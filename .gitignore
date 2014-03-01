@@ -22,3 +22,6 @@ Pods
 
 # Vim
 .swp
+
+# Custom
+build/*
