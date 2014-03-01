@@ -14,4 +14,6 @@
 
 @property (assign) IBOutlet NSWindow *window;
 
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification;
+
 @end

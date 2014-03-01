@@ -13,6 +13,9 @@
 		4B64254E18C23F800012ED42 /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B64254A18C23F800012ED42 /* PSMTabBarControl.framework */; };
 		4B64255018C23FE20012ED42 /* MacVimFramework.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B64254918C23F800012ED42 /* MacVimFramework.framework */; };
 		4B64255118C23FE20012ED42 /* PSMTabBarControl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B64254A18C23F800012ED42 /* PSMTabBarControl.framework */; };
+		4B64255A18C26CB00012ED42 /* VRMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B64255818C26CB00012ED42 /* VRMainWindowController.m */; };
+		4B64255B18C26CB00012ED42 /* VRMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B64255818C26CB00012ED42 /* VRMainWindowController.m */; };
+		4B64256E18C2846B0012ED42 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B64257018C2846B0012ED42 /* MainWindow.xib */; };
 		4BE9241718C20DBC00E67BB6 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE9241618C20DBC00E67BB6 /* Cocoa.framework */; };
 		4BE9242118C20DBC00E67BB6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4BE9241F18C20DBC00E67BB6 /* InfoPlist.strings */; };
 		4BE9242318C20DBC00E67BB6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE9242218C20DBC00E67BB6 /* main.m */; };
@@ -56,6 +59,9 @@
 		35DDD94E48FE41568A1349A2 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		4B64254918C23F800012ED42 /* MacVimFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MacVimFramework.framework; path = build/VimR/Build/Products/Debug/MacVimFramework.framework; sourceTree = "<group>"; };
 		4B64254A18C23F800012ED42 /* PSMTabBarControl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PSMTabBarControl.framework; path = build/VimR/Build/Products/Debug/PSMTabBarControl.framework; sourceTree = "<group>"; };
+		4B64255718C26CB00012ED42 /* VRMainWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRMainWindowController.h; sourceTree = "<group>"; };
+		4B64255818C26CB00012ED42 /* VRMainWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRMainWindowController.m; sourceTree = "<group>"; };
+		4B64256F18C2846B0012ED42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		4BE9241318C20DBC00E67BB6 /* VimR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VimR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BE9241618C20DBC00E67BB6 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4BE9241918C20DBC00E67BB6 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -114,6 +120,15 @@
 			name = Test;
 			sourceTree = "<group>";
 		};
+		4B64256718C26D4E0012ED42 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4BE9242B18C20DBC00E67BB6 /* MainMenu.xib */,
+				4B64257018C2846B0012ED42 /* MainWindow.xib */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		4BE9240A18C20DBC00E67BB6 = {
 			isa = PBXGroup;
 			children = (
@@ -155,9 +170,11 @@
 			children = (
 				4BE9242818C20DBC00E67BB6 /* VRAppDelegate.h */,
 				4BE9242918C20DBC00E67BB6 /* VRAppDelegate.m */,
-				4BE9242B18C20DBC00E67BB6 /* MainMenu.xib */,
 				4BE9242E18C20DBC00E67BB6 /* Images.xcassets */,
+				4B64256718C26D4E0012ED42 /* Resources */,
 				4BE9241D18C20DBC00E67BB6 /* Supporting Files */,
+				4B64255718C26CB00012ED42 /* VRMainWindowController.h */,
+				4B64255818C26CB00012ED42 /* VRMainWindowController.m */,
 			);
 			path = VimR;
 			sourceTree = "<group>";
@@ -261,8 +278,6 @@
 			mainGroup = 4BE9240A18C20DBC00E67BB6;
 			productRefGroup = 4BE9241418C20DBC00E67BB6 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-			);
 			projectRoot = "";
 			targets = (
 				4BE9241218C20DBC00E67BB6 /* VimR */,
@@ -277,6 +292,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BE9242118C20DBC00E67BB6 /* InfoPlist.strings in Resources */,
+				4B64256E18C2846B0012ED42 /* MainWindow.xib in Resources */,
 				4BE9242F18C20DBC00E67BB6 /* Images.xcassets in Resources */,
 				4BE9242718C20DBC00E67BB6 /* Credits.rtf in Resources */,
 				4BE9242D18C20DBC00E67BB6 /* MainMenu.xib in Resources */,
@@ -361,6 +377,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B64255A18C26CB00012ED42 /* VRMainWindowController.m in Sources */,
 				4BE9242A18C20DBC00E67BB6 /* VRAppDelegate.m in Sources */,
 				4BE9242318C20DBC00E67BB6 /* main.m in Sources */,
 			);
@@ -371,6 +388,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BE9244118C20DBC00E67BB6 /* VRBaseTestCase.m in Sources */,
+				4B64255B18C26CB00012ED42 /* VRMainWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -385,6 +403,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		4B64257018C2846B0012ED42 /* MainWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4B64256F18C2846B0012ED42 /* Base */,
+			);
+			name = MainWindow.xib;
+			sourceTree = "<group>";
+		};
 		4BE9241F18C20DBC00E67BB6 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

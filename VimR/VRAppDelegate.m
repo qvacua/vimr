@@ -12,6 +12,7 @@
 
 @implementation VRAppDelegate
 
+#pragma mark NSApplicationDelegate
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 
 }
