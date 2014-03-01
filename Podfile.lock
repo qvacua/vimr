@@ -1,10 +1,17 @@
 PODS:
+  - OCHamcrest (3.0.1)
+  - OCMockito (1.1.0):
+    - OCHamcrest (~> 3.0)
   - TBCacao (0.0.1)
 
 DEPENDENCIES:
+  - OCHamcrest
+  - OCMockito
   - TBCacao
 
 SPEC CHECKSUMS:
+  OCHamcrest: 782c52ae8c673e5d6060a65005cfd26d20d519ba
+  OCMockito: 317fa0cf75c9b0d73d2be335789c556537be7fd2
   TBCacao: c03189b873866133ccc27b245011270ce9a4a7ca
 
 COCOAPODS: 0.29.0

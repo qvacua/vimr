@@ -23,8 +23,9 @@
 		4BE9243618C20DBC00E67BB6 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE9243518C20DBC00E67BB6 /* XCTest.framework */; };
 		4BE9243718C20DBC00E67BB6 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE9241618C20DBC00E67BB6 /* Cocoa.framework */; };
 		4BE9243F18C20DBC00E67BB6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4BE9243D18C20DBC00E67BB6 /* InfoPlist.strings */; };
-		4BE9244118C20DBC00E67BB6 /* VimRTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE9244018C20DBC00E67BB6 /* VimRTests.m */; };
+		4BE9244118C20DBC00E67BB6 /* VRBaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE9244018C20DBC00E67BB6 /* VRBaseTestCase.m */; };
 		664C3590B3B2428C94313696 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 876A31FD94744ACDB111D476 /* libPods.a */; };
+		E6B1AC2D372E4EA58650E10C /* libPods-VimRTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9EFC32D7A674D77BBF1D411 /* libPods-VimRTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,8 +73,10 @@
 		4BE9243518C20DBC00E67BB6 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		4BE9243C18C20DBC00E67BB6 /* VimRTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "VimRTests-Info.plist"; sourceTree = "<group>"; };
 		4BE9243E18C20DBC00E67BB6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		4BE9244018C20DBC00E67BB6 /* VimRTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VimRTests.m; sourceTree = "<group>"; };
+		4BE9244018C20DBC00E67BB6 /* VRBaseTestCase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VRBaseTestCase.m; sourceTree = "<group>"; };
+		7A3FC0B1787A4B05B5E0AE34 /* Pods-VimRTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VimRTests.xcconfig"; path = "Pods/Pods-VimRTests.xcconfig"; sourceTree = "<group>"; };
 		876A31FD94744ACDB111D476 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9EFC32D7A674D77BBF1D411 /* libPods-VimRTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-VimRTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +99,7 @@
 				4BE9243618C20DBC00E67BB6 /* XCTest.framework in Frameworks */,
 				4B64254C18C23F800012ED42 /* MacVimFramework.framework in Frameworks */,
 				4B64254E18C23F800012ED42 /* PSMTabBarControl.framework in Frameworks */,
+				E6B1AC2D372E4EA58650E10C /* libPods-VimRTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +122,7 @@
 				4BE9241518C20DBC00E67BB6 /* Frameworks */,
 				4BE9241418C20DBC00E67BB6 /* Products */,
 				35DDD94E48FE41568A1349A2 /* Pods.xcconfig */,
+				7A3FC0B1787A4B05B5E0AE34 /* Pods-VimRTests.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -140,6 +145,7 @@
 				4BE9241B18C20DBC00E67BB6 /* Foundation.framework */,
 				4B64250918C2222F0012ED42 /* Test */,
 				876A31FD94744ACDB111D476 /* libPods.a */,
+				E9EFC32D7A674D77BBF1D411 /* libPods-VimRTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -171,7 +177,7 @@
 		4BE9243A18C20DBC00E67BB6 /* VimRTests */ = {
 			isa = PBXGroup;
 			children = (
-				4BE9244018C20DBC00E67BB6 /* VimRTests.m */,
+				4BE9244018C20DBC00E67BB6 /* VRBaseTestCase.m */,
 				4BE9243B18C20DBC00E67BB6 /* Supporting Files */,
 			);
 			path = VimRTests;
@@ -213,9 +219,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4BE9244718C20DBC00E67BB6 /* Build configuration list for PBXNativeTarget "VimRTests" */;
 			buildPhases = (
+				1A52FA72DD38403BBD2A859E /* Check Pods Manifest.lock */,
 				4BE9243018C20DBC00E67BB6 /* Sources */,
 				4BE9243118C20DBC00E67BB6 /* Frameworks */,
 				4BE9243218C20DBC00E67BB6 /* Resources */,
+				09BCFBB1D8214DAE8A0CFEB5 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -253,6 +261,8 @@
 			mainGroup = 4BE9240A18C20DBC00E67BB6;
 			productRefGroup = 4BE9241418C20DBC00E67BB6 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+			);
 			projectRoot = "";
 			targets = (
 				4BE9241218C20DBC00E67BB6 /* VimR */,
@@ -284,6 +294,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		09BCFBB1D8214DAE8A0CFEB5 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-VimRTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		16F47F5372CE497A96F5CDD8 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -297,6 +322,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		1A52FA72DD38403BBD2A859E /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		D2FA809780E44B8296713484 /* Check Pods Manifest.lock */ = {
@@ -330,7 +370,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BE9244118C20DBC00E67BB6 /* VimRTests.m in Sources */,
+				4BE9244118C20DBC00E67BB6 /* VRBaseTestCase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -490,6 +530,7 @@
 		};
 		4BE9244818C20DBC00E67BB6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7A3FC0B1787A4B05B5E0AE34 /* Pods-VimRTests.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/VimR.app/Contents/MacOS/VimR";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -513,6 +554,7 @@
 		};
 		4BE9244918C20DBC00E67BB6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7A3FC0B1787A4B05B5E0AE34 /* Pods-VimRTests.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/VimR.app/Contents/MacOS/VimR";
 				COMBINE_HIDPI_IMAGES = YES;
