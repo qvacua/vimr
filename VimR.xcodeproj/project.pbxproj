@@ -585,7 +585,6 @@
 				);
 				INFOPLIST_FILE = "VimRTests/VimRTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
@@ -605,7 +604,6 @@
 				GCC_PREFIX_HEADER = "VimR/VimR-Prefix.pch";
 				INFOPLIST_FILE = "VimRTests/VimRTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
