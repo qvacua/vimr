@@ -11,27 +11,7 @@
 #import "VRDocumentController.h"
 
 
-@interface VRDocumentController ()
-
-@property MMVimManager *vimManager;
-
-@end
-
 @implementation VRDocumentController
-
-#pragma mark NSDocumentController
-- (id)init {
-    self = [super init];
-    if (self == nil) {
-        return nil;
-    }
-
-    _vimManager = [[MMVimManager alloc] init];
-    _vimManager.delegate = self;
-    [_vimManager setUp];
-
-    return self;
-}
 
 #pragma mark MMVimManagerDelegateProtocol
 - (void)manager:(MMVimManager *)manager vimControllerCreated:(MMVimController *)controller {

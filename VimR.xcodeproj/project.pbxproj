@@ -9,7 +9,9 @@
 /* Begin PBXBuildFile section */
 		1929B49C8EFA5526541CE614 /* VRDocumentTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B3D4784BDAFFAAB715FA /* VRDocumentTest.m */; };
 		1929B65D8458FE1E5D4E0594 /* VRBaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9CC266B14FF9F1AABF9 /* VRBaseTestCase.m */; };
+		1929B93BBCD53898D16541CD /* VRManualBeanProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCAF60827409FA845CAC /* VRManualBeanProvider.m */; };
 		1929BA4727FA0A8D2FD0A642 /* VRDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B78A8084470EC33DE744 /* VRDocumentController.m */; };
+		1929BE2CA3488AB3824DF598 /* VRManualBeanProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCAF60827409FA845CAC /* VRManualBeanProvider.m */; };
 		1929BEE6213A8875598A2713 /* VRDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B78A8084470EC33DE744 /* VRDocumentController.m */; };
 		4B64254B18C23F800012ED42 /* MacVimFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B64254918C23F800012ED42 /* MacVimFramework.framework */; };
 		4B64254C18C23F800012ED42 /* MacVimFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B64254918C23F800012ED42 /* MacVimFramework.framework */; };
@@ -67,6 +69,7 @@
 		1929B78A8084470EC33DE744 /* VRDocumentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRDocumentController.m; sourceTree = "<group>"; };
 		1929B9CC266B14FF9F1AABF9 /* VRBaseTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRBaseTestCase.m; sourceTree = "<group>"; };
 		1929BB7A8FA90C2B0F82BED8 /* VRBaseTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRBaseTestCase.h; sourceTree = "<group>"; };
+		1929BCAF60827409FA845CAC /* VRManualBeanProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRManualBeanProvider.m; sourceTree = "<group>"; };
 		35DDD94E48FE41568A1349A2 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		4B64254918C23F800012ED42 /* MacVimFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MacVimFramework.framework; path = build/VimR/Build/Products/Debug/MacVimFramework.framework; sourceTree = "<group>"; };
 		4B64254A18C23F800012ED42 /* PSMTabBarControl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PSMTabBarControl.framework; path = build/VimR/Build/Products/Debug/PSMTabBarControl.framework; sourceTree = "<group>"; };
@@ -201,6 +204,7 @@
 				1929B145B0B06ED9C019212D /* VRLog.h */,
 				1929B78A8084470EC33DE744 /* VRDocumentController.m */,
 				1929B27A0B9B328D44155A68 /* VRDocumentController.h */,
+				1929BCAF60827409FA845CAC /* VRManualBeanProvider.m */,
 			);
 			path = VimR;
 			sourceTree = "<group>";
@@ -409,6 +413,7 @@
 				4BD30CFD18C31E2A00503CBE /* VRDocument.m in Sources */,
 				4BE9242318C20DBC00E67BB6 /* main.m in Sources */,
 				1929BEE6213A8875598A2713 /* VRDocumentController.m in Sources */,
+				1929BE2CA3488AB3824DF598 /* VRManualBeanProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -421,6 +426,7 @@
 				1929B49C8EFA5526541CE614 /* VRDocumentTest.m in Sources */,
 				1929B65D8458FE1E5D4E0594 /* VRBaseTestCase.m in Sources */,
 				1929BA4727FA0A8D2FD0A642 /* VRDocumentController.m in Sources */,
+				1929B93BBCD53898D16541CD /* VRManualBeanProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

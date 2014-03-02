@@ -8,12 +8,11 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import <TBCacao/TBCacao.h>
 
 
-@interface VRDocumentController : NSDocumentController <TBBean, MMVimManagerDelegateProtocol>
+@interface VRDocumentController : NSDocumentController <MMVimManagerDelegateProtocol>
 
-- (id)init;
+@property (weak) MMVimManager *vimManager;
 
 - (void)manager:(MMVimManager *)manager vimControllerCreated:(MMVimController *)controller;
 - (void)manager:(MMVimManager *)manager vimControllerRemovedWithIdentifier:(unsigned int)identifier;
