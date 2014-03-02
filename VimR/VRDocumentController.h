@@ -15,4 +15,8 @@
 
 - (id)init;
 
+- (void)manager:(MMVimManager *)manager vimControllerCreated:(MMVimController *)controller;
+- (void)manager:(MMVimManager *)manager vimControllerRemovedWithIdentifier:(unsigned int)identifier;
+- (NSMenuItem *)menuItemTemplateForManager:(MMVimManager *)manager;
+
 @end
