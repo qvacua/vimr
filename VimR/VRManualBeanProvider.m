@@ -7,7 +7,6 @@
  * See LICENSE
  */
 
-#import <Foundation/Foundation.h>
 #import <TBCacao/TBCacao.h>
 #import <MacVimFramework/MacVimFramework.h>
 #import "VRDocumentController.h"
