@@ -16,6 +16,8 @@
 		4B64255A18C26CB00012ED42 /* VRMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B64255818C26CB00012ED42 /* VRMainWindowController.m */; };
 		4B64255B18C26CB00012ED42 /* VRMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B64255818C26CB00012ED42 /* VRMainWindowController.m */; };
 		4B64256E18C2846B0012ED42 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B64257018C2846B0012ED42 /* MainWindow.xib */; };
+		4BD30CFD18C31E2A00503CBE /* VRDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD30CFC18C31E2A00503CBE /* VRDocument.m */; };
+		4BD30CFE18C31E2A00503CBE /* VRDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD30CFC18C31E2A00503CBE /* VRDocument.m */; };
 		4BE9241718C20DBC00E67BB6 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE9241618C20DBC00E67BB6 /* Cocoa.framework */; };
 		4BE9242118C20DBC00E67BB6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4BE9241F18C20DBC00E67BB6 /* InfoPlist.strings */; };
 		4BE9242318C20DBC00E67BB6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE9242218C20DBC00E67BB6 /* main.m */; };
@@ -62,6 +64,8 @@
 		4B64255718C26CB00012ED42 /* VRMainWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRMainWindowController.h; sourceTree = "<group>"; };
 		4B64255818C26CB00012ED42 /* VRMainWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRMainWindowController.m; sourceTree = "<group>"; };
 		4B64256F18C2846B0012ED42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		4BD30CFB18C31E2A00503CBE /* VRDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRDocument.h; sourceTree = "<group>"; };
+		4BD30CFC18C31E2A00503CBE /* VRDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRDocument.m; sourceTree = "<group>"; };
 		4BE9241318C20DBC00E67BB6 /* VimR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VimR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BE9241618C20DBC00E67BB6 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4BE9241918C20DBC00E67BB6 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -168,6 +172,8 @@
 		4BE9241C18C20DBC00E67BB6 /* VimR */ = {
 			isa = PBXGroup;
 			children = (
+				4BD30CFB18C31E2A00503CBE /* VRDocument.h */,
+				4BD30CFC18C31E2A00503CBE /* VRDocument.m */,
 				4BE9242818C20DBC00E67BB6 /* VRAppDelegate.h */,
 				4BE9242918C20DBC00E67BB6 /* VRAppDelegate.m */,
 				4BE9242E18C20DBC00E67BB6 /* Images.xcassets */,
@@ -379,6 +385,7 @@
 			files = (
 				4B64255A18C26CB00012ED42 /* VRMainWindowController.m in Sources */,
 				4BE9242A18C20DBC00E67BB6 /* VRAppDelegate.m in Sources */,
+				4BD30CFD18C31E2A00503CBE /* VRDocument.m in Sources */,
 				4BE9242318C20DBC00E67BB6 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -389,6 +396,7 @@
 			files = (
 				4BE9244118C20DBC00E67BB6 /* VRBaseTestCase.m in Sources */,
 				4B64255B18C26CB00012ED42 /* VRMainWindowController.m in Sources */,
+				4BD30CFE18C31E2A00503CBE /* VRDocument.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
