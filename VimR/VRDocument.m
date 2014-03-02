@@ -8,11 +8,20 @@
  */
 
 #import "VRDocument.h"
+#import "VRMainWindowController.h"
+
+
+NSString *const qMainWindowNibName = @"MainWindow";
 
 
 @implementation VRDocument
 
 #pragma mark NSDocument
+- (void)makeWindowControllers {
+    _mainWindowController = [[VRMainWindowController alloc] initWithWindowNibName:qMainWindowNibName];
+    [self addWindowController:_mainWindowController];
+}
+
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError {
     return NO;
 }
