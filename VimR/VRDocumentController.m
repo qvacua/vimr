@@ -63,7 +63,9 @@
     mainWindowController.vimView = controller.vimView;
 }
 
-- (void)manager:(MMVimManager *)manager vimControllerRemovedWithControllerId:(unsigned int)vimControllerId pid:(int)pid {
+- (void)manager:(MMVimManager *)manager vimControllerRemovedWithControllerId:(unsigned int)vimControllerId
+            pid:(int)pid {
+
     VRDocument *doc = self.vimController2Doc[@(pid)];
     [doc close]; // FIXME: ask when there are unsaved files, for time being, just close the document
 }

@@ -20,17 +20,24 @@
 }
 
 #pragma mark MMVimControllerDelegate
-- (void)vimController:(MMVimController *)controller handleShowDialogWithButtonTitles:(NSArray *)buttonTitles style:(NSAlertStyle)style message:(NSString *)message text:(NSString *)text textFieldString:(NSString *)string data:(NSData *)data {
+- (void)vimController:(MMVimController *)controller handleShowDialogWithButtonTitles:(NSArray *)buttonTitles
+                style:(NSAlertStyle)style message:(NSString *)message text:(NSString *)text
+      textFieldString:(NSString *)string data:(NSData *)data {
+
     // 3 = don't save
     // 1 = save
     [self.vimController tellBackend:@[@3]];
 }
 
-- (void)vimController:(MMVimController *)controller showScrollbarWithIdentifier:(int32_t)identifier state:(BOOL)state data:(NSData *)data {
+- (void)vimController:(MMVimController *)controller showScrollbarWithIdentifier:(int32_t)identifier
+                state:(BOOL)state data:(NSData *)data {
+
     [self.vimView showScrollbarWithIdentifier:identifier state:state];
 }
 
-- (void)vimController:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns isLive:(BOOL)live keepOnScreen:(BOOL)screen data:(NSData *)data {
+- (void)vimController:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
+               isLive:(BOOL)live keepOnScreen:(BOOL)screen data:(NSData *)data {
+
     [self.vimView setDesiredRows:rows columns:columns];
 }
 
@@ -49,7 +56,9 @@
     // Here we should resize and -position the Vim view...
 }
 
-- (void)vimController:(MMVimController *)controller setScrollbarThumbValue:(float)value proportion:(float)proportion identifier:(int32_t)identifier data:(NSData *)data {
+- (void)vimController:(MMVimController *)controller setScrollbarThumbValue:(float)value proportion:(float)proportion
+           identifier:(int32_t)identifier data:(NSData *)data {
+
     // Here we should resize and -position the Vim view...
 }
 
