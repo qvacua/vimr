@@ -9,10 +9,10 @@
 
 #import "VRDocument.h"
 #import "VRMainWindowController.h"
+#import "VRDocumentController.h"
 
 
 NSString *const qMainWindowNibName = @"MainWindow";
-
 
 @implementation VRDocument
 
@@ -20,10 +20,12 @@ NSString *const qMainWindowNibName = @"MainWindow";
 - (void)makeWindowControllers {
     _mainWindowController = [[VRMainWindowController alloc] initWithWindowNibName:qMainWindowNibName];
     [self addWindowController:_mainWindowController];
+
+    [self.documentController requestVimControllerForDocument:self];
 }
 
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError {
-    return NO;
+    return YES;
 }
 
 - (BOOL)writeToURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError {

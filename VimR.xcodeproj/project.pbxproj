@@ -10,7 +10,9 @@
 		1929B49C8EFA5526541CE614 /* VRDocumentTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B3D4784BDAFFAAB715FA /* VRDocumentTest.m */; };
 		1929B65D8458FE1E5D4E0594 /* VRBaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9CC266B14FF9F1AABF9 /* VRBaseTestCase.m */; };
 		1929B93BBCD53898D16541CD /* VRManualBeanProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCAF60827409FA845CAC /* VRManualBeanProvider.m */; };
+		1929BA41015080AAF2E5B287 /* VRDocumentControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD37D92EFEEA7FE4F8BB /* VRDocumentControllerTest.m */; };
 		1929BA4727FA0A8D2FD0A642 /* VRDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B78A8084470EC33DE744 /* VRDocumentController.m */; };
+		1929BD434C100AD15EDA2FAF /* VRMainWindowControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8515E4EA94E1C7EB1F9 /* VRMainWindowControllerTest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1929BE2CA3488AB3824DF598 /* VRManualBeanProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCAF60827409FA845CAC /* VRManualBeanProvider.m */; };
 		1929BEE6213A8875598A2713 /* VRDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B78A8084470EC33DE744 /* VRDocumentController.m */; };
 		4B64254B18C23F800012ED42 /* MacVimFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B64254918C23F800012ED42 /* MacVimFramework.framework */; };
@@ -22,6 +24,8 @@
 		4B64255A18C26CB00012ED42 /* VRMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B64255818C26CB00012ED42 /* VRMainWindowController.m */; };
 		4B64255B18C26CB00012ED42 /* VRMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B64255818C26CB00012ED42 /* VRMainWindowController.m */; };
 		4B64256E18C2846B0012ED42 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B64257018C2846B0012ED42 /* MainWindow.xib */; };
+		4BABEDC318C5243F00317232 /* MacVimFramework.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B64254918C23F800012ED42 /* MacVimFramework.framework */; };
+		4BABEDC418C5243F00317232 /* PSMTabBarControl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B64254A18C23F800012ED42 /* PSMTabBarControl.framework */; };
 		4BD30CFD18C31E2A00503CBE /* VRDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD30CFC18C31E2A00503CBE /* VRDocument.m */; };
 		4BD30CFE18C31E2A00503CBE /* VRDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD30CFC18C31E2A00503CBE /* VRDocument.m */; };
 		4BE9241718C20DBC00E67BB6 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE9241618C20DBC00E67BB6 /* Cocoa.framework */; };
@@ -60,6 +64,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4BABEDC218C5242400317232 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				4BABEDC318C5243F00317232 /* MacVimFramework.framework in CopyFiles */,
+				4BABEDC418C5243F00317232 /* PSMTabBarControl.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -67,9 +82,11 @@
 		1929B27A0B9B328D44155A68 /* VRDocumentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRDocumentController.h; sourceTree = "<group>"; };
 		1929B3D4784BDAFFAAB715FA /* VRDocumentTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRDocumentTest.m; sourceTree = "<group>"; };
 		1929B78A8084470EC33DE744 /* VRDocumentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRDocumentController.m; sourceTree = "<group>"; };
+		1929B8515E4EA94E1C7EB1F9 /* VRMainWindowControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRMainWindowControllerTest.m; sourceTree = "<group>"; };
 		1929B9CC266B14FF9F1AABF9 /* VRBaseTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRBaseTestCase.m; sourceTree = "<group>"; };
 		1929BB7A8FA90C2B0F82BED8 /* VRBaseTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRBaseTestCase.h; sourceTree = "<group>"; };
 		1929BCAF60827409FA845CAC /* VRManualBeanProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRManualBeanProvider.m; sourceTree = "<group>"; };
+		1929BD37D92EFEEA7FE4F8BB /* VRDocumentControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRDocumentControllerTest.m; sourceTree = "<group>"; };
 		35DDD94E48FE41568A1349A2 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		4B64254918C23F800012ED42 /* MacVimFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MacVimFramework.framework; path = build/VimR/Build/Products/Debug/MacVimFramework.framework; sourceTree = "<group>"; };
 		4B64254A18C23F800012ED42 /* PSMTabBarControl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PSMTabBarControl.framework; path = build/VimR/Build/Products/Debug/PSMTabBarControl.framework; sourceTree = "<group>"; };
@@ -227,6 +244,8 @@
 				4BE9243B18C20DBC00E67BB6 /* Supporting Files */,
 				1929B3D4784BDAFFAAB715FA /* VRDocumentTest.m */,
 				1929B4B3928F746175D2DDF9 /* Test Support */,
+				1929BD37D92EFEEA7FE4F8BB /* VRDocumentControllerTest.m */,
+				1929B8515E4EA94E1C7EB1F9 /* VRMainWindowControllerTest.m */,
 			);
 			path = VimRTests;
 			sourceTree = "<group>";
@@ -272,6 +291,7 @@
 				4BE9243118C20DBC00E67BB6 /* Frameworks */,
 				4BE9243218C20DBC00E67BB6 /* Resources */,
 				09BCFBB1D8214DAE8A0CFEB5 /* Copy Pods Resources */,
+				4BABEDC218C5242400317232 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -427,6 +447,8 @@
 				1929B65D8458FE1E5D4E0594 /* VRBaseTestCase.m in Sources */,
 				1929BA4727FA0A8D2FD0A642 /* VRDocumentController.m in Sources */,
 				1929B93BBCD53898D16541CD /* VRManualBeanProvider.m in Sources */,
+				1929BA41015080AAF2E5B287 /* VRDocumentControllerTest.m in Sources */,
+				1929BD434C100AD15EDA2FAF /* VRMainWindowControllerTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

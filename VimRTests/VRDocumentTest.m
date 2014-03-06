@@ -18,12 +18,17 @@
 
 @implementation VRDocumentTest {
     VRDocument *document;
+
+    VRMainWindowController *mainWindowController;
 }
 
 - (void)setUp {
     [super setUp];
 
+    mainWindowController = mock([VRMainWindowController class]);
+
     document = [[VRDocument alloc] init];
+    document.mainWindowController = mainWindowController;
 }
 
 - (void)testMakeWindowControllers {

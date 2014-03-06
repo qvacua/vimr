@@ -8,16 +8,19 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import <MacVimFramework/MacVimFramework.h>
 
 
 extern NSString *const qMainWindowNibName;
 
 
 @class VRMainWindowController;
+@class VRDocumentController;
 
 
 @interface VRDocument : NSDocument
 
+@property (weak) VRDocumentController *documentController;
 @property VRMainWindowController *mainWindowController;
 
 - (void)makeWindowControllers;

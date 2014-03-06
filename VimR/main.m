@@ -13,6 +13,8 @@
 
 int main(int argc, const char *argv[]) {
     // necessary MacVimFramework initialization {
+    ASLInit();
+
     [MMUtils setKeyHandlingUserDefaults];
     [MMUtils setInitialUserDefaults];
 
