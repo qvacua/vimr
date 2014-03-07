@@ -18,6 +18,7 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
 @interface VRDocumentController ()
 
 @property NSMutableDictionary *vimController2Doc;
+@property NSMutableDictionary *vimController2MainWindowController;
 
 @end
 
@@ -25,13 +26,22 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
 @implementation VRDocumentController
 
 #pragma mark Public
-- (void)requestVimControllerForDocument:(VRDocument *)doc {
+- (VRMainWindowController *)mainWindowControllerForDocument:(VRDocument *)doc {
+    VRMainWindowController *mainWindowController = [
+            [VRMainWindowController alloc] initWithWindowNibName:qMainWindowNibName
+    ];
+
     NSDictionary *args = @{
             qVimArgFileNamesToOpen : @[doc.fileURL.path]
     };
     int pid = [self.vimManager pidOfNewVimControllerWithArgs:args];
 
     self.vimController2Doc[@(pid)] = doc;
+    self.vimController2MainWindowController[@(pid)] = mainWindowController;
+
+    [mainWindowController.documents addObject:doc];
+
+    return mainWindowController;
 }
 
 #pragma mark NSDocumentController
@@ -42,6 +52,7 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
     }
 
     _vimController2Doc = [[NSMutableDictionary alloc] initWithCapacity:4];
+    _vimController2MainWindowController = [[NSMutableDictionary alloc] initWithCapacity:4];
 
     return self;
 }
@@ -59,8 +70,7 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
 
 #pragma mark MMVimManagerDelegateProtocol
 - (void)manager:(MMVimManager *)manager vimControllerCreated:(MMVimController *)controller {
-    VRDocument *doc = self.vimController2Doc[@(controller.pid)];
-    VRMainWindowController *mainWindowController = doc.mainWindowController;
+    VRMainWindowController *mainWindowController = self.vimController2MainWindowController[@(controller.pid)];
 
     controller.delegate = (id <MMVimControllerDelegate>) mainWindowController;
 
@@ -71,7 +81,13 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
 - (void)manager:(MMVimManager *)manager vimControllerRemovedWithControllerId:(unsigned int)vimControllerId
             pid:(int)pid {
 
+    VRMainWindowController *windowControllerToClose = self.vimController2MainWindowController[@(pid)];
     VRDocument *doc = self.vimController2Doc[@(pid)];
+
+    [windowControllerToClose.documents removeObject:doc];
+    [windowControllerToClose cleanup];
+
+    [self.vimController2MainWindowController removeObjectForKey:@(pid)];
     [doc close]; // FIXME: ask when there are unsaved files, for time being, just close the document
 }
 

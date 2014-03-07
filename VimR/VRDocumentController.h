@@ -12,6 +12,7 @@
 
 
 @class VRDocument;
+@class VRMainWindowController;
 
 extern NSString *const qVimArgFileNamesToOpen;
 
@@ -19,7 +20,7 @@ extern NSString *const qVimArgFileNamesToOpen;
 
 @property (weak) MMVimManager *vimManager;
 
-- (void)requestVimControllerForDocument:(VRDocument *)doc;
+- (VRMainWindowController *)mainWindowControllerForDocument:(VRDocument *)doc;
 
 - (id)init;
 - (void)dealloc;

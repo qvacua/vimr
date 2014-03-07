@@ -13,9 +13,13 @@
 
 @interface VRMainWindowController : NSWindowController <NSWindowDelegate, MMVimControllerDelegate>
 
+@property NSMutableArray *documents;
+
 @property (weak) MMVimController *vimController;
 @property (weak) MMVimView *vimView;
 
+- (id)initWithWindowNibName:(NSString *)windowNibName;
+- (void)cleanup;
 - (void)dealloc;
 
 - (void)vimController:(MMVimController *)controller handleShowDialogWithButtonTitles:(NSArray *)buttonTitles

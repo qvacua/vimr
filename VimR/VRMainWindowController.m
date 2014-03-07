@@ -9,12 +9,29 @@
 
 #import <PSMTabBarControl/PSMTabBarControl.h>
 #import "VRMainWindowController.h"
+#import "VRLog.h"
 
 
 @implementation VRMainWindowController
 
 #pragma mark NSWindowController
+- (id)initWithWindowNibName:(NSString *)windowNibName {
+    self = [super initWithWindowNibName:windowNibName];
+    if (self == nil) {
+        return nil;
+    }
+
+    _documents = [[NSMutableArray alloc] initWithCapacity:4];
+
+    return self;
+}
+
+- (void)cleanup {
+    log4Debug(@"cleanup");
+}
+
 - (void)dealloc {
+    log4Debug(@"dealloc");
     [self.vimView removeFromSuperviewWithoutNeedingDisplay];
     [self.vimView cleanup];
 }

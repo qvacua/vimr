@@ -18,10 +18,9 @@ NSString *const qMainWindowNibName = @"MainWindow";
 
 #pragma mark NSDocument
 - (void)makeWindowControllers {
-    _mainWindowController = [[VRMainWindowController alloc] initWithWindowNibName:qMainWindowNibName];
-    [self addWindowController:_mainWindowController];
+    self.mainWindowController = [self.documentController mainWindowControllerForDocument:self];
 
-    [self.documentController requestVimControllerForDocument:self];
+    [self addWindowController:self.mainWindowController]; // retain cycle!
 }
 
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError {

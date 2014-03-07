@@ -21,7 +21,7 @@ extern NSString *const qMainWindowNibName;
 @interface VRDocument : NSDocument
 
 @property (weak) VRDocumentController *documentController;
-@property VRMainWindowController *mainWindowController;
+@property (weak) VRMainWindowController *mainWindowController;
 
 - (void)makeWindowControllers;
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError;
