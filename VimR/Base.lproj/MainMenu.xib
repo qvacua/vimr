@@ -70,6 +70,11 @@
                                     <action selector="newDocument:" target="-1" id="373"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="New Tab" keyEquivalent="t" id="LvQ-Qu-Tme">
+                                <connections>
+                                    <action selector="newDocument:" target="-1" id="ZBE-Wv-MAA"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Open…" keyEquivalent="o" id="72">
                                 <connections>
                                     <action selector="openDocument:" target="-1" id="374"/>

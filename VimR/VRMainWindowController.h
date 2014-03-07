@@ -34,6 +34,8 @@
 - (void)vimController:(MMVimController *)controller setScrollbarThumbValue:(float)value
            proportion:(float)proportion identifier:(int32_t)identifier data:(NSData *)data;
 
+- (void)vimController:(MMVimController *)controller tabShouldUpdateWithData:(NSData *)data;
+- (void)vimController:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data;
 - (void)windowDidBecomeMain:(NSNotification *)notification;
 - (void)windowDidResignMain:(NSNotification *)notification;
 - (BOOL)windowShouldClose:(id)sender;

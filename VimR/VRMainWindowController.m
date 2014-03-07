@@ -79,6 +79,14 @@
     // Here we should resize and -position the Vim view...
 }
 
+- (void)vimController:(MMVimController *)controller tabShouldUpdateWithData:(NSData *)data {
+
+}
+
+- (void)vimController:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data {
+
+}
+
 #pragma mark NSWindowDelegate
 - (void)windowDidBecomeMain:(NSNotification *)notification {
     [self.vimController sendMessage:GotFocusMsgID data:nil];

@@ -25,6 +25,8 @@ extern NSString *const qVimArgFileNamesToOpen;
 - (id)init;
 - (void)dealloc;
 
+- (IBAction)newTab:(id)sender;
+
 - (void)addDocument:(NSDocument *)document;
 
 - (void)manager:(MMVimManager *)manager vimControllerCreated:(MMVimController *)controller;

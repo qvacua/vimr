@@ -11,6 +11,7 @@
 #import "VRDocumentController.h"
 #import "VRDocument.h"
 #import "VRMainWindowController.h"
+#import "VRLog.h"
 
 
 NSString *const qVimArgFileNamesToOpen = @"filenames";
@@ -27,13 +28,24 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
 
 #pragma mark Public
 - (VRMainWindowController *)mainWindowControllerForDocument:(VRDocument *)doc {
+    if (self.vimController2MainWindowController.count > 0) {
+        VRMainWindowController *mainWindowController = self.vimController2MainWindowController.allValues[0];
+        [mainWindowController.documents addObject:doc];
+        [mainWindowController.vimController sendMessage:AddNewTabMsgID data:nil];
+
+        return mainWindowController;
+    }
+
     VRMainWindowController *mainWindowController = [
             [VRMainWindowController alloc] initWithWindowNibName:qMainWindowNibName
     ];
 
-    NSDictionary *args = @{
-            qVimArgFileNamesToOpen : @[doc.fileURL.path]
-    };
+    NSDictionary *args = nil;
+    NSURL *url = doc.fileURL;
+
+    if (url != nil) {
+        args = @{qVimArgFileNamesToOpen : @[url.path]};
+    }
     int pid = [self.vimManager pidOfNewVimControllerWithArgs:args];
 
     self.vimController2Doc[@(pid)] = doc;
@@ -59,6 +71,14 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
 
 - (void)dealloc {
     [self.vimManager terminateAllVimProcesses];
+}
+
+- (IBAction)newTab:(id)sender {
+    VRDocument *newDoc = [[VRDocument alloc] initWithType:@"Plain Text File" error:NULL];
+    [self addDocument:newDoc];
+
+    [newDoc makeWindowControllers];
+    [newDoc showWindows];
 }
 
 - (void)addDocument:(NSDocument *)document {
