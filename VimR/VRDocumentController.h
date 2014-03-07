@@ -13,6 +13,8 @@
 
 @class VRDocument;
 
+extern NSString *const qVimArgFileNamesToOpen;
+
 @interface VRDocumentController : NSDocumentController <MMVimManagerDelegateProtocol>
 
 @property (weak) MMVimManager *vimManager;

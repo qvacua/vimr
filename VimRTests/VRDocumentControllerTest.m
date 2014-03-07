@@ -43,6 +43,7 @@ static const int CONTROLLER_ID = 2;
     documentController.vimManager = vimManager;
 
     [given([doc mainWindowController]) willReturn:mainWindowController];
+    [given([doc fileURL]) willReturn:[NSURL URLWithString:@"file:///tmp"]];
     [given([vimManager pidOfNewVimControllerWithArgs:nil]) willReturnInt:PID];
     [given([vimController vimView]) willReturn:vimView];
     [given([vimController pid]) willReturnInt:PID];
@@ -53,7 +54,9 @@ static const int CONTROLLER_ID = 2;
 - (void)testRequestVimControllerForDocument {
     [documentController requestVimControllerForDocument:doc];
 
-    [verify(vimManager) pidOfNewVimControllerWithArgs:nil];
+    [verify(vimManager) pidOfNewVimControllerWithArgs:@{
+            qVimArgFileNamesToOpen : @[@"/tmp"]
+    }];
 }
 
 - (void)testManagerVimControllerCreated {

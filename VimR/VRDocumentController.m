@@ -13,6 +13,8 @@
 #import "VRMainWindowController.h"
 
 
+NSString *const qVimArgFileNamesToOpen = @"filenames";
+
 @interface VRDocumentController ()
 
 @property NSMutableDictionary *vimController2Doc;
@@ -24,7 +26,10 @@
 
 #pragma mark Public
 - (void)requestVimControllerForDocument:(VRDocument *)doc {
-    int pid = [self.vimManager pidOfNewVimControllerWithArgs:nil];
+    NSDictionary *args = @{
+            qVimArgFileNamesToOpen : @[doc.fileURL.path]
+    };
+    int pid = [self.vimManager pidOfNewVimControllerWithArgs:args];
 
     self.vimController2Doc[@(pid)] = doc;
 }
