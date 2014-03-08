@@ -22,13 +22,14 @@
 @property (weak) MMVimController *vimController;
 @property (weak) MMVimView *vimView;
 
+#pragma mark IBActions
 - (IBAction)firstDebugAction:(id)sender;
 - (IBAction)performClose:(id)sender;
 - (IBAction)saveDocument:(id)sender;
-
-#pragma mark NSMainWindowController
 - (IBAction)saveDocumentAs:(id)sender;
 - (IBAction)revertDocumentToSaved:(id)sender;
+
+#pragma mark NSWindowController
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)dealloc;
 
@@ -44,7 +45,8 @@
 - (void)vimController:(MMVimController *)controller showTabBarWithData:(NSData *)data;
 - (void)vimController:(MMVimController *)controller setScrollbarThumbValue:(float)value
            proportion:(float)proportion identifier:(int32_t)identifier data:(NSData *)data;
-- (void)vimController:(MMVimController *)controller destroyScrollbarWithIdentifier:(int32_t)identifier data:(NSData *)data;
+- (void)vimController:(MMVimController *)controller destroyScrollbarWithIdentifier:(int32_t)identifier
+                 data:(NSData *)data;
 - (void)vimController:(MMVimController *)controller tabShouldUpdateWithData:(NSData *)data;
 - (void)vimController:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data;
 - (void)vimController:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data;

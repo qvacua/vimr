@@ -17,6 +17,7 @@
 
 @implementation VRMainWindowController
 
+#pragma mark IBActions
 - (IBAction)firstDebugAction:(id)sender {
     log4Debug(@"edited: %@", @([self.documents[0] isDocumentEdited]));
 }
@@ -30,6 +31,7 @@
     // TODO: when reordering tabs, we have to reflect the order in the order of docs
     NSArray *descriptor = @[@"File", @"Close"];
     [self.vimController sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:descriptor]];
+    [self removeDocument:[self selectedDocument]];
 
 }
 
@@ -255,10 +257,14 @@
 #pragma mark Private
 - (void)removeDocument:(VRDocument *)doc {
     [self.documents removeObject:doc];
-    [self.documentController removeDocument:doc];
+    [doc close];
 }
 
 - (VRDocument *)selectedDocument {
+    if (self.documents.count == 1) {
+        return self.documents[0];
+    }
+
     return self.documents[[self indexOfSelectedTab]];
 }
 

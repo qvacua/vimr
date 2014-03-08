@@ -10,10 +10,25 @@
 #import "VRDocument.h"
 #import "VRMainWindowController.h"
 #import "VRDocumentController.h"
+#import "VRLog.h"
 
 
 @implementation VRDocument
 
+#pragma mark Properties
+- (BOOL)transient {
+    if (self.dirty) {
+        return NO;
+    }
+
+    return self.fileURL == nil;
+}
+
+- (void)dealloc {
+    log4Mark;
+}
+
+#pragma mark NSDocument
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError {
     return YES;
 }

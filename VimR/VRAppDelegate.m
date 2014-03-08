@@ -34,4 +34,8 @@ TB_MANUALWIRE(workspace)
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 }
 
+- (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender {
+    return NO;
+}
+
 @end

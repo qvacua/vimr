@@ -19,17 +19,19 @@ extern NSString *const qVimArgFileNamesToOpen;
 
 @interface VRDocumentController : NSDocumentController <MMVimManagerDelegateProtocol>
 
+#pragma mark Properties
 @property (weak) MMVimManager *vimManager;
 
-- (VRMainWindowController *)mainWindowControllerForDocument:(VRDocument *)doc;
-
-- (id)init;
-- (void)dealloc;
-
+#pragma mark IBActions
 - (IBAction)newTab:(id)sender;
 - (IBAction)newDocument:(id)sender;
 - (IBAction)openDocument:(id)sender;
 
+#pragma mark NSDocumentController
+- (id)init;
+- (void)dealloc;
+
+#pragma mark MMVimManagerDelegate
 - (void)manager:(MMVimManager *)manager vimControllerCreated:(MMVimController *)controller;
 - (void)manager:(MMVimManager *)manager vimControllerRemovedWithControllerId:(unsigned int)vimControllerId pid:(int)pid;
 - (NSMenuItem *)menuItemTemplateForManager:(MMVimManager *)manager;
