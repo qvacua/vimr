@@ -34,6 +34,8 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
         [mainWindowController.documents addObject:doc];
         [mainWindowController.vimController sendMessage:AddNewTabMsgID data:nil];
 
+        doc.mainWindowController = mainWindowController;
+
         return mainWindowController;
     }
 
@@ -54,6 +56,7 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
     self.vimController2MainWindowController[@(pid)] = mainWindowController;
 
     [mainWindowController.documents addObject:doc];
+    doc.mainWindowController = mainWindowController;
 
     return mainWindowController;
 }

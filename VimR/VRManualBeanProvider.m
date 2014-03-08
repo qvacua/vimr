@@ -38,6 +38,7 @@
         manualBeans = @[
                 [TBBeanContainer beanContainerWithBean:documentController],
                 [TBBeanContainer beanContainerWithBean:vimManager],
+                [TBBeanContainer beanContainerWithBean:[NSWorkspace sharedWorkspace]],
         ];
     }
 

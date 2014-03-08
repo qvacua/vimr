@@ -22,9 +22,12 @@
 @property (weak) MMVimController *vimController;
 @property (weak) MMVimView *vimView;
 
+- (IBAction)firstDebugAction:(id)sender;
 - (IBAction)saveDocument:(id)sender;
 
 #pragma mark NSMainWindowController
+- (IBAction)saveDocumentAs:(id)sender;
+- (IBAction)revertDocumentToSaved:(id)sender;
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)dealloc;
 

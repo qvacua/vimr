@@ -16,9 +16,23 @@
 
 @implementation VRMainWindowController
 
+- (IBAction)firstDebugAction:(id)sender {
+    [self sendCommandToVim:@":help"];
+}
+
 - (IBAction)saveDocument:(id)sender {
-    NSArray *fileSaveDescriptor = @[@"File", @"Save"];
-    [self.vimController sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:fileSaveDescriptor]];
+    log4Mark;
+    [self sendCommandToVim:@":browse confirm w"];
+}
+
+- (IBAction)saveDocumentAs:(id)sender {
+    log4Mark;
+    [self sendCommandToVim:@"browse confirm sav"];
+}
+
+- (IBAction)revertDocumentToSaved:(id)sender {
+    log4Mark;
+    [self sendCommandToVim:@":e!"];
 }
 
 #pragma mark NSWindowController
@@ -45,6 +59,7 @@
                 style:(NSAlertStyle)style message:(NSString *)message text:(NSString *)text
       textFieldString:(NSString *)string data:(NSData *)data {
 
+    log4Mark;
     // 3 = don't save
     // 1 = save
     [self.vimController tellBackend:@[@3]];
@@ -116,13 +131,34 @@
     [self.window setRepresentedFilename:filename];
 }
 
+- (void)vimController:(MMVimController *)controller setWindowTitle:(NSString *)title data:(NSData *)data {
+    self.window.title = title;
+}
+
 - (void)vimController:(MMVimController *)controller handleBrowseWithDirectoryUrl:(NSURL *)url browseDir:(BOOL)dir saving:(BOOL)saving data:(NSData *)data {
 
     if (!saving) {
         return;
     }
 
+    NSSavePanel *savePanel = [NSSavePanel savePanel];
+    if (url != nil) {
+        [savePanel setDirectoryURL:url];
+    }
 
+    [savePanel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
+        NSString *path = nil;
+        if (result == NSOKButton) {
+            path = savePanel.URL.path;
+        }
+
+        [savePanel orderBack:self];
+
+        if (![controller sendDialogReturnToBackend:path]) {
+            log4Error(@"some error occurred sending dialog return value %@ to backend!", path);
+            return;
+        }
+    }];
 }
 
 #pragma mark NSWindowDelegate
@@ -159,13 +195,17 @@
     [self.documentController removeDocument:doc];
 }
 
+- (VRDocument *)selectedDocument {
+    return self.documents[[self indexOfSelectedTab]];
+}
+
 - (NSUInteger)indexOfSelectedTab {
     PSMTabBarControl *tabBar = self.vimView.tabBarControl;
     return [tabBar.representedTabViewItems indexOfObject:tabBar.tabView.selectedTabViewItem];
 }
 
-- (NSData *)dataFromDescriptor:(NSArray *)descriptor {
-    return [@{@"descriptor" : descriptor} dictionaryAsData];
+- (void)sendCommandToVim:(NSString *)command {
+    [self.vimController addVimInput:[NSString stringWithFormat:@"<C-\\><C-N>%@\n", command]];
 }
 
 @end

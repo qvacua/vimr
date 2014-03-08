@@ -104,6 +104,11 @@
                                     <action selector="saveDocument:" target="-1" id="362"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Save As..." keyEquivalent="S" id="6e7-RT-Ta0">
+                                <connections>
+                                    <action selector="saveDocumentAs:" target="-1" id="D7Z-Br-u0S"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Revert to Saved" id="112">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
@@ -375,13 +380,25 @@
                         </items>
                     </menu>
                 </menuItem>
+                <menuItem title="Debug" id="ENQ-3Q-U1j">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Debug" id="IF5-nu-Y0K">
+                        <items>
+                            <menuItem title="Some thing" keyEquivalent="1" id="dzX-yG-Iqo">
+                                <connections>
+                                    <action selector="firstDebugAction:" target="-1" id="wcM-Hn-Grz"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
                 <menuItem title="Help" id="490">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Help" systemMenu="help" id="491">
                         <items>
                             <menuItem title="VimR Help" keyEquivalent="?" id="492">
                                 <connections>
-                                    <action selector="showHelp:" target="-1" id="493"/>
+                                    <action selector="showHelp:" target="494" id="Qft-uf-49D"/>
                                 </connections>
                             </menuItem>
                         </items>

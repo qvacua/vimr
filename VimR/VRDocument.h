@@ -11,7 +11,11 @@
 #import <MacVimFramework/MacVimFramework.h>
 
 
+@class VRMainWindowController;
+
 @interface VRDocument : NSDocument
+
+@property (weak) VRMainWindowController *mainWindowController;
 
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError;
 - (BOOL)writeToURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError;
