@@ -16,8 +16,8 @@
         #define logRect4Debug(prefix, rect) printf("%s", [[NSString stringWithFormat:@"[DEBUG] %s - %d: %@: x: %.2f, y: %.2f, w: %.2f, h: %.2f\n", __PRETTY_FUNCTION__, __LINE__, prefix, rect.origin.x, rect.origin.y, rect.size.width, rect.size.height] UTF8String])
     #endif
 
-    #ifndef logMarker
-        #define logMarker printf("%s", [[NSString stringWithFormat:(@"[DEBUG] %s - %d\n"), __PRETTY_FUNCTION__, __LINE__] UTF8String])
+    #ifndef log4Mark
+        #define log4Mark printf("%s", [[NSString stringWithFormat:(@"[DEBUG] %s - %d\n"), __PRETTY_FUNCTION__, __LINE__] UTF8String])
     #endif
 
 #else
@@ -26,6 +26,7 @@
     #define logPoint4Debug(...)
     #define logSize4Debug(...)
     #define logRect4Debug(...)
+    #define log4Mark
 
 #endif
 

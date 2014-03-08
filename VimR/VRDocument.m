@@ -12,23 +12,14 @@
 #import "VRDocumentController.h"
 
 
-NSString *const qMainWindowNibName = @"MainWindow";
-
 @implementation VRDocument
-
-#pragma mark NSDocument
-- (void)makeWindowControllers {
-    self.mainWindowController = [self.documentController mainWindowControllerForDocument:self];
-
-    [self addWindowController:self.mainWindowController]; // retain cycle!
-}
 
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError {
     return YES;
 }
 
 - (BOOL)writeToURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError {
-    return NO;
+    return YES;
 }
 
 @end

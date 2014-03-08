@@ -14,6 +14,7 @@
 #import "VRLog.h"
 
 
+NSString *const qMainWindowNibName = @"MainWindow";
 NSString *const qVimArgFileNamesToOpen = @"filenames";
 
 @interface VRDocumentController ()
@@ -39,6 +40,7 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
     VRMainWindowController *mainWindowController = [
             [VRMainWindowController alloc] initWithWindowNibName:qMainWindowNibName
     ];
+    mainWindowController.documentController = self;
 
     NSDictionary *args = nil;
     NSURL *url = doc.fileURL;
@@ -76,16 +78,27 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
 - (IBAction)newTab:(id)sender {
     VRDocument *newDoc = [[VRDocument alloc] initWithType:@"Plain Text File" error:NULL];
     [self addDocument:newDoc];
-
-    [newDoc makeWindowControllers];
-    [newDoc showWindows];
 }
 
-- (void)addDocument:(NSDocument *)document {
-    [super addDocument:document];
+- (IBAction)newDocument:(id)sender {
+    VRDocument *newDoc = [[VRDocument alloc] initWithType:@"Plain Text File" error:NULL];
+    [self addDocument:newDoc];
 
-    VRDocument *vrDocument = (VRDocument *) document;
-    vrDocument.documentController = self;
+    VRMainWindowController *mainWindowController = [self mainWindowControllerForDocument:newDoc];
+    [mainWindowController showWindow:self];
+}
+
+- (IBAction)openDocument:(id)sender {
+    NSArray *fileUrls = [self URLsFromRunningOpenPanel];
+
+    for (NSURL *url in fileUrls) {
+        NSString *type = [self typeForContentsOfURL:url error:NULL];
+        VRDocument *doc2Open = [[VRDocument alloc] initWithContentsOfURL:url ofType:type error:NULL];
+        [self addDocument:doc2Open];
+
+        VRMainWindowController *mainWindowController = [self mainWindowControllerForDocument:doc2Open];
+        [mainWindowController showWindow:self];
+    }
 }
 
 #pragma mark MMVimManagerDelegateProtocol
@@ -105,7 +118,6 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
     VRDocument *doc = self.vimController2Doc[@(pid)];
 
     [windowControllerToClose.documents removeObject:doc];
-    [windowControllerToClose cleanup];
 
     [self.vimController2MainWindowController removeObjectForKey:@(pid)];
     [doc close]; // FIXME: ask when there are unsaved files, for time being, just close the document

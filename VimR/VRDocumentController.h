@@ -14,6 +14,7 @@
 @class VRDocument;
 @class VRMainWindowController;
 
+extern NSString *const qMainWindowNibName;
 extern NSString *const qVimArgFileNamesToOpen;
 
 @interface VRDocumentController : NSDocumentController <MMVimManagerDelegateProtocol>
@@ -26,8 +27,8 @@ extern NSString *const qVimArgFileNamesToOpen;
 - (void)dealloc;
 
 - (IBAction)newTab:(id)sender;
-
-- (void)addDocument:(NSDocument *)document;
+- (IBAction)newDocument:(id)sender;
+- (IBAction)openDocument:(id)sender;
 
 - (void)manager:(MMVimManager *)manager vimControllerCreated:(MMVimController *)controller;
 - (void)manager:(MMVimManager *)manager vimControllerRemovedWithControllerId:(unsigned int)vimControllerId pid:(int)pid;

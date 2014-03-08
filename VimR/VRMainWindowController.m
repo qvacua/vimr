@@ -9,10 +9,17 @@
 
 #import <PSMTabBarControl/PSMTabBarControl.h>
 #import "VRMainWindowController.h"
+#import "VRDocumentController.h"
+#import "VRDocument.h"
 #import "VRLog.h"
 
 
 @implementation VRMainWindowController
+
+- (IBAction)saveDocument:(id)sender {
+    NSArray *fileSaveDescriptor = @[@"File", @"Save"];
+    [self.vimController sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:fileSaveDescriptor]];
+}
 
 #pragma mark NSWindowController
 - (id)initWithWindowNibName:(NSString *)windowNibName {
@@ -26,12 +33,9 @@
     return self;
 }
 
-- (void)cleanup {
-    log4Debug(@"cleanup");
-}
-
 - (void)dealloc {
-    log4Debug(@"dealloc");
+    log4Mark;
+
     [self.vimView removeFromSuperviewWithoutNeedingDisplay];
     [self.vimView cleanup];
 }
@@ -70,20 +74,54 @@
 
 - (void)vimController:(MMVimController *)controller showTabBarWithData:(NSData *)data {
     [self.vimView.tabBarControl setHidden:NO];
-    // Here we should resize and -position the Vim view...
+
+    log4Mark;
 }
 
 - (void)vimController:(MMVimController *)controller setScrollbarThumbValue:(float)value proportion:(float)proportion
            identifier:(int32_t)identifier data:(NSData *)data {
 
-    // Here we should resize and -position the Vim view...
+    log4Mark;
+}
+
+- (void)vimController:(MMVimController *)controller destroyScrollbarWithIdentifier:(int32_t)identifier
+                 data:(NSData *)data {
+
+    log4Mark;
 }
 
 - (void)vimController:(MMVimController *)controller tabShouldUpdateWithData:(NSData *)data {
-
+    log4Mark;
 }
 
 - (void)vimController:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data {
+    log4Mark;
+    log4Debug(@"selected tab index: %li", [self indexOfSelectedTab]);
+}
+
+- (void)vimController:(MMVimController *)controller hideTabBarWithData:(NSData *)data {
+    log4Mark;
+    [[self.vimView tabBarControl] setHidden:YES];
+}
+
+- (void)vimController:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data {
+    log4Mark;
+
+    [self setDocumentEdited:modified];
+}
+
+- (void)vimController:(MMVimController *)controller setDocumentFilename:(NSString *)filename data:(NSData *)data {
+    log4Mark;
+
+    [self.window setRepresentedFilename:filename];
+}
+
+- (void)vimController:(MMVimController *)controller handleBrowseWithDirectoryUrl:(NSURL *)url browseDir:(BOOL)dir saving:(BOOL)saving data:(NSData *)data {
+
+    if (!saving) {
+        return;
+    }
+
 
 }
 
@@ -97,9 +135,37 @@
 }
 
 - (BOOL)windowShouldClose:(id)sender {
-    // Don't close the window now; Instead let Vim decide whether to close the window or not.
-    [self.vimController sendMessage:VimShouldCloseMsgID data:nil];
+    // don't close the window or tab; instead let Vim decide what to do
+
+    // TODO: when reordering tabs, we have to reflect the order in the order of docs
+    if (self.documents.count <= 1) {
+        log4Debug(@"only one doc left, thus closing the Vim process");
+
+        [self.vimController sendMessage:VimShouldCloseMsgID data:nil];
+    } else {
+        int index = (int) [self indexOfSelectedTab];
+        log4Debug(@"more than one doc open, thus closing the selected tab with index: %d", index);
+
+        [self.vimController sendMessage:CloseTabMsgID data:[NSData dataWithBytes:&index length:sizeof(int)]];
+        [self removeDocument:self.documents[(NSUInteger) index]];
+    }
+
     return NO;
+}
+
+#pragma mark Private
+- (void)removeDocument:(VRDocument *)doc {
+    [self.documents removeObject:doc];
+    [self.documentController removeDocument:doc];
+}
+
+- (NSUInteger)indexOfSelectedTab {
+    PSMTabBarControl *tabBar = self.vimView.tabBarControl;
+    return [tabBar.representedTabViewItems indexOfObject:tabBar.tabView.selectedTabViewItem];
+}
+
+- (NSData *)dataFromDescriptor:(NSArray *)descriptor {
+    return [@{@"descriptor" : descriptor} dictionaryAsData];
 }
 
 @end
