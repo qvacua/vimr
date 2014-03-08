@@ -12,12 +12,25 @@
 #import "VRDocumentController.h"
 #import "VRDocument.h"
 #import "VRLog.h"
+#import "MMAlert.h"
 
 
 @implementation VRMainWindowController
 
 - (IBAction)firstDebugAction:(id)sender {
-    [self sendCommandToVim:@":help"];
+    log4Debug(@"edited: %@", @([self.documents[0] isDocumentEdited]));
+}
+
+- (IBAction)performClose:(id)sender {
+    log4Mark;
+
+    // TODO: we could ask the user here whether to save or not
+    log4Debug(@"%@ dirty: %@", self.selectedDocument.fileURL.path, @(self.selectedDocument.dirty));
+
+    // TODO: when reordering tabs, we have to reflect the order in the order of docs
+    NSArray *descriptor = @[@"File", @"Close"];
+    [self.vimController sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:descriptor]];
+
 }
 
 - (IBAction)saveDocument:(id)sender {
@@ -57,12 +70,69 @@
 #pragma mark MMVimControllerDelegate
 - (void)vimController:(MMVimController *)controller handleShowDialogWithButtonTitles:(NSArray *)buttonTitles
                 style:(NSAlertStyle)style message:(NSString *)message text:(NSString *)text
-      textFieldString:(NSString *)string data:(NSData *)data {
+      textFieldString:(NSString *)textFieldString data:(NSData *)data {
 
     log4Mark;
-    // 3 = don't save
-    // 1 = save
-    [self.vimController tellBackend:@[@3]];
+
+    // copied from MacVim {
+    MMAlert *alert = [[MMAlert alloc] init];
+
+    // NOTE! This has to be done before setting the informative text.
+    if (textFieldString) {
+        alert.textFieldString = textFieldString;
+    }
+
+    alert.alertStyle = style;
+
+    if (message) {
+        alert.messageText = message;
+    } else {
+        // If no message text is specified 'Alert' is used, which we don't
+        // want, so set an empty string as message text.
+        alert.messageText = @"";
+    }
+
+    if (text) {
+        alert.informativeText = text;
+    } else if (textFieldString) {
+        // Make sure there is always room for the input text field.
+        alert.informativeText = @"";
+    }
+
+    unsigned i, count = buttonTitles.count;
+    for (i = 0; i < count; ++i) {
+        NSString *title = buttonTitles[i];
+        // NOTE: The title of the button may contain the character '&' to
+        // indicate that the following letter should be the key equivalent
+        // associated with the button.  Extract this letter and lowercase it.
+        NSString *keyEquivalent = nil;
+        NSRange hotkeyRange = [title rangeOfString:@"&"];
+        if (NSNotFound != hotkeyRange.location) {
+            if ([title length] > NSMaxRange(hotkeyRange)) {
+                NSRange keyEquivRange = NSMakeRange(hotkeyRange.location + 1, 1);
+                keyEquivalent = [title substringWithRange:keyEquivRange].lowercaseString;
+            }
+
+            NSMutableString *string = [NSMutableString stringWithString:title];
+            [string deleteCharactersInRange:hotkeyRange];
+            title = string;
+        }
+
+        [alert addButtonWithTitle:title];
+
+        // Set key equivalent for the button, but only if NSAlert hasn't
+        // already done so.  (Check the documentation for
+        // - [NSAlert addButtonWithTitle:] to see what key equivalents are
+        // automatically assigned.)
+        NSButton *btn = alert.buttons.lastObject;
+        if (btn.keyEquivalent.length == 0 && keyEquivalent) {
+            btn.keyEquivalent = keyEquivalent;
+        }
+    }
+
+    [alert beginSheetModalForWindow:self.window modalDelegate:self didEndSelector:@selector(alertDidEnd:code:context:)
+                        contextInfo:NULL];
+    // } copied from MacVim
 }
 
 - (void)vimController:(MMVimController *)controller showScrollbarWithIdentifier:(int32_t)identifier
@@ -123,6 +193,7 @@
     log4Mark;
 
     [self setDocumentEdited:modified];
+    [self selectedDocument].dirty = modified;
 }
 
 - (void)vimController:(MMVimController *)controller setDocumentFilename:(NSString *)filename data:(NSData *)data {
@@ -171,20 +242,12 @@
 }
 
 - (BOOL)windowShouldClose:(id)sender {
-    // don't close the window or tab; instead let Vim decide what to do
-
-    // TODO: when reordering tabs, we have to reflect the order in the order of docs
-    if (self.documents.count <= 1) {
-        log4Debug(@"only one doc left, thus closing the Vim process");
-
-        [self.vimController sendMessage:VimShouldCloseMsgID data:nil];
-    } else {
-        int index = (int) [self indexOfSelectedTab];
-        log4Debug(@"more than one doc open, thus closing the selected tab with index: %d", index);
-
-        [self.vimController sendMessage:CloseTabMsgID data:[NSData dataWithBytes:&index length:sizeof(int)]];
-        [self removeDocument:self.documents[(NSUInteger) index]];
+    for (VRDocument *doc in self.documents) {
+        log4Debug(@"%@ - dirty: %@", doc.fileURL.path, @(doc.dirty));
     }
+
+    // don't close the window or tab; instead let Vim decide what to do
+    [self.vimController sendMessage:VimShouldCloseMsgID data:nil];
 
     return NO;
 }
@@ -206,6 +269,35 @@
 
 - (void)sendCommandToVim:(NSString *)command {
     [self.vimController addVimInput:[NSString stringWithFormat:@"<C-\\><C-N>%@\n", command]];
+}
+
+- (NSData *)dataFromDescriptor:(NSArray *)descriptor {
+    return [@{@"descriptor" : descriptor} dictionaryAsData];
+}
+
+- (void)alertDidEnd:(MMAlert *)alert code:(int)code context:(void *)controllerContext {
+    // copied from MacVim {
+    NSArray *ret = nil;
+    code = code - NSAlertFirstButtonReturn + 1;
+
+    if ([alert isKindOfClass:[MMAlert class]] && alert.textField) {
+        ret = @[@(code), alert.textField.stringValue];
+    } else {
+        ret = @[@(code)];
+    }
+
+    log4Debug(@"Alert return=%@", ret);
+
+    // NOTE!  This causes the sheet animation to run its course BEFORE the rest
+    // of this function is executed.  If we do not wait for the sheet to
+    // disappear before continuing it can happen that the controller is
+    // released from under us (i.e. we'll crash and burn) because this
+    // animation is otherwise performed in the default run loop mode!
+    [alert.window orderOut:self];
+
+    // TODO: why not use -sendDialogReturnToBackend:?
+    [self.vimController tellBackend:ret];
+    // } copied from MacVim
 }
 
 @end

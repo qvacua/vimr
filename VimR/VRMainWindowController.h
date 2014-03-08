@@ -23,6 +23,7 @@
 @property (weak) MMVimView *vimView;
 
 - (IBAction)firstDebugAction:(id)sender;
+- (IBAction)performClose:(id)sender;
 - (IBAction)saveDocument:(id)sender;
 
 #pragma mark NSMainWindowController

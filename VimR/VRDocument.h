@@ -15,6 +15,7 @@
 
 @interface VRDocument : NSDocument
 
+@property BOOL dirty;
 @property (weak) VRMainWindowController *mainWindowController;
 
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError;
