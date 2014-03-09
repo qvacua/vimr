@@ -14,6 +14,11 @@
 #import "MMAlert.h"
 #import "VRUtils.h"
 
+@interface VRMainWindowController ()
+
+@property (readonly) NSMutableArray *mutableDocuments;
+
+@end
 
 @implementation VRMainWindowController
 
@@ -23,6 +28,28 @@
     }
 
     return self.documents[[self indexOfSelectedTab]];
+}
+
+#pragma mark Properties
+- (NSArray *)documents {
+    return self.mutableDocuments;
+}
+
+#pragma mark KVO
+- (NSUInteger)countOfDocuments {
+    return self.mutableDocuments.count;
+}
+
+- (VRDocument *)objectInDocumentsAtIndex:(NSUInteger)index {
+    return self.mutableDocuments[index];
+}
+
+- (void)insertObject:(VRDocument *)doc inDocumentsAtIndex:(NSUInteger)index {
+    [self.mutableDocuments insertObject:doc atIndex:index];
+}
+
+- (void)removeObjectFromDocumentsAtIndex:(NSUInteger)index {
+    [self.mutableDocuments removeObjectAtIndex:index];
 }
 
 #pragma mark IBActions
@@ -65,7 +92,7 @@
         return nil;
     }
 
-    _documents = [[NSMutableArray alloc] initWithCapacity:4];
+    _mutableDocuments = [[NSMutableArray alloc] initWithCapacity:4];
 
     return self;
 }

@@ -101,7 +101,7 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
 
 #pragma mark Private
 - (VRMainWindowController *)mainWindowControllerForDocument:(VRDocument *)doc {
-    // TODO: for time being, only use one window...
+    // TODO: for time being, use only one window...
 
     if (self.vimController2MainWindowController.count > 0) {
         VRMainWindowController *mainWindowController = self.vimController2MainWindowController.allValues[0];

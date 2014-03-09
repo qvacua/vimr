@@ -18,10 +18,20 @@
 @interface VRMainWindowController : NSWindowController <NSWindowDelegate, MMVimControllerDelegate>
 
 #pragma mark Properties
-@property (readonly) NSMutableArray *documents;
+@property (readonly) NSArray *documents;
 @property (weak) VRDocumentController *documentController;
 @property (weak) MMVimController *vimController;
 @property (weak) MMVimView *vimView;
+
+#pragma mark KVO
+- (NSUInteger)countOfDocuments;
+- (VRDocument *)objectInDocumentsAtIndex:(NSUInteger)index;
+- (void)insertObject:(VRDocument *)doc inDocumentsAtIndex:(NSUInteger)index;
+- (void)removeObjectFromDocumentsAtIndex:(NSUInteger)index;
+
+#pragma mark Public
+- (void)removeDocument:(VRDocument *)doc;
+- (void)sendCommandToVim:(NSString *)command;
 
 #pragma mark IBActions
 - (VRDocument *)selectedDocument;
@@ -59,6 +69,4 @@
 - (void)windowDidResignMain:(NSNotification *)notification;
 - (BOOL)windowShouldClose:(id)sender;
 
-- (void)removeDocument:(VRDocument *)doc;
-- (void)sendCommandToVim:(NSString *)command;
 @end
