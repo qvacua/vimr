@@ -85,6 +85,7 @@
 		1929B27A0B9B328D44155A68 /* VRDocumentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRDocumentController.h; sourceTree = "<group>"; };
 		1929B3D4784BDAFFAAB715FA /* VRDocumentTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRDocumentTest.m; sourceTree = "<group>"; };
 		1929B4CEDB2535E83B22A788 /* VRWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRWindow.h; sourceTree = "<group>"; };
+		1929B7576C87840B1F96E465 /* VRUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRUtils.h; sourceTree = "<group>"; };
 		1929B78A8084470EC33DE744 /* VRDocumentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRDocumentController.m; sourceTree = "<group>"; };
 		1929B7A3852E902DE9863E99 /* VRWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRWindow.m; sourceTree = "<group>"; };
 		1929B8515E4EA94E1C7EB1F9 /* VRMainWindowControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRMainWindowControllerTest.m; sourceTree = "<group>"; };
@@ -233,6 +234,7 @@
 				1929B4CEDB2535E83B22A788 /* VRWindow.h */,
 				1929BEF2CE80B94809D83914 /* MMAlert.h */,
 				1929BBF8BE880500FCF8B9A6 /* MMAlert.m */,
+				1929B7576C87840B1F96E465 /* VRUtils.h */,
 			);
 			path = VimR;
 			sourceTree = "<group>";

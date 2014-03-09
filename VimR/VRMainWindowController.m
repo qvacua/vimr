@@ -9,13 +9,21 @@
 
 #import <PSMTabBarControl/PSMTabBarControl.h>
 #import "VRMainWindowController.h"
-#import "VRDocumentController.h"
 #import "VRDocument.h"
 #import "VRLog.h"
 #import "MMAlert.h"
+#import "VRUtils.h"
 
 
 @implementation VRMainWindowController
+
+- (VRDocument *)selectedDocument {
+    if (self.documents.count == 1) {
+        return self.documents[0];
+    }
+
+    return self.documents[[self indexOfSelectedTab]];
+}
 
 #pragma mark IBActions
 - (IBAction)firstDebugAction:(id)sender {
@@ -260,21 +268,13 @@
     [doc close];
 }
 
-- (VRDocument *)selectedDocument {
-    if (self.documents.count == 1) {
-        return self.documents[0];
-    }
-
-    return self.documents[[self indexOfSelectedTab]];
-}
-
 - (NSUInteger)indexOfSelectedTab {
     PSMTabBarControl *tabBar = self.vimView.tabBarControl;
     return [tabBar.representedTabViewItems indexOfObject:tabBar.tabView.selectedTabViewItem];
 }
 
 - (void)sendCommandToVim:(NSString *)command {
-    [self.vimController addVimInput:[NSString stringWithFormat:@"<C-\\><C-N>%@\n", command]];
+    [self.vimController addVimInput:SF(@"<C-\\><C-N>%@<CR>", command)];
 }
 
 - (NSData *)dataFromDescriptor:(NSArray *)descriptor {

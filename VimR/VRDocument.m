@@ -16,7 +16,7 @@
 @implementation VRDocument
 
 #pragma mark Properties
-- (BOOL)transient {
+- (BOOL)isTransient {
     if (self.dirty) {
         return NO;
     }

@@ -12,6 +12,7 @@
 
 
 @class VRDocumentController;
+@class VRDocument;
 
 
 @interface VRMainWindowController : NSWindowController <NSWindowDelegate, MMVimControllerDelegate>
@@ -23,6 +24,7 @@
 @property (weak) MMVimView *vimView;
 
 #pragma mark IBActions
+- (VRDocument *)selectedDocument;
 - (IBAction)firstDebugAction:(id)sender;
 - (IBAction)performClose:(id)sender;
 - (IBAction)saveDocument:(id)sender;
@@ -57,4 +59,6 @@
 - (void)windowDidResignMain:(NSNotification *)notification;
 - (BOOL)windowShouldClose:(id)sender;
 
+- (void)removeDocument:(VRDocument *)doc;
+- (void)sendCommandToVim:(NSString *)command;
 @end

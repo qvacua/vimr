@@ -16,8 +16,8 @@
 @interface VRDocument : NSDocument
 
 #pragma mark Properties
-@property BOOL dirty;
-@property (readonly) BOOL transient;
+@property (getter=isDirty) BOOL dirty;
+@property (readonly, getter=isTransient) BOOL transient;
 @property (weak) VRMainWindowController *mainWindowController;
 
 #pragma mark NSDocument

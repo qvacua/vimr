@@ -12,6 +12,7 @@
 #import "VRDocument.h"
 #import "VRMainWindowController.h"
 #import "VRLog.h"
+#import "VRUtils.h"
 
 
 NSString *const qMainWindowNibName = @"MainWindow";
@@ -100,12 +101,30 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
 
 #pragma mark Private
 - (VRMainWindowController *)mainWindowControllerForDocument:(VRDocument *)doc {
+    // TODO: for time being, only use one window...
+
     if (self.vimController2MainWindowController.count > 0) {
         VRMainWindowController *mainWindowController = self.vimController2MainWindowController.allValues[0];
-        [mainWindowController.documents addObject:doc];
-        [mainWindowController.vimController sendMessage:AddNewTabMsgID data:nil];
+        VRDocument *currentlyVisibleDocument = mainWindowController.selectedDocument;
+
+        /**
+         * We could use
+         * [mainWindowController.vimController sendMessage:OpenWithArgumentsMsgID
+         *                                     data:[@{qVimArgFileNamesToOpen: @[doc.fileURL.path]} dictionaryAsData]];
+         * which checks whether the currently visible document is transient and act appropriately.
+         * We want to keep the opened files and our list of VRDocuments in sync, thus, we do it manually here
+         */
+        if (currentlyVisibleDocument.transient) {
+            NSString *command = SF(@":e %@", doc.fileURL.path.stringByEscapingSpecialFilenameCharacters);
+            [mainWindowController sendCommandToVim:command];
+            [mainWindowController removeDocument:currentlyVisibleDocument];
+        } else {
+            NSString *command = SF(@":tabe %@", doc.fileURL.path.stringByEscapingSpecialFilenameCharacters);
+            [mainWindowController sendCommandToVim:command];
+        }
 
         doc.mainWindowController = mainWindowController;
+        [mainWindowController.documents addObject:doc];
 
         return mainWindowController;
     }
