@@ -37,7 +37,7 @@
         return self.documents[0];
     }
 
-    return self.documents[[self indexOfSelectedTab]];
+    return self.documents[self.indexOfSelectedDocument];
 }
 
 #pragma mark Properties
@@ -79,13 +79,13 @@
 - (IBAction)performClose:(id)sender {
     log4Mark;
 
-    // TODO: we could ask the user here whether to save or not
+    // NOTE: we could ask the user here whether to save or not
     log4Debug(@"%@ dirty: %@", self.selectedDocument.fileURL.path, @(self.selectedDocument.dirty));
 
-    // TODO: when reordering tabs, we have to reflect the order in the order of docs
+    // NOTE: when reordering tabs, we have to reflect the order in the order of docs
     NSArray *descriptor = @[@"File", @"Close"];
     [self.vimController sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:descriptor]];
-    [self removeObjectFromDocumentsAtIndex:self.indexOfSelectedTab];
+    [self removeObjectFromDocumentsAtIndex:self.indexOfSelectedDocument];
 
 }
 
@@ -245,7 +245,7 @@
 
 - (void)vimController:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data {
     log4Mark;
-    log4Debug(@"selected tab index: %li", [self indexOfSelectedTab]);
+    log4Debug(@"selected tab index: %li", [self indexOfSelectedDocument]);
 }
 
 - (void)vimController:(MMVimController *)controller hideTabBarWithData:(NSData *)data {
@@ -317,7 +317,7 @@
 }
 
 #pragma mark Private
-- (NSUInteger)indexOfSelectedTab {
+- (NSUInteger)indexOfSelectedDocument {
     PSMTabBarControl *tabBar = self.vimView.tabBarControl;
     return [tabBar.representedTabViewItems indexOfObject:tabBar.tabView.selectedTabViewItem];
 }
@@ -363,16 +363,15 @@
      * which checks whether the currently visible document is transient and act appropriately.
      * We want to keep the opened files and our list of VRDocuments in sync, thus, we do it manually here
      */
-    VRDocument *currentlyVisibleDocument = self.selectedDocument;
-    NSString *command;
 
+    NSString *command;
     if (doc.isNewDocument) {
         // the doc to add is new, then open a new tab
         command = @":tabe";
-    } else if (currentlyVisibleDocument.transient) {
+    } else if (self.selectedDocument.transient) {
         // the doc corresponds to an existing file and the currently visible doc is transient
         command = SF(@":e %@", doc.fileURL.path.stringByEscapingSpecialFilenameCharacters);
-        [self removeObjectFromDocumentsAtIndex:self.indexOfSelectedTab];
+        [self removeObjectFromDocumentsAtIndex:self.indexOfSelectedDocument];
     } else {
         command = SF(@":tabe %@", doc.fileURL.path.stringByEscapingSpecialFilenameCharacters);
     }
