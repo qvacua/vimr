@@ -17,6 +17,7 @@
 
 #pragma mark Properties
 @property (getter=isDirty) BOOL dirty;
+@property (readonly, getter=isNewDocument) BOOL newDocument;
 @property (readonly, getter=isTransient) BOOL transient;
 @property (weak) VRMainWindowController *mainWindowController;
 

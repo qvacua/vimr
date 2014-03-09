@@ -111,10 +111,9 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
     ];
     mainWindowController.documentController = self;
 
-    NSURL *url = doc.fileURL;
     NSDictionary *args = nil;
-    if (url != nil) {
-        args = @{qVimArgFileNamesToOpen : @[url.path]};
+    if (!doc.isNewDocument) {
+        args = @{qVimArgFileNamesToOpen : @[doc.fileURL.path]};
     }
 
     int pid = [self.vimManager pidOfNewVimControllerWithArgs:args];

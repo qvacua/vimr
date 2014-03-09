@@ -91,7 +91,15 @@
 
 - (IBAction)saveDocument:(id)sender {
     log4Mark;
-    [self sendCommandToVim:@":browse confirm w"];
+
+    NSString *command;
+    if (self.selectedDocument.isNewDocument) {
+        command = @":browse confirm w";
+    } else {
+        command = @":w";
+    }
+
+    [self sendCommandToVim:command];
 }
 
 - (IBAction)saveDocumentAs:(id)sender {
@@ -358,7 +366,7 @@
     VRDocument *currentlyVisibleDocument = self.selectedDocument;
     NSString *command;
 
-    if (doc.fileURL == nil) {
+    if (doc.isNewDocument) {
         // the doc to add is new, then open a new tab
         command = @":tabe";
     } else if (currentlyVisibleDocument.transient) {
