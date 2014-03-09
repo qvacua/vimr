@@ -28,29 +28,30 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
 
 #pragma mark IBActions
 - (IBAction)newTab:(id)sender {
-    VRDocument *newDoc = [[VRDocument alloc] initWithType:@"Plain Text File" error:NULL];
-    [self addDocument:newDoc];
+    log4Mark;
+    [self openUntitledDocumentAndDisplay:YES error:NULL];
 }
 
-- (IBAction)newDocument:(id)sender {
-    VRDocument *newDoc = [[VRDocument alloc] initWithType:@"Plain Text File" error:NULL];
+- (void)openDocumentWithContentsOfURL:(NSURL *)url display:(BOOL)displayDocument completionHandler:
+        (void (^)(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error))completionHandler {
+
+    void (^handler)(NSDocument *, BOOL, NSError *) = ^(NSDocument *document, BOOL alreadyOpen, NSError *error) {
+        [[self mainWindowControllerForDocument:(VRDocument *) document] showWindow:self];
+    };
+
+    [super openDocumentWithContentsOfURL:url display:displayDocument completionHandler:handler];
+}
+
+- (id)openUntitledDocumentAndDisplay:(BOOL)displayDocument error:(NSError **)outError {
+    log4Mark;
+
+    VRDocument *newDoc = [self makeUntitledDocumentOfType:self.defaultType error:outError];
     [self addDocument:newDoc];
 
     VRMainWindowController *mainWindowController = [self mainWindowControllerForDocument:newDoc];
     [mainWindowController showWindow:self];
-}
 
-- (IBAction)openDocument:(id)sender {
-    NSArray *fileUrls = [self URLsFromRunningOpenPanel];
-
-    for (NSURL *url in fileUrls) {
-        NSString *type = [self typeForContentsOfURL:url error:NULL];
-        VRDocument *doc2Open = [[VRDocument alloc] initWithContentsOfURL:url ofType:type error:NULL];
-        [self addDocument:doc2Open];
-
-        VRMainWindowController *mainWindowController = [self mainWindowControllerForDocument:doc2Open];
-        [mainWindowController showWindow:self];
-    }
+    return newDoc;
 }
 
 #pragma mark NSDocumentController
@@ -88,6 +89,7 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
         [doc close];
     }
     [windowControllerToClose.documents removeAllObjects];
+    [windowControllerToClose close];
 
     [self.vimController2MainWindowController removeObjectForKey:@(pid)];
 }

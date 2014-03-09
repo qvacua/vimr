@@ -24,10 +24,9 @@ extern NSString *const qVimArgFileNamesToOpen;
 
 #pragma mark IBActions
 - (IBAction)newTab:(id)sender;
-- (IBAction)newDocument:(id)sender;
-- (IBAction)openDocument:(id)sender;
 
 #pragma mark NSDocumentController
+- (id)openUntitledDocumentAndDisplay:(BOOL)displayDocument error:(NSError **)outError;
 - (id)init;
 - (void)dealloc;
 

@@ -11,22 +11,6 @@
             <dict>
                 <key>CFBundleTypeExtensions</key>
                 <array>
-                    <string>vim</string>
-                </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
-                <key>CFBundleTypeIconFile</key>
-                <string>MacVim-vim</string>
-                <key>CFBundleTypeName</key>
-                <string>Vim Script File</string>
-                <key>CFBundleTypeRole</key>
-                <string>Editor</string>
-                <key>LSIsAppleDefaultForType</key>
-                <true/>
-            </dict>
-            <dict>
-                <key>CFBundleTypeExtensions</key>
-                <array>
                     <string>txt</string>
                     <string>text</string>
                     <string>utf8</string>
@@ -41,6 +25,22 @@
                 </array>
                 <key>CFBundleTypeName</key>
                 <string>Plain Text File</string>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>LSIsAppleDefaultForType</key>
+                <true/>
+            </dict>
+            <dict>
+                <key>CFBundleTypeExtensions</key>
+                <array>
+                    <string>vim</string>
+                </array>
+                <key>NSDocumentClass</key>
+                <string>VRDocument</string>
+                <key>CFBundleTypeIconFile</key>
+                <string>MacVim-vim</string>
+                <key>CFBundleTypeName</key>
+                <string>Vim Script File</string>
                 <key>CFBundleTypeRole</key>
                 <string>Editor</string>
                 <key>LSIsAppleDefaultForType</key>

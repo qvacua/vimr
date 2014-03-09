@@ -72,7 +72,7 @@
                             </menuItem>
                             <menuItem title="New Tab" keyEquivalent="t" id="LvQ-Qu-Tme">
                                 <connections>
-                                    <action selector="newDocument:" target="-1" id="ZBE-Wv-MAA"/>
+                                    <action selector="newTab:" target="-1" id="tf3-kd-LHX"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Open…" keyEquivalent="o" id="72">
