@@ -23,18 +23,16 @@
 @property (weak) MMVimController *vimController;
 @property (weak) MMVimView *vimView;
 
+#pragma mark Public
+- (void)cleanupAndClose;
+
 #pragma mark KVO
 - (NSUInteger)countOfDocuments;
 - (VRDocument *)objectInDocumentsAtIndex:(NSUInteger)index;
 - (void)insertObject:(VRDocument *)doc inDocumentsAtIndex:(NSUInteger)index;
 - (void)removeObjectFromDocumentsAtIndex:(NSUInteger)index;
 
-#pragma mark Public
-- (void)removeDocument:(VRDocument *)doc;
-- (void)sendCommandToVim:(NSString *)command;
-
 #pragma mark IBActions
-- (VRDocument *)selectedDocument;
 - (IBAction)firstDebugAction:(id)sender;
 - (IBAction)performClose:(id)sender;
 - (IBAction)saveDocument:(id)sender;

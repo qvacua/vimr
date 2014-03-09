@@ -12,7 +12,6 @@
 #import "VRDocument.h"
 #import "VRMainWindowController.h"
 #import "VRLog.h"
-#import "VRUtils.h"
 
 
 NSString *const qMainWindowNibName = @"MainWindow";
@@ -36,8 +35,12 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
 - (void)openDocumentWithContentsOfURL:(NSURL *)url display:(BOOL)displayDocument completionHandler:
         (void (^)(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error))completionHandler {
 
-    void (^handler)(NSDocument *, BOOL, NSError *) = ^(NSDocument *document, BOOL alreadyOpen, NSError *error) {
-        [[self mainWindowControllerForDocument:(VRDocument *) document] showWindow:self];
+    void (^handler)(NSDocument *, BOOL, NSError *) = ^(NSDocument *nsDoc, BOOL alreadyOpen, NSError *error) {
+        VRDocument *doc = (VRDocument *) nsDoc;
+
+        VRMainWindowController *controller = [self mainWindowControllerForDocument:doc];
+        [controller insertObject:doc inDocumentsAtIndex:controller.countOfDocuments];
+        [controller showWindow:self];
     };
 
     [super openDocumentWithContentsOfURL:url display:displayDocument completionHandler:handler];
@@ -50,6 +53,7 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
     [self addDocument:newDoc];
 
     VRMainWindowController *mainWindowController = [self mainWindowControllerForDocument:newDoc];
+    [mainWindowController insertObject:newDoc inDocumentsAtIndex:mainWindowController.countOfDocuments];
     [mainWindowController showWindow:self];
 
     return newDoc;
@@ -81,17 +85,8 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
     mainWindowController.vimView = controller.vimView;
 }
 
-- (void)manager:(MMVimManager *)manager vimControllerRemovedWithControllerId:(unsigned int)vimControllerId
-            pid:(int)pid {
-
-    VRMainWindowController *windowControllerToClose = self.vimController2MainWindowController[@(pid)];
-
-    for (VRDocument *doc in windowControllerToClose.documents) {
-        [doc close];
-    }
-    [windowControllerToClose.documents removeAllObjects];
-    [windowControllerToClose close];
-
+- (void)manager:(MMVimManager *)manager vimControllerRemovedWithControllerId:(unsigned int)controllerId pid:(int)pid {
+    [self.vimController2MainWindowController[@(pid)] cleanupAndClose];
     [self.vimController2MainWindowController removeObjectForKey:@(pid)];
 }
 
@@ -104,48 +99,26 @@ NSString *const qVimArgFileNamesToOpen = @"filenames";
     // TODO: for time being, use only one window...
 
     if (self.vimController2MainWindowController.count > 0) {
-        VRMainWindowController *mainWindowController = self.vimController2MainWindowController.allValues[0];
-        VRDocument *currentlyVisibleDocument = mainWindowController.selectedDocument;
-
-        /**
-         * We could use
-         * [mainWindowController.vimController sendMessage:OpenWithArgumentsMsgID
-         *                                     data:[@{qVimArgFileNamesToOpen: @[doc.fileURL.path]} dictionaryAsData]];
-         * which checks whether the currently visible document is transient and act appropriately.
-         * We want to keep the opened files and our list of VRDocuments in sync, thus, we do it manually here
-         */
-        if (currentlyVisibleDocument.transient) {
-            NSString *command = SF(@":e %@", doc.fileURL.path.stringByEscapingSpecialFilenameCharacters);
-            [mainWindowController sendCommandToVim:command];
-            [mainWindowController removeDocument:currentlyVisibleDocument];
-        } else {
-            NSString *command = SF(@":tabe %@", doc.fileURL.path.stringByEscapingSpecialFilenameCharacters);
-            [mainWindowController sendCommandToVim:command];
-        }
-
-        doc.mainWindowController = mainWindowController;
-        [mainWindowController.documents addObject:doc];
-
-        return mainWindowController;
+        return self.vimController2MainWindowController.allValues[0];
     }
 
+    return [self newMainWindowControllerForDocument:doc];
+}
+
+- (VRMainWindowController *)newMainWindowControllerForDocument:(VRDocument *)doc {
     VRMainWindowController *mainWindowController = [
             [VRMainWindowController alloc] initWithWindowNibName:qMainWindowNibName
     ];
     mainWindowController.documentController = self;
 
-    NSDictionary *args = nil;
     NSURL *url = doc.fileURL;
-
+    NSDictionary *args = nil;
     if (url != nil) {
         args = @{qVimArgFileNamesToOpen : @[url.path]};
     }
+
     int pid = [self.vimManager pidOfNewVimControllerWithArgs:args];
-
     self.vimController2MainWindowController[@(pid)] = mainWindowController;
-
-    [mainWindowController.documents addObject:doc];
-    doc.mainWindowController = mainWindowController;
 
     return mainWindowController;
 }

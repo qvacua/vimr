@@ -32,7 +32,7 @@ extern NSString *const qVimArgFileNamesToOpen;
 
 #pragma mark MMVimManagerDelegate
 - (void)manager:(MMVimManager *)manager vimControllerCreated:(MMVimController *)controller;
-- (void)manager:(MMVimManager *)manager vimControllerRemovedWithControllerId:(unsigned int)vimControllerId pid:(int)pid;
+- (void)manager:(MMVimManager *)manager vimControllerRemovedWithControllerId:(unsigned int)controllerId pid:(int)pid;
 - (NSMenuItem *)menuItemTemplateForManager:(MMVimManager *)manager;
 
 @end

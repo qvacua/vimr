@@ -14,6 +14,7 @@
 #import "MMAlert.h"
 #import "VRUtils.h"
 
+
 @interface VRMainWindowController ()
 
 @property (readonly) NSMutableArray *mutableDocuments;
@@ -21,6 +22,15 @@
 @end
 
 @implementation VRMainWindowController
+
+- (void)cleanupAndClose {
+    // KVO compliant way to removeAllObjects...
+    while (self.mutableDocuments.count > 0) {
+        [self removeObjectFromDocumentsAtIndex:0];
+    }
+
+    [self close];
+}
 
 - (VRDocument *)selectedDocument {
     if (self.documents.count == 1) {
@@ -45,10 +55,19 @@
 }
 
 - (void)insertObject:(VRDocument *)doc inDocumentsAtIndex:(NSUInteger)index {
+    doc.mainWindowController = self;
     [self.mutableDocuments insertObject:doc atIndex:index];
+
+    if (self.countOfDocuments == 1) {
+        // when doc is the first document, then Vim already did everything
+        return;
+    }
+
+    [self openAdditionalDocument:doc];
 }
 
 - (void)removeObjectFromDocumentsAtIndex:(NSUInteger)index {
+    [self.mutableDocuments[index] close];
     [self.mutableDocuments removeObjectAtIndex:index];
 }
 
@@ -66,7 +85,7 @@
     // TODO: when reordering tabs, we have to reflect the order in the order of docs
     NSArray *descriptor = @[@"File", @"Close"];
     [self.vimController sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:descriptor]];
-    [self removeDocument:[self selectedDocument]];
+    [self removeObjectFromDocumentsAtIndex:self.indexOfSelectedTab];
 
 }
 
@@ -290,11 +309,6 @@
 }
 
 #pragma mark Private
-- (void)removeDocument:(VRDocument *)doc {
-    [self.documents removeObject:doc];
-    [doc close];
-}
-
 - (NSUInteger)indexOfSelectedTab {
     PSMTabBarControl *tabBar = self.vimView.tabBarControl;
     return [tabBar.representedTabViewItems indexOfObject:tabBar.tabView.selectedTabViewItem];
@@ -331,6 +345,31 @@
     // TODO: why not use -sendDialogReturnToBackend:?
     [self.vimController tellBackend:ret];
     // } copied from MacVim
+}
+
+- (void)openAdditionalDocument:(VRDocument *)doc {
+    /**
+     * We could use
+     * [mainWindowController.vimController sendMessage:OpenWithArgumentsMsgID
+     *                                     data:[@{qVimArgFileNamesToOpen: @[doc.fileURL.path]} dictionaryAsData]];
+     * which checks whether the currently visible document is transient and act appropriately.
+     * We want to keep the opened files and our list of VRDocuments in sync, thus, we do it manually here
+     */
+    VRDocument *currentlyVisibleDocument = self.selectedDocument;
+    NSString *command;
+
+    if (doc.fileURL == nil) {
+        // the doc to add is new, then open a new tab
+        command = @":tabe";
+    } else if (currentlyVisibleDocument.transient) {
+        // the doc corresponds to an existing file and the currently visible doc is transient
+        command = SF(@":e %@", doc.fileURL.path.stringByEscapingSpecialFilenameCharacters);
+        [self removeObjectFromDocumentsAtIndex:self.indexOfSelectedTab];
+    } else {
+        command = SF(@":tabe %@", doc.fileURL.path.stringByEscapingSpecialFilenameCharacters);
+    }
+
+    [self sendCommandToVim:command];
 }
 
 @end
