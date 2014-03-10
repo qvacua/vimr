@@ -16,6 +16,7 @@
 
 extern NSString *const qMainWindowNibName;
 extern NSString *const qVimArgFileNamesToOpen;
+extern NSString *const qVimArgOpenFilesLayout;
 
 @interface VRDocumentController : NSDocumentController <MMVimManagerDelegateProtocol>
 
@@ -26,6 +27,7 @@ extern NSString *const qVimArgFileNamesToOpen;
 - (IBAction)newTab:(id)sender;
 
 #pragma mark NSDocumentController
+- (IBAction)openDocument:(id)sender;
 - (id)openUntitledDocumentAndDisplay:(BOOL)displayDocument error:(NSError **)outError;
 - (id)init;
 - (void)dealloc;

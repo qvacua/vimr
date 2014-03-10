@@ -13,15 +13,32 @@
 #import "VRLog.h"
 #import "MMAlert.h"
 #import "VRUtils.h"
+#import "VRDocumentController.h"
 
 
 @interface VRMainWindowController ()
 
+@property BOOL processOngoing;
 @property (readonly) NSMutableArray *mutableDocuments;
 
 @end
 
 @implementation VRMainWindowController
+
+#pragma mark Public
+- (void)openDocuments:(NSArray *)docs {
+    NSMutableArray *filenames = [[NSMutableArray alloc] initWithCapacity:4];
+    for (VRDocument *doc in docs) {
+        [self insertObject:doc inDocumentsAtIndex:self.countOfDocuments];
+        [filenames addObject:doc.fileURL.path];
+    }
+
+    log4Debug(@"opening %@", filenames);
+    [self.vimController passArguments:@{
+            qVimArgFileNamesToOpen : filenames,
+            qVimArgOpenFilesLayout : @(MMLayoutTabs),
+    }];
+}
 
 - (void)cleanupAndClose {
     // KVO compliant way to removeAllObjects...
@@ -30,14 +47,6 @@
     }
 
     [self close];
-}
-
-- (VRDocument *)selectedDocument {
-    if (self.documents.count == 1) {
-        return self.documents[0];
-    }
-
-    return self.documents[self.indexOfSelectedDocument];
 }
 
 #pragma mark Properties
@@ -57,23 +66,18 @@
 - (void)insertObject:(VRDocument *)doc inDocumentsAtIndex:(NSUInteger)index {
     doc.mainWindowController = self;
     [self.mutableDocuments insertObject:doc atIndex:index];
-
-    if (self.countOfDocuments == 1) {
-        // when doc is the first document, then Vim already did everything
-        return;
-    }
-
-    [self openAdditionalDocument:doc];
 }
 
 - (void)removeObjectFromDocumentsAtIndex:(NSUInteger)index {
-    [self.mutableDocuments[index] close];
-    [self.mutableDocuments removeObjectAtIndex:index];
+    @synchronized (self.mutableDocuments) {
+        [self.mutableDocuments[index] close];
+        [self.mutableDocuments removeObjectAtIndex:index];
+    }
 }
 
 #pragma mark IBActions
 - (IBAction)firstDebugAction:(id)sender {
-    log4Debug(@"edited: %@", @([self.documents[0] isDocumentEdited]));
+    log4Debug(@"%@", self.vimView.tabBarControl.representedTabViewItems);
 }
 
 - (IBAction)performClose:(id)sender {
@@ -270,6 +274,13 @@
     self.window.title = title;
 }
 
+- (void)vimController:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue {
+    if (self.processOngoing) {
+        log4Debug(@"setting process ongoing to no");
+        self.processOngoing = NO;
+    }
+}
+
 - (void)vimController:(MMVimController *)controller handleBrowseWithDirectoryUrl:(NSURL *)url browseDir:(BOOL)dir saving:(BOOL)saving data:(NSData *)data {
 
     if (!saving) {
@@ -323,6 +334,13 @@
 }
 
 - (void)sendCommandToVim:(NSString *)command {
+    while (self.processOngoing) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+
+    self.processOngoing = YES;
+
+    log4Debug(@"sending command %@", command);
     [self.vimController addVimInput:SF(@"<C-\\><C-N>%@<CR>", command)];
 }
 
@@ -355,28 +373,12 @@
     // } copied from MacVim
 }
 
-- (void)openAdditionalDocument:(VRDocument *)doc {
-    /**
-     * We could use
-     * [mainWindowController.vimController sendMessage:OpenWithArgumentsMsgID
-     *                                     data:[@{qVimArgFileNamesToOpen: @[doc.fileURL.path]} dictionaryAsData]];
-     * which checks whether the currently visible document is transient and act appropriately.
-     * We want to keep the opened files and our list of VRDocuments in sync, thus, we do it manually here
-     */
-
-    NSString *command;
-    if (doc.isNewDocument) {
-        // the doc to add is new, then open a new tab
-        command = @":tabe";
-    } else if (self.selectedDocument.transient) {
-        // the doc corresponds to an existing file and the currently visible doc is transient
-        command = SF(@":e %@", doc.fileURL.path.stringByEscapingSpecialFilenameCharacters);
-        [self removeObjectFromDocumentsAtIndex:self.indexOfSelectedDocument];
-    } else {
-        command = SF(@":tabe %@", doc.fileURL.path.stringByEscapingSpecialFilenameCharacters);
+- (VRDocument *)selectedDocument {
+    if (self.documents.count == 1) {
+        return self.documents[0];
     }
 
-    [self sendCommandToVim:command];
+    return self.documents[self.indexOfSelectedDocument];
 }
 
 @end

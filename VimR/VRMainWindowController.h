@@ -24,6 +24,7 @@
 @property (weak) MMVimView *vimView;
 
 #pragma mark Public
+- (void)openDocuments:(NSArray *)docs;
 - (void)cleanupAndClose;
 
 #pragma mark KVO
@@ -63,6 +64,7 @@
 - (void)vimController:(MMVimController *)controller setDocumentFilename:(NSString *)filename data:(NSData *)data;
 
 #pragma mark NSWindowDelegate
+- (void)vimController:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue;
 - (void)windowDidBecomeMain:(NSNotification *)notification;
 - (void)windowDidResignMain:(NSNotification *)notification;
 - (BOOL)windowShouldClose:(id)sender;

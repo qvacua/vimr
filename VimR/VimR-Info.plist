@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-        "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
     <dict>
         <key>CFBundleDevelopmentRegion</key>
         <string>en</string>
-        <!-- copied from Info.plist of MacVim -->
         <key>CFBundleDocumentTypes</key>
         <array>
             <dict>
@@ -29,6 +27,24 @@
                 <string>Editor</string>
                 <key>LSIsAppleDefaultForType</key>
                 <true/>
+            </dict>
+            <dict>
+                <key>NSDocumentClass</key>
+                <string>VRDocument</string>
+                <key>CFBundleTypeName</key>
+                <string>Document</string>
+                <key>CFBundleTypeIconFile</key>
+                <string>GenericDocumentIcon</string>
+                <key>CFBundleTypeOSTypes</key>
+                <array>
+                    <string>****</string>
+                </array>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>LSItemContentTypes</key>
+                <array>
+                    <string>public.data</string>
+                </array>
             </dict>
             <dict>
                 <key>CFBundleTypeExtensions</key>
@@ -680,20 +696,6 @@
                 </array>
             </dict>
             <dict>
-                <key>CFBundleTypeExtensions</key>
-                <array>
-                    <string>*</string>
-                </array>
-                <key>CFBundleTypeName</key>
-                <string>Text File</string>
-                <key>CFBundleTypeOSTypes</key>
-                <array>
-                    <string>****</string>
-                </array>
-                <key>CFBundleTypeRole</key>
-                <string>Editor</string>
-            </dict>
-            <dict>
                 <key>CFBundleTypeName</key>
                 <string>AppleScript Source File</string>
                 <key>CFBundleTypeExtensions</key>
@@ -1107,21 +1109,6 @@
                 <key>CFBundleTypeRole</key>
                 <string>Editor</string>
             </dict>
-            <!--<dict>
-                <key>CFBundleTypeName</key>
-                <string>Property list</string>
-                <key>CFBundleTypeExtensions</key>
-                <array>
-                    <string>dict</string>
-                    <string>plist</string>
-                    <string>scriptSuite</string>
-                    <string>scriptTerminology</string>
-                </array>
-                <key>NSDocumentClass</key><string>VRDocument</string><key>CFBundleTypeIconFile</key>
-                <string>MacVim-plist</string>
-                <key>CFBundleTypeRole</key>
-                <string>Editor</string>
-              </dict>-->
             <dict>
                 <key>CFBundleTypeName</key>
                 <string>Scheme Source File</string>
@@ -1318,7 +1305,6 @@
                 <string>Editor</string>
             </dict>
         </array>
-        <!-- copied from Info.plist of MacVim -->
         <key>UTExportedTypeDeclarations</key>
         <array>
             <dict>
@@ -2646,6 +2632,13 @@
                         <string>vhd</string>
                     </array>
                 </dict>
+            </dict>
+            <dict>
+                <key>UTTypeConformsTo</key>
+                <array>
+                    <string>public.data</string>
+                    <string>public.content</string>
+                </array>
             </dict>
             <dict>
                 <key>UTTypeConformsTo</key>
