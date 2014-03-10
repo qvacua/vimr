@@ -45,41 +45,17 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
         [self addDocument:doc];
     }
 
-    VRMainWindowController *mainWindowController;
-    if (self.vimController2MainWindowController.count > 0) {
-        // open docs in the existing window in tabs
-        mainWindowController = [self existingMainWindowController];
-        [mainWindowController openDocuments:docs];
-    } else {
-        // no existing window, create one
-        mainWindowController = [self newMainWindowControllerForDocuments:docs];
-    }
+    [self openDocuments:docs];
 
-    for (VRDocument *doc in docs) {
-        [mainWindowController insertObject:doc inDocumentsAtIndex:mainWindowController.countOfDocuments];
-    }
-
-    [mainWindowController showWindow:self];
 }
 
 - (id)openUntitledDocumentAndDisplay:(BOOL)displayDocument error:(NSError **)outError {
-    VRDocument *newDoc = [self makeUntitledDocumentOfType:self.defaultType error:outError];
-    [self addDocument:newDoc];
+    VRDocument *doc = [self makeUntitledDocumentOfType:self.defaultType error:outError];
+    [self addDocument:doc];
 
-    VRMainWindowController *mainWindowController;
-    if (self.vimController2MainWindowController.count > 0) {
-        // open docs in the existing window in tabs
-        mainWindowController = [self existingMainWindowController];
-        [mainWindowController openDocuments:@[newDoc]];
-    } else {
-        // no existing window, create one
-        mainWindowController = [self newMainWindowControllerForDocuments:@[newDoc]];
-    }
+    [self openDocuments:@[doc]];
 
-    [mainWindowController insertObject:newDoc inDocumentsAtIndex:mainWindowController.countOfDocuments];
-    [mainWindowController showWindow:self];
-
-    return newDoc;
+    return doc;
 }
 
 #pragma mark NSDocumentController
@@ -161,6 +137,24 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
     }
 
     return docs;
+}
+
+- (void)openDocuments:(NSArray *)docs {
+    VRMainWindowController *mainWindowController;
+    if (self.vimController2MainWindowController.count > 0) {
+        // open docs in the existing window in tabs
+        mainWindowController = [self existingMainWindowController];
+        [mainWindowController openDocuments:docs];
+    } else {
+        // no existing window, create one
+        mainWindowController = [self newMainWindowControllerForDocuments:docs];
+    }
+
+    for (VRDocument *doc in docs) {
+        [mainWindowController insertObject:doc inDocumentsAtIndex:mainWindowController.countOfDocuments];
+    }
+
+    [mainWindowController showWindow:self];
 }
 
 @end
