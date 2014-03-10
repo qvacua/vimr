@@ -72,7 +72,7 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
     [self addDocument:newDoc];
 
     VRMainWindowController *mainWindowController = [self mainWindowControllerForDocument:newDoc];
-    [mainWindowController insertObject:newDoc inDocumentsAtIndex:mainWindowController.countOfDocuments];
+    [mainWindowController openDocuments:@[newDoc]];
     [mainWindowController showWindow:self];
 
     return newDoc;
@@ -131,8 +131,7 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
     mainWindowController.documentController = self;
 
     NSDictionary *args = nil;
-    VRDocument *firstDoc = docs[0];
-    if (!firstDoc.newDocument) {
+    if (![self isOpeningNewDoc:docs]) {
         NSMutableArray *filenames = [[NSMutableArray alloc] initWithCapacity:docs.count];
         for (VRDocument *doc in docs) {
             [filenames addObject:doc.fileURL.path];
@@ -147,6 +146,10 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
     self.vimController2MainWindowController[@(pid)] = mainWindowController;
 
     return mainWindowController;
+}
+
+- (BOOL)isOpeningNewDoc:(NSArray *)docs {
+    return [docs[0] isNewDocument] && docs.count == 1;
 }
 
 @end

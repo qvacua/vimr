@@ -27,6 +27,12 @@
 
 #pragma mark Public
 - (void)openDocuments:(NSArray *)docs {
+    if ([self isOpeningNewDoc:docs]) {
+        [self insertObject:docs[0] inDocumentsAtIndex:self.countOfDocuments];
+        [self sendCommandToVim:@":tabe"];
+        return;
+    }
+
     NSMutableArray *filenames = [[NSMutableArray alloc] initWithCapacity:4];
     for (VRDocument *doc in docs) {
         [self insertObject:doc inDocumentsAtIndex:self.countOfDocuments];
@@ -90,7 +96,6 @@
     NSArray *descriptor = @[@"File", @"Close"];
     [self.vimController sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:descriptor]];
     [self removeObjectFromDocumentsAtIndex:self.indexOfSelectedDocument];
-
 }
 
 - (IBAction)saveDocument:(id)sender {
@@ -379,6 +384,10 @@
     }
 
     return self.documents[self.indexOfSelectedDocument];
+}
+
+- (BOOL)isOpeningNewDoc:(NSArray *)docs {
+    return [docs[0] fileURL] == nil && docs.count == 1;
 }
 
 @end
