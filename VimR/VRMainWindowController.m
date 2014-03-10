@@ -28,14 +28,12 @@
 #pragma mark Public
 - (void)openDocuments:(NSArray *)docs {
     if ([self isOpeningNewDoc:docs]) {
-        [self insertObject:docs[0] inDocumentsAtIndex:self.countOfDocuments];
         [self sendCommandToVim:@":tabe"];
         return;
     }
 
     NSMutableArray *filenames = [[NSMutableArray alloc] initWithCapacity:4];
     for (VRDocument *doc in docs) {
-        [self insertObject:doc inDocumentsAtIndex:self.countOfDocuments];
         [filenames addObject:doc.fileURL.path];
     }
 
@@ -92,7 +90,8 @@
     // NOTE: we could ask the user here whether to save or not
     log4Debug(@"%@ dirty: %@", self.selectedDocument.fileURL.path, @(self.selectedDocument.dirty));
 
-    // NOTE: when reordering tabs, we have to reflect the order in the order of docs
+    // TODO: when reordering tabs, we have to reflect the order in the order of docs
+    // TODO: when the doc is dirty, ask to save here!
     NSArray *descriptor = @[@"File", @"Close"];
     [self.vimController sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:descriptor]];
     [self removeObjectFromDocumentsAtIndex:self.indexOfSelectedDocument];

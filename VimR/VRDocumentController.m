@@ -13,6 +13,7 @@
 #import "VRMainWindowController.h"
 #import "VRLog.h"
 #import "VRUtils.h"
+#import "NSArray+VR.h"
 
 
 NSString *const qMainWindowNibName = @"MainWindow";
@@ -30,49 +31,52 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 
 #pragma mark IBActions
 - (IBAction)newTab:(id)sender {
-    log4Mark;
     [self openUntitledDocumentAndDisplay:YES error:NULL];
 }
 
 - (IBAction)openDocument:(id)sender {
-    log4Mark;
     NSArray *fileUrls = [self URLsFromRunningOpenPanel];
-    if (fileUrls.count == 0) {
+    if ([fileUrls isEmpty]) {
         return;
     }
 
-    NSMutableArray *docs2Open = [[NSMutableArray alloc] initWithCapacity:4];
-    for (NSURL *url in fileUrls) {
-        NSString *type = [self typeForContentsOfURL:url error:NULL];
-        VRDocument *doc2Open = [[VRDocument alloc] initWithContentsOfURL:url ofType:type error:NULL];
-
-        [self addDocument:doc2Open];
-        [docs2Open addObject:doc2Open];
+    NSArray *docs = [self documentsFromUrls:fileUrls];
+    for (VRDocument *doc in docs) {
+        [self addDocument:doc];
     }
 
+    VRMainWindowController *mainWindowController;
     if (self.vimController2MainWindowController.count > 0) {
         // open docs in the existing window in tabs
-        VRMainWindowController *mainWindowController = [self mainWindowControllerForDocument:docs2Open[0]];
-        [mainWindowController openDocuments:docs2Open];
-        [mainWindowController showWindow:self];
+        mainWindowController = [self existingMainWindowController];
+        [mainWindowController openDocuments:docs];
     } else {
         // no existing window, create one
-        VRMainWindowController *mainWindowController = [self newMainWindowControllerForDocuments:docs2Open];
-        for (VRDocument *doc in docs2Open) {
-            [mainWindowController insertObject:doc inDocumentsAtIndex:mainWindowController.countOfDocuments];
-        }
-        [mainWindowController showWindow:self];
+        mainWindowController = [self newMainWindowControllerForDocuments:docs];
     }
+
+    for (VRDocument *doc in docs) {
+        [mainWindowController insertObject:doc inDocumentsAtIndex:mainWindowController.countOfDocuments];
+    }
+
+    [mainWindowController showWindow:self];
 }
 
 - (id)openUntitledDocumentAndDisplay:(BOOL)displayDocument error:(NSError **)outError {
-    log4Mark;
-
     VRDocument *newDoc = [self makeUntitledDocumentOfType:self.defaultType error:outError];
     [self addDocument:newDoc];
 
-    VRMainWindowController *mainWindowController = [self mainWindowControllerForDocument:newDoc];
-    [mainWindowController openDocuments:@[newDoc]];
+    VRMainWindowController *mainWindowController;
+    if (self.vimController2MainWindowController.count > 0) {
+        // open docs in the existing window in tabs
+        mainWindowController = [self existingMainWindowController];
+        [mainWindowController openDocuments:@[newDoc]];
+    } else {
+        // no existing window, create one
+        mainWindowController = [self newMainWindowControllerForDocuments:@[newDoc]];
+    }
+
+    [mainWindowController insertObject:newDoc inDocumentsAtIndex:mainWindowController.countOfDocuments];
     [mainWindowController showWindow:self];
 
     return newDoc;
@@ -114,14 +118,9 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 }
 
 #pragma mark Private
-- (VRMainWindowController *)mainWindowControllerForDocument:(VRDocument *)doc {
+- (VRMainWindowController *)existingMainWindowController {
     // TODO: for time being, use only one window...
-
-    if (self.vimController2MainWindowController.count > 0) {
-        return self.vimController2MainWindowController.allValues[0];
-    }
-
-    return [self newMainWindowControllerForDocuments:@[doc]];
+    return self.vimController2MainWindowController.allValues[0];
 }
 
 - (VRMainWindowController *)newMainWindowControllerForDocuments:(NSArray *)docs {
@@ -150,6 +149,18 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 
 - (BOOL)isOpeningNewDoc:(NSArray *)docs {
     return [docs[0] isNewDocument] && docs.count == 1;
+}
+
+- (NSArray *)documentsFromUrls:(NSArray *)fileUrls {
+    NSMutableArray *docs = [[NSMutableArray alloc] initWithCapacity:4];
+    for (NSURL *url in fileUrls) {
+        NSString *type = [self typeForContentsOfURL:url error:NULL];
+        VRDocument *doc = [[VRDocument alloc] initWithContentsOfURL:url ofType:type error:NULL];
+
+        [docs addObject:doc];
+    }
+
+    return docs;
 }
 
 @end
