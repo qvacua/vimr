@@ -35,6 +35,7 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 }
 
 - (IBAction)openDocument:(id)sender {
+    // TODO: filter out already opened documents
     NSArray *fileUrls = [self URLsFromRunningOpenPanel];
     if ([fileUrls isEmpty]) {
         return;

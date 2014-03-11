@@ -60,6 +60,7 @@
                  data:(NSData *)data;
 - (void)vimController:(MMVimController *)controller tabShouldUpdateWithData:(NSData *)data;
 - (void)vimController:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data;
+- (void)vimController:(MMVimController *)controller tabDraggedWithData:(NSData *)data;
 - (void)vimController:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data;
 - (void)vimController:(MMVimController *)controller setDocumentFilename:(NSString *)filename data:(NSData *)data;
 

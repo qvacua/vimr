@@ -14,6 +14,7 @@
 #import "MMAlert.h"
 #import "VRUtils.h"
 #import "VRDocumentController.h"
+#import "NSTabViewItem+VR.h"
 
 
 @interface VRMainWindowController ()
@@ -222,6 +223,9 @@
 - (void)vimController:(MMVimController *)controller openWindowWithData:(NSData *)data {
     self.window.acceptsMouseMovedEvents = YES; // Vim wants to have mouse move events
 
+    // TODO: we always show the tabs! NO exception!
+    [self sendCommandToVim:@":set showtabline=2"];
+
     self.vimView.frameSize = [self.window contentRectForFrameRect:self.window.frame].size;
     [self.window.contentView addSubview:self.vimView];
 
@@ -253,12 +257,31 @@
 
 - (void)vimController:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data {
     log4Mark;
-    log4Debug(@"selected tab index: %li", [self indexOfSelectedDocument]);
+    log4Debug(@"%@", self.vimController.filenamesOfTabs);
+    for (VRDocument *doc in self.documents) {
+        log4Debug(@"%@", doc.fileURL.path.lastPathComponent);
+    }
+
+    NSArray *tvis = self.vimView.tabBarControl.representedTabViewItems;
+    for (NSTabViewItem *tvi in tvis) {
+        if (tvi.associatedDocument == nil) {
+            /**
+            * - new tab inserted => there must be a doc which is new
+            * - some files were opened
+            */
+        }
+    }
+}
+
+- (void)vimController:(MMVimController *)controller tabDraggedWithData:(NSData *)data {
+    log4Mark;
+    log4Debug(@"%@", self.vimController.filenamesOfTabs);
 }
 
 - (void)vimController:(MMVimController *)controller hideTabBarWithData:(NSData *)data {
     log4Mark;
-    [[self.vimView tabBarControl] setHidden:YES];
+    // TODO: we always show the tabs! NO exception!
+    [self sendCommandToVim:@":set showtabline=2"];
 }
 
 - (void)vimController:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data {
