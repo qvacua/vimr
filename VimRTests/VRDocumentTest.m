@@ -9,7 +9,7 @@
 
 #import "VRBaseTestCase.h"
 #import "VRMainWindowController.h"
-#import "VRDocument.h"
+#import "VRWorkspace.h"
 
 
 @interface VRDocumentTest : VRBaseTestCase
@@ -17,7 +17,7 @@
 @end
 
 @implementation VRDocumentTest {
-    VRDocument *document;
+    VRWorkspace *document;
 
     VRMainWindowController *mainWindowController;
 }
@@ -27,7 +27,7 @@
 
     mainWindowController = mock([VRMainWindowController class]);
 
-    document = [[VRDocument alloc] init];
+    document = [[VRWorkspace alloc] init];
     document.mainWindowController = mainWindowController;
 }
 

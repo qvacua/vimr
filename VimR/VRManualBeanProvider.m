@@ -9,7 +9,7 @@
 
 #import <TBCacao/TBCacao.h>
 #import <MacVimFramework/MacVimFramework.h>
-#import "VRDocumentController.h"
+#import "VRWorkspaceController.h"
 
 
 @interface VRManualBeanProvider : NSObject <TBManualBeanProvider>
@@ -22,7 +22,7 @@
     static NSArray *manualBeans;
 
     if (manualBeans == nil) {
-        VRDocumentController *documentController = [[VRDocumentController alloc] init];
+        VRWorkspaceController *workspaceController = [[VRWorkspaceController alloc] init];
 
         /**
         * TODO: MMVimController uses [MMVimManager sharedManager].
@@ -31,13 +31,14 @@
         */
         MMVimManager *vimManager = [MMVimManager sharedManager];
 
-        documentController.vimManager = vimManager;
-        vimManager.delegate = documentController;
+        workspaceController.vimManager = vimManager;
+        vimManager.delegate = workspaceController;
         [vimManager setUp];
 
         manualBeans = @[
-                [TBBeanContainer beanContainerWithBean:documentController],
+                [TBBeanContainer beanContainerWithBean:workspaceController],
                 [TBBeanContainer beanContainerWithBean:vimManager],
+                [TBBeanContainer beanContainerWithBean:[NSWorkspace sharedWorkspace]],
         ];
     }
 

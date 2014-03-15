@@ -1,29 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-        "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
     <dict>
         <key>CFBundleDevelopmentRegion</key>
         <string>en</string>
-        <!-- copied from Info.plist of MacVim -->
         <key>CFBundleDocumentTypes</key>
         <array>
-            <dict>
-                <key>CFBundleTypeExtensions</key>
-                <array>
-                    <string>vim</string>
-                </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
-                <key>CFBundleTypeIconFile</key>
-                <string>MacVim-vim</string>
-                <key>CFBundleTypeName</key>
-                <string>Vim Script File</string>
-                <key>CFBundleTypeRole</key>
-                <string>Editor</string>
-                <key>LSIsAppleDefaultForType</key>
-                <true/>
-            </dict>
             <dict>
                 <key>CFBundleTypeExtensions</key>
                 <array>
@@ -31,8 +13,8 @@
                     <string>text</string>
                     <string>utf8</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-txt</string>
                 <key>CFBundleTypeMIMETypes</key>
@@ -41,6 +23,40 @@
                 </array>
                 <key>CFBundleTypeName</key>
                 <string>Plain Text File</string>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>LSIsAppleDefaultForType</key>
+                <true/>
+            </dict>
+            <dict>
+                
+                
+                <key>CFBundleTypeName</key>
+                <string>Document</string>
+                <key>CFBundleTypeIconFile</key>
+                <string>GenericDocumentIcon</string>
+                <key>CFBundleTypeOSTypes</key>
+                <array>
+                    <string>****</string>
+                </array>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>LSItemContentTypes</key>
+                <array>
+                    <string>public.data</string>
+                </array>
+            </dict>
+            <dict>
+                <key>CFBundleTypeExtensions</key>
+                <array>
+                    <string>vim</string>
+                </array>
+                
+                
+                <key>CFBundleTypeIconFile</key>
+                <string>MacVim-vim</string>
+                <key>CFBundleTypeName</key>
+                <string>Vim Script File</string>
                 <key>CFBundleTypeRole</key>
                 <string>Editor</string>
                 <key>LSIsAppleDefaultForType</key>
@@ -56,8 +72,8 @@
                     <string>ins</string>
                     <string>dtx</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-tex</string>
                 <key>CFBundleTypeName</key>
@@ -72,8 +88,8 @@
                 <array>
                     <string>h</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-h</string>
                 <key>CFBundleTypeName</key>
@@ -92,8 +108,8 @@
                 <array>
                     <string>pch</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-h</string>
                 <key>CFBundleTypeName</key>
@@ -116,8 +132,8 @@
                     <string>hxx</string>
                     <string>h++</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-h</string>
                 <key>CFBundleTypeName</key>
@@ -132,8 +148,8 @@
                 <array>
                     <string>pch++</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-h</string>
                 <key>CFBundleTypeName</key>
@@ -152,8 +168,8 @@
                 <array>
                     <string>c</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-c</string>
                 <key>CFBundleTypeName</key>
@@ -172,8 +188,8 @@
                 <array>
                     <string>m</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-m</string>
                 <key>CFBundleTypeName</key>
@@ -192,8 +208,8 @@
                 <array>
                     <string>mm</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-mm</string>
                 <key>CFBundleTypeName</key>
@@ -216,8 +232,8 @@
                     <string>cxx</string>
                     <string>c++</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-cpp</string>
                 <key>CFBundleTypeName</key>
@@ -270,8 +286,8 @@
                     <string>java</string>
                     <string>jav</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-java</string>
                 <key>CFBundleTypeName</key>
@@ -363,8 +379,8 @@
                     <string>f90</string>
                     <string>f95</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-f</string>
                 <key>CFBundleTypeName</key>
@@ -427,8 +443,8 @@
                     <string>shtm</string>
                     <string>xhtm</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-html</string>
                 <key>CFBundleTypeMIMETypes</key>
@@ -456,8 +472,8 @@
                     <string>cpt</string>
                     <string>dtml</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-xml</string>
                 <key>CFBundleTypeMIMETypes</key>
@@ -483,8 +499,8 @@
                     <string>jscript</string>
                     <string>javascript</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-js</string>
                 <key>CFBundleTypeMIMETypes</key>
@@ -512,8 +528,8 @@
                     <string>pod</string>
                     <string>perl</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-perl</string>
                 <key>CFBundleTypeMIMETypes</key>
@@ -537,8 +553,8 @@
                     <string>cpy</string>
                     <string>python</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-py</string>
                 <key>CFBundleTypeMIMETypes</key>
@@ -565,8 +581,8 @@
                     <string>ph4</string>
                     <string>phtml</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-php</string>
                 <key>CFBundleTypeMIMETypes</key>
@@ -591,8 +607,8 @@
                     <string>rjs</string>
                     <string>rxml</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-rb</string>
                 <key>CFBundleTypeMIMETypes</key>
@@ -621,8 +637,8 @@
                     <string>profile</string>
                     <string>bash_logout</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-bash</string>
                 <key>CFBundleTypeRole</key>
@@ -654,8 +670,8 @@
                     <string>patch</string>
                     <string>diff</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-patch</string>
                 <key>CFBundleTypeName</key>
@@ -680,28 +696,14 @@
                 </array>
             </dict>
             <dict>
-                <key>CFBundleTypeExtensions</key>
-                <array>
-                    <string>*</string>
-                </array>
-                <key>CFBundleTypeName</key>
-                <string>Text File</string>
-                <key>CFBundleTypeOSTypes</key>
-                <array>
-                    <string>****</string>
-                </array>
-                <key>CFBundleTypeRole</key>
-                <string>Editor</string>
-            </dict>
-            <dict>
                 <key>CFBundleTypeName</key>
                 <string>AppleScript Source File</string>
                 <key>CFBundleTypeExtensions</key>
                 <array>
                     <string>applescript</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-applescript</string>
                 <key>CFBundleTypeRole</key>
@@ -718,8 +720,8 @@
                 <array>
                     <string>as</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-as</string>
                 <key>CFBundleTypeRole</key>
@@ -733,8 +735,8 @@
                     <string>asp</string>
                     <string>asa</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-asp</string>
                 <key>CFBundleTypeRole</key>
@@ -750,8 +752,8 @@
                     <string>asmx</string>
                     <string>ashx</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-asp</string>
                 <key>CFBundleTypeRole</key>
@@ -764,8 +766,8 @@
                 <array>
                     <string>bib</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-bib</string>
                 <key>CFBundleTypeRole</key>
@@ -778,8 +780,8 @@
                 <array>
                     <string>cs</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-cs</string>
                 <key>CFBundleTypeRole</key>
@@ -792,8 +794,8 @@
                 <array>
                     <string>cfdg</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-csfg</string>
                 <key>CFBundleTypeRole</key>
@@ -806,8 +808,8 @@
                 <array>
                     <string>csv</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-csv</string>
                 <key>CFBundleTypeRole</key>
@@ -820,8 +822,8 @@
                 <array>
                     <string>tsv</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-tsv</string>
                 <key>CFBundleTypeRole</key>
@@ -835,8 +837,8 @@
                     <string>cgi</string>
                     <string>fcgi</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-cgi</string>
                 <key>CFBundleTypeRole</key>
@@ -852,8 +854,8 @@
                     <string>config</string>
                     <string>htaccess</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-cfg</string>
                 <key>CFBundleTypeRole</key>
@@ -866,8 +868,8 @@
                 <array>
                     <string>css</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-css</string>
                 <key>CFBundleTypeRole</key>
@@ -880,8 +882,8 @@
                 <array>
                     <string>dtd</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-dtd</string>
                 <key>CFBundleTypeRole</key>
@@ -894,8 +896,8 @@
                 <array>
                     <string>dylan</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-dylan</string>
                 <key>CFBundleTypeRole</key>
@@ -909,8 +911,8 @@
                     <string>erl</string>
                     <string>hrl</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-erl</string>
                 <key>CFBundleTypeRole</key>
@@ -923,8 +925,8 @@
                 <array>
                     <string>fscript</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-fscript</string>
                 <key>CFBundleTypeRole</key>
@@ -938,8 +940,8 @@
                     <string>hs</string>
                     <string>lhs</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-hs</string>
                 <key>CFBundleTypeRole</key>
@@ -952,8 +954,8 @@
                 <array>
                     <string>inc</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-inc</string>
                 <key>CFBundleTypeRole</key>
@@ -966,8 +968,8 @@
                 <array>
                     <string>ics</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-ics</string>
                 <key>CFBundleTypeRole</key>
@@ -980,8 +982,8 @@
                 <array>
                     <string>ini</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-ini</string>
                 <key>CFBundleTypeRole</key>
@@ -994,8 +996,8 @@
                 <array>
                     <string>io</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-io</string>
                 <key>CFBundleTypeRole</key>
@@ -1008,8 +1010,8 @@
                 <array>
                     <string>bsh</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-bsh</string>
                 <key>CFBundleTypeRole</key>
@@ -1022,8 +1024,8 @@
                 <array>
                     <string>properties</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-properties</string>
                 <key>CFBundleTypeRole</key>
@@ -1036,8 +1038,8 @@
                 <array>
                     <string>jsp</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-jsp</string>
                 <key>CFBundleTypeRole</key>
@@ -1055,8 +1057,8 @@
                     <string>mud</string>
                     <string>el</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-lisp</string>
                 <key>CFBundleTypeRole</key>
@@ -1069,8 +1071,8 @@
                 <array>
                     <string>log</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-log</string>
                 <key>CFBundleTypeRole</key>
@@ -1085,8 +1087,8 @@
                     <string>wikipedia</string>
                     <string>mediawiki</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-wiki</string>
                 <key>CFBundleTypeRole</key>
@@ -1100,28 +1102,13 @@
                     <string>ps</string>
                     <string>eps</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-ps</string>
                 <key>CFBundleTypeRole</key>
                 <string>Editor</string>
             </dict>
-            <!--<dict>
-                <key>CFBundleTypeName</key>
-                <string>Property list</string>
-                <key>CFBundleTypeExtensions</key>
-                <array>
-                    <string>dict</string>
-                    <string>plist</string>
-                    <string>scriptSuite</string>
-                    <string>scriptTerminology</string>
-                </array>
-                <key>NSDocumentClass</key><string>VRDocument</string><key>CFBundleTypeIconFile</key>
-                <string>MacVim-plist</string>
-                <key>CFBundleTypeRole</key>
-                <string>Editor</string>
-              </dict>-->
             <dict>
                 <key>CFBundleTypeName</key>
                 <string>Scheme Source File</string>
@@ -1130,8 +1117,8 @@
                     <string>scm</string>
                     <string>sch</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-sch</string>
                 <key>CFBundleTypeRole</key>
@@ -1144,8 +1131,8 @@
                 <array>
                     <string>sql</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-sql</string>
                 <key>CFBundleTypeRole</key>
@@ -1158,8 +1145,8 @@
                 <array>
                     <string>tcl</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-tcl</string>
                 <key>CFBundleTypeRole</key>
@@ -1173,8 +1160,8 @@
                     <string>xsl</string>
                     <string>xslt</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-xsl</string>
                 <key>CFBundleTypeRole</key>
@@ -1188,8 +1175,8 @@
                     <string>vcf</string>
                     <string>vcard</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-vcf</string>
                 <key>CFBundleTypeRole</key>
@@ -1202,8 +1189,8 @@
                 <array>
                     <string>vb</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-vb</string>
                 <key>CFBundleTypeRole</key>
@@ -1217,8 +1204,8 @@
                     <string>yaml</string>
                     <string>yml</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-yaml</string>
                 <key>CFBundleTypeRole</key>
@@ -1232,8 +1219,8 @@
                     <string>gtd</string>
                     <string>gtdlog</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-gtd</string>
                 <key>CFBundleTypeRole</key>
@@ -1249,8 +1236,8 @@
                     <string>mdown</string>
                     <string>md</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-markdown</string>
                 <key>CFBundleTypeRole</key>
@@ -1263,8 +1250,8 @@
                 <array>
                     <string>rst</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-rst</string>
                 <key>CFBundleTypeRole</key>
@@ -1277,8 +1264,8 @@
                 <array>
                     <string>vba</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-vba</string>
                 <key>CFBundleTypeRole</key>
@@ -1292,8 +1279,8 @@
                     <string>vhd</string>
                     <string>vhdl</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-generic</string>
                 <key>CFBundleTypeRole</key>
@@ -1306,8 +1293,8 @@
                 <array>
                     <string>lua</string>
                 </array>
-                <key>NSDocumentClass</key>
-                <string>VRDocument</string>
+                
+                
                 <key>CFBundleTypeIconFile</key>
                 <string>MacVim-generic</string>
                 <key>CFBundleTypeMIMETypes</key>
@@ -1318,7 +1305,6 @@
                 <string>Editor</string>
             </dict>
         </array>
-        <!-- copied from Info.plist of MacVim -->
         <key>UTExportedTypeDeclarations</key>
         <array>
             <dict>
@@ -2646,6 +2632,13 @@
                         <string>vhd</string>
                     </array>
                 </dict>
+            </dict>
+            <dict>
+                <key>UTTypeConformsTo</key>
+                <array>
+                    <string>public.data</string>
+                    <string>public.content</string>
+                </array>
             </dict>
             <dict>
                 <key>UTTypeConformsTo</key>

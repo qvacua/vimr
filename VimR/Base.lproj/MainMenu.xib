@@ -70,6 +70,11 @@
                                     <action selector="newDocument:" target="-1" id="373"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="New Tab" keyEquivalent="t" id="LvQ-Qu-Tme">
+                                <connections>
+                                    <action selector="newTab:" target="-1" id="tf3-kd-LHX"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Open…" keyEquivalent="o" id="72">
                                 <connections>
                                     <action selector="openDocument:" target="-1" id="374"/>
@@ -97,6 +102,11 @@
                             <menuItem title="Save…" keyEquivalent="s" id="75">
                                 <connections>
                                     <action selector="saveDocument:" target="-1" id="362"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Save As..." keyEquivalent="S" id="6e7-RT-Ta0">
+                                <connections>
+                                    <action selector="saveDocumentAs:" target="-1" id="D7Z-Br-u0S"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Revert to Saved" id="112">
@@ -370,13 +380,25 @@
                         </items>
                     </menu>
                 </menuItem>
+                <menuItem title="Debug" id="ENQ-3Q-U1j">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Debug" id="IF5-nu-Y0K">
+                        <items>
+                            <menuItem title="Some thing" keyEquivalent="1" id="dzX-yG-Iqo">
+                                <connections>
+                                    <action selector="firstDebugAction:" target="-1" id="wcM-Hn-Grz"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
                 <menuItem title="Help" id="490">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Help" systemMenu="help" id="491">
                         <items>
                             <menuItem title="VimR Help" keyEquivalent="?" id="492">
                                 <connections>
-                                    <action selector="showHelp:" target="-1" id="493"/>
+                                    <action selector="showHelp:" target="494" id="Qft-uf-49D"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -384,7 +406,7 @@
                 </menuItem>
             </items>
         </menu>
-        <window title="VimR" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="371">
+        <window title="VimR" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="371">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="480" height="360"/>
