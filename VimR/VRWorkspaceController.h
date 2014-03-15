@@ -10,25 +10,23 @@
 #import <Cocoa/Cocoa.h>
 #import <MacVimFramework/MacVimFramework.h>
 
+extern NSString *const qMainWindowNibName;
 
-@class VRDocument;
 @class VRMainWindowController;
 
-extern NSString *const qMainWindowNibName;
 extern NSString *const qVimArgFileNamesToOpen;
 extern NSString *const qVimArgOpenFilesLayout;
 
-@interface VRDocumentController : NSDocumentController <MMVimManagerDelegateProtocol>
+@interface VRWorkspaceController : NSObject <MMVimManagerDelegateProtocol>
 
 #pragma mark Properties
 @property (weak) MMVimManager *vimManager;
 
-#pragma mark IBActions
-- (IBAction)newTab:(id)sender;
+#pragma mark Public
+- (void)newWorkspace;
+- (void)openFiles:(NSArray *)fileUrls;
 
-#pragma mark NSDocumentController
-- (IBAction)openDocument:(id)sender;
-- (id)openUntitledDocumentAndDisplay:(BOOL)displayDocument error:(NSError **)outError;
+#pragma mark NSObject
 - (id)init;
 - (void)dealloc;
 

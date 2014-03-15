@@ -9,75 +9,23 @@
 
 #import <PSMTabBarControl/PSMTabBarControl.h>
 #import "VRMainWindowController.h"
-#import "VRDocument.h"
 #import "VRLog.h"
 #import "MMAlert.h"
 #import "VRUtils.h"
-#import "VRDocumentController.h"
-#import "NSTabViewItem+VR.h"
 
 
 @interface VRMainWindowController ()
 
 @property BOOL processOngoing;
-@property (readonly) NSMutableArray *mutableDocuments;
 
 @end
 
 @implementation VRMainWindowController
 
 #pragma mark Public
-- (void)openDocuments:(NSArray *)docs {
-    if ([self isOpeningNewDoc:docs]) {
-        [self sendCommandToVim:@":tabe"];
-        return;
-    }
-
-    NSMutableArray *filenames = [[NSMutableArray alloc] initWithCapacity:4];
-    for (VRDocument *doc in docs) {
-        [filenames addObject:doc.fileURL.path];
-    }
-
-    log4Debug(@"opening %@", filenames);
-    [self.vimController passArguments:@{
-            qVimArgFileNamesToOpen : filenames,
-            qVimArgOpenFilesLayout : @(MMLayoutTabs),
-    }];
-}
-
 - (void)cleanupAndClose {
-    // KVO compliant way to removeAllObjects...
-    while (self.mutableDocuments.count > 0) {
-        [self removeObjectFromDocumentsAtIndex:0];
-    }
-
+    log4Mark;
     [self close];
-}
-
-#pragma mark Properties
-- (NSArray *)documents {
-    return self.mutableDocuments;
-}
-
-#pragma mark KVO
-- (NSUInteger)countOfDocuments {
-    return self.mutableDocuments.count;
-}
-
-- (VRDocument *)objectInDocumentsAtIndex:(NSUInteger)index {
-    return self.mutableDocuments[index];
-}
-
-- (void)insertObject:(VRDocument *)doc inDocumentsAtIndex:(NSUInteger)index {
-    doc.mainWindowController = self;
-    [self.mutableDocuments insertObject:doc atIndex:index];
-}
-
-- (void)removeObjectFromDocumentsAtIndex:(NSUInteger)index {
-    @synchronized (self.mutableDocuments) {
-        [self.mutableDocuments[index] close];
-        [self.mutableDocuments removeObjectAtIndex:index];
-    }
 }
 
 #pragma mark IBActions
@@ -87,28 +35,17 @@
 
 - (IBAction)performClose:(id)sender {
     log4Mark;
-
     // NOTE: we could ask the user here whether to save or not
-    log4Debug(@"%@ dirty: %@", self.selectedDocument.fileURL.path, @(self.selectedDocument.dirty));
 
     // TODO: when reordering tabs, we have to reflect the order in the order of docs
     // TODO: when the doc is dirty, ask to save here!
     NSArray *descriptor = @[@"File", @"Close"];
     [self.vimController sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:descriptor]];
-    [self removeObjectFromDocumentsAtIndex:self.indexOfSelectedDocument];
 }
 
 - (IBAction)saveDocument:(id)sender {
     log4Mark;
-
-    NSString *command;
-    if (self.selectedDocument.isNewDocument) {
-        command = @":browse confirm w";
-    } else {
-        command = @":w";
-    }
-
-    [self sendCommandToVim:command];
+    [self sendCommandToVim:@":w"];
 }
 
 - (IBAction)saveDocumentAs:(id)sender {
@@ -127,8 +64,6 @@
     if (self == nil) {
         return nil;
     }
-
-    _mutableDocuments = [[NSMutableArray alloc] initWithCapacity:4];
 
     return self;
 }
@@ -257,25 +192,10 @@
 
 - (void)vimController:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data {
     log4Mark;
-    log4Debug(@"%@", self.vimController.filenamesOfTabs);
-    for (VRDocument *doc in self.documents) {
-        log4Debug(@"%@", doc.fileURL.path.lastPathComponent);
-    }
-
-    NSArray *tvis = self.vimView.tabBarControl.representedTabViewItems;
-    for (NSTabViewItem *tvi in tvis) {
-        if (tvi.associatedDocument == nil) {
-            /**
-            * - new tab inserted => there must be a doc which is new
-            * - some files were opened
-            */
-        }
-    }
 }
 
 - (void)vimController:(MMVimController *)controller tabDraggedWithData:(NSData *)data {
     log4Mark;
-    log4Debug(@"%@", self.vimController.filenamesOfTabs);
 }
 
 - (void)vimController:(MMVimController *)controller hideTabBarWithData:(NSData *)data {
@@ -288,7 +208,6 @@
     log4Mark;
 
     [self setDocumentEdited:modified];
-    [self selectedDocument].dirty = modified;
 }
 
 - (void)vimController:(MMVimController *)controller setDocumentFilename:(NSString *)filename data:(NSData *)data {
@@ -344,10 +263,6 @@
 }
 
 - (BOOL)windowShouldClose:(id)sender {
-    for (VRDocument *doc in self.documents) {
-        log4Debug(@"%@ - dirty: %@", doc.fileURL.path, @(doc.dirty));
-    }
-
     // don't close the window or tab; instead let Vim decide what to do
     [self.vimController sendMessage:VimShouldCloseMsgID data:nil];
 
@@ -398,18 +313,6 @@
     // TODO: why not use -sendDialogReturnToBackend:?
     [self.vimController tellBackend:ret];
     // } copied from MacVim
-}
-
-- (VRDocument *)selectedDocument {
-    if (self.documents.count == 1) {
-        return self.documents[0];
-    }
-
-    return self.documents[self.indexOfSelectedDocument];
-}
-
-- (BOOL)isOpeningNewDoc:(NSArray *)docs {
-    return [docs[0] fileURL] == nil && docs.count == 1;
 }
 
 @end

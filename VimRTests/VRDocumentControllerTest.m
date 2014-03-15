@@ -9,8 +9,8 @@
 
 #import "VRBaseTestCase.h"
 #import "VRMainWindowController.h"
-#import "VRDocument.h"
-#import "VRDocumentController.h"
+#import "VRWorkspace.h"
+#import "VRWorkspaceController.h"
 
 
 static const int PID = 1;
@@ -21,9 +21,9 @@ static const int CONTROLLER_ID = 2;
 @end
 
 @implementation VRDocumentControllerTest {
-    VRDocumentController *documentController;
+    VRWorkspaceController *documentController;
 
-    VRDocument *doc;
+    VRWorkspace *doc;
     VRMainWindowController *mainWindowController;
     MMVimManager *vimManager;
     MMVimController *vimController;
@@ -33,13 +33,13 @@ static const int CONTROLLER_ID = 2;
 - (void)setUp {
     [super setUp];
 
-    doc = mock([VRDocument class]);
+    doc = mock([VRWorkspace class]);
     mainWindowController = mock([VRMainWindowController class]);
     vimManager = mock([MMVimManager class]);
     vimController = mock([MMVimController class]);
     vimView = mock([MMVimView class]);
 
-    documentController = [[VRDocumentController alloc] init];
+    documentController = [[VRWorkspaceController alloc] init];
     documentController.vimManager = vimManager;
 
     [given([doc mainWindowController]) willReturn:mainWindowController];

@@ -10,11 +10,11 @@
 #import <Cocoa/Cocoa.h>
 
 
-@class VRDocument;
+@class VRWorkspace;
 
 
 @interface NSTabViewItem (VR)
 
-@property (weak) VRDocument *associatedDocument;
+@property (weak) VRWorkspace *associatedDocument;
 
 @end

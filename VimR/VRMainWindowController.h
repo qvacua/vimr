@@ -11,27 +11,18 @@
 #import <MacVimFramework/MacVimFramework.h>
 
 
-@class VRDocumentController;
-@class VRDocument;
+@class VRWorkspaceController;
 
 
 @interface VRMainWindowController : NSWindowController <NSWindowDelegate, MMVimControllerDelegate>
 
 #pragma mark Properties
-@property (readonly) NSArray *documents;
-@property (weak) VRDocumentController *documentController;
+@property (weak) VRWorkspaceController *workspaceController;
 @property (weak) MMVimController *vimController;
 @property (weak) MMVimView *vimView;
 
 #pragma mark Public
-- (void)openDocuments:(NSArray *)docs;
 - (void)cleanupAndClose;
-
-#pragma mark KVO
-- (NSUInteger)countOfDocuments;
-- (VRDocument *)objectInDocumentsAtIndex:(NSUInteger)index;
-- (void)insertObject:(VRDocument *)doc inDocumentsAtIndex:(NSUInteger)index;
-- (void)removeObjectFromDocumentsAtIndex:(NSUInteger)index;
 
 #pragma mark IBActions
 - (IBAction)firstDebugAction:(id)sender;
