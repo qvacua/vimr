@@ -36,7 +36,8 @@
 - (IBAction)performClose:(id)sender {
     log4Mark;
     // TODO: when the doc is dirty, we could ask to save here!
-    [self sendCommandToVim:@":bd"];
+    NSArray *descriptor = @[@"File", @"Close"];
+    [self.vimController sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:descriptor]];
 }
 
 - (IBAction)saveDocument:(id)sender {
