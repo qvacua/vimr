@@ -17,6 +17,7 @@
 @interface VRMainWindowController ()
 
 @property BOOL processOngoing;
+@property BOOL needsToResize;
 
 @end
 
@@ -29,6 +30,10 @@
 }
 
 #pragma mark IBActions
+- (IBAction)newTab:(id)sender {
+    [self sendCommandToVim:@":tabe"];
+}
+
 - (IBAction)firstDebugAction:(id)sender {
     log4Mark;
 }
@@ -159,6 +164,7 @@
 
     // TODO: we always show the tabs! NO exception!
     [self sendCommandToVim:@":set showtabline=2"];
+    self.needsToResize = YES;
 
     [self.window.contentView addSubview:self.vimView];
 
@@ -168,6 +174,7 @@
 
 - (void)vimController:(MMVimController *)controller showTabBarWithData:(NSData *)data {
     [self.vimView.tabBarControl setHidden:NO];
+    self.needsToResize = YES;
 
     log4Mark;
 }
@@ -182,6 +189,7 @@
                  data:(NSData *)data {
 
     log4Mark;
+    self.needsToResize = YES;
 }
 
 - (void)vimController:(MMVimController *)controller tabShouldUpdateWithData:(NSData *)data {
@@ -190,16 +198,19 @@
 
 - (void)vimController:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data {
     log4Mark;
+    self.needsToResize = YES;
 }
 
 - (void)vimController:(MMVimController *)controller tabDraggedWithData:(NSData *)data {
     log4Mark;
+    self.needsToResize = YES;
 }
 
 - (void)vimController:(MMVimController *)controller hideTabBarWithData:(NSData *)data {
     log4Mark;
     // TODO: we always show the tabs! NO exception!
     [self sendCommandToVim:@":set showtabline=2"];
+    self.needsToResize = YES;
 }
 
 - (void)vimController:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data {
@@ -223,6 +234,13 @@
         log4Debug(@"setting process ongoing to no");
         self.processOngoing = NO;
     }
+
+    if (!self.needsToResize) {
+        return;
+    }
+
+    log4Debug(@"resizing window to fit Vim view");
+    self.needsToResize = NO;
 
     NSSize contentSize = self.vimView.desiredSize;
     contentSize = [self constrainContentSizeToScreenSize:contentSize];

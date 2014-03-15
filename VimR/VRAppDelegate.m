@@ -33,6 +33,11 @@ TB_MANUALWIRE(workspaceController)
     [self applicationOpenUntitledFile:self.application];
 }
 
+- (IBAction)newTab:(id)sender {
+    // when we're here, no window is open yet
+    [self newDocument:sender];
+}
+
 - (IBAction)openDocument:(id)sender {
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
     openPanel.allowsMultipleSelection = YES;

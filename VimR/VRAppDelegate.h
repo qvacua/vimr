@@ -23,6 +23,7 @@
 
 #pragma mark IBActions
 - (IBAction)newDocument:(id)sender;
+- (IBAction)newTab:(id)sender;
 - (IBAction)openDocument:(id)sender;
 - (IBAction)showHelp:(id)sender;
 
