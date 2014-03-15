@@ -400,11 +400,6 @@
         if (NSMaxX(newFrame) > NSMaxX(maxFrame)) {
             newFrame.origin.x = NSMaxX(maxFrame) - newFrame.size.width;
         }
-
-        // Keep window centered when in native full-screen.
-        NSRect screenFrame = screen.frame;
-        newFrame.origin.y = screenFrame.origin.y + round(0.5 * (screenFrame.size.height - newFrame.size.height));
-        newFrame.origin.x = screenFrame.origin.x + round(0.5 * (screenFrame.size.width - newFrame.size.width));
     }
 
     [window setFrame:newFrame display:YES];
