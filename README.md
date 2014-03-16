@@ -10,6 +10,8 @@ Project VimR is an attempt to refine the Vim experience.
 
 The very first goal is to get a naked Vim running using [MacVimFramework](https://github.com/qvacua/macvim). Once we have that, we'll start to add convenience GUI features similar to those present in modern editors for Mac. Let's see how far we get! :)
 
+[![Build Status](https://travis-ci.org/qvacua/vimr.svg?branch=master)](https://travis-ci.org/qvacua/vimr)
+
 How to Build
 ------------
 First, clone the project and the `macvim` submodule. Then, build the `macvim` submodule: Assuming you're in the project root

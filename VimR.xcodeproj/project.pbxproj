@@ -8,10 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1929B49A8267EBEADBF79B2A /* NSArray+VR.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7D3A28BF9EF2C8C8D60 /* NSArray+VR.m */; };
-		1929B49C8EFA5526541CE614 /* VRDocumentTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B3D4784BDAFFAAB715FA /* VRDocumentTest.m */; };
 		1929B65D8458FE1E5D4E0594 /* VRBaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9CC266B14FF9F1AABF9 /* VRBaseTestCase.m */; };
 		1929B93BBCD53898D16541CD /* VRManualBeanProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCAF60827409FA845CAC /* VRManualBeanProvider.m */; };
-		1929BA41015080AAF2E5B287 /* VRDocumentControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD37D92EFEEA7FE4F8BB /* VRDocumentControllerTest.m */; };
 		1929BA4727FA0A8D2FD0A642 /* VRWorkspaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B78A8084470EC33DE744 /* VRWorkspaceController.m */; };
 		1929BA9297DE6121D8B98CA0 /* NSArray+VR.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7D3A28BF9EF2C8C8D60 /* NSArray+VR.m */; };
 		1929BBA604D410BBCDC0D16E /* MMAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBF8BE880500FCF8B9A6 /* MMAlert.m */; };
@@ -20,17 +18,16 @@
 		1929BD434C100AD15EDA2FAF /* VRMainWindowControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8515E4EA94E1C7EB1F9 /* VRMainWindowControllerTest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1929BE2CA3488AB3824DF598 /* VRManualBeanProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCAF60827409FA845CAC /* VRManualBeanProvider.m */; };
 		1929BEE6213A8875598A2713 /* VRWorkspaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B78A8084470EC33DE744 /* VRWorkspaceController.m */; };
+		4B36F12E18DF70C00010ACE2 /* MacVimFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B64254918C23F800012ED42 /* MacVimFramework.framework */; };
+		4B36F12F18DF713D0010ACE2 /* MacVimFramework.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B64254918C23F800012ED42 /* MacVimFramework.framework */; };
 		4B64254B18C23F800012ED42 /* MacVimFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B64254918C23F800012ED42 /* MacVimFramework.framework */; };
-		4B64254C18C23F800012ED42 /* MacVimFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B64254918C23F800012ED42 /* MacVimFramework.framework */; };
 		4B64254D18C23F800012ED42 /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B64254A18C23F800012ED42 /* PSMTabBarControl.framework */; };
-		4B64254E18C23F800012ED42 /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B64254A18C23F800012ED42 /* PSMTabBarControl.framework */; };
-		4B64255018C23FE20012ED42 /* MacVimFramework.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B64254918C23F800012ED42 /* MacVimFramework.framework */; };
 		4B64255118C23FE20012ED42 /* PSMTabBarControl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B64254A18C23F800012ED42 /* PSMTabBarControl.framework */; };
 		4B64255A18C26CB00012ED42 /* VRMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B64255818C26CB00012ED42 /* VRMainWindowController.m */; };
 		4B64255B18C26CB00012ED42 /* VRMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B64255818C26CB00012ED42 /* VRMainWindowController.m */; };
 		4B64256E18C2846B0012ED42 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B64257018C2846B0012ED42 /* MainWindow.xib */; };
-		4BABEDC318C5243F00317232 /* MacVimFramework.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B64254918C23F800012ED42 /* MacVimFramework.framework */; };
-		4BABEDC418C5243F00317232 /* PSMTabBarControl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B64254A18C23F800012ED42 /* PSMTabBarControl.framework */; };
+		4B78D61518D644A000CAA020 /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B64254A18C23F800012ED42 /* PSMTabBarControl.framework */; };
+		4B78D61618D644E500CAA020 /* MMAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBF8BE880500FCF8B9A6 /* MMAlert.m */; };
 		4BE9241718C20DBC00E67BB6 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE9241618C20DBC00E67BB6 /* Cocoa.framework */; };
 		4BE9242118C20DBC00E67BB6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4BE9241F18C20DBC00E67BB6 /* InfoPlist.strings */; };
 		4BE9242318C20DBC00E67BB6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE9242218C20DBC00E67BB6 /* main.m */; };
@@ -62,19 +59,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				4B64255018C23FE20012ED42 /* MacVimFramework.framework in CopyFiles */,
+				4B36F12F18DF713D0010ACE2 /* MacVimFramework.framework in CopyFiles */,
 				4B64255118C23FE20012ED42 /* PSMTabBarControl.framework in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4BABEDC218C5242400317232 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 16;
-			files = (
-				4BABEDC318C5243F00317232 /* MacVimFramework.framework in CopyFiles */,
-				4BABEDC418C5243F00317232 /* PSMTabBarControl.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,7 +69,6 @@
 /* Begin PBXFileReference section */
 		1929B145B0B06ED9C019212D /* VRLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRLog.h; sourceTree = "<group>"; };
 		1929B27A0B9B328D44155A68 /* VRWorkspaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRWorkspaceController.h; sourceTree = "<group>"; };
-		1929B3D4784BDAFFAAB715FA /* VRDocumentTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRDocumentTest.m; sourceTree = "<group>"; };
 		1929B4CEDB2535E83B22A788 /* VRWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRWindow.h; sourceTree = "<group>"; };
 		1929B5926F26F6A0CCF86D2B /* NSArray+VR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+VR.h"; sourceTree = "<group>"; };
 		1929B7576C87840B1F96E465 /* VRUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRUtils.h; sourceTree = "<group>"; };
@@ -95,7 +80,6 @@
 		1929BB7A8FA90C2B0F82BED8 /* VRBaseTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRBaseTestCase.h; sourceTree = "<group>"; };
 		1929BBF8BE880500FCF8B9A6 /* MMAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAlert.m; sourceTree = "<group>"; };
 		1929BCAF60827409FA845CAC /* VRManualBeanProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRManualBeanProvider.m; sourceTree = "<group>"; };
-		1929BD37D92EFEEA7FE4F8BB /* VRDocumentControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRDocumentControllerTest.m; sourceTree = "<group>"; };
 		1929BEF2CE80B94809D83914 /* MMAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAlert.h; sourceTree = "<group>"; };
 		35DDD94E48FE41568A1349A2 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		4B64254918C23F800012ED42 /* MacVimFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MacVimFramework.framework; path = build/VimR/Build/Products/Debug/MacVimFramework.framework; sourceTree = "<group>"; };
@@ -141,10 +125,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B36F12E18DF70C00010ACE2 /* MacVimFramework.framework in Frameworks */,
+				4B78D61518D644A000CAA020 /* PSMTabBarControl.framework in Frameworks */,
 				4BE9243718C20DBC00E67BB6 /* Cocoa.framework in Frameworks */,
 				4BE9243618C20DBC00E67BB6 /* XCTest.framework in Frameworks */,
-				4B64254C18C23F800012ED42 /* MacVimFramework.framework in Frameworks */,
-				4B64254E18C23F800012ED42 /* PSMTabBarControl.framework in Frameworks */,
 				E6B1AC2D372E4EA58650E10C /* libPods-VimRTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -255,9 +239,7 @@
 			isa = PBXGroup;
 			children = (
 				4BE9243B18C20DBC00E67BB6 /* Supporting Files */,
-				1929B3D4784BDAFFAAB715FA /* VRDocumentTest.m */,
 				1929B4B3928F746175D2DDF9 /* Test Support */,
-				1929BD37D92EFEEA7FE4F8BB /* VRDocumentControllerTest.m */,
 				1929B8515E4EA94E1C7EB1F9 /* VRMainWindowControllerTest.m */,
 			);
 			path = VimRTests;
@@ -304,7 +286,6 @@
 				4BE9243118C20DBC00E67BB6 /* Frameworks */,
 				4BE9243218C20DBC00E67BB6 /* Resources */,
 				09BCFBB1D8214DAE8A0CFEB5 /* Copy Pods Resources */,
-				4BABEDC218C5242400317232 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -456,12 +437,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B78D61618D644E500CAA020 /* MMAlert.m in Sources */,
 				4B64255B18C26CB00012ED42 /* VRMainWindowController.m in Sources */,
-				1929B49C8EFA5526541CE614 /* VRDocumentTest.m in Sources */,
 				1929B65D8458FE1E5D4E0594 /* VRBaseTestCase.m in Sources */,
 				1929BA4727FA0A8D2FD0A642 /* VRWorkspaceController.m in Sources */,
 				1929B93BBCD53898D16541CD /* VRManualBeanProvider.m in Sources */,
-				1929BA41015080AAF2E5B287 /* VRDocumentControllerTest.m in Sources */,
 				1929BD434C100AD15EDA2FAF /* VRMainWindowControllerTest.m in Sources */,
 				1929BCADA23D06F1B35B62F9 /* VRWindow.m in Sources */,
 				1929B49A8267EBEADBF79B2A /* NSArray+VR.m in Sources */,
@@ -556,6 +536,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				SYMROOT = build;
 			};
 			name = Debug;
 		};
@@ -587,6 +568,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				SDKROOT = macosx;
+				SYMROOT = build;
 			};
 			name = Release;
 		};
@@ -598,9 +580,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/VimR-azzqmpdaianyxbhhpymfwklybegy/Build/Products/Debug",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/VimR-gwcecgeapvplzzfrusftahjeulej/Build/Products/Debug",
-					/Users/hat/Projects/vimr/build/VimR/Build/Products/Debug,
+					"$(PROJECT_DIR)/build/VimR/Build/Products/Debug",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VimR/VimR-Prefix.pch";
@@ -619,9 +599,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/VimR-azzqmpdaianyxbhhpymfwklybegy/Build/Products/Debug",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/VimR-gwcecgeapvplzzfrusftahjeulej/Build/Products/Debug",
-					/Users/hat/Projects/vimr/build/VimR/Build/Products/Debug,
+					"$(PROJECT_DIR)/build/VimR/Build/Products/Debug",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VimR/VimR-Prefix.pch";
@@ -636,12 +614,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7A3FC0B1787A4B05B5E0AE34 /* Pods-VimRTests.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/VimR.app/Contents/MacOS/VimR";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
-					/Users/hat/Projects/vimr/build/VimR/Build/Products/Debug,
+					"$(PROJECT_DIR)/build/VimR/Build/Products/Debug",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VimR/VimR-Prefix.pch";
@@ -659,12 +636,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7A3FC0B1787A4B05B5E0AE34 /* Pods-VimRTests.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/VimR.app/Contents/MacOS/VimR";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
-					/Users/hat/Projects/vimr/build/VimR/Build/Products/Debug,
+					"$(PROJECT_DIR)/build/VimR/Build/Products/Debug",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VimR/VimR-Prefix.pch";

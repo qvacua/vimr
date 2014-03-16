@@ -21,7 +21,7 @@ DerivedData
 Pods
 
 # Vim
-.swp
+*.swp
 
 # Custom
 build/*

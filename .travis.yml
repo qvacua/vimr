@@ -1,0 +1,13 @@
+language: objective-c
+rvm: 1.9.3
+before_install:
+    - gem install cocoapods -v '0.29.0'
+    - gem install ocunit2junit
+    - export LC_ALL="en_US.UTF-8"
+before_script:
+    - cd macvim/src
+    - ./configure
+    - make
+    - cd ../..
+script: xcodebuild -workspace VimR.xcworkspace -scheme VimR -derivedDataPath build/VimR -configuration Debug build test
+

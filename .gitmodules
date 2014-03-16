@@ -1,3 +1,3 @@
 [submodule "macvim"]
 	path = macvim
-	url = git@github.com:qvacua/macvim.git
+	url = git://github.com/qvacua/macvim.git
