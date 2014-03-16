@@ -8,6 +8,7 @@
  */
 
 #import <PSMTabBarControl/PSMTabBarControl.h>
+#import <MacVimFramework/MacVimFramework.h>
 #import "VRMainWindowController.h"
 #import "VRLog.h"
 #import "MMAlert.h"
@@ -36,6 +37,8 @@
 
 - (IBAction)firstDebugAction:(id)sender {
     log4Mark;
+
+    log4Debug(@"%@", [self.vimController currentTab]);
 }
 
 - (IBAction)performClose:(id)sender {
@@ -199,6 +202,8 @@
 - (void)vimController:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data {
     log4Mark;
     self.needsToResize = YES;
+
+    log4Debug(@"tabs: %@", [self.vimController tabs]);
 }
 
 - (void)vimController:(MMVimController *)controller tabDraggedWithData:(NSData *)data {
@@ -291,6 +296,11 @@
 }
 
 - (BOOL)windowShouldClose:(id)sender {
+    log4Mark;
+    /**
+    * this gets called when Cmd-W
+    */
+
     // don't close the window or tab; instead let Vim decide what to do
     [self.vimController sendMessage:VimShouldCloseMsgID data:nil];
 
