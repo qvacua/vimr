@@ -50,7 +50,14 @@
 
 - (IBAction)saveDocument:(id)sender {
     log4Mark;
-    [self sendCommandToVim:@":w"];
+
+    MMBuffer *currentBuffer = self.vimController.currentTab.buffer;
+    if (currentBuffer.fileName == nil) {
+        log4Debug(@"file name nil");
+    }
+
+    NSArray *descriptor = @[@"File", @"Save"];
+    [self.vimController sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:descriptor]];
 }
 
 - (IBAction)saveDocumentAs:(id)sender {
