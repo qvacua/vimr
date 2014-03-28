@@ -27,7 +27,10 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 
 #pragma mark Public
 - (void)newWorkspace {
-    int pid = [self.vimManager pidOfNewVimControllerWithArgs:nil];
+    // TODO: for time being, only one main window
+    if (self.mainWindowController == nil) {
+        [self.vimManager pidOfNewVimControllerWithArgs:nil];
+    }
 }
 
 - (void)openFiles:(NSArray *)fileUrls {
