@@ -83,7 +83,7 @@ TB_MANUALWIRE(workspaceController)
 }
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender {
-    return NO;
+    return YES;
 }
 
 @end

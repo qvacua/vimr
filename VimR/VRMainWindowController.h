@@ -35,6 +35,10 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)dealloc;
 
+#pragma mark MMViewDelegate informal protocol
+- (void)liveResizeWillStart;
+- (void)liveResizeDidEnd;
+
 #pragma mark MMVimControllerDelegate
 - (void)vimController:(MMVimController *)controller handleShowDialogWithButtonTitles:(NSArray *)buttonTitles
                 style:(NSAlertStyle)style message:(NSString *)message text:(NSString *)text
@@ -42,7 +46,7 @@
 - (void)vimController:(MMVimController *)controller showScrollbarWithIdentifier:(int32_t)identifier state:(BOOL)state
                  data:(NSData *)data;
 - (void)vimController:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
-               isLive:(BOOL)live keepOnScreen:(BOOL)screen data:(NSData *)data;
+               isLive:(BOOL)live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data;
 - (void)vimController:(MMVimController *)controller openWindowWithData:(NSData *)data;
 - (void)vimController:(MMVimController *)controller showTabBarWithData:(NSData *)data;
 - (void)vimController:(MMVimController *)controller setScrollbarThumbValue:(float)value

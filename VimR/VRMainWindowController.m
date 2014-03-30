@@ -19,12 +19,28 @@
 
 @property BOOL processOngoing;
 @property BOOL needsToResize;
+@property BOOL isReplyToGuiResize;
 
 @end
 
-@implementation VRMainWindowController
+@implementation VRMainWindowController {
+    __weak MMVimView *_vimView;
+}
 
 #pragma mark Public
+- (MMVimView *)vimView {
+    @synchronized (self) {
+        return _vimView;
+    }
+}
+
+- (void)setVimView:(MMVimView *)vimView {
+    @synchronized (self) {
+        _vimView = vimView;
+        [_vimView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+    }
+}
+
 - (void)cleanupAndClose {
     log4Mark;
     [self close];
@@ -39,6 +55,7 @@
     log4Mark;
 
     log4Debug(@"%@", [self.vimController currentTab]);
+    log4Debug(@"%@", [NSValue valueWithSize:self.vimView.frame.size]);
 }
 
 - (IBAction)performClose:(id)sender {
@@ -85,6 +102,57 @@
 
     [self.vimView removeFromSuperviewWithoutNeedingDisplay];
     [self.vimView cleanup];
+}
+
+#pragma mark MMViewDelegate informal protocol
+- (void)liveResizeWillStart {
+    /**
+    * NOTE: During live resize Cocoa goes into "event tracking mode".  We have
+    * to add the backend connection to this mode in order for resize messages
+    * from Vim to reach MacVim.  We do not wish to always listen to requests
+    * in event tracking mode since then MacVim could receive DO messages at
+    * unexpected times (e.g. when a key equivalent is pressed and the menu bar
+    * momentarily lights up).
+    */
+    log4Debug(@"starting resize");
+    [self.connectionToBackend addRequestMode:NSEventTrackingRunLoopMode];
+}
+
+- (void)liveResizeDidEnd {
+    // See comment regarding event tracking mode in -liveResizeWillStart.
+    [self.connectionToBackend removeRequestMode:NSEventTrackingRunLoopMode];
+
+    /**
+    * NOTE: During live resize messages from MacVim to Vim are often dropped
+    * (because too many messages are sent at once).  This may lead to
+    * inconsistent states between Vim and MacVim; to avoid this we send a
+    * synchronous resize message to Vim now (this is not fool-proof, but it
+    * does seem to work quite well).
+    * Do NOT send a SetTextDimensionsMsgID message (as opposed to
+    * LiveResizeMsgID) since then the view is constrained to not be larger
+    * than the screen the window mostly occupies; this makes it impossible to
+    * resize the window across multiple screens.
+    */
+
+    int constrained[2];
+    NSView <MMTextViewProtocol> *textView = self.vimView.textView;
+    NSSize textViewSize = textView.frame.size;
+    [textView constrainRows:&constrained[0] columns:&constrained[1] toSize:textViewSize];
+
+    log4Debug(@"End of live resize, notify Vim that text dimensions are %dx%d", constrained[1], constrained[0]);
+
+    NSData *data = [NSData dataWithBytes:constrained length:2 * sizeof(int)];
+    BOOL liveResizeMsgSuccessful = [self.vimController sendMessageNow:LiveResizeMsgID data:data timeout:.5];
+
+    if (!liveResizeMsgSuccessful) {
+        /**
+        * Sending of synchronous message failed.  Force the window size to
+        * match the last dimensions received from Vim, otherwise we end up
+        * with inconsistent states.
+        */
+        log4Debug(@"failed");
+        [self resizeWindowToFitContentSize:self.vimView.desiredSize];
+    }
 }
 
 #pragma mark MMVimControllerDelegate
@@ -162,9 +230,15 @@
 }
 
 - (void)vimController:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
-               isLive:(BOOL)live keepOnScreen:(BOOL)screen data:(NSData *)data {
+               isLive:(BOOL)live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data {
 
+    log4Mark;
     [self.vimView setDesiredRows:rows columns:columns];
+
+    if (!live) {
+        self.needsToResize = YES;
+        self.isReplyToGuiResize = isReplyToGuiResize;
+    }
 }
 
 - (void)vimController:(MMVimController *)controller openWindowWithData:(NSData *)data {
@@ -172,19 +246,17 @@
 
     self.vimView.tabBarControl.styleNamed = @"Metal";
 
-    // TODO: we always show the tabs! NO exception!
-    [self sendCommandToVim:@":set showtabline=2"];
-    self.needsToResize = YES;
-
     [self.window.contentView addSubview:self.vimView];
 
     [self.vimView addNewTabViewItem];
     [self.window makeFirstResponder:self.vimView.textView];
+
+    // no need to set needsToResize to YES here since setTextDimensionsWith.. method gets called first and set it to YES
 }
 
 - (void)vimController:(MMVimController *)controller showTabBarWithData:(NSData *)data {
     [self.vimView.tabBarControl setHidden:NO];
-    self.needsToResize = YES;
+//    self.needsToResize = YES;
 
     log4Mark;
 }
@@ -199,7 +271,7 @@
                  data:(NSData *)data {
 
     log4Mark;
-    self.needsToResize = YES;
+//    self.needsToResize = YES;
 }
 
 - (void)vimController:(MMVimController *)controller tabShouldUpdateWithData:(NSData *)data {
@@ -208,21 +280,21 @@
 
 - (void)vimController:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data {
     log4Mark;
-    self.needsToResize = YES;
+//    self.needsToResize = YES;
 
     log4Debug(@"tabs: %@", [self.vimController tabs]);
 }
 
 - (void)vimController:(MMVimController *)controller tabDraggedWithData:(NSData *)data {
     log4Mark;
-    self.needsToResize = YES;
+//    self.needsToResize = YES;
 }
 
 - (void)vimController:(MMVimController *)controller hideTabBarWithData:(NSData *)data {
     log4Mark;
     // TODO: we always show the tabs! NO exception!
     [self sendCommandToVim:@":set showtabline=2"];
-    self.needsToResize = YES;
+//    self.needsToResize = YES;
 }
 
 - (void)vimController:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data {
@@ -258,9 +330,15 @@
     contentSize = [self constrainContentSizeToScreenSize:contentSize];
     int rows = 0, cols = 0;
     contentSize = [self.vimView constrainRows:&rows columns:&cols toSize:contentSize];
+
+    log4Debug(@"%d X %d", rows, cols);
+    log4Debug(@"size: %@", [NSValue valueWithSize:contentSize]);
+
     self.vimView.frameSize = contentSize;
 
     [self resizeWindowToFitContentSize:contentSize];
+
+    self.isReplyToGuiResize = NO;
 }
 
 - (void)vimController:(MMVimController *)controller removeToolbarItemWithIdentifier:(NSString *)identifier {
@@ -312,6 +390,16 @@
     [self.vimController sendMessage:VimShouldCloseMsgID data:nil];
 
     return NO;
+}
+
+- (void)windowDidResize:(id)sender {
+    /**
+    * NOTE: Since we have no control over when the window may resize (Cocoa
+    * may resize automatically) we simply set the view to fill the entire
+    * window.  The vim view takes care of notifying Vim if the number of
+    * (rows,columns) changed.
+    */
+    self.vimView.frameSize = [self.window contentRectForFrameRect:self.window.frame].size;
 }
 
 #pragma mark Private
@@ -385,7 +473,7 @@
     NSRect newFrame = [window frameRectForContentRect:contentRect];
 
     NSScreen *screen = window.screen;
-    if (screen) {
+    if (self.isReplyToGuiResize && screen) {
         // Ensure that the window fits inside the visible part of the screen.
         // If there are more than one screen the window will be moved to fit
         // entirely in the screen that most of it occupies.
@@ -456,6 +544,12 @@
     }
 
     return contentSize;
+}
+
+- (NSConnection *)connectionToBackend {
+    NSDistantObject *proxy = self.vimController.backendProxy;
+
+    return proxy.connectionForProxy;
 }
 
 @end
