@@ -21,6 +21,9 @@
 @property BOOL needsToResize;
 @property BOOL isReplyToGuiResize;
 
+@property int initialRows;
+@property int initialColumns;
+@property BOOL setUpDone;
 @end
 
 @implementation VRMainWindowController {
@@ -233,7 +236,13 @@
                isLive:(BOOL)live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data {
 
     log4Mark;
+    log4Debug(@"%d X %d\tlive: %@\tkeepOnScreen: %@", rows, columns, @(live), @(isReplyToGuiResize));
     [self.vimView setDesiredRows:rows columns:columns];
+
+    if (!self.setUpDone) {
+        log4Debug(@"not yet setup");
+        return;
+    }
 
     if (!live) {
         self.needsToResize = YES;
@@ -242,6 +251,8 @@
 }
 
 - (void)vimController:(MMVimController *)controller openWindowWithData:(NSData *)data {
+    log4Mark;
+
     self.window.acceptsMouseMovedEvents = YES; // Vim wants to have mouse move events
 
     self.vimView.tabBarControl.styleNamed = @"Metal";
@@ -249,9 +260,16 @@
     [self.window.contentView addSubview:self.vimView];
 
     [self.vimView addNewTabViewItem];
-    [self.window makeFirstResponder:self.vimView.textView];
 
-    // no need to set needsToResize to YES here since setTextDimensionsWith.. method gets called first and set it to YES
+    self.setUpDone = YES;
+
+    [self updateResizeConstraints];
+
+    self.isReplyToGuiResize = YES;
+
+//    [self resizeWindowToFitContentSize:self.vimView.desiredSize];
+
+    [self.window makeFirstResponder:self.vimView.textView];
 }
 
 - (void)vimController:(MMVimController *)controller showTabBarWithData:(NSData *)data {
@@ -280,21 +298,16 @@
 
 - (void)vimController:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data {
     log4Mark;
-//    self.needsToResize = YES;
 
     log4Debug(@"tabs: %@", [self.vimController tabs]);
 }
 
 - (void)vimController:(MMVimController *)controller tabDraggedWithData:(NSData *)data {
     log4Mark;
-//    self.needsToResize = YES;
 }
 
 - (void)vimController:(MMVimController *)controller hideTabBarWithData:(NSData *)data {
     log4Mark;
-    // TODO: we always show the tabs! NO exception!
-    [self sendCommandToVim:@":set showtabline=2"];
-//    self.needsToResize = YES;
 }
 
 - (void)vimController:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data {
@@ -328,11 +341,12 @@
 
     NSSize contentSize = self.vimView.desiredSize;
     contentSize = [self constrainContentSizeToScreenSize:contentSize];
+    log4Debug(@"uncorrected size: %@", [NSValue valueWithSize:contentSize]);
     int rows = 0, cols = 0;
     contentSize = [self.vimView constrainRows:&rows columns:&cols toSize:contentSize];
 
     log4Debug(@"%d X %d", rows, cols);
-    log4Debug(@"size: %@", [NSValue valueWithSize:contentSize]);
+    log4Debug(@"corrected size: %@", [NSValue valueWithSize:contentSize]);
 
     self.vimView.frameSize = contentSize;
 
@@ -462,6 +476,7 @@
 }
 
 - (void)resizeWindowToFitContentSize:(NSSize)contentSize {
+    logSize4Debug(@"contentSize", contentSize);
     NSWindow *window = self.window;
     NSRect frame = window.frame;
     NSRect contentRect = [window contentRectForFrameRect:frame];
@@ -471,6 +486,9 @@
     contentRect.size = contentSize;
 
     NSRect newFrame = [window frameRectForContentRect:contentRect];
+
+    logRect4Debug(@"old", frame);
+    logRect4Debug(@"new", newFrame);
 
     NSScreen *screen = window.screen;
     if (self.isReplyToGuiResize && screen) {
@@ -512,6 +530,7 @@
     NSPoint oldTopLeft = {frame.origin.x, NSMaxY(frame)};
     NSPoint newTopLeft = {newFrame.origin.x, NSMaxY(newFrame)};
     if (NSEqualPoints(oldTopLeft, newTopLeft)) {
+        log4Debug(@"returning since top left point equal");
         return;
     }
 
@@ -550,6 +569,18 @@
     NSDistantObject *proxy = self.vimController.backendProxy;
 
     return proxy.connectionForProxy;
+}
+
+- (void)updateResizeConstraints {
+    if (!self.setUpDone) {
+        return;
+    }
+
+    // Set the resize increments to exactly match the font size; this way the
+    // window will always hold an integer number of (rows,columns).
+    self.window.contentResizeIncrements = self.vimView.textView.cellSize;
+
+    self.window.contentMinSize = self.vimView.minSize;
 }
 
 @end
