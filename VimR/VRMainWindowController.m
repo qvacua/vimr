@@ -20,30 +20,13 @@
 @property BOOL processOngoing;
 @property BOOL needsToResize;
 @property BOOL isReplyToGuiResize;
-
-@property int initialRows;
-@property int initialColumns;
 @property BOOL setUpDone;
+
 @end
 
-@implementation VRMainWindowController {
-    __weak MMVimView *_vimView;
-}
+@implementation VRMainWindowController
 
 #pragma mark Public
-- (MMVimView *)vimView {
-    @synchronized (self) {
-        return _vimView;
-    }
-}
-
-- (void)setVimView:(MMVimView *)vimView {
-    @synchronized (self) {
-        _vimView = vimView;
-        [_vimView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-    }
-}
-
 - (void)cleanupAndClose {
     log4Mark;
     [self close];
@@ -230,6 +213,7 @@
                 state:(BOOL)state data:(NSData *)data {
 
     [self.vimView showScrollbarWithIdentifier:identifier state:state];
+    self.needsToResize = YES;
 }
 
 - (void)vimController:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
@@ -258,23 +242,21 @@
     self.vimView.tabBarControl.styleNamed = @"Metal";
 
     [self.window.contentView addSubview:self.vimView];
+    self.vimView.autoresizingMask = NSViewNotSizable;
 
     [self.vimView addNewTabViewItem];
 
     self.setUpDone = YES;
-
-    [self updateResizeConstraints];
-
     self.isReplyToGuiResize = YES;
 
-//    [self resizeWindowToFitContentSize:self.vimView.desiredSize];
+    [self updateResizeConstraints];
+    [self resizeWindowToFitContentSize:self.vimView.desiredSize];
 
     [self.window makeFirstResponder:self.vimView.textView];
 }
 
 - (void)vimController:(MMVimController *)controller showTabBarWithData:(NSData *)data {
     [self.vimView.tabBarControl setHidden:NO];
-//    self.needsToResize = YES;
 
     log4Mark;
 }
@@ -289,7 +271,7 @@
                  data:(NSData *)data {
 
     log4Mark;
-//    self.needsToResize = YES;
+    self.needsToResize = YES;
 }
 
 - (void)vimController:(MMVimController *)controller tabShouldUpdateWithData:(NSData *)data {
