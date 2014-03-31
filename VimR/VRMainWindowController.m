@@ -138,6 +138,8 @@
         log4Debug(@"failed");
         [self resizeWindowToFitContentSize:self.vimView.desiredSize];
     }
+
+    [self setWindowTitleToCurrentBuffer];
 }
 
 #pragma mark MMVimControllerDelegate
@@ -304,16 +306,8 @@
 }
 
 - (void)vimController:(MMVimController *)controller setWindowTitle:(NSString *)title data:(NSData *)data {
-    NSString *filePath = self.vimController.currentTab.buffer.fileName;
-    NSString *filename = filePath.lastPathComponent;
+    [self setWindowTitleToCurrentBuffer];
 
-    if (filename == nil) {
-        self.window.title = @"Untitled";
-        return;
-    }
-
-    NSString *containingFolder = filePath.stringByDeletingLastPathComponent.lastPathComponent;
-    self.window.title = SF(@"%@ — %@", filename, containingFolder);
 }
 
 - (void)vimController:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue {
@@ -570,6 +564,19 @@
     // window will always hold an integer number of (rows, columns).
     self.window.contentResizeIncrements = self.vimView.textView.cellSize;
     self.window.contentMinSize = self.vimView.minSize;
+}
+
+- (void)setWindowTitleToCurrentBuffer {
+    NSString *filePath = self.vimController.currentTab.buffer.fileName;
+    NSString *filename = filePath.lastPathComponent;
+
+    if (filename == nil) {
+        self.window.title = @"Untitled";
+        return;
+    }
+
+    NSString *containingFolder = filePath.stringByDeletingLastPathComponent.lastPathComponent;
+    self.window.title = SF(@"%@ — %@", filename, containingFolder);
 }
 
 @end
