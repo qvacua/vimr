@@ -38,14 +38,12 @@
 }
 
 - (IBAction)firstDebugAction:(id)sender {
-    log4Mark;
-
     log4Debug(@"%@", [self.vimController currentTab]);
-    log4Debug(@"%@", [NSValue valueWithSize:self.vimView.frame.size]);
 }
 
 - (IBAction)performClose:(id)sender {
     log4Mark;
+
     // TODO: when the doc is dirty, we could ask to save here!
     NSArray *descriptor = @[@"File", @"Close"];
     [self.vimController sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:descriptor]];
@@ -65,11 +63,13 @@
 
 - (IBAction)saveDocumentAs:(id)sender {
     log4Mark;
+
     [self sendCommandToVim:@"browse confirm sav"];
 }
 
 - (IBAction)revertDocumentToSaved:(id)sender {
     log4Mark;
+
     [self sendCommandToVim:@":e!"];
 }
 
@@ -100,7 +100,6 @@
     * unexpected times (e.g. when a key equivalent is pressed and the menu bar
     * momentarily lights up).
     */
-    log4Debug(@"starting resize");
     [self.connectionToBackend addRequestMode:NSEventTrackingRunLoopMode];
 }
 
@@ -305,7 +304,16 @@
 }
 
 - (void)vimController:(MMVimController *)controller setWindowTitle:(NSString *)title data:(NSData *)data {
-    self.window.title = title;
+    NSString *filePath = self.vimController.currentTab.buffer.fileName;
+    NSString *filename = filePath.lastPathComponent;
+
+    if (filename == nil) {
+        self.window.title = @"Untitled";
+        return;
+    }
+
+    NSString *containingFolder = filePath.stringByDeletingLastPathComponent.lastPathComponent;
+    self.window.title = SF(@"%@ — %@", filename, containingFolder);
 }
 
 - (void)vimController:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue {
@@ -526,7 +534,7 @@
 
 - (NSSize)constrainContentSizeToScreenSize:(NSSize)contentSize {
     NSWindow *win = self.window;
-    if (!win.screen) {
+    if (win.screen == nil) {
         return contentSize;
     }
 
@@ -559,9 +567,8 @@
     }
 
     // Set the resize increments to exactly match the font size; this way the
-    // window will always hold an integer number of (rows,columns).
+    // window will always hold an integer number of (rows, columns).
     self.window.contentResizeIncrements = self.vimView.textView.cellSize;
-
     self.window.contentMinSize = self.vimView.minSize;
 }
 
