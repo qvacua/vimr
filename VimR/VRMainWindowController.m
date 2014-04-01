@@ -17,10 +17,8 @@
 
 @interface VRMainWindowController ()
 
-@property BOOL processOngoing;
-@property BOOL needsToResize;
 @property BOOL isReplyToGuiResize;
-@property BOOL setUpDone;
+@property BOOL vimViewSetUpDone;
 
 @end
 
@@ -214,7 +212,7 @@
                 state:(BOOL)state data:(NSData *)data {
 
     [self.vimView showScrollbarWithIdentifier:identifier state:state];
-    self.needsToResize = YES;
+    self.needsToResizeVimView = YES;
 }
 
 - (void)vimController:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
@@ -224,13 +222,13 @@
     log4Debug(@"%d X %d\tlive: %@\tkeepOnScreen: %@", rows, columns, @(live), @(isReplyToGuiResize));
     [self.vimView setDesiredRows:rows columns:columns];
 
-    if (!self.setUpDone) {
+    if (!self.vimViewSetUpDone) {
         log4Debug(@"not yet setup");
         return;
     }
 
     if (!live) {
-        self.needsToResize = YES;
+        self.needsToResizeVimView = YES;
         self.isReplyToGuiResize = isReplyToGuiResize;
     }
 }
@@ -247,7 +245,7 @@
 
     [self.vimView addNewTabViewItem];
 
-    self.setUpDone = YES;
+    self.vimViewSetUpDone = YES;
     self.isReplyToGuiResize = YES;
 
     [self updateResizeConstraints];
@@ -257,9 +255,8 @@
 }
 
 - (void)vimController:(MMVimController *)controller showTabBarWithData:(NSData *)data {
-    [self.vimView.tabBarControl setHidden:NO];
-
     log4Mark;
+    self.vimView.tabBarControl.hidden = NO;
 }
 
 - (void)vimController:(MMVimController *)controller setScrollbarThumbValue:(float)value proportion:(float)proportion
@@ -272,7 +269,7 @@
                  data:(NSData *)data {
 
     log4Mark;
-    self.needsToResize = YES;
+    self.needsToResizeVimView = YES;
 }
 
 - (void)vimController:(MMVimController *)controller tabShouldUpdateWithData:(NSData *)data {
@@ -291,6 +288,7 @@
 
 - (void)vimController:(MMVimController *)controller hideTabBarWithData:(NSData *)data {
     log4Mark;
+    self.vimView.tabBarControl.hidden = YES;
 }
 
 - (void)vimController:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data {
@@ -311,17 +309,12 @@
 }
 
 - (void)vimController:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue {
-    if (self.processOngoing) {
-        log4Debug(@"setting process ongoing to no");
-        self.processOngoing = NO;
-    }
-
-    if (!self.needsToResize) {
+    if (!self.needsToResizeVimView) {
         return;
     }
 
     log4Debug(@"resizing window to fit Vim view");
-    self.needsToResize = NO;
+    self.needsToResizeVimView = NO;
 
     NSSize contentSize = self.vimView.desiredSize;
     contentSize = [self constrainContentSizeToScreenSize:contentSize];
@@ -407,12 +400,6 @@
 }
 
 - (void)sendCommandToVim:(NSString *)command {
-    while (self.processOngoing) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-    }
-
-    self.processOngoing = YES;
-
     log4Debug(@"sending command %@", command);
     [self.vimController addVimInput:SF(@"<C-\\><C-N>%@<CR>", command)];
 }
@@ -556,7 +543,7 @@
 }
 
 - (void)updateResizeConstraints {
-    if (!self.setUpDone) {
+    if (!self.vimViewSetUpDone) {
         return;
     }
 

@@ -20,6 +20,7 @@
 @property (weak) VRWorkspaceController *workspaceController;
 @property (weak) MMVimController *vimController;
 @property (weak) MMVimView *vimView;
+@property BOOL needsToResizeVimView;
 
 #pragma mark Public
 - (void)cleanupAndClose;
@@ -58,9 +59,9 @@
 - (void)vimController:(MMVimController *)controller tabDraggedWithData:(NSData *)data;
 - (void)vimController:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data;
 - (void)vimController:(MMVimController *)controller setDocumentFilename:(NSString *)filename data:(NSData *)data;
+- (void)vimController:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue;
 
 #pragma mark NSWindowDelegate
-- (void)vimController:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue;
 - (void)windowDidBecomeMain:(NSNotification *)notification;
 - (void)windowDidResignMain:(NSNotification *)notification;
 - (BOOL)windowShouldClose:(id)sender;
