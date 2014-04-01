@@ -141,7 +141,7 @@
 }
 
 #pragma mark MMVimControllerDelegate
-- (void)vimController:(MMVimController *)controller handleShowDialogWithButtonTitles:(NSArray *)buttonTitles
+- (void)controller:(MMVimController *)controller handleShowDialogWithButtonTitles:(NSArray *)buttonTitles
                 style:(NSAlertStyle)style message:(NSString *)message text:(NSString *)text
       textFieldString:(NSString *)textFieldString data:(NSData *)data {
 
@@ -208,14 +208,14 @@
     // } copied from MacVim
 }
 
-- (void)vimController:(MMVimController *)controller showScrollbarWithIdentifier:(int32_t)identifier
+- (void)controller:(MMVimController *)controller showScrollbarWithIdentifier:(int32_t)identifier
                 state:(BOOL)state data:(NSData *)data {
 
     [self.vimView showScrollbarWithIdentifier:identifier state:state];
     self.needsToResizeVimView = YES;
 }
 
-- (void)vimController:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
+- (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
                isLive:(BOOL)live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data {
 
     log4Mark;
@@ -233,7 +233,7 @@
     }
 }
 
-- (void)vimController:(MMVimController *)controller openWindowWithData:(NSData *)data {
+- (void)controller:(MMVimController *)controller openWindowWithData:(NSData *)data {
     log4Mark;
 
     self.window.acceptsMouseMovedEvents = YES; // Vim wants to have mouse move events
@@ -254,61 +254,61 @@
     [self.window makeFirstResponder:self.vimView.textView];
 }
 
-- (void)vimController:(MMVimController *)controller showTabBarWithData:(NSData *)data {
+- (void)controller:(MMVimController *)controller showTabBarWithData:(NSData *)data {
     log4Mark;
     self.vimView.tabBarControl.hidden = NO;
 }
 
-- (void)vimController:(MMVimController *)controller setScrollbarThumbValue:(float)value proportion:(float)proportion
+- (void)controller:(MMVimController *)controller setScrollbarThumbValue:(float)value proportion:(float)proportion
            identifier:(int32_t)identifier data:(NSData *)data {
 
     log4Mark;
 }
 
-- (void)vimController:(MMVimController *)controller destroyScrollbarWithIdentifier:(int32_t)identifier
+- (void)controller:(MMVimController *)controller destroyScrollbarWithIdentifier:(int32_t)identifier
                  data:(NSData *)data {
 
     log4Mark;
     self.needsToResizeVimView = YES;
 }
 
-- (void)vimController:(MMVimController *)controller tabShouldUpdateWithData:(NSData *)data {
+- (void)controller:(MMVimController *)controller tabShouldUpdateWithData:(NSData *)data {
     log4Mark;
 }
 
-- (void)vimController:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data {
+- (void)controller:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data {
     log4Mark;
 
     log4Debug(@"tabs: %@", [self.vimController tabs]);
 }
 
-- (void)vimController:(MMVimController *)controller tabDraggedWithData:(NSData *)data {
+- (void)controller:(MMVimController *)controller tabDraggedWithData:(NSData *)data {
     log4Mark;
 }
 
-- (void)vimController:(MMVimController *)controller hideTabBarWithData:(NSData *)data {
+- (void)controller:(MMVimController *)controller hideTabBarWithData:(NSData *)data {
     log4Mark;
     self.vimView.tabBarControl.hidden = YES;
 }
 
-- (void)vimController:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data {
+- (void)controller:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data {
     log4Mark;
 
     [self setDocumentEdited:modified];
 }
 
-- (void)vimController:(MMVimController *)controller setDocumentFilename:(NSString *)filename data:(NSData *)data {
+- (void)controller:(MMVimController *)controller setDocumentFilename:(NSString *)filename data:(NSData *)data {
     log4Mark;
 
     [self.window setRepresentedFilename:filename];
 }
 
-- (void)vimController:(MMVimController *)controller setWindowTitle:(NSString *)title data:(NSData *)data {
+- (void)controller:(MMVimController *)controller setWindowTitle:(NSString *)title data:(NSData *)data {
     [self setWindowTitleToCurrentBuffer];
 
 }
 
-- (void)vimController:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue {
+- (void)controller:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue {
     if (!self.needsToResizeVimView) {
         return;
     }
@@ -332,11 +332,11 @@
     self.isReplyToGuiResize = NO;
 }
 
-- (void)vimController:(MMVimController *)controller removeToolbarItemWithIdentifier:(NSString *)identifier {
+- (void)controller:(MMVimController *)controller removeToolbarItemWithIdentifier:(NSString *)identifier {
     log4Mark;
 }
 
-- (void)vimController:(MMVimController *)controller handleBrowseWithDirectoryUrl:(NSURL *)url browseDir:(BOOL)dir saving:(BOOL)saving data:(NSData *)data {
+- (void)controller:(MMVimController *)controller handleBrowseWithDirectoryUrl:(NSURL *)url browseDir:(BOOL)dir saving:(BOOL)saving data:(NSData *)data {
 
     if (!saving) {
         return;

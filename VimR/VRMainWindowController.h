@@ -41,25 +41,29 @@
 - (void)liveResizeDidEnd;
 
 #pragma mark MMVimControllerDelegate
-- (void)vimController:(MMVimController *)controller handleShowDialogWithButtonTitles:(NSArray *)buttonTitles
+- (void)controller:(MMVimController *)controller handleShowDialogWithButtonTitles:(NSArray *)buttonTitles
                 style:(NSAlertStyle)style message:(NSString *)message text:(NSString *)text
       textFieldString:(NSString *)string data:(NSData *)data;
-- (void)vimController:(MMVimController *)controller showScrollbarWithIdentifier:(int32_t)identifier state:(BOOL)state
+- (void)controller:(MMVimController *)controller showScrollbarWithIdentifier:(int32_t)identifier state:(BOOL)state
                  data:(NSData *)data;
-- (void)vimController:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
+- (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
                isLive:(BOOL)live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data;
-- (void)vimController:(MMVimController *)controller openWindowWithData:(NSData *)data;
-- (void)vimController:(MMVimController *)controller showTabBarWithData:(NSData *)data;
-- (void)vimController:(MMVimController *)controller setScrollbarThumbValue:(float)value
+- (void)controller:(MMVimController *)controller openWindowWithData:(NSData *)data;
+- (void)controller:(MMVimController *)controller showTabBarWithData:(NSData *)data;
+- (void)controller:(MMVimController *)controller setScrollbarThumbValue:(float)value
            proportion:(float)proportion identifier:(int32_t)identifier data:(NSData *)data;
-- (void)vimController:(MMVimController *)controller destroyScrollbarWithIdentifier:(int32_t)identifier
+- (void)controller:(MMVimController *)controller destroyScrollbarWithIdentifier:(int32_t)identifier
                  data:(NSData *)data;
-- (void)vimController:(MMVimController *)controller tabShouldUpdateWithData:(NSData *)data;
-- (void)vimController:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data;
-- (void)vimController:(MMVimController *)controller tabDraggedWithData:(NSData *)data;
-- (void)vimController:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data;
-- (void)vimController:(MMVimController *)controller setDocumentFilename:(NSString *)filename data:(NSData *)data;
-- (void)vimController:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue;
+- (void)controller:(MMVimController *)controller tabShouldUpdateWithData:(NSData *)data;
+- (void)controller:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data;
+- (void)controller:(MMVimController *)controller tabDraggedWithData:(NSData *)data;
+- (void)controller:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data;
+- (void)controller:(MMVimController *)controller setDocumentFilename:(NSString *)filename data:(NSData *)data;
+- (void)controller:(MMVimController *)controller setWindowTitle:(NSString *)title data:(NSData *)data;
+- (void)controller:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue;
+- (void)controller:(MMVimController *)controller removeToolbarItemWithIdentifier:(NSString *)identifier;
+- (void)controller:(MMVimController *)controller handleBrowseWithDirectoryUrl:(NSURL *)url browseDir:(BOOL)dir
+            saving:(BOOL)saving data:(NSData *)data;
 
 #pragma mark NSWindowDelegate
 - (void)windowDidBecomeMain:(NSNotification *)notification;
