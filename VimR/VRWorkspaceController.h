@@ -27,7 +27,6 @@ extern NSString *const qVimArgOpenFilesLayout;
 - (void)openFiles:(NSArray *)fileUrls;
 
 #pragma mark NSObject
-- (id)init;
 - (void)dealloc;
 
 #pragma mark MMVimManagerDelegate

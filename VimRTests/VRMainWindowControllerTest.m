@@ -73,7 +73,7 @@
 - (void)testWindowShouldClose {
     BOOL shouldClose = [mainWindowController windowShouldClose:nil];
 
-    assertThat(@(shouldClose), is(@NO));
+    assertThat(@(shouldClose), isNo);
     [verify(vimController) sendMessage:VimShouldCloseMsgID data:nil];
 }
 

@@ -56,15 +56,6 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
     };
 }
 
-- (id)init {
-    self = [super init];
-    if (self == nil) {
-        return nil;
-    }
-
-    return self;
-}
-
 - (void)dealloc {
     [self.vimManager terminateAllVimProcesses];
 }

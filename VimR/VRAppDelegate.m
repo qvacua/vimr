@@ -78,7 +78,7 @@ TB_MANUALWIRE(workspaceController)
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
-    // cannot be done with TBCacao
+    // this cannot be done with TBCacao
     self.application = aNotification.object;
 }
 
