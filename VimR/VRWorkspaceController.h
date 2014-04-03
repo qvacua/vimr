@@ -23,6 +23,7 @@ extern NSString *const qVimArgOpenFilesLayout;
 @property (weak) MMVimManager *vimManager;
 
 #pragma mark Public
+@property VRMainWindowController *mainWindowController;
 - (void)newWorkspace;
 - (void)openFiles:(NSArray *)fileUrls;
 - (void)cleanup;

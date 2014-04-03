@@ -23,6 +23,7 @@
 @property BOOL needsToResizeVimView;
 
 #pragma mark Public
+- (void)openFilesWithArgs:(NSDictionary *)args;
 - (void)cleanupAndClose;
 
 #pragma mark IBActions

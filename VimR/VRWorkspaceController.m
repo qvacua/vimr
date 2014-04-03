@@ -16,12 +16,6 @@ NSString *const qMainWindowNibName = @"MainWindow";
 NSString *const qVimArgFileNamesToOpen = @"filenames";
 NSString *const qVimArgOpenFilesLayout = @"layout";
 
-@interface VRWorkspaceController ()
-
-@property VRMainWindowController *mainWindowController;
-
-@end
-
 
 @implementation VRWorkspaceController
 
@@ -38,22 +32,10 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
     NSDictionary *args = [self vimArgsFromFileUrls:fileUrls];
 
     if (self.mainWindowController) {
-        [self.mainWindowController.vimController sendMessage:OpenWithArgumentsMsgID data:args.dictionaryAsData];
+        [self.mainWindowController openFilesWithArgs:args];
     } else {
-        int pid = [self.vimManager pidOfNewVimControllerWithArgs:args];
+        [self.vimManager pidOfNewVimControllerWithArgs:args];
     }
-}
-
-- (NSDictionary *)vimArgsFromFileUrls:(NSArray *)fileUrls {
-    NSMutableArray *filenames = [[NSMutableArray alloc] initWithCapacity:4];
-    for (NSURL *url in fileUrls) {
-        [filenames addObject:url.path];
-    }
-
-    return @{
-            qVimArgFileNamesToOpen: filenames,
-            qVimArgOpenFilesLayout: @(MMLayoutTabs),
-    };
 }
 
 - (void)cleanup {
@@ -78,6 +60,19 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 
 - (NSMenuItem *)menuItemTemplateForManager:(MMVimManager *)manager {
     return [[NSMenuItem alloc] init]; // dummy menu item
+}
+
+#pragma mark Private
+- (NSDictionary *)vimArgsFromFileUrls:(NSArray *)fileUrls {
+    NSMutableArray *filenames = [[NSMutableArray alloc] initWithCapacity:4];
+    for (NSURL *url in fileUrls) {
+        [filenames addObject:url.path];
+    }
+
+    return @{
+            qVimArgFileNamesToOpen : filenames,
+            qVimArgOpenFilesLayout : @(MMLayoutTabs),
+    };
 }
 
 @end

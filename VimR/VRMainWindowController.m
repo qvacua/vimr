@@ -25,6 +25,10 @@
 @implementation VRMainWindowController
 
 #pragma mark Public
+- (void)openFilesWithArgs:(NSDictionary *)args {
+    [self.vimController sendMessage:OpenWithArgumentsMsgID data:args.dictionaryAsData];
+}
+
 - (void)cleanupAndClose {
     log4Mark;
     [self close];
