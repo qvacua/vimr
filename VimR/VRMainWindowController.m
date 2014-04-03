@@ -80,15 +80,6 @@
 }
 
 #pragma mark NSWindowController
-- (id)initWithWindowNibName:(NSString *)windowNibName {
-    self = [super initWithWindowNibName:windowNibName];
-    if (self == nil) {
-        return nil;
-    }
-
-    return self;
-}
-
 - (void)dealloc {
     log4Mark;
 }

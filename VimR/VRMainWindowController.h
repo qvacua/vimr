@@ -35,7 +35,6 @@
 - (IBAction)revertDocumentToSaved:(id)sender;
 
 #pragma mark NSWindowController
-- (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)dealloc;
 
 #pragma mark MMViewDelegate informal protocol
