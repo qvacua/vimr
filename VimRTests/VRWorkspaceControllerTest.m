@@ -41,4 +41,11 @@
     [verifyCount(vimManager, times(1)) pidOfNewVimControllerWithArgs:anything()];
 }
 
+- (void)testOpenFiles {
+    NSArray *urls = @[[NSURL URLWithString:@"file:///some/file"], [NSURL URLWithString:@"file:///another/file"]];
+    [workspaceController openFiles:urls];
+
+
+}
+
 @end

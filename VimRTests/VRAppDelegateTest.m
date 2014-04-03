@@ -80,6 +80,14 @@ static NSOpenPanel *openPanel;
     [verify(workspaceController) openFiles:urls];
 }
 
+- (void)testOpenDocumentCancelled {
+    [given([openPanel runModal]) willReturnInteger:NSCancelButton];
+
+    [appDelegate openDocument:nil];
+    [verify(openPanel) setAllowsMultipleSelection:YES];
+    [verifyCount(workspaceController, never()) openFiles:anything()];
+}
+
 - (void)testApplicationOpenUntitledFile {
     assertThat(@([appDelegate applicationOpenUntitledFile:application]), isYes);
     [verify(workspaceController) newWorkspace];
