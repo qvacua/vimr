@@ -56,7 +56,7 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
     };
 }
 
-- (void)dealloc {
+- (void)cleanup {
     [self.vimManager terminateAllVimProcesses];
 }
 

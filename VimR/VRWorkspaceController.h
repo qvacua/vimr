@@ -25,9 +25,7 @@ extern NSString *const qVimArgOpenFilesLayout;
 #pragma mark Public
 - (void)newWorkspace;
 - (void)openFiles:(NSArray *)fileUrls;
-
-#pragma mark NSObject
-- (void)dealloc;
+- (void)cleanup;
 
 #pragma mark MMVimManagerDelegate
 - (void)manager:(MMVimManager *)manager vimControllerCreated:(MMVimController *)controller;

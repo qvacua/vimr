@@ -82,6 +82,10 @@ TB_MANUALWIRE(workspaceController)
     self.application = aNotification.object;
 }
 
+- (void)applicationWillTerminate:(NSNotification *)notification {
+    [self.workspaceController cleanup];
+}
+
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender {
     return YES;
 }

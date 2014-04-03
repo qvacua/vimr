@@ -99,4 +99,9 @@ static NSOpenPanel *openPanel;
     assertThat(appDelegate.application, is(anApp));
 }
 
+- (void)testApplicationWillTerminate {
+    [appDelegate applicationWillTerminate:nil];
+    [verify(workspaceController) cleanup];
+}
+
 @end
