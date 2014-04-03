@@ -31,6 +31,10 @@
 
 - (void)cleanupAndClose {
     log4Mark;
+
+    [self.vimView removeFromSuperviewWithoutNeedingDisplay];
+    [self.vimView cleanup];
+
     [self close];
 }
 
@@ -87,9 +91,6 @@
 
 - (void)dealloc {
     log4Mark;
-
-    [self.vimView removeFromSuperviewWithoutNeedingDisplay];
-    [self.vimView cleanup];
 }
 
 #pragma mark MMViewDelegate informal protocol

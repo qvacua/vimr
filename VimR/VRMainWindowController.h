@@ -27,6 +27,7 @@
 - (void)cleanupAndClose;
 
 #pragma mark IBActions
+- (IBAction)newTab:(id)sender;
 - (IBAction)firstDebugAction:(id)sender;
 - (IBAction)performClose:(id)sender;
 - (IBAction)saveDocument:(id)sender;

@@ -9,6 +9,7 @@
 
 #import "VRBaseTestCase.h"
 #import "VRMainWindowController.h"
+#import "VRUtils.h"
 
 
 /**
@@ -47,17 +48,27 @@
     mainWindowController.vimView = vimView;
 }
 
-- (void)dealloc {
-    [mainWindowController release];
-    [super dealloc];
+- (void)testOpenFilesWithArgs {
+    NSDictionary *args = @{@"some" : @"value"};
+
+    [mainWindowController openFilesWithArgs:args];
+    [verify(vimController) sendMessage:OpenWithArgumentsMsgID data:args.dictionaryAsData];
 }
 
-- (void)testDealloc {
-    [mainWindowController dealloc];
-    mainWindowController = nil;
-
+- (void)testCleanupAndClose {
+    [mainWindowController cleanupAndClose];
     [verify(vimView) removeFromSuperviewWithoutNeedingDisplay];
     [verify(vimView) cleanup];
+    // cannot verify [mainWindowController close]
+}
+
+- (void)testNewTab {
+    [mainWindowController newTab:nil];
+    [verify(vimController) addVimInput:[self vimInputWithString:@":tabe"]];
+}
+
+- (NSString *)vimInputWithString:(NSString *)cmd {
+    return SF(@"<C-\\><C-N>%@<CR>", cmd);
 }
 
 - (void)testWindowDidBecomeMain {

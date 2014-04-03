@@ -16,7 +16,7 @@
 		1929BBA604D410BBCDC0D16E /* MMAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBF8BE880500FCF8B9A6 /* MMAlert.m */; };
 		1929BBDABB15EEFE9DB1151C /* VRWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7A3852E902DE9863E99 /* VRWindow.m */; };
 		1929BCADA23D06F1B35B62F9 /* VRWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7A3852E902DE9863E99 /* VRWindow.m */; };
-		1929BD434C100AD15EDA2FAF /* VRMainWindowControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8515E4EA94E1C7EB1F9 /* VRMainWindowControllerTest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1929BD434C100AD15EDA2FAF /* VRMainWindowControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8515E4EA94E1C7EB1F9 /* VRMainWindowControllerTest.m */; };
 		1929BD58ED16CFBDF23E41A5 /* VRWorkspaceControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC6C99CA6C4535EA9CAF /* VRWorkspaceControllerTest.m */; };
 		1929BE2CA3488AB3824DF598 /* VRManualBeanProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCAF60827409FA845CAC /* VRManualBeanProvider.m */; };
 		1929BEE6213A8875598A2713 /* VRWorkspaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B78A8084470EC33DE744 /* VRWorkspaceController.m */; };
