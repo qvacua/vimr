@@ -67,8 +67,14 @@
     [verify(vimController) addVimInput:[self vimInputWithString:@":tabe"]];
 }
 
-- (NSString *)vimInputWithString:(NSString *)cmd {
-    return SF(@"<C-\\><C-N>%@<CR>", cmd);
+- (void)testPerformClose {
+    [mainWindowController performClose:nil];
+    [verify(vimController) sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:@[@"File", @"Close"]]];
+}
+
+- (void)testSaveDocument {
+    [mainWindowController saveDocument:nil];
+    [verify(vimController) sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:@[@"File", @"Save"]]];
 }
 
 - (void)testWindowDidBecomeMain {
@@ -86,6 +92,14 @@
 
     assertThat(@(shouldClose), isNo);
     [verify(vimController) sendMessage:VimShouldCloseMsgID data:nil];
+}
+
+- (NSData *)dataFromDescriptor:(NSArray *)descriptor {
+    return [@{@"descriptor" : descriptor} dictionaryAsData];
+}
+
+- (NSString *)vimInputWithString:(NSString *)cmd {
+    return SF(@"<C-\\><C-N>%@<CR>", cmd);
 }
 
 @end

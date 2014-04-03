@@ -43,40 +43,28 @@
     [self sendCommandToVim:@":tabe"];
 }
 
-- (IBAction)firstDebugAction:(id)sender {
-    log4Debug(@"%@", [self.vimController currentTab]);
-}
-
 - (IBAction)performClose:(id)sender {
-    log4Mark;
-
     // TODO: when the doc is dirty, we could ask to save here!
     NSArray *descriptor = @[@"File", @"Close"];
     [self.vimController sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:descriptor]];
 }
 
 - (IBAction)saveDocument:(id)sender {
-    log4Mark;
-
-    MMBuffer *currentBuffer = self.vimController.currentTab.buffer;
-    if (currentBuffer.fileName == nil) {
-        log4Debug(@"file name nil");
-    }
-
     NSArray *descriptor = @[@"File", @"Save"];
     [self.vimController sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:descriptor]];
 }
 
 - (IBAction)saveDocumentAs:(id)sender {
-    log4Mark;
-
-    [self sendCommandToVim:@"browse confirm sav"];
+    [self sendCommandToVim:@":browse confirm sav"];
 }
 
 - (IBAction)revertDocumentToSaved:(id)sender {
-    log4Mark;
-
     [self sendCommandToVim:@":e!"];
+}
+
+#pragma mark Debug
+- (IBAction)firstDebugAction:(id)sender {
+    log4Debug(@"%@", [self.vimController currentTab]);
 }
 
 #pragma mark NSWindowController
