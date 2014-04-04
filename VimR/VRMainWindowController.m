@@ -101,14 +101,14 @@
     * resize the window across multiple screens.
     */
 
-    int constrained[2];
     NSView <MMTextViewProtocol> *textView = self.vimView.textView;
-    NSSize textViewSize = textView.frame.size;
-    [textView constrainRows:&constrained[0] columns:&constrained[1] toSize:textViewSize];
 
-    log4Debug(@"End of live resize, notify Vim that text dimensions are %dx%d", constrained[1], constrained[0]);
+    int constrained[2];
+    [textView constrainRows:&constrained[0] columns:&constrained[1] toSize:textView.frame.size];
 
-    NSData *data = [NSData dataWithBytes:constrained length:2 * sizeof(int)];
+    log4Debug(@"End of live resize, notify Vim that text dimensions are %d x %d", constrained[1], constrained[0]);
+
+    NSData *data = [NSData dataWithBytes:constrained length:(2 * sizeof(int))];
     BOOL liveResizeMsgSuccessful = [self.vimController sendMessageNow:LiveResizeMsgID data:data timeout:.5];
 
     if (!liveResizeMsgSuccessful) {
@@ -117,7 +117,7 @@
         * match the last dimensions received from Vim, otherwise we end up
         * with inconsistent states.
         */
-        log4Debug(@"failed");
+        log4Debug(@"live resizing failed");
         [self resizeWindowToFitContentSize:self.vimView.desiredSize];
     }
 
@@ -126,8 +126,8 @@
 
 #pragma mark MMVimControllerDelegate
 - (void)controller:(MMVimController *)controller handleShowDialogWithButtonTitles:(NSArray *)buttonTitles
-                style:(NSAlertStyle)style message:(NSString *)message text:(NSString *)text
-      textFieldString:(NSString *)textFieldString data:(NSData *)data {
+             style:(NSAlertStyle)style message:(NSString *)message text:(NSString *)text
+   textFieldString:(NSString *)textFieldString data:(NSData *)data {
 
     log4Mark;
 
@@ -156,7 +156,8 @@
         alert.informativeText = @"";
     }
 
-    unsigned i, count = buttonTitles.count;
+    unsigned i;
+    int count = buttonTitles.count;
     for (i = 0; i < count; ++i) {
         NSString *title = buttonTitles[i];
         // NOTE: The title of the button may contain the character '&' to
@@ -192,15 +193,15 @@
     // } copied from MacVim
 }
 
-- (void)controller:(MMVimController *)controller showScrollbarWithIdentifier:(int32_t)identifier
-                state:(BOOL)state data:(NSData *)data {
+- (void)controller:(MMVimController *)controller showScrollbarWithIdentifier:(int32_t)identifier state:(BOOL)state
+              data:(NSData *)data {
 
     [self.vimView showScrollbarWithIdentifier:identifier state:state];
     self.needsToResizeVimView = YES;
 }
 
-- (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
-               isLive:(BOOL)live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data {
+- (void)       controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns isLive:(BOOL)
+        live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data {
 
     log4Mark;
     log4Debug(@"%d X %d\tlive: %@\tkeepOnScreen: %@", rows, columns, @(live), @(isReplyToGuiResize));
@@ -244,13 +245,13 @@
 }
 
 - (void)controller:(MMVimController *)controller setScrollbarThumbValue:(float)value proportion:(float)proportion
-           identifier:(int32_t)identifier data:(NSData *)data {
+        identifier:(int32_t)identifier data:(NSData *)data {
 
     log4Mark;
 }
 
 - (void)controller:(MMVimController *)controller destroyScrollbarWithIdentifier:(int32_t)identifier
-                 data:(NSData *)data {
+              data:(NSData *)data {
 
     log4Mark;
     self.needsToResizeVimView = YES;
@@ -320,7 +321,8 @@
     log4Mark;
 }
 
-- (void)controller:(MMVimController *)controller handleBrowseWithDirectoryUrl:(NSURL *)url browseDir:(BOOL)dir saving:(BOOL)saving data:(NSData *)data {
+- (void)controller:(MMVimController *)controller handleBrowseWithDirectoryUrl:(NSURL *)url browseDir:(BOOL)dir
+            saving:(BOOL)saving data:(NSData *)data {
 
     if (!saving) {
         return;

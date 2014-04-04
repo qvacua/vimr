@@ -13,4 +13,5 @@
 @interface VRWindow : NSWindow
 
 - (IBAction)performClose:(id)sender;
+
 @end
