@@ -133,13 +133,12 @@
 
     // copied from MacVim {
     MMAlert *alert = [[MMAlert alloc] init];
+    alert.alertStyle = style;
 
-    // NOTE! This has to be done before setting the informative text.
+    // NOTE: This has to be done before setting the informative text.
     if (textFieldString) {
         alert.textFieldString = textFieldString;
     }
-
-    alert.alertStyle = style;
 
     if (message) {
         alert.messageText = message;
