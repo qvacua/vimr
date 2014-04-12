@@ -71,13 +71,16 @@ static NSOpenPanel *openPanel;
 }
 
 - (void)testOpenDocument {
-    NSArray *urls = @[@"some", @"objects"];
+    NSArray *filenames = @[@"/tmp", @"/usr"];
     [given([openPanel runModal]) willReturnInteger:NSOKButton];
-    [given([openPanel URLs]) willReturn:urls];
+    [given([openPanel URLs]) willReturn:filenames];
 
     [appDelegate openDocument:nil];
     [verify(openPanel) setAllowsMultipleSelection:YES];
-    [verify(workspaceController) openFiles:urls];
+    [verify(workspaceController) openFiles:@[
+            [NSURL fileURLWithPath:@"/tmp"],
+            [NSURL fileURLWithPath:@"/usr"]
+    ]];
 }
 
 - (void)testOpenDocumentCancelled {
@@ -93,10 +96,20 @@ static NSOpenPanel *openPanel;
     [verify(workspaceController) newWorkspace];
 }
 
+- (void)testAppliationOpenFile {
+    [appDelegate application:nil openFile:@"/tmp"];
+    [verify(workspaceController) openFiles:@[
+            [NSURL fileURLWithPath:@"/tmp"],
+    ]];
+}
+
 - (void)testAppliationOpenFiles {
-    NSArray *urls = @[@"some", @"objects"];
-    [appDelegate application:nil openFiles:urls];
-    [verify(workspaceController) openFiles:urls];
+    NSArray *filenames = @[@"/tmp", @"/usr"];
+    [appDelegate application:nil openFiles:filenames];
+    [verify(workspaceController) openFiles:@[
+            [NSURL fileURLWithPath:@"/tmp"],
+            [NSURL fileURLWithPath:@"/usr"]
+    ]];
 }
 
 - (void)testApplicationWillFinishLaunching {

@@ -69,12 +69,23 @@ TB_MANUALWIRE(workspaceController)
 
 #pragma mark NSApplicationDelegate
 - (BOOL)applicationOpenUntitledFile:(NSApplication *)theApplication {
+    log4Mark;
     [self.workspaceController newWorkspace];
     return YES;
 }
 
-- (void)application:(NSApplication *)sender openFiles:(NSArray *)fileUrls {
-    [self.workspaceController openFiles:fileUrls];
+- (BOOL)application:(NSApplication *)sender openFile:(NSString *)filename {
+    [self application:sender openFiles:@[filename]];
+    return YES;
+}
+
+- (void)application:(NSApplication *)sender openFiles:(NSArray *)filenames {
+    NSMutableArray *urls = [[NSMutableArray alloc] initWithCapacity:filenames.count];
+    for (NSString *filename in filenames) {
+        [urls addObject:[[NSURL alloc] initFileURLWithPath:filename]];
+    }
+
+    [self.workspaceController openFiles:urls];
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
