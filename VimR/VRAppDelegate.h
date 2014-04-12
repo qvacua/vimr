@@ -32,6 +32,7 @@
 
 #pragma mark NSApplicationDelegate
 - (BOOL)applicationOpenUntitledFile:(NSApplication *)theApplication;
+- (BOOL)application:(NSApplication *)sender openFile:(NSString *)filename;
 - (void)application:(NSApplication *)sender openFiles:(NSArray *)filenames;
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification;
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender;
