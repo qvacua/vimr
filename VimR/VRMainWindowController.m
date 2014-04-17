@@ -202,7 +202,7 @@ NSString *const qMainWindowNibName = @"MainWindow";
     self.needsToResizeVimView = YES;
 }
 
-- (void)       controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns isLive:(BOOL)
+- (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns isLive:(BOOL)
         live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data {
 
     log4Mark;
