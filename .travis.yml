@@ -1,7 +1,8 @@
 language: objective-c
 before_install:
-    - gem install ocunit2junit
     - export LC_ALL="en_US.UTF-8"
+    - gem install cocoapods -v '0.32.1'
+    - gem install ocunit2junit
 before_script:
     - cd macvim/src
     - ./configure
