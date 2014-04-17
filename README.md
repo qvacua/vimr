@@ -18,7 +18,7 @@ First, clone the project and the `macvim` submodule. Then, build the `macvim` su
 
 ```
 $ cd macvim/src
-$ ./configure
+$ ./configure --with-features=huge --enable-rubyinterp --enable-pythoninterp --enable-perlinterp --enable-cscope
 $ make
 ```
 
