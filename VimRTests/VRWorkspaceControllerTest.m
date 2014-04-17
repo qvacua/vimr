@@ -10,6 +10,7 @@
 #import "VRBaseTestCase.h"
 #import "VRMainWindowController.h"
 #import "VRWorkspaceController.h"
+#import "VRWorkspace.h"
 
 
 @interface VRWorkspaceControllerTest : VRBaseTestCase
@@ -19,49 +20,43 @@
 @implementation VRWorkspaceControllerTest {
     VRWorkspaceController *workspaceController;
 
-    VRMainWindowController *mainWindowController;
     MMVimManager *vimManager;
+    MMVimController *vimController;
 }
 
 - (void)setUp {
     [super setUp];
 
     vimManager = mock([MMVimManager class]);
-    mainWindowController = mock([VRMainWindowController class]);
+    vimController = mock([MMVimController class]);
 
     workspaceController = [[VRWorkspaceController alloc] init];
     workspaceController.vimManager = vimManager;
 }
 
 - (void)testNewWorkspace {
+    [given([vimManager pidOfNewVimControllerWithArgs:nil]) willReturnInt:123];
     [workspaceController newWorkspace];
     [verify(vimManager) pidOfNewVimControllerWithArgs:nil];
-    [self emulateControllerCreated];
-
-    // TODO: for time being, only one main window!
-    [workspaceController newWorkspace];
-    [verifyCount(vimManager, times(1)) pidOfNewVimControllerWithArgs:anything()];
 }
 
-- (void)testOpenFilesWitoutMainWindow {
-    NSArray *urls = @[[NSURL URLWithString:@"file:///some/file"], [NSURL URLWithString:@"file:///another/file"]];
+- (void)testOpenFiles {
+    NSArray *urls = @[
+            [NSURL URLWithString:@"file:///some/folder/is/1.txt"],
+            [NSURL URLWithString:@"file:///some/folder/2.txt"],
+            [NSURL URLWithString:@"file:///some/folder/is/there/3.txt"],
+            [NSURL URLWithString:@"file:///some/folder/is/not/there/4.txt"],
+    ];
+    [given([vimManager pidOfNewVimControllerWithArgs:nil]) willReturnInt:123];
 
     [workspaceController openFiles:urls];
     [verify(vimManager) pidOfNewVimControllerWithArgs:@{
-            qVimArgFileNamesToOpen : @[@"/some/file", @"/another/file"],
-            qVimArgOpenFilesLayout : @(MMLayoutTabs)
-    }];
-}
-
-- (void)testOpenFilesWithMainWindow {
-    NSArray *urls = @[[NSURL URLWithString:@"file:///some/file"], [NSURL URLWithString:@"file:///another/file"]];
-
-    [workspaceController newWorkspace];
-    [self emulateControllerCreated];
-
-    [workspaceController openFiles:urls];
-    [verify(mainWindowController) openFilesWithArgs:@{
-            qVimArgFileNamesToOpen : @[@"/some/file", @"/another/file"],
+            qVimArgFileNamesToOpen : @[
+                    @"/some/folder/is/1.txt",
+                    @"/some/folder/2.txt",
+                    @"/some/folder/is/there/3.txt",
+                    @"/some/folder/is/not/there/4.txt",
+            ],
             qVimArgOpenFilesLayout : @(MMLayoutTabs)
     }];
 }
@@ -72,22 +67,32 @@
 }
 
 - (void)testManagerVimControllerCreated {
+    NSArray *urls = @[
+            [NSURL URLWithString:@"file:///some/folder/is/1.txt"],
+            [NSURL URLWithString:@"file:///some/folder/2.txt"],
+            [NSURL URLWithString:@"file:///some/folder/is/there/3.txt"],
+            [NSURL URLWithString:@"file:///some/folder/is/not/there/4.txt"],
+    ];
+    [given([vimManager pidOfNewVimControllerWithArgs:nil]) willReturnInt:123];
+    [workspaceController openFiles:urls];
+
+    [workspaceController manager:vimManager vimControllerCreated:vimController];
+
+    VRWorkspace *workspace = workspaceController.workspaces[0];
+    assertThat(workspace.workingDirectory, is([NSURL fileURLWithPath:@"/some/folder"]));
+    // cannot verify [workspace setUpWithVimController:vimController]
 }
 
 - (void)testManagerVimControllerRemovedWithControllerIdPid {
-    [self emulateControllerCreated];
+    [given([vimManager pidOfNewVimControllerWithArgs:nil]) willReturnInt:123];
+    [workspaceController newWorkspace];
 
-    [workspaceController manager:vimManager vimControllerRemovedWithControllerId:123 pid:987];
-    [verify(mainWindowController) cleanUpAndClose];
+    [workspaceController manager:vimManager vimControllerRemovedWithControllerId:456 pid:123];
+    assertThat(workspaceController.workspaces, isEmpty());
 }
 
 - (void)testMenuItemTemplateForManager {
     assertThat([workspaceController menuItemTemplateForManager:vimManager], isNot(nilValue()));
-}
-
-- (void)emulateControllerCreated {
-    // not very elegant, but emulate that the vim manager created the vim controller
-//    workspaceController.mainWindowController = mainWindowController;
 }
 
 @end

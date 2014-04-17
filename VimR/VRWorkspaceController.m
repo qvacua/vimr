@@ -35,14 +35,6 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
     [self createNewVimControllerWithWorkingDir:[[NSURL alloc] initFileURLWithPath:NSHomeDirectory()] args:nil];
 }
 
-- (void)createNewVimControllerWithWorkingDir:(NSURL *)workingDir args:(id)args {
-    int pid = [self.vimManager pidOfNewVimControllerWithArgs:args];
-    VRWorkspace *workspace = [[VRWorkspace alloc] init];
-    workspace.workingDirectory = workingDir;
-
-    self.pid2Workspace[@(pid)] = workspace;
-}
-
 - (void)openFiles:(NSArray *)fileUrls {
     NSDictionary *args = [self vimArgsFromFileUrls:fileUrls];
     NSURL *commonParentDir = [self commonParentDirUrl:fileUrls];
@@ -136,6 +128,14 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
     }
 
     return [NSURL fileURLWithPathComponents:currentCommonComps];
+}
+
+- (void)createNewVimControllerWithWorkingDir:(NSURL *)workingDir args:(id)args {
+    int pid = [self.vimManager pidOfNewVimControllerWithArgs:args];
+    VRWorkspace *workspace = [[VRWorkspace alloc] init];
+    workspace.workingDirectory = workingDir;
+
+    self.pid2Workspace[@(pid)] = workspace;
 }
 
 @end
