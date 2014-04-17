@@ -13,9 +13,7 @@
 #import "VRLog.h"
 #import "MMAlert.h"
 #import "VRUtils.h"
-
-
-NSString *const qMainWindowNibName = @"MainWindow";
+#import "VRWindow.h"
 
 
 @interface VRMainWindowController ()
@@ -28,6 +26,15 @@ NSString *const qMainWindowNibName = @"MainWindow";
 @implementation VRMainWindowController
 
 #pragma mark Public
+- (instancetype)initWithContentRect:(CGRect)contentRect {
+    self = [super initWithWindow:[self newMainWindowForContentRect:contentRect]];
+    if (!self) {
+        return nil;
+    }
+
+    return self;
+}
+
 - (void)openFilesWithArgs:(NSDictionary *)args {
     [self.vimController sendMessage:OpenWithArgumentsMsgID data:args.dictionaryAsData];
 }
@@ -202,7 +209,7 @@ NSString *const qMainWindowNibName = @"MainWindow";
     self.needsToResizeVimView = YES;
 }
 
-- (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns isLive:(BOOL)
+- (void)       controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns isLive:(BOOL)
         live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data {
 
     log4Mark;
@@ -552,6 +559,18 @@ NSString *const qMainWindowNibName = @"MainWindow";
 
     NSString *containingFolder = filePath.stringByDeletingLastPathComponent.lastPathComponent;
     self.window.title = SF(@"%@ — %@", filename, containingFolder);
+}
+
+- (VRWindow *)newMainWindowForContentRect:(CGRect)contentRect {
+    unsigned windowStyle = NSTitledWindowMask | NSUnifiedTitleAndToolbarWindowMask
+            | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask
+            | NSTexturedBackgroundWindowMask;
+
+    VRWindow *window = [[VRWindow alloc] initWithContentRect:contentRect styleMask:windowStyle
+                                                     backing:NSBackingStoreBuffered defer:YES];
+    window.delegate = self;
+    window.title = @"VimR";
+    return window;
 }
 
 @end

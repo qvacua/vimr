@@ -14,9 +14,6 @@
 #import "VRLog.h"
 #import "VRMainWindowController.h"
 
-#include <cf/cf.h>
-#include <text/ranker.h>
-
 
 static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 

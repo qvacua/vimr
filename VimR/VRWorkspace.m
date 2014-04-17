@@ -10,14 +10,15 @@
 #import <MacVimFramework/MacVimFramework.h>
 #import "VRWorkspace.h"
 #import "VRMainWindowController.h"
-#import "VRWorkspaceController.h"
 
 
 @implementation VRWorkspace
 
 #pragma mark Public
 - (void)setUpWithVimController:(MMVimController *)vimController {
-    VRMainWindowController *controller = [[VRMainWindowController alloc] initWithWindowNibName:qMainWindowNibName];
+    VRMainWindowController *controller = [
+            [VRMainWindowController alloc] initWithContentRect:CGRectMake(242, 364, 480, 360)
+    ];
     controller.vimController = vimController;
     controller.vimView = vimController.vimView;
 

@@ -11,8 +11,6 @@
 #import <MacVimFramework/MacVimFramework.h>
 
 
-extern NSString *const qMainWindowNibName;
-
 @class VRWorkspaceController;
 
 
@@ -25,6 +23,7 @@ extern NSString *const qMainWindowNibName;
 @property BOOL needsToResizeVimView;
 
 #pragma mark Public
+- (instancetype)initWithContentRect:(CGRect)contentRect;
 - (void)openFilesWithArgs:(NSDictionary *)args;
 - (void)cleanUpAndClose;
 

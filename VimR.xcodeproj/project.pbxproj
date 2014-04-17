@@ -30,7 +30,6 @@
 		4B64255118C23FE20012ED42 /* PSMTabBarControl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B64254A18C23F800012ED42 /* PSMTabBarControl.framework */; };
 		4B64255A18C26CB00012ED42 /* VRMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B64255818C26CB00012ED42 /* VRMainWindowController.m */; };
 		4B64255B18C26CB00012ED42 /* VRMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B64255818C26CB00012ED42 /* VRMainWindowController.m */; };
-		4B64256E18C2846B0012ED42 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B64257018C2846B0012ED42 /* MainWindow.xib */; };
 		4B78D61518D644A000CAA020 /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B64254A18C23F800012ED42 /* PSMTabBarControl.framework */; };
 		4B78D61618D644E500CAA020 /* MMAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBF8BE880500FCF8B9A6 /* MMAlert.m */; };
 		4B8BE1EE18EB556C004840F1 /* VRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE9242918C20DBC00E67BB6 /* VRAppDelegate.m */; };
@@ -127,7 +126,6 @@
 		4B64254A18C23F800012ED42 /* PSMTabBarControl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PSMTabBarControl.framework; path = build/VimR/Build/Products/Debug/PSMTabBarControl.framework; sourceTree = "<group>"; };
 		4B64255718C26CB00012ED42 /* VRMainWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRMainWindowController.h; sourceTree = "<group>"; };
 		4B64255818C26CB00012ED42 /* VRMainWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRMainWindowController.m; sourceTree = "<group>"; };
-		4B64256F18C2846B0012ED42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		4B921D9C19003F1D004D4FFD /* cf.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = cf.dylib; path = VimR/TextMate/lib/cf.dylib; sourceTree = "<group>"; };
 		4B921D9D19003F1D004D4FFD /* text.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = text.dylib; path = VimR/TextMate/lib/text.dylib; sourceTree = "<group>"; };
 		4BE9241318C20DBC00E67BB6 /* VimR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VimR.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -213,7 +211,6 @@
 			isa = PBXGroup;
 			children = (
 				4BE9242B18C20DBC00E67BB6 /* MainMenu.xib */,
-				4B64257018C2846B0012ED42 /* MainWindow.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -409,7 +406,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BE9242118C20DBC00E67BB6 /* InfoPlist.strings in Resources */,
-				4B64256E18C2846B0012ED42 /* MainWindow.xib in Resources */,
 				4BE9242F18C20DBC00E67BB6 /* Images.xcassets in Resources */,
 				4BE9242718C20DBC00E67BB6 /* Credits.rtf in Resources */,
 				4BE9242D18C20DBC00E67BB6 /* MainMenu.xib in Resources */,
@@ -537,14 +533,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		4B64257018C2846B0012ED42 /* MainWindow.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4B64256F18C2846B0012ED42 /* Base */,
-			);
-			name = MainWindow.xib;
-			sourceTree = "<group>";
-		};
 		4BE9241F18C20DBC00E67BB6 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
