@@ -122,7 +122,7 @@ static NSOpenPanel *openPanel;
 
 - (void)testApplicationWillTerminate {
     [appDelegate applicationWillTerminate:nil];
-    [verify(workspaceController) cleanup];
+    [verify(workspaceController) cleanUp];
 }
 
 @end
