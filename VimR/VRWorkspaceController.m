@@ -9,53 +9,80 @@
 
 #import <MacVimFramework/MacVimFramework.h>
 #import "VRWorkspaceController.h"
-#import "VRMainWindowController.h"
+#import "VRWorkspace.h"
 
 
-NSString *const qMainWindowNibName = @"MainWindow";
 NSString *const qVimArgFileNamesToOpen = @"filenames";
 NSString *const qVimArgOpenFilesLayout = @"layout";
+
+@interface VRWorkspaceController ()
+
+@property (readonly) NSMutableArray *mutableWorkspaces;
+@property (readonly) NSMutableDictionary *pid2Workspace;
+
+@end
 
 
 @implementation VRWorkspaceController
 
+#pragma mark Properties
+- (NSArray *)workspaces {
+    return self.mutableWorkspaces;
+}
+
 #pragma mark Public
 - (void)newWorkspace {
-    // TODO: for time being, only one main window
-    if (self.mainWindowController == nil) {
-        [self.vimManager pidOfNewVimControllerWithArgs:nil];
-    }
+    [self createNewVimControllerWithWorkingDir:[[NSURL alloc] initFileURLWithPath:NSHomeDirectory()] args:nil];
+}
+
+- (void)createNewVimControllerWithWorkingDir:(NSURL *)workingDir args:(id)args {
+    int pid = [self.vimManager pidOfNewVimControllerWithArgs:args];
+    VRWorkspace *workspace = [[VRWorkspace alloc] init];
+    workspace.workingDirectory = workingDir;
+
+    self.pid2Workspace[@(pid)] = workspace;
 }
 
 - (void)openFiles:(NSArray *)fileUrls {
-    // for time being, only one window
     NSDictionary *args = [self vimArgsFromFileUrls:fileUrls];
+    NSURL *commonParentDir = [self commonParentDirUrl:fileUrls];
 
-    if (self.mainWindowController) {
-        [self.mainWindowController openFilesWithArgs:args];
-    } else {
-        [self.vimManager pidOfNewVimControllerWithArgs:args];
-    }
+    // for time being, always open a new window. Later we could offer "Open in Tab..." or similar
+    [self createNewVimControllerWithWorkingDir:commonParentDir args:args];
 }
 
-- (void)cleanup {
+- (void)cleanUp {
     [self.vimManager terminateAllVimProcesses];
 }
 
+#pragma mark NSObject
+- (id)init {
+    self = [super init];
+    if (!self) {
+        return nil;
+    }
+
+    _mutableWorkspaces = [[NSMutableArray alloc] initWithCapacity:5];
+    _pid2Workspace = [[NSMutableDictionary alloc] initWithCapacity:5];
+
+    return self;
+}
+
 #pragma mark MMVimManagerDelegateProtocol
-- (void)manager:(MMVimManager *)manager vimControllerCreated:(MMVimController *)controller {
-    _mainWindowController = [[VRMainWindowController alloc] initWithWindowNibName:qMainWindowNibName];
-    _mainWindowController.vimController = controller;
-    _mainWindowController.vimView = controller.vimView;
+- (void)manager:(MMVimManager *)manager vimControllerCreated:(MMVimController *)vimController {
+    VRWorkspace *workspace = self.pid2Workspace[@(vimController.pid)];
+    [self.mutableWorkspaces addObject:workspace];
 
-    controller.delegate = (id <MMVimControllerDelegate>) _mainWindowController;
-
-    [_mainWindowController showWindow:self];
+    [workspace setUpWithVimController:vimController];
 }
 
 - (void)manager:(MMVimManager *)manager vimControllerRemovedWithControllerId:(unsigned int)controllerId pid:(int)pid {
-    [self.mainWindowController cleanupAndClose];
-    self.mainWindowController = nil;
+    VRWorkspace *workspace = self.pid2Workspace[@(pid)];
+
+    [self.pid2Workspace removeObjectForKey:@(pid)];
+    [self.mutableWorkspaces removeObject:workspace];
+
+    [workspace cleanUpAndClose];
 }
 
 - (NSMenuItem *)menuItemTemplateForManager:(MMVimManager *)manager {
@@ -73,6 +100,42 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
             qVimArgFileNamesToOpen : filenames,
             qVimArgOpenFilesLayout : @(MMLayoutTabs),
     };
+}
+
+- (NSURL *)commonParentDirUrl:(NSArray *)fileUrls {
+    NSURL *firstUrl = fileUrls[0];
+
+    if (fileUrls.count == 1) {
+        return firstUrl.URLByDeletingLastPathComponent;
+    }
+
+    // from http://stackoverflow.com/questions/2845974/how-can-i-get-the-common-ancestor-directory-for-two-or-more-files-in-cocoa-obj-c
+
+    NSArray *currentCommonComps = [firstUrl pathComponents];
+    for (NSUInteger i = 1; i < fileUrls.count; i++) {
+        NSArray *thisPathComps = [fileUrls[i] pathComponents];
+        NSUInteger total = currentCommonComps.count;
+        if (thisPathComps.count < total) {
+            total = thisPathComps.count;
+        }
+
+        NSUInteger j;
+        for (j = 0; j < total; j++) {
+            if (![currentCommonComps[j] isEqualToString:thisPathComps[j]]) {
+                break;
+            }
+        }
+
+        if (j < currentCommonComps.count) {
+            currentCommonComps = [currentCommonComps subarrayWithRange:NSMakeRange(0, j)];
+        }
+
+        if (currentCommonComps.count == 0) {
+            break;
+        }
+    }
+
+    return [NSURL fileURLWithPathComponents:currentCommonComps];
 }
 
 @end

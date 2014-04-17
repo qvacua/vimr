@@ -67,7 +67,7 @@
 }
 
 - (void)testCleanup {
-    [workspaceController cleanup];
+    [workspaceController cleanUp];
     [verify(vimManager) terminateAllVimProcesses];
 }
 
@@ -81,7 +81,7 @@
     [self emulateControllerCreated];
 
     [workspaceController manager:vimManager vimControllerRemovedWithControllerId:123 pid:987];
-    [verify(mainWindowController) cleanupAndClose];
+    [verify(mainWindowController) cleanUpAndClose];
 }
 
 - (void)testMenuItemTemplateForManager {
@@ -90,7 +90,7 @@
 
 - (void)emulateControllerCreated {
     // not very elegant, but emulate that the vim manager created the vim controller
-    workspaceController.mainWindowController = mainWindowController;
+//    workspaceController.mainWindowController = mainWindowController;
 }
 
 @end

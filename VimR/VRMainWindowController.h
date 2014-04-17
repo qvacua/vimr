@@ -11,6 +11,8 @@
 #import <MacVimFramework/MacVimFramework.h>
 
 
+extern NSString *const qMainWindowNibName;
+
 @class VRWorkspaceController;
 
 
@@ -24,7 +26,7 @@
 
 #pragma mark Public
 - (void)openFilesWithArgs:(NSDictionary *)args;
-- (void)cleanupAndClose;
+- (void)cleanUpAndClose;
 
 #pragma mark IBActions
 - (IBAction)newTab:(id)sender;
@@ -45,18 +47,18 @@
 
 #pragma mark MMVimControllerDelegate
 - (void)controller:(MMVimController *)controller handleShowDialogWithButtonTitles:(NSArray *)buttonTitles
-                style:(NSAlertStyle)style message:(NSString *)message text:(NSString *)text
-      textFieldString:(NSString *)string data:(NSData *)data;
+             style:(NSAlertStyle)style message:(NSString *)message text:(NSString *)text
+   textFieldString:(NSString *)string data:(NSData *)data;
 - (void)controller:(MMVimController *)controller showScrollbarWithIdentifier:(int32_t)identifier state:(BOOL)state
-                 data:(NSData *)data;
+              data:(NSData *)data;
 - (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
-               isLive:(BOOL)live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data;
+            isLive:(BOOL)live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data;
 - (void)controller:(MMVimController *)controller openWindowWithData:(NSData *)data;
 - (void)controller:(MMVimController *)controller showTabBarWithData:(NSData *)data;
 - (void)controller:(MMVimController *)controller setScrollbarThumbValue:(float)value
-           proportion:(float)proportion identifier:(int32_t)identifier data:(NSData *)data;
+        proportion:(float)proportion identifier:(int32_t)identifier data:(NSData *)data;
 - (void)controller:(MMVimController *)controller destroyScrollbarWithIdentifier:(int32_t)identifier
-                 data:(NSData *)data;
+              data:(NSData *)data;
 - (void)controller:(MMVimController *)controller tabShouldUpdateWithData:(NSData *)data;
 - (void)controller:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data;
 - (void)controller:(MMVimController *)controller tabDraggedWithData:(NSData *)data;

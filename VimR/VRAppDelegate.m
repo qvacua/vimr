@@ -80,6 +80,17 @@ TB_MANUALWIRE(workspaceController)
 }
 
 - (void)application:(NSApplication *)sender openFiles:(NSArray *)filenames {
+    /**
+    * filenames consists of
+    * - NSURLs when opening files via NSOpenPanel
+    * - NSStrings when opening files via drag and drop on the VimR icon
+    */
+
+    if ([filenames[0] isKindOfClass:[NSURL class]]) {
+        [self.workspaceController openFiles:filenames];
+        return;
+    }
+
     NSMutableArray *urls = [[NSMutableArray alloc] initWithCapacity:filenames.count];
     for (NSString *filename in filenames) {
         [urls addObject:[[NSURL alloc] initFileURLWithPath:filename]];
@@ -94,7 +105,7 @@ TB_MANUALWIRE(workspaceController)
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification {
-    [self.workspaceController cleanup];
+    [self.workspaceController cleanUp];
 }
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender {

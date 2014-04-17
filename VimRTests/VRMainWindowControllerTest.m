@@ -56,7 +56,7 @@
 }
 
 - (void)testCleanupAndClose {
-    [mainWindowController cleanupAndClose];
+    [mainWindowController cleanUpAndClose];
     [verify(vimView) removeFromSuperviewWithoutNeedingDisplay];
     [verify(vimView) cleanup];
     // cannot verify [mainWindowController close]

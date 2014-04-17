@@ -15,6 +15,9 @@
 #import "VRUtils.h"
 
 
+NSString *const qMainWindowNibName = @"MainWindow";
+
+
 @interface VRMainWindowController ()
 
 @property BOOL isReplyToGuiResize;
@@ -29,7 +32,7 @@
     [self.vimController sendMessage:OpenWithArgumentsMsgID data:args.dictionaryAsData];
 }
 
-- (void)cleanupAndClose {
+- (void)cleanUpAndClose {
     log4Mark;
 
     [self.vimView removeFromSuperviewWithoutNeedingDisplay];
