@@ -34,6 +34,14 @@
 		4B78D61518D644A000CAA020 /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B64254A18C23F800012ED42 /* PSMTabBarControl.framework */; };
 		4B78D61618D644E500CAA020 /* MMAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBF8BE880500FCF8B9A6 /* MMAlert.m */; };
 		4B8BE1EE18EB556C004840F1 /* VRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE9242918C20DBC00E67BB6 /* VRAppDelegate.m */; };
+		4B921D9E19003F1D004D4FFD /* cf.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B921D9C19003F1D004D4FFD /* cf.dylib */; };
+		4B921D9F19003F1D004D4FFD /* cf.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B921D9C19003F1D004D4FFD /* cf.dylib */; };
+		4B921DA019003F1D004D4FFD /* text.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B921D9D19003F1D004D4FFD /* text.dylib */; };
+		4B921DA119003F1D004D4FFD /* text.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B921D9D19003F1D004D4FFD /* text.dylib */; };
+		4B921DA419003F86004D4FFD /* cf.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B921D9C19003F1D004D4FFD /* cf.dylib */; };
+		4B921DA519003F86004D4FFD /* text.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B921D9D19003F1D004D4FFD /* text.dylib */; };
+		4B921DA719003FBE004D4FFD /* cf.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B921D9C19003F1D004D4FFD /* cf.dylib */; };
+		4B921DA819003FBE004D4FFD /* text.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B921D9D19003F1D004D4FFD /* text.dylib */; };
 		4BE9241718C20DBC00E67BB6 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE9241618C20DBC00E67BB6 /* Cocoa.framework */; };
 		4BE9242118C20DBC00E67BB6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4BE9241F18C20DBC00E67BB6 /* InfoPlist.strings */; };
 		4BE9242318C20DBC00E67BB6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE9242218C20DBC00E67BB6 /* main.m */; };
@@ -70,6 +78,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4B921DA319003F7B004D4FFD /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				4B921DA419003F86004D4FFD /* cf.dylib in CopyFiles */,
+				4B921DA519003F86004D4FFD /* text.dylib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B921DA619003FB2004D4FFD /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				4B921DA719003FBE004D4FFD /* cf.dylib in CopyFiles */,
+				4B921DA819003FBE004D4FFD /* text.dylib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -98,6 +128,8 @@
 		4B64255718C26CB00012ED42 /* VRMainWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRMainWindowController.h; sourceTree = "<group>"; };
 		4B64255818C26CB00012ED42 /* VRMainWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRMainWindowController.m; sourceTree = "<group>"; };
 		4B64256F18C2846B0012ED42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		4B921D9C19003F1D004D4FFD /* cf.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = cf.dylib; path = VimR/TextMate/lib/cf.dylib; sourceTree = "<group>"; };
+		4B921D9D19003F1D004D4FFD /* text.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = text.dylib; path = VimR/TextMate/lib/text.dylib; sourceTree = "<group>"; };
 		4BE9241318C20DBC00E67BB6 /* VimR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VimR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BE9241618C20DBC00E67BB6 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4BE9241918C20DBC00E67BB6 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -128,7 +160,9 @@
 				4BE9241718C20DBC00E67BB6 /* Cocoa.framework in Frameworks */,
 				664C3590B3B2428C94313696 /* libPods.a in Frameworks */,
 				4B64254B18C23F800012ED42 /* MacVimFramework.framework in Frameworks */,
+				4B921DA019003F1D004D4FFD /* text.dylib in Frameworks */,
 				4B64254D18C23F800012ED42 /* PSMTabBarControl.framework in Frameworks */,
+				4B921D9E19003F1D004D4FFD /* cf.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,7 +172,9 @@
 			files = (
 				4B36F12E18DF70C00010ACE2 /* MacVimFramework.framework in Frameworks */,
 				4B78D61518D644A000CAA020 /* PSMTabBarControl.framework in Frameworks */,
+				4B921DA119003F1D004D4FFD /* text.dylib in Frameworks */,
 				4BE9243718C20DBC00E67BB6 /* Cocoa.framework in Frameworks */,
+				4B921D9F19003F1D004D4FFD /* cf.dylib in Frameworks */,
 				4BE9243618C20DBC00E67BB6 /* XCTest.framework in Frameworks */,
 				E6B1AC2D372E4EA58650E10C /* libPods-VimRTests.a in Frameworks */,
 			);
@@ -182,6 +218,15 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		4B921DA219003F26004D4FFD /* TextMate */ = {
+			isa = PBXGroup;
+			children = (
+				4B921D9C19003F1D004D4FFD /* cf.dylib */,
+				4B921D9D19003F1D004D4FFD /* text.dylib */,
+			);
+			name = TextMate;
+			sourceTree = "<group>";
+		};
 		4BE9240A18C20DBC00E67BB6 = {
 			isa = PBXGroup;
 			children = (
@@ -206,6 +251,7 @@
 		4BE9241518C20DBC00E67BB6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4B921DA219003F26004D4FFD /* TextMate */,
 				4B64254918C23F800012ED42 /* MacVimFramework.framework */,
 				4B64254A18C23F800012ED42 /* PSMTabBarControl.framework */,
 				4BE9241618C20DBC00E67BB6 /* Cocoa.framework */,
@@ -290,6 +336,7 @@
 				4BE9241018C20DBC00E67BB6 /* Frameworks */,
 				4BE9241118C20DBC00E67BB6 /* Resources */,
 				4B64252218C2233C0012ED42 /* CopyFiles */,
+				4B921DA319003F7B004D4FFD /* CopyFiles */,
 				16F47F5372CE497A96F5CDD8 /* Copy Pods Resources */,
 			);
 			buildRules = (
@@ -310,6 +357,7 @@
 				4BE9243118C20DBC00E67BB6 /* Frameworks */,
 				4BE9243218C20DBC00E67BB6 /* Resources */,
 				09BCFBB1D8214DAE8A0CFEB5 /* Copy Pods Resources */,
+				4B921DA619003FB2004D4FFD /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -606,6 +654,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 35DDD94E48FE41568A1349A2 /* Pods.xcconfig */;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -616,7 +665,12 @@
 				GCC_PREFIX_HEADER = "VimR/VimR-Prefix.pch";
 				INFOPLIST_FILE = "VimR/VimR-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/VimR/TextMate/lib",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/VimR/TextMate/include/**";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -625,6 +679,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 35DDD94E48FE41568A1349A2 /* Pods.xcconfig */;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -635,7 +690,12 @@
 				GCC_PREFIX_HEADER = "VimR/VimR-Prefix.pch";
 				INFOPLIST_FILE = "VimR/VimR-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/VimR/TextMate/lib",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/VimR/TextMate/include/**";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -644,6 +704,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7A3FC0B1787A4B05B5E0AE34 /* Pods-VimRTests.xcconfig */;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -657,7 +718,12 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "VimRTests/VimRTests-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/VimR/TextMate/lib",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/VimR/TextMate/include/**";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
@@ -666,6 +732,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7A3FC0B1787A4B05B5E0AE34 /* Pods-VimRTests.xcconfig */;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -675,7 +742,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VimR/VimR-Prefix.pch";
 				INFOPLIST_FILE = "VimRTests/VimRTests-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/VimR/TextMate/lib",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/VimR/TextMate/include/**";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;

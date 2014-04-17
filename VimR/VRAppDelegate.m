@@ -14,6 +14,9 @@
 #import "VRLog.h"
 #import "VRMainWindowController.h"
 
+#include <cf/cf.h>
+#include <text/ranker.h>
+
 
 static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
@@ -26,6 +29,7 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 @implementation VRAppDelegate
 
 TB_MANUALWIRE(workspace)
+
 TB_MANUALWIRE(workspaceController)
 
 #pragma mark IBActions

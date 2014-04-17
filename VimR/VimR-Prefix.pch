@@ -7,3 +7,12 @@
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
 #endif
+
+#ifdef __cplusplus
+    #include <map>
+    #include <set>
+    #include <string>
+    #include <vector>
+
+    std::string NULL_STR="\uFFFF";
+#endif
