@@ -71,10 +71,7 @@
     [verify(vimManager) terminateAllVimProcesses];
 }
 
-/**
-* cannot create window...
-*/
-- (void)notTestManagerVimControllerCreated {
+- (void)testManagerVimControllerCreated {
 }
 
 - (void)testManagerVimControllerRemovedWithControllerIdPid {

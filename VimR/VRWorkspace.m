@@ -30,7 +30,6 @@
 
 - (void)cleanUpAndClose {
     [self.mainWindowController cleanUpAndClose];
-    self.mainWindowController = nil;
 }
 
 @end
