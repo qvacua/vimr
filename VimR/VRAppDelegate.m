@@ -26,7 +26,6 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 @implementation VRAppDelegate
 
 TB_MANUALWIRE(workspace)
-
 TB_MANUALWIRE(workspaceController)
 
 #pragma mark IBActions

@@ -14,6 +14,7 @@
 #import "MMAlert.h"
 #import "VRUtils.h"
 #import "VRWindow.h"
+#import "VROpenQuicklyWindow.h"
 
 
 @interface VRMainWindowController ()
@@ -23,7 +24,9 @@
 
 @end
 
-@implementation VRMainWindowController
+@implementation VRMainWindowController {
+    VROpenQuicklyWindow *_win;
+}
 
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect {
@@ -75,6 +78,18 @@
 #pragma mark Debug
 - (IBAction)firstDebugAction:(id)sender {
     log4Debug(@"%@", [self.vimController currentTab]);
+
+    _win = [[VROpenQuicklyWindow alloc] initWithContentRect:CGRectMake(100, 100, 200, 22 + 2 * qOpenQuicklyWindowPadding)];
+
+    NSRect frame = self.window.frame;
+    NSRect contentRect = [self.window contentRectForFrameRect:frame];
+    logRect4Debug(@"frame", frame);
+    logRect4Debug(@"contentRect", contentRect);
+    CGFloat xPos = NSMinX(frame) + NSWidth(frame) / 2 - 200 / 2 - 2 * qOpenQuicklyWindowPadding;
+    CGFloat yPos = NSMaxY(contentRect) - 22 - 2 * qOpenQuicklyWindowPadding;
+
+    [_win setFrameOrigin:CGPointMake(xPos, yPos)];
+    [_win makeKeyAndOrderFront:self];
 }
 
 #pragma mark NSWindowController
@@ -569,7 +584,9 @@
     VRWindow *window = [[VRWindow alloc] initWithContentRect:contentRect styleMask:windowStyle
                                                      backing:NSBackingStoreBuffered defer:YES];
     window.delegate = self;
+    window.hasShadow = YES;
     window.title = @"VimR";
+
     return window;
 }
 
