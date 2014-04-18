@@ -15,6 +15,7 @@
 #import "VRUtils.h"
 #import "VRWindow.h"
 #import "VROpenQuicklyWindow.h"
+#import "VROpenQuicklyWindowController.h"
 
 
 @interface VRMainWindowController ()
@@ -75,21 +76,16 @@
     [self sendCommandToVim:@":e!"];
 }
 
+- (IBAction)openQuickly:(id)sender {
+    log4Debug(@"open quickly!!!");
+
+    NSRect contentRect = [self.window contentRectForFrameRect:self.window.frame];
+    [self.openQuicklyWindowController showWindowForContentRect:contentRect];
+}
+
 #pragma mark Debug
 - (IBAction)firstDebugAction:(id)sender {
     log4Debug(@"%@", [self.vimController currentTab]);
-
-    _win = [[VROpenQuicklyWindow alloc] initWithContentRect:CGRectMake(100, 100, 200, 22 + 2 * qOpenQuicklyWindowPadding)];
-
-    NSRect frame = self.window.frame;
-    NSRect contentRect = [self.window contentRectForFrameRect:frame];
-    logRect4Debug(@"frame", frame);
-    logRect4Debug(@"contentRect", contentRect);
-    CGFloat xPos = NSMinX(frame) + NSWidth(frame) / 2 - 200 / 2 - 2 * qOpenQuicklyWindowPadding;
-    CGFloat yPos = NSMaxY(contentRect) - 22 - 2 * qOpenQuicklyWindowPadding;
-
-    [_win setFrameOrigin:CGPointMake(xPos, yPos)];
-    [_win makeKeyAndOrderFront:self];
 }
 
 #pragma mark NSWindowController

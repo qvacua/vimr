@@ -19,6 +19,7 @@ extern int qOpenQuicklySearchFieldMinWidth;
 
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect;
+- (void)reset;
 
 #pragma mark NSWindow
 - (BOOL)canBecomeKeyWindow;

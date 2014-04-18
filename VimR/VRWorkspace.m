@@ -8,8 +8,10 @@
  */
 
 #import <MacVimFramework/MacVimFramework.h>
+#import <TBCacao/TBCacao.h>
 #import "VRWorkspace.h"
 #import "VRMainWindowController.h"
+#import "VROpenQuicklyWindowController.h"
 
 
 @implementation VRWorkspace
@@ -21,6 +23,9 @@
     ];
     controller.vimController = vimController;
     controller.vimView = vimController.vimView;
+    // TODO: ugly
+    controller.openQuicklyWindowController = [[TBContext sharedContext]
+            beanWithClass:[VROpenQuicklyWindowController class]];
 
     vimController.delegate = (id <MMVimControllerDelegate>) controller;
 

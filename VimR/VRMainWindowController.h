@@ -12,12 +12,14 @@
 
 
 @class VRWorkspaceController;
+@class VROpenQuicklyWindowController;
 
 
 @interface VRMainWindowController : NSWindowController <NSWindowDelegate, MMVimControllerDelegate>
 
 #pragma mark Properties
 @property (weak) VRWorkspaceController *workspaceController;
+@property (weak) VROpenQuicklyWindowController *openQuicklyWindowController;
 @property (weak) MMVimController *vimController;
 @property (weak) MMVimView *vimView;
 @property BOOL needsToResizeVimView;
@@ -33,6 +35,7 @@
 - (IBAction)saveDocument:(id)sender;
 - (IBAction)saveDocumentAs:(id)sender;
 - (IBAction)revertDocumentToSaved:(id)sender;
+- (IBAction)openQuickly:(id)sender;
 
 #pragma mark Debug
 - (IBAction)firstDebugAction:(id)sender;

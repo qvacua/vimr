@@ -8,7 +8,21 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import <TBCacao/TBCacao.h>
 
 
-@interface VROpenQuicklyWindowController : NSWindowController
+extern int qOpenQuicklyWindowWidth;
+
+@interface VROpenQuicklyWindowController : NSWindowController <TBBean, NSWindowDelegate, NSTextFieldDelegate>
+
+#pragma mark Public
+- (void)showWindowForContentRect:(CGRect)contentRect;
+
+#pragma mark NSObject
+- (id)init;
+
+#pragma mark NSWindowDelegate
+- (void)windowDidResignMain:(NSNotification *)notification;
+- (void)windowDidResignKey:(NSNotification *)notification;
+
 @end

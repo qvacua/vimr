@@ -18,6 +18,9 @@ int qOpenQuicklySearchFieldMinWidth = 100;
 
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect {
+    // this window should have a fixed height
+    contentRect.size.height = 22 + 2 * qOpenQuicklyWindowPadding;
+
     self = [super initWithContentRect:contentRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered
                                 defer:YES];
     if (!self) {
@@ -33,6 +36,10 @@ int qOpenQuicklySearchFieldMinWidth = 100;
     [self addViews];
 
     return self;
+}
+
+- (void)reset {
+    [self.searchField setStringValue:@""];
 }
 
 #pragma mark NSWindow
@@ -51,7 +58,8 @@ int qOpenQuicklySearchFieldMinWidth = 100;
             @"searchField" : _searchField,
     };
     [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
-            SF(@"H:|-%d-[searchField(>=%d)]-%d-|", qOpenQuicklyWindowPadding, qOpenQuicklySearchFieldMinWidth, qOpenQuicklyWindowPadding)
+            SF(@"H:|-%d-[searchField(>=%d)]-%d-|", qOpenQuicklyWindowPadding, qOpenQuicklySearchFieldMinWidth,
+            qOpenQuicklyWindowPadding)
                                                                              options:0 metrics:nil views:views]
     ];
     [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
