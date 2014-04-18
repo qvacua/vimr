@@ -14,8 +14,8 @@
 #import "MMAlert.h"
 #import "VRUtils.h"
 #import "VRWindow.h"
-#import "VROpenQuicklyWindow.h"
 #import "VROpenQuicklyWindowController.h"
+#import "VRUrlManager.h"
 
 
 @interface VRMainWindowController ()
@@ -25,9 +25,7 @@
 
 @end
 
-@implementation VRMainWindowController {
-    VROpenQuicklyWindow *_win;
-}
+@implementation VRMainWindowController
 
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect {
@@ -86,6 +84,14 @@
 #pragma mark Debug
 - (IBAction)firstDebugAction:(id)sender {
     log4Debug(@"%@", [self.vimController currentTab]);
+
+    VRUrlManager *manager = [[TBContext sharedContext] beanWithClass:[VRUrlManager class]];
+    [manager start];
+}
+
+- (IBAction)secondDebugAction:(id)sender {
+    VRUrlManager *manager = [[TBContext sharedContext] beanWithClass:[VRUrlManager class]];
+    [manager stop];
 }
 
 #pragma mark NSWindowController

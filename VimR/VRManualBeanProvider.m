@@ -39,6 +39,7 @@
                 [TBBeanContainer beanContainerWithBean:workspaceController],
                 [TBBeanContainer beanContainerWithBean:vimManager],
                 [TBBeanContainer beanContainerWithBean:[NSWorkspace sharedWorkspace]],
+                [TBBeanContainer beanContainerWithBean:[NSFileManager defaultManager]],
         ];
     }
 

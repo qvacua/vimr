@@ -12,4 +12,14 @@
 
 
 @interface VRUrlManager : NSObject <TBBean>
+
+@property (weak) NSFileManager *fileManager;
+
+#pragma mark Public
+- (void)start;
+- (void)stop;
+
+#pragma mark NSObject
+- (id)init;
+
 @end

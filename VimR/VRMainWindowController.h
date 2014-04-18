@@ -39,6 +39,7 @@
 
 #pragma mark Debug
 - (IBAction)firstDebugAction:(id)sender;
+- (IBAction)secondDebugAction:(id)sender;
 
 #pragma mark NSWindowController
 - (void)dealloc;

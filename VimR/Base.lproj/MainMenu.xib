@@ -389,9 +389,14 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Debug" id="IF5-nu-Y0K">
                         <items>
-                            <menuItem title="Some thing" keyEquivalent="1" id="dzX-yG-Iqo">
+                            <menuItem title="Start Monitoring" keyEquivalent="1" id="dzX-yG-Iqo">
                                 <connections>
                                     <action selector="firstDebugAction:" target="-1" id="wcM-Hn-Grz"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Stop Monitoring" keyEquivalent="2" id="tzt-Jk-072">
+                                <connections>
+                                    <action selector="secondDebugAction:" target="-1" id="1jC-K5-yZZ"/>
                                 </connections>
                             </menuItem>
                         </items>
