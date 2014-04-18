@@ -9,6 +9,7 @@
 
 #import "VRUrlManager.h"
 #import "VRLog.h"
+#import "VRUtils.h"
 
 
 void streamCallback(
@@ -57,11 +58,10 @@ TB_AUTOWIRE(fileManager)
     [thread cancel];
 }
 
+#pragma mark NSObject
 - (id)init {
     self = [super init];
-    if (!self) {
-        return nil;
-    }
+    RETURN_NIL_WHEN_NOT_SELF
 
     NSArray *paths = @[
             @"/Users/hat/Downloads",

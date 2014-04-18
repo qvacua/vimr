@@ -5,3 +5,7 @@
 #ifndef CPP_STR
     #define CPP_STR(str) cf::to_s((__bridge CFStringRef) str)
 #endif
+
+#ifndef RETURN_NIL_WHEN_NOT_SELF
+    #define RETURN_NIL_WHEN_NOT_SELF if (!self) { return nil; }
+#endif

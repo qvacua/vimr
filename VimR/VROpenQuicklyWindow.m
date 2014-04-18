@@ -23,9 +23,7 @@ int qOpenQuicklySearchFieldMinWidth = 100;
 
     self = [super initWithContentRect:contentRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered
                                 defer:YES];
-    if (!self) {
-        return nil;
-    }
+    RETURN_NIL_WHEN_NOT_SELF
 
     self.hasShadow = YES;
     self.opaque = NO;

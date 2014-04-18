@@ -13,6 +13,7 @@
 #import "VRWorkspaceController.h"
 #import "VRLog.h"
 #import "VRMainWindowController.h"
+#import "VRUtils.h"
 
 
 static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
@@ -58,9 +59,7 @@ TB_MANUALWIRE(workspaceController)
 #pragma mark NSObject
 - (id)init {
     self = [super init];
-    if (self == nil) {
-        return nil;
-    }
+    RETURN_NIL_WHEN_NOT_SELF
 
     [[TBContext sharedContext] autowireSeed:self];
 

@@ -10,6 +10,7 @@
 #import <MacVimFramework/MacVimFramework.h>
 #import "VRWorkspaceController.h"
 #import "VRWorkspace.h"
+#import "VRUtils.h"
 
 
 NSString *const qVimArgFileNamesToOpen = @"filenames";
@@ -50,9 +51,7 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 #pragma mark NSObject
 - (id)init {
     self = [super init];
-    if (!self) {
-        return nil;
-    }
+    RETURN_NIL_WHEN_NOT_SELF
 
     _mutableWorkspaces = [[NSMutableArray alloc] initWithCapacity:5];
     _pid2Workspace = [[NSMutableDictionary alloc] initWithCapacity:5];

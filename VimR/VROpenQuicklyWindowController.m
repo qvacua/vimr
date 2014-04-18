@@ -10,6 +10,7 @@
 #import "VROpenQuicklyWindowController.h"
 #import "VROpenQuicklyWindow.h"
 #import "VRLog.h"
+#import "VRUtils.h"
 
 
 static const int qSearchFieldHeight = 22;
@@ -33,9 +34,7 @@ int qOpenQuicklyWindowWidth = 200;
             CGRectMake(100, 100, qOpenQuicklyWindowWidth, 100)];
 
     self = [super initWithWindow:win];
-    if (!self) {
-        return nil;
-    }
+    RETURN_NIL_WHEN_NOT_SELF
 
     win.delegate = self;
     win.searchField.delegate = self;

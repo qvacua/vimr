@@ -30,9 +30,7 @@
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect {
     self = [super initWithWindow:[self newMainWindowForContentRect:contentRect]];
-    if (!self) {
-        return nil;
-    }
+    RETURN_NIL_WHEN_NOT_SELF
 
     return self;
 }
