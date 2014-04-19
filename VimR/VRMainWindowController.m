@@ -15,7 +15,6 @@
 #import "VRUtils.h"
 #import "VRWindow.h"
 #import "VROpenQuicklyWindowController.h"
-#import "VRUrlManager.h"
 
 
 @interface VRMainWindowController ()
@@ -85,7 +84,7 @@
 }
 
 - (IBAction)secondDebugAction:(id)sender {
-    log4Debug(@"%@", [self.vimController buffers]);
+    log4Debug(@"tabs: %@", [self.vimController tabs]);
 }
 
 #pragma mark NSWindowController
