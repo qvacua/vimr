@@ -8,15 +8,16 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <TBCacao/TBCacao.h>
 
 
-@interface VRUrlManager : NSObject
+@interface VRFileItemManager : NSObject <TBBean>
 
 @property (weak) NSFileManager *fileManager;
+@property (readonly) NSSet *monitoredUrls;
 
 #pragma mark Public
-- (void)start;
-- (void)stop;
+- (void)monitorUrl:(NSURL *)url;
 
 #pragma mark NSObject
 - (id)init;
