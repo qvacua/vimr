@@ -82,14 +82,10 @@
 #pragma mark Debug
 - (IBAction)firstDebugAction:(id)sender {
     log4Debug(@"%@", [self.vimController currentTab]);
-
-    VRUrlManager *manager = [[TBContext sharedContext] beanWithClass:[VRUrlManager class]];
-    [manager start];
 }
 
 - (IBAction)secondDebugAction:(id)sender {
-    VRUrlManager *manager = [[TBContext sharedContext] beanWithClass:[VRUrlManager class]];
-    [manager stop];
+    log4Debug(@"%@", [self.vimController buffers]);
 }
 
 #pragma mark NSWindowController

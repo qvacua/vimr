@@ -40,9 +40,6 @@ void streamCallback(
     NSThread *thread;
 }
 
-TB_AUTOWIRE(fileManager)
-
-
 #pragma mark Public
 - (void)start {
     thread = [[NSThread alloc] initWithTarget:self selector:@selector(scheduleStream:) object:self];

@@ -8,10 +8,9 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <TBCacao/TBCacao.h>
 
 
-@interface VRUrlManager : NSObject <TBBean>
+@interface VRUrlManager : NSObject
 
 @property (weak) NSFileManager *fileManager;
 
