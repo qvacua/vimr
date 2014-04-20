@@ -255,7 +255,7 @@ TB_AUTOWIRE(fileManager)
         for (NSURL *parentUrl in parentUrls) {
             [self traverseFileItem:self.url2CachedFileItem[parentUrl] usingBlock:^(VRFileItem *item, BOOL *stop) {
                 if ([item.url isEqualTo:url]) {
-                    log4Debug(@"invalidating cache for %@", item);
+                    log4Debug(@"invalidating cache for %@ of the parent %@", item, parentUrl);
                     item.shouldCacheChildren = YES;
                     *stop = YES;
                 }
