@@ -9,3 +9,5 @@
 #ifndef RETURN_NIL_WHEN_NOT_SELF
     #define RETURN_NIL_WHEN_NOT_SELF if (!self) { return nil; }
 #endif
+
+extern double measure_time(void (^block)());

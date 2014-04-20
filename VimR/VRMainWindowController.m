@@ -15,6 +15,7 @@
 #import "VRUtils.h"
 #import "VRWindow.h"
 #import "VROpenQuicklyWindowController.h"
+#import "VRFileItemManager.h"
 
 
 @interface VRMainWindowController ()
@@ -80,7 +81,10 @@
 
 #pragma mark Debug
 - (IBAction)firstDebugAction:(id)sender {
-    log4Debug(@"%@", [self.vimController currentTab]);
+//    log4Debug(@"%@", [self.vimController currentTab]);
+
+    VRFileItemManager *monitor = [[TBContext sharedContext] beanWithClass:[VRFileItemManager class]];
+    [monitor registerUrl:[[NSURL alloc] initFileURLWithPath:@"/Users/hat/Projects/VimR"]];
 }
 
 - (IBAction)secondDebugAction:(id)sender {

@@ -10,6 +10,17 @@
 #import "VRFileItemManager.h"
 #import "VRLog.h"
 #import "VRUtils.h"
+#import "VRFileItem.h"
+
+
+@interface VRFileItemManager ()
+
+@property (readonly) NSMutableSet *mutableRegisteredUrls;
+
+// declared here to be used in the callback (and not to make it public)
+- (void)reCacheUrls:(NSArray *)fileSystemRep flags:(FSEventStreamEventFlags const [])flags;
+
+@end
 
 
 void streamCallback(
@@ -25,21 +36,18 @@ void streamCallback(
     __weak VRFileItemManager *urlManager = (__bridge VRFileItemManager *) callBackInfo;
 
     @autoreleasepool {
+        NSMutableArray *urls = [[NSMutableArray alloc] initWithCapacity:numEvents];
         for (i = 0; i < numEvents; i++) {
             NSString *path = [urlManager.fileManager stringWithFileSystemRepresentation:paths[i]
                                                                                  length:strlen(paths[i])];
             NSURL *url = [NSURL fileURLWithPath:path];
-            unsigned int flags = eventFlags[i];
-            log4Debug(@"URL %@ changed w/flags 0x%08x", url, flags);
+            [urls addObject:url];
+            log4Debug(@"%@ changed!", url);
         }
+        [urlManager reCacheUrls:urls flags:eventFlags];
     };
 }
 
-@interface VRFileItemManager ()
-
-@property (readonly) NSMutableSet *mutableMonitoredUrls;
-
-@end
 
 @implementation VRFileItemManager {
     NSThread *_thread;
@@ -50,21 +58,35 @@ void streamCallback(
 TB_AUTOWIRE(fileManager)
 
 #pragma mark Properties
-- (NSSet *)monitoredUrls {
-    return self.mutableMonitoredUrls;
+- (NSSet *)registeredUrls {
+    return self.mutableRegisteredUrls;
 }
 
 #pragma mark Public
-- (void)monitorUrl:(NSURL *)url {
+- (VRFileItem *)fileItemForUrl:(NSURL *)url {
+    return nil;
+}
+
+- (void)registerUrl:(NSURL *)url {
     @synchronized (self) {
-        if ([_mutableMonitoredUrls containsObject:url]) {
-            log4Debug(@"%@ already monitored", url);
+        if ([_mutableRegisteredUrls containsObject:url]) {
             return;
         }
 
-        [_mutableMonitoredUrls addObject:url];
+        [_mutableRegisteredUrls addObject:url];
 
-        [self restart];
+        if (_thread) {
+            [self stop];
+        }
+        [self start];
+
+        // TODO: here we request caching of the newly added url?
+    }
+}
+
+- (void)cleanUp {
+    @synchronized (self) {
+        [self stop];
     }
 }
 
@@ -74,11 +96,24 @@ TB_AUTOWIRE(fileManager)
     RETURN_NIL_WHEN_NOT_SELF
 
     _lastEventId = kFSEventStreamEventIdSinceNow;
+    _mutableRegisteredUrls = [[NSMutableSet alloc] initWithCapacity:5];
 
     return self;
 }
 
 #pragma mark Private
+- (void)reCacheUrls:(NSArray *)urls flags:(FSEventStreamEventFlags const [])flags {
+    [urls enumerateObjectsUsingBlock:^(NSURL *url, NSUInteger idx, BOOL *stop) {
+        log4Debug(@"recaching for %@", url);
+
+        FSEventStreamEventFlags flag = flags[idx];
+
+        if (flag & kFSEventStreamEventFlagMustScanSubDirs) {
+            log4Debug(@"%@ must subscan", url);
+        }
+    }];
+}
+
 - (FSEventStreamContext)contextWithSelfAsInfo {
     FSEventStreamContext context;
 
@@ -89,7 +124,10 @@ TB_AUTOWIRE(fileManager)
 }
 
 - (void)scheduleStream:(id)sender {
-    _stream = [self newStream];
+    // this method gets executed by an NSThread, therefore it's responsible for its own autorelease pool
+    @autoreleasepool {
+        _stream = [self newStream];
+    }
 
     FSEventStreamScheduleWithRunLoop(_stream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
     FSEventStreamStart(_stream);
@@ -98,8 +136,8 @@ TB_AUTOWIRE(fileManager)
 }
 
 - (FSEventStreamRef)newStream {
-    NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:self.monitoredUrls.count];
-    for (NSURL *url in self.monitoredUrls) {
+    NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:self.registeredUrls.count];
+    for (NSURL *url in self.registeredUrls) {
         [paths addObject:url.path];
     }
 
@@ -112,15 +150,8 @@ TB_AUTOWIRE(fileManager)
             (__bridge CFArrayRef) paths,
             _lastEventId,
             0.5,
-            kFSEventStreamCreateFlagWatchRoot
+            kFSEventStreamCreateFlagNone
     );
-}
-
-- (void)restart {
-    @synchronized (self) {
-        [self stop];
-        [self start];
-    }
 }
 
 - (void)start {
@@ -133,6 +164,51 @@ TB_AUTOWIRE(fileManager)
         _thread.name = @"file-item-manager-thread";
 
         [_thread start];
+
+        [self performSelector:@selector(justTesting:) onThread:_thread withObject:self waitUntilDone:NO];
+    }
+}
+
+- (void)justTesting:(id)sender {
+    @autoreleasepool {
+        NSURL *targetUrl = self.registeredUrls.anyObject;
+
+        NSArray *keys = @[
+                NSURLIsDirectoryKey,
+//                NSURLIsHiddenKey,
+//                NSURLIsPackageKey,
+//                NSURLIsRegularFileKey,
+//                NSURLIsSymbolicLinkKey,
+        ];
+        enum NSDirectoryEnumerationOptions options = NSDirectoryEnumerationSkipsPackageDescendants;
+
+        VRFileItem *parent = [[VRFileItem alloc] initWithUrl:targetUrl isDir:YES];
+
+        double fetchUrlsTime = measure_time(^{
+            [self buildFileItemForParent:parent includingProperties:keys options:options];
+        });
+
+        log4Debug(@"Fetching contents of %@ in %.2f s", targetUrl, fetchUrlsTime);
+    }
+}
+
+- (void)buildFileItemForParent:(VRFileItem *)parent includingProperties:propertyKeys
+                       options:(NSDirectoryEnumerationOptions)options {
+
+    NSArray *children = [self.fileManager contentsOfDirectoryAtURL:parent.url includingPropertiesForKeys:propertyKeys
+                                                           options:options error:NULL];
+    for (NSURL *childUrl in children) {
+        NSNumber *isDir = nil;
+        [childUrl getResourceValue:&isDir forKey:NSURLIsDirectoryKey error:NULL];
+        BOOL dir = isDir.boolValue;
+
+        VRFileItem *child = [[VRFileItem alloc] initWithUrl:childUrl isDir:dir];
+        [parent.children addObject:child];
+
+        if (dir) {
+            // NOTE: could dispatch async here?
+            [self buildFileItemForParent:child includingProperties:propertyKeys options:options];
+        }
     }
 }
 

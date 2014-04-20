@@ -11,6 +11,7 @@
 		1929B2474A754C511FA7C4C9 /* VRWorkspace.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B4C315994876DB3F872A /* VRWorkspace.m */; };
 		1929B3BA342BB860ACE055ED /* VROpenQuicklyWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B406BD745C39B1E487FB /* VROpenQuicklyWindow.m */; };
 		1929B4B16DD8BEC2C1688EE5 /* VROpenQuicklyWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B786A5B34853FDEABA48 /* VROpenQuicklyWindowController.m */; };
+		1929B4D46C3BFBB370A6E1EE /* VRUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD3D77EA1A77CF8D469D /* VRUtils.m */; };
 		1929B65D8458FE1E5D4E0594 /* VRBaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9CC266B14FF9F1AABF9 /* VRBaseTestCase.m */; };
 		1929B80712EFF4A7935CD84E /* VRFileItemManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA1AF9C1D310C2D44214 /* VRFileItemManager.m */; };
 		1929B93BBCD53898D16541CD /* VRManualBeanProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCAF60827409FA845CAC /* VRManualBeanProvider.m */; };
@@ -31,6 +32,7 @@
 		1929BEE29EA16DF832244A1D /* NSArray+VR.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA50673906A6CDA54575 /* NSArray+VR.m */; };
 		1929BEE6213A8875598A2713 /* VRWorkspaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B78A8084470EC33DE744 /* VRWorkspaceController.m */; };
 		1929BF1DA8AF89ECE4C5981D /* VRFileItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B51876DDE88FB767D3FB /* VRFileItem.m */; };
+		1929BF483DBE74597ABFF53F /* VRUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD3D77EA1A77CF8D469D /* VRUtils.m */; };
 		4B36F12E18DF70C00010ACE2 /* MacVimFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B64254918C23F800012ED42 /* MacVimFramework.framework */; };
 		4B36F12F18DF713D0010ACE2 /* MacVimFramework.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B64254918C23F800012ED42 /* MacVimFramework.framework */; };
 		4B64254B18C23F800012ED42 /* MacVimFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B64254918C23F800012ED42 /* MacVimFramework.framework */; };
@@ -133,6 +135,7 @@
 		1929BBF8BE880500FCF8B9A6 /* MMAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAlert.m; sourceTree = "<group>"; };
 		1929BC6C99CA6C4535EA9CAF /* VRWorkspaceControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRWorkspaceControllerTest.m; sourceTree = "<group>"; };
 		1929BCAF60827409FA845CAC /* VRManualBeanProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRManualBeanProvider.m; sourceTree = "<group>"; };
+		1929BD3D77EA1A77CF8D469D /* VRUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRUtils.m; sourceTree = "<group>"; };
 		1929BDFD369F4B3D64B1FCBC /* VRFileItemManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRFileItemManager.h; sourceTree = "<group>"; };
 		1929BEB39029AA6F807E8B95 /* NSArray+VR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+VR.h"; sourceTree = "<group>"; };
 		1929BEDAD04E9D7AC57EBE5B /* VRWorkspaceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRWorkspaceTest.m; sourceTree = "<group>"; };
@@ -307,6 +310,7 @@
 				1929B9E2E7CEC80C7681E1A8 /* VROpenQuicklyWindowController.h */,
 				1929B51876DDE88FB767D3FB /* VRFileItem.m */,
 				1929B4897D01F2CEE7CDBBF1 /* VRFileItem.h */,
+				1929BD3D77EA1A77CF8D469D /* VRUtils.m */,
 			);
 			path = VimR;
 			sourceTree = "<group>";
@@ -527,6 +531,7 @@
 				1929B3BA342BB860ACE055ED /* VROpenQuicklyWindow.m in Sources */,
 				1929B9B2C50FFA662A40F5FF /* VROpenQuicklyWindowController.m in Sources */,
 				1929BC55F9070D1A292E2FB4 /* VRFileItem.m in Sources */,
+				1929B4D46C3BFBB370A6E1EE /* VRUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -551,6 +556,7 @@
 				1929BBCE8789D90C70541059 /* VROpenQuicklyWindow.m in Sources */,
 				1929B4B16DD8BEC2C1688EE5 /* VROpenQuicklyWindowController.m in Sources */,
 				1929BF1DA8AF89ECE4C5981D /* VRFileItem.m in Sources */,
+				1929BF483DBE74597ABFF53F /* VRUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

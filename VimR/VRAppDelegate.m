@@ -14,6 +14,7 @@
 #import "VRLog.h"
 #import "VRMainWindowController.h"
 #import "VRUtils.h"
+#import "VRFileItemManager.h"
 
 
 static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
@@ -28,6 +29,7 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
 TB_MANUALWIRE(workspace)
 TB_MANUALWIRE(workspaceController)
+TB_MANUALWIRE(fileItemManager)
 
 #pragma mark IBActions
 - (IBAction)newDocument:(id)sender {
@@ -105,6 +107,7 @@ TB_MANUALWIRE(workspaceController)
 
 - (void)applicationWillTerminate:(NSNotification *)notification {
     [self.workspaceController cleanUp];
+    [self.fileItemManager cleanUp];
 }
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender {

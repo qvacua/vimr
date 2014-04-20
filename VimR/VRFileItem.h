@@ -13,10 +13,17 @@
 @interface VRFileItem : NSObject
 
 @property (copy) NSURL *url;
+@property (readonly, getter=isDir) BOOL dir;
 @property (readonly) NSString *displayName;
-@property (readonly) NSArray *children;
+@property (readonly) NSMutableArray *children;
 
 #pragma mark Public
-- (instancetype)initWithUrl:(NSURL *)url;
+- (instancetype)initWithUrl:(NSURL *)url isDir:(BOOL)isDir;
+- (BOOL)isEqualToItem:(VRFileItem *)item;
+
+#pragma mark NSObject
+- (BOOL)isEqual:(id)other;
+- (NSUInteger)hash;
+- (NSString *)description;
 
 @end

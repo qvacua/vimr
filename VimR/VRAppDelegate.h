@@ -12,12 +12,14 @@
 
 
 @class VRWorkspaceController;
+@class VRFileItemManager;
 
 @interface VRAppDelegate : NSObject <NSApplicationDelegate>
 
 @property (weak) NSApplication *application;
 @property (weak) VRWorkspaceController *workspaceController;
 @property (weak) NSWorkspace *workspace;
+@property (weak) VRFileItemManager *fileItemManager;
 
 @property (assign) IBOutlet NSWindow *window;
 
