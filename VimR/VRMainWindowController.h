@@ -42,6 +42,7 @@
 - (IBAction)secondDebugAction:(id)sender;
 
 #pragma mark NSWindowController
+- (IBAction)thirdDebugAction:(id)sender;
 - (void)dealloc;
 
 #pragma mark MMViewDelegate informal protocol

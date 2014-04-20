@@ -21,6 +21,7 @@
 @property (readonly) NSArray *fileItemsOfTargetUrl;
 
 #pragma mark Public
+- (void)unregisterUrl:(NSURL *)url;
 - (BOOL)setTargetUrl:(NSURL *)url;
 - (void)registerUrl:(NSURL *)url;
 - (void)cleanUp;

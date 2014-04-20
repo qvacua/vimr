@@ -94,11 +94,13 @@
 
     VRFileItemManager *monitor = [[TBContext sharedContext] beanWithClass:[VRFileItemManager class]];
     NSArray *fileItems = monitor.fileItemsOfTargetUrl;
-    log4Debug(@"#################### count of file items: %lu", fileItems.count);
+    log4Debug(@"count of file items: %lu", fileItems.count);
     [fileItems writeToFile:@"/Users/hat/Downloads/file-items.plist" atomically:NO];
+}
 
-    NSSet *uniqueFileItems = [[NSSet alloc] initWithArray:fileItems];
-    log4Debug(@"#################### count of unique file items: %lu", uniqueFileItems.count);
+- (IBAction)thirdDebugAction:(id)sender {
+    VRFileItemManager *monitor = [[TBContext sharedContext] beanWithClass:[VRFileItemManager class]];
+    [monitor unregisterUrl:[[NSURL alloc] initFileURLWithPath:@"/Users/hat/Downloads/tempo"]];
 }
 
 #pragma mark NSWindowController
