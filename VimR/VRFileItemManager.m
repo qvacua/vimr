@@ -118,7 +118,7 @@ TB_AUTOWIRE(fileManager)
     [self.mutableFileItemsForTargetUrl removeAllObjects];
 
     // we don't add root to mutableFileItemsForTargetUrl, since it is a dir
-    [self traverseFileItemChildHierachyForRequest:root];
+    [self traverseFileItemChildHierarchyForRequest:root];
 
     return YES;
 }
@@ -142,7 +142,7 @@ TB_AUTOWIRE(fileManager)
 }
 
 #pragma mark Private
-- (void)traverseFileItemChildHierachyForRequest:(VRFileItem *)parent {
+- (void)traverseFileItemChildHierarchyForRequest:(VRFileItem *)parent {
     if (parent.isCachingChildren) {
         log4Debug(@"file item %@ is currently being cached", parent.url);
         return;
@@ -175,7 +175,7 @@ TB_AUTOWIRE(fileManager)
     for (VRFileItem *child in parent.children) {
         if (child.dir) {
             log4Debug(@"traversing child %@", child.url);
-            [self traverseFileItemChildHierachyForRequest:child];
+            [self traverseFileItemChildHierarchyForRequest:child];
         } else {
             [self addToFileItemsForTargetUrl:child];
         }
