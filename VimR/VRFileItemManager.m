@@ -12,6 +12,7 @@
 #import "VRUtils.h"
 #import "VRFileItem.h"
 #import "NSArray+VR.h"
+#import "NSMutableArray+VR.h"
 
 
 typedef void (^VRHandlerForCachedChildrenBlock)(NSArray *);
@@ -25,7 +26,7 @@ static NSString *const qParentFileItemToCacheKey = @"parent-file-item-to-cache-k
 @property BOOL shouldCancelScanning;
 
 // declared here to be used in the callback (and not to make it public)
-- (void)reCacheUrls:(NSArray *)fileSystemRep flags:(FSEventStreamEventFlags const [])flags;
+- (void)invalidateCacheForUrls:(NSArray *)fileSystemRep flags:(FSEventStreamEventFlags const [])flags;
 
 @end
 
@@ -51,7 +52,7 @@ void streamCallback(
             [urls addObject:url];
             log4Debug(@"%@ changed!", url);
         }
-        [urlManager reCacheUrls:urls flags:eventFlags];
+        [urlManager invalidateCacheForUrls:urls flags:eventFlags];
     };
 }
 
@@ -117,7 +118,7 @@ TB_AUTOWIRE(fileManager)
     [self.mutableFileItemsForTargetUrl removeAllObjects];
 
     // we don't add root to mutableFileItemsForTargetUrl, since it is a dir
-    [self traverseFileItemChildHierachy:root];
+    [self traverseFileItemChildHierachyForRequest:root];
 
     return YES;
 }
@@ -141,13 +142,19 @@ TB_AUTOWIRE(fileManager)
 }
 
 #pragma mark Private
-- (void)traverseFileItemChildHierachy:(VRFileItem *)parent {
+- (void)traverseFileItemChildHierachyForRequest:(VRFileItem *)parent {
     if (parent.isCachingChildren) {
         log4Debug(@"file item %@ is currently being cached", parent.url);
         return;
     }
 
     if (parent.shouldCacheChildren) {
+        /**
+        * we remove all children when shouldCacheChildren is on, because we do not deep-scan in background, but
+        * only set shouldCacheChildren of the direct descendants to YES
+        */
+        [parent.children removeAllObjects];
+
         VRHandlerForCachedChildrenBlock handlerForCachedChildren = ^(NSArray *children) {
             for (VRFileItem *child in children) {
                 if (!child.dir) {
@@ -168,7 +175,7 @@ TB_AUTOWIRE(fileManager)
     for (VRFileItem *child in parent.children) {
         if (child.dir) {
             log4Debug(@"traversing child %@", child.url);
-            [self traverseFileItemChildHierachy:child];
+            [self traverseFileItemChildHierachyForRequest:child];
         } else {
             [self addToFileItemsForTargetUrl:child];
         }
@@ -239,16 +246,69 @@ TB_AUTOWIRE(fileManager)
     return isDir.boolValue;
 }
 
-- (void)reCacheUrls:(NSArray *)urls flags:(FSEventStreamEventFlags const [])flags {
-    [urls enumerateObjectsUsingBlock:^(NSURL *url, NSUInteger idx, BOOL *stop) {
-        log4Debug(@"recaching for %@", url);
+- (void)invalidateCacheForUrls:(NSArray *)urls flags:(FSEventStreamEventFlags const [])flags {
+    [urls enumerateObjectsUsingBlock:^(NSURL *url, NSUInteger idx, BOOL *stopUrlEnumeration) {
+        log4Debug(@"background-recaching %@: only direct descendants", url);
+
+        // there can be more than one registered URLs in which url is contained; we just take them all
+        NSArray *parentUrls = [self parentUrlsForUrl:url];
+        for (NSURL *parentUrl in parentUrls) {
+            [self traverseFileItem:self.url2CachedFileItem[parentUrl] usingBlock:^(VRFileItem *item, BOOL *stop) {
+                if ([item.url isEqualTo:url]) {
+                    log4Debug(@"invalidating cache for %@", item);
+                    item.shouldCacheChildren = YES;
+                    *stop = YES;
+                }
+            }];
+        }
 
         FSEventStreamEventFlags flag = flags[idx];
-
         if (flag & kFSEventStreamEventFlagMustScanSubDirs) {
-            log4Debug(@"%@ must subscan", url);
+            // we do not deep-scan in background, let's do that when the user sets the root parent of url
+            log4Debug(@"subdirs of %@ must be scanned, not doing this here, but when the root becomes target", url);
         }
     }];
+}
+
+/**
+* Pre-order traversal of file items;
+* When stop of the block is set to YES, then that item is returned
+*/
+- (VRFileItem *)traverseFileItem:(VRFileItem *)parent usingBlock:(void (^)(VRFileItem *item, BOOL *stop))block {
+    // pre-order traversal
+    BOOL stop = NO;
+
+    VRStack *nodeStack = [[NSMutableArray alloc] initWithCapacity:15];
+    [nodeStack push:parent];
+
+    __weak VRFileItem *currentItem;
+    while (nodeStack.count > 0) {
+        currentItem = [nodeStack pop];
+        if (currentItem.dir) {
+            [nodeStack pushArray:currentItem.children];
+        }
+
+        block(currentItem, &stop);
+
+        if (stop) {
+            return currentItem;
+        }
+    }
+
+    return nil;
+}
+
+- (NSArray *)parentUrlsForUrl:(NSURL *)url {
+    NSString *childPath = url.path;
+    NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:5];
+    for (NSURL *possibleParent in self.registeredUrls) {
+        NSString *parentPath = possibleParent.path;
+        if ([[childPath substringToIndex:parentPath.length] isEqualToString:parentPath]) {
+            [result addObject:possibleParent];
+        }
+    }
+
+    return result;
 }
 
 - (FSEventStreamContext)contextWithSelfAsInfo {
