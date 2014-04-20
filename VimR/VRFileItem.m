@@ -25,6 +25,8 @@
 
     _url = url;
     _dir = isDir;
+    _shouldCacheChildren = YES;
+    _isCachingChildren = NO;
 
     if (isDir) {
         _children = [[NSMutableArray alloc] initWithCapacity:20];

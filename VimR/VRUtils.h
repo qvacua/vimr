@@ -10,4 +10,6 @@
     #define RETURN_NIL_WHEN_NOT_SELF if (!self) { return nil; }
 #endif
 
-extern double measure_time(void (^block)());
+extern inline double measure_time(void (^block)());
+extern inline void dispatch(dispatch_block_t block);
+

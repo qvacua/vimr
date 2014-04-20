@@ -84,11 +84,21 @@
 //    log4Debug(@"%@", [self.vimController currentTab]);
 
     VRFileItemManager *monitor = [[TBContext sharedContext] beanWithClass:[VRFileItemManager class]];
-    [monitor registerUrl:[[NSURL alloc] initFileURLWithPath:@"/Users/hat/Projects/VimR"]];
+    NSURL *url = [[NSURL alloc] initFileURLWithPath:@"/Users/hat/Downloads/tempo"];
+    [monitor registerUrl:url];
+    [monitor setTargetUrl:url];
 }
 
 - (IBAction)secondDebugAction:(id)sender {
-    log4Debug(@"tabs: %@", [self.vimController tabs]);
+//    log4Debug(@"tabs: %@", [self.vimController tabs]);
+
+    VRFileItemManager *monitor = [[TBContext sharedContext] beanWithClass:[VRFileItemManager class]];
+    NSArray *fileItems = monitor.fileItemsOfTargetUrl;
+    log4Debug(@"#################### count of file items: %lu", fileItems.count);
+    [fileItems writeToFile:@"/Users/hat/Downloads/file-items.plist" atomically:NO];
+
+    NSSet *uniqueFileItems = [[NSSet alloc] initWithArray:fileItems];
+    log4Debug(@"#################### count of unique file items: %lu", uniqueFileItems.count);
 }
 
 #pragma mark NSWindowController

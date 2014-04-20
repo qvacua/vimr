@@ -8,3 +8,7 @@ double measure_time(void (^block)()) {
 
     return (double) (toc - tic) / CLOCKS_PER_SEC;
 }
+
+void dispatch(dispatch_block_t block) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
+}

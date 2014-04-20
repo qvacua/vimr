@@ -17,10 +17,11 @@
 @interface VRFileItemManager : NSObject <TBBean>
 
 @property (weak) NSFileManager *fileManager;
-@property (readonly) NSSet *registeredUrls;
+@property (readonly) NSArray *registeredUrls;
+@property (readonly) NSArray *fileItemsOfTargetUrl;
 
 #pragma mark Public
-- (VRFileItem *)fileItemForUrl:(NSURL *)url;
+- (BOOL)setTargetUrl:(NSURL *)url;
 - (void)registerUrl:(NSURL *)url;
 - (void)cleanUp;
 

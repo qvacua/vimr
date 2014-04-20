@@ -17,6 +17,18 @@
 @property (readonly) NSString *displayName;
 @property (readonly) NSMutableArray *children;
 
+/**
+* If YES, direct descendants are not in the children array yet, so they should be scanned.
+* IF NO, direct descendants are there, but it is possible, that they still don't have their descendants yet.
+*/
+@property BOOL shouldCacheChildren;
+
+/**
+* If YES, direct descendants are being scanned.
+* Even if NO, it is possible, that its children are scanning their descendants
+*/
+@property BOOL isCachingChildren;
+
 #pragma mark Public
 - (instancetype)initWithUrl:(NSURL *)url isDir:(BOOL)isDir;
 - (BOOL)isEqualToItem:(VRFileItem *)item;
