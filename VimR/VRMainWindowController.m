@@ -97,7 +97,7 @@
   [monitor setTargetUrl:debugUrl];
 
   NSArray *fileItems = monitor.fileItemsOfTargetUrl;
-  usleep(800);
+  usleep(900);
   log4Debug(@"count of file items: %lu", fileItems.count);
   [monitor resetTargetUrl];
 //    log4Debug(@"count of file items: %lu", fileItems.count);

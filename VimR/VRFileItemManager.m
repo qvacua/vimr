@@ -16,8 +16,11 @@
 
 
 typedef void (^VRHandlerForCachedChildrenBlock)(NSArray *);
+
 static NSString *const qHandlerForCachedChildrenKey = @"handler-for-cached-children-key";
 static NSString *const qParentFileItemToCacheKey = @"parent-file-item-to-cache-key";
+static NSString *const qThreadName = @"com.qvacua.VimR.VRFileItemManager";
+
 
 @interface VRFileItemManager ()
 
@@ -25,35 +28,22 @@ static NSString *const qParentFileItemToCacheKey = @"parent-file-item-to-cache-k
 @property (readonly) NSMutableArray *mutableFileItemsForTargetUrl;
 @property BOOL shouldCancelScanning;
 
-// declared here to be used in the callback (and not to make it public)
-- (void)invalidateCacheForUrls:(NSArray *)fileSystemRep flags:(FSEventStreamEventFlags const [])flags;
+// Declared here to be used in the callback and not to make it public.
+- (void)invalidateCacheForPaths:(char **)eventPaths eventCount:(NSUInteger)eventCount;
 
 @end
 
 
 void streamCallback(
     ConstFSEventStreamRef stream,
-    void *callBackInfo,
-    size_t numEvents,
-    void *eventPaths,
-    const FSEventStreamEventFlags eventFlags[],
-    const FSEventStreamEventId eventIds[]
-) {
-  int i;
-  char **paths = eventPaths;
-  __weak VRFileItemManager *urlManager = (__bridge VRFileItemManager *) callBackInfo;
+    void *streamContextInfo,
+    size_t eventCount,
+    void *paths,
+    const FSEventStreamEventFlags flags[],
+    const FSEventStreamEventId eventIds[]) {
 
-  @autoreleasepool {
-    NSMutableArray *urls = [[NSMutableArray alloc] initWithCapacity:numEvents];
-    for (i = 0; i < numEvents; i++) {
-      NSString *path = [urlManager.fileManager stringWithFileSystemRepresentation:paths[i]
-                                                                           length:strlen(paths[i])];
-      NSURL *url = [NSURL fileURLWithPath:path];
-      [urls addObject:url];
-      log4Debug(@"%@ changed!", url);
-    }
-    [urlManager invalidateCacheForUrls:urls flags:eventFlags];
-  };
+  __weak VRFileItemManager *urlManager = (__bridge VRFileItemManager *) streamContextInfo;
+  [urlManager invalidateCacheForPaths:paths eventCount:eventCount];
 }
 
 
@@ -78,12 +68,12 @@ TB_AUTOWIRE(fileManager)
 - (void)registerUrl:(NSURL *)url {
   @synchronized (self) {
     if ([_url2CachedFileItem.allKeys containsObject:url]) {
-      log4Warn(@"%@ is already registered!", url);
+      log4Warn(@"%@ is already registered.", url);
       return;
     }
 
     if (![self isDir:url]) {
-      log4Warn(@"%@ is not a dir!", url);
+      log4Warn(@"%@ is not a dir.", url);
       return;
     }
 
@@ -106,21 +96,16 @@ TB_AUTOWIRE(fileManager)
 - (BOOL)setTargetUrl:(NSURL *)url {
   self.shouldCancelScanning = NO;
 
-  VRFileItem *root = self.url2CachedFileItem[url];
-  if (!root) {
+  VRFileItem *targetItem = self.url2CachedFileItem[url];
+  if (!targetItem) {
     log4Warn(@"The URL %@ is not yet registered.", url);
     return NO;
   }
 
-  /**
-  * Build up cached file items.
-  * Non-cached items will be built up async.
-  * However, when the monitoring thread is caching, we wait until ready and build up the list
-  */
   [self.mutableFileItemsForTargetUrl removeAllObjects];
 
-  // we don't add root to mutableFileItemsForTargetUrl, since it is a dir
-  [self traverseFileItemChildHierarchyForRequest:root];
+  // We don't add targetItem to mutableFileItemsForTargetUrl, since it is a dir.
+  [self traverseFileItemChildHierarchyForRequest:targetItem];
 
   return YES;
 }
@@ -150,15 +135,13 @@ TB_AUTOWIRE(fileManager)
 #pragma mark Private
 - (void)traverseFileItemChildHierarchyForRequest:(VRFileItem *)parent {
   if (parent.isCachingChildren) {
-    log4Debug(@"file item %@ is currently being cached", parent.url);
+    log4Debug(@"File item %@ is currently being cached, noop.", parent.url);
     return;
   }
 
   if (parent.shouldCacheChildren) {
-    /**
-    * we remove all children when shouldCacheChildren is on, because we do not deep-scan in background, but
-    * only set shouldCacheChildren of the direct descendants to YES
-    */
+    // We remove all children when shouldCacheChildren is on, because we do not deep-scan in background, but only set
+    // shouldCacheChildren to YES, ie invalidate the cache.
     [parent.children removeAllObjects];
 
     VRHandlerForCachedChildrenBlock handlerForCachedChildren = ^(NSArray *children) {
@@ -177,10 +160,10 @@ TB_AUTOWIRE(fileManager)
     return;
   }
 
-  log4Debug(@"children of %@ cached, traversing or adding", parent.url);
+  log4Debug(@"Children of %@ already cached, traversing or adding.", parent.url);
   for (VRFileItem *child in parent.children) {
     if (child.dir) {
-      log4Debug(@"traversing child %@", child.url);
+      log4Debug(@"Traversing children of %@", child.url);
       [self traverseFileItemChildHierarchyForRequest:child];
     } else {
       [self addToFileItemsForTargetUrl:child];
@@ -201,11 +184,11 @@ TB_AUTOWIRE(fileManager)
     VRHandlerForCachedChildrenBlock handlerForCachedChildren = dict[qHandlerForCachedChildrenKey];
 
     if (self.shouldCancelScanning) {
-      log4Debug(@"cancelling the scanning as requested at %@", parent.url);
+      log4Debug(@"Cancelling the scanning as requested at %@", parent.url);
       return;
     }
 
-    log4Debug(@"building children for %@", parent.url);
+    log4Debug(@"Building children for %@", parent.url);
 
     parent.isCachingChildren = YES;
 
@@ -225,7 +208,7 @@ TB_AUTOWIRE(fileManager)
 
     for (VRFileItem *child in parent.children) {
       if (self.shouldCancelScanning) {
-        log4Debug(@"cancelling the scanning as requested at %@", parent.url);
+        log4Debug(@"Cancelling the scanning as requested at %@", parent.url);
         return;
       }
 
@@ -252,46 +235,58 @@ TB_AUTOWIRE(fileManager)
   return isDir.boolValue;
 }
 
-- (void)invalidateCacheForUrls:(NSArray *)urls flags:(FSEventStreamEventFlags const [])flags {
-  [urls enumerateObjectsUsingBlock:^(NSURL *url, NSUInteger idx, BOOL *stopUrlEnumeration) {
+/**
+* Performed on a separate thread
+*/
+- (void)invalidateCacheForPaths:(char **)paths eventCount:(NSUInteger)eventCount {
+  @autoreleasepool {
+    for (NSUInteger i = 0; i < eventCount; i++) {
 
-    // there can be more than one registered URLs in which url is contained; we just take them all
-    NSArray *parentUrls = [self parentUrlsForUrl:url];
-    for (NSURL *parentUrl in parentUrls) {
-      VRFileItem *matchingItem =
-          [self traverseFileItem:self.url2CachedFileItem[parentUrl]
-                      usingBlock:^(VRFileItem *item, BOOL *stop) {
+      // There is +fileURLWithFileSystemRepresentation:isDirectory:relativeToURL: of NSURL, but I'm not quite sure,
+      // what to think of isDirectory argument. Thus, use NSFileManager first to convert the paths to NSString.
+      NSString *path = [self.fileManager stringWithFileSystemRepresentation:paths[i] length:strlen(paths[i])];
+      NSURL *url = [NSURL fileURLWithPath:path];
 
-                        if ([item.url isEqualTo:url]) {
-                          log4Debug(@"invalidating cache for %@ of the parent %@", item, parentUrl);
-                          item.shouldCacheChildren = YES;
-                          *stop = YES;
-                        }
-                      }
-          ];
-
-      if (!matchingItem) {
-        log4Debug(@"%@ in %@ not yet cached, doing nothing", url, parentUrl);
-      }
+      // NOTE: We could optimize here: Evaluate the flag for each URL and issue either a shallow or deep scan.
+      // This however may be (or is) an overkill. For time being we issue only deep scan.
+      [self invalidateCacheForUrl:url];
     }
-
-    FSEventStreamEventFlags flag = flags[idx];
-    if (flag & kFSEventStreamEventFlagMustScanSubDirs) {
-      // we do not deep-scan in background, let's do that when the user sets the root parent of url
-      log4Debug(@"subdirs of %@ must be scanned, not doing this here, but when the root becomes target", url);
-    }
-  }];
+  };
 }
 
 /**
-* Pre-order traversal of file items;
-* When stop of the block is set to YES, then that item is returned
+* Performed on a separate thread, however, only called within an @autoreleasepool
+*/
+- (void)invalidateCacheForUrl:(NSURL *)url {
+  NSArray *parentUrls = [self parentUrlsForUrl:url];
+
+  for (NSURL *parentUrl in parentUrls) {
+    VRFileItem *parentItem = self.url2CachedFileItem[parentUrl];
+
+    VRFileItem *matchingItem = [self traverseFileItem:parentItem usingBlock:^(VRFileItem *item, BOOL *stop) {
+      if ([item.url isEqualTo:url]) {
+        log4Debug(@"invalidating cache for %@ of the parent %@", item, parentUrl);
+        item.shouldCacheChildren = YES;
+        *stop = YES;
+      }
+    }];
+
+    if (!matchingItem) {
+      log4Debug(@"%@ in %@ not yet cached, noop", url, parentUrl);
+    }
+  }
+}
+
+/**
+* Performed on a separate thread, however, only called within an @autoreleasepool
+*
+* Pre-order traversal of file items.
+* When stop of the block is set to YES, then that item is returned and the traversal stops.
 */
 - (VRFileItem *)traverseFileItem:(VRFileItem *)parent usingBlock:(void (^)(VRFileItem *item, BOOL *stop))block {
-  // pre-order traversal
   BOOL stop = NO;
 
-  VRStack *nodeStack = [[NSMutableArray alloc] initWithCapacity:15];
+  VRStack *nodeStack = [[NSMutableArray alloc] initWithCapacity:50];
   [nodeStack push:parent];
 
   __weak VRFileItem *currentItem;
@@ -335,7 +330,7 @@ TB_AUTOWIRE(fileManager)
 }
 
 /**
-* performed on a separate thread
+* Performed on a separate thread
 */
 - (void)scheduleStream:(id)sender {
   @autoreleasepool {
@@ -348,6 +343,9 @@ TB_AUTOWIRE(fileManager)
   CFRunLoopRun();
 }
 
+/**
+* Performed on a separate thread, however, only called within an @autoreleasepool
+*/
 - (FSEventStreamRef)newStream {
   NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:self.registeredUrls.count];
   for (NSURL *url in self.registeredUrls) {
@@ -377,9 +375,9 @@ TB_AUTOWIRE(fileManager)
       return;
     }
 
-    log4Debug(@"starting a new thread");
+    log4Debug(@"Starting the thread %@", qThreadName);
     _thread = [[NSThread alloc] initWithTarget:self selector:@selector(scheduleStream:) object:self];
-    _thread.name = @"file-item-manager-thread";
+    _thread.name = qThreadName;
 
     [_thread start];
   }
@@ -397,7 +395,7 @@ TB_AUTOWIRE(fileManager)
     FSEventStreamInvalidate(_stream);
     FSEventStreamRelease(_stream);
 
-    log4Debug(@"stopping the thread");
+    log4Debug(@"Stopping the thread %@", qThreadName);
     [_thread cancel];
 
     _stream = NULL;
