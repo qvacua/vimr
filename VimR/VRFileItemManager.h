@@ -24,6 +24,7 @@
 - (void)unregisterUrl:(NSURL *)url;
 - (BOOL)setTargetUrl:(NSURL *)url;
 - (void)registerUrl:(NSURL *)url;
+- (void)resetTargetUrl;
 - (void)cleanUp;
 
 #pragma mark NSObject

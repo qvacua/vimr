@@ -25,7 +25,9 @@
 
 @end
 
-@implementation VRMainWindowController
+@implementation VRMainWindowController {
+    NSURL *debugUrl;
+}
 
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect {
@@ -84,26 +86,34 @@
 //    log4Debug(@"%@", [self.vimController currentTab]);
 
     VRFileItemManager *monitor = [[TBContext sharedContext] beanWithClass:[VRFileItemManager class]];
-    NSURL *url = [[NSURL alloc] initFileURLWithPath:@"/Users/hat/Downloads/tempo"];
-    [monitor registerUrl:url];
+    debugUrl = [[NSURL alloc] initFileURLWithPath:@"/Users/hat/Projects/vimr"];
+    [monitor registerUrl:debugUrl];
 }
 
 - (IBAction)secondDebugAction:(id)sender {
 //    log4Debug(@"tabs: %@", [self.vimController tabs]);
 
     VRFileItemManager *monitor = [[TBContext sharedContext] beanWithClass:[VRFileItemManager class]];
-    [monitor setTargetUrl:[[NSURL alloc] initFileURLWithPath:@"/Users/hat/Downloads/tempo"]];
+    [monitor setTargetUrl:debugUrl];
 
     NSArray *fileItems = monitor.fileItemsOfTargetUrl;
+    usleep(800);
     log4Debug(@"count of file items: %lu", fileItems.count);
-    sleep(1);
-    log4Debug(@"count of file items: %lu", fileItems.count);
+    [monitor resetTargetUrl];
+//    log4Debug(@"count of file items: %lu", fileItems.count);
     [fileItems writeToFile:@"/Users/hat/Downloads/file-items.plist" atomically:NO];
 }
 
 - (IBAction)thirdDebugAction:(id)sender {
     VRFileItemManager *monitor = [[TBContext sharedContext] beanWithClass:[VRFileItemManager class]];
-    [monitor unregisterUrl:[[NSURL alloc] initFileURLWithPath:@"/Users/hat/Downloads/tempo"]];
+    [monitor setTargetUrl:debugUrl];
+
+    sleep(1);
+    NSArray *fileItems = monitor.fileItemsOfTargetUrl;
+    log4Debug(@"count of file items: %lu", fileItems.count);
+    [fileItems writeToFile:@"/Users/hat/Downloads/file-items.plist" atomically:NO];
+
+//    [monitor unregisterUrl:debugUrl];
 }
 
 #pragma mark NSWindowController

@@ -104,6 +104,8 @@ TB_AUTOWIRE(fileManager)
 }
 
 - (BOOL)setTargetUrl:(NSURL *)url {
+    self.shouldCancelScanning = NO;
+
     VRFileItem *root = self.url2CachedFileItem[url];
     if (!root) {
         log4Warn(@"The URL %@ is not yet registered.", url);
@@ -121,6 +123,10 @@ TB_AUTOWIRE(fileManager)
     [self traverseFileItemChildHierarchyForRequest:root];
 
     return YES;
+}
+
+- (void)resetTargetUrl {
+    self.shouldCancelScanning = YES;
 }
 
 - (void)cleanUp {
@@ -248,18 +254,25 @@ TB_AUTOWIRE(fileManager)
 
 - (void)invalidateCacheForUrls:(NSArray *)urls flags:(FSEventStreamEventFlags const [])flags {
     [urls enumerateObjectsUsingBlock:^(NSURL *url, NSUInteger idx, BOOL *stopUrlEnumeration) {
-        log4Debug(@"background-recaching %@: only direct descendants", url);
 
         // there can be more than one registered URLs in which url is contained; we just take them all
         NSArray *parentUrls = [self parentUrlsForUrl:url];
         for (NSURL *parentUrl in parentUrls) {
-            [self traverseFileItem:self.url2CachedFileItem[parentUrl] usingBlock:^(VRFileItem *item, BOOL *stop) {
-                if ([item.url isEqualTo:url]) {
-                    log4Debug(@"invalidating cache for %@ of the parent %@", item, parentUrl);
-                    item.shouldCacheChildren = YES;
-                    *stop = YES;
-                }
-            }];
+            VRFileItem *matchingItem =
+                    [self traverseFileItem:self.url2CachedFileItem[parentUrl]
+                                usingBlock:^(VRFileItem *item, BOOL *stop) {
+
+                                    if ([item.url isEqualTo:url]) {
+                                        log4Debug(@"invalidating cache for %@ of the parent %@", item, parentUrl);
+                                        item.shouldCacheChildren = YES;
+                                        *stop = YES;
+                                    }
+                                }
+                    ];
+
+            if (!matchingItem) {
+                log4Debug(@"%@ in %@ not yet cached, doing nothing", url, parentUrl);
+            }
         }
 
         FSEventStreamEventFlags flag = flags[idx];
@@ -300,6 +313,7 @@ TB_AUTOWIRE(fileManager)
 
 - (NSArray *)parentUrlsForUrl:(NSURL *)url {
     NSString *childPath = url.path;
+
     NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:5];
     for (NSURL *possibleParent in self.registeredUrls) {
         NSString *parentPath = possibleParent.path;
