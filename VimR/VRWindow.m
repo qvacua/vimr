@@ -13,12 +13,12 @@
 @implementation VRWindow
 
 - (IBAction)performClose:(id)sender {
-    if ([self.windowController respondsToSelector:@selector(performClose:)]) {
-        [self.windowController performClose:sender];
-        return;
-    }
+  if ([self.windowController respondsToSelector:@selector(performClose:)]) {
+    [self.windowController performClose:sender];
+    return;
+  }
 
-    [super performClose:sender];
+  [super performClose:sender];
 }
 
 @end

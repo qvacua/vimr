@@ -15,55 +15,55 @@
 
 #pragma mark Properties
 - (NSString *)displayName {
-    return self.url.lastPathComponent;
+  return self.url.lastPathComponent;
 }
 
 #pragma mark Public
 - (instancetype)initWithUrl:(NSURL *)url isDir:(BOOL)isDir {
-    self = [super init];
-    RETURN_NIL_WHEN_NOT_SELF;
+  self = [super init];
+  RETURN_NIL_WHEN_NOT_SELF;
 
-    _url = url;
-    _dir = isDir;
-    _shouldCacheChildren = YES;
-    _isCachingChildren = NO;
+  _url = url;
+  _dir = isDir;
+  _shouldCacheChildren = YES;
+  _isCachingChildren = NO;
 
-    if (isDir) {
-        _children = [[NSMutableArray alloc] initWithCapacity:20];
-    }
+  if (isDir) {
+    _children = [[NSMutableArray alloc] initWithCapacity:20];
+  }
 
-    return self;
+  return self;
 }
 
 - (BOOL)isEqualToItem:(VRFileItem *)item {
-    if (self == item)
-        return YES;
-    if (item == nil)
-        return NO;
-    if (self.url != item.url && ![self.url isEqual:item.url])
-        return NO;
+  if (self == item)
     return YES;
+  if (item == nil)
+    return NO;
+  if (self.url != item.url && ![self.url isEqual:item.url])
+    return NO;
+  return YES;
 }
 
 #pragma mark NSObject
 - (NSUInteger)hash {
-    return [self.url hash];
+  return [self.url hash];
 }
 
 - (BOOL)isEqual:(id)other {
-    if (other == self)
-        return YES;
-    if (!other || ![[other class] isEqual:[self class]])
-        return NO;
+  if (other == self)
+    return YES;
+  if (!other || ![[other class] isEqual:[self class]])
+    return NO;
 
-    return [self isEqualToItem:other];
+  return [self isEqualToItem:other];
 }
 
 - (NSString *)description {
-    NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
-    [description appendFormat:@"self.url=%@", self.url];
-    [description appendString:@">"];
-    return description;
+  NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
+  [description appendFormat:@"self.url=%@", self.url];
+  [description appendString:@">"];
+  return description;
 }
 
 @end

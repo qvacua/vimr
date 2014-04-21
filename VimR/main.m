@@ -12,16 +12,16 @@
 
 
 int main(int argc, const char *argv[]) {
-    // necessary MacVimFramework initialization {
-    ASLInit();
+  // necessary MacVimFramework initialization {
+  ASLInit();
 
-    [MMUtils setKeyHandlingUserDefaults];
-    [MMUtils setInitialUserDefaults];
+  [MMUtils setKeyHandlingUserDefaults];
+  [MMUtils setInitialUserDefaults];
 
-    [[NSFileManager defaultManager] changeCurrentDirectoryPath:NSHomeDirectory()];
-    // } necessary MacVimFramework initialization
+  [[NSFileManager defaultManager] changeCurrentDirectoryPath:NSHomeDirectory()];
+  // } necessary MacVimFramework initialization
 
-    [[TBContext sharedContext] initContext];
+  [[TBContext sharedContext] initContext];
 
-    return NSApplicationMain(argc, argv);
+  return NSApplicationMain(argc, argv);
 }

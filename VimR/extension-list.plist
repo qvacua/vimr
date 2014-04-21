@@ -1,181 +1,181 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<array>
-<string>txt</string>
-<string>text</string>
-<string>utf8</string>
-<string>vim</string>
-<string>tex</string>
-<string>sty</string>
-<string>cls</string>
-<string>ltx</string>
-<string>ins</string>
-<string>dtx</string>
-<string>h</string>
-<string>pch</string>
-<string>hh</string>
-<string>hp</string>
-<string>hpp</string>
-<string>hxx</string>
-<string>h++</string>
-<string>pch++</string>
-<string>c</string>
-<string>m</string>
-<string>mm</string>
-<string>cc</string>
-<string>cp</string>
-<string>cpp</string>
-<string>cxx</string>
-<string>c++</string>
-<string>s</string>
-<string>asm</string>
-<string>r</string>
-<string>java</string>
-<string>jav</string>
-<string>l</string>
-<string>lm</string>
-<string>lmm</string>
-<string>lpp</string>
-<string>lxx</string>
-<string>y</string>
-<string>ym</string>
-<string>ymm</string>
-<string>ypp</string>
-<string>yxx</string>
-<string>defs</string>
-<string>exp</string>
-<string>f</string>
-<string>for</string>
-<string>fpp</string>
-<string>f77</string>
-<string>f90</string>
-<string>f95</string>
-<string>pas</string>
-<string>ada</string>
-<string>adb</string>
-<string>ads</string>
-<string>html</string>
-<string>phtml</string>
-<string>shtml</string>
-<string>xhtml</string>
-<string>htm</string>
-<string>pht</string>
-<string>sht</string>
-<string>xht</string>
-<string>phtm</string>
-<string>shtm</string>
-<string>xhtm</string>
-<string>xml</string>
-<string>rss</string>
-<string>tld</string>
-<string>pt</string>
-<string>cpt</string>
-<string>dtml</string>
-<string>js</string>
-<string>htc</string>
-<string>jscript</string>
-<string>javascript</string>
-<string>pl</string>
-<string>pm</string>
-<string>pod</string>
-<string>perl</string>
-<string>py</string>
-<string>rpy</string>
-<string>cpy</string>
-<string>python</string>
-<string>php</string>
-<string>php3</string>
-<string>php4</string>
-<string>php5</string>
-<string>ph3</string>
-<string>ph4</string>
-<string>phtml</string>
-<string>rb</string>
-<string>rbw</string>
-<string>rbx</string>
-<string>rjs</string>
-<string>rxml</string>
-<string>sh</string>
-<string>csh</string>
-<string>command</string>
-<string>ss</string>
-<string>bashrc</string>
-<string>bash_profile</string>
-<string>bash_login</string>
-<string>profile</string>
-<string>bash_logout</string>
-<string>class</string>
-<string>patch</string>
-<string>diff</string>
-<string>strings</string>
-<string>applescript</string>
-<string>as</string>
-<string>asp</string>
-<string>asa</string>
-<string>aspx</string>
-<string>ascx</string>
-<string>asmx</string>
-<string>ashx</string>
-<string>bib</string>
-<string>cs</string>
-<string>cfdg</string>
-<string>csv</string>
-<string>tsv</string>
-<string>cgi</string>
-<string>fcgi</string>
-<string>cfg</string>
-<string>conf</string>
-<string>config</string>
-<string>htaccess</string>
-<string>css</string>
-<string>dtd</string>
-<string>dylan</string>
-<string>erl</string>
-<string>hrl</string>
-<string>fscript</string>
-<string>hs</string>
-<string>lhs</string>
-<string>inc</string>
-<string>ics</string>
-<string>ini</string>
-<string>io</string>
-<string>bsh</string>
-<string>properties</string>
-<string>jsp</string>
-<string>lisp</string>
-<string>cl</string>
-<string>l</string>
-<string>lsp</string>
-<string>mud</string>
-<string>el</string>
-<string>log</string>
-<string>wiki</string>
-<string>wikipedia</string>
-<string>mediawiki</string>
-<string>ps</string>
-<string>eps</string>
-<string>scm</string>
-<string>sch</string>
-<string>sql</string>
-<string>tcl</string>
-<string>xsl</string>
-<string>xslt</string>
-<string>vcf</string>
-<string>vcard</string>
-<string>vb</string>
-<string>yaml</string>
-<string>yml</string>
-<string>gtd</string>
-<string>gtdlog</string>
-<string>markdown</string>
-<string>markd</string>
-<string>mdown</string>
-<string>md</string>
-<string>rst</string>
-<string>vba</string>
-<string>vhd</string>
-<string>vhdl</string>
-<string>lua</string>
-</array>
+    <array>
+        <string>txt</string>
+        <string>text</string>
+        <string>utf8</string>
+        <string>vim</string>
+        <string>tex</string>
+        <string>sty</string>
+        <string>cls</string>
+        <string>ltx</string>
+        <string>ins</string>
+        <string>dtx</string>
+        <string>h</string>
+        <string>pch</string>
+        <string>hh</string>
+        <string>hp</string>
+        <string>hpp</string>
+        <string>hxx</string>
+        <string>h++</string>
+        <string>pch++</string>
+        <string>c</string>
+        <string>m</string>
+        <string>mm</string>
+        <string>cc</string>
+        <string>cp</string>
+        <string>cpp</string>
+        <string>cxx</string>
+        <string>c++</string>
+        <string>s</string>
+        <string>asm</string>
+        <string>r</string>
+        <string>java</string>
+        <string>jav</string>
+        <string>l</string>
+        <string>lm</string>
+        <string>lmm</string>
+        <string>lpp</string>
+        <string>lxx</string>
+        <string>y</string>
+        <string>ym</string>
+        <string>ymm</string>
+        <string>ypp</string>
+        <string>yxx</string>
+        <string>defs</string>
+        <string>exp</string>
+        <string>f</string>
+        <string>for</string>
+        <string>fpp</string>
+        <string>f77</string>
+        <string>f90</string>
+        <string>f95</string>
+        <string>pas</string>
+        <string>ada</string>
+        <string>adb</string>
+        <string>ads</string>
+        <string>html</string>
+        <string>phtml</string>
+        <string>shtml</string>
+        <string>xhtml</string>
+        <string>htm</string>
+        <string>pht</string>
+        <string>sht</string>
+        <string>xht</string>
+        <string>phtm</string>
+        <string>shtm</string>
+        <string>xhtm</string>
+        <string>xml</string>
+        <string>rss</string>
+        <string>tld</string>
+        <string>pt</string>
+        <string>cpt</string>
+        <string>dtml</string>
+        <string>js</string>
+        <string>htc</string>
+        <string>jscript</string>
+        <string>javascript</string>
+        <string>pl</string>
+        <string>pm</string>
+        <string>pod</string>
+        <string>perl</string>
+        <string>py</string>
+        <string>rpy</string>
+        <string>cpy</string>
+        <string>python</string>
+        <string>php</string>
+        <string>php3</string>
+        <string>php4</string>
+        <string>php5</string>
+        <string>ph3</string>
+        <string>ph4</string>
+        <string>phtml</string>
+        <string>rb</string>
+        <string>rbw</string>
+        <string>rbx</string>
+        <string>rjs</string>
+        <string>rxml</string>
+        <string>sh</string>
+        <string>csh</string>
+        <string>command</string>
+        <string>ss</string>
+        <string>bashrc</string>
+        <string>bash_profile</string>
+        <string>bash_login</string>
+        <string>profile</string>
+        <string>bash_logout</string>
+        <string>class</string>
+        <string>patch</string>
+        <string>diff</string>
+        <string>strings</string>
+        <string>applescript</string>
+        <string>as</string>
+        <string>asp</string>
+        <string>asa</string>
+        <string>aspx</string>
+        <string>ascx</string>
+        <string>asmx</string>
+        <string>ashx</string>
+        <string>bib</string>
+        <string>cs</string>
+        <string>cfdg</string>
+        <string>csv</string>
+        <string>tsv</string>
+        <string>cgi</string>
+        <string>fcgi</string>
+        <string>cfg</string>
+        <string>conf</string>
+        <string>config</string>
+        <string>htaccess</string>
+        <string>css</string>
+        <string>dtd</string>
+        <string>dylan</string>
+        <string>erl</string>
+        <string>hrl</string>
+        <string>fscript</string>
+        <string>hs</string>
+        <string>lhs</string>
+        <string>inc</string>
+        <string>ics</string>
+        <string>ini</string>
+        <string>io</string>
+        <string>bsh</string>
+        <string>properties</string>
+        <string>jsp</string>
+        <string>lisp</string>
+        <string>cl</string>
+        <string>l</string>
+        <string>lsp</string>
+        <string>mud</string>
+        <string>el</string>
+        <string>log</string>
+        <string>wiki</string>
+        <string>wikipedia</string>
+        <string>mediawiki</string>
+        <string>ps</string>
+        <string>eps</string>
+        <string>scm</string>
+        <string>sch</string>
+        <string>sql</string>
+        <string>tcl</string>
+        <string>xsl</string>
+        <string>xslt</string>
+        <string>vcf</string>
+        <string>vcard</string>
+        <string>vb</string>
+        <string>yaml</string>
+        <string>yml</string>
+        <string>gtd</string>
+        <string>gtdlog</string>
+        <string>markdown</string>
+        <string>markd</string>
+        <string>mdown</string>
+        <string>md</string>
+        <string>rst</string>
+        <string>vba</string>
+        <string>vhd</string>
+        <string>vhdl</string>
+        <string>lua</string>
+    </array>
 </plist>

@@ -13,7 +13,7 @@
 @implementation NSArray (VR)
 
 - (BOOL)isEmpty {
-    return self.count == 0;
+  return self.count == 0;
 }
 
 @end

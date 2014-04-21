@@ -16,30 +16,30 @@
 @end
 
 @implementation VRWorkspaceTest {
-    VRWorkspace *workspace;
+  VRWorkspace *workspace;
 
-    MMVimController *vimController;
-    VRMainWindowController *mainWindowController;
+  MMVimController *vimController;
+  VRMainWindowController *mainWindowController;
 }
 
 - (void)setUp {
-    [super setUp];
+  [super setUp];
 
-    vimController = mock([MMVimController class]);
-    mainWindowController = mock([VRMainWindowController class]);
+  vimController = mock([MMVimController class]);
+  mainWindowController = mock([VRMainWindowController class]);
 
-    workspace = [[VRWorkspace alloc] init];
-    workspace.mainWindowController = mainWindowController;
+  workspace = [[VRWorkspace alloc] init];
+  workspace.mainWindowController = mainWindowController;
 }
 
 - (void)notTestSetUpWithVimController {
-    // cannot load Nib
+  // cannot load Nib
 }
 
 - (void)testCleanUpAndClose {
-    [workspace cleanUpAndClose];
+  [workspace cleanUpAndClose];
 
-    [verify(mainWindowController) cleanUpAndClose];
+  [verify(mainWindowController) cleanUpAndClose];
 }
 
 @end
