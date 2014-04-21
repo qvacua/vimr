@@ -18,7 +18,6 @@
 
 typedef void (^VRHandlerForCachedChildrenBlock)(NSArray *);
 
-static NSString *const qHandlerForCachedChildrenKey = @"handler-for-cached-children-key";
 static NSString *const qParentFileItemToCacheKey = @"parent-file-item-to-cache-key";
 static NSString *const qRootUrlKey = @"root-url-key";
 static NSString *const qThreadName = @"com.qvacua.VimR.VRFileItemManager";
