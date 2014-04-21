@@ -86,7 +86,7 @@
 //    log4Debug(@"%@", [self.vimController currentTab]);
 
   VRFileItemManager *monitor = [[TBContext sharedContext] beanWithClass:[VRFileItemManager class]];
-  debugUrl = [[NSURL alloc] initFileURLWithPath:@"/Users/hat/Projects/vimr"];
+  debugUrl = [[NSURL alloc] initFileURLWithPath:@"/Users/hat/Projects/vimr" isDirectory:YES];
   [monitor registerUrl:debugUrl];
 }
 
@@ -97,10 +97,9 @@
   [monitor setTargetUrl:debugUrl];
 
   NSArray *fileItems = monitor.fileItemsOfTargetUrl;
-  usleep(900);
+  usleep(2000);
   log4Debug(@"count of file items: %lu", fileItems.count);
   [monitor resetTargetUrl];
-//    log4Debug(@"count of file items: %lu", fileItems.count);
   [fileItems writeToFile:@"/Users/hat/Downloads/file-items.plist" atomically:NO];
 }
 

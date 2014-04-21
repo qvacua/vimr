@@ -381,7 +381,18 @@ TB_AUTOWIRE(fileManager)
     _thread.name = qThreadName;
 
     [_thread start];
+
+    // We probe the thread whether it is ready for events. When -registerUrl is called consecutively, the FSEventStream
+    // could be not ready yet, thus, we wait till everything's started and then return.
+    [self performSelector:@selector(probe:) onThread:_thread withObject:self waitUntilDone:YES];
   }
+}
+
+/**
+* This method is used probe whether the thread is ready for events.
+*/
+- (void)probe:(id)sender {
+  return;
 }
 
 - (void)stop {
