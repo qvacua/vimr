@@ -20,14 +20,14 @@ typedef void (^VRHandlerForCachedChildrenBlock)(NSArray *);
 
 static NSString *const qHandlerForCachedChildrenKey = @"handler-for-cached-children-key";
 static NSString *const qParentFileItemToCacheKey = @"parent-file-item-to-cache-key";
+static NSString *const qRootUrlKey = @"root-url-key";
 static NSString *const qThreadName = @"com.qvacua.VimR.VRFileItemManager";
-
 
 @interface VRFileItemManager ()
 
 @property (readonly) NSMutableDictionary *url2CachedFileItem;
 @property (readonly) NSMutableArray *mutableFileItemsForTargetUrl;
-@property BOOL shouldCancelScanning;
+@property (copy) NSURL *currentTargetUrl;
 
 // Declared here to be used in the callback and not to make it public.
 - (void)invalidateCacheForPaths:(char **)eventPaths eventCount:(NSUInteger)eventCount;
@@ -104,24 +104,28 @@ TB_AUTOWIRE(fileManager)
 }
 
 - (BOOL)setTargetUrl:(NSURL *)url {
-  self.shouldCancelScanning = NO;
+  @synchronized (self) {
+    _currentTargetUrl = url;
 
-  VRFileItem *targetItem = self.url2CachedFileItem[url];
-  if (!targetItem) {
-    log4Warn(@"The URL %@ is not yet registered.", url);
-    return NO;
+    VRFileItem *targetItem = _url2CachedFileItem[url];
+    if (!targetItem) {
+      log4Warn(@"The URL %@ is not yet registered.", url);
+      return NO;
+    }
+
+    [_mutableFileItemsForTargetUrl removeAllObjects];
+
+    // We don't add targetItem to mutableFileItemsForTargetUrl, since it is a dir.
+    [self traverseFileItemChildHierarchyForRequest:targetItem forRootUrl:url];
+
+    return YES;
   }
-
-  [self.mutableFileItemsForTargetUrl removeAllObjects];
-
-  // We don't add targetItem to mutableFileItemsForTargetUrl, since it is a dir.
-  [self traverseFileItemChildHierarchyForRequest:targetItem];
-
-  return YES;
 }
 
 - (void)resetTargetUrl {
-  self.shouldCancelScanning = YES;
+  @synchronized (self) {
+    _currentTargetUrl = nil;
+  }
 }
 
 - (void)cleanUp {
@@ -137,13 +141,13 @@ TB_AUTOWIRE(fileManager)
 
   _url2CachedFileItem = [[NSMutableDictionary alloc] initWithCapacity:5];
   _mutableFileItemsForTargetUrl = [[NSMutableArray alloc] initWithCapacity:500];
-  _shouldCancelScanning = NO;
+  _currentTargetUrl = nil;
 
   return self;
 }
 
 #pragma mark Private
-- (void)traverseFileItemChildHierarchyForRequest:(VRFileItem *)parent {
+- (void)traverseFileItemChildHierarchyForRequest:(VRFileItem *)parent forRootUrl:(NSURL *)rootUrl {
   if (parent.isCachingChildren) {
     log4Debug(@"File item %@ is currently being cached, noop.", parent.url);
     return;
@@ -165,6 +169,7 @@ TB_AUTOWIRE(fileManager)
     [self performSelector:@selector(cacheChildrenForFileItemAndCallback:) onThread:_thread withObject:@{
         qParentFileItemToCacheKey : parent,
         qHandlerForCachedChildrenKey : handlerForCachedChildren,
+        qRootUrlKey : rootUrl,
     }       waitUntilDone:NO];
 
     return;
@@ -174,7 +179,7 @@ TB_AUTOWIRE(fileManager)
   for (VRFileItem *child in parent.children) {
     if (child.dir) {
       log4Debug(@"Traversing children of %@", child.url);
-      [self traverseFileItemChildHierarchyForRequest:child];
+      [self traverseFileItemChildHierarchyForRequest:child forRootUrl:rootUrl];
     } else {
       [self addToFileItemsForTargetUrl:child];
     }
@@ -192,8 +197,13 @@ TB_AUTOWIRE(fileManager)
   @autoreleasepool {
     VRFileItem *parent = dict[qParentFileItemToCacheKey];
     VRHandlerForCachedChildrenBlock handlerForCachedChildren = dict[qHandlerForCachedChildrenKey];
+    NSURL *rootUrl = dict[qRootUrlKey];
 
-    if (self.shouldCancelScanning) {
+    BOOL (^should_cancel_scanning)() = ^BOOL {
+      return ![self.currentTargetUrl isEqualTo:rootUrl];
+    };
+
+    if (should_cancel_scanning()) {
       log4Debug(@"Cancelling the scanning as requested at %@", parent.url);
       return;
     }
@@ -208,7 +218,7 @@ TB_AUTOWIRE(fileManager)
                                                               error:NULL];
 
     for (NSURL *childUrl in childUrls) {
-      [parent.children addObject:[self fileItemFromUrl:childUrl]];
+      [parent.children addObject:[[VRFileItem alloc] initWithUrl:childUrl isDir:childUrl.isDirectory]];
     }
 
     parent.shouldCacheChildren = NO; // because shouldCacheChildren means, "should add direct descendants"
@@ -217,8 +227,8 @@ TB_AUTOWIRE(fileManager)
     handlerForCachedChildren(parent.children);
 
     for (VRFileItem *child in parent.children) {
-      if (self.shouldCancelScanning) {
-        log4Debug(@"Cancelling the scanning as requested at %@", parent.url);
+      if (should_cancel_scanning()) {
+        log4Debug(@"Cancelling the scanning as requested at %@", child.url);
         return;
       }
 
@@ -226,14 +236,11 @@ TB_AUTOWIRE(fileManager)
         [self performSelector:@selector(cacheChildrenForFileItemAndCallback:) onThread:_thread withObject:@{
             qParentFileItemToCacheKey : child,
             qHandlerForCachedChildrenKey : handlerForCachedChildren,
+            qRootUrlKey : rootUrl,
         }       waitUntilDone:NO];
       }
     }
   }
-}
-
-- (VRFileItem *)fileItemFromUrl:(NSURL *)url {
-  return [[VRFileItem alloc] initWithUrl:url isDir:url.isDirectory];
 }
 
 /**
@@ -266,7 +273,7 @@ TB_AUTOWIRE(fileManager)
 
     VRFileItem *matchingItem = [self traverseFileItem:parentItem usingBlock:^(VRFileItem *item, BOOL *stop) {
       if ([item.url isEqualTo:url]) {
-        log4Debug(@"invalidating cache for %@ of the parent %@", item, parentUrl);
+        log4Debug(@"Invalidating cache for %@ of the parent %@", item, parentUrl);
         item.shouldCacheChildren = YES;
         *stop = YES;
       }
