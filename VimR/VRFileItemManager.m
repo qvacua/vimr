@@ -13,6 +13,7 @@
 #import "VRFileItem.h"
 #import "NSArray+VR.h"
 #import "NSMutableArray+VR.h"
+#import "NSURL+VR.h"
 
 
 typedef void (^VRHandlerForCachedChildrenBlock)(NSArray *);
@@ -66,16 +67,25 @@ TB_AUTOWIRE(fileManager)
 
 #pragma mark Public
 - (void)registerUrl:(NSURL *)url {
+  // TODO: handle symlinks and aliases
+
   @synchronized (self) {
     if ([_url2CachedFileItem.allKeys containsObject:url]) {
-      log4Warn(@"%@ is already registered.", url);
+      log4Warn(@"%@ is already registered, noop", url);
       return;
     }
 
-    if (![self isDir:url]) {
-      log4Warn(@"%@ is not a dir.", url);
+    if (!url.isDirectory) {
+      log4Warn(@"%@ is not a dir, noop", url);
       return;
     }
+
+    // NOTE: We may optimize (or not) the caching behavior here: When the URL A to register is a subdir of an already
+    // registered URL B, we build the hierarchy up to the requested URL A. However, then, we would have to scan children
+    // up to A, which could be costly to do it sync; async building complicates things too much. For time being, we
+    // ignore B and use a separate file item hierarchy for B.
+    // If we should do that, we would have only one parent when invalidating the cache. For now, we could have multiple
+    // parent URLs and therefore file items for one URL reported by FSEventStream.
 
     _url2CachedFileItem[url] = [[VRFileItem alloc] initWithUrl:url isDir:YES];
 
@@ -223,16 +233,7 @@ TB_AUTOWIRE(fileManager)
 }
 
 - (VRFileItem *)fileItemFromUrl:(NSURL *)url {
-  BOOL dir = [self isDir:url];
-
-  return [[VRFileItem alloc] initWithUrl:url isDir:dir];
-}
-
-- (BOOL)isDir:(NSURL *)url {
-  NSNumber *isDir = nil;
-  [url getResourceValue:&isDir forKey:NSURLIsDirectoryKey error:NULL];
-
-  return isDir.boolValue;
+  return [[VRFileItem alloc] initWithUrl:url isDir:url.isDirectory];
 }
 
 /**
