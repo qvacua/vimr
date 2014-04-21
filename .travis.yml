@@ -4,6 +4,7 @@ before_install:
     - gem install cocoapods -v '0.32.1'
     - gem install ocunit2junit
 before_script:
+    - export LANG=en_US.UTF-8
     - cd macvim/src
     - ./configure
     - make
