@@ -95,9 +95,9 @@
 
   VRFileItemManager *monitor = [[TBContext sharedContext] beanWithClass:[VRFileItemManager class]];
   [monitor setTargetUrl:debugUrl];
+  usleep(2000);
 
   NSArray *fileItems = monitor.fileItemsOfTargetUrl;
-  usleep(2000);
   log4Debug(@"count of file items: %lu", fileItems.count);
   [monitor resetTargetUrl];
   [fileItems writeToFile:@"/Users/hat/Downloads/file-items.plist" atomically:NO];

@@ -116,7 +116,9 @@ TB_AUTOWIRE(fileManager)
     [_mutableFileItemsForTargetUrl removeAllObjects];
 
     // We don't add targetItem to mutableFileItemsForTargetUrl, since it is a dir.
-    [self traverseFileItemChildHierarchyForRequest:targetItem forRootUrl:url];
+    dispatch(^{
+      [self traverseFileItemChildHierarchyForRequest:targetItem forRootUrl:url];
+    });
 
     return YES;
   }
@@ -158,17 +160,8 @@ TB_AUTOWIRE(fileManager)
     // shouldCacheChildren to YES, ie invalidate the cache.
     [parent.children removeAllObjects];
 
-    VRHandlerForCachedChildrenBlock handlerForCachedChildren = ^(NSArray *children) {
-      for (VRFileItem *child in children) {
-        if (!child.dir) {
-          [self addToFileItemsForTargetUrl:child];
-        }
-      }
-    };
-
-    [self performSelector:@selector(cacheChildrenForFileItemAndCallback:) onThread:_thread withObject:@{
+    [self performSelector:@selector(cacheAddToFileItemsForTargetUrl:) onThread:_thread withObject:@{
         qParentFileItemToCacheKey : parent,
-        qHandlerForCachedChildrenKey : handlerForCachedChildren,
         qRootUrlKey : rootUrl,
     }       waitUntilDone:NO];
 
@@ -177,6 +170,11 @@ TB_AUTOWIRE(fileManager)
 
   log4Debug(@"Children of %@ already cached, traversing or adding.", parent.url);
   for (VRFileItem *child in parent.children) {
+    if ([self shouldCancelForRootUrl:rootUrl]) {
+      log4Debug(@"Cancelling the traversing or adding as requested at %@", child.url);
+      return;
+    }
+
     if (child.dir) {
       log4Debug(@"Traversing children of %@", child.url);
       [self traverseFileItemChildHierarchyForRequest:child forRootUrl:rootUrl];
@@ -190,20 +188,19 @@ TB_AUTOWIRE(fileManager)
   [self.mutableFileItemsForTargetUrl addObject:item.url.path];
 }
 
+- (BOOL)shouldCancelForRootUrl:(NSURL *)rootUrl {
+  return ![self.currentTargetUrl isEqualTo:rootUrl];
+}
+
 /**
 * performed on a separate thread
 */
-- (void)cacheChildrenForFileItemAndCallback:(NSDictionary *)dict {
+- (void)cacheAddToFileItemsForTargetUrl:(NSDictionary *)dict {
   @autoreleasepool {
     VRFileItem *parent = dict[qParentFileItemToCacheKey];
-    VRHandlerForCachedChildrenBlock handlerForCachedChildren = dict[qHandlerForCachedChildrenKey];
     NSURL *rootUrl = dict[qRootUrlKey];
 
-    BOOL (^should_cancel_scanning)() = ^BOOL {
-      return ![self.currentTargetUrl isEqualTo:rootUrl];
-    };
-
-    if (should_cancel_scanning()) {
+    if ([self shouldCancelForRootUrl:rootUrl]) {
       log4Debug(@"Cancelling the scanning as requested at %@", parent.url);
       return;
     }
@@ -217,28 +214,37 @@ TB_AUTOWIRE(fileManager)
                                                             options:NSDirectoryEnumerationSkipsPackageDescendants
                                                               error:NULL];
 
+    NSMutableArray *childrenOfParent = parent.children;
+
     for (NSURL *childUrl in childUrls) {
-      [parent.children addObject:[[VRFileItem alloc] initWithUrl:childUrl isDir:childUrl.isDirectory]];
+      [childrenOfParent addObject:[[VRFileItem alloc] initWithUrl:childUrl isDir:childUrl.isDirectory]];
     }
 
     parent.shouldCacheChildren = NO; // because shouldCacheChildren means, "should add direct descendants"
     parent.isCachingChildren = NO; // direct descendants scanning is done
 
-    handlerForCachedChildren(parent.children);
+    [self addAllToFileItemsForTargetUrl:childrenOfParent];
 
-    for (VRFileItem *child in parent.children) {
-      if (should_cancel_scanning()) {
+    for (VRFileItem *child in childrenOfParent) {
+      if ([self shouldCancelForRootUrl:rootUrl]) {
         log4Debug(@"Cancelling the scanning as requested at %@", child.url);
         return;
       }
 
       if (child.dir) {
-        [self performSelector:@selector(cacheChildrenForFileItemAndCallback:) onThread:_thread withObject:@{
+        [self performSelector:@selector(cacheAddToFileItemsForTargetUrl:) onThread:_thread withObject:@{
             qParentFileItemToCacheKey : child,
-            qHandlerForCachedChildrenKey : handlerForCachedChildren,
             qRootUrlKey : rootUrl,
         }       waitUntilDone:NO];
       }
+    }
+  }
+}
+
+- (void)addAllToFileItemsForTargetUrl:(NSArray *)items {
+  for (VRFileItem *child in items) {
+    if (!child.dir) {
+      [self addToFileItemsForTargetUrl:child];
     }
   }
 }
