@@ -38,7 +38,6 @@ TB_MANUALWIRE(fileItemManager)
 }
 
 - (IBAction)newTab:(id)sender {
-  // when we're here, no window is open yet
   [self newDocument:sender];
 }
 
