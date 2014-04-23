@@ -34,6 +34,9 @@
 		4B78D61518D644A000CAA020 /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B64254A18C23F800012ED42 /* PSMTabBarControl.framework */; };
 		4B78D61618D644E500CAA020 /* MMAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBF8BE880500FCF8B9A6 /* MMAlert.m */; };
 		4B8BE1EE18EB556C004840F1 /* VRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE9242918C20DBC00E67BB6 /* VRAppDelegate.m */; };
+		4BC47960190843F400536200 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC4795F190843F400536200 /* Sparkle.framework */; };
+		4BC479611908440400536200 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BC4795F190843F400536200 /* Sparkle.framework */; };
+		4BC47963190845CC00536200 /* sparkle-pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 4BC47962190845CC00536200 /* sparkle-pub.pem */; };
 		4BE9241718C20DBC00E67BB6 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE9241618C20DBC00E67BB6 /* Cocoa.framework */; };
 		4BE9242118C20DBC00E67BB6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4BE9241F18C20DBC00E67BB6 /* InfoPlist.strings */; };
 		4BE9242318C20DBC00E67BB6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE9242218C20DBC00E67BB6 /* main.m */; };
@@ -65,6 +68,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4BC479611908440400536200 /* Sparkle.framework in CopyFiles */,
 				4B36F12F18DF713D0010ACE2 /* MacVimFramework.framework in CopyFiles */,
 				4B64255118C23FE20012ED42 /* PSMTabBarControl.framework in CopyFiles */,
 			);
@@ -98,6 +102,8 @@
 		4B64255718C26CB00012ED42 /* VRMainWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRMainWindowController.h; sourceTree = "<group>"; };
 		4B64255818C26CB00012ED42 /* VRMainWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRMainWindowController.m; sourceTree = "<group>"; };
 		4B64256F18C2846B0012ED42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		4BC4795F190843F400536200 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = build/VimR/Build/Products/Debug/Sparkle.framework; sourceTree = "<group>"; };
+		4BC47962190845CC00536200 /* sparkle-pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "sparkle-pub.pem"; path = "Resources/sparkle-pub.pem"; sourceTree = "<group>"; };
 		4BE9241318C20DBC00E67BB6 /* VimR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VimR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BE9241618C20DBC00E67BB6 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4BE9241918C20DBC00E67BB6 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -127,6 +133,7 @@
 			files = (
 				4BE9241718C20DBC00E67BB6 /* Cocoa.framework in Frameworks */,
 				664C3590B3B2428C94313696 /* libPods.a in Frameworks */,
+				4BC47960190843F400536200 /* Sparkle.framework in Frameworks */,
 				4B64254B18C23F800012ED42 /* MacVimFramework.framework in Frameworks */,
 				4B64254D18C23F800012ED42 /* PSMTabBarControl.framework in Frameworks */,
 			);
@@ -176,6 +183,7 @@
 		4B64256718C26D4E0012ED42 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4BC47962190845CC00536200 /* sparkle-pub.pem */,
 				4BE9242B18C20DBC00E67BB6 /* MainMenu.xib */,
 				4B64257018C2846B0012ED42 /* MainWindow.xib */,
 			);
@@ -206,6 +214,7 @@
 		4BE9241518C20DBC00E67BB6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4BC4795F190843F400536200 /* Sparkle.framework */,
 				4B64254918C23F800012ED42 /* MacVimFramework.framework */,
 				4B64254A18C23F800012ED42 /* PSMTabBarControl.framework */,
 				4BE9241618C20DBC00E67BB6 /* Cocoa.framework */,
@@ -363,6 +372,7 @@
 				4BE9242118C20DBC00E67BB6 /* InfoPlist.strings in Resources */,
 				4B64256E18C2846B0012ED42 /* MainWindow.xib in Resources */,
 				4BE9242F18C20DBC00E67BB6 /* Images.xcassets in Resources */,
+				4BC47963190845CC00536200 /* sparkle-pub.pem in Resources */,
 				4BE9242718C20DBC00E67BB6 /* Credits.rtf in Resources */,
 				4BE9242D18C20DBC00E67BB6 /* MainMenu.xib in Resources */,
 			);
