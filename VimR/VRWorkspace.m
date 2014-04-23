@@ -17,6 +17,10 @@
 @implementation VRWorkspace
 
 #pragma mark Public
+- (BOOL)hasModifiedBuffer {
+  return self.mainWindowController.vimController.hasModifiedBuffer;
+}
+
 - (void)setUpWithVimController:(MMVimController *)vimController {
   VRMainWindowController *controller = [
       [VRMainWindowController alloc] initWithContentRect:CGRectMake(242, 364, 480, 360)

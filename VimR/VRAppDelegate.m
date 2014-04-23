@@ -15,6 +15,7 @@
 #import "VRMainWindowController.h"
 #import "VRUtils.h"
 #import "VRFileItemManager.h"
+#import "VRWorkspace.h"
 
 
 static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
@@ -103,6 +104,33 @@ TB_MANUALWIRE(fileItemManager)
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
   // this cannot be done with TBCacao
   self.application = aNotification.object;
+}
+
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
+  NSApplicationTerminateReply reply = NSTerminateNow;
+  BOOL dirtyBuffersExist = NO;
+
+  for (VRWorkspace *workspace in self.workspaceController.workspaces) {
+    if (workspace.hasModifiedBuffer) {
+      dirtyBuffersExist = YES;
+      break;
+    }
+  }
+
+  if (dirtyBuffersExist) {
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.alertStyle = NSWarningAlertStyle;
+    [alert addButtonWithTitle:@"Quit"];
+    [alert addButtonWithTitle:@"Cancel"];
+    alert.messageText = @"Quit without saving?";
+    alert.informativeText = @"There are modified buffers, if you quit now all changes will be lost. Quit anyway?";
+
+    if (alert.runModal != NSAlertFirstButtonReturn) {
+      reply = NSTerminateCancel;
+    }
+  }
+
+  return reply;
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification {

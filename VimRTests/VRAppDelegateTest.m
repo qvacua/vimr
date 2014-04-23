@@ -120,6 +120,10 @@ static NSOpenPanel *openPanel;
   assertThat(appDelegate.application, is(anApp));
 }
 
+- (void)notTestApplicationShouldTerminate {
+  // We use [[NSAlert alloc] init]...
+}
+
 - (void)testApplicationWillTerminate {
   [appDelegate applicationWillTerminate:nil];
   [verify(workspaceController) cleanUp];
