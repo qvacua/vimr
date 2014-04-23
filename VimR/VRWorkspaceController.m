@@ -142,6 +142,8 @@ TB_AUTOWIRE(openQuicklyWindowController)
   workspace.fileItemManager = self.fileItemManager;
   workspace.workingDirectory = workingDir;
 
+  [self.fileItemManager registerUrl:workingDir];
+
   self.pid2Workspace[@(pid)] = workspace;
 }
 

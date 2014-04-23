@@ -78,7 +78,9 @@
 - (IBAction)openQuickly:(id)sender {
   log4Debug(@"open quickly!!!");
 
-  [self.openQuicklyWindowController showForWindow:self.window url:self.workspace.workingDirectory];
+  VRWorkspace *workspace = self.workspace;
+  [workspace.openQuicklyWindowController showForWindow:self.window url:workspace.workingDirectory];
+  [workspace.fileItemManager setTargetUrl:workspace.workingDirectory];
 }
 
 #pragma mark Debug

@@ -7,16 +7,20 @@
  * See LICENSE
  */
 
+#import <TBCacao/TBCacao.h>
 #import "VROpenQuicklyWindowController.h"
 #import "VROpenQuicklyWindow.h"
 #import "VRLog.h"
 #import "VRUtils.h"
+#import "VRFileItemManager.h"
 
 
 static const int qSearchFieldHeight = 22;
 int qOpenQuicklyWindowWidth = 200;
 
 @implementation VROpenQuicklyWindowController
+
+TB_AUTOWIRE(fileItemManager)
 
 #pragma mark Public
 - (void)showForWindow:(NSWindow *)targetWindow url:(NSURL *)targetUrl {
@@ -76,7 +80,10 @@ int qOpenQuicklyWindowWidth = 200;
 
 #pragma mark Private
 - (void)reset {
+  [self.fileItemManager resetTargetUrl];
+
   [self.window orderBack:self];
+
   [(VROpenQuicklyWindow *) self.window reset];
 }
 

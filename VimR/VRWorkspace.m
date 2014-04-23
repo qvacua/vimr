@@ -11,7 +11,7 @@
 #import <TBCacao/TBCacao.h>
 #import "VRWorkspace.h"
 #import "VRMainWindowController.h"
-#import "VROpenQuicklyWindowController.h"
+#import "VRFileItemManager.h"
 
 
 @implementation VRWorkspace
@@ -22,7 +22,6 @@
       [VRMainWindowController alloc] initWithContentRect:CGRectMake(242, 364, 480, 360)
   ];
   controller.workspace = self;
-  controller.openQuicklyWindowController = self.openQuicklyWindowController;
 
   controller.vimController = vimController;
   controller.vimView = vimController.vimView;
@@ -36,6 +35,7 @@
 
 - (void)cleanUpAndClose {
   [self.mainWindowController cleanUpAndClose];
+  [self.fileItemManager unregisterUrl:self.workingDirectory];
 }
 
 @end

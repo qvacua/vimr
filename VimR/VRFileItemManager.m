@@ -85,6 +85,7 @@ TB_AUTOWIRE(fileManager)
     // If we should do that, we would have only one parent when invalidating the cache. For now, we could have multiple
     // parent URLs and therefore file items for one URL reported by FSEventStream.
 
+    log4Debug(@"Registering %@ for caching and monitoring", url);
     _url2CachedFileItem[url] = [[VRFileItem alloc] initWithUrl:url isDir:YES];
 
     [self stop];
@@ -94,6 +95,7 @@ TB_AUTOWIRE(fileManager)
 
 - (void)unregisterUrl:(NSURL *)url {
   @synchronized (self) {
+    log4Debug(@"Unregistering %@", url);
     [_url2CachedFileItem removeObjectForKey:url];
 
     [self stop];

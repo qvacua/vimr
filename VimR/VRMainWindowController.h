@@ -18,7 +18,6 @@
 @interface VRMainWindowController : NSWindowController <NSWindowDelegate, MMVimControllerDelegate>
 
 #pragma mark Properties
-@property (weak) VROpenQuicklyWindowController *openQuicklyWindowController;
 @property (weak) VRWorkspace *workspace;
 
 @property (weak) MMVimController *vimController;

@@ -11,9 +11,14 @@
 #import <TBCacao/TBCacao.h>
 
 
+@class VRFileItemManager;
+
+
 extern int qOpenQuicklyWindowWidth;
 
 @interface VROpenQuicklyWindowController : NSWindowController <TBBean, NSWindowDelegate, NSTextFieldDelegate>
+
+@property (weak) VRFileItemManager *fileItemManager;
 
 #pragma mark Public
 - (void)showForWindow:(NSWindow *)contentRect url:(NSURL *)targetUrl;
