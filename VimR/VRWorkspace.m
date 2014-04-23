@@ -21,11 +21,11 @@
   VRMainWindowController *controller = [
       [VRMainWindowController alloc] initWithContentRect:CGRectMake(242, 364, 480, 360)
   ];
+  controller.workspace = self;
+  controller.openQuicklyWindowController = self.openQuicklyWindowController;
+
   controller.vimController = vimController;
   controller.vimView = vimController.vimView;
-  // TODO: ugly
-  controller.openQuicklyWindowController = [[TBContext sharedContext]
-      beanWithClass:[VROpenQuicklyWindowController class]];
 
   vimController.delegate = (id <MMVimControllerDelegate>) controller;
 

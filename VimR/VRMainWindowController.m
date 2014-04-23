@@ -16,6 +16,7 @@
 #import "VRWindow.h"
 #import "VROpenQuicklyWindowController.h"
 #import "VRFileItemManager.h"
+#import "VRWorkspace.h"
 
 
 @interface VRMainWindowController ()
@@ -77,8 +78,7 @@
 - (IBAction)openQuickly:(id)sender {
   log4Debug(@"open quickly!!!");
 
-  NSRect contentRect = [self.window contentRectForFrameRect:self.window.frame];
-  [self.openQuicklyWindowController showWindowForContentRect:contentRect];
+  [self.openQuicklyWindowController showForWindow:self.window url:self.workspace.workingDirectory];
 }
 
 #pragma mark Debug

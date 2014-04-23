@@ -12,12 +12,16 @@
 
 @class VRMainWindowController;
 @class MMVimController;
+@class VRFileItemManager;
+@class VROpenQuicklyWindowController;
 
 
 @interface VRWorkspace : NSObject
 
-@property NSURL *workingDirectory;
+@property VRFileItemManager *fileItemManager;
+@property VROpenQuicklyWindowController *openQuicklyWindowController;
 @property VRMainWindowController *mainWindowController;
+@property NSURL *workingDirectory;
 
 #pragma mark Public
 - (void)setUpWithVimController:(MMVimController *)vimController;

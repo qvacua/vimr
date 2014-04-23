@@ -19,13 +19,16 @@ int qOpenQuicklyWindowWidth = 200;
 @implementation VROpenQuicklyWindowController
 
 #pragma mark Public
-- (void)showWindowForContentRect:(CGRect)contentRect {
+- (void)showForWindow:(NSWindow *)targetWindow url:(NSURL *)targetUrl {
+  CGRect contentRect = [targetWindow contentRectForFrameRect:targetWindow.frame];
   CGFloat xPos = NSMinX(contentRect) + NSWidth(contentRect) / 2 - qOpenQuicklyWindowWidth / 2
       - 2 * qOpenQuicklyWindowPadding;
   CGFloat yPos = NSMaxY(contentRect) - qSearchFieldHeight - 2 * qOpenQuicklyWindowPadding;
 
   self.window.frameOrigin = CGPointMake(xPos, yPos);
   [self.window makeKeyAndOrderFront:self];
+
+  log4Debug(@"############## %@", targetUrl);
 }
 
 #pragma mark NSObject

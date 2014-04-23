@@ -15,12 +15,15 @@ extern NSString *const qVimArgFileNamesToOpen;
 extern NSString *const qVimArgOpenFilesLayout;
 
 @class VRMainWindowController;
+@class VRFileItemManager;
+@class VROpenQuicklyWindowController;
 
 @interface VRWorkspaceController : NSObject <MMVimManagerDelegateProtocol>
 
-#pragma mark Properties
 @property (weak) MMVimManager *vimManager;
 @property (readonly) NSArray *workspaces;
+@property (weak) VRFileItemManager *fileItemManager;
+@property (weak) VROpenQuicklyWindowController *openQuicklyWindowController;
 
 #pragma mark Public
 - (void)newWorkspace;

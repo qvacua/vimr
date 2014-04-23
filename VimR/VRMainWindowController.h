@@ -13,15 +13,17 @@
 
 @class VRWorkspaceController;
 @class VROpenQuicklyWindowController;
-
+@class VRWorkspace;
 
 @interface VRMainWindowController : NSWindowController <NSWindowDelegate, MMVimControllerDelegate>
 
 #pragma mark Properties
-@property (weak) VRWorkspaceController *workspaceController;
 @property (weak) VROpenQuicklyWindowController *openQuicklyWindowController;
+@property (weak) VRWorkspace *workspace;
+
 @property (weak) MMVimController *vimController;
 @property (weak) MMVimView *vimView;
+
 @property BOOL needsToResizeVimView;
 
 #pragma mark Public

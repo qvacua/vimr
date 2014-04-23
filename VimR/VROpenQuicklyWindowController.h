@@ -16,7 +16,7 @@ extern int qOpenQuicklyWindowWidth;
 @interface VROpenQuicklyWindowController : NSWindowController <TBBean, NSWindowDelegate, NSTextFieldDelegate>
 
 #pragma mark Public
-- (void)showWindowForContentRect:(CGRect)contentRect;
+- (void)showForWindow:(NSWindow *)contentRect url:(NSURL *)targetUrl;
 
 #pragma mark NSObject
 - (id)init;

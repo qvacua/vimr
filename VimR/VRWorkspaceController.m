@@ -8,9 +8,12 @@
  */
 
 #import <MacVimFramework/MacVimFramework.h>
+#import <TBCacao/TBCacao.h>
 #import "VRWorkspaceController.h"
 #import "VRWorkspace.h"
 #import "VRUtils.h"
+#import "VRFileItemManager.h"
+#import "VROpenQuicklyWindowController.h"
 
 
 NSString *const qVimArgFileNamesToOpen = @"filenames";
@@ -25,6 +28,9 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 
 
 @implementation VRWorkspaceController
+
+TB_AUTOWIRE(fileItemManager)
+TB_AUTOWIRE(openQuicklyWindowController)
 
 #pragma mark Properties
 - (NSArray *)workspaces {
@@ -132,6 +138,8 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 - (void)createNewVimControllerWithWorkingDir:(NSURL *)workingDir args:(id)args {
   int pid = [self.vimManager pidOfNewVimControllerWithArgs:args];
   VRWorkspace *workspace = [[VRWorkspace alloc] init];
+  workspace.openQuicklyWindowController = self.openQuicklyWindowController;
+  workspace.fileItemManager = self.fileItemManager;
   workspace.workingDirectory = workingDir;
 
   self.pid2Workspace[@(pid)] = workspace;
