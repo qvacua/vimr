@@ -111,7 +111,7 @@ TB_MANUALWIRE(workspaceController)
   BOOL dirtyBuffersExist = NO;
 
   for (VRWorkspace *workspace in self.workspaceController.workspaces) {
-    if (workspace.mainWindowController.vimController.hasModifiedBuffer) {
+    if (workspace.hasModifiedBuffer) {
       dirtyBuffersExist = YES;
       break;
     }

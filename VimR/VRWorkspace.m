@@ -10,12 +10,15 @@
 #import <MacVimFramework/MacVimFramework.h>
 #import "VRWorkspace.h"
 #import "VRMainWindowController.h"
-#import "VRWorkspaceController.h"
 
 
 @implementation VRWorkspace
 
 #pragma mark Public
+- (BOOL)hasModifiedBuffer {
+  return self.mainWindowController.vimController.hasModifiedBuffer;
+}
+
 - (void)setUpWithVimController:(MMVimController *)vimController {
     VRMainWindowController *controller = [[VRMainWindowController alloc] initWithWindowNibName:qMainWindowNibName];
     controller.vimController = vimController;
