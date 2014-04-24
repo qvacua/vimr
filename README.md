@@ -38,8 +38,6 @@ Issue the following command in the project root
 $ xcodebuild -workspace VimR.xcworkspace -scheme VimR -configuration Release build
 ```
 
-It will report that the build has failed. Ignore the failure message.
-
 From now on, you can build VimR by running the `VimR` scheme (in VimR.xcworkspace).
 
 From time to time, we'll edit some files of `macvim` that are not registered in the `macvim/src/MacVim/MacVim.xcodeproj` file like `macvim/src/MacVim/MMBackend.m`. In this case we have to `make` `macvim` again, ie it does not suffice to recompile `VimR` (or `macvim/src/MacVim/MacVim.xcodeproj`).
