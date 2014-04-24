@@ -168,15 +168,15 @@ TB_AUTOWIRE(fileManager)
     return;
   }
 
-  log4Debug(@"Children of %@ already cached, traversing or adding.", parent.url);
+//  log4Debug(@"Children of %@ already cached, traversing or adding.", parent.url);
   for (VRFileItem *child in parent.children) {
     if ([self shouldCancelForRootUrl:rootUrl]) {
-      log4Debug(@"Cancelling the traversing or adding as requested at %@", child.url);
+//      log4Debug(@"Cancelling the traversing or adding as requested at %@", child.url);
       return;
     }
 
     if (child.dir) {
-      log4Debug(@"Traversing children of %@", child.url);
+//      log4Debug(@"Traversing children of %@", child.url);
       [self traverseFileItemChildHierarchyForRequest:child forRootUrl:rootUrl];
     } else {
       [self addToFileItemsForTargetUrl:child];
@@ -201,11 +201,11 @@ TB_AUTOWIRE(fileManager)
     NSURL *rootUrl = dict[qRootUrlKey];
 
     if ([self shouldCancelForRootUrl:rootUrl]) {
-      log4Debug(@"Cancelling the scanning as requested at %@", parent.url);
+//      log4Debug(@"Cancelling the scanning as requested at %@", parent.url);
       return;
     }
 
-    log4Debug(@"Building children for %@", parent.url);
+//    log4Debug(@"Building children for %@", parent.url);
 
     parent.isCachingChildren = YES;
 
@@ -227,7 +227,7 @@ TB_AUTOWIRE(fileManager)
 
     for (VRFileItem *child in childrenOfParent) {
       if ([self shouldCancelForRootUrl:rootUrl]) {
-        log4Debug(@"Cancelling the scanning as requested at %@", child.url);
+//        log4Debug(@"Cancelling the scanning as requested at %@", child.url);
         return;
       }
 

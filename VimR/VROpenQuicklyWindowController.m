@@ -18,12 +18,21 @@
 static const int qSearchFieldHeight = 22;
 int qOpenQuicklyWindowWidth = 200;
 
+@interface VROpenQuicklyWindowController ()
+
+@property (weak) NSWindow *targetWindow;
+
+@end
+
+
 @implementation VROpenQuicklyWindowController
 
 TB_AUTOWIRE(fileItemManager)
 
 #pragma mark Public
 - (void)showForWindow:(NSWindow *)targetWindow url:(NSURL *)targetUrl {
+  self.targetWindow = targetWindow;
+
   CGRect contentRect = [targetWindow contentRectForFrameRect:targetWindow.frame];
   CGFloat xPos = NSMinX(contentRect) + NSWidth(contentRect) / 2 - qOpenQuicklyWindowWidth / 2
       - 2 * qOpenQuicklyWindowPadding;
@@ -31,8 +40,6 @@ TB_AUTOWIRE(fileItemManager)
 
   self.window.frameOrigin = CGPointMake(xPos, yPos);
   [self.window makeKeyAndOrderFront:self];
-
-  log4Debug(@"############## %@", targetUrl);
 }
 
 #pragma mark NSObject
@@ -85,6 +92,9 @@ TB_AUTOWIRE(fileItemManager)
   [self.window orderBack:self];
 
   [(VROpenQuicklyWindow *) self.window reset];
+
+  [self.targetWindow makeKeyAndOrderFront:self];
+  self.targetWindow = nil;
 }
 
 @end
