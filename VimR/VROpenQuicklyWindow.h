@@ -10,15 +10,20 @@
 #import <Cocoa/Cocoa.h>
 
 
+@class VROpenQuicklyWindowController;
+
+
 extern int qOpenQuicklyWindowPadding;
 extern int qOpenQuicklySearchFieldMinWidth;
 
 @interface VROpenQuicklyWindow : NSWindow
 
 @property NSSearchField *searchField;
+@property NSTableView *fileItemTableView;
 
 #pragma mark Public
-- (instancetype)initWithContentRect:(CGRect)contentRect;
+- (instancetype)initWithContentRect:(CGRect)contentRect
+                   windowController:(VROpenQuicklyWindowController *)windowController;
 - (void)reset;
 
 #pragma mark NSWindow

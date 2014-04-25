@@ -8,16 +8,21 @@
  */
 
 #import <TBCacao/TBCacao.h>
+#import <CocoaLumberjack/DDLog.h>
 #import "VROpenQuicklyWindowController.h"
 #import "VROpenQuicklyWindow.h"
-#import "VRLog.h"
 #import "VRUtils.h"
 #import "VRFileItemManager.h"
 
 
-static const int qSearchFieldHeight = 22;
-
 int qOpenQuicklyWindowWidth = 200;
+
+#ifdef DEBUG
+static const int ddLogLevel = LOG_LEVEL_DEBUG;
+#else
+static const int ddLogLevel = LOG_LEVEL_INFO;
+#endif
+
 
 @interface VROpenQuicklyWindowController ()
 
@@ -47,7 +52,7 @@ TB_AUTOWIRE(notificationCenter)
 #pragma mark NSObject
 - (id)init {
   VROpenQuicklyWindow *win = [[VROpenQuicklyWindow alloc] initWithContentRect:
-      CGRectMake(100, 100, qOpenQuicklyWindowWidth, 100)];
+      CGRectMake(100, 100, qOpenQuicklyWindowWidth, 250)     windowController:self];
 
   self = [super initWithWindow:win];
   RETURN_NIL_WHEN_NOT_SELF
@@ -55,28 +60,33 @@ TB_AUTOWIRE(notificationCenter)
   win.delegate = self;
   win.searchField.delegate = self;
 
-  [self.notificationCenter addObserver:self selector:@selector(chunkOfFileItemsAdded:)
-                                  name:qChunkOfNewFileItemsAddedEvent object:nil];
-
   return self;
+}
+
+#pragma mark NSTableViewDataSource
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
+  NSUInteger count = self.fileItemManager.fileItemsOfTargetUrl.count;
+  return count;
+}
+
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
+  return self.fileItemManager.fileItemsOfTargetUrl[(NSUInteger) row];
 }
 
 #pragma mark NSTextFieldDelegate
 - (void)controlTextDidChange:(NSNotification *)obj {
-
 }
 
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)selector {
   if (selector == @selector(cancelOperation:)) {
-    log4Debug(@"Open quickly cancelled");
+    DDLogDebug(@"Open quickly cancelled");
 
     [self reset];
     return YES;
   }
 
   if (selector == @selector(insertNewline:)) {
-    log4Debug(@"Open quickly window: Enter pressed");
-
+    DDLogDebug(@"Open quickly window: Enter pressed");
     return YES;
   }
 
@@ -85,18 +95,18 @@ TB_AUTOWIRE(notificationCenter)
 
 #pragma mark NSWindowDelegate
 - (void)windowDidResignMain:(NSNotification *)notification {
-  log4Debug(@"Open quickly window resigned main");
+  DDLogDebug(@"Open quickly window resigned main");
   [self reset];
 }
 
 - (void)windowDidResignKey:(NSNotification *)notification {
-  log4Debug(@"Open quickly window resigned key");
+  DDLogDebug(@"Open quickly window resigned key");
   [self reset];
 }
 
 #pragma mark Private
 - (void)chunkOfFileItemsAdded:(id)obj {
-  // yet noop
+  [[(VROpenQuicklyWindow *) self.window fileItemTableView] reloadData];
 }
 
 - (void)reset {
@@ -108,6 +118,12 @@ TB_AUTOWIRE(notificationCenter)
 
   [self.targetWindow makeKeyAndOrderFront:self];
   self.targetWindow = nil;
+}
+
+#pragma mark TBInitializingBean
+- (void)postConstruct {
+  [self.notificationCenter addObserver:self selector:@selector(chunkOfFileItemsAdded:)
+                                  name:qChunkOfNewFileItemsAddedEvent object:nil];
 }
 
 @end

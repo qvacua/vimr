@@ -16,7 +16,11 @@
 
 extern int qOpenQuicklyWindowWidth;
 
-@interface VROpenQuicklyWindowController : NSWindowController <TBBean, NSWindowDelegate, NSTextFieldDelegate>
+@interface VROpenQuicklyWindowController : NSWindowController <
+    TBBean, TBInitializingBean,
+    NSWindowDelegate,
+    NSTextFieldDelegate,
+    NSTableViewDataSource, NSTableViewDelegate>
 
 @property (weak) VRFileItemManager *fileItemManager;
 @property (weak) NSNotificationCenter *notificationCenter;
