@@ -6,10 +6,9 @@ before_install:
 before_script:
     - export LANG=en_US.UTF-8
     - cd macvim/src
-    - ./configure
+    - ./configure --with-features=huge --enable-rubyinterp --enable-pythoninterp --enable-perlinterp --enable-cscope
     - make
     - cd ../..
 script:
-    - xcodebuild -workspace VimR.xcworkspace -scheme VimR -configuration Release build
-    - xcodebuild -workspace VimR.xcworkspace -scheme VimR -derivedDataPath build/VimR -configuration Debug build test
+    - xcodebuild -workspace VimR.xcworkspace -scheme VimR -configuration Debug build test
 

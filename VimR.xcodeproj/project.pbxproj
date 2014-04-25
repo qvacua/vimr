@@ -44,6 +44,11 @@
 		4B64255A18C26CB00012ED42 /* VRMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B64255818C26CB00012ED42 /* VRMainWindowController.m */; };
 		4B64255B18C26CB00012ED42 /* VRMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B64255818C26CB00012ED42 /* VRMainWindowController.m */; };
 		4B78D61618D644E500CAA020 /* MMAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBF8BE880500FCF8B9A6 /* MMAlert.m */; };
+		4B89F11C190A473F00AA0EE5 /* MacVimFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B89F119190A473F00AA0EE5 /* MacVimFramework.framework */; };
+		4B89F11D190A473F00AA0EE5 /* MacVimFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B89F119190A473F00AA0EE5 /* MacVimFramework.framework */; };
+		4B89F11E190A473F00AA0EE5 /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B89F11A190A473F00AA0EE5 /* PSMTabBarControl.framework */; };
+		4B89F11F190A473F00AA0EE5 /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B89F11A190A473F00AA0EE5 /* PSMTabBarControl.framework */; };
+		4B89F120190A473F00AA0EE5 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B89F11B190A473F00AA0EE5 /* Sparkle.framework */; };
 		4B8BE1EE18EB556C004840F1 /* VRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE9242918C20DBC00E67BB6 /* VRAppDelegate.m */; };
 		4B921D9E19003F1D004D4FFD /* cf.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B921D9C19003F1D004D4FFD /* cf.dylib */; };
 		4B921D9F19003F1D004D4FFD /* cf.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B921D9C19003F1D004D4FFD /* cf.dylib */; };
@@ -54,14 +59,6 @@
 		4B921DA719003FBE004D4FFD /* cf.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B921D9C19003F1D004D4FFD /* cf.dylib */; };
 		4B921DA819003FBE004D4FFD /* text.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B921D9D19003F1D004D4FFD /* text.dylib */; };
 		4BC47963190845CC00536200 /* sparkle-pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 4BC47962190845CC00536200 /* sparkle-pub.pem */; };
-		4BC4798D19085E1A00536200 /* MacVimFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC4798A19085E1A00536200 /* MacVimFramework.framework */; };
-		4BC4798E19085E1A00536200 /* MacVimFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC4798A19085E1A00536200 /* MacVimFramework.framework */; };
-		4BC4798F19085E1A00536200 /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC4798B19085E1A00536200 /* PSMTabBarControl.framework */; };
-		4BC4799019085E1A00536200 /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC4798B19085E1A00536200 /* PSMTabBarControl.framework */; };
-		4BC4799119085E1A00536200 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC4798C19085E1A00536200 /* Sparkle.framework */; };
-		4BC4799319085E2D00536200 /* MacVimFramework.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BC4798A19085E1A00536200 /* MacVimFramework.framework */; };
-		4BC4799419085E2D00536200 /* PSMTabBarControl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BC4798B19085E1A00536200 /* PSMTabBarControl.framework */; };
-		4BC4799519085E2D00536200 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BC4798C19085E1A00536200 /* Sparkle.framework */; };
 		4BE9241718C20DBC00E67BB6 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE9241618C20DBC00E67BB6 /* Cocoa.framework */; };
 		4BE9242118C20DBC00E67BB6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4BE9241F18C20DBC00E67BB6 /* InfoPlist.strings */; };
 		4BE9242318C20DBC00E67BB6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE9242218C20DBC00E67BB6 /* main.m */; };
@@ -93,9 +90,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				4BC4799319085E2D00536200 /* MacVimFramework.framework in CopyFiles */,
-				4BC4799419085E2D00536200 /* PSMTabBarControl.framework in CopyFiles */,
-				4BC4799519085E2D00536200 /* Sparkle.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,12 +157,12 @@
 		35DDD94E48FE41568A1349A2 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		4B64255718C26CB00012ED42 /* VRMainWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRMainWindowController.h; sourceTree = "<group>"; };
 		4B64255818C26CB00012ED42 /* VRMainWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRMainWindowController.m; sourceTree = "<group>"; };
+		4B89F119190A473F00AA0EE5 /* MacVimFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MacVimFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B89F11A190A473F00AA0EE5 /* PSMTabBarControl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PSMTabBarControl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B89F11B190A473F00AA0EE5 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B921D9C19003F1D004D4FFD /* cf.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = cf.dylib; path = VimR/TextMate/lib/cf.dylib; sourceTree = "<group>"; };
 		4B921D9D19003F1D004D4FFD /* text.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = text.dylib; path = VimR/TextMate/lib/text.dylib; sourceTree = "<group>"; };
 		4BC47962190845CC00536200 /* sparkle-pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "sparkle-pub.pem"; path = "Resources/sparkle-pub.pem"; sourceTree = "<group>"; };
-		4BC4798A19085E1A00536200 /* MacVimFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MacVimFramework.framework; path = build/VimR/Build/Products/Release/MacVimFramework.framework; sourceTree = "<group>"; };
-		4BC4798B19085E1A00536200 /* PSMTabBarControl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PSMTabBarControl.framework; path = build/VimR/Build/Products/Release/PSMTabBarControl.framework; sourceTree = "<group>"; };
-		4BC4798C19085E1A00536200 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = build/VimR/Build/Products/Release/Sparkle.framework; sourceTree = "<group>"; };
 		4BE9241318C20DBC00E67BB6 /* VimR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VimR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BE9241618C20DBC00E67BB6 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4BE9241918C20DBC00E67BB6 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -197,10 +191,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BE9241718C20DBC00E67BB6 /* Cocoa.framework in Frameworks */,
-				4BC4798D19085E1A00536200 /* MacVimFramework.framework in Frameworks */,
+				4B89F11C190A473F00AA0EE5 /* MacVimFramework.framework in Frameworks */,
 				664C3590B3B2428C94313696 /* libPods.a in Frameworks */,
-				4BC4799119085E1A00536200 /* Sparkle.framework in Frameworks */,
-				4BC4798F19085E1A00536200 /* PSMTabBarControl.framework in Frameworks */,
+				4B89F120190A473F00AA0EE5 /* Sparkle.framework in Frameworks */,
+				4B89F11E190A473F00AA0EE5 /* PSMTabBarControl.framework in Frameworks */,
 				4B921DA019003F1D004D4FFD /* text.dylib in Frameworks */,
 				4B921D9E19003F1D004D4FFD /* cf.dylib in Frameworks */,
 			);
@@ -212,11 +206,11 @@
 			files = (
 				4B921DA119003F1D004D4FFD /* text.dylib in Frameworks */,
 				4BE9243718C20DBC00E67BB6 /* Cocoa.framework in Frameworks */,
-				4BC4798E19085E1A00536200 /* MacVimFramework.framework in Frameworks */,
+				4B89F11D190A473F00AA0EE5 /* MacVimFramework.framework in Frameworks */,
 				4B921D9F19003F1D004D4FFD /* cf.dylib in Frameworks */,
 				4BE9243618C20DBC00E67BB6 /* XCTest.framework in Frameworks */,
 				E6B1AC2D372E4EA58650E10C /* libPods-VimRTests.a in Frameworks */,
-				4BC4799019085E1A00536200 /* PSMTabBarControl.framework in Frameworks */,
+				4B89F11F190A473F00AA0EE5 /* PSMTabBarControl.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,9 +297,9 @@
 		4BE9241518C20DBC00E67BB6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4BC4798A19085E1A00536200 /* MacVimFramework.framework */,
-				4BC4798B19085E1A00536200 /* PSMTabBarControl.framework */,
-				4BC4798C19085E1A00536200 /* Sparkle.framework */,
+				4B89F119190A473F00AA0EE5 /* MacVimFramework.framework */,
+				4B89F11A190A473F00AA0EE5 /* PSMTabBarControl.framework */,
+				4B89F11B190A473F00AA0EE5 /* Sparkle.framework */,
 				4B921DA219003F26004D4FFD /* TextMate */,
 				4BE9241618C20DBC00E67BB6 /* Cocoa.framework */,
 				4BE9241918C20DBC00E67BB6 /* AppKit.framework */,
@@ -737,6 +731,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/build/VimR/Build/Products/Debug",
 					"$(PROJECT_DIR)/build/VimR/Build/Products/Release",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/VimR-gwcecgeapvplzzfrusftahjeulej/Build/Products/Debug",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VimR/VimR-Prefix.pch";
@@ -763,6 +758,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/build/VimR/Build/Products/Debug",
 					"$(PROJECT_DIR)/build/VimR/Build/Products/Release",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/VimR-gwcecgeapvplzzfrusftahjeulej/Build/Products/Debug",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VimR/VimR-Prefix.pch";
@@ -789,6 +785,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/build/VimR/Build/Products/Debug",
 					"$(PROJECT_DIR)/build/VimR/Build/Products/Release",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/VimR-gwcecgeapvplzzfrusftahjeulej/Build/Products/Debug",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VimR/VimR-Prefix.pch";
@@ -818,6 +815,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/build/VimR/Build/Products/Debug",
 					"$(PROJECT_DIR)/build/VimR/Build/Products/Release",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/VimR-gwcecgeapvplzzfrusftahjeulej/Build/Products/Debug",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VimR/VimR-Prefix.pch";

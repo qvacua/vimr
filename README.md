@@ -14,8 +14,6 @@ The very first goal is to get a naked Vim running using [MacVimFramework](https:
 
 How to Build
 ------------
-The build process is (yet) quite cumbersome: In the future I'll try to simplify it.
-
 First, clone the project and the `macvim` submodule. Then, build the `macvim` submodule: Assuming you're in the project root
 
 ```
@@ -30,15 +28,7 @@ We use [CocoaPods](http://cocoapods.org) to include other open source libraries,
 $ pod install
 ```
 
-Open the `VimR.xcworkspace` file. Select `File > Workspace Settings...` and change `Derived Data Location` to `Workspace-relative` and set it to `build` (the default value is `DerivedData`).
-
-Issue the following command in the project root
-
-```
-$ xcodebuild -workspace VimR.xcworkspace -scheme VimR -configuration Release build
-```
-
-From now on, you can build VimR by running the `VimR` scheme (in VimR.xcworkspace).
+Open the `VimR.xcworkspace` file and run the `VimR` scheme.
 
 From time to time, we'll edit some files of `macvim` that are not registered in the `macvim/src/MacVim/MacVim.xcodeproj` file like `macvim/src/MacVim/MMBackend.m`. In this case we have to `make` `macvim` again, ie it does not suffice to recompile `VimR` (or `macvim/src/MacVim/MacVim.xcodeproj`).
 

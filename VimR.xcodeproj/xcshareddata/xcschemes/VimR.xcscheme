@@ -21,31 +21,31 @@
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
-            buildForTesting = "NO"
-            buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8DC2EF4F0486A6940098B216"
-               BuildableName = "Sparkle.framework"
-               BlueprintName = "Sparkle"
-               ReferencedContainer = "container:Sparkle/Sparkle.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
-            buildForProfiling = "NO"
+            buildForProfiling = "YES"
             buildForArchiving = "YES"
-            buildForAnalyzing = "NO">
+            buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4B00FE81175D1DD800773FB5"
                BuildableName = "MacVimFramework.framework"
                BlueprintName = "MacVimFramework"
                ReferencedContainer = "container:macvim/src/MacVim/MacVim.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "8DC2EF4F0486A6940098B216"
+               BuildableName = "Sparkle.framework"
+               BlueprintName = "Sparkle"
+               ReferencedContainer = "container:Sparkle/Sparkle.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
