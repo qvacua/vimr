@@ -19,11 +19,13 @@
 
 
 int qOpenQuicklyWindowWidth = 200;
+static const int qMaximumNumberOfFilterResult = 50;
 
-static inline double rank_string(NSString *string, NSString *target) {
-  return oak::rank(cf::to_s((__bridge CFStringRef) string), cf::to_s((__bridge CFStringRef) target));
+static inline double rank_string(NSString *string, NSString *target,
+    std::vector< std::pair<size_t, size_t> >* out = NULL) {
+
+  return oak::rank(cf::to_s((__bridge CFStringRef) string), cf::to_s((__bridge CFStringRef) target), out);
 }
-
 
 #ifdef DEBUG
 static const int ddLogLevel = LOG_LEVEL_DEBUG;
@@ -38,6 +40,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @property id item;
 
 - (instancetype)initWithItem:(id)item score:(double)score;
+- (NSString *)description;
 
 @end
 
@@ -57,6 +60,14 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
   return self;
 }
 
+- (NSString *)description {
+  NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
+  [description appendFormat:@"self.score=%f", self.score];
+  [description appendFormat:@", self.item=%@", self.item];
+  [description appendString:@">"];
+  return description;
+}
+
 @end
 
 
@@ -65,6 +76,7 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
 @property (weak) NSWindow *targetWindow;
 @property (weak) NSSearchField *searchField;
 @property (weak) NSTableView *fileItemTableView;
+@property (copy) NSURL *rootUrlOfTarget;
 
 @property (readonly) NSMutableArray *filteredFileItems;
 
@@ -80,6 +92,7 @@ TB_AUTOWIRE(notificationCenter)
 #pragma mark Public
 - (void)showForWindow:(NSWindow *)targetWindow url:(NSURL *)targetUrl {
   self.targetWindow = targetWindow;
+  self.rootUrlOfTarget = targetUrl;
 
   CGRect contentRect = [targetWindow contentRectForFrameRect:targetWindow.frame];
   CGFloat xPos = NSMinX(contentRect) + NSWidth(contentRect) / 2 - qOpenQuicklyWindowWidth / 2
@@ -107,7 +120,7 @@ TB_AUTOWIRE(notificationCenter)
 
   win.delegate = self;
 
-  _filteredFileItems = [[NSMutableArray alloc] initWithCapacity:50];
+  _filteredFileItems = [[NSMutableArray alloc] initWithCapacity:qMaximumNumberOfFilterResult];
 
   return self;
 }
@@ -140,15 +153,57 @@ TB_AUTOWIRE(notificationCenter)
     return;
   }
 
-  [self.filteredFileItems removeAllObjects];
+  NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:1000];
+  // Shallow copy the file items array, since the self.fileItemManager.fileItemsOfTargetUrl can get mutated,
+  // while we enumerate over it. Then, we have to update the filtered list, when a chunk of cached items are updated.
+  NSArray *fileItems = [[NSArray alloc] initWithArray:self.fileItemManager.fileItemsOfTargetUrl];
+  for (NSString *path in fileItems) {
+    VRScoredItem *item= [self scoredItemForSearchStr:searchStr path:path];
+    [result addObject:item];
+  }
+  [result sortUsingComparator:qScoredItemComparator];
 
-  for (NSString *path in self.fileItemManager.fileItemsOfTargetUrl) {
-    VRScoredItem *item = [[VRScoredItem alloc] initWithItem:path score:rank_string(searchStr, path.lastPathComponent)];
-    [self.filteredFileItems addObject:item];
+  [self.filteredFileItems removeAllObjects];
+  NSRange range;
+  if (result.count >= qMaximumNumberOfFilterResult) {
+    range = NSMakeRange(0, qMaximumNumberOfFilterResult - 1);
+  } else {
+    range = NSMakeRange(0, result.count - 1);
+  }
+  [self.filteredFileItems addObjectsFromArray:[result subarrayWithRange:range]];
+  [self.fileItemTableView reloadData];
+}
+
+- (VRScoredItem *)scoredItemForSearchStr:(NSString *)searchStr path:(NSString *)path {
+  std::vector<std::pair<size_t, size_t>> matches;
+  double score = rank_string(searchStr, path.lastPathComponent, &matches);
+
+  for (auto &region : matches) {
+    DDLogVerbose(@"%@: %d, %d", path, region.first, region.second);
   }
 
-  [self.filteredFileItems sortUsingComparator:qScoredItemComparator];
-  [self.fileItemTableView reloadData];
+  __block CGFloat pathScore = 0;
+  NSArray *refPathComponents = self.rootUrlOfTarget.pathComponents;
+  NSArray *pathComponents = path.pathComponents;
+
+  NSArray *source = refPathComponents;
+  NSArray *target = pathComponents;
+  if (source.count > target.count) {
+    source = pathComponents;
+    target = refPathComponents;
+  }
+
+  [source enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
+    if ([obj isEqualToString:target[idx]]) {
+      pathScore++;
+    } else {
+      *stop = YES;
+    }
+  }];
+
+  score += 0.25 * pathScore / (refPathComponents.count - 1); // path score contributes 1/4 to the whole score
+
+  return [[VRScoredItem alloc] initWithItem:path score:score];
 }
 
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)selector {

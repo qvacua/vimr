@@ -79,7 +79,13 @@
   log4Debug(@"open quickly!!!");
 
   VRWorkspace *workspace = self.workspace;
-  [workspace.openQuicklyWindowController showForWindow:self.window url:workspace.workingDirectory];
+  NSString *currentFileName = self.vimController.currentTab.buffer.fileName;
+  if (!currentFileName) {
+    currentFileName = self.workspace.workingDirectory.path;
+  }
+  [workspace.openQuicklyWindowController showForWindow:self.window url:
+      [NSURL fileURLWithPath:currentFileName]
+  ];
   [workspace.fileItemManager setTargetUrl:workspace.workingDirectory];
 }
 
