@@ -18,7 +18,7 @@
 #import <text/ranker.h>
 
 
-int qOpenQuicklyWindowWidth = 200;
+int qOpenQuicklyWindowWidth = 400;
 static const int qMaximumNumberOfFilterResult = 50;
 
 static inline double rank_string(NSString *string, NSString *target,
