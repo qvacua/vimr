@@ -27,6 +27,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @interface VROpenQuicklyWindowController ()
 
 @property (weak) NSWindow *targetWindow;
+@property (weak) NSSearchField *searchField;
+@property (weak) NSTableView *fileItemTableView;
 
 @end
 
@@ -34,6 +36,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @implementation VROpenQuicklyWindowController
 
 TB_AUTOWIRE(fileItemManager)
+
 TB_AUTOWIRE(notificationCenter)
 
 #pragma mark Public
@@ -52,25 +55,42 @@ TB_AUTOWIRE(notificationCenter)
 #pragma mark NSObject
 - (id)init {
   VROpenQuicklyWindow *win = [[VROpenQuicklyWindow alloc] initWithContentRect:
-      CGRectMake(100, 100, qOpenQuicklyWindowWidth, 250)     windowController:self];
+      CGRectMake(100, 100, qOpenQuicklyWindowWidth, 250)];
 
   self = [super initWithWindow:win];
   RETURN_NIL_WHEN_NOT_SELF
 
+  _searchField = win.searchField;
+  _searchField.delegate = self;
+
+  _fileItemTableView = win.fileItemTableView;
+  _fileItemTableView.dataSource = self;
+  _fileItemTableView.delegate = self;
+
   win.delegate = self;
-  win.searchField.delegate = self;
 
   return self;
 }
 
 #pragma mark NSTableViewDataSource
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-  NSUInteger count = self.fileItemManager.fileItemsOfTargetUrl.count;
-  return count;
+  if (!self.window.isVisible) {
+    return 0;
+  }
+
+  if (self.searchField.stringValue.length == 0) {
+    return self.fileItemManager.fileItemsOfTargetUrl.count;
+  }
+
+  return 0;
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-  return self.fileItemManager.fileItemsOfTargetUrl[(NSUInteger) row];
+  if (self.searchField.stringValue.length == 0) {
+    return self.fileItemManager.fileItemsOfTargetUrl[(NSUInteger) row];
+  }
+
+  return @"test";
 }
 
 #pragma mark NSTextFieldDelegate
@@ -106,7 +126,9 @@ TB_AUTOWIRE(notificationCenter)
 
 #pragma mark Private
 - (void)chunkOfFileItemsAdded:(id)obj {
-  [[(VROpenQuicklyWindow *) self.window fileItemTableView] reloadData];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [[(VROpenQuicklyWindow *) self.window fileItemTableView] reloadData];
+  });
 }
 
 - (void)reset {

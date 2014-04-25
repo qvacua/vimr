@@ -369,12 +369,17 @@ TB_AUTOWIRE(notificationCenter);
   return nil;
 }
 
+// TODO: extract this in an util class and test it!
 - (NSArray *)parentUrlsForUrl:(NSURL *)url {
   NSString *childPath = url.path;
 
   NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:5];
   for (NSURL *possibleParent in self.registeredUrls) {
     NSString *parentPath = possibleParent.path;
+    if (parentPath.length >= childPath.length) {
+      continue;
+    }
+
     if ([[childPath substringToIndex:parentPath.length] isEqualToString:parentPath]) {
       [result addObject:possibleParent];
     }

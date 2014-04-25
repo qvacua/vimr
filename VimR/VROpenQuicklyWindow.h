@@ -22,8 +22,7 @@ extern int qOpenQuicklySearchFieldMinWidth;
 @property NSTableView *fileItemTableView;
 
 #pragma mark Public
-- (instancetype)initWithContentRect:(CGRect)contentRect
-                   windowController:(VROpenQuicklyWindowController *)windowController;
+- (instancetype)initWithContentRect:(CGRect)contentRect;
 - (void)reset;
 
 #pragma mark NSWindow

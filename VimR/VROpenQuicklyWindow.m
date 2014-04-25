@@ -9,7 +9,6 @@
 
 #import "VROpenQuicklyWindow.h"
 #import "VRUtils.h"
-#import "VROpenQuicklyWindowController.h"
 
 
 int qOpenQuicklyWindowPadding = 4;
@@ -23,9 +22,7 @@ int qOpenQuicklySearchFieldMinWidth = 100;
 }
 
 #pragma mark Public
-- (instancetype)initWithContentRect:(CGRect)contentRect
-                   windowController:(VROpenQuicklyWindowController *)windowController {
-
+- (instancetype)initWithContentRect:(CGRect)contentRect {
   self = [super initWithContentRect:contentRect styleMask:NSBorderlessWindowMask | NSTexturedBackgroundWindowMask
                             backing:NSBackingStoreBuffered defer:YES];
   RETURN_NIL_WHEN_NOT_SELF
@@ -35,7 +32,7 @@ int qOpenQuicklySearchFieldMinWidth = 100;
   self.movableByWindowBackground = NO;
   self.excludedFromWindowsMenu = YES;
 
-  [self addViewsWithWindowController:windowController];
+  [self addViews];
 
   return self;
 }
@@ -51,7 +48,7 @@ int qOpenQuicklySearchFieldMinWidth = 100;
 }
 
 #pragma mark Private
-- (void)addViewsWithWindowController:(VROpenQuicklyWindowController *)windowController {
+- (void)addViews {
   NSTextField *label = [[NSTextField alloc] initWithFrame:CGRectZero];
   label.translatesAutoresizingMaskIntoConstraints = NO;
   label.backgroundColor = [NSColor clearColor];
@@ -76,8 +73,6 @@ int qOpenQuicklySearchFieldMinWidth = 100;
 
   _fileItemTableView = [[NSTableView alloc] initWithFrame:CGRectZero];
   [_fileItemTableView addTableColumn:tableColumn];
-  _fileItemTableView.delegate = windowController;
-  _fileItemTableView.dataSource = windowController;
   _fileItemTableView.usesAlternatingRowBackgroundColors = YES;
   _fileItemTableView.headerView = nil;
   _fileItemTableView.focusRingType = NSFocusRingTypeNone;
@@ -102,7 +97,7 @@ int qOpenQuicklySearchFieldMinWidth = 100;
   constraint_layout(views, @"H:|-(%d)-[searchField(>=100)]-(%d)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
   constraint_layout(views, @"H:|[table(>=100)]|");
   constraint_layout(views, @"V:|-(%d)-[label(17)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]-(%d)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
-  constraint_layout(views, @"V:|-(%d)-[progress(16)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]-(%d)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding+1, qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
+  constraint_layout(views, @"V:|-(%d)-[progress(16)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]-(%d)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding + 1, qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
 }
 
 @end
