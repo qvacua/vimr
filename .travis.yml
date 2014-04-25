@@ -9,6 +9,5 @@ before_script:
     - make
     - cd ../..
 script:
-    - xcodebuild -workspace VimR.xcworkspace -scheme VimR -configuration Release -derivedDataPath ./build build
-    - xcodebuild -workspace VimR.xcworkspace -scheme VimR -derivedDataPath build/VimR -configuration Debug build test
+    - xcodebuild -workspace VimR.xcworkspace -scheme VimR -configuration Debug build test
 
