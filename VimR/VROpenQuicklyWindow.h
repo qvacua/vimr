@@ -14,7 +14,6 @@
 
 
 extern int qOpenQuicklyWindowPadding;
-extern int qOpenQuicklySearchFieldMinWidth;
 
 @interface VROpenQuicklyWindow : NSWindow
 

@@ -14,8 +14,16 @@
 #import "VRUtils.h"
 #import "VRFileItemManager.h"
 
+#import <cf/cf.h>
+#import <text/ranker.h>
+
 
 int qOpenQuicklyWindowWidth = 200;
+
+static inline double rank_string(NSString *string, NSString *target) {
+  return oak::rank(cf::to_s((__bridge CFStringRef) string), cf::to_s((__bridge CFStringRef) target));
+}
+
 
 #ifdef DEBUG
 static const int ddLogLevel = LOG_LEVEL_DEBUG;
@@ -24,11 +32,41 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #endif
 
 
+@interface VRScoredItem : NSObject
+
+@property double score;
+@property id item;
+
+- (instancetype)initWithItem:(id)item score:(double)score;
+
+@end
+
+static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult(VRScoredItem *url1, VRScoredItem *url2) {
+  return (NSComparisonResult) (url1.score <= url2.score);
+};
+
+@implementation VRScoredItem
+
+- (instancetype)initWithItem:(id)item score:(double)score {
+  self = [super init];
+  RETURN_NIL_WHEN_NOT_SELF
+
+  _score = score;
+  _item = item;
+
+  return self;
+}
+
+@end
+
+
 @interface VROpenQuicklyWindowController ()
 
 @property (weak) NSWindow *targetWindow;
 @property (weak) NSSearchField *searchField;
 @property (weak) NSTableView *fileItemTableView;
+
+@property (readonly) NSMutableArray *filteredFileItems;
 
 @end
 
@@ -69,6 +107,8 @@ TB_AUTOWIRE(notificationCenter)
 
   win.delegate = self;
 
+  _filteredFileItems = [[NSMutableArray alloc] initWithCapacity:50];
+
   return self;
 }
 
@@ -82,7 +122,7 @@ TB_AUTOWIRE(notificationCenter)
     return self.fileItemManager.fileItemsOfTargetUrl.count;
   }
 
-  return 0;
+  return self.filteredFileItems.count;
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
@@ -90,11 +130,25 @@ TB_AUTOWIRE(notificationCenter)
     return self.fileItemManager.fileItemsOfTargetUrl[(NSUInteger) row];
   }
 
-  return @"test";
+  return [self.filteredFileItems[(NSUInteger) row] item];
 }
 
 #pragma mark NSTextFieldDelegate
 - (void)controlTextDidChange:(NSNotification *)obj {
+  NSString *searchStr = self.searchField.stringValue;
+  if (searchStr.length == 0) {
+    return;
+  }
+
+  [self.filteredFileItems removeAllObjects];
+
+  for (NSString *path in self.fileItemManager.fileItemsOfTargetUrl) {
+    VRScoredItem *item = [[VRScoredItem alloc] initWithItem:path score:rank_string(searchStr, path.lastPathComponent)];
+    [self.filteredFileItems addObject:item];
+  }
+
+  [self.filteredFileItems sortUsingComparator:qScoredItemComparator];
+  [self.fileItemTableView reloadData];
 }
 
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)selector {

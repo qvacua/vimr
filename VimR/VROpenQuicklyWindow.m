@@ -11,8 +11,7 @@
 #import "VRUtils.h"
 
 
-int qOpenQuicklyWindowPadding = 4;
-int qOpenQuicklySearchFieldMinWidth = 100;
+int qOpenQuicklyWindowPadding = 8;
 
 #define constraint_layout(vs, fmt, ...) [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views: vs]];
 
@@ -69,11 +68,12 @@ int qOpenQuicklySearchFieldMinWidth = 100;
 
   NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:@"name"];
   tableColumn.dataCell = [[NSTextFieldCell alloc] initTextCell:@""];
-  [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingMiddle];
+  [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingHead];
 
   _fileItemTableView = [[NSTableView alloc] initWithFrame:CGRectZero];
   [_fileItemTableView addTableColumn:tableColumn];
   _fileItemTableView.usesAlternatingRowBackgroundColors = YES;
+  _fileItemTableView.allowsMultipleSelection = NO;
   _fileItemTableView.headerView = nil;
   _fileItemTableView.focusRingType = NSFocusRingTypeNone;
 
@@ -96,8 +96,8 @@ int qOpenQuicklySearchFieldMinWidth = 100;
   constraint_layout(views, @"H:[progress(16)]-(%d)-|", qOpenQuicklyWindowPadding);
   constraint_layout(views, @"H:|-(%d)-[searchField(>=100)]-(%d)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
   constraint_layout(views, @"H:|[table(>=100)]|");
-  constraint_layout(views, @"V:|-(%d)-[label(17)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]-(%d)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
-  constraint_layout(views, @"V:|-(%d)-[progress(16)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]-(%d)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding + 1, qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
+  constraint_layout(views, @"V:|-(%d)-[label(17)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
+  constraint_layout(views, @"V:|-(%d)-[progress(16)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding + 1, qOpenQuicklyWindowPadding);
 }
 
 @end

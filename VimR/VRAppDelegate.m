@@ -59,6 +59,12 @@ TB_MANUALWIRE(fileItemManager)
   [self.workspace openURL:[[NSURL alloc] initWithString:qVimRHelpUrl]];
 }
 
+- (IBAction)thirdDebugAction:(id)sender {
+  [self application:self.application openFiles:@[
+      [NSURL fileURLWithPath:@"/Users/hat/Projects/vimr/Podfile"]
+  ]];
+}
+
 #pragma mark NSObject
 - (id)init {
   self = [super init];

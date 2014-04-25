@@ -94,10 +94,6 @@
   log4Debug(@"all tabs: %@", [self.vimController tabs]);
 }
 
-- (IBAction)thirdDebugAction:(id)sender {
-  log4Debug(@"current tab: %@", [self.vimController currentTab]);
-}
-
 #pragma mark NSWindowController
 - (void)dealloc {
   log4Mark;
