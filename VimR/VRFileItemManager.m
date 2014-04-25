@@ -16,6 +16,11 @@
 #import "NSURL+VR.h"
 
 
+#ifdef DEBUG
+//#define LOG_CACHING
+#endif
+
+
 static NSString *const qParentFileItemToCacheKey = @"parent-file-item-to-cache-key";
 static NSString *const qRootUrlKey = @"root-url-key";
 static NSString *const qThreadName = @"com.qvacua.VimR.VRFileItemManager";
@@ -151,7 +156,9 @@ TB_AUTOWIRE(fileManager)
 #pragma mark Private
 - (void)traverseFileItemChildHierarchyForRequest:(VRFileItem *)parent forRootUrl:(NSURL *)rootUrl {
   if (parent.isCachingChildren) {
+#ifdef LOG_CACHING
     log4Debug(@"File item %@ is currently being cached, noop.", parent.url);
+#endif
     return;
   }
 
@@ -171,12 +178,16 @@ TB_AUTOWIRE(fileManager)
 //  log4Debug(@"Children of %@ already cached, traversing or adding.", parent.url);
   for (VRFileItem *child in parent.children) {
     if ([self shouldCancelForRootUrl:rootUrl]) {
-//      log4Debug(@"Cancelling the traversing or adding as requested at %@", child.url);
+#ifdef LOG_CACHING
+      log4Debug(@"Cancelling the traversing or adding as requested at %@", child.url);
+#endif
       return;
     }
 
     if (child.dir) {
-//      log4Debug(@"Traversing children of %@", child.url);
+#ifdef LOG_CACHING
+      log4Debug(@"Traversing children of %@", child.url);
+#endif
       [self traverseFileItemChildHierarchyForRequest:child forRootUrl:rootUrl];
     } else {
       [self addToFileItemsForTargetUrl:child];
@@ -201,11 +212,15 @@ TB_AUTOWIRE(fileManager)
     NSURL *rootUrl = dict[qRootUrlKey];
 
     if ([self shouldCancelForRootUrl:rootUrl]) {
-//      log4Debug(@"Cancelling the scanning as requested at %@", parent.url);
+#ifdef LOG_CACHING
+      log4Debug(@"Cancelling the scanning as requested at %@", parent.url);
+#endif
       return;
     }
 
-//    log4Debug(@"Building children for %@", parent.url);
+#ifdef LOG_CACHING
+    log4Debug(@"Building children for %@", parent.url);
+#endif
 
     parent.isCachingChildren = YES;
 
@@ -227,7 +242,9 @@ TB_AUTOWIRE(fileManager)
 
     for (VRFileItem *child in childrenOfParent) {
       if ([self shouldCancelForRootUrl:rootUrl]) {
-//        log4Debug(@"Cancelling the scanning as requested at %@", child.url);
+#ifdef LOG_CACHING
+        log4Debug(@"Cancelling the scanning as requested at %@", child.url);
+#endif
         return;
       }
 
@@ -279,14 +296,18 @@ TB_AUTOWIRE(fileManager)
 
     VRFileItem *matchingItem = [self traverseFileItem:parentItem usingBlock:^(VRFileItem *item, BOOL *stop) {
       if ([item.url isEqualTo:url]) {
+#ifdef LOG_CACHING
         log4Debug(@"Invalidating cache for %@ of the parent %@", item, parentUrl);
+#endif
         item.shouldCacheChildren = YES;
         *stop = YES;
       }
     }];
 
     if (!matchingItem) {
+#ifdef LOG_CACHING
       log4Debug(@"%@ in %@ not yet cached, noop", url, parentUrl);
+#endif
     }
   }
 }
