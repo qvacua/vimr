@@ -5,7 +5,7 @@ before_install:
     - gem install ocunit2junit
 before_script:
     - cd macvim/src
-    - ./configure
+    - ./configure --with-features=huge --enable-rubyinterp --enable-pythoninterp --enable-perlinterp --enable-cscope
     - make
     - cd ../..
 script:
