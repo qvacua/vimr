@@ -16,6 +16,7 @@
 
 
 static const int qSearchFieldHeight = 22;
+
 int qOpenQuicklyWindowWidth = 200;
 
 @interface VROpenQuicklyWindowController ()
@@ -28,6 +29,7 @@ int qOpenQuicklyWindowWidth = 200;
 @implementation VROpenQuicklyWindowController
 
 TB_AUTOWIRE(fileItemManager)
+TB_AUTOWIRE(notificationCenter)
 
 #pragma mark Public
 - (void)showForWindow:(NSWindow *)targetWindow url:(NSURL *)targetUrl {
@@ -36,7 +38,7 @@ TB_AUTOWIRE(fileItemManager)
   CGRect contentRect = [targetWindow contentRectForFrameRect:targetWindow.frame];
   CGFloat xPos = NSMinX(contentRect) + NSWidth(contentRect) / 2 - qOpenQuicklyWindowWidth / 2
       - 2 * qOpenQuicklyWindowPadding;
-  CGFloat yPos = NSMaxY(contentRect) - qSearchFieldHeight - 2 * qOpenQuicklyWindowPadding;
+  CGFloat yPos = NSMaxY(contentRect) - NSHeight(self.window.frame);
 
   self.window.frameOrigin = CGPointMake(xPos, yPos);
   [self.window makeKeyAndOrderFront:self];
@@ -53,10 +55,17 @@ TB_AUTOWIRE(fileItemManager)
   win.delegate = self;
   win.searchField.delegate = self;
 
+  [self.notificationCenter addObserver:self selector:@selector(chunkOfFileItemsAdded:)
+                                  name:qChunkOfNewFileItemsAddedEvent object:nil];
+
   return self;
 }
 
 #pragma mark NSTextFieldDelegate
+- (void)controlTextDidChange:(NSNotification *)obj {
+
+}
+
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)selector {
   if (selector == @selector(cancelOperation:)) {
     log4Debug(@"Open quickly cancelled");
@@ -86,6 +95,10 @@ TB_AUTOWIRE(fileItemManager)
 }
 
 #pragma mark Private
+- (void)chunkOfFileItemsAdded:(id)obj {
+  // yet noop
+}
+
 - (void)reset {
   [self.fileItemManager resetTargetUrl];
 

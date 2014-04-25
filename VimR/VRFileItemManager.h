@@ -11,12 +11,16 @@
 #import <TBCacao/TBCacao.h>
 
 
+extern NSString *const qChunkOfNewFileItemsAddedEvent;
+
+
 @class VRFileItem;
 
 
 @interface VRFileItemManager : NSObject <TBBean>
 
 @property (weak) NSFileManager *fileManager;
+@property (weak) NSNotificationCenter *notificationCenter;
 @property (readonly) NSArray *registeredUrls;
 @property (readonly) NSArray *fileItemsOfTargetUrl;
 @property (readonly) NSSet *currentlyTraversedUrls;

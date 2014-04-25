@@ -20,6 +20,7 @@ static NSString *const qParentFileItemToCacheKey = @"parent-file-item-to-cache-k
 static NSString *const qRootUrlKey = @"root-url-key";
 static NSString *const qThreadName = @"com.qvacua.VimR.VRFileItemManager";
 
+NSString *const qChunkOfNewFileItemsAddedEvent = @"chunk-of-new-file-items-added-event";
 
 #define LOG_FLAG_CACHING (1 << 5)
 #define DDLogCaching(frmt, ...) ASYNC_LOG_OBJC_MAYBE(ddLogLevel, LOG_FLAG_CACHING,  0, frmt, ##__VA_ARGS__)
@@ -65,6 +66,7 @@ void streamCallback(
 }
 
 TB_AUTOWIRE(fileManager)
+TB_AUTOWIRE(notificationCenter);
 
 #pragma mark Properties
 - (NSArray *)fileItemsOfTargetUrl {
@@ -98,14 +100,14 @@ TB_AUTOWIRE(fileManager)
       return;
     }
 
-    // NOTE: We may optimize (or not) the caching behavior here: When the URL A to register is a subdir of an already
-    // registered URL B, we build the hierarchy up to the requested URL A. However, then, we would have to scan children
-    // up to A, which could be costly to do it sync; async building complicates things too much. For time being, we
-    // ignore B and use a separate file item hierarchy for B.
-    // If we should do that, we would have only one parent when invalidating the cache. For now, we could have multiple
-    // parent URLs and therefore file items for one URL reported by FSEventStream.
+        // NOTE: We may optimize (or not) the caching behavior here: When the URL A to register is a subdir of an already
+        // registered URL B, we build the hierarchy up to the requested URL A. However, then, we would have to scan children
+        // up to A, which could be costly to do it sync; async building complicates things too much. For time being, we
+        // ignore B and use a separate file item hierarchy for B.
+        // If we should do that, we would have only one parent when invalidating the cache. For now, we could have multiple
+        // parent URLs and therefore file items for one URL reported by FSEventStream.
 
-    DDLogDebug(@"Registering %@ for caching and monitoring", url);
+        DDLogDebug(@"Registering %@ for caching and monitoring", url);
     _url2CachedFileItem[url] = [[VRFileItem alloc] initWithUrl:url isDir:YES];
 
     [self stop];
@@ -205,6 +207,7 @@ TB_AUTOWIRE(fileManager)
   NSURL *parentUrl = parent.url;
   [self.mutableCurrentlyTraversedUrls addObject:parentUrl];
 
+  NSMutableArray *fileItemsToAdd = [[NSMutableArray alloc] initWithCapacity:parent.children.count];
   for (VRFileItem *child in parent.children) {
     if ([self shouldCancelForRootUrl:rootUrl]) {
       DDLogCaching(@"Cancelling the traversing as requested at %@", child.url);
@@ -217,15 +220,12 @@ TB_AUTOWIRE(fileManager)
       DDLogCaching(@"Traversing children of %@", child.url);
       [self traverseFileItemChildHierarchyForRequest:child forRootUrl:rootUrl];
     } else {
-      [self addToFileItemsForTargetUrl:child];
+      [fileItemsToAdd addObject:child];
     }
   }
+  [self addAllToFileItemsForTargetUrl:fileItemsToAdd];
 
   [self.mutableCurrentlyTraversedUrls removeObject:parentUrl];
-}
-
-- (void)addToFileItemsForTargetUrl:(VRFileItem *)item {
-  [self.mutableFileItemsForTargetUrl addObject:item.url.path];
 }
 
 - (BOOL)shouldCancelForRootUrl:(NSURL *)rootUrl {
@@ -289,9 +289,13 @@ TB_AUTOWIRE(fileManager)
 - (void)addAllToFileItemsForTargetUrl:(NSArray *)items {
   for (VRFileItem *child in items) {
     if (!child.dir) {
-      [self addToFileItemsForTargetUrl:child];
+      [self.mutableFileItemsForTargetUrl addObject:child.url.path];
     }
   }
+
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self.notificationCenter postNotificationName:qChunkOfNewFileItemsAddedEvent object:self];
+  });
 }
 
 /**
