@@ -83,21 +83,14 @@
   if (!currentFileName) {
     currentFileName = self.workspace.workingDirectory.path;
   }
+  [workspace.fileItemManager setTargetUrl:workspace.workingDirectory];
   [workspace.openQuicklyWindowController showForWindow:self.window url:
       [NSURL fileURLWithPath:currentFileName]
   ];
-  [workspace.fileItemManager setTargetUrl:workspace.workingDirectory];
 }
 
 #pragma mark Debug
 - (IBAction)firstDebugAction:(id)sender {
-  VRFileItemManager *fileItemManager = [[TBContext sharedContext] beanWithClass:[VRFileItemManager class]];
-  log4Debug(@"currently caching urls: %@", fileItemManager.currentlyCachingUrls);
-  log4Debug(@"currently traversed urls: %@\ncount: %lu", fileItemManager.currentlyTraversedUrls, fileItemManager.currentlyTraversedUrls.count);
-}
-
-- (IBAction)secondDebugAction:(id)sender {
-  log4Debug(@"all tabs: %@", [self.vimController tabs]);
 }
 
 #pragma mark NSWindowController

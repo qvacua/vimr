@@ -23,8 +23,6 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 @property (weak) NSNotificationCenter *notificationCenter;
 @property (readonly) NSArray *registeredUrls;
 @property (readonly) NSArray *fileItemsOfTargetUrl;
-@property (readonly) NSSet *currentlyTraversedUrls;
-@property (readonly) NSSet *currentlyCachingUrls;
 
 #pragma mark Public
 - (void)registerUrl:(NSURL *)url;
@@ -32,6 +30,8 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 - (BOOL)setTargetUrl:(NSURL *)url;
 - (void)unregisterUrl:(NSURL *)url;
 - (void)cleanUp;
+- (void)pause;
+- (void)resume;
 
 #pragma mark NSObject
 - (id)init;

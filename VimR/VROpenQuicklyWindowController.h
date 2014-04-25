@@ -27,8 +27,10 @@ extern int qOpenQuicklyWindowWidth;
 
 #pragma mark Public
 - (void)showForWindow:(NSWindow *)contentRect url:(NSURL *)targetUrl;
+- (void)cleanUp;
 
 #pragma mark NSObject
+- (IBAction)secondDebugAction:(id)sender;
 - (id)init;
 
 

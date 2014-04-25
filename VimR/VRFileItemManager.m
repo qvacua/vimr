@@ -14,21 +14,30 @@
 #import "NSArray+VR.h"
 #import "NSMutableArray+VR.h"
 #import "NSURL+VR.h"
+#import "VRFileItemOperation.h"
 
-
-static NSString *const qParentFileItemToCacheKey = @"parent-file-item-to-cache-key";
-static NSString *const qRootUrlKey = @"root-url-key";
-static NSString *const qThreadName = @"com.qvacua.VimR.VRFileItemManager";
-
-NSString *const qChunkOfNewFileItemsAddedEvent = @"chunk-of-new-file-items-added-event";
 
 #define LOG_FLAG_CACHING (1 << 5)
 #define DDLogCaching(frmt, ...) ASYNC_LOG_OBJC_MAYBE(ddLogLevel, LOG_FLAG_CACHING,  0, frmt, ##__VA_ARGS__)
-
 static const int ddLogLevel = LOG_LEVEL_DEBUG;
 //static const int ddLogLevel = LOG_LEVEL_DEBUG;// | LOG_FLAG_CACHING;
-
 static DDFileLogger *file_logger_for_cache;
+
+static void setup_file_logger() {
+  static dispatch_once_t once_token;
+
+  dispatch_once(&once_token, ^{
+    file_logger_for_cache = [[DDFileLogger alloc] init];
+    file_logger_for_cache.maximumFileSize = 20 * (1024 * 1024); // 20 MB
+    [DDLog addLogger:file_logger_for_cache withLogLevel:LOG_FLAG_CACHING];
+  });
+}
+
+
+static NSString *const qThreadName = @"com.qvacua.VimR.VRFileItemManager";
+
+
+NSString *const qChunkOfNewFileItemsAddedEvent = @"chunk-of-new-file-items-added-event";
 
 
 @interface VRFileItemManager ()
@@ -36,9 +45,7 @@ static DDFileLogger *file_logger_for_cache;
 @property (readonly) NSMutableDictionary *url2CachedFileItem;
 @property (readonly) NSMutableArray *mutableFileItemsForTargetUrl;
 @property (copy) NSURL *currentTargetUrl;
-
-@property (readonly) NSMutableSet *mutableCurrentlyCachingUrls;
-@property (readonly) NSMutableSet *mutableCurrentlyTraversedUrls;
+@property (readonly) NSOperationQueue *operationQueue;
 
 // Declared here to be used in the callback and not to make it public.
 - (void)invalidateCacheForPaths:(char **)eventPaths eventCount:(NSUInteger)eventCount;
@@ -75,14 +82,6 @@ TB_AUTOWIRE(notificationCenter);
 
 - (NSArray *)registeredUrls {
   return self.url2CachedFileItem.allKeys;
-}
-
-- (NSSet *)currentlyTraversedUrls {
-  return self.mutableCurrentlyTraversedUrls;
-}
-
-- (NSSet *)currentlyCachingUrls {
-  return self.mutableCurrentlyCachingUrls;
 }
 
 #pragma mark Public
@@ -127,6 +126,9 @@ TB_AUTOWIRE(notificationCenter);
 
 - (BOOL)setTargetUrl:(NSURL *)url {
   @synchronized (self) {
+    // Just to be safe...
+    [_operationQueue cancelAllOperations];
+
     _currentTargetUrl = url;
 
     VRFileItem *targetItem = _url2CachedFileItem[url];
@@ -138,9 +140,18 @@ TB_AUTOWIRE(notificationCenter);
     [_mutableFileItemsForTargetUrl removeAllObjects];
 
     // We don't add targetItem to mutableFileItemsForTargetUrl, since it is a dir.
-    dispatch(^{
-      [self traverseFileItemChildHierarchyForRequest:targetItem forRootUrl:url];
-    });
+    [self.operationQueue addOperation:
+        [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationCacheMode
+                                             dict:@{
+                                                 qFileItemOperationRootUrlKey : url,
+                                                 qFileItemOperationParentItemKey : targetItem,
+                                                 qFileItemOperationOperationQueueKey : _operationQueue,
+                                                 qFileItemOperationFileItemManagerKey : self,
+                                                 qFileItemOperationNotificationCenterKey : _notificationCenter,
+                                                 qFileItemOperationFileItemsKey : _mutableFileItemsForTargetUrl,
+                                                 qFileItemOperationFileManagerKey : _fileManager,
+                                             }]
+    ];
 
     return YES;
   }
@@ -149,11 +160,25 @@ TB_AUTOWIRE(notificationCenter);
 - (void)resetTargetUrl {
   @synchronized (self) {
     _currentTargetUrl = nil;
+    [_operationQueue cancelAllOperations];
   }
 }
 
 - (void)cleanUp {
+  [self.operationQueue cancelAllOperations];
   [self stop];
+}
+
+- (void)pause {
+  for (VRFileItemOperation *operation in self.operationQueue.operations) {
+    [operation pause];
+  }
+}
+
+- (void)resume {
+  for (VRFileItemOperation *operation in self.operationQueue.operations) {
+    [operation resume];
+  }
 }
 
 #pragma mark NSObject
@@ -167,137 +192,17 @@ TB_AUTOWIRE(notificationCenter);
   _mutableFileItemsForTargetUrl = [[NSMutableArray alloc] initWithCapacity:500];
   _currentTargetUrl = nil;
 
-  _mutableCurrentlyCachingUrls = [[NSMutableSet alloc] initWithCapacity:100];
-  _mutableCurrentlyTraversedUrls = [[NSMutableSet alloc] initWithCapacity:100];
+  _operationQueue = [[NSOperationQueue alloc] init];
+  _operationQueue.maxConcurrentOperationCount = 1;
 
 #ifdef DEBUG
-  static dispatch_once_t once_token;
-  dispatch_once(&once_token, ^{
-    file_logger_for_cache = [[DDFileLogger alloc] init];
-    file_logger_for_cache.maximumFileSize = 20 * (1024 * 1024); // 20 MB
-    [DDLog addLogger:file_logger_for_cache withLogLevel:LOG_FLAG_CACHING];
-  });
+  setup_file_logger();
 #endif
 
   return self;
 }
 
 #pragma mark Private
-- (void)traverseFileItemChildHierarchyForRequest:(VRFileItem *)parent forRootUrl:(NSURL *)rootUrl {
-  if (parent.isCachingChildren) {
-    DDLogCaching(@"File item %@ is currently being cached, noop.", parent.url);
-    return;
-  }
-
-  if (parent.shouldCacheChildren) {
-    // We remove all children when shouldCacheChildren is on, because we do not deep-scan in background, but only set
-    // shouldCacheChildren to YES, ie invalidate the cache.
-    [parent.children removeAllObjects];
-
-    [self performSelector:@selector(cacheAddToFileItemsForTargetUrl:) onThread:_thread withObject:@{
-        qParentFileItemToCacheKey : parent,
-        qRootUrlKey : rootUrl,
-    }       waitUntilDone:NO];
-
-    return;
-  }
-
-  DDLogCaching(@"Children of %@ already cached, traversing or adding.", parent.url);
-
-  NSURL *parentUrl = parent.url;
-  [self.mutableCurrentlyTraversedUrls addObject:parentUrl];
-
-  NSMutableArray *fileItemsToAdd = [[NSMutableArray alloc] initWithCapacity:parent.children.count];
-  for (VRFileItem *child in parent.children) {
-    if ([self shouldCancelForRootUrl:rootUrl]) {
-      DDLogCaching(@"Cancelling the traversing as requested at %@", child.url);
-      [self.mutableCurrentlyTraversedUrls removeObject:parentUrl];
-
-      return;
-    }
-
-    if (child.dir) {
-      DDLogCaching(@"Traversing children of %@", child.url);
-      [self traverseFileItemChildHierarchyForRequest:child forRootUrl:rootUrl];
-    } else {
-      [fileItemsToAdd addObject:child];
-    }
-  }
-  [self addAllToFileItemsForTargetUrl:fileItemsToAdd];
-
-  [self.mutableCurrentlyTraversedUrls removeObject:parentUrl];
-}
-
-- (BOOL)shouldCancelForRootUrl:(NSURL *)rootUrl {
-  return ![self.currentTargetUrl isEqualTo:rootUrl];
-}
-
-/**
-* performed on a separate thread
-*/
-- (void)cacheAddToFileItemsForTargetUrl:(NSDictionary *)dict {
-  @autoreleasepool {
-    VRFileItem *parent = dict[qParentFileItemToCacheKey];
-    NSURL *rootUrl = dict[qRootUrlKey];
-
-    if ([self shouldCancelForRootUrl:rootUrl]) {
-      DDLogCaching(@"Cancelling the scanning as requested at %@", parent.url);
-      return;
-    }
-
-    DDLogCaching(@"Building children for %@", parent.url);
-
-    NSURL *parentUrl = parent.url;
-    [self.mutableCurrentlyCachingUrls addObject:parentUrl];
-
-    parent.isCachingChildren = YES;
-
-    NSArray *childUrls = [self.fileManager contentsOfDirectoryAtURL:parentUrl
-                                         includingPropertiesForKeys:@[NSURLIsDirectoryKey]
-                                                            options:NSDirectoryEnumerationSkipsPackageDescendants
-                                                              error:NULL];
-
-    NSMutableArray *childrenOfParent = parent.children;
-
-    for (NSURL *childUrl in childUrls) {
-      [childrenOfParent addObject:[[VRFileItem alloc] initWithUrl:childUrl isDir:childUrl.isDirectory]];
-    }
-
-    parent.shouldCacheChildren = NO; // because shouldCacheChildren means, "should add direct descendants"
-    parent.isCachingChildren = NO; // direct descendants scanning is done
-
-    [self.mutableCurrentlyCachingUrls removeObject:parentUrl];
-
-    [self addAllToFileItemsForTargetUrl:childrenOfParent];
-
-    for (VRFileItem *child in childrenOfParent) {
-      if ([self shouldCancelForRootUrl:rootUrl]) {
-        DDLogCaching(@"Cancelling the scanning as requested at %@", child.url);
-        return;
-      }
-
-      if (child.dir) {
-        [self performSelector:@selector(cacheAddToFileItemsForTargetUrl:) onThread:_thread withObject:@{
-            qParentFileItemToCacheKey : child,
-            qRootUrlKey : rootUrl,
-        }       waitUntilDone:NO];
-      }
-    }
-  }
-}
-
-- (void)addAllToFileItemsForTargetUrl:(NSArray *)items {
-  for (VRFileItem *child in items) {
-    if (!child.dir) {
-      [self.mutableFileItemsForTargetUrl addObject:child.url.path];
-    }
-  }
-
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [self.notificationCenter postNotificationName:qChunkOfNewFileItemsAddedEvent object:self];
-  });
-}
-
 /**
 * Performed on a separate thread
 */
