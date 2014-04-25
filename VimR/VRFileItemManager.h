@@ -19,6 +19,8 @@
 @property (weak) NSFileManager *fileManager;
 @property (readonly) NSArray *registeredUrls;
 @property (readonly) NSArray *fileItemsOfTargetUrl;
+@property (readonly) NSSet *currentlyTraversedUrls;
+@property (readonly) NSSet *currentlyCachingUrls;
 
 #pragma mark Public
 - (void)registerUrl:(NSURL *)url;

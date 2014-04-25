@@ -7,8 +7,8 @@
  * See LICENSE
  */
 
+#import <CocoaLumberjack/DDFileLogger.h>
 #import "VRFileItemManager.h"
-#import "VRLog.h"
 #import "VRUtils.h"
 #import "VRFileItem.h"
 #import "NSArray+VR.h"
@@ -16,14 +16,18 @@
 #import "NSURL+VR.h"
 
 
-#ifdef DEBUG
-//#define LOG_CACHING
-#endif
-
-
 static NSString *const qParentFileItemToCacheKey = @"parent-file-item-to-cache-key";
 static NSString *const qRootUrlKey = @"root-url-key";
 static NSString *const qThreadName = @"com.qvacua.VimR.VRFileItemManager";
+
+
+#define LOG_FLAG_CACHING (1 << 5)
+#define DDLogCaching(frmt, ...) ASYNC_LOG_OBJC_MAYBE(ddLogLevel, LOG_FLAG_CACHING,  0, frmt, ##__VA_ARGS__)
+
+static const int ddLogLevel = LOG_LEVEL_DEBUG;
+//static const int ddLogLevel = LOG_LEVEL_DEBUG;// | LOG_FLAG_CACHING;
+
+static DDFileLogger *file_logger_for_cache;
 
 
 @interface VRFileItemManager ()
@@ -31,6 +35,9 @@ static NSString *const qThreadName = @"com.qvacua.VimR.VRFileItemManager";
 @property (readonly) NSMutableDictionary *url2CachedFileItem;
 @property (readonly) NSMutableArray *mutableFileItemsForTargetUrl;
 @property (copy) NSURL *currentTargetUrl;
+
+@property (readonly) NSMutableSet *mutableCurrentlyCachingUrls;
+@property (readonly) NSMutableSet *mutableCurrentlyTraversedUrls;
 
 // Declared here to be used in the callback and not to make it public.
 - (void)invalidateCacheForPaths:(char **)eventPaths eventCount:(NSUInteger)eventCount;
@@ -68,18 +75,26 @@ TB_AUTOWIRE(fileManager)
   return self.url2CachedFileItem.allKeys;
 }
 
+- (NSSet *)currentlyTraversedUrls {
+  return self.mutableCurrentlyTraversedUrls;
+}
+
+- (NSSet *)currentlyCachingUrls {
+  return self.mutableCurrentlyCachingUrls;
+}
+
 #pragma mark Public
 - (void)registerUrl:(NSURL *)url {
   // TODO: handle symlinks and aliases
 
   @synchronized (self) {
     if ([_url2CachedFileItem.allKeys containsObject:url]) {
-      log4Warn(@"%@ is already registered, noop", url);
+      DDLogWarn(@"%@ is already registered, noop", url);
       return;
     }
 
     if (!url.isDirectory) {
-      log4Warn(@"%@ is not a dir, noop", url);
+      DDLogWarn(@"%@ is not a dir, noop", url);
       return;
     }
 
@@ -90,7 +105,7 @@ TB_AUTOWIRE(fileManager)
     // If we should do that, we would have only one parent when invalidating the cache. For now, we could have multiple
     // parent URLs and therefore file items for one URL reported by FSEventStream.
 
-    log4Debug(@"Registering %@ for caching and monitoring", url);
+    DDLogDebug(@"Registering %@ for caching and monitoring", url);
     _url2CachedFileItem[url] = [[VRFileItem alloc] initWithUrl:url isDir:YES];
 
     [self stop];
@@ -100,7 +115,7 @@ TB_AUTOWIRE(fileManager)
 
 - (void)unregisterUrl:(NSURL *)url {
   @synchronized (self) {
-    log4Debug(@"Unregistering %@", url);
+    DDLogDebug(@"Unregistering %@", url);
     [_url2CachedFileItem removeObjectForKey:url];
 
     [self stop];
@@ -114,7 +129,7 @@ TB_AUTOWIRE(fileManager)
 
     VRFileItem *targetItem = _url2CachedFileItem[url];
     if (!targetItem) {
-      log4Warn(@"The URL %@ is not yet registered.", url);
+      DDLogWarn(@"The URL %@ is not yet registered.", url);
       return NO;
     }
 
@@ -150,15 +165,25 @@ TB_AUTOWIRE(fileManager)
   _mutableFileItemsForTargetUrl = [[NSMutableArray alloc] initWithCapacity:500];
   _currentTargetUrl = nil;
 
+  _mutableCurrentlyCachingUrls = [[NSMutableSet alloc] initWithCapacity:100];
+  _mutableCurrentlyTraversedUrls = [[NSMutableSet alloc] initWithCapacity:100];
+
+#ifdef DEBUG
+  static dispatch_once_t once_token;
+  dispatch_once(&once_token, ^{
+    file_logger_for_cache = [[DDFileLogger alloc] init];
+    file_logger_for_cache.maximumFileSize = 20 * (1024 * 1024); // 20 MB
+    [DDLog addLogger:file_logger_for_cache withLogLevel:LOG_FLAG_CACHING];
+  });
+#endif
+
   return self;
 }
 
 #pragma mark Private
 - (void)traverseFileItemChildHierarchyForRequest:(VRFileItem *)parent forRootUrl:(NSURL *)rootUrl {
   if (parent.isCachingChildren) {
-#ifdef LOG_CACHING
-    log4Debug(@"File item %@ is currently being cached, noop.", parent.url);
-#endif
+    DDLogCaching(@"File item %@ is currently being cached, noop.", parent.url);
     return;
   }
 
@@ -175,24 +200,28 @@ TB_AUTOWIRE(fileManager)
     return;
   }
 
-//  log4Debug(@"Children of %@ already cached, traversing or adding.", parent.url);
+  DDLogCaching(@"Children of %@ already cached, traversing or adding.", parent.url);
+
+  NSURL *parentUrl = parent.url;
+  [self.mutableCurrentlyTraversedUrls addObject:parentUrl];
+
   for (VRFileItem *child in parent.children) {
     if ([self shouldCancelForRootUrl:rootUrl]) {
-#ifdef LOG_CACHING
-      log4Debug(@"Cancelling the traversing or adding as requested at %@", child.url);
-#endif
+      DDLogCaching(@"Cancelling the traversing as requested at %@", child.url);
+      [self.mutableCurrentlyTraversedUrls removeObject:parentUrl];
+
       return;
     }
 
     if (child.dir) {
-#ifdef LOG_CACHING
-      log4Debug(@"Traversing children of %@", child.url);
-#endif
+      DDLogCaching(@"Traversing children of %@", child.url);
       [self traverseFileItemChildHierarchyForRequest:child forRootUrl:rootUrl];
     } else {
       [self addToFileItemsForTargetUrl:child];
     }
   }
+
+  [self.mutableCurrentlyTraversedUrls removeObject:parentUrl];
 }
 
 - (void)addToFileItemsForTargetUrl:(VRFileItem *)item {
@@ -212,19 +241,18 @@ TB_AUTOWIRE(fileManager)
     NSURL *rootUrl = dict[qRootUrlKey];
 
     if ([self shouldCancelForRootUrl:rootUrl]) {
-#ifdef LOG_CACHING
-      log4Debug(@"Cancelling the scanning as requested at %@", parent.url);
-#endif
+      DDLogCaching(@"Cancelling the scanning as requested at %@", parent.url);
       return;
     }
 
-#ifdef LOG_CACHING
-    log4Debug(@"Building children for %@", parent.url);
-#endif
+    DDLogCaching(@"Building children for %@", parent.url);
+
+    NSURL *parentUrl = parent.url;
+    [self.mutableCurrentlyCachingUrls addObject:parentUrl];
 
     parent.isCachingChildren = YES;
 
-    NSArray *childUrls = [self.fileManager contentsOfDirectoryAtURL:parent.url
+    NSArray *childUrls = [self.fileManager contentsOfDirectoryAtURL:parentUrl
                                          includingPropertiesForKeys:@[NSURLIsDirectoryKey]
                                                             options:NSDirectoryEnumerationSkipsPackageDescendants
                                                               error:NULL];
@@ -238,13 +266,13 @@ TB_AUTOWIRE(fileManager)
     parent.shouldCacheChildren = NO; // because shouldCacheChildren means, "should add direct descendants"
     parent.isCachingChildren = NO; // direct descendants scanning is done
 
+    [self.mutableCurrentlyCachingUrls removeObject:parentUrl];
+
     [self addAllToFileItemsForTargetUrl:childrenOfParent];
 
     for (VRFileItem *child in childrenOfParent) {
       if ([self shouldCancelForRootUrl:rootUrl]) {
-#ifdef LOG_CACHING
-        log4Debug(@"Cancelling the scanning as requested at %@", child.url);
-#endif
+        DDLogCaching(@"Cancelling the scanning as requested at %@", child.url);
         return;
       }
 
@@ -296,18 +324,14 @@ TB_AUTOWIRE(fileManager)
 
     VRFileItem *matchingItem = [self traverseFileItem:parentItem usingBlock:^(VRFileItem *item, BOOL *stop) {
       if ([item.url isEqualTo:url]) {
-#ifdef LOG_CACHING
-        log4Debug(@"Invalidating cache for %@ of the parent %@", item, parentUrl);
-#endif
+        DDLogCaching(@"Invalidating cache for %@ of the parent %@", item, parentUrl);
         item.shouldCacheChildren = YES;
         *stop = YES;
       }
     }];
 
     if (!matchingItem) {
-#ifdef LOG_CACHING
-      log4Debug(@"%@ in %@ not yet cached, noop", url, parentUrl);
-#endif
+      DDLogCaching(@"%@ in %@ not yet cached, noop", url, parentUrl);
     }
   }
 }
@@ -410,7 +434,7 @@ TB_AUTOWIRE(fileManager)
       return;
     }
 
-    log4Debug(@"Starting the thread %@", qThreadName);
+    DDLogDebug(@"Starting the thread %@", qThreadName);
     _thread = [[NSThread alloc] initWithTarget:self selector:@selector(scheduleStream:) object:self];
     _thread.name = qThreadName;
 
@@ -441,7 +465,7 @@ TB_AUTOWIRE(fileManager)
     FSEventStreamInvalidate(_stream);
     FSEventStreamRelease(_stream);
 
-    log4Debug(@"Stopping the thread %@", qThreadName);
+    DDLogDebug(@"Stopping the thread %@", qThreadName);
     [_thread cancel];
 
     _stream = NULL;

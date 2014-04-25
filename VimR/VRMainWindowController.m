@@ -85,36 +85,17 @@
 
 #pragma mark Debug
 - (IBAction)firstDebugAction:(id)sender {
-//    log4Debug(@"%@", [self.vimController currentTab]);
-
-  VRFileItemManager *monitor = [[TBContext sharedContext] beanWithClass:[VRFileItemManager class]];
-  debugUrl = [[NSURL alloc] initFileURLWithPath:@"/Users/hat/Projects/vimr" isDirectory:YES];
-  [monitor registerUrl:debugUrl];
+  VRFileItemManager *fileItemManager = [[TBContext sharedContext] beanWithClass:[VRFileItemManager class]];
+  log4Debug(@"currently caching urls: %@", fileItemManager.currentlyCachingUrls);
+  log4Debug(@"currently traversed urls: %@\ncount: %lu", fileItemManager.currentlyTraversedUrls, fileItemManager.currentlyTraversedUrls.count);
 }
 
 - (IBAction)secondDebugAction:(id)sender {
-//    log4Debug(@"tabs: %@", [self.vimController tabs]);
-
-  VRFileItemManager *monitor = [[TBContext sharedContext] beanWithClass:[VRFileItemManager class]];
-  [monitor setTargetUrl:debugUrl];
-  usleep(2000);
-
-  NSArray *fileItems = monitor.fileItemsOfTargetUrl;
-  log4Debug(@"count of file items: %lu", fileItems.count);
-  [monitor resetTargetUrl];
-  [fileItems writeToFile:@"/Users/hat/Downloads/file-items.plist" atomically:NO];
+  log4Debug(@"all tabs: %@", [self.vimController tabs]);
 }
 
 - (IBAction)thirdDebugAction:(id)sender {
-  VRFileItemManager *monitor = [[TBContext sharedContext] beanWithClass:[VRFileItemManager class]];
-  [monitor setTargetUrl:debugUrl];
-
-  sleep(1);
-  NSArray *fileItems = monitor.fileItemsOfTargetUrl;
-  log4Debug(@"count of file items: %lu", fileItems.count);
-  [fileItems writeToFile:@"/Users/hat/Downloads/file-items.plist" atomically:NO];
-
-//    [monitor unregisterUrl:debugUrl];
+  log4Debug(@"current tab: %@", [self.vimController currentTab]);
 }
 
 #pragma mark NSWindowController

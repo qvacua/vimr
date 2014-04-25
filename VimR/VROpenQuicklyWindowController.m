@@ -89,7 +89,7 @@ TB_AUTOWIRE(fileItemManager)
 - (void)reset {
   [self.fileItemManager resetTargetUrl];
 
-  [self.window orderBack:self];
+  [self.window close];
 
   [(VROpenQuicklyWindow *) self.window reset];
 
