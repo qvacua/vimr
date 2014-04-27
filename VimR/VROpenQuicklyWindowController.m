@@ -58,11 +58,14 @@ TB_AUTOWIRE(notificationCenter)
 }
 
 - (void)cleanUp {
+  @synchronized (self) {
+    DDLogDebug(@"Going to wait %lu filter operations to finish", _operationQueue.operationCount);
+    [_operationQueue waitUntilAllOperationsAreFinished];
+  }
 }
 
 - (IBAction)secondDebugAction:(id)sender {
-  DDLogDebug(@"pausing");
-  [_fileItemManager pause];
+  DDLogDebug(@"cound of cached file items: %lu", _fileItemManager.fileItemsOfTargetUrl.count);
 }
 
 #pragma mark NSObject

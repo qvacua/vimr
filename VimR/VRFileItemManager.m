@@ -141,7 +141,7 @@ TB_AUTOWIRE(notificationCenter);
 
     // We don't add targetItem to mutableFileItemsForTargetUrl, since it is a dir.
     [self.operationQueue addOperation:
-        [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationCacheMode
+        [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationTraverseMode
                                              dict:@{
                                                  qFileItemOperationRootUrlKey : url,
                                                  qFileItemOperationParentItemKey : targetItem,
@@ -170,7 +170,9 @@ TB_AUTOWIRE(notificationCenter);
 
 - (void)cleanUp {
   @synchronized (self) {
-    [self.operationQueue cancelAllOperations];
+    [_operationQueue cancelAllOperations];
+    [_operationQueue waitUntilAllOperationsAreFinished];
+
     [self stop];
   }
 }

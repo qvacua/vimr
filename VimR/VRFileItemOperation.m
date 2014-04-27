@@ -18,8 +18,8 @@
 
 #define LOG_FLAG_CACHING (1 << 5)
 #define DDLogCaching(frmt, ...) ASYNC_LOG_OBJC_MAYBE(ddLogLevel, LOG_FLAG_CACHING,  0, frmt, ##__VA_ARGS__)
-static const int ddLogLevel = LOG_LEVEL_DEBUG;
-//static const int ddLogLevel = LOG_LEVEL_DEBUG | LOG_FLAG_CACHING;
+//static const int ddLogLevel = LOG_LEVEL_DEBUG;
+static const int ddLogLevel = LOG_LEVEL_DEBUG | LOG_FLAG_CACHING;
 static DDFileLogger *file_logger_for_cache;
 
 static void setup_file_logger() {
@@ -199,6 +199,7 @@ NSString *const qFileItemOperationFileItemsKey = @"file-items-array";
     }
     [self wait];
 
+    DDLogCaching(@"### Adding (from traversing) children items of parent: %@", parentUrl);
     [self addAllToFileItemsForTargetUrl:fileItemsToAdd];
   }
 }
@@ -213,10 +214,9 @@ NSString *const qFileItemOperationFileItemsKey = @"file-items-array";
     }
     [self wait];
 
-    DDLogCaching(@"Building children for %@", parentUrl);
+    DDLogCaching(@"Caching children for %@", parentUrl);
 
     _parentItem.isCachingChildren = YES;
-    _parentItem.shouldCacheChildren = NO; // because shouldCacheChildren means, "should add direct descendants"
 
     NSArray *childUrls = [_fileManager contentsOfDirectoryAtURL:parentUrl
                                      includingPropertiesForKeys:@[NSURLIsDirectoryKey]
@@ -224,10 +224,14 @@ NSString *const qFileItemOperationFileItemsKey = @"file-items-array";
                                                           error:NULL];
 
     NSMutableArray *childrenOfParent = _parentItem.children;
+    [childrenOfParent removeAllObjects];
     for (NSURL *childUrl in childUrls) {
       [childrenOfParent addObject:[[VRFileItem alloc] initWithUrl:childUrl isDir:childUrl.isDirectory]];
     }
 
+    // When the monitoring thread invalidates cache of this item before this line, then we will have an outdated
+    // children, however, we don't really care...
+    _parentItem.shouldCacheChildren = NO; // because shouldCacheChildren means, "should add direct descendants"
     _parentItem.isCachingChildren = NO; // direct descendants scanning is done
 
     if (childrenOfParent.isEmpty) {
@@ -240,6 +244,7 @@ NSString *const qFileItemOperationFileItemsKey = @"file-items-array";
     }
     [self wait];
 
+    DDLogCaching(@"### Adding (from caching) children items of parent: %@", parentUrl);
     [self addAllToFileItemsForTargetUrl:childrenOfParent];
 
     for (VRFileItem *child in childrenOfParent) {
