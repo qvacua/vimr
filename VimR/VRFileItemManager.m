@@ -44,7 +44,6 @@ NSString *const qChunkOfNewFileItemsAddedEvent = @"chunk-of-new-file-items-added
 
 @property (readonly) NSMutableDictionary *url2CachedFileItem;
 @property (readonly) NSMutableArray *mutableFileItemsForTargetUrl;
-@property (copy) NSURL *currentTargetUrl;
 @property (readonly) NSOperationQueue *operationQueue;
 
 // Declared here to be used in the callback and not to make it public.
@@ -157,7 +156,6 @@ TB_AUTOWIRE(notificationCenter);
 
 - (void)resetTargetUrl {
   @synchronized (self) {
-    _currentTargetUrl = nil;
     [_operationQueue cancelAllOperations];
 
     [_mutableFileItemsForTargetUrl removeAllObjects];
@@ -201,7 +199,6 @@ TB_AUTOWIRE(notificationCenter);
 
   _url2CachedFileItem = [[NSMutableDictionary alloc] initWithCapacity:5];
   _mutableFileItemsForTargetUrl = [[NSMutableArray alloc] initWithCapacity:500];
-  _currentTargetUrl = nil;
 
   _operationQueue = [[NSOperationQueue alloc] init];
   _operationQueue.maxConcurrentOperationCount = 1;
