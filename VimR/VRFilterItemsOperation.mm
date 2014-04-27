@@ -50,7 +50,7 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
 
   _fileItemManager = dict[qFilterItemsOperationFileItemManagerKey];
   _filteredItems = dict[qFilterItemsOperationFilteredItemsKey];
-  _searchStr = dict[qFilterItemsOperationSearchStringKey];
+  _searchStr = [dict[qFilterItemsOperationSearchStringKey] copy];
   _fileItemTableView = dict[qFilterItemsOperationItemTableViewKey];
 
   return self;
@@ -64,7 +64,9 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
     }
 
     if (_searchStr.length == 0) {
-      [_filteredItems removeAllObjects];
+      @synchronized (_filteredItems) {
+        [_filteredItems removeAllObjects];
+      }
 
       dispatch_to_main_thread(^{
         [_fileItemTableView reloadData];
@@ -75,18 +77,22 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
 
     [_fileItemManager pause];
 
-    NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:1000];
     // We could shallow copy the file items array, since the _controller.fileItemManager.fileItemsOfTargetUrl can get
     // mutated, while we enumerate over it. Then, we have to update the filtered list, when a chunk of cached items are
     // updated. However, it's not necessary anymore, because we're pausing the file item manager...
-    for (NSString *path in _fileItemManager.fileItemsOfTargetUrl) {
-      if (self.isCancelled) {
-        [_fileItemManager resume];
-        return;
-      }
+    NSArray *filItemsOfTargetUrl = _fileItemManager.fileItemsOfTargetUrl;
 
-      VRScoredPath *item = [self scoredItemForSearchStr:_searchStr path:path];
-      [result addObject:item];
+    NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:1000];
+    @synchronized (filItemsOfTargetUrl) {
+      for (NSString *path in filItemsOfTargetUrl) {
+        if (self.isCancelled) {
+          [_fileItemManager resume];
+          return;
+        }
+
+        VRScoredPath *item = [self scoredItemForSearchStr:_searchStr path:path];
+        [result addObject:item];
+      }
     }
     [result sortUsingComparator:qScoredItemComparator];
 
@@ -95,8 +101,10 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
       return;
     }
 
-    [_filteredItems removeAllObjects];
-    [_filteredItems addObjectsFromArray:[result subarrayWithRange:[self rangeForFilteredItems:result]]];
+    @synchronized (_filteredItems) {
+      [_filteredItems removeAllObjects];
+      [_filteredItems addObjectsFromArray:[result subarrayWithRange:[self rangeForFilteredItems:result]]];
+    }
 
     if (self.isCancelled) {
       [_fileItemManager resume];

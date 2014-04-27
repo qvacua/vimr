@@ -216,18 +216,18 @@ NSString *const qFileItemOperationFileItemsKey = @"file-items-array";
     DDLogCaching(@"Building children for %@", parentUrl);
 
     _parentItem.isCachingChildren = YES;
+    _parentItem.shouldCacheChildren = NO; // because shouldCacheChildren means, "should add direct descendants"
 
     NSArray *childUrls = [_fileManager contentsOfDirectoryAtURL:parentUrl
                                      includingPropertiesForKeys:@[NSURLIsDirectoryKey]
                                                         options:NSDirectoryEnumerationSkipsPackageDescendants
                                                           error:NULL];
-    NSMutableArray *childrenOfParent = _parentItem.children;
 
+    NSMutableArray *childrenOfParent = _parentItem.children;
     for (NSURL *childUrl in childUrls) {
       [childrenOfParent addObject:[[VRFileItem alloc] initWithUrl:childUrl isDir:childUrl.isDirectory]];
     }
 
-    _parentItem.shouldCacheChildren = NO; // because shouldCacheChildren means, "should add direct descendants"
     _parentItem.isCachingChildren = NO; // direct descendants scanning is done
 
     if (childrenOfParent.isEmpty) {
@@ -269,10 +269,13 @@ NSString *const qFileItemOperationFileItemsKey = @"file-items-array";
 
 - (void)addAllToFileItemsForTargetUrl:(NSArray *)items {
   BOOL added = NO;
-  for (VRFileItem *child in items) {
-    if (!child.dir) {
-      [_fileItems addObject:child.url.path];
-      added = YES;
+
+  @synchronized (_fileItems) {
+    for (VRFileItem *child in items) {
+      if (!child.dir) {
+        [_fileItems addObject:child.url.path];
+        added = YES;
+      }
     }
   }
 

@@ -165,19 +165,25 @@ TB_AUTOWIRE(notificationCenter);
 }
 
 - (void)cleanUp {
-  [self.operationQueue cancelAllOperations];
-  [self stop];
+  @synchronized (self) {
+    [self.operationQueue cancelAllOperations];
+    [self stop];
+  }
 }
 
 - (void)pause {
-  for (VRFileItemOperation *operation in self.operationQueue.operations) {
-    [operation pause];
+  @synchronized (self) {
+    for (VRFileItemOperation *operation in self.operationQueue.operations) {
+      [operation pause];
+    }
   }
 }
 
 - (void)resume {
-  for (VRFileItemOperation *operation in self.operationQueue.operations) {
-    [operation resume];
+  @synchronized (self) {
+    for (VRFileItemOperation *operation in self.operationQueue.operations) {
+      [operation resume];
+    }
   }
 }
 
@@ -226,21 +232,25 @@ TB_AUTOWIRE(notificationCenter);
 * Performed on a separate thread, however, only called within an @autoreleasepool
 */
 - (void)invalidateCacheForUrl:(NSURL *)url {
-  NSArray *parentUrls = [self parentUrlsForUrl:url];
+  @synchronized (self) {
+    NSArray *parentUrls = [self parentUrlsForUrl:url];
 
-  for (NSURL *parentUrl in parentUrls) {
-    VRFileItem *parentItem = self.url2CachedFileItem[parentUrl];
+    for (NSURL *parentUrl in parentUrls) {
+      VRFileItem *parentItem = _url2CachedFileItem[parentUrl];
 
-    VRFileItem *matchingItem = [self traverseFileItem:parentItem usingBlock:^(VRFileItem *item, BOOL *stop) {
-      if ([item.url isEqualTo:url]) {
-        DDLogCaching(@"Invalidating cache for %@ of the parent %@", item, parentUrl);
-        item.shouldCacheChildren = YES;
-        *stop = YES;
+      VRFileItem *matchingItem = [self traverseFileItem:parentItem usingBlock:^(VRFileItem *item, BOOL *stop) {
+        if ([item.url isEqualTo:url]) {
+          DDLogCaching(@"Invalidating cache for %@ of the parent %@", item, parentUrl);
+
+          // TODO: sync on item?
+          item.shouldCacheChildren = YES;
+          *stop = YES;
+        }
+      }];
+
+      if (!matchingItem) {
+        DDLogCaching(@"%@ in %@ not yet cached, noop", url, parentUrl);
       }
-    }];
-
-    if (!matchingItem) {
-      DDLogCaching(@"%@ in %@ not yet cached, noop", url, parentUrl);
     }
   }
 }
