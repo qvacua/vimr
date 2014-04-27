@@ -127,9 +127,7 @@ TB_AUTOWIRE(notificationCenter);
 - (BOOL)setTargetUrl:(NSURL *)url {
   @synchronized (self) {
     // Just to be safe...
-    [_operationQueue cancelAllOperations];
-
-    _currentTargetUrl = url;
+    [self resetTargetUrl];
 
     VRFileItem *targetItem = _url2CachedFileItem[url];
     if (!targetItem) {

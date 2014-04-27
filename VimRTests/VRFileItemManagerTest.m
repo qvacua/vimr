@@ -54,6 +54,23 @@
   assertThat([NSSet setWithArray:resultItems], hasCountOf(11)); // we just check whether all items are unique...
 }
 
+- (void)testTwiceSetTargetUrl {
+  [fileItemManager registerUrl:level1];
+  [fileItemManager setTargetUrl:level1];
+
+  // we wait some time till the background thread has finished its job: 2s should be enough...
+  sleep(2);
+
+  [fileItemManager resetTargetUrl];
+  [fileItemManager setTargetUrl:level1];
+  // we wait some time till the background thread has finished its job: 2s should be enough...
+  sleep(2);
+
+  NSArray *resultItems = fileItemManager.fileItemsOfTargetUrl;
+  assertThat(resultItems, hasCountOf(11));
+  assertThat([NSSet setWithArray:resultItems], hasCountOf(11)); // we just check whether all items are unique...
+}
+
 - (void)testMultipleTargetUrls {
   NSURL *level2a = [level1 URLByAppendingPathComponent:@"level-2-a"];
   NSURL *level2b = [level1 URLByAppendingPathComponent:@"level-2-b"];
