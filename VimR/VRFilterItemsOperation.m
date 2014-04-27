@@ -14,10 +14,6 @@
 #import "VRScoredPath.h"
 #import "NSArray+VR.h"
 
-#import <cf/cf.h>
-#import <text/ranker.h>
-#import <__locale>
-
 
 NSString *const qFilterItemsOperationFileItemManagerKey = @"file-item-manager";
 NSString *const qFilterItemsOperationSearchStringKey = @"search-string";
@@ -26,15 +22,15 @@ NSString *const qFilterItemsOperationItemTableViewKey = @"file-item-table-view";
 const NSUInteger qMaximumNumberOfFilterResult = 50;
 
 
-static inline double rank_string(NSString *string, NSString *target,
-    std::vector< std::pair<size_t, size_t> > *out = NULL) {
-
-  return oak::rank(cf::to_s((__bridge CFStringRef) string), cf::to_s((__bridge CFStringRef) target), out);
-}
-
 static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult(VRScoredPath *p1, VRScoredPath *p2) {
   return (NSComparisonResult) (p1.score <= p2.score);
 };
+
+
+#define CANCEL_WHEN_REQUESTED  if (self.isCancelled) { \
+                                 [_fileItemManager resume]; \
+                                 return; \
+                               }
 
 
 @implementation VRFilterItemsOperation {
@@ -81,36 +77,35 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
     // We could shallow copy the file items array, since the _controller.fileItemManager.fileItemsOfTargetUrl can get
     // mutated, while we enumerate over it. Then, we have to update the filtered list, when a chunk of cached items are
     // updated. However, it's not necessary anymore, because we're pausing the file item manager...
-    NSArray *filItemsOfTargetUrl = _fileItemManager.fileItemsOfTargetUrl;
+    NSArray *fileItemsOfTargetUrl = _fileItemManager.fileItemsOfTargetUrl;
 
     NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:1000];
-    @synchronized (filItemsOfTargetUrl) {
-      for (NSString *path in filItemsOfTargetUrl) {
-        if (self.isCancelled) {
-          [_fileItemManager resume];
-          return;
-        }
+    @synchronized (fileItemsOfTargetUrl) {
+      for (NSString *path in fileItemsOfTargetUrl) {
+        CANCEL_WHEN_REQUESTED
 
-        VRScoredPath *item = [self scoredItemForSearchStr:_searchStr path:path];
-        [result addObject:item];
+        [result addObject:[[VRScoredPath alloc] initWithPath:path]];
       }
     }
+
+    CANCEL_WHEN_REQUESTED
+
+    dispatch_apply(result.count, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(size_t i) {
+      [result[i] computeScoreForCandidate:_searchStr];
+    });
+
+    CANCEL_WHEN_REQUESTED
+
     [result sortUsingComparator:qScoredItemComparator];
 
-    if (self.isCancelled) {
-      [_fileItemManager resume];
-      return;
-    }
+    CANCEL_WHEN_REQUESTED
 
     @synchronized (_filteredItems) {
       [_filteredItems removeAllObjects];
       [_filteredItems addObjectsFromArray:[result subarrayWithRange:[self rangeForFilteredItems:result]]];
     }
 
-    if (self.isCancelled) {
-      [_fileItemManager resume];
-      return;
-    }
+    CANCEL_WHEN_REQUESTED
 
     dispatch_to_main_thread(^{
       [_fileItemTableView reloadData];
@@ -133,12 +128,6 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
     range = NSMakeRange(0, result.count - 1);
   }
   return range;
-}
-
-- (VRScoredPath *)scoredItemForSearchStr:(NSString *)searchStr path:(NSString *)path {
-  double score = rank_string(searchStr, path.lastPathComponent);
-
-  return [[VRScoredPath alloc] initWithPath:path score:score];
 }
 
 @end

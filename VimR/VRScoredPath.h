@@ -16,7 +16,8 @@
 @property NSString *path;
 @property (readonly) NSString *displayName;
 
-- (instancetype)initWithPath:(NSString *)path score:(double)score;
+- (instancetype)initWithPath:(NSString *)path;
+- (void)computeScoreForCandidate:(NSString *)candidate;
 - (NSString *)description;
 
 @end

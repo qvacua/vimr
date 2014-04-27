@@ -17,7 +17,7 @@
 
 
 #define LOG_FLAG_CACHING (1 << 5)
-#define DDLogCaching(frmt, ...) ASYNC_LOG_OBJC_MAYBE(ddLogLevel, LOG_FLAG_CACHING,  0, frmt, ##__VA_ARGS__)
+#define DDLogCaching(fmt, ...) ASYNC_LOG_OBJC_MAYBE(ddLogLevel, LOG_FLAG_CACHING,  0, fmt, ##__VA_ARGS__)
 static const int ddLogLevel = LOG_LEVEL_DEBUG;
 //static const int ddLogLevel = LOG_LEVEL_DEBUG | LOG_FLAG_CACHING;
 static DDFileLogger *file_logger_for_cache;
@@ -40,6 +40,12 @@ NSString *const qFileItemOperationFileManagerKey = @"file-manager";
 NSString *const qFileItemOperationParentItemKey = @"parent-file-item";
 NSString *const qFileItemOperationRootUrlKey = @"root-url";
 NSString *const qFileItemOperationFileItemsKey = @"file-items-array";
+
+
+#define CANCEL_OR_WAIT if ([self isCancelled]) { \
+                         return; \
+                       } \
+                       [self wait];
 
 
 @implementation VRFileItemOperation {
@@ -127,19 +133,13 @@ NSString *const qFileItemOperationFileItemsKey = @"file-items-array";
 
 - (void)traverseFileItemChildHierarchy {
   @autoreleasepool {
-    NSURL *parentUrl = _parentItem.url;
-
     // Necessary?
     if (_parentItem.isCachingChildren) {
-      DDLogCaching(@"File item %@ is currently being cached, noop.", parentUrl);
+      DDLogCaching(@"File item %@ is currently being cached, noop.", _parentItem.url);
       return;
     }
 
-    if ([self isCancelled]) {
-      DDLogCaching(@"Cancelling the traversing as requested at %@", parentUrl);
-      return;
-    }
-    [self wait];
+    CANCEL_OR_WAIT
 
     if (_parentItem.shouldCacheChildren) {
       // We remove all children when shouldCacheChildren is on, because we do not deep-scan in background, but only set
@@ -162,20 +162,14 @@ NSString *const qFileItemOperationFileItemsKey = @"file-items-array";
       return;
     }
 
-    DDLogCaching(@"Children of %@ already cached, traversing or adding.", parentUrl);
+    DDLogCaching(@"Children of %@ already cached, traversing or adding.", _parentItem.url);
 
     NSMutableArray *fileItemsToAdd = [[NSMutableArray alloc] initWithCapacity:_parentItem.children.count];
     for (VRFileItem *child in _parentItem.children) {
-      NSURL *childUrl = child.url;
-
-      if ([self isCancelled]) {
-        DDLogCaching(@"Cancelling the traversing as requested at %@", childUrl);
-        return;
-      }
-      [self wait];
+      CANCEL_OR_WAIT
 
       if (child.dir) {
-        DDLogCaching(@"Traversing children of %@", childUrl);
+        DDLogCaching(@"Traversing children of %@", child.url);
         [_operationQueue addOperation:
             [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationTraverseMode
                                                  dict:@{
@@ -193,35 +187,27 @@ NSString *const qFileItemOperationFileItemsKey = @"file-items-array";
       }
     }
 
-    if ([self isCancelled]) {
-      DDLogCaching(@"Cancelling the traversing as requested at %@", parentUrl);
-      return;
-    }
-    [self wait];
+    CANCEL_OR_WAIT
 
-    DDLogCaching(@"### Adding (from traversing) children items of parent: %@", parentUrl);
+    DDLogCaching(@"### Adding (from traversing) children items of parent: %@", _parentItem.url);
     [self addAllToFileItemsForTargetUrl:fileItemsToAdd];
   }
 }
 
 - (void)cacheAddToFileItems {
   @autoreleasepool {
-    NSURL *parentUrl = _parentItem.url;
+    CANCEL_OR_WAIT
 
-    if ([self isCancelled]) {
-      DDLogCaching(@"Cancelling the scanning as requested at %@", parentUrl);
-      return;
-    }
-    [self wait];
-
-    DDLogCaching(@"Caching children for %@", parentUrl);
+    DDLogCaching(@"Caching children for %@", _parentItem.url);
 
     _parentItem.isCachingChildren = YES;
 
-    NSArray *childUrls = [_fileManager contentsOfDirectoryAtURL:parentUrl
+    NSArray *childUrls = [_fileManager contentsOfDirectoryAtURL:_parentItem.url
                                      includingPropertiesForKeys:@[NSURLIsDirectoryKey]
                                                         options:NSDirectoryEnumerationSkipsPackageDescendants
                                                           error:NULL];
+
+    [self wait];
 
     NSMutableArray *childrenOfParent = _parentItem.children;
     [childrenOfParent removeAllObjects];
@@ -238,21 +224,13 @@ NSString *const qFileItemOperationFileItemsKey = @"file-items-array";
       return;
     }
 
-    if ([self isCancelled]) {
-      DDLogCaching(@"Cancelling the scanning as requested at %@", parentUrl);
-      return;
-    }
-    [self wait];
+    CANCEL_OR_WAIT
 
-    DDLogCaching(@"### Adding (from caching) children items of parent: %@", parentUrl);
+    DDLogCaching(@"### Adding (from caching) children items of parent: %@", _parentItem.url);
     [self addAllToFileItemsForTargetUrl:childrenOfParent];
 
     for (VRFileItem *child in childrenOfParent) {
-      if ([self isCancelled]) {
-        DDLogCaching(@"Cancelling the scanning as requested at %@", child.url);
-        return;
-      }
-      [self wait];
+      CANCEL_OR_WAIT
 
       if (child.dir) {
         [_operationQueue addOperation:
