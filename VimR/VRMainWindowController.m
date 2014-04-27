@@ -53,6 +53,19 @@
 }
 
 - (void)openFileWithUrl:(NSURL *)url {
+  __block BOOL alreadyOpened = NO;
+  [_vimController.tabs enumerateObjectsUsingBlock:^(MMTabPage *tab, NSUInteger idx, BOOL *stop) {
+    if ([tab.buffer.fileName isEqualToString:url.path]) {
+      [self sendCommandToVim:SF(@":tabm %lu", idx)];
+      *stop = YES;
+      alreadyOpened = YES;
+    }
+  }];
+
+  if (alreadyOpened) {
+    return;
+  }
+
   [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsFromFileUrls:@[url]].dictionaryAsData];
 }
 
@@ -81,15 +94,8 @@
 }
 
 - (IBAction)openQuickly:(id)sender {
-  log4Debug(@"open quickly!!!");
-
-  VRWorkspace *workspace = self.workspace;
-  NSString *currentFileName = self.vimController.currentTab.buffer.fileName;
-  if (!currentFileName) {
-    currentFileName = self.workspace.workingDirectory.path;
-  }
-  [workspace.fileItemManager setTargetUrl:workspace.workingDirectory];
-  [workspace.openQuicklyWindowController showForWindowController:self];
+  [_workspace.fileItemManager setTargetUrl:_workspace.workingDirectory];
+  [_workspace.openQuicklyWindowController showForWindowController:self];
 }
 
 #pragma mark Debug
