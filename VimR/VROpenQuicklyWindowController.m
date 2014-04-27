@@ -46,8 +46,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @implementation VROpenQuicklyWindowController
 
-TB_AUTOWIRE(fileItemManager)
-TB_AUTOWIRE(notificationCenter)
+@autowire(fileItemManager)
+@autowire(notificationCenter)
 
 #pragma mark Public
 - (void)showForWindowController:(VRMainWindowController *)windowController {

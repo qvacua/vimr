@@ -29,8 +29,8 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 
 @implementation VRWorkspaceController
 
-TB_AUTOWIRE(fileItemManager)
-TB_AUTOWIRE(openQuicklyWindowController)
+@autowire(fileItemManager)
+@autowire(openQuicklyWindowController)
 
 #pragma mark Properties
 - (NSArray *)workspaces {

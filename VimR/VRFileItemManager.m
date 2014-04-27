@@ -71,8 +71,8 @@ void streamCallback(
   FSEventStreamEventId _lastEventId;
 }
 
-TB_AUTOWIRE(fileManager)
-TB_AUTOWIRE(notificationCenter);
+@autowire(fileManager)
+@autowire(notificationCenter);
 
 #pragma mark Properties
 - (NSArray *)fileItemsOfTargetUrl {

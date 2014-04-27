@@ -29,10 +29,10 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
 @implementation VRAppDelegate
 
-TB_MANUALWIRE(workspace)
-TB_MANUALWIRE(workspaceController)
-TB_MANUALWIRE(fileItemManager)
-TB_MANUALWIRE(openQuicklyWindowController)
+@manualwire(workspace)
+@manualwire(workspaceController)
+@manualwire(fileItemManager)
+@manualwire(openQuicklyWindowController)
 
 #pragma mark IBActions
 - (IBAction)newDocument:(id)sender {
