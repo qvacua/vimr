@@ -242,7 +242,7 @@ void streamCallback(
 
       VRFileItem *matchingItem = [self traverseFileItem:parentItem usingBlock:^(VRFileItem *item, BOOL *stop) {
         if ([item.url isEqualTo:url]) {
-          DDLogCaching(@"Invalidating cache for %@ of the parent %@", item, parentUrl);
+          DDLogDebug(@"Invalidating cache for %@ of the parent %@", item, parentUrl);
 
           // TODO: sync on item?
           item.shouldCacheChildren = YES;
@@ -251,7 +251,7 @@ void streamCallback(
       }];
 
       if (!matchingItem) {
-        DDLogCaching(@"%@ in %@ not yet cached, noop", url, parentUrl);
+        DDLogDebug(@"%@ in %@ not yet cached, noop", url, parentUrl);
       }
     }
   }
@@ -293,7 +293,7 @@ void streamCallback(
   NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:5];
   for (NSURL *possibleParent in self.registeredUrls) {
     NSString *parentPath = possibleParent.path;
-    if (parentPath.length >= childPath.length) {
+    if (parentPath.length > childPath.length) {
       continue;
     }
 
