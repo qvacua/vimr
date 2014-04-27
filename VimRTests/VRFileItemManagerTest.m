@@ -25,6 +25,7 @@
 
   fileItemManager = [[VRFileItemManager alloc] init];
   fileItemManager.fileManager = [NSFileManager defaultManager];
+  fileItemManager.notificationCenter = [NSNotificationCenter defaultCenter];
 
   NSURL *rsrcUrl = [[NSBundle bundleForClass:self.class] resourceURL];
   level1 = [rsrcUrl URLByAppendingPathComponent:@"level-1" isDirectory:YES];
