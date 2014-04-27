@@ -16,7 +16,7 @@
 		1929B22F52F120AB48CCEBE1 /* VRFileItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B29BF71B8286DBBD6E34 /* VRFileItem.m */; };
 		1929B2474A754C511FA7C4C9 /* VRWorkspace.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B4C315994876DB3F872A /* VRWorkspace.m */; };
 		1929B2EEFE49637BD0FD0855 /* VRInactiveTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9EA600D86AEAC3EBEEB /* VRInactiveTableView.m */; };
-		1929B3F63E1E808B31FF11A0 /* VRFilterItemsOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9B5817A70437785EDD7 /* VRFilterItemsOperation.m */; };
+		1929B3F63E1E808B31FF11A0 /* VRFilterItemsOperation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9B5817A70437785EDD7 /* VRFilterItemsOperation.mm */; };
 		1929B4D46C3BFBB370A6E1EE /* VRUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD3D77EA1A77CF8D469D /* VRUtils.m */; };
 		1929B65D8458FE1E5D4E0594 /* VRBaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9CC266B14FF9F1AABF9 /* VRBaseTestCase.m */; };
 		1929B85F39A41C42C8860028 /* VROpenQuicklyWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC33A2168C3F0643B5DD /* VROpenQuicklyWindow.m */; };
@@ -28,7 +28,7 @@
 		1929BA4727FA0A8D2FD0A642 /* VRWorkspaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B78A8084470EC33DE744 /* VRWorkspaceController.m */; };
 		1929BA6D0E371458FD54041A /* NSMutableArray+VR.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1EC8394FEA5F65DC9E2 /* NSMutableArray+VR.m */; };
 		1929BA9066266E68EBA907E6 /* NSURL+VR.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B2836A22CCFE1CAD67B0 /* NSURL+VR.m */; };
-		1929BB2FD516E0C54A7F9F38 /* VRFilterItemsOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9B5817A70437785EDD7 /* VRFilterItemsOperation.m */; };
+		1929BB2FD516E0C54A7F9F38 /* VRFilterItemsOperation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9B5817A70437785EDD7 /* VRFilterItemsOperation.mm */; };
 		1929BBA604D410BBCDC0D16E /* MMAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBF8BE880500FCF8B9A6 /* MMAlert.m */; };
 		1929BBB9701BA2B52A2B940A /* VROpenQuicklyWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC33A2168C3F0643B5DD /* VROpenQuicklyWindow.m */; };
 		1929BBDABB15EEFE9DB1151C /* VRWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7A3852E902DE9863E99 /* VRWindow.m */; };
@@ -152,7 +152,7 @@
 		1929B89C5887B39C88FBDAFB /* VRFileItemOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRFileItemOperation.h; sourceTree = "<group>"; };
 		1929B8B272093B5D54DB9AE2 /* NSURLCategoryTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLCategoryTest.m; sourceTree = "<group>"; };
 		1929B96FD49BBA2E98F84BA1 /* NSURL+VR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+VR.h"; sourceTree = "<group>"; };
-		1929B9B5817A70437785EDD7 /* VRFilterItemsOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRFilterItemsOperation.m; sourceTree = "<group>"; };
+		1929B9B5817A70437785EDD7 /* VRFilterItemsOperation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VRFilterItemsOperation.mm; sourceTree = "<group>"; };
 		1929B9CC266B14FF9F1AABF9 /* VRBaseTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRBaseTestCase.m; sourceTree = "<group>"; };
 		1929B9EA600D86AEAC3EBEEB /* VRInactiveTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRInactiveTableView.m; sourceTree = "<group>"; };
 		1929BA50673906A6CDA54575 /* NSArray+VR.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+VR.m"; sourceTree = "<group>"; };
@@ -272,7 +272,7 @@
 				1929BF7223563E01F97C1DDB /* VROpenQuicklyWindowController.m */,
 				1929B54A396D27D81AEB116E /* VRScoredPath.mm */,
 				1929BB855507E8D2D2CD90A6 /* VRScoredPath.h */,
-				1929B9B5817A70437785EDD7 /* VRFilterItemsOperation.m */,
+				1929B9B5817A70437785EDD7 /* VRFilterItemsOperation.mm */,
 				1929B28F65672DE45BCE4849 /* VRFilterItemsOperation.h */,
 				1929B9EA600D86AEAC3EBEEB /* VRInactiveTableView.m */,
 				1929B68FDCF00DC74509A5DB /* VRInactiveTableView.h */,
@@ -612,7 +612,7 @@
 				1929B85F39A41C42C8860028 /* VROpenQuicklyWindow.m in Sources */,
 				1929BF1D3C2F7A3F89D6DD98 /* VROpenQuicklyWindowController.m in Sources */,
 				1929BF36720565B5E5A0C630 /* VRScoredPath.mm in Sources */,
-				1929BB2FD516E0C54A7F9F38 /* VRFilterItemsOperation.m in Sources */,
+				1929BB2FD516E0C54A7F9F38 /* VRFilterItemsOperation.mm in Sources */,
 				1929BD196B173976BF90271A /* VRFileItemOperation.m in Sources */,
 				1929BC8C50BE7FB5EEE3EC41 /* VRInactiveTableView.m in Sources */,
 			);
@@ -646,7 +646,7 @@
 				1929BBB9701BA2B52A2B940A /* VROpenQuicklyWindow.m in Sources */,
 				1929BD07E68408BD5063CF15 /* VROpenQuicklyWindowController.m in Sources */,
 				1929B15E4DE9D40CD001D126 /* VRScoredPath.mm in Sources */,
-				1929B3F63E1E808B31FF11A0 /* VRFilterItemsOperation.m in Sources */,
+				1929B3F63E1E808B31FF11A0 /* VRFilterItemsOperation.mm in Sources */,
 				1929B1D2E7F9326E3A3749C5 /* VRFileItemOperation.m in Sources */,
 				1929B2EEFE49637BD0FD0855 /* VRInactiveTableView.m in Sources */,
 			);
@@ -789,6 +789,21 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/VimR/TextMate/lib",
 				);
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/CocoaLumberjack\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/OCHamcrest\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/OCMockito\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/TBCacao\"",
+					"-D",
+					"'NULL_STR=\"\\uFFFF\"'",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/VimR/TextMate/include/**";
 				WRAPPER_EXTENSION = app;
@@ -815,6 +830,21 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/VimR/TextMate/lib",
+				);
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/CocoaLumberjack\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/OCHamcrest\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/OCMockito\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/TBCacao\"",
+					"-D",
+					"'NULL_STR=\"\\uFFFF\"'",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/VimR/TextMate/include/**";
@@ -846,6 +876,21 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/VimR/TextMate/lib",
 				);
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/CocoaLumberjack\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/OCHamcrest\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/OCMockito\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/TBCacao\"",
+					"-D",
+					"'NULL_STR=\"\\uFFFF\"'",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/VimR/TextMate/include/**";
 				WRAPPER_EXTENSION = xctest;
@@ -871,6 +916,21 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/VimR/TextMate/lib",
+				);
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/CocoaLumberjack\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/OCHamcrest\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/OCMockito\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/TBCacao\"",
+					"-D",
+					"'NULL_STR=\"\\uFFFF\"'",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/VimR/TextMate/include/**";

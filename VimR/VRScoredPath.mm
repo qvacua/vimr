@@ -9,7 +9,6 @@
 
 #import "VRScoredPath.h"
 #import "VRUtils.h"
-#import "NSURL+VR.h"
 
 #import <cf/cf.h>
 #import <text/ranker.h>
@@ -31,7 +30,6 @@ static inline double rank_string(NSString *string, NSString *target,
 
   _score = 0;
   _path = path;
-  _displayName = SF(@"%@  —  %@/", _path.lastPathComponent, [[NSURL fileURLWithPath:_path] parentName]);
 
   return self;
 }

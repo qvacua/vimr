@@ -12,6 +12,8 @@
 
 /**
 * Copied and slightly modified from TextMate
+* v2.0-alpha.9537
+* Frameworks/OakFilterList/src/ui/TableView.mm
 */
 @interface VRInactiveTableView : NSTableView
 @end

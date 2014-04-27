@@ -8,14 +8,14 @@
 
 #import <Cocoa/Cocoa.h>
 
-
 #endif
 
-#ifdef __cplusplus
-    #include <map>
-    #include <set>
-    #include <string>
-    #include <vector>
 
-    std::string NULL_STR="\uFFFF";
+#ifdef __cplusplus
+
+#import <map>
+#import <set>
+#import <string>
+#import <vector>
+
 #endif
