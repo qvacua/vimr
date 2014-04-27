@@ -9,6 +9,7 @@
 
 #import "VROpenQuicklyWindow.h"
 #import "VRUtils.h"
+#import "VRInactiveTableView.h"
 
 
 int qOpenQuicklyWindowPadding = 8;
@@ -71,10 +72,12 @@ int qOpenQuicklyWindowPadding = 8;
   tableColumn.dataCell = [[NSTextFieldCell alloc] initTextCell:@""];
   [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingTail];
 
-  _fileItemTableView = [[NSTableView alloc] initWithFrame:CGRectZero];
+  _fileItemTableView = [[VRInactiveTableView alloc] initWithFrame:CGRectZero];
   [_fileItemTableView addTableColumn:tableColumn];
   _fileItemTableView.usesAlternatingRowBackgroundColors = YES;
+  _fileItemTableView.allowsEmptySelection = NO;
   _fileItemTableView.allowsMultipleSelection = NO;
+  _fileItemTableView.refusesFirstResponder = YES;
   _fileItemTableView.headerView = nil;
   _fileItemTableView.focusRingType = NSFocusRingTypeNone;
 

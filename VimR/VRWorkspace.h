@@ -24,6 +24,7 @@
 @property NSURL *workingDirectory;
 
 #pragma mark Public
+- (void)openFileWithUrl:(NSURL *)url;
 - (BOOL)hasModifiedBuffer;
 - (void)setUpWithVimController:(MMVimController *)vimController;
 - (void)cleanUpAndClose;

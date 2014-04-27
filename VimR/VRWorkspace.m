@@ -17,6 +17,10 @@
 @implementation VRWorkspace
 
 #pragma mark Public
+- (void)openFileWithUrl:(NSURL *)url {
+  [_mainWindowController openFileWithUrl:url];
+}
+
 - (BOOL)hasModifiedBuffer {
   return self.mainWindowController.vimController.hasModifiedBuffer;
 }

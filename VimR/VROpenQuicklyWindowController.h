@@ -12,9 +12,11 @@
 
 
 @class VRFileItemManager;
+@class VRMainWindowController;
 
 
 extern int qOpenQuicklyWindowWidth;
+
 
 @interface VROpenQuicklyWindowController : NSWindowController <
     TBBean, TBInitializingBean,
@@ -26,7 +28,7 @@ extern int qOpenQuicklyWindowWidth;
 @property (weak) NSNotificationCenter *notificationCenter;
 
 #pragma mark Public
-- (void)showForWindow:(NSWindow *)contentRect;
+- (void)showForWindowController:(VRMainWindowController *)windowController;
 - (void)cleanUp;
 
 #pragma mark NSObject

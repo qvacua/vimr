@@ -29,6 +29,7 @@
 - (instancetype)initWithContentRect:(CGRect)contentRect;
 - (void)openFilesWithArgs:(NSDictionary *)args;
 - (void)cleanUpAndClose;
+- (void)openFileWithUrl:(NSURL *)url;
 
 #pragma mark IBActions
 - (IBAction)newTab:(id)sender;

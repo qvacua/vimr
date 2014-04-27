@@ -11,6 +11,7 @@
 
 
 @class VROpenQuicklyWindowController;
+@class VRInactiveTableView;
 
 
 extern int qOpenQuicklyWindowPadding;
@@ -19,7 +20,7 @@ extern int qOpenQuicklyWindowPadding;
 
 @property NSSearchField *searchField;
 @property NSProgressIndicator *progressIndicator;
-@property NSTableView *fileItemTableView;
+@property VRInactiveTableView *fileItemTableView;
 
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect;

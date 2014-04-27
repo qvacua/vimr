@@ -17,6 +17,7 @@
 #import "VROpenQuicklyWindowController.h"
 #import "VRFileItemManager.h"
 #import "VRWorkspace.h"
+#import "VRWorkspaceController.h"
 
 
 @interface VRMainWindowController ()
@@ -49,6 +50,10 @@
   [self.vimView cleanup];
 
   [self close];
+}
+
+- (void)openFileWithUrl:(NSURL *)url {
+  [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsFromFileUrls:@[url]].dictionaryAsData];
 }
 
 #pragma mark IBActions
@@ -84,7 +89,7 @@
     currentFileName = self.workspace.workingDirectory.path;
   }
   [workspace.fileItemManager setTargetUrl:workspace.workingDirectory];
-  [workspace.openQuicklyWindowController showForWindow:self.window];
+  [workspace.openQuicklyWindowController showForWindowController:self];
 }
 
 #pragma mark Debug
@@ -587,6 +592,18 @@
   window.title = @"VimR";
 
   return window;
+}
+
+- (NSDictionary *)vimArgsFromFileUrls:(NSArray *)fileUrls {
+  NSMutableArray *filenames = [[NSMutableArray alloc] initWithCapacity:4];
+  for (NSURL *url in fileUrls) {
+    [filenames addObject:url.path];
+  }
+
+  return @{
+      qVimArgFileNamesToOpen : filenames,
+      qVimArgOpenFilesLayout : @(MMLayoutTabs),
+  };
 }
 
 @end

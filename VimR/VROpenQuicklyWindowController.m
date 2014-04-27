@@ -15,6 +15,9 @@
 #import "VRFileItemManager.h"
 #import "VRScoredPath.h"
 #import "VRFilterItemsOperation.h"
+#import "VRInactiveTableView.h"
+#import "VRMainWindowController.h"
+#import "VRWorkspace.h"
 
 
 int qOpenQuicklyWindowWidth = 400;
@@ -30,8 +33,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @interface VROpenQuicklyWindowController ()
 
 @property (weak) NSWindow *targetWindow;
+@property (weak) VRMainWindowController *targetWindowController;
 @property (weak) NSSearchField *searchField;
-@property (weak) NSTableView *fileItemTableView;
+@property (weak) VRInactiveTableView *fileItemTableView;
 @property (weak) NSProgressIndicator *progressIndicator;
 @property (readonly) NSOperationQueue *operationQueue;
 @property (readonly) NSMutableArray *filteredFileItems;
@@ -46,10 +50,11 @@ TB_AUTOWIRE(fileItemManager)
 TB_AUTOWIRE(notificationCenter)
 
 #pragma mark Public
-- (void)showForWindow:(NSWindow *)targetWindow {
-  self.targetWindow = targetWindow;
+- (void)showForWindowController:(VRMainWindowController *)windowController {
+  _targetWindowController = windowController;
+  _targetWindow = windowController.window;
 
-  CGRect contentRect = [targetWindow contentRectForFrameRect:targetWindow.frame];
+  CGRect contentRect = [_targetWindow contentRectForFrameRect:_targetWindow.frame];
   CGFloat xPos = NSMinX(contentRect) + NSWidth(contentRect) / 2 - qOpenQuicklyWindowWidth / 2
       - 2 * qOpenQuicklyWindowPadding;
   CGFloat yPos = NSMaxY(contentRect) - NSHeight(self.window.frame);
@@ -136,7 +141,21 @@ TB_AUTOWIRE(notificationCenter)
   }
 
   if (selector == @selector(insertNewline:)) {
-    DDLogDebug(@"Open quickly window: Enter pressed");
+    @synchronized (_filteredFileItems) {
+      VRScoredPath *scoredPath = _filteredFileItems[(NSUInteger) _fileItemTableView.selectedRow];
+      [_targetWindowController.workspace openFileWithUrl:[NSURL fileURLWithPath:scoredPath.path]];
+      [self reset];
+      return YES;
+    }
+  }
+
+  if (selector == @selector(moveUp:)) {
+    [self moveSelectionByDelta:-1];
+    return YES;
+  }
+
+  if (selector == @selector(moveDown:)) {
+    [self moveSelectionByDelta:1];
     return YES;
   }
 
@@ -212,6 +231,23 @@ TB_AUTOWIRE(notificationCenter)
       usleep(500);
     }
   }];
+}
+
+- (void)moveSelectionByDelta:(NSInteger)delta {
+  NSInteger selectedRow = _fileItemTableView.selectedRow;
+  NSUInteger lastIndex = (NSUInteger) [self numberOfRowsInTableView:_fileItemTableView] - 1;
+  NSUInteger targetIndex;
+
+  if (selectedRow + delta < 0) {
+    targetIndex = lastIndex;
+  } else if (selectedRow + delta > lastIndex) {
+    targetIndex = 0;
+  } else {
+    targetIndex = (NSUInteger) (selectedRow + delta);
+  }
+
+  [_fileItemTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:targetIndex] byExtendingSelection:NO];
+  [_fileItemTableView scrollRowToVisible:targetIndex];
 }
 
 @end
