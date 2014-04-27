@@ -162,8 +162,6 @@ TB_AUTOWIRE(notificationCenter);
     _currentTargetUrl = nil;
     [_operationQueue cancelAllOperations];
 
-    DDLogDebug(@"Going to wait %lu traverse/cache operations to finish", _operationQueue.operationCount);
-    [_operationQueue waitUntilAllOperationsAreFinished];
     [_mutableFileItemsForTargetUrl removeAllObjects];
   }
 }
@@ -171,7 +169,6 @@ TB_AUTOWIRE(notificationCenter);
 - (void)cleanUp {
   @synchronized (self) {
     [_operationQueue cancelAllOperations];
-    [_operationQueue waitUntilAllOperationsAreFinished];
 
     [self stop];
   }
