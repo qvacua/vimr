@@ -190,6 +190,10 @@ TB_AUTOWIRE(notificationCenter);
   }
 }
 
+- (BOOL)isBusy {
+  return _operationQueue.operationCount > 0;
+}
+
 #pragma mark NSObject
 - (id)init {
   self = [super init];

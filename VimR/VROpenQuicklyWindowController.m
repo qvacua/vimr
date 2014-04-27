@@ -32,8 +32,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @property (weak) NSWindow *targetWindow;
 @property (weak) NSSearchField *searchField;
 @property (weak) NSTableView *fileItemTableView;
+@property (weak) NSProgressIndicator *progressIndicator;
 @property (readonly) NSOperationQueue *operationQueue;
 @property (readonly) NSMutableArray *filteredFileItems;
+@property (readonly) NSOperationQueue *progressOperationQueue;
 
 @end
 
@@ -55,6 +57,23 @@ TB_AUTOWIRE(notificationCenter)
   self.window.frameOrigin = CGPointMake(xPos, yPos);
 
   [self.window makeKeyAndOrderFront:self];
+
+  _progressIndicator.hidden = NO;
+  [_progressOperationQueue addOperationWithBlock:^{
+    while (self.targetWindow) {
+      if (self.fileItemManager.isBusy || self.operationQueue.operationCount > 0) {
+        dispatch_to_main_thread(^{
+          [self.progressIndicator startAnimation:self];
+        });
+      } else {
+        dispatch_to_main_thread(^{
+          [self.progressIndicator stopAnimation:self];
+          self.progressIndicator.hidden = YES;
+        });
+      }
+      usleep(500);
+    }
+  }];
 }
 
 - (void)cleanUp {
@@ -64,7 +83,6 @@ TB_AUTOWIRE(notificationCenter)
 }
 
 - (IBAction)secondDebugAction:(id)sender {
-  DDLogDebug(@"cound of cached file items: %lu", _fileItemManager.fileItemsOfTargetUrl.count);
 }
 
 #pragma mark NSObject
@@ -83,11 +101,16 @@ TB_AUTOWIRE(notificationCenter)
   _fileItemTableView.dataSource = self;
   _fileItemTableView.delegate = self;
 
+  _progressIndicator = win.progressIndicator;
+
   win.delegate = self;
 
   _operationQueue = [[NSOperationQueue alloc] init];
   _operationQueue.maxConcurrentOperationCount = 1;
   _filteredFileItems = [[NSMutableArray alloc] initWithCapacity:qMaximumNumberOfFilterResult];
+
+  _progressOperationQueue = [[NSOperationQueue alloc] init];
+  _progressOperationQueue.maxConcurrentOperationCount = 1;
 
   return self;
 }
@@ -179,6 +202,7 @@ TB_AUTOWIRE(notificationCenter)
 
   [_filteredFileItems removeAllObjects];
   [_fileItemTableView reloadData];
+  [_progressIndicator stopAnimation:self];
 
   [_targetWindow makeKeyAndOrderFront:self];
   _targetWindow = nil;

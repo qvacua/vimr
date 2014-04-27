@@ -32,6 +32,7 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 - (void)cleanUp;
 - (void)pause;
 - (void)resume;
+- (BOOL)isBusy;
 
 #pragma mark NSObject
 - (id)init;
