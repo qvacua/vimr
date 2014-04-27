@@ -25,6 +25,7 @@ NSString *const qFilterItemsOperationFilteredItemsKey = @"filtered-items-array";
 NSString *const qFilterItemsOperationItemTableViewKey = @"file-item-table-view";
 const NSUInteger qMaximumNumberOfFilterResult = 50;
 
+
 static inline double rank_string(NSString *string, NSString *target,
     std::vector< std::pair<size_t, size_t> > *out = NULL) {
 
