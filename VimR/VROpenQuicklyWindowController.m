@@ -37,16 +37,16 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @property (weak) NSSearchField *searchField;
 @property (weak) VRInactiveTableView *fileItemTableView;
 @property (weak) NSProgressIndicator *progressIndicator;
+@property (weak) NSTextField *itemCountTextField;
 @property (readonly) NSOperationQueue *operationQueue;
 @property (readonly) NSMutableArray *filteredFileItems;
-@property (readonly) NSOperationQueue *progressIndicatorOperationQueue;
+@property (readonly) NSOperationQueue *uiUpdateOperationQueue;
 
 @end
 
 @implementation VROpenQuicklyWindowController
 
 TB_AUTOWIRE(fileItemManager)
-
 TB_AUTOWIRE(notificationCenter)
 
 #pragma mark Public
@@ -63,7 +63,7 @@ TB_AUTOWIRE(notificationCenter)
 
   [self.window makeKeyAndOrderFront:self];
 
-  [self prepareProgressIndicator];
+  [self setupUiUpdateOperation];
 }
 
 - (void)cleanUp {
@@ -92,6 +92,7 @@ TB_AUTOWIRE(notificationCenter)
   _fileItemTableView.delegate = self;
 
   _progressIndicator = win.progressIndicator;
+  _itemCountTextField = win.itemCountTextField;
 
   win.delegate = self;
 
@@ -99,8 +100,8 @@ TB_AUTOWIRE(notificationCenter)
   _operationQueue.maxConcurrentOperationCount = 1;
   _filteredFileItems = [[NSMutableArray alloc] initWithCapacity:qMaximumNumberOfFilterResult];
 
-  _progressIndicatorOperationQueue = [[NSOperationQueue alloc] init];
-  _progressIndicatorOperationQueue.maxConcurrentOperationCount = 1;
+  _uiUpdateOperationQueue = [[NSOperationQueue alloc] init];
+  _uiUpdateOperationQueue.maxConcurrentOperationCount = 1;
 
   return self;
 }
@@ -207,15 +208,16 @@ TB_AUTOWIRE(notificationCenter)
   [_filteredFileItems removeAllObjects];
   [_fileItemTableView reloadData];
   [_progressIndicator stopAnimation:self];
+  self.itemCountTextField.stringValue = @"";
 
   [_targetWindow makeKeyAndOrderFront:self];
   _targetWindow = nil;
 }
 
-- (void)prepareProgressIndicator {
+- (void)setupUiUpdateOperation {
   _progressIndicator.hidden = NO;
 
-  [_progressIndicatorOperationQueue addOperationWithBlock:^{
+  [_uiUpdateOperationQueue addOperationWithBlock:^{
     while (self.targetWindow) {
       if (self.fileItemManager.isBusy || self.operationQueue.operationCount > 0) {
         dispatch_to_main_thread(^{
@@ -227,6 +229,10 @@ TB_AUTOWIRE(notificationCenter)
           self.progressIndicator.hidden = YES;
         });
       }
+
+      dispatch_to_main_thread(^{
+        self.itemCountTextField.stringValue = SF(@"%lu items", self.fileItemManager.fileItemsOfTargetUrl.count);
+      });
 
       usleep(500);
     }

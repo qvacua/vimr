@@ -21,6 +21,7 @@ extern int qOpenQuicklyWindowPadding;
 @property NSSearchField *searchField;
 @property NSProgressIndicator *progressIndicator;
 @property VRInactiveTableView *fileItemTableView;
+@property NSTextField *itemCountTextField;
 
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect;

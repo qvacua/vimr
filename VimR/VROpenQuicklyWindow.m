@@ -58,6 +58,15 @@ int qOpenQuicklyWindowPadding = 8;
   label.bordered = NO;
   [self.contentView addSubview:label];
 
+  _itemCountTextField = [[NSTextField alloc] initWithFrame:CGRectZero];
+  _itemCountTextField.translatesAutoresizingMaskIntoConstraints = NO;
+  _itemCountTextField.backgroundColor = [NSColor clearColor];
+  _itemCountTextField.alignment = NSRightTextAlignment;
+  _itemCountTextField.stringValue = @"";
+  _itemCountTextField.editable = NO;
+  _itemCountTextField.bordered = NO;
+  [self.contentView addSubview:_itemCountTextField];
+
   _progressIndicator = [[NSProgressIndicator alloc] initWithFrame:CGRectZero];
   _progressIndicator.style = NSProgressIndicatorSpinningStyle;
   _progressIndicator.translatesAutoresizingMaskIntoConstraints = NO;
@@ -94,13 +103,15 @@ int qOpenQuicklyWindowPadding = 8;
       @"label" : label,
       @"progress" : _progressIndicator,
       @"table" : _scrollView,
+      @"itemCount" : _itemCountTextField,
   };
 
   constraint_layout(views, @"H:|-(%d)-[label(>=50)]", qOpenQuicklyWindowPadding);
-  constraint_layout(views, @"H:[progress(16)]-(%d)-|", qOpenQuicklyWindowPadding);
+  constraint_layout(views, @"H:[progress(16)]-(%d)-[itemCount(>=25)]-(%d)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
   constraint_layout(views, @"H:|-(%d)-[searchField(>=100)]-(%d)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
   constraint_layout(views, @"H:|[table(>=100)]|");
   constraint_layout(views, @"V:|-(%d)-[label(17)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
+  constraint_layout(views, @"V:|-(%d)-[itemCount(17)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
   constraint_layout(views, @"V:|-(%d)-[progress(16)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding + 1, qOpenQuicklyWindowPadding);
 }
 
