@@ -13,6 +13,7 @@
 
 int qOpenQuicklyWindowPadding = 8;
 
+
 #define constraint_layout(vs, fmt, ...) [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views: vs]];
 
 
@@ -56,11 +57,11 @@ int qOpenQuicklyWindowPadding = 8;
   label.bordered = NO;
   [self.contentView addSubview:label];
 
-  NSProgressIndicator *progressIndicator = [[NSProgressIndicator alloc] initWithFrame:CGRectZero];
-  progressIndicator.style = NSProgressIndicatorSpinningStyle;
-  progressIndicator.translatesAutoresizingMaskIntoConstraints = NO;
-  progressIndicator.controlSize = NSSmallControlSize;
-  [self.contentView addSubview:progressIndicator];
+  _progressIndicator = [[NSProgressIndicator alloc] initWithFrame:CGRectZero];
+  _progressIndicator.style = NSProgressIndicatorSpinningStyle;
+  _progressIndicator.translatesAutoresizingMaskIntoConstraints = NO;
+  _progressIndicator.controlSize = NSSmallControlSize;
+  [self.contentView addSubview:_progressIndicator];
 
   _searchField = [[NSSearchField alloc] initWithFrame:CGRectZero];
   _searchField.translatesAutoresizingMaskIntoConstraints = NO;
@@ -88,7 +89,7 @@ int qOpenQuicklyWindowPadding = 8;
   NSDictionary *views = @{
       @"searchField" : _searchField,
       @"label" : label,
-      @"progress" : progressIndicator,
+      @"progress" : _progressIndicator,
       @"table" : _scrollView,
   };
 

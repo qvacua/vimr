@@ -18,6 +18,7 @@ extern int qOpenQuicklyWindowPadding;
 @interface VROpenQuicklyWindow : NSWindow
 
 @property NSSearchField *searchField;
+@property NSProgressIndicator *progressIndicator;
 @property NSTableView *fileItemTableView;
 
 #pragma mark Public

@@ -171,6 +171,7 @@ TB_AUTOWIRE(notificationCenter)
 
 - (void)reset {
   DDLogDebug(@"Going to wait %lu filter operations to finish", _operationQueue.operationCount);
+  [_operationQueue cancelAllOperations];
   [_operationQueue waitUntilAllOperationsAreFinished];
   [_filteredFileItems removeAllObjects];
 
