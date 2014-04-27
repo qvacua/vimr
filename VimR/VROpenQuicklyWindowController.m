@@ -118,8 +118,7 @@ TB_AUTOWIRE(notificationCenter)
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
   @synchronized (_filteredFileItems) {
     VRScoredPath *scoredPath = _filteredFileItems[(NSUInteger) row];
-    NSURL *parentUrl = [[NSURL fileURLWithPath:scoredPath.path] URLByDeletingLastPathComponent];
-    return SF(@"%@  —  %@/", scoredPath.path.lastPathComponent, parentUrl.lastPathComponent);
+    return scoredPath.displayName;
   }
 }
 

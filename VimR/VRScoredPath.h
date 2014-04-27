@@ -14,6 +14,7 @@
 
 @property double score;
 @property NSString *path;
+@property (readonly) NSString *displayName;
 
 - (instancetype)initWithPath:(NSString *)path score:(double)score;
 - (NSString *)description;

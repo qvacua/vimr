@@ -14,7 +14,6 @@
 
 @property (copy) NSURL *url;
 @property (readonly, getter=isDir) BOOL dir;
-@property (readonly) NSString *displayName;
 @property (readonly) NSMutableArray *children;
 
 /**

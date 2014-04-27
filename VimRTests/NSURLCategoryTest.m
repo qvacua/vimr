@@ -29,4 +29,15 @@
   XCTAssertThrows(url.isDirectory, @"%@ cannot have a dir property", url);
 }
 
+- (void)testParentName {
+  url = [NSURL fileURLWithPath:@"/Users/test"];
+  assertThat(url.parentName, is(@"Users"));
+
+  url = [NSURL fileURLWithPath:@"/Users"];
+  assertThat(url.parentName, is(@"/"));
+
+  url = [NSURL fileURLWithPath:@"/"];
+  XCTAssertThrows(url.parentName, @"%@ cannot have a parent", url);
+}
+
 @end

@@ -13,11 +13,6 @@
 
 @implementation VRFileItem
 
-#pragma mark Properties
-- (NSString *)displayName {
-  return self.url.lastPathComponent;
-}
-
 #pragma mark Public
 - (instancetype)initWithUrl:(NSURL *)url isDir:(BOOL)isDir {
   self = [super init];

@@ -10,11 +10,13 @@
 #import <Foundation/Foundation.h>
 
 
-extern NSString *const qGetResourceValueIsDirException;
+extern NSString *const qUrlGetResourceValueIsDirException;
+extern NSString *const qUrlNoParentException;
 
 
 @interface NSURL (VR)
 
 - (BOOL)isDirectory;
 
+- (NSString *)parentName;
 @end

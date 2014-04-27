@@ -69,7 +69,7 @@ int qOpenQuicklyWindowPadding = 8;
 
   NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:@"name"];
   tableColumn.dataCell = [[NSTextFieldCell alloc] initTextCell:@""];
-  [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingHead];
+  [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingTail];
 
   _fileItemTableView = [[NSTableView alloc] initWithFrame:CGRectZero];
   [_fileItemTableView addTableColumn:tableColumn];
