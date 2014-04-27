@@ -44,7 +44,7 @@ TB_AUTOWIRE(fileItemManager)
 TB_AUTOWIRE(notificationCenter)
 
 #pragma mark Public
-- (void)showForWindow:(NSWindow *)targetWindow url:(NSURL *)targetUrl {
+- (void)showForWindow:(NSWindow *)targetWindow {
   self.targetWindow = targetWindow;
 
   CGRect contentRect = [targetWindow contentRectForFrameRect:targetWindow.frame];
@@ -62,7 +62,7 @@ TB_AUTOWIRE(notificationCenter)
 
 - (IBAction)secondDebugAction:(id)sender {
   DDLogDebug(@"pausing");
-  [self.fileItemManager pause];
+  [_fileItemManager pause];
 }
 
 #pragma mark NSObject
@@ -96,21 +96,25 @@ TB_AUTOWIRE(notificationCenter)
     return 0;
   }
 
-  if (self.searchField.stringValue.length == 0) {
+  if (_searchField.stringValue.length == 0) {
     return 0;
   }
 
-  return self.filteredFileItems.count;
+  @synchronized (_filteredFileItems) {
+    return _filteredFileItems.count;
+  }
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-  VRScoredPath *scoredPath = self.filteredFileItems[(NSUInteger) row];
-  return scoredPath.path;
+  @synchronized (_filteredFileItems) {
+    VRScoredPath *scoredPath = _filteredFileItems[(NSUInteger) row];
+    return scoredPath.path;
+  }
 }
 
 #pragma mark NSTextFieldDelegate
 - (void)controlTextDidChange:(NSNotification *)obj {
-  [self reFilter];
+  [self refilter];
 }
 
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)selector {
@@ -142,19 +146,19 @@ TB_AUTOWIRE(notificationCenter)
 
 #pragma mark TBInitializingBean
 - (void)postConstruct {
-  [self.notificationCenter addObserver:self selector:@selector(chunkOfFileItemsAdded:)
-                                  name:qChunkOfNewFileItemsAddedEvent object:nil];
+  [_notificationCenter addObserver:self selector:@selector(chunkOfFileItemsAdded:)
+                              name:qChunkOfNewFileItemsAddedEvent object:nil];
 }
 
 #pragma mark Private
 - (void)chunkOfFileItemsAdded:(id)obj {
-  [self reFilter];
+  [self refilter];
 }
 
-- (void)reFilter {
-  [self.operationQueue cancelAllOperations];
+- (void)refilter {
+  [_operationQueue cancelAllOperations];
 
-  [self.operationQueue addOperation:[[VRFilterItemsOperation alloc] initWithDict:@{
+  [_operationQueue addOperation:[[VRFilterItemsOperation alloc] initWithDict:@{
       qFilterItemsOperationFileItemManagerKey : self.fileItemManager,
       qFilterItemsOperationFilteredItemsKey : self.filteredFileItems,
       qFilterItemsOperationItemTableViewKey : self.fileItemTableView,
@@ -163,16 +167,20 @@ TB_AUTOWIRE(notificationCenter)
 }
 
 - (void)reset {
-  [self.fileItemManager resetTargetUrl];
+  DDLogDebug(@"Going to wait %lu filter operations to finish", _operationQueue.operationCount);
+  [_operationQueue waitUntilAllOperationsAreFinished];
+  [_filteredFileItems removeAllObjects];
+
+  [_fileItemManager resetTargetUrl];
 
   [self.window close];
   [(VROpenQuicklyWindow *) self.window reset];
 
-  [self.filteredFileItems removeAllObjects];
-  [self.fileItemTableView reloadData];
+  [_filteredFileItems removeAllObjects];
+  [_fileItemTableView reloadData];
 
-  [self.targetWindow makeKeyAndOrderFront:self];
-  self.targetWindow = nil;
+  [_targetWindow makeKeyAndOrderFront:self];
+  _targetWindow = nil;
 }
 
 @end

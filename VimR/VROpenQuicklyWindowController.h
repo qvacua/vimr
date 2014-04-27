@@ -26,7 +26,7 @@ extern int qOpenQuicklyWindowWidth;
 @property (weak) NSNotificationCenter *notificationCenter;
 
 #pragma mark Public
-- (void)showForWindow:(NSWindow *)contentRect url:(NSURL *)targetUrl;
+- (void)showForWindow:(NSWindow *)contentRect;
 - (void)cleanUp;
 
 #pragma mark NSObject

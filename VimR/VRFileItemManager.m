@@ -161,6 +161,10 @@ TB_AUTOWIRE(notificationCenter);
   @synchronized (self) {
     _currentTargetUrl = nil;
     [_operationQueue cancelAllOperations];
+
+    DDLogDebug(@"Going to wait %lu traverse/cache operations to finish", _operationQueue.operationCount);
+    [_operationQueue waitUntilAllOperationsAreFinished];
+    [_mutableFileItemsForTargetUrl removeAllObjects];
   }
 }
 

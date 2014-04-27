@@ -84,9 +84,7 @@
     currentFileName = self.workspace.workingDirectory.path;
   }
   [workspace.fileItemManager setTargetUrl:workspace.workingDirectory];
-  [workspace.openQuicklyWindowController showForWindow:self.window url:
-      [NSURL fileURLWithPath:currentFileName]
-  ];
+  [workspace.openQuicklyWindowController showForWindow:self.window];
 }
 
 #pragma mark Debug
