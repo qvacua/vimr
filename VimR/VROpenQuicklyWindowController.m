@@ -35,7 +35,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @property (weak) NSProgressIndicator *progressIndicator;
 @property (readonly) NSOperationQueue *operationQueue;
 @property (readonly) NSMutableArray *filteredFileItems;
-@property (readonly) NSOperationQueue *progressOperationQueue;
+@property (readonly) NSOperationQueue *progressIndicatorOperationQueue;
 
 @end
 
@@ -58,22 +58,7 @@ TB_AUTOWIRE(notificationCenter)
 
   [self.window makeKeyAndOrderFront:self];
 
-  _progressIndicator.hidden = NO;
-  [_progressOperationQueue addOperationWithBlock:^{
-    while (self.targetWindow) {
-      if (self.fileItemManager.isBusy || self.operationQueue.operationCount > 0) {
-        dispatch_to_main_thread(^{
-          [self.progressIndicator startAnimation:self];
-        });
-      } else {
-        dispatch_to_main_thread(^{
-          [self.progressIndicator stopAnimation:self];
-          self.progressIndicator.hidden = YES;
-        });
-      }
-      usleep(500);
-    }
-  }];
+  [self prepareProgressIndicator];
 }
 
 - (void)cleanUp {
@@ -109,8 +94,8 @@ TB_AUTOWIRE(notificationCenter)
   _operationQueue.maxConcurrentOperationCount = 1;
   _filteredFileItems = [[NSMutableArray alloc] initWithCapacity:qMaximumNumberOfFilterResult];
 
-  _progressOperationQueue = [[NSOperationQueue alloc] init];
-  _progressOperationQueue.maxConcurrentOperationCount = 1;
+  _progressIndicatorOperationQueue = [[NSOperationQueue alloc] init];
+  _progressIndicatorOperationQueue.maxConcurrentOperationCount = 1;
 
   return self;
 }
@@ -206,6 +191,27 @@ TB_AUTOWIRE(notificationCenter)
 
   [_targetWindow makeKeyAndOrderFront:self];
   _targetWindow = nil;
+}
+
+- (void)prepareProgressIndicator {
+  _progressIndicator.hidden = NO;
+
+  [_progressIndicatorOperationQueue addOperationWithBlock:^{
+    while (self.targetWindow) {
+      if (self.fileItemManager.isBusy || self.operationQueue.operationCount > 0) {
+        dispatch_to_main_thread(^{
+          [self.progressIndicator startAnimation:self];
+        });
+      } else {
+        dispatch_to_main_thread(^{
+          [self.progressIndicator stopAnimation:self];
+          self.progressIndicator.hidden = YES;
+        });
+      }
+
+      usleep(500);
+    }
+  }];
 }
 
 @end
