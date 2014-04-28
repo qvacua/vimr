@@ -127,6 +127,7 @@ void streamCallback(
   @synchronized (self) {
     // Just to be safe...
     [self resetTargetUrl];
+    _operationQueue.suspended = NO;
 
     VRFileItem *targetItem = _url2CachedFileItem[url];
     if (!targetItem) {
@@ -155,15 +156,19 @@ void streamCallback(
 }
 
 - (void)resetTargetUrl {
-  @synchronized (self) {
+  @synchronized (_operationQueue) {
+    [_operationQueue setSuspended:YES];
     [_operationQueue cancelAllOperations];
+  }
 
+  @synchronized (_mutableFileItemsForTargetUrl) {
     [_mutableFileItemsForTargetUrl removeAllObjects];
   }
 }
 
 - (void)cleanUp {
-  @synchronized (self) {
+  @synchronized (_operationQueue) {
+    _operationQueue.suspended = YES;
     [_operationQueue cancelAllOperations];
 
     [self stop];
@@ -171,24 +176,37 @@ void streamCallback(
 }
 
 - (void)pause {
-  @synchronized (self) {
-    for (VRFileItemOperation *operation in self.operationQueue.operations) {
+  @synchronized (_operationQueue) {
+    _operationQueue.suspended = YES;
+
+    for (VRFileItemOperation *operation in _operationQueue.operations) {
       [operation pause];
     }
   }
 }
 
 - (void)resume {
-  @synchronized (self) {
-    for (VRFileItemOperation *operation in self.operationQueue.operations) {
+  @synchronized (_operationQueue) {
+    _operationQueue.suspended = NO;
+
+    for (VRFileItemOperation *operation in _operationQueue.operations) {
       [operation resume];
     }
   }
 }
 
 - (BOOL)isBusy {
-  return _operationQueue.operationCount > 0;
+  @synchronized (_operationQueue) {
+    return _operationQueue.operationCount > 0;
+  }
 }
+
+- (NSUInteger)operationCount {
+  @synchronized (_operationQueue) {
+    return _operationQueue.operationCount;
+  }
+}
+
 
 #pragma mark NSObject
 - (id)init {

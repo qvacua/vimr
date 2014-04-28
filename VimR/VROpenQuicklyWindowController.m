@@ -73,6 +73,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 }
 
 - (IBAction)secondDebugAction:(id)sender {
+  DDLogDebug(@"filter operations: %lu", _operationQueue.operationCount);
+  DDLogDebug(@"file item operations: %lu", _fileItemManager.operationCount);
 }
 
 #pragma mark NSObject

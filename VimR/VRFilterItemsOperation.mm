@@ -7,6 +7,7 @@
  * See LICENSE
  */
 
+#import <CocoaLumberjack/DDLog.h>
 #import "VRFilterItemsOperation.h"
 #import "VROpenQuicklyWindowController.h"
 #import "VRFileItemManager.h"
@@ -18,11 +19,17 @@
 #import <cf/cf.h>
 
 
+static const int ddLogLevel = LOG_LEVEL_DEBUG;
+
+
 NSString *const qFilterItemsOperationFileItemManagerKey = @"file-item-manager";
 NSString *const qFilterItemsOperationSearchStringKey = @"search-string";
 NSString *const qFilterItemsOperationFilteredItemsKey = @"filtered-items-array";
 NSString *const qFilterItemsOperationItemTableViewKey = @"file-item-table-view";
 const NSUInteger qMaximumNumberOfFilterResult = 50;
+
+
+static const int qArrayChunkSize = 50;
 
 
 static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult(VRScoredPath *p1, VRScoredPath *p2) {
@@ -117,6 +124,7 @@ std::vector<size_t> disambiguate(std::vector<std::string> const &paths) {
 #pragma mark NSOperation
 - (void)main {
   @autoreleasepool {
+
     if (self.isCancelled) {
       return;
     }
@@ -149,11 +157,20 @@ std::vector<size_t> disambiguate(std::vector<std::string> const &paths) {
       }
     }
 
-    CANCEL_WHEN_REQUESTED
+    NSArray *chunkedIndexes = [result indexesForChunkSize:qArrayChunkSize];
+    NSRange range;
+    for (NSValue *value in chunkedIndexes) {
+      CANCEL_WHEN_REQUESTED
 
-    dispatch_apply(result.count, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(size_t i) {
-      [result[i] computeScoreForCandidate:_searchStr];
-    });
+      [value getValue:&range];
+      NSUInteger beginIndex = range.location;
+      NSUInteger endIndex = range.length;
+      NSUInteger count = endIndex - beginIndex + 1;
+
+      dispatch_apply(count, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(size_t i) {
+        [result[beginIndex + i] computeScoreForCandidate:_searchStr];
+      });
+    }
 
     CANCEL_WHEN_REQUESTED
 
@@ -164,9 +181,16 @@ std::vector<size_t> disambiguate(std::vector<std::string> const &paths) {
       paths.push_back(cf::to_s((__bridge CFStringRef) scoredPath.path));
     }
 
+    CANCEL_WHEN_REQUESTED
+
+    NSUInteger chunkCounter = 0;
     std::vector<size_t> levels = disambiguate(paths);
     for (auto &level : levels) {
-      CANCEL_WHEN_REQUESTED
+      if (chunkCounter % qArrayChunkSize == 0) {
+        CANCEL_WHEN_REQUESTED
+      }
+
+      chunkCounter++;
 
       // http://stackoverflow.com/questions/10962290/find-position-of-element-in-c11-range-based-for-loop
       VRScoredPath *scoredPath = result[(NSUInteger) (&level - &levels[0])];

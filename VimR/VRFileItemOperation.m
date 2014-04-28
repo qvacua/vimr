@@ -42,6 +42,9 @@ NSString *const qFileItemOperationRootUrlKey = @"root-url";
 NSString *const qFileItemOperationFileItemsKey = @"file-items-array";
 
 
+static const int qArrayChunkSize = 50;
+
+
 #define CANCEL_OR_WAIT if ([self isCancelled]) { \
                          return; \
                        } \
@@ -66,27 +69,23 @@ NSString *const qFileItemOperationFileItemsKey = @"file-items-array";
 
 #pragma mark Public
 - (BOOL)isPaused {
-  @synchronized (self) {
+  @synchronized (_pauseCondition) {
     return _shouldPause;
   }
 }
 
 - (void)pause {
-  @synchronized (self) {
     [_pauseCondition lock];
     _shouldPause = YES;
     [_pauseCondition signal];
     [_pauseCondition unlock];
-  }
 }
 
 - (void)resume {
-  @synchronized (self) {
     [_pauseCondition lock];
     _shouldPause = NO;
     [_pauseCondition signal];
     [_pauseCondition unlock];
-  }
 }
 
 - (id)initWithMode:(VRFileItemOperationMode)mode dict:(NSDictionary *)dict {
@@ -189,6 +188,10 @@ NSString *const qFileItemOperationFileItemsKey = @"file-items-array";
 
     CANCEL_OR_WAIT
 
+    if (fileItemsToAdd.isEmpty) {
+      return;
+    }
+
     DDLogCaching(@"### Adding (from traversing) children items of parent: %@", _parentItem.url);
     [self addAllToFileItemsForTargetUrl:fileItemsToAdd];
   }
@@ -253,11 +256,23 @@ NSString *const qFileItemOperationFileItemsKey = @"file-items-array";
 - (void)addAllToFileItemsForTargetUrl:(NSArray *)items {
   BOOL added = NO;
 
-  @synchronized (_fileItems) {
-    for (VRFileItem *child in items) {
-      if (!child.dir) {
-        [_fileItems addObject:child.url.path];
-        added = YES;
+
+  NSArray *chunkedIndexes = [items indexesForChunkSize:qArrayChunkSize];
+  NSRange range;
+  for (NSValue *value in chunkedIndexes) {
+    CANCEL_OR_WAIT
+
+    [value getValue:&range];
+    NSUInteger beginIndex = range.location;
+    NSUInteger endIndex = range.length;
+
+    @synchronized (_fileItems) {
+      for (NSUInteger i = beginIndex; i <= endIndex; i++) {
+        VRFileItem *child = items[i];
+        if (!child.dir) {
+          [_fileItems addObject:child.url.path];
+          added = YES;
+        }
       }
     }
   }
