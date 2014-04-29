@@ -16,3 +16,7 @@ void dispatch_to_main_thread(dispatch_block_t block) {
 void dispatch_to_global_queue(dispatch_block_t block) {
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
 }
+
+void dispatch_loop(size_t count, void (^block)(size_t)) {
+  dispatch_apply(count, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
+}

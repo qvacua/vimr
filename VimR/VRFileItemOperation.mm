@@ -257,15 +257,15 @@ static const int qArrayChunkSize = 50;
 - (void)addAllToFileItemsForTargetUrl:(NSArray *)items {
   BOOL added = NO;
 
-  std::vector<std::pair<NSUInteger, NSUInteger>> chunkedIndexes = chunked_indexes(items.count, qArrayChunkSize);
+  std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(items.count, qArrayChunkSize);
   for (auto &pair : chunkedIndexes) {
     CANCEL_OR_WAIT
 
-    NSUInteger beginIndex = pair.first;
-    NSUInteger endIndex = pair.second;
+    size_t beginIndex = pair.first;
+    size_t endIndex = pair.second;
 
     @synchronized (_fileItems) {
-      for (NSUInteger i = beginIndex; i <= endIndex; i++) {
+      for (size_t i = beginIndex; i <= endIndex; i++) {
         VRFileItem *child = items[i];
         if (!child.dir) {
           [_fileItems addObject:child.url.path];
@@ -282,7 +282,7 @@ static const int qArrayChunkSize = 50;
   NSURL *parentUrl = [[items[0] url] URLByDeletingLastPathComponent];
   DDLogCaching(@"Adding children of %@ to file items array", parentUrl);
 
-  dispatch_async(dispatch_get_main_queue(), ^{
+  dispatch_to_main_thread(^{
     [_notificationCenter postNotificationName:qChunkOfNewFileItemsAddedEvent object:parentUrl];
   });
 }
