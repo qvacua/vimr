@@ -23,6 +23,7 @@ static const int ddLogLevel = LOG_LEVEL_DEBUG;
 //static const int ddLogLevel = LOG_LEVEL_DEBUG | LOG_FLAG_CACHING;
 static DDFileLogger *file_logger_for_cache;
 
+
 static void setup_file_logger() {
   static dispatch_once_t once_token;
 
@@ -76,17 +77,17 @@ static const int qArrayChunkSize = 50;
 }
 
 - (void)pause {
-    [_pauseCondition lock];
-    _shouldPause = YES;
-    [_pauseCondition signal];
-    [_pauseCondition unlock];
+  [_pauseCondition lock];
+  _shouldPause = YES;
+  [_pauseCondition signal];
+  [_pauseCondition unlock];
 }
 
 - (void)resume {
-    [_pauseCondition lock];
-    _shouldPause = NO;
-    [_pauseCondition signal];
-    [_pauseCondition unlock];
+  [_pauseCondition lock];
+  _shouldPause = NO;
+  [_pauseCondition signal];
+  [_pauseCondition unlock];
 }
 
 - (id)initWithMode:(VRFileItemOperationMode)mode dict:(NSDictionary *)dict {
@@ -147,18 +148,7 @@ static const int qArrayChunkSize = 50;
       // shouldCacheChildren to YES, ie invalidate the cache.
       [children removeAllObjects];
 
-      [_operationQueue addOperation:
-          [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationCacheMode
-                                               dict:@{
-                                                   qFileItemOperationRootUrlKey : _rootUrl,
-                                                   qFileItemOperationParentItemKey : _parentItem,
-                                                   qFileItemOperationOperationQueueKey : _operationQueue,
-                                                   qFileItemOperationFileItemManagerKey : _fileItemManager,
-                                                   qFileItemOperationNotificationCenterKey : _notificationCenter,
-                                                   qFileItemOperationFileItemsKey : _fileItems,
-                                                   qFileItemOperationFileManagerKey : _fileManager,
-                                               }]
-      ];
+      [_operationQueue addOperation:[self cacheOperationForParent:_parentItem]];
 
       return;
     }
@@ -180,18 +170,7 @@ static const int qArrayChunkSize = 50;
 
         if (child.dir) {
           DDLogCaching(@"Traversing children of %@", child.url);
-          [_operationQueue addOperation:
-              [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationTraverseMode
-                                                   dict:@{
-                                                       qFileItemOperationRootUrlKey : _rootUrl,
-                                                       qFileItemOperationParentItemKey : child,
-                                                       qFileItemOperationOperationQueueKey : _operationQueue,
-                                                       qFileItemOperationFileItemManagerKey : _fileItemManager,
-                                                       qFileItemOperationNotificationCenterKey : _notificationCenter,
-                                                       qFileItemOperationFileItemsKey : _fileItems,
-                                                       qFileItemOperationFileManagerKey : _fileManager,
-                                                   }]
-          ];
+          [_operationQueue addOperation:[self traverseOperationForParent:child]];
         } else {
           [fileItemsToAdd addObject:child];
         }
@@ -255,18 +234,7 @@ static const int qArrayChunkSize = 50;
         VRFileItem *child = childrenOfParent[i];
 
         if (child.dir) {
-          [_operationQueue addOperation:
-              [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationCacheMode
-                                                   dict:@{
-                                                       qFileItemOperationRootUrlKey : _rootUrl,
-                                                       qFileItemOperationParentItemKey : child,
-                                                       qFileItemOperationOperationQueueKey : _operationQueue,
-                                                       qFileItemOperationFileItemManagerKey : _fileItemManager,
-                                                       qFileItemOperationNotificationCenterKey : _notificationCenter,
-                                                       qFileItemOperationFileItemsKey : _fileItems,
-                                                       qFileItemOperationFileManagerKey : _fileManager,
-                                                   }]
-          ];
+          [_operationQueue addOperation:[self cacheOperationForParent:child]];
         }
       }
     }
@@ -304,6 +272,32 @@ static const int qArrayChunkSize = 50;
   dispatch_to_main_thread(^{
     [_notificationCenter postNotificationName:qChunkOfNewFileItemsAddedEvent object:parentUrl];
   });
+}
+
+- (VRFileItemOperation *)traverseOperationForParent:(VRFileItem *)parent {
+  return [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationTraverseMode
+                                              dict:@{
+                                                  qFileItemOperationRootUrlKey : _rootUrl,
+                                                  qFileItemOperationParentItemKey : parent,
+                                                  qFileItemOperationOperationQueueKey : _operationQueue,
+                                                  qFileItemOperationFileItemManagerKey : _fileItemManager,
+                                                  qFileItemOperationNotificationCenterKey : _notificationCenter,
+                                                  qFileItemOperationFileItemsKey : _fileItems,
+                                                  qFileItemOperationFileManagerKey : _fileManager,
+                                              }];
+}
+
+- (VRFileItemOperation *)cacheOperationForParent:(VRFileItem *)parent {
+  return [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationCacheMode
+                                              dict:@{
+                                                  qFileItemOperationRootUrlKey : _rootUrl,
+                                                  qFileItemOperationParentItemKey : parent,
+                                                  qFileItemOperationOperationQueueKey : _operationQueue,
+                                                  qFileItemOperationFileItemManagerKey : _fileItemManager,
+                                                  qFileItemOperationNotificationCenterKey : _notificationCenter,
+                                                  qFileItemOperationFileItemsKey : _fileItems,
+                                                  qFileItemOperationFileManagerKey : _fileManager,
+                                              }];
 }
 
 @end
