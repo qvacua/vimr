@@ -52,6 +52,14 @@ static const int qArrayChunkSize = 50;
                        } \
                        [self wait];
 
+#define CANCEL_OR_WAIT_BLOCK ^BOOL { \
+                               if ([self isCancelled]) { \
+                                 return YES; \
+                               } \
+                               [self wait]; \
+                               return NO; \
+                             }
+
 
 @implementation VRFileItemOperation {
   VRFileItemOperationMode _mode;
@@ -156,25 +164,21 @@ static const int qArrayChunkSize = 50;
     DDLogCaching(@"Children of %@ already cached, traversing or adding.", _parentItem.url);
 
     NSUInteger parentChildrenCount = children.count;
+    if (parentChildrenCount == 0) {
+      return;
+    }
+
     NSMutableArray *fileItemsToAdd = [[NSMutableArray alloc] initWithCapacity:parentChildrenCount];
-
-    std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(parentChildrenCount, qArrayChunkSize);
-    for (auto &pair : chunkedIndexes) {
-      CANCEL_OR_WAIT
-
-      size_t beginIndex = pair.first;
-      size_t endIndex = pair.second;
-
-      for (size_t i = beginIndex; i <= endIndex; i++) {
-        VRFileItem *child = children[i];
-
-        if (child.dir) {
-          DDLogCaching(@"Traversing children of %@", child.url);
-          [_operationQueue addOperation:[self traverseOperationForParent:child]];
-        } else {
-          [fileItemsToAdd addObject:child];
-        }
+    BOOL shouldReturn = chunk_enumerate_array(children, qArrayChunkSize, CANCEL_OR_WAIT_BLOCK, ^(VRFileItem *child) {
+      if (child.dir) {
+        DDLogCaching(@"Traversing children of %@", child.url);
+        [_operationQueue addOperation:[self traverseOperationForParent:child]];
+      } else {
+        [fileItemsToAdd addObject:child];
       }
+    });
+    if (shouldReturn) {
+      return;
     }
 
     if (fileItemsToAdd.isEmpty) {
@@ -203,10 +207,10 @@ static const int qArrayChunkSize = 50;
 
     [self wait];
 
-    NSMutableArray *childrenOfParent = _parentItem.children;
-    [childrenOfParent removeAllObjects];
+    NSMutableArray *children = _parentItem.children;
+    [children removeAllObjects];
     for (NSURL *childUrl in childUrls) {
-      [childrenOfParent addObject:[[VRFileItem alloc] initWithUrl:childUrl isDir:childUrl.isDirectory]];
+      [children addObject:[[VRFileItem alloc] initWithUrl:childUrl isDir:childUrl.isDirectory]];
     }
 
     // When the monitoring thread invalidates cache of this item before this line, then we will have an outdated
@@ -214,51 +218,40 @@ static const int qArrayChunkSize = 50;
     _parentItem.shouldCacheChildren = NO; // because shouldCacheChildren means, "should add direct descendants"
     _parentItem.isCachingChildren = NO; // direct descendants scanning is done
 
-    if (childrenOfParent.isEmpty) {
+    if (children.isEmpty) {
       return;
     }
 
     CANCEL_OR_WAIT
 
     DDLogCaching(@"### Adding (from caching) children items of parent: %@", _parentItem.url);
-    [self addAllToFileItemsForTargetUrl:childrenOfParent];
+    [self addAllToFileItemsForTargetUrl:children];
 
-    std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(childrenOfParent.count, qArrayChunkSize);
-    for (auto &pair : chunkedIndexes) {
-      CANCEL_OR_WAIT
-
-      size_t beginIndex = pair.first;
-      size_t endIndex = pair.second;
-
-      for (size_t i = beginIndex; i <= endIndex; i++) {
-        VRFileItem *child = childrenOfParent[i];
-
-        if (child.dir) {
-          [_operationQueue addOperation:[self cacheOperationForParent:child]];
-        }
+    BOOL shouldReturn = chunk_enumerate_array(children, qArrayChunkSize, CANCEL_OR_WAIT_BLOCK, ^(VRFileItem *child) {
+      if (child.dir) {
+        [_operationQueue addOperation:[self cacheOperationForParent:child]];
       }
+
+    });
+    if (shouldReturn) {
+      return;
     }
   }
 }
 
 - (void)addAllToFileItemsForTargetUrl:(NSArray *)items {
-  BOOL added = NO;
+  __block BOOL added = NO;
 
-  std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(items.count, qArrayChunkSize);
-  for (auto &pair : chunkedIndexes) {
-    CANCEL_OR_WAIT
-
-    size_t beginIndex = pair.first;
-    size_t endIndex = pair.second;
-
-    @synchronized (_fileItems) {
-      for (size_t i = beginIndex; i <= endIndex; i++) {
-        VRFileItem *child = items[i];
-        if (!child.dir) {
-          [_fileItems addObject:child.url.path];
-          added = YES;
-        }
+  @synchronized (_fileItems) {
+    BOOL shouldReturn = chunk_enumerate_array(items, qArrayChunkSize, CANCEL_OR_WAIT_BLOCK, ^(VRFileItem *child) {
+      if (!child.dir) {
+        [_fileItems addObject:child.url.path];
+        added = YES;
       }
+    });
+
+    if (shouldReturn) {
+      return;
     }
   }
 

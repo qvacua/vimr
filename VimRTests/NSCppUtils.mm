@@ -36,6 +36,9 @@
   [self assertPair:result[0] first:0 second:3];
   [self assertPair:result[1] first:4 second:7];
   [self assertPair:result[2] first:8 second:10];
+
+  result = chunked_indexes(0, 3);
+  assertThat(@(result.size()), is(@0));
 }
 
 - (void)assertPair:(std::pair<NSUInteger, NSUInteger> const &)pair first:(NSUInteger)first second:(NSUInteger)second {
