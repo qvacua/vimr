@@ -141,10 +141,11 @@ static const int qArrayChunkSize = 50;
 
     CANCEL_OR_WAIT
 
+    NSMutableArray *children = _parentItem.children;
     if (_parentItem.shouldCacheChildren) {
       // We remove all children when shouldCacheChildren is on, because we do not deep-scan in background, but only set
       // shouldCacheChildren to YES, ie invalidate the cache.
-      [_parentItem.children removeAllObjects];
+      [children removeAllObjects];
 
       [_operationQueue addOperation:
           [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationCacheMode
@@ -164,34 +165,44 @@ static const int qArrayChunkSize = 50;
 
     DDLogCaching(@"Children of %@ already cached, traversing or adding.", _parentItem.url);
 
-    NSMutableArray *fileItemsToAdd = [[NSMutableArray alloc] initWithCapacity:_parentItem.children.count];
-    for (VRFileItem *child in _parentItem.children) {
+    NSUInteger parentChildrenCount = children.count;
+    NSMutableArray *fileItemsToAdd = [[NSMutableArray alloc] initWithCapacity:parentChildrenCount];
+
+    std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(parentChildrenCount, qArrayChunkSize);
+    for (auto &pair : chunkedIndexes) {
       CANCEL_OR_WAIT
 
-      if (child.dir) {
-        DDLogCaching(@"Traversing children of %@", child.url);
-        [_operationQueue addOperation:
-            [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationTraverseMode
-                                                 dict:@{
-                                                     qFileItemOperationRootUrlKey : _rootUrl,
-                                                     qFileItemOperationParentItemKey : child,
-                                                     qFileItemOperationOperationQueueKey : _operationQueue,
-                                                     qFileItemOperationFileItemManagerKey : _fileItemManager,
-                                                     qFileItemOperationNotificationCenterKey : _notificationCenter,
-                                                     qFileItemOperationFileItemsKey : _fileItems,
-                                                     qFileItemOperationFileManagerKey : _fileManager,
-                                                 }]
-        ];
-      } else {
-        [fileItemsToAdd addObject:child];
+      size_t beginIndex = pair.first;
+      size_t endIndex = pair.second;
+
+      for (size_t i = beginIndex; i <= endIndex; i++) {
+        VRFileItem *child = children[i];
+
+        if (child.dir) {
+          DDLogCaching(@"Traversing children of %@", child.url);
+          [_operationQueue addOperation:
+              [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationTraverseMode
+                                                   dict:@{
+                                                       qFileItemOperationRootUrlKey : _rootUrl,
+                                                       qFileItemOperationParentItemKey : child,
+                                                       qFileItemOperationOperationQueueKey : _operationQueue,
+                                                       qFileItemOperationFileItemManagerKey : _fileItemManager,
+                                                       qFileItemOperationNotificationCenterKey : _notificationCenter,
+                                                       qFileItemOperationFileItemsKey : _fileItems,
+                                                       qFileItemOperationFileManagerKey : _fileManager,
+                                                   }]
+          ];
+        } else {
+          [fileItemsToAdd addObject:child];
+        }
       }
     }
-
-    CANCEL_OR_WAIT
 
     if (fileItemsToAdd.isEmpty) {
       return;
     }
+
+    CANCEL_OR_WAIT
 
     DDLogCaching(@"### Adding (from traversing) children items of parent: %@", _parentItem.url);
     [self addAllToFileItemsForTargetUrl:fileItemsToAdd];
@@ -233,22 +244,30 @@ static const int qArrayChunkSize = 50;
     DDLogCaching(@"### Adding (from caching) children items of parent: %@", _parentItem.url);
     [self addAllToFileItemsForTargetUrl:childrenOfParent];
 
-    for (VRFileItem *child in childrenOfParent) {
+    std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(childrenOfParent.count, qArrayChunkSize);
+    for (auto &pair : chunkedIndexes) {
       CANCEL_OR_WAIT
 
-      if (child.dir) {
-        [_operationQueue addOperation:
-            [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationCacheMode
-                                                 dict:@{
-                                                     qFileItemOperationRootUrlKey : _rootUrl,
-                                                     qFileItemOperationParentItemKey : child,
-                                                     qFileItemOperationOperationQueueKey : _operationQueue,
-                                                     qFileItemOperationFileItemManagerKey : _fileItemManager,
-                                                     qFileItemOperationNotificationCenterKey : _notificationCenter,
-                                                     qFileItemOperationFileItemsKey : _fileItems,
-                                                     qFileItemOperationFileManagerKey : _fileManager,
-                                                 }]
-        ];
+      size_t beginIndex = pair.first;
+      size_t endIndex = pair.second;
+
+      for (size_t i = beginIndex; i <= endIndex; i++) {
+        VRFileItem *child = childrenOfParent[i];
+
+        if (child.dir) {
+          [_operationQueue addOperation:
+              [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationCacheMode
+                                                   dict:@{
+                                                       qFileItemOperationRootUrlKey : _rootUrl,
+                                                       qFileItemOperationParentItemKey : child,
+                                                       qFileItemOperationOperationQueueKey : _operationQueue,
+                                                       qFileItemOperationFileItemManagerKey : _fileItemManager,
+                                                       qFileItemOperationNotificationCenterKey : _notificationCenter,
+                                                       qFileItemOperationFileItemsKey : _fileItems,
+                                                       qFileItemOperationFileManagerKey : _fileManager,
+                                                   }]
+          ];
+        }
       }
     }
   }
