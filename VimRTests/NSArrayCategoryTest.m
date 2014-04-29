@@ -10,6 +10,7 @@
 #import "VRBaseTestCase.h"
 #import "NSArray+VR.h"
 
+
 @interface NSArrayCategoryTest : VRBaseTestCase
 @end
 

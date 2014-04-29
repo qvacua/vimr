@@ -14,6 +14,7 @@
 #import "VRFileItem.h"
 #import "NSURL+VR.h"
 #import "NSArray+VR.h"
+#import "VRCppUtils.h"
 
 
 #define LOG_FLAG_CACHING (1 << 5)
@@ -256,15 +257,12 @@ static const int qArrayChunkSize = 50;
 - (void)addAllToFileItemsForTargetUrl:(NSArray *)items {
   BOOL added = NO;
 
-
-  NSArray *chunkedIndexes = [items indexesForChunkSize:qArrayChunkSize];
-  NSRange range;
-  for (NSValue *value in chunkedIndexes) {
+  std::vector<std::pair<NSUInteger, NSUInteger>> chunkedIndexes = chunked_indexes(items.count, qArrayChunkSize);
+  for (auto &pair : chunkedIndexes) {
     CANCEL_OR_WAIT
 
-    [value getValue:&range];
-    NSUInteger beginIndex = range.location;
-    NSUInteger endIndex = range.length;
+    NSUInteger beginIndex = pair.first;
+    NSUInteger endIndex = pair.second;
 
     @synchronized (_fileItems) {
       for (NSUInteger i = beginIndex; i <= endIndex; i++) {

@@ -14,6 +14,7 @@
 #import "VRUtils.h"
 #import "VRScoredPath.h"
 #import "NSArray+VR.h"
+#import "VRCppUtils.h"
 
 #import <numeric>
 #import <cf/cf.h>
@@ -157,14 +158,12 @@ std::vector<size_t> disambiguate(std::vector<std::string> const &paths) {
       }
     }
 
-    NSArray *chunkedIndexes = [result indexesForChunkSize:qArrayChunkSize];
-    NSRange range;
-    for (NSValue *value in chunkedIndexes) {
+    std::vector<std::pair<NSUInteger, NSUInteger>> chunkedIndexes = chunked_indexes(result.count, qArrayChunkSize);
+    for (auto &pair : chunkedIndexes) {
       CANCEL_WHEN_REQUESTED
-
-      [value getValue:&range];
-      NSUInteger beginIndex = range.location;
-      NSUInteger endIndex = range.length;
+      
+      NSUInteger beginIndex = pair.first;
+      NSUInteger endIndex = pair.second;
       NSUInteger count = endIndex - beginIndex + 1;
 
       dispatch_apply(count, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(size_t i) {
@@ -181,31 +180,31 @@ std::vector<size_t> disambiguate(std::vector<std::string> const &paths) {
       paths.push_back(cf::to_s((__bridge CFStringRef) scoredPath.path));
     }
 
-    CANCEL_WHEN_REQUESTED
-
-    NSUInteger chunkCounter = 0;
     std::vector<size_t> levels = disambiguate(paths);
-    for (auto &level : levels) {
-      if (chunkCounter % qArrayChunkSize == 0) {
-        CANCEL_WHEN_REQUESTED
-      }
+    chunkedIndexes = chunked_indexes((NSUInteger) levels.size(), qArrayChunkSize);
+    for (auto &pair : chunkedIndexes) {
+      CANCEL_WHEN_REQUESTED
 
-      chunkCounter++;
+      NSUInteger beginIndex = pair.first;
+      NSUInteger endIndex = pair.second;
+      NSUInteger count = endIndex - beginIndex + 1;
 
-      // http://stackoverflow.com/questions/10962290/find-position-of-element-in-c11-range-based-for-loop
-      VRScoredPath *scoredPath = result[(NSUInteger) (&level - &levels[0])];
-      NSURL *url = [NSURL fileURLWithPath:scoredPath.path];
+      dispatch_apply(count, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(size_t i) {
+        size_t level = levels[i];
+        VRScoredPath *scoredPath = result[i];
+        NSURL *url = [NSURL fileURLWithPath:scoredPath.path];
 
-      NSArray *disambiguationPathComponents = [url.pathComponents.reverseObjectEnumerator.allObjects
-          subarrayWithRange:NSMakeRange(1, level)
-      ];
+        NSArray *disambiguationPathComponents = [url.pathComponents.reverseObjectEnumerator.allObjects
+            subarrayWithRange:NSMakeRange(1, level)
+        ];
 
-      if (disambiguationPathComponents.isEmpty) {
-        scoredPath.displayName = url.lastPathComponent;
-      } else {
-        NSString *disambiguation = [disambiguationPathComponents componentsJoinedByString:@"/"];
-        scoredPath.displayName = SF(@"%@  —  %@", url.lastPathComponent, disambiguation);
-      }
+        if (disambiguationPathComponents.isEmpty) {
+          scoredPath.displayName = url.lastPathComponent;
+        } else {
+          NSString *disambiguation = [disambiguationPathComponents componentsJoinedByString:@"/"];
+          scoredPath.displayName = SF(@"%@  —  %@", url.lastPathComponent, disambiguation);
+        }
+      });
     }
 
     CANCEL_WHEN_REQUESTED
