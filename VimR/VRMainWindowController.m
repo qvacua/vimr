@@ -103,9 +103,13 @@
 #pragma mark Debug
 - (IBAction)firstDebugAction:(id)sender {
   DDLogDebug(@"buffers: %@", _vimController.buffers);
+  NSMenu *menu = _vimController.mainMenu;
+  NSMenuItem *fileMenu = menu.itemArray[2];
+  NSArray *editMenuArray = [[fileMenu submenu] itemArray];
+  DDLogDebug(@"edit menu: %@", editMenuArray);
 }
 
-#pragma mark NSWindowController
+#pragma mark NSObject
 - (void)dealloc {
   log4Mark;
 }

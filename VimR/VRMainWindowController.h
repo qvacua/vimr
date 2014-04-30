@@ -15,7 +15,9 @@
 @class VROpenQuicklyWindowController;
 @class VRWorkspace;
 
-@interface VRMainWindowController : NSWindowController <NSWindowDelegate, MMVimControllerDelegate>
+@interface VRMainWindowController : NSWindowController <
+    NSWindowDelegate,
+    MMVimControllerDelegate>
 
 #pragma mark Properties
 @property (weak) VRWorkspace *workspace;
