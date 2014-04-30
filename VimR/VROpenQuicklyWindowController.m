@@ -221,7 +221,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
   [_uiUpdateOperationQueue addOperationWithBlock:^{
     while (self.targetWindow) {
-      if (self.fileItemManager.isBusy || self.operationQueue.operationCount > 0) {
+      if (self.fileItemManager.fileItemOperationPending || self.operationQueue.operationCount > 0) {
         dispatch_to_main_thread(^{
           [self.progressIndicator startAnimation:self];
         });

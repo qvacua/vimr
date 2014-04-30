@@ -36,7 +36,6 @@ static void setup_file_logger() {
 
 
 NSString *const qFileItemOperationOperationQueueKey = @"operation-queue";
-NSString *const qFileItemOperationFileItemManagerKey = @"file-item-manager";
 NSString *const qFileItemOperationNotificationCenterKey = @"notification-center";
 NSString *const qFileItemOperationFileManagerKey = @"file-manager";
 NSString *const qFileItemOperationParentItemKey = @"parent-file-item";

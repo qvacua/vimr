@@ -12,9 +12,9 @@
 #import "VRUtils.h"
 #import "VRFileItem.h"
 #import "NSArray+VR.h"
-#import "NSMutableArray+VR.h"
 #import "NSURL+VR.h"
 #import "VRFileItemOperation.h"
+#import "VRInvalidateCacheOperation.h"
 
 
 #define LOG_FLAG_CACHING (1 << 5)
@@ -44,7 +44,9 @@ NSString *const qChunkOfNewFileItemsAddedEvent = @"chunk-of-new-file-items-added
 
 @property (readonly) NSMutableDictionary *url2CachedFileItem;
 @property (readonly) NSMutableArray *mutableFileItemsForTargetUrl;
-@property (readonly) NSOperationQueue *operationQueue;
+
+@property (readonly) NSOperationQueue *fileItemOperationQueue;
+@property (readonly) NSOperationQueue *monitoringOperationQueue;
 
 // Declared here to be used in the callback and not to make it public.
 - (void)invalidateCacheForPaths:(char **)eventPaths eventCount:(NSUInteger)eventCount;
@@ -127,7 +129,7 @@ void streamCallback(
   @synchronized (self) {
     // Just to be safe...
     [self resetTargetUrl];
-    _operationQueue.suspended = NO;
+    _fileItemOperationQueue.suspended = NO;
 
     VRFileItem *targetItem = _url2CachedFileItem[url];
     if (!targetItem) {
@@ -138,12 +140,12 @@ void streamCallback(
     [_mutableFileItemsForTargetUrl removeAllObjects];
 
     // We don't add targetItem to mutableFileItemsForTargetUrl, since it is a dir.
-    [self.operationQueue addOperation:
+    [_fileItemOperationQueue addOperation:
         [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationTraverseMode
                                              dict:@{
                                                  qFileItemOperationRootUrlKey : url,
                                                  qFileItemOperationParentItemKey : targetItem,
-                                                 qFileItemOperationOperationQueueKey : _operationQueue,
+                                                 qFileItemOperationOperationQueueKey : _fileItemOperationQueue,
                                                  qFileItemOperationNotificationCenterKey : _notificationCenter,
                                                  qFileItemOperationFileItemsKey : _mutableFileItemsForTargetUrl,
                                                  qFileItemOperationFileManagerKey : _fileManager,
@@ -155,9 +157,9 @@ void streamCallback(
 }
 
 - (void)resetTargetUrl {
-  @synchronized (_operationQueue) {
-    [_operationQueue setSuspended:YES];
-    [_operationQueue cancelAllOperations];
+  @synchronized (_fileItemOperationQueue) {
+    [_fileItemOperationQueue setSuspended:YES];
+    [_fileItemOperationQueue cancelAllOperations];
   }
 
   @synchronized (_mutableFileItemsForTargetUrl) {
@@ -166,43 +168,43 @@ void streamCallback(
 }
 
 - (void)cleanUp {
-  @synchronized (_operationQueue) {
-    _operationQueue.suspended = YES;
-    [_operationQueue cancelAllOperations];
+  @synchronized (_fileItemOperationQueue) {
+    _fileItemOperationQueue.suspended = YES;
+    [_fileItemOperationQueue cancelAllOperations];
 
     [self stop];
   }
 }
 
 - (void)pause {
-  @synchronized (_operationQueue) {
-    _operationQueue.suspended = YES;
+  @synchronized (_fileItemOperationQueue) {
+    _fileItemOperationQueue.suspended = YES;
 
-    for (VRFileItemOperation *operation in _operationQueue.operations) {
+    for (VRFileItemOperation *operation in _fileItemOperationQueue.operations) {
       [operation pause];
     }
   }
 }
 
 - (void)resume {
-  @synchronized (_operationQueue) {
-    _operationQueue.suspended = NO;
+  @synchronized (_fileItemOperationQueue) {
+    _fileItemOperationQueue.suspended = NO;
 
-    for (VRFileItemOperation *operation in _operationQueue.operations) {
+    for (VRFileItemOperation *operation in _fileItemOperationQueue.operations) {
       [operation resume];
     }
   }
 }
 
-- (BOOL)isBusy {
-  @synchronized (_operationQueue) {
-    return _operationQueue.operationCount > 0;
+- (BOOL)fileItemOperationPending {
+  @synchronized (_fileItemOperationQueue) {
+    return _fileItemOperationQueue.operationCount > 0;
   }
 }
 
 - (NSUInteger)operationCount {
-  @synchronized (_operationQueue) {
-    return _operationQueue.operationCount;
+  @synchronized (_fileItemOperationQueue) {
+    return _fileItemOperationQueue.operationCount;
   }
 }
 
@@ -217,8 +219,11 @@ void streamCallback(
   _url2CachedFileItem = [[NSMutableDictionary alloc] initWithCapacity:5];
   _mutableFileItemsForTargetUrl = [[NSMutableArray alloc] initWithCapacity:500];
 
-  _operationQueue = [[NSOperationQueue alloc] init];
-  _operationQueue.maxConcurrentOperationCount = 1;
+  _fileItemOperationQueue = [[NSOperationQueue alloc] init];
+  _fileItemOperationQueue.maxConcurrentOperationCount = 1;
+
+  _monitoringOperationQueue = [[NSOperationQueue alloc] init];
+  _monitoringOperationQueue.maxConcurrentOperationCount = 1;
 
 #ifdef DEBUG
   setup_file_logger();
@@ -242,33 +247,12 @@ void streamCallback(
 
       // NOTE: We could optimize here: Evaluate the flag for each URL and issue either a shallow or deep scan.
       // This however may be (or is) an overkill. For time being we issue only deep scan.
-      [self invalidateCacheForUrl:url];
+      [_monitoringOperationQueue addOperation:
+          [[VRInvalidateCacheOperation alloc] initWithUrl:url parentItems:[self parentItemsForUrl:url]
+                                          fileItemManager:self]
+      ];
     }
   };
-}
-
-/**
-* Performed on a separate thread, however, only called within an @autoreleasepool
-*/
-- (void)invalidateCacheForUrl:(NSURL *)url {
-  @synchronized (self) {
-    NSArray *parentUrls = [self parentUrlsForUrl:url];
-
-    for (NSURL *parentUrl in parentUrls) {
-      VRFileItem *parentItem = _url2CachedFileItem[parentUrl];
-
-      VRFileItem *matchingItem = [self findFileItemForUrl:url inParent:parentItem];
-      if (matchingItem) {
-          DDLogDebug(@"Invalidating cache for %@ of the parent %@", matchingItem, parentUrl);
-
-          matchingItem.shouldCacheChildren = YES;
-      }
-
-      if (!matchingItem) {
-        DDLogDebug(@"%@ in %@ not yet cached, noop", url, parentUrl);
-      }
-    }
-  }
 }
 
 - (VRFileItem *)findFileItemForUrl:(NSURL *)url inParent:(VRFileItem *)parent {
@@ -289,48 +273,12 @@ void streamCallback(
   return nil;
 }
 
-/**
-* Performed on a separate thread, however, only called within an @autoreleasepool
-*
-* Pre-order traversal of file items.
-* When stop of the block is set to YES, then that item is returned and the traversal stops.
-*/
-- (VRFileItem *)traverseFileItem:(VRFileItem *)parent usingBlock:(void (^)(VRFileItem *item, BOOL *stop))block {
-  BOOL stop = NO;
-
-  VRStack *nodeStack = [[NSMutableArray alloc] initWithCapacity:50];
-  [nodeStack push:parent];
-
-  __weak VRFileItem *currentItem;
-  while (nodeStack.count > 0) {
-    currentItem = [nodeStack pop];
-    if (currentItem.dir) {
-      [nodeStack pushArray:currentItem.children];
-    }
-
-    block(currentItem, &stop);
-
-    if (stop) {
-      return currentItem;
-    }
-  }
-
-  return nil;
-}
-
 // TODO: extract this in an util class and test it!
-- (NSArray *)parentUrlsForUrl:(NSURL *)url {
-  NSString *childPath = url.path;
-
+- (NSArray *)parentItemsForUrl:(NSURL *)url {
   NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:5];
-  for (NSURL *possibleParent in self.registeredUrls) {
-    NSString *parentPath = possibleParent.path;
-    if (parentPath.length > childPath.length) {
-      continue;
-    }
-
-    if ([[childPath substringToIndex:parentPath.length] isEqualToString:parentPath]) {
-      [result addObject:possibleParent];
+  for (NSURL *possibleParentUrl in self.registeredUrls) {
+    if ([possibleParentUrl isParentToUrl:url]) {
+      [result addObject:_url2CachedFileItem[possibleParentUrl]];
     }
   }
 

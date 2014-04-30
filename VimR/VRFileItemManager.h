@@ -32,7 +32,9 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 - (void)cleanUp;
 - (void)pause;
 - (void)resume;
-- (BOOL)isBusy;
+- (BOOL)fileItemOperationPending;
+
+// TODO: for debug only!
 - (NSUInteger)operationCount;
 
 #pragma mark NSObject
