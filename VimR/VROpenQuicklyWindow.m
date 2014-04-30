@@ -29,6 +29,7 @@ int qOpenQuicklyWindowPadding = 8;
   RETURN_NIL_WHEN_NOT_SELF
 
   self.hasShadow = YES;
+  self.level = NSFloatingWindowLevel; // the window will hide when spaces is activated
   self.opaque = NO;
   self.movableByWindowBackground = NO;
   self.excludedFromWindowsMenu = YES;
