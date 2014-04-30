@@ -17,6 +17,24 @@
 
 static const int ddLogLevel = LOG_LEVEL_DEBUG;
 
+static VRFileItem *find_file_item(NSURL *url, VRFileItem *parent) {
+  if ([parent.url isEqual:url]) {
+    return parent;
+  }
+
+  for (VRFileItem *child in parent.children) {
+    if ([child.url isEqual:url]) {
+      return child;
+    }
+
+    if (child.isDir && [child.url isParentToUrl:url]) {
+      return find_file_item(url, child);
+    }
+  }
+
+  return nil;
+}
+
 
 @implementation VRInvalidateCacheOperation {
   __weak VRFileItemManager *_fileItemManager;
@@ -24,6 +42,7 @@ static const int ddLogLevel = LOG_LEVEL_DEBUG;
   NSURL *_url;
 }
 
+#pragma mark Public
 - (instancetype)initWithUrl:(NSURL *)url parentItems:(NSArray *)parentItems
             fileItemManager:(__weak VRFileItemManager *)fileItemManager {
 
@@ -37,10 +56,11 @@ static const int ddLogLevel = LOG_LEVEL_DEBUG;
   return self;
 }
 
+#pragma mark NSOperation
 - (void)main {
   @autoreleasepool {
     for (VRFileItem *parentItem in _parentItems) {
-      VRFileItem *matchingItem = [self findFileItemForUrl:_url inParent:parentItem];
+      VRFileItem *matchingItem = find_file_item(_url, parentItem);
       if (matchingItem) {
         DDLogDebug(@"Invalidating cache for %@ of the parent %@", matchingItem, parentItem.url);
 
@@ -50,24 +70,6 @@ static const int ddLogLevel = LOG_LEVEL_DEBUG;
       }
     }
   }
-}
-
-- (VRFileItem *)findFileItemForUrl:(NSURL *)url inParent:(VRFileItem *)parent {
-  if ([parent.url isEqual:url]) {
-    return parent;
-  }
-
-  for (VRFileItem *child in parent.children) {
-    if ([child.url isEqual:url]) {
-      return child;
-    }
-
-    if (child.isDir && [child.url isParentToUrl:url]) {
-      return [self findFileItemForUrl:url inParent:child];
-    }
-  }
-
-  return nil;
 }
 
 @end

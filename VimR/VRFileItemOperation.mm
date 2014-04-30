@@ -153,7 +153,7 @@ static const int qArrayChunkSize = 50;
       // shouldCacheChildren to YES, ie invalidate the cache.
       [children removeAllObjects];
 
-      [_operationQueue addOperation:[self cacheOperationForParent:_parentItem]];
+      [_operationQueue addOperation:[self operationForParent:_parentItem mode:VRFileItemOperationCacheMode]];
 
       return;
     }
@@ -169,7 +169,7 @@ static const int qArrayChunkSize = 50;
     BOOL wasComplete = chunk_enumerate_array(children, qArrayChunkSize, CANCEL_OR_WAIT_BLOCK, ^(VRFileItem *child) {
       if (child.dir) {
         DDLogCaching(@"Traversing children of %@", child.url);
-        [_operationQueue addOperation:[self traverseOperationForParent:child]];
+        [_operationQueue addOperation:[self operationForParent:child mode:VRFileItemOperationTraverseMode]];
       } else {
         [fileItemsToAdd addObject:child];
       }
@@ -226,7 +226,7 @@ static const int qArrayChunkSize = 50;
 
     chunk_enumerate_array(children, qArrayChunkSize, CANCEL_OR_WAIT_BLOCK, ^(VRFileItem *child) {
       if (child.dir) {
-        [_operationQueue addOperation:[self cacheOperationForParent:child]];
+        [_operationQueue addOperation:[self operationForParent:child mode:VRFileItemOperationCacheMode]];
       }
     });
   }
@@ -260,20 +260,8 @@ static const int qArrayChunkSize = 50;
   });
 }
 
-- (VRFileItemOperation *)traverseOperationForParent:(VRFileItem *)parent {
-  return [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationTraverseMode
-                                              dict:@{
-                                                  qFileItemOperationRootUrlKey : _rootUrl,
-                                                  qFileItemOperationParentItemKey : parent,
-                                                  qFileItemOperationOperationQueueKey : _operationQueue,
-                                                  qFileItemOperationNotificationCenterKey : _notificationCenter,
-                                                  qFileItemOperationFileItemsKey : _fileItems,
-                                                  qFileItemOperationFileManagerKey : _fileManager,
-                                              }];
-}
-
-- (VRFileItemOperation *)cacheOperationForParent:(VRFileItem *)parent {
-  return [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationCacheMode
+- (VRFileItemOperation *)operationForParent:(VRFileItem *)parent mode:(VRFileItemOperationMode)mode {
+  return [[VRFileItemOperation alloc] initWithMode:mode
                                               dict:@{
                                                   qFileItemOperationRootUrlKey : _rootUrl,
                                                   qFileItemOperationParentItemKey : parent,

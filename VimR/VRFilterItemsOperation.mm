@@ -31,6 +31,32 @@ const NSUInteger qMaximumNumberOfFilterResult = 250;
 
 static const int qArrayChunkSize = 2000;
 
+static NSString *disambiguated_display_name(size_t level, NSURL *url) {
+  if (level == 0) {
+    return url.lastPathComponent;
+  }
+
+  NSArray *disambiguationPathComponents = [url.pathComponents.reverseObjectEnumerator.allObjects
+      subarrayWithRange:NSMakeRange(1, level)
+  ];
+
+  NSString *disambiguation = [disambiguationPathComponents componentsJoinedByString:@"/"];
+  return SF(@"%@  —  %@", url.lastPathComponent, disambiguation);
+}
+
+static NSRange capped_range_for_filtered_items(NSArray *result) {
+  if (result.isEmpty) {
+    return NSMakeRange(0, 0);
+  }
+
+  NSRange range;
+  if (result.count >= qMaximumNumberOfFilterResult) {
+    range = NSMakeRange(0, qMaximumNumberOfFilterResult - 1);
+  } else {
+    range = NSMakeRange(0, result.count - 1);
+  }
+  return range;
+}
 
 static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult(VRScoredPath *p1, VRScoredPath *p2) {
   return (NSComparisonResult) (p1.score <= p2.score);
@@ -90,10 +116,11 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
     // mutated, while we enumerate over it. Then, we have to update the filtered list, when a chunk of cached items are
     // updated. However, it's not necessary anymore, because we're pausing the file item manager...
     NSArray *fileItemsOfTargetUrl = _fileItemManager.fileItemsOfTargetUrl;
-    NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:1000];
 
+    NSMutableArray *result;
     std::vector<std::pair<size_t, size_t>> chunkedIndexes;
     @synchronized (fileItemsOfTargetUrl) {
+      result = [[NSMutableArray alloc] initWithCapacity:fileItemsOfTargetUrl.count];
       chunkedIndexes = chunked_indexes(fileItemsOfTargetUrl.count, qArrayChunkSize);
     }
 
@@ -117,35 +144,26 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
 
       CANCEL_WHEN_REQUESTED
       [result sortUsingComparator:qScoredItemComparator];
+      NSArray *cappedResult = [result subarrayWithRange:capped_range_for_filtered_items(result)];
 
       std::vector<std::string> paths;
-      for (VRScoredPath *scoredPath in result) {
+      for (VRScoredPath *scoredPath in cappedResult) {
         paths.push_back(cf::to_s((__bridge CFStringRef) scoredPath.path));
       }
 
       CANCEL_WHEN_REQUESTED
       std::vector<size_t> levels = disambiguate(paths);
-      dispatch_loop(count, ^(size_t i) {
-        size_t level = levels[i];
-        VRScoredPath *scoredPath = result[i];
+      dispatch_loop(cappedResult.count, ^(size_t i) {
+        VRScoredPath *scoredPath = cappedResult[i];
         NSURL *url = [NSURL fileURLWithPath:scoredPath.path];
 
-        NSArray *disambiguationPathComponents = [url.pathComponents.reverseObjectEnumerator.allObjects
-            subarrayWithRange:NSMakeRange(1, level)
-        ];
-
-        if (disambiguationPathComponents.isEmpty) {
-          scoredPath.displayName = url.lastPathComponent;
-        } else {
-          NSString *disambiguation = [disambiguationPathComponents componentsJoinedByString:@"/"];
-          scoredPath.displayName = SF(@"%@  —  %@", url.lastPathComponent, disambiguation);
-        }
+        scoredPath.displayName = disambiguated_display_name(levels[i], url);
       });
 
       CANCEL_WHEN_REQUESTED
       @synchronized (_filteredItems) {
         [_filteredItems removeAllObjects];
-        [_filteredItems addObjectsFromArray:[result subarrayWithRange:[self rangeForFilteredItems:result]]];
+        [_filteredItems addObjectsFromArray:cappedResult];
       }
 
       CANCEL_WHEN_REQUESTED
@@ -158,21 +176,6 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
 
     [_fileItemManager resume];
   }
-}
-
-#pragma mark Private
-- (NSRange)rangeForFilteredItems:(NSArray *)result {
-  if (result.isEmpty) {
-    return NSMakeRange(0, 0);
-  }
-
-  NSRange range;
-  if (result.count >= qMaximumNumberOfFilterResult) {
-    range = NSMakeRange(0, qMaximumNumberOfFilterResult - 1);
-  } else {
-    range = NSMakeRange(0, result.count - 1);
-  }
-  return range;
 }
 
 @end
