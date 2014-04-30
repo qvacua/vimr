@@ -13,7 +13,10 @@
 #import "VRWorkspaceController.h"
 #import "VRLog.h"
 #import "VRMainWindowController.h"
+#import "VRUtils.h"
+#import "VRFileItemManager.h"
 #import "VRWorkspace.h"
+#import "VROpenQuicklyWindowController.h"
 
 
 static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
@@ -26,9 +29,10 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
 @implementation VRAppDelegate
 
-TB_MANUALWIRE(workspace)
-
-TB_MANUALWIRE(workspaceController)
+@manualwire(workspace)
+@manualwire(workspaceController)
+@manualwire(fileItemManager)
+@manualwire(openQuicklyWindowController)
 
 #pragma mark IBActions
 - (IBAction)newDocument:(id)sender {
@@ -36,7 +40,6 @@ TB_MANUALWIRE(workspaceController)
 }
 
 - (IBAction)newTab:(id)sender {
-  // when we're here, no window is open yet
   [self newDocument:sender];
 }
 
@@ -57,12 +60,16 @@ TB_MANUALWIRE(workspaceController)
   [self.workspace openURL:[[NSURL alloc] initWithString:qVimRHelpUrl]];
 }
 
+- (IBAction)thirdDebugAction:(id)sender {
+  [self application:self.application openFiles:@[
+      [NSURL fileURLWithPath:@"/Users/hat/Projects/vimr/Podfile"]
+  ]];
+}
+
 #pragma mark NSObject
 - (id)init {
   self = [super init];
-  if (self == nil) {
-    return nil;
-  }
+  RETURN_NIL_WHEN_NOT_SELF
 
   [[TBContext sharedContext] autowireSeed:self];
 
@@ -135,6 +142,8 @@ TB_MANUALWIRE(workspaceController)
 
 - (void)applicationWillTerminate:(NSNotification *)notification {
   [self.workspaceController cleanUp];
+  [self.fileItemManager cleanUp];
+  [self.openQuicklyWindowController cleanUp];
 }
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender {

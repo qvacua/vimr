@@ -5,5 +5,17 @@
 //
 
 #ifdef __OBJC__
-    #import <Cocoa/Cocoa.h>
+
+#import <Cocoa/Cocoa.h>
+
+#endif
+
+
+#ifdef __cplusplus
+
+#import <map>
+#import <set>
+#import <string>
+#import <vector>
+
 #endif

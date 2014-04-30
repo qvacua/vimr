@@ -12,12 +12,16 @@
 
 
 @class VRWorkspaceController;
+@class VRFileItemManager;
+@class VROpenQuicklyWindowController;
 
 @interface VRAppDelegate : NSObject <NSApplicationDelegate>
 
 @property (weak) NSApplication *application;
 @property (weak) VRWorkspaceController *workspaceController;
 @property (weak) NSWorkspace *workspace;
+@property (weak) VRFileItemManager *fileItemManager;
+@property (weak) VROpenQuicklyWindowController *openQuicklyWindowController;
 
 @property (assign) IBOutlet NSWindow *window;
 

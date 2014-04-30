@@ -1,15 +1,22 @@
 PODS:
+  - CocoaLumberjack (1.8.1):
+    - CocoaLumberjack/Extensions
+  - CocoaLumberjack/Core (1.8.1)
+  - CocoaLumberjack/Extensions (1.8.1):
+    - CocoaLumberjack/Core
   - OCHamcrest (3.0.1)
   - OCMockito (1.2.0):
     - OCHamcrest (~> 3.0)
   - TBCacao (0.0.2)
 
 DEPENDENCIES:
+  - CocoaLumberjack
   - OCHamcrest
   - OCMockito
   - TBCacao
 
 SPEC CHECKSUMS:
+  CocoaLumberjack: 020378ec400d658923bf5887178394f65f052c90
   OCHamcrest: 782c52ae8c673e5d6060a65005cfd26d20d519ba
   OCMockito: 050fca9528760faa8b5fafc82faad9d54f0864c0
   TBCacao: fb6134236cf304cc6b21e8d76eb2a035e09fb742

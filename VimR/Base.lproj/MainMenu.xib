@@ -22,10 +22,10 @@
                                     <action selector="orderFrontStandardAboutPanel:" target="-2" id="142"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Check for Updates..." id="eYB-XP-GFA">
+                            <menuItem title="Check for Updates..." id="6Nm-TV-3uP">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="checkForUpdates:" target="ftn-Gc-L13" id="cG5-TX-QNQ"/>
+                                    <action selector="checkForUpdates:" target="zvh-K8-0Ta" id="T6w-Kj-waB"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="236">
@@ -84,6 +84,11 @@
                             <menuItem title="Open…" keyEquivalent="o" id="72">
                                 <connections>
                                     <action selector="openDocument:" target="-1" id="374"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Open Quickly…" keyEquivalent="O" id="Vim-gL-ViA">
+                                <connections>
+                                    <action selector="openQuickly:" target="-1" id="dHw-5P-kf4"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Open Recent" id="124">
@@ -390,9 +395,19 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Debug" id="IF5-nu-Y0K">
                         <items>
-                            <menuItem title="Some thing" keyEquivalent="1" id="dzX-yG-Iqo">
+                            <menuItem title="Debug 1" keyEquivalent="1" id="dzX-yG-Iqo">
                                 <connections>
                                     <action selector="firstDebugAction:" target="-1" id="wcM-Hn-Grz"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Debug 2" keyEquivalent="2" id="tzt-Jk-072">
+                                <connections>
+                                    <action selector="secondDebugAction:" target="-1" id="1jC-K5-yZZ"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Debug 3" keyEquivalent="3" id="QY8-mB-qpl">
+                                <connections>
+                                    <action selector="thirdDebugAction:" target="-1" id="cL4-65-B5I"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -420,6 +435,30 @@
             <view key="contentView" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                 <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <searchField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sYr-CZ-8gK">
+                        <rect key="frame" x="20" y="318" width="206" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" id="Rdr-XZ-AEJ">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </searchFieldCell>
+                    </searchField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wuI-o1-6Qs">
+                        <rect key="frame" x="245" y="144" width="38" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="3u3-SY-eju">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <progressIndicator horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="mcQ-3J-zQx">
+                        <rect key="frame" x="289" y="144" width="16" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    </progressIndicator>
+                </subviews>
             </view>
         </window>
         <customObject id="494" customClass="VRAppDelegate">
@@ -428,6 +467,6 @@
             </connections>
         </customObject>
         <customObject id="420" customClass="NSFontManager"/>
-        <customObject id="ftn-Gc-L13" customClass="SUUpdater"/>
+        <customObject id="zvh-K8-0Ta" customClass="SUUpdater"/>
     </objects>
 </document>

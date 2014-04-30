@@ -11,22 +11,25 @@
 #import <MacVimFramework/MacVimFramework.h>
 
 
-extern NSString *const qMainWindowNibName;
-
 @class VRWorkspaceController;
-
+@class VROpenQuicklyWindowController;
+@class VRWorkspace;
 
 @interface VRMainWindowController : NSWindowController <NSWindowDelegate, MMVimControllerDelegate>
 
 #pragma mark Properties
-@property (weak) VRWorkspaceController *workspaceController;
+@property (weak) VRWorkspace *workspace;
+
 @property (weak) MMVimController *vimController;
 @property (weak) MMVimView *vimView;
+
 @property BOOL needsToResizeVimView;
 
 #pragma mark Public
+- (instancetype)initWithContentRect:(CGRect)contentRect;
 - (void)openFilesWithArgs:(NSDictionary *)args;
 - (void)cleanUpAndClose;
+- (void)openFileWithUrl:(NSURL *)url;
 
 #pragma mark IBActions
 - (IBAction)newTab:(id)sender;
@@ -34,11 +37,14 @@ extern NSString *const qMainWindowNibName;
 - (IBAction)saveDocument:(id)sender;
 - (IBAction)saveDocumentAs:(id)sender;
 - (IBAction)revertDocumentToSaved:(id)sender;
+- (IBAction)openQuickly:(id)sender;
 
 #pragma mark Debug
 - (IBAction)firstDebugAction:(id)sender;
+- (IBAction)secondDebugAction:(id)sender;
 
 #pragma mark NSWindowController
+- (IBAction)thirdDebugAction:(id)sender;
 - (void)dealloc;
 
 #pragma mark MMViewDelegate informal protocol
