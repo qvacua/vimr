@@ -105,6 +105,7 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
   workspace.openQuicklyWindowController = self.openQuicklyWindowController;
   workspace.fileItemManager = self.fileItemManager;
   workspace.workingDirectory = workingDir;
+  workspace.workspaceController = self;
 
   [self.fileItemManager registerUrl:workingDir];
 

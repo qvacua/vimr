@@ -397,7 +397,7 @@
                         <items>
                             <menuItem title="Debug 1" keyEquivalent="1" id="dzX-yG-Iqo">
                                 <connections>
-                                    <action selector="firstDebugAction:" target="-1" id="wcM-Hn-Grz"/>
+                                    <action selector="firstDebugAction:" target="-1" id="wVm-7C-9Jq"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Debug 2" keyEquivalent="2" id="tzt-Jk-072">
@@ -498,7 +498,7 @@
                             <rect key="frame" x="1" y="1" width="0.0" height="16"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="37" horizontal="NO" id="swr-pD-miJ">
+                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="swr-pD-miJ">
                             <rect key="frame" x="-15" y="17" width="16" height="0.0"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>

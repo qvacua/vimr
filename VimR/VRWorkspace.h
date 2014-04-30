@@ -14,10 +14,12 @@
 @class MMVimController;
 @class VRFileItemManager;
 @class VROpenQuicklyWindowController;
+@class VRWorkspaceController;
 
 
 @interface VRWorkspace : NSObject
 
+@property VRWorkspaceController *workspaceController;
 @property VRFileItemManager *fileItemManager;
 @property VROpenQuicklyWindowController *openQuicklyWindowController;
 @property VRMainWindowController *mainWindowController;
