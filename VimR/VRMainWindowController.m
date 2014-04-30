@@ -234,7 +234,7 @@
   self.needsToResizeVimView = YES;
 }
 
-- (void)   controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns isLive:(BOOL)
+- (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns isLive:(BOOL)
     live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data {
 
   log4Mark;
@@ -323,8 +323,10 @@
 }
 
 - (void)controller:(MMVimController *)controller setWindowTitle:(NSString *)title data:(NSData *)data {
+  // This delegate method is called whenever new buffer is opened. Here we should loop over all buffers and determine
+  // the common parent directory and set it as the workspace.
+  // When we open a new tab, this does not get called, but in that case, no change in workspace is required.
   [self setWindowTitleToCurrentBuffer];
-
 }
 
 - (void)controller:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue {

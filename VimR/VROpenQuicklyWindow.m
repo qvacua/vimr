@@ -24,7 +24,8 @@ int qOpenQuicklyWindowPadding = 8;
 
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect {
-  self = [super initWithContentRect:contentRect styleMask:NSBorderlessWindowMask | NSTexturedBackgroundWindowMask
+  self = [super initWithContentRect:contentRect styleMask:NSTitledWindowMask | NSClosableWindowMask
+      | NSTexturedBackgroundWindowMask
                             backing:NSBackingStoreBuffered defer:YES];
   RETURN_NIL_WHEN_NOT_SELF
 
@@ -33,6 +34,9 @@ int qOpenQuicklyWindowPadding = 8;
   self.opaque = NO;
   self.movableByWindowBackground = NO;
   self.excludedFromWindowsMenu = YES;
+  [self setTitle:@"Open Quickly"];
+  [self setAutorecalculatesContentBorderThickness:NO forEdge:NSMaxYEdge];
+  [self setContentBorderThickness:25 forEdge:NSMaxYEdge];
 
   [self addViews];
 
@@ -95,9 +99,27 @@ int qOpenQuicklyWindowPadding = 8;
   _scrollView.translatesAutoresizingMaskIntoConstraints = NO;
   _scrollView.hasVerticalScroller = YES;
   _scrollView.hasHorizontalScroller = NO;
+  _scrollView.borderType = NSBezelBorder;
   _scrollView.autohidesScrollers = YES;
   _scrollView.documentView = _fileItemTableView;
   [self.contentView addSubview:_scrollView];
+
+  NSTextField *workspaceLabel = [[NSTextField alloc] initWithFrame:CGRectZero];
+  workspaceLabel.translatesAutoresizingMaskIntoConstraints = NO;
+  workspaceLabel.backgroundColor = [NSColor clearColor];
+  workspaceLabel.stringValue = @"Workspace:";
+  workspaceLabel.editable = NO;
+  workspaceLabel.bordered = NO;
+  [self.contentView addSubview:workspaceLabel];
+
+  _workspaceTextField = [[NSTextField alloc] initWithFrame:CGRectZero];
+  _workspaceTextField.translatesAutoresizingMaskIntoConstraints = NO;
+  [_workspaceTextField.cell setLineBreakMode:NSLineBreakByTruncatingHead];
+  _workspaceTextField.backgroundColor = [NSColor clearColor];
+  _workspaceTextField.stringValue = @"";
+  _workspaceTextField.editable = NO;
+  _workspaceTextField.bordered = NO;
+  [self.contentView addSubview:_workspaceTextField];
 
   NSDictionary *views = @{
       @"searchField" : _searchField,
@@ -105,15 +127,18 @@ int qOpenQuicklyWindowPadding = 8;
       @"progress" : _progressIndicator,
       @"table" : _scrollView,
       @"itemCount" : _itemCountTextField,
+      @"workspaceLabel" : workspaceLabel,
+      @"workspaceTextField" : _workspaceTextField,
   };
 
   constraint_layout(views, @"H:|-(%d)-[label(>=50)]", qOpenQuicklyWindowPadding);
   constraint_layout(views, @"H:[progress(16)]-(%d)-[itemCount(>=25)]-(%d)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
   constraint_layout(views, @"H:|-(%d)-[searchField(>=100)]-(%d)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
-  constraint_layout(views, @"H:|[table(>=100)]|");
-  constraint_layout(views, @"V:|-(%d)-[label(17)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
-  constraint_layout(views, @"V:|-(%d)-[itemCount(17)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
-  constraint_layout(views, @"V:|-(%d)-[progress(16)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding + 1, qOpenQuicklyWindowPadding);
+  constraint_layout(views, @"H:|-(-1)-[table(>=100)]-(-1)-|");
+  constraint_layout(views, @"H:|-(%d)-[workspaceLabel][workspaceTextField(>=50)]-(%d)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
+  constraint_layout(views, @"V:|-(%d)-[label(17)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]-(4)-[workspaceLabel(17)]-(4)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
+  constraint_layout(views, @"V:|-(%d)-[itemCount(17)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]-(4)-[workspaceTextField(17)]-(4)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
+  constraint_layout(views, @"V:|-(%d)-[progress(16)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]-(4)-[workspaceTextField(17)]-(4)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding + 1, qOpenQuicklyWindowPadding);
 }
 
 @end
