@@ -14,13 +14,7 @@
 #import "VRMainWindowController.h"
 #import "VRFileItemManager.h"
 #import "VRUtils.h"
-
-
-#ifdef DEBUG
-static const int ddLogLevel = LOG_LEVEL_DEBUG;
-#else
-static const int ddLogLevel = LOG_LEVEL_INFO;
-#endif
+#import "VRDefaultLogSetting.h"
 
 
 @interface VRWorkspace ()

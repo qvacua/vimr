@@ -10,6 +10,7 @@
 #import <TBCacao/TBCacao.h>
 #import <MacVimFramework/MacVimFramework.h>
 #import <CocoaLumberjack/DDTTYLogger.h>
+#import "VRLogFormatter.h"
 
 
 int main(int argc, const char *argv[]) {
@@ -24,6 +25,7 @@ int main(int argc, const char *argv[]) {
 
   DDTTYLogger *logger = [DDTTYLogger sharedInstance];
   logger.colorsEnabled = YES;
+  logger.logFormatter = [[VRLogFormatter alloc] init];
   [DDLog addLogger:logger];
 
   return NSApplicationMain(argc, argv);

@@ -18,16 +18,10 @@
 #import "VRInactiveTableView.h"
 #import "VRMainWindowController.h"
 #import "VRWorkspace.h"
+#import "VRDefaultLogSetting.h"
 
 
 int qOpenQuicklyWindowWidth = 400;
-
-
-#ifdef DEBUG
-static const int ddLogLevel = LOG_LEVEL_DEBUG;
-#else
-static const int ddLogLevel = LOG_LEVEL_INFO;
-#endif
 
 
 @interface VROpenQuicklyWindowController ()

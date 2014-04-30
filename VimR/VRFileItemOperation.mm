@@ -7,7 +7,6 @@
  * See LICENSE
  */
 
-#import <CocoaLumberjack/DDFileLogger.h>
 #import "VRFileItemOperation.h"
 #import "VRUtils.h"
 #import "VRFileItemManager.h"
@@ -15,24 +14,7 @@
 #import "NSURL+VR.h"
 #import "NSArray+VR.h"
 #import "VRCppUtils.h"
-
-
-#define LOG_FLAG_CACHING (1 << 5)
-#define DDLogCaching(fmt, ...) ASYNC_LOG_OBJC_MAYBE(ddLogLevel, LOG_FLAG_CACHING,  0, fmt, ##__VA_ARGS__)
-static const int ddLogLevel = LOG_LEVEL_DEBUG;
-//static const int ddLogLevel = LOG_LEVEL_DEBUG | LOG_FLAG_CACHING;
-static DDFileLogger *file_logger_for_cache;
-
-
-static void setup_file_logger() {
-  static dispatch_once_t once_token;
-
-  dispatch_once(&once_token, ^{
-    file_logger_for_cache = [[DDFileLogger alloc] init];
-    file_logger_for_cache.maximumFileSize = 20 * (1024 * 1024); // 20 MB
-    [DDLog addLogger:file_logger_for_cache withLogLevel:LOG_FLAG_CACHING];
-  });
-}
+#import "VRCachingLogSetting.h"
 
 
 NSString *const qFileItemOperationOperationQueueKey = @"operation-queue";

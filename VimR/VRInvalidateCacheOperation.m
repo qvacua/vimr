@@ -13,9 +13,7 @@
 #import "VRFileItem.h"
 #import "NSURL+VR.h"
 #import "VRUtils.h"
-
-
-static const int ddLogLevel = LOG_LEVEL_DEBUG;
+#import "VRDefaultLogSetting.h"
 
 
 static VRFileItem *find_file_item(NSURL *url, VRFileItem *parent) {

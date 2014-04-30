@@ -7,7 +7,6 @@
  * See LICENSE
  */
 
-#import <CocoaLumberjack/DDLog.h>
 #import "VRFilterItemsOperation.h"
 #import "VROpenQuicklyWindowController.h"
 #import "VRFileItemManager.h"
@@ -17,9 +16,6 @@
 #import "VRCppUtils.h"
 
 #import <cf/cf.h>
-
-
-static const int ddLogLevel = LOG_LEVEL_DEBUG;
 
 
 NSString *const qFilterItemsOperationFileItemManagerKey = @"file-item-manager";
