@@ -46,7 +46,7 @@ NSString *const qChunkOfNewFileItemsAddedEvent = @"chunk-of-new-file-items-added
 @property (readonly) NSMutableArray *mutableFileItemsForTargetUrl;
 
 @property (readonly) NSOperationQueue *fileItemOperationQueue;
-@property (readonly) NSOperationQueue *monitoringOperationQueue;
+@property (readonly) NSOperationQueue *invalidateCacheOperationQueue;
 
 // Declared here to be used in the callback and not to make it public.
 - (void)invalidateCacheForPaths:(char **)eventPaths eventCount:(NSUInteger)eventCount;
@@ -222,8 +222,8 @@ void streamCallback(
   _fileItemOperationQueue = [[NSOperationQueue alloc] init];
   _fileItemOperationQueue.maxConcurrentOperationCount = 1;
 
-  _monitoringOperationQueue = [[NSOperationQueue alloc] init];
-  _monitoringOperationQueue.maxConcurrentOperationCount = 1;
+  _invalidateCacheOperationQueue = [[NSOperationQueue alloc] init];
+  _invalidateCacheOperationQueue.maxConcurrentOperationCount = 1;
 
 #ifdef DEBUG
   setup_file_logger();
@@ -247,30 +247,12 @@ void streamCallback(
 
       // NOTE: We could optimize here: Evaluate the flag for each URL and issue either a shallow or deep scan.
       // This however may be (or is) an overkill. For time being we issue only deep scan.
-      [_monitoringOperationQueue addOperation:
+      [_invalidateCacheOperationQueue addOperation:
           [[VRInvalidateCacheOperation alloc] initWithUrl:url parentItems:[self parentItemsForUrl:url]
                                           fileItemManager:self]
       ];
     }
   };
-}
-
-- (VRFileItem *)findFileItemForUrl:(NSURL *)url inParent:(VRFileItem *)parent {
-  if ([parent.url isEqual:url]) {
-    return parent;
-  }
-
-  for (VRFileItem *child in parent.children) {
-    if ([child.url isEqual:url]) {
-      return child;
-    }
-
-    if (child.isDir && [child.url isParentToUrl:url]) {
-      return [self findFileItemForUrl:url inParent:child];
-    }
-  }
-
-  return nil;
 }
 
 // TODO: extract this in an util class and test it!
