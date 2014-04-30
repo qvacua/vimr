@@ -14,3 +14,4 @@ OBJC_EXTERN inline double measure_time(dispatch_block_t block);
 OBJC_EXTERN inline void dispatch_to_main_thread(dispatch_block_t block);
 OBJC_EXTERN inline void dispatch_to_global_queue(dispatch_block_t block);
 OBJC_EXTERN inline void dispatch_loop(size_t count, void (^block)(size_t));
+OBJC_EXTERN NSURL *common_parent_url(NSArray *fileUrls);

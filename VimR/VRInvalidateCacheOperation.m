@@ -17,6 +17,7 @@
 
 static const int ddLogLevel = LOG_LEVEL_DEBUG;
 
+
 static VRFileItem *find_file_item(NSURL *url, VRFileItem *parent) {
   if ([parent.url isEqual:url]) {
     return parent;

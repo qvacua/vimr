@@ -21,12 +21,17 @@
 @property VRFileItemManager *fileItemManager;
 @property VROpenQuicklyWindowController *openQuicklyWindowController;
 @property VRMainWindowController *mainWindowController;
-@property NSURL *workingDirectory;
+@property (copy) NSURL *workingDirectory;
 
 #pragma mark Public
 - (void)openFileWithUrl:(NSURL *)url;
 - (BOOL)hasModifiedBuffer;
 - (void)setUpWithVimController:(MMVimController *)vimController;
+- (void)setUpInitialBuffers;
 - (void)cleanUpAndClose;
 
+#pragma mark NSObject
+- (id)init;
+
+- (void)updateBuffers;
 @end

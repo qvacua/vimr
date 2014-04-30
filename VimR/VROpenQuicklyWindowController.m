@@ -38,6 +38,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @property (weak) VRInactiveTableView *fileItemTableView;
 @property (weak) NSProgressIndicator *progressIndicator;
 @property (weak) NSTextField *itemCountTextField;
+@property (weak) NSTextField *workspaceTextField;
 @property (readonly) NSOperationQueue *operationQueue;
 @property (readonly) NSMutableArray *filteredFileItems;
 @property (readonly) NSOperationQueue *uiUpdateOperationQueue;
@@ -95,6 +96,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
   _progressIndicator = win.progressIndicator;
   _itemCountTextField = win.itemCountTextField;
+  _workspaceTextField = win.workspaceTextField;
 
   win.delegate = self;
 
@@ -218,6 +220,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)setupUiUpdateOperation {
   _progressIndicator.hidden = NO;
+  _workspaceTextField.stringValue = _targetWindowController.workspace.workingDirectory.path;
 
   [_uiUpdateOperationQueue addOperationWithBlock:^{
     while (self.targetWindow) {
