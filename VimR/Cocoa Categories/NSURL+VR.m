@@ -45,4 +45,20 @@ NSString *const qUrlNoParentException = @"qNoParentException";
   return self.URLByDeletingLastPathComponent.lastPathComponent;
 }
 
+- (BOOL)isParentToUrl:(NSURL *)url {
+  NSString *path = self.path;
+  NSUInteger pathLength = path.length;
+
+  NSString *targetPath = url.path;
+  if (pathLength > targetPath.length) {
+    return NO;
+  }
+
+  if ([[targetPath substringToIndex:pathLength] isEqualToString:path]) {
+    return YES;
+  }
+  
+  return NO;
+}
+
 @end

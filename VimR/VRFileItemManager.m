@@ -20,7 +20,7 @@
 #define LOG_FLAG_CACHING (1 << 5)
 #define DDLogCaching(fmt, ...) ASYNC_LOG_OBJC_MAYBE(ddLogLevel, LOG_FLAG_CACHING,  0, fmt, ##__VA_ARGS__)
 static const int ddLogLevel = LOG_LEVEL_DEBUG;
-//static const int ddLogLevel = LOG_LEVEL_DEBUG;// | LOG_FLAG_CACHING;
+//static const int ddLogLevel = LOG_LEVEL_DEBUG | LOG_FLAG_CACHING;
 static DDFileLogger *file_logger_for_cache;
 
 static void setup_file_logger() {
@@ -258,21 +258,36 @@ void streamCallback(
     for (NSURL *parentUrl in parentUrls) {
       VRFileItem *parentItem = _url2CachedFileItem[parentUrl];
 
-      VRFileItem *matchingItem = [self traverseFileItem:parentItem usingBlock:^(VRFileItem *item, BOOL *stop) {
-        if ([item.url isEqualTo:url]) {
-          DDLogDebug(@"Invalidating cache for %@ of the parent %@", item, parentUrl);
+      VRFileItem *matchingItem = [self findFileItemForUrl:url inParent:parentItem];
+      if (matchingItem) {
+          DDLogDebug(@"Invalidating cache for %@ of the parent %@", matchingItem, parentUrl);
 
-          // TODO: sync on item?
-          item.shouldCacheChildren = YES;
-          *stop = YES;
-        }
-      }];
+          matchingItem.shouldCacheChildren = YES;
+      }
 
       if (!matchingItem) {
         DDLogDebug(@"%@ in %@ not yet cached, noop", url, parentUrl);
       }
     }
   }
+}
+
+- (VRFileItem *)findFileItemForUrl:(NSURL *)url inParent:(VRFileItem *)parent {
+  if ([parent.url isEqual:url]) {
+    return parent;
+  }
+
+  for (VRFileItem *child in parent.children) {
+    if ([child.url isEqual:url]) {
+      return child;
+    }
+
+    if (child.isDir && [child.url isParentToUrl:url]) {
+      return [self findFileItemForUrl:url inParent:child];
+    }
+  }
+
+  return nil;
 }
 
 /**

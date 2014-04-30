@@ -1,4 +1,4 @@
-/**
+ /**
  * Tae Won Ha — @hataewon
  *
  * http://taewon.de
@@ -38,6 +38,14 @@
 
   url = [NSURL fileURLWithPath:@"/"];
   XCTAssertThrows(url.parentName, @"%@ cannot have a parent", url);
+}
+
+- (void)testIsParentForUrl {
+  url = [NSURL fileURLWithPath:@"/Users/test"];
+  assertThat(@([url isParentToUrl:[NSURL fileURLWithPath:@"/Users/test/test.txt"]]), isYes);
+  assertThat(@([url isParentToUrl:[NSURL fileURLWithPath:@"/Users/no"]]), isNo);
+  assertThat(@([url isParentToUrl:[NSURL fileURLWithPath:@"/Tes"]]), isNo);
+
 }
 
 @end

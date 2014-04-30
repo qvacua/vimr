@@ -169,7 +169,7 @@ static const int qArrayChunkSize = 50;
     }
 
     NSMutableArray *fileItemsToAdd = [[NSMutableArray alloc] initWithCapacity:parentChildrenCount];
-    BOOL shouldReturn = chunk_enumerate_array(children, qArrayChunkSize, CANCEL_OR_WAIT_BLOCK, ^(VRFileItem *child) {
+    BOOL wasComplete = chunk_enumerate_array(children, qArrayChunkSize, CANCEL_OR_WAIT_BLOCK, ^(VRFileItem *child) {
       if (child.dir) {
         DDLogCaching(@"Traversing children of %@", child.url);
         [_operationQueue addOperation:[self traverseOperationForParent:child]];
@@ -177,7 +177,7 @@ static const int qArrayChunkSize = 50;
         [fileItemsToAdd addObject:child];
       }
     });
-    if (shouldReturn) {
+    if (!wasComplete) {
       return;
     }
 
@@ -227,15 +227,11 @@ static const int qArrayChunkSize = 50;
     DDLogCaching(@"### Adding (from caching) children items of parent: %@", _parentItem.url);
     [self addAllToFileItemsForTargetUrl:children];
 
-    BOOL shouldReturn = chunk_enumerate_array(children, qArrayChunkSize, CANCEL_OR_WAIT_BLOCK, ^(VRFileItem *child) {
+    chunk_enumerate_array(children, qArrayChunkSize, CANCEL_OR_WAIT_BLOCK, ^(VRFileItem *child) {
       if (child.dir) {
         [_operationQueue addOperation:[self cacheOperationForParent:child]];
       }
-
     });
-    if (shouldReturn) {
-      return;
-    }
   }
 }
 
