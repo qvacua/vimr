@@ -34,7 +34,7 @@ int qOpenQuicklyWindowPadding = 8;
   self.opaque = NO;
   self.movableByWindowBackground = NO;
   self.excludedFromWindowsMenu = YES;
-  [self setTitle:@"Open Quickly"];
+  self.title = @"Open Quickly";
   [self setAutorecalculatesContentBorderThickness:NO forEdge:NSMaxYEdge];
   [self setContentBorderThickness:25 forEdge:NSMaxYEdge];
 

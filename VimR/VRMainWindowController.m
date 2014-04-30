@@ -9,6 +9,7 @@
 
 #import <PSMTabBarControl/PSMTabBarControl.h>
 #import <MacVimFramework/MacVimFramework.h>
+#import <CocoaLumberjack/DDLog.h>
 #import "VRMainWindowController.h"
 #import "VRLog.h"
 #import "MMAlert.h"
@@ -18,6 +19,13 @@
 #import "VRFileItemManager.h"
 #import "VRWorkspace.h"
 #import "VRWorkspaceController.h"
+
+
+#ifdef DEBUG
+static const int ddLogLevel = LOG_LEVEL_DEBUG;
+#else
+static const int ddLogLevel = LOG_LEVEL_INFO;
+#endif
 
 
 @interface VRMainWindowController ()
@@ -100,6 +108,7 @@
 
 #pragma mark Debug
 - (IBAction)firstDebugAction:(id)sender {
+  DDLogDebug(@"buffers: %@", _vimController.buffers);
 }
 
 #pragma mark NSWindowController
@@ -141,7 +150,7 @@
   int constrained[2];
   [textView constrainRows:&constrained[0] columns:&constrained[1] toSize:textView.frame.size];
 
-  log4Debug(@"End of live resize, notify Vim that text dimensions are %d x %d", constrained[1], constrained[0]);
+  DDLogDebug(@"End of live resize, notify Vim that text dimensions are %d x %d", constrained[1], constrained[0]);
 
   NSData *data = [NSData dataWithBytes:constrained length:(2 * sizeof(int))];
   BOOL liveResizeMsgSuccessful = [self.vimController sendMessageNow:LiveResizeMsgID data:data timeout:.5];
@@ -152,7 +161,7 @@
     * match the last dimensions received from Vim, otherwise we end up
     * with inconsistent states.
     */
-    log4Debug(@"live resizing failed");
+    DDLogDebug(@"live resizing failed");
     [self resizeWindowToFitContentSize:self.vimView.desiredSize];
   }
 
@@ -234,15 +243,15 @@
   self.needsToResizeVimView = YES;
 }
 
-- (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns isLive:(BOOL)
-    live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data {
+- (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
+            isLive:(BOOL)live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data {
 
   log4Mark;
-  log4Debug(@"%d X %d\tlive: %@\tkeepOnScreen: %@", rows, columns, @(live), @(isReplyToGuiResize));
+  DDLogDebug(@"%d X %d\tlive: %@\tkeepOnScreen: %@", rows, columns, @(live), @(isReplyToGuiResize));
   [self.vimView setDesiredRows:rows columns:columns];
 
   if (!self.vimViewSetUpDone) {
-    log4Debug(@"not yet setup");
+    DDLogDebug(@"not yet setup");
     return;
   }
 
@@ -269,6 +278,8 @@
 
   [self updateResizeConstraints];
   [self resizeWindowToFitContentSize:self.vimView.desiredSize];
+
+  [_workspace setUpInitialBuffers];
 
   [self.window makeFirstResponder:self.vimView.textView];
 }
@@ -298,7 +309,7 @@
 - (void)controller:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data {
   log4Mark;
 
-  log4Debug(@"tabs: %@", [self.vimController tabs]);
+  DDLogDebug(@"tabs: %@", [self.vimController tabs]);
 }
 
 - (void)controller:(MMVimController *)controller tabDraggedWithData:(NSData *)data {
@@ -323,28 +334,31 @@
 }
 
 - (void)controller:(MMVimController *)controller setWindowTitle:(NSString *)title data:(NSData *)data {
-  // This delegate method is called whenever new buffer is opened. Here we should loop over all buffers and determine
-  // the common parent directory and set it as the workspace.
-  // When we open a new tab, this does not get called, but in that case, no change in workspace is required.
   [self setWindowTitleToCurrentBuffer];
+
+  // This delegate method is called whenever new buffer is opened, eg :e filename. Here we should loop over all buffers
+  // and determine the common parent directory and set it as the workspace.
+  // When we open a new tab, this does not get called, but in that case, no change in workspace is required.
+  [_workspace updateBuffers];
 }
+
 
 - (void)controller:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue {
   if (!self.needsToResizeVimView) {
     return;
   }
 
-  log4Debug(@"resizing window to fit Vim view");
+  DDLogDebug(@"resizing window to fit Vim view");
   self.needsToResizeVimView = NO;
 
   NSSize contentSize = self.vimView.desiredSize;
   contentSize = [self constrainContentSizeToScreenSize:contentSize];
-  log4Debug(@"uncorrected size: %@", [NSValue valueWithSize:contentSize]);
+  DDLogDebug(@"uncorrected size: %@", [NSValue valueWithSize:contentSize]);
   int rows = 0, cols = 0;
   contentSize = [self.vimView constrainRows:&rows columns:&cols toSize:contentSize];
 
-  log4Debug(@"%d X %d", rows, cols);
-  log4Debug(@"corrected size: %@", [NSValue valueWithSize:contentSize]);
+  DDLogDebug(@"%d X %d", rows, cols);
+  DDLogDebug(@"corrected size: %@", [NSValue valueWithSize:contentSize]);
 
   self.vimView.frameSize = contentSize;
 
@@ -422,7 +436,7 @@
 }
 
 - (void)sendCommandToVim:(NSString *)command {
-  log4Debug(@"sending command %@", command);
+  DDLogDebug(@"sending command %@", command);
   [self.vimController addVimInput:SF(@"<C-\\><C-N>%@<CR>", command)];
 }
 
@@ -441,7 +455,7 @@
     ret = @[@(code)];
   }
 
-  log4Debug(@"Alert return=%@", ret);
+  DDLogDebug(@"Alert return=%@", ret);
 
   // NOTE!  This causes the sheet animation to run its course BEFORE the rest
   // of this function is executed.  If we do not wait for the sheet to
@@ -523,7 +537,7 @@
   NSPoint oldTopLeft = {frame.origin.x, NSMaxY(frame)};
   NSPoint newTopLeft = {newFrame.origin.x, NSMaxY(newFrame)};
   if (NSEqualPoints(oldTopLeft, newTopLeft)) {
-    log4Debug(@"returning since top left point equal");
+    DDLogDebug(@"returning since top left point equal");
     return;
   }
 
