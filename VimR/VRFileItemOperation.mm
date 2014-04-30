@@ -65,7 +65,6 @@ static const int qArrayChunkSize = 50;
   VRFileItemOperationMode _mode;
 
   __weak NSOperationQueue *_operationQueue;
-  __weak VRFileItemManager *_fileItemManager;
   __weak NSFileManager *_fileManager;
   __weak NSNotificationCenter *_notificationCenter;
   __weak VRFileItem *_parentItem;
@@ -105,7 +104,6 @@ static const int qArrayChunkSize = 50;
   _mode = mode;
 
   _operationQueue = dict[qFileItemOperationOperationQueueKey];
-  _fileItemManager = dict[qFileItemOperationFileItemManagerKey];
   _notificationCenter = dict[qFileItemOperationNotificationCenterKey];
   _fileManager = dict[qFileItemOperationFileManagerKey];
   _parentItem = dict[qFileItemOperationParentItemKey];
@@ -269,7 +267,6 @@ static const int qArrayChunkSize = 50;
                                                   qFileItemOperationRootUrlKey : _rootUrl,
                                                   qFileItemOperationParentItemKey : parent,
                                                   qFileItemOperationOperationQueueKey : _operationQueue,
-                                                  qFileItemOperationFileItemManagerKey : _fileItemManager,
                                                   qFileItemOperationNotificationCenterKey : _notificationCenter,
                                                   qFileItemOperationFileItemsKey : _fileItems,
                                                   qFileItemOperationFileManagerKey : _fileManager,
@@ -282,7 +279,6 @@ static const int qArrayChunkSize = 50;
                                                   qFileItemOperationRootUrlKey : _rootUrl,
                                                   qFileItemOperationParentItemKey : parent,
                                                   qFileItemOperationOperationQueueKey : _operationQueue,
-                                                  qFileItemOperationFileItemManagerKey : _fileItemManager,
                                                   qFileItemOperationNotificationCenterKey : _notificationCenter,
                                                   qFileItemOperationFileItemsKey : _fileItems,
                                                   qFileItemOperationFileManagerKey : _fileManager,

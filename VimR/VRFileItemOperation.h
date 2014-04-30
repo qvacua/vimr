@@ -11,7 +11,6 @@
 
 
 extern NSString *const qFileItemOperationOperationQueueKey;
-extern NSString *const qFileItemOperationFileItemManagerKey;
 extern NSString *const qFileItemOperationFileManagerKey;
 extern NSString *const qFileItemOperationNotificationCenterKey;
 extern NSString *const qFileItemOperationParentItemKey;

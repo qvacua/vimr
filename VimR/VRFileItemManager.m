@@ -144,7 +144,6 @@ void streamCallback(
                                                  qFileItemOperationRootUrlKey : url,
                                                  qFileItemOperationParentItemKey : targetItem,
                                                  qFileItemOperationOperationQueueKey : _operationQueue,
-                                                 qFileItemOperationFileItemManagerKey : self,
                                                  qFileItemOperationNotificationCenterKey : _notificationCenter,
                                                  qFileItemOperationFileItemsKey : _mutableFileItemsForTargetUrl,
                                                  qFileItemOperationFileManagerKey : _fileManager,
