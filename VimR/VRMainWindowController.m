@@ -30,7 +30,10 @@
 @end
 
 @implementation VRMainWindowController {
-  NSURL *debugUrl;
+  int _userRows;
+  int _userCols;
+  CGPoint _userTopLeft;
+  BOOL _shouldRestoreUserTopLeft;
 }
 
 #pragma mark Public
@@ -93,6 +96,63 @@
 
 - (IBAction)revertDocumentToSaved:(id)sender {
   [self sendCommandToVim:@":e!"];
+}
+
+- (IBAction)zoom:(id)sender {
+  // maximize window
+  NSScreen *screen = self.window.screen;
+  if (!screen) {
+    DDLogWarn(@"Window not on screen, zoom to main screen");
+    screen = [NSScreen mainScreen];
+    if (!screen) {
+      DDLogError(@"No main screen, abort zoom");
+      return;
+    }
+  }
+
+  // Decide whether too zoom horizontally or not (always zoom vertically).
+  NSEvent *event = [NSApp currentEvent];
+  BOOL cmdLeftClick = event.type == NSLeftMouseUp && event.modifierFlags & NSCommandKeyMask;
+  BOOL zoomBoth = NO;
+  zoomBoth = (zoomBoth && !cmdLeftClick) || (!zoomBoth && cmdLeftClick);
+
+  // Figure out how many rows/columns can fit while zoomed.
+  int rowsZoomed, colsZoomed;
+  NSRect maxFrame = screen.visibleFrame;
+  NSRect contentRect = [self.window contentRectForFrameRect:maxFrame];
+  [_vimView constrainRows:&rowsZoomed columns:&colsZoomed toSize:contentRect.size];
+
+  int curRows, curCols;
+  [_vimView.textView getMaxRows:&curRows columns:&curCols];
+
+  int rows, cols;
+  BOOL isZoomed = zoomBoth ? curRows >= rowsZoomed && curCols >= colsZoomed : curRows >= rowsZoomed;
+  if (isZoomed) {
+    rows = _userRows > 0 ? _userRows : curRows;
+    cols = _userCols > 0 ? _userCols : curCols;
+  } else {
+    rows = rowsZoomed;
+    cols = zoomBoth ? colsZoomed : curCols;
+
+    if (curRows + 2 < rows || curCols + 2 < cols) {
+      // The window is being zoomed so save the current "user state".
+      // Note that if the window does not enlarge by a 'significant'
+      // number of rows/columns then we don't save the current state.
+      // This is done to take into account toolbar/scrollbars
+      // showing/hiding.
+      _userRows = curRows;
+      _userCols = curCols;
+      NSRect frame = self.window.frame;
+      _userTopLeft = CGPointMake(frame.origin.x, NSMaxY(frame));
+    }
+  }
+
+  // NOTE: Instead of resizing the window immediately we send a zoom message
+  // to the backend so that it gets a chance to resize before the window
+  // does.  This avoids problems with the window flickering when zooming.
+  int info[3] = {rows, cols, !isZoomed};
+  NSData *data = [NSData dataWithBytes:info length:3 * sizeof(int)];
+  [_vimController sendMessage:ZoomMsgID data:data];
 }
 
 - (IBAction)openQuickly:(id)sender {
@@ -167,6 +227,25 @@
 }
 
 #pragma mark MMVimControllerDelegate
+- (void)controller:(MMVimController *)controller zoomWithRows:(int)rows columns:(int)columns state:(int)state
+              data:(NSData *)data {
+
+  [_vimView setDesiredRows:rows columns:columns];
+  _needsToResizeVimView = YES;
+  _isReplyToGuiResize = YES;
+
+  // NOTE: If state==0 then the window should be put in the non-zoomed
+  // "user state".  That is, move the window back to the last stored
+  // position.  If the window is in the zoomed state, the call to change the
+  // dimensions above will also reposition the window to ensure it fits on
+  // the screen.  However, since resizing of the window is delayed we also
+  // delay repositioning so that both happen at the same time (this avoid
+  // situations where the window would appear to "jump").
+  if (!state && !CGPointEqualToPoint(CGPointZero, _userTopLeft)) {
+    _shouldRestoreUserTopLeft = YES;
+  }
+}
+
 - (void)controller:(MMVimController *)controller handleShowDialogWithButtonTitles:(NSArray *)buttonTitles
              style:(NSAlertStyle)style message:(NSString *)message text:(NSString *)text
    textFieldString:(NSString *)textFieldString data:(NSData *)data {
@@ -246,7 +325,7 @@
 
   log4Mark;
   DDLogDebug(@"%d X %d\tlive: %@\tkeepOnScreen: %@", rows, columns, @(live), @(isReplyToGuiResize));
-  [self.vimView setDesiredRows:rows columns:columns];
+  [_vimView setDesiredRows:rows columns:columns];
 
   if (!self.vimViewSetUpDone) {
     DDLogDebug(@"not yet setup");
@@ -254,8 +333,8 @@
   }
 
   if (!live) {
-    self.needsToResizeVimView = YES;
-    self.isReplyToGuiResize = isReplyToGuiResize;
+    _needsToResizeVimView = YES;
+    _isReplyToGuiResize = isReplyToGuiResize;
   }
 }
 
@@ -495,6 +574,14 @@
   logRect4Debug(@"old", frame);
   logRect4Debug(@"new", newFrame);
 
+  if (_shouldRestoreUserTopLeft) {
+      // Restore user top left window position (which is saved when zooming).
+      CGFloat dy = _userTopLeft.y - NSMaxY(newFrame);
+      newFrame.origin.x = _userTopLeft.x;
+      newFrame.origin.y += dy;
+      _shouldRestoreUserTopLeft = NO;
+  }
+
   NSScreen *screen = window.screen;
   if (self.isReplyToGuiResize && screen) {
     // Ensure that the window fits inside the visible part of the screen.
@@ -606,7 +693,7 @@
       | NSTexturedBackgroundWindowMask;
 
   VRMainWindow *window = [[VRMainWindow alloc] initWithContentRect:contentRect styleMask:windowStyle
-                                                   backing:NSBackingStoreBuffered defer:YES];
+                                                           backing:NSBackingStoreBuffered defer:YES];
   window.delegate = self;
   window.hasShadow = YES;
   window.title = @"VimR";
