@@ -12,6 +12,8 @@ The very first goal is to get a naked Vim running using [MacVimFramework](https:
 
 [![Build Status](https://travis-ci.org/qvacua/vimr.svg?branch=master)](https://travis-ci.org/qvacua/vimr)
 
+![Screenshot](https://raw.github.com/qvacua/vimr/master/Meta/screenshot.png)
+
 How to Build
 ------------
 First, clone the project and the `macvim` submodule. Then, build the `macvim` submodule: Assuming you're in the project root
