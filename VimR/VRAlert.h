@@ -16,7 +16,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface MMAlert : NSAlert
+@interface VRAlert : NSAlert
 
 @property (readonly) NSTextField *textField;
 

@@ -7,19 +7,19 @@
  * Do ":help credits" in Vim to see a list of people who contributed.
  * See README.txt for an overview of the Vim source code.
  *
- * Minor modifications by Tae Won Ha — @hataewon
+ * MMAlert of MacVim, minor modifications by Tae Won Ha — @hataewon
  *
  * http://taewon.de
  * http://qvacua.com
  */
 
-#import "MMAlert.h"
+#import "VRAlert.h"
 
 
 static int MMAlertTextFieldHeight = 22;
 
 
-@implementation MMAlert
+@implementation VRAlert
 
 - (void)setTextFieldString:(NSString *)textFieldString {
   @synchronized (self) {

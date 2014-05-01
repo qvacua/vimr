@@ -12,9 +12,9 @@
 #import <CocoaLumberjack/DDLog.h>
 #import "VRMainWindowController.h"
 #import "VRLog.h"
-#import "MMAlert.h"
+#import "VRAlert.h"
 #import "VRUtils.h"
-#import "VRWindow.h"
+#import "VRMainWindow.h"
 #import "VROpenQuicklyWindowController.h"
 #import "VRFileItemManager.h"
 #import "VRWorkspace.h"
@@ -174,7 +174,7 @@
   log4Mark;
 
   // copied from MacVim {
-  MMAlert *alert = [[MMAlert alloc] init];
+  VRAlert *alert = [[VRAlert alloc] init];
   alert.alertStyle = style;
 
   // NOTE: This has to be done before setting the informative text.
@@ -442,12 +442,12 @@
   return [@{@"descriptor" : descriptor} dictionaryAsData];
 }
 
-- (void)alertDidEnd:(MMAlert *)alert code:(int)code context:(void *)controllerContext {
+- (void)alertDidEnd:(VRAlert *)alert code:(int)code context:(void *)controllerContext {
   // copied from MacVim {
   NSArray *ret = nil;
   code = code - NSAlertFirstButtonReturn + 1;
 
-  if ([alert isKindOfClass:[MMAlert class]] && alert.textField) {
+  if ([alert isKindOfClass:[VRAlert class]] && alert.textField) {
     ret = @[@(code), alert.textField.stringValue];
   } else {
     ret = @[@(code)];
@@ -600,12 +600,12 @@
   self.window.title = SF(@"%@ — %@", filename, containingFolder);
 }
 
-- (VRWindow *)newMainWindowForContentRect:(CGRect)contentRect {
+- (VRMainWindow *)newMainWindowForContentRect:(CGRect)contentRect {
   unsigned windowStyle = NSTitledWindowMask | NSUnifiedTitleAndToolbarWindowMask
       | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask
       | NSTexturedBackgroundWindowMask;
 
-  VRWindow *window = [[VRWindow alloc] initWithContentRect:contentRect styleMask:windowStyle
+  VRMainWindow *window = [[VRMainWindow alloc] initWithContentRect:contentRect styleMask:windowStyle
                                                    backing:NSBackingStoreBuffered defer:YES];
   window.delegate = self;
   window.hasShadow = YES;

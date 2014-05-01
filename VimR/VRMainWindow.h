@@ -10,7 +10,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface VRWindow : NSWindow
+@interface VRMainWindow : NSWindow
 
 - (IBAction)performClose:(id)sender;
 

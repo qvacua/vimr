@@ -7,10 +7,10 @@
  * See LICENSE
  */
 
-#import "VRWindow.h"
+#import "VRMainWindow.h"
 
 
-@implementation VRWindow
+@implementation VRMainWindow
 
 - (IBAction)performClose:(id)sender {
   if ([self.windowController respondsToSelector:@selector(performClose:)]) {
