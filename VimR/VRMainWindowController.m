@@ -112,12 +112,12 @@
 
   // Decide whether too zoom horizontally or not (always zoom vertically).
   NSEvent *event = [NSApp currentEvent];
-  BOOL cmdLeftClick = event.type == NSLeftMouseUp && event.modifierFlags & NSCommandKeyMask;
-  BOOL zoomBoth = NO;
-  zoomBoth = (zoomBoth && !cmdLeftClick) || (!zoomBoth && cmdLeftClick);
+  BOOL zoomBoth = event.type == NSLeftMouseUp
+      && (event.modifierFlags & NSCommandKeyMask || event.modifierFlags & NSAlternateKeyMask);
 
   // Figure out how many rows/columns can fit while zoomed.
-  int rowsZoomed, colsZoomed;
+  int rowsZoomed;
+  int colsZoomed;
   NSRect maxFrame = screen.visibleFrame;
   NSRect contentRect = [self.window contentRectForFrameRect:maxFrame];
   [_vimView constrainRows:&rowsZoomed columns:&colsZoomed toSize:contentRect.size];
@@ -575,15 +575,15 @@
   logRect4Debug(@"new", newFrame);
 
   if (_shouldRestoreUserTopLeft) {
-      // Restore user top left window position (which is saved when zooming).
-      CGFloat dy = _userTopLeft.y - NSMaxY(newFrame);
-      newFrame.origin.x = _userTopLeft.x;
-      newFrame.origin.y += dy;
-      _shouldRestoreUserTopLeft = NO;
+    // Restore user top left window position (which is saved when zooming).
+    CGFloat dy = _userTopLeft.y - NSMaxY(newFrame);
+    newFrame.origin.x = _userTopLeft.x;
+    newFrame.origin.y += dy;
+    _shouldRestoreUserTopLeft = NO;
   }
 
   NSScreen *screen = window.screen;
-  if (self.isReplyToGuiResize && screen) {
+  if (_isReplyToGuiResize && screen) {
     // Ensure that the window fits inside the visible part of the screen.
     // If there are more than one screen the window will be moved to fit
     // entirely in the screen that most of it occupies.
@@ -621,7 +621,7 @@
 
   NSPoint oldTopLeft = {frame.origin.x, NSMaxY(frame)};
   NSPoint newTopLeft = {newFrame.origin.x, NSMaxY(newFrame)};
-  if (NSEqualPoints(oldTopLeft, newTopLeft)) {
+  if (CGPointEqualToPoint(oldTopLeft, newTopLeft)) {
     DDLogDebug(@"returning since top left point equal");
     return;
   }
