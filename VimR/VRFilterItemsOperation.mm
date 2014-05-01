@@ -27,6 +27,7 @@ const NSUInteger qMaximumNumberOfFilterResult = 250;
 
 static const int qArrayChunkSize = 2000;
 
+
 static NSString *disambiguated_display_name(size_t level, NSURL *url) {
   if (level == 0) {
     return url.lastPathComponent;

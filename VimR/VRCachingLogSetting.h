@@ -30,4 +30,5 @@ static void setup_file_logger() {
 }
 #else
 static const int ddLogLevel = LOG_LEVEL_INFO;
+#define DDLogCaching(fmt, ...)
 #endif

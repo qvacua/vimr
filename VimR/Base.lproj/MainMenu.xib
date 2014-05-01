@@ -391,23 +391,23 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Debug" id="ENQ-3Q-U1j">
+                <menuItem title="Debug" hidden="YES" id="ENQ-3Q-U1j">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Debug" id="IF5-nu-Y0K">
                         <items>
                             <menuItem title="Debug 1" keyEquivalent="1" id="dzX-yG-Iqo">
                                 <connections>
-                                    <action selector="firstDebugAction:" target="-1" id="wVm-7C-9Jq"/>
+                                    <action selector="debug1Action:" target="-1" id="iLE-Rw-ymG"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Debug 2" keyEquivalent="2" id="tzt-Jk-072">
                                 <connections>
-                                    <action selector="secondDebugAction:" target="-1" id="1jC-K5-yZZ"/>
+                                    <action selector="debug2Action:" target="-1" id="DjF-9w-2DQ"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Debug 3" keyEquivalent="3" id="QY8-mB-qpl">
                                 <connections>
-                                    <action selector="thirdDebugAction:" target="-1" id="cL4-65-B5I"/>
+                                    <action selector="debug3Action:" target="-1" id="Gex-St-mCz"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -522,6 +522,7 @@
         </window>
         <customObject id="494" customClass="VRAppDelegate">
             <connections>
+                <outlet property="debug" destination="ENQ-3Q-U1j" id="NmI-dt-BFI"/>
                 <outlet property="window" destination="371" id="532"/>
             </connections>
         </customObject>

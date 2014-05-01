@@ -23,7 +23,8 @@
 @property (weak) VRFileItemManager *fileItemManager;
 @property (weak) VROpenQuicklyWindowController *openQuicklyWindowController;
 
-@property (assign) IBOutlet NSWindow *window;
+@property (weak) IBOutlet NSWindow *window;
+@property (weak) IBOutlet NSMenuItem *debug;
 
 #pragma mark IBActions
 - (IBAction)newDocument:(id)sender;

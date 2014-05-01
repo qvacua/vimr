@@ -9,17 +9,19 @@
 
 #import <TBCacao/TBCacao.h>
 #import <MacVimFramework/MacVimFramework.h>
+#import <CocoaLumberjack/DDLog.h>
 #import "VRAppDelegate.h"
 #import "VRWorkspaceController.h"
-#import "VRLog.h"
 #import "VRMainWindowController.h"
 #import "VRUtils.h"
 #import "VRFileItemManager.h"
 #import "VRWorkspace.h"
 #import "VROpenQuicklyWindowController.h"
+#import "VRDefaultLogSetting.h"
 
 
 static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
+
 
 @interface VRAppDelegate ()
 
@@ -48,11 +50,11 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
   openPanel.allowsMultipleSelection = YES;
 
   if ([openPanel runModal] != NSOKButton) {
-    log4Debug(@"no files selected");
+    DDLogDebug(@"no files selected");
     return;
   }
 
-  log4Debug(@"opening %@", openPanel.URLs);
+  DDLogDebug(@"opening %@", openPanel.URLs);
   [self application:self.application openFiles:openPanel.URLs];
 }
 
@@ -60,7 +62,7 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
   [self.workspace openURL:[[NSURL alloc] initWithString:qVimRHelpUrl]];
 }
 
-- (IBAction)thirdDebugAction:(id)sender {
+- (IBAction)debug3Action:(id)sender {
   [self application:self.application openFiles:@[
       [NSURL fileURLWithPath:@"/Users/hat/Projects/vimr/Podfile"]
   ]];
@@ -78,7 +80,6 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
 #pragma mark NSApplicationDelegate
 - (BOOL)applicationOpenUntitledFile:(NSApplication *)theApplication {
-  log4Mark;
   [self.workspaceController newWorkspace];
   return YES;
 }
@@ -111,6 +112,10 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
   // this cannot be done with TBCacao
   self.application = aNotification.object;
+
+#ifdef DEBUG
+  _debug.hidden = NO;
+#endif
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {

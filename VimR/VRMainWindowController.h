@@ -41,12 +41,7 @@
 - (IBAction)revertDocumentToSaved:(id)sender;
 - (IBAction)openQuickly:(id)sender;
 
-#pragma mark Debug
-- (IBAction)firstDebugAction:(id)sender;
-- (IBAction)secondDebugAction:(id)sender;
-
-#pragma mark NSWindowController
-- (IBAction)thirdDebugAction:(id)sender;
+#pragma mark NSObject
 - (void)dealloc;
 
 #pragma mark MMViewDelegate informal protocol
