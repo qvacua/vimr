@@ -8,17 +8,23 @@
  */
 
 #import "VRMainWindow.h"
+#import "VRMainWindowController.h"
 
 
 @implementation VRMainWindow
 
-- (IBAction)performClose:(id)sender {
-  if ([self.windowController respondsToSelector:@selector(performClose:)]) {
-    [self.windowController performClose:sender];
-    return;
-  }
+#pragma mark NSWindow
+- (id)windowController {
+  return (VRMainWindowController *) [super windowController];
+}
 
-  [super performClose:sender];
+- (IBAction)performClose:(id)sender {
+  [self.windowController performClose:sender];
+}
+
+- (void)zoom:(id)sender {
+  // We shortcut the usual zooming behavior of NSWindow and provide custom zooming in the window controller.
+  [self.windowController zoom:sender];
 }
 
 @end

@@ -12,6 +12,8 @@
 
 @interface VRMainWindow : NSWindow
 
+#pragma mark NSWindow
+- (id)windowController;
 - (IBAction)performClose:(id)sender;
 
 @end
