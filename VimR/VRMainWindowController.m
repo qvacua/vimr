@@ -22,6 +22,9 @@
 #import "VRDefaultLogSetting.h"
 
 
+#define CONSTRAIN(fmt, ...) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
+
+
 @interface VRMainWindowController ()
 
 @property BOOL isReplyToGuiResize;
@@ -155,10 +158,6 @@
   [_vimController sendMessage:ZoomMsgID data:data];
 }
 
-- (CGRect)uncorrectedVimViewRectInParentRect:(CGRect)parentRect {
-  return [self.window contentRectForFrameRect:parentRect];
-}
-
 - (IBAction)openQuickly:(id)sender {
   [_workspace.fileItemManager setTargetUrl:_workspace.workingDirectory];
   [_workspace.openQuicklyWindowController showForWindowController:self];
@@ -223,7 +222,7 @@
     * match the last dimensions received from Vim, otherwise we end up
     * with inconsistent states.
     */
-    DDLogDebug(@"live resizing failed");
+    DDLogWarn(@"live resizing failed");
     [self resizeWindowToFitContentSize:_vimView.desiredSize];
   }
 
@@ -347,10 +346,7 @@
 
   self.window.acceptsMouseMovedEvents = YES; // Vim wants to have mouse move events
 
-  _vimView.tabBarControl.styleNamed = @"Metal";
-
-  [self.window.contentView addSubview:_vimView];
-  _vimView.autoresizingMask = NSViewNotSizable;
+  [self addViews];
 
   [_vimView addNewTabViewItem];
 
@@ -500,16 +496,29 @@
 }
 
 - (void)windowDidResize:(id)sender {
-  /**
-  * NOTE: Since we have no control over when the window may resize (Cocoa
-  * may resize automatically) we simply set the view to fill the entire
-  * window.  The vim view takes care of notifying Vim if the number of
-  * (rows,columns) changed.
-  */
-  _vimView.frameSize = [self uncorrectedVimViewRectInParentRect:self.window.frame].size;
+  // noop
 }
 
 #pragma mark Private
+- (void)addViews {
+  NSView *contentView = self.window.contentView;
+
+  _vimView.tabBarControl.styleNamed = @"Metal";
+  _vimView.translatesAutoresizingMaskIntoConstraints = NO;
+  [contentView addSubview:_vimView];
+
+  NSDictionary *views = @{
+      @"vimview": _vimView,
+  };
+
+  CONSTRAIN(@"H:|[vimview]|");
+  CONSTRAIN(@"V:|[vimview]|");
+}
+
+- (CGRect)uncorrectedVimViewRectInParentRect:(CGRect)parentRect {
+  return [self.window contentRectForFrameRect:parentRect];
+}
+
 - (void)sendCommandToVim:(NSString *)command {
   DDLogDebug(@"sending command %@", command);
   [_vimController addVimInput:SF(@"<C-\\><C-N>%@<CR>", command)];

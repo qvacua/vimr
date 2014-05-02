@@ -9,11 +9,19 @@
 
 #import "VRMainWindow.h"
 #import "VRMainWindowController.h"
+#import "VRUtils.h"
 
 
 @implementation VRMainWindow
 
 #pragma mark NSWindow
+- (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag {
+  self = [super initWithContentRect:contentRect styleMask:aStyle backing:bufferingType defer:flag];
+  RETURN_NIL_WHEN_NOT_SELF
+
+  return self;
+}
+
 - (id)windowController {
   return (VRMainWindowController *) [super windowController];
 }
