@@ -15,7 +15,7 @@
 int qOpenQuicklyWindowPadding = 8;
 
 
-#define constraint_layout(vs, fmt, ...) [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views: vs]];
+#define CONSTRAIN(fmt, ...) [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
 
 
 @implementation VROpenQuicklyWindow {
@@ -131,14 +131,14 @@ int qOpenQuicklyWindowPadding = 8;
       @"workspaceTextField" : _workspaceTextField,
   };
 
-  constraint_layout(views, @"H:|-(%d)-[label(>=50)]", qOpenQuicklyWindowPadding);
-  constraint_layout(views, @"H:[progress(16)]-(%d)-[itemCount(>=25)]-(%d)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
-  constraint_layout(views, @"H:|-(%d)-[searchField(>=100)]-(%d)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
-  constraint_layout(views, @"H:|-(-1)-[table(>=100)]-(-1)-|");
-  constraint_layout(views, @"H:|-(%d)-[workspaceLabel][workspaceTextField(>=50)]-(%d)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
-  constraint_layout(views, @"V:|-(%d)-[label(17)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]-(4)-[workspaceLabel(17)]-(4)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
-  constraint_layout(views, @"V:|-(%d)-[itemCount(17)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]-(4)-[workspaceTextField(17)]-(4)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
-  constraint_layout(views, @"V:|-(%d)-[progress(16)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]-(4)-[workspaceTextField(17)]-(4)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding + 1, qOpenQuicklyWindowPadding);
+  CONSTRAIN(@"H:|-(%d)-[label(>=50)]", qOpenQuicklyWindowPadding);
+  CONSTRAIN(@"H:[progress(16)]-(%d)-[itemCount(>=25)]-(%d)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
+  CONSTRAIN(@"H:|-(%d)-[searchField(>=100)]-(%d)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
+  CONSTRAIN(@"H:|-(-1)-[table(>=100)]-(-1)-|");
+  CONSTRAIN(@"H:|-(%d)-[workspaceLabel][workspaceTextField(>=50)]-(%d)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
+  CONSTRAIN(@"V:|-(%d)-[label(17)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]-(4)-[workspaceLabel(17)]-(4)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
+  CONSTRAIN(@"V:|-(%d)-[itemCount(17)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]-(4)-[workspaceTextField(17)]-(4)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding);
+  CONSTRAIN(@"V:|-(%d)-[progress(16)]-(%d)-[searchField(22)]-(%d)-[table(>=100)]-(4)-[workspaceTextField(17)]-(4)-|", qOpenQuicklyWindowPadding, qOpenQuicklyWindowPadding + 1, qOpenQuicklyWindowPadding);
 }
 
 @end

@@ -118,8 +118,8 @@
   // Figure out how many rows/columns can fit while zoomed.
   int rowsZoomed;
   int colsZoomed;
-  NSRect maxFrame = screen.visibleFrame;
-  NSRect contentRect = [self.window contentRectForFrameRect:maxFrame];
+  CGRect maxFrame = screen.visibleFrame;
+  CGRect contentRect = [self.window contentRectForFrameRect:maxFrame];
   [_vimView constrainRows:&rowsZoomed columns:&colsZoomed toSize:contentRect.size];
 
   int curRows, curCols;
@@ -142,7 +142,7 @@
       // showing/hiding.
       _userRows = curRows;
       _userCols = curCols;
-      NSRect frame = self.window.frame;
+      CGRect frame = self.window.frame;
       _userTopLeft = CGPointMake(frame.origin.x, NSMaxY(frame));
     }
   }
@@ -540,12 +540,12 @@
   // } copied from MacVim
 }
 
-- (NSRect)constrainFrame:(NSRect)frame {
+- (CGRect)constrainFrame:(CGRect)frame {
   // Constrain the given (window) frame so that it fits an even number of
   // rows and columns.
   NSWindow *window = self.window;
-  NSRect contentRect = [window contentRectForFrameRect:frame];
-  NSSize constrainedSize = [self.vimView constrainRows:NULL columns:NULL toSize:contentRect.size];
+  CGRect contentRect = [window contentRectForFrameRect:frame];
+  CGSize constrainedSize = [self.vimView constrainRows:NULL columns:NULL toSize:contentRect.size];
 
   contentRect.origin.y += contentRect.size.height - constrainedSize.height;
   contentRect.size = constrainedSize;
@@ -553,17 +553,17 @@
   return [window frameRectForContentRect:contentRect];
 }
 
-- (void)resizeWindowToFitContentSize:(NSSize)contentSize {
+- (void)resizeWindowToFitContentSize:(CGSize)contentSize {
   logSize4Debug(@"contentSize", contentSize);
   NSWindow *window = self.window;
-  NSRect frame = window.frame;
-  NSRect contentRect = [window contentRectForFrameRect:frame];
+  CGRect frame = window.frame;
+  CGRect contentRect = [window contentRectForFrameRect:frame];
 
   // Keep top-left corner of the window fixed when resizing.
   contentRect.origin.y -= contentSize.height - contentRect.size.height;
   contentRect.size = contentSize;
 
-  NSRect newFrame = [window frameRectForContentRect:contentRect];
+  CGRect newFrame = [window frameRectForContentRect:contentRect];
 
   logRect4Debug(@"old", frame);
   logRect4Debug(@"new", newFrame);
@@ -581,7 +581,7 @@
     // Ensure that the window fits inside the visible part of the screen.
     // If there are more than one screen the window will be moved to fit
     // entirely in the screen that most of it occupies.
-    NSRect maxFrame = screen.visibleFrame;
+    CGRect maxFrame = screen.visibleFrame;
     maxFrame = [self constrainFrame:maxFrame];
 
     if (newFrame.size.width > maxFrame.size.width) {
@@ -613,8 +613,8 @@
 
   [window setFrame:newFrame display:YES];
 
-  NSPoint oldTopLeft = {frame.origin.x, NSMaxY(frame)};
-  NSPoint newTopLeft = {newFrame.origin.x, NSMaxY(newFrame)};
+  CGPoint oldTopLeft = {frame.origin.x, NSMaxY(frame)};
+  CGPoint newTopLeft = {newFrame.origin.x, NSMaxY(newFrame)};
   if (CGPointEqualToPoint(oldTopLeft, newTopLeft)) {
     DDLogDebug(@"returning since top left point equal");
     return;
@@ -628,7 +628,7 @@
   [self.vimController sendMessage:SetWindowPositionMsgID data:[NSData dataWithBytes:pos length:2 * sizeof(int)]];
 }
 
-- (NSSize)constrainContentSizeToScreenSize:(NSSize)contentSize {
+- (CGSize)constrainContentSizeToScreenSize:(CGSize)contentSize {
   NSWindow *win = self.window;
   if (win.screen == nil) {
     return contentSize;
@@ -637,8 +637,8 @@
   // NOTE: This may be called in both windowed and full-screen mode.  The
   // "visibleFrame" method does not overlap menu and dock so should not be
   // used in full-screen.
-  NSRect screenRect = win.screen.visibleFrame;
-  NSRect rect = [win contentRectForFrameRect:screenRect];
+  CGRect screenRect = win.screen.visibleFrame;
+  CGRect rect = [win contentRectForFrameRect:screenRect];
 
   if (contentSize.height > rect.size.height) {
     contentSize.height = rect.size.height;
