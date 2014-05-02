@@ -56,3 +56,15 @@ NSURL *common_parent_url(NSArray *fileUrls) {
 
   return [NSURL fileURLWithPathComponents:currentCommonComps];
 }
+
+NSValue *vsize(CGSize size) {
+  return [NSValue valueWithSize:size];
+}
+
+NSValue *vrect(CGRect rect) {
+  return [NSValue valueWithRect:rect];
+}
+
+NSValue *vpoint(CGPoint point) {
+  return [NSValue valueWithPoint:point];
+}

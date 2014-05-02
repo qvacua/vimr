@@ -220,7 +220,7 @@
     * with inconsistent states.
     */
     DDLogDebug(@"live resizing failed");
-    [self resizeWindowToFitContentSize:self.vimView.desiredSize];
+    [self resizeWindowToFitContentSize:_vimView.desiredSize];
   }
 
   [self setWindowTitleToCurrentBuffer];
@@ -343,21 +343,21 @@
 
   self.window.acceptsMouseMovedEvents = YES; // Vim wants to have mouse move events
 
-  self.vimView.tabBarControl.styleNamed = @"Metal";
+  _vimView.tabBarControl.styleNamed = @"Metal";
 
-  [self.window.contentView addSubview:self.vimView];
-  self.vimView.autoresizingMask = NSViewNotSizable;
+  [self.window.contentView addSubview:_vimView];
+  _vimView.autoresizingMask = NSViewNotSizable;
 
-  [self.vimView addNewTabViewItem];
+  [_vimView addNewTabViewItem];
 
-  self.vimViewSetUpDone = YES;
-  self.isReplyToGuiResize = YES;
+  _vimViewSetUpDone = YES;
+  _isReplyToGuiResize = YES;
 
   [self updateResizeConstraints];
 
   [_workspace setUpInitialBuffers];
 
-  [self.window makeFirstResponder:self.vimView.textView];
+  [self.window makeFirstResponder:_vimView.textView];
 }
 
 - (void)controller:(MMVimController *)controller showTabBarWithData:(NSData *)data {
@@ -429,12 +429,12 @@
 
   CGSize contentSize = _vimView.desiredSize;
   contentSize = [self constrainContentSizeToScreenSize:contentSize];
-  DDLogDebug(@"uncorrected size: %@", [NSValue valueWithSize:contentSize]);
+  DDLogDebug(@"uncorrected size: %@", vsize(contentSize));
   int rows = 0, cols = 0;
   contentSize = [self.vimView constrainRows:&rows columns:&cols toSize:contentSize];
 
   DDLogDebug(@"%d X %d", rows, cols);
-  DDLogDebug(@"corrected size: %@", [NSValue valueWithSize:contentSize]);
+  DDLogDebug(@"corrected size: %@", vsize(contentSize));
 
   _vimView.frameSize = contentSize;
 
@@ -652,24 +652,24 @@
 }
 
 - (NSConnection *)connectionToBackend {
-  NSDistantObject *proxy = self.vimController.backendProxy;
+  NSDistantObject *proxy = _vimController.backendProxy;
 
   return proxy.connectionForProxy;
 }
 
 - (void)updateResizeConstraints {
-  if (!self.vimViewSetUpDone) {
+  if (!_vimViewSetUpDone) {
     return;
   }
 
   // Set the resize increments to exactly match the font size; this way the
   // window will always hold an integer number of (rows, columns).
-  self.window.contentResizeIncrements = self.vimView.textView.cellSize;
-  self.window.contentMinSize = self.vimView.minSize;
+  self.window.contentResizeIncrements = _vimView.textView.cellSize;
+  self.window.contentMinSize = _vimView.minSize;
 }
 
 - (void)setWindowTitleToCurrentBuffer {
-  NSString *filePath = self.vimController.currentTab.buffer.fileName;
+  NSString *filePath = _vimController.currentTab.buffer.fileName;
   NSString *filename = filePath.lastPathComponent;
 
   if (filename == nil) {
