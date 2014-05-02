@@ -354,7 +354,6 @@
   self.isReplyToGuiResize = YES;
 
   [self updateResizeConstraints];
-  [self resizeWindowToFitContentSize:self.vimView.desiredSize];
 
   [_workspace setUpInitialBuffers];
 
@@ -421,14 +420,14 @@
 
 
 - (void)controller:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue {
-  if (!self.needsToResizeVimView) {
+  if (!_needsToResizeVimView) {
     return;
   }
 
   DDLogDebug(@"resizing window to fit Vim view");
-  self.needsToResizeVimView = NO;
+  _needsToResizeVimView = NO;
 
-  NSSize contentSize = self.vimView.desiredSize;
+  CGSize contentSize = _vimView.desiredSize;
   contentSize = [self constrainContentSizeToScreenSize:contentSize];
   DDLogDebug(@"uncorrected size: %@", [NSValue valueWithSize:contentSize]);
   int rows = 0, cols = 0;
@@ -437,11 +436,11 @@
   DDLogDebug(@"%d X %d", rows, cols);
   DDLogDebug(@"corrected size: %@", [NSValue valueWithSize:contentSize]);
 
-  self.vimView.frameSize = contentSize;
+  _vimView.frameSize = contentSize;
 
   [self resizeWindowToFitContentSize:contentSize];
 
-  self.isReplyToGuiResize = NO;
+  _isReplyToGuiResize = NO;
 }
 
 - (void)controller:(MMVimController *)controller removeToolbarItemWithIdentifier:(NSString *)identifier {
@@ -503,18 +502,13 @@
   * window.  The vim view takes care of notifying Vim if the number of
   * (rows,columns) changed.
   */
-  self.vimView.frameSize = [self.window contentRectForFrameRect:self.window.frame].size;
+  _vimView.frameSize = [self.window contentRectForFrameRect:self.window.frame].size;
 }
 
 #pragma mark Private
-- (NSUInteger)indexOfSelectedDocument {
-  PSMTabBarControl *tabBar = self.vimView.tabBarControl;
-  return [tabBar.representedTabViewItems indexOfObject:tabBar.tabView.selectedTabViewItem];
-}
-
 - (void)sendCommandToVim:(NSString *)command {
   DDLogDebug(@"sending command %@", command);
-  [self.vimController addVimInput:SF(@"<C-\\><C-N>%@<CR>", command)];
+  [_vimController addVimInput:SF(@"<C-\\><C-N>%@<CR>", command)];
 }
 
 - (NSData *)dataFromDescriptor:(NSArray *)descriptor {
