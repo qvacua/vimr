@@ -119,7 +119,7 @@
   int rowsZoomed;
   int colsZoomed;
   CGRect maxFrame = screen.visibleFrame;
-  CGRect contentRect = [self.window contentRectForFrameRect:maxFrame];
+  CGRect contentRect = [self uncorrectedVimViewRectInParentRect:maxFrame];
   [_vimView constrainRows:&rowsZoomed columns:&colsZoomed toSize:contentRect.size];
 
   int curRows, curCols;
@@ -153,6 +153,10 @@
   int info[3] = {rows, cols, !isZoomed};
   NSData *data = [NSData dataWithBytes:info length:3 * sizeof(int)];
   [_vimController sendMessage:ZoomMsgID data:data];
+}
+
+- (CGRect)uncorrectedVimViewRectInParentRect:(CGRect)parentRect {
+  return [self.window contentRectForFrameRect:parentRect];
 }
 
 - (IBAction)openQuickly:(id)sender {
@@ -502,7 +506,7 @@
   * window.  The vim view takes care of notifying Vim if the number of
   * (rows,columns) changed.
   */
-  _vimView.frameSize = [self.window contentRectForFrameRect:self.window.frame].size;
+  _vimView.frameSize = [self uncorrectedVimViewRectInParentRect:self.window.frame].size;
 }
 
 #pragma mark Private
@@ -544,7 +548,7 @@
   // Constrain the given (window) frame so that it fits an even number of
   // rows and columns.
   NSWindow *window = self.window;
-  CGRect contentRect = [window contentRectForFrameRect:frame];
+  CGRect contentRect = [self uncorrectedVimViewRectInParentRect:frame];
   CGSize constrainedSize = [self.vimView constrainRows:NULL columns:NULL toSize:contentRect.size];
 
   contentRect.origin.y += contentRect.size.height - constrainedSize.height;
@@ -557,7 +561,7 @@
   logSize4Debug(@"contentSize", contentSize);
   NSWindow *window = self.window;
   CGRect frame = window.frame;
-  CGRect contentRect = [window contentRectForFrameRect:frame];
+  CGRect contentRect = [self uncorrectedVimViewRectInParentRect:frame];
 
   // Keep top-left corner of the window fixed when resizing.
   contentRect.origin.y -= contentSize.height - contentRect.size.height;
@@ -638,7 +642,7 @@
   // "visibleFrame" method does not overlap menu and dock so should not be
   // used in full-screen.
   CGRect screenRect = win.screen.visibleFrame;
-  CGRect rect = [win contentRectForFrameRect:screenRect];
+  CGRect rect = [self uncorrectedVimViewRectInParentRect:screenRect];
 
   if (contentSize.height > rect.size.height) {
     contentSize.height = rect.size.height;
