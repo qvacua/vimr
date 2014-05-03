@@ -14,6 +14,7 @@
 #import "VRScoredPath.h"
 #import "NSArray+VR.h"
 #import "VRCppUtils.h"
+#import "VRTextMateCppUtils.h"
 
 #import <cf/cf.h>
 

@@ -12,9 +12,7 @@
 #define __VRCppUtils_H_
 
 
-extern size_t count_slashes(std::string const &s1, std::string const &s2);
 extern std::vector<std::pair<size_t, size_t>> chunked_indexes(size_t count, size_t chunkSize);
-extern std::vector<size_t> disambiguate(std::vector<std::string> const &paths);
 extern void enumerate_array_in_range(NSArray *array, std::pair<size_t, size_t> pair, void (^block)(id));
 
 /**
