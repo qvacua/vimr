@@ -15,6 +15,10 @@
 #import "VRFileItemManager.h"
 #import "VRUtils.h"
 #import "VRDefaultLogSetting.h"
+#import "VRMainWindow.h"
+
+
+static CGPoint qDefaultOrigin = {242, 364};
 
 
 @interface VRWorkspace ()
@@ -38,8 +42,9 @@
 - (void)setUpWithVimController:(MMVimController *)vimController {
   _vimController = vimController;
 
+  CGPoint origin= [self cascadedWindowOrigin];
   VRMainWindowController *controller = [
-      [VRMainWindowController alloc] initWithContentRect:CGRectMake(242, 364, 480, 360)
+      [VRMainWindowController alloc] initWithContentRect:CGRectMake(origin.x, origin.y, 480, 360)
   ];
   controller.workspace = self;
 
@@ -103,6 +108,24 @@
   _openedBufferUrls = [[NSMutableArray alloc] initWithCapacity:10];
 
   return self;
+}
+
+- (CGPoint)cascadedWindowOrigin {
+  CGPoint origin = qDefaultOrigin;
+
+  NSWindow *curKeyWindow = [NSApp keyWindow];
+  if ([curKeyWindow isKindOfClass:[VRMainWindow class]]) {
+    origin = [curKeyWindow frame].origin;
+    origin.x += 24;
+    origin.y -= 48;
+
+    CGSize curScreenSize = curKeyWindow.screen.visibleFrame.size;
+    if (curScreenSize.width < origin.x + 500 || origin.y < 5) {
+      origin = qDefaultOrigin;
+    }
+  }
+
+  return origin;
 }
 
 @end
