@@ -21,20 +21,24 @@
 		1929B3F63E1E808B31FF11A0 /* VRFilterItemsOperation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9B5817A70437785EDD7 /* VRFilterItemsOperation.mm */; };
 		1929B44A377085462454D47A /* VRCppUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6422375B345DAA4E35A /* VRCppUtils.mm */; };
 		1929B4744107BEEF43CB9F30 /* VRMainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD725D623E7889F1EC73 /* VRMainWindow.m */; };
+		1929B55E015D40CDDCE5A13F /* VRWorkspaceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6E1C938B98AFC2F83C7 /* VRWorkspaceView.m */; };
 		1929B5622423723C0CB7E6F1 /* VRInvalidateCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB95A037F13EE18647E7 /* VRInvalidateCacheOperation.m */; };
 		1929B64D6959587E9FAA14F2 /* VRUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B52697BB86B981D353FB /* VRUtils.m */; };
 		1929B65D8458FE1E5D4E0594 /* VRBaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9CC266B14FF9F1AABF9 /* VRBaseTestCase.m */; };
 		1929B66C7CF1C6C27FE4BE8F /* VRMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6F7FC83ACA973E19D2A /* VRMainWindowController.m */; };
+		1929B78E947C50865826F723 /* VRTextMateUiUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B3EDCF79ED4BE49E8372 /* VRTextMateUiUtils.m */; };
 		1929B79CDFEAB775EEE6AF35 /* NSArrayCategoryTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B799A1EDB71ED6B60251 /* NSArrayCategoryTest.m */; };
 		1929B85F39A41C42C8860028 /* VROpenQuicklyWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC33A2168C3F0643B5DD /* VROpenQuicklyWindow.m */; };
 		1929B8777AAA28151A01B474 /* NSURLCategoryTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8B272093B5D54DB9AE2 /* NSURLCategoryTest.m */; };
 		1929B8B706AC7A4DEBEA23BA /* VRWorkspace.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B59CC278289ECAF44A97 /* VRWorkspace.m */; };
 		1929B9042F3B76FB542DC17F /* VRUtilsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B2FEDB5C369E7319A250 /* VRUtilsTest.m */; };
 		1929B93BBCD53898D16541CD /* VRManualBeanProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCAF60827409FA845CAC /* VRManualBeanProvider.m */; };
+		1929B9588523C90BA38223FA /* VRWorkspaceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6E1C938B98AFC2F83C7 /* VRWorkspaceView.m */; };
 		1929B96602CF1132D3C20FC0 /* VRAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B4A7B8CA1DF045231802 /* VRAlert.m */; };
 		1929B96C9E0B606DF4632697 /* VRWorkspaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B2448853E9BA30EEADF6 /* VRWorkspaceController.m */; };
 		1929B994D24F53D5FD32F9D9 /* VRFileItemManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B257E65E0DB8272EBEED /* VRFileItemManagerTest.m */; };
 		1929B99E6ED2346227C88A2B /* VRAppDelegateTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1DEF7AFADC800A86158 /* VRAppDelegateTest.m */; };
+		1929BA0717682C263764E1D8 /* VRTextMateUiUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B3EDCF79ED4BE49E8372 /* VRTextMateUiUtils.m */; };
 		1929BA103B925DB4222ABB09 /* NSMutableArray+VR.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1EC8394FEA5F65DC9E2 /* NSMutableArray+VR.m */; };
 		1929BA227E512755391D3A00 /* VRUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B52697BB86B981D353FB /* VRUtils.m */; };
 		1929BA573D9D927EF4FDA4E0 /* VRMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6F7FC83ACA973E19D2A /* VRMainWindowController.m */; };
@@ -146,6 +150,7 @@
 
 /* Begin PBXFileReference section */
 		1929B067746B81C6A69AECDB /* VRCppUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRCppUtils.h; sourceTree = "<group>"; };
+		1929B0B003827A50CBDB0688 /* VRTextMateUiUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRTextMateUiUtils.h; sourceTree = "<group>"; };
 		1929B1C59D2CA18A30520D97 /* VRUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRUtils.h; sourceTree = "<group>"; };
 		1929B1DEF7AFADC800A86158 /* VRAppDelegateTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRAppDelegateTest.m; sourceTree = "<group>"; };
 		1929B1E20ED0F6CB91008357 /* VRLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRLogFormatter.h; sourceTree = "<group>"; };
@@ -160,6 +165,7 @@
 		1929B2FEDB5C369E7319A250 /* VRUtilsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRUtilsTest.m; sourceTree = "<group>"; };
 		1929B317ED51E095BA3B9465 /* VRWorkspaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRWorkspaceController.h; sourceTree = "<group>"; };
 		1929B37A2B86D52B945AD0D8 /* VRFileItemManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRFileItemManager.m; sourceTree = "<group>"; };
+		1929B3EDCF79ED4BE49E8372 /* VRTextMateUiUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRTextMateUiUtils.m; sourceTree = "<group>"; };
 		1929B47C5915154AA444AE2C /* VRCachingLogSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRCachingLogSetting.h; sourceTree = "<group>"; };
 		1929B4A7B8CA1DF045231802 /* VRAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRAlert.m; sourceTree = "<group>"; };
 		1929B52697BB86B981D353FB /* VRUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRUtils.m; sourceTree = "<group>"; };
@@ -169,6 +175,7 @@
 		1929B6422375B345DAA4E35A /* VRCppUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VRCppUtils.mm; sourceTree = "<group>"; };
 		1929B68FDCF00DC74509A5DB /* VRInactiveTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRInactiveTableView.h; sourceTree = "<group>"; };
 		1929B6D4A0A49E50C922F2D4 /* VRTextMateCppUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRTextMateCppUtils.h; sourceTree = "<group>"; };
+		1929B6E1C938B98AFC2F83C7 /* VRWorkspaceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VRWorkspaceView.m; path = TextMate/VRWorkspaceView.m; sourceTree = "<group>"; };
 		1929B6F7FC83ACA973E19D2A /* VRMainWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRMainWindowController.m; sourceTree = "<group>"; };
 		1929B764812EDD43ECA48729 /* VROpenQuicklyWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VROpenQuicklyWindowController.h; sourceTree = "<group>"; };
 		1929B77C736E5804A840EDCC /* NSMutableArray+VR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+VR.h"; sourceTree = "<group>"; };
@@ -202,6 +209,7 @@
 		1929BD725D623E7889F1EC73 /* VRMainWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRMainWindow.m; sourceTree = "<group>"; };
 		1929BDB655059880E6611FC8 /* NSCppUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSCppUtils.mm; sourceTree = "<group>"; };
 		1929BE64ABA49FD7195EF958 /* VRFileItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRFileItem.h; sourceTree = "<group>"; };
+		1929BE9F9DAA496347120FE6 /* VRWorkspaceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VRWorkspaceView.h; path = TextMate/VRWorkspaceView.h; sourceTree = "<group>"; };
 		1929BEB39029AA6F807E8B95 /* NSArray+VR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+VR.h"; sourceTree = "<group>"; };
 		1929BEDAD04E9D7AC57EBE5B /* VRWorkspaceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRWorkspaceTest.m; sourceTree = "<group>"; };
 		1929BF7223563E01F97C1DDB /* VROpenQuicklyWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VROpenQuicklyWindowController.m; sourceTree = "<group>"; };
@@ -272,6 +280,8 @@
 			children = (
 				1929B7D8D7809B241537B6F7 /* VRTextMateCppUtils.mm */,
 				1929B6D4A0A49E50C922F2D4 /* VRTextMateCppUtils.h */,
+				1929B3EDCF79ED4BE49E8372 /* VRTextMateUiUtils.m */,
+				1929B0B003827A50CBDB0688 /* VRTextMateUiUtils.h */,
 			);
 			path = TextMate;
 			sourceTree = "<group>";
@@ -321,6 +331,8 @@
 				1929BBECC965F11998D5D87C /* VRMainWindowController.h */,
 				1929B787BBACFF82F365EECD /* VRAlert.h */,
 				1929B4A7B8CA1DF045231802 /* VRAlert.m */,
+				1929B6E1C938B98AFC2F83C7 /* VRWorkspaceView.m */,
+				1929BE9F9DAA496347120FE6 /* VRWorkspaceView.h */,
 			);
 			name = Workspace;
 			sourceTree = "<group>";
@@ -701,6 +713,8 @@
 				1929B96602CF1132D3C20FC0 /* VRAlert.m in Sources */,
 				1929BC669E2256259850A32B /* VRFileBrowserView.m in Sources */,
 				1929BFEE218D1F29938F4E99 /* VRTextMateCppUtils.mm in Sources */,
+				1929B9588523C90BA38223FA /* VRWorkspaceView.m in Sources */,
+				1929B78E947C50865826F723 /* VRTextMateUiUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -743,6 +757,8 @@
 				1929BAFE398C4B624DAC7FD9 /* VRAlert.m in Sources */,
 				1929BEF8168FB341913725C0 /* VRFileBrowserView.m in Sources */,
 				1929B159A8EDC43B78E512AD /* VRTextMateCppUtils.mm in Sources */,
+				1929B55E015D40CDDCE5A13F /* VRWorkspaceView.m in Sources */,
+				1929BA0717682C263764E1D8 /* VRTextMateUiUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
