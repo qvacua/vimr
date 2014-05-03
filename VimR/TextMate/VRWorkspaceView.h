@@ -10,7 +10,7 @@
 #import <Cocoa/Cocoa.h>
 
 /**
-* Copied and modified -Tae
+* Copied and modified from TextMate -Tae
 *
 * Frameworks/DocumentWindow/src/ProjectLayoutView.mm
 * v2.0-alpha.9537
@@ -18,10 +18,8 @@
 @interface VRWorkspaceView : NSView
 
 @property NSView *fileBrowserView;
-@property NSView *documentView;
-@property CGFloat fileBrowserWidth;
+@property NSView *vimView;
 @property BOOL fileBrowserOnRight;
-
-@property NSUInteger increment;
+@property NSUInteger dragIncrement;
 
 @end
