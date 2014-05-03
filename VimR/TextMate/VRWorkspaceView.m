@@ -7,8 +7,10 @@
  * See LICENSE
  */
 
+#import <MacVimFramework/MacVimFramework.h>
 #import "VRWorkspaceView.h"
 #import "VRTextMateUiUtils.h"
+#import "VRFileBrowserView.h"
 
 
 #define SQ(x) ((x)*(x))
@@ -25,6 +27,8 @@
 
 @property NSView *fileBrowserDivider;
 @property NSLayoutConstraint *fileBrowserWidthConstraint;
+@property NSLayoutConstraint *vimViewWidthConstraint;
+@property NSLayoutConstraint *vimViewHeightConstraint;
 @property NSMutableArray *myConstraints;
 @property BOOL mouseDownRecursionGuard;
 @property CGFloat fileBrowserWidth;
@@ -32,31 +36,31 @@
 @end
 
 @implementation VRWorkspaceView {
-  NSView *_vimView;
-  NSView *_fileBrowserView;
+  MMVimView *_vimView;
+  VRFileBrowserView *_fileBrowserView;
   BOOL _fileBrowserOnRight;
 }
 
 #pragma mark Properties
-- (NSView *)vimView {
+- (MMVimView *)vimView {
   @synchronized (self) {
     return _vimView;
   }
 }
 
-- (void)setVimView:(NSView *)aVimView {
+- (void)setVimView:(MMVimView *)aVimView {
   @synchronized (self) {
     _vimView = [self replaceView:_vimView withView:aVimView];
   }
 }
 
-- (NSView *)fileBrowserView {
+- (VRFileBrowserView *)fileBrowserView {
   @synchronized (self) {
     return _fileBrowserView;
   }
 }
 
-- (void)setFileBrowserView:(NSView *)aFileBrowserView {
+- (void)setFileBrowserView:(VRFileBrowserView *)aFileBrowserView {
   @synchronized (self) {
     NSBox *dividerView = aFileBrowserView ? OakCreateVerticalLine([NSColor controlShadowColor], nil) : nil;
 
@@ -106,19 +110,12 @@
   };
 
   CONSTRAINT(@"V:|[documentView]|");
+  [self addVimViewMinSizeConstraints];
 
   if (_fileBrowserView) {
-    self.fileBrowserWidthConstraint = [NSLayoutConstraint constraintWithItem:_fileBrowserView
-                                                                   attribute:NSLayoutAttributeWidth
-                                                                   relatedBy:NSLayoutRelationEqual
-                                                                      toItem:nil
-                                                                   attribute:NSLayoutAttributeNotAnAttribute
-                                                                  multiplier:1
-                                                                    constant:_fileBrowserWidth];
-    self.fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow;
-    [_myConstraints addObject:self.fileBrowserWidthConstraint];
+    [self addFileBrowserWidthConstraint];
 
-    CONSTRAINT(@"V:|[fileBrowserView]|");
+    CONSTRAINT(@"V:|[fileBrowserView(>=100)]|");
     CONSTRAINT(@"V:|[fileBrowserDivider]|");
 
     if (_fileBrowserOnRight) {
@@ -135,12 +132,16 @@
   [self.window invalidateCursorRectsForView:self];
 }
 
-- (CGRect)fileBrowserResizeRect {
-  if (!_fileBrowserView) {
-    return CGRectZero;
-  }
-  CGRect r = _fileBrowserView.frame;
-  return CGRectMake(_fileBrowserOnRight ? NSMinX(r) - 3 : NSMaxX(r) - 4, NSMinY(r), 10, NSHeight(r));
+- (void)addFileBrowserWidthConstraint {
+  _fileBrowserWidthConstraint = [NSLayoutConstraint constraintWithItem:_fileBrowserView
+                                                             attribute:NSLayoutAttributeWidth
+                                                             relatedBy:NSLayoutRelationEqual
+                                                                toItem:nil
+                                                             attribute:NSLayoutAttributeNotAnAttribute
+                                                            multiplier:1
+                                                              constant:_fileBrowserWidth];
+  _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow;
+  [_myConstraints addObject:_fileBrowserWidthConstraint];
 }
 
 - (void)resetCursorRects {
@@ -172,8 +173,8 @@
     [super mouseDown:anEvent];
   } else {
     if (_fileBrowserView) {
-      self.fileBrowserWidthConstraint.constant = NSWidth(_fileBrowserView.frame);
-      self.fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow;
+      _fileBrowserWidthConstraint.constant = NSWidth(_fileBrowserView.frame);
+      _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow;
     }
 
     NSEvent *mouseDownEvent = anEvent;
@@ -199,8 +200,8 @@
         NSUInteger targetWidth = (NSUInteger) MAX(50, round(width));
         _fileBrowserWidth = targetWidth - targetWidth % _dragIncrement;
 
-        self.fileBrowserWidthConstraint.constant = _fileBrowserWidth;
-        self.fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow - 1;
+        _fileBrowserWidthConstraint.constant = _fileBrowserWidth;
+        _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow - 1;
       }
 
       [self.window invalidateCursorRectsForView:self];
@@ -222,7 +223,7 @@
 }
 
 #pragma mark Private
-- (NSView *)replaceView:(NSView *)oldView withView:(NSView *)newView {
+- (id)replaceView:(NSView *)oldView withView:(NSView *)newView {
   if (newView == oldView) {
     return oldView;
   }
@@ -236,6 +237,33 @@
 
   self.needsUpdateConstraints = YES;
   return newView;
+}
+
+- (void)addVimViewMinSizeConstraints {
+  _vimViewWidthConstraint = [NSLayoutConstraint constraintWithItem:_vimView
+                                                         attribute:NSLayoutAttributeWidth
+                                                         relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                                            toItem:nil
+                                                         attribute:NSLayoutAttributeNotAnAttribute
+                                                        multiplier:1
+                                                          constant:_vimView.minSize.width];
+  _vimViewHeightConstraint = [NSLayoutConstraint constraintWithItem:_vimView
+                                                          attribute:NSLayoutAttributeHeight
+                                                          relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                                             toItem:nil
+                                                          attribute:NSLayoutAttributeNotAnAttribute
+                                                         multiplier:1
+                                                           constant:_vimView.minSize.height];
+  [_myConstraints addObject:_vimViewWidthConstraint];
+  [_myConstraints addObject:_vimViewHeightConstraint];
+}
+
+- (CGRect)fileBrowserResizeRect {
+  if (!_fileBrowserView) {
+    return CGRectZero;
+  }
+  CGRect r = _fileBrowserView.frame;
+  return CGRectMake(_fileBrowserOnRight ? NSMinX(r) - 3 : NSMaxX(r) - 4, NSMinY(r), 10, NSHeight(r));
 }
 
 @end

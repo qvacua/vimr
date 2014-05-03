@@ -9,6 +9,10 @@
 
 #import <Cocoa/Cocoa.h>
 
+
+@class MMVimView;
+@class VRFileBrowserView;
+
 /**
 * Copied and modified from TextMate -Tae
 *
@@ -17,8 +21,8 @@
 */
 @interface VRWorkspaceView : NSView
 
-@property NSView *fileBrowserView;
-@property NSView *vimView;
+@property VRFileBrowserView *fileBrowserView;
+@property MMVimView *vimView;
 @property BOOL fileBrowserOnRight;
 @property NSUInteger dragIncrement;
 
