@@ -32,6 +32,7 @@
 @property NSMutableArray *myConstraints;
 @property BOOL mouseDownRecursionGuard;
 @property CGFloat fileBrowserWidth;
+@property NSUInteger dragIncrement;
 
 @end
 
@@ -51,6 +52,7 @@
 - (void)setVimView:(MMVimView *)aVimView {
   @synchronized (self) {
     _vimView = [self replaceView:_vimView withView:aVimView];
+    _dragIncrement = (NSUInteger) _vimView.textView.cellSize.width;
   }
 }
 
@@ -178,7 +180,7 @@
     }
 
     NSEvent *mouseDownEvent = anEvent;
-    NSRect initialFrame = view.frame;
+    CGRect initialFrame = view.frame;
 
     BOOL didDrag = NO;
     while (anEvent.type != NSLeftMouseUp) {
@@ -188,7 +190,7 @@
         break;
       }
 
-      NSPoint mouseCurrentPos = [self convertPoint:anEvent.locationInWindow fromView:nil];
+      CGPoint mouseCurrentPos = [self convertPoint:anEvent.locationInWindow fromView:nil];
       if (!didDrag &&
           SQ(fabs(mouseDownPos.x - mouseCurrentPos.x)) + SQ(fabs(mouseDownPos.y - mouseCurrentPos.y)) < SQ(1)) {
 
@@ -216,7 +218,7 @@
       }
     }
 
-    self.fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow;
+    _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow;
   }
 
   _mouseDownRecursionGuard = NO;

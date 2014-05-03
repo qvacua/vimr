@@ -24,6 +24,5 @@
 @property VRFileBrowserView *fileBrowserView;
 @property MMVimView *vimView;
 @property BOOL fileBrowserOnRight;
-@property NSUInteger dragIncrement;
 
 @end
