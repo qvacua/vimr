@@ -329,6 +329,7 @@
 
   DDLogDebug(@"%d X %d\tlive: %@\tkeepOnScreen: %@", rows, columns, @(live), @(isReplyToGuiResize));
   [_vimView setDesiredRows:rows columns:columns];
+  [self updateResizeConstraints];
 
   if (!_vimViewSetUpDone) {
     DDLogDebug(@"not yet setup");
