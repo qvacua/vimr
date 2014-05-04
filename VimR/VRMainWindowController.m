@@ -20,9 +20,10 @@
 #import "VRWorkspace.h"
 #import "VRWorkspaceController.h"
 #import "VRDefaultLogSetting.h"
+#import "VRWorkspaceView.h"
 
 
-#define CONSTRAIN(fmt, ...) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
+#define CONSTRAINT(fmt, ...) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
 
 
 @interface VRMainWindowController ()
@@ -30,6 +31,7 @@
 @property BOOL isReplyToGuiResize;
 @property BOOL vimViewSetUpDone;
 @property BOOL needsToResizeVimView;
+@property VRWorkspaceView *workspaceView;
 
 @end
 
@@ -500,18 +502,19 @@
 
 #pragma mark Private
 - (void)addViews {
-  NSView *contentView = self.window.contentView;
-
   _vimView.tabBarControl.styleNamed = @"Metal";
-  _vimView.translatesAutoresizingMaskIntoConstraints = NO;
-  [contentView addSubview:_vimView];
+
+  NSView *contentView = self.window.contentView;
+  _workspaceView = [[VRWorkspaceView alloc] initWithFrame:CGRectZero];
+  _workspaceView.translatesAutoresizingMaskIntoConstraints = NO;
+  _workspaceView.vimView = _vimView;
+  [contentView addSubview:_workspaceView];
 
   NSDictionary *views = @{
-      @"vimview": _vimView,
+      @"workspace" : _workspaceView,
   };
-
-  CONSTRAIN(@"H:|[vimview]|");
-  CONSTRAIN(@"V:|[vimview]|");
+  CONSTRAINT(@"H:|[workspace]|");
+  CONSTRAINT(@"V:|[workspace]|");
 }
 
 - (CGRect)uncorrectedVimViewRectInParentRect:(CGRect)parentRect {
