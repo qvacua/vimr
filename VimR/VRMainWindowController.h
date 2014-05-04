@@ -25,8 +25,6 @@
 @property (weak) MMVimController *vimController;
 @property (weak) MMVimView *vimView;
 
-@property BOOL needsToResizeVimView;
-
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect;
 - (void)openFilesWithArgs:(NSDictionary *)args;
@@ -49,6 +47,8 @@
 - (void)liveResizeDidEnd;
 
 #pragma mark MMVimControllerDelegate
+- (void)controller:(MMVimController *)controller zoomWithRows:(int)rows columns:(int)columns state:(int)state
+              data:(NSData *)data;
 - (void)controller:(MMVimController *)controller handleShowDialogWithButtonTitles:(NSArray *)buttonTitles
              style:(NSAlertStyle)style message:(NSString *)message text:(NSString *)text
    textFieldString:(NSString *)string data:(NSData *)data;

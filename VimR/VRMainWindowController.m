@@ -29,6 +29,7 @@
 
 @property BOOL isReplyToGuiResize;
 @property BOOL vimViewSetUpDone;
+@property BOOL needsToResizeVimView;
 
 @end
 
@@ -48,14 +49,14 @@
 }
 
 - (void)openFilesWithArgs:(NSDictionary *)args {
-  [self.vimController sendMessage:OpenWithArgumentsMsgID data:args.dictionaryAsData];
+  [_vimController sendMessage:OpenWithArgumentsMsgID data:args.dictionaryAsData];
 }
 
 - (void)cleanUpAndClose {
   log4Mark;
 
-  [self.vimView removeFromSuperviewWithoutNeedingDisplay];
-  [self.vimView cleanup];
+  [_vimView removeFromSuperviewWithoutNeedingDisplay];
+  [_vimView cleanup];
 
   [self close];
 }
@@ -206,7 +207,7 @@
   * resize the window across multiple screens.
   */
 
-  NSView <MMTextViewProtocol> *textView = self.vimView.textView;
+  NSView <MMTextViewProtocol> *textView = _vimView.textView;
 
   int constrained[2];
   [textView constrainRows:&constrained[0] columns:&constrained[1] toSize:textView.frame.size];
@@ -214,7 +215,7 @@
   DDLogDebug(@"End of live resize, notify Vim that text dimensions are %d x %d", constrained[1], constrained[0]);
 
   NSData *data = [NSData dataWithBytes:constrained length:(2 * sizeof(int))];
-  BOOL liveResizeMsgSuccessful = [self.vimController sendMessageNow:LiveResizeMsgID data:data timeout:.5];
+  BOOL liveResizeMsgSuccessful = [_vimController sendMessageNow:LiveResizeMsgID data:data timeout:.5];
 
   if (!liveResizeMsgSuccessful) {
     /**
@@ -326,11 +327,10 @@
 - (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
             isLive:(BOOL)live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data {
 
-  log4Mark;
   DDLogDebug(@"%d X %d\tlive: %@\tkeepOnScreen: %@", rows, columns, @(live), @(isReplyToGuiResize));
   [_vimView setDesiredRows:rows columns:columns];
 
-  if (!self.vimViewSetUpDone) {
+  if (!_vimViewSetUpDone) {
     DDLogDebug(@"not yet setup");
     return;
   }
@@ -342,8 +342,6 @@
 }
 
 - (void)controller:(MMVimController *)controller openWindowWithData:(NSData *)data {
-  log4Mark;
-
   self.window.acceptsMouseMovedEvents = YES; // Vim wants to have mouse move events
 
   [self addViews];
@@ -431,7 +429,7 @@
   contentSize = [self constrainContentSizeToScreenSize:contentSize];
   DDLogDebug(@"uncorrected size: %@", vsize(contentSize));
   int rows = 0, cols = 0;
-  contentSize = [self.vimView constrainRows:&rows columns:&cols toSize:contentSize];
+  contentSize = [_vimView constrainRows:&rows columns:&cols toSize:contentSize];
 
   DDLogDebug(@"%d X %d", rows, cols);
   DDLogDebug(@"corrected size: %@", vsize(contentSize));
