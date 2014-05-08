@@ -19,4 +19,10 @@
   NSRectFill(dirtyRect);
 }
 
+- (BOOL)mouseDownCanMoveWindow {
+  // I dunno why, but if we don't override this, then the window title has the inactive appearance and the drag in the
+  // VRWorkspaceView in combination with the vim view does not work correctly. To override -isOpaque does not suffice.
+  return NO;
+}
+
 @end

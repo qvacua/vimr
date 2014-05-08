@@ -21,6 +21,7 @@
 #import "VRWorkspaceController.h"
 #import "VRDefaultLogSetting.h"
 #import "VRWorkspaceView.h"
+#import "VRFileBrowserView.h"
 
 
 #define CONSTRAINT(fmt, ...) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
@@ -86,7 +87,6 @@
 }
 
 - (IBAction)performClose:(id)sender {
-  // TODO: when the doc is dirty, we could ask to save here!
   NSArray *descriptor = @[@"File", @"Close"];
   [self.vimController sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:descriptor]];
 }
@@ -122,6 +122,7 @@
       && (event.modifierFlags & NSCommandKeyMask || event.modifierFlags & NSAlternateKeyMask);
 
   // Figure out how many rows/columns can fit while zoomed.
+  // TODO #4: We should take the size of the file browser into account
   int rowsZoomed;
   int colsZoomed;
   CGRect maxFrame = screen.visibleFrame;
@@ -338,7 +339,11 @@
     return;
   }
 
-  if (!live) {
+  if (live) {
+    // I dunno why, but when we resize the window very fast, the text view in the vim view can end up a bit smaller than
+    // the vim view, thus, we manually set the frame size of the vim view, such that it can adjust its text view.
+    [_vimView setFrameSize:_vimView.frame.size];
+  } else {
     _needsToResizeVimView = YES;
     _isReplyToGuiResize = isReplyToGuiResize;
   }
@@ -347,14 +352,14 @@
 - (void)controller:(MMVimController *)controller openWindowWithData:(NSData *)data {
   self.window.acceptsMouseMovedEvents = YES; // Vim wants to have mouse move events
 
+  [self updateResizeConstraints];
+
   [self addViews];
 
   [_vimView addNewTabViewItem];
 
   _vimViewSetUpDone = YES;
   _isReplyToGuiResize = YES;
-
-  [self updateResizeConstraints];
 
   [_workspace setUpInitialBuffers];
 
@@ -429,16 +434,23 @@
   _needsToResizeVimView = NO;
 
   CGSize contentSize = _vimView.desiredSize;
+
+  // We constrain the desired size of the Vim view to the visible frame of the screen. This can happen, when you use
+  // :set lines=BIG_NUMBER
+
+  // TODO #4: Here, we should take into account the size of the file browser
   contentSize = [self constrainContentSizeToScreenSize:contentSize];
   DDLogDebug(@"uncorrected size: %@", vsize(contentSize));
+
   int rows = 0, cols = 0;
   contentSize = [_vimView constrainRows:&rows columns:&cols toSize:contentSize];
 
   DDLogDebug(@"%d X %d", rows, cols);
   DDLogDebug(@"corrected size: %@", vsize(contentSize));
 
-  _vimView.frameSize = contentSize;
+//  _vimView.frameSize = contentSize;
 
+  // TODO #4: We should not use contentSize, but contentSize + size of the file browser
   [self resizeWindowToFitContentSize:contentSize];
 
   _isReplyToGuiResize = NO;
@@ -507,6 +519,7 @@
   NSView *contentView = self.window.contentView;
   _workspaceView = [[VRWorkspaceView alloc] initWithFrame:CGRectZero];
   _workspaceView.translatesAutoresizingMaskIntoConstraints = NO;
+  _workspaceView.fileBrowserView = [[VRFileBrowserView alloc] initWithFrame:CGRectZero];
   _workspaceView.vimView = _vimView;
   [contentView addSubview:_workspaceView];
 
@@ -572,11 +585,13 @@
   logSize4Debug(@"contentSize", contentSize);
   NSWindow *window = self.window;
   CGRect frame = window.frame;
+  // TODO #4: probably just use contentSize, the caller will have the right size prepared for you...
   CGRect contentRect = [self uncorrectedVimViewRectInParentRect:frame];
 
   // Keep top-left corner of the window fixed when resizing.
   contentRect.origin.y -= contentSize.height - contentRect.size.height;
   contentRect.size = contentSize;
+  contentRect.size.width += 245;
 
   CGRect newFrame = [window frameRectForContentRect:contentRect];
 
@@ -681,6 +696,8 @@
   // window will always hold an integer number of (rows, columns).
   self.window.contentResizeIncrements = _vimView.textView.cellSize;
   self.window.contentMinSize = _vimView.minSize;
+
+  // TODO #4: update also the increment of the workspace view?
 }
 
 - (void)setWindowTitleToCurrentBuffer {

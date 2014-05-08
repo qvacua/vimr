@@ -24,5 +24,6 @@
 @property VRFileBrowserView *fileBrowserView;
 @property MMVimView *vimView;
 @property BOOL fileBrowserOnRight;
+@property CGFloat fileBrowserWidth;
 
 @end

@@ -8,9 +8,12 @@
  */
 
 #import <MacVimFramework/MacVimFramework.h>
+#import <CocoaLumberjack/DDLog.h>
 #import "VRWorkspaceView.h"
 #import "VRTextMateUiUtils.h"
 #import "VRFileBrowserView.h"
+#import "VRMainWindowController.h"
+#import "VRDefaultLogSetting.h"
 
 
 #define SQ(x) ((x)*(x))
@@ -31,7 +34,6 @@
 @property NSLayoutConstraint *vimViewHeightConstraint;
 @property NSMutableArray *myConstraints;
 @property BOOL mouseDownRecursionGuard;
-@property CGFloat fileBrowserWidth;
 @property NSUInteger dragIncrement;
 
 @end
@@ -93,7 +95,7 @@
 - (id)initWithFrame:(NSRect)aRect {
   if (self = [super initWithFrame:aRect]) {
     _myConstraints = [NSMutableArray array];
-    _fileBrowserWidth = 250;
+    _fileBrowserWidth = 244;
     _dragIncrement = 1;
   }
 
@@ -173,6 +175,7 @@
   }
 
   if (!view || anEvent.type != NSLeftMouseDown) {
+    DDLogDebug(@"view: %@", view);
     [super mouseDown:anEvent];
   } else {
     if (_fileBrowserView) {
@@ -182,6 +185,11 @@
 
     NSEvent *mouseDownEvent = anEvent;
     CGRect initialFrame = view.frame;
+
+    VRMainWindowController *windowController = (VRMainWindowController *) self.window.windowController;
+    DDLogDebug(@"turning on live resize flag");
+    DDLogDebug(@"drag increment: %lu\tcell width: %f", _dragIncrement, _vimView.textView.cellSize.width);
+    [windowController.vimView viewWillStartLiveResize];
 
     BOOL didDrag = NO;
     while (anEvent.type != NSLeftMouseUp) {
@@ -201,7 +209,7 @@
       if (view == _fileBrowserView) {
         CGFloat width = NSWidth(initialFrame) + (mouseCurrentPos.x - mouseDownPos.x) * (_fileBrowserOnRight ? -1 : +1);
         NSUInteger targetWidth = (NSUInteger) MAX(50, round(width));
-        _fileBrowserWidth = targetWidth - targetWidth % _dragIncrement;
+        _fileBrowserWidth = floor(targetWidth / _dragIncrement) * _dragIncrement - 1; // 1 = width of the divider
 
         _fileBrowserWidthConstraint.constant = _fileBrowserWidth;
         _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow - 1;
@@ -210,6 +218,8 @@
       [self.window invalidateCursorRectsForView:self];
       didDrag = YES;
     }
+
+    [windowController.vimView viewDidEndLiveResize];
 
     if (!didDrag) {
       NSView *hitView = [super hitTest:[self.superview convertPoint:[mouseDownEvent locationInWindow] fromView:nil]];
@@ -265,6 +275,7 @@
   if (!_fileBrowserView) {
     return CGRectZero;
   }
+
   CGRect r = _fileBrowserView.frame;
   return CGRectMake(_fileBrowserOnRight ? NSMinX(r) - 3 : NSMaxX(r) - 4, NSMinY(r), 10, NSHeight(r));
 }
