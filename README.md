@@ -33,6 +33,7 @@ $ make
 We use [CocoaPods](http://cocoapods.org) to include other open source libraries, eg [OCHamcrest](https://github.com/hamcrest/OCHamcrest) and [TBCacao](https://github.com/qvacua/tbcacao). Thus, install CocoaPods and do the following in the project root
 
 ```
+$ sudo gem install cocoapods    # only if you haven't yet installed CocoaPods
 $ pod install
 ```
 
