@@ -107,7 +107,7 @@
 - (id)initWithFrame:(NSRect)aRect {
   if (self = [super initWithFrame:aRect]) {
     _myConstraints = [NSMutableArray array];
-    _fileBrowserWidth = 201;
+    _fileBrowserWidth = 175;
     _dragIncrement = 1;
   }
 
@@ -224,18 +224,10 @@
         CGFloat width = NSWidth(initialFrame) + (mouseCurrentPos.x - mouseDownPos.x) * (_fileBrowserOnRight ? -1 : +1);
         NSUInteger targetWidth = (NSUInteger) MAX(50, round(width));
 
-
-
-//        _fileBrowserWidth = floor(targetWidth / _dragIncrement) * _dragIncrement - 1; // 1 = width of the divider
         CGFloat totalWidth = self.frame.size.width;
-        double targetVimViewWidth = _dragIncrement * ceil((totalWidth - targetWidth - 1 - 3) / _dragIncrement) + 3;
+        double targetVimViewWidth = _dragIncrement
+            * ceil((totalWidth - targetWidth - 1 - _vimView.totalInset) / _dragIncrement) + _vimView.totalInset;
         _fileBrowserWidth = totalWidth - targetVimViewWidth - 1;
-
-        DDLogDebug(@"target: %f = %f + 1 + %f", totalWidth, _fileBrowserWidth, targetVimViewWidth);
-
-
-
-
 
         _fileBrowserWidthConstraint.constant = _fileBrowserWidth;
         _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow - 1;

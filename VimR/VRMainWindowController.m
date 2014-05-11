@@ -517,7 +517,9 @@
 
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize {
   CGFloat cellWidth = _vimView.textView.cellSize.width;
-  frameSize.width = floor((frameSize.width - _workspaceView.fileBrowserAndDividerWidth - 3) / cellWidth) * cellWidth + _workspaceView.fileBrowserAndDividerWidth + 3;
+  frameSize.width = floor(
+      (frameSize.width - _workspaceView.fileBrowserAndDividerWidth - _vimView.totalInset) / cellWidth
+  ) * cellWidth + _workspaceView.fileBrowserAndDividerWidth + _vimView.totalInset;
   
   return frameSize;
 }
@@ -708,7 +710,8 @@
   self.window.contentMinSize = _vimView.minSize;
 
   // TODO #4: update also the increment of the workspace view?
-  [self.window setMinSize:CGSizeMake(_workspaceView.fileBrowserAndDividerWidth + _vimView.minSize.width, self.window.minSize.height)];
+  [self.window setMinSize:
+      CGSizeMake(_workspaceView.fileBrowserAndDividerWidth + _vimView.minSize.width, self.window.minSize.height)];
 }
 
 - (void)setWindowTitleToCurrentBuffer {
