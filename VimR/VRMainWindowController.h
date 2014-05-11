@@ -38,6 +38,7 @@
 - (IBAction)saveDocumentAs:(id)sender;
 - (IBAction)revertDocumentToSaved:(id)sender;
 - (IBAction)openQuickly:(id)sender;
+- (IBAction)toggleFileBrowser:(id)sender;
 
 #pragma mark NSObject
 - (void)dealloc;

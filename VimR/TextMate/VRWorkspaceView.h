@@ -25,5 +25,8 @@
 @property MMVimView *vimView;
 @property BOOL fileBrowserOnRight;
 @property CGFloat fileBrowserWidth;
+@property (readonly) CGFloat fileBrowserAndDividerWidth;
+
+- (void)updateMetrics;
 
 @end

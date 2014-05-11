@@ -167,13 +167,19 @@
   [_workspace.openQuicklyWindowController showForWindowController:self];
 }
 
+- (IBAction)toggleFileBrowser:(id)sender {
+
+}
+
 #pragma mark Debug
 - (IBAction)debug1Action:(id)sender {
   DDLogDebug(@"buffers: %@", _vimController.buffers);
   NSMenu *menu = _vimController.mainMenu;
   NSMenuItem *fileMenu = menu.itemArray[2];
   NSArray *editMenuArray = [[fileMenu submenu] itemArray];
-  DDLogDebug(@"edit menu: %@", editMenuArray);
+//  DDLogDebug(@"edit menu: %@", editMenuArray);
+
+  DDLogDebug(@"###########: %f = %f + 1 + %f", _workspaceView.frame.size.width, _workspaceView.fileBrowserWidth, _vimView.frame.size.width);
 }
 
 #pragma mark NSObject
@@ -213,7 +219,8 @@
   NSView <MMTextViewProtocol> *textView = _vimView.textView;
 
   int constrained[2];
-  [textView constrainRows:&constrained[0] columns:&constrained[1] toSize:textView.frame.size];
+  CGSize size = [textView constrainRows:&constrained[0] columns:&constrained[1] toSize:textView.frame.size];
+  DDLogDebug(@"################## total width: %f\tdesired width: %f\tcurrent text view width: %f\tcurrent vim view width %f", _workspaceView.frame.size.width, size.width, textView.frame.size, _vimView.frame.size.width);
 
   DDLogDebug(@"End of live resize, notify Vim that text dimensions are %d x %d", constrained[1], constrained[0]);
 
@@ -339,11 +346,7 @@
     return;
   }
 
-  if (live) {
-    // I dunno why, but when we resize the window very fast, the text view in the vim view can end up a bit smaller than
-    // the vim view, thus, we manually set the frame size of the vim view, such that it can adjust its text view.
-    [_vimView setFrameSize:_vimView.frame.size];
-  } else {
+  if (!live) {
     _needsToResizeVimView = YES;
     _isReplyToGuiResize = isReplyToGuiResize;
   }
@@ -512,6 +515,13 @@
   // noop
 }
 
+- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize {
+  CGFloat cellWidth = _vimView.textView.cellSize.width;
+  frameSize.width = floor((frameSize.width - _workspaceView.fileBrowserAndDividerWidth - 3) / cellWidth) * cellWidth + _workspaceView.fileBrowserAndDividerWidth + 3;
+  
+  return frameSize;
+}
+
 #pragma mark Private
 - (void)addViews {
   _vimView.tabBarControl.styleNamed = @"Metal";
@@ -591,7 +601,7 @@
   // Keep top-left corner of the window fixed when resizing.
   contentRect.origin.y -= contentSize.height - contentRect.size.height;
   contentRect.size = contentSize;
-  contentRect.size.width += 245;
+  contentRect.size.width += _workspaceView.fileBrowserAndDividerWidth;
 
   CGRect newFrame = [window frameRectForContentRect:contentRect];
 
@@ -698,6 +708,7 @@
   self.window.contentMinSize = _vimView.minSize;
 
   // TODO #4: update also the increment of the workspace view?
+  [self.window setMinSize:CGSizeMake(_workspaceView.fileBrowserAndDividerWidth + _vimView.minSize.width, self.window.minSize.height)];
 }
 
 - (void)setWindowTitleToCurrentBuffer {

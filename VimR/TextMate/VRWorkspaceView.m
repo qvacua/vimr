@@ -54,7 +54,7 @@
 - (void)setVimView:(MMVimView *)aVimView {
   @synchronized (self) {
     _vimView = [self replaceView:_vimView withView:aVimView];
-    _dragIncrement = (NSUInteger) _vimView.textView.cellSize.width;
+    [self updateMetrics];
   }
 }
 
@@ -79,6 +79,18 @@
   }
 }
 
+- (CGFloat)fileBrowserAndDividerWidth {
+  if (_fileBrowserView) {
+    return _fileBrowserWidth + 1;
+  }
+
+  return 0;
+}
+
+- (void)updateMetrics {
+  _dragIncrement = (NSUInteger) _vimView.textView.cellSize.width;
+}
+
 - (void)setFileBrowserOnRight:(BOOL)flag {
   @synchronized (self) {
     if (_fileBrowserOnRight != flag) {
@@ -95,7 +107,7 @@
 - (id)initWithFrame:(NSRect)aRect {
   if (self = [super initWithFrame:aRect]) {
     _myConstraints = [NSMutableArray array];
-    _fileBrowserWidth = 244;
+    _fileBrowserWidth = 201;
     _dragIncrement = 1;
   }
 
@@ -191,6 +203,8 @@
     DDLogDebug(@"drag increment: %lu\tcell width: %f", _dragIncrement, _vimView.textView.cellSize.width);
     [windowController.vimView viewWillStartLiveResize];
 
+    DDLogDebug(@"before: %f = %f + 1 + %f", self.frame.size.width, _fileBrowserWidth, _vimView.frame.size.width);
+
     BOOL didDrag = NO;
     while (anEvent.type != NSLeftMouseUp) {
       anEvent = [NSApp nextEventMatchingMask:(NSLeftMouseDraggedMask | NSLeftMouseDown | NSLeftMouseUpMask)
@@ -209,7 +223,19 @@
       if (view == _fileBrowserView) {
         CGFloat width = NSWidth(initialFrame) + (mouseCurrentPos.x - mouseDownPos.x) * (_fileBrowserOnRight ? -1 : +1);
         NSUInteger targetWidth = (NSUInteger) MAX(50, round(width));
-        _fileBrowserWidth = floor(targetWidth / _dragIncrement) * _dragIncrement - 1; // 1 = width of the divider
+
+
+
+//        _fileBrowserWidth = floor(targetWidth / _dragIncrement) * _dragIncrement - 1; // 1 = width of the divider
+        CGFloat totalWidth = self.frame.size.width;
+        double targetVimViewWidth = _dragIncrement * ceil((totalWidth - targetWidth - 1 - 3) / _dragIncrement) + 3;
+        _fileBrowserWidth = totalWidth - targetVimViewWidth - 1;
+
+        DDLogDebug(@"target: %f = %f + 1 + %f", totalWidth, _fileBrowserWidth, targetVimViewWidth);
+
+
+
+
 
         _fileBrowserWidthConstraint.constant = _fileBrowserWidth;
         _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow - 1;
