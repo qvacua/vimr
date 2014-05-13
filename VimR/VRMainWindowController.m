@@ -178,8 +178,6 @@
   NSMenuItem *fileMenu = menu.itemArray[2];
   NSArray *editMenuArray = [[fileMenu submenu] itemArray];
 //  DDLogDebug(@"edit menu: %@", editMenuArray);
-
-  DDLogDebug(@"###########: %f = %f + 1 + %f", _workspaceView.frame.size.width, _workspaceView.fileBrowserWidth, _vimView.frame.size.width);
 }
 
 #pragma mark NSObject
@@ -331,13 +329,13 @@
               data:(NSData *)data {
 
   [self.vimView showScrollbarWithIdentifier:identifier state:state];
-  self.needsToResizeVimView = YES;
+  _needsToResizeVimView = YES;
 }
 
 - (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
             isLive:(BOOL)live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data {
 
-  DDLogDebug(@"%d X %d\tlive: %@\tkeepOnScreen: %@", rows, columns, @(live), @(isReplyToGuiResize));
+//  DDLogDebug(@"%d X %d\tlive: %@\tkeepOnScreen: %@", rows, columns, @(live), @(isReplyToGuiResize));
   [_vimView setDesiredRows:rows columns:columns];
   [self updateResizeConstraints];
 
@@ -516,11 +514,28 @@
 }
 
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize {
-  CGFloat cellWidth = _vimView.textView.cellSize.width;
-  frameSize.width = floor(
-      (frameSize.width - _workspaceView.fileBrowserAndDividerWidth - _vimView.totalInset) / cellWidth
-  ) * cellWidth + _workspaceView.fileBrowserAndDividerWidth + _vimView.totalInset;
-  
+  // To set -contentResizeIncrements of the window to the cell width of the vim view does not suffice because of the
+  // file browser and insets among others. Here, we adjust the width of the window such that the vim view is always
+  // A * column wide where A is an integer. And the height.
+  CGRect winFrame = sender.frame;
+  winFrame.size = frameSize;
+
+  CGRect contentRect = [sender contentRectForFrameRect:winFrame];
+  CGFloat contentWidth = contentRect.size.width;
+  CGFloat contentHeight = contentRect.size.height;
+
+  NSSize cellSize = _vimView.textView.cellSize;
+  CGFloat cellWidth = cellSize.width;
+  CGFloat cellHeight = cellSize.height;
+
+  CGFloat fileBrowserAndDividerWidth = _workspaceView.fileBrowserAndDividerWidth;
+  CGFloat horInsetOfVimView = _vimView.totalHorizontalInset;
+  frameSize.width = floor((contentWidth - fileBrowserAndDividerWidth - horInsetOfVimView) / cellWidth) * cellWidth
+      + fileBrowserAndDividerWidth + horInsetOfVimView;
+
+  frameSize.height = frameSize.height - contentHeight + floor(contentHeight / cellHeight) * cellHeight
+      + _vimView.totalVerticalInset;
+
   return frameSize;
 }
 
@@ -706,12 +721,13 @@
 
   // Set the resize increments to exactly match the font size; this way the
   // window will always hold an integer number of (rows, columns).
-  self.window.contentResizeIncrements = _vimView.textView.cellSize;
-  self.window.contentMinSize = _vimView.minSize;
+  NSWindow *window = self.window;
+/*  window.contentResizeIncrements = _vimView.textView.cellSize;
+  window.contentMinSize = _vimView.minSize;*/
 
   // TODO #4: update also the increment of the workspace view?
-  [self.window setMinSize:
-      CGSizeMake(_workspaceView.fileBrowserAndDividerWidth + _vimView.minSize.width, self.window.minSize.height)];
+  [window setMinSize:
+      CGSizeMake(_workspaceView.fileBrowserAndDividerWidth + _vimView.minSize.width, _vimView.minSize.height)];
 }
 
 - (void)setWindowTitleToCurrentBuffer {

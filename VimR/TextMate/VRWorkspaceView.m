@@ -222,12 +222,7 @@
 
       if (view == _fileBrowserView) {
         CGFloat width = NSWidth(initialFrame) + (mouseCurrentPos.x - mouseDownPos.x) * (_fileBrowserOnRight ? -1 : +1);
-        NSUInteger targetWidth = (NSUInteger) MAX(50, round(width));
-
-        CGFloat totalWidth = self.frame.size.width;
-        double targetVimViewWidth = _dragIncrement
-            * ceil((totalWidth - targetWidth - 1 - _vimView.totalInset) / _dragIncrement) + _vimView.totalInset;
-        _fileBrowserWidth = totalWidth - targetVimViewWidth - 1;
+        _fileBrowserWidth = [self adjustedFileBrowserWidthForWidth:width];
 
         _fileBrowserWidthConstraint.constant = _fileBrowserWidth;
         _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow - 1;
@@ -254,6 +249,19 @@
 }
 
 #pragma mark Private
+- (CGFloat)adjustedFileBrowserWidthForWidth:(CGFloat)width {
+  NSUInteger targetWidth = (NSUInteger) MAX(50, round(width));
+
+  CGFloat totalWidth = self.frame.size.width;
+  CGFloat insetOfVimView = _vimView.totalHorizontalInset;
+
+  // 1 is the width of the divider
+  double targetVimViewWidth = _dragIncrement * ceil((totalWidth - targetWidth - 1 - insetOfVimView) / _dragIncrement)
+      + insetOfVimView;
+
+  return totalWidth - targetVimViewWidth - 1;
+}
+
 - (id)replaceView:(NSView *)oldView withView:(NSView *)newView {
   if (newView == oldView) {
     return oldView;
