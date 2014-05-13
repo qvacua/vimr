@@ -514,6 +514,8 @@
 }
 
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize {
+  // TODO: take the other components like scrollbars into account...
+
   // To set -contentResizeIncrements of the window to the cell width of the vim view does not suffice because of the
   // file browser and insets among others. Here, we adjust the width of the window such that the vim view is always
   // A * column wide where A is an integer. And the height.
@@ -533,8 +535,9 @@
   frameSize.width = floor((contentWidth - fileBrowserAndDividerWidth - horInsetOfVimView) / cellWidth) * cellWidth
       + fileBrowserAndDividerWidth + horInsetOfVimView;
 
-  frameSize.height = frameSize.height - contentHeight + floor(contentHeight / cellHeight) * cellHeight
-      + _vimView.totalVerticalInset;
+  CGFloat tabBarHeight = _vimView.tabBarControl.isHidden ? 0 : _vimView.tabBarControl.frame.size.height;
+  frameSize.height = frameSize.height - contentHeight + tabBarHeight
+      + floor((contentHeight - tabBarHeight) / cellHeight) * cellHeight + _vimView.totalVerticalInset;
 
   return frameSize;
 }
