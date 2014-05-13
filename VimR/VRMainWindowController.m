@@ -117,7 +117,6 @@
       && (event.modifierFlags & NSCommandKeyMask || event.modifierFlags & NSAlternateKeyMask);
 
   // Figure out how many rows/columns can fit while zoomed.
-  // TODO #4: We should take the size of the file browser into account
   int rowsZoomed;
   int colsZoomed;
   CGRect maxFrame = screen.visibleFrame;
@@ -163,7 +162,11 @@
 }
 
 - (IBAction)toggleFileBrowser:(id)sender {
-
+  if (_workspaceView.fileBrowserView) {
+    _workspaceView.fileBrowserView = nil;
+  } else {
+    _workspaceView.fileBrowserView = [[VRFileBrowserView alloc] initWithFrame:CGRectZero];
+  }
 }
 
 #pragma mark Debug
@@ -434,7 +437,6 @@
   // We constrain the desired size of the Vim view to the visible frame of the screen. This can happen, when you use
   // :set lines=BIG_NUMBER
 
-  // TODO #4: Here, we should take into account the size of the file browser
   contentSize = [self constrainContentSizeToScreenSize:contentSize];
   DDLogDebug(@"uncorrected size: %@", vsize(contentSize));
 
@@ -444,9 +446,6 @@
   DDLogDebug(@"%d X %d", rows, cols);
   DDLogDebug(@"corrected size: %@", vsize(contentSize));
 
-//  _vimView.frameSize = contentSize;
-
-  // TODO #4: We should not use contentSize, but contentSize + size of the file browser
   [self resizeWindowToFitContentSize:contentSize];
 
   _isReplyToGuiResize = NO;
@@ -610,7 +609,6 @@
   logSize4Debug(@"contentSize", contentSize);
   NSWindow *window = self.window;
   CGRect frame = window.frame;
-  // TODO #4: probably just use contentSize, the caller will have the right size prepared for you...
   CGRect contentRect = [self uncorrectedVimViewRectInParentRect:frame];
 
   // Keep top-left corner of the window fixed when resizing.
@@ -717,15 +715,15 @@
     return;
   }
 
-  // Set the resize increments to exactly match the font size; this way the
-  // window will always hold an integer number of (rows, columns).
   NSWindow *window = self.window;
-/*  window.contentResizeIncrements = _vimView.textView.cellSize;
-  window.contentMinSize = _vimView.minSize;*/
-
-  // TODO #4: update also the increment of the workspace view?
-  [window setMinSize:
-      CGSizeMake(_workspaceView.fileBrowserAndDividerWidth + _vimView.minSize.width, _vimView.minSize.height)];
+  if (_workspaceView.fileBrowserView) {
+    window.minSize =
+        CGSizeMake(_workspaceView.fileBrowserAndDividerWidth + _vimView.minSize.width, _vimView.minSize.height);
+  } else {
+    window.minSize = _vimView.minSize;
+  }
+  // We also update the increment of the workspace view, because it could be that the font size has changed
+  _workspaceView.dragIncrement = _vimView.textView.cellSize.width;
 }
 
 - (void)setWindowTitleToCurrentBuffer {

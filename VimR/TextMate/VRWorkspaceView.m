@@ -26,10 +26,6 @@
 * Frameworks/DocumentWindow/src/ProjectLayoutView.mm
 * v2.0-alpha.9537
 */
-@interface VRWorkspaceView ()
-
-@end
-
 @implementation VRWorkspaceView {
   NSView *_fileBrowserDivider;
   NSLayoutConstraint *_fileBrowserWidthConstraint;
