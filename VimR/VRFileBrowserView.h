@@ -10,5 +10,5 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface VRFileBrowserView : NSView
+@interface VRFileBrowserView : NSView <NSOutlineViewDataSource, NSOutlineViewDelegate>
 @end

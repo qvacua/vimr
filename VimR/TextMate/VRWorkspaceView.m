@@ -21,6 +21,8 @@
 
 
 static const int qDefaultFileBrowserWidth = 175;
+static const int qMinimumFileBrowserWidth = 100;
+
 
 /**
 * Copied and modified from TextMate -Tae
@@ -251,7 +253,7 @@ static const int qDefaultFileBrowserWidth = 175;
 
 #pragma mark Private
 - (CGFloat)adjustedFileBrowserWidthForWidth:(CGFloat)width {
-  NSUInteger targetWidth = (NSUInteger) MAX(50, round(width));
+  NSUInteger targetWidth = (NSUInteger) MAX(qMinimumFileBrowserWidth, round(width));
 
   CGFloat totalWidth = self.frame.size.width;
   CGFloat insetOfVimView = _vimView.totalHorizontalInset;
