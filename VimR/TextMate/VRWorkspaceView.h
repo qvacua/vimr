@@ -26,6 +26,7 @@
 @property BOOL fileBrowserOnRight;
 @property CGFloat fileBrowserWidth;
 @property (readonly) CGFloat fileBrowserAndDividerWidth;
+@property (readonly) CGFloat defaultFileBrowserAndDividerWidth;
 @property NSUInteger dragIncrement;
 
 @end

@@ -164,9 +164,15 @@
 - (IBAction)toggleFileBrowser:(id)sender {
   if (_workspaceView.fileBrowserView) {
     _workspaceView.fileBrowserView = nil;
-  } else {
-    _workspaceView.fileBrowserView = [[VRFileBrowserView alloc] initWithFrame:CGRectZero];
+    return;
   }
+
+  CGRect frame = self.window.frame;
+  if (frame.size.width <= _vimView.minSize.width) {
+    frame.size.width += _workspaceView.defaultFileBrowserAndDividerWidth;
+    [self.window setFrame:frame display:YES];
+  }
+  _workspaceView.fileBrowserView = [[VRFileBrowserView alloc] initWithFrame:CGRectZero];
 }
 
 #pragma mark Debug

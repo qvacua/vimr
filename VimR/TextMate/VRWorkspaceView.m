@@ -20,6 +20,8 @@
 #define CONSTRAINT(str) [_myConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:str options:0 metrics:nil views:views]]
 
 
+static const int qDefaultFileBrowserWidth = 175;
+
 /**
 * Copied and modified from TextMate -Tae
 *
@@ -82,6 +84,10 @@
   return 0;
 }
 
+- (CGFloat)defaultFileBrowserAndDividerWidth {
+  return qDefaultFileBrowserWidth + 1;
+}
+
 - (void)updateMetrics {
   _dragIncrement = (NSUInteger) _vimView.textView.cellSize.width;
 }
@@ -102,7 +108,7 @@
 - (id)initWithFrame:(NSRect)aRect {
   if (self = [super initWithFrame:aRect]) {
     _myConstraints = [NSMutableArray array];
-    _fileBrowserWidth = 175;
+    _fileBrowserWidth = qDefaultFileBrowserWidth;
     _dragIncrement = 1;
   }
 
