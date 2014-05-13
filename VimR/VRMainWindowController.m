@@ -27,20 +27,15 @@
 #define CONSTRAINT(fmt, ...) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
 
 
-@interface VRMainWindowController ()
-
-@property BOOL isReplyToGuiResize;
-@property BOOL vimViewSetUpDone;
-@property BOOL needsToResizeVimView;
-@property VRWorkspaceView *workspaceView;
-
-@end
-
 @implementation VRMainWindowController {
   int _userRows;
   int _userCols;
   CGPoint _userTopLeft;
   BOOL _shouldRestoreUserTopLeft;
+  BOOL _isReplyToGuiResize;
+  BOOL _vimViewSetUpDone;
+  BOOL _needsToResizeVimView;
+  VRWorkspaceView *_workspaceView;
 }
 
 #pragma mark Public
@@ -174,9 +169,9 @@
 #pragma mark Debug
 - (IBAction)debug1Action:(id)sender {
   DDLogDebug(@"buffers: %@", _vimController.buffers);
-  NSMenu *menu = _vimController.mainMenu;
-  NSMenuItem *fileMenu = menu.itemArray[2];
-  NSArray *editMenuArray = [[fileMenu submenu] itemArray];
+//  NSMenu *menu = _vimController.mainMenu;
+//  NSMenuItem *fileMenu = menu.itemArray[2];
+//  NSArray *editMenuArray = [[fileMenu submenu] itemArray];
 //  DDLogDebug(@"edit menu: %@", editMenuArray);
 }
 
@@ -335,7 +330,7 @@
 - (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
             isLive:(BOOL)live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data {
 
-//  DDLogDebug(@"%d X %d\tlive: %@\tkeepOnScreen: %@", rows, columns, @(live), @(isReplyToGuiResize));
+  DDLogDebug(@"%d X %d\tlive: %@\tkeepOnScreen: %@", rows, columns, @(live), @(isReplyToGuiResize));
   [_vimView setDesiredRows:rows columns:columns];
   [self updateResizeConstraints];
 
@@ -369,7 +364,7 @@
 
 - (void)controller:(MMVimController *)controller showTabBarWithData:(NSData *)data {
   log4Mark;
-  self.vimView.tabBarControl.hidden = NO;
+  _vimView.tabBarControl.hidden = NO;
 }
 
 - (void)controller:(MMVimController *)controller setScrollbarThumbValue:(float)value proportion:(float)proportion
@@ -382,7 +377,7 @@
               data:(NSData *)data {
 
   log4Mark;
-  self.needsToResizeVimView = YES;
+  _needsToResizeVimView = YES;
 }
 
 - (void)controller:(MMVimController *)controller tabShouldUpdateWithData:(NSData *)data {
@@ -401,19 +396,19 @@
 
 - (void)controller:(MMVimController *)controller hideTabBarWithData:(NSData *)data {
   log4Mark;
-  self.vimView.tabBarControl.hidden = YES;
+  _vimView.tabBarControl.hidden = YES;
 }
 
 - (void)controller:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data {
   log4Mark;
 
-  [self setDocumentEdited:modified];
+  self.documentEdited = modified;
 }
 
 - (void)controller:(MMVimController *)controller setDocumentFilename:(NSString *)filename data:(NSData *)data {
   log4Mark;
 
-  [self.window setRepresentedFilename:filename];
+  self.window.representedFilename = filename;
 }
 
 - (void)controller:(MMVimController *)controller setWindowTitle:(NSString *)title data:(NSData *)data {

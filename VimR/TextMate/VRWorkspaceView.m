@@ -28,17 +28,16 @@
 */
 @interface VRWorkspaceView ()
 
-@property NSView *fileBrowserDivider;
-@property NSLayoutConstraint *fileBrowserWidthConstraint;
-@property NSLayoutConstraint *vimViewWidthConstraint;
-@property NSLayoutConstraint *vimViewHeightConstraint;
-@property NSMutableArray *myConstraints;
-@property BOOL mouseDownRecursionGuard;
-@property NSUInteger dragIncrement;
-
 @end
 
 @implementation VRWorkspaceView {
+  NSView *_fileBrowserDivider;
+  NSLayoutConstraint *_fileBrowserWidthConstraint;
+  NSLayoutConstraint *_vimViewWidthConstraint;
+  NSLayoutConstraint *_vimViewHeightConstraint;
+  NSMutableArray *_myConstraints;
+  BOOL _mouseDownRecursionGuard;
+  NSUInteger _dragIncrement;
   MMVimView *_vimView;
   VRFileBrowserView *_fileBrowserView;
   BOOL _fileBrowserOnRight;
