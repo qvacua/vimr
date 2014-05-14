@@ -9,6 +9,7 @@
 
 #import "VRFileBrowserView.h"
 #import "VRUtils.h"
+#import "VRFileItem.h"
 
 
 #define CONSTRAIN(fmt, ...) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
@@ -19,17 +20,19 @@
   NSScrollView *_scrollView;
 }
 
-- (id)initWithFrame:(NSRect)frameRect {
-  self = [super initWithFrame:frameRect];
+#pragma mark Public
+- (instancetype)initWithRootUrl:(NSURL *)rootUrl {
+  self = [super initWithFrame:CGRectZero];
   RETURN_NIL_WHEN_NOT_SELF
 
+  _rootUrl = rootUrl;
   [self addViews];
 
   return self;
 }
 
 #pragma mark NSOutlineViewDataSource
-- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(VRFileItem *)item {
   if (!item) {
     return 1;
   }
@@ -37,15 +40,17 @@
   return 0;
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index1 ofItem:(id)item {
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(VRFileItem *)item {
   return nil;
 }
 
-- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item {
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(VRFileItem *)item {
   return NO;
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn
+           byItem:(VRFileItem *)item {
+
   return @"Test";
 }
 
@@ -58,7 +63,6 @@
   // VRWorkspaceView in combination with the vim view does not work correctly. To override -isOpaque does not suffice.
   return NO;
 }
-
 
 #pragma mark Private
 - (void)addViews {

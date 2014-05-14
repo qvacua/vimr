@@ -35,7 +35,9 @@
   BOOL _isReplyToGuiResize;
   BOOL _vimViewSetUpDone;
   BOOL _needsToResizeVimView;
+
   VRWorkspaceView *_workspaceView;
+  VRFileBrowserView *_fileBrowserView;
 }
 
 #pragma mark Public
@@ -157,7 +159,7 @@
 }
 
 - (IBAction)openQuickly:(id)sender {
-  [_workspace.fileItemManager setTargetUrl:_workspace.workingDirectory];
+  [_workspace.fileItemManager setTargetUrl:self.workingDirectory];
   [_workspace.openQuicklyWindowController showForWindowController:self];
 }
 
@@ -172,7 +174,7 @@
     frame.size.width += _workspaceView.defaultFileBrowserAndDividerWidth;
     [self.window setFrame:frame display:YES];
   }
-  _workspaceView.fileBrowserView = [[VRFileBrowserView alloc] initWithFrame:CGRectZero];
+  _workspaceView.fileBrowserView = _fileBrowserView;
 }
 
 #pragma mark Debug
@@ -543,13 +545,19 @@
 }
 
 #pragma mark Private
+- (NSURL *)workingDirectory {
+  return _workspace.workingDirectory;
+}
+
 - (void)addViews {
   _vimView.tabBarControl.styleNamed = @"Metal";
+
+  _fileBrowserView = [[VRFileBrowserView alloc] initWithRootUrl:self.workingDirectory];
 
   NSView *contentView = self.window.contentView;
   _workspaceView = [[VRWorkspaceView alloc] initWithFrame:CGRectZero];
   _workspaceView.translatesAutoresizingMaskIntoConstraints = NO;
-  _workspaceView.fileBrowserView = [[VRFileBrowserView alloc] initWithFrame:CGRectZero];
+  _workspaceView.fileBrowserView = _fileBrowserView;
   _workspaceView.vimView = _vimView;
   [contentView addSubview:_workspaceView];
 

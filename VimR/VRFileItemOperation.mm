@@ -176,27 +176,9 @@ static const int qArrayChunkSize = 50;
     CANCEL_OR_WAIT
 
     DDLogCaching(@"Caching children for %@", _parentItem.url);
-
-    _parentItem.isCachingChildren = YES;
-
-    NSArray *childUrls = [_fileManager contentsOfDirectoryAtURL:_parentItem.url
-                                     includingPropertiesForKeys:@[NSURLIsDirectoryKey]
-                                                        options:NSDirectoryEnumerationSkipsPackageDescendants
-                                                          error:NULL];
-
-    [self wait];
+    [self cacheDirectDescendants];
 
     NSMutableArray *children = _parentItem.children;
-    [children removeAllObjects];
-    for (NSURL *childUrl in childUrls) {
-      [children addObject:[[VRFileItem alloc] initWithUrl:childUrl isDir:childUrl.isDirectory]];
-    }
-
-    // When the monitoring thread invalidates cache of this item before this line, then we will have an outdated
-    // children, however, we don't really care...
-    _parentItem.shouldCacheChildren = NO; // because shouldCacheChildren means, "should add direct descendants"
-    _parentItem.isCachingChildren = NO; // direct descendants scanning is done
-
     if (children.isEmpty) {
       return;
     }
@@ -212,6 +194,26 @@ static const int qArrayChunkSize = 50;
       }
     });
   }
+}
+
+- (void)cacheDirectDescendants {
+  _parentItem.isCachingChildren = YES;
+
+  NSArray *childUrls = [_fileManager contentsOfDirectoryAtURL:_parentItem.url
+                                   includingPropertiesForKeys:@[NSURLIsDirectoryKey]
+                                                      options:NSDirectoryEnumerationSkipsPackageDescendants
+                                                        error:NULL];
+
+  NSMutableArray *children = _parentItem.children;
+  [children removeAllObjects];
+  for (NSURL *childUrl in childUrls) {
+      [children addObject:[[VRFileItem alloc] initWithUrl:childUrl isDir:childUrl.isDirectory]];
+    }
+
+  // When the monitoring thread invalidates cache of this item before this line, then we will have an outdated
+  // children, however, we don't really care...
+  _parentItem.shouldCacheChildren = NO; // because shouldCacheChildren means, "should add direct descendants"
+  _parentItem.isCachingChildren = NO; // direct descendants scanning is done
 }
 
 - (void)addAllToFileItemsForTargetUrl:(NSArray *)items {
