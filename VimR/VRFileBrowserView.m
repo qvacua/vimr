@@ -10,6 +10,7 @@
 #import "VRFileBrowserView.h"
 #import "VRUtils.h"
 #import "VRFileItemManager.h"
+#import "VRMainWindowController.h"
 
 
 #define CONSTRAIN(fmt, ...) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
@@ -87,6 +88,7 @@
   _fileOutlineView.focusRingType = NSFocusRingTypeNone;
   _fileOutlineView.dataSource = self;
   _fileOutlineView.delegate = self;
+  [_fileOutlineView setDoubleAction:@selector(fileOutlineViewDoubleClicked:)];
 
   _scrollView = [[NSScrollView alloc] initWithFrame:NSZeroRect];
   _scrollView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -103,6 +105,11 @@
 
   CONSTRAIN(@"H:|[outline(>=50)]|");
   CONSTRAIN(@"V:|[outline(>=50)]|");
+}
+
+- (void)fileOutlineViewDoubleClicked:(id)sender {
+  id clickedItem = [_fileOutlineView itemAtRow:_fileOutlineView.clickedRow];
+  [(VRMainWindowController *)self.window.windowController openFileWithUrl:[_fileItemManager urlForItem:clickedItem]];
 }
 
 - (void)setUp {

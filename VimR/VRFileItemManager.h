@@ -35,6 +35,7 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 - (NSArray *)childrenOfItem:(id)item;
 - (BOOL)isItemDir:(id)item;
 - (NSString *)nameOfItem:(id)item;
+- (NSURL *)urlForItem:(id)item;
 
 - (void)registerUrl:(NSURL *)url;
 - (void)resetTargetUrl;

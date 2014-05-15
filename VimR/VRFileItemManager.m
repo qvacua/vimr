@@ -138,6 +138,10 @@ void streamCallback(
   return item.url.lastPathComponent;
 }
 
+- (NSURL *)urlForItem:(VRFileItem *)item {
+  return item.url;
+}
+
 - (void)registerUrl:(NSURL *)url {
   // TODO: handle symlinks and aliases
 
