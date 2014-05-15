@@ -103,27 +103,26 @@ void streamCallback(
 }
 
 #pragma mark Public
-- (NSArray *)childrenOfUrl:(NSURL *)url {
-  VRCachedFileItemRecord *record = _url2CacheRecord[url];
+- (NSArray *)childrenOfRootUrl:(NSURL *)rootUrl {
+  VRCachedFileItemRecord *record = _url2CacheRecord[rootUrl];
   if (!record) {
-    DDLogWarn(@"no record found for %@", url);
+    DDLogWarn(@"no record found for %@", rootUrl);
     return nil;
   }
 
-  VRFileItem *item = record.fileItem;
+  return [self childrenOfItem:record.fileItem];
+}
+
+- (NSArray *)childrenOfItem:(VRFileItem *)item {
   if (!item.shouldCacheChildren) {
     return item.children;
   }
 
   VRFileItemOperation *operation = [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationShallowCacheMode
-                                       dict:@{
-                                           qFileItemOperationRootUrlKey : url,
-                                           qFileItemOperationParentItemKey : item,
-                                           qFileItemOperationOperationQueueKey : _fileItemOperationQueue,
-                                           qFileItemOperationNotificationCenterKey : _notificationCenter,
-                                           qFileItemOperationFileItemsKey : _mutableFileItemsForTargetUrl,
-                                           qFileItemOperationFileManagerKey : _fileManager,
-                                       }];
+                                                                        dict:@{
+                                                                            qFileItemOperationParentItemKey : item,
+                                                                            qFileItemOperationFileManagerKey : _fileManager,
+                                                                        }];
   [operation main];
 
   return item.children;

@@ -28,7 +28,11 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 /**
 * Synchronously caches the direct descendants of url
 */
-- (NSArray *)childrenOfUrl:(NSURL *)url;
+- (NSArray *)childrenOfRootUrl:(NSURL *)rootUrl;
+/**
+* Synchronously caches the direct descendants of item.
+*/
+- (NSArray *)childrenOfItem:(VRFileItem *)item;
 - (void)registerUrl:(NSURL *)url;
 - (void)resetTargetUrl;
 - (BOOL)setTargetUrl:(NSURL *)url;

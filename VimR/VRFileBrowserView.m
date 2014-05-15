@@ -35,24 +35,25 @@
 #pragma mark NSOutlineViewDataSource
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(VRFileItem *)item {
   if (!item) {
-    NSArray *children = [_fileItemManager childrenOfUrl:_rootUrl];
+    NSArray *children = [_fileItemManager childrenOfRootUrl:_rootUrl];
     return children.count;
   }
 
-  return 0;
+  NSArray *children = [_fileItemManager childrenOfItem:item];
+  return children.count;
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(VRFileItem *)item {
   if (!item) {
-    NSArray *children = [_fileItemManager childrenOfUrl:_rootUrl];
+    NSArray *children = [_fileItemManager childrenOfRootUrl:_rootUrl];
     return children[(NSUInteger) index];
   }
 
-  return nil;
+  return [[_fileItemManager childrenOfItem:item] objectAtIndex:(NSUInteger) index];
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(VRFileItem *)item {
-  return NO;
+  return item.dir;
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn
@@ -77,9 +78,10 @@
   tableColumn.dataCell = [[NSTextFieldCell alloc] initTextCell:@""];
   [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingTail];
 
-
   _fileOutlineView = [[NSOutlineView alloc] initWithFrame:CGRectZero];
   [_fileOutlineView addTableColumn:tableColumn];
+  _fileOutlineView.outlineTableColumn = tableColumn;
+  [_fileOutlineView sizeLastColumnToFit];
   _fileOutlineView.allowsEmptySelection = YES;
   _fileOutlineView.allowsMultipleSelection = NO;
   _fileOutlineView.headerView = nil;
