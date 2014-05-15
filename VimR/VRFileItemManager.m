@@ -160,26 +160,6 @@ void streamCallback(
   }
 }
 
-- (void)pause {
-  @synchronized (_fileItemOperationQueue) {
-    _fileItemOperationQueue.suspended = YES;
-
-    for (VRFileItemOperation *operation in _fileItemOperationQueue.operations) {
-      [operation pause];
-    }
-  }
-}
-
-- (void)resume {
-  @synchronized (_fileItemOperationQueue) {
-    _fileItemOperationQueue.suspended = NO;
-
-    for (VRFileItemOperation *operation in _fileItemOperationQueue.operations) {
-      [operation resume];
-    }
-  }
-}
-
 - (BOOL)fileItemOperationPending {
   @synchronized (_fileItemOperationQueue) {
     return _fileItemOperationQueue.operationCount > 0;
@@ -204,10 +184,10 @@ void streamCallback(
   _mutableFileItemsForTargetUrl = [[NSMutableArray alloc] initWithCapacity:500];
 
   _fileItemOperationQueue = [[NSOperationQueue alloc] init];
-  _fileItemOperationQueue.maxConcurrentOperationCount = 1;
+  _fileItemOperationQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
 
   _invalidateCacheOperationQueue = [[NSOperationQueue alloc] init];
-  _invalidateCacheOperationQueue.maxConcurrentOperationCount = 1;
+  _invalidateCacheOperationQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
 
   return self;
 }

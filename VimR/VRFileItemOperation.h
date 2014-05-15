@@ -30,11 +30,6 @@ typedef enum {
 
 @interface VRFileItemOperation : NSOperation
 
-#pragma mark Public
-- (BOOL)isPaused;
-- (void)pause;
-- (void)resume;
-
 #pragma mark NSOperation
 - (id)initWithMode:(VRFileItemOperationMode)mode dict:(NSDictionary *)dict;
 

@@ -26,7 +26,7 @@ NSString *const qFilterItemsOperationItemTableViewKey = @"file-item-table-view";
 const NSUInteger qMaximumNumberOfFilterResult = 250;
 
 
-static const int qArrayChunkSize = 2000;
+static const int qArrayChunkSize = 5000;
 
 
 static NSString *disambiguated_display_name(size_t level, NSURL *url) {
@@ -62,7 +62,6 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
 
 
 #define CANCEL_WHEN_REQUESTED  if (self.isCancelled) { \
-                                 [_fileItemManager resume]; \
                                  return; \
                                }
 
@@ -107,8 +106,6 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
 
       return;
     }
-
-    [_fileItemManager pause];
 
     // We could shallow copy the file items array, since the _controller.fileItemManager.fileItemsOfTargetUrl can get
     // mutated, while we enumerate over it. Then, we have to update the filtered list, when a chunk of cached items are
@@ -171,8 +168,6 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
         }
       });
     }
-
-    [_fileItemManager resume];
   }
 }
 

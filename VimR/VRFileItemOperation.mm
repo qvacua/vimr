@@ -30,14 +30,12 @@ static const int qArrayChunkSize = 50;
 
 #define CANCEL_OR_WAIT if ([self isCancelled]) { \
                          return; \
-                       } \
-                       [self wait];
+                       }
 
 #define CANCEL_OR_WAIT_BLOCK ^BOOL { \
                                if ([self isCancelled]) { \
                                  return YES; \
                                } \
-                               [self wait]; \
                                return NO; \
                              }
 
@@ -52,32 +50,9 @@ static const int qArrayChunkSize = 50;
   __weak NSMutableArray *_fileItems;
 
   NSURL *_rootUrl;
-
-  NSCondition *_pauseCondition;
-  BOOL _shouldPause;
 }
 
 #pragma mark Public
-- (BOOL)isPaused {
-  @synchronized (_pauseCondition) {
-    return _shouldPause;
-  }
-}
-
-- (void)pause {
-  [_pauseCondition lock];
-  _shouldPause = YES;
-  [_pauseCondition signal];
-  [_pauseCondition unlock];
-}
-
-- (void)resume {
-  [_pauseCondition lock];
-  _shouldPause = NO;
-  [_pauseCondition signal];
-  [_pauseCondition unlock];
-}
-
 - (id)initWithMode:(VRFileItemOperationMode)mode dict:(NSDictionary *)dict {
   self = [super init];
   RETURN_NIL_WHEN_NOT_SELF
@@ -90,9 +65,6 @@ static const int qArrayChunkSize = 50;
   _parentItem = dict[qFileItemOperationParentItemKey];
   _rootUrl = [dict[qFileItemOperationRootUrlKey] copy];
   _fileItems = dict[qFileItemOperationFileItemsKey];
-
-  _shouldPause = NO;
-  _pauseCondition = [[NSCondition alloc] init];
 
 #ifdef DEBUG
   setup_file_logger();
@@ -111,14 +83,6 @@ static const int qArrayChunkSize = 50;
 }
 
 #pragma mark Private
-- (void)wait {
-  [_pauseCondition lock];
-  while (_shouldPause) {
-    [_pauseCondition wait];
-  }
-  [_pauseCondition unlock];
-}
-
 - (void)traverseFileItemChildHierarchy {
   @autoreleasepool {
     // Necessary?
