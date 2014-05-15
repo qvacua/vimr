@@ -108,11 +108,8 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
       return;
     }
 
-    [_fileItemManager pause];
+    [_fileItemManager pause]; // this will only suspend the operation queue
 
-    // We could shallow copy the file items array, since the _controller.fileItemManager.fileItemsOfTargetUrl can get
-    // mutated, while we enumerate over it. Then, we have to update the filtered list, when a chunk of cached items are
-    // updated. However, it's not necessary anymore, because we're pausing the file item manager...
     NSArray *fileItemsOfTargetUrl = _fileItemManager.fileItemsOfTargetUrl;
 
     NSMutableArray *result;
@@ -120,56 +117,54 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
     @synchronized (fileItemsOfTargetUrl) {
       result = [[NSMutableArray alloc] initWithCapacity:fileItemsOfTargetUrl.count];
       chunkedIndexes = chunked_indexes(fileItemsOfTargetUrl.count, qArrayChunkSize);
-    }
 
-    for (auto &pair : chunkedIndexes) {
-      CANCEL_WHEN_REQUESTED
+      for (auto &pair : chunkedIndexes) {
+        CANCEL_WHEN_REQUESTED
 
-      NSUInteger beginIndex = pair.first;
-      NSUInteger endIndex = pair.second;
-      NSUInteger count = endIndex - beginIndex + 1;
+        NSUInteger beginIndex = pair.first;
+        NSUInteger endIndex = pair.second;
+        NSUInteger count = endIndex - beginIndex + 1;
 
-      @synchronized (fileItemsOfTargetUrl) {
         for (size_t i = beginIndex; i <= endIndex; i++) {
           [result addObject:[[VRScoredPath alloc] initWithPath:fileItemsOfTargetUrl[i]]];
         }
-      }
 
-      CANCEL_WHEN_REQUESTED
-      dispatch_loop(count, ^(size_t i) {
-        [result[beginIndex + i] computeScoreForCandidate:_searchStr];
-      });
+        CANCEL_WHEN_REQUESTED
+        dispatch_loop(count, ^(size_t i) {
+          [result[beginIndex + i] computeScoreForCandidate:_searchStr];
+        });
 
-      CANCEL_WHEN_REQUESTED
-      [result sortUsingComparator:qScoredItemComparator];
-      NSArray *cappedResult = [result subarrayWithRange:capped_range_for_filtered_items(result)];
+        CANCEL_WHEN_REQUESTED
+        [result sortUsingComparator:qScoredItemComparator];
+        NSArray *cappedResult = [result subarrayWithRange:capped_range_for_filtered_items(result)];
 
-      std::vector<std::string> paths;
-      for (VRScoredPath *scoredPath in cappedResult) {
-        paths.push_back(cf::to_s((__bridge CFStringRef) scoredPath.path));
-      }
-
-      CANCEL_WHEN_REQUESTED
-      std::vector<size_t> levels = disambiguate(paths);
-      dispatch_loop(cappedResult.count, ^(size_t i) {
-        VRScoredPath *scoredPath = cappedResult[i];
-        NSURL *url = [NSURL fileURLWithPath:scoredPath.path];
-
-        scoredPath.displayName = disambiguated_display_name(levels[i], url);
-      });
-
-      CANCEL_WHEN_REQUESTED
-      @synchronized (_filteredItems) {
-        [_filteredItems removeAllObjects];
-        [_filteredItems addObjectsFromArray:cappedResult];
-      }
-
-      CANCEL_WHEN_REQUESTED
-      dispatch_to_main_thread(^{
-        @synchronized (_filteredItems) {
-          [_fileItemTableView reloadData];
+        std::vector<std::string> paths;
+        for (VRScoredPath *scoredPath in cappedResult) {
+          paths.push_back(cf::to_s((__bridge CFStringRef) scoredPath.path));
         }
-      });
+
+        CANCEL_WHEN_REQUESTED
+        std::vector<size_t> levels = disambiguate(paths);
+        dispatch_loop(cappedResult.count, ^(size_t i) {
+          VRScoredPath *scoredPath = cappedResult[i];
+          NSURL *url = [NSURL fileURLWithPath:scoredPath.path];
+
+          scoredPath.displayName = disambiguated_display_name(levels[i], url);
+        });
+
+        CANCEL_WHEN_REQUESTED
+        @synchronized (_filteredItems) {
+          [_filteredItems removeAllObjects];
+          [_filteredItems addObjectsFromArray:cappedResult];
+        }
+
+        CANCEL_WHEN_REQUESTED
+        dispatch_to_main_thread(^{
+          @synchronized (_filteredItems) {
+            [_fileItemTableView reloadData];
+          }
+        });
+      }
     }
   }
 }

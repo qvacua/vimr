@@ -118,6 +118,8 @@ void streamCallback(
     return item.children;
   }
 
+  // TODO: if item is caching, we should wait here until done and return
+
   VRFileItemOperation *operation = [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationShallowCacheMode
                                                                         dict:@{
                                                                             qFileItemOperationParentItemKey : item,
