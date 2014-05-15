@@ -31,6 +31,8 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 - (void)unregisterUrl:(NSURL *)url;
 - (void)cleanUp;
 - (BOOL)fileItemOperationPending;
+- (void)pause;
+- (void)resume;
 
 // TODO: for debug only!
 - (NSUInteger)operationCount;

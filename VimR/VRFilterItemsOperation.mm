@@ -62,6 +62,7 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
 
 
 #define CANCEL_WHEN_REQUESTED  if (self.isCancelled) { \
+                                 [_fileItemManager resume]; \
                                  return; \
                                }
 
@@ -106,6 +107,8 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
 
       return;
     }
+
+    [_fileItemManager pause];
 
     // We could shallow copy the file items array, since the _controller.fileItemManager.fileItemsOfTargetUrl can get
     // mutated, while we enumerate over it. Then, we have to update the filtered list, when a chunk of cached items are

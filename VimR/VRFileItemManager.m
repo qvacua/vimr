@@ -222,6 +222,13 @@ void streamCallback(
   }
 }
 
+- (void)pause {
+  _fileItemOperationQueue.suspended = YES;
+}
+
+- (void)resume {
+  _fileItemOperationQueue.suspended = NO;
+}
 
 #pragma mark NSObject
 - (id)init {
