@@ -24,9 +24,42 @@ static NSString *const qThreadName = @"com.qvacua.VimR.VRFileItemManager";
 NSString *const qChunkOfNewFileItemsAddedEvent = @"chunk-of-new-file-items-added-event";
 
 
+@interface VRCachedFileItemRecord : NSObject
+
+@property VRFileItem *fileItem;
+@property (readonly) NSUInteger countOfConsumer;
+
+- (instancetype)initWithFileItem:(VRFileItem *)fileItem;
+
+@end
+
+@implementation VRCachedFileItemRecord
+
+- (instancetype)initWithFileItem:(VRFileItem *)fileItem {
+  self = [super init];
+  RETURN_NIL_WHEN_NOT_SELF
+
+  _fileItem = fileItem;
+  _countOfConsumer = 1;
+
+  return self;
+}
+
+
+- (void)incrementConsumer {
+  _countOfConsumer++;
+}
+
+- (void)decrementConsumer {
+  _countOfConsumer--;
+}
+
+@end
+
+
 @interface VRFileItemManager ()
 
-@property (readonly) NSMutableDictionary *url2CachedFileItem;
+@property (readonly) NSMutableDictionary *url2CacheRecord;
 @property (readonly) NSMutableArray *mutableFileItemsForTargetUrl;
 
 @property (readonly) NSOperationQueue *fileItemOperationQueue;
@@ -66,7 +99,7 @@ void streamCallback(
 }
 
 - (NSArray *)registeredUrls {
-  return self.url2CachedFileItem.allKeys;
+  return self.url2CacheRecord.allKeys;
 }
 
 #pragma mark Public
@@ -74,8 +107,10 @@ void streamCallback(
   // TODO: handle symlinks and aliases
 
   @synchronized (self) {
-    if ([_url2CachedFileItem.allKeys containsObject:url]) {
-      DDLogWarn(@"%@ is already registered, noop", url);
+    VRCachedFileItemRecord *record = _url2CacheRecord[url];
+    if (record) {
+      DDLogWarn(@"%@ is already registered, incrementing consumer count", url);
+      [record incrementConsumer];
       return;
     }
 
@@ -92,7 +127,8 @@ void streamCallback(
         // parent URLs and therefore file items for one URL reported by FSEventStream.
 
         DDLogDebug(@"Registering %@ for caching and monitoring", url);
-    _url2CachedFileItem[url] = [[VRFileItem alloc] initWithUrl:url isDir:YES];
+    _url2CacheRecord[url] = [[VRCachedFileItemRecord alloc] initWithFileItem:[[VRFileItem alloc] initWithUrl:url
+                                                                                                       isDir:YES]];
 
     [self stop];
     [self start];
@@ -101,8 +137,20 @@ void streamCallback(
 
 - (void)unregisterUrl:(NSURL *)url {
   @synchronized (self) {
+    VRCachedFileItemRecord *record = _url2CacheRecord[url];
+    if (!record) {
+      DDLogWarn(@"%@ was not registered");
+      return;
+    }
+
+    DDLogDebug(@"decrementing %@", url);
+    [record decrementConsumer];
+    if (record.countOfConsumer > 0) {
+      return;
+    }
+
     DDLogDebug(@"Unregistering %@", url);
-    [_url2CachedFileItem removeObjectForKey:url];
+    [_url2CacheRecord removeObjectForKey:url];
 
     [self stop];
     [self start];
@@ -115,11 +163,13 @@ void streamCallback(
     [self resetTargetUrl];
     _fileItemOperationQueue.suspended = NO;
 
-    VRFileItem *targetItem = _url2CachedFileItem[url];
-    if (!targetItem) {
+    VRCachedFileItemRecord *record = _url2CacheRecord[url];
+    if (!record) {
       DDLogWarn(@"The URL %@ is not yet registered.", url);
       return NO;
     }
+
+    VRFileItem *targetItem = record.fileItem;
 
     [_mutableFileItemsForTargetUrl removeAllObjects];
 
@@ -180,8 +230,8 @@ void streamCallback(
 
   _lastEventId = kFSEventStreamEventIdSinceNow;
 
-  _url2CachedFileItem = [[NSMutableDictionary alloc] initWithCapacity:5];
-  _mutableFileItemsForTargetUrl = [[NSMutableArray alloc] initWithCapacity:500];
+  _url2CacheRecord = [[NSMutableDictionary alloc] initWithCapacity:5];
+  _mutableFileItemsForTargetUrl = [[NSMutableArray alloc] initWithCapacity:10000];
 
   _fileItemOperationQueue = [[NSOperationQueue alloc] init];
   _fileItemOperationQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
@@ -220,7 +270,8 @@ void streamCallback(
   NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:5];
   for (NSURL *possibleParentUrl in self.registeredUrls) {
     if ([possibleParentUrl isParentToUrl:url]) {
-      [result addObject:_url2CachedFileItem[possibleParentUrl]];
+      VRCachedFileItemRecord *record = _url2CacheRecord[possibleParentUrl];
+      [result addObject:record.fileItem];
     }
   }
 
