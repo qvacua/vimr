@@ -130,6 +130,14 @@ void streamCallback(
   return item.children;
 }
 
+- (BOOL)isItemDir:(VRFileItem *)item {
+  return item.dir;
+}
+
+- (NSString *)nameOfItem:(VRFileItem *)item {
+  return item.url.lastPathComponent;
+}
+
 - (void)registerUrl:(NSURL *)url {
   // TODO: handle symlinks and aliases
 

@@ -9,7 +9,6 @@
 
 #import "VRFileBrowserView.h"
 #import "VRUtils.h"
-#import "VRFileItem.h"
 #import "VRFileItemManager.h"
 
 
@@ -33,7 +32,7 @@
 }
 
 #pragma mark NSOutlineViewDataSource
-- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(VRFileItem *)item {
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
   if (!item) {
     NSArray *children = [_fileItemManager childrenOfRootUrl:_rootUrl];
     return children.count;
@@ -43,7 +42,7 @@
   return children.count;
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(VRFileItem *)item {
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item {
   if (!item) {
     NSArray *children = [_fileItemManager childrenOfRootUrl:_rootUrl];
     return children[(NSUInteger) index];
@@ -52,14 +51,14 @@
   return [[_fileItemManager childrenOfItem:item] objectAtIndex:(NSUInteger) index];
 }
 
-- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(VRFileItem *)item {
-  return item.dir;
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item {
+  return [_fileItemManager isItemDir:item];
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn
-           byItem:(VRFileItem *)item {
+           byItem:(id)item {
 
-  return item.url.lastPathComponent;
+  return [_fileItemManager nameOfItem:item];
 }
 
 #pragma mark NSOutlineViewDelegate

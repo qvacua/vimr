@@ -25,11 +25,11 @@
 - (instancetype)initWithRootUrl:(NSURL *)rootUrl;
 
 #pragma mark NSOutlineViewDataSource
-- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(VRFileItem *)item;
-- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index1 ofItem:(VRFileItem *)item;
-- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(VRFileItem *)item;
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item;
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index1 ofItem:(id)item;
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item;
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn
-           byItem:(VRFileItem *)item;
+           byItem:(id)item;
 
 #pragma mark NSView
 - (BOOL)mouseDownCanMoveWindow;
