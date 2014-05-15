@@ -21,6 +21,7 @@ extern NSString *const qFileItemOperationFileItemsKey;
 typedef enum {
   VRFileItemOperationTraverseMode = 0,
   VRFileItemOperationCacheMode,
+  VRFileItemOperationShallowCacheMode,
 } VRFileItemOperationMode;
 
 

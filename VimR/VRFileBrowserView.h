@@ -11,18 +11,18 @@
 
 
 @class VRFileItem;
+@class VRFileItemManager;
 
 
 @interface VRFileBrowserView : NSView <NSOutlineViewDataSource, NSOutlineViewDelegate>
 
 @property (weak) NSFileManager *fileManager;
+@property (weak) VRFileItemManager *fileItemManager;
 @property (copy) NSURL *rootUrl;
 
 
 #pragma mark Public
 - (instancetype)initWithRootUrl:(NSURL *)rootUrl;
-
-
 
 #pragma mark NSOutlineViewDataSource
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(VRFileItem *)item;
@@ -34,4 +34,5 @@
 #pragma mark NSView
 - (BOOL)mouseDownCanMoveWindow;
 
+- (void)setUp;
 @end

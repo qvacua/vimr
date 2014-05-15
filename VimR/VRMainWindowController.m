@@ -553,6 +553,8 @@
   _vimView.tabBarControl.styleNamed = @"Metal";
 
   _fileBrowserView = [[VRFileBrowserView alloc] initWithRootUrl:self.workingDirectory];
+  _fileBrowserView.fileItemManager = _workspace.fileItemManager;
+  [_fileBrowserView setUp];
 
   NSView *contentView = self.window.contentView;
   _workspaceView = [[VRWorkspaceView alloc] initWithFrame:CGRectZero];

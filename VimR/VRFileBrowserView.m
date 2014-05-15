@@ -10,6 +10,7 @@
 #import "VRFileBrowserView.h"
 #import "VRUtils.h"
 #import "VRFileItem.h"
+#import "VRFileItemManager.h"
 
 
 #define CONSTRAIN(fmt, ...) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
@@ -34,13 +35,19 @@
 #pragma mark NSOutlineViewDataSource
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(VRFileItem *)item {
   if (!item) {
-    return 1;
+    NSArray *children = [_fileItemManager childrenOfUrl:_rootUrl];
+    return children.count;
   }
 
   return 0;
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(VRFileItem *)item {
+  if (!item) {
+    NSArray *children = [_fileItemManager childrenOfUrl:_rootUrl];
+    return children[(NSUInteger) index];
+  }
+
   return nil;
 }
 
@@ -51,7 +58,7 @@
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn
            byItem:(VRFileItem *)item {
 
-  return @"Test";
+  return item.url.lastPathComponent;
 }
 
 #pragma mark NSOutlineViewDelegate
@@ -95,6 +102,10 @@
 
   CONSTRAIN(@"H:|[outline(>=50)]|");
   CONSTRAIN(@"V:|[outline(>=50)]|");
+}
+
+- (void)setUp {
+  [_fileOutlineView reloadData];
 }
 
 @end

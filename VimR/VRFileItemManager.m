@@ -103,6 +103,32 @@ void streamCallback(
 }
 
 #pragma mark Public
+- (NSArray *)childrenOfUrl:(NSURL *)url {
+  VRCachedFileItemRecord *record = _url2CacheRecord[url];
+  if (!record) {
+    DDLogWarn(@"no record found for %@", url);
+    return nil;
+  }
+
+  VRFileItem *item = record.fileItem;
+  if (!item.shouldCacheChildren) {
+    return item.children;
+  }
+
+  VRFileItemOperation *operation = [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationShallowCacheMode
+                                       dict:@{
+                                           qFileItemOperationRootUrlKey : url,
+                                           qFileItemOperationParentItemKey : item,
+                                           qFileItemOperationOperationQueueKey : _fileItemOperationQueue,
+                                           qFileItemOperationNotificationCenterKey : _notificationCenter,
+                                           qFileItemOperationFileItemsKey : _mutableFileItemsForTargetUrl,
+                                           qFileItemOperationFileManagerKey : _fileManager,
+                                       }];
+  [operation main];
+
+  return item.children;
+}
+
 - (void)registerUrl:(NSURL *)url {
   // TODO: handle symlinks and aliases
 
