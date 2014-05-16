@@ -19,6 +19,7 @@
 @implementation VRFileBrowserView {
   NSOutlineView *_fileOutlineView;
   NSScrollView *_scrollView;
+  NSPopUpButton *_settingsButton;
 }
 
 #pragma mark Public
@@ -27,6 +28,7 @@
   RETURN_NIL_WHEN_NOT_SELF
 
   _rootUrl = rootUrl;
+
   [self addViews];
 
   return self;
@@ -94,17 +96,33 @@
   _scrollView.translatesAutoresizingMaskIntoConstraints = NO;
   _scrollView.hasVerticalScroller = YES;
   _scrollView.hasHorizontalScroller = NO;
-  _scrollView.borderType = NSNoBorder;
+  _scrollView.borderType = NSBezelBorder;
   _scrollView.autohidesScrollers = YES;
   _scrollView.documentView = _fileOutlineView;
   [self addSubview:_scrollView];
 
+  _settingsButton = [[NSPopUpButton alloc] initWithFrame:CGRectZero];
+  _settingsButton.translatesAutoresizingMaskIntoConstraints = NO;
+  _settingsButton.bordered = NO;
+  _settingsButton.pullsDown = YES;
+
+  NSMenuItem *item = [NSMenuItem new];
+  item.title = @"";
+  item.image = [NSImage imageNamed:NSImageNameActionTemplate];
+  [item.image setSize:NSMakeSize(12, 12)];
+  [_settingsButton.cell setBackgroundStyle:NSBackgroundStyleRaised];
+  [_settingsButton.cell setUsesItemFromMenu:NO];
+  [_settingsButton.cell setMenuItem:item];
+  [self addSubview:_settingsButton];
+
   NSDictionary *views = @{
       @"outline" : _scrollView,
+      @"settings" : _settingsButton,
   };
 
-  CONSTRAIN(@"H:|[outline(>=50)]|");
-  CONSTRAIN(@"V:|[outline(>=50)]|");
+  CONSTRAIN(@"H:[settings]|");
+  CONSTRAIN(@"H:|-(-1)-[outline(>=50)]-(-1)-|");
+  CONSTRAIN(@"V:|-(-1)-[outline(>=50)][settings]-(3)-|");
 }
 
 - (void)fileOutlineViewDoubleClicked:(id)sender {

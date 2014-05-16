@@ -11,7 +11,6 @@
 #import "VRUtils.h"
 #import "VRFileItemManager.h"
 #import "VRFileItem.h"
-#import "NSURL+VR.h"
 #import "NSArray+VR.h"
 #import "VRCppUtils.h"
 #import "VRCachingLogSetting.h"
@@ -140,7 +139,7 @@ static const int qArrayChunkSize = 50;
 
     CANCEL_OR_WAIT
 
-    DDLogCaching(@"### Adding (from traversing) children items of parent: %@", _parentItem.url);
+        DDLogCaching(@"### Adding (from traversing) children items of parent: %@", _parentItem.url);
     [self addAllToFileItemsForTargetUrl:fileItemsToAdd];
   }
 }
@@ -149,7 +148,7 @@ static const int qArrayChunkSize = 50;
   @autoreleasepool {
     CANCEL_OR_WAIT
 
-    DDLogCaching(@"Caching children for %@", _parentItem.url);
+        DDLogCaching(@"Caching children for %@", _parentItem.url);
     [self cacheDirectDescendants];
 
     NSMutableArray *children = _parentItem.children;
@@ -159,7 +158,7 @@ static const int qArrayChunkSize = 50;
 
     CANCEL_OR_WAIT
 
-    DDLogCaching(@"### Adding (from caching) children items of parent: %@", _parentItem.url);
+        DDLogCaching(@"### Adding (from caching) children items of parent: %@", _parentItem.url);
     [self addAllToFileItemsForTargetUrl:children];
 
     chunk_enumerate_array(children, qArrayChunkSize, CANCEL_OR_WAIT_BLOCK, ^(VRFileItem *child) {
@@ -174,15 +173,15 @@ static const int qArrayChunkSize = 50;
   _parentItem.isCachingChildren = YES;
 
   NSArray *childUrls = [_fileManager contentsOfDirectoryAtURL:_parentItem.url
-                                   includingPropertiesForKeys:@[NSURLIsDirectoryKey]
+                                   includingPropertiesForKeys:@[NSURLIsDirectoryKey, NSURLIsHiddenKey,]
                                                       options:NSDirectoryEnumerationSkipsPackageDescendants
                                                         error:NULL];
 
   NSMutableArray *children = _parentItem.children;
   [children removeAllObjects];
   for (NSURL *childUrl in childUrls) {
-      [children addObject:[[VRFileItem alloc] initWithUrl:childUrl isDir:childUrl.isDirectory]];
-    }
+    [children addObject:[[VRFileItem alloc] initWithUrl:childUrl]];
+  }
 
   // When the monitoring thread invalidates cache of this item before this line, then we will have an outdated
   // children, however, we don't really care...

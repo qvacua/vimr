@@ -554,6 +554,7 @@
 
   _fileBrowserView = [[VRFileBrowserView alloc] initWithRootUrl:self.workingDirectory];
   _fileBrowserView.fileItemManager = _workspace.fileItemManager;
+  _fileBrowserView.userDefaults = _workspace.userDefaults;
   [_fileBrowserView setUp];
 
   NSView *contentView = self.window.contentView;
@@ -739,7 +740,7 @@
     window.minSize = _vimView.minSize;
   }
   // We also update the increment of the workspace view, because it could be that the font size has changed
-  _workspaceView.dragIncrement = _vimView.textView.cellSize.width;
+  _workspaceView.dragIncrement = (NSUInteger) _vimView.textView.cellSize.width;
 }
 
 - (void)setWindowTitleToCurrentBuffer {
@@ -765,6 +766,9 @@
   window.delegate = self;
   window.hasShadow = YES;
   window.title = @"VimR";
+
+  [window setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
+  [window setContentBorderThickness:22 forEdge:NSMinYEdge];
 
   return window;
 }

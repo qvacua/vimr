@@ -16,6 +16,26 @@ NSString *const qUrlNoParentException = @"qNoParentException";
 
 @implementation NSURL (VR)
 
+- (BOOL)isHidden {
+  if (!self.isFileURL) {
+    @throw [NSException exceptionWithName:qUrlGetResourceValueIsDirException
+                                   reason:@"The URL is not a file URL"
+                                 userInfo:nil];
+  }
+
+  NSNumber *isHidden = nil;
+  NSError *error = nil;
+  BOOL success = [self getResourceValue:&isHidden forKey:NSURLIsHiddenKey error:&error];
+
+  if (success) {
+    return isHidden.boolValue;
+  }
+
+  @throw [NSException exceptionWithName:qUrlGetResourceValueIsDirException
+                                 reason:@"There was an error getting NSURLIsHiddenKey"
+                               userInfo:@{@"error" : error}];
+}
+
 - (BOOL)isDirectory {
   if (!self.isFileURL) {
     @throw [NSException exceptionWithName:qUrlGetResourceValueIsDirException

@@ -12,24 +12,25 @@
 
 @interface VRFileItem : NSObject
 
-@property (copy) NSURL *url;
-@property (readonly, getter=isDir) BOOL dir;
-@property (readonly) NSMutableArray *children;
+@property (nonatomic) NSURL *url;
+@property (nonatomic, readonly, getter=isDir) BOOL dir;
+@property (nonatomic, readonly, getter=isHidden) BOOL hidden;
+@property (nonatomic, readonly) NSMutableArray *children;
 
 /**
 * If YES, direct descendants are not in the children array yet, so they should be scanned.
 * IF NO, direct descendants are there, but it is possible, that they still don't have their descendants yet.
 */
-@property BOOL shouldCacheChildren;
+@property (nonatomic) BOOL shouldCacheChildren;
 
 /**
 * If YES, direct descendants are being scanned.
 * Even if NO, it is possible, that its children are scanning their descendants
 */
-@property BOOL isCachingChildren;
+@property (nonatomic) BOOL isCachingChildren;
 
 #pragma mark Public
-- (instancetype)initWithUrl:(NSURL *)url isDir:(BOOL)isDir;
+- (instancetype)initWithUrl:(NSURL *)url;
 - (BOOL)isEqualToItem:(VRFileItem *)item;
 
 #pragma mark NSObject

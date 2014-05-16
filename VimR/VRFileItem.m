@@ -9,21 +9,23 @@
 
 #import "VRFileItem.h"
 #import "VRUtils.h"
+#import "NSURL+VR.h"
 
 
 @implementation VRFileItem
 
 #pragma mark Public
-- (instancetype)initWithUrl:(NSURL *)url isDir:(BOOL)isDir {
+- (instancetype)initWithUrl:(NSURL *)url {
   self = [super init];
   RETURN_NIL_WHEN_NOT_SELF;
 
   _url = url;
-  _dir = isDir;
+  _dir = url.isDirectory;
+  _hidden = url.isHidden;
   _shouldCacheChildren = YES;
   _isCachingChildren = NO;
 
-  if (isDir) {
+  if (_dir) {
     _children = [[NSMutableArray alloc] initWithCapacity:20];
   }
 

@@ -166,8 +166,7 @@ void streamCallback(
     // parent URLs and therefore file items for one URL reported by FSEventStream.
 
     DDLogDebug(@"Registering %@ for caching and monitoring", url);
-    _url2CacheRecord[url] = [[VRCachedFileItemRecord alloc] initWithFileItem:[[VRFileItem alloc] initWithUrl:url
-                                                                                                       isDir:YES]];
+    _url2CacheRecord[url] = [[VRCachedFileItemRecord alloc] initWithFileItem:[[VRFileItem alloc] initWithUrl:url]];
 
     [self stop];
     [self start];

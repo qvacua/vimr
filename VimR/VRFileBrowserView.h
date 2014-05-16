@@ -18,11 +18,13 @@
 
 @property (weak) NSFileManager *fileManager;
 @property (weak) VRFileItemManager *fileItemManager;
+@property (weak) NSUserDefaults *userDefaults;
 @property (copy) NSURL *rootUrl;
 
 
 #pragma mark Public
 - (instancetype)initWithRootUrl:(NSURL *)rootUrl;
+- (void)setUp;
 
 #pragma mark NSOutlineViewDataSource
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item;
@@ -34,5 +36,4 @@
 #pragma mark NSView
 - (BOOL)mouseDownCanMoveWindow;
 
-- (void)setUp;
 @end

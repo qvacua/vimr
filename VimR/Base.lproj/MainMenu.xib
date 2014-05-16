@@ -425,7 +425,7 @@
             </items>
         </menu>
         <window title="VimR" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" appearanceType="aqua" animationBehavior="default" id="371">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="689" height="474"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
@@ -500,16 +500,9 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </tableHeaderView>
                     </scrollView>
-                    <button appearanceType="aqua" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AsI-fc-vmn">
-                        <rect key="frame" x="163" y="314" width="117" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="recessed" title="Recessed Button" bezelStyle="recessed" alignment="center" state="on" imageScaling="proportionallyDown" inset="2" id="4ee-aR-s5X">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="systemBold" size="12"/>
-                        </buttonCell>
-                    </button>
                 </subviews>
             </view>
+            <contentBorderThickness minY="25"/>
         </window>
         <customObject id="494" customClass="VRAppDelegate">
             <connections>
