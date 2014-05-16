@@ -109,7 +109,17 @@
 
 - (void)fileOutlineViewDoubleClicked:(id)sender {
   id clickedItem = [_fileOutlineView itemAtRow:_fileOutlineView.clickedRow];
-  [(VRMainWindowController *)self.window.windowController openFileWithUrl:[_fileItemManager urlForItem:clickedItem]];
+
+  if (![_fileItemManager isItemDir:clickedItem]) {
+    [(VRMainWindowController *) self.window.windowController openFileWithUrl:[_fileItemManager urlForItem:clickedItem]];
+    return;
+  }
+
+  if ([_fileOutlineView isItemExpanded:clickedItem]) {
+    [_fileOutlineView collapseItem:clickedItem];
+  } else {
+    [_fileOutlineView expandItem:clickedItem];
+  }
 }
 
 - (void)setUp {

@@ -158,14 +158,14 @@ void streamCallback(
       return;
     }
 
-        // NOTE: We may optimize (or not) the caching behavior here: When the URL A to register is a subdir of an already
-        // registered URL B, we build the hierarchy up to the requested URL A. However, then, we would have to scan children
-        // up to A, which could be costly to do it sync; async building complicates things too much. For time being, we
-        // ignore B and use a separate file item hierarchy for B.
-        // If we should do that, we would have only one parent when invalidating the cache. For now, we could have multiple
-        // parent URLs and therefore file items for one URL reported by FSEventStream.
+    // NOTE: We may optimize (or not) the caching behavior here: When the URL A to register is a subdir of an already
+    // registered URL B, we build the hierarchy up to the requested URL A. However, then, we would have to scan children
+    // up to A, which could be costly to do it sync; async building complicates things too much. For time being, we
+    // ignore B and use a separate file item hierarchy for B.
+    // If we should do that, we would have only one parent when invalidating the cache. For now, we could have multiple
+    // parent URLs and therefore file items for one URL reported by FSEventStream.
 
-        DDLogDebug(@"Registering %@ for caching and monitoring", url);
+    DDLogDebug(@"Registering %@ for caching and monitoring", url);
     _url2CacheRecord[url] = [[VRCachedFileItemRecord alloc] initWithFileItem:[[VRFileItem alloc] initWithUrl:url
                                                                                                        isDir:YES]];
 
