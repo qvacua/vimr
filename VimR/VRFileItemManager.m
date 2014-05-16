@@ -134,6 +134,10 @@ void streamCallback(
   return item.dir;
 }
 
+- (BOOL)isItemHidden:(VRFileItem *)item {
+  return item.hidden;
+}
+
 - (NSString *)nameOfItem:(VRFileItem *)item {
   return item.url.lastPathComponent;
 }

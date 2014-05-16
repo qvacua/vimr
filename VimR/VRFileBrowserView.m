@@ -11,15 +11,18 @@
 #import "VRUtils.h"
 #import "VRFileItemManager.h"
 #import "VRMainWindowController.h"
+#import "VRUserDefaults.h"
 
 
 #define CONSTRAIN(fmt, ...) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
+
 
 
 @implementation VRFileBrowserView {
   NSOutlineView *_fileOutlineView;
   NSScrollView *_scrollView;
   NSPopUpButton *_settingsButton;
+  BOOL _showHidden;
 }
 
 #pragma mark Public
@@ -28,30 +31,35 @@
   RETURN_NIL_WHEN_NOT_SELF
 
   _rootUrl = rootUrl;
+  _showHidden = [_userDefaults boolForKey:qDefaultShowHiddenInFileBrowser];
 
   [self addViews];
 
   return self;
 }
 
+- (void)setUp {
+  [_fileOutlineView reloadData];
+}
+
 #pragma mark NSOutlineViewDataSource
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
   if (!item) {
-    NSArray *children = [_fileItemManager childrenOfRootUrl:_rootUrl];
+    NSArray *children = [self filterOutHiddenFromItems:[_fileItemManager childrenOfRootUrl:_rootUrl]];
     return children.count;
   }
 
-  NSArray *children = [_fileItemManager childrenOfItem:item];
+  NSArray *children = [self filterOutHiddenFromItems:[_fileItemManager childrenOfItem:item]];
   return children.count;
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item {
   if (!item) {
-    NSArray *children = [_fileItemManager childrenOfRootUrl:_rootUrl];
+    NSArray *children = [self filterOutHiddenFromItems:[_fileItemManager childrenOfRootUrl:_rootUrl]];
     return children[(NSUInteger) index];
   }
 
-  return [[_fileItemManager childrenOfItem:item] objectAtIndex:(NSUInteger) index];
+  return [[self filterOutHiddenFromItems:[_fileItemManager childrenOfItem:item]] objectAtIndex:(NSUInteger) index];
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item {
@@ -140,8 +148,19 @@
   }
 }
 
-- (void)setUp {
-  [_fileOutlineView reloadData];
+- (NSArray *)filterOutHiddenFromItems:(NSArray *)items {
+  if (_showHidden) {
+    return items;
+  }
+
+  NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:items.count];
+  for (id item in items) {
+    if(![_fileItemManager isItemHidden:item]) {
+      [result addObject:item];
+    }
+  }
+
+  return result;
 }
 
 @end

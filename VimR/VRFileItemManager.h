@@ -52,4 +52,5 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 #pragma mark NSObject
 - (id)init;
 
+- (BOOL)isItemHidden:(id)item;
 @end
