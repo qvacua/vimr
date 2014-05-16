@@ -86,6 +86,7 @@
 - (void)addViews {
   NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:@"name"];
   tableColumn.dataCell = [[NSTextFieldCell alloc] initTextCell:@""];
+  [tableColumn.dataCell setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
   [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingTail];
 
   _fileOutlineView = [[NSOutlineView alloc] initWithFrame:CGRectZero];
@@ -103,7 +104,7 @@
   _scrollView = [[NSScrollView alloc] initWithFrame:NSZeroRect];
   _scrollView.translatesAutoresizingMaskIntoConstraints = NO;
   _scrollView.hasVerticalScroller = YES;
-  _scrollView.hasHorizontalScroller = NO;
+  _scrollView.hasHorizontalScroller = YES;
   _scrollView.borderType = NSBezelBorder;
   _scrollView.autohidesScrollers = YES;
   _scrollView.documentView = _fileOutlineView;
