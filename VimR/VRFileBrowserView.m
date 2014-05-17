@@ -204,6 +204,7 @@
 
 - (void)cacheInvalidated:(NSNotification *)notification {
   [_fileOutlineView reloadData];
+  [_fileOutlineView selectRowIndexes:nil byExtendingSelection:NO];
 }
 
 @end
