@@ -104,7 +104,6 @@
   NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:@"name"];
   tableColumn.dataCell = [[NSTextFieldCell alloc] initTextCell:@""];
   [tableColumn.dataCell setAllowsEditingTextAttributes:YES];
-  [tableColumn.dataCell setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
   [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingTail];
 
   _fileOutlineView = [[NSOutlineView alloc] initWithFrame:CGRectZero];
