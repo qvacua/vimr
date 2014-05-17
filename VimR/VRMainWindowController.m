@@ -75,11 +75,11 @@
     }
   }];
 
-  if (alreadyOpened) {
-    return;
+  if (!alreadyOpened) {
+    [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsFromFileUrls:@[url]].dictionaryAsData];
   }
 
-  [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsFromFileUrls:@[url]].dictionaryAsData];
+  [self.window makeFirstResponder:_vimView.textView];
 }
 
 #pragma mark IBActions

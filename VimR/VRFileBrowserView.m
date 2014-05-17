@@ -23,8 +23,6 @@
   NSScrollView *_scrollView;
   NSPopUpButton *_settingsButton;
   NSMenuItem *_showHiddenMenuItem;
-
-  NSDictionary *_hiddenItemStringAttributes;
 }
 
 #pragma mark Public
@@ -39,10 +37,6 @@
   RETURN_NIL_WHEN_NOT_SELF
 
   _rootUrl = rootUrl;
-  _hiddenItemStringAttributes = @{
-      NSFontAttributeName : [NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSMiniControlSize]],
-      NSForegroundColorAttributeName : [NSColor grayColor],
-  };
 
   [self addViews];
 
@@ -97,7 +91,6 @@
 
   return cell;
 }
-
 
 #pragma mark NSView
 - (BOOL)mouseDownCanMoveWindow {
