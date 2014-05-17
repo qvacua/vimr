@@ -29,7 +29,7 @@
 @property (copy) NSURL *workingDirectory;
 
 #pragma mark Public
-- (void)openFileWithUrl:(NSURL *)url;
+- (void)openFilesWithUrls:(NSArray *)url;
 - (BOOL)hasModifiedBuffer;
 - (void)setUpWithVimController:(MMVimController *)vimController;
 - (void)setUpInitialBuffers;

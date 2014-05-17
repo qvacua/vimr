@@ -171,7 +171,7 @@
   id clickedItem = [_fileOutlineView itemAtRow:_fileOutlineView.clickedRow];
 
   if (![_fileItemManager isItemDir:clickedItem]) {
-    [(VRMainWindowController *) self.window.windowController openFileWithUrl:[_fileItemManager urlForItem:clickedItem]];
+    [(VRMainWindowController *) self.window.windowController openFilesWithUrls:@[[_fileItemManager urlForItem:clickedItem]]];
     return;
   }
 

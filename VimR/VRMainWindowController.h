@@ -30,7 +30,7 @@
 - (void)updateWorkingDirectory;
 - (void)openFilesWithArgs:(NSDictionary *)args;
 - (void)cleanUpAndClose;
-- (void)openFileWithUrl:(NSURL *)url;
+- (void)openFilesWithUrls:(NSArray *)url;
 
 #pragma mark IBActions
 - (IBAction)newTab:(id)sender;

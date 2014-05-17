@@ -30,6 +30,7 @@
 - (IBAction)newDocument:(id)sender;
 - (IBAction)newTab:(id)sender;
 - (IBAction)openDocument:(id)sender;
+- (IBAction)openDocumentInTab:(id)sender;
 - (IBAction)showHelp:(id)sender;
 
 #pragma mark NSObject

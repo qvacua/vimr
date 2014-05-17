@@ -181,7 +181,7 @@ void streamCallback(
   @synchronized (self) {
     VRCachedFileItemRecord *record = _url2CacheRecord[url];
     if (!record) {
-      DDLogWarn(@"%@ was not registered");
+      DDLogWarn(@"%@ was not registered", url);
       return;
     }
 
