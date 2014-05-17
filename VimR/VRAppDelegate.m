@@ -18,6 +18,7 @@
 #import "VRWorkspace.h"
 #import "VROpenQuicklyWindowController.h"
 #import "VRDefaultLogSetting.h"
+#import "VRMainWindow.h"
 
 
 static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
@@ -46,16 +47,33 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 }
 
 - (IBAction)openDocument:(id)sender {
+  NSArray *urls = [self urlsFromOpenPanel];
+
+  DDLogDebug(@"opening %@", urls);
+  [self application:self.application openFiles:urls];
+}
+
+- (NSArray *)urlsFromOpenPanel {
   NSOpenPanel *openPanel = [NSOpenPanel openPanel];
   openPanel.allowsMultipleSelection = YES;
 
   if ([openPanel runModal] != NSOKButton) {
     DDLogDebug(@"no files selected");
-    return;
+    return nil;
   }
 
-  DDLogDebug(@"opening %@", openPanel.URLs);
-  [self application:self.application openFiles:openPanel.URLs];
+  return openPanel.URLs;
+}
+
+- (IBAction)openDocumentInTab:(id)sender {
+  NSWindow *keyWindow = _application.keyWindow;
+  if (![keyWindow isKindOfClass:[VRMainWindow class]]) {
+    return;
+  }
+  
+  NSArray *urls = [self urlsFromOpenPanel];
+  VRMainWindowController *controller = (VRMainWindowController *) keyWindow.windowController;
+  [controller.workspace openFilesWithUrls:urls];
 }
 
 - (IBAction)showHelp:(id)sender {
