@@ -8,11 +8,10 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "VROperation.h"
 
 
 extern NSString *const qFileItemOperationOperationQueueKey;
-extern NSString *const qFileItemOperationFileManagerKey;
-extern NSString *const qFileItemOperationNotificationCenterKey;
 extern NSString *const qFileItemOperationParentItemKey;
 extern NSString *const qFileItemOperationRootUrlKey;
 extern NSString *const qFileItemOperationFileItemsKey;
@@ -29,7 +28,7 @@ typedef enum {
 @class VRFileItem;
 
 
-@interface VRFileItemOperation : NSOperation
+@interface VRFileItemOperation : VROperation
 
 #pragma mark NSOperation
 - (id)initWithMode:(VRFileItemOperationMode)mode dict:(NSDictionary *)dict;

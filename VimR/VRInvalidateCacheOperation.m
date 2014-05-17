@@ -16,6 +16,10 @@
 #import "VRDefaultLogSetting.h"
 
 
+NSString *const qInvalidatedCacheEvent = @"invalidated-cache-notification";
+NSString *const qInvalidateCacheOperationParentItemsKey = @"parent-items";
+
+
 static VRFileItem *find_file_item(NSURL *url, VRFileItem *parent) {
   if ([parent.url isEqual:url]) {
     return parent;
@@ -37,19 +41,22 @@ static VRFileItem *find_file_item(NSURL *url, VRFileItem *parent) {
 
 @implementation VRInvalidateCacheOperation {
   __weak VRFileItemManager *_fileItemManager;
+  __weak NSNotificationCenter *_notificationCenter;
+
   NSArray *_parentItems;
   NSURL *_url;
 }
 
 #pragma mark Public
-- (instancetype)initWithUrl:(NSURL *)url parentItems:(NSArray *)parentItems
-            fileItemManager:(__weak VRFileItemManager *)fileItemManager {
+- (instancetype)initWithUrl:(NSURL *)url dict:(NSDictionary *)dict {
 
   self = [super init];
   RETURN_NIL_WHEN_NOT_SELF
 
-  _fileItemManager = fileItemManager;
-  _parentItems = parentItems;
+  _fileItemManager = dict[qOperationFileItemManagerKey];
+  _notificationCenter = dict[qOperationNotificationCenterKey];
+  _parentItems = dict[qInvalidateCacheOperationParentItemsKey];
+
   _url = [url copy];
 
   return self;
@@ -64,6 +71,10 @@ static VRFileItem *find_file_item(NSURL *url, VRFileItem *parent) {
         DDLogDebug(@"Invalidating cache for %@ of the parent %@", matchingItem, parentItem.url);
 
         matchingItem.shouldCacheChildren = YES;
+
+        dispatch_to_main_thread(^{
+          [_notificationCenter postNotificationName:qInvalidatedCacheEvent object:matchingItem];
+        });
       } else {
         DDLogDebug(@"%@ in %@ not yet cached, noop", _url, parentItem.url);
       }

@@ -17,8 +17,6 @@
 
 
 NSString *const qFileItemOperationOperationQueueKey = @"operation-queue";
-NSString *const qFileItemOperationNotificationCenterKey = @"notification-center";
-NSString *const qFileItemOperationFileManagerKey = @"file-manager";
 NSString *const qFileItemOperationParentItemKey = @"parent-file-item";
 NSString *const qFileItemOperationRootUrlKey = @"root-url";
 NSString *const qFileItemOperationFileItemsKey = @"file-items-array";
@@ -59,8 +57,8 @@ static const int qArrayChunkSize = 50;
   _mode = mode;
 
   _operationQueue = dict[qFileItemOperationOperationQueueKey];
-  _notificationCenter = dict[qFileItemOperationNotificationCenterKey];
-  _fileManager = dict[qFileItemOperationFileManagerKey];
+  _notificationCenter = dict[qOperationNotificationCenterKey];
+  _fileManager = dict[qOperationFileManagerKey];
   _parentItem = dict[qFileItemOperationParentItemKey];
   _rootUrl = [dict[qFileItemOperationRootUrlKey] copy];
   _fileItems = dict[qFileItemOperationFileItemsKey];
@@ -223,9 +221,9 @@ static const int qArrayChunkSize = 50;
                                                   qFileItemOperationRootUrlKey : _rootUrl,
                                                   qFileItemOperationParentItemKey : parent,
                                                   qFileItemOperationOperationQueueKey : _operationQueue,
-                                                  qFileItemOperationNotificationCenterKey : _notificationCenter,
+                                                  qOperationNotificationCenterKey : _notificationCenter,
                                                   qFileItemOperationFileItemsKey : _fileItems,
-                                                  qFileItemOperationFileManagerKey : _fileManager,
+                                                  qOperationFileManagerKey : _fileManager,
                                               }];
 }
 

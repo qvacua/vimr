@@ -12,6 +12,7 @@
 #import "VRFileItemManager.h"
 #import "VRMainWindowController.h"
 #import "VRUserDefaults.h"
+#import "VRInvalidateCacheOperation.h"
 
 
 #define CONSTRAIN(fmt, ...) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
@@ -31,19 +32,28 @@
   RETURN_NIL_WHEN_NOT_SELF
 
   _rootUrl = rootUrl;
-  _showHidden = [_userDefaults boolForKey:qDefaultShowHiddenInFileBrowser];
 
   [self addViews];
 
   return self;
 }
 
+- (void)dealloc {
+ [_notificationCenter removeObserver:self];
+}
+
 - (void)setUp {
+  _showHidden = [_userDefaults boolForKey:qDefaultShowHiddenInFileBrowser];
+
+  [_notificationCenter addObserver:self selector:@selector(cacheInvalidated:) name:qInvalidatedCacheEvent
+                            object:nil];
+
   [_fileOutlineView reloadData];
 }
 
 #pragma mark NSOutlineViewDataSource
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
+//  return 0;
   if (!item) {
     NSArray *children = [self filterOutHiddenFromItems:[_fileItemManager childrenOfRootUrl:_rootUrl]];
     return children.count;
@@ -162,6 +172,12 @@
   }
 
   return result;
+}
+
+- (void)cacheInvalidated:(NSNotification *)notification {
+  NSLog(@"%@", notification.object);
+//  [_fileOutlineView reloadItem:notification.object];
+  [_fileOutlineView reloadData];
 }
 
 @end

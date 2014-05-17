@@ -123,7 +123,7 @@ void streamCallback(
   VRFileItemOperation *operation = [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationShallowCacheMode
                                                                         dict:@{
                                                                             qFileItemOperationParentItemKey : item,
-                                                                            qFileItemOperationFileManagerKey : _fileManager,
+                                                                            qOperationFileManagerKey : _fileManager,
                                                                         }];
   [operation main];
 
@@ -222,9 +222,9 @@ void streamCallback(
                                                  qFileItemOperationRootUrlKey : url,
                                                  qFileItemOperationParentItemKey : targetItem,
                                                  qFileItemOperationOperationQueueKey : _fileItemOperationQueue,
-                                                 qFileItemOperationNotificationCenterKey : _notificationCenter,
+                                                 qOperationNotificationCenterKey : _notificationCenter,
                                                  qFileItemOperationFileItemsKey : _mutableFileItemsForTargetUrl,
-                                                 qFileItemOperationFileManagerKey : _fileManager,
+                                                 qOperationFileManagerKey : _fileManager,
                                              }]
     ];
 
@@ -307,8 +307,11 @@ void streamCallback(
       // NOTE: We could optimize here: Evaluate the flag for each URL and issue either a shallow or deep scan.
       // This however may be (or is) an overkill. For time being we issue only deep scan.
       [_invalidateCacheOperationQueue addOperation:
-          [[VRInvalidateCacheOperation alloc] initWithUrl:url parentItems:[self parentItemsForUrl:url]
-                                          fileItemManager:self]
+          [[VRInvalidateCacheOperation alloc] initWithUrl:url dict:@{
+              qOperationFileItemManagerKey : self,
+              qOperationNotificationCenterKey : _notificationCenter,
+              qInvalidateCacheOperationParentItemsKey : [self parentItemsForUrl:url],
+          }]
       ];
     }
   };

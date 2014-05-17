@@ -555,6 +555,8 @@
   _fileBrowserView = [[VRFileBrowserView alloc] initWithRootUrl:self.workingDirectory];
   _fileBrowserView.fileItemManager = _workspace.fileItemManager;
   _fileBrowserView.userDefaults = _workspace.userDefaults;
+  _fileBrowserView.notificationCenter = _workspace.notificationCenter;
+
   [_fileBrowserView setUp];
 
   NSView *contentView = self.window.contentView;

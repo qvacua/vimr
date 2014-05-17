@@ -19,11 +19,14 @@
 @property (weak) NSFileManager *fileManager;
 @property (weak) VRFileItemManager *fileItemManager;
 @property (weak) NSUserDefaults *userDefaults;
+@property (weak) NSNotificationCenter *notificationCenter;
+
 @property (copy) NSURL *rootUrl;
 
 
 #pragma mark Public
 - (instancetype)initWithRootUrl:(NSURL *)rootUrl;
+- (void)dealloc;
 - (void)setUp;
 
 #pragma mark NSOutlineViewDataSource

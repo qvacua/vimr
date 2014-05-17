@@ -23,6 +23,7 @@ extern NSString *const qVimArgOpenFilesLayout;
 @property (weak) VRFileItemManager *fileItemManager;
 @property (weak) VROpenQuicklyWindowController *openQuicklyWindowController;
 @property (weak) NSUserDefaults *userDefaults;
+@property (weak) NSNotificationCenter *notificationCenter;
 @property (weak) MMVimManager *vimManager;
 
 @property (readonly) NSArray *workspaces;

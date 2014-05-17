@@ -8,18 +8,19 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "VROperation.h"
 
 
-extern NSString *const qFilterItemsOperationFileItemManagerKey;
 extern NSString *const qFilterItemsOperationSearchStringKey;
 extern NSString *const qFilterItemsOperationFilteredItemsKey;
 extern NSString *const qFilterItemsOperationItemTableViewKey;
 extern const NSUInteger qMaximumNumberOfFilterResult;
 
+
 @class VROpenQuicklyWindowController;
 
 
-@interface VRFilterItemsOperation : NSOperation
+@interface VRFilterItemsOperation : VROperation
 
 #pragma mark Public
 - (instancetype)initWithDict:(NSDictionary *)dict;

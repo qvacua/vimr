@@ -32,6 +32,7 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 @autowire(fileItemManager)
 @autowire(openQuicklyWindowController)
 @autowire(vimManager)
+@autowire(notificationCenter)
 @autowire(userDefaults)
 
 #pragma mark Properties
@@ -107,6 +108,7 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
   workspace.openQuicklyWindowController = _openQuicklyWindowController;
   workspace.fileItemManager = _fileItemManager;
   workspace.userDefaults = _userDefaults;
+  workspace.notificationCenter = _notificationCenter;
   workspace.workspaceController = self;
 
   workspace.workingDirectory = workingDir;

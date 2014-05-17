@@ -8,14 +8,18 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "VROperation.h"
+
+
+extern NSString *const qInvalidatedCacheEvent;
+extern NSString *const qInvalidateCacheOperationParentItemsKey;
 
 
 @class VRFileItemManager;
 
 
-@interface VRInvalidateCacheOperation : NSOperation
+@interface VRInvalidateCacheOperation : VROperation
 
-- (instancetype)initWithUrl:(NSURL *)url parentItems:(NSArray *)parentItems
-            fileItemManager:(__weak VRFileItemManager *)fileItemManager;
+- (instancetype)initWithUrl:(NSURL *)url dict:(NSDictionary *)dict;
 
 @end

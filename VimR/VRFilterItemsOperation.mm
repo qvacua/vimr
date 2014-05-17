@@ -19,7 +19,6 @@
 #import <cf/cf.h>
 
 
-NSString *const qFilterItemsOperationFileItemManagerKey = @"file-item-manager";
 NSString *const qFilterItemsOperationSearchStringKey = @"search-string";
 NSString *const qFilterItemsOperationFilteredItemsKey = @"filtered-items-array";
 NSString *const qFilterItemsOperationItemTableViewKey = @"file-item-table-view";
@@ -79,7 +78,7 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
   self = [super init];
   RETURN_NIL_WHEN_NOT_SELF
 
-  _fileItemManager = dict[qFilterItemsOperationFileItemManagerKey];
+  _fileItemManager = dict[qOperationFileItemManagerKey];
   _filteredItems = dict[qFilterItemsOperationFilteredItemsKey];
   _searchStr = [dict[qFilterItemsOperationSearchStringKey] copy];
   _fileItemTableView = dict[qFilterItemsOperationItemTableViewKey];
