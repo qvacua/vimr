@@ -48,6 +48,10 @@
   return self;
 }
 
+- (void)updateWorkingDirectory {
+  _fileBrowserView.rootUrl = _workspace.workingDirectory;
+}
+
 - (void)openFilesWithArgs:(NSDictionary *)args {
   [_vimController sendMessage:OpenWithArgumentsMsgID data:args.dictionaryAsData];
 }

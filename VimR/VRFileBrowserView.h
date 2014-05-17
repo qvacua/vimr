@@ -16,12 +16,12 @@
 
 @interface VRFileBrowserView : NSView <NSOutlineViewDataSource, NSOutlineViewDelegate>
 
-@property (weak) NSFileManager *fileManager;
-@property (weak) VRFileItemManager *fileItemManager;
-@property (weak) NSUserDefaults *userDefaults;
-@property (weak) NSNotificationCenter *notificationCenter;
+@property (nonatomic, weak) NSFileManager *fileManager;
+@property (nonatomic, weak) VRFileItemManager *fileItemManager;
+@property (nonatomic, weak) NSUserDefaults *userDefaults;
+@property (nonatomic, weak) NSNotificationCenter *notificationCenter;
 
-@property (copy) NSURL *rootUrl;
+@property (nonatomic, copy) NSURL *rootUrl;
 
 
 #pragma mark Public

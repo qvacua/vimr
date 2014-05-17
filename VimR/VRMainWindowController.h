@@ -27,6 +27,7 @@
 
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect;
+- (void)updateWorkingDirectory;
 - (void)openFilesWithArgs:(NSDictionary *)args;
 - (void)cleanUpAndClose;
 - (void)openFileWithUrl:(NSURL *)url;

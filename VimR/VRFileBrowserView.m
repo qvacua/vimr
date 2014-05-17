@@ -27,6 +27,12 @@
 }
 
 #pragma mark Public
+- (void)setRootUrl:(NSURL *)rootUrl {
+  _rootUrl = rootUrl;
+  [_fileOutlineView reloadData];
+  [_fileOutlineView selectRowIndexes:nil byExtendingSelection:NO];
+}
+
 - (instancetype)initWithRootUrl:(NSURL *)rootUrl {
   self = [super initWithFrame:CGRectZero];
   RETURN_NIL_WHEN_NOT_SELF

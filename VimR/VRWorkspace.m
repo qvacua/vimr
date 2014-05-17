@@ -81,6 +81,7 @@ static CGPoint qDefaultOrigin = {242, 364};
   [_fileItemManager unregisterUrl:_workingDirectory];
   _workingDirectory = commonParent;
   [_fileItemManager registerUrl:_workingDirectory];
+  [_mainWindowController updateWorkingDirectory];
   DDLogDebug(@"Registered new workspace: %@", _workingDirectory);
 }
 
