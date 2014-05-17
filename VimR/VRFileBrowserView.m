@@ -59,7 +59,6 @@
 
 #pragma mark NSOutlineViewDataSource
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
-//  return 0;
   if (!item) {
     NSArray *children = [self filterOutHiddenFromItems:[_fileItemManager childrenOfRootUrl:_rootUrl]];
     return children.count;
@@ -94,7 +93,7 @@
 #pragma mark NSView
 - (BOOL)mouseDownCanMoveWindow {
   // I dunno why, but if we don't override this, then the window title has the inactive appearance and the drag in the
-  // VRWorkspaceView in combination with the vim view does not work correctly. To override -isOpaque does not suffice.
+  // VRWorkspaceView in combination with the vim view does not work correctly. Overriding -isOpaque does not suffice.
   return NO;
 }
 
@@ -181,8 +180,6 @@
 }
 
 - (void)cacheInvalidated:(NSNotification *)notification {
-  NSLog(@"%@", notification.object);
-//  [_fileOutlineView reloadItem:notification.object];
   [_fileOutlineView reloadData];
 }
 
