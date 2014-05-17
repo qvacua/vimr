@@ -29,6 +29,9 @@
 - (void)dealloc;
 - (void)setUp;
 
+#pragma mark IBActions
+- (IBAction)toggleShowHiddenFiles:(id)sender;
+
 #pragma mark NSOutlineViewDataSource
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item;
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index1 ofItem:(id)item;

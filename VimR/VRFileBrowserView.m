@@ -18,12 +18,13 @@
 #define CONSTRAIN(fmt, ...) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
 
 
-
 @implementation VRFileBrowserView {
   NSOutlineView *_fileOutlineView;
   NSScrollView *_scrollView;
   NSPopUpButton *_settingsButton;
-  BOOL _showHidden;
+  NSMenuItem *_showHiddenMenuItem;
+
+  NSDictionary *_hiddenItemStringAttributes;
 }
 
 #pragma mark Public
@@ -38,6 +39,10 @@
   RETURN_NIL_WHEN_NOT_SELF
 
   _rootUrl = rootUrl;
+  _hiddenItemStringAttributes = @{
+      NSFontAttributeName : [NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSMiniControlSize]],
+      NSForegroundColorAttributeName : [NSColor grayColor],
+  };
 
   [self addViews];
 
@@ -45,12 +50,10 @@
 }
 
 - (void)dealloc {
- [_notificationCenter removeObserver:self];
+  [_notificationCenter removeObserver:self];
 }
 
 - (void)setUp {
-  _showHidden = [_userDefaults boolForKey:qDefaultShowHiddenInFileBrowser];
-
   [_notificationCenter addObserver:self selector:@selector(cacheInvalidated:) name:qInvalidatedCacheEvent
                             object:nil];
 
@@ -88,6 +91,12 @@
 }
 
 #pragma mark NSOutlineViewDelegate
+- (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(id)item {
+  NSTextFieldCell *cell = [tableColumn dataCellForRow:[_fileOutlineView rowForItem:item]];
+  cell.textColor = [_fileItemManager isItemHidden:item] ? [NSColor grayColor] : [NSColor textColor];
+
+  return cell;
+}
 
 
 #pragma mark NSView
@@ -101,6 +110,7 @@
 - (void)addViews {
   NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:@"name"];
   tableColumn.dataCell = [[NSTextFieldCell alloc] initTextCell:@""];
+  [tableColumn.dataCell setAllowsEditingTextAttributes:YES];
   [tableColumn.dataCell setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
   [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingTail];
 
@@ -134,9 +144,18 @@
   item.title = @"";
   item.image = [NSImage imageNamed:NSImageNameActionTemplate];
   [item.image setSize:NSMakeSize(12, 12)];
+
   [_settingsButton.cell setBackgroundStyle:NSBackgroundStyleRaised];
   [_settingsButton.cell setUsesItemFromMenu:NO];
   [_settingsButton.cell setMenuItem:item];
+  [_settingsButton.menu addItemWithTitle:@"" action:NULL keyEquivalent:@""];
+
+  _showHiddenMenuItem = [[NSMenuItem alloc] initWithTitle:@"Show Hidden Files"
+                                                   action:@selector(toggleShowHiddenFiles:) keyEquivalent:@""];
+  _showHiddenMenuItem.target = self;
+  _showHiddenMenuItem.state = [_userDefaults boolForKey:qDefaultShowHiddenInFileBrowser] ? NSOnState : NSOffState;
+  [_settingsButton.menu addItem:_showHiddenMenuItem];
+
   [self addSubview:_settingsButton];
 
   NSDictionary *views = @{
@@ -147,6 +166,13 @@
   CONSTRAIN(@"H:[settings]|");
   CONSTRAIN(@"H:|-(-1)-[outline(>=50)]-(-1)-|");
   CONSTRAIN(@"V:|-(-1)-[outline(>=50)][settings]-(3)-|");
+}
+
+- (IBAction)toggleShowHiddenFiles:(id)sender {
+  NSInteger oldState = _showHiddenMenuItem.state;
+  _showHiddenMenuItem.state = !oldState;
+
+  [_fileOutlineView reloadData];
 }
 
 - (void)fileOutlineViewDoubleClicked:(id)sender {
@@ -165,18 +191,22 @@
 }
 
 - (NSArray *)filterOutHiddenFromItems:(NSArray *)items {
-  if (_showHidden) {
+  if ([self showHiddenFiles]) {
     return items;
   }
 
   NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:items.count];
   for (id item in items) {
-    if(![_fileItemManager isItemHidden:item]) {
+    if (![_fileItemManager isItemHidden:item]) {
       [result addObject:item];
     }
   }
 
   return result;
+}
+
+- (BOOL)showHiddenFiles {
+  return _showHiddenMenuItem.state == NSOnState ? YES : NO;
 }
 
 - (void)cacheInvalidated:(NSNotification *)notification {
