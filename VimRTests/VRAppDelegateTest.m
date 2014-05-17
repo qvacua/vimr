@@ -77,7 +77,7 @@ static NSOpenPanel *openPanel;
 
   [appDelegate openDocument:nil];
   [verify(openPanel) setAllowsMultipleSelection:YES];
-  [verify(workspaceController) openFiles:@[
+  [verify(workspaceController) openFilesInNewWorkspace:@[
       [NSURL fileURLWithPath:@"/tmp"],
       [NSURL fileURLWithPath:@"/usr"]
   ]];
@@ -88,7 +88,7 @@ static NSOpenPanel *openPanel;
 
   [appDelegate openDocument:nil];
   [verify(openPanel) setAllowsMultipleSelection:YES];
-  [verifyCount(workspaceController, never()) openFiles:anything()];
+  [verifyCount(workspaceController, never()) openFilesInNewWorkspace:anything()];
 }
 
 - (void)testApplicationOpenUntitledFile {
@@ -98,7 +98,7 @@ static NSOpenPanel *openPanel;
 
 - (void)testAppliationOpenFile {
   [appDelegate application:nil openFile:@"/tmp"];
-  [verify(workspaceController) openFiles:@[
+  [verify(workspaceController) openFilesInNewWorkspace:@[
       [NSURL fileURLWithPath:@"/tmp"],
   ]];
 }
@@ -106,7 +106,7 @@ static NSOpenPanel *openPanel;
 - (void)testAppliationOpenFiles {
   NSArray *filenames = @[@"/tmp", @"/usr"];
   [appDelegate application:nil openFiles:filenames];
-  [verify(workspaceController) openFiles:@[
+  [verify(workspaceController) openFilesInNewWorkspace:@[
       [NSURL fileURLWithPath:@"/tmp"],
       [NSURL fileURLWithPath:@"/usr"]
   ]];

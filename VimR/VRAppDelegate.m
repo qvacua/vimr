@@ -97,7 +97,7 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
   */
 
   if ([filenames[0] isKindOfClass:[NSURL class]]) {
-    [self.workspaceController openFiles:filenames];
+    [self.workspaceController openFilesInNewWorkspace:filenames];
     return;
   }
 
@@ -106,7 +106,7 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
     [urls addObject:[[NSURL alloc] initFileURLWithPath:filename]];
   }
 
-  [self.workspaceController openFiles:urls];
+  [self.workspaceController openFilesInNewWorkspace:urls];
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {

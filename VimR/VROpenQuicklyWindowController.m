@@ -142,7 +142,7 @@ int qOpenQuicklyWindowWidth = 400;
   if (selector == @selector(insertNewline:)) {
     @synchronized (_filteredFileItems) {
       VRScoredPath *scoredPath = _filteredFileItems[(NSUInteger) _fileItemTableView.selectedRow];
-      [_targetWindowController.workspace openFileWithUrl:[NSURL fileURLWithPath:scoredPath.path]];
+      [_targetWindowController.workspace openFilesWithUrls:@[[NSURL fileURLWithPath:scoredPath.path]]];
       [self reset];
       return YES;
     }

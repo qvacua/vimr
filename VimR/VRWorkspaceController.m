@@ -45,7 +45,7 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
   [self createNewVimControllerWithWorkingDir:[[NSURL alloc] initFileURLWithPath:NSHomeDirectory()] args:nil];
 }
 
-- (void)openFiles:(NSArray *)fileUrls {
+- (void)openFilesInNewWorkspace:(NSArray *)fileUrls {
   NSDictionary *args = [self vimArgsFromFileUrls:fileUrls];
   NSURL *commonParentDir = common_parent_url(fileUrls);
 

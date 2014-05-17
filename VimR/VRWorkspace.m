@@ -31,8 +31,8 @@ static CGPoint qDefaultOrigin = {242, 364};
 @implementation VRWorkspace
 
 #pragma mark Public
-- (void)openFileWithUrl:(NSURL *)url {
-  [_mainWindowController openFileWithUrl:url];
+- (void)openFilesWithUrls:(NSArray *)urls {
+  [_mainWindowController openFilesWithUrls:urls];
 }
 
 - (BOOL)hasModifiedBuffer {

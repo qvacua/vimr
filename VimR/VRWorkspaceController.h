@@ -30,7 +30,7 @@ extern NSString *const qVimArgOpenFilesLayout;
 
 #pragma mark Public
 - (void)newWorkspace;
-- (void)openFiles:(NSArray *)fileUrls;
+- (void)openFilesInNewWorkspace:(NSArray *)fileUrls;
 - (void)cleanUp;
 
 #pragma mark NSObject

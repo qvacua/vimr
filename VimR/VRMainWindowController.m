@@ -22,6 +22,7 @@
 #import "VRDefaultLogSetting.h"
 #import "VRWorkspaceView.h"
 #import "VRFileBrowserView.h"
+#import "NSArray+VR.h"
 
 
 #define CONSTRAINT(fmt, ...) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
@@ -77,6 +78,32 @@
 
   if (!alreadyOpened) {
     [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsFromFileUrls:@[url]].dictionaryAsData];
+  }
+}
+
+- (void)openFilesWithUrls:(NSArray *)urls {
+  NSArray *tabs = _vimController.tabs;
+  if (urls.count == 1) {
+    [self openFileWithUrl:urls[0]];
+
+    [self.window makeFirstResponder:_vimView.textView];
+    return;
+  }
+
+  NSMutableArray *urlsToOpen = [[NSMutableArray alloc] initWithArray:urls];
+
+  for (NSURL *url in urls) {
+    for (MMTabPage *tab in tabs) {
+      if ([tab.buffer.fileName isEqualToString:url.path]) {
+        [urlsToOpen removeObject:url];
+      }
+    }
+  }
+
+  if (urlsToOpen.isEmpty) {
+    [self openFileWithUrl:urlsToOpen.lastObject];
+  } else {
+    [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsFromFileUrls:urlsToOpen].dictionaryAsData];
   }
 
   [self.window makeFirstResponder:_vimView.textView];

@@ -49,7 +49,7 @@
   ];
   [given([vimManager pidOfNewVimControllerWithArgs:nil]) willReturnInt:123];
 
-  [workspaceController openFiles:urls];
+  [workspaceController openFilesInNewWorkspace:urls];
   [verify(vimManager) pidOfNewVimControllerWithArgs:@{
       qVimArgFileNamesToOpen : @[
           @"/some/folder/is/1.txt",
@@ -75,7 +75,7 @@
       [NSURL URLWithString:@"file:///some/folder/is/not/there/4.txt"],
   ];
   [given([vimManager pidOfNewVimControllerWithArgs:nil]) willReturnInt:123];
-  [workspaceController openFiles:urls];
+  [workspaceController openFilesInNewWorkspace:urls];
 
   [workspaceController manager:vimManager vimControllerCreated:vimController];
 
