@@ -19,20 +19,33 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 
 @interface VRFileItemManager : NSObject <TBBean>
 
-@property (weak) NSFileManager *fileManager;
-@property (weak) NSNotificationCenter *notificationCenter;
-@property (readonly) NSArray *registeredUrls;
-@property (readonly) NSArray *fileItemsOfTargetUrl;
+@property (nonatomic, weak) NSFileManager *fileManager;
+@property (nonatomic, weak) NSNotificationCenter *notificationCenter;
+
+@property (nonatomic, readonly) NSArray *registeredUrls;
+@property (nonatomic, readonly) NSArray *fileItemsOfTargetUrl;
 
 #pragma mark Public
+/**
+* Synchronously caches the direct descendants of url
+*/
+- (NSArray *)childrenOfRootUrl:(NSURL *)rootUrl;
+/**
+* Synchronously caches the direct descendants of item.
+*/
+- (NSArray *)childrenOfItem:(id)item;
+- (BOOL)isItemDir:(id)item;
+- (NSString *)nameOfItem:(id)item;
+- (NSURL *)urlForItem:(id)item;
+
 - (void)registerUrl:(NSURL *)url;
 - (void)resetTargetUrl;
 - (BOOL)setTargetUrl:(NSURL *)url;
 - (void)unregisterUrl:(NSURL *)url;
 - (void)cleanUp;
+- (BOOL)fileItemOperationPending;
 - (void)pause;
 - (void)resume;
-- (BOOL)fileItemOperationPending;
 
 // TODO: for debug only!
 - (NSUInteger)operationCount;
@@ -40,4 +53,5 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 #pragma mark NSObject
 - (id)init;
 
+- (BOOL)isItemHidden:(id)item;
 @end

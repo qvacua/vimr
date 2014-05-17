@@ -11,15 +11,12 @@
 #import "VRUtils.h"
 #import "VRFileItemManager.h"
 #import "VRFileItem.h"
-#import "NSURL+VR.h"
 #import "NSArray+VR.h"
 #import "VRCppUtils.h"
 #import "VRCachingLogSetting.h"
 
 
 NSString *const qFileItemOperationOperationQueueKey = @"operation-queue";
-NSString *const qFileItemOperationNotificationCenterKey = @"notification-center";
-NSString *const qFileItemOperationFileManagerKey = @"file-manager";
 NSString *const qFileItemOperationParentItemKey = @"parent-file-item";
 NSString *const qFileItemOperationRootUrlKey = @"root-url";
 NSString *const qFileItemOperationFileItemsKey = @"file-items-array";
@@ -30,14 +27,12 @@ static const int qArrayChunkSize = 50;
 
 #define CANCEL_OR_WAIT if ([self isCancelled]) { \
                          return; \
-                       } \
-                       [self wait];
+                       }
 
 #define CANCEL_OR_WAIT_BLOCK ^BOOL { \
                                if ([self isCancelled]) { \
                                  return YES; \
                                } \
-                               [self wait]; \
                                return NO; \
                              }
 
@@ -52,32 +47,9 @@ static const int qArrayChunkSize = 50;
   __weak NSMutableArray *_fileItems;
 
   NSURL *_rootUrl;
-
-  NSCondition *_pauseCondition;
-  BOOL _shouldPause;
 }
 
 #pragma mark Public
-- (BOOL)isPaused {
-  @synchronized (_pauseCondition) {
-    return _shouldPause;
-  }
-}
-
-- (void)pause {
-  [_pauseCondition lock];
-  _shouldPause = YES;
-  [_pauseCondition signal];
-  [_pauseCondition unlock];
-}
-
-- (void)resume {
-  [_pauseCondition lock];
-  _shouldPause = NO;
-  [_pauseCondition signal];
-  [_pauseCondition unlock];
-}
-
 - (id)initWithMode:(VRFileItemOperationMode)mode dict:(NSDictionary *)dict {
   self = [super init];
   RETURN_NIL_WHEN_NOT_SELF
@@ -85,14 +57,11 @@ static const int qArrayChunkSize = 50;
   _mode = mode;
 
   _operationQueue = dict[qFileItemOperationOperationQueueKey];
-  _notificationCenter = dict[qFileItemOperationNotificationCenterKey];
-  _fileManager = dict[qFileItemOperationFileManagerKey];
+  _notificationCenter = dict[qOperationNotificationCenterKey];
+  _fileManager = dict[qOperationFileManagerKey];
   _parentItem = dict[qFileItemOperationParentItemKey];
   _rootUrl = [dict[qFileItemOperationRootUrlKey] copy];
   _fileItems = dict[qFileItemOperationFileItemsKey];
-
-  _shouldPause = NO;
-  _pauseCondition = [[NSCondition alloc] init];
 
 #ifdef DEBUG
   setup_file_logger();
@@ -105,20 +74,22 @@ static const int qArrayChunkSize = 50;
 - (void)main {
   if (_mode == VRFileItemOperationTraverseMode) {
     [self traverseFileItemChildHierarchy];
-  } else {
+    return;
+  }
+
+  if (_mode == VRFileItemOperationCacheMode) {
     [self cacheAddToFileItems];
+    return;
+  }
+
+  if (_mode == VRFileItemOperationShallowCacheMode) {
+    DDLogDebug(@"shallow caching %@", _parentItem);
+    [self cacheDirectDescendants];
+    return;
   }
 }
 
 #pragma mark Private
-- (void)wait {
-  [_pauseCondition lock];
-  while (_shouldPause) {
-    [_pauseCondition wait];
-  }
-  [_pauseCondition unlock];
-}
-
 - (void)traverseFileItemChildHierarchy {
   @autoreleasepool {
     // Necessary?
@@ -166,7 +137,7 @@ static const int qArrayChunkSize = 50;
 
     CANCEL_OR_WAIT
 
-    DDLogCaching(@"### Adding (from traversing) children items of parent: %@", _parentItem.url);
+        DDLogCaching(@"### Adding (from traversing) children items of parent: %@", _parentItem.url);
     [self addAllToFileItemsForTargetUrl:fileItemsToAdd];
   }
 }
@@ -175,35 +146,17 @@ static const int qArrayChunkSize = 50;
   @autoreleasepool {
     CANCEL_OR_WAIT
 
-    DDLogCaching(@"Caching children for %@", _parentItem.url);
-
-    _parentItem.isCachingChildren = YES;
-
-    NSArray *childUrls = [_fileManager contentsOfDirectoryAtURL:_parentItem.url
-                                     includingPropertiesForKeys:@[NSURLIsDirectoryKey]
-                                                        options:NSDirectoryEnumerationSkipsPackageDescendants
-                                                          error:NULL];
-
-    [self wait];
+        DDLogCaching(@"Caching children for %@", _parentItem.url);
+    [self cacheDirectDescendants];
 
     NSMutableArray *children = _parentItem.children;
-    [children removeAllObjects];
-    for (NSURL *childUrl in childUrls) {
-      [children addObject:[[VRFileItem alloc] initWithUrl:childUrl isDir:childUrl.isDirectory]];
-    }
-
-    // When the monitoring thread invalidates cache of this item before this line, then we will have an outdated
-    // children, however, we don't really care...
-    _parentItem.shouldCacheChildren = NO; // because shouldCacheChildren means, "should add direct descendants"
-    _parentItem.isCachingChildren = NO; // direct descendants scanning is done
-
     if (children.isEmpty) {
       return;
     }
 
     CANCEL_OR_WAIT
 
-    DDLogCaching(@"### Adding (from caching) children items of parent: %@", _parentItem.url);
+        DDLogCaching(@"### Adding (from caching) children items of parent: %@", _parentItem.url);
     [self addAllToFileItemsForTargetUrl:children];
 
     chunk_enumerate_array(children, qArrayChunkSize, CANCEL_OR_WAIT_BLOCK, ^(VRFileItem *child) {
@@ -212,6 +165,26 @@ static const int qArrayChunkSize = 50;
       }
     });
   }
+}
+
+- (void)cacheDirectDescendants {
+  _parentItem.isCachingChildren = YES;
+
+  NSArray *childUrls = [_fileManager contentsOfDirectoryAtURL:_parentItem.url
+                                   includingPropertiesForKeys:@[NSURLIsDirectoryKey, NSURLIsHiddenKey,]
+                                                      options:NSDirectoryEnumerationSkipsPackageDescendants
+                                                        error:NULL];
+
+  NSMutableArray *children = _parentItem.children;
+  [children removeAllObjects];
+  for (NSURL *childUrl in childUrls) {
+    [children addObject:[[VRFileItem alloc] initWithUrl:childUrl]];
+  }
+
+  // When the monitoring thread invalidates cache of this item before this line, then we will have an outdated
+  // children, however, we don't really care...
+  _parentItem.shouldCacheChildren = NO; // because shouldCacheChildren means, "should add direct descendants"
+  _parentItem.isCachingChildren = NO; // direct descendants scanning is done
 }
 
 - (void)addAllToFileItemsForTargetUrl:(NSArray *)items {
@@ -248,9 +221,9 @@ static const int qArrayChunkSize = 50;
                                                   qFileItemOperationRootUrlKey : _rootUrl,
                                                   qFileItemOperationParentItemKey : parent,
                                                   qFileItemOperationOperationQueueKey : _operationQueue,
-                                                  qFileItemOperationNotificationCenterKey : _notificationCenter,
+                                                  qOperationNotificationCenterKey : _notificationCenter,
                                                   qFileItemOperationFileItemsKey : _fileItems,
-                                                  qFileItemOperationFileManagerKey : _fileManager,
+                                                  qOperationFileManagerKey : _fileManager,
                                               }];
 }
 

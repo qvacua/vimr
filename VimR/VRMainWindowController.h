@@ -25,10 +25,9 @@
 @property (weak) MMVimController *vimController;
 @property (weak) MMVimView *vimView;
 
-@property BOOL needsToResizeVimView;
-
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect;
+- (void)updateWorkingDirectory;
 - (void)openFilesWithArgs:(NSDictionary *)args;
 - (void)cleanUpAndClose;
 - (void)openFileWithUrl:(NSURL *)url;
@@ -40,6 +39,7 @@
 - (IBAction)saveDocumentAs:(id)sender;
 - (IBAction)revertDocumentToSaved:(id)sender;
 - (IBAction)openQuickly:(id)sender;
+- (IBAction)toggleFileBrowser:(id)sender;
 
 #pragma mark NSObject
 - (void)dealloc;
@@ -49,6 +49,8 @@
 - (void)liveResizeDidEnd;
 
 #pragma mark MMVimControllerDelegate
+- (void)controller:(MMVimController *)controller zoomWithRows:(int)rows columns:(int)columns state:(int)state
+              data:(NSData *)data;
 - (void)controller:(MMVimController *)controller handleShowDialogWithButtonTitles:(NSArray *)buttonTitles
              style:(NSAlertStyle)style message:(NSString *)message text:(NSString *)text
    textFieldString:(NSString *)string data:(NSData *)data;

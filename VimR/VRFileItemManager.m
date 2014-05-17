@@ -24,9 +24,42 @@ static NSString *const qThreadName = @"com.qvacua.VimR.VRFileItemManager";
 NSString *const qChunkOfNewFileItemsAddedEvent = @"chunk-of-new-file-items-added-event";
 
 
+@interface VRCachedFileItemRecord : NSObject
+
+@property VRFileItem *fileItem;
+@property (readonly) NSUInteger countOfConsumer;
+
+- (instancetype)initWithFileItem:(VRFileItem *)fileItem;
+
+@end
+
+@implementation VRCachedFileItemRecord
+
+- (instancetype)initWithFileItem:(VRFileItem *)fileItem {
+  self = [super init];
+  RETURN_NIL_WHEN_NOT_SELF
+
+  _fileItem = fileItem;
+  _countOfConsumer = 1;
+
+  return self;
+}
+
+
+- (void)incrementConsumer {
+  _countOfConsumer++;
+}
+
+- (void)decrementConsumer {
+  _countOfConsumer--;
+}
+
+@end
+
+
 @interface VRFileItemManager ()
 
-@property (readonly) NSMutableDictionary *url2CachedFileItem;
+@property (readonly) NSMutableDictionary *url2CacheRecord;
 @property (readonly) NSMutableArray *mutableFileItemsForTargetUrl;
 
 @property (readonly) NSOperationQueue *fileItemOperationQueue;
@@ -66,16 +99,61 @@ void streamCallback(
 }
 
 - (NSArray *)registeredUrls {
-  return self.url2CachedFileItem.allKeys;
+  return self.url2CacheRecord.allKeys;
 }
 
 #pragma mark Public
+- (NSArray *)childrenOfRootUrl:(NSURL *)rootUrl {
+  VRCachedFileItemRecord *record = _url2CacheRecord[rootUrl];
+  if (!record) {
+    DDLogWarn(@"no record found for %@", rootUrl);
+    return nil;
+  }
+
+  return [self childrenOfItem:record.fileItem];
+}
+
+- (NSArray *)childrenOfItem:(VRFileItem *)item {
+  if (!item.shouldCacheChildren) {
+    return item.children;
+  }
+
+  // TODO: if item is caching, we should wait here until done and return
+
+  VRFileItemOperation *operation = [[VRFileItemOperation alloc] initWithMode:VRFileItemOperationShallowCacheMode
+                                                                        dict:@{
+                                                                            qFileItemOperationParentItemKey : item,
+                                                                            qOperationFileManagerKey : _fileManager,
+                                                                        }];
+  [operation main];
+
+  return item.children;
+}
+
+- (BOOL)isItemDir:(VRFileItem *)item {
+  return item.dir;
+}
+
+- (BOOL)isItemHidden:(VRFileItem *)item {
+  return item.hidden;
+}
+
+- (NSString *)nameOfItem:(VRFileItem *)item {
+  return item.url.lastPathComponent;
+}
+
+- (NSURL *)urlForItem:(VRFileItem *)item {
+  return item.url;
+}
+
 - (void)registerUrl:(NSURL *)url {
   // TODO: handle symlinks and aliases
 
   @synchronized (self) {
-    if ([_url2CachedFileItem.allKeys containsObject:url]) {
-      DDLogWarn(@"%@ is already registered, noop", url);
+    VRCachedFileItemRecord *record = _url2CacheRecord[url];
+    if (record) {
+      DDLogWarn(@"%@ is already registered, incrementing consumer count", url);
+      [record incrementConsumer];
       return;
     }
 
@@ -84,15 +162,15 @@ void streamCallback(
       return;
     }
 
-        // NOTE: We may optimize (or not) the caching behavior here: When the URL A to register is a subdir of an already
-        // registered URL B, we build the hierarchy up to the requested URL A. However, then, we would have to scan children
-        // up to A, which could be costly to do it sync; async building complicates things too much. For time being, we
-        // ignore B and use a separate file item hierarchy for B.
-        // If we should do that, we would have only one parent when invalidating the cache. For now, we could have multiple
-        // parent URLs and therefore file items for one URL reported by FSEventStream.
+    // NOTE: We may optimize (or not) the caching behavior here: When the URL A to register is a subdir of an already
+    // registered URL B, we build the hierarchy up to the requested URL A. However, then, we would have to scan children
+    // up to A, which could be costly to do it sync; async building complicates things too much. For time being, we
+    // ignore B and use a separate file item hierarchy for B.
+    // If we should do that, we would have only one parent when invalidating the cache. For now, we could have multiple
+    // parent URLs and therefore file items for one URL reported by FSEventStream.
 
-        DDLogDebug(@"Registering %@ for caching and monitoring", url);
-    _url2CachedFileItem[url] = [[VRFileItem alloc] initWithUrl:url isDir:YES];
+    DDLogDebug(@"Registering %@ for caching and monitoring", url);
+    _url2CacheRecord[url] = [[VRCachedFileItemRecord alloc] initWithFileItem:[[VRFileItem alloc] initWithUrl:url]];
 
     [self stop];
     [self start];
@@ -101,8 +179,20 @@ void streamCallback(
 
 - (void)unregisterUrl:(NSURL *)url {
   @synchronized (self) {
+    VRCachedFileItemRecord *record = _url2CacheRecord[url];
+    if (!record) {
+      DDLogWarn(@"%@ was not registered");
+      return;
+    }
+
+    DDLogDebug(@"decrementing %@", url);
+    [record decrementConsumer];
+    if (record.countOfConsumer > 0) {
+      return;
+    }
+
     DDLogDebug(@"Unregistering %@", url);
-    [_url2CachedFileItem removeObjectForKey:url];
+    [_url2CacheRecord removeObjectForKey:url];
 
     [self stop];
     [self start];
@@ -115,11 +205,13 @@ void streamCallback(
     [self resetTargetUrl];
     _fileItemOperationQueue.suspended = NO;
 
-    VRFileItem *targetItem = _url2CachedFileItem[url];
-    if (!targetItem) {
+    VRCachedFileItemRecord *record = _url2CacheRecord[url];
+    if (!record) {
       DDLogWarn(@"The URL %@ is not yet registered.", url);
       return NO;
     }
+
+    VRFileItem *targetItem = record.fileItem;
 
     [_mutableFileItemsForTargetUrl removeAllObjects];
 
@@ -130,9 +222,9 @@ void streamCallback(
                                                  qFileItemOperationRootUrlKey : url,
                                                  qFileItemOperationParentItemKey : targetItem,
                                                  qFileItemOperationOperationQueueKey : _fileItemOperationQueue,
-                                                 qFileItemOperationNotificationCenterKey : _notificationCenter,
+                                                 qOperationNotificationCenterKey : _notificationCenter,
                                                  qFileItemOperationFileItemsKey : _mutableFileItemsForTargetUrl,
-                                                 qFileItemOperationFileManagerKey : _fileManager,
+                                                 qOperationFileManagerKey : _fileManager,
                                              }]
     ];
 
@@ -160,26 +252,6 @@ void streamCallback(
   }
 }
 
-- (void)pause {
-  @synchronized (_fileItemOperationQueue) {
-    _fileItemOperationQueue.suspended = YES;
-
-    for (VRFileItemOperation *operation in _fileItemOperationQueue.operations) {
-      [operation pause];
-    }
-  }
-}
-
-- (void)resume {
-  @synchronized (_fileItemOperationQueue) {
-    _fileItemOperationQueue.suspended = NO;
-
-    for (VRFileItemOperation *operation in _fileItemOperationQueue.operations) {
-      [operation resume];
-    }
-  }
-}
-
 - (BOOL)fileItemOperationPending {
   @synchronized (_fileItemOperationQueue) {
     return _fileItemOperationQueue.operationCount > 0;
@@ -192,6 +264,13 @@ void streamCallback(
   }
 }
 
+- (void)pause {
+  _fileItemOperationQueue.suspended = YES;
+}
+
+- (void)resume {
+  _fileItemOperationQueue.suspended = NO;
+}
 
 #pragma mark NSObject
 - (id)init {
@@ -200,14 +279,14 @@ void streamCallback(
 
   _lastEventId = kFSEventStreamEventIdSinceNow;
 
-  _url2CachedFileItem = [[NSMutableDictionary alloc] initWithCapacity:5];
-  _mutableFileItemsForTargetUrl = [[NSMutableArray alloc] initWithCapacity:500];
+  _url2CacheRecord = [[NSMutableDictionary alloc] initWithCapacity:5];
+  _mutableFileItemsForTargetUrl = [[NSMutableArray alloc] initWithCapacity:10000];
 
   _fileItemOperationQueue = [[NSOperationQueue alloc] init];
-  _fileItemOperationQueue.maxConcurrentOperationCount = 1;
+  _fileItemOperationQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
 
   _invalidateCacheOperationQueue = [[NSOperationQueue alloc] init];
-  _invalidateCacheOperationQueue.maxConcurrentOperationCount = 1;
+  _invalidateCacheOperationQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
 
   return self;
 }
@@ -228,8 +307,11 @@ void streamCallback(
       // NOTE: We could optimize here: Evaluate the flag for each URL and issue either a shallow or deep scan.
       // This however may be (or is) an overkill. For time being we issue only deep scan.
       [_invalidateCacheOperationQueue addOperation:
-          [[VRInvalidateCacheOperation alloc] initWithUrl:url parentItems:[self parentItemsForUrl:url]
-                                          fileItemManager:self]
+          [[VRInvalidateCacheOperation alloc] initWithUrl:url dict:@{
+              qOperationFileItemManagerKey : self,
+              qOperationNotificationCenterKey : _notificationCenter,
+              qInvalidateCacheOperationParentItemsKey : [self parentItemsForUrl:url],
+          }]
       ];
     }
   };
@@ -240,7 +322,8 @@ void streamCallback(
   NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:5];
   for (NSURL *possibleParentUrl in self.registeredUrls) {
     if ([possibleParentUrl isParentToUrl:url]) {
-      [result addObject:_url2CachedFileItem[possibleParentUrl]];
+      VRCachedFileItemRecord *record = _url2CacheRecord[possibleParentUrl];
+      [result addObject:record.fileItem];
     }
   }
 

@@ -30,8 +30,6 @@
     * For time being, let's accept this and use the shared manager here.
     */
     MMVimManager *vimManager = [MMVimManager sharedManager];
-
-    workspaceController.vimManager = vimManager;
     vimManager.delegate = workspaceController;
     [vimManager setUp];
 
@@ -41,6 +39,7 @@
         [TBBeanContainer beanContainerWithBean:[NSWorkspace sharedWorkspace]],
         [TBBeanContainer beanContainerWithBean:[NSFileManager defaultManager]],
         [TBBeanContainer beanContainerWithBean:[NSNotificationCenter defaultCenter]],
+        [TBBeanContainer beanContainerWithBean:[NSUserDefaults standardUserDefaults]],
     ];
   }
 

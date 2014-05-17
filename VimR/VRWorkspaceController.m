@@ -31,6 +31,9 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 
 @autowire(fileItemManager)
 @autowire(openQuicklyWindowController)
+@autowire(vimManager)
+@autowire(notificationCenter)
+@autowire(userDefaults)
 
 #pragma mark Properties
 - (NSArray *)workspaces {
@@ -102,10 +105,13 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 - (void)createNewVimControllerWithWorkingDir:(NSURL *)workingDir args:(id)args {
   int pid = [self.vimManager pidOfNewVimControllerWithArgs:args];
   VRWorkspace *workspace = [[VRWorkspace alloc] init];
-  workspace.openQuicklyWindowController = self.openQuicklyWindowController;
-  workspace.fileItemManager = self.fileItemManager;
-  workspace.workingDirectory = workingDir;
+  workspace.openQuicklyWindowController = _openQuicklyWindowController;
+  workspace.fileItemManager = _fileItemManager;
+  workspace.userDefaults = _userDefaults;
+  workspace.notificationCenter = _notificationCenter;
   workspace.workspaceController = self;
+
+  workspace.workingDirectory = workingDir;
 
   [self.fileItemManager registerUrl:workingDir];
 

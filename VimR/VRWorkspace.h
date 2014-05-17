@@ -21,6 +21,9 @@
 
 @property VRWorkspaceController *workspaceController;
 @property VRFileItemManager *fileItemManager;
+@property NSUserDefaults *userDefaults;
+@property NSNotificationCenter *notificationCenter;
+
 @property VROpenQuicklyWindowController *openQuicklyWindowController;
 @property VRMainWindowController *mainWindowController;
 @property (copy) NSURL *workingDirectory;

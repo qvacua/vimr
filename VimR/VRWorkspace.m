@@ -65,7 +65,7 @@ static CGPoint qDefaultOrigin = {242, 364};
 
 - (void)updateBuffers {
   NSArray *vimBuffers = _vimController.buffers;
-  NSMutableArray *bufferUrls= [self bufferUrlsFromVimBuffers:vimBuffers];
+  NSMutableArray *bufferUrls = [self bufferUrlsFromVimBuffers:vimBuffers];
   if ([bufferUrls isEqualToArray:_openedBufferUrls]) {
     DDLogDebug(@"Buffers not changed, noop");
     return;
@@ -81,6 +81,7 @@ static CGPoint qDefaultOrigin = {242, 364};
   [_fileItemManager unregisterUrl:_workingDirectory];
   _workingDirectory = commonParent;
   [_fileItemManager registerUrl:_workingDirectory];
+  [_mainWindowController updateWorkingDirectory];
   DDLogDebug(@"Registered new workspace: %@", _workingDirectory);
 }
 

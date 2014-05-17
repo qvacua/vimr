@@ -16,6 +16,7 @@ extern NSString *const qUrlNoParentException;
 
 @interface NSURL (VR)
 
+- (BOOL)isHidden;
 - (BOOL)isDirectory;
 
 - (NSString *)parentName;

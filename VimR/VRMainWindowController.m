@@ -20,20 +20,24 @@
 #import "VRWorkspace.h"
 #import "VRWorkspaceController.h"
 #import "VRDefaultLogSetting.h"
+#import "VRWorkspaceView.h"
+#import "VRFileBrowserView.h"
 
 
-@interface VRMainWindowController ()
+#define CONSTRAINT(fmt, ...) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
 
-@property BOOL isReplyToGuiResize;
-@property BOOL vimViewSetUpDone;
-
-@end
 
 @implementation VRMainWindowController {
   int _userRows;
   int _userCols;
   CGPoint _userTopLeft;
   BOOL _shouldRestoreUserTopLeft;
+  BOOL _isReplyToGuiResize;
+  BOOL _vimViewSetUpDone;
+  BOOL _needsToResizeVimView;
+
+  VRWorkspaceView *_workspaceView;
+  VRFileBrowserView *_fileBrowserView;
 }
 
 #pragma mark Public
@@ -44,15 +48,19 @@
   return self;
 }
 
+- (void)updateWorkingDirectory {
+  _fileBrowserView.rootUrl = _workspace.workingDirectory;
+}
+
 - (void)openFilesWithArgs:(NSDictionary *)args {
-  [self.vimController sendMessage:OpenWithArgumentsMsgID data:args.dictionaryAsData];
+  [_vimController sendMessage:OpenWithArgumentsMsgID data:args.dictionaryAsData];
 }
 
 - (void)cleanUpAndClose {
   log4Mark;
 
-  [self.vimView removeFromSuperviewWithoutNeedingDisplay];
-  [self.vimView cleanup];
+  [_vimView removeFromSuperviewWithoutNeedingDisplay];
+  [_vimView cleanup];
 
   [self close];
 }
@@ -67,11 +75,11 @@
     }
   }];
 
-  if (alreadyOpened) {
-    return;
+  if (!alreadyOpened) {
+    [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsFromFileUrls:@[url]].dictionaryAsData];
   }
 
-  [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsFromFileUrls:@[url]].dictionaryAsData];
+  [self.window makeFirstResponder:_vimView.textView];
 }
 
 #pragma mark IBActions
@@ -80,7 +88,6 @@
 }
 
 - (IBAction)performClose:(id)sender {
-  // TODO: when the doc is dirty, we could ask to save here!
   NSArray *descriptor = @[@"File", @"Close"];
   [self.vimController sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:descriptor]];
 }
@@ -118,8 +125,8 @@
   // Figure out how many rows/columns can fit while zoomed.
   int rowsZoomed;
   int colsZoomed;
-  NSRect maxFrame = screen.visibleFrame;
-  NSRect contentRect = [self.window contentRectForFrameRect:maxFrame];
+  CGRect maxFrame = screen.visibleFrame;
+  CGRect contentRect = [self uncorrectedVimViewRectInParentRect:maxFrame];
   [_vimView constrainRows:&rowsZoomed columns:&colsZoomed toSize:contentRect.size];
 
   int curRows, curCols;
@@ -142,7 +149,7 @@
       // showing/hiding.
       _userRows = curRows;
       _userCols = curCols;
-      NSRect frame = self.window.frame;
+      CGRect frame = self.window.frame;
       _userTopLeft = CGPointMake(frame.origin.x, NSMaxY(frame));
     }
   }
@@ -156,17 +163,31 @@
 }
 
 - (IBAction)openQuickly:(id)sender {
-  [_workspace.fileItemManager setTargetUrl:_workspace.workingDirectory];
+  [_workspace.fileItemManager setTargetUrl:self.workingDirectory];
   [_workspace.openQuicklyWindowController showForWindowController:self];
+}
+
+- (IBAction)toggleFileBrowser:(id)sender {
+  if (_workspaceView.fileBrowserView) {
+    _workspaceView.fileBrowserView = nil;
+    return;
+  }
+
+  CGRect frame = self.window.frame;
+  if (frame.size.width <= _vimView.minSize.width) {
+    frame.size.width += _workspaceView.defaultFileBrowserAndDividerWidth;
+    [self.window setFrame:frame display:YES];
+  }
+  _workspaceView.fileBrowserView = _fileBrowserView;
 }
 
 #pragma mark Debug
 - (IBAction)debug1Action:(id)sender {
   DDLogDebug(@"buffers: %@", _vimController.buffers);
-  NSMenu *menu = _vimController.mainMenu;
-  NSMenuItem *fileMenu = menu.itemArray[2];
-  NSArray *editMenuArray = [[fileMenu submenu] itemArray];
-  DDLogDebug(@"edit menu: %@", editMenuArray);
+//  NSMenu *menu = _vimController.mainMenu;
+//  NSMenuItem *fileMenu = menu.itemArray[2];
+//  NSArray *editMenuArray = [[fileMenu submenu] itemArray];
+//  DDLogDebug(@"edit menu: %@", editMenuArray);
 }
 
 #pragma mark NSObject
@@ -203,15 +224,16 @@
   * resize the window across multiple screens.
   */
 
-  NSView <MMTextViewProtocol> *textView = self.vimView.textView;
+  NSView <MMTextViewProtocol> *textView = _vimView.textView;
 
   int constrained[2];
-  [textView constrainRows:&constrained[0] columns:&constrained[1] toSize:textView.frame.size];
+  CGSize size = [textView constrainRows:&constrained[0] columns:&constrained[1] toSize:textView.frame.size];
+  DDLogDebug(@"################## total width: %f\tdesired width: %f\tcurrent text view width: %f\tcurrent vim view width %f", _workspaceView.frame.size.width, size.width, textView.frame.size, _vimView.frame.size.width);
 
   DDLogDebug(@"End of live resize, notify Vim that text dimensions are %d x %d", constrained[1], constrained[0]);
 
   NSData *data = [NSData dataWithBytes:constrained length:(2 * sizeof(int))];
-  BOOL liveResizeMsgSuccessful = [self.vimController sendMessageNow:LiveResizeMsgID data:data timeout:.5];
+  BOOL liveResizeMsgSuccessful = [_vimController sendMessageNow:LiveResizeMsgID data:data timeout:.5];
 
   if (!liveResizeMsgSuccessful) {
     /**
@@ -219,8 +241,8 @@
     * match the last dimensions received from Vim, otherwise we end up
     * with inconsistent states.
     */
-    DDLogDebug(@"live resizing failed");
-    [self resizeWindowToFitContentSize:self.vimView.desiredSize];
+    DDLogWarn(@"live resizing failed");
+    [self resizeWindowToFitContentSize:_vimView.desiredSize];
   }
 
   [self setWindowTitleToCurrentBuffer];
@@ -317,17 +339,17 @@
               data:(NSData *)data {
 
   [self.vimView showScrollbarWithIdentifier:identifier state:state];
-  self.needsToResizeVimView = YES;
+  _needsToResizeVimView = YES;
 }
 
 - (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
             isLive:(BOOL)live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data {
 
-  log4Mark;
   DDLogDebug(@"%d X %d\tlive: %@\tkeepOnScreen: %@", rows, columns, @(live), @(isReplyToGuiResize));
   [_vimView setDesiredRows:rows columns:columns];
+  [self updateResizeConstraints];
 
-  if (!self.vimViewSetUpDone) {
+  if (!_vimViewSetUpDone) {
     DDLogDebug(@"not yet setup");
     return;
   }
@@ -339,31 +361,25 @@
 }
 
 - (void)controller:(MMVimController *)controller openWindowWithData:(NSData *)data {
-  log4Mark;
-
   self.window.acceptsMouseMovedEvents = YES; // Vim wants to have mouse move events
 
-  self.vimView.tabBarControl.styleNamed = @"Metal";
-
-  [self.window.contentView addSubview:self.vimView];
-  self.vimView.autoresizingMask = NSViewNotSizable;
-
-  [self.vimView addNewTabViewItem];
-
-  self.vimViewSetUpDone = YES;
-  self.isReplyToGuiResize = YES;
-
   [self updateResizeConstraints];
-  [self resizeWindowToFitContentSize:self.vimView.desiredSize];
+
+  [self addViews];
+
+  [_vimView addNewTabViewItem];
+
+  _vimViewSetUpDone = YES;
+  _isReplyToGuiResize = YES;
 
   [_workspace setUpInitialBuffers];
 
-  [self.window makeFirstResponder:self.vimView.textView];
+  [self.window makeFirstResponder:_vimView.textView];
 }
 
 - (void)controller:(MMVimController *)controller showTabBarWithData:(NSData *)data {
   log4Mark;
-  self.vimView.tabBarControl.hidden = NO;
+  _vimView.tabBarControl.hidden = NO;
 }
 
 - (void)controller:(MMVimController *)controller setScrollbarThumbValue:(float)value proportion:(float)proportion
@@ -376,7 +392,7 @@
               data:(NSData *)data {
 
   log4Mark;
-  self.needsToResizeVimView = YES;
+  _needsToResizeVimView = YES;
 }
 
 - (void)controller:(MMVimController *)controller tabShouldUpdateWithData:(NSData *)data {
@@ -395,19 +411,19 @@
 
 - (void)controller:(MMVimController *)controller hideTabBarWithData:(NSData *)data {
   log4Mark;
-  self.vimView.tabBarControl.hidden = YES;
+  _vimView.tabBarControl.hidden = YES;
 }
 
 - (void)controller:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data {
   log4Mark;
 
-  [self setDocumentEdited:modified];
+  self.documentEdited = modified;
 }
 
 - (void)controller:(MMVimController *)controller setDocumentFilename:(NSString *)filename data:(NSData *)data {
   log4Mark;
 
-  [self.window setRepresentedFilename:filename];
+  self.window.representedFilename = filename;
 }
 
 - (void)controller:(MMVimController *)controller setWindowTitle:(NSString *)title data:(NSData *)data {
@@ -421,27 +437,30 @@
 
 
 - (void)controller:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue {
-  if (!self.needsToResizeVimView) {
+  if (!_needsToResizeVimView) {
     return;
   }
 
   DDLogDebug(@"resizing window to fit Vim view");
-  self.needsToResizeVimView = NO;
+  _needsToResizeVimView = NO;
 
-  NSSize contentSize = self.vimView.desiredSize;
+  CGSize contentSize = _vimView.desiredSize;
+
+  // We constrain the desired size of the Vim view to the visible frame of the screen. This can happen, when you use
+  // :set lines=BIG_NUMBER
+
   contentSize = [self constrainContentSizeToScreenSize:contentSize];
-  DDLogDebug(@"uncorrected size: %@", [NSValue valueWithSize:contentSize]);
+  DDLogDebug(@"uncorrected size: %@", vsize(contentSize));
+
   int rows = 0, cols = 0;
-  contentSize = [self.vimView constrainRows:&rows columns:&cols toSize:contentSize];
+  contentSize = [_vimView constrainRows:&rows columns:&cols toSize:contentSize];
 
   DDLogDebug(@"%d X %d", rows, cols);
-  DDLogDebug(@"corrected size: %@", [NSValue valueWithSize:contentSize]);
-
-  self.vimView.frameSize = contentSize;
+  DDLogDebug(@"corrected size: %@", vsize(contentSize));
 
   [self resizeWindowToFitContentSize:contentSize];
 
-  self.isReplyToGuiResize = NO;
+  _isReplyToGuiResize = NO;
 }
 
 - (void)controller:(MMVimController *)controller removeToolbarItemWithIdentifier:(NSString *)identifier {
@@ -497,24 +516,74 @@
 }
 
 - (void)windowDidResize:(id)sender {
-  /**
-  * NOTE: Since we have no control over when the window may resize (Cocoa
-  * may resize automatically) we simply set the view to fill the entire
-  * window.  The vim view takes care of notifying Vim if the number of
-  * (rows,columns) changed.
-  */
-  self.vimView.frameSize = [self.window contentRectForFrameRect:self.window.frame].size;
+  // noop
+}
+
+- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize {
+  // TODO: take the other components like scrollbars into account...
+
+  // To set -contentResizeIncrements of the window to the cell width of the vim view does not suffice because of the
+  // file browser and insets among others. Here, we adjust the width of the window such that the vim view is always
+  // A * column wide where A is an integer. And the height.
+  CGRect winFrame = sender.frame;
+  winFrame.size = frameSize;
+
+  CGRect contentRect = [sender contentRectForFrameRect:winFrame];
+  CGFloat contentWidth = contentRect.size.width;
+  CGFloat contentHeight = contentRect.size.height;
+
+  NSSize cellSize = _vimView.textView.cellSize;
+  CGFloat cellWidth = cellSize.width;
+  CGFloat cellHeight = cellSize.height;
+
+  CGFloat fileBrowserAndDividerWidth = _workspaceView.fileBrowserAndDividerWidth;
+  CGFloat horInsetOfVimView = _vimView.totalHorizontalInset;
+  frameSize.width = floor((contentWidth - fileBrowserAndDividerWidth - horInsetOfVimView) / cellWidth) * cellWidth
+      + fileBrowserAndDividerWidth + horInsetOfVimView;
+
+  CGFloat tabBarHeight = _vimView.tabBarControl.isHidden ? 0 : _vimView.tabBarControl.frame.size.height;
+  frameSize.height = frameSize.height - contentHeight + tabBarHeight
+      + floor((contentHeight - tabBarHeight) / cellHeight) * cellHeight + _vimView.totalVerticalInset;
+
+  return frameSize;
 }
 
 #pragma mark Private
-- (NSUInteger)indexOfSelectedDocument {
-  PSMTabBarControl *tabBar = self.vimView.tabBarControl;
-  return [tabBar.representedTabViewItems indexOfObject:tabBar.tabView.selectedTabViewItem];
+- (NSURL *)workingDirectory {
+  return _workspace.workingDirectory;
+}
+
+- (void)addViews {
+  _vimView.tabBarControl.styleNamed = @"Metal";
+
+  _fileBrowserView = [[VRFileBrowserView alloc] initWithRootUrl:self.workingDirectory];
+  _fileBrowserView.fileItemManager = _workspace.fileItemManager;
+  _fileBrowserView.userDefaults = _workspace.userDefaults;
+  _fileBrowserView.notificationCenter = _workspace.notificationCenter;
+
+  [_fileBrowserView setUp];
+
+  NSView *contentView = self.window.contentView;
+  _workspaceView = [[VRWorkspaceView alloc] initWithFrame:CGRectZero];
+  _workspaceView.translatesAutoresizingMaskIntoConstraints = NO;
+  _workspaceView.fileBrowserView = _fileBrowserView;
+  _workspaceView.vimView = _vimView;
+  [contentView addSubview:_workspaceView];
+
+  NSDictionary *views = @{
+      @"workspace" : _workspaceView,
+  };
+  CONSTRAINT(@"H:|[workspace]|");
+  CONSTRAINT(@"V:|[workspace]|");
+}
+
+- (CGRect)uncorrectedVimViewRectInParentRect:(CGRect)parentRect {
+  return [self.window contentRectForFrameRect:parentRect];
 }
 
 - (void)sendCommandToVim:(NSString *)command {
   DDLogDebug(@"sending command %@", command);
-  [self.vimController addVimInput:SF(@"<C-\\><C-N>%@<CR>", command)];
+  [_vimController addVimInput:SF(@"<C-\\><C-N>%@<CR>", command)];
 }
 
 - (NSData *)dataFromDescriptor:(NSArray *)descriptor {
@@ -546,12 +615,12 @@
   // } copied from MacVim
 }
 
-- (NSRect)constrainFrame:(NSRect)frame {
+- (CGRect)constrainFrame:(CGRect)frame {
   // Constrain the given (window) frame so that it fits an even number of
   // rows and columns.
   NSWindow *window = self.window;
-  NSRect contentRect = [window contentRectForFrameRect:frame];
-  NSSize constrainedSize = [self.vimView constrainRows:NULL columns:NULL toSize:contentRect.size];
+  CGRect contentRect = [self uncorrectedVimViewRectInParentRect:frame];
+  CGSize constrainedSize = [self.vimView constrainRows:NULL columns:NULL toSize:contentRect.size];
 
   contentRect.origin.y += contentRect.size.height - constrainedSize.height;
   contentRect.size = constrainedSize;
@@ -559,17 +628,18 @@
   return [window frameRectForContentRect:contentRect];
 }
 
-- (void)resizeWindowToFitContentSize:(NSSize)contentSize {
+- (void)resizeWindowToFitContentSize:(CGSize)contentSize {
   logSize4Debug(@"contentSize", contentSize);
   NSWindow *window = self.window;
-  NSRect frame = window.frame;
-  NSRect contentRect = [window contentRectForFrameRect:frame];
+  CGRect frame = window.frame;
+  CGRect contentRect = [self uncorrectedVimViewRectInParentRect:frame];
 
   // Keep top-left corner of the window fixed when resizing.
   contentRect.origin.y -= contentSize.height - contentRect.size.height;
   contentRect.size = contentSize;
+  contentRect.size.width += _workspaceView.fileBrowserAndDividerWidth;
 
-  NSRect newFrame = [window frameRectForContentRect:contentRect];
+  CGRect newFrame = [window frameRectForContentRect:contentRect];
 
   logRect4Debug(@"old", frame);
   logRect4Debug(@"new", newFrame);
@@ -587,7 +657,7 @@
     // Ensure that the window fits inside the visible part of the screen.
     // If there are more than one screen the window will be moved to fit
     // entirely in the screen that most of it occupies.
-    NSRect maxFrame = screen.visibleFrame;
+    CGRect maxFrame = screen.visibleFrame;
     maxFrame = [self constrainFrame:maxFrame];
 
     if (newFrame.size.width > maxFrame.size.width) {
@@ -619,8 +689,8 @@
 
   [window setFrame:newFrame display:YES];
 
-  NSPoint oldTopLeft = {frame.origin.x, NSMaxY(frame)};
-  NSPoint newTopLeft = {newFrame.origin.x, NSMaxY(newFrame)};
+  CGPoint oldTopLeft = {frame.origin.x, NSMaxY(frame)};
+  CGPoint newTopLeft = {newFrame.origin.x, NSMaxY(newFrame)};
   if (CGPointEqualToPoint(oldTopLeft, newTopLeft)) {
     DDLogDebug(@"returning since top left point equal");
     return;
@@ -634,7 +704,7 @@
   [self.vimController sendMessage:SetWindowPositionMsgID data:[NSData dataWithBytes:pos length:2 * sizeof(int)]];
 }
 
-- (NSSize)constrainContentSizeToScreenSize:(NSSize)contentSize {
+- (CGSize)constrainContentSizeToScreenSize:(CGSize)contentSize {
   NSWindow *win = self.window;
   if (win.screen == nil) {
     return contentSize;
@@ -643,8 +713,8 @@
   // NOTE: This may be called in both windowed and full-screen mode.  The
   // "visibleFrame" method does not overlap menu and dock so should not be
   // used in full-screen.
-  NSRect screenRect = win.screen.visibleFrame;
-  NSRect rect = [win contentRectForFrameRect:screenRect];
+  CGRect screenRect = win.screen.visibleFrame;
+  CGRect rect = [self uncorrectedVimViewRectInParentRect:screenRect];
 
   if (contentSize.height > rect.size.height) {
     contentSize.height = rect.size.height;
@@ -658,24 +728,29 @@
 }
 
 - (NSConnection *)connectionToBackend {
-  NSDistantObject *proxy = self.vimController.backendProxy;
+  NSDistantObject *proxy = _vimController.backendProxy;
 
   return proxy.connectionForProxy;
 }
 
 - (void)updateResizeConstraints {
-  if (!self.vimViewSetUpDone) {
+  if (!_vimViewSetUpDone) {
     return;
   }
 
-  // Set the resize increments to exactly match the font size; this way the
-  // window will always hold an integer number of (rows, columns).
-  self.window.contentResizeIncrements = self.vimView.textView.cellSize;
-  self.window.contentMinSize = self.vimView.minSize;
+  NSWindow *window = self.window;
+  if (_workspaceView.fileBrowserView) {
+    window.minSize =
+        CGSizeMake(_workspaceView.fileBrowserAndDividerWidth + _vimView.minSize.width, _vimView.minSize.height);
+  } else {
+    window.minSize = _vimView.minSize;
+  }
+  // We also update the increment of the workspace view, because it could be that the font size has changed
+  _workspaceView.dragIncrement = (NSUInteger) _vimView.textView.cellSize.width;
 }
 
 - (void)setWindowTitleToCurrentBuffer {
-  NSString *filePath = self.vimController.currentTab.buffer.fileName;
+  NSString *filePath = _vimController.currentTab.buffer.fileName;
   NSString *filename = filePath.lastPathComponent;
 
   if (filename == nil) {
@@ -697,6 +772,9 @@
   window.delegate = self;
   window.hasShadow = YES;
   window.title = @"VimR";
+
+  [window setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
+  [window setContentBorderThickness:22 forEdge:NSMinYEdge];
 
   return window;
 }

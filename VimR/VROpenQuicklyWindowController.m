@@ -187,10 +187,10 @@ int qOpenQuicklyWindowWidth = 400;
   [_operationQueue cancelAllOperations];
 
   [_operationQueue addOperation:[[VRFilterItemsOperation alloc] initWithDict:@{
-      qFilterItemsOperationFileItemManagerKey : self.fileItemManager,
-      qFilterItemsOperationFilteredItemsKey : self.filteredFileItems,
-      qFilterItemsOperationItemTableViewKey : self.fileItemTableView,
-      qFilterItemsOperationSearchStringKey : self.searchField.stringValue,
+      qOperationFileItemManagerKey : _fileItemManager,
+      qFilterItemsOperationFilteredItemsKey : _filteredFileItems,
+      qFilterItemsOperationItemTableViewKey : _fileItemTableView,
+      qFilterItemsOperationSearchStringKey : _searchField.stringValue,
   }]];
 }
 
