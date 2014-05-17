@@ -12,7 +12,7 @@ The very first goal is to get a naked Vim running using [MacVimFramework](https:
 
 [![Build Status](https://travis-ci.org/qvacua/vimr.svg?branch=master)](https://travis-ci.org/qvacua/vimr)
 
-Pre-built binaries can be found [here](https://github.com/qvacua/vimr/releases).
+Pre-built binaries can be found [here](https://github.com/qvacua/vimr/releases). (If you want to be on the bleeding edge, you can download [this](http://taewon.de/VimR-dev.tar.bz2).)
 
 ![Screenshot](https://raw.github.com/qvacua/vimr/master/Meta/screenshot.png)
 
