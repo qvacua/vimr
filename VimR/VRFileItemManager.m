@@ -16,45 +16,13 @@
 #import "VRFileItemOperation.h"
 #import "VRInvalidateCacheOperation.h"
 #import "VRDefaultLogSetting.h"
+#import "VRCachedFileItemRecord.h"
 
 
 static NSString *const qThreadName = @"com.qvacua.VimR.VRFileItemManager";
 
 
 NSString *const qChunkOfNewFileItemsAddedEvent = @"chunk-of-new-file-items-added-event";
-
-
-@interface VRCachedFileItemRecord : NSObject
-
-@property VRFileItem *fileItem;
-@property (readonly) NSUInteger countOfConsumer;
-
-- (instancetype)initWithFileItem:(VRFileItem *)fileItem;
-
-@end
-
-@implementation VRCachedFileItemRecord
-
-- (instancetype)initWithFileItem:(VRFileItem *)fileItem {
-  self = [super init];
-  RETURN_NIL_WHEN_NOT_SELF
-
-  _fileItem = fileItem;
-  _countOfConsumer = 1;
-
-  return self;
-}
-
-
-- (void)incrementConsumer {
-  _countOfConsumer++;
-}
-
-- (void)decrementConsumer {
-  _countOfConsumer--;
-}
-
-@end
 
 
 @interface VRFileItemManager ()
