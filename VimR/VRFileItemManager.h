@@ -47,9 +47,6 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 - (void)pause;
 - (void)resume;
 
-// TODO: for debug only!
-- (NSUInteger)operationCount;
-
 #pragma mark NSObject
 - (id)init;
 

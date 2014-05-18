@@ -69,7 +69,6 @@ int qOpenQuicklyWindowWidth = 400;
 
 - (IBAction)debug2Action:(id)sender {
   DDLogDebug(@"filter operations: %lu", _operationQueue.operationCount);
-  DDLogDebug(@"file item operations: %lu", _fileItemManager.operationCount);
 }
 
 #pragma mark NSObject

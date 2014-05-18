@@ -258,12 +258,6 @@ void streamCallback(
   }
 }
 
-- (NSUInteger)operationCount {
-  @synchronized (_fileItemOperationQueue) {
-    return _fileItemOperationQueue.operationCount;
-  }
-}
-
 - (void)pause {
   _fileItemOperationQueue.suspended = YES;
 }
