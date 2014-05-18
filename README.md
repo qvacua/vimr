@@ -16,6 +16,8 @@ Pre-built binaries can be found [here](https://github.com/qvacua/vimr/releases).
 
 ![Screenshot](https://raw.github.com/qvacua/vimr/master/Meta/screenshot.png)
 
+There is a mailing list with absolute no traffic: [vimr@librelist.com](mailto:vimr@librelist.com). (To unsubscribe, send a mail to [vimr-unsubscribe@librelist.com](mailto:vimr-unsubscribe@librelist.com)
+
 How to Build
 ------------
 First, clone the submodules:
