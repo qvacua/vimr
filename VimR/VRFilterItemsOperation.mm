@@ -61,7 +61,7 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
 
 
 #define CANCEL_WHEN_REQUESTED  if (self.isCancelled) { \
-                                 [_fileItemManager resume]; \
+                                 [_fileItemManager resumeFurtherCacheOperations]; \
                                  return; \
                                }
 
@@ -107,7 +107,7 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
       return;
     }
 
-    [_fileItemManager pause]; // this will only suspend the operation queue
+    [_fileItemManager suspendFurtherCacheOperations];
 
     NSArray *fileItemsOfTargetUrl = _fileItemManager.fileItemsOfTargetUrl;
 

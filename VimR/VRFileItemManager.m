@@ -258,11 +258,11 @@ void streamCallback(
   }
 }
 
-- (void)pause {
+- (void)suspendFurtherCacheOperations {
   _fileItemOperationQueue.suspended = YES;
 }
 
-- (void)resume {
+- (void)resumeFurtherCacheOperations {
   _fileItemOperationQueue.suspended = NO;
 }
 

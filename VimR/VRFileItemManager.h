@@ -35,6 +35,7 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 */
 - (NSArray *)childrenOfItem:(id)item;
 - (BOOL)isItemDir:(id)item;
+- (BOOL)isItemHidden:(id)item;
 - (NSString *)nameOfItem:(id)item;
 - (NSURL *)urlForItem:(id)item;
 
@@ -44,11 +45,10 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 - (void)unregisterUrl:(NSURL *)url;
 - (void)cleanUp;
 - (BOOL)fileItemOperationPending;
-- (void)pause;
-- (void)resume;
+- (void)suspendFurtherCacheOperations;
+- (void)resumeFurtherCacheOperations;
 
 #pragma mark NSObject
 - (id)init;
 
-- (BOOL)isItemHidden:(id)item;
 @end
