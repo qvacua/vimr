@@ -10,8 +10,8 @@
 #import <Foundation/Foundation.h>
 
 
-extern NSString *const qUrlGetResourceValueIsDirException;
-extern NSString *const qUrlNoParentException;
+extern NSString *const qUrlGetResourceValueIsDirExceptionName;
+extern NSString *const qUrlNoParentExceptionName;
 
 
 @interface NSURL (VR)

@@ -40,6 +40,17 @@
   XCTAssertThrows(url.parentName, @"%@ cannot have a parent", url);
 }
 
+- (void)testIsHidden {
+  url = [NSURL fileURLWithPath:@"/tmp"];
+  assertThat(@(url.isHidden), isYes);
+
+  url = [NSURL fileURLWithPath:[@"~/.Trash" stringByExpandingTildeInPath]];
+  assertThat(@(url.isHidden), isYes);
+
+  url = [NSURL fileURLWithPath:@"/Library"];
+  assertThat(@(url.isHidden), isNo);
+}
+
 - (void)testIsParentForUrl {
   url = [NSURL fileURLWithPath:@"/Users/test"];
   assertThat(@([url isParentToUrl:[NSURL fileURLWithPath:@"/Users/test/test.txt"]]), isYes);

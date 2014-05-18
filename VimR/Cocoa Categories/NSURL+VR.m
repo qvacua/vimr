@@ -10,15 +10,15 @@
 #import "NSURL+VR.h"
 
 
-NSString *const qUrlGetResourceValueIsDirException = @"qGetResourceValueIsDirException";
-NSString *const qUrlNoParentException = @"qNoParentException";
+NSString *const qUrlGetResourceValueIsDirExceptionName = @"qGetResourceValueIsDirException";
+NSString *const qUrlNoParentExceptionName = @"qNoParentException";
 
 
 @implementation NSURL (VR)
 
 - (BOOL)isHidden {
   if (!self.isFileURL) {
-    @throw [NSException exceptionWithName:qUrlGetResourceValueIsDirException
+    @throw [NSException exceptionWithName:qUrlGetResourceValueIsDirExceptionName
                                    reason:@"The URL is not a file URL"
                                  userInfo:nil];
   }
@@ -31,14 +31,14 @@ NSString *const qUrlNoParentException = @"qNoParentException";
     return isHidden.boolValue;
   }
 
-  @throw [NSException exceptionWithName:qUrlGetResourceValueIsDirException
+  @throw [NSException exceptionWithName:qUrlGetResourceValueIsDirExceptionName
                                  reason:@"There was an error getting NSURLIsHiddenKey"
                                userInfo:@{@"error" : error}];
 }
 
 - (BOOL)isDirectory {
   if (!self.isFileURL) {
-    @throw [NSException exceptionWithName:qUrlGetResourceValueIsDirException
+    @throw [NSException exceptionWithName:qUrlGetResourceValueIsDirExceptionName
                                    reason:@"The URL is not a file URL"
                                  userInfo:nil];
   }
@@ -51,14 +51,14 @@ NSString *const qUrlNoParentException = @"qNoParentException";
     return isDir.boolValue;
   }
 
-  @throw [NSException exceptionWithName:qUrlGetResourceValueIsDirException
+  @throw [NSException exceptionWithName:qUrlGetResourceValueIsDirExceptionName
                                  reason:@"There was an error getting NSURLIsDirectoryKey"
                                userInfo:@{@"error" : error}];
 }
 
 - (NSString *)parentName {
   if ([self.path isEqualToString:@"/"]) {
-    @throw [NSException exceptionWithName:qUrlNoParentException reason:@"The root folder cannot have a parent"
+    @throw [NSException exceptionWithName:qUrlNoParentExceptionName reason:@"The root folder cannot have a parent"
                                  userInfo:nil];
   }
 
