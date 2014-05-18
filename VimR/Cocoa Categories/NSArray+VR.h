@@ -14,12 +14,5 @@
 
 - (BOOL)isEmpty;
 
-/**
-* We use NSRange in a non-standard way. Usually it is location + length, we use it as
-* range.location = begin index
-* range.length = end index
-*/
-- (NSArray *)indexesForChunkSize:(NSUInteger)size;
-
 @end
 
