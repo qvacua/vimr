@@ -198,7 +198,7 @@
 }
 
 - (BOOL)showHiddenFiles {
-  return _showHiddenMenuItem.state == NSOnState ? YES : NO;
+  return _showHiddenMenuItem.state == NSOnState;
 }
 
 - (void)cacheInvalidated:(NSNotification *)notification {

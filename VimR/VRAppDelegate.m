@@ -55,7 +55,7 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
   }
 
   DDLogDebug(@"opening %@", urls);
-  [self application:self.application openFiles:urls];
+  [self application:_application openFiles:urls];
 }
 
 - (IBAction)openDocumentInTab:(id)sender {
