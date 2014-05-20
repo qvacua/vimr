@@ -26,7 +26,7 @@
 
 @property VROpenQuicklyWindowController *openQuicklyWindowController;
 @property VRMainWindowController *mainWindowController;
-@property (copy) NSURL *workingDirectory;
+@property NSURL *workingDirectory;
 
 #pragma mark Public
 - (void)openFilesWithUrls:(NSArray *)url;

@@ -21,7 +21,7 @@
 @property (nonatomic, weak) NSUserDefaults *userDefaults;
 @property (nonatomic, weak) NSNotificationCenter *notificationCenter;
 
-@property (nonatomic, copy) NSURL *rootUrl;
+@property (nonatomic) NSURL *rootUrl;
 
 
 #pragma mark Public

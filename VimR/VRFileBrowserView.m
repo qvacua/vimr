@@ -18,6 +18,20 @@
 #define CONSTRAIN(fmt, ...) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
 
 
+@interface VRNode : NSObject
+
+@property (nonatomic, readonly) NSURL *url;
+@property (nonatomic, readonly) NSString *name;
+@property (nonatomic) NSArray *children;
+@property (nonatomic, readonly, getter=isDir) BOOL dir;
+@property (nonatomic, readonly, getter=isHidden) BOOL hidden;
+
+@end
+
+@implementation VRNode
+@end
+
+
 @implementation VRFileBrowserView {
   NSOutlineView *_fileOutlineView;
   NSScrollView *_scrollView;
@@ -56,12 +70,14 @@
 
 #pragma mark NSOutlineViewDataSource
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
+  NSArray *children;
+
   if (!item) {
-    NSArray *children = [self filterOutHiddenFromItems:[_fileItemManager childrenOfRootUrl:_rootUrl]];
+    children = [self filterOutHiddenFromItems:[_fileItemManager childrenOfRootUrl:_rootUrl]];
     return children.count;
   }
 
-  NSArray *children = [self filterOutHiddenFromItems:[_fileItemManager childrenOfItem:item]];
+  children = [self filterOutHiddenFromItems:[_fileItemManager childrenOfItem:item]];
   return children.count;
 }
 
