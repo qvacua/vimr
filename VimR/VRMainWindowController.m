@@ -70,7 +70,7 @@
   __block BOOL alreadyOpened = NO;
   [_vimController.tabs enumerateObjectsUsingBlock:^(MMTabPage *tab, NSUInteger idx, BOOL *stop) {
     if ([tab.buffer.fileName isEqualToString:url.path]) {
-      [self sendCommandToVim:SF(@":tabm %lu", idx)];
+      [self sendCommandToVim:SF(@":tabn %lu", idx + 1)];
       *stop = YES;
       alreadyOpened = YES;
     }
