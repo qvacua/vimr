@@ -248,10 +248,10 @@
 }
 
 - (void)fileOutlineViewDoubleClicked:(id)sender {
-  id clickedItem = [_fileOutlineView itemAtRow:_fileOutlineView.clickedRow];
+  VRNode *clickedItem = [_fileOutlineView itemAtRow:_fileOutlineView.clickedRow];
 
-  if (![_fileItemManager isItemDir:clickedItem]) {
-    [(VRMainWindowController *) self.window.windowController openFilesWithUrls:@[[_fileItemManager urlForItem:clickedItem]]];
+  if (!clickedItem.dir) {
+    [(VRMainWindowController *) self.window.windowController openFilesWithUrls:@[clickedItem.url]];
     return;
   }
 
