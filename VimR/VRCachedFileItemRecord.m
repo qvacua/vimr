@@ -30,6 +30,10 @@
 }
 
 - (void)decrementConsumer {
+  if (_countOfConsumer <= 0) {
+    return;
+  }
+
   _countOfConsumer--;
 }
 
