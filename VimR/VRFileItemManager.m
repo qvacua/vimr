@@ -27,12 +27,6 @@ NSString *const qChunkOfNewFileItemsAddedEvent = @"chunk-of-new-file-items-added
 
 @interface VRFileItemManager ()
 
-@property (readonly) NSMutableDictionary *url2CacheRecord;
-@property (readonly) NSMutableArray *mutableFileItemsForTargetUrl;
-
-@property (readonly) NSOperationQueue *fileItemOperationQueue;
-@property (readonly) NSOperationQueue *invalidateCacheOperationQueue;
-
 // Declared here to be used in the callback and not to make it public.
 - (void)invalidateCacheForPaths:(char **)eventPaths eventCount:(NSUInteger)eventCount;
 
@@ -56,6 +50,13 @@ void streamCallback(
   NSThread *_thread;
   FSEventStreamRef _stream;
   FSEventStreamEventId _lastEventId;
+
+  NSMutableDictionary *_url2CacheRecord;
+  NSMutableArray *_mutableFileItemsForTargetUrl;
+
+  NSOperationQueue *_fileItemOperationQueue;
+  NSOperationQueue *_invalidateCacheOperationQueue;
+
 }
 
 @autowire(fileManager)
@@ -63,11 +64,11 @@ void streamCallback(
 
 #pragma mark Properties
 - (NSArray *)fileItemsOfTargetUrl {
-  return self.mutableFileItemsForTargetUrl;
+  return _mutableFileItemsForTargetUrl;
 }
 
 - (NSArray *)registeredUrls {
-  return self.url2CacheRecord.allKeys;
+  return _url2CacheRecord.allKeys;
 }
 
 #pragma mark Public

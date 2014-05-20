@@ -40,10 +40,13 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 - (NSURL *)urlForItem:(id)item;
 
 - (void)registerUrl:(NSURL *)url;
-- (void)resetTargetUrl;
-- (BOOL)setTargetUrl:(NSURL *)url;
 - (void)unregisterUrl:(NSURL *)url;
+
+- (BOOL)setTargetUrl:(NSURL *)url;
+- (void)resetTargetUrl;
+
 - (void)cleanUp;
+
 - (BOOL)fileItemOperationPending;
 - (void)suspendFurtherCacheOperations;
 - (void)resumeFurtherCacheOperations;
