@@ -32,6 +32,10 @@
   return self;
 }
 
+- (void)dealloc {
+//  NSLog(@"############################# %@", self);
+}
+
 - (BOOL)isEqualToItem:(VRFileItem *)item {
   if (self == item)
     return YES;
