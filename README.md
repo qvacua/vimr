@@ -6,20 +6,26 @@ Project VimR — Vim Refined
 About
 -----
 
-Project VimR is an attempt to refine the Vim experience.
+Project VimR is an attempt to refine the Vim experience. The goal is to build an editor that uses Vim inside with many of the convenience GUI features similar to those present in modern editors for Mac. Let's see how far we get! :)
 
-The very first goal is to get a naked Vim running using [MacVimFramework](https://github.com/qvacua/macvim). Once we have that, we'll start to add convenience GUI features similar to those present in modern editors for Mac. Let's see how far we get! :)
+In case you want to have a bit more information on the motivation behind VimR, I tried to explain it in my [blog](http://ishouldcocoa.net/post/85242609106/why-vimr).
 
 [![Build Status](https://travis-ci.org/qvacua/vimr.svg?branch=master)](https://travis-ci.org/qvacua/vimr)
-
-Pre-built binaries can be found [here](https://github.com/qvacua/vimr/releases). (If you want to be on the bleeding edge, you can download [this](http://taewon.de/VimR-dev.tar.bz2).)
 
 ![Screenshot](https://raw.github.com/qvacua/vimr/master/Meta/screenshot.png)
 
 There is a mailing list with absolute no traffic: [vimr@librelist.com](mailto:vimr@librelist.com). (To unsubscribe, send a mail to [vimr-unsubscribe@librelist.com](mailto:vimr-unsubscribe@librelist.com))
 
+Download
+--------
+
+Pre-built binaries can be found [here](https://github.com/qvacua/vimr/releases).
+
+From time to time I'll upload a bleeding edge build and you can download it [here](http://taewon.de/VimR-dev.tar.bz2).
+
 How to Build
 ------------
+
 First, clone the submodules:
 
 ```
@@ -55,3 +61,4 @@ Source Code License
 -------------------
 
 For now, the source code of VimR is licensed under GNU General Public License version 3 as published by the Free Software Foundation.
+
