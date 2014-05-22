@@ -14,6 +14,20 @@
 @class VRFileItemManager;
 
 
+@interface VRNode : NSObject
+
+@property (nonatomic) NSURL *url;
+@property (nonatomic) id item;
+@property (nonatomic) NSString *name;
+@property (nonatomic) NSArray *children;
+@property (nonatomic, getter=isDir) BOOL dir;
+@property (nonatomic, getter=isHidden) BOOL hidden;
+
+- (NSString *)description;
+
+@end
+
+
 @interface VRFileBrowserView : NSView <NSOutlineViewDataSource, NSOutlineViewDelegate>
 
 @property (nonatomic, weak) NSFileManager *fileManager;

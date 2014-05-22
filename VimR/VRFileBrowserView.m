@@ -19,19 +19,6 @@
 #define CONSTRAIN(fmt, ...) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
 
 
-@interface VRNode : NSObject
-
-@property (nonatomic) NSURL *url;
-@property (nonatomic) id item;
-@property (nonatomic) NSString *name;
-@property (nonatomic) NSArray *children;
-@property (nonatomic, getter=isDir) BOOL dir;
-@property (nonatomic, getter=isHidden) BOOL hidden;
-
-- (NSString *)description;
-
-@end
-
 @implementation VRNode
 
 - (NSString *)description {
@@ -86,41 +73,6 @@
 
   [self reCacheNodes];
   [_fileOutlineView reloadData];
-}
-
-- (void)reCacheNodes {
-  @synchronized (_fileItemManager) {
-    _rootNode.item = [_fileItemManager itemForUrl:_rootUrl];
-    [self buildChildNodesForNode:_rootNode];
-    DDLogDebug(@"re-caching root node");
-  }
-}
-
-- (VRNode *)nodeFromItem:(id)item {
-  VRNode *node = [[VRNode alloc] init];
-  node.url = [_fileItemManager urlForItem:item];
-  node.dir = [_fileItemManager isItemDir:item];
-  node.hidden = [_fileItemManager isItemHidden:item];
-  node.name = [_fileItemManager nameOfItem:item];
-  node.item = item;
-  node.children = nil;
-
-  return node;
-}
-
-- (NSArray *)filterHiddenNodesIfNec:(NSArray *)nodes {
-  if ([self showHiddenFiles]) {
-    return nodes;
-  }
-
-  NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:nodes.count];
-  for (VRNode *item in nodes) {
-    if (!item.hidden) {
-      [result addObject:item];
-    }
-  }
-
-  return result;
 }
 
 #pragma mark NSOutlineViewDataSource
@@ -276,6 +228,41 @@
   }
 
   parentNode.children = children;
+}
+
+- (void)reCacheNodes {
+  @synchronized (_fileItemManager) {
+    _rootNode.item = [_fileItemManager itemForUrl:_rootUrl];
+    [self buildChildNodesForNode:_rootNode];
+    DDLogDebug(@"re-caching root node");
+  }
+}
+
+- (VRNode *)nodeFromItem:(id)item {
+  VRNode *node = [[VRNode alloc] init];
+  node.url = [_fileItemManager urlForItem:item];
+  node.dir = [_fileItemManager isItemDir:item];
+  node.hidden = [_fileItemManager isItemHidden:item];
+  node.name = [_fileItemManager nameOfItem:item];
+  node.item = item;
+  node.children = nil;
+
+  return node;
+}
+
+- (NSArray *)filterHiddenNodesIfNec:(NSArray *)nodes {
+  if ([self showHiddenFiles]) {
+    return nodes;
+  }
+
+  NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:nodes.count];
+  for (VRNode *item in nodes) {
+    if (!item.hidden) {
+      [result addObject:item];
+    }
+  }
+
+  return result;
 }
 
 @end
