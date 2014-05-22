@@ -1,11 +1,11 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import "VRFileBrowserView.h"
 #import "VRUtils.h"
@@ -13,9 +13,27 @@
 #import "VRMainWindowController.h"
 #import "VRUserDefaults.h"
 #import "VRInvalidateCacheOperation.h"
+#import "VRDefaultLogSetting.h"
 
 
 #define CONSTRAIN(fmt, ...) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
+
+
+@implementation VRNode
+
+- (NSString *)description {
+  NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
+  [description appendFormat:@"self.url=%@", self.url];
+  [description appendFormat:@", self.name=%@", self.name];
+  [description appendFormat:@", self.children=%@", self.children];
+  [description appendFormat:@", self.dir=%d", self.dir];
+  [description appendFormat:@", self.hidden=%d", self.hidden];
+  [description appendFormat:@", self.item=%@", self.item];
+  [description appendString:@">"];
+  return description;
+}
+
+@end
 
 
 @implementation VRFileBrowserView {
@@ -23,13 +41,14 @@
   NSScrollView *_scrollView;
   NSPopUpButton *_settingsButton;
   NSMenuItem *_showHiddenMenuItem;
+  VRNode *_rootNode;
 }
 
 #pragma mark Public
+
 - (void)setRootUrl:(NSURL *)rootUrl {
   _rootUrl = rootUrl;
-  [_fileOutlineView reloadData];
-  [_fileOutlineView selectRowIndexes:nil byExtendingSelection:NO];
+  [self reload];
 }
 
 - (instancetype)initWithRootUrl:(NSURL *)rootUrl {
@@ -37,7 +56,6 @@
   RETURN_NIL_WHEN_NOT_SELF
 
   _rootUrl = rootUrl;
-
   [self addViews];
 
   return self;
@@ -51,48 +69,51 @@
   [_notificationCenter addObserver:self selector:@selector(cacheInvalidated:) name:qInvalidatedCacheEvent
                             object:nil];
 
+  [self reCacheNodes];
   [_fileOutlineView reloadData];
 }
 
 #pragma mark NSOutlineViewDataSource
-- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
-  if (!item) {
-    NSArray *children = [self filterOutHiddenFromItems:[_fileItemManager childrenOfRootUrl:_rootUrl]];
-    return children.count;
+
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(VRNode *)item {
+  VRNode *currentNode = item ?: _rootNode;
+
+  if (!currentNode.children) {
+    [self buildChildNodesForNode:currentNode];
   }
 
-  NSArray *children = [self filterOutHiddenFromItems:[_fileItemManager childrenOfItem:item]];
-  return children.count;
+  return [self filterHiddenNodesIfNec:currentNode.children].count;
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item {
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(VRNode *)item {
   if (!item) {
-    NSArray *children = [self filterOutHiddenFromItems:[_fileItemManager childrenOfRootUrl:_rootUrl]];
-    return children[(NSUInteger) index];
+    return [self filterHiddenNodesIfNec:_rootNode.children][(NSUInteger) index];
   }
 
-  return [[self filterOutHiddenFromItems:[_fileItemManager childrenOfItem:item]] objectAtIndex:(NSUInteger) index];
+  return [[self filterHiddenNodesIfNec:item.children] objectAtIndex:(NSUInteger) index];
 }
 
-- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item {
-  return [_fileItemManager isItemDir:item];
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(VRNode *)item {
+  return item.dir;
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn
-           byItem:(id)item {
+           byItem:(VRNode *)item {
 
-  return [_fileItemManager nameOfItem:item];
+  return item.name;
 }
 
 #pragma mark NSOutlineViewDelegate
-- (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(id)item {
+
+- (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(VRNode *)item {
   NSTextFieldCell *cell = [tableColumn dataCellForRow:[_fileOutlineView rowForItem:item]];
-  cell.textColor = [_fileItemManager isItemHidden:item] ? [NSColor grayColor] : [NSColor textColor];
+  cell.textColor = item.hidden ? [NSColor grayColor] : [NSColor textColor];
 
   return cell;
 }
 
 #pragma mark NSView
+
 - (BOOL)mouseDownCanMoveWindow {
   // I dunno why, but if we don't override this, then the window title has the inactive appearance and the drag in the
   // VRWorkspaceView in combination with the vim view does not work correctly. Overriding -isOpaque does not suffice.
@@ -100,6 +121,7 @@
 }
 
 #pragma mark Private
+
 - (void)addViews {
   NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:@"name"];
   tableColumn.dataCell = [[NSTextFieldCell alloc] initTextCell:@""];
@@ -168,10 +190,10 @@
 }
 
 - (void)fileOutlineViewDoubleClicked:(id)sender {
-  id clickedItem = [_fileOutlineView itemAtRow:_fileOutlineView.clickedRow];
+  VRNode *clickedItem = [_fileOutlineView itemAtRow:_fileOutlineView.clickedRow];
 
-  if (![_fileItemManager isItemDir:clickedItem]) {
-    [(VRMainWindowController *) self.window.windowController openFilesWithUrls:@[[_fileItemManager urlForItem:clickedItem]]];
+  if (!clickedItem.dir) {
+    [(VRMainWindowController *) self.window.windowController openFilesWithUrls:@[clickedItem.url]];
     return;
   }
 
@@ -182,28 +204,64 @@
   }
 }
 
-- (NSArray *)filterOutHiddenFromItems:(NSArray *)items {
-  if ([self showHiddenFiles]) {
-    return items;
-  }
-
-  NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:items.count];
-  for (id item in items) {
-    if (![_fileItemManager isItemHidden:item]) {
-      [result addObject:item];
-    }
-  }
-
-  return result;
-}
-
 - (BOOL)showHiddenFiles {
   return _showHiddenMenuItem.state == NSOnState;
 }
 
 - (void)cacheInvalidated:(NSNotification *)notification {
+  [self reload];
+}
+
+- (void)reload {
+  [self reCacheNodes];
   [_fileOutlineView reloadData];
   [_fileOutlineView selectRowIndexes:nil byExtendingSelection:NO];
+}
+
+- (void)buildChildNodesForNode:(VRNode *)parentNode {
+  NSArray *childItems = [_fileItemManager childrenOfItem:parentNode.item];
+  NSMutableArray *children = [[NSMutableArray alloc] initWithCapacity:childItems.count];
+  for (id item in childItems) {
+    [children addObject:[self nodeFromItem:item]];
+  }
+
+  parentNode.children = children;
+}
+
+- (void)reCacheNodes {
+  @synchronized (_fileItemManager) {
+    _rootNode = [[VRNode alloc] init];
+    _rootNode.item = [_fileItemManager itemForUrl:_rootUrl];
+    [self buildChildNodesForNode:_rootNode];
+    DDLogDebug(@"re-caching root node");
+  }
+}
+
+- (VRNode *)nodeFromItem:(id)item {
+  VRNode *node = [[VRNode alloc] init];
+  node.url = [_fileItemManager urlForItem:item];
+  node.dir = [_fileItemManager isItemDir:item];
+  node.hidden = [_fileItemManager isItemHidden:item];
+  node.name = [_fileItemManager nameOfItem:item];
+  node.item = item;
+  node.children = nil;
+
+  return node;
+}
+
+- (NSArray *)filterHiddenNodesIfNec:(NSArray *)nodes {
+  if ([self showHiddenFiles]) {
+    return nodes;
+  }
+
+  NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:nodes.count];
+  for (VRNode *item in nodes) {
+    if (!item.hidden) {
+      [result addObject:item];
+    }
+  }
+
+  return result;
 }
 
 @end

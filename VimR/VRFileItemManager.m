@@ -72,6 +72,10 @@ void streamCallback(
 }
 
 #pragma mark Public
+- (id)itemForUrl:(NSURL *)url {
+  return [_url2CacheRecord[url] fileItem];
+}
+
 - (NSArray *)childrenOfRootUrl:(NSURL *)rootUrl {
   VRCachedFileItemRecord *record = _url2CacheRecord[rootUrl];
   if (!record) {

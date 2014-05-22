@@ -34,6 +34,7 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 * Synchronously caches the direct descendants of item.
 */
 - (NSArray *)childrenOfItem:(id)item;
+- (id)itemForUrl:(NSURL *)url;
 - (BOOL)isItemDir:(id)item;
 - (BOOL)isItemHidden:(id)item;
 - (NSString *)nameOfItem:(id)item;
