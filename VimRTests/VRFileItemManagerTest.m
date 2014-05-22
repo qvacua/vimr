@@ -50,8 +50,8 @@
   sleep(2);
 
   NSArray *resultItems = fileItemManager.fileItemsOfTargetUrl;
-  assertThat(resultItems, hasCountOf(11));
-  assertThat([NSSet setWithArray:resultItems], hasCountOf(11)); // we just check whether all items are unique...
+  assertThat(resultItems, hasCountOf(12));
+  assertThat([NSSet setWithArray:resultItems], hasCountOf(12)); // we just check whether all items are unique...
 }
 
 - (void)testTwiceSetTargetUrl {
@@ -67,8 +67,8 @@
   sleep(2);
 
   NSArray *resultItems = fileItemManager.fileItemsOfTargetUrl;
-  assertThat(resultItems, hasCountOf(11));
-  assertThat([NSSet setWithArray:resultItems], hasCountOf(11)); // we just check whether all items are unique...
+  assertThat(resultItems, hasCountOf(12));
+  assertThat([NSSet setWithArray:resultItems], hasCountOf(12)); // we just check whether all items are unique...
 }
 
 - (void)testMultipleTargetUrls {
@@ -80,7 +80,7 @@
 
   [fileItemManager setTargetUrl:level2b];
   sleep(1);
-  assertThat(fileItemManager.fileItemsOfTargetUrl, hasCountOf(2));
+  assertThat(fileItemManager.fileItemsOfTargetUrl, hasCountOf(3));
 
   [fileItemManager setTargetUrl:level2a];
   sleep(1);

@@ -56,8 +56,6 @@
   RETURN_NIL_WHEN_NOT_SELF
 
   _rootUrl = rootUrl;
-  _rootNode = [[VRNode alloc] init];
-
   [self addViews];
 
   return self;
@@ -232,6 +230,7 @@
 
 - (void)reCacheNodes {
   @synchronized (_fileItemManager) {
+    _rootNode = [[VRNode alloc] init];
     _rootNode.item = [_fileItemManager itemForUrl:_rootUrl];
     [self buildChildNodesForNode:_rootNode];
     DDLogDebug(@"re-caching root node");
