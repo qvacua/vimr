@@ -16,8 +16,11 @@
 @property NSString *path;
 @property NSString *displayName;
 
+#pragma mark Public
 - (instancetype)initWithPath:(NSString *)path;
 - (void)computeScoreForCandidate:(NSString *)candidate;
+
+#pragma mark NSObject
 - (NSString *)description;
 
 @end

@@ -19,15 +19,11 @@
 NSString *const qVimArgFileNamesToOpen = @"filenames";
 NSString *const qVimArgOpenFilesLayout = @"layout";
 
-@interface VRWorkspaceController ()
 
-@property (readonly) NSMutableArray *mutableWorkspaces;
-@property (readonly) NSMutableDictionary *pid2Workspace;
-
-@end
-
-
-@implementation VRWorkspaceController
+@implementation VRWorkspaceController {
+  NSMutableArray *_mutableWorkspaces;
+  NSMutableDictionary *_pid2Workspace;
+}
 
 @autowire(fileItemManager)
 @autowire(openQuicklyWindowController)
@@ -37,7 +33,7 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 
 #pragma mark Properties
 - (NSArray *)workspaces {
-  return self.mutableWorkspaces;
+  return _mutableWorkspaces;
 }
 
 #pragma mark Public
@@ -57,6 +53,16 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
   [self.vimManager terminateAllVimProcesses];
 }
 
+- (BOOL)hasDirtyBuffers {
+  for (VRWorkspace *workspace in _mutableWorkspaces) {
+    if (workspace.hasModifiedBuffer) {
+      return YES;
+    }
+  }
+
+  return NO;
+}
+
 #pragma mark NSObject
 - (id)init {
   self = [super init];
@@ -70,17 +76,16 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 
 #pragma mark MMVimManagerDelegateProtocol
 - (void)manager:(MMVimManager *)manager vimControllerCreated:(MMVimController *)vimController {
-  VRWorkspace *workspace = self.pid2Workspace[@(vimController.pid)];
-  [self.mutableWorkspaces addObject:workspace];
+  VRWorkspace *workspace = _pid2Workspace[@(vimController.pid)];
 
   [workspace setUpWithVimController:vimController];
 }
 
 - (void)manager:(MMVimManager *)manager vimControllerRemovedWithControllerId:(unsigned int)controllerId pid:(int)pid {
-  VRWorkspace *workspace = self.pid2Workspace[@(pid)];
+  VRWorkspace *workspace = _pid2Workspace[@(pid)];
 
-  [self.pid2Workspace removeObjectForKey:@(pid)];
-  [self.mutableWorkspaces removeObject:workspace];
+  [_pid2Workspace removeObjectForKey:@(pid)];
+  [_mutableWorkspaces removeObject:workspace];
 
   [workspace cleanUpAndClose];
 }
@@ -115,7 +120,8 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 
   [self.fileItemManager registerUrl:workingDir];
 
-  self.pid2Workspace[@(pid)] = workspace;
+  [_mutableWorkspaces addObject:workspace];
+  _pid2Workspace[@(pid)] = workspace;
 }
 
 @end

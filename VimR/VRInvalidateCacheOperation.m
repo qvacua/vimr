@@ -7,7 +7,6 @@
  * See LICENSE
  */
 
-#import <CocoaLumberjack/DDLog.h>
 #import "VRInvalidateCacheOperation.h"
 #import "VRFileItemManager.h"
 #import "VRFileItem.h"
@@ -40,7 +39,6 @@ static VRFileItem *find_file_item(NSURL *url, VRFileItem *parent) {
 
 
 @implementation VRInvalidateCacheOperation {
-  __weak VRFileItemManager *_fileItemManager;
   __weak NSNotificationCenter *_notificationCenter;
 
   NSArray *_parentItems;
@@ -53,7 +51,6 @@ static VRFileItem *find_file_item(NSURL *url, VRFileItem *parent) {
   self = [super init];
   RETURN_NIL_WHEN_NOT_SELF
 
-  _fileItemManager = dict[qOperationFileItemManagerKey];
   _notificationCenter = dict[qOperationNotificationCenterKey];
   _parentItems = dict[qInvalidateCacheOperationParentItemsKey];
 
@@ -66,18 +63,24 @@ static VRFileItem *find_file_item(NSURL *url, VRFileItem *parent) {
 - (void)main {
   @autoreleasepool {
     for (VRFileItem *parentItem in _parentItems) {
-      VRFileItem *matchingItem = find_file_item(_url, parentItem);
-      if (matchingItem) {
-        DDLogDebug(@"Invalidating cache for %@ of the parent %@", matchingItem, parentItem.url);
+      [self findInParentItemAndInvalidate:parentItem];
+    }
+  }
+}
 
-        matchingItem.shouldCacheChildren = YES;
+- (void)findInParentItemAndInvalidate:(VRFileItem *)parentItem {
+  @synchronized (parentItem) {
+    VRFileItem *matchingItem = find_file_item(_url, parentItem);
+    if (matchingItem) {
+      DDLogDebug(@"Invalidating cache for %@ of the parent %@", matchingItem, parentItem.url);
 
-        dispatch_to_main_thread(^{
-          [_notificationCenter postNotificationName:qInvalidatedCacheEvent object:matchingItem];
-        });
-      } else {
-        DDLogDebug(@"%@ in %@ not yet cached, noop", _url, parentItem.url);
-      }
+      matchingItem.shouldCacheChildren = YES;
+
+      dispatch_to_main_thread(^{
+        [_notificationCenter postNotificationName:qInvalidatedCacheEvent object:matchingItem];
+      });
+    } else {
+      DDLogDebug(@"%@ in %@ not yet cached, noop", _url, parentItem.url);
     }
   }
 }

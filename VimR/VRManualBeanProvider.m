@@ -15,6 +15,7 @@
 @interface VRManualBeanProvider : NSObject <TBManualBeanProvider>
 @end
 
+
 @implementation VRManualBeanProvider
 
 // TODO: why did I use a static method here? Use an instance method (TBD in TBCacao)

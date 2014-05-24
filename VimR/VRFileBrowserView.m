@@ -41,6 +41,7 @@
   NSScrollView *_scrollView;
   NSPopUpButton *_settingsButton;
   NSMenuItem *_showHiddenMenuItem;
+  NSOperationQueue *_invalidateCacheQueue;
   VRNode *_rootNode;
 }
 
@@ -56,6 +57,9 @@
   RETURN_NIL_WHEN_NOT_SELF
 
   _rootUrl = rootUrl;
+  _invalidateCacheQueue = [[NSOperationQueue alloc] init];
+  _invalidateCacheQueue.maxConcurrentOperationCount = 1;
+
   [self addViews];
 
   return self;
@@ -209,7 +213,18 @@
 }
 
 - (void)cacheInvalidated:(NSNotification *)notification {
-  [self reload];
+  [_invalidateCacheQueue addOperationWithBlock:^{
+    // We wait here till all file item operations are finished, because, for instance, the children items of the root
+    // can be deleted by -reload and Open Quickly file item operations are trying to use them.
+    [_fileItemManager waitTillFileItemOperationsFinished];
+    DDLogDebug(@"finished wating till file item operations are done");
+
+    dispatch_to_main_thread(^{
+      @synchronized (_fileItemManager) {
+        [self reload];
+      }
+    });
+  }];
 }
 
 - (void)reload {
@@ -229,12 +244,10 @@
 }
 
 - (void)reCacheNodes {
-  @synchronized (_fileItemManager) {
-    _rootNode = [[VRNode alloc] init];
-    _rootNode.item = [_fileItemManager itemForUrl:_rootUrl];
-    [self buildChildNodesForNode:_rootNode];
-    DDLogDebug(@"re-caching root node");
-  }
+  _rootNode = [[VRNode alloc] init];
+  _rootNode.item = [_fileItemManager itemForUrl:_rootUrl];
+  [self buildChildNodesForNode:_rootNode];
+  DDLogDebug(@"re-caching root node");
 }
 
 - (VRNode *)nodeFromItem:(id)item {

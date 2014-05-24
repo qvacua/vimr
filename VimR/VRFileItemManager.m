@@ -7,7 +7,6 @@
  * See LICENSE
  */
 
-#import <CocoaLumberjack/DDFileLogger.h>
 #import "VRFileItemManager.h"
 #import "VRUtils.h"
 #import "VRFileItem.h"
@@ -76,16 +75,6 @@ void streamCallback(
   return [_url2CacheRecord[url] fileItem];
 }
 
-- (NSArray *)childrenOfRootUrl:(NSURL *)rootUrl {
-  VRCachedFileItemRecord *record = _url2CacheRecord[rootUrl];
-  if (!record) {
-    DDLogWarn(@"no record found for %@", rootUrl);
-    return nil;
-  }
-
-  return [self childrenOfItem:record.fileItem];
-}
-
 - (NSArray *)childrenOfItem:(VRFileItem *)item {
   if (!item.shouldCacheChildren) {
     return item.children;
@@ -135,14 +124,14 @@ void streamCallback(
       return;
     }
 
-    // NOTE: We may optimize (or not) the caching behavior here: When the URL A to register is a subdir of an already
-    // registered URL B, we build the hierarchy up to the requested URL A. However, then, we would have to scan children
-    // up to A, which could be costly to do it sync; async building complicates things too much. For time being, we
-    // ignore B and use a separate file item hierarchy for B.
-    // If we should do that, we would have only one parent when invalidating the cache. For now, we could have multiple
-    // parent URLs and therefore file items for one URL reported by FSEventStream.
+        // NOTE: We may optimize (or not) the caching behavior here: When the URL A to register is a subdir of an already
+        // registered URL B, we build the hierarchy up to the requested URL A. However, then, we would have to scan children
+        // up to A, which could be costly to do it sync; async building complicates things too much. For time being, we
+        // ignore B and use a separate file item hierarchy for B.
+        // If we should do that, we would have only one parent when invalidating the cache. For now, we could have multiple
+        // parent URLs and therefore file items for one URL reported by FSEventStream.
 
-    DDLogDebug(@"Registering %@ for caching and monitoring", url);
+        DDLogDebug(@"Registering %@ for caching and monitoring", url);
     _url2CacheRecord[url] = [[VRCachedFileItemRecord alloc] initWithFileItem:[[VRFileItem alloc] initWithUrl:url]];
 
     [self stop];
@@ -194,9 +183,10 @@ void streamCallback(
                                              dict:@{
                                                  qFileItemOperationRootUrlKey : url,
                                                  qFileItemOperationParentItemKey : targetItem,
+                                                 qFileItemOperationFileItemsKey : _mutableFileItemsForTargetUrl,
+                                                 qOperationFileItemManagerKey : self,
                                                  qFileItemOperationOperationQueueKey : _fileItemOperationQueue,
                                                  qOperationNotificationCenterKey : _notificationCenter,
-                                                 qFileItemOperationFileItemsKey : _mutableFileItemsForTargetUrl,
                                                  qOperationFileManagerKey : _fileManager,
                                              }]
     ];
@@ -239,6 +229,10 @@ void streamCallback(
   _fileItemOperationQueue.suspended = NO;
 }
 
+- (void)waitTillFileItemOperationsFinished {
+  [_fileItemOperationQueue waitUntilAllOperationsAreFinished];
+}
+
 #pragma mark NSObject
 - (id)init {
   self = [super init];
@@ -275,7 +269,6 @@ void streamCallback(
       // This however may be (or is) an overkill. For time being we issue only deep scan.
       [_invalidateCacheOperationQueue addOperation:
           [[VRInvalidateCacheOperation alloc] initWithUrl:url dict:@{
-              qOperationFileItemManagerKey : self,
               qOperationNotificationCenterKey : _notificationCenter,
               qInvalidateCacheOperationParentItemsKey : [self parentItemsForUrl:url],
           }]
@@ -391,4 +384,8 @@ void streamCallback(
   }
 }
 
+- (void)postNewFileItemsAddedNotification:(id)sender {
+  DDLogDebug(@"Posting new file items added notification");
+  [_notificationCenter postNotificationName:qChunkOfNewFileItemsAddedEvent object:nil];
+}
 @end

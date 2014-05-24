@@ -9,7 +9,6 @@
 
 #import <TBCacao/TBCacao.h>
 #import <MacVimFramework/MacVimFramework.h>
-#import <CocoaLumberjack/DDLog.h>
 #import "VRAppDelegate.h"
 #import "VRWorkspaceController.h"
 #import "VRMainWindowController.h"
@@ -25,13 +24,9 @@
 static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
 
-@interface VRAppDelegate ()
-
-@property VRMainWindowController *mainWindowController;
-
-@end
-
-@implementation VRAppDelegate
+@implementation VRAppDelegate {
+  VRMainWindowController *_mainWindowController;
+}
 
 @manualwire(workspace)
 @manualwire(workspaceController)
@@ -40,7 +35,7 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
 #pragma mark IBActions
 - (IBAction)newDocument:(id)sender {
-  [self applicationOpenUntitledFile:self.application];
+  [self applicationOpenUntitledFile:_application];
 }
 
 - (IBAction)newTab:(id)sender {
@@ -63,7 +58,7 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
   if (![keyWindow isKindOfClass:[VRMainWindow class]]) {
     return;
   }
-  
+
   NSArray *urls = [self urlsFromOpenPanel];
   VRMainWindowController *controller = (VRMainWindowController *) keyWindow.windowController;
   [controller.workspace openFilesWithUrls:urls];
@@ -74,7 +69,7 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 }
 
 - (IBAction)debug3Action:(id)sender {
-  [self application:self.application openFiles:@[
+  [self application:_application openFiles:@[
       [NSURL fileURLWithPath:@"/Users/hat/Projects/vimr/Podfile"]
   ]];
 }
@@ -91,7 +86,7 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
 #pragma mark NSApplicationDelegate
 - (BOOL)applicationOpenUntitledFile:(NSApplication *)theApplication {
-  [self.workspaceController newWorkspace];
+  [_workspaceController newWorkspace];
   return YES;
 }
 
@@ -100,29 +95,24 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
   return YES;
 }
 
-- (void)application:(NSApplication *)sender openFiles:(NSArray *)filenames {
+- (void)application:(NSApplication *)sender openFiles:(NSArray *)fileNames {
   /**
-  * filenames consists of
+  * fileNames consists of
   * - NSURLs when opening files via NSOpenPanel
   * - NSStrings when opening files via drag and drop on the VimR icon
   */
 
-  if ([filenames[0] isKindOfClass:[NSURL class]]) {
-    [self.workspaceController openFilesInNewWorkspace:filenames];
+  if ([fileNames[0] isKindOfClass:[NSURL class]]) {
+    [self.workspaceController openFilesInNewWorkspace:fileNames];
     return;
   }
 
-  NSMutableArray *urls = [[NSMutableArray alloc] initWithCapacity:filenames.count];
-  for (NSString *filename in filenames) {
-    [urls addObject:[[NSURL alloc] initFileURLWithPath:filename]];
-  }
-
-  [self.workspaceController openFilesInNewWorkspace:urls];
+  [self.workspaceController openFilesInNewWorkspace:urls_from_paths(fileNames)];
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
   // this cannot be done with TBCacao
-  self.application = aNotification.object;
+  _application = aNotification.object;
 
 #ifdef DEBUG
   _debug.hidden = NO;
@@ -130,36 +120,22 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
-  NSApplicationTerminateReply reply = NSTerminateNow;
-  BOOL dirtyBuffersExist = NO;
-
-  for (VRWorkspace *workspace in self.workspaceController.workspaces) {
-    if (workspace.hasModifiedBuffer) {
-      dirtyBuffersExist = YES;
-      break;
-    }
+  if (![_workspaceController hasDirtyBuffers]) {
+    return NSTerminateNow;
   }
 
-  if (dirtyBuffersExist) {
-    NSAlert *alert = [[NSAlert alloc] init];
-    alert.alertStyle = NSWarningAlertStyle;
-    [alert addButtonWithTitle:@"Quit"];
-    [alert addButtonWithTitle:@"Cancel"];
-    alert.messageText = @"Quit without saving?";
-    alert.informativeText = @"There are modified buffers, if you quit now all changes will be lost. Quit anyway?";
-
-    if (alert.runModal != NSAlertFirstButtonReturn) {
-      reply = NSTerminateCancel;
-    }
+  NSAlert *alert = [self warnBeforeQuitAlert];
+  if (alert.runModal != NSAlertFirstButtonReturn) {
+    return NSTerminateCancel;
   }
 
-  return reply;
+  return NSTerminateNow;
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification {
-  [self.workspaceController cleanUp];
-  [self.fileItemManager cleanUp];
-  [self.openQuicklyWindowController cleanUp];
+  [_workspaceController cleanUp];
+  [_fileItemManager cleanUp];
+  [_openQuicklyWindowController cleanUp];
 }
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender {
@@ -178,6 +154,17 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
   }
 
   return openPanel.URLs;
+}
+
+- (NSAlert *)warnBeforeQuitAlert {
+  NSAlert *alert = [[NSAlert alloc] init];
+  alert.alertStyle = NSWarningAlertStyle;
+  [alert addButtonWithTitle:@"Quit"];
+  [alert addButtonWithTitle:@"Cancel"];
+  alert.messageText = @"Quit without saving?";
+  alert.informativeText = @"There are modified buffers, if you quit now all changes will be lost. Quit anyway?";
+
+  return alert;
 }
 
 @end

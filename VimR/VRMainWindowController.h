@@ -20,10 +20,10 @@
     MMVimControllerDelegate>
 
 #pragma mark Properties
-@property (weak) VRWorkspace *workspace;
+@property (nonatomic, weak) VRWorkspace *workspace;
 
-@property (weak) MMVimController *vimController;
-@property (weak) MMVimView *vimView;
+@property (nonatomic, weak) MMVimController *vimController;
+@property (nonatomic, weak) MMVimView *vimView;
 
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect;

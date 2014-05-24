@@ -21,12 +21,12 @@
 */
 @interface VRWorkspaceView : NSView
 
-@property VRFileBrowserView *fileBrowserView;
-@property MMVimView *vimView;
-@property BOOL fileBrowserOnRight;
-@property CGFloat fileBrowserWidth;
-@property (readonly) CGFloat fileBrowserAndDividerWidth;
-@property (readonly) CGFloat defaultFileBrowserAndDividerWidth;
-@property NSUInteger dragIncrement;
+@property (nonatomic) VRFileBrowserView *fileBrowserView;
+@property (nonatomic) MMVimView *vimView;
+@property (nonatomic) BOOL fileBrowserOnRight;
+@property (nonatomic) CGFloat fileBrowserWidth;
+@property (nonatomic, readonly) CGFloat fileBrowserAndDividerWidth;
+@property (nonatomic, readonly) CGFloat defaultFileBrowserAndDividerWidth;
+@property (nonatomic) NSUInteger dragIncrement;
 
 @end

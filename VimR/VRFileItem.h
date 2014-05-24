@@ -18,7 +18,7 @@
 @property (nonatomic, readonly) NSMutableArray *children;
 
 /**
-* If YES, direct descendants are not in the children array yet, so they should be scanned.
+* If YES, direct descendants should be (re-)scanned.
 * IF NO, direct descendants are there, but it is possible, that they still don't have their descendants yet.
 */
 @property (nonatomic) BOOL shouldCacheChildren;

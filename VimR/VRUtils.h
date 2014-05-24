@@ -10,7 +10,6 @@
 #define RETURN_NIL_WHEN_NOT_SELF if (!self) { return nil; }
 #endif
 
-OBJC_EXTERN inline double measure_time(dispatch_block_t block);
 OBJC_EXTERN inline void dispatch_to_main_thread(dispatch_block_t block);
 OBJC_EXTERN inline void dispatch_to_global_queue(dispatch_block_t block);
 OBJC_EXTERN inline void dispatch_loop(size_t count, void (^block)(size_t));
@@ -18,3 +17,4 @@ OBJC_EXTERN inline NSURL *common_parent_url(NSArray *fileUrls);
 OBJC_EXTERN inline NSValue *vsize(CGSize size);
 OBJC_EXTERN inline NSValue *vrect(CGRect rect);
 OBJC_EXTERN inline NSValue *vpoint(CGPoint point);
+OBJC_EXTERN inline NSArray *urls_from_paths(NSArray *);

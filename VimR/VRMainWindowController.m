@@ -9,7 +9,6 @@
 
 #import <PSMTabBarControl/PSMTabBarControl.h>
 #import <MacVimFramework/MacVimFramework.h>
-#import <CocoaLumberjack/DDLog.h>
 #import "VRMainWindowController.h"
 #import "VRLog.h"
 #import "VRAlert.h"
@@ -190,8 +189,10 @@
 }
 
 - (IBAction)openQuickly:(id)sender {
-  [_workspace.fileItemManager setTargetUrl:self.workingDirectory];
-  [_workspace.openQuicklyWindowController showForWindowController:self];
+  @synchronized (_workspace.fileItemManager) {
+    [_workspace.fileItemManager setTargetUrl:self.workingDirectory];
+    [_workspace.openQuicklyWindowController showForWindowController:self];
+  }
 }
 
 - (IBAction)toggleFileBrowser:(id)sender {

@@ -34,8 +34,8 @@
 
   NSRange range = [self rowsInRect:clipRect];
   [[NSColor alternateSelectedControlColor] set];
-  [self.selectedRowIndexes enumerateRangesInRange:range options:0 usingBlock:^(NSRange range, BOOL *stop) {
-    for (NSUInteger row = range.location; row < NSMaxRange(range); ++row) {
+  [self.selectedRowIndexes enumerateRangesInRange:range options:0 usingBlock:^(NSRange curRange, BOOL *stop) {
+    for (NSUInteger row = curRange.location; row < NSMaxRange(curRange); ++row) {
       NSRect rect = [self rectOfRow:row];
       rect.size.height -= 1;
       NSRectFill(rect);

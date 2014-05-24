@@ -19,14 +19,14 @@
 
 @interface VRWorkspace : NSObject
 
-@property VRWorkspaceController *workspaceController;
-@property VRFileItemManager *fileItemManager;
-@property NSUserDefaults *userDefaults;
-@property NSNotificationCenter *notificationCenter;
+@property (nonatomic) VRWorkspaceController *workspaceController;
+@property (nonatomic) VRFileItemManager *fileItemManager;
+@property (nonatomic) NSUserDefaults *userDefaults;
+@property (nonatomic) NSNotificationCenter *notificationCenter;
 
-@property VROpenQuicklyWindowController *openQuicklyWindowController;
-@property VRMainWindowController *mainWindowController;
-@property NSURL *workingDirectory;
+@property (nonatomic) VROpenQuicklyWindowController *openQuicklyWindowController;
+@property (nonatomic) VRMainWindowController *mainWindowController;
+@property (nonatomic) NSURL *workingDirectory;
 
 #pragma mark Public
 - (void)openFilesWithUrls:(NSArray *)url;
