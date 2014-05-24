@@ -18,3 +18,4 @@ OBJC_EXTERN inline NSURL *common_parent_url(NSArray *fileUrls);
 OBJC_EXTERN inline NSValue *vsize(CGSize size);
 OBJC_EXTERN inline NSValue *vrect(CGRect rect);
 OBJC_EXTERN inline NSValue *vpoint(CGPoint point);
+OBJC_EXTERN inline NSArray *urls_from_paths(NSArray *);

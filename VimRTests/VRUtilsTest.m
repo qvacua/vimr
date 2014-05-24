@@ -28,4 +28,16 @@
   assertThat(parent.path, is(@"/a/b/c"));
 }
 
+- (void)testUrlsFromPaths {
+  NSArray *paths = @[
+      @"/System/Library",
+      @"/Library",
+  ];
+
+  assertThat(urls_from_paths(paths), consistsOfInAnyOrder(
+      [NSURL fileURLWithPath:@"/System/Library"],
+      [NSURL fileURLWithPath:@"/Library"]
+  ));
+}
+
 @end

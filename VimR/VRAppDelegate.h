@@ -17,14 +17,14 @@
 
 @interface VRAppDelegate : NSObject <NSApplicationDelegate>
 
-@property (weak) NSApplication *application;
-@property (weak) VRWorkspaceController *workspaceController;
-@property (weak) NSWorkspace *workspace;
-@property (weak) VRFileItemManager *fileItemManager;
-@property (weak) VROpenQuicklyWindowController *openQuicklyWindowController;
+@property (nonatomic, weak) NSApplication *application;
+@property (nonatomic, weak) VRWorkspaceController *workspaceController;
+@property (nonatomic, weak) NSWorkspace *workspace;
+@property (nonatomic, weak) VRFileItemManager *fileItemManager;
+@property (nonatomic, weak) VROpenQuicklyWindowController *openQuicklyWindowController;
 
-@property (weak) IBOutlet NSWindow *window;
-@property (weak) IBOutlet NSMenuItem *debug;
+@property (nonatomic, weak) IBOutlet NSWindow *window;
+@property (nonatomic, weak) IBOutlet NSMenuItem *debug;
 
 #pragma mark IBActions
 - (IBAction)newDocument:(id)sender;
@@ -39,7 +39,7 @@
 #pragma mark NSApplicationDelegate
 - (BOOL)applicationOpenUntitledFile:(NSApplication *)theApplication;
 - (BOOL)application:(NSApplication *)sender openFile:(NSString *)filename;
-- (void)application:(NSApplication *)sender openFiles:(NSArray *)filenames;
+- (void)application:(NSApplication *)sender openFiles:(NSArray *)fileNames;
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification;
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender;
 

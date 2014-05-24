@@ -25,6 +25,9 @@
 #import "VRLog.h"
 
 
+#define consistsOf(...) contains(__VA_ARGS__, nil)
+#define consistsOfInAnyOrder(...) containsInAnyOrder(__VA_ARGS__, nil)
+
 #define isYes is(@YES)
 #define isNo is(@NO)
 

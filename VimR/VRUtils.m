@@ -68,3 +68,13 @@ NSValue *vrect(CGRect rect) {
 NSValue *vpoint(CGPoint point) {
   return [NSValue valueWithPoint:point];
 }
+
+NSArray *urls_from_paths(NSArray *paths) {
+  NSMutableArray *urls = [[NSMutableArray alloc] initWithCapacity:paths.count];
+  for (NSString *filename in paths) {
+    [urls addObject:[[NSURL alloc] initFileURLWithPath:filename]];
+  }
+
+  return urls;
+}
+
