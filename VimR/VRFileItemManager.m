@@ -264,7 +264,6 @@ void streamCallback(
       // This however may be (or is) an overkill. For time being we issue only deep scan.
       [_invalidateCacheOperationQueue addOperation:
           [[VRInvalidateCacheOperation alloc] initWithUrl:url dict:@{
-              qOperationFileItemManagerKey : self,
               qOperationNotificationCenterKey : _notificationCenter,
               qInvalidateCacheOperationParentItemsKey : [self parentItemsForUrl:url],
           }]

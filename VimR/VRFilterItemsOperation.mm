@@ -25,23 +25,27 @@ NSString *const qFilterItemsOperationItemTableViewKey = @"file-item-table-view";
 const NSUInteger qMaximumNumberOfFilterResult = 250;
 
 
-static const int qArrayChunkSize = 5000;
+static const int qArrayChunkSize = 10000;
+
+static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult(VRScoredPath *p1, VRScoredPath *p2) {
+  return (NSComparisonResult) (p1.score <= p2.score);
+};
 
 
-static NSString *disambiguated_display_name(size_t level, NSURL *url) {
+static inline NSString *disambiguated_display_name(size_t level, NSString *path) {
   if (level == 0) {
-    return url.lastPathComponent;
+    return path.lastPathComponent;
   }
 
-  NSArray *disambiguationPathComponents = [url.pathComponents.reverseObjectEnumerator.allObjects
+  NSArray *disambiguationPathComponents = [path.pathComponents.reverseObjectEnumerator.allObjects
       subarrayWithRange:NSMakeRange(1, level)
   ];
 
   NSString *disambiguation = [disambiguationPathComponents componentsJoinedByString:@"/"];
-  return SF(@"%@  —  %@", url.lastPathComponent, disambiguation);
+  return SF(@"%@  —  %@", path.lastPathComponent, disambiguation);
 }
 
-static NSRange capped_range_for_filtered_items(NSArray *result) {
+static inline NSRange capped_range_for_filtered_items(NSArray *result) {
   if (result.isEmpty) {
     return NSMakeRange(0, 0);
   }
@@ -55,16 +59,11 @@ static NSRange capped_range_for_filtered_items(NSArray *result) {
   return range;
 }
 
-static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult(VRScoredPath *p1, VRScoredPath *p2) {
-  return (NSComparisonResult) (p1.score <= p2.score);
-};
-
 
 #define CANCEL_WHEN_REQUESTED  if (self.isCancelled) { \
                                  [_fileItemManager resumeFurtherCacheOperations]; \
                                  return; \
                                }
-
 
 @implementation VRFilterItemsOperation {
   __weak VRFileItemManager *_fileItemManager;
@@ -88,44 +87,38 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
 
 #pragma mark NSOperation
 - (void)main {
-  @autoreleasepool {
-    if (self.isCancelled) {
-      return;
-    }
+  if (self.isCancelled) {
+    return;
+  }
 
-    if (_searchStr.length == 0) {
+  if (_searchStr.length == 0) {
+    dispatch_to_main_thread(^{
       @synchronized (_filteredItems) {
         [_filteredItems removeAllObjects];
+        [_fileItemTableView reloadData];
       }
+    });
 
-      dispatch_to_main_thread(^{
-        @synchronized (_filteredItems) {
-          [_fileItemTableView reloadData];
-        }
-      });
+    return;
+  }
 
-      return;
-    }
-
+  @autoreleasepool {
     [_fileItemManager suspendFurtherCacheOperations];
 
-    NSArray *fileItemsOfTargetUrl = _fileItemManager.fileItemsOfTargetUrl;
+    NSArray *fileItems = _fileItemManager.fileItemsOfTargetUrl;
 
-    NSMutableArray *result;
-    std::vector<std::pair<size_t, size_t>> chunkedIndexes;
-    @synchronized (fileItemsOfTargetUrl) {
-      result = [[NSMutableArray alloc] initWithCapacity:fileItemsOfTargetUrl.count];
-      chunkedIndexes = chunked_indexes(fileItemsOfTargetUrl.count, qArrayChunkSize);
+    @synchronized (fileItems) {
+      NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:fileItems.count];
+      std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(fileItems.count, qArrayChunkSize);
 
       for (auto &pair : chunkedIndexes) {
-        CANCEL_WHEN_REQUESTED
-
         NSUInteger beginIndex = pair.first;
         NSUInteger endIndex = pair.second;
         NSUInteger count = endIndex - beginIndex + 1;
 
+        CANCEL_WHEN_REQUESTED
         for (size_t i = beginIndex; i <= endIndex; i++) {
-          [result addObject:[[VRScoredPath alloc] initWithPath:fileItemsOfTargetUrl[i]]];
+          [result addObject:[[VRScoredPath alloc] initWithPath:fileItems[i]]];
         }
 
         CANCEL_WHEN_REQUESTED
@@ -146,25 +139,22 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
         std::vector<size_t> levels = disambiguate(paths);
         dispatch_loop(cappedResult.count, ^(size_t i) {
           VRScoredPath *scoredPath = cappedResult[i];
-          NSURL *url = [NSURL fileURLWithPath:scoredPath.path];
-
-          scoredPath.displayName = disambiguated_display_name(levels[i], url);
+          scoredPath.displayName = disambiguated_display_name(levels[i], scoredPath.path);
         });
-
-        CANCEL_WHEN_REQUESTED
-        @synchronized (_filteredItems) {
-          [_filteredItems removeAllObjects];
-          [_filteredItems addObjectsFromArray:cappedResult];
-        }
 
         CANCEL_WHEN_REQUESTED
         dispatch_to_main_thread(^{
           @synchronized (_filteredItems) {
+            [_filteredItems removeAllObjects];
+            [_filteredItems addObjectsFromArray:cappedResult];
+
             [_fileItemTableView reloadData];
           }
         });
       }
     }
+
+    [_fileItemManager resumeFurtherCacheOperations];
   }
 }
 
