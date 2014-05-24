@@ -7,7 +7,6 @@
  * See LICENSE
  */
 
-#import <CocoaLumberjack/DDFileLogger.h>
 #import "VRFileItemManager.h"
 #import "VRUtils.h"
 #import "VRFileItem.h"
@@ -74,16 +73,6 @@ void streamCallback(
 #pragma mark Public
 - (id)itemForUrl:(NSURL *)url {
   return [_url2CacheRecord[url] fileItem];
-}
-
-- (NSArray *)childrenOfRootUrl:(NSURL *)rootUrl {
-  VRCachedFileItemRecord *record = _url2CacheRecord[rootUrl];
-  if (!record) {
-    DDLogWarn(@"no record found for %@", rootUrl);
-    return nil;
-  }
-
-  return [self childrenOfItem:record.fileItem];
 }
 
 - (NSArray *)childrenOfItem:(VRFileItem *)item {

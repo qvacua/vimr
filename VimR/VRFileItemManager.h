@@ -27,10 +27,6 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 
 #pragma mark Public
 /**
-* Synchronously caches the direct descendants of url
-*/
-- (NSArray *)childrenOfRootUrl:(NSURL *)rootUrl;
-/**
 * Synchronously caches the direct descendants of item.
 */
 - (NSArray *)childrenOfItem:(id)item;
