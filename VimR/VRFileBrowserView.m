@@ -50,6 +50,7 @@
 - (void)setRootUrl:(NSURL *)rootUrl {
   _rootUrl = rootUrl;
   [self reload];
+//  [self cacheInvalidated:nil];
 }
 
 - (instancetype)initWithRootUrl:(NSURL *)rootUrl {
