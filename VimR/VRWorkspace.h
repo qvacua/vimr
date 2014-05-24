@@ -29,14 +29,15 @@
 @property (nonatomic) NSURL *workingDirectory;
 
 #pragma mark Public
+- (void)updateWorkingDirectory:(NSURL *)commonParent;
 - (void)openFilesWithUrls:(NSArray *)url;
 - (BOOL)hasModifiedBuffer;
 - (void)setUpWithVimController:(MMVimController *)vimController;
 - (void)setUpInitialBuffers;
 - (void)cleanUpAndClose;
+- (void)updateBuffers;
 
 #pragma mark NSObject
 - (id)init;
 
-- (void)updateBuffers;
 @end

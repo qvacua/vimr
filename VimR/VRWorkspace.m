@@ -30,6 +30,13 @@ static CGPoint qDefaultOrigin = {242, 364};
 }
 
 #pragma mark Public
+- (void)updateWorkingDirectory:(NSURL *)commonParent {
+  [_fileItemManager unregisterUrl:_workingDirectory];
+  _workingDirectory = commonParent;
+  [_fileItemManager registerUrl:_workingDirectory];
+  [_mainWindowController updateWorkingDirectory];
+}
+
 - (void)openFilesWithUrls:(NSArray *)urls {
   [_mainWindowController openFilesWithUrls:urls];
 }
@@ -77,10 +84,7 @@ static CGPoint qDefaultOrigin = {242, 364};
     return;
   }
 
-  [_fileItemManager unregisterUrl:_workingDirectory];
-  _workingDirectory = commonParent;
-  [_fileItemManager registerUrl:_workingDirectory];
-  [_mainWindowController updateWorkingDirectory];
+  [self updateWorkingDirectory:commonParent];
   DDLogDebug(@"Registered new workspace: %@", _workingDirectory);
 }
 
