@@ -75,19 +75,16 @@ static const int qArrayChunkSize = 1000;
 
     @synchronized (_item) {
       if (_mode == VRFileItemOperationTraverseMode) {
-//        DDLogDebug(@"traversing %@", _item);
         [self traverseFileItemChildHierarchy];
         return;
       }
 
       if (_mode == VRFileItemOperationCacheMode) {
-//        DDLogDebug(@"caching %@", _item);
         [self cacheAddToFileItems];
         return;
       }
 
       if (_mode == VRFileItemOperationShallowCacheMode) {
-//        DDLogDebug(@"shallow caching %@", _item);
         [self cacheDirectDescendants];
         return;
       }

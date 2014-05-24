@@ -8,7 +8,6 @@
  */
 
 #import <TBCacao/TBCacao.h>
-#import <CocoaLumberjack/DDLog.h>
 #import "VROpenQuicklyWindowController.h"
 #import "VROpenQuicklyWindow.h"
 #import "VRUtils.h"
@@ -33,7 +32,7 @@ int qOpenQuicklyWindowWidth = 400;
 @property (weak) NSProgressIndicator *progressIndicator;
 @property (weak) NSTextField *itemCountTextField;
 @property (weak) NSTextField *workspaceTextField;
-@property (readonly) NSOperationQueue *operationQueue;
+@property (readonly) NSOperationQueue *filterOperationQueue;
 @property (readonly) NSMutableArray *filteredFileItems;
 @property (readonly) NSOperationQueue *uiUpdateOperationQueue;
 
@@ -63,12 +62,12 @@ int qOpenQuicklyWindowWidth = 400;
 
 - (void)cleanUp {
   @synchronized (self) {
-    [_operationQueue cancelAllOperations];
+    [_filterOperationQueue cancelAllOperations];
   }
 }
 
 - (IBAction)debug2Action:(id)sender {
-  DDLogDebug(@"filter operations: %lu", _operationQueue.operationCount);
+  DDLogDebug(@"filter operations: %lu", _filterOperationQueue.operationCount);
 }
 
 #pragma mark NSObject
@@ -93,8 +92,8 @@ int qOpenQuicklyWindowWidth = 400;
 
   win.delegate = self;
 
-  _operationQueue = [[NSOperationQueue alloc] init];
-  _operationQueue.maxConcurrentOperationCount = 1;
+  _filterOperationQueue = [[NSOperationQueue alloc] init];
+  _filterOperationQueue.maxConcurrentOperationCount = 1;
   _filteredFileItems = [[NSMutableArray alloc] initWithCapacity:qMaximumNumberOfFilterResult];
 
   _uiUpdateOperationQueue = [[NSOperationQueue alloc] init];
@@ -183,9 +182,9 @@ int qOpenQuicklyWindowWidth = 400;
 }
 
 - (void)refilter {
-  [_operationQueue cancelAllOperations];
+  [_filterOperationQueue cancelAllOperations];
 
-  [_operationQueue addOperation:[[VRFilterItemsOperation alloc] initWithDict:@{
+  [_filterOperationQueue addOperation:[[VRFilterItemsOperation alloc] initWithDict:@{
       qOperationFileItemManagerKey : _fileItemManager,
       qFilterItemsOperationFilteredItemsKey : _filteredFileItems,
       qFilterItemsOperationItemTableViewKey : _fileItemTableView,
@@ -194,7 +193,7 @@ int qOpenQuicklyWindowWidth = 400;
 }
 
 - (void)reset {
-  [_operationQueue cancelAllOperations];
+  [_filterOperationQueue cancelAllOperations];
   [_filteredFileItems removeAllObjects];
 
   [_fileItemManager resetTargetUrl];
@@ -217,7 +216,7 @@ int qOpenQuicklyWindowWidth = 400;
 
   [_uiUpdateOperationQueue addOperationWithBlock:^{
     while (self.targetWindow) {
-      if (self.fileItemManager.fileItemOperationPending || self.operationQueue.operationCount > 0) {
+      if (self.fileItemManager.fileItemOperationPending || self.filterOperationQueue.operationCount > 0) {
         dispatch_to_main_thread(^{
           [self.progressIndicator startAnimation:self];
         });
