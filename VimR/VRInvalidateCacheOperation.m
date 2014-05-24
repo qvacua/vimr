@@ -63,18 +63,24 @@ static VRFileItem *find_file_item(NSURL *url, VRFileItem *parent) {
 - (void)main {
   @autoreleasepool {
     for (VRFileItem *parentItem in _parentItems) {
-      VRFileItem *matchingItem = find_file_item(_url, parentItem);
-      if (matchingItem) {
-        DDLogDebug(@"Invalidating cache for %@ of the parent %@", matchingItem, parentItem.url);
+      [self findInParentItemAndInvalidate:parentItem];
+    }
+  }
+}
 
-        matchingItem.shouldCacheChildren = YES;
+- (void)findInParentItemAndInvalidate:(VRFileItem *)parentItem {
+  @synchronized (parentItem) {
+    VRFileItem *matchingItem = find_file_item(_url, parentItem);
+    if (matchingItem) {
+      DDLogDebug(@"Invalidating cache for %@ of the parent %@", matchingItem, parentItem.url);
 
-        dispatch_to_main_thread(^{
-          [_notificationCenter postNotificationName:qInvalidatedCacheEvent object:matchingItem];
-        });
-      } else {
-        DDLogDebug(@"%@ in %@ not yet cached, noop", _url, parentItem.url);
-      }
+      matchingItem.shouldCacheChildren = YES;
+
+      dispatch_to_main_thread(^{
+        [_notificationCenter postNotificationName:qInvalidatedCacheEvent object:matchingItem];
+      });
+    } else {
+      DDLogDebug(@"%@ in %@ not yet cached, noop", _url, parentItem.url);
     }
   }
 }

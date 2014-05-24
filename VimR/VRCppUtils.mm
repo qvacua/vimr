@@ -11,33 +11,6 @@
 #include <numeric>
 
 
-BOOL chunk_enumerate_array(NSArray *array, size_t chunkSize, BOOL (^shouldStopBeforeChunk)(void), void (^blockOnChild)(id)) {
-  std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(array.count, chunkSize);
-  for (auto &pair : chunkedIndexes) {
-    if (shouldStopBeforeChunk()) {
-      return NO;
-    }
-
-    size_t beginIndex = pair.first;
-    size_t endIndex = pair.second;
-
-    for (size_t i = beginIndex; i <= endIndex; i++) {
-      blockOnChild(array[i]);
-    }
-  }
-
-  return YES;
-}
-
-void enumerate_array_in_range(NSArray *array, std::pair<size_t, size_t> pair, void (^block)(id)) {
-  size_t beginIndex = pair.first;
-  size_t endIndex = pair.second;
-
-  for (size_t i = beginIndex; i <= endIndex; i++) {
-    block(array[i]);
-  }
-}
-
 std::vector<std::pair<size_t, size_t>> chunked_indexes(size_t count, size_t size) {
   std::vector<std::pair<size_t, size_t>> result;
 
