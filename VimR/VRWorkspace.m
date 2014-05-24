@@ -9,7 +9,6 @@
 
 #import <MacVimFramework/MacVimFramework.h>
 #import <TBCacao/TBCacao.h>
-#import <CocoaLumberjack/DDLog.h>
 #import "VRWorkspace.h"
 #import "VRMainWindowController.h"
 #import "VRFileItemManager.h"
@@ -23,12 +22,12 @@ static CGPoint qDefaultOrigin = {242, 364};
 
 @interface VRWorkspace ()
 
-@property (weak) MMVimController *vimController;
-@property (readonly) NSMutableArray *openedBufferUrls;
-
 @end
 
-@implementation VRWorkspace
+@implementation VRWorkspace {
+  MMVimController *_vimController;
+  NSMutableArray *_openedBufferUrls;
+}
 
 #pragma mark Public
 - (void)openFilesWithUrls:(NSArray *)urls {
