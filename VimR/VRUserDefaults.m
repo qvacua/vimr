@@ -11,4 +11,5 @@
 
 
 NSString *const qDefaultShowHiddenInFileBrowser = @"show-hidden-files-in-file-browser";
+NSString *const qDefaultSyncWorkingDirectoryWithVimPwd = @"sync-working-directory-with-vim-pwd";
 

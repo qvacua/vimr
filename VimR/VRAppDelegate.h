@@ -14,14 +14,17 @@
 @class VRWorkspaceController;
 @class VRFileItemManager;
 @class VROpenQuicklyWindowController;
+@class VRPrefWindow;
 
 @interface VRAppDelegate : NSObject <NSApplicationDelegate>
 
 @property (nonatomic, weak) NSApplication *application;
+@property (nonatomic, weak) NSUserDefaults *userDefaults;
 @property (nonatomic, weak) VRWorkspaceController *workspaceController;
 @property (nonatomic, weak) NSWorkspace *workspace;
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;
 @property (nonatomic, weak) VROpenQuicklyWindowController *openQuicklyWindowController;
+@property (nonatomic, weak) VRPrefWindow *prefWindow;
 
 @property (nonatomic, weak) IBOutlet NSWindow *window;
 @property (nonatomic, weak) IBOutlet NSMenuItem *debug;
@@ -32,6 +35,7 @@
 - (IBAction)openDocument:(id)sender;
 - (IBAction)openDocumentInTab:(id)sender;
 - (IBAction)showHelp:(id)sender;
+- (IBAction)showPrefWindow:(id)sender;
 
 #pragma mark NSObject
 - (id)init;

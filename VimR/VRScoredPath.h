@@ -13,11 +13,12 @@
 @interface VRScoredPath : NSObject
 
 @property double score;
-@property NSString *path;
+@property NSURL *url;
 @property NSString *displayName;
+@property NSImage *icon;
 
 #pragma mark Public
-- (instancetype)initWithPath:(NSString *)path;
+- (instancetype)initWithUrl:(NSURL *)url;
 - (void)computeScoreForCandidate:(NSString *)candidate;
 
 #pragma mark NSObject

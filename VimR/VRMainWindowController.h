@@ -20,6 +20,7 @@
     MMVimControllerDelegate>
 
 #pragma mark Properties
+@property (nonatomic, weak) NSUserDefaults *userDefaults;
 @property (nonatomic, weak) VRWorkspace *workspace;
 
 @property (nonatomic, weak) MMVimController *vimController;

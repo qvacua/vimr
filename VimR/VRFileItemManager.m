@@ -51,19 +51,22 @@ void streamCallback(
   FSEventStreamEventId _lastEventId;
 
   NSMutableDictionary *_url2CacheRecord;
-  NSMutableArray *_mutableFileItemsForTargetUrl;
+  NSMutableArray *_mutableUrlsForTargetUrl;
 
+  NSCondition *_fileItemOperationCondition;
   NSOperationQueue *_fileItemOperationQueue;
   NSOperationQueue *_invalidateCacheOperationQueue;
 
+  NSCache *_iconCache;
 }
 
+@autowire(workspace)
 @autowire(fileManager)
 @autowire(notificationCenter);
 
 #pragma mark Properties
-- (NSArray *)fileItemsOfTargetUrl {
-  return _mutableFileItemsForTargetUrl;
+- (NSArray *)urlsOfTargetUrl {
+  return _mutableUrlsForTargetUrl;
 }
 
 - (NSArray *)registeredUrls {
@@ -106,6 +109,22 @@ void streamCallback(
 
 - (NSURL *)urlForItem:(VRFileItem *)item {
   return item.url;
+}
+
+- (NSImage *)iconForUrl:(NSURL *)url {
+  if (!url.isFileURL) {
+    return nil;
+  }
+
+  NSImage *icon = [_iconCache objectForKey:url];
+  if (!icon) {
+    icon = [_workspace iconForFile:url.path];
+    icon.size = CGSizeMake(16, 16);
+
+    [_iconCache setObject:icon forKey:url];
+  }
+
+  return icon;
 }
 
 - (void)registerUrl:(NSURL *)url {
@@ -166,6 +185,7 @@ void streamCallback(
     // Just to be safe...
     [self resetTargetUrl];
     _fileItemOperationQueue.suspended = NO;
+    _fileItemOperationCondition = [[NSCondition alloc] init];
 
     VRCachedFileItemRecord *record = _url2CacheRecord[url];
     if (!record) {
@@ -175,7 +195,7 @@ void streamCallback(
 
     VRFileItem *targetItem = record.fileItem;
 
-    [_mutableFileItemsForTargetUrl removeAllObjects];
+    [_mutableUrlsForTargetUrl removeAllObjects];
 
     // We don't add targetItem to mutableFileItemsForTargetUrl, since it is a dir.
     [_fileItemOperationQueue addOperation:
@@ -183,11 +203,12 @@ void streamCallback(
                                              dict:@{
                                                  qFileItemOperationRootUrlKey : url,
                                                  qFileItemOperationParentItemKey : targetItem,
-                                                 qFileItemOperationFileItemsKey : _mutableFileItemsForTargetUrl,
+                                                 qFileItemOperationUrlsForTargetUrlKey : _mutableUrlsForTargetUrl,
                                                  qOperationFileItemManagerKey : self,
                                                  qFileItemOperationOperationQueueKey : _fileItemOperationQueue,
                                                  qOperationNotificationCenterKey : _notificationCenter,
                                                  qOperationFileManagerKey : _fileManager,
+                                                 qFileItemOperationPauseConditionKey : _fileItemOperationCondition,
                                              }]
     ];
 
@@ -201,8 +222,8 @@ void streamCallback(
     [_fileItemOperationQueue cancelAllOperations];
   }
 
-  @synchronized (_mutableFileItemsForTargetUrl) {
-    [_mutableFileItemsForTargetUrl removeAllObjects];
+  @synchronized (_mutableUrlsForTargetUrl) {
+    [_mutableUrlsForTargetUrl removeAllObjects];
   }
 }
 
@@ -215,18 +236,35 @@ void streamCallback(
   }
 }
 
+- (void)pauseFileItemOperations {
+  @synchronized (_fileItemOperationQueue) {
+    _fileItemOperationQueue.suspended = YES;
+
+    [_fileItemOperationCondition lock];
+    for (VRFileItemOperation *operation in _fileItemOperationQueue.operations) {
+      [operation pause];
+    }
+    [_fileItemOperationCondition unlock];
+  }
+}
+
+- (void)resumeFileItemOperations {
+  @synchronized (_fileItemOperationQueue) {
+    _fileItemOperationQueue.suspended = NO;
+
+    [_fileItemOperationCondition lock];
+    for (VRFileItemOperation *operation in _fileItemOperationQueue.operations) {
+      [operation resume];
+    }
+    [_fileItemOperationCondition broadcast];
+    [_fileItemOperationCondition unlock];
+  }
+}
+
 - (BOOL)fileItemOperationPending {
   @synchronized (_fileItemOperationQueue) {
     return _fileItemOperationQueue.operationCount > 0;
   }
-}
-
-- (void)suspendFurtherCacheOperations {
-  _fileItemOperationQueue.suspended = YES;
-}
-
-- (void)resumeFurtherCacheOperations {
-  _fileItemOperationQueue.suspended = NO;
 }
 
 - (void)waitTillFileItemOperationsFinished {
@@ -241,13 +279,18 @@ void streamCallback(
   _lastEventId = kFSEventStreamEventIdSinceNow;
 
   _url2CacheRecord = [[NSMutableDictionary alloc] initWithCapacity:5];
-  _mutableFileItemsForTargetUrl = [[NSMutableArray alloc] initWithCapacity:10000];
+  _mutableUrlsForTargetUrl = [[NSMutableArray alloc] initWithCapacity:10000];
 
+  _fileItemOperationCondition = [[NSCondition alloc] init];
   _fileItemOperationQueue = [[NSOperationQueue alloc] init];
   _fileItemOperationQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
 
   _invalidateCacheOperationQueue = [[NSOperationQueue alloc] init];
   _invalidateCacheOperationQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
+
+  _iconCache = [[NSCache alloc] init];
+  _iconCache.countLimit = 1000;
+  _iconCache.name = @"icon-cache";
 
   return self;
 }
@@ -258,6 +301,9 @@ void streamCallback(
 */
 - (void)invalidateCacheForPaths:(char **)paths eventCount:(NSUInteger)eventCount {
   @autoreleasepool {
+    [self waitTillFileItemOperationsFinished];
+    DDLogDebug(@"done waiting till file item operations are finished.");
+
     for (NSUInteger i = 0; i < eventCount; i++) {
 
       // There is +fileURLWithFileSystemRepresentation:isDirectory:relativeToURL: of NSURL, but I'm not quite sure,

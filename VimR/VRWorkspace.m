@@ -53,13 +53,14 @@ static CGPoint qDefaultOrigin = {242, 364};
       [VRMainWindowController alloc] initWithContentRect:CGRectMake(origin.x, origin.y, 480, 360)
   ];
   controller.workspace = self;
+  controller.userDefaults = _userDefaults;
 
   controller.vimController = vimController;
   controller.vimView = vimController.vimView;
 
   vimController.delegate = (id <MMVimControllerDelegate>) controller;
 
-  self.mainWindowController = controller;
+  _mainWindowController = controller;
 
   [controller showWindow:self];
 }

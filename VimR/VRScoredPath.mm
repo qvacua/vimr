@@ -24,25 +24,25 @@ static inline double rank_string(NSString *string, NSString *target,
 @implementation VRScoredPath
 
 #pragma mark Public
-- (instancetype)initWithPath:(NSString *)path {
+- (instancetype)initWithUrl:(NSURL *)url {
   self = [super init];
   RETURN_NIL_WHEN_NOT_SELF
 
   _score = 0;
-  _path = path;
+  _url = url;
 
   return self;
 }
 
 - (void)computeScoreForCandidate:(NSString *)candidate {
-  _score = rank_string(candidate, _path.lastPathComponent);
+  _score = rank_string(candidate, _url.lastPathComponent);
 }
 
 #pragma mark NSObject
 - (NSString *)description {
   NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
   [description appendFormat:@"self.score=%f", self.score];
-  [description appendFormat:@", self.path=%@", self.path];
+  [description appendFormat:@", self.url=%@", self.url];
   [description appendString:@">"];
   return description;
 }

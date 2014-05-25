@@ -14,12 +14,12 @@
 extern NSString *const qFileItemOperationOperationQueueKey;
 extern NSString *const qFileItemOperationParentItemKey;
 extern NSString *const qFileItemOperationRootUrlKey;
-extern NSString *const qFileItemOperationFileItemsKey;
+extern NSString *const qFileItemOperationUrlsForTargetUrlKey;
+extern NSString *const qFileItemOperationPauseConditionKey;
 
 
 typedef enum {
   VRFileItemOperationTraverseMode = 0,
-  VRFileItemOperationCacheMode,
   VRFileItemOperationShallowCacheMode,
 } VRFileItemOperationMode;
 
@@ -30,7 +30,9 @@ typedef enum {
 
 @interface VRFileItemOperation : VROperation
 
-#pragma mark NSOperation
+#pragma mark Public
+- (void)pause;
+- (void)resume;
 - (id)initWithMode:(VRFileItemOperationMode)mode dict:(NSDictionary *)dict;
 
 @end

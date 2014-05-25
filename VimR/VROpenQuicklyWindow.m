@@ -10,6 +10,7 @@
 #import "VROpenQuicklyWindow.h"
 #import "VRUtils.h"
 #import "VRInactiveTableView.h"
+#import "OakImageAndTextCell.h"
 
 
 int qOpenQuicklyWindowPadding = 8;
@@ -34,6 +35,7 @@ int qOpenQuicklyWindowPadding = 8;
   self.opaque = NO;
   self.movableByWindowBackground = NO;
   self.excludedFromWindowsMenu = YES;
+  self.releasedWhenClosed = NO;
   self.title = @"Open Quickly";
   [self setAutorecalculatesContentBorderThickness:NO forEdge:NSMaxYEdge];
   [self setContentBorderThickness:25 forEdge:NSMaxYEdge];
@@ -83,7 +85,8 @@ int qOpenQuicklyWindowPadding = 8;
   [self.contentView addSubview:_searchField];
 
   NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:@"name"];
-  tableColumn.dataCell = [[NSTextFieldCell alloc] initTextCell:@""];
+  tableColumn.dataCell = [[OakImageAndTextCell alloc] init];
+//  tableColumn.dataCell = [[NSTextFieldCell alloc] initTextCell:@""];
   [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingTail];
 
   _fileItemTableView = [[VRInactiveTableView alloc] initWithFrame:CGRectZero];

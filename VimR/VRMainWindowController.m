@@ -22,6 +22,7 @@
 #import "VRWorkspaceView.h"
 #import "VRFileBrowserView.h"
 #import "NSArray+VR.h"
+#import "VRUserDefaults.h"
 
 
 #define CONSTRAINT(fmt, ...) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
@@ -464,11 +465,13 @@
 }
 
 - (void)controller:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue {
-  NSURL *pwd = _vimController.pwd;
-  if (![_workspace.workingDirectory isEqualTo:pwd]) {
-    [_workspace updateWorkingDirectory:pwd];
+  if ([_userDefaults boolForKey:qDefaultSyncWorkingDirectoryWithVimPwd]) {
+    NSString *pwdPath = _vimController.vimState[@"pwd"];
+    if (![_workspace.workingDirectory.path isEqualToString:pwdPath]) {
+      [_workspace updateWorkingDirectory:[[NSURL alloc] initFileURLWithPath:pwdPath]];
+    }
   }
-  
+
   if (!_needsToResizeVimView) {
     return;
   }

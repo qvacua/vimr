@@ -24,8 +24,8 @@ extern int qOpenQuicklyWindowWidth;
     NSTextFieldDelegate,
     NSTableViewDataSource, NSTableViewDelegate>
 
-@property (weak) VRFileItemManager *fileItemManager;
-@property (weak) NSNotificationCenter *notificationCenter;
+@property (nonatomic, weak) VRFileItemManager *fileItemManager;
+@property (nonatomic, weak) NSNotificationCenter *notificationCenter;
 
 #pragma mark Public
 - (void)showForWindowController:(VRMainWindowController *)windowController;

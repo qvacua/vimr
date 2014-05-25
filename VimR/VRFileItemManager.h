@@ -19,11 +19,12 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 
 @interface VRFileItemManager : NSObject <TBBean>
 
+@property (nonatomic, weak) NSWorkspace *workspace;
 @property (nonatomic, weak) NSFileManager *fileManager;
 @property (nonatomic, weak) NSNotificationCenter *notificationCenter;
 
 @property (nonatomic, readonly) NSArray *registeredUrls;
-@property (nonatomic, readonly) NSArray *fileItemsOfTargetUrl;
+@property (nonatomic, readonly) NSArray *urlsOfTargetUrl;
 
 #pragma mark Public
 /**
@@ -36,6 +37,8 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 - (NSString *)nameOfItem:(id)item;
 - (NSURL *)urlForItem:(id)item;
 
+- (NSImage *)iconForUrl:(NSURL *)url;
+
 - (void)registerUrl:(NSURL *)url;
 - (void)unregisterUrl:(NSURL *)url;
 
@@ -44,9 +47,10 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 
 - (void)cleanUp;
 
+- (void)pauseFileItemOperations;
+- (void)resumeFileItemOperations;
+
 - (BOOL)fileItemOperationPending;
-- (void)suspendFurtherCacheOperations;
-- (void)resumeFurtherCacheOperations;
 - (void)waitTillFileItemOperationsFinished;
 
 #pragma mark NSObject
