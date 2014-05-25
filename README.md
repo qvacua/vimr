@@ -14,8 +14,6 @@ In case you want to have a bit more information on the motivation behind VimR, I
 
 ![Screenshot](https://raw.github.com/qvacua/vimr/master/Meta/screenshot.png)
 
-There is a mailing list with absolute no traffic: [vimr@librelist.com](mailto:vimr@librelist.com). (To unsubscribe, send a mail to [vimr-unsubscribe@librelist.com](mailto:vimr-unsubscribe@librelist.com))
-
 Download
 --------
 
