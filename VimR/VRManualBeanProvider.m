@@ -41,6 +41,7 @@
         [TBBeanContainer beanContainerWithBean:[NSFileManager defaultManager]],
         [TBBeanContainer beanContainerWithBean:[NSNotificationCenter defaultCenter]],
         [TBBeanContainer beanContainerWithBean:[NSUserDefaults standardUserDefaults]],
+        [TBBeanContainer beanContainerWithBean:[NSUserDefaultsController sharedUserDefaultsController]],
     ];
   }
 

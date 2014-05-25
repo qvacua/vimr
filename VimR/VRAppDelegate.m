@@ -19,6 +19,7 @@
 #import "VRDefaultLogSetting.h"
 #import "VRMainWindow.h"
 #import "NSArray+VR.h"
+#import "VRPrefWindow.h"
 
 
 static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
@@ -28,10 +29,12 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
   VRMainWindowController *_mainWindowController;
 }
 
+@manualwire(userDefaults)
 @manualwire(workspace)
 @manualwire(workspaceController)
 @manualwire(fileItemManager)
 @manualwire(openQuicklyWindowController)
+@manualwire(prefWindow)
 
 #pragma mark IBActions
 - (IBAction)newDocument:(id)sender {
@@ -66,6 +69,16 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
 - (IBAction)showHelp:(id)sender {
   [self.workspace openURL:[[NSURL alloc] initWithString:qVimRHelpUrl]];
+}
+
+- (IBAction)showPrefWindow:(id)sender {
+  if ([_userDefaults objectForKey:SF(@"NSWindow Frame %@", qPrefWindowFrameAutosaveName])) {
+    [_prefWindow setFrameUsingName:qPrefWindowFrameAutosaveName];
+  } else {
+    [_prefWindow center];
+  }
+
+  [_prefWindow makeKeyAndOrderFront:self];
 }
 
 - (IBAction)debug3Action:(id)sender {

@@ -464,11 +464,10 @@
 }
 
 - (void)controller:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue {
-  // TODO: consumes too much cpu time
-//  NSURL *pwd = _vimController.pwd;
-//  if (![_workspace.workingDirectory isEqualTo:pwd]) {
-//    [_workspace updateWorkingDirectory:pwd];
-//  }
+  NSString *pwdPath = _vimController.vimState[@"pwd"];
+  if (![_workspace.workingDirectory.path isEqualToString:pwdPath]) {
+    [_workspace updateWorkingDirectory:[[NSURL alloc] initFileURLWithPath:pwdPath]];
+  }
   
   if (!_needsToResizeVimView) {
     return;
