@@ -20,14 +20,20 @@ NSString *const qFileItemOperationOperationQueueKey = @"operation-queue";
 NSString *const qFileItemOperationParentItemKey = @"parent-file-item";
 NSString *const qFileItemOperationRootUrlKey = @"root-url";
 NSString *const qFileItemOperationUrlsForTargetUrlKey = @"file-items-array";
+NSString *const qCondition = @"condition";
 
 
 static const int qArrayChunkSize = 1000;
 
 
-#define CANCEL_WHEN_REQUESTED if ([self isCancelled]) { \
-                                return; \
-                              }
+#define CANCEL_OR_WAIT if ([self isCancelled]) { \
+                         return; \
+                       } \
+                       [_condition lock]; \
+                       while (_paused) { \
+                         [_condition wait]; \
+                       } \
+                       [_condition unlock];
 
 
 @implementation VRFileItemOperation {
@@ -41,9 +47,20 @@ static const int qArrayChunkSize = 1000;
   __weak NSMutableArray *_urlsForTargetUrl;
 
   NSURL *_rootUrl;
+
+  __weak NSCondition *_condition;
+  BOOL _paused;
 }
 
 #pragma mark Public
+- (void)pause {
+  _paused = YES;
+}
+
+- (void)resume {
+  _paused = NO;
+}
+
 - (id)initWithMode:(VRFileItemOperationMode)mode dict:(NSDictionary *)dict {
   self = [super init];
   RETURN_NIL_WHEN_NOT_SELF
@@ -56,6 +73,9 @@ static const int qArrayChunkSize = 1000;
   _item = dict[qFileItemOperationParentItemKey];
   _rootUrl = [dict[qFileItemOperationRootUrlKey] copy];
   _urlsForTargetUrl = dict[qFileItemOperationUrlsForTargetUrlKey];
+
+  _condition = dict[qCondition];
+  _paused = NO;
 
 #ifdef DEBUG
   setup_file_logger();
@@ -92,9 +112,36 @@ static const int qArrayChunkSize = 1000;
   }
 }
 
+//#pragma mark Experimental
+//- (id)traverseCell:(id)parentCell usingBlock:(void (^)(id cell, BOOL *stop))block {
+//  // pre-order traversal
+//
+//  BOOL stop = NO;
+//
+//  VRStack *stack = [[VRStack alloc] initWithCapacity:5000];
+//  [stack push:parentCell];
+//
+//  __weak id currentCell;
+//  while (stack.count > 0) {
+//    currentCell = [stack pop];
+//
+//    if (currentCell.isLeaf == NO && currentCell.isFolded == NO) {
+//      [stack pushArray:currentCell.allChildren];
+//    }
+//
+//    block(currentCell, &stop);
+//
+//    if (stop) {
+//      return currentCell;
+//    }
+//  }
+//
+//  return nil;
+//}
+
 #pragma mark Private
 - (void)traverseFileItemChildHierarchy {
-  CANCEL_WHEN_REQUESTED
+  CANCEL_OR_WAIT
 
   NSMutableArray *children = _item.children;
   if (_item.shouldCacheChildren) {
@@ -133,16 +180,16 @@ static const int qArrayChunkSize = 1000;
     return;
   }
 
-  CANCEL_WHEN_REQUESTED
+  CANCEL_OR_WAIT
 
-      DDLogCaching(@"### Adding (from traversing) children items of parent: %@", _item.url);
+  DDLogCaching(@"### Adding (from traversing) children items of parent: %@", _item.url);
   [self addAllToUrlsForTargetUrl:fileItemsToAdd];
 }
 
 - (void)cacheAddToFileItems {
-  CANCEL_WHEN_REQUESTED
+  CANCEL_OR_WAIT
 
-      DDLogCaching(@"Caching children for %@", _item.url);
+  DDLogCaching(@"Caching children for %@", _item.url);
   [self cacheDirectDescendants];
 
   NSMutableArray *children = _item.children;
@@ -150,9 +197,9 @@ static const int qArrayChunkSize = 1000;
     return;
   }
 
-  CANCEL_WHEN_REQUESTED
+  CANCEL_OR_WAIT
 
-      DDLogCaching(@"### Adding (from caching) children items of parent: %@", _item.url);
+  DDLogCaching(@"### Adding (from caching) children items of parent: %@", _item.url);
   [self addAllToUrlsForTargetUrl:children];
 
   [self chunkEnumerateArray:children usingBlock:^(VRFileItem *child) {
@@ -187,19 +234,23 @@ static const int qArrayChunkSize = 1000;
 }
 
 - (void)addAllToUrlsForTargetUrl:(NSArray *)items {
-  @synchronized (_urlsForTargetUrl) {
-    __block BOOL added = NO;
+  __block BOOL added = NO;
 
-    BOOL enumerationComplete = [self chunkEnumerateArray:items usingBlock:^(VRFileItem *child) {
-      if (!child.dir) {
-        [_urlsForTargetUrl addObject:child.url];
-        added = YES;
+  BOOL enumerationComplete = [self chunkEnumerateArray:items usingBlockOnChunks:^(size_t beginIndex, size_t endIndex) {
+    @synchronized (_urlsForTargetUrl) {
+      for (size_t i = beginIndex; i <= endIndex; i++) {
+        VRFileItem *child = items[i];
+
+        if (!child.dir) {
+          [_urlsForTargetUrl addObject:child.url];
+          added = YES;
+        }
       }
-    }];
-
-    if (!enumerationComplete || !added) {
-      return;
     }
+  }];
+
+  if (!enumerationComplete || !added) {
+    return;
   }
 
   dispatch_to_main_thread(^{
@@ -217,6 +268,7 @@ static const int qArrayChunkSize = 1000;
                                                   qOperationFileItemManagerKey : _fileItemManager,
                                                   qFileItemOperationOperationQueueKey : _operationQueue,
                                                   qOperationFileManagerKey : _fileManager,
+                                                  qCondition : _condition,
                                               }];
 }
 
@@ -231,12 +283,42 @@ static const int qArrayChunkSize = 1000;
       return NO;
     }
 
+    [_condition lock];
+    while (_paused) {
+      [_condition wait];
+    }
+    [_condition unlock];
+
     size_t beginIndex = pair.first;
     size_t endIndex = pair.second;
 
     for (size_t i = beginIndex; i <= endIndex; i++) {
       blockOnChild(array[i]);
     }
+  }
+
+  return YES;
+}
+
+- (BOOL)chunkEnumerateArray:(NSArray *)array
+         usingBlockOnChunks:(void (^)(size_t beginIndex, size_t endIndex))blockOnChunks {
+
+  std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(array.count, qArrayChunkSize);
+  for (auto &pair : chunkedIndexes) {
+    if (self.isCancelled) {
+      return NO;
+    }
+
+    [_condition lock];
+    while (_paused) {
+      [_condition wait];
+    }
+    [_condition unlock];
+
+    size_t beginIndex = pair.first;
+    size_t endIndex = pair.second;
+
+    blockOnChunks(beginIndex, endIndex);
   }
 
   return YES;

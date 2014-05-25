@@ -53,6 +53,7 @@ void streamCallback(
   NSMutableDictionary *_url2CacheRecord;
   NSMutableArray *_mutableUrlsForTargetUrl;
 
+  NSCondition *_fileItemOperationCondition;
   NSOperationQueue *_fileItemOperationQueue;
   NSOperationQueue *_invalidateCacheOperationQueue;
 
@@ -206,6 +207,7 @@ void streamCallback(
                                                  qFileItemOperationOperationQueueKey : _fileItemOperationQueue,
                                                  qOperationNotificationCenterKey : _notificationCenter,
                                                  qOperationFileManagerKey : _fileManager,
+                                                 qCondition : _fileItemOperationCondition,
                                              }]
     ];
 
@@ -230,6 +232,31 @@ void streamCallback(
     [_fileItemOperationQueue cancelAllOperations];
 
     [self stop];
+  }
+}
+
+- (void)pauseFileItemOperations {
+  @synchronized (_fileItemOperationQueue) {
+    _fileItemOperationQueue.suspended = YES;
+
+    [_fileItemOperationCondition lock];
+    for (VRFileItemOperation *operation in _fileItemOperationQueue.operations) {
+      [operation pause];
+    }
+    [_fileItemOperationCondition unlock];
+  }
+}
+
+- (void)resumeFileItemOperations {
+  @synchronized (_fileItemOperationQueue) {
+    _fileItemOperationQueue.suspended = NO;
+
+    [_fileItemOperationCondition lock];
+    for (VRFileItemOperation *operation in _fileItemOperationQueue.operations) {
+      [operation resume];
+    }
+    [_fileItemOperationCondition broadcast];
+    [_fileItemOperationCondition unlock];
   }
 }
 
@@ -261,6 +288,7 @@ void streamCallback(
   _url2CacheRecord = [[NSMutableDictionary alloc] initWithCapacity:5];
   _mutableUrlsForTargetUrl = [[NSMutableArray alloc] initWithCapacity:10000];
 
+  _fileItemOperationCondition = [[NSCondition alloc] init];
   _fileItemOperationQueue = [[NSOperationQueue alloc] init];
   _fileItemOperationQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
 

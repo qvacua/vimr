@@ -61,7 +61,7 @@ static inline NSRange capped_range_for_filtered_items(NSArray *result) {
 
 
 #define CANCEL_WHEN_REQUESTED  if (self.isCancelled) { \
-                                 [_fileItemManager resumeFurtherCacheOperations]; \
+                                 [_fileItemManager resumeFileItemOperations]; \
                                  return; \
                                }
 
@@ -103,7 +103,7 @@ static inline NSRange capped_range_for_filtered_items(NSArray *result) {
   }
 
   @autoreleasepool {
-    [_fileItemManager suspendFurtherCacheOperations];
+    [_fileItemManager pauseFileItemOperations];
 
     NSArray *urlsOfTargetUrl = _fileItemManager.urlsOfTargetUrl;
 
@@ -125,7 +125,6 @@ static inline NSRange capped_range_for_filtered_items(NSArray *result) {
         dispatch_loop(count, ^(size_t i) {
           VRScoredPath *scoredPath = result[beginIndex + i];
           [scoredPath computeScoreForCandidate:_searchStr];
-          scoredPath.icon = [_fileItemManager iconForUrl:scoredPath.url];
         });
 
         CANCEL_WHEN_REQUESTED
@@ -156,7 +155,7 @@ static inline NSRange capped_range_for_filtered_items(NSArray *result) {
       }
     }
 
-    [_fileItemManager resumeFurtherCacheOperations];
+    [_fileItemManager resumeFileItemOperations];
   }
 }
 

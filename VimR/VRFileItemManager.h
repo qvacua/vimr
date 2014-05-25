@@ -47,6 +47,9 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 
 - (void)cleanUp;
 
+- (void)pauseFileItemOperations;
+- (void)resumeFileItemOperations;
+
 - (BOOL)fileItemOperationPending;
 - (void)suspendFurtherCacheOperations;
 - (void)resumeFurtherCacheOperations;
