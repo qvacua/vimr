@@ -28,12 +28,13 @@ static const int qArrayChunkSize = 1000;
 
 
 #define CANCEL_OR_WAIT if ([self isCancelled]) { \
-                         [_condition unlock]; \
                          return; \
                        } \
+                       [_condition lock]; \
                        while (_paused) { \
                          [_condition wait]; \
                        } \
+                       [_condition unlock]; \
 
 
 @implementation VRFileItemOperation {
@@ -109,8 +110,6 @@ static const int qArrayChunkSize = 1000;
   VRStack *stack = [[VRStack alloc] initWithCapacity:10000];
   [stack push:_item];
 
-  [_condition lock];
-
   CANCEL_OR_WAIT
   __weak VRFileItem *currentItem;
   while (stack.count > 0) {
@@ -139,7 +138,6 @@ static const int qArrayChunkSize = 1000;
     }];
 
     if (!enumerationComplete) {
-      [_condition unlock];
       return;
     }
 
@@ -150,8 +148,6 @@ static const int qArrayChunkSize = 1000;
     CANCEL_OR_WAIT
     [self addAllToUrlsForTargetUrl:childrenOfCurrentItem];
   }
-
-  [_condition unlock];
 }
 
 #pragma mark Private
@@ -216,9 +212,11 @@ static const int qArrayChunkSize = 1000;
       return NO;
     }
 
+    [_condition lock];
     while (_paused) {
       [_condition wait];
     }
+    [_condition unlock];
 
     size_t beginIndex = pair.first;
     size_t endIndex = pair.second;
@@ -240,9 +238,11 @@ static const int qArrayChunkSize = 1000;
       return NO;
     }
 
+    [_condition lock];
     while (_paused) {
       [_condition wait];
     }
+    [_condition unlock];
 
     size_t beginIndex = pair.first;
     size_t endIndex = pair.second;
