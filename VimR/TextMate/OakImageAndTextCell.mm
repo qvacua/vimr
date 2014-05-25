@@ -81,7 +81,7 @@
   if (NSMouseInRect(point, imageRect, controlView.isFlipped))
     res = NSCellHitContentArea | OakImageAndTextCellHitImage;
   else if (NSMouseInRect(point, textRect, controlView.isFlipped))
-    res = NSCellHitContentArea | NSCellHitEditableTextArea | OakImageAndTextCellHitText;
+    res = NSCellHitContentArea | /*NSCellHitEditableTextArea |*/ OakImageAndTextCellHitText; // We don't need editing
   return res;
 }
 

@@ -14,6 +14,7 @@
 #import "VRUserDefaults.h"
 #import "VRInvalidateCacheOperation.h"
 #import "VRDefaultLogSetting.h"
+#import "OakImageAndTextCell.h"
 
 
 #define CONSTRAIN(fmt, ...) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
@@ -49,8 +50,7 @@
 
 - (void)setRootUrl:(NSURL *)rootUrl {
   _rootUrl = rootUrl;
-  [self reload];
-//  [self cacheInvalidated:nil];
+  [self cacheInvalidated:nil];
 }
 
 - (instancetype)initWithRootUrl:(NSURL *)rootUrl {
@@ -113,6 +113,7 @@
 - (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(VRNode *)item {
   NSTextFieldCell *cell = [tableColumn dataCellForRow:[_fileOutlineView rowForItem:item]];
   cell.textColor = item.hidden ? [NSColor grayColor] : [NSColor textColor];
+  cell.image = [_fileItemManager iconForUrl:item.url];
 
   return cell;
 }
@@ -129,7 +130,7 @@
 
 - (void)addViews {
   NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:@"name"];
-  tableColumn.dataCell = [[NSTextFieldCell alloc] initTextCell:@""];
+  tableColumn.dataCell = [[OakImageAndTextCell alloc] init];
   [tableColumn.dataCell setAllowsEditingTextAttributes:YES];
   [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingTail];
 
