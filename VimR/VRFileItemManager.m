@@ -208,7 +208,7 @@ void streamCallback(
                                                  qFileItemOperationOperationQueueKey : _fileItemOperationQueue,
                                                  qOperationNotificationCenterKey : _notificationCenter,
                                                  qOperationFileManagerKey : _fileManager,
-                                                 qCondition : _fileItemOperationCondition,
+                                                 qFileItemOperationPauseConditionKey : _fileItemOperationCondition,
                                              }]
     ];
 

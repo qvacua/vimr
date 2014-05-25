@@ -15,7 +15,7 @@ extern NSString *const qFileItemOperationOperationQueueKey;
 extern NSString *const qFileItemOperationParentItemKey;
 extern NSString *const qFileItemOperationRootUrlKey;
 extern NSString *const qFileItemOperationUrlsForTargetUrlKey;
-extern NSString *const qCondition;
+extern NSString *const qFileItemOperationPauseConditionKey;
 
 
 typedef enum {

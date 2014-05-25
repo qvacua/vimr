@@ -21,7 +21,7 @@ NSString *const qFileItemOperationOperationQueueKey = @"operation-queue";
 NSString *const qFileItemOperationParentItemKey = @"parent-file-item";
 NSString *const qFileItemOperationRootUrlKey = @"root-url";
 NSString *const qFileItemOperationUrlsForTargetUrlKey = @"file-items-array";
-NSString *const qCondition = @"condition";
+NSString *const qFileItemOperationPauseConditionKey = @"condition";
 
 
 static const int qArrayChunkSize = 1000;
@@ -70,7 +70,7 @@ static const int qArrayChunkSize = 1000;
   _item = dict[qFileItemOperationParentItemKey];
   _urlsForTargetUrl = dict[qFileItemOperationUrlsForTargetUrlKey];
 
-  _condition = dict[qCondition];
+  _condition = dict[qFileItemOperationPauseConditionKey];
   _paused = NO;
 
 #ifdef DEBUG
