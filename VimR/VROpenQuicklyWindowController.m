@@ -129,7 +129,7 @@ int qOpenQuicklyWindowWidth = 400;
               row:(NSInteger)row {
 
   VRScoredPath *scoredPath = _filteredFileItems[(NSUInteger) row];
-  cell.image = scoredPath.icon;
+  cell.image = [_fileItemManager iconForUrl:scoredPath.url];
 }
 
 #pragma mark NSTextFieldDelegate

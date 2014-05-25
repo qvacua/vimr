@@ -185,6 +185,7 @@ void streamCallback(
     // Just to be safe...
     [self resetTargetUrl];
     _fileItemOperationQueue.suspended = NO;
+    _fileItemOperationCondition = [[NSCondition alloc] init];
 
     VRCachedFileItemRecord *record = _url2CacheRecord[url];
     if (!record) {
@@ -266,14 +267,6 @@ void streamCallback(
   }
 }
 
-- (void)suspendFurtherCacheOperations {
-  _fileItemOperationQueue.suspended = YES;
-}
-
-- (void)resumeFurtherCacheOperations {
-  _fileItemOperationQueue.suspended = NO;
-}
-
 - (void)waitTillFileItemOperationsFinished {
   [_fileItemOperationQueue waitUntilAllOperationsAreFinished];
 }
@@ -308,6 +301,9 @@ void streamCallback(
 */
 - (void)invalidateCacheForPaths:(char **)paths eventCount:(NSUInteger)eventCount {
   @autoreleasepool {
+    [self waitTillFileItemOperationsFinished];
+    DDLogDebug(@"done waiting till file item operations are finished.");
+
     for (NSUInteger i = 0; i < eventCount; i++) {
 
       // There is +fileURLWithFileSystemRepresentation:isDirectory:relativeToURL: of NSURL, but I'm not quite sure,

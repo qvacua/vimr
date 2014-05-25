@@ -20,7 +20,6 @@ extern NSString *const qCondition;
 
 typedef enum {
   VRFileItemOperationTraverseMode = 0,
-  VRFileItemOperationCacheMode,
   VRFileItemOperationShallowCacheMode,
 } VRFileItemOperationMode;
 

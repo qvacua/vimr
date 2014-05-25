@@ -51,8 +51,6 @@ extern NSString *const qChunkOfNewFileItemsAddedEvent;
 - (void)resumeFileItemOperations;
 
 - (BOOL)fileItemOperationPending;
-- (void)suspendFurtherCacheOperations;
-- (void)resumeFurtherCacheOperations;
 - (void)waitTillFileItemOperationsFinished;
 
 #pragma mark NSObject
