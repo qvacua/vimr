@@ -25,7 +25,7 @@ NSString *const qFilterItemsOperationItemTableViewKey = @"file-item-table-view";
 const NSUInteger qMaximumNumberOfFilterResult = 250;
 
 
-static const int qArrayChunkSize = 10000;
+static const int qArrayChunkSize = 50000;
 
 static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult(VRScoredPath *p1, VRScoredPath *p2) {
   return (NSComparisonResult) (p1.score <= p2.score);
