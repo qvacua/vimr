@@ -89,16 +89,14 @@ static const int qArrayChunkSize = 1000;
       return;
     }
 
-    @synchronized (_item) {
-      if (_mode == VRFileItemOperationTraverseMode) {
-        [self traverse];
-        return;
-      }
+    if (_mode == VRFileItemOperationTraverseMode) {
+      [self traverse];
+      return;
+    }
 
-      if (_mode == VRFileItemOperationShallowCacheMode) {
-        [self cacheDirectDescendants:_item];
-        return;
-      }
+    if (_mode == VRFileItemOperationShallowCacheMode) {
+      [self cacheDirectDescendants:_item];
+      return;
     }
   }
 }
@@ -114,68 +112,75 @@ static const int qArrayChunkSize = 1000;
   __weak VRFileItem *currentItem;
   while (stack.count > 0) {
     currentItem = [stack pop];
-    NSMutableArray *childrenOfCurrentItem = currentItem.children;
 
-    CANCEL_OR_WAIT
-    if (currentItem.shouldCacheChildren) {
-      [childrenOfCurrentItem removeAllObjects];
+    @synchronized (currentItem) {
+      NSMutableArray *childrenOfCurrentItem = currentItem.children;
 
-      [self cacheDirectDescendants:currentItem];
-    }
+      CANCEL_OR_WAIT
+      if (currentItem.shouldCacheChildren) {
+        [childrenOfCurrentItem removeAllObjects];
 
-    if (childrenOfCurrentItem.isEmpty) {
-      continue;
-    }
-
-    CANCEL_OR_WAIT
-    NSMutableArray *fileItemsToAdd = [[NSMutableArray alloc] initWithCapacity:childrenOfCurrentItem.count];
-    BOOL enumerationComplete = [self chunkEnumerateArray:childrenOfCurrentItem usingBlock:^(VRFileItem *item) {
-      if (item.dir) {
-        [stack push:item];
-      } else {
-        [fileItemsToAdd addObject:item];
+        [self cacheDirectDescendants:currentItem];
       }
-    }];
 
-    if (!enumerationComplete) {
-      return;
+      if (childrenOfCurrentItem.isEmpty) {
+        continue;
+      }
+
+      CANCEL_OR_WAIT
+      NSMutableArray *fileItemsToAdd = [[NSMutableArray alloc] initWithCapacity:childrenOfCurrentItem.count];
+      BOOL enumerationComplete = [self chunkEnumerateArray:childrenOfCurrentItem usingBlockOnChunks:^(size_t beginIndex, size_t endIndex) {
+        for (size_t i = beginIndex; i <= endIndex; i++) {
+          VRFileItem *item = childrenOfCurrentItem[i];
+          if (item.dir) {
+            [stack push:item];
+          } else {
+            [fileItemsToAdd addObject:item];
+          }
+        }
+      }];
+
+      if (!enumerationComplete) {
+        return;
+      }
+
+      if (fileItemsToAdd.isEmpty) {
+        continue;
+      }
+
+      [self addAllToUrlsForTargetUrl:childrenOfCurrentItem];
     }
-
-    if (fileItemsToAdd.isEmpty) {
-      continue;
-    }
-
-    CANCEL_OR_WAIT
-    [self addAllToUrlsForTargetUrl:childrenOfCurrentItem];
   }
 }
 
 #pragma mark Private
 - (void)cacheDirectDescendants:(__weak VRFileItem *)item {
-  item.isCachingChildren = YES;
+  @synchronized (item) {
+    item.isCachingChildren = YES;
 
-  if (item.url == nil) {
-    DDLogError(@"url of %@ is nil", item);
+    if (item.url == nil) {
+      DDLogError(@"url of %@ is nil", item);
+    }
+
+    NSArray *childUrls = [_fileManager contentsOfDirectoryAtURL:item.url
+                                     includingPropertiesForKeys:@[NSURLIsDirectoryKey, NSURLIsHiddenKey,]
+                                                        options:NSDirectoryEnumerationSkipsPackageDescendants
+                                                          error:NULL];
+
+    NSMutableArray *children = item.children;
+    [children removeAllObjects];
+    for (NSURL *childUrl in childUrls) {
+      [children addObject:[[VRFileItem alloc] initWithUrl:childUrl]];
+    }
+
+    // When the monitoring thread invalidates cache of this item before this line, then we will have an outdated
+    // children, however, we don't really care...
+    item.shouldCacheChildren = NO; // because shouldCacheChildren means, "should add direct descendants"
+    item.isCachingChildren = NO; // direct descendants scanning is done
   }
-
-  NSArray *childUrls = [_fileManager contentsOfDirectoryAtURL:item.url
-                                   includingPropertiesForKeys:@[NSURLIsDirectoryKey, NSURLIsHiddenKey,]
-                                                      options:NSDirectoryEnumerationSkipsPackageDescendants
-                                                        error:NULL];
-
-  NSMutableArray *children = item.children;
-  [children removeAllObjects];
-  for (NSURL *childUrl in childUrls) {
-    [children addObject:[[VRFileItem alloc] initWithUrl:childUrl]];
-  }
-
-  // When the monitoring thread invalidates cache of this item before this line, then we will have an outdated
-  // children, however, we don't really care...
-  item.shouldCacheChildren = NO; // because shouldCacheChildren means, "should add direct descendants"
-  item.isCachingChildren = NO; // direct descendants scanning is done
 }
 
-- (void)addAllToUrlsForTargetUrl:(NSArray *)items {
+- (BOOL)addAllToUrlsForTargetUrl:(NSArray *)items {
   __block BOOL added = NO;
 
   BOOL enumerationComplete = [self chunkEnumerateArray:items usingBlockOnChunks:^(size_t beginIndex, size_t endIndex) {
@@ -192,43 +197,21 @@ static const int qArrayChunkSize = 1000;
   }];
 
   if (!enumerationComplete || !added) {
-    return;
+    return NO;
   }
 
   dispatch_to_main_thread(^{
     [NSObject cancelPreviousPerformRequestsWithTarget:_fileItemManager];
     [_fileItemManager performSelector:@selector(postNewFileItemsAddedNotification:) withObject:nil afterDelay:0.5];
   });
+
+  return YES;
 }
 
 /**
 * shouldStopBeforeChunk() is called before each chunk execution and if it returns YES, we stop and return NO, ie
 * the enumeration was not complete, but was cancelled.
 */
-- (BOOL)chunkEnumerateArray:(NSArray *)array usingBlock:(void (^)(VRFileItem *))blockOnChild {
-  std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(array.count, qArrayChunkSize);
-  for (auto &pair : chunkedIndexes) {
-    if (self.isCancelled) {
-      return NO;
-    }
-
-    [_condition lock];
-    while (_paused) {
-      [_condition wait];
-    }
-    [_condition unlock];
-
-    size_t beginIndex = pair.first;
-    size_t endIndex = pair.second;
-
-    for (size_t i = beginIndex; i <= endIndex; i++) {
-      blockOnChild(array[i]);
-    }
-  }
-
-  return YES;
-}
-
 - (BOOL)chunkEnumerateArray:(NSArray *)array
          usingBlockOnChunks:(void (^)(size_t beginIndex, size_t endIndex))blockOnChunks {
 
