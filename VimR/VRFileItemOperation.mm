@@ -19,7 +19,7 @@
 NSString *const qFileItemOperationOperationQueueKey = @"operation-queue";
 NSString *const qFileItemOperationParentItemKey = @"parent-file-item";
 NSString *const qFileItemOperationRootUrlKey = @"root-url";
-NSString *const qFileItemOperationFileItemsKey = @"file-items-array";
+NSString *const qFileItemOperationUrlsForTargetUrlKey = @"file-items-array";
 
 
 static const int qArrayChunkSize = 1000;
@@ -38,7 +38,7 @@ static const int qArrayChunkSize = 1000;
   __weak NSFileManager *_fileManager;
 
   __weak VRFileItem *_item;
-  __weak NSMutableArray *_fileItems;
+  __weak NSMutableArray *_urlsForTargetUrl;
 
   NSURL *_rootUrl;
 }
@@ -55,7 +55,7 @@ static const int qArrayChunkSize = 1000;
   _fileManager = dict[qOperationFileManagerKey];
   _item = dict[qFileItemOperationParentItemKey];
   _rootUrl = [dict[qFileItemOperationRootUrlKey] copy];
-  _fileItems = dict[qFileItemOperationFileItemsKey];
+  _urlsForTargetUrl = dict[qFileItemOperationUrlsForTargetUrlKey];
 
 #ifdef DEBUG
   setup_file_logger();
@@ -136,7 +136,7 @@ static const int qArrayChunkSize = 1000;
   CANCEL_WHEN_REQUESTED
 
       DDLogCaching(@"### Adding (from traversing) children items of parent: %@", _item.url);
-  [self addAllToFileItemsForTargetUrl:fileItemsToAdd];
+  [self addAllToUrlsForTargetUrl:fileItemsToAdd];
 }
 
 - (void)cacheAddToFileItems {
@@ -153,7 +153,7 @@ static const int qArrayChunkSize = 1000;
   CANCEL_WHEN_REQUESTED
 
       DDLogCaching(@"### Adding (from caching) children items of parent: %@", _item.url);
-  [self addAllToFileItemsForTargetUrl:children];
+  [self addAllToUrlsForTargetUrl:children];
 
   [self chunkEnumerateArray:children usingBlock:^(VRFileItem *child) {
     if (child.dir) {
@@ -186,13 +186,13 @@ static const int qArrayChunkSize = 1000;
   _item.isCachingChildren = NO; // direct descendants scanning is done
 }
 
-- (void)addAllToFileItemsForTargetUrl:(NSArray *)items {
-  @synchronized (_fileItems) {
+- (void)addAllToUrlsForTargetUrl:(NSArray *)items {
+  @synchronized (_urlsForTargetUrl) {
     __block BOOL added = NO;
 
     BOOL enumerationComplete = [self chunkEnumerateArray:items usingBlock:^(VRFileItem *child) {
       if (!child.dir) {
-        [_fileItems addObject:child.url.path];
+        [_urlsForTargetUrl addObject:child.url];
         added = YES;
       }
     }];
@@ -213,7 +213,7 @@ static const int qArrayChunkSize = 1000;
                                               dict:@{
                                                   qFileItemOperationRootUrlKey : _rootUrl,
                                                   qFileItemOperationParentItemKey : parent,
-                                                  qFileItemOperationFileItemsKey : _fileItems,
+                                                  qFileItemOperationUrlsForTargetUrlKey : _urlsForTargetUrl,
                                                   qOperationFileItemManagerKey : _fileItemManager,
                                                   qFileItemOperationOperationQueueKey : _operationQueue,
                                                   qOperationFileManagerKey : _fileManager,

@@ -49,7 +49,7 @@
   // we wait some time till the background thread has finished its job: 2s should be enough...
   sleep(2);
 
-  NSArray *resultItems = fileItemManager.fileItemsOfTargetUrl;
+  NSArray *resultItems = fileItemManager.urlsOfTargetUrl;
   assertThat(resultItems, hasCountOf(12));
   assertThat([NSSet setWithArray:resultItems], hasCountOf(12)); // we just check whether all items are unique...
 }
@@ -66,7 +66,7 @@
   // we wait some time till the background thread has finished its job: 2s should be enough...
   sleep(2);
 
-  NSArray *resultItems = fileItemManager.fileItemsOfTargetUrl;
+  NSArray *resultItems = fileItemManager.urlsOfTargetUrl;
   assertThat(resultItems, hasCountOf(12));
   assertThat([NSSet setWithArray:resultItems], hasCountOf(12)); // we just check whether all items are unique...
 }
@@ -80,11 +80,11 @@
 
   [fileItemManager setTargetUrl:level2b];
   sleep(1);
-  assertThat(fileItemManager.fileItemsOfTargetUrl, hasCountOf(3));
+  assertThat(fileItemManager.urlsOfTargetUrl, hasCountOf(3));
 
   [fileItemManager setTargetUrl:level2a];
   sleep(1);
-  assertThat(fileItemManager.fileItemsOfTargetUrl, hasCountOf(5));
+  assertThat(fileItemManager.urlsOfTargetUrl, hasCountOf(5));
 }
 
 - (void)testUnregisterUrl {

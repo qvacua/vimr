@@ -51,19 +51,21 @@ void streamCallback(
   FSEventStreamEventId _lastEventId;
 
   NSMutableDictionary *_url2CacheRecord;
-  NSMutableArray *_mutableFileItemsForTargetUrl;
+  NSMutableArray *_mutableUrlsForTargetUrl;
 
   NSOperationQueue *_fileItemOperationQueue;
   NSOperationQueue *_invalidateCacheOperationQueue;
 
+  NSCache *_iconCache;
 }
 
+@autowire(workspace)
 @autowire(fileManager)
 @autowire(notificationCenter);
 
 #pragma mark Properties
-- (NSArray *)fileItemsOfTargetUrl {
-  return _mutableFileItemsForTargetUrl;
+- (NSArray *)urlsOfTargetUrl {
+  return _mutableUrlsForTargetUrl;
 }
 
 - (NSArray *)registeredUrls {
@@ -106,6 +108,22 @@ void streamCallback(
 
 - (NSURL *)urlForItem:(VRFileItem *)item {
   return item.url;
+}
+
+- (NSImage *)iconForUrl:(NSURL *)url {
+  if (!url.isFileURL) {
+    return nil;
+  }
+
+  NSImage *icon = [_iconCache objectForKey:url];
+  if (!icon) {
+    icon = [_workspace iconForFile:url.path];
+    icon.size = CGSizeMake(16, 16);
+
+    [_iconCache setObject:icon forKey:url];
+  }
+
+  return icon;
 }
 
 - (void)registerUrl:(NSURL *)url {
@@ -175,7 +193,7 @@ void streamCallback(
 
     VRFileItem *targetItem = record.fileItem;
 
-    [_mutableFileItemsForTargetUrl removeAllObjects];
+    [_mutableUrlsForTargetUrl removeAllObjects];
 
     // We don't add targetItem to mutableFileItemsForTargetUrl, since it is a dir.
     [_fileItemOperationQueue addOperation:
@@ -183,7 +201,7 @@ void streamCallback(
                                              dict:@{
                                                  qFileItemOperationRootUrlKey : url,
                                                  qFileItemOperationParentItemKey : targetItem,
-                                                 qFileItemOperationFileItemsKey : _mutableFileItemsForTargetUrl,
+                                                 qFileItemOperationUrlsForTargetUrlKey : _mutableUrlsForTargetUrl,
                                                  qOperationFileItemManagerKey : self,
                                                  qFileItemOperationOperationQueueKey : _fileItemOperationQueue,
                                                  qOperationNotificationCenterKey : _notificationCenter,
@@ -201,8 +219,8 @@ void streamCallback(
     [_fileItemOperationQueue cancelAllOperations];
   }
 
-  @synchronized (_mutableFileItemsForTargetUrl) {
-    [_mutableFileItemsForTargetUrl removeAllObjects];
+  @synchronized (_mutableUrlsForTargetUrl) {
+    [_mutableUrlsForTargetUrl removeAllObjects];
   }
 }
 
@@ -241,13 +259,17 @@ void streamCallback(
   _lastEventId = kFSEventStreamEventIdSinceNow;
 
   _url2CacheRecord = [[NSMutableDictionary alloc] initWithCapacity:5];
-  _mutableFileItemsForTargetUrl = [[NSMutableArray alloc] initWithCapacity:10000];
+  _mutableUrlsForTargetUrl = [[NSMutableArray alloc] initWithCapacity:10000];
 
   _fileItemOperationQueue = [[NSOperationQueue alloc] init];
   _fileItemOperationQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
 
   _invalidateCacheOperationQueue = [[NSOperationQueue alloc] init];
   _invalidateCacheOperationQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
+
+  _iconCache = [[NSCache alloc] init];
+  _iconCache.countLimit = 1000;
+  _iconCache.name = @"icon-cache";
 
   return self;
 }

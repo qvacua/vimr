@@ -105,11 +105,11 @@ static inline NSRange capped_range_for_filtered_items(NSArray *result) {
   @autoreleasepool {
     [_fileItemManager suspendFurtherCacheOperations];
 
-    NSArray *fileItems = _fileItemManager.fileItemsOfTargetUrl;
+    NSArray *urlsOfTargetUrl = _fileItemManager.urlsOfTargetUrl;
 
-    @synchronized (fileItems) {
-      NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:fileItems.count];
-      std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(fileItems.count, qArrayChunkSize);
+    @synchronized (urlsOfTargetUrl) {
+      NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:urlsOfTargetUrl.count];
+      std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(urlsOfTargetUrl.count, qArrayChunkSize);
 
       for (auto &pair : chunkedIndexes) {
         NSUInteger beginIndex = pair.first;
@@ -118,12 +118,14 @@ static inline NSRange capped_range_for_filtered_items(NSArray *result) {
 
         CANCEL_WHEN_REQUESTED
         for (size_t i = beginIndex; i <= endIndex; i++) {
-          [result addObject:[[VRScoredPath alloc] initWithPath:fileItems[i]]];
+          [result addObject:[[VRScoredPath alloc] initWithUrl:urlsOfTargetUrl[i]]];
         }
 
         CANCEL_WHEN_REQUESTED
         dispatch_loop(count, ^(size_t i) {
-          [result[beginIndex + i] computeScoreForCandidate:_searchStr];
+          VRScoredPath *scoredPath = result[beginIndex + i];
+          [scoredPath computeScoreForCandidate:_searchStr];
+          scoredPath.icon = [_fileItemManager iconForUrl:scoredPath.url];
         });
 
         CANCEL_WHEN_REQUESTED
@@ -132,14 +134,14 @@ static inline NSRange capped_range_for_filtered_items(NSArray *result) {
 
         std::vector<std::string> paths;
         for (VRScoredPath *scoredPath in cappedResult) {
-          paths.push_back(cf::to_s((__bridge CFStringRef) scoredPath.path));
+          paths.push_back(cf::to_s((__bridge CFStringRef) scoredPath.url.path));
         }
 
         CANCEL_WHEN_REQUESTED
         std::vector<size_t> levels = disambiguate(paths);
         dispatch_loop(cappedResult.count, ^(size_t i) {
           VRScoredPath *scoredPath = cappedResult[i];
-          scoredPath.displayName = disambiguated_display_name(levels[i], scoredPath.path);
+          scoredPath.displayName = disambiguated_display_name(levels[i], scoredPath.url.path);
         });
 
         CANCEL_WHEN_REQUESTED

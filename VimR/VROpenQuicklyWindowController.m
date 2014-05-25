@@ -124,6 +124,14 @@ int qOpenQuicklyWindowWidth = 400;
   }
 }
 
+#pragma mark NSTableViewDelegate
+- (void)tableView:(NSTableView *)tableView willDisplayCell:(NSCell *)cell forTableColumn:(NSTableColumn *)tableColumn
+              row:(NSInteger)row {
+
+  VRScoredPath *scoredPath = _filteredFileItems[(NSUInteger) row];
+  cell.image = scoredPath.icon;
+}
+
 #pragma mark NSTextFieldDelegate
 - (void)controlTextDidChange:(NSNotification *)obj {
   [self refilter];
@@ -140,7 +148,7 @@ int qOpenQuicklyWindowWidth = 400;
   if (selector == @selector(insertNewline:)) {
     @synchronized (_filteredFileItems) {
       VRScoredPath *scoredPath = _filteredFileItems[(NSUInteger) _fileItemTableView.selectedRow];
-      [_targetWindowController.workspace openFilesWithUrls:@[[NSURL fileURLWithPath:scoredPath.path]]];
+      [_targetWindowController.workspace openFilesWithUrls:@[scoredPath.url]];
       [self reset];
       return YES;
     }
@@ -228,7 +236,7 @@ int qOpenQuicklyWindowWidth = 400;
       }
 
       dispatch_to_main_thread(^{
-        self.itemCountTextField.stringValue = SF(@"%lu items", self.fileItemManager.fileItemsOfTargetUrl.count);
+        self.itemCountTextField.stringValue = SF(@"%lu items", self.fileItemManager.urlsOfTargetUrl.count);
       });
 
       usleep(500);
