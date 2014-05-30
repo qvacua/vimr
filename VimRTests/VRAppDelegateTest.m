@@ -11,6 +11,7 @@
 #import "VRMainWindowController.h"
 #import "VRWorkspaceController.h"
 #import "VRAppDelegate.h"
+#import "VRWorkspace.h"
 
 
 static NSOpenPanel *openPanel;
@@ -22,11 +23,14 @@ static NSOpenPanel *openPanel;
 @implementation VRAppDelegateTest {
   VRAppDelegate *appDelegate;
 
+  NSUserNotificationCenter *userNotificationCenter;
   NSApplication *application;
   VRWorkspaceController *workspaceController;
   NSWorkspace *workspace;
 
   IMP openPanelOriginalImpl;
+  VRWorkspace *workspace1;
+  VRWorkspace *workspace2;
 }
 
 + (NSOpenPanel *)mockOpenPanel {
@@ -39,8 +43,10 @@ static NSOpenPanel *openPanel;
   application = mock([NSApplication class]);
   workspaceController = mock([VRWorkspaceController class]);
   workspace = mock([NSWorkspace class]);
+  userNotificationCenter = mock([NSUserNotificationCenter class]);
 
   appDelegate = [[VRAppDelegate alloc] init];
+  appDelegate.userNotificationCenter = userNotificationCenter;
   appDelegate.application = application;
   appDelegate.workspaceController = workspaceController;
   appDelegate.workspace = workspace;
@@ -48,6 +54,19 @@ static NSOpenPanel *openPanel;
   openPanel = mock([NSOpenPanel class]);
   openPanelOriginalImpl = [self mockClassSelector:@selector(openPanel) ofClass:[NSOpenPanel class]
                                      withSelector:@selector(mockOpenPanel) ofClass:[self class]];
+
+  workspace1 = mock([VRWorkspace class]);
+  workspace2 = mock([VRWorkspace class]);
+
+  [given([workspace1 openedUrls]) willReturn:@[
+      [NSURL fileURLWithPath:@"/some/path/to/file1"],
+      [NSURL fileURLWithPath:@"/some/path/to/file2"],
+  ]];
+
+  [given([workspace2 openedUrls]) willReturn:@[
+      [NSURL fileURLWithPath:@"/some/other/path/to/file1"],
+      [NSURL fileURLWithPath:@"/some/other/path/to/file2"],
+  ]];
 }
 
 - (void)tearDown {
@@ -97,18 +116,48 @@ static NSOpenPanel *openPanel;
 }
 
 - (void)testAppliationOpenFile {
+  [given([workspaceController workspaces]) willReturn:@[]];
+
   [appDelegate application:nil openFile:@"/tmp"];
   [verify(workspaceController) openFilesInNewWorkspace:@[
       [NSURL fileURLWithPath:@"/tmp"],
   ]];
 }
 
-- (void)testAppliationOpenFiles {
+- (void)testAppliationOpenFilesWithNoOpenUrls {
+  [given([workspaceController workspaces]) willReturn:@[]];
+
   NSArray *filenames = @[@"/tmp", @"/usr"];
   [appDelegate application:nil openFiles:filenames];
   [verify(workspaceController) openFilesInNewWorkspace:@[
       [NSURL fileURLWithPath:@"/tmp"],
       [NSURL fileURLWithPath:@"/usr"]
+  ]];
+}
+
+- (void)testApplicationOpenFilesWithAllOpenUrls {
+  [given([workspaceController workspaces]) willReturn:@[workspace1, workspace2]];
+
+  [appDelegate application:nil openFiles:@[
+      [NSURL fileURLWithPath:@"/some/path/to/file2"],
+      [NSURL fileURLWithPath:@"/some/other/path/to/file1"],
+  ]];
+
+  [verify(userNotificationCenter) scheduleNotification:instanceOf([NSUserNotification class])];
+  [verify(workspaceController) selectBufferWithUrl:[NSURL fileURLWithPath:@"/some/path/to/file2"]];
+}
+
+- (void)testApplicationOpenFilesWithPartiallyOpenUrls {
+  [given([workspaceController workspaces]) willReturn:@[workspace1, workspace2]];
+
+  [appDelegate application:nil openFiles:@[
+      [NSURL fileURLWithPath:@"/some/path/to/file2"],
+      [NSURL fileURLWithPath:@"/some/other/path/to/file3"],
+  ]];
+
+  [verify(userNotificationCenter) scheduleNotification:instanceOf([NSUserNotification class])];
+  [verify(workspaceController) openFilesInNewWorkspace:@[
+      [NSURL fileURLWithPath:@"/some/other/path/to/file3"],
   ]];
 }
 

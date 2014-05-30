@@ -124,20 +124,14 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
   [urls removeObjectsInArray:alreadyOpenendUrls];
 
   if (urls.isEmpty) {
-    DDLogDebug(@"All selected file(s) are already open.");
-    NSUserNotification *userNotification = [[NSUserNotification alloc] init];
-    userNotification.title = @"All selected file(s) are already opened.";
-    [_userNotificationCenter scheduleNotification:userNotification];
-
+    [self postUserNotificationWithTitle:@"All selected file(s) are already opened."];
     [_workspaceController selectBufferWithUrl:alreadyOpenendUrls[0]];
 
     return;
   }
 
   if (!alreadyOpenendUrls.isEmpty) {
-    NSUserNotification *userNotification = [[NSUserNotification alloc] init];
-    userNotification.title = @"There are already opened files.";
-    [_userNotificationCenter scheduleNotification:userNotification];
+    [self postUserNotificationWithTitle:@"There are already opened files."];
   }
 
   [_workspaceController openFilesInNewWorkspace:urls];
@@ -220,6 +214,12 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
   alert.informativeText = @"There are modified buffers, if you quit now all changes will be lost. Quit anyway?";
 
   return alert;
+}
+
+- (void)postUserNotificationWithTitle:(NSString *)title {
+  NSUserNotification *userNotification = [[NSUserNotification alloc] init];
+  userNotification.title = title;
+  [_userNotificationCenter scheduleNotification:userNotification];
 }
 
 @end
