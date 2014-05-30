@@ -212,7 +212,7 @@
 
 #pragma mark Debug
 - (IBAction)debug1Action:(id)sender {
-  DDLogDebug(@"buffers: %@", _vimController.buffers);
+//  DDLogDebug(@"buffers: %@", _vimController.buffers);
 //  NSMenu *menu = _vimController.mainMenu;
 //  NSMenuItem *fileMenu = menu.itemArray[2];
 //  NSArray *editMenuArray = [[fileMenu submenu] itemArray];

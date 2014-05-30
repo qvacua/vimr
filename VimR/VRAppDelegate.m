@@ -25,9 +25,7 @@
 static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
 
-@implementation VRAppDelegate {
-  VRMainWindowController *_mainWindowController;
-}
+@implementation VRAppDelegate
 
 @manualwire(userDefaults)
 @manualwire(workspace)
@@ -115,17 +113,54 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
   * - NSStrings when opening files via drag and drop on the VimR icon
   */
 
+  NSMutableArray *urls;
   if ([fileNames[0] isKindOfClass:[NSURL class]]) {
-    [self.workspaceController openFilesInNewWorkspace:fileNames];
+    urls = [fileNames mutableCopy];
+  } else {
+    urls = [urls_from_paths(fileNames) mutableCopy];
+  }
+
+  NSArray *alreadyOpenendUrls = [self alreadyOpenedUrlsInUrls:urls];
+  [urls removeObjectsInArray:alreadyOpenendUrls];
+
+  if (urls.isEmpty) {
+    DDLogDebug(@"All selected file(s) are already open.");
+    NSUserNotification *userNotification = [[NSUserNotification alloc] init];
+    userNotification.title = @"All selected file(s) are already opened.";
+    [_userNotificationCenter scheduleNotification:userNotification];
+
+    [_workspaceController selectBufferWithUrl:alreadyOpenendUrls[0]];
+
     return;
   }
 
-  [self.workspaceController openFilesInNewWorkspace:urls_from_paths(fileNames)];
+  if (!alreadyOpenendUrls.isEmpty) {
+    NSUserNotification *userNotification = [[NSUserNotification alloc] init];
+    userNotification.title = @"There are already opened files.";
+    [_userNotificationCenter scheduleNotification:userNotification];
+  }
+
+  [_workspaceController openFilesInNewWorkspace:urls];
+}
+
+- (NSArray *)alreadyOpenedUrlsInUrls:(NSArray *)urls {
+  NSMutableSet *openedUrls = [[NSMutableSet alloc] init];
+  for (VRWorkspace *workspace in _workspaceController.workspaces) {
+    [openedUrls addObjectsFromArray:workspace.openedUrls];
+  }
+
+  NSMutableSet *result = [[NSMutableSet alloc] initWithArray:urls];
+  [result intersectSet:openedUrls];
+
+  return result.allObjects;
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
   // this cannot be done with TBCacao
   _application = aNotification.object;
+
+  _userNotificationCenter = [NSUserNotificationCenter defaultUserNotificationCenter];
+  _userNotificationCenter.delegate = self;
 
 #ifdef DEBUG
   _debug.hidden = NO;
@@ -152,6 +187,13 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 }
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender {
+  return YES;
+}
+
+#pragma mark NSUserNotificationCenterDelegate
+- (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center
+     shouldPresentNotification:(NSUserNotification *)notification {
+
   return YES;
 }
 

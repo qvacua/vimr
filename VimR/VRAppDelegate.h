@@ -16,7 +16,7 @@
 @class VROpenQuicklyWindowController;
 @class VRPrefWindow;
 
-@interface VRAppDelegate : NSObject <NSApplicationDelegate>
+@interface VRAppDelegate : NSObject <NSApplicationDelegate, NSUserNotificationCenterDelegate>
 
 @property (nonatomic, weak) NSApplication *application;
 @property (nonatomic, weak) NSUserDefaults *userDefaults;
@@ -25,6 +25,7 @@
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;
 @property (nonatomic, weak) VROpenQuicklyWindowController *openQuicklyWindowController;
 @property (nonatomic, weak) VRPrefWindow *prefWindow;
+@property (nonatomic, weak) NSUserNotificationCenter *userNotificationCenter;
 
 @property (nonatomic, weak) IBOutlet NSWindow *window;
 @property (nonatomic, weak) IBOutlet NSMenuItem *debug;
@@ -46,5 +47,9 @@
 - (void)application:(NSApplication *)sender openFiles:(NSArray *)fileNames;
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification;
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender;
+
+#pragma mark NSUserNotificationCenterDelegate
+- (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center
+     shouldPresentNotification:(NSUserNotification *)notification;
 
 @end

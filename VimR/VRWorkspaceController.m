@@ -37,6 +37,16 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 }
 
 #pragma mark Public
+- (void)selectBufferWithUrl:(NSURL *)url {
+  for (VRWorkspace *workspace in _mutableWorkspaces) {
+    if ([workspace.openedUrls containsObject:url]) {
+      [workspace selectBufferWithUrl:url];
+
+      return;
+    }
+  }
+}
+
 - (void)newWorkspace {
   [self createNewVimControllerWithWorkingDir:[[NSURL alloc] initFileURLWithPath:NSHomeDirectory()] args:nil];
 }

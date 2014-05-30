@@ -29,6 +29,7 @@
 @property (nonatomic) NSURL *workingDirectory;
 
 #pragma mark Public
+- (NSArray *)openedUrls;
 - (void)updateWorkingDirectory:(NSURL *)commonParent;
 - (void)openFilesWithUrls:(NSArray *)url;
 - (BOOL)hasModifiedBuffer;
@@ -40,4 +41,5 @@
 #pragma mark NSObject
 - (id)init;
 
+- (void)selectBufferWithUrl:(NSURL *)url;
 @end

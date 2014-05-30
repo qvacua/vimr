@@ -42,4 +42,5 @@ extern NSString *const qVimArgOpenFilesLayout;
 - (void)manager:(MMVimManager *)manager vimControllerRemovedWithControllerId:(unsigned int)controllerId pid:(int)pid;
 - (NSMenuItem *)menuItemTemplateForManager:(MMVimManager *)manager;
 
+- (void)selectBufferWithUrl:(NSURL *)url;
 @end

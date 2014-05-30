@@ -30,6 +30,15 @@ static CGPoint qDefaultOrigin = {242, 364};
 }
 
 #pragma mark Public
+- (void)selectBufferWithUrl:(NSURL *)url {
+  [_vimController gotoBufferWithUrl:url];
+  [_mainWindowController.window makeKeyAndOrderFront:self];
+}
+
+- (NSArray *)openedUrls {
+  return _openedBufferUrls;
+}
+
 - (void)updateWorkingDirectory:(NSURL *)commonParent {
   [_fileItemManager unregisterUrl:_workingDirectory];
   _workingDirectory = commonParent;
