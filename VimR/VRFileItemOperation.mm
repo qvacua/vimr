@@ -27,14 +27,14 @@ NSString *const qFileItemOperationPauseConditionKey = @"condition";
 static const int qArrayChunkSize = 1000;
 
 
-#define CANCEL_OR_WAIT if ([self isCancelled]) { \
-                         return; \
-                       } \
-                       [_condition lock]; \
-                       while (_paused) { \
-                         [_condition wait]; \
-                       } \
-                       [_condition unlock]; \
+#define CANCEL_OR_WAIT(rv) if ([self isCancelled]) { \
+                             return rv; \
+                           } \
+                           [_condition lock]; \
+                           while (_paused) { \
+                             [_condition wait]; \
+                           } \
+                           [_condition unlock]; \
 
 
 @implementation VRFileItemOperation {
@@ -108,7 +108,7 @@ static const int qArrayChunkSize = 1000;
   VRStack *stack = [[VRStack alloc] initWithCapacity:10000];
   [stack push:_item];
 
-  CANCEL_OR_WAIT
+  CANCEL_OR_WAIT()
   __weak VRFileItem *currentItem;
   while (stack.count > 0) {
     currentItem = [stack pop];
@@ -116,7 +116,7 @@ static const int qArrayChunkSize = 1000;
     @synchronized (currentItem) {
       NSMutableArray *childrenOfCurrentItem = currentItem.children;
 
-      CANCEL_OR_WAIT
+      CANCEL_OR_WAIT()
       if (currentItem.shouldCacheChildren) {
         [childrenOfCurrentItem removeAllObjects];
 
@@ -127,7 +127,7 @@ static const int qArrayChunkSize = 1000;
         continue;
       }
 
-      CANCEL_OR_WAIT
+      CANCEL_OR_WAIT()
       NSMutableArray *fileItemsToAdd = [[NSMutableArray alloc] initWithCapacity:childrenOfCurrentItem.count];
       BOOL enumerationComplete = [self chunkEnumerateArray:childrenOfCurrentItem usingBlockOnChunks:^(size_t beginIndex, size_t endIndex) {
         for (size_t i = beginIndex; i <= endIndex; i++) {
@@ -217,15 +217,7 @@ static const int qArrayChunkSize = 1000;
 
   std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(array.count, qArrayChunkSize);
   for (auto &pair : chunkedIndexes) {
-    if (self.isCancelled) {
-      return NO;
-    }
-
-    [_condition lock];
-    while (_paused) {
-      [_condition wait];
-    }
-    [_condition unlock];
+    CANCEL_OR_WAIT(NO)
 
     size_t beginIndex = pair.first;
     size_t endIndex = pair.second;
