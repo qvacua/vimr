@@ -70,3 +70,6 @@ NSArray *urls_from_paths(NSArray *paths) {
   return urls;
 }
 
+CGRect rect_with_origin(CGPoint origin, CGFloat width, CGFloat height) {
+  return CGRectMake(origin.x, origin.y, width, height);
+}

@@ -18,3 +18,4 @@ OBJC_EXTERN inline NSValue *vsize(CGSize size);
 OBJC_EXTERN inline NSValue *vrect(CGRect rect);
 OBJC_EXTERN inline NSValue *vpoint(CGPoint point);
 OBJC_EXTERN inline NSArray *urls_from_paths(NSArray *);
+OBJC_EXTERN inline CGRect rect_with_origin(CGPoint origin, CGFloat width, CGFloat height);
