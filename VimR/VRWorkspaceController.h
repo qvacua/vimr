@@ -17,6 +17,7 @@ extern NSString *const qVimArgOpenFilesLayout;
 @class VRMainWindowController;
 @class VRFileItemManager;
 @class VROpenQuicklyWindowController;
+@class VRWorkspaceFactory;
 
 @interface VRWorkspaceController : NSObject <MMVimManagerDelegateProtocol>
 
@@ -25,6 +26,7 @@ extern NSString *const qVimArgOpenFilesLayout;
 @property (nonatomic, weak) NSUserDefaults *userDefaults;
 @property (nonatomic, weak) NSNotificationCenter *notificationCenter;
 @property (nonatomic, weak) MMVimManager *vimManager;
+@property (nonatomic, weak) VRWorkspaceFactory *workspaceFactory;
 
 @property (nonatomic, readonly) NSArray *workspaces;
 

@@ -13,7 +13,7 @@
 #import "VRWorkspace.h"
 #import "VRUtils.h"
 #import "VRFileItemManager.h"
-#import "VROpenQuicklyWindowController.h"
+#import "VRWorkspaceFactory.h"
 
 
 NSString *const qVimArgFileNamesToOpen = @"filenames";
@@ -30,6 +30,7 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 @autowire(vimManager)
 @autowire(notificationCenter)
 @autowire(userDefaults)
+@autowire(workspaceFactory)
 
 #pragma mark Properties
 - (NSArray *)workspaces {
@@ -60,7 +61,7 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 }
 
 - (void)cleanUp {
-  [self.vimManager terminateAllVimProcesses];
+  [_vimManager terminateAllVimProcesses];
 }
 
 - (BOOL)hasDirtyBuffers {
@@ -118,19 +119,12 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 }
 
 - (void)createNewVimControllerWithWorkingDir:(NSURL *)workingDir args:(id)args {
-  int pid = [self.vimManager pidOfNewVimControllerWithArgs:args];
-  VRWorkspace *workspace = [[VRWorkspace alloc] init];
-  workspace.openQuicklyWindowController = _openQuicklyWindowController;
-  workspace.fileItemManager = _fileItemManager;
-  workspace.userDefaults = _userDefaults;
-  workspace.notificationCenter = _notificationCenter;
-  workspace.workspaceController = self;
+  int pid = [_vimManager pidOfNewVimControllerWithArgs:args];
 
-  workspace.workingDirectory = workingDir;
-
-  [self.fileItemManager registerUrl:workingDir];
-
+  VRWorkspace *workspace = [_workspaceFactory newWorkspaceWithWorkingDir:workingDir];
   [_mutableWorkspaces addObject:workspace];
+  [_fileItemManager registerUrl:workingDir];
+
   _pid2Workspace[@(pid)] = workspace;
 }
 

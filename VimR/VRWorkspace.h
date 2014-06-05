@@ -15,14 +15,16 @@
 @class VRFileItemManager;
 @class VROpenQuicklyWindowController;
 @class VRWorkspaceController;
+@class VRMainWindowControllerFactory;
 
 
 @interface VRWorkspace : NSObject
 
-@property (nonatomic) VRWorkspaceController *workspaceController;
-@property (nonatomic) VRFileItemManager *fileItemManager;
-@property (nonatomic) NSUserDefaults *userDefaults;
-@property (nonatomic) NSNotificationCenter *notificationCenter;
+@property (nonatomic, weak) VRWorkspaceController *workspaceController;
+@property (nonatomic, weak) VRFileItemManager *fileItemManager;
+@property (nonatomic, weak) NSUserDefaults *userDefaults;
+@property (nonatomic, weak) NSNotificationCenter *notificationCenter;
+@property (nonatomic, weak) VRMainWindowControllerFactory *mainWindowControllerFactory;
 
 @property (nonatomic) VROpenQuicklyWindowController *openQuicklyWindowController;
 @property (nonatomic) VRMainWindowController *mainWindowController;

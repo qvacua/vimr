@@ -11,6 +11,7 @@
 #import "VRMainWindowController.h"
 #import "VRWorkspaceController.h"
 #import "VRWorkspace.h"
+#import "VRWorkspaceFactory.h"
 
 
 @interface VRWorkspaceControllerTest : VRBaseTestCase
@@ -22,6 +23,7 @@
 
   MMVimManager *vimManager;
   MMVimController *vimController;
+  VRWorkspaceFactory *workspaceFactory;
 }
 
 - (void)setUp {
@@ -29,14 +31,19 @@
 
   vimManager = mock([MMVimManager class]);
   vimController = mock([MMVimController class]);
+  workspaceFactory = mock([VRWorkspaceFactory class]);
 
   workspaceController = [[VRWorkspaceController alloc] init];
   workspaceController.vimManager = vimManager;
+  workspaceController.workspaceFactory = workspaceFactory;
 }
 
 - (void)testNewWorkspace {
   [given([vimManager pidOfNewVimControllerWithArgs:nil]) willReturnInt:123];
+  [given([workspaceFactory newWorkspaceWithWorkingDir:instanceOf([NSURL class])]) willReturn:mock([VRWorkspace class])];
+
   [workspaceController newWorkspace];
+
   [verify(vimManager) pidOfNewVimControllerWithArgs:nil];
 }
 
@@ -48,6 +55,7 @@
       [NSURL URLWithString:@"file:///some/folder/is/not/there/4.txt"],
   ];
   [given([vimManager pidOfNewVimControllerWithArgs:nil]) willReturnInt:123];
+  [given([workspaceFactory newWorkspaceWithWorkingDir:instanceOf([NSURL class])]) willReturn:mock([VRWorkspace class])];
 
   [workspaceController openFilesInNewWorkspace:urls];
   [verify(vimManager) pidOfNewVimControllerWithArgs:@{
@@ -86,9 +94,12 @@
 
 - (void)testManagerVimControllerRemovedWithControllerIdPid {
   [given([vimManager pidOfNewVimControllerWithArgs:nil]) willReturnInt:123];
+  [given([workspaceFactory newWorkspaceWithWorkingDir:instanceOf([NSURL class])]) willReturn:mock([VRWorkspace class])];
+
   [workspaceController newWorkspace];
 
   [workspaceController manager:vimManager vimControllerRemovedWithControllerId:456 pid:123];
+
   assertThat(workspaceController.workspaces, isEmpty());
 }
 

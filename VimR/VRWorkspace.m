@@ -15,6 +15,7 @@
 #import "VRUtils.h"
 #import "VRDefaultLogSetting.h"
 #import "VRMainWindow.h"
+#import "VRMainWindowControllerFactory.h"
 
 
 static CGPoint qDefaultOrigin = {242, 364};
@@ -55,20 +56,14 @@ static CGPoint qDefaultOrigin = {242, 364};
   _vimController = vimController;
 
   CGPoint origin= [self cascadedWindowOrigin];
-  VRMainWindowController *mainWinController = [
-      [VRMainWindowController alloc] initWithContentRect:rect_with_origin(origin, 480, 360)
-  ];
-  mainWinController.workspace = self;
-  mainWinController.userDefaults = _userDefaults;
+  CGRect contentRect = rect_with_origin(origin, 480, 360);
+  _mainWindowController = [_mainWindowControllerFactory newMainWindowControllerWithContentRect:contentRect
+                                                                                     workspace:self
+                                                                                 vimController:vimController];
 
-  mainWinController.vimController = vimController;
-  mainWinController.vimView = vimController.vimView;
+  vimController.delegate = _mainWindowController;
 
-  vimController.delegate = (id <MMVimControllerDelegate>) mainWinController;
-
-  _mainWindowController = mainWinController;
-
-  [mainWinController showWindow:self];
+  [_mainWindowController showWindow:self];
 }
 
 - (void)setUpInitialBuffers {
