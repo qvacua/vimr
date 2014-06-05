@@ -407,51 +407,38 @@
 }
 
 - (void)controller:(MMVimController *)controller showTabBarWithData:(NSData *)data {
-  log4Mark;
   _vimView.tabBarControl.hidden = NO;
 }
 
 - (void)controller:(MMVimController *)controller setScrollbarThumbValue:(float)value proportion:(float)proportion
         identifier:(int32_t)identifier data:(NSData *)data {
 
-  log4Mark;
 }
 
 - (void)controller:(MMVimController *)controller destroyScrollbarWithIdentifier:(int32_t)identifier
               data:(NSData *)data {
 
-  log4Mark;
   _needsToResizeVimView = YES;
 }
 
 - (void)controller:(MMVimController *)controller tabShouldUpdateWithData:(NSData *)data {
-  log4Mark;
 }
 
 - (void)controller:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data {
-  log4Mark;
-
-  DDLogDebug(@"tabs: %@", [self.vimController tabs]);
 }
 
 - (void)controller:(MMVimController *)controller tabDraggedWithData:(NSData *)data {
-  log4Mark;
 }
 
 - (void)controller:(MMVimController *)controller hideTabBarWithData:(NSData *)data {
-  log4Mark;
   _vimView.tabBarControl.hidden = YES;
 }
 
 - (void)controller:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data {
-  log4Mark;
-
   self.documentEdited = modified;
 }
 
 - (void)controller:(MMVimController *)controller setDocumentFilename:(NSString *)filename data:(NSData *)data {
-  log4Mark;
-
   self.window.representedFilename = filename;
 }
 
@@ -499,7 +486,6 @@
 }
 
 - (void)controller:(MMVimController *)controller removeToolbarItemWithIdentifier:(NSString *)identifier {
-  log4Mark;
 }
 
 - (void)controller:(MMVimController *)controller handleBrowseWithDirectoryUrl:(NSURL *)url browseDir:(BOOL)dir
@@ -531,21 +517,20 @@
 
 #pragma mark NSWindowDelegate
 - (void)windowDidBecomeMain:(NSNotification *)notification {
-  [self.vimController sendMessage:GotFocusMsgID data:nil];
+  [_vimController sendMessage:GotFocusMsgID data:nil];
 }
 
 - (void)windowDidResignMain:(NSNotification *)notification {
-  [self.vimController sendMessage:LostFocusMsgID data:nil];
+  [_vimController sendMessage:LostFocusMsgID data:nil];
 }
 
 - (BOOL)windowShouldClose:(id)sender {
-  log4Mark;
   /**
   * this gets called when Cmd-W
   */
 
   // don't close the window or tab; instead let Vim decide what to do
-  [self.vimController sendMessage:VimShouldCloseMsgID data:nil];
+  [_vimController sendMessage:VimShouldCloseMsgID data:nil];
 
   return NO;
 }
