@@ -109,13 +109,22 @@
 }
 
 #pragma mark NSOutlineViewDelegate
-
 - (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(VRNode *)item {
   NSTextFieldCell *cell = [tableColumn dataCellForRow:[_fileOutlineView rowForItem:item]];
   cell.textColor = item.hidden ? [NSColor grayColor] : [NSColor textColor];
   cell.image = [_fileItemManager iconForUrl:item.url];
 
   return cell;
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView shouldExpandItem:(VRNode *)item {
+  item.expanded = YES;
+  return YES;
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView shouldCollapseItem:(VRNode *)item {
+  item.expanded = NO;
+  return YES;
 }
 
 #pragma mark NSView
@@ -167,7 +176,6 @@
 
   [_settingsButton.cell setBackgroundStyle:NSBackgroundStyleRaised];
   [_settingsButton.cell setUsesItemFromMenu:NO];
-  [_settingsButton.cell setMenuItem:item];
   [_settingsButton.menu addItemWithTitle:@"" action:NULL keyEquivalent:@""];
 
   _showHiddenMenuItem = [[NSMenuItem alloc] initWithTitle:@"Show Hidden Files"

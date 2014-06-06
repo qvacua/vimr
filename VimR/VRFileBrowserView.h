@@ -22,6 +22,7 @@
 @property (nonatomic) NSArray *children;
 @property (nonatomic, getter=isDir) BOOL dir;
 @property (nonatomic, getter=isHidden) BOOL hidden;
+@property (nonatomic, getter=isExpanded) BOOL expanded;
 
 - (NSString *)description;
 
@@ -54,6 +55,8 @@
            byItem:(id)item;
 
 #pragma mark NSView
+- (BOOL)outlineView:(NSOutlineView *)outlineView shouldExpandItem:(id)item;
+- (BOOL)outlineView:(NSOutlineView *)outlineView shouldCollapseItem:(id)item;
 - (BOOL)mouseDownCanMoveWindow;
 
 @end
