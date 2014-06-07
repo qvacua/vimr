@@ -18,8 +18,7 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
 #define CONSTRAIN(fmt, ...) [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
 
 
-@implementation VRPrefWindow {
-}
+@implementation VRPrefWindow
 
 @autowire(userDefaultsController)
 
@@ -47,12 +46,24 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   [syncWorkingDirWithVimPwdButton bind:NSValueBinding toObject:_userDefaultsController
                            withKeyPath:SF(@"values.%@", qDefaultSyncWorkingDirectoryWithVimPwd) options:nil];
 
+  NSButton *showFolderFirstButton = [[NSButton alloc] initWithFrame:CGRectZero];
+  showFolderFirstButton.translatesAutoresizingMaskIntoConstraints = NO;
+  showFolderFirstButton.buttonType = NSSwitchButton;
+  showFolderFirstButton.bezelStyle = NSThickSquareBezelStyle;
+  showFolderFirstButton.title = @"Show folders first in the file browser";
+  [self.contentView addSubview:showFolderFirstButton];
+
+  [showFolderFirstButton bind:NSValueBinding toObject:_userDefaultsController
+                  withKeyPath:SF(@"values.%@", qDefaultShowFoldersFirst) options:nil];
+
   NSDictionary *views = @{
       @"syncWorkingDir" : syncWorkingDirWithVimPwdButton,
+      @"showFoldersFirst" : showFolderFirstButton,
   };
 
   CONSTRAIN(@"H:|-[syncWorkingDir]-|");
-  CONSTRAIN(@"V:|-[syncWorkingDir]-|");
+  CONSTRAIN(@"H:|-[showFoldersFirst]-|");
+  CONSTRAIN(@"V:|[syncWorkingDir]-[showFoldersFirst]-|");
 }
 
 #pragma mark TBInitializingBean

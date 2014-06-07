@@ -12,3 +12,4 @@
 
 extern NSString *const qDefaultShowHiddenInFileBrowser;
 extern NSString *const qDefaultSyncWorkingDirectoryWithVimPwd;
+extern NSString *const qDefaultShowFoldersFirst;

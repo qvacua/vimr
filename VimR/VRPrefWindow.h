@@ -13,7 +13,6 @@
 
 extern NSString *const qPrefWindowFrameAutosaveName;
 
-
 @interface VRPrefWindow : NSWindow <TBBean, TBInitializingBean>
 
 @property (nonatomic, weak) NSUserDefaultsController *userDefaultsController;
