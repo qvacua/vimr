@@ -19,7 +19,7 @@ Download
 
 Pre-built binaries can be found [here](https://github.com/qvacua/vimr/releases).
 
-From time to time I'll upload a bleeding edge build and you can download it [here](http://taewon.de/VimR-dev.tar.bz2).
+From time to time I'll upload a bleeding edge build and you can download it [here](http://qvacua.com/snapshots).
 
 How to Build
 ------------
