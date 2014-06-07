@@ -217,6 +217,8 @@
 //  NSMenuItem *fileMenu = menu.itemArray[2];
 //  NSArray *editMenuArray = [[fileMenu submenu] itemArray];
 //  DDLogDebug(@"edit menu: %@", editMenuArray);
+
+  DDLogDebug(@"############# %@", _fileBrowserView.expandedUrls);
 }
 
 #pragma mark NSObject

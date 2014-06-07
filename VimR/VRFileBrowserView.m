@@ -15,9 +15,34 @@
 #import "VRInvalidateCacheOperation.h"
 #import "VRDefaultLogSetting.h"
 #import "OakImageAndTextCell.h"
+#import "NSArray+VR.h"
 
 
 #define CONSTRAIN(fmt, ...) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
+
+
+@implementation VRNodeState
+
+- (id)init {
+  self = [super init];
+  RETURN_NIL_WHEN_NOT_SELF
+
+  _children = [[NSMutableArray alloc] initWithCapacity:20];
+
+  return self;
+}
+
+- (NSString *)description {
+  NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
+  [description appendFormat:@"self.url=%@", self.url];
+  [description appendFormat:@", self.parent=%@", self.parent];
+  [description appendFormat:@", self.children=%@", self.children];
+  [description appendFormat:@", self.expanded=%d", self.expanded];
+  [description appendString:@">"];
+  return description;
+}
+
+@end
 
 
 @implementation VRNode
@@ -44,6 +69,10 @@
   NSMenuItem *_showHiddenMenuItem;
   NSOperationQueue *_invalidateCacheQueue;
   VRNode *_rootNode;
+
+  NSMutableSet *_expandedUrls;
+  VRNodeState *_rootNodeState;
+  NSURL *_selectedUrl;
 }
 
 #pragma mark Public
@@ -60,6 +89,9 @@
   _rootUrl = rootUrl;
   _invalidateCacheQueue = [[NSOperationQueue alloc] init];
   _invalidateCacheQueue.maxConcurrentOperationCount = 1;
+
+  _expandedUrls = [[NSMutableSet alloc] initWithCapacity:40];
+  _rootNodeState = [[VRNodeState alloc] init];
 
   [self addViews];
 
@@ -118,12 +150,16 @@
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldExpandItem:(VRNode *)item {
-  item.expanded = YES;
+  item.state.expanded = YES;
+  [_expandedUrls addObject:item.url];
+
   return YES;
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldCollapseItem:(VRNode *)item {
-  item.expanded = NO;
+  item.state.expanded = NO;
+  [_expandedUrls removeObject:item.url];
+
   return YES;
 }
 
@@ -176,6 +212,7 @@
 
   [_settingsButton.cell setBackgroundStyle:NSBackgroundStyleRaised];
   [_settingsButton.cell setUsesItemFromMenu:NO];
+  [_settingsButton.cell setMenuItem:item];
   [_settingsButton.menu addItemWithTitle:@"" action:NULL keyEquivalent:@""];
 
   _showHiddenMenuItem = [[NSMenuItem alloc] initWithTitle:@"Show Hidden Files"
@@ -238,26 +275,75 @@
 }
 
 - (void)reload {
+  NSURL *url = [[_fileOutlineView itemAtRow:_fileOutlineView.selectedRow] url];
+  DDLogDebug(@"####### selection did change to %@", url);
+  _selectedUrl = url;
+
   [self reCacheNodes];
   [_fileOutlineView reloadData];
-  [_fileOutlineView selectRowIndexes:nil byExtendingSelection:NO];
+
+  [self restoreExpandedStates];
+
+  if (_selectedUrl == nil) {
+    return;
+  }
+
+  DDLogDebug(@"#### old: %@", _selectedUrl);
+  NSURL *oldSelectedUrl = _selectedUrl;
+  _selectedUrl = nil;
+  NSIndexSet *indexSet;
+  for (NSUInteger i = 0; i < _fileOutlineView.numberOfRows; i++) {
+    if ([[[_fileOutlineView itemAtRow:i] url] isEqualTo:oldSelectedUrl]) {
+      indexSet = [NSIndexSet indexSetWithIndex:i];
+      break;
+    }
+  }
+  [_fileOutlineView selectRowIndexes:indexSet byExtendingSelection:NO];
+}
+
+- (void)restoreExpandedStates {
+  NSSet *oldExpandedStates = _expandedUrls.copy;
+  [_expandedUrls removeAllObjects];
+
+  [self restoreExpandState:_rootNode.children states:oldExpandedStates];
+}
+
+- (void)reCacheNodes {
+  _rootNode = [[VRNode alloc] init];
+  _rootNode.item = [_fileItemManager itemForUrl:_rootUrl];
+  _rootNode.state = [[VRNodeState alloc] init];
+  _rootNode.state.url = _rootNode.url;
+
+  [self buildChildNodesForNode:_rootNode];
+  DDLogDebug(@"Re-cached root node");
+}
+
+- (void)restoreExpandState:(NSArray *)children states:(NSSet *)states {
+  for (VRNode *node in children) {
+    if (node.dir && [states containsObject:node.url]) {
+      DDLogDebug(@"####### expanding %@", node.url);
+      [_fileOutlineView expandItem:node];
+
+      if (!node.children.isEmpty) {
+        [self restoreExpandState:node.children states:states];
+      }
+    }
+  }
 }
 
 - (void)buildChildNodesForNode:(VRNode *)parentNode {
   NSArray *childItems = [_fileItemManager childrenOfItem:parentNode.item];
   NSMutableArray *children = [[NSMutableArray alloc] initWithCapacity:childItems.count];
   for (id item in childItems) {
-    [children addObject:[self nodeFromItem:item]];
+    VRNode *node = [self nodeFromItem:item];
+    [children addObject:node];
+
+    if (node.dir) {
+      [parentNode.state.children addObject:node.state];
+    }
   }
 
   parentNode.children = children;
-}
-
-- (void)reCacheNodes {
-  _rootNode = [[VRNode alloc] init];
-  _rootNode.item = [_fileItemManager itemForUrl:_rootUrl];
-  [self buildChildNodesForNode:_rootNode];
-  DDLogDebug(@"re-caching root node");
 }
 
 - (VRNode *)nodeFromItem:(id)item {
@@ -268,6 +354,11 @@
   node.name = [_fileItemManager nameOfItem:item];
   node.item = item;
   node.children = nil;
+
+  if (node.dir) {
+    node.state = [[VRNodeState alloc] init];
+    node.state.url = node.url;
+  }
 
   return node;
 }
