@@ -221,6 +221,9 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 - (IBAction)toggleShowFoldersFirst:(id)sender {
+  NSInteger oldState = _showFoldersFirstMenuItem.state;
+  _showFoldersFirstMenuItem.state = !oldState;
+
   [self reload];
 }
 
