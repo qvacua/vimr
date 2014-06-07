@@ -14,17 +14,6 @@
 @class VRFileItemManager;
 
 
-@interface VRNodeState : NSObject
-
-@property (nonatomic) NSURL *url;
-@property (nonatomic, weak) VRNodeState *parent;
-@property (nonatomic, readonly) NSMutableArray *children;
-@property (nonatomic, getter=isExpanded) BOOL expanded;
-- (NSString *)description;
-
-@end
-
-
 @interface VRNode : NSObject
 
 @property (nonatomic) NSURL *url;
@@ -33,7 +22,6 @@
 @property (nonatomic) NSArray *children;
 @property (nonatomic, getter=isDir) BOOL dir;
 @property (nonatomic, getter=isHidden) BOOL hidden;
-@property (nonatomic) VRNodeState *state;
 
 - (NSString *)description;
 
@@ -48,10 +36,6 @@
 @property (nonatomic, weak) NSNotificationCenter *notificationCenter;
 
 @property (nonatomic) NSURL *rootUrl;
-
-#ifdef DEBUG
-@property (nonatomic, readonly) NSMutableSet *expandedUrls;
-#endif
 
 #pragma mark Public
 - (instancetype)initWithRootUrl:(NSURL *)rootUrl;

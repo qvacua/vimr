@@ -21,30 +21,6 @@
 #define CONSTRAIN(fmt, ...) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
 
 
-@implementation VRNodeState
-
-- (id)init {
-  self = [super init];
-  RETURN_NIL_WHEN_NOT_SELF
-
-  _children = [[NSMutableArray alloc] initWithCapacity:20];
-
-  return self;
-}
-
-- (NSString *)description {
-  NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
-  [description appendFormat:@"self.url=%@", self.url];
-  [description appendFormat:@", self.parent=%@", self.parent];
-  [description appendFormat:@", self.children=%@", self.children];
-  [description appendFormat:@", self.expanded=%d", self.expanded];
-  [description appendString:@">"];
-  return description;
-}
-
-@end
-
-
 @implementation VRNode
 
 - (NSString *)description {
@@ -71,7 +47,6 @@
   VRNode *_rootNode;
 
   NSMutableSet *_expandedUrls;
-  VRNodeState *_rootNodeState;
   NSURL *_selectedUrl;
 }
 
@@ -91,7 +66,6 @@
   _invalidateCacheQueue.maxConcurrentOperationCount = 1;
 
   _expandedUrls = [[NSMutableSet alloc] initWithCapacity:40];
-  _rootNodeState = [[VRNodeState alloc] init];
 
   [self addViews];
 
@@ -150,14 +124,12 @@
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldExpandItem:(VRNode *)item {
-  item.state.expanded = YES;
   [_expandedUrls addObject:item.url];
 
   return YES;
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldCollapseItem:(VRNode *)item {
-  item.state.expanded = NO;
   [_expandedUrls removeObject:item.url];
 
   return YES;
@@ -311,8 +283,6 @@
 - (void)reCacheNodes {
   _rootNode = [[VRNode alloc] init];
   _rootNode.item = [_fileItemManager itemForUrl:_rootUrl];
-  _rootNode.state = [[VRNodeState alloc] init];
-  _rootNode.state.url = _rootNode.url;
 
   [self buildChildNodesForNode:_rootNode];
   DDLogDebug(@"Re-cached root node");
@@ -337,10 +307,6 @@
   for (id item in childItems) {
     VRNode *node = [self nodeFromItem:item];
     [children addObject:node];
-
-    if (node.dir) {
-      [parentNode.state.children addObject:node.state];
-    }
   }
 
   parentNode.children = children;
@@ -354,11 +320,6 @@
   node.name = [_fileItemManager nameOfItem:item];
   node.item = item;
   node.children = nil;
-
-  if (node.dir) {
-    node.state = [[VRNodeState alloc] init];
-    node.state.url = node.url;
-  }
 
   return node;
 }
