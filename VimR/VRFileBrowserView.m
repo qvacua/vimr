@@ -47,7 +47,6 @@
   VRNode *_rootNode;
 
   NSMutableSet *_expandedUrls;
-  NSURL *_selectedUrl;
 }
 
 #pragma mark Public
@@ -247,22 +246,20 @@
 }
 
 - (void)reload {
-  NSURL *url = [[_fileOutlineView itemAtRow:_fileOutlineView.selectedRow] url];
-  DDLogDebug(@"####### selection did change to %@", url);
-  _selectedUrl = url;
+  NSURL *selectedUrl = [[_fileOutlineView itemAtRow:_fileOutlineView.selectedRow] url];
+  CGRect visibleRect = _fileOutlineView.enclosingScrollView.contentView.visibleRect;
 
   [self reCacheNodes];
   [_fileOutlineView reloadData];
 
   [self restoreExpandedStates];
+  [_fileOutlineView scrollRectToVisible:visibleRect];
 
-  if (_selectedUrl == nil) {
+  if (selectedUrl == nil) {
     return;
   }
 
-  DDLogDebug(@"#### old: %@", _selectedUrl);
-  NSURL *oldSelectedUrl = _selectedUrl;
-  _selectedUrl = nil;
+  NSURL *oldSelectedUrl = selectedUrl;
   NSIndexSet *indexSet;
   for (NSUInteger i = 0; i < _fileOutlineView.numberOfRows; i++) {
     if ([[[_fileOutlineView itemAtRow:i] url] isEqualTo:oldSelectedUrl]) {
@@ -270,6 +267,7 @@
       break;
     }
   }
+
   [_fileOutlineView selectRowIndexes:indexSet byExtendingSelection:NO];
 }
 
