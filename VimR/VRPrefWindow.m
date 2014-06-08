@@ -35,40 +35,62 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   return self;
 }
 
+#pragma mark TBInitializingBean
+- (void)postConstruct {
+  [self addViews];
+}
+
+#pragma mark Private
 - (void)addViews {
-  NSButton *syncWorkingDirWithVimPwdButton = [[NSButton alloc] initWithFrame:CGRectZero];
-  syncWorkingDirWithVimPwdButton.translatesAutoresizingMaskIntoConstraints = NO;
-  syncWorkingDirWithVimPwdButton.buttonType = NSSwitchButton;
-  syncWorkingDirWithVimPwdButton.bezelStyle = NSThickSquareBezelStyle;
-  syncWorkingDirWithVimPwdButton.title = @"Keep the working directory in sync with Vim's 'pwd'";
-  [self.contentView addSubview:syncWorkingDirWithVimPwdButton];
+  NSButton *syncWorkingDirWithVimPwdButton =
+      [self checkButtonWithTitle:@"Keep the working directory in sync with Vim's 'pwd'"
+                      defaultKey:qDefaultSyncWorkingDirectoryWithVimPwd];
 
-  [syncWorkingDirWithVimPwdButton bind:NSValueBinding toObject:_userDefaultsController
-                           withKeyPath:SF(@"values.%@", qDefaultSyncWorkingDirectoryWithVimPwd) options:nil];
+  NSButton *showFoldersFirstButton =
+      [self checkButtonWithTitle:@"Show folders first in the file browser" defaultKey:qDefaultShowFoldersFirst];
 
-  NSButton *showFolderFirstButton = [[NSButton alloc] initWithFrame:CGRectZero];
-  showFolderFirstButton.translatesAutoresizingMaskIntoConstraints = NO;
-  showFolderFirstButton.buttonType = NSSwitchButton;
-  showFolderFirstButton.bezelStyle = NSThickSquareBezelStyle;
-  showFolderFirstButton.title = @"Show folders first in the file browser";
-  [self.contentView addSubview:showFolderFirstButton];
+  NSButton *showHiddenFilesButton =
+      [self checkButtonWithTitle:@"Show hidden files in the file browser" defaultKey:qDefaultShowHiddenInFileBrowser];
 
-  [showFolderFirstButton bind:NSValueBinding toObject:_userDefaultsController
-                  withKeyPath:SF(@"values.%@", qDefaultShowFoldersFirst) options:nil];
+  NSTextField *label = [[NSTextField alloc] initWithFrame:CGRectZero];
+  label.translatesAutoresizingMaskIntoConstraints = NO;
+  label.backgroundColor = [NSColor clearColor];
+  [label setFont:[NSFont systemFontOfSize:[NSFont smallSystemFontSize]]];
+  [label.cell setWraps:YES];
+  [label.cell setUsesSingleLineMode:NO];
+  label.stringValue = @"These are default values, ie new windows will start with these values set.\n"
+      "You can override them in each window.";
+  label.editable = NO;
+  label.bordered = NO;
+  [self.contentView addSubview:label];
 
   NSDictionary *views = @{
       @"syncWorkingDir" : syncWorkingDirWithVimPwdButton,
-      @"showFoldersFirst" : showFolderFirstButton,
+      @"showFoldersFirst" : showFoldersFirstButton,
+      @"showHidden" : showHiddenFilesButton,
+      @"label" : label,
   };
 
   CONSTRAIN(@"H:|-[syncWorkingDir]-|");
   CONSTRAIN(@"H:|-[showFoldersFirst]-|");
-  CONSTRAIN(@"V:|[syncWorkingDir]-[showFoldersFirst]-|");
+  CONSTRAIN(@"H:|-[showHidden]-|");
+  CONSTRAIN(@"H:|-[label]-|");
+  CONSTRAIN(@"V:|-[syncWorkingDir]-[showFoldersFirst]-[showHidden]-[label]-|");
 }
 
-#pragma mark TBInitializingBean
-- (void)postConstruct {
-  [self addViews];
+- (NSButton *)checkButtonWithTitle:(NSString *)title defaultKey:(NSString *)defaultKey {
+  NSButton *checkButton = [[NSButton alloc] initWithFrame:CGRectZero];
+  checkButton.translatesAutoresizingMaskIntoConstraints = NO;
+  checkButton.title = title;
+  checkButton.buttonType = NSSwitchButton;
+  checkButton.bezelStyle = NSThickSquareBezelStyle;
+
+  [checkButton bind:NSValueBinding toObject:_userDefaultsController withKeyPath:SF(@"values.%@", defaultKey)
+            options:nil];
+
+  [self.contentView addSubview:checkButton];
+
+  return checkButton;
 }
 
 @end
