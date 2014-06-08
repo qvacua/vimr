@@ -1204,11 +1204,11 @@
         <key>CFBundlePackageType</key>
         <string>APPL</string>
         <key>CFBundleShortVersionString</key>
-        <string>0.0.4</string>
+        <string>0.0.5</string>
         <key>CFBundleSignature</key>
         <string>????</string>
         <key>CFBundleVersion</key>
-        <string>5</string>
+        <string>6</string>
         <key>LSApplicationCategoryType</key>
         <string>public.app-category.developer-tools</string>
         <key>LSMinimumSystemVersion</key>
