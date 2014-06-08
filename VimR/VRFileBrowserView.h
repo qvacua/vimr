@@ -22,7 +22,6 @@
 @property (nonatomic) NSArray *children;
 @property (nonatomic, getter=isDir) BOOL dir;
 @property (nonatomic, getter=isHidden) BOOL hidden;
-@property (nonatomic, getter=isExpanded) BOOL expanded;
 
 - (NSString *)description;
 
@@ -38,9 +37,9 @@
 
 @property (nonatomic) NSURL *rootUrl;
 
-
 #pragma mark Public
 - (instancetype)initWithRootUrl:(NSURL *)rootUrl;
+- (BOOL)syncWorkspaceWithPwd;
 - (void)dealloc;
 - (void)setUp;
 

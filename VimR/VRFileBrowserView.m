@@ -15,9 +15,20 @@
 #import "VRInvalidateCacheOperation.h"
 #import "VRDefaultLogSetting.h"
 #import "OakImageAndTextCell.h"
+#import "NSArray+VR.h"
 
 
 #define CONSTRAIN(fmt, ...) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
+
+
+static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
+    ^NSComparisonResult(NSNumber *node1IsDir, NSNumber *node2IsDir) {
+      if (node1IsDir.boolValue) {
+        return NSOrderedAscending;
+      } else {
+        return NSOrderedDescending;
+      }
+    };
 
 
 @implementation VRNode
@@ -39,14 +50,21 @@
 
 @implementation VRFileBrowserView {
   NSOutlineView *_fileOutlineView;
-  NSScrollView *_scrollView;
-  NSPopUpButton *_settingsButton;
+
   NSMenuItem *_showHiddenMenuItem;
+  NSMenuItem *_showFoldersFirstMenuItem;
+  NSMenuItem *_syncWorkspaceWithPwdMenuItem;
+
   NSOperationQueue *_invalidateCacheQueue;
+
   VRNode *_rootNode;
+  NSMutableSet *_expandedUrls;
 }
 
 #pragma mark Public
+- (BOOL)syncWorkspaceWithPwd {
+  return _syncWorkspaceWithPwdMenuItem.state == NSOnState;
+}
 
 - (void)setRootUrl:(NSURL *)rootUrl {
   _rootUrl = rootUrl;
@@ -61,7 +79,7 @@
   _invalidateCacheQueue = [[NSOperationQueue alloc] init];
   _invalidateCacheQueue.maxConcurrentOperationCount = 1;
 
-  [self addViews];
+  _expandedUrls = [[NSMutableSet alloc] initWithCapacity:40];
 
   return self;
 }
@@ -71,11 +89,11 @@
 }
 
 - (void)setUp {
-  [_notificationCenter addObserver:self selector:@selector(cacheInvalidated:) name:qInvalidatedCacheEvent
-                            object:nil];
+  [_notificationCenter addObserver:self selector:@selector(cacheInvalidated:) name:qInvalidatedCacheEvent object:nil];
 
-  [self reCacheNodes];
-  [_fileOutlineView reloadData];
+  [self addViews];
+
+  [self reload];
 }
 
 #pragma mark NSOutlineViewDataSource
@@ -87,15 +105,15 @@
     [self buildChildNodesForNode:currentNode];
   }
 
-  return [self filterHiddenNodesIfNec:currentNode.children].count;
+  return currentNode.children.count;
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(VRNode *)item {
   if (!item) {
-    return [self filterHiddenNodesIfNec:_rootNode.children][(NSUInteger) index];
+    return _rootNode.children[(NSUInteger) index];
   }
 
-  return [[self filterHiddenNodesIfNec:item.children] objectAtIndex:(NSUInteger) index];
+  return item.children[(NSUInteger) index];
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(VRNode *)item {
@@ -118,12 +136,14 @@
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldExpandItem:(VRNode *)item {
-  item.expanded = YES;
+  [_expandedUrls addObject:item.url];
+
   return YES;
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldCollapseItem:(VRNode *)item {
-  item.expanded = NO;
+  [_expandedUrls removeObject:item.url];
+
   return YES;
 }
 
@@ -155,40 +175,54 @@
   _fileOutlineView.delegate = self;
   [_fileOutlineView setDoubleAction:@selector(fileOutlineViewDoubleClicked:)];
 
-  _scrollView = [[NSScrollView alloc] initWithFrame:NSZeroRect];
-  _scrollView.translatesAutoresizingMaskIntoConstraints = NO;
-  _scrollView.hasVerticalScroller = YES;
-  _scrollView.hasHorizontalScroller = YES;
-  _scrollView.borderType = NSBezelBorder;
-  _scrollView.autohidesScrollers = YES;
-  _scrollView.documentView = _fileOutlineView;
-  [self addSubview:_scrollView];
+  NSScrollView *scrollView = [[NSScrollView alloc] initWithFrame:NSZeroRect];
+  scrollView.translatesAutoresizingMaskIntoConstraints = NO;
+  scrollView.hasVerticalScroller = YES;
+  scrollView.hasHorizontalScroller = YES;
+  scrollView.borderType = NSBezelBorder;
+  scrollView.autohidesScrollers = YES;
+  scrollView.documentView = _fileOutlineView;
+  [self addSubview:scrollView];
 
-  _settingsButton = [[NSPopUpButton alloc] initWithFrame:CGRectZero];
-  _settingsButton.translatesAutoresizingMaskIntoConstraints = NO;
-  _settingsButton.bordered = NO;
-  _settingsButton.pullsDown = YES;
+  NSPopUpButton *settingsButton = [[NSPopUpButton alloc] initWithFrame:CGRectZero];
+  settingsButton.translatesAutoresizingMaskIntoConstraints = NO;
+  settingsButton.bordered = NO;
+  settingsButton.pullsDown = YES;
 
   NSMenuItem *item = [NSMenuItem new];
   item.title = @"";
   item.image = [NSImage imageNamed:NSImageNameActionTemplate];
   [item.image setSize:NSMakeSize(12, 12)];
 
-  [_settingsButton.cell setBackgroundStyle:NSBackgroundStyleRaised];
-  [_settingsButton.cell setUsesItemFromMenu:NO];
-  [_settingsButton.menu addItemWithTitle:@"" action:NULL keyEquivalent:@""];
+  [settingsButton.cell setBackgroundStyle:NSBackgroundStyleRaised];
+  [settingsButton.cell setUsesItemFromMenu:NO];
+  [settingsButton.cell setMenuItem:item];
+  [settingsButton.menu addItemWithTitle:@"" action:NULL keyEquivalent:@""];
+  [self addSubview:settingsButton];
+
+  _showFoldersFirstMenuItem = [[NSMenuItem alloc] initWithTitle:@"Show Folders First"
+                                                         action:@selector(toggleShowFoldersFirst:) keyEquivalent:@""];
+  _showFoldersFirstMenuItem.target = self;
+  _showFoldersFirstMenuItem.state = [_userDefaults boolForKey:qDefaultShowFoldersFirst] ? NSOnState : NSOffState;
+  [settingsButton.menu addItem:_showFoldersFirstMenuItem];
 
   _showHiddenMenuItem = [[NSMenuItem alloc] initWithTitle:@"Show Hidden Files"
                                                    action:@selector(toggleShowHiddenFiles:) keyEquivalent:@""];
   _showHiddenMenuItem.target = self;
   _showHiddenMenuItem.state = [_userDefaults boolForKey:qDefaultShowHiddenInFileBrowser] ? NSOnState : NSOffState;
-  [_settingsButton.menu addItem:_showHiddenMenuItem];
+  [settingsButton.menu addItem:_showHiddenMenuItem];
 
-  [self addSubview:_settingsButton];
+  _syncWorkspaceWithPwdMenuItem = [[NSMenuItem alloc] initWithTitle:@"Sync Workspace with Vim's 'pwd'"
+                                                             action:@selector(toggleSyncWorkspaceWithPwd:)
+                                                      keyEquivalent:@""];
+  _syncWorkspaceWithPwdMenuItem.target = self;
+  _syncWorkspaceWithPwdMenuItem.state =
+      [_userDefaults boolForKey:qDefaultSyncWorkingDirectoryWithVimPwd] ? NSOnState : NSOffState;
+  [settingsButton.menu addItem:_syncWorkspaceWithPwdMenuItem];
 
   NSDictionary *views = @{
-      @"outline" : _scrollView,
-      @"settings" : _settingsButton,
+      @"outline" : scrollView,
+      @"settings" : settingsButton,
   };
 
   CONSTRAIN(@"H:[settings]|");
@@ -196,11 +230,25 @@
   CONSTRAIN(@"V:|-(-1)-[outline(>=50)][settings]-(3)-|");
 }
 
+- (IBAction)toggleSyncWorkspaceWithPwd:(id)sender {
+  NSInteger oldState = _syncWorkspaceWithPwdMenuItem.state;
+  _syncWorkspaceWithPwdMenuItem.state = !oldState;
+
+  [self reload];
+}
+
+- (IBAction)toggleShowFoldersFirst:(id)sender {
+  NSInteger oldState = _showFoldersFirstMenuItem.state;
+  _showFoldersFirstMenuItem.state = !oldState;
+
+  [self reload];
+}
+
 - (IBAction)toggleShowHiddenFiles:(id)sender {
   NSInteger oldState = _showHiddenMenuItem.state;
   _showHiddenMenuItem.state = !oldState;
 
-  [_fileOutlineView reloadData];
+  [self reload];
 }
 
 - (void)fileOutlineViewDoubleClicked:(id)sender {
@@ -222,6 +270,10 @@
   return _showHiddenMenuItem.state == NSOnState;
 }
 
+- (BOOL)showFoldersFirst {
+  return _showFoldersFirstMenuItem.state == NSOnState;
+}
+
 - (void)cacheInvalidated:(NSNotification *)notification {
   [_invalidateCacheQueue addOperationWithBlock:^{
     // We wait here till all file item operations are finished, because, for instance, the children items of the root
@@ -238,26 +290,75 @@
 }
 
 - (void)reload {
+  NSURL *selectedUrl = [[_fileOutlineView itemAtRow:_fileOutlineView.selectedRow] url];
+  CGRect visibleRect = _fileOutlineView.enclosingScrollView.contentView.visibleRect;
+
   [self reCacheNodes];
   [_fileOutlineView reloadData];
-  [_fileOutlineView selectRowIndexes:nil byExtendingSelection:NO];
+  [self restoreExpandedStates];
+
+  [_fileOutlineView scrollRectToVisible:visibleRect];
+
+  [self selectNodeWithUrl:selectedUrl];
+}
+
+- (void)selectNodeWithUrl:(NSURL *)selectedUrl {
+  if (selectedUrl == nil) {
+    return;
+  }
+
+  for (NSUInteger i = 0; i < _fileOutlineView.numberOfRows; i++) {
+    if ([[[_fileOutlineView itemAtRow:i] url] isEqualTo:selectedUrl]) {
+      [_fileOutlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:i] byExtendingSelection:NO];
+      return;
+    }
+  }
+}
+
+- (void)restoreExpandedStates {
+  NSSet *oldExpandedStates = _expandedUrls.copy;
+  [_expandedUrls removeAllObjects];
+
+  [self restoreExpandState:_rootNode.children states:oldExpandedStates];
+}
+
+- (void)reCacheNodes {
+  _rootNode = [[VRNode alloc] init];
+  _rootNode.item = [_fileItemManager itemForUrl:_rootUrl];
+
+  [self buildChildNodesForNode:_rootNode];
+  DDLogDebug(@"Re-cached root node");
+}
+
+- (void)restoreExpandState:(NSArray *)children states:(NSSet *)states {
+  for (VRNode *node in children) {
+    if (node.dir && [states containsObject:node.url]) {
+      [_fileOutlineView expandItem:node];
+
+      if (!node.children.isEmpty) {
+        [self restoreExpandState:node.children states:states];
+      }
+    }
+  }
 }
 
 - (void)buildChildNodesForNode:(VRNode *)parentNode {
   NSArray *childItems = [_fileItemManager childrenOfItem:parentNode.item];
   NSMutableArray *children = [[NSMutableArray alloc] initWithCapacity:childItems.count];
   for (id item in childItems) {
-    [children addObject:[self nodeFromItem:item]];
+    VRNode *node = [self nodeFromItem:item];
+    [children addObject:node];
   }
 
-  parentNode.children = children;
-}
+  NSArray *filteredChildren = [self filterHiddenNodesIfNec:children];
+  if ([self showFoldersFirst]) {
+    NSSortDescriptor *folderDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dir" ascending:YES
+                                                                    comparator:qNodeDirComparator];
 
-- (void)reCacheNodes {
-  _rootNode = [[VRNode alloc] init];
-  _rootNode.item = [_fileItemManager itemForUrl:_rootUrl];
-  [self buildChildNodesForNode:_rootNode];
-  DDLogDebug(@"re-caching root node");
+    parentNode.children = [filteredChildren sortedArrayUsingDescriptors:@[folderDescriptor]];
+  } else {
+    parentNode.children = filteredChildren;
+  }
 }
 
 - (VRNode *)nodeFromItem:(id)item {
