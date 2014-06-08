@@ -1,7 +1,7 @@
 VimR
 ====
 
-Project VimR — Vim Refined
+Project VimR — Vim Refined — [![Build Status](https://travis-ci.org/qvacua/vimr.svg?branch=master)](https://travis-ci.org/qvacua/vimr)
 
 About
 -----
@@ -10,7 +10,7 @@ Project VimR is an attempt to refine the Vim experience. The goal is to build an
 
 In case you want to have a bit more information on the motivation behind VimR, I tried to explain it in my [blog](http://ishouldcocoa.net/post/85242609106/why-vimr).
 
-[![Build Status](https://travis-ci.org/qvacua/vimr.svg?branch=master)](https://travis-ci.org/qvacua/vimr)
+There is a mailing list with absolute no traffic: [vimr@librelist.com](mailto:vimr@librelist.com). (To unsubscribe, send a mail to [vimr-unsubscribe@librelist.com](mailto:vimr-unsubscribe@librelist.com))
 
 ![Screenshot](https://raw.github.com/qvacua/vimr/master/Meta/screenshot.png)
 
