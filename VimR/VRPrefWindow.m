@@ -58,8 +58,9 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   [label setFont:[NSFont systemFontOfSize:[NSFont smallSystemFontSize]]];
   [label.cell setWraps:YES];
   [label.cell setUsesSingleLineMode:NO];
-  label.stringValue = @"These are default values, ie new windows will start with these values set.\n"
-      "You can override them in each window.";
+  label.stringValue = @"These are default values, ie new windows will start with these values set:\n"
+      "– The changes will only affect new windows.\n"
+      "– You can override these settings in each window.";
   label.editable = NO;
   label.bordered = NO;
   [self.contentView addSubview:label];
@@ -75,7 +76,7 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   CONSTRAIN(@"H:|-[showFoldersFirst]-|");
   CONSTRAIN(@"H:|-[showHidden]-|");
   CONSTRAIN(@"H:|-[label]-|");
-  CONSTRAIN(@"V:|-[syncWorkingDir]-[showFoldersFirst]-[showHidden]-[label]-|");
+  CONSTRAIN(@"V:|-[showFoldersFirst]-[showHidden]-[syncWorkingDir]-[label]-|");
 }
 
 - (NSButton *)checkButtonWithTitle:(NSString *)title defaultKey:(NSString *)defaultKey {

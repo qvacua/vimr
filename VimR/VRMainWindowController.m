@@ -22,7 +22,6 @@
 #import "VRWorkspaceView.h"
 #import "VRFileBrowserView.h"
 #import "NSArray+VR.h"
-#import "VRUserDefaults.h"
 
 
 #define CONSTRAINT(fmt, ...) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
@@ -257,7 +256,6 @@
 
   int constrained[2];
   CGSize size = [textView constrainRows:&constrained[0] columns:&constrained[1] toSize:textView.frame.size];
-  DDLogDebug(@"################## total width: %f\tdesired width: %f\tcurrent text view width: %f\tcurrent vim view width %f", _workspaceView.frame.size.width, size.width, textView.frame.size, _vimView.frame.size.width);
 
   DDLogDebug(@"End of live resize, notify Vim that text dimensions are %d x %d", constrained[1], constrained[0]);
 
@@ -452,7 +450,7 @@
 }
 
 - (void)controller:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue {
-  if ([_userDefaults boolForKey:qDefaultSyncWorkingDirectoryWithVimPwd]) {
+  if (_fileBrowserView.syncWorkspaceWithPwd) {
     NSString *pwdPath = _vimController.vimState[@"pwd"];
     if (![_workspace.workingDirectory.path isEqualToString:pwdPath]) {
       [_workspace updateWorkingDirectory:[[NSURL alloc] initFileURLWithPath:pwdPath]];

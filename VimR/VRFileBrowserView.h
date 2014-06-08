@@ -39,6 +39,7 @@
 
 #pragma mark Public
 - (instancetype)initWithRootUrl:(NSURL *)rootUrl;
+- (BOOL)syncWorkspaceWithPwd;
 - (void)dealloc;
 - (void)setUp;
 

@@ -50,18 +50,21 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 
 @implementation VRFileBrowserView {
   NSOutlineView *_fileOutlineView;
-  NSScrollView *_scrollView;
-  NSPopUpButton *_settingsButton;
-  NSOperationQueue *_invalidateCacheQueue;
-  VRNode *_rootNode;
 
   NSMenuItem *_showHiddenMenuItem;
   NSMenuItem *_showFoldersFirstMenuItem;
+  NSMenuItem *_syncWorkspaceWithPwdMenuItem;
 
+  NSOperationQueue *_invalidateCacheQueue;
+
+  VRNode *_rootNode;
   NSMutableSet *_expandedUrls;
 }
 
 #pragma mark Public
+- (BOOL)syncWorkspaceWithPwd {
+  return _syncWorkspaceWithPwdMenuItem.state == NSOnState;
+}
 
 - (void)setRootUrl:(NSURL *)rootUrl {
   _rootUrl = rootUrl;
@@ -172,52 +175,66 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   _fileOutlineView.delegate = self;
   [_fileOutlineView setDoubleAction:@selector(fileOutlineViewDoubleClicked:)];
 
-  _scrollView = [[NSScrollView alloc] initWithFrame:NSZeroRect];
-  _scrollView.translatesAutoresizingMaskIntoConstraints = NO;
-  _scrollView.hasVerticalScroller = YES;
-  _scrollView.hasHorizontalScroller = YES;
-  _scrollView.borderType = NSBezelBorder;
-  _scrollView.autohidesScrollers = YES;
-  _scrollView.documentView = _fileOutlineView;
-  [self addSubview:_scrollView];
+  NSScrollView *scrollView = [[NSScrollView alloc] initWithFrame:NSZeroRect];
+  scrollView.translatesAutoresizingMaskIntoConstraints = NO;
+  scrollView.hasVerticalScroller = YES;
+  scrollView.hasHorizontalScroller = YES;
+  scrollView.borderType = NSBezelBorder;
+  scrollView.autohidesScrollers = YES;
+  scrollView.documentView = _fileOutlineView;
+  [self addSubview:scrollView];
 
-  _settingsButton = [[NSPopUpButton alloc] initWithFrame:CGRectZero];
-  _settingsButton.translatesAutoresizingMaskIntoConstraints = NO;
-  _settingsButton.bordered = NO;
-  _settingsButton.pullsDown = YES;
+  NSPopUpButton *settingsButton = [[NSPopUpButton alloc] initWithFrame:CGRectZero];
+  settingsButton.translatesAutoresizingMaskIntoConstraints = NO;
+  settingsButton.bordered = NO;
+  settingsButton.pullsDown = YES;
 
   NSMenuItem *item = [NSMenuItem new];
   item.title = @"";
   item.image = [NSImage imageNamed:NSImageNameActionTemplate];
   [item.image setSize:NSMakeSize(12, 12)];
 
-  [_settingsButton.cell setBackgroundStyle:NSBackgroundStyleRaised];
-  [_settingsButton.cell setUsesItemFromMenu:NO];
-  [_settingsButton.cell setMenuItem:item];
-  [_settingsButton.menu addItemWithTitle:@"" action:NULL keyEquivalent:@""];
-  [self addSubview:_settingsButton];
+  [settingsButton.cell setBackgroundStyle:NSBackgroundStyleRaised];
+  [settingsButton.cell setUsesItemFromMenu:NO];
+  [settingsButton.cell setMenuItem:item];
+  [settingsButton.menu addItemWithTitle:@"" action:NULL keyEquivalent:@""];
+  [self addSubview:settingsButton];
 
   _showFoldersFirstMenuItem = [[NSMenuItem alloc] initWithTitle:@"Show Folders First"
                                                          action:@selector(toggleShowFoldersFirst:) keyEquivalent:@""];
   _showFoldersFirstMenuItem.target = self;
   _showFoldersFirstMenuItem.state = [_userDefaults boolForKey:qDefaultShowFoldersFirst] ? NSOnState : NSOffState;
-  [_settingsButton.menu addItem:_showFoldersFirstMenuItem];
+  [settingsButton.menu addItem:_showFoldersFirstMenuItem];
 
   _showHiddenMenuItem = [[NSMenuItem alloc] initWithTitle:@"Show Hidden Files"
                                                    action:@selector(toggleShowHiddenFiles:) keyEquivalent:@""];
   _showHiddenMenuItem.target = self;
   _showHiddenMenuItem.state = [_userDefaults boolForKey:qDefaultShowHiddenInFileBrowser] ? NSOnState : NSOffState;
-  [_settingsButton.menu addItem:_showHiddenMenuItem];
+  [settingsButton.menu addItem:_showHiddenMenuItem];
 
+  _syncWorkspaceWithPwdMenuItem = [[NSMenuItem alloc] initWithTitle:@"Sync Workspace with Vim's 'pwd'"
+                                                             action:@selector(toggleSyncWorkspaceWithPwd:)
+                                                      keyEquivalent:@""];
+  _syncWorkspaceWithPwdMenuItem.target = self;
+  _syncWorkspaceWithPwdMenuItem.state =
+      [_userDefaults boolForKey:qDefaultSyncWorkingDirectoryWithVimPwd] ? NSOnState : NSOffState;
+  [settingsButton.menu addItem:_syncWorkspaceWithPwdMenuItem];
 
   NSDictionary *views = @{
-      @"outline" : _scrollView,
-      @"settings" : _settingsButton,
+      @"outline" : scrollView,
+      @"settings" : settingsButton,
   };
 
   CONSTRAIN(@"H:[settings]|");
   CONSTRAIN(@"H:|-(-1)-[outline(>=50)]-(-1)-|");
   CONSTRAIN(@"V:|-(-1)-[outline(>=50)][settings]-(3)-|");
+}
+
+- (IBAction)toggleSyncWorkspaceWithPwd:(id)sender {
+  NSInteger oldState = _syncWorkspaceWithPwdMenuItem.state;
+  _syncWorkspaceWithPwdMenuItem.state = !oldState;
+
+  [self reload];
 }
 
 - (IBAction)toggleShowFoldersFirst:(id)sender {
