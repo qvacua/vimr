@@ -384,6 +384,17 @@
                                     <action selector="performZoom:" target="-1" id="240"/>
                                 </connections>
                             </menuItem>
+                            <menuItem isSeparatorItem="YES" id="6Ly-5s-0lA"/>
+                            <menuItem title="Select Next Tab" keyEquivalent="}" id="B42-SL-HgS">
+                                <connections>
+                                    <action selector="selectNextTab:" target="-1" id="pbn-rb-fcL"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Select Previous Tab" keyEquivalent="{" id="lmH-zd-MBr">
+                                <connections>
+                                    <action selector="selectPreviousTab:" target="-1" id="9iC-uX-gAP"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="92">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
@@ -452,23 +463,6 @@
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </searchFieldCell>
                     </searchField>
-                    <button appearanceType="aqua" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GtO-hk-v1b">
-                        <rect key="frame" x="245" y="296" width="61" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Check" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="y6N-xy-pvs">
-                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                    </button>
-                    <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZMV-Ls-Daa">
-                        <rect key="frame" x="230" y="265" width="213" height="14"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="fjdsklfj sdalk;fj as;dkfj dsakl;afs" id="46U-aj-T7q">
-                            <font key="font" metaFont="smallSystem"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
                 </subviews>
             </view>
             <contentBorderThickness minY="25"/>

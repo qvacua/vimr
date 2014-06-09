@@ -17,7 +17,8 @@
 
 @interface VRMainWindowController : NSWindowController <
     NSWindowDelegate,
-    MMVimControllerDelegate>
+    MMVimControllerDelegate,
+    NSUserInterfaceValidations>
 
 #pragma mark Properties
 @property (nonatomic, weak) NSUserDefaults *userDefaults;
@@ -39,6 +40,8 @@
 - (IBAction)saveDocument:(id)sender;
 - (IBAction)saveDocumentAs:(id)sender;
 - (IBAction)revertDocumentToSaved:(id)sender;
+- (IBAction)selectNextTab:(id)sender;
+- (IBAction)selectPreviousTab:(id)sender;
 - (IBAction)openQuickly:(id)sender;
 - (IBAction)toggleFileBrowser:(id)sender;
 

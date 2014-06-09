@@ -131,6 +131,14 @@
   [self sendCommandToVim:@":e!"];
 }
 
+- (IBAction)selectNextTab:(id)sender {
+  [self sendCommandToVim:@"gt"];
+}
+
+- (IBAction)selectPreviousTab:(id)sender {
+  [self sendCommandToVim:@"gT"];
+}
+
 - (IBAction)zoom:(id)sender {
   // maximize window
   NSScreen *screen = self.window.screen;
@@ -209,9 +217,52 @@
   _workspaceView.fileBrowserView = _fileBrowserView;
 }
 
+#pragma mark NSUserInterfaceValidations
+- (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
+  SEL action = anItem.action;
+
+  if (action == @selector(newTab:)) {
+    return YES;
+  }
+
+  if (action == @selector(performClose:)) {
+    return YES;
+  }
+
+  if (action == @selector(saveDocument:)) {
+    return YES;
+  }
+
+  if (action == @selector(saveDocumentAs:)) {
+    return YES;
+  }
+
+  if (action == @selector(revertDocumentToSaved:)) {
+    return YES;
+  }
+
+  if (action == @selector(openQuickly:)) {
+    return YES;
+  }
+
+  if (action == @selector(toggleFileBrowser:)) {
+    return YES;
+  }
+
+  if (action == @selector(selectNextTab:) || action == @selector(selectPreviousTab:)) {
+    return _vimController.tabs.count >= 2 ? YES : NO;
+  }
+
+  if (action == @selector(debug1Action:)) {
+    return YES;
+  }
+
+  return NO;
+}
+
 #pragma mark Debug
 - (IBAction)debug1Action:(id)sender {
-//  DDLogDebug(@"buffers: %@", _vimController.buffers);
+  DDLogDebug(@"buffers: %@", _vimController.buffers);
 //  NSMenu *menu = _vimController.mainMenu;
 //  NSMenuItem *fileMenu = menu.itemArray[2];
 //  NSArray *editMenuArray = [[fileMenu submenu] itemArray];
