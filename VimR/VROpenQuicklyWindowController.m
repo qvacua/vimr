@@ -81,6 +81,7 @@ int qOpenQuicklyWindowWidth = 400;
   _fileItemTableView = win.fileItemTableView;
   _fileItemTableView.dataSource = self;
   _fileItemTableView.delegate = self;
+  _fileItemTableView.doubleAction = @selector(openSelectedFile:);
 
   _progressIndicator = win.progressIndicator;
   _itemCountTextField = win.itemCountTextField;
@@ -142,12 +143,8 @@ int qOpenQuicklyWindowWidth = 400;
   }
 
   if (selector == @selector(insertNewline:)) {
-    @synchronized (_filteredFileItems) {
-      VRScoredPath *scoredPath = _filteredFileItems[(NSUInteger) _fileItemTableView.selectedRow];
-      [_targetWindowController.workspace openFilesWithUrls:@[scoredPath.url]];
-      [self reset];
-      return YES;
-    }
+    [self openSelectedFile:self];
+    return YES;
   }
 
   if (selector == @selector(moveUp:)) {
@@ -255,6 +252,15 @@ int qOpenQuicklyWindowWidth = 400;
 
   [_fileItemTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:targetIndex] byExtendingSelection:NO];
   [_fileItemTableView scrollRowToVisible:targetIndex];
+}
+
+- (void)openSelectedFile:(id)sender {
+  @synchronized (_filteredFileItems) {
+    VRScoredPath *scoredPath = _filteredFileItems[(NSUInteger) _fileItemTableView.selectedRow];
+    [_targetWindowController.workspace openFilesWithUrls:@[scoredPath.url]];
+
+    [self reset];
+  }
 }
 
 @end
