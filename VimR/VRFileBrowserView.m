@@ -184,10 +184,9 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   scrollView.documentView = _fileOutlineView;
   [self addSubview:scrollView];
 
-  NSPopUpButton *settingsButton = [[NSPopUpButton alloc] initWithFrame:CGRectZero];
+  NSPopUpButton *settingsButton = [[NSPopUpButton alloc] initWithFrame:CGRectZero pullsDown:YES];
   settingsButton.translatesAutoresizingMaskIntoConstraints = NO;
   settingsButton.bordered = NO;
-  settingsButton.pullsDown = YES;
 
   NSMenuItem *item = [NSMenuItem new];
   item.title = @"";
