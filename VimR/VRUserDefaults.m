@@ -15,11 +15,10 @@ NSString *const qDefaultSyncWorkingDirectoryWithVimPwd = @"sync-working-director
 NSString *const qDefaultShowFoldersFirst = @"show-folder-first";
 NSString *const qDefaultDefaultOpeningBehavior = @"default-opening-behavior";
 
-
-static NSString *const qOpenModeInNewTabValue = @"in-new-tab";
-static NSString *const qOpenModeInCurrentTabValue = @"in-current-tab";
-static NSString *const qOpenModeInVerticalSplitValue = @"in-vertical-split-tab";
-static NSString *const qOpenModeInHorizontalSplitValue = @"in-horizontal-split-tab";
+NSString *const qOpenModeInNewTabValue = @"in-new-tab";
+NSString *const qOpenModeInCurrentTabValue = @"in-current-tab";
+NSString *const qOpenModeInVerticalSplitValue = @"in-vertical-split-tab";
+NSString *const qOpenModeInHorizontalSplitValue = @"in-horizontal-split-tab";
 
 
 @implementation VROpenModeValueTransformer

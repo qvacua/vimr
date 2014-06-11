@@ -18,7 +18,14 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
 #define CONSTRAIN(fmt) [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]];
 
 
-@implementation VRPrefWindow
+@implementation VRPrefWindow {
+  VROpenModeValueTransformer *_openModeTransformer;
+  NSPopUpButton *_defaultOpenModeButton;
+  NSTextField *_noModifierDescription;
+  NSTextField *_cmdDescription;
+  NSTextField *_optDescription;
+  NSTextField *_ctrlDescription;
+}
 
 @autowire(userDefaultsController)
 
@@ -27,6 +34,8 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   self = [super initWithContentRect:contentRect styleMask:NSTitledWindowMask | NSClosableWindowMask
                             backing:NSBackingStoreBuffered defer:YES];
   RETURN_NIL_WHEN_NOT_SELF
+
+  _openModeTransformer = [[VROpenModeValueTransformer alloc] init];
 
   self.title = @"Preferences";
   self.releasedWhenClosed = NO;
@@ -42,8 +51,7 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
 
 #pragma mark Private
 - (void)addViews {
-  NSTextField *fbbTitle = [self newTextLabelWithString:@"File Browser Behavior:"];
-  fbbTitle.alignment = NSRightTextAlignment;
+  NSTextField *fbbTitle = [self newTextLabelWithString:@"File Browser Behavior:" alignment:NSRightTextAlignment];
 
   NSButton *showFoldersFirstButton =
       [self checkButtonWithTitle:@"Show folders first" defaultKey:qDefaultShowFoldersFirst];
@@ -55,31 +63,39 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   NSButton *showHiddenFilesButton =
       [self checkButtonWithTitle:@"Show hidden files" defaultKey:qDefaultShowHiddenInFileBrowser];
 
-
   NSTextField *fbbDescription = [self newTextLabelWithString:
       @"These are default values, ie new windows will start with these values set:\n"
           "– The changes will only affect new windows.\n"
-          "– You can override these settings in each window."];
+          "– You can override these settings in each window." alignment:NSLeftTextAlignment];
   fbbDescription.font = [NSFont systemFontOfSize:[NSFont smallSystemFontSize]];
   fbbDescription.textColor = [NSColor grayColor];
   [fbbDescription.cell setWraps:YES];
   [fbbDescription.cell setUsesSingleLineMode:NO];
 
-  NSTextField *dobTitle = [self newTextLabelWithString:@"Default Opening Behavior:"];
-  dobTitle.alignment = NSRightTextAlignment;
+  NSTextField *domTitle = [self newTextLabelWithString:@"Default Opening Behavior:" alignment:NSRightTextAlignment];
 
-  NSPopUpButton *dobButton = [[NSPopUpButton alloc] initWithFrame:CGRectZero pullsDown:NO];
-  dobButton.translatesAutoresizingMaskIntoConstraints = NO;
-  [dobButton.menu addItemWithTitle:@"Open in a new tab" action:NULL keyEquivalent:@""];
-  [dobButton.menu addItemWithTitle:@"Open in the current tab" action:NULL keyEquivalent:@""];
-  [dobButton.menu addItemWithTitle:@"Open in a vertical split" action:NULL keyEquivalent:@""];
-  [dobButton.menu addItemWithTitle:@"Open in a horizontal split" action:NULL keyEquivalent:@""];
-  [dobButton bind:NSSelectedIndexBinding toObject:_userDefaultsController
-      withKeyPath:SF(@"values.%@", qDefaultDefaultOpeningBehavior)
-          options:@{
-              NSValueTransformerBindingOption : [[VROpenModeValueTransformer alloc] init]
-          }];
-  [self.contentView addSubview:dobButton];
+  _defaultOpenModeButton = [[NSPopUpButton alloc] initWithFrame:CGRectZero pullsDown:NO];
+  _defaultOpenModeButton.translatesAutoresizingMaskIntoConstraints = NO;
+  [_defaultOpenModeButton setAction:@selector(defaultOpenBehaviorAction:)];
+  [_defaultOpenModeButton.menu addItemWithTitle:@"Open in a new tab" action:NULL keyEquivalent:@""];
+  [_defaultOpenModeButton.menu addItemWithTitle:@"Open in the current tab" action:NULL keyEquivalent:@""];
+  [_defaultOpenModeButton.menu addItemWithTitle:@"Open in a vertical split" action:NULL keyEquivalent:@""];
+  [_defaultOpenModeButton.menu addItemWithTitle:@"Open in a horizontal split" action:NULL keyEquivalent:@""];
+  [_defaultOpenModeButton bind:NSSelectedIndexBinding toObject:_userDefaultsController
+                   withKeyPath:SF(@"values.%@", qDefaultDefaultOpeningBehavior)
+                       options:@{NSValueTransformerBindingOption : _openModeTransformer}];
+  [self.contentView addSubview:_defaultOpenModeButton];
+
+  NSTextField *noModifierTitle = [self newDescriptionLabelWithString:@"Open:" alignment:NSRightTextAlignment];
+  NSTextField *cmdTitle = [self newDescriptionLabelWithString:@"⌘-Open:" alignment:NSRightTextAlignment];
+  NSTextField *optTitle = [self newDescriptionLabelWithString:@"⌥-Open:" alignment:NSRightTextAlignment];
+  NSTextField *ctrlTitle = [self newDescriptionLabelWithString:@"⌃-Open:" alignment:NSRightTextAlignment];
+
+  _noModifierDescription = [self newDescriptionLabelWithString:qOpenInNewTabDescription alignment:NSLeftTextAlignment];
+  _cmdDescription = [self newDescriptionLabelWithString:qOpenInCurrentTabDescription alignment:NSLeftTextAlignment];
+  _optDescription = [self newDescriptionLabelWithString:qOpenInVerticalSplitDescription alignment:NSLeftTextAlignment];
+  _ctrlDescription = [self newDescriptionLabelWithString:qOpenInHorizontalSplitDescription alignment:NSLeftTextAlignment];
+  [self defaultOpenBehaviorAction:_defaultOpenModeButton];
 
   NSDictionary *views = @{
       @"fbbTitle" : fbbTitle,
@@ -88,8 +104,16 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
       @"syncWorkingDir" : syncWorkingDirWithVimPwdButton,
       @"fbbDesc" : fbbDescription,
 
-      @"dobTitle" : dobTitle,
-      @"dobMenu" : dobButton,
+      @"domTitle" : domTitle,
+      @"domMenu" : _defaultOpenModeButton,
+      @"noModifierTitle" : noModifierTitle,
+      @"cmdTitle" : cmdTitle,
+      @"optTitle" : optTitle,
+      @"ctrlTitle" : ctrlTitle,
+      @"noModifierDesc" : _noModifierDescription,
+      @"cmdDesc" : _cmdDescription,
+      @"optDesc" : _optDescription,
+      @"ctrlDesc" : _ctrlDescription,
   };
 
   CONSTRAIN(@"H:|-[fbbTitle]-[showFoldersFirst]-|");
@@ -97,12 +121,65 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   CONSTRAIN(@"H:|-[fbbTitle]-[syncWorkingDir]-|");
   CONSTRAIN(@"H:|-[fbbTitle]-[fbbDesc]-|");
 
-  CONSTRAIN(@"H:|-[dobTitle]-[showFoldersFirst]");
-  CONSTRAIN(@"H:[dobTitle]-[dobMenu]");
+  CONSTRAIN(@"H:|-[domTitle]-[showFoldersFirst]");
+  CONSTRAIN(@"H:[domTitle]-[domMenu]");
+  CONSTRAIN(@"H:|-[noModifierTitle]-[showFoldersFirst]");
+  CONSTRAIN(@"H:|-[cmdTitle]-[showFoldersFirst]");
+  CONSTRAIN(@"H:|-[optTitle]-[showFoldersFirst]");
+  CONSTRAIN(@"H:|-[ctrlTitle]-[showFoldersFirst]");
+  CONSTRAIN(@"H:|-[noModifierTitle]-[noModifierDesc]");
+  CONSTRAIN(@"H:|-[cmdTitle]-[cmdDesc]");
+  CONSTRAIN(@"H:|-[optTitle]-[optDesc]");
+  CONSTRAIN(@"H:|-[ctrlTitle]-[ctrlDesc]");
 
   [self.contentView addConstraint:[self baseLineConstraintForView:fbbTitle toView:showFoldersFirstButton]];
-  [self.contentView addConstraint:[self baseLineConstraintForView:dobTitle toView:dobButton]];
-  CONSTRAIN(@"V:|-[showFoldersFirst]-[showHidden]-[syncWorkingDir]-[fbbDesc]-[dobMenu]-|");
+  [self.contentView addConstraint:[self baseLineConstraintForView:domTitle toView:_defaultOpenModeButton]];
+  CONSTRAIN(@"V:|-[showFoldersFirst]-[showHidden]-[syncWorkingDir]-[fbbDesc]-"
+      "[domMenu]-[noModifierTitle][cmdTitle][optTitle][ctrlTitle]-|");
+  CONSTRAIN(@"V:[domMenu]-[noModifierDesc][cmdDesc][optDesc][ctrlDesc]");
+}
+
+- (IBAction)defaultOpenBehaviorAction:(id)sender {
+  NSString *mode = [_openModeTransformer reverseTransformedValue:@([sender indexOfSelectedItem])];
+  if ([mode isEqualToString:qOpenModeInNewTabValue]) {
+    _noModifierDescription.stringValue = qOpenInNewTabDescription;
+    _cmdDescription.stringValue = qOpenInCurrentTabDescription;
+    _optDescription.stringValue = qOpenInVerticalSplitDescription;
+    _ctrlDescription.stringValue = qOpenInHorizontalSplitDescription;
+    return;
+  }
+
+  if ([mode isEqualToString:qOpenModeInCurrentTabValue]) {
+    _noModifierDescription.stringValue = qOpenInCurrentTabDescription;
+    _cmdDescription.stringValue = qOpenInNewTabDescription;
+    _optDescription.stringValue = qOpenInVerticalSplitDescription;
+    _ctrlDescription.stringValue = qOpenInHorizontalSplitDescription;
+    return;
+  }
+
+  if ([mode isEqualToString:qOpenModeInVerticalSplitValue]) {
+    _noModifierDescription.stringValue = qOpenInVerticalSplitDescription;
+    _cmdDescription.stringValue = qOpenInCurrentTabDescription;
+    _optDescription.stringValue = qOpenInNewTabDescription;
+    _ctrlDescription.stringValue = qOpenInHorizontalSplitDescription;
+    return;
+  }
+
+  if ([mode isEqualToString:qOpenModeInHorizontalSplitValue]) {
+    _noModifierDescription.stringValue = qOpenInHorizontalSplitDescription;
+    _cmdDescription.stringValue = qOpenInCurrentTabDescription;
+    _optDescription.stringValue = qOpenInVerticalSplitDescription;
+    _ctrlDescription.stringValue = qOpenInNewTabDescription;
+    return;
+  }
+}
+
+- (NSTextField *)newDescriptionLabelWithString:(NSString *)string alignment:(NSTextAlignment)alignment {
+  NSTextField *field = [self newTextLabelWithString:string alignment:alignment];
+  field.font = [NSFont systemFontOfSize:[NSFont smallSystemFontSize]];
+  field.textColor = [NSColor grayColor];
+
+  return field;
 }
 
 - (NSLayoutConstraint *)baseLineConstraintForView:(NSView *)targetView toView:(NSView *)referenceView {
@@ -113,17 +190,18 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
                                      multiplier:1 constant:0];
 }
 
-- (NSTextField *)newTextLabelWithString:(NSString *)string {
-  NSTextField *textField = [[NSTextField alloc] initWithFrame:CGRectZero];
-  textField.translatesAutoresizingMaskIntoConstraints = NO;
-  textField.backgroundColor = [NSColor clearColor];
-  textField.stringValue = string;
-  textField.editable = NO;
-  textField.bordered = NO;
+- (NSTextField *)newTextLabelWithString:(NSString *)string alignment:(NSTextAlignment)alignment {
+  NSTextField *field = [[NSTextField alloc] initWithFrame:CGRectZero];
+  field.translatesAutoresizingMaskIntoConstraints = NO;
+  field.backgroundColor = [NSColor clearColor];
+  field.stringValue = string;
+  field.editable = NO;
+  field.bordered = NO;
+  field.alignment = alignment;
 
-  [self.contentView addSubview:textField];
+  [self.contentView addSubview:field];
 
-  return textField;
+  return field;
 }
 
 - (NSButton *)checkButtonWithTitle:(NSString *)title defaultKey:(NSString *)defaultKey {
