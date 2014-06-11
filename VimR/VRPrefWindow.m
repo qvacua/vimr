@@ -72,6 +72,13 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   dobButton.translatesAutoresizingMaskIntoConstraints = NO;
   [dobButton.menu addItemWithTitle:@"Open in a new tab" action:NULL keyEquivalent:@""];
   [dobButton.menu addItemWithTitle:@"Open in the current tab" action:NULL keyEquivalent:@""];
+  [dobButton.menu addItemWithTitle:@"Open in a vertical split" action:NULL keyEquivalent:@""];
+  [dobButton.menu addItemWithTitle:@"Open in a horizontal split" action:NULL keyEquivalent:@""];
+  [dobButton bind:NSSelectedIndexBinding toObject:_userDefaultsController
+      withKeyPath:SF(@"values.%@", qDefaultDefaultOpeningBehavior)
+          options:@{
+              NSValueTransformerBindingOption : [[VROpenModeValueTransformer alloc] init]
+          }];
   [self.contentView addSubview:dobButton];
 
   NSDictionary *views = @{
@@ -82,7 +89,7 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
       @"fbbDesc" : fbbDescription,
 
       @"dobTitle" : dobTitle,
-      @"dobMenu": dobButton,
+      @"dobMenu" : dobButton,
   };
 
   CONSTRAIN(@"H:|-[fbbTitle]-[showFoldersFirst]-|");
@@ -96,15 +103,14 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   [self.contentView addConstraint:[self baseLineConstraintForView:fbbTitle toView:showFoldersFirstButton]];
   [self.contentView addConstraint:[self baseLineConstraintForView:dobTitle toView:dobButton]];
   CONSTRAIN(@"V:|-[showFoldersFirst]-[showHidden]-[syncWorkingDir]-[fbbDesc]-[dobMenu]-|");
-
 }
 
 - (NSLayoutConstraint *)baseLineConstraintForView:(NSView *)targetView toView:(NSView *)referenceView {
   return [NSLayoutConstraint constraintWithItem:targetView attribute:NSLayoutAttributeBaseline
-                                                           relatedBy:NSLayoutRelationEqual
-                                                              toItem:referenceView
-                                                           attribute:NSLayoutAttributeBaseline
-                                                          multiplier:1 constant:0];
+                                      relatedBy:NSLayoutRelationEqual
+                                         toItem:referenceView
+                                      attribute:NSLayoutAttributeBaseline
+                                     multiplier:1 constant:0];
 }
 
 - (NSTextField *)newTextLabelWithString:(NSString *)string {

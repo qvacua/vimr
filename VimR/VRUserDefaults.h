@@ -13,3 +13,17 @@
 extern NSString *const qDefaultShowHiddenInFileBrowser;
 extern NSString *const qDefaultSyncWorkingDirectoryWithVimPwd;
 extern NSString *const qDefaultShowFoldersFirst;
+extern NSString *const qDefaultDefaultOpeningBehavior;
+
+typedef enum {
+  VROpenModeInNewTab,
+  VROpenModeInCurrentTab,
+  VROpenModeInVerticalSplit,
+  VROpenModeInHorizontalSplit
+} VROpenMode;
+
+/**
+* string of VROpenMode -> index (enum)
+*/
+@interface VROpenModeValueTransformer : NSValueTransformer
+@end

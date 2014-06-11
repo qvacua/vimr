@@ -499,12 +499,12 @@
                     <popUpButton appearanceType="aqua" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="18B-pV-GNO">
                         <rect key="frame" x="192" y="307" width="205" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="R1C-um-liK">
+                        <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="Y2h-FN-Hr1" id="R1C-um-liK">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
+                            <font key="font" metaFont="menu"/>
                             <menu key="menu" title="OtherViews" id="MSe-qQ-w34">
                                 <items>
-                                    <menuItem title="Item 1" id="Y2h-FN-Hr1"/>
+                                    <menuItem title="Item 1" state="on" id="Y2h-FN-Hr1"/>
                                     <menuItem title="Item 2" id="WcG-z6-GWk"/>
                                     <menuItem title="Item 3" id="aqp-V4-rhR"/>
                                 </items>
