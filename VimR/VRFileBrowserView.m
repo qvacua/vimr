@@ -17,7 +17,7 @@
 #import "NSArray+VR.h"
 
 
-#define CONSTRAIN(fmt, ...) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:nil views:views]];
+#define CONSTRAIN(fmt) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]];
 
 
 static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =

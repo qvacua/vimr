@@ -16,7 +16,7 @@
 int qOpenQuicklyWindowPadding = 8;
 
 
-#define CONSTRAIN(fmt, ...) [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: fmt, ##__VA_ARGS__] options:0 metrics:@{@"padding":@(qOpenQuicklyWindowPadding)} views:views]];
+#define CONSTRAIN(fmt) [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:@{@"padding":@(qOpenQuicklyWindowPadding)} views:views]];
 
 
 @implementation VROpenQuicklyWindow {
