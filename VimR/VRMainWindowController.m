@@ -66,23 +66,32 @@
 }
 
 - (void)openFileWithUrls:(NSURL *)url openMode:(VROpenMode)openMode {
+  NSArray *urlsAlreadyOpen = [self alreadyOpenedUrlsFromUrls:@[url]];
+  if (!urlsAlreadyOpen.isEmpty) {
+    [_vimController gotoBufferWithUrl:url];
+    [self.window makeFirstResponder:_vimView.textView];
+    return;
+  }
+
   switch (openMode) {
     case VROpenModeInNewTab:
       [_vimController sendMessage:OpenWithArgumentsMsgID
                              data:[self vimArgsFromUrl:url mode:MMLayoutTabs].dictionaryAsData];
-      return;
+      break;
     case VROpenModeInCurrentTab:
       [self sendCommandToVim:SF(@":e %@", url.path)];
-      return;
+      break;
     case VROpenModeInVerticalSplit:
       [_vimController sendMessage:OpenWithArgumentsMsgID
                              data:[self vimArgsFromUrl:url mode:MMLayoutVerticalSplit].dictionaryAsData];
-      return;
+      break;
     case VROpenModeInHorizontalSplit:
       [_vimController sendMessage:OpenWithArgumentsMsgID
                              data:[self vimArgsFromUrl:url mode:MMLayoutHorizontalSplit].dictionaryAsData];
-      return;
+      break;
   }
+
+  [self.window makeFirstResponder:_vimView.textView];
 }
 
 - (void)openFilesWithUrls:(NSArray *)urls {
@@ -90,7 +99,7 @@
     return;
   }
 
-  NSMutableArray *urlsAlreadyOpen = [self alreadyOpenedUrlsFromUrls:urls];
+  NSArray *urlsAlreadyOpen = [self alreadyOpenedUrlsFromUrls:urls];
   NSMutableArray *urlsToOpen = [[NSMutableArray alloc] initWithArray:urls];
   [urlsToOpen removeObjectsInArray:urlsAlreadyOpen];
 
