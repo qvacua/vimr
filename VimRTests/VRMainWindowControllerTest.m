@@ -48,13 +48,6 @@
   mainWindowController.vimView = vimView;
 }
 
-- (void)testOpenFilesWithArgs {
-  NSDictionary *args = @{@"some" : @"value"};
-
-  [mainWindowController openFilesWithArgs:args];
-  [verify(vimController) sendMessage:OpenWithArgumentsMsgID data:args.dictionaryAsData];
-}
-
 - (void)testCleanupAndClose {
   [mainWindowController cleanUpAndClose];
   [verify(vimView) removeFromSuperviewWithoutNeedingDisplay];
