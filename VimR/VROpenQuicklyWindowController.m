@@ -23,25 +23,22 @@
 int qOpenQuicklyWindowWidth = 400;
 
 
-@interface VROpenQuicklyWindowController ()
-
-@property (weak) NSWindow *targetWindow;
-@property (weak) VRMainWindowController *targetWindowController;
-@property (weak) NSSearchField *searchField;
-@property (weak) VRInactiveTableView *fileItemTableView;
-@property (weak) NSProgressIndicator *progressIndicator;
-@property (weak) NSTextField *itemCountTextField;
-@property (weak) NSTextField *workspaceTextField;
-@property (readonly) NSOperationQueue *filterOperationQueue;
-@property (readonly) NSMutableArray *filteredFileItems;
-@property (readonly) NSOperationQueue *uiUpdateOperationQueue;
-
-@end
-
-@implementation VROpenQuicklyWindowController
+@implementation VROpenQuicklyWindowController {
+  __weak NSWindow *_targetWindow;
+  __weak VRMainWindowController *_targetWindowController;
+  __weak NSSearchField *_searchField;
+  __weak VRInactiveTableView *_fileItemTableView;
+  __weak NSProgressIndicator *_progressIndicator;
+  __weak NSTextField *_itemCountTextField;
+  __weak NSTextField *_workspaceTextField;
+  NSOperationQueue *_filterOperationQueue;
+  NSMutableArray *_filteredFileItems;
+  NSOperationQueue *_uiUpdateOperationQueue;
+}
 
 @autowire(fileItemManager)
 @autowire(notificationCenter)
+@autowire(userDefaults);
 
 #pragma mark Public
 - (void)showForWindowController:(VRMainWindowController *)windowController {
@@ -85,6 +82,7 @@ int qOpenQuicklyWindowWidth = 400;
   _fileItemTableView = win.fileItemTableView;
   _fileItemTableView.dataSource = self;
   _fileItemTableView.delegate = self;
+  _fileItemTableView.doubleAction = @selector(openSelectedFile:);
 
   _progressIndicator = win.progressIndicator;
   _itemCountTextField = win.itemCountTextField;
@@ -146,12 +144,8 @@ int qOpenQuicklyWindowWidth = 400;
   }
 
   if (selector == @selector(insertNewline:)) {
-    @synchronized (_filteredFileItems) {
-      VRScoredPath *scoredPath = _filteredFileItems[(NSUInteger) _fileItemTableView.selectedRow];
-      [_targetWindowController.workspace openFilesWithUrls:@[scoredPath.url]];
-      [self reset];
-      return YES;
-    }
+    [self openSelectedFile:self];
+    return YES;
   }
 
   if (selector == @selector(moveUp:)) {
@@ -212,7 +206,7 @@ int qOpenQuicklyWindowWidth = 400;
   [_filteredFileItems removeAllObjects];
   [_fileItemTableView reloadData];
   [_progressIndicator stopAnimation:self];
-  self.itemCountTextField.stringValue = @"";
+  _itemCountTextField.stringValue = @"";
 
   [_targetWindow makeKeyAndOrderFront:self];
   _targetWindow = nil;
@@ -223,20 +217,20 @@ int qOpenQuicklyWindowWidth = 400;
   _workspaceTextField.stringValue = _targetWindowController.workspace.workingDirectory.path;
 
   [_uiUpdateOperationQueue addOperationWithBlock:^{
-    while (self.targetWindow) {
-      if (self.fileItemManager.fileItemOperationPending || self.filterOperationQueue.operationCount > 0) {
+    while (_targetWindow) {
+      if (self.fileItemManager.fileItemOperationPending || _filterOperationQueue.operationCount > 0) {
         dispatch_to_main_thread(^{
-          [self.progressIndicator startAnimation:self];
+          [_progressIndicator startAnimation:self];
         });
       } else {
         dispatch_to_main_thread(^{
-          [self.progressIndicator stopAnimation:self];
-          self.progressIndicator.hidden = YES;
+          [_progressIndicator stopAnimation:self];
+          _progressIndicator.hidden = YES;
         });
       }
 
       dispatch_to_main_thread(^{
-        self.itemCountTextField.stringValue = SF(@"%lu items", self.fileItemManager.urlsOfTargetUrl.count);
+        _itemCountTextField.stringValue = SF(@"%lu items", self.fileItemManager.urlsOfTargetUrl.count);
       });
 
       usleep(500);
@@ -259,6 +253,21 @@ int qOpenQuicklyWindowWidth = 400;
 
   [_fileItemTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:targetIndex] byExtendingSelection:NO];
   [_fileItemTableView scrollRowToVisible:targetIndex];
+}
+
+- (void)openSelectedFile:(id)sender {
+  @synchronized (_filteredFileItems) {
+    VRScoredPath *scoredPath = _filteredFileItems[(NSUInteger) _fileItemTableView.selectedRow];
+
+    VROpenMode mode = open_mode_from_event(
+        [NSApp currentEvent],
+        [_userDefaults stringForKey:qDefaultDefaultOpeningBehavior]
+    );
+
+    [_targetWindowController openFileWithUrls:scoredPath.url openMode:mode];
+
+    [self reset];
+  }
 }
 
 @end

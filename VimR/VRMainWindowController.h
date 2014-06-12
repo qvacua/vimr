@@ -9,6 +9,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <MacVimFramework/MacVimFramework.h>
+#import "VRUserDefaults.h"
 
 
 @class VRWorkspaceController;
@@ -17,7 +18,8 @@
 
 @interface VRMainWindowController : NSWindowController <
     NSWindowDelegate,
-    MMVimControllerDelegate>
+    MMVimControllerDelegate,
+    NSUserInterfaceValidations>
 
 #pragma mark Properties
 @property (nonatomic, weak) NSUserDefaults *userDefaults;
@@ -31,6 +33,7 @@
 - (void)updateWorkingDirectory;
 - (void)openFilesWithArgs:(NSDictionary *)args;
 - (void)cleanUpAndClose;
+- (void)openFileWithUrls:(NSURL *)urls openMode:(VROpenMode)openMode;
 - (void)openFilesWithUrls:(NSArray *)url;
 
 #pragma mark IBActions
@@ -39,6 +42,8 @@
 - (IBAction)saveDocument:(id)sender;
 - (IBAction)saveDocumentAs:(id)sender;
 - (IBAction)revertDocumentToSaved:(id)sender;
+- (IBAction)selectNextTab:(id)sender;
+- (IBAction)selectPreviousTab:(id)sender;
 - (IBAction)openQuickly:(id)sender;
 - (IBAction)toggleFileBrowser:(id)sender;
 

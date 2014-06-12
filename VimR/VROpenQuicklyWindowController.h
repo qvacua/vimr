@@ -26,6 +26,7 @@ extern int qOpenQuicklyWindowWidth;
 
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;
 @property (nonatomic, weak) NSNotificationCenter *notificationCenter;
+@property (nonatomic, weak) NSUserDefaults *userDefaults;
 
 #pragma mark Public
 - (void)showForWindowController:(VRMainWindowController *)windowController;

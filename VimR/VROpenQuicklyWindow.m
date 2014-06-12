@@ -86,7 +86,6 @@ int qOpenQuicklyWindowPadding = 8;
 
   NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:@"name"];
   tableColumn.dataCell = [[OakImageAndTextCell alloc] init];
-//  tableColumn.dataCell = [[NSTextFieldCell alloc] initTextCell:@""];
   [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingTail];
 
   _fileItemTableView = [[VRInactiveTableView alloc] initWithFrame:CGRectZero];
@@ -110,7 +109,7 @@ int qOpenQuicklyWindowPadding = 8;
   NSTextField *workspaceLabel = [[NSTextField alloc] initWithFrame:CGRectZero];
   workspaceLabel.translatesAutoresizingMaskIntoConstraints = NO;
   workspaceLabel.backgroundColor = [NSColor clearColor];
-  workspaceLabel.stringValue = @"Workspace:";
+  workspaceLabel.stringValue = @"Working Dir.:";
   workspaceLabel.editable = NO;
   workspaceLabel.bordered = NO;
   [self.contentView addSubview:workspaceLabel];

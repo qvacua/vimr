@@ -65,44 +65,48 @@
   [self close];
 }
 
-- (void)openFileWithUrl:(NSURL *)url {
-  __block BOOL alreadyOpened = NO;
-  [_vimController.tabs enumerateObjectsUsingBlock:^(MMTabPage *tab, NSUInteger idx, BOOL *stop) {
-    if ([tab.buffer.fileName isEqualToString:url.path]) {
-      [self sendCommandToVim:SF(@":tabn %lu", idx + 1)];
-      *stop = YES;
-      alreadyOpened = YES;
-    }
-  }];
-
-  if (!alreadyOpened) {
-    [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsFromFileUrls:@[url]].dictionaryAsData];
-  }
-}
-
-- (void)openFilesWithUrls:(NSArray *)urls {
-  NSArray *tabs = _vimController.tabs;
-  if (urls.count == 1) {
-    [self openFileWithUrl:urls[0]];
-
+- (void)openFileWithUrls:(NSURL *)url openMode:(VROpenMode)openMode {
+  NSArray *urlsAlreadyOpen = [self alreadyOpenedUrlsFromUrls:@[url]];
+  if (!urlsAlreadyOpen.isEmpty) {
+    [_vimController gotoBufferWithUrl:url];
     [self.window makeFirstResponder:_vimView.textView];
     return;
   }
 
-  NSMutableArray *urlsToOpen = [[NSMutableArray alloc] initWithArray:urls];
-
-  for (NSURL *url in urls) {
-    for (MMTabPage *tab in tabs) {
-      if ([tab.buffer.fileName isEqualToString:url.path]) {
-        [urlsToOpen removeObject:url];
-      }
-    }
+  switch (openMode) {
+    case VROpenModeInNewTab:
+      [_vimController sendMessage:OpenWithArgumentsMsgID
+                             data:[self vimArgsFromUrl:url mode:MMLayoutTabs].dictionaryAsData];
+      break;
+    case VROpenModeInCurrentTab:
+      [self sendCommandToVim:SF(@":e %@", url.path)];
+      break;
+    case VROpenModeInVerticalSplit:
+      [_vimController sendMessage:OpenWithArgumentsMsgID
+                             data:[self vimArgsFromUrl:url mode:MMLayoutVerticalSplit].dictionaryAsData];
+      break;
+    case VROpenModeInHorizontalSplit:
+      [_vimController sendMessage:OpenWithArgumentsMsgID
+                             data:[self vimArgsFromUrl:url mode:MMLayoutHorizontalSplit].dictionaryAsData];
+      break;
   }
 
-  if (urlsToOpen.isEmpty) {
-    [self openFileWithUrl:urlsToOpen.lastObject];
-  } else {
+  [self.window makeFirstResponder:_vimView.textView];
+}
+
+- (void)openFilesWithUrls:(NSArray *)urls {
+  if (urls.isEmpty) {
+    return;
+  }
+
+  NSArray *urlsAlreadyOpen = [self alreadyOpenedUrlsFromUrls:urls];
+  NSMutableArray *urlsToOpen = [[NSMutableArray alloc] initWithArray:urls];
+  [urlsToOpen removeObjectsInArray:urlsAlreadyOpen];
+
+  if (!urlsToOpen.isEmpty) {
     [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsFromFileUrls:urlsToOpen].dictionaryAsData];
+  } else {
+    [_vimController gotoBufferWithUrl:urlsAlreadyOpen[0]];
   }
 
   [self.window makeFirstResponder:_vimView.textView];
@@ -129,6 +133,14 @@
 
 - (IBAction)revertDocumentToSaved:(id)sender {
   [self sendCommandToVim:@":e!"];
+}
+
+- (IBAction)selectNextTab:(id)sender {
+  [self sendCommandToVim:@"gt"];
+}
+
+- (IBAction)selectPreviousTab:(id)sender {
+  [self sendCommandToVim:@"gT"];
 }
 
 - (IBAction)zoom:(id)sender {
@@ -209,9 +221,53 @@
   _workspaceView.fileBrowserView = _fileBrowserView;
 }
 
+#pragma mark NSUserInterfaceValidations
+- (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
+  SEL action = anItem.action;
+
+  if (action == @selector(newTab:)) {
+    return YES;
+  }
+
+  if (action == @selector(performClose:)) {
+    return YES;
+  }
+
+  if (action == @selector(saveDocument:)) {
+    return YES;
+  }
+
+  if (action == @selector(saveDocumentAs:)) {
+    return YES;
+  }
+
+  if (action == @selector(revertDocumentToSaved:)) {
+    return YES;
+  }
+
+  if (action == @selector(openQuickly:)) {
+    return YES;
+  }
+
+  if (action == @selector(toggleFileBrowser:)) {
+    return YES;
+  }
+
+  if (action == @selector(selectNextTab:) || action == @selector(selectPreviousTab:)) {
+    return _vimController.tabs.count >= 2 ? YES : NO;
+  }
+
+  if (action == @selector(debug1Action:)) {
+    return YES;
+  }
+
+  return NO;
+}
+
 #pragma mark Debug
 - (IBAction)debug1Action:(id)sender {
-//  DDLogDebug(@"buffers: %@", _vimController.buffers);
+  DDLogDebug(@"tabs: %@", _vimController.tabs);
+  DDLogDebug(@"buffers: %@", _vimController.buffers);
 //  NSMenu *menu = _vimController.mainMenu;
 //  NSMenuItem *fileMenu = menu.itemArray[2];
 //  NSArray *editMenuArray = [[fileMenu submenu] itemArray];
@@ -768,7 +824,7 @@
 }
 
 - (void)setWindowTitleToCurrentBuffer {
-  NSString *filePath = _vimController.currentTab.buffer.fileName;
+  NSString *filePath = _vimController.currentBuffer.fileName;
   NSString *filename = filePath.lastPathComponent;
 
   if (filename == nil) {
@@ -807,6 +863,28 @@
       qVimArgFileNamesToOpen : filenames,
       qVimArgOpenFilesLayout : @(MMLayoutTabs),
   };
+}
+
+- (NSDictionary *)vimArgsFromUrl:(NSURL *)url mode:(NSUInteger)mode {
+  return @{
+      qVimArgFileNamesToOpen : @[url.path],
+      qVimArgOpenFilesLayout : @(mode),
+  };
+}
+
+- (NSMutableArray *)alreadyOpenedUrlsFromUrls:(NSArray *)urls {
+  NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:urls.count];
+  NSArray *buffers = _vimController.buffers;
+
+  for (NSURL *url in urls) {
+    for (MMBuffer *buffer in buffers) {
+      if ([buffer.fileName isEqualToString:url.path]) {
+        [result addObject:url];
+      }
+    }
+  }
+
+  return result;
 }
 
 @end
