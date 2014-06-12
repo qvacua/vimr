@@ -27,6 +27,8 @@ typedef enum {
   VROpenModeInHorizontalSplit
 } VROpenMode;
 
+OBJC_EXTERN inline VROpenMode open_mode_from_modifier(NSUInteger modifierFlags, VROpenMode defaultMode);
+
 /**
 * string of VROpenMode -> index (enum)
 */

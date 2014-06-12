@@ -21,6 +21,27 @@ NSString *const qOpenModeInVerticalSplitValue = @"in-vertical-split-tab";
 NSString *const qOpenModeInHorizontalSplitValue = @"in-horizontal-split-tab";
 
 
+VROpenMode open_mode_from_modifier(NSUInteger modifierFlags, VROpenMode defaultMode) {
+  BOOL commandKey = (modifierFlags & NSCommandKeyMask) != 0;
+  BOOL optionKey = (modifierFlags & NSAlternateKeyMask) != 0;
+  BOOL controlKey = (modifierFlags & NSControlKeyMask) != 0;
+
+  if (commandKey) {
+    return defaultMode == VROpenModeInCurrentTab ? VROpenModeInNewTab : VROpenModeInCurrentTab;
+  }
+
+  if (optionKey) {
+    return defaultMode == VROpenModeInVerticalSplit ? VROpenModeInNewTab : VROpenModeInVerticalSplit;
+  }
+
+  if (controlKey) {
+    return defaultMode == VROpenModeInHorizontalSplit ? VROpenModeInNewTab : VROpenModeInHorizontalSplit;
+  }
+
+  return defaultMode;
+}
+
+
 @implementation VROpenModeValueTransformer
 
 + (Class)transformedValueClass {

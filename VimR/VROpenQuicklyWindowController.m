@@ -23,14 +23,6 @@
 int qOpenQuicklyWindowWidth = 400;
 
 
-typedef enum {
-  qOpenQuicklyInNewTab,
-  qOpenQuicklyInCurrentTab,
-  qOpenQuicklyInVerticalSplit,
-  qOpenQuicklyInHorizontalSplit
-} VROpenQuicklyMode;
-
-
 @implementation VROpenQuicklyWindowController {
   __weak NSWindow *_targetWindow;
   __weak VRMainWindowController *_targetWindowController;
@@ -142,16 +134,6 @@ typedef enum {
   [self refilter];
 }
 
-- (VROpenQuicklyMode)openModeFromEvent:(NSEvent *)event {
-  NSUInteger modifierFlags = event.modifierFlags;
-  BOOL commandKey = (BOOL) (modifierFlags & NSCommandKeyMask);
-  BOOL optionKey = (BOOL) (modifierFlags & NSAlternateKeyMask);
-  BOOL shiftKey = (BOOL) (modifierFlags & NSShiftKeyMask);
-  BOOL controlKey = (BOOL) (modifierFlags & NSControlKeyMask);
-
-  return 0;
-}
-
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)selector {
   if (selector == @selector(cancelOperation:)) {
     DDLogDebug(@"Open quickly cancelled");
@@ -160,7 +142,6 @@ typedef enum {
     return YES;
   }
 
-  NSEvent *event = [NSApp currentEvent];
   if (selector == @selector(insertNewline:)) {
     [self openSelectedFile:self];
     return YES;
