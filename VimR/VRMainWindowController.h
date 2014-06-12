@@ -9,6 +9,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <MacVimFramework/MacVimFramework.h>
+#import "VRUserDefaults.h"
 
 
 @class VRWorkspaceController;
@@ -32,6 +33,7 @@
 - (void)updateWorkingDirectory;
 - (void)openFilesWithArgs:(NSDictionary *)args;
 - (void)cleanUpAndClose;
+- (void)openFileWithUrls:(NSURL *)urls openMode:(VROpenMode)openMode;
 - (void)openFilesWithUrls:(NSArray *)url;
 
 #pragma mark IBActions

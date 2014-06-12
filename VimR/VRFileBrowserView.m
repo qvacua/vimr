@@ -11,7 +11,6 @@
 #import "VRUtils.h"
 #import "VRFileItemManager.h"
 #import "VRMainWindowController.h"
-#import "VRUserDefaults.h"
 #import "VRInvalidateCacheOperation.h"
 #import "VRDefaultLogSetting.h"
 #import "OakImageAndTextCell.h"
@@ -254,7 +253,11 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   VRNode *clickedItem = [_fileOutlineView itemAtRow:_fileOutlineView.clickedRow];
 
   if (!clickedItem.dir) {
-    [(VRMainWindowController *) self.window.windowController openFilesWithUrls:@[clickedItem.url]];
+    VROpenMode mode = open_mode_from_event(
+        [NSApp currentEvent],
+        [_userDefaults stringForKey:qDefaultDefaultOpeningBehavior]
+    );
+    [(VRMainWindowController *) self.window.windowController openFileWithUrls:clickedItem.url openMode:mode];
     return;
   }
 

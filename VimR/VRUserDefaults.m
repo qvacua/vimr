@@ -42,6 +42,14 @@ VROpenMode open_mode_from_modifier(NSUInteger modifierFlags, VROpenMode defaultM
 }
 
 
+VROpenMode open_mode_from_event(NSEvent *curEvent, NSString *defaultModeString) {
+  VROpenModeValueTransformer *transformer = [[VROpenModeValueTransformer alloc] init];
+  VROpenMode defaultMode = (VROpenMode) [[transformer transformedValue:defaultModeString] unsignedIntegerValue];
+
+  return open_mode_from_modifier(curEvent.modifierFlags, defaultMode);
+}
+
+
 @implementation VROpenModeValueTransformer
 
 + (Class)transformedValueClass {

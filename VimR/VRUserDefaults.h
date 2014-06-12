@@ -28,6 +28,7 @@ typedef enum {
 } VROpenMode;
 
 OBJC_EXTERN inline VROpenMode open_mode_from_modifier(NSUInteger modifierFlags, VROpenMode defaultMode);
+OBJC_EXTERN inline VROpenMode open_mode_from_event(NSEvent *curEvent, NSString *defaultModeString);
 
 /**
 * string of VROpenMode -> index (enum)

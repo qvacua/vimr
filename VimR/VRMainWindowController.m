@@ -65,6 +65,26 @@
   [self close];
 }
 
+- (void)openFileWithUrls:(NSURL *)url openMode:(VROpenMode)openMode {
+  switch (openMode) {
+    case VROpenModeInNewTab:
+      [_vimController sendMessage:OpenWithArgumentsMsgID
+                             data:[self vimArgsFromUrl:url mode:MMLayoutTabs].dictionaryAsData];
+      return;
+    case VROpenModeInCurrentTab:
+      [self sendCommandToVim:SF(@":e %@", url.path)];
+      return;
+    case VROpenModeInVerticalSplit:
+      [_vimController sendMessage:OpenWithArgumentsMsgID
+                             data:[self vimArgsFromUrl:url mode:MMLayoutVerticalSplit].dictionaryAsData];
+      return;
+    case VROpenModeInHorizontalSplit:
+      [_vimController sendMessage:OpenWithArgumentsMsgID
+                             data:[self vimArgsFromUrl:url mode:MMLayoutHorizontalSplit].dictionaryAsData];
+      return;
+  }
+}
+
 - (void)openFilesWithUrls:(NSArray *)urls {
   if (urls.isEmpty) {
     return;
@@ -833,6 +853,13 @@
   return @{
       qVimArgFileNamesToOpen : filenames,
       qVimArgOpenFilesLayout : @(MMLayoutTabs),
+  };
+}
+
+- (NSDictionary *)vimArgsFromUrl:(NSURL *)url mode:(NSUInteger)mode {
+  return @{
+      qVimArgFileNamesToOpen : @[url.path],
+      qVimArgOpenFilesLayout : @(mode),
   };
 }
 

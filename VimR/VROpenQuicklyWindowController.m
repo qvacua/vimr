@@ -38,6 +38,7 @@ int qOpenQuicklyWindowWidth = 400;
 
 @autowire(fileItemManager)
 @autowire(notificationCenter)
+@autowire(userDefaults);
 
 #pragma mark Public
 - (void)showForWindowController:(VRMainWindowController *)windowController {
@@ -257,7 +258,13 @@ int qOpenQuicklyWindowWidth = 400;
 - (void)openSelectedFile:(id)sender {
   @synchronized (_filteredFileItems) {
     VRScoredPath *scoredPath = _filteredFileItems[(NSUInteger) _fileItemTableView.selectedRow];
-    [_targetWindowController.workspace openFilesWithUrls:@[scoredPath.url]];
+
+    VROpenMode mode = open_mode_from_event(
+        [NSApp currentEvent],
+        [_userDefaults stringForKey:qDefaultDefaultOpeningBehavior]
+    );
+
+    [_targetWindowController openFileWithUrls:scoredPath.url openMode:mode];
 
     [self reset];
   }
