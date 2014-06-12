@@ -164,7 +164,7 @@
   int rowsZoomed;
   int colsZoomed;
   CGRect maxFrame = screen.visibleFrame;
-  CGRect contentRect = [self uncorrectedVimViewRectInParentRect:maxFrame];
+  CGRect contentRect = [self.window contentRectForFrameRect:maxFrame];
   [_vimView constrainRows:&rowsZoomed columns:&colsZoomed toSize:contentRect.size];
 
   int curRows, curCols;
@@ -611,9 +611,6 @@
   CGSize givenVimViewSize = CGSizeMake(contentRect.size.width - fileBrowserAndDividerWidth, contentRect.size.height);
   NSSize desiredSize = [_vimView constrainRows:&row columns:&columns toSize:givenVimViewSize];
 
-  DDLogDebug(@"###############   given content size: %@", vsize(givenVimViewSize));
-  DDLogDebug(@"############### desired content size: %@", vsize(desiredSize));
-
   contentRect.size.width = fileBrowserAndDividerWidth + desiredSize.width;
   contentRect.size.height = desiredSize.height;
 
@@ -649,10 +646,6 @@
   };
   CONSTRAINT(@"H:|[workspace]|");
   CONSTRAINT(@"V:|[workspace]|");
-}
-
-- (CGRect)uncorrectedVimViewRectInParentRect:(CGRect)parentRect {
-  return [self.window contentRectForFrameRect:parentRect];
 }
 
 - (void)sendCommandToVim:(NSString *)command {
@@ -693,7 +686,7 @@
   // Constrain the given (window) frame so that it fits an even number of
   // rows and columns.
   NSWindow *window = self.window;
-  CGRect contentRect = [self uncorrectedVimViewRectInParentRect:frame];
+  CGRect contentRect = [self.window contentRectForFrameRect:frame];
   CGSize constrainedSize = [self.vimView constrainRows:NULL columns:NULL toSize:contentRect.size];
 
   contentRect.origin.y += contentRect.size.height - constrainedSize.height;
@@ -706,7 +699,7 @@
   logSize4Debug(@"contentSize", contentSize);
   NSWindow *window = self.window;
   CGRect frame = window.frame;
-  CGRect contentRect = [self uncorrectedVimViewRectInParentRect:frame];
+  CGRect contentRect = [self.window contentRectForFrameRect:frame];
 
   // Keep top-left corner of the window fixed when resizing.
   contentRect.origin.y -= contentSize.height - contentRect.size.height;
@@ -788,7 +781,7 @@
   // "visibleFrame" method does not overlap menu and dock so should not be
   // used in full-screen.
   CGRect screenRect = win.screen.visibleFrame;
-  CGRect rect = [self uncorrectedVimViewRectInParentRect:screenRect];
+  CGRect rect = [self.window contentRectForFrameRect:screenRect];
 
   if (contentSize.height > rect.size.height) {
     contentSize.height = rect.size.height;
