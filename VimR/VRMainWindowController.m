@@ -422,7 +422,10 @@
               data:(NSData *)data {
 
   [self.vimView showScrollbarWithIdentifier:identifier state:state];
-  _needsToResizeVimView = YES;
+  if (!_vimViewSetUpDone) {
+    // This delegate method is called when live resizing. Thus, set resize to YES, only when we are opening the window.
+    _needsToResizeVimView = YES;
+  }
 }
 
 - (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
@@ -594,8 +597,6 @@
 }
 
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize {
-  // TODO: take the other components like scrollbars into account...
-
   // To set -contentResizeIncrements of the window to the cell width of the vim view does not suffice because of the
   // file browser and insets among others. Here, we adjust the width of the window such that the vim view is always
   // A * column wide where A is an integer. And the height.
@@ -603,23 +604,22 @@
   winFrame.size = frameSize;
 
   CGRect contentRect = [sender contentRectForFrameRect:winFrame];
-  CGFloat contentWidth = contentRect.size.width;
-  CGFloat contentHeight = contentRect.size.height;
-
-  NSSize cellSize = _vimView.textView.cellSize;
-  CGFloat cellWidth = cellSize.width;
-  CGFloat cellHeight = cellSize.height;
 
   CGFloat fileBrowserAndDividerWidth = _workspaceView.fileBrowserAndDividerWidth;
-  CGFloat horInsetOfVimView = _vimView.totalHorizontalInset;
-  frameSize.width = floor((contentWidth - fileBrowserAndDividerWidth - horInsetOfVimView) / cellWidth) * cellWidth
-      + fileBrowserAndDividerWidth + horInsetOfVimView;
 
-  CGFloat tabBarHeight = _vimView.tabBarControl.isHidden ? 0 : _vimView.tabBarControl.frame.size.height;
-  frameSize.height = frameSize.height - contentHeight + tabBarHeight
-      + floor((contentHeight - tabBarHeight) / cellHeight) * cellHeight + _vimView.totalVerticalInset;
+  int row, columns;
+  CGSize givenVimViewSize = CGSizeMake(contentRect.size.width - fileBrowserAndDividerWidth, contentRect.size.height);
+  NSSize desiredSize = [_vimView constrainRows:&row columns:&columns toSize:givenVimViewSize];
 
-  return frameSize;
+  DDLogDebug(@"###############   given content size: %@", vsize(givenVimViewSize));
+  DDLogDebug(@"############### desired content size: %@", vsize(desiredSize));
+
+  contentRect.size.width = fileBrowserAndDividerWidth + desiredSize.width;
+  contentRect.size.height = desiredSize.height;
+
+  winFrame = [self.window frameRectForContentRect:contentRect];
+
+  return winFrame.size;
 }
 
 #pragma mark Private
@@ -775,7 +775,7 @@
   // the new window position is here.
   // NOTE 2: Vim measures Y-coordinates from top of screen.
   int pos[2] = {(int) newTopLeft.x, (int) (NSMaxY(window.screen.frame) - newTopLeft.y)};
-  [self.vimController sendMessage:SetWindowPositionMsgID data:[NSData dataWithBytes:pos length:2 * sizeof(int)]];
+  [_vimController sendMessage:SetWindowPositionMsgID data:[NSData dataWithBytes:pos length:2 * sizeof(int)]];
 }
 
 - (CGSize)constrainContentSizeToScreenSize:(CGSize)contentSize {
