@@ -65,44 +65,19 @@
   [self close];
 }
 
-- (void)openFileWithUrl:(NSURL *)url {
-  __block BOOL alreadyOpened = NO;
-  [_vimController.tabs enumerateObjectsUsingBlock:^(MMTabPage *tab, NSUInteger idx, BOOL *stop) {
-    if ([tab.buffer.fileName isEqualToString:url.path]) {
-      [self sendCommandToVim:SF(@":tabn %lu", idx + 1)];
-      *stop = YES;
-      alreadyOpened = YES;
-    }
-  }];
-
-  if (!alreadyOpened) {
-    [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsFromFileUrls:@[url]].dictionaryAsData];
-  }
-}
-
 - (void)openFilesWithUrls:(NSArray *)urls {
-  NSArray *tabs = _vimController.tabs;
-  if (urls.count == 1) {
-    [self openFileWithUrl:urls[0]];
-
-    [self.window makeFirstResponder:_vimView.textView];
+  if (urls.isEmpty) {
     return;
   }
 
+  NSMutableArray *urlsAlreadyOpen = [self alreadyOpenedUrlsFromUrls:urls];
   NSMutableArray *urlsToOpen = [[NSMutableArray alloc] initWithArray:urls];
+  [urlsToOpen removeObjectsInArray:urlsAlreadyOpen];
 
-  for (NSURL *url in urls) {
-    for (MMTabPage *tab in tabs) {
-      if ([tab.buffer.fileName isEqualToString:url.path]) {
-        [urlsToOpen removeObject:url];
-      }
-    }
-  }
-
-  if (urlsToOpen.isEmpty) {
-    [self openFileWithUrl:urlsToOpen.lastObject];
-  } else {
+  if (!urlsToOpen.isEmpty) {
     [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsFromFileUrls:urlsToOpen].dictionaryAsData];
+  } else {
+    [_vimController gotoBufferWithUrl:urlsAlreadyOpen[0]];
   }
 
   [self.window makeFirstResponder:_vimView.textView];
@@ -820,7 +795,7 @@
 }
 
 - (void)setWindowTitleToCurrentBuffer {
-  NSString *filePath = _vimController.currentTab.buffer.fileName;
+  NSString *filePath = _vimController.currentBuffer.fileName;
   NSString *filename = filePath.lastPathComponent;
 
   if (filename == nil) {
@@ -859,6 +834,21 @@
       qVimArgFileNamesToOpen : filenames,
       qVimArgOpenFilesLayout : @(MMLayoutTabs),
   };
+}
+
+- (NSMutableArray *)alreadyOpenedUrlsFromUrls:(NSArray *)urls {
+  NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:urls.count];
+  NSArray *buffers = _vimController.buffers;
+
+  for (NSURL *url in urls) {
+    for (MMBuffer *buffer in buffers) {
+      if ([buffer.fileName isEqualToString:url.path]) {
+        [result addObject:url];
+      }
+    }
+  }
+
+  return result;
 }
 
 @end

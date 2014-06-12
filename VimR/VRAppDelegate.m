@@ -120,17 +120,17 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
     urls = [urls_from_paths(fileNames) mutableCopy];
   }
 
-  NSArray *alreadyOpenendUrls = [self alreadyOpenedUrlsInUrls:urls];
-  [urls removeObjectsInArray:alreadyOpenendUrls];
+  NSArray *alreadyOpenedUrls = [self alreadyOpenedUrlsInUrls:urls];
+  [urls removeObjectsInArray:alreadyOpenedUrls];
 
   if (urls.isEmpty) {
     [self postUserNotificationWithTitle:@"All selected file(s) are already opened."];
-    [_workspaceController selectBufferWithUrl:alreadyOpenendUrls[0]];
+    [_workspaceController selectBufferWithUrl:alreadyOpenedUrls[0]];
 
     return;
   }
 
-  if (!alreadyOpenendUrls.isEmpty) {
+  if (!alreadyOpenedUrls.isEmpty) {
     [self postUserNotificationWithTitle:@"There are already opened files."];
   }
 
