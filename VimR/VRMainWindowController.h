@@ -31,7 +31,6 @@
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect;
 - (void)updateWorkingDirectory;
-- (void)openFilesWithArgs:(NSDictionary *)args;
 - (void)cleanUpAndClose;
 - (void)openFileWithUrls:(NSURL *)urls openMode:(VROpenMode)openMode;
 - (void)openFilesWithUrls:(NSArray *)url;
