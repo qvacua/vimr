@@ -1,11 +1,11 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import <MacVimFramework/MacVimFramework.h>
 #import <CocoaLumberjack/DDLog.h>
@@ -14,6 +14,7 @@
 #import "VRFileBrowserView.h"
 #import "VRMainWindowController.h"
 #import "VRDefaultLogSetting.h"
+#import "VRUtils.h"
 
 
 #define SQ(x) ((x)*(x))
@@ -44,6 +45,7 @@ static const int qMinimumFileBrowserWidth = 100;
 }
 
 #pragma mark Properties
+
 - (MMVimView *)vimView {
   @synchronized (self) {
     return _vimView;
@@ -78,7 +80,7 @@ static const int qMinimumFileBrowserWidth = 100;
   }
 }
 
-- (CGFloat)fileBrowserAndDividerWidth {
+- (CGFloat)sidebarAndDividerWidth {
   if (_fileBrowserView) {
     return _fileBrowserWidth + 1;
   }
@@ -107,12 +109,21 @@ static const int qMinimumFileBrowserWidth = 100;
 }
 
 #pragma mark NSView
+
 - (id)initWithFrame:(NSRect)aRect {
-  if (self = [super initWithFrame:aRect]) {
-    _myConstraints = [NSMutableArray array];
-    _fileBrowserWidth = qDefaultFileBrowserWidth;
-    _dragIncrement = 1;
-  }
+  self = [super initWithFrame:aRect];
+  RETURN_NIL_WHEN_NOT_SELF
+  _myConstraints = [NSMutableArray array];
+  _fileBrowserWidth = qDefaultFileBrowserWidth;
+  _dragIncrement = 1;
+
+  NSPathControl *pathControl = [[NSPathControl alloc] initWithFrame:CGRectZero];
+  pathControl.translatesAutoresizingMaskIntoConstraints = NO;
+  pathControl.pathStyle = NSPathStyleStandard;
+  pathControl.backgroundColor = [NSColor clearColor];
+  pathControl.URL = [[NSURL alloc] initFileURLWithPath:@"/Users/hat/Projects"];
+
+//  [self addSubview:pathControl];
 
   return self;
 }
@@ -218,7 +229,7 @@ static const int qMinimumFileBrowserWidth = 100;
 
       CGPoint mouseCurrentPos = [self convertPoint:anEvent.locationInWindow fromView:nil];
       if (!didDrag &&
-          SQ(fabs(mouseDownPos.x - mouseCurrentPos.x)) + SQ(fabs(mouseDownPos.y - mouseCurrentPos.y)) < SQ(1)) {
+              SQ(fabs(mouseDownPos.x - mouseCurrentPos.x)) + SQ(fabs(mouseDownPos.y - mouseCurrentPos.y)) < SQ(1)) {
 
         continue; // we didn't even drag a pixel
       }
@@ -252,6 +263,7 @@ static const int qMinimumFileBrowserWidth = 100;
 }
 
 #pragma mark Private
+
 - (CGFloat)adjustedFileBrowserWidthForWidth:(CGFloat)width {
   NSUInteger targetWidth = (NSUInteger) MAX(qMinimumFileBrowserWidth, round(width));
 

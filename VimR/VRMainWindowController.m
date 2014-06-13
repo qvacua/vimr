@@ -1,11 +1,11 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import <PSMTabBarControl/PSMTabBarControl.h>
 #import <MacVimFramework/MacVimFramework.h>
@@ -42,6 +42,7 @@
 }
 
 #pragma mark Public
+
 - (instancetype)initWithContentRect:(CGRect)contentRect {
   self = [super initWithWindow:[self newMainWindowForContentRect:contentRect]];
   RETURN_NIL_WHEN_NOT_SELF
@@ -110,6 +111,7 @@
 }
 
 #pragma mark IBActions
+
 - (IBAction)newTab:(id)sender {
   [self sendCommandToVim:@":tabe"];
 }
@@ -227,6 +229,7 @@
 }
 
 #pragma mark NSUserInterfaceValidations
+
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
   SEL action = anItem.action;
 
@@ -274,6 +277,7 @@
 }
 
 #pragma mark Debug
+
 - (IBAction)debug1Action:(id)sender {
   DDLogDebug(@"tabs: %@", _vimController.tabs);
   DDLogDebug(@"buffers: %@", _vimController.buffers);
@@ -284,11 +288,13 @@
 }
 
 #pragma mark NSObject
+
 - (void)dealloc {
   log4Mark;
 }
 
 #pragma mark MMViewDelegate informal protocol
+
 - (void)liveResizeWillStart {
   /**
   * NOTE: During live resize Cocoa goes into "event tracking mode".  We have
@@ -341,6 +347,7 @@
 }
 
 #pragma mark MMVimControllerDelegate
+
 - (void)controller:(MMVimController *)controller zoomWithRows:(int)rows columns:(int)columns state:(int)state
               data:(NSData *)data {
 
@@ -472,6 +479,14 @@
   [self.window makeFirstResponder:_vimView.textView];
 }
 
+- (CGSize)vimViewSizeForWindowRect:(CGRect)winRect {
+  NSRect contentRect = [self.window contentRectForFrameRect:winRect];
+  contentRect.size.width = contentRect.size.width - _workspaceView.sidebarAndDividerWidth;
+  contentRect.size.height = contentRect.size.height - 23;
+
+  return contentRect.size;
+}
+
 - (void)controller:(MMVimController *)controller showTabBarWithData:(NSData *)data {
   _vimView.tabBarControl.hidden = NO;
 }
@@ -582,6 +597,7 @@
 }
 
 #pragma mark NSWindowDelegate
+
 - (void)windowDidBecomeMain:(NSNotification *)notification {
   [_vimController sendMessage:GotFocusMsgID data:nil];
 }
@@ -609,26 +625,31 @@
   // To set -contentResizeIncrements of the window to the cell width of the vim view does not suffice because of the
   // file browser and insets among others. Here, we adjust the width of the window such that the vim view is always
   // A * column wide where A is an integer. And the height.
-  CGRect winFrame = sender.frame;
-  winFrame.size = frameSize;
+  CGRect winRect = sender.frame;
+  winRect.size = frameSize;
 
-  CGRect contentRect = [sender contentRectForFrameRect:winFrame];
-
-  CGFloat fileBrowserAndDividerWidth = _workspaceView.fileBrowserAndDividerWidth;
-
-  int row, columns;
-  CGSize givenVimViewSize = CGSizeMake(contentRect.size.width - fileBrowserAndDividerWidth, contentRect.size.height);
-  NSSize desiredSize = [_vimView constrainRows:&row columns:&columns toSize:givenVimViewSize];
-
-  contentRect.size.width = fileBrowserAndDividerWidth + desiredSize.width;
-  contentRect.size.height = desiredSize.height;
-
-  winFrame = [self.window frameRectForContentRect:contentRect];
-
-  return winFrame.size;
+  return [self desiredWinFrameRectForFrameRect:winRect].size;
 }
 
 #pragma mark Private
+
+- (CGRect)desiredWinFrameRectForFrameRect:(CGRect)winRect {
+  CGRect contentRect = [self.window contentRectForFrameRect:winRect];
+  CGFloat fileBrowserAndDividerWidth = _workspaceView.sidebarAndDividerWidth;
+
+  int rows, columns;
+  CGSize givenVimViewSize = CGSizeMake(
+      contentRect.size.width - fileBrowserAndDividerWidth,
+      contentRect.size.height
+  );
+  CGSize desiredVimViewSize = [_vimView constrainRows:&rows columns:&columns toSize:givenVimViewSize];
+
+  contentRect.size.width = fileBrowserAndDividerWidth + desiredVimViewSize.width;
+  contentRect.size.height = desiredVimViewSize.height;
+
+  return [self.window frameRectForContentRect:contentRect];
+}
+
 - (NSURL *)workingDirectory {
   return _workspace.workingDirectory;
 }
@@ -667,7 +688,6 @@
 }
 
 - (void)alertDidEnd:(VRAlert *)alert code:(int)code context:(void *)controllerContext {
-  // copied from MacVim {
   NSArray *ret = nil;
   code = code - NSAlertFirstButtonReturn + 1;
 
@@ -687,8 +707,7 @@
   [alert.window orderOut:self];
 
   // TODO: why not use -sendDialogReturnToBackend:?
-  [self.vimController tellBackend:ret];
-  // } copied from MacVim
+  [_vimController tellBackend:ret];
 }
 
 - (CGRect)constrainFrame:(CGRect)frame {
@@ -713,7 +732,7 @@
   // Keep top-left corner of the window fixed when resizing.
   contentRect.origin.y -= contentSize.height - contentRect.size.height;
   contentRect.size = contentSize;
-  contentRect.size.width += _workspaceView.fileBrowserAndDividerWidth;
+  contentRect.size.width += _workspaceView.sidebarAndDividerWidth;
 
   CGRect newFrame = [window frameRectForContentRect:contentRect];
 
@@ -817,7 +836,7 @@
   NSWindow *window = self.window;
   if (_workspaceView.fileBrowserView) {
     window.minSize =
-        CGSizeMake(_workspaceView.fileBrowserAndDividerWidth + _vimView.minSize.width, _vimView.minSize.height);
+        CGSizeMake(_workspaceView.sidebarAndDividerWidth + _vimView.minSize.width, _vimView.minSize.height);
   } else {
     window.minSize = _vimView.minSize;
   }

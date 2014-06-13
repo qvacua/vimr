@@ -536,8 +536,17 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <pathControl appearanceType="aqua" verticalHuggingPriority="750" fixedFrame="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Le2-yX-boP">
+                        <rect key="frame" x="0.0" y="2" width="184" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <pathCell key="cell" controlSize="mini" selectable="YES" alignment="left" id="N59-Y0-pj6">
+                            <font key="font" metaFont="miniSystem"/>
+                            <url key="url" string="file:///Users/hat/Projects/"/>
+                        </pathCell>
+                    </pathControl>
                 </subviews>
             </view>
+            <contentBorderThickness minY="22"/>
         </window>
         <customObject id="494" customClass="VRAppDelegate">
             <connections>

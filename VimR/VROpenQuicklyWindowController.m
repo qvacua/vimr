@@ -1,11 +1,11 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import <TBCacao/TBCacao.h>
 #import "VROpenQuicklyWindowController.h"
@@ -42,6 +42,7 @@ int qOpenQuicklyWindowWidth = 400;
 @autowire(userDefaults);
 
 #pragma mark Public
+
 - (void)showForWindowController:(VRMainWindowController *)windowController {
   _targetWindowController = windowController;
   _targetWindow = windowController.window;
@@ -102,6 +103,7 @@ int qOpenQuicklyWindowWidth = 400;
 }
 
 #pragma mark NSTableViewDataSource
+
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
   if (!self.window.isVisible) {
     return 0;
@@ -124,6 +126,7 @@ int qOpenQuicklyWindowWidth = 400;
 }
 
 #pragma mark NSTableViewDelegate
+
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(NSCell *)cell forTableColumn:(NSTableColumn *)tableColumn
               row:(NSInteger)row {
 
@@ -132,12 +135,12 @@ int qOpenQuicklyWindowWidth = 400;
 }
 
 #pragma mark NSTextFieldDelegate
+
 - (void)controlTextDidChange:(NSNotification *)obj {
   [self refilter];
 }
 
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)selector {
-  NSLog(@"#################### %@", NSStringFromSelector(selector));
   if (selector == @selector(cancelOperation:)) {
     DDLogDebug(@"Open quickly cancelled");
 
@@ -178,6 +181,7 @@ int qOpenQuicklyWindowWidth = 400;
 }
 
 #pragma mark NSWindowDelegate
+
 - (void)windowDidResignMain:(NSNotification *)notification {
   DDLogDebug(@"Open quickly window resigned main");
   [self reset];
@@ -189,12 +193,14 @@ int qOpenQuicklyWindowWidth = 400;
 }
 
 #pragma mark TBInitializingBean
+
 - (void)postConstruct {
   [_notificationCenter addObserver:self selector:@selector(chunkOfFileItemsAdded:)
                               name:qChunkOfNewFileItemsAddedEvent object:nil];
 }
 
 #pragma mark Private
+
 - (void)chunkOfFileItemsAdded:(id)obj {
   [self refilter];
 }
