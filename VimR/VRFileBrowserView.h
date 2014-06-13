@@ -8,10 +8,12 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "VRMovementsAndActionsProtocol.h"
 
 
 @class VRFileItem;
 @class VRFileItemManager;
+@class VROutlineView;
 
 
 @interface VRNode : NSObject
@@ -28,7 +30,9 @@
 @end
 
 
-@interface VRFileBrowserView : NSView <NSOutlineViewDataSource, NSOutlineViewDelegate>
+@interface VRFileBrowserView : NSView <
+    NSOutlineViewDataSource, NSOutlineViewDelegate,
+    VRMovementsAndActionsProtocol>
 
 @property (nonatomic, weak) NSFileManager *fileManager;
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;
@@ -36,6 +40,8 @@
 @property (nonatomic, weak) NSNotificationCenter *notificationCenter;
 
 @property (nonatomic) NSURL *rootUrl;
+
+@property (readonly) VROutlineView *fileOutlineView;
 
 #pragma mark Public
 - (instancetype)initWithRootUrl:(NSURL *)rootUrl;
@@ -50,8 +56,7 @@
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item;
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index1 ofItem:(id)item;
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item;
-- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn
-           byItem:(id)item;
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item;
 
 #pragma mark NSView
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldExpandItem:(id)item;

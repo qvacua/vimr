@@ -44,7 +44,8 @@
 - (IBAction)selectNextTab:(id)sender;
 - (IBAction)selectPreviousTab:(id)sender;
 - (IBAction)openQuickly:(id)sender;
-- (IBAction)toggleFileBrowser:(id)sender;
+- (IBAction)showFileBrowser:(id)sender;
+- (IBAction)hideSidebar:(id)sender;
 
 #pragma mark NSObject
 - (void)dealloc;

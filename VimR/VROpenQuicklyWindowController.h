@@ -35,7 +35,6 @@ extern int qOpenQuicklyWindowWidth;
 #pragma mark NSObject
 - (id)init;
 
-
 - (void)controlTextDidChange:(NSNotification *)obj;
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)selector;
 

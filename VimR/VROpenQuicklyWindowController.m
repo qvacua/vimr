@@ -18,6 +18,7 @@
 #import "VRMainWindowController.h"
 #import "VRWorkspace.h"
 #import "VRDefaultLogSetting.h"
+#import "NSTableView+VR.H"
 
 
 int qOpenQuicklyWindowWidth = 400;
@@ -136,6 +137,7 @@ int qOpenQuicklyWindowWidth = 400;
 }
 
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)selector {
+  NSLog(@"#################### %@", NSStringFromSelector(selector));
   if (selector == @selector(cancelOperation:)) {
     DDLogDebug(@"Open quickly cancelled");
 
@@ -143,18 +145,32 @@ int qOpenQuicklyWindowWidth = 400;
     return YES;
   }
 
-  if (selector == @selector(insertNewline:)) {
+  if (selector == @selector(insertNewline:)
+      || selector == @selector(insertLineBreak:)
+      || selector == @selector(insertNewlineIgnoringFieldEditor:)) {
+
     [self openSelectedFile:self];
     return YES;
   }
 
+  // When we enter Cmd-CR, then we get noop: as the selector
+  if (selector == @selector(noop:)) {
+    NSEvent *event = [NSApp currentEvent];
+    if ([event.charactersIgnoringModifiers characterAtIndex:0] == NSCarriageReturnCharacter
+        && event.modifierFlags & NSCommandKeyMask) {
+
+      [self openSelectedFile:self];
+      return YES;
+    }
+  }
+
   if (selector == @selector(moveUp:)) {
-    [self moveSelectionByDelta:-1];
+    [_fileItemTableView moveSelectionByDelta:-1];
     return YES;
   }
 
   if (selector == @selector(moveDown:)) {
-    [self moveSelectionByDelta:1];
+    [_fileItemTableView moveSelectionByDelta:1];
     return YES;
   }
 
@@ -236,23 +252,6 @@ int qOpenQuicklyWindowWidth = 400;
       usleep(500);
     }
   }];
-}
-
-- (void)moveSelectionByDelta:(NSInteger)delta {
-  NSInteger selectedRow = _fileItemTableView.selectedRow;
-  NSUInteger lastIndex = (NSUInteger) [self numberOfRowsInTableView:_fileItemTableView] - 1;
-  NSUInteger targetIndex;
-
-  if (selectedRow + delta < 0) {
-    targetIndex = lastIndex;
-  } else if (selectedRow + delta > lastIndex) {
-    targetIndex = 0;
-  } else {
-    targetIndex = (NSUInteger) (selectedRow + delta);
-  }
-
-  [_fileItemTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:targetIndex] byExtendingSelection:NO];
-  [_fileItemTableView scrollRowToVisible:targetIndex];
 }
 
 - (void)openSelectedFile:(id)sender {

@@ -22,6 +22,7 @@
 #import "VRWorkspaceView.h"
 #import "VRFileBrowserView.h"
 #import "NSArray+VR.h"
+#import "VROutlineView.h"
 
 
 #define CONSTRAINT(fmt) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]];
@@ -203,9 +204,10 @@
   }
 }
 
-- (IBAction)toggleFileBrowser:(id)sender {
+- (IBAction)showFileBrowser:(id)sender {
   if (_workspaceView.fileBrowserView) {
-    _workspaceView.fileBrowserView = nil;
+    [self.window makeFirstResponder:_fileBrowserView.fileOutlineView];
+
     return;
   }
 
@@ -215,6 +217,13 @@
     [self.window setFrame:frame display:YES];
   }
   _workspaceView.fileBrowserView = _fileBrowserView;
+
+  // We do not make the file browser the first responder, when the file browser was hidden and now gets shown
+}
+
+- (IBAction)hideSidebar:(id)sender {
+  _workspaceView.fileBrowserView = nil;
+  [self.window makeFirstResponder:_vimView.textView];
 }
 
 #pragma mark NSUserInterfaceValidations
@@ -245,8 +254,12 @@
     return YES;
   }
 
-  if (action == @selector(toggleFileBrowser:)) {
+  if (action == @selector(showFileBrowser:)) {
     return YES;
+  }
+
+  if (action == @selector(hideSidebar:)) {
+    return _workspaceView.fileBrowserView ? YES : NO;
   }
 
   if (action == @selector(selectNextTab:) || action == @selector(selectPreviousTab:)) {

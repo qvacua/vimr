@@ -363,9 +363,22 @@
                 <menuItem title="View" id="295">
                     <menu key="submenu" title="View" id="296">
                         <items>
-                            <menuItem title="File Navigator" keyEquivalent="1" id="1YK-Wp-zxp">
+                            <menuItem title="Sidebar" id="MDH-WW-bYf">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Sidebar" id="xLO-fh-3MJ">
+                                    <items>
+                                        <menuItem title="Show File Browser" keyEquivalent="1" id="qHs-KO-fKo">
+                                            <connections>
+                                                <action selector="showFileBrowser:" target="-1" id="QgY-Wh-Lo1"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="3xD-us-Pot"/>
+                            <menuItem title="Hide Sidebar" keyEquivalent="0" id="UJC-4N-2Bm">
                                 <connections>
-                                    <action selector="toggleFileBrowser:" target="-1" id="qjb-UR-n4T"/>
+                                    <action selector="hideSidebar:" target="-1" id="WIL-ck-ogk"/>
                                 </connections>
                             </menuItem>
                         </items>
