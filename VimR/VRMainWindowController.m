@@ -340,7 +340,7 @@
     * with inconsistent states.
     */
     DDLogWarn(@"live resizing failed");
-    [self resizeWindowToFitContentSize:_vimView.desiredSize];
+    [self resizeWindowToFitVimViewSize:_vimView.desiredSize];
   }
 
   [self setWindowTitleToCurrentBuffer];
@@ -544,24 +544,21 @@
     return;
   }
 
-  DDLogDebug(@"resizing window to fit Vim view");
+  DDLogDebug(@"Resizing window to fit Vim view");
   _needsToResizeVimView = NO;
 
-  CGSize contentSize = _vimView.desiredSize;
+  CGSize desiredVimViewSize = _vimView.desiredSize;
+  DDLogError(@"###### desired vim view size: %@", vsize(desiredVimViewSize));
+  DDLogError(@"######     content view size: %@", vsize([self.window contentRectForFrameRect:self.window.frame].size));
 
   // We constrain the desired size of the Vim view to the visible frame of the screen. This can happen, when you use
   // :set lines=BIG_NUMBER
 
-  contentSize = [self constrainContentSizeToScreenSize:contentSize];
-  DDLogDebug(@"uncorrected size: %@", vsize(contentSize));
+  desiredVimViewSize = [self constrainContentSizeToScreenSize:desiredVimViewSize];
 
-  int rows = 0, cols = 0;
-  contentSize = [_vimView constrainRows:&rows columns:&cols toSize:contentSize];
+  DDLogError(@"###### to screen constrained vim view size: %@", vsize(desiredVimViewSize));
 
-  DDLogDebug(@"%d X %d", rows, cols);
-  DDLogDebug(@"corrected size: %@", vsize(contentSize));
-
-  [self resizeWindowToFitContentSize:contentSize];
+  [self resizeWindowToFitVimViewSize:desiredVimViewSize];
 
   _isReplyToGuiResize = NO;
 }
@@ -723,27 +720,26 @@
   return [window frameRectForContentRect:contentRect];
 }
 
-- (void)resizeWindowToFitContentSize:(CGSize)contentSize {
-  logSize4Debug(@"contentSize", contentSize);
+- (void)resizeWindowToFitVimViewSize:(CGSize)vimViewSize {
   NSWindow *window = self.window;
   CGRect frame = window.frame;
-  CGRect contentRect = [self.window contentRectForFrameRect:frame];
+  CGRect winContentRect = [self.window contentRectForFrameRect:frame];
 
   // Keep top-left corner of the window fixed when resizing.
-  contentRect.origin.y -= contentSize.height - contentRect.size.height;
-  contentRect.size = contentSize;
-  contentRect.size.width += _workspaceView.sidebarAndDividerWidth;
+  winContentRect.origin.y -= vimViewSize.height - winContentRect.size.height;
+  winContentRect.size = vimViewSize;
+  winContentRect.size.width += _workspaceView.sidebarAndDividerWidth;
 
-  CGRect newFrame = [window frameRectForContentRect:contentRect];
+  CGRect newWinFrameRect = [window frameRectForContentRect:winContentRect];
 
-  logRect4Debug(@"old", frame);
-  logRect4Debug(@"new", newFrame);
+  DDLogError(@"###### old win frame rect: %@", vrect(frame));
+  DDLogError(@"###### new win frame rect: %@", vrect(newWinFrameRect));
 
   if (_shouldRestoreUserTopLeft) {
     // Restore user top left window position (which is saved when zooming).
-    CGFloat dy = _userTopLeft.y - NSMaxY(newFrame);
-    newFrame.origin.x = _userTopLeft.x;
-    newFrame.origin.y += dy;
+    CGFloat dy = _userTopLeft.y - NSMaxY(newWinFrameRect);
+    newWinFrameRect.origin.x = _userTopLeft.x;
+    newWinFrameRect.origin.y += dy;
     _shouldRestoreUserTopLeft = NO;
   }
 
@@ -755,37 +751,37 @@
     CGRect maxFrame = screen.visibleFrame;
     maxFrame = [self constrainFrame:maxFrame];
 
-    if (newFrame.size.width > maxFrame.size.width) {
-      newFrame.size.width = maxFrame.size.width;
-      newFrame.origin.x = maxFrame.origin.x;
+    if (newWinFrameRect.size.width > maxFrame.size.width) {
+      newWinFrameRect.size.width = maxFrame.size.width;
+      newWinFrameRect.origin.x = maxFrame.origin.x;
     }
 
-    if (newFrame.size.height > maxFrame.size.height) {
-      newFrame.size.height = maxFrame.size.height;
-      newFrame.origin.y = maxFrame.origin.y;
+    if (newWinFrameRect.size.height > maxFrame.size.height) {
+      newWinFrameRect.size.height = maxFrame.size.height;
+      newWinFrameRect.origin.y = maxFrame.origin.y;
     }
 
-    if (newFrame.origin.y < maxFrame.origin.y) {
-      newFrame.origin.y = maxFrame.origin.y;
+    if (newWinFrameRect.origin.y < maxFrame.origin.y) {
+      newWinFrameRect.origin.y = maxFrame.origin.y;
     }
 
-    if (NSMaxY(newFrame) > NSMaxY(maxFrame)) {
-      newFrame.origin.y = NSMaxY(maxFrame) - newFrame.size.height;
+    if (NSMaxY(newWinFrameRect) > NSMaxY(maxFrame)) {
+      newWinFrameRect.origin.y = NSMaxY(maxFrame) - newWinFrameRect.size.height;
     }
 
-    if (newFrame.origin.x < maxFrame.origin.x) {
-      newFrame.origin.x = maxFrame.origin.x;
+    if (newWinFrameRect.origin.x < maxFrame.origin.x) {
+      newWinFrameRect.origin.x = maxFrame.origin.x;
     }
 
-    if (NSMaxX(newFrame) > NSMaxX(maxFrame)) {
-      newFrame.origin.x = NSMaxX(maxFrame) - newFrame.size.width;
+    if (NSMaxX(newWinFrameRect) > NSMaxX(maxFrame)) {
+      newWinFrameRect.origin.x = NSMaxX(maxFrame) - newWinFrameRect.size.width;
     }
   }
 
-  [window setFrame:newFrame display:YES];
+  [window setFrame:newWinFrameRect display:YES];
 
-  CGPoint oldTopLeft = {frame.origin.x, NSMaxY(frame)};
-  CGPoint newTopLeft = {newFrame.origin.x, NSMaxY(newFrame)};
+  CGPoint oldTopLeft = CGPointMake(frame.origin.x, NSMaxY(frame));
+  CGPoint newTopLeft = CGPointMake(newWinFrameRect.origin.x, NSMaxY(newWinFrameRect));
   if (CGPointEqualToPoint(oldTopLeft, newTopLeft)) {
     DDLogDebug(@"returning since top left point equal");
     return;
