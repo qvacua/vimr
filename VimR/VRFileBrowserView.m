@@ -50,8 +50,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 
 
 @implementation VRFileBrowserView {
-  VROutlineView *_fileOutlineView;
-
   NSMenuItem *_showHiddenMenuItem;
   NSMenuItem *_showFoldersFirstMenuItem;
   NSMenuItem *_syncWorkspaceWithPwdMenuItem;

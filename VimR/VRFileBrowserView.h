@@ -13,6 +13,7 @@
 
 @class VRFileItem;
 @class VRFileItemManager;
+@class VROutlineView;
 
 
 @interface VRNode : NSObject
@@ -39,6 +40,8 @@
 @property (nonatomic, weak) NSNotificationCenter *notificationCenter;
 
 @property (nonatomic) NSURL *rootUrl;
+
+@property (readonly) VROutlineView *fileOutlineView;
 
 #pragma mark Public
 - (instancetype)initWithRootUrl:(NSURL *)rootUrl;
