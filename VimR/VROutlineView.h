@@ -8,7 +8,14 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "VRMovementsAndActionsProtocol.h"
+
+
+@protocol VRMovementsAndActionsProtocol;
 
 
 @interface VROutlineView : NSOutlineView
+
+@property id<VRMovementsAndActionsProtocol> movementsAndActionDelegate;
+
 @end

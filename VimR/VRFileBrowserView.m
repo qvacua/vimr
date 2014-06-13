@@ -16,6 +16,7 @@
 #import "OakImageAndTextCell.h"
 #import "NSArray+VR.h"
 #import "VROutlineView.h"
+#import "NSTableView+VR.h"
 
 
 #define CONSTRAIN(fmt) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]];
@@ -96,6 +97,35 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   [self reload];
 }
 
+#pragma mark VRMovementsAndActionsProtocol
+- (void)viMotionLeft:(id)sender event:(NSEvent *)event {
+  [self fileOutlineViewDoubleClicked:sender];
+}
+
+- (void)viMotionUp:(id)sender event:(NSEvent *)event {
+  [_fileOutlineView moveSelectionByDelta:-1];
+}
+
+- (void)viMotionDown:(id)sender event:(NSEvent *)event {
+  [_fileOutlineView moveSelectionByDelta:1];
+}
+
+- (void)viMotionRight:(id)sender event:(NSEvent *)event {
+  [self fileOutlineViewDoubleClicked:sender];
+}
+
+- (void)actionSpace:(id)sender event:(NSEvent *)event {
+  [self fileOutlineViewDoubleClicked:sender];
+}
+
+- (void)actionCarriageReturn:(id)sender event:(NSEvent *)event {
+  [self fileOutlineViewDoubleClicked:sender];
+}
+
+- (void)actionEscape:(id)sender event:(NSEvent *)event {
+  [self.window makeFirstResponder:[self.window.windowController vimView].textView];
+}
+
 #pragma mark NSOutlineViewDataSource
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(VRNode *)item {
   VRNode *currentNode = item ?: _rootNode;
@@ -171,6 +201,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   _fileOutlineView.focusRingType = NSFocusRingTypeNone;
   _fileOutlineView.dataSource = self;
   _fileOutlineView.delegate = self;
+  _fileOutlineView.movementsAndActionDelegate = self;
   [_fileOutlineView setDoubleAction:@selector(fileOutlineViewDoubleClicked:)];
 
   NSScrollView *scrollView = [[NSScrollView alloc] initWithFrame:NSZeroRect];
@@ -249,21 +280,21 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 - (void)fileOutlineViewDoubleClicked:(id)sender {
-  VRNode *clickedItem = [_fileOutlineView itemAtRow:_fileOutlineView.clickedRow];
+  VRNode *item = [_fileOutlineView itemAtRow:_fileOutlineView.selectedRow];
 
-  if (!clickedItem.dir) {
+  if (!item.dir) {
     VROpenMode mode = open_mode_from_event(
         [NSApp currentEvent],
         [_userDefaults stringForKey:qDefaultDefaultOpeningBehavior]
     );
-    [(VRMainWindowController *) self.window.windowController openFileWithUrls:clickedItem.url openMode:mode];
+    [(VRMainWindowController *) self.window.windowController openFileWithUrls:item.url openMode:mode];
     return;
   }
 
-  if ([_fileOutlineView isItemExpanded:clickedItem]) {
-    [_fileOutlineView collapseItem:clickedItem];
+  if ([_fileOutlineView isItemExpanded:item]) {
+    [_fileOutlineView collapseItem:item];
   } else {
-    [_fileOutlineView expandItem:clickedItem];
+    [_fileOutlineView expandItem:item];
   }
 }
 

@@ -18,6 +18,7 @@
 #import "VRMainWindowController.h"
 #import "VRWorkspace.h"
 #import "VRDefaultLogSetting.h"
+#import "NSTableView+VR.H"
 
 
 int qOpenQuicklyWindowWidth = 400;
@@ -149,12 +150,12 @@ int qOpenQuicklyWindowWidth = 400;
   }
 
   if (selector == @selector(moveUp:)) {
-    [self moveSelectionByDelta:-1];
+    [_fileItemTableView moveSelectionByDelta:-1];
     return YES;
   }
 
   if (selector == @selector(moveDown:)) {
-    [self moveSelectionByDelta:1];
+    [_fileItemTableView moveSelectionByDelta:1];
     return YES;
   }
 

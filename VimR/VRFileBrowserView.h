@@ -8,6 +8,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "VRMovementsAndActionsProtocol.h"
 
 
 @class VRFileItem;
@@ -28,7 +29,9 @@
 @end
 
 
-@interface VRFileBrowserView : NSView <NSOutlineViewDataSource, NSOutlineViewDelegate>
+@interface VRFileBrowserView : NSView <
+    NSOutlineViewDataSource, NSOutlineViewDelegate,
+    VRMovementsAndActionsProtocol>
 
 @property (nonatomic, weak) NSFileManager *fileManager;
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;
