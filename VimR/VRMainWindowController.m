@@ -346,8 +346,9 @@
     * match the last dimensions received from Vim, otherwise we end up
     * with inconsistent states.
     */
-    DDLogWarn(@"live resizing failed");
-    [self resizeWindowToFitVimViewSize:_vimView.desiredSize];
+    CGSize manualWinContentSize = [self winContentSizeForVimViewSize:_vimView.desiredSize];
+    DDLogWarn(@"Live resizing failed, manually resizing to %@", vsize(manualWinContentSize));
+    [self resizeWindowToFitContentSize:manualWinContentSize];
   }
 
   [self setWindowTitleToCurrentBuffer];
@@ -459,7 +460,7 @@
 - (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
             isLive:(BOOL)live keepOnScreen:(BOOL)winShouldNotMove data:(NSData *)data {
 
-  DDLogDebug(@"%d X %d\tlive: %@\tkeepOnScreen: %@", rows, columns, @(live), @(winShouldNotMove));
+  DDLogError(@"%d X %d, live: %@, winSouldNotMove: %@", rows, columns, @(live), @(winShouldNotMove));
   [_vimView setDesiredRows:rows columns:columns];
   [self updateResizeConstraints];
 
@@ -558,18 +559,27 @@
 
   _needsToResizeVimView = NO;
 
-  CGSize desiredVimViewSize = _vimView.desiredSize;
-  DDLogError(@"###### desired vim view size: %@", vsize(desiredVimViewSize));
-  DDLogError(@"######     content view size: %@", vsize([self.window contentRectForFrameRect:self.window.frame].size));
+  // We have to start our computation of window frame with the desired size of the Vim view because of non-GUI resize
+  // requests like :set columns=XYZ
+
+  CGSize reqVimViewSize = _vimView.desiredSize;
+  DDLogWarn(@"###### desired vim view size: %@", vsize(reqVimViewSize));
 
   // We constrain the desired size of the Vim view to the visible frame of the screen. This can happen, when you
   // for instance use :set lines=BIG_NUMBER
 
-  desiredVimViewSize = [self constrainContentSizeToScreenSize:desiredVimViewSize];
+  CGSize reqWinContentSizeView = [self winContentSizeForVimViewSize:reqVimViewSize];
+  CGSize constrainedWinContentSize = [self constrainContentSizeToScreenSize:reqWinContentSizeView];
+  DDLogWarn(@"###### to screen constrained win frame size: %@", vsize(constrainedWinContentSize));
 
-  DDLogError(@"###### to screen constrained vim view size: %@", vsize(desiredVimViewSize));
+  // The constrained window frame size may be not integral for the Vim view, however, there's no need for re-adjustment,
+  // because
+  // 1. If the requested size was too big for the screen, then the win frame size got constrained and Vim will call
+  //    setTextDimension again, which will again resize the window with a size that will fit to the screen and will be
+  //    integral for the Vim view.
+  // 2. If the requested size did fit to the screen, then the resulting size is already integral for the Vim view.
 
-  [self resizeWindowToFitVimViewSize:desiredVimViewSize];
+  [self resizeWindowToFitContentSize:constrainedWinContentSize];
 
   _winShouldNotMove = NO;
 }
@@ -852,26 +862,26 @@
 /**
 * Resize code
 */
-- (void)resizeWindowToFitVimViewSize:(CGSize)vimViewSize {
+- (void)resizeWindowToFitContentSize:(CGSize)targetWinContentSize {
   NSWindow *window = self.window;
-  CGRect frame = window.frame;
-  CGRect winContentRect = [self.window contentRectForFrameRect:frame];
+  CGRect curWinFrameRect = window.frame;
+  CGRect curContentRect = [self.window contentRectForFrameRect:curWinFrameRect];
+  CGRect targetContentRect;
 
   // Keep top-left corner of the window fixed when resizing.
-  winContentRect.origin.y -= vimViewSize.height - winContentRect.size.height;
-  winContentRect.size = vimViewSize;
-  winContentRect.size.width += _workspaceView.sidebarAndDividerWidth;
+  targetContentRect.origin = curContentRect.origin;
+  targetContentRect.origin.y -= targetWinContentSize.height - curContentRect.size.height;
+  targetContentRect.size = targetWinContentSize;
 
-  CGRect newWinFrameRect = [window frameRectForContentRect:winContentRect];
-
-  DDLogError(@"###### old win frame rect: %@", vrect(frame));
-  DDLogError(@"###### new win frame rect: %@", vrect(newWinFrameRect));
+  CGRect targetWinFrameRect = [window frameRectForContentRect:targetContentRect];
+  DDLogError(@"###### old win frame rect: %@", vrect(curWinFrameRect));
+  DDLogError(@"###### new win frame rect: %@", vrect(targetWinFrameRect));
 
   if (_shouldRestoreUserTopLeft) {
     // Restore user top left window position (which is saved when zooming).
-    CGFloat dy = _userTopLeft.y - NSMaxY(newWinFrameRect);
-    newWinFrameRect.origin.x = _userTopLeft.x;
-    newWinFrameRect.origin.y += dy;
+    CGFloat dy = _userTopLeft.y - NSMaxY(targetWinFrameRect);
+    targetWinFrameRect.origin.x = _userTopLeft.x;
+    targetWinFrameRect.origin.y += dy;
     _shouldRestoreUserTopLeft = NO;
   }
 
@@ -883,37 +893,37 @@
     CGRect maxFrame = screen.visibleFrame;
     maxFrame = [self constrainFrame:maxFrame];
 
-    if (newWinFrameRect.size.width > maxFrame.size.width) {
-      newWinFrameRect.size.width = maxFrame.size.width;
-      newWinFrameRect.origin.x = maxFrame.origin.x;
+    if (targetWinFrameRect.size.width > maxFrame.size.width) {
+      targetWinFrameRect.size.width = maxFrame.size.width;
+      targetWinFrameRect.origin.x = maxFrame.origin.x;
     }
 
-    if (newWinFrameRect.size.height > maxFrame.size.height) {
-      newWinFrameRect.size.height = maxFrame.size.height;
-      newWinFrameRect.origin.y = maxFrame.origin.y;
+    if (targetWinFrameRect.size.height > maxFrame.size.height) {
+      targetWinFrameRect.size.height = maxFrame.size.height;
+      targetWinFrameRect.origin.y = maxFrame.origin.y;
     }
 
-    if (newWinFrameRect.origin.y < maxFrame.origin.y) {
-      newWinFrameRect.origin.y = maxFrame.origin.y;
+    if (targetWinFrameRect.origin.y < maxFrame.origin.y) {
+      targetWinFrameRect.origin.y = maxFrame.origin.y;
     }
 
-    if (NSMaxY(newWinFrameRect) > NSMaxY(maxFrame)) {
-      newWinFrameRect.origin.y = NSMaxY(maxFrame) - newWinFrameRect.size.height;
+    if (NSMaxY(targetWinFrameRect) > NSMaxY(maxFrame)) {
+      targetWinFrameRect.origin.y = NSMaxY(maxFrame) - targetWinFrameRect.size.height;
     }
 
-    if (newWinFrameRect.origin.x < maxFrame.origin.x) {
-      newWinFrameRect.origin.x = maxFrame.origin.x;
+    if (targetWinFrameRect.origin.x < maxFrame.origin.x) {
+      targetWinFrameRect.origin.x = maxFrame.origin.x;
     }
 
-    if (NSMaxX(newWinFrameRect) > NSMaxX(maxFrame)) {
-      newWinFrameRect.origin.x = NSMaxX(maxFrame) - newWinFrameRect.size.width;
+    if (NSMaxX(targetWinFrameRect) > NSMaxX(maxFrame)) {
+      targetWinFrameRect.origin.x = NSMaxX(maxFrame) - targetWinFrameRect.size.width;
     }
   }
 
-  [window setFrame:newWinFrameRect display:YES];
+  [window setFrame:targetWinFrameRect display:YES];
 
-  CGPoint oldTopLeft = CGPointMake(frame.origin.x, NSMaxY(frame));
-  CGPoint newTopLeft = CGPointMake(newWinFrameRect.origin.x, NSMaxY(newWinFrameRect));
+  CGPoint oldTopLeft = CGPointMake(curWinFrameRect.origin.x, NSMaxY(curWinFrameRect));
+  CGPoint newTopLeft = CGPointMake(targetWinFrameRect.origin.x, NSMaxY(targetWinFrameRect));
   if (CGPointEqualToPoint(oldTopLeft, newTopLeft)) {
     DDLogDebug(@"returning since top left point equal");
     return;
@@ -930,10 +940,10 @@
 /**
 * Resize code
 */
-- (CGSize)constrainContentSizeToScreenSize:(CGSize)contentSize {
+- (CGSize)constrainContentSizeToScreenSize:(CGSize)winContentSize {
   NSWindow *win = self.window;
   if (win.screen == nil) {
-    return contentSize;
+    return winContentSize;
   }
 
   // NOTE: This may be called in both windowed and full-screen mode.  The
@@ -942,15 +952,15 @@
   CGRect screenRect = win.screen.visibleFrame;
   CGRect rect = [self.window contentRectForFrameRect:screenRect];
 
-  if (contentSize.height > rect.size.height) {
-    contentSize.height = rect.size.height;
+  if (winContentSize.height > rect.size.height) {
+    winContentSize.height = rect.size.height;
   }
 
-  if (contentSize.width > rect.size.width) {
-    contentSize.width = rect.size.width;
+  if (winContentSize.width > rect.size.width) {
+    winContentSize.width = rect.size.width;
   }
 
-  return contentSize;
+  return winContentSize;
 }
 
 /**
@@ -961,13 +971,15 @@
     return;
   }
 
-  NSWindow *window = self.window;
   if (_workspaceView.fileBrowserView) {
-    window.minSize =
-        CGSizeMake(_workspaceView.sidebarAndDividerWidth + _vimView.minSize.width, _vimView.minSize.height);
+    self.window.minSize = CGSizeMake(
+        _workspaceView.sidebarAndDividerWidth + _vimView.minSize.width,
+        _vimView.minSize.height
+    );
   } else {
-    window.minSize = _vimView.minSize;
+    self.window.minSize = _vimView.minSize;
   }
+
   // We also update the increment of the workspace view, because it could be that the font size has changed
   _workspaceView.dragIncrement = (NSUInteger) _vimView.textView.cellSize.width;
 }
