@@ -790,22 +790,12 @@
 #pragma mark Private Resize Code
 
 /**
+* The resulting Vim view size is not guaranteed to be integral.
+*
 * Resize code
 */
-- (CGSize)vimViewSizeForWindowRect:(CGRect)winRect {
-  NSRect contentRect = [self.window contentRectForFrameRect:winRect];
-  contentRect.size.width = contentRect.size.width - _workspaceView.sidebarAndDividerWidth;
-  contentRect.size.height = contentRect.size.height - 23;
-
-  return contentRect.size;
-}
-
-/**
-* Resize code
-*/
-- (CGSize)uncorrectedVimViewSizeForWinFrameRect:(CGRect)winRect {
-  NSRect winContentRect = [self.window contentRectForFrameRect:winRect];
-  CGSize winContentSize = winContentRect.size;
+- (CGSize)uncorrectedVimViewSizeForWinFrameRect:(CGRect)winFrameRect {
+  CGSize winContentSize = [self.window contentRectForFrameRect:winFrameRect].size;
 
   winContentSize.width = winContentSize.width - _workspaceView.sidebarAndDividerWidth;
   winContentSize.height = winContentSize.height - 0;
@@ -817,27 +807,22 @@
 * Resize code
 */
 - (CGSize)winContentSizeForVimViewSize:(CGSize)vimViewSize {
-  CGSize result;
-
-  result.width = _workspaceView.sidebarAndDividerWidth + vimViewSize.width;
-  result.height = vimViewSize.height + 0;
-
-  return result;
+  return CGSizeMake(
+      _workspaceView.sidebarAndDividerWidth + vimViewSize.width,
+      vimViewSize.height + 0
+  );
 }
 
 /**
+* We does not check whether the resulting rect will be bigger then the screen.
+*
 * Resize code
 */
-- (CGRect)desiredWinFrameRectForWinFrameRect:(CGRect)winRect {
-  CGRect contentRect = [self.window contentRectForFrameRect:winRect];
-  CGFloat fileBrowserAndDividerWidth = _workspaceView.sidebarAndDividerWidth;
+- (CGRect)desiredWinFrameRectForWinFrameRect:(CGRect)winFrameRect {
+  CGSize givenVimViewSize = [self uncorrectedVimViewSizeForWinFrameRect:winFrameRect];
+  CGSize desiredVimViewSize = [_vimView constrainRows:NULL columns:NULL toSize:givenVimViewSize];
 
-  int rows, columns;
-  CGSize givenVimViewSize = CGSizeMake(
-      contentRect.size.width - fileBrowserAndDividerWidth,
-      contentRect.size.height
-  );
-  CGSize desiredVimViewSize = [_vimView constrainRows:&rows columns:&columns toSize:givenVimViewSize];
+  CGRect contentRect = [self.window contentRectForFrameRect:winFrameRect];
   contentRect.size = [self winContentSizeForVimViewSize:desiredVimViewSize];
 
   return [self.window frameRectForContentRect:contentRect];
