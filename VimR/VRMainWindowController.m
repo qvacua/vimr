@@ -266,18 +266,15 @@
   }
 
   if (action == @selector(hideSidebar:)) {
-    return _workspaceView.fileBrowserView ? YES : NO;
+    return _workspaceView.fileBrowserView != nil;
   }
 
   if (action == @selector(selectNextTab:) || action == @selector(selectPreviousTab:)) {
-    return _vimController.tabs.count >= 2 ? YES : NO;
+    return _vimController.tabs.count >= 2;
   }
 
-  if (action == @selector(debug1Action:)) {
-    return YES;
-  }
+  return action == @selector(debug1Action:);
 
-  return NO;
 }
 
 #pragma mark Debug
@@ -330,7 +327,7 @@
   NSView <MMTextViewProtocol> *textView = _vimView.textView;
 
   int constrained[2];
-  CGSize size = [textView constrainRows:&constrained[0] columns:&constrained[1] toSize:textView.frame.size];
+  [textView constrainRows:&constrained[0] columns:&constrained[1] toSize:textView.frame.size];
 
   DDLogDebug(@"End of live resize, notify Vim that text dimensions are %d x %d", constrained[1], constrained[0]);
 
@@ -489,14 +486,6 @@
   [self.window makeFirstResponder:_vimView.textView];
 }
 
-- (CGSize)vimViewSizeForWindowRect:(CGRect)winRect {
-  NSRect contentRect = [self.window contentRectForFrameRect:winRect];
-  contentRect.size.width = contentRect.size.width - _workspaceView.sidebarAndDividerWidth;
-  contentRect.size.height = contentRect.size.height - 23;
-
-  return contentRect.size;
-}
-
 - (void)controller:(MMVimController *)controller showTabBarWithData:(NSData *)data {
   _vimView.tabBarControl.hidden = NO;
 }
@@ -554,15 +543,14 @@
     return;
   }
 
-  DDLogDebug(@"Resizing window to fit Vim view");
   _needsToResizeVimView = NO;
 
   CGSize desiredVimViewSize = _vimView.desiredSize;
   DDLogError(@"###### desired vim view size: %@", vsize(desiredVimViewSize));
   DDLogError(@"######     content view size: %@", vsize([self.window contentRectForFrameRect:self.window.frame].size));
 
-  // We constrain the desired size of the Vim view to the visible frame of the screen. This can happen, when you use
-  // :set lines=BIG_NUMBER
+  // We constrain the desired size of the Vim view to the visible frame of the screen. This can happen, when you
+  // for instance use :set lines=BIG_NUMBER
 
   desiredVimViewSize = [self constrainContentSizeToScreenSize:desiredVimViewSize];
 
@@ -640,6 +628,14 @@
 
 #pragma mark Private
 
+- (CGSize)vimViewSizeForWindowRect:(CGRect)winRect {
+  NSRect contentRect = [self.window contentRectForFrameRect:winRect];
+  contentRect.size.width = contentRect.size.width - _workspaceView.sidebarAndDividerWidth;
+  contentRect.size.height = contentRect.size.height - 23;
+
+  return contentRect.size;
+}
+
 - (CGSize)uncorrectedVimViewSizeForWinFrameRect:(CGRect)winRect {
   NSRect winContentRect = [self.window contentRectForFrameRect:winRect];
   CGSize winContentSize = winContentRect.size;
@@ -648,6 +644,15 @@
   winContentSize.height = winContentSize.height - 0;
 
   return winContentSize;
+}
+
+- (CGSize)winContentSizeForVimViewSize:(CGSize)vimViewSize {
+  CGSize result;
+
+  result.width = _workspaceView.sidebarAndDividerWidth + vimViewSize.width;
+  result.height = vimViewSize.height + 0;
+
+  return result;
 }
 
 - (CGRect)desiredWinFrameRectForWinFrameRect:(CGRect)winRect {
@@ -660,9 +665,7 @@
       contentRect.size.height
   );
   CGSize desiredVimViewSize = [_vimView constrainRows:&rows columns:&columns toSize:givenVimViewSize];
-
-  contentRect.size.width = fileBrowserAndDividerWidth + desiredVimViewSize.width;
-  contentRect.size.height = desiredVimViewSize.height;
+  contentRect.size = [self winContentSizeForVimViewSize:desiredVimViewSize];
 
   return [self.window frameRectForContentRect:contentRect];
 }

@@ -36,11 +36,11 @@ static CGPoint qDefaultOrigin = {242, 364};
   return _openedBufferUrls;
 }
 
-- (void)updateWorkingDirectory:(NSURL *)commonParent {
+- (void)updateWorkingDirectory:(NSURL *)workingDir {
   [_fileItemManager unregisterUrl:_workingDirectory];
-  [_fileItemManager registerUrl:commonParent];
+  [_fileItemManager registerUrl:workingDir];
 
-  _workingDirectory = commonParent;
+  _workingDirectory = workingDir;
   [_mainWindowController updateWorkingDirectory];
 }
 

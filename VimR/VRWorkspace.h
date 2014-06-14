@@ -32,7 +32,7 @@
 
 #pragma mark Public
 - (NSArray *)openedUrls;
-- (void)updateWorkingDirectory:(NSURL *)commonParent;
+- (void)updateWorkingDirectory:(NSURL *)workingDir;
 - (void)openFilesWithUrls:(NSArray *)url;
 - (BOOL)hasModifiedBuffer;
 - (void)setUpWithVimController:(MMVimController *)vimController;
