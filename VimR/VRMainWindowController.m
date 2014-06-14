@@ -947,14 +947,9 @@
     return;
   }
 
-  if (_workspaceView.fileBrowserView) {
-    self.window.minSize = CGSizeMake(
-        _workspaceView.sidebarAndDividerWidth + _vimView.minSize.width,
-        _vimView.minSize.height
-    );
-  } else {
-    self.window.minSize = _vimView.minSize;
-  }
+  NSRect winFrameRect = self.window.frame;
+  winFrameRect.size = [self winContentSizeForVimViewSize:_vimView.minSize];
+  self.window.minSize = [self.window frameRectForContentRect:winFrameRect].size;
 
   // We also update the increment of the workspace view, because it could be that the font size has changed
   _workspaceView.dragIncrement = (NSUInteger) _vimView.textView.cellSize.width;
