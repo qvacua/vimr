@@ -851,6 +851,8 @@
 }
 
 /**
+* We expect that targetWinContentSize does fit to the screen.
+*
 * Resize code
 */
 - (void)resizeWindowToFitContentSize:(CGSize)targetWinContentSize {
@@ -878,37 +880,7 @@
 
   NSScreen *screen = window.screen;
   if (_windowOriginShouldMoveToKeepOnScreen && screen) {
-    // Ensure that the window fits inside the visible part of the screen.
-    // If there are more than one screen the window will be moved to fit
-    // entirely in the screen that most of it occupies.
-    CGRect maxFrame = screen.visibleFrame;
-    maxFrame = [self constrainFrame:maxFrame];
-
-    if (targetWinFrameRect.size.width > maxFrame.size.width) {
-      targetWinFrameRect.size.width = maxFrame.size.width;
-      targetWinFrameRect.origin.x = maxFrame.origin.x;
-    }
-
-    if (targetWinFrameRect.size.height > maxFrame.size.height) {
-      targetWinFrameRect.size.height = maxFrame.size.height;
-      targetWinFrameRect.origin.y = maxFrame.origin.y;
-    }
-
-    if (targetWinFrameRect.origin.y < maxFrame.origin.y) {
-      targetWinFrameRect.origin.y = maxFrame.origin.y;
-    }
-
-    if (NSMaxY(targetWinFrameRect) > NSMaxY(maxFrame)) {
-      targetWinFrameRect.origin.y = NSMaxY(maxFrame) - targetWinFrameRect.size.height;
-    }
-
-    if (targetWinFrameRect.origin.x < maxFrame.origin.x) {
-      targetWinFrameRect.origin.x = maxFrame.origin.x;
-    }
-
-    if (NSMaxX(targetWinFrameRect) > NSMaxX(maxFrame)) {
-      targetWinFrameRect.origin.x = NSMaxX(maxFrame) - targetWinFrameRect.size.width;
-    }
+    targetWinFrameRect = [self winFrameRectToKeepOnScreenForWinFrameRect:targetWinFrameRect];
   }
 
   [window setFrame:targetWinFrameRect display:YES];
@@ -926,6 +898,46 @@
   // NOTE 2: Vim measures Y-coordinates from top of screen.
   int pos[2] = {(int) newTopLeft.x, (int) (NSMaxY(window.screen.frame) - newTopLeft.y)};
   [_vimController sendMessage:SetWindowPositionMsgID data:[NSData dataWithBytes:pos length:2 * sizeof(int)]];
+}
+
+/**
+* Resize code
+*/
+- (CGRect)winFrameRectToKeepOnScreenForWinFrameRect:(CGRect)reqWinFrameRect {
+  // Ensure that the window fits inside the visible part of the screen.
+  // If there are more than one screen the window will be moved to fit
+  // entirely in the screen that most of it occupies.
+  CGRect targetWinFrameRect = reqWinFrameRect;
+  CGRect maxFrame = self.window.screen.visibleFrame;
+  maxFrame = [self constrainFrame:maxFrame];
+
+  if (targetWinFrameRect.size.width > maxFrame.size.width) {
+    targetWinFrameRect.size.width = maxFrame.size.width;
+    targetWinFrameRect.origin.x = maxFrame.origin.x;
+  }
+
+  if (targetWinFrameRect.size.height > maxFrame.size.height) {
+    targetWinFrameRect.size.height = maxFrame.size.height;
+    targetWinFrameRect.origin.y = maxFrame.origin.y;
+  }
+
+  if (targetWinFrameRect.origin.y < maxFrame.origin.y) {
+    targetWinFrameRect.origin.y = maxFrame.origin.y;
+  }
+
+  if (NSMaxY(targetWinFrameRect) > NSMaxY(maxFrame)) {
+    targetWinFrameRect.origin.y = NSMaxY(maxFrame) - targetWinFrameRect.size.height;
+  }
+
+  if (targetWinFrameRect.origin.x < maxFrame.origin.x) {
+    targetWinFrameRect.origin.x = maxFrame.origin.x;
+  }
+
+  if (NSMaxX(targetWinFrameRect) > NSMaxX(maxFrame)) {
+    targetWinFrameRect.origin.x = NSMaxX(maxFrame) - targetWinFrameRect.size.width;
+  }
+
+  return targetWinFrameRect;
 }
 
 /**
