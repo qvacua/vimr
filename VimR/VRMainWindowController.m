@@ -835,22 +835,6 @@
 }
 
 /**
-* Resize code
-*/
-- (CGRect)constrainFrame:(CGRect)frame {
-  // Constrain the given (window) frame so that it fits an even number of
-  // rows and columns.
-  NSWindow *window = self.window;
-  CGRect contentRect = [self.window contentRectForFrameRect:frame];
-  CGSize constrainedSize = [self.vimView constrainRows:NULL columns:NULL toSize:contentRect.size];
-
-  contentRect.origin.y += contentRect.size.height - constrainedSize.height;
-  contentRect.size = constrainedSize;
-
-  return [window frameRectForContentRect:contentRect];
-}
-
-/**
 * We expect that targetWinContentSize does fit to the screen.
 *
 * Resize code
@@ -909,17 +893,6 @@
   // entirely in the screen that most of it occupies.
   CGRect targetWinFrameRect = reqWinFrameRect;
   CGRect maxFrame = self.window.screen.visibleFrame;
-  maxFrame = [self constrainFrame:maxFrame];
-
-  if (targetWinFrameRect.size.width > maxFrame.size.width) {
-    targetWinFrameRect.size.width = maxFrame.size.width;
-    targetWinFrameRect.origin.x = maxFrame.origin.x;
-  }
-
-  if (targetWinFrameRect.size.height > maxFrame.size.height) {
-    targetWinFrameRect.size.height = maxFrame.size.height;
-    targetWinFrameRect.origin.y = maxFrame.origin.y;
-  }
 
   if (targetWinFrameRect.origin.y < maxFrame.origin.y) {
     targetWinFrameRect.origin.y = maxFrame.origin.y;
