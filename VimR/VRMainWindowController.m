@@ -296,6 +296,9 @@
 
 #pragma mark MMViewDelegate informal protocol
 
+/**
+* Resize code
+*/
 - (void)liveResizeWillStart {
   /**
   * NOTE: During live resize Cocoa goes into "event tracking mode".  We have
@@ -308,6 +311,9 @@
   [self.connectionToBackend addRequestMode:NSEventTrackingRunLoopMode];
 }
 
+/**
+* Resize code
+*/
 - (void)liveResizeDidEnd {
   // See comment regarding event tracking mode in -liveResizeWillStart.
   [self.connectionToBackend removeRequestMode:NSEventTrackingRunLoopMode];
@@ -349,10 +355,13 @@
 
 #pragma mark MMVimControllerDelegate
 
+/**
+* Resize code
+*/
 - (void)controller:(MMVimController *)controller zoomWithRows:(int)rows columns:(int)columns state:(int)state
               data:(NSData *)data {
 
-  DDLogWarn(@"zoom with rows and colums: %d X %d", rows, columns) ;
+  DDLogWarn(@"zoom with rows and colums: %d X %d", rows, columns);
 
   [_vimView setDesiredRows:rows columns:columns];
   _needsToResizeVimView = YES;
@@ -541,10 +550,11 @@
   [_workspace updateBuffers];
 }
 
+/**
+* Resize code
+*/
 - (void)controller:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue {
-  if (!_needsToResizeVimView) {
-    return;
-  }
+  if (!_needsToResizeVimView) {return;}
 
   _needsToResizeVimView = NO;
 
@@ -615,10 +625,16 @@
   return NO;
 }
 
+/**
+* Resize code
+*/
 - (void)windowDidResize:(id)sender {
   // noop
 }
 
+/**
+* Resize code
+*/
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize {
   // To set -contentResizeIncrements of the window to the cell width of the vim view does not suffice because of the
   // file browser and insets among others. Here, we adjust the width of the window such that the vim view is always
@@ -630,48 +646,6 @@
 }
 
 #pragma mark Private
-
-- (CGSize)vimViewSizeForWindowRect:(CGRect)winRect {
-  NSRect contentRect = [self.window contentRectForFrameRect:winRect];
-  contentRect.size.width = contentRect.size.width - _workspaceView.sidebarAndDividerWidth;
-  contentRect.size.height = contentRect.size.height - 23;
-
-  return contentRect.size;
-}
-
-- (CGSize)uncorrectedVimViewSizeForWinFrameRect:(CGRect)winRect {
-  NSRect winContentRect = [self.window contentRectForFrameRect:winRect];
-  CGSize winContentSize = winContentRect.size;
-
-  winContentSize.width = winContentSize.width - _workspaceView.sidebarAndDividerWidth;
-  winContentSize.height = winContentSize.height - 0;
-
-  return winContentSize;
-}
-
-- (CGSize)winContentSizeForVimViewSize:(CGSize)vimViewSize {
-  CGSize result;
-
-  result.width = _workspaceView.sidebarAndDividerWidth + vimViewSize.width;
-  result.height = vimViewSize.height + 0;
-
-  return result;
-}
-
-- (CGRect)desiredWinFrameRectForWinFrameRect:(CGRect)winRect {
-  CGRect contentRect = [self.window contentRectForFrameRect:winRect];
-  CGFloat fileBrowserAndDividerWidth = _workspaceView.sidebarAndDividerWidth;
-
-  int rows, columns;
-  CGSize givenVimViewSize = CGSizeMake(
-      contentRect.size.width - fileBrowserAndDividerWidth,
-      contentRect.size.height
-  );
-  CGSize desiredVimViewSize = [_vimView constrainRows:&rows columns:&columns toSize:givenVimViewSize];
-  contentRect.size = [self winContentSizeForVimViewSize:desiredVimViewSize];
-
-  return [self.window frameRectForContentRect:contentRect];
-}
 
 - (NSURL *)workingDirectory {
   return _workspace.workingDirectory;
@@ -733,6 +707,135 @@
   [_vimController tellBackend:ret];
 }
 
+- (NSConnection *)connectionToBackend {
+  NSDistantObject *proxy = _vimController.backendProxy;
+
+  return proxy.connectionForProxy;
+}
+
+- (void)setWindowTitleToCurrentBuffer {
+  NSString *filePath = _vimController.currentBuffer.fileName;
+  NSString *filename = filePath.lastPathComponent;
+
+  if (filename == nil) {
+    self.window.title = @"Untitled";
+    return;
+  }
+
+  NSString *containingFolder = filePath.stringByDeletingLastPathComponent.lastPathComponent;
+  self.window.title = SF(@"%@ — %@", filename, containingFolder);
+}
+
+- (VRMainWindow *)newMainWindowForContentRect:(CGRect)contentRect {
+  unsigned windowStyle = NSTitledWindowMask | NSUnifiedTitleAndToolbarWindowMask
+      | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask
+      | NSTexturedBackgroundWindowMask;
+
+  VRMainWindow *window = [[VRMainWindow alloc] initWithContentRect:contentRect styleMask:windowStyle
+                                                           backing:NSBackingStoreBuffered defer:YES];
+  window.delegate = self;
+  window.hasShadow = YES;
+  window.title = @"VimR";
+
+  [window setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
+  [window setContentBorderThickness:22 forEdge:NSMinYEdge];
+
+  return window;
+}
+
+- (NSDictionary *)vimArgsFromFileUrls:(NSArray *)fileUrls {
+  NSMutableArray *filenames = [[NSMutableArray alloc] initWithCapacity:4];
+  for (NSURL *url in fileUrls) {
+    [filenames addObject:url.path];
+  }
+
+  return @{
+      qVimArgFileNamesToOpen : filenames,
+      qVimArgOpenFilesLayout : @(MMLayoutTabs),
+  };
+}
+
+- (NSDictionary *)vimArgsFromUrl:(NSURL *)url mode:(NSUInteger)mode {
+  return @{
+      qVimArgFileNamesToOpen : @[url.path],
+      qVimArgOpenFilesLayout : @(mode),
+  };
+}
+
+- (NSMutableArray *)alreadyOpenedUrlsFromUrls:(NSArray *)urls {
+  NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:urls.count];
+  NSArray *buffers = _vimController.buffers;
+
+  for (NSURL *url in urls) {
+    for (MMBuffer *buffer in buffers) {
+      if ([buffer.fileName isEqualToString:url.path]) {
+        [result addObject:url];
+      }
+    }
+  }
+
+  return result;
+}
+
+#pragma mark Private Resize Code
+
+/**
+* Resize code
+*/
+- (CGSize)vimViewSizeForWindowRect:(CGRect)winRect {
+  NSRect contentRect = [self.window contentRectForFrameRect:winRect];
+  contentRect.size.width = contentRect.size.width - _workspaceView.sidebarAndDividerWidth;
+  contentRect.size.height = contentRect.size.height - 23;
+
+  return contentRect.size;
+}
+
+/**
+* Resize code
+*/
+- (CGSize)uncorrectedVimViewSizeForWinFrameRect:(CGRect)winRect {
+  NSRect winContentRect = [self.window contentRectForFrameRect:winRect];
+  CGSize winContentSize = winContentRect.size;
+
+  winContentSize.width = winContentSize.width - _workspaceView.sidebarAndDividerWidth;
+  winContentSize.height = winContentSize.height - 0;
+
+  return winContentSize;
+}
+
+/**
+* Resize code
+*/
+- (CGSize)winContentSizeForVimViewSize:(CGSize)vimViewSize {
+  CGSize result;
+
+  result.width = _workspaceView.sidebarAndDividerWidth + vimViewSize.width;
+  result.height = vimViewSize.height + 0;
+
+  return result;
+}
+
+/**
+* Resize code
+*/
+- (CGRect)desiredWinFrameRectForWinFrameRect:(CGRect)winRect {
+  CGRect contentRect = [self.window contentRectForFrameRect:winRect];
+  CGFloat fileBrowserAndDividerWidth = _workspaceView.sidebarAndDividerWidth;
+
+  int rows, columns;
+  CGSize givenVimViewSize = CGSizeMake(
+      contentRect.size.width - fileBrowserAndDividerWidth,
+      contentRect.size.height
+  );
+  CGSize desiredVimViewSize = [_vimView constrainRows:&rows columns:&columns toSize:givenVimViewSize];
+  contentRect.size = [self winContentSizeForVimViewSize:desiredVimViewSize];
+
+  return [self.window frameRectForContentRect:contentRect];
+}
+
+/**
+* Resize code
+*/
 - (CGRect)constrainFrame:(CGRect)frame {
   // Constrain the given (window) frame so that it fits an even number of
   // rows and columns.
@@ -746,6 +849,9 @@
   return [window frameRectForContentRect:contentRect];
 }
 
+/**
+* Resize code
+*/
 - (void)resizeWindowToFitVimViewSize:(CGSize)vimViewSize {
   NSWindow *window = self.window;
   CGRect frame = window.frame;
@@ -821,6 +927,9 @@
   [_vimController sendMessage:SetWindowPositionMsgID data:[NSData dataWithBytes:pos length:2 * sizeof(int)]];
 }
 
+/**
+* Resize code
+*/
 - (CGSize)constrainContentSizeToScreenSize:(CGSize)contentSize {
   NSWindow *win = self.window;
   if (win.screen == nil) {
@@ -844,12 +953,9 @@
   return contentSize;
 }
 
-- (NSConnection *)connectionToBackend {
-  NSDistantObject *proxy = _vimController.backendProxy;
-
-  return proxy.connectionForProxy;
-}
-
+/**
+* Resize code
+*/
 - (void)updateResizeConstraints {
   if (!_vimViewSetUpDone) {
     return;
@@ -864,70 +970,6 @@
   }
   // We also update the increment of the workspace view, because it could be that the font size has changed
   _workspaceView.dragIncrement = (NSUInteger) _vimView.textView.cellSize.width;
-}
-
-- (void)setWindowTitleToCurrentBuffer {
-  NSString *filePath = _vimController.currentBuffer.fileName;
-  NSString *filename = filePath.lastPathComponent;
-
-  if (filename == nil) {
-    self.window.title = @"Untitled";
-    return;
-  }
-
-  NSString *containingFolder = filePath.stringByDeletingLastPathComponent.lastPathComponent;
-  self.window.title = SF(@"%@ — %@", filename, containingFolder);
-}
-
-- (VRMainWindow *)newMainWindowForContentRect:(CGRect)contentRect {
-  unsigned windowStyle = NSTitledWindowMask | NSUnifiedTitleAndToolbarWindowMask
-      | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask
-      | NSTexturedBackgroundWindowMask;
-
-  VRMainWindow *window = [[VRMainWindow alloc] initWithContentRect:contentRect styleMask:windowStyle
-                                                           backing:NSBackingStoreBuffered defer:YES];
-  window.delegate = self;
-  window.hasShadow = YES;
-  window.title = @"VimR";
-
-  [window setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
-  [window setContentBorderThickness:22 forEdge:NSMinYEdge];
-
-  return window;
-}
-
-- (NSDictionary *)vimArgsFromFileUrls:(NSArray *)fileUrls {
-  NSMutableArray *filenames = [[NSMutableArray alloc] initWithCapacity:4];
-  for (NSURL *url in fileUrls) {
-    [filenames addObject:url.path];
-  }
-
-  return @{
-      qVimArgFileNamesToOpen : filenames,
-      qVimArgOpenFilesLayout : @(MMLayoutTabs),
-  };
-}
-
-- (NSDictionary *)vimArgsFromUrl:(NSURL *)url mode:(NSUInteger)mode {
-  return @{
-      qVimArgFileNamesToOpen : @[url.path],
-      qVimArgOpenFilesLayout : @(mode),
-  };
-}
-
-- (NSMutableArray *)alreadyOpenedUrlsFromUrls:(NSArray *)urls {
-  NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:urls.count];
-  NSArray *buffers = _vimController.buffers;
-
-  for (NSURL *url in urls) {
-    for (MMBuffer *buffer in buffers) {
-      if ([buffer.fileName isEqualToString:url.path]) {
-        [result addObject:url];
-      }
-    }
-  }
-
-  return result;
 }
 
 @end
