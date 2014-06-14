@@ -18,7 +18,7 @@
 
 
 #define SQ(x) ((x)*(x))
-#define CONSTRAINT(str) [_myConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:str options:0 metrics:nil views:views]]
+#define CONSTRAINT(str, ...) [_myConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: str, ##__VA_ARGS__] options:0 metrics:nil views:views]]
 
 
 static const int qDefaultFileBrowserWidth = 175;
@@ -139,7 +139,7 @@ static const int qMinimumFileBrowserWidth = 100;
       @"fileBrowserDivider" : _fileBrowserDivider ?: [NSNull null],
   };
 
-  CONSTRAINT(@"V:|[documentView]|");
+  CONSTRAINT(@"V:|[documentView]-(%d)-|", qMainWindowBorderThickness + 1);
   [self addVimViewMinSizeConstraints];
 
   if (_fileBrowserView) {

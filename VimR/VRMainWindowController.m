@@ -25,6 +25,9 @@
 #import "VROutlineView.h"
 
 
+const int qMainWindowBorderThickness = 22;
+
+
 #define CONSTRAINT(fmt) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]];
 
 
@@ -754,7 +757,7 @@
   window.title = @"VimR";
 
   [window setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
-  [window setContentBorderThickness:22 forEdge:NSMinYEdge];
+  [window setContentBorderThickness:qMainWindowBorderThickness forEdge:NSMinYEdge];
 
   return window;
 }
@@ -804,7 +807,7 @@
   CGSize winContentSize = [self.window contentRectForFrameRect:winFrameRect].size;
 
   winContentSize.width = winContentSize.width - _workspaceView.sidebarAndDividerWidth;
-  winContentSize.height = winContentSize.height - 0;
+  winContentSize.height = winContentSize.height - (qMainWindowBorderThickness + 1);
 
   return winContentSize;
 }
@@ -815,7 +818,7 @@
 - (CGSize)winContentSizeForVimViewSize:(CGSize)vimViewSize {
   return CGSizeMake(
       _workspaceView.sidebarAndDividerWidth + vimViewSize.width,
-      vimViewSize.height + 0
+      vimViewSize.height + (qMainWindowBorderThickness + 1)
   );
 }
 

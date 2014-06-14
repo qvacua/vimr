@@ -16,6 +16,8 @@
 @class VROpenQuicklyWindowController;
 @class VRWorkspace;
 
+extern const int qMainWindowBorderThickness;
+
 @interface VRMainWindowController : NSWindowController <
     NSWindowDelegate,
     MMVimControllerDelegate,
