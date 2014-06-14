@@ -63,7 +63,7 @@
 - (void)controller:(MMVimController *)controller showScrollbarWithIdentifier:(int32_t)identifier state:(BOOL)state
               data:(NSData *)data;
 - (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
-            isLive:(BOOL)live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data;
+            isLive:(BOOL)live keepOnScreen:(BOOL)winShouldNotMove data:(NSData *)data;
 - (void)controller:(MMVimController *)controller openWindowWithData:(NSData *)data;
 - (void)controller:(MMVimController *)controller showTabBarWithData:(NSData *)data;
 - (void)controller:(MMVimController *)controller setScrollbarThumbValue:(float)value

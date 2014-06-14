@@ -33,7 +33,7 @@
   int _userCols;
   CGPoint _userTopLeft;
   BOOL _shouldRestoreUserTopLeft;
-  BOOL _isReplyToGuiResize;
+  BOOL _winShouldNotMove;
   BOOL _vimViewSetUpDone;
   BOOL _needsToResizeVimView;
 
@@ -163,8 +163,10 @@
   int rowsZoomed;
   int colsZoomed;
   CGRect maxFrame = screen.visibleFrame;
-  CGRect contentRect = [self.window contentRectForFrameRect:maxFrame];
-  [_vimView constrainRows:&rowsZoomed columns:&colsZoomed toSize:contentRect.size];
+  DDLogWarn(@"###### max frame of the screen: %@", vrect(maxFrame));
+  CGSize uncorrectedVimViewSize = [self uncorrectedVimViewSizeForWinFrameRect:maxFrame];
+  DDLogWarn(@"###### uncorrected vim view for max frame: %@", vsize(uncorrectedVimViewSize));
+  [_vimView constrainRows:&rowsZoomed columns:&colsZoomed toSize:uncorrectedVimViewSize];
 
   int curRows, curCols;
   [_vimView.textView getMaxRows:&curRows columns:&curCols];
@@ -190,6 +192,8 @@
       _userTopLeft = CGPointMake(frame.origin.x, NSMaxY(frame));
     }
   }
+
+  DDLogWarn(@"###### telling vim to zoom with %@ X %@", @(rows), @(cols));
 
   // NOTE: Instead of resizing the window immediately we send a zoom message
   // to the backend so that it gets a chance to resize before the window
@@ -351,9 +355,11 @@
 - (void)controller:(MMVimController *)controller zoomWithRows:(int)rows columns:(int)columns state:(int)state
               data:(NSData *)data {
 
+  DDLogWarn(@"zoom with rows and colums: %d X %d", rows, columns) ;
+
   [_vimView setDesiredRows:rows columns:columns];
   _needsToResizeVimView = YES;
-  _isReplyToGuiResize = YES;
+  _winShouldNotMove = YES;
 
   // NOTE: If state==0 then the window should be put in the non-zoomed
   // "user state".  That is, move the window back to the last stored
@@ -445,9 +451,9 @@
 }
 
 - (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
-            isLive:(BOOL)live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data {
+            isLive:(BOOL)live keepOnScreen:(BOOL)winShouldNotMove data:(NSData *)data {
 
-  DDLogDebug(@"%d X %d\tlive: %@\tkeepOnScreen: %@", rows, columns, @(live), @(isReplyToGuiResize));
+  DDLogDebug(@"%d X %d\tlive: %@\tkeepOnScreen: %@", rows, columns, @(live), @(winShouldNotMove));
   [_vimView setDesiredRows:rows columns:columns];
   [self updateResizeConstraints];
 
@@ -456,9 +462,13 @@
     return;
   }
 
+  if (!winShouldNotMove) {
+    DDLogError(@"###### window should not move!!!!");
+  }
+
   if (!live) {
     _needsToResizeVimView = YES;
-    _isReplyToGuiResize = isReplyToGuiResize;
+    _winShouldNotMove = winShouldNotMove;
   }
 }
 
@@ -472,7 +482,7 @@
   [_vimView addNewTabViewItem];
 
   _vimViewSetUpDone = YES;
-  _isReplyToGuiResize = YES;
+  _winShouldNotMove = YES;
 
   [_workspace setUpInitialBuffers];
 
@@ -560,7 +570,7 @@
 
   [self resizeWindowToFitVimViewSize:desiredVimViewSize];
 
-  _isReplyToGuiResize = NO;
+  _winShouldNotMove = NO;
 }
 
 - (void)controller:(MMVimController *)controller removeToolbarItemWithIdentifier:(NSString *)identifier {
@@ -625,12 +635,22 @@
   CGRect winRect = sender.frame;
   winRect.size = frameSize;
 
-  return [self desiredWinFrameRectForFrameRect:winRect].size;
+  return [self desiredWinFrameRectForWinFrameRect:winRect].size;
 }
 
 #pragma mark Private
 
-- (CGRect)desiredWinFrameRectForFrameRect:(CGRect)winRect {
+- (CGSize)uncorrectedVimViewSizeForWinFrameRect:(CGRect)winRect {
+  NSRect winContentRect = [self.window contentRectForFrameRect:winRect];
+  CGSize winContentSize = winContentRect.size;
+
+  winContentSize.width = winContentSize.width - _workspaceView.sidebarAndDividerWidth;
+  winContentSize.height = winContentSize.height - 0;
+
+  return winContentSize;
+}
+
+- (CGRect)desiredWinFrameRectForWinFrameRect:(CGRect)winRect {
   CGRect contentRect = [self.window contentRectForFrameRect:winRect];
   CGFloat fileBrowserAndDividerWidth = _workspaceView.sidebarAndDividerWidth;
 
@@ -744,7 +764,7 @@
   }
 
   NSScreen *screen = window.screen;
-  if (_isReplyToGuiResize && screen) {
+  if (_winShouldNotMove && screen) {
     // Ensure that the window fits inside the visible part of the screen.
     // If there are more than one screen the window will be moved to fit
     // entirely in the screen that most of it occupies.
