@@ -522,6 +522,16 @@
   self.window.representedFilename = filename;
 }
 
+- (void)controller:(MMVimController *)controller setVimState:(NSDictionary *)vimState data:(NSData *)data {
+  if (_fileBrowserView.syncWorkspaceWithPwd) {
+    NSString *pwdPath = _vimController.vimState[@"pwd"];
+    if (![_workspace.workingDirectory.path isEqualToString:pwdPath]) {
+      DDLogWarn(@"setting workspace");
+      [_workspace updateWorkingDirectory:[[NSURL alloc] initFileURLWithPath:pwdPath]];
+    }
+  }
+}
+
 - (void)controller:(MMVimController *)controller setWindowTitle:(NSString *)title data:(NSData *)data {
   [self setWindowTitleToCurrentBuffer];
 
@@ -532,13 +542,6 @@
 }
 
 - (void)controller:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue {
-  if (_fileBrowserView.syncWorkspaceWithPwd) {
-    NSString *pwdPath = _vimController.vimState[@"pwd"];
-    if (![_workspace.workingDirectory.path isEqualToString:pwdPath]) {
-      [_workspace updateWorkingDirectory:[[NSURL alloc] initFileURLWithPath:pwdPath]];
-    }
-  }
-
   if (!_needsToResizeVimView) {
     return;
   }

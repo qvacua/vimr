@@ -75,6 +75,7 @@
 - (void)controller:(MMVimController *)controller tabDraggedWithData:(NSData *)data;
 - (void)controller:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data;
 - (void)controller:(MMVimController *)controller setDocumentFilename:(NSString *)filename data:(NSData *)data;
+- (void)controller:(MMVimController *)controller setVimState:(NSDictionary *)vimState data:(NSData *)data;
 - (void)controller:(MMVimController *)controller setWindowTitle:(NSString *)title data:(NSData *)data;
 - (void)controller:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue;
 - (void)controller:(MMVimController *)controller removeToolbarItemWithIdentifier:(NSString *)identifier;
