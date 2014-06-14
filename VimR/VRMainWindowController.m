@@ -33,7 +33,7 @@
   int _userCols;
   CGPoint _userTopLeft;
   BOOL _shouldRestoreUserTopLeft;
-  BOOL _winShouldNotMove;
+  BOOL _windowOriginShouldMoveToKeepOnScreen;
   BOOL _vimViewSetUpDone;
   BOOL _needsToResizeVimView;
 
@@ -366,7 +366,7 @@
 
   [_vimView setDesiredRows:rows columns:columns];
   _needsToResizeVimView = YES;
-  _winShouldNotMove = YES;
+  _windowOriginShouldMoveToKeepOnScreen = YES;
 
   // NOTE: If state==0 then the window should be put in the non-zoomed
   // "user state".  That is, move the window back to the last stored
@@ -458,9 +458,9 @@
 }
 
 - (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
-            isLive:(BOOL)live keepOnScreen:(BOOL)winShouldNotMove data:(NSData *)data {
+            isLive:(BOOL)live keepOnScreen:(BOOL)winOriginShouldMove data:(NSData *)data {
 
-  DDLogError(@"%d X %d, live: %@, winSouldNotMove: %@", rows, columns, @(live), @(winShouldNotMove));
+  DDLogError(@"%d X %d, live: %@, winOriginShouldMove: %@", rows, columns, @(live), @(winOriginShouldMove));
   [_vimView setDesiredRows:rows columns:columns];
   [self updateResizeConstraints];
 
@@ -469,13 +469,13 @@
     return;
   }
 
-  if (!winShouldNotMove) {
-    DDLogError(@"###### window should not move!!!!");
+  if (winOriginShouldMove) {
+    DDLogError(@"###### window should/may move!!!!");
   }
 
   if (!live) {
     _needsToResizeVimView = YES;
-    _winShouldNotMove = winShouldNotMove;
+    _windowOriginShouldMoveToKeepOnScreen = winOriginShouldMove;
   }
 }
 
@@ -489,7 +489,7 @@
   [_vimView addNewTabViewItem];
 
   _vimViewSetUpDone = YES;
-  _winShouldNotMove = YES;
+  _windowOriginShouldMoveToKeepOnScreen = YES;
 
   [_workspace setUpInitialBuffers];
 
@@ -557,6 +557,12 @@
 - (void)controller:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue {
   if (!_needsToResizeVimView) {return;}
 
+  // When :set lines=2000, the following happens:
+  // - setTextDimensions is called with rows=2000, keepOnScreen=YES
+  // - in this method, we constrain the window frame to fit the screen size, ie the size of the Vim view changes which
+  //   is small to accommodate 2000 rows.
+  // - thus, setTextDimensions is called again with eg rows=60, keepOnScreen=NO
+
   _needsToResizeVimView = NO;
 
   // We have to start our computation of window frame with the desired size of the Vim view because of non-GUI resize
@@ -581,7 +587,7 @@
 
   [self resizeWindowToFitContentSize:constrainedWinContentSize];
 
-  _winShouldNotMove = NO;
+  _windowOriginShouldMoveToKeepOnScreen = NO;
 }
 
 - (void)controller:(MMVimController *)controller removeToolbarItemWithIdentifier:(NSString *)identifier {
@@ -871,7 +877,7 @@
   }
 
   NSScreen *screen = window.screen;
-  if (_winShouldNotMove && screen) {
+  if (_windowOriginShouldMoveToKeepOnScreen && screen) {
     // Ensure that the window fits inside the visible part of the screen.
     // If there are more than one screen the window will be moved to fit
     // entirely in the screen that most of it occupies.
