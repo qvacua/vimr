@@ -166,9 +166,7 @@ const int qMainWindowBorderThickness = 22;
   int rowsZoomed;
   int colsZoomed;
   CGRect maxFrame = screen.visibleFrame;
-  DDLogWarn(@"###### max frame of the screen: %@", vrect(maxFrame));
   CGSize uncorrectedVimViewSize = [self uncorrectedVimViewSizeForWinFrameRect:maxFrame];
-  DDLogWarn(@"###### uncorrected vim view for max frame: %@", vsize(uncorrectedVimViewSize));
   [_vimView constrainRows:&rowsZoomed columns:&colsZoomed toSize:uncorrectedVimViewSize];
 
   int curRows, curCols;
@@ -350,7 +348,6 @@ const int qMainWindowBorderThickness = 22;
     * with inconsistent states.
     */
     CGSize manualWinContentSize = [self winContentSizeForVimViewSize:_vimView.desiredSize];
-    DDLogWarn(@"Live resizing failed, manually resizing to %@", vsize(manualWinContentSize));
     [self resizeWindowToFitContentSize:manualWinContentSize];
   }
 
@@ -463,17 +460,13 @@ const int qMainWindowBorderThickness = 22;
 - (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
             isLive:(BOOL)live keepOnScreen:(BOOL)winOriginShouldMove data:(NSData *)data {
 
-  DDLogError(@"%d X %d, live: %@, winOriginShouldMove: %@", rows, columns, @(live), @(winOriginShouldMove));
+  DDLogDebug(@"%d X %d, live: %@, winOriginShouldMove: %@", rows, columns, @(live), @(winOriginShouldMove));
   [_vimView setDesiredRows:rows columns:columns];
   [self updateResizeConstraints];
 
   if (!_vimViewSetUpDone) {
     DDLogDebug(@"not yet setup");
     return;
-  }
-
-  if (winOriginShouldMove) {
-    DDLogError(@"###### window should/may move!!!!");
   }
 
   if (!live) {
@@ -572,14 +565,12 @@ const int qMainWindowBorderThickness = 22;
   // requests like :set columns=XYZ
 
   CGSize reqVimViewSize = _vimView.desiredSize;
-  DDLogWarn(@"###### desired vim view size: %@", vsize(reqVimViewSize));
 
   // We constrain the desired size of the Vim view to the visible frame of the screen. This can happen, when you
   // for instance use :set lines=BIG_NUMBER
 
   CGSize reqWinContentSizeView = [self winContentSizeForVimViewSize:reqVimViewSize];
   CGSize constrainedWinContentSize = [self constrainContentSizeToScreenSize:reqWinContentSizeView];
-  DDLogWarn(@"###### to screen constrained win frame size: %@", vsize(constrainedWinContentSize));
 
   // The constrained window frame size may be not integral for the Vim view, however, there's no need for re-adjustment,
   // because
@@ -854,8 +845,6 @@ const int qMainWindowBorderThickness = 22;
   targetContentRect.size = targetWinContentSize;
 
   CGRect targetWinFrameRect = [window frameRectForContentRect:targetContentRect];
-  DDLogError(@"###### old win frame rect: %@", vrect(curWinFrameRect));
-  DDLogError(@"###### new win frame rect: %@", vrect(targetWinFrameRect));
 
   if (_shouldRestoreUserTopLeft) {
     // Restore user top left window position (which is saved when zooming).
