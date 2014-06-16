@@ -39,9 +39,9 @@
 - (void)setUpInitialBuffers;
 - (void)cleanUpAndClose;
 - (void)updateBuffers;
+- (void)selectBufferWithUrl:(NSURL *)url;
 
 #pragma mark NSObject
 - (id)init;
 
-- (void)selectBufferWithUrl:(NSURL *)url;
 @end

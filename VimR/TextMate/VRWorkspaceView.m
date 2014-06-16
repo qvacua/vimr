@@ -42,6 +42,7 @@ static const int qMinimumFileBrowserWidth = 100;
   MMVimView *_vimView;
   VRFileBrowserView *_fileBrowserView;
   BOOL _fileBrowserOnRight;
+  NSPathControl *_pathControl;
 }
 
 #pragma mark Properties
@@ -92,6 +93,7 @@ static const int qMinimumFileBrowserWidth = 100;
   return qDefaultFileBrowserWidth + 1;
 }
 
+
 - (void)updateMetrics {
   _dragIncrement = (NSUInteger) _vimView.textView.cellSize.width;
 }
@@ -108,6 +110,12 @@ static const int qMinimumFileBrowserWidth = 100;
   }
 }
 
+#pragma mark Public
+
+- (void)setUrlOfPathControl:(NSURL *)url {
+  _pathControl.URL = url;
+}
+
 #pragma mark NSView
 
 - (id)initWithFrame:(NSRect)aRect {
@@ -117,13 +125,17 @@ static const int qMinimumFileBrowserWidth = 100;
   _fileBrowserWidth = qDefaultFileBrowserWidth;
   _dragIncrement = 1;
 
-  NSPathControl *pathControl = [[NSPathControl alloc] initWithFrame:CGRectZero];
-  pathControl.translatesAutoresizingMaskIntoConstraints = NO;
-  pathControl.pathStyle = NSPathStyleStandard;
-  pathControl.backgroundColor = [NSColor clearColor];
-  pathControl.URL = [[NSURL alloc] initFileURLWithPath:@"/Users/hat/Projects"];
+  _pathControl = [[NSPathControl alloc] initWithFrame:CGRectZero];
+  _pathControl.translatesAutoresizingMaskIntoConstraints = NO;
+  _pathControl.pathStyle = NSPathStyleStandard;
+  _pathControl.backgroundColor = [NSColor clearColor];
+  _pathControl.refusesFirstResponder = YES;
+  [_pathControl.cell setControlSize:NSSmallControlSize];
+  [_pathControl.cell setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
+  [_pathControl setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow
+                                         forOrientation:NSLayoutConstraintOrientationHorizontal];
 
-//  [self addSubview:pathControl];
+  [self addSubview:_pathControl];
 
   return self;
 }
@@ -137,9 +149,11 @@ static const int qMinimumFileBrowserWidth = 100;
       @"documentView" : _vimView,
       @"fileBrowserView" : _fileBrowserView ?: [NSNull null],
       @"fileBrowserDivider" : _fileBrowserDivider ?: [NSNull null],
+      @"pathControl" : _pathControl,
   };
 
   CONSTRAINT(@"V:|[documentView]-(%d)-|", qMainWindowBorderThickness + 1);
+  CONSTRAINT(@"V:[pathControl]-(1)-|");
   [self addVimViewMinSizeConstraints];
 
   if (_fileBrowserView) {
@@ -150,12 +164,15 @@ static const int qMinimumFileBrowserWidth = 100;
 
     if (_fileBrowserOnRight) {
       CONSTRAINT(@"H:|[documentView][fileBrowserDivider][fileBrowserView]|");
+      CONSTRAINT(@"H:|-(2)-[pathControl]-(2)-[fileBrowserDivider]");
     } else {
       CONSTRAINT(@"H:|[fileBrowserView][fileBrowserDivider][documentView]|");
+      CONSTRAINT(@"H:[fileBrowserDivider]-(2)-[pathControl]-(2)-|");
     }
 
   } else {
     CONSTRAINT(@"H:|[documentView]|");
+    CONSTRAINT(@"H:|-(2)-[pathControl]-(2)-|");
   }
 
   [self addConstraints:_myConstraints];

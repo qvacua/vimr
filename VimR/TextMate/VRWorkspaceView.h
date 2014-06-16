@@ -12,6 +12,7 @@
 
 @class MMVimView;
 @class VRFileBrowserView;
+@class VRWorkspace;
 
 /**
 * Copied and modified from TextMate -Tae
@@ -28,5 +29,8 @@
 @property (nonatomic, readonly) CGFloat sidebarAndDividerWidth;
 @property (nonatomic, readonly) CGFloat defaultFileBrowserAndDividerWidth;
 @property (nonatomic) NSUInteger dragIncrement;
+
+#pragma mark Public
+- (void)setUrlOfPathControl:(NSURL *)url;
 
 @end

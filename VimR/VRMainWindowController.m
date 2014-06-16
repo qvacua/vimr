@@ -541,6 +541,12 @@ const int qMainWindowBorderThickness = 22;
 - (void)controller:(MMVimController *)controller setWindowTitle:(NSString *)title data:(NSData *)data {
   [self setWindowTitleToCurrentBuffer];
 
+  if (!_vimController.currentBuffer.fileName) {
+    [_workspaceView setUrlOfPathControl:_workspace.workingDirectory];
+  } else {
+    [_workspaceView setUrlOfPathControl:[NSURL fileURLWithPath:_vimController.currentBuffer.fileName]];
+  }
+
   // This delegate method is called whenever new buffer is opened, eg :e filename. Here we should loop over all buffers
   // and determine the common parent directory and set it as the workspace.
   // When we open a new tab, this does not get called, but in that case, no change in workspace is required.
