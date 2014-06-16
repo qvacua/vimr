@@ -32,16 +32,16 @@
 
 #pragma mark Public
 - (NSArray *)openedUrls;
-- (void)updateWorkingDirectory:(NSURL *)commonParent;
+- (void)updateWorkingDirectory:(NSURL *)workingDir;
 - (void)openFilesWithUrls:(NSArray *)url;
 - (BOOL)hasModifiedBuffer;
 - (void)setUpWithVimController:(MMVimController *)vimController;
 - (void)setUpInitialBuffers;
 - (void)cleanUpAndClose;
 - (void)updateBuffers;
+- (void)selectBufferWithUrl:(NSURL *)url;
 
 #pragma mark NSObject
 - (id)init;
 
-- (void)selectBufferWithUrl:(NSURL *)url;
 @end

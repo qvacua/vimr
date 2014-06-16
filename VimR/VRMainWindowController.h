@@ -16,6 +16,8 @@
 @class VROpenQuicklyWindowController;
 @class VRWorkspace;
 
+extern const int qMainWindowBorderThickness;
+
 @interface VRMainWindowController : NSWindowController <
     NSWindowDelegate,
     MMVimControllerDelegate,
@@ -63,7 +65,7 @@
 - (void)controller:(MMVimController *)controller showScrollbarWithIdentifier:(int32_t)identifier state:(BOOL)state
               data:(NSData *)data;
 - (void)controller:(MMVimController *)controller setTextDimensionsWithRows:(int)rows columns:(int)columns
-            isLive:(BOOL)live keepOnScreen:(BOOL)isReplyToGuiResize data:(NSData *)data;
+            isLive:(BOOL)live keepOnScreen:(BOOL)winOriginShouldMove data:(NSData *)data;
 - (void)controller:(MMVimController *)controller openWindowWithData:(NSData *)data;
 - (void)controller:(MMVimController *)controller showTabBarWithData:(NSData *)data;
 - (void)controller:(MMVimController *)controller setScrollbarThumbValue:(float)value
@@ -75,6 +77,7 @@
 - (void)controller:(MMVimController *)controller tabDraggedWithData:(NSData *)data;
 - (void)controller:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data;
 - (void)controller:(MMVimController *)controller setDocumentFilename:(NSString *)filename data:(NSData *)data;
+- (void)controller:(MMVimController *)controller setVimState:(NSDictionary *)vimState data:(NSData *)data;
 - (void)controller:(MMVimController *)controller setWindowTitle:(NSString *)title data:(NSData *)data;
 - (void)controller:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue;
 - (void)controller:(MMVimController *)controller removeToolbarItemWithIdentifier:(NSString *)identifier;

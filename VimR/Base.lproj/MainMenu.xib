@@ -461,83 +461,50 @@
         <window title="VimR" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" appearanceType="aqua" animationBehavior="default" id="371">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="689" height="474"/>
+            <rect key="contentRect" x="335" y="390" width="530" height="169"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <view key="contentView" id="372">
-                <rect key="frame" x="0.0" y="0.0" width="689" height="474"/>
+                <rect key="frame" x="0.0" y="0.0" width="530" height="169"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H9t-3Z-skw">
-                        <rect key="frame" x="46" y="437" width="142" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="File Browser Behavior:" id="wyi-pL-qkd">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="p18-LD-WHN">
-                        <rect key="frame" x="18" y="313" width="170" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Default Opening Behavior:" id="YY3-86-gvV">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <button appearanceType="aqua" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="czA-lS-Igh">
-                        <rect key="frame" x="192" y="436" width="132" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Show folders first" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Cd0-Qa-Fym">
-                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                    </button>
-                    <button appearanceType="aqua" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s9E-87-1Id">
-                        <rect key="frame" x="192" y="416" width="133" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Show hidden files" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Pg8-LY-idH">
-                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                    </button>
-                    <button appearanceType="aqua" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cYL-i0-2Kk">
-                        <rect key="frame" x="192" y="396" width="321" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Keep working directory in sync with Vim's 'pwd'" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="sae-3F-1PU">
-                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                    </button>
-                    <popUpButton appearanceType="aqua" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="18B-pV-GNO">
-                        <rect key="frame" x="192" y="307" width="205" height="26"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="Y2h-FN-Hr1" id="R1C-um-liK">
-                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="menu"/>
-                            <menu key="menu" title="OtherViews" id="MSe-qQ-w34">
-                                <items>
-                                    <menuItem title="Item 1" state="on" id="Y2h-FN-Hr1"/>
-                                    <menuItem title="Item 2" id="WcG-z6-GWk"/>
-                                    <menuItem title="Item 3" id="aqp-V4-rhR"/>
-                                </items>
-                            </menu>
-                        </popUpButtonCell>
-                    </popUpButton>
-                    <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e3L-ei-KqA">
-                        <rect key="frame" x="192" y="348" width="388" height="42"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" id="yZu-uq-oMj">
-                            <font key="font" metaFont="smallSystem"/>
-                            <string key="title">These are default values, ie new windows will start with these values set:
-– The changes will only affect new windows.
-– You can override these settings in each window.</string>
-                            <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
+                    <scrollView appearanceType="aqua" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="czp-tk-suB">
+                        <rect key="frame" x="20" y="42" width="490" height="107"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <clipView key="contentView" id="GLq-Od-Lrz">
+                            <rect key="frame" x="1" y="1" width="488" height="105"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <textView importsGraphics="NO" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="DeL-FA-e1V">
+                                    <rect key="frame" x="0.0" y="0.0" width="488" height="105"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <size key="minSize" width="488" height="105"/>
+                                    <size key="maxSize" width="590" height="10000000"/>
+                                    <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    <size key="minSize" width="488" height="105"/>
+                                    <size key="maxSize" width="590" height="10000000"/>
+                                </textView>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </clipView>
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="vbb-L4-rbk">
+                            <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="8EQ-hK-xeJ">
+                            <rect key="frame" x="473" y="1" width="16" height="105"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                    </scrollView>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="czp-tk-suB" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="20" symbolic="YES" id="EJE-Br-AQ3"/>
+                    <constraint firstAttribute="trailing" secondItem="czp-tk-suB" secondAttribute="trailing" constant="20" symbolic="YES" id="RMS-2h-Q2u"/>
+                    <constraint firstAttribute="bottom" secondItem="czp-tk-suB" secondAttribute="bottom" constant="42" id="aGU-yD-sCy"/>
+                    <constraint firstItem="czp-tk-suB" firstAttribute="top" secondItem="372" secondAttribute="top" constant="20" symbolic="YES" id="cpc-56-UCG"/>
+                </constraints>
             </view>
+            <contentBorderThickness minY="22"/>
         </window>
         <customObject id="494" customClass="VRAppDelegate">
             <connections>
