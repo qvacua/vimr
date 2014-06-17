@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6154.17" systemVersion="13D65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6154.17"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -467,42 +467,15 @@
                 <rect key="frame" x="0.0" y="0.0" width="530" height="169"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <scrollView appearanceType="aqua" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="czp-tk-suB">
-                        <rect key="frame" x="20" y="42" width="490" height="107"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <clipView key="contentView" id="GLq-Od-Lrz">
-                            <rect key="frame" x="1" y="1" width="488" height="105"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <subviews>
-                                <textView importsGraphics="NO" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="DeL-FA-e1V">
-                                    <rect key="frame" x="0.0" y="0.0" width="488" height="105"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <size key="minSize" width="488" height="105"/>
-                                    <size key="maxSize" width="590" height="10000000"/>
-                                    <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                    <size key="minSize" width="488" height="105"/>
-                                    <size key="maxSize" width="590" height="10000000"/>
-                                </textView>
-                            </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="vbb-L4-rbk">
-                            <rect key="frame" x="-100" y="-100" width="87" height="18"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="8EQ-hK-xeJ">
-                            <rect key="frame" x="473" y="1" width="16" height="105"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                    </scrollView>
+                    <textField appearanceType="aqua" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MIU-s4-JXD">
+                        <rect key="frame" x="75" y="104" width="96" height="22"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="sEo-7s-rCd">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
-                <constraints>
-                    <constraint firstItem="czp-tk-suB" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="20" symbolic="YES" id="EJE-Br-AQ3"/>
-                    <constraint firstAttribute="trailing" secondItem="czp-tk-suB" secondAttribute="trailing" constant="20" symbolic="YES" id="RMS-2h-Q2u"/>
-                    <constraint firstAttribute="bottom" secondItem="czp-tk-suB" secondAttribute="bottom" constant="42" id="aGU-yD-sCy"/>
-                    <constraint firstItem="czp-tk-suB" firstAttribute="top" secondItem="372" secondAttribute="top" constant="20" symbolic="YES" id="cpc-56-UCG"/>
-                </constraints>
             </view>
             <contentBorderThickness minY="22"/>
         </window>

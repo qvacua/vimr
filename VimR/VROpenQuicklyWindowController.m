@@ -32,6 +32,9 @@ int qOpenQuicklyWindowWidth = 400;
   __weak NSProgressIndicator *_progressIndicator;
   __weak NSTextField *_itemCountTextField;
   __weak NSTextField *_workspaceTextField;
+
+  VRCrTextView *_crFieldEditor;
+
   NSOperationQueue *_filterOperationQueue;
   NSMutableArray *_filteredFileItems;
   NSOperationQueue *_uiUpdateOperationQueue;
@@ -148,25 +151,6 @@ int qOpenQuicklyWindowWidth = 400;
     return YES;
   }
 
-  if (selector == @selector(insertNewline:)
-      || selector == @selector(insertLineBreak:)
-      || selector == @selector(insertNewlineIgnoringFieldEditor:)) {
-
-    [self openSelectedFile:self];
-    return YES;
-  }
-
-  // When we enter Cmd-CR, then we get noop: as the selector
-  if (selector == @selector(noop:)) {
-    NSEvent *event = [NSApp currentEvent];
-    if ([event.charactersIgnoringModifiers characterAtIndex:0] == NSCarriageReturnCharacter
-        && event.modifierFlags & NSCommandKeyMask) {
-
-      [self openSelectedFile:self];
-      return YES;
-    }
-  }
-
   if (selector == @selector(moveUp:)) {
     [_fileItemTableView moveSelectionByDelta:-1];
     return YES;
@@ -180,7 +164,26 @@ int qOpenQuicklyWindowWidth = 400;
   return NO;
 }
 
+#pragma mark VRTextViewCrDelegate
+
+- (void)carriageReturnWithModifierFlags:(NSUInteger)modifierFlags {
+  [self openSelectedFile:self];
+}
+
 #pragma mark NSWindowDelegate
+
+- (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)client {
+  if (client != _searchField) {return nil;}
+
+  if (!_crFieldEditor) {
+    _crFieldEditor = [[VRCrTextView alloc] init];
+    _crFieldEditor.fieldEditor = YES;
+    _crFieldEditor.crDelegate = self;
+  }
+
+  return _crFieldEditor;
+}
+
 
 - (void)windowDidResignMain:(NSNotification *)notification {
   DDLogDebug(@"Open quickly window resigned main");
@@ -262,8 +265,10 @@ int qOpenQuicklyWindowWidth = 400;
 
 - (void)openSelectedFile:(id)sender {
   @synchronized (_filteredFileItems) {
-    VRScoredPath *scoredPath = _filteredFileItems[(NSUInteger) _fileItemTableView.selectedRow];
+    NSInteger selectedRow = _fileItemTableView.selectedRow;
+    if (selectedRow < 0) {return;}
 
+    VRScoredPath *scoredPath = _filteredFileItems[(NSUInteger) selectedRow];
     VROpenMode mode = open_mode_from_event(
         [NSApp currentEvent],
         [_userDefaults stringForKey:qDefaultDefaultOpeningBehavior]

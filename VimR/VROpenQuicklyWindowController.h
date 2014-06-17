@@ -1,14 +1,15 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import <Cocoa/Cocoa.h>
 #import <TBCacao/TBCacao.h>
+#import "VRCrTextView.h"
 
 
 @class VRFileItemManager;
@@ -22,6 +23,7 @@ extern int qOpenQuicklyWindowWidth;
     TBBean, TBInitializingBean,
     NSWindowDelegate,
     NSTextFieldDelegate,
+    VRCrTextViewDelegate,
     NSTableViewDataSource, NSTableViewDelegate>
 
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;
@@ -37,6 +39,9 @@ extern int qOpenQuicklyWindowWidth;
 
 - (void)controlTextDidChange:(NSNotification *)obj;
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)selector;
+
+#pragma mark VRTextViewCrDelegate
+- (void)carriageReturnWithModifierFlags:(NSUInteger)modifierFlags;
 
 #pragma mark NSWindowDelegate
 - (void)windowDidResignMain:(NSNotification *)notification;
