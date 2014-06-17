@@ -255,7 +255,7 @@ int qOpenQuicklyWindowWidth = 400;
       }
 
       dispatch_to_main_thread(^{
-        _itemCountTextField.stringValue = SF(@"%lu items", self.fileItemManager.urlsOfTargetUrl.count);
+        _itemCountTextField.stringValue = SF(@"%lu items", _fileItemManager.urlsOfTargetUrl.count);
       });
 
       usleep(500);

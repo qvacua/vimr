@@ -532,7 +532,6 @@ const int qMainWindowBorderThickness = 22;
   if (_fileBrowserView.syncWorkspaceWithPwd) {
     NSString *pwdPath = _vimController.vimState[@"pwd"];
     if (![_workspace.workingDirectory.path isEqualToString:pwdPath]) {
-      DDLogWarn(@"setting workspace");
       [_workspace updateWorkingDirectory:[[NSURL alloc] initFileURLWithPath:pwdPath]];
     }
   }
