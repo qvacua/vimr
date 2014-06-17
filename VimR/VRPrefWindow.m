@@ -87,7 +87,7 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   [self.contentView addSubview:_defaultOpenModeButton];
 
   NSTextField *noModifierTitle = [self newDescriptionLabelWithString:@"Open:" alignment:NSRightTextAlignment];
-  NSTextField *cmdTitle = [self newDescriptionLabelWithString:@"⌘-Open:" alignment:NSRightTextAlignment];
+  NSTextField *cmdTitle = [self newDescriptionLabelWithString:@"⌃⌥-Open:" alignment:NSRightTextAlignment];
   NSTextField *optTitle = [self newDescriptionLabelWithString:@"⌥-Open:" alignment:NSRightTextAlignment];
   NSTextField *ctrlTitle = [self newDescriptionLabelWithString:@"⌃-Open:" alignment:NSRightTextAlignment];
 
