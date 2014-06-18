@@ -61,7 +61,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 #pragma mark Public
-
 - (BOOL)syncWorkspaceWithPwd {
   return _syncWorkspaceWithPwdMenuItem.state == NSOnState;
 }
@@ -97,7 +96,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 #pragma mark VRMovementsAndActionsProtocol
-
 - (void)viMotionLeft:(id)sender event:(NSEvent *)event {
   [self fileOutlineViewDoubleClicked:sender];
 }
@@ -127,7 +125,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 #pragma mark NSOutlineViewDataSource
-
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(VRNode *)item {
   VRNode *currentNode = item ?: _rootNode;
 
@@ -157,7 +154,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 #pragma mark NSOutlineViewDelegate
-
 - (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(VRNode *)item {
   NSTextFieldCell *cell = [tableColumn dataCellForRow:[_fileOutlineView rowForItem:item]];
   cell.textColor = item.hidden ? [NSColor grayColor] : [NSColor textColor];
@@ -187,7 +183,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 #pragma mark Private
-
 - (void)addViews {
   NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:@"name"];
   tableColumn.dataCell = [[OakImageAndTextCell alloc] init];
