@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6154.17" systemVersion="13D65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6154.17"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -372,14 +372,40 @@
                                                 <action selector="showFileBrowser:" target="-1" id="QgY-Wh-Lo1"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="whj-4X-AqO"/>
+                                        <menuItem title="Hide Sidebar" keyEquivalent="0" id="GQ2-og-mBa">
+                                            <connections>
+                                                <action selector="hideSidebar:" target="-1" id="0cJ-Kz-tFV"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="3xD-us-Pot"/>
-                            <menuItem title="Hide Sidebar" keyEquivalent="0" id="UJC-4N-2Bm">
-                                <connections>
-                                    <action selector="hideSidebar:" target="-1" id="WIL-ck-ogk"/>
-                                </connections>
+                            <menuItem title="File Browser" id="9Xb-Mv-R9X">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="File Browser" id="lZ4-03-NaY">
+                                    <items>
+                                        <menuItem title="Show Folders First" id="Sjh-xe-x3X">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleShowFoldersFirst:" target="-1" id="CoY-Lq-CIx"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Show Hidden Files" id="GKF-ac-t4R">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleShowHiddenFiles:" target="-1" id="pmk-id-d3Q"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Sync Working Directory with Vim's 'pwd'" id="KBL-a3-5Q3">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleSyncWorkspaceWithPwd:" target="-1" id="TAw-GH-gy9"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
                             </menuItem>
                         </items>
                     </menu>
@@ -466,16 +492,6 @@
             <view key="contentView" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="530" height="169"/>
                 <autoresizingMask key="autoresizingMask"/>
-                <subviews>
-                    <textField appearanceType="aqua" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MIU-s4-JXD">
-                        <rect key="frame" x="75" y="104" width="96" height="22"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="sEo-7s-rCd">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                </subviews>
             </view>
             <contentBorderThickness minY="22"/>
         </window>

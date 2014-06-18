@@ -32,13 +32,15 @@ const int qMainWindowBorderThickness = 22;
 
 
 @implementation VRMainWindowController {
+  BOOL _vimViewSetUpDone;
+
   int _userRows;
   int _userCols;
   CGPoint _userTopLeft;
   BOOL _shouldRestoreUserTopLeft;
-  BOOL _windowOriginShouldMoveToKeepOnScreen;
-  BOOL _vimViewSetUpDone;
+
   BOOL _needsToResizeVimView;
+  BOOL _windowOriginShouldMoveToKeepOnScreen;
 
   VRWorkspaceView *_workspaceView;
   VRFileBrowserView *_fileBrowserView;

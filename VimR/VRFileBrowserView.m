@@ -239,7 +239,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   _showHiddenMenuItem.state = [_userDefaults boolForKey:qDefaultShowHiddenInFileBrowser] ? NSOnState : NSOffState;
   [settingsButton.menu addItem:_showHiddenMenuItem];
 
-  _syncWorkspaceWithPwdMenuItem = [[NSMenuItem alloc] initWithTitle:@"Sync Workspace with Vim's 'pwd'"
+  _syncWorkspaceWithPwdMenuItem = [[NSMenuItem alloc] initWithTitle:@"Sync Working Directory with Vim's 'pwd'"
                                                              action:@selector(toggleSyncWorkspaceWithPwd:)
                                                       keyEquivalent:@""];
   _syncWorkspaceWithPwdMenuItem.target = self;
