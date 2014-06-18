@@ -205,7 +205,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   _fileOutlineView.dataSource = self;
   _fileOutlineView.delegate = self;
   _fileOutlineView.movementsAndActionDelegate = self;
-  _fileOutlineView.allowsMultipleSelection = YES;
+  _fileOutlineView.allowsMultipleSelection = NO;
   [_fileOutlineView setDoubleAction:@selector(fileOutlineViewDoubleClicked:)];
 
   NSScrollView *scrollView = [[NSScrollView alloc] initWithFrame:NSZeroRect];
