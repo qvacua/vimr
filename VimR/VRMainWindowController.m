@@ -269,6 +269,10 @@ const int qMainWindowBorderThickness = 22;
     return _vimController.tabs.count >= 2;
   }
 
+  if (action == @selector(toggleStatusBar:)) {
+    return YES;
+  }
+
   if (action == @selector(toggleShowFoldersFirst:)
       || action == @selector(toggleShowHiddenFiles:)
       || action == @selector(toggleSyncWorkspaceWithPwd:)) {
@@ -280,6 +284,9 @@ const int qMainWindowBorderThickness = 22;
   }
 
   return NO;
+}
+
+- (IBAction)toggleStatusBar:(NSMenuItem *)sender {
 }
 
 #ifdef DEBUG
