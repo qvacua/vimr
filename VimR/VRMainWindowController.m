@@ -249,33 +249,17 @@ const int qMainWindowBorderThickness = 22;
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
   SEL action = anItem.action;
 
-  if (action == @selector(newTab:)) {
-    return YES;
-  }
+  if (action == @selector(newTab:)) {return YES;}
+  if (action == @selector(performClose:)) {return YES;}
+  if (action == @selector(saveDocument:)) {return YES;}
+  if (action == @selector(saveDocumentAs:)) {return YES;}
+  if (action == @selector(revertDocumentToSaved:)) {return YES;}
+  if (action == @selector(openQuickly:)) {return YES;}
+  if (action == @selector(showFileBrowser:)) {return YES;}
 
-  if (action == @selector(performClose:)) {
-    return YES;
-  }
-
-  if (action == @selector(saveDocument:)) {
-    return YES;
-  }
-
-  if (action == @selector(saveDocumentAs:)) {
-    return YES;
-  }
-
-  if (action == @selector(revertDocumentToSaved:)) {
-    return YES;
-  }
-
-  if (action == @selector(openQuickly:)) {
-    return YES;
-  }
-
-  if (action == @selector(showFileBrowser:)) {
-    return YES;
-  }
+#ifdef DEBUG
+  if (action == @selector(debug1Action:)) {return YES;}
+#endif
 
   if (action == @selector(hideSidebar:)) {
     return [self fileBrowserVisible];
@@ -295,10 +279,10 @@ const int qMainWindowBorderThickness = 22;
     return [self fileBrowserVisible];
   }
 
-  return action == @selector(debug1Action:);
+  return NO;
 }
 
-#pragma mark Debug
+#ifdef DEBUG
 - (IBAction)debug1Action:(id)sender {
   DDLogDebug(@"tabs: %@", _vimController.tabs);
   DDLogDebug(@"buffers: %@", _vimController.buffers);
@@ -307,6 +291,7 @@ const int qMainWindowBorderThickness = 22;
 //  NSArray *editMenuArray = [[fileMenu submenu] itemArray];
 //  DDLogDebug(@"edit menu: %@", editMenuArray);
 }
+#endif
 
 #pragma mark NSObject
 - (void)dealloc {
@@ -372,7 +357,6 @@ const int qMainWindowBorderThickness = 22;
 }
 
 #pragma mark MMVimControllerDelegate
-
 /**
 * Resize code
 */

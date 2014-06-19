@@ -1,11 +1,11 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import <TBCacao/TBCacao.h>
 #import <MacVimFramework/MacVimFramework.h>
@@ -79,10 +79,58 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
   [_prefWindow makeKeyAndOrderFront:self];
 }
 
+- (IBAction)toggleShowFoldersFirst:(id)sender {
+  // noop
+}
+
+- (IBAction)toggleShowHiddenFiles:(id)sender {
+  // noop
+}
+
+- (IBAction)toggleSyncWorkspaceWithPwd:(id)sender {
+  // noop
+}
+
+#ifdef DEBUG
 - (IBAction)debug3Action:(id)sender {
   [self application:_application openFiles:@[
       [NSURL fileURLWithPath:@"/Users/hat/Projects/vimr/Podfile"]
   ]];
+}
+#endif
+
+#pragma mark NSUserInterfaceValidations
+- (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
+  NSLog(@"@#32423432");
+  SEL action = anItem.action;
+
+  if (action == @selector(newDocument:)) {return YES;}
+  if (action == @selector(newTab:)) {return YES;}
+  if (action == @selector(openDocument:)) {return YES;}
+  if (action == @selector(openDocumentInTab:)) {return YES;}
+  if (action == @selector(showHelp:)) {return YES;}
+  if (action == @selector(showPrefWindow:)) {return YES;}
+
+#ifdef DEBUG
+  if (action == @selector(debug3Action:)) {return YES;}
+#endif
+
+  if (action == @selector(toggleShowFoldersFirst:)) {
+    [(NSMenuItem *)anItem setState:[_userDefaults boolForKey:qDefaultShowFoldersFirst]];
+    return NO;
+  }
+
+  if (action == @selector(toggleShowHiddenFiles:)) {
+    [(NSMenuItem *)anItem setState:[_userDefaults boolForKey:qDefaultShowHiddenInFileBrowser]];
+    return NO;
+  }
+
+  if (action == @selector(toggleSyncWorkspaceWithPwd:)) {
+    [(NSMenuItem *)anItem setState:[_userDefaults boolForKey:qDefaultSyncWorkingDirectoryWithVimPwd]];
+    return NO;
+  }
+
+  return NO;
 }
 
 #pragma mark NSObject

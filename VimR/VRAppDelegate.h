@@ -16,7 +16,10 @@
 @class VROpenQuicklyWindowController;
 @class VRPrefWindow;
 
-@interface VRAppDelegate : NSObject <NSApplicationDelegate, NSUserNotificationCenterDelegate>
+@interface VRAppDelegate : NSObject <
+    NSApplicationDelegate,
+    NSUserNotificationCenterDelegate,
+    NSUserInterfaceValidations>
 
 @property (nonatomic, weak) NSApplication *application;
 @property (nonatomic, weak) NSUserDefaults *userDefaults;
@@ -37,6 +40,9 @@
 - (IBAction)openDocumentInTab:(id)sender;
 - (IBAction)showHelp:(id)sender;
 - (IBAction)showPrefWindow:(id)sender;
+- (IBAction)toggleShowFoldersFirst:(id)sender;
+- (IBAction)toggleShowHiddenFiles:(id)sender;
+- (IBAction)toggleSyncWorkspaceWithPwd:(id)sender;
 
 #pragma mark NSObject
 - (id)init;
