@@ -32,53 +32,46 @@ static const int qMinimumFileBrowserWidth = 100;
 * v2.0-alpha.9537
 */
 @implementation VRWorkspaceView {
-  NSView *_fileBrowserDivider;
   NSLayoutConstraint *_fileBrowserWidthConstraint;
   NSLayoutConstraint *_vimViewWidthConstraint;
   NSLayoutConstraint *_vimViewHeightConstraint;
   NSMutableArray *_myConstraints;
-  BOOL _mouseDownRecursionGuard;
+
   NSUInteger _dragIncrement;
-  MMVimView *_vimView;
-  VRFileBrowserView *_fileBrowserView;
+
+  BOOL _mouseDownRecursionGuard;
   BOOL _fileBrowserOnRight;
+
+  VRFileBrowserView *_fileBrowserView;
+  NSView *_fileBrowserDivider;
+
+  MMVimView *_vimView;
   NSPathControl *_pathControl;
 }
 
 #pragma mark Properties
-
 - (MMVimView *)vimView {
-  @synchronized (self) {
-    return _vimView;
-  }
+  return _vimView;
 }
 
 - (void)setVimView:(MMVimView *)aVimView {
-  @synchronized (self) {
-    _vimView = [self replaceView:_vimView withView:aVimView];
-    [self updateMetrics];
-  }
+  _vimView = [self replaceView:_vimView withView:aVimView];
+  [self updateMetrics];
 }
 
 - (VRFileBrowserView *)fileBrowserView {
-  @synchronized (self) {
-    return _fileBrowserView;
-  }
+  return _fileBrowserView;
 }
 
 - (void)setFileBrowserView:(VRFileBrowserView *)aFileBrowserView {
-  @synchronized (self) {
-    NSBox *dividerView = aFileBrowserView ? OakCreateVerticalLine([NSColor controlShadowColor], nil) : nil;
+  NSBox *dividerView = aFileBrowserView ? OakCreateVerticalLine([NSColor controlShadowColor], nil) : nil;
 
-    _fileBrowserDivider = [self replaceView:_fileBrowserDivider withView:dividerView];
-    _fileBrowserView = [self replaceView:_fileBrowserView withView:aFileBrowserView];
-  }
+  _fileBrowserDivider = [self replaceView:_fileBrowserDivider withView:dividerView];
+  _fileBrowserView = [self replaceView:_fileBrowserView withView:aFileBrowserView];
 }
 
 - (BOOL)fileBrowserOnRight {
-  @synchronized (self) {
-    return _fileBrowserOnRight;
-  }
+  return _fileBrowserOnRight;
 }
 
 - (CGFloat)sidebarAndDividerWidth {
@@ -99,13 +92,11 @@ static const int qMinimumFileBrowserWidth = 100;
 }
 
 - (void)setFileBrowserOnRight:(BOOL)flag {
-  @synchronized (self) {
-    if (_fileBrowserOnRight != flag) {
-      _fileBrowserOnRight = flag;
+  if (_fileBrowserOnRight != flag) {
+    _fileBrowserOnRight = flag;
 
-      if (_fileBrowserView) {
-        self.needsUpdateConstraints = YES;
-      }
+    if (_fileBrowserView) {
+      self.needsUpdateConstraints = YES;
     }
   }
 }
@@ -121,6 +112,7 @@ static const int qMinimumFileBrowserWidth = 100;
 - (id)initWithFrame:(NSRect)aRect {
   self = [super initWithFrame:aRect];
   RETURN_NIL_WHEN_NOT_SELF
+
   _myConstraints = [NSMutableArray array];
   _fileBrowserWidth = qDefaultFileBrowserWidth;
   _dragIncrement = 1;
