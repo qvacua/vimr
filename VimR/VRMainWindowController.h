@@ -45,9 +45,13 @@ extern const int qMainWindowBorderThickness;
 - (IBAction)revertDocumentToSaved:(id)sender;
 - (IBAction)selectNextTab:(id)sender;
 - (IBAction)selectPreviousTab:(id)sender;
+- (IBAction)zoom:(id)sender;
 - (IBAction)openQuickly:(id)sender;
 - (IBAction)showFileBrowser:(id)sender;
 - (IBAction)hideSidebar:(id)sender;
+- (IBAction)toggleSyncWorkspaceWithPwd:(NSMenuItem *)sender;
+- (IBAction)toggleShowFoldersFirst:(NSMenuItem *)sender;
+- (IBAction)toggleShowHiddenFiles:(NSMenuItem *)sender;
 
 #pragma mark NSObject
 - (void)dealloc;

@@ -45,11 +45,15 @@
 
 #pragma mark Public
 - (instancetype)initWithRootUrl:(NSURL *)rootUrl;
-- (BOOL)syncWorkspaceWithPwd;
 - (void)dealloc;
 - (void)setUp;
+- (BOOL)showHiddenFiles;
+- (BOOL)showFoldersFirst;
+- (BOOL)syncWorkspaceWithPwd;
 
 #pragma mark IBActions
+- (IBAction)toggleSyncWorkspaceWithPwd:(NSMenuItem *)sender;
+- (IBAction)toggleShowFoldersFirst:(NSMenuItem *)sender;
 - (IBAction)toggleShowHiddenFiles:(id)sender;
 
 #pragma mark NSOutlineViewDataSource

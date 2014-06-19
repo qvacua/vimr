@@ -47,7 +47,6 @@ const int qMainWindowBorderThickness = 22;
 }
 
 #pragma mark Public
-
 - (instancetype)initWithContentRect:(CGRect)contentRect {
   self = [super initWithWindow:[self newMainWindowForContentRect:contentRect]];
   RETURN_NIL_WHEN_NOT_SELF
@@ -116,7 +115,6 @@ const int qMainWindowBorderThickness = 22;
 }
 
 #pragma mark IBActions
-
 - (IBAction)newTab:(id)sender {
   [self sendCommandToVim:@":tabe"];
 }
@@ -235,8 +233,19 @@ const int qMainWindowBorderThickness = 22;
   [self.window makeFirstResponder:_vimView.textView];
 }
 
-#pragma mark NSUserInterfaceValidations
+- (IBAction)toggleSyncWorkspaceWithPwd:(NSMenuItem *)sender {
+  [_workspaceView.fileBrowserView toggleSyncWorkspaceWithPwd:sender];
+}
 
+- (IBAction)toggleShowFoldersFirst:(NSMenuItem *)sender {
+  [_workspaceView.fileBrowserView toggleShowFoldersFirst:sender];
+}
+
+- (IBAction)toggleShowHiddenFiles:(NSMenuItem *)sender {
+  [_workspaceView.fileBrowserView toggleShowHiddenFiles:sender];
+}
+
+#pragma mark NSUserInterfaceValidations
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
   SEL action = anItem.action;
 
@@ -269,19 +278,27 @@ const int qMainWindowBorderThickness = 22;
   }
 
   if (action == @selector(hideSidebar:)) {
-    return _workspaceView.fileBrowserView != nil;
+    return [self fileBrowserVisible];
   }
 
   if (action == @selector(selectNextTab:) || action == @selector(selectPreviousTab:)) {
     return _vimController.tabs.count >= 2;
   }
 
-  return action == @selector(debug1Action:);
+  if (action == @selector(toggleShowFoldersFirst:)
+      || action == @selector(toggleShowHiddenFiles:)
+      || action == @selector(toggleSyncWorkspaceWithPwd:)) {
 
+    // TODO: there must be a better way to do this...
+    [self setStateOfFileBrowserFlagsForMenuItem:anItem];
+
+    return [self fileBrowserVisible];
+  }
+
+  return action == @selector(debug1Action:);
 }
 
 #pragma mark Debug
-
 - (IBAction)debug1Action:(id)sender {
   DDLogDebug(@"tabs: %@", _vimController.tabs);
   DDLogDebug(@"buffers: %@", _vimController.buffers);
@@ -292,13 +309,11 @@ const int qMainWindowBorderThickness = 22;
 }
 
 #pragma mark NSObject
-
 - (void)dealloc {
   log4Mark;
 }
 
 #pragma mark MMViewDelegate informal protocol
-
 /**
 * Resize code
 */
@@ -622,7 +637,6 @@ const int qMainWindowBorderThickness = 22;
 }
 
 #pragma mark NSWindowDelegate
-
 - (void)windowDidBecomeMain:(NSNotification *)notification {
   [_vimController sendMessage:GotFocusMsgID data:nil];
 }
@@ -663,7 +677,6 @@ const int qMainWindowBorderThickness = 22;
 }
 
 #pragma mark Private
-
 - (NSURL *)workingDirectory {
   return _workspace.workingDirectory;
 }
@@ -794,8 +807,30 @@ const int qMainWindowBorderThickness = 22;
   return result;
 }
 
-#pragma mark Private Resize Code
+- (BOOL)fileBrowserVisible {
+  return _workspaceView.fileBrowserView != nil;
+}
 
+- (void)setStateOfFileBrowserFlagsForMenuItem:(NSMenuItem *)anItem {
+  SEL action = anItem.action;
+
+  if (action == @selector(toggleShowFoldersFirst:)) {
+    anItem.state = _fileBrowserView.showFoldersFirst;
+    return;
+  }
+
+  if (action == @selector(toggleShowHiddenFiles:)) {
+    anItem.state = _fileBrowserView.showHiddenFiles;
+    return;
+  }
+
+  if (action == @selector(toggleSyncWorkspaceWithPwd:)) {
+    anItem.state = _fileBrowserView.syncWorkspaceWithPwd;
+    return;
+  }
+}
+
+#pragma mark Private Resize Code
 /**
 * The resulting Vim view size is not guaranteed to be integral.
 *
