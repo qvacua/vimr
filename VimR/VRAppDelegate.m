@@ -101,7 +101,6 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
 #pragma mark NSUserInterfaceValidations
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
-  NSLog(@"@#32423432");
   SEL action = anItem.action;
 
   if (action == @selector(newDocument:)) {return YES;}
@@ -116,17 +115,17 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 #endif
 
   if (action == @selector(toggleShowFoldersFirst:)) {
-    [(NSMenuItem *)anItem setState:[_userDefaults boolForKey:qDefaultShowFoldersFirst]];
+    [(NSMenuItem *) anItem setState:[_userDefaults boolForKey:qDefaultShowFoldersFirst]];
     return NO;
   }
 
   if (action == @selector(toggleShowHiddenFiles:)) {
-    [(NSMenuItem *)anItem setState:[_userDefaults boolForKey:qDefaultShowHiddenInFileBrowser]];
+    [(NSMenuItem *) anItem setState:[_userDefaults boolForKey:qDefaultShowHiddenInFileBrowser]];
     return NO;
   }
 
   if (action == @selector(toggleSyncWorkspaceWithPwd:)) {
-    [(NSMenuItem *)anItem setState:[_userDefaults boolForKey:qDefaultSyncWorkingDirectoryWithVimPwd]];
+    [(NSMenuItem *) anItem setState:[_userDefaults boolForKey:qDefaultSyncWorkingDirectoryWithVimPwd]];
     return NO;
   }
 
@@ -204,9 +203,33 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
   _userNotificationCenter = [NSUserNotificationCenter defaultUserNotificationCenter];
   _userNotificationCenter.delegate = self;
 
+  [self setInitialUserDefaults];
+
 #ifdef DEBUG
   _debug.hidden = NO;
 #endif
+}
+
+- (void)setInitialUserDefaults {
+  if (![_userDefaults objectForKey:qDefaultShowStatusBar]) {
+    [_userDefaults setBool:YES forKey:qDefaultShowStatusBar];
+  }
+
+  if (![_userDefaults objectForKey:qDefaultShowFoldersFirst]) {
+    [_userDefaults setBool:YES forKey:qDefaultShowFoldersFirst];
+  }
+
+  if (![_userDefaults objectForKey:qDefaultShowHiddenInFileBrowser]) {
+    [_userDefaults setBool:NO forKey:qDefaultShowHiddenInFileBrowser];
+  }
+
+  if (![_userDefaults objectForKey:qDefaultSyncWorkingDirectoryWithVimPwd]) {
+    [_userDefaults setBool:YES forKey:qDefaultSyncWorkingDirectoryWithVimPwd];
+  }
+
+  if (![_userDefaults objectForKey:qDefaultDefaultOpeningBehavior]) {
+    [_userDefaults setObject:qOpenModeInNewTabValue forKey:qDefaultDefaultOpeningBehavior];
+  }
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {

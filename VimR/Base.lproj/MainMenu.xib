@@ -381,6 +381,9 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="Show Status Bar" id="92S-aK-nDO">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="3xD-us-Pot"/>
                             <menuItem title="File Browser" id="9Xb-Mv-R9X">
                                 <modifierMask key="keyEquivalentModifierMask"/>

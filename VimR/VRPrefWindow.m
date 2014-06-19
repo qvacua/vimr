@@ -1,11 +1,11 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import "VRPrefWindow.h"
 #import "VRUtils.h"
@@ -51,6 +51,9 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
 
 #pragma mark Private
 - (void)addViews {
+  NSTextField *daTitle = [self newTextLabelWithString:@"Default Appearance:" alignment:NSRightTextAlignment];
+  NSButton *showStatusBarButton = [self checkButtonWithTitle:@"Show status bar" defaultKey:qDefaultShowStatusBar];
+
   NSTextField *fbbTitle = [self newTextLabelWithString:@"File Browser Behavior:" alignment:NSRightTextAlignment];
 
   NSButton *showFoldersFirstButton =
@@ -63,7 +66,7 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   NSButton *showHiddenFilesButton =
       [self checkButtonWithTitle:@"Show hidden files" defaultKey:qDefaultShowHiddenInFileBrowser];
 
-  NSTextField *fbbDescription = [self newTextLabelWithString:
+  NSTextField *fbbDescription = [self            newTextLabelWithString:
       @"These are default values, ie new windows will start with these values set:\n"
           "– The changes will only affect new windows.\n"
           "– You can override these settings in each window." alignment:NSLeftTextAlignment];
@@ -98,6 +101,9 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   [self defaultOpenBehaviorAction:_defaultOpenModeButton];
 
   NSDictionary *views = @{
+      @"daTitle" : daTitle,
+      @"showStatusBar" : showStatusBarButton,
+
       @"fbbTitle" : fbbTitle,
       @"showFoldersFirst" : showFoldersFirstButton,
       @"showHidden" : showHiddenFilesButton,
@@ -116,25 +122,36 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
       @"ctrlDesc" : _ctrlDescription,
   };
 
+  for (NSView *view in @[fbbTitle, domTitle, noModifierTitle, cmdTitle, optTitle, ctrlTitle]) {
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTrailing
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:daTitle attribute:NSLayoutAttributeTrailing
+                                                                multiplier:1 constant:0]];
+  }
+
+  for (NSView *view in views.allValues) {
+    [view setContentHuggingPriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
+  }
+
+  CONSTRAIN(@"H:|-[daTitle]-[showStatusBar]-|");
+
   CONSTRAIN(@"H:|-[fbbTitle]-[showFoldersFirst]-|");
   CONSTRAIN(@"H:|-[fbbTitle]-[showHidden]-|");
   CONSTRAIN(@"H:|-[fbbTitle]-[syncWorkingDir]-|");
   CONSTRAIN(@"H:|-[fbbTitle]-[fbbDesc]-|");
 
-  CONSTRAIN(@"H:|-[domTitle]-[showFoldersFirst]");
-  CONSTRAIN(@"H:[domTitle]-[domMenu]");
-  CONSTRAIN(@"H:|-[noModifierTitle]-[showFoldersFirst]");
-  CONSTRAIN(@"H:|-[cmdTitle]-[showFoldersFirst]");
-  CONSTRAIN(@"H:|-[optTitle]-[showFoldersFirst]");
-  CONSTRAIN(@"H:|-[ctrlTitle]-[showFoldersFirst]");
-  CONSTRAIN(@"H:|-[noModifierTitle]-[noModifierDesc]");
-  CONSTRAIN(@"H:|-[cmdTitle]-[cmdDesc]");
-  CONSTRAIN(@"H:|-[optTitle]-[optDesc]");
-  CONSTRAIN(@"H:|-[ctrlTitle]-[ctrlDesc]");
+  CONSTRAIN(@"H:|-[domTitle]-[domMenu]"); // the domMenu should not be stretched
+  CONSTRAIN(@"H:|-[noModifierTitle]-[noModifierDesc]-|");
+  CONSTRAIN(@"H:|-[cmdTitle]-[cmdDesc]-|");
+  CONSTRAIN(@"H:|-[optTitle]-[optDesc]-|");
+  CONSTRAIN(@"H:|-[ctrlTitle]-[ctrlDesc]-|");
 
+  [self.contentView addConstraint:[self baseLineConstraintForView:daTitle toView:showStatusBarButton]];
   [self.contentView addConstraint:[self baseLineConstraintForView:fbbTitle toView:showFoldersFirstButton]];
   [self.contentView addConstraint:[self baseLineConstraintForView:domTitle toView:_defaultOpenModeButton]];
-  CONSTRAIN(@"V:|-[showFoldersFirst]-[showHidden]-[syncWorkingDir]-[fbbDesc]-"
+
+  CONSTRAIN(@"V:|-[showStatusBar]-"
+      "[showFoldersFirst]-[showHidden]-[syncWorkingDir]-[fbbDesc]-"
       "[domMenu]-[noModifierTitle][cmdTitle][optTitle][ctrlTitle]-|");
   CONSTRAIN(@"V:[domMenu]-[noModifierDesc][cmdDesc][optDesc][ctrlDesc]");
 }
