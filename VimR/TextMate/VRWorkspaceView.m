@@ -122,9 +122,9 @@ static const int qMinimumFileBrowserWidth = 100;
 
   if (action == @selector(toggleStatusBar:)) {
     if (_showStatusBar) {
-      [(NSMenuItem *)anItem setTitle:@"Hide Status Bar"];
+      [(NSMenuItem *) anItem setTitle:@"Hide Status Bar"];
     } else {
-      [(NSMenuItem *)anItem setTitle:@"Show Status Bar"];
+      [(NSMenuItem *) anItem setTitle:@"Show Status Bar"];
     }
 
     return YES;
@@ -188,59 +188,52 @@ static const int qMinimumFileBrowserWidth = 100;
       @"pathControl" : _pathControl,
   };
 
-  if (_pathControl.superview == nil) {
-    [self addSubview:_pathControl];
+  if (!_pathControl.superview) {[self addSubview:_pathControl];}
+  if (!_settingsButton.superview) {[self addSubview:_settingsButton];}
+  if (!_showStatusBar) {
+    [_pathControl removeFromSuperview];
+    [_settingsButton removeFromSuperview];
   }
+  if (!_fileBrowserView) {[_settingsButton removeFromSuperview];}
 
-  if (_settingsButton.superview == nil) {
-    [self addSubview:_settingsButton];
+  [self addVimViewMinSizeConstraints];
+  if (_fileBrowserView) {[self addFileBrowserWidthConstraint];}
+
+  if (_fileBrowserView) {
+    CONSTRAINT(@"V:|[fileBrowserDivider]|");
+
+    if (_fileBrowserOnRight) {
+      CONSTRAINT(@"H:|[documentView][fileBrowserDivider][fileBrowserView]|");
+    } else {
+      CONSTRAINT(@"H:|[fileBrowserView][fileBrowserDivider][documentView]|");
+    }
+  } else {
+    CONSTRAINT(@"H:|[documentView]|");
   }
 
   if (_showStatusBar) {
     CONSTRAINT(@"V:|[documentView]-(%d)-|", qMainWindowBorderThickness + 1);
     CONSTRAINT(@"V:[pathControl]-(1)-|");
-    [self addVimViewMinSizeConstraints];
 
     if (_fileBrowserView) {
       CONSTRAINT(@"V:[settings]-(3)-|");
-      [self addFileBrowserWidthConstraint];
-
       CONSTRAINT(@"V:|[fileBrowserView(>=100)]-(%d)-|", qMainWindowBorderThickness + 1);
-      CONSTRAINT(@"V:|[fileBrowserDivider]|");
 
       if (_fileBrowserOnRight) {
-        CONSTRAINT(@"H:|[documentView][fileBrowserDivider][fileBrowserView]|");
+        CONSTRAINT(@"H:[fileBrowserDivider][settings]");
         CONSTRAINT(@"H:|-(2)-[pathControl]-(2)-[fileBrowserDivider]");
       } else {
-        CONSTRAINT(@"H:|[fileBrowserView][fileBrowserDivider][documentView]|");
         CONSTRAINT(@"H:[settings][fileBrowserDivider]");
         CONSTRAINT(@"H:[fileBrowserDivider]-(2)-[pathControl]-(2)-|");
       }
-
     } else {
-      [_pathControl removeFromSuperview];
-      CONSTRAINT(@"H:|[documentView]|");
       CONSTRAINT(@"H:|-(2)-[pathControl]-(2)-|");
     }
   } else {
-    [_pathControl removeFromSuperview];
-    [_settingsButton removeFromSuperview];
-
     CONSTRAINT(@"V:|[documentView]|");
-    [self addVimViewMinSizeConstraints];
 
     if (_fileBrowserView) {
-      [self addFileBrowserWidthConstraint];
-
       CONSTRAINT(@"V:|[fileBrowserView(>=100)]|");
-      CONSTRAINT(@"V:|[fileBrowserDivider]|");
-
-      if (_fileBrowserOnRight) {
-        CONSTRAINT(@"H:|[documentView][fileBrowserDivider][fileBrowserView]|");
-      } else {
-        CONSTRAINT(@"H:|[fileBrowserView][fileBrowserDivider][documentView]|");
-      }
-
     } else {
       CONSTRAINT(@"H:|[documentView]|");
     }
