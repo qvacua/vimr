@@ -78,18 +78,18 @@ const int qMainWindowBorderThickness = 22;
   switch (openMode) {
     case VROpenModeInNewTab:
       [_vimController sendMessage:OpenWithArgumentsMsgID
-                             data:[self vimArgsFromUrl:url mode:MMLayoutTabs].dictionaryAsData];
+                             data:[self vimArgsAsDataFromUrl:url mode:MMLayoutTabs]];
       break;
     case VROpenModeInCurrentTab:
       [self sendCommandToVim:SF(@":e %@", url.path)];
       break;
     case VROpenModeInVerticalSplit:
       [_vimController sendMessage:OpenWithArgumentsMsgID
-                             data:[self vimArgsFromUrl:url mode:MMLayoutVerticalSplit].dictionaryAsData];
+                             data:[self vimArgsAsDataFromUrl:url mode:MMLayoutVerticalSplit]];
       break;
     case VROpenModeInHorizontalSplit:
       [_vimController sendMessage:OpenWithArgumentsMsgID
-                             data:[self vimArgsFromUrl:url mode:MMLayoutHorizontalSplit].dictionaryAsData];
+                             data:[self vimArgsAsDataFromUrl:url mode:MMLayoutHorizontalSplit]];
       break;
   }
 
@@ -97,16 +97,14 @@ const int qMainWindowBorderThickness = 22;
 }
 
 - (void)openFilesWithUrls:(NSArray *)urls {
-  if (urls.isEmpty) {
-    return;
-  }
+  if (urls.isEmpty) { return; }
 
   NSArray *urlsAlreadyOpen = [self alreadyOpenedUrlsFromUrls:urls];
   NSMutableArray *urlsToOpen = [[NSMutableArray alloc] initWithArray:urls];
   [urlsToOpen removeObjectsInArray:urlsAlreadyOpen];
 
   if (!urlsToOpen.isEmpty) {
-    [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsFromFileUrls:urlsToOpen].dictionaryAsData];
+    [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsAsDataFromFileUrls:urlsToOpen]];
   } else {
     [_vimController gotoBufferWithUrl:urlsAlreadyOpen[0]];
   }
@@ -750,7 +748,7 @@ const int qMainWindowBorderThickness = 22;
   return window;
 }
 
-- (NSDictionary *)vimArgsFromFileUrls:(NSArray *)fileUrls {
+- (NSData *)vimArgsAsDataFromFileUrls:(NSArray *)fileUrls {
   NSMutableArray *filenames = [[NSMutableArray alloc] initWithCapacity:4];
   for (NSURL *url in fileUrls) {
     [filenames addObject:url.path];
@@ -759,14 +757,7 @@ const int qMainWindowBorderThickness = 22;
   return @{
       qVimArgFileNamesToOpen : filenames,
       qVimArgOpenFilesLayout : @(MMLayoutTabs),
-  };
-}
-
-- (NSDictionary *)vimArgsFromUrl:(NSURL *)url mode:(NSUInteger)mode {
-  return @{
-      qVimArgFileNamesToOpen : @[url.path],
-      qVimArgOpenFilesLayout : @(mode),
-  };
+  }.dictionaryAsData;
 }
 
 - (NSMutableArray *)alreadyOpenedUrlsFromUrls:(NSArray *)urls {
@@ -786,6 +777,13 @@ const int qMainWindowBorderThickness = 22;
 
 - (BOOL)fileBrowserVisible {
   return _workspaceView.fileBrowserView != nil;
+}
+
+- (NSData *)vimArgsAsDataFromUrl:(NSURL *)url mode:(NSUInteger)mode {
+  return @{
+      qVimArgFileNamesToOpen : @[url.path],
+      qVimArgOpenFilesLayout : @(mode),
+  }.dictionaryAsData;
 }
 
 #pragma mark Private Resize Code
