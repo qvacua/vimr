@@ -8,12 +8,10 @@
 */
 
 #import <MacVimFramework/MacVimFramework.h>
-#import <CocoaLumberjack/DDLog.h>
 #import "VRWorkspaceView.h"
 #import "VRTextMateUiUtils.h"
 #import "VRFileBrowserView.h"
 #import "VRMainWindowController.h"
-#import "VRDefaultLogSetting.h"
 #import "VRUtils.h"
 
 
@@ -37,12 +35,11 @@ static const int qMinimumFileBrowserWidth = 100;
   NSLayoutConstraint *_vimViewHeightConstraint;
   NSMutableArray *_myConstraints;
 
-  NSUInteger _dragIncrement;
   BOOL _mouseDownRecursionGuard;
 
   NSView *_fileBrowserDivider;
 
-  NSPathControl *_pathControl;
+  NSPathControl *_pathView;
   NSPopUpButton *_settingsButton;
 }
 
@@ -74,10 +71,6 @@ static const int qMinimumFileBrowserWidth = 100;
 
 - (CGFloat)defaultFileBrowserAndDividerWidth {
   return qDefaultFileBrowserWidth + 1;
-}
-
-- (void)updateMetrics {
-  _dragIncrement = (NSUInteger) _vimView.textView.cellSize.width;
 }
 
 - (void)setFileBrowserOnRight:(BOOL)flag {
@@ -113,7 +106,56 @@ static const int qMinimumFileBrowserWidth = 100;
 
 #pragma mark Public
 - (void)setUrlOfPathControl:(NSURL *)url {
-  _pathControl.URL = url;
+  _pathView.URL = url;
+}
+
+- (void)setUp {
+  _pathView = [[NSPathControl alloc] initWithFrame:CGRectZero];
+  _pathView.translatesAutoresizingMaskIntoConstraints = NO;
+  _pathView.pathStyle = NSPathStyleStandard;
+  _pathView.backgroundColor = [NSColor clearColor];
+  _pathView.refusesFirstResponder = YES;
+  [_pathView.cell setControlSize:NSSmallControlSize];
+  [_pathView.cell setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
+  [_pathView setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow
+                                      forOrientation:NSLayoutConstraintOrientationHorizontal];
+
+  [self addSubview:_pathView];
+
+  NSMenuItem *item = [NSMenuItem new];
+  item.title = @"";
+  item.image = [NSImage imageNamed:NSImageNameActionTemplate];
+  [item.image setSize:NSMakeSize(12, 12)];
+
+  _settingsButton = [[NSPopUpButton alloc] initWithFrame:CGRectZero pullsDown:YES];
+  _settingsButton.bordered = NO;
+  _settingsButton.translatesAutoresizingMaskIntoConstraints = NO;
+  [_settingsButton.cell setBackgroundStyle:NSBackgroundStyleRaised];
+  [_settingsButton.cell setUsesItemFromMenu:NO];
+  [_settingsButton.cell setMenuItem:item];
+  [_settingsButton.menu addItemWithTitle:@"" action:NULL keyEquivalent:@""];
+  [self addSubview:_settingsButton];
+
+  NSMenuItem *showFoldersFirstMenu = [[NSMenuItem alloc] initWithTitle:@"Show Folders First"
+                                                                action:@selector(toggleShowFoldersFirst:)
+                                                         keyEquivalent:@""];
+  showFoldersFirstMenu.target = self;
+  showFoldersFirstMenu.state = _showFoldersFirst ? NSOnState : NSOffState;
+  [_settingsButton.menu addItem:showFoldersFirstMenu];
+
+  NSMenuItem *showHiddenMenu = [[NSMenuItem alloc] initWithTitle:@"Show Hidden Files"
+                                                          action:@selector(toggleShowHiddenFiles:)
+                                                   keyEquivalent:@""];
+  showHiddenMenu.target = self;
+  showHiddenMenu.state = _showHiddenFiles ? NSOnState : NSOffState;
+  [_settingsButton.menu addItem:showHiddenMenu];
+
+  NSMenuItem *syncWorkspaceWithPwdMenu = [[NSMenuItem alloc] initWithTitle:@"Sync Working Directory with Vim's 'pwd'"
+                                                                    action:@selector(toggleSyncWorkspaceWithPwd:)
+                                                             keyEquivalent:@""];
+  syncWorkspaceWithPwdMenu.target = self;
+  syncWorkspaceWithPwdMenu.state = _syncWorkspaceWithPwd ? NSOnState : NSOffState;
+  [_settingsButton.menu addItem:syncWorkspaceWithPwdMenu];
 }
 
 #pragma mark NSUserInterfaceValidations
@@ -143,25 +185,6 @@ static const int qMinimumFileBrowserWidth = 100;
   return NO;
 }
 
-- (void)setStateOfFileBrowserFlagsForMenuItem:(NSMenuItem *)item {
-  SEL action = item.action;
-
-  if (action == @selector(toggleShowFoldersFirst:)) {
-    item.state = _showFoldersFirst;
-    return;
-  }
-
-  if (action == @selector(toggleShowHiddenFiles:)) {
-    item.state = _showHiddenFiles;
-    return;
-  }
-
-  if (action == @selector(toggleSyncWorkspaceWithPwd:)) {
-    item.state = _syncWorkspaceWithPwd;
-    return;
-  }
-}
-
 #pragma mark NSView
 - (id)initWithFrame:(NSRect)aRect {
   self = [super initWithFrame:aRect];
@@ -185,13 +208,13 @@ static const int qMinimumFileBrowserWidth = 100;
       @"fileBrowserDivider" : _fileBrowserDivider ?: [NSNull null],
 
       @"documentView" : _vimView,
-      @"pathControl" : _pathControl,
+      @"pathControl" : _pathView,
   };
 
-  if (!_pathControl.superview) {[self addSubview:_pathControl];}
+  if (!_pathView.superview) {[self addSubview:_pathView];}
   if (!_settingsButton.superview) {[self addSubview:_settingsButton];}
   if (!_showStatusBar) {
-    [_pathControl removeFromSuperview];
+    [_pathView removeFromSuperview];
     [_settingsButton removeFromSuperview];
   }
   if (!_fileBrowserView) {[_settingsButton removeFromSuperview];}
@@ -243,19 +266,6 @@ static const int qMinimumFileBrowserWidth = 100;
   [self.window invalidateCursorRectsForView:self];
 }
 
-- (void)addFileBrowserWidthConstraint {
-  _fileBrowserWidth -= (NSUInteger) _fileBrowserWidthConstraint.constant % _dragIncrement;
-  _fileBrowserWidthConstraint = [NSLayoutConstraint constraintWithItem:_fileBrowserView
-                                                             attribute:NSLayoutAttributeWidth
-                                                             relatedBy:NSLayoutRelationEqual
-                                                                toItem:nil
-                                                             attribute:NSLayoutAttributeNotAnAttribute
-                                                            multiplier:1
-                                                              constant:_fileBrowserWidth];
-  _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow;
-  [_myConstraints addObject:_fileBrowserWidthConstraint];
-}
-
 - (void)resetCursorRects {
   [self addCursorRect:self.fileBrowserResizeRect cursor:[NSCursor resizeLeftRightCursor]];
 }
@@ -282,69 +292,67 @@ static const int qMinimumFileBrowserWidth = 100;
   }
 
   if (!view || anEvent.type != NSLeftMouseDown) {
-    DDLogDebug(@"view: %@", view);
     [super mouseDown:anEvent];
-  } else {
-    if (_fileBrowserView) {
-      _fileBrowserWidthConstraint.constant = NSWidth(_fileBrowserView.frame);
-      _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow;
-    }
+    _mouseDownRecursionGuard = NO;
 
-    NSEvent *mouseDownEvent = anEvent;
-    CGRect initialFrame = view.frame;
+    return;
+  }
 
-    VRMainWindowController *windowController = (VRMainWindowController *) self.window.windowController;
-    DDLogDebug(@"turning on live resize flag");
-    DDLogDebug(@"drag increment: %lu\tcell width: %f", _dragIncrement, _vimView.textView.cellSize.width);
-    [windowController.vimView viewWillStartLiveResize];
-
-    DDLogDebug(@"before: %f = %f + 1 + %f", self.frame.size.width, _fileBrowserWidth, _vimView.frame.size.width);
-
-    BOOL didDrag = NO;
-    while (anEvent.type != NSLeftMouseUp) {
-      anEvent = [NSApp nextEventMatchingMask:(NSLeftMouseDraggedMask | NSLeftMouseDown | NSLeftMouseUpMask)
-                                   untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:YES];
-      if (anEvent.type != NSLeftMouseDragged) {
-        break;
-      }
-
-      CGPoint mouseCurrentPos = [self convertPoint:anEvent.locationInWindow fromView:nil];
-      if (!didDrag &&
-              SQ(fabs(mouseDownPos.x - mouseCurrentPos.x)) + SQ(fabs(mouseDownPos.y - mouseCurrentPos.y)) < SQ(1)) {
-
-        continue; // we didn't even drag a pixel
-      }
-
-      if (view == _fileBrowserView) {
-        CGFloat width = NSWidth(initialFrame) + (mouseCurrentPos.x - mouseDownPos.x) * (_fileBrowserOnRight ? -1 : +1);
-        _fileBrowserWidth = [self adjustedFileBrowserWidthForWidth:width];
-
-        _fileBrowserWidthConstraint.constant = _fileBrowserWidth;
-        _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow - 1;
-      }
-
-      [self.window invalidateCursorRectsForView:self];
-      didDrag = YES;
-    }
-
-    [windowController.vimView viewDidEndLiveResize];
-
-    if (!didDrag) {
-      NSView *hitView = [super hitTest:[self.superview convertPoint:[mouseDownEvent locationInWindow] fromView:nil]];
-      if (hitView && hitView != self) {
-        [NSApp postEvent:anEvent atStart:NO];
-        [hitView mouseDown:mouseDownEvent];
-      }
-    }
-
+  if (_fileBrowserView) {
+    _fileBrowserWidthConstraint.constant = NSWidth(_fileBrowserView.frame);
     _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow;
   }
+
+  NSEvent *mouseDownEvent = anEvent;
+  CGRect initialFrame = view.frame;
+
+  VRMainWindowController *windowController = (VRMainWindowController *) self.window.windowController;
+  [windowController.vimView viewWillStartLiveResize];
+
+  BOOL didDrag = NO;
+  while (anEvent.type != NSLeftMouseUp) {
+    anEvent = [NSApp nextEventMatchingMask:(NSLeftMouseDraggedMask | NSLeftMouseDown | NSLeftMouseUpMask)
+                                 untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:YES];
+
+    if (anEvent.type != NSLeftMouseDragged) {
+      break;
+    }
+
+    CGPoint mouseCurrentPos = [self convertPoint:anEvent.locationInWindow fromView:nil];
+    if (!didDrag &&
+            SQ(fabs(mouseDownPos.x - mouseCurrentPos.x)) + SQ(fabs(mouseDownPos.y - mouseCurrentPos.y)) < SQ(1)) {
+
+      continue; // we didn't even drag a pixel
+    }
+
+    if (view == _fileBrowserView) {
+      CGFloat width = NSWidth(initialFrame) + (mouseCurrentPos.x - mouseDownPos.x) * (_fileBrowserOnRight ? -1 : +1);
+      _fileBrowserWidth = [self adjustedFileBrowserWidthForWidth:width];
+
+      _fileBrowserWidthConstraint.constant = _fileBrowserWidth;
+      _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow - 1;
+    }
+
+    [self.window invalidateCursorRectsForView:self];
+    didDrag = YES;
+  }
+
+  [windowController.vimView viewDidEndLiveResize];
+
+  if (!didDrag) {
+    NSView *hitView = [super hitTest:[self.superview convertPoint:mouseDownEvent.locationInWindow fromView:nil]];
+    if (hitView && hitView != self) {
+      [NSApp postEvent:anEvent atStart:NO];
+      [hitView mouseDown:mouseDownEvent];
+    }
+  }
+
+  _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow;
 
   _mouseDownRecursionGuard = NO;
 }
 
 #pragma mark Private
-
 - (CGFloat)adjustedFileBrowserWidthForWidth:(CGFloat)width {
   NSUInteger targetWidth = (NSUInteger) MAX(qMinimumFileBrowserWidth, round(width));
 
@@ -359,9 +367,7 @@ static const int qMinimumFileBrowserWidth = 100;
 }
 
 - (id)replaceView:(NSView *)oldView withView:(NSView *)newView {
-  if (newView == oldView) {
-    return oldView;
-  }
+  if (newView == oldView) {return oldView;}
 
   [oldView removeFromSuperview];
 
@@ -389,68 +395,52 @@ static const int qMinimumFileBrowserWidth = 100;
                                                           attribute:NSLayoutAttributeNotAnAttribute
                                                          multiplier:1
                                                            constant:_vimView.minSize.height];
+
   [_myConstraints addObject:_vimViewWidthConstraint];
   [_myConstraints addObject:_vimViewHeightConstraint];
 }
 
 - (CGRect)fileBrowserResizeRect {
-  if (!_fileBrowserView) {
-    return CGRectZero;
-  }
+  if (!_fileBrowserView) {return CGRectZero;}
 
-  CGRect r = _fileBrowserView.frame;
-  return CGRectMake(_fileBrowserOnRight ? NSMinX(r) - 3 : NSMaxX(r) - 4, NSMinY(r), 10, NSHeight(r));
+  CGRect rect = _fileBrowserView.frame;
+  return CGRectMake(_fileBrowserOnRight ? NSMinX(rect) - 3 : NSMaxX(rect) - 4, NSMinY(rect), 10, NSHeight(rect));
 }
 
-- (void)setUp {
-  _pathControl = [[NSPathControl alloc] initWithFrame:CGRectZero];
-  _pathControl.translatesAutoresizingMaskIntoConstraints = NO;
-  _pathControl.pathStyle = NSPathStyleStandard;
-  _pathControl.backgroundColor = [NSColor clearColor];
-  _pathControl.refusesFirstResponder = YES;
-  [_pathControl.cell setControlSize:NSSmallControlSize];
-  [_pathControl.cell setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
-  [_pathControl setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow
-                                         forOrientation:NSLayoutConstraintOrientationHorizontal];
+- (void)updateMetrics {
+  _dragIncrement = (NSUInteger) _vimView.textView.cellSize.width;
+}
 
-  [self addSubview:_pathControl];
+- (void)setStateOfFileBrowserFlagsForMenuItem:(NSMenuItem *)item {
+  SEL action = item.action;
 
-  _settingsButton = [[NSPopUpButton alloc] initWithFrame:CGRectZero pullsDown:YES];
-  _settingsButton.bordered = NO;
-  _settingsButton.translatesAutoresizingMaskIntoConstraints = NO;
-  [self addSubview:_settingsButton];
+  if (action == @selector(toggleShowFoldersFirst:)) {
+    item.state = _showFoldersFirst;
+    return;
+  }
 
-  NSMenuItem *item = [NSMenuItem new];
-  item.title = @"";
-  item.image = [NSImage imageNamed:NSImageNameActionTemplate];
-  [item.image setSize:NSMakeSize(12, 12)];
+  if (action == @selector(toggleShowHiddenFiles:)) {
+    item.state = _showHiddenFiles;
+    return;
+  }
 
-  [_settingsButton.cell setBackgroundStyle:NSBackgroundStyleRaised];
-  [_settingsButton.cell setUsesItemFromMenu:NO];
-  [_settingsButton.cell setMenuItem:item];
-  [_settingsButton.menu addItemWithTitle:@"" action:NULL keyEquivalent:@""];
+  if (action == @selector(toggleSyncWorkspaceWithPwd:)) {
+    item.state = _syncWorkspaceWithPwd;
+    return;
+  }
+}
 
-  NSMenuItem *showFoldersFirstMenuItem = [[NSMenuItem alloc] initWithTitle:@"Show Folders First"
-                                                                    action:@selector(toggleShowFoldersFirst:)
-                                                             keyEquivalent:@""];
-  showFoldersFirstMenuItem.target = self;
-  showFoldersFirstMenuItem.state = _showFoldersFirst ? NSOnState : NSOffState;
-  [_settingsButton.menu addItem:showFoldersFirstMenuItem];
-
-  NSMenuItem *showHiddenMenuItem = [[NSMenuItem alloc] initWithTitle:@"Show Hidden Files"
-                                                              action:@selector(toggleShowHiddenFiles:)
-                                                       keyEquivalent:@""];
-  showHiddenMenuItem.target = self;
-  showHiddenMenuItem.state = _showHiddenFiles ? NSOnState : NSOffState;
-  [_settingsButton.menu addItem:showHiddenMenuItem];
-
-  NSMenuItem *syncWorkspaceWithPwdMenuItem =
-      [[NSMenuItem alloc] initWithTitle:@"Sync Working Directory with Vim's 'pwd'"
-                                 action:@selector(toggleSyncWorkspaceWithPwd:)
-                          keyEquivalent:@""];
-  syncWorkspaceWithPwdMenuItem.target = self;
-  syncWorkspaceWithPwdMenuItem.state = _syncWorkspaceWithPwd ? NSOnState : NSOffState;
-  [_settingsButton.menu addItem:syncWorkspaceWithPwdMenuItem];
+- (void)addFileBrowserWidthConstraint {
+  _fileBrowserWidth -= (NSUInteger) _fileBrowserWidthConstraint.constant % _dragIncrement;
+  _fileBrowserWidthConstraint = [NSLayoutConstraint constraintWithItem:_fileBrowserView
+                                                             attribute:NSLayoutAttributeWidth
+                                                             relatedBy:NSLayoutRelationEqual
+                                                                toItem:nil
+                                                             attribute:NSLayoutAttributeNotAnAttribute
+                                                            multiplier:1
+                                                              constant:_fileBrowserWidth];
+  _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow;
+  [_myConstraints addObject:_fileBrowserWidthConstraint];
 }
 
 @end

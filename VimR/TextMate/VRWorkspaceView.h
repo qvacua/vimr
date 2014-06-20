@@ -40,6 +40,13 @@
 - (void)setUrlOfPathControl:(NSURL *)url;
 - (void)setUp;
 
+#pragma mark NSView
+- (id)initWithFrame:(NSRect)aRect;
+- (void)updateConstraints;
+- (void)resetCursorRects;
+- (NSView *)hitTest:(NSPoint)aPoint;
+- (void)mouseDown:(NSEvent *)anEvent;
+
 #pragma mark IBActions
 - (IBAction)toggleStatusBar:(NSMenuItem *)sender;
 - (IBAction)toggleSyncWorkspaceWithPwd:(NSMenuItem *)sender;
