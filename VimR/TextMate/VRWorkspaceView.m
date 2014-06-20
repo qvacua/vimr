@@ -74,12 +74,14 @@ static const int qMinimumFileBrowserWidth = 100;
 }
 
 - (void)setFileBrowserOnRight:(BOOL)flag {
-  if (_fileBrowserOnRight != flag) {
-    _fileBrowserOnRight = flag;
+  if (_fileBrowserOnRight == flag) {
+    return;
+  }
 
-    if (_fileBrowserView) {
-      self.needsUpdateConstraints = YES;
-    }
+  _fileBrowserOnRight = flag;
+
+  if (_fileBrowserView) {
+    self.needsUpdateConstraints = YES;
   }
 }
 
@@ -136,26 +138,12 @@ static const int qMinimumFileBrowserWidth = 100;
   [_settingsButton.menu addItemWithTitle:@"" action:NULL keyEquivalent:@""];
   [self addSubview:_settingsButton];
 
-  NSMenuItem *showFoldersFirstMenu = [[NSMenuItem alloc] initWithTitle:@"Show Folders First"
-                                                                action:@selector(toggleShowFoldersFirst:)
-                                                         keyEquivalent:@""];
-  showFoldersFirstMenu.target = self;
-  showFoldersFirstMenu.state = _showFoldersFirst ? NSOnState : NSOffState;
-  [_settingsButton.menu addItem:showFoldersFirstMenu];
-
-  NSMenuItem *showHiddenMenu = [[NSMenuItem alloc] initWithTitle:@"Show Hidden Files"
-                                                          action:@selector(toggleShowHiddenFiles:)
-                                                   keyEquivalent:@""];
-  showHiddenMenu.target = self;
-  showHiddenMenu.state = _showHiddenFiles ? NSOnState : NSOffState;
-  [_settingsButton.menu addItem:showHiddenMenu];
-
-  NSMenuItem *syncWorkspaceWithPwdMenu = [[NSMenuItem alloc] initWithTitle:@"Sync Working Directory with Vim's 'pwd'"
-                                                                    action:@selector(toggleSyncWorkspaceWithPwd:)
-                                                             keyEquivalent:@""];
-  syncWorkspaceWithPwdMenu.target = self;
-  syncWorkspaceWithPwdMenu.state = _syncWorkspaceWithPwd ? NSOnState : NSOffState;
-  [_settingsButton.menu addItem:syncWorkspaceWithPwdMenu];
+  [self addMenuItemToSettingsButtonWithTitle:@"Show Folders First"
+                                      action:@selector(toggleShowFoldersFirst:) flag:_showFoldersFirst];
+  [self addMenuItemToSettingsButtonWithTitle:@"Show hidden files"
+                                      action:@selector(toggleShowHiddenFiles:) flag:_showHiddenFiles];
+  [self addMenuItemToSettingsButtonWithTitle:@"Sync Working Directory with Vim's 'pwd'"
+                                      action:@selector(toggleSyncWorkspaceWithPwd:) flag:_syncWorkspaceWithPwd];
 }
 
 #pragma mark NSUserInterfaceValidations
@@ -441,6 +429,14 @@ static const int qMinimumFileBrowserWidth = 100;
                                                               constant:_fileBrowserWidth];
   _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow;
   [_myConstraints addObject:_fileBrowserWidthConstraint];
+}
+
+- (void)addMenuItemToSettingsButtonWithTitle:(NSString *)title action:(SEL)action flag:(BOOL)flag {
+  NSMenuItem *showFoldersFirstMenu = [[NSMenuItem alloc] initWithTitle:title action:action keyEquivalent:@""];
+  showFoldersFirstMenu.target = self;
+  showFoldersFirstMenu.state = flag ? NSOnState : NSOffState;
+
+  [_settingsButton.menu addItem:showFoldersFirstMenu];
 }
 
 @end
