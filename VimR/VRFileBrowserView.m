@@ -17,6 +17,7 @@
 #import "NSArray+VR.h"
 #import "VROutlineView.h"
 #import "NSTableView+VR.h"
+#import "VRWorkspaceView.h"
 
 
 #define CONSTRAIN(fmt) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]];
@@ -309,7 +310,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   }
 
   NSArray *filteredChildren = [self filterHiddenNodesIfNec:children];
-  if ([self showFoldersFirst]) {
+  if (_workspaceView.showFoldersFirst) {
     NSSortDescriptor *folderDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dir" ascending:YES
                                                                     comparator:qNodeDirComparator];
 
@@ -332,7 +333,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 - (NSArray *)filterHiddenNodesIfNec:(NSArray *)nodes {
-  if ([self showHiddenFiles]) {
+  if (_workspaceView.showHiddenFiles) {
     return nodes;
   }
 

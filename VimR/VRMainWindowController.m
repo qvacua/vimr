@@ -508,7 +508,7 @@ const int qMainWindowBorderThickness = 22;
 }
 
 - (void)controller:(MMVimController *)controller setVimState:(NSDictionary *)vimState data:(NSData *)data {
-  if (_fileBrowserView.syncWorkspaceWithPwd) {
+  if (_workspaceView.syncWorkspaceWithPwd) {
     NSString *pwdPath = _vimController.vimState[@"pwd"];
     if (![_workspace.workingDirectory.path isEqualToString:pwdPath]) {
       [_workspace updateWorkingDirectory:[[NSURL alloc] initFileURLWithPath:pwdPath]];
@@ -646,14 +646,17 @@ const int qMainWindowBorderThickness = 22;
 - (void)addViews {
   _vimView.tabBarControl.styleNamed = @"Metal";
 
+  _workspaceView = [self newWorkspaceView];
+  
   _fileBrowserView = [[VRFileBrowserView alloc] initWithRootUrl:self.workingDirectory];
   _fileBrowserView.fileItemManager = _workspace.fileItemManager;
   _fileBrowserView.userDefaults = _workspace.userDefaults;
   _fileBrowserView.notificationCenter = _workspace.notificationCenter;
-
+  _fileBrowserView.workspaceView = _workspaceView;
   [_fileBrowserView setUp];
 
-  _workspaceView = [self newWorkspaceView];
+  _workspaceView.fileBrowserView = _fileBrowserView;
+
   NSView *contentView = self.window.contentView;
   [contentView addSubview:_workspaceView];
 
@@ -669,7 +672,6 @@ const int qMainWindowBorderThickness = 22;
   VRWorkspaceView *view = [[VRWorkspaceView alloc] initWithFrame:CGRectZero];
 
   view.translatesAutoresizingMaskIntoConstraints = NO;
-  view.fileBrowserView = _fileBrowserView;
   view.vimView = _vimView;
   view.showStatusBar = [_userDefaults boolForKey:qDefaultShowStatusBar];
   view.showFoldersFirst = [_userDefaults boolForKey:qDefaultShowFoldersFirst];
@@ -784,25 +786,6 @@ const int qMainWindowBorderThickness = 22;
 
 - (BOOL)fileBrowserVisible {
   return _workspaceView.fileBrowserView != nil;
-}
-
-- (void)setStateOfFileBrowserFlagsForMenuItem:(NSMenuItem *)anItem {
-  SEL action = anItem.action;
-
-  if (action == @selector(toggleShowFoldersFirst:)) {
-    anItem.state = _fileBrowserView.showFoldersFirst;
-    return;
-  }
-
-  if (action == @selector(toggleShowHiddenFiles:)) {
-    anItem.state = _fileBrowserView.showHiddenFiles;
-    return;
-  }
-
-  if (action == @selector(toggleSyncWorkspaceWithPwd:)) {
-    anItem.state = _fileBrowserView.syncWorkspaceWithPwd;
-    return;
-  }
 }
 
 #pragma mark Private Resize Code

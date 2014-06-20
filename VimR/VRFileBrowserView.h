@@ -14,6 +14,7 @@
 @class VRFileItem;
 @class VRFileItemManager;
 @class VROutlineView;
+@class VRWorkspaceView;
 
 
 @interface VRNode : NSObject
@@ -41,6 +42,7 @@
 
 @property (nonatomic) NSURL *rootUrl;
 
+@property (weak) VRWorkspaceView *workspaceView;
 @property (readonly) VROutlineView *fileOutlineView;
 
 #pragma mark Public
