@@ -20,17 +20,30 @@
 * Frameworks/DocumentWindow/src/ProjectLayoutView.mm
 * v2.0-alpha.9537
 */
-@interface VRWorkspaceView : NSView
+@interface VRWorkspaceView : NSView <NSUserInterfaceValidations>
 
 @property (nonatomic) VRFileBrowserView *fileBrowserView;
 @property (nonatomic) MMVimView *vimView;
-@property (nonatomic) BOOL fileBrowserOnRight;
+
 @property (nonatomic) CGFloat fileBrowserWidth;
 @property (nonatomic, readonly) CGFloat sidebarAndDividerWidth;
 @property (nonatomic, readonly) CGFloat defaultFileBrowserAndDividerWidth;
 @property (nonatomic) NSUInteger dragIncrement;
 
+@property (nonatomic) BOOL fileBrowserOnRight;
+@property (nonatomic) BOOL showStatusBar;
+@property (nonatomic) BOOL showHiddenFiles;
+@property (nonatomic) BOOL showFoldersFirst;
+@property (nonatomic) BOOL syncWorkspaceWithPwd;
+
 #pragma mark Public
 - (void)setUrlOfPathControl:(NSURL *)url;
+- (void)setUp;
+
+#pragma mark IBActions
+- (IBAction)toggleStatusBar:(NSMenuItem *)sender;
+- (IBAction)toggleSyncWorkspaceWithPwd:(NSMenuItem *)sender;
+- (IBAction)toggleShowFoldersFirst:(NSMenuItem *)sender;
+- (IBAction)toggleShowHiddenFiles:(NSMenuItem *)sender;
 
 @end

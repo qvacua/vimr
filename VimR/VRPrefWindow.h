@@ -12,13 +12,9 @@
 
 
 extern NSString *const qPrefWindowFrameAutosaveName;
-
 static NSString *const qOpenInNewTabDescription = @"Opens in a new tab";
-
 static NSString *const qOpenInCurrentTabDescription = @"Opens in the current tab:";
-
 static NSString *const qOpenInVerticalSplitDescription = @"Opens in a vertical split";
-
 static NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal split";
 
 @interface VRPrefWindow : NSWindow <TBBean, TBInitializingBean>

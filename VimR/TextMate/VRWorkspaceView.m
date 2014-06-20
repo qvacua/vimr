@@ -38,20 +38,18 @@ static const int qMinimumFileBrowserWidth = 100;
   NSMutableArray *_myConstraints;
 
   NSUInteger _dragIncrement;
-
   BOOL _mouseDownRecursionGuard;
-  BOOL _fileBrowserOnRight;
 
-  VRFileBrowserView *_fileBrowserView;
   NSView *_fileBrowserDivider;
 
-  MMVimView *_vimView;
   NSPathControl *_pathControl;
+  NSPopUpButton *_settingsButton;
 }
 
 #pragma mark Properties
-- (MMVimView *)vimView {
-  return _vimView;
+- (void)setShowStatusBar:(BOOL)showStatusBar {
+  _showStatusBar = showStatusBar;
+  self.needsUpdateConstraints = YES;
 }
 
 - (void)setVimView:(MMVimView *)aVimView {
@@ -59,19 +57,11 @@ static const int qMinimumFileBrowserWidth = 100;
   [self updateMetrics];
 }
 
-- (VRFileBrowserView *)fileBrowserView {
-  return _fileBrowserView;
-}
-
 - (void)setFileBrowserView:(VRFileBrowserView *)aFileBrowserView {
   NSBox *dividerView = aFileBrowserView ? OakCreateVerticalLine([NSColor controlShadowColor], nil) : nil;
 
   _fileBrowserDivider = [self replaceView:_fileBrowserDivider withView:dividerView];
   _fileBrowserView = [self replaceView:_fileBrowserView withView:aFileBrowserView];
-}
-
-- (BOOL)fileBrowserOnRight {
-  return _fileBrowserOnRight;
 }
 
 - (CGFloat)sidebarAndDividerWidth {
@@ -85,7 +75,6 @@ static const int qMinimumFileBrowserWidth = 100;
 - (CGFloat)defaultFileBrowserAndDividerWidth {
   return qDefaultFileBrowserWidth + 1;
 }
-
 
 - (void)updateMetrics {
   _dragIncrement = (NSUInteger) _vimView.textView.cellSize.width;
@@ -101,14 +90,79 @@ static const int qMinimumFileBrowserWidth = 100;
   }
 }
 
-#pragma mark Public
+#pragma mark IBActions
+- (IBAction)toggleSyncWorkspaceWithPwd:(NSMenuItem *)sender {
+  _syncWorkspaceWithPwd = !_syncWorkspaceWithPwd;
+  [_fileBrowserView reload];
+}
 
+- (IBAction)toggleShowFoldersFirst:(NSMenuItem *)sender {
+  _showFoldersFirst = !_showFoldersFirst;
+  [_fileBrowserView reload];
+}
+
+- (IBAction)toggleShowHiddenFiles:(NSMenuItem *)sender {
+  _showHiddenFiles = !_showHiddenFiles;
+  [_fileBrowserView reload];
+}
+
+- (IBAction)toggleStatusBar:(NSMenuItem *)sender {
+  _showStatusBar = !_showStatusBar;
+  self.needsUpdateConstraints = YES;
+}
+
+#pragma mark Public
 - (void)setUrlOfPathControl:(NSURL *)url {
   _pathControl.URL = url;
 }
 
-#pragma mark NSView
+#pragma mark NSUserInterfaceValidations
+- (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
+  SEL action = anItem.action;
 
+  if (action == @selector(toggleStatusBar:)) {
+    if (_showStatusBar) {
+      [(NSMenuItem *)anItem setTitle:@"Hide Status Bar"];
+    } else {
+      [(NSMenuItem *)anItem setTitle:@"Show Status Bar"];
+    }
+
+    return YES;
+  }
+
+  if (action == @selector(toggleShowFoldersFirst:)
+      || action == @selector(toggleShowHiddenFiles:)
+      || action == @selector(toggleSyncWorkspaceWithPwd:)) {
+
+    // TODO: there must be a better way to do this...
+    [self setStateOfFileBrowserFlagsForMenuItem:anItem];
+
+    return _fileBrowserView != nil;
+  }
+
+  return NO;
+}
+
+- (void)setStateOfFileBrowserFlagsForMenuItem:(NSMenuItem *)item {
+  SEL action = item.action;
+
+  if (action == @selector(toggleShowFoldersFirst:)) {
+    item.state = _showFoldersFirst;
+    return;
+  }
+
+  if (action == @selector(toggleShowHiddenFiles:)) {
+    item.state = _showHiddenFiles;
+    return;
+  }
+
+  if (action == @selector(toggleSyncWorkspaceWithPwd:)) {
+    item.state = _syncWorkspaceWithPwd;
+    return;
+  }
+}
+
+#pragma mark NSView
 - (id)initWithFrame:(NSRect)aRect {
   self = [super initWithFrame:aRect];
   RETURN_NIL_WHEN_NOT_SELF
@@ -116,18 +170,6 @@ static const int qMinimumFileBrowserWidth = 100;
   _myConstraints = [NSMutableArray array];
   _fileBrowserWidth = qDefaultFileBrowserWidth;
   _dragIncrement = 1;
-
-  _pathControl = [[NSPathControl alloc] initWithFrame:CGRectZero];
-  _pathControl.translatesAutoresizingMaskIntoConstraints = NO;
-  _pathControl.pathStyle = NSPathStyleStandard;
-  _pathControl.backgroundColor = [NSColor clearColor];
-  _pathControl.refusesFirstResponder = YES;
-  [_pathControl.cell setControlSize:NSSmallControlSize];
-  [_pathControl.cell setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
-  [_pathControl setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow
-                                         forOrientation:NSLayoutConstraintOrientationHorizontal];
-
-  [self addSubview:_pathControl];
 
   return self;
 }
@@ -138,33 +180,61 @@ static const int qMinimumFileBrowserWidth = 100;
   [super updateConstraints];
 
   NSDictionary *views = @{
-      @"documentView" : _vimView,
       @"fileBrowserView" : _fileBrowserView ?: [NSNull null],
+      @"settings" : _settingsButton,
       @"fileBrowserDivider" : _fileBrowserDivider ?: [NSNull null],
+
+      @"documentView" : _vimView,
       @"pathControl" : _pathControl,
   };
 
-  CONSTRAINT(@"V:|[documentView]-(%d)-|", qMainWindowBorderThickness + 1);
-  CONSTRAINT(@"V:[pathControl]-(1)-|");
-  [self addVimViewMinSizeConstraints];
+  if (_showStatusBar) {
+    CONSTRAINT(@"V:|[documentView]-(%d)-|", qMainWindowBorderThickness + 1);
+    CONSTRAINT(@"V:[pathControl]-(1)-|");
+    CONSTRAINT(@"V:[settings]-(3)-|");
+    [self addVimViewMinSizeConstraints];
 
-  if (_fileBrowserView) {
-    [self addFileBrowserWidthConstraint];
+    if (_fileBrowserView) {
+      [self addFileBrowserWidthConstraint];
 
-    CONSTRAINT(@"V:|[fileBrowserView(>=100)]|");
-    CONSTRAINT(@"V:|[fileBrowserDivider]|");
+      CONSTRAINT(@"V:|[fileBrowserView(>=100)]-(%d)-|", qMainWindowBorderThickness + 1);
+      CONSTRAINT(@"V:|[fileBrowserDivider]|");
 
-    if (_fileBrowserOnRight) {
-      CONSTRAINT(@"H:|[documentView][fileBrowserDivider][fileBrowserView]|");
-      CONSTRAINT(@"H:|-(2)-[pathControl]-(2)-[fileBrowserDivider]");
+      if (_fileBrowserOnRight) {
+        CONSTRAINT(@"H:|[documentView][fileBrowserDivider][fileBrowserView]|");
+        CONSTRAINT(@"H:|-(2)-[pathControl]-(2)-[fileBrowserDivider]");
+      } else {
+        CONSTRAINT(@"H:|[fileBrowserView][fileBrowserDivider][documentView]|");
+        CONSTRAINT(@"H:[settings][fileBrowserDivider]");
+        CONSTRAINT(@"H:[fileBrowserDivider]-(2)-[pathControl]-(2)-|");
+      }
+
     } else {
-      CONSTRAINT(@"H:|[fileBrowserView][fileBrowserDivider][documentView]|");
-      CONSTRAINT(@"H:[fileBrowserDivider]-(2)-[pathControl]-(2)-|");
+      CONSTRAINT(@"H:|[documentView]|");
+      CONSTRAINT(@"H:|-(2)-[pathControl]-(2)-|");
     }
-
   } else {
-    CONSTRAINT(@"H:|[documentView]|");
-    CONSTRAINT(@"H:|-(2)-[pathControl]-(2)-|");
+    [_pathControl removeFromSuperview];
+    [_settingsButton removeFromSuperview];
+
+    CONSTRAINT(@"V:|[documentView]|");
+    [self addVimViewMinSizeConstraints];
+
+    if (_fileBrowserView) {
+      [self addFileBrowserWidthConstraint];
+
+      CONSTRAINT(@"V:|[fileBrowserView(>=100)]|");
+      CONSTRAINT(@"V:|[fileBrowserDivider]|");
+
+      if (_fileBrowserOnRight) {
+        CONSTRAINT(@"H:|[documentView][fileBrowserDivider][fileBrowserView]|");
+      } else {
+        CONSTRAINT(@"H:|[fileBrowserView][fileBrowserDivider][documentView]|");
+      }
+
+    } else {
+      CONSTRAINT(@"H:|[documentView]|");
+    }
   }
 
   [self addConstraints:_myConstraints];
@@ -328,6 +398,57 @@ static const int qMinimumFileBrowserWidth = 100;
 
   CGRect r = _fileBrowserView.frame;
   return CGRectMake(_fileBrowserOnRight ? NSMinX(r) - 3 : NSMaxX(r) - 4, NSMinY(r), 10, NSHeight(r));
+}
+
+- (void)setUp {
+  _pathControl = [[NSPathControl alloc] initWithFrame:CGRectZero];
+  _pathControl.translatesAutoresizingMaskIntoConstraints = NO;
+  _pathControl.pathStyle = NSPathStyleStandard;
+  _pathControl.backgroundColor = [NSColor clearColor];
+  _pathControl.refusesFirstResponder = YES;
+  [_pathControl.cell setControlSize:NSSmallControlSize];
+  [_pathControl.cell setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
+  [_pathControl setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow
+                                         forOrientation:NSLayoutConstraintOrientationHorizontal];
+
+  [self addSubview:_pathControl];
+
+  _settingsButton = [[NSPopUpButton alloc] initWithFrame:CGRectZero pullsDown:YES];
+  _settingsButton.bordered = NO;
+  _settingsButton.translatesAutoresizingMaskIntoConstraints = NO;
+  [self addSubview:_settingsButton];
+
+  NSMenuItem *item = [NSMenuItem new];
+  item.title = @"";
+  item.image = [NSImage imageNamed:NSImageNameActionTemplate];
+  [item.image setSize:NSMakeSize(12, 12)];
+
+  [_settingsButton.cell setBackgroundStyle:NSBackgroundStyleRaised];
+  [_settingsButton.cell setUsesItemFromMenu:NO];
+  [_settingsButton.cell setMenuItem:item];
+  [_settingsButton.menu addItemWithTitle:@"" action:NULL keyEquivalent:@""];
+
+  NSMenuItem *showFoldersFirstMenuItem = [[NSMenuItem alloc] initWithTitle:@"Show Folders First"
+                                                                    action:@selector(toggleShowFoldersFirst:)
+                                                             keyEquivalent:@""];
+  showFoldersFirstMenuItem.target = self;
+  showFoldersFirstMenuItem.state = _showFoldersFirst ? NSOnState : NSOffState;
+  [_settingsButton.menu addItem:showFoldersFirstMenuItem];
+
+  NSMenuItem *showHiddenMenuItem = [[NSMenuItem alloc] initWithTitle:@"Show Hidden Files"
+                                                              action:@selector(toggleShowHiddenFiles:)
+                                                       keyEquivalent:@""];
+  showHiddenMenuItem.target = self;
+  showHiddenMenuItem.state = _showHiddenFiles ? NSOnState : NSOffState;
+  [_settingsButton.menu addItem:showHiddenMenuItem];
+
+  NSMenuItem *syncWorkspaceWithPwdMenuItem =
+      [[NSMenuItem alloc] initWithTitle:@"Sync Working Directory with Vim's 'pwd'"
+                                 action:@selector(toggleSyncWorkspaceWithPwd:)
+                          keyEquivalent:@""];
+  syncWorkspaceWithPwdMenuItem.target = self;
+  syncWorkspaceWithPwdMenuItem.state = _syncWorkspaceWithPwd ? NSOnState : NSOffState;
+  [_settingsButton.menu addItem:syncWorkspaceWithPwdMenuItem];
 }
 
 @end

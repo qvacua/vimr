@@ -49,10 +49,6 @@ extern const int qMainWindowBorderThickness;
 - (IBAction)openQuickly:(id)sender;
 - (IBAction)showFileBrowser:(id)sender;
 - (IBAction)hideSidebar:(id)sender;
-- (IBAction)toggleSyncWorkspaceWithPwd:(NSMenuItem *)sender;
-- (IBAction)toggleShowFoldersFirst:(NSMenuItem *)sender;
-- (IBAction)toggleShowHiddenFiles:(NSMenuItem *)sender;
-- (IBAction)toggleStatusBar:(NSMenuItem *)sender;
 
 #pragma mark NSObject
 - (void)dealloc;

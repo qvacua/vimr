@@ -50,10 +50,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 
 
 @implementation VRFileBrowserView {
-  NSMenuItem *_showHiddenMenuItem;
-  NSMenuItem *_showFoldersFirstMenuItem;
-  NSMenuItem *_syncWorkspaceWithPwdMenuItem;
-
   NSOperationQueue *_invalidateCacheQueue;
 
   VRNode *_rootNode;
@@ -61,10 +57,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 #pragma mark Public
-- (BOOL)syncWorkspaceWithPwd {
-  return _syncWorkspaceWithPwdMenuItem.state == NSOnState;
-}
-
 - (void)setRootUrl:(NSURL *)rootUrl {
   _rootUrl = rootUrl;
   [self cacheInvalidated:nil];
@@ -83,16 +75,29 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   return self;
 }
 
-- (void)dealloc {
-  [_notificationCenter removeObserver:self];
+- (void)reload {
+  NSURL *selectedUrl = [[_fileOutlineView itemAtRow:_fileOutlineView.selectedRow] url];
+  CGRect visibleRect = _fileOutlineView.enclosingScrollView.contentView.visibleRect;
+
+  [self reCacheNodes];
+  [_fileOutlineView reloadData];
+  [self restoreExpandedStates];
+
+  [_fileOutlineView scrollRectToVisible:visibleRect];
+
+  [self selectNodeWithUrl:selectedUrl];
 }
 
 - (void)setUp {
   [_notificationCenter addObserver:self selector:@selector(cacheInvalidated:) name:qInvalidatedCacheEvent object:nil];
 
   [self addViews];
-
   [self reload];
+}
+
+#pragma mark NSObject
+- (void)dealloc {
+  [_notificationCenter removeObserver:self];
 }
 
 #pragma mark VRMovementsAndActionsProtocol
@@ -212,70 +217,12 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   scrollView.documentView = _fileOutlineView;
   [self addSubview:scrollView];
 
-  NSPopUpButton *settingsButton = [[NSPopUpButton alloc] initWithFrame:CGRectZero pullsDown:YES];
-  settingsButton.translatesAutoresizingMaskIntoConstraints = NO;
-  settingsButton.bordered = NO;
-
-  NSMenuItem *item = [NSMenuItem new];
-  item.title = @"";
-  item.image = [NSImage imageNamed:NSImageNameActionTemplate];
-  [item.image setSize:NSMakeSize(12, 12)];
-
-  [settingsButton.cell setBackgroundStyle:NSBackgroundStyleRaised];
-  [settingsButton.cell setUsesItemFromMenu:NO];
-  [settingsButton.cell setMenuItem:item];
-  [settingsButton.menu addItemWithTitle:@"" action:NULL keyEquivalent:@""];
-  [self addSubview:settingsButton];
-
-  _showFoldersFirstMenuItem = [[NSMenuItem alloc] initWithTitle:@"Show Folders First"
-                                                         action:@selector(toggleShowFoldersFirst:) keyEquivalent:@""];
-  _showFoldersFirstMenuItem.target = self;
-  _showFoldersFirstMenuItem.state = [_userDefaults boolForKey:qDefaultShowFoldersFirst] ? NSOnState : NSOffState;
-  [settingsButton.menu addItem:_showFoldersFirstMenuItem];
-
-  _showHiddenMenuItem = [[NSMenuItem alloc] initWithTitle:@"Show Hidden Files"
-                                                   action:@selector(toggleShowHiddenFiles:) keyEquivalent:@""];
-  _showHiddenMenuItem.target = self;
-  _showHiddenMenuItem.state = [_userDefaults boolForKey:qDefaultShowHiddenInFileBrowser] ? NSOnState : NSOffState;
-  [settingsButton.menu addItem:_showHiddenMenuItem];
-
-  _syncWorkspaceWithPwdMenuItem = [[NSMenuItem alloc] initWithTitle:@"Sync Working Directory with Vim's 'pwd'"
-                                                             action:@selector(toggleSyncWorkspaceWithPwd:)
-                                                      keyEquivalent:@""];
-  _syncWorkspaceWithPwdMenuItem.target = self;
-  _syncWorkspaceWithPwdMenuItem.state =
-      [_userDefaults boolForKey:qDefaultSyncWorkingDirectoryWithVimPwd] ? NSOnState : NSOffState;
-  [settingsButton.menu addItem:_syncWorkspaceWithPwdMenuItem];
-
   NSDictionary *views = @{
       @"outline" : scrollView,
-      @"settings" : settingsButton,
   };
 
-  CONSTRAIN(@"H:[settings]|");
   CONSTRAIN(@"H:|-(-1)-[outline(>=50)]-(-1)-|");
-  CONSTRAIN(@"V:|-(-1)-[outline(>=50)][settings]-(3)-|");
-}
-
-- (IBAction)toggleSyncWorkspaceWithPwd:(id)sender {
-  NSInteger oldState = _syncWorkspaceWithPwdMenuItem.state;
-  _syncWorkspaceWithPwdMenuItem.state = !oldState;
-
-  [self reload];
-}
-
-- (IBAction)toggleShowFoldersFirst:(id)sender {
-  NSInteger oldState = _showFoldersFirstMenuItem.state;
-  _showFoldersFirstMenuItem.state = !oldState;
-
-  [self reload];
-}
-
-- (IBAction)toggleShowHiddenFiles:(id)sender {
-  NSInteger oldState = _showHiddenMenuItem.state;
-  _showHiddenMenuItem.state = !oldState;
-
-  [self reload];
+  CONSTRAIN(@"V:|-(-1)-[outline(>=50)]-(-1)-|");
 }
 
 - (void)fileOutlineViewDoubleClicked:(id)sender {
@@ -298,14 +245,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   }
 }
 
-- (BOOL)showHiddenFiles {
-  return _showHiddenMenuItem.state == NSOnState;
-}
-
-- (BOOL)showFoldersFirst {
-  return _showFoldersFirstMenuItem.state == NSOnState;
-}
-
 - (void)cacheInvalidated:(NSNotification *)notification {
   [_invalidateCacheQueue addOperationWithBlock:^{
     // We wait here till all file item operations are finished, because, for instance, the children items of the root
@@ -319,19 +258,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
       }
     });
   }];
-}
-
-- (void)reload {
-  NSURL *selectedUrl = [[_fileOutlineView itemAtRow:_fileOutlineView.selectedRow] url];
-  CGRect visibleRect = _fileOutlineView.enclosingScrollView.contentView.visibleRect;
-
-  [self reCacheNodes];
-  [_fileOutlineView reloadData];
-  [self restoreExpandedStates];
-
-  [_fileOutlineView scrollRectToVisible:visibleRect];
-
-  [self selectNodeWithUrl:selectedUrl];
 }
 
 - (void)selectNodeWithUrl:(NSURL *)selectedUrl {

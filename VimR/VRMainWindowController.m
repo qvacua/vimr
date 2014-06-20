@@ -233,18 +233,6 @@ const int qMainWindowBorderThickness = 22;
   [self.window makeFirstResponder:_vimView.textView];
 }
 
-- (IBAction)toggleSyncWorkspaceWithPwd:(NSMenuItem *)sender {
-  [_workspaceView.fileBrowserView toggleSyncWorkspaceWithPwd:sender];
-}
-
-- (IBAction)toggleShowFoldersFirst:(NSMenuItem *)sender {
-  [_workspaceView.fileBrowserView toggleShowFoldersFirst:sender];
-}
-
-- (IBAction)toggleShowHiddenFiles:(NSMenuItem *)sender {
-  [_workspaceView.fileBrowserView toggleShowHiddenFiles:sender];
-}
-
 #pragma mark NSUserInterfaceValidations
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
   SEL action = anItem.action;
@@ -269,24 +257,7 @@ const int qMainWindowBorderThickness = 22;
     return _vimController.tabs.count >= 2;
   }
 
-  if (action == @selector(toggleStatusBar:)) {
-    return YES;
-  }
-
-  if (action == @selector(toggleShowFoldersFirst:)
-      || action == @selector(toggleShowHiddenFiles:)
-      || action == @selector(toggleSyncWorkspaceWithPwd:)) {
-
-    // TODO: there must be a better way to do this...
-    [self setStateOfFileBrowserFlagsForMenuItem:anItem];
-
-    return [self fileBrowserVisible];
-  }
-
   return NO;
-}
-
-- (IBAction)toggleStatusBar:(NSMenuItem *)sender {
 }
 
 #ifdef DEBUG
@@ -682,18 +653,31 @@ const int qMainWindowBorderThickness = 22;
 
   [_fileBrowserView setUp];
 
+  _workspaceView = [self newWorkspaceView];
   NSView *contentView = self.window.contentView;
-  _workspaceView = [[VRWorkspaceView alloc] initWithFrame:CGRectZero];
-  _workspaceView.translatesAutoresizingMaskIntoConstraints = NO;
-  _workspaceView.fileBrowserView = _fileBrowserView;
-  _workspaceView.vimView = _vimView;
   [contentView addSubview:_workspaceView];
 
   NSDictionary *views = @{
       @"workspace" : _workspaceView,
   };
+
   CONSTRAINT(@"H:|[workspace]|");
   CONSTRAINT(@"V:|[workspace]|");
+}
+
+- (VRWorkspaceView *)newWorkspaceView {
+  VRWorkspaceView *view = [[VRWorkspaceView alloc] initWithFrame:CGRectZero];
+
+  view.translatesAutoresizingMaskIntoConstraints = NO;
+  view.fileBrowserView = _fileBrowserView;
+  view.vimView = _vimView;
+  view.showStatusBar = [_userDefaults boolForKey:qDefaultShowStatusBar];
+  view.showFoldersFirst = [_userDefaults boolForKey:qDefaultShowFoldersFirst];
+  view.showHiddenFiles = [_userDefaults boolForKey:qDefaultShowHiddenInFileBrowser];
+  view.syncWorkspaceWithPwd = [_userDefaults boolForKey:qDefaultSyncWorkingDirectoryWithVimPwd];
+  [view setUp];
+
+  return view;
 }
 
 - (void)sendCommandToVim:(NSString *)command {
@@ -831,7 +815,7 @@ const int qMainWindowBorderThickness = 22;
   CGSize winContentSize = [self.window contentRectForFrameRect:winFrameRect].size;
 
   winContentSize.width = winContentSize.width - _workspaceView.sidebarAndDividerWidth;
-  winContentSize.height = winContentSize.height - (qMainWindowBorderThickness + 1);
+  winContentSize.height = winContentSize.height - (_workspaceView.showStatusBar ? (qMainWindowBorderThickness + 1) : 0);
 
   return winContentSize;
 }
@@ -842,7 +826,7 @@ const int qMainWindowBorderThickness = 22;
 - (CGSize)winContentSizeForVimViewSize:(CGSize)vimViewSize {
   return CGSizeMake(
       _workspaceView.sidebarAndDividerWidth + vimViewSize.width,
-      vimViewSize.height + (qMainWindowBorderThickness + 1)
+      vimViewSize.height + (_workspaceView.showStatusBar ? (qMainWindowBorderThickness + 1) : 0)
   );
 }
 
