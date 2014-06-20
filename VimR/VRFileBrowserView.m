@@ -77,7 +77,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 - (void)reload {
-  NSURL *selectedUrl = [[_fileOutlineView itemAtRow:_fileOutlineView.selectedRow] url];
+  NSURL *selectedUrl = [_fileOutlineView.selectedItem url];
   CGRect visibleRect = _fileOutlineView.enclosingScrollView.contentView.visibleRect;
 
   [self reCacheNodes];
@@ -134,17 +134,13 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(VRNode *)item {
   VRNode *currentNode = item ?: _rootNode;
 
-  if (!currentNode.children) {
-    [self buildChildNodesForNode:currentNode];
-  }
+  if (!currentNode.children) {[self buildChildNodesForNode:currentNode];}
 
   return currentNode.children.count;
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(VRNode *)item {
-  if (!item) {
-    return _rootNode.children[(NSUInteger) index];
-  }
+  if (!item) {return _rootNode.children[(NSUInteger) index];}
 
   return item.children[(NSUInteger) index];
 }
@@ -181,7 +177,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 #pragma mark NSView
-
 - (BOOL)mouseDownCanMoveWindow {
   // I dunno why, but if we don't override this, then the window title has the inactive appearance and the drag in the
   // VRWorkspaceView in combination with the vim view does not work correctly. Overriding -isOpaque does not suffice.
@@ -207,9 +202,9 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   _fileOutlineView.delegate = self;
   _fileOutlineView.movementsAndActionDelegate = self;
   _fileOutlineView.allowsMultipleSelection = NO;
-  [_fileOutlineView setDoubleAction:@selector(fileOutlineViewDoubleClicked:)];
+  _fileOutlineView.doubleAction = @selector(fileOutlineViewDoubleClicked:);
 
-  NSScrollView *scrollView = [[NSScrollView alloc] initWithFrame:NSZeroRect];
+  NSScrollView *scrollView = [[NSScrollView alloc] initWithFrame:CGRectZero];
   scrollView.translatesAutoresizingMaskIntoConstraints = NO;
   scrollView.hasVerticalScroller = YES;
   scrollView.hasHorizontalScroller = YES;
@@ -227,22 +222,23 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 - (void)fileOutlineViewDoubleClicked:(id)sender {
-  VRNode *item = [_fileOutlineView itemAtRow:_fileOutlineView.selectedRow];
-  if (!item) {return;}
+  VRNode *selectedItem = _fileOutlineView.selectedItem;
+  if (!selectedItem) {return;}
 
-  if (!item.dir) {
+  if (!selectedItem.dir) {
     VROpenMode mode = open_mode_from_event(
         [NSApp currentEvent],
         [_userDefaults stringForKey:qDefaultDefaultOpeningBehavior]
     );
-    [(VRMainWindowController *) self.window.windowController openFileWithUrls:item.url openMode:mode];
+
+    [(VRMainWindowController *) self.window.windowController openFileWithUrls:selectedItem.url openMode:mode];
     return;
   }
 
-  if ([_fileOutlineView isItemExpanded:item]) {
-    [_fileOutlineView collapseItem:item];
+  if ([_fileOutlineView isItemExpanded:selectedItem]) {
+    [_fileOutlineView collapseItem:selectedItem];
   } else {
-    [_fileOutlineView expandItem:item];
+    [_fileOutlineView expandItem:selectedItem];
   }
 }
 
@@ -262,9 +258,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 - (void)selectNodeWithUrl:(NSURL *)selectedUrl {
-  if (selectedUrl == nil) {
-    return;
-  }
+  if (selectedUrl == nil) {return;}
 
   for (NSUInteger i = 0; i < _fileOutlineView.numberOfRows; i++) {
     if ([[[_fileOutlineView itemAtRow:i] url] isEqualTo:selectedUrl]) {
@@ -333,9 +327,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 - (NSArray *)filterHiddenNodesIfNec:(NSArray *)nodes {
-  if (_workspaceView.showHiddenFiles) {
-    return nodes;
-  }
+  if (_workspaceView.showHiddenFiles) {return nodes;}
 
   NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:nodes.count];
   for (VRNode *item in nodes) {

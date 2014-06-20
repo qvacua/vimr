@@ -50,4 +50,11 @@ static const int qEscCharacter = '\033';
   }
 }
 
+- (id)selectedItem {
+  NSInteger selectedRow = self.selectedRow;
+  if (selectedRow < 0) { return nil; }
+
+  return [self itemAtRow:selectedRow];
+}
+
 @end

@@ -18,4 +18,6 @@
 
 @property id<VRMovementsAndActionsProtocol> movementsAndActionDelegate;
 
+- (id)selectedItem;
+
 @end
