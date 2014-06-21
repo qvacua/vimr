@@ -210,28 +210,6 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 #endif
 }
 
-- (void)setInitialUserDefaults {
-  if (![_userDefaults objectForKey:qDefaultShowStatusBar]) {
-    [_userDefaults setBool:YES forKey:qDefaultShowStatusBar];
-  }
-
-  if (![_userDefaults objectForKey:qDefaultShowFoldersFirst]) {
-    [_userDefaults setBool:YES forKey:qDefaultShowFoldersFirst];
-  }
-
-  if (![_userDefaults objectForKey:qDefaultShowHiddenInFileBrowser]) {
-    [_userDefaults setBool:NO forKey:qDefaultShowHiddenInFileBrowser];
-  }
-
-  if (![_userDefaults objectForKey:qDefaultSyncWorkingDirectoryWithVimPwd]) {
-    [_userDefaults setBool:YES forKey:qDefaultSyncWorkingDirectoryWithVimPwd];
-  }
-
-  if (![_userDefaults objectForKey:qDefaultDefaultOpeningBehavior]) {
-    [_userDefaults setObject:qOpenModeInNewTabValue forKey:qDefaultDefaultOpeningBehavior];
-  }
-}
-
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
   if (![_workspaceController hasDirtyBuffers]) {
     return NSTerminateNow;
@@ -263,7 +241,6 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 }
 
 #pragma mark Private
-
 - (NSArray *)urlsFromOpenPanel {
   NSOpenPanel *openPanel = [NSOpenPanel openPanel];
   openPanel.allowsMultipleSelection = YES;
@@ -291,6 +268,36 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
   NSUserNotification *userNotification = [[NSUserNotification alloc] init];
   userNotification.title = title;
   [_userNotificationCenter scheduleNotification:userNotification];
+}
+
+- (void)setInitialUserDefaults {
+  if (![_userDefaults objectForKey:qDefaultShowStatusBar]) {
+    [_userDefaults setBool:YES forKey:qDefaultShowStatusBar];
+  }
+
+  if (![_userDefaults objectForKey:qDefaultShowFoldersFirst]) {
+    [_userDefaults setBool:YES forKey:qDefaultShowFoldersFirst];
+  }
+
+  if (![_userDefaults objectForKey:qDefaultShowHiddenInFileBrowser]) {
+    [_userDefaults setBool:NO forKey:qDefaultShowHiddenInFileBrowser];
+  }
+
+  if (![_userDefaults objectForKey:qDefaultSyncWorkingDirectoryWithVimPwd]) {
+    [_userDefaults setBool:YES forKey:qDefaultSyncWorkingDirectoryWithVimPwd];
+  }
+
+  if (![_userDefaults objectForKey:qDefaultDefaultOpeningBehavior]) {
+    [_userDefaults setObject:qOpenModeInNewTabValue forKey:qDefaultDefaultOpeningBehavior];
+  }
+
+  if (![_userDefaults objectForKey:qDefaultShowSideBar]) {
+    [_userDefaults setBool:YES forKey:qDefaultShowSideBar];
+  }
+
+  if (![_userDefaults objectForKey:qDefaultShowSideBarOnRight]) {
+    [_userDefaults setBool:NO forKey:qDefaultShowSideBarOnRight];
+  }
 }
 
 @end

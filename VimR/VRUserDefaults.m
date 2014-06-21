@@ -15,6 +15,8 @@ NSString *const qDefaultSyncWorkingDirectoryWithVimPwd = @"sync-working-director
 NSString *const qDefaultShowFoldersFirst = @"show-folder-first";
 NSString *const qDefaultDefaultOpeningBehavior = @"default-opening-behavior";
 NSString *const qDefaultShowStatusBar = @"show-status-bar";
+NSString *const qDefaultShowSideBar = @"show-side-bar";
+NSString *const qDefaultShowSideBarOnRight = @"show-side-bar-on-right";
 
 NSString *const qOpenModeInNewTabValue = @"in-new-tab";
 NSString *const qOpenModeInCurrentTabValue = @"in-current-tab";

@@ -53,6 +53,9 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
 - (void)addViews {
   NSTextField *daTitle = [self newTextLabelWithString:@"Default Appearance:" alignment:NSRightTextAlignment];
   NSButton *showStatusBarButton = [self checkButtonWithTitle:@"Show status bar" defaultKey:qDefaultShowStatusBar];
+  NSButton *showSidebarButton = [self checkButtonWithTitle:@"Show sidebar" defaultKey:qDefaultShowSideBar];
+  NSButton *showSidebarOnRightButton = [self checkButtonWithTitle:@"Sidebar on right"
+                                                       defaultKey:qDefaultShowSideBarOnRight];
 
   NSTextField *fbbTitle = [self newTextLabelWithString:@"File Browser Behavior:" alignment:NSRightTextAlignment];
 
@@ -103,6 +106,8 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   NSDictionary *views = @{
       @"daTitle" : daTitle,
       @"showStatusBar" : showStatusBarButton,
+      @"showSidebar" : showSidebarButton,
+      @"showSidebarRight" : showSidebarOnRightButton,
 
       @"fbbTitle" : fbbTitle,
       @"showFoldersFirst" : showFoldersFirstButton,
@@ -134,6 +139,8 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   }
 
   CONSTRAIN(@"H:|-[daTitle]-[showStatusBar]-|");
+  CONSTRAIN(@"H:|-[daTitle]-[showSidebar]-|");
+  CONSTRAIN(@"H:|-[daTitle]-[showSidebarRight]-|");
 
   CONSTRAIN(@"H:|-[fbbTitle]-[showFoldersFirst]-|");
   CONSTRAIN(@"H:|-[fbbTitle]-[showHidden]-|");
@@ -150,7 +157,7 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   [self.contentView addConstraint:[self baseLineConstraintForView:fbbTitle toView:showFoldersFirstButton]];
   [self.contentView addConstraint:[self baseLineConstraintForView:domTitle toView:_defaultOpenModeButton]];
 
-  CONSTRAIN(@"V:|-[showStatusBar]-"
+  CONSTRAIN(@"V:|-[showStatusBar]-[showSidebar]-[showSidebarRight]-(24)-"
       "[showFoldersFirst]-[showHidden]-[syncWorkingDir]-[fbbDesc]-"
       "[domMenu]-[noModifierTitle][cmdTitle][optTitle][ctrlTitle]-|");
   CONSTRAIN(@"V:[domMenu]-[noModifierDesc][cmdDesc][optDesc][ctrlDesc]");

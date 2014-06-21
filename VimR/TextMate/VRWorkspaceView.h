@@ -40,6 +40,9 @@
 - (void)setUrlOfPathControl:(NSURL *)url;
 - (void)setUp;
 
+#pragma mark NSUserInterfaceValidations
+- (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
+
 #pragma mark NSView
 - (id)initWithFrame:(NSRect)aRect;
 - (void)updateConstraints;
@@ -52,5 +55,8 @@
 - (IBAction)toggleSyncWorkspaceWithPwd:(NSMenuItem *)sender;
 - (IBAction)toggleShowFoldersFirst:(NSMenuItem *)sender;
 - (IBAction)toggleShowHiddenFiles:(NSMenuItem *)sender;
+- (IBAction)hideSidebar:(id)sender;
+- (IBAction)toggleSidebarOnRight:(id)sender;
+- (IBAction)showFileBrowser:(id)sender;
 
 @end

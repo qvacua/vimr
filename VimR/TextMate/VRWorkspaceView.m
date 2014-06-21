@@ -12,6 +12,7 @@
 #import "VRTextMateUiUtils.h"
 #import "VRFileBrowserView.h"
 #import "VRMainWindowController.h"
+#import "VROutlineView.h"
 #import "VRUtils.h"
 
 
@@ -106,6 +107,32 @@ static const int qMinimumFileBrowserWidth = 100;
   self.needsUpdateConstraints = YES;
 }
 
+- (IBAction)hideSidebar:(id)sender {
+  self.fileBrowserView = nil;
+  [self.window makeFirstResponder:_vimView.textView];
+}
+
+- (IBAction)toggleSidebarOnRight:(id)sender {
+  self.fileBrowserOnRight = !_fileBrowserOnRight;
+  [self.mainWindowController forceRedrawVimView]; // Vim does not refresh the part in which the file browser was
+}
+
+- (IBAction)showFileBrowser:(id)sender {
+  if (_fileBrowserView) {
+    [self.window makeFirstResponder:_fileBrowserView.fileOutlineView];
+    return;
+  }
+
+  CGRect frame = self.window.frame;
+  if (frame.size.width <= _vimView.minSize.width) {
+    frame.size.width += self.defaultFileBrowserAndDividerWidth;
+    [self.window setFrame:frame display:YES];
+  }
+  self.fileBrowserView = _fileBrowserView;
+
+  // We do not make the file browser the first responder, when the file browser was hidden and now gets shown
+}
+
 #pragma mark Public
 - (void)setUrlOfPathControl:(NSURL *)url {
   _pathView.URL = url;
@@ -150,6 +177,12 @@ static const int qMinimumFileBrowserWidth = 100;
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
   SEL action = anItem.action;
 
+  if (action == @selector(showFileBrowser:)) {return YES;}
+
+  if (action == @selector(hideSidebar:)) {
+    return _fileBrowserView != nil;
+  }
+
   if (action == @selector(toggleStatusBar:)) {
     if (_showStatusBar) {
       [(NSMenuItem *) anItem setTitle:@"Hide Status Bar"];
@@ -158,6 +191,16 @@ static const int qMinimumFileBrowserWidth = 100;
     }
 
     return YES;
+  }
+
+  if (action == @selector(toggleSidebarOnRight:)) {
+    if (_fileBrowserOnRight) {
+      [(NSMenuItem *)anItem setTitle:@"Put Sidebar on Left"];
+    } else {
+      [(NSMenuItem *)anItem setTitle:@"Put Sidebar on Right"];
+    }
+
+    return _fileBrowserView != nil;
   }
 
   if (action == @selector(toggleShowFoldersFirst:)

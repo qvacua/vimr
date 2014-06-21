@@ -36,6 +36,7 @@ extern const int qMainWindowBorderThickness;
 - (void)cleanUpAndClose;
 - (void)openFileWithUrls:(NSURL *)urls openMode:(VROpenMode)openMode;
 - (void)openFilesWithUrls:(NSArray *)url;
+- (void)forceRedrawVimView;
 
 #pragma mark IBActions
 - (IBAction)newTab:(id)sender;
@@ -47,8 +48,6 @@ extern const int qMainWindowBorderThickness;
 - (IBAction)selectPreviousTab:(id)sender;
 - (IBAction)zoom:(id)sender;
 - (IBAction)openQuickly:(id)sender;
-- (IBAction)showFileBrowser:(id)sender;
-- (IBAction)hideSidebar:(id)sender;
 
 #pragma mark NSUserInterfaceValidations
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;

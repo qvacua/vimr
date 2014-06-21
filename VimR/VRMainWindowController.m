@@ -22,7 +22,6 @@
 #import "VRWorkspaceView.h"
 #import "VRFileBrowserView.h"
 #import "NSArray+VR.h"
-#import "VROutlineView.h"
 
 
 const int qMainWindowBorderThickness = 22;
@@ -97,7 +96,7 @@ const int qMainWindowBorderThickness = 22;
 }
 
 - (void)openFilesWithUrls:(NSArray *)urls {
-  if (urls.isEmpty) { return; }
+  if (urls.isEmpty) {return;}
 
   NSArray *urlsAlreadyOpen = [self alreadyOpenedUrlsFromUrls:urls];
   NSMutableArray *urlsToOpen = [[NSMutableArray alloc] initWithArray:urls];
@@ -110,6 +109,10 @@ const int qMainWindowBorderThickness = 22;
   }
 
   [self.window makeFirstResponder:_vimView.textView];
+}
+
+- (void)forceRedrawVimView {
+  [self sendCommandToVim:@":redraw!"];
 }
 
 #pragma mark IBActions
@@ -207,28 +210,6 @@ const int qMainWindowBorderThickness = 22;
   }
 }
 
-- (IBAction)showFileBrowser:(id)sender {
-  if (_workspaceView.fileBrowserView) {
-    [self.window makeFirstResponder:_fileBrowserView.fileOutlineView];
-
-    return;
-  }
-
-  CGRect frame = self.window.frame;
-  if (frame.size.width <= _vimView.minSize.width) {
-    frame.size.width += _workspaceView.defaultFileBrowserAndDividerWidth;
-    [self.window setFrame:frame display:YES];
-  }
-  _workspaceView.fileBrowserView = _fileBrowserView;
-
-  // We do not make the file browser the first responder, when the file browser was hidden and now gets shown
-}
-
-- (IBAction)hideSidebar:(id)sender {
-  _workspaceView.fileBrowserView = nil;
-  [self.window makeFirstResponder:_vimView.textView];
-}
-
 #pragma mark NSUserInterfaceValidations
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
   SEL action = anItem.action;
@@ -239,15 +220,10 @@ const int qMainWindowBorderThickness = 22;
   if (action == @selector(saveDocumentAs:)) {return YES;}
   if (action == @selector(revertDocumentToSaved:)) {return YES;}
   if (action == @selector(openQuickly:)) {return YES;}
-  if (action == @selector(showFileBrowser:)) {return YES;}
 
 #ifdef DEBUG
   if (action == @selector(debug1Action:)) {return YES;}
 #endif
-
-  if (action == @selector(hideSidebar:)) {
-    return [self fileBrowserVisible];
-  }
 
   if (action == @selector(selectNextTab:) || action == @selector(selectPreviousTab:)) {
     return _vimController.tabs.count >= 2;
@@ -643,7 +619,7 @@ const int qMainWindowBorderThickness = 22;
   _vimView.tabBarControl.styleNamed = @"Metal";
 
   _workspaceView = [self newWorkspaceView];
-  
+
   _fileBrowserView = [[VRFileBrowserView alloc] initWithRootUrl:self.workingDirectory];
   _fileBrowserView.fileItemManager = _workspace.fileItemManager;
   _fileBrowserView.userDefaults = _workspace.userDefaults;
@@ -673,6 +649,8 @@ const int qMainWindowBorderThickness = 22;
   view.showFoldersFirst = [_userDefaults boolForKey:qDefaultShowFoldersFirst];
   view.showHiddenFiles = [_userDefaults boolForKey:qDefaultShowHiddenInFileBrowser];
   view.syncWorkspaceWithPwd = [_userDefaults boolForKey:qDefaultSyncWorkingDirectoryWithVimPwd];
+  view.fileBrowserOnRight = [_userDefaults boolForKey:qDefaultShowSideBarOnRight];
+
   [view setUp];
 
   return view;
