@@ -11,6 +11,7 @@
 #import "VRFileItemManager.h"
 #import "VRFileBrowserView.h"
 #import "VRUserDefaults.h"
+#import "VRWorkspaceView.h"
 
 
 @interface VRFileBrowserViewTest : VRBaseTestCase
@@ -20,6 +21,7 @@
   NSURL *level1;
   VRFileItemManager *fileItemManager;
   NSUserDefaults *userDefaults;
+  VRWorkspaceView *workspaceView;
 
   VRFileBrowserView *fileBrowserView;
 }
@@ -39,10 +41,13 @@
   userDefaults = mock([NSUserDefaults class]);
   [given([userDefaults boolForKey:qDefaultShowHiddenInFileBrowser]) willReturnBool:NO];
 
+  workspaceView = mock([VRWorkspaceView class]);
+
   fileBrowserView = [[VRFileBrowserView alloc] initWithRootUrl:level1];
   fileBrowserView.userDefaults = userDefaults;
   fileBrowserView.fileItemManager = fileItemManager;
   fileBrowserView.rootUrl = level1;
+  fileBrowserView.workspaceView = workspaceView;
 
   [fileBrowserView setUp];
 }
@@ -68,7 +73,7 @@
 }
 
 - (void)testOutlineViewDataSourceMethodsWithHiddenItems {
-  [fileBrowserView toggleShowHiddenFiles:self];
+  [given([workspaceView showHiddenFiles]) willReturnBool:YES];
 
   for (NSUInteger i = 0; i < 6; i++) {
     id child = [fileBrowserView outlineView:nil child:i ofItem:nil];
