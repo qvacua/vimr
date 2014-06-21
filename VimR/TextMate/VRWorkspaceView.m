@@ -294,8 +294,7 @@ static const int qMinimumFileBrowserWidth = 100;
   NSEvent *mouseDownEvent = anEvent;
   CGRect initialFrame = view.frame;
 
-  VRMainWindowController *windowController = (VRMainWindowController *) self.window.windowController;
-  [windowController.vimView viewWillStartLiveResize];
+  [self.mainWindowController.vimView viewWillStartLiveResize];
 
   BOOL didDrag = NO;
   while (anEvent.type != NSLeftMouseUp) {
@@ -325,7 +324,7 @@ static const int qMinimumFileBrowserWidth = 100;
     didDrag = YES;
   }
 
-  [windowController.vimView viewDidEndLiveResize];
+  [self.mainWindowController.vimView viewDidEndLiveResize];
 
   if (!didDrag) {
     NSView *hitView = [super hitTest:[self.superview convertPoint:mouseDownEvent.locationInWindow fromView:nil]];
@@ -432,11 +431,15 @@ static const int qMinimumFileBrowserWidth = 100;
 }
 
 - (void)addMenuItemToSettingsButtonWithTitle:(NSString *)title action:(SEL)action flag:(BOOL)flag {
-  NSMenuItem *showFoldersFirstMenu = [[NSMenuItem alloc] initWithTitle:title action:action keyEquivalent:@""];
-  showFoldersFirstMenu.target = self;
-  showFoldersFirstMenu.state = flag ? NSOnState : NSOffState;
+  NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:title action:action keyEquivalent:@""];
+  menuItem.target = self;
+  menuItem.state = flag ? NSOnState : NSOffState;
 
-  [_settingsButton.menu addItem:showFoldersFirstMenu];
+  [_settingsButton.menu addItem:menuItem];
+}
+
+- (VRMainWindowController *)mainWindowController {
+  return (VRMainWindowController *) self.window.windowController;
 }
 
 @end
