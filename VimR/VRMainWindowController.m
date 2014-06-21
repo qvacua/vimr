@@ -192,8 +192,6 @@ const int qMainWindowBorderThickness = 22;
     }
   }
 
-  DDLogWarn(@"###### telling vim to zoom with %@ X %@", @(rows), @(cols));
-
   // NOTE: Instead of resizing the window immediately we send a zoom message
   // to the backend so that it gets a chance to resize before the window
   // does.  This avoids problems with the window flickering when zooming.
