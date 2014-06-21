@@ -91,6 +91,14 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
   // noop
 }
 
+- (IBAction)toggleSidebarOnRight:(id)sender {
+  // noop
+}
+
+- (IBAction)toggleStatusBar:(id)sender {
+  // noop
+}
+
 #ifdef DEBUG
 - (IBAction)debug3Action:(id)sender {
   [self application:_application openFiles:@[
@@ -126,6 +134,26 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
   if (action == @selector(toggleSyncWorkspaceWithPwd:)) {
     [(NSMenuItem *) anItem setState:[_userDefaults boolForKey:qDefaultSyncWorkingDirectoryWithVimPwd]];
+    return NO;
+  }
+
+  if (action == @selector(toggleSidebarOnRight:)) {
+    if ([_userDefaults boolForKey:qDefaultShowSideBarOnRight]) {
+      [(NSMenuItem *)anItem setTitle:@"Put Sidebar on Left"];
+    } else {
+      [(NSMenuItem *)anItem setTitle:@"Put Sidebar on Right"];
+    }
+
+    return NO;
+  }
+
+  if (action == @selector(toggleStatusBar:)) {
+    if ([_userDefaults boolForKey:qDefaultShowStatusBar]) {
+      [(NSMenuItem *) anItem setTitle:@"Hide Status Bar"];
+    } else {
+      [(NSMenuItem *) anItem setTitle:@"Show Status Bar"];
+    }
+
     return NO;
   }
 

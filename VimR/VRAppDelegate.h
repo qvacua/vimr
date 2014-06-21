@@ -40,9 +40,12 @@
 - (IBAction)openDocumentInTab:(id)sender;
 - (IBAction)showHelp:(id)sender;
 - (IBAction)showPrefWindow:(id)sender;
+
 - (IBAction)toggleShowFoldersFirst:(id)sender;
 - (IBAction)toggleShowHiddenFiles:(id)sender;
 - (IBAction)toggleSyncWorkspaceWithPwd:(id)sender;
+- (IBAction)toggleSidebarOnRight:(id)sender;
+- (IBAction)toggleStatusBar:(id)sender;
 
 #pragma mark NSObject
 - (id)init;
