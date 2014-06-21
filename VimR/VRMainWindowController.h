@@ -50,6 +50,9 @@ extern const int qMainWindowBorderThickness;
 - (IBAction)showFileBrowser:(id)sender;
 - (IBAction)hideSidebar:(id)sender;
 
+#pragma mark NSUserInterfaceValidations
+- (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
+
 #pragma mark NSObject
 - (void)dealloc;
 
