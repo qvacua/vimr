@@ -42,7 +42,6 @@ const int qMainWindowBorderThickness = 22;
   BOOL _windowOriginShouldMoveToKeepOnScreen;
 
   VRWorkspaceView *_workspaceView;
-  VRFileBrowserView *_fileBrowserView;
 }
 
 #pragma mark Public
@@ -54,7 +53,7 @@ const int qMainWindowBorderThickness = 22;
 }
 
 - (void)updateWorkingDirectory {
-  _fileBrowserView.rootUrl = _workspace.workingDirectory;
+  _workspaceView.fileBrowserView.rootUrl = _workspace.workingDirectory;
 }
 
 - (void)cleanUpAndClose {
@@ -113,6 +112,10 @@ const int qMainWindowBorderThickness = 22;
 
 - (void)forceRedrawVimView {
   [self sendCommandToVim:@":redraw!"];
+}
+
+- (NSURL *)workingDirectory {
+  return _workspace.workingDirectory;
 }
 
 #pragma mark IBActions
@@ -611,26 +614,14 @@ const int qMainWindowBorderThickness = 22;
 }
 
 #pragma mark Private
-- (NSURL *)workingDirectory {
-  return _workspace.workingDirectory;
-}
-
 - (void)addViews {
   _vimView.tabBarControl.styleNamed = @"Metal";
 
   _workspaceView = [self newWorkspaceView];
 
-  _fileBrowserView = [[VRFileBrowserView alloc] initWithRootUrl:self.workingDirectory];
-  _fileBrowserView.fileItemManager = _workspace.fileItemManager;
-  _fileBrowserView.userDefaults = _workspace.userDefaults;
-  _fileBrowserView.notificationCenter = _workspace.notificationCenter;
-  _fileBrowserView.workspaceView = _workspaceView;
-  [_fileBrowserView setUp];
-
-  _workspaceView.fileBrowserView = _fileBrowserView;
-
   NSView *contentView = self.window.contentView;
   [contentView addSubview:_workspaceView];
+  [_workspaceView setUp];
 
   NSDictionary *views = @{
       @"workspace" : _workspaceView,
@@ -650,8 +641,6 @@ const int qMainWindowBorderThickness = 22;
   view.showHiddenFiles = [_userDefaults boolForKey:qDefaultShowHiddenInFileBrowser];
   view.syncWorkspaceWithPwd = [_userDefaults boolForKey:qDefaultSyncWorkingDirectoryWithVimPwd];
   view.fileBrowserOnRight = [_userDefaults boolForKey:qDefaultShowSideBarOnRight];
-
-  [view setUp];
 
   return view;
 }

@@ -14,6 +14,7 @@
 #import "VRMainWindowController.h"
 #import "VROutlineView.h"
 #import "VRUtils.h"
+#import "VRWorkspace.h"
 
 
 #define SQ(x) ((x)*(x))
@@ -42,6 +43,8 @@ static const int qMinimumFileBrowserWidth = 100;
 
   NSPathControl *_pathView;
   NSPopUpButton *_settingsButton;
+  
+  VRFileBrowserView *_cachedFileBrowserView;
 }
 
 #pragma mark Properties
@@ -128,7 +131,7 @@ static const int qMinimumFileBrowserWidth = 100;
     frame.size.width += self.defaultFileBrowserAndDividerWidth;
     [self.window setFrame:frame display:YES];
   }
-  self.fileBrowserView = _fileBrowserView;
+  self.fileBrowserView = _cachedFileBrowserView;
 
   // We do not make the file browser the first responder, when the file browser was hidden and now gets shown
 }
@@ -171,6 +174,16 @@ static const int qMinimumFileBrowserWidth = 100;
                                       action:@selector(toggleShowHiddenFiles:) flag:_showHiddenFiles];
   [self addMenuItemToSettingsButtonWithTitle:@"Sync Working Directory with Vim's 'pwd'"
                                       action:@selector(toggleSyncWorkspaceWithPwd:) flag:_syncWorkspaceWithPwd];
+
+
+  _cachedFileBrowserView = [[VRFileBrowserView alloc] initWithRootUrl:self.mainWindowController.workingDirectory];
+  _cachedFileBrowserView.fileItemManager = self.mainWindowController.workspace.fileItemManager;
+  _cachedFileBrowserView.userDefaults = self.mainWindowController.workspace.userDefaults;
+  _cachedFileBrowserView.notificationCenter = self.mainWindowController.workspace.notificationCenter;
+  _cachedFileBrowserView.workspaceView = self;
+  [_cachedFileBrowserView setUp];
+
+  self.fileBrowserView = _cachedFileBrowserView;
 }
 
 #pragma mark NSUserInterfaceValidations

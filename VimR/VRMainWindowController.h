@@ -37,6 +37,7 @@ extern const int qMainWindowBorderThickness;
 - (void)openFileWithUrls:(NSURL *)urls openMode:(VROpenMode)openMode;
 - (void)openFilesWithUrls:(NSArray *)url;
 - (void)forceRedrawVimView;
+- (NSURL *)workingDirectory;
 
 #pragma mark IBActions
 - (IBAction)newTab:(id)sender;
