@@ -21,7 +21,7 @@
 #define CONSTRAINT(str, ...) [_myConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: str, ##__VA_ARGS__] options:0 metrics:nil views:views]]
 
 
-static const int qDefaultFileBrowserWidth = 175;
+static const int qDefaultFileBrowserWidth = 240;
 static const int qMinimumFileBrowserWidth = 100;
 
 
