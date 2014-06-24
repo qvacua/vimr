@@ -27,6 +27,8 @@
   NSRect imageFrame = [self imageFrameWithFrame:aRect inControlView:aView];
   NSRect textFrame = aRect;
   textFrame.origin.x = NSMaxX(imageFrame) + 4;
+  textFrame.origin.y += 1;
+  textFrame.size.height -= 2;
   textFrame.size.width = NSMaxX(aRect) - NSMinX(textFrame);
   return textFrame;
 }

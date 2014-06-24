@@ -159,6 +159,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 - (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(VRNode *)item {
   NSTextFieldCell *cell = [tableColumn dataCellForRow:[_fileOutlineView rowForItem:item]];
   cell.textColor = item.hidden ? [NSColor grayColor] : [NSColor textColor];
+  cell.font = [NSFont systemFontOfSize:11.0];
   cell.image = [_fileItemManager iconForUrl:item.url];
 
   return cell;
