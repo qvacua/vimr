@@ -130,6 +130,22 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   [self.window makeFirstResponder:[self.window.windowController vimView].textView];
 }
 
+- (void)actionOpenInNewTab:(id)sender event:(NSEvent *)event {
+  [self fileOutlineViewOpen:sender inMode:VROpenModeInNewTab];
+}
+
+- (void)actionOpenInCurrentTab:(id)sender event:(NSEvent *)event {
+  [self fileOutlineViewOpen:sender inMode:VROpenModeInCurrentTab];
+}
+
+- (void)actionOpenInVerticalSplit:(id)sender event:(NSEvent *)event {
+  [self fileOutlineViewOpen:sender inMode:VROpenModeInVerticalSplit];
+}
+
+- (void)actionOpenInHorizontalSplit:(id)sender event:(NSEvent *)event {
+  [self fileOutlineViewOpen:sender inMode:VROpenModeInHorizontalSplit];
+}
+
 #pragma mark NSOutlineViewDataSource
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(VRNode *)item {
   VRNode *currentNode = item ?: _rootNode;
@@ -224,24 +240,27 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 - (void)fileOutlineViewDoubleClicked:(id)sender {
-  VRNode *selectedItem = _fileOutlineView.selectedItem;
-  if (!selectedItem) {return;}
-
-  if (!selectedItem.dir) {
     VROpenMode mode = open_mode_from_event(
-        [NSApp currentEvent],
-        [_userDefaults stringForKey:qDefaultDefaultOpeningBehavior]
-    );
+                                           [NSApp currentEvent],
+                                           [_userDefaults stringForKey:qDefaultDefaultOpeningBehavior]
+                                          );
+    [self fileOutlineViewOpen:sender inMode:mode];
+}
 
-    [(VRMainWindowController *) self.window.windowController openFileWithUrls:selectedItem.url openMode:mode];
-    return;
-  }
+- (void)fileOutlineViewOpen:(id)sender inMode:(VROpenMode)mode {
+    VRNode *selectedItem = _fileOutlineView.selectedItem;
+    if (!selectedItem) {return;}
 
-  if ([_fileOutlineView isItemExpanded:selectedItem]) {
-    [_fileOutlineView collapseItem:selectedItem];
-  } else {
-    [_fileOutlineView expandItem:selectedItem];
-  }
+    if (!selectedItem.dir) {
+        [(VRMainWindowController *) self.window.windowController openFileWithUrls:selectedItem.url openMode:mode];
+        return;
+    }
+
+    if ([_fileOutlineView isItemExpanded:selectedItem]) {
+        [_fileOutlineView collapseItem:selectedItem];
+    } else {
+        [_fileOutlineView expandItem:selectedItem];
+    }
 }
 
 - (void)cacheInvalidated:(NSNotification *)notification {

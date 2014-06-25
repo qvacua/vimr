@@ -23,4 +23,10 @@
 
 - (void)actionEscape:(id)sender event:(NSEvent *)event;
 
+- (void)actionOpen:(id)sender event:(NSEvent *)event;
+- (void)actionOpenInNewTab:(id)sender event:(NSEvent *)event;
+- (void)actionOpenInCurrentTab:(id)sender event:(NSEvent *)event;
+- (void)actionOpenInVerticalSplit:(id)sender event:(NSEvent *)event;
+- (void)actionOpenInHorizontalSplit:(id)sender event:(NSEvent *)event;
+
 @end

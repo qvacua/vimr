@@ -39,6 +39,18 @@ static const int qEscCharacter = '\033';
     case ' ':
       [_movementsAndActionDelegate actionSpace:self event:theEvent];
       return;
+    case 'o':
+      [_movementsAndActionDelegate actionOpenInNewTab:self event:theEvent];
+      return;
+    case 'O':
+      [_movementsAndActionDelegate actionOpenInCurrentTab:self event:theEvent];
+      return;
+    case 's':
+      [_movementsAndActionDelegate actionOpenInVerticalSplit:self event:theEvent];
+      return;
+    case 'i':
+      [_movementsAndActionDelegate actionOpenInHorizontalSplit:self event:theEvent];
+      return;
     case NSCarriageReturnCharacter:
       [_movementsAndActionDelegate actionCarriageReturn:self event:theEvent];
       return;
