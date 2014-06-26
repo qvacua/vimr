@@ -1,11 +1,11 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import "VRFileItemOperation.h"
 #import "VRUtils.h"
@@ -129,16 +129,17 @@ static const int qArrayChunkSize = 1000;
 
       CANCEL_OR_WAIT()
       NSMutableArray *fileItemsToAdd = [[NSMutableArray alloc] initWithCapacity:childrenOfCurrentItem.count];
-      BOOL enumerationComplete = [self chunkEnumerateArray:childrenOfCurrentItem usingBlockOnChunks:^(size_t beginIndex, size_t endIndex) {
-        for (size_t i = beginIndex; i <= endIndex; i++) {
-          VRFileItem *item = childrenOfCurrentItem[i];
-          if (item.dir) {
-            [stack push:item];
-          } else {
-            [fileItemsToAdd addObject:item];
-          }
-        }
-      }];
+      BOOL enumerationComplete =
+          [self chunkEnumerateArray:childrenOfCurrentItem usingBlockOnChunks:^(size_t beginIndex, size_t endIndex) {
+            for (size_t i = beginIndex; i <= endIndex; i++) {
+              VRFileItem *item = childrenOfCurrentItem[i];
+              if (item.dir) {
+                [stack push:item];
+              } else {
+                [fileItemsToAdd addObject:item];
+              }
+            }
+          }];
 
       if (!enumerationComplete) {
         return;
