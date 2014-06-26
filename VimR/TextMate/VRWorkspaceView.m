@@ -177,10 +177,13 @@ static const int qMinimumFileBrowserWidth = 100;
 
 
   _cachedFileBrowserView = [[VRFileBrowserView alloc] initWithRootUrl:self.mainWindowController.workingDirectory];
-  _cachedFileBrowserView.fileItemManager = self.mainWindowController.workspace.fileItemManager;
-  _cachedFileBrowserView.userDefaults = self.mainWindowController.workspace.userDefaults;
-  _cachedFileBrowserView.notificationCenter = self.mainWindowController.workspace.notificationCenter;
+
+  VRWorkspace *workspace = self.mainWindowController.workspace;
+  _cachedFileBrowserView.fileItemManager = workspace.fileItemManager;
+  _cachedFileBrowserView.userDefaults = workspace.userDefaults;
+  _cachedFileBrowserView.notificationCenter = workspace.notificationCenter;
   _cachedFileBrowserView.workspaceView = self;
+
   [_cachedFileBrowserView setUp];
 
   self.fileBrowserView = _cachedFileBrowserView;

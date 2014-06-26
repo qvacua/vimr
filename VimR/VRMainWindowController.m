@@ -633,14 +633,15 @@ const int qMainWindowBorderThickness = 22;
 
 - (VRWorkspaceView *)newWorkspaceView {
   VRWorkspaceView *view = [[VRWorkspaceView alloc] initWithFrame:CGRectZero];
-
   view.translatesAutoresizingMaskIntoConstraints = NO;
+
   view.vimView = _vimView;
-  view.showStatusBar = [_userDefaults boolForKey:qDefaultShowStatusBar];
-  view.showFoldersFirst = [_userDefaults boolForKey:qDefaultShowFoldersFirst];
-  view.showHiddenFiles = [_userDefaults boolForKey:qDefaultShowHiddenInFileBrowser];
-  view.syncWorkspaceWithPwd = [_userDefaults boolForKey:qDefaultSyncWorkingDirectoryWithVimPwd];
-  view.fileBrowserOnRight = [_userDefaults boolForKey:qDefaultShowSideBarOnRight];
+
+  view.showStatusBar = [_workspace.userDefaults boolForKey:qDefaultShowStatusBar];
+  view.showFoldersFirst = [_workspace.userDefaults boolForKey:qDefaultShowFoldersFirst];
+  view.showHiddenFiles = [_workspace.userDefaults boolForKey:qDefaultShowHiddenInFileBrowser];
+  view.syncWorkspaceWithPwd = [_workspace.userDefaults boolForKey:qDefaultSyncWorkingDirectoryWithVimPwd];
+  view.fileBrowserOnRight = [_workspace.userDefaults boolForKey:qDefaultShowSideBarOnRight];
 
   return view;
 }

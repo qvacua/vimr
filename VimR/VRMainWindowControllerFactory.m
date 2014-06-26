@@ -23,7 +23,6 @@
 
   VRMainWindowController *mainWinController = [[VRMainWindowController alloc] initWithContentRect:contentRect];
   mainWinController.workspace = workspace;
-  mainWinController.userDefaults = _userDefaults;
 
   mainWinController.vimController = vimController;
   mainWinController.vimView = vimController.vimView;
