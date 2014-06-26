@@ -35,4 +35,7 @@ typedef enum {
 - (void)resume;
 - (id)initWithMode:(VRFileItemOperationMode)mode dict:(NSDictionary *)dict;
 
+#pragma mark NSObject
++ (void)initialize;
+
 @end

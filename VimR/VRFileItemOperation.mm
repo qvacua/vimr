@@ -25,6 +25,7 @@ NSString *const qFileItemOperationPauseConditionKey = @"condition";
 
 
 static const int qArrayChunkSize = 1000;
+static NSArray *qKeysToCache;
 
 
 #define CANCEL_OR_WAIT(rv) if ([self isCancelled]) { \
@@ -101,7 +102,16 @@ static const int qArrayChunkSize = 1000;
   }
 }
 
-#pragma mark Experimental
+#pragma mark NSObject
++ (void)initialize {
+  [super initialize];
+
+  if (!qKeysToCache) {
+    qKeysToCache = @[NSURLIsDirectoryKey, NSURLIsHiddenKey, NSURLIsAliasFileKey, NSURLIsSymbolicLinkKey,];
+  }
+}
+
+#pragma mark Private
 - (void)traverse {
   // pre-order traversal
 
@@ -154,7 +164,6 @@ static const int qArrayChunkSize = 1000;
   }
 }
 
-#pragma mark Private
 - (void)cacheDirectDescendants:(__weak VRFileItem *)item {
   @synchronized (item) {
     item.isCachingChildren = YES;
@@ -163,8 +172,7 @@ static const int qArrayChunkSize = 1000;
       DDLogError(@"url of %@ is nil", item);
     }
 
-    NSArray *childUrls = [_fileManager contentsOfDirectoryAtURL:item.url
-                                     includingPropertiesForKeys:@[NSURLIsDirectoryKey, NSURLIsHiddenKey,]
+    NSArray *childUrls = [_fileManager contentsOfDirectoryAtURL:item.url includingPropertiesForKeys:qKeysToCache
                                                         options:NSDirectoryEnumerationSkipsPackageDescendants
                                                           error:NULL];
 
