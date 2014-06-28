@@ -139,7 +139,7 @@ static NSArray *qKeysToCache;
 
       CANCEL_OR_WAIT()
       NSMutableArray *fileItemsToAdd = [[NSMutableArray alloc] initWithCapacity:childrenOfCurrentItem.count];
-      BOOL enumerationComplete =
+      BOOL operationCancelled =
           [self chunkEnumerateArray:childrenOfCurrentItem usingBlockOnChunks:^(size_t beginIndex, size_t endIndex) {
             for (size_t i = beginIndex; i <= endIndex; i++) {
               VRFileItem *item = childrenOfCurrentItem[i];
@@ -151,7 +151,7 @@ static NSArray *qKeysToCache;
             }
           }];
 
-      if (!enumerationComplete) {
+      if (!operationCancelled) {
         return;
       }
 
@@ -189,7 +189,7 @@ static NSArray *qKeysToCache;
   }
 }
 
-- (BOOL)addAllToUrlsForTargetUrl:(NSArray *)items {
+- (BOOL)addAllToUrlsForTargetUrl:(__weak NSArray *)items {
   __block BOOL added = NO;
 
   BOOL enumerationComplete = [self chunkEnumerateArray:items usingBlockOnChunks:^(size_t beginIndex, size_t endIndex) {
@@ -221,7 +221,7 @@ static NSArray *qKeysToCache;
 * shouldStopBeforeChunk() is called before each chunk execution and if it returns YES, we stop and return NO, ie
 * the enumeration was not complete, but was cancelled.
 */
-- (BOOL)chunkEnumerateArray:(NSArray *)array
+- (BOOL)chunkEnumerateArray:(__weak NSArray *)array
          usingBlockOnChunks:(void (^)(size_t beginIndex, size_t endIndex))blockOnChunks {
 
   std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(array.count, qArrayChunkSize);
