@@ -15,8 +15,6 @@
 
 @implementation VRMainWindowControllerFactory
 
-@autowire(userDefaults)
-
 - (VRMainWindowController *)newMainWindowControllerWithContentRect:(CGRect)contentRect
                                                          workspace:(VRWorkspace *)workspace
                                                      vimController:(MMVimController *)vimController {

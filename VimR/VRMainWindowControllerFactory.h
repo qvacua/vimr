@@ -18,8 +18,6 @@
 
 @interface VRMainWindowControllerFactory : NSObject <TBBean>
 
-@property (nonatomic, weak) NSUserDefaults *userDefaults;
-
 - (VRMainWindowController *)newMainWindowControllerWithContentRect:(CGRect)contentRect
                                                          workspace:(VRWorkspace *)workspace
                                                      vimController:(MMVimController *)vimController;
