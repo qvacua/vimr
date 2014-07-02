@@ -43,7 +43,7 @@ static const int qMinimumFileBrowserWidth = 100;
 
   NSPathControl *_pathView;
   NSPopUpButton *_settingsButton;
-  
+
   VRFileBrowserView *_cachedFileBrowserView;
 }
 
@@ -186,7 +186,9 @@ static const int qMinimumFileBrowserWidth = 100;
 
   [_cachedFileBrowserView setUp];
 
-  self.fileBrowserView = _cachedFileBrowserView;
+  if ([self.mainWindowController.workspace.userDefaults boolForKey:qDefaultShowSideBar]) {
+    self.fileBrowserView = _cachedFileBrowserView;
+  }
 }
 
 #pragma mark NSUserInterfaceValidations
@@ -195,9 +197,7 @@ static const int qMinimumFileBrowserWidth = 100;
 
   if (action == @selector(showFileBrowser:)) {return YES;}
 
-  if (action == @selector(hideSidebar:)) {
-    return _fileBrowserView != nil;
-  }
+  if (action == @selector(hideSidebar:)) {return _fileBrowserView != nil;}
 
   if (action == @selector(toggleStatusBar:)) {
     if (_showStatusBar) {
@@ -211,9 +211,9 @@ static const int qMinimumFileBrowserWidth = 100;
 
   if (action == @selector(toggleSidebarOnRight:)) {
     if (_fileBrowserOnRight) {
-      [(NSMenuItem *)anItem setTitle:@"Put Sidebar on Left"];
+      [(NSMenuItem *) anItem setTitle:@"Put Sidebar on Left"];
     } else {
-      [(NSMenuItem *)anItem setTitle:@"Put Sidebar on Right"];
+      [(NSMenuItem *) anItem setTitle:@"Put Sidebar on Right"];
     }
 
     return _fileBrowserView != nil;
