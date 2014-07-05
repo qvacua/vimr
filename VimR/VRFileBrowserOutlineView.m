@@ -7,13 +7,13 @@
  * See LICENSE
  */
 
-#import "VROutlineView.h"
+#import "VRFileBrowserOutlineView.h"
 
 
 static const int qEscCharacter = '\033';
 
 
-@implementation VROutlineView
+@implementation VRFileBrowserOutlineView
 
 - (void)keyDown:(NSEvent *)theEvent {
   NSString *characters = [theEvent charactersIgnoringModifiers];

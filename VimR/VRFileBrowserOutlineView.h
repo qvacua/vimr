@@ -14,7 +14,7 @@
 @protocol VRMovementsAndActionsProtocol;
 
 
-@interface VROutlineView : NSOutlineView
+@interface VRFileBrowserOutlineView : NSOutlineView
 
 @property id<VRMovementsAndActionsProtocol> movementsAndActionDelegate;
 

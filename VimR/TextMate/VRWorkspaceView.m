@@ -12,7 +12,7 @@
 #import "VRTextMateUiUtils.h"
 #import "VRFileBrowserView.h"
 #import "VRMainWindowController.h"
-#import "VROutlineView.h"
+#import "VRFileBrowserOutlineView.h"
 #import "VRUtils.h"
 #import "VRWorkspace.h"
 

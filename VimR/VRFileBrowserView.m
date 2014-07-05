@@ -15,7 +15,7 @@
 #import "VRDefaultLogSetting.h"
 #import "OakImageAndTextCell.h"
 #import "NSArray+VR.h"
-#import "VROutlineView.h"
+#import "VRFileBrowserOutlineView.h"
 #import "NSTableView+VR.h"
 #import "VRWorkspaceView.h"
 
@@ -207,7 +207,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   [tableColumn.dataCell setAllowsEditingTextAttributes:YES];
   [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingTail];
 
-  _fileOutlineView = [[VROutlineView alloc] initWithFrame:CGRectZero];
+  _fileOutlineView = [[VRFileBrowserOutlineView alloc] initWithFrame:CGRectZero];
   [_fileOutlineView addTableColumn:tableColumn];
   _fileOutlineView.outlineTableColumn = tableColumn;
   [_fileOutlineView sizeLastColumnToFit];

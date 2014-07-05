@@ -13,7 +13,7 @@
 
 @class VRFileItem;
 @class VRFileItemManager;
-@class VROutlineView;
+@class VRFileBrowserOutlineView;
 @class VRWorkspaceView;
 
 
@@ -43,7 +43,7 @@
 @property (nonatomic) NSURL *rootUrl;
 
 @property (weak) VRWorkspaceView *workspaceView;
-@property (readonly) VROutlineView *fileOutlineView;
+@property (readonly) VRFileBrowserOutlineView *fileOutlineView;
 
 #pragma mark Public
 - (instancetype)initWithRootUrl:(NSURL *)rootUrl;
