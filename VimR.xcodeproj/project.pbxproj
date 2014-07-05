@@ -204,7 +204,6 @@
 		1929B59CC278289ECAF44A97 /* VRWorkspace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRWorkspace.m; sourceTree = "<group>"; };
 		1929B5F1BACD13A56A7ADDD1 /* OakImageAndTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OakImageAndTextCell.h; sourceTree = "<group>"; };
 		1929B60202DAE063135DD32C /* VRLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRLog.h; sourceTree = "<group>"; };
-		1929B60CBECB1657AE2A1C84 /* VRMovementsAndActionsProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRMovementsAndActionsProtocol.h; sourceTree = "<group>"; };
 		1929B610BD09830F426CB915 /* VRUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRUserDefaults.h; sourceTree = "<group>"; };
 		1929B6422375B345DAA4E35A /* VRCppUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VRCppUtils.mm; sourceTree = "<group>"; };
 		1929B68FDCF00DC74509A5DB /* VRInactiveTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRInactiveTableView.h; sourceTree = "<group>"; };
@@ -560,7 +559,6 @@
 				1929B7792FE9330CD5D50BB8 /* VROperation.m */,
 				1929B4CA13AABCAE8AEEF746 /* VROperation.h */,
 				1929B0F6C64D35798EAF33F8 /* File Browser */,
-				1929B60CBECB1657AE2A1C84 /* VRMovementsAndActionsProtocol.h */,
 				1929B60AD749F5D8CF01FD38 /* Preferences */,
 			);
 			path = VimR;

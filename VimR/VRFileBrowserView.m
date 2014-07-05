@@ -16,7 +16,6 @@
 #import "OakImageAndTextCell.h"
 #import "NSArray+VR.h"
 #import "VRFileBrowserOutlineView.h"
-#import "NSTableView+VR.h"
 #import "VRWorkspaceView.h"
 
 
@@ -31,23 +30,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
         return NSOrderedDescending;
       }
     };
-
-
-@implementation VRNode
-
-- (NSString *)description {
-  NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
-  [description appendFormat:@"self.url=%@", self.url];
-  [description appendFormat:@", self.name=%@", self.name];
-  [description appendFormat:@", self.children=%@", self.children];
-  [description appendFormat:@", self.dir=%d", self.dir];
-  [description appendFormat:@", self.hidden=%d", self.hidden];
-  [description appendFormat:@", self.item=%@", self.item];
-  [description appendString:@">"];
-  return description;
-}
-
-@end
 
 
 @implementation VRFileBrowserView {
@@ -99,51 +81,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 #pragma mark NSObject
 - (void)dealloc {
   [_notificationCenter removeObserver:self];
-}
-
-#pragma mark VRMovementsAndActionsProtocol
-- (void)viMotionLeft:(id)sender event:(NSEvent *)event {
-  [self fileOutlineViewDoubleClicked:sender];
-}
-
-- (void)viMotionUp:(id)sender event:(NSEvent *)event {
-  [_fileOutlineView moveSelectionByDelta:-1];
-}
-
-- (void)viMotionDown:(id)sender event:(NSEvent *)event {
-  [_fileOutlineView moveSelectionByDelta:1];
-}
-
-- (void)viMotionRight:(id)sender event:(NSEvent *)event {
-  [self fileOutlineViewDoubleClicked:sender];
-}
-
-- (void)actionSpace:(id)sender event:(NSEvent *)event {
-  [self fileOutlineViewDoubleClicked:sender];
-}
-
-- (void)actionCarriageReturn:(id)sender event:(NSEvent *)event {
-  [self fileOutlineViewDoubleClicked:sender];
-}
-
-- (void)actionEscape:(id)sender event:(NSEvent *)event {
-  [self.window makeFirstResponder:[self.window.windowController vimView].textView];
-}
-
-- (void)actionOpenInNewTab:(id)sender event:(NSEvent *)event {
-  [self fileOutlineViewOpen:sender inMode:VROpenModeInNewTab];
-}
-
-- (void)actionOpenInCurrentTab:(id)sender event:(NSEvent *)event {
-  [self fileOutlineViewOpen:sender inMode:VROpenModeInCurrentTab];
-}
-
-- (void)actionOpenInVerticalSplit:(id)sender event:(NSEvent *)event {
-  [self fileOutlineViewOpen:sender inMode:VROpenModeInVerticalSplit];
-}
-
-- (void)actionOpenInHorizontalSplit:(id)sender event:(NSEvent *)event {
-  [self fileOutlineViewOpen:sender inMode:VROpenModeInHorizontalSplit];
 }
 
 #pragma mark NSOutlineViewDataSource
@@ -217,7 +154,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   _fileOutlineView.focusRingType = NSFocusRingTypeNone;
   _fileOutlineView.dataSource = self;
   _fileOutlineView.delegate = self;
-  _fileOutlineView.movementsAndActionDelegate = self;
   _fileOutlineView.allowsMultipleSelection = NO;
   _fileOutlineView.doubleAction = @selector(fileOutlineViewDoubleClicked:);
   _fileOutlineView.backgroundColor = [NSColor colorWithSRGBRed:0.925 green:0.925 blue:0.925 alpha:1.0];
@@ -244,23 +180,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
                                            [NSApp currentEvent],
                                            [_userDefaults stringForKey:qDefaultDefaultOpeningBehavior]
                                           );
-    [self fileOutlineViewOpen:sender inMode:mode];
-}
-
-- (void)fileOutlineViewOpen:(id)sender inMode:(VROpenMode)mode {
-    VRNode *selectedItem = _fileOutlineView.selectedItem;
-    if (!selectedItem) {return;}
-
-    if (!selectedItem.dir) {
-        [(VRMainWindowController *) self.window.windowController openFileWithUrls:selectedItem.url openMode:mode];
-        return;
-    }
-
-    if ([_fileOutlineView isItemExpanded:selectedItem]) {
-        [_fileOutlineView collapseItem:selectedItem];
-    } else {
-        [_fileOutlineView expandItem:selectedItem];
-    }
+    [_fileOutlineView openInMode:mode];
 }
 
 - (void)cacheInvalidated:(NSNotification *)notification {
