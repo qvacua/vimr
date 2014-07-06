@@ -56,7 +56,6 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
   NSDictionary *args = [self vimArgsFromFileUrls:fileUrls];
   NSURL *commonParentDir = common_parent_url(fileUrls);
 
-  // for time being, always open a new window. Later we could offer "Open in Tab..." or similar
   [self createNewVimControllerWithWorkingDir:commonParentDir args:args];
 }
 

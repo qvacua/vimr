@@ -1,4 +1,5 @@
 #import "VRUtils.h"
+#import "NSURL+VR.h"
 
 
 void dispatch_to_main_thread(dispatch_block_t block) {
@@ -17,6 +18,10 @@ NSURL *common_parent_url(NSArray *fileUrls) {
   NSURL *firstUrl = fileUrls[0];
 
   if (fileUrls.count == 1) {
+    if (firstUrl.isDirectory) {
+      return firstUrl;
+    }
+
     return firstUrl.URLByDeletingLastPathComponent;
   }
 
