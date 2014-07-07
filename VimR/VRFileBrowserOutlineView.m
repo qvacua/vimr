@@ -180,6 +180,7 @@ BOOL IsPrintableAscii(unichar key) {
 }
 
 - (BOOL)processKeyModeNormal:(unichar)key {
+  [self.actionDelegate updateStatusMessage:@""];
   switch (key) {
     case 'h':
       [self.actionDelegate actionOpenDefault];
