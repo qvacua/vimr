@@ -136,11 +136,11 @@ NSEvent *KeyDownEvent(unichar key) {
   [verify(actionDelegate) updateStatusMessage:@"/ab"];
 }
 
-- (void)testSearchShouldHandleBackspace {
+- (void)testSearchShouldHandleDelete {
   [fileOutlineView keyDown:KeyDownEvent('/')];
   [fileOutlineView keyDown:KeyDownEvent('a')];
   [fileOutlineView keyDown:KeyDownEvent('b')];
-  [fileOutlineView keyDown:KeyDownEvent(NSBackspaceCharacter)];
+  [fileOutlineView keyDown:KeyDownEvent(NSDeleteCharacter)];
   [verifyCount(actionDelegate, times(2)) updateStatusMessage:@"/a"];
 }
 
@@ -328,6 +328,18 @@ NSEvent *KeyDownEvent(unichar key) {
   [fileOutlineView keyDown:KeyDownEvent('/')];
   [fileOutlineView keyDown:KeyDownEvent(qEscCharacter)];
   [verifyCount(actionDelegate, never()) actionFocusVimView];
+}
+
+#pragma mark Line Editing Mode Tests
+
+- (void)testLineEditingCanHandleMultipleDeletes {
+  [fileOutlineView keyDown:KeyDownEvent('/')];
+  [fileOutlineView keyDown:KeyDownEvent('a')];
+  [verifyCount(actionDelegate, times(1)) updateStatusMessage:@"/a"];
+  [fileOutlineView keyDown:KeyDownEvent(NSDeleteCharacter)];
+  [fileOutlineView keyDown:KeyDownEvent(NSDeleteCharacter)];
+  [fileOutlineView keyDown:KeyDownEvent(NSDeleteCharacter)];
+  [verifyCount(actionDelegate, times(4)) updateStatusMessage:@"/"];
 }
 
 @end

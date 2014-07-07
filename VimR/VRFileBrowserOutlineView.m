@@ -116,7 +116,7 @@ static const int qEscCharacter = '\033';
   NSString *characters = [event charactersIgnoringModifiers];
   unichar key = 0;
   if (characters.length == 1) {
-     key = [characters characterAtIndex:0];
+    key = [characters characterAtIndex:0];
   }
   
   if (self.actionMode != VRFileBrowserActionModeNormal && key == qEscCharacter) {
@@ -130,8 +130,12 @@ static const int qEscCharacter = '\033';
       case NSCarriageReturnCharacter:
         [self endLineEditing];
         break;
-      case NSBackspaceCharacter:
-        _lineEditingString = [_lineEditingString substringToIndex:MAX(_lineEditingString.length-1, 0)];
+      case NSDeleteCharacter:
+        if (_lineEditingString.length > 0)
+          _lineEditingString = [_lineEditingString substringToIndex:_lineEditingString.length-1];
+        else {
+          _lineEditingString = @"";
+        }
         [self updateLineEditingStatusMessage];
         break;
       default:
