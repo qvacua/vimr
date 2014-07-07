@@ -16,6 +16,7 @@
 #import "OakImageAndTextCell.h"
 #import "NSArray+VR.h"
 #import "VRFileBrowserOutlineView.h"
+#import "NSTableView+VR.h"
 #import "VRWorkspaceView.h"
 
 
@@ -137,6 +138,76 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   return NO;
 }
 
+#pragma mark VRFileBrowserActionDelegate
+
+- (void)actionOpenDefault {
+  [self fileOutlineViewDoubleClicked:self];
+}
+
+- (void)actionOpenDefaultAlt {
+  [self fileOutlineViewDoubleClicked:self];
+}
+
+- (void)actionOpenInNewTab {
+  [self openInMode:VROpenModeInNewTab];
+}
+
+- (void)actionOpenInCurrentTab {
+  [self openInMode:VROpenModeInCurrentTab];
+}
+
+- (void)actionOpenInVerticalSplit {
+  [self openInMode:VROpenModeInVerticalSplit];
+}
+
+- (void)actionOpenInHorizontalSplit {
+  [self openInMode:VROpenModeInHorizontalSplit];
+}
+
+- (void)actionSearch:(NSString *)string {
+  [self updateStatusMessage:@"Not yet implemented"];
+}
+
+- (void)actionReverseSearch:(NSString *)string {
+  [self updateStatusMessage:@"Not yet implemented"];
+}
+
+- (void)actionMoveDown {
+  [_fileOutlineView moveSelectionByDelta:1];
+}
+
+- (void)actionMoveUp {
+  [_fileOutlineView moveSelectionByDelta:-1];
+}
+
+- (void)actionFocusVimView {
+  [self.window makeFirstResponder:[self.window.windowController vimView].textView];
+}
+
+- (void)actionAddPath:(NSString *)path {
+  [self updateStatusMessage:@"Not yet implemented"];
+}
+
+- (void)actionMoveToPath:(NSString *)path {
+  [self updateStatusMessage:@"Not yet implemented"];
+}
+
+- (void)actionDelete {
+  [self updateStatusMessage:@"Not yet implemented"];
+}
+
+- (void)actionCopyToPath:(NSString *)path {
+  [self updateStatusMessage:@"Not yet implemented"];
+}
+
+- (BOOL)actionCheckIfPathExists:(NSString *)path {
+  return YES;
+}
+
+- (void)updateStatusMessage:(NSString *)message {
+  [_workspaceView setStatusMessage:message];
+}
+
 #pragma mark Private
 - (void)addViews {
   NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:@"name"];
@@ -154,6 +225,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   _fileOutlineView.focusRingType = NSFocusRingTypeNone;
   _fileOutlineView.dataSource = self;
   _fileOutlineView.delegate = self;
+  _fileOutlineView.actionDelegate = self;
   _fileOutlineView.allowsMultipleSelection = NO;
   _fileOutlineView.doubleAction = @selector(fileOutlineViewDoubleClicked:);
   _fileOutlineView.backgroundColor = [NSColor colorWithSRGBRed:0.925 green:0.925 blue:0.925 alpha:1.0];
@@ -180,7 +252,23 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
                                            [NSApp currentEvent],
                                            [_userDefaults stringForKey:qDefaultDefaultOpeningBehavior]
                                           );
-    [_fileOutlineView openInMode:mode];
+    [self openInMode:mode];
+}
+
+- (void)openInMode:(VROpenMode)mode {
+  VRNode *selectedItem = [_fileOutlineView selectedItem];
+  if (!selectedItem) {return;}
+  
+  if (!selectedItem.dir) {
+    [(VRMainWindowController *) self.window.windowController openFileWithUrls:selectedItem.url openMode:mode];
+    return;
+  }
+  
+  if ([_fileOutlineView isItemExpanded:selectedItem]) {
+    [_fileOutlineView collapseItem:selectedItem];
+  } else {
+    [_fileOutlineView expandItem:selectedItem];
+  }
 }
 
 - (void)cacheInvalidated:(NSNotification *)notification {

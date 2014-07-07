@@ -25,9 +25,48 @@
 @end
 
 
+@protocol VRFileBrowserActionDelegate <NSObject>
+
+- (void)actionOpenDefault;
+- (void)actionOpenDefaultAlt;
+- (void)actionOpenInNewTab;
+- (void)actionOpenInCurrentTab;
+- (void)actionOpenInVerticalSplit;
+- (void)actionOpenInHorizontalSplit;
+- (void)actionSearch:(NSString *)string;
+- (void)actionReverseSearch:(NSString *)string;
+- (void)actionMoveDown;
+- (void)actionMoveUp;
+- (void)actionFocusVimView;
+- (void)actionAddPath:(NSString *)path;
+- (void)actionMoveToPath:(NSString *)path;
+- (void)actionDelete;
+- (void)actionCopyToPath:(NSString *)path;
+- (BOOL)actionCheckIfPathExists:(NSString *)path;
+
+- (void)updateStatusMessage:(NSString *)message;
+
+@end
+
+
+typedef enum {
+  VRFileBrowserActionModeNormal,
+  VRFileBrowserActionModeSearch,
+  VRFileBrowserActionModeMenu,
+  VRFileBrowserActionModeMenuAdd,
+  VRFileBrowserActionModeMenuMove,
+  VRFileBrowserActionModeMenuCopy,
+  VRFileBrowserActionModeMenuDelete,
+  VRFileBrowserActionModeConfirmation,
+} VRFileBrowserActionMode;
+
+
 @interface VRFileBrowserOutlineView : NSOutlineView
 
+@property (nonatomic) id<VRFileBrowserActionDelegate> actionDelegate;
+@property (nonatomic, readonly) VRFileBrowserActionMode actionMode;
+@property (nonatomic, readonly) VRFileBrowserActionMode actionSubMode;
+
 - (id)selectedItem;
-- (void)openInMode:(VROpenMode)mode;
 
 @end

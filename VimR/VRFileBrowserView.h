@@ -16,8 +16,10 @@
 @class VRNode;
 @class VRWorkspaceView;
 
+@protocol VRFileBrowserActionDelegate;
 
-@interface VRFileBrowserView : NSView <NSOutlineViewDataSource, NSOutlineViewDelegate>
+
+@interface VRFileBrowserView : NSView <NSOutlineViewDataSource, NSOutlineViewDelegate, VRFileBrowserActionDelegate>
 
 @property (nonatomic, weak) NSFileManager *fileManager;
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;

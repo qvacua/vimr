@@ -124,6 +124,7 @@
 		4BE9243F18C20DBC00E67BB6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4BE9243D18C20DBC00E67BB6 /* InfoPlist.strings */; };
 		664C3590B3B2428C94313696 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 876A31FD94744ACDB111D476 /* libPods.a */; };
 		E6B1AC2D372E4EA58650E10C /* libPods-VimRTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9EFC32D7A674D77BBF1D411 /* libPods-VimRTests.a */; };
+		F84FA63C196A809900F8E2B8 /* VRFileBrowserActionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = F84FA63B196A809900F8E2B8 /* VRFileBrowserActionTest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -291,6 +292,7 @@
 		7A3FC0B1787A4B05B5E0AE34 /* Pods-VimRTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VimRTests.xcconfig"; path = "Pods/Pods-VimRTests.xcconfig"; sourceTree = "<group>"; };
 		876A31FD94744ACDB111D476 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9EFC32D7A674D77BBF1D411 /* libPods-VimRTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-VimRTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F84FA63B196A809900F8E2B8 /* VRFileBrowserActionTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRFileBrowserActionTest.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -595,6 +597,7 @@
 				1929BD35EC3ED6C841D80313 /* VRCachedFileItemRecordTest.m */,
 				1929B1173319EA175A82BDBC /* VRFileBrowserViewTest.m */,
 				1929BEEB6FEA9272E4964826 /* VRUserDefaultsTest.m */,
+				F84FA63B196A809900F8E2B8 /* VRFileBrowserActionTest.m */,
 			);
 			path = VimRTests;
 			sourceTree = "<group>";
@@ -870,6 +873,7 @@
 				1929B1A41AF757BB09A862CD /* VRMainWindowControllerFactory.m in Sources */,
 				1929BD7307126A5A849ABB4E /* VRUserDefaultsTest.m in Sources */,
 				1929B66EC272E6AC1EBF917E /* VRFileBrowserOutlineView.m in Sources */,
+				F84FA63C196A809900F8E2B8 /* VRFileBrowserActionTest.m in Sources */,
 				1929B13CEDA6638B8F29DE69 /* VRFileBrowserView.m in Sources */,
 				1929B7023045E86540E77077 /* NSTableView+VR.m in Sources */,
 				1929B28BC315460CC2895A2E /* VRCrTextView.m in Sources */,

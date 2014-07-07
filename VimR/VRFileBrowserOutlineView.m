@@ -8,7 +8,6 @@
  */
 
 #import "VRFileBrowserOutlineView.h"
-#import "NSTableView+VR.h"
 #import "VRMainWindowController.h"
 
 static const int qEscCharacter = '\033';
@@ -31,52 +30,246 @@ static const int qEscCharacter = '\033';
 @end
 
 
-@implementation VRFileBrowserOutlineView
+@interface VRFileBrowserOutlineView ()
 
-- (void)keyDown:(NSEvent *)theEvent {
-  NSString *characters = [theEvent charactersIgnoringModifiers];
-  if (characters.length != 1) {
-    [super keyDown:theEvent];
+@property (readonly) BOOL lineEditing;
+@property (readonly) NSString *lineEditingPrompt;
+
+@end
+
+
+@implementation VRFileBrowserOutlineView {
+  NSString *_lineEditingString;
+}
+
+- (instancetype)initWithFrame:(NSRect)frameRect {
+  if ((self = [super initWithFrame:frameRect])) {
+    _lineEditingString = @"";
+  }
+  return self;
+}
+
+#pragma mark Line Editing
+
+- (BOOL)lineEditing {
+  switch (self.actionMode) {
+    case VRFileBrowserActionModeSearch:
+    case VRFileBrowserActionModeMenuAdd:
+    case VRFileBrowserActionModeMenuMove:
+    case VRFileBrowserActionModeMenuCopy:
+      return YES;
+    default:
+      return NO;
+  }
+}
+
+- (NSString *)lineEditingPrompt {
+  switch (self.actionMode) {
+    case VRFileBrowserActionModeSearch:
+      return @"/";
+    case VRFileBrowserActionModeMenuAdd:
+      return @"Add node: ";
+    case VRFileBrowserActionModeMenuMove:
+      return @"Move to: ";
+    case VRFileBrowserActionModeMenuCopy:
+      return @"Copy to: ";
+    default:
+      return @"";
+  }
+}
+
+- (void)updateLineEditingStatusMessage {
+  [self.actionDelegate updateStatusMessage:[NSString stringWithFormat:@"%@%@", self.lineEditingPrompt, _lineEditingString]];
+}
+
+- (void)endLineEditing {
+  VRFileBrowserActionMode _newMode = VRFileBrowserActionModeNormal;
+  
+  switch (_actionMode) {
+    case VRFileBrowserActionModeSearch:
+      [self.actionDelegate actionSearch:_lineEditingString];
+      break;
+    case VRFileBrowserActionModeMenuAdd:
+      [self.actionDelegate actionAddPath:_lineEditingString];
+      break;
+    case VRFileBrowserActionModeMenuMove:
+    case VRFileBrowserActionModeMenuCopy:
+      if ([self.actionDelegate actionCheckIfPathExists:_lineEditingString]) {
+        [self.actionDelegate updateStatusMessage:@"Overwrite existing file? (y)es (n)o"];
+        _newMode = VRFileBrowserActionModeConfirmation;
+      } else {
+        _actionMode == VRFileBrowserActionModeMenuMove ?
+        [self.actionDelegate actionMoveToPath:_lineEditingString] :
+        [self.actionDelegate actionCopyToPath:_lineEditingString];
+      }
+      break;
+    default:
+      break;
+  }
+  
+  _actionMode = _newMode;
+}
+
+#pragma mark NSResponder
+
+- (void)keyDown:(NSEvent *)event {
+  NSString *characters = [event charactersIgnoringModifiers];
+  unichar key = 0;
+  if (characters.length == 1) {
+     key = [characters characterAtIndex:0];
+  }
+  
+  if (self.actionMode != VRFileBrowserActionModeNormal && key == qEscCharacter) {
+    [self.actionDelegate updateStatusMessage:@"Type <Esc> again to focus text"];
+    _actionMode = VRFileBrowserActionModeNormal;
     return;
   }
+  
+  if (self.lineEditing) {
+    switch (key) {
+      case NSCarriageReturnCharacter:
+        [self endLineEditing];
+        break;
+      case NSBackspaceCharacter:
+        _lineEditingString = [_lineEditingString substringToIndex:MAX(_lineEditingString.length-1, 0)];
+        [self updateLineEditingStatusMessage];
+        break;
+      default:
+        _lineEditingString = [_lineEditingString stringByAppendingString:characters];
+        [self updateLineEditingStatusMessage];
+        break;
+    }
+  } else {
+    if ([self processKey:key]) {
+      if (self.lineEditing) {
+        _lineEditingString = @"";
+        [self updateLineEditingStatusMessage];
+      }
+    } else {
+      [super keyDown:event];
+    }
+  }
+}
 
-  unichar key = [characters characterAtIndex:0];
+#pragma mark Key Processing
+
+- (BOOL)processKey:(unichar)key {
+  switch (self.actionMode) {
+    case VRFileBrowserActionModeNormal:
+      return [self processKeyModeNormal:key];
+    case VRFileBrowserActionModeMenu:
+      return [self processKeyModeMenu:key];
+    case VRFileBrowserActionModeConfirmation:
+      return [self processKeyModeConfirmation:key];
+    default:
+      return NO;
+  }
+}
+
+- (BOOL)processKeyModeNormal:(unichar)key {
   switch (key) {
     case 'h':
-      [self viMotionLeft:self event:theEvent];
-      return;
+      [self.actionDelegate actionOpenDefault];
+      return YES;
     case 'j':
-      [self viMotionDown:self event:theEvent];
-      return;
+      [self.actionDelegate actionMoveDown];
+      return YES;
     case 'k':
-      [self viMotionUp:self event:theEvent];
-      return;
+      [self.actionDelegate actionMoveUp];
+      return YES;
     case 'l':
-      [self viMotionRight:self event:theEvent];
-      return;
+      [self.actionDelegate actionOpenDefault];
+      return YES;
     case ' ':
-      [self actionSpace:self event:theEvent];
-      return;
+      [self.actionDelegate actionOpenDefault];
+      return YES;
     case 'o':
-      [self actionOpenInNewTab:self event:theEvent];
-      return;
+      [self.actionDelegate actionOpenDefault];
+      return YES;
     case 'O':
-      [self actionOpenInCurrentTab:self event:theEvent];
-      return;
+      [self.actionDelegate actionOpenDefaultAlt];
+      return YES;
     case 's':
-      [self actionOpenInVerticalSplit:self event:theEvent];
-      return;
+      [self.actionDelegate actionOpenInVerticalSplit];
+      return YES;
     case 'i':
-      [self actionOpenInHorizontalSplit:self event:theEvent];
-      return;
+      [self.actionDelegate actionOpenInHorizontalSplit];
+      return YES;
     case NSCarriageReturnCharacter:
-      [self actionCarriageReturn:self event:theEvent];
-      return;
+      [self.actionDelegate actionOpenDefault];
+      return YES;
     case qEscCharacter:
-      [self actionEscape:self event:theEvent];
-      return;
+      [self.actionDelegate actionFocusVimView];
+      return YES;
+    case '/':
+      _actionMode = VRFileBrowserActionModeSearch;
+      return YES;
+    case 'm':
+      _actionMode = VRFileBrowserActionModeMenu;
+      [self.actionDelegate updateStatusMessage:@"Actions: (a)dd (m)ove (d)elete (c)opy"];
+      return YES;
     default:
-      [super keyDown:theEvent];
+      return NO;
+  }
+}
+
+- (BOOL)processKeyModeMenu:(unichar)key {
+  switch (key) {
+    case 'a':
+      _actionMode = VRFileBrowserActionModeMenuAdd;
+      _actionSubMode = VRFileBrowserActionModeMenuAdd;
+      return YES;
+    case 'm':
+      _actionMode = VRFileBrowserActionModeMenuMove;
+      _actionSubMode = VRFileBrowserActionModeMenuMove;
+      return YES;
+    case 'd':
+      _actionMode = VRFileBrowserActionModeConfirmation;
+      _actionSubMode = VRFileBrowserActionModeMenuDelete;
+      [self.actionDelegate updateStatusMessage:@"Delete? (y)es (n)o"];
+      return YES;
+    case 'c':
+      _actionMode = VRFileBrowserActionModeMenuCopy;
+      _actionSubMode = VRFileBrowserActionModeMenuCopy;
+      return YES;
+    default:
+      return NO;
+  }
+}
+
+- (BOOL)processKeyModeConfirmation:(unichar)key {
+  switch (key) {
+    case 'y':
+      [self.actionDelegate updateStatusMessage:@""];
+      switch (_actionSubMode) {
+        case VRFileBrowserActionModeMenuMove:
+          [self.actionDelegate actionMoveToPath:_lineEditingString];
+          break;
+        case VRFileBrowserActionModeMenuDelete:
+          [self.actionDelegate actionDelete];
+          break;
+        case VRFileBrowserActionModeMenuCopy:
+          [self.actionDelegate actionCopyToPath:_lineEditingString];
+        default:
+          break;
+      }
+      _actionMode = VRFileBrowserActionModeNormal;
+      return YES;
+    case 'n':
+      switch (_actionSubMode) {
+        case VRFileBrowserActionModeMenuMove:
+        case VRFileBrowserActionModeMenuCopy:
+          _actionMode = _actionSubMode;
+          [self updateLineEditingStatusMessage];
+          break;
+        default:
+          [self.actionDelegate updateStatusMessage:@""];
+          _actionMode = VRFileBrowserActionModeNormal;
+          break;
+      }
+      return YES;
+    default:
+      return NO;
   }
 }
 
@@ -85,71 +278,6 @@ static const int qEscCharacter = '\033';
   if (selectedRow < 0) { return nil; }
 
   return [self itemAtRow:selectedRow];
-}
-
-#pragma mark Actions
-- (void)viMotionLeft:(id)sender event:(NSEvent *)event {
-  [self performDoubleAction];
-}
-
-- (void)viMotionUp:(id)sender event:(NSEvent *)event {
-  [self moveSelectionByDelta:-1];
-}
-
-- (void)viMotionDown:(id)sender event:(NSEvent *)event {
-  [self moveSelectionByDelta:1];
-}
-
-- (void)viMotionRight:(id)sender event:(NSEvent *)event {
-  [self performDoubleAction];
-}
-
-- (void)actionSpace:(id)sender event:(NSEvent *)event {
-  [self performDoubleAction];
-}
-
-- (void)actionCarriageReturn:(id)sender event:(NSEvent *)event {
-  [self performDoubleAction];
-}
-
-- (void)actionEscape:(id)sender event:(NSEvent *)event {
-  [self.window makeFirstResponder:[self.window.windowController vimView].textView];
-}
-
-- (void)actionOpenInNewTab:(id)sender event:(NSEvent *)event {
-  [self openInMode:VROpenModeInNewTab];
-}
-
-- (void)actionOpenInCurrentTab:(id)sender event:(NSEvent *)event {
-  [self openInMode:VROpenModeInCurrentTab];
-}
-
-- (void)actionOpenInVerticalSplit:(id)sender event:(NSEvent *)event {
-  [self openInMode:VROpenModeInVerticalSplit];
-}
-
-- (void)actionOpenInHorizontalSplit:(id)sender event:(NSEvent *)event {
-  [self openInMode:VROpenModeInHorizontalSplit];
-}
-
-- (void)performDoubleAction {
-  [self sendAction:self.doubleAction to:self.target];
-}
-
-- (void)openInMode:(VROpenMode)mode {
-  VRNode *selectedItem = [self selectedItem];
-  if (!selectedItem) {return;}
-  
-  if (!selectedItem.dir) {
-    [(VRMainWindowController *) self.window.windowController openFileWithUrls:selectedItem.url openMode:mode];
-    return;
-  }
-  
-  if ([self isItemExpanded:selectedItem]) {
-    [self collapseItem:selectedItem];
-  } else {
-    [self expandItem:selectedItem];
-  }
 }
 
 @end
