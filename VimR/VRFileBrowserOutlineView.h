@@ -43,6 +43,7 @@
 - (void)actionDelete;
 - (void)actionCopyToPath:(NSString *)path;
 - (BOOL)actionCheckIfPathExists:(NSString *)path;
+- (void)actionIgnore;
 
 - (void)updateStatusMessage:(NSString *)message;
 

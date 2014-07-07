@@ -150,7 +150,7 @@ static const int qEscCharacter = '\033';
         [self updateLineEditingStatusMessage];
       }
     } else {
-      [super keyDown:event];
+      [self.actionDelegate actionIgnore];
     }
   }
 }

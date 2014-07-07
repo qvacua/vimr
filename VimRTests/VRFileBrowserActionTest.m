@@ -61,6 +61,11 @@ NSEvent *KeyDownEvent(unichar key) {
 
 #pragma mark Tests
 
+- (void)testUnknownKeyShouldBeIgnored {
+  [fileOutlineView keyDown:KeyDownEvent('6')];
+  [verify(actionDelegate) actionIgnore];
+}
+
 - (void)test_j_ActionShouldMoveDown {
   [fileOutlineView keyDown:KeyDownEvent('j')];
   [verify(actionDelegate) actionMoveDown];

@@ -204,6 +204,10 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   return YES;
 }
 
+- (void)actionIgnore {
+  NSBeep();
+}
+
 - (void)updateStatusMessage:(NSString *)message {
   [_workspaceView setStatusMessage:message];
 }
