@@ -30,6 +30,11 @@ static const int qEscCharacter = '\033';
 @end
 
 
+BOOL IsPrintableAscii(unichar key) {
+  return key >= 32 && key < 127;
+}
+
+
 @interface VRFileBrowserOutlineView ()
 
 @property (readonly) BOOL lineEditing;
@@ -139,8 +144,12 @@ static const int qEscCharacter = '\033';
         [self updateLineEditingStatusMessage];
         break;
       default:
-        _lineEditingString = [_lineEditingString stringByAppendingString:characters];
-        [self updateLineEditingStatusMessage];
+        if (IsPrintableAscii(key)) {
+          _lineEditingString = [_lineEditingString stringByAppendingString:[NSString stringWithCharacters:&key length:1]];
+          [self updateLineEditingStatusMessage];
+        } else {
+          [self.actionDelegate actionIgnore];
+        }
         break;
     }
   } else {
