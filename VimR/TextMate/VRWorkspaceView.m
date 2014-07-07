@@ -43,6 +43,7 @@ static const int qMinimumFileBrowserWidth = 100;
 
   NSPathControl *_pathView;
   NSPopUpButton *_settingsButton;
+  NSTextField *_messageView;
 
   VRFileBrowserView *_cachedFileBrowserView;
 }
@@ -166,6 +167,10 @@ static const int qMinimumFileBrowserWidth = 100;
   [_settingsButton.cell setUsesItemFromMenu:NO];
   [_settingsButton.cell setMenuItem:item];
   [_settingsButton.menu addItemWithTitle:@"" action:NULL keyEquivalent:@""];
+  [_settingsButton setContentCompressionResistancePriority:NSLayoutPriorityDefaultHigh
+                                            forOrientation:NSLayoutConstraintOrientationHorizontal];
+  [_settingsButton setContentHuggingPriority:NSLayoutPriorityDefaultHigh
+                              forOrientation:NSLayoutConstraintOrientationHorizontal];
   [self addSubview:_settingsButton];
 
   [self addMenuItemToSettingsButtonWithTitle:@"Show Folders First"
@@ -175,6 +180,19 @@ static const int qMinimumFileBrowserWidth = 100;
   [self addMenuItemToSettingsButtonWithTitle:@"Sync Working Directory with Vim's 'pwd'"
                                       action:@selector(toggleSyncWorkspaceWithPwd:) flag:_syncWorkspaceWithPwd];
 
+  _messageView = [[NSTextField alloc] initWithFrame:CGRectZero];
+  _messageView.translatesAutoresizingMaskIntoConstraints = NO;
+  _messageView.font = [NSFont systemFontOfSize:11];
+  _messageView.bezeled = NO;
+  _messageView.drawsBackground = NO;
+  _messageView.editable = NO;
+  _messageView.selectable = NO;
+  [[_messageView cell] setLineBreakMode:NSLineBreakByTruncatingTail];
+  [_messageView setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow
+                                         forOrientation:NSLayoutConstraintOrientationHorizontal];
+  [_messageView setContentHuggingPriority:NSLayoutPriorityDefaultLow
+                           forOrientation:NSLayoutConstraintOrientationHorizontal];
+  [self addSubview:_messageView];
 
   _cachedFileBrowserView = [[VRFileBrowserView alloc] initWithRootUrl:self.mainWindowController.workingDirectory];
 
@@ -189,6 +207,10 @@ static const int qMinimumFileBrowserWidth = 100;
   if ([self.mainWindowController.workspace.userDefaults boolForKey:qDefaultShowSideBar]) {
     self.fileBrowserView = _cachedFileBrowserView;
   }
+}
+
+- (void)setStatusMessage:(NSString *)message {
+  [_messageView setStringValue:message];
 }
 
 #pragma mark NSUserInterfaceValidations
@@ -251,6 +273,7 @@ static const int qMinimumFileBrowserWidth = 100;
 
   NSDictionary *views = @{
       @"fileBrowserView" : _fileBrowserView ?: [NSNull null],
+                          @"message" : _messageView,
       @"settings" : _settingsButton,
       @"fileBrowserDivider" : _fileBrowserDivider ?: [NSNull null],
 
@@ -287,13 +310,14 @@ static const int qMinimumFileBrowserWidth = 100;
 
     if (_fileBrowserView) {
       CONSTRAINT(@"V:[settings]-(3)-|");
+      CONSTRAINT(@"V:[message]-(5)-|");
       CONSTRAINT(@"V:|[fileBrowserView(>=100)]-(%d)-|", qMainWindowBorderThickness + 1);
 
       if (_fileBrowserOnRight) {
-        CONSTRAINT(@"H:[fileBrowserDivider][settings]");
+        CONSTRAINT(@"H:[fileBrowserDivider]-(8)-[message][settings]|");
         CONSTRAINT(@"H:|-(2)-[pathControl]-(2)-[fileBrowserDivider]");
       } else {
-        CONSTRAINT(@"H:[settings][fileBrowserDivider]");
+        CONSTRAINT(@"H:|-(8)-[message][settings][fileBrowserDivider]");
         CONSTRAINT(@"H:[fileBrowserDivider]-(2)-[pathControl]-(2)-|");
       }
     } else {

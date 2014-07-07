@@ -39,6 +39,7 @@
 #pragma mark Public
 - (void)setUrlOfPathControl:(NSURL *)url;
 - (void)setUp;
+- (void)setStatusMessage:(NSString *)message;
 
 #pragma mark NSUserInterfaceValidations
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
