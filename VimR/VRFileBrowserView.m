@@ -211,7 +211,8 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 
 - (void)actionAddPath:(NSString *)path {
   BOOL createDirectory = [path hasSuffix:@"/"];
-  NSString *relativeToPath = _fileOutlineView.numberOfRows > 0 ? _fileOutlineView.selectedItem.url.path : _rootUrl.path;
+  VRNode *node = _fileOutlineView.selectedItem;
+  NSString *relativeToPath = node ? node.url.path : _rootUrl.path;
   NSError *error;
   
   path = VRResolvePathRelativeToPath(path, relativeToPath, NO);
@@ -226,6 +227,10 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
     if (!success) {
       [self updateStatusMessage:[NSString stringWithFormat:@"%s", strerror(errno)]];
     }
+  }
+  
+  if (node.isDir) {
+    [_fileOutlineView expandItem:node];
   }
 }
 
