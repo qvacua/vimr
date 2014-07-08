@@ -213,11 +213,19 @@ BOOL IsPrintableAscii(unichar key) {
       [self.actionDelegate actionOpenDefaultAlt];
       return YES;
     case 's':
-      [self.actionDelegate actionOpenInVerticalSplit];
-      return YES;
+      if ([self.actionDelegate actionNodeIsDirectory]) {
+        return NO;
+      } else {
+        [self.actionDelegate actionOpenInVerticalSplit];
+        return YES;
+      }
     case 'i':
-      [self.actionDelegate actionOpenInHorizontalSplit];
-      return YES;
+      if ([self.actionDelegate actionNodeIsDirectory]) {
+        return NO;
+      } else {
+        [self.actionDelegate actionOpenInHorizontalSplit];
+        return YES;
+      }
     case NSCarriageReturnCharacter:
       [self.actionDelegate actionOpenDefault];
       return YES;

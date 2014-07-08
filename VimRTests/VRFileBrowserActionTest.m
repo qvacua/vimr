@@ -106,14 +106,27 @@ NSEvent *KeyDownEvent(unichar key) {
   [verify(actionDelegate) actionOpenDefaultAlt];
 }
 
-- (void)test_s_ActionShouldOpenInVerticalSplit {
+- (void)test_s_ActionShouldOpenInVerticalSplitIfNodeIsFile {
+  [given([actionDelegate actionNodeIsDirectory]) willReturnBool:NO];
   [fileOutlineView keyDown:KeyDownEvent('s')];
   [verify(actionDelegate) actionOpenInVerticalSplit];
 }
 
-- (void)test_i_ActionShouldOpenDefaultAlt {
+- (void)test_s_IsIgnoredIfNodeIsDirectory {
+  [given([actionDelegate actionNodeIsDirectory]) willReturnBool:YES];
+  [fileOutlineView keyDown:KeyDownEvent('s')];
+  [verify(actionDelegate) actionIgnore];
+}
+
+- (void)test_i_ActionShouldOpenInHorizontalSplitIfNodeIsFile {
   [fileOutlineView keyDown:KeyDownEvent('i')];
   [verify(actionDelegate) actionOpenInHorizontalSplit];
+}
+
+- (void)test_i_IsIgnoredIfNodeIsDirectory {
+  [given([actionDelegate actionNodeIsDirectory]) willReturnBool:YES];
+  [fileOutlineView keyDown:KeyDownEvent('i')];
+  [verify(actionDelegate) actionIgnore];
 }
 
 - (void)testEscShouldFocusVimView {

@@ -314,6 +314,10 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   return [_fileOutlineView numberOfRows] > 0;
 }
 
+- (BOOL)actionNodeIsDirectory {
+  return _fileOutlineView.selectedItem.isDir;
+}
+
 - (void)updateStatusMessage:(NSString *)message {
   [_workspaceView setStatusMessage:message];
 }
