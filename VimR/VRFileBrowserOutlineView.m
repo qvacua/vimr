@@ -241,7 +241,6 @@ BOOL IsPrintableAscii(unichar key) {
       if (_lastSearch == nil) {
         return NO;
       }
-      [self.actionDelegate updateStatusMessage:[NSString stringWithFormat:@"/%@", _lastSearch]];
       key == 'n' ? [self.actionDelegate actionSearch:_lastSearch] : [self.actionDelegate actionReverseSearch:_lastSearch];
       return YES;
     case '/':

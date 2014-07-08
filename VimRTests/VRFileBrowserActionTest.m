@@ -151,7 +151,7 @@ NSEvent *KeyDownEvent(unichar key) {
   [fileOutlineView keyDown:KeyDownEvent(NSCarriageReturnCharacter)];
   [fileOutlineView keyDown:KeyDownEvent('n')];
   [verifyCount(actionDelegate, times(2)) actionSearch:@"search"];
-  [verifyCount(actionDelegate, times(2)) updateStatusMessage:@"/search"];
+  //[verifyCount(actionDelegate, times(2)) updateStatusMessage:@"/search"];
 
 }
 
@@ -165,7 +165,7 @@ NSEvent *KeyDownEvent(unichar key) {
   [fileOutlineView keyDown:KeyDownEvent(NSCarriageReturnCharacter)];
   [fileOutlineView keyDown:KeyDownEvent('N')];
   [verifyCount(actionDelegate, times(1)) actionReverseSearch:@"search"];
-  [verifyCount(actionDelegate, times(2)) updateStatusMessage:@"/search"];
+  //[verifyCount(actionDelegate, times(2)) updateStatusMessage:@"/search"];
 }
 
 - (void)test_slash_ShouldDisplaySearchStatusMessage {

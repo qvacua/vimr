@@ -177,6 +177,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
       } else {
         [_fileOutlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
         [_fileOutlineView scrollRowToVisible:row];
+        [self updateStatusMessage:[NSString stringWithFormat:@"/%@", string]];
         return;
       }
     }
