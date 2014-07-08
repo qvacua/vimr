@@ -444,8 +444,9 @@ const int qMainWindowBorderThickness = 22;
   [_workspace setUpInitialBuffers];
 
   /**
-  * When opening a folder and netrw is used, the Vim view does not get redrawn... When NERDTree ist used, the screen
-  * does get redrawn, but there is another problem, cf https://github.com/qvacua/vimr/issues/35 and
+  * FIXME: When opening a folder and netrw is used, the Vim view does not get redrawn...
+  * When NERDTree ist used, the screen does get redrawn, but there is another problem,
+  * cf https://github.com/qvacua/vimr/issues/35 and
   */
   [self forceRedrawVimView];
 
