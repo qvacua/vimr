@@ -208,16 +208,19 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 - (void)actionAddPath:(NSString *)path {
   BOOL createDirectory = [path hasSuffix:@"/"];
   VRNode *node = [_fileOutlineView selectedItem];
+  NSError *error;
+  
   path = VRResolvePathRelativeToPath(path, node.url.path, NO);
+  
   if (createDirectory) {
-    BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:nil];
+    BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:&error];
     if (!success) {
-      [self updateStatusMessage:@"Could not create directory"];
+      [self updateStatusMessage:error.localizedFailureReason];
     }
   } else {
     BOOL success = [[NSFileManager defaultManager] createFileAtPath:path contents:[NSData data] attributes:nil];
     if (!success) {
-      [self updateStatusMessage:@"Could not create file"];
+      [self updateStatusMessage:[NSString stringWithFormat:@"%s", strerror(errno)]];
     }
   }
 }
@@ -246,7 +249,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
     success = [[NSFileManager defaultManager] moveItemAtPath:node.url.path toPath:path error:&error];
   }
   if (!success) {
-    [self updateStatusMessage:[error localizedDescription]];
+    [self updateStatusMessage:error.localizedFailureReason];
   }
 }
 
@@ -267,7 +270,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   }
   
   if (!success) {
-    [self updateStatusMessage:[error localizedDescription]];
+    [self updateStatusMessage:error.localizedFailureReason];
   }
 }
 
@@ -283,7 +286,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
     success = [[NSFileManager defaultManager] copyItemAtPath:node.url.path toPath:path error:&error];
   }
   if (!success) {
-    [self updateStatusMessage:[error localizedDescription]];
+    [self updateStatusMessage:error.localizedFailureReason];
   }
 }
 
