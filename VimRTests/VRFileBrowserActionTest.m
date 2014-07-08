@@ -101,11 +101,6 @@ NSEvent *KeyDownEvent(unichar key) {
   [verify(actionDelegate) actionOpenDefault];
 }
 
-- (void)test_O_ActionShouldOpenDefaultAlt {
-  [fileOutlineView keyDown:KeyDownEvent('O')];
-  [verify(actionDelegate) actionOpenDefaultAlt];
-}
-
 - (void)test_s_ActionShouldOpenInVerticalSplitIfNodeIsFile {
   [given([actionDelegate actionNodeIsDirectory]) willReturnBool:NO];
   [fileOutlineView keyDown:KeyDownEvent('s')];

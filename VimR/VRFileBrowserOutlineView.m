@@ -209,9 +209,6 @@ BOOL IsPrintableAscii(unichar key) {
     case 'o':
       [self.actionDelegate actionOpenDefault];
       return YES;
-    case 'O':
-      [self.actionDelegate actionOpenDefaultAlt];
-      return YES;
     case 's':
       if ([self.actionDelegate actionNodeIsDirectory]) {
         return NO;

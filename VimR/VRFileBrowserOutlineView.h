@@ -28,7 +28,6 @@
 @protocol VRFileBrowserActionDelegate <NSObject>
 
 - (void)actionOpenDefault;
-- (void)actionOpenDefaultAlt;
 - (void)actionOpenInNewTab;
 - (void)actionOpenInCurrentTab;
 - (void)actionOpenInVerticalSplit;

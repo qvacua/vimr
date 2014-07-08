@@ -148,10 +148,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   [self fileOutlineViewDoubleClicked:self];
 }
 
-- (void)actionOpenDefaultAlt {
-  [self fileOutlineViewDoubleClicked:self];
-}
-
 - (void)actionOpenInNewTab {
   [self openInMode:VROpenModeInNewTab];
 }
