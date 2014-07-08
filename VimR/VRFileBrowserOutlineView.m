@@ -173,6 +173,16 @@ BOOL IsPrintableAscii(unichar key) {
   }
 }
 
+- (BOOL)resignFirstResponder {
+  BOOL resign = [super resignFirstResponder];
+  
+  if (resign) {
+    [self actionReset];
+  }
+  
+  return resign;
+}
+
 #pragma mark Key Processing
 
 - (BOOL)processKey:(unichar)key {
@@ -320,6 +330,8 @@ BOOL IsPrintableAscii(unichar key) {
   }
 }
 
+#pragma mark Public
+
 - (VRNode *)selectedItem {
   NSInteger selectedRow = self.selectedRow;
   if (selectedRow < 0) { return nil; }
@@ -330,18 +342,6 @@ BOOL IsPrintableAscii(unichar key) {
 - (void)actionReset {
   _actionMode = VRFileBrowserActionModeNormal;
   [self.actionDelegate updateStatusMessage:@""];
-}
-
-#pragma mark NSResponder
-
-- (BOOL)resignFirstResponder {
-  BOOL resign = [super resignFirstResponder];
-  
-  if (resign) {
-    [self actionReset];
-  }
-  
-  return resign;
 }
 
 @end
