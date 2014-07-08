@@ -133,7 +133,13 @@ BOOL IsPrintableAscii(unichar key) {
   if (self.lineEditing) {
     switch (key) {
       case NSCarriageReturnCharacter:
-        [self endLineEditing];
+        _lineEditingString = [_lineEditingString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        if (_lineEditingString.length == 0) {
+          [self.actionDelegate actionIgnore];
+          [self updateLineEditingStatusMessage];
+        } else {
+          [self endLineEditing];
+        }
         break;
       case NSDeleteCharacter:
         if (_lineEditingString.length > 0)

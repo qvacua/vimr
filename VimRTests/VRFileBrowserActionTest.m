@@ -158,6 +158,13 @@ NSEvent *KeyDownEvent(unichar key) {
   [verify(actionDelegate) actionSearch:@"ab"];
 }
 
+- (void)testSearchWithNothingShouldBeIgnored {
+  [fileOutlineView keyDown:KeyDownEvent('/')];
+  [fileOutlineView keyDown:KeyDownEvent(NSCarriageReturnCharacter)];
+  [verifyCount(actionDelegate, never()) actionSearch:anything()];
+  [verifyCount(actionDelegate, times(1)) actionIgnore];
+}
+
 #pragma mark Menu Tests
 
 - (void)testMenu_a_ShouldPromptToAddNode {
