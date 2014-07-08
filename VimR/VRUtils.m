@@ -1,3 +1,4 @@
+#import <MacVimFramework/MacVimFramework.h>
 #import "VRUtils.h"
 #import "NSURL+VR.h"
 
@@ -77,4 +78,8 @@ NSArray *urls_from_paths(NSArray *paths) {
 
 CGRect rect_with_origin(CGPoint origin, CGFloat width, CGFloat height) {
   return CGRectMake(origin.x, origin.y, width, height);
+}
+
+NSData *vim_data_for_menu_descriptor(NSArray *descriptor) {
+  return [@{@"descriptor" : descriptor} dictionaryAsData];
 }

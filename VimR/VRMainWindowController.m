@@ -125,12 +125,12 @@ const int qMainWindowBorderThickness = 22;
 
 - (IBAction)performClose:(id)sender {
   NSArray *descriptor = @[@"File", @"Close"];
-  [self.vimController sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:descriptor]];
+  [self.vimController sendMessage:ExecuteMenuMsgID data:vim_data_for_menu_descriptor(descriptor)];
 }
 
 - (IBAction)saveDocument:(id)sender {
   NSArray *descriptor = @[@"File", @"Save"];
-  [self.vimController sendMessage:ExecuteMenuMsgID data:[self dataFromDescriptor:descriptor]];
+  [self.vimController sendMessage:ExecuteMenuMsgID data:vim_data_for_menu_descriptor(descriptor)];
 }
 
 - (IBAction)saveDocumentAs:(id)sender {
@@ -443,6 +443,12 @@ const int qMainWindowBorderThickness = 22;
 
   [_workspace setUpInitialBuffers];
 
+  /**
+  * When opening a folder and netrw is used, the Vim view does not get redrawn... When NERDTree ist used, the screen
+  * does get redrawn, but there is another problem, cf https://github.com/qvacua/vimr/issues/35 and
+  */
+  [self forceRedrawVimView];
+
   [self.window makeFirstResponder:_vimView.textView];
 }
 
@@ -649,10 +655,6 @@ const int qMainWindowBorderThickness = 22;
 - (void)sendCommandToVim:(NSString *)command {
   DDLogDebug(@"sending command %@", command);
   [_vimController addVimInput:SF(@"<C-\\><C-N>%@<CR>", command)];
-}
-
-- (NSData *)dataFromDescriptor:(NSArray *)descriptor {
-  return [@{@"descriptor" : descriptor} dictionaryAsData];
 }
 
 - (void)alertDidEnd:(VRAlert *)alert code:(int)code context:(void *)controllerContext {

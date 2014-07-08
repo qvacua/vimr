@@ -10,12 +10,13 @@
 #define RETURN_NIL_WHEN_NOT_SELF if (!self) { return nil; }
 #endif
 
-OBJC_EXTERN inline void dispatch_to_main_thread(dispatch_block_t block);
-OBJC_EXTERN inline void dispatch_to_global_queue(dispatch_block_t block);
-OBJC_EXTERN inline void dispatch_loop(size_t count, void (^block)(size_t));
-OBJC_EXTERN inline NSURL *common_parent_url(NSArray *fileUrls);
-OBJC_EXTERN inline NSValue *vsize(CGSize size);
-OBJC_EXTERN inline NSValue *vrect(CGRect rect);
-OBJC_EXTERN inline NSValue *vpoint(CGPoint point);
-OBJC_EXTERN inline NSArray *urls_from_paths(NSArray *);
-OBJC_EXTERN inline CGRect rect_with_origin(CGPoint origin, CGFloat width, CGFloat height);
+OBJC_EXTERN void dispatch_to_main_thread(dispatch_block_t block);
+OBJC_EXTERN void dispatch_to_global_queue(dispatch_block_t block);
+OBJC_EXTERN void dispatch_loop(size_t count, void (^block)(size_t));
+OBJC_EXTERN NSURL *common_parent_url(NSArray *fileUrls);
+OBJC_EXTERN NSValue *vsize(CGSize size);
+OBJC_EXTERN NSValue *vrect(CGRect rect);
+OBJC_EXTERN NSValue *vpoint(CGPoint point);
+OBJC_EXTERN NSArray *urls_from_paths(NSArray *);
+OBJC_EXTERN CGRect rect_with_origin(CGPoint origin, CGFloat width, CGFloat height);
+OBJC_EXTERN NSData *vim_data_for_menu_descriptor(NSArray *descriptor);
