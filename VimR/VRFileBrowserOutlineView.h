@@ -42,7 +42,7 @@
 - (void)actionMoveToPath:(NSString *)path;
 - (void)actionDelete;
 - (void)actionCopyToPath:(NSString *)path;
-- (BOOL)actionCheckIfPathExists:(NSString *)path;
+- (BOOL)actionCheckClobberForPath:(NSString *)path;
 - (void)actionIgnore;
 
 - (void)updateStatusMessage:(NSString *)message;
@@ -68,6 +68,6 @@ typedef enum {
 @property (nonatomic, readonly) VRFileBrowserActionMode actionMode;
 @property (nonatomic, readonly) VRFileBrowserActionMode actionSubMode;
 
-- (id)selectedItem;
+- (VRNode *)selectedItem;
 
 @end

@@ -183,16 +183,16 @@ NSEvent *KeyDownEvent(unichar key) {
   [verify(actionDelegate) updateStatusMessage:@"Move to: "];
 }
 
-- (void)testMenu_m_ShouldCallCheckIfPathExistsOnReturn {
+- (void)testMenu_m_ShouldCallCheckClobberForPathOnReturn {
   [fileOutlineView keyDown:KeyDownEvent('m')];
   [fileOutlineView keyDown:KeyDownEvent('m')];
   [self type:@"file"];
   [fileOutlineView keyDown:KeyDownEvent(NSCarriageReturnCharacter)];
-  [verify(actionDelegate) actionCheckIfPathExists:@"file"];
+  [verify(actionDelegate) actionCheckClobberForPath:@"file"];
 }
 
 - (void)testMenu_a_ShouldMoveIfPathDoesNotExist {
-  [given([actionDelegate actionCheckIfPathExists:@"file"]) willReturnBool:NO];
+  [given([actionDelegate actionCheckClobberForPath:@"file"]) willReturnBool:NO];
   [fileOutlineView keyDown:KeyDownEvent('m')];
   [fileOutlineView keyDown:KeyDownEvent('m')];
   [self type:@"file"];
@@ -202,7 +202,7 @@ NSEvent *KeyDownEvent(unichar key) {
 }
 
 - (void)testMenu_m_ShouldShowConfirmationIfPathExists {
-  [given([actionDelegate actionCheckIfPathExists:@"file"]) willReturnBool:YES];
+  [given([actionDelegate actionCheckClobberForPath:@"file"]) willReturnBool:YES];
   [fileOutlineView keyDown:KeyDownEvent('m')];
   [fileOutlineView keyDown:KeyDownEvent('m')];
   [self type:@"file"];
@@ -211,7 +211,7 @@ NSEvent *KeyDownEvent(unichar key) {
 }
 
 - (void)testMenu_a_ShouldAddIfConfirmed {
-  [given([actionDelegate actionCheckIfPathExists:@"file"]) willReturnBool:YES];
+  [given([actionDelegate actionCheckClobberForPath:@"file"]) willReturnBool:YES];
   [fileOutlineView keyDown:KeyDownEvent('m')];
   [fileOutlineView keyDown:KeyDownEvent('m')];
   [self type:@"file"];
@@ -222,7 +222,7 @@ NSEvent *KeyDownEvent(unichar key) {
 }
 
 - (void)testMenu_a_ShouldReturnToMenuMoveModeIfNotConfirmed {
-  [given([actionDelegate actionCheckIfPathExists:@"file"]) willReturnBool:YES];
+  [given([actionDelegate actionCheckClobberForPath:@"file"]) willReturnBool:YES];
   [fileOutlineView keyDown:KeyDownEvent('m')];
   [fileOutlineView keyDown:KeyDownEvent('m')];
   [self type:@"file"];
@@ -241,16 +241,16 @@ NSEvent *KeyDownEvent(unichar key) {
   [verify(actionDelegate) updateStatusMessage:@"Copy to: "];
 }
 
-- (void)testMenu_c_ShouldCallCheckIfPathExistsOnReturn {
+- (void)testMenu_c_ShouldCallCheckClobberForPathOnReturn {
   [fileOutlineView keyDown:KeyDownEvent('m')];
   [fileOutlineView keyDown:KeyDownEvent('c')];
   [self type:@"file"];
   [fileOutlineView keyDown:KeyDownEvent(NSCarriageReturnCharacter)];
-  [verify(actionDelegate) actionCheckIfPathExists:@"file"];
+  [verify(actionDelegate) actionCheckClobberForPath:@"file"];
 }
 
 - (void)testMenu_a_ShouldCopyIfPathDoesNotExist {
-  [given([actionDelegate actionCheckIfPathExists:@"file"]) willReturnBool:NO];
+  [given([actionDelegate actionCheckClobberForPath:@"file"]) willReturnBool:NO];
   [fileOutlineView keyDown:KeyDownEvent('m')];
   [fileOutlineView keyDown:KeyDownEvent('c')];
   [self type:@"file"];
@@ -259,7 +259,7 @@ NSEvent *KeyDownEvent(unichar key) {
 }
 
 - (void)testMenu_a_ShouldShowConfirmationIfPathExists {
-  [given([actionDelegate actionCheckIfPathExists:@"file"]) willReturnBool:YES];
+  [given([actionDelegate actionCheckClobberForPath:@"file"]) willReturnBool:YES];
   [fileOutlineView keyDown:KeyDownEvent('m')];
   [fileOutlineView keyDown:KeyDownEvent('c')];
   [self type:@"file"];
@@ -268,7 +268,7 @@ NSEvent *KeyDownEvent(unichar key) {
 }
 
 - (void)testMenu_a_ShouldCopyIfConfirmed {
-  [given([actionDelegate actionCheckIfPathExists:@"file"]) willReturnBool:YES];
+  [given([actionDelegate actionCheckClobberForPath:@"file"]) willReturnBool:YES];
   [fileOutlineView keyDown:KeyDownEvent('m')];
   [fileOutlineView keyDown:KeyDownEvent('c')];
   [self type:@"file"];
@@ -278,7 +278,7 @@ NSEvent *KeyDownEvent(unichar key) {
 }
 
 - (void)testMenu_a_ShouldReturnToMenuCopyModeIfNotConfirmed {
-  [given([actionDelegate actionCheckIfPathExists:@"file"]) willReturnBool:YES];
+  [given([actionDelegate actionCheckClobberForPath:@"file"]) willReturnBool:YES];
   [fileOutlineView keyDown:KeyDownEvent('m')];
   [fileOutlineView keyDown:KeyDownEvent('c')];
   [self type:@"file"];
@@ -310,7 +310,6 @@ NSEvent *KeyDownEvent(unichar key) {
   [fileOutlineView keyDown:KeyDownEvent('d')];
   [fileOutlineView keyDown:KeyDownEvent('n')];
   [verifyCount(actionDelegate, never()) actionDelete];
-  [verifyCount(actionDelegate, times(1)) updateStatusMessage:@""];
   assertThat([self isInNormalMode], isYes);
 }
 

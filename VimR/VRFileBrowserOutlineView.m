@@ -99,7 +99,7 @@ BOOL IsPrintableAscii(unichar key) {
       break;
     case VRFileBrowserActionModeMenuMove:
     case VRFileBrowserActionModeMenuCopy:
-      if ([self.actionDelegate actionCheckIfPathExists:_lineEditingString]) {
+      if ([self.actionDelegate actionCheckClobberForPath:_lineEditingString]) {
         [self.actionDelegate updateStatusMessage:@"Overwrite existing file? (y)es (n)o"];
         _newMode = VRFileBrowserActionModeConfirmation;
       } else {

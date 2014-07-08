@@ -73,3 +73,39 @@ NSArray *urls_from_paths(NSArray *paths) {
 CGRect rect_with_origin(CGPoint origin, CGFloat width, CGFloat height) {
   return CGRectMake(origin.x, origin.y, width, height);
 }
+
+//path = [path stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+//assert(path.length > 0); //TODO move this
+
+NSString *VRResolvePathRelativeToPathWithFileManager(NSString *path, NSString *relativeToPath, BOOL sibling, NSFileManager *fileManager) {
+  NSString *result;
+
+  if ([path hasPrefix:@"/"]) {
+    result = path;
+  } else if ([path hasPrefix:@"~"]) {
+    result = [path stringByExpandingTildeInPath];
+  } else if (![path hasPrefix:@"/"]) {
+    NSString *parent;
+    BOOL relativeToPathExists, relativeToPathIsDirectory;
+    relativeToPathExists = [fileManager fileExistsAtPath:relativeToPath isDirectory:&relativeToPathIsDirectory];
+    if (relativeToPathExists && relativeToPathIsDirectory && !sibling) {
+      parent = relativeToPath;
+    } else {
+      parent = [relativeToPath stringByDeletingLastPathComponent];
+    }
+    result = [parent stringByAppendingPathComponent:path];
+  }
+  
+  BOOL resultExists, resultIsDirectory;
+  resultExists = [fileManager fileExistsAtPath:result isDirectory:&resultIsDirectory];
+
+  if (resultExists && resultIsDirectory) {
+    result = [result stringByAppendingPathComponent:[relativeToPath lastPathComponent]];
+  }
+
+  return result;
+}
+
+NSString *VRResolvePathRelativeToPath(NSString *path, NSString *relativeToPath, BOOL sibling) {
+  return VRResolvePathRelativeToPathWithFileManager(path, relativeToPath, sibling, [NSFileManager defaultManager]);
+}

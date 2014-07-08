@@ -185,23 +185,70 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 - (void)actionAddPath:(NSString *)path {
-  [self updateStatusMessage:@"Not yet implemented"];
+  BOOL createDirectory = [path hasSuffix:@"/"];
+  VRNode *node = [_fileOutlineView selectedItem];
+  path = VRResolvePathRelativeToPath(path, node.url.path, NO);
+  if (createDirectory) {
+    BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:nil];
+    if (!success) {
+      [self updateStatusMessage:@"Could not create directory"];
+    }
+  } else {
+    BOOL success = [[NSFileManager defaultManager] createFileAtPath:path contents:[NSData data] attributes:nil];
+    if (!success) {
+      [self updateStatusMessage:@"Could not create file"];
+    }
+  }
 }
 
 - (void)actionMoveToPath:(NSString *)path {
-  [self updateStatusMessage:@"Not yet implemented"];
+  VRNode *node =  [_fileOutlineView selectedItem];
+  path = VRResolvePathRelativeToPath(path, node.url.path, node.isDir);
+
+  NSError *error;
+  
+  if (![[NSFileManager defaultManager] moveItemAtPath:node.url.path toPath:path error:&error]) {
+    [self updateStatusMessage:[error localizedDescription]];
+  }
 }
 
 - (void)actionDelete {
-  [self updateStatusMessage:@"Not yet implemented"];
+  VRNode *node =  [_fileOutlineView selectedItem];
+  NSError *error;
+  BOOL success = YES;
+
+  if (node.isDir) {
+    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:node.url.path error:&error];
+    if (contents.count) {
+      [self updateStatusMessage:@"Directory is not empty. Cannot delete."];
+    } else {
+      success = [[NSFileManager defaultManager] removeItemAtURL:node.url error:&error];
+    }
+  } else {
+    success = [[NSFileManager defaultManager] removeItemAtURL:node.url error:&error];
+  }
+  
+  if (!success) {
+    [self updateStatusMessage:[error localizedDescription]];
+  }
 }
 
 - (void)actionCopyToPath:(NSString *)path {
-  [self updateStatusMessage:@"Not yet implemented"];
+  VRNode *node =  [_fileOutlineView selectedItem];
+  path = VRResolvePathRelativeToPath(path, node.url.path, node.isDir);
+  
+  NSError *error;
+  
+  if (![[NSFileManager defaultManager] copyItemAtPath:[node.url path] toPath:path error:&error]) {
+    [self updateStatusMessage:[error localizedDescription]];
+  }
 }
 
-- (BOOL)actionCheckIfPathExists:(NSString *)path {
-  return YES;
+- (BOOL)actionCheckClobberForPath:(NSString *)path {
+  // Check clobber uses move and copy semantics, i.e. it treats directories as siblings.
+  VRNode *node =  [_fileOutlineView selectedItem];
+  path = VRResolvePathRelativeToPath(path, node.url.path, node.isDir);
+  return [[NSFileManager defaultManager] fileExistsAtPath:path];
 }
 
 - (void)actionIgnore {
