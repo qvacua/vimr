@@ -11,7 +11,7 @@
                 New Features
             </description>
             <sparkle:releaseNotesLink>
-                https://raw.githubusercontent.com/qvacua/vimr/master/Meta/release-notes.html
+                http://qvacua.com/vimr/release-notes.html
             </sparkle:releaseNotesLink>
             <pubDate>2014-07-08 20:40:11 +0000</pubDate>
             <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.0.9-10/VimR-0.0.9.tar.bz2"
