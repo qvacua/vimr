@@ -328,6 +328,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   _fileOutlineView.delegate = self;
   _fileOutlineView.actionDelegate = self;
   _fileOutlineView.allowsMultipleSelection = NO;
+  _fileOutlineView.allowsEmptySelection = NO;
   _fileOutlineView.doubleAction = @selector(fileOutlineViewDoubleClicked:);
   _fileOutlineView.backgroundColor = [NSColor colorWithSRGBRed:0.925 green:0.925 blue:0.925 alpha:1.0];
 
