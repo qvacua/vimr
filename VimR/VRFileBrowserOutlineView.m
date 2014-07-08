@@ -245,6 +245,11 @@ BOOL IsPrintableAscii(unichar key) {
 }
 
 - (BOOL)processKeyModeMenu:(unichar)key {
+  if (![self.actionDelegate actionCanActOnNode] && key != 'a') {
+    [self actionReset];
+    return NO;
+  }
+  
   switch (key) {
     case 'a':
       _actionMode = VRFileBrowserActionModeMenuAdd;

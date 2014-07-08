@@ -211,10 +211,10 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 
 - (void)actionAddPath:(NSString *)path {
   BOOL createDirectory = [path hasSuffix:@"/"];
-  VRNode *node = [_fileOutlineView selectedItem];
+  NSString *relativeToPath = _fileOutlineView.numberOfRows > 0 ? _fileOutlineView.selectedItem.url.path : _rootUrl.path;
   NSError *error;
   
-  path = VRResolvePathRelativeToPath(path, node.url.path, NO);
+  path = VRResolvePathRelativeToPath(path, relativeToPath, NO);
   
   if (createDirectory) {
     BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:&error];
@@ -303,6 +303,10 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 
 - (void)actionIgnore {
   NSBeep();
+}
+
+- (BOOL)actionCanActOnNode {
+  return [_fileOutlineView numberOfRows] > 0;
 }
 
 - (void)updateStatusMessage:(NSString *)message {

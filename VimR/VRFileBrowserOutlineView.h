@@ -38,6 +38,7 @@
 - (void)actionMoveDown;
 - (void)actionMoveUp;
 - (void)actionFocusVimView;
+- (BOOL)actionCanActOnNode;
 - (void)actionAddPath:(NSString *)path;
 - (void)actionMoveToPath:(NSString *)path;
 - (void)actionDelete;

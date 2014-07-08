@@ -37,7 +37,6 @@ NSEvent *KeyDownEvent(unichar key) {
 @implementation VRFileBrowserActionsTestCase {
   VRFileBrowserOutlineView *fileOutlineView;
   id<VRFileBrowserActionDelegate> actionDelegate;
-  NSString *testPath;
 }
 
 - (void)setUp {
@@ -45,6 +44,7 @@ NSEvent *KeyDownEvent(unichar key) {
   actionDelegate = mockProtocol(@protocol(VRFileBrowserActionDelegate));
   fileOutlineView =[[VRFileBrowserOutlineView alloc] initWithFrame:CGRectZero];
   fileOutlineView.actionDelegate = actionDelegate;
+  [given([actionDelegate actionCanActOnNode]) willReturnBool:YES];
 }
 
 #pragma mark Utils
@@ -378,6 +378,54 @@ NSEvent *KeyDownEvent(unichar key) {
   [fileOutlineView keyDown:KeyDownEvent(NSDeleteCharacter)];
   [fileOutlineView keyDown:KeyDownEvent(NSDeleteCharacter)];
   [verifyCount(actionDelegate, times(4)) updateStatusMessage:@"/"];
+}
+
+@end
+
+
+@interface VREmptyFileBrowserActionsTestCase : VRBaseTestCase
+
+@end
+
+@implementation VREmptyFileBrowserActionsTestCase {
+  VRFileBrowserOutlineView *fileOutlineView;
+  id<VRFileBrowserActionDelegate> actionDelegate;
+}
+
+- (void)setUp {
+  [super setUp];
+  actionDelegate = mockProtocol(@protocol(VRFileBrowserActionDelegate));
+  fileOutlineView =[[VRFileBrowserOutlineView alloc] initWithFrame:CGRectZero];
+  fileOutlineView.actionDelegate = actionDelegate;
+  [given([actionDelegate actionCanActOnNode]) willReturnBool:NO];
+}
+
+- (void)testMenu_a_ShouldAddNodeOnReturn {
+  [fileOutlineView keyDown:KeyDownEvent('m')];
+  [fileOutlineView keyDown:KeyDownEvent('a')];
+  assertThat(@(fileOutlineView.actionMode), is(@(VRFileBrowserActionModeMenuAdd)));
+}
+
+- (void)testMenu_m_CannotMove {
+  [fileOutlineView keyDown:KeyDownEvent('m')];
+  [fileOutlineView keyDown:KeyDownEvent('m')];
+  [verify(actionDelegate) actionIgnore];
+  assertThat(@(fileOutlineView.actionMode), is(@(VRFileBrowserActionModeNormal)));
+}
+
+- (void)testMenu_m_CannotDelete {
+  [fileOutlineView keyDown:KeyDownEvent('m')];
+  [fileOutlineView keyDown:KeyDownEvent('d')];
+  [verify(actionDelegate) actionIgnore];
+  assertThat(@(fileOutlineView.actionMode), is(@(VRFileBrowserActionModeNormal)));
+
+}
+
+- (void)testMenu_m_CannotCopy {
+  [fileOutlineView keyDown:KeyDownEvent('m')];
+  [fileOutlineView keyDown:KeyDownEvent('c')];
+  [verify(actionDelegate) actionIgnore];
+  assertThat(@(fileOutlineView.actionMode), is(@(VRFileBrowserActionModeNormal)));
 }
 
 @end
