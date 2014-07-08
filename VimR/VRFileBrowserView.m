@@ -164,12 +164,33 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   [self openInMode:VROpenModeInHorizontalSplit];
 }
 
+- (void)search:(NSString *)string increment:(int)increment {
+  NSUInteger selectedIndex = [_fileOutlineView.selectedRowIndexes firstIndex];
+  for (NSUInteger i = 0; i < _fileOutlineView.numberOfRows; i++) {
+    NSUInteger row = (i*increment + selectedIndex + increment) % _fileOutlineView.numberOfRows;
+    VRNode *node = [_fileOutlineView itemAtRow:row];
+    if ([node.name rangeOfString:string].location != NSNotFound) {
+      if (selectedIndex == row) {
+        [self updateStatusMessage:@"No more matches"];
+        [self actionIgnore];
+        return;
+      } else {
+        [_fileOutlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+        [_fileOutlineView scrollRowToVisible:row];
+        return;
+      }
+    }
+  }
+  [self updateStatusMessage:@"Nothing found"];
+  [self actionIgnore];
+}
+
 - (void)actionSearch:(NSString *)string {
-  [self updateStatusMessage:@"Not yet implemented"];
+  [self search:string increment:1];
 }
 
 - (void)actionReverseSearch:(NSString *)string {
-  [self updateStatusMessage:@"Not yet implemented"];
+  [self search:string increment:-1];
 }
 
 - (void)actionMoveDown {

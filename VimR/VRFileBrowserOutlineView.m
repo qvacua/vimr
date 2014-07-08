@@ -45,6 +45,7 @@ BOOL IsPrintableAscii(unichar key) {
 
 @implementation VRFileBrowserOutlineView {
   NSString *_lineEditingString;
+  NSString *_lastSearch;
 }
 
 - (instancetype)initWithFrame:(NSRect)frameRect {
@@ -93,6 +94,7 @@ BOOL IsPrintableAscii(unichar key) {
   
   switch (_actionMode) {
     case VRFileBrowserActionModeSearch:
+      _lastSearch = _lineEditingString;
       [self.actionDelegate actionSearch:_lineEditingString];
       break;
     case VRFileBrowserActionModeMenuAdd:
@@ -101,7 +103,7 @@ BOOL IsPrintableAscii(unichar key) {
     case VRFileBrowserActionModeMenuMove:
     case VRFileBrowserActionModeMenuCopy:
       if ([self.actionDelegate actionCheckClobberForPath:_lineEditingString]) {
-        [self.actionDelegate updateStatusMessage:@"Overwrite existing file? (y)es (n)o"];
+        statusMessage = @"Overwrite existing file? (y)es (n)o";
         _newMode = VRFileBrowserActionModeConfirmation;
       } else {
         _actionMode == VRFileBrowserActionModeMenuMove ?
@@ -113,6 +115,7 @@ BOOL IsPrintableAscii(unichar key) {
       break;
   }
   
+  [self.actionDelegate updateStatusMessage:statusMessage];
   _actionMode = _newMode;
 }
 
@@ -221,6 +224,14 @@ BOOL IsPrintableAscii(unichar key) {
       return YES;
     case qEscCharacter:
       [self.actionDelegate actionFocusVimView];
+      return YES;
+    case 'n':
+    case 'N':
+      if (_lastSearch == nil) {
+        return NO;
+      }
+      [self.actionDelegate updateStatusMessage:[NSString stringWithFormat:@"/%@", _lastSearch]];
+      key == 'n' ? [self.actionDelegate actionSearch:_lastSearch] : [self.actionDelegate actionReverseSearch:_lastSearch];
       return YES;
     case '/':
       _actionMode = VRFileBrowserActionModeSearch;

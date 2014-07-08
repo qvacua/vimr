@@ -121,6 +121,33 @@ NSEvent *KeyDownEvent(unichar key) {
   [verify(actionDelegate) actionFocusVimView];
 }
 
+- (void)test_n_ShouldIgnoreIfThereIsNoPreviousSearch {
+  [fileOutlineView keyDown:KeyDownEvent('n')];
+  [verify(actionDelegate) actionIgnore];
+}
+
+- (void)test_n_ShouldSearchWithPreviousSearch {
+  [self type:@"/search"];
+  [fileOutlineView keyDown:KeyDownEvent(NSCarriageReturnCharacter)];
+  [fileOutlineView keyDown:KeyDownEvent('n')];
+  [verifyCount(actionDelegate, times(2)) actionSearch:@"search"];
+  [verifyCount(actionDelegate, times(2)) updateStatusMessage:@"/search"];
+
+}
+
+- (void)test_N_ShouldIgnoreIfThereIsNoPreviousSearch {
+  [fileOutlineView keyDown:KeyDownEvent('N')];
+  [verify(actionDelegate) actionIgnore];
+}
+
+- (void)test_n_ShouldReverseSearchWithPreviousSearch {
+  [self type:@"/search"];
+  [fileOutlineView keyDown:KeyDownEvent(NSCarriageReturnCharacter)];
+  [fileOutlineView keyDown:KeyDownEvent('N')];
+  [verifyCount(actionDelegate, times(1)) actionReverseSearch:@"search"];
+  [verifyCount(actionDelegate, times(2)) updateStatusMessage:@"/search"];
+}
+
 - (void)test_slash_ShouldDisplaySearchStatusMessage {
   [fileOutlineView keyDown:KeyDownEvent('/')];
   [verify(actionDelegate) updateStatusMessage:@"/"];
