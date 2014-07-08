@@ -101,6 +101,18 @@ NSEvent *KeyDownEvent(unichar key) {
   [verify(actionDelegate) actionOpenDefault];
 }
 
+- (void)test_t_ActionShouldOpenInNewTabIfNodeIsFile {
+  [given([actionDelegate actionNodeIsDirectory]) willReturnBool:NO];
+  [fileOutlineView keyDown:KeyDownEvent('t')];
+  [verify(actionDelegate) actionOpenInNewTab];
+}
+
+- (void)test_t_IsIgnoredIfNodeIsDirectory {
+  [given([actionDelegate actionNodeIsDirectory]) willReturnBool:YES];
+  [fileOutlineView keyDown:KeyDownEvent('t')];
+  [verify(actionDelegate) actionIgnore];
+}
+
 - (void)test_s_ActionShouldOpenInVerticalSplitIfNodeIsFile {
   [given([actionDelegate actionNodeIsDirectory]) willReturnBool:NO];
   [fileOutlineView keyDown:KeyDownEvent('s')];

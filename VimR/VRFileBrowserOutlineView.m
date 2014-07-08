@@ -209,6 +209,13 @@ BOOL IsPrintableAscii(unichar key) {
     case 'o':
       [self.actionDelegate actionOpenDefault];
       return YES;
+    case 't':
+      if ([self.actionDelegate actionNodeIsDirectory]) {
+        return NO;
+      } else {
+        [self.actionDelegate actionOpenInNewTab];
+        return YES;
+      }
     case 's':
       if ([self.actionDelegate actionNodeIsDirectory]) {
         return NO;
