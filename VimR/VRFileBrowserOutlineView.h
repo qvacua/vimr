@@ -69,5 +69,6 @@ typedef enum {
 @property (nonatomic, readonly) VRFileBrowserActionMode actionSubMode;
 
 - (VRNode *)selectedItem;
+- (void)actionReset;
 
 @end

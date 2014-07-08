@@ -311,4 +311,21 @@ BOOL IsPrintableAscii(unichar key) {
   return [self itemAtRow:selectedRow];
 }
 
+- (void)actionReset {
+  _actionMode = VRFileBrowserActionModeNormal;
+  [self.actionDelegate updateStatusMessage:@""];
+}
+
+#pragma mark NSResponder
+
+- (BOOL)resignFirstResponder {
+  BOOL resign = [super resignFirstResponder];
+  
+  if (resign) {
+    [self actionReset];
+  }
+  
+  return resign;
+}
+
 @end

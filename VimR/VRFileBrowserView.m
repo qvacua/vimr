@@ -131,6 +131,10 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   return YES;
 }
 
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification {
+  [_fileOutlineView actionReset];
+}
+
 #pragma mark NSView
 - (BOOL)mouseDownCanMoveWindow {
   // I dunno why, but if we don't override this, then the window title has the inactive appearance and the drag in the
