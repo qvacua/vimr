@@ -89,6 +89,7 @@ BOOL IsPrintableAscii(unichar key) {
 
 - (void)endLineEditing {
   VRFileBrowserActionMode _newMode = VRFileBrowserActionModeNormal;
+  NSString *statusMessage = @"";
   
   switch (_actionMode) {
     case VRFileBrowserActionModeSearch:
