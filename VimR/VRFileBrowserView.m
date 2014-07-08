@@ -222,13 +222,30 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   }
 }
 
+- (BOOL)removePathIfNecessary:(NSString *)path error:(NSError **)error{
+  BOOL pathExists, pathIsDirectory;
+  pathExists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&pathIsDirectory];
+  
+  if (pathExists && !pathIsDirectory) {
+    // Given the way path is resolved, it should never be a directory
+    return [[NSFileManager defaultManager] removeItemAtPath:path error:error];
+  }
+  
+  return YES;
+}
+
 - (void)actionMoveToPath:(NSString *)path {
   VRNode *node =  [_fileOutlineView selectedItem];
   path = VRResolvePathRelativeToPath(path, node.url.path, node.isDir);
 
   NSError *error;
+  BOOL success;
   
-  if (![[NSFileManager defaultManager] moveItemAtPath:node.url.path toPath:path error:&error]) {
+  success = [self removePathIfNecessary:path error:&error];
+  if (success) {
+    success = [[NSFileManager defaultManager] moveItemAtPath:node.url.path toPath:path error:&error];
+  }
+  if (!success) {
     [self updateStatusMessage:[error localizedDescription]];
   }
 }
@@ -259,8 +276,13 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   path = VRResolvePathRelativeToPath(path, node.url.path, node.isDir);
   
   NSError *error;
+  BOOL success;
   
-  if (![[NSFileManager defaultManager] copyItemAtPath:[node.url path] toPath:path error:&error]) {
+  success = [self removePathIfNecessary:path error:&error];
+  if (success) {
+    success = [[NSFileManager defaultManager] copyItemAtPath:node.url.path toPath:path error:&error];
+  }
+  if (!success) {
     [self updateStatusMessage:[error localizedDescription]];
   }
 }
