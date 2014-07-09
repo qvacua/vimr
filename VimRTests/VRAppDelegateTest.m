@@ -96,6 +96,7 @@ static NSOpenPanel *openPanel;
 
   [appDelegate openDocument:nil];
   [verify(openPanel) setAllowsMultipleSelection:YES];
+  [verify(openPanel) setCanChooseDirectories:YES];
   [verify(workspaceController) openFilesInNewWorkspace:@[
       [NSURL fileURLWithPath:@"/tmp"],
       [NSURL fileURLWithPath:@"/usr"]
@@ -107,6 +108,7 @@ static NSOpenPanel *openPanel;
 
   [appDelegate openDocument:nil];
   [verify(openPanel) setAllowsMultipleSelection:YES];
+  [verify(openPanel) setCanChooseDirectories:YES];
   [verifyCount(workspaceController, never()) openFilesInNewWorkspace:anything()];
 }
 

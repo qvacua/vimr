@@ -1,4 +1,6 @@
+#import <MacVimFramework/MacVimFramework.h>
 #import "VRUtils.h"
+#import "NSURL+VR.h"
 
 
 void dispatch_to_main_thread(dispatch_block_t block) {
@@ -17,6 +19,10 @@ NSURL *common_parent_url(NSArray *fileUrls) {
   NSURL *firstUrl = fileUrls[0];
 
   if (fileUrls.count == 1) {
+    if (firstUrl.isDirectory) {
+      return firstUrl;
+    }
+
     return firstUrl.URLByDeletingLastPathComponent;
   }
 
@@ -72,6 +78,10 @@ NSArray *urls_from_paths(NSArray *paths) {
 
 CGRect rect_with_origin(CGPoint origin, CGFloat width, CGFloat height) {
   return CGRectMake(origin.x, origin.y, width, height);
+}
+
+NSData *vim_data_for_menu_descriptor(NSArray *descriptor) {
+  return [@{@"descriptor" : descriptor} dictionaryAsData];
 }
 
 NSString *VRResolvePathRelativeToPathWithFileManager(NSString *path, NSString *relativeToPath, BOOL sibling, NSFileManager *fileManager) {

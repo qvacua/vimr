@@ -15,17 +15,26 @@
 @end
 
 
-@implementation VRUtilsTest
+@implementation VRUtilsTest {
+  NSString *rsrcPath;
+}
+
+- (void)setUp {
+  rsrcPath = [[NSBundle bundleForClass:[self class]] resourcePath];
+}
 
 - (void)testCommonParentUrl {
-  NSURL *parent = common_parent_url(@[
-      [NSURL fileURLWithPath:@"/a/b/c/d/e.txt"],
-      [NSURL fileURLWithPath:@"/a/b/c/d/1/2/3/o.txt"],
-      [NSURL fileURLWithPath:@"/a/b/c/ae.txt"],
-      [NSURL fileURLWithPath:@"/a/b/c/d/3.txt"],
-  ]);
+  NSURL *url1 = [NSURL fileURLWithPath:[rsrcPath stringByAppendingPathComponent:@"level-1/level-1-file-1"]];
+  NSURL *url2 = [NSURL fileURLWithPath:[rsrcPath stringByAppendingPathComponent:@"level-1/level-2-a"]];
+  NSURL *url3 = [NSURL fileURLWithPath:[rsrcPath stringByAppendingPathComponent:@"level-1/level-2-b/level-2-b-file-1"]];
 
-  assertThat(parent.path, is(@"/a/b/c"));
+  NSURL *parent = common_parent_url(@[url1, url2, url3]);
+  assertThat(parent, is([NSURL fileURLWithPath:[rsrcPath stringByAppendingPathComponent:@"level-1"]]));
+}
+
+- (void)testCommonParentUrlWithOneDir {
+  NSURL *parent = common_parent_url(@[[NSURL fileURLWithPath:[rsrcPath stringByAppendingPathComponent:@"level-1"]]]);
+  assertThat(parent, is([NSURL fileURLWithPath:[rsrcPath stringByAppendingPathComponent:@"level-1"]]));
 }
 
 - (void)testUrlsFromPaths {

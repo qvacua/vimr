@@ -1,0 +1,34 @@
+/* mostly based on http://webdesign.maratz.com/lab/typography-for-developers/ */
+* { margin: 0; padding: 0; }
+
+html { font: 10px/150% Helvetica, sans-serif; color: #444; }
+
+body { padding: 1em 4em; text-rendering: optimizeLegibility; }
+
+p,
+li,
+th,
+td      { font-size: 1.6em; line-height: 1.5em; }
+
+p       { margin-bottom: 1.5em; }
+
+ul,
+ol      { margin-bottom: 2.4em; }
+
+h3,
+h2,
+h1      { font-weight: bold; line-height: 1.5em; }
+
+h3      { font-size: 1.6em; }
+h2      { font-size: 2.4em; padding: .5833em 0 0; margin-bottom: .9166em; }
+h1      { font-size: 3.2em; padding: 12px 0 0; margin-bottom: .59em; }
+
+table   { border-collapse: collapse; margin-top: 3.6em; margin-bottom: 3.6em; table-layout: fixed; width: 100%; }
+
+th      { font-weight: normal; }
+th, td  { border-top: .0625em solid #ccc; padding: .6875em 1em .75em; vertical-align: top; }
+
+.numeric        { text-align: right; }
+td.numeric      { font-family: Menlo, monospace; }
+th[scope="row"] { padding-left: 0; text-align: left; white-space: nowrap; }
+

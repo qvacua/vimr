@@ -44,7 +44,7 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 }
 
 - (IBAction)openDocument:(id)sender {
-  NSArray *urls = [self urlsFromOpenPanel];
+  NSArray *urls = [self urlsFromOpenPanelWithCanChooseDir:YES];
 
   if (!urls || urls.isEmpty) {
     return;
@@ -60,7 +60,7 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
     return;
   }
 
-  NSArray *urls = [self urlsFromOpenPanel];
+  NSArray *urls = [self urlsFromOpenPanelWithCanChooseDir:NO];
   VRMainWindowController *controller = (VRMainWindowController *) keyWindow.windowController;
   [controller.workspace openFilesWithUrls:urls];
 }
@@ -269,9 +269,10 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 }
 
 #pragma mark Private
-- (NSArray *)urlsFromOpenPanel {
+- (NSArray *)urlsFromOpenPanelWithCanChooseDir:(BOOL)canChooseDir {
   NSOpenPanel *openPanel = [NSOpenPanel openPanel];
   openPanel.allowsMultipleSelection = YES;
+  openPanel.canChooseDirectories = canChooseDir;
 
   if ([openPanel runModal] != NSOKButton) {
     DDLogDebug(@"no files selected");

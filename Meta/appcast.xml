@@ -1,0 +1,25 @@
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/"
+     version="2.0">
+    <channel>
+        <title>VimR Appcast</title>
+        <link>http://qvacua.com</link>
+        <description>Most recent changes with links to updates for VimR.</description>
+        <language>en</language>
+        <item>
+            <title>Version 0.0.9</title>
+            <description>
+                New Features
+            </description>
+            <sparkle:releaseNotesLink>
+                http://qvacua.com/vimr/release-notes.html
+            </sparkle:releaseNotesLink>
+            <pubDate>2014-07-08 20:40:11 +0000</pubDate>
+            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.0.9-10/VimR-0.0.9.tar.bz2"
+                       sparkle:version="10"
+                       sparkle:shortVersionString="0.0.9"
+                       sparkle:dsaSignature="MC0CFB6borg3JisYu0pTqYJbo6tJf9ahAhUAicY+4S9WY9hChf/xxScYBnRrf7s="
+                       length="7884800"
+                       type="application/octet-stream"/>
+        </item>
+    </channel>
+</rss>
