@@ -710,7 +710,8 @@ const int qMainWindowBorderThickness = 22;
   window.delegate = self;
   window.hasShadow = YES;
   window.title = @"VimR";
-
+  window.opaque = NO;
+    
   [window setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
   [window setContentBorderThickness:qMainWindowBorderThickness forEdge:NSMinYEdge];
 
