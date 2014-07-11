@@ -10,18 +10,22 @@
 #import "VRUserDefaults.h"
 
 
-NSString *const qDefaultShowHiddenInFileBrowser = @"show-hidden-files-in-file-browser";
-NSString *const qDefaultSyncWorkingDirectoryWithVimPwd = @"sync-working-directory-with-vim-pwd";
-NSString *const qDefaultShowFoldersFirst = @"show-folder-first";
-NSString *const qDefaultDefaultOpeningBehavior = @"default-opening-behavior";
 NSString *const qDefaultShowStatusBar = @"show-status-bar";
 NSString *const qDefaultShowSideBar = @"show-side-bar";
 NSString *const qDefaultShowSideBarOnRight = @"show-side-bar-on-right";
 
+NSString *const qDefaultShowHiddenInFileBrowser = @"show-hidden-files-in-file-browser";
+NSString *const qDefaultSyncWorkingDirectoryWithVimPwd = @"sync-working-directory-with-vim-pwd";
+NSString *const qDefaultShowFoldersFirst = @"show-folder-first";
+
+NSString *const qDefaultDefaultOpeningBehavior = @"default-opening-behavior";
 NSString *const qOpenModeInNewTabValue = @"in-new-tab";
 NSString *const qOpenModeInCurrentTabValue = @"in-current-tab";
 NSString *const qOpenModeInVerticalSplitValue = @"in-vertical-split-tab";
 NSString *const qOpenModeInHorizontalSplitValue = @"in-horizontal-split-tab";
+
+NSString *const qDefaultAutoSaveOnFrameDeactivation = @"auto-save-on-frame-deactivation";
+NSString *const qDefaultAutoSaveOnCursorHold = @"auto-save-on-cursor-hold";
 
 
 VROpenMode open_mode_from_modifier(NSUInteger modifierFlags, VROpenMode defaultMode) {

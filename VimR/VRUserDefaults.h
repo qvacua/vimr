@@ -24,6 +24,9 @@ extern NSString *const qOpenModeInCurrentTabValue;
 extern NSString *const qOpenModeInVerticalSplitValue;
 extern NSString *const qOpenModeInHorizontalSplitValue;
 
+extern NSString *const qDefaultAutoSaveOnFrameDeactivation;
+extern NSString *const qDefaultAutoSaveOnCursorHold;
+
 
 typedef enum {
   VROpenModeInNewTab,
