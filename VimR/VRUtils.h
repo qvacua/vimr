@@ -20,3 +20,6 @@ OBJC_EXTERN NSValue *vpoint(CGPoint point);
 OBJC_EXTERN NSArray *urls_from_paths(NSArray *);
 OBJC_EXTERN CGRect rect_with_origin(CGPoint origin, CGFloat width, CGFloat height);
 OBJC_EXTERN NSData *vim_data_for_menu_descriptor(NSArray *descriptor);
+
+NSString *VRResolvePathRelativeToPathWithFileManager(NSString *path, NSString *relativeToPath, BOOL sibling, NSFileManager *fileManager);
+NSString *VRResolvePathRelativeToPath(NSString *path, NSString *relativeToPath, BOOL sibling);

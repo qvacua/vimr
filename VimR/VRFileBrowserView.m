@@ -15,7 +15,7 @@
 #import "VRDefaultLogSetting.h"
 #import "OakImageAndTextCell.h"
 #import "NSArray+VR.h"
-#import "VROutlineView.h"
+#import "VRFileBrowserOutlineView.h"
 #import "NSTableView+VR.h"
 #import "VRWorkspaceView.h"
 
@@ -31,23 +31,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
         return NSOrderedDescending;
       }
     };
-
-
-@implementation VRNode
-
-- (NSString *)description {
-  NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
-  [description appendFormat:@"self.url=%@", self.url];
-  [description appendFormat:@", self.name=%@", self.name];
-  [description appendFormat:@", self.children=%@", self.children];
-  [description appendFormat:@", self.dir=%d", self.dir];
-  [description appendFormat:@", self.hidden=%d", self.hidden];
-  [description appendFormat:@", self.item=%@", self.item];
-  [description appendString:@">"];
-  return description;
-}
-
-@end
 
 
 @implementation VRFileBrowserView {
@@ -101,35 +84,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   [_notificationCenter removeObserver:self];
 }
 
-#pragma mark VRMovementsAndActionsProtocol
-- (void)viMotionLeft:(id)sender event:(NSEvent *)event {
-  [self fileOutlineViewDoubleClicked:sender];
-}
-
-- (void)viMotionUp:(id)sender event:(NSEvent *)event {
-  [_fileOutlineView moveSelectionByDelta:-1];
-}
-
-- (void)viMotionDown:(id)sender event:(NSEvent *)event {
-  [_fileOutlineView moveSelectionByDelta:1];
-}
-
-- (void)viMotionRight:(id)sender event:(NSEvent *)event {
-  [self fileOutlineViewDoubleClicked:sender];
-}
-
-- (void)actionSpace:(id)sender event:(NSEvent *)event {
-  [self fileOutlineViewDoubleClicked:sender];
-}
-
-- (void)actionCarriageReturn:(id)sender event:(NSEvent *)event {
-  [self fileOutlineViewDoubleClicked:sender];
-}
-
-- (void)actionEscape:(id)sender event:(NSEvent *)event {
-  [self.window makeFirstResponder:[self.window.windowController vimView].textView];
-}
-
 #pragma mark NSOutlineViewDataSource
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(VRNode *)item {
   VRNode *currentNode = item ?: _rootNode;
@@ -177,11 +131,192 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   return YES;
 }
 
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification {
+  [_fileOutlineView actionReset];
+}
+
 #pragma mark NSView
 - (BOOL)mouseDownCanMoveWindow {
   // I dunno why, but if we don't override this, then the window title has the inactive appearance and the drag in the
   // VRWorkspaceView in combination with the vim view does not work correctly. Overriding -isOpaque does not suffice.
   return NO;
+}
+
+#pragma mark VRFileBrowserActionDelegate
+
+- (void)actionOpenDefault {
+  [self fileOutlineViewDoubleClicked:self];
+}
+
+- (void)actionOpenInNewTab {
+  [self openInMode:VROpenModeInNewTab];
+}
+
+- (void)actionOpenInCurrentTab {
+  [self openInMode:VROpenModeInCurrentTab];
+}
+
+- (void)actionOpenInVerticalSplit {
+  [self openInMode:VROpenModeInVerticalSplit];
+}
+
+- (void)actionOpenInHorizontalSplit {
+  [self openInMode:VROpenModeInHorizontalSplit];
+}
+
+- (void)search:(NSString *)string increment:(int)increment {
+  NSUInteger selectedIndex = [_fileOutlineView.selectedRowIndexes firstIndex];
+  for (NSUInteger i = 0; i < _fileOutlineView.numberOfRows; i++) {
+    NSUInteger row = (i*increment + selectedIndex + increment) % _fileOutlineView.numberOfRows;
+    VRNode *node = [_fileOutlineView itemAtRow:row];
+    if ([node.name rangeOfString:string].location != NSNotFound) {
+      if (selectedIndex == row) {
+        [self updateStatusMessage:@"No more matches"];
+        [self actionIgnore];
+        return;
+      } else {
+        [_fileOutlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+        [_fileOutlineView scrollRowToVisible:row];
+        [self updateStatusMessage:[NSString stringWithFormat:@"/%@", string]];
+        return;
+      }
+    }
+  }
+  [self updateStatusMessage:@"Nothing found"];
+  [self actionIgnore];
+}
+
+- (void)actionSearch:(NSString *)string {
+  [self search:string increment:1];
+}
+
+- (void)actionReverseSearch:(NSString *)string {
+  [self search:string increment:-1];
+}
+
+- (void)actionMoveDown {
+  [_fileOutlineView moveSelectionByDelta:1];
+}
+
+- (void)actionMoveUp {
+  [_fileOutlineView moveSelectionByDelta:-1];
+}
+
+- (void)actionFocusVimView {
+  [self.window makeFirstResponder:[self.window.windowController vimView].textView];
+}
+
+- (void)actionAddPath:(NSString *)path {
+  BOOL createDirectory = [path hasSuffix:@"/"];
+  VRNode *node = _fileOutlineView.selectedItem;
+  NSString *relativeToPath = node ? node.url.path : _rootUrl.path;
+  NSError *error;
+  
+  path = VRResolvePathRelativeToPath(path, relativeToPath, NO);
+  
+  if (createDirectory) {
+    BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:&error];
+    if (!success) {
+      [self updateStatusMessage:error.localizedFailureReason];
+    }
+  } else {
+    BOOL success = [[NSFileManager defaultManager] createFileAtPath:path contents:[NSData data] attributes:nil];
+    if (!success) {
+      [self updateStatusMessage:[NSString stringWithFormat:@"%s", strerror(errno)]];
+    }
+  }
+  
+  if (node.isDir) {
+    [_fileOutlineView expandItem:node];
+  }
+}
+
+- (BOOL)removePathIfNecessary:(NSString *)path error:(NSError **)error{
+  BOOL pathExists, pathIsDirectory;
+  pathExists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&pathIsDirectory];
+  
+  if (pathExists && !pathIsDirectory) {
+    // Given the way path is resolved, it should never be a directory
+    return [[NSFileManager defaultManager] removeItemAtPath:path error:error];
+  }
+  
+  return YES;
+}
+
+- (void)actionMoveToPath:(NSString *)path {
+  VRNode *node =  [_fileOutlineView selectedItem];
+  path = VRResolvePathRelativeToPath(path, node.url.path, node.isDir);
+
+  NSError *error;
+  BOOL success;
+  
+  success = [self removePathIfNecessary:path error:&error];
+  if (success) {
+    success = [[NSFileManager defaultManager] moveItemAtPath:node.url.path toPath:path error:&error];
+  }
+  if (!success) {
+    [self updateStatusMessage:error.localizedFailureReason];
+  }
+}
+
+- (void)actionDelete {
+  VRNode *node =  [_fileOutlineView selectedItem];
+  NSError *error;
+  BOOL success = YES;
+
+  if (node.isDir) {
+    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:node.url.path error:&error];
+    if (contents.count) {
+      [self updateStatusMessage:@"Directory is not empty. Cannot delete."];
+    } else {
+      success = [[NSFileManager defaultManager] removeItemAtURL:node.url error:&error];
+    }
+  } else {
+    success = [[NSFileManager defaultManager] removeItemAtURL:node.url error:&error];
+  }
+  
+  if (!success) {
+    [self updateStatusMessage:error.localizedFailureReason];
+  }
+}
+
+- (void)actionCopyToPath:(NSString *)path {
+  VRNode *node =  [_fileOutlineView selectedItem];
+  path = VRResolvePathRelativeToPath(path, node.url.path, node.isDir);
+  
+  NSError *error;
+  BOOL success;
+  
+  success = [self removePathIfNecessary:path error:&error];
+  if (success) {
+    success = [[NSFileManager defaultManager] copyItemAtPath:node.url.path toPath:path error:&error];
+  }
+  if (!success) {
+    [self updateStatusMessage:error.localizedFailureReason];
+  }
+}
+
+- (BOOL)actionCheckClobberForPath:(NSString *)path {
+  // Check clobber uses move and copy semantics, i.e. it treats directories as siblings.
+  VRNode *node =  [_fileOutlineView selectedItem];
+  path = VRResolvePathRelativeToPath(path, node.url.path, node.isDir);
+  return [[NSFileManager defaultManager] fileExistsAtPath:path];
+}
+
+- (void)actionIgnore {
+  NSBeep();
+}
+
+- (BOOL)actionCanActOnNode {
+  return [_fileOutlineView numberOfRows] > 0;
+}
+
+- (BOOL)actionNodeIsDirectory {
+  return _fileOutlineView.selectedItem.isDir;
+}
+
+- (void)updateStatusMessage:(NSString *)message {
+  [_workspaceView setStatusMessage:message];
 }
 
 #pragma mark Private
@@ -191,7 +326,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   [tableColumn.dataCell setAllowsEditingTextAttributes:YES];
   [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingTail];
 
-  _fileOutlineView = [[VROutlineView alloc] initWithFrame:CGRectZero];
+  _fileOutlineView = [[VRFileBrowserOutlineView alloc] initWithFrame:CGRectZero];
   [_fileOutlineView addTableColumn:tableColumn];
   _fileOutlineView.outlineTableColumn = tableColumn;
   [_fileOutlineView sizeLastColumnToFit];
@@ -201,8 +336,9 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   _fileOutlineView.focusRingType = NSFocusRingTypeNone;
   _fileOutlineView.dataSource = self;
   _fileOutlineView.delegate = self;
-  _fileOutlineView.movementsAndActionDelegate = self;
+  _fileOutlineView.actionDelegate = self;
   _fileOutlineView.allowsMultipleSelection = NO;
+  _fileOutlineView.allowsEmptySelection = NO;
   _fileOutlineView.doubleAction = @selector(fileOutlineViewDoubleClicked:);
   _fileOutlineView.backgroundColor = [NSColor colorWithSRGBRed:0.925 green:0.925 blue:0.925 alpha:1.0];
 
@@ -224,19 +360,22 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 - (void)fileOutlineViewDoubleClicked:(id)sender {
-  VRNode *selectedItem = _fileOutlineView.selectedItem;
-  if (!selectedItem) {return;}
-
-  if (!selectedItem.dir) {
     VROpenMode mode = open_mode_from_event(
-        [NSApp currentEvent],
-        [_userDefaults stringForKey:qDefaultDefaultOpeningBehavior]
-    );
+                                           [NSApp currentEvent],
+                                           [_userDefaults stringForKey:qDefaultDefaultOpeningBehavior]
+                                          );
+    [self openInMode:mode];
+}
 
+- (void)openInMode:(VROpenMode)mode {
+  VRNode *selectedItem = [_fileOutlineView selectedItem];
+  if (!selectedItem) {return;}
+  
+  if (!selectedItem.dir) {
     [(VRMainWindowController *) self.window.windowController openFileWithUrls:selectedItem.url openMode:mode];
     return;
   }
-
+  
   if ([_fileOutlineView isItemExpanded:selectedItem]) {
     [_fileOutlineView collapseItem:selectedItem];
   } else {
