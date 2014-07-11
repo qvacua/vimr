@@ -55,7 +55,7 @@ NSEvent *KeyDownEvent(unichar key) {
 
 - (void)type:(NSString *)string {
   for (int i = 0; i < string.length; i++) {
-    [fileOutlineView keyDown:KeyDownEvent([string characterAtIndex:i])];
+    [fileOutlineView keyDown:KeyDownEvent([string characterAtIndex:(NSUInteger) i])];
   }
 }
 

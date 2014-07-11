@@ -7,6 +7,7 @@
 * See LICENSE
 */
 
+#import "VRFileBrowserOutlineView.h"
 #import "VRFileBrowserView.h"
 #import "VRUtils.h"
 #import "VRFileItemManager.h"
@@ -15,7 +16,6 @@
 #import "VRDefaultLogSetting.h"
 #import "OakImageAndTextCell.h"
 #import "NSArray+VR.h"
-#import "VRFileBrowserOutlineView.h"
 #import "NSTableView+VR.h"
 #import "VRWorkspaceView.h"
 

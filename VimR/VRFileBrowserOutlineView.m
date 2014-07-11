@@ -1,14 +1,15 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import "VRFileBrowserOutlineView.h"
-#import "VRMainWindowController.h"
+#import "VRUtils.h"
+
 
 static const int qEscCharacter = '\033';
 
@@ -30,17 +31,9 @@ static const int qEscCharacter = '\033';
 @end
 
 
-BOOL IsPrintableAscii(unichar key) {
+static inline BOOL IsPrintableAscii(unichar key) {
   return key >= 32 && key < 127;
 }
-
-
-@interface VRFileBrowserOutlineView ()
-
-@property (readonly) BOOL lineEditing;
-@property (readonly) NSString *lineEditingPrompt;
-
-@end
 
 
 @implementation VRFileBrowserOutlineView {
@@ -48,91 +41,30 @@ BOOL IsPrintableAscii(unichar key) {
   NSString *_lastSearch;
 }
 
+#pragma mark NSView
 - (instancetype)initWithFrame:(NSRect)frameRect {
-  if ((self = [super initWithFrame:frameRect])) {
-    _lineEditingString = @"";
-  }
+  self = [super initWithFrame:frameRect];
+  RETURN_NIL_WHEN_NOT_SELF
+
+  _lineEditingString = @"";
+
   return self;
 }
 
-#pragma mark Line Editing
-
-- (BOOL)lineEditing {
-  switch (self.actionMode) {
-    case VRFileBrowserActionModeSearch:
-    case VRFileBrowserActionModeMenuAdd:
-    case VRFileBrowserActionModeMenuMove:
-    case VRFileBrowserActionModeMenuCopy:
-      return YES;
-    default:
-      return NO;
-  }
-}
-
-- (NSString *)lineEditingPrompt {
-  switch (self.actionMode) {
-    case VRFileBrowserActionModeSearch:
-      return @"/";
-    case VRFileBrowserActionModeMenuAdd:
-      return @"Add node: ";
-    case VRFileBrowserActionModeMenuMove:
-      return @"Move to: ";
-    case VRFileBrowserActionModeMenuCopy:
-      return @"Copy to: ";
-    default:
-      return @"";
-  }
-}
-
-- (void)updateLineEditingStatusMessage {
-  [self.actionDelegate updateStatusMessage:[NSString stringWithFormat:@"%@%@", self.lineEditingPrompt, _lineEditingString]];
-}
-
-- (void)endLineEditing {
-  VRFileBrowserActionMode _newMode = VRFileBrowserActionModeNormal;
-  [self.actionDelegate updateStatusMessage:@""];
-  
-  switch (_actionMode) {
-    case VRFileBrowserActionModeSearch:
-      _lastSearch = _lineEditingString;
-      [self.actionDelegate actionSearch:_lineEditingString];
-      break;
-    case VRFileBrowserActionModeMenuAdd:
-      [self.actionDelegate actionAddPath:_lineEditingString];
-      break;
-    case VRFileBrowserActionModeMenuMove:
-    case VRFileBrowserActionModeMenuCopy:
-      if ([self.actionDelegate actionCheckClobberForPath:_lineEditingString]) {
-        [self.actionDelegate updateStatusMessage:@"Overwrite existing file? (y)es (n)o"];
-        _newMode = VRFileBrowserActionModeConfirmation;
-      } else {
-        _actionMode == VRFileBrowserActionModeMenuMove ?
-        [self.actionDelegate actionMoveToPath:_lineEditingString] :
-        [self.actionDelegate actionCopyToPath:_lineEditingString];
-      }
-      break;
-    default:
-      break;
-  }
-  
-  _actionMode = _newMode;
-}
-
 #pragma mark NSResponder
-
 - (void)keyDown:(NSEvent *)event {
   NSString *characters = [event charactersIgnoringModifiers];
   unichar key = 0;
   if (characters.length == 1) {
     key = [characters characterAtIndex:0];
   }
-  
+
   if (self.actionMode != VRFileBrowserActionModeNormal && key == qEscCharacter) {
     [self.actionDelegate updateStatusMessage:@"Type <Esc> again to focus text"];
     _actionMode = VRFileBrowserActionModeNormal;
     return;
   }
-  
+
   if (self.lineEditing) {
     switch (key) {
       case NSCarriageReturnCharacter:
@@ -146,7 +78,7 @@ BOOL IsPrintableAscii(unichar key) {
         break;
       case NSDeleteCharacter:
         if (_lineEditingString.length > 0)
-          _lineEditingString = [_lineEditingString substringToIndex:_lineEditingString.length-1];
+          _lineEditingString = [_lineEditingString substringToIndex:_lineEditingString.length - 1];
         else {
           _lineEditingString = @"";
         }
@@ -175,16 +107,15 @@ BOOL IsPrintableAscii(unichar key) {
 
 - (BOOL)resignFirstResponder {
   BOOL resign = [super resignFirstResponder];
-  
+
   if (resign) {
     [self actionReset];
   }
-  
+
   return resign;
 }
 
 #pragma mark Key Processing
-
 - (BOOL)processKey:(unichar)key {
   switch (self.actionMode) {
     case VRFileBrowserActionModeNormal:
@@ -270,7 +201,7 @@ BOOL IsPrintableAscii(unichar key) {
     [self actionReset];
     return NO;
   }
-  
+
   switch (key) {
     case 'a':
       _actionMode = VRFileBrowserActionModeMenuAdd;
@@ -331,10 +262,9 @@ BOOL IsPrintableAscii(unichar key) {
 }
 
 #pragma mark Public
-
 - (VRNode *)selectedItem {
   NSInteger selectedRow = self.selectedRow;
-  if (selectedRow < 0) { return nil; }
+  if (selectedRow < 0) {return nil;}
 
   return [self itemAtRow:selectedRow];
 }
@@ -342,6 +272,70 @@ BOOL IsPrintableAscii(unichar key) {
 - (void)actionReset {
   _actionMode = VRFileBrowserActionModeNormal;
   [self.actionDelegate updateStatusMessage:@""];
+}
+
+#pragma mark Line Editing
+- (BOOL)lineEditing {
+  switch (self.actionMode) {
+    case VRFileBrowserActionModeSearch:
+    case VRFileBrowserActionModeMenuAdd:
+    case VRFileBrowserActionModeMenuMove:
+    case VRFileBrowserActionModeMenuCopy:
+      return YES;
+    default:
+      return NO;
+  }
+}
+
+- (NSString *)lineEditingPrompt {
+  switch (self.actionMode) {
+    case VRFileBrowserActionModeSearch:
+      return @"/";
+    case VRFileBrowserActionModeMenuAdd:
+      return @"Add node: ";
+    case VRFileBrowserActionModeMenuMove:
+      return @"Move to: ";
+    case VRFileBrowserActionModeMenuCopy:
+      return @"Copy to: ";
+    default:
+      return @"";
+  }
+}
+
+
+#pragma mark Private
+- (void)updateLineEditingStatusMessage {
+  [self.actionDelegate updateStatusMessage:SF(@"%@%@", self.lineEditingPrompt, _lineEditingString)];
+}
+
+- (void)endLineEditing {
+  VRFileBrowserActionMode _newMode = VRFileBrowserActionModeNormal;
+  [self.actionDelegate updateStatusMessage:@""];
+
+  switch (_actionMode) {
+    case VRFileBrowserActionModeSearch:
+      _lastSearch = _lineEditingString;
+      [self.actionDelegate actionSearch:_lineEditingString];
+      break;
+    case VRFileBrowserActionModeMenuAdd:
+      [self.actionDelegate actionAddPath:_lineEditingString];
+      break;
+    case VRFileBrowserActionModeMenuMove:
+    case VRFileBrowserActionModeMenuCopy:
+      if ([self.actionDelegate actionCheckClobberForPath:_lineEditingString]) {
+        [self.actionDelegate updateStatusMessage:@"Overwrite existing file? (y)es (n)o"];
+        _newMode = VRFileBrowserActionModeConfirmation;
+      } else {
+        _actionMode == VRFileBrowserActionModeMenuMove ?
+            [self.actionDelegate actionMoveToPath:_lineEditingString] :
+            [self.actionDelegate actionCopyToPath:_lineEditingString];
+      }
+      break;
+    default:
+      break;
+  }
+
+  _actionMode = _newMode;
 }
 
 @end
