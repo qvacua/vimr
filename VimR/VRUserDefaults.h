@@ -10,18 +10,20 @@
 #import <Foundation/Foundation.h>
 
 
-extern NSString *const qDefaultShowHiddenInFileBrowser;
-extern NSString *const qDefaultSyncWorkingDirectoryWithVimPwd;
-extern NSString *const qDefaultShowFoldersFirst;
-extern NSString *const qDefaultDefaultOpeningBehavior;
 extern NSString *const qDefaultShowStatusBar;
 extern NSString *const qDefaultShowSideBar;
 extern NSString *const qDefaultShowSideBarOnRight;
 
+extern NSString *const qDefaultShowFoldersFirst;
+extern NSString *const qDefaultShowHiddenInFileBrowser;
+extern NSString *const qDefaultSyncWorkingDirectoryWithVimPwd;
+
+extern NSString *const qDefaultDefaultOpeningBehavior;
 extern NSString *const qOpenModeInNewTabValue;
 extern NSString *const qOpenModeInCurrentTabValue;
 extern NSString *const qOpenModeInVerticalSplitValue;
 extern NSString *const qOpenModeInHorizontalSplitValue;
+
 
 typedef enum {
   VROpenModeInNewTab,
