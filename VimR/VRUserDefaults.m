@@ -27,7 +27,6 @@ NSString *const qOpenModeInHorizontalSplitValue = @"in-horizontal-split-tab";
 NSString *const qDefaultAutoSaveOnFrameDeactivation = @"auto-save-on-frame-deactivation";
 NSString *const qDefaultAutoSaveOnCursorHold = @"auto-save-on-cursor-hold";
 
-
 VROpenMode open_mode_from_modifier(NSUInteger modifierFlags, VROpenMode defaultMode) {
   BOOL optionKey = (modifierFlags & NSAlternateKeyMask) != 0;
   BOOL controlKey = (modifierFlags & NSControlKeyMask) != 0;

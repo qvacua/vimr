@@ -34,7 +34,9 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
 @autowire(userDefaultsController)
 
 #pragma mark NSWindow
-- (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag {
+- (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType
+                    defer:(BOOL)flag {
+
   self = [super initWithContentRect:contentRect styleMask:NSTitledWindowMask | NSClosableWindowMask
                             backing:NSBackingStoreBuffered defer:YES];
   RETURN_NIL_WHEN_NOT_SELF
@@ -55,12 +57,14 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
 
 #pragma mark Private
 - (void)addViews {
+  // default appearance
   NSTextField *daTitle = [self newTextLabelWithString:@"Default Appearance:" alignment:NSRightTextAlignment];
   NSButton *showStatusBarButton = [self checkButtonWithTitle:@"Show status bar" defaultKey:qDefaultShowStatusBar];
   NSButton *showSidebarButton = [self checkButtonWithTitle:@"Show sidebar" defaultKey:qDefaultShowSideBar];
   NSButton *showSidebarOnRightButton = [self checkButtonWithTitle:@"Sidebar on right"
                                                        defaultKey:qDefaultShowSideBarOnRight];
 
+  // file browser behavior
   NSTextField *fbbTitle = [self newTextLabelWithString:@"File Browser Behavior:" alignment:NSRightTextAlignment];
 
   NSButton *showFoldersFirstButton =
@@ -82,6 +86,7 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
   [fbbDescription.cell setWraps:YES];
   [fbbDescription.cell setUsesSingleLineMode:NO];
 
+  // default opening behavior
   NSTextField *domTitle = [self newTextLabelWithString:@"Default Opening Behavior:" alignment:NSRightTextAlignment];
 
   _defaultOpenModeButton = [[NSPopUpButton alloc] initWithFrame:CGRectZero pullsDown:NO];
@@ -107,6 +112,19 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
   _ctrlDescription = [self newDescriptionLabelWithString:qOpenInHorizontalSplitDescription alignment:NSLeftTextAlignment];
   [self defaultOpenBehaviorAction:_defaultOpenModeButton];
 
+  // auto saving
+  NSTextField *asTitle = [self newTextLabelWithString:@"Saving Behavior" alignment:NSRightTextAlignment];
+
+  NSButton *asOnFrameDeactivation = [self checkButtonWithTitle:@"Save automatically on focus loss"
+                                                    defaultKey:qDefaultAutoSaveOnFrameDeactivation];
+  NSTextField *asOfdDesc = [self newDescriptionLabelWithString:@"autocmd BufLeave,FocusLost * silent! wall"
+                                                     alignment:NSLeftTextAlignment];
+
+  NSButton *asOnCursorHold = [self checkButtonWithTitle:@"Save automatically if VimR is idle for some time"
+                                             defaultKey:qDefaultAutoSaveOnCursorHold];
+  NSTextField *asOchDesc = [self newDescriptionLabelWithString:@"autocmd CursorHold * silent! wall"
+                                                            alignment:NSLeftTextAlignment];
+
   NSDictionary *views = @{
       @"daTitle" : daTitle,
       @"showStatusBar" : showStatusBarButton,
@@ -129,9 +147,15 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
       @"cmdDesc" : _cmdDescription,
       @"optDesc" : _optDescription,
       @"ctrlDesc" : _ctrlDescription,
+
+      @"asTitle" : asTitle,
+      @"asOnFrameDeactivation" : asOnFrameDeactivation,
+      @"asOfdDesc" : asOfdDesc,
+      @"asOnCursorHold" : asOnCursorHold,
+      @"asOchDesc" : asOchDesc,
   };
 
-  for (NSView *view in @[fbbTitle, domTitle, noModifierTitle, cmdTitle, optTitle, ctrlTitle]) {
+  for (NSView *view in @[fbbTitle, domTitle, noModifierTitle, cmdTitle, optTitle, ctrlTitle, asTitle]) {
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTrailing
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:daTitle attribute:NSLayoutAttributeTrailing
@@ -157,13 +181,20 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
   CONSTRAIN(@"H:|-[optTitle]-[optDesc]-|");
   CONSTRAIN(@"H:|-[ctrlTitle]-[ctrlDesc]-|");
 
+  CONSTRAIN(@"H:|-[asTitle]-[asOnFrameDeactivation]");
+  CONSTRAIN(@"H:|-[asTitle]-[asOfdDesc]");
+  CONSTRAIN(@"H:|-[asTitle]-[asOnCursorHold]");
+  CONSTRAIN(@"H:|-[asTitle]-[asOchDesc]");
+
   [self.contentView addConstraint:[self baseLineConstraintForView:daTitle toView:showStatusBarButton]];
   [self.contentView addConstraint:[self baseLineConstraintForView:fbbTitle toView:showFoldersFirstButton]];
   [self.contentView addConstraint:[self baseLineConstraintForView:domTitle toView:_defaultOpenModeButton]];
+  [self.contentView addConstraint:[self baseLineConstraintForView:asTitle toView:asOnFrameDeactivation]];
 
   CONSTRAIN(@"V:|-[showStatusBar]-[showSidebar]-[showSidebarRight]-(24)-"
       "[showFoldersFirst]-[showHidden]-[syncWorkingDir]-[fbbDesc]-"
-      "[domMenu]-[noModifierTitle][cmdTitle][optTitle][ctrlTitle]-|");
+      "[domMenu]-[noModifierTitle][cmdTitle][optTitle][ctrlTitle]-(24)-"
+      "[asOnFrameDeactivation][asOfdDesc]-[asOnCursorHold][asOchDesc]-|");
   CONSTRAIN(@"V:[domMenu]-[noModifierDesc][cmdDesc][optDesc][ctrlDesc]");
 }
 

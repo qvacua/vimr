@@ -18,7 +18,6 @@
 #import "VROpenQuicklyWindowController.h"
 #import "VRDefaultLogSetting.h"
 #import "VRMainWindow.h"
-#import "NSArray+VR.h"
 #import "VRPrefWindow.h"
 
 
@@ -326,6 +325,14 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
   if (![_userDefaults objectForKey:qDefaultShowSideBarOnRight]) {
     [_userDefaults setBool:NO forKey:qDefaultShowSideBarOnRight];
+  }
+
+  if (![_userDefaults objectForKey:qDefaultAutoSaveOnFrameDeactivation]) {
+    [_userDefaults setBool:NO forKey:qDefaultAutoSaveOnFrameDeactivation];
+  }
+
+  if (![_userDefaults objectForKey:qDefaultAutoSaveOnCursorHold]) {
+    [_userDefaults setBool:NO forKey:qDefaultAutoSaveOnCursorHold];
   }
 }
 
