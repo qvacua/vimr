@@ -12,6 +12,7 @@
 #import "VRFileBrowserView.h"
 #import "VRUserDefaults.h"
 #import "VRWorkspaceView.h"
+#import "VRFileBrowserOutlineView.h"
 
 
 @interface VRFileBrowserViewTest : VRBaseTestCase

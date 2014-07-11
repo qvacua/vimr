@@ -8,32 +8,18 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "VRMovementsAndActionsProtocol.h"
 
 
 @class VRFileItem;
 @class VRFileItemManager;
-@class VROutlineView;
+@class VRFileBrowserOutlineView;
+@class VRNode;
 @class VRWorkspaceView;
 
-
-@interface VRNode : NSObject
-
-@property (nonatomic) NSURL *url;
-@property (nonatomic) id item;
-@property (nonatomic) NSString *name;
-@property (nonatomic) NSArray *children;
-@property (nonatomic, getter=isDir) BOOL dir;
-@property (nonatomic, getter=isHidden) BOOL hidden;
-
-- (NSString *)description;
-
-@end
+@protocol VRFileBrowserActionDelegate;
 
 
-@interface VRFileBrowserView : NSView <
-    NSOutlineViewDataSource, NSOutlineViewDelegate,
-    VRMovementsAndActionsProtocol>
+@interface VRFileBrowserView : NSView <NSOutlineViewDataSource, NSOutlineViewDelegate, VRFileBrowserActionDelegate>
 
 @property (nonatomic, weak) NSFileManager *fileManager;
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;
@@ -43,7 +29,7 @@
 @property (nonatomic) NSURL *rootUrl;
 
 @property (weak) VRWorkspaceView *workspaceView;
-@property (readonly) VROutlineView *fileOutlineView;
+@property (readonly) VRFileBrowserOutlineView *fileOutlineView;
 
 #pragma mark Public
 - (instancetype)initWithRootUrl:(NSURL *)rootUrl;
@@ -61,15 +47,6 @@
                    item:(VRNode *)item;
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldExpandItem:(id)item;
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldCollapseItem:(id)item;
-
-#pragma mark VRMovementsAndActionsProtocol
-- (void)viMotionLeft:(id)sender event:(NSEvent *)event;
-- (void)viMotionUp:(id)sender event:(NSEvent *)event;
-- (void)viMotionDown:(id)sender event:(NSEvent *)event;
-- (void)viMotionRight:(id)sender event:(NSEvent *)event;
-- (void)actionSpace:(id)sender event:(NSEvent *)event;
-- (void)actionCarriageReturn:(id)sender event:(NSEvent *)event;
-- (void)actionEscape:(id)sender event:(NSEvent *)event;
 
 #pragma mark NSView
 - (BOOL)mouseDownCanMoveWindow;

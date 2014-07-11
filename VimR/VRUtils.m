@@ -83,3 +83,36 @@ CGRect rect_with_origin(CGPoint origin, CGFloat width, CGFloat height) {
 NSData *vim_data_for_menu_descriptor(NSArray *descriptor) {
   return [@{@"descriptor" : descriptor} dictionaryAsData];
 }
+
+NSString *VRResolvePathRelativeToPathWithFileManager(NSString *path, NSString *relativeToPath, BOOL sibling, NSFileManager *fileManager) {
+  NSString *result;
+
+  if ([path hasPrefix:@"/"]) {
+    result = path;
+  } else if ([path hasPrefix:@"~"]) {
+    result = [path stringByExpandingTildeInPath];
+  } else {
+    NSString *parent;
+    BOOL relativeToPathExists, relativeToPathIsDirectory;
+    relativeToPathExists = [fileManager fileExistsAtPath:relativeToPath isDirectory:&relativeToPathIsDirectory];
+    if (relativeToPathExists && relativeToPathIsDirectory && !sibling) {
+      parent = relativeToPath;
+    } else {
+      parent = [relativeToPath stringByDeletingLastPathComponent];
+    }
+    result = [parent stringByAppendingPathComponent:path];
+  }
+  
+  BOOL resultExists, resultIsDirectory;
+  resultExists = [fileManager fileExistsAtPath:result isDirectory:&resultIsDirectory];
+
+  if (resultExists && resultIsDirectory) {
+    result = [result stringByAppendingPathComponent:[relativeToPath lastPathComponent]];
+  }
+
+  return result;
+}
+
+NSString *VRResolvePathRelativeToPath(NSString *path, NSString *relativeToPath, BOOL sibling) {
+  return VRResolvePathRelativeToPathWithFileManager(path, relativeToPath, sibling, [NSFileManager defaultManager]);
+}
