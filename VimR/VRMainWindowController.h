@@ -23,9 +23,7 @@ extern const int qMainWindowBorderThickness;
     MMVimControllerDelegate,
     NSUserInterfaceValidations>
 
-#pragma mark Properties
 @property (nonatomic, weak) VRWorkspace *workspace;
-
 @property (nonatomic, weak) MMVimController *vimController;
 @property (nonatomic, weak) MMVimView *vimView;
 

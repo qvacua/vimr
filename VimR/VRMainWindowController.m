@@ -27,6 +27,9 @@
 const int qMainWindowBorderThickness = 22;
 
 
+static NSString *const qVimRAutoGroupName = @"VimR";
+
+
 #define CONSTRAINT(fmt) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]];
 
 
@@ -57,7 +60,8 @@ const int qMainWindowBorderThickness = 22;
 }
 
 - (void)cleanUpAndClose {
-  log4Mark;
+  [_workspace.userDefaults removeObserver:self forKeyPath:qDefaultAutoSaveOnFrameDeactivation];
+  [_workspace.userDefaults removeObserver:self forKeyPath:qDefaultAutoSaveOnCursorHold];
 
   [_vimView removeFromSuperviewWithoutNeedingDisplay];
   [_vimView cleanup];
@@ -438,6 +442,9 @@ const int qMainWindowBorderThickness = 22;
 
   [_vimView addNewTabViewItem];
 
+  [self observeUserDefaults];
+  [self applyUserDefaultsToVim];
+
   _vimViewSetUpDone = YES;
   _windowOriginShouldMoveToKeepOnScreen = YES;
 
@@ -620,7 +627,61 @@ const int qMainWindowBorderThickness = 22;
   return [self desiredWinFrameRectForWinFrameRect:winRect].size;
 }
 
+#pragma mark KVO
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change
+                       context:(void *)context {
+
+  [self applyUserDefaultsToVim];
+}
+
+
 #pragma mark Private
+- (void)observeUserDefaults {
+  [_workspace.userDefaults addObserver:self forKeyPath:qDefaultAutoSaveOnFrameDeactivation
+                               options:NSKeyValueObservingOptionNew context:NULL];
+  [_workspace.userDefaults addObserver:self forKeyPath:qDefaultAutoSaveOnCursorHold
+                               options:NSKeyValueObservingOptionNew context:NULL];
+}
+
+- (void)sendMultipleCommandsToVim:(NSArray *)commands {
+  NSString *joinedCmds = [commands componentsJoinedByString:@"<CR>"];
+
+  [self sendCommandToVim:joinedCmds];
+}
+
+- (void)applyUserDefaultsToVim {
+  BOOL autoSaveOnFrameDeactivation = [_workspace.userDefaults boolForKey:qDefaultAutoSaveOnFrameDeactivation];
+  BOOL autoSaveOnCursorHold = [_workspace.userDefaults boolForKey:qDefaultAutoSaveOnCursorHold];
+
+  if (autoSaveOnFrameDeactivation) {
+    [self sendMultipleCommandsToVim:@[
+        SF(@":augroup %@", qVimRAutoGroupName),
+        @":autocmd BufLeave,FocusLost * silent! wall",
+        @":augroup END",
+    ]];
+  } else {
+    [self sendMultipleCommandsToVim:@[
+        SF(@":augroup %@", qVimRAutoGroupName),
+        @":autocmd! BufLeave,FocusLost *",
+        @":augroup END",
+    ]];
+  }
+
+  if (autoSaveOnCursorHold) {
+    [self sendMultipleCommandsToVim:@[
+        SF(@":augroup %@", qVimRAutoGroupName),
+        @":autocmd CursorHold * silent! wall",
+        @":augroup END",
+    ]];
+  } else {
+    [self sendMultipleCommandsToVim:@[
+        SF(@":augroup %@", qVimRAutoGroupName),
+        @":autocmd! CursorHold *",
+        @":augroup END",
+    ]];
+  }
+}
+
 - (void)addViews {
   _vimView.tabBarControl.styleNamed = @"Metal";
 
@@ -711,7 +772,7 @@ const int qMainWindowBorderThickness = 22;
   window.hasShadow = YES;
   window.title = @"VimR";
   window.opaque = NO;
-    
+
   [window setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
   [window setContentBorderThickness:qMainWindowBorderThickness forEdge:NSMinYEdge];
 

@@ -117,12 +117,12 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
 
   NSButton *asOnFrameDeactivation = [self checkButtonWithTitle:@"Save automatically on focus loss"
                                                     defaultKey:qDefaultAutoSaveOnFrameDeactivation];
-  NSTextField *asOfdDesc = [self newDescriptionLabelWithString:@"autocmd BufLeave,FocusLost * silent! wall"
+  NSTextField *asOfdDesc = [self newDescriptionLabelWithString:@"'autocmd BufLeave,FocusLost * silent! wall' in VimR group"
                                                      alignment:NSLeftTextAlignment];
 
   NSButton *asOnCursorHold = [self checkButtonWithTitle:@"Save automatically if VimR is idle for some time"
                                              defaultKey:qDefaultAutoSaveOnCursorHold];
-  NSTextField *asOchDesc = [self newDescriptionLabelWithString:@"autocmd CursorHold * silent! wall"
+  NSTextField *asOchDesc = [self newDescriptionLabelWithString:@"'autocmd CursorHold * silent! wall' in VimR group"
                                                             alignment:NSLeftTextAlignment];
 
   NSDictionary *views = @{
@@ -194,7 +194,7 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
   CONSTRAIN(@"V:|-[showStatusBar]-[showSidebar]-[showSidebarRight]-(24)-"
       "[showFoldersFirst]-[showHidden]-[syncWorkingDir]-[fbbDesc]-"
       "[domMenu]-[noModifierTitle][cmdTitle][optTitle][ctrlTitle]-(24)-"
-      "[asOnFrameDeactivation][asOfdDesc]-[asOnCursorHold][asOchDesc]-|");
+      "[asOnFrameDeactivation]-[asOfdDesc]-[asOnCursorHold]-[asOchDesc]-|");
   CONSTRAIN(@"V:[domMenu]-[noModifierDesc][cmdDesc][optDesc][ctrlDesc]");
 }
 
