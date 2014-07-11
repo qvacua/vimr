@@ -9,6 +9,7 @@
 
 #import <TBCacao/TBCacao.h>
 #import <MacVimFramework/MacVimFramework.h>
+#import "NSArray+VR.h"
 #import "VRAppDelegate.h"
 #import "VRWorkspaceController.h"
 #import "VRMainWindowController.h"
