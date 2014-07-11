@@ -13,6 +13,10 @@
 
 
 NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
+NSString *const qOpenInNewTabDescription = @"Opens in a new tab";
+NSString *const qOpenInCurrentTabDescription = @"Opens in the current tab";
+NSString *const qOpenInVerticalSplitDescription = @"Opens in a vertical split";
+NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal split";
 
 
 #define CONSTRAIN(fmt) [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]];
