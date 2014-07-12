@@ -1,11 +1,11 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import "VRFileItemManager.h"
 #import "VRUtils.h"
@@ -143,14 +143,14 @@ void streamCallback(
       return;
     }
 
-        // NOTE: We may optimize (or not) the caching behavior here: When the URL A to register is a subdir of an already
-        // registered URL B, we build the hierarchy up to the requested URL A. However, then, we would have to scan children
-        // up to A, which could be costly to do it sync; async building complicates things too much. For time being, we
-        // ignore B and use a separate file item hierarchy for B.
-        // If we should do that, we would have only one parent when invalidating the cache. For now, we could have multiple
-        // parent URLs and therefore file items for one URL reported by FSEventStream.
+      // NOTE: We may optimize (or not) the caching behavior here: When the URL A to register is a subdir of an already
+      // registered URL B, we build the hierarchy up to the requested URL A. However, then, we would have to scan children
+      // up to A, which could be costly to do it sync; async building complicates things too much. For time being, we
+      // ignore B and use a separate file item hierarchy for B.
+      // If we should do that, we would have only one parent when invalidating the cache. For now, we could have multiple
+      // parent URLs and therefore file items for one URL reported by FSEventStream.
 
-        DDLogDebug(@"Registering %@ for caching and monitoring", url);
+    DDLogDebug(@"Registering %@ for caching and monitoring", url);
     _url2CacheRecord[url] = [[VRCachedFileItemRecord alloc] initWithFileItem:[[VRFileItem alloc] initWithUrl:url]];
 
     [self stop];
@@ -311,8 +311,12 @@ void streamCallback(
       NSString *path = [self.fileManager stringWithFileSystemRepresentation:paths[i] length:strlen(paths[i])];
       NSURL *url = [NSURL fileURLWithPath:path];
 
-      // NOTE: We could optimize here: Evaluate the flag for each URL and issue either a shallow or deep scan.
-      // This however may be (or is) an overkill. For time being we issue only deep scan.
+      /**
+      * NOTE: We could optimize here: Evaluate the flag for each URL and issue either a shallow or deep scan.
+      * This however may be (or is) an overkill. For time being we issue only deep scan.
+      * We need a separate queue since we're cancelling all operations of _fileItemOperationQueue when the user
+      * closes the open quickly window, but the cache invalidation operation must be processed.
+      */
       [_invalidateCacheOperationQueue addOperation:
           [[VRInvalidateCacheOperation alloc] initWithUrl:url dict:@{
               qOperationNotificationCenterKey : _notificationCenter,
