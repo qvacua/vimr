@@ -404,7 +404,7 @@ void streamCallback(
 }
 
 /**
-* This method is used probe whether the thread is ready for events.
+* This method is used to probe whether the thread is ready for events.
 */
 - (void)probe:(id)sender {
   return;
