@@ -40,6 +40,7 @@
 - (void)setUrlOfPathControl:(NSURL *)url;
 - (void)setUp;
 - (void)setStatusMessage:(NSString *)message;
+- (NSSet *)nonFilteredWildIgnorePathsForParentPath:(NSString *)path;
 
 #pragma mark NSUserInterfaceValidations
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
