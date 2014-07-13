@@ -82,7 +82,7 @@
     if ([[fileBrowserView outlineView:nil objectValueForTableColumn:nil byItem:child] isEqualToString:@"level-2-b"]) {
       assertThat(@([fileBrowserView outlineView:nil numberOfChildrenOfItem:child]), is(@3));
 
-      for (NSUInteger j = 0; i < 2; i++) {
+      for (NSUInteger j = 0; j < 3; j++) {
         if ([[fileBrowserView outlineView:nil objectValueForTableColumn:nil byItem:child]
             isEqualToString:@".level-2-b-file-3"]) {
           assertThat(@([fileBrowserView outlineView:nil isItemExpandable:child]), isNo);
