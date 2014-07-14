@@ -213,6 +213,17 @@ static const int qMinimumFileBrowserWidth = 100;
   [_messageView setStringValue:message];
 }
 
+- (NSSet *)nonFilteredWildIgnorePathsForParentPath:(NSString *)path {
+  NSString *pathExpression = [NSString stringWithFormat:@"globpath(\"%@\", \"*\")", path];
+  NSString *dotPathExpression = [NSString stringWithFormat:@"globpath(\"%@\", \".*\")", path];
+  
+  NSMutableSet *paths = [NSMutableSet set];
+  [paths addObjectsFromArray:[[self.vimView.vimController evaluateVimExpression:pathExpression] componentsSeparatedByString:@"\n"]];
+  [paths addObjectsFromArray:[[self.vimView.vimController evaluateVimExpression:dotPathExpression] componentsSeparatedByString:@"\n"]];
+  
+  return paths;
+}
+
 #pragma mark NSUserInterfaceValidations
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
   SEL action = anItem.action;
