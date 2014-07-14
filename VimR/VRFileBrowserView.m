@@ -32,6 +32,11 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
       }
     };
 
+@interface VRFileBrowserView ()
+
+@property (nonatomic, readonly) MMVimController *vimController;
+
+@end
 
 @implementation VRFileBrowserView {
   NSOperationQueue *_invalidateCacheQueue;
@@ -320,6 +325,10 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 #pragma mark Private
+- (MMVimController *)vimController {
+  return self.workspaceView.vimView.vimController;
+}
+
 - (void)addViews {
   NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:@"name"];
   tableColumn.dataCell = [[OakImageAndTextCell alloc] init];
@@ -444,7 +453,9 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
     [children addObject:node];
   }
 
-  NSArray *filteredChildren = [self filterHiddenNodesIfNec:children];
+  NSArray *filteredChildren = children;
+  filteredChildren = [self filterWildIngoreNodes:filteredChildren forParentPath:[parentNode.item url].path];
+  filteredChildren = [self filterHiddenNodesIfNec:filteredChildren];
   if (_workspaceView.showFoldersFirst) {
     NSSortDescriptor *folderDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dir" ascending:YES
                                                                     comparator:qNodeDirComparator];
@@ -465,6 +476,19 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   node.children = nil;
 
   return node;
+}
+
+- (NSArray *)filterWildIngoreNodes:(NSArray *)children forParentPath:(NSString *)parentPath {
+  NSSet *paths = [self.workspaceView nonFilteredWildIgnorePathsForParentPath:parentPath];
+  
+  NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:paths.count];
+  
+  for (VRNode *node in children) {
+    if ([paths containsObject:node.url.path]) {
+      [result addObject:node];
+    }
+  }
+  return result;
 }
 
 - (NSArray *)filterHiddenNodesIfNec:(NSArray *)nodes {
