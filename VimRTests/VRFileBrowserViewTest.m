@@ -9,10 +9,9 @@
 
 #import "VRBaseTestCase.h"
 #import "VRFileItemManager.h"
-#import "VRFileBrowserView.h"
-#import "VRUserDefaults.h"
-#import "VRWorkspaceView.h"
 #import "VRFileBrowserOutlineView.h"
+#import "VRFileBrowserView.h"
+#import "VRWorkspaceView.h"
 
 
 @interface VRFileBrowserViewTest : VRBaseTestCase
