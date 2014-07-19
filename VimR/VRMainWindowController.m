@@ -91,19 +91,16 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 
   switch (openMode) {
     case VROpenModeInNewTab:
-      [_vimController sendMessage:OpenWithArgumentsMsgID
-                             data:[self vimArgsAsDataFromUrl:url mode:MMLayoutTabs]];
+      [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsAsDataFromUrl:url mode:MMLayoutTabs]];
       break;
     case VROpenModeInCurrentTab:
       [self sendCommandToVim:SF(@":e %@", url.path)];
       break;
     case VROpenModeInVerticalSplit:
-      [_vimController sendMessage:OpenWithArgumentsMsgID
-                             data:[self vimArgsAsDataFromUrl:url mode:MMLayoutVerticalSplit]];
+      [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsAsDataFromUrl:url mode:MMLayoutVerticalSplit]];
       break;
     case VROpenModeInHorizontalSplit:
-      [_vimController sendMessage:OpenWithArgumentsMsgID
-                             data:[self vimArgsAsDataFromUrl:url mode:MMLayoutHorizontalSplit]];
+      [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsAsDataFromUrl:url mode:MMLayoutHorizontalSplit]];
       break;
   }
 
@@ -508,14 +505,11 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   _vimView.tabBarControl.hidden = NO;
 }
 
-- (void)controller:(MMVimController *)controller setScrollbarThumbValue:(float)value proportion:(float)proportion
-        identifier:(int32_t)identifier data:(NSData *)data {
+- (void)controller:(MMVimController *)controller setScrollbarThumbValue:(float)value proportion:(float)proportion identifier:(int32_t)identifier data:(NSData *)data {
 
 }
 
-- (void)controller:(MMVimController *)controller destroyScrollbarWithIdentifier:(int32_t)identifier
-              data:(NSData *)data {
-
+- (void)controller:(MMVimController *)controller destroyScrollbarWithIdentifier:(int32_t)identifier data:(NSData *)data {
   _needsToResizeVimView = YES;
 }
 
@@ -604,9 +598,7 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 - (void)controller:(MMVimController *)controller removeToolbarItemWithIdentifier:(NSString *)identifier {
 }
 
-- (void)controller:(MMVimController *)controller handleBrowseWithDirectoryUrl:(NSURL *)url browseDir:(BOOL)dir
-            saving:(BOOL)saving data:(NSData *)data {
-
+- (void)controller:(MMVimController *)controller handleBrowseWithDirectoryUrl:(NSURL *)url browseDir:(BOOL)dir saving:(BOOL)saving data:(NSData *)data {
   if (!saving) {
     return;
   }
@@ -810,8 +802,7 @@ static NSString *const qVimRAutoGroupName = @"VimR";
       | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask
       | NSTexturedBackgroundWindowMask;
 
-  VRMainWindow *window = [[VRMainWindow alloc] initWithContentRect:contentRect styleMask:windowStyle
-                                                           backing:NSBackingStoreBuffered defer:YES];
+  VRMainWindow *window = [[VRMainWindow alloc] initWithContentRect:contentRect styleMask:windowStyle backing:NSBackingStoreBuffered defer:YES];
   window.delegate = self;
   window.hasShadow = YES;
   window.title = @"VimR";

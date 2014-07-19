@@ -1,3 +1,12 @@
+/**
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
+
 #ifndef SF
 #define SF(format, ...) [NSString stringWithFormat:format, ##__VA_ARGS__]
 #endif
@@ -22,5 +31,5 @@ OBJC_EXTERN CGRect rect_with_origin(CGPoint origin, CGFloat width, CGFloat heigh
 OBJC_EXTERN NSData *vim_data_for_menu_descriptor(NSArray *descriptor);
 OBJC_EXTERN BOOL blank(NSString *str);
 
-NSString *VRResolvePathRelativeToPathWithFileManager(NSString *path, NSString *relativeToPath, BOOL sibling, NSFileManager *fileManager);
-NSString *VRResolvePathRelativeToPath(NSString *path, NSString *relativeToPath, BOOL sibling);
+OBJC_EXTERN NSString *VRResolvePathRelativeToPathWithFileManager(NSString *path, NSString *relativeToPath, BOOL sibling, NSFileManager *fileManager);
+OBJC_EXTERN NSString *VRResolvePathRelativeToPath(NSString *path, NSString *relativeToPath, BOOL sibling);
