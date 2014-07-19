@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -1186,13 +1188,23 @@
 				<string>com.apple.resolvable</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>vimr-plugin</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>VimR Plugin</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.qvacua.VimR.plugin</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<integer>1</integer>
+		</dict>
 	</array>
-	<key>SUFeedURL</key>
-	<string>https://raw.githubusercontent.com/qvacua/vimr/master/Meta/appcast.xml</string>
-	<key>SUPublicDSAKeyFile</key>
-	<string>sparkle-pub.pem</string>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
@@ -1221,5 +1233,29 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>SUFeedURL</key>
+	<string>https://raw.githubusercontent.com/qvacua/vimr/master/Meta/appcast.xml</string>
+	<key>SUPublicDSAKeyFile</key>
+	<string>sparkle-pub.pem</string>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.apple.bundle</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>VimR Plugin</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.qvacua.VimR.plugin</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>vimr-plugin</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>
