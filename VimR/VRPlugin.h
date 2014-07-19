@@ -12,16 +12,14 @@
 
 
 extern NSString *const qPluginAbilityPreview;
-
-
-static const NSUInteger qPluginDefinitionVersion = 1;
+extern const NSUInteger qPluginDefinitionVersion;
 
 
 @interface VRPlugin : NSObject
 
 /**
-* On the basis of this VimR will determine whether it will be able to use this plugin or not. Usually, you should always
-* return the constant qPluginDefinitionVersion.
+* On the basis of this VimR will determine whether it will be able to use this plugin or not. You must not override
+* this method.
 *
 * @must-not-override
 * @since 1
@@ -76,7 +74,7 @@ static const NSUInteger qPluginDefinitionVersion = 1;
 /**
 * The plugin can return a preview view for the given fileType (as returned by -fileTypes).
 * This method has to return a new view instance each time it is called. This view will be added to the
-* appropriate parent view and will be set to be automatically resized.
+* appropriate parent view and will be set to be automatically resized. Initialize your view with CGRectZero.
 *
 * @optional
 * @since 1

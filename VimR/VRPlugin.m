@@ -11,6 +11,7 @@
 
 
 NSString *const qPluginAbilityPreview = @"plugin-ability-preview";
+const NSUInteger qPluginDefinitionVersion = 1;
 
 
 @implementation VRPlugin
