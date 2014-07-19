@@ -16,7 +16,17 @@
 
 
 @implementation VRMarkdownPreviewView {
+  CGFloat _pageYOffset;
+  CGFloat _pageXOffset;
+
   WebView *_webView;
+}
+
+
+- (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame {
+  [_webView stringByEvaluatingJavaScriptFromString:
+      [NSString stringWithFormat:@"window.scrollTo(%f, %f)", _pageXOffset, _pageYOffset]
+  ];
 }
 
 - (id)initWithFrame:(NSRect)frameRect {
@@ -25,6 +35,7 @@
 
   _webView = [[WebView alloc] initWithFrame:CGRectZero];
   _webView.translatesAutoresizingMaskIntoConstraints = NO;
+  _webView.frameLoadDelegate = self;
   [self addSubview:_webView];
 
   NSDictionary *views = @{
@@ -38,6 +49,9 @@
 }
 
 - (BOOL)previewFileAtUrl:(NSURL *)url {
+  _pageYOffset = [_webView stringByEvaluatingJavaScriptFromString:@"window.pageYOffset"].floatValue;
+  _pageXOffset = [_webView stringByEvaluatingJavaScriptFromString:@"window.pageXOffset"].floatValue;
+
   NSString *markdown = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
   NSString *html = [markdown htmlFromMarkdown];
 

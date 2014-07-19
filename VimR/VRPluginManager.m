@@ -12,6 +12,7 @@
 #import "VRPlugin.h"
 #import "VRDefaultLogSetting.h"
 #import "NSArray+VR.h"
+#import "VRNoPluginPreviewView.h"
 
 
 static NSString *const qPluginBundleExtension = @"vimr-plugin";
@@ -28,7 +29,17 @@ static const NSUInteger qMaxPluginDefinitionVersion = 1;
 
 #pragma mark Public
 - (NSView <VRPluginPreviewView> *)previewViewForFileType:(NSString *)fileType {
-  return [_pluginsForPreview[fileType] previewViewForFileType:fileType];
+  if (blank(fileType)) {
+    return [[VRNoPluginPreviewView alloc] initWithFrame:CGRectZero];
+  }
+
+  NSView <VRPluginPreviewView> *previewView = [_pluginsForPreview[fileType] previewViewForFileType:fileType];
+
+  if (previewView == nil) {
+    return [[VRNoPluginPreviewView alloc] initWithFrame:CGRectZero];
+  }
+
+  return previewView;
 }
 
 #pragma mark TBInitializingBean

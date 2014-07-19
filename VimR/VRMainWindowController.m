@@ -191,7 +191,9 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[previewView]|" options:0 metrics:nil views:views]];
 
   [_previewWindow makeKeyAndOrderFront:self];
-  [_currentPreviewView previewFileAtUrl:[NSURL fileURLWithPath:_vimController.currentBuffer.fileName]];
+  NSString *path = _vimController.currentBuffer.fileName;
+  NSURL *url = path == nil ? nil : [NSURL fileURLWithPath:path];
+  [_currentPreviewView previewFileAtUrl:url];
 }
 
 - (IBAction)zoom:(id)sender {
