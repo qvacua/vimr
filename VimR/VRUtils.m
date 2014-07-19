@@ -116,3 +116,7 @@ NSString *VRResolvePathRelativeToPathWithFileManager(NSString *path, NSString *r
 NSString *VRResolvePathRelativeToPath(NSString *path, NSString *relativeToPath, BOOL sibling) {
   return VRResolvePathRelativeToPathWithFileManager(path, relativeToPath, sibling, [NSFileManager defaultManager]);
 }
+
+BOOL blank(NSString *str) {
+  return str == nil || str.length == 0;
+}
