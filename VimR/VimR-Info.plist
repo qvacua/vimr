@@ -1189,6 +1189,10 @@
 			</array>
 		</dict>
 		<dict>
+			<key>LSItemContentTypes - 2</key>
+			<array>
+				<string>com.qvacua.VimR.plugin</string>
+			</array>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>vimr-plugin</string>
@@ -1243,6 +1247,7 @@
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>com.apple.bundle</string>
+				<string>com.apple.package</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>VimR Plugin</string>
