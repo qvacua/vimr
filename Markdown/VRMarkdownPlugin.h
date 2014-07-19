@@ -15,8 +15,7 @@
 
 #pragma mark VRPlugin
 - (NSArray *)fileTypes;
-- (NSString *)description;
 
-#pragma mark NSObject
+
 
 @end

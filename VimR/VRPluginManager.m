@@ -88,11 +88,16 @@ static const NSUInteger qMaxPluginDefinitionVersion = 1;
     return @[];
   }
 
-  NSArray *pluginPaths = [possiblePlugins filteredArrayUsingPredicate:
+  NSArray *plugins = [possiblePlugins filteredArrayUsingPredicate:
       [NSPredicate predicateWithBlock:^BOOL(NSString *path, NSDictionary *bindings) {
         return [path.pathExtension isEqualToString:qPluginBundleExtension];
       }]
   ];
+
+  NSMutableArray *pluginPaths = [[NSMutableArray alloc] initWithCapacity:plugins.count];
+  for (NSString *plugin in plugins) {
+    [pluginPaths addObject:[builtInPlugInsPath stringByAppendingPathComponent:plugin]];
+  }
 
   return pluginPaths;
 }

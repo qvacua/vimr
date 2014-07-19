@@ -37,23 +37,23 @@ static NSBundle *pluginBundleE;
 }
 
 + (NSBundle *)mockBundleWithPath:(NSString *)path {
-  if ([path hasPrefix:@"a"]) {
+  if ([path hasPrefix:@"built-in-path/a"]) {
     return pluginBundleA;
   }
 
-  if ([path hasPrefix:@"b"]) {
+  if ([path hasPrefix:@"built-in-path/b"]) {
     return pluginBundleB;
   }
 
-  if ([path hasPrefix:@"c"]) {
+  if ([path hasPrefix:@"built-in-path/c"]) {
     return pluginBundleC;
   }
 
-  if ([path hasPrefix:@"d"]) {
+  if ([path hasPrefix:@"built-in-path/d"]) {
     return pluginBundleD;
   }
 
-  if ([path hasPrefix:@"e"]) {
+  if ([path hasPrefix:@"built-in-path/e"]) {
     return pluginBundleE;
   }
 

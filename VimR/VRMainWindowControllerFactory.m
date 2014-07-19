@@ -11,9 +11,12 @@
 #import "VRMainWindowControllerFactory.h"
 #import "VRWorkspace.h"
 #import "VRMainWindowController.h"
+#import "VRPluginManager.h"
 
 
 @implementation VRMainWindowControllerFactory
+
+@autowire(pluginManager)
 
 - (VRMainWindowController *)newMainWindowControllerWithContentRect:(CGRect)contentRect
                                                          workspace:(VRWorkspace *)workspace
@@ -22,6 +25,7 @@
   VRMainWindowController *mainWinController = [[VRMainWindowController alloc] initWithContentRect:contentRect];
   mainWinController.workspace = workspace;
 
+  mainWinController.pluginManager = _pluginManager;
   mainWinController.vimController = vimController;
   mainWinController.vimView = vimController.vimView;
 

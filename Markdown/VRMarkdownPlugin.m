@@ -8,6 +8,7 @@
 */
 
 #import "VRMarkdownPlugin.h"
+#import "VRMarkdownPreviewView.h"
 
 
 @implementation VRMarkdownPlugin {
@@ -23,13 +24,8 @@
   return @[qPluginAbilityPreview];
 }
 
-- (NSView <VRPluginPreviewView> *)previewView {
-  return nil;
-}
-
-#pragma mark NSObject
-- (NSString *)description {
-  return [NSString stringWithFormat:@"<%@>", NSStringFromClass([self class])];
+- (NSView <VRPluginPreviewView> *)previewViewForFileType:(NSString *)fileType {
+  return [[VRMarkdownPreviewView alloc] initWithFrame:CGRectZero];
 }
 
 @end

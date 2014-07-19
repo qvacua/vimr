@@ -8,11 +8,8 @@
 */
 
 #import <Cocoa/Cocoa.h>
+#import "VRPluginPreviewView.h"
 
 
-@protocol VRPluginPreviewView
-
-@required
-- (BOOL)previewFileAtUrl:(NSURL *)url;
-
+@interface VRMarkdownPreviewView : NSView <VRPluginPreviewView>
 @end

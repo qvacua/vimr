@@ -21,7 +21,9 @@
 #import "VRDefaultLogSetting.h"
 #import "VRWorkspaceView.h"
 #import "VRFileBrowserView.h"
+#import "VRPluginManager.h"
 #import "NSArray+VR.h"
+#import "VRPluginPreviewView.h"
 
 
 const int qMainWindowBorderThickness = 22;
@@ -30,7 +32,7 @@ const int qMainWindowBorderThickness = 22;
 static NSString *const qVimRAutoGroupName = @"VimR";
 
 
-#define CONSTRAINT(fmt) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]];
+#define CONSTRAINT(fmt) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]]
 
 
 @implementation VRMainWindowController {
@@ -45,12 +47,22 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   BOOL _windowOriginShouldMoveToKeepOnScreen;
 
   VRWorkspaceView *_workspaceView;
+
+  NSWindow *_previewWindow;
+  NSView <VRPluginPreviewView> *_currentPreviewView;
 }
 
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect {
   self = [super initWithWindow:[self newMainWindowForContentRect:contentRect]];
   RETURN_NIL_WHEN_NOT_SELF
+
+  _previewWindow = [[NSWindow alloc] initWithContentRect:CGRectMake(100, 100, 640, 480)
+                                               styleMask:NSTitledWindowMask | NSUnifiedTitleAndToolbarWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask
+                                                 backing:NSBackingStoreBuffered defer:YES];
+  _previewWindow.hasShadow = YES;
+  _previewWindow.title = @"Preview";
+  _previewWindow.opaque = NO;
 
   return self;
 }
@@ -153,6 +165,35 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   [self sendCommandToVim:@"gT"];
 }
 
+- (IBAction)showPreview:(id)sender {
+  NSArray *fileTypes = [[_vimController evaluateVimExpression:@"&ft"] componentsSeparatedByString:@"."];
+
+  if (fileTypes.isEmpty) {
+    DDLogInfo(@"No file type set.");
+    return;
+  }
+
+  // TODO: for time being we use the first filetype and ignore the rest
+  _currentPreviewView = [_pluginManager previewViewForFileType:fileTypes[0]];
+  if (_currentPreviewView == nil) {
+    DDLogInfo(@"No suitable plugin found for file types %@.", fileTypes);
+    return;
+  }
+
+  _currentPreviewView.translatesAutoresizingMaskIntoConstraints = NO;
+  NSView *contentView = _previewWindow.contentView;
+  [contentView addSubview:_currentPreviewView];
+  
+  NSDictionary *views = @{
+      @"previewView" : _currentPreviewView,
+  };
+  [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[previewView]|" options:0 metrics:nil views:views]];
+  [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[previewView]|" options:0 metrics:nil views:views]];
+
+  [_previewWindow makeKeyAndOrderFront:self];
+  [_currentPreviewView previewFileAtUrl:[NSURL fileURLWithPath:_vimController.currentBuffer.fileName]];
+}
+
 - (IBAction)zoom:(id)sender {
   // maximize window
   NSScreen *screen = self.window.screen;
@@ -227,6 +268,7 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   if (action == @selector(saveDocumentAs:)) {return YES;}
   if (action == @selector(revertDocumentToSaved:)) {return YES;}
   if (action == @selector(openQuickly:)) {return YES;}
+  if (action == @selector(showPreview:)) {return YES;}
 
 #ifdef DEBUG
   if (action == @selector(debug1Action:)) {return YES;}

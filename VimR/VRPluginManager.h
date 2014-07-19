@@ -16,7 +16,7 @@
 
 @interface VRPluginManager : NSObject <TBBean, TBInitializingBean>
 
-@property (weak) NSFileManager *fileManager;
+@property (nonatomic, weak) NSFileManager *fileManager;
 
 #pragma mark Public
 - (NSView <VRPluginPreviewView> *)previewViewForFileType:(NSString *)fileType;
