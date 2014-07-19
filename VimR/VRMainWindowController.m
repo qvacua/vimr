@@ -20,6 +20,7 @@
 #import "VRWorkspaceController.h"
 #import "VRDefaultLogSetting.h"
 #import "VRWorkspaceView.h"
+#import "VRFileBrowserOutlineView.h"
 #import "VRFileBrowserView.h"
 #import "VRPluginManager.h"
 #import "NSArray+VR.h"
@@ -170,7 +171,7 @@ static NSString *const qVimRAutoGroupName = @"VimR";
     return;
   }
 
-  // TODO: for time being we use the first filetype and ignore the rest
+  // TODO: for time being we use the first file type and ignore the rest
   _currentPreviewView = [_pluginManager previewViewForFileType:fileTypes[0]];
   if (_currentPreviewView == nil) {
     DDLogInfo(@"No suitable plugin found for file types %@.", fileTypes);
@@ -179,13 +180,14 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 
   _currentPreviewView.translatesAutoresizingMaskIntoConstraints = NO;
   NSView *contentView = _previewWindow.contentView;
+  [contentView setSubviews:@[]];
   [contentView addSubview:_currentPreviewView];
   
   NSDictionary *views = @{
       @"previewView" : _currentPreviewView,
   };
-  [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[previewView]|" options:0 metrics:nil views:views]];
-  [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[previewView]|" options:0 metrics:nil views:views]];
+  CONSTRAINT(@"H:|[previewView]|");
+  CONSTRAINT(@"V:|[previewView]|");
 
   [_previewWindow makeKeyAndOrderFront:self];
   NSString *path = _vimController.currentBuffer.fileName;
