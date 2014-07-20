@@ -9,6 +9,7 @@
 
 #import <PSMTabBarControl/PSMTabBarControl.h>
 #import <MacVimFramework/MacVimFramework.h>
+#import <VimRPluginDefinition/VRPlugin.h>
 #import "VRMainWindowController.h"
 #import "VRLog.h"
 #import "VRAlert.h"
@@ -24,7 +25,6 @@
 #import "VRFileBrowserView.h"
 #import "VRPluginManager.h"
 #import "NSArray+VR.h"
-#import "VRPluginPreviewView.h"
 
 
 const int qMainWindowBorderThickness = 22;

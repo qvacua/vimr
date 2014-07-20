@@ -8,7 +8,7 @@
 */
 
 #import <Cocoa/Cocoa.h>
-#import "VRPluginPreviewView.h"
+#import <VimRPluginDefinition/VRPlugin.h>
 
 
 @interface VRNoPluginPreviewView : NSView <VRPluginPreviewView>

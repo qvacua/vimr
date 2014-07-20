@@ -1,0 +1,323 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1929BE930F7A50871C39BCCD /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1929B00125E256436F58EA64 /* WebKit.framework */; };
+		4B6F251D197B9EC500AB1DD8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B6F2506197B9DE600AB1DD8 /* Cocoa.framework */; };
+		4B6F2523197B9EC500AB1DD8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4B6F2521197B9EC500AB1DD8 /* InfoPlist.strings */; };
+		4B6F252C197B9EF200AB1DD8 /* VRMarkdownPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6F2529197B9EF200AB1DD8 /* VRMarkdownPlugin.m */; };
+		4B6F252D197B9EF200AB1DD8 /* VRMarkdownPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6F252B197B9EF200AB1DD8 /* VRMarkdownPreviewView.m */; };
+		4B6F2577197BAEFC00AB1DD8 /* VimRPluginDefinition.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B6F2576197BAEFC00AB1DD8 /* VimRPluginDefinition.framework */; };
+		4B6F2579197BAF1700AB1DD8 /* VimRPluginDefinition.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B6F2576197BAEFC00AB1DD8 /* VimRPluginDefinition.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4B6F2578197BAF1000AB1DD8 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4B6F2579197BAF1700AB1DD8 /* VimRPluginDefinition.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1929B00125E256436F58EA64 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		4B6F2506197B9DE600AB1DD8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		4B6F251C197B9EC500AB1DD8 /* Markdown.vimr-plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Markdown.vimr-plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B6F2520197B9EC500AB1DD8 /* Markdown-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Markdown-Info.plist"; sourceTree = "<group>"; };
+		4B6F2522197B9EC500AB1DD8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4B6F2524197B9EC500AB1DD8 /* Markdown-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Markdown-Prefix.pch"; sourceTree = "<group>"; };
+		4B6F2528197B9EF200AB1DD8 /* VRMarkdownPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRMarkdownPlugin.h; sourceTree = "<group>"; };
+		4B6F2529197B9EF200AB1DD8 /* VRMarkdownPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRMarkdownPlugin.m; sourceTree = "<group>"; };
+		4B6F252A197B9EF200AB1DD8 /* VRMarkdownPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRMarkdownPreviewView.h; sourceTree = "<group>"; };
+		4B6F252B197B9EF200AB1DD8 /* VRMarkdownPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRMarkdownPreviewView.m; sourceTree = "<group>"; };
+		4B6F2576197BAEFC00AB1DD8 /* VimRPluginDefinition.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = VimRPluginDefinition.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4B6F2519197B9EC500AB1DD8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B6F251D197B9EC500AB1DD8 /* Cocoa.framework in Frameworks */,
+				1929BE930F7A50871C39BCCD /* WebKit.framework in Frameworks */,
+				4B6F2577197BAEFC00AB1DD8 /* VimRPluginDefinition.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4B6F24FA197B9DE600AB1DD8 = {
+			isa = PBXGroup;
+			children = (
+				4B6F251E197B9EC500AB1DD8 /* Markdown */,
+				4B6F2505197B9DE600AB1DD8 /* Frameworks */,
+				4B6F2504197B9DE600AB1DD8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4B6F2504197B9DE600AB1DD8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4B6F251C197B9EC500AB1DD8 /* Markdown.vimr-plugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4B6F2505197B9DE600AB1DD8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4B6F2576197BAEFC00AB1DD8 /* VimRPluginDefinition.framework */,
+				4B6F2506197B9DE600AB1DD8 /* Cocoa.framework */,
+				1929B00125E256436F58EA64 /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4B6F251E197B9EC500AB1DD8 /* Markdown */ = {
+			isa = PBXGroup;
+			children = (
+				4B6F2528197B9EF200AB1DD8 /* VRMarkdownPlugin.h */,
+				4B6F2529197B9EF200AB1DD8 /* VRMarkdownPlugin.m */,
+				4B6F252A197B9EF200AB1DD8 /* VRMarkdownPreviewView.h */,
+				4B6F252B197B9EF200AB1DD8 /* VRMarkdownPreviewView.m */,
+				4B6F251F197B9EC500AB1DD8 /* Supporting Files */,
+			);
+			path = Markdown;
+			sourceTree = "<group>";
+		};
+		4B6F251F197B9EC500AB1DD8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4B6F2520197B9EC500AB1DD8 /* Markdown-Info.plist */,
+				4B6F2521197B9EC500AB1DD8 /* InfoPlist.strings */,
+				4B6F2524197B9EC500AB1DD8 /* Markdown-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4B6F251B197B9EC500AB1DD8 /* Markdown */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4B6F2525197B9EC500AB1DD8 /* Build configuration list for PBXNativeTarget "Markdown" */;
+			buildPhases = (
+				4B6F2518197B9EC500AB1DD8 /* Sources */,
+				4B6F2519197B9EC500AB1DD8 /* Frameworks */,
+				4B6F251A197B9EC500AB1DD8 /* Resources */,
+				4B6F2578197BAF1000AB1DD8 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Markdown;
+			productName = Markdown;
+			productReference = 4B6F251C197B9EC500AB1DD8 /* Markdown.vimr-plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4B6F24FB197B9DE600AB1DD8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = "Tae Won Ha";
+			};
+			buildConfigurationList = 4B6F24FE197B9DE600AB1DD8 /* Build configuration list for PBXProject "StandardPlugins" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 4B6F24FA197B9DE600AB1DD8;
+			productRefGroup = 4B6F2504197B9DE600AB1DD8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4B6F251B197B9EC500AB1DD8 /* Markdown */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4B6F251A197B9EC500AB1DD8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B6F2523197B9EC500AB1DD8 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4B6F2518197B9EC500AB1DD8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B6F252D197B9EF200AB1DD8 /* VRMarkdownPreviewView.m in Sources */,
+				4B6F252C197B9EF200AB1DD8 /* VRMarkdownPlugin.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		4B6F2521197B9EC500AB1DD8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4B6F2522197B9EC500AB1DD8 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4B6F2513197B9DE700AB1DD8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		4B6F2514197B9DE700AB1DD8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		4B6F2526197B9EC500AB1DD8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/VimR-gwcecgeapvplzzfrusftahjeulej/Build/Products/Debug",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Markdown/Markdown-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Markdown/Markdown-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = "vimr-plugin";
+			};
+			name = Debug;
+		};
+		4B6F2527197B9EC500AB1DD8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/VimR-gwcecgeapvplzzfrusftahjeulej/Build/Products/Debug",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Markdown/Markdown-Prefix.pch";
+				INFOPLIST_FILE = "Markdown/Markdown-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = "vimr-plugin";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4B6F24FE197B9DE600AB1DD8 /* Build configuration list for PBXProject "StandardPlugins" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B6F2513197B9DE700AB1DD8 /* Debug */,
+				4B6F2514197B9DE700AB1DD8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4B6F2525197B9EC500AB1DD8 /* Build configuration list for PBXNativeTarget "Markdown" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B6F2526197B9EC500AB1DD8 /* Debug */,
+				4B6F2527197B9EC500AB1DD8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4B6F24FB197B9DE600AB1DD8 /* Project object */;
+}

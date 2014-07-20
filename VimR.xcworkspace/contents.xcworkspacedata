@@ -11,6 +11,12 @@
       location = "group:VimR.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:vimr-plugin-definition/VimRPluginDefinition.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:StandardPlugins/StandardPlugins.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>
 </Workspace>

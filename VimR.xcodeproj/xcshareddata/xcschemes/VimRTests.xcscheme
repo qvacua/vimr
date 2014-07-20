@@ -13,24 +13,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2ECCCBE373824D02893552C9"
-               BuildableName = "libPods.a"
-               BlueprintName = "Pods"
-               ReferencedContainer = "container:Pods/Pods.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4B6F2538197BA64E00AB1DD8"
-               BuildableName = "VimRPluginDefinition.framework"
-               BlueprintName = "VimRPluginDefinition"
-               ReferencedContainer = "container:vimr-plugin-definition/VimRPluginDefinition.xcodeproj">
+               BlueprintIdentifier = "4BE9243318C20DBC00E67BB6"
+               BuildableName = "VimRTests.xctest"
+               BlueprintName = "VimRTests"
+               ReferencedContainer = "container:VimR.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -52,15 +38,6 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4BE9241218C20DBC00E67BB6"
-            BuildableName = "VimR.app"
-            BlueprintName = "VimR"
-            ReferencedContainer = "container:VimR.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
@@ -71,22 +48,6 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4BE9241218C20DBC00E67BB6"
-            BuildableName = "VimR.app"
-            BlueprintName = "VimR"
-            ReferencedContainer = "container:VimR.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "TERM"
-            value = "color"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

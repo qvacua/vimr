@@ -7,9 +7,9 @@
 * See LICENSE
 */
 
+#import <VimRPluginDefinition/VRPlugin.h>
 #import "VRPluginManager.h"
 #import "VRUtils.h"
-#import "VRPlugin.h"
 #import "VRDefaultLogSetting.h"
 #import "NSArray+VR.h"
 #import "VRNoPluginPreviewView.h"
