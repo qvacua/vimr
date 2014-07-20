@@ -49,6 +49,7 @@ extern const int qMainWindowBorderThickness;
 - (IBAction)revertDocumentToSaved:(id)sender;
 - (IBAction)selectNextTab:(id)sender;
 - (IBAction)selectPreviousTab:(id)sender;
+- (IBAction)showPreview:(id)sender;
 - (IBAction)zoom:(id)sender;
 - (IBAction)openQuickly:(id)sender;
 
