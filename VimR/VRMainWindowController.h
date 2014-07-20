@@ -15,8 +15,12 @@
 @class VRWorkspaceController;
 @class VROpenQuicklyWindowController;
 @class VRWorkspace;
+@class VRPluginManager;
+@class VRPreviewWindowController;
+
 
 extern const int qMainWindowBorderThickness;
+
 
 @interface VRMainWindowController : NSWindowController <
     NSWindowDelegate,
@@ -26,6 +30,7 @@ extern const int qMainWindowBorderThickness;
 @property (nonatomic, weak) VRWorkspace *workspace;
 @property (nonatomic, weak) MMVimController *vimController;
 @property (nonatomic, weak) MMVimView *vimView;
+@property (nonatomic) VRPreviewWindowController *previewWindowController;
 
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect;
@@ -44,6 +49,7 @@ extern const int qMainWindowBorderThickness;
 - (IBAction)revertDocumentToSaved:(id)sender;
 - (IBAction)selectNextTab:(id)sender;
 - (IBAction)selectPreviousTab:(id)sender;
+- (IBAction)showPreview:(id)sender;
 - (IBAction)zoom:(id)sender;
 - (IBAction)openQuickly:(id)sender;
 

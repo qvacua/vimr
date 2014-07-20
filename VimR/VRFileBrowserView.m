@@ -172,7 +172,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 - (void)search:(NSString *)string increment:(int)increment {
   NSUInteger selectedIndex = [_fileOutlineView.selectedRowIndexes firstIndex];
   for (NSUInteger i = 0; i < _fileOutlineView.numberOfRows; i++) {
-    NSUInteger row = (i*increment + selectedIndex + increment) % _fileOutlineView.numberOfRows;
+    NSUInteger row = (i * increment + selectedIndex + increment) % _fileOutlineView.numberOfRows;
     VRNode *node = [_fileOutlineView itemAtRow:row];
     if ([node.name rangeOfString:string].location != NSNotFound) {
       if (selectedIndex == row) {
@@ -216,9 +216,9 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   VRNode *node = _fileOutlineView.selectedItem;
   NSString *relativeToPath = node ? node.url.path : _rootUrl.path;
   NSError *error;
-  
+
   path = VRResolvePathRelativeToPath(path, relativeToPath, NO);
-  
+
   if (createDirectory) {
     BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:&error];
     if (!success) {
@@ -230,31 +230,31 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
       [self updateStatusMessage:[NSString stringWithFormat:@"%s", strerror(errno)]];
     }
   }
-  
+
   if (node.isDir) {
     [_fileOutlineView expandItem:node];
   }
 }
 
-- (BOOL)removePathIfNecessary:(NSString *)path error:(NSError **)error{
+- (BOOL)removePathIfNecessary:(NSString *)path error:(NSError **)error {
   BOOL pathExists, pathIsDirectory;
   pathExists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&pathIsDirectory];
-  
+
   if (pathExists && !pathIsDirectory) {
     // Given the way path is resolved, it should never be a directory
     return [[NSFileManager defaultManager] removeItemAtPath:path error:error];
   }
-  
+
   return YES;
 }
 
 - (void)actionMoveToPath:(NSString *)path {
-  VRNode *node =  [_fileOutlineView selectedItem];
+  VRNode *node = [_fileOutlineView selectedItem];
   path = VRResolvePathRelativeToPath(path, node.url.path, node.isDir);
 
   NSError *error;
   BOOL success;
-  
+
   success = [self removePathIfNecessary:path error:&error];
   if (success) {
     success = [[NSFileManager defaultManager] moveItemAtPath:node.url.path toPath:path error:&error];
@@ -265,7 +265,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 - (void)actionDelete {
-  VRNode *node =  [_fileOutlineView selectedItem];
+  VRNode *node = [_fileOutlineView selectedItem];
   NSError *error;
   BOOL success = YES;
 
@@ -279,19 +279,19 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   } else {
     success = [[NSFileManager defaultManager] removeItemAtURL:node.url error:&error];
   }
-  
+
   if (!success) {
     [self updateStatusMessage:error.localizedFailureReason];
   }
 }
 
 - (void)actionCopyToPath:(NSString *)path {
-  VRNode *node =  [_fileOutlineView selectedItem];
+  VRNode *node = [_fileOutlineView selectedItem];
   path = VRResolvePathRelativeToPath(path, node.url.path, node.isDir);
-  
+
   NSError *error;
   BOOL success;
-  
+
   success = [self removePathIfNecessary:path error:&error];
   if (success) {
     success = [[NSFileManager defaultManager] copyItemAtPath:node.url.path toPath:path error:&error];
@@ -303,7 +303,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 
 - (BOOL)actionCheckClobberForPath:(NSString *)path {
   // Check clobber uses move and copy semantics, i.e. it treats directories as siblings.
-  VRNode *node =  [_fileOutlineView selectedItem];
+  VRNode *node = [_fileOutlineView selectedItem];
   path = VRResolvePathRelativeToPath(path, node.url.path, node.isDir);
   return [[NSFileManager defaultManager] fileExistsAtPath:path];
 }
@@ -369,22 +369,19 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 - (void)fileOutlineViewDoubleClicked:(id)sender {
-    VROpenMode mode = open_mode_from_event(
-                                           [NSApp currentEvent],
-                                           [_userDefaults stringForKey:qDefaultDefaultOpeningBehavior]
-                                          );
-    [self openInMode:mode];
+  VROpenMode mode = open_mode_from_event([NSApp currentEvent], [_userDefaults stringForKey:qDefaultDefaultOpeningBehavior]);
+  [self openInMode:mode];
 }
 
 - (void)openInMode:(VROpenMode)mode {
   VRNode *selectedItem = [_fileOutlineView selectedItem];
   if (!selectedItem) {return;}
-  
+
   if (!selectedItem.dir) {
     [(VRMainWindowController *) self.window.windowController openFileWithUrls:selectedItem.url openMode:mode];
     return;
   }
-  
+
   if ([_fileOutlineView isItemExpanded:selectedItem]) {
     [_fileOutlineView collapseItem:selectedItem];
   } else {
@@ -457,8 +454,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   filteredChildren = [self filterWildIngoreNodes:filteredChildren forParentPath:[parentNode.item url].path];
   filteredChildren = [self filterHiddenNodesIfNec:filteredChildren];
   if (_workspaceView.showFoldersFirst) {
-    NSSortDescriptor *folderDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dir" ascending:YES
-                                                                    comparator:qNodeDirComparator];
+    NSSortDescriptor *folderDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dir" ascending:YES comparator:qNodeDirComparator];
 
     parentNode.children = [filteredChildren sortedArrayUsingDescriptors:@[folderDescriptor]];
   } else {
@@ -480,9 +476,9 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 
 - (NSArray *)filterWildIngoreNodes:(NSArray *)children forParentPath:(NSString *)parentPath {
   NSSet *paths = [self.workspaceView nonFilteredWildIgnorePathsForParentPath:parentPath];
-  
+
   NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:paths.count];
-  
+
   for (VRNode *node in children) {
     if ([paths containsObject:node.url.path]) {
       [result addObject:node];

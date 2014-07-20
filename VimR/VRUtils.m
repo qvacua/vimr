@@ -1,3 +1,12 @@
+/**
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
+
 #import <MacVimFramework/MacVimFramework.h>
 #import "VRUtils.h"
 #import "NSURL+VR.h"
@@ -27,7 +36,6 @@ NSURL *common_parent_url(NSArray *fileUrls) {
   }
 
   // from http://stackoverflow.com/questions/2845974/how-can-i-get-the-common-ancestor-directory-for-two-or-more-files-in-cocoa-obj-c
-
   NSArray *currentCommonComps = [firstUrl pathComponents];
   for (NSUInteger i = 1; i < fileUrls.count; i++) {
     NSArray *thisPathComps = [fileUrls[i] pathComponents];
@@ -102,7 +110,7 @@ NSString *VRResolvePathRelativeToPathWithFileManager(NSString *path, NSString *r
     }
     result = [parent stringByAppendingPathComponent:path];
   }
-  
+
   BOOL resultExists, resultIsDirectory;
   resultExists = [fileManager fileExistsAtPath:result isDirectory:&resultIsDirectory];
 
@@ -115,4 +123,8 @@ NSString *VRResolvePathRelativeToPathWithFileManager(NSString *path, NSString *r
 
 NSString *VRResolvePathRelativeToPath(NSString *path, NSString *relativeToPath, BOOL sibling) {
   return VRResolvePathRelativeToPathWithFileManager(path, relativeToPath, sibling, [NSFileManager defaultManager]);
+}
+
+BOOL blank(NSString *str) {
+  return str == nil || str.length == 0;
 }

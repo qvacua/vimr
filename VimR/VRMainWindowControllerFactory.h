@@ -14,9 +14,13 @@
 @class VRWorkspace;
 @class MMVimController;
 @class VRMainWindowController;
+@class VRPluginManager;
 
 
 @interface VRMainWindowControllerFactory : NSObject <TBBean>
+
+@property (nonatomic, weak) VRPluginManager *pluginManager;
+@property (nonatomic, weak) NSNotificationCenter *notificationCenter;
 
 - (VRMainWindowController *)newMainWindowControllerWithContentRect:(CGRect)contentRect
                                                          workspace:(VRWorkspace *)workspace

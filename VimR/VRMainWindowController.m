@@ -20,8 +20,10 @@
 #import "VRWorkspaceController.h"
 #import "VRDefaultLogSetting.h"
 #import "VRWorkspaceView.h"
+#import "VRFileBrowserOutlineView.h"
 #import "VRFileBrowserView.h"
 #import "NSArray+VR.h"
+#import "VRPreviewWindowController.h"
 
 
 const int qMainWindowBorderThickness = 22;
@@ -30,7 +32,7 @@ const int qMainWindowBorderThickness = 22;
 static NSString *const qVimRAutoGroupName = @"VimR";
 
 
-#define CONSTRAINT(fmt) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]];
+#define CONSTRAINT(fmt) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]]
 
 
 @implementation VRMainWindowController {
@@ -66,6 +68,8 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   [_vimView removeFromSuperviewWithoutNeedingDisplay];
   [_vimView cleanup];
 
+  [_previewWindowController close];
+
   [self close];
 }
 
@@ -79,19 +83,16 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 
   switch (openMode) {
     case VROpenModeInNewTab:
-      [_vimController sendMessage:OpenWithArgumentsMsgID
-                             data:[self vimArgsAsDataFromUrl:url mode:MMLayoutTabs]];
+      [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsAsDataFromUrl:url mode:MMLayoutTabs]];
       break;
     case VROpenModeInCurrentTab:
       [self sendCommandToVim:SF(@":e %@", url.path)];
       break;
     case VROpenModeInVerticalSplit:
-      [_vimController sendMessage:OpenWithArgumentsMsgID
-                             data:[self vimArgsAsDataFromUrl:url mode:MMLayoutVerticalSplit]];
+      [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsAsDataFromUrl:url mode:MMLayoutVerticalSplit]];
       break;
     case VROpenModeInHorizontalSplit:
-      [_vimController sendMessage:OpenWithArgumentsMsgID
-                             data:[self vimArgsAsDataFromUrl:url mode:MMLayoutHorizontalSplit]];
+      [_vimController sendMessage:OpenWithArgumentsMsgID data:[self vimArgsAsDataFromUrl:url mode:MMLayoutHorizontalSplit]];
       break;
   }
 
@@ -151,6 +152,24 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 
 - (IBAction)selectPreviousTab:(id)sender {
   [self sendCommandToVim:@"gT"];
+}
+
+- (IBAction)showPreview:(id)sender {
+  if (_previewWindowController.window.isVisible) {
+    [_previewWindowController showWindow:self];
+    return;
+  }
+
+  NSString *path = _vimController.currentBuffer.fileName;
+  NSURL *url = path == nil ? nil : [NSURL fileURLWithPath:path];
+
+  // TODO: for time being we use the first file type and ignore the rest
+  NSArray *fileTypes = [[_vimController evaluateVimExpression:@"&ft"] componentsSeparatedByString:@"."];
+  [_previewWindowController previewForUrl:url fileType:fileTypes[0]];
+}
+
+- (IBAction)refreshPreview:(id)sender {
+  [_previewWindowController refreshPreview:sender];
 }
 
 - (IBAction)zoom:(id)sender {
@@ -227,10 +246,15 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   if (action == @selector(saveDocumentAs:)) {return YES;}
   if (action == @selector(revertDocumentToSaved:)) {return YES;}
   if (action == @selector(openQuickly:)) {return YES;}
+  if (action == @selector(showPreview:)) {return YES;}
 
 #ifdef DEBUG
   if (action == @selector(debug1Action:)) {return YES;}
 #endif
+
+  if (action == @selector(refreshPreview:)) {
+    return _previewWindowController.window.isVisible;
+  }
 
   if (action == @selector(selectNextTab:) || action == @selector(selectPreviousTab:)) {
     return _vimController.tabs.count >= 2;
@@ -464,14 +488,11 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   _vimView.tabBarControl.hidden = NO;
 }
 
-- (void)controller:(MMVimController *)controller setScrollbarThumbValue:(float)value proportion:(float)proportion
-        identifier:(int32_t)identifier data:(NSData *)data {
+- (void)controller:(MMVimController *)controller setScrollbarThumbValue:(float)value proportion:(float)proportion identifier:(int32_t)identifier data:(NSData *)data {
 
 }
 
-- (void)controller:(MMVimController *)controller destroyScrollbarWithIdentifier:(int32_t)identifier
-              data:(NSData *)data {
-
+- (void)controller:(MMVimController *)controller destroyScrollbarWithIdentifier:(int32_t)identifier data:(NSData *)data {
   _needsToResizeVimView = YES;
 }
 
@@ -560,9 +581,7 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 - (void)controller:(MMVimController *)controller removeToolbarItemWithIdentifier:(NSString *)identifier {
 }
 
-- (void)controller:(MMVimController *)controller handleBrowseWithDirectoryUrl:(NSURL *)url browseDir:(BOOL)dir
-            saving:(BOOL)saving data:(NSData *)data {
-
+- (void)controller:(MMVimController *)controller handleBrowseWithDirectoryUrl:(NSURL *)url browseDir:(BOOL)dir saving:(BOOL)saving data:(NSData *)data {
   if (!saving) {
     return;
   }
@@ -766,8 +785,7 @@ static NSString *const qVimRAutoGroupName = @"VimR";
       | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask
       | NSTexturedBackgroundWindowMask;
 
-  VRMainWindow *window = [[VRMainWindow alloc] initWithContentRect:contentRect styleMask:windowStyle
-                                                           backing:NSBackingStoreBuffered defer:YES];
+  VRMainWindow *window = [[VRMainWindow alloc] initWithContentRect:contentRect styleMask:windowStyle backing:NSBackingStoreBuffered defer:YES];
   window.delegate = self;
   window.hasShadow = YES;
   window.title = @"VimR";

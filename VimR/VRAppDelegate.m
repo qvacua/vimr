@@ -101,9 +101,7 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
 #ifdef DEBUG
 - (IBAction)debug3Action:(id)sender {
-  [self application:_application openFiles:@[
-      [NSURL fileURLWithPath:@"/Users/hat/Projects/vimr/Podfile"]
-  ]];
+  [self application:_application openFiles:@[[NSURL fileURLWithPath:@"/Users/hat/Projects/vimr/README.md"]]];
 }
 #endif
 
@@ -139,9 +137,9 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
   if (action == @selector(toggleSidebarOnRight:)) {
     if ([_userDefaults boolForKey:qDefaultShowSideBarOnRight]) {
-      [(NSMenuItem *)anItem setTitle:@"Put Sidebar on Left"];
+      [(NSMenuItem *) anItem setTitle:@"Put Sidebar on Left"];
     } else {
-      [(NSMenuItem *)anItem setTitle:@"Put Sidebar on Right"];
+      [(NSMenuItem *) anItem setTitle:@"Put Sidebar on Right"];
     }
 
     return NO;

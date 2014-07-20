@@ -49,6 +49,13 @@
   ));
 }
 
+- (void)testBlank {
+ assertThat(@(blank(nil)), isYes);
+ assertThat(@(blank(@"")), isYes);
+
+ assertThat(@(blank(@"str")), isNo);
+}
+
 @end
 
 
