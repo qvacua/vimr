@@ -20,6 +20,7 @@
   CGFloat _pageXOffset;
 
   WebView *_webView;
+  NSString *_template;
 }
 
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame {
@@ -44,6 +45,9 @@
   CONSTRAINT(@"H:|[webView]|");
   CONSTRAINT(@"V:|[webView]|");
 
+  NSURL *templateUrl = [[NSBundle bundleForClass:[self class]] URLForResource:@"template" withExtension:@"html"];
+  _template = [NSString stringWithContentsOfURL:templateUrl encoding:NSUTF8StringEncoding error:NULL];
+
   return self;
 }
 
@@ -52,9 +56,14 @@
   _pageXOffset = [_webView stringByEvaluatingJavaScriptFromString:@"window.pageXOffset"].floatValue;
 
   NSString *markdown = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
-  NSString *html = [markdown htmlFromMarkdown];
+  NSString *htmlContent = [markdown htmlFromMarkdown];
 
-  [_webView.mainFrame loadHTMLString:html baseURL:url.URLByDeletingLastPathComponent];
+  NSString *result = [_template stringByReplacingOccurrencesOfString:@"<% TITLE %>" withString:url.lastPathComponent];
+  result = [result stringByReplacingOccurrencesOfString:@"<% CONTENT %>" withString:htmlContent];
+
+  [result writeToFile:@"/tmp/test.html" atomically:NO encoding:NSUTF8StringEncoding error:NULL];
+
+  [_webView.mainFrame loadHTMLString:result baseURL:url.URLByDeletingLastPathComponent];
 
   return YES;
 }
