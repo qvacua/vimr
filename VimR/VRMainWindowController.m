@@ -51,6 +51,7 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 
   NSWindow *_previewWindow;
   NSView <VRPluginPreviewView> *_currentPreviewView;
+  NSMutableArray *_previewViewConstraints;
 }
 
 #pragma mark Public
@@ -64,6 +65,9 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   _previewWindow.hasShadow = YES;
   _previewWindow.title = @"Preview";
   _previewWindow.opaque = NO;
+  _previewWindow.releasedWhenClosed = NO;
+
+  _previewViewConstraints = [[NSMutableArray alloc] init];
 
   return self;
 }
@@ -78,6 +82,8 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 
   [_vimView removeFromSuperviewWithoutNeedingDisplay];
   [_vimView cleanup];
+
+  [_previewWindow orderOut:self];
 
   [self close];
 }
@@ -164,30 +170,27 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 }
 
 - (IBAction)showPreview:(id)sender {
-  NSArray *fileTypes = [[_vimController evaluateVimExpression:@"&ft"] componentsSeparatedByString:@"."];
-
-  if (fileTypes.isEmpty) {
-    DDLogInfo(@"No file type set.");
-    return;
-  }
+  NSString *fileTypesFromVim = [_vimController evaluateVimExpression:@"&ft"];
+  NSArray *fileTypes = [fileTypesFromVim componentsSeparatedByString:@"."];
 
   // TODO: for time being we use the first file type and ignore the rest
   _currentPreviewView = [_pluginManager previewViewForFileType:fileTypes[0]];
-  if (_currentPreviewView == nil) {
-    DDLogInfo(@"No suitable plugin found for file types %@.", fileTypes);
-    return;
-  }
-
   _currentPreviewView.translatesAutoresizingMaskIntoConstraints = NO;
+  DDLogInfo(@"Using plugin %@ for %@", [_currentPreviewView class], fileTypesFromVim);
+
   NSView *contentView = _previewWindow.contentView;
+  [contentView removeConstraints:_previewViewConstraints];
   [contentView setSubviews:@[]];
   [contentView addSubview:_currentPreviewView];
   
   NSDictionary *views = @{
       @"previewView" : _currentPreviewView,
   };
-  CONSTRAINT(@"H:|[previewView]|");
-  CONSTRAINT(@"V:|[previewView]|");
+
+  [_previewViewConstraints removeAllObjects];
+  [_previewViewConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[previewView]|" options:0 metrics:nil views:views]];
+  [_previewViewConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[previewView]|" options:0 metrics:nil views:views]];
+  [contentView addConstraints:_previewViewConstraints];
 
   [_previewWindow makeKeyAndOrderFront:self];
   NSString *path = _vimController.currentBuffer.fileName;

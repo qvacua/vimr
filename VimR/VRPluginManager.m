@@ -143,11 +143,7 @@ static const NSUInteger qMaxPluginDefinitionVersion = 1;
     return NO;
   }
 
-  if (plugin.pluginDefinitionVersion > qMaxPluginDefinitionVersion) {
-    return NO;
-  }
-
-  return YES;
+  return plugin.pluginDefinitionVersion <= qMaxPluginDefinitionVersion;
 }
 
 @end
