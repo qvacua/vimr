@@ -103,7 +103,6 @@
 		1929BFD2A870FBF210148877 /* VRPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BAEC891444D375F472C8 /* VRPluginManager.m */; };
 		1929BFEE218D1F29938F4E99 /* VRTextMateCppUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7D8D7809B241537B6F7 /* VRTextMateCppUtils.mm */; };
 		4B6F24DB197B000100AB1DD8 /* NoPluginPreviewContent.html in Resources */ = {isa = PBXBuildFile; fileRef = 1929BADD87FEE7512FA3D9AE /* NoPluginPreviewContent.html */; };
-		4B6F252E197B9F8D00AB1DD8 /* WebKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1929BA377D1941667961B208 /* WebKit.framework */; };
 		4B6F2573197BAD4300AB1DD8 /* VimRPluginDefinition.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B6F2572197BAD4300AB1DD8 /* VimRPluginDefinition.framework */; };
 		4B6F2574197BAD5300AB1DD8 /* VimRPluginDefinition.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B6F2572197BAD4300AB1DD8 /* VimRPluginDefinition.framework */; };
 		4B6F2575197BAD5B00AB1DD8 /* VimRPluginDefinition.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B6F2572197BAD4300AB1DD8 /* VimRPluginDefinition.framework */; };
@@ -158,7 +157,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				4B6F252E197B9F8D00AB1DD8 /* WebKit.framework in CopyFiles */,
 				4B74C386191238B100B8C503 /* Sparkle.framework in CopyFiles */,
 				4B6F2573197BAD4300AB1DD8 /* VimRPluginDefinition.framework in CopyFiles */,
 				4B74C387191238B400B8C503 /* PSMTabBarControl.framework in CopyFiles */,
