@@ -155,6 +155,11 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 }
 
 - (IBAction)showPreview:(id)sender {
+  if (_previewWindowController.window.isVisible) {
+    [_previewWindowController showWindow:self];
+    return;
+  }
+
   NSString *path = _vimController.currentBuffer.fileName;
   NSURL *url = path == nil ? nil : [NSURL fileURLWithPath:path];
 

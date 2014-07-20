@@ -13,6 +13,8 @@
 #import "VRMainWindowController.h"
 #import "VRUtils.h"
 #import "VRPluginManager.h"
+#import "VRInvalidateCacheOperation.h"
+#import "VRFileItem.h"
 
 
 @implementation VRPreviewWindowController {
@@ -21,6 +23,8 @@
   BOOL _windowHasBeenShown;
 
   NSView <VRPluginPreviewView> *_currentPreviewView;
+  NSURL *_currentUrl;
+
   NSMutableArray *_previewViewConstraints;
 }
 
@@ -36,7 +40,13 @@
   return self;
 }
 
+- (void)setUp {
+  [_notificationCenter addObserver:self selector:@selector(cacheInvalidated:) name:qInvalidatedCacheEvent object:nil];
+}
+
 - (void)previewForUrl:(NSURL *)url fileType:(NSString *)fileType {
+  _currentUrl = url;
+
   _currentPreviewView = [_pluginManager previewViewForFileType:fileType];
   _currentPreviewView.translatesAutoresizingMaskIntoConstraints = NO;
   DDLogInfo(@"Using plugin %@ for %@", [_currentPreviewView class], fileType);
@@ -55,6 +65,17 @@
   [self showWindow:self];
   [_currentPreviewView previewFileAtUrl:url];
 
+}
+
+#pragma mark IBAction
+- (IBAction)refreshPreview:(id)sender {
+  DDLogInfo(@"Reloading preview of for %@", _currentUrl);
+  [_currentPreviewView previewFileAtUrl:_currentUrl];
+}
+
+#pragma mark NSObject
+- (void)dealloc {
+  [_notificationCenter removeObserver:self];
 }
 
 #pragma mark Private
@@ -84,6 +105,19 @@
   window.releasedWhenClosed = NO;
 
   return window;
+}
+
+- (void)cacheInvalidated:(NSNotification *)notification {
+  if (!self.window.isVisible) {
+    return;
+  }
+
+  VRFileItem *fileItem = notification.object;
+  if (![_currentUrl.URLByDeletingLastPathComponent isEqualTo:fileItem.url]) {
+    return;
+  }
+
+  [self refreshPreview:self];
 }
 
 @end

@@ -18,6 +18,7 @@
 @implementation VRMainWindowControllerFactory
 
 @autowire(pluginManager)
+@autowire(notificationCenter)
 
 - (VRMainWindowController *)newMainWindowControllerWithContentRect:(CGRect)contentRect workspace:(VRWorkspace *)workspace vimController:(MMVimController *)vimController {
   VRMainWindowController *mainWinController = [[VRMainWindowController alloc] initWithContentRect:contentRect];
@@ -29,6 +30,9 @@
 
   VRPreviewWindowController *previewWindowController = [[VRPreviewWindowController alloc] initWithMainWindowController:mainWinController];
   previewWindowController.pluginManager = _pluginManager;
+  previewWindowController.notificationCenter = _notificationCenter;
+  [previewWindowController setUp];
+
   mainWinController.previewWindowController = previewWindowController;
 
   return mainWinController;

@@ -431,6 +431,12 @@
                                     <action selector="showPreview:" target="-1" id="hTt-u7-Lrk"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Refresh" id="xhx-5v-5vO">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="refreshPreview:" target="-1" id="opj-wq-b7y"/>
+                                </connections>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
