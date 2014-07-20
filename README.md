@@ -3,6 +3,13 @@ VimR
 
 Project VimR — Vim Refined — [![Build Status](https://travis-ci.org/qvacua/vimr.svg?branch=master)](https://travis-ci.org/qvacua/vimr)
 
+Download
+--------
+
+Pre-built binaries can be found [here](https://github.com/qvacua/vimr/releases).
+
+From time to time I'll upload a bleeding edge build and you can download it [here](http://qvacua.com/snapshots/?C=M;O=D).
+
 About
 -----
 
@@ -13,13 +20,6 @@ In case you want to have a bit more information on the motivation behind VimR, I
 There is a mailing list with absolute no traffic: [vimr@librelist.com](mailto:vimr@librelist.com). (To unsubscribe, send a mail to [vimr-unsubscribe@librelist.com](mailto:vimr-unsubscribe@librelist.com))
 
 ![Screenshot](https://raw.github.com/qvacua/vimr/master/Meta/screenshot.png)
-
-Download
---------
-
-Pre-built binaries can be found [here](https://github.com/qvacua/vimr/releases).
-
-From time to time I'll upload a bleeding edge build and you can download it [here](http://qvacua.com/snapshots/?C=M;O=D).
 
 How to Build
 ------------
