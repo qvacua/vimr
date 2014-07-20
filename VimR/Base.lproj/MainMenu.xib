@@ -412,17 +412,23 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="45L-jg-jZ4"/>
-                            <menuItem title="Show Preview" keyEquivalent="p" id="92S-aK-nDO">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="showPreview:" target="-1" id="Ck4-mi-Qnb"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="VCk-xX-v5c"/>
                             <menuItem title="Show Status Bar" keyEquivalent="/" id="APq-bi-3bg">
                                 <connections>
                                     <action selector="toggleStatusBar:" target="-1" id="hrV-es-SUd"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Preview" id="8wf-mf-At6">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Preview" id="e5M-oa-9zh">
+                        <items>
+                            <menuItem title="Show Preview" keyEquivalent="p" id="60p-zq-AFA">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="showPreview:" target="-1" id="hTt-u7-Lrk"/>
                                 </connections>
                             </menuItem>
                         </items>

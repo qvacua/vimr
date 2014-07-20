@@ -9,7 +9,6 @@
 
 #import <PSMTabBarControl/PSMTabBarControl.h>
 #import <MacVimFramework/MacVimFramework.h>
-#import <VimRPluginDefinition/VRPlugin.h>
 #import "VRMainWindowController.h"
 #import "VRLog.h"
 #import "VRAlert.h"
@@ -23,8 +22,8 @@
 #import "VRWorkspaceView.h"
 #import "VRFileBrowserOutlineView.h"
 #import "VRFileBrowserView.h"
-#import "VRPluginManager.h"
 #import "NSArray+VR.h"
+#import "VRPreviewWindowController.h"
 
 
 const int qMainWindowBorderThickness = 22;
@@ -48,26 +47,12 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   BOOL _windowOriginShouldMoveToKeepOnScreen;
 
   VRWorkspaceView *_workspaceView;
-
-  NSWindow *_previewWindow;
-  NSView <VRPluginPreviewView> *_currentPreviewView;
-  NSMutableArray *_previewViewConstraints;
 }
 
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect {
   self = [super initWithWindow:[self newMainWindowForContentRect:contentRect]];
   RETURN_NIL_WHEN_NOT_SELF
-
-  _previewWindow = [[NSWindow alloc] initWithContentRect:CGRectMake(100, 100, 640, 480)
-                                               styleMask:NSTitledWindowMask | NSUnifiedTitleAndToolbarWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask
-                                                 backing:NSBackingStoreBuffered defer:YES];
-  _previewWindow.hasShadow = YES;
-  _previewWindow.title = @"Preview";
-  _previewWindow.opaque = NO;
-  _previewWindow.releasedWhenClosed = NO;
-
-  _previewViewConstraints = [[NSMutableArray alloc] init];
 
   return self;
 }
@@ -83,7 +68,7 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   [_vimView removeFromSuperviewWithoutNeedingDisplay];
   [_vimView cleanup];
 
-  [_previewWindow orderOut:self];
+  [_previewWindowController close];
 
   [self close];
 }
@@ -170,32 +155,12 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 }
 
 - (IBAction)showPreview:(id)sender {
-  NSString *fileTypesFromVim = [_vimController evaluateVimExpression:@"&ft"];
-  NSArray *fileTypes = [fileTypesFromVim componentsSeparatedByString:@"."];
-
-  // TODO: for time being we use the first file type and ignore the rest
-  _currentPreviewView = [_pluginManager previewViewForFileType:fileTypes[0]];
-  _currentPreviewView.translatesAutoresizingMaskIntoConstraints = NO;
-  DDLogInfo(@"Using plugin %@ for %@", [_currentPreviewView class], fileTypesFromVim);
-
-  NSView *contentView = _previewWindow.contentView;
-  [contentView removeConstraints:_previewViewConstraints];
-  [contentView setSubviews:@[]];
-  [contentView addSubview:_currentPreviewView];
-  
-  NSDictionary *views = @{
-      @"previewView" : _currentPreviewView,
-  };
-
-  [_previewViewConstraints removeAllObjects];
-  [_previewViewConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[previewView]|" options:0 metrics:nil views:views]];
-  [_previewViewConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[previewView]|" options:0 metrics:nil views:views]];
-  [contentView addConstraints:_previewViewConstraints];
-
-  [_previewWindow makeKeyAndOrderFront:self];
   NSString *path = _vimController.currentBuffer.fileName;
   NSURL *url = path == nil ? nil : [NSURL fileURLWithPath:path];
-  [_currentPreviewView previewFileAtUrl:url];
+
+  // TODO: for time being we use the first file type and ignore the rest
+  NSArray *fileTypes = [[_vimController evaluateVimExpression:@"&ft"] componentsSeparatedByString:@"."];
+  [_previewWindowController previewForUrl:url fileType:fileTypes[0]];
 }
 
 - (IBAction)zoom:(id)sender {
