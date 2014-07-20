@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1929B5355E7ECCB33545873F /* error.html in Resources */ = {isa = PBXBuildFile; fileRef = 1929B876D79D4EE3D3BC1E7C /* error.html */; };
 		1929B65C0E3DB18ABB4345BD /* template.html in Resources */ = {isa = PBXBuildFile; fileRef = 1929B00478E02C1D2A3EC539 /* template.html */; };
 		1929BE930F7A50871C39BCCD /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1929B00125E256436F58EA64 /* WebKit.framework */; };
 		4B6F251D197B9EC500AB1DD8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B6F2506197B9DE600AB1DD8 /* Cocoa.framework */; };
@@ -53,6 +54,7 @@
 /* Begin PBXFileReference section */
 		1929B00125E256436F58EA64 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		1929B00478E02C1D2A3EC539 /* template.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = template.html; path = Resources/template.html; sourceTree = "<group>"; };
+		1929B876D79D4EE3D3BC1E7C /* error.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = error.html; sourceTree = "<group>"; };
 		4B6F2506197B9DE600AB1DD8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4B6F251C197B9EC500AB1DD8 /* Markdown.vimr-plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Markdown.vimr-plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B6F2520197B9EC500AB1DD8 /* Markdown-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Markdown-Info.plist"; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 			isa = PBXGroup;
 			children = (
 				1929B00478E02C1D2A3EC539 /* template.html */,
+				1929B876D79D4EE3D3BC1E7C /* error.html */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -226,6 +229,7 @@
 			files = (
 				4B6F2523197B9EC500AB1DD8 /* InfoPlist.strings in Resources */,
 				1929B65C0E3DB18ABB4345BD /* template.html in Resources */,
+				1929B5355E7ECCB33545873F /* error.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

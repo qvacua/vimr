@@ -40,7 +40,7 @@
 
 #pragma mark VRPluginPreviewView
 - (BOOL)previewFileAtUrl:(NSURL *)url {
-  NSURL *htmlUrl = [[NSBundle mainBundle] URLForResource:@"NoPluginPreviewContent" withExtension:@"html"];
+  NSURL *htmlUrl = [[NSBundle mainBundle] URLForResource:@"error" withExtension:@"html"];
   [_webView.mainFrame loadRequest:[NSURLRequest requestWithURL:htmlUrl]];
 
   return YES;

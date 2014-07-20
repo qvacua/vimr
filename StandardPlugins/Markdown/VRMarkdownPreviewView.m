@@ -21,6 +21,7 @@
 
   WebView *_webView;
   NSString *_template;
+  NSString *_errorHtml;
 }
 
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame {
@@ -48,6 +49,9 @@
   NSURL *templateUrl = [[NSBundle bundleForClass:[self class]] URLForResource:@"template" withExtension:@"html"];
   _template = [NSString stringWithContentsOfURL:templateUrl encoding:NSUTF8StringEncoding error:NULL];
 
+  NSURL *errorHtmlUrl = [[NSBundle bundleForClass:[self class]] URLForResource:@"error" withExtension:@"html"];
+  _errorHtml = [NSString stringWithContentsOfURL:errorHtmlUrl encoding:NSUTF8StringEncoding error:NULL];
+
   return self;
 }
 
@@ -58,8 +62,13 @@
   NSString *markdown = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
   NSString *htmlContent = [markdown htmlFromMarkdown];
 
-  NSString *result = [_template stringByReplacingOccurrencesOfString:@"<% TITLE %>" withString:url.lastPathComponent];
-  result = [result stringByReplacingOccurrencesOfString:@"<% CONTENT %>" withString:htmlContent];
+  NSString *result = nil;
+  if (htmlContent == nil) {
+    result = _errorHtml;
+  } else {
+    result = [_template stringByReplacingOccurrencesOfString:@"<% TITLE %>" withString:url.lastPathComponent];
+    result = [result stringByReplacingOccurrencesOfString:@"<% CONTENT %>" withString:htmlContent];
+  }
 
   [_webView.mainFrame loadHTMLString:result baseURL:url.URLByDeletingLastPathComponent];
 
