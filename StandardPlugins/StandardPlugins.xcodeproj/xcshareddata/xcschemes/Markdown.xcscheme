@@ -43,7 +43,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4B6F251B197B9EC500AB1DD8"
-               BuildableName = "Markdown.bundle"
+               BuildableName = "Markdown.vimr-plugin"
                BlueprintName = "Markdown"
                ReferencedContainer = "container:StandardPlugins.xcodeproj">
             </BuildableReference>

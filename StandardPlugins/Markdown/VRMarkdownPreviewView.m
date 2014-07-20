@@ -22,7 +22,6 @@
   WebView *_webView;
 }
 
-
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame {
   [_webView stringByEvaluatingJavaScriptFromString:
       [NSString stringWithFormat:@"window.scrollTo(%f, %f)", _pageXOffset, _pageYOffset]
