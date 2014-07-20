@@ -7,3 +7,6 @@
 [submodule "vimr-plugin-definition"]
 	path = vimr-plugin-definition
 	url = git://github.com/qvacua/vimr-plugin-definition.git
+[submodule "StandardPlugins/ocdiscount"]
+	path = StandardPlugins/ocdiscount
+	url = git://github.com/qvacua/ocdiscount.git
