@@ -8,7 +8,7 @@
 */
 
 #import <Cocoa/Cocoa.h>
-#import "VRPlugin.h"
+#import <VimRPluginDefinition/VRPlugin.h>
 
 
 @interface VRMarkdownPlugin : VRPlugin

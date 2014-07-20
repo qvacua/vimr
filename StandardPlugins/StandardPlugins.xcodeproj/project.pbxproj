@@ -14,7 +14,26 @@
 		4B6F252D197B9EF200AB1DD8 /* VRMarkdownPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6F252B197B9EF200AB1DD8 /* VRMarkdownPreviewView.m */; };
 		4B6F2577197BAEFC00AB1DD8 /* VimRPluginDefinition.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B6F2576197BAEFC00AB1DD8 /* VimRPluginDefinition.framework */; };
 		4B6F2579197BAF1700AB1DD8 /* VimRPluginDefinition.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B6F2576197BAEFC00AB1DD8 /* VimRPluginDefinition.framework */; };
+		4B6F2583197BB4BB00AB1DD8 /* OCDiscount.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B6F2580197BB49600AB1DD8 /* OCDiscount.framework */; };
+		4B6F2584197BB4CC00AB1DD8 /* OCDiscount.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B6F2580197BB49600AB1DD8 /* OCDiscount.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4B6F257F197BB49600AB1DD8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4B6F257A197BB49600AB1DD8 /* OCDiscount.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4B3EFF4817199EC200D1D951;
+			remoteInfo = OCDiscount;
+		};
+		4B6F2581197BB49600AB1DD8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4B6F257A197BB49600AB1DD8 /* OCDiscount.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4B3EFF6017199EC200D1D951;
+			remoteInfo = OCDiscountTests;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		4B6F2578197BAF1000AB1DD8 /* CopyFiles */ = {
@@ -24,6 +43,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				4B6F2579197BAF1700AB1DD8 /* VimRPluginDefinition.framework in CopyFiles */,
+				4B6F2583197BB4BB00AB1DD8 /* OCDiscount.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,6 +61,7 @@
 		4B6F252A197B9EF200AB1DD8 /* VRMarkdownPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRMarkdownPreviewView.h; sourceTree = "<group>"; };
 		4B6F252B197B9EF200AB1DD8 /* VRMarkdownPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRMarkdownPreviewView.m; sourceTree = "<group>"; };
 		4B6F2576197BAEFC00AB1DD8 /* VimRPluginDefinition.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = VimRPluginDefinition.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B6F257A197BB49600AB1DD8 /* OCDiscount.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCDiscount.xcodeproj; path = ocdiscount/OCDiscount.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +72,7 @@
 				4B6F251D197B9EC500AB1DD8 /* Cocoa.framework in Frameworks */,
 				1929BE930F7A50871C39BCCD /* WebKit.framework in Frameworks */,
 				4B6F2577197BAEFC00AB1DD8 /* VimRPluginDefinition.framework in Frameworks */,
+				4B6F2584197BB4CC00AB1DD8 /* OCDiscount.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,6 +82,7 @@
 		4B6F24FA197B9DE600AB1DD8 = {
 			isa = PBXGroup;
 			children = (
+				4B6F257A197BB49600AB1DD8 /* OCDiscount.xcodeproj */,
 				4B6F251E197B9EC500AB1DD8 /* Markdown */,
 				4B6F2505197B9DE600AB1DD8 /* Frameworks */,
 				4B6F2504197B9DE600AB1DD8 /* Products */,
@@ -106,6 +129,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		4B6F257B197BB49600AB1DD8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4B6F2580197BB49600AB1DD8 /* OCDiscount.framework */,
+				4B6F2582197BB49600AB1DD8 /* OCDiscountTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -146,12 +178,35 @@
 			mainGroup = 4B6F24FA197B9DE600AB1DD8;
 			productRefGroup = 4B6F2504197B9DE600AB1DD8 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 4B6F257B197BB49600AB1DD8 /* Products */;
+					ProjectRef = 4B6F257A197BB49600AB1DD8 /* OCDiscount.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				4B6F251B197B9EC500AB1DD8 /* Markdown */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		4B6F2580197BB49600AB1DD8 /* OCDiscount.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OCDiscount.framework;
+			remoteRef = 4B6F257F197BB49600AB1DD8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B6F2582197BB49600AB1DD8 /* OCDiscountTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = OCDiscountTests.xctest;
+			remoteRef = 4B6F2581197BB49600AB1DD8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4B6F251A197B9EC500AB1DD8 /* Resources */ = {

@@ -33,6 +33,20 @@
                ReferencedContainer = "container:vimr-plugin-definition/VimRPluginDefinition.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4B6F251B197B9EC500AB1DD8"
+               BuildableName = "Markdown.vimr-plugin"
+               BlueprintName = "Markdown"
+               ReferencedContainer = "container:StandardPlugins/StandardPlugins.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
