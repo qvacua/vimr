@@ -62,6 +62,7 @@
   }
 
   [self preparePreviewView:_currentPreviewView];
+  self.window.title = SF(@"%@ — %@ — [%@]", @"Preview", url.lastPathComponent, url.path.stringByDeletingLastPathComponent.stringByAbbreviatingWithTildeInPath);
   [self showWindow:self];
   [_currentPreviewView previewFileAtUrl:url];
 
