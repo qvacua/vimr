@@ -8,7 +8,7 @@
 */
 
 #import <Foundation/Foundation.h>
-#import "VRPlugin.h"
+#import <VimRPluginDefinition/VRPlugin.h>
 
 
 @interface VRDummyPluginA : VRPlugin

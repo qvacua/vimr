@@ -10,6 +10,7 @@
 #import "VRBaseTestCase.h"
 #import "VRPluginManager.h"
 #import "VRDummyPlugins.h"
+#import "VRNoPluginPreviewView.h"
 
 
 static NSBundle *mainBundle;
@@ -114,8 +115,8 @@ static NSBundle *pluginBundleE;
   assertThat([pluginManager previewViewForFileType:@"type-c-2"], instanceOf([VRDummyViewC2 class]));
   assertThat([pluginManager previewViewForFileType:@"type-c-3"], instanceOf([VRDummyViewC1 class]));
 
-  assertThat([pluginManager previewViewForFileType:@"type-d-1"], is(nilValue()));
-  assertThat([pluginManager previewViewForFileType:@"type-e-1"], is(nilValue()));
+  assertThat([pluginManager previewViewForFileType:@"type-d-1"], instanceOf([VRNoPluginPreviewView class]));
+  assertThat([pluginManager previewViewForFileType:@"type-e-1"], instanceOf([VRNoPluginPreviewView class]));
 }
 
 @end
