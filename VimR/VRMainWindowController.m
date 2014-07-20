@@ -168,6 +168,10 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   [_previewWindowController previewForUrl:url fileType:fileTypes[0]];
 }
 
+- (IBAction)refreshPreview:(id)sender {
+  [_previewWindowController refreshPreview:sender];
+}
+
 - (IBAction)zoom:(id)sender {
   // maximize window
   NSScreen *screen = self.window.screen;
@@ -247,6 +251,10 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 #ifdef DEBUG
   if (action == @selector(debug1Action:)) {return YES;}
 #endif
+
+  if (action == @selector(refreshPreview:)) {
+    return _previewWindowController.window.isVisible;
+  }
 
   if (action == @selector(selectNextTab:) || action == @selector(selectPreviousTab:)) {
     return _vimController.tabs.count >= 2;
