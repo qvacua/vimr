@@ -61,8 +61,6 @@
   NSString *result = [_template stringByReplacingOccurrencesOfString:@"<% TITLE %>" withString:url.lastPathComponent];
   result = [result stringByReplacingOccurrencesOfString:@"<% CONTENT %>" withString:htmlContent];
 
-  [result writeToFile:@"/tmp/test.html" atomically:NO encoding:NSUTF8StringEncoding error:NULL];
-
   [_webView.mainFrame loadHTMLString:result baseURL:url.URLByDeletingLastPathComponent];
 
   return YES;
