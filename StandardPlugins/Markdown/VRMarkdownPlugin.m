@@ -17,7 +17,7 @@
 
 #pragma mark VRPlugin
 - (NSArray *)fileTypes {
-  return @[@"markdown"];
+  return @[@"markdown", @"mkd"];
 }
 
 - (NSArray *)abilities {
