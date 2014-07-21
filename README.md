@@ -31,7 +31,7 @@ How to Build
 First, clone the submodules:
 
 ```
-$ git submodule update --init
+$ git submodule update --recursive --init
 ```
 
 Then, build the `macvim` submodule: Assuming you're in the project root
