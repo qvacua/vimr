@@ -13,7 +13,11 @@ From time to time I'll upload a bleeding edge build and you can download it [her
 About
 -----
 
-Project VimR is an attempt to refine the Vim experience. The goal is to build an editor that uses Vim inside with many of the convenience GUI features similar to those present in modern editors for Mac. Let's see how far we get! :)
+Project VimR is an attempt to refine the Vim experience. The goal is to build an editor that uses Vim inside with many of the convenience GUI features similar to those present in modern editors for Mac. Let's see how far we get! :) Some features so far:
+
+* Open Quickly à la Xcode (or Go to File in TextMate)
+* File browser with many [keyboard actions](https://github.com/qvacua/vimr/wiki/File-Browser-Actions)
+* Preview via a plugin system: currently VimR ships with a `markdown`-preview plugin, more to come!
 
 In case you want to have a bit more information on the motivation behind VimR, I tried to explain it in my [blog](http://ishouldcocoa.net/post/85242609106/why-vimr).
 
