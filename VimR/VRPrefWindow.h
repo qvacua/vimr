@@ -14,7 +14,9 @@
 extern NSString *const qPrefWindowFrameAutosaveName;
 
 
-@interface VRPrefWindow : NSWindow <TBBean, TBInitializingBean>
+@interface VRPrefWindow : NSWindow <
+    TBBean, TBInitializingBean,
+    NSOutlineViewDataSource, NSOutlineViewDelegate, NSSplitViewDelegate>
 
 @property (nonatomic, weak) NSUserDefaultsController *userDefaultsController;
 

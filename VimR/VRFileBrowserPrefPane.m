@@ -126,10 +126,6 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
     [view setContentHuggingPriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
   }
 
-  CONSTRAIN(@"H:|-[daTitle]-[showStatusBar]-|");
-  CONSTRAIN(@"H:|-[daTitle]-[showSidebar]-|");
-  CONSTRAIN(@"H:|-[daTitle]-[showSidebarRight]-|");
-
   CONSTRAIN(@"H:|-[fbbTitle]-[showFoldersFirst]-|");
   CONSTRAIN(@"H:|-[fbbTitle]-[showHidden]-|");
   CONSTRAIN(@"H:|-[fbbTitle]-[syncWorkingDir]-|");
@@ -141,16 +137,11 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
   CONSTRAIN(@"H:|-[optTitle]-[optDesc]-|");
   CONSTRAIN(@"H:|-[ctrlTitle]-[ctrlDesc]-|");
 
-  CONSTRAIN(@"H:|-[asTitle]-[asOnFrameDeactivation]");
-  CONSTRAIN(@"H:|-[asTitle]-[asOfdDesc]");
-  CONSTRAIN(@"H:|-[asTitle]-[asOnCursorHold]");
-  CONSTRAIN(@"H:|-[asTitle]-[asOchDesc]");
-
   [self addConstraint:[self baseLineConstraintForView:fbbTitle toView:showFoldersFirstButton]];
   [self addConstraint:[self baseLineConstraintForView:domTitle toView:_defaultOpenModeButton]];
 
   CONSTRAIN(@"V:|-[showFoldersFirst]-[showHidden]-[syncWorkingDir]-[fbbDesc]-"
-      "[domMenu]-[noModifierTitle][cmdTitle][optTitle][ctrlTitle]-(24)-");
+      "[domMenu]-[noModifierTitle][cmdTitle][optTitle][ctrlTitle]-|");
   CONSTRAIN(@"V:[domMenu]-[noModifierDesc][cmdDesc][optDesc][ctrlDesc]");
 }
 
