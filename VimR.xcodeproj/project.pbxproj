@@ -127,6 +127,7 @@
 		4B921DA719003FBE004D4FFD /* cf.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B921D9C19003F1D004D4FFD /* cf.dylib */; };
 		4B921DA819003FBE004D4FFD /* text.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B921D9D19003F1D004D4FFD /* text.dylib */; };
 		4BC47963190845CC00536200 /* sparkle-pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 4BC47962190845CC00536200 /* sparkle-pub.pem */; };
+		4BD9894419819FBB00A95BF9 /* app-icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4BD9894319819FBB00A95BF9 /* app-icon.icns */; };
 		4BE9241718C20DBC00E67BB6 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE9241618C20DBC00E67BB6 /* Cocoa.framework */; };
 		4BE9242118C20DBC00E67BB6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4BE9241F18C20DBC00E67BB6 /* InfoPlist.strings */; };
 		4BE9242318C20DBC00E67BB6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE9242218C20DBC00E67BB6 /* main.m */; };
@@ -311,6 +312,7 @@
 		4B921D9C19003F1D004D4FFD /* cf.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = cf.dylib; path = VimR/TextMate/lib/cf.dylib; sourceTree = "<group>"; };
 		4B921D9D19003F1D004D4FFD /* text.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = text.dylib; path = VimR/TextMate/lib/text.dylib; sourceTree = "<group>"; };
 		4BC47962190845CC00536200 /* sparkle-pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "sparkle-pub.pem"; path = "Resources/sparkle-pub.pem"; sourceTree = "<group>"; };
+		4BD9894319819FBB00A95BF9 /* app-icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "app-icon.icns"; path = "Resources/app-icon.icns"; sourceTree = "<group>"; };
 		4BE9241318C20DBC00E67BB6 /* VimR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VimR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BE9241618C20DBC00E67BB6 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4BE9241918C20DBC00E67BB6 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -552,6 +554,7 @@
 		4B64256718C26D4E0012ED42 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4BD9894319819FBB00A95BF9 /* app-icon.icns */,
 				4BC47962190845CC00536200 /* sparkle-pub.pem */,
 				4BE9242B18C20DBC00E67BB6 /* MainMenu.xib */,
 				1929BADD87FEE7512FA3D9AE /* NoPluginPreviewContent.html */,
@@ -776,6 +779,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BD9894419819FBB00A95BF9 /* app-icon.icns in Resources */,
 				4BE9242118C20DBC00E67BB6 /* InfoPlist.strings in Resources */,
 				4BE9242F18C20DBC00E67BB6 /* Images.xcassets in Resources */,
 				4BC47963190845CC00536200 /* sparkle-pub.pem in Resources */,
