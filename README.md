@@ -1,7 +1,9 @@
-VimR
-====
+VimR — Vim Refined
+==================
 
-Project VimR — Vim Refined — [![Build Status](https://travis-ci.org/qvacua/vimr.svg?branch=master)](https://travis-ci.org/qvacua/vimr)
+![App Icon](https://raw.github.com/qvacua/vimr/master/Meta/vimr-app-icon.png)
+
+[![Build Status](https://travis-ci.org/qvacua/vimr.svg?branch=master)](https://travis-ci.org/qvacua/vimr)
 
 Download
 --------
