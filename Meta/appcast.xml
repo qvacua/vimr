@@ -6,19 +6,19 @@
         <description>Most recent changes with links to updates for VimR.</description>
         <language>en</language>
         <item>
-            <title>Version 0.1.0</title>
+            <title>Version 0.1.1</title>
             <description>
-                New Features and bug fixes
+                New App icon!
             </description>
             <sparkle:releaseNotesLink>
                 http://qvacua.com/vimr/release-notes.html
             </sparkle:releaseNotesLink>
-            <pubDate>2014-07-21 20:40:11 +0000</pubDate>
-            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.1.0-12/VimR-0.1.0.tar.bz2"
-                       sparkle:version="12"
-                       sparkle:shortVersionString="0.1.0"
-                       sparkle:dsaSignature="MCwCFDPGl8eaPwPoCig85QESCFgIX7iUAhRUe/rpf5oyHtz9SumCJZVIsPA7Pw=="
-                       length="7933952"
+            <pubDate>2014-07-26 20:40:11 +0000</pubDate>
+            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.1.1-13/VimR-0.1.1.tar.bz2"
+                       sparkle:version="13"
+                       sparkle:shortVersionString="0.1.1"
+                       sparkle:dsaSignature="MCwCFBaCN3VN8UOXVw1qfcnp9GRrNaFzAhQEoBMXc+MKG5R/R+vwS2AD+oNSUQ=="
+                       length="8384512"
                        type="application/octet-stream"/>
         </item>
     </channel>
