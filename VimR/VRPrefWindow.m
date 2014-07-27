@@ -136,22 +136,8 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
       @"paneView" : _paneScrollView,
   };
 
-  [contentView addConstraint:[NSLayoutConstraint constraintWithItem:_categoryScrollView
-                                                          attribute:NSLayoutAttributeWidth
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:nil
-                                                          attribute:NSLayoutAttributeNotAnAttribute
-                                                         multiplier:1
-                                                           constant:150]];
-  [contentView addConstraint:[NSLayoutConstraint constraintWithItem:_paneScrollView
-                                                          attribute:NSLayoutAttributeWidth
-                                                          relatedBy:NSLayoutRelationGreaterThanOrEqual
-                                                             toItem:nil
-                                                          attribute:NSLayoutAttributeNotAnAttribute
-                                                         multiplier:1
-                                                           constant:200]];
-  CONSTRAIN(@"H:|-(-1)-[catView][paneView]|")
-  CONSTRAIN(@"V:|-(-1)-[catView]-(-1)-|")
+  CONSTRAIN(@"H:|-(-1)-[catView(150)][paneView(>=200)]|")
+  CONSTRAIN(@"V:|-(-1)-[catView(>=100)]-(-1)-|")
   CONSTRAIN(@"V:|[paneView]|")
 }
 
