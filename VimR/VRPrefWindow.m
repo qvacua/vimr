@@ -23,6 +23,7 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   NSArray *_prefPanes;
   NSOutlineView *_categoryOutlineView;
   NSScrollView *_paneScrollView;
+  NSScrollView *_categoryScrollView;
 }
 
 @autowire(userDefaultsController)
@@ -37,6 +38,14 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   [self setFrameAutosaveName:qPrefWindowFrameAutosaveName];
 
   return self;
+}
+
+- (IBAction)debug1Action:(id)sender {
+  CGRect paneRect = [_paneScrollView.documentView frame];
+  CGFloat targetWidth = _categoryScrollView.frame.size.width - 1 + paneRect.size.width;
+  CGFloat targetHeight = MAX(200.0, paneRect.size.height);
+
+  self.contentSize = CGSizeMake(targetWidth, targetHeight);
 }
 
 #pragma mark TBInitializingBean
@@ -100,13 +109,13 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   _categoryOutlineView.allowsMultipleSelection = NO;
   _categoryOutlineView.allowsEmptySelection = NO;
 
-  NSScrollView *categoryScrollView = [[NSScrollView alloc] initWithFrame:CGRectZero];
-  categoryScrollView.translatesAutoresizingMaskIntoConstraints = NO;
-  categoryScrollView.hasVerticalScroller = YES;
-  categoryScrollView.hasHorizontalScroller = YES;
-  categoryScrollView.borderType = NSBezelBorder;
-  categoryScrollView.autohidesScrollers = YES;
-  categoryScrollView.documentView = _categoryOutlineView;
+  _categoryScrollView = [[NSScrollView alloc] initWithFrame:CGRectZero];
+  _categoryScrollView.translatesAutoresizingMaskIntoConstraints = NO;
+  _categoryScrollView.hasVerticalScroller = YES;
+  _categoryScrollView.hasHorizontalScroller = YES;
+  _categoryScrollView.borderType = NSBezelBorder;
+  _categoryScrollView.autohidesScrollers = YES;
+  _categoryScrollView.documentView = _categoryOutlineView;
 
   _paneScrollView = [[NSScrollView alloc] initWithFrame:CGRectZero];
   _paneScrollView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -119,15 +128,15 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   _paneScrollView.backgroundColor = [NSColor windowBackgroundColor];
 
   NSView *contentView = self.contentView;
-  [contentView addSubview:categoryScrollView];
+  [contentView addSubview:_categoryScrollView];
   [contentView addSubview:_paneScrollView];
 
   NSDictionary *views = @{
-      @"catView" : categoryScrollView,
+      @"catView" : _categoryScrollView,
       @"paneView" : _paneScrollView,
   };
 
-  [contentView addConstraint:[NSLayoutConstraint constraintWithItem:categoryScrollView
+  [contentView addConstraint:[NSLayoutConstraint constraintWithItem:_categoryScrollView
                                                           attribute:NSLayoutAttributeWidth
                                                           relatedBy:NSLayoutRelationEqual
                                                              toItem:nil

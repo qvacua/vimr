@@ -517,13 +517,12 @@
         <window title="VimR" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" appearanceType="aqua" animationBehavior="default" id="371">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="530" height="169"/>
+            <rect key="contentRect" x="335" y="390" width="605" height="501"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <view key="contentView" id="372">
-                <rect key="frame" x="0.0" y="0.0" width="530" height="169"/>
+                <rect key="frame" x="0.0" y="0.0" width="605" height="501"/>
                 <autoresizingMask key="autoresizingMask"/>
             </view>
-            <contentBorderThickness minY="22"/>
         </window>
         <customObject id="494" customClass="VRAppDelegate">
             <connections>
