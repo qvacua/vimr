@@ -16,6 +16,9 @@
 NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
 
 
+static const int qWindowStyleMask = NSTitledWindowMask | NSResizableWindowMask | NSClosableWindowMask;
+
+
 #define CONSTRAIN(fmt) [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]];
 
 
@@ -30,7 +33,7 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
 
 #pragma mark NSWindow
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag {
-  self = [super initWithContentRect:contentRect styleMask:NSTitledWindowMask | NSResizableWindowMask | NSClosableWindowMask backing:NSBackingStoreBuffered defer:YES];
+  self = [super initWithContentRect:contentRect styleMask:qWindowStyleMask backing:NSBackingStoreBuffered defer:YES];
   RETURN_NIL_WHEN_NOT_SELF
 
   self.title = @"Preferences";
@@ -38,14 +41,6 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   [self setFrameAutosaveName:qPrefWindowFrameAutosaveName];
 
   return self;
-}
-
-- (IBAction)debug1Action:(id)sender {
-  CGRect paneRect = [_paneScrollView.documentView frame];
-  CGFloat targetWidth = _categoryScrollView.frame.size.width - 1 + paneRect.size.width;
-  CGFloat targetHeight = MAX(200.0, paneRect.size.height);
-
-  self.contentSize = CGSizeMake(targetWidth, targetHeight);
 }
 
 #pragma mark TBInitializingBean
@@ -65,7 +60,14 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
 #pragma mark NSOutlineViewDelegate
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification {
   VRPrefPane *selectedPane = [_categoryOutlineView itemAtRow:_categoryOutlineView.selectedRow];
+
   _paneScrollView.documentView = selectedPane;
+
+  // The first two or three times, the resizing does not work. When dispatching to the main thread, it works from the
+  // start. Very odd...
+  dispatch_to_main_thread(^{
+    [self resizeWindowForPrefPane:selectedPane];
+  });
 }
 
 #pragma mark NSOutlineViewDataSource
@@ -76,7 +78,6 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
 
   return nil;
 }
-
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
   return _prefPanes.count;
 }
@@ -137,8 +138,27 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   };
 
   CONSTRAIN(@"H:|-(-1)-[catView(150)][paneView(>=200)]|")
-  CONSTRAIN(@"V:|-(-1)-[catView(>=100)]-(-1)-|")
+  CONSTRAIN(@"V:|-(-1)-[catView(>=150)]-(-1)-|")
   CONSTRAIN(@"V:|[paneView]|")
+
+  // Why do we need this?
+  dispatch_to_main_thread(^{
+    [self resizeWindowForPrefPane:_prefPanes[0]];
+  });
+}
+
+- (void)resizeWindowForPrefPane:(VRPrefPane *)selectedPane {
+  CGRect paneRect = selectedPane.frame;
+  CGFloat targetWidth = _categoryScrollView.frame.size.width - 1 + paneRect.size.width;
+  CGFloat targetHeight = MAX(150, paneRect.size.height);
+  CGSize newWinSize = [NSWindow frameRectForContentRect:CGRectMake(0, 0, targetWidth, targetHeight) styleMask:qWindowStyleMask].size;
+
+  CGRect winFrame = self.frame;
+  winFrame.origin.y += winFrame.size.height;
+  winFrame.origin.y -= newWinSize.height;
+  winFrame.size = newWinSize;
+
+  [self setFrame:winFrame display:YES animate:YES];
 }
 
 @end
