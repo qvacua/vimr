@@ -1,9 +1,6 @@
 [submodule "macvim"]
 	path = macvim
 	url = git://github.com/qvacua/macvim.git
-[submodule "Sparkle"]
-	path = Sparkle
-	url = git://github.com/sparkle-project/Sparkle.git
 [submodule "vimr-plugin-definition"]
 	path = vimr-plugin-definition
 	url = git://github.com/qvacua/vimr-plugin-definition.git
