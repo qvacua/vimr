@@ -14,6 +14,11 @@
 #import "VRWorkspaceView.h"
 
 
+#define LEVEL1(name) [level1.path stringByAppendingPathComponent:name]
+#define LEVEL2A(name) [level2aPath stringByAppendingPathComponent:name]
+#define LEVEL2B(name) [level2bPath stringByAppendingPathComponent:name]
+
+
 @interface VRFileBrowserViewTest : VRBaseTestCase
 @end
 
@@ -25,10 +30,6 @@
 
   VRFileBrowserView *fileBrowserView;
 }
-
-#define LEVEL1(name) [level1.path stringByAppendingPathComponent:name]
-#define LEVEL2A(name) [level2aPath stringByAppendingPathComponent:name]
-#define LEVEL2B(name) [level2bPath stringByAppendingPathComponent:name]
 
 - (void)setUp {
   [super setUp];
@@ -44,6 +45,7 @@
 
   userDefaults = mock([NSUserDefaults class]);
   [given([userDefaults boolForKey:qDefaultShowHiddenInFileBrowser]) willReturnBool:NO];
+  [given([userDefaults boolForKey:qDefaultHideWildignoreInFileBrowser]) willReturnBool:YES];
 
   workspaceView = mock([VRWorkspaceView class]);
   
@@ -128,6 +130,13 @@
   assertThat(@([fileBrowserView outlineView:nil numberOfChildrenOfItem:nil]), is(@2));
 }
 
+- (void)testOutlineViewDataSourceMethodsWithoutWildIgnoreItems {
+  [given([userDefaults boolForKey:qDefaultHideWildignoreInFileBrowser]) willReturnBool:NO];
+
+  [fileBrowserView reload];
+  assertThat(@([fileBrowserView outlineView:nil numberOfChildrenOfItem:nil]), is(@6));
+}
+
 - (void)assertLevel2a:(id)node {
   assertThat(@([fileBrowserView outlineView:nil numberOfChildrenOfItem:node]), is(@5));
   assertThat(@([node isDir]), isYes);
@@ -135,8 +144,7 @@
 
   for (NSUInteger i = 0; i < 5; i++) {
     id child = [fileBrowserView outlineView:nil child:i ofItem:node];
-    assertThat([fileBrowserView outlineView:nil objectValueForTableColumn:nil byItem:child],
-        containsString(@"level-2-a-file-"));
+    assertThat([fileBrowserView outlineView:nil objectValueForTableColumn:nil byItem:child], containsString(@"level-2-a-file-"));
     assertThat(@([fileBrowserView outlineView:nil isItemExpandable:child]), isNo);
     assertThat(@([child isHidden]), isNo);
   }

@@ -21,7 +21,6 @@
 
 @interface VRFileBrowserView : NSView <NSOutlineViewDataSource, NSOutlineViewDelegate, VRFileBrowserActionDelegate>
 
-@property (nonatomic, weak) NSFileManager *fileManager;
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;
 @property (nonatomic, weak) NSUserDefaults *userDefaults;
 @property (nonatomic, weak) NSNotificationCenter *notificationCenter;

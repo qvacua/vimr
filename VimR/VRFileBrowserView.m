@@ -79,6 +79,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 
 - (void)setUp {
   [_notificationCenter addObserver:self selector:@selector(cacheInvalidated:) name:qInvalidatedCacheEvent object:nil];
+  [_userDefaults addObserver:self forKeyPath:qDefaultHideWildignoreInFileBrowser options:NSKeyValueObservingOptionNew context:NULL];
 
   [self addViews];
   [self reload];
@@ -87,13 +88,23 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 #pragma mark NSObject
 - (void)dealloc {
   [_notificationCenter removeObserver:self];
+  [_userDefaults removeObserver:self forKeyPath:qDefaultHideWildignoreInFileBrowser];
+}
+
+#pragma mark KVO
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+  if ([keyPath isEqualToString:qDefaultHideWildignoreInFileBrowser]) {
+    [self reload];
+  }
 }
 
 #pragma mark NSOutlineViewDataSource
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(VRNode *)item {
   VRNode *currentNode = item ?: _rootNode;
 
-  if (!currentNode.children) {[self buildChildNodesForNode:currentNode];}
+  if (!currentNode.children) {
+    [self buildChildNodesForNode:currentNode];
+  }
 
   return currentNode.children.count;
 }
@@ -451,8 +462,11 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   }
 
   NSArray *filteredChildren = children;
-  filteredChildren = [self filterWildIngoreNodes:filteredChildren forParentPath:[parentNode.item url].path];
+  if ([_userDefaults boolForKey:qDefaultHideWildignoreInFileBrowser]) {
+    filteredChildren = [self filterWildIngoreNodes:filteredChildren forParentPath:[parentNode.item url].path];
+  }
   filteredChildren = [self filterHiddenNodesIfNec:filteredChildren];
+
   if (_workspaceView.showFoldersFirst) {
     NSSortDescriptor *folderDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dir" ascending:YES comparator:qNodeDirComparator];
 

@@ -17,6 +17,7 @@ extern NSString *const qDefaultShowSideBarOnRight;
 extern NSString *const qDefaultShowFoldersFirst;
 extern NSString *const qDefaultShowHiddenInFileBrowser;
 extern NSString *const qDefaultSyncWorkingDirectoryWithVimPwd;
+extern NSString *const qDefaultHideWildignoreInFileBrowser;
 
 extern NSString *const qDefaultDefaultOpeningBehavior;
 extern NSString *const qOpenModeInNewTabValue;

@@ -333,6 +333,10 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
   if (![_userDefaults objectForKey:qDefaultAutoSaveOnCursorHold]) {
     [_userDefaults setBool:NO forKey:qDefaultAutoSaveOnCursorHold];
   }
+
+  if (![_userDefaults objectForKey:qDefaultHideWildignoreInFileBrowser]) {
+    [_userDefaults setBool:YES forKey:qDefaultHideWildignoreInFileBrowser];
+  }
 }
 
 @end

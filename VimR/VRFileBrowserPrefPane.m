@@ -61,6 +61,10 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
   NSTextField *fbbDescription = [self newDescriptionLabelWithString:@"These are default values, ie new windows will start with these values set:\n– The changes will only affect new windows.\n– You can override these settings in each window."
                                                           alignment:NSLeftTextAlignment];
 
+  NSTextField *filterTitle = [self newTextLabelWithString:@"Filtering" alignment:NSRightTextAlignment];
+  NSButton *filterButton = [self checkButtonWithTitle:@"Hide files matching 'wildignore' of Vim" defaultKey:qDefaultHideWildignoreInFileBrowser];
+  NSTextField *filterDescription = [self newDescriptionLabelWithString:@"Example: 'set wildignore=*.o,*.obj,.DS_Store' in ~/.vimrc" alignment:NSLeftTextAlignment];
+
   // default opening behavior
   NSTextField *domTitle = [self newTextLabelWithString:@"Default Opening Behavior:" alignment:NSRightTextAlignment];
 
@@ -94,6 +98,10 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
       @"syncWorkingDir" : syncWorkingDirWithVimPwdButton,
       @"fbbDesc" : fbbDescription,
 
+      @"filterTitle" : filterTitle,
+      @"filterButton" : filterButton,
+      @"filterDesc" : filterDescription,
+
       @"domTitle" : domTitle,
       @"domMenu" : _defaultOpenModeButton,
       @"noModifierTitle" : noModifierTitle,
@@ -106,7 +114,7 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
       @"ctrlDesc" : _ctrlDescription,
   };
 
-  for (NSView *view in @[domTitle, noModifierTitle, cmdTitle, optTitle, ctrlTitle]) {
+  for (NSView *view in @[domTitle, filterTitle, noModifierTitle, cmdTitle, optTitle, ctrlTitle]) {
     [self addConstraint:[NSLayoutConstraint constraintWithItem:view
                                                      attribute:NSLayoutAttributeTrailing
                                                      relatedBy:NSLayoutRelationEqual
@@ -124,6 +132,9 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
   CONSTRAIN(@"H:|-[fbbTitle]-[syncWorkingDir]-|");
   CONSTRAIN(@"H:|-[fbbTitle]-[fbbDesc]-|");
 
+  CONSTRAIN(@"H:|-[filterTitle]-[filterButton]-|");
+  CONSTRAIN(@"H:|-[filterTitle]-[filterDesc]-|");
+
   CONSTRAIN(@"H:|-[domTitle]-[domMenu]"); // the domMenu should not be stretched
   CONSTRAIN(@"H:|-[noModifierTitle]-[noModifierDesc]-|");
   CONSTRAIN(@"H:|-[cmdTitle]-[cmdDesc]-|");
@@ -131,9 +142,11 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
   CONSTRAIN(@"H:|-[ctrlTitle]-[ctrlDesc]-|");
 
   [self addConstraint:[self baseLineConstraintForView:fbbTitle toView:showFoldersFirstButton]];
+  [self addConstraint:[self baseLineConstraintForView:filterTitle toView:filterButton]];
   [self addConstraint:[self baseLineConstraintForView:domTitle toView:_defaultOpenModeButton]];
 
   CONSTRAIN(@"V:|-[showFoldersFirst]-[showHidden]-[syncWorkingDir]-[fbbDesc]-"
+      "[filterTitle]-[filterDesc]-"
       "[domMenu]-[noModifierTitle][cmdTitle][optTitle][ctrlTitle]-|");
   CONSTRAIN(@"V:[domMenu]-[noModifierDesc][cmdDesc][optDesc][ctrlDesc]");
 }
