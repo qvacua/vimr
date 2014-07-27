@@ -16,7 +16,7 @@
 NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
 
 
-static const int qWindowStyleMask = NSTitledWindowMask | NSResizableWindowMask | NSClosableWindowMask;
+static const int qWindowStyleMask = NSTitledWindowMask | NSResizableWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
 
 
 #define CONSTRAIN(fmt) [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]];

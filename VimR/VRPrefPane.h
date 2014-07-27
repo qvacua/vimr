@@ -10,7 +10,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-static NSString *const qNotImplementedExceptionName = @"NotImplementedException";
+static NSString *const qPrefPaneNotImplementedExceptionName = @"PrefPaneNotImplementedException";
 
 
 @interface VRPrefPane : NSView

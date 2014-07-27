@@ -15,7 +15,7 @@
 
 #pragma mark  Public
 - (NSString *)displayName {
-  @throw [NSException exceptionWithName:qNotImplementedExceptionName reason:@"The subclass must implement this method" userInfo:nil];
+  @throw [NSException exceptionWithName:qPrefPaneNotImplementedExceptionName reason:@"The subclass must implement this method" userInfo:nil];
 }
 
 - (NSTextField *)newDescriptionLabelWithString:(NSString *)string alignment:(NSTextAlignment)alignment {
