@@ -18,11 +18,11 @@
 @implementation VRGeneralPrefPane
 
 - (NSString *)name {
-  return @"General";
+  return @"general";
 }
 
 - (NSString *)displayName {
-  return @"general";
+  return @"General";
 }
 
 - (id)initWithUserDefaultsController:(NSUserDefaultsController *)userDefaultsController {

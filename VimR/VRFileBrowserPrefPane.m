@@ -32,11 +32,11 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
 }
 
 - (NSString *)name {
-  return @"File Browser";
+  return @"file-browser";
 }
 
 - (NSString *)displayName {
-  return @"file-browser";
+  return @"File Browser";
 }
 
 - (id)initWithUserDefaultsController:(NSUserDefaultsController *)userDefaultsController {

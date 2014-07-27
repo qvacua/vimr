@@ -21,6 +21,8 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
 
 @implementation VRPrefWindow {
   NSArray *_prefPanes;
+  NSOutlineView *_categoryOutlineView;
+  NSScrollView *_paneScrollView;
 }
 
 @autowire(userDefaultsController)
@@ -51,17 +53,27 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   [self addViews];
 }
 
+#pragma mark NSOutlineViewDelegate
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification {
+  VRPrefPane *selectedPane = [_categoryOutlineView itemAtRow:_categoryOutlineView.selectedRow];
+  _paneScrollView.documentView = selectedPane;
+}
+
 #pragma mark NSOutlineViewDataSource
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item {
-  return @"test";
+  if (item == nil) {
+    return _prefPanes[(NSUInteger) index];
+  }
+
+  return nil;
 }
 
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
-  return 10;
+  return _prefPanes.count;
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
-  return item;
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(VRPrefPane *)pane {
+  return pane.displayName;
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item {
@@ -75,19 +87,18 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   [tableColumn.dataCell setAllowsEditingTextAttributes:YES];
   [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingTail];
 
-  NSOutlineView *categoryOutlineView = [[NSOutlineView alloc] initWithFrame:CGRectZero];
-//  categoryOutlineView.translatesAutoresizingMaskIntoConstraints = NO;
-  [categoryOutlineView addTableColumn:tableColumn];
-  categoryOutlineView.outlineTableColumn = tableColumn;
-  [categoryOutlineView sizeLastColumnToFit];
-  categoryOutlineView.allowsEmptySelection = NO;
-  categoryOutlineView.allowsMultipleSelection = NO;
-  categoryOutlineView.headerView = nil;
-  categoryOutlineView.focusRingType = NSFocusRingTypeNone;
-  categoryOutlineView.dataSource = self;
-  categoryOutlineView.delegate = self;
-  categoryOutlineView.allowsMultipleSelection = NO;
-  categoryOutlineView.allowsEmptySelection = NO;
+  _categoryOutlineView = [[NSOutlineView alloc] initWithFrame:CGRectZero];
+  [_categoryOutlineView addTableColumn:tableColumn];
+  _categoryOutlineView.outlineTableColumn = tableColumn;
+  [_categoryOutlineView sizeLastColumnToFit];
+  _categoryOutlineView.allowsEmptySelection = NO;
+  _categoryOutlineView.allowsMultipleSelection = NO;
+  _categoryOutlineView.headerView = nil;
+  _categoryOutlineView.focusRingType = NSFocusRingTypeNone;
+  _categoryOutlineView.dataSource = self;
+  _categoryOutlineView.delegate = self;
+  _categoryOutlineView.allowsMultipleSelection = NO;
+  _categoryOutlineView.allowsEmptySelection = NO;
 
   NSScrollView *categoryScrollView = [[NSScrollView alloc] initWithFrame:CGRectZero];
   categoryScrollView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -95,25 +106,25 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   categoryScrollView.hasHorizontalScroller = YES;
   categoryScrollView.borderType = NSBezelBorder;
   categoryScrollView.autohidesScrollers = YES;
-  categoryScrollView.documentView = categoryOutlineView;
+  categoryScrollView.documentView = _categoryOutlineView;
 
-  NSScrollView *paneScrollView = [[NSScrollView alloc] initWithFrame:CGRectZero];
-  paneScrollView.translatesAutoresizingMaskIntoConstraints = NO;
-  paneScrollView.hasVerticalScroller = YES;
-  paneScrollView.hasHorizontalScroller = YES;
-  paneScrollView.borderType = NSNoBorder;
-  paneScrollView.autohidesScrollers = YES;
-  paneScrollView.autoresizesSubviews = YES;
-  paneScrollView.documentView = _prefPanes[0];
-  paneScrollView.backgroundColor = [NSColor windowBackgroundColor];
+  _paneScrollView = [[NSScrollView alloc] initWithFrame:CGRectZero];
+  _paneScrollView.translatesAutoresizingMaskIntoConstraints = NO;
+  _paneScrollView.hasVerticalScroller = YES;
+  _paneScrollView.hasHorizontalScroller = YES;
+  _paneScrollView.borderType = NSNoBorder;
+  _paneScrollView.autohidesScrollers = YES;
+  _paneScrollView.autoresizesSubviews = YES;
+  _paneScrollView.documentView = _prefPanes[0];
+  _paneScrollView.backgroundColor = [NSColor windowBackgroundColor];
 
   NSView *contentView = self.contentView;
   [contentView addSubview:categoryScrollView];
-  [contentView addSubview:paneScrollView];
+  [contentView addSubview:_paneScrollView];
 
   NSDictionary *views = @{
       @"catView" : categoryScrollView,
-      @"paneView" : paneScrollView,
+      @"paneView" : _paneScrollView,
   };
 
   [contentView addConstraint:[NSLayoutConstraint constraintWithItem:categoryScrollView
@@ -123,7 +134,7 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
                                                           attribute:NSLayoutAttributeNotAnAttribute
                                                          multiplier:1
                                                            constant:150]];
-  [contentView addConstraint:[NSLayoutConstraint constraintWithItem:paneScrollView
+  [contentView addConstraint:[NSLayoutConstraint constraintWithItem:_paneScrollView
                                                           attribute:NSLayoutAttributeWidth
                                                           relatedBy:NSLayoutRelationGreaterThanOrEqual
                                                              toItem:nil
