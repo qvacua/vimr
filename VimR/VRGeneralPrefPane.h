@@ -13,6 +13,10 @@
 
 @interface VRGeneralPrefPane : VRPrefPane
 
+#pragma mark Public
 - (id)initWithUserDefaultsController:(NSUserDefaultsController *)userDefaultsController;
+
+#pragma mark VRPrefPane
+- (NSString *)displayName;
 
 @end

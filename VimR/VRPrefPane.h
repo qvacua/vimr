@@ -17,13 +17,14 @@ static NSString *const qNotImplementedExceptionName = @"NotImplementedException"
 
 @property (nonatomic, weak) NSUserDefaultsController *userDefaultsController;
 
-- (NSString *)prefPaneIdentifier;
-- (NSString *)name;
+#pragma mark Public
 - (NSString *)displayName;
-
 - (NSTextField *)newDescriptionLabelWithString:(NSString *)string alignment:(NSTextAlignment)alignment;
 - (NSLayoutConstraint *)baseLineConstraintForView:(NSView *)targetView toView:(NSView *)referenceView;
 - (NSTextField *)newTextLabelWithString:(NSString *)string alignment:(NSTextAlignment)alignment;
 - (NSButton *)checkButtonWithTitle:(NSString *)title defaultKey:(NSString *)defaultKey;
+
+#pragma mark NSview
+- (BOOL)isFlipped;
 
 @end

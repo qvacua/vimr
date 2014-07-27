@@ -11,12 +11,15 @@
 #import <TBCacao/TBCacao.h>
 
 
+@class VRPrefPane;
+
+
 extern NSString *const qPrefWindowFrameAutosaveName;
 
 
 @interface VRPrefWindow : NSWindow <
     TBBean, TBInitializingBean,
-    NSOutlineViewDataSource, NSOutlineViewDelegate, NSSplitViewDelegate>
+    NSOutlineViewDataSource, NSOutlineViewDelegate>
 
 @property (nonatomic, weak) NSUserDefaultsController *userDefaultsController;
 
@@ -25,5 +28,14 @@ extern NSString *const qPrefWindowFrameAutosaveName;
 
 #pragma mark TBInitializingBean
 - (void)postConstruct;
+
+#pragma mark NSOutlineViewDelegate
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification;
+
+#pragma mark NSOutlineViewDataSource
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item;
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item;
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(VRPrefPane *)pane;
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item;
 
 @end

@@ -17,6 +17,10 @@ extern NSString *const qOpenInHorizontalSplitDescription;
 
 @interface VRFileBrowserPrefPane : VRPrefPane
 
+#pragma mark Public
 - (id)initWithUserDefaultsController:(NSUserDefaultsController *)userDefaultsController;
+
+#pragma mark VRPrefPane
+- (NSString *)displayName;
 
 @end

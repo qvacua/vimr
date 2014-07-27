@@ -31,14 +31,12 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
   NSTextField *_ctrlDescription;
 }
 
-- (NSString *)name {
-  return @"file-browser";
-}
-
+#pragma mark VRPrefPane
 - (NSString *)displayName {
   return @"File Browser";
 }
 
+#pragma mark Public
 - (id)initWithUserDefaultsController:(NSUserDefaultsController *)userDefaultsController {
   self = [super initWithFrame:CGRectZero];
   RETURN_NIL_WHEN_NOT_SELF
@@ -51,6 +49,7 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
   return self;
 }
 
+#pragma mark Private
 - (void)addViews {
   // file browser behavior
   NSTextField *fbbTitle = [self newTextLabelWithString:@"File Browser Behavior:" alignment:NSRightTextAlignment];

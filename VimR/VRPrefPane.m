@@ -13,16 +13,9 @@
 
 @implementation VRPrefPane
 
+#pragma mark  Public
 - (NSString *)displayName {
   @throw [NSException exceptionWithName:qNotImplementedExceptionName reason:@"The subclass must implement this method" userInfo:nil];
-}
-
-- (NSString *)name {
-  @throw [NSException exceptionWithName:qNotImplementedExceptionName reason:@"The subclass must implement this method" userInfo:nil];
-}
-
-- (NSString *)prefPaneIdentifier {
-  return SF(@"%@.%@", [NSBundle bundleForClass:[self class]].infoDictionary[@"CFBundleIdentifier"], self.name);
 }
 
 - (NSTextField *)newDescriptionLabelWithString:(NSString *)string alignment:(NSTextAlignment)alignment {
@@ -69,15 +62,9 @@
   return checkButton;
 }
 
+#pragma mark NSView
 - (BOOL)isFlipped {
-  return YES;
-}
-
-- (void)updateConstraints {
-  self.translatesAutoresizingMaskIntoConstraints = NO;
-  [super updateConstraints];
-
-  NSLog(@"%@", vsize(self.intrinsicContentSize));
+  return YES; // such that the pref pane view is placed at the left top corner of the scroll view
 }
 
 @end

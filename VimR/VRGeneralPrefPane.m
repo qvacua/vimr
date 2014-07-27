@@ -17,14 +17,12 @@
 
 @implementation VRGeneralPrefPane
 
-- (NSString *)name {
-  return @"general";
-}
-
+#pragma mark VRPrefPane
 - (NSString *)displayName {
   return @"General";
 }
 
+#pragma mark Public
 - (id)initWithUserDefaultsController:(NSUserDefaultsController *)userDefaultsController {
   self = [super initWithFrame:CGRectZero];
   RETURN_NIL_WHEN_NOT_SELF
@@ -35,7 +33,7 @@
   return self;
 }
 
-
+#pragma mark Private
 - (void)addViews {
   // default appearance
   NSTextField *daTitle = [self newTextLabelWithString:@"Default Appearance:" alignment:NSRightTextAlignment];
