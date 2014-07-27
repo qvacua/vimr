@@ -1238,7 +1238,7 @@
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>SUFeedURL</key>
-	<string>https://raw.githubusercontent.com/qvacua/vimr/master/Meta/appcast.xml</string>
+	<string>http://qvacua.github.io/vimr/appcast.xml</string>
 	<key>SUPublicDSAKeyFile</key>
 	<string>sparkle-pub.pem</string>
 	<key>UTExportedTypeDeclarations</key>
