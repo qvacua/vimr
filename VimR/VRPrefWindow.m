@@ -44,6 +44,10 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
       [[VRFileBrowserPrefPane alloc] initWithUserDefaultsController:_userDefaultsController],
   ];
 
+  for (NSView *prefPane in _prefPanes) {
+    prefPane.translatesAutoresizingMaskIntoConstraints = NO;
+  }
+
   [self addViews];
 }
 
@@ -85,34 +89,50 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   categoryOutlineView.allowsMultipleSelection = NO;
   categoryOutlineView.allowsEmptySelection = NO;
 
-  NSScrollView *scrollView = [[NSScrollView alloc] initWithFrame:CGRectZero];
-//  scrollView.translatesAutoresizingMaskIntoConstraints = NO;
-  scrollView.hasVerticalScroller = YES;
-  scrollView.hasHorizontalScroller = YES;
-  scrollView.borderType = NSBezelBorder;
-  scrollView.autohidesScrollers = YES;
-  scrollView.documentView = categoryOutlineView;
+  NSScrollView *categoryScrollView = [[NSScrollView alloc] initWithFrame:CGRectZero];
+  categoryScrollView.translatesAutoresizingMaskIntoConstraints = NO;
+  categoryScrollView.hasVerticalScroller = YES;
+  categoryScrollView.hasHorizontalScroller = YES;
+  categoryScrollView.borderType = NSBezelBorder;
+  categoryScrollView.autohidesScrollers = YES;
+  categoryScrollView.documentView = categoryOutlineView;
 
-  
-
-  NSSplitView *splitView = [[NSSplitView alloc] initWithFrame:CGRectZero];
-  splitView.translatesAutoresizingMaskIntoConstraints = NO;
-  splitView.dividerStyle = NSSplitViewDividerStyleThin;
-  splitView.vertical = YES;
-  splitView.delegate = self;
-  NSView *pane = _prefPanes[0];
-  pane.frameSize = pane.intrinsicContentSize;
-  splitView.subviews = @[scrollView, pane];
+  NSScrollView *paneScrollView = [[NSScrollView alloc] initWithFrame:CGRectZero];
+  paneScrollView.translatesAutoresizingMaskIntoConstraints = NO;
+  paneScrollView.hasVerticalScroller = YES;
+  paneScrollView.hasHorizontalScroller = YES;
+  paneScrollView.borderType = NSBezelBorder;
+  paneScrollView.autohidesScrollers = YES;
+  paneScrollView.autoresizesSubviews = YES;
+  paneScrollView.documentView = _prefPanes[0];
+  paneScrollView.backgroundColor = [NSColor yellowColor];
 
   NSView *contentView = self.contentView;
-  [contentView addSubview:splitView];
+  [contentView addSubview:categoryScrollView];
+  [contentView addSubview:paneScrollView];
 
   NSDictionary *views = @{
-      @"splitView": splitView,
+      @"catView" : categoryScrollView,
+      @"paneView" : paneScrollView,
   };
 
-  CONSTRAIN(@"H:|[splitView(>=400)]|");
-  CONSTRAIN(@"V:|[splitView(>=200)]|");
+  [contentView addConstraint:[NSLayoutConstraint constraintWithItem:categoryScrollView
+                                                          attribute:NSLayoutAttributeWidth
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:nil
+                                                          attribute:NSLayoutAttributeNotAnAttribute
+                                                         multiplier:1
+                                                           constant:150]];
+  [contentView addConstraint:[NSLayoutConstraint constraintWithItem:paneScrollView
+                                                          attribute:NSLayoutAttributeWidth
+                                                          relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                                             toItem:nil
+                                                          attribute:NSLayoutAttributeNotAnAttribute
+                                                         multiplier:1
+                                                           constant:200]];
+  CONSTRAIN(@"H:|[catView][paneView]|")
+  CONSTRAIN(@"V:|[catView]|")
+  CONSTRAIN(@"V:|[paneView]|")
 }
 
 @end

@@ -35,6 +35,7 @@
   return self;
 }
 
+
 - (void)addViews {
   // default appearance
   NSTextField *daTitle = [self newTextLabelWithString:@"Default Appearance:" alignment:NSRightTextAlignment];
@@ -81,10 +82,10 @@
   CONSTRAIN(@"H:|-[daTitle]-[showSidebar]-|");
   CONSTRAIN(@"H:|-[daTitle]-[showSidebarRight]-|");
 
-  CONSTRAIN(@"H:|-[asTitle]-[asOnFrameDeactivation]");
-  CONSTRAIN(@"H:|-[asTitle]-[asOfdDesc]");
-  CONSTRAIN(@"H:|-[asTitle]-[asOnCursorHold]");
-  CONSTRAIN(@"H:|-[asTitle]-[asOchDesc]");
+  CONSTRAIN(@"H:|-[asTitle]-[asOnFrameDeactivation]-|");
+  CONSTRAIN(@"H:|-[asTitle]-[asOfdDesc]-|");
+  CONSTRAIN(@"H:|-[asTitle]-[asOnCursorHold]-|");
+  CONSTRAIN(@"H:|-[asTitle]-[asOchDesc]-|");
 
   [self addConstraint:[self baseLineConstraintForView:daTitle toView:showStatusBarButton]];
   [self addConstraint:[self baseLineConstraintForView:asTitle toView:asOnFrameDeactivation]];

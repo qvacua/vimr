@@ -68,4 +68,16 @@
 
   return checkButton;
 }
+
+- (BOOL)isFlipped {
+  return YES;
+}
+
+- (void)updateConstraints {
+  self.translatesAutoresizingMaskIntoConstraints = NO;
+  [super updateConstraints];
+
+  NSLog(@"%@", vsize(self.intrinsicContentSize));
+}
+
 @end
