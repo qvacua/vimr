@@ -40,7 +40,8 @@
   NSButton *showStatusBarButton = [self checkButtonWithTitle:@"Show status bar" defaultKey:qDefaultShowStatusBar];
   NSButton *showSidebarButton = [self checkButtonWithTitle:@"Show sidebar" defaultKey:qDefaultShowSideBar];
   NSButton *showSidebarOnRightButton = [self checkButtonWithTitle:@"Sidebar on right" defaultKey:qDefaultShowSideBarOnRight];
-
+  NSTextField *daDescription = [self newDescriptionLabelWithString:@"These are default values, ie new windows will start with these values set:\n– The changes will only affect new windows.\n– You can override these settings in each window."
+                                                         alignment:NSLeftTextAlignment];
   // auto saving
   NSTextField *asTitle = [self newTextLabelWithString:@"Saving Behavior:" alignment:NSRightTextAlignment];
 
@@ -55,6 +56,7 @@
       @"showStatusBar" : showStatusBarButton,
       @"showSidebar" : showSidebarButton,
       @"showSidebarRight" : showSidebarOnRightButton,
+      @"daDesc" : daDescription,
 
       @"asTitle" : asTitle,
       @"asOnFrameDeactivation" : asOnFrameDeactivation,
@@ -79,6 +81,7 @@
   CONSTRAIN(@"H:|-[daTitle]-[showStatusBar]-|");
   CONSTRAIN(@"H:|-[daTitle]-[showSidebar]-|");
   CONSTRAIN(@"H:|-[daTitle]-[showSidebarRight]-|");
+  CONSTRAIN(@"H:|-[daTitle]-[daDesc]-|");
 
   CONSTRAIN(@"H:|-[asTitle]-[asOnFrameDeactivation]-|");
   CONSTRAIN(@"H:|-[asTitle]-[asOfdDesc]-|");
@@ -88,7 +91,7 @@
   [self addConstraint:[self baseLineConstraintForView:daTitle toView:showStatusBarButton]];
   [self addConstraint:[self baseLineConstraintForView:asTitle toView:asOnFrameDeactivation]];
 
-  CONSTRAIN(@"V:|-[showStatusBar]-[showSidebar]-[showSidebarRight]-(24)-[asOnFrameDeactivation]-[asOfdDesc]-[asOnCursorHold]-[asOchDesc]-|");
+  CONSTRAIN(@"V:|-[showStatusBar]-[showSidebar]-[showSidebarRight]-[daDesc]-(24)-[asOnFrameDeactivation]-[asOfdDesc]-[asOnCursorHold]-[asOchDesc]-|");
 }
 
 @end

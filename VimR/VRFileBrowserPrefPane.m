@@ -58,14 +58,8 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
   NSButton *syncWorkingDirWithVimPwdButton = [self checkButtonWithTitle:@"Keep the working directory in sync with Vim's 'pwd'" defaultKey:qDefaultSyncWorkingDirectoryWithVimPwd];
   NSButton *showHiddenFilesButton = [self checkButtonWithTitle:@"Show hidden files" defaultKey:qDefaultShowHiddenInFileBrowser];
 
-  NSTextField *fbbDescription = [self            newTextLabelWithString:
-      @"These are default values, ie new windows will start with these values set:\n"
-          "– The changes will only affect new windows.\n"
-          "– You can override these settings in each window." alignment:NSLeftTextAlignment];
-  fbbDescription.font = [NSFont systemFontOfSize:[NSFont smallSystemFontSize]];
-  fbbDescription.textColor = [NSColor grayColor];
-  [fbbDescription.cell setWraps:YES];
-  [fbbDescription.cell setUsesSingleLineMode:NO];
+  NSTextField *fbbDescription = [self newDescriptionLabelWithString:@"These are default values, ie new windows will start with these values set:\n– The changes will only affect new windows.\n– You can override these settings in each window."
+                                                          alignment:NSLeftTextAlignment];
 
   // default opening behavior
   NSTextField *domTitle = [self newTextLabelWithString:@"Default Opening Behavior:" alignment:NSRightTextAlignment];
