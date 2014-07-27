@@ -109,14 +109,12 @@
 		4B6F2574197BAD5300AB1DD8 /* VimRPluginDefinition.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B6F2572197BAD4300AB1DD8 /* VimRPluginDefinition.framework */; };
 		4B6F2575197BAD5B00AB1DD8 /* VimRPluginDefinition.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B6F2572197BAD4300AB1DD8 /* VimRPluginDefinition.framework */; };
 		4B6F2586197BB59000AB1DD8 /* Markdown.vimr-plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B6F2585197BB59000AB1DD8 /* Markdown.vimr-plugin */; };
-		4B74C386191238B100B8C503 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B89F11B190A473F00AA0EE5 /* Sparkle.framework */; };
 		4B74C387191238B400B8C503 /* PSMTabBarControl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B89F11A190A473F00AA0EE5 /* PSMTabBarControl.framework */; };
 		4B74C388191238B600B8C503 /* MacVimFramework.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B89F119190A473F00AA0EE5 /* MacVimFramework.framework */; };
 		4B89F11C190A473F00AA0EE5 /* MacVimFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B89F119190A473F00AA0EE5 /* MacVimFramework.framework */; };
 		4B89F11D190A473F00AA0EE5 /* MacVimFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B89F119190A473F00AA0EE5 /* MacVimFramework.framework */; };
 		4B89F11E190A473F00AA0EE5 /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B89F11A190A473F00AA0EE5 /* PSMTabBarControl.framework */; };
 		4B89F11F190A473F00AA0EE5 /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B89F11A190A473F00AA0EE5 /* PSMTabBarControl.framework */; };
-		4B89F120190A473F00AA0EE5 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B89F11B190A473F00AA0EE5 /* Sparkle.framework */; };
 		4B8BE1EE18EB556C004840F1 /* VRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE9242918C20DBC00E67BB6 /* VRAppDelegate.m */; };
 		4B921D9E19003F1D004D4FFD /* cf.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B921D9C19003F1D004D4FFD /* cf.dylib */; };
 		4B921D9F19003F1D004D4FFD /* cf.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B921D9C19003F1D004D4FFD /* cf.dylib */; };
@@ -160,7 +158,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				4B74C386191238B100B8C503 /* Sparkle.framework in CopyFiles */,
 				4B6F2573197BAD4300AB1DD8 /* VimRPluginDefinition.framework in CopyFiles */,
 				4B74C387191238B400B8C503 /* PSMTabBarControl.framework in CopyFiles */,
 				4B74C388191238B600B8C503 /* MacVimFramework.framework in CopyFiles */,
@@ -344,7 +341,6 @@
 				4BE9241718C20DBC00E67BB6 /* Cocoa.framework in Frameworks */,
 				4B89F11C190A473F00AA0EE5 /* MacVimFramework.framework in Frameworks */,
 				664C3590B3B2428C94313696 /* libPods.a in Frameworks */,
-				4B89F120190A473F00AA0EE5 /* Sparkle.framework in Frameworks */,
 				4B89F11E190A473F00AA0EE5 /* PSMTabBarControl.framework in Frameworks */,
 				4B6F2574197BAD5300AB1DD8 /* VimRPluginDefinition.framework in Frameworks */,
 				4B921DA019003F1D004D4FFD /* text.dylib in Frameworks */,
