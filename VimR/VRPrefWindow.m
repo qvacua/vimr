@@ -101,11 +101,11 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
   paneScrollView.translatesAutoresizingMaskIntoConstraints = NO;
   paneScrollView.hasVerticalScroller = YES;
   paneScrollView.hasHorizontalScroller = YES;
-  paneScrollView.borderType = NSBezelBorder;
+  paneScrollView.borderType = NSNoBorder;
   paneScrollView.autohidesScrollers = YES;
   paneScrollView.autoresizesSubviews = YES;
   paneScrollView.documentView = _prefPanes[0];
-  paneScrollView.backgroundColor = [NSColor yellowColor];
+  paneScrollView.backgroundColor = [NSColor windowBackgroundColor];
 
   NSView *contentView = self.contentView;
   [contentView addSubview:categoryScrollView];
@@ -130,8 +130,8 @@ NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
                                                           attribute:NSLayoutAttributeNotAnAttribute
                                                          multiplier:1
                                                            constant:200]];
-  CONSTRAIN(@"H:|[catView][paneView]|")
-  CONSTRAIN(@"V:|[catView]|")
+  CONSTRAIN(@"H:|-(-1)-[catView][paneView]|")
+  CONSTRAIN(@"V:|-(-1)-[catView]-(-1)-|")
   CONSTRAIN(@"V:|[paneView]|")
 }
 
