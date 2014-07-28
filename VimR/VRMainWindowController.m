@@ -62,9 +62,7 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 }
 
 - (void)cleanUpAndClose {
-  [_workspace.userDefaults removeObserver:self forKeyPath:qDefaultAutoSaveOnFrameDeactivation];
-  [_workspace.userDefaults removeObserver:self forKeyPath:qDefaultAutoSaveOnCursorHold];
-
+  [self removeUserDefaultsObservation];
   [_vimView removeFromSuperviewWithoutNeedingDisplay];
   [_vimView cleanup];
 
@@ -236,6 +234,17 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   }
 }
 
+#ifdef DEBUG
+- (IBAction)debug1Action:(id)sender {
+  DDLogDebug(@"tabs: %@", _vimController.tabs);
+  DDLogDebug(@"buffers: %@", _vimController.buffers);
+//  NSMenu *menu = _vimController.mainMenu;
+//  NSMenuItem *fileMenu = menu.itemArray[2];
+//  NSArray *editMenuArray = [[fileMenu submenu] itemArray];
+//  DDLogDebug(@"edit menu: %@", editMenuArray);
+}
+#endif
+
 #pragma mark NSUserInterfaceValidations
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
   SEL action = anItem.action;
@@ -263,20 +272,20 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   return NO;
 }
 
-#ifdef DEBUG
-- (IBAction)debug1Action:(id)sender {
-  DDLogDebug(@"tabs: %@", _vimController.tabs);
-  DDLogDebug(@"buffers: %@", _vimController.buffers);
-//  NSMenu *menu = _vimController.mainMenu;
-//  NSMenuItem *fileMenu = menu.itemArray[2];
-//  NSArray *editMenuArray = [[fileMenu submenu] itemArray];
-//  DDLogDebug(@"edit menu: %@", editMenuArray);
-}
-#endif
-
 #pragma mark NSObject
 - (void)dealloc {
   log4Mark;
+}
+
+#pragma mark VRUserDefaultsObserver
+- (void)registerUserDefaultsObservation {
+  [_workspace.userDefaults addObserver:self forKeyPath:qDefaultAutoSaveOnFrameDeactivation options:NSKeyValueObservingOptionNew context:NULL];
+  [_workspace.userDefaults addObserver:self forKeyPath:qDefaultAutoSaveOnCursorHold options:NSKeyValueObservingOptionNew context:NULL];
+}
+
+- (void)removeUserDefaultsObservation {
+  [_workspace.userDefaults removeObserver:self forKeyPath:qDefaultAutoSaveOnFrameDeactivation];
+  [_workspace.userDefaults removeObserver:self forKeyPath:qDefaultAutoSaveOnCursorHold];
 }
 
 #pragma mark MMViewDelegate informal protocol
@@ -466,7 +475,7 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 
   [_vimView addNewTabViewItem];
 
-  [self observeUserDefaults];
+  [self registerUserDefaultsObservation];
   [self applyUserDefaultsToVim];
 
   _vimViewSetUpDone = YES;
@@ -647,21 +656,12 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 }
 
 #pragma mark KVO
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change
-                       context:(void *)context {
-
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
   [self applyUserDefaultsToVim];
 }
 
 
 #pragma mark Private
-- (void)observeUserDefaults {
-  [_workspace.userDefaults addObserver:self forKeyPath:qDefaultAutoSaveOnFrameDeactivation
-                               options:NSKeyValueObservingOptionNew context:NULL];
-  [_workspace.userDefaults addObserver:self forKeyPath:qDefaultAutoSaveOnCursorHold
-                               options:NSKeyValueObservingOptionNew context:NULL];
-}
-
 - (void)sendMultipleCommandsToVim:(NSArray *)commands {
   NSString *joinedCmds = [commands componentsJoinedByString:@"<CR>"];
 

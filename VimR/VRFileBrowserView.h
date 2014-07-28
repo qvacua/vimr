@@ -8,6 +8,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "VRUserDefaultsObserver.h"
 
 
 @class VRFileItem;
@@ -19,7 +20,9 @@
 @protocol VRFileBrowserActionDelegate;
 
 
-@interface VRFileBrowserView : NSView <NSOutlineViewDataSource, NSOutlineViewDelegate, VRFileBrowserActionDelegate>
+@interface VRFileBrowserView : NSView <NSOutlineViewDataSource, NSOutlineViewDelegate,
+    VRUserDefaultsObserver,
+    VRFileBrowserActionDelegate>
 
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;
 @property (nonatomic, weak) NSUserDefaults *userDefaults;
@@ -49,6 +52,10 @@
 
 #pragma mark NSView
 - (BOOL)mouseDownCanMoveWindow;
+
+#pragma mark VRUserDefaultsObserver
+- (void)registerUserDefaultsObservation;
+- (void)removeUserDefaultsObservation;
 
 #pragma mark NSObject
 - (void)dealloc;

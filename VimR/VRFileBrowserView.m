@@ -79,7 +79,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 
 - (void)setUp {
   [_notificationCenter addObserver:self selector:@selector(cacheInvalidated:) name:qInvalidatedCacheEvent object:nil];
-  [_userDefaults addObserver:self forKeyPath:qDefaultHideWildignoreInFileBrowser options:NSKeyValueObservingOptionNew context:NULL];
+  [self registerUserDefaultsObservation];
 
   [self addViews];
   [self reload];
@@ -88,6 +88,15 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 #pragma mark NSObject
 - (void)dealloc {
   [_notificationCenter removeObserver:self];
+  [self removeUserDefaultsObservation];
+}
+
+#pragma mark VRUserDefaultsObserver
+- (void)registerUserDefaultsObservation {
+  [_userDefaults addObserver:self forKeyPath:qDefaultHideWildignoreInFileBrowser options:NSKeyValueObservingOptionNew context:NULL];
+}
+
+- (void)removeUserDefaultsObservation {
   [_userDefaults removeObserver:self forKeyPath:qDefaultHideWildignoreInFileBrowser];
 }
 
