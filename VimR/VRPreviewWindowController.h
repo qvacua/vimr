@@ -8,13 +8,14 @@
 */
 
 #import <Cocoa/Cocoa.h>
+#import "VRFileItemCacheInvalidationObserver.h"
 
 
 @class VRMainWindowController;
 @class VRPluginManager;
 
 
-@interface VRPreviewWindowController : NSWindowController
+@interface VRPreviewWindowController : NSWindowController <VRFileItemCacheInvalidationObserver>
 
 @property (nonatomic, weak) NSNotificationCenter *notificationCenter;
 @property (nonatomic, weak) VRPluginManager *pluginManager;
@@ -24,5 +25,14 @@
 - (void)setUp;
 - (void)previewForUrl:(NSURL *)url fileType:(NSString *)fileType;
 
+#pragma mark VRFileItemCacheInvalidationObserver
+- (void)registerFileItemCacheInvalidationObservation;
+- (void)removeFileItemCacheInvalidationObservation;
+
+#pragma mark IBActions
 - (IBAction)refreshPreview:(id)sender;
+
+#pragma mark NSObject
+- (void)dealloc;
+
 @end

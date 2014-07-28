@@ -78,7 +78,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 - (void)setUp {
-  [_notificationCenter addObserver:self selector:@selector(cacheInvalidated:) name:qInvalidatedCacheEvent object:nil];
+  [self registerFileItemCacheInvalidationObservation];
   [self registerUserDefaultsObservation];
 
   [self addViews];
@@ -87,8 +87,17 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 
 #pragma mark NSObject
 - (void)dealloc {
-  [_notificationCenter removeObserver:self];
+  [self removeFileItemCacheInvalidationObservation];
   [self removeUserDefaultsObservation];
+}
+
+#pragma mark VRFileItemCacheInvalidationObserver
+- (void)registerFileItemCacheInvalidationObservation {
+  [_notificationCenter addObserver:self selector:@selector(cacheInvalidated:) name:qInvalidatedCacheEvent object:nil];
+}
+
+- (void)removeFileItemCacheInvalidationObservation {
+  [_notificationCenter removeObserver:self name:qInvalidatedCacheEvent object:nil];
 }
 
 #pragma mark VRUserDefaultsObserver

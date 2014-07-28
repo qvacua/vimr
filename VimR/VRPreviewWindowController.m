@@ -41,7 +41,7 @@
 }
 
 - (void)setUp {
-  [_notificationCenter addObserver:self selector:@selector(cacheInvalidated:) name:qInvalidatedCacheEvent object:nil];
+  [self registerFileItemCacheInvalidationObservation];
 }
 
 - (void)previewForUrl:(NSURL *)url fileType:(NSString *)fileType {
@@ -65,7 +65,15 @@
   self.window.title = SF(@"%@ — %@ — [%@]", @"Preview", url.lastPathComponent, url.path.stringByDeletingLastPathComponent.stringByAbbreviatingWithTildeInPath);
   [self showWindow:self];
   [_currentPreviewView previewFileAtUrl:url];
+}
 
+#pragma mark VRFileItemCacheInvalidationObserver
+- (void)registerFileItemCacheInvalidationObservation {
+  [_notificationCenter addObserver:self selector:@selector(cacheInvalidated:) name:qInvalidatedCacheEvent object:nil];
+}
+
+- (void)removeFileItemCacheInvalidationObservation {
+  [_notificationCenter removeObserver:self name:qInvalidatedCacheEvent object:nil];
 }
 
 #pragma mark IBAction
@@ -76,7 +84,7 @@
 
 #pragma mark NSObject
 - (void)dealloc {
-  [_notificationCenter removeObserver:self];
+  [self removeFileItemCacheInvalidationObservation];
 }
 
 #pragma mark Private

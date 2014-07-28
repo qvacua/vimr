@@ -9,6 +9,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "VRUserDefaultsObserver.h"
+#import "VRFileItemCacheInvalidationObserver.h"
 
 
 @class VRFileItem;
@@ -22,6 +23,7 @@
 
 @interface VRFileBrowserView : NSView <NSOutlineViewDataSource, NSOutlineViewDelegate,
     VRUserDefaultsObserver,
+    VRFileItemCacheInvalidationObserver,
     VRFileBrowserActionDelegate>
 
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;
@@ -56,6 +58,10 @@
 #pragma mark VRUserDefaultsObserver
 - (void)registerUserDefaultsObservation;
 - (void)removeUserDefaultsObservation;
+
+#pragma mark VRFileItemCacheInvalidationObserver
+- (void)registerFileItemCacheInvalidationObservation;
+- (void)removeFileItemCacheInvalidationObservation;
 
 #pragma mark NSObject
 - (void)dealloc;
