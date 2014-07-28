@@ -387,6 +387,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   scrollView.borderType = NSBezelBorder;
   scrollView.autohidesScrollers = YES;
   scrollView.documentView = _fileOutlineView;
+  scrollView.autohidesScrollers = YES;
   [self addSubview:scrollView];
 
   NSDictionary *views = @{

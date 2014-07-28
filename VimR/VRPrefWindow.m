@@ -117,6 +117,7 @@ static const int qWindowStyleMask = NSTitledWindowMask | NSResizableWindowMask |
   _categoryScrollView.borderType = NSBezelBorder;
   _categoryScrollView.autohidesScrollers = YES;
   _categoryScrollView.documentView = _categoryOutlineView;
+  _categoryScrollView.autohidesScrollers = YES;
 
   _paneScrollView = [[NSScrollView alloc] initWithFrame:CGRectZero];
   _paneScrollView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -127,6 +128,7 @@ static const int qWindowStyleMask = NSTitledWindowMask | NSResizableWindowMask |
   _paneScrollView.autoresizesSubviews = YES;
   _paneScrollView.documentView = _prefPanes[0];
   _paneScrollView.backgroundColor = [NSColor windowBackgroundColor];
+  _paneScrollView.autohidesScrollers = YES;
 
   NSView *contentView = self.contentView;
   [contentView addSubview:_categoryScrollView];
