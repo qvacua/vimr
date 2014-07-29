@@ -116,7 +116,7 @@ int qOpenQuicklyWindowPadding = 8;
 
   CONSTRAIN(@"H:|-(padding)-[searchField]-(padding)-|")
   CONSTRAIN(@"H:|-(-1)-[table]-(-1)-|")
-  CONSTRAIN(@"H:|-(2)-[workspace]-[count]-(2)-|")
+  CONSTRAIN(@"H:|-(2)-[workspace]-[count]-(6)-|")
 
   CONSTRAIN(@"V:|-(padding)-[searchField]-(padding)-[table]-(3)-[count]-(5)-|");
   CONSTRAIN(@"V:[workspace]-(1)-|")
