@@ -31,7 +31,7 @@ int qOpenQuicklyWindowWidth = 400;
   __weak VRInactiveTableView *_fileItemTableView;
   __weak NSProgressIndicator *_progressIndicator;
   __weak NSTextField *_itemCountTextField;
-  __weak NSTextField *_workspaceTextField;
+  NSPathControl *_pathControl;
 
   VRCrTextView *_crFieldEditor;
 
@@ -92,7 +92,7 @@ int qOpenQuicklyWindowWidth = 400;
 
   _progressIndicator = win.progressIndicator;
   _itemCountTextField = win.itemCountTextField;
-  _workspaceTextField = win.workspaceTextField;
+  _pathControl = win.pathControl;
 
   win.delegate = self;
 
@@ -237,7 +237,7 @@ int qOpenQuicklyWindowWidth = 400;
 
 - (void)setupUiUpdateOperation {
   _progressIndicator.hidden = NO;
-  _workspaceTextField.stringValue = _targetWindowController.workspace.workingDirectory.path.stringByAbbreviatingWithTildeInPath;
+  _pathControl.URL= _targetWindowController.workspace.workingDirectory;
 
   [_uiUpdateOperationQueue addOperationWithBlock:^{
     while (_targetWindow) {

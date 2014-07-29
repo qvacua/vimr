@@ -38,7 +38,7 @@ int qOpenQuicklyWindowPadding = 8;
   self.releasedWhenClosed = NO;
   self.title = @"Open Quickly";
   [self setAutorecalculatesContentBorderThickness:NO forEdge:NSMaxYEdge];
-  [self setContentBorderThickness:25 forEdge:NSMaxYEdge];
+  [self setContentBorderThickness:22 forEdge:NSMaxYEdge];
 
   [self addViews];
 
@@ -59,6 +59,7 @@ int qOpenQuicklyWindowPadding = 8;
 - (void)addViews {
   NSFont *smallSystemFont = [NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]];
   NSColor *clearColor = [NSColor clearColor];
+  NSView *contentView = self.contentView;
 
   _itemCountTextField = [[NSTextField alloc] initWithFrame:CGRectZero];
   _itemCountTextField.translatesAutoresizingMaskIntoConstraints = NO;
@@ -68,11 +69,11 @@ int qOpenQuicklyWindowPadding = 8;
   _itemCountTextField.editable = NO;
   _itemCountTextField.bordered = NO;
   _itemCountTextField.font = smallSystemFont;
-  [self.contentView addSubview:_itemCountTextField];
+  [contentView addSubview:_itemCountTextField];
 
   _searchField = [[NSSearchField alloc] initWithFrame:CGRectZero];
   _searchField.translatesAutoresizingMaskIntoConstraints = NO;
-  [self.contentView addSubview:_searchField];
+  [contentView addSubview:_searchField];
 
   NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:@"name"];
   tableColumn.dataCell = [[OakImageAndTextCell alloc] init];
@@ -94,32 +95,31 @@ int qOpenQuicklyWindowPadding = 8;
   _scrollView.borderType = NSBezelBorder;
   _scrollView.autohidesScrollers = YES;
   _scrollView.documentView = _fileItemTableView;
-  [self.contentView addSubview:_scrollView];
+  [contentView addSubview:_scrollView];
 
-  _workspaceTextField = [[NSTextField alloc] initWithFrame:CGRectZero];
-  _workspaceTextField.translatesAutoresizingMaskIntoConstraints = NO;
-  [_workspaceTextField.cell setLineBreakMode:NSLineBreakByTruncatingMiddle];
-  _workspaceTextField.backgroundColor = clearColor;
-  _workspaceTextField.alignment = NSLeftTextAlignment;
-  _workspaceTextField.stringValue = @"";
-  _workspaceTextField.editable = NO;
-  _workspaceTextField.bordered = NO;
-  _workspaceTextField.font = smallSystemFont;
-  [self.contentView addSubview:_workspaceTextField];
+  _pathControl = [[NSPathControl alloc] initWithFrame:CGRectZero];
+  _pathControl.translatesAutoresizingMaskIntoConstraints = NO;
+  _pathControl.pathStyle = NSPathStyleStandard;
+  _pathControl.backgroundColor = [NSColor clearColor];
+  _pathControl.refusesFirstResponder = YES;
+  [_pathControl.cell setControlSize:NSSmallControlSize];
+  [_pathControl.cell setFont:smallSystemFont];
+  [_pathControl setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
+  [contentView addSubview:_pathControl];
 
   NSDictionary *views = @{
       @"searchField" : _searchField,
       @"table" : _scrollView,
-      @"workspace" : _workspaceTextField,
+      @"workspace" : _pathControl,
       @"count" : _itemCountTextField,
   };
 
   CONSTRAIN(@"H:|-(padding)-[searchField]-(padding)-|")
   CONSTRAIN(@"H:|-(-1)-[table]-(-1)-|")
-  CONSTRAIN(@"H:|-(padding)-[workspace]-[count]-(padding)-|")
+  CONSTRAIN(@"H:|-(2)-[workspace]-[count]-(2)-|")
 
-  CONSTRAIN(@"V:|-(padding)-[searchField]-(padding)-[table]-(3)-[workspace]-(5)-|");
-  CONSTRAIN(@"V:[count]-(5)-|")
+  CONSTRAIN(@"V:|-(padding)-[searchField]-(padding)-[table]-(3)-[count]-(5)-|");
+  CONSTRAIN(@"V:[workspace]-(1)-|")
 }
 
 @end

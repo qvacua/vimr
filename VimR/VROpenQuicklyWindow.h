@@ -22,7 +22,7 @@ extern int qOpenQuicklyWindowPadding;
 @property NSProgressIndicator *progressIndicator;
 @property VRInactiveTableView *fileItemTableView;
 @property NSTextField *itemCountTextField;
-@property NSTextField *workspaceTextField;
+@property NSPathControl *pathControl;
 
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect;
