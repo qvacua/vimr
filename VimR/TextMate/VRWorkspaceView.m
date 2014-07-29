@@ -150,8 +150,7 @@ static const int qMinimumFileBrowserWidth = 100;
   _pathView.refusesFirstResponder = YES;
   [_pathView.cell setControlSize:NSSmallControlSize];
   [_pathView.cell setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
-  [_pathView setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow
-                                      forOrientation:NSLayoutConstraintOrientationHorizontal];
+  [_pathView setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
 
   [self addSubview:_pathView];
 

@@ -57,28 +57,18 @@ int qOpenQuicklyWindowPadding = 8;
 
 #pragma mark Private
 - (void)addViews {
-  NSTextField *label = [[NSTextField alloc] initWithFrame:CGRectZero];
-  label.translatesAutoresizingMaskIntoConstraints = NO;
-  label.backgroundColor = [NSColor clearColor];
-  label.stringValue = @"Enter file name";
-  label.editable = NO;
-  label.bordered = NO;
-  [self.contentView addSubview:label];
+  NSFont *smallSystemFont = [NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]];
+  NSColor *clearColor = [NSColor clearColor];
 
   _itemCountTextField = [[NSTextField alloc] initWithFrame:CGRectZero];
   _itemCountTextField.translatesAutoresizingMaskIntoConstraints = NO;
-  _itemCountTextField.backgroundColor = [NSColor clearColor];
+  _itemCountTextField.backgroundColor = clearColor;
   _itemCountTextField.alignment = NSRightTextAlignment;
   _itemCountTextField.stringValue = @"";
   _itemCountTextField.editable = NO;
   _itemCountTextField.bordered = NO;
+  _itemCountTextField.font = smallSystemFont;
   [self.contentView addSubview:_itemCountTextField];
-
-  _progressIndicator = [[NSProgressIndicator alloc] initWithFrame:CGRectZero];
-  _progressIndicator.style = NSProgressIndicatorSpinningStyle;
-  _progressIndicator.translatesAutoresizingMaskIntoConstraints = NO;
-  _progressIndicator.controlSize = NSSmallControlSize;
-  [self.contentView addSubview:_progressIndicator];
 
   _searchField = [[NSSearchField alloc] initWithFrame:CGRectZero];
   _searchField.translatesAutoresizingMaskIntoConstraints = NO;
@@ -106,42 +96,30 @@ int qOpenQuicklyWindowPadding = 8;
   _scrollView.documentView = _fileItemTableView;
   [self.contentView addSubview:_scrollView];
 
-  NSTextField *workspaceLabel = [[NSTextField alloc] initWithFrame:CGRectZero];
-  workspaceLabel.translatesAutoresizingMaskIntoConstraints = NO;
-  workspaceLabel.backgroundColor = [NSColor clearColor];
-  workspaceLabel.stringValue = @"Working Dir.:";
-  workspaceLabel.editable = NO;
-  workspaceLabel.bordered = NO;
-  [self.contentView addSubview:workspaceLabel];
-
   _workspaceTextField = [[NSTextField alloc] initWithFrame:CGRectZero];
   _workspaceTextField.translatesAutoresizingMaskIntoConstraints = NO;
-  [_workspaceTextField.cell setLineBreakMode:NSLineBreakByTruncatingHead];
-  _workspaceTextField.backgroundColor = [NSColor clearColor];
+  [_workspaceTextField.cell setLineBreakMode:NSLineBreakByTruncatingMiddle];
+  _workspaceTextField.backgroundColor = clearColor;
   _workspaceTextField.alignment = NSLeftTextAlignment;
   _workspaceTextField.stringValue = @"";
   _workspaceTextField.editable = NO;
   _workspaceTextField.bordered = NO;
+  _workspaceTextField.font = smallSystemFont;
   [self.contentView addSubview:_workspaceTextField];
 
   NSDictionary *views = @{
       @"searchField" : _searchField,
-      @"label" : label,
-      @"progress" : _progressIndicator,
       @"table" : _scrollView,
-      @"itemCount" : _itemCountTextField,
-      @"workspaceLabel" : workspaceLabel,
-      @"workspaceTextField" : _workspaceTextField,
+      @"workspace" : _workspaceTextField,
+      @"count" : _itemCountTextField,
   };
 
-  CONSTRAIN(@"H:|-(padding)-[label]");
-  CONSTRAIN(@"H:[progress]-(padding)-[itemCount]-(padding)-|");
-  CONSTRAIN(@"H:|-(padding)-[searchField]-(padding)-|");
-  CONSTRAIN(@"H:|-(-1)-[table]-(-1)-|");
-  CONSTRAIN(@"H:|-(padding)-[workspaceLabel][workspaceTextField(>=50)]-(padding)-|");
-  CONSTRAIN(@"V:|-(padding)-[label]-(padding)-[searchField]-(padding)-[table]-(3)-[workspaceLabel]-(5)-|");
-  CONSTRAIN(@"V:|-(padding)-[itemCount]-(padding)-[searchField]-(padding)-[table]-(3)-[workspaceTextField]-(5)-|");
-  CONSTRAIN(@"V:|-(padding)-[progress]-(padding)-[searchField]-(padding)-[table]-(3)-[workspaceTextField]-(5)-|");
+  CONSTRAIN(@"H:|-(padding)-[searchField]-(padding)-|")
+  CONSTRAIN(@"H:|-(-1)-[table]-(-1)-|")
+  CONSTRAIN(@"H:|-(padding)-[workspace]-[count]-(padding)-|")
+
+  CONSTRAIN(@"V:|-(padding)-[searchField]-(padding)-[table]-(3)-[workspace]-(5)-|");
+  CONSTRAIN(@"V:[count]-(5)-|")
 }
 
 @end

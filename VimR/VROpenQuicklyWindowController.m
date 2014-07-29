@@ -77,8 +77,7 @@ int qOpenQuicklyWindowWidth = 400;
 #pragma mark NSObject
 
 - (id)init {
-  VROpenQuicklyWindow *win = [[VROpenQuicklyWindow alloc] initWithContentRect:
-      CGRectMake(100, 100, qOpenQuicklyWindowWidth, 250)];
+  VROpenQuicklyWindow *win = [[VROpenQuicklyWindow alloc] initWithContentRect: CGRectMake(100, 100, qOpenQuicklyWindowWidth, 250)];
 
   self = [super initWithWindow:win];
   RETURN_NIL_WHEN_NOT_SELF
@@ -132,9 +131,7 @@ int qOpenQuicklyWindowWidth = 400;
 
 #pragma mark NSTableViewDelegate
 
-- (void)tableView:(NSTableView *)tableView willDisplayCell:(NSCell *)cell forTableColumn:(NSTableColumn *)tableColumn
-              row:(NSInteger)row {
-
+- (void)tableView:(NSTableView *)tableView willDisplayCell:(NSCell *)cell forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
   VRScoredPath *scoredPath = _filteredFileItems[(NSUInteger) row];
   cell.image = [_fileItemManager iconForUrl:scoredPath.url];
 }
@@ -200,8 +197,7 @@ int qOpenQuicklyWindowWidth = 400;
 #pragma mark TBInitializingBean
 
 - (void)postConstruct {
-  [_notificationCenter addObserver:self selector:@selector(chunkOfFileItemsAdded:)
-                              name:qChunkOfNewFileItemsAddedEvent object:nil];
+  [_notificationCenter addObserver:self selector:@selector(chunkOfFileItemsAdded:) name:qChunkOfNewFileItemsAddedEvent object:nil];
 }
 
 #pragma mark Private
@@ -241,7 +237,7 @@ int qOpenQuicklyWindowWidth = 400;
 
 - (void)setupUiUpdateOperation {
   _progressIndicator.hidden = NO;
-  _workspaceTextField.stringValue = _targetWindowController.workspace.workingDirectory.path;
+  _workspaceTextField.stringValue = _targetWindowController.workspace.workingDirectory.path.stringByAbbreviatingWithTildeInPath;
 
   [_uiUpdateOperationQueue addOperationWithBlock:^{
     while (_targetWindow) {
