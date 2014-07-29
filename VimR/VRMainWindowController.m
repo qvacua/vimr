@@ -772,12 +772,11 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   NSString *filename = filePath.lastPathComponent;
 
   if (filename == nil) {
-    self.window.title = @"Untitled";
+    self.window.title = SF(@"Untitled — [%@]", [_vimController.vimState[@"pwd"] stringByAbbreviatingWithTildeInPath]);
     return;
   }
 
-  NSString *containingFolder = filePath.stringByDeletingLastPathComponent.lastPathComponent;
-  self.window.title = SF(@"%@ — %@", filename, containingFolder);
+  self.window.title = SF(@"%@ — [%@]", filename, filePath.stringByDeletingLastPathComponent.stringByAbbreviatingWithTildeInPath);
 }
 
 - (VRMainWindow *)newMainWindowForContentRect:(CGRect)contentRect {
