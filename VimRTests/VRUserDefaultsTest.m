@@ -1,4 +1,4 @@
-/**
+ /**
  * Tae Won Ha — @hataewon
  *
  * http://taewon.de
@@ -37,6 +37,24 @@
   assertThat(@(open_mode_from_modifier(NSAlternateKeyMask | NSControlKeyMask, VROpenModeInHorizontalSplit)), is(@(VROpenModeInCurrentTab)));
   assertThat(@(open_mode_from_modifier(NSAlternateKeyMask, VROpenModeInHorizontalSplit)), is(@(VROpenModeInVerticalSplit)));
   assertThat(@(open_mode_from_modifier(NSControlKeyMask, VROpenModeInHorizontalSplit)), is(@(VROpenModeInNewTab)));
+}
+
+- (void)testOpenModeTransformer {
+  VROpenModeValueTransformer *transformer = [[VROpenModeValueTransformer alloc] init];
+
+  assertThat([transformer transformedValue:qOpenModeInNewTabValue], is(@(VROpenModeInNewTab)));
+  assertThat([transformer transformedValue:qOpenModeInCurrentTabValue], is(@(VROpenModeInCurrentTab)));
+  assertThat([transformer transformedValue:qOpenModeInVerticalSplitValue], is(@(VROpenModeInVerticalSplit)));
+  assertThat([transformer transformedValue:qOpenModeInHorizontalSplitValue], is(@(VROpenModeInHorizontalSplit)));
+}
+
+- (void)testOpenModeReverseTransformer {
+  VROpenModeValueTransformer *transformer = [[VROpenModeValueTransformer alloc] init];
+
+  assertThat([transformer reverseTransformedValue:@(VROpenModeInNewTab)], is(qOpenModeInNewTabValue));
+  assertThat([transformer reverseTransformedValue:@(VROpenModeInCurrentTab)], is(qOpenModeInCurrentTabValue));
+  assertThat([transformer reverseTransformedValue:@(VROpenModeInVerticalSplit)], is(qOpenModeInVerticalSplitValue));
+  assertThat([transformer reverseTransformedValue:@(VROpenModeInHorizontalSplit)], is(qOpenModeInHorizontalSplitValue));
 }
 
 @end

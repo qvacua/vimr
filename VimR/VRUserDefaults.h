@@ -1,11 +1,11 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import <Foundation/Foundation.h>
 
@@ -13,6 +13,9 @@
 extern NSString *const qDefaultShowStatusBar;
 extern NSString *const qDefaultShowSideBar;
 extern NSString *const qDefaultShowSideBarOnRight;
+
+extern NSString *const qDefaultOpenUntitledWindowModeOnLaunch;
+extern NSString *const qDefaultOpenUntitledWindowModeOnReactivation;
 
 extern NSString *const qDefaultShowFoldersFirst;
 extern NSString *const qDefaultShowHiddenInFileBrowser;
@@ -35,6 +38,12 @@ typedef enum {
   VROpenModeInVerticalSplit,
   VROpenModeInHorizontalSplit
 } VROpenMode;
+
+typedef enum {
+  VROpenUntitledWindowWhenOnLaunchAndReactivation,
+  VROpenUntitledWindowWhenOnLaunch,
+  VROpenUntitledWindowNever,
+} VROpenUntitledWindowMode;
 
 OBJC_EXTERN inline VROpenMode open_mode_from_modifier(NSUInteger modifierFlags, VROpenMode defaultMode);
 OBJC_EXTERN inline VROpenMode open_mode_from_event(NSEvent *curEvent, NSString *defaultModeString);

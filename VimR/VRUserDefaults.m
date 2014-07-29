@@ -14,6 +14,9 @@ NSString *const qDefaultShowStatusBar = @"show-status-bar";
 NSString *const qDefaultShowSideBar = @"show-side-bar";
 NSString *const qDefaultShowSideBarOnRight = @"show-side-bar-on-right";
 
+NSString *const qDefaultOpenUntitledWindowModeOnLaunch = @"open-untitled-window-on-launch";
+NSString *const qDefaultOpenUntitledWindowModeOnReactivation = @"open-untitled-window-on-reactivation";
+
 NSString *const qDefaultShowHiddenInFileBrowser = @"show-hidden-files-in-file-browser";
 NSString *const qDefaultSyncWorkingDirectoryWithVimPwd = @"sync-working-directory-with-vim-pwd";
 NSString *const qDefaultShowFoldersFirst = @"show-folder-first";
@@ -68,22 +71,22 @@ VROpenMode open_mode_from_event(NSEvent *curEvent, NSString *defaultModeString) 
 
 - (id)transformedValue:(id)value {
   if ([value isEqualTo:qOpenModeInNewTabValue]) {
-    return [NSNumber numberWithUnsignedInteger:VROpenModeInNewTab];
+    return @(VROpenModeInNewTab);
   }
 
   if ([value isEqualTo:qOpenModeInCurrentTabValue]) {
-    return [NSNumber numberWithUnsignedInteger:VROpenModeInCurrentTab];
+    return @(VROpenModeInCurrentTab);
   }
 
   if ([value isEqualTo:qOpenModeInVerticalSplitValue]) {
-    return [NSNumber numberWithUnsignedInteger:VROpenModeInVerticalSplit];
+    return @(VROpenModeInVerticalSplit);
   }
 
   if ([value isEqualTo:qOpenModeInHorizontalSplitValue]) {
-    return [NSNumber numberWithUnsignedInteger:VROpenModeInHorizontalSplit];
+    return @(VROpenModeInHorizontalSplit);
   }
 
-  return [NSNumber numberWithUnsignedInteger:VROpenModeInNewTab];
+  return @(VROpenModeInNewTab);
 }
 
 - (id)reverseTransformedValue:(id)value {

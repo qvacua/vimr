@@ -25,7 +25,9 @@
 static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
 
-@implementation VRAppDelegate
+@implementation VRAppDelegate {
+  BOOL _isLaunching;
+}
 
 @manualwire(userDefaults)
 @manualwire(workspace)
@@ -197,7 +199,7 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
   [urls removeObjectsInArray:alreadyOpenedUrls];
 
   if (urls.isEmpty) {
-    [self postUserNotificationWithTitle:@"All selected file(s) are already opened."];
+    [self postUserNotificationWithTitle:@"All selected file(s) are already open."];
     [_workspaceController selectBufferWithUrl:alreadyOpenedUrls[0]];
 
     return;
@@ -223,6 +225,8 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
+  _isLaunching = YES;
+  
   // this cannot be done with TBCacao
   _application = aNotification.object;
 
@@ -336,6 +340,14 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
   if (![_userDefaults objectForKey:qDefaultHideWildignoreInFileBrowser]) {
     [_userDefaults setBool:YES forKey:qDefaultHideWildignoreInFileBrowser];
+  }
+
+  if (![_userDefaults objectForKey:qDefaultOpenUntitledWindowModeOnLaunch]) {
+    [_userDefaults setBool:YES forKey:qDefaultOpenUntitledWindowModeOnLaunch];
+  }
+
+  if (![_userDefaults objectForKey:qDefaultOpenUntitledWindowModeOnReactivation]) {
+    [_userDefaults setBool:YES forKey:qDefaultOpenUntitledWindowModeOnReactivation];
   }
 }
 

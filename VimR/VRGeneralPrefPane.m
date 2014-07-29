@@ -28,6 +28,7 @@
   RETURN_NIL_WHEN_NOT_SELF
 
   self.userDefaultsController = userDefaultsController;
+
   [self addViews];
 
   return self;
@@ -42,6 +43,11 @@
   NSButton *showSidebarOnRightButton = [self checkButtonWithTitle:@"Sidebar on right" defaultKey:qDefaultShowSideBarOnRight];
   NSTextField *daDescription = [self newDescriptionLabelWithString:@"These are default values, ie new windows will start with these values set:\n– The changes will only affect new windows.\n– You can override these settings in each window."
                                                          alignment:NSLeftTextAlignment];
+
+  NSTextField *ouTitle = [self newTextLabelWithString:@"Open Untitled Window:" alignment:NSRightTextAlignment];
+  NSButton *ouOnLaunch = [self checkButtonWithTitle:@"On launch" defaultKey:qDefaultOpenUntitledWindowModeOnLaunch];
+  NSButton *ouOnReactivation = [self checkButtonWithTitle:@"On re-activation" defaultKey:qDefaultOpenUntitledWindowModeOnReactivation];
+
   // auto saving
   NSTextField *asTitle = [self newTextLabelWithString:@"Saving Behavior:" alignment:NSRightTextAlignment];
 
@@ -58,6 +64,10 @@
       @"showSidebarRight" : showSidebarOnRightButton,
       @"daDesc" : daDescription,
 
+      @"ouTitle" : ouTitle,
+      @"ouOnLaunch" : ouOnLaunch,
+      @"ouOnReactivation" : ouOnReactivation,
+
       @"asTitle" : asTitle,
       @"asOnFrameDeactivation" : asOnFrameDeactivation,
       @"asOfdDesc" : asOfdDesc,
@@ -65,7 +75,7 @@
       @"asOchDesc" : asOchDesc,
   };
 
-  for (NSView *view in @[asTitle]) {
+  for (NSView *view in @[asTitle, ouTitle]) {
     [self addConstraint:[NSLayoutConstraint constraintWithItem:view
                                                      attribute:NSLayoutAttributeTrailing
                                                      relatedBy:NSLayoutRelationEqual
@@ -83,6 +93,9 @@
   CONSTRAIN(@"H:|-[daTitle]-[showSidebarRight]-|");
   CONSTRAIN(@"H:|-[daTitle]-[daDesc]-|");
 
+  CONSTRAIN(@"H:|-[ouTitle]-[ouOnLaunch]")
+  CONSTRAIN(@"H:|-[ouTitle]-[ouOnReactivation]")
+
   CONSTRAIN(@"H:|-[asTitle]-[asOnFrameDeactivation]-|");
   CONSTRAIN(@"H:|-[asTitle]-[asOfdDesc]-|");
   CONSTRAIN(@"H:|-[asTitle]-[asOnCursorHold]-|");
@@ -90,8 +103,11 @@
 
   [self addConstraint:[self baseLineConstraintForView:daTitle toView:showStatusBarButton]];
   [self addConstraint:[self baseLineConstraintForView:asTitle toView:asOnFrameDeactivation]];
+  [self addConstraint:[self baseLineConstraintForView:ouTitle toView:ouOnLaunch]];
 
-  CONSTRAIN(@"V:|-[showStatusBar]-[showSidebar]-[showSidebarRight]-[daDesc]-(24)-[asOnFrameDeactivation]-[asOfdDesc]-[asOnCursorHold]-[asOchDesc]-|");
+  CONSTRAIN(@"V:|-[showStatusBar]-[showSidebar]-[showSidebarRight]-[daDesc]-(24)-"
+      "[ouOnLaunch]-[ouOnReactivation]-(24)-"
+      "[asOnFrameDeactivation]-[asOfdDesc]-[asOnCursorHold]-[asOchDesc]-|");
 }
 
 @end
