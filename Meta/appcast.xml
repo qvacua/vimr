@@ -6,20 +6,23 @@
         <description>Most recent changes with links to updates for VimR.</description>
         <language>en</language>
         <item>
-            <title>Version 0.1.1</title>
+            <title>Version 0.1.2</title>
             <description>
-                New App icon!
+                Restructured Preferences window (ready to scale!), 
+                Added an option for untitled window behavior, 
+                Added an option to turn on filtering in the file browser based on Vim's wildignore
             </description>
             <sparkle:releaseNotesLink>
-                http://qvacua.com/vimr/release-notes.html
+                http://qvacua.github.io/vimr/release-notes.html
             </sparkle:releaseNotesLink>
-            <pubDate>2014-07-26 20:40:11 +0000</pubDate>
-            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.1.1-13/VimR-0.1.1.tar.bz2"
-                       sparkle:version="13"
-                       sparkle:shortVersionString="0.1.1"
-                       sparkle:dsaSignature="MCwCFBaCN3VN8UOXVw1qfcnp9GRrNaFzAhQEoBMXc+MKG5R/R+vwS2AD+oNSUQ=="
-                       length="8384512"
+            <pubDate>2014-07-30 20:40:11 +0000</pubDate>
+            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.1.2-12/VimR-0.1.2.tar.bz2"
+                       sparkle:version="14"
+                       sparkle:shortVersionString="0.1.2"
+                       sparkle:dsaSignature="MC0CFQCESuCtlWXFW5tOwM3ElTl0g2qg2wIUerpPIdSpefrg137wlpcV+x0rXVY="
+                       length="8486912"
                        type="application/octet-stream"/>
         </item>
     </channel>
 </rss>
+
