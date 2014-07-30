@@ -1,0 +1,27 @@
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/"
+     version="2.0">
+    <channel>
+        <title>VimR Appcast</title>
+        <link>http://qvacua.com</link>
+        <description>Most recent changes with links to updates for VimR.</description>
+        <language>en</language>
+        <item>
+            <title>Version 0.1.2</title>
+            <description>
+                Restructured Preferences window (ready to scale!), 
+                Added an option for untitled window behavior, 
+                Added an option to turn on filtering in the file browser based on Vim's wildignore
+            </description>
+            <sparkle:releaseNotesLink>
+                http://qvacua.github.io/vimr/release-notes.html
+            </sparkle:releaseNotesLink>
+            <pubDate>2014-07-30 20:40:11 +0000</pubDate>
+            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.1.2-14/VimR-0.1.2.tar.bz2"
+                       sparkle:version="14"
+                       sparkle:shortVersionString="0.1.2"
+                       sparkle:dsaSignature="MC0CFQCESuCtlWXFW5tOwM3ElTl0g2qg2wIUerpPIdSpefrg137wlpcV+x0rXVY="
+                       length="8486912"
+                       type="application/octet-stream"/>
+        </item>
+    </channel>
+</rss>
