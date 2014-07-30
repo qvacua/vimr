@@ -16,7 +16,7 @@
                 http://qvacua.github.io/vimr/release-notes.html
             </sparkle:releaseNotesLink>
             <pubDate>2014-07-30 20:40:11 +0000</pubDate>
-            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.1.2-12/VimR-0.1.2.tar.bz2"
+            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.1.2-14/VimR-0.1.2.tar.bz2"
                        sparkle:version="14"
                        sparkle:shortVersionString="0.1.2"
                        sparkle:dsaSignature="MC0CFQCESuCtlWXFW5tOwM3ElTl0g2qg2wIUerpPIdSpefrg137wlpcV+x0rXVY="
