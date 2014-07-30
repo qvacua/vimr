@@ -55,6 +55,9 @@
 - (BOOL)application:(NSApplication *)sender openFile:(NSString *)filename;
 - (void)application:(NSApplication *)sender openFiles:(NSArray *)fileNames;
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification;
+- (void)applicationDidFinishLaunching:(NSNotification *)notification;
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender;
+- (void)applicationWillTerminate:(NSNotification *)notification;
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender;
 
 #pragma mark NSUserNotificationCenterDelegate

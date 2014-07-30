@@ -38,7 +38,7 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
 #pragma mark IBActions
 - (IBAction)newDocument:(id)sender {
-  [self applicationOpenUntitledFile:_application];
+  [_workspaceController newWorkspace];
 }
 
 - (IBAction)newTab:(id)sender {
@@ -172,7 +172,16 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
 #pragma mark NSApplicationDelegate
 - (BOOL)applicationOpenUntitledFile:(NSApplication *)theApplication {
-  [_workspaceController newWorkspace];
+  if (_isLaunching) {
+    if ([_userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnLaunch]) {
+      [_workspaceController newWorkspace];
+    }
+  } else {
+    if ([_userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnReactivation]) {
+      [_workspaceController newWorkspace];
+    }
+  }
+
   return YES;
 }
 
@@ -226,7 +235,7 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
   _isLaunching = YES;
-  
+
   // this cannot be done with TBCacao
   _application = aNotification.object;
 
@@ -238,6 +247,10 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 #ifdef DEBUG
   _debug.hidden = NO;
 #endif
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)notification {
+  _isLaunching = NO;
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {

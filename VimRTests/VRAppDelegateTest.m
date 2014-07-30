@@ -23,6 +23,7 @@ static NSOpenPanel *openPanel;
 @implementation VRAppDelegateTest {
   VRAppDelegate *appDelegate;
 
+  NSUserDefaults *userDefaults;
   NSUserNotificationCenter *userNotificationCenter;
   NSApplication *application;
   VRWorkspaceController *workspaceController;
@@ -40,6 +41,7 @@ static NSOpenPanel *openPanel;
 - (void)setUp {
   [super setUp];
 
+  userDefaults = mock([NSUserDefaults class]);
   application = mock([NSApplication class]);
   workspaceController = mock([VRWorkspaceController class]);
   workspace = mock([NSWorkspace class]);
@@ -50,6 +52,7 @@ static NSOpenPanel *openPanel;
   appDelegate.application = application;
   appDelegate.workspaceController = workspaceController;
   appDelegate.workspace = workspace;
+  appDelegate.userDefaults = userDefaults;
 
   openPanel = mock([NSOpenPanel class]);
   openPanelOriginalImpl = [self mockClassSelector:@selector(openPanel) ofClass:[NSOpenPanel class]
@@ -84,6 +87,52 @@ static NSOpenPanel *openPanel;
   [verify(workspaceController) newWorkspace];
 }
 
+- (void)testNewDocumentOpenUntitledOnLaunch {
+  [given([userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnLaunch]) willReturnBool:YES];
+  [given([userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnReactivation]) willReturnBool:NO];
+
+  [appDelegate applicationWillFinishLaunching:nil];
+  [appDelegate applicationOpenUntitledFile:application];
+
+  [verify(workspaceController) newWorkspace];
+}
+
+- (void)testNewDocumentDoNotOpenUntitledOnLaunch {
+  [given([userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnLaunch]) willReturnBool:NO];
+  [given([userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnReactivation]) willReturnBool:YES];
+
+  [appDelegate applicationWillFinishLaunching:nil];
+  [appDelegate applicationOpenUntitledFile:application];
+
+  [verifyCount(workspaceController, times(0)) newWorkspace];
+}
+
+- (void)testNewDocumentDoNotOpenUntitledOnReactivation {
+  [given([userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnLaunch]) willReturnBool:YES];
+  [given([userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnReactivation]) willReturnBool:NO];
+
+  [appDelegate applicationWillFinishLaunching:nil];
+  [appDelegate applicationOpenUntitledFile:application];
+  [appDelegate applicationDidFinishLaunching:nil];
+
+  [appDelegate applicationOpenUntitledFile:application];
+
+  [verifyCount(workspaceController, times(1)) newWorkspace];
+}
+
+- (void)testNewDocumentOpenUntitledOnReactivation {
+  [given([userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnLaunch]) willReturnBool:YES];
+  [given([userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnReactivation]) willReturnBool:YES];
+
+  [appDelegate applicationWillFinishLaunching:nil];
+  [appDelegate applicationOpenUntitledFile:application];
+  [appDelegate applicationDidFinishLaunching:nil];
+
+  [appDelegate applicationOpenUntitledFile:application];
+
+  [verifyCount(workspaceController, times(2)) newWorkspace];
+}
+
 - (void)testNewTab {
   [appDelegate newTab:nil];
   [verify(workspaceController) newWorkspace];
@@ -110,11 +159,6 @@ static NSOpenPanel *openPanel;
   [verify(openPanel) setAllowsMultipleSelection:YES];
   [verify(openPanel) setCanChooseDirectories:YES];
   [verifyCount(workspaceController, never()) openFilesInNewWorkspace:anything()];
-}
-
-- (void)testApplicationOpenUntitledFile {
-  assertThat(@([appDelegate applicationOpenUntitledFile:application]), isYes);
-  [verify(workspaceController) newWorkspace];
 }
 
 - (void)testAppliationOpenFile {
