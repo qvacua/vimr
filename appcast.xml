@@ -8,8 +8,8 @@
         <item>
             <title>Version 0.1.2</title>
             <description>
-                Restructured Preferences window (ready to scale!), 
-                Added an option for untitled window behavior, 
+                Restructured Preferences window (ready to scale!),
+                Added an option for untitled window behavior,
                 Added an option to turn on filtering in the file browser based on Vim's wildignore
             </description>
             <sparkle:releaseNotesLink>
@@ -25,3 +25,4 @@
         </item>
     </channel>
 </rss>
+
