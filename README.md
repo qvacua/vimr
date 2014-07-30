@@ -10,7 +10,7 @@ Download
 
 Pre-built binaries can be found [here](https://github.com/qvacua/vimr/releases).
 
-From time to time I'll upload a bleeding edge build and you can download it [here](http://qvacua.com/snapshots/?C=M;O=D).
+From time to time I'll upload a bleeding edge build and you can download it [here](http://taewon.de/snapshots/?C=M;O=D).
 
 About
 -----
