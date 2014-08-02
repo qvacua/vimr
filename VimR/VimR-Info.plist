@@ -1189,10 +1189,6 @@
 			</array>
 		</dict>
 		<dict>
-			<key>LSItemContentTypes - 2</key>
-			<array>
-				<string>com.qvacua.VimR.plugin</string>
-			</array>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>vimr-plugin</string>
