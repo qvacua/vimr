@@ -1,0 +1,89 @@
+* {
+  margin: 0;
+  padding: 0; }
+
+html {
+  font: 10pt/1.5;
+  color: #333333; }
+
+body {
+  background: white; }
+
+hr {
+  border: none;
+  height: 1px;
+  background-color: #e7e7e7; }
+
+header {
+  padding-top: 24px;
+  padding-bottom: 12px;
+  text-align: center;
+  font-weight: 100; }
+  header .refined {
+    font-weight: bold; }
+  header .title {
+    font-size: 7.2rem; }
+    header .title .vim {
+      font-weight: 100; }
+  header .tagline {
+    font-size: 2.8rem;
+    margin-bottom: 20px; }
+  header .download-button {
+    margin-bottom: 24px; }
+    header .download-button .btn-lg {
+      font-size: 2.4rem;
+      font-weight: 100; }
+  header .version-info {
+    font-weight: normal;
+    color: gray; }
+
+#social-buttons {
+  padding-top: 24px;
+  padding-bottom: 14px;
+  border-top: 1px solid #e7e7e7;
+  border-bottom: 1px solid #e7e7e7;
+  text-align: center; }
+  #social-buttons ul {
+    list-style: none; }
+    #social-buttons ul li {
+      display: inline-block;
+      padding-left: 5px;
+      padding-right: 5px; }
+
+#features {
+  font-weight: 100;
+  text-align: center; }
+  #features .feature {
+    padding: 48px 0;
+    border-bottom: solid 1px #e7e7e7; }
+    #features .feature code {
+      color: #333333;
+      border: none;
+      background: none; }
+    #features .feature h2 {
+      font-weight: bold;
+      font-size: 3.2rem;
+      letter-spacing: -1pt;
+      margin: 0 0 5px 0; }
+    #features .feature .screenshot {
+      vertical-align: middle;
+      display: inline-block;
+      padding: 0 24px;
+      width: 480px;
+      text-align: right; }
+    #features .feature .description {
+      font-size: 2.8rem;
+      display: inline-block;
+      text-align: left;
+      padding: 0 24px;
+      width: 480px;
+      vertical-align: top; }
+    #features .feature:nth-child(even) .screenshot {
+      text-align: left; }
+    #features .feature:nth-child(even) .description {
+      text-align: right; }
+
+footer {
+  padding-top: 48px;
+  padding-bottom: 24px;
+  text-align: center; }
