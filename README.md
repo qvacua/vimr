@@ -3,6 +3,8 @@ VimR — Vim Refined
 
 ![App Icon](https://raw.github.com/qvacua/vimr/master/Meta/vimr-app-icon.png)
 
+<http://vimr.org>
+
 [![Build Status](https://travis-ci.org/qvacua/vimr.svg?branch=master)](https://travis-ci.org/qvacua/vimr)
 
 Download
