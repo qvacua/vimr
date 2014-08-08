@@ -22,6 +22,8 @@ hr {
 }
 
 header {
+  width: 960px;
+  margin: 0 auto;
   padding-top: 24px;
   padding-bottom: 12px;
 
@@ -61,13 +63,16 @@ header {
 }
 
 #social-buttons {
-  padding-top: 24px;
-  padding-bottom: 14px;
-
+  text-align: center;
   border-top: 1px solid $rule-color;
   border-bottom: 1px solid $rule-color;
 
-  text-align: center;
+  .content {
+    width: 960px;
+    margin: 0 auto;
+    padding-top: 24px;
+    padding-bottom: 14px;
+  }
 
   ul {
     list-style: none;
@@ -82,12 +87,16 @@ header {
 
 #features {
   font-weight: 100;
-
   text-align: center;
 
   .feature {
     padding: 48px 0;
     border-bottom: solid 1px $rule-color;
+
+    .content {
+      width: 960px;
+      margin: 0 auto;
+    }
 
     code {
       color: $text-color;
@@ -131,7 +140,36 @@ header {
   }
 }
 
+#credits {
+  text-align: center;
+  border-bottom: solid 1px $rule-color;
+
+  .content {
+    width: 960px;
+    margin: 0 auto;
+  }
+
+  .contributor {
+    display: inline-block;
+    vertical-align: top;
+    width: 400px;
+    padding: 48px 24px;
+
+    .avatar {
+      margin-bottom: 12px;
+      border-radius: 4px;
+    }
+
+    .social {
+      font-size: 2rem;
+      padding: 0 6px;
+    }
+  }
+}
+
 footer {
+  width: 960px;
+  margin: 0 auto;
   padding-top: 48px;
   padding-bottom: 24px;
 
