@@ -10,9 +10,9 @@
 #import <MacVimFramework/MacVimFramework.h>
 #import "VRWorkspaceView.h"
 #import "VRTextMateUiUtils.h"
+#import "VRFileBrowserOutlineView.h"
 #import "VRFileBrowserView.h"
 #import "VRMainWindowController.h"
-#import "VRFileBrowserOutlineView.h"
 #import "VRUtils.h"
 #import "VRFileBrowserViewFactory.h"
 

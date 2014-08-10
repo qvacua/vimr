@@ -491,7 +491,7 @@
 				1929B4A7B8CA1DF045231802 /* VRAlert.m */,
 				1929B6E1C938B98AFC2F83C7 /* VRWorkspaceView.m */,
 				1929BE9F9DAA496347120FE6 /* VRWorkspaceView.h */,
-				1929BE77FDD009AFE95F8222 /* Factories */,
+				1929BE77FDD009AFE95F8222 /* Factory */,
 			);
 			name = Workspace;
 			sourceTree = "<group>";
@@ -519,7 +519,7 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		1929BE77FDD009AFE95F8222 /* Factories */ = {
+		1929BE77FDD009AFE95F8222 /* Factory */ = {
 			isa = PBXGroup;
 			children = (
 				1929B749CF87AC2F0E44F9EB /* VRMainWindowControllerFactory.h */,
@@ -529,7 +529,7 @@
 				1929B055E5123E0B02728FE2 /* VRWorkspaceViewFactory.m */,
 				1929B3AD663D6BACCAA5AABF /* VRWorkspaceViewFactory.h */,
 			);
-			name = Factories;
+			name = Factory;
 			sourceTree = "<group>";
 		};
 		1929BF241734EC43FCC6630C /* Dummies */ = {
