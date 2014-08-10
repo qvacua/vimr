@@ -70,9 +70,11 @@ static CGPoint qDefaultOrigin = {242, 364};
 }
 
 - (void)updateBuffers {
-  NSArray *vimBuffers = _vimController.buffers;
-  NSMutableArray *bufferUrls = [self bufferUrlsFromVimBuffers:vimBuffers];
-  if ([bufferUrls isEqualToArray:_openedBufferUrls]) {
+  NSMutableArray *bufferUrls = [self bufferUrlsFromVimBuffers:_vimController.buffers];
+
+  NSMutableSet *bufferUrlsSet = [NSMutableSet setWithArray:bufferUrls];
+  [bufferUrlsSet minusSet:[NSSet setWithArray:_openedBufferUrls]];
+  if (bufferUrlsSet.count == 0) {
     return;
   }
 
@@ -83,17 +85,6 @@ static CGPoint qDefaultOrigin = {242, 364};
   }
 
   [self updateWorkingDirectory:commonParent];
-}
-
-- (NSMutableArray *)bufferUrlsFromVimBuffers:(NSArray *)vimBuffers {
-  NSMutableArray *bufferUrls = [[NSMutableArray alloc] initWithCapacity:vimBuffers.count];
-  for (MMBuffer *buffer in vimBuffers) {
-    if (buffer.fileName) {
-      [bufferUrls addObject:[NSURL fileURLWithPath:buffer.fileName]];
-    }
-  }
-
-  return bufferUrls;
 }
 
 - (void)cleanUpAndClose {
@@ -111,6 +102,7 @@ static CGPoint qDefaultOrigin = {242, 364};
   return self;
 }
 
+#pragma mark Private
 - (CGPoint)cascadedWindowOrigin {
   CGPoint origin = qDefaultOrigin;
 
@@ -127,6 +119,17 @@ static CGPoint qDefaultOrigin = {242, 364};
   }
 
   return origin;
+}
+
+- (NSMutableArray *)bufferUrlsFromVimBuffers:(NSArray *)vimBuffers {
+  NSMutableArray *bufferUrls = [[NSMutableArray alloc] initWithCapacity:vimBuffers.count];
+  for (MMBuffer *buffer in vimBuffers) {
+    if (buffer.fileName) {
+      [bufferUrls addObject:[NSURL fileURLWithPath:buffer.fileName]];
+    }
+  }
+
+  return bufferUrls;
 }
 
 @end
