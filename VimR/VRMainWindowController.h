@@ -18,6 +18,8 @@
 @class VRWorkspace;
 @class VRPluginManager;
 @class VRPreviewWindowController;
+@class VRFileItemManager;
+@class VRWorkspaceViewFactory;
 
 
 extern const int qMainWindowBorderThickness;
@@ -30,7 +32,12 @@ extern const int qMainWindowBorderThickness;
     NSUserInterfaceValidations>
 
 @property (nonatomic, weak) VRWorkspace *workspace;
+@property (nonatomic, weak) VRWorkspaceViewFactory *workspaceViewFactory;
+@property (nonatomic, weak) VRFileItemManager *fileItemManager;
+@property (nonatomic, weak) VROpenQuicklyWindowController *openQuicklyWindowController;
+@property (nonatomic, weak) NSUserDefaults *userDefaults;
 @property (nonatomic, weak) MMVimController *vimController;
+
 @property (nonatomic, weak) MMVimView *vimView;
 @property (nonatomic) VRPreviewWindowController *previewWindowController;
 

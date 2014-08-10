@@ -11,9 +11,7 @@
 #import "VRWorkspace.h"
 #import "VRMainWindowController.h"
 #import "VRMainWindowControllerFactory.h"
-#import "VRWorkspaceController.h"
 #import "VRFileItemManager.h"
-#import "VROpenQuicklyWindowController.h"
 
 
 @interface VRWorkspaceTest : VRBaseTestCase
@@ -26,13 +24,8 @@
   NSWindow *window;
   VRMainWindowController *mainWindowController;
   VRMainWindowControllerFactory *mainWindowControllerFactory;
-
-  NSFileManager *fileManager;
-  VRWorkspaceController *workspaceController;
   VRFileItemManager *fileItemManager;
-  NSUserDefaults *userDefaults;
-  NSNotificationCenter *notificationCenter;
-  VROpenQuicklyWindowController *openQuicklyWindowController;
+
   NSURL *initialUrl;
 }
 
@@ -55,21 +48,11 @@
   [given([mainWindowController vimController]) willReturn:vimController];
   [given([mainWindowController window]) willReturn:window];
 
-  fileManager = mock([NSFileManager class]);
-  workspaceController = mock([VRWorkspaceController class]);
   fileItemManager = mock([VRFileItemManager class]);
-  userDefaults = mock([NSUserDefaults class]);
-  notificationCenter = mock([NSNotificationCenter class]);
-  openQuicklyWindowController = mock([VROpenQuicklyWindowController class]);
   initialUrl = [NSURL URLWithString:@"file:///initial/url"];
 
   workspace.mainWindowControllerFactory = mainWindowControllerFactory;
-  workspace.fileManager = fileManager;
-  workspace.workspaceController = workspaceController;
   workspace.fileItemManager = fileItemManager;
-  workspace.userDefaults = userDefaults;
-  workspace.notificationCenter = notificationCenter;
-  workspace.openQuicklyWindowController = openQuicklyWindowController;
   workspace.workingDirectory = initialUrl;
 
   [workspace setUpWithVimController:vimController];

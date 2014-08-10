@@ -14,7 +14,7 @@
 #import "VRMainWindowController.h"
 #import "VRFileBrowserOutlineView.h"
 #import "VRUtils.h"
-#import "VRWorkspace.h"
+#import "VRFileBrowserViewFactory.h"
 
 
 #define SQ(x) ((x)*(x))
@@ -143,6 +143,12 @@ static const int qMinimumFileBrowserWidth = 100;
 }
 
 - (void)setUp {
+  _showStatusBar = [_userDefaults boolForKey:qDefaultShowStatusBar];
+  _showFoldersFirst = [_userDefaults boolForKey:qDefaultFileBrowserShowFoldersFirst];
+  _showHiddenFiles = [_userDefaults boolForKey:qDefaultFileBrowserShowHidden];
+  _syncWorkspaceWithPwd = [_userDefaults boolForKey:qDefaultFileBrowserSyncWorkingDirWithVimPwd];
+  _fileBrowserOnRight = [_userDefaults boolForKey:qDefaultShowSideBarOnRight];
+  
   _pathView = [[NSPathControl alloc] initWithFrame:CGRectZero];
   _pathView.translatesAutoresizingMaskIntoConstraints = NO;
   _pathView.pathStyle = NSPathStyleStandard;
@@ -187,24 +193,14 @@ static const int qMinimumFileBrowserWidth = 100;
   _messageView.editable = NO;
   _messageView.selectable = NO;
   [[_messageView cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-  [_messageView setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow
-                                         forOrientation:NSLayoutConstraintOrientationHorizontal];
-  [_messageView setContentHuggingPriority:NSLayoutPriorityDefaultLow
-                           forOrientation:NSLayoutConstraintOrientationHorizontal];
+  [_messageView setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
+  [_messageView setContentHuggingPriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
   [self addSubview:_messageView];
 
-  _cachedFileBrowserView = [[VRFileBrowserView alloc] initWithRootUrl:self.mainWindowController.workingDirectory];
-
-  VRWorkspace *workspace = self.mainWindowController.workspace;
-  _cachedFileBrowserView.fileItemManager = workspace.fileItemManager;
-  _cachedFileBrowserView.userDefaults = workspace.userDefaults;
-  _cachedFileBrowserView.notificationCenter = workspace.notificationCenter;
-  _cachedFileBrowserView.fileManager = workspace.fileManager;
-  _cachedFileBrowserView.workspaceView = self;
-
+  _cachedFileBrowserView = [_fileBrowserViewFactory newFileBrowserViewWithWorkspaceView:self rootUrl:self.mainWindowController.workingDirectory];
   [_cachedFileBrowserView setUp];
 
-  if ([self.mainWindowController.workspace.userDefaults boolForKey:qDefaultShowSideBar]) {
+  if ([_userDefaults boolForKey:qDefaultShowSideBar]) {
     self.fileBrowserView = _cachedFileBrowserView;
   }
 }
@@ -216,11 +212,11 @@ static const int qMinimumFileBrowserWidth = 100;
 - (NSSet *)nonFilteredWildIgnorePathsForParentPath:(NSString *)path {
   NSString *pathExpression = [NSString stringWithFormat:@"globpath(\"%@\", \"*\")", path];
   NSString *dotPathExpression = [NSString stringWithFormat:@"globpath(\"%@\", \".*\")", path];
-  
+
   NSMutableSet *paths = [NSMutableSet set];
   [paths addObjectsFromArray:[[self.vimView.vimController evaluateVimExpression:pathExpression] componentsSeparatedByString:@"\n"]];
   [paths addObjectsFromArray:[[self.vimView.vimController evaluateVimExpression:dotPathExpression] componentsSeparatedByString:@"\n"]];
-  
+
   return paths;
 }
 
@@ -284,7 +280,7 @@ static const int qMinimumFileBrowserWidth = 100;
 
   NSDictionary *views = @{
       @"fileBrowserView" : _fileBrowserView ?: [NSNull null],
-                          @"message" : _messageView,
+      @"message" : _messageView,
       @"settings" : _settingsButton,
       @"fileBrowserDivider" : _fileBrowserDivider ?: [NSNull null],
 
@@ -401,7 +397,7 @@ static const int qMinimumFileBrowserWidth = 100;
 
     CGPoint mouseCurrentPos = [self convertPoint:anEvent.locationInWindow fromView:nil];
     if (!didDrag &&
-            SQ(fabs(mouseDownPos.x - mouseCurrentPos.x)) + SQ(fabs(mouseDownPos.y - mouseCurrentPos.y)) < SQ(1)) {
+        SQ(fabs(mouseDownPos.x - mouseCurrentPos.x)) + SQ(fabs(mouseDownPos.y - mouseCurrentPos.y)) < SQ(1)) {
 
       continue; // we didn't even drag a pixel
     }

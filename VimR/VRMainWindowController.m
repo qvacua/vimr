@@ -24,6 +24,7 @@
 #import "VRFileBrowserView.h"
 #import "NSArray+VR.h"
 #import "VRPreviewWindowController.h"
+#import "VRWorkspaceViewFactory.h"
 
 
 const int qMainWindowBorderThickness = 22;
@@ -228,9 +229,9 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 }
 
 - (IBAction)openQuickly:(id)sender {
-  @synchronized (_workspace.fileItemManager) {
-    [_workspace.fileItemManager setTargetUrl:self.workingDirectory];
-    [_workspace.openQuicklyWindowController showForWindowController:self];
+  @synchronized (_fileItemManager) {
+    [_fileItemManager setTargetUrl:self.workingDirectory];
+    [_openQuicklyWindowController showForWindowController:self];
   }
 }
 
@@ -279,13 +280,13 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 
 #pragma mark VRUserDefaultsObserver
 - (void)registerUserDefaultsObservation {
-  [_workspace.userDefaults addObserver:self forKeyPath:qDefaultAutoSaveOnFrameDeactivation options:NSKeyValueObservingOptionNew context:NULL];
-  [_workspace.userDefaults addObserver:self forKeyPath:qDefaultAutoSaveOnCursorHold options:NSKeyValueObservingOptionNew context:NULL];
+  [_userDefaults addObserver:self forKeyPath:qDefaultAutoSaveOnFrameDeactivation options:NSKeyValueObservingOptionNew context:NULL];
+  [_userDefaults addObserver:self forKeyPath:qDefaultAutoSaveOnCursorHold options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)removeUserDefaultsObservation {
-  [_workspace.userDefaults removeObserver:self forKeyPath:qDefaultAutoSaveOnFrameDeactivation];
-  [_workspace.userDefaults removeObserver:self forKeyPath:qDefaultAutoSaveOnCursorHold];
+  [_userDefaults removeObserver:self forKeyPath:qDefaultAutoSaveOnFrameDeactivation];
+  [_userDefaults removeObserver:self forKeyPath:qDefaultAutoSaveOnCursorHold];
 }
 
 #pragma mark MMViewDelegate informal protocol
@@ -669,8 +670,8 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 }
 
 - (void)applyUserDefaultsToVim {
-  BOOL autoSaveOnFrameDeactivation = [_workspace.userDefaults boolForKey:qDefaultAutoSaveOnFrameDeactivation];
-  BOOL autoSaveOnCursorHold = [_workspace.userDefaults boolForKey:qDefaultAutoSaveOnCursorHold];
+  BOOL autoSaveOnFrameDeactivation = [_userDefaults boolForKey:qDefaultAutoSaveOnFrameDeactivation];
+  BOOL autoSaveOnCursorHold = [_userDefaults boolForKey:qDefaultAutoSaveOnCursorHold];
 
   if (autoSaveOnFrameDeactivation) {
     [self sendMultipleCommandsToVim:@[
@@ -704,7 +705,8 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 - (void)addViews {
   _vimView.tabBarControl.styleNamed = @"Metal";
 
-  _workspaceView = [self newWorkspaceView];
+  _workspaceView = [_workspaceViewFactory newWorkspaceViewWithFrame:CGRectZero vimView:_vimView];
+  _workspaceView.translatesAutoresizingMaskIntoConstraints = NO;
 
   NSView *contentView = self.window.contentView;
   [contentView addSubview:_workspaceView];
@@ -716,21 +718,6 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 
   CONSTRAINT(@"H:|[workspace]|");
   CONSTRAINT(@"V:|[workspace]|");
-}
-
-- (VRWorkspaceView *)newWorkspaceView {
-  VRWorkspaceView *view = [[VRWorkspaceView alloc] initWithFrame:CGRectZero];
-  view.translatesAutoresizingMaskIntoConstraints = NO;
-
-  view.vimView = _vimView;
-
-  view.showStatusBar = [_workspace.userDefaults boolForKey:qDefaultShowStatusBar];
-  view.showFoldersFirst = [_workspace.userDefaults boolForKey:qDefaultFileBrowserShowFoldersFirst];
-  view.showHiddenFiles = [_workspace.userDefaults boolForKey:qDefaultFileBrowserShowHidden];
-  view.syncWorkspaceWithPwd = [_workspace.userDefaults boolForKey:qDefaultFileBrowserSyncWorkingDirWithVimPwd];
-  view.fileBrowserOnRight = [_workspace.userDefaults boolForKey:qDefaultShowSideBarOnRight];
-
-  return view;
 }
 
 - (void)sendCommandToVim:(NSString *)command {

@@ -13,6 +13,7 @@
 @class MMVimView;
 @class VRFileBrowserView;
 @class VRWorkspace;
+@class VRFileBrowserViewFactory;
 
 /**
 * Copied and modified from TextMate -Tae
@@ -21,6 +22,9 @@
 * v2.0-alpha.9537
 */
 @interface VRWorkspaceView : NSView <NSUserInterfaceValidations>
+
+@property (nonatomic, weak) VRFileBrowserViewFactory *fileBrowserViewFactory;
+@property (nonatomic, weak) NSUserDefaults *userDefaults;
 
 @property (nonatomic) VRFileBrowserView *fileBrowserView;
 @property (nonatomic) MMVimView *vimView;
