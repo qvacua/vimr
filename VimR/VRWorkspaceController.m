@@ -44,7 +44,7 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 }
 
 - (void)newWorkspace {
-  [self createNewVimControllerWithWorkingDir:[[NSURL alloc] initFileURLWithPath:NSHomeDirectory()] args:nil];
+  [self createNewVimControllerWithWorkingDir:[NSURL fileURLWithPath:NSHomeDirectory()] args:nil];
 }
 
 - (void)openFilesInNewWorkspace:(NSArray *)fileUrls {
@@ -101,13 +101,13 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 
 #pragma mark Private
 - (NSDictionary *)vimArgsFromFileUrls:(NSArray *)fileUrls {
-  NSMutableArray *filenames = [[NSMutableArray alloc] initWithCapacity:4];
+  NSMutableArray *fileNames = [[NSMutableArray alloc] initWithCapacity:4];
   for (NSURL *url in fileUrls) {
-    [filenames addObject:url.path];
+    [fileNames addObject:url.path];
   }
 
   return @{
-      qVimArgFileNamesToOpen : filenames,
+      qVimArgFileNamesToOpen : fileNames,
       qVimArgOpenFilesLayout : @(MMLayoutTabs),
   };
 }

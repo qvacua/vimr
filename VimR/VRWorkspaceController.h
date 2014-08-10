@@ -14,6 +14,7 @@
 extern NSString *const qVimArgFileNamesToOpen;
 extern NSString *const qVimArgOpenFilesLayout;
 
+
 @class VRMainWindowController;
 @class VRFileItemManager;
 @class VROpenQuicklyWindowController;
