@@ -13,7 +13,6 @@
 #import "VRMainWindowController.h"
 #import "VRFileItemManager.h"
 #import "VRUtils.h"
-#import "VRDefaultLogSetting.h"
 #import "VRMainWindow.h"
 #import "VRMainWindowControllerFactory.h"
 
@@ -59,9 +58,7 @@ static CGPoint qDefaultOrigin = {242, 364};
 
   CGPoint origin= [self cascadedWindowOrigin];
   CGRect contentRect = rect_with_origin(origin, 480, 360);
-  _mainWindowController = [_mainWindowControllerFactory newMainWindowControllerWithContentRect:contentRect
-                                                                                     workspace:self
-                                                                                 vimController:vimController];
+  _mainWindowController = [_mainWindowControllerFactory newMainWindowControllerWithContentRect:contentRect workspace:self vimController:vimController];
 
   vimController.delegate = _mainWindowController;
 
@@ -70,7 +67,6 @@ static CGPoint qDefaultOrigin = {242, 364};
 
 - (void)setUpInitialBuffers {
   _openedBufferUrls = [self bufferUrlsFromVimBuffers:_vimController.buffers];
-  DDLogDebug(@"opened buffers: %@", _openedBufferUrls);
 }
 
 - (void)updateBuffers {
@@ -87,7 +83,6 @@ static CGPoint qDefaultOrigin = {242, 364};
   }
 
   [self updateWorkingDirectory:commonParent];
-  DDLogDebug(@"Registered new workspace: %@", _workingDirectory);
 }
 
 - (NSMutableArray *)bufferUrlsFromVimBuffers:(NSArray *)vimBuffers {
