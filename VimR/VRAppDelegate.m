@@ -22,7 +22,7 @@
 #import "VRPrefWindow.h"
 
 
-static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
+static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
 
 
 @implementation VRAppDelegate {
