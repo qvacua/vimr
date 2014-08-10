@@ -123,17 +123,17 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 #endif
 
   if (action == @selector(toggleShowFoldersFirst:)) {
-    [(NSMenuItem *) anItem setState:[_userDefaults boolForKey:qDefaultShowFoldersFirst]];
+    [(NSMenuItem *) anItem setState:[_userDefaults boolForKey:qDefaultFileBrowserShowFoldersFirst]];
     return NO;
   }
 
   if (action == @selector(toggleShowHiddenFiles:)) {
-    [(NSMenuItem *) anItem setState:[_userDefaults boolForKey:qDefaultShowHiddenInFileBrowser]];
+    [(NSMenuItem *) anItem setState:[_userDefaults boolForKey:qDefaultFileBrowserShowHidden]];
     return NO;
   }
 
   if (action == @selector(toggleSyncWorkspaceWithPwd:)) {
-    [(NSMenuItem *) anItem setState:[_userDefaults boolForKey:qDefaultSyncWorkingDirectoryWithVimPwd]];
+    [(NSMenuItem *) anItem setState:[_userDefaults boolForKey:qDefaultFileBrowserSyncWorkingDirWithVimPwd]];
     return NO;
   }
 
@@ -173,11 +173,11 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
 #pragma mark NSApplicationDelegate
 - (BOOL)applicationOpenUntitledFile:(NSApplication *)theApplication {
   if (_isLaunching) {
-    if ([_userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnLaunch]) {
+    if ([_userDefaults boolForKey:qDefaultOpenUntitledWinModeOnLaunch]) {
       [_workspaceController newWorkspace];
     }
   } else {
-    if ([_userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnReactivation]) {
+    if ([_userDefaults boolForKey:qDefaultOpenUntitledWinModeOnReactivation]) {
       [_workspaceController newWorkspace];
     }
   }
@@ -319,20 +319,20 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
     [_userDefaults setBool:YES forKey:qDefaultShowStatusBar];
   }
 
-  if (![_userDefaults objectForKey:qDefaultShowFoldersFirst]) {
-    [_userDefaults setBool:YES forKey:qDefaultShowFoldersFirst];
+  if (![_userDefaults objectForKey:qDefaultFileBrowserShowFoldersFirst]) {
+    [_userDefaults setBool:YES forKey:qDefaultFileBrowserShowFoldersFirst];
   }
 
-  if (![_userDefaults objectForKey:qDefaultShowHiddenInFileBrowser]) {
-    [_userDefaults setBool:NO forKey:qDefaultShowHiddenInFileBrowser];
+  if (![_userDefaults objectForKey:qDefaultFileBrowserShowHidden]) {
+    [_userDefaults setBool:NO forKey:qDefaultFileBrowserShowHidden];
   }
 
-  if (![_userDefaults objectForKey:qDefaultSyncWorkingDirectoryWithVimPwd]) {
-    [_userDefaults setBool:YES forKey:qDefaultSyncWorkingDirectoryWithVimPwd];
+  if (![_userDefaults objectForKey:qDefaultFileBrowserSyncWorkingDirWithVimPwd]) {
+    [_userDefaults setBool:YES forKey:qDefaultFileBrowserSyncWorkingDirWithVimPwd];
   }
 
-  if (![_userDefaults objectForKey:qDefaultDefaultOpeningBehavior]) {
-    [_userDefaults setObject:qOpenModeInNewTabValue forKey:qDefaultDefaultOpeningBehavior];
+  if (![_userDefaults objectForKey:qDefaultFileBrowserOpeningBehavior]) {
+    [_userDefaults setObject:qOpenModeInNewTabValue forKey:qDefaultFileBrowserOpeningBehavior];
   }
 
   if (![_userDefaults objectForKey:qDefaultShowSideBar]) {
@@ -351,16 +351,16 @@ static NSString *const qVimRHelpUrl = @"http://vimdoc.sourceforge.net/htmldoc/";
     [_userDefaults setBool:NO forKey:qDefaultAutoSaveOnCursorHold];
   }
 
-  if (![_userDefaults objectForKey:qDefaultHideWildignoreInFileBrowser]) {
-    [_userDefaults setBool:YES forKey:qDefaultHideWildignoreInFileBrowser];
+  if (![_userDefaults objectForKey:qDefaultFileBrowserHideWildignore]) {
+    [_userDefaults setBool:YES forKey:qDefaultFileBrowserHideWildignore];
   }
 
-  if (![_userDefaults objectForKey:qDefaultOpenUntitledWindowModeOnLaunch]) {
-    [_userDefaults setBool:YES forKey:qDefaultOpenUntitledWindowModeOnLaunch];
+  if (![_userDefaults objectForKey:qDefaultOpenUntitledWinModeOnLaunch]) {
+    [_userDefaults setBool:YES forKey:qDefaultOpenUntitledWinModeOnLaunch];
   }
 
-  if (![_userDefaults objectForKey:qDefaultOpenUntitledWindowModeOnReactivation]) {
-    [_userDefaults setBool:YES forKey:qDefaultOpenUntitledWindowModeOnReactivation];
+  if (![_userDefaults objectForKey:qDefaultOpenUntitledWinModeOnReactivation]) {
+    [_userDefaults setBool:YES forKey:qDefaultOpenUntitledWinModeOnReactivation];
   }
 }
 

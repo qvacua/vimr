@@ -102,16 +102,16 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 
 #pragma mark VRUserDefaultsObserver
 - (void)registerUserDefaultsObservation {
-  [_userDefaults addObserver:self forKeyPath:qDefaultHideWildignoreInFileBrowser options:NSKeyValueObservingOptionNew context:NULL];
+  [_userDefaults addObserver:self forKeyPath:qDefaultFileBrowserHideWildignore options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)removeUserDefaultsObservation {
-  [_userDefaults removeObserver:self forKeyPath:qDefaultHideWildignoreInFileBrowser];
+  [_userDefaults removeObserver:self forKeyPath:qDefaultFileBrowserHideWildignore];
 }
 
 #pragma mark KVO
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-  if ([keyPath isEqualToString:qDefaultHideWildignoreInFileBrowser]) {
+  if ([keyPath isEqualToString:qDefaultFileBrowserHideWildignore]) {
     [self reload];
   }
 }
@@ -399,7 +399,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 - (void)fileOutlineViewDoubleClicked:(id)sender {
-  VROpenMode mode = open_mode_from_event([NSApp currentEvent], [_userDefaults stringForKey:qDefaultDefaultOpeningBehavior]);
+  VROpenMode mode = open_mode_from_event([NSApp currentEvent], [_userDefaults stringForKey:qDefaultFileBrowserOpeningBehavior]);
   [self openInMode:mode];
 }
 
@@ -481,7 +481,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   }
 
   NSArray *filteredChildren = children;
-  if ([_userDefaults boolForKey:qDefaultHideWildignoreInFileBrowser]) {
+  if ([_userDefaults boolForKey:qDefaultFileBrowserHideWildignore]) {
     filteredChildren = [self filterWildIngoreNodes:filteredChildren forParentPath:[parentNode.item url].path];
   }
   filteredChildren = [self filterHiddenNodesIfNec:filteredChildren];

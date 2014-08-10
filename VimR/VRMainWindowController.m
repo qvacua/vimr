@@ -725,9 +725,9 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   view.vimView = _vimView;
 
   view.showStatusBar = [_workspace.userDefaults boolForKey:qDefaultShowStatusBar];
-  view.showFoldersFirst = [_workspace.userDefaults boolForKey:qDefaultShowFoldersFirst];
-  view.showHiddenFiles = [_workspace.userDefaults boolForKey:qDefaultShowHiddenInFileBrowser];
-  view.syncWorkspaceWithPwd = [_workspace.userDefaults boolForKey:qDefaultSyncWorkingDirectoryWithVimPwd];
+  view.showFoldersFirst = [_workspace.userDefaults boolForKey:qDefaultFileBrowserShowFoldersFirst];
+  view.showHiddenFiles = [_workspace.userDefaults boolForKey:qDefaultFileBrowserShowHidden];
+  view.syncWorkspaceWithPwd = [_workspace.userDefaults boolForKey:qDefaultFileBrowserSyncWorkingDirWithVimPwd];
   view.fileBrowserOnRight = [_workspace.userDefaults boolForKey:qDefaultShowSideBarOnRight];
 
   return view;

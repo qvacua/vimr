@@ -14,15 +14,16 @@ extern NSString *const qDefaultShowStatusBar;
 extern NSString *const qDefaultShowSideBar;
 extern NSString *const qDefaultShowSideBarOnRight;
 
-extern NSString *const qDefaultOpenUntitledWindowModeOnLaunch;
-extern NSString *const qDefaultOpenUntitledWindowModeOnReactivation;
+extern NSString *const qDefaultOpenUntitledWinModeOnLaunch;
+extern NSString *const qDefaultOpenUntitledWinModeOnReactivation;
 
-extern NSString *const qDefaultShowFoldersFirst;
-extern NSString *const qDefaultShowHiddenInFileBrowser;
-extern NSString *const qDefaultSyncWorkingDirectoryWithVimPwd;
-extern NSString *const qDefaultHideWildignoreInFileBrowser;
+extern NSString *const qDefaultFileBrowserShowFoldersFirst;
+extern NSString *const qDefaultFileBrowserShowHidden;
+extern NSString *const qDefaultFileBrowserSyncWorkingDirWithVimPwd;
+extern NSString *const qDefaultFileBrowserHideWildignore;
 
-extern NSString *const qDefaultDefaultOpeningBehavior;
+extern NSString *const qDefaultFileBrowserOpeningBehavior;
+
 extern NSString *const qOpenModeInNewTabValue;
 extern NSString *const qOpenModeInCurrentTabValue;
 extern NSString *const qOpenModeInVerticalSplitValue;
@@ -39,14 +40,10 @@ typedef enum {
   VROpenModeInHorizontalSplit
 } VROpenMode;
 
-typedef enum {
-  VROpenUntitledWindowWhenOnLaunchAndReactivation,
-  VROpenUntitledWindowWhenOnLaunch,
-  VROpenUntitledWindowNever,
-} VROpenUntitledWindowMode;
 
 OBJC_EXTERN inline VROpenMode open_mode_from_modifier(NSUInteger modifierFlags, VROpenMode defaultMode);
 OBJC_EXTERN inline VROpenMode open_mode_from_event(NSEvent *curEvent, NSString *defaultModeString);
+
 
 /**
 * string of VROpenMode -> index (enum)
