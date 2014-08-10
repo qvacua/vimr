@@ -199,6 +199,7 @@ static const int qMinimumFileBrowserWidth = 100;
   _cachedFileBrowserView.fileItemManager = workspace.fileItemManager;
   _cachedFileBrowserView.userDefaults = workspace.userDefaults;
   _cachedFileBrowserView.notificationCenter = workspace.notificationCenter;
+  _cachedFileBrowserView.fileManager = workspace.fileManager;
   _cachedFileBrowserView.workspaceView = self;
 
   [_cachedFileBrowserView setUp];

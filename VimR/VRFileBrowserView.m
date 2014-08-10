@@ -23,20 +23,14 @@
 #define CONSTRAIN(fmt) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]];
 
 
-static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
-    ^NSComparisonResult(NSNumber *node1IsDir, NSNumber *node2IsDir) {
-      if (node1IsDir.boolValue) {
-        return NSOrderedAscending;
-      } else {
-        return NSOrderedDescending;
-      }
-    };
+static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSComparisonResult(NSNumber *node1IsDir, NSNumber *node2IsDir) {
+  if (node1IsDir.boolValue) {
+    return NSOrderedAscending;
+  } else {
+    return NSOrderedDescending;
+  }
+};
 
-@interface VRFileBrowserView ()
-
-@property (nonatomic, readonly) MMVimController *vimController;
-
-@end
 
 @implementation VRFileBrowserView {
   NSOperationQueue *_invalidateCacheQueue;
@@ -137,9 +131,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   return item.dir;
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn
-           byItem:(VRNode *)item {
-
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(VRNode *)item {
   return item.name;
 }
 
@@ -177,7 +169,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 #pragma mark VRFileBrowserActionDelegate
-
 - (void)actionOpenDefault {
   [self fileOutlineViewDoubleClicked:self];
 }
@@ -199,7 +190,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 }
 
 - (void)search:(NSString *)string increment:(int)increment {
-  NSUInteger selectedIndex = [_fileOutlineView.selectedRowIndexes firstIndex];
+  NSUInteger selectedIndex = _fileOutlineView.selectedRowIndexes.firstIndex;
   for (NSUInteger i = 0; i < _fileOutlineView.numberOfRows; i++) {
     NSUInteger row = (i * increment + selectedIndex + increment) % _fileOutlineView.numberOfRows;
     VRNode *node = [_fileOutlineView itemAtRow:row];
@@ -211,11 +202,12 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
       } else {
         [_fileOutlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
         [_fileOutlineView scrollRowToVisible:row];
-        [self updateStatusMessage:[NSString stringWithFormat:@"/%@", string]];
+        [self updateStatusMessage:SF(@"/%@", string)];
         return;
       }
     }
   }
+  
   [self updateStatusMessage:@"Nothing found"];
   [self actionIgnore];
 }
@@ -249,14 +241,14 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   path = VRResolvePathRelativeToPath(path, relativeToPath, NO);
 
   if (createDirectory) {
-    BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:&error];
+    BOOL success = [_fileManager createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:&error];
     if (!success) {
       [self updateStatusMessage:error.localizedFailureReason];
     }
   } else {
-    BOOL success = [[NSFileManager defaultManager] createFileAtPath:path contents:[NSData data] attributes:nil];
+    BOOL success = [_fileManager createFileAtPath:path contents:[NSData data] attributes:nil];
     if (!success) {
-      [self updateStatusMessage:[NSString stringWithFormat:@"%s", strerror(errno)]];
+      [self updateStatusMessage:SF(@"%s", strerror(errno))];
     }
   }
 
@@ -267,11 +259,11 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 
 - (BOOL)removePathIfNecessary:(NSString *)path error:(NSError **)error {
   BOOL pathExists, pathIsDirectory;
-  pathExists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&pathIsDirectory];
+  pathExists = [_fileManager fileExistsAtPath:path isDirectory:&pathIsDirectory];
 
   if (pathExists && !pathIsDirectory) {
     // Given the way path is resolved, it should never be a directory
-    return [[NSFileManager defaultManager] removeItemAtPath:path error:error];
+    return [_fileManager removeItemAtPath:path error:error];
   }
 
   return YES;
@@ -286,7 +278,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 
   success = [self removePathIfNecessary:path error:&error];
   if (success) {
-    success = [[NSFileManager defaultManager] moveItemAtPath:node.url.path toPath:path error:&error];
+    success = [_fileManager moveItemAtPath:node.url.path toPath:path error:&error];
   }
   if (!success) {
     [self updateStatusMessage:error.localizedFailureReason];
@@ -299,14 +291,14 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   BOOL success = YES;
 
   if (node.isDir) {
-    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:node.url.path error:&error];
+    NSArray *contents = [_fileManager contentsOfDirectoryAtPath:node.url.path error:&error];
     if (contents.count) {
       [self updateStatusMessage:@"Directory is not empty. Cannot delete."];
     } else {
-      success = [[NSFileManager defaultManager] removeItemAtURL:node.url error:&error];
+      success = [_fileManager removeItemAtURL:node.url error:&error];
     }
   } else {
-    success = [[NSFileManager defaultManager] removeItemAtURL:node.url error:&error];
+    success = [_fileManager removeItemAtURL:node.url error:&error];
   }
 
   if (!success) {
@@ -323,7 +315,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
 
   success = [self removePathIfNecessary:path error:&error];
   if (success) {
-    success = [[NSFileManager defaultManager] copyItemAtPath:node.url.path toPath:path error:&error];
+    success = [_fileManager copyItemAtPath:node.url.path toPath:path error:&error];
   }
   if (!success) {
     [self updateStatusMessage:error.localizedFailureReason];
@@ -334,7 +326,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) =
   // Check clobber uses move and copy semantics, i.e. it treats directories as siblings.
   VRNode *node = [_fileOutlineView selectedItem];
   path = VRResolvePathRelativeToPath(path, node.url.path, node.isDir);
-  return [[NSFileManager defaultManager] fileExistsAtPath:path];
+  return [_fileManager fileExistsAtPath:path];
 }
 
 - (void)actionIgnore {

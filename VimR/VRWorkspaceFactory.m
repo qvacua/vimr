@@ -17,9 +17,10 @@
 
 @implementation VRWorkspaceFactory
 
-@autowire(workspaceController);
-@autowire(fileItemManager);
-@autowire(userDefaults);
+@autowire(fileManager)
+@autowire(workspaceController)
+@autowire(fileItemManager)
+@autowire(userDefaults)
 @autowire(notificationCenter)
 @autowire(openQuicklyWindowController)
 @autowire(mainWindowControllerFactory)
@@ -33,6 +34,7 @@
   workspace.notificationCenter = _notificationCenter;
   workspace.workspaceController = _workspaceController;
   workspace.mainWindowControllerFactory = _mainWindowControllerFactory;
+  workspace.fileManager = _fileManager;
 
   workspace.workingDirectory = workingDir;
 

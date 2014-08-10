@@ -20,6 +20,7 @@
 
 @interface VRWorkspaceFactory : NSObject <TBBean>
 
+@property (nonatomic, weak) NSFileManager *fileManager;
 @property (nonatomic, weak) VRWorkspaceController *workspaceController;
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;
 @property (nonatomic, weak) NSUserDefaults *userDefaults;
