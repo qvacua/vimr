@@ -13,17 +13,29 @@
 #import "VRMainWindowController.h"
 #import "VRPluginManager.h"
 #import "VRPreviewWindowController.h"
+#import "VRFileItemManager.h"
+#import "VROpenQuicklyWindowController.h"
+#import "VRWorkspaceViewFactory.h"
 
 
 @implementation VRMainWindowControllerFactory
 
+@autowire(userDefaults)
+@autowire(fileItemManager)
+@autowire(openQuicklyWindowController)
 @autowire(pluginManager)
 @autowire(notificationCenter)
+@autowire(workspaceViewFactory)
 
 - (VRMainWindowController *)newMainWindowControllerWithContentRect:(CGRect)contentRect workspace:(VRWorkspace *)workspace vimController:(MMVimController *)vimController {
   VRMainWindowController *mainWinController = [[VRMainWindowController alloc] initWithContentRect:contentRect];
   mainWinController.workspace = workspace;
   mainWinController.vimController = vimController;
+  mainWinController.fileItemManager = _fileItemManager;
+  mainWinController.openQuicklyWindowController = _openQuicklyWindowController;
+  mainWinController.userDefaults = _userDefaults;
+  mainWinController.workspaceViewFactory = _workspaceViewFactory;
+
   mainWinController.vimView = vimController.vimView;
 
   vimController.delegate = (id <MMVimControllerDelegate>) mainWinController;

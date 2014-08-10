@@ -20,11 +20,7 @@
 
 @interface VRWorkspaceFactory : NSObject <TBBean>
 
-@property (nonatomic, weak) VRWorkspaceController *workspaceController;
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;
-@property (nonatomic, weak) NSUserDefaults *userDefaults;
-@property (nonatomic, weak) NSNotificationCenter *notificationCenter;
-@property (nonatomic, weak) VROpenQuicklyWindowController *openQuicklyWindowController;
 @property (nonatomic, weak) VRMainWindowControllerFactory *mainWindowControllerFactory;
 
 - (VRWorkspace *)newWorkspaceWithWorkingDir:(NSURL *)workingDir;

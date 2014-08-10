@@ -13,7 +13,6 @@
 #import "VRMainWindowController.h"
 #import "VRFileItemManager.h"
 #import "VRUtils.h"
-#import "VRDefaultLogSetting.h"
 #import "VRMainWindow.h"
 #import "VRMainWindowControllerFactory.h"
 
@@ -53,13 +52,13 @@ static CGPoint qDefaultOrigin = {242, 364};
 }
 
 - (void)setUpWithVimController:(MMVimController *)vimController {
+  [_fileItemManager registerUrl:_workingDirectory];
+
   _vimController = vimController;
 
   CGPoint origin= [self cascadedWindowOrigin];
   CGRect contentRect = rect_with_origin(origin, 480, 360);
-  _mainWindowController = [_mainWindowControllerFactory newMainWindowControllerWithContentRect:contentRect
-                                                                                     workspace:self
-                                                                                 vimController:vimController];
+  _mainWindowController = [_mainWindowControllerFactory newMainWindowControllerWithContentRect:contentRect workspace:self vimController:vimController];
 
   vimController.delegate = _mainWindowController;
 
@@ -68,13 +67,14 @@ static CGPoint qDefaultOrigin = {242, 364};
 
 - (void)setUpInitialBuffers {
   _openedBufferUrls = [self bufferUrlsFromVimBuffers:_vimController.buffers];
-  DDLogDebug(@"opened buffers: %@", _openedBufferUrls);
 }
 
 - (void)updateBuffers {
-  NSArray *vimBuffers = _vimController.buffers;
-  NSMutableArray *bufferUrls = [self bufferUrlsFromVimBuffers:vimBuffers];
-  if ([bufferUrls isEqualToArray:_openedBufferUrls]) {
+  NSMutableArray *bufferUrls = [self bufferUrlsFromVimBuffers:_vimController.buffers];
+
+  NSMutableSet *bufferUrlsSet = [NSMutableSet setWithArray:bufferUrls];
+  [bufferUrlsSet minusSet:[NSSet setWithArray:_openedBufferUrls]];
+  if (bufferUrlsSet.count == 0) {
     return;
   }
 
@@ -85,18 +85,6 @@ static CGPoint qDefaultOrigin = {242, 364};
   }
 
   [self updateWorkingDirectory:commonParent];
-  DDLogDebug(@"Registered new workspace: %@", _workingDirectory);
-}
-
-- (NSMutableArray *)bufferUrlsFromVimBuffers:(NSArray *)vimBuffers {
-  NSMutableArray *bufferUrls = [[NSMutableArray alloc] initWithCapacity:vimBuffers.count];
-  for (MMBuffer *buffer in vimBuffers) {
-    if (buffer.fileName) {
-      [bufferUrls addObject:[NSURL fileURLWithPath:buffer.fileName]];
-    }
-  }
-
-  return bufferUrls;
 }
 
 - (void)cleanUpAndClose {
@@ -114,6 +102,7 @@ static CGPoint qDefaultOrigin = {242, 364};
   return self;
 }
 
+#pragma mark Private
 - (CGPoint)cascadedWindowOrigin {
   CGPoint origin = qDefaultOrigin;
 
@@ -130,6 +119,17 @@ static CGPoint qDefaultOrigin = {242, 364};
   }
 
   return origin;
+}
+
+- (NSMutableArray *)bufferUrlsFromVimBuffers:(NSArray *)vimBuffers {
+  NSMutableArray *bufferUrls = [[NSMutableArray alloc] initWithCapacity:vimBuffers.count];
+  for (MMBuffer *buffer in vimBuffers) {
+    if (buffer.fileName) {
+      [bufferUrls addObject:[NSURL fileURLWithPath:buffer.fileName]];
+    }
+  }
+
+  return bufferUrls;
 }
 
 @end

@@ -269,7 +269,7 @@ int qOpenQuicklyWindowWidth = 400;
     VRScoredPath *scoredPath = _filteredFileItems[(NSUInteger) selectedRow];
     VROpenMode mode = open_mode_from_event(
         [NSApp currentEvent],
-        [_userDefaults stringForKey:qDefaultDefaultOpeningBehavior]
+        [_userDefaults stringForKey:qDefaultFileBrowserOpeningBehavior]
     );
 
     [_targetWindowController openFileWithUrls:scoredPath.url openMode:mode];

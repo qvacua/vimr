@@ -54,15 +54,15 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
   // file browser behavior
   NSTextField *fbbTitle = [self newTextLabelWithString:@"File Browser Behavior:" alignment:NSRightTextAlignment];
 
-  NSButton *showFoldersFirstButton = [self checkButtonWithTitle:@"Show folders first" defaultKey:qDefaultShowFoldersFirst];
-  NSButton *syncWorkingDirWithVimPwdButton = [self checkButtonWithTitle:@"Keep the working directory in sync with Vim's 'pwd'" defaultKey:qDefaultSyncWorkingDirectoryWithVimPwd];
-  NSButton *showHiddenFilesButton = [self checkButtonWithTitle:@"Show hidden files" defaultKey:qDefaultShowHiddenInFileBrowser];
+  NSButton *showFoldersFirstButton = [self checkButtonWithTitle:@"Show folders first" defaultKey:qDefaultFileBrowserShowFoldersFirst];
+  NSButton *syncWorkingDirWithVimPwdButton = [self checkButtonWithTitle:@"Keep the working directory in sync with Vim's 'pwd'" defaultKey:qDefaultFileBrowserSyncWorkingDirWithVimPwd];
+  NSButton *showHiddenFilesButton = [self checkButtonWithTitle:@"Show hidden files" defaultKey:qDefaultFileBrowserShowHidden];
 
   NSTextField *fbbDescription = [self newDescriptionLabelWithString:@"These are default values, ie new windows will start with these values set:\n– The changes will only affect new windows.\n– You can override these settings in each window."
                                                           alignment:NSLeftTextAlignment];
 
   NSTextField *filterTitle = [self newTextLabelWithString:@"Filtering" alignment:NSRightTextAlignment];
-  NSButton *filterButton = [self checkButtonWithTitle:@"Hide files matching 'wildignore' of Vim" defaultKey:qDefaultHideWildignoreInFileBrowser];
+  NSButton *filterButton = [self checkButtonWithTitle:@"Hide files matching 'wildignore' of Vim" defaultKey:qDefaultFileBrowserHideWildignore];
   NSTextField *filterDescription = [self newDescriptionLabelWithString:@"Example: 'set wildignore=*.o,*.obj,.DS_Store' in ~/.vimrc" alignment:NSLeftTextAlignment];
 
   // default opening behavior
@@ -76,7 +76,7 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
   [_defaultOpenModeButton.menu addItemWithTitle:@"Open in a vertical split" action:NULL keyEquivalent:@""];
   [_defaultOpenModeButton.menu addItemWithTitle:@"Open in a horizontal split" action:NULL keyEquivalent:@""];
   [_defaultOpenModeButton bind:NSSelectedIndexBinding toObject:self.userDefaultsController
-                   withKeyPath:SF(@"values.%@", qDefaultDefaultOpeningBehavior)
+                   withKeyPath:SF(@"values.%@", qDefaultFileBrowserOpeningBehavior)
                        options:@{NSValueTransformerBindingOption : _openModeTransformer}];
   [self addSubview:_defaultOpenModeButton];
 

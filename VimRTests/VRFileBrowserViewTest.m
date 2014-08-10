@@ -44,8 +44,8 @@
   [fileItemManager registerUrl:level1];
 
   userDefaults = mock([NSUserDefaults class]);
-  [given([userDefaults boolForKey:qDefaultShowHiddenInFileBrowser]) willReturnBool:NO];
-  [given([userDefaults boolForKey:qDefaultHideWildignoreInFileBrowser]) willReturnBool:YES];
+  [given([userDefaults boolForKey:qDefaultFileBrowserShowHidden]) willReturnBool:NO];
+  [given([userDefaults boolForKey:qDefaultFileBrowserHideWildignore]) willReturnBool:YES];
 
   workspaceView = mock([VRWorkspaceView class]);
   
@@ -131,7 +131,7 @@
 }
 
 - (void)testOutlineViewDataSourceMethodsWithoutWildIgnoreItems {
-  [given([userDefaults boolForKey:qDefaultHideWildignoreInFileBrowser]) willReturnBool:NO];
+  [given([userDefaults boolForKey:qDefaultFileBrowserHideWildignore]) willReturnBool:NO];
 
   [fileBrowserView reload];
   assertThat(@([fileBrowserView outlineView:nil numberOfChildrenOfItem:nil]), is(@6));

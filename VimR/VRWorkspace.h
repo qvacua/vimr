@@ -20,13 +20,9 @@
 
 @interface VRWorkspace : NSObject
 
-@property (nonatomic, weak) VRWorkspaceController *workspaceController;
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;
-@property (nonatomic, weak) NSUserDefaults *userDefaults;
-@property (nonatomic, weak) NSNotificationCenter *notificationCenter;
 @property (nonatomic, weak) VRMainWindowControllerFactory *mainWindowControllerFactory;
 
-@property (nonatomic) VROpenQuicklyWindowController *openQuicklyWindowController;
 @property (nonatomic) VRMainWindowController *mainWindowController;
 @property (nonatomic) NSURL *workingDirectory;
 

@@ -74,11 +74,7 @@ NSString *const qUrlNoParentExceptionName = @"qNoParentException";
     return NO;
   }
 
-  if ([[targetPath substringToIndex:pathLength] isEqualToString:path]) {
-    return YES;
-  }
-  
-  return NO;
+  return [[targetPath substringToIndex:pathLength] isEqualToString:path];
 }
 
 @end

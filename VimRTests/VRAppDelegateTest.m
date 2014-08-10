@@ -88,8 +88,8 @@ static NSOpenPanel *openPanel;
 }
 
 - (void)testNewDocumentOpenUntitledOnLaunch {
-  [given([userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnLaunch]) willReturnBool:YES];
-  [given([userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnReactivation]) willReturnBool:NO];
+  [given([userDefaults boolForKey:qDefaultOpenUntitledWinModeOnLaunch]) willReturnBool:YES];
+  [given([userDefaults boolForKey:qDefaultOpenUntitledWinModeOnReactivation]) willReturnBool:NO];
 
   [appDelegate applicationWillFinishLaunching:nil];
   [appDelegate applicationOpenUntitledFile:application];
@@ -98,8 +98,8 @@ static NSOpenPanel *openPanel;
 }
 
 - (void)testNewDocumentDoNotOpenUntitledOnLaunch {
-  [given([userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnLaunch]) willReturnBool:NO];
-  [given([userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnReactivation]) willReturnBool:YES];
+  [given([userDefaults boolForKey:qDefaultOpenUntitledWinModeOnLaunch]) willReturnBool:NO];
+  [given([userDefaults boolForKey:qDefaultOpenUntitledWinModeOnReactivation]) willReturnBool:YES];
 
   [appDelegate applicationWillFinishLaunching:nil];
   [appDelegate applicationOpenUntitledFile:application];
@@ -108,8 +108,8 @@ static NSOpenPanel *openPanel;
 }
 
 - (void)testNewDocumentDoNotOpenUntitledOnReactivation {
-  [given([userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnLaunch]) willReturnBool:YES];
-  [given([userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnReactivation]) willReturnBool:NO];
+  [given([userDefaults boolForKey:qDefaultOpenUntitledWinModeOnLaunch]) willReturnBool:YES];
+  [given([userDefaults boolForKey:qDefaultOpenUntitledWinModeOnReactivation]) willReturnBool:NO];
 
   [appDelegate applicationWillFinishLaunching:nil];
   [appDelegate applicationOpenUntitledFile:application];
@@ -121,8 +121,8 @@ static NSOpenPanel *openPanel;
 }
 
 - (void)testNewDocumentOpenUntitledOnReactivation {
-  [given([userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnLaunch]) willReturnBool:YES];
-  [given([userDefaults boolForKey:qDefaultOpenUntitledWindowModeOnReactivation]) willReturnBool:YES];
+  [given([userDefaults boolForKey:qDefaultOpenUntitledWinModeOnLaunch]) willReturnBool:YES];
+  [given([userDefaults boolForKey:qDefaultOpenUntitledWinModeOnReactivation]) willReturnBool:YES];
 
   [appDelegate applicationWillFinishLaunching:nil];
   [appDelegate applicationOpenUntitledFile:application];

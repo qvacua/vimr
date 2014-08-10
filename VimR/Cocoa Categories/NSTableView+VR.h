@@ -13,4 +13,5 @@
 @interface NSTableView (VR)
 
 - (void)moveSelectionByDelta:(NSInteger)delta;
+
 @end

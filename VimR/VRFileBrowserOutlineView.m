@@ -309,7 +309,7 @@ static inline BOOL IsPrintableAscii(unichar key) {
 }
 
 - (void)endLineEditing {
-  VRFileBrowserActionMode _newMode = VRFileBrowserActionModeNormal;
+  VRFileBrowserActionMode newMode = VRFileBrowserActionModeNormal;
   [self.actionDelegate updateStatusMessage:@""];
 
   switch (_actionMode) {
@@ -324,7 +324,7 @@ static inline BOOL IsPrintableAscii(unichar key) {
     case VRFileBrowserActionModeMenuCopy:
       if ([self.actionDelegate actionCheckClobberForPath:_lineEditingString]) {
         [self.actionDelegate updateStatusMessage:@"Overwrite existing file? (y)es (n)o"];
-        _newMode = VRFileBrowserActionModeConfirmation;
+        newMode = VRFileBrowserActionModeConfirmation;
       } else {
         _actionMode == VRFileBrowserActionModeMenuMove ?
             [self.actionDelegate actionMoveToPath:_lineEditingString] :
@@ -335,7 +335,7 @@ static inline BOOL IsPrintableAscii(unichar key) {
       break;
   }
 
-  _actionMode = _newMode;
+  _actionMode = newMode;
 }
 
 @end
