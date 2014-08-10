@@ -20,7 +20,6 @@ extern NSString *const qUrlNoParentExceptionName;
 - (BOOL)isDirectory;
 
 - (NSString *)parentName;
-
 - (BOOL)isParentToUrl:(NSURL *)url;
 
 @end
