@@ -19,12 +19,9 @@ extern NSString *const qVimArgOpenFilesLayout;
 @class VROpenQuicklyWindowController;
 @class VRWorkspaceFactory;
 
+
 @interface VRWorkspaceController : NSObject <MMVimManagerDelegateProtocol>
 
-@property (nonatomic, weak) VRFileItemManager *fileItemManager;
-@property (nonatomic, weak) VROpenQuicklyWindowController *openQuicklyWindowController;
-@property (nonatomic, weak) NSUserDefaults *userDefaults;
-@property (nonatomic, weak) NSNotificationCenter *notificationCenter;
 @property (nonatomic, weak) MMVimManager *vimManager;
 @property (nonatomic, weak) VRWorkspaceFactory *workspaceFactory;
 
@@ -35,6 +32,7 @@ extern NSString *const qVimArgOpenFilesLayout;
 - (void)openFilesInNewWorkspace:(NSArray *)fileUrls;
 - (void)cleanUp;
 - (BOOL)hasDirtyBuffers;
+- (void)selectBufferWithUrl:(NSURL *)url;
 
 #pragma mark NSObject
 - (id)init;
@@ -44,5 +42,4 @@ extern NSString *const qVimArgOpenFilesLayout;
 - (void)manager:(MMVimManager *)manager vimControllerRemovedWithControllerId:(unsigned int)controllerId pid:(int)pid;
 - (NSMenuItem *)menuItemTemplateForManager:(MMVimManager *)manager;
 
-- (void)selectBufferWithUrl:(NSURL *)url;
 @end

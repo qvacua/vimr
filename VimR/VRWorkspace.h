@@ -26,8 +26,8 @@
 @property (nonatomic, weak) NSUserDefaults *userDefaults;
 @property (nonatomic, weak) NSNotificationCenter *notificationCenter;
 @property (nonatomic, weak) VRMainWindowControllerFactory *mainWindowControllerFactory;
+@property (nonatomic, weak) VROpenQuicklyWindowController *openQuicklyWindowController;
 
-@property (nonatomic) VROpenQuicklyWindowController *openQuicklyWindowController;
 @property (nonatomic) VRMainWindowController *mainWindowController;
 @property (nonatomic) NSURL *workingDirectory;
 

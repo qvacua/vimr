@@ -53,6 +53,8 @@ static CGPoint qDefaultOrigin = {242, 364};
 }
 
 - (void)setUpWithVimController:(MMVimController *)vimController {
+  [_fileItemManager registerUrl:_workingDirectory];
+
   _vimController = vimController;
 
   CGPoint origin= [self cascadedWindowOrigin];

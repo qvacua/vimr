@@ -12,7 +12,6 @@
 #import "VRWorkspaceController.h"
 #import "VRWorkspace.h"
 #import "VRUtils.h"
-#import "VRFileItemManager.h"
 #import "VRWorkspaceFactory.h"
 
 
@@ -25,11 +24,7 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
   NSMutableDictionary *_pid2Workspace;
 }
 
-@autowire(fileItemManager)
-@autowire(openQuicklyWindowController)
 @autowire(vimManager)
-@autowire(notificationCenter)
-@autowire(userDefaults)
 @autowire(workspaceFactory)
 
 #pragma mark Properties
@@ -122,7 +117,6 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 
   VRWorkspace *workspace = [_workspaceFactory newWorkspaceWithWorkingDir:workingDir];
   [_mutableWorkspaces addObject:workspace];
-  [_fileItemManager registerUrl:workingDir];
 
   _pid2Workspace[@(pid)] = workspace;
 }
