@@ -2,25 +2,23 @@
      version="2.0">
     <channel>
         <title>VimR Appcast</title>
-        <link>http://qvacua.com</link>
+        <link>http://vimr.org</link>
         <description>Most recent changes with links to updates for VimR.</description>
         <language>en</language>
         <item>
-            <title>Version 0.1.2</title>
+            <title>Version 0.1.3</title>
             <description>
-                Restructured Preferences window (ready to scale!),
-                Added an option for untitled window behavior,
-                Added an option to turn on filtering in the file browser based on Vim's wildignore
+                Bugfix: some files with non-ASCII file names does not show up in the file browser
             </description>
             <sparkle:releaseNotesLink>
-                http://qvacua.github.io/vimr/release-notes.html
+                http://vimr.org/release-notes.html
             </sparkle:releaseNotesLink>
-            <pubDate>2014-07-30 20:40:11 +0000</pubDate>
-            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.1.2-14/VimR-0.1.2.tar.bz2"
-                       sparkle:version="14"
-                       sparkle:shortVersionString="0.1.2"
-                       sparkle:dsaSignature="MC0CFQCESuCtlWXFW5tOwM3ElTl0g2qg2wIUerpPIdSpefrg137wlpcV+x0rXVY="
-                       length="8486912"
+            <pubDate>2014-08-11 20:40:11 +0000</pubDate>
+            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.1.3-15/VimR-0.1.3.tar.bz2"
+                       sparkle:version="15"
+                       sparkle:shortVersionString="0.1.3"
+                       sparkle:dsaSignature="MC0CFCwokcwX1EhBAj5DTfPqvuZk1T4LAhUAiQ2hra3pAbwY/Wm4MnHSixGEu5s="
+                       length="8482816"
                        type="application/octet-stream"/>
         </item>
     </channel>
