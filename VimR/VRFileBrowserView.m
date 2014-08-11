@@ -211,7 +211,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSCom
       }
     }
   }
-  
+
   [self updateStatusMessage:@"Nothing found"];
   [self actionIgnore];
 }
@@ -505,12 +505,12 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSCom
   NSSet *paths = [self.workspaceView nonFilteredWildIgnorePathsForParentPath:parentPath];
 
   NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:paths.count];
-
   for (VRNode *node in children) {
     if ([paths containsObject:node.url.path]) {
       [result addObject:node];
     }
   }
+
   return result;
 }
 
