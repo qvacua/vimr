@@ -37,6 +37,8 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSCom
 
   VRNode *_rootNode;
   NSMutableSet *_expandedUrls;
+
+  NSSortDescriptor *_folderDescriptor;
 }
 
 #pragma mark Public
@@ -54,6 +56,8 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSCom
   _invalidateCacheQueue.maxConcurrentOperationCount = 1;
 
   _expandedUrls = [[NSMutableSet alloc] initWithCapacity:40];
+
+  _folderDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dir" ascending:YES comparator:qNodeDirComparator];
 
   return self;
 }
@@ -479,9 +483,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSCom
   filteredChildren = [self filterHiddenNodesIfNec:filteredChildren];
 
   if (_workspaceView.showFoldersFirst) {
-    NSSortDescriptor *folderDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dir" ascending:YES comparator:qNodeDirComparator];
-
-    parentNode.children = [filteredChildren sortedArrayUsingDescriptors:@[folderDescriptor]];
+    parentNode.children = [filteredChildren sortedArrayUsingDescriptors:@[_folderDescriptor]];
   } else {
     parentNode.children = filteredChildren;
   }
