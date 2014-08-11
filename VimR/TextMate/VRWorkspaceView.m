@@ -210,12 +210,18 @@ static const int qMinimumFileBrowserWidth = 100;
 }
 
 - (NSSet *)nonFilteredWildIgnorePathsForParentPath:(NSString *)path {
-  NSString *pathExpression = [NSString stringWithFormat:@"globpath(\"%@\", \"*\")", path];
-  NSString *dotPathExpression = [NSString stringWithFormat:@"globpath(\"%@\", \".*\")", path];
+  NSString *pathExpression = SF(@"globpath(\"%@\", \"*\")", path);
+  NSString *dotPathExpression = SF(@"globpath(\"%@\", \".*\")", path);
 
+  // 공부 = ACF5 BD80 in composed Unicode, what Vim returns
+  // 공부 = 1100 1169 11BC 1107 116E in decomposed Unicode, what usual NSString use
   NSMutableSet *paths = [NSMutableSet set];
-  [paths addObjectsFromArray:[[self.vimView.vimController evaluateVimExpression:pathExpression] componentsSeparatedByString:@"\n"]];
-  [paths addObjectsFromArray:[[self.vimView.vimController evaluateVimExpression:dotPathExpression] componentsSeparatedByString:@"\n"]];
+  [paths addObjectsFromArray:
+      [[_vimView.vimController evaluateVimExpression:pathExpression].decomposedStringWithCanonicalMapping componentsSeparatedByString:@"\n"]
+  ];
+  [paths addObjectsFromArray:
+      [[_vimView.vimController evaluateVimExpression:dotPathExpression].decomposedStringWithCanonicalMapping componentsSeparatedByString:@"\n"]
+  ];
 
   return paths;
 }
