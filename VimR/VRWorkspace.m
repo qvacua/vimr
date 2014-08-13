@@ -61,8 +61,6 @@ static CGPoint qDefaultOrigin = {242, 364};
   _mainWindowController = [_mainWindowControllerFactory newMainWindowControllerWithContentRect:contentRect workspace:self vimController:vimController];
 
   vimController.delegate = _mainWindowController;
-
-  [_mainWindowController showWindow:self];
 }
 
 - (void)setUpInitialBuffers {

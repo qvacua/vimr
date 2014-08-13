@@ -48,12 +48,15 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   BOOL _windowOriginShouldMoveToKeepOnScreen;
 
   VRWorkspaceView *_workspaceView;
+  BOOL _loadDone;
 }
 
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect {
   self = [super initWithWindow:[self newMainWindowForContentRect:contentRect]];
   RETURN_NIL_WHEN_NOT_SELF
+
+  _loadDone = NO;
 
   return self;
 }
@@ -586,6 +589,12 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   [self resizeWindowToFitContentSize:constrainedWinContentSize];
 
   _windowOriginShouldMoveToKeepOnScreen = NO;
+
+  // FIXME: this is a quick-and-dirty hack to avoid the empty window when opening a new main window.
+  if (!_loadDone) {
+    [self showWindow:self];
+    _loadDone = YES;
+  }
 }
 
 - (void)controller:(MMVimController *)controller removeToolbarItemWithIdentifier:(NSString *)identifier {
