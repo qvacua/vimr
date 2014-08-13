@@ -96,7 +96,6 @@
   [[verify(mainWindowControllerFactory) withMatcher:anything() forArgument:0]
       newMainWindowControllerWithContentRect:CGRectZero workspace:workspace vimController:vimController];
   [verify(vimController) setDelegate:mainWindowController];
-  [verify(mainWindowController) showWindow:workspace];
 }
 
 - (void)testSetUpInitialBuffers {
