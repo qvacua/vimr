@@ -31,6 +31,7 @@ const int qMainWindowBorderThickness = 22;
 
 
 static NSString *const qVimRAutoGroupName = @"VimR";
+static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame";
 
 
 #define CONSTRAINT(fmt) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]]
@@ -240,6 +241,7 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 
 #ifdef DEBUG
 - (IBAction)debug1Action:(id)sender {
+  DDLogError(@"current: %@", vrect(self.window.frame));
   DDLogDebug(@"tabs: %@", _vimController.tabs);
   DDLogDebug(@"buffers: %@", _vimController.buffers);
 //  NSMenu *menu = _vimController.mainMenu;
@@ -649,7 +651,10 @@ static NSString *const qVimRAutoGroupName = @"VimR";
 * Resize code
 */
 - (void)windowDidResize:(id)sender {
-  // noop
+  if (_loadDone) {
+    [_userDefaults setObject:NSStringFromRect(self.window.frame) forKey:qMainWindowFrameAutosaveName];
+    DDLogError(@"Written %@", vrect(self.window.frame));
+  }
 }
 
 /**
@@ -902,6 +907,7 @@ static NSString *const qVimRAutoGroupName = @"VimR";
     targetWinFrameRect = [self winFrameRectToKeepOnScreenForWinFrameRect:targetWinFrameRect];
   }
 
+  DDLogError(@"Resizing window to %@", vrect(targetWinFrameRect));
   [window setFrame:targetWinFrameRect display:YES];
 
   CGPoint oldTopLeft = CGPointMake(curWinFrameRect.origin.x, NSMaxY(curWinFrameRect));
