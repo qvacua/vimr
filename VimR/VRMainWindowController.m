@@ -31,7 +31,7 @@ const int qMainWindowBorderThickness = 22;
 
 
 static NSString *const qVimRAutoGroupName = @"VimR";
-static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame";
+static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosave";
 
 
 #define CONSTRAINT(fmt) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]]
