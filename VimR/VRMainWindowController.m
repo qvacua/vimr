@@ -785,6 +785,7 @@ static NSString *const qVimRAutoGroupName = @"VimR";
   window.hasShadow = YES;
   window.title = @"VimR";
   window.opaque = NO;
+  window.animationBehavior = NSWindowAnimationBehaviorDocumentWindow;
 
   [window setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
   [window setContentBorderThickness:qMainWindowBorderThickness forEdge:NSMinYEdge];
