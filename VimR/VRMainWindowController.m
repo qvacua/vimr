@@ -241,7 +241,7 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame";
 
 #ifdef DEBUG
 - (IBAction)debug1Action:(id)sender {
-  DDLogError(@"current: %@", vrect(self.window.frame));
+  DDLogDebug(@"current: %@", vrect(self.window.frame));
   DDLogDebug(@"tabs: %@", _vimController.tabs);
   DDLogDebug(@"buffers: %@", _vimController.buffers);
 //  NSMenu *menu = _vimController.mainMenu;
@@ -594,6 +594,15 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame";
 
   // FIXME: this is a quick-and-dirty hack to avoid the empty window when opening a new main window.
   if (!_loadDone) {
+    CGRect savedRect = NSRectFromString([_userDefaults objectForKey:qMainWindowFrameAutosaveName]);
+    CGRect integralRect = [self desiredWinFrameRectForWinFrameRect:savedRect];
+    CGRect integralRectToKeepOnScreen = [self winFrameRectToKeepOnScreenForWinFrameRect:integralRect];
+
+    CGPoint origin = self.window.frame.origin;
+
+    [self.window setFrame:integralRectToKeepOnScreen display:NO animate:NO];
+    [self.window setFrameOrigin:origin];
+
     [self showWindow:self];
     _loadDone = YES;
   }
@@ -653,7 +662,6 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame";
 - (void)windowDidResize:(id)sender {
   if (_loadDone) {
     [_userDefaults setObject:NSStringFromRect(self.window.frame) forKey:qMainWindowFrameAutosaveName];
-    DDLogError(@"Written %@", vrect(self.window.frame));
   }
 }
 
@@ -907,7 +915,7 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame";
     targetWinFrameRect = [self winFrameRectToKeepOnScreenForWinFrameRect:targetWinFrameRect];
   }
 
-  DDLogError(@"Resizing window to %@", vrect(targetWinFrameRect));
+  DDLogDebug(@"Resizing window to %@", vrect(targetWinFrameRect));
   [window setFrame:targetWinFrameRect display:YES];
 
   CGPoint oldTopLeft = CGPointMake(curWinFrameRect.origin.x, NSMaxY(curWinFrameRect));
