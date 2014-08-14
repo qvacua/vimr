@@ -148,7 +148,7 @@ static const int qMinimumFileBrowserWidth = 100;
   _showHiddenFiles = [_userDefaults boolForKey:qDefaultFileBrowserShowHidden];
   _syncWorkspaceWithPwd = [_userDefaults boolForKey:qDefaultFileBrowserSyncWorkingDirWithVimPwd];
   _fileBrowserOnRight = [_userDefaults boolForKey:qDefaultShowSideBarOnRight];
-  
+
   _pathView = [[NSPathControl alloc] initWithFrame:CGRectZero];
   _pathView.translatesAutoresizingMaskIntoConstraints = NO;
   _pathView.pathStyle = NSPathStyleStandard;
@@ -172,18 +172,13 @@ static const int qMinimumFileBrowserWidth = 100;
   [_settingsButton.cell setUsesItemFromMenu:NO];
   [_settingsButton.cell setMenuItem:item];
   [_settingsButton.menu addItemWithTitle:@"" action:NULL keyEquivalent:@""];
-  [_settingsButton setContentCompressionResistancePriority:NSLayoutPriorityDefaultHigh
-                                            forOrientation:NSLayoutConstraintOrientationHorizontal];
-  [_settingsButton setContentHuggingPriority:NSLayoutPriorityDefaultHigh
-                              forOrientation:NSLayoutConstraintOrientationHorizontal];
+  [_settingsButton setContentCompressionResistancePriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
+  [_settingsButton setContentHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
   [self addSubview:_settingsButton];
 
-  [self addMenuItemToSettingsButtonWithTitle:@"Show Folders First"
-                                      action:@selector(toggleShowFoldersFirst:) flag:_showFoldersFirst];
-  [self addMenuItemToSettingsButtonWithTitle:@"Show hidden files"
-                                      action:@selector(toggleShowHiddenFiles:) flag:_showHiddenFiles];
-  [self addMenuItemToSettingsButtonWithTitle:@"Sync Working Directory with Vim's 'pwd'"
-                                      action:@selector(toggleSyncWorkspaceWithPwd:) flag:_syncWorkspaceWithPwd];
+  [self addMenuItemToSettingsButtonWithTitle:@"Show Folders First" action:@selector(toggleShowFoldersFirst:) flag:_showFoldersFirst];
+  [self addMenuItemToSettingsButtonWithTitle:@"Show hidden files" action:@selector(toggleShowHiddenFiles:) flag:_showHiddenFiles];
+  [self addMenuItemToSettingsButtonWithTitle:@"Sync Working Directory with Vim's 'pwd'" action:@selector(toggleSyncWorkspaceWithPwd:) flag:_syncWorkspaceWithPwd];
 
   _messageView = [[NSTextField alloc] initWithFrame:CGRectZero];
   _messageView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -394,7 +389,7 @@ static const int qMinimumFileBrowserWidth = 100;
 
   BOOL didDrag = NO;
   while (anEvent.type != NSLeftMouseUp) {
-    anEvent = [NSApp nextEventMatchingMask:(NSLeftMouseDraggedMask | NSLeftMouseDown | NSLeftMouseUpMask)
+    anEvent = [NSApp nextEventMatchingMask:NSLeftMouseDraggedMask | NSLeftMouseDown | NSLeftMouseUpMask
                                  untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:YES];
 
     if (anEvent.type != NSLeftMouseDragged) {
@@ -402,9 +397,7 @@ static const int qMinimumFileBrowserWidth = 100;
     }
 
     CGPoint mouseCurrentPos = [self convertPoint:anEvent.locationInWindow fromView:nil];
-    if (!didDrag &&
-        SQ(fabs(mouseDownPos.x - mouseCurrentPos.x)) + SQ(fabs(mouseDownPos.y - mouseCurrentPos.y)) < SQ(1)) {
-
+    if (!didDrag && SQ(fabs(mouseDownPos.x - mouseCurrentPos.x)) + SQ(fabs(mouseDownPos.y - mouseCurrentPos.y)) < SQ(1)) {
       continue; // we didn't even drag a pixel
     }
 
