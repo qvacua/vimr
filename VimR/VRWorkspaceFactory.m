@@ -17,12 +17,14 @@
 
 @autowire(fileItemManager)
 @autowire(mainWindowControllerFactory)
+@autowire(workspaceController)
 
 - (VRWorkspace *)newWorkspaceWithWorkingDir:(NSURL *)workingDir {
   VRWorkspace *workspace = [[VRWorkspace alloc] init];
 
   workspace.fileItemManager = _fileItemManager;
   workspace.mainWindowControllerFactory = _mainWindowControllerFactory;
+  workspace.workspaceController = _workspaceController;
 
   workspace.workingDirectory = workingDir;
 

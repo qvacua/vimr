@@ -73,6 +73,10 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 
   [_previewWindowController close];
 
+  if (self.window.isKeyWindow) {
+    [_userDefaults setObject:NSStringFromRect(self.window.frame) forKey:qMainWindowFrameAutosaveName];
+  }
+
   [self close];
 }
 
@@ -602,7 +606,9 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
     CGPoint origin = self.window.frame.origin;
 
     [self.window setFrame:integralRectToKeepOnScreen display:NO animate:NO];
-    [self.window setFrameOrigin:origin];
+    if (!_workspace.isOnlyWorkspace) {
+      [self.window setFrameOrigin:origin];
+    }
 
     [self showWindow:self];
     _loadDone = YES;

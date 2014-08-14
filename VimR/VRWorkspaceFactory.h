@@ -22,6 +22,7 @@
 
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;
 @property (nonatomic, weak) VRMainWindowControllerFactory *mainWindowControllerFactory;
+@property (nonatomic, weak) VRWorkspaceController *workspaceController;
 
 - (VRWorkspace *)newWorkspaceWithWorkingDir:(NSURL *)workingDir;
 

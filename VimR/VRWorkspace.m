@@ -15,6 +15,7 @@
 #import "VRUtils.h"
 #import "VRMainWindow.h"
 #import "VRMainWindowControllerFactory.h"
+#import "VRWorkspaceController.h"
 
 
 static CGPoint qDefaultOrigin = {242, 364};
@@ -26,6 +27,10 @@ static CGPoint qDefaultOrigin = {242, 364};
 }
 
 #pragma mark Public
+- (BOOL)isOnlyWorkspace {
+  return _workspaceController.workspaces.count == 1;
+}
+
 - (void)selectBufferWithUrl:(NSURL *)url {
   [_vimController gotoBufferWithUrl:url];
   [_mainWindowController.window makeKeyAndOrderFront:self];
