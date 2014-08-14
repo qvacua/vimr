@@ -75,6 +75,7 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 
   if (self.window.isKeyWindow) {
     [_userDefaults setObject:NSStringFromRect(self.window.frame) forKey:qMainWindowFrameAutosaveName];
+    [_userDefaults setFloat:(float) _workspaceView.fileBrowserWidth forKey:qSidebarWidthAutosaveName];
   }
 
   [self close];
@@ -669,6 +670,7 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 - (void)windowDidResize:(id)sender {
   if (_loadDone) {
     [_userDefaults setObject:NSStringFromRect(self.window.frame) forKey:qMainWindowFrameAutosaveName];
+    [_userDefaults synchronize];
   }
 }
 

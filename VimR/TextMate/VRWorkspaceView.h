@@ -10,6 +10,9 @@
 #import <Cocoa/Cocoa.h>
 
 
+extern NSString *const qSidebarWidthAutosaveName;
+
+
 @class MMVimView;
 @class VRFileBrowserView;
 @class VRWorkspace;

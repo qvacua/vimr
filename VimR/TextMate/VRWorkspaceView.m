@@ -21,6 +21,7 @@
 #define CONSTRAINT(str, ...) [_myConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat: str, ##__VA_ARGS__] options:0 metrics:nil views:views]]
 
 
+NSString *const qSidebarWidthAutosaveName = @"main-window-sidebar-width-autosave";
 static const int qDefaultFileBrowserWidth = 240;
 static const int qMinimumFileBrowserWidth = 100;
 
@@ -80,6 +81,11 @@ static const int qMinimumFileBrowserWidth = 100;
 }
 
 - (CGFloat)defaultFileBrowserAndDividerWidth {
+  CGFloat savedSidebarWidth = [_userDefaults floatForKey:qSidebarWidthAutosaveName];
+  if (savedSidebarWidth >= qMinimumFileBrowserWidth) {
+    return savedSidebarWidth + 1;
+  }
+
   return qDefaultFileBrowserWidth + 1;
 }
 
@@ -196,6 +202,11 @@ static const int qMinimumFileBrowserWidth = 100;
   [_messageView setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
   [_messageView setContentHuggingPriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
   [self addSubview:_messageView];
+
+  CGFloat savedSidebarWidth = [_userDefaults floatForKey:qSidebarWidthAutosaveName];
+  if (savedSidebarWidth >= qMinimumFileBrowserWidth) {
+    _fileBrowserWidth = savedSidebarWidth;
+  }
 
   _cachedFileBrowserView = [_fileBrowserViewFactory newFileBrowserViewWithWorkspaceView:self rootUrl:self.mainWindowController.workingDirectory];
   [_cachedFileBrowserView setUp];
@@ -362,6 +373,11 @@ static const int qMinimumFileBrowserWidth = 100;
   return [super hitTest:aPoint];
 }
 
+- (void)setFileBrowserWidthConstraintWithConstant:(CGFloat)constant priority:(NSLayoutPriority)priority {
+  _fileBrowserWidthConstraint.constant = constant;
+  _fileBrowserWidthConstraint.priority = priority;
+}
+
 - (void)mouseDown:(NSEvent *)anEvent {
   if (_mouseDownRecursionGuard) {
     return;
@@ -383,8 +399,7 @@ static const int qMinimumFileBrowserWidth = 100;
   }
 
   if (_fileBrowserView) {
-    _fileBrowserWidthConstraint.constant = NSWidth(_fileBrowserView.frame);
-    _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow;
+    [self setFileBrowserWidthConstraintWithConstant:NSWidth(_fileBrowserView.frame) priority:NSLayoutPriorityDragThatCannotResizeWindow];
   }
 
   NSEvent *mouseDownEvent = anEvent;
@@ -410,8 +425,7 @@ static const int qMinimumFileBrowserWidth = 100;
       CGFloat width = NSWidth(initialFrame) + (mouseCurrentPos.x - mouseDownPos.x) * (_fileBrowserOnRight ? -1 : +1);
       _fileBrowserWidth = [self adjustedFileBrowserWidthForWidth:width];
 
-      _fileBrowserWidthConstraint.constant = _fileBrowserWidth;
-      _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow - 1;
+      [self setFileBrowserWidthConstraintWithConstant:_fileBrowserWidth priority:NSLayoutPriorityDragThatCannotResizeWindow - 1];
     }
 
     [self.window invalidateCursorRectsForView:self];
@@ -431,6 +445,8 @@ static const int qMinimumFileBrowserWidth = 100;
   _fileBrowserWidthConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow;
 
   _mouseDownRecursionGuard = NO;
+
+  [_userDefaults setFloat:(float) _fileBrowserWidthConstraint.constant forKey:qSidebarWidthAutosaveName];
 }
 
 #pragma mark Private
