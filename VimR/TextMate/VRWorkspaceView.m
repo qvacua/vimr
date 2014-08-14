@@ -49,6 +49,11 @@ static const int qMinimumFileBrowserWidth = 100;
 }
 
 #pragma mark Properties
+- (void)setFileBrowserWidth:(CGFloat)width {
+  _fileBrowserWidth = [self adjustedFileBrowserWidthForWidth:width];
+  [self setNeedsUpdateConstraints:YES];
+}
+
 - (void)setShowStatusBar:(BOOL)showStatusBar {
   _showStatusBar = showStatusBar;
   self.needsUpdateConstraints = YES;
@@ -209,7 +214,7 @@ static const int qMinimumFileBrowserWidth = 100;
   NSString *dotPathExpression = SF(@"globpath(\"%@\", \".*\")", path);
 
   // 공부 = ACF5 BD80 in composed Unicode, what Vim returns
-  // 공부 = 1100 1169 11BC 1107 116E in decomposed Unicode, what usual NSString use
+  // 공부 = 1100 1169 11BC 1107 116E in decomposed Unicode, what usual NSStrings use
   NSMutableSet *paths = [NSMutableSet set];
   [paths addObjectsFromArray:
       [[_vimView.vimController evaluateVimExpression:pathExpression].decomposedStringWithCanonicalMapping componentsSeparatedByString:@"\n"]
@@ -436,8 +441,7 @@ static const int qMinimumFileBrowserWidth = 100;
   CGFloat insetOfVimView = _vimView.totalHorizontalInset;
 
   // 1 is the width of the divider
-  double targetVimViewWidth = _dragIncrement * ceil((totalWidth - targetWidth - 1 - insetOfVimView) / _dragIncrement)
-      + insetOfVimView;
+  double targetVimViewWidth = _dragIncrement * ceil((totalWidth - targetWidth - 1 - insetOfVimView) / _dragIncrement) + insetOfVimView;
 
   return totalWidth - targetVimViewWidth - 1;
 }
