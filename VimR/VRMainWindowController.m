@@ -241,9 +241,10 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 
 #ifdef DEBUG
 - (IBAction)debug1Action:(id)sender {
-  DDLogDebug(@"current: %@", vrect(self.window.frame));
-  DDLogDebug(@"tabs: %@", _vimController.tabs);
-  DDLogDebug(@"buffers: %@", _vimController.buffers);
+  DDLogError(@"current win frame: %@", vrect(self.window.frame));
+  DDLogError(@"current workspace frame: %@\tcell size: %@", vrect(_workspaceView.frame), vsize(_vimView.textView.cellSize));
+//  DDLogDebug(@"tabs: %@", _vimController.tabs);
+//  DDLogDebug(@"buffers: %@", _vimController.buffers);
 //  NSMenu *menu = _vimController.mainMenu;
 //  NSMenuItem *fileMenu = menu.itemArray[2];
 //  NSArray *editMenuArray = [[fileMenu submenu] itemArray];

@@ -103,7 +103,7 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
 
 #ifdef DEBUG
 - (IBAction)debug3Action:(id)sender {
-  [self application:_application openFiles:@[[NSURL fileURLWithPath:@"/Users/hat/Projects/vimr/README.md"]]];
+  [self application:_application openFiles:@[[NSURL fileURLWithPath:@"/Users/hat/Projects/vimr-pages/index.html"]]];
 }
 #endif
 
