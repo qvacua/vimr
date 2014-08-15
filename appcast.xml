@@ -6,19 +6,21 @@
         <description>Most recent changes with links to updates for VimR.</description>
         <language>en</language>
         <item>
-            <title>Version 0.1.3</title>
+            <title>Version 0.1.4</title>
             <description>
-                Bugfix: some files with non-ASCII file names does not show up in the file browser
+  <li>The position and the size of the window are saved</li>
+  <li>The width of the sidebar is saved</li>
+  <li>Opening a new window is now much more smooth</li>
             </description>
             <sparkle:releaseNotesLink>
                 http://vimr.org/release-notes.html
             </sparkle:releaseNotesLink>
-            <pubDate>2014-08-11 20:40:11 +0000</pubDate>
-            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.1.3-15/VimR-0.1.3.tar.bz2"
-                       sparkle:version="15"
-                       sparkle:shortVersionString="0.1.3"
-                       sparkle:dsaSignature="MC0CFCwokcwX1EhBAj5DTfPqvuZk1T4LAhUAiQ2hra3pAbwY/Wm4MnHSixGEu5s="
-                       length="8482816"
+            <pubDate>2014-08-15 10:40:11 +0000</pubDate>
+            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.1.4-16/VimR-0.1.4.tar.bz2"
+                       sparkle:version="16"
+                       sparkle:shortVersionString="0.1.4"
+                       sparkle:dsaSignature="MCwCFHllc+328yc++q8bh8ZlUIUEefZKAhQ6dMSgemr1SVW38l5XWK1AGGmrQQ=="
+                       length="8544256"
                        type="application/octet-stream"/>
         </item>
     </channel>
