@@ -600,15 +600,19 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 
   // FIXME: this is a quick-and-dirty hack to avoid the empty window when opening a new main window.
   if (!_loadDone) {
-    CGRect savedRect = NSRectFromString([_userDefaults objectForKey:qMainWindowFrameAutosaveName]);
-    CGRect integralRect = [self desiredWinFrameRectForWinFrameRect:savedRect];
-    CGRect integralRectToKeepOnScreen = [self winFrameRectToKeepOnScreenForWinFrameRect:integralRect];
+    NSString *savedRectString = [_userDefaults objectForKey:qMainWindowFrameAutosaveName];
+    CGRect savedRect;
+    if (savedRectString) {
+      savedRect = NSRectFromString(savedRectString);
+      CGRect integralRect = [self desiredWinFrameRectForWinFrameRect:savedRect];
+      CGRect integralRectToKeepOnScreen = [self winFrameRectToKeepOnScreenForWinFrameRect:integralRect];
 
-    CGPoint origin = self.window.frame.origin;
+      CGPoint origin = self.window.frame.origin;
 
-    [self.window setFrame:integralRectToKeepOnScreen display:NO animate:NO];
-    if (!_workspace.isOnlyWorkspace) {
-      [self.window setFrameOrigin:origin];
+      [self.window setFrame:integralRectToKeepOnScreen display:NO animate:NO];
+      if (!_workspace.isOnlyWorkspace) {
+        [self.window setFrameOrigin:origin];
+      }
     }
 
     [self showWindow:self];
