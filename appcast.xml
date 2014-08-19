@@ -6,19 +6,19 @@
         <description>Most recent changes with links to updates for VimR.</description>
         <language>en</language>
         <item>
-            <title>Version 0.1.5</title>
+            <title>Version 0.1.6</title>
             <description>
-Bugfix: when launching the App for the first time, the position and the size of the window is not very optimal...
+Bugfix: working directory is not updated when closing tabs
             </description>
             <sparkle:releaseNotesLink>
                 http://vimr.org/release-notes.html
             </sparkle:releaseNotesLink>
-            <pubDate>2014-08-14 22:40:11 +0000</pubDate>
-            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.1.5-17/VimR-0.1.5.tar.bz2"
-                       sparkle:version="17"
-                       sparkle:shortVersionString="0.1.5"
-                       sparkle:dsaSignature="MC0CFQCHzD/VGZLt8R1OnZqYnAnvCeJAuwIUTaMgOp0CKMEN5VOb+s0eOvzlPCc="
-                       length="8544256"
+            <pubDate>2014-08-19 22:40:11 +0000</pubDate>
+            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.1.6-18/VimR-0.1.6.tar.bz2"
+                       sparkle:version="18"
+                       sparkle:shortVersionString="0.1.6"
+                       sparkle:dsaSignature="MC0CFHrGk7TiteN5MipAfEkCMFha9AgJAhUAkw8RfL3HDE84Hu0Fe1IWKNKgMYw="
+                       length="8540160"
                        type="application/octet-stream"/>
         </item>
     </channel>
