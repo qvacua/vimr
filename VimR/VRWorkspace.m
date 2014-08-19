@@ -72,17 +72,15 @@ static CGPoint qDefaultOrigin = {242, 364};
   _openedBufferUrls = [self bufferUrlsFromVimBuffers:_vimController.buffers];
 }
 
-- (void)updateBuffers {
-  NSMutableArray *bufferUrls = [self bufferUrlsFromVimBuffers:_vimController.buffers];
-
-  NSMutableSet *bufferUrlsSet = [NSMutableSet setWithArray:bufferUrls];
-  [bufferUrlsSet minusSet:[NSSet setWithArray:_openedBufferUrls]];
-  if (bufferUrlsSet.count == 0) {
-    return;
+- (void)updateBuffersInTabs {
+  NSMutableArray *visibleBufferUrls = [[NSMutableArray alloc] init];
+  NSArray *tabs = _vimController.tabs;
+  for (MMTabPage *tab in tabs) {
+    [visibleBufferUrls addObject:[NSURL fileURLWithPath:tab.currentBuffer.fileName]];
   }
 
-  _openedBufferUrls = bufferUrls;
-  NSURL *commonParent = common_parent_url(bufferUrls);
+  _openedBufferUrls = visibleBufferUrls;
+  NSURL *commonParent = common_parent_url(visibleBufferUrls);
   if ([commonParent isEqualTo:_workingDirectory]) {
     return;
   }

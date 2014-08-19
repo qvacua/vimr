@@ -93,8 +93,7 @@
 
 - (void)testSetUpWithVimController {
   [verify(fileItemManager) registerUrl:initialUrl];
-  [[verify(mainWindowControllerFactory) withMatcher:anything() forArgument:0]
-      newMainWindowControllerWithContentRect:CGRectZero workspace:workspace vimController:vimController];
+  [[verify(mainWindowControllerFactory) withMatcher:anything() forArgument:0] newMainWindowControllerWithContentRect:CGRectZero workspace:workspace vimController:vimController];
   [verify(vimController) setDelegate:mainWindowController];
 }
 
@@ -104,7 +103,7 @@
       [[MMBuffer alloc] initWithNumber:1 fileName:@"/tmp/2" modified:NO]]
   ];
   [workspace setUpInitialBuffers];
-  (workspace.openedUrls, consistsOfInAnyOrder(
+  assertThat(workspace.openedUrls, consistsOfInAnyOrder(
       [NSURL fileURLWithPath:@"/tmp/1"],
       [NSURL fileURLWithPath:@"/tmp/2"])
   );
@@ -116,12 +115,18 @@
       [[MMBuffer alloc] initWithNumber:1 fileName:@"/tmp/2" modified:NO]]
   ];
   [workspace setUpInitialBuffers];
+  workspace.workingDirectory = [NSURL fileURLWithPath:@"/tmp"];
 
-  [given([vimController buffers]) willReturn:@[
-      [[MMBuffer alloc] initWithNumber:0 fileName:@"/tmp/2" modified:NO],
-      [[MMBuffer alloc] initWithNumber:1 fileName:@"/tmp/1" modified:NO]]
-  ];
-  [workspace updateBuffers];
+  MMVimWindow *win1 = [[MMVimWindow alloc] initWithBuffer:[[MMBuffer alloc] initWithNumber:0 fileName:@"/tmp/1" modified:NO]];
+  MMVimWindow *win2 = [[MMVimWindow alloc] initWithBuffer:[[MMBuffer alloc] initWithNumber:1 fileName:@"/tmp/2" modified:NO]];
+  win1.currentWindow = YES;
+  win2.currentWindow = YES;
+
+  [given([vimController tabs]) willReturn:@[
+      [[MMTabPage alloc] initWithVimWindows:@[win1]],
+      [[MMTabPage alloc] initWithVimWindows:@[win2]],
+  ]];
+  [workspace updateBuffersInTabs];
 
   [verifyCount(fileItemManager, never()) unregisterUrl:anything()];
   [verifyCount(fileItemManager, times(1)) registerUrl:anything()]; // setUpWithVimController in setUp calls this, thus 1
@@ -129,20 +134,30 @@
 }
 
 - (void)testUpdateBuffers {
+  NSURL *workingDir = [NSURL fileURLWithPath:@"/tmp/folder"];
+
   [given([vimController buffers]) willReturn:@[
       [[MMBuffer alloc] initWithNumber:0 fileName:@"/tmp/folder/1" modified:NO],
-      [[MMBuffer alloc] initWithNumber:1 fileName:@"/tmp/folder/2" modified:NO]
+      [[MMBuffer alloc] initWithNumber:1 fileName:@"/tmp/folder/2" modified:NO],
   ]];
   [workspace setUpInitialBuffers];
+  workspace.workingDirectory = workingDir;
 
-  [given([vimController buffers]) willReturn:@[
-      [[MMBuffer alloc] initWithNumber:0 fileName:@"/tmp/folder/2" modified:NO],
-      [[MMBuffer alloc] initWithNumber:1 fileName:@"/tmp/folder/1" modified:NO],
-      [[MMBuffer alloc] initWithNumber:2 fileName:@"/tmp/3" modified:NO]
+  MMVimWindow *win1 = [[MMVimWindow alloc] initWithBuffer:[[MMBuffer alloc] initWithNumber:0 fileName:@"/tmp/folder/1" modified:NO]];
+  MMVimWindow *win2 = [[MMVimWindow alloc] initWithBuffer:[[MMBuffer alloc] initWithNumber:1 fileName:@"/tmp/folder/2" modified:NO]];
+  MMVimWindow *win3 = [[MMVimWindow alloc] initWithBuffer:[[MMBuffer alloc] initWithNumber:2 fileName:@"/tmp/3" modified:NO]];
+  win1.currentWindow = YES;
+  win2.currentWindow = YES;
+  win3.currentWindow = YES;
+
+  [given([vimController tabs]) willReturn:@[
+      [[MMTabPage alloc] initWithVimWindows:@[win1]],
+      [[MMTabPage alloc] initWithVimWindows:@[win2]],
+      [[MMTabPage alloc] initWithVimWindows:@[win3]],
   ]];
-  [workspace updateBuffers];
+  [workspace updateBuffersInTabs];
 
-  [verify(fileItemManager) unregisterUrl:initialUrl];
+  [verify(fileItemManager) unregisterUrl:workingDir];
   [verify(fileItemManager) registerUrl:[NSURL fileURLWithPath:@"/tmp"]];
   [verify(mainWindowController) updateWorkingDirectory];
 }

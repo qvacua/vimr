@@ -36,7 +36,7 @@
 - (void)setUpWithVimController:(MMVimController *)vimController;
 - (void)setUpInitialBuffers;
 - (void)cleanUpAndClose;
-- (void)updateBuffers;
+- (void)updateBuffersInTabs;
 - (void)selectBufferWithUrl:(NSURL *)url;
 
 #pragma mark NSObject
