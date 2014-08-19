@@ -521,6 +521,7 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 }
 
 - (void)controller:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data {
+  [self updateBuffersInTabs];
 }
 
 - (void)controller:(MMVimController *)controller tabDraggedWithData:(NSData *)data {
@@ -528,6 +529,7 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 
 - (void)controller:(MMVimController *)controller hideTabBarWithData:(NSData *)data {
   _vimView.tabBarControl.hidden = YES;
+  [self updateBuffersInTabs];
 }
 
 - (void)controller:(MMVimController *)controller setBufferModified:(BOOL)modified data:(NSData *)data {
@@ -555,11 +557,6 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   } else {
     [_workspaceView setUrlOfPathControl:[NSURL fileURLWithPath:_vimController.currentBuffer.fileName]];
   }
-
-  // This delegate method is called whenever new buffer is opened, eg :e filename. Here we should loop over all buffers
-  // and determine the common parent directory and set it as the workspace.
-  // When we open a new tab, this does not get called, but in that case, no change in workspace is required.
-  [_workspace updateBuffersInTabs];
 }
 
 /**
@@ -817,6 +814,14 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   [window setContentBorderThickness:qMainWindowBorderThickness forEdge:NSMinYEdge];
 
   return window;
+}
+
+- (void)updateBuffersInTabs {
+  if (_workspaceView.syncWorkspaceWithPwd) {
+    return;
+  }
+
+  [_workspace updateBuffersInTabs];
 }
 
 - (NSData *)vimArgsAsDataFromFileUrls:(NSArray *)fileUrls {

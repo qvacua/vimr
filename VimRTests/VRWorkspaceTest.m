@@ -133,6 +133,15 @@
   [verifyCount(mainWindowController, never()) updateWorkingDirectory];
 }
 
+- (void)testUpdateBuffersWithUntitledBuffer {
+  NSURL *workingDir = [NSURL fileURLWithPath:@"/other"];
+  workspace.workingDirectory = workingDir;
+  [workspace updateBuffersInTabs];
+  [verify(fileItemManager) unregisterUrl:workingDir];
+  [verify(fileItemManager) registerUrl:[NSURL fileURLWithPath:NSHomeDirectory()]];
+  [verify(mainWindowController) updateWorkingDirectory];
+}
+
 - (void)testUpdateBuffers {
   NSURL *workingDir = [NSURL fileURLWithPath:@"/tmp/folder"];
 
