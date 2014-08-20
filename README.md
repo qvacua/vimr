@@ -27,7 +27,13 @@ In case you want to have a bit more information on the motivation behind VimR, I
 
 There is a mailing list with absolute no traffic: [vim-refined@googlegroups.com](mailto:vim-refined@googlegroups.com) or <https://groups.google.com/forum/#!forum/vim-refined>
 
+Screenshots
+-----------
+
 ![Screenshot](https://raw.github.com/qvacua/vimr/master/Meta/screenshot.png)
+![Editing Javascript](https://raw.github.com/qvacua/vimr/master/Meta/screenshots/javascript.png)
+![Editing Python](https://raw.github.com/qvacua/vimr/master/Meta/screenshots/python.png)
+![Editing Ruby](https://raw.github.com/qvacua/vimr/master/Meta/screenshots/ruby.png)
 
 How to Build
 ------------
