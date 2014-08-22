@@ -1,0 +1,2 @@
+* first point
+* second point
