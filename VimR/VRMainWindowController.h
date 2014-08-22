@@ -73,6 +73,7 @@ extern const int qMainWindowBorderThickness;
 - (void)liveResizeDidEnd;
 
 #pragma mark MMVimControllerDelegate
+- (void)controller:(MMVimController *)controller setTooltipDelay:(float)delay;
 - (void)controller:(MMVimController *)controller zoomWithRows:(int)rows columns:(int)columns state:(int)state data:(NSData *)data;
 - (void)controller:(MMVimController *)controller handleShowDialogWithButtonTitles:(NSArray *)buttonTitles style:(NSAlertStyle)style message:(NSString *)message text:(NSString *)text textFieldString:(NSString *)string data:(NSData *)data;
 - (void)controller:(MMVimController *)controller showScrollbarWithIdentifier:(int32_t)identifier state:(BOOL)state data:(NSData *)data;
