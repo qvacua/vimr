@@ -359,6 +359,10 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 }
 
 #pragma mark MMVimControllerDelegate
+- (void)controller:(MMVimController *)controller setTooltipDelay:(float)delay {
+  DDLogWarn(@"Doing nothing...");
+}
+
 /**
 * Resize code
 */
