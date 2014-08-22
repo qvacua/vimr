@@ -6,19 +6,19 @@
         <description>Most recent changes with links to updates for VimR.</description>
         <language>en</language>
         <item>
-            <title>Version 0.1.6</title>
+            <title>Version 0.1.7</title>
             <description>
-Bugfix: working directory is not updated when closing tabs
+              Bugfix: VimR does not open any window when Eclim is used (#111)
             </description>
             <sparkle:releaseNotesLink>
                 http://vimr.org/release-notes.html
             </sparkle:releaseNotesLink>
-            <pubDate>2014-08-19 22:40:11 +0000</pubDate>
-            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.1.6-18/VimR-0.1.6.tar.bz2"
-                       sparkle:version="18"
-                       sparkle:shortVersionString="0.1.6"
-                       sparkle:dsaSignature="MC0CFHrGk7TiteN5MipAfEkCMFha9AgJAhUAkw8RfL3HDE84Hu0Fe1IWKNKgMYw="
-                       length="8540160"
+            <pubDate>2014-08-22 22:40:11 +0000</pubDate>
+            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.1.7-19/VimR-0.1.7.tar.bz2"
+                       sparkle:version="19"
+                       sparkle:shortVersionString="0.1.7"
+                       sparkle:dsaSignature="MCwCFAofF7sS/xdY3gHWuA4Ple80kAmVAhR2vlMMnfvvvvVZSwGkF182pcxE0w=="
+                       length="8544256"
                        type="application/octet-stream"/>
         </item>
     </channel>
