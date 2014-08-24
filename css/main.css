@@ -35,6 +35,9 @@ header {
     header .download-button .btn-lg {
       font-size: 2.4rem;
       font-weight: 100; }
+  header .financial-support {
+    font-weight: normal;
+    color: gray; }
   header .version-info {
     font-weight: normal;
     color: gray; }
