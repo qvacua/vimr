@@ -54,16 +54,6 @@
   ];
 }
 
-- (void)testSelectBufferWithUrl {
-  [given([workspaceFactory newWorkspaceWithWorkingDir:instanceOf([NSURL class])]) willReturn:workspace];
-  [workspaceController openFilesInNewWorkspace:urls];
-
-  [given([workspace openedUrls]) willReturn:urls];
-
-  [workspaceController selectBufferWithUrl:urls[2]];
-  [verify(workspace) selectBufferWithUrl:urls[2]];
-}
-
 - (void)testNewWorkspace {
   [given([workspaceFactory newWorkspaceWithWorkingDir:[NSURL fileURLWithPath:NSHomeDirectory()]]) willReturn:workspace];
 

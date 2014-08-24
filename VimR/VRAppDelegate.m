@@ -52,7 +52,6 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
     return;
   }
 
-  DDLogDebug(@"opening %@", urls);
   [self application:_application openFiles:urls];
 }
 
