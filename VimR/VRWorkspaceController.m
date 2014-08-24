@@ -33,6 +33,17 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 }
 
 #pragma mark Public
+- (void)ensureUrlsAreVisible:(NSArray *)urls {
+  NSSet *urlSet = [[NSSet alloc] initWithArray:urls];
+
+  for (VRWorkspace *workspace in _mutableWorkspaces) {
+    NSMutableSet *workspaceUrls = [[NSMutableSet alloc] initWithArray:workspace.openedUrls];
+    [workspaceUrls intersectSet:urlSet];
+    
+    [workspace ensureUrlsAreVisible:workspaceUrls.allObjects];
+  }
+}
+
 - (void)selectBufferWithUrl:(NSURL *)url {
   for (VRWorkspace *workspace in _mutableWorkspaces) {
     if ([workspace.openedUrls containsObject:url]) {

@@ -1,11 +1,11 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import <MacVimFramework/MacVimFramework.h>
 #import <TBCacao/TBCacao.h>
@@ -27,6 +27,31 @@ static CGPoint qDefaultOrigin = {242, 364};
 }
 
 #pragma mark Public
+- (void)ensureUrlsAreVisible:(NSArray *)urls {
+  NSMutableSet *urlSet = [[NSMutableSet alloc] initWithArray:urls];
+
+  [_vimController.tabs enumerateObjectsUsingBlock:^(MMTabPage *tab, NSUInteger idx, BOOL *stop) {
+    NSString *fileName = tab.currentBuffer.fileName;
+    if (blank(fileName)) {
+      return;
+    }
+
+    NSURL *url = [NSURL fileURLWithPath:fileName];
+    if ([urlSet containsObject:url]) {
+      [urlSet removeObject:url];
+    }
+  }];
+
+  [_vimController sendMessage:OpenWithArgumentsMsgID data:[self openFileDataForVim:urlSet]];
+}
+
+- (NSData *)openFileDataForVim:(NSSet *)urls {
+  return @{
+      qVimArgFileNamesToOpen : paths_from_urls(urls.allObjects),
+      qVimArgOpenFilesLayout : @(MMLayoutTabs),
+  }.dictionaryAsData;
+}
+
 - (BOOL)isOnlyWorkspace {
   return _workspaceController.workspaces.count == 1;
 }
@@ -61,7 +86,7 @@ static CGPoint qDefaultOrigin = {242, 364};
 
   _vimController = vimController;
 
-  CGPoint origin= [self cascadedWindowOrigin];
+  CGPoint origin = [self cascadedWindowOrigin];
   CGRect contentRect = rect_with_origin(origin, 480, 360);
   _mainWindowController = [_mainWindowControllerFactory newMainWindowControllerWithContentRect:contentRect workspace:self vimController:vimController];
 

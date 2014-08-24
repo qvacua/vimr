@@ -63,12 +63,12 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
   }
 
   NSArray *urls = [self urlsFromOpenPanelWithCanChooseDir:NO];
-  VRMainWindowController *controller = (VRMainWindowController *) keyWindow.windowController;
-  [controller.workspace openFilesWithUrls:urls];
+  VRWorkspace *workspace = [(VRMainWindowController *) keyWindow.windowController workspace];
+  [workspace openFilesWithUrls:urls];
 }
 
 - (IBAction)showHelp:(id)sender {
-  [self.workspace openURL:[[NSURL alloc] initWithString:qVimRHelpUrl]];
+  [self.workspace openURL:[NSURL URLWithString:qVimRHelpUrl]];
 }
 
 - (IBAction)showPrefWindow:(id)sender {
@@ -204,18 +204,19 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
     urls = [urls_from_paths(fileNames) mutableCopy];
   }
 
-  NSArray *alreadyOpenedUrls = [self alreadyOpenedUrlsInUrls:urls];
-  [urls removeObjectsInArray:alreadyOpenedUrls];
+  NSArray *alreadyOpenUrls = [self alreadyOpenedUrlsInUrls:urls];
+  [urls removeObjectsInArray:alreadyOpenUrls];
 
   if (urls.isEmpty) {
     [self postUserNotificationWithTitle:@"All selected file(s) are already open."];
-    [_workspaceController selectBufferWithUrl:alreadyOpenedUrls[0]];
+    [_workspaceController ensureUrlsAreVisible:alreadyOpenUrls];
 
     return;
   }
 
-  if (!alreadyOpenedUrls.isEmpty) {
+  if (!alreadyOpenUrls.isEmpty) {
     [self postUserNotificationWithTitle:@"There are already opened files."];
+    [_workspaceController ensureUrlsAreVisible:alreadyOpenUrls];
   }
 
   [_workspaceController openFilesInNewWorkspace:urls];

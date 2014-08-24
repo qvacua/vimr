@@ -84,6 +84,15 @@ NSArray *urls_from_paths(NSArray *paths) {
   return urls;
 }
 
+NSArray *paths_from_urls(NSArray *urls) {
+  NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:urls.count];
+  for (NSURL *url in urls) {
+    [paths addObject:url.path];
+  }
+
+  return paths;
+}
+
 CGRect rect_with_origin(CGPoint origin, CGFloat width, CGFloat height) {
   return CGRectMake(origin.x, origin.y, width, height);
 }
