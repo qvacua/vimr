@@ -155,11 +155,11 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 }
 
 - (IBAction)selectNextTab:(id)sender {
-  [self sendCommandToVim:@"gt"];
+  [_vimView selectTabWithIndexDelta:+1];
 }
 
 - (IBAction)selectPreviousTab:(id)sender {
-  [self sendCommandToVim:@"gT"];
+  [_vimView selectTabWithIndexDelta:-1];
 }
 
 - (IBAction)showPreview:(id)sender {
