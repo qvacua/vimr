@@ -1,0 +1,26 @@
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/"
+     version="2.0">
+    <channel>
+        <title>VimR Appcast</title>
+        <link>http://vimr.org</link>
+        <description>Most recent changes with links to updates for VimR.</description>
+        <language>en</language>
+        <item>
+            <title>Version #SHORT_VERSION#</title>
+            <description>
+                #DESCRIPTION#
+            </description>
+            <sparkle:releaseNotesLink>
+                http://vimr.org/release-notes.html
+            </sparkle:releaseNotesLink>
+            <pubDate>#DATE_TIME# +0000</pubDate>
+            <enclosure url="https://github.com/qvacua/vimr/releases/download/v#SHORT_VERSION#-#BUNDLE_VERSION#/VimR-#SHORT_VERSION#.tar.bz2"
+                       sparkle:version="#BUNDLE_VERSION#"
+                       sparkle:shortVersionString="#SHORT_VERSION#"
+                       sparkle:dsaSignature="#SIGNATURE#"
+                       length="#SIZE#"
+                       type="application/octet-stream"/>
+        </item>
+    </channel>
+</rss>
+

@@ -24,7 +24,7 @@ end
 parser.parse!
 
 $release_notes_html_file = 'release-notes.html'
-$notes_directory = 'release-notes'
+$notes_directory = 'data'
 
 renderer = Redcarpet::Render::HTML.new(render_options = {})
 markdown = Redcarpet::Markdown.new(renderer, extensions = {})
