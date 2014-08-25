@@ -25,6 +25,10 @@ parser = OptionParser.new do |opts|
     options[:working_dir] = working_dir
   end
 
+  opts.on('-v leap', '--version-leap leap', 'Version leap: major, minor or bugfix') do |leap|
+    options[:version_leap] = leap
+  end
+
   opts.on('-h', '--help', 'Displays Help') do
     puts opts
     exit
@@ -73,8 +77,11 @@ def new_short_version_string(cur_short_str_version, version_leap)
   case version_leap
     when "major"
       version_components[0] += 1
+      version_components[1] = 0
+      version_components[2] = 0
     when "minor"
       version_components[1] += 1
+      version_components[2] = 0
     when "bugfix"
       version_components[2] += 1
     else
