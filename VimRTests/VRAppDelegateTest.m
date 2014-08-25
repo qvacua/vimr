@@ -190,7 +190,10 @@ static NSOpenPanel *openPanel;
   ]];
 
   [verify(userNotificationCenter) scheduleNotification:instanceOf([NSUserNotification class])];
-  [verify(workspaceController) selectBufferWithUrl:[NSURL fileURLWithPath:@"/some/path/to/file2"]];
+  [verify(workspaceController) ensureUrlsAreVisible:@[
+      [NSURL fileURLWithPath:@"/some/path/to/file2"],
+      [NSURL fileURLWithPath:@"/some/other/path/to/file1"],
+  ]];
 }
 
 - (void)testApplicationOpenFilesWithPartiallyOpenUrls {
@@ -198,10 +201,15 @@ static NSOpenPanel *openPanel;
 
   [appDelegate application:nil openFiles:@[
       [NSURL fileURLWithPath:@"/some/path/to/file2"],
+      [NSURL fileURLWithPath:@"/some/other/path/to/file2"],
       [NSURL fileURLWithPath:@"/some/other/path/to/file3"],
   ]];
 
   [verify(userNotificationCenter) scheduleNotification:instanceOf([NSUserNotification class])];
+  [verify(workspaceController) ensureUrlsAreVisible:@[
+      [NSURL fileURLWithPath:@"/some/path/to/file2"],
+      [NSURL fileURLWithPath:@"/some/other/path/to/file2"],
+  ]];
   [verify(workspaceController) openFilesInNewWorkspace:@[
       [NSURL fileURLWithPath:@"/some/other/path/to/file3"],
   ]];

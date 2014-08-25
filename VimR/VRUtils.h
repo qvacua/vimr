@@ -27,6 +27,7 @@ OBJC_EXTERN NSValue *vsize(CGSize size);
 OBJC_EXTERN NSValue *vrect(CGRect rect);
 OBJC_EXTERN NSValue *vpoint(CGPoint point);
 OBJC_EXTERN NSArray *urls_from_paths(NSArray *);
+OBJC_EXTERN NSArray *paths_from_urls(NSArray *urls);
 OBJC_EXTERN CGRect rect_with_origin(CGPoint origin, CGFloat width, CGFloat height);
 OBJC_EXTERN NSData *vim_data_for_menu_descriptor(NSArray *descriptor);
 OBJC_EXTERN BOOL blank(NSString *str);

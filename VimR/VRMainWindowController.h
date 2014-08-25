@@ -92,8 +92,33 @@ extern const int qMainWindowBorderThickness;
 - (void)controller:(MMVimController *)controller processFinishedForInputQueue:(NSArray *)inputQueue;
 - (void)controller:(MMVimController *)controller removeToolbarItemWithIdentifier:(NSString *)identifier;
 - (void)controller:(MMVimController *)controller handleBrowseWithDirectoryUrl:(NSURL *)url browseDir:(BOOL)dir saving:(BOOL)saving data:(NSData *)data;
+- (void)controller:(MMVimController *)controller hideTabBarWithData:(NSData *)data;
+- (void)controller:(MMVimController *)controller setDefaultColorsBackground:(NSColor *)background foreground:(NSColor *)foreground data:(NSData *)data;
+- (void)controller:(MMVimController *)controller adjustLinespace:(int)linespace data:(NSData *)data;
+- (void)controller:(MMVimController *)controller setFont:(NSFont *)font data:(NSData *)data;
+- (void)controller:(MMVimController *)controller setWideFont:(NSFont *)font data:(NSData *)data;
+- (void)controller:(MMVimController *)controller createScrollbarWithIdentifier:(int32_t)identifier type:(int)type data:(NSData *)data;
+- (void)controller:(MMVimController *)controller setMouseShape:(int)shape data:(NSData *)data;
+- (void)controller:(MMVimController *)controller setStateToolbarItemWithIdentifier:(NSString *)identifier state:(BOOL)state;
+- (void)controller:(MMVimController *)controller addToolbarItemWithLabel:(NSString *)label tip:(NSString *)tip icon:(NSString *)icon atIndex:(int)idx;
+- (void)controller:(MMVimController *)controller showToolbar:(BOOL)enable flags:(int)flags data:(NSData *)data;
+- (void)controller:(MMVimController *)controller setScrollbarPosition:(int)position length:(int)length identifier:(int32_t)identifier data:(NSData *)data;
+- (void)controller:(MMVimController *)controller activateIm:(BOOL)activate data:(NSData *)data;
+- (void)controller:(MMVimController *)controller setImControl:(BOOL)control data:(NSData *)data;
+- (void)controller:(MMVimController *)controller addToMru:(NSArray *)filenames data:(NSData *)data;
+- (void)controller:(MMVimController *)controller setWindowPosition:(NSPoint)position data:(NSData *)data; // Vim measures Y-coordinates from top of screen.
+- (void)controller:(MMVimController *)controller activateWithData:(NSData *)data;
+- (void)controller:(MMVimController *)controller enterFullScreen:(int)screen backgroundColor:(NSColor *)color data:(NSData *)data;
+- (void)controller:(MMVimController *)controller leaveFullScreenWithData:(NSData *)data;
+- (void)controller:(MMVimController *)controller setFullScreenBackgroundColor:(NSColor *)color data:(NSData *)data;
+- (void)controller:(MMVimController *)controller showFindReplaceDialogWithText:(id)text flags:(int)flags data:(NSData *)data;
+- (void)controller:(MMVimController *)controller dropFiles:(NSArray *)filenames forceOpen:(BOOL)force;
+
+// The following delegate method is called too often...
+//- (void)controller:(MMVimController *)controller setPreEditRow:(int)row column:(int)column data:(NSData *)data;
 
 #pragma mark VRUserDefaultsObserver
+- (void)controller:(MMVimController *)controller setAntialias:(BOOL)antialias data:(NSData *)data;
 - (void)registerUserDefaultsObservation;
 - (void)removeUserDefaultsObservation;
 

@@ -29,11 +29,12 @@ extern NSString *const qVimArgOpenFilesLayout;
 @property (nonatomic, readonly) NSArray *workspaces;
 
 #pragma mark Public
+- (void)ensureUrlsAreVisible:(NSArray *)urls;
+- (void)selectBufferWithUrl:(NSURL *)url;
 - (void)newWorkspace;
 - (void)openFilesInNewWorkspace:(NSArray *)fileUrls;
 - (void)cleanUp;
 - (BOOL)hasDirtyBuffers;
-- (void)selectBufferWithUrl:(NSURL *)url;
 
 #pragma mark NSObject
 - (id)init;

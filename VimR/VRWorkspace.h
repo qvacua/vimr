@@ -28,6 +28,7 @@
 @property (nonatomic) NSURL *workingDirectory;
 
 #pragma mark Public
+- (void)ensureUrlsAreVisible:(NSArray *)urls;
 - (BOOL)isOnlyWorkspace;
 - (NSArray *)openedUrls;
 - (void)updateWorkingDirectory:(NSURL *)workingDir;
