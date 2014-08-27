@@ -214,6 +214,8 @@ static const int qMinimumFileBrowserWidth = 100;
   if ([_userDefaults boolForKey:qDefaultShowSideBar]) {
     self.fileBrowserView = _cachedFileBrowserView;
   }
+
+  [[NSNotificationCenter defaultCenter] addObserver:self.mainWindowController selector:@selector(forceRedrawVimView) name:@"NSWindowDidExitFullScreenNotification" object:self.window];
 }
 
 - (void)setStatusMessage:(NSString *)message {
