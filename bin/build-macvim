@@ -4,6 +4,5 @@ MYPATH="$(dirname $0)"
 ROOT="$MYPATH"/..
 
 cd "$ROOT"/macvim/src
-make distclean
 CPPFLAGS="-DFEAT_GUI_VIMR" ./configure --with-features=huge --enable-rubyinterp --enable-pythoninterp --enable-perlinterp --enable-cscope
 make
