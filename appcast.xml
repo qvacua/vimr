@@ -6,18 +6,22 @@
         <description>Most recent changes with links to updates for VimR.</description>
         <language>en</language>
         <item>
-            <title>Version 0.1.7</title>
+            <title>Version 0.2.0</title>
             <description>
-              Bugfix: VimR does not open any window when Eclim is used (#111)
+                <ul>
+<li>Add <code>gui_vimr</code> for <code>vimrc</code>, ie you can now use <code>if has(&quot;gui_vimr&quot;) ...</code></li>
+<li>Bugfix: VimR loses cursor state when switching between tabs (<a href="https://github.com/qvacua/vimr/issues/116">#116</a>)</li>
+<li>Buffix: Already open files are not re-opened properly (<a href="https://github.com/qvacua/vimr/issues/113">#113</a>)</li>
+</ul>
             </description>
             <sparkle:releaseNotesLink>
                 http://vimr.org/release-notes.html
             </sparkle:releaseNotesLink>
-            <pubDate>2014-08-22 22:40:11 +0000</pubDate>
-            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.1.7-19/VimR-0.1.7.tar.bz2"
-                       sparkle:version="19"
-                       sparkle:shortVersionString="0.1.7"
-                       sparkle:dsaSignature="MCwCFAofF7sS/xdY3gHWuA4Ple80kAmVAhR2vlMMnfvvvvVZSwGkF182pcxE0w=="
+            <pubDate>2014-08-29 20:58:44 +0000</pubDate>
+            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.2.0-20/VimR-0.2.0.tar.bz2"
+                       sparkle:version="20"
+                       sparkle:shortVersionString="0.2.0"
+                       sparkle:dsaSignature="MCwCFBf6Ht+g07c+Q/NsbyDT9ikmfCGbAhQmyuIaXFESQT3s0heRHMRARzOlig=="
                        length="8544256"
                        type="application/octet-stream"/>
         </item>
