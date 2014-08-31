@@ -761,6 +761,10 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   return NO;
 }
 
+- (void)windowDidExitFullScreen:(NSNotification *)notification {
+    [self forceRedrawVimView];
+}
+
 /**
 * Resize code
 */
