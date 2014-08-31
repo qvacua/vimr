@@ -123,8 +123,14 @@ extern const int qMainWindowBorderThickness;
 - (void)removeUserDefaultsObservation;
 
 #pragma mark NSWindowDelegate
+- (void)windowDidExitFullScreen:(NSNotification *)notification;
+- (void)windowDidResize:(id)sender;
+- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize;
 - (void)windowDidBecomeMain:(NSNotification *)notification;
 - (void)windowDidResignMain:(NSNotification *)notification;
 - (BOOL)windowShouldClose:(id)sender;
+
+#pragma mark KVO
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context;
 
 @end
