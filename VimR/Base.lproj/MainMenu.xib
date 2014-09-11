@@ -387,9 +387,9 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="File Browser Bahavior" id="9Xb-Mv-R9X">
+                            <menuItem title="File Browser Behavior" id="9Xb-Mv-R9X">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="File Browser Bahavior" id="lZ4-03-NaY">
+                                <menu key="submenu" title="File Browser Behavior" id="lZ4-03-NaY">
                                     <items>
                                         <menuItem title="Show Folders First" id="Sjh-xe-x3X">
                                             <modifierMask key="keyEquivalentModifierMask"/>
