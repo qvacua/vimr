@@ -10,16 +10,23 @@
   <link rel="stylesheet" type="text/css" href="css/main.css">
 
   <script>
-  if (document.location.hostname.search("vimr.org") !== -1) {
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    if (document.location.hostname.search("vimr.org") !== -1) {
+      (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+          (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-  ga('create', 'UA-53526825-1', 'auto');
-  ga('send', 'pageview');
-  }
-</script>
+      ga('create', 'UA-53526825-1', 'auto');
+      ga('send', 'pageview');
+    }
+  </script>
 
 </head>
 <body>
@@ -40,14 +47,18 @@
        class="btn btn-primary btn-lg btn-success" role="button"><i class="fa fa-download"></i> Download</a>
   </div>
 
-  <div class="financial-support">
-    If you want to support the development of VimR financially, you can do it via <a href="https://www.bountysource.com/teams/vimr">Bountysource</a>.
+  <div class="version-info">
+    v0.2.0 for 10.9 •
+    <a href="https://github.com/qvacua/vimr">GitHub Project</a> •
+    <a href="https://github.com/qvacua/vimr/graphs/contributors">Contributors</a> •
+    <a href="https://groups.google.com/forum/#!forum/vim-refined">Mailing list</a> •
+    <a href="https://github.com/qvacua/vimr/wiki">Docs</a> •
+    Created by <a href="http://taewon.de">Tae Won Ha</a>
   </div>
 
-  <div class="version-info">
-    v0.2.0 for 10.9 • <a href="https://github.com/qvacua/vimr">GitHub Project</a> • <a href="https://groups.google.com/forum/#!forum/vim-refined">Mailing list</a> • <a
-      href="https://github.com/qvacua/vimr/wiki">Docs</a> • Created by <a href="http://taewon.de">Tae Won
-    Ha</a>
+  <div class="financial-support">
+    If you want to support the development of VimR financially, you can do it via <a
+      href="https://www.bountysource.com/teams/vimr">Bountysource</a>.
   </div>
 </header>
 
@@ -83,7 +94,7 @@
   <div class="feature">
     <div class="content">
       <div class="screenshot"><img src="images/vim-only-window.png"></div><!--
-   --><div class="description">
+       --><div class="description">
         <h2>Full Vim</h2>
         Look ma, no emulation! VimR has full Vim inside. This means for instance that you can use all your favorite
         plugins.
@@ -125,53 +136,6 @@
   </div>
 </div>
 
-<div id="credits">
-  <div class="content">
-    <div class="contributor">
-      <img class="avatar" src="https://s.gravatar.com/avatar/44d8a2579c0857598b01050e80a46215?s=128" width="128">
-      <br>
-      Tae Won Ha
-      <br>
-
-      <div class="social">
-        <a href="http://ishouldcocoa.net"><i class="fa fa-rss"></i></a>
-        <a href="https://github.com/qvacua"><i class="fa fa-github"></i></a>
-        <a href="https://twitter.com/hataewon"><i class="fa fa-twitter"></i></a>
-      </div>
-    </div>
-    <div class="contributor">
-      <div>
-        <img class="avatar" src="https://s.gravatar.com/avatar/9db5094487d460d4d0c9ab939b81b081?s=128" width="128">
-        <br>
-        Mark Sandstorm
-        <br>
-
-        <div class="social">
-          <a href="https://github.com/dnerdy"><i class="fa fa-github"></i></a>
-          <a href="https://twitter.com/dnerdy"><i class="fa fa-twitter"></i></a>
-        </div>
-      </div>
-    </div>
-    <div class="contributor">
-      <img class="avatar" src="https://s.gravatar.com/avatar/13f1d8616c9bc1ebd91707f68f891b94?s=128" width="128">
-      <br>
-      Andrew Yeaton
-      <div class="social">
-        <a href="https://github.com/drewyeaton"><i class="fa fa-github"></i></a>
-        <a href="https://twitter.com/xeeton"><i class="fa fa-twitter"></i></a>
-      </div>
-    </div>
-    <div class="contributor">
-      <img class="avatar" src="https://s.gravatar.com/avatar/b5b8eec3fd886a7d72b3ac29368f5073?s=128" width="128">
-      <br>
-      Michal Kalbarczyk
-      <div class="social">
-        <a href="https://github.com/fazibear"><i class="fa fa-github"></i></a>
-      </div>
-    </div>
-  </div>
-</div>
-
 <footer>
   <p>VimR • Created by <a href="http://taewon.de">Tae Won Ha</a></p>
 
@@ -179,7 +143,13 @@
     Awesome</a></p>
 
   <p>
-  <a href="https://twitter.com/VimRefined">Twitter</a> • <a href="https://github.com/qvacua/vimr">GitHub Project</a> • <a href="https://groups.google.com/forum/#!forum/vim-refined">Mailing list</a> • <a href="https://github.com/qvacua/vimr/wiki">Docs</a> • <a href="https://github.com/qvacua/vimr/issues">Issues</a> • <a href="https://www.bountysource.com/teams/vimr">Bountysource</a>
+    <a href="https://twitter.com/VimRefined">Twitter</a> •
+    <a href="https://github.com/qvacua/vimr">GitHub Project</a> •
+    <a href="https://github.com/qvacua/vimr/graphs/contributors">Contributors</a> •
+    <a href="https://groups.google.com/forum/#!forum/vim-refined">Mailing list</a> •
+    <a href="https://github.com/qvacua/vimr/wiki">Docs</a> •
+    <a href="https://github.com/qvacua/vimr/issues">Issues</a> •
+    <a href="https://www.bountysource.com/teams/vimr">Bountysource</a>
   </p>
 </footer>
 
