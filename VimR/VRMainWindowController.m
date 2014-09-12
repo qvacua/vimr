@@ -163,17 +163,8 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 }
 
 - (IBAction)showPreview:(id)sender {
-  if (_previewWindowController.window.isVisible) {
-    [_previewWindowController showWindow:self];
-    return;
-  }
-
-  NSString *path = _vimController.currentBuffer.fileName;
-  NSURL *url = path == nil ? nil : [NSURL fileURLWithPath:path];
-
-  // TODO: for time being we use the first file type and ignore the rest
-  NSArray *fileTypes = [[_vimController evaluateVimExpression:@"&ft"] componentsSeparatedByString:@"."];
-  [_previewWindowController previewForUrl:url fileType:fileTypes[0]];
+  [_previewWindowController updatePreview];
+  [_previewWindowController showWindow:self];
 }
 
 - (IBAction)refreshPreview:(id)sender {
@@ -515,6 +506,15 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 
 - (void)controller:(MMVimController *)controller tabDidUpdateWithData:(NSData *)data {
   [self updateBuffersInTabs];
+  [self updatePreview];
+}
+
+- (void)updatePreview {
+  if (!_previewWindowController.window.isVisible) {
+    return;
+  }
+
+  [_previewWindowController updatePreview];
 }
 
 - (void)controller:(MMVimController *)controller hideTabBarWithData:(NSData *)data {

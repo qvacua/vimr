@@ -21,6 +21,7 @@
   __weak VRMainWindowController *_mainWindowController;
 
   BOOL _windowHasBeenShown;
+  NSString *_lastFileType;
 
   NSView <VRPluginPreviewView> *_currentPreviewView;
   NSURL *_currentUrl;
@@ -44,27 +45,40 @@
   [self registerFileItemCacheInvalidationObservation];
 }
 
+- (void)updatePreview {
+  NSString *path = _mainWindowController.vimController.currentBuffer.fileName;
+  NSURL *url = path == nil ? nil : [NSURL fileURLWithPath:path];
+
+  // TODO: for time being we use the first file type and ignore the rest
+  NSArray *fileTypes = [[_mainWindowController.vimController evaluateVimExpression:@"&ft"] componentsSeparatedByString:@"."];
+  [self previewForUrl:url fileType:fileTypes[0]];
+}
+
 - (void)previewForUrl:(NSURL *)url fileType:(NSString *)fileType {
-  _currentUrl = url;
+  BOOL sameFileType = NO;
 
-  _currentPreviewView = [_pluginManager previewViewForFileType:fileType];
-  _currentPreviewView.translatesAutoresizingMaskIntoConstraints = NO;
-  DDLogInfo(@"Using plugin %@ for %@", [_currentPreviewView class], fileType);
-
-  if (!_windowHasBeenShown) {
-    CGRect mainWinFrame = _mainWindowController.window.frame;
-    CGPoint mainWinOrigin = mainWinFrame.origin;
-    [self.window setFrameOrigin:CGPointMake(
-        mainWinOrigin.x + 30,
-        mainWinOrigin.y + mainWinFrame.size.height - 30 - self.window.frame.size.height
-    )];
-    _windowHasBeenShown = YES;
+  if ([_lastFileType isEqualToString:fileType]) {
+    sameFileType = YES;
   }
 
-  [self preparePreviewView:_currentPreviewView];
+  _currentUrl = url;
+
+  if (!sameFileType) {
+    _lastFileType = fileType;
+
+    _currentPreviewView = [_pluginManager previewViewForFileType:fileType];
+    _currentPreviewView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self preparePreviewView:_currentPreviewView];
+
+    DDLogInfo(@"Using new instance of preview view class %@ for %@", [_currentPreviewView class], fileType);
+  }
+
   self.window.title = SF(@"%@ — %@ — [%@]", @"Preview", url.lastPathComponent, url.path.stringByDeletingLastPathComponent.stringByAbbreviatingWithTildeInPath);
-  [self showWindow:self];
   [_currentPreviewView previewFileAtUrl:url];
+
+  if (!_windowHasBeenShown) {
+    [self placeWindowInitialDisplay];
+  }
 }
 
 #pragma mark VRFileItemCacheInvalidationObserver
@@ -88,6 +102,16 @@
 }
 
 #pragma mark Private
+- (void)placeWindowInitialDisplay {
+  CGRect mainWinFrame = _mainWindowController.window.frame;
+  CGPoint mainWinOrigin = mainWinFrame.origin;
+  [self.window setFrameOrigin:CGPointMake(
+      mainWinOrigin.x + 30,
+      mainWinOrigin.y + mainWinFrame.size.height - 30 - self.window.frame.size.height
+  )];
+  _windowHasBeenShown = YES;
+}
+
 - (void)preparePreviewView:(NSView <VRPluginPreviewView> *)previewView {
   NSView *contentView = self.window.contentView;
   [contentView removeConstraints:_previewViewConstraints];

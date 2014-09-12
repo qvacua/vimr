@@ -23,7 +23,7 @@
 #pragma mark Public
 - (instancetype)initWithMainWindowController:(VRMainWindowController *)mainWindowController;
 - (void)setUp;
-- (void)previewForUrl:(NSURL *)url fileType:(NSString *)fileType;
+- (void)updatePreview;
 
 #pragma mark VRFileItemCacheInvalidationObserver
 - (void)registerFileItemCacheInvalidationObservation;
