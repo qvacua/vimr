@@ -29,10 +29,15 @@
   VRWorkspaceView *workspaceView;
 
   VRFileBrowserView *fileBrowserView;
+
+  NSWorkspace *workspace;
 }
 
 - (void)setUp {
   [super setUp];
+
+  workspace = mock([NSWorkspace class]);
+  [given([workspace iconForFile:anything()]) willReturn:mock([NSImage class])];
 
   NSURL *rsrcUrl = [NSBundle bundleForClass:self.class].resourceURL;
   level1 = [rsrcUrl URLByAppendingPathComponent:@"level-1" isDirectory:YES];
@@ -40,6 +45,7 @@
   fileItemManager = [[VRFileItemManager alloc] init];
   fileItemManager.fileManager = [NSFileManager defaultManager];
   fileItemManager.notificationCenter = [NSNotificationCenter defaultCenter];
+  fileItemManager.workspace = workspace;
 
   [fileItemManager registerUrl:level1];
 
