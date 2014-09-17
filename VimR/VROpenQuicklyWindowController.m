@@ -51,8 +51,7 @@ int qOpenQuicklyWindowWidth = 400;
   _targetWindow = windowController.window;
 
   CGRect contentRect = [_targetWindow contentRectForFrameRect:_targetWindow.frame];
-  CGFloat xPos = NSMinX(contentRect) + NSWidth(contentRect) / 2 - qOpenQuicklyWindowWidth / 2
-      - 2 * qOpenQuicklyWindowPadding;
+  CGFloat xPos = NSMinX(contentRect) + NSWidth(contentRect) / 2 - qOpenQuicklyWindowWidth / 2 - 2 * qOpenQuicklyWindowPadding;
   CGFloat yPos = NSMaxY(contentRect) - NSHeight(self.window.frame);
 
   self.window.frameOrigin = CGPointMake(xPos, yPos);
@@ -134,6 +133,15 @@ int qOpenQuicklyWindowWidth = 400;
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(NSCell *)cell forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
   VRScoredPath *scoredPath = _filteredFileItems[(NSUInteger) row];
   cell.image = [_fileItemManager iconForUrl:scoredPath.url];
+}
+
+- (void)tableViewSelectionDidChange:(NSNotification *)notification {
+//  @synchronized (_filteredFileItems) {
+//    _targetWindowController.workspace.workingDirectory;
+//    NSURL *parentUrl = [_filteredFileItems[(NSUInteger) [notification.object selectedRow]] url].URLByDeletingLastPathComponent;
+//    parentUrl
+//    _pathControl.URL = parentUrl;
+//  }
 }
 
 #pragma mark NSTextFieldDelegate

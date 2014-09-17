@@ -221,9 +221,7 @@ static NSArray *qKeysToCache;
 * shouldStopBeforeChunk() is called before each chunk execution and if it returns YES, we stop and return NO, ie
 * the enumeration was not complete, but was cancelled.
 */
-- (BOOL)chunkEnumerateArray:(__weak NSArray *)array
-         usingBlockOnChunks:(void (^)(size_t beginIndex, size_t endIndex))blockOnChunks {
-
+- (BOOL)chunkEnumerateArray:(__weak NSArray *)array usingBlockOnChunks:(void (^)(size_t beginIndex, size_t endIndex))blockOnChunks {
   std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(array.count, qArrayChunkSize);
   for (auto &pair : chunkedIndexes) {
     CANCEL_OR_WAIT(NO)

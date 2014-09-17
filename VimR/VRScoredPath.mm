@@ -1,22 +1,21 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import "VRScoredPath.h"
 #import "VRUtils.h"
+#import "NSString+VR.h"
 
 #import <cf/cf.h>
 #import <text/ranker.h>
 
 
-static inline double rank_string(NSString *string, NSString *target,
-    std::vector< std::pair<size_t, size_t> > *out = NULL) {
-
+static inline double rank_string(NSString *string, NSString *target, std::vector<std::pair<size_t, size_t> > *out = NULL) {
   return oak::rank(cf::to_s((__bridge CFStringRef) string), cf::to_s((__bridge CFStringRef) target), out);
 }
 
@@ -35,7 +34,14 @@ static inline double rank_string(NSString *string, NSString *target,
 }
 
 - (void)computeScoreForCandidate:(NSString *)candidate {
-  _score = rank_string(candidate, _url.lastPathComponent);
+  NSString *preparedStr;
+  if ([candidate contains:@"/"]) {
+    preparedStr = _url.path;
+  } else {
+    preparedStr = _url.lastPathComponent;
+  }
+
+  _score = rank_string(candidate, preparedStr);
 }
 
 #pragma mark NSObject

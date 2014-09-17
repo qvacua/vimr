@@ -68,6 +68,8 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSCom
 
   [self reCacheNodes];
   [_fileOutlineView reloadData];
+  [self resizeToFitContents];
+
   [self restoreExpandedStates];
 
   [_fileOutlineView scrollRectToVisible:visibleRect];
@@ -163,6 +165,14 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSCom
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification {
   [_fileOutlineView actionReset];
+}
+
+- (void)outlineViewItemDidExpand:(NSNotification *)notification {
+  [self resizeToFitContents];
+}
+
+- (void)outlineViewItemDidCollapse:(NSNotification *)notification {
+  [self resizeToFitContents];
 }
 
 #pragma mark NSView
@@ -361,9 +371,9 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSCom
   [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingTail];
 
   _fileOutlineView = [[VRFileBrowserOutlineView alloc] initWithFrame:CGRectZero];
+  [_fileOutlineView setColumnAutoresizingStyle:NSTableViewNoColumnAutoresizing];
   [_fileOutlineView addTableColumn:tableColumn];
   _fileOutlineView.outlineTableColumn = tableColumn;
-  [_fileOutlineView sizeLastColumnToFit];
   _fileOutlineView.allowsEmptySelection = YES;
   _fileOutlineView.allowsMultipleSelection = NO;
   _fileOutlineView.headerView = nil;
@@ -525,6 +535,26 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSCom
   }
 
   return result;
+}
+
+- (void)resizeToFitContents {
+  CGFloat indentation = _fileOutlineView.indentationPerLevel;
+  NSRect rect = CGRectMake(0, 0, INFINITY, _fileOutlineView.rowHeight);
+
+  CGFloat maxSize = 0;
+  for (NSInteger i = 0; i < _fileOutlineView.numberOfRows; i++) {
+    NSCell *cell = [_fileOutlineView preparedCellAtColumn:0 row:i];
+    NSSize size = [cell cellSizeForBounds:rect];
+    NSInteger level = [_fileOutlineView levelForItem:[_fileOutlineView itemAtRow:i]];
+
+    // FIXME: empirical value to make sure that the table column's width is big enough...
+    // not a good solution, will probably break soon...
+    maxSize = MAX(maxSize, indentation * (level + 1 + 3 /* empirical value */) + size.width);
+  }
+
+  NSTableColumn *column = _fileOutlineView.outlineTableColumn;
+  column.minWidth = maxSize;
+  column.width = maxSize;
 }
 
 @end
