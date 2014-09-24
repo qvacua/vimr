@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -10,7 +10,7 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <menu title="AMainMenu" systemMenu="main" id="29">
             <items>
                 <menuItem title="VimR" id="56">
@@ -363,60 +363,61 @@
                 <menuItem title="View" id="295">
                     <menu key="submenu" title="View" id="296">
                         <items>
-                            <menuItem title="Sidebar" id="MDH-WW-bYf">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Sidebar" id="xLO-fh-3MJ">
-                                    <items>
-                                        <menuItem title="Show File Browser" keyEquivalent="1" id="qHs-KO-fKo">
-                                            <connections>
-                                                <action selector="showFileBrowser:" target="-1" id="QgY-Wh-Lo1"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="whj-4X-AqO"/>
-                                        <menuItem title="Put Sidebar on Right" keyEquivalent="0" id="GQ2-og-mBa">
-                                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="toggleSidebarOnRight:" target="-1" id="gmw-GW-KmU"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Hide Sidebar" keyEquivalent="0" id="Dta-j0-WQt">
-                                            <connections>
-                                                <action selector="hideSidebar:" target="-1" id="8wa-f7-MRO"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
+                            <menuItem title="Show File Browser" keyEquivalent="1" id="m8V-X2-m82">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="showFileBrowser:" target="-1" id="tke-MQ-A8G"/>
+                                </connections>
                             </menuItem>
-                            <menuItem title="File Browser Behavior" id="9Xb-Mv-R9X">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="File Browser Behavior" id="lZ4-03-NaY">
-                                    <items>
-                                        <menuItem title="Show Folders First" id="Sjh-xe-x3X">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="toggleShowFoldersFirst:" target="-1" id="CoY-Lq-CIx"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Show Hidden Files" id="GKF-ac-t4R">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="toggleShowHiddenFiles:" target="-1" id="pmk-id-d3Q"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Sync Working Directory with Vim's 'pwd'" id="KBL-a3-5Q3">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="toggleSyncWorkspaceWithPwd:" target="-1" id="TAw-GH-gy9"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
+                            <menuItem title="Hide File Browser" keyEquivalent="0" id="cKB-wE-YV2">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="hideSidebar:" target="-1" id="tys-zs-PmU"/>
+                                </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="VCk-xX-v5c"/>
+                            <menuItem title="Put File Browser on Right" keyEquivalent="0" id="mDM-BC-eAg">
+                                <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                                <connections>
+                                    <action selector="toggleSidebarOnRight:" target="-1" id="ogW-uA-Dyn"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="Aa2-gG-5De"/>
                             <menuItem title="Show Status Bar" keyEquivalent="/" id="APq-bi-3bg">
                                 <connections>
                                     <action selector="toggleStatusBar:" target="-1" id="hrV-es-SUd"/>
                                 </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Navigate" id="FlI-ZJ-g9T">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Navigate" id="Qkn-nP-qpX">
+                        <items>
+                            <menuItem title="File Browser Behavior" id="rS2-fa-a7N">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="File Browser Behavior" id="ZMu-E3-48Q">
+                                    <items>
+                                        <menuItem title="Show Folders First" id="wfg-C6-WGB">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleShowFoldersFirst:" target="-1" id="b6H-BD-rQA"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Show Hidden Files" id="93p-aD-Xtg">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleShowHiddenFiles:" target="-1" id="qwZ-T3-Q3P"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Sync Working Directory with Vim's 'pwd'" id="u25-dx-q2m">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleSyncWorkspaceWithPwd:" target="-1" id="z3U-JU-7P7"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
                             </menuItem>
                         </items>
                     </menu>
