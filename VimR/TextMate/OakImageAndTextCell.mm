@@ -4,9 +4,19 @@
 
 /**
 * Frameworks/OakAppKit/src/NSimage Addtions.mm
-* v2.0-alpha.9537
+* Slightly different formatting
+* 32a3d939cd1ace06fc3d90b7ea65541aaca1941e
 */
-@implementation OakImageAndTextCell
+@implementation OakImageAndTextCell {
+  NSImage *_image;
+}
+
+- (NSImage *)image {
+  return _image;
+}
+- (void)setImage:(NSImage *)anImage {
+  _image = anImage;
+}
 
 - (id)copyWithZone:(NSZone *)zone {
   OakImageAndTextCell *cell = (OakImageAndTextCell *) [super copyWithZone:zone];
@@ -27,29 +37,21 @@
   NSRect imageFrame = [self imageFrameWithFrame:aRect inControlView:aView];
   NSRect textFrame = aRect;
   textFrame.origin.x = NSMaxX(imageFrame) + 4;
-  textFrame.origin.y += 1;
-  textFrame.size.height -= 2;
   textFrame.size.width = NSMaxX(aRect) - NSMinX(textFrame);
   return textFrame;
 }
 
-- (void)editWithFrame:(NSRect)aRect inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject
-                event:(NSEvent *)theEvent {
-
-  [super editWithFrame:[self textFrameWithFrame:aRect inControlView:controlView] inView:controlView editor:textObj
-              delegate:anObject event:theEvent];
+- (void)editWithFrame:(NSRect)aRect inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject event:(NSEvent *)theEvent {
+  [super editWithFrame:[self textFrameWithFrame:aRect inControlView:controlView] inView:controlView editor:textObj delegate:anObject event:theEvent];
 }
 
-- (void)selectWithFrame:(NSRect)aRect inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject
-                  start:(NSInteger)selStart length:(NSInteger)selLength {
-
-  [super selectWithFrame:[self textFrameWithFrame:aRect inControlView:controlView] inView:controlView editor:textObj
-                delegate:anObject start:selStart length:selLength];
+- (void)selectWithFrame:(NSRect)aRect inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength {
+  [super selectWithFrame:[self textFrameWithFrame:aRect inControlView:controlView] inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
 }
 
 - (NSRect)expansionFrameWithFrame:(NSRect)cellFrame inView:(NSView *)view {
   NSRect frame = [super expansionFrameWithFrame:[self textFrameWithFrame:cellFrame inControlView:view] inView:view];
-  frame.size.width -= self.image ? [self.image size].width + 3.0 : 0.0;
+  frame.size.width -= self.image ? [self.image size].width + 3 : 0;
   return frame;
 }
 
@@ -60,7 +62,7 @@
       [[self backgroundColor] set];
       NSRectFill(imageRect);
     }
-    [self.image drawAdjustedInRect:imageRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+    [self.image drawAdjustedInRect:imageRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
   }
 
   [super drawWithFrame:[self textFrameWithFrame:cellFrame inControlView:controlView] inView:controlView];
@@ -68,22 +70,20 @@
 
 - (NSSize)cellSize {
   NSSize cellSize = [super cellSize];
-  cellSize.width += self.image ? [self.image size].width + 3.0 : 0.0;
+  cellSize.width += self.image ? [self.image size].width + 3 : 0;
   return cellSize;
 }
 
 - (NSUInteger)hitTestForEvent:(NSEvent *)event inRect:(NSRect)cellFrame ofView:(NSView *)controlView {
   NSRect imageRect = [self imageFrameWithFrame:cellFrame inControlView:controlView];
   NSRect textRect = [self textFrameWithFrame:cellFrame inControlView:controlView];
-  NSPoint point = [controlView convertPoint:
-      ([event window] ? [event locationInWindow] : [[controlView window] convertScreenToBase:[event locationInWindow]])
-                                   fromView:nil];
+  NSPoint point = [controlView convertPoint:([event window] ? [event locationInWindow] : [[controlView window] convertRectFromScreen:(NSRect) {[event locationInWindow], NSZeroSize}].origin) fromView:nil];
 
   NSUInteger res = NSCellHitContentArea;
   if (NSMouseInRect(point, imageRect, controlView.isFlipped))
     res = NSCellHitContentArea | OakImageAndTextCellHitImage;
   else if (NSMouseInRect(point, textRect, controlView.isFlipped))
-    res = NSCellHitContentArea | /*NSCellHitEditableTextArea |*/ OakImageAndTextCellHitText; // We don't need editing
+    res = NSCellHitContentArea | NSCellHitEditableTextArea | OakImageAndTextCellHitText;
   return res;
 }
 

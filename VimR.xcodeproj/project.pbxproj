@@ -325,7 +325,7 @@
 		1929BFA3CFF24540C8D6937A /* VRFileBrowserView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRFileBrowserView.m; sourceTree = "<group>"; };
 		1929BFDF13D59CE5B6D54B2D /* VRGeneralPrefPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRGeneralPrefPane.m; sourceTree = "<group>"; };
 		1929BFE6F9FFFCCA920EF56C /* VRPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRPluginManager.h; sourceTree = "<group>"; };
-		35DDD94E48FE41568A1349A2 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		44ADE76C2C18B01D5595A5B8 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		4B6F2572197BAD4300AB1DD8 /* VimRPluginDefinition.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = VimRPluginDefinition.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B6F2585197BB59000AB1DD8 /* Markdown.vimr-plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = "Markdown.vimr-plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B89F119190A473F00AA0EE5 /* MacVimFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MacVimFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -351,8 +351,10 @@
 		4BE9243518C20DBC00E67BB6 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		4BE9243C18C20DBC00E67BB6 /* VimRTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "VimRTests-Info.plist"; sourceTree = "<group>"; };
 		4BE9243E18C20DBC00E67BB6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		7A3FC0B1787A4B05B5E0AE34 /* Pods-VimRTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VimRTests.xcconfig"; path = "Pods/Pods-VimRTests.xcconfig"; sourceTree = "<group>"; };
+		72FC4EA04A89B7D607AE062C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		84FA57C8227BFE14B01965B5 /* Pods-VimRTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VimRTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VimRTests/Pods-VimRTests.debug.xcconfig"; sourceTree = "<group>"; };
 		876A31FD94744ACDB111D476 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C68E620AE7FD0A6A47982499 /* Pods-VimRTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VimRTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-VimRTests/Pods-VimRTests.release.xcconfig"; sourceTree = "<group>"; };
 		E9EFC32D7A674D77BBF1D411 /* libPods-VimRTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-VimRTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F84FA63B196A809900F8E2B8 /* VRFileBrowserActionTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRFileBrowserActionTest.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -626,8 +628,7 @@
 				4B6F2587197BB59800AB1DD8 /* Plugins */,
 				4BE9241518C20DBC00E67BB6 /* Frameworks */,
 				4BE9241418C20DBC00E67BB6 /* Products */,
-				35DDD94E48FE41568A1349A2 /* Pods.xcconfig */,
-				7A3FC0B1787A4B05B5E0AE34 /* Pods-VimRTests.xcconfig */,
+				DA168E6AEEDE97E1FD73861B /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -735,6 +736,17 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		DA168E6AEEDE97E1FD73861B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				72FC4EA04A89B7D607AE062C /* Pods.debug.xcconfig */,
+				44ADE76C2C18B01D5595A5B8 /* Pods.release.xcconfig */,
+				84FA57C8227BFE14B01965B5 /* Pods-VimRTests.debug.xcconfig */,
+				C68E620AE7FD0A6A47982499 /* Pods-VimRTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -807,6 +819,8 @@
 			mainGroup = 4BE9240A18C20DBC00E67BB6;
 			productRefGroup = 4BE9241418C20DBC00E67BB6 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+			);
 			projectRoot = "";
 			targets = (
 				4BE9241218C20DBC00E67BB6 /* VimR */,
@@ -853,7 +867,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-VimRTests-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-VimRTests/Pods-VimRTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		16F47F5372CE497A96F5CDD8 /* Copy Pods Resources */ = {
@@ -868,7 +882,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		1A52FA72DD38403BBD2A859E /* Check Pods Manifest.lock */ = {
@@ -1146,7 +1160,7 @@
 		};
 		4BE9244518C20DBC00E67BB6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 35DDD94E48FE41568A1349A2 /* Pods.xcconfig */;
+			baseConfigurationReference = 72FC4EA04A89B7D607AE062C /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1188,7 +1202,7 @@
 		};
 		4BE9244618C20DBC00E67BB6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 35DDD94E48FE41568A1349A2 /* Pods.xcconfig */;
+			baseConfigurationReference = 44ADE76C2C18B01D5595A5B8 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1230,7 +1244,7 @@
 		};
 		4BE9244818C20DBC00E67BB6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7A3FC0B1787A4B05B5E0AE34 /* Pods-VimRTests.xcconfig */;
+			baseConfigurationReference = 84FA57C8227BFE14B01965B5 /* Pods-VimRTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/VimR.app/Contents/MacOS/VimR";
@@ -1276,7 +1290,7 @@
 		};
 		4BE9244918C20DBC00E67BB6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7A3FC0B1787A4B05B5E0AE34 /* Pods-VimRTests.xcconfig */;
+			baseConfigurationReference = C68E620AE7FD0A6A47982499 /* Pods-VimRTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/VimR.app/Contents/MacOS/VimR";

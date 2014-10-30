@@ -10,7 +10,7 @@ PODS:
     - TPWeakProxy (~> 1.0)
   - Sparkle (1.7.1)
   - TBCacao (0.0.2)
-  - TPWeakProxy (1.0.0)
+  - TPWeakProxy (1.0.1)
 
 DEPENDENCIES:
   - CocoaLumberjack
@@ -25,6 +25,6 @@ SPEC CHECKSUMS:
   OCMockito: eca2670b3ce4a457d316b046a36d6f2b980a4da7
   Sparkle: fde5ffeb7bf01db28925499ce2a75977763af58a
   TBCacao: 81edd5849d972f1869ab640e6c6e638f765141d2
-  TPWeakProxy: a23251ba7fbe268c93f809cc072ef834f5063798
+  TPWeakProxy: da4177b6ae5eff685642c1cd9698f71ef7060ea5
 
-COCOAPODS: 0.33.1
+COCOAPODS: 0.34.4
