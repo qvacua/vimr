@@ -1,30 +1,27 @@
 PODS:
-  - CocoaLumberjack (1.9.1):
+  - CocoaLumberjack (1.9.2):
     - CocoaLumberjack/Extensions
-  - CocoaLumberjack/Core (1.9.1)
-  - CocoaLumberjack/Extensions (1.9.1):
+  - CocoaLumberjack/Core (1.9.2)
+  - CocoaLumberjack/Extensions (1.9.2):
     - CocoaLumberjack/Core
   - OCHamcrest (4.0.1)
-  - OCMockito (1.3.0):
+  - OCMockito (1.3.1):
     - OCHamcrest (~> 4.0)
-    - TPWeakProxy (~> 1.0)
-  - Sparkle (1.7.1)
+  - Sparkle (1.8.0)
   - TBCacao (0.0.2)
-  - TPWeakProxy (1.0.1)
 
 DEPENDENCIES:
-  - CocoaLumberjack
+  - CocoaLumberjack (= 1.9.2)
   - OCHamcrest
   - OCMockito
   - Sparkle
   - TBCacao
 
 SPEC CHECKSUMS:
-  CocoaLumberjack: 94accd5749f5c5d15134c8d50f34a973aed8ef69
+  CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
   OCHamcrest: b464725bbb48d0f1cd9c6f4ec3cb35fe0c4f2b94
-  OCMockito: eca2670b3ce4a457d316b046a36d6f2b980a4da7
-  Sparkle: fde5ffeb7bf01db28925499ce2a75977763af58a
+  OCMockito: 57b8c4bb54ff3a4a14eb2174f9e57faf9f56efb6
+  Sparkle: 5eb20bb37ca21e471dab8417dee880198d905327
   TBCacao: 81edd5849d972f1869ab640e6c6e638f765141d2
-  TPWeakProxy: da4177b6ae5eff685642c1cd9698f71ef7060ea5
 
 COCOAPODS: 0.34.4
