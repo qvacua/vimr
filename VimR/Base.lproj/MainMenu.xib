@@ -364,12 +364,19 @@
                 <menuItem title="View" id="295">
                     <menu key="submenu" title="View" id="296">
                         <items>
-                            <menuItem title="Focus File Browser" keyEquivalent="L" id="lxp-G4-8vM"/>
+                            <menuItem title="Focus File Browser" keyEquivalent="L" id="lxp-G4-8vM">
+                                <connections>
+                                    <action selector="showFileBrowser:" target="-1" id="mYg-G3-1Wi"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Focus Text Area" id="QxQ-g1-Bzs">
                                 <string key="keyEquivalent" base64-UTF8="YES">
 Gw
 </string>
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="focusVimView:" target="-1" id="v9m-Vo-rd1"/>
+                                </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="ooA-uS-6QN"/>
                             <menuItem title="Show File Browser" keyEquivalent="1" id="m8V-X2-m82">

@@ -85,6 +85,11 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSCom
   [self reload];
 }
 
+#pragma mark IBActions
+- (IBAction)focusVimView:(id)sender {
+  [self actionFocusVimView];
+}
+
 #pragma mark NSObject
 - (void)dealloc {
   [self removeFileItemCacheInvalidationObservation];

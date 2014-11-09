@@ -41,6 +41,9 @@
 - (void)setUp;
 - (void)reload;
 
+#pragma mark IBActions
+- (IBAction)focusVimView:(id)sender;
+
 #pragma mark NSOutlineViewDataSource
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item;
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index1 ofItem:(id)item;
