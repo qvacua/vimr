@@ -239,9 +239,20 @@ static const int qMinimumFileBrowserWidth = 100;
 
 #pragma mark NSUserInterfaceValidations
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
+  // TODO: there must be a better way (place) to set the title of a menu item according to the action...
+
   SEL action = anItem.action;
 
-  if (action == @selector(showFileBrowser:)) {return YES;}
+  if (action == @selector(showFileBrowser:)) {
+    if (_fileBrowserView == nil) {
+      [(NSMenuItem *) anItem setTitle:@"Show File Browser"];
+    } else {
+      if (self.window.firstResponder != _fileBrowserView) {
+        [(NSMenuItem *) anItem setTitle:@"Focus File Browser"];
+      }
+    }
+    return YES;
+  }
 
   if (action == @selector(hideSidebar:)) {return _fileBrowserView != nil;}
 
@@ -269,7 +280,6 @@ static const int qMinimumFileBrowserWidth = 100;
       || action == @selector(toggleShowHiddenFiles:)
       || action == @selector(toggleSyncWorkspaceWithPwd:)) {
 
-    // TODO: there must be a better way to do this...
     [self setStateOfFileBrowserFlagsForMenuItem:anItem];
 
     return _fileBrowserView != nil;

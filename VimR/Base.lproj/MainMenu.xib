@@ -363,16 +363,18 @@
                 <menuItem title="View" id="295">
                     <menu key="submenu" title="View" id="296">
                         <items>
+                            <menuItem title="Focus File Browser" keyEquivalent="L" id="lxp-G4-8vM"/>
+                            <menuItem title="Focus Text Area" id="QxQ-g1-Bzs">
+                                <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="ooA-uS-6QN"/>
                             <menuItem title="Show File Browser" keyEquivalent="1" id="m8V-X2-m82">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="showFileBrowser:" target="-1" id="tke-MQ-A8G"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Hide File Browser" keyEquivalent="0" id="cKB-wE-YV2">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="hideSidebar:" target="-1" id="tys-zs-PmU"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Put File Browser on Right" keyEquivalent="0" id="mDM-BC-eAg">
@@ -394,30 +396,23 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Navigate" id="Qkn-nP-qpX">
                         <items>
-                            <menuItem title="File Browser Behavior" id="rS2-fa-a7N">
+                            <menuItem title="Show Folders First" id="jSN-4m-3wl">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="File Browser Behavior" id="ZMu-E3-48Q">
-                                    <items>
-                                        <menuItem title="Show Folders First" id="wfg-C6-WGB">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="toggleShowFoldersFirst:" target="-1" id="b6H-BD-rQA"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Show Hidden Files" id="93p-aD-Xtg">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="toggleShowHiddenFiles:" target="-1" id="qwZ-T3-Q3P"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Sync Working Directory with Vim's 'pwd'" id="u25-dx-q2m">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="toggleSyncWorkspaceWithPwd:" target="-1" id="z3U-JU-7P7"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
+                                <connections>
+                                    <action selector="toggleShowFoldersFirst:" target="-1" id="HcS-j8-6t6"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Show Hidden Files" id="9fO-Qz-cWQ">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleShowHiddenFiles:" target="-1" id="lSo-BO-0fc"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Sync Working Directory with Vim's 'pwd'" id="BKA-1b-0RM">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleSyncWorkspaceWithPwd:" target="-1" id="d9o-Qm-6eV"/>
+                                </connections>
                             </menuItem>
                         </items>
                     </menu>
@@ -519,7 +514,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="605" height="501"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1178"/>
             <view key="contentView" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="605" height="501"/>
                 <autoresizingMask key="autoresizingMask"/>
