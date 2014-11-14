@@ -364,7 +364,8 @@
                 <menuItem title="View" id="295">
                     <menu key="submenu" title="View" id="296">
                         <items>
-                            <menuItem title="Focus File Browser" keyEquivalent="L" id="lxp-G4-8vM">
+                            <menuItem title="Focus File Browser" id="lxp-G4-8vM">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="showFileBrowser:" target="-1" id="mYg-G3-1Wi"/>
                                 </connections>
@@ -379,8 +380,7 @@ Gw
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="ooA-uS-6QN"/>
-                            <menuItem title="Show File Browser" keyEquivalent="1" id="m8V-X2-m82">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                            <menuItem title="Show File Browser" keyEquivalent="L" id="m8V-X2-m82">
                                 <connections>
                                     <action selector="showFileBrowser:" target="-1" id="tke-MQ-A8G"/>
                                 </connections>
