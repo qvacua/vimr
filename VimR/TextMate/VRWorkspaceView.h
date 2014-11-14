@@ -64,8 +64,10 @@ extern NSString *const qSidebarWidthAutosaveName;
 - (IBAction)toggleSyncWorkspaceWithPwd:(NSMenuItem *)sender;
 - (IBAction)toggleShowFoldersFirst:(NSMenuItem *)sender;
 - (IBAction)toggleShowHiddenFiles:(NSMenuItem *)sender;
-- (IBAction)hideSidebar:(id)sender;
 - (IBAction)toggleSidebarOnRight:(id)sender;
+
+- (IBAction)hideFileBrowser:(id)sender;
+- (IBAction)focusFileBrowser:(id)sender;
 - (IBAction)showFileBrowser:(id)sender;
 
 @end

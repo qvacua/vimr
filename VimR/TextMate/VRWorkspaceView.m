@@ -122,19 +122,24 @@ static const int qMinimumFileBrowserWidth = 100;
   self.needsUpdateConstraints = YES;
 }
 
-- (IBAction)hideSidebar:(id)sender {
-  self.fileBrowserView = nil;
-  [self.window makeFirstResponder:_vimView.textView];
-}
-
 - (IBAction)toggleSidebarOnRight:(id)sender {
   self.fileBrowserOnRight = !_fileBrowserOnRight;
   [self.mainWindowController forceRedrawVimView]; // Vim does not refresh the part in which the file browser was
 }
 
+- (IBAction)focusFileBrowser:(id)sender {
+  if (_fileBrowserView == nil) {
+    [self showFileBrowser:sender];
+  }
+
+  [self.window makeFirstResponder:_fileBrowserView.fileOutlineView];
+}
+
 - (IBAction)showFileBrowser:(id)sender {
   if (_fileBrowserView) {
-    [self.window makeFirstResponder:_fileBrowserView.fileOutlineView];
+    self.fileBrowserView = nil;
+    [self.window makeFirstResponder:_vimView.textView];
+
     return;
   }
 
@@ -247,14 +252,12 @@ static const int qMinimumFileBrowserWidth = 100;
     if (_fileBrowserView == nil) {
       [(NSMenuItem *) anItem setTitle:@"Show File Browser"];
     } else {
-      if (self.window.firstResponder != _fileBrowserView) {
-        [(NSMenuItem *) anItem setTitle:@"Focus File Browser"];
-      }
+      [(NSMenuItem *) anItem setTitle:@"Hide File Browser"];
     }
     return YES;
   }
 
-  if (action == @selector(hideSidebar:)) {return _fileBrowserView != nil;}
+  if (action == @selector(focusFileBrowser:)) {return YES;}
 
   if (action == @selector(toggleStatusBar:)) {
     if (_showStatusBar) {
