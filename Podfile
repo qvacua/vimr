@@ -1,10 +1,10 @@
 platform :osx, "10.9"
 
-pod "TBCacao"
+pod "TBCacao", "0.0.2"
 pod "CocoaLumberjack", "1.9.2"
-pod "Sparkle"
+pod "Sparkle", "1.8.0"
 
 target :VimRTests do
-  pod "OCHamcrest"
-  pod "OCMockito"
+  pod "OCHamcrest", "4.0.1"
+  pod "OCMockito", "1.3.1"
 end
