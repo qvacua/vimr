@@ -66,7 +66,6 @@ extern NSString *const qSidebarWidthAutosaveName;
 - (IBAction)toggleShowHiddenFiles:(NSMenuItem *)sender;
 - (IBAction)toggleSidebarOnRight:(id)sender;
 
-- (IBAction)hideFileBrowser:(id)sender;
 - (IBAction)focusFileBrowser:(id)sender;
 - (IBAction)showFileBrowser:(id)sender;
 

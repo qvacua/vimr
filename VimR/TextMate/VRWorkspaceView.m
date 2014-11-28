@@ -15,6 +15,7 @@
 #import "VRMainWindowController.h"
 #import "VRUtils.h"
 #import "VRFileBrowserViewFactory.h"
+#import "VRDefaultLogSetting.h"
 
 
 #define SQ(x) ((x)*(x))
@@ -69,6 +70,20 @@ static const int qMinimumFileBrowserWidth = 100;
   NSBox *dividerView = aFileBrowserView ? OakCreateVerticalLine([NSColor controlShadowColor], nil) : nil;
 
   _fileBrowserDivider = [self replaceView:_fileBrowserDivider withView:dividerView];
+
+  /**
+  * Bug under Yosemite: when the user calls -showFileBrowser: via the menu item, after this line, the updateConstraints
+  * kicks in and crashes because _fileBrowserView is not nil. Therefore, we return here, when we're on Yosemite.
+  * If you use the keyboard shortcut, there's no problem...
+  * Cf. also -updateConstraints
+  */
+  if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_9) {
+    if (_fileBrowserView == nil && aFileBrowserView == nil) {
+      DDLogWarn(@"Workaround in work because of a strange behavior on Yosemite");
+      return;
+    }
+  }
+
   _fileBrowserView = [self replaceView:_fileBrowserView withView:aFileBrowserView];
 }
 
@@ -307,6 +322,20 @@ static const int qMinimumFileBrowserWidth = 100;
   [self removeConstraints:_myConstraints];
   [_myConstraints removeAllObjects];
   [super updateConstraints];
+
+  /**
+  * Bug under Yosemite: when the user calls -showFileBrowser: via the menu item, after this line, the updateConstraints
+  * kicks in and crashes because _fileBrowserView is not nil. Therefore, we return here, when we're on Yosemite.
+  * If you use the keyboard shortcut, there's no problem...
+  * Cf. also -setFileBrowserView:
+  */
+  if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_9) {
+    if (_fileBrowserDivider == nil && _fileBrowserView != nil) {
+      DDLogWarn(@"Workaround in work because of a strange behavior on Yosemite");
+      [_fileBrowserView removeFromSuperview];
+      _fileBrowserView = nil;
+    }
+  }
 
   NSDictionary *views = @{
       @"fileBrowserView" : _fileBrowserView ?: [NSNull null],
