@@ -1,7 +1,7 @@
 language: objective-c
 before_install:
     - export LANG=en_US.UTF-8
-    - gem install cocoapods -v '0.34.4'
+    - gem install cocoapods -v '0.35.0'
 before_script:
     - git submodule update --init --recursive
     - export LANG=en_US.UTF-8

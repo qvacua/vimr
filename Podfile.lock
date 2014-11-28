@@ -1,6 +1,6 @@
 PODS:
   - CocoaLumberjack (1.9.2):
-    - CocoaLumberjack/Extensions
+    - CocoaLumberjack/Extensions (= 1.9.2)
   - CocoaLumberjack/Core (1.9.2)
   - CocoaLumberjack/Extensions (1.9.2):
     - CocoaLumberjack/Core
@@ -24,4 +24,4 @@ SPEC CHECKSUMS:
   Sparkle: 5eb20bb37ca21e471dab8417dee880198d905327
   TBCacao: 81edd5849d972f1869ab640e6c6e638f765141d2
 
-COCOAPODS: 0.34.4
+COCOAPODS: 0.35.0
