@@ -6,24 +6,20 @@
         <description>Most recent changes with links to updates for VimR.</description>
         <language>en</language>
         <item>
-            <title>Version 0.3.0</title>
+            <title>Version 0.3.1</title>
             <description>
                 <ul>
-<li>Preliminary full-screen support (<a href="https://github.com/qvacua/vimr/pull/98">#98</a>)</li>
-<li>Bugfix: Preview window does not work well with multiple tabs (<a href="https://github.com/qvacua/vimr/issues/131">#131</a>)</li>
-<li>Added support for folders in <code>Open Quickly</code> (<a href="https://github.com/qvacua/vimr/issues/120">#120</a>): use <code>/</code>, eg <code>fi/class</code> for <code>first/folder/containing/some/class</code></li>
-<li>Added horizontal scroll to file browser (<a href="https://github.com/qvacua/vimr/issues/119">#119</a>)</li>
-<li>Restructured the menu: Note that some keyboard shortcuts changed (<a href="https://github.com/qvacua/vimr/issues/93">#93</a>)</li>
+<li>Bugfix: Hide File Browser crashes in a certain case on Yosemite (<a href="https://github.com/qvacua/vimr/issues/145">#145</a>)</li>
 </ul>
             </description>
             <sparkle:releaseNotesLink>
                 http://vimr.org/release-notes.html
             </sparkle:releaseNotesLink>
-            <pubDate>2014-11-14 12:52:10 +0000</pubDate>
-            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.3.0-21/VimR-0.3.0.tar.bz2"
-                       sparkle:version="21"
-                       sparkle:shortVersionString="0.3.0"
-                       sparkle:dsaSignature="MCwCFGN2HMkQc7Pf8oOmSBriLPutM1UKAhRa52Z6YhXo5QWC8s2VrzOzQlziCQ=="
+            <pubDate>2014-11-28 15:34:47 +0000</pubDate>
+            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.3.1-22/VimR-0.3.1.tar.bz2"
+                       sparkle:version="22"
+                       sparkle:shortVersionString="0.3.1"
+                       sparkle:dsaSignature="MC4CFQCBlYeBSI9IiCCE8w539LQiG13sdAIVAIqXo7GE2jXDlrJ+Y8vMJy74zDjN"
                        length="8572928"
                        type="application/octet-stream"/>
         </item>
