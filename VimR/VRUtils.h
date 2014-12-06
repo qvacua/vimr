@@ -19,6 +19,8 @@
 #define RETURN_NIL_WHEN_NOT_SELF if (!self) { return nil; }
 #endif
 
+OBJC_EXTERN SInt32 minor_os_version();
+
 OBJC_EXTERN void dispatch_to_main_thread(dispatch_block_t block);
 OBJC_EXTERN void dispatch_to_global_queue(dispatch_block_t block);
 OBJC_EXTERN void dispatch_loop(size_t count, void (^block)(size_t));
