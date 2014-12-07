@@ -28,6 +28,7 @@
 @property (nonatomic, weak) VROpenQuicklyWindowController *openQuicklyWindowController;
 @property (nonatomic, weak) NSNotificationCenter *notificationCenter;
 @property (nonatomic, weak) VRWorkspaceViewFactory *workspaceViewFactory;
+@property (nonatomic, unsafe_unretained) NSFontManager *fontManager;
 
 - (VRMainWindowController *)newMainWindowControllerWithContentRect:(CGRect)contentRect
                                                          workspace:(VRWorkspace *)workspace

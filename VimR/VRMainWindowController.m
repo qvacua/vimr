@@ -235,6 +235,14 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   }
 }
 
+- (IBAction)zoomIn:(id)sender {
+  [_fontManager modifyFont:sender];
+}
+
+- (IBAction)zoomOut:(id)sender {
+  [_fontManager modifyFont:sender];
+}
+
 #ifdef DEBUG
 - (IBAction)debug1Action:(id)sender {
   [_workspaceView setFileBrowserWidth:400];
@@ -259,6 +267,9 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   if (action == @selector(revertDocumentToSaved:)) {return YES;}
   if (action == @selector(openQuickly:)) {return YES;}
   if (action == @selector(showPreview:)) {return YES;}
+
+  if (action == @selector(zoomIn:)) {return YES;}
+  if (action == @selector(zoomOut:)) {return YES;}
 
 #ifdef DEBUG
   if (action == @selector(debug1Action:)) {return YES;}
