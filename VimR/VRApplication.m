@@ -7,16 +7,19 @@
 * See LICENSE
 */
 
-#import "VRCustomApplication.h"
+#import <CocoaLumberjack/DDTTYLogger.h>
+#import <MacVimFramework/MacVimFramework.h>
+#import "VRApplication.h"
 #import "VRUtils.h"
 #import "VRDefaultLogSetting.h"
+#import "VRLogFormatter.h"
 
 
 @implementation VRKeyShortcutItem {
 
 }
 
-- (instancetype)initWithAction:(SEL)anAction keyEquivalent:(NSString *)charCode {
+- (instancetype)initWithAction:(SEL)anAction keyEquivalent:(NSString *)charCode tag:(NSUInteger)tag {
   self = [super init];
   RETURN_NIL_WHEN_NOT_SELF
 
@@ -30,7 +33,7 @@
 @end
 
 
-@implementation VRCustomApplication {
+@implementation VRApplication {
   NSMutableArray *_mutableKeyShortcutItems;
   NSMutableDictionary *_keyEquivalentCache;
 }
@@ -39,7 +42,17 @@
   self = [super init];
   RETURN_NIL_WHEN_NOT_SELF
 
-  NSLog(@"################## not nil");
+  // necessary MacVimFramework initialization {
+  [MMUtils setKeyHandlingUserDefaults];
+  [MMUtils setInitialUserDefaults];
+
+  [[NSFileManager defaultManager] changeCurrentDirectoryPath:NSHomeDirectory()];
+  // } necessary MacVimFramework initialization
+
+  DDTTYLogger *logger = [DDTTYLogger sharedInstance];
+  logger.colorsEnabled = YES;
+  logger.logFormatter = [[VRLogFormatter alloc] init];
+  [DDLog addLogger:logger];
 
   return self;
 }
@@ -64,7 +77,22 @@
     if ([_keyEquivalentCache.allKeys containsObject:charactersIgnoringModifiers]) {
       DDLogInfo(@"custom key shortcut called: %@", charactersIgnoringModifiers);
 
-      [self.keyWindow.firstResponder performSelector:[_keyEquivalentCache[charactersIgnoringModifiers] action]];
+      if (self.keyWindow == nil) {
+        DDLogError(@"key window nil");
+        return;
+      }
+
+      NSResponder *responder = self.keyWindow;
+      do {
+        VRKeyShortcutItem *item = _keyEquivalentCache[charactersIgnoringModifiers];
+        SEL aSelector = [item action];
+        if ([responder respondsToSelector:aSelector]) {
+          DDLogError(@"found one!");
+          [responder performSelectorOnMainThread:aSelector withObject:item waitUntilDone:YES];
+          return;
+        }
+      } while(responder = responder.nextResponder);
+
       return;
     }
   }

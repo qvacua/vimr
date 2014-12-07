@@ -20,12 +20,12 @@
 * By default:
 * - tag = 0
 */
-- (instancetype)initWithAction:(SEL)anAction keyEquivalent:(NSString *)charCode;
+- (instancetype)initWithAction:(SEL)anAction keyEquivalent:(NSString *)charCode tag:(NSUInteger)tag;
 
 @end
 
 
-@interface VRCustomApplication : NSApplication
+@interface VRApplication : NSApplication
 
 @property (nonatomic, readonly) NSArray *keyShortcutItems;
 

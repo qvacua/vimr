@@ -1,30 +1,19 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
-
-#import <TBCacao/TBCacao.h>
-#import <CocoaLumberjack/DDTTYLogger.h>
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 
 int main(int argc, const char *argv[]) {
-  // necessary MacVimFramework initialization {
-//  [MMUtils setKeyHandlingUserDefaults];
-//  [MMUtils setInitialUserDefaults];
-
-//  [[NSFileManager defaultManager] changeCurrentDirectoryPath:NSHomeDirectory()];
-  // } necessary MacVimFramework initialization
-
-  [[TBContext sharedContext] initContext];
-
-//  DDTTYLogger *logger = [DDTTYLogger sharedInstance];
-//  logger.colorsEnabled = YES;
-//  logger.logFormatter = [[VRLogFormatter alloc] init];
-//  [DDLog addLogger:logger];
+  /** Usually we would call here the following:
+  * [[TBContext sharedContext] initContext];
+  * However, we do that in the -init of the app delegate because we use a subclass of NSApplication. Otherwise, AppKit
+  * tries to instantiate two NSApplication's.
+  */
 
   return NSApplicationMain(argc, argv);
 }

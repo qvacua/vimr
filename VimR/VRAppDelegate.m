@@ -19,7 +19,7 @@
 #import "VROpenQuicklyWindowController.h"
 #import "VRDefaultLogSetting.h"
 #import "VRMainWindow.h"
-#import "VRCustomApplication.h"
+#import "VRApplication.h"
 #import "VRPrefWindow.h"
 
 
@@ -165,6 +165,7 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
   self = [super init];
   RETURN_NIL_WHEN_NOT_SELF
 
+  [[TBContext sharedContext] initContext];
   [[TBContext sharedContext] autowireSeed:self];
 
   return self;
@@ -249,20 +250,10 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
   _debug.hidden = NO;
 #endif
 
-  NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:9];
-  for (int i = 0; i < 9; i++) {
-    VRKeyShortcutItem *item = [[VRKeyShortcutItem alloc] initWithAction:@selector(selectNthTab:) keyEquivalent:SF(@"%d", i + 1)];
-    [items addObject:item];
-  }
-//  [_application addKeyShortcutItems:items];
-  [MMUtils setKeyHandlingUserDefaults];
-  [MMUtils setInitialUserDefaults];
-
-  [[NSFileManager defaultManager] changeCurrentDirectoryPath:NSHomeDirectory()];
+  [self addTabKeyShortcuts];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
-  NSLog(@"############################# %@", notification.object);
   _isLaunching = NO;
 }
 
@@ -373,6 +364,16 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
   if (![_userDefaults objectForKey:qDefaultOpenUntitledWinModeOnReactivation]) {
     [_userDefaults setBool:YES forKey:qDefaultOpenUntitledWinModeOnReactivation];
   }
+}
+
+- (void)addTabKeyShortcuts {
+  NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:9];
+  for (NSUInteger i = 0; i < 9; i++) {
+    VRKeyShortcutItem *item = [[VRKeyShortcutItem alloc] initWithAction:@selector(selectNthTab:) keyEquivalent:SF(@"%lu", i + 1) tag:i];
+    [items addObject:item];
+  }
+
+  [_application addKeyShortcutItems:items];
 }
 
 @end

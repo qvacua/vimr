@@ -15,14 +15,14 @@
 @class VRFileItemManager;
 @class VROpenQuicklyWindowController;
 @class VRPrefWindow;
-@class VRCustomApplication;
+@class VRApplication;
 
 @interface VRAppDelegate : NSObject <
     NSApplicationDelegate,
     NSUserNotificationCenterDelegate,
     NSUserInterfaceValidations>
 
-@property (nonatomic, weak) VRCustomApplication *application;
+@property (nonatomic, weak) VRApplication *application;
 @property (nonatomic, weak) NSUserDefaults *userDefaults;
 @property (nonatomic, weak) VRWorkspaceController *workspaceController;
 @property (nonatomic, weak) NSWorkspace *workspace;
