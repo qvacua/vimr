@@ -865,27 +865,8 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
       @"workspace" : _workspaceView,
   }.mutableCopy;
 
-  for (int i = 0; i < 9; i++) {
-    NSButton *tabButton = [[NSButton alloc] initWithFrame:CGRectMake(-100, -100, 100, 24)];
-    tabButton.bordered = NO;
-    tabButton.action = @selector(selectNthTab:);
-    tabButton.keyEquivalent = SF(@"%d", i + 1);
-    tabButton.title = @"TEst";
-
-    tabButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [contentView addSubview:tabButton];
-
-    views[SF(@"tab_%d", i + 1)] = tabButton;
-  }
-
   CONSTRAINT(@"H:|[workspace]|");
   CONSTRAINT(@"V:|[workspace]|");
-  for (int i=0;i<9;i++) {
-    NSString *horConstraint = SF(@"H:|tab_%d", i +1);
-    NSString *verConstraint = SF(@"V:|tab_%d", i +1);
-    CONSTRAINT(horConstraint);
-    CONSTRAINT(verConstraint);
-  }
 }
 
 - (void)sendCommandToVim:(NSString *)command {

@@ -32,6 +32,7 @@
 
 @property (nonatomic, weak) IBOutlet NSWindow *window;
 @property (nonatomic, weak) IBOutlet NSMenuItem *debug;
+@property (nonatomic, weak) IBOutlet NSMenuItem *tabs;
 
 #pragma mark IBActions
 - (IBAction)newDocument:(id)sender;

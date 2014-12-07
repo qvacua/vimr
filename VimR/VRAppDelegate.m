@@ -247,6 +247,14 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
 #ifdef DEBUG
   _debug.hidden = NO;
 #endif
+
+  NSLog(@"######### %@", _tabs.submenu.itemArray);
+  for (int i = 0; i < 9; i++) {
+    NSMenuItem *tabMenu = [[NSMenuItem alloc] initWithTitle:SF(@"Tab Index %d", i + 1) action:@selector(selectNthTab:) keyEquivalent:SF(@"%d", i + 1)];
+    tabMenu.tag = i;
+    [_tabs.submenu addItem:tabMenu];
+    tabMenu.enabled = YES;
+  }
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
