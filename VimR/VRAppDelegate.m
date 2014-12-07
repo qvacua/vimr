@@ -19,6 +19,7 @@
 #import "VROpenQuicklyWindowController.h"
 #import "VRDefaultLogSetting.h"
 #import "VRMainWindow.h"
+#import "VRCustomApplication.h"
 #import "VRPrefWindow.h"
 
 
@@ -248,16 +249,20 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
   _debug.hidden = NO;
 #endif
 
-  NSLog(@"######### %@", _tabs.submenu.itemArray);
+  NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:9];
   for (int i = 0; i < 9; i++) {
-    NSMenuItem *tabMenu = [[NSMenuItem alloc] initWithTitle:SF(@"Tab Index %d", i + 1) action:@selector(selectNthTab:) keyEquivalent:SF(@"%d", i + 1)];
-    tabMenu.tag = i;
-    [_tabs.submenu addItem:tabMenu];
-    tabMenu.enabled = YES;
+    VRKeyShortcutItem *item = [[VRKeyShortcutItem alloc] initWithAction:@selector(selectNthTab:) keyEquivalent:SF(@"%d", i + 1)];
+    [items addObject:item];
   }
+//  [_application addKeyShortcutItems:items];
+  [MMUtils setKeyHandlingUserDefaults];
+  [MMUtils setInitialUserDefaults];
+
+  [[NSFileManager defaultManager] changeCurrentDirectoryPath:NSHomeDirectory()];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
+  NSLog(@"############################# %@", notification.object);
   _isLaunching = NO;
 }
 
@@ -285,9 +290,7 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
 }
 
 #pragma mark NSUserNotificationCenterDelegate
-- (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center
-     shouldPresentNotification:(NSUserNotification *)notification {
-
+- (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center shouldPresentNotification:(NSUserNotification *)notification {
   return YES;
 }
 

@@ -511,10 +511,6 @@ Gw
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Tabs" id="0KN-RT-JvP">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Tabs" id="XLa-BA-odi"/>
-                </menuItem>
                 <menuItem title="Debug" hidden="YES" id="ENQ-3Q-U1j">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Debug" id="IF5-nu-Y0K">
@@ -567,7 +563,6 @@ Gw
         <customObject id="494" customClass="VRAppDelegate">
             <connections>
                 <outlet property="debug" destination="ENQ-3Q-U1j" id="NmI-dt-BFI"/>
-                <outlet property="tabs" destination="0KN-RT-JvP" id="WuM-du-KwI"/>
                 <outlet property="window" destination="371" id="532"/>
             </connections>
         </customObject>
