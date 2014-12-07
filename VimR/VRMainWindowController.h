@@ -64,6 +64,7 @@ extern const int qMainWindowBorderThickness;
 - (IBAction)openQuickly:(id)sender;
 - (IBAction)zoomIn:(id)sender;
 - (IBAction)zoomOut:(id)sender;
+- (IBAction)selectNthTab:(id)sender;
 
 #pragma mark NSUserInterfaceValidations
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
