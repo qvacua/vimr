@@ -12,14 +12,10 @@
 
 @interface VRKeyShortcutItem : NSObject
 
-@property (nonatomic, copy) NSString *keyEquivalent;
-@property (nonatomic) NSInteger tag;
-@property (nonatomic) SEL action;
+@property (readonly, nonatomic, copy) NSString *keyEquivalent;
+@property (readonly, nonatomic) NSInteger tag;
+@property (readonly, nonatomic) SEL action;
 
-/**
-* By default:
-* - tag = 0
-*/
 - (instancetype)initWithAction:(SEL)anAction keyEquivalent:(NSString *)charCode tag:(NSUInteger)tag;
 
 @end
@@ -29,8 +25,8 @@
 
 @property (nonatomic, readonly) NSArray *keyShortcutItems;
 
+- (id)init;
 - (void)addKeyShortcutItems:(NSArray *)items;
-
 - (void)sendEvent:(NSEvent *)theEvent;
 
 @end
