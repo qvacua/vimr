@@ -45,7 +45,7 @@ static BOOL is_command_key_only(NSEventModifierFlags flags) {
 
 
 @implementation VRApplication {
-  NSMutableArray *_mutableKeyShortcutItems;
+  NSMutableArray *_keyShortcutItems;
   NSMutableDictionary *_keyEquivalentCache;
 }
 
@@ -54,29 +54,21 @@ static BOOL is_command_key_only(NSEventModifierFlags flags) {
   self = [super init];
   RETURN_NIL_WHEN_NOT_SELF
 
-  _mutableKeyShortcutItems = [[NSMutableArray alloc] initWithCapacity:10];
+  _keyShortcutItems = [[NSMutableArray alloc] initWithCapacity:10];
   _keyEquivalentCache = [[NSMutableDictionary alloc] initWithCapacity:10];
 
-  // necessary MacVimFramework initialization {
-  [MMUtils setKeyHandlingUserDefaults];
-  [MMUtils setInitialUserDefaults];
+  [self initMacVimFramework];
+  [self initLogger];
 
   [[NSFileManager defaultManager] changeCurrentDirectoryPath:NSHomeDirectory()];
-  // } necessary MacVimFramework initialization
-
-  [self initLogger];
 
   return self;
 }
 
 #pragma mark Public
-- (NSArray *)keyShortcutItems {
-  return _mutableKeyShortcutItems;
-}
-
 - (void)addKeyShortcutItems:(NSArray *)items {
   for (VRKeyShortcutItem *item in items) {
-    [_mutableKeyShortcutItems addObject:item];
+    [_keyShortcutItems addObject:item];
     _keyEquivalentCache[item.keyEquivalent] = item;
   }
 }
@@ -116,6 +108,11 @@ static BOOL is_command_key_only(NSEventModifierFlags flags) {
   logger.colorsEnabled = YES;
   logger.logFormatter = [[VRLogFormatter alloc] init];
   [DDLog addLogger:logger];
+}
+
+- (void)initMacVimFramework {
+  [MMUtils setKeyHandlingUserDefaults];
+  [MMUtils setInitialUserDefaults];
 }
 
 @end

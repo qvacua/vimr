@@ -23,8 +23,6 @@
 
 @interface VRApplication : NSApplication
 
-@property (nonatomic, readonly) NSArray *keyShortcutItems;
-
 - (id)init;
 - (void)addKeyShortcutItems:(NSArray *)items;
 - (void)sendEvent:(NSEvent *)theEvent;
