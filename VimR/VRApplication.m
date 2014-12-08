@@ -15,7 +15,7 @@
 #import "VRLogFormatter.h"
 
 
-static BOOL is_command_key_only(NSEventModifierFlags flags) {
+static BOOL is_command_key_only(NSUInteger flags) {
   if (!(flags & NSCommandKeyMask)) {
     return NO;
   }
