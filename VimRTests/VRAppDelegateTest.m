@@ -12,6 +12,7 @@
 #import "VRWorkspaceController.h"
 #import "VRAppDelegate.h"
 #import "VRWorkspace.h"
+#import "VRApplication.h"
 
 
 static NSOpenPanel *openPanel;
@@ -216,7 +217,7 @@ static NSOpenPanel *openPanel;
 }
 
 - (void)testApplicationWillFinishLaunching {
-  NSApplication *anApp = mock([NSApplication class]);
+  NSApplication *anApp = mock([VRApplication class]);
   NSNotification *notification = [[NSNotification alloc] initWithName:@"some-name" object:anApp userInfo:nil];
 
   [appDelegate applicationWillFinishLaunching:notification];
