@@ -6,21 +6,22 @@
         <description>Most recent changes with links to updates for VimR.</description>
         <language>en</language>
         <item>
-            <title>Version 0.3.1</title>
+            <title>Version 0.4.0</title>
             <description>
                 <ul>
-<li>Bugfix: Hide File Browser crashes in a certain case on Yosemite (<a href="https://github.com/qvacua/vimr/issues/145">#145</a>)</li>
+<li>Added menu items for changing font (<a href="https://github.com/qvacua/vimr/issues/108">#103</a>)</li>
+<li>Added keyshort cuts for selecting n-th tab (⌘-1 to ⌘-9) (<a href="https://github.com/qvacua/vimr/issues/112">#112</a>)</li>
 </ul>
             </description>
             <sparkle:releaseNotesLink>
                 http://vimr.org/release-notes.html
             </sparkle:releaseNotesLink>
-            <pubDate>2014-11-28 15:34:47 +0000</pubDate>
-            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.3.1-22/VimR-0.3.1.tar.bz2"
-                       sparkle:version="22"
-                       sparkle:shortVersionString="0.3.1"
-                       sparkle:dsaSignature="MC4CFQCBlYeBSI9IiCCE8w539LQiG13sdAIVAIqXo7GE2jXDlrJ+Y8vMJy74zDjN"
-                       length="8572928"
+            <pubDate>2014-12-12 10:21:45 +0000</pubDate>
+            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.4.0-23/VimR-0.4.0.tar.bz2"
+                       sparkle:version="23"
+                       sparkle:shortVersionString="0.4.0"
+                       sparkle:dsaSignature="MCwCFCJ0OQdKMNmZ87bxLvKRhxZErDAXAhQ0wgCirSj9h9Ti3xaRc61SMX+C3Q=="
+                       length="8577024"
                        type="application/octet-stream"/>
         </item>
     </channel>
