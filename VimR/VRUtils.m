@@ -12,6 +12,13 @@
 #import "NSURL+VR.h"
 
 
+SInt32 minor_os_version() {
+  SInt32 minorVersion;
+  Gestalt(gestaltSystemVersionMinor, &minorVersion);
+
+  return minorVersion;
+}
+
 void dispatch_to_main_thread(dispatch_block_t block) {
   dispatch_async(dispatch_get_main_queue(), block);
 }

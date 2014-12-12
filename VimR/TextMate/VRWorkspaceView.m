@@ -77,7 +77,7 @@ static const int qMinimumFileBrowserWidth = 100;
   * If you use the keyboard shortcut, there's no problem...
   * Cf. also -updateConstraints
   */
-  if ([self minorOsVersion] == 10) {
+  if (minor_os_version() == 10) {
     if (_fileBrowserView == nil && aFileBrowserView == nil) {
       DDLogWarn(@"Workaround in work because of a strange behavior on Yosemite");
       return;
@@ -329,7 +329,7 @@ static const int qMinimumFileBrowserWidth = 100;
   * If you use the keyboard shortcut, there's no problem...
   * Cf. also -setFileBrowserView:
   */
-  if ([self minorOsVersion] == 10) {
+  if (minor_os_version() == 10) {
     if (_fileBrowserDivider == nil && _fileBrowserView != nil) {
       DDLogWarn(@"Workaround in work because of a strange behavior on Yosemite");
       [_fileBrowserView removeFromSuperview];
@@ -591,13 +591,6 @@ static const int qMinimumFileBrowserWidth = 100;
 
 - (VRMainWindowController *)mainWindowController {
   return (VRMainWindowController *) self.window.windowController;
-}
-
-- (SInt32)minorOsVersion {
-  SInt32 minorVersion;
-  Gestalt(gestaltSystemVersionMinor, &minorVersion);
-
-  return minorVersion;
 }
 
 @end

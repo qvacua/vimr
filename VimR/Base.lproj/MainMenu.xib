@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -396,6 +396,30 @@ Gw
                                     <action selector="toggleStatusBar:" target="-1" id="hrV-es-SUd"/>
                                 </connections>
                             </menuItem>
+                            <menuItem isSeparatorItem="YES" id="2Yb-bh-MO0"/>
+                            <menuItem title="Font" id="7W3-Iu-qgw">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Font" systemMenu="font" id="csN-Vm-10k">
+                                    <items>
+                                        <menuItem title="Show Fonts" id="2TS-BO-0cT">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="orderFrontFontPanel:" target="420" id="gd2-n7-xag"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Bigger" tag="3" keyEquivalent="+" id="PWg-YT-jwp">
+                                            <connections>
+                                                <action selector="zoomIn:" target="-1" id="6S4-sh-bJo"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Smaller" tag="4" keyEquivalent="-" id="jHy-uc-moB">
+                                            <connections>
+                                                <action selector="zoomOut:" target="-1" id="kgz-mm-YgQ"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="7Jn-vv-uPe"/>
                             <menuItem title="Enter Full Screen" keyEquivalent="f" id="9Rn-I5-7k1">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
@@ -464,12 +488,14 @@ Gw
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="6Ly-5s-0lA"/>
-                            <menuItem title="Select Next Tab" keyEquivalent="}" id="B42-SL-HgS">
+                            <menuItem title="Select Next Tab" keyEquivalent="]" id="B42-SL-HgS">
+                                <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <connections>
                                     <action selector="selectNextTab:" target="-1" id="pbn-rb-fcL"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Select Previous Tab" keyEquivalent="{" id="lmH-zd-MBr">
+                            <menuItem title="Select Previous Tab" keyEquivalent="[" id="lmH-zd-MBr">
+                                <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <connections>
                                     <action selector="selectPreviousTab:" target="-1" id="9iC-uX-gAP"/>
                                 </connections>
@@ -542,5 +568,15 @@ Gw
         </customObject>
         <customObject id="420" customClass="NSFontManager"/>
         <customObject id="zvh-K8-0Ta" customClass="SUUpdater"/>
+        <menuItem title="Menu" id="sV7-wi-Y1h">
+            <modifierMask key="keyEquivalentModifierMask"/>
+            <menu key="submenu" title="Menu" id="Dch-Bn-8Ui">
+                <items>
+                    <menuItem title="Item" id="pQn-QD-eCR">
+                        <modifierMask key="keyEquivalentModifierMask"/>
+                    </menuItem>
+                </items>
+            </menu>
+        </menuItem>
     </objects>
 </document>

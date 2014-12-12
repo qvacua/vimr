@@ -26,6 +26,7 @@
 @autowire(pluginManager)
 @autowire(notificationCenter)
 @autowire(workspaceViewFactory)
+@autowire(fontManager)
 
 - (VRMainWindowController *)newMainWindowControllerWithContentRect:(CGRect)contentRect workspace:(VRWorkspace *)workspace vimController:(MMVimController *)vimController {
   VRMainWindowController *mainWinController = [[VRMainWindowController alloc] initWithContentRect:contentRect];
@@ -35,6 +36,7 @@
   mainWinController.openQuicklyWindowController = _openQuicklyWindowController;
   mainWinController.userDefaults = _userDefaults;
   mainWinController.workspaceViewFactory = _workspaceViewFactory;
+  mainWinController.fontManager = _fontManager;
 
   mainWinController.vimView = vimController.vimView;
 

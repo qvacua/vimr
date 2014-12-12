@@ -37,6 +37,7 @@ extern const int qMainWindowBorderThickness;
 @property (nonatomic, weak) VROpenQuicklyWindowController *openQuicklyWindowController;
 @property (nonatomic, weak) NSUserDefaults *userDefaults;
 @property (nonatomic, weak) MMVimController *vimController;
+@property (nonatomic, unsafe_unretained) NSFontManager *fontManager;
 
 @property (nonatomic, weak) MMVimView *vimView;
 @property (nonatomic) VRPreviewWindowController *previewWindowController;
@@ -61,6 +62,9 @@ extern const int qMainWindowBorderThickness;
 - (IBAction)showPreview:(id)sender;
 - (IBAction)zoom:(id)sender;
 - (IBAction)openQuickly:(id)sender;
+- (IBAction)zoomIn:(id)sender;
+- (IBAction)zoomOut:(id)sender;
+- (IBAction)selectNthTab:(id)sender;
 
 #pragma mark NSUserInterfaceValidations
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;

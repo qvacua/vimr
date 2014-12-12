@@ -235,6 +235,18 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   }
 }
 
+- (IBAction)zoomIn:(id)sender {
+  [_fontManager modifyFont:sender];
+}
+
+- (IBAction)zoomOut:(id)sender {
+  [_fontManager modifyFont:sender];
+}
+
+- (IBAction)selectNthTab:(id)sender {
+  [_vimView selectTabWithIndex:[sender tag] fromVim:NO];
+}
+
 #ifdef DEBUG
 - (IBAction)debug1Action:(id)sender {
   [_workspaceView setFileBrowserWidth:400];
@@ -259,6 +271,11 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   if (action == @selector(revertDocumentToSaved:)) {return YES;}
   if (action == @selector(openQuickly:)) {return YES;}
   if (action == @selector(showPreview:)) {return YES;}
+
+  if (action == @selector(zoomIn:)) {return YES;}
+  if (action == @selector(zoomOut:)) {return YES;}
+
+  if (action == @selector(selectNthTab:)) {return YES;}
 
 #ifdef DEBUG
   if (action == @selector(debug1Action:)) {return YES;}
@@ -586,25 +603,25 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   _windowOriginShouldMoveToKeepOnScreen = NO;
 
   // FIXME: this is a quick-and-dirty hack to avoid the empty window when opening a new main window.
-  if (!_loadDone) {
-    NSString *savedRectString = [_userDefaults objectForKey:qMainWindowFrameAutosaveName];
-    CGRect savedRect;
-    if (savedRectString) {
-      savedRect = NSRectFromString(savedRectString);
-      CGRect integralRect = [self desiredWinFrameRectForWinFrameRect:savedRect];
-      CGRect integralRectToKeepOnScreen = [self winFrameRectToKeepOnScreenForWinFrameRect:integralRect];
+  if (_loadDone) {return;}
 
-      CGPoint origin = self.window.frame.origin;
+  NSString *savedRectString = [_userDefaults objectForKey:qMainWindowFrameAutosaveName];
+  CGRect savedRect;
+  if (savedRectString) {
+    savedRect = NSRectFromString(savedRectString);
+    CGRect integralRect = [self desiredWinFrameRectForWinFrameRect:savedRect];
+    CGRect integralRectToKeepOnScreen = [self winFrameRectToKeepOnScreenForWinFrameRect:integralRect];
 
-      [self.window setFrame:integralRectToKeepOnScreen display:NO animate:NO];
-      if (!_workspace.isOnlyWorkspace) {
-        [self.window setFrameOrigin:origin];
-      }
+    CGPoint origin = self.window.frame.origin;
+
+    [self.window setFrame:integralRectToKeepOnScreen display:NO animate:NO];
+    if (!_workspace.isOnlyWorkspace) {
+      [self.window setFrameOrigin:origin];
     }
-
-    [self showWindow:self];
-    _loadDone = YES;
   }
+
+  [self showWindow:self];
+  _loadDone = YES;
 }
 
 - (void)controller:(MMVimController *)controller handleBrowseWithDirectoryUrl:(NSURL *)url browseDir:(BOOL)dir saving:(BOOL)saving data:(NSData *)data {
@@ -762,7 +779,7 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 }
 
 - (void)windowDidExitFullScreen:(NSNotification *)notification {
-    [self forceRedrawVimView];
+  [self forceRedrawVimView];
 }
 
 /**
@@ -844,9 +861,9 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   [contentView addSubview:_workspaceView];
   [_workspaceView setUp];
 
-  NSDictionary *views = @{
+  NSMutableDictionary *views = @{
       @"workspace" : _workspaceView,
-  };
+  }.mutableCopy;
 
   CONSTRAINT(@"H:|[workspace]|");
   CONSTRAINT(@"V:|[workspace]|");
