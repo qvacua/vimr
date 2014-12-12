@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
+
+<dictionary title="VimR Terminology">
+
+  <suite name="VimR Suite" code="vimr" description="VimR Suite">
+
+    <command name="openFilesInNewWindow" code="opnfnwnd" description="Open files (absolute paths) in tabs in one new window">
+      <cocoa class="VROpenFileInNewWindowCommand"/>
+      <direct-parameter>
+        <type type="any" list="yes"/>
+      </direct-parameter>
+    </command>
+
+    <!--<command name="openFilesInNewWindows" code="opnfnwns" description="Open files (absolute paths) in new windows"/>-->
+    <!--<command name="openFilesInFrontmostWindow" code="opnffmwn" description="Open files (absolute paths) in tabs in the front most window. If there is no window present, we open them in a new window."/>-->
+
+  </suite>
+
+</dictionary>
