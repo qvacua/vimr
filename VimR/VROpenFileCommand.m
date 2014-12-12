@@ -23,4 +23,8 @@
   return (VRAppDelegate *) [self.app delegate];
 }
 
+- (NSArray *)fileUrls {
+  return self.evaluatedArguments[@""];
+}
+
 @end

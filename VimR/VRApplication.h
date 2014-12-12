@@ -27,4 +27,6 @@
 - (void)addKeyShortcutItems:(NSArray *)items;
 - (void)sendEvent:(NSEvent *)theEvent;
 
+- (NSArray *)orderedMainWindows;
+
 @end

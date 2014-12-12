@@ -17,6 +17,6 @@
 
 @property (readonly, nonatomic) NSApplication *app;
 @property (readonly, nonatomic) VRAppDelegate *appDelegate;
-
+@property (readonly, nonatomic) NSArray *fileUrls;
 
 @end

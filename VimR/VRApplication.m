@@ -13,6 +13,7 @@
 #import "VRUtils.h"
 #import "VRDefaultLogSetting.h"
 #import "VRLogFormatter.h"
+#import "VRMainWindow.h"
 
 
 static BOOL is_command_key_only(NSUInteger flags) {
@@ -100,6 +101,13 @@ static BOOL is_command_key_only(NSUInteger flags) {
   } while (responder = responder.nextResponder);
 
   [super sendEvent:theEvent];
+}
+
+- (NSArray *)orderedMainWindows {
+  NSArray *orderedWindows = self.orderedWindows;
+  return [orderedWindows filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+    return [[evaluatedObject class] isEqualTo:[VRMainWindow class]];
+  }]];
 }
 
 #pragma mark Private

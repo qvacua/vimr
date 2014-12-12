@@ -17,24 +17,12 @@
 }
 
 - (id)performDefaultImplementation {
-  NSArray *args = [self argumentsAsString];
+  NSArray *fileUrls = self.fileUrls;
 
-  DDLogDebug(@"calling open file in new window command with args: %@", args);
-  [self.appDelegate application:self.app openFiles:args];
+  DDLogDebug(@"VimR OSA: Calling open file in new window command with args: %@", fileUrls);
+  [self.appDelegate application:self.app openFiles:fileUrls];
 
   return nil;
-}
-
-#pragma mark Private
-- (NSArray *)argumentsAsString {
-  NSArray *args = self.evaluatedArguments[@""];
-
-  NSMutableArray *result = @[].mutableCopy;
-  for (NSAppleEventDescriptor *descriptor in args) {
-    [result addObject:descriptor.stringValue];
-  }
-
-  return result;
 }
 
 @end
