@@ -27,6 +27,10 @@
 - (void)addKeyShortcutItems:(NSArray *)items;
 - (void)sendEvent:(NSEvent *)theEvent;
 
+#pragma mark Public
+/**
+* This method is used by AppleScript to get the list of open main windows.
+*/
 - (NSArray *)orderedMainWindows;
 
 @end

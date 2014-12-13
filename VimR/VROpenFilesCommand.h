@@ -13,7 +13,7 @@
 @class VRAppDelegate;
 
 
-@interface VROpenFileCommand : NSScriptCommand
+@interface VROpenFilesCommand : NSScriptCommand
 
 @property (readonly, nonatomic) NSApplication *app;
 @property (readonly, nonatomic) VRAppDelegate *appDelegate;

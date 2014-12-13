@@ -7,11 +7,11 @@
 * See LICENSE
 */
 
-#import "VROpenFileCommand.h"
+#import "VROpenFilesCommand.h"
 #import "VRAppDelegate.h"
 
 
-@implementation VROpenFileCommand {
+@implementation VROpenFilesCommand {
 
 }
 

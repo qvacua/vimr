@@ -8,6 +8,7 @@
  */
 
 #import "NSURL+VR.h"
+#import "VRUtils.h"
 
 
 NSString *const qUrlGetResourceValueIsDirExceptionName = @"qGetResourceValueIsDirException";
@@ -52,7 +53,7 @@ NSString *const qUrlNoParentExceptionName = @"qNoParentException";
   }
 
   @throw [NSException exceptionWithName:qUrlGetResourceValueIsDirExceptionName
-                                 reason:@"There was an error getting NSURLIsDirectoryKey"
+                                 reason:SF(@"There was an error getting NSURLIsDirectoryKey for %@", self)
                                userInfo:@{@"error" : error}];
 }
 

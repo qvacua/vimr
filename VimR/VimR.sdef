@@ -85,20 +85,21 @@
         <cocoa method="handleSaveScriptCommand:"/>
       </responds-to>
     </class>
+
   </suite>
 
   <suite name="VimR Suite" code="vimr" description="VimR Suite">
 
     <command name="openFilesInNewWindow" code="opnfnwnd" description="Open given files in tabs in one new window">
-      <cocoa class="VROpenFileInNewWindowCommand"/>
+      <cocoa class="VROpenFilesInNewWindowCommand"/>
       <direct-parameter>
         <type type="file" list="yes"/>
       </direct-parameter>
     </command>
 
     <command name="openFilesInFrontmostWindow" code="opnffmwn"
-             description="Open files (absolute paths) in tabs in the front most window. If there is no window present, we open them in a new window.">
-      <cocoa class="VROpenFileInFrontmostWindowCommand"/>
+             description="Open given files in tabs in the front most window. If there is no window present, a new window is opened.">
+      <cocoa class="VROpenFilesInFrontmostWindowCommand"/>
       <direct-parameter>
         <type type="file" list="yes"/>
       </direct-parameter>
@@ -107,8 +108,9 @@
       </parameter>
     </command>
 
-    <command name="openFilesInNewWindows" code="opnfnwns" description="Open files (absolute paths) in new windows">
-      <cocoa class="VROpenFileInNewWindows"/>
+    <command name="openFilesInNewWindows" code="opnfnwns"
+             description="Open given files in new windows, that is one window for a file.">
+      <cocoa class="VROpenFilesInNewWindows"/>
       <direct-parameter>
         <type type="file" list="yes"/>
       </direct-parameter>

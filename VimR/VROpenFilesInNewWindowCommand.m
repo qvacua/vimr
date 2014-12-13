@@ -7,12 +7,12 @@
 * See LICENSE
 */
 
-#import "VROpenFileInNewWindowCommand.h"
+#import "VROpenFilesInNewWindowCommand.h"
 #import "VRDefaultLogSetting.h"
 #import "VRAppDelegate.h"
 
 
-@implementation VROpenFileInNewWindowCommand {
+@implementation VROpenFilesInNewWindowCommand {
 
 }
 

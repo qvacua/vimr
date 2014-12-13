@@ -103,10 +103,10 @@ static BOOL is_command_key_only(NSUInteger flags) {
   [super sendEvent:theEvent];
 }
 
+#pragma mark Public
 - (NSArray *)orderedMainWindows {
-  NSArray *orderedWindows = self.orderedWindows;
-  return [orderedWindows filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-    return [[evaluatedObject class] isEqualTo:[VRMainWindow class]];
+  return [self.orderedWindows filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id obj, NSDictionary *bindings) {
+    return [[obj class] isEqualTo:[VRMainWindow class]];
   }]];
 }
 

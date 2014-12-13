@@ -7,14 +7,14 @@
 * See LICENSE
 */
 
-#import "VROpenFileInFrontmostWindowCommand.h"
+#import "VROpenFilesInFrontmostWindowCommand.h"
 #import "VRDefaultLogSetting.h"
 #import "VRAppDelegate.h"
 #import "VRMainWindow.h"
 #import "VRWorkspace.h"
 
 
-@implementation VROpenFileInFrontmostWindowCommand {
+@implementation VROpenFilesInFrontmostWindowCommand {
 
 }
 

@@ -8,10 +8,10 @@
 */
 
 #import <Cocoa/Cocoa.h>
-#import "VROpenFileCommand.h"
+#import "VROpenFilesCommand.h"
 
 
-@interface VROpenFileInNewWindowCommand : VROpenFileCommand
+@interface VROpenFilesInNewWindows : VROpenFilesCommand
 
 #pragma mark NSScriptCommand
 - (id)performDefaultImplementation;
