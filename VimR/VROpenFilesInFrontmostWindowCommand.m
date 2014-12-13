@@ -14,9 +14,7 @@
 #import "VRWorkspace.h"
 
 
-@implementation VROpenFilesInFrontmostWindowCommand {
-
-}
+@implementation VROpenFilesInFrontmostWindowCommand
 
 #pragma mark NSScriptCommand
 - (id)performDefaultImplementation {

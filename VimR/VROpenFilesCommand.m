@@ -11,9 +11,7 @@
 #import "VRAppDelegate.h"
 
 
-@implementation VROpenFilesCommand {
-
-}
+@implementation VROpenFilesCommand
 
 - (NSApplication *)app {
   return NSApp;

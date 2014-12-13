@@ -12,9 +12,7 @@
 #import "VRAppDelegate.h"
 
 
-@implementation VROpenFilesInNewWindows {
-
-}
+@implementation VROpenFilesInNewWindows
 
 - (id)performDefaultImplementation {
   NSArray *fileUrls = self.fileUrls;
