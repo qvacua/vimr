@@ -107,7 +107,12 @@
       </parameter>
     </command>
 
-    <!--<command name="openFilesInNewWindows" code="opnfnwns" description="Open files (absolute paths) in new windows"/>-->
+    <command name="openFilesInNewWindows" code="opnfnwns" description="Open files (absolute paths) in new windows">
+      <cocoa class="VROpenFileInNewWindows"/>
+      <direct-parameter>
+        <type type="file" list="yes"/>
+      </direct-parameter>
+    </command>
 
   </suite>
 
