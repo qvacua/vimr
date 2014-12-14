@@ -30,7 +30,6 @@ extern NSString *const qVimArgOpenFilesLayout;
 
 #pragma mark Public
 - (void)ensureUrlsAreVisible:(NSArray *)urls;
-- (void)selectBufferWithUrl:(NSURL *)url;
 - (void)newWorkspace;
 - (void)openFilesInNewWorkspace:(NSArray *)fileUrls;
 - (void)cleanUp;
