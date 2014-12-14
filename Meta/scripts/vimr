@@ -29,6 +29,13 @@ tell application id "com.qvacua.VimR"
 end tell
 FIN
 
+goToLineScript = <<FIN
+tell application id "com.qvacua.VimR"
+  activate
+  goToLine #LINE of #FILE
+end tell
+FIN
+
 ###### Helpers
 def absolutePathsFromArgv()
   files = []
@@ -46,7 +53,8 @@ end
 ###### Option handling
 options = {
     :one_new_window => false,
-    :multiple_new_window => false
+    :multiple_new_window => false,
+    :line => 0
 }
 
 parser = OptionParser.new do |opts|
@@ -60,6 +68,10 @@ parser = OptionParser.new do |opts|
     options[:multiple_new_window] = true
   end
 
+  opts.on('-l line', '--line line', Integer, 'go to line (> 0)') do |line|
+   options[:line] = line
+  end
+
   opts.on('-h', '--help', 'Displays Help') do
     puts "By default files are open in tabs in the front most window. If there's no open window, VimR will open a new window."
     puts opts
@@ -70,6 +82,11 @@ end
 parser.parse!
 
 ###### Do things
+if options[:line] > 0
+  `/usr/bin/osascript -e '#{goToLineScript.gsub(/#LINE/, "#{options[:line]}").gsub(/#FILE/, absolutePathsFromArgv()[0])}'`
+  exit
+end
+
 if options[:one_new_window]
   callOsaScript(newWindowScript)
   exit
