@@ -110,10 +110,21 @@
 
     <command name="openFilesInNewWindows" code="opnfnwns"
              description="Open given files in new windows, that is one window for a file.">
-      <cocoa class="VROpenFilesInNewWindows"/>
+      <cocoa class="VROpenFilesInNewWindowsCommand"/>
       <direct-parameter>
         <type type="file" list="yes"/>
       </direct-parameter>
+    </command>
+
+    <command name="goToLine" code="gotolifi"
+             description="Go to the given line of the given file">
+      <cocoa class="VRGoToLineOfFileCommand"/>
+      <direct-parameter>
+        <type type="integer" list="no"/>
+      </direct-parameter>
+      <parameter name="of" code="of  " type="file">
+        <cocoa key="file"/>
+      </parameter>
     </command>
 
   </suite>

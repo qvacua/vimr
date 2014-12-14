@@ -49,7 +49,6 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   BOOL _windowOriginShouldMoveToKeepOnScreen;
 
   VRWorkspaceView *_workspaceView;
-  BOOL _loadDone;
 }
 
 #pragma mark Public

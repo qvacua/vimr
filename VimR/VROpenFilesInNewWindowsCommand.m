@@ -7,12 +7,12 @@
 * See LICENSE
 */
 
-#import "VROpenFilesInNewWindows.h"
+#import "VROpenFilesInNewWindowsCommand.h"
 #import "VRDefaultLogSetting.h"
 #import "VRAppDelegate.h"
 
 
-@implementation VROpenFilesInNewWindows
+@implementation VROpenFilesInNewWindowsCommand
 
 - (id)performDefaultImplementation {
   NSArray *fileUrls = self.fileUrls;

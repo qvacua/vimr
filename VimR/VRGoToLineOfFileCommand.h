@@ -11,7 +11,7 @@
 #import "VROpenFilesCommand.h"
 
 
-@interface VROpenFilesInNewWindows : VROpenFilesCommand
+@interface VRGoToLineOfFileCommand : NSScriptCommand
 
 #pragma mark NSScriptCommand
 - (id)performDefaultImplementation;
