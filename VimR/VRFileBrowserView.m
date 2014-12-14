@@ -389,6 +389,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSCom
   _fileOutlineView.allowsMultipleSelection = NO;
   _fileOutlineView.allowsEmptySelection = NO;
   _fileOutlineView.doubleAction = @selector(fileOutlineViewDoubleClicked:);
+  _fileOutlineView.target = self;
   _fileOutlineView.backgroundColor = [NSColor colorWithSRGBRed:0.925 green:0.925 blue:0.925 alpha:1.0];
 
   NSScrollView *scrollView = [[NSScrollView alloc] initWithFrame:CGRectZero];

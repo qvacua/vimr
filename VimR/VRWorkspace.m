@@ -31,6 +31,15 @@ static CGPoint qDefaultOrigin = {242, 364};
   NSMutableSet *urlSet = [[NSMutableSet alloc] initWithArray:urls];
 
   [_vimController.tabs enumerateObjectsUsingBlock:^(MMTabPage *tab, NSUInteger idx, BOOL *stop) {
+    if (tab.currentBuffer == nil) {
+      NSString *fileName = _vimController.currentBuffer.fileName;
+      NSURL *url = [NSURL fileURLWithPath:fileName];
+      if ([urlSet containsObject:url]) {
+        [urlSet removeObject:url];
+      }
+      *stop = YES;
+    }
+
     NSString *fileName = tab.currentBuffer.fileName;
     if (blank(fileName)) {
       return;
@@ -65,7 +74,7 @@ static CGPoint qDefaultOrigin = {242, 364};
   return _openedBufferUrls;
 }
 
-- (void)updateWorkingDirectory:(NSURL *)workingDir {
+- (void)updateWorkingDirectoryToUrl:(NSURL *)workingDir {
   [_fileItemManager unregisterUrl:_workingDirectory];
   [_fileItemManager registerUrl:workingDir];
 
@@ -109,18 +118,20 @@ static CGPoint qDefaultOrigin = {242, 364};
   }
 
   _openedBufferUrls = visibleBufferUrls;
+}
 
-  if (visibleBufferUrls.count == 0) {
-    [self updateWorkingDirectory:[NSURL fileURLWithPath:NSHomeDirectory()]];
+- (void)updateWorkingDirectoryToCommonParent {
+  if (_openedBufferUrls.count == 0) {
+    [self updateWorkingDirectoryToUrl:[NSURL fileURLWithPath:NSHomeDirectory()]];
     return;
   }
 
-  NSURL *commonParent = common_parent_url(visibleBufferUrls);
+  NSURL *commonParent = common_parent_url(_openedBufferUrls);
   if ([commonParent isEqualTo:_workingDirectory]) {
     return;
   }
 
-  [self updateWorkingDirectory:commonParent];
+  [self updateWorkingDirectoryToUrl:commonParent];
 }
 
 - (void)cleanUpAndClose {
