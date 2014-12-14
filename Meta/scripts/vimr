@@ -1,0 +1,84 @@
+#!/usr/bin/env ruby
+
+require 'pathname'
+require 'optparse'
+
+###### AppleScripts
+newWindowScript = <<FIN
+tell application id "com.qvacua.VimR"
+  activate
+  openFilesInNewWindow {#FILES}
+end tell
+FIN
+
+frontmostWindowScript = <<FIN
+tell application id "com.qvacua.VimR"
+  activate
+  if the (count of windows) ≥ 1 then
+    openFilesInFrontmostWindow {#FILES} to the front window
+  else
+    openFilesInNewWindow {#FILES}
+  end if
+end tell
+FIN
+
+newWindowsScript = <<FIN
+tell application id "com.qvacua.VimR"
+  activate
+  openFilesInNewWindows {#FILES}
+end tell
+FIN
+
+###### Helpers
+def absolutePathsFromArgv()
+  files = []
+  ARGV.each do |f|
+    files << "\"#{Pathname.new(f).realpath.to_s}\""
+  end
+
+  return files
+end
+
+def callOsaScript(script)
+  return `/usr/bin/osascript -e '#{script.gsub(/#FILES/, absolutePathsFromArgv().join(','))}'`
+end
+
+###### Option handling
+options = {
+    :one_new_window => false,
+    :multiple_new_window => false
+}
+
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: vimr [options] file1 file2 ..."
+
+  opts.on('-n', '--new-window', 'open files in one new window') do
+    options[:one_new_window] = true
+  end
+
+  opts.on('-m', '--multiple-window', 'open files in new windows') do
+    options[:multiple_new_window] = true
+  end
+
+  opts.on('-h', '--help', 'Displays Help') do
+    puts "By default files are open in tabs in the front most window. If there's no open window, VimR will open a new window."
+    puts opts
+    exit
+  end
+end
+
+parser.parse!
+
+###### Do things
+if options[:one_new_window]
+  callOsaScript(newWindowScript)
+  exit
+end
+
+if options[:multiple_new_window]
+  callOsaScript(newWindowsScript)
+  exit
+end
+
+callOsaScript(frontmostWindowScript)
+exit
