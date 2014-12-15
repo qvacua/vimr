@@ -31,6 +31,7 @@
 		1929B33598E6CAD67115494B /* VRApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA88B4146E7157FB9A99 /* VRApplication.m */; };
 		1929B37C3D245E6C4EAC370B /* VROpenFilesInFrontmostWindowCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5FC0CACD06A926BB858 /* VROpenFilesInFrontmostWindowCommand.m */; };
 		1929B3D7B0F9C520ED12773B /* VRPrefWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8CE80E30F2D8C08ECF4 /* VRPrefWindow.m */; };
+		1929B3E1D0C146BDCB5DAF52 /* vimr in Resources */ = {isa = PBXBuildFile; fileRef = 1929BB2AA2A4D755ECB98735 /* vimr */; };
 		1929B3F63E1E808B31FF11A0 /* VRFilterItemsOperation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9B5817A70437785EDD7 /* VRFilterItemsOperation.mm */; };
 		1929B44A377085462454D47A /* VRCppUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6422375B345DAA4E35A /* VRCppUtils.mm */; };
 		1929B45FB56172D6481C412A /* VROpenFilesInNewWindowCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B68C34C504CB9E6CF69B /* VROpenFilesInNewWindowCommand.m */; };
@@ -51,6 +52,7 @@
 		1929B66EC272E6AC1EBF917E /* VRFileBrowserOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC6450833D2DD65D870F /* VRFileBrowserOutlineView.m */; };
 		1929B683C26F3C2903644800 /* NSString+VR.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6C75D0E46577EF45AFB /* NSString+VR.m */; };
 		1929B6A3598236BB434C4A4F /* VRFileBrowserViewTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1173319EA175A82BDBC /* VRFileBrowserViewTest.m */; };
+		1929B6F1747A9919FEE1593B /* vimr in Resources */ = {isa = PBXBuildFile; fileRef = 1929BB2AA2A4D755ECB98735 /* vimr */; };
 		1929B7023045E86540E77077 /* NSTableView+VR.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B99AA675C89B0536FBD7 /* NSTableView+VR.m */; };
 		1929B71208DDE247D64E498F /* VRCachedFileItemRecordTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD35EC3ED6C841D80313 /* VRCachedFileItemRecordTest.m */; };
 		1929B71ED8E8ADE8E5B9BBF6 /* VRFileBrowserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFA3CFF24540C8D6937A /* VRFileBrowserView.m */; };
@@ -311,6 +313,7 @@
 		1929BAA4497787B935906030 /* VRWorkspace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRWorkspace.h; sourceTree = "<group>"; };
 		1929BADD87FEE7512FA3D9AE /* NoPluginPreviewContent.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = NoPluginPreviewContent.html; path = Resources/NoPluginPreviewContent.html; sourceTree = "<group>"; };
 		1929BAEC891444D375F472C8 /* VRPluginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRPluginManager.m; sourceTree = "<group>"; };
+		1929BB2AA2A4D755ECB98735 /* vimr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = vimr; path = Resources/vimr; sourceTree = "<group>"; };
 		1929BB7A8FA90C2B0F82BED8 /* VRBaseTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRBaseTestCase.h; sourceTree = "<group>"; };
 		1929BB855507E8D2D2CD90A6 /* VRScoredPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRScoredPath.h; sourceTree = "<group>"; };
 		1929BB86F5635AD1AD2F0515 /* VRUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRUserDefaults.m; sourceTree = "<group>"; };
@@ -644,6 +647,7 @@
 				4BE9242B18C20DBC00E67BB6 /* MainMenu.xib */,
 				1929BADD87FEE7512FA3D9AE /* NoPluginPreviewContent.html */,
 				1929BC804A62489D7B34A4FF /* VimR.sdef */,
+				1929BB2AA2A4D755ECB98735 /* vimr */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -889,6 +893,7 @@
 				4B6F24DB197B000100AB1DD8 /* NoPluginPreviewContent.html in Resources */,
 				4BE9242D18C20DBC00E67BB6 /* MainMenu.xib in Resources */,
 				1929BC76694B089BD0E5F8C4 /* VimR.sdef in Resources */,
+				1929B6F1747A9919FEE1593B /* vimr in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -899,6 +904,7 @@
 				4BE9243F18C20DBC00E67BB6 /* InfoPlist.strings in Resources */,
 				1929BE65AB8337EC251DEA3C /* level-1 in Resources */,
 				1929BB15C2394F266142D0A7 /* VimR.sdef in Resources */,
+				1929B3E1D0C146BDCB5DAF52 /* vimr in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

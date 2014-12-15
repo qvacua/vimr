@@ -558,6 +558,15 @@ Gw
             <view key="contentView" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="605" height="501"/>
                 <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ud0-L9-kQ1">
+                        <rect key="frame" x="311" y="265" width="82" height="32"/>
+                        <buttonCell key="cell" type="push" title="Button" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="eei-1a-X8N">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
+                </subviews>
             </view>
         </window>
         <customObject id="494" customClass="VRAppDelegate">

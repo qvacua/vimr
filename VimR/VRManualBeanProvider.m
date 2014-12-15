@@ -43,6 +43,7 @@
         [TBBeanContainer beanContainerWithBean:[NSUserDefaults standardUserDefaults]],
         [TBBeanContainer beanContainerWithBean:[NSUserDefaultsController sharedUserDefaultsController]],
         [TBBeanContainer beanContainerWithBean:[NSFontManager sharedFontManager]],
+        [TBBeanContainer beanContainerWithBean:[NSBundle mainBundle]],
     ];
   }
 

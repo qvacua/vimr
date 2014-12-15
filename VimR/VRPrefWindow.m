@@ -30,10 +30,13 @@ static const int qWindowStyleMask = NSTitledWindowMask | NSResizableWindowMask |
 }
 
 @autowire(userDefaultsController)
+@autowire(fileManager)
+@autowire(workspace)
+@autowire(mainBundle)
 
 #pragma mark NSWindow
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag {
-  self = [super initWithContentRect:contentRect styleMask:qWindowStyleMask backing:NSBackingStoreBuffered defer:YES];
+  self = [super initWithContentRect:contentRect styleMask:(NSUInteger) qWindowStyleMask backing:NSBackingStoreBuffered defer:YES];
   RETURN_NIL_WHEN_NOT_SELF
 
   self.title = @"Preferences";
@@ -46,7 +49,7 @@ static const int qWindowStyleMask = NSTitledWindowMask | NSResizableWindowMask |
 #pragma mark TBInitializingBean
 - (void)postConstruct {
   _prefPanes = @[
-      [[VRGeneralPrefPane alloc] initWithUserDefaultsController:_userDefaultsController],
+      [[VRGeneralPrefPane alloc] initWithUserDefaultsController:_userDefaultsController fileManager:_fileManager workspace:_workspace mainBundle:_mainBundle],
       [[VRFileBrowserPrefPane alloc] initWithUserDefaultsController:_userDefaultsController],
   ];
 
