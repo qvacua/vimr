@@ -29,8 +29,7 @@ static NSString *const qCliToolName = @"vimr";
 - (id)initWithUserDefaultsController:(NSUserDefaultsController *)userDefaultsController
                          fileManager:(NSFileManager *)fileManager
                            workspace:(NSWorkspace *)workspace
-                          mainBundle:(NSBundle *)mainBundle
-{
+                          mainBundle:(NSBundle *)mainBundle {
   self = [super initWithFrame:CGRectZero];
   RETURN_NIL_WHEN_NOT_SELF
 
@@ -70,7 +69,7 @@ static NSString *const qCliToolName = @"vimr";
   // vimr CLI tool
   NSTextField *cliTitle = [self newTextLabelWithString:@"CLI Tool:" alignment:NSRightTextAlignment];
   NSButton *cliButton = [[NSButton alloc] initWithFrame:CGRectZero];
-  cliButton.title = @"Copy 'vimr' CLI tool to ~/Downloads";
+  cliButton.title = @"Copy 'vimr' CLI tool...";
   cliButton.translatesAutoresizingMaskIntoConstraints = NO;
   cliButton.bezelStyle = NSRoundedBezelStyle;
   cliButton.buttonType = NSMomentaryPushInButton;
@@ -143,22 +142,35 @@ static NSString *const qCliToolName = @"vimr";
 }
 
 - (void)copyCliToolToDownloads {
-  NSURL *downloadsUrl = [_fileManager URLsForDirectory:NSDownloadsDirectory inDomains:NSUserDomainMask][0];
-  NSURL *cliToolUrl = [_mainBundle URLForResource:qCliToolName withExtension:@""];
+  NSOpenPanel *panel = [NSOpenPanel openPanel];
+  panel.canChooseFiles = NO;
+  panel.allowsMultipleSelection = NO;
+  panel.canChooseDirectories = YES;
+  panel.message = @"Select the folder to save the CLI tool";
 
-  NSError *error = nil;
-  [_fileManager copyItemAtURL:cliToolUrl toURL:[downloadsUrl URLByAppendingPathComponent:qCliToolName isDirectory:NO] error:&error];
-  if (error == nil) {
-    [_workspace openURL:downloadsUrl];
-    return;
-  }
+  [panel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
+    if (result == NSFileHandlingPanelOKButton) {
+      NSURL *targetFolderUrl = panel.URLs[0];
 
-  NSAlert *alert = [[NSAlert alloc] init];
-  [alert addButtonWithTitle:@"OK"];
-  [alert setMessageText:@"The CLI tool could not be copied."];
-  [alert setInformativeText:@"Something went wrong. Please create an issue on the GitHub project page: http://github.com/qvacua/vimr"];
-  [alert setAlertStyle:NSWarningAlertStyle];
-  [alert runModal];
+      NSError *error = nil;
+      [_fileManager copyItemAtURL:[_mainBundle URLForResource:qCliToolName withExtension:@""]
+                            toURL:[targetFolderUrl URLByAppendingPathComponent:qCliToolName isDirectory:NO]
+                            error:&error];
+
+      if (error == nil) {
+        [_workspace openURL:targetFolderUrl];
+        return;
+      }
+
+      NSAlert *alert = [[NSAlert alloc] init];
+      [alert addButtonWithTitle:@"OK"];
+      [alert setMessageText:@"The CLI tool could not be copied."];
+      [alert setInformativeText:@"Something went wrong. Please create an issue on the GitHub project page: http://github.com/qvacua/vimr"];
+      [alert setAlertStyle:NSWarningAlertStyle];
+      [alert runModal];
+    }
+  }];
+
 }
 
 @end
