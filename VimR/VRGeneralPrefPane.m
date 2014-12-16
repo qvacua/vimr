@@ -10,6 +10,7 @@
 #import "VRGeneralPrefPane.h"
 #import "VRUserDefaults.h"
 #import "VRUtils.h"
+#import "VRDefaultLogSetting.h"
 
 
 #define CONSTRAIN(fmt) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]];
@@ -142,35 +143,73 @@ static NSString *const qCliToolName = @"vimr";
 }
 
 - (void)copyCliToolToDownloads {
-  NSOpenPanel *panel = [NSOpenPanel openPanel];
-  panel.canChooseFiles = NO;
-  panel.allowsMultipleSelection = NO;
-  panel.canChooseDirectories = YES;
-  panel.message = @"Select the folder to save the CLI tool";
-
+  NSOpenPanel *panel = [self cliToolSavePanel];
   [panel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
-    if (result == NSFileHandlingPanelOKButton) {
-      NSURL *targetFolderUrl = panel.URLs[0];
+    if (result != NSFileHandlingPanelOKButton) {
+      return;
+    }
 
-      NSError *error = nil;
-      [_fileManager copyItemAtURL:[_mainBundle URLForResource:qCliToolName withExtension:@""]
-                            toURL:[targetFolderUrl URLByAppendingPathComponent:qCliToolName isDirectory:NO]
-                            error:&error];
+    NSURL *targetFolder = panel.URLs[0];
+    NSURL *target = [targetFolder URLByAppendingPathComponent:qCliToolName isDirectory:NO];
+    NSURL *source = [_mainBundle URLForResource:qCliToolName withExtension:@""];
 
-      if (error == nil) {
-        [_workspace openURL:targetFolderUrl];
+    if ([_fileManager fileExistsAtPath:target.path]) {
+      NSModalResponse response = [[self replaceFileDialogForTargetFolder:targetFolder] runModal];
+
+      if (response == NSAlertSecondButtonReturn) {
+        DDLogDebug(@"Cancelled.");
         return;
       }
 
-      NSAlert *alert = [[NSAlert alloc] init];
-      [alert addButtonWithTitle:@"OK"];
-      [alert setMessageText:@"The CLI tool could not be copied."];
-      [alert setInformativeText:@"Something went wrong. Please create an issue on the GitHub project page: http://github.com/qvacua/vimr"];
-      [alert setAlertStyle:NSWarningAlertStyle];
-      [alert runModal];
+      DDLogInfo(@"Removing %@ first before copying.", target);
+      NSError *error = nil;
+      [_fileManager removeItemAtURL:target error:&error];
+
+      if (error != nil) {
+        [self presentError:error];
+        return;
+      }
     }
+
+    DDLogInfo(@"Copying 'vimr' script to %@", targetFolder);
+    NSError *error = nil;
+    [_fileManager copyItemAtURL:source toURL:target error:&error];
+
+    if (error == nil) {
+      [_workspace openURL:targetFolder];
+      return;
+    }
+
+    [self presentError:error];
   }];
 
+}
+
+- (NSOpenPanel *)cliToolSavePanel {
+  NSOpenPanel *panel = [NSOpenPanel openPanel];
+
+  panel.canChooseFiles = NO;
+  panel.allowsMultipleSelection = NO;
+  panel.canChooseDirectories = YES;
+  panel.message = @"Select the folder to save the CLI tool 'vimr'";
+
+  return panel;
+}
+
+- (NSAlert *)replaceFileDialogForTargetFolder:(NSURL *)targetFolderUrl {
+  NSAlert *alert = [[NSAlert alloc] init];
+
+  [alert addButtonWithTitle:@"Replace"];
+  [alert addButtonWithTitle:@"Cancel"];
+  [alert.buttons[0] setKeyEquivalent:@"r"];
+  [alert.buttons[0] setKeyEquivalentModifierMask:NSCommandKeyMask];
+  [alert.buttons[1] setKeyEquivalent:@"\r"];
+  alert.messageText = @"'vimr' already exists. Do you want to replace it?";
+  alert.informativeText = SF(@"A file or folder with the same name already exists in the folder %@. "
+        "Replacing it will overwrite its current contents.", targetFolderUrl.lastPathComponent);
+  alert.alertStyle = NSWarningAlertStyle;
+
+  return alert;
 }
 
 @end
