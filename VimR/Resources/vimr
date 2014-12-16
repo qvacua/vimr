@@ -40,7 +40,15 @@ FIN
 def absolutePathsFromArgv()
   files = []
   ARGV.each do |f|
-    files << "\"#{Pathname.new(f).realpath.to_s}\""
+    if File.exist?(File.expand_path(f)) then
+      files << "\"#{Pathname.new(f).realpath.to_s}\""
+    else
+      if f.start_with?('/')
+        files << "\"#{f}\""
+      else
+        files << "\"#{Dir.pwd + '/' + f}\""
+      end
+    end
   end
 
   return files

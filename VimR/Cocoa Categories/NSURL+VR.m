@@ -1,14 +1,15 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import "NSURL+VR.h"
 #import "VRUtils.h"
+#import "VRDefaultLogSetting.h"
 
 
 NSString *const qUrlGetResourceValueIsDirExceptionName = @"qGetResourceValueIsDirException";
@@ -52,9 +53,8 @@ NSString *const qUrlNoParentExceptionName = @"qNoParentException";
     return isDir.boolValue;
   }
 
-  @throw [NSException exceptionWithName:qUrlGetResourceValueIsDirExceptionName
-                                 reason:SF(@"There was an error getting NSURLIsDirectoryKey for %@", self)
-                               userInfo:@{@"error" : error}];
+  DDLogWarn(@"An error occurred. We assume that %@ is not a directory: %@", self, error.localizedDescription);
+  return NO;
 }
 
 - (NSString *)parentName {
