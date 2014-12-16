@@ -68,7 +68,7 @@
 
 - (void)testUpdateWorkingDir {
   NSURL *newUrl = [NSURL URLWithString:@"file:///some/file"];
-  [workspace updateWorkingDirectory:newUrl];
+  [workspace updateWorkingDirectoryToUrl:newUrl];
 
   [verify(fileItemManager) unregisterUrl:initialUrl];
   [verify(fileItemManager) registerUrl:newUrl];
@@ -137,6 +137,7 @@
   NSURL *workingDir = [NSURL fileURLWithPath:@"/other"];
   workspace.workingDirectory = workingDir;
   [workspace updateBuffersInTabs];
+  [workspace updateWorkingDirectoryToCommonParent];
   [verify(fileItemManager) unregisterUrl:workingDir];
   [verify(fileItemManager) registerUrl:[NSURL fileURLWithPath:NSHomeDirectory()]];
   [verify(mainWindowController) updateWorkingDirectory];
@@ -165,6 +166,7 @@
       [[MMTabPage alloc] initWithVimWindows:@[win3]],
   ]];
   [workspace updateBuffersInTabs];
+  [workspace updateWorkingDirectoryToCommonParent];
 
   [verify(fileItemManager) unregisterUrl:workingDir];
   [verify(fileItemManager) registerUrl:[NSURL fileURLWithPath:@"/tmp"]];

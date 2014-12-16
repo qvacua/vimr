@@ -49,7 +49,6 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   BOOL _windowOriginShouldMoveToKeepOnScreen;
 
   VRWorkspaceView *_workspaceView;
-  BOOL _loadDone;
 }
 
 #pragma mark Public
@@ -104,6 +103,8 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
       break;
   }
 
+  [self updateBuffersInTabs];
+
   [self.window makeFirstResponder:_vimView.textView];
 }
 
@@ -119,6 +120,8 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   } else {
     [_vimController gotoBufferWithUrl:urlsAlreadyOpen[0]];
   }
+
+  [self updateBuffersInTabs];
 
   [self.window makeFirstResponder:_vimView.textView];
 }
@@ -551,7 +554,7 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   if (_workspaceView.syncWorkspaceWithPwd) {
     NSString *pwdPath = _vimController.vimState[@"pwd"];
     if (![_workspace.workingDirectory.path isEqualToString:pwdPath]) {
-      [_workspace updateWorkingDirectory:[[NSURL alloc] initFileURLWithPath:pwdPath]];
+      [_workspace updateWorkingDirectoryToUrl:[[NSURL alloc] initFileURLWithPath:pwdPath]];
     }
   }
 }
@@ -934,11 +937,13 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 }
 
 - (void)updateBuffersInTabs {
+  [_workspace updateBuffersInTabs];
+
   if (_workspaceView.syncWorkspaceWithPwd) {
     return;
   }
 
-  [_workspace updateBuffersInTabs];
+  [_workspace updateWorkingDirectoryToCommonParent];
 }
 
 - (NSData *)vimArgsAsDataFromFileUrls:(NSArray *)fileUrls {

@@ -22,6 +22,9 @@ extern NSString *const qPrefWindowFrameAutosaveName;
     NSOutlineViewDataSource, NSOutlineViewDelegate>
 
 @property (nonatomic, weak) NSUserDefaultsController *userDefaultsController;
+@property (nonatomic, weak) NSFileManager *fileManager;
+@property (nonatomic, weak) NSWorkspace *workspace;
+@property (nonatomic, weak) NSBundle *mainBundle;
 
 #pragma mark NSWindow
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag;

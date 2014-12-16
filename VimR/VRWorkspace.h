@@ -31,11 +31,12 @@
 - (void)ensureUrlsAreVisible:(NSArray *)urls;
 - (BOOL)isOnlyWorkspace;
 - (NSArray *)openedUrls;
-- (void)updateWorkingDirectory:(NSURL *)workingDir;
+- (void)updateWorkingDirectoryToUrl:(NSURL *)workingDir;
 - (void)openFilesWithUrls:(NSArray *)url;
 - (BOOL)hasModifiedBuffer;
 - (void)setUpWithVimController:(MMVimController *)vimController;
 - (void)setUpInitialBuffers;
+- (void)updateWorkingDirectoryToCommonParent;
 - (void)cleanUpAndClose;
 - (void)updateBuffersInTabs;
 - (void)selectBufferWithUrl:(NSURL *)url;

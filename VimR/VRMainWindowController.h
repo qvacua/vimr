@@ -42,6 +42,8 @@ extern const int qMainWindowBorderThickness;
 @property (nonatomic, weak) MMVimView *vimView;
 @property (nonatomic) VRPreviewWindowController *previewWindowController;
 
+@property (nonatomic, readonly) BOOL loadDone;
+
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect;
 - (void)updateWorkingDirectory;
