@@ -4,13 +4,9 @@
 export LC_ALL="en_US.UTF-8"
 pod install
 
-cd macvim/src
-make clean
-./configure --with-features=huge --enable-rubyinterp --enable-pythoninterp --enable-perlinterp --enable-cscope
-make
-
-cd ../..
 [ -e build ] && rm -r build
+
+./bin/build-macvim
 
 xcodebuild -workspace VimR.xcworkspace -configuration Release -scheme VimR -derivedDataPath ./build clean build
 
@@ -24,7 +20,7 @@ tar -cjf dSYM-VimR-$VERSION.tar.bz2 VimR.app.dSYM
 
 cd ../../../../
 
-./Sparkle/bin/sign_update.sh build/Build/Products/Release/VimR-$VERSION.tar.bz2 /Users/Shared/sparkle-priv.pem > build/sparkle-checksum.txt
+/usr/local/bin/sign_update.sh build/Build/Products/Release/VimR-$VERSION.tar.bz2 /Users/Shared/sparkle-priv.pem > build/sparkle-checksum.txt
 
 du -ks build/Build/Products/Release/VimR-$VERSION.tar.bz2 | awk '{print $1*1024}' > build/size.txt
 ```
@@ -32,19 +28,15 @@ du -ks build/Build/Products/Release/VimR-$VERSION.tar.bz2 | awk '{print $1*1024}
 # Snapshot Build
 
 ```
-export LC_ALL="en_US.UTF-8"
-
 ./bin/increment_version.rb
+
+export LC_ALL="en_US.UTF-8"
 
 pod install
 
-cd macvim/src
-make clean
-./configure --with-features=huge --enable-rubyinterp --enable-pythoninterp --enable-perlinterp --enable-cscope
-make
-
-cd ../..
 [ -e build ] && rm -r build
+
+./bin/build-macvim
 
 xcodebuild -workspace VimR.xcworkspace -configuration Release -scheme VimR -derivedDataPath ./build clean build
 
