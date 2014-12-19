@@ -6,22 +6,22 @@
         <description>Most recent changes with links to updates for VimR.</description>
         <language>en</language>
         <item>
-            <title>Version 0.5.0</title>
+            <title>Version 0.5.1</title>
             <description>
                 <ul>
-<li>Add rudimentary apple script support (<a href="https://github.com/qvacua/vimr/issues/51">#51</a>)</li>
-<li>Add command line tool (<a href="https://github.com/qvacua/vimr/issues/99">#99</a>)</li>
+<li>Bugfix: encoding problem of the <code>vimr</code> script (<a href="https://github.com/qvacua/vimr/pull/154">#154</a>)</li>
+<li>Enable arrow key navigation in the file browser (<a href="https://github.com/qvacua/vimr/issues/153">#153</a>)</li>
 </ul>
             </description>
             <sparkle:releaseNotesLink>
                 http://vimr.org/release-notes.html
             </sparkle:releaseNotesLink>
-            <pubDate>2014-12-17 21:30:37 +0000</pubDate>
-            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.5.0-24/VimR-0.5.0.tar.bz2"
-                       sparkle:version="24"
-                       sparkle:shortVersionString="0.5.0"
-                       sparkle:dsaSignature="MCwCFE4ZhuGmE7Nb4YL+KnE3o50h7aRdAhRxhHn7pdRWojQ5FZ040wiTh+PUeg=="
-                       length="8609792"
+            <pubDate>2014-12-19 21:16:40 +0000</pubDate>
+            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.5.1-25/VimR-0.5.1.tar.bz2"
+                       sparkle:version="25"
+                       sparkle:shortVersionString="0.5.1"
+                       sparkle:dsaSignature="MC0CFGP1eowi3EsBmksAyZO9BPwywqeUAhUAjkefyIPMh2vHowQTDIJixGpUgRo="
+                       length="8613888"
                        type="application/octet-stream"/>
         </item>
     </channel>
