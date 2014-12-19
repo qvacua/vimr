@@ -132,15 +132,19 @@ static inline BOOL IsPrintableAscii(unichar key) {
 - (BOOL)processKeyModeNormal:(unichar)key {
   [self.actionDelegate updateStatusMessage:@""];
   switch (key) {
+    case NSLeftArrowFunctionKey:
     case 'h':
       [self.actionDelegate actionOpenDefault];
       return YES;
+    case NSDownArrowFunctionKey:
     case 'j':
       [self.actionDelegate actionMoveDown];
       return YES;
+    case NSUpArrowFunctionKey:
     case 'k':
       [self.actionDelegate actionMoveUp];
       return YES;
+    case NSRightArrowFunctionKey:
     case 'l':
       [self.actionDelegate actionOpenDefault];
       return YES;

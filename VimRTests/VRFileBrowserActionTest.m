@@ -86,6 +86,26 @@ NSEvent *KeyDownEvent(unichar key) {
   [verify(actionDelegate) actionOpenDefault];
 }
 
+- (void)test_down_arrow_ActionShouldMoveDown {
+    [fileOutlineView keyDown:KeyDownEvent(NSDownArrowFunctionKey)];
+    [verify(actionDelegate) actionMoveDown];
+}
+
+- (void)test_up_arrow_ActionShouldMoveUp {
+    [fileOutlineView keyDown:KeyDownEvent(NSUpArrowFunctionKey)];
+    [verify(actionDelegate) actionMoveUp];
+}
+
+- (void)test_left_arrow_ActionShouldOpenDefault {
+    [fileOutlineView keyDown:KeyDownEvent(NSLeftArrowFunctionKey)];
+    [verify(actionDelegate) actionOpenDefault];
+}
+
+- (void)test_right_arrow_ActionShouldOpenDefault {
+    [fileOutlineView keyDown:KeyDownEvent(NSRightArrowFunctionKey)];
+    [verify(actionDelegate) actionOpenDefault];
+}
+
 - (void)test_space_ActionShouldOpenDefault {
   [fileOutlineView keyDown:KeyDownEvent(' ')];
   [verify(actionDelegate) actionOpenDefault];
