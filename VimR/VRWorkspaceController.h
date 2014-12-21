@@ -25,6 +25,8 @@ extern NSString *const qVimArgOpenFilesLayout;
 
 @property (nonatomic, weak) MMVimManager *vimManager;
 @property (nonatomic, weak) VRWorkspaceFactory *workspaceFactory;
+@property (nonatomic, weak) NSUserDefaults *userDefaults;
+@property (nonatomic, weak) NSApplication *application; // set manually in VRManualBeanProvider
 
 @property (nonatomic, readonly) NSArray *workspaces;
 

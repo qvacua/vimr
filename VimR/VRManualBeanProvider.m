@@ -24,6 +24,7 @@
 
   if (manualBeans == nil) {
     VRWorkspaceController *workspaceController = [[VRWorkspaceController alloc] init];
+    workspaceController.application = NSApp;
 
     /**
     * TODO: MMVimController uses [MMVimManager sharedManager].
