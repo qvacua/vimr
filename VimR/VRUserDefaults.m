@@ -32,6 +32,8 @@ NSString *const qOpenModeInHorizontalSplitValue             = @"in-horizontal-sp
 NSString *const qDefaultAutoSaveOnFrameDeactivation         = @"auto-save-on-frame-deactivation";
 NSString *const qDefaultAutoSaveOnCursorHold                = @"auto-save-on-cursor-hold";
 
+NSString *const qDefaultQuitWhenLastWindowCloses = @"quit-when-last-window-closes";
+
 
 VROpenMode open_mode_from_modifier(NSUInteger modifierFlags, VROpenMode defaultMode) {
   BOOL optionKey = (modifierFlags & NSAlternateKeyMask) != 0;

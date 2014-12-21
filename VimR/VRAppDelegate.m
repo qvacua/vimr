@@ -364,6 +364,10 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
   if (![_userDefaults objectForKey:qDefaultOpenUntitledWinModeOnReactivation]) {
     [_userDefaults setBool:YES forKey:qDefaultOpenUntitledWinModeOnReactivation];
   }
+
+  if (![_userDefaults objectForKey:qDefaultQuitWhenLastWindowCloses]) {
+    [_userDefaults setBool:NO forKey:qDefaultQuitWhenLastWindowCloses];
+  }
 }
 
 - (void)addTabKeyShortcuts {

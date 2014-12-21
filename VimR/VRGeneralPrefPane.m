@@ -46,63 +46,20 @@ static NSString *const qCliToolName = @"vimr";
 
 #pragma mark Private
 - (void)addViews {
-  // default appearance
-  NSTextField *daTitle = [self newTextLabelWithString:@"Default Appearance:" alignment:NSRightTextAlignment];
-  NSButton *showStatusBarButton = [self checkButtonWithTitle:@"Show status bar" defaultKey:qDefaultShowStatusBar];
-  NSButton *showSidebarButton = [self checkButtonWithTitle:@"Show sidebar" defaultKey:qDefaultShowSideBar];
-  NSButton *showSidebarOnRightButton = [self checkButtonWithTitle:@"Sidebar on right" defaultKey:qDefaultShowSideBarOnRight];
-  NSTextField *daDescription = [self newDescriptionLabelWithString:@"These are default values, ie new windows will start with these values set:\n– The changes will only affect new windows.\n– You can override these settings in each window."
-                                                         alignment:NSLeftTextAlignment];
+  NSMutableDictionary *views = [[NSMutableDictionary alloc] init];
+  [views addEntriesFromDictionary:self.defaultAppearanceViews];
+  [views addEntriesFromDictionary:self.openingBehaviorViews];
+  [views addEntriesFromDictionary:self.autoSavingViews];
+  [views addEntriesFromDictionary:self.cliToolViews];
+  [views addEntriesFromDictionary:self.quitViews];
 
-  NSTextField *ouTitle = [self newTextLabelWithString:@"Open Untitled Window:" alignment:NSRightTextAlignment];
-  NSButton *ouOnLaunch = [self checkButtonWithTitle:@"On launch" defaultKey:qDefaultOpenUntitledWinModeOnLaunch];
-  NSButton *ouOnReactivation = [self checkButtonWithTitle:@"On re-activation" defaultKey:qDefaultOpenUntitledWinModeOnReactivation];
+  NSView *daTitle = views[@"daTitle"];
+  NSView *ouTitle = views[@"ouTitle"];
+  NSView *asTitle = views[@"asTitle"];
+  NSView *cliTitle = views[@"cliTitle"];
+  NSView *quitTitle = views[@"quitTitle"];
 
-  // auto saving
-  NSTextField *asTitle = [self newTextLabelWithString:@"Saving Behavior:" alignment:NSRightTextAlignment];
-
-  NSButton *asOnFrameDeactivation = [self checkButtonWithTitle:@"Save automatically on focus loss" defaultKey:qDefaultAutoSaveOnFrameDeactivation];
-  NSTextField *asOfdDesc = [self newDescriptionLabelWithString:@"'autocmd BufLeave,FocusLost * silent! wall' in VimR group" alignment:NSLeftTextAlignment];
-
-  NSButton *asOnCursorHold = [self checkButtonWithTitle:@"Save automatically if VimR is idle for some time" defaultKey:qDefaultAutoSaveOnCursorHold];
-  NSTextField *asOchDesc = [self newDescriptionLabelWithString:@"'autocmd CursorHold * silent! wall' in VimR group" alignment:NSLeftTextAlignment];
-
-  // vimr CLI tool
-  NSTextField *cliTitle = [self newTextLabelWithString:@"CLI Tool:" alignment:NSRightTextAlignment];
-  NSButton *cliButton = [[NSButton alloc] initWithFrame:CGRectZero];
-  cliButton.title = @"Copy 'vimr' CLI tool...";
-  cliButton.translatesAutoresizingMaskIntoConstraints = NO;
-  cliButton.bezelStyle = NSRoundedBezelStyle;
-  cliButton.buttonType = NSMomentaryPushInButton;
-  cliButton.bordered = YES;
-  cliButton.action = @selector(copyCliToolToDownloads);
-  cliButton.target = self;
-  [self addSubview:cliButton];
-  NSTextField *cliDesc = [self newDescriptionLabelWithString:@"Put the executable 'vimr' in your PATH and 'vimr -h' for help" alignment:NSLeftTextAlignment];
-
-  NSDictionary *views = @{
-      @"daTitle" : daTitle,
-      @"showStatusBar" : showStatusBarButton,
-      @"showSidebar" : showSidebarButton,
-      @"showSidebarRight" : showSidebarOnRightButton,
-      @"daDesc" : daDescription,
-
-      @"ouTitle" : ouTitle,
-      @"ouOnLaunch" : ouOnLaunch,
-      @"ouOnReactivation" : ouOnReactivation,
-
-      @"asTitle" : asTitle,
-      @"asOnFrameDeactivation" : asOnFrameDeactivation,
-      @"asOfdDesc" : asOfdDesc,
-      @"asOnCursorHold" : asOnCursorHold,
-      @"asOchDesc" : asOchDesc,
-
-      @"cliTitle" : cliTitle,
-      @"cliButton" : cliButton,
-      @"cliDesc" : cliDesc,
-  };
-
-  for (NSView *view in @[asTitle, ouTitle, asTitle, cliTitle]) {
+  for (NSView *view in @[ouTitle, asTitle, cliTitle, quitTitle]) {
     [self addConstraint:[NSLayoutConstraint constraintWithItem:view
                                                      attribute:NSLayoutAttributeTrailing
                                                      relatedBy:NSLayoutRelationEqual
@@ -128,18 +85,98 @@ static NSString *const qCliToolName = @"vimr";
   CONSTRAIN(@"H:|-[asTitle]-[asOnCursorHold]-|");
   CONSTRAIN(@"H:|-[asTitle]-[asOchDesc]-|");
 
+  CONSTRAIN(@"H:|-[quitTitle]-[quitOnNoWindow]-|")
+
   CONSTRAIN(@"H:|-[cliTitle]-[cliButton]");
   CONSTRAIN(@"H:|-[cliTitle]-[cliDesc]-|");
 
-  [self addConstraint:[self baseLineConstraintForView:daTitle toView:showStatusBarButton]];
-  [self addConstraint:[self baseLineConstraintForView:asTitle toView:asOnFrameDeactivation]];
-  [self addConstraint:[self baseLineConstraintForView:ouTitle toView:ouOnLaunch]];
-  [self addConstraint:[self baseLineConstraintForView:cliTitle toView:cliButton]];
+  [self addConstraint:[self baseLineConstraintForView:daTitle toView:views[@"showStatusBar"]]];
+  [self addConstraint:[self baseLineConstraintForView:asTitle toView:views[@"asOnFrameDeactivation"]]];
+  [self addConstraint:[self baseLineConstraintForView:ouTitle toView:views[@"ouOnLaunch"]]];
+  [self addConstraint:[self baseLineConstraintForView:quitTitle toView:views[@"quitOnNoWindow"]]];
+  [self addConstraint:[self baseLineConstraintForView:cliTitle toView:views[@"cliButton"]]];
 
   CONSTRAIN(@"V:|-[showStatusBar]-[showSidebar]-[showSidebarRight]-[daDesc]-(24)-"
       "[ouOnLaunch]-[ouOnReactivation]-(24)-"
       "[asOnFrameDeactivation]-[asOfdDesc]-[asOnCursorHold]-[asOchDesc]-(24)-"
+      "[quitOnNoWindow]-(24)-"
       "[cliButton]-[cliDesc]-|");
+}
+
+- (NSDictionary *)defaultAppearanceViews {
+  NSTextField *daTitle = [self newTextLabelWithString:@"Default Appearance:" alignment:NSRightTextAlignment];
+  NSButton *showStatusBarButton = [self checkButtonWithTitle:@"Show status bar" defaultKey:qDefaultShowStatusBar];
+  NSButton *showSidebarButton = [self checkButtonWithTitle:@"Show sidebar" defaultKey:qDefaultShowSideBar];
+  NSButton *showSidebarOnRightButton = [self checkButtonWithTitle:@"Sidebar on right" defaultKey:qDefaultShowSideBarOnRight];
+  NSTextField *daDescription = [self newDescriptionLabelWithString:@"These are default values, "
+      "ie new windows will start with these values set:\n– The changes will only affect new windows.\n– "
+      "You can override these settings in each window."  alignment:NSLeftTextAlignment];
+
+  return @{
+      @"daTitle" : daTitle,
+      @"showStatusBar" : showStatusBarButton,
+      @"showSidebar" : showSidebarButton,
+      @"showSidebarRight" : showSidebarOnRightButton,
+      @"daDesc" : daDescription,
+  };
+}
+
+- (NSDictionary *)openingBehaviorViews {
+  NSTextField *ouTitle = [self newTextLabelWithString:@"Open Untitled Window:" alignment:NSRightTextAlignment];
+  NSButton *ouOnLaunch = [self checkButtonWithTitle:@"On launch" defaultKey:qDefaultOpenUntitledWinModeOnLaunch];
+  NSButton *ouOnReactivation = [self checkButtonWithTitle:@"On re-activation" defaultKey:qDefaultOpenUntitledWinModeOnReactivation];
+
+  return @{
+      @"ouTitle" : ouTitle,
+      @"ouOnLaunch" : ouOnLaunch,
+      @"ouOnReactivation" : ouOnReactivation,
+  };
+}
+
+- (NSDictionary *)autoSavingViews {
+  NSTextField *asTitle = [self newTextLabelWithString:@"Saving Behavior:" alignment:NSRightTextAlignment];
+  NSButton *asOnFrameDeactivation = [self checkButtonWithTitle:@"Save automatically on focus loss" defaultKey:qDefaultAutoSaveOnFrameDeactivation];
+  NSTextField *asOfdDesc = [self newDescriptionLabelWithString:@"'autocmd BufLeave,FocusLost * silent! wall' in VimR group" alignment:NSLeftTextAlignment];
+  NSButton *asOnCursorHold = [self checkButtonWithTitle:@"Save automatically if VimR is idle for some time" defaultKey:qDefaultAutoSaveOnCursorHold];
+  NSTextField *asOchDesc = [self newDescriptionLabelWithString:@"'autocmd CursorHold * silent! wall' in VimR group" alignment:NSLeftTextAlignment];
+
+  return @{
+      @"asTitle" : asTitle,
+      @"asOnFrameDeactivation" : asOnFrameDeactivation,
+      @"asOfdDesc" : asOfdDesc,
+      @"asOnCursorHold" : asOnCursorHold,
+      @"asOchDesc" : asOchDesc,
+  };
+}
+
+- (NSDictionary *)cliToolViews {
+  NSTextField *cliTitle = [self newTextLabelWithString:@"CLI Tool:" alignment:NSRightTextAlignment];
+  NSButton *cliButton = [[NSButton alloc] initWithFrame:CGRectZero];
+  cliButton.title = @"Copy 'vimr' CLI tool...";
+  cliButton.translatesAutoresizingMaskIntoConstraints = NO;
+  cliButton.bezelStyle = NSRoundedBezelStyle;
+  cliButton.buttonType = NSMomentaryPushInButton;
+  cliButton.bordered = YES;
+  cliButton.action = @selector(copyCliToolToDownloads);
+  cliButton.target = self;
+  [self addSubview:cliButton];
+  NSTextField *cliDesc = [self newDescriptionLabelWithString:@"Put the executable 'vimr' in your PATH and 'vimr -h' for help" alignment:NSLeftTextAlignment];
+
+  return @{
+      @"cliTitle" : cliTitle,
+      @"cliButton" : cliButton,
+      @"cliDesc" : cliDesc,
+  };
+}
+
+- (NSDictionary *)quitViews {
+  NSTextField *quitTitle = [self newTextLabelWithString:@"Quit Behavior:" alignment:NSRightTextAlignment];
+  NSButton *quitOnNoWindow = [self checkButtonWithTitle:@"Quit VimR when last window closes" defaultKey:qDefaultQuitWhenLastWindowCloses];
+
+  return @{
+      @"quitTitle" : quitTitle,
+      @"quitOnNoWindow" : quitOnNoWindow,
+  };
 }
 
 - (void)copyCliToolToDownloads {
@@ -206,7 +243,7 @@ static NSString *const qCliToolName = @"vimr";
   [alert.buttons[1] setKeyEquivalent:@"\r"];
   alert.messageText = @"'vimr' already exists. Do you want to replace it?";
   alert.informativeText = SF(@"A file or folder with the same name already exists in the folder %@. "
-        "Replacing it will overwrite its current contents.", targetFolderUrl.lastPathComponent);
+      "Replacing it will overwrite its current contents.", targetFolderUrl.lastPathComponent);
   alert.alertStyle = NSWarningAlertStyle;
 
   return alert;
