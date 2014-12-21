@@ -171,7 +171,7 @@ static NSString *const qCliToolName = @"vimr";
 
 - (NSDictionary *)quitViews {
   NSTextField *quitTitle = [self newTextLabelWithString:@"Quit Behavior:" alignment:NSRightTextAlignment];
-  NSButton *quitOnNoWindow = [self checkButtonWithTitle:@"Quit VimR when the last editor window closes" defaultKey:qDefaultQuitWhenLastWindowCloses];
+  NSButton *quitOnNoWindow = [self checkButtonWithTitle:@"Quit VimR after last editor window closes" defaultKey:qDefaultQuitWhenLastWindowCloses];
 
   return @{
       @"quitTitle" : quitTitle,
