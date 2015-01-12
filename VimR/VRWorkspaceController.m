@@ -131,6 +131,10 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
     return;
   }
 
+  if (_pid2Workspace.allValues.count > 0) {
+    return;
+  }
+
   DDLogInfo(@"Quitting VimR since the last main window has been closed.");
   [_application terminate:self];
 }

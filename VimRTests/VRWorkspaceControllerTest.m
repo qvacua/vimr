@@ -129,4 +129,17 @@
   [verify(application) terminate:workspaceController];
 }
 
+- (void)testDoNotQuitWhenWindow {
+  [given([userDefaults boolForKey:qDefaultQuitWhenLastWindowCloses]) willReturnBool:YES];
+  [given([workspaceFactory newWorkspaceWithWorkingDir:instanceOf([NSURL class])]) willReturn:mock([VRWorkspace class])];
+  [workspaceController newWorkspace];
+
+  [given([vimManager pidOfNewVimControllerWithArgs:anything()]) willReturnInt:124];
+  [workspaceController newWorkspace];
+
+  [workspaceController manager:vimManager vimControllerRemovedWithControllerId:456 pid:123];
+
+  [verifyCount(application, never()) terminate:workspaceController];
+}
+
 @end
