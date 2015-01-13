@@ -24,6 +24,8 @@
 
   MMVimManager *vimManager;
   MMVimController *vimController;
+  NSApplication *application;
+  NSUserDefaults *userDefaults;
 
   VRWorkspace *workspace;
   VRWorkspaceFactory *workspaceFactory;
@@ -39,12 +41,17 @@
   vimController = mock([MMVimController class]);
   [given([vimController pid]) willReturnInt:123];
 
+  application = mock([NSApplication class]);
+  userDefaults = mock([NSUserDefaults class]);
+
   workspace = mock([VRWorkspace class]);
   workspaceFactory = mock([VRWorkspaceFactory class]);
 
   workspaceController = [[VRWorkspaceController alloc] init];
   workspaceController.vimManager = vimManager;
   workspaceController.workspaceFactory = workspaceFactory;
+  workspaceController.application = application;
+  workspaceController.userDefaults = userDefaults;
 
   urls = @[
       [NSURL URLWithString:@"file:///some/folder/is/1.txt"],
@@ -58,7 +65,7 @@
   [given([workspaceFactory newWorkspaceWithWorkingDir:[NSURL fileURLWithPath:NSHomeDirectory()]]) willReturn:workspace];
 
   [workspaceController newWorkspace];
-  (workspaceController.workspaces, consistsOf(workspace));
+  assertThat(workspaceController.workspaces, consistsOf(workspace));
 }
 
 - (void)testOpenFilesInNewWorkspace {
@@ -75,7 +82,7 @@
       ],
       qVimArgOpenFilesLayout : @(MMLayoutTabs)
   }];
-  (workspaceController.workspaces, consistsOf(workspace));
+  assertThat(workspaceController.workspaces, consistsOf(workspace));
 }
 
 - (void)testCleanup {
@@ -88,7 +95,7 @@
   [workspaceController openFilesInNewWorkspace:urls];
 
   [given([workspace hasModifiedBuffer]) willReturnBool:YES];
-  (@([workspaceController hasDirtyBuffers]), isYes);
+  assertThat(@([workspaceController hasDirtyBuffers]), isYes);
 }
 
 - (void)testManagerVimControllerCreated {
@@ -105,11 +112,34 @@
   [workspaceController newWorkspace];
   [workspaceController manager:vimManager vimControllerRemovedWithControllerId:456 pid:123];
 
-  (workspaceController.workspaces, isEmpty());
+  assertThat(workspaceController.workspaces, isEmpty());
 }
 
 - (void)testMenuItemTemplateForManager {
-  ([workspaceController menuItemTemplateForManager:vimManager], isNot(nilValue()));
+  assertThat([workspaceController menuItemTemplateForManager:vimManager], isNot(nilValue()));
+}
+
+- (void)testQuitOnNoWindow {
+  [given([userDefaults boolForKey:qDefaultQuitWhenLastWindowCloses]) willReturnBool:YES];
+  [given([workspaceFactory newWorkspaceWithWorkingDir:instanceOf([NSURL class])]) willReturn:mock([VRWorkspace class])];
+
+  [workspaceController newWorkspace];
+  [workspaceController manager:vimManager vimControllerRemovedWithControllerId:456 pid:123];
+
+  [verify(application) terminate:workspaceController];
+}
+
+- (void)testDoNotQuitWhenWindow {
+  [given([userDefaults boolForKey:qDefaultQuitWhenLastWindowCloses]) willReturnBool:YES];
+  [given([workspaceFactory newWorkspaceWithWorkingDir:instanceOf([NSURL class])]) willReturn:mock([VRWorkspace class])];
+  [workspaceController newWorkspace];
+
+  [given([vimManager pidOfNewVimControllerWithArgs:anything()]) willReturnInt:124];
+  [workspaceController newWorkspace];
+
+  [workspaceController manager:vimManager vimControllerRemovedWithControllerId:456 pid:123];
+
+  [verifyCount(application, never()) terminate:workspaceController];
 }
 
 @end

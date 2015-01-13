@@ -1,11 +1,11 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import <MacVimFramework/MacVimFramework.h>
 #import <TBCacao/TBCacao.h>
@@ -13,6 +13,8 @@
 #import "VRWorkspace.h"
 #import "VRUtils.h"
 #import "VRWorkspaceFactory.h"
+#import "VRUserDefaults.h"
+#import "VRDefaultLogSetting.h"
 
 
 NSString *const qVimArgFileNamesToOpen = @"filenames";
@@ -26,6 +28,7 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
 
 @autowire(vimManager)
 @autowire(workspaceFactory)
+@autowire(userDefaults)
 
 #pragma mark Properties
 - (NSArray *)workspaces {
@@ -39,7 +42,7 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
   for (VRWorkspace *workspace in _mutableWorkspaces) {
     NSMutableSet *workspaceUrls = [[NSMutableSet alloc] initWithArray:workspace.openedUrls];
     [workspaceUrls intersectSet:urlSet];
-    
+
     [workspace ensureUrlsAreVisible:workspaceUrls.allObjects];
   }
 }
@@ -94,6 +97,8 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
   [_mutableWorkspaces removeObject:workspace];
 
   [workspace cleanUpAndClose];
+
+  [self quitWhenRequested];
 }
 
 - (NSMenuItem *)menuItemTemplateForManager:(MMVimManager *)manager {
@@ -112,7 +117,6 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
       qVimArgOpenFilesLayout : @(MMLayoutTabs),
   };
 }
-
 - (void)createNewVimControllerWithWorkingDir:(NSURL *)workingDir args:(id)args {
   int pid = [_vimManager pidOfNewVimControllerWithArgs:args];
 
@@ -120,6 +124,19 @@ NSString *const qVimArgOpenFilesLayout = @"layout";
   [_mutableWorkspaces addObject:workspace];
 
   _pid2Workspace[@(pid)] = workspace;
+}
+
+- (void)quitWhenRequested {
+  if (![_userDefaults boolForKey:qDefaultQuitWhenLastWindowCloses]) {
+    return;
+  }
+
+  if (_pid2Workspace.allValues.count > 0) {
+    return;
+  }
+
+  DDLogInfo(@"Quitting VimR since the last main window has been closed.");
+  [_application terminate:self];
 }
 
 @end
