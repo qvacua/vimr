@@ -1,15 +1,16 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import "VRUserDefaults.h"
 
 
+// @formatter:off
 NSString *const qDefaultShowStatusBar                       = @"show-status-bar";
 NSString *const qDefaultShowSideBar                         = @"show-side-bar";
 NSString *const qDefaultShowSideBarOnRight                  = @"show-side-bar-on-right";
@@ -32,7 +33,10 @@ NSString *const qOpenModeInHorizontalSplitValue             = @"in-horizontal-sp
 NSString *const qDefaultAutoSaveOnFrameDeactivation         = @"auto-save-on-frame-deactivation";
 NSString *const qDefaultAutoSaveOnCursorHold                = @"auto-save-on-cursor-hold";
 
-NSString *const qDefaultQuitWhenLastWindowCloses = @"quit-when-last-window-closes";
+NSString *const qDefaultQuitWhenLastWindowCloses            = @"quit-when-last-window-closes";
+
+NSString *const qVimrResourceFileName                       = @".vimr_rc";
+// @formatter:on
 
 
 VROpenMode open_mode_from_modifier(NSUInteger modifierFlags, VROpenMode defaultMode) {
