@@ -1,11 +1,11 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import "VRBaseTestCase.h"
 #import "VRUtils.h"
@@ -50,10 +50,25 @@
 }
 
 - (void)testBlank {
- assertThat(@(blank(nil)), isYes);
- assertThat(@(blank(@"")), isYes);
+  assertThat(@(blank(nil)), isYes);
+  assertThat(@(blank(@"")), isYes);
 
- assertThat(@(blank(@"str")), isNo);
+  assertThat(@(blank(@"str")), isNo);
+}
+
+- (void)testPathMatchesShellPattern {
+  assertThat(@(path_matches_shell_pattern("*/.git", @"/a/b/.git/c/d")), isYes);
+  assertThat(@(path_matches_shell_pattern(".gitignore", @"/a/b/.gitignore")), isYes);
+  assertThat(@(path_matches_shell_pattern(".gitignore", @".gitignore")), isYes);
+  assertThat(@(path_matches_shell_pattern("*.iml", @"/a/b/c/test.iml")), isYes);
+
+  assertThat(@(path_matches_shell_pattern("*/.git/*.config", @"/a/b/.git/branch.config")), isYes);
+  assertThat(@(path_matches_shell_pattern("*/.git/*.config", @"/a/b/.git/c/branch.config")), isYes);
+
+  assertThat(@(path_matches_shell_pattern("*/.git", @"/a/b/git/c/d")), isNo);
+  assertThat(@(path_matches_shell_pattern(".gitignore", @"/a/b/.gitconfig")), isNo);
+  assertThat(@(path_matches_shell_pattern(".gitignore", @"dgitconfig")), isNo);
+  assertThat(@(path_matches_shell_pattern("*.iml", @"/a/b/c/test.iml/d/e")), isNo);
 }
 
 @end
@@ -61,9 +76,7 @@
 
 #pragma mark VRFileManagerStub
 
-
 @interface VRFileManagerStub : NSFileManager
-
 @end
 
 
@@ -97,9 +110,7 @@
 
 #pragma mark VRUtilsResolvePathTest
 
-
 @interface VRUtilsResolvePathTest : VRBaseTestCase
-
 @end
 
 
@@ -132,21 +143,21 @@
 
 - (void)testDoesNotExistRelativeToFile {
   [fileManager stubPath:@"/tmp/file" isDirectory:NO];
-  
+
   NSString *path = [self resolvePath:@"file2" relativeToPath:@"/tmp/file"];
   assertThat(path, is(@"/tmp/file2"));
 }
 
 - (void)testDoesNotExistRelativeToDir {
   [fileManager stubPath:@"/tmp/dir" isDirectory:YES];
-  
+
   NSString *path = [self resolvePath:@"file" relativeToPath:@"/tmp/dir"];
   assertThat(path, is(@"/tmp/dir/file"));
 }
 
 - (void)testDoesNotExistRelativeToDirWithSiblingHint {
   [fileManager stubPath:@"/tmp/dir" isDirectory:YES];
-  
+
   NSString *path = [self resolvePath:@"file" relativeToPath:@"/tmp/dir" sibling:YES];
   assertThat(path, is(@"/tmp/file"));
 }
@@ -154,7 +165,7 @@
 - (void)testFileRelativeToFile {
   [fileManager stubPath:@"/tmp/file" isDirectory:NO];
   [fileManager stubPath:@"/tmp/file2" isDirectory:NO];
-  
+
   NSString *path = [self resolvePath:@"file2" relativeToPath:@"/tmp/file"];
   assertThat(path, is(@"/tmp/file2"));
 }
@@ -162,15 +173,15 @@
 - (void)testFileRelativeToDir {
   [fileManager stubPath:@"/tmp/dir" isDirectory:YES];
   [fileManager stubPath:@"/tmp/dir/file" isDirectory:NO];
-  
+
   NSString *path = [self resolvePath:@"file" relativeToPath:@"/tmp/dir"];
   assertThat(path, is(@"/tmp/dir/file"));
 }
 
-- (void)testDirRelativeToFile  {
+- (void)testDirRelativeToFile {
   [fileManager stubPath:@"/tmp/file" isDirectory:NO];
   [fileManager stubPath:@"/tmp/dir" isDirectory:YES];
-  
+
   NSString *path = [self resolvePath:@"dir" relativeToPath:@"/tmp/file"];
   assertThat(path, is(@"/tmp/dir/file"));
 }
@@ -178,7 +189,7 @@
 - (void)testDirRelativeToDir {
   [fileManager stubPath:@"/tmp/dir" isDirectory:YES];
   [fileManager stubPath:@"/tmp/dir2" isDirectory:YES];
-  
+
   NSString *path = [self resolvePath:@"dir2" relativeToPath:@"/tmp/dir"];
   assertThat(path, is(@"/tmp/dir/dir2"));
 }
