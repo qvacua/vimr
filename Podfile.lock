@@ -1,4 +1,5 @@
 PODS:
+  - BNFParser (1.1)
   - CocoaLumberjack (1.9.2):
     - CocoaLumberjack/Extensions (= 1.9.2)
   - CocoaLumberjack/Core (1.9.2)
@@ -7,20 +8,25 @@ PODS:
   - OCHamcrest (4.0.1)
   - OCMockito (1.3.1):
     - OCHamcrest (~> 4.0)
+  - PureLayout (2.0.4)
   - Sparkle (1.8.0)
   - TBCacao (0.0.2)
 
 DEPENDENCIES:
+  - BNFParser (= 1.1)
   - CocoaLumberjack (= 1.9.2)
-  - OCHamcrest
-  - OCMockito
-  - Sparkle
-  - TBCacao
+  - OCHamcrest (= 4.0.1)
+  - OCMockito (= 1.3.1)
+  - PureLayout (= 2.0.4)
+  - Sparkle (= 1.8.0)
+  - TBCacao (= 0.0.2)
 
 SPEC CHECKSUMS:
+  BNFParser: 7d3a0d3248a18f277e337f2f7c83716d044233b0
   CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
   OCHamcrest: b464725bbb48d0f1cd9c6f4ec3cb35fe0c4f2b94
   OCMockito: 57b8c4bb54ff3a4a14eb2174f9e57faf9f56efb6
+  PureLayout: ddf4fedf7e2f5984f972bbd2205dda4fc3418347
   Sparkle: 5eb20bb37ca21e471dab8417dee880198d905327
   TBCacao: 81edd5849d972f1869ab640e6c6e638f765141d2
 
