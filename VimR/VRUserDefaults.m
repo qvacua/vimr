@@ -35,7 +35,7 @@ NSString *const qDefaultAutoSaveOnCursorHold                = @"auto-save-on-cur
 
 NSString *const qDefaultQuitWhenLastWindowCloses            = @"quit-when-last-window-closes";
 
-NSString *const qVimrResourceFileName                       = @".vimr_rc";
+NSString *const qOpenQuicklyIgnoreList                      = @"open-quickly-ignore-list";
 // @formatter:on
 
 

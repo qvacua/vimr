@@ -34,7 +34,7 @@ extern NSString *const qDefaultAutoSaveOnCursorHold;
 
 extern NSString *const qDefaultQuitWhenLastWindowCloses;
 
-extern NSString *const qVimrResourceFileName;
+extern NSString *const qOpenQuicklyIgnoreList;
 
 
 typedef enum {
