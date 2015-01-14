@@ -11,12 +11,10 @@
 #import "VRUtils.h"
 #import "VRInactiveTableView.h"
 #import "OakImageAndTextCell.h"
+#import "ALView+PureLayout.h"
 
 
 int qOpenQuicklyWindowPadding = 8;
-
-
-#define CONSTRAIN(fmt) [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:@{@"padding":@(qOpenQuicklyWindowPadding)} views:views]];
 
 
 @implementation VROpenQuicklyWindow {
@@ -25,9 +23,11 @@ int qOpenQuicklyWindowPadding = 8;
 
 #pragma mark Public
 - (instancetype)initWithContentRect:(CGRect)contentRect {
-  self = [super initWithContentRect:contentRect styleMask:NSTitledWindowMask | NSClosableWindowMask
-      | NSTexturedBackgroundWindowMask
-                            backing:NSBackingStoreBuffered defer:YES];
+  self = [super initWithContentRect:contentRect
+                          styleMask:NSTitledWindowMask | NSClosableWindowMask | NSTexturedBackgroundWindowMask
+                            backing:NSBackingStoreBuffered
+                              defer:YES];
+
   RETURN_NIL_WHEN_NOT_SELF
 
   self.hasShadow = YES;
@@ -61,7 +61,7 @@ int qOpenQuicklyWindowPadding = 8;
   NSColor *clearColor = [NSColor clearColor];
   NSView *contentView = self.contentView;
 
-  _itemCountTextField = [[NSTextField alloc] initWithFrame:CGRectZero];
+  _itemCountTextField = [[NSTextField alloc] initForAutoLayout];
   _itemCountTextField.translatesAutoresizingMaskIntoConstraints = NO;
   _itemCountTextField.backgroundColor = clearColor;
   _itemCountTextField.alignment = NSRightTextAlignment;
@@ -71,7 +71,7 @@ int qOpenQuicklyWindowPadding = 8;
   _itemCountTextField.font = smallSystemFont;
   [contentView addSubview:_itemCountTextField];
 
-  _searchField = [[NSSearchField alloc] initWithFrame:CGRectZero];
+  _searchField = [[NSSearchField alloc] initForAutoLayout];
   _searchField.translatesAutoresizingMaskIntoConstraints = NO;
   [contentView addSubview:_searchField];
 
@@ -79,7 +79,7 @@ int qOpenQuicklyWindowPadding = 8;
   tableColumn.dataCell = [[OakImageAndTextCell alloc] init];
   [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingTail];
 
-  _fileItemTableView = [[VRInactiveTableView alloc] initWithFrame:CGRectZero];
+  _fileItemTableView = [[VRInactiveTableView alloc] initForAutoLayout];
   [_fileItemTableView addTableColumn:tableColumn];
   _fileItemTableView.usesAlternatingRowBackgroundColors = YES;
   _fileItemTableView.allowsEmptySelection = NO;
@@ -88,7 +88,7 @@ int qOpenQuicklyWindowPadding = 8;
   _fileItemTableView.headerView = nil;
   _fileItemTableView.focusRingType = NSFocusRingTypeNone;
 
-  _scrollView = [[NSScrollView alloc] initWithFrame:NSZeroRect];
+  _scrollView = [[NSScrollView alloc] initForAutoLayout];
   _scrollView.translatesAutoresizingMaskIntoConstraints = NO;
   _scrollView.hasVerticalScroller = YES;
   _scrollView.hasHorizontalScroller = NO;
@@ -97,7 +97,7 @@ int qOpenQuicklyWindowPadding = 8;
   _scrollView.documentView = _fileItemTableView;
   [contentView addSubview:_scrollView];
 
-  _pathControl = [[NSPathControl alloc] initWithFrame:CGRectZero];
+  _pathControl = [[NSPathControl alloc] initForAutoLayout];
   _pathControl.translatesAutoresizingMaskIntoConstraints = NO;
   _pathControl.pathStyle = NSPathStyleStandard;
   _pathControl.backgroundColor = [NSColor clearColor];
@@ -107,19 +107,19 @@ int qOpenQuicklyWindowPadding = 8;
   [_pathControl setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
   [contentView addSubview:_pathControl];
 
-  NSDictionary *views = @{
-      @"searchField" : _searchField,
-      @"table" : _scrollView,
-      @"workspace" : _pathControl,
-      @"count" : _itemCountTextField,
-  };
+  [_searchField autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:qOpenQuicklyWindowPadding];
+  [_searchField autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:qOpenQuicklyWindowPadding];
+  [_scrollView autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:-1];
+  [_scrollView autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:-1];
+  [_pathControl autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:2];
+  [_itemCountTextField autoPinEdge:ALEdgeLeft toEdge:ALEdgeRight ofView:_pathControl];
+  [_itemCountTextField autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:6];
 
-  CONSTRAIN(@"H:|-(padding)-[searchField]-(padding)-|")
-  CONSTRAIN(@"H:|-(-1)-[table]-(-1)-|")
-  CONSTRAIN(@"H:|-(2)-[workspace]-[count]-(6)-|")
-
-  CONSTRAIN(@"V:|-(padding)-[searchField]-(padding)-[table]-(3)-[count]-(5)-|");
-  CONSTRAIN(@"V:[workspace]-(1)-|")
+  [_searchField autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:qOpenQuicklyWindowPadding];
+  [_scrollView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:_searchField withOffset:qOpenQuicklyWindowPadding];
+  [_itemCountTextField autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:_scrollView withOffset:3];
+  [_itemCountTextField autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:5];
+  [_pathControl autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:1];
 }
 
 @end
