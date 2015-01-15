@@ -37,6 +37,10 @@ extern int qOpenQuicklyWindowWidth;
 #pragma mark NSObject
 - (id)init;
 
+#pragma mark NSTableViewDelegate
+- (void)tableView:(NSTableView *)tableView willDisplayCell:(NSCell *)cell forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
+
+#pragma mark NSTextFieldDelegate
 - (void)controlTextDidChange:(NSNotification *)obj;
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)selector;
 
