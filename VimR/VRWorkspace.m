@@ -16,14 +16,19 @@
 #import "VRMainWindow.h"
 #import "VRMainWindowControllerFactory.h"
 #import "VRWorkspaceController.h"
+#import "VRDefaultLogSetting.h"
+#import "VRPropertyReader.h"
 
 
 static CGPoint qDefaultOrigin = {242, 364};
+static NSString *const qVimrRcFileName = @".vimr_rc";
+static NSString *const qOpenQuicklyIgnorePatterns = @"open.quickly.ignore.patterns";
 
 
 @implementation VRWorkspace {
   MMVimController *_vimController;
   NSMutableArray *_openedBufferUrls;
+  NSArray *_openQuicklyIgnorePatterns;
 }
 
 #pragma mark Public
@@ -100,6 +105,8 @@ static CGPoint qDefaultOrigin = {242, 364};
   _mainWindowController = [_mainWindowControllerFactory newMainWindowControllerWithContentRect:contentRect workspace:self vimController:vimController];
 
   vimController.delegate = _mainWindowController;
+
+  [self readVimrRc];
 }
 
 - (void)setUpInitialBuffers {
@@ -177,6 +184,39 @@ static CGPoint qDefaultOrigin = {242, 364};
   }
 
   return bufferUrls;
+}
+
+- (void)readVimrRc {
+  NSDictionary *properties = [self propertiesFromVimrRc];
+
+  _openQuicklyIgnorePatterns = [self openQuicklyIgnorePatternsFromVimrRc:properties];
+}
+
+- (NSArray *)openQuicklyIgnorePatternsFromVimrRc:(NSDictionary *)properties {
+  NSArray *untrimmedPatterns = [properties[qOpenQuicklyIgnorePatterns] componentsSeparatedByString:@","];
+  NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:untrimmedPatterns.count];
+  for (NSString *pattern in untrimmedPatterns) {
+    [result addObject:[pattern stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+  }
+
+  return result;
+}
+
+- (NSDictionary *)propertiesFromVimrRc {
+  NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:qVimrRcFileName];
+  if (![_fileManager fileExistsAtPath:path]) {
+    DDLogDebug(@"%@ not found", path);
+    return @{};
+  }
+
+  NSError *error;
+  NSString *content = [NSString stringWithContentsOfURL:[NSURL fileURLWithPath:path] encoding:NSUTF8StringEncoding error:&error];
+  if (error) {
+    DDLogWarn(@"There was an error opening %@: %@", path, error);
+    return @{};
+  }
+
+  return [VRPropertyReader read:content];
 }
 
 @end

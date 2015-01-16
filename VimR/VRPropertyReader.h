@@ -12,6 +12,6 @@
 
 @interface VRPropertyReader : NSObject
 
-- (NSDictionary *)read:(NSString *)input;
++ (NSDictionary *)read:(NSString *)input;
 
 @end

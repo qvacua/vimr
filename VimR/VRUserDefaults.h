@@ -34,8 +34,6 @@ extern NSString *const qDefaultAutoSaveOnCursorHold;
 
 extern NSString *const qDefaultQuitWhenLastWindowCloses;
 
-extern NSString *const qOpenQuicklyIgnoreList;
-
 
 typedef enum {
   VROpenModeInNewTab,

@@ -18,10 +18,8 @@
 @implementation VRPropertyReaderTest
 
 - (void)testRead {
-  VRPropertyReader *reader = [[VRPropertyReader alloc] init];
-
   // @formatter:off
-  NSDictionary *properties = [reader read:
+  NSDictionary *properties = [VRPropertyReader read:
       @"\n\n"
        "# first=comment\n"
        "#second\n"
@@ -42,7 +40,6 @@
   assertThat(properties[@"c"], is(@"3"));
   assertThat(properties[@"d"], is(@""));
   assertThat(properties[@"open.quickly.patterns"], is(@"*/.git/*, .gitignore"));
-
 }
 
 @end

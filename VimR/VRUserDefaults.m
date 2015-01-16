@@ -34,8 +34,6 @@ NSString *const qDefaultAutoSaveOnFrameDeactivation         = @"auto-save-on-fra
 NSString *const qDefaultAutoSaveOnCursorHold                = @"auto-save-on-cursor-hold";
 
 NSString *const qDefaultQuitWhenLastWindowCloses            = @"quit-when-last-window-closes";
-
-NSString *const qOpenQuicklyIgnoreList                      = @"open-quickly-ignore-list";
 // @formatter:on
 
 

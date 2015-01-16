@@ -16,10 +16,12 @@
 @class VRWorkspace;
 @class VROpenQuicklyWindowController;
 @class VRMainWindowControllerFactory;
+@class VRPropertyReader;
 
 
 @interface VRWorkspaceFactory : NSObject <TBBean>
 
+@property (nonatomic, weak) NSFileManager *fileManager;
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;
 @property (nonatomic, weak) VRMainWindowControllerFactory *mainWindowControllerFactory;
 @property (nonatomic, weak) VRWorkspaceController *workspaceController;

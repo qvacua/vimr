@@ -8,15 +8,12 @@
 */
 
 #import "VRPropertyReader.h"
-#import "VRDefaultLogSetting.h"
 #import "NSString+TBCacao.h"
 
 
-@implementation VRPropertyReader {
+@implementation VRPropertyReader
 
-}
-
-- (NSDictionary *)read:(NSString *)input {
++ (NSDictionary *)read:(NSString *)input {
   NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithCapacity:30];
 
   NSArray *lines = [input componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
