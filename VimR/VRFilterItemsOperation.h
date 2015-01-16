@@ -14,6 +14,7 @@
 extern NSString *const qFilterItemsOperationSearchStringKey;
 extern NSString *const qFilterItemsOperationFilteredItemsKey;
 extern NSString *const qFilterItemsOperationItemTableViewKey;
+extern NSString *const qOpenQuicklyIgnorePatternsKey;
 extern const NSUInteger qMaximumNumberOfFilterResult;
 
 

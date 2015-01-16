@@ -22,6 +22,7 @@
 NSString *const qFilterItemsOperationSearchStringKey = @"search-string";
 NSString *const qFilterItemsOperationFilteredItemsKey = @"filtered-items-array";
 NSString *const qFilterItemsOperationItemTableViewKey = @"file-item-table-view";
+NSString *const qOpenQuicklyIgnorePatternsKey = @"open-quickly-ignore-patterns";
 const NSUInteger qMaximumNumberOfFilterResult = 250;
 
 
@@ -31,6 +32,16 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
   return (NSComparisonResult) (p1.score <= p2.score);
 };
 
+
+static inline BOOL ignore(const char **patterns, NSUInteger nr, NSString *path) {
+  for (NSUInteger i = 0; i < nr; i++) {
+    if (path_matches_shell_pattern(patterns[i], path)) {
+      return YES;
+    }
+  }
+
+  return NO;
+}
 
 static inline NSString *disambiguated_display_name(size_t level, NSString *path) {
   if (level == 0) {
@@ -69,6 +80,7 @@ static inline NSRange capped_range_for_filtered_items(NSArray *result) {
   __weak VRFileItemManager *_fileItemManager;
   __weak NSMutableArray *_filteredItems;
   __weak NSTableView *_fileItemTableView;
+  NSArray *_ignorePatterns;
   NSString *_searchStr;
 }
 
@@ -81,6 +93,7 @@ static inline NSRange capped_range_for_filtered_items(NSArray *result) {
   _filteredItems = dict[qFilterItemsOperationFilteredItemsKey];
   _searchStr = [dict[qFilterItemsOperationSearchStringKey] copy];
   _fileItemTableView = dict[qFilterItemsOperationItemTableViewKey];
+  _ignorePatterns = dict[qOpenQuicklyIgnorePatternsKey];
 
   return self;
 }
@@ -111,6 +124,12 @@ static inline NSRange capped_range_for_filtered_items(NSArray *result) {
       NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:urlsOfTargetUrl.count];
       std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(urlsOfTargetUrl.count, qArrayChunkSize);
 
+      NSUInteger patternsCount = _ignorePatterns.count;
+      const char *patterns[patternsCount];
+      for (NSUInteger i = 0; i < patternsCount; i++) {
+        patterns[i] = [_ignorePatterns[i] fileSystemRepresentation];
+      }
+
       for (auto &pair : chunkedIndexes) {
         NSUInteger beginIndex = pair.first;
         NSUInteger endIndex = pair.second;
@@ -118,8 +137,14 @@ static inline NSRange capped_range_for_filtered_items(NSArray *result) {
 
         CANCEL_WHEN_REQUESTED
         for (size_t i = beginIndex; i <= endIndex; i++) {
+          if(ignore(patterns, patternsCount, [urlsOfTargetUrl[i] path])) {
+            continue;
+          }
+
           [result addObject:[[VRScoredPath alloc] initWithUrl:urlsOfTargetUrl[i]]];
         }
+
+        count = result.count;
 
         CANCEL_WHEN_REQUESTED
         dispatch_loop(count, ^(size_t i) {

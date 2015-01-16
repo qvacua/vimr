@@ -43,6 +43,7 @@
 - (void)cleanUpAndClose;
 - (void)updateBuffersInTabs;
 - (void)selectBufferWithUrl:(NSURL *)url;
+- (NSArray *)openQuicklyIgnorePatterns;
 
 #pragma mark NSObject
 - (id)init;

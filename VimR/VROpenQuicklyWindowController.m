@@ -211,6 +211,7 @@ int qOpenQuicklyWindowWidth = 400;
       qFilterItemsOperationFilteredItemsKey : _filteredFileItems,
       qFilterItemsOperationItemTableViewKey : _fileItemTableView,
       qFilterItemsOperationSearchStringKey : _searchField.stringValue,
+      qOpenQuicklyIgnorePatternsKey : _targetWindowController.workspace.openQuicklyIgnorePatterns,
   }]];
 }
 

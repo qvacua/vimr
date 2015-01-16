@@ -75,6 +75,10 @@ static NSString *const qOpenQuicklyIgnorePatterns = @"open.quickly.ignore.patter
   [_mainWindowController.window makeKeyAndOrderFront:self];
 }
 
+- (NSArray *)openQuicklyIgnorePatterns {
+  return _openQuicklyIgnorePatterns;
+}
+
 - (NSArray *)openedUrls {
   return _openedBufferUrls;
 }
