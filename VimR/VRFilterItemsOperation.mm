@@ -27,15 +27,14 @@ const NSUInteger qMaximumNumberOfFilterResult = 250;
 
 
 static const int qArrayChunkSize = 50000;
-
 static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult(VRScoredPath *p1, VRScoredPath *p2) {
   return (NSComparisonResult) (p1.score <= p2.score);
 };
 
 
-static inline BOOL ignore(const char **patterns, NSUInteger nr, NSString *path) {
-  for (NSUInteger i = 0; i < nr; i++) {
-    if (path_matches_shell_pattern(patterns[i], path)) {
+static inline BOOL ignore(const char **patterns, NSUInteger patternsCount, NSURL *fileUrl) {
+  for (NSUInteger i = 0; i < patternsCount; i++) {
+    if (path_matches_shell_pattern(patterns[i], fileUrl.path)) {
       return YES;
     }
   }
@@ -133,21 +132,18 @@ static inline NSRange capped_range_for_filtered_items(NSArray *result) {
       for (auto &pair : chunkedIndexes) {
         NSUInteger beginIndex = pair.first;
         NSUInteger endIndex = pair.second;
-        NSUInteger count = endIndex - beginIndex + 1;
 
         CANCEL_WHEN_REQUESTED
         for (size_t i = beginIndex; i <= endIndex; i++) {
-          if(ignore(patterns, patternsCount, [urlsOfTargetUrl[i] path])) {
+          if(ignore(patterns, patternsCount, urlsOfTargetUrl[i])) {
             continue;
           }
 
           [result addObject:[[VRScoredPath alloc] initWithUrl:urlsOfTargetUrl[i]]];
         }
 
-        count = result.count;
-
         CANCEL_WHEN_REQUESTED
-        dispatch_loop(count, ^(size_t i) {
+        dispatch_loop(result.count, ^(size_t i) {
           VRScoredPath *scoredPath = result[beginIndex + i];
           [scoredPath computeScoreForCandidate:_searchStr];
         });
