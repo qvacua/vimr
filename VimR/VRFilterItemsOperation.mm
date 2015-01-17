@@ -120,6 +120,7 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
 
         std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(urlsOfTargetUrl.count, qArrayChunkSize);
         for (auto &pair : chunkedIndexes) {
+          NSMutableArray *partialResult = [[NSMutableArray alloc] initWithCapacity:qArrayChunkSize];
           NSUInteger beginIndex = pair.first;
           NSUInteger endIndex = pair.second;
 
@@ -129,32 +130,25 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
               continue;
             }
 
-            [result addObject:[[VRScoredPath alloc] initWithUrl:urlsOfTargetUrl[i]]];
+            [partialResult addObject:[[VRScoredPath alloc] initWithUrl:urlsOfTargetUrl[i]]];
           }
+
+          // use the whole result from here
+          [result addObjectsFromArray:partialResult];
 
           CANCEL_WHEN_REQUESTED
           NSArray *cappedResult = [result subarrayWithRange:capped_range_for_filtered_items(qMaximumNumberOfNonFilteredResult, result)];
+
+          // use the capped result from here
+
           std::vector<std::string> paths;
-          for (VRScoredPath *scoredPath in cappedResult) {
-            paths.push_back(cf::to_s((__bridge CFStringRef) scoredPath.url.path));
-          }
+          [self fillPaths:paths withScoredPaths:cappedResult];
 
           CANCEL_WHEN_REQUESTED
-          std::vector<size_t> levels = disambiguate(paths);
-          dispatch_loop(cappedResult.count, ^(size_t i) {
-            VRScoredPath *scoredPath = cappedResult[i];
-            scoredPath.displayName = disambiguated_display_name(levels[i], scoredPath.url.path);
-          });
+          [self disambiguatePaths:paths inScoredPaths:cappedResult];
 
           CANCEL_WHEN_REQUESTED
-          dispatch_to_main_thread(^{
-            @synchronized (_filteredItems) {
-              [_filteredItems removeAllObjects];
-              [_filteredItems addObjectsFromArray:cappedResult];
-
-              [_fileItemTableView reloadData];
-            }
-          });
+          [self reloadTableViewWithScoredPaths:cappedResult];
         }
       }
 
@@ -178,8 +172,11 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
 
       std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(urlsOfTargetUrl.count, qArrayChunkSize);
       for (auto &pair : chunkedIndexes) {
+        NSMutableArray *partialResult = [[NSMutableArray alloc] initWithCapacity:qArrayChunkSize];
         NSUInteger beginIndex = pair.first;
         NSUInteger endIndex = pair.second;
+
+        // build up the partial result
 
         CANCEL_WHEN_REQUESTED
         for (size_t i = beginIndex; i <= endIndex; i++) {
@@ -187,45 +184,63 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
             continue;
           }
 
-          [result addObject:[[VRScoredPath alloc] initWithUrl:urlsOfTargetUrl[i]]];
+          [partialResult addObject:[[VRScoredPath alloc] initWithUrl:urlsOfTargetUrl[i]]];
         }
 
         CANCEL_WHEN_REQUESTED
-        dispatch_loop(result.count, ^(size_t i) {
-          VRScoredPath *scoredPath = result[beginIndex + i];
+        dispatch_loop(partialResult.count, ^(size_t i) {
+          VRScoredPath *scoredPath = partialResult[beginIndex + i];
           [scoredPath computeScoreForCandidate:_searchStr];
         });
+
+        // use the whole result from here
+        [result addObjectsFromArray:partialResult];
 
         CANCEL_WHEN_REQUESTED
         [result sortUsingComparator:qScoredItemComparator];
         NSArray *cappedResult = [result subarrayWithRange:capped_range_for_filtered_items(qMaximumNumberOfFilterResult, result)];
 
+        // use the capped result from here
+
         std::vector<std::string> paths;
-        for (VRScoredPath *scoredPath in cappedResult) {
-          paths.push_back(cf::to_s((__bridge CFStringRef) scoredPath.url.path));
-        }
+        [self fillPaths:paths withScoredPaths:cappedResult];
 
         CANCEL_WHEN_REQUESTED
-        std::vector<size_t> levels = disambiguate(paths);
-        dispatch_loop(cappedResult.count, ^(size_t i) {
-          VRScoredPath *scoredPath = cappedResult[i];
-          scoredPath.displayName = disambiguated_display_name(levels[i], scoredPath.url.path);
-        });
+        [self disambiguatePaths:paths inScoredPaths:cappedResult];
 
         CANCEL_WHEN_REQUESTED
-        dispatch_to_main_thread(^{
-          @synchronized (_filteredItems) {
-            [_filteredItems removeAllObjects];
-            [_filteredItems addObjectsFromArray:cappedResult];
-
-            [_fileItemTableView reloadData];
-          }
-        });
+        [self reloadTableViewWithScoredPaths:cappedResult];
       }
     }
 
     [_fileItemManager resumeFileItemOperations];
   }
+}
+
+- (void)reloadTableViewWithScoredPaths:(NSArray *)scoredPaths {
+  dispatch_to_main_thread(^{
+    @synchronized (_filteredItems) {
+      [_filteredItems removeAllObjects];
+      [_filteredItems addObjectsFromArray:scoredPaths];
+
+      [_fileItemTableView reloadData];
+    }
+  });
+}
+
+- (void)fillPaths:(std::vector<std::string> &)paths withScoredPaths:(NSArray *)scoredPaths {
+  for (VRScoredPath *scoredPath in scoredPaths) {
+    paths.push_back(cf::to_s((__bridge CFStringRef) scoredPath.url.path));
+  }
+}
+
+- (void)disambiguatePaths:(std::vector<std::string> &)paths inScoredPaths:(NSArray *)scoredPaths {
+  std::vector<size_t> levels = disambiguate(paths);
+
+  dispatch_loop(scoredPaths.count, ^(size_t i) {
+    VRScoredPath *scoredPath = scoredPaths[i];
+    scoredPath.displayName = disambiguated_display_name(levels[i], scoredPath.url.path);
+  });
 }
 
 @end

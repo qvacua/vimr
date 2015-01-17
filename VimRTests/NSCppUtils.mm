@@ -1,11 +1,11 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import "VRBaseTestCase.h"
 #import "VRCppUtils.h"
