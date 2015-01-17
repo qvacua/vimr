@@ -158,9 +158,10 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
     return;
   }
 
-  @autoreleasepool {
-    [_fileItemManager pauseFileItemOperations];
+  NSUInteger countOfMaxResult = qMaximumNumberOfFilterResult;
 
+  [_fileItemManager pauseFileItemOperations];
+  @autoreleasepool {
     @synchronized (urlsOfTargetUrl) {
       NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:urlsOfTargetUrl.count];
 
@@ -172,33 +173,33 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
 
       std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(urlsOfTargetUrl.count, qArrayChunkSize);
       for (auto &pair : chunkedIndexes) {
-        NSMutableArray *partialResult = [[NSMutableArray alloc] initWithCapacity:qArrayChunkSize];
         NSUInteger beginIndex = pair.first;
         NSUInteger endIndex = pair.second;
 
-        // build up the partial result
-
         CANCEL_WHEN_REQUESTED
+        NSUInteger countOfResultUpToNow = result.count;
+        NSUInteger addedCount = 0;
         for (size_t i = beginIndex; i <= endIndex; i++) {
           if (ignore(patterns, patternsCount, urlsOfTargetUrl[i])) {
             continue;
           }
 
-          [partialResult addObject:[[VRScoredPath alloc] initWithUrl:urlsOfTargetUrl[i]]];
+          [result addObject:[[VRScoredPath alloc] initWithUrl:urlsOfTargetUrl[i]]];
+          addedCount++;
         }
 
+        // filter start
         CANCEL_WHEN_REQUESTED
-        dispatch_loop(partialResult.count, ^(size_t i) {
-          VRScoredPath *scoredPath = partialResult[beginIndex + i];
+        dispatch_loop(addedCount, ^(size_t i) {
+          VRScoredPath *scoredPath = result[countOfResultUpToNow + i];
           [scoredPath computeScoreForCandidate:_searchStr];
         });
 
-        // use the whole result from here
-        [result addObjectsFromArray:partialResult];
-
         CANCEL_WHEN_REQUESTED
         [result sortUsingComparator:qScoredItemComparator];
-        NSArray *cappedResult = [result subarrayWithRange:capped_range_for_filtered_items(qMaximumNumberOfFilterResult, result)];
+        // filter end
+
+        NSArray *cappedResult = [result subarrayWithRange:capped_range_for_filtered_items(countOfMaxResult, result)];
 
         // use the capped result from here
 
@@ -212,9 +213,8 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
         [self reloadTableViewWithScoredPaths:cappedResult];
       }
     }
-
-    [_fileItemManager resumeFileItemOperations];
   }
+  [_fileItemManager resumeFileItemOperations];
 }
 
 - (void)reloadTableViewWithScoredPaths:(NSArray *)scoredPaths {
