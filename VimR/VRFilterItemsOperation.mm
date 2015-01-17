@@ -144,7 +144,6 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
           dispatch_loop(cappedResult.count, ^(size_t i) {
             VRScoredPath *scoredPath = cappedResult[i];
             scoredPath.displayName = disambiguated_display_name(levels[i], scoredPath.url.path);
-            NSLog(@"adding: %@", scoredPath.displayName);
           });
 
           CANCEL_WHEN_REQUESTED
