@@ -1,11 +1,11 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import "VROpenQuicklyWindow.h"
 #import "VRUtils.h"
@@ -72,14 +72,13 @@ int qOpenQuicklyWindowPadding = 8;
   [contentView addSubview:_itemCountTextField];
 
   _searchField = [[NSSearchField alloc] initForAutoLayout];
-  _searchField.translatesAutoresizingMaskIntoConstraints = NO;
   [contentView addSubview:_searchField];
 
   NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:@"name"];
   tableColumn.dataCell = [[OakImageAndTextCell alloc] init];
   [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingTail];
 
-  _fileItemTableView = [[VRInactiveTableView alloc] initForAutoLayout];
+  _fileItemTableView = [[VRInactiveTableView alloc] initWithFrame:CGRectZero];
   [_fileItemTableView addTableColumn:tableColumn];
   _fileItemTableView.usesAlternatingRowBackgroundColors = YES;
   _fileItemTableView.allowsEmptySelection = NO;
@@ -89,7 +88,6 @@ int qOpenQuicklyWindowPadding = 8;
   _fileItemTableView.focusRingType = NSFocusRingTypeNone;
 
   _scrollView = [[NSScrollView alloc] initForAutoLayout];
-  _scrollView.translatesAutoresizingMaskIntoConstraints = NO;
   _scrollView.hasVerticalScroller = YES;
   _scrollView.hasHorizontalScroller = NO;
   _scrollView.borderType = NSBezelBorder;
@@ -98,7 +96,6 @@ int qOpenQuicklyWindowPadding = 8;
   [contentView addSubview:_scrollView];
 
   _pathControl = [[NSPathControl alloc] initForAutoLayout];
-  _pathControl.translatesAutoresizingMaskIntoConstraints = NO;
   _pathControl.pathStyle = NSPathStyleStandard;
   _pathControl.backgroundColor = [NSColor clearColor];
   _pathControl.refusesFirstResponder = YES;
