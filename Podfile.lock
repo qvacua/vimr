@@ -12,10 +12,10 @@ PODS:
 
 DEPENDENCIES:
   - CocoaLumberjack (= 1.9.2)
-  - OCHamcrest
-  - OCMockito
-  - Sparkle
-  - TBCacao
+  - OCHamcrest (= 4.0.1)
+  - OCMockito (= 1.3.1)
+  - Sparkle (= 1.8.0)
+  - TBCacao (= 0.0.2)
 
 SPEC CHECKSUMS:
   CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
