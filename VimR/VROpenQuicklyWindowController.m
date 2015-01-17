@@ -58,6 +58,8 @@ int qOpenQuicklyWindowWidth = 400;
 
   [self.window makeKeyAndOrderFront:self];
 
+  [self refilter];
+
   [self setupUiUpdateOperation];
 }
 
@@ -109,10 +111,6 @@ int qOpenQuicklyWindowWidth = 400;
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
   if (!self.window.isVisible) {
-    return 0;
-  }
-
-  if (_searchField.stringValue.length == 0) {
     return 0;
   }
 

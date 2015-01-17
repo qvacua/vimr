@@ -1,11 +1,11 @@
 /**
- * Tae Won Ha — @hataewon
- *
- * http://taewon.de
- * http://qvacua.com
- *
- * See LICENSE
- */
+* Tae Won Ha — @hataewon
+*
+* http://taewon.de
+* http://qvacua.com
+*
+* See LICENSE
+*/
 
 #import "VRFilterItemsOperation.h"
 #import "VROpenQuicklyWindowController.h"
@@ -24,6 +24,7 @@ NSString *const qFilterItemsOperationFilteredItemsKey = @"filtered-items-array";
 NSString *const qFilterItemsOperationItemTableViewKey = @"file-item-table-view";
 NSString *const qOpenQuicklyIgnorePatternsKey = @"open-quickly-ignore-patterns";
 const NSUInteger qMaximumNumberOfFilterResult = 250;
+const NSUInteger qMaximumNumberOfNonFilteredResult = 2000;
 
 
 static const int qArrayChunkSize = 50000;
@@ -55,17 +56,18 @@ static inline NSString *disambiguated_display_name(size_t level, NSString *path)
   return SF(@"%@  —  %@", path.lastPathComponent, disambiguation);
 }
 
-static inline NSRange capped_range_for_filtered_items(NSArray *result) {
+static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArray *result) {
   if (result.isEmpty) {
     return NSMakeRange(0, 0);
   }
 
   NSRange range;
   if (result.count >= qMaximumNumberOfFilterResult) {
-    range = NSMakeRange(0, qMaximumNumberOfFilterResult - 1);
+    range = NSMakeRange(0, maxCount - 1);
   } else {
     range = NSMakeRange(0, result.count - 1);
   }
+
   return range;
 }
 
@@ -99,17 +101,66 @@ static inline NSRange capped_range_for_filtered_items(NSArray *result) {
 
 #pragma mark NSOperation
 - (void)main {
-  if (self.isCancelled) {
-    return;
-  }
+  if (self.isCancelled) {return;}
+
+  NSArray *urlsOfTargetUrl = _fileItemManager.urlsOfTargetUrl;
 
   if (_searchStr.length == 0) {
-    dispatch_to_main_thread(^{
-      @synchronized (_filteredItems) {
-        [_filteredItems removeAllObjects];
-        [_fileItemTableView reloadData];
+    @autoreleasepool {
+      [_fileItemManager pauseFileItemOperations];
+
+      @synchronized (urlsOfTargetUrl) {
+        NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:urlsOfTargetUrl.count];
+
+        NSUInteger patternsCount = _ignorePatterns.count;
+        const char *patterns[patternsCount];
+        for (NSUInteger i = 0; i < patternsCount; i++) {
+          patterns[i] = [_ignorePatterns[i] fileSystemRepresentation];
+        }
+
+        std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(urlsOfTargetUrl.count, qArrayChunkSize);
+        for (auto &pair : chunkedIndexes) {
+          NSUInteger beginIndex = pair.first;
+          NSUInteger endIndex = pair.second;
+
+          CANCEL_WHEN_REQUESTED
+          for (size_t i = beginIndex; i <= endIndex; i++) {
+            if (ignore(patterns, patternsCount, urlsOfTargetUrl[i])) {
+              continue;
+            }
+
+            [result addObject:[[VRScoredPath alloc] initWithUrl:urlsOfTargetUrl[i]]];
+          }
+
+          CANCEL_WHEN_REQUESTED
+          NSArray *cappedResult = [result subarrayWithRange:capped_range_for_filtered_items(qMaximumNumberOfFilterResult, result)];
+          std::vector<std::string> paths;
+          for (VRScoredPath *scoredPath in cappedResult) {
+            paths.push_back(cf::to_s((__bridge CFStringRef) scoredPath.url.path));
+          }
+
+          CANCEL_WHEN_REQUESTED
+          std::vector<size_t> levels = disambiguate(paths);
+          dispatch_loop(cappedResult.count, ^(size_t i) {
+            VRScoredPath *scoredPath = cappedResult[i];
+            scoredPath.displayName = disambiguated_display_name(levels[i], scoredPath.url.path);
+            NSLog(@"adding: %@", scoredPath.displayName);
+          });
+
+          CANCEL_WHEN_REQUESTED
+          dispatch_to_main_thread(^{
+            @synchronized (_filteredItems) {
+              [_filteredItems removeAllObjects];
+              [_filteredItems addObjectsFromArray:cappedResult];
+
+              [_fileItemTableView reloadData];
+            }
+          });
+        }
       }
-    });
+
+      [_fileItemManager resumeFileItemOperations];
+    }
 
     return;
   }
@@ -117,11 +168,8 @@ static inline NSRange capped_range_for_filtered_items(NSArray *result) {
   @autoreleasepool {
     [_fileItemManager pauseFileItemOperations];
 
-    NSArray *urlsOfTargetUrl = _fileItemManager.urlsOfTargetUrl;
-
     @synchronized (urlsOfTargetUrl) {
       NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:urlsOfTargetUrl.count];
-      std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(urlsOfTargetUrl.count, qArrayChunkSize);
 
       NSUInteger patternsCount = _ignorePatterns.count;
       const char *patterns[patternsCount];
@@ -129,13 +177,14 @@ static inline NSRange capped_range_for_filtered_items(NSArray *result) {
         patterns[i] = [_ignorePatterns[i] fileSystemRepresentation];
       }
 
+      std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(urlsOfTargetUrl.count, qArrayChunkSize);
       for (auto &pair : chunkedIndexes) {
         NSUInteger beginIndex = pair.first;
         NSUInteger endIndex = pair.second;
 
         CANCEL_WHEN_REQUESTED
         for (size_t i = beginIndex; i <= endIndex; i++) {
-          if(ignore(patterns, patternsCount, urlsOfTargetUrl[i])) {
+          if (ignore(patterns, patternsCount, urlsOfTargetUrl[i])) {
             continue;
           }
 
@@ -150,7 +199,7 @@ static inline NSRange capped_range_for_filtered_items(NSArray *result) {
 
         CANCEL_WHEN_REQUESTED
         [result sortUsingComparator:qScoredItemComparator];
-        NSArray *cappedResult = [result subarrayWithRange:capped_range_for_filtered_items(result)];
+        NSArray *cappedResult = [result subarrayWithRange:capped_range_for_filtered_items(qMaximumNumberOfFilterResult, result)];
 
         std::vector<std::string> paths;
         for (VRScoredPath *scoredPath in cappedResult) {
