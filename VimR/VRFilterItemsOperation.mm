@@ -104,61 +104,8 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
   if (self.isCancelled) {return;}
 
   NSArray *urlsOfTargetUrl = _fileItemManager.urlsOfTargetUrl;
-
-  if (_searchStr.length == 0) {
-    @autoreleasepool {
-      [_fileItemManager pauseFileItemOperations];
-
-      @synchronized (urlsOfTargetUrl) {
-        NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:urlsOfTargetUrl.count];
-
-        NSUInteger patternsCount = _ignorePatterns.count;
-        const char *patterns[patternsCount];
-        for (NSUInteger i = 0; i < patternsCount; i++) {
-          patterns[i] = [_ignorePatterns[i] fileSystemRepresentation];
-        }
-
-        std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(urlsOfTargetUrl.count, qArrayChunkSize);
-        for (auto &pair : chunkedIndexes) {
-          NSMutableArray *partialResult = [[NSMutableArray alloc] initWithCapacity:qArrayChunkSize];
-          NSUInteger beginIndex = pair.first;
-          NSUInteger endIndex = pair.second;
-
-          CANCEL_WHEN_REQUESTED
-          for (size_t i = beginIndex; i <= endIndex; i++) {
-            if (ignore(patterns, patternsCount, urlsOfTargetUrl[i])) {
-              continue;
-            }
-
-            [partialResult addObject:[[VRScoredPath alloc] initWithUrl:urlsOfTargetUrl[i]]];
-          }
-
-          // use the whole result from here
-          [result addObjectsFromArray:partialResult];
-
-          CANCEL_WHEN_REQUESTED
-          NSArray *cappedResult = [result subarrayWithRange:capped_range_for_filtered_items(qMaximumNumberOfNonFilteredResult, result)];
-
-          // use the capped result from here
-
-          std::vector<std::string> paths;
-          [self fillPaths:paths withScoredPaths:cappedResult];
-
-          CANCEL_WHEN_REQUESTED
-          [self disambiguatePaths:paths inScoredPaths:cappedResult];
-
-          CANCEL_WHEN_REQUESTED
-          [self reloadTableViewWithScoredPaths:cappedResult];
-        }
-      }
-
-      [_fileItemManager resumeFileItemOperations];
-    }
-
-    return;
-  }
-
-  NSUInteger countOfMaxResult = qMaximumNumberOfFilterResult;
+  BOOL filterResult = _searchStr.length > 0;
+  NSUInteger countOfMaxResult = filterResult ? qMaximumNumberOfFilterResult : qMaximumNumberOfNonFilteredResult;
 
   [_fileItemManager pauseFileItemOperations];
   @autoreleasepool {
@@ -188,20 +135,20 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
           addedCount++;
         }
 
-        // filter start
         CANCEL_WHEN_REQUESTED
-        dispatch_loop(addedCount, ^(size_t i) {
-          VRScoredPath *scoredPath = result[countOfResultUpToNow + i];
-          [scoredPath computeScoreForCandidate:_searchStr];
-        });
+        if (filterResult) {
+          // filter
+          dispatch_loop(addedCount, ^(size_t i) {
+            VRScoredPath *scoredPath = result[countOfResultUpToNow + i];
+            [scoredPath computeScoreForCandidate:_searchStr];
+          });
 
-        CANCEL_WHEN_REQUESTED
-        [result sortUsingComparator:qScoredItemComparator];
-        // filter end
-
-        NSArray *cappedResult = [result subarrayWithRange:capped_range_for_filtered_items(countOfMaxResult, result)];
+          CANCEL_WHEN_REQUESTED
+          [result sortUsingComparator:qScoredItemComparator];
+        }
 
         // use the capped result from here
+        NSArray *cappedResult = [result subarrayWithRange:capped_range_for_filtered_items(countOfMaxResult, result)];
 
         std::vector<std::string> paths;
         [self fillPaths:paths withScoredPaths:cappedResult];
