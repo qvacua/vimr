@@ -39,7 +39,7 @@
   return self;
 }
 
-- (BOOL)matchesPath:(NSString *)absolutePath {
+- (BOOL)matchesPath:(__weak NSString *)absolutePath {
   switch (_kind) {
     case VROpenQuicklyIgnoreFolderPattern:
       return [absolutePath hasString:_targetPattern];
