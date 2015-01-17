@@ -24,7 +24,7 @@ NSString *const qFilterItemsOperationFilteredItemsKey = @"filtered-items-array";
 NSString *const qFilterItemsOperationItemTableViewKey = @"file-item-table-view";
 NSString *const qOpenQuicklyIgnorePatternsKey = @"open-quickly-ignore-patterns";
 const NSUInteger qMaximumNumberOfFilterResult = 250;
-const NSUInteger qMaximumNumberOfNonFilteredResult = 2000;
+const NSUInteger qMaximumNumberOfNonFilteredResult = 5000;
 
 
 static const int qArrayChunkSize = 50000;
@@ -62,7 +62,7 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
   }
 
   NSRange range;
-  if (result.count >= qMaximumNumberOfFilterResult) {
+  if (result.count >= maxCount) {
     range = NSMakeRange(0, maxCount - 1);
   } else {
     range = NSMakeRange(0, result.count - 1);
@@ -133,7 +133,7 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
           }
 
           CANCEL_WHEN_REQUESTED
-          NSArray *cappedResult = [result subarrayWithRange:capped_range_for_filtered_items(qMaximumNumberOfFilterResult, result)];
+          NSArray *cappedResult = [result subarrayWithRange:capped_range_for_filtered_items(qMaximumNumberOfNonFilteredResult, result)];
           std::vector<std::string> paths;
           for (VRScoredPath *scoredPath in cappedResult) {
             paths.push_back(cf::to_s((__bridge CFStringRef) scoredPath.url.path));
