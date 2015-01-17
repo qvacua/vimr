@@ -35,7 +35,7 @@ static inline double rank_string(NSString *string, NSString *target, std::vector
 
 - (void)computeScoreForCandidate:(NSString *)candidate {
   NSString *preparedStr;
-  if ([candidate contains:@"/"]) {
+  if ([candidate hasString:@"/"]) {
     preparedStr = _url.path;
   } else {
     preparedStr = _url.lastPathComponent;

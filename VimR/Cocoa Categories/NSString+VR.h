@@ -12,6 +12,6 @@
 
 @interface NSString (VR)
 
-- (BOOL)contains:(NSString *)str;
+- (BOOL)hasString:(NSString *)str;
 
 @end
