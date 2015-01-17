@@ -33,9 +33,9 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
 };
 
 
-static inline BOOL ignore(const char **patterns, NSUInteger patternsCount, NSURL *fileUrl) {
-  for (NSUInteger i = 0; i < patternsCount; i++) {
-    if (path_matches_shell_pattern(patterns[i], fileUrl.path)) {
+static inline BOOL ignore(std::vector<std::string> patterns, NSURL *fileUrl) {
+  for (auto &pattern : patterns) {
+    if (path_matches_shell_pattern(pattern.c_str(), fileUrl.path)) {
       return YES;
     }
   }
@@ -107,16 +107,16 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
   BOOL filterResult = _searchStr.length > 0;
   NSUInteger countOfMaxResult = filterResult ? qMaximumNumberOfFilterResult : qMaximumNumberOfNonFilteredResult;
 
+  std::vector<std::string> patterns;
+  for (NSUInteger i = 0; i < _ignorePatterns.count; i++) {
+    patterns.push_back(std::string([_ignorePatterns[i] fileSystemRepresentation]));
+  }
+
   [_fileItemManager pauseFileItemOperations];
   @autoreleasepool {
     @synchronized (urlsOfTargetUrl) {
       NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:urlsOfTargetUrl.count];
 
-      NSUInteger patternsCount = _ignorePatterns.count;
-      const char *patterns[patternsCount];
-      for (NSUInteger i = 0; i < patternsCount; i++) {
-        patterns[i] = [_ignorePatterns[i] fileSystemRepresentation];
-      }
 
       std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(urlsOfTargetUrl.count, qArrayChunkSize);
       for (auto &pair : chunkedIndexes) {
@@ -127,7 +127,7 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
         NSUInteger countOfResultUpToNow = result.count;
         NSUInteger addedCount = 0;
         for (size_t i = beginIndex; i <= endIndex; i++) {
-          if (ignore(patterns, patternsCount, urlsOfTargetUrl[i])) {
+          if (ignore(patterns, urlsOfTargetUrl[i])) {
             continue;
           }
 

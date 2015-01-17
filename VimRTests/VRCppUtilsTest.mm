@@ -11,11 +11,11 @@
 #import "VRCppUtils.h"
 
 
-@interface NSCppUtils : VRBaseTestCase
+@interface VRCppUtilsTest : VRBaseTestCase
 @end
 
 
-@implementation NSCppUtils
+@implementation VRCppUtilsTest
 
 - (void)testChunkIndexes {
   auto result = chunked_indexes(11, 11);
