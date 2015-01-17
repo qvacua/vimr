@@ -56,24 +56,6 @@
   assertThat(@(blank(@"str")), isNo);
 }
 
-- (void)testPathMatchesShellPattern {
-  assertThat(@(path_matches_shell_pattern("*/.git", @"/a/b/.git/c/d")), isYes);
-  assertThat(@(path_matches_shell_pattern("*/.git", @"/a/b/git/c/d")), isNo);
-  assertThat(@(path_matches_shell_pattern(".git", @"/a/b/.git/c/d")), isNo);
-
-  assertThat(@(path_matches_shell_pattern(".gitignore", @"/a/b/.gitignore")), isYes);
-  assertThat(@(path_matches_shell_pattern(".gitignore", @".gitignore")), isYes);
-  assertThat(@(path_matches_shell_pattern(".gitignore", @"/a/b/.gitconfig")), isNo);
-  assertThat(@(path_matches_shell_pattern(".gitignore", @"dgitconfig")), isNo);
-
-  assertThat(@(path_matches_shell_pattern("*/.git/*.config", @"/a/b/.git/branch.config")), isYes);
-  assertThat(@(path_matches_shell_pattern("*/.git/*.config", @"/a/b/.git/c/branch.config")), isYes);
-  assertThat(@(path_matches_shell_pattern("*/.git/*.config", @"/a/b/.git/c/branch.config/test")), isYes);
-
-  assertThat(@(path_matches_shell_pattern("*.iml", @"/a/b/c/test.iml")), isYes);
-  assertThat(@(path_matches_shell_pattern("*.iml", @"/a/b/c/test.iml/d/e")), isNo);
-}
-
 @end
 
 

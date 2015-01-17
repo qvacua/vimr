@@ -8,7 +8,6 @@
 */
 
 #import <MacVimFramework/MacVimFramework.h>
-#import <fnmatch.h>
 #import "VRUtils.h"
 #import "NSURL+VR.h"
 
@@ -144,17 +143,4 @@ NSString *VRResolvePathRelativeToPath(NSString *path, NSString *relativeToPath, 
 
 BOOL blank(NSString *str) {
   return str == nil || str.length == 0;
-}
-
-BOOL path_matches_shell_pattern(const char *pattern, NSString *path) {
-  int matches = FNM_NOMATCH;
-
-  if (pattern[0] == '*' && pattern[1] == '/') {
-    // folder
-    matches = fnmatch(pattern, path.fileSystemRepresentation, FNM_LEADING_DIR);
-  } else {
-    matches = fnmatch(pattern, path.lastPathComponent.fileSystemRepresentation, 0);
-  }
-
-  return matches != FNM_NOMATCH;
 }

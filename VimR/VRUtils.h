@@ -36,5 +36,3 @@ OBJC_EXTERN BOOL blank(NSString *str);
 
 OBJC_EXTERN NSString *VRResolvePathRelativeToPathWithFileManager(NSString *path, NSString *relativeToPath, BOOL sibling, NSFileManager *fileManager);
 OBJC_EXTERN NSString *VRResolvePathRelativeToPath(NSString *path, NSString *relativeToPath, BOOL sibling);
-
-OBJC_EXTERN BOOL path_matches_shell_pattern(const char *pattern, NSString *path);

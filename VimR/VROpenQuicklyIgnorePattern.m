@@ -23,7 +23,7 @@
   _pattern = pattern.copy;
 
   if ([pattern hasPrefix:@"*/"]) {
-    _targetPattern = [pattern substringFromIndex:1];
+    _targetPattern = SF(@"%@/", [pattern substringFromIndex:1]);
     _kind = VROpenQuicklyIgnoreFolderPattern;
   } else if ([pattern hasPrefix:@"*"]) {
     _targetPattern = [pattern substringFromIndex:1];
@@ -42,7 +42,7 @@
 - (BOOL)matchesPath:(__weak NSString *)absolutePath {
   switch (_kind) {
     case VROpenQuicklyIgnoreFolderPattern:
-      return [absolutePath hasString:_targetPattern];
+      return [[absolutePath stringByAppendingString:@"/"] hasString:_targetPattern];
     case VROpenQuicklyIgnoreSuffixPattern:
       return [absolutePath.lastPathComponent hasSuffix:_targetPattern];
     case VROpenQuicklyIgnorePrefixPattern:
