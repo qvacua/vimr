@@ -12,8 +12,8 @@
 
 @implementation NSString (VR)
 
-- (BOOL)contains:(NSString *)str {
-  return [str rangeOfString:str].location != NSNotFound;
+- (BOOL)hasString:(NSString *)str {
+  return [self rangeOfString:str].location != NSNotFound;
 }
 
 @end
