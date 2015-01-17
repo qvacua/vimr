@@ -28,7 +28,7 @@ const NSUInteger qMaximumNumberOfFilterResult = 250;
 const NSUInteger qMaximumNumberOfNonFilteredResult = 5000;
 
 
-static const int qArrayChunkSize = 15000;
+static const int qArrayChunkSize = 10000;
 static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult(VRScoredPath *p1, VRScoredPath *p2) {
   return (NSComparisonResult) (p1.score <= p2.score);
 };
@@ -114,41 +114,24 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, __wea
     @synchronized (urlsOfTargetUrl) {
       NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:urlsOfTargetUrl.count];
 
-
       std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(urlsOfTargetUrl.count, qArrayChunkSize);
       for (auto &pair : chunkedIndexes) {
-        NSUInteger beginIndex = pair.first;
-        NSUInteger endIndex = pair.second;
+        NSUInteger countOfResultUpToNow = result.count;
 
         CANCEL_WHEN_REQUESTED
-        NSUInteger countOfResultUpToNow = result.count;
-        NSUInteger addedCount = 0;
-        for (size_t i = beginIndex; i <= endIndex; i++) {
-          __weak NSURL *url = urlsOfTargetUrl[i];
-
-          if (ignoreUrl(_ignorePatterns, url)) {
-            continue;
-          }
-
-          [result addObject:[[VRScoredPath alloc] initWithUrl:url]];
-          addedCount++;
-        }
+        NSUInteger addedCount = [self addUrlsInIndices:pair to:result];
 
         CANCEL_WHEN_REQUESTED
         if (filterResult) {
-          // filter
-          dispatch_loop(addedCount, ^(size_t i) {
-            __weak VRScoredPath *scoredPath = result[countOfResultUpToNow + i];
-            [scoredPath computeScoreForCandidate:_searchStr];
-          });
+          [self computeScoresIn:result lastCount:countOfResultUpToNow addedCount:addedCount];
 
           CANCEL_WHEN_REQUESTED
           [result sortUsingComparator:qScoredItemComparator];
         }
 
-        // use the capped result from here
         NSArray *cappedResult = [result subarrayWithRange:capped_range_for_filtered_items(countOfMaxResult, result)];
 
+        CANCEL_WHEN_REQUESTED
         std::vector<std::string> paths;
         [self fillPaths:paths withScoredPaths:cappedResult];
 
@@ -161,6 +144,32 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, __wea
     }
   }
   [_fileItemManager resumeFileItemOperations];
+}
+
+- (void)computeScoresIn:(NSMutableArray *)result lastCount:(NSUInteger)lastCount addedCount:(NSUInteger)addedCount {
+  dispatch_loop(addedCount, ^(size_t i) {
+    __weak VRScoredPath *scoredPath = result[lastCount + i];
+    [scoredPath computeScoreForCandidate:_searchStr];
+  });
+}
+
+- (NSUInteger)addUrlsInIndices:(std::pair<size_t, size_t> &)pair to:(__weak NSMutableArray *)result {
+  NSArray *urls = _fileItemManager.urlsOfTargetUrl;
+
+  NSUInteger beginIndex = pair.first;
+  NSUInteger endIndex = pair.second;
+  NSUInteger addedCount = 0;
+
+  for (size_t i = beginIndex; i <= endIndex; i++) {
+    __weak NSURL *url = urls[i];
+
+    if (ignoreUrl(_ignorePatterns, url)) {continue;}
+
+    [result addObject:[[VRScoredPath alloc] initWithUrl:url]];
+    addedCount++;
+  }
+
+  return addedCount;
 }
 
 - (void)reloadTableViewWithScoredPaths:(__weak NSArray *)scoredPaths {
