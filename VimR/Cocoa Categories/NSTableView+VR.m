@@ -18,9 +18,9 @@
   NSUInteger targetIndex;
 
   if (selectedRow + delta < 0) {
-    targetIndex = lastIndex;
-  } else if (selectedRow + delta > lastIndex) {
     targetIndex = 0;
+  } else if (selectedRow + delta > lastIndex) {
+    targetIndex = lastIndex;
   } else {
     targetIndex = (NSUInteger) (selectedRow + delta);
   }
