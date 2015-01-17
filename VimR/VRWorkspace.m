@@ -18,6 +18,7 @@
 #import "VRWorkspaceController.h"
 #import "VRDefaultLogSetting.h"
 #import "VRPropertyReader.h"
+#import "VROpenQuicklyIgnorePattern.h"
 
 
 static CGPoint qDefaultOrigin = {242, 364};
@@ -200,7 +201,9 @@ static NSString *const qOpenQuicklyIgnorePatterns = @"open.quickly.ignore.patter
   NSArray *untrimmedPatterns = [properties[qOpenQuicklyIgnorePatterns] componentsSeparatedByString:@","];
   NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:untrimmedPatterns.count];
   for (NSString *pattern in untrimmedPatterns) {
-    [result addObject:[pattern stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+    [result addObject:[[VROpenQuicklyIgnorePattern alloc] initWithPattern:
+        [pattern stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]]
+    ];
   }
 
   return result;

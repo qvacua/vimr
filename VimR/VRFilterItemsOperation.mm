@@ -15,6 +15,7 @@
 #import "NSArray+VR.h"
 #import "VRCppUtils.h"
 #import "VRTextMateCppUtils.h"
+#import "VROpenQuicklyIgnorePattern.h"
 
 #import <cf/cf.h>
 
@@ -33,9 +34,9 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
 };
 
 
-static inline BOOL ignore(std::vector<std::string> patterns, NSURL *fileUrl) {
-  for (auto &pattern : patterns) {
-    if (path_matches_shell_pattern(pattern.c_str(), fileUrl.path)) {
+static inline BOOL ignoreUrl(NSArray *patterns, NSURL *fileUrl) {
+  for (VROpenQuicklyIgnorePattern *pattern in patterns) {
+    if ([pattern matchesPath:fileUrl.path]) {
       return YES;
     }
   }
@@ -107,11 +108,6 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
   BOOL filterResult = _searchStr.length > 0;
   NSUInteger countOfMaxResult = filterResult ? qMaximumNumberOfFilterResult : qMaximumNumberOfNonFilteredResult;
 
-  std::vector<std::string> patterns;
-  for (NSUInteger i = 0; i < _ignorePatterns.count; i++) {
-    patterns.push_back(std::string([_ignorePatterns[i] fileSystemRepresentation]));
-  }
-
   [_fileItemManager pauseFileItemOperations];
   @autoreleasepool {
     @synchronized (urlsOfTargetUrl) {
@@ -127,11 +123,13 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
         NSUInteger countOfResultUpToNow = result.count;
         NSUInteger addedCount = 0;
         for (size_t i = beginIndex; i <= endIndex; i++) {
-          if (ignore(patterns, urlsOfTargetUrl[i])) {
+          NSURL *url = urlsOfTargetUrl[i];
+
+          if (ignoreUrl(_ignorePatterns, url)) {
             continue;
           }
 
-          [result addObject:[[VRScoredPath alloc] initWithUrl:urlsOfTargetUrl[i]]];
+          [result addObject:[[VRScoredPath alloc] initWithUrl:url]];
           addedCount++;
         }
 
