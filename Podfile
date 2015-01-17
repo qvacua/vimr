@@ -6,6 +6,6 @@ pod "Sparkle", "1.8.0"
 pod "PureLayout", "2.0.4"
 
 target :VimRTests do
-  pod "OCHamcrest", "4.0.1"
-  pod "OCMockito", "1.3.1"
+  pod "OCHamcrest", "4.1.1"
+  pod "OCMockito", "1.4.0"
 end
