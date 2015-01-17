@@ -28,15 +28,17 @@ const NSUInteger qMaximumNumberOfFilterResult = 250;
 const NSUInteger qMaximumNumberOfNonFilteredResult = 5000;
 
 
-static const int qArrayChunkSize = 50000;
+static const int qArrayChunkSize = 15000;
 static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult(VRScoredPath *p1, VRScoredPath *p2) {
   return (NSComparisonResult) (p1.score <= p2.score);
 };
 
 
 static inline BOOL ignoreUrl(__weak NSArray *patterns, __weak NSURL *fileUrl) {
-  for (VROpenQuicklyIgnorePattern *pattern in patterns) {
-    if ([pattern matchesPath:fileUrl.path]) {
+  NSString *path = fileUrl.path;
+
+  for (__weak VROpenQuicklyIgnorePattern *pattern in patterns) {
+    if ([pattern matchesPath:path]) {
       return YES;
     }
   }
@@ -49,12 +51,11 @@ static inline NSString *disambiguated_display_name(size_t level, __weak NSString
     return path.lastPathComponent;
   }
 
-  NSArray *disambiguationPathComponents = [path.pathComponents.reverseObjectEnumerator.allObjects
-      subarrayWithRange:NSMakeRange(1, level)
-  ];
+  NSArray *pathComponents = path.pathComponents;
+  NSArray *disambiguationPathComponents = [pathComponents.reverseObjectEnumerator.allObjects subarrayWithRange:NSMakeRange(1, level)];
 
   NSString *disambiguation = [disambiguationPathComponents componentsJoinedByString:@"/"];
-  return SF(@"%@  —  %@", path.lastPathComponent, disambiguation);
+  return SF(@"%@  —  %@", pathComponents.lastObject, disambiguation);
 }
 
 static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, __weak NSArray *result) {
@@ -123,7 +124,7 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, __wea
         NSUInteger countOfResultUpToNow = result.count;
         NSUInteger addedCount = 0;
         for (size_t i = beginIndex; i <= endIndex; i++) {
-          NSURL *url = urlsOfTargetUrl[i];
+          __weak NSURL *url = urlsOfTargetUrl[i];
 
           if (ignoreUrl(_ignorePatterns, url)) {
             continue;
@@ -137,7 +138,7 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, __wea
         if (filterResult) {
           // filter
           dispatch_loop(addedCount, ^(size_t i) {
-            VRScoredPath *scoredPath = result[countOfResultUpToNow + i];
+            __weak VRScoredPath *scoredPath = result[countOfResultUpToNow + i];
             [scoredPath computeScoreForCandidate:_searchStr];
           });
 
@@ -174,7 +175,7 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, __wea
 }
 
 - (void)fillPaths:(std::vector<std::string> &)paths withScoredPaths:(__weak NSArray *)scoredPaths {
-  for (VRScoredPath *scoredPath in scoredPaths) {
+  for (__weak VRScoredPath *scoredPath in scoredPaths) {
     paths.push_back(cf::to_s((__bridge CFStringRef) scoredPath.url.path));
   }
 }
@@ -183,7 +184,7 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, __wea
   std::vector<size_t> levels = disambiguate(paths);
 
   dispatch_loop(scoredPaths.count, ^(size_t i) {
-    VRScoredPath *scoredPath = scoredPaths[i];
+    __weak VRScoredPath *scoredPath = scoredPaths[i];
     scoredPath.displayName = disambiguated_display_name(levels[i], scoredPath.url.path);
   });
 }

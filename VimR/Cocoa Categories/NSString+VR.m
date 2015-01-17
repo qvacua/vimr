@@ -12,7 +12,7 @@
 
 @implementation NSString (VR)
 
-- (BOOL)hasString:(NSString *)str {
+- (BOOL)hasString:(__weak NSString *)str {
   return [self rangeOfString:str].location != NSNotFound;
 }
 

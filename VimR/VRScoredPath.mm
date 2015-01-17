@@ -33,7 +33,7 @@ static inline double rank_string(NSString *string, NSString *target, std::vector
   return self;
 }
 
-- (void)computeScoreForCandidate:(NSString *)candidate {
+- (void)computeScoreForCandidate:(__weak NSString *)candidate {
   NSString *preparedStr;
   if ([candidate hasString:@"/"]) {
     preparedStr = _url.path;
