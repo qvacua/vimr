@@ -34,7 +34,7 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
 };
 
 
-static inline BOOL ignoreUrl(__weak NSArray *patterns, __weak NSURL *fileUrl) {
+static inline BOOL ignoreUrl(NSArray *patterns, NSURL *fileUrl) {
   NSString *path = fileUrl.path;
 
   for (__weak VROpenQuicklyIgnorePattern *pattern in patterns) {
@@ -46,7 +46,7 @@ static inline BOOL ignoreUrl(__weak NSArray *patterns, __weak NSURL *fileUrl) {
   return NO;
 }
 
-static inline NSString *disambiguated_display_name(size_t level, __weak NSString *path) {
+static inline NSString *disambiguated_display_name(size_t level, NSString *path) {
   if (level == 0) {
     return path.lastPathComponent;
   }
@@ -58,7 +58,7 @@ static inline NSString *disambiguated_display_name(size_t level, __weak NSString
   return SF(@"%@  —  %@", pathComponents.lastObject, disambiguation);
 }
 
-static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, __weak NSArray *result) {
+static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArray *result) {
   if (result.isEmpty) {
     return NSMakeRange(0, 0);
   }
@@ -153,7 +153,7 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, __wea
   });
 }
 
-- (NSUInteger)addUrlsInIndices:(std::pair<size_t, size_t> &)pair to:(__weak NSMutableArray *)result {
+- (NSUInteger)addUrlsInIndices:(std::pair<size_t, size_t> &)pair to:(NSMutableArray *)result {
   NSArray *urls = _fileItemManager.urlsOfTargetUrl;
 
   NSUInteger beginIndex = pair.first;
@@ -172,7 +172,7 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, __wea
   return addedCount;
 }
 
-- (void)reloadTableViewWithScoredPaths:(__weak NSArray *)scoredPaths {
+- (void)reloadTableViewWithScoredPaths:(NSArray *)scoredPaths {
   dispatch_to_main_thread(^{
     @synchronized (_filteredItems) {
       [_filteredItems removeAllObjects];
@@ -183,13 +183,13 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, __wea
   });
 }
 
-- (void)fillPaths:(std::vector<std::string> &)paths withScoredPaths:(__weak NSArray *)scoredPaths {
+- (void)fillPaths:(std::vector<std::string> &)paths withScoredPaths:(NSArray *)scoredPaths {
   for (__weak VRScoredPath *scoredPath in scoredPaths) {
     paths.push_back(cf::to_s((__bridge CFStringRef) scoredPath.url.path));
   }
 }
 
-- (void)disambiguatePaths:(std::vector<std::string> &)paths inScoredPaths:(__weak NSArray *)scoredPaths {
+- (void)disambiguatePaths:(std::vector<std::string> &)paths inScoredPaths:(NSArray *)scoredPaths {
   std::vector<size_t> levels = disambiguate(paths);
 
   dispatch_loop(scoredPaths.count, ^(size_t i) {
