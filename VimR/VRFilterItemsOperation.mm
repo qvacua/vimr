@@ -36,14 +36,13 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
 
 static inline BOOL ignore_url(NSArray *patterns, NSURL *fileUrl) {
   NSString *path = fileUrl.path;
+  for (VROpenQuicklyIgnorePattern *pattern in patterns) {
+    if ([pattern matchesPath:path]) {
+      return YES;
+    }
+  }
 
-  __block BOOL matches = NO;
-  dispatch_loop(patterns.count, ^(size_t i) {
-    if (matches) {return;}
-    matches = [patterns[i] matchesPath:path];
-  });
-
-  return matches;
+  return NO;
 }
 
 static inline NSString *disambiguated_display_name(size_t level, NSString *path) {
