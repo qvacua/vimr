@@ -34,16 +34,16 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
 };
 
 
-static inline BOOL ignoreUrl(NSArray *patterns, NSURL *fileUrl) {
+static inline BOOL ignore_url(NSArray *patterns, NSURL *fileUrl) {
   NSString *path = fileUrl.path;
 
-  for (__weak VROpenQuicklyIgnorePattern *pattern in patterns) {
-    if ([pattern matchesPath:path]) {
-      return YES;
-    }
-  }
+  __block BOOL matches = NO;
+  dispatch_loop(patterns.count, ^(size_t i) {
+    if (matches) {return;}
+    matches = [patterns[i] matchesPath:path];
+  });
 
-  return NO;
+  return matches;
 }
 
 static inline NSString *disambiguated_display_name(size_t level, NSString *path) {
@@ -163,7 +163,7 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
   for (size_t i = beginIndex; i <= endIndex; i++) {
     __weak NSURL *url = urls[i];
 
-    if (ignoreUrl(_ignorePatterns, url)) {continue;}
+    if (ignore_url(_ignorePatterns, url)) {continue;}
 
     [result addObject:[[VRScoredPath alloc] initWithUrl:url]];
     addedCount++;
