@@ -373,7 +373,7 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
 - (void)addTabKeyShortcuts {
   NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:9];
   for (NSUInteger i = 0; i < 9; i++) {
-    VRKeyShortcutItem *item = [[VRKeyShortcutItem alloc] initWithAction:@selector(selectNthTab:) keyEquivalent:SF(@"%lu", i + 1) tag:i];
+    VRKeyShortcut *item = [[VRKeyShortcut alloc] initWithAction:@selector(selectNthTab:) keyEquivalent:SF(@"%lu", i + 1) tag:i];
     [items addObject:item];
   }
 

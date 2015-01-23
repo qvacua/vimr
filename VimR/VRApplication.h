@@ -10,7 +10,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface VRKeyShortcutItem : NSObject
+@interface VRKeyShortcut : NSObject
 
 @property (readonly, nonatomic, copy) NSString *keyEquivalent;
 @property (readonly, nonatomic) NSInteger tag;

@@ -29,7 +29,7 @@ static BOOL is_command_key_only(NSUInteger flags) {
 }
 
 
-@implementation VRKeyShortcutItem
+@implementation VRKeyShortcut
 
 - (instancetype)initWithAction:(SEL)anAction keyEquivalent:(NSString *)charCode tag:(NSUInteger)tag {
   self = [super init];
@@ -46,8 +46,9 @@ static BOOL is_command_key_only(NSUInteger flags) {
 
 
 @implementation VRApplication {
-  NSMutableArray *_keyShortcutItems;
+  NSMutableArray *_keyShortcuts;
   NSMutableDictionary *_keyEquivalentCache;
+  NSSet *_allKeys;
 }
 
 #pragma mark NSObject
@@ -55,7 +56,7 @@ static BOOL is_command_key_only(NSUInteger flags) {
   self = [super init];
   RETURN_NIL_WHEN_NOT_SELF
 
-  _keyShortcutItems = [[NSMutableArray alloc] initWithCapacity:10];
+  _keyShortcuts = [[NSMutableArray alloc] initWithCapacity:10];
   _keyEquivalentCache = [[NSMutableDictionary alloc] initWithCapacity:10];
 
   [self initMacVimFramework];
@@ -68,10 +69,12 @@ static BOOL is_command_key_only(NSUInteger flags) {
 
 #pragma mark Public
 - (void)addKeyShortcutItems:(NSArray *)items {
-  for (VRKeyShortcutItem *item in items) {
-    [_keyShortcutItems addObject:item];
+  for (VRKeyShortcut *item in items) {
+    [_keyShortcuts addObject:item];
     _keyEquivalentCache[item.keyEquivalent] = item;
   }
+
+  _allKeys = [[NSSet alloc] initWithArray:_keyEquivalentCache.allKeys];
 }
 
 #pragma mark NSApplication
@@ -79,19 +82,20 @@ static BOOL is_command_key_only(NSUInteger flags) {
   if (self.keyWindow == nil
       || theEvent.type != NSKeyDown
       || !is_command_key_only(theEvent.modifierFlags)) {
+
     [super sendEvent:theEvent];
     return;
   }
 
   NSString *charactersIgnoringModifiers = theEvent.charactersIgnoringModifiers;
-  if (![_keyEquivalentCache.allKeys containsObject:charactersIgnoringModifiers]) {
+  if (![_allKeys containsObject:charactersIgnoringModifiers]) {
     [super sendEvent:theEvent];
     return;
   }
 
   NSResponder *responder = self.keyWindow;
   do {
-    VRKeyShortcutItem *item = _keyEquivalentCache[charactersIgnoringModifiers];
+    VRKeyShortcut *item = _keyEquivalentCache[charactersIgnoringModifiers];
     SEL aSelector = item.action;
     if ([responder respondsToSelector:aSelector]) {
       DDLogDebug(@"%@ responds to the selector %@. Invoking on the main thread.", responder, NSStringFromSelector(aSelector));
