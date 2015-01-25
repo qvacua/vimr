@@ -22,6 +22,7 @@
 #import "VRApplication.h"
 #import "VRPrefWindow.h"
 #import "VRPropertyReader.h"
+#import "VRKeyBinding.h"
 
 
 static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
@@ -254,6 +255,8 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
 
   _properties = [VRPropertyReader properties];
   [self addTabKeyShortcuts];
+
+  [self updateKeybindingsOfMenuItems];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
@@ -384,10 +387,10 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
 
   NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:9];
   for (NSUInteger i = 0; i < 9; i++) {
-    VRKeyShortcut *item = [[VRKeyShortcut alloc] initWithAction:@selector(selectNthTab:)
-                                                      modifiers:modifiers
-                                                  keyEquivalent:SF(@"%lu", i + 1)
-                                                            tag:i];
+    VRKeyBinding *item = [[VRKeyBinding alloc] initWithAction:@selector(selectNthTab:)
+                                                    modifiers:modifiers
+                                                keyEquivalent:SF(@"%lu", i + 1)
+                                                          tag:i];
     [items addObject:item];
   }
 
@@ -430,6 +433,81 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
   }
 
   return result;
+}
+
+- (void)updateKeybindingsOfMenuItems {
+  NSArray *keys = @[
+      @"file.new",
+      @"file.new-tab",
+      @"file.open",
+      @"file.open-in-tab",
+      @"file.open-quickly",
+      @"file.close",
+      @"file.save",
+      @"file.save-as",
+      @"file.revert-to-saved",
+      @"edit.undo",
+      @"edit.redo",
+      @"edit.cut",
+      @"edit.copy",
+      @"edit.paste",
+      @"edit.delete",
+      @"edit.select-all",
+      @"view.focus-file-browser",
+      @"view.focus-text-area",
+      @"view.show-file-browser",
+      @"view.put-file-browser-on-right",
+      @"view.show-status-bar",
+      @"view.font.show-fonts",
+      @"view.font.bigger",
+      @"view.font.smaller",
+      @"view.enter-full-screen",
+      @"navigate.show-folders-first",
+      @"navigate.show-hidden-files",
+      @"navigate.sync-vim-pwd",
+      @"preview.show-preview",
+      @"preview.refresh",
+      @"window.minimize",
+      @"window.zoom",
+      @"window.select-next-tab",
+      @"window.select-previous-tab",
+      @"window.bring-all-to-front",
+      @"help.vimr-help",
+  ];
+
+  for (NSString *key in keys) {
+    NSString *value = _properties[key];
+
+    if (value == nil) {
+      continue;
+    }
+
+    if (value.length <= 2) {
+      DDLogWarn(@"Something wrong with %@=%@", key, value);
+      continue;
+    }
+
+    // @-^-~-$-k
+    // @-^-~-$-^[
+    // @-^-~-$--
+    NSArray *components = [value componentsSeparatedByString:@"-"];
+    if (components.count <= 2) {
+      DDLogWarn(@"Something wrong with %@=%@", key, value);
+      continue;
+    }
+
+    // @-a
+    if (components.count == 2) {
+
+    }
+
+    // @-a
+    if (components.count == 2) {
+
+    }
+  }
+
+
 }
 
 @end

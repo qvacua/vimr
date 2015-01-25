@@ -10,18 +10,6 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface VRKeyShortcut : NSObject
-
-@property (readonly, nonatomic, copy) NSString *keyEquivalent;
-@property (readonly, nonatomic) NSEventModifierFlags modifiers;
-@property (readonly, nonatomic) NSInteger tag;
-@property (readonly, nonatomic) SEL action;
-
-- (instancetype)initWithAction:(SEL)anAction modifiers:(NSEventModifierFlags)modifiers keyEquivalent:(NSString *)charCode tag:(NSUInteger)tag;
-
-@end
-
-
 @interface VRApplication : NSApplication
 
 - (id)init;

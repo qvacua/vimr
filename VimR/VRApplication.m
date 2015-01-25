@@ -14,6 +14,7 @@
 #import "VRDefaultLogSetting.h"
 #import "VRLogFormatter.h"
 #import "VRMainWindow.h"
+#import "VRKeyBinding.h"
 
 
 static NSString *bit_string(NSUInteger mask) {
@@ -28,23 +29,6 @@ static NSString *bit_string(NSUInteger mask) {
 static BOOL is_matching_modifiers(NSEventModifierFlags expectedModifiers, NSUInteger actualModifiers) {
   return (expectedModifiers & actualModifiers) == expectedModifiers;
 }
-
-
-@implementation VRKeyShortcut
-
-- (instancetype)initWithAction:(SEL)anAction modifiers:(NSEventModifierFlags)modifiers keyEquivalent:(NSString *)charCode tag:(NSUInteger)tag {
-  self = [super init];
-  RETURN_NIL_WHEN_NOT_SELF
-
-  _action = anAction;
-  _keyEquivalent = charCode;
-  _tag = tag;
-  _modifiers = modifiers;
-
-  return self;
-}
-
-@end
 
 
 @implementation VRApplication {
@@ -82,7 +66,7 @@ static BOOL is_matching_modifiers(NSEventModifierFlags expectedModifiers, NSUInt
 
 #pragma mark Public
 - (void)addKeyShortcutItems:(NSArray *)items {
-  for (VRKeyShortcut *item in items) {
+  for (VRKeyBinding *item in items) {
     [_keyShortcuts addObject:item];
     _keyEquivalentCache[item.keyEquivalent] = item;
   }
@@ -109,7 +93,7 @@ static BOOL is_matching_modifiers(NSEventModifierFlags expectedModifiers, NSUInt
 
   NSResponder *responder = self.keyWindow;
   do {
-    VRKeyShortcut *item = _keyEquivalentCache[characters];
+    VRKeyBinding *item = _keyEquivalentCache[characters];
     SEL aSelector = item.action;
     if ([responder respondsToSelector:aSelector]) {
       DDLogDebug(@"%@ responds to the selector %@. Invoking on the main thread.", responder, NSStringFromSelector(aSelector));
