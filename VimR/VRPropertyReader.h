@@ -28,7 +28,7 @@ extern NSString *const qSelectNthTabModifier;
 - (instancetype)initWithPropertyFileUrl:(NSURL *)url;
 
 - (BOOL)useSelectNthTabBindings;
-- (NSEventModifierFlags)selectNthTabModifier;
+- (NSEventModifierFlags)selectNthTabModifiers;
 - (VRKeyBinding *)keyBindingForKey:(NSString *)key;
 
 @end

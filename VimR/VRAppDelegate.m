@@ -381,7 +381,7 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
   NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:9];
   for (NSUInteger i = 0; i < 9; i++) {
     VRKeyBinding *item = [[VRKeyBinding alloc] initWithAction:@selector(selectNthTab:)
-                                                    modifiers:_propertyReader.selectNthTabModifier
+                                                    modifiers:_propertyReader.selectNthTabModifiers
                                                 keyEquivalent:SF(@"%lu", i + 1)
                                                           tag:i];
     [items addObject:item];

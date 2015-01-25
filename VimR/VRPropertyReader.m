@@ -117,8 +117,12 @@ NSString *const qSelectNthTabModifier = @"global.keybinding.select-nth-tab.modif
   return [self readPropertiesFromUrl:_propertyFileUrl];
 }
 
-- (NSEventModifierFlags)selectNthTabModifier {
+- (NSEventModifierFlags)selectNthTabModifiers {
   NSString *modifierAsStr = _globalProperties[qSelectNthTabModifier];
+  if (modifierAsStr == nil) {
+    return NSCommandKeyMask;
+  }
+
   NSArray *modifierChars = [modifierAsStr componentsSeparatedByString:@"-"];
   return [self modifiersFromProperty:modifierChars];
 }
