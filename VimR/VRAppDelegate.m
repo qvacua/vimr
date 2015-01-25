@@ -254,8 +254,6 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
 #endif
 
   [self addTabKeyShortcuts];
-
-  [self updateKeybindingsOfMenuItems];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
@@ -376,18 +374,14 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
 }
 
 - (void)addTabKeyShortcuts {
-  if ([_propertyReader.globalProperties[qSelectNthTabActive] isEqualToString:@"false"]) {
+  if (!_propertyReader.useSelectNthTabBindings) {
     return;
   }
-
-  NSString *modifierAsStr = _propertyReader.globalProperties[qSelectNthTabModifier];
-  NSArray *modifierChars = [modifierAsStr componentsSeparatedByString:@"-"];
-  NSEventModifierFlags modifiers = [self modifiersFromProperty:modifierChars];
 
   NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:9];
   for (NSUInteger i = 0; i < 9; i++) {
     VRKeyBinding *item = [[VRKeyBinding alloc] initWithAction:@selector(selectNthTab:)
-                                                    modifiers:modifiers
+                                                    modifiers:_propertyReader.selectNthTabModifier
                                                 keyEquivalent:SF(@"%lu", i + 1)
                                                           tag:i];
     [items addObject:item];
@@ -396,117 +390,5 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
   [_application addKeyShortcutItems:items];
 }
 
-- (NSEventModifierFlags)modifiersFromProperty:(NSArray *)chars {
-  if (chars.isEmpty) {
-    DDLogWarn(@"Something wrong with '%@'", qSelectNthTabModifier);
-    return NSCommandKeyMask;
-  }
-
-  NSEventModifierFlags result = (NSEventModifierFlags) 0;
-  for (NSString *character in chars) {
-    if (character.length != 1) {
-      DDLogWarn(@"Something wrong with '%@'", qSelectNthTabModifier);
-      return NSCommandKeyMask;
-    }
-
-    if (![[NSCharacterSet characterSetWithCharactersInString:@"@^~$"] characterIsMember:[character characterAtIndex:0]]) {
-      DDLogWarn(@"Something wrong with '%@'", qSelectNthTabModifier);
-      return NSCommandKeyMask;
-    }
-
-    if ([character isEqualToString:@"@"]) {
-      result = result | NSCommandKeyMask;
-    }
-
-    if ([character isEqualToString:@"^"]) {
-      result = result | NSControlKeyMask;
-    }
-
-    if ([character isEqualToString:@"~"]) {
-      result = result | NSAlternateKeyMask;
-    }
-
-    if ([character isEqualToString:@"$"]) {
-      result = result | NSShiftKeyMask;
-    }
-  }
-
-  return result;
-}
-
-- (void)updateKeybindingsOfMenuItems {
-  NSArray *keys = @[
-      @"file.new",
-      @"file.new-tab",
-      @"file.open",
-      @"file.open-in-tab",
-      @"file.open-quickly",
-      @"file.close",
-      @"file.save",
-      @"file.save-as",
-      @"file.revert-to-saved",
-      @"edit.undo",
-      @"edit.redo",
-      @"edit.cut",
-      @"edit.copy",
-      @"edit.paste",
-      @"edit.delete",
-      @"edit.select-all",
-      @"view.focus-file-browser",
-      @"view.focus-text-area",
-      @"view.show-file-browser",
-      @"view.put-file-browser-on-right",
-      @"view.show-status-bar",
-      @"view.font.show-fonts",
-      @"view.font.bigger",
-      @"view.font.smaller",
-      @"view.enter-full-screen",
-      @"navigate.show-folders-first",
-      @"navigate.show-hidden-files",
-      @"navigate.sync-vim-pwd",
-      @"preview.show-preview",
-      @"preview.refresh",
-      @"window.minimize",
-      @"window.zoom",
-      @"window.select-next-tab",
-      @"window.select-previous-tab",
-      @"window.bring-all-to-front",
-      @"help.vimr-help",
-  ];
-
-  for (NSString *key in keys) {
-    NSString *value = _propertyReader.globalProperties[key];
-
-    if (value == nil) {
-      continue;
-    }
-
-    if (value.length <= 2) {
-      DDLogWarn(@"Something wrong with %@=%@", key, value);
-      continue;
-    }
-
-    // @-^-~-$-k
-    // @-^-~-$-^[
-    // @-^-~-$--
-    NSArray *components = [value componentsSeparatedByString:@"-"];
-    if (components.count <= 2) {
-      DDLogWarn(@"Something wrong with %@=%@", key, value);
-      continue;
-    }
-
-    // @-a
-    if (components.count == 2) {
-
-    }
-
-    // @-a
-    if (components.count == 2) {
-
-    }
-  }
-
-
-}
 
 @end

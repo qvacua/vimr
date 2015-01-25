@@ -11,6 +11,7 @@
 #import "VRDefaultLogSetting.h"
 #import "VRKeyBinding.h"
 #import "VRUtils.h"
+#import "NSArray+VR.h"
 
 
 NSString *const qOpenQuicklyIgnorePatterns = @"open.quickly.ignore.patterns";
@@ -70,6 +71,10 @@ NSString *const qSelectNthTabModifier = @"global.keybinding.select-nth-tab.modif
   return self;
 }
 
+- (BOOL)useSelectNthTabBindings {
+  return ![_globalProperties[qSelectNthTabActive] isEqualToString:@"false"];
+}
+
 - (NSDictionary *)readPropertiesFromUrl:(NSURL *)url {
   NSError *error;
   NSString *content = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
@@ -112,8 +117,125 @@ NSString *const qSelectNthTabModifier = @"global.keybinding.select-nth-tab.modif
   return [self readPropertiesFromUrl:_propertyFileUrl];
 }
 
+- (NSEventModifierFlags)selectNthTabModifier {
+  NSString *modifierAsStr = _globalProperties[qSelectNthTabModifier];
+  NSArray *modifierChars = [modifierAsStr componentsSeparatedByString:@"-"];
+  return [self modifiersFromProperty:modifierChars];
+}
+
 - (VRKeyBinding *)keyBindingForKey:(NSString *)key {
   return nil;
+}
+
+- (NSEventModifierFlags)modifiersFromProperty:(NSArray *)chars {
+  if (chars.isEmpty) {
+    DDLogWarn(@"Something wrong with '%@'", qSelectNthTabModifier);
+    return NSCommandKeyMask;
+  }
+
+  NSEventModifierFlags result = (NSEventModifierFlags) 0;
+  for (NSString *character in chars) {
+    if (character.length != 1) {
+      DDLogWarn(@"Something wrong with '%@'", qSelectNthTabModifier);
+      return NSCommandKeyMask;
+    }
+
+    if (![[NSCharacterSet characterSetWithCharactersInString:@"@^~$"] characterIsMember:[character characterAtIndex:0]]) {
+      DDLogWarn(@"Something wrong with '%@'", qSelectNthTabModifier);
+      return NSCommandKeyMask;
+    }
+
+    if ([character isEqualToString:@"@"]) {
+      result = result | NSCommandKeyMask;
+    }
+
+    if ([character isEqualToString:@"^"]) {
+      result = result | NSControlKeyMask;
+    }
+
+    if ([character isEqualToString:@"~"]) {
+      result = result | NSAlternateKeyMask;
+    }
+
+    if ([character isEqualToString:@"$"]) {
+      result = result | NSShiftKeyMask;
+    }
+  }
+
+  return result;
+}
+
+- (void)updateKeyBindingsOfMenuItems {
+  NSArray *keys = @[
+      @"file.new",
+      @"file.new-tab",
+      @"file.open",
+      @"file.open-in-tab",
+      @"file.open-quickly",
+      @"file.close",
+      @"file.save",
+      @"file.save-as",
+      @"file.revert-to-saved",
+      @"edit.undo",
+      @"edit.redo",
+      @"edit.cut",
+      @"edit.copy",
+      @"edit.paste",
+      @"edit.delete",
+      @"edit.select-all",
+      @"view.focus-file-browser",
+      @"view.focus-text-area",
+      @"view.show-file-browser",
+      @"view.put-file-browser-on-right",
+      @"view.show-status-bar",
+      @"view.font.show-fonts",
+      @"view.font.bigger",
+      @"view.font.smaller",
+      @"view.enter-full-screen",
+      @"navigate.show-folders-first",
+      @"navigate.show-hidden-files",
+      @"navigate.sync-vim-pwd",
+      @"preview.show-preview",
+      @"preview.refresh",
+      @"window.minimize",
+      @"window.zoom",
+      @"window.select-next-tab",
+      @"window.select-previous-tab",
+      @"window.bring-all-to-front",
+      @"help.vimr-help",
+  ];
+
+  for (NSString *key in keys) {
+    NSString *value = _globalProperties[key];
+
+    if (value == nil) {
+      continue;
+    }
+
+    if (value.length <= 2) {
+      DDLogWarn(@"Something wrong with %@=%@", key, value);
+      continue;
+    }
+
+    // @-^-~-$-k
+    // @-^-~-$-^[
+    // @-^-~-$--
+    NSArray *components = [value componentsSeparatedByString:@"-"];
+    if (components.count <= 2) {
+      DDLogWarn(@"Something wrong with %@=%@", key, value);
+      continue;
+    }
+
+    // @-a
+    if (components.count == 2) {
+
+    }
+
+    // @-a
+    if (components.count == 2) {
+
+    }
+  }
 }
 
 @end
