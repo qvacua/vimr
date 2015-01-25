@@ -10,8 +10,12 @@
 #import <Foundation/Foundation.h>
 
 
+NSString *const qOpenQuicklyIgnorePatterns;
+
+
 @interface VRPropertyReader : NSObject
 
 + (NSDictionary *)read:(NSString *)input;
++ (NSDictionary *)properties;
 
 @end

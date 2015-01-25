@@ -9,9 +9,33 @@
 
 #import "VRPropertyReader.h"
 #import "NSString+TBCacao.h"
+#import "VRDefaultLogSetting.h"
+
+
+NSString *const qOpenQuicklyIgnorePatterns = @"open.quickly.ignore.patterns";
+
+
+static NSString *const qVimrRcFileName = @".vimr_rc";
 
 
 @implementation VRPropertyReader
+
++ (NSDictionary *)properties {
+  NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:qVimrRcFileName];
+  if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+    DDLogDebug(@"%@ not found", path);
+    return @{};
+  }
+
+  NSError *error;
+  NSString *content = [NSString stringWithContentsOfURL:[NSURL fileURLWithPath:path] encoding:NSUTF8StringEncoding error:&error];
+  if (error) {
+    DDLogWarn(@"There was an error opening %@: %@", path, error);
+    return @{};
+  }
+
+  return [self read:content];
+}
 
 + (NSDictionary *)read:(NSString *)input {
   NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithCapacity:30];
