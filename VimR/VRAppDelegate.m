@@ -30,7 +30,6 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
 
 @implementation VRAppDelegate {
   BOOL _isLaunching;
-  NSDictionary *_properties;
 }
 
 @manualwire(userDefaults)
@@ -39,6 +38,7 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
 @manualwire(fileItemManager)
 @manualwire(openQuicklyWindowController)
 @manualwire(prefWindow)
+@manualwire(propertyReader)
 
 #pragma mark IBActions
 - (IBAction)newDocument:(id)sender {
@@ -253,7 +253,6 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
   _debug.hidden = NO;
 #endif
 
-  _properties = [VRPropertyReader properties];
   [self addTabKeyShortcuts];
 
   [self updateKeybindingsOfMenuItems];
@@ -377,11 +376,11 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
 }
 
 - (void)addTabKeyShortcuts {
-  if ([_properties[qSelectNthTabActive] isEqualToString:@"false"]) {
+  if ([_propertyReader.globalProperties[qSelectNthTabActive] isEqualToString:@"false"]) {
     return;
   }
 
-  NSString *modifierAsStr = _properties[qSelectNthTabModifier];
+  NSString *modifierAsStr = _propertyReader.globalProperties[qSelectNthTabModifier];
   NSArray *modifierChars = [modifierAsStr componentsSeparatedByString:@"-"];
   NSEventModifierFlags modifiers = [self modifiersFromProperty:modifierChars];
 
@@ -476,7 +475,7 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
   ];
 
   for (NSString *key in keys) {
-    NSString *value = _properties[key];
+    NSString *value = _propertyReader.globalProperties[key];
 
     if (value == nil) {
       continue;

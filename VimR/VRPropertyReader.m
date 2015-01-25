@@ -8,8 +8,9 @@
 */
 
 #import "VRPropertyReader.h"
-#import "NSString+TBCacao.h"
 #import "VRDefaultLogSetting.h"
+#import "VRKeyBinding.h"
+#import "VRUtils.h"
 
 
 NSString *const qOpenQuicklyIgnorePatterns = @"open.quickly.ignore.patterns";
@@ -17,34 +18,75 @@ NSString *const qSelectNthTabActive = @"global.keybinding.select-nth-tab.active"
 NSString *const qSelectNthTabModifier = @"global.keybinding.select-nth-tab.modifier";
 
 
-static NSString *const qVimrRcFileName = @".vimr_rc";
-
-
-@implementation VRPropertyReader
-
-+ (NSDictionary *)properties {
-  NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:qVimrRcFileName];
-  if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
-    DDLogDebug(@"%@ not found", path);
-    return @{};
-  }
-
-  NSError *error;
-  NSString *content = [NSString stringWithContentsOfURL:[NSURL fileURLWithPath:path] encoding:NSUTF8StringEncoding error:&error];
-  if (error) {
-    DDLogWarn(@"There was an error opening %@: %@", path, error);
-    return @{};
-  }
-
-  return [self read:content];
+@implementation VRPropertyReader {
+  NSURL *_propertyFileUrl;
 }
 
-+ (NSDictionary *)read:(NSString *)input {
+- (instancetype)initWithPropertyFileUrl:(NSURL *)url {
+  self = [super init];
+  RETURN_NIL_WHEN_NOT_SELF
+
+  _propertyFileUrl = url.copy;
+  _globalProperties = [self readPropertiesFromUrl:url];
+  _keysForKeyBindings = @[
+      @"file.new",
+      @"file.new-tab",
+      @"file.open",
+      @"file.open-in-tab",
+      @"file.open-quickly",
+      @"file.close",
+      @"file.save",
+      @"file.save-as",
+      @"file.revert-to-saved",
+      @"edit.undo",
+      @"edit.redo",
+      @"edit.cut",
+      @"edit.copy",
+      @"edit.paste",
+      @"edit.delete",
+      @"edit.select-all",
+      @"view.focus-file-browser",
+      @"view.focus-text-area",
+      @"view.show-file-browser",
+      @"view.put-file-browser-on-right",
+      @"view.show-status-bar",
+      @"view.font.show-fonts",
+      @"view.font.bigger",
+      @"view.font.smaller",
+      @"view.enter-full-screen",
+      @"navigate.show-folders-first",
+      @"navigate.show-hidden-files",
+      @"navigate.sync-vim-pwd",
+      @"preview.show-preview",
+      @"preview.refresh",
+      @"window.minimize",
+      @"window.zoom",
+      @"window.select-next-tab",
+      @"window.select-previous-tab",
+      @"window.bring-all-to-front",
+      @"help.vimr-help",
+  ];
+
+  return self;
+}
+
+- (NSDictionary *)readPropertiesFromUrl:(NSURL *)url {
+  NSError *error;
+  NSString *content = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
+  if (error) {
+    DDLogWarn(@"There was an error opening %@: %@", url, error);
+    return @{};
+  }
+
+  return [self readPropertiesFromString:content];
+}
+
+- (NSDictionary *)readPropertiesFromString:(NSString *)input {
   NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithCapacity:30];
 
   NSArray *lines = [input componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
   for (NSString *line in lines) {
-    if ([line startsWithString:@"#"]) {
+    if ([line hasPrefix:@"#"]) {
       continue;
     }
 
@@ -64,6 +106,14 @@ static NSString *const qVimrRcFileName = @".vimr_rc";
   }
 
   return result;
+}
+
+- (NSDictionary *)workspaceProperties {
+  return [self readPropertiesFromUrl:_propertyFileUrl];
+}
+
+- (VRKeyBinding *)keyBindingForKey:(NSString *)key {
+  return nil;
 }
 
 @end

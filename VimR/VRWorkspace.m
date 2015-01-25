@@ -189,7 +189,7 @@ static CGPoint qDefaultOrigin = {242, 364};
 }
 
 - (void)readVimrRc {
-  NSDictionary *properties = [VRPropertyReader properties];
+  NSDictionary *properties = _propertyReader.workspaceProperties;
 
   _openQuicklyIgnorePatterns = [self openQuicklyIgnorePatternsFromVimrRc:properties];
 }

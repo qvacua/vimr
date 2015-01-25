@@ -7,7 +7,10 @@
 * See LICENSE
 */
 
-#import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
+
+
+@class VRKeyBinding;
 
 
 extern NSString *const qOpenQuicklyIgnorePatterns;
@@ -17,7 +20,13 @@ extern NSString *const qSelectNthTabModifier;
 
 @interface VRPropertyReader : NSObject
 
-+ (NSDictionary *)read:(NSString *)input;
-+ (NSDictionary *)properties;
+@property (nonatomic, weak) NSFileManager *fileManager;
+@property (readonly, nonatomic) NSArray *keysForKeyBindings;
+@property (readonly, nonatomic) NSDictionary *workspaceProperties;
+@property (readonly, nonatomic) NSDictionary *globalProperties;
+
+- (instancetype)initWithPropertyFileUrl:(NSURL *)url;
+
+- (VRKeyBinding *)keyBindingForKey:(NSString *)key;
 
 @end

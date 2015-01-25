@@ -25,6 +25,7 @@
 @property (nonatomic, weak) NSFileManager *fileManager;
 @property (nonatomic, weak) VRMainWindowControllerFactory *mainWindowControllerFactory;
 @property (nonatomic, weak) VRWorkspaceController *workspaceController;
+@property (nonatomic, weak) VRPropertyReader *propertyReader;
 
 
 @property (nonatomic) VRMainWindowController *mainWindowController;
