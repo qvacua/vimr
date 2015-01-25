@@ -13,6 +13,6 @@
 IB_DESIGNABLE
 @interface VRMenuItem : NSMenuItem
 
-@property (nonatomic, copy) IBInspectable NSString *identifier;
+@property (nonatomic, copy) IBInspectable NSString *menuItemIdentifier;
 
 @end

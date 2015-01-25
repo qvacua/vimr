@@ -78,7 +78,7 @@
                         <items>
                             <menuItem title="New" keyEquivalent="n" id="82" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="file.new"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="file.new"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="newDocument:" target="-1" id="373"/>
@@ -86,7 +86,7 @@
                             </menuItem>
                             <menuItem title="New Tab" keyEquivalent="t" id="LvQ-Qu-Tme" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="file.new-tab"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="file.new-tab"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="newTab:" target="-1" id="tf3-kd-LHX"/>
@@ -95,7 +95,7 @@
                             <menuItem isSeparatorItem="YES" id="39y-4Z-95L"/>
                             <menuItem title="Open…" keyEquivalent="o" id="72" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="file.open"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="file.open"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="openDocument:" target="-1" id="374"/>
@@ -103,7 +103,7 @@
                             </menuItem>
                             <menuItem title="Open in Tab…" keyEquivalent="T" id="IVZ-fS-c6G" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="file.open-in-tab"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="file.open-in-tab"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="openDocumentInTab:" target="-1" id="3Wl-WW-K7l"/>
@@ -111,7 +111,7 @@
                             </menuItem>
                             <menuItem title="Open Quickly…" keyEquivalent="O" id="Vim-gL-ViA" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="file.open-quickly"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="file.open-quickly"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="openQuickly:" target="-1" id="dHw-5P-kf4"/>
@@ -133,7 +133,7 @@
                             </menuItem>
                             <menuItem title="Close" keyEquivalent="w" id="73" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="file.close"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="file.close"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="performClose:" target="-1" id="193"/>
@@ -141,7 +141,7 @@
                             </menuItem>
                             <menuItem title="Save…" keyEquivalent="s" id="75" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="file.save"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="file.save"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="saveDocument:" target="-1" id="362"/>
@@ -149,7 +149,7 @@
                             </menuItem>
                             <menuItem title="Save As..." keyEquivalent="S" id="6e7-RT-Ta0" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="file.save-as"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="file.save-as"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="saveDocumentAs:" target="-1" id="D7Z-Br-u0S"/>
@@ -158,7 +158,7 @@
                             <menuItem title="Revert to Saved" id="112" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="file.revert-to-saved"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="file.revert-to-saved"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="revertDocumentToSaved:" target="-1" id="364"/>
@@ -172,7 +172,7 @@
                         <items>
                             <menuItem title="Undo" keyEquivalent="z" id="207" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="edit.undo"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="edit.undo"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="undo:" target="-1" id="223"/>
@@ -181,7 +181,7 @@
                             <menuItem title="Redo" keyEquivalent="Z" id="215" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="edit.redo"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="edit.redo"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="redo:" target="-1" id="231"/>
@@ -192,7 +192,7 @@
                             </menuItem>
                             <menuItem title="Cut" keyEquivalent="x" id="199" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="edit.cut"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="edit.cut"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="cut:" target="-1" id="228"/>
@@ -200,7 +200,7 @@
                             </menuItem>
                             <menuItem title="Copy" keyEquivalent="c" id="197" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="edit.copy"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="edit.copy"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="copy:" target="-1" id="224"/>
@@ -208,7 +208,7 @@
                             </menuItem>
                             <menuItem title="Paste" keyEquivalent="v" id="203" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="edit.paste"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="edit.paste"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="paste:" target="-1" id="226"/>
@@ -216,7 +216,7 @@
                             </menuItem>
                             <menuItem title="Delete" id="202" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="edit.delete"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="edit.delete"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="delete:" target="-1" id="235"/>
@@ -224,7 +224,7 @@
                             </menuItem>
                             <menuItem title="Select All" keyEquivalent="a" id="198" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="edit.select-all"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="edit.select-all"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="selectAll:" target="-1" id="232"/>
@@ -239,7 +239,7 @@
                             <menuItem title="Focus File Browser" keyEquivalent="0" id="lxp-G4-8vM" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="view.focus-file-browser"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="view.focus-file-browser"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="focusFileBrowser:" target="-1" id="nLp-Fl-zao"/>
@@ -251,7 +251,7 @@ Gw
 </string>
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="view.focus-text-area"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="view.focus-text-area"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="focusVimView:" target="-1" id="v9m-Vo-rd1"/>
@@ -260,7 +260,7 @@ Gw
                             <menuItem isSeparatorItem="YES" id="ooA-uS-6QN"/>
                             <menuItem title="Show File Browser" keyEquivalent="L" id="m8V-X2-m82" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="view.show-file-browser"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="view.show-file-browser"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="showFileBrowser:" target="-1" id="tke-MQ-A8G"/>
@@ -269,7 +269,7 @@ Gw
                             <menuItem title="Put File Browser on Right" keyEquivalent="0" id="mDM-BC-eAg" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="view.put-file-browser-on-right"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="view.put-file-browser-on-right"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="toggleSidebarOnRight:" target="-1" id="ogW-uA-Dyn"/>
@@ -277,7 +277,7 @@ Gw
                             </menuItem>
                             <menuItem title="Show Status Bar" keyEquivalent="/" id="APq-bi-3bg" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="view.show-status-bar"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="view.show-status-bar"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="toggleStatusBar:" target="-1" id="hrV-es-SUd"/>
@@ -291,7 +291,7 @@ Gw
                                         <menuItem title="Show Fonts" id="2TS-BO-0cT" customClass="VRMenuItem">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="view.font.show-fonts"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="view.font.show-fonts"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
                                                 <action selector="orderFrontFontPanel:" target="420" id="gd2-n7-xag"/>
@@ -299,7 +299,7 @@ Gw
                                         </menuItem>
                                         <menuItem title="Bigger" tag="3" keyEquivalent="+" id="PWg-YT-jwp" customClass="VRMenuItem">
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="view.font.bigger"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="view.font.bigger"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
                                                 <action selector="zoomIn:" target="-1" id="6S4-sh-bJo"/>
@@ -307,7 +307,7 @@ Gw
                                         </menuItem>
                                         <menuItem title="Smaller" tag="4" keyEquivalent="-" id="jHy-uc-moB" customClass="VRMenuItem">
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="view.font.smaller"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="view.font.smaller"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
                                                 <action selector="zoomOut:" target="-1" id="kgz-mm-YgQ"/>
@@ -320,7 +320,7 @@ Gw
                             <menuItem title="Enter Full Screen" keyEquivalent="f" id="9Rn-I5-7k1" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="view.enter-full-screen"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="view.enter-full-screen"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="toggleFullScreen:" target="-1" id="MuT-Y4-6Cv"/>
@@ -336,7 +336,7 @@ Gw
                             <menuItem title="Show Folders First" id="jSN-4m-3wl" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="navigate.show-folders-first"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="navigate.show-folders-first"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="toggleShowFoldersFirst:" target="-1" id="HcS-j8-6t6"/>
@@ -345,7 +345,7 @@ Gw
                             <menuItem title="Show Hidden Files" id="9fO-Qz-cWQ" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="navigate.show-hidden-files"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="navigate.show-hidden-files"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="toggleShowHiddenFiles:" target="-1" id="lSo-BO-0fc"/>
@@ -354,7 +354,7 @@ Gw
                             <menuItem title="Sync Working Directory with Vim's 'pwd'" id="BKA-1b-0RM" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="navigate.sync-vim-pwd"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="navigate.sync-vim-pwd"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="toggleSyncWorkspaceWithPwd:" target="-1" id="d9o-Qm-6eV"/>
@@ -370,7 +370,7 @@ Gw
                             <menuItem title="Show Preview" keyEquivalent="p" id="60p-zq-AFA" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="preview.show-preview"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="preview.show-preview"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="showPreview:" target="-1" id="hTt-u7-Lrk"/>
@@ -379,7 +379,7 @@ Gw
                             <menuItem title="Refresh" id="xhx-5v-5vO" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="preview.refresh"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="preview.refresh"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="refreshPreview:" target="-1" id="opj-wq-b7y"/>
@@ -393,7 +393,7 @@ Gw
                         <items>
                             <menuItem title="Minimize" keyEquivalent="m" id="23" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="window.minimize"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="window.minimize"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="performMiniaturize:" target="-1" id="37"/>
@@ -401,7 +401,7 @@ Gw
                             </menuItem>
                             <menuItem title="Zoom" id="239" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="window.zoom"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="window.zoom"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="performZoom:" target="-1" id="240"/>
@@ -411,7 +411,7 @@ Gw
                             <menuItem title="Select Next Tab" keyEquivalent="]" id="B42-SL-HgS" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="window.select-next-tab"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="window.select-next-tab"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="selectNextTab:" target="-1" id="pbn-rb-fcL"/>
@@ -420,7 +420,7 @@ Gw
                             <menuItem title="Select Previous Tab" keyEquivalent="[" id="lmH-zd-MBr" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="window.select-previous-tab"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="window.select-previous-tab"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="selectPreviousTab:" target="-1" id="9iC-uX-gAP"/>
@@ -431,7 +431,7 @@ Gw
                             </menuItem>
                             <menuItem title="Bring All to Front" id="5" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="window.bring-all-to-front"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="window.bring-all-to-front"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="arrangeInFront:" target="-1" id="39"/>
@@ -471,7 +471,7 @@ Gw
                         <items>
                             <menuItem title="VimR Help" keyEquivalent="?" id="492" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="help.vimr-help"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="help.vimr-help"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="showHelp:" target="494" id="Qft-uf-49D"/>
@@ -486,7 +486,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="605" height="501"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1177"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1200"/>
             <view key="contentView" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="605" height="501"/>
                 <autoresizingMask key="autoresizingMask"/>
