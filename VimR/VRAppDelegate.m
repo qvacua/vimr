@@ -21,6 +21,7 @@
 #import "VRMainWindow.h"
 #import "VRApplication.h"
 #import "VRPrefWindow.h"
+#import "VRPropertyReader.h"
 
 
 static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
@@ -28,6 +29,7 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
 
 @implementation VRAppDelegate {
   BOOL _isLaunching;
+  NSDictionary *_properties;
 }
 
 @manualwire(userDefaults)
@@ -250,6 +252,7 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
   _debug.hidden = NO;
 #endif
 
+  _properties = [VRPropertyReader properties];
   [self addTabKeyShortcuts];
 }
 
@@ -371,6 +374,10 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
 }
 
 - (void)addTabKeyShortcuts {
+  if ([_properties[qSelectNthTabActive] isEqualToString:@"false"]) {
+    return;
+  }
+
   NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:9];
   for (NSUInteger i = 0; i < 9; i++) {
     VRKeyShortcut *item = [[VRKeyShortcut alloc] initWithAction:@selector(selectNthTab:) keyEquivalent:SF(@"%lu", i + 1) tag:i];

@@ -13,6 +13,8 @@
 
 
 NSString *const qOpenQuicklyIgnorePatterns = @"open.quickly.ignore.patterns";
+NSString *const qSelectNthTabActive = @"global.keybinding.select-nth-tab.active";
+NSString *const qSelectNthTabModifier = @"global.keybinding.select-nth-tab.modifier";
 
 
 static NSString *const qVimrRcFileName = @".vimr_rc";

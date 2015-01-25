@@ -10,7 +10,9 @@
 #import <Foundation/Foundation.h>
 
 
-NSString *const qOpenQuicklyIgnorePatterns;
+extern NSString *const qOpenQuicklyIgnorePatterns;
+extern NSString *const qSelectNthTabActive;
+extern NSString *const qSelectNthTabModifier;
 
 
 @interface VRPropertyReader : NSObject
