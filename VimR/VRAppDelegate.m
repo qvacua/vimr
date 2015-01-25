@@ -378,13 +378,58 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
     return;
   }
 
+  NSString *modifierAsStr = _properties[qSelectNthTabModifier];
+  NSArray *modifierChars = [modifierAsStr componentsSeparatedByString:@"-"];
+  NSEventModifierFlags modifiers = [self modifiersFromProperty:modifierChars];
+
   NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:9];
   for (NSUInteger i = 0; i < 9; i++) {
-    VRKeyShortcut *item = [[VRKeyShortcut alloc] initWithAction:@selector(selectNthTab:) keyEquivalent:SF(@"%lu", i + 1) tag:i];
+    VRKeyShortcut *item = [[VRKeyShortcut alloc] initWithAction:@selector(selectNthTab:)
+                                                      modifiers:modifiers
+                                                  keyEquivalent:SF(@"%lu", i + 1)
+                                                            tag:i];
     [items addObject:item];
   }
 
   [_application addKeyShortcutItems:items];
+}
+
+- (NSEventModifierFlags)modifiersFromProperty:(NSArray *)chars {
+  if (chars.isEmpty) {
+    DDLogWarn(@"Something wrong with '%@'", qSelectNthTabModifier);
+    return NSCommandKeyMask;
+  }
+
+  NSEventModifierFlags result = (NSEventModifierFlags) 0;
+  for (NSString *character in chars) {
+    if (character.length != 1) {
+      DDLogWarn(@"Something wrong with '%@'", qSelectNthTabModifier);
+      return NSCommandKeyMask;
+    }
+
+    if (![[NSCharacterSet characterSetWithCharactersInString:@"@^~$"] characterIsMember:[character characterAtIndex:0]]) {
+      DDLogWarn(@"Something wrong with '%@'", qSelectNthTabModifier);
+      return NSCommandKeyMask;
+    }
+
+    if ([character isEqualToString:@"@"]) {
+      result = result | NSCommandKeyMask;
+    }
+
+    if ([character isEqualToString:@"^"]) {
+      result = result | NSControlKeyMask;
+    }
+
+    if ([character isEqualToString:@"~"]) {
+      result = result | NSAlternateKeyMask;
+    }
+
+    if ([character isEqualToString:@"$"]) {
+      result = result | NSShiftKeyMask;
+    }
+  }
+
+  return result;
 }
 
 @end

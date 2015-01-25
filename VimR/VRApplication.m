@@ -16,28 +16,30 @@
 #import "VRMainWindow.h"
 
 
-static BOOL is_command_key_only(NSUInteger flags) {
-  if (!(flags & NSCommandKeyMask)) {
-    return NO;
+static NSString *bit_string(NSUInteger mask) {
+  NSMutableString *mutableStringWithBits = [NSMutableString new];
+  for (int8_t bitIndex = 0; bitIndex < sizeof(mask) * 8; bitIndex++) {
+    [mutableStringWithBits insertString:mask & 1 ? @"1" : @"0" atIndex:0];
+    mask >>= 1;
   }
+  return [mutableStringWithBits copy];
+}
 
-  if (flags & (NSAlphaShiftKeyMask | NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask)) {
-    return NO;
-  }
-
-  return YES;
+static BOOL is_matching_modifiers(NSEventModifierFlags expectedModifiers, NSUInteger actualModifiers) {
+  return (expectedModifiers & actualModifiers) == expectedModifiers;
 }
 
 
 @implementation VRKeyShortcut
 
-- (instancetype)initWithAction:(SEL)anAction keyEquivalent:(NSString *)charCode tag:(NSUInteger)tag {
+- (instancetype)initWithAction:(SEL)anAction modifiers:(NSEventModifierFlags)modifiers keyEquivalent:(NSString *)charCode tag:(NSUInteger)tag {
   self = [super init];
   RETURN_NIL_WHEN_NOT_SELF
 
   _action = anAction;
   _keyEquivalent = charCode;
   _tag = tag;
+  _modifiers = modifiers;
 
   return self;
 }
@@ -49,6 +51,7 @@ static BOOL is_command_key_only(NSUInteger flags) {
   NSMutableArray *_keyShortcuts;
   NSMutableDictionary *_keyEquivalentCache;
   NSSet *_allKeys;
+  NSEventModifierFlags _modifiers;
 }
 
 #pragma mark NSObject
@@ -67,6 +70,16 @@ static BOOL is_command_key_only(NSUInteger flags) {
   return self;
 }
 
+- (NSString *)bitString:(NSUInteger)mask {
+  NSString *str = @"";
+  for (NSUInteger i = 0; i < 8; i++) {
+    // Prepend "0" or "1", depending on the bit
+    str = [NSString stringWithFormat:@"%@%@", mask & 1 ? @"1" : @"0", str];
+    mask >>= 1;
+  }
+  return str;
+}
+
 #pragma mark Public
 - (void)addKeyShortcutItems:(NSArray *)items {
   for (VRKeyShortcut *item in items) {
@@ -74,6 +87,7 @@ static BOOL is_command_key_only(NSUInteger flags) {
     _keyEquivalentCache[item.keyEquivalent] = item;
   }
 
+  _modifiers = [items[0] modifiers];
   _allKeys = [[NSSet alloc] initWithArray:_keyEquivalentCache.allKeys];
 }
 
@@ -81,21 +95,21 @@ static BOOL is_command_key_only(NSUInteger flags) {
 - (void)sendEvent:(NSEvent *)theEvent {
   if (self.keyWindow == nil
       || theEvent.type != NSKeyDown
-      || !is_command_key_only(theEvent.modifierFlags)) {
+      || !is_matching_modifiers(_modifiers, theEvent.modifierFlags)) {
 
     [super sendEvent:theEvent];
     return;
   }
 
-  NSString *charactersIgnoringModifiers = theEvent.charactersIgnoringModifiers;
-  if (![_allKeys containsObject:charactersIgnoringModifiers]) {
+  NSString *characters = [self charsStrippingModifiers:theEvent];
+  if (![_allKeys containsObject:characters]) {
     [super sendEvent:theEvent];
     return;
   }
 
   NSResponder *responder = self.keyWindow;
   do {
-    VRKeyShortcut *item = _keyEquivalentCache[charactersIgnoringModifiers];
+    VRKeyShortcut *item = _keyEquivalentCache[characters];
     SEL aSelector = item.action;
     if ([responder respondsToSelector:aSelector]) {
       DDLogDebug(@"%@ responds to the selector %@. Invoking on the main thread.", responder, NSStringFromSelector(aSelector));
@@ -105,6 +119,50 @@ static BOOL is_command_key_only(NSUInteger flags) {
   } while (responder = responder.nextResponder);
 
   [super sendEvent:theEvent];
+}
+
+- (NSString *)charsStrippingModifiers:(NSEvent *)theEvent {
+  // from http://stackoverflow.com/questions/8263618/convert-virtual-key-code-to-unicode-string
+  NSString *characters = theEvent.characters;
+
+  TISInputSourceRef currentKeyboard = TISCopyCurrentKeyboardInputSource();
+  CFDataRef uchr = (CFDataRef) TISGetInputSourceProperty(currentKeyboard, kTISPropertyUnicodeKeyLayoutData);
+  const UCKeyboardLayout *keyboardLayout = (const UCKeyboardLayout *) CFDataGetBytePtr(uchr);
+
+  if (!keyboardLayout) {
+    return _modifiers & NSShiftKeyMask ? characters : theEvent.charactersIgnoringModifiers;
+  }
+
+  UInt32 deadKeyState = 0;
+  UniCharCount maxStringLength = 255;
+  UniCharCount actualStringLength = 0;
+  UniChar unicodeString[maxStringLength];
+
+  OSStatus status = UCKeyTranslate(
+      keyboardLayout,
+      theEvent.keyCode, kUCKeyActionDown, 0,
+      LMGetKbdType(), 0,
+      &deadKeyState,
+      maxStringLength,
+      &actualStringLength, unicodeString
+  );
+
+  if (actualStringLength == 0 && deadKeyState) {
+    status = UCKeyTranslate(
+        keyboardLayout,
+        kVK_Space, kUCKeyActionDown, 0,
+        LMGetKbdType(), 0,
+        &deadKeyState,
+        maxStringLength,
+        &actualStringLength, unicodeString
+    );
+  }
+
+  if (actualStringLength > 0 && status == noErr) {
+    return [NSString stringWithCharacters:unicodeString length:(NSUInteger) actualStringLength];
+  }
+
+  return _modifiers & NSShiftKeyMask ? characters : theEvent.charactersIgnoringModifiers;
 }
 
 #pragma mark Public
