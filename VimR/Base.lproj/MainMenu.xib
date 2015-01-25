@@ -76,28 +76,43 @@
                 <menuItem title="File" id="83">
                     <menu key="submenu" title="File" id="81">
                         <items>
-                            <menuItem title="New" keyEquivalent="n" id="82">
+                            <menuItem title="New" keyEquivalent="n" id="82" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="file.new"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="newDocument:" target="-1" id="373"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="New Tab" keyEquivalent="t" id="LvQ-Qu-Tme">
+                            <menuItem title="New Tab" keyEquivalent="t" id="LvQ-Qu-Tme" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="file.new-tab"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="newTab:" target="-1" id="tf3-kd-LHX"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="39y-4Z-95L"/>
-                            <menuItem title="Open…" keyEquivalent="o" id="72">
+                            <menuItem title="Open…" keyEquivalent="o" id="72" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="file.open"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="openDocument:" target="-1" id="374"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Open in Tab…" keyEquivalent="T" id="IVZ-fS-c6G">
+                            <menuItem title="Open in Tab…" keyEquivalent="T" id="IVZ-fS-c6G" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="file.open-in-tab"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="openDocumentInTab:" target="-1" id="3Wl-WW-K7l"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Open Quickly…" keyEquivalent="O" id="Vim-gL-ViA">
+                            <menuItem title="Open Quickly…" keyEquivalent="O" id="Vim-gL-ViA" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="file.open-quickly"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="openQuickly:" target="-1" id="dHw-5P-kf4"/>
                                 </connections>
@@ -105,7 +120,7 @@
                             <menuItem title="Open Recent" id="124">
                                 <menu key="submenu" title="Open Recent" systemMenu="recentDocuments" id="125">
                                     <items>
-                                        <menuItem title="Clear Menu" id="126">
+                                        <menuItem title="Clear Menu" id="126" customClass="I">
                                             <connections>
                                                 <action selector="clearRecentDocuments:" target="-1" id="127"/>
                                             </connections>
@@ -116,39 +131,37 @@
                             <menuItem isSeparatorItem="YES" id="79">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Close" keyEquivalent="w" id="73">
+                            <menuItem title="Close" keyEquivalent="w" id="73" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="file.close"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="performClose:" target="-1" id="193"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Save…" keyEquivalent="s" id="75">
+                            <menuItem title="Save…" keyEquivalent="s" id="75" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="file.save"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="saveDocument:" target="-1" id="362"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Save As..." keyEquivalent="S" id="6e7-RT-Ta0">
+                            <menuItem title="Save As..." keyEquivalent="S" id="6e7-RT-Ta0" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="file.save-as"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="saveDocumentAs:" target="-1" id="D7Z-Br-u0S"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Revert to Saved" id="112">
+                            <menuItem title="Revert to Saved" id="112" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="file.revert-to-saved"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="revertDocumentToSaved:" target="-1" id="364"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="74">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="Page Setup..." keyEquivalent="P" id="77">
-                                <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
-                                <connections>
-                                    <action selector="runPageLayout:" target="-1" id="87"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Print…" keyEquivalent="p" id="78">
-                                <connections>
-                                    <action selector="print:" target="-1" id="86"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -157,13 +170,19 @@
                 <menuItem title="Edit" id="217">
                     <menu key="submenu" title="Edit" id="205">
                         <items>
-                            <menuItem title="Undo" keyEquivalent="z" id="207">
+                            <menuItem title="Undo" keyEquivalent="z" id="207" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="edit.undo"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="undo:" target="-1" id="223"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Redo" keyEquivalent="Z" id="215">
+                            <menuItem title="Redo" keyEquivalent="Z" id="215" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="edit.redo"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="redo:" target="-1" id="231"/>
                                 </connections>
@@ -171,192 +190,45 @@
                             <menuItem isSeparatorItem="YES" id="206">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Cut" keyEquivalent="x" id="199">
+                            <menuItem title="Cut" keyEquivalent="x" id="199" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="edit.cut"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="cut:" target="-1" id="228"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Copy" keyEquivalent="c" id="197">
+                            <menuItem title="Copy" keyEquivalent="c" id="197" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="edit.copy"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="copy:" target="-1" id="224"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Paste" keyEquivalent="v" id="203">
+                            <menuItem title="Paste" keyEquivalent="v" id="203" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="edit.paste"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="paste:" target="-1" id="226"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Paste and Match Style" keyEquivalent="V" id="485">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="pasteAsPlainText:" target="-1" id="486"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Delete" id="202">
+                            <menuItem title="Delete" id="202" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="edit.delete"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="delete:" target="-1" id="235"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Select All" keyEquivalent="a" id="198">
+                            <menuItem title="Select All" keyEquivalent="a" id="198" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="edit.select-all"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="selectAll:" target="-1" id="232"/>
                                 </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="214">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="Find" id="218">
-                                <menu key="submenu" title="Find" id="220">
-                                    <items>
-                                        <menuItem title="Find…" tag="1" keyEquivalent="f" id="209">
-                                            <connections>
-                                                <action selector="performFindPanelAction:" target="-1" id="241"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Find and Replace…" tag="12" keyEquivalent="f" id="534">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="performFindPanelAction:" target="-1" id="535"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Find Next" tag="2" keyEquivalent="g" id="208">
-                                            <connections>
-                                                <action selector="performFindPanelAction:" target="-1" id="487"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Find Previous" tag="3" keyEquivalent="G" id="213">
-                                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="performFindPanelAction:" target="-1" id="488"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Use Selection for Find" tag="7" keyEquivalent="e" id="221">
-                                            <connections>
-                                                <action selector="performFindPanelAction:" target="-1" id="489"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Jump to Selection" keyEquivalent="j" id="210">
-                                            <connections>
-                                                <action selector="centerSelectionInVisibleArea:" target="-1" id="245"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
-                            <menuItem title="Spelling and Grammar" id="216">
-                                <menu key="submenu" title="Spelling and Grammar" id="200">
-                                    <items>
-                                        <menuItem title="Show Spelling and Grammar" keyEquivalent=":" id="204">
-                                            <connections>
-                                                <action selector="showGuessPanel:" target="-1" id="230"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Check Document Now" keyEquivalent=";" id="201">
-                                            <connections>
-                                                <action selector="checkSpelling:" target="-1" id="225"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="453"/>
-                                        <menuItem title="Check Spelling While Typing" id="219">
-                                            <connections>
-                                                <action selector="toggleContinuousSpellChecking:" target="-1" id="222"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Check Grammar With Spelling" id="346">
-                                            <connections>
-                                                <action selector="toggleGrammarChecking:" target="-1" id="347"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Correct Spelling Automatically" id="454">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="toggleAutomaticSpellingCorrection:" target="-1" id="456"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
-                            <menuItem title="Substitutions" id="348">
-                                <menu key="submenu" title="Substitutions" id="349">
-                                    <items>
-                                        <menuItem title="Show Substitutions" id="457">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="orderFrontSubstitutionsPanel:" target="-1" id="458"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="459"/>
-                                        <menuItem title="Smart Copy/Paste" tag="1" keyEquivalent="f" id="350">
-                                            <connections>
-                                                <action selector="toggleSmartInsertDelete:" target="-1" id="355"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Smart Quotes" tag="2" keyEquivalent="g" id="351">
-                                            <connections>
-                                                <action selector="toggleAutomaticQuoteSubstitution:" target="-1" id="356"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Smart Dashes" id="460">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="toggleAutomaticDashSubstitution:" target="-1" id="461"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Smart Links" tag="3" keyEquivalent="G" id="354">
-                                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="toggleAutomaticLinkDetection:" target="-1" id="357"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Text Replacement" id="462">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="toggleAutomaticTextReplacement:" target="-1" id="463"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
-                            <menuItem title="Transformations" id="450">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Transformations" id="451">
-                                    <items>
-                                        <menuItem title="Make Upper Case" id="452">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="uppercaseWord:" target="-1" id="464"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Make Lower Case" id="465">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="lowercaseWord:" target="-1" id="468"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Capitalize" id="466">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="capitalizeWord:" target="-1" id="467"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
-                            <menuItem title="Speech" id="211">
-                                <menu key="submenu" title="Speech" id="212">
-                                    <items>
-                                        <menuItem title="Start Speaking" id="196">
-                                            <connections>
-                                                <action selector="startSpeaking:" target="-1" id="233"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Stop Speaking" id="195">
-                                            <connections>
-                                                <action selector="stopSpeaking:" target="-1" id="227"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
                             </menuItem>
                         </items>
                     </menu>
@@ -364,34 +236,49 @@
                 <menuItem title="View" id="295">
                     <menu key="submenu" title="View" id="296">
                         <items>
-                            <menuItem title="Focus File Browser" keyEquivalent="0" id="lxp-G4-8vM">
+                            <menuItem title="Focus File Browser" keyEquivalent="0" id="lxp-G4-8vM" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="view.focus-file-browser"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="focusFileBrowser:" target="-1" id="nLp-Fl-zao"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Focus Text Area" id="QxQ-g1-Bzs">
+                            <menuItem title="Focus Text Area" id="QxQ-g1-Bzs" customClass="VRMenuItem">
                                 <string key="keyEquivalent" base64-UTF8="YES">
 Gw
 </string>
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="view.focus-text-area"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="focusVimView:" target="-1" id="v9m-Vo-rd1"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="ooA-uS-6QN"/>
-                            <menuItem title="Show File Browser" keyEquivalent="L" id="m8V-X2-m82">
+                            <menuItem title="Show File Browser" keyEquivalent="L" id="m8V-X2-m82" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="view.show-file-browser"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="showFileBrowser:" target="-1" id="tke-MQ-A8G"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Put File Browser on Right" keyEquivalent="0" id="mDM-BC-eAg">
+                            <menuItem title="Put File Browser on Right" keyEquivalent="0" id="mDM-BC-eAg" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="view.put-file-browser-on-right"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="toggleSidebarOnRight:" target="-1" id="ogW-uA-Dyn"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Show Status Bar" keyEquivalent="/" id="APq-bi-3bg">
+                            <menuItem title="Show Status Bar" keyEquivalent="/" id="APq-bi-3bg" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="view.show-status-bar"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="toggleStatusBar:" target="-1" id="hrV-es-SUd"/>
                                 </connections>
@@ -401,18 +288,27 @@ Gw
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Font" systemMenu="font" id="csN-Vm-10k">
                                     <items>
-                                        <menuItem title="Show Fonts" id="2TS-BO-0cT">
+                                        <menuItem title="Show Fonts" id="2TS-BO-0cT" customClass="VRMenuItem">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="view.font.show-fonts"/>
+                                            </userDefinedRuntimeAttributes>
                                             <connections>
                                                 <action selector="orderFrontFontPanel:" target="420" id="gd2-n7-xag"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Bigger" tag="3" keyEquivalent="+" id="PWg-YT-jwp">
+                                        <menuItem title="Bigger" tag="3" keyEquivalent="+" id="PWg-YT-jwp" customClass="VRMenuItem">
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="view.font.bigger"/>
+                                            </userDefinedRuntimeAttributes>
                                             <connections>
                                                 <action selector="zoomIn:" target="-1" id="6S4-sh-bJo"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Smaller" tag="4" keyEquivalent="-" id="jHy-uc-moB">
+                                        <menuItem title="Smaller" tag="4" keyEquivalent="-" id="jHy-uc-moB" customClass="VRMenuItem">
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="view.font.smaller"/>
+                                            </userDefinedRuntimeAttributes>
                                             <connections>
                                                 <action selector="zoomOut:" target="-1" id="kgz-mm-YgQ"/>
                                             </connections>
@@ -421,8 +317,11 @@ Gw
                                 </menu>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="7Jn-vv-uPe"/>
-                            <menuItem title="Enter Full Screen" keyEquivalent="f" id="9Rn-I5-7k1">
+                            <menuItem title="Enter Full Screen" keyEquivalent="f" id="9Rn-I5-7k1" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="view.enter-full-screen"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="toggleFullScreen:" target="-1" id="MuT-Y4-6Cv"/>
                                 </connections>
@@ -434,20 +333,29 @@ Gw
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Navigate" id="Qkn-nP-qpX">
                         <items>
-                            <menuItem title="Show Folders First" id="jSN-4m-3wl">
+                            <menuItem title="Show Folders First" id="jSN-4m-3wl" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="navigate.show-folders-first"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="toggleShowFoldersFirst:" target="-1" id="HcS-j8-6t6"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Show Hidden Files" id="9fO-Qz-cWQ">
+                            <menuItem title="Show Hidden Files" id="9fO-Qz-cWQ" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="navigate.show-hidden-files"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="toggleShowHiddenFiles:" target="-1" id="lSo-BO-0fc"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Sync Working Directory with Vim's 'pwd'" id="BKA-1b-0RM">
+                            <menuItem title="Sync Working Directory with Vim's 'pwd'" id="BKA-1b-0RM" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="navigate.sync-vim-pwd"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="toggleSyncWorkspaceWithPwd:" target="-1" id="d9o-Qm-6eV"/>
                                 </connections>
@@ -459,14 +367,20 @@ Gw
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Preview" id="e5M-oa-9zh">
                         <items>
-                            <menuItem title="Show Preview" keyEquivalent="p" id="60p-zq-AFA">
+                            <menuItem title="Show Preview" keyEquivalent="p" id="60p-zq-AFA" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="preview.show-preview"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="showPreview:" target="-1" id="hTt-u7-Lrk"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Refresh" id="xhx-5v-5vO">
+                            <menuItem title="Refresh" id="xhx-5v-5vO" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="preview.refresh"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="refreshPreview:" target="-1" id="opj-wq-b7y"/>
                                 </connections>
@@ -477,25 +391,37 @@ Gw
                 <menuItem title="Window" id="19">
                     <menu key="submenu" title="Window" systemMenu="window" id="24">
                         <items>
-                            <menuItem title="Minimize" keyEquivalent="m" id="23">
+                            <menuItem title="Minimize" keyEquivalent="m" id="23" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="window.minimize"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="performMiniaturize:" target="-1" id="37"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Zoom" id="239">
+                            <menuItem title="Zoom" id="239" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="window.zoom"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="performZoom:" target="-1" id="240"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="6Ly-5s-0lA"/>
-                            <menuItem title="Select Next Tab" keyEquivalent="]" id="B42-SL-HgS">
+                            <menuItem title="Select Next Tab" keyEquivalent="]" id="B42-SL-HgS" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="window.select-next-tab"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="selectNextTab:" target="-1" id="pbn-rb-fcL"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Select Previous Tab" keyEquivalent="[" id="lmH-zd-MBr">
+                            <menuItem title="Select Previous Tab" keyEquivalent="[" id="lmH-zd-MBr" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="window.select-previous-tab"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="selectPreviousTab:" target="-1" id="9iC-uX-gAP"/>
                                 </connections>
@@ -503,7 +429,10 @@ Gw
                             <menuItem isSeparatorItem="YES" id="92">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Bring All to Front" id="5">
+                            <menuItem title="Bring All to Front" id="5" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="window.bring-all-to-front"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="arrangeInFront:" target="-1" id="39"/>
                                 </connections>
@@ -515,19 +444,19 @@ Gw
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Debug" id="IF5-nu-Y0K">
                         <items>
-                            <menuItem title="Debug 1" keyEquivalent="1" id="dzX-yG-Iqo">
+                            <menuItem title="Debug 1" keyEquivalent="1" id="dzX-yG-Iqo" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES"/>
                                 <connections>
                                     <action selector="debug1Action:" target="-1" id="iLE-Rw-ymG"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Debug 2" keyEquivalent="2" id="tzt-Jk-072">
+                            <menuItem title="Debug 2" keyEquivalent="2" id="tzt-Jk-072" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES"/>
                                 <connections>
                                     <action selector="debug2Action:" target="-1" id="DjF-9w-2DQ"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Debug 3" keyEquivalent="3" id="QY8-mB-qpl">
+                            <menuItem title="Debug 3" keyEquivalent="3" id="QY8-mB-qpl" customClass="VRMenuItem">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES"/>
                                 <connections>
                                     <action selector="debug3Action:" target="-1" id="Gex-St-mCz"/>
@@ -540,7 +469,10 @@ Gw
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Help" systemMenu="help" id="491">
                         <items>
-                            <menuItem title="VimR Help" keyEquivalent="?" id="492">
+                            <menuItem title="VimR Help" keyEquivalent="?" id="492" customClass="VRMenuItem">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="help.vimr-help"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="showHelp:" target="494" id="Qft-uf-49D"/>
                                 </connections>
@@ -558,16 +490,8 @@ Gw
             <view key="contentView" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="605" height="501"/>
                 <autoresizingMask key="autoresizingMask"/>
-                <subviews>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ud0-L9-kQ1">
-                        <rect key="frame" x="311" y="265" width="82" height="32"/>
-                        <buttonCell key="cell" type="push" title="Button" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="eei-1a-X8N">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                    </button>
-                </subviews>
             </view>
+            <point key="canvasLocation" x="459.5" y="345.5"/>
         </window>
         <customObject id="494" customClass="VRAppDelegate">
             <connections>
