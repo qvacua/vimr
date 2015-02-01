@@ -1,0 +1,2 @@
+global.keybinding.select-nth-tab.active = true
+global.keybinding.select-nth-tab.modifier = @-$-~

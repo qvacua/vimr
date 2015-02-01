@@ -16,14 +16,11 @@
 #import "VRMainWindow.h"
 #import "VRMainWindowControllerFactory.h"
 #import "VRWorkspaceController.h"
-#import "VRDefaultLogSetting.h"
 #import "VRPropertyReader.h"
 #import "VROpenQuicklyIgnorePattern.h"
 
 
 static CGPoint qDefaultOrigin = {242, 364};
-static NSString *const qVimrRcFileName = @".vimr_rc";
-static NSString *const qOpenQuicklyIgnorePatterns = @"open.quickly.ignore.patterns";
 
 
 @implementation VRWorkspace {
@@ -192,7 +189,7 @@ static NSString *const qOpenQuicklyIgnorePatterns = @"open.quickly.ignore.patter
 }
 
 - (void)readVimrRc {
-  NSDictionary *properties = [self propertiesFromVimrRc];
+  NSDictionary *properties = _propertyReader.workspaceProperties;
 
   _openQuicklyIgnorePatterns = [self openQuicklyIgnorePatternsFromVimrRc:properties];
 }
@@ -207,23 +204,6 @@ static NSString *const qOpenQuicklyIgnorePatterns = @"open.quickly.ignore.patter
   }
 
   return result;
-}
-
-- (NSDictionary *)propertiesFromVimrRc {
-  NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:qVimrRcFileName];
-  if (![_fileManager fileExistsAtPath:path]) {
-    DDLogDebug(@"%@ not found", path);
-    return @{};
-  }
-
-  NSError *error;
-  NSString *content = [NSString stringWithContentsOfURL:[NSURL fileURLWithPath:path] encoding:NSUTF8StringEncoding error:&error];
-  if (error) {
-    DDLogWarn(@"There was an error opening %@: %@", path, error);
-    return @{};
-  }
-
-  return [VRPropertyReader read:content];
 }
 
 @end
