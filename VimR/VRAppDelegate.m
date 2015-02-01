@@ -253,6 +253,7 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
   _debug.hidden = NO;
 #endif
 
+  [_propertyReader updateKeyBindingsOfMenuItems];
   [self addTabKeyShortcuts];
 }
 

@@ -31,4 +31,5 @@ extern NSString *const qSelectNthTabModifier;
 - (NSEventModifierFlags)selectNthTabModifiers;
 - (VRKeyBinding *)keyBindingForKey:(NSString *)key;
 
+- (void)updateKeyBindingsOfMenuItems;
 @end

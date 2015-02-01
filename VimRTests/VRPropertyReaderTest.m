@@ -9,12 +9,12 @@
 
 #import "VRBaseTestCase.h"
 #import "VRPropertyReader.h"
+#import "VRKeyBinding.h"
 
 
 static NSNumber *has_modifier(NSEventModifierFlags actual, NSEventModifierFlags expected) {
   return [[NSNumber alloc] initWithBool:((actual & expected) != 0)];
 }
-
 
 @interface VRPropertyReaderTest : VRBaseTestCase
 @end
@@ -22,6 +22,60 @@ static NSNumber *has_modifier(NSEventModifierFlags actual, NSEventModifierFlags 
 
 @implementation VRPropertyReaderTest {
   VRPropertyReader *propertyReader;
+}
+
+- (void)testBindings {
+  propertyReader = [self propertyReaderWithTestFile:@"test_binding_vimr_rc"];
+
+  const unichar ch[] = {27};
+  NSString *escStr = [NSString stringWithCharacters:ch length:1];
+
+  assertThat(@([escStr characterAtIndex:0]), is(@(27)));
+
+  [self assertBinding:@"global.keybinding.menuitem.file.new" keyEquivalent:@"a" flags:NSCommandKeyMask];
+  [self assertBinding:@"global.keybinding.menuitem.file.new-tab" keyEquivalent:@"a" flags:NSControlKeyMask];
+  [self assertBinding:@"global.keybinding.menuitem.file.open" keyEquivalent:@"a" flags:NSAlternateKeyMask];
+  [self assertBinding:@"global.keybinding.menuitem.file.open-in-tab" keyEquivalent:@"a" flags:NSCommandKeyMask | NSShiftKeyMask];
+  [self assertBinding:@"global.keybinding.menuitem.file.open-quickly" keyEquivalent:@"-" flags:NSCommandKeyMask];
+  [self assertBinding:@"global.keybinding.menuitem.file.close" keyEquivalent:escStr flags:(NSEventModifierFlags) 0];
+  [self assertBinding:@"global.keybinding.menuitem.file.save" keyEquivalent:escStr flags:NSCommandKeyMask];
+  [self assertBinding:@"global.keybinding.menuitem.file.save-as" keyEquivalent:@"a" flags:NSCommandKeyMask | NSAlternateKeyMask];
+  [self assertBinding:@"global.keybinding.menuitem.file.revert-to-saved" keyEquivalent:@"a" flags:NSCommandKeyMask | NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask];
+  [self assertBinding:@"global.keybinding.menuitem.edit.undo" keyEquivalent:@"-" flags:NSCommandKeyMask | NSAlternateKeyMask];
+
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.edit.redo"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.edit.cut"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.edit.copy"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.edit.paste"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.edit.delete"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.edit.select-all"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.view.focus-file-browser"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.view.focus-text-area"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.view.show-file-browser"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.view.put-file-browser-on-right"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.view.show-status-bar"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.view.font.show-fonts"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.view.font.bigger"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.view.font.smaller"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.view.enter-full-screen"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.navigate.show-folders-first"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.navigate.show-hidden-files"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.navigate.sync-vim-pwd"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.preview.show-preview"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.preview.refresh"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.window.minimize"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.window.zoom"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.window.select-next-tab"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.window.select-previous-tab"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.window.bring-all-to-front"], nilValue());
+  assertThat([propertyReader keyBindingForKey:@"global.keybinding.menuitem.help.vimr-help"], nilValue());
+}
+
+- (void)assertBinding:(NSString *)key keyEquivalent:(NSString *)keyEquivalent flags:(NSEventModifierFlags)flags {
+  VRKeyBinding *binding = [propertyReader keyBindingForKey:key];
+
+  assertThat(binding.keyEquivalent, is(keyEquivalent));
+  assertThat(@(binding.modifiers), is(@(flags)));
 }
 
 - (void)testSelectNthTabModifiers1 {

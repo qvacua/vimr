@@ -12,11 +12,18 @@
 #import "VRKeyBinding.h"
 #import "VRUtils.h"
 #import "NSArray+VR.h"
+#import "VRMenuItem.h"
 
 
 NSString *const qOpenQuicklyIgnorePatterns = @"open.quickly.ignore.patterns";
 NSString *const qSelectNthTabActive = @"global.keybinding.select-nth-tab.active";
 NSString *const qSelectNthTabModifier = @"global.keybinding.select-nth-tab.modifier";
+
+
+static inline NSString *esc_string() {
+  const unichar escape[] = {27};
+  return [NSString stringWithCharacters:escape length:1];
+}
 
 
 @implementation VRPropertyReader {
@@ -30,42 +37,42 @@ NSString *const qSelectNthTabModifier = @"global.keybinding.select-nth-tab.modif
   _propertyFileUrl = url.copy;
   _globalProperties = [self readPropertiesFromUrl:url];
   _keysForKeyBindings = @[
-      @"file.new",
-      @"file.new-tab",
-      @"file.open",
-      @"file.open-in-tab",
-      @"file.open-quickly",
-      @"file.close",
-      @"file.save",
-      @"file.save-as",
-      @"file.revert-to-saved",
-      @"edit.undo",
-      @"edit.redo",
-      @"edit.cut",
-      @"edit.copy",
-      @"edit.paste",
-      @"edit.delete",
-      @"edit.select-all",
-      @"view.focus-file-browser",
-      @"view.focus-text-area",
-      @"view.show-file-browser",
-      @"view.put-file-browser-on-right",
-      @"view.show-status-bar",
-      @"view.font.show-fonts",
-      @"view.font.bigger",
-      @"view.font.smaller",
-      @"view.enter-full-screen",
-      @"navigate.show-folders-first",
-      @"navigate.show-hidden-files",
-      @"navigate.sync-vim-pwd",
-      @"preview.show-preview",
-      @"preview.refresh",
-      @"window.minimize",
-      @"window.zoom",
-      @"window.select-next-tab",
-      @"window.select-previous-tab",
-      @"window.bring-all-to-front",
-      @"help.vimr-help",
+      @"global.keybinding.menuitem.file.new",
+      @"global.keybinding.menuitem.file.new-tab",
+      @"global.keybinding.menuitem.file.open",
+      @"global.keybinding.menuitem.file.open-in-tab",
+      @"global.keybinding.menuitem.file.open-quickly",
+      @"global.keybinding.menuitem.file.close",
+      @"global.keybinding.menuitem.file.save",
+      @"global.keybinding.menuitem.file.save-as",
+      @"global.keybinding.menuitem.file.revert-to-saved",
+      @"global.keybinding.menuitem.edit.undo",
+      @"global.keybinding.menuitem.edit.redo",
+      @"global.keybinding.menuitem.edit.cut",
+      @"global.keybinding.menuitem.edit.copy",
+      @"global.keybinding.menuitem.edit.paste",
+      @"global.keybinding.menuitem.edit.delete",
+      @"global.keybinding.menuitem.edit.select-all",
+      @"global.keybinding.menuitem.view.focus-file-browser",
+      @"global.keybinding.menuitem.view.focus-text-area",
+      @"global.keybinding.menuitem.view.show-file-browser",
+      @"global.keybinding.menuitem.view.put-file-browser-on-right",
+      @"global.keybinding.menuitem.view.show-status-bar",
+      @"global.keybinding.menuitem.view.font.show-fonts",
+      @"global.keybinding.menuitem.view.font.bigger",
+      @"global.keybinding.menuitem.view.font.smaller",
+      @"global.keybinding.menuitem.view.enter-full-screen",
+      @"global.keybinding.menuitem.navigate.show-folders-first",
+      @"global.keybinding.menuitem.navigate.show-hidden-files",
+      @"global.keybinding.menuitem.navigate.sync-vim-pwd",
+      @"global.keybinding.menuitem.preview.show-preview",
+      @"global.keybinding.menuitem.preview.refresh",
+      @"global.keybinding.menuitem.window.minimize",
+      @"global.keybinding.menuitem.window.zoom",
+      @"global.keybinding.menuitem.window.select-next-tab",
+      @"global.keybinding.menuitem.window.select-previous-tab",
+      @"global.keybinding.menuitem.window.bring-all-to-front",
+      @"global.keybinding.menuitem.help.vimr-help",
   ];
 
   return self;
@@ -119,34 +126,94 @@ NSString *const qSelectNthTabModifier = @"global.keybinding.select-nth-tab.modif
 
 - (NSEventModifierFlags)selectNthTabModifiers {
   NSString *modifierAsStr = _globalProperties[qSelectNthTabModifier];
-  if (modifierAsStr == nil) {
+  if (blank(modifierAsStr)) {
     return NSCommandKeyMask;
   }
 
   NSArray *modifierChars = [modifierAsStr componentsSeparatedByString:@"-"];
-  return [self modifiersFromProperty:modifierChars];
-}
-
-- (VRKeyBinding *)keyBindingForKey:(NSString *)key {
-  return nil;
-}
-
-- (NSEventModifierFlags)modifiersFromProperty:(NSArray *)chars {
-  if (chars.isEmpty) {
-    DDLogWarn(@"Something wrong with '%@'", qSelectNthTabModifier);
+  if (modifierChars.isEmpty) {
     return NSCommandKeyMask;
   }
 
+  NSEventModifierFlags modifierFlags = [self modifiersFromModifierChars:modifierChars];
+  if (modifierFlags == 0) {
+    return NSCommandKeyMask;
+  }
+
+  return modifierFlags;
+}
+
+- (VRKeyBinding *)keyBindingForKey:(NSString *)key {
+  NSString *value = _globalProperties[key];
+
+  if (blank(value)) {return nil;}
+
+  if (value.length <= 1) {
+    DDLogWarn(@"Something wrong with %@=%@", key, value);
+    return nil;
+  }
+
+  NSArray *components = [value componentsSeparatedByString:@"-"];
+  NSUInteger componentCount = components.count;
+
+  if (componentCount == 0) {
+    DDLogWarn(@"Something wrong with %@=%@", key, value);
+    return nil;
+  }
+
+  // binding = ^[
+  if (componentCount == 1) {
+    if (![components[0] isEqualToString:@"^["]) {
+      DDLogWarn(@"Something wrong with %@=%@", key, value);
+      return nil;
+    }
+
+    VRMenuItem *menuItem = [self menuItemWithIdentifier:key];
+    return [[VRKeyBinding alloc] initWithAction:menuItem.action modifiers:(NSEventModifierFlags) 0 keyEquivalent:esc_string() tag:0];
+  }
+
+  NSString *keyEquivalent;
+  NSArray *modifiers;
+
+  // binding = @-^-~-$-k
+  // binding = @-^-~-$-^[
+  // binding = @-^-~-$--
+  if (componentCount >= 3 && [components.lastObject isEqualToString:@""] && [components[componentCount - 2] isEqualToString:@""]) {
+    keyEquivalent = @"-";
+    modifiers = [components subarrayWithRange:NSMakeRange(0, componentCount - 2)];
+  } else {
+    keyEquivalent = components.lastObject;
+    modifiers = [components subarrayWithRange:NSMakeRange(0, componentCount - 1)];
+  }
+
+  if (keyEquivalent.length != 1 && ![keyEquivalent isEqualToString:@"^["]) {
+    DDLogWarn(@"Something wrong with %@=%@", key, value);
+    return nil;
+  }
+
+  if ([keyEquivalent isEqualToString:@"^["]) {
+    keyEquivalent = esc_string();
+  }
+
+  NSEventModifierFlags modifierFlags = [self modifiersFromModifierChars:modifiers];
+  if (modifierFlags == 0) {
+    DDLogWarn(@"Something wrong with %@=%@", key, value);
+    return nil;
+  }
+
+  VRMenuItem *menuItem = [self menuItemWithIdentifier:key];
+  return [[VRKeyBinding alloc] initWithAction:menuItem.action modifiers:modifierFlags keyEquivalent:keyEquivalent tag:0];
+}
+
+- (NSEventModifierFlags)modifiersFromModifierChars:(NSArray *)chars {
   NSEventModifierFlags result = (NSEventModifierFlags) 0;
   for (NSString *character in chars) {
     if (character.length != 1) {
-      DDLogWarn(@"Something wrong with '%@'", qSelectNthTabModifier);
       return NSCommandKeyMask;
     }
 
     if (![[NSCharacterSet characterSetWithCharactersInString:@"@^~$"] characterIsMember:[character characterAtIndex:0]]) {
-      DDLogWarn(@"Something wrong with '%@'", qSelectNthTabModifier);
-      return NSCommandKeyMask;
+      return (NSEventModifierFlags) 0;
     }
 
     if ([character isEqualToString:@"@"]) {
@@ -169,77 +236,21 @@ NSString *const qSelectNthTabModifier = @"global.keybinding.select-nth-tab.modif
   return result;
 }
 
-- (void)updateKeyBindingsOfMenuItems {
-  NSArray *keys = @[
-      @"file.new",
-      @"file.new-tab",
-      @"file.open",
-      @"file.open-in-tab",
-      @"file.open-quickly",
-      @"file.close",
-      @"file.save",
-      @"file.save-as",
-      @"file.revert-to-saved",
-      @"edit.undo",
-      @"edit.redo",
-      @"edit.cut",
-      @"edit.copy",
-      @"edit.paste",
-      @"edit.delete",
-      @"edit.select-all",
-      @"view.focus-file-browser",
-      @"view.focus-text-area",
-      @"view.show-file-browser",
-      @"view.put-file-browser-on-right",
-      @"view.show-status-bar",
-      @"view.font.show-fonts",
-      @"view.font.bigger",
-      @"view.font.smaller",
-      @"view.enter-full-screen",
-      @"navigate.show-folders-first",
-      @"navigate.show-hidden-files",
-      @"navigate.sync-vim-pwd",
-      @"preview.show-preview",
-      @"preview.refresh",
-      @"window.minimize",
-      @"window.zoom",
-      @"window.select-next-tab",
-      @"window.select-previous-tab",
-      @"window.bring-all-to-front",
-      @"help.vimr-help",
-  ];
-
-  for (NSString *key in keys) {
-    NSString *value = _globalProperties[key];
-
-    if (value == nil) {
-      continue;
-    }
-
-    if (value.length <= 2) {
-      DDLogWarn(@"Something wrong with %@=%@", key, value);
-      continue;
-    }
-
-    // @-^-~-$-k
-    // @-^-~-$-^[
-    // @-^-~-$--
-    NSArray *components = [value componentsSeparatedByString:@"-"];
-    if (components.count <= 2) {
-      DDLogWarn(@"Something wrong with %@=%@", key, value);
-      continue;
-    }
-
-    // @-a
-    if (components.count == 2) {
-
-    }
-
-    // @-a
-    if (components.count == 2) {
-
+- (VRMenuItem *)menuItemWithIdentifier:(NSString *)identifier {
+  for (NSMenuItem *menu in [NSApp mainMenu].itemArray) {
+    for (id menuItem in menu.submenu.itemArray) {
+      if ([menuItem isKindOfClass:[VRMenuItem class]]) {
+        if ([[menuItem menuItemIdentifier] isEqualToString:identifier]) {
+          return menuItem;
+        }
+      }
     }
   }
+
+  return nil;
+}
+
+- (void)updateKeyBindingsOfMenuItems {
 }
 
 @end

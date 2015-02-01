@@ -121,6 +121,7 @@
 		1929BD07E68408BD5063CF15 /* VROpenQuicklyWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF7223563E01F97C1DDB /* VROpenQuicklyWindowController.m */; };
 		1929BD196B173976BF90271A /* VRFileItemOperation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD08826A501D4F3AE082 /* VRFileItemOperation.mm */; };
 		1929BD2D9DE41B00F757EE10 /* VROperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7792FE9330CD5D50BB8 /* VROperation.m */; };
+		1929BD352EA4AFAFB2753429 /* test_binding_vimr_rc in Resources */ = {isa = PBXBuildFile; fileRef = 1929BFD51236BCFE6B2CB8D4 /* test_binding_vimr_rc */; };
 		1929BD434C100AD15EDA2FAF /* VRMainWindowControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8515E4EA94E1C7EB1F9 /* VRMainWindowControllerTest.m */; };
 		1929BD56A2F37B95C9A2112B /* OakImageAndTextCell.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC4171D0D0FFAA7BE4D8 /* OakImageAndTextCell.mm */; };
 		1929BD58A3D5B75CD348D907 /* VRMainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD725D623E7889F1EC73 /* VRMainWindow.m */; };
@@ -388,6 +389,7 @@
 		1929BF2F125F7C5286F1CC4B /* VRMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRMenuItem.m; sourceTree = "<group>"; };
 		1929BF7223563E01F97C1DDB /* VROpenQuicklyWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VROpenQuicklyWindowController.m; sourceTree = "<group>"; };
 		1929BFA3CFF24540C8D6937A /* VRFileBrowserView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRFileBrowserView.m; sourceTree = "<group>"; };
+		1929BFD51236BCFE6B2CB8D4 /* test_binding_vimr_rc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test_binding_vimr_rc; sourceTree = "<group>"; };
 		1929BFDF13D59CE5B6D54B2D /* VRGeneralPrefPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRGeneralPrefPane.m; sourceTree = "<group>"; };
 		1929BFE6F9FFFCCA920EF56C /* VRPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRPluginManager.h; sourceTree = "<group>"; };
 		44ADE76C2C18B01D5595A5B8 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
@@ -597,6 +599,7 @@
 				1929B32E0EF011B08F1DB40B /* test_vimr_rc_2 */,
 				1929B5DA7109AEBA77ECD4F1 /* test_vimr_rc_3 */,
 				1929BE93C7983D0DF0EC6220 /* test_vimr_rc_4 */,
+				1929BFD51236BCFE6B2CB8D4 /* test_binding_vimr_rc */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -963,6 +966,7 @@
 				1929B9A3B7867F3FD38D914E /* test_vimr_rc_2 in Resources */,
 				1929B9DE2AD039363C9E47FC /* test_vimr_rc_3 in Resources */,
 				1929B59DCC5F104CB34F976D /* test_vimr_rc_4 in Resources */,
+				1929BD352EA4AFAFB2753429 /* test_binding_vimr_rc in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
