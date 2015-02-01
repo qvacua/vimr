@@ -23,6 +23,7 @@
 #import "VRPrefWindow.h"
 #import "VRPropertyReader.h"
 #import "VRKeyBinding.h"
+#import "VRMenuItem.h"
 
 
 static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
@@ -253,7 +254,7 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
   _debug.hidden = NO;
 #endif
 
-  [_propertyReader updateKeyBindingsOfMenuItems];
+  [self updateKeyBindingsOfMenuItems];
   [self addTabKeyShortcuts];
 }
 
@@ -391,5 +392,33 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
   [_application addKeyShortcutItems:items];
 }
 
+- (void)updateKeyBindingsOfMenuItems {
+  for (NSString *keyBindingKey in _propertyReader.keysForKeyBindings) {
+    NSString *menuItemIdentifier = [keyBindingKey substringFromIndex:27];
+
+    VRMenuItem *menuItem = [self menuItemWithIdentifier:menuItemIdentifier];
+    VRKeyBinding *keyBinding = [_propertyReader keyBindingForMenuItem:menuItem];
+
+    // no custom key binding set
+    if (keyBinding == nil) {
+      continue;
+    }
+
+    menuItem.keyEquivalent = keyBinding.keyEquivalent;
+    menuItem.keyEquivalentModifierMask = keyBinding.modifiers;
+  }
+}
+
+- (VRMenuItem *)menuItemWithIdentifier:(NSString *)identifier {
+  for (NSMenuItem *menu in [_application mainMenu].itemArray) {
+    for (id menuItem in menu.submenu.itemArray) {
+      if ([menuItem isKindOfClass:[VRMenuItem class]] && [[menuItem menuItemIdentifier] isEqualToString:identifier]) {
+        return menuItem;
+      }
+    }
+  }
+
+  return nil;
+}
 
 @end

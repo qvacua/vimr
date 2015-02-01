@@ -11,6 +11,7 @@
 
 
 @class VRKeyBinding;
+@class VRMenuItem;
 
 
 extern NSString *const qOpenQuicklyIgnorePatterns;
@@ -29,7 +30,6 @@ extern NSString *const qSelectNthTabModifier;
 
 - (BOOL)useSelectNthTabBindings;
 - (NSEventModifierFlags)selectNthTabModifiers;
-- (VRKeyBinding *)keyBindingForKey:(NSString *)key;
+- (VRKeyBinding *)keyBindingForMenuItem:(VRMenuItem *)key;
 
-- (void)updateKeyBindingsOfMenuItems;
 @end

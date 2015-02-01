@@ -143,10 +143,17 @@ static inline NSString *esc_string() {
   return modifierFlags;
 }
 
-- (VRKeyBinding *)keyBindingForKey:(NSString *)key {
-  NSString *value = _globalProperties[key];
+- (VRKeyBinding *)keyBindingForMenuItem:(VRMenuItem *)menuItem {
+  NSString *key = menuItem.menuItemIdentifier;
+  NSString *value = _globalProperties[SF(@"global.keybinding.menuitem.%@", key)];
 
-  if (blank(value)) {return nil;}
+  if (value == nil) {
+    return nil;
+  }
+
+  if (value.length == 0) {
+    return [[VRKeyBinding alloc] initWithAction:menuItem.action modifiers:(NSEventModifierFlags) 0 keyEquivalent:@"" tag:0];
+  }
 
   if (value.length <= 1) {
     DDLogWarn(@"Something wrong with %@=%@", key, value);
@@ -168,7 +175,6 @@ static inline NSString *esc_string() {
       return nil;
     }
 
-    VRMenuItem *menuItem = [self menuItemWithIdentifier:key];
     return [[VRKeyBinding alloc] initWithAction:menuItem.action modifiers:(NSEventModifierFlags) 0 keyEquivalent:esc_string() tag:0];
   }
 
@@ -201,7 +207,6 @@ static inline NSString *esc_string() {
     return nil;
   }
 
-  VRMenuItem *menuItem = [self menuItemWithIdentifier:key];
   return [[VRKeyBinding alloc] initWithAction:menuItem.action modifiers:modifierFlags keyEquivalent:keyEquivalent tag:0];
 }
 
@@ -234,23 +239,6 @@ static inline NSString *esc_string() {
   }
 
   return result;
-}
-
-- (VRMenuItem *)menuItemWithIdentifier:(NSString *)identifier {
-  for (NSMenuItem *menu in [NSApp mainMenu].itemArray) {
-    for (id menuItem in menu.submenu.itemArray) {
-      if ([menuItem isKindOfClass:[VRMenuItem class]]) {
-        if ([[menuItem menuItemIdentifier] isEqualToString:identifier]) {
-          return menuItem;
-        }
-      }
-    }
-  }
-
-  return nil;
-}
-
-- (void)updateKeyBindingsOfMenuItems {
 }
 
 @end
