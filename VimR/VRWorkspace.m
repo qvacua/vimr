@@ -16,7 +16,7 @@
 #import "VRMainWindow.h"
 #import "VRMainWindowControllerFactory.h"
 #import "VRWorkspaceController.h"
-#import "VRPropertyReader.h"
+#import "VRPropertyService.h"
 #import "VROpenQuicklyIgnorePattern.h"
 
 
