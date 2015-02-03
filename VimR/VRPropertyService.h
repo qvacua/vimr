@@ -19,7 +19,7 @@ extern NSString *const qSelectNthTabActive;
 extern NSString *const qSelectNthTabModifier;
 
 
-@interface VRPropertyReader : NSObject
+@interface VRPropertyService : NSObject
 
 @property (nonatomic, weak) NSFileManager *fileManager;
 @property (readonly, nonatomic) NSArray *keysForKeyBindings;

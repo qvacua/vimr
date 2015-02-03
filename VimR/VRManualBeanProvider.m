@@ -10,7 +10,7 @@
 #import <TBCacao/TBCacao.h>
 #import <MacVimFramework/MacVimFramework.h>
 #import "VRWorkspaceController.h"
-#import "VRPropertyReader.h"
+#import "VRPropertyService.h"
 
 
 static NSString *const qVimrRcFileName = @".vimr_rc";
@@ -40,7 +40,7 @@ static NSString *const qVimrRcFileName = @".vimr_rc";
     [vimManager setUp];
 
     NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:qVimrRcFileName];
-    VRPropertyReader *propertyReader = [[VRPropertyReader alloc] initWithPropertyFileUrl:[NSURL fileURLWithPath:path]];
+    VRPropertyService *propertyReader = [[VRPropertyService alloc] initWithPropertyFileUrl:[NSURL fileURLWithPath:path]];
     propertyReader.fileManager = [NSFileManager defaultManager];
 
     manualBeans = @[

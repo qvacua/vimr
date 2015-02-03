@@ -7,7 +7,7 @@
 * See LICENSE
 */
 
-#import "VRPropertyReader.h"
+#import "VRPropertyService.h"
 #import "VRDefaultLogSetting.h"
 #import "VRKeyBinding.h"
 #import "VRUtils.h"
@@ -26,7 +26,7 @@ static inline NSString *esc_string() {
 }
 
 
-@implementation VRPropertyReader {
+@implementation VRPropertyService {
   NSURL *_propertyFileUrl;
 }
 

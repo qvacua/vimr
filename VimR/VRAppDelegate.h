@@ -16,7 +16,7 @@
 @class VROpenQuicklyWindowController;
 @class VRPrefWindow;
 @class VRApplication;
-@class VRPropertyReader;
+@class VRPropertyService;
 
 @interface VRAppDelegate : NSObject <
     NSApplicationDelegate,
@@ -31,7 +31,7 @@
 @property (nonatomic, weak) VROpenQuicklyWindowController *openQuicklyWindowController;
 @property (nonatomic, weak) VRPrefWindow *prefWindow;
 @property (nonatomic, weak) NSUserNotificationCenter *userNotificationCenter;
-@property (nonatomic, weak) VRPropertyReader *propertyReader;
+@property (nonatomic, weak) VRPropertyService *propertyReader;
 
 @property (nonatomic, weak) IBOutlet NSWindow *window;
 @property (nonatomic, weak) IBOutlet NSMenuItem *debug;

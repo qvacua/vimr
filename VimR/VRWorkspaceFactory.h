@@ -16,7 +16,7 @@
 @class VRWorkspace;
 @class VROpenQuicklyWindowController;
 @class VRMainWindowControllerFactory;
-@class VRPropertyReader;
+@class VRPropertyService;
 
 
 @interface VRWorkspaceFactory : NSObject <TBBean>
@@ -25,7 +25,7 @@
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;
 @property (nonatomic, weak) VRMainWindowControllerFactory *mainWindowControllerFactory;
 @property (nonatomic, weak) VRWorkspaceController *workspaceController;
-@property (nonatomic, weak) VRPropertyReader *propertyReader;
+@property (nonatomic, weak) VRPropertyService *propertyReader;
 
 - (VRWorkspace *)newWorkspaceWithWorkingDir:(NSURL *)workingDir;
 

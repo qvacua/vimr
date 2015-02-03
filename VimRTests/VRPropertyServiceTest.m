@@ -8,7 +8,7 @@
 */
 
 #import "VRBaseTestCase.h"
-#import "VRPropertyReader.h"
+#import "VRPropertyService.h"
 #import "VRKeyBinding.h"
 #import "VRMenuItem.h"
 
@@ -17,12 +17,12 @@ static NSNumber *has_modifier(NSEventModifierFlags actual, NSEventModifierFlags 
   return [[NSNumber alloc] initWithBool:((actual & expected) != 0)];
 }
 
-@interface VRPropertyReaderTest : VRBaseTestCase
+@interface VRPropertyServiceTest : VRBaseTestCase
 @end
 
 
-@implementation VRPropertyReaderTest {
-  VRPropertyReader *propertyReader;
+@implementation VRPropertyServiceTest {
+  VRPropertyService *propertyReader;
 }
 
 - (void)testBindings {
@@ -149,10 +149,10 @@ static NSNumber *has_modifier(NSEventModifierFlags actual, NSEventModifierFlags 
   assertThat(properties[@"open.quickly.patterns"], is(@"*/.git/*, .gitignore"));
 }
 
-- (VRPropertyReader *)propertyReaderWithTestFile:(NSString *)testFile {
+- (VRPropertyService *)propertyReaderWithTestFile:(NSString *)testFile {
   NSURL *url = [[NSBundle bundleForClass:self.class] URLForResource:testFile withExtension:@""];
 
-  VRPropertyReader *reader = [[VRPropertyReader alloc] initWithPropertyFileUrl:url];
+  VRPropertyService *reader = [[VRPropertyService alloc] initWithPropertyFileUrl:url];
   reader.fileManager = [NSFileManager defaultManager];
 
   return reader;

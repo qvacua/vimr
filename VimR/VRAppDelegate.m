@@ -21,7 +21,7 @@
 #import "VRMainWindow.h"
 #import "VRApplication.h"
 #import "VRPrefWindow.h"
-#import "VRPropertyReader.h"
+#import "VRPropertyService.h"
 #import "VRKeyBinding.h"
 #import "VRMenuItem.h"
 
