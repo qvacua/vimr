@@ -25,7 +25,7 @@ NSString *const qFilterItemsOperationFilteredItemsKey = @"filtered-items-array";
 NSString *const qFilterItemsOperationItemTableViewKey = @"file-item-table-view";
 NSString *const qOpenQuicklyIgnorePatternsKey = @"open-quickly-ignore-patterns";
 const NSUInteger qMaximumNumberOfFilterResult = 250;
-const NSUInteger qMaximumNumberOfNonFilteredResult = 5000;
+const NSUInteger qMaximumNumberOfNonFilteredResult = 2500;
 
 
 static const int qArrayChunkSize = 10000;
@@ -34,7 +34,7 @@ static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult
 };
 
 
-static inline BOOL ignore_url(NSArray *patterns, NSURL *fileUrl) {
+static inline BOOL ignore_url(__weak NSArray *patterns, NSURL *fileUrl) {
   NSString *path = fileUrl.path;
   for (VROpenQuicklyIgnorePattern *pattern in patterns) {
     if ([pattern matchesPath:path]) {
@@ -106,7 +106,6 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
 
   NSArray *urlsOfTargetUrl = _fileItemManager.urlsOfTargetUrl;
   BOOL filterResult = _searchStr.length > 0;
-  NSUInteger countOfMaxResult = filterResult ? qMaximumNumberOfFilterResult : qMaximumNumberOfNonFilteredResult;
 
   [_fileItemManager pauseFileItemOperations];
   @autoreleasepool {
@@ -128,7 +127,7 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
           [result sortUsingComparator:qScoredItemComparator];
         }
 
-        NSArray *cappedResult = [result subarrayWithRange:capped_range_for_filtered_items(countOfMaxResult, result)];
+        NSArray *cappedResult = [self cappedResult:result filter:filterResult];
 
         CANCEL_WHEN_REQUESTED
         std::vector<std::string> paths;
@@ -143,6 +142,21 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
     }
   }
   [_fileItemManager resumeFileItemOperations];
+}
+
+#pragma mark Private
+- (NSArray *)cappedResult:(NSArray *)uncappedResult filter:(BOOL)filterResult {
+  NSUInteger countOfMaxResult = filterResult ? qMaximumNumberOfFilterResult : qMaximumNumberOfNonFilteredResult;
+  NSArray *cappedResultForIteration = [uncappedResult subarrayWithRange:capped_range_for_filtered_items(countOfMaxResult, uncappedResult)];
+  NSMutableArray *cappedResult = cappedResultForIteration.mutableCopy;
+
+  for (VRScoredPath *scoredPath in cappedResultForIteration) {
+    if (ignore_url(_ignorePatterns, scoredPath.url)) {
+      [cappedResult removeObject:scoredPath];
+    }
+  }
+
+  return cappedResult;
 }
 
 - (void)computeScoresIn:(NSMutableArray *)result lastCount:(NSUInteger)lastCount addedCount:(NSUInteger)addedCount {
@@ -161,8 +175,6 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
 
   for (size_t i = beginIndex; i <= endIndex; i++) {
     __weak NSURL *url = urls[i];
-
-    if (ignore_url(_ignorePatterns, url)) {continue;}
 
     [result addObject:[[VRScoredPath alloc] initWithUrl:url]];
     addedCount++;
