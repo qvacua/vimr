@@ -147,16 +147,28 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
 #pragma mark Private
 - (NSArray *)cappedResult:(NSArray *)uncappedResult filter:(BOOL)filterResult {
   NSUInteger countOfMaxResult = filterResult ? qMaximumNumberOfFilterResult : qMaximumNumberOfNonFilteredResult;
-  NSArray *cappedResultForIteration = [uncappedResult subarrayWithRange:capped_range_for_filtered_items(countOfMaxResult, uncappedResult)];
-  NSMutableArray *cappedResult = cappedResultForIteration.mutableCopy;
+  NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:countOfMaxResult];
 
-  for (VRScoredPath *scoredPath in cappedResultForIteration) {
-    if (ignore_url(_ignorePatterns, scoredPath.url)) {
-      [cappedResult removeObject:scoredPath];
+  std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(uncappedResult.count, countOfMaxResult);
+  for (auto &pair : chunkedIndexes) {
+    NSArray *cappedResultForIteration = [uncappedResult subarrayWithRange:NSMakeRange(pair.first, pair.second - pair.first + 1)];
+    NSMutableArray *cappedResult = cappedResultForIteration.mutableCopy;
+
+    for (VRScoredPath *scoredPath in cappedResultForIteration) {
+      if (ignore_url(_ignorePatterns, scoredPath.url)) {
+        [cappedResult removeObject:scoredPath];
+      }
     }
+
+    if (result.count + cappedResult.count >= countOfMaxResult) {
+      [result addObjectsFromArray:[cappedResult subarrayWithRange:NSMakeRange(0, countOfMaxResult - result.count)]];
+      return result;
+    }
+
+    [result addObjectsFromArray:cappedResult];
   }
 
-  return cappedResult;
+  return result;
 }
 
 - (void)computeScoresIn:(NSMutableArray *)result lastCount:(NSUInteger)lastCount addedCount:(NSUInteger)addedCount {

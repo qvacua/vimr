@@ -33,9 +33,9 @@
 
   if (_pattern[0] == '*' && _pattern[1] == '/') {
     // folder
-    matches = fnmatch(_pattern, absolutePath.fileSystemRepresentation, FNM_LEADING_DIR);
+    matches = fnmatch(_pattern, absolutePath.fileSystemRepresentation, FNM_LEADING_DIR | FNM_NOESCAPE);
   } else {
-    matches = fnmatch(_pattern, absolutePath.lastPathComponent.fileSystemRepresentation, 0);
+    matches = fnmatch(_pattern, absolutePath.lastPathComponent.fileSystemRepresentation, FNM_NOESCAPE);
   }
 
   return matches != FNM_NOMATCH;
