@@ -18,7 +18,6 @@
 #import "VROpenQuicklyIgnorePattern.h"
 
 #import <cf/cf.h>
-#import <bitset>
 
 
 NSString *const qFilterItemsOperationSearchStringKey = @"search-string";
