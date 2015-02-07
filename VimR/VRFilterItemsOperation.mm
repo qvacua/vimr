@@ -12,7 +12,6 @@
 #import "VRFileItemManager.h"
 #import "VRUtils.h"
 #import "VRScoredPath.h"
-#import "NSArray+VR.h"
 #import "VRCppUtils.h"
 #import "VRTextMateCppUtils.h"
 #import "VROpenQuicklyIgnorePattern.h"
@@ -29,6 +28,7 @@ const NSUInteger qMaximumNumberOfNonFilteredResult = 2500;
 
 
 static const int qArrayChunkSize = 10000;
+
 static NSComparisonResult (^qScoredItemComparator)(id, id) = ^NSComparisonResult(VRScoredPath *p1, VRScoredPath *p2) {
   return (NSComparisonResult) (p1.score <= p2.score);
 };
@@ -55,21 +55,6 @@ static inline NSString *disambiguated_display_name(size_t level, NSString *path)
 
   NSString *disambiguation = [disambiguationPathComponents componentsJoinedByString:@"/"];
   return SF(@"%@  —  %@", pathComponents.lastObject, disambiguation);
-}
-
-static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArray *result) {
-  if (result.isEmpty) {
-    return NSMakeRange(0, 0);
-  }
-
-  NSRange range;
-  if (result.count >= maxCount) {
-    range = NSMakeRange(0, maxCount - 1);
-  } else {
-    range = NSMakeRange(0, result.count - 1);
-  }
-
-  return range;
 }
 
 
@@ -171,7 +156,11 @@ static inline NSRange capped_range_for_filtered_items(NSUInteger maxCount, NSArr
 
   std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(uncappedResult.count, countOfMaxResult);
   for (auto &pair : chunkedIndexes) {
-    NSArray *cappedResultForIteration = [uncappedResult subarrayWithRange:NSMakeRange(pair.first, pair.second - pair.first + 1)];
+    NSUInteger beginIndex = pair.first;
+    NSUInteger endIndex = pair.second;
+    NSUInteger count = endIndex - beginIndex + 1;
+
+    NSArray *cappedResultForIteration = [uncappedResult subarrayWithRange:NSMakeRange(beginIndex, count)];
     NSMutableArray *cappedResult = cappedResultForIteration.mutableCopy;
 
     for (VRScoredPath *scoredPath in cappedResultForIteration) {
