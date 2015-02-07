@@ -13,7 +13,7 @@
 
 
 @implementation VROpenQuicklyIgnorePattern {
-  const char *_pattern;
+  char *_pattern;
 }
 
 - (instancetype)initWithPattern:(NSString *)pattern {
@@ -26,6 +26,10 @@
   strcpy(_pattern, patternAsCStr);
 
   return self;
+}
+
+- (void)dealloc {
+  free(_pattern);
 }
 
 - (BOOL)matchesPath:(NSString *)absolutePath {
