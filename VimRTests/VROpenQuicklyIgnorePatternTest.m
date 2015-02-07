@@ -21,7 +21,6 @@
 
 - (void)testMatchFolder {
   pattern = [[VROpenQuicklyIgnorePattern alloc] initWithPattern:@"*/.git"];
-  assertThat(@(pattern.kind), is(@(VROpenQuicklyIgnoreFolderPattern)));
 
   assertThat(@([pattern matchesPath:@"/a/b/c/.git"]), isYes);
   assertThat(@([pattern matchesPath:@"/a/b/c/.git/d"]), isYes);
@@ -33,9 +32,17 @@
   assertThat(@([pattern matchesPath:@"/a/b/c/.hg/d"]), isNo);
 }
 
+- (void)testMatchFolderMultipleWildCards {
+  pattern = [[VROpenQuicklyIgnorePattern alloc] initWithPattern:@"*/*.xcodeproj"];
+
+  assertThat(@([pattern matchesPath:@"/a/b/c/VimR.xcodeproj"]), isYes);
+  assertThat(@([pattern matchesPath:@"/a/b/c/VimR.xcodeproj/somefile"]), isYes);
+  assertThat(@([pattern matchesPath:@"/a/b/c/VimR.xcodeproj/somefile/deep"]), isYes);
+  assertThat(@([pattern matchesPath:@"/a/b/c/VimR.xcworkspace/somefile"]), isNo);
+}
+
 - (void)testMatchSuffix {
   pattern = [[VROpenQuicklyIgnorePattern alloc] initWithPattern:@"*.png"];
-  assertThat(@(pattern.kind), is(@(VROpenQuicklyIgnoreSuffixPattern)));
 
   assertThat(@([pattern matchesPath:@"/a/b/c/d.png"]), isYes);
   assertThat(@([pattern matchesPath:@"a.png"]), isYes);
@@ -46,7 +53,6 @@
 
 - (void)testMatchPrefix {
   pattern = [[VROpenQuicklyIgnorePattern alloc] initWithPattern:@"vr*"];
-  assertThat(@(pattern.kind), is(@(VROpenQuicklyIgnorePrefixPattern)));
 
   assertThat(@([pattern matchesPath:@"/a/b/c/vr.png"]), isYes);
   assertThat(@([pattern matchesPath:@"vr.png"]), isYes);
@@ -57,7 +63,6 @@
 
 - (void)testMatchExact {
   pattern = [[VROpenQuicklyIgnorePattern alloc] initWithPattern:@"some"];
-  assertThat(@(pattern.kind), is(@(VROpenQuicklyIgnoreExactPattern)));
 
   assertThat(@([pattern matchesPath:@"/a/b/c/some"]), isYes);
   assertThat(@([pattern matchesPath:@"some"]), isYes);

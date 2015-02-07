@@ -10,6 +10,10 @@
 #import <TBCacao/TBCacao.h>
 #import <MacVimFramework/MacVimFramework.h>
 #import "VRWorkspaceController.h"
+#import "VRPropertyService.h"
+
+
+static NSString *const qVimrRcFileName = @".vimr_rc";
 
 
 @interface VRManualBeanProvider : NSObject <TBManualBeanProvider>
@@ -35,6 +39,10 @@
     vimManager.delegate = workspaceController;
     [vimManager setUp];
 
+    NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:qVimrRcFileName];
+    VRPropertyService *propertyReader = [[VRPropertyService alloc] initWithPropertyFileUrl:[NSURL fileURLWithPath:path]];
+    propertyReader.fileManager = [NSFileManager defaultManager];
+
     manualBeans = @[
         [TBBeanContainer beanContainerWithBean:workspaceController],
         [TBBeanContainer beanContainerWithBean:vimManager],
@@ -45,6 +53,7 @@
         [TBBeanContainer beanContainerWithBean:[NSUserDefaultsController sharedUserDefaultsController]],
         [TBBeanContainer beanContainerWithBean:[NSFontManager sharedFontManager]],
         [TBBeanContainer beanContainerWithBean:[NSBundle mainBundle]],
+        [TBBeanContainer beanContainerWithBean:propertyReader],
     ];
   }
 

@@ -21,6 +21,9 @@
 #import "VRMainWindow.h"
 #import "VRApplication.h"
 #import "VRPrefWindow.h"
+#import "VRPropertyService.h"
+#import "VRKeyBinding.h"
+#import "VRMenuItem.h"
 
 
 static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
@@ -36,6 +39,7 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
 @manualwire(fileItemManager)
 @manualwire(openQuicklyWindowController)
 @manualwire(prefWindow)
+@manualwire(propertyReader)
 
 #pragma mark IBActions
 - (IBAction)newDocument:(id)sender {
@@ -250,6 +254,7 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
   _debug.hidden = NO;
 #endif
 
+  [self updateKeyBindingsOfMenuItems];
   [self addTabKeyShortcuts];
 }
 
@@ -371,13 +376,49 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
 }
 
 - (void)addTabKeyShortcuts {
+  if (!_propertyReader.useSelectNthTabBindings) {
+    return;
+  }
+
   NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:9];
   for (NSUInteger i = 0; i < 9; i++) {
-    VRKeyShortcutItem *item = [[VRKeyShortcutItem alloc] initWithAction:@selector(selectNthTab:) keyEquivalent:SF(@"%lu", i + 1) tag:i];
+    VRKeyBinding *item = [[VRKeyBinding alloc] initWithAction:@selector(selectNthTab:)
+                                                    modifiers:_propertyReader.selectNthTabModifiers
+                                                keyEquivalent:SF(@"%lu", i + 1)
+                                                          tag:i];
     [items addObject:item];
   }
 
   [_application addKeyShortcutItems:items];
+}
+
+- (void)updateKeyBindingsOfMenuItems {
+  for (NSString *keyBindingKey in _propertyReader.keysForKeyBindings) {
+    NSString *menuItemIdentifier = [keyBindingKey substringFromIndex:27];
+
+    VRMenuItem *menuItem = [self menuItemWithIdentifier:menuItemIdentifier];
+    VRKeyBinding *keyBinding = [_propertyReader keyBindingForMenuItem:menuItem];
+
+    // no custom key binding set
+    if (keyBinding == nil) {
+      continue;
+    }
+
+    menuItem.keyEquivalent = keyBinding.keyEquivalent;
+    menuItem.keyEquivalentModifierMask = keyBinding.modifiers;
+  }
+}
+
+- (VRMenuItem *)menuItemWithIdentifier:(NSString *)identifier {
+  for (NSMenuItem *menu in [_application mainMenu].itemArray) {
+    for (id menuItem in menu.submenu.itemArray) {
+      if ([menuItem isKindOfClass:[VRMenuItem class]] && [[menuItem menuItemIdentifier] isEqualToString:identifier]) {
+        return menuItem;
+      }
+    }
+  }
+
+  return nil;
 }
 
 @end
