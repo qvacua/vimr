@@ -32,6 +32,15 @@
   assertThat(@([pattern matchesPath:@"/a/b/c/.hg/d"]), isNo);
 }
 
+- (void)testMatchFolderMultipleWildCards {
+  pattern = [[VROpenQuicklyIgnorePattern alloc] initWithPattern:@"*/*.xcodeproj"];
+
+  assertThat(@([pattern matchesPath:@"/a/b/c/VimR.xcodeproj"]), isYes);
+  assertThat(@([pattern matchesPath:@"/a/b/c/VimR.xcodeproj/somefile"]), isYes);
+  assertThat(@([pattern matchesPath:@"/a/b/c/VimR.xcodeproj/somefile/deep"]), isYes);
+  assertThat(@([pattern matchesPath:@"/a/b/c/VimR.xcworkspace/somefile"]), isNo);
+}
+
 - (void)testMatchSuffix {
   pattern = [[VROpenQuicklyIgnorePattern alloc] initWithPattern:@"*.png"];
 
