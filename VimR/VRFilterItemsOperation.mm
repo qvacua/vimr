@@ -134,6 +134,7 @@ static inline NSString *disambiguated_display_name(size_t level, NSString *path)
   [_fileItemManager resumeFileItemOperations];
 }
 
+#pragma mark Private
 - (void)disambiguateResult:(NSArray *)cappedResult paths:(std::vector<std::string> &)paths {
   std::vector<size_t> levels = disambiguate(paths);
   dispatch_loop(cappedResult.count, ^(size_t i) {
@@ -149,11 +150,10 @@ static inline NSString *disambiguated_display_name(size_t level, NSString *path)
   });
 }
 
-#pragma mark Private
 - (NSArray *)cappedResult:(NSArray *)uncappedResult filter:(BOOL)filterResult {
   NSUInteger countOfMaxResult = filterResult ? qMaximumNumberOfFilterResult : qMaximumNumberOfNonFilteredResult;
-  NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:countOfMaxResult];
 
+  NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:countOfMaxResult];
   std::vector<std::pair<size_t, size_t>> chunkedIndexes = chunked_indexes(uncappedResult.count, countOfMaxResult);
   for (auto &pair : chunkedIndexes) {
     NSUInteger beginIndex = pair.first;
