@@ -6,22 +6,22 @@
         <description>Most recent changes with links to updates for VimR.</description>
         <language>en</language>
         <item>
-            <title>Version 0.6.0</title>
+            <title>Version 0.7.0</title>
             <description>
                 <ul>
-<li>Added an option to quit VimR when the last editor window closes (<a href="https://github.com/qvacua/vimr/issues/148">#148</a>)</li>
-<li>Added open quickly ignore list (<a href="https://github.com/qvacua/vimr/issues/151">#151</a>)</li>
+<li>Basic support for custom key bindings (<a href="https://github.com/qvacua/vimr/issues/53">#53</a>)</li>
+<li>Improved Open Quickly blacklist: VimR now supports shell patterns.</li>
 </ul>
             </description>
             <sparkle:releaseNotesLink>
                 http://vimr.org/release-notes.html
             </sparkle:releaseNotesLink>
-            <pubDate>2015-01-19 19:29:00 +0000</pubDate>
-            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.6.0-27/VimR-0.6.0.tar.bz2"
-                       sparkle:version="27"
-                       sparkle:shortVersionString="0.6.0"
-                       sparkle:dsaSignature="MCwCFH5zMzCgqF/Rcax8dH9O/6ZBVIi6AhRrqACgZj+Fhj8tVx0p9YaPRQiKRw=="
-                       length="8642560"
+            <pubDate>2015-02-11 21:31:24 +0000</pubDate>
+            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.7.0-28/VimR-0.7.0.tar.bz2"
+                       sparkle:version="28"
+                       sparkle:shortVersionString="0.7.0"
+                       sparkle:dsaSignature="MCwCFCLDX6FKuYhi2ElABE64+K5tbPHyAhQPL+2BKexAfWV0VikU/ae5zf9PuA=="
+                       length="8646656"
                        type="application/octet-stream"/>
         </item>
     </channel>
