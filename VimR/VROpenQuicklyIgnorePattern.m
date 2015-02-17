@@ -13,6 +13,7 @@
 
 
 @implementation VROpenQuicklyIgnorePattern {
+  BOOL _folderPattern;
   char *_pattern;
 }
 
@@ -24,6 +25,7 @@
   _pattern = malloc(sizeof(char) * strlen(patternAsCStr));
 
   strcpy(_pattern, patternAsCStr);
+  _folderPattern = _pattern[0] == '*' && _pattern[1] == '/';
 
   return self;
 }
@@ -35,7 +37,7 @@
 - (BOOL)matchesPath:(NSString *)absolutePath {
   int matches;
 
-  if (_pattern[0] == '*' && _pattern[1] == '/') {
+  if (_folderPattern) {
     // folder
     matches = fnmatch(_pattern, absolutePath.fileSystemRepresentation, FNM_LEADING_DIR | FNM_NOESCAPE);
   } else {
