@@ -4,38 +4,52 @@
 require 'pathname'
 require 'optparse'
 
-###### AppleScripts
-newWindowScript = <<FIN
-tell application id "com.qvacua.VimR"
-  activate
-  openFilesInNewWindow {#FILES}
-end tell
-FIN
+class AppleScript
+  BIN = '/usr/bin/osascript'
 
-frontmostWindowScript = <<FIN
-tell application id "com.qvacua.VimR"
-  activate
-  if the (count of windows) ≥ 1 then
-    openFilesInFrontmostWindow {#FILES} to the front window
-  else
-    openFilesInNewWindow {#FILES}
-  end if
-end tell
-FIN
+  APP_ID = 'com.qvacua.VimR'
 
-newWindowsScript = <<FIN
-tell application id "com.qvacua.VimR"
-  activate
-  openFilesInNewWindows {#FILES}
-end tell
-FIN
+  SCRIPT_START = %(tell application id "#{ APP_ID }")
+  SCRIPT_END = 'end tell'
 
-goToLineScript = <<FIN
-tell application id "com.qvacua.VimR"
-  activate
-  goToLine #LINE of #FILE
-end tell
-FIN
+  SCRIPT_TEMPLATES = {
+    :new_window => %(
+        activate
+        openFilesInNewWindow {#FILES}
+    ),
+    :new_windows => %(
+        activate
+        openFilesInNewWindows {#FILES}
+    ),
+    :frontmost_window => %(
+        activate
+        if the (count of windows) ≥ 1 then
+          openFilesInFrontmostWindow {#FILES} to the front window
+        else
+          openFilesInNewWindow {#FILES}
+        end if
+    ),
+    :go_to_line => %(
+        activate
+        goToLine #LINE of #FILE
+    )
+  }
+
+  def self.cmd(name, options = {})
+    script = strip(SCRIPT_START + SCRIPT_TEMPLATES[name] + SCRIPT_END)
+    options.each { |opt_name, opt| script.gsub!(/##{opt_name.upcase}/, opt) }
+    script
+  end
+
+  def self.run!(name, options = {})
+    `#{BIN} -e '#{cmd(name, options)}'`
+  end
+
+  def self.strip(str)
+    indent = str.scan(/^[ \t]*(?=\S)/).min.size || 0
+    str.gsub(/^[ \t]{#{indent}}/, '')
+  end
+end
 
 ###### Helpers
 def absolutePathsFromArgv()
@@ -53,10 +67,6 @@ def absolutePathsFromArgv()
   end
 
   return files
-end
-
-def callOsaScript(script)
-  return `/usr/bin/osascript -e '#{script.gsub(/#FILES/, absolutePathsFromArgv().join(','))}'`
 end
 
 ###### Option handling
@@ -92,19 +102,19 @@ parser.parse!
 
 ###### Do things
 if options[:line] > 0
-  `/usr/bin/osascript -e '#{goToLineScript.gsub(/#LINE/, "#{options[:line]}").gsub(/#FILE/, absolutePathsFromArgv()[0])}'`
+  AppleScript.run!(:go_to_line, file: absolutePathsFromArgv[0], line: options[:line])
   exit
 end
 
 if options[:one_new_window]
-  callOsaScript(newWindowScript)
+  AppleScript.run!(:new_window, files: absolutePathsFromArgv.join(','))
   exit
 end
 
 if options[:multiple_new_window]
-  callOsaScript(newWindowsScript)
+  AppleScript.run!(:new_windows, files: absolutePathsFromArgv.join(','))
   exit
 end
 
-callOsaScript(frontmostWindowScript)
+AppleScript.run!(:frontmost_window, files: absolutePathsFromArgv.join(','))
 exit
