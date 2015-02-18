@@ -108,7 +108,7 @@ class CliRunner
     elsif options[:one_new_window]
       AppleScript.run!(:new_window, files: files.join(','))
     elsif options[:multiple_new_window]
-      AppleScript.run!(:new_windows, files: files.join.join(','))
+      AppleScript.run!(:new_windows, files: files.join(','))
     else
       AppleScript.run!(:frontmost_window, files: files.join(','))
     end
