@@ -77,7 +77,7 @@ options = {
 }
 
 parser = OptionParser.new do |opts|
-  opts.banner = "Usage: vimr [options] file1 file2 ..."
+  opts.banner = 'Usage: vimr [options] file1 file2 ...'
 
   opts.on('-n', '--new-window', 'open files in one new window') do
     options[:one_new_window] = true
