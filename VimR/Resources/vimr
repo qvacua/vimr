@@ -52,7 +52,7 @@ class AppleScript
 end
 
 ###### Helpers
-def absolutePathsFromArgv()
+def absolute_paths_from_argv
   files = []
   ARGV.each do |f|
     if File.exist?(File.expand_path(f)) then
@@ -102,19 +102,19 @@ parser.parse!
 
 ###### Do things
 if options[:line] > 0
-  AppleScript.run!(:go_to_line, file: absolutePathsFromArgv[0], line: options[:line])
+  AppleScript.run!(:go_to_line, file: absolute_paths_from_argv[0], line: options[:line])
   exit
 end
 
 if options[:one_new_window]
-  AppleScript.run!(:new_window, files: absolutePathsFromArgv.join(','))
+  AppleScript.run!(:new_window, files: absolute_paths_from_argv.join(','))
   exit
 end
 
 if options[:multiple_new_window]
-  AppleScript.run!(:new_windows, files: absolutePathsFromArgv.join(','))
+  AppleScript.run!(:new_windows, files: absolute_paths_from_argv.join.join(','))
   exit
 end
 
-AppleScript.run!(:frontmost_window, files: absolutePathsFromArgv.join(','))
+AppleScript.run!(:frontmost_window, files: absolute_paths_from_argv.join(','))
 exit
