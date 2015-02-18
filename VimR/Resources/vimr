@@ -37,7 +37,7 @@ class AppleScript
 
   def self.cmd(name, options = {})
     script = strip(SCRIPT_START + SCRIPT_TEMPLATES[name] + SCRIPT_END)
-    options.each { |opt_name, opt| script.gsub!(/##{opt_name.upcase}/, opt) }
+    options.each { |opt_name, opt| script.gsub!(/##{opt_name.upcase}/, opt.to_s) }
     script
   end
 
@@ -51,65 +51,68 @@ class AppleScript
   end
 end
 
-###### Helpers
-def absolute_paths_from_argv
-  ARGV.map do |f|
-    if File.exist?(File.expand_path(f))
-      %("#{Pathname.new(f).realpath}")
-    elsif f.start_with?('/')
-      %("#{f}")
+class CliRunner
+  DEFAULT_OPTIONS = {
+    :one_new_window      => false,
+    :multiple_new_window => false,
+    :line                => 0
+  }
+
+  attr_reader :options
+
+  def initialize
+    @options = DEFAULT_OPTIONS.dup
+    parser.parse!
+    run!
+  end
+
+  def parser
+    OptionParser.new do |opts|
+      opts.banner = 'Usage: vimr [options] file1 file2 ...'
+
+      opts.on('-n', '--new-window', 'open files in one new window') do
+        @options[:one_new_window] = true
+      end
+
+      opts.on('-m', '--multiple-window', 'open files in new windows') do
+        @options[:multiple_new_window] = true
+      end
+
+      opts.on('-l line', '--line line', Integer, 'go to line (> 0)') do |line|
+        @options[:line] = line
+      end
+
+      opts.on('-h', '--help', 'Displays Help') do
+        puts "By default files are open in tabs in the front most window. If there's no open window, VimR will open a new window."
+        puts opts
+        exit
+      end
+    end
+  end
+
+  def files
+    ARGV.map do |f|
+      if File.exist?(File.expand_path(f))
+        %("#{Pathname.new(f).realpath}")
+      elsif f.start_with?('/')
+        %("#{f}")
+      else
+        %("#{File.join(Dir.pwd, f)}")
+      end
+    end
+  end
+
+  def run!
+    if options[:line] > 0
+      AppleScript.run!(:go_to_line, file: files.first, line: options[:line])
+    elsif options[:one_new_window]
+      AppleScript.run!(:new_window, files: files.join(','))
+    elsif options[:multiple_new_window]
+      AppleScript.run!(:new_windows, files: files.join.join(','))
     else
-      %("#{File.join(Dir.pwd, f)}")
+      AppleScript.run!(:frontmost_window, files: files.join(','))
     end
   end
 end
 
-###### Option handling
-options = {
-  :one_new_window => false,
-  :multiple_new_window => false,
-  :line => 0
-}
-
-parser = OptionParser.new do |opts|
-  opts.banner = 'Usage: vimr [options] file1 file2 ...'
-
-  opts.on('-n', '--new-window', 'open files in one new window') do
-    options[:one_new_window] = true
-  end
-
-  opts.on('-m', '--multiple-window', 'open files in new windows') do
-    options[:multiple_new_window] = true
-  end
-
-  opts.on('-l line', '--line line', Integer, 'go to line (> 0)') do |line|
-    options[:line] = line
-  end
-
-  opts.on('-h', '--help', 'Displays Help') do
-    puts "By default files are open in tabs in the front most window. If there's no open window, VimR will open a new window."
-    puts opts
-    exit
-  end
-end
-
-parser.parse!
-
-###### Do things
-if options[:line] > 0
-  AppleScript.run!(:go_to_line, file: absolute_paths_from_argv[0], line: options[:line])
-  exit
-end
-
-if options[:one_new_window]
-  AppleScript.run!(:new_window, files: absolute_paths_from_argv.join(','))
-  exit
-end
-
-if options[:multiple_new_window]
-  AppleScript.run!(:new_windows, files: absolute_paths_from_argv.join.join(','))
-  exit
-end
-
-AppleScript.run!(:frontmost_window, files: absolute_paths_from_argv.join(','))
-exit
+CliRunner.new
