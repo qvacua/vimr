@@ -56,7 +56,7 @@ def absolute_paths_from_argv
   files = []
   ARGV.each do |f|
     if File.exist?(File.expand_path(f)) then
-      files << "\"#{Pathname.new(f).realpath.to_s}\""
+      files << "\"#{Pathname.new(f).realpath}\""
     else
       if f.start_with?('/')
         files << "\"#{f}\""
