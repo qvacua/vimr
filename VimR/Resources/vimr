@@ -71,9 +71,9 @@ end
 
 ###### Option handling
 options = {
-    :one_new_window => false,
-    :multiple_new_window => false,
-    :line => 0
+  :one_new_window => false,
+  :multiple_new_window => false,
+  :line => 0
 }
 
 parser = OptionParser.new do |opts|
@@ -88,7 +88,7 @@ parser = OptionParser.new do |opts|
   end
 
   opts.on('-l line', '--line line', Integer, 'go to line (> 0)') do |line|
-   options[:line] = line
+    options[:line] = line
   end
 
   opts.on('-h', '--help', 'Displays Help') do
