@@ -12,3 +12,7 @@ before_script:
 script:
     - xcodebuild -workspace VimR.xcworkspace -scheme VimR -configuration Debug build test
 
+branches:
+  except:
+      - next
+      - gh-pages
