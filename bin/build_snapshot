@@ -1,0 +1,20 @@
+#!/bin/sh
+
+./bin/increment_version.rb
+
+export LC_ALL="en_US.UTF-8"
+
+pod install
+
+[ -e build ] && rm -r build
+
+./bin/build_macvim
+
+xcodebuild -workspace VimR.xcworkspace -configuration Release -scheme VimR -derivedDataPath ./build clean build
+
+TODAY=$(date "+%Y%m%d-%H%M")
+cd build/Build/Products/Release
+
+tar -cjf VimR-$TODAY.tar.bz2 VimR.app
+tar -cjf dSYM-VimR-$TODAY.tar.bz2 VimR.app.dSYM
+

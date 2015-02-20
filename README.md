@@ -47,7 +47,7 @@ $ git submodule update --recursive --init
 Then, build the `macvim` submodule: Assuming you're in the project root
 
 ```
-bin/build-macvim
+bin/build_macvim
 ```
 
 We use [CocoaPods](http://cocoapods.org) to include other open source libraries, eg [OCHamcrest](https://github.com/hamcrest/OCHamcrest) and [TBCacao](https://github.com/qvacua/tbcacao). Thus, install CocoaPods and do the following in the project root
