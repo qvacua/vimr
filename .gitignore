@@ -28,3 +28,5 @@ build/*
 
 # Netbeans
 nbproject/*
+
+node_modules

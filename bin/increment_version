@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+
+var argv = require('minimist')(process.argv.slice(2));
+var util = require('util');
+var shell = require('shelljs');
+var semver = require('semver');
+var dateUtils = require('date-utils');
+
+var PLIST_BUDDY_CMD = '/usr/libexec/PlistBuddy -c';
+
+if (argv.help || argv.h) {
+  console.info('Usage: %s --dryrun --snapshot --leap [major|minor|patch=default]', process.argv[1]);
+  process.exit(0);
+}
+
+var dryrun = argv.dryrun;
+var leap = argv.leap ? argv.leap : 'patch';
+var snapshot = argv.snapshot;
+
+function plistGet(key, file) {
+  return shell.exec(util.format('%s "Print :%s" %s', PLIST_BUDDY_CMD, key, file), {silent: true}).output.trim();
+}
+
+function plistSet(key, value, file) {
+  return shell.exec(util.format('%s -c "Set :%s %s" %s', PLIST_BUDDY_CMD, key, value, file), {silent: true}).output.trim();
+}
+
+var plistFiles = ['VimR/VimR-Info.plist', 'StandardPlugins/Markdown/Markdown-Info.plist'];
+
+(function () {
+
+  plistFiles.forEach(function (plistFile) {
+    console.log('Processing %s', plistFile);
+
+    var curBundleVer = plistGet('CFBundleVersion', plistFile);
+    var newBundleVer = parseInt(curBundleVer) + 1;
+    console.info('Bundle version: %s -> %s', curBundleVer, newBundleVer);
+
+    if (!dryrun) {
+      console.info('Setting CFBundleVersion in %s to %s', plistFile, newBundleVer);
+      plistSet('CFBundleVersion', newBundleVer, plistFile);
+    }
+
+    var curShortVer = plistGet('CFBundleShortVersionString', plistFile);
+    var newShortVer = semver.inc(curShortVer, leap);
+    if (snapshot) {
+      newShortVer += '-SNAPSHOT-' + (new Date()).toFormat('YYYYMMDD-HH24MI');
+    }
+    console.info('Short version: %s -> %s', curShortVer, newShortVer);
+
+    if (!dryrun) {
+      console.info('Setting CFBundleShortVersionString in %s to %s', plistFile, newShortVer);
+      plistSet('CFBundleShortVersionString', newShortVer, plistFile);
+    }
+  });
+
+}).call(this);

@@ -17,13 +17,13 @@
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.2.0</string>
+	<string>0.7.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>20</string>
+	<string>28</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2014 Tae Won Ha. All rights reserved.</string>
+	<string>Copyright © 2015 Tae Won Ha. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
 	<string>VRMarkdownPlugin</string>
 </dict>

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "semver": "^4.3.0",
+    "shelljs": "^0.3.0"
+  }
+}
