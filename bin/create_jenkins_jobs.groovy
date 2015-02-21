@@ -4,8 +4,12 @@ def vimrSnapshotBuild = 'vimr_snapshot_build'
 def vimrSnapshotUpload = 'vimr_snapshot_upload'
 
 
-def scmConfig(delegate) {
-  def scmConfigClosure = {
+def commonConfig(delegate) {
+  def commonConfigClosure = {
+    environmentVariables {
+      env('PATH', '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin')
+    }
+
     scm {
       git {
         remote { url 'https://github.com/qvacua/vimr.git' }
@@ -26,9 +30,9 @@ def scmConfig(delegate) {
     }
   }
 
-  scmConfigClosure.resolveStrategy = Closure.DELEGATE_FIRST
-  scmConfigClosure.delegate = delegate
-  scmConfigClosure()
+  commonConfigClosure.resolveStrategy = Closure.DELEGATE_FIRST
+  commonConfigClosure.delegate = delegate
+  commonConfigClosure()
 }
 
 job {
@@ -40,10 +44,15 @@ job {
     stringParam('branch_to_build', 'master', 'Branch to build')
   }
 
-  scmConfig(delegate)
+  commonConfig(delegate)
 
   steps {
-    shell './bin/build_release'
+    shell '''
+pushd bin
+npm install
+popd
+./bin/build_release
+'''
   }
 
   publishers {
@@ -62,10 +71,15 @@ job {
     stringParam('branch_to_build', 'develop', 'Branch to build')
   }
 
-  scmConfig(delegate)
+  commonConfig(delegate)
 
   steps {
-    shell './bin/build_snapshot'
+    shell '''
+pushd bin
+npm install
+popd
+./bin/build_snapshot
+'''
   }
 
   publishers {
