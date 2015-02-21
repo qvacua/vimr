@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "date-utils": "^1.2.16",
+    "minimist": "^1.1.0",
     "semver": "^4.3.0",
     "shelljs": "^0.3.0"
   }
