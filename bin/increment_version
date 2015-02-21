@@ -22,7 +22,7 @@ function plistGet(key, file) {
 }
 
 function plistSet(key, value, file) {
-  return shell.exec(util.format('%s -c "Set :%s %s" %s', PLIST_BUDDY_CMD, key, value, file), {silent: true}).output.trim();
+  return shell.exec(util.format('%s "Set :%s %s" %s', PLIST_BUDDY_CMD, key, value, file), {silent: true}).output.trim();
 }
 
 var plistFiles = ['VimR/VimR-Info.plist', 'StandardPlugins/Markdown/Markdown-Info.plist'];

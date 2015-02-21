@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-./bin/increment_version.rb
+./bin/increment_version --snapshot
 
 LC_ALL="en_US.UTF-8" pod install
 
