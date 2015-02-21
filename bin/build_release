@@ -1,7 +1,6 @@
-#!/bin/sh
+#!/bin/bash -e
 
-export LC_ALL="en_US.UTF-8"
-pod install
+LC_ALL="en_US.UTF-8" pod install
 
 [ -e build ] && rm -r build
 
@@ -11,13 +10,13 @@ xcodebuild -workspace VimR.xcworkspace -configuration Release -scheme VimR -deri
 
 VERSION=$(grep -A 1 CFBundleShortVersionString VimR/VimR-Info.plist | grep \<string\> | sed 's/.*<string>\(.*\)<\/string>/\1/')
 
-cd build/Build/Products/Release
+pushd build/Build/Products/Release
+
 tar -cf VimR-$VERSION.tar VimR.app
 bzip2 VimR-$VERSION.tar
-
 tar -cjf dSYM-VimR-$VERSION.tar.bz2 VimR.app.dSYM
 
-cd ../../../../
+popd
 
 /usr/local/bin/sign_update.sh build/Build/Products/Release/VimR-$VERSION.tar.bz2 /Users/Shared/sparkle-priv.pem > build/sparkle-checksum.txt
 
