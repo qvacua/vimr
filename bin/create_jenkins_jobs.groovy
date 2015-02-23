@@ -6,9 +6,7 @@ def vimrSnapshotUpload = 'vimr_snapshot_upload'
 
 def commonConfig(delegate) {
   def commonConfigClosure = {
-    environmentVariables {
-      env('PATH', '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin')
-    }
+    environmentVariables { env('PATH', '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin') }
 
     scm {
       git {
