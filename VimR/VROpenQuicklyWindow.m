@@ -62,7 +62,6 @@ int qOpenQuicklyWindowPadding = 8;
   NSView *contentView = self.contentView;
 
   _itemCountTextField = [[NSTextField alloc] initForAutoLayout];
-  _itemCountTextField.translatesAutoresizingMaskIntoConstraints = NO;
   _itemCountTextField.backgroundColor = clearColor;
   _itemCountTextField.alignment = NSRightTextAlignment;
   _itemCountTextField.stringValue = @"";
