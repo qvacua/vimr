@@ -110,10 +110,17 @@ static BOOL is_matching_modifiers(NSEventModifierFlags expectedModifiers, NSUInt
   NSString *characters = theEvent.characters;
 
   TISInputSourceRef currentKeyboard = TISCopyCurrentKeyboardInputSource();
-  CFDataRef uchr = (CFDataRef) TISGetInputSourceProperty(currentKeyboard, kTISPropertyUnicodeKeyLayoutData);
-  const UCKeyboardLayout *keyboardLayout = (const UCKeyboardLayout *) CFDataGetBytePtr(uchr);
+  if (currentKeyboard == NULL) {
+    return _modifiers & NSShiftKeyMask ? characters : theEvent.charactersIgnoringModifiers;
+  }
 
-  if (!keyboardLayout) {
+  CFDataRef uchr = (CFDataRef) TISGetInputSourceProperty(currentKeyboard, kTISPropertyUnicodeKeyLayoutData);
+  if (uchr == NULL) {
+    return _modifiers & NSShiftKeyMask ? characters : theEvent.charactersIgnoringModifiers;
+  }
+
+  const UCKeyboardLayout *keyboardLayout = (const UCKeyboardLayout *) CFDataGetBytePtr(uchr);
+  if (keyboardLayout == NULL) {
     return _modifiers & NSShiftKeyMask ? characters : theEvent.charactersIgnoringModifiers;
   }
 
