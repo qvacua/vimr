@@ -6,22 +6,22 @@
         <description>Most recent changes with links to updates for VimR.</description>
         <language>en</language>
         <item>
-            <title>Version 0.7.0</title>
+            <title>Version 0.7.1</title>
             <description>
                 <ul>
-<li>Basic support for custom key bindings (<a href="https://github.com/qvacua/vimr/issues/53">#53</a>)</li>
-<li>Improved Open Quickly blacklist: VimR now supports shell patterns.</li>
+<li>Internal improvements of the command line tool (<a href="https://github.com/qvacua/vimr/pull/170">#170</a>)</li>
+<li>Bugfix: some problem with CJK keyboard layout (<a href="https://github.com/qvacua/vimr/pull/176">#176</a>)</li>
 </ul>
             </description>
             <sparkle:releaseNotesLink>
                 http://vimr.org/release-notes.html
             </sparkle:releaseNotesLink>
-            <pubDate>2015-02-11 21:31:24 +0000</pubDate>
-            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.7.0-28/VimR-0.7.0.tar.bz2"
-                       sparkle:version="28"
-                       sparkle:shortVersionString="0.7.0"
-                       sparkle:dsaSignature="MCwCFCLDX6FKuYhi2ElABE64+K5tbPHyAhQPL+2BKexAfWV0VikU/ae5zf9PuA=="
-                       length="8646656"
+            <pubDate>2015-03-31 22:49:59 +0000</pubDate>
+            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.7.1-29/VimR-0.7.1.tar.bz2"
+                       sparkle:version="29"
+                       sparkle:shortVersionString="0.7.1"
+                       sparkle:dsaSignature="MCwCFAFjguaxCcJN/UvFs999peZspnz1AhR4+jJfC2dQKghn2K3oqyf9yJP8Rg=="
+                       length="8691712"
                        type="application/octet-stream"/>
         </item>
     </channel>
