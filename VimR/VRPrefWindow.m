@@ -7,6 +7,7 @@
 * See LICENSE
 */
 
+#import <PureLayout/ALView+PureLayout.h>
 #import "VRPrefWindow.h"
 #import "VRUtils.h"
 #import "VRGeneralPrefPane.h"
@@ -16,10 +17,7 @@
 NSString *const qPrefWindowFrameAutosaveName = @"pref-window-frame-autosave";
 
 
-static const int qWindowStyleMask = NSTitledWindowMask | NSResizableWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
-
-
-#define CONSTRAIN(fmt) [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]];
+static const NSUInteger qWindowStyleMask = NSTitledWindowMask | NSResizableWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
 
 
 @implementation VRPrefWindow {
@@ -100,7 +98,7 @@ static const int qWindowStyleMask = NSTitledWindowMask | NSResizableWindowMask |
   [tableColumn.dataCell setAllowsEditingTextAttributes:YES];
   [tableColumn.dataCell setLineBreakMode:NSLineBreakByTruncatingTail];
 
-  _categoryOutlineView = [[NSOutlineView alloc] initWithFrame:CGRectZero];
+  _categoryOutlineView = [[NSOutlineView alloc] initForAutoLayout];
   [_categoryOutlineView addTableColumn:tableColumn];
   _categoryOutlineView.outlineTableColumn = tableColumn;
   [_categoryOutlineView sizeLastColumnToFit];
@@ -113,7 +111,7 @@ static const int qWindowStyleMask = NSTitledWindowMask | NSResizableWindowMask |
   _categoryOutlineView.allowsMultipleSelection = NO;
   _categoryOutlineView.allowsEmptySelection = NO;
 
-  _categoryScrollView = [[NSScrollView alloc] initWithFrame:CGRectZero];
+  _categoryScrollView = [[NSScrollView alloc] initForAutoLayout];
   _categoryScrollView.translatesAutoresizingMaskIntoConstraints = NO;
   _categoryScrollView.hasVerticalScroller = YES;
   _categoryScrollView.hasHorizontalScroller = YES;
@@ -122,7 +120,7 @@ static const int qWindowStyleMask = NSTitledWindowMask | NSResizableWindowMask |
   _categoryScrollView.documentView = _categoryOutlineView;
   _categoryScrollView.autohidesScrollers = YES;
 
-  _paneScrollView = [[NSScrollView alloc] initWithFrame:CGRectZero];
+  _paneScrollView = [[NSScrollView alloc] initForAutoLayout];
   _paneScrollView.translatesAutoresizingMaskIntoConstraints = NO;
   _paneScrollView.hasVerticalScroller = YES;
   _paneScrollView.hasHorizontalScroller = YES;
@@ -137,14 +135,19 @@ static const int qWindowStyleMask = NSTitledWindowMask | NSResizableWindowMask |
   [contentView addSubview:_categoryScrollView];
   [contentView addSubview:_paneScrollView];
 
-  NSDictionary *views = @{
-      @"catView" : _categoryScrollView,
-      @"paneView" : _paneScrollView,
-  };
+  [_categoryScrollView autoSetDimension:ALDimensionWidth toSize:150];
+  [_categoryScrollView autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:-1];
 
-  CONSTRAIN(@"H:|-(-1)-[catView(150)][paneView(>=200)]|")
-  CONSTRAIN(@"V:|-(-1)-[catView(>=150)]-(-1)-|")
-  CONSTRAIN(@"V:|[paneView]|")
+  [_paneScrollView autoSetDimension:ALDimensionWidth toSize:200 relation:NSLayoutRelationGreaterThanOrEqual];
+  [_paneScrollView autoPinEdge:ALEdgeLeft toEdge:ALEdgeRight ofView:_categoryScrollView];
+  [_paneScrollView autoPinEdgeToSuperviewEdge:ALEdgeRight];
+
+  [_categoryScrollView autoSetDimension:ALDimensionHeight toSize:150 relation:NSLayoutRelationGreaterThanOrEqual];
+  [_categoryScrollView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:-1];
+  [_categoryScrollView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-1];
+
+  [_paneScrollView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+  [_paneScrollView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 
   // Why do we need this?
   dispatch_to_main_thread(^{

@@ -7,6 +7,7 @@
 * See LICENSE
 */
 
+#import <PureLayout/ALView+PureLayout.h>
 #import "VRPrefPane.h"
 #import "VRUtils.h"
 
@@ -35,7 +36,7 @@
 }
 
 - (NSTextField *)newTextLabelWithString:(NSString *)string alignment:(NSTextAlignment)alignment {
-  NSTextField *field = [[NSTextField alloc] initWithFrame:CGRectZero];
+  NSTextField *field = [[NSTextField alloc] initForAutoLayout];
   field.translatesAutoresizingMaskIntoConstraints = NO;
   field.backgroundColor = [NSColor clearColor];
   field.stringValue = string;
@@ -49,7 +50,7 @@
 }
 
 - (NSButton *)checkButtonWithTitle:(NSString *)title defaultKey:(NSString *)defaultKey {
-  NSButton *checkButton = [[NSButton alloc] initWithFrame:CGRectZero];
+  NSButton *checkButton = [[NSButton alloc] initForAutoLayout];
   checkButton.translatesAutoresizingMaskIntoConstraints = NO;
   checkButton.title = title;
   checkButton.buttonType = NSSwitchButton;
