@@ -9,6 +9,7 @@
 
 #import <PSMTabBarControl/PSMTabBarControl.h>
 #import <MacVimFramework/MacVimFramework.h>
+#import <PureLayout/ALView+PureLayout.h>
 #import "VRMainWindowController.h"
 #import "VRLog.h"
 #import "VRAlert.h"
@@ -32,9 +33,6 @@ const int qMainWindowBorderThickness = 22;
 
 static NSString *const qVimRAutoGroupName = @"VimR";
 static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosave";
-
-
-#define CONSTRAINT(fmt) [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]]
 
 
 @implementation VRMainWindowController {
@@ -247,7 +245,7 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 }
 
 - (IBAction)selectNthTab:(id)sender {
-  [_vimView selectTabWithIndex:[sender tag] fromVim:NO];
+  [_vimView selectTabWithIndex:(int) [sender tag] fromVim:NO];
 }
 
 #ifdef DEBUG
@@ -864,12 +862,7 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   [contentView addSubview:_workspaceView];
   [_workspaceView setUp];
 
-  NSMutableDictionary *views = @{
-      @"workspace" : _workspaceView,
-  }.mutableCopy;
-
-  CONSTRAINT(@"H:|[workspace]|");
-  CONSTRAINT(@"V:|[workspace]|");
+  [_workspaceView autoPinEdgesToSuperviewEdgesWithInsets:ALEdgeInsetsZero];
 }
 
 - (void)sendCommandToVim:(NSString *)command {
