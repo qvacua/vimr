@@ -9,7 +9,7 @@ PODS:
     - OCHamcrest (~> 4.0)
   - PureLayout (2.0.4)
   - Sparkle (1.8.0)
-  - TBCacao (0.0.2)
+  - TBCacao (0.0.3)
 
 DEPENDENCIES:
   - CocoaLumberjack (= 1.9.2)
@@ -17,14 +17,14 @@ DEPENDENCIES:
   - OCMockito (= 1.4.0)
   - PureLayout (= 2.0.4)
   - Sparkle (= 1.8.0)
-  - TBCacao (= 0.0.2)
+  - TBCacao (= 0.0.3)
 
 SPEC CHECKSUMS:
-  CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
-  OCHamcrest: af1c7c5ea345de69ea6c9c2958f65f3044e5c420
-  OCMockito: 991936bb775cc4c27f063d38f5e17b9161fbd21c
-  PureLayout: ddf4fedf7e2f5984f972bbd2205dda4fc3418347
-  Sparkle: 5eb20bb37ca21e471dab8417dee880198d905327
-  TBCacao: 81edd5849d972f1869ab640e6c6e638f765141d2
+  CocoaLumberjack: 628fca2e88ef06f7cf6817309aa405f325d9a6fa
+  OCHamcrest: 6f03ffa81d12feab872638490a44ab0a6d3aca10
+  OCMockito: 4981140c9a9ec06c31af40f636e3c0f25f27e6b2
+  PureLayout: 39ab7d09edec14750ba3982bf19126916861bba5
+  Sparkle: 3adb45d38bcdf80caf505f2b4cd693031db70835
+  TBCacao: 10235db2ae5da95ba3394ba4d46592baf61ac99b
 
-COCOAPODS: 0.35.0
+COCOAPODS: 0.36.3
