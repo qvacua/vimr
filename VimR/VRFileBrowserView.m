@@ -7,6 +7,7 @@
 * See LICENSE
 */
 
+#import <PureLayout/ALView+PureLayout.h>
 #import "VRFileBrowserOutlineView.h"
 #import "VRFileBrowserView.h"
 #import "VRUtils.h"
@@ -18,9 +19,6 @@
 #import "NSArray+VR.h"
 #import "NSTableView+VR.h"
 #import "VRWorkspaceView.h"
-
-
-#define CONSTRAIN(fmt) [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fmt options:0 metrics:nil views:views]];
 
 
 static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSComparisonResult(NSNumber *node1IsDir, NSNumber *node2IsDir) {
@@ -402,12 +400,10 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSCom
   scrollView.autohidesScrollers = YES;
   [self addSubview:scrollView];
 
-  NSDictionary *views = @{
-      @"outline" : scrollView,
-  };
-
-  CONSTRAIN(@"H:|-(-1)-[outline(>=50)]-(-1)-|");
-  CONSTRAIN(@"V:|-(-1)-[outline(>=50)]-(-1)-|");
+  [scrollView autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:-1];
+  [scrollView autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:-1];
+  [scrollView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:-1];
+  [scrollView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-1];
 }
 
 - (void)fileOutlineViewDoubleClicked:(id)sender {
