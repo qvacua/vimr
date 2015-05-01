@@ -7,11 +7,11 @@
 * See LICENSE
 */
 
+#import <MacVimFramework/MacVimFramework.h>
 #import "VRFileBrowserViewFactory.h"
 #import "VRFileItemManager.h"
 #import "VRFileBrowserOutlineView.h"
 #import "VRFileBrowserView.h"
-#import "VRWorkspaceView.h"
 
 
 @implementation VRFileBrowserViewFactory
@@ -21,14 +21,14 @@
 @autowire(userDefaults)
 @autowire(notificationCenter)
 
-- (VRFileBrowserView *)newFileBrowserViewWithWorkspaceView:(VRWorkspaceView *)workspaceView rootUrl:(NSURL *)rootUrl {
+- (VRFileBrowserView *)newFileBrowserViewWithVimController:(MMVimController *)vimController rootUrl:(NSURL *)rootUrl {
   VRFileBrowserView *view = [[VRFileBrowserView alloc] initWithRootUrl:rootUrl];
 
   view.fileItemManager = _fileItemManager;
   view.userDefaults = _userDefaults;
   view.notificationCenter = _notificationCenter;
   view.fileManager = _fileManager;
-  view.workspaceView = workspaceView;
+  view.vimController = vimController;
 
   return view;
 }

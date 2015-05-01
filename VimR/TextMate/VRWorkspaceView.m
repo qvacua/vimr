@@ -228,7 +228,7 @@ static const int qMinimumFileBrowserWidth = 100;
     _fileBrowserWidth = savedSidebarWidth;
   }
 
-  _cachedFileBrowserView = [_fileBrowserViewFactory newFileBrowserViewWithWorkspaceView:self rootUrl:self.mainWindowController.workingDirectory];
+  _cachedFileBrowserView = [_fileBrowserViewFactory newFileBrowserViewWithVimController:self rootUrl:self.mainWindowController.workingDirectory];
   [_cachedFileBrowserView setUp];
 
   if ([_userDefaults boolForKey:qDefaultShowSideBar]) {

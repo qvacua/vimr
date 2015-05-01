@@ -16,6 +16,7 @@
 #import "VRFileItemManager.h"
 #import "VROpenQuicklyWindowController.h"
 #import "VRWorkspaceViewFactory.h"
+#import "VRFileBrowserViewFactory.h"
 
 
 @implementation VRMainWindowControllerFactory
@@ -26,9 +27,13 @@
 @autowire(pluginManager)
 @autowire(notificationCenter)
 @autowire(workspaceViewFactory)
+@autowire(fileBrowserViewFactory)
 @autowire(fontManager)
 
-- (VRMainWindowController *)newMainWindowControllerWithContentRect:(CGRect)contentRect workspace:(VRWorkspace *)workspace vimController:(MMVimController *)vimController {
+- (VRMainWindowController *)newMainWindowControllerWithContentRect:(CGRect)contentRect
+                                                          workspace:(VRWorkspace *)workspace
+                                                      vimController:(MMVimController *)vimController {
+
   VRMainWindowController *mainWinController = [[VRMainWindowController alloc] initWithContentRect:contentRect];
   mainWinController.workspace = workspace;
   mainWinController.vimController = vimController;
@@ -36,6 +41,7 @@
   mainWinController.openQuicklyWindowController = _openQuicklyWindowController;
   mainWinController.userDefaults = _userDefaults;
   mainWinController.workspaceViewFactory = _workspaceViewFactory;
+  mainWinController.fileBrowserViewFactory = _fileBrowserViewFactory;
   mainWinController.fontManager = _fontManager;
 
   mainWinController.vimView = vimController.vimView;

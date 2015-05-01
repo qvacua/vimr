@@ -26,6 +26,10 @@
 #import "NSArray+VR.h"
 #import "VRPreviewWindowController.h"
 #import "VRWorkspaceViewFactory.h"
+#import "QVWorkspace.h"
+#import "VRFileBrowserViewFactory.h"
+#import "QVToolbarButtonDelegate.h"
+#import "QVToolbar.h"
 
 
 const int qMainWindowBorderThickness = 22;
@@ -46,7 +50,8 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   BOOL _needsToResizeVimView;
   BOOL _windowOriginShouldMoveToKeepOnScreen;
 
-  VRWorkspaceView *_workspaceView;
+  QVWorkspace *_workspaceView;
+  VRFileBrowserView *_fileBrowserView;
 }
 
 #pragma mark Public
@@ -60,7 +65,7 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 }
 
 - (void)updateWorkingDirectory {
-  _workspaceView.fileBrowserView.rootUrl = _workspace.workingDirectory;
+  _fileBrowserView.rootUrl = _workspace.workingDirectory;
 }
 
 - (void)cleanUpAndClose {
@@ -70,9 +75,10 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 
   [_previewWindowController close];
 
+  // FIXME: where is the bar?! trbl?
   if (self.window.isKeyWindow) {
     [_userDefaults setObject:NSStringFromRect(self.window.frame) forKey:qMainWindowFrameAutosaveName];
-    [_userDefaults setFloat:(float) _workspaceView.fileBrowserWidth forKey:qSidebarWidthAutosaveName];
+    [_userDefaults setFloat:(float) _workspaceView.leftBar.dimension forKey:qSidebarWidthAutosaveName];
   }
 
   [self close];
@@ -250,8 +256,6 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 
 #ifdef DEBUG
 - (IBAction)debug1Action:(id)sender {
-  [_workspaceView setFileBrowserWidth:400];
-
 //  DDLogDebug(@"tabs: %@", _vimController.tabs);
 //  DDLogDebug(@"buffers: %@", _vimController.buffers);
 //  NSMenu *menu = _vimController.mainMenu;
@@ -549,22 +553,24 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 }
 
 - (void)controller:(MMVimController *)controller setVimState:(NSDictionary *)vimState data:(NSData *)data {
-  if (_workspaceView.syncWorkspaceWithPwd) {
-    NSString *pwdPath = _vimController.vimState[@"pwd"];
-    if (![_workspace.workingDirectory.path isEqualToString:pwdPath]) {
-      [_workspace updateWorkingDirectoryToUrl:[[NSURL alloc] initFileURLWithPath:pwdPath]];
-    }
-  }
+  // FIXME
+//  if (_workspaceView.syncWorkspaceWithPwd) {
+//    NSString *pwdPath = _vimController.vimState[@"pwd"];
+//    if (![_workspace.workingDirectory.path isEqualToString:pwdPath]) {
+//      [_workspace updateWorkingDirectoryToUrl:[[NSURL alloc] initFileURLWithPath:pwdPath]];
+//    }
+//  }
 }
 
 - (void)controller:(MMVimController *)controller setWindowTitle:(NSString *)title data:(NSData *)data {
+  // FIXME
   [self setWindowTitleToCurrentBuffer];
 
-  if (!_vimController.currentBuffer.fileName) {
-    [_workspaceView setUrlOfPathControl:_workspace.workingDirectory];
-  } else {
-    [_workspaceView setUrlOfPathControl:[NSURL fileURLWithPath:_vimController.currentBuffer.fileName]];
-  }
+//  if (!_vimController.currentBuffer.fileName) {
+//    [_workspaceView setUrlOfPathControl:_workspace.workingDirectory];
+//  } else {
+//    [_workspaceView setUrlOfPathControl:[NSURL fileURLWithPath:_vimController.currentBuffer.fileName]];
+//  }
 }
 
 /**
@@ -856,11 +862,14 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   _vimView.tabBarControl.styleNamed = @"Metal";
 
   _workspaceView = [_workspaceViewFactory newWorkspaceViewWithFrame:CGRectZero vimView:_vimView];
-  _workspaceView.translatesAutoresizingMaskIntoConstraints = NO;
 
-  NSView *contentView = self.window.contentView;
-  [contentView addSubview:_workspaceView];
-  [_workspaceView setUp];
+  // FIXME: nil workspace view
+  _fileBrowserView = [_fileBrowserViewFactory newFileBrowserViewWithVimController:_vimController rootUrl:self.workingDirectory];
+  [_fileBrowserView setUp];
+
+  [_workspaceView addToolView:_fileBrowserView displayName:@"Files" location:QVToolbarLocationLeft];
+
+  [self.window.contentView addSubview:_workspaceView];
 
   [_workspaceView autoPinEdgesToSuperviewEdgesWithInsets:ALEdgeInsetsZero];
 }
@@ -932,9 +941,10 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 - (void)updateBuffersInTabs {
   [_workspace updateBuffersInTabs];
 
-  if (_workspaceView.syncWorkspaceWithPwd) {
-    return;
-  }
+  // FIXME
+//  if (_workspaceView.syncWorkspaceWithPwd) {
+//    return;
+//  }
 
   [_workspace updateWorkingDirectoryToCommonParent];
 }
@@ -967,7 +977,7 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 }
 
 - (BOOL)fileBrowserVisible {
-  return _workspaceView.fileBrowserView != nil;
+  return _workspaceView.leftBar.hasActiveTool;
 }
 
 - (NSData *)vimArgsAsDataFromUrl:(NSURL *)url mode:(NSUInteger)mode {
@@ -986,8 +996,9 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 - (CGSize)uncorrectedVimViewSizeForWinFrameRect:(CGRect)winFrameRect {
   CGSize winContentSize = [self.window contentRectForFrameRect:winFrameRect].size;
 
-  winContentSize.width = winContentSize.width - _workspaceView.sidebarAndDividerWidth;
-  winContentSize.height = winContentSize.height - (_workspaceView.showStatusBar ? (qMainWindowBorderThickness + 1) : 0);
+  // FIXME
+  winContentSize.width = winContentSize.width - _workspaceView.leftBar.dimension;
+  winContentSize.height = winContentSize.height;// - (_workspaceView.showStatusBar ? (qMainWindowBorderThickness + 1) : 0);
 
   return winContentSize;
 }
@@ -996,9 +1007,10 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 * Resize code
 */
 - (CGSize)winContentSizeForVimViewSize:(CGSize)vimViewSize {
+  // FIXME
   return CGSizeMake(
-      _workspaceView.sidebarAndDividerWidth + vimViewSize.width,
-      vimViewSize.height + (_workspaceView.showStatusBar ? (qMainWindowBorderThickness + 1) : 0)
+      _workspaceView.leftBar.dimension + vimViewSize.width,
+      vimViewSize.height// + (_workspaceView.showStatusBar ? (qMainWindowBorderThickness + 1) : 0)
   );
 }
 
@@ -1133,8 +1145,9 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   winFrameRect.size = [self winContentSizeForVimViewSize:_vimView.minSize];
   self.window.minSize = [self.window frameRectForContentRect:winFrameRect].size;
 
+  // FIXME
   // We also update the increment of the workspace view, because it could be that the font size has changed
-  _workspaceView.dragIncrement = (NSUInteger) _vimView.textView.cellSize.width;
+  _workspaceView.leftBar.dragIncrement = (NSUInteger) _vimView.textView.cellSize.width;
 }
 
 @end

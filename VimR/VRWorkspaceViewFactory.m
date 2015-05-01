@@ -8,9 +8,9 @@
 */
 
 #import <MacVimFramework/MacVimFramework.h>
+#import <PureLayout/ALView+PureLayout.h>
 #import "VRWorkspaceViewFactory.h"
-#import "VRFileBrowserViewFactory.h"
-#import "VRWorkspaceView.h"
+#import "QVWorkspace.h"
 
 
 @implementation VRWorkspaceViewFactory
@@ -18,12 +18,10 @@
 @autowire(userDefaults)
 @autowire(fileBrowserViewFactory)
 
-- (VRWorkspaceView *)newWorkspaceViewWithFrame:(NSRect)frame vimView:(MMVimView *)vimView {
-  VRWorkspaceView *view = [[VRWorkspaceView alloc] initWithFrame:frame];
+- (QVWorkspace *)newWorkspaceViewWithFrame:(NSRect)frame vimView:(MMVimView *)vimView {
+  QVWorkspace *view = [[QVWorkspace alloc] initForAutoLayout];
 
-  view.fileBrowserViewFactory = _fileBrowserViewFactory;
-  view.userDefaults = _userDefaults;
-  view.vimView = vimView;
+  view.centerView = vimView;
 
   return view;
 }
