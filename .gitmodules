@@ -7,3 +7,6 @@
 [submodule "StandardPlugins/ocdiscount"]
 	path = StandardPlugins/ocdiscount
 	url = git://github.com/qvacua/ocdiscount.git
+[submodule "qvworkspace"]
+	path = qvworkspace
+	url = https://github.com/qvacua/qvworkspace.git
