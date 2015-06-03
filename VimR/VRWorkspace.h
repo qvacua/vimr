@@ -31,6 +31,8 @@
 @property (nonatomic) VRMainWindowController *mainWindowController;
 @property (nonatomic) NSURL *workingDirectory;
 
+@property (nonatomic) BOOL syncWorkspaceWithPwd;
+
 #pragma mark Public
 - (void)ensureUrlsAreVisible:(NSArray *)urls;
 - (BOOL)isOnlyWorkspace;

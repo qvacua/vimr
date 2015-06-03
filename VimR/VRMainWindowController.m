@@ -131,6 +131,7 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 }
 
 - (void)forceRedrawVimView {
+  DDLogError(@"forcing redraw");
   [self sendCommandToVim:@":redraw!"];
 }
 
@@ -254,6 +255,11 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   [_vimView selectTabWithIndex:(int) [sender tag] fromVim:NO];
 }
 
+- (IBAction)toggleSyncWorkspaceWithPwd:(id)sender {
+  _workspace.syncWorkspaceWithPwd = ! _workspace.syncWorkspaceWithPwd;
+  [_fileBrowserView reload];
+}
+
 #ifdef DEBUG
 - (IBAction)debug1Action:(id)sender {
 //  DDLogDebug(@"tabs: %@", _vimController.tabs);
@@ -311,6 +317,12 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 - (void)removeUserDefaultsObservation {
   [_userDefaults removeObserver:self forKeyPath:qDefaultAutoSaveOnFrameDeactivation];
   [_userDefaults removeObserver:self forKeyPath:qDefaultAutoSaveOnCursorHold];
+}
+
+#pragma mark QVToolbarDelegate
+- (void)toolbarChangedDimension:(QVToolbar *)toolbar {
+  DDLogError(@"toolbar changed!");
+  [self forceRedrawVimView];
 }
 
 #pragma mark MMViewDelegate informal protocol
@@ -492,7 +504,8 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 }
 
 - (void)controller:(MMVimController *)controller openWindowWithData:(NSData *)data {
-  self.window.acceptsMouseMovedEvents = YES; // Vim wants to have mouse move events
+  // FIXME find out why Vim wants to get the mouse events!
+//  self.window.acceptsMouseMovedEvents = YES; // Vim wants to have mouse move events
 
   [self updateResizeConstraints];
 
@@ -553,13 +566,12 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 }
 
 - (void)controller:(MMVimController *)controller setVimState:(NSDictionary *)vimState data:(NSData *)data {
-  // FIXME
-//  if (_workspaceView.syncWorkspaceWithPwd) {
-//    NSString *pwdPath = _vimController.vimState[@"pwd"];
-//    if (![_workspace.workingDirectory.path isEqualToString:pwdPath]) {
-//      [_workspace updateWorkingDirectoryToUrl:[[NSURL alloc] initFileURLWithPath:pwdPath]];
-//    }
-//  }
+  if (_workspace.syncWorkspaceWithPwd) {
+    NSString *pwdPath = _vimController.vimState[@"pwd"];
+    if (![_workspace.workingDirectory.path isEqualToString:pwdPath]) {
+      [_workspace updateWorkingDirectoryToUrl:[[NSURL alloc] initFileURLWithPath:pwdPath]];
+    }
+  }
 }
 
 - (void)controller:(MMVimController *)controller setWindowTitle:(NSString *)title data:(NSData *)data {
@@ -862,6 +874,7 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   _vimView.tabBarControl.styleNamed = @"Metal";
 
   _workspaceView = [_workspaceViewFactory newWorkspaceViewWithFrame:CGRectZero vimView:_vimView];
+  _workspaceView.leftBar.delegate = self;
 
   // FIXME: nil workspace view
   _fileBrowserView = [_fileBrowserViewFactory newFileBrowserViewWithVimController:_vimController rootUrl:self.workingDirectory];
@@ -941,10 +954,9 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 - (void)updateBuffersInTabs {
   [_workspace updateBuffersInTabs];
 
-  // FIXME
-//  if (_workspaceView.syncWorkspaceWithPwd) {
-//    return;
-//  }
+  if (_workspace.syncWorkspaceWithPwd) {
+    return;
+  }
 
   [_workspace updateWorkingDirectoryToCommonParent];
 }

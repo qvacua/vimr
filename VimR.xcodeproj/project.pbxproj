@@ -309,6 +309,7 @@
 		1929B5FC0CACD06A926BB858 /* VROpenFilesInFrontmostWindowCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VROpenFilesInFrontmostWindowCommand.m; sourceTree = "<group>"; };
 		1929B60202DAE063135DD32C /* VRLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRLog.h; sourceTree = "<group>"; };
 		1929B610BD09830F426CB915 /* VRUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRUserDefaults.h; sourceTree = "<group>"; };
+		1929B625D1EA6CD6EFF958D6 /* QVToolbarDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QVToolbarDelegate.h; path = qvworkspace/Workspace/QVToolbarDelegate.h; sourceTree = "<group>"; };
 		1929B6422375B345DAA4E35A /* VRCppUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VRCppUtils.mm; sourceTree = "<group>"; };
 		1929B68C34C504CB9E6CF69B /* VROpenFilesInNewWindowCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VROpenFilesInNewWindowCommand.m; sourceTree = "<group>"; };
 		1929B68FDCF00DC74509A5DB /* VRInactiveTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRInactiveTableView.h; sourceTree = "<group>"; };
@@ -749,6 +750,7 @@
 				4B6BDCE61AF36DBE0019DB59 /* QVWorkspace.h */,
 				4B6BDCE71AF36DBE0019DB59 /* QVWorkspace.m */,
 				4B6BDCE81AF36DBE0019DB59 /* QVWorkspaceDelegate.h */,
+				1929B625D1EA6CD6EFF958D6 /* QVToolbarDelegate.h */,
 			);
 			name = QVWorkspace;
 			sourceTree = "<group>";
