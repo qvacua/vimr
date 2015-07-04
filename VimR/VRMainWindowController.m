@@ -10,6 +10,7 @@
 #import <PSMTabBarControl/PSMTabBarControl.h>
 #import <MacVimFramework/MacVimFramework.h>
 #import <PureLayout/ALView+PureLayout.h>
+#import "QVToolbarDelegate.h"
 #import "VRMainWindowController.h"
 #import "VRLog.h"
 #import "VRAlert.h"
