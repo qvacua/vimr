@@ -783,6 +783,10 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
   [self forceRedrawVimView];
 }
 
+- (void)windowDidChangeBackingProperties:(NSNotification *)notification {
+  [self forceRedrawVimView];
+}
+
 /**
 * Resize code
 */
