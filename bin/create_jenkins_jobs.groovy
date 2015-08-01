@@ -1,8 +1,8 @@
-# Plugins to install
-# Clone Workspace SCM Plug-in
-# Environment Injector Plugin
-# Job DSL
-# Publish Over FTP (we don't create the upload jobs here)
+// Plugins to install
+// Clone Workspace SCM Plug-in
+// Environment Injector Plugin
+// Job DSL
+// Publish Over FTP (we don't create the upload jobs here)
 
 def vimrReleaseBuild = 'vimr_release_build'
 def vimrReleaseUpload = 'vimr_release_upload'
