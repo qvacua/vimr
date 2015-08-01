@@ -70,7 +70,8 @@ NSString *const qOpenInHorizontalSplitDescription = @"Opens in a horizontal spli
 
   _defaultOpenModeButton = [[NSPopUpButton alloc] initWithFrame:CGRectZero pullsDown:NO];
   _defaultOpenModeButton.translatesAutoresizingMaskIntoConstraints = NO;
-  [_defaultOpenModeButton setAction:@selector(defaultOpenBehaviorAction:)];
+  _defaultOpenModeButton.target = self;
+  _defaultOpenModeButton.action = @selector(defaultOpenBehaviorAction:);
   [_defaultOpenModeButton.menu addItemWithTitle:@"Open in a new tab" action:NULL keyEquivalent:@""];
   [_defaultOpenModeButton.menu addItemWithTitle:@"Open in the current tab" action:NULL keyEquivalent:@""];
   [_defaultOpenModeButton.menu addItemWithTitle:@"Open in a vertical split" action:NULL keyEquivalent:@""];
