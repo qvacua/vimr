@@ -6,21 +6,21 @@
         <description>Most recent changes with links to updates for VimR.</description>
         <language>en</language>
         <item>
-            <title>Version 0.7.1</title>
+            <title>Version 0.7.2</title>
             <description>
                 <ul>
-<li>Internal improvements of the command line tool (<a href="https://github.com/qvacua/vimr/pull/170">#170</a>)</li>
-<li>Bugfix: some problem with CJK keyboard layout (<a href="https://github.com/qvacua/vimr/pull/176">#176</a>)</li>
+<li>Bugfix: Moving editor window from one screen to another, all content disappears (<a href="https://github.com/qvacua/vimr/issues/187">#186</a>)</li>
+<li>Bugfix: Cannot change default opening behavior (<a href="https://github.com/qvacua/vimr/pull/189">#189</a>)</li>
 </ul>
             </description>
             <sparkle:releaseNotesLink>
                 http://vimr.org/release-notes.html
             </sparkle:releaseNotesLink>
-            <pubDate>2015-03-31 22:49:59 +0000</pubDate>
-            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.7.1-29/VimR-0.7.1.tar.bz2"
-                       sparkle:version="29"
-                       sparkle:shortVersionString="0.7.1"
-                       sparkle:dsaSignature="MCwCFAFjguaxCcJN/UvFs999peZspnz1AhR4+jJfC2dQKghn2K3oqyf9yJP8Rg=="
+            <pubDate>2015-08-01 17:54:11 +0000</pubDate>
+            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.7.2-30/VimR-0.7.2.tar.bz2"
+                       sparkle:version="30"
+                       sparkle:shortVersionString="0.7.2"
+                       sparkle:dsaSignature="MCwCFEkXHio/3berBr1GIvB8ooX76EL4AhQabm+cSZ7oB/rbueO6lwIG5KQpYQ=="
                        length="8691712"
                        type="application/octet-stream"/>
         </item>
