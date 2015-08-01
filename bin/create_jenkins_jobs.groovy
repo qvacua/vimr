@@ -9,41 +9,25 @@ def vimrReleaseUpload = 'vimr_release_upload'
 def vimrSnapshotBuild = 'vimr_snapshot_build'
 def vimrSnapshotUpload = 'vimr_snapshot_upload'
 
-
 def commonConfig(delegate) {
-  def commonConfigClosure = {
+  delegate.with({
+    logRotator(-1, 4, -1, -1)
+
     environmentVariables { env('PATH', '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin') }
 
     scm {
       git {
         remote { url 'https://github.com/qvacua/vimr.git' }
         branch '$branch_to_build'
+
         shallowClone true
-
-        configure { git ->
-          def submoduleCfg = git / 'submoduleCfg'
-          submoduleCfg.@class = 'list'
-
-          git / 'extensions' / 'hudson.plugins.git.extensions.impl.SubmoduleOption' {
-              'disableSubmodules' false
-              'recursiveSubmodules' true
-              'trackingSubmodules' false
-          }
-        }
+        recursiveSubmodules true
       }
     }
-  }
-
-  commonConfigClosure.resolveStrategy = Closure.DELEGATE_FIRST
-  commonConfigClosure.delegate = delegate
-  commonConfigClosure()
+  })
 }
 
-job {
-  name vimrReleaseBuild
-
-  logRotator(-1, 4, -1, -1)
-  
+freeStyleJob(vimrReleaseBuild) {
   parameters {
     stringParam('branch_to_build', 'master', 'Branch to build')
   }
@@ -66,11 +50,7 @@ popd
   }
 }
 
-job {
-  name vimrSnapshotBuild
-  
-  logRotator(-1, 4, -1, -1)
-  
+freeStyleJob(vimrSnapshotBuild) {
   parameters {
     stringParam('branch_to_build', 'develop', 'Branch to build')
   }
