@@ -659,7 +659,7 @@ static NSString *const qMainWindowFrameAutosaveName = @"main-window-frame-autosa
 }
 
 - (void)controller:(MMVimController *)controller setScrollbarThumbValue:(float)value proportion:(float)proportion identifier:(int32_t)identifier data:(NSData *)data {
-  DDLogDebug(@"NOOP");
+  [self.vimView setScrollbarThumbValue:value proportion:proportion identifier:identifier];
 }
 
 - (void)controller:(MMVimController *)controller tabDraggedWithData:(NSData *)data {
