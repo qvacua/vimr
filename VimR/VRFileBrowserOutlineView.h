@@ -40,6 +40,8 @@
 - (void)actionMoveUp;
 - (void)actionScrollDownOneLine;
 - (void)actionScrollUpOneLine;
+- (void)actionScrollDownOneScreen;
+- (void)actionScrollUpOneScreen;
 - (void)actionFocusVimView;
 - (BOOL)actionCanActOnNode;
 - (BOOL)actionNodeIsDirectory;

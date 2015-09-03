@@ -17,5 +17,7 @@
 - (void)moveSelectionToTop;
 - (void)scrollDownOneLine;
 - (void)scrollUpOneLine;
+- (void)scrollDownOneScreen;
+- (void)scrollUpOneScreen;
 
 @end

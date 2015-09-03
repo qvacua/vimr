@@ -261,6 +261,13 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSCom
   [_fileOutlineView scrollUpOneLine];
 }
 
+- (void)actionScrollDownOneScreen {
+  [_fileOutlineView scrollDownOneScreen];
+}
+- (void)actionScrollUpOneScreen {
+  [_fileOutlineView scrollUpOneScreen];
+}
+
 - (void)actionFocusVimView {
   [self.window makeFirstResponder:[self.window.windowController vimView].textView];
 }

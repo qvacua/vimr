@@ -72,4 +72,29 @@
   }
 }
 
+- (void)scrollDownOneScreen {
+  NSRange vr = [self visibleRange];
+  NSInteger maxIndex = self.numberOfRows - 1;
+  NSUInteger mustBeVisible = MIN(vr.location + 2*vr.length - 1, maxIndex);
+
+  NSUInteger willBeSelected = mustBeVisible - vr.length + 1;
+  if (willBeSelected > self.selectedRow) {
+    [self selectRowIndexes:[NSIndexSet indexSetWithIndex:willBeSelected] byExtendingSelection:NO];
+  }
+  [self scrollRowToVisible:mustBeVisible];
+}
+
+- (void)scrollUpOneScreen {
+  NSRange vr = [self visibleRange];
+  // The difference in the second argument here might become negative. To avoid
+  // underflows of NSUInteger, we cast to NSInteger here.
+  NSInteger mustBeVisible = MAX(0, (NSInteger)vr.location - (NSInteger)vr.length);
+
+  NSUInteger willBeSelected = mustBeVisible + vr.length - 1;
+  if (willBeSelected < self.selectedRow) {
+    [self selectRowIndexes:[NSIndexSet indexSetWithIndex:willBeSelected] byExtendingSelection:NO];
+  }
+  [self scrollRowToVisible:mustBeVisible];
+}
+
 @end
