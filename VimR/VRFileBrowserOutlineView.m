@@ -217,23 +217,27 @@ static inline BOOL IsPrintableAscii(unichar key) {
     case 'e':
       if (modifierFlags & NSControlKeyMask) {
         [self.actionDelegate actionScrollDownOneLine];
+        return YES;
       }
-      return YES;
+      return NO;
     case 'y':
       if (modifierFlags & NSControlKeyMask) {
         [self.actionDelegate actionScrollUpOneLine];
+        return YES;
       }
-      return YES;
+      return NO;
     case 'f':
       if (modifierFlags & NSControlKeyMask) {
         [self.actionDelegate actionScrollDownOneScreen];
+        return YES;
       }
-      return YES;
+      return NO;
     case 'b':
       if (modifierFlags & NSControlKeyMask) {
         [self.actionDelegate actionScrollUpOneScreen];
+        return YES;
       }
-      return YES;
+      return NO;
     default:
       return NO;
   }
