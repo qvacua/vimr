@@ -44,4 +44,32 @@
   [self scrollRowToVisible:0];
 }
 
+- (NSRange)visibleRange {
+  NSRect visibleRect = [self visibleRect];
+  return [self rowsInRect:visibleRect];
+}
+
+- (void)scrollDownOneLine {
+  NSRange vr = [self visibleRange];
+  NSInteger maxIndex = self.numberOfRows - 1;
+  NSUInteger mustBeVisible = vr.location + vr.length;
+  if (mustBeVisible <= maxIndex ) {
+    // So we will actually scroll down
+    NSUInteger willBeSelected = MAX(self.selectedRow, vr.location + 1);
+    [self selectRowIndexes:[NSIndexSet indexSetWithIndex:willBeSelected] byExtendingSelection:NO];
+    [self scrollRowToVisible:mustBeVisible];
+  }
+}
+
+- (void)scrollUpOneLine {
+  NSRange vr = [self visibleRange];
+  NSInteger mustBeVisible = vr.location - 1;
+  if (mustBeVisible >= 0) {
+    // So we will actually scroll up
+    NSUInteger willBeSelected = MIN(self.selectedRow , vr.location + vr.length - 2);
+    [self selectRowIndexes:[NSIndexSet indexSetWithIndex:willBeSelected] byExtendingSelection:NO];
+    [self scrollRowToVisible:mustBeVisible];
+  }
+}
+
 @end

@@ -38,6 +38,8 @@
 - (void)actionMoveToBottom;
 - (void)actionMoveToTop;
 - (void)actionMoveUp;
+- (void)actionScrollDownOneLine;
+- (void)actionScrollUpOneLine;
 - (void)actionFocusVimView;
 - (BOOL)actionCanActOnNode;
 - (BOOL)actionNodeIsDirectory;

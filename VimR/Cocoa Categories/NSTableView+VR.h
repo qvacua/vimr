@@ -15,5 +15,7 @@
 - (void)moveSelectionByDelta:(NSInteger)delta;
 - (void)moveSelectionToBottom;
 - (void)moveSelectionToTop;
+- (void)scrollDownOneLine;
+- (void)scrollUpOneLine;
 
 @end
