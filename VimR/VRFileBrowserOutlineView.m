@@ -11,6 +11,7 @@
 #import "VRUtils.h"
 
 
+static const unichar cZero = '\0'; // marks an 'undefined last key'
 static const int qEscCharacter = '\033';
 
 
@@ -39,6 +40,7 @@ static inline BOOL IsPrintableAscii(unichar key) {
 @implementation VRFileBrowserOutlineView {
   NSString *_lineEditingString;
   NSString *_lastSearch;
+  unichar _lastKey;
 }
 
 #pragma mark NSView
@@ -47,6 +49,7 @@ static inline BOOL IsPrintableAscii(unichar key) {
   RETURN_NIL_WHEN_NOT_SELF
 
   _lineEditingString = @"";
+  _lastKey = cZero;
 
   return self;
 }
@@ -103,6 +106,11 @@ static inline BOOL IsPrintableAscii(unichar key) {
       [self.actionDelegate actionIgnore];
     }
   }
+
+  // So we are done processing the keyDown event and performed our actions.
+  // We now remember the last key (useful for the 'gg' movement to the top of
+  // the view.
+  _lastKey = key;
 }
 
 - (BOOL)resignFirstResponder {
@@ -194,6 +202,15 @@ static inline BOOL IsPrintableAscii(unichar key) {
     case 'm':
       _actionMode = VRFileBrowserActionModeMenu;
       [self.actionDelegate updateStatusMessage:@"Actions: (a)dd (m)ove (d)elete (c)opy"];
+      return YES;
+    case 'g':
+      if (_lastKey == 'g') {
+        _lastKey = cZero;
+        [self.actionDelegate actionMoveToTop];
+      }
+      return YES;
+    case 'G':
+      [self.actionDelegate actionMoveToBottom];
       return YES;
     default:
       return NO;

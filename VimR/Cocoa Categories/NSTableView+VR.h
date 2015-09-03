@@ -13,5 +13,7 @@
 @interface NSTableView (VR)
 
 - (void)moveSelectionByDelta:(NSInteger)delta;
+- (void)moveSelectionToBottom;
+- (void)moveSelectionToTop;
 
 @end

@@ -29,4 +29,19 @@
   [self scrollRowToVisible:targetIndex];
 }
 
+- (void)moveSelectionToBottom {
+  NSInteger targetIndex = self.numberOfRows - 1;
+  if (targetIndex < 0) {
+    return;
+  }
+
+  [self selectRowIndexes:[NSIndexSet indexSetWithIndex:targetIndex] byExtendingSelection:NO];
+  [self scrollRowToVisible:targetIndex];
+}
+
+- (void)moveSelectionToTop {
+  [self selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+  [self scrollRowToVisible:0];
+}
+
 @end
