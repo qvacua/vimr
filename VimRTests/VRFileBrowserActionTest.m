@@ -86,6 +86,37 @@ NSEvent *KeyDownEvent(unichar key) {
   [verify(actionDelegate) actionOpenDefault];
 }
 
+- (void)test_G_ActionShouldMoveToBottom {
+  [fileOutlineView keyDown:KeyDownEvent('G')];
+  [verify(actionDelegate) actionMoveToBottom];
+}
+
+- (void)test_gg_ActionShouldMoveToTop {
+  [fileOutlineView keyDown:KeyDownEvent('g')];
+  [fileOutlineView keyDown:KeyDownEvent('g')];
+  [verify(actionDelegate) actionMoveToTop];
+}
+
+- (void)test_ctrlE_ActionShouldScrollDownOneLine {
+  [fileOutlineView keyDown:KeyDownEventWithModifiers('e', NSControlKeyMask)];
+  [verify(actionDelegate) actionScrollDownOneLine];
+}
+
+- (void)test_ctrlY_ActionShouldScrollUpOneLine {
+  [fileOutlineView keyDown:KeyDownEventWithModifiers('y', NSControlKeyMask)];
+  [verify(actionDelegate) actionScrollUpOneLine];
+}
+
+- (void)test_ctrlF_ActionShouldScrollDownOneScreen {
+  [fileOutlineView keyDown:KeyDownEventWithModifiers('f', NSControlKeyMask)];
+  [verify(actionDelegate) actionScrollDownOneScreen];
+}
+
+- (void)test_ctrlB_ActionShouldScrollUpOneScreen {
+  [fileOutlineView keyDown:KeyDownEventWithModifiers('b', NSControlKeyMask)];
+  [verify(actionDelegate) actionScrollUpOneScreen];
+}
+
 - (void)test_down_arrow_ActionShouldMoveDown {
     [fileOutlineView keyDown:KeyDownEvent(NSDownArrowFunctionKey)];
     [verify(actionDelegate) actionMoveDown];
