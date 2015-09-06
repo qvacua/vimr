@@ -35,7 +35,13 @@
 - (void)actionSearch:(NSString *)string;
 - (void)actionReverseSearch:(NSString *)string;
 - (void)actionMoveDown;
+- (void)actionMoveToBottom;
+- (void)actionMoveToTop;
 - (void)actionMoveUp;
+- (void)actionScrollDownOneLine;
+- (void)actionScrollUpOneLine;
+- (void)actionScrollDownOneScreen;
+- (void)actionScrollUpOneScreen;
 - (void)actionFocusVimView;
 - (BOOL)actionCanActOnNode;
 - (BOOL)actionNodeIsDirectory;

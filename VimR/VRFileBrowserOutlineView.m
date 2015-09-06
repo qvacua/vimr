@@ -11,6 +11,7 @@
 #import "VRUtils.h"
 
 
+static const unichar cZero = '\0'; // marks an 'undefined last key'
 static const int qEscCharacter = '\033';
 
 
@@ -39,6 +40,7 @@ static inline BOOL IsPrintableAscii(unichar key) {
 @implementation VRFileBrowserOutlineView {
   NSString *_lineEditingString;
   NSString *_lastSearch;
+  unichar _lastKey;
 }
 
 #pragma mark NSView
@@ -47,6 +49,7 @@ static inline BOOL IsPrintableAscii(unichar key) {
   RETURN_NIL_WHEN_NOT_SELF
 
   _lineEditingString = @"";
+  _lastKey = cZero;
 
   return self;
 }
@@ -58,6 +61,8 @@ static inline BOOL IsPrintableAscii(unichar key) {
   if (characters.length == 1) {
     key = [characters characterAtIndex:0];
   }
+
+  NSEventModifierFlags modifierFlags = [event modifierFlags];
 
   if (self.actionMode != VRFileBrowserActionModeNormal && key == qEscCharacter) {
     [self.actionDelegate updateStatusMessage:@"Type <Esc> again to focus text"];
@@ -94,7 +99,7 @@ static inline BOOL IsPrintableAscii(unichar key) {
         break;
     }
   } else {
-    if ([self processKey:key]) {
+    if ([self processKey:key modifierFlags:modifierFlags]) {
       if (self.lineEditing) {
         _lineEditingString = @"";
         [self updateLineEditingStatusMessage];
@@ -103,6 +108,11 @@ static inline BOOL IsPrintableAscii(unichar key) {
       [self.actionDelegate actionIgnore];
     }
   }
+
+  // So we are done processing the keyDown event and performed our actions.
+  // We now remember the last key (useful for the 'gg' movement to the top of
+  // the view.
+  _lastKey = key;
 }
 
 - (BOOL)resignFirstResponder {
@@ -116,10 +126,10 @@ static inline BOOL IsPrintableAscii(unichar key) {
 }
 
 #pragma mark Key Processing
-- (BOOL)processKey:(unichar)key {
+- (BOOL)processKey:(unichar)key modifierFlags:(NSEventModifierFlags)modifierFlags {
   switch (self.actionMode) {
     case VRFileBrowserActionModeNormal:
-      return [self processKeyModeNormal:key];
+      return [self processKeyModeNormal:key modifierFlags:modifierFlags];
     case VRFileBrowserActionModeMenu:
       return [self processKeyModeMenu:key];
     case VRFileBrowserActionModeConfirmation:
@@ -129,7 +139,7 @@ static inline BOOL IsPrintableAscii(unichar key) {
   }
 }
 
-- (BOOL)processKeyModeNormal:(unichar)key {
+- (BOOL)processKeyModeNormal:(unichar)key modifierFlags:(NSEventModifierFlags)modifierFlags {
   [self.actionDelegate updateStatusMessage:@""];
   switch (key) {
     case NSLeftArrowFunctionKey:
@@ -195,6 +205,39 @@ static inline BOOL IsPrintableAscii(unichar key) {
       _actionMode = VRFileBrowserActionModeMenu;
       [self.actionDelegate updateStatusMessage:@"Actions: (a)dd (m)ove (d)elete (c)opy"];
       return YES;
+    case 'g':
+      if (_lastKey == 'g') {
+        _lastKey = cZero;
+        [self.actionDelegate actionMoveToTop];
+      }
+      return YES;
+    case 'G':
+      [self.actionDelegate actionMoveToBottom];
+      return YES;
+    case 'e':
+      if (modifierFlags & NSControlKeyMask) {
+        [self.actionDelegate actionScrollDownOneLine];
+        return YES;
+      }
+      return NO;
+    case 'y':
+      if (modifierFlags & NSControlKeyMask) {
+        [self.actionDelegate actionScrollUpOneLine];
+        return YES;
+      }
+      return NO;
+    case 'f':
+      if (modifierFlags & NSControlKeyMask) {
+        [self.actionDelegate actionScrollDownOneScreen];
+        return YES;
+      }
+      return NO;
+    case 'b':
+      if (modifierFlags & NSControlKeyMask) {
+        [self.actionDelegate actionScrollUpOneScreen];
+        return YES;
+      }
+      return NO;
     default:
       return NO;
   }

@@ -241,8 +241,31 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSCom
   [_fileOutlineView moveSelectionByDelta:1];
 }
 
+- (void)actionMoveToBottom {
+  [_fileOutlineView moveSelectionToBottom];
+}
+
+- (void)actionMoveToTop {
+  [_fileOutlineView moveSelectionToTop];
+}
+
 - (void)actionMoveUp {
   [_fileOutlineView moveSelectionByDelta:-1];
+}
+
+- (void)actionScrollDownOneLine {
+  [_fileOutlineView scrollDownOneLine];
+}
+
+- (void)actionScrollUpOneLine {
+  [_fileOutlineView scrollUpOneLine];
+}
+
+- (void)actionScrollDownOneScreen {
+  [_fileOutlineView scrollDownOneScreen];
+}
+- (void)actionScrollUpOneScreen {
+  [_fileOutlineView scrollUpOneScreen];
 }
 
 - (void)actionFocusVimView {
