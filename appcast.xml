@@ -6,21 +6,21 @@
         <description>Most recent changes with links to updates for VimR.</description>
         <language>en</language>
         <item>
-            <title>Version 0.7.3</title>
+            <title>Version 0.8.0</title>
             <description>
                 <ul>
-<li>Bugfix: Scrollbar does not get updated (<a href="https://github.com/qvacua/vimr/issues/191">#191</a>)</li>
+<li>More vi-movements in the file browser (<a href="https://github.com/qvacua/vimr/pull/195">#195</a>)</li>
 </ul>
             </description>
             <sparkle:releaseNotesLink>
                 http://vimr.org/release-notes.html
             </sparkle:releaseNotesLink>
-            <pubDate>2015-08-07 17:43:45 +0000</pubDate>
-            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.7.3-31/VimR-0.7.3.tar.bz2"
-                       sparkle:version="31"
-                       sparkle:shortVersionString="0.7.3"
-                       sparkle:dsaSignature="MC0CFGRD+G3BFzHoK/Y9ykqDCzHBpr8qAhUAlJ2WyKR2jwXGBuqOvfsX+afUBaQ="
-                       length="8691712"
+            <pubDate>2015-09-06 10:15:45 +0000</pubDate>
+            <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.8.0-32/VimR-0.8.0.tar.bz2"
+                       sparkle:version="32"
+                       sparkle:shortVersionString="0.8.0"
+                       sparkle:dsaSignature="MCwCFDFzxrL+9KEWxewIaBoscyZUjB5AAhRrJHUw+aC5AJ808LaKD/5QzStnYg=="
+                       length="8687616"
                        type="application/octet-stream"/>
         </item>
     </channel>
