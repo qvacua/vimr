@@ -44,6 +44,7 @@
 - (IBAction)openDocumentInTab:(id)sender;
 - (IBAction)showHelp:(id)sender;
 - (IBAction)showPrefWindow:(id)sender;
+- (IBAction)openVimConfigInTab:(id)sender;
 
 - (IBAction)toggleShowFoldersFirst:(id)sender;
 - (IBAction)toggleShowHiddenFiles:(id)sender;
