@@ -85,6 +85,16 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
   [_prefWindow makeKeyAndOrderFront:self];
 }
 
+- (IBAction)openVimConfigInTab:(id)sender {
+    NSWindow *keyWindow = _application.keyWindow;
+    if (![keyWindow isKindOfClass:[VRMainWindow class]]) {
+        return;
+    }
+    
+    VRWorkspace *workspace = [(VRMainWindowController *) keyWindow.windowController workspace];
+    [workspace openFilesWithUrls:@[[NSURL fileURLWithPath:@"/Users/isam/.vimrc"]]];
+}
+
 - (IBAction)toggleShowFoldersFirst:(id)sender {
   // noop
 }
@@ -121,6 +131,8 @@ static NSString *const qVimRHelpUrl = @"https://github.com/qvacua/vimr/wiki";
   if (action == @selector(openDocumentInTab:)) {return YES;}
   if (action == @selector(showHelp:)) {return YES;}
   if (action == @selector(showPrefWindow:)) {return YES;}
+  if (action == @selector(openVimConfigInTab:)) {return YES;}
+
 
 #ifdef DEBUG
   if (action == @selector(debug3Action:)) {return YES;}

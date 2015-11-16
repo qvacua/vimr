@@ -37,6 +37,12 @@
                                     <action selector="showPrefWindow:" target="-1" id="wV2-4u-CTJ"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Open vimrc in new tab" id="zGq-an-AEZ">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="openVimConfigInTab:" target="-1" id="4B1-F5-tee"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="143">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
