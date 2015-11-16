@@ -7,5 +7,12 @@ cd "$ROOT"/macvim/src
 
 [ -e auto/config.mk ] && make distclean
 
-CC=clang CPPFLAGS="-DFEAT_GUI_VIMR" ./configure --with-features=huge --enable-rubyinterp --enable-pythoninterp --enable-perlinterp --enable-cscope
+LUAJIT_BIN=$(which luajit)
+LUA_BIN_PATH=$(realpath $LUAJIT_BIN)
+if [ -n "$LUA_BIN_PATH" ]; then
+  LUA_BIN=$(dirname $LUA_BIN_PATH)
+  LUA_DIR=$(dirname $LUA_BIN)
+fi
+
+CC=clang CPPFLAGS="-DFEAT_GUI_VIMR" ./configure --with-features=huge --enable-rubyinterp --enable-pythoninterp --enable-perlinterp --enable-cscope --enable-luainterp --with-luajit --with-lua-prefix=$LUA_DIR
 make
