@@ -1,10 +1,7 @@
-//
-//  AppDelegate.swift
-//  nvox
-//
-//  Created by Tae Won Ha on 03/06/16.
-//  Copyright © 2016 Tae Won Ha. All rights reserved.
-//
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 import Cocoa
 
@@ -12,16 +9,26 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
 
   @IBOutlet weak var window: NSWindow!
-
+  
+  var xpcConnection: NSXPCConnection!
+  
+  var neoVimXpc: NeoVimXpc!
 
   func applicationDidFinishLaunching(aNotification: NSNotification) {
-    // Insert code here to initialize your application
+    xpcConnection = NSXPCConnection(serviceName: "com.qvacua.nvox.xpc")
+    xpcConnection.remoteObjectInterface = NSXPCInterface(withProtocol: NeoVimXpc.self)
+    xpcConnection.resume()
+    
+    neoVimXpc = self.xpcConnection.remoteObjectProxy as! NeoVimXpc
+    neoVimXpc.upperCaseString("Doing something from the main app...") { (result) in
+      print(result)
+    }
+    
+    neoVimXpc.doSth();
   }
 
   func applicationWillTerminate(aNotification: NSNotification) {
-    // Insert code here to tear down your application
+    xpcConnection.invalidate()
   }
-
-
 }
 

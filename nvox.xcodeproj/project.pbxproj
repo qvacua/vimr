@@ -7,147 +7,268 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4B2A2BC81D021C860074CE9A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2BC71D021C860074CE9A /* AppDelegate.swift */; };
-		4B2A2BCA1D021C860074CE9A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B2A2BC91D021C860074CE9A /* Assets.xcassets */; };
-		4B2A2BCD1D021C860074CE9A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B2A2BCB1D021C860074CE9A /* MainMenu.xib */; };
-		4B2A2BD81D021C860074CE9A /* nvoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2BD71D021C860074CE9A /* nvoxTests.swift */; };
+		4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5081CFF374B00673FDF /* AppDelegate.swift */; };
+		4BEBA50B1CFF374B00673FDF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50A1CFF374B00673FDF /* Assets.xcassets */; };
+		4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50C1CFF374B00673FDF /* MainMenu.xib */; };
+		4BEBA5191CFF374B00673FDF /* nvoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5181CFF374B00673FDF /* nvoxTests.swift */; };
+		4BEBA52C1CFF3DFF00673FDF /* NeoVimXpcImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA52B1CFF3DFF00673FDF /* NeoVimXpcImpl.m */; };
+		4BEBA52E1CFF3DFF00673FDF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA52D1CFF3DFF00673FDF /* main.m */; };
+		4BEBA5321CFF3DFF00673FDF /* NeoVimXpc.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 4BEBA5271CFF3DFF00673FDF /* NeoVimXpc.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4BEBA5391CFF5E5D00673FDF /* libnvim.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBA5381CFF5E5D00673FDF /* libnvim.a */; };
+		4BEBA5431CFF5EA500673FDF /* libjemalloc_pic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBA53A1CFF5EA500673FDF /* libjemalloc_pic.a */; };
+		4BEBA5441CFF5EA500673FDF /* libjemalloc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBA53B1CFF5EA500673FDF /* libjemalloc.a */; };
+		4BEBA5451CFF5EA500673FDF /* libluajit-5.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBA53C1CFF5EA500673FDF /* libluajit-5.1.a */; };
+		4BEBA5461CFF5EA500673FDF /* libluv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBA53D1CFF5EA500673FDF /* libluv.a */; };
+		4BEBA5471CFF5EA500673FDF /* libmsgpack.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBA53E1CFF5EA500673FDF /* libmsgpack.a */; };
+		4BEBA54A1CFF5EA500673FDF /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBA5411CFF5EA500673FDF /* libuv.a */; };
+		4BEBA54B1CFF5EA500673FDF /* libvterm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBA5421CFF5EA500673FDF /* libvterm.a */; };
+		4BEBA6631D00157A00673FDF /* runtime in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA6621D00157A00673FDF /* runtime */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4B2A2BD41D021C860074CE9A /* PBXContainerItemProxy */ = {
+		4BEBA5151CFF374B00673FDF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 4B2A2BBC1D021C860074CE9A /* Project object */;
+			containerPortal = 4BEBA4FD1CFF374B00673FDF /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 4B2A2BC31D021C860074CE9A;
+			remoteGlobalIDString = 4BEBA5041CFF374B00673FDF;
 			remoteInfo = nvox;
+		};
+		4BEBA5301CFF3DFF00673FDF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4BEBA4FD1CFF374B00673FDF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4BEBA5261CFF3DFF00673FDF;
+			remoteInfo = NeoVimXpc;
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		4BEBA5361CFF3DFF00673FDF /* Embed XPC Services */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/XPCServices";
+			dstSubfolderSpec = 16;
+			files = (
+				4BEBA5321CFF3DFF00673FDF /* NeoVimXpc.xpc in Embed XPC Services */,
+			);
+			name = "Embed XPC Services";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		4B2A2BC41D021C860074CE9A /* nvox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nvox.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B2A2BC71D021C860074CE9A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4B2A2BC91D021C860074CE9A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		4B2A2BCC1D021C860074CE9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		4B2A2BCE1D021C860074CE9A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4B2A2BD31D021C860074CE9A /* nvoxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = nvoxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B2A2BD71D021C860074CE9A /* nvoxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = nvoxTests.swift; sourceTree = "<group>"; };
-		4B2A2BD91D021C860074CE9A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4BEBA5051CFF374B00673FDF /* nvox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nvox.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BEBA5081CFF374B00673FDF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4BEBA50A1CFF374B00673FDF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4BEBA50D1CFF374B00673FDF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		4BEBA50F1CFF374B00673FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4BEBA5141CFF374B00673FDF /* nvoxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = nvoxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BEBA5181CFF374B00673FDF /* nvoxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = nvoxTests.swift; sourceTree = "<group>"; };
+		4BEBA51A1CFF374B00673FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4BEBA5271CFF3DFF00673FDF /* NeoVimXpc.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = NeoVimXpc.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BEBA5291CFF3DFF00673FDF /* NeoVimXpc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NeoVimXpc.h; sourceTree = "<group>"; };
+		4BEBA52A1CFF3DFF00673FDF /* NeoVimXpcImpl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NeoVimXpcImpl.h; sourceTree = "<group>"; };
+		4BEBA52B1CFF3DFF00673FDF /* NeoVimXpcImpl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NeoVimXpcImpl.m; sourceTree = "<group>"; };
+		4BEBA52D1CFF3DFF00673FDF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4BEBA52F1CFF3DFF00673FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4BEBA5381CFF5E5D00673FDF /* libnvim.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnvim.a; path = neovim/build/lib/libnvim.a; sourceTree = SOURCE_ROOT; };
+		4BEBA53A1CFF5EA500673FDF /* libjemalloc_pic.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjemalloc_pic.a; path = neovim/.deps/usr/lib/libjemalloc_pic.a; sourceTree = SOURCE_ROOT; };
+		4BEBA53B1CFF5EA500673FDF /* libjemalloc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjemalloc.a; path = neovim/.deps/usr/lib/libjemalloc.a; sourceTree = SOURCE_ROOT; };
+		4BEBA53C1CFF5EA500673FDF /* libluajit-5.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libluajit-5.1.a"; path = "neovim/.deps/usr/lib/libluajit-5.1.a"; sourceTree = SOURCE_ROOT; };
+		4BEBA53D1CFF5EA500673FDF /* libluv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluv.a; path = neovim/.deps/usr/lib/libluv.a; sourceTree = SOURCE_ROOT; };
+		4BEBA53E1CFF5EA500673FDF /* libmsgpack.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmsgpack.a; path = neovim/.deps/usr/lib/libmsgpack.a; sourceTree = SOURCE_ROOT; };
+		4BEBA5411CFF5EA500673FDF /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv.a; path = neovim/.deps/usr/lib/libuv.a; sourceTree = SOURCE_ROOT; };
+		4BEBA5421CFF5EA500673FDF /* libvterm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvterm.a; path = neovim/.deps/usr/lib/libvterm.a; sourceTree = SOURCE_ROOT; };
+		4BEBA54E1CFF79A400673FDF /* Bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bridge.h; sourceTree = "<group>"; };
+		4BEBA6611D0014A400673FDF /* nvim */ = {isa = PBXFileReference; lastKnownFileType = folder; name = nvim; path = neovim/src/nvim; sourceTree = SOURCE_ROOT; };
+		4BEBA6621D00157A00673FDF /* runtime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = runtime; path = neovim/runtime; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		4B2A2BC11D021C860074CE9A /* Frameworks */ = {
+		4BEBA5021CFF374B00673FDF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4B2A2BD01D021C860074CE9A /* Frameworks */ = {
+		4BEBA5111CFF374B00673FDF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BEBA5241CFF3DFF00673FDF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BEBA54A1CFF5EA500673FDF /* libuv.a in Frameworks */,
+				4BEBA5391CFF5E5D00673FDF /* libnvim.a in Frameworks */,
+				4BEBA5431CFF5EA500673FDF /* libjemalloc_pic.a in Frameworks */,
+				4BEBA5461CFF5EA500673FDF /* libluv.a in Frameworks */,
+				4BEBA54B1CFF5EA500673FDF /* libvterm.a in Frameworks */,
+				4BEBA5441CFF5EA500673FDF /* libjemalloc.a in Frameworks */,
+				4BEBA5471CFF5EA500673FDF /* libmsgpack.a in Frameworks */,
+				4BEBA5451CFF5EA500673FDF /* libluajit-5.1.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4B2A2BBB1D021C860074CE9A = {
+		4BEBA4FC1CFF374B00673FDF = {
 			isa = PBXGroup;
 			children = (
-				4B2A2BC61D021C860074CE9A /* nvox */,
-				4B2A2BD61D021C860074CE9A /* nvoxTests */,
-				4B2A2BC51D021C860074CE9A /* Products */,
+				4BEBA5071CFF374B00673FDF /* nvox */,
+				4BEBA5171CFF374B00673FDF /* nvoxTests */,
+				4BEBA5281CFF3DFF00673FDF /* NeoVimXpc */,
+				4BEBA5061CFF374B00673FDF /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		4B2A2BC51D021C860074CE9A /* Products */ = {
+		4BEBA5061CFF374B00673FDF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4B2A2BC41D021C860074CE9A /* nvox.app */,
-				4B2A2BD31D021C860074CE9A /* nvoxTests.xctest */,
+				4BEBA5051CFF374B00673FDF /* nvox.app */,
+				4BEBA5141CFF374B00673FDF /* nvoxTests.xctest */,
+				4BEBA5271CFF3DFF00673FDF /* NeoVimXpc.xpc */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4B2A2BC61D021C860074CE9A /* nvox */ = {
+		4BEBA5071CFF374B00673FDF /* nvox */ = {
 			isa = PBXGroup;
 			children = (
-				4B2A2BC71D021C860074CE9A /* AppDelegate.swift */,
-				4B2A2BC91D021C860074CE9A /* Assets.xcassets */,
-				4B2A2BCB1D021C860074CE9A /* MainMenu.xib */,
-				4B2A2BCE1D021C860074CE9A /* Info.plist */,
+				4BEBA5081CFF374B00673FDF /* AppDelegate.swift */,
+				4BEBA50A1CFF374B00673FDF /* Assets.xcassets */,
+				4BEBA50C1CFF374B00673FDF /* MainMenu.xib */,
+				4BEBA50F1CFF374B00673FDF /* Info.plist */,
+				4BEBA54E1CFF79A400673FDF /* Bridge.h */,
 			);
 			path = nvox;
 			sourceTree = "<group>";
 		};
-		4B2A2BD61D021C860074CE9A /* nvoxTests */ = {
+		4BEBA5171CFF374B00673FDF /* nvoxTests */ = {
 			isa = PBXGroup;
 			children = (
-				4B2A2BD71D021C860074CE9A /* nvoxTests.swift */,
-				4B2A2BD91D021C860074CE9A /* Info.plist */,
+				4BEBA5181CFF374B00673FDF /* nvoxTests.swift */,
+				4BEBA51A1CFF374B00673FDF /* Info.plist */,
 			);
 			path = nvoxTests;
+			sourceTree = "<group>";
+		};
+		4BEBA5281CFF3DFF00673FDF /* NeoVimXpc */ = {
+			isa = PBXGroup;
+			children = (
+				4BEBA6611D0014A400673FDF /* nvim */,
+				4BEBA6621D00157A00673FDF /* runtime */,
+				4BEBA5371CFF5E4100673FDF /* libs */,
+				4BEBA5291CFF3DFF00673FDF /* NeoVimXpc.h */,
+				4BEBA52A1CFF3DFF00673FDF /* NeoVimXpcImpl.h */,
+				4BEBA52B1CFF3DFF00673FDF /* NeoVimXpcImpl.m */,
+				4BEBA52D1CFF3DFF00673FDF /* main.m */,
+				4BEBA52F1CFF3DFF00673FDF /* Info.plist */,
+			);
+			path = NeoVimXpc;
+			sourceTree = "<group>";
+		};
+		4BEBA5371CFF5E4100673FDF /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				4BEBA53A1CFF5EA500673FDF /* libjemalloc_pic.a */,
+				4BEBA53B1CFF5EA500673FDF /* libjemalloc.a */,
+				4BEBA53C1CFF5EA500673FDF /* libluajit-5.1.a */,
+				4BEBA53D1CFF5EA500673FDF /* libluv.a */,
+				4BEBA53E1CFF5EA500673FDF /* libmsgpack.a */,
+				4BEBA5411CFF5EA500673FDF /* libuv.a */,
+				4BEBA5421CFF5EA500673FDF /* libvterm.a */,
+				4BEBA5381CFF5E5D00673FDF /* libnvim.a */,
+			);
+			name = libs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4B2A2BC31D021C860074CE9A /* nvox */ = {
+		4BEBA5041CFF374B00673FDF /* nvox */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4B2A2BDC1D021C860074CE9A /* Build configuration list for PBXNativeTarget "nvox" */;
+			buildConfigurationList = 4BEBA51D1CFF374B00673FDF /* Build configuration list for PBXNativeTarget "nvox" */;
 			buildPhases = (
-				4B2A2BC01D021C860074CE9A /* Sources */,
-				4B2A2BC11D021C860074CE9A /* Frameworks */,
-				4B2A2BC21D021C860074CE9A /* Resources */,
+				4BEBA5011CFF374B00673FDF /* Sources */,
+				4BEBA5021CFF374B00673FDF /* Frameworks */,
+				4BEBA5031CFF374B00673FDF /* Resources */,
+				4BEBA5361CFF3DFF00673FDF /* Embed XPC Services */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				4BEBA5311CFF3DFF00673FDF /* PBXTargetDependency */,
 			);
 			name = nvox;
 			productName = nvox;
-			productReference = 4B2A2BC41D021C860074CE9A /* nvox.app */;
+			productReference = 4BEBA5051CFF374B00673FDF /* nvox.app */;
 			productType = "com.apple.product-type.application";
 		};
-		4B2A2BD21D021C860074CE9A /* nvoxTests */ = {
+		4BEBA5131CFF374B00673FDF /* nvoxTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4B2A2BDF1D021C860074CE9A /* Build configuration list for PBXNativeTarget "nvoxTests" */;
+			buildConfigurationList = 4BEBA5201CFF374B00673FDF /* Build configuration list for PBXNativeTarget "nvoxTests" */;
 			buildPhases = (
-				4B2A2BCF1D021C860074CE9A /* Sources */,
-				4B2A2BD01D021C860074CE9A /* Frameworks */,
-				4B2A2BD11D021C860074CE9A /* Resources */,
+				4BEBA5101CFF374B00673FDF /* Sources */,
+				4BEBA5111CFF374B00673FDF /* Frameworks */,
+				4BEBA5121CFF374B00673FDF /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				4B2A2BD51D021C860074CE9A /* PBXTargetDependency */,
+				4BEBA5161CFF374B00673FDF /* PBXTargetDependency */,
 			);
 			name = nvoxTests;
 			productName = nvoxTests;
-			productReference = 4B2A2BD31D021C860074CE9A /* nvoxTests.xctest */;
+			productReference = 4BEBA5141CFF374B00673FDF /* nvoxTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		4BEBA5261CFF3DFF00673FDF /* NeoVimXpc */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4BEBA5331CFF3DFF00673FDF /* Build configuration list for PBXNativeTarget "NeoVimXpc" */;
+			buildPhases = (
+				4B2A2BBA1D00C7200074CE9A /* ShellScript */,
+				4BEBA5231CFF3DFF00673FDF /* Sources */,
+				4BEBA5241CFF3DFF00673FDF /* Frameworks */,
+				4BEBA5251CFF3DFF00673FDF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NeoVimXpc;
+			productName = NeoVimXpc;
+			productReference = 4BEBA5271CFF3DFF00673FDF /* NeoVimXpc.xpc */;
+			productType = "com.apple.product-type.xpc-service";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		4B2A2BBC1D021C860074CE9A /* Project object */ = {
+		4BEBA4FD1CFF374B00673FDF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Tae Won Ha";
 				TargetAttributes = {
-					4B2A2BC31D021C860074CE9A = {
+					4BEBA5041CFF374B00673FDF = {
 						CreatedOnToolsVersion = 7.3.1;
 					};
-					4B2A2BD21D021C860074CE9A = {
+					4BEBA5131CFF374B00673FDF = {
 						CreatedOnToolsVersion = 7.3.1;
-						TestTargetID = 4B2A2BC31D021C860074CE9A;
+						TestTargetID = 4BEBA5041CFF374B00673FDF;
+					};
+					4BEBA5261CFF3DFF00673FDF = {
+						CreatedOnToolsVersion = 7.3.1;
 					};
 				};
 			};
-			buildConfigurationList = 4B2A2BBF1D021C860074CE9A /* Build configuration list for PBXProject "nvox" */;
+			buildConfigurationList = 4BEBA5001CFF374B00673FDF /* Build configuration list for PBXProject "nvox" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -155,68 +276,107 @@
 				en,
 				Base,
 			);
-			mainGroup = 4B2A2BBB1D021C860074CE9A;
-			productRefGroup = 4B2A2BC51D021C860074CE9A /* Products */;
+			mainGroup = 4BEBA4FC1CFF374B00673FDF;
+			productRefGroup = 4BEBA5061CFF374B00673FDF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4B2A2BC31D021C860074CE9A /* nvox */,
-				4B2A2BD21D021C860074CE9A /* nvoxTests */,
+				4BEBA5041CFF374B00673FDF /* nvox */,
+				4BEBA5131CFF374B00673FDF /* nvoxTests */,
+				4BEBA5261CFF3DFF00673FDF /* NeoVimXpc */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		4B2A2BC21D021C860074CE9A /* Resources */ = {
+		4BEBA5031CFF374B00673FDF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B2A2BCA1D021C860074CE9A /* Assets.xcassets in Resources */,
-				4B2A2BCD1D021C860074CE9A /* MainMenu.xib in Resources */,
+				4BEBA50B1CFF374B00673FDF /* Assets.xcassets in Resources */,
+				4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4B2A2BD11D021C860074CE9A /* Resources */ = {
+		4BEBA5121CFF374B00673FDF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BEBA5251CFF3DFF00673FDF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BEBA6631D00157A00673FDF /* runtime in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		4B2A2BBA1D00C7200074CE9A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "pushd neovim\nmake libnvim\npopd";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
-		4B2A2BC01D021C860074CE9A /* Sources */ = {
+		4BEBA5011CFF374B00673FDF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B2A2BC81D021C860074CE9A /* AppDelegate.swift in Sources */,
+				4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4B2A2BCF1D021C860074CE9A /* Sources */ = {
+		4BEBA5101CFF374B00673FDF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B2A2BD81D021C860074CE9A /* nvoxTests.swift in Sources */,
+				4BEBA5191CFF374B00673FDF /* nvoxTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BEBA5231CFF3DFF00673FDF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BEBA52E1CFF3DFF00673FDF /* main.m in Sources */,
+				4BEBA52C1CFF3DFF00673FDF /* NeoVimXpcImpl.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		4B2A2BD51D021C860074CE9A /* PBXTargetDependency */ = {
+		4BEBA5161CFF374B00673FDF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4B2A2BC31D021C860074CE9A /* nvox */;
-			targetProxy = 4B2A2BD41D021C860074CE9A /* PBXContainerItemProxy */;
+			target = 4BEBA5041CFF374B00673FDF /* nvox */;
+			targetProxy = 4BEBA5151CFF374B00673FDF /* PBXContainerItemProxy */;
+		};
+		4BEBA5311CFF3DFF00673FDF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4BEBA5261CFF3DFF00673FDF /* NeoVimXpc */;
+			targetProxy = 4BEBA5301CFF3DFF00673FDF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		4B2A2BCB1D021C860074CE9A /* MainMenu.xib */ = {
+		4BEBA50C1CFF374B00673FDF /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				4B2A2BCC1D021C860074CE9A /* Base */,
+				4BEBA50D1CFF374B00673FDF /* Base */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -224,7 +384,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		4B2A2BDA1D021C860074CE9A /* Debug */ = {
+		4BEBA51B1CFF374B00673FDF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -269,7 +429,7 @@
 			};
 			name = Debug;
 		};
-		4B2A2BDB1D021C860074CE9A /* Release */ = {
+		4BEBA51C1CFF374B00673FDF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -306,7 +466,7 @@
 			};
 			name = Release;
 		};
-		4B2A2BDD1D021C860074CE9A /* Debug */ = {
+		4BEBA51E1CFF374B00673FDF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -315,10 +475,11 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.nvox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = nvox/Bridge.h;
 			};
 			name = Debug;
 		};
-		4B2A2BDE1D021C860074CE9A /* Release */ = {
+		4BEBA51F1CFF374B00673FDF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -327,10 +488,11 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.nvox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = nvox/Bridge.h;
 			};
 			name = Release;
 		};
-		4B2A2BE01D021C860074CE9A /* Debug */ = {
+		4BEBA5211CFF374B00673FDF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -343,7 +505,7 @@
 			};
 			name = Debug;
 		};
-		4B2A2BE11D021C860074CE9A /* Release */ = {
+		4BEBA5221CFF374B00673FDF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -353,38 +515,109 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.nvoxTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/nvox.app/Contents/MacOS/nvox";
+			};
+			name = Release;
+		};
+		4BEBA5341CFF3DFF00673FDF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"INCLUDE_GENERATED_DECLARATIONS=1",
+					"CUSTOM_UI=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					neovim/build/include,
+					neovim/src,
+					neovim/.deps/usr/include,
+				);
+				INFOPLIST_FILE = NeoVimXpc/Info.plist;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/neovim/build/lib",
+					"$(PROJECT_DIR)/neovim/.deps/usr/lib",
+				);
+				OTHER_LDFLAGS = (
+					/usr/local/opt/gettext/lib/libintl.a,
+					"-liconv",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.nvox.xpc;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		4BEBA5351CFF3DFF00673FDF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"INCLUDE_GENERATED_DECLARATIONS=1",
+					"CUSTOM_UI=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					neovim/build/include,
+					neovim/src,
+					neovim/.deps/usr/include,
+				);
+				INFOPLIST_FILE = NeoVimXpc/Info.plist;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/neovim/build/lib",
+					"$(PROJECT_DIR)/neovim/.deps/usr/lib",
+				);
+				OTHER_LDFLAGS = (
+					/usr/local/opt/gettext/lib/libintl.a,
+					"-liconv",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.nvox.xpc;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4B2A2BBF1D021C860074CE9A /* Build configuration list for PBXProject "nvox" */ = {
+		4BEBA5001CFF374B00673FDF /* Build configuration list for PBXProject "nvox" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4B2A2BDA1D021C860074CE9A /* Debug */,
-				4B2A2BDB1D021C860074CE9A /* Release */,
+				4BEBA51B1CFF374B00673FDF /* Debug */,
+				4BEBA51C1CFF374B00673FDF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4B2A2BDC1D021C860074CE9A /* Build configuration list for PBXNativeTarget "nvox" */ = {
+		4BEBA51D1CFF374B00673FDF /* Build configuration list for PBXNativeTarget "nvox" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4B2A2BDD1D021C860074CE9A /* Debug */,
-				4B2A2BDE1D021C860074CE9A /* Release */,
+				4BEBA51E1CFF374B00673FDF /* Debug */,
+				4BEBA51F1CFF374B00673FDF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
-		4B2A2BDF1D021C860074CE9A /* Build configuration list for PBXNativeTarget "nvoxTests" */ = {
+		4BEBA5201CFF374B00673FDF /* Build configuration list for PBXNativeTarget "nvoxTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4B2A2BE01D021C860074CE9A /* Debug */,
-				4B2A2BE11D021C860074CE9A /* Release */,
+				4BEBA5211CFF374B00673FDF /* Debug */,
+				4BEBA5221CFF374B00673FDF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4BEBA5331CFF3DFF00673FDF /* Build configuration list for PBXNativeTarget "NeoVimXpc" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4BEBA5341CFF3DFF00673FDF /* Debug */,
+				4BEBA5351CFF3DFF00673FDF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 4B2A2BBC1D021C860074CE9A /* Project object */;
+	rootObject = 4BEBA4FD1CFF374B00673FDF /* Project object */;
 }

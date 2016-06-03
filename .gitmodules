@@ -1,0 +1,3 @@
+[submodule "neovim"]
+	path = neovim
+	url = git@github.com:qvacua/neovim.git
