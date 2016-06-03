@@ -14,6 +14,7 @@ It could very well be that nothing useful comes out of it.
 ## How to Build
 
 ```bash
+carthage update --platform osx # install Carthage first
 brew install gettext
 git submodule update --init
 cd neovim
