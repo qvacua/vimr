@@ -16,7 +16,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   func applicationDidFinishLaunching(aNotification: NSNotification) {
     xpcConnection = NSXPCConnection(serviceName: "com.qvacua.nvox.xpc")
+
     xpcConnection.remoteObjectInterface = NSXPCInterface(withProtocol: NeoVimXpc.self)
+
+    xpcConnection.exportedInterface = NSXPCInterface(withProtocol: NeoVimUi.self)
+    xpcConnection.exportedObject = NeoVimUiImpl()
+
     xpcConnection.resume()
     
     neoVimXpc = self.xpcConnection.remoteObjectProxy as! NeoVimXpc

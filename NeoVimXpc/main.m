@@ -5,6 +5,7 @@
 
 #import <Foundation/Foundation.h>
 #import "NeoVimXpcImpl.h"
+#import "NeoVimUi.h"
 
 @interface NVXpcDelegate : NSObject <NSXPCListenerDelegate>
 @end
@@ -12,9 +13,16 @@
 @implementation NVXpcDelegate
 
 - (BOOL)listener:(NSXPCListener *)listener shouldAcceptNewConnection:(NSXPCConnection *)newConnection {
+  NeoVimXpcImpl *neoVimXpc = [NeoVimXpcImpl new];
+
   newConnection.exportedInterface = [NSXPCInterface interfaceWithProtocol:@protocol(NeoVimXpc)];
-  newConnection.exportedObject = [NeoVimXpcImpl new];
+  newConnection.exportedObject = neoVimXpc;
+
+  newConnection.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(NeoVimUi)];
+
   [newConnection resume];
+
+  [neoVimXpc setNeoVimUi:newConnection.remoteObjectProxy];
 
   return YES;
 }

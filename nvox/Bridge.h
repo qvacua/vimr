@@ -3,9 +3,5 @@
  * See LICENSE
  */
 
-#ifndef Bridge_h
-#define Bridge_h
-
-#include "NeoVimXpc.h"
-
-#endif /* Bridge_h */
+#import "NeoVimUi.h"
+#import "NeoVimXpc.h"

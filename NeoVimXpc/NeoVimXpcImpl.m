@@ -4,6 +4,9 @@
  */
 
 #import "NeoVimXpcImpl.h"
+#import "NeoVimUi.h"
+
+#import <objc/message.h>
 
 /**
  * FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
@@ -19,13 +22,20 @@
 #import <nvim/event/stream.h>
 #import <nvim/event/signal.h>
 
+void (*objc_msgSend_string)(id, SEL, NSString *) = (void *) objc_msgSend;
+void (*objc_msgSend_int)(id, SEL, int) = (void *) objc_msgSend;
 
 // we declare nvim_main because it's not declared in any header files of neovim
 extern int nvim_main(int argc, char **argv);
 
 static bool is_ui_launched = false;
-
 static NSCondition *uiLaunchCondition;
+
+static id <NeoVimUi> neo_vim_osx_ui;
+
+static NSString *string_from_bytes(uint8_t *str, size_t len) {
+  return [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
+}
 
 typedef struct {
     UIBridgeData *bridge;
@@ -136,7 +146,7 @@ static void xpc_ui_mouse_off(UI *ui) {
 }
 
 static void xpc_ui_mode_change(UI *ui, int mode) {
-  NSLog(@"mode_change: %04x", mode);
+  objc_msgSend_int(neo_vim_osx_ui, @selector(modeChange:), mode);
 }
 
 static void xpc_ui_set_scroll_region(UI *ui, int top, int bot, int left, int right) {
@@ -152,7 +162,7 @@ static void xpc_ui_highlight_set(UI *ui, HlAttrs attrs) {
 }
 
 static void xpc_ui_put(UI *ui, uint8_t *str, size_t len) {
-  NSLog(@"put: %@", [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding]);
+  objc_msgSend_string(neo_vim_osx_ui, @selector(put:), string_from_bytes(str, len));
 }
 
 static void xpc_ui_bell(UI *ui) {
@@ -239,7 +249,7 @@ void custom_ui_start(void) {
 }
 
 @implementation NeoVimXpcImpl {
-  NSThread *_neovimThread;
+  NSThread *_neoVimThread;
 }
 
 - (instancetype)init {
@@ -254,8 +264,8 @@ void custom_ui_start(void) {
   NSString *runtimePath = [[NSBundle mainBundle].resourcePath stringByAppendingPathComponent:@"runtime"];
   setenv("VIMRUNTIME", runtimePath.fileSystemRepresentation, true);
 
-  _neovimThread = [[NSThread alloc] initWithTarget:self selector:@selector(runNeovim:) object:self];
-  [_neovimThread start];
+  _neoVimThread = [[NSThread alloc] initWithTarget:self selector:@selector(runNeoVim:) object:self];
+  [_neoVimThread start];
 
   // return only when the ui is launched
   [uiLaunchCondition lock];
@@ -267,7 +277,11 @@ void custom_ui_start(void) {
   return self;
 }
 
-- (void)runNeovim:(id)sender {
+- (void)setNeoVimUi:(id <NeoVimUi>)ui {
+  neo_vim_osx_ui = ui;
+}
+
+- (void)runNeoVim:(id)sender {
   char *argv[1];
   argv[0] = "nvim";
 
