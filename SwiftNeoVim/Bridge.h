@@ -3,4 +3,5 @@
  * See LICENSE
  */
 
-#import <SwiftNeoVim/SwiftNeoVim.h>
+#import "NeoVimUi.h"
+#import "NeoVimXpc.h"

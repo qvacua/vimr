@@ -10,26 +10,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   @IBOutlet weak var window: NSWindow!
   
-  var xpcConnection: NSXPCConnection!
-  
-  var neoVimXpc: NeoVimXpc!
+  var neoVim: NeoVim = NeoVim()
 
   func applicationDidFinishLaunching(aNotification: NSNotification) {
-    xpcConnection = NSXPCConnection(serviceName: "com.qvacua.nvox.xpc")
-
-    xpcConnection.remoteObjectInterface = NSXPCInterface(withProtocol: NeoVimXpc.self)
-
-    xpcConnection.exportedInterface = NSXPCInterface(withProtocol: NeoVimUi.self)
-    xpcConnection.exportedObject = NeoVimUiImpl()
-
-    xpcConnection.resume()
-    
-    neoVimXpc = self.xpcConnection.remoteObjectProxy as! NeoVimXpc
-    neoVimXpc.doSth();
+    self.neoVim.doSth()
   }
 
   func applicationWillTerminate(aNotification: NSNotification) {
-    xpcConnection.invalidate()
   }
 }
 
