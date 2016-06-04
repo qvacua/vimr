@@ -5,6 +5,12 @@
 
 #import <Foundation/Foundation.h>
 
+// TODO: keep in sync with HlAttrs struct in ui.h
+typedef struct {
+  bool bold, underline, undercurl, italic, reverse;
+  int foreground, background, special;
+} HighlightAttributes;
+
 @protocol NeoVimUi
 
 - (void)resize:(int)rows columns:(int)columns;
@@ -19,7 +25,7 @@
 - (void)modeChange:(int)mode;
 - (void)setScrollRegion:(int)top bottom:(int)bottom left:(int)left right:(int)right;
 - (void)scroll:(int)count;
-- (void)highlightSet;
+- (void)highlightSet:(HighlightAttributes)attrs;
 - (void)put:(NSString *)string;
 - (void)bell;
 - (void)visualBell;

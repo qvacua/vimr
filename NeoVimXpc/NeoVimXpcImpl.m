@@ -3,10 +3,11 @@
  * See LICENSE
  */
 
+#import <objc/message.h>
+
 #import "NeoVimXpcImpl.h"
 #import "NeoVimUi.h"
 
-#import <objc/message.h>
 
 /**
  * FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
@@ -27,6 +28,7 @@ void (*objc_msgSend_string)(id, SEL, NSString *) = (void *) objc_msgSend;
 void (*objc_msgSend_int)(id, SEL, int) = (void *) objc_msgSend;
 void (*objc_msgSend_2_int)(id, SEL, int, int) = (void *) objc_msgSend;
 void (*objc_msgSend_4_int)(id, SEL, int, int, int, int) = (void *) objc_msgSend;
+void (*objc_msgSend_hlattrs)(id, SEL, HighlightAttributes) = (void *) objc_msgSend;
 
 // we declare nvim_main because it's not declared in any header files of neovim
 extern int nvim_main(int argc, char **argv);
@@ -36,12 +38,16 @@ static NSCondition *uiLaunchCondition;
 
 static id <NeoVimUi> neoVimOsxUi;
 
-static NSString *string_from_bytes(uint8_t *str, size_t len) {
+static inline NSString *string_from_bytes(uint8_t *str, size_t len) {
   return [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
 }
 
-static NSString *string_from_cstr(char *cstr) {
+static inline NSString *string_from_cstr(char *cstr) {
   return [[NSString alloc] initWithCString:cstr encoding:NSUTF8StringEncoding];
+}
+
+static inline String nvim_string_from_string(NSString *str) {
+  return (String) {.data=(char *) str.UTF8String, .size=[str lengthOfBytesUsingEncoding:NSUTF8StringEncoding]};
 }
 
 typedef struct {
@@ -52,7 +58,7 @@ typedef struct {
     bool stop;
     bool cont_received;
 
-    // dunno whether we need this: copied from tui.c
+    // FIXME: dunno whether we need this: copied from tui.c
     SignalWatcher cont_handle;
 } OsxXpcUiData;
 
@@ -165,7 +171,7 @@ static void xpc_ui_scroll(UI *ui, int count) {
 }
 
 static void xpc_ui_highlight_set(UI *ui, HlAttrs attrs) {
-  objc_msgSend_no_arg(neoVimOsxUi, @selector(highlightSet));
+  objc_msgSend_hlattrs(neoVimOsxUi, @selector(highlightSet:), (*(HighlightAttributes *)(&attrs)));
 }
 
 static void xpc_ui_put(UI *ui, uint8_t *str, size_t len) {
@@ -298,16 +304,16 @@ void custom_ui_start(void) {
 - (void)doSth {
   NSString *str = @"i";
   NSLog(@"entering input");
-  vim_input((String) {.data=(char *) str.UTF8String, .size=[str lengthOfBytesUsingEncoding:NSUTF8StringEncoding]});
+  vim_input(nvim_string_from_string(str));
 
   str = @"test input";
   NSLog(@"entering some text");
-  vim_input((String) {.data=(char *) str.UTF8String, .size=[str lengthOfBytesUsingEncoding:NSUTF8StringEncoding]});
+  vim_input(nvim_string_from_string(str));
 
   unichar esc = 27; // = 001B
   str = [NSString stringWithCharacters:&esc length:1];
   NSLog(@"entering normal");
-  vim_input((String) {.data=(char *) str.UTF8String, .size=[str lengthOfBytesUsingEncoding:NSUTF8StringEncoding]});
+  vim_input(nvim_string_from_string(str));
 }
 
 @end

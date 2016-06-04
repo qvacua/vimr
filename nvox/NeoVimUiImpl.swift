@@ -55,8 +55,8 @@ class NeoVimUiImpl: NSObject, NeoVimUi {
     print("### count: \(count)")
   }
 
-  func highlightSet() {
-    print("### highlight set");
+  func highlightSet(attrs: HighlightAttributes) {
+    print("### highlight set: \(attrs)");
   }
 
   func put(str: String) {
