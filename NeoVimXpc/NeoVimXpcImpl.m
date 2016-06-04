@@ -289,9 +289,4 @@ void custom_ui_start(void) {
   vim_input((String) {.data=(char *) str.UTF8String, .size=[str lengthOfBytesUsingEncoding:NSUTF8StringEncoding]});
 }
 
-- (void)upperCaseString:(NSString *)aString withReply:(void (^)(NSString *))reply {
-  NSString *response = [aString uppercaseString];
-  reply(response);
-}
-
 @end

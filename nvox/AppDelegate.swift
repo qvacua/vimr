@@ -20,10 +20,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     xpcConnection.resume()
     
     neoVimXpc = self.xpcConnection.remoteObjectProxy as! NeoVimXpc
-    neoVimXpc.upperCaseString("Doing something from the main app...") { (result) in
-      print(result)
-    }
-    
     neoVimXpc.doSth();
   }
 
