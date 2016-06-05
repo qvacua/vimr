@@ -6,7 +6,7 @@
 #import <Foundation/Foundation.h>
 
 #import "NeoVimXpcImpl.h"
-#import "NeoVimUi.h"
+#import "NeoVimUiBridgeProtocol.h"
 
 @interface NVXpcDelegate : NSObject <NSXPCListenerDelegate>
 @end
@@ -14,7 +14,7 @@
 @implementation NVXpcDelegate
 
 - (BOOL)listener:(NSXPCListener *)listener shouldAcceptNewConnection:(NSXPCConnection *)newConnection {
-  newConnection.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(NeoVimUi)];
+  newConnection.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(NeoVimUiBridgeProtocol)];
 
   NeoVimXpcImpl *neoVimXpc = [[NeoVimXpcImpl alloc] initWithNeoVimUi:newConnection.remoteObjectProxy];
 

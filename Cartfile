@@ -1,1 +1,2 @@
 github "ReactiveX/RxSwift" ~> 2.5.0
+github "PureLayout/PureLayout" ~> 3.0.1

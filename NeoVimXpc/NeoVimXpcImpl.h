@@ -6,10 +6,12 @@
 #import <Foundation/Foundation.h>
 #import "NeoVimXpc.h"
 
-@protocol NeoVimUi;
+@protocol NeoVimUiBridgeProtocol;
 
 @interface NeoVimXpcImpl : NSObject <NeoVimXpc>
 
-- (instancetype)initWithNeoVimUi:(id<NeoVimUi>)ui;
+- (instancetype)initWithNeoVimUi:(id<NeoVimUiBridgeProtocol>)ui;
+
+- (void)vimInput:(NSString *)input;
 
 @end

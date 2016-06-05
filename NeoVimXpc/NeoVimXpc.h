@@ -7,6 +7,6 @@
 
 @protocol NeoVimXpc
 
-- (void)doSth;
-    
+- (void)vimInput:(NSString *)input;
+
 @end
