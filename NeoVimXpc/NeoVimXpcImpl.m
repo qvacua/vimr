@@ -265,7 +265,7 @@ void custom_ui_start(void) {
   NSThread *_neoVimThread;
 }
 
-- (instancetype)init {
+- (instancetype)initWithNeoVimUi:(id<NeoVimUi>)ui {
   self = [super init];
   if (self == nil) {
     return nil;
@@ -287,11 +287,9 @@ void custom_ui_start(void) {
   }
   [uiLaunchCondition unlock];
 
-  return self;
-}
-
-- (void)setNeoVimUi:(id <NeoVimUi>)ui {
   neoVimOsxUi = ui;
+
+  return self;
 }
 
 - (void)runNeoVim:(id)sender {

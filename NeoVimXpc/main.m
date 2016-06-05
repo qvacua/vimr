@@ -14,16 +14,14 @@
 @implementation NVXpcDelegate
 
 - (BOOL)listener:(NSXPCListener *)listener shouldAcceptNewConnection:(NSXPCConnection *)newConnection {
-  NeoVimXpcImpl *neoVimXpc = [NeoVimXpcImpl new];
+  newConnection.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(NeoVimUi)];
+
+  NeoVimXpcImpl *neoVimXpc = [[NeoVimXpcImpl alloc] initWithNeoVimUi:newConnection.remoteObjectProxy];
 
   newConnection.exportedInterface = [NSXPCInterface interfaceWithProtocol:@protocol(NeoVimXpc)];
   newConnection.exportedObject = neoVimXpc;
 
-  newConnection.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(NeoVimUi)];
-
   [newConnection resume];
-
-  [neoVimXpc setNeoVimUi:newConnection.remoteObjectProxy];
 
   return YES;
 }

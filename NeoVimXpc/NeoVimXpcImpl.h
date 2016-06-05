@@ -10,8 +10,6 @@
 
 @interface NeoVimXpcImpl : NSObject <NeoVimXpc>
 
-- (instancetype)init;
-
-- (void)setNeoVimUi:(id<NeoVimUi>)ui;
+- (instancetype)initWithNeoVimUi:(id<NeoVimUi>)ui;
 
 @end
