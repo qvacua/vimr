@@ -34,6 +34,20 @@ Run the `nvox`-target in Xcode.
 
 ## Project Setup
 
+### Artifacts Hierarchy
+
+```
+nvox.app
++-- SwiftNeoVim.framework
+    +-- NeoVimView
+    +-- NeoVimXpc.xpc
+        +-- libnvim
+        +-- other libs for NeoVim
+        +-- runtime files for NeoVim
+```
+
+### Libraries for NeoVim
+
 * The library `libiconv` is linked by the linker flag `-liconv`. The version bundled with OSX will be linked.
 * The library `libintl` should be installed by `homebrew` and is statically linked by explicitly using the linker flag `/usr/local/opt/gettext/lib/libintl.a`.
 * Other libraries used by NeoVim, which are automatically built by building `libnvim`, are linked by adding them to the Xcode project.
