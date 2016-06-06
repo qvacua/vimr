@@ -19,9 +19,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NeoVimViewDelegate {
     self.neoVim.view.setFrameOrigin(CGPointMake(0, 0))
     window.contentView?.addSubview(self.neoVim.view)
     
-    neoVim.vimInput("i")
-    neoVim.vimInput("t 하태원")
-    neoVim.vimInput("\u{001B}")
+    window.makeFirstResponder(self.neoVim.view)
+    
+//    neoVim.vimInput("i")
+//    neoVim.vimInput("abc")
+//    neoVim.vimInput("\u{001B}")
+//    neoVim.vimInput("i")
+//    neoVim.vimInput("Z")
+//    neoVim.vimInput("\u{001B}")
+//    neoVim.vimInput("i")
+//    for i in 0...9 {
+//      neoVim.vimInput("\(i)")
+//    }
   }
 
   func resizeToSize(size: CGSize) {

@@ -59,7 +59,7 @@ class NeoVimUiBridge: NSObject, NeoVimUiBridgeProtocol {
   }
 
   func scroll(count: Int32) {
-    print("### count: \(count)")
+    print("### scroll count: \(count)")
   }
 
   func highlightSet(attrs: HighlightAttributes) {

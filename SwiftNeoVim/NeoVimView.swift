@@ -11,10 +11,12 @@ public class NeoVimView: NSView {
   public var delegate: NeoVimViewDelegate?
   
   private let disposeBag = DisposeBag()
-
+  
   private var foregroundColor = NSColor.blackColor()
   private var backgroundColor = NSColor.whiteColor()
   private var font = NSFont(name: "Menlo", size: 12)!
+  
+  private let xpc: NeoVimXpc
   
   private var cellSize: CGSize {
     return self.font.boundingRectForFont.size
@@ -22,7 +24,8 @@ public class NeoVimView: NSView {
   
   private var lineGap: CGFloat = 2.0
 
-  init(frame rect: NSRect = CGRectZero, uiEventObservable: Observable<NeoVim.UiEvent>) {
+  init(frame rect: NSRect = CGRectZero, uiEventObservable: Observable<NeoVim.UiEvent>, xpc: NeoVimXpc) {
+    self.xpc = xpc
     super.init(frame: rect)
     
     uiEventObservable.subscribe(
@@ -42,7 +45,9 @@ public class NeoVimView: NSView {
           Swift.print("### \(position)")
           
         case .Put(let string):
-          Swift.print("### putting: \(string)")
+          dispatch_async(dispatch_get_main_queue()) {
+            NSLog("### putting: %@", string.stringByReplacingOccurrencesOfString(" ", withString: "•"))
+          }
         }
         
       }, onError: { error in
@@ -52,6 +57,10 @@ public class NeoVimView: NSView {
       }, onDisposed: {
         Swift.print("ui event observable disposed")
     }).addDisposableTo(self.disposeBag)
+  }
+  
+  override public func keyDown(theEvent: NSEvent) {
+    self.xpc.vimInput(theEvent.charactersIgnoringModifiers!)
   }
   
   override public func drawRect(dirtyRect: NSRect) {

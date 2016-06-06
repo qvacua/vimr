@@ -13,16 +13,22 @@ It could very well be that nothing useful comes out of it.
 
 ## How to Build
 
+First install `homebrew`, then:
+
 ```bash
+xcode-select --install # this installs the Xcode commandline tools
+brew install carthage # install Carthage for depencency management
+brew install libtool automake cmake pkg-config gettext ninja
+
 carthage update --platform osx # install Carthage first
-brew install gettext
+
 git submodule update --init
 cd neovim
 ln -s ../NeoVimXpc/local.mk .
 make libnvim # optional, the nvox target in Xcode also does this
 ```
 
-Then run the `nvox`-target in Xcode.
+Run the `nvox`-target in Xcode.
 
 ## Project Setup
 

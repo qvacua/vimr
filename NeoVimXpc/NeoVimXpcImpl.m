@@ -20,8 +20,9 @@
 #import <nvim/api/vim.h>
 #import <nvim/ui.h>
 #import <nvim/ui_bridge.h>
-#import <nvim/event/stream.h>
 #import <nvim/event/signal.h>
+#import <nvim/main.h>
+
 
 void (*objc_msgSend_no_arg)(id, SEL) = (void *) objc_msgSend;
 void (*objc_msgSend_string)(id, SEL, NSString *) = (void *) objc_msgSend;
@@ -30,15 +31,16 @@ void (*objc_msgSend_2_int)(id, SEL, int, int) = (void *) objc_msgSend;
 void (*objc_msgSend_4_int)(id, SEL, int, int, int, int) = (void *) objc_msgSend;
 void (*objc_msgSend_hlattrs)(id, SEL, HighlightAttributes) = (void *) objc_msgSend;
 
-// we declare nvim_main because it's not declared in any header files of neovim
+// We declare nvim_main because it's not declared in any header files of neovim
 extern int nvim_main(int argc, char **argv);
 
-static bool is_ui_launched = false;
-static NSCondition *uiLaunchCondition;
+// The thread in which neovim's main runs
+static uv_thread_t thread;
 
-static int PUT_BUFFER_SIZE = 80;
-static NSString *put_buffer = @"";
-#define PUT_IF_NECESSARY if (put_buffer.length > 0) { do_put_from_buffer(); }
+// Condition variable used by the XPC's init to wait till the UI initialization is finished
+static bool is_ui_launched = false;
+static uv_mutex_t mutex;
+static uv_cond_t condition;
 
 static id <NeoVimUiBridgeProtocol> neoVimOsxUi;
 
@@ -60,12 +62,11 @@ static inline String nvim_string_from_string(NSString *str) {
 typedef struct {
     UIBridgeData *bridge;
     Loop *loop;
-    Stream read_stream;
 
     bool stop;
-    bool cont_received;
 
     // FIXME: dunno whether we need this: copied from tui.c
+    bool cont_received;
     SignalWatcher cont_handle;
 } OsxXpcUiData;
 
@@ -88,19 +89,20 @@ static void osx_xpc_ui_main(UIBridgeData *bridge, UI *ui) {
   data->bridge = bridge;
   data->loop = &loop;
 
+  // FIXME: dunno whether we need this: copied from tui.c
   signal_watcher_init(data->loop, &data->cont_handle, data);
   signal_watcher_start(&data->cont_handle, sigcont_cb, SIGCONT);
 
-  bridge->bridge.width = 10;
-  bridge->bridge.height = 5;
+  bridge->bridge.width = 60;
+  bridge->bridge.height = 20;
 
   data->stop = false;
   CONTINUE(bridge);
 
-  [uiLaunchCondition lock];
+  uv_mutex_lock(&mutex);
   is_ui_launched = true;
-  [uiLaunchCondition signal];
-  [uiLaunchCondition unlock];
+  uv_cond_signal(&condition);
+  uv_mutex_unlock(&mutex);
 
   while (!data->stop) {
     loop_poll_events(&loop, -1);
@@ -113,7 +115,7 @@ static void osx_xpc_ui_main(UIBridgeData *bridge, UI *ui) {
   xfree(ui);
 }
 
-// copied from tui.c
+// FIXME: dunno whether we need this: copied from tui.c
 static void suspend_event(void **argv) {
   UI *ui = argv[0];
   OsxXpcUiData *data = ui->data;
@@ -129,120 +131,91 @@ static void suspend_event(void **argv) {
   CONTINUE(data->bridge);
 }
 
-static void do_put_from_buffer() {
-  objc_msgSend_string(neoVimOsxUi, @selector(put:), put_buffer);
-  put_buffer = @"";
-}
-
 static void xpc_ui_resize(UI *ui, int columns, int rows) {
-  PUT_IF_NECESSARY
   objc_msgSend_2_int(neoVimOsxUi, @selector(resizeToRows:columns:), rows, columns);
 }
 
 static void xpc_ui_clear(UI *ui) {
-  PUT_IF_NECESSARY
   objc_msgSend_no_arg(neoVimOsxUi, @selector(clear));
 }
 
 static void xpc_ui_eol_clear(UI *ui) {
-  PUT_IF_NECESSARY
   objc_msgSend_no_arg(neoVimOsxUi, @selector(eolClear));
 }
 
 static void xpc_ui_cursor_goto(UI *ui, int row, int col) {
-  PUT_IF_NECESSARY
   objc_msgSend_2_int(neoVimOsxUi, @selector(cursorGotoRow:column:), row, col);
 }
 
 static void xpc_ui_update_menu(UI *ui) {
-  PUT_IF_NECESSARY
   objc_msgSend_no_arg(neoVimOsxUi, @selector(updateMenu));
 }
 
 static void xpc_ui_busy_start(UI *ui) {
-  PUT_IF_NECESSARY
   objc_msgSend_no_arg(neoVimOsxUi, @selector(busyStart));
 }
 
 static void xpc_ui_busy_stop(UI *ui) {
-  PUT_IF_NECESSARY
   objc_msgSend_no_arg(neoVimOsxUi, @selector(busyStop));
 }
 
 static void xpc_ui_mouse_on(UI *ui) {
-  PUT_IF_NECESSARY
   objc_msgSend_no_arg(neoVimOsxUi, @selector(mouseOn));
 }
 
 static void xpc_ui_mouse_off(UI *ui) {
-  PUT_IF_NECESSARY
   objc_msgSend_no_arg(neoVimOsxUi, @selector(mouseOff));
 }
 
 static void xpc_ui_mode_change(UI *ui, int mode) {
-  PUT_IF_NECESSARY
   objc_msgSend_int(neoVimOsxUi, @selector(modeChange:), mode);
 }
 
 static void xpc_ui_set_scroll_region(UI *ui, int top, int bot, int left, int right) {
-  PUT_IF_NECESSARY
   objc_msgSend_4_int(neoVimOsxUi, @selector(setScrollRegionToTop:bottom:left:right:), top, bot, left, right);
 }
 
 static void xpc_ui_scroll(UI *ui, int count) {
-  PUT_IF_NECESSARY
   objc_msgSend_int(neoVimOsxUi, @selector(scroll:), count);
 }
 
 static void xpc_ui_highlight_set(UI *ui, HlAttrs attrs) {
-  PUT_IF_NECESSARY
-  objc_msgSend_hlattrs(neoVimOsxUi, @selector(highlightSet:), (*(HighlightAttributes *)(&attrs)));
+  objc_msgSend_hlattrs(neoVimOsxUi, @selector(highlightSet:), (*(HighlightAttributes *) (&attrs)));
 }
 
 static void xpc_ui_put(UI *ui, uint8_t *str, size_t len) {
-  put_buffer = [put_buffer stringByAppendingString:string_from_bytes(str, len)];
-
-  if (put_buffer.length >= PUT_BUFFER_SIZE) {
-    do_put_from_buffer();
-  }
+  objc_msgSend_string(neoVimOsxUi, @selector(put:), string_from_bytes(str, len));
 }
 
 static void xpc_ui_bell(UI *ui) {
-  PUT_IF_NECESSARY
   objc_msgSend_no_arg(neoVimOsxUi, @selector(bell));
 }
 
 static void xpc_ui_visual_bell(UI *ui) {
-  PUT_IF_NECESSARY
   objc_msgSend_no_arg(neoVimOsxUi, @selector(visualBell));
 }
 
 static void xpc_ui_flush(UI *ui) {
-  PUT_IF_NECESSARY
   objc_msgSend_no_arg(neoVimOsxUi, @selector(flush));
 }
 
 static void xpc_ui_update_fg(UI *ui, int fg) {
-  PUT_IF_NECESSARY
   objc_msgSend_int(neoVimOsxUi, @selector(updateForeground:), fg);
 }
 
 static void xpc_ui_update_bg(UI *ui, int bg) {
-  PUT_IF_NECESSARY
   objc_msgSend_int(neoVimOsxUi, @selector(updateBackground:), bg);
 }
 
 static void xpc_ui_update_sp(UI *ui, int sp) {
-  PUT_IF_NECESSARY
   objc_msgSend_int(neoVimOsxUi, @selector(updateSpecial:), sp);
 }
 
 static void xpc_ui_suspend(UI *ui) {
-  PUT_IF_NECESSARY
   objc_msgSend_no_arg(neoVimOsxUi, @selector(suspend));
 
   OsxXpcUiData *data = ui->data;
-  // copied from tui.c
+  // FIXME: dunno whether we need this: copied from tui.c
   // kill(0, SIGTSTP) won't stop the UI thread, so we must poll for SIGCONT
   // before continuing. This is done in another callback to avoid
   // loop_poll_events recursion
@@ -250,12 +223,10 @@ static void xpc_ui_suspend(UI *ui) {
 }
 
 static void xpc_ui_set_title(UI *ui, char *title) {
-  PUT_IF_NECESSARY
   objc_msgSend_string(neoVimOsxUi, @selector(setTitle:), string_from_cstr(title));
 }
 
 static void xpc_ui_set_icon(UI *ui, char *icon) {
-  PUT_IF_NECESSARY
   objc_msgSend_string(neoVimOsxUi, @selector(setTitle:), string_from_cstr(icon));
 }
 
@@ -264,6 +235,15 @@ static void xpc_ui_stop(UI *ui) {
 
   OsxXpcUiData *data = (OsxXpcUiData *) ui->data;
   data->stop = true;
+}
+
+static void run_neovim(void *arg) {
+  char *argv[1];
+  argv[0] = "nvim";
+
+  int returnCode = nvim_main(1, argv);
+
+  NSLog(@"neovim's main returned with code: %d", returnCode);
 }
 
 void custom_ui_start(void) {
@@ -295,50 +275,52 @@ void custom_ui_start(void) {
   ui->set_title = xpc_ui_set_title;
   ui->set_icon = xpc_ui_set_icon;
 
-  NSLog(@"attaching ui");
   ui_bridge_attach(ui, osx_xpc_ui_main, osx_xpc_ui_scheduler);
 }
 
-@implementation NeoVimXpcImpl {
-  NSThread *_neoVimThread;
+// We don't wait in this callback because the input events are coming from the XPC's main thread, but we call it same as
+// in tui.c
+static void wait_input_enqueue(void **argv) {
+  NSString *input = (__bridge NSString *) argv[0];
+
+  // TODO: Should we copy the UTF8String to be sure?
+  vim_input(nvim_string_from_string(input));
 }
 
-- (instancetype)initWithNeoVimUi:(id<NeoVimUiBridgeProtocol>)ui {
+@implementation NeoVimXpcImpl
+
+- (instancetype)initWithNeoVimUi:(id <NeoVimUiBridgeProtocol>)ui {
   self = [super init];
   if (self == nil) {
     return nil;
   }
 
-  uiLaunchCondition = [NSCondition new];
-
   // set $VIMRUNTIME to ${RESOURCE_PATH_OF_XPC_BUNDLE}/runtime
   NSString *runtimePath = [[NSBundle mainBundle].resourcePath stringByAppendingPathComponent:@"runtime"];
   setenv("VIMRUNTIME", runtimePath.fileSystemRepresentation, true);
 
-  _neoVimThread = [[NSThread alloc] initWithTarget:self selector:@selector(runNeoVim:) object:self];
-  [_neoVimThread start];
+  uv_mutex_init(&mutex);
+  uv_cond_init(&condition);
 
-  // return only when the ui is launched
-  [uiLaunchCondition lock];
+  uv_thread_create(&thread, run_neovim, NULL);
+
+  // return only when the UI is launched
+  uv_mutex_lock(&mutex);
   while (!is_ui_launched) {
-    [uiLaunchCondition wait];
+    uv_cond_wait(&condition, &mutex);
   }
-  [uiLaunchCondition unlock];
+  uv_mutex_unlock(&mutex);
+
+  uv_cond_destroy(&condition);
+  uv_mutex_destroy(&mutex);
 
   neoVimOsxUi = ui;
 
   return self;
 }
 
-- (void)runNeoVim:(id)sender {
-  char *argv[1];
-  argv[0] = "nvim";
-
-  nvim_main(1, argv);
-}
-
 - (void)vimInput:(NSString *)input {
-  vim_input(nvim_string_from_string(input));
+  loop_schedule(&main_loop, event_create(1, wait_input_enqueue, 1, input));
 }
 
 @end

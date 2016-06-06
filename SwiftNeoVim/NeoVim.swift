@@ -41,7 +41,6 @@ public class NeoVim {
   public init() {
     let neoVimUiBridge = NeoVimUiBridge()
     self.neoVimUiBridge = neoVimUiBridge
-    self.view = NeoVimView(uiEventObservable: neoVimUiBridge.observable)
     
     self.xpcConnection.remoteObjectInterface = NSXPCInterface(withProtocol: NeoVimXpc.self)
 
@@ -51,6 +50,7 @@ public class NeoVim {
     self.xpcConnection.resume()
 
     self.xpc = self.xpcConnection.remoteObjectProxy as! NeoVimXpc
+    self.view = NeoVimView(uiEventObservable: neoVimUiBridge.observable, xpc: self.xpc)
   }
 
   deinit {

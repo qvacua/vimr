@@ -10,8 +10,8 @@
 
 @interface NeoVimXpcImpl : NSObject <NeoVimXpc>
 
-- (instancetype)initWithNeoVimUi:(id<NeoVimUiBridgeProtocol>)ui;
+- (instancetype _Nonnull)initWithNeoVimUi:(id<NeoVimUiBridgeProtocol> _Nonnull)ui;
 
-- (void)vimInput:(NSString *)input;
+- (void)vimInput:(NSString * _Nonnull)input;
 
 @end
