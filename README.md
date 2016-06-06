@@ -1,6 +1,8 @@
 nvox
 ====
 
+<strong>N</strong>eo<strong>V</strong>im for <strong>O</strong>S <strong>X</strong>
+
 ## About
 
 nvox is a *toy* project, meaning e.g. no tests whatsoever, for me to:
@@ -16,11 +18,11 @@ It could very well be that nothing useful comes out of it.
 First install `homebrew`, then:
 
 ```bash
-xcode-select --install # this installs the Xcode commandline tools
-brew install carthage # install Carthage for depencency management
-brew install libtool automake cmake pkg-config gettext ninja
+xcode-select --install # install the Xcode command line tools
+brew install carthage # install Carthage for dependency management
+brew install libtool automake cmake pkg-config gettext ninja # install libs and tools for neovim
 
-carthage update --platform osx # install Carthage first
+carthage update --platform osx
 
 git submodule update --init
 cd neovim
