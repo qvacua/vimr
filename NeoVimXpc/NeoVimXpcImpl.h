@@ -12,6 +12,8 @@
 
 - (instancetype _Nonnull)initWithNeoVimUi:(id<NeoVimUiBridgeProtocol> _Nonnull)ui;
 
+- (void)probe;
+
 - (void)vimInput:(NSString * _Nonnull)input;
 
 @end

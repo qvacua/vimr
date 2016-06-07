@@ -42,7 +42,7 @@ static bool is_ui_launched = false;
 static uv_mutex_t mutex;
 static uv_cond_t condition;
 
-static id <NeoVimUiBridgeProtocol> neoVimOsxUi;
+static id <NeoVimUiBridgeProtocol> neo_vim_osx_ui;
 
 static inline NSString *string_from_bytes(uint8_t *str, size_t len) {
   return [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
@@ -132,87 +132,87 @@ static void suspend_event(void **argv) {
 }
 
 static void xpc_ui_resize(UI *ui, int columns, int rows) {
-  objc_msgSend_2_int(neoVimOsxUi, @selector(resizeToRows:columns:), rows, columns);
+  objc_msgSend_2_int(neo_vim_osx_ui, @selector(resizeToRows:columns:), rows, columns);
 }
 
 static void xpc_ui_clear(UI *ui) {
-  objc_msgSend_no_arg(neoVimOsxUi, @selector(clear));
+  objc_msgSend_no_arg(neo_vim_osx_ui, @selector(clear));
 }
 
 static void xpc_ui_eol_clear(UI *ui) {
-  objc_msgSend_no_arg(neoVimOsxUi, @selector(eolClear));
+  objc_msgSend_no_arg(neo_vim_osx_ui, @selector(eolClear));
 }
 
 static void xpc_ui_cursor_goto(UI *ui, int row, int col) {
-  objc_msgSend_2_int(neoVimOsxUi, @selector(cursorGotoRow:column:), row, col);
+  objc_msgSend_2_int(neo_vim_osx_ui, @selector(cursorGotoRow:column:), row, col);
 }
 
 static void xpc_ui_update_menu(UI *ui) {
-  objc_msgSend_no_arg(neoVimOsxUi, @selector(updateMenu));
+  objc_msgSend_no_arg(neo_vim_osx_ui, @selector(updateMenu));
 }
 
 static void xpc_ui_busy_start(UI *ui) {
-  objc_msgSend_no_arg(neoVimOsxUi, @selector(busyStart));
+  objc_msgSend_no_arg(neo_vim_osx_ui, @selector(busyStart));
 }
 
 static void xpc_ui_busy_stop(UI *ui) {
-  objc_msgSend_no_arg(neoVimOsxUi, @selector(busyStop));
+  objc_msgSend_no_arg(neo_vim_osx_ui, @selector(busyStop));
 }
 
 static void xpc_ui_mouse_on(UI *ui) {
-  objc_msgSend_no_arg(neoVimOsxUi, @selector(mouseOn));
+  objc_msgSend_no_arg(neo_vim_osx_ui, @selector(mouseOn));
 }
 
 static void xpc_ui_mouse_off(UI *ui) {
-  objc_msgSend_no_arg(neoVimOsxUi, @selector(mouseOff));
+  objc_msgSend_no_arg(neo_vim_osx_ui, @selector(mouseOff));
 }
 
 static void xpc_ui_mode_change(UI *ui, int mode) {
-  objc_msgSend_int(neoVimOsxUi, @selector(modeChange:), mode);
+  objc_msgSend_int(neo_vim_osx_ui, @selector(modeChange:), mode);
 }
 
 static void xpc_ui_set_scroll_region(UI *ui, int top, int bot, int left, int right) {
-  objc_msgSend_4_int(neoVimOsxUi, @selector(setScrollRegionToTop:bottom:left:right:), top, bot, left, right);
+  objc_msgSend_4_int(neo_vim_osx_ui, @selector(setScrollRegionToTop:bottom:left:right:), top, bot, left, right);
 }
 
 static void xpc_ui_scroll(UI *ui, int count) {
-  objc_msgSend_int(neoVimOsxUi, @selector(scroll:), count);
+  objc_msgSend_int(neo_vim_osx_ui, @selector(scroll:), count);
 }
 
 static void xpc_ui_highlight_set(UI *ui, HlAttrs attrs) {
-  objc_msgSend_hlattrs(neoVimOsxUi, @selector(highlightSet:), (*(HighlightAttributes *) (&attrs)));
+  objc_msgSend_hlattrs(neo_vim_osx_ui, @selector(highlightSet:), (*(HighlightAttributes *) (&attrs)));
 }
 
 static void xpc_ui_put(UI *ui, uint8_t *str, size_t len) {
-  objc_msgSend_string(neoVimOsxUi, @selector(put:), string_from_bytes(str, len));
+  objc_msgSend_string(neo_vim_osx_ui, @selector(put:), string_from_bytes(str, len));
 }
 
 static void xpc_ui_bell(UI *ui) {
-  objc_msgSend_no_arg(neoVimOsxUi, @selector(bell));
+  objc_msgSend_no_arg(neo_vim_osx_ui, @selector(bell));
 }
 
 static void xpc_ui_visual_bell(UI *ui) {
-  objc_msgSend_no_arg(neoVimOsxUi, @selector(visualBell));
+  objc_msgSend_no_arg(neo_vim_osx_ui, @selector(visualBell));
 }
 
 static void xpc_ui_flush(UI *ui) {
-  objc_msgSend_no_arg(neoVimOsxUi, @selector(flush));
+  objc_msgSend_no_arg(neo_vim_osx_ui, @selector(flush));
 }
 
 static void xpc_ui_update_fg(UI *ui, int fg) {
-  objc_msgSend_int(neoVimOsxUi, @selector(updateForeground:), fg);
+  objc_msgSend_int(neo_vim_osx_ui, @selector(updateForeground:), fg);
 }
 
 static void xpc_ui_update_bg(UI *ui, int bg) {
-  objc_msgSend_int(neoVimOsxUi, @selector(updateBackground:), bg);
+  objc_msgSend_int(neo_vim_osx_ui, @selector(updateBackground:), bg);
 }
 
 static void xpc_ui_update_sp(UI *ui, int sp) {
-  objc_msgSend_int(neoVimOsxUi, @selector(updateSpecial:), sp);
+  objc_msgSend_int(neo_vim_osx_ui, @selector(updateSpecial:), sp);
 }
 
 static void xpc_ui_suspend(UI *ui) {
-  objc_msgSend_no_arg(neoVimOsxUi, @selector(suspend));
+  objc_msgSend_no_arg(neo_vim_osx_ui, @selector(suspend));
 
   OsxXpcUiData *data = ui->data;
   // FIXME: dunno whether we need this: copied from tui.c
@@ -223,15 +223,15 @@ static void xpc_ui_suspend(UI *ui) {
 }
 
 static void xpc_ui_set_title(UI *ui, char *title) {
-  objc_msgSend_string(neoVimOsxUi, @selector(setTitle:), string_from_cstr(title));
+  objc_msgSend_string(neo_vim_osx_ui, @selector(setTitle:), string_from_cstr(title));
 }
 
 static void xpc_ui_set_icon(UI *ui, char *icon) {
-  objc_msgSend_string(neoVimOsxUi, @selector(setTitle:), string_from_cstr(icon));
+  objc_msgSend_string(neo_vim_osx_ui, @selector(setTitle:), string_from_cstr(icon));
 }
 
 static void xpc_ui_stop(UI *ui) {
-  objc_msgSend_no_arg(neoVimOsxUi, @selector(stop));
+  objc_msgSend_no_arg(neo_vim_osx_ui, @selector(stop));
 
   OsxXpcUiData *data = (OsxXpcUiData *) ui->data;
   data->stop = true;
@@ -314,9 +314,13 @@ static void wait_input_enqueue(void **argv) {
   uv_cond_destroy(&condition);
   uv_mutex_destroy(&mutex);
 
-  neoVimOsxUi = ui;
+  neo_vim_osx_ui = ui;
 
   return self;
+}
+
+- (void)probe {
+  // noop
 }
 
 - (void)vimInput:(NSString *)input {

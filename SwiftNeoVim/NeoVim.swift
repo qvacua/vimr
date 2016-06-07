@@ -51,6 +51,8 @@ public class NeoVim {
 
     self.xpc = self.xpcConnection.remoteObjectProxy as! NeoVimXpc
     self.view = NeoVimView(uiEventObservable: neoVimUiBridge.observable, xpc: self.xpc)
+    // bring the XPC service to life
+    self.xpc.probe()
   }
 
   deinit {
