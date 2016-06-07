@@ -9,10 +9,8 @@
 #import "NeoVimUiBridgeProtocol.h"
 
 
-/**
- * FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
- * them.
- */
+// FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
+// them.
 #define FileInfo CarbonFileInfo
 #define Boolean CarbonBoolean
 
@@ -35,29 +33,14 @@ void (*objc_msgSend_hlattrs)(id, SEL, HighlightAttributes) = (void *) objc_msgSe
 extern int nvim_main(int argc, char **argv);
 
 // The thread in which neovim's main runs
-static uv_thread_t thread;
+static uv_thread_t nvim_thread;
 
-// Condition variable used by the XPC's init to wait till the UI initialization is finished
+// Condition variable used by the XPC's init to wait till our custom UI initialization is finished inside neovim
 static bool is_ui_launched = false;
 static uv_mutex_t mutex;
 static uv_cond_t condition;
 
 static id <NeoVimUiBridgeProtocol> neo_vim_osx_ui;
-
-static inline NSString *string_from_bytes(uint8_t *str, size_t len) {
-  return [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
-}
-
-static inline NSString *string_from_cstr(char *cstr) {
-  return [[NSString alloc] initWithCString:cstr encoding:NSUTF8StringEncoding];
-}
-
-static inline String nvim_string_from_string(NSString *str) {
-  return (String) {
-      .data=(char *) str.UTF8String,
-      .size=[str lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
-  };
-}
 
 typedef struct {
     UIBridgeData *bridge;
@@ -70,7 +53,7 @@ typedef struct {
     SignalWatcher cont_handle;
 } OsxXpcUiData;
 
-static void sigcont_cb(SignalWatcher *watcher, int signum, void *data) {
+static void sigcont_cb(SignalWatcher *watcher __unused, int signum __unused, void *data) {
   ((OsxXpcUiData *) data)->cont_received = true;
 }
 
@@ -131,87 +114,89 @@ static void suspend_event(void **argv) {
   CONTINUE(data->bridge);
 }
 
-static void xpc_ui_resize(UI *ui, int columns, int rows) {
+static void xpc_ui_resize(UI *ui __unused, int columns, int rows) {
   objc_msgSend_2_int(neo_vim_osx_ui, @selector(resizeToRows:columns:), rows, columns);
 }
 
-static void xpc_ui_clear(UI *ui) {
+static void xpc_ui_clear(UI *ui __unused) {
   objc_msgSend_no_arg(neo_vim_osx_ui, @selector(clear));
 }
 
-static void xpc_ui_eol_clear(UI *ui) {
+static void xpc_ui_eol_clear(UI *ui __unused) {
   objc_msgSend_no_arg(neo_vim_osx_ui, @selector(eolClear));
 }
 
-static void xpc_ui_cursor_goto(UI *ui, int row, int col) {
+static void xpc_ui_cursor_goto(UI *ui __unused, int row, int col) {
   objc_msgSend_2_int(neo_vim_osx_ui, @selector(cursorGotoRow:column:), row, col);
 }
 
-static void xpc_ui_update_menu(UI *ui) {
+static void xpc_ui_update_menu(UI *ui __unused) {
   objc_msgSend_no_arg(neo_vim_osx_ui, @selector(updateMenu));
 }
 
-static void xpc_ui_busy_start(UI *ui) {
+static void xpc_ui_busy_start(UI *ui __unused) {
   objc_msgSend_no_arg(neo_vim_osx_ui, @selector(busyStart));
 }
 
-static void xpc_ui_busy_stop(UI *ui) {
+static void xpc_ui_busy_stop(UI *ui __unused) {
   objc_msgSend_no_arg(neo_vim_osx_ui, @selector(busyStop));
 }
 
-static void xpc_ui_mouse_on(UI *ui) {
+static void xpc_ui_mouse_on(UI *ui __unused) {
   objc_msgSend_no_arg(neo_vim_osx_ui, @selector(mouseOn));
 }
 
-static void xpc_ui_mouse_off(UI *ui) {
+static void xpc_ui_mouse_off(UI *ui __unused) {
   objc_msgSend_no_arg(neo_vim_osx_ui, @selector(mouseOff));
 }
 
-static void xpc_ui_mode_change(UI *ui, int mode) {
+static void xpc_ui_mode_change(UI *ui __unused, int mode) {
   objc_msgSend_int(neo_vim_osx_ui, @selector(modeChange:), mode);
 }
 
-static void xpc_ui_set_scroll_region(UI *ui, int top, int bot, int left, int right) {
+static void xpc_ui_set_scroll_region(UI *ui __unused, int top, int bot, int left, int right) {
   objc_msgSend_4_int(neo_vim_osx_ui, @selector(setScrollRegionToTop:bottom:left:right:), top, bot, left, right);
 }
 
-static void xpc_ui_scroll(UI *ui, int count) {
+static void xpc_ui_scroll(UI *ui __unused, int count) {
   objc_msgSend_int(neo_vim_osx_ui, @selector(scroll:), count);
 }
 
-static void xpc_ui_highlight_set(UI *ui, HlAttrs attrs) {
+static void xpc_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
   objc_msgSend_hlattrs(neo_vim_osx_ui, @selector(highlightSet:), (*(HighlightAttributes *) (&attrs)));
 }
 
-static void xpc_ui_put(UI *ui, uint8_t *str, size_t len) {
-  objc_msgSend_string(neo_vim_osx_ui, @selector(put:), string_from_bytes(str, len));
+static void xpc_ui_put(UI *ui __unused, uint8_t *str, size_t len) {
+  NSString *string = [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
+  objc_msgSend_string(neo_vim_osx_ui, @selector(put:), string);
+  [string release];
 }
 
-static void xpc_ui_bell(UI *ui) {
+static void xpc_ui_bell(UI *ui __unused) {
   objc_msgSend_no_arg(neo_vim_osx_ui, @selector(bell));
 }
 
-static void xpc_ui_visual_bell(UI *ui) {
+static void xpc_ui_visual_bell(UI *ui __unused) {
   objc_msgSend_no_arg(neo_vim_osx_ui, @selector(visualBell));
 }
 
-static void xpc_ui_flush(UI *ui) {
+static void xpc_ui_flush(UI *ui __unused) {
   objc_msgSend_no_arg(neo_vim_osx_ui, @selector(flush));
 }
 
-static void xpc_ui_update_fg(UI *ui, int fg) {
+static void xpc_ui_update_fg(UI *ui __unused, int fg) {
   objc_msgSend_int(neo_vim_osx_ui, @selector(updateForeground:), fg);
 }
 
-static void xpc_ui_update_bg(UI *ui, int bg) {
+static void xpc_ui_update_bg(UI *ui __unused, int bg) {
   objc_msgSend_int(neo_vim_osx_ui, @selector(updateBackground:), bg);
 }
 
-static void xpc_ui_update_sp(UI *ui, int sp) {
+static void xpc_ui_update_sp(UI *ui __unused, int sp) {
   objc_msgSend_int(neo_vim_osx_ui, @selector(updateSpecial:), sp);
 }
 
-static void xpc_ui_suspend(UI *ui) {
+static void xpc_ui_suspend(UI *ui __unused) {
   objc_msgSend_no_arg(neo_vim_osx_ui, @selector(suspend));
 
   OsxXpcUiData *data = ui->data;
@@ -222,22 +207,26 @@ static void xpc_ui_suspend(UI *ui) {
   queue_put_event(data->loop->fast_events, event_create(1, suspend_event, 1, ui));
 }
 
-static void xpc_ui_set_title(UI *ui, char *title) {
-  objc_msgSend_string(neo_vim_osx_ui, @selector(setTitle:), string_from_cstr(title));
+static void xpc_ui_set_title(UI *ui __unused, char *title) {
+  NSString *string = [[NSString alloc] initWithCString:title encoding:NSUTF8StringEncoding];
+  objc_msgSend_string(neo_vim_osx_ui, @selector(setTitle:), string);
+  [string release];
 }
 
-static void xpc_ui_set_icon(UI *ui, char *icon) {
-  objc_msgSend_string(neo_vim_osx_ui, @selector(setTitle:), string_from_cstr(icon));
+static void xpc_ui_set_icon(UI *ui __unused, char *icon) {
+  NSString *string = [[NSString alloc] initWithCString:icon encoding:NSUTF8StringEncoding];
+  objc_msgSend_string(neo_vim_osx_ui, @selector(setTitle:), string);
+  [string release];
 }
 
-static void xpc_ui_stop(UI *ui) {
+static void xpc_ui_stop(UI *ui __unused) {
   objc_msgSend_no_arg(neo_vim_osx_ui, @selector(stop));
 
   OsxXpcUiData *data = (OsxXpcUiData *) ui->data;
   data->stop = true;
 }
 
-static void run_neovim(void *arg) {
+static void run_neovim(void *arg __unused) {
   char *argv[1];
   argv[0] = "nvim";
 
@@ -278,13 +267,20 @@ void custom_ui_start(void) {
   ui_bridge_attach(ui, osx_xpc_ui_main, osx_xpc_ui_scheduler);
 }
 
-// We don't wait in this callback because the input events are coming from the XPC's main thread, but we call it same as
-// in tui.c
+// We don't wait in this callback because the input events are coming from the XPC's main thread, but we call it the
+// same as in tui.c. This function is called in the main_loop of neovim.
 static void wait_input_enqueue(void **argv) {
-  NSString *input = (__bridge NSString *) argv[0];
+  NSString *input = (NSString *) argv[0];
 
-  // TODO: Should we copy the UTF8String to be sure?
-  vim_input(nvim_string_from_string(input));
+  // FIXME: check the length of the consumed bytes by neovim and if not fully consumed, call vim_input again.
+  vim_input((String) {
+      .data=(char *) input.UTF8String,
+      .size=[input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
+  });
+
+  // Release NSString that is retained in -NeoVimXpcImpl.vimInput:. The retain call was in the main thread of the XPC
+  // service.
+  [input release];
 }
 
 @implementation NeoVimXpcImpl
@@ -302,9 +298,9 @@ static void wait_input_enqueue(void **argv) {
   uv_mutex_init(&mutex);
   uv_cond_init(&condition);
 
-  uv_thread_create(&thread, run_neovim, NULL);
+  uv_thread_create(&nvim_thread, run_neovim, NULL);
 
-  // return only when the UI is launched
+  // continue only after our UI main code for neovim has been fully initialized
   uv_mutex_lock(&mutex);
   while (!is_ui_launched) {
     uv_cond_wait(&condition, &mutex);
@@ -314,9 +310,17 @@ static void wait_input_enqueue(void **argv) {
   uv_cond_destroy(&condition);
   uv_mutex_destroy(&mutex);
 
-  neo_vim_osx_ui = ui;
+  // casting because [ui retain] returns an NSObject
+  neo_vim_osx_ui = (id <NeoVimUiBridgeProtocol>) [ui retain];
 
   return self;
+}
+
+- (void)dealloc {
+  [neo_vim_osx_ui release];
+  // FIXME: uv_thread_join(&thread) here after terminating neovim
+
+  [super dealloc];
 }
 
 - (void)probe {
@@ -324,6 +328,9 @@ static void wait_input_enqueue(void **argv) {
 }
 
 - (void)vimInput:(NSString *)input {
+  // OK not to release here since it will be released in wait_input_enqueue
+  [input retain];
+
   loop_schedule(&main_loop, event_create(1, wait_input_enqueue, 1, input));
 }
 

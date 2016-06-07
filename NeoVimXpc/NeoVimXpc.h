@@ -5,7 +5,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol NeoVimXpc
+@protocol NeoVimXpc <NSObject>
 
 /**
  * It seems that the XPC service does not get instantiated as long as no actual calls are made. However, we want neovim

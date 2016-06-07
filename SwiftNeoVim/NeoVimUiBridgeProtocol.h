@@ -11,7 +11,7 @@ typedef struct {
   int foreground, background, special;
 } HighlightAttributes;
 
-@protocol NeoVimUiBridgeProtocol
+@protocol NeoVimUiBridgeProtocol <NSObject>
 
 - (void)resizeToRows:(int)rows columns:(int)columns;
 - (void)clear;

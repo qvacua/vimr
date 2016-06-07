@@ -25,7 +25,7 @@
 		4B2A2C1D1D0358CE0074CE9A /* RxCocoa.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B2A2BE21D0225800074CE9A /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B2A2C1E1D0358CE0074CE9A /* RxSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B2A2BE31D0225800074CE9A /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B2A2C251D0359650074CE9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2C201D0359650074CE9A /* main.m */; };
-		4B2A2C261D0359650074CE9A /* NeoVimXpcImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2C231D0359650074CE9A /* NeoVimXpcImpl.m */; };
+		4B2A2C261D0359650074CE9A /* NeoVimXpcImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2C231D0359650074CE9A /* NeoVimXpcImpl.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4B2F24A81D035EBB0035AC9A /* NeoVimService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2F24A71D035EBB0035AC9A /* NeoVimService.swift */; };
 		4B401B141D0454DC00D99EDC /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; };
 		4B401B161D0454E900D99EDC /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
