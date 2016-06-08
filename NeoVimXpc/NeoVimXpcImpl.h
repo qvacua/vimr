@@ -16,4 +16,6 @@
 
 - (void)vimInput:(NSString * _Nonnull)input;
 
+- (void)debugScreenLines;
+
 @end

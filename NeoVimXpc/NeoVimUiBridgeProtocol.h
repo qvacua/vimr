@@ -1,0 +1,1 @@
+../SwiftNeoVim/NeoVimUiBridgeProtocol.h

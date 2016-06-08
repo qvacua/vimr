@@ -11,16 +11,20 @@ public class NeoVim {
     case MoveCursor(position: Position)
     case Put(string: String)
     case Resize(size: Size)
+    case SetHighlightAttributes(attrs: HighlightAttributes)
+    case Clear
+    case EolClear
+    case Flush
   }
   
   struct Size {
-    let rows: Int32
-    let columns: Int32
+    let width: Int
+    let height: Int
   }
   
   struct Position {
-    let row: Int32
-    let column: Int32
+    var row: Int
+    var column: Int
   }
 
   enum ColorKind {
@@ -32,25 +36,21 @@ public class NeoVim {
   private static let qXpcName = "com.qvacua.nvox.xpc"
 
   private let xpcConnection: NSXPCConnection = NSXPCConnection(serviceName: NeoVim.qXpcName)
-  private let xpc: NeoVimXpc
   
-  private let neoVimUiBridge: NeoVimUiBridge
-  
+  public let xpc: NeoVimXpc
   public let view: NeoVimView
 
   public init() {
-    let neoVimUiBridge = NeoVimUiBridge()
-    self.neoVimUiBridge = neoVimUiBridge
-    
     self.xpcConnection.remoteObjectInterface = NSXPCInterface(withProtocol: NeoVimXpc.self)
 
+    self.xpc = self.xpcConnection.remoteObjectProxy as! NeoVimXpc
+    self.view = NeoVimView(xpc: self.xpc)
+    
     self.xpcConnection.exportedInterface = NSXPCInterface(withProtocol: NeoVimUiBridgeProtocol.self)
-    self.xpcConnection.exportedObject = self.neoVimUiBridge
+    self.xpcConnection.exportedObject = self.view
 
     self.xpcConnection.resume()
 
-    self.xpc = self.xpcConnection.remoteObjectProxy as! NeoVimXpc
-    self.view = NeoVimView(uiEventObservable: neoVimUiBridge.observable, xpc: self.xpc)
     // bring the XPC service to life
     self.xpc.probe()
   }
