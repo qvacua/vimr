@@ -19,10 +19,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NeoVimViewDelegate {
   func applicationDidFinishLaunching(aNotification: NSNotification) {
     self.neoVim = NeoVim()
     self.neoVim.view.delegate = self
-    self.neoVim.view.setFrameSize(CGSizeMake(100.0, 100.0))
-    self.neoVim.view.setFrameOrigin(CGPointMake(0, 0))
-    window.contentView?.addSubview(self.neoVim.view)
-    window.makeFirstResponder(self.neoVim.view)
+
+    self.neoVim.view.setFrameSize(CGSize(width: 100.0, height: 100.0))
+    self.neoVim.view.setFrameOrigin(CGPoint(x: 0, y: 0))
+    self.window.contentView?.addSubview(self.neoVim.view)
+
+    self.window.makeFirstResponder(self.neoVim.view)
 
 //    neoVim.vimInput("i")
 //    neoVim.vimInput("\u{1F914}")
@@ -30,17 +32,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NeoVimViewDelegate {
 //    neoVim.vimInput("č")
 //    neoVim.vimInput("하")
 //    neoVim.vimInput("a")
+//    neoVim.vimInput("泰")
 //    neoVim.vimInput("z")
 //    neoVim.vimInput("\u{001B}")
-//    neoVim.vimInput("하12")
-//    neoVim.vimInput("r")
-//    neoVim.vimInput("泰")
-//    neoVim.vimInput("\u{001B}")
-//    neoVim.vimInput("Z")
-//    neoVim.vimInput("i")
-//    for i in 0...9 {
-//      neoVim.vimInput("\(i)")
-//    }
   }
 
   func resizeToSize(size: CGSize) {

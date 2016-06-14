@@ -52,17 +52,18 @@ public class NeoVimView: NSView {
   
   public var delegate: NeoVimViewDelegate?
 
-  private static let qDispatchMainQueue = dispatch_get_main_queue()
+  private let qDispatchMainQueue = dispatch_get_main_queue()
+  private let qLineGap = CGFloat(2)
   
   private var foregroundColor = Int32(bitPattern: UInt32(0xFF000000))
   private var backgroundColor = Int32(bitPattern: UInt32(0xFFFFFFFF))
-  private var font = NSFont(name: "Menlo", size: 14)!
+  private var font = NSFont(name: "Menlo", size: 13)!
   
   private let xpc: NeoVimXpc
   private let drawer = TextDrawer()
   
   private var cellSize: CGSize = CGSizeMake(0, 0)
-  
+
   private let grid = Grid()
   private var rowFragmentsToDraw: [RowFragment] = []
 
@@ -73,7 +74,7 @@ public class NeoVimView: NSView {
     // hard-code some stuff
     let attrs = [ NSFontAttributeName: self.font ]
     let width = ceil(" ".sizeWithAttributes(attrs).width)
-    let height = ceil(self.font.ascender - self.font.descender + self.font.leading);
+    let height = ceil(self.font.ascender - self.font.descender + self.font.leading) + qLineGap
     self.cellSize = CGSizeMake(width, height)
   }
   
@@ -82,7 +83,6 @@ public class NeoVimView: NSView {
   }
   
   override public func drawRect(dirtyRect: NSRect) {
-//    Swift.print("$$$ DRAWING: \(dirtyRect)")
     let context = NSGraphicsContext.currentContext()!.CGContext
 
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
@@ -90,22 +90,30 @@ public class NeoVimView: NSView {
 
     self.rowFragmentsToDraw.forEach { rowFrag in
       let string = self.grid.cells[rowFrag.row][rowFrag.range].reduce("") { $0 + $1.string }
+
       let positions = rowFrag.range
         // filter out the put(0, 0)s (after a wide character)
         .filter { self.grid.cells[rowFrag.row][$0].string.characters.count > 0 }
         .map { self.originOnView(rowFrag.row, column: $0) }
 
-      let positionsPtr: UnsafeMutablePointer<CGPoint> = UnsafeMutablePointer(positions)
+      ColorUtils.colorFromCode(self.backgroundColor).set()
+      let backgroundRect = CGRect(x: positions[0].x, y: positions[0].y,
+                                  width: positions.last!.x + self.cellSize.width, height: self.cellSize.height)
+      NSRectFill(backgroundRect)
+
+      ColorUtils.colorFromCode(self.foregroundColor).set()
+      let glyphPositions = positions.map { CGPoint(x: $0.x, y: $0.y + qLineGap) }
       self.drawer.drawString(
-        string, positions: positionsPtr,
+        string, positions: UnsafeMutablePointer(glyphPositions),
         font: self.font, foreground: self.foregroundColor, background: self.backgroundColor,
         context: context
       )
-      positionsPtr.destroy()
+
+      NSColor.redColor().set()
+      positions.forEach { NSRectFill(CGRect(origin: $0, size: CGSize(width: 1, height: 1))) }
     }
 
     self.rowFragmentsToDraw = []
-//    Swift.print("$$$ DRAWN")
   }
 
   private func originOnView(row: Int, column: Int) -> CGPoint {
@@ -116,7 +124,7 @@ public class NeoVimView: NSView {
   }
 
   private func gui(call: () -> Void) {
-    dispatch_async(NeoVimView.qDispatchMainQueue, call)
+    dispatch_async(qDispatchMainQueue, call)
   }
   
   required public init?(coder: NSCoder) {
@@ -157,7 +165,9 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
         width: CGFloat(self.grid.region.right - self.grid.position.column + 1) * self.cellSize.width,
         height: self.cellSize.height
       )
-      self.setNeedsDisplayInRect(CGRect(origin: origin, size: size))
+      let rect = CGRect(origin: origin, size: size)
+      Swift.print("### eol clear: \(rect)")
+      self.setNeedsDisplayInRect(rect)
     }
   }
   
@@ -216,9 +226,8 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
 
       self.addToRowFragmentsToDraw(curPos)
 
-      self.setNeedsDisplayInRect(
-        CGRect(origin: self.originOnView(curPos.row, column: curPos.column), size: self.cellSize)
-      )
+      let rect = CGRect(origin: self.originOnView(curPos.row, column: curPos.column), size: self.cellSize)
+      self.setNeedsDisplayInRect(rect)
     }
   }
   
