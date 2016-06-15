@@ -100,7 +100,33 @@ class Grid: CustomStringConvertible {
   }
   
   func scroll(count: Int) {
-    // TODO: implement me
+    var start, stop, step : Int
+    if count > 0 {
+      start = self.region.top;
+      stop = self.region.bottom - count + 1;
+      step = 1;
+    } else {
+      start = self.region.bottom;
+      stop = self.region.top - count - 1;
+      step = -1;
+    }
+
+    // copy cell data
+    let rangeWithinRow = self.region.left...self.region.right
+    for i in start.stride(to: stop, by: step) {
+      self.cells[i].replaceRange(rangeWithinRow, with: self.cells[i + count][rangeWithinRow])
+    }
+
+    // clear cells in the emptied region,
+    var clearTop, clearBottom: Int
+    if count > 0 {
+      clearTop = stop
+      clearBottom = stop + count - 1
+    } else {
+      clearBottom = stop
+      clearTop = stop + count + 1
+    }
+    self.clearRegion(Region(top: clearTop, bottom: clearBottom, left: self.region.left, right: self.region.right))
   }
   
   func goto(position: Position) {
@@ -113,7 +139,7 @@ class Grid: CustomStringConvertible {
   }
   
   private func clearRegion(region: Region) {
-    guard self.region.bottom > 0 && self.region.right > 0 && region.bottom > 0 && region.right > 0 else {
+    guard self.cells.count > 0 else {
       return
     }
 

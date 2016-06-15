@@ -53,7 +53,7 @@ public class NeoVimView: NSView {
   public var delegate: NeoVimViewDelegate?
 
   private let qDispatchMainQueue = dispatch_get_main_queue()
-  private let qLineGap = CGFloat(2)
+  private let qLineGap = CGFloat(4)
   
   private var foregroundColor = Int32(bitPattern: UInt32(0xFF000000))
   private var backgroundColor = Int32(bitPattern: UInt32(0xFFFFFFFF))
@@ -141,7 +141,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     )
     
     gui {
-//      Swift.print("### resize to \(width):\(height)")
+      Swift.print("### resize to \(width):\(height)")
       self.grid.resize(Size(width: Int(width), height: Int(height)))
       self.delegate?.resizeToSize(rectSize)
     }
@@ -157,7 +157,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   
   public func eolClear() {
     gui {
-//      Swift.print("### eol clear")
+      Swift.print("### eol clear")
       self.grid.eolClear()
 
       let origin = self.originOnView(self.grid.position.row, column: self.grid.position.column)
@@ -166,14 +166,13 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
         height: self.cellSize.height
       )
       let rect = CGRect(origin: origin, size: size)
-      Swift.print("### eol clear: \(rect)")
       self.setNeedsDisplayInRect(rect)
     }
   }
   
   public func cursorGotoRow(row: Int32, column: Int32) {
     gui {
-//      Swift.print("### goto: \(row):\(column)")
+      Swift.print("### goto: \(row):\(column)")
       self.grid.goto(Position(row: Int(row), column: Int(column)))
     }
   }
@@ -204,10 +203,27 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   
   public func setScrollRegionToTop(top: Int32, bottom: Int32, left: Int32, right: Int32) {
     Swift.print("### set scroll region: \(top), \(bottom), \(left), \(right)")
+    self.grid.setScrollRegion(Region(top: Int(top), bottom: Int(bottom), left: Int(left), right: Int(right)))
   }
   
   public func scroll(count: Int32) {
     Swift.print("### scroll count: \(count)")
+
+    Swift.print("before scroll: \(self.grid)")
+    self.grid.scroll(Int(count))
+    Swift.print("after scroll: \(self.grid)")
+
+    let top = CGFloat(self.grid.region.top)
+    let bottom = CGFloat(self.grid.region.bottom)
+    let left = CGFloat(self.grid.region.left)
+    let right = CGFloat(self.grid.region.right)
+
+    let width = right - left + 1
+    let height = bottom - top + 1
+
+    let rect = CGRect(x: left * self.cellSize.width, y: bottom * self.cellSize.height,
+                      width: width * self.cellSize.width, height: height * self.cellSize.height)
+    self.setNeedsDisplayInRect(rect)
   }
   
   public func highlightSet(attrs: HighlightAttributes) {
