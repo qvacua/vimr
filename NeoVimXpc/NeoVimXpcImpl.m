@@ -3,11 +3,8 @@
  * See LICENSE
  */
 
-#import <objc/message.h>
-
 #import "NeoVimXpcImpl.h"
 #import "NeoVimUiBridgeProtocol.h"
-
 
 // FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
 // them.
@@ -352,7 +349,7 @@ static void wait_input_enqueue(void **argv) {
 - (void)debugScreenLines {
   NSLog(@"--- ScreenLines ---");
   for (int i = 0; i < 20; i++) {
-    //printf("%c,\n", ScreenLines[i]);
+    printf("%c,\n", ScreenLines[i]);
   }
 }
 

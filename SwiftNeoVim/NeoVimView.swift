@@ -7,44 +7,12 @@ import Cocoa
 import RxSwift
 
 struct RowFragment: CustomStringConvertible {
-  
-  static let null = RowFragment(row: -1, range: 0...0)
-  
+
   let row: Int
   let range: Range<Int>
 
   var description: String {
     return "RowFragment<\(row): \(range)>"
-  }
-  
-  init(row: Int, range: Range<Int>) {
-    self.row = row
-    self.range = range
-  }
-  
-  init(position: Position) {
-    self.row = position.row
-    self.range = position.column...position.column
-  }
-
-  func canBeAddedTo(rowFragment rowFrag: RowFragment) -> Bool {
-    guard self.row == rowFrag.row else {
-      return false
-    }
-    
-    let rangeInclBorder = min(self.range.startIndex - 1, 0)...self.range.endIndex
-    if rangeInclBorder.contains(rowFrag.range.startIndex) || rangeInclBorder.contains(rowFrag.range.endIndex - 1) {
-      return true
-    }
-
-    return false
-  }
-
-  func union(rowFrag: RowFragment) -> RowFragment {
-    return RowFragment(
-      row: self.row,
-      range: min(self.range.startIndex, rowFrag.range.startIndex)..<max(self.range.endIndex, rowFrag.range.endIndex)
-    )
   }
 }
 
@@ -103,8 +71,10 @@ public class NeoVimView: NSView {
         .map { self.originOnView(rowFrag.row, column: $0) }
 
       ColorUtils.colorFromCode(self.backgroundColor).set()
-      let backgroundRect = CGRect(x: positions[0].x, y: positions[0].y,
-        width: positions.last!.x + self.cellSize.width, height: self.cellSize.height)
+      let backgroundRect = CGRect(
+        x: positions[0].x, y: positions[0].y,
+        width: positions.last!.x + self.cellSize.width, height: self.cellSize.height
+      )
       NSRectFill(backgroundRect)
 
       ColorUtils.colorFromCode(self.foregroundColor).set()
