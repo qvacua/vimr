@@ -27,6 +27,7 @@
 		4B401B1A1D046E0600D99EDC /* NeoVimViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */; };
 		4B4192181D0C52D700A0BEB2 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4192171D0C52D700A0BEB2 /* Grid.swift */; };
 		4BB202DC1D0359B0001D130D /* NeoVimXpc.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B2A2C211D0359650074CE9A /* NeoVimXpc.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BCADE081D11ED12004DAD0F /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */; };
 		4BDF641C1D0887C100D47E1D /* TextDrawer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDF641A1D0887C100D47E1D /* TextDrawer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BDF641D1D0887C100D47E1D /* TextDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BDF641B1D0887C100D47E1D /* TextDrawer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4BDF64241D08CAB000D47E1D /* MMCoreTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDF64221D08CAB000D47E1D /* MMCoreTextView.h */; };
@@ -117,6 +118,7 @@
 		4B401B131D0454DC00D99EDC /* PureLayout.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureLayout.framework; path = Carthage/Build/Mac/PureLayout.framework; sourceTree = SOURCE_ROOT; };
 		4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimViewDelegate.swift; sourceTree = "<group>"; };
 		4B4192171D0C52D700A0BEB2 /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
+		4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaExtensions.swift; sourceTree = "<group>"; };
 		4BDF641A1D0887C100D47E1D /* TextDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextDrawer.h; sourceTree = "<group>"; };
 		4BDF641B1D0887C100D47E1D /* TextDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDrawer.m; sourceTree = "<group>"; };
 		4BDF64221D08CAB000D47E1D /* MMCoreTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCoreTextView.h; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 				4BDF64221D08CAB000D47E1D /* MMCoreTextView.h */,
 				4BDF64231D08CAB000D47E1D /* MMCoreTextView.m */,
 				4B4192171D0C52D700A0BEB2 /* Grid.swift */,
+				4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */,
 			);
 			path = SwiftNeoVim;
 			sourceTree = "<group>";
@@ -486,6 +489,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B2F24A81D035EBB0035AC9A /* NeoVimService.swift in Sources */,
+				4BCADE081D11ED12004DAD0F /* CocoaExtensions.swift in Sources */,
 				4B2A2C0F1D0353E30074CE9A /* NeoVim.swift in Sources */,
 				4B401B1A1D046E0600D99EDC /* NeoVimViewDelegate.swift in Sources */,
 				1929B728262BAA14FC93F6AC /* NeoVimView.swift in Sources */,

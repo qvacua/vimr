@@ -49,7 +49,15 @@ struct Region: CustomStringConvertible {
   let right: Int
 
   var description: String {
-    return "Region<\(self.top),\(self.bottom):\(self.left),\(self.right)>"
+    return "Region<\(self.top)...\(self.bottom):\(self.left)...\(self.right)>"
+  }
+
+  var rowRange: Range<Int> {
+    return self.top...self.bottom
+  }
+
+  var columnRange: Range<Int> {
+    return self.left...self.right
   }
 }
 
@@ -71,6 +79,10 @@ class Grid: CustomStringConvertible {
   var attrs: HighlightAttributes = Grid.qEmptyHighlightAttributes
   
   private(set) var cells: [[Cell]] = []
+
+  var hasData: Bool {
+    return !self.cells.isEmpty
+  }
   
   var description: String {
     return self.cells.reduce("<<< Grid\n") { $1.reduce($0) { $0 + $1.description } + "\n" } + ">>>"
@@ -139,7 +151,7 @@ class Grid: CustomStringConvertible {
   }
   
   private func clearRegion(region: Region) {
-    guard self.cells.count > 0 else {
+    guard self.hasData else {
       return
     }
 

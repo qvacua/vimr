@@ -65,32 +65,38 @@ public class NeoVimView: NSView {
   private var cellSize: CGSize = CGSizeMake(0, 0)
 
   private let grid = Grid()
-  private var rowFragmentsToDraw: [RowFragment] = []
 
   init(frame rect: NSRect = CGRect.zero, xpc: NeoVimXpc) {
     self.xpc = xpc
     super.init(frame: rect)
 
+    self.wantsLayer = true
+
     // hard-code some stuff
     let attrs = [ NSFontAttributeName: self.font ]
     let width = ceil(" ".sizeWithAttributes(attrs).width)
     let height = ceil(self.font.ascender - self.font.descender + self.font.leading) + qLineGap
-    self.cellSize = CGSizeMake(width, height)
+    self.cellSize = CGSize(width: width, height: height)
   }
   
   override public func keyDown(theEvent: NSEvent) {
     self.xpc.vimInput(theEvent.charactersIgnoringModifiers!)
   }
-  
-  override public func drawRect(dirtyRect: NSRect) {
+
+  override public func drawRect(dirtyUnionRect: NSRect) {
+    guard self.grid.hasData else {
+      return
+    }
+
+//    Swift.print("------- DRAW")
+
     let context = NSGraphicsContext.currentContext()!.CGContext
 
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
     CGContextSetTextDrawingMode(context, .Fill);
 
-    self.rowFragmentsToDraw.forEach { rowFrag in
+    self.rowFragmentsIntersecting(rects: self.rectsBeingDrawn()).forEach { rowFrag in
       let string = self.grid.cells[rowFrag.row][rowFrag.range].reduce("") { $0 + $1.string }
-
       let positions = rowFrag.range
         // filter out the put(0, 0)s (after a wide character)
         .filter { self.grid.cells[rowFrag.row][$0].string.characters.count > 0 }
@@ -98,7 +104,7 @@ public class NeoVimView: NSView {
 
       ColorUtils.colorFromCode(self.backgroundColor).set()
       let backgroundRect = CGRect(x: positions[0].x, y: positions[0].y,
-                                  width: positions.last!.x + self.cellSize.width, height: self.cellSize.height)
+        width: positions.last!.x + self.cellSize.width, height: self.cellSize.height)
       NSRectFill(backgroundRect)
 
       ColorUtils.colorFromCode(self.foregroundColor).set()
@@ -108,12 +114,23 @@ public class NeoVimView: NSView {
         font: self.font, foreground: self.foregroundColor, background: self.backgroundColor,
         context: context
       )
-
-      NSColor.redColor().set()
-      positions.forEach { NSRectFill(CGRect(origin: $0, size: CGSize(width: 1, height: 1))) }
     }
+//    Swift.print("------- DRAW END")
+  }
 
-    self.rowFragmentsToDraw = []
+  private func rowFragmentsIntersecting(rects rects: [CGRect]) -> [RowFragment] {
+    return rects
+      .map { rect -> Region in
+        let rowStart = Int(floor((self.frame.height - (rect.origin.y + rect.size.height)) / self.cellSize.height))
+        let rowEnd = Int(ceil((self.frame.height - rect.origin.y) / self.cellSize.height)) - 1
+        let columnStart = Int(floor(rect.origin.x / self.cellSize.width))
+        let columnEnd = Int(ceil((rect.origin.x + rect.size.width) / self.cellSize.width)) - 1
+        return Region(top: rowStart, bottom: rowEnd, left: columnStart, right: columnEnd)
+      }
+      .map { region -> [RowFragment] in
+        return (region.rowRange).map { RowFragment(row: $0, range: region.columnRange) }
+      }
+      .flatMap { $0 }
   }
 
   private func originOnView(row: Int, column: Int) -> CGPoint {
@@ -209,9 +226,9 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   public func scroll(count: Int32) {
     Swift.print("### scroll count: \(count)")
 
-    Swift.print("before scroll: \(self.grid)")
+//    Swift.print("before scroll: \(self.grid)")
     self.grid.scroll(Int(count))
-    Swift.print("after scroll: \(self.grid)")
+//    Swift.print("after scroll: \(self.grid)")
 
     let top = CGFloat(self.grid.region.top)
     let bottom = CGFloat(self.grid.region.bottom)
@@ -239,8 +256,6 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
       self.grid.put(string)
 
 //      Swift.print("### put: \(curPos) -> '\(string)'")
-
-      self.addToRowFragmentsToDraw(curPos)
 
       let rect = CGRect(origin: self.originOnView(curPos.row, column: curPos.column), size: self.cellSize)
       self.setNeedsDisplayInRect(rect)
@@ -287,29 +302,5 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   
   public func stop() {
     Swift.print("### stop")
-  }
-  
-  private func addToRowFragmentsToDraw(position: Position) {
-    let rowFragToAdd = RowFragment(position: position)
-    if self.rowFragmentsToDraw.count == 0 {
-      self.rowFragmentsToDraw.append(rowFragToAdd)
-      return
-    }
-    
-    var indexToReplace = -1
-    var rowFragForReplacement = RowFragment.null
-    for (idx, rowFrag) in self.rowFragmentsToDraw.enumerate() {
-      if rowFrag.canBeAddedTo(rowFragment: rowFragToAdd) {
-        indexToReplace = idx
-        rowFragForReplacement = rowFrag.union(rowFragToAdd)
-        break
-      }
-    }
-
-    if indexToReplace == -1 {
-      self.rowFragmentsToDraw.append(rowFragToAdd)
-    } else {
-      self.rowFragmentsToDraw[indexToReplace] = rowFragForReplacement
-    }
   }
 }
