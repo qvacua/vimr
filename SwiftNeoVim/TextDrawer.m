@@ -44,8 +44,8 @@
 - (void)drawString:(NSString *_Nonnull)theString
          positions:(CGPoint *_Nonnull)positions
               font:(NSFont *_Nonnull)theFont
-        foreground:(int)foreground
-        background:(int)background
+        foreground:(unsigned int)foreground
+        background:(unsigned int)background
            context:(CGContextRef _Nonnull)context
 {
   CFStringRef string = (CFStringRef) theString;

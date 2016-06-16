@@ -6,7 +6,7 @@
 import Cocoa
 import RxSwift
 
-struct RowFragment: CustomStringConvertible {
+private struct RowFragment: CustomStringConvertible {
 
   let row: Int
   let range: Range<Int>
@@ -23,8 +23,8 @@ public class NeoVimView: NSView {
   private let qDispatchMainQueue = dispatch_get_main_queue()
   private let qLineGap = CGFloat(4)
   
-  private var foregroundColor = Int32(bitPattern: UInt32(0xFF000000))
-  private var backgroundColor = Int32(bitPattern: UInt32(0xFFFFFFFF))
+  private var foregroundColor = UInt32(0xFF000000)
+  private var backgroundColor = UInt32(0xFFFFFFFF)
   private var font = NSFont(name: "Menlo", size: 13)!
   
   private let xpc: NeoVimXpc
@@ -63,21 +63,17 @@ public class NeoVimView: NSView {
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
     CGContextSetTextDrawingMode(context, .Fill);
 
-    self.rowFragmentsIntersecting(rects: self.rectsBeingDrawn()).forEach { rowFrag in
-      let string = self.grid.cells[rowFrag.row][rowFrag.range].reduce("") { $0 + $1.string }
+    let dirtyRects = self.rectsBeingDrawn()
+    self.rowFragmentsIntersecting(rects: dirtyRects).forEach { rowFrag in
       let positions = rowFrag.range
         // filter out the put(0, 0)s (after a wide character)
         .filter { self.grid.cells[rowFrag.row][$0].string.characters.count > 0 }
-        .map { self.originOnView(rowFrag.row, column: $0) }
-
-      ColorUtils.colorFromCode(self.backgroundColor).set()
-      let backgroundRect = CGRect(
-        x: positions[0].x, y: positions[0].y,
-        width: positions.last!.x + self.cellSize.width, height: self.cellSize.height
-      )
-      NSRectFill(backgroundRect)
+        .map { self.positionOnView(rowFrag.row, column: $0) }
+      
+      self.drawBackground(positions: positions)
 
       ColorUtils.colorFromCode(self.foregroundColor).set()
+      let string = self.grid.cells[rowFrag.row][rowFrag.range].reduce("") { $0 + $1.string }
       let glyphPositions = positions.map { CGPoint(x: $0.x, y: $0.y + qLineGap) }
       self.drawer.drawString(
         string, positions: UnsafeMutablePointer(glyphPositions),
@@ -88,6 +84,15 @@ public class NeoVimView: NSView {
 //    Swift.print("------- DRAW END")
   }
 
+  private func drawBackground(positions positions: [CGPoint]) {
+    ColorUtils.colorFromCode(self.backgroundColor).set()
+    let backgroundRect = CGRect(
+      x: positions[0].x, y: positions[0].y,
+      width: positions.last!.x + self.cellSize.width, height: self.cellSize.height
+    )
+    backgroundRect.fill()
+  }
+
   private func rowFragmentsIntersecting(rects rects: [CGRect]) -> [RowFragment] {
     return rects
       .map { rect -> Region in
@@ -96,14 +101,14 @@ public class NeoVimView: NSView {
         let columnStart = Int(floor(rect.origin.x / self.cellSize.width))
         let columnEnd = Int(ceil((rect.origin.x + rect.size.width) / self.cellSize.width)) - 1
         return Region(top: rowStart, bottom: rowEnd, left: columnStart, right: columnEnd)
-      }
+      } // There can be overlaps between the Regions, but for the time being we ignore them.
       .map { region -> [RowFragment] in
         return (region.rowRange).map { RowFragment(row: $0, range: region.columnRange) }
       }
       .flatMap { $0 }
   }
 
-  private func originOnView(row: Int, column: Int) -> CGPoint {
+  private func positionOnView(row: Int, column: Int) -> CGPoint {
     return CGPoint(
       x: CGFloat(column) * self.cellSize.width,
       y: self.frame.size.height - CGFloat(row) * self.cellSize.height - self.cellSize.height
@@ -147,7 +152,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
       Swift.print("### eol clear")
       self.grid.eolClear()
 
-      let origin = self.originOnView(self.grid.position.row, column: self.grid.position.column)
+      let origin = self.positionOnView(self.grid.position.row, column: self.grid.position.column)
       let size = CGSize(
         width: CGFloat(self.grid.region.right - self.grid.position.column + 1) * self.cellSize.width,
         height: self.cellSize.height
@@ -190,27 +195,31 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   
   public func setScrollRegionToTop(top: Int32, bottom: Int32, left: Int32, right: Int32) {
     Swift.print("### set scroll region: \(top), \(bottom), \(left), \(right)")
-    self.grid.setScrollRegion(Region(top: Int(top), bottom: Int(bottom), left: Int(left), right: Int(right)))
+    gui {
+      self.grid.setScrollRegion(Region(top: Int(top), bottom: Int(bottom), left: Int(left), right: Int(right)))
+    }
   }
   
   public func scroll(count: Int32) {
     Swift.print("### scroll count: \(count)")
 
-//    Swift.print("before scroll: \(self.grid)")
-    self.grid.scroll(Int(count))
-//    Swift.print("after scroll: \(self.grid)")
+    gui {
+//      Swift.print("before scroll: \(self.grid)")
+      self.grid.scroll(Int(count))
+//      Swift.print("after scroll: \(self.grid)")
 
-    let top = CGFloat(self.grid.region.top)
-    let bottom = CGFloat(self.grid.region.bottom)
-    let left = CGFloat(self.grid.region.left)
-    let right = CGFloat(self.grid.region.right)
+      let top = CGFloat(self.grid.region.top)
+      let bottom = CGFloat(self.grid.region.bottom)
+      let left = CGFloat(self.grid.region.left)
+      let right = CGFloat(self.grid.region.right)
 
-    let width = right - left + 1
-    let height = bottom - top + 1
+      let width = right - left + 1
+      let height = bottom - top + 1
 
-    let rect = CGRect(x: left * self.cellSize.width, y: bottom * self.cellSize.height,
-                      width: width * self.cellSize.width, height: height * self.cellSize.height)
-    self.setNeedsDisplayInRect(rect)
+      let rect = CGRect(x: left * self.cellSize.width, y: bottom * self.cellSize.height,
+        width: width * self.cellSize.width, height: height * self.cellSize.height)
+      self.setNeedsDisplayInRect(rect)
+    }
   }
   
   public func highlightSet(attrs: HighlightAttributes) {
@@ -227,13 +236,15 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
 
 //      Swift.print("### put: \(curPos) -> '\(string)'")
 
-      let rect = CGRect(origin: self.originOnView(curPos.row, column: curPos.column), size: self.cellSize)
+      let rect = CGRect(origin: self.positionOnView(curPos.row, column: curPos.column), size: self.cellSize)
       self.setNeedsDisplayInRect(rect)
     }
   }
   
   public func bell() {
-    //    Swift.print("### bell")
+    gui {
+      NSBeep()
+    }
   }
   
   public func visualBell() {

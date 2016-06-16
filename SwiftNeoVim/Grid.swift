@@ -5,7 +5,6 @@
 
 import Foundation
 
-/// Almost a verbatim copy of ugrid.c of NeoVim
 struct Cell: CustomStringConvertible {
   let string: String
   let attrs: HighlightAttributes
@@ -61,12 +60,13 @@ struct Region: CustomStringConvertible {
   }
 }
 
+/// Almost a verbatim copy of ugrid.c of NeoVim
 class Grid: CustomStringConvertible {
   
-  private static let qEmptyHighlightAttributes = HighlightAttributes(
+  private let qEmptyHighlightAttributes = HighlightAttributes(
     bold: false, underline: false, undercurl: false, italic: false,
     reverse: false, foreground: -1, background: -1, special: -1
-  )
+  ) // not static due to https://bugs.swift.org/browse/SR-1739
   
   private(set) var region = Region.zero
   private(set) var size = Size.zero
@@ -76,7 +76,10 @@ class Grid: CustomStringConvertible {
   var background: Int32 = -1
   var special: Int32 = -1
   
-  var attrs: HighlightAttributes = Grid.qEmptyHighlightAttributes
+  var attrs: HighlightAttributes = HighlightAttributes(
+    bold: false, underline: false, undercurl: false, italic: false,
+    reverse: false, foreground: -1, background: -1, special: -1
+  ) // not using qEmptyHighlightAttributes because not static due to https://bugs.swift.org/browse/SR-1739
   
   private(set) var cells: [[Cell]] = []
 
@@ -93,7 +96,7 @@ class Grid: CustomStringConvertible {
     self.size = size
     self.position = Position.zero
     
-    let emptyRow = Array(count: size.width, repeatedValue: Cell(string: " ", attrs: Grid.qEmptyHighlightAttributes))
+    let emptyRow = Array(count: size.width, repeatedValue: Cell(string: " ", attrs: qEmptyHighlightAttributes))
     self.cells = Array(count: size.height, repeatedValue: emptyRow)
   }
   

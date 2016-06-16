@@ -5,6 +5,13 @@
 
 import Cocoa
 
+extension CGRect {
+
+  func fill() {
+    NSRectFill(self)
+  }
+}
+
 extension NSView {
 
   /// - Returns: Rects currently being drawn
