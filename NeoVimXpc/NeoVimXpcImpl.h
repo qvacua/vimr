@@ -3,7 +3,8 @@
  * See LICENSE
  */
 
-#import <Foundation/Foundation.h>
+@import Foundation;
+
 #import "NeoVimXpc.h"
 
 @protocol NeoVimUiBridgeProtocol;
