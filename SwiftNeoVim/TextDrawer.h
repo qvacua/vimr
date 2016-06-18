@@ -6,13 +6,19 @@
 @import Cocoa;
 @import CoreText;
 
+#import "NeoVimUiBridgeProtocol.h"
+
 @interface TextDrawer : NSObject
 
-- (void)drawString:(NSString *_Nonnull)theString
-         positions:(CGPoint *_Nonnull)positions
-              font:(NSFont *_Nonnull)font
-        foreground:(unsigned int)foreground
-        background:(unsigned int)background
+@property (nonatomic, nonnull, retain) NSFont *font;
+@property (nonatomic, readonly) CGFloat lineSpace;
+@property (nonatomic, readonly) CGSize cellSize;
+
+- (instancetype _Nonnull)initWithFont:(NSFont *_Nonnull)font;
+
+- (void)drawString:(NSString *_Nonnull)string
+         positions:(CGPoint *_Nonnull)positions positionsCount:(NSInteger)positionsCount
+    highlightAttrs:(CellAttributes)attrs
            context:(CGContextRef _Nonnull)context;
 
 @end

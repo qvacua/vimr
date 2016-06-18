@@ -5,11 +5,25 @@
 
 #import <Foundation/Foundation.h>
 
-// TODO: keep in sync with HlAttrs struct in ui.h
+typedef NS_ENUM(NSUInteger, FontTrait) {
+    FontTraitNone      = 0,
+    FontTraitItalic    = (1 << 0),
+    FontTraitBold      = (1 << 1),
+    FontTraitUnderline = (1 << 2),
+    FontTraitUndercurl = (1 << 3)
+};
+
 typedef struct {
-  bool bold, underline, undercurl, italic, reverse;
-  int foreground, background, special;
-} HighlightAttributes;
+    FontTrait fontTrait;
+
+    unsigned int foreground;
+    unsigned int background;
+    unsigned int special;
+} CellAttributes;
+
+#define qDefaultForeground 0xFF000000
+#define qDefaultBackground 0xFFFFFFFF
+#define qDefaultSpecial    0xFFFF0000
 
 @protocol NeoVimUiBridgeProtocol <NSObject>
 
@@ -50,7 +64,7 @@ typedef struct {
 
 - (void)setScrollRegionToTop:(int)top bottom:(int)bottom left:(int)left right:(int)right;
 - (void)scroll:(int)count;
-- (void)highlightSet:(HighlightAttributes)attrs;
+- (void)highlightSet:(CellAttributes)attrs;
 
 /**
  * Draw string at the current cursor which was set by a previous cursorGotoRow:column callback.

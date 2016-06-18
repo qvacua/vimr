@@ -7,5 +7,6 @@ import Cocoa
 
 public protocol NeoVimViewDelegate {
   
+  func setTitle(title: String)
   func resizeToSize(size: CGSize)
 }

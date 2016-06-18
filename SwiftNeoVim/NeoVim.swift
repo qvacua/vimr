@@ -6,32 +6,6 @@
 import Foundation
 
 public class NeoVim {
-  
-  enum UiEvent {
-    case MoveCursor(position: Position)
-    case Put(string: String)
-    case Resize(size: Size)
-    case SetHighlightAttributes(attrs: HighlightAttributes)
-    case Clear
-    case EolClear
-    case Flush
-  }
-  
-  struct Size {
-    let width: Int
-    let height: Int
-  }
-  
-  struct Position {
-    var row: Int
-    var column: Int
-  }
-
-  enum ColorKind {
-    case Foreground
-    case Background
-    case Special
-  }
 
   private static let qXpcName = "com.qvacua.nvox.xpc"
 

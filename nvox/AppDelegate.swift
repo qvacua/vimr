@@ -40,4 +40,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NeoVimViewDelegate {
   func resizeToSize(size: CGSize) {
     self.neoVim.view.setFrameSize(size)
   }
+  
+  func setTitle(title: String) {
+    self.window.title = title
+  }
 }

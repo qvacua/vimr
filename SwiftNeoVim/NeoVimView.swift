@@ -4,7 +4,20 @@
  */
 
 import Cocoa
-import RxSwift
+
+func == (left: CellAttributes, right: CellAttributes) -> Bool {
+  if left.foreground != right.foreground { return false }
+  if left.fontTrait != right.fontTrait { return false }
+
+  if left.background != right.background { return false }
+  if left.special != right.special { return false }
+
+  return true
+}
+
+func != (left: CellAttributes, right: CellAttributes) -> Bool {
+  return !(left == right)
+}
 
 private struct RowFragment: CustomStringConvertible {
 
@@ -16,35 +29,52 @@ private struct RowFragment: CustomStringConvertible {
   }
 }
 
+private struct AttributedRowFragment: CustomStringConvertible {
+
+  let row: Int
+  let range: Range<Int>
+  let attrs: CellAttributes
+
+  var description: String {
+    return "AttributedRowFragment<\(row): \(range)\n\(attrs)>"
+  }
+}
+
 public class NeoVimView: NSView {
   
   public var delegate: NeoVimViewDelegate?
 
   private let qDispatchMainQueue = dispatch_get_main_queue()
-  private let qLineGap = CGFloat(4)
-  
-  private var foregroundColor = UInt32(0xFF000000)
-  private var backgroundColor = UInt32(0xFFFFFFFF)
-  private var font = NSFont(name: "Menlo", size: 13)!
+
+  private var font: NSFont {
+    didSet {
+      self.drawer.font = self.font
+      self.cellSize = self.drawer.cellSize
+      self.lineSpace = self.drawer.lineSpace
+      
+      // FIXME: resize and redraw
+    }
+  }
   
   private let xpc: NeoVimXpc
-  private let drawer = TextDrawer()
+  private let drawer: TextDrawer
   
-  private var cellSize: CGSize = CGSizeMake(0, 0)
+  private var cellSize = CGSize.zero
+  private var lineSpace = CGFloat(0)
 
   private let grid = Grid()
 
   init(frame rect: NSRect = CGRect.zero, xpc: NeoVimXpc) {
     self.xpc = xpc
+    
+    self.font = NSFont(name: "Menlo", size: 13)!
+    self.drawer = TextDrawer(font: font)
+    
     super.init(frame: rect)
-
+    
     self.wantsLayer = true
-
-    // hard-code some stuff
-    let attrs = [ NSFontAttributeName: self.font ]
-    let width = ceil(" ".sizeWithAttributes(attrs).width)
-    let height = ceil(self.font.ascender - self.font.descender + self.font.leading) + qLineGap
-    self.cellSize = CGSize(width: width, height: height)
+    self.cellSize = self.drawer.cellSize
+    self.lineSpace = self.drawer.lineSpace
   }
   
   override public func keyDown(theEvent: NSEvent) {
@@ -56,41 +86,62 @@ public class NeoVimView: NSView {
       return
     }
 
-//    Swift.print("------- DRAW")
-
     let context = NSGraphicsContext.currentContext()!.CGContext
 
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
     CGContextSetTextDrawingMode(context, .Fill);
 
     let dirtyRects = self.rectsBeingDrawn()
-    self.rowFragmentsIntersecting(rects: dirtyRects).forEach { rowFrag in
+
+    self.attributedRowFragmentsIntersecting(rects: dirtyRects).forEach { rowFrag in
       let positions = rowFrag.range
         // filter out the put(0, 0)s (after a wide character)
         .filter { self.grid.cells[rowFrag.row][$0].string.characters.count > 0 }
         .map { self.positionOnView(rowFrag.row, column: $0) }
-      
-      self.drawBackground(positions: positions)
 
-      ColorUtils.colorFromCode(self.foregroundColor).set()
+      self.drawBackground(positions: positions, background: rowFrag.attrs.background)
+
       let string = self.grid.cells[rowFrag.row][rowFrag.range].reduce("") { $0 + $1.string }
-      let glyphPositions = positions.map { CGPoint(x: $0.x, y: $0.y + qLineGap) }
-      self.drawer.drawString(
-        string, positions: UnsafeMutablePointer(glyphPositions),
-        font: self.font, foreground: self.foregroundColor, background: self.backgroundColor,
-        context: context
-      )
+      let glyphPositions = positions.map { CGPoint(x: $0.x, y: $0.y + self.lineSpace) }
+      self.drawer.drawString(string,
+                             positions: UnsafeMutablePointer(glyphPositions), positionsCount: positions.count,
+                             highlightAttrs: rowFrag.attrs,
+                             context: context)
     }
-//    Swift.print("------- DRAW END")
   }
 
-  private func drawBackground(positions positions: [CGPoint]) {
-    ColorUtils.colorFromCode(self.backgroundColor).set()
+  private func drawBackground(positions positions: [CGPoint], background: UInt32) {
+    ColorUtils.colorFromCodeIgnoringAlpha(background).set()
     let backgroundRect = CGRect(
       x: positions[0].x, y: positions[0].y,
       width: positions.last!.x + self.cellSize.width, height: self.cellSize.height
     )
     backgroundRect.fill()
+  }
+
+  private func attributedRowFragmentsIntersecting(rects rects: [CGRect]) -> [AttributedRowFragment] {
+    return self.rowFragmentsIntersecting(rects: rects)
+      .map { rowFrag -> [AttributedRowFragment] in
+        let row = rowFrag.row
+        let rowCells = self.grid.cells[rowFrag.row]
+        let range = rowFrag.range
+        let startIndex = range.startIndex
+
+        var result = [
+          AttributedRowFragment(row: row, range: startIndex...startIndex, attrs: rowCells[startIndex].attrs)
+        ]
+        range.forEach { idx in
+          if rowCells[idx].attrs == result.last!.attrs {
+            let last = result.popLast()!
+            result.append(AttributedRowFragment(row: row, range: last.range.startIndex...idx, attrs: last.attrs))
+          } else {
+            result.append(AttributedRowFragment(row: row, range: idx...idx, attrs: rowCells[idx].attrs))
+          }
+        }
+
+        return result
+      }
+      .flatMap { $0 }
   }
 
   private func rowFragmentsIntersecting(rects rects: [CGRect]) -> [RowFragment] {
@@ -222,7 +273,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     }
   }
   
-  public func highlightSet(attrs: HighlightAttributes) {
+  public func highlightSet(attrs: CellAttributes) {
     gui {
 //      Swift.print("### set highlight")
       self.grid.attrs = attrs
@@ -274,7 +325,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   public func setTitle(title: String) {
-    //    Swift.print("### set title: \(title)")
+    self.delegate?.setTitle(title)
   }
   
   public func setIcon(icon: String) {

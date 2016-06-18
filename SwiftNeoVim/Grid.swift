@@ -7,7 +7,7 @@ import Foundation
 
 struct Cell: CustomStringConvertible {
   let string: String
-  let attrs: HighlightAttributes
+  let attrs: CellAttributes
   
   var description: String {
     return self.string.characters.count > 0 ? self.string : "*"
@@ -63,23 +63,23 @@ struct Region: CustomStringConvertible {
 /// Almost a verbatim copy of ugrid.c of NeoVim
 class Grid: CustomStringConvertible {
   
-  private let qEmptyHighlightAttributes = HighlightAttributes(
-    bold: false, underline: false, undercurl: false, italic: false,
-    reverse: false, foreground: -1, background: -1, special: -1
+  private let qEmptyCellAttributes = CellAttributes(
+    fontTrait: .None,
+    foreground: qDefaultForeground, background: qDefaultBackground, special: qDefaultSpecial
   ) // not static due to https://bugs.swift.org/browse/SR-1739
   
   private(set) var region = Region.zero
   private(set) var size = Size.zero
   private(set) var position = Position.zero
   
-  var foreground: Int32 = -1
-  var background: Int32 = -1
-  var special: Int32 = -1
+  var foreground = qDefaultForeground
+  var background = qDefaultBackground
+  var special = qDefaultSpecial
   
-  var attrs: HighlightAttributes = HighlightAttributes(
-    bold: false, underline: false, undercurl: false, italic: false,
-    reverse: false, foreground: -1, background: -1, special: -1
-  ) // not using qEmptyHighlightAttributes because not static due to https://bugs.swift.org/browse/SR-1739
+  var attrs: CellAttributes = CellAttributes(
+    fontTrait: .None,
+    foreground: qDefaultForeground, background: qDefaultBackground, special: qDefaultSpecial
+  ) // not using qEmptyCellAttributes because not static due to https://bugs.swift.org/browse/SR-1739
   
   private(set) var cells: [[Cell]] = []
 
@@ -96,7 +96,7 @@ class Grid: CustomStringConvertible {
     self.size = size
     self.position = Position.zero
     
-    let emptyRow = Array(count: size.width, repeatedValue: Cell(string: " ", attrs: qEmptyHighlightAttributes))
+    let emptyRow = Array(count: size.width, repeatedValue: Cell(string: " ", attrs: qEmptyCellAttributes))
     self.cells = Array(count: size.height, repeatedValue: emptyRow)
   }
   
@@ -158,10 +158,8 @@ class Grid: CustomStringConvertible {
       return
     }
 
-    let clearedAttrs = HighlightAttributes(
-      bold: false, underline: false, undercurl: false, italic: false,
-      reverse: false, foreground: self.foreground, background: self.background, special: self.background
-    )
+    let clearedAttrs = CellAttributes(fontTrait: .None,
+                                      foreground: self.foreground, background: self.background, special: self.special)
     
     let clearedCell = Cell(string: " ", attrs: clearedAttrs)
     let clearedRow = Array(count: region.right - region.left + 1, repeatedValue: clearedCell)

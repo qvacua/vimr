@@ -41,15 +41,15 @@ typedef struct {
     // FIXME: dunno whether we need this: copied from tui.c
     bool cont_received;
     SignalWatcher cont_handle;
-} OsxXpcUiData;
+} XpcUiData;
 
 static void sigcont_cb(SignalWatcher *watcher __unused, int signum __unused, void *data) {
-  ((OsxXpcUiData *) data)->cont_received = true;
+  ((XpcUiData *) data)->cont_received = true;
 }
 
 static void osx_xpc_ui_scheduler(Event event, void *d) {
   UI *ui = d;
-  OsxXpcUiData *data = ui->data;
+  XpcUiData *data = ui->data;
   loop_schedule(data->loop, event);
 }
 
@@ -57,7 +57,7 @@ static void osx_xpc_ui_main(UIBridgeData *bridge, UI *ui) {
   Loop loop;
   loop_init(&loop, NULL);
 
-  OsxXpcUiData *data = xcalloc(1, sizeof(OsxXpcUiData));
+  XpcUiData *data = xcalloc(1, sizeof(XpcUiData));
   ui->data = data;
   data->bridge = bridge;
   data->loop = &loop;
@@ -91,7 +91,7 @@ static void osx_xpc_ui_main(UIBridgeData *bridge, UI *ui) {
 // FIXME: dunno whether we need this: copied from tui.c
 static void suspend_event(void **argv) {
   UI *ui = argv[0];
-  OsxXpcUiData *data = ui->data;
+  XpcUiData *data = ui->data;
   data->cont_received = false;
 
   kill(0, SIGTSTP);
@@ -166,7 +166,30 @@ static void xpc_ui_scroll(UI *ui __unused, int count) {
 
 static void xpc_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
   //printf("highlight set\n");
-  [neo_vim_osx_ui highlightSet:*((HighlightAttributes *)(&attrs))];
+  FontTrait trait = FontTraitNone;
+  if (attrs.italic) {
+    trait |= FontTraitItalic;
+  }
+  if (attrs.bold) {
+    trait |= FontTraitBold;
+  }
+  if (attrs.underline) {
+    trait |= FontTraitUnderline;
+  }
+  if (attrs.undercurl) {
+    trait |= FontTraitUndercurl;
+  }
+  CellAttributes cellAttrs;
+  cellAttrs.fontTrait = trait;
+
+  unsigned int fg = attrs.foreground == -1 ? qDefaultForeground : *((unsigned int*)(&attrs.foreground));
+  unsigned int bg = attrs.background == -1 ? qDefaultBackground : *((unsigned int*)(&attrs.background));
+
+  cellAttrs.foreground = attrs.reverse ? bg : fg;
+  cellAttrs.background = attrs.reverse ? fg : bg;
+  cellAttrs.special = attrs.special == -1 ? qDefaultSpecial : *((unsigned int*)(&attrs.special));
+
+  [neo_vim_osx_ui highlightSet:cellAttrs];
 }
 
 static void xpc_ui_put(UI *ui __unused, uint8_t *str, size_t len) {
@@ -210,7 +233,7 @@ static void xpc_ui_suspend(UI *ui __unused) {
   //printf("suspend\n");
   [neo_vim_osx_ui suspend];
 
-  OsxXpcUiData *data = ui->data;
+  XpcUiData *data = ui->data;
   // FIXME: dunno whether we need this: copied from tui.c
   // kill(0, SIGTSTP) won't stop the UI thread, so we must poll for SIGCONT
   // before continuing. This is done in another callback to avoid
@@ -236,7 +259,7 @@ static void xpc_ui_stop(UI *ui __unused) {
   //printf("stop\n");
   [neo_vim_osx_ui stop];
 
-  OsxXpcUiData *data = (OsxXpcUiData *) ui->data;
+  XpcUiData *data = (XpcUiData *) ui->data;
   data->stop = true;
 }
 
