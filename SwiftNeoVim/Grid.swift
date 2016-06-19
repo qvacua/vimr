@@ -63,11 +63,6 @@ struct Region: CustomStringConvertible {
 /// Almost a verbatim copy of ugrid.c of NeoVim
 class Grid: CustomStringConvertible {
   
-  private let qEmptyCellAttributes = CellAttributes(
-    fontTrait: .None,
-    foreground: qDefaultForeground, background: qDefaultBackground, special: qDefaultSpecial
-  ) // not static due to https://bugs.swift.org/browse/SR-1739
-  
   private(set) var region = Region.zero
   private(set) var size = Size.zero
   private(set) var position = Position.zero
@@ -79,7 +74,7 @@ class Grid: CustomStringConvertible {
   var attrs: CellAttributes = CellAttributes(
     fontTrait: .None,
     foreground: qDefaultForeground, background: qDefaultBackground, special: qDefaultSpecial
-  ) // not using qEmptyCellAttributes because not static due to https://bugs.swift.org/browse/SR-1739
+  )
   
   private(set) var cells: [[Cell]] = []
 
