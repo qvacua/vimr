@@ -19,24 +19,22 @@ func != (left: CellAttributes, right: CellAttributes) -> Bool {
   return !(left == right)
 }
 
-private struct RowFragment: CustomStringConvertible {
-
-  let row: Int
-  let range: Range<Int>
-
-  var description: String {
-    return "RowFragment<\(row): \(range)>"
+extension CellAttributes: CustomStringConvertible {
+  
+  public var description: String {
+    return "CellAttributes<fg: \(String(format: "%x", self.foreground)), bg: \(String(format: "%x", self.background)))"
   }
 }
 
-private struct AttributedRowFragment: CustomStringConvertible {
+/// Contiguous piece of cells of a row that has the same attributes.
+private struct RowRun: CustomStringConvertible {
 
   let row: Int
   let range: Range<Int>
   let attrs: CellAttributes
 
   var description: String {
-    return "AttributedRowFragment<\(row): \(range)\n\(attrs)>"
+    return "RowRun<\(row): \(range)\n\(attrs)>"
   }
 }
 
@@ -85,7 +83,7 @@ public class NeoVimView: NSView {
     guard self.grid.hasData else {
       return
     }
-
+    
     let context = NSGraphicsContext.currentContext()!.CGContext
 
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
@@ -93,7 +91,7 @@ public class NeoVimView: NSView {
 
     let dirtyRects = self.rectsBeingDrawn()
 
-    self.attributedRowFragmentsIntersecting(rects: dirtyRects).forEach { rowFrag in
+    self.rowRunIntersecting(rects: dirtyRects).forEach { rowFrag in
       let positions = rowFrag.range
         // filter out the put(0, 0)s (after a wide character)
         .filter { self.grid.cells[rowFrag.row][$0].string.characters.count > 0 }
@@ -119,32 +117,7 @@ public class NeoVimView: NSView {
     backgroundRect.fill()
   }
 
-  private func attributedRowFragmentsIntersecting(rects rects: [CGRect]) -> [AttributedRowFragment] {
-    return self.rowFragmentsIntersecting(rects: rects)
-      .map { rowFrag -> [AttributedRowFragment] in
-        let row = rowFrag.row
-        let rowCells = self.grid.cells[rowFrag.row]
-        let range = rowFrag.range
-        let startIndex = range.startIndex
-
-        var result = [
-          AttributedRowFragment(row: row, range: startIndex...startIndex, attrs: rowCells[startIndex].attrs)
-        ]
-        range.forEach { idx in
-          if rowCells[idx].attrs == result.last!.attrs {
-            let last = result.popLast()!
-            result.append(AttributedRowFragment(row: row, range: last.range.startIndex...idx, attrs: last.attrs))
-          } else {
-            result.append(AttributedRowFragment(row: row, range: idx...idx, attrs: rowCells[idx].attrs))
-          }
-        }
-
-        return result
-      }
-      .flatMap { $0 }
-  }
-
-  private func rowFragmentsIntersecting(rects rects: [CGRect]) -> [RowFragment] {
+  private func rowRunIntersecting(rects rects: [CGRect]) -> [RowRun] {
     return rects
       .map { rect -> Region in
         let rowStart = Int(floor((self.frame.height - (rect.origin.y + rect.size.height)) / self.cellSize.height))
@@ -153,10 +126,30 @@ public class NeoVimView: NSView {
         let columnEnd = Int(ceil((rect.origin.x + rect.size.width) / self.cellSize.width)) - 1
         return Region(top: rowStart, bottom: rowEnd, left: columnStart, right: columnEnd)
       } // There can be overlaps between the Regions, but for the time being we ignore them.
-      .map { region -> [RowFragment] in
-        return (region.rowRange).map { RowFragment(row: $0, range: region.columnRange) }
-      }
-      .flatMap { $0 }
+      .map { region -> [RowRun] in
+        return (region.rowRange)
+          .map { row -> [RowRun] in
+            let range = region.columnRange
+            let rowCells = self.grid.cells[row]
+            let startIndex = range.startIndex
+            
+            var result = [
+              RowRun(row: row, range: startIndex...startIndex, attrs: rowCells[startIndex].attrs)
+            ]
+            range.forEach { idx in
+              if rowCells[idx].attrs == result.last!.attrs {
+                let last = result.popLast()!
+                result.append(RowRun(row: row, range: last.range.startIndex...idx, attrs: last.attrs))
+              } else {
+                result.append(RowRun(row: row, range: idx...idx, attrs: rowCells[idx].attrs))
+              }
+            }
+            
+            return result
+          } // -> [[RowRun]]
+          .flatMap { $0 } // -> [RowRun]
+      } // -> [[RowRun]]
+      .flatMap { $0 } // -> [RowRun]
   }
 
   private func positionOnView(row: Int, column: Int) -> CGPoint {
@@ -255,20 +248,19 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     Swift.print("### scroll count: \(count)")
 
     gui {
-//      Swift.print("before scroll: \(self.grid)")
       self.grid.scroll(Int(count))
-//      Swift.print("after scroll: \(self.grid)")
 
-      let top = CGFloat(self.grid.region.top)
-      let bottom = CGFloat(self.grid.region.bottom)
-      let left = CGFloat(self.grid.region.left)
-      let right = CGFloat(self.grid.region.right)
+      let region = self.grid.region
+      let top = CGFloat(region.top)
+      let bottom = CGFloat(region.bottom)
+      let left = CGFloat(region.left)
+      let right = CGFloat(region.right)
 
       let width = right - left + 1
       let height = bottom - top + 1
 
       let rect = CGRect(x: left * self.cellSize.width, y: bottom * self.cellSize.height,
-        width: width * self.cellSize.width, height: height * self.cellSize.height)
+                        width: width * self.cellSize.width, height: height * self.cellSize.height)
       self.setNeedsDisplayInRect(rect)
     }
   }
@@ -309,15 +301,24 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   public func updateForeground(fg: Int32) {
-    //    Swift.print("### update fg: \(colorFromCode(fg))")
+//      Swift.print("### update fg: \(String(format: "%x", fg))")
+    gui {
+      self.grid.foreground = UInt32(bitPattern: fg)
+    }
   }
   
   public func updateBackground(bg: Int32) {
-    //    Swift.print("### update bg: \(colorFromCode(bg, kind: .Background))")
+//      Swift.print("### update bg: \(String(format: "%x", bg))")
+    gui {
+      self.grid.background = UInt32(bitPattern: bg)
+    }
   }
   
   public func updateSpecial(sp: Int32) {
-    //    Swift.print("### update sp: \(colorFromCode(sp, kind: .Special))")
+//      Swift.print("### update sp: \(String(format: "%x", sp)")
+    gui {
+      self.grid.special = UInt32(bitPattern: sp)
+    }
   }
   
   public func suspend() {

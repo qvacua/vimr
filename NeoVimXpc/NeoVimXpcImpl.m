@@ -18,6 +18,7 @@
 #import <nvim/event/signal.h>
 #import <nvim/main.h>
 
+#define pun_type(t, x) (*((t *)(&x)))
 
 // We declare nvim_main because it's not declared in any header files of neovim
 extern int nvim_main(int argc, char **argv);
@@ -31,6 +32,10 @@ static uv_mutex_t mutex;
 static uv_cond_t condition;
 
 static id <NeoVimUiBridgeProtocol> neo_vim_osx_ui;
+
+static unsigned int default_foreground = qDefaultForeground;
+static unsigned int default_background = qDefaultBackground;
+static unsigned int default_special    = qDefaultSpecial;
 
 typedef struct {
     UIBridgeData *bridge;
@@ -182,12 +187,12 @@ static void xpc_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
   CellAttributes cellAttrs;
   cellAttrs.fontTrait = trait;
 
-  unsigned int fg = attrs.foreground == -1 ? qDefaultForeground : *((unsigned int*)(&attrs.foreground));
-  unsigned int bg = attrs.background == -1 ? qDefaultBackground : *((unsigned int*)(&attrs.background));
+  unsigned int fg = attrs.foreground == -1 ? default_foreground : pun_type(unsigned int, attrs.foreground);
+  unsigned int bg = attrs.background == -1 ? default_background : pun_type(unsigned int, attrs.background);
 
   cellAttrs.foreground = attrs.reverse ? bg : fg;
   cellAttrs.background = attrs.reverse ? fg : bg;
-  cellAttrs.special = attrs.special == -1 ? qDefaultSpecial : *((unsigned int*)(&attrs.special));
+  cellAttrs.special = attrs.special == -1 ? default_special : pun_type(unsigned int, attrs.special);
 
   [neo_vim_osx_ui highlightSet:cellAttrs];
 }
@@ -215,17 +220,26 @@ static void xpc_ui_flush(UI *ui __unused) {
 }
 
 static void xpc_ui_update_fg(UI *ui __unused, int fg) {
-  //printf("update fg\n");
+//  printf("update fg: %x\n", fg);
+  if (fg != -1) {
+    default_foreground = pun_type(unsigned int, fg);
+  }
   [neo_vim_osx_ui updateForeground:fg];
 }
 
 static void xpc_ui_update_bg(UI *ui __unused, int bg) {
-  //printf("update bg\n");
+//  printf("update bg: %x\n", bg);
+  if (bg != -1) {
+    default_background = pun_type(unsigned int, bg);
+  }
   [neo_vim_osx_ui updateBackground:bg];
 }
 
 static void xpc_ui_update_sp(UI *ui __unused, int sp) {
-  //printf("update sp\n");
+//  printf("update sp: %x\n", sp);
+  if (sp != -1) {
+    default_special = pun_type(unsigned int, sp);
+  }
   [neo_vim_osx_ui updateSpecial:sp];
 }
 
@@ -365,7 +379,7 @@ static void wait_input_enqueue(void **argv) {
 }
 
 - (void)vimInput:(NSString *)input {
-  // we retain, but not release here since it will be released in wait_input_enqueue
+  // We retain, but not release here since it will be released in wait_input_enqueue.
   loop_schedule(&main_loop, event_create(1, wait_input_enqueue, 1, [input retain]));
 }
 

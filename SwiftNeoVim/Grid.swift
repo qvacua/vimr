@@ -96,7 +96,10 @@ class Grid: CustomStringConvertible {
     self.size = size
     self.position = Position.zero
     
-    let emptyRow = Array(count: size.width, repeatedValue: Cell(string: " ", attrs: qEmptyCellAttributes))
+    let emptyCellAttrs = CellAttributes(fontTrait: .None,
+                                        foreground: self.foreground, background: self.background, special: self.special)
+    
+    let emptyRow = Array(count: size.width, repeatedValue: Cell(string: " ", attrs: emptyCellAttrs))
     self.cells = Array(count: size.height, repeatedValue: emptyRow)
   }
   

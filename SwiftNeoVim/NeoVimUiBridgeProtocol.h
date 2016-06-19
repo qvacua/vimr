@@ -76,15 +76,18 @@ typedef struct {
 - (void)flush;
 
 /**
- * Set the foreground color.
+ * Set the default foreground color.
  */
 - (void)updateForeground:(int)fg;
 
 /**
- * Set the background color.
+ * Set the default background color.
  */
 - (void)updateBackground:(int)bg;
 
+/**
+ * Set the default special color, eg curly underline for spelling errors.
+ */
 - (void)updateSpecial:(int)sp;
 - (void)suspend;
 - (void)setTitle:(NSString *)title;

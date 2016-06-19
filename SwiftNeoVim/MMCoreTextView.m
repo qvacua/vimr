@@ -16,7 +16,7 @@
 
 #import "MMCoreTextView.h"
 
-   CTFontRef
+   static CTFontRef
 lookupFont(NSMutableArray *fontCache, const unichar *chars, UniCharCount count,
            CTFontRef currFontRef)
 {
@@ -48,7 +48,7 @@ lookupFont(NSMutableArray *fontCache, const unichar *chars, UniCharCount count,
     return newFontRef;
 }
 
-    CFAttributedStringRef
+    static CFAttributedStringRef
 attributedStringForString(NSString *string, const CTFontRef font,
                           BOOL useLigatures)
 {
@@ -66,7 +66,7 @@ attributedStringForString(NSString *string, const CTFontRef font,
                                     (CFDictionaryRef)attrs);
 }
 
-    UniCharCount
+    static UniCharCount
 fetchGlyphsAndAdvances(const CTLineRef line, CGGlyph *glyphs, CGSize *advances,
                        UniCharCount length)
 {
@@ -96,7 +96,7 @@ fetchGlyphsAndAdvances(const CTLineRef line, CGGlyph *glyphs, CGSize *advances,
     return offset;
 }
 
-    UniCharCount
+    static UniCharCount
 gatherGlyphs(CGGlyph glyphs[], UniCharCount count)
 {
     // Gather scattered glyphs that was happended by Surrogate pair chars
@@ -112,7 +112,7 @@ gatherGlyphs(CGGlyph glyphs[], UniCharCount count)
     return glyphCount;
 }
 
-    UniCharCount
+    static UniCharCount
 ligatureGlyphsForChars(const unichar *chars, CGGlyph *glyphs,
                        CGPoint *positions, UniCharCount length, CTFontRef font)
 {
