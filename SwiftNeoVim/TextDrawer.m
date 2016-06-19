@@ -19,8 +19,8 @@
   NSLayoutManager *_layoutManager;
 
   NSFont *_font;
-  CGFloat _fontDescent;
-  CGFloat _lineGap;
+  CGFloat _underlinePosition;
+  CGFloat _underlineThickness;
 
   NSMutableArray *_fontLookupCache;
   NSMutableDictionary *_fontTraitCache;
@@ -30,13 +30,23 @@
   [_font autorelease];
   _font = [font retain];
 
+  // cf. https://developer.apple.com/library/mac/documentation/TextFonts/Conceptual/CocoaTextArchitecture/FontHandling/FontHandling.html
+  CGFloat ascent = CTFontGetAscent((CTFontRef) _font);
+  CGFloat descent = CTFontGetDescent((CTFontRef) _font);
+  CGFloat leading = CTFontGetLeading((CTFontRef) _font);
+  CGFloat underlinePosition = CTFontGetUnderlinePosition((CTFontRef) _font);
+  CGFloat underlineThickness = CTFontGetUnderlineThickness((CTFontRef) _font);
+
   _cellSize = CGSizeMake(
       round([@"m" sizeWithAttributes:@{ NSFontAttributeName : _font }].width),
-      [_layoutManager defaultLineHeightForFont:_font] + _lineSpace
+      ceil(ascent + descent + leading)
   );
-  // https://developer.apple.com/library/mac/documentation/TextFonts/Conceptual/CocoaTextArchitecture/FontHandling/FontHandling.html
-  _lineGap = _cellSize.height - _font.ascender - _font.descender;
-  _fontDescent = CTFontGetDescent((CTFontRef) _font);
+
+  _leading = leading;
+  _descent = descent;
+  _underlinePosition = underlinePosition; // This seems to take the thickness into account
+  // TODO: Maybe we should use 0.5 or 1 as minimum thickness for Retina and non-Retina, respectively.
+  _underlineThickness = underlineThickness;
 }
 
 - (instancetype)initWithFont:(NSFont *_Nonnull)font {
@@ -49,7 +59,6 @@
   _fontLookupCache = [[NSMutableArray alloc] init];
   _fontTraitCache = [[NSMutableDictionary alloc] init];
 
-  _lineSpace = 4;
   self.font = font;
 
   return self;
@@ -79,11 +88,7 @@
   CGContextSaveGState(context);
 
   if (attrs.fontTrait & FontTraitUnderline) {
-    CGRect rect = {
-        {positions[0].x, positions[0].y - 1},
-        {positions[0].x + positions[positionsCount - 1].x + _cellSize.width, 1}
-    };
-    [self drawUnderline:rect color:attrs.special context:context];
+    [self drawUnderline:positions count:positionsCount color:attrs.special context:context];
   }
 
   [self drawString:string positions:positions
@@ -93,8 +98,16 @@
   CGContextRestoreGState(context);
 }
 
-- (void)drawUnderline:(CGRect)rect color:(unsigned int)color context:(CGContextRef _Nonnull)context {
+- (void)drawUnderline:(const CGPoint *_Nonnull)positions
+                count:(NSInteger)count
+                color:(unsigned int)color
+              context:(CGContextRef _Nonnull)context
+{
   CGContextSetRGBFillColor(context, RED(color), GREEN(color), BLUE(color), ALPHA(color));
+  CGRect rect = {
+      {positions[0].x, positions[0].y + _underlinePosition},
+      {positions[0].x + positions[count - 1].x + _cellSize.width, _underlineThickness}
+  };
   CGContextFillRect(context, rect);
 }
 
@@ -115,7 +128,7 @@
     unichars = unibuffer;
   }
 
-  CGGlyph *glyphs = malloc(unilength * sizeof(UniChar));
+  CGGlyph *glyphs = malloc(unilength * sizeof(CGGlyph));
   CTFontRef fontWithTraits = [self fontWithTrait:fontTrait];
 
   CGContextSetRGBFillColor(context, RED(foreground), GREEN(foreground), BLUE(foreground), 1.0);

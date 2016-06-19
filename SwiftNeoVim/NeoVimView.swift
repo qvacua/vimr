@@ -48,7 +48,8 @@ public class NeoVimView: NSView {
     didSet {
       self.drawer.font = self.font
       self.cellSize = self.drawer.cellSize
-      self.lineSpace = self.drawer.lineSpace
+      self.descent = self.drawer.descent
+      self.leading = self.drawer.leading
       
       // FIXME: resize and redraw
     }
@@ -58,21 +59,23 @@ public class NeoVimView: NSView {
   private let drawer: TextDrawer
   
   private var cellSize = CGSize.zero
-  private var lineSpace = CGFloat(0)
+  private var descent = CGFloat(0)
+  private var leading = CGFloat(0)
 
   private let grid = Grid()
 
   init(frame rect: NSRect = CGRect.zero, xpc: NeoVimXpc) {
     self.xpc = xpc
     
-    self.font = NSFont(name: "Menlo", size: 13)!
+    self.font = NSFont(name: "Menlo", size: 16)!
     self.drawer = TextDrawer(font: font)
     
     super.init(frame: rect)
     
     self.wantsLayer = true
     self.cellSize = self.drawer.cellSize
-    self.lineSpace = self.drawer.lineSpace
+    self.descent = self.drawer.descent
+    self.leading = self.drawer.leading
   }
   
   override public func keyDown(theEvent: NSEvent) {
@@ -100,7 +103,7 @@ public class NeoVimView: NSView {
       self.drawBackground(positions: positions, background: rowFrag.attrs.background)
 
       let string = self.grid.cells[rowFrag.row][rowFrag.range].reduce("") { $0 + $1.string }
-      let glyphPositions = positions.map { CGPoint(x: $0.x, y: $0.y + self.lineSpace) }
+      let glyphPositions = positions.map { CGPoint(x: $0.x, y: $0.y + self.descent + self.leading) }
       self.drawer.drawString(string,
                              positions: UnsafeMutablePointer(glyphPositions), positionsCount: positions.count,
                              highlightAttrs: rowFrag.attrs,
@@ -120,23 +123,26 @@ public class NeoVimView: NSView {
   private func rowRunIntersecting(rects rects: [CGRect]) -> [RowRun] {
     return rects
       .map { rect -> Region in
+        // Get all Regions that intersects with the given rects. There can be overlaps between the Regions, but for the
+        // time being we ignore them; probably not necessary to optimize them away.
         let rowStart = Int(floor((self.frame.height - (rect.origin.y + rect.size.height)) / self.cellSize.height))
         let rowEnd = Int(ceil((self.frame.height - rect.origin.y) / self.cellSize.height)) - 1
         let columnStart = Int(floor(rect.origin.x / self.cellSize.width))
         let columnEnd = Int(ceil((rect.origin.x + rect.size.width) / self.cellSize.width)) - 1
+        
         return Region(top: rowStart, bottom: rowEnd, left: columnStart, right: columnEnd)
-      } // There can be overlaps between the Regions, but for the time being we ignore them.
+      }
       .map { region -> [RowRun] in
-        return (region.rowRange)
+        // Map Regions to RowRuns for drawing.
+        return region.rowRange
+          // Map each row in a Region to RowRuns
           .map { row -> [RowRun] in
-            let range = region.columnRange
+            let columns = region.columnRange
             let rowCells = self.grid.cells[row]
-            let startIndex = range.startIndex
+            let startIndex = columns.startIndex
             
-            var result = [
-              RowRun(row: row, range: startIndex...startIndex, attrs: rowCells[startIndex].attrs)
-            ]
-            range.forEach { idx in
+            var result = [ RowRun(row: row, range: startIndex...startIndex, attrs: rowCells[startIndex].attrs) ]
+            columns.forEach { idx in
               if rowCells[idx].attrs == result.last!.attrs {
                 let last = result.popLast()!
                 result.append(RowRun(row: row, range: last.range.startIndex...idx, attrs: last.attrs))
@@ -145,11 +151,11 @@ public class NeoVimView: NSView {
               }
             }
             
-            return result
-          } // -> [[RowRun]]
-          .flatMap { $0 } // -> [RowRun]
-      } // -> [[RowRun]]
-      .flatMap { $0 } // -> [RowRun]
+            return result // All RowRuns for a row in a Region.
+          }               // All RowRuns for all rows in a Region grouped by row.
+          .flatMap { $0 } // Flattened RowRuns for a Region.
+      }                   // All RowRuns for all Regions grouped by Region.
+      .flatMap { $0 }     // Flattened RowRuns for all Regions.
   }
 
   private func positionOnView(row: Int, column: Int) -> CGPoint {

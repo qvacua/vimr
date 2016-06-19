@@ -11,7 +11,8 @@
 @interface TextDrawer : NSObject
 
 @property (nonatomic, nonnull, retain) NSFont *font;
-@property (nonatomic, readonly) CGFloat lineSpace;
+@property (nonatomic, readonly) CGFloat leading;
+@property (nonatomic, readonly) CGFloat descent;
 @property (nonatomic, readonly) CGSize cellSize;
 
 - (instancetype _Nonnull)initWithFont:(NSFont *_Nonnull)font;

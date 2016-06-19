@@ -157,6 +157,7 @@ class Grid: CustomStringConvertible {
   }
   
   private func clearRegion(region: Region) {
+    // FIXME: sometimes clearRegion gets called without first resizing the Grid. Should we handle this?
     guard self.hasData else {
       return
     }
