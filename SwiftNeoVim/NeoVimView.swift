@@ -5,27 +5,6 @@
 
 import Cocoa
 
-func == (left: CellAttributes, right: CellAttributes) -> Bool {
-  if left.foreground != right.foreground { return false }
-  if left.fontTrait != right.fontTrait { return false }
-
-  if left.background != right.background { return false }
-  if left.special != right.special { return false }
-
-  return true
-}
-
-func != (left: CellAttributes, right: CellAttributes) -> Bool {
-  return !(left == right)
-}
-
-extension CellAttributes: CustomStringConvertible {
-  
-  public var description: String {
-    return "CellAttributes<fg: \(String(format: "%x", self.foreground)), bg: \(String(format: "%x", self.background)))"
-  }
-}
-
 /// Contiguous piece of cells of a row that has the same attributes.
 private struct RowRun: CustomStringConvertible {
 
@@ -42,8 +21,6 @@ public class NeoVimView: NSView {
   
   public var delegate: NeoVimViewDelegate?
 
-  private let qDispatchMainQueue = dispatch_get_main_queue()
-
   private var font: NSFont {
     didSet {
       self.drawer.font = self.font
@@ -58,11 +35,11 @@ public class NeoVimView: NSView {
   private let xpc: NeoVimXpc
   private let drawer: TextDrawer
   
-  private var cellSize = CGSize.zero
-  private var descent = CGFloat(0)
-  private var leading = CGFloat(0)
+  var cellSize = CGSize.zero
+  var descent = CGFloat(0)
+  var leading = CGFloat(0)
 
-  private let grid = Grid()
+  let grid = Grid()
 
   init(frame rect: NSRect = CGRect.zero, xpc: NeoVimXpc) {
     self.xpc = xpc
@@ -158,15 +135,11 @@ public class NeoVimView: NSView {
       .flatMap { $0 }     // Flattened RowRuns for all Regions.
   }
 
-  private func positionOnView(row: Int, column: Int) -> CGPoint {
+  func positionOnView(row: Int, column: Int) -> CGPoint {
     return CGPoint(
       x: CGFloat(column) * self.cellSize.width,
       y: self.frame.size.height - CGFloat(row) * self.cellSize.height - self.cellSize.height
     )
-  }
-
-  private func gui(call: () -> Void) {
-    dispatch_async(qDispatchMainQueue, call)
   }
   
   required public init?(coder: NSCoder) {
@@ -174,172 +147,3 @@ public class NeoVimView: NSView {
   }
 }
 
-extension NeoVimView: NeoVimUiBridgeProtocol {
-
-  public func resizeToWidth(width: Int32, height: Int32) {
-    let rectSize = CGSizeMake(
-      CGFloat(width) * self.cellSize.width,
-      CGFloat(height) * self.cellSize.height
-    )
-    
-    gui {
-      Swift.print("### resize to \(width):\(height)")
-      self.grid.resize(Size(width: Int(width), height: Int(height)))
-      self.delegate?.resizeToSize(rectSize)
-    }
-  }
-  
-  public func clear() {
-    gui {
-      Swift.print("### clear")
-      self.grid.clear()
-      self.needsDisplay = true
-    }
-  }
-  
-  public func eolClear() {
-    gui {
-      Swift.print("### eol clear")
-      self.grid.eolClear()
-
-      let origin = self.positionOnView(self.grid.position.row, column: self.grid.position.column)
-      let size = CGSize(
-        width: CGFloat(self.grid.region.right - self.grid.position.column + 1) * self.cellSize.width,
-        height: self.cellSize.height
-      )
-      let rect = CGRect(origin: origin, size: size)
-      self.setNeedsDisplayInRect(rect)
-    }
-  }
-  
-  public func cursorGotoRow(row: Int32, column: Int32) {
-    gui {
-      Swift.print("### goto: \(row):\(column)")
-      self.grid.goto(Position(row: Int(row), column: Int(column)))
-    }
-  }
-  
-  public func updateMenu() {
-    //    Swift.print("### update menu")
-  }
-  
-  public func busyStart() {
-    //    Swift.print("### busy start")
-  }
-  
-  public func busyStop() {
-    //    Swift.print("### busy stop")
-  }
-  
-  public func mouseOn() {
-    //    Swift.print("### mouse on")
-  }
-  
-  public func mouseOff() {
-    //    Swift.print("### mouse off")
-  }
-  
-  public func modeChange(mode: Int32) {
-    //    Swift.print("### mode change to: \(String(format: "%04X", mode))")
-  }
-  
-  public func setScrollRegionToTop(top: Int32, bottom: Int32, left: Int32, right: Int32) {
-    Swift.print("### set scroll region: \(top), \(bottom), \(left), \(right)")
-    gui {
-      self.grid.setScrollRegion(Region(top: Int(top), bottom: Int(bottom), left: Int(left), right: Int(right)))
-    }
-  }
-  
-  public func scroll(count: Int32) {
-    Swift.print("### scroll count: \(count)")
-
-    gui {
-      self.grid.scroll(Int(count))
-
-      let region = self.grid.region
-      let top = CGFloat(region.top)
-      let bottom = CGFloat(region.bottom)
-      let left = CGFloat(region.left)
-      let right = CGFloat(region.right)
-
-      let width = right - left + 1
-      let height = bottom - top + 1
-
-      let rect = CGRect(x: left * self.cellSize.width, y: bottom * self.cellSize.height,
-                        width: width * self.cellSize.width, height: height * self.cellSize.height)
-      self.setNeedsDisplayInRect(rect)
-    }
-  }
-  
-  public func highlightSet(attrs: CellAttributes) {
-    gui {
-//      Swift.print("### set highlight")
-      self.grid.attrs = attrs
-    }
-  }
-  
-  public func put(string: String) {
-    gui {
-      let curPos = Position(row: self.grid.position.row, column: self.grid.position.column)
-      self.grid.put(string)
-
-//      Swift.print("### put: \(curPos) -> '\(string)'")
-
-      let rect = CGRect(origin: self.positionOnView(curPos.row, column: curPos.column), size: self.cellSize)
-      self.setNeedsDisplayInRect(rect)
-    }
-  }
-  
-  public func bell() {
-    gui {
-      NSBeep()
-    }
-  }
-  
-  public func visualBell() {
-    //    Swift.print("### visual bell")
-  }
-  
-  public func flush() {
-//    gui {
-//      Swift.print("### flush")
-//    }
-  }
-  
-  public func updateForeground(fg: Int32) {
-//      Swift.print("### update fg: \(String(format: "%x", fg))")
-    gui {
-      self.grid.foreground = UInt32(bitPattern: fg)
-    }
-  }
-  
-  public func updateBackground(bg: Int32) {
-//      Swift.print("### update bg: \(String(format: "%x", bg))")
-    gui {
-      self.grid.background = UInt32(bitPattern: bg)
-    }
-  }
-  
-  public func updateSpecial(sp: Int32) {
-//      Swift.print("### update sp: \(String(format: "%x", sp)")
-    gui {
-      self.grid.special = UInt32(bitPattern: sp)
-    }
-  }
-  
-  public func suspend() {
-    //    Swift.print("### suspend")
-  }
-  
-  public func setTitle(title: String) {
-    self.delegate?.setTitle(title)
-  }
-  
-  public func setIcon(icon: String) {
-    //    Swift.print("### set icon: \(icon)")
-  }
-  
-  public func stop() {
-    Swift.print("### stop")
-  }
-}
