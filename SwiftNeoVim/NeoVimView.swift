@@ -32,8 +32,12 @@ public class NeoVimView: NSView {
     }
   }
   
-  private let xpc: NeoVimXpc
   private let drawer: TextDrawer
+
+  let xpc: NeoVimXpc
+
+  var markedText: String?
+  var keyDownDone = true
   
   var cellSize = CGSize.zero
   var descent = CGFloat(0)
@@ -53,10 +57,6 @@ public class NeoVimView: NSView {
     self.cellSize = self.drawer.cellSize
     self.descent = self.drawer.descent
     self.leading = self.drawer.leading
-  }
-  
-  override public func keyDown(theEvent: NSEvent) {
-    self.xpc.vimInput(theEvent.charactersIgnoringModifiers!)
   }
 
   override public func drawRect(dirtyUnionRect: NSRect) {
@@ -141,7 +141,11 @@ public class NeoVimView: NSView {
       y: self.frame.size.height - CGFloat(row) * self.cellSize.height - self.cellSize.height
     )
   }
-  
+
+  func cellRect(row: Int, column: Int) -> CGRect {
+    return CGRect(origin: self.positionOnView(row, column: column), size: self.cellSize)
+  }
+
   required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }

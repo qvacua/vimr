@@ -116,8 +116,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
 
 //      Swift.print("### put: \(curPos) -> '\(string)'")
 
-      let rect = CGRect(origin: self.positionOnView(curPos.row, column: curPos.column), size: self.cellSize)
-      self.setNeedsDisplayInRect(rect)
+      self.setNeedsDisplayInRect(self.cellRect(curPos.row, column: curPos.column))
     }
   }
   

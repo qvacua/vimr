@@ -150,6 +150,11 @@ class Grid: CustomStringConvertible {
     self.cells[self.position.row][self.position.column] = Cell(string: string, attrs: self.attrs)
     self.position.column += 1
   }
+
+  func putMarkedText(string: String) {
+    // NOTE: Maybe there's a better way to indicate marked text than inverting...
+    self.cells[self.position.row][self.position.column] = Cell(string: string, attrs: self.attrs.reversedColor)
+  }
   
   private func clearRegion(region: Region) {
     // FIXME: sometimes clearRegion gets called without first resizing the Grid. Should we handle this?

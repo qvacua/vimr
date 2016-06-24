@@ -17,18 +17,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NeoVimViewDelegate {
   }
 
   func applicationDidFinishLaunching(aNotification: NSNotification) {
-    let testView = InputTestView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
-    self.window.contentView?.addSubview(testView)
-    self.window.makeFirstResponder(testView)
-    
-//    self.neoVim = NeoVim()
-//    self.neoVim.view.delegate = self
-//
-//    self.neoVim.view.setFrameSize(CGSize(width: 100.0, height: 100.0))
-//    self.neoVim.view.setFrameOrigin(CGPoint(x: 0, y: 0))
-//    self.window.contentView?.addSubview(self.neoVim.view)
-//
-//    self.window.makeFirstResponder(self.neoVim.view)
+//    let testView = InputTestView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+//    self.window.contentView?.addSubview(testView)
+//    self.window.makeFirstResponder(testView)
+
+    self.neoVim = NeoVim()
+    self.neoVim.view.delegate = self
+
+    self.neoVim.view.setFrameSize(CGSize(width: 100.0, height: 100.0))
+    self.neoVim.view.setFrameOrigin(CGPoint(x: 0, y: 0))
+    self.window.contentView?.addSubview(self.neoVim.view)
+
+    self.window.makeFirstResponder(self.neoVim.view)
 
 //    neoVim.vimInput("i")
 //    neoVim.vimInput("\u{1F914}")

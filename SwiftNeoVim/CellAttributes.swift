@@ -26,5 +26,14 @@ extension CellAttributes: CustomStringConvertible {
   public var description: String {
     return "CellAttributes<fg: \(String(format: "%x", self.foreground)), bg: \(String(format: "%x", self.background)))"
   }
+
+  public var reversedColor: CellAttributes {
+    var result = self
+
+    result.background = self.foreground
+    result.foreground = self.background
+
+    return result
+  }
 }
 
