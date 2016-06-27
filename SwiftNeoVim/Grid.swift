@@ -6,8 +6,20 @@
 import Foundation
 
 struct Cell: CustomStringConvertible {
+  private let attributes: CellAttributes
+
   let string: String
-  let attrs: CellAttributes
+  var marked: Bool
+
+  var attrs: CellAttributes {
+    return self.marked ? self.attributes.reversedColor : self.attributes
+  }
+
+  init(string: String, attrs: CellAttributes, marked: Bool = false) {
+    self.string = string
+    self.attributes = attrs
+    self.marked = marked
+  }
   
   var description: String {
     return self.string.characters.count > 0 ? self.string : "*"
@@ -153,7 +165,17 @@ class Grid: CustomStringConvertible {
 
   func putMarkedText(string: String) {
     // NOTE: Maybe there's a better way to indicate marked text than inverting...
-    self.cells[self.position.row][self.position.column] = Cell(string: string, attrs: self.attrs.reversedColor)
+    self.cells[self.position.row][self.position.column] = Cell(string: string, attrs: self.attrs, marked: true)
+    self.position.column += 1
+  }
+
+  func unmarkCell(position: Position) {
+    print("!!!!! unmarking: \(position)")
+    self.cells[position.row][position.column].marked = false
+  }
+
+  func currentCell() -> Cell {
+    return self.cells[self.position.row][self.position.column]
   }
   
   private func clearRegion(region: Region) {

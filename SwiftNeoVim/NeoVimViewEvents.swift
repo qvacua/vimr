@@ -22,37 +22,24 @@ extension NeoVimView: NSTextInputClient {
     let chars = event.characters!
     let charsIgnoringModifiers = shift || capslock ? event.charactersIgnoringModifiers!.lowercaseString
                                                    : event.charactersIgnoringModifiers!
-    
+
     let vimModifiers = self.vimModifierFlags(modifierFlags)
     if vimModifiers.characters.count > 0 {
-      self.xpc.vimInput(self.vimWrapNamedKeys(vimModifiers + charsIgnoringModifiers))
+      self.xpc.vimInput(self.vimNamedKeys(vimModifiers + charsIgnoringModifiers))
     } else {
-      self.xpc.vimInput(self.vimStringFromPlainString(chars))
+      self.xpc.vimInput(self.vimPlainString(chars))
     }
 
     self.keyDownDone = true
-  }
-
-  private func vimWrapNamedKeys(string: String) -> String {
-    return "<\(string)>"
-  }
-  
-  private func vimStringFromPlainString(string: String) -> String {
-    return string.stringByReplacingOccurrencesOfString("<", withString: self.vimWrapNamedKeys("lt"))
   }
   
   private func vimModifierFlags(modifierFlags: NSEventModifierFlags) -> String {
     var result = ""
     
-    let shift = modifierFlags.contains(.ShiftKeyMask)
     let control = modifierFlags.contains(.ControlKeyMask)
     let option = modifierFlags.contains(.AlternateKeyMask)
     let command = modifierFlags.contains(.CommandKeyMask)
-    
-    if shift {
-      result += "S-"
-    }
-    
+
     if control {
       result += "C-"
     }
@@ -71,21 +58,48 @@ extension NeoVimView: NSTextInputClient {
   public func insertText(aString: AnyObject, replacementRange: NSRange) {
     Swift.print("\(#function): \(aString), \(replacementRange)")
 
-    self.xpc.vimInput(self.vimStringFromPlainString(String(aString)))
+    switch aString {
+    case let string as String:
+      self.xpc.vimInput(self.vimPlainString(string))
+    case let attributedString as NSAttributedString:
+      self.xpc.vimInput(self.vimPlainString(attributedString.string))
+    default:
+      break;
+    }
+
     self.markedText = nil
     self.keyDownDone = true
   }
 
   public override func doCommandBySelector(aSelector: Selector) {
     Swift.print("\(#function): \(aSelector)")
+
+    // TODO: handle when ㅎ -> delete
+
+    if self.respondsToSelector(aSelector) {
+      Swift.print("\(#function): calling \(aSelector)")
+      self.performSelector(aSelector, withObject: self)
+      self.keyDownDone = true
+      return
+    }
+
+    Swift.print("\(#function): \(aSelector) not implemented, forwarding input to vim")
     self.keyDownDone = false
   }
 
   public func setMarkedText(aString: AnyObject, selectedRange: NSRange, replacementRange: NSRange) {
     Swift.print("\(#function): \(aString), \(selectedRange), \(replacementRange)")
-    self.markedText = String(aString)
-    self.grid.putMarkedText(self.markedText!)
-    self.setNeedsDisplayInRect(self.cellRect(self.grid.position.row, column: self.grid.position.column))
+
+    switch aString {
+    case let string as String:
+      self.markedText = string
+    case let attributedString as NSAttributedString:
+      self.markedText = attributedString.string
+    default:
+      self.markedText = String(aString) // should not occur
+    }
+
+    self.xpc.vimInputMarkedText(self.markedText!)
     self.keyDownDone = true
   }
 
@@ -117,7 +131,7 @@ extension NeoVimView: NSTextInputClient {
 
   public func hasMarkedText() -> Bool {
     let result = self.markedText != nil
-    Swift.print("\(#function): returning \(result)")
+//    Swift.print("\(#function): returning \(result)")
     return result
   }
 
@@ -150,12 +164,6 @@ extension NeoVimView: NSTextInputClient {
   }
 
   /*
-   public func moveForward(sender: AnyObject?)
-   public func moveRight(sender: AnyObject?)
-   public func moveBackward(sender: AnyObject?)
-   public func moveLeft(sender: AnyObject?)
-   public func moveUp(sender: AnyObject?)
-   public func moveDown(sender: AnyObject?)
    public func moveWordForward(sender: AnyObject?)
    public func moveWordBackward(sender: AnyObject?)
    public func moveToBeginningOfLine(sender: AnyObject?)
@@ -198,13 +206,8 @@ extension NeoVimView: NSTextInputClient {
    public func moveToLeftEndOfLineAndModifySelection(sender: AnyObject?)
    public func moveToRightEndOfLineAndModifySelection(sender: AnyObject?)
 
-   public func scrollPageUp(sender: AnyObject?)
-   public func scrollPageDown(sender: AnyObject?)
    public func scrollLineUp(sender: AnyObject?)
    public func scrollLineDown(sender: AnyObject?)
-
-   public func scrollToBeginningOfDocument(sender: AnyObject?)
-   public func scrollToEndOfDocument(sender: AnyObject?)
 
    public func transpose(sender: AnyObject?)
    public func transposeWords(sender: AnyObject?)
@@ -231,8 +234,6 @@ extension NeoVimView: NSTextInputClient {
    public func lowercaseWord(sender: AnyObject?)
    public func capitalizeWord(sender: AnyObject?)
 
-   public func deleteForward(sender: AnyObject?)
-   public func deleteBackward(sender: AnyObject?)
    public func deleteBackwardByDecomposingPreviousCharacter(sender: AnyObject?)
    public func deleteWordForward(sender: AnyObject?)
    public func deleteWordBackward(sender: AnyObject?)

@@ -69,7 +69,10 @@ typedef struct {
 /**
  * Draw string at the current cursor which was set by a previous cursorGotoRow:column callback.
  */
-- (void)put:(NSString *)string;
+- (void)put:(NSString *_Nonnull)string;
+
+- (void)putMarkedText:(NSString *_Nonnull)markedText;
+- (void)unmarkRow:(int)row column:(int)column;
 
 - (void)bell;
 - (void)visualBell;
@@ -90,8 +93,8 @@ typedef struct {
  */
 - (void)updateSpecial:(int)sp;
 - (void)suspend;
-- (void)setTitle:(NSString *)title;
-- (void)setIcon:(NSString *)icon;
+- (void)setTitle:(NSString *_Nonnull)title;
+- (void)setIcon:(NSString *_Nonnull)icon;
 
 /**
  * NeoVim has been stopped.

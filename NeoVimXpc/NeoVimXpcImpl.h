@@ -15,7 +15,8 @@
 
 - (void)probe;
 
-- (void)vimInput:(NSString * _Nonnull)input;
+- (void)vimInput:(NSString *_Nonnull)input;
+- (void)vimInputMarkedText:(NSString *_Nonnull)markedText;
 
 - (void)debugScreenLines;
 

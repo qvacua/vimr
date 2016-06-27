@@ -154,7 +154,7 @@ public class InputTestView: NSView, NSTextInputClient {
   /// "Cmd-Ctrl-Return" you'll get the Emoji-popup at the rect by firstRectForCharacterRange(actualRange:) where the
   /// first range is the result of this method.
   public func selectedRange() -> NSRange {
-    let result = NSRange(location: 13, length: 0)
+    let result = NSRange(location: 1, length: 0)
     Swift.print("\(#function): returning \(result)")
     return result
   }
@@ -168,7 +168,7 @@ public class InputTestView: NSView, NSTextInputClient {
       return NSRange(location: self.text.characters.count, length: markedText.characters.count)
     }
     
-    return NSRange(location: NSNotFound, length: 0)
+    return NSRange(location: NSNotFound, length: 1)
   }
   
   /* Returns whether or not the receiver has marked text.
@@ -183,7 +183,7 @@ public class InputTestView: NSView, NSTextInputClient {
    */
   public func attributedSubstringForProposedRange(aRange: NSRange, actualRange: NSRangePointer) -> NSAttributedString? {
     Swift.print("\(#function): \(aRange), \(actualRange)")
-    return NSAttributedString(string: "t")
+    return NSAttributedString(string: "하")
   }
   
   /* Returns an array of attribute names recognized by the receiver.

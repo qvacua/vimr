@@ -71,7 +71,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   public func modeChange(mode: Int32) {
-    //    Swift.print("### mode change to: \(String(format: "%04X", mode))")
+    Swift.print("### mode change to: \(String(format: "%04X", mode))")
   }
   
   public func setScrollRegionToTop(top: Int32, bottom: Int32, left: Int32, right: Int32) {
@@ -101,15 +101,42 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   
   public func put(string: String) {
     DispatchUtils.gui {
+//      Swift.print("\(#function): \(string)")
       let curPos = Position(row: self.grid.position.row, column: self.grid.position.column)
       self.grid.put(string)
 
-//      Swift.print("### put: \(curPos) -> '\(string)'")
-
-      self.setNeedsDisplayInRect(self.cellRect(curPos.row, column: curPos.column))
+      if string.characters.count == 0 {
+        self.setNeedsDisplayPosition(row: curPos.row, column: max(curPos.column - 1, 0))
+      }
+      self.setNeedsDisplayPosition(row: curPos.row, column: curPos.column)
     }
   }
-  
+
+  public func putMarkedText(markedText: String) {
+    DispatchUtils.gui {
+//      Swift.print("\(#function): \(markedText)")
+      let curPos = Position(row: self.grid.position.row, column: self.grid.position.column)
+      self.grid.putMarkedText(markedText)
+
+      if markedText.characters.count == 0 {
+        self.setNeedsDisplayPosition(row: curPos.row, column: max(curPos.column - 1, 0))
+      }
+      self.setNeedsDisplayPosition(row: curPos.row, column: curPos.column)
+    }
+  }
+
+  private func setNeedsDisplayPosition(row row: Int, column: Int) {
+    self.setNeedsDisplayInRect(self.cellRect(row, column: column))
+  }
+
+  public func unmarkRow(row: Int32, column: Int32) {
+    DispatchUtils.gui {
+//      Swift.print("\(#function): \(row):\(column)")
+      self.grid.unmarkCell(Position(row: Int(row), column: Int(column)))
+      self.setNeedsDisplayPosition(row: Int(row), column: Int(column))
+    }
+  }
+
   public func bell() {
     DispatchUtils.gui {
       NSBeep()
