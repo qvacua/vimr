@@ -13,7 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NeoVimViewDelegate {
   var neoVim: NeoVim!
 
   @IBAction func debugSomething(sender: AnyObject!) {
-    self.neoVim.xpc.debugScreenLines()
+    self.neoVim.view.debugInfo()
   }
 
   func applicationDidFinishLaunching(aNotification: NSNotification) {

@@ -59,11 +59,16 @@ public class NeoVimView: NSView {
     self.leading = self.drawer.leading
   }
 
+  public func debugInfo() {
+    Swift.print(self.grid)
+  }
+
   override public func drawRect(dirtyUnionRect: NSRect) {
     guard self.grid.hasData else {
       return
     }
-    
+
+    Swift.print("\(#function): \(dirtyUnionRect)")
     let context = NSGraphicsContext.currentContext()!.CGContext
 
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
@@ -146,6 +151,19 @@ public class NeoVimView: NSView {
     return CGRect(origin: self.positionOnView(row, column: column), size: self.cellSize)
   }
 
+  func regionRect(region: Region) -> CGRect {
+      let top = CGFloat(region.top)
+      let bottom = CGFloat(region.bottom)
+      let left = CGFloat(region.left)
+      let right = CGFloat(region.right)
+
+      let width = right - left + 1
+      let height = bottom - top + 1
+
+      return CGRect(x: left * self.cellSize.width, y: (CGFloat(self.grid.size.height) - bottom) * self.cellSize.height,
+                    width: width * self.cellSize.width, height: height * self.cellSize.height)
+  }
+  
   required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }

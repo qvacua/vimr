@@ -77,7 +77,9 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   public func setScrollRegionToTop(top: Int32, bottom: Int32, left: Int32, right: Int32) {
     Swift.print("### set scroll region: \(top), \(bottom), \(left), \(right)")
     DispatchUtils.gui {
-      self.grid.setScrollRegion(Region(top: Int(top), bottom: Int(bottom), left: Int(left), right: Int(right)))
+      let region = Region(top: Int(top), bottom: Int(bottom), left: Int(left), right: Int(right))
+      self.grid.setScrollRegion(region)
+      self.setNeedsDisplayInRect(self.regionRect(region))
     }
   }
   
@@ -86,22 +88,10 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
 
     DispatchUtils.gui {
       self.grid.scroll(Int(count))
-
-      let region = self.grid.region
-      let top = CGFloat(region.top)
-      let bottom = CGFloat(region.bottom)
-      let left = CGFloat(region.left)
-      let right = CGFloat(region.right)
-
-      let width = right - left + 1
-      let height = bottom - top + 1
-
-      let rect = CGRect(x: left * self.cellSize.width, y: bottom * self.cellSize.height,
-                        width: width * self.cellSize.width, height: height * self.cellSize.height)
-      self.setNeedsDisplayInRect(rect)
+      self.setNeedsDisplayInRect(self.regionRect(self.grid.region))
     }
   }
-  
+
   public func highlightSet(attrs: CellAttributes) {
     DispatchUtils.gui {
 //      Swift.print("### set highlight")

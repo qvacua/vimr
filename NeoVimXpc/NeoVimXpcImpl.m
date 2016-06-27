@@ -71,8 +71,8 @@ static void osx_xpc_ui_main(UIBridgeData *bridge, UI *ui) {
   signal_watcher_init(data->loop, &data->cont_handle, data);
   signal_watcher_start(&data->cont_handle, sigcont_cb, SIGCONT);
 
-  bridge->bridge.width = 15;
-  bridge->bridge.height = 5;
+  bridge->bridge.width = 30;
+  bridge->bridge.height = 10;
 
   data->stop = false;
   CONTINUE(bridge);
