@@ -29,6 +29,7 @@ struct Cell: CustomStringConvertible {
 struct Position: CustomStringConvertible {
   
   static let zero = Position(row: 0, column: 0)
+  static let null = Position(row: -1, column: -1)
   
   var row: Int
   var column: Int
@@ -175,20 +176,44 @@ class Grid: CustomStringConvertible {
   }
 
   func unmarkCell(position: Position) {
-    print("!!!!! unmarking: \(position)")
+//    NSLog("\(#function): \(position)")
     self.cells[position.row][position.column].marked = false
   }
 
-  func isNextCellEmpty(position: Position) -> Bool {
-    if self.cells[position.row][min(position.column + 1, self.size.width - 1)].string.characters.count == 0 {
+  func singleIndexFrom(position: Position) -> Int {
+    return position.row * self.size.width + position.column
+  }
+
+  func positionFromSingleIndex(idx: Int) -> Position {
+    let row = Int(floor(Double(idx) / Double(self.size.width)))
+    let column = idx - row * self.size.width
+
+    return Position(row: row, column: column)
+  }
+
+  func isCellEmpty(position: Position) -> Bool {
+    if self.cells[position.row][position.column].string.characters.count == 0 {
       return true
     }
 
     return false
   }
 
+  func isPreviousCellEmpty(position: Position) -> Bool {
+    return self.isCellEmpty(Position(row: position.row, column: max(position.column - 1, 0)))
+  }
+
+  func isNextCellEmpty(position: Position) -> Bool {
+    return self.isCellEmpty(Position(row: position.row, column: min(position.column + 1, self.size.width - 1)))
+  }
+
   func nextCellPosition(position: Position) -> Position {
     return Position(row: position.row, column: min(position.column + 1, self.size.width - 1))
+  }
+  
+  func cellForSingleIndex(idx: Int) -> Cell {
+    let position = self.positionFromSingleIndex(idx)
+    return self.cells[position.row][position.column]
   }
 
   private func clearRegion(region: Region) {

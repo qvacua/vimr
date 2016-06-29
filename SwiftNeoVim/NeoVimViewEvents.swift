@@ -32,6 +32,181 @@ extension NeoVimView: NSTextInputClient {
 
     self.keyDownDone = true
   }
+
+  public func insertText(aString: AnyObject, replacementRange: NSRange) {
+    NSLog("\(#function): \(replacementRange): \(aString)")
+
+    switch aString {
+    case let string as String:
+      self.xpc.vimInput(self.vimPlainString(string))
+    case let attributedString as NSAttributedString:
+      self.xpc.vimInput(self.vimPlainString(attributedString.string))
+    default:
+      break;
+    }
+
+    // unmarkText()
+    self.markedText = nil
+    self.markedPosition = Position.null
+    // TODO: necessary?
+    self.setNeedsDisplayInRect(self.cellRect(row: self.grid.position.row, column: self.grid.position.column))
+    self.keyDownDone = true
+  }
+
+  public override func doCommandBySelector(aSelector: Selector) {
+//    NSLog("\(#function): "\(aSelector)")
+
+    // TODO: handle when ㅎ -> delete
+
+    if self.respondsToSelector(aSelector) {
+      Swift.print("\(#function): calling \(aSelector)")
+      self.performSelector(aSelector, withObject: self)
+      self.keyDownDone = true
+      return
+    }
+
+//    NSLog("\(#function): "\(aSelector) not implemented, forwarding input to vim")
+    self.keyDownDone = false
+  }
+
+  public func setMarkedText(aString: AnyObject, selectedRange: NSRange, replacementRange: NSRange) {
+
+    if self.markedText == nil {
+      self.markedPosition = self.grid.position
+    }
+
+    switch aString {
+    case let string as String:
+      self.markedText = string
+    case let attributedString as NSAttributedString:
+      self.markedText = attributedString.string
+    default:
+      self.markedText = String(aString) // should not occur
+    }
+    
+    NSLog("\(#function): \(self.markedText), \(selectedRange), \(replacementRange)")
+
+    self.xpc.vimInputMarkedText(self.markedText!)
+    self.keyDownDone = true
+  }
+
+  public func unmarkText() {
+    NSLog("\(#function): ")
+    self.markedText = nil
+    self.markedPosition = Position.null
+    // TODO: necessary?
+    self.setNeedsDisplayInRect(self.cellRect(row: self.grid.position.row, column: self.grid.position.column))
+    self.keyDownDone = true
+  }
+
+  /// Return the current selection (or the position of the cursor with empty-length range). For example when you enter
+  /// "Cmd-Ctrl-Return" you'll get the Emoji-popup at the rect by firstRectForCharacterRange(actualRange:) where the
+  /// first range is the result of this method.
+  public func selectedRange() -> NSRange {
+//    if self.markedText == nil {
+//      let result = NSRange(location: self.grid.singleIndexFrom(self.grid.position), length: 0)
+//      NSLog("\(#function): \(result)")
+//      return result
+//    }
+    
+    // FIXME: do we have to handle positions at the column borders?
+    if self.grid.isPreviousCellEmpty(self.grid.position) {
+      let result = NSRange(
+        location: self.grid.singleIndexFrom(
+          Position(row: self.grid.position.row, column: self.grid.position.column - 1)
+        ),
+        length: 0
+      )
+      NSLog("\(#function): \(result)")
+      return result
+    }
+
+    let result = NSRange(location: self.grid.singleIndexFrom(self.grid.position), length: 0)
+    NSLog("\(#function): \(result)")
+    return result
+  }
+
+  public func markedRange() -> NSRange {
+    // FIXME: do we have to handle positions at the column borders?
+    if let markedText = self.markedText {
+      let result = NSRange(location: self.grid.singleIndexFrom(self.markedPosition),
+                           length: markedText.characters.count)
+      NSLog("\(#function): \(result)")
+      return result
+    }
+
+    NSLog("\(#function): returning empty range")
+    return NSRange(location: NSNotFound, length: 0)
+  }
+
+  public func hasMarkedText() -> Bool {
+    let result = self.markedText != nil
+//    NSLog("\(#function): "returning \(result)")
+    return result
+  }
+
+  // FIXME: REFACTOR and take into account the "return nil"-case
+  public func attributedSubstringForProposedRange(aRange: NSRange, actualRange: NSRangePointer) -> NSAttributedString? {
+//    NSLog("\(#function): \(aRange), \(actualRange[0])")
+    
+    // first check whether the first cell is empty and if so, jump one character backward
+    var length = aRange.length
+    var location = aRange.location
+    var position = self.grid.positionFromSingleIndex(aRange.location)
+    if self.grid.isCellEmpty(position) {
+      length += 1
+      location -= 1
+      position = self.grid.positionFromSingleIndex(location)
+    }
+    
+    // check whether the range extend to multiple lines
+    let multipleLines = position.column + length >= self.grid.size.width
+    
+    if !multipleLines {
+      // FIXME: do we have to handle position.column + aRange.length >= self.grid.width?
+      let string = self.grid.cells[position.row][position.column...(position.column + length)].reduce("") {
+        $0 + $1.string
+      }
+      actualRange[0].length = string.characters.count
+      NSLog("\(#function): \(aRange), \(actualRange[0]): \(string)")
+      return NSAttributedString(string: string)
+    }
+    
+    // TODO: maybe make Grid a Indexable or similar
+    var string = ""
+    for i in location...(location + length) {
+      string += self.grid.cellForSingleIndex(i).string
+    }
+    NSLog("\(#function): \(aRange), \(actualRange[0]): \(string)")
+    return NSAttributedString(string: string)
+  }
+
+  public func validAttributesForMarkedText() -> [String] {
+    //    Swift.print("\(#function): ")
+    return []
+  }
+
+  public func firstRectForCharacterRange(aRange: NSRange, actualRange: NSRangePointer) -> NSRect {
+    NSLog("\(#function): \(aRange), \(actualRange[0])")
+    if actualRange != nil {
+      Swift.print("\(#function): \(aRange), \(actualRange[0])")
+    } else {
+      Swift.print("\(#function): \(aRange), nil")
+    }
+
+    let row = Int(floor(Double(aRange.location / self.grid.size.width)))
+    let column = aRange.location - row * self.grid.size.width
+
+    let resultInSelf = self.cellRect(row: row, column: column)
+    let result = self.window?.convertRectToScreen(self.convertRect(resultInSelf, toView: nil))
+
+    return result!
+  }
+
+  public func characterIndexForPoint(aPoint: NSPoint) -> Int {
+    NSLog("\(#function): \(aPoint)")
+    return 1
+  }
   
   private func vimModifierFlags(modifierFlags: NSEventModifierFlags) -> String {
     var result = ""
@@ -53,114 +228,6 @@ extension NeoVimView: NSTextInputClient {
     }
 
     return result
-  }
-
-  public func insertText(aString: AnyObject, replacementRange: NSRange) {
-//    Swift.print("\(#function): \(aString), \(replacementRange)")
-
-    switch aString {
-    case let string as String:
-      self.xpc.vimInput(self.vimPlainString(string))
-    case let attributedString as NSAttributedString:
-      self.xpc.vimInput(self.vimPlainString(attributedString.string))
-    default:
-      break;
-    }
-
-    self.markedText = nil
-    self.keyDownDone = true
-  }
-
-  public override func doCommandBySelector(aSelector: Selector) {
-    Swift.print("\(#function): \(aSelector)")
-
-    // TODO: handle when ㅎ -> delete
-
-    if self.respondsToSelector(aSelector) {
-      Swift.print("\(#function): calling \(aSelector)")
-      self.performSelector(aSelector, withObject: self)
-      self.keyDownDone = true
-      return
-    }
-
-    Swift.print("\(#function): \(aSelector) not implemented, forwarding input to vim")
-    self.keyDownDone = false
-  }
-
-  public func setMarkedText(aString: AnyObject, selectedRange: NSRange, replacementRange: NSRange) {
-    Swift.print("\(#function): \(aString), \(selectedRange), \(replacementRange)")
-
-    switch aString {
-    case let string as String:
-      self.markedText = string
-    case let attributedString as NSAttributedString:
-      self.markedText = attributedString.string
-    default:
-      self.markedText = String(aString) // should not occur
-    }
-
-    self.xpc.vimInputMarkedText(self.markedText!)
-    self.keyDownDone = true
-  }
-
-  public func unmarkText() {
-    Swift.print("\(#function): ")
-    self.markedText = nil
-    self.setNeedsDisplayInRect(self.cellRect(row: self.grid.position.row, column: self.grid.position.column))
-    self.keyDownDone = true
-  }
-
-  /// Return the current selection (or the position of the cursor with empty-length range). For example when you enter
-  /// "Cmd-Ctrl-Return" you'll get the Emoji-popup at the rect by firstRectForCharacterRange(actualRange:) where the
-  /// first range is the result of this method.
-  public func selectedRange() -> NSRange {
-    let result = NSRange(location: 13, length: 0)
-    Swift.print("\(#function): returning \(result)")
-    return result
-  }
-
-  public func markedRange() -> NSRange {
-    Swift.print("\(#function): ")
-
-    if let markedText = self.markedText {
-//      return NSRange(location: self.text.characters.count, length: markedText.characters.count)
-    }
-
-    return NSRange(location: NSNotFound, length: 0)
-  }
-
-  public func hasMarkedText() -> Bool {
-    let result = self.markedText != nil
-//    Swift.print("\(#function): returning \(result)")
-    return result
-  }
-
-  public func attributedSubstringForProposedRange(aRange: NSRange, actualRange: NSRangePointer) -> NSAttributedString? {
-    Swift.print("\(#function): \(aRange), \(actualRange)")
-    return NSAttributedString(string: "t")
-  }
-
-  public func validAttributesForMarkedText() -> [String] {
-    //    Swift.print("\(#function): ")
-    return []
-  }
-
-  public func firstRectForCharacterRange(aRange: NSRange, actualRange: NSRangePointer) -> NSRect {
-    if actualRange != nil {
-      Swift.print("\(#function): \(aRange), \(actualRange[0])")
-    } else {
-      Swift.print("\(#function): \(aRange), nil")
-    }
-
-    let resultInSelf = NSRect(x: 0, y: 0, width: 10, height: 10)
-    let result = self.window?.convertRectToScreen(self.convertRect(resultInSelf, toView: nil))
-
-    return result!
-  }
-
-  public func characterIndexForPoint(aPoint: NSPoint) -> Int {
-    Swift.print("\(#function): \(aPoint)")
-    return 1
   }
 
   /*

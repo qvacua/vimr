@@ -48,13 +48,19 @@ static uv_cond_t _condition;
 
 static id <NeoVimUiBridgeProtocol> _neo_vim_osx_ui;
 
-static int _row = 0;
-static int _column = 0;
 static int _markedRow = 0;
 static int _markedColumn = 0;
 static NSString *_markedText = nil;
 
 static dispatch_queue_t _queue;
+
+static inline int cursorRow() {
+  return curwin->w_winrow + curwin->w_wrow;
+}
+
+static inline int cursorColumn() {
+  return curwin->w_wincol + curwin->w_wcol;
+}
 
 static void xpc_async(void (^block)()) {
   dispatch_async(_queue, block);
@@ -145,9 +151,6 @@ static void xpc_ui_eol_clear(UI *ui __unused) {
 static void xpc_ui_cursor_goto(UI *ui __unused, int row, int col) {
   xpc_async(^{
       //printf("cursor goto %d:%d\n", row, col);
-      _row = row;
-      _column = col;
-
       [_neo_vim_osx_ui cursorGotoRow:row column:col];
   });
 }
@@ -243,15 +246,14 @@ static void xpc_ui_put(UI *ui __unused, uint8_t *str, size_t len) {
       NSString *string = [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
 //      printf("put: %lu:'%s'\n", len, [string cStringUsingEncoding:NSUTF8StringEncoding]);
 
-      if (_markedText != nil && _markedColumn == _column && _markedRow == _row) {
+      if (_markedText != nil && _markedColumn == cursorColumn() && _markedRow == cursorRow()) {
         [_neo_vim_osx_ui putMarkedText:string];
-      } else if (_markedText != nil && len == 0 && _markedColumn == _column - 1) {
+      } else if (_markedText != nil && len == 0 && _markedColumn == cursorColumn() - 1) {
         [_neo_vim_osx_ui putMarkedText:string];
       } else {
         [_neo_vim_osx_ui put:string];
       }
 
-      _column += 1;
       [string release];
   });
 }
@@ -458,6 +460,7 @@ static void neovim_input(void **argv) {
 }
 
 - (void)vimInput:(NSString *_Nonnull)input {
+
   xpc_async(^{
       if (_markedText == nil) {
         loop_schedule(&main_loop, event_create(1, neovim_input, 1, [input retain])); // release in neovim_input
@@ -468,9 +471,9 @@ static void neovim_input(void **argv) {
       // inserted. Neovim's drawing code is optimized such that it does not call put in this case again, thus, we
       // have to manually unmark the cells in the main app.
       if ([_markedText isEqualToString:input]) {
-        [_neo_vim_osx_ui unmarkRow:_row column:MAX(_column - 1, 0)];
-        if (ScreenLines[_row * screen_Columns + MAX(_column - 1, 0)] == 0x00) {
-          [_neo_vim_osx_ui unmarkRow:_row column:MAX(_column - 2, 0)];
+        [_neo_vim_osx_ui unmarkRow:cursorRow() column:MAX(cursorColumn() - 1, 0)];
+        if (ScreenLines[cursorRow() * screen_Columns + MAX(cursorColumn() - 1, 0)] == 0x00) {
+          [_neo_vim_osx_ui unmarkRow:cursorRow() column:MAX(cursorColumn() - 2, 0)];
         }
       }
 
@@ -490,8 +493,8 @@ static void neovim_input(void **argv) {
 }
 
 - (void)insertMarkedText:(NSString *_Nonnull)markedText {
-  _markedRow = _row;
-  _markedColumn = _column;
+  _markedRow = cursorRow();
+  _markedColumn = cursorColumn();
   _markedText = [markedText retain]; // release when the final text is input in -vimInput
 
   loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_markedText retain])); // release in neovim_input

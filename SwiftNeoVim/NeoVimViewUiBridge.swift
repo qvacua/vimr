@@ -14,7 +14,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
         height: CGFloat(height) * self.cellSize.height
       )
     
-      Swift.print("### resize to \(width):\(height)")
+//      Swift.print("### resize to \(width):\(height)")
       self.grid.resize(Size(width: Int(width), height: Int(height)))
       self.delegate?.resizeToSize(rectSize)
     }
@@ -22,7 +22,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   
   public func clear() {
     DispatchUtils.gui {
-      Swift.print("### clear")
+//      Swift.print("### clear")
       self.grid.clear()
       self.needsDisplay = true
     }
@@ -30,7 +30,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   
   public func eolClear() {
     DispatchUtils.gui {
-      Swift.print("### eol clear")
+//      Swift.print("### eol clear")
       self.grid.eolClear()
 
       let origin = self.positionOnView(self.grid.position.row, column: self.grid.position.column)
@@ -45,10 +45,10 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   
   public func cursorGotoRow(row: Int32, column: Int32) {
     DispatchUtils.gui {
-      Swift.print("### goto: \(row):\(column)")
-      self.setCursorNeedsDisplay()
+      NSLog("\(#function): \(row):\(column)")
+      self.setCursorNeedsDisplay(self.grid.position)
       self.grid.goto(Position(row: Int(row), column: Int(column)))
-      self.setCursorNeedsDisplay()
+      self.setCursorNeedsDisplay(self.grid.position)
     }
   }
   
@@ -73,11 +73,11 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   public func modeChange(mode: Int32) {
-    Swift.print("### mode change to: \(String(format: "%04X", mode))")
+//    Swift.print("### mode change to: \(String(format: "%04X", mode))")
   }
   
   public func setScrollRegionToTop(top: Int32, bottom: Int32, left: Int32, right: Int32) {
-    Swift.print("### set scroll region: \(top), \(bottom), \(left), \(right)")
+//    Swift.print("### set scroll region: \(top), \(bottom), \(left), \(right)")
     DispatchUtils.gui {
       let region = Region(top: Int(top), bottom: Int(bottom), left: Int(left), right: Int(right))
       self.grid.setScrollRegion(region)
@@ -86,7 +86,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   public func scroll(count: Int32) {
-    Swift.print("### scroll count: \(count)")
+//    Swift.print("### scroll count: \(count)")
 
     DispatchUtils.gui {
       self.grid.scroll(Int(count))
@@ -112,15 +112,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
       if string.characters.count == 0 {
         self.setNeedsDisplayAt(row: curPos.row, column: max(curPos.column - 1, 0))
       }
-      self.setCursorNeedsDisplay()
-    }
-  }
-
-  private func setCursorNeedsDisplay() {
-    let position = self.grid.position
-    self.setNeedsDisplayAt(position: position)
-    if self.grid.isNextCellEmpty(position) {
-      self.setNeedsDisplayAt(position: self.grid.nextCellPosition(position))
+      self.setCursorNeedsDisplay(self.grid.position)
     }
   }
 
@@ -134,7 +126,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
       if markedText.characters.count == 0 {
         self.setNeedsDisplayAt(row: curPos.row, column: max(curPos.column - 1, 0))
       }
-      self.setCursorNeedsDisplay()
+      self.setCursorNeedsDisplay(self.grid.position)
     }
   }
 
@@ -143,7 +135,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
 //      Swift.print("\(#function): \(row):\(column)")
       self.grid.unmarkCell(Position(row: Int(row), column: Int(column)))
       self.setNeedsDisplayAt(row: Int(row), column: Int(column))
-      self.setCursorNeedsDisplay()
+      self.setCursorNeedsDisplay(self.grid.position)
     }
   }
 
@@ -197,7 +189,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   public func stop() {
-    Swift.print("### stop")
+//    Swift.print("### stop")
   }
 
   private func setNeedsDisplayAt(position position: Position) {
@@ -207,5 +199,12 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   private func setNeedsDisplayAt(row row: Int, column: Int) {
 //    Swift.print("\(#function): \(row):\(column)")
     self.setNeedsDisplayInRect(self.cellRect(row: row, column: column))
+  }
+
+  private func setCursorNeedsDisplay(position: Position) {
+    self.setNeedsDisplayAt(position: position)
+    if self.grid.isNextCellEmpty(position) {
+      self.setNeedsDisplayAt(position: self.grid.nextCellPosition(position))
+    }
   }
 }

@@ -16,125 +16,17 @@ public class InputTestView: NSView, NSTextInputClient {
    */
   public func insertText(aString: AnyObject, replacementRange: NSRange) {
     Swift.print("\(#function): \(aString), \(replacementRange)")
-    
-    self.vimInput(String(aString))
     self.markedText = nil
   }
   
   /* The receiver invokes the action specified by aSelector.
    */
   public override func doCommandBySelector(aSelector: Selector) {
-    self.handledBySelector = true
     Swift.print("\(#function): \(aSelector)")
     if aSelector == NSSelectorFromString("noop:") {
       self.handledBySelector = false
       return
     }
-
-    /*
- 
-     public func moveForward(sender: AnyObject?)
-     public func moveRight(sender: AnyObject?)
-     public func moveBackward(sender: AnyObject?)
-     public func moveLeft(sender: AnyObject?)
-     public func moveUp(sender: AnyObject?)
-     public func moveDown(sender: AnyObject?)
-     public func moveWordForward(sender: AnyObject?)
-     public func moveWordBackward(sender: AnyObject?)
-     public func moveToBeginningOfLine(sender: AnyObject?)
-     public func moveToEndOfLine(sender: AnyObject?)
-     public func moveToBeginningOfParagraph(sender: AnyObject?)
-     public func moveToEndOfParagraph(sender: AnyObject?)
-     public func moveToEndOfDocument(sender: AnyObject?)
-     public func moveToBeginningOfDocument(sender: AnyObject?)
-     public func pageDown(sender: AnyObject?)
-     public func pageUp(sender: AnyObject?)
-     public func centerSelectionInVisibleArea(sender: AnyObject?)
-     
-     public func moveBackwardAndModifySelection(sender: AnyObject?)
-     public func moveForwardAndModifySelection(sender: AnyObject?)
-     public func moveWordForwardAndModifySelection(sender: AnyObject?)
-     public func moveWordBackwardAndModifySelection(sender: AnyObject?)
-     public func moveUpAndModifySelection(sender: AnyObject?)
-     public func moveDownAndModifySelection(sender: AnyObject?)
-     
-     public func moveToBeginningOfLineAndModifySelection(sender: AnyObject?)
-     public func moveToEndOfLineAndModifySelection(sender: AnyObject?)
-     public func moveToBeginningOfParagraphAndModifySelection(sender: AnyObject?)
-     public func moveToEndOfParagraphAndModifySelection(sender: AnyObject?)
-     public func moveToEndOfDocumentAndModifySelection(sender: AnyObject?)
-     public func moveToBeginningOfDocumentAndModifySelection(sender: AnyObject?)
-     public func pageDownAndModifySelection(sender: AnyObject?)
-     public func pageUpAndModifySelection(sender: AnyObject?)
-     public func moveParagraphForwardAndModifySelection(sender: AnyObject?)
-     public func moveParagraphBackwardAndModifySelection(sender: AnyObject?)
-     
-     public func moveWordRight(sender: AnyObject?)
-     public func moveWordLeft(sender: AnyObject?)
-     public func moveRightAndModifySelection(sender: AnyObject?)
-     public func moveLeftAndModifySelection(sender: AnyObject?)
-     public func moveWordRightAndModifySelection(sender: AnyObject?)
-     public func moveWordLeftAndModifySelection(sender: AnyObject?)
-     
-     public func moveToLeftEndOfLine(sender: AnyObject?)
-     public func moveToRightEndOfLine(sender: AnyObject?)
-     public func moveToLeftEndOfLineAndModifySelection(sender: AnyObject?)
-     public func moveToRightEndOfLineAndModifySelection(sender: AnyObject?)
-     
-     public func scrollPageUp(sender: AnyObject?)
-     public func scrollPageDown(sender: AnyObject?)
-     public func scrollLineUp(sender: AnyObject?)
-     public func scrollLineDown(sender: AnyObject?)
-     
-     public func scrollToBeginningOfDocument(sender: AnyObject?)
-     public func scrollToEndOfDocument(sender: AnyObject?)
-     
-     public func transpose(sender: AnyObject?)
-     public func transposeWords(sender: AnyObject?)
-     
-     public func selectAll(sender: AnyObject?)
-     public func selectParagraph(sender: AnyObject?)
-     public func selectLine(sender: AnyObject?)
-     public func selectWord(sender: AnyObject?)
-     
-     public func indent(sender: AnyObject?)
-     public func insertTab(sender: AnyObject?)
-     public func insertBacktab(sender: AnyObject?)
-     public func insertNewline(sender: AnyObject?)
-     public func insertParagraphSeparator(sender: AnyObject?)
-     public func insertNewlineIgnoringFieldEditor(sender: AnyObject?)
-     public func insertTabIgnoringFieldEditor(sender: AnyObject?)
-     public func insertLineBreak(sender: AnyObject?)
-     public func insertContainerBreak(sender: AnyObject?)
-     public func insertSingleQuoteIgnoringSubstitution(sender: AnyObject?)
-     public func insertDoubleQuoteIgnoringSubstitution(sender: AnyObject?)
-     
-     public func changeCaseOfLetter(sender: AnyObject?)
-     public func uppercaseWord(sender: AnyObject?)
-     public func lowercaseWord(sender: AnyObject?)
-     public func capitalizeWord(sender: AnyObject?)
-     
-     public func deleteForward(sender: AnyObject?)
-     public func deleteBackward(sender: AnyObject?)
-     public func deleteBackwardByDecomposingPreviousCharacter(sender: AnyObject?)
-     public func deleteWordForward(sender: AnyObject?)
-     public func deleteWordBackward(sender: AnyObject?)
-     public func deleteToBeginningOfLine(sender: AnyObject?)
-     public func deleteToEndOfLine(sender: AnyObject?)
-     public func deleteToBeginningOfParagraph(sender: AnyObject?)
-     public func deleteToEndOfParagraph(sender: AnyObject?)
-     
-     public func yank(sender: AnyObject?)
-     
-     public func complete(sender: AnyObject?)
-     
-     public func setMark(sender: AnyObject?)
-     public func deleteToMark(sender: AnyObject?)
-     public func selectToMark(sender: AnyObject?)
-     public func swapWithMark(sender: AnyObject?)
-     
-     public func cancelOperation(sender: AnyObject?)
-     */
   }
   
   /* The receiver inserts aString replacing the content specified by replacementRange. aString can be either an NSString or NSAttributedString instance. selectedRange specifies the selection inside the string being inserted; hence, the location is relative to the beginning of aString. When aString is an NSString, the receiver is expected to render the marked text with distinguishing appearance (i.e. NSTextView renders with -markedTextAttributes).
@@ -162,13 +54,13 @@ public class InputTestView: NSView, NSTextInputClient {
   /* Returns the marked range. Returns {NSNotFound, 0} if no marked range.
    */
   public func markedRange() -> NSRange {
-    Swift.print("\(#function): ")
-    
     if let markedText = self.markedText {
-      return NSRange(location: self.text.characters.count, length: markedText.characters.count)
+      Swift.print("\(#function): returning \(NSRange(location: 0, length: 1))")
+      return NSRange(location: 0, length: 1)
     }
-    
-    return NSRange(location: NSNotFound, length: 1)
+
+    Swift.print("\(#function): returning \(NSRange(location: NSNotFound, length: 0))")
+    return NSRange(location: NSNotFound, length: 0)
   }
   
   /* Returns whether or not the receiver has marked text.
@@ -182,7 +74,7 @@ public class InputTestView: NSView, NSTextInputClient {
   /* Returns attributed string specified by aRange. It may return nil. If non-nil return value and actualRange is non-NULL, it contains the actual range for the return value. The range can be adjusted from various reasons (i.e. adjust to grapheme cluster boundary, performance optimization, etc).
    */
   public func attributedSubstringForProposedRange(aRange: NSRange, actualRange: NSRangePointer) -> NSAttributedString? {
-    Swift.print("\(#function): \(aRange), \(actualRange)")
+    Swift.print("\(#function): \(aRange), \(actualRange[0])")
     return NSAttributedString(string: "하")
   }
   
@@ -197,11 +89,12 @@ public class InputTestView: NSView, NSTextInputClient {
    */
   public func firstRectForCharacterRange(aRange: NSRange, actualRange: NSRangePointer) -> NSRect {
     if actualRange != nil {
-      Swift.print("\(#function): \(aRange), \(actualRange[0])")
+//      Swift.print("\(#function): \(aRange), \(actualRange[0])")
     } else {
-      Swift.print("\(#function): \(aRange), nil")
+//      Swift.print("\(#function): \(aRange), nil")
     }
-    
+    Swift.print("\(#function): \(aRange), \(actualRange[0])")
+
     let resultInSelf = NSRect(x: 0, y: 0, width: 10, height: 10)
     let result = self.window?.convertRectToScreen(self.convertRect(resultInSelf, toView: nil))
     
@@ -243,15 +136,15 @@ public class InputTestView: NSView, NSTextInputClient {
     let charsIgnoringModifiers = shift || capslock ? theEvent.charactersIgnoringModifiers!.lowercaseString
                                                    : theEvent.charactersIgnoringModifiers!
     
-    Swift.print("characters: \(chars)")// = " + String(format:"%x", theEvent.characters!.unicodeScalars.first!.value))
-    Swift.print("characters ign: \(charsIgnoringModifiers)")// = " + String(format:"%x", theEvent.charactersIgnoringModifiers!.unicodeScalars.first!.value))
+//    Swift.print("characters: \(chars)")// = " + String(format:"%x", theEvent.characters!.unicodeScalars.first!.value))
+//    Swift.print("characters ign: \(charsIgnoringModifiers)")// = " + String(format:"%x", theEvent.charactersIgnoringModifiers!.unicodeScalars.first!.value))
 //    Swift.print(String(format: "keycode: %x", theEvent.keyCode))
-    Swift.print("shift: \(shift), command: \(command), control: \(control), option: \(option)")
+//    Swift.print("shift: \(shift), command: \(command), control: \(control), option: \(option)")
 
     let inputContext = NSTextInputContext.currentInputContext()!
     let handled = inputContext.handleEvent(theEvent)
     if handled {
-      Swift.print("Cocoa handled it")
+//      Swift.print("Cocoa handled it")
     }
 
 //    self.text += theEvent.charactersIgnoringModifiers!
@@ -264,6 +157,6 @@ public class InputTestView: NSView, NSTextInputClient {
   }
   
   private func vimInput(string: String) {
-    Swift.print("### vim input: \(string)")
+//    Swift.print("### vim input: \(string)")
   }
 }

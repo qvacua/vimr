@@ -72,6 +72,11 @@ public class NeoVimView: NSView {
   let xpc: NeoVimXpc
 
   var markedText: String?
+  var markedPosition = Position.null {
+    didSet {
+//      Swift.print("\(self.markedPosition)")
+    }
+  }
   var keyDownDone = true
   
   var cellSize = CGSize.zero
