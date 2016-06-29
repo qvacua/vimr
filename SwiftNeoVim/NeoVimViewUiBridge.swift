@@ -204,7 +204,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
 
   private func setNeedsDisplayAt(row row: Int, column: Int) {
-    Swift.print("\(#function): \(row):\(column)")
+//    Swift.print("\(#function): \(row):\(column)")
     self.setNeedsDisplayInRect(self.cellRect(row: row, column: column))
   }
 }
