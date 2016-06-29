@@ -103,7 +103,7 @@ public class NeoVimView: NSView {
       return
     }
 
-    Swift.print("\(#function): \(dirtyUnionRect)")
+//    Swift.print("\(#function): \(dirtyUnionRect)")
     let context = NSGraphicsContext.currentContext()!.CGContext
 
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
@@ -133,6 +133,26 @@ public class NeoVimView: NSView {
                              highlightAttrs: rowFrag.attrs,
                              context: context)
     }
+
+    self.drawCursor(self.grid.background)
+  }
+
+  private func drawCursor(background: UInt32) {
+    // FIXME: for now do some rudimentary cursor drawing
+    let cursorPosition = self.grid.position
+//    Swift.print("\(#function): \(cursorPosition)")
+
+    var cursorRect = self.cellRect(row: cursorPosition.row, column: cursorPosition.column)
+    Swift.print("@@@@@@@@@@@@@@@@@ original \(cursorRect)")
+    let nextColumn = min(cursorPosition.column + 1, self.grid.size.width)
+    let nextString = self.grid.cells[cursorPosition.row][nextColumn].string
+    if nextString.characters.count == 0 {
+      cursorRect = cursorRect.union(self.cellRect(row: cursorPosition.row, column:nextColumn))
+      Swift.print("@@@@@@@@@@@@@@@@@ new \(cursorRect)")
+    }
+
+    ColorUtils.colorFromCodeIgnoringAlpha(background).set()
+    NSRectFillUsingOperation(cursorRect, .CompositeDifference)
   }
 
   private func drawBackground(positions positions: [CGPoint], background: UInt32) {
@@ -189,7 +209,7 @@ public class NeoVimView: NSView {
     )
   }
 
-  func cellRect(row: Int, column: Int) -> CGRect {
+  func cellRect(row row: Int, column: Int) -> CGRect {
     return CGRect(origin: self.positionOnView(row, column: column), size: self.cellSize)
   }
 

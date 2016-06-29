@@ -106,7 +106,7 @@ extension NeoVimView: NSTextInputClient {
   public func unmarkText() {
     Swift.print("\(#function): ")
     self.markedText = nil
-    self.setNeedsDisplayInRect(self.cellRect(self.grid.position.row, column: self.grid.position.column))
+    self.setNeedsDisplayInRect(self.cellRect(row: self.grid.position.row, column: self.grid.position.column))
     self.keyDownDone = true
   }
 

@@ -46,7 +46,11 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   public func cursorGotoRow(row: Int32, column: Int32) {
     DispatchUtils.gui {
       Swift.print("### goto: \(row):\(column)")
-      self.grid.goto(Position(row: Int(row), column: Int(column)))
+      self.setNeedsDisplayAt(position: self.grid.position)
+
+      let newPosition = Position(row: Int(row), column: Int(column))
+      self.grid.goto(newPosition)
+      self.setNeedsDisplayAt(position: newPosition)
     }
   }
   
@@ -105,10 +109,11 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
       let curPos = Position(row: self.grid.position.row, column: self.grid.position.column)
       self.grid.put(string)
 
+      self.setNeedsDisplayAt(position: curPos)
       if string.characters.count == 0 {
-        self.setNeedsDisplayPosition(row: curPos.row, column: max(curPos.column - 1, 0))
+        self.setNeedsDisplayAt(row: curPos.row, column: max(curPos.column - 1, 0))
       }
-      self.setNeedsDisplayPosition(row: curPos.row, column: curPos.column)
+      self.setNeedsDisplayAt(position: self.grid.position) // cursor
     }
   }
 
@@ -118,22 +123,20 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
       let curPos = Position(row: self.grid.position.row, column: self.grid.position.column)
       self.grid.putMarkedText(markedText)
 
+      self.setNeedsDisplayAt(position: curPos)
       if markedText.characters.count == 0 {
-        self.setNeedsDisplayPosition(row: curPos.row, column: max(curPos.column - 1, 0))
+        self.setNeedsDisplayAt(row: curPos.row, column: max(curPos.column - 1, 0))
       }
-      self.setNeedsDisplayPosition(row: curPos.row, column: curPos.column)
+      self.setNeedsDisplayAt(position: self.grid.position) // cursor
     }
-  }
-
-  private func setNeedsDisplayPosition(row row: Int, column: Int) {
-    self.setNeedsDisplayInRect(self.cellRect(row, column: column))
   }
 
   public func unmarkRow(row: Int32, column: Int32) {
     DispatchUtils.gui {
 //      Swift.print("\(#function): \(row):\(column)")
       self.grid.unmarkCell(Position(row: Int(row), column: Int(column)))
-      self.setNeedsDisplayPosition(row: Int(row), column: Int(column))
+      self.setNeedsDisplayAt(row: Int(row), column: Int(column))
+      self.setNeedsDisplayAt(position: self.grid.position) // cursor
     }
   }
 
@@ -188,5 +191,14 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   
   public func stop() {
     Swift.print("### stop")
+  }
+
+  private func setNeedsDisplayAt(position position: Position) {
+    self.setNeedsDisplayAt(row: position.row, column: position.column)
+  }
+
+  private func setNeedsDisplayAt(row row: Int, column: Int) {
+    Swift.print("\(#function): \(row):\(column)")
+    self.setNeedsDisplayInRect(self.cellRect(row: row, column: column))
   }
 }
