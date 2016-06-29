@@ -159,6 +159,11 @@ class Grid: CustomStringConvertible {
   }
   
   func put(string: String) {
+    // FIXME: handle the following situation:
+    // |abcde | <- type ㅎ
+    // =>
+    // |abcde>| <- ">" at the end of the line is wrong -> the XPC could tell the main app whether the string occupies
+    // |ㅎ    |        two cells using vim_strwidth()
     self.cells[self.position.row][self.position.column] = Cell(string: string, attrs: self.attrs)
     self.position.column += 1
   }

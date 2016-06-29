@@ -56,7 +56,7 @@ extension NeoVimView: NSTextInputClient {
   }
 
   public func insertText(aString: AnyObject, replacementRange: NSRange) {
-    Swift.print("\(#function): \(aString), \(replacementRange)")
+//    Swift.print("\(#function): \(aString), \(replacementRange)")
 
     switch aString {
     case let string as String:

@@ -105,6 +105,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     DispatchUtils.gui {
 //      Swift.print("\(#function): \(string)")
       let curPos = Position(row: self.grid.position.row, column: self.grid.position.column)
+//      Swift.print("\(#function): \(curPos) -> \(string)")
       self.grid.put(string)
 
       self.setNeedsDisplayAt(position: curPos)
