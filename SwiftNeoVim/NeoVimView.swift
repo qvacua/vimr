@@ -111,9 +111,9 @@ public class NeoVimView: NSView {
 
     let dirtyRects = self.rectsBeingDrawn()
 
-//    Swift.print(self.grid)
-
     self.rowRunIntersecting(rects: dirtyRects).forEach { rowFrag in
+      // For background drawing we don't filter out the put(0, 0)s: in some cases only the put(0, 0)-cells should be
+      // redrawn.
       self.drawBackground(positions: rowFrag.range.map { self.positionOnView(rowFrag.row, column: $0) },
                           background: rowFrag.attrs.background)
 
@@ -122,7 +122,6 @@ public class NeoVimView: NSView {
         .filter { self.grid.cells[rowFrag.row][$0].string.characters.count > 0 }
         .map { self.positionOnView(rowFrag.row, column: $0) }
 
-//      self.drawBackground(positions: positions, background: rowFrag.attrs.background)
       if positions.isEmpty {
         return
       }
