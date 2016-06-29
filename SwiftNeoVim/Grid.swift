@@ -174,6 +174,18 @@ class Grid: CustomStringConvertible {
     self.cells[position.row][position.column].marked = false
   }
 
+  func isNextCellEmpty(position: Position) -> Bool {
+    if self.cells[position.row][min(position.column + 1, self.size.width - 1)].string.characters.count == 0 {
+      return true
+    }
+
+    return false
+  }
+
+  func nextCellPosition(position: Position) -> Position {
+    return Position(row: position.row, column: min(position.column + 1, self.size.width - 1))
+  }
+
   private func clearRegion(region: Region) {
     // FIXME: sometimes clearRegion gets called without first resizing the Grid. Should we handle this?
     guard self.hasData else {

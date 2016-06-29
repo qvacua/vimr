@@ -46,11 +46,9 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   public func cursorGotoRow(row: Int32, column: Int32) {
     DispatchUtils.gui {
       Swift.print("### goto: \(row):\(column)")
-      self.setNeedsDisplayAt(position: self.grid.position)
-
-      let newPosition = Position(row: Int(row), column: Int(column))
-      self.grid.goto(newPosition)
-      self.setNeedsDisplayAt(position: newPosition)
+      self.setCursorNeedsDisplay()
+      self.grid.goto(Position(row: Int(row), column: Int(column)))
+      self.setCursorNeedsDisplay()
     }
   }
   
@@ -113,7 +111,15 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
       if string.characters.count == 0 {
         self.setNeedsDisplayAt(row: curPos.row, column: max(curPos.column - 1, 0))
       }
-      self.setNeedsDisplayAt(position: self.grid.position) // cursor
+      self.setCursorNeedsDisplay()
+    }
+  }
+
+  private func setCursorNeedsDisplay() {
+    let position = self.grid.position
+    self.setNeedsDisplayAt(position: position)
+    if self.grid.isNextCellEmpty(position) {
+      self.setNeedsDisplayAt(position: self.grid.nextCellPosition(position))
     }
   }
 
@@ -127,7 +133,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
       if markedText.characters.count == 0 {
         self.setNeedsDisplayAt(row: curPos.row, column: max(curPos.column - 1, 0))
       }
-      self.setNeedsDisplayAt(position: self.grid.position) // cursor
+      self.setCursorNeedsDisplay()
     }
   }
 
@@ -136,7 +142,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
 //      Swift.print("\(#function): \(row):\(column)")
       self.grid.unmarkCell(Position(row: Int(row), column: Int(column)))
       self.setNeedsDisplayAt(row: Int(row), column: Int(column))
-      self.setNeedsDisplayAt(position: self.grid.position) // cursor
+      self.setCursorNeedsDisplay()
     }
   }
 

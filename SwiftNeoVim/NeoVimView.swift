@@ -143,12 +143,9 @@ public class NeoVimView: NSView {
 //    Swift.print("\(#function): \(cursorPosition)")
 
     var cursorRect = self.cellRect(row: cursorPosition.row, column: cursorPosition.column)
-    Swift.print("@@@@@@@@@@@@@@@@@ original \(cursorRect)")
-    let nextColumn = min(cursorPosition.column + 1, self.grid.size.width)
-    let nextString = self.grid.cells[cursorPosition.row][nextColumn].string
-    if nextString.characters.count == 0 {
-      cursorRect = cursorRect.union(self.cellRect(row: cursorPosition.row, column:nextColumn))
-      Swift.print("@@@@@@@@@@@@@@@@@ new \(cursorRect)")
+    if self.grid.isNextCellEmpty(cursorPosition) {
+      let nextPosition = self.grid.nextCellPosition(cursorPosition)
+      cursorRect = cursorRect.union(self.cellRect(row: nextPosition.row, column:nextPosition.column))
     }
 
     ColorUtils.colorFromCodeIgnoringAlpha(background).set()
