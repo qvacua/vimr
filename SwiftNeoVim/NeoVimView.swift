@@ -118,14 +118,15 @@ public class NeoVimView: NSView {
 
     self.rowRunIntersecting(rects: dirtyRects).forEach { rowFrag in
       // For background drawing we don't filter out the put(0, 0)s: in some cases only the put(0, 0)-cells should be
-      // redrawn.
-      self.drawBackground(positions: rowFrag.range.map { self.positionOnView(rowFrag.row, column: $0) },
+      // redrawn. => FIXME: probably we have to consider this also when drawing further down, ie when the range starts
+      // with '0'...
+      self.drawBackground(positions: rowFrag.range.map { self.pointInView(rowFrag.row, column: $0) },
                           background: rowFrag.attrs.background)
 
       let positions = rowFrag.range
         // filter out the put(0, 0)s (after a wide character)
         .filter { self.grid.cells[rowFrag.row][$0].string.characters.count > 0 }
-        .map { self.positionOnView(rowFrag.row, column: $0) }
+        .map { self.pointInView(rowFrag.row, column: $0) }
 
       if positions.isEmpty {
         return
@@ -144,7 +145,7 @@ public class NeoVimView: NSView {
 
   private func drawCursor(background: UInt32) {
     // FIXME: for now do some rudimentary cursor drawing
-    let cursorPosition = self.grid.position
+    let cursorPosition = self.grid.screenCursor
 //    Swift.print("\(#function): \(cursorPosition)")
 
     var cursorRect = self.cellRect(row: cursorPosition.row, column: cursorPosition.column)
@@ -153,7 +154,8 @@ public class NeoVimView: NSView {
       cursorRect = cursorRect.union(self.cellRect(row: nextPosition.row, column:nextPosition.column))
     }
 
-    ColorUtils.colorFromCodeIgnoringAlpha(background).set()
+    // set cursor to an abhorrent color for debugging
+    ColorUtils.colorFromCodeIgnoringAlpha(0xFF990000).set()
     NSRectFillUsingOperation(cursorRect, .CompositeDifference)
   }
 
@@ -203,16 +205,24 @@ public class NeoVimView: NSView {
       }                   // All RowRuns for all Regions grouped by Region.
       .flatMap { $0 }     // Flattened RowRuns for all Regions.
   }
+  
+  func pointInView(position: Position) -> CGPoint {
+    return self.pointInView(position.row, column: position.column)
+  }
 
-  func positionOnView(row: Int, column: Int) -> CGPoint {
+  func pointInView(row: Int, column: Int) -> CGPoint {
     return CGPoint(
       x: CGFloat(column) * self.cellSize.width,
       y: self.frame.size.height - CGFloat(row) * self.cellSize.height - self.cellSize.height
     )
   }
 
+  func cellRect(position: Position) -> CGRect {
+    return self.cellRect(row: position.row, column: position.column)
+  }
+  
   func cellRect(row row: Int, column: Int) -> CGRect {
-    return CGRect(origin: self.positionOnView(row, column: column), size: self.cellSize)
+    return CGRect(origin: self.pointInView(row, column: column), size: self.cellSize)
   }
 
   func regionRect(region: Region) -> CGRect {

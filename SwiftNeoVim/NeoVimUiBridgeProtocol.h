@@ -21,6 +21,11 @@ typedef struct {
     unsigned int special;
 } CellAttributes;
 
+typedef struct {
+  NSInteger row;
+  NSInteger column;
+} Position;
+
 #define qDefaultForeground 0xFF000000
 #define qDefaultBackground 0xFFFFFFFF
 #define qDefaultSpecial    0xFFFF0000
@@ -49,7 +54,7 @@ typedef struct {
  * 2. NeoVim wants to put the cursor at (row, column).
  * In case of 1. NeoVim will put in subsequent call. In case of 2. NeoVim seems to flush twice in a row.
  */
-- (void)cursorGotoRow:(int)row column:(int)column;
+- (void)gotoPosition:(Position)position screenCursor:(Position)screenCursor bufferCursor:(Position)bufferCursor;
 
 - (void)updateMenu;
 - (void)busyStart;

@@ -18,6 +18,7 @@
 #import <nvim/event/signal.h>
 #import <nvim/main.h>
 
+
 #define pun_type(t, x) (*((t *)(&x)))
 
 typedef struct {
@@ -48,9 +49,12 @@ static uv_cond_t _condition;
 
 static id <NeoVimUiBridgeProtocol> _neo_vim_osx_ui;
 
-static int _markedRow = 0;
-static int _markedColumn = 0;
-static NSString *_markedText = nil;
+static int _marked_row = 0;
+static int _marked_column = 0;
+static int _put_row = -1;
+static int _put_column = -1;
+static NSString *_marked_text = nil;
+static NSString *_backspace = nil;
 
 static dispatch_queue_t _queue;
 
@@ -129,234 +133,219 @@ static void suspend_event(void **argv) {
 
 static void xpc_ui_resize(UI *ui __unused, int width, int height) {
   xpc_async(^{
-      //printf("resize: %d:%d\n", width, height);
-      [_neo_vim_osx_ui resizeToWidth:width height:height];
+    [_neo_vim_osx_ui resizeToWidth:width height:height];
   });
 }
 
 static void xpc_ui_clear(UI *ui __unused) {
   xpc_async(^{
-      //printf("clear\n");
-      [_neo_vim_osx_ui clear];
+    [_neo_vim_osx_ui clear];
   });
 }
 
 static void xpc_ui_eol_clear(UI *ui __unused) {
   xpc_async(^{
-      //printf("eol clear\n");
-      [_neo_vim_osx_ui eolClear];
+    [_neo_vim_osx_ui eolClear];
   });
 }
 
 static void xpc_ui_cursor_goto(UI *ui __unused, int row, int col) {
   xpc_async(^{
-      //printf("cursor goto %d:%d\n", row, col);
-      [_neo_vim_osx_ui cursorGotoRow:row column:col];
+    _put_row = row;
+    _put_column = col;
+
+    [_neo_vim_osx_ui gotoPosition:(Position) { .row = row, .column = col }
+                     screenCursor:(Position) { .row = cursorRow(), .column = cursorColumn() }
+                     bufferCursor:(Position) { .row = curwin->w_cursor.lnum - 1, .column = curwin->w_cursor.col }];
   });
 }
 
 static void xpc_ui_update_menu(UI *ui __unused) {
   xpc_async(^{
-      //printf("update menu\n");
-      [_neo_vim_osx_ui updateMenu];
+    [_neo_vim_osx_ui updateMenu];
   });
 }
 
 static void xpc_ui_busy_start(UI *ui __unused) {
   xpc_async(^{
-      //printf("busy start\n");
-      [_neo_vim_osx_ui busyStart];
+    [_neo_vim_osx_ui busyStart];
   });
 }
 
 static void xpc_ui_busy_stop(UI *ui __unused) {
   xpc_async(^{
-      //printf("busy stop\n");
-      [_neo_vim_osx_ui busyStop];
+    [_neo_vim_osx_ui busyStop];
   });
 }
 
 static void xpc_ui_mouse_on(UI *ui __unused) {
   xpc_async(^{
-      //printf("mouse on\n");
-      [_neo_vim_osx_ui mouseOn];
+    [_neo_vim_osx_ui mouseOn];
   });
 }
 
 static void xpc_ui_mouse_off(UI *ui __unused) {
   xpc_async(^{
-      //printf("mouse off\n");
-      [_neo_vim_osx_ui mouseOff];
+    [_neo_vim_osx_ui mouseOff];
   });
 }
 
 static void xpc_ui_mode_change(UI *ui __unused, int mode) {
   xpc_async(^{
-      //printf("mode change %04x\n", mode);
-      [_neo_vim_osx_ui modeChange:mode];
+    [_neo_vim_osx_ui modeChange:mode];
   });
 }
 
 static void xpc_ui_set_scroll_region(UI *ui __unused, int top, int bot, int left, int right) {
   xpc_async(^{
-      //printf("set scroll region: %d, %d, %d, %d\n", top, bot, left, right);
-      [_neo_vim_osx_ui setScrollRegionToTop:top bottom:bot left:left right:right];
+    [_neo_vim_osx_ui setScrollRegionToTop:top bottom:bot left:left right:right];
   });
 }
 
 static void xpc_ui_scroll(UI *ui __unused, int count) {
   xpc_async(^{
-      //printf("scroll %d\n", count);
-      [_neo_vim_osx_ui scroll:count];
+    [_neo_vim_osx_ui scroll:count];
   });
 }
 
 static void xpc_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
   xpc_async(^{
-      //printf("highlight set\n");
-      FontTrait trait = FontTraitNone;
-      if (attrs.italic) {
-        trait |= FontTraitItalic;
-      }
-      if (attrs.bold) {
-        trait |= FontTraitBold;
-      }
-      if (attrs.underline) {
-        trait |= FontTraitUnderline;
-      }
-      if (attrs.undercurl) {
-        trait |= FontTraitUndercurl;
-      }
-      CellAttributes cellAttrs;
-      cellAttrs.fontTrait = trait;
+    FontTrait trait = FontTraitNone;
+    if (attrs.italic) {
+      trait |= FontTraitItalic;
+    }
+    if (attrs.bold) {
+      trait |= FontTraitBold;
+    }
+    if (attrs.underline) {
+      trait |= FontTraitUnderline;
+    }
+    if (attrs.undercurl) {
+      trait |= FontTraitUndercurl;
+    }
+    CellAttributes cellAttrs;
+    cellAttrs.fontTrait = trait;
 
-      unsigned int fg = attrs.foreground == -1 ? _default_foreground : pun_type(unsigned int, attrs.foreground);
-      unsigned int bg = attrs.background == -1 ? _default_background : pun_type(unsigned int, attrs.background);
+    unsigned int fg = attrs.foreground == -1 ? _default_foreground : pun_type(unsigned int, attrs.foreground);
+    unsigned int bg = attrs.background == -1 ? _default_background : pun_type(unsigned int, attrs.background);
 
-      cellAttrs.foreground = attrs.reverse ? bg : fg;
-      cellAttrs.background = attrs.reverse ? fg : bg;
-      cellAttrs.special = attrs.special == -1 ? _default_special : pun_type(unsigned int, attrs.special);
+    cellAttrs.foreground = attrs.reverse ? bg : fg;
+    cellAttrs.background = attrs.reverse ? fg : bg;
+    cellAttrs.special = attrs.special == -1 ? _default_special : pun_type(unsigned int, attrs.special);
 
-      [_neo_vim_osx_ui highlightSet:cellAttrs];
+    [_neo_vim_osx_ui highlightSet:cellAttrs];
   });
 }
 
 static void xpc_ui_put(UI *ui __unused, uint8_t *str, size_t len) {
   xpc_async(^{
-      NSString *string = [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
-//      printf("put: %lu:'%s'\n", len, [string cStringUsingEncoding:NSUTF8StringEncoding]);
+    NSString *string = [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
 
-      if (_markedText != nil && _markedColumn == cursorColumn() && _markedRow == cursorRow()) {
-        [_neo_vim_osx_ui putMarkedText:string];
-      } else if (_markedText != nil && len == 0 && _markedColumn == cursorColumn() - 1) {
-        [_neo_vim_osx_ui putMarkedText:string];
-      } else {
-        [_neo_vim_osx_ui put:string];
-      }
+    if (_marked_text != nil && _marked_row == _put_row && _marked_column == _put_column) {
+//      NSLog(@"!!! putting marked text: '%@'", string);
+      [_neo_vim_osx_ui putMarkedText:string];
+    } else if (_marked_text != nil && len == 0 && _marked_row == _put_row && _marked_column == _put_column - 1) {
+//      NSLog(@"!!! putting marked text cuz zero");
+      [_neo_vim_osx_ui putMarkedText:string];
+    } else {
+//      NSLog(@"putting non-marked text: '%@'", string);
+      [_neo_vim_osx_ui put:string];
+    }
 
-      [string release];
+    _put_column += 1;
+    [string release];
   });
 }
 
 static void xpc_ui_bell(UI *ui __unused) {
   xpc_async(^{
-      //printf("bell\n");
-      [_neo_vim_osx_ui bell];
+    [_neo_vim_osx_ui bell];
   });
 }
 
 static void xpc_ui_visual_bell(UI *ui __unused) {
   xpc_async(^{
-      //printf("visual bell\n");
-      [_neo_vim_osx_ui visualBell];
+    [_neo_vim_osx_ui visualBell];
   });
 }
 
 static void xpc_ui_flush(UI *ui __unused) {
   xpc_async(^{
-      //printf("flush\n");
-      [_neo_vim_osx_ui flush];
+    [_neo_vim_osx_ui flush];
   });
 }
 
 static void xpc_ui_update_fg(UI *ui __unused, int fg) {
   xpc_async(^{
-//  printf("update fg: %x\n", fg);
-      if (fg == -1) {
-        [_neo_vim_osx_ui updateForeground:_default_foreground];
-        return;
-      }
+    if (fg == -1) {
+      [_neo_vim_osx_ui updateForeground:_default_foreground];
+      return;
+    }
 
-      _default_foreground = pun_type(unsigned int, fg);
-      [_neo_vim_osx_ui updateForeground:fg];
+    _default_foreground = pun_type(unsigned int, fg);
+    [_neo_vim_osx_ui updateForeground:fg];
   });
 }
 
 static void xpc_ui_update_bg(UI *ui __unused, int bg) {
   xpc_async(^{
-//  printf("update bg: %x\n", bg);
-      if (bg == -1) {
-        [_neo_vim_osx_ui updateBackground:_default_background];
-        return;
-      }
+    if (bg == -1) {
+      [_neo_vim_osx_ui updateBackground:_default_background];
+      return;
+    }
 
-      _default_background = pun_type(unsigned int, bg);
-      [_neo_vim_osx_ui updateBackground:bg];
+    _default_background = pun_type(unsigned int, bg);
+    [_neo_vim_osx_ui updateBackground:bg];
   });
 }
 
 static void xpc_ui_update_sp(UI *ui __unused, int sp) {
   xpc_async(^{
-//  printf("update sp: %x\n", sp);
-      if (sp == -1) {
-        [_neo_vim_osx_ui updateSpecial:_default_special];
-        return;
-      }
+    if (sp == -1) {
+      [_neo_vim_osx_ui updateSpecial:_default_special];
+      return;
+    }
 
-      _default_special = pun_type(unsigned int, sp);
-      [_neo_vim_osx_ui updateSpecial:sp];
+    _default_special = pun_type(unsigned int, sp);
+    [_neo_vim_osx_ui updateSpecial:sp];
   });
 }
 
 static void xpc_ui_suspend(UI *ui __unused) {
   xpc_async(^{
-      //printf("suspend\n");
-      [_neo_vim_osx_ui suspend];
+    [_neo_vim_osx_ui suspend];
 
-      XpcUiData *data = ui->data;
-      // FIXME: dunno whether we need this: copied from tui.c
-      // kill(0, SIGTSTP) won't stop the UI thread, so we must poll for SIGCONT
-      // before continuing. This is done in another callback to avoid
-      // loop_poll_events recursion
-      queue_put_event(data->loop->fast_events, event_create(1, suspend_event, 1, ui));
+    XpcUiData *data = ui->data;
+    // FIXME: dunno whether we need this: copied from tui.c
+    // kill(0, SIGTSTP) won't stop the UI thread, so we must poll for SIGCONT
+    // before continuing. This is done in another callback to avoid
+    // loop_poll_events recursion
+    queue_put_event(data->loop->fast_events, event_create(1, suspend_event, 1, ui));
   });
 }
 
 static void xpc_ui_set_title(UI *ui __unused, char *title) {
   xpc_async(^{
-      //printf("set title: %s\n", title);
-      NSString *string = [[NSString alloc] initWithCString:title encoding:NSUTF8StringEncoding];
-      [_neo_vim_osx_ui setTitle:string];
-      [string release];
+    NSString *string = [[NSString alloc] initWithCString:title encoding:NSUTF8StringEncoding];
+    [_neo_vim_osx_ui setTitle:string];
+    [string release];
   });
 }
 
 static void xpc_ui_set_icon(UI *ui __unused, char *icon) {
   xpc_async(^{
-      //printf("set title: %s\n", icon);
-      NSString *string = [[NSString alloc] initWithCString:icon encoding:NSUTF8StringEncoding];
-      [_neo_vim_osx_ui setIcon:string];
-      [string release];
+    NSString *string = [[NSString alloc] initWithCString:icon encoding:NSUTF8StringEncoding];
+    [_neo_vim_osx_ui setIcon:string];
+    [string release];
   });
 }
 
 static void xpc_ui_stop(UI *ui __unused) {
   xpc_async(^{
-      //printf("stop\n");
-      [_neo_vim_osx_ui stop];
+    [_neo_vim_osx_ui stop];
 
-      XpcUiData *data = (XpcUiData *) ui->data;
-      data->stop = true;
+    XpcUiData *data = (XpcUiData *) ui->data;
+    data->stop = true;
   });
 }
 
@@ -442,14 +431,18 @@ static void neovim_input(void **argv) {
   uv_cond_destroy(&_condition);
   uv_mutex_destroy(&_mutex);
 
-  // casting because [ui retain] returns an NSObject
-  _neo_vim_osx_ui = (id <NeoVimUiBridgeProtocol>) [ui retain];
+  [ui retain];
+  _neo_vim_osx_ui = ui;
+
+  _backspace = [[NSString alloc] initWithString:@"<BS>"];
 
   return self;
 }
 
 - (void)dealloc {
   [_neo_vim_osx_ui release];
+  [_backspace release];
+
   // FIXME: uv_thread_join(&thread) here after terminating neovim
 
   [super dealloc];
@@ -460,64 +453,64 @@ static void neovim_input(void **argv) {
 }
 
 - (void)vimInput:(NSString *_Nonnull)input {
-
   xpc_async(^{
-      if (_markedText == nil) {
-        loop_schedule(&main_loop, event_create(1, neovim_input, 1, [input retain])); // release in neovim_input
-        return;
-      }
-
-      // Handle cases like ㅎ -> arrow key: The previously marked text is the same as the finalized text which should
-      // inserted. Neovim's drawing code is optimized such that it does not call put in this case again, thus, we
-      // have to manually unmark the cells in the main app.
-      if ([_markedText isEqualToString:input]) {
-        [_neo_vim_osx_ui unmarkRow:cursorRow() column:MAX(cursorColumn() - 1, 0)];
-        if (ScreenLines[cursorRow() * screen_Columns + MAX(cursorColumn() - 1, 0)] == 0x00) {
-          [_neo_vim_osx_ui unmarkRow:cursorRow() column:MAX(cursorColumn() - 2, 0)];
-        }
-      }
-
-      [self deleteMarkedText];
+    if (_marked_text == nil) {
       loop_schedule(&main_loop, event_create(1, neovim_input, 1, [input retain])); // release in neovim_input
+      return;
+    }
+
+    // Handle cases like ㅎ -> arrow key: The previously marked text is the same as the finalized text which should
+    // inserted. Neovim's drawing code is optimized such that it does not call put in this case again, thus, we have
+    // to manually unmark the cells in the main app.
+    if ([_marked_text isEqualToString:input]) {
+//      NSLog(@"unmarking text: '%@'\t now at %d:%d", input, _put_row, _put_column);
+      const char *str = [_marked_text cStringUsingEncoding:NSUTF8StringEncoding];
+      size_t cellCount = mb_string2cells((const char_u *) str);
+      for (int i = 1; i <= cellCount; i++) {
+//        NSLog(@"unmarking at %d:%d", _put_row, _put_column - i);
+        [_neo_vim_osx_ui unmarkRow:_put_row column:MAX(_put_column - i, 0)];
+      }
+    }
+
+    [self deleteMarkedText];
+    loop_schedule(&main_loop, event_create(1, neovim_input, 1, [input retain])); // release in neovim_input
   });
 }
 
 - (void)vimInputMarkedText:(NSString *_Nonnull)markedText {
   xpc_async(^{
-      if (_markedText != nil) {
-        [self deleteMarkedText];
-      }
+    if (_marked_text == nil) {
+      _marked_row = _put_row;
+      _marked_column = _put_column;
+    } else {
+      [self deleteMarkedText];
+    }
 
-      [self insertMarkedText:markedText];
+//    NSLog(@"inserting marked text '%@' at %d:%d", markedText, _put_row, _put_column);
+    [self insertMarkedText:markedText];
   });
 }
 
 - (void)insertMarkedText:(NSString *_Nonnull)markedText {
-  _markedRow = cursorRow();
-  _markedColumn = cursorColumn();
-  _markedText = [markedText retain]; // release when the final text is input in -vimInput
+  _marked_text = [markedText retain]; // release when the final text is input in -vimInput
 
-  loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_markedText retain])); // release in neovim_input
+  loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_marked_text retain])); // release in neovim_input
 }
 
 - (void)deleteMarkedText {
-  NSUInteger length = [_markedText lengthOfBytesUsingEncoding:NSUTF32StringEncoding] / 4;
+  NSUInteger length = [_marked_text lengthOfBytesUsingEncoding:NSUTF32StringEncoding] / 4;
 
-  [_markedText release];
-  _markedText = nil;
+  [_marked_text release];
+  _marked_text = nil;
 
-  NSString *backspace = [[NSString alloc] initWithString:@"<BS>"];
   for (int i = 0; i < length; i++) {
-    loop_schedule(&main_loop, event_create(1, neovim_input, 1, [backspace retain])); // release in neovim_input
+    loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_backspace retain])); // release in neovim_input
   }
-  [backspace release];
 }
 
-- (void)debugScreenLines {
-  NSLog(@"--- ScreenLines ---");
-  for (int i = 0; i < 20; i++) {
-    printf("%c,\n", ScreenLines[i]);
-  }
+- (void)debug1 {
+  NSLog(@"_marked position: %d:%d", _marked_row, _marked_column);
+  NSLog(@"current cursor position: %d:%d", ui_current_row(), ui_current_col());
 }
 
 @end

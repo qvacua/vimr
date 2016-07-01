@@ -34,7 +34,7 @@ extension NeoVimView: NSTextInputClient {
   }
 
   public func insertText(aString: AnyObject, replacementRange: NSRange) {
-    NSLog("\(#function): \(replacementRange): \(aString)")
+    NSLog("\(#function): \(replacementRange): '\(aString)'")
 
     switch aString {
     case let string as String:
@@ -49,14 +49,14 @@ extension NeoVimView: NSTextInputClient {
     self.markedText = nil
     self.markedPosition = Position.null
     // TODO: necessary?
-    self.setNeedsDisplayInRect(self.cellRect(row: self.grid.position.row, column: self.grid.position.column))
+    self.setNeedsDisplayInRect(self.cellRect(row: self.grid.putPosition.row, column: self.grid.putPosition.column))
     self.keyDownDone = true
   }
 
   public override func doCommandBySelector(aSelector: Selector) {
 //    NSLog("\(#function): "\(aSelector)")
 
-    // TODO: handle when ㅎ -> delete
+    // FIXME: handle when ㅎ -> delete
 
     if self.respondsToSelector(aSelector) {
       Swift.print("\(#function): calling \(aSelector)")
@@ -72,7 +72,7 @@ extension NeoVimView: NSTextInputClient {
   public func setMarkedText(aString: AnyObject, selectedRange: NSRange, replacementRange: NSRange) {
 
     if self.markedText == nil {
-      self.markedPosition = self.grid.position
+      self.markedPosition = self.grid.putPosition
     }
 
     switch aString {
@@ -95,7 +95,7 @@ extension NeoVimView: NSTextInputClient {
     self.markedText = nil
     self.markedPosition = Position.null
     // TODO: necessary?
-    self.setNeedsDisplayInRect(self.cellRect(row: self.grid.position.row, column: self.grid.position.column))
+    self.setNeedsDisplayInRect(self.cellRect(row: self.grid.putPosition.row, column: self.grid.putPosition.column))
     self.keyDownDone = true
   }
 
@@ -110,19 +110,19 @@ extension NeoVimView: NSTextInputClient {
 //    }
     
     // FIXME: do we have to handle positions at the column borders?
-    if self.grid.isPreviousCellEmpty(self.grid.position) {
+    if self.grid.isPreviousCellEmpty(self.grid.putPosition) {
       let result = NSRange(
         location: self.grid.singleIndexFrom(
-          Position(row: self.grid.position.row, column: self.grid.position.column - 1)
+          Position(row: self.grid.putPosition.row, column: self.grid.putPosition.column - 1)
         ),
         length: 0
       )
-      NSLog("\(#function): \(result)")
+//      NSLog("\(#function): \(result)")
       return result
     }
 
-    let result = NSRange(location: self.grid.singleIndexFrom(self.grid.position), length: 0)
-    NSLog("\(#function): \(result)")
+    let result = NSRange(location: self.grid.singleIndexFrom(self.grid.putPosition), length: 0)
+//    NSLog("\(#function): \(result)")
     return result
   }
 
@@ -131,11 +131,11 @@ extension NeoVimView: NSTextInputClient {
     if let markedText = self.markedText {
       let result = NSRange(location: self.grid.singleIndexFrom(self.markedPosition),
                            length: markedText.characters.count)
-      NSLog("\(#function): \(result)")
+//      NSLog("\(#function): \(result)")
       return result
     }
 
-    NSLog("\(#function): returning empty range")
+//    NSLog("\(#function): returning empty range")
     return NSRange(location: NSNotFound, length: 0)
   }
 
@@ -168,36 +168,29 @@ extension NeoVimView: NSTextInputClient {
         $0 + $1.string
       }
       actualRange[0].length = string.characters.count
-      NSLog("\(#function): \(aRange), \(actualRange[0]): \(string)")
+//      NSLog("\(#function): \(aRange), \(actualRange[0]): \(string)")
       return NSAttributedString(string: string)
     }
     
-    // TODO: maybe make Grid a Indexable or similar
+    // FIXME: maybe make Grid a Indexable or similar
     var string = ""
     for i in location...(location + length) {
       string += self.grid.cellForSingleIndex(i).string
     }
-    NSLog("\(#function): \(aRange), \(actualRange[0]): \(string)")
+//    NSLog("\(#function): \(aRange), \(actualRange[0]): \(string)")
     return NSAttributedString(string: string)
   }
 
   public func validAttributesForMarkedText() -> [String] {
-    //    Swift.print("\(#function): ")
     return []
   }
 
   public func firstRectForCharacterRange(aRange: NSRange, actualRange: NSRangePointer) -> NSRect {
-    NSLog("\(#function): \(aRange), \(actualRange[0])")
-    if actualRange != nil {
-      Swift.print("\(#function): \(aRange), \(actualRange[0])")
-    } else {
-      Swift.print("\(#function): \(aRange), nil")
-    }
+    let position = self.grid.positionFromSingleIndex(aRange.location)
+    
+    NSLog("\(#function): \(aRange),\(actualRange[0]) -> \(position.row):\(position.column)")
 
-    let row = Int(floor(Double(aRange.location / self.grid.size.width)))
-    let column = aRange.location - row * self.grid.size.width
-
-    let resultInSelf = self.cellRect(row: row, column: column)
+    let resultInSelf = self.cellRect(row: position.row, column: position.column)
     let result = self.window?.convertRectToScreen(self.convertRect(resultInSelf, toView: nil))
 
     return result!
@@ -229,95 +222,95 @@ extension NeoVimView: NSTextInputClient {
 
     return result
   }
-
-  /*
-   public func moveWordForward(sender: AnyObject?)
-   public func moveWordBackward(sender: AnyObject?)
-   public func moveToBeginningOfLine(sender: AnyObject?)
-   public func moveToEndOfLine(sender: AnyObject?)
-   public func moveToBeginningOfParagraph(sender: AnyObject?)
-   public func moveToEndOfParagraph(sender: AnyObject?)
-   public func moveToEndOfDocument(sender: AnyObject?)
-   public func moveToBeginningOfDocument(sender: AnyObject?)
-   public func pageDown(sender: AnyObject?)
-   public func pageUp(sender: AnyObject?)
-   public func centerSelectionInVisibleArea(sender: AnyObject?)
-
-   public func moveBackwardAndModifySelection(sender: AnyObject?)
-   public func moveForwardAndModifySelection(sender: AnyObject?)
-   public func moveWordForwardAndModifySelection(sender: AnyObject?)
-   public func moveWordBackwardAndModifySelection(sender: AnyObject?)
-   public func moveUpAndModifySelection(sender: AnyObject?)
-   public func moveDownAndModifySelection(sender: AnyObject?)
-
-   public func moveToBeginningOfLineAndModifySelection(sender: AnyObject?)
-   public func moveToEndOfLineAndModifySelection(sender: AnyObject?)
-   public func moveToBeginningOfParagraphAndModifySelection(sender: AnyObject?)
-   public func moveToEndOfParagraphAndModifySelection(sender: AnyObject?)
-   public func moveToEndOfDocumentAndModifySelection(sender: AnyObject?)
-   public func moveToBeginningOfDocumentAndModifySelection(sender: AnyObject?)
-   public func pageDownAndModifySelection(sender: AnyObject?)
-   public func pageUpAndModifySelection(sender: AnyObject?)
-   public func moveParagraphForwardAndModifySelection(sender: AnyObject?)
-   public func moveParagraphBackwardAndModifySelection(sender: AnyObject?)
-
-   public func moveWordRight(sender: AnyObject?)
-   public func moveWordLeft(sender: AnyObject?)
-   public func moveRightAndModifySelection(sender: AnyObject?)
-   public func moveLeftAndModifySelection(sender: AnyObject?)
-   public func moveWordRightAndModifySelection(sender: AnyObject?)
-   public func moveWordLeftAndModifySelection(sender: AnyObject?)
-
-   public func moveToLeftEndOfLine(sender: AnyObject?)
-   public func moveToRightEndOfLine(sender: AnyObject?)
-   public func moveToLeftEndOfLineAndModifySelection(sender: AnyObject?)
-   public func moveToRightEndOfLineAndModifySelection(sender: AnyObject?)
-
-   public func scrollLineUp(sender: AnyObject?)
-   public func scrollLineDown(sender: AnyObject?)
-
-   public func transpose(sender: AnyObject?)
-   public func transposeWords(sender: AnyObject?)
-
-   public func selectAll(sender: AnyObject?)
-   public func selectParagraph(sender: AnyObject?)
-   public func selectLine(sender: AnyObject?)
-   public func selectWord(sender: AnyObject?)
-
-   public func indent(sender: AnyObject?)
-   public func insertTab(sender: AnyObject?)
-   public func insertBacktab(sender: AnyObject?)
-   public func insertNewline(sender: AnyObject?)
-   public func insertParagraphSeparator(sender: AnyObject?)
-   public func insertNewlineIgnoringFieldEditor(sender: AnyObject?)
-   public func insertTabIgnoringFieldEditor(sender: AnyObject?)
-   public func insertLineBreak(sender: AnyObject?)
-   public func insertContainerBreak(sender: AnyObject?)
-   public func insertSingleQuoteIgnoringSubstitution(sender: AnyObject?)
-   public func insertDoubleQuoteIgnoringSubstitution(sender: AnyObject?)
-
-   public func changeCaseOfLetter(sender: AnyObject?)
-   public func uppercaseWord(sender: AnyObject?)
-   public func lowercaseWord(sender: AnyObject?)
-   public func capitalizeWord(sender: AnyObject?)
-
-   public func deleteBackwardByDecomposingPreviousCharacter(sender: AnyObject?)
-   public func deleteWordForward(sender: AnyObject?)
-   public func deleteWordBackward(sender: AnyObject?)
-   public func deleteToBeginningOfLine(sender: AnyObject?)
-   public func deleteToEndOfLine(sender: AnyObject?)
-   public func deleteToBeginningOfParagraph(sender: AnyObject?)
-   public func deleteToEndOfParagraph(sender: AnyObject?)
-
-   public func yank(sender: AnyObject?)
-
-   public func complete(sender: AnyObject?)
-
-   public func setMark(sender: AnyObject?)
-   public func deleteToMark(sender: AnyObject?)
-   public func selectToMark(sender: AnyObject?)
-   public func swapWithMark(sender: AnyObject?)
-
-   public func cancelOperation(sender: AnyObject?)
-   */
 }
+
+/*
+ public func moveWordForward(sender: AnyObject?)
+ public func moveWordBackward(sender: AnyObject?)
+ public func moveToBeginningOfLine(sender: AnyObject?)
+ public func moveToEndOfLine(sender: AnyObject?)
+ public func moveToBeginningOfParagraph(sender: AnyObject?)
+ public func moveToEndOfParagraph(sender: AnyObject?)
+ public func moveToEndOfDocument(sender: AnyObject?)
+ public func moveToBeginningOfDocument(sender: AnyObject?)
+ public func pageDown(sender: AnyObject?)
+ public func pageUp(sender: AnyObject?)
+ public func centerSelectionInVisibleArea(sender: AnyObject?)
+ 
+ public func moveBackwardAndModifySelection(sender: AnyObject?)
+ public func moveForwardAndModifySelection(sender: AnyObject?)
+ public func moveWordForwardAndModifySelection(sender: AnyObject?)
+ public func moveWordBackwardAndModifySelection(sender: AnyObject?)
+ public func moveUpAndModifySelection(sender: AnyObject?)
+ public func moveDownAndModifySelection(sender: AnyObject?)
+ 
+ public func moveToBeginningOfLineAndModifySelection(sender: AnyObject?)
+ public func moveToEndOfLineAndModifySelection(sender: AnyObject?)
+ public func moveToBeginningOfParagraphAndModifySelection(sender: AnyObject?)
+ public func moveToEndOfParagraphAndModifySelection(sender: AnyObject?)
+ public func moveToEndOfDocumentAndModifySelection(sender: AnyObject?)
+ public func moveToBeginningOfDocumentAndModifySelection(sender: AnyObject?)
+ public func pageDownAndModifySelection(sender: AnyObject?)
+ public func pageUpAndModifySelection(sender: AnyObject?)
+ public func moveParagraphForwardAndModifySelection(sender: AnyObject?)
+ public func moveParagraphBackwardAndModifySelection(sender: AnyObject?)
+ 
+ public func moveWordRight(sender: AnyObject?)
+ public func moveWordLeft(sender: AnyObject?)
+ public func moveRightAndModifySelection(sender: AnyObject?)
+ public func moveLeftAndModifySelection(sender: AnyObject?)
+ public func moveWordRightAndModifySelection(sender: AnyObject?)
+ public func moveWordLeftAndModifySelection(sender: AnyObject?)
+ 
+ public func moveToLeftEndOfLine(sender: AnyObject?)
+ public func moveToRightEndOfLine(sender: AnyObject?)
+ public func moveToLeftEndOfLineAndModifySelection(sender: AnyObject?)
+ public func moveToRightEndOfLineAndModifySelection(sender: AnyObject?)
+ 
+ public func scrollLineUp(sender: AnyObject?)
+ public func scrollLineDown(sender: AnyObject?)
+ 
+ public func transpose(sender: AnyObject?)
+ public func transposeWords(sender: AnyObject?)
+ 
+ public func selectAll(sender: AnyObject?)
+ public func selectParagraph(sender: AnyObject?)
+ public func selectLine(sender: AnyObject?)
+ public func selectWord(sender: AnyObject?)
+ 
+ public func indent(sender: AnyObject?)
+ public func insertTab(sender: AnyObject?)
+ public func insertBacktab(sender: AnyObject?)
+ public func insertNewline(sender: AnyObject?)
+ public func insertParagraphSeparator(sender: AnyObject?)
+ public func insertNewlineIgnoringFieldEditor(sender: AnyObject?)
+ public func insertTabIgnoringFieldEditor(sender: AnyObject?)
+ public func insertLineBreak(sender: AnyObject?)
+ public func insertContainerBreak(sender: AnyObject?)
+ public func insertSingleQuoteIgnoringSubstitution(sender: AnyObject?)
+ public func insertDoubleQuoteIgnoringSubstitution(sender: AnyObject?)
+ 
+ public func changeCaseOfLetter(sender: AnyObject?)
+ public func uppercaseWord(sender: AnyObject?)
+ public func lowercaseWord(sender: AnyObject?)
+ public func capitalizeWord(sender: AnyObject?)
+ 
+ public func deleteBackwardByDecomposingPreviousCharacter(sender: AnyObject?)
+ public func deleteWordForward(sender: AnyObject?)
+ public func deleteWordBackward(sender: AnyObject?)
+ public func deleteToBeginningOfLine(sender: AnyObject?)
+ public func deleteToEndOfLine(sender: AnyObject?)
+ public func deleteToBeginningOfParagraph(sender: AnyObject?)
+ public func deleteToEndOfParagraph(sender: AnyObject?)
+ 
+ public func yank(sender: AnyObject?)
+ 
+ public func complete(sender: AnyObject?)
+ 
+ public func setMark(sender: AnyObject?)
+ public func deleteToMark(sender: AnyObject?)
+ public func selectToMark(sender: AnyObject?)
+ public func swapWithMark(sender: AnyObject?)
+ 
+ public func cancelOperation(sender: AnyObject?)
+ */
