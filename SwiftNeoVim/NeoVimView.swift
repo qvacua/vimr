@@ -72,11 +72,13 @@ public class NeoVimView: NSView {
   let xpc: NeoVimXpc
 
   var markedText: String?
-  var markedPosition = Position.null {
-    didSet {
-//      Swift.print("\(self.markedPosition)")
-    }
-  }
+  
+  /// We store the last marked text because Cocoa's text input system does the following:
+  /// 하 -> hanja popup -> insertText(하) -> attributedSubstring...() -> setMarkedText(下) -> ...
+  /// We want to return "하" in attributedSubstring...()
+  var lastMarkedText: String?
+  
+  var markedPosition = Position.null
   var keyDownDone = true
   
   var cellSize = CGSize.zero

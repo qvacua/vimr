@@ -16,6 +16,7 @@
 
 - (void)vimInput:(NSString * _Nonnull)input;
 - (void)vimInputMarkedText:(NSString *_Nonnull)markedText;
+- (void)deleteCharacters:(NSInteger)count;
 
 - (void)debug1;
 

@@ -34,7 +34,7 @@ extension NeoVimView: NSTextInputClient {
   }
 
   public func insertText(aString: AnyObject, replacementRange: NSRange) {
-    NSLog("\(#function): \(replacementRange): '\(aString)'")
+//    NSLog("\(#function): \(replacementRange): '\(aString)'")
 
     switch aString {
     case let string as String:
@@ -46,11 +46,13 @@ extension NeoVimView: NSTextInputClient {
     }
 
     // unmarkText()
+    self.lastMarkedText = self.markedText
     self.markedText = nil
     self.markedPosition = Position.null
+    self.keyDownDone = true
+    
     // TODO: necessary?
     self.setNeedsDisplayInRect(self.cellRect(row: self.grid.putPosition.row, column: self.grid.putPosition.column))
-    self.keyDownDone = true
   }
 
   public override func doCommandBySelector(aSelector: Selector) {
@@ -70,9 +72,13 @@ extension NeoVimView: NSTextInputClient {
   }
 
   public func setMarkedText(aString: AnyObject, selectedRange: NSRange, replacementRange: NSRange) {
-
     if self.markedText == nil {
       self.markedPosition = self.grid.putPosition
+    }
+    
+    // eg 하 -> hanja popup, cf comment for self.lastMarkedText
+    if replacementRange.length > 0 {
+      self.xpc.deleteCharacters(replacementRange.length)
     }
 
     switch aString {
@@ -94,9 +100,10 @@ extension NeoVimView: NSTextInputClient {
     NSLog("\(#function): ")
     self.markedText = nil
     self.markedPosition = Position.null
+    self.keyDownDone = true
+    
     // TODO: necessary?
     self.setNeedsDisplayInRect(self.cellRect(row: self.grid.putPosition.row, column: self.grid.putPosition.column))
-    self.keyDownDone = true
   }
 
   /// Return the current selection (or the position of the cursor with empty-length range). For example when you enter
@@ -107,21 +114,9 @@ extension NeoVimView: NSTextInputClient {
     guard self.grid.hasData else {
       return NSRange(location: NSNotFound, length: 0)
     }
-    
-    // FIXME: do we have to handle positions at the column borders?
-    if self.grid.isPreviousCellEmpty(self.grid.putPosition) {
-      let result = NSRange(
-        location: self.grid.singleIndexFrom(
-          Position(row: self.grid.putPosition.row, column: self.grid.putPosition.column - 1)
-        ),
-        length: 0
-      )
-//      NSLog("\(#function): \(result)")
-      return result
-    }
 
     let result = NSRange(location: self.grid.singleIndexFrom(self.grid.putPosition), length: 0)
-//    NSLog("\(#function): \(result)")
+    NSLog("\(#function): \(result)")
     return result
   }
 
@@ -130,54 +125,36 @@ extension NeoVimView: NSTextInputClient {
     if let markedText = self.markedText {
       let result = NSRange(location: self.grid.singleIndexFrom(self.markedPosition),
                            length: markedText.characters.count)
-//      NSLog("\(#function): \(result)")
+      NSLog("\(#function): \(result)")
       return result
     }
 
-//    NSLog("\(#function): returning empty range")
+    NSLog("\(#function): returning empty range")
     return NSRange(location: NSNotFound, length: 0)
   }
 
   public func hasMarkedText() -> Bool {
-    let result = self.markedText != nil
-//    NSLog("\(#function): "returning \(result)")
-    return result
+    return self.markedText != nil
   }
 
-  // FIXME: REFACTOR and take into account the "return nil"-case
+  // FIXME: take into account the "return nil"-case
   public func attributedSubstringForProposedRange(aRange: NSRange, actualRange: NSRangePointer) -> NSAttributedString? {
-//    NSLog("\(#function): \(aRange), \(actualRange[0])")
-    
-    // first check whether the first cell is empty and if so, jump one character backward
-    var length = aRange.length
-    var location = aRange.location
-    var position = self.grid.positionFromSingleIndex(aRange.location)
-    if self.grid.isCellEmpty(position) {
-      length += 1
-      location -= 1
-      position = self.grid.positionFromSingleIndex(location)
+    NSLog("\(#function): \(aRange), \(actualRange[0])")
+    if aRange.location == NSNotFound {
+      return nil
     }
     
-    // check whether the range extend to multiple lines
-    let multipleLines = position.column + length >= self.grid.size.width
-    
-    if !multipleLines {
-      // FIXME: do we have to handle position.column + aRange.length >= self.grid.width?
-      let string = self.grid.cells[position.row][position.column...(position.column + length)].reduce("") {
-        $0 + $1.string
-      }
-      actualRange[0].length = string.characters.count
-//      NSLog("\(#function): \(aRange), \(actualRange[0]): \(string)")
-      return NSAttributedString(string: string)
+    guard let lastMarkedText = self.lastMarkedText else {
+      NSLog("\(#function): no last marked text: returning nil")
+      return nil
     }
     
-    // FIXME: maybe make Grid a Indexable or similar
-    var string = ""
-    for i in location...(location + length) {
-      string += self.grid.cellForSingleIndex(i).string
-    }
-//    NSLog("\(#function): \(aRange), \(actualRange[0]): \(string)")
-    return NSAttributedString(string: string)
+    // we only support last marked text, thus fill dummy characters when Cocoa asks for more characters than marked...
+    let fillCount = aRange.length - lastMarkedText.characters.count
+    let fillChars = Array(0..<fillCount).reduce("") { (result, _) in return result + " " }
+    
+    NSLog("\(#function): \(aRange), \(actualRange[0]): \(fillChars + lastMarkedText)")
+    return NSAttributedString(string: fillChars + lastMarkedText)
   }
 
   public func validAttributesForMarkedText() -> [String] {

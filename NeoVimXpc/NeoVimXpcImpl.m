@@ -5,6 +5,7 @@
 
 #import "NeoVimXpcImpl.h"
 #import "NeoVimUiBridgeProtocol.h"
+#import "Logging.h"
 
 // FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
 // them.
@@ -17,6 +18,7 @@
 #import <nvim/ui_bridge.h>
 #import <nvim/event/signal.h>
 #import <nvim/main.h>
+#import <nvim/cursor.h>
 
 
 #define pun_type(t, x) (*((t *)(&x)))
@@ -51,6 +53,7 @@ static id <NeoVimUiBridgeProtocol> _neo_vim_osx_ui;
 
 static int _marked_row = 0;
 static int _marked_column = 0;
+static int _marked_delta = 0; // for 하 -> hanja popup, Cocoa first insert 하, then set marked text
 static int _put_row = -1;
 static int _put_column = -1;
 static NSString *_marked_text = nil;
@@ -151,6 +154,8 @@ static void xpc_ui_eol_clear(UI *ui __unused) {
 
 static void xpc_ui_cursor_goto(UI *ui __unused, int row, int col) {
   xpc_async(^{
+//    log4Debug("%d:%d", row, col);
+
     _put_row = row;
     _put_column = col;
 
@@ -242,13 +247,13 @@ static void xpc_ui_put(UI *ui __unused, uint8_t *str, size_t len) {
     NSString *string = [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
 
     if (_marked_text != nil && _marked_row == _put_row && _marked_column == _put_column) {
-//      NSLog(@"!!! putting marked text: '%@'", string);
+//      log4Debug("!!! putting marked text: '%@'", string);
       [_neo_vim_osx_ui putMarkedText:string];
     } else if (_marked_text != nil && len == 0 && _marked_row == _put_row && _marked_column == _put_column - 1) {
-//      NSLog(@"!!! putting marked text cuz zero");
+//      log4Debug("!!! putting marked text cuz zero");
       [_neo_vim_osx_ui putMarkedText:string];
     } else {
-//      NSLog(@"putting non-marked text: '%@'", string);
+//      log4Debug("putting non-marked text: '%@'", string);
       [_neo_vim_osx_ui put:string];
     }
 
@@ -355,7 +360,7 @@ static void run_neovim(void *arg __unused) {
 
   int returnCode = nvim_main(1, argv);
 
-  NSLog(@"neovim's main returned with code: %d", returnCode);
+  log4Debug("neovim's main returned with code: %d", returnCode);
 }
 
 void custom_ui_start(void) {
@@ -452,6 +457,31 @@ static void neovim_input(void **argv) {
   // noop
 }
 
+- (void)deleteCharacters:(NSInteger)count {
+  xpc_async(^{
+    _marked_delta = 0;
+
+    int emptyCounter = 0;
+    for (int i = 0; i < count; i++) {
+      _marked_delta -= 1;
+
+      // TODO: -1 because we assume that the cursor is one cell ahead, probably not always correct...
+      schar_T character = ScreenLines[_put_row * screen_Rows + _put_column - i - emptyCounter - 1];
+      if (character == 0x00 || character == ' ') {
+        // FIXME: dunno yet, why we have to also match ' '...
+        _marked_delta -= 1;
+        emptyCounter += 1;
+      }
+    }
+
+//    log4Debug("put cursor: %d:%d, count: %li, delta: %d", _put_row, _put_column, count, _marked_delta);
+
+    for (int i = 0; i < count; i++) {
+      loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_backspace retain])); // release in neovim_input
+    }
+  });
+}
+
 - (void)vimInput:(NSString *_Nonnull)input {
   xpc_async(^{
     if (_marked_text == nil) {
@@ -463,11 +493,11 @@ static void neovim_input(void **argv) {
     // inserted. Neovim's drawing code is optimized such that it does not call put in this case again, thus, we have
     // to manually unmark the cells in the main app.
     if ([_marked_text isEqualToString:input]) {
-//      NSLog(@"unmarking text: '%@'\t now at %d:%d", input, _put_row, _put_column);
+//      log4Debug("unmarking text: '%@'\t now at %d:%d", input, _put_row, _put_column);
       const char *str = [_marked_text cStringUsingEncoding:NSUTF8StringEncoding];
       size_t cellCount = mb_string2cells((const char_u *) str);
       for (int i = 1; i <= cellCount; i++) {
-//        NSLog(@"unmarking at %d:%d", _put_row, _put_column - i);
+//        log4Debug("unmarking at %d:%d", _put_row, _put_column - i);
         [_neo_vim_osx_ui unmarkRow:_put_row column:MAX(_put_column - i, 0)];
       }
     }
@@ -481,12 +511,14 @@ static void neovim_input(void **argv) {
   xpc_async(^{
     if (_marked_text == nil) {
       _marked_row = _put_row;
-      _marked_column = _put_column;
+      _marked_column = _put_column + _marked_delta;
+//      log4Debug("marking position: %d:%d(%d + %d)", _put_row, _marked_column, _put_column, _marked_delta);
+      _marked_delta = 0;
     } else {
       [self deleteMarkedText];
     }
 
-//    NSLog(@"inserting marked text '%@' at %d:%d", markedText, _put_row, _put_column);
+//    log4Debug("inserting marked text '%@' at %d:%d", markedText, _put_row, _put_column);
     [self insertMarkedText:markedText];
   });
 }
@@ -509,8 +541,12 @@ static void neovim_input(void **argv) {
 }
 
 - (void)debug1 {
-  NSLog(@"_marked position: %d:%d", _marked_row, _marked_column);
-  NSLog(@"current cursor position: %d:%d", ui_current_row(), ui_current_col());
+  char_u *ptr = get_cursor_pos_ptr();
+  printf("-----------------\n'");
+  for (int i = 0; i < 10; i++) {
+    printf("%c", (unsigned char) *(ptr++));
+  }
+  printf("'\n---------------------\n");
 }
 
 @end
