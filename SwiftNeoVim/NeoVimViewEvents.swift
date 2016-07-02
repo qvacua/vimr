@@ -103,11 +103,10 @@ extension NeoVimView: NSTextInputClient {
   /// "Cmd-Ctrl-Return" you'll get the Emoji-popup at the rect by firstRectForCharacterRange(actualRange:) where the
   /// first range is the result of this method.
   public func selectedRange() -> NSRange {
-//    if self.markedText == nil {
-//      let result = NSRange(location: self.grid.singleIndexFrom(self.grid.position), length: 0)
-//      NSLog("\(#function): \(result)")
-//      return result
-//    }
+    // When the app starts and the Hangul input method is selected, this method gets called very early...
+    guard self.grid.hasData else {
+      return NSRange(location: NSNotFound, length: 0)
+    }
     
     // FIXME: do we have to handle positions at the column borders?
     if self.grid.isPreviousCellEmpty(self.grid.putPosition) {
