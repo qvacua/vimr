@@ -34,7 +34,7 @@ extension NeoVimView: NSTextInputClient {
   }
 
   public func insertText(aString: AnyObject, replacementRange: NSRange) {
-//    NSLog("\(#function): \(replacementRange): '\(aString)'")
+    NSLog("\(#function): \(replacementRange): '\(aString)'")
 
     switch aString {
     case let string as String:
@@ -56,7 +56,7 @@ extension NeoVimView: NSTextInputClient {
   }
 
   public override func doCommandBySelector(aSelector: Selector) {
-//    NSLog("\(#function): "\(aSelector)")
+    NSLog("\(#function): \(aSelector)");
 
     // FIXME: handle when ㅎ -> delete
 
@@ -112,6 +112,7 @@ extension NeoVimView: NSTextInputClient {
   public func selectedRange() -> NSRange {
     // When the app starts and the Hangul input method is selected, this method gets called very early...
     guard self.grid.hasData else {
+      NSLog("\(#function): not found")
       return NSRange(location: NSNotFound, length: 0)
     }
 
@@ -134,6 +135,7 @@ extension NeoVimView: NSTextInputClient {
   }
 
   public func hasMarkedText() -> Bool {
+    NSLog("\(#function)")
     return self.markedText != nil
   }
 
@@ -141,6 +143,7 @@ extension NeoVimView: NSTextInputClient {
   public func attributedSubstringForProposedRange(aRange: NSRange, actualRange: NSRangePointer) -> NSAttributedString? {
     NSLog("\(#function): \(aRange), \(actualRange[0])")
     if aRange.location == NSNotFound {
+      NSLog("\(#function): range not found: returning nil")
       return nil
     }
     
