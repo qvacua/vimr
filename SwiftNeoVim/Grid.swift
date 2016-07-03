@@ -115,7 +115,8 @@ class Grid: CustomStringConvertible {
   
   func eolClear() {
     self.clearRegion(
-      Region(top: self.putPosition.row, bottom: self.putPosition.row, left: self.putPosition.column, right: self.region.right)
+      Region(top: self.putPosition.row, bottom: self.putPosition.row,
+             left: self.putPosition.column, right: self.region.right)
     )
   }
   
