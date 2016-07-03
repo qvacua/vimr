@@ -7,7 +7,7 @@ import Cocoa
 
 class ColorUtils {
 
-  static func colorFromCodeIgnoringAlpha(rgb: UInt32) -> NSColor {
+  static func colorIgnoringAlpha(rgb: UInt32) -> NSColor {
     let red =   (CGFloat((rgb >> 16) & 0xFF)) / 255.0;
     let green = (CGFloat((rgb >>  8) & 0xFF)) / 255.0;
     let blue =  (CGFloat((rgb      ) & 0xFF)) / 255.0;

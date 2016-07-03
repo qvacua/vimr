@@ -12,7 +12,7 @@ struct Cell: CustomStringConvertible {
   var marked: Bool
 
   var attrs: CellAttributes {
-    return self.marked ? self.attributes.reversedColor : self.attributes
+    return self.marked ? self.attributes.inverted : self.attributes
   }
 
   init(string: String, attrs: CellAttributes, marked: Bool = false) {

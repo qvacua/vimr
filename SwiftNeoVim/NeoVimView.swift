@@ -156,12 +156,12 @@ public class NeoVimView: NSView {
       cursorRect = cursorRect.union(self.cellRect(row: nextPosition.row, column:nextPosition.column))
     }
 
-    ColorUtils.colorFromCodeIgnoringAlpha(background).set()
+    ColorUtils.colorIgnoringAlpha(background).set()
     NSRectFillUsingOperation(cursorRect, .CompositeDifference)
   }
 
   private func drawBackground(positions positions: [CGPoint], background: UInt32) {
-    ColorUtils.colorFromCodeIgnoringAlpha(background).set()
+    ColorUtils.colorIgnoringAlpha(background).set()
     let backgroundRect = CGRect(
       x: positions[0].x, y: positions[0].y,
       width: positions.last!.x + self.cellSize.width, height: self.cellSize.height
