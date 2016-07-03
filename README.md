@@ -5,11 +5,12 @@ nvox
 
 ## About
 
-nvox is a *toy* project, meaning e.g. no tests whatsoever, for me to:
+There are other working NeoVim GUIs for OS X, e.g. [NyaoVim](https://github.com/rhysd/NyaoVim), [neovim-dot-app](https://github.com/rogual/neovim-dot-app), etc., why another? Well, nvox is a *toy* project, meaning e.g. no tests whatsoever, for me to:
 
-- play around with [NeoVim](https://github.com/neovim),
-- play around with the `XPC`-architecture and to find out whether this is a viable choice for an OSX-NeoVim-GUI-app and
-- play around with Swift (and [RxSwift](https://github.com/ReactiveX/RxSwift)).
+- play around (obviously) with [NeoVim](https://github.com/neovim),
+- play around with the `XPC`-architecture and to find out whether this is a viable choice for an OSX-NeoVim-GUI-app,
+- play around with Swift (and especially with [RxSwift](https://github.com/ReactiveX/RxSwift)) and
+- (most importantly) have fun!
 
 It could very well be that nothing useful comes out of it.
 
