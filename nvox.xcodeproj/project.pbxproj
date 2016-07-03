@@ -504,7 +504,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "pushd neovim\nmake libnvim\npopd";
+			shellScript = "pushd neovim\nmake CMAKE_BUILD_TYPE=Release libnvim\npopd";
 		};
 /* End PBXShellScriptBuildPhase section */
 
