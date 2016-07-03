@@ -156,8 +156,7 @@ public class NeoVimView: NSView {
       cursorRect = cursorRect.union(self.cellRect(row: nextPosition.row, column:nextPosition.column))
     }
 
-    // set cursor to an abhorrent color for debugging
-    ColorUtils.colorFromCodeIgnoringAlpha(0xFF990000).set()
+    ColorUtils.colorFromCodeIgnoringAlpha(background).set()
     NSRectFillUsingOperation(cursorRect, .CompositeDifference)
   }
 
