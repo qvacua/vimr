@@ -43,8 +43,8 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   
   public func gotoPosition(position: Position, screenCursor: Position, bufferCursor: Position) {
     DispatchUtils.gui {
-      NSLog("\(#function): \(position), \(screenCursor), \(bufferCursor)")
-      
+//      NSLog("\(#function): \(position), \(screenCursor), \(bufferCursor)")
+
       self.setNeedsDisplay(cellPosition: self.grid.screenCursor) // redraw where the cursor was till now
       self.setNeedsDisplay(screenCursor: screenCursor) // draw the new cursor
 

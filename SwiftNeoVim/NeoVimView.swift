@@ -110,7 +110,7 @@ public class NeoVimView: NSView {
       return
     }
 
-//    Swift.print("\(#function): \(dirtyUnionRect)")
+//    NSLog("\(#function): \(dirtyUnionRect)")
     let context = NSGraphicsContext.currentContext()!.CGContext
 
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);

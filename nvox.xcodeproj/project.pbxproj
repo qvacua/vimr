@@ -26,6 +26,13 @@
 		4B401B161D0454E900D99EDC /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B401B1A1D046E0600D99EDC /* NeoVimViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */; };
 		4B4192181D0C52D700A0BEB2 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4192171D0C52D700A0BEB2 /* Grid.swift */; };
+		4B56F2931D29903F00C1F92E /* SwiftNeoVimTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B56F2921D29903F00C1F92E /* SwiftNeoVimTests.swift */; };
+		4B56F2951D29903F00C1F92E /* SwiftNeoVim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; };
+		4B56F29D1D29926600C1F92E /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; };
+		4B56F29E1D29926600C1F92E /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29C1D29926600C1F92E /* Quick.framework */; };
+		4B9A15241D2993DA009F9F67 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B9A15251D2993DA009F9F67 /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29C1D29926600C1F92E /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B9A15261D2993DF009F9F67 /* SwiftNeoVim.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BB202DC1D0359B0001D130D /* NeoVimXpc.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B2A2C211D0359650074CE9A /* NeoVimXpc.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BCADE081D11ED12004DAD0F /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */; };
 		4BDF641C1D0887C100D47E1D /* TextDrawer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDF641A1D0887C100D47E1D /* TextDrawer.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -67,6 +74,13 @@
 			remoteGlobalIDString = 4BEBA5261CFF3DFF00673FDF;
 			remoteInfo = NeoVimXpc;
 		};
+		4B56F2961D29903F00C1F92E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4BEBA4FD1CFF374B00673FDF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4B2A2BF61D0351810074CE9A;
+			remoteInfo = SwiftNeoVim;
+		};
 		4BEBA5151CFF374B00673FDF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4BEBA4FD1CFF374B00673FDF /* Project object */;
@@ -101,6 +115,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4B9A15231D2993D0009F9F67 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4B9A15261D2993DF009F9F67 /* SwiftNeoVim.framework in CopyFiles */,
+				4B9A15241D2993DA009F9F67 /* Nimble.framework in CopyFiles */,
+				4B9A15251D2993DA009F9F67 /* Quick.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -124,6 +150,11 @@
 		4B401B131D0454DC00D99EDC /* PureLayout.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureLayout.framework; path = Carthage/Build/Mac/PureLayout.framework; sourceTree = SOURCE_ROOT; };
 		4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimViewDelegate.swift; sourceTree = "<group>"; };
 		4B4192171D0C52D700A0BEB2 /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
+		4B56F2901D29903F00C1F92E /* SwiftNeoVimTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftNeoVimTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B56F2921D29903F00C1F92E /* SwiftNeoVimTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftNeoVimTests.swift; sourceTree = "<group>"; };
+		4B56F2941D29903F00C1F92E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4B56F29B1D29926600C1F92E /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/Mac/Nimble.framework; sourceTree = SOURCE_ROOT; };
+		4B56F29C1D29926600C1F92E /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/Mac/Quick.framework; sourceTree = SOURCE_ROOT; };
 		4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaExtensions.swift; sourceTree = "<group>"; };
 		4BDF641A1D0887C100D47E1D /* TextDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextDrawer.h; sourceTree = "<group>"; };
 		4BDF641B1D0887C100D47E1D /* TextDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDrawer.m; sourceTree = "<group>"; };
@@ -160,6 +191,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B56F28D1D29903F00C1F92E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B56F2951D29903F00C1F92E /* SwiftNeoVim.framework in Frameworks */,
+				4B56F29D1D29926600C1F92E /* Nimble.framework in Frameworks */,
+				4B56F29E1D29926600C1F92E /* Quick.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,6 +243,8 @@
 		4B2A2BE61D0225840074CE9A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4B56F29B1D29926600C1F92E /* Nimble.framework */,
+				4B56F29C1D29926600C1F92E /* Quick.framework */,
 				4B401B131D0454DC00D99EDC /* PureLayout.framework */,
 				4B2A2BE21D0225800074CE9A /* RxCocoa.framework */,
 				4B2A2BE31D0225800074CE9A /* RxSwift.framework */,
@@ -232,6 +275,15 @@
 			path = SwiftNeoVim;
 			sourceTree = "<group>";
 		};
+		4B56F2911D29903F00C1F92E /* SwiftNeoVimTests */ = {
+			isa = PBXGroup;
+			children = (
+				4B56F2921D29903F00C1F92E /* SwiftNeoVimTests.swift */,
+				4B56F2941D29903F00C1F92E /* Info.plist */,
+			);
+			path = SwiftNeoVimTests;
+			sourceTree = "<group>";
+		};
 		4BEBA4FC1CFF374B00673FDF = {
 			isa = PBXGroup;
 			children = (
@@ -240,6 +292,7 @@
 				4BEBA5171CFF374B00673FDF /* nvoxTests */,
 				4BEBA5281CFF3DFF00673FDF /* NeoVimXpc */,
 				4B2A2BF81D0351810074CE9A /* SwiftNeoVim */,
+				4B56F2911D29903F00C1F92E /* SwiftNeoVimTests */,
 				4BEBA5061CFF374B00673FDF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -251,6 +304,7 @@
 				4BEBA5141CFF374B00673FDF /* nvoxTests.xctest */,
 				4BEBA5271CFF3DFF00673FDF /* NeoVimXpc.xpc */,
 				4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */,
+				4B56F2901D29903F00C1F92E /* SwiftNeoVimTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -357,6 +411,25 @@
 			productReference = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		4B56F28F1D29903F00C1F92E /* SwiftNeoVimTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4B56F29A1D29903F00C1F92E /* Build configuration list for PBXNativeTarget "SwiftNeoVimTests" */;
+			buildPhases = (
+				4B56F28C1D29903F00C1F92E /* Sources */,
+				4B56F28D1D29903F00C1F92E /* Frameworks */,
+				4B56F28E1D29903F00C1F92E /* Resources */,
+				4B9A15231D2993D0009F9F67 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4B56F2971D29903F00C1F92E /* PBXTargetDependency */,
+			);
+			name = SwiftNeoVimTests;
+			productName = SwiftNeoVimTests;
+			productReference = 4B56F2901D29903F00C1F92E /* SwiftNeoVimTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		4BEBA5041CFF374B00673FDF /* nvox */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4BEBA51D1CFF374B00673FDF /* Build configuration list for PBXNativeTarget "nvox" */;
@@ -425,6 +498,9 @@
 					4B2A2BF61D0351810074CE9A = {
 						CreatedOnToolsVersion = 7.3.1;
 					};
+					4B56F28F1D29903F00C1F92E = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
 					4BEBA5041CFF374B00673FDF = {
 						CreatedOnToolsVersion = 7.3.1;
 					};
@@ -454,12 +530,20 @@
 				4BEBA5131CFF374B00673FDF /* nvoxTests */,
 				4BEBA5261CFF3DFF00673FDF /* NeoVimXpc */,
 				4B2A2BF61D0351810074CE9A /* SwiftNeoVim */,
+				4B56F28F1D29903F00C1F92E /* SwiftNeoVimTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4B2A2BF51D0351810074CE9A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B56F28E1D29903F00C1F92E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -530,6 +614,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4B56F28C1D29903F00C1F92E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B56F2931D29903F00C1F92E /* SwiftNeoVimTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4BEBA5011CFF374B00673FDF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -567,6 +659,11 @@
 			isa = PBXTargetDependency;
 			target = 4BEBA5261CFF3DFF00673FDF /* NeoVimXpc */;
 			targetProxy = 4B2A2C0B1D0353090074CE9A /* PBXContainerItemProxy */;
+		};
+		4B56F2971D29903F00C1F92E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4B2A2BF61D0351810074CE9A /* SwiftNeoVim */;
+			targetProxy = 4B56F2961D29903F00C1F92E /* PBXContainerItemProxy */;
 		};
 		4BEBA5161CFF374B00673FDF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -631,6 +728,36 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.nvox.SwiftNeoVim;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		4B56F2981D29903F00C1F92E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				INFOPLIST_FILE = SwiftNeoVimTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.SwiftNeoVimTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		4B56F2991D29903F00C1F92E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				INFOPLIST_FILE = SwiftNeoVimTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.SwiftNeoVimTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -846,6 +973,15 @@
 			buildConfigurations = (
 				4B2A2C001D0351810074CE9A /* Debug */,
 				4B2A2C011D0351810074CE9A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4B56F29A1D29903F00C1F92E /* Build configuration list for PBXNativeTarget "SwiftNeoVimTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B56F2981D29903F00C1F92E /* Debug */,
+				4B56F2991D29903F00C1F92E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

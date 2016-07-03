@@ -466,9 +466,9 @@ static void neovim_input(void **argv) {
   xpc_async(^{
     _marked_delta = 0;
 
-    // Very ugly: When we want to have the Hanja for 하, Cocoa first finalize 하, then set the Hanja as marked text. The
-    // main app will call this method when this happens, thus compute how many cell we have to go backward to correctly
-    // mark the will-be-soon-inserted Hanja... See also docs/notes-on-cocoa-text-input.md
+    // Very ugly: When we want to have the Hanja for 하, Cocoa first finalizes 하, then sets the Hanja as marked text.
+    // The main app will call this method when this happens, thus compute how many cell we have to go backward to
+    // correctly mark the will-be-soon-inserted Hanja... See also docs/notes-on-cocoa-text-input.md
     int emptyCounter = 0;
     for (int i = 0; i < count; i++) {
       _marked_delta -= 1;

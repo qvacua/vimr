@@ -34,7 +34,7 @@ extension NeoVimView: NSTextInputClient {
   }
 
   public func insertText(aString: AnyObject, replacementRange: NSRange) {
-    NSLog("\(#function): \(replacementRange): '\(aString)'")
+//    NSLog("\(#function): \(replacementRange): '\(aString)'")
 
     switch aString {
     case let string as String:
@@ -56,7 +56,7 @@ extension NeoVimView: NSTextInputClient {
   }
 
   public override func doCommandBySelector(aSelector: Selector) {
-    NSLog("\(#function): \(aSelector)");
+//    NSLog("\(#function): \(aSelector)");
 
     // FIXME: handle when ㅎ -> delete
 
@@ -90,14 +90,14 @@ extension NeoVimView: NSTextInputClient {
       self.markedText = String(aString) // should not occur
     }
     
-    NSLog("\(#function): \(self.markedText), \(selectedRange), \(replacementRange)")
+//    NSLog("\(#function): \(self.markedText), \(selectedRange), \(replacementRange)")
 
     self.xpc.vimInputMarkedText(self.markedText!)
     self.keyDownDone = true
   }
 
   public func unmarkText() {
-    NSLog("\(#function): ")
+//    NSLog("\(#function): ")
     self.markedText = nil
     self.markedPosition = Position.null
     self.keyDownDone = true
@@ -112,12 +112,12 @@ extension NeoVimView: NSTextInputClient {
   public func selectedRange() -> NSRange {
     // When the app starts and the Hangul input method is selected, this method gets called very early...
     guard self.grid.hasData else {
-      NSLog("\(#function): not found")
+//      NSLog("\(#function): not found")
       return NSRange(location: NSNotFound, length: 0)
     }
 
     let result = NSRange(location: self.grid.singleIndexFrom(self.grid.putPosition), length: 0)
-    NSLog("\(#function): \(result)")
+//    NSLog("\(#function): \(result)")
     return result
   }
 
@@ -126,7 +126,7 @@ extension NeoVimView: NSTextInputClient {
     if let markedText = self.markedText {
       let result = NSRange(location: self.grid.singleIndexFrom(self.markedPosition),
                            length: markedText.characters.count)
-      NSLog("\(#function): \(result)")
+//      NSLog("\(#function): \(result)")
       return result
     }
 
@@ -135,20 +135,20 @@ extension NeoVimView: NSTextInputClient {
   }
 
   public func hasMarkedText() -> Bool {
-    NSLog("\(#function)")
+//    NSLog("\(#function)")
     return self.markedText != nil
   }
 
   // FIXME: take into account the "return nil"-case
   public func attributedSubstringForProposedRange(aRange: NSRange, actualRange: NSRangePointer) -> NSAttributedString? {
-    NSLog("\(#function): \(aRange), \(actualRange[0])")
+//    NSLog("\(#function): \(aRange), \(actualRange[0])")
     if aRange.location == NSNotFound {
-      NSLog("\(#function): range not found: returning nil")
+//      NSLog("\(#function): range not found: returning nil")
       return nil
     }
     
     guard let lastMarkedText = self.lastMarkedText else {
-      NSLog("\(#function): no last marked text: returning nil")
+//      NSLog("\(#function): no last marked text: returning nil")
       return nil
     }
     
@@ -156,7 +156,7 @@ extension NeoVimView: NSTextInputClient {
     let fillCount = aRange.length - lastMarkedText.characters.count
     let fillChars = Array(0..<fillCount).reduce("") { (result, _) in return result + " " }
     
-    NSLog("\(#function): \(aRange), \(actualRange[0]): \(fillChars + lastMarkedText)")
+//    NSLog("\(#function): \(aRange), \(actualRange[0]): \(fillChars + lastMarkedText)")
     return NSAttributedString(string: fillChars + lastMarkedText)
   }
 
@@ -167,7 +167,7 @@ extension NeoVimView: NSTextInputClient {
   public func firstRectForCharacterRange(aRange: NSRange, actualRange: NSRangePointer) -> NSRect {
     let position = self.grid.positionFromSingleIndex(aRange.location)
     
-    NSLog("\(#function): \(aRange),\(actualRange[0]) -> \(position.row):\(position.column)")
+//    NSLog("\(#function): \(aRange),\(actualRange[0]) -> \(position.row):\(position.column)")
 
     let resultInSelf = self.cellRect(row: position.row, column: position.column)
     let result = self.window?.convertRectToScreen(self.convertRect(resultInSelf, toView: nil))
@@ -176,7 +176,7 @@ extension NeoVimView: NSTextInputClient {
   }
 
   public func characterIndexForPoint(aPoint: NSPoint) -> Int {
-    NSLog("\(#function): \(aPoint)")
+//    NSLog("\(#function): \(aPoint)")
     return 1
   }
   
