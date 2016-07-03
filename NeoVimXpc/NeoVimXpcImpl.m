@@ -51,21 +51,26 @@ static uv_cond_t _condition;
 
 static id <NeoVimUiBridgeProtocol> _neo_vim_osx_ui;
 
+static NSString *_marked_text = nil;
+
 static int _marked_row = 0;
 static int _marked_column = 0;
-static int _marked_delta = 0; // for 하 -> hanja popup, Cocoa first insert 하, then set marked text
+
+// for 하 -> hanja popup, Cocoa first inserts 하, then sets marked text, cf docs/notes-on-cocoa-text-input.md
+static int _marked_delta = 0;
+
 static int _put_row = -1;
 static int _put_column = -1;
-static NSString *_marked_text = nil;
+
 static NSString *_backspace = nil;
 
 static dispatch_queue_t _queue;
 
-static inline int cursorRow() {
+static inline int screen_cursor_row() {
   return curwin->w_winrow + curwin->w_wrow;
 }
 
-static inline int cursorColumn() {
+static inline int screen_cursor_column() {
   return curwin->w_wincol + curwin->w_wcol;
 }
 
@@ -160,7 +165,7 @@ static void xpc_ui_cursor_goto(UI *ui __unused, int row, int col) {
     _put_column = col;
 
     [_neo_vim_osx_ui gotoPosition:(Position) { .row = row, .column = col }
-                     screenCursor:(Position) { .row = cursorRow(), .column = cursorColumn() }
+                     screenCursor:(Position) { .row = screen_cursor_row(), .column = screen_cursor_column() }
                      bufferCursor:(Position) { .row = curwin->w_cursor.lnum - 1, .column = curwin->w_cursor.col }];
   });
 }
@@ -247,10 +252,10 @@ static void xpc_ui_put(UI *ui __unused, uint8_t *str, size_t len) {
     NSString *string = [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
 
     if (_marked_text != nil && _marked_row == _put_row && _marked_column == _put_column) {
-//      log4Debug("!!! putting marked text: '%@'", string);
+//      log4Debug("putting marked text: '%@'", string);
       [_neo_vim_osx_ui putMarkedText:string];
     } else if (_marked_text != nil && len == 0 && _marked_row == _put_row && _marked_column == _put_column - 1) {
-//      log4Debug("!!! putting marked text cuz zero");
+//      log4Debug("putting marked text cuz zero");
       [_neo_vim_osx_ui putMarkedText:string];
     } else {
 //      log4Debug("putting non-marked text: '%@'", string);
@@ -461,6 +466,9 @@ static void neovim_input(void **argv) {
   xpc_async(^{
     _marked_delta = 0;
 
+    // Very ugly: When we want to have the Hanja for 하, Cocoa first finalize 하, then set the Hanja as marked text. The
+    // main app will call this method when this happens, thus compute how many cell we have to go backward to correctly
+    // mark the will-be-soon-inserted Hanja... See also docs/notes-on-cocoa-text-input.md
     int emptyCounter = 0;
     for (int i = 0; i < count; i++) {
       _marked_delta -= 1;
