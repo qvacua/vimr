@@ -49,6 +49,7 @@ static bool _is_ui_launched = false;
 static uv_mutex_t _mutex;
 static uv_cond_t _condition;
 
+static XpcUiData *_xpc_ui_data;
 static id <NeoVimUiBridgeProtocol> _neo_vim_osx_ui;
 
 static NSString *_marked_text = nil;
@@ -92,19 +93,19 @@ static void osx_xpc_ui_main(UIBridgeData *bridge, UI *ui) {
   Loop loop;
   loop_init(&loop, NULL);
 
-  XpcUiData *data = xcalloc(1, sizeof(XpcUiData));
-  ui->data = data;
-  data->bridge = bridge;
-  data->loop = &loop;
+  _xpc_ui_data = xcalloc(1, sizeof(XpcUiData));
+  ui->data = _xpc_ui_data;
+  _xpc_ui_data->bridge = bridge;
+  _xpc_ui_data->loop = &loop;
 
   // FIXME: dunno whether we need this: copied from tui.c
-  signal_watcher_init(data->loop, &data->cont_handle, data);
-  signal_watcher_start(&data->cont_handle, sigcont_cb, SIGCONT);
+  signal_watcher_init(_xpc_ui_data->loop, &_xpc_ui_data->cont_handle, _xpc_ui_data);
+  signal_watcher_start(&_xpc_ui_data->cont_handle, sigcont_cb, SIGCONT);
 
   bridge->bridge.width = 30;
   bridge->bridge.height = 10;
 
-  data->stop = false;
+  _xpc_ui_data->stop = false;
   CONTINUE(bridge);
 
   uv_mutex_lock(&_mutex);
@@ -112,14 +113,14 @@ static void osx_xpc_ui_main(UIBridgeData *bridge, UI *ui) {
   uv_cond_signal(&_condition);
   uv_mutex_unlock(&_mutex);
 
-  while (!data->stop) {
+  while (!_xpc_ui_data->stop) {
     loop_poll_events(&loop, -1);
   }
 
   ui_bridge_stopped(bridge);
   loop_close(&loop);
 
-  xfree(data);
+  xfree(_xpc_ui_data);
   xfree(ui);
 }
 
@@ -400,6 +401,10 @@ void custom_ui_start(void) {
   ui_bridge_attach(ui, osx_xpc_ui_main, osx_xpc_ui_scheduler);
 }
 
+static void refresh_ui(void **argv __unused) {
+  ui_refresh();
+}
+
 static void neovim_input(void **argv) {
   NSString *input = (NSString *) argv[0];
 
@@ -487,6 +492,20 @@ static void neovim_input(void **argv) {
     for (int i = 0; i < count; i++) {
       loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_backspace retain])); // release in neovim_input
     }
+  });
+}
+
+- (void)resizeToWidth:(int)width height:(int)height {
+  xpc_async(^{
+    // see sigwinch_cb() and update_size() in tui.c
+    UI *ui = _xpc_ui_data->bridge->ui;
+
+    ui->width = width;
+    ui->height = height;
+    _xpc_ui_data->bridge->bridge.width = width;
+    _xpc_ui_data->bridge->bridge.height = height;
+
+    loop_schedule(&main_loop, event_create(1, refresh_ui, 0));
   });
 }
 

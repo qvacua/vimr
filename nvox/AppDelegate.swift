@@ -13,7 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NeoVimViewDelegate {
   var neoVim: NeoVim!
 
   @IBAction func debugSomething(sender: AnyObject!) {
-    self.neoVim.xpc.debug1()
+    self.neoVim.xpc.resizeToWidth(35, height: 13)
   }
 
   func applicationDidFinishLaunching(aNotification: NSNotification) {

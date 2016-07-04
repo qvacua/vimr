@@ -18,6 +18,8 @@
 - (void)vimInputMarkedText:(NSString *_Nonnull)markedText;
 - (void)deleteCharacters:(NSInteger)count;
 
+- (void)resizeToWidth:(int)width height:(int)height;
+
 - (void)debug1;
 
 @end
