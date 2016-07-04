@@ -140,6 +140,7 @@ extension NeoVimView: NSTextInputClient {
   }
 
   // FIXME: take into account the "return nil"-case
+  // FIXME: just fix me, PLEASE...
   public func attributedSubstringForProposedRange(aRange: NSRange, actualRange: NSRangePointer) -> NSAttributedString? {
 //    NSLog("\(#function): \(aRange), \(actualRange[0])")
     if aRange.location == NSNotFound {
@@ -154,6 +155,10 @@ extension NeoVimView: NSTextInputClient {
     
     // we only support last marked text, thus fill dummy characters when Cocoa asks for more characters than marked...
     let fillCount = aRange.length - lastMarkedText.characters.count
+    guard fillCount >= 0 else {
+      return nil
+    }
+
     let fillChars = Array(0..<fillCount).reduce("") { (result, _) in return result + " " }
     
 //    NSLog("\(#function): \(aRange), \(actualRange[0]): \(fillChars + lastMarkedText)")

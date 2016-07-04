@@ -32,6 +32,8 @@ typedef struct {
 
 @protocol NeoVimUiBridgeProtocol <NSObject>
 
+- (void)neoVimUiIsReady;
+
 /**
  * NeoVim has set the size of its screen to rows X columns. The view must be resized accordingly.
  */

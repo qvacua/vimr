@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import PureLayout
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NeoVimViewDelegate {
@@ -24,9 +25,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NeoVimViewDelegate {
     self.neoVim = NeoVim()
     self.neoVim.view.delegate = self
 
-    self.neoVim.view.setFrameSize(CGSize(width: 100.0, height: 100.0))
-    self.neoVim.view.setFrameOrigin(CGPoint(x: 0, y: 0))
+    let view = self.neoVim.view
+    view.translatesAutoresizingMaskIntoConstraints = false
     self.window.contentView?.addSubview(self.neoVim.view)
+    view.autoPinEdgesToSuperviewEdges()
 
     self.window.makeFirstResponder(self.neoVim.view)
 
@@ -42,9 +44,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NeoVimViewDelegate {
   }
 
   func resizeToSize(size: CGSize) {
-    let delta = CGFloat(4 + 4)
-    let bigger = CGSize(width: size.width + delta, height: size.height + delta)
-    self.neoVim.view.setFrameSize(bigger)
+//    let delta = CGFloat(4 + 4)
+//    let bigger = CGSize(width: size.width + delta, height: size.height + delta)
+//    self.neoVim.view.setFrameSize(bigger)
+//    NSLog("\(#function)")
   }
   
   func setTitle(title: String) {

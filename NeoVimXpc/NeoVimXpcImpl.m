@@ -19,6 +19,7 @@
 #import <nvim/event/signal.h>
 #import <nvim/main.h>
 #import <nvim/cursor.h>
+#import <nvim/screen.h>
 
 
 #define pun_type(t, x) (*((t *)(&x)))
@@ -75,8 +76,20 @@ static inline int screen_cursor_column() {
   return curwin->w_wincol + curwin->w_wcol;
 }
 
-static void xpc_async(void (^block)()) {
-  dispatch_async(_queue, block);
+// TODO: Is it possible to optimize away @autoreleasepool?
+static inline void xpc_sync(void (^block)()) {
+  dispatch_sync(_queue, ^{
+    @autoreleasepool {
+      block();
+    }
+  });
+}
+
+static void set_ui_size(UIBridgeData *bridge, int width, int height) {
+  bridge->ui->width = width;
+  bridge->ui->height = height;
+  bridge->bridge.width = width;
+  bridge->bridge.height = height;
 }
 
 static void sigcont_cb(SignalWatcher *watcher __unused, int signum __unused, void *data) {
@@ -102,8 +115,7 @@ static void osx_xpc_ui_main(UIBridgeData *bridge, UI *ui) {
   signal_watcher_init(_xpc_ui_data->loop, &_xpc_ui_data->cont_handle, _xpc_ui_data);
   signal_watcher_start(&_xpc_ui_data->cont_handle, sigcont_cb, SIGCONT);
 
-  bridge->bridge.width = 30;
-  bridge->bridge.height = 10;
+  set_ui_size(bridge, 30, 15);
 
   _xpc_ui_data->stop = false;
   CONTINUE(bridge);
@@ -141,86 +153,86 @@ static void suspend_event(void **argv) {
 }
 
 static void xpc_ui_resize(UI *ui __unused, int width, int height) {
-  xpc_async(^{
+  xpc_sync(^{
     [_neo_vim_osx_ui resizeToWidth:width height:height];
   });
 }
 
 static void xpc_ui_clear(UI *ui __unused) {
-  xpc_async(^{
+  xpc_sync(^{
     [_neo_vim_osx_ui clear];
   });
 }
 
 static void xpc_ui_eol_clear(UI *ui __unused) {
-  xpc_async(^{
+  xpc_sync(^{
     [_neo_vim_osx_ui eolClear];
   });
 }
 
 static void xpc_ui_cursor_goto(UI *ui __unused, int row, int col) {
-  xpc_async(^{
+  xpc_sync(^{
 //    log4Debug("%d:%d", row, col);
 
     _put_row = row;
     _put_column = col;
 
-    [_neo_vim_osx_ui gotoPosition:(Position) { .row = row, .column = col }
-                     screenCursor:(Position) { .row = screen_cursor_row(), .column = screen_cursor_column() }
-                     bufferCursor:(Position) { .row = curwin->w_cursor.lnum - 1, .column = curwin->w_cursor.col }];
+    [_neo_vim_osx_ui gotoPosition:(Position) {.row = row, .column = col}
+                     screenCursor:(Position) {.row = screen_cursor_row(), .column = screen_cursor_column()}
+                     bufferCursor:(Position) {.row = curwin->w_cursor.lnum - 1, .column = curwin->w_cursor.col}];
   });
 }
 
 static void xpc_ui_update_menu(UI *ui __unused) {
-  xpc_async(^{
+  xpc_sync(^{
     [_neo_vim_osx_ui updateMenu];
   });
 }
 
 static void xpc_ui_busy_start(UI *ui __unused) {
-  xpc_async(^{
+  xpc_sync(^{
     [_neo_vim_osx_ui busyStart];
   });
 }
 
 static void xpc_ui_busy_stop(UI *ui __unused) {
-  xpc_async(^{
+  xpc_sync(^{
     [_neo_vim_osx_ui busyStop];
   });
 }
 
 static void xpc_ui_mouse_on(UI *ui __unused) {
-  xpc_async(^{
+  xpc_sync(^{
     [_neo_vim_osx_ui mouseOn];
   });
 }
 
 static void xpc_ui_mouse_off(UI *ui __unused) {
-  xpc_async(^{
+  xpc_sync(^{
     [_neo_vim_osx_ui mouseOff];
   });
 }
 
 static void xpc_ui_mode_change(UI *ui __unused, int mode) {
-  xpc_async(^{
+  xpc_sync(^{
     [_neo_vim_osx_ui modeChange:mode];
   });
 }
 
 static void xpc_ui_set_scroll_region(UI *ui __unused, int top, int bot, int left, int right) {
-  xpc_async(^{
+  xpc_sync(^{
     [_neo_vim_osx_ui setScrollRegionToTop:top bottom:bot left:left right:right];
   });
 }
 
 static void xpc_ui_scroll(UI *ui __unused, int count) {
-  xpc_async(^{
+  xpc_sync(^{
     [_neo_vim_osx_ui scroll:count];
   });
 }
 
 static void xpc_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
-  xpc_async(^{
+  xpc_sync(^{
     FontTrait trait = FontTraitNone;
     if (attrs.italic) {
       trait |= FontTraitItalic;
@@ -249,8 +261,9 @@ static void xpc_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
 }
 
 static void xpc_ui_put(UI *ui __unused, uint8_t *str, size_t len) {
-  xpc_async(^{
+  xpc_sync(^{
     NSString *string = [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
+//    printf("%s", [string cStringUsingEncoding:NSUTF8StringEncoding]);
 
     if (_marked_text != nil && _marked_row == _put_row && _marked_column == _put_column) {
 //      log4Debug("putting marked text: '%@'", string);
@@ -269,25 +282,25 @@ static void xpc_ui_put(UI *ui __unused, uint8_t *str, size_t len) {
 }
 
 static void xpc_ui_bell(UI *ui __unused) {
-  xpc_async(^{
+  xpc_sync(^{
     [_neo_vim_osx_ui bell];
   });
 }
 
 static void xpc_ui_visual_bell(UI *ui __unused) {
-  xpc_async(^{
+  xpc_sync(^{
     [_neo_vim_osx_ui visualBell];
   });
 }
 
 static void xpc_ui_flush(UI *ui __unused) {
-  xpc_async(^{
+  xpc_sync(^{
     [_neo_vim_osx_ui flush];
   });
 }
 
 static void xpc_ui_update_fg(UI *ui __unused, int fg) {
-  xpc_async(^{
+  xpc_sync(^{
     if (fg == -1) {
       [_neo_vim_osx_ui updateForeground:_default_foreground];
       return;
@@ -299,7 +312,7 @@ static void xpc_ui_update_fg(UI *ui __unused, int fg) {
 }
 
 static void xpc_ui_update_bg(UI *ui __unused, int bg) {
-  xpc_async(^{
+  xpc_sync(^{
     if (bg == -1) {
       [_neo_vim_osx_ui updateBackground:_default_background];
       return;
@@ -311,7 +324,7 @@ static void xpc_ui_update_bg(UI *ui __unused, int bg) {
 }
 
 static void xpc_ui_update_sp(UI *ui __unused, int sp) {
-  xpc_async(^{
+  xpc_sync(^{
     if (sp == -1) {
       [_neo_vim_osx_ui updateSpecial:_default_special];
       return;
@@ -323,7 +336,7 @@ static void xpc_ui_update_sp(UI *ui __unused, int sp) {
 }
 
 static void xpc_ui_suspend(UI *ui __unused) {
-  xpc_async(^{
+  xpc_sync(^{
     [_neo_vim_osx_ui suspend];
 
     XpcUiData *data = ui->data;
@@ -336,7 +349,7 @@ static void xpc_ui_suspend(UI *ui __unused) {
 }
 
 static void xpc_ui_set_title(UI *ui __unused, char *title) {
-  xpc_async(^{
+  xpc_sync(^{
     NSString *string = [[NSString alloc] initWithCString:title encoding:NSUTF8StringEncoding];
     [_neo_vim_osx_ui setTitle:string];
     [string release];
@@ -344,7 +357,7 @@ static void xpc_ui_set_title(UI *ui __unused, char *title) {
 }
 
 static void xpc_ui_set_icon(UI *ui __unused, char *icon) {
-  xpc_async(^{
+  xpc_sync(^{
     NSString *string = [[NSString alloc] initWithCString:icon encoding:NSUTF8StringEncoding];
     [_neo_vim_osx_ui setIcon:string];
     [string release];
@@ -352,7 +365,7 @@ static void xpc_ui_set_icon(UI *ui __unused, char *icon) {
 }
 
 static void xpc_ui_stop(UI *ui __unused) {
-  xpc_async(^{
+  xpc_sync(^{
     [_neo_vim_osx_ui stop];
 
     XpcUiData *data = (XpcUiData *) ui->data;
@@ -401,20 +414,28 @@ void custom_ui_start(void) {
   ui_bridge_attach(ui, osx_xpc_ui_main, osx_xpc_ui_scheduler);
 }
 
+static void force_redraw(void **argv __unused) {
+  must_redraw = CLEAR;
+  update_screen(0);
+}
+
 static void refresh_ui(void **argv __unused) {
   ui_refresh();
 }
 
+// TODO: optimize away @autoreleasepool?
 static void neovim_input(void **argv) {
-  NSString *input = (NSString *) argv[0];
+  @autoreleasepool {
+    NSString *input = (NSString *) argv[0];
 
-  // FIXME: check the length of the consumed bytes by neovim and if not fully consumed, call vim_input again.
-  vim_input((String) {
-      .data = (char *) input.UTF8String,
-      .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
-  });
+    // FIXME: check the length of the consumed bytes by neovim and if not fully consumed, call vim_input again.
+    vim_input((String) {
+        .data = (char *) input.UTF8String,
+        .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
+    });
 
-  [input release]; // retain in loop_schedule(&main_loop, ...) (in _queue) somewhere
+    [input release]; // retain in loop_schedule(&main_loop, ...) (in _queue) somewhere
+  }
 }
 
 @implementation NeoVimXpcImpl
@@ -448,6 +469,7 @@ static void neovim_input(void **argv) {
 
   [ui retain];
   _neo_vim_osx_ui = ui;
+  [_neo_vim_osx_ui neoVimUiIsReady];
 
   _backspace = [[NSString alloc] initWithString:@"<BS>"];
 
@@ -468,7 +490,7 @@ static void neovim_input(void **argv) {
 }
 
 - (void)deleteCharacters:(NSInteger)count {
-  xpc_async(^{
+  xpc_sync(^{
     _marked_delta = 0;
 
     // Very ugly: When we want to have the Hanja for 하, Cocoa first finalizes 하, then sets the Hanja as marked text.
@@ -495,22 +517,20 @@ static void neovim_input(void **argv) {
   });
 }
 
+- (void)forceRedraw {
+  loop_schedule(&main_loop, event_create(1, force_redraw, 0));
+}
+
 - (void)resizeToWidth:(int)width height:(int)height {
-  xpc_async(^{
+  xpc_sync(^{
     // see sigwinch_cb() and update_size() in tui.c
-    UI *ui = _xpc_ui_data->bridge->ui;
-
-    ui->width = width;
-    ui->height = height;
-    _xpc_ui_data->bridge->bridge.width = width;
-    _xpc_ui_data->bridge->bridge.height = height;
-
+    set_ui_size(_xpc_ui_data->bridge, width, height);
     loop_schedule(&main_loop, event_create(1, refresh_ui, 0));
   });
 }
 
 - (void)vimInput:(NSString *_Nonnull)input {
-  xpc_async(^{
+  xpc_sync(^{
     if (_marked_text == nil) {
       loop_schedule(&main_loop, event_create(1, neovim_input, 1, [input retain])); // release in neovim_input
       return;
@@ -535,7 +555,7 @@ static void neovim_input(void **argv) {
 }
 
 - (void)vimInputMarkedText:(NSString *_Nonnull)markedText {
-  xpc_async(^{
+  xpc_sync(^{
     if (_marked_text == nil) {
       _marked_row = _put_row;
       _marked_column = _put_column + _marked_delta;

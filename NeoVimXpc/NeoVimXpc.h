@@ -19,6 +19,7 @@
 - (void)deleteCharacters:(NSInteger)count;
 
 - (void)resizeToWidth:(int)width height:(int)height;
+- (void)forceRedraw;
 
 - (void)debug1;
 

@@ -66,9 +66,9 @@ public class NeoVimView: NSView {
       // FIXME: resize and redraw
     }
   }
-
-  private let xOffset = CGFloat(4)
-  private let yOffSet = CGFloat(4)
+  
+  var xOffset = CGFloat(0)
+  var yOffset = CGFloat(0)
   
   private let drawer: TextDrawer
 
@@ -108,8 +108,41 @@ public class NeoVimView: NSView {
     Swift.print(self.grid)
   }
 
+//  override public func setFrameSize(newSize: NSSize) {
+//    super.setFrameSize(newSize)
+//
+//    // initial resizing is done when grid has data
+//    guard self.grid.hasData else {
+//      return
+//    }
+//
+//    self.resizeNeoVimUiTo(size: newSize)
+//  }
+
+  override public func viewDidEndLiveResize() {
+    super.viewDidEndLiveResize()
+    self.resizeNeoVimUiTo(size: self.bounds.size)
+  }
+
+  func resizeNeoVimUiTo(size size: CGSize) {
+    NSLog("\(#function): \(size)")
+    let discreteSize = Size(width: Int(floor(size.width / self.cellSize.width)),
+                            height: Int(floor(size.height / self.cellSize.height)))
+
+    self.xOffset = floor((size.width - self.cellSize.width * CGFloat(discreteSize.width)) / 2)
+    self.yOffset = floor((size.height - self.cellSize.height * CGFloat(discreteSize.height)) / 2)
+
+    self.xpc.resizeToWidth(Int32(discreteSize.width), height: Int32(discreteSize.height))
+  }
+
   override public func drawRect(dirtyUnionRect: NSRect) {
     guard self.grid.hasData else {
+      return
+    }
+
+    if self.inLiveResize {
+      NSColor.lightGrayColor().set()
+      dirtyUnionRect.fill()
       return
     }
 
@@ -225,7 +258,7 @@ public class NeoVimView: NSView {
   func pointInView(row: Int, column: Int) -> CGPoint {
     return CGPoint(
       x: CGFloat(column) * self.cellSize.width + self.xOffset,
-      y: self.frame.size.height - CGFloat(row) * self.cellSize.height - self.cellSize.height - self.yOffSet
+      y: self.frame.size.height - CGFloat(row) * self.cellSize.height - self.cellSize.height - self.yOffset
     )
   }
 
@@ -248,7 +281,7 @@ public class NeoVimView: NSView {
 
     return CGRect(
       x: left * self.cellSize.width + self.xOffset,
-      y: (CGFloat(self.grid.size.height) - bottom) * self.cellSize.height - self.yOffSet,
+      y: (CGFloat(self.grid.size.height) - bottom) * self.cellSize.height - self.yOffset,
       width: width * self.cellSize.width,
       height: height * self.cellSize.height
     )

@@ -7,20 +7,23 @@ import Cocoa
 
 extension NeoVimView: NeoVimUiBridgeProtocol {
 
+  public func neoVimUiIsReady() {
+    DispatchUtils.gui {
+    NSLog("\(#function): \(self.frame)")
+    self.resizeNeoVimUiTo(size: self.frame.size)
+    }
+  }
+
   public func resizeToWidth(width: Int32, height: Int32) {
     DispatchUtils.gui {
-      let rectSize = CGSize(
-        width: CGFloat(width) * self.cellSize.width,
-        height: CGFloat(height) * self.cellSize.height
-      )
-    
+//      NSLog("\(#function): \(width):\(height)")
       self.grid.resize(Size(width: Int(width), height: Int(height)))
-      self.delegate?.resizeToSize(rectSize)
-      // TODO: set needs display?
+      self.needsDisplay = true
     }
   }
   
   public func clear() {
+    //if self.inLiveResize { return }
     DispatchUtils.gui {
       self.grid.clear()
       self.needsDisplay = true
@@ -28,6 +31,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   public func eolClear() {
+    //if self.inLiveResize { return }
     DispatchUtils.gui {
       self.grid.eolClear()
 
@@ -42,6 +46,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   public func gotoPosition(position: Position, screenCursor: Position, bufferCursor: Position) {
+    //if self.inLiveResize { return }
     DispatchUtils.gui {
 //      NSLog("\(#function): \(position), \(screenCursor), \(bufferCursor)")
 
@@ -72,6 +77,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   public func setScrollRegionToTop(top: Int32, bottom: Int32, left: Int32, right: Int32) {
+    //if self.inLiveResize { return }
     DispatchUtils.gui {
       let region = Region(top: Int(top), bottom: Int(bottom), left: Int(left), right: Int(right))
       self.grid.setScrollRegion(region)
@@ -80,6 +86,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   public func scroll(count: Int32) {
+    //if self.inLiveResize { return }
     DispatchUtils.gui {
       self.grid.scroll(Int(count))
       self.setNeedsDisplay(region: self.grid.region)
@@ -87,12 +94,14 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
 
   public func highlightSet(attrs: CellAttributes) {
+    //if self.inLiveResize { return }
     DispatchUtils.gui {
       self.grid.attrs = attrs
     }
   }
   
   public func put(string: String) {
+    //if self.inLiveResize { return }
     DispatchUtils.gui {
       let curPos = self.grid.putPosition
 //      NSLog("\(#function): \(curPos) -> \(string)")
@@ -104,6 +113,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
 
   public func putMarkedText(markedText: String) {
+    //if self.inLiveResize { return }
     DispatchUtils.gui {
       NSLog("\(#function): '\(markedText)'")
       let curPos = self.grid.putPosition
@@ -118,6 +128,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
 
   public func unmarkRow(row: Int32, column: Int32) {
+    //if self.inLiveResize { return }
     DispatchUtils.gui {
       let position = Position(row: Int(row), column: Int(column))
 
@@ -140,15 +151,18 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   public func flush() {
+//    Swift.print("\(self.grid)")
   }
   
   public func updateForeground(fg: Int32) {
+    //if self.inLiveResize { return }
     DispatchUtils.gui {
       self.grid.foreground = UInt32(bitPattern: fg)
     }
   }
   
   public func updateBackground(bg: Int32) {
+    //if self.inLiveResize { return }
     DispatchUtils.gui {
       self.grid.background = UInt32(bitPattern: bg)
       self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).CGColor
@@ -156,6 +170,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   public func updateSpecial(sp: Int32) {
+    //if self.inLiveResize { return }
     DispatchUtils.gui {
       self.grid.special = UInt32(bitPattern: sp)
     }
