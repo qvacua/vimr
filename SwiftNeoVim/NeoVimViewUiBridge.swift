@@ -151,6 +151,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   public func updateBackground(bg: Int32) {
     DispatchUtils.gui {
       self.grid.background = UInt32(bitPattern: bg)
+      self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).CGColor
     }
   }
   

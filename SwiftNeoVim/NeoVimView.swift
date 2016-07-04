@@ -66,6 +66,9 @@ public class NeoVimView: NSView {
       // FIXME: resize and redraw
     }
   }
+
+  private let xOffset = CGFloat(4)
+  private let yOffSet = CGFloat(4)
   
   private let drawer: TextDrawer
 
@@ -174,10 +177,18 @@ public class NeoVimView: NSView {
       .map { rect -> Region in
         // Get all Regions that intersects with the given rects. There can be overlaps between the Regions, but for the
         // time being we ignore them; probably not necessary to optimize them away.
-        let rowStart = Int(floor((self.frame.height - (rect.origin.y + rect.size.height)) / self.cellSize.height))
-        let rowEnd = Int(ceil((self.frame.height - rect.origin.y) / self.cellSize.height)) - 1
-        let columnStart = Int(floor(rect.origin.x / self.cellSize.width))
-        let columnEnd = Int(ceil((rect.origin.x + rect.size.width) / self.cellSize.width)) - 1
+        let rowStart = max(
+          Int(floor((self.frame.height - (rect.origin.y + rect.size.height)) / self.cellSize.height)), 0
+        )
+        let rowEnd = min(
+          Int(ceil((self.frame.height - rect.origin.y) / self.cellSize.height)) - 1, self.grid.size.height  - 1
+        )
+        let columnStart = max(
+          Int(floor(rect.origin.x / self.cellSize.width)), 0
+        )
+        let columnEnd = min(
+          Int(ceil((rect.origin.x + rect.size.width) / self.cellSize.width)) - 1, self.grid.size.width - 1
+        )
         
         return Region(top: rowStart, bottom: rowEnd, left: columnStart, right: columnEnd)
       }
@@ -213,8 +224,8 @@ public class NeoVimView: NSView {
 
   func pointInView(row: Int, column: Int) -> CGPoint {
     return CGPoint(
-      x: CGFloat(column) * self.cellSize.width,
-      y: self.frame.size.height - CGFloat(row) * self.cellSize.height - self.cellSize.height
+      x: CGFloat(column) * self.cellSize.width + self.xOffset,
+      y: self.frame.size.height - CGFloat(row) * self.cellSize.height - self.cellSize.height - self.yOffSet
     )
   }
 
@@ -227,16 +238,20 @@ public class NeoVimView: NSView {
   }
 
   func regionRect(region: Region) -> CGRect {
-      let top = CGFloat(region.top)
-      let bottom = CGFloat(region.bottom)
-      let left = CGFloat(region.left)
-      let right = CGFloat(region.right)
+    let top = CGFloat(region.top)
+    let bottom = CGFloat(region.bottom)
+    let left = CGFloat(region.left)
+    let right = CGFloat(region.right)
 
-      let width = right - left + 1
-      let height = bottom - top + 1
+    let width = right - left + 1
+    let height = bottom - top + 1
 
-      return CGRect(x: left * self.cellSize.width, y: (CGFloat(self.grid.size.height) - bottom) * self.cellSize.height,
-                    width: width * self.cellSize.width, height: height * self.cellSize.height)
+    return CGRect(
+      x: left * self.cellSize.width + self.xOffset,
+      y: (CGFloat(self.grid.size.height) - bottom) * self.cellSize.height - self.yOffSet,
+      width: width * self.cellSize.width,
+      height: height * self.cellSize.height
+    )
   }
 
   func vimNamedKeys(string: String) -> String {
