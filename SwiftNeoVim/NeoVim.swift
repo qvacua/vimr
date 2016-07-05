@@ -32,8 +32,4 @@ public class NeoVim {
   deinit {
     self.xpcConnection.invalidate()
   }
-
-  public func vimInput(input: String) {
-    self.xpc.vimInput(input)
-  }
 }
