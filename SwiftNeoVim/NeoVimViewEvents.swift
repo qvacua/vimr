@@ -52,7 +52,7 @@ extension NeoVimView: NSTextInputClient {
     self.keyDownDone = true
     
     // TODO: necessary?
-    self.setNeedsDisplayInRect(self.cellRect(row: self.grid.putPosition.row, column: self.grid.putPosition.column))
+    self.setNeedsDisplayInRect(self.cellRectFor(row: self.grid.putPosition.row, column: self.grid.putPosition.column))
   }
 
   public override func doCommandBySelector(aSelector: Selector) {
@@ -103,7 +103,7 @@ extension NeoVimView: NSTextInputClient {
     self.keyDownDone = true
     
     // TODO: necessary?
-    self.setNeedsDisplayInRect(self.cellRect(row: self.grid.putPosition.row, column: self.grid.putPosition.column))
+    self.setNeedsDisplayInRect(self.cellRectFor(row: self.grid.putPosition.row, column: self.grid.putPosition.column))
   }
 
   /// Return the current selection (or the position of the cursor with empty-length range). For example when you enter
@@ -174,7 +174,7 @@ extension NeoVimView: NSTextInputClient {
     
 //    NSLog("\(#function): \(aRange),\(actualRange[0]) -> \(position.row):\(position.column)")
 
-    let resultInSelf = self.cellRect(row: position.row, column: position.column)
+    let resultInSelf = self.cellRectFor(row: position.row, column: position.column)
     let result = self.window?.convertRectToScreen(self.convertRect(resultInSelf, toView: nil))
 
     return result!

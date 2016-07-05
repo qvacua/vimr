@@ -35,7 +35,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     DispatchUtils.gui {
       self.grid.eolClear()
 
-      let origin = self.pointInView(self.grid.putPosition)
+      let origin = self.pointInViewFor(position: self.grid.putPosition)
       let size = CGSize(
         width: CGFloat(self.grid.region.right - self.grid.putPosition.column + 1) * self.cellSize.width,
         height: self.cellSize.height
@@ -190,7 +190,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   private func setNeedsDisplay(region region: Region) {
-    self.setNeedsDisplayInRect(self.regionRect(region))
+    self.setNeedsDisplayInRect(self.regionRectFor(region: region))
   }
   
   private func setNeedsDisplay(cellPosition position: Position) {
@@ -211,7 +211,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
 
   private func setNeedsDisplay(row row: Int, column: Int) {
 //    Swift.print("\(#function): \(row):\(column)")
-    self.setNeedsDisplayInRect(self.cellRect(row: row, column: column))
+    self.setNeedsDisplayInRect(self.cellRectFor(row: row, column: column))
   }
 
   private func setNeedsDisplay(screenCursor position: Position) {
