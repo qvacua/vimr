@@ -198,6 +198,10 @@ class Grid: CustomStringConvertible {
   }
 
   func isCellEmpty(position: Position) -> Bool {
+    guard self.isSane(position: position) else {
+      return false
+    }
+
     if self.cells[position.row][position.column].string.characters.count == 0 {
       return true
     }
@@ -240,5 +244,13 @@ class Grid: CustomStringConvertible {
     for i in region.top...region.bottom {
       self.cells[i].replaceRange(region.left...region.right, with: clearedRow)
     }
+  }
+
+  private func isSane(position position: Position) -> Bool {
+    guard position.row < self.size.height && position.column < self.size.width else {
+      return false
+    }
+
+    return true
   }
 }
