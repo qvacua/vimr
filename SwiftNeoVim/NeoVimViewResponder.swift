@@ -9,19 +9,19 @@ import Cocoa
 extension NeoVimView {
 
   public override func moveForward(sender: AnyObject?) {
-    self.xpc.vimInput(self.vimNamedKeys("Right"))
-  }
-
-  public override func moveRight(sender: AnyObject?) {
-    self.moveForward(sender)
+    self.xpc.vimInput(self.vimNamedKeys("C-f"))
   }
 
   public override func moveBackward(sender: AnyObject?) {
-    self.xpc.vimInput(self.vimNamedKeys("Left"))
+    self.xpc.vimInput(self.vimNamedKeys("C-b"))
+  }
+
+  public override func moveRight(sender: AnyObject?) {
+    self.xpc.vimInput(self.vimNamedKeys("Right"))
   }
 
   public override func moveLeft(sender: AnyObject?) {
-    self.moveBackward(sender)
+    self.xpc.vimInput(self.vimNamedKeys("Left"))
   }
 
   public override func moveUp(sender: AnyObject?) {
