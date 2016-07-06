@@ -108,16 +108,24 @@ public class NeoVimView: NSView {
     Swift.print(self.grid)
   }
 
-//  override public func setFrameSize(newSize: NSSize) {
-//    super.setFrameSize(newSize)
-//
-//    // initial resizing is done when grid has data
-//    guard self.grid.hasData else {
-//      return
-//    }
-//
-//    self.resizeNeoVimUiTo(size: newSize)
-//  }
+  override public func setFrameSize(newSize: NSSize) {
+    super.setFrameSize(newSize)
+
+    // initial resizing is done when grid has data
+    guard self.grid.hasData else {
+      return
+    }
+
+    if self.inLiveResize {
+      // TODO: Turn of live resizing for now.
+      // self.resizeNeoVimUiTo(size: newSize)
+      return
+    }
+
+    // There can be cases where the frame is resized not by live resizing, eg when the window is resized by window
+    // management tools. Thus, we make sure that the resize call is made when this happens.
+    self.resizeNeoVimUiTo(size: newSize)
+  }
 
   override public func viewDidEndLiveResize() {
     super.viewDidEndLiveResize()
