@@ -28,7 +28,10 @@
 
 - (void)setFont:(NSFont *)font {
   [_font autorelease];
+
   _font = [font retain];
+  [_fontTraitCache removeAllObjects];
+  [_fontLookupCache removeAllObjects];
 
   // cf. https://developer.apple.com/library/mac/documentation/TextFonts/Conceptual/CocoaTextArchitecture/FontHandling/FontHandling.html
   CGFloat ascent = CTFontGetAscent((CTFontRef) _font);

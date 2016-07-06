@@ -63,7 +63,8 @@ public class NeoVimView: NSView {
       self.descent = self.drawer.descent
       self.leading = self.drawer.leading
       
-      // FIXME: resize and redraw
+      // We assume that the font is valid, eg fixed width, not too small, not too big, etc..
+      self.resizeNeoVimUiTo(size: self.frame.size)
     }
   }
   
@@ -106,6 +107,15 @@ public class NeoVimView: NSView {
 
   public func debugInfo() {
     Swift.print(self.grid)
+  }
+
+  public func setFont(font: NSFont) {
+    guard font.fixedPitch else {
+      return
+    }
+
+    // FIXME: check the size whether too small or too big!
+    self.font = font
   }
 
   override public func setFrameSize(newSize: NSSize) {
