@@ -207,48 +207,52 @@ public class NeoVimView: NSView {
 
   private func rowRunIntersecting(rects rects: [CGRect]) -> [RowRun] {
     return rects
-      .map { rect -> Region in
+      .map { rect -> (Range<Int>, Range<Int>) in
         // Get all Regions that intersects with the given rects. There can be overlaps between the Regions, but for the
         // time being we ignore them; probably not necessary to optimize them away.
-        let rowStart = max(
-          Int(floor((self.frame.height - (rect.origin.y + rect.size.height)) / self.cellSize.height)), 0
-        )
-        let rowEnd = min(
-          Int(ceil((self.frame.height - rect.origin.y) / self.cellSize.height)) - 1, self.grid.size.height  - 1
-        )
-        let columnStart = max(
-          Int(floor(rect.origin.x / self.cellSize.width)), 0
-        )
-        let columnEnd = min(
-          Int(ceil((rect.origin.x + rect.size.width) / self.cellSize.width)) - 1, self.grid.size.width - 1
-        )
-        
-        return Region(top: rowStart, bottom: rowEnd, left: columnStart, right: columnEnd)
+        let region = self.regionFor(rect: rect)
+        return (region.rowRange, region.columnRange)
       }
-      .map { region -> [RowRun] in
-        // Map Regions to RowRuns for drawing.
-        return region.rowRange
-          // Map each row in a Region to RowRuns
-          .map { row -> [RowRun] in
-            let columns = region.columnRange
-            let rowCells = self.grid.cells[row]
-            let startIndex = columns.startIndex
-            
-            var result = [ RowRun(row: row, range: startIndex...startIndex, attrs: rowCells[startIndex].attrs) ]
-            columns.forEach { idx in
-              if rowCells[idx].attrs == result.last!.attrs {
-                let last = result.popLast()!
-                result.append(RowRun(row: row, range: last.range.startIndex...idx, attrs: last.attrs))
-              } else {
-                result.append(RowRun(row: row, range: idx...idx, attrs: rowCells[idx].attrs))
-              }
-            }
-            
-            return result // All RowRuns for a row in a Region.
-          }               // All RowRuns for all rows in a Region grouped by row.
-          .flatMap { $0 } // Flattened RowRuns for a Region.
-      }                   // All RowRuns for all Regions grouped by Region.
-      .flatMap { $0 }     // Flattened RowRuns for all Regions.
+      .map { self.rowRunsFor(rowRange: $0, columnRange: $1) } // All RowRuns for all Regions grouped by their row range.
+      .flatMap { $0 }                                         // Flattened RowRuns for all Regions.
+  }
+
+  private func rowRunsFor(rowRange rowRange: Range<Int>, columnRange: Range<Int>) -> [RowRun] {
+    return rowRange
+      .map { (row) -> [RowRun] in
+        let rowCells = self.grid.cells[row]
+        let startIdx = columnRange.startIndex
+
+        var result = [ RowRun(row: row, range: startIdx...startIdx, attrs: rowCells[startIdx].attrs) ]
+        columnRange.forEach { idx in
+          if rowCells[idx].attrs == result.last!.attrs {
+            let last = result.popLast()!
+            result.append(RowRun(row: row, range: last.range.startIndex...idx, attrs: last.attrs))
+          } else {
+            result.append(RowRun(row: row, range: idx...idx, attrs: rowCells[idx].attrs))
+          }
+        }
+
+        return result // All RowRuns for a row in a Region.
+      }               // All RowRuns for all rows in a Region grouped by row.
+      .flatMap { $0 } // Flattened RowRuns for a Region.
+  }
+
+  private func regionFor(rect rect: CGRect) -> Region {
+    let rowStart = max(
+      Int(floor((self.frame.height - (rect.origin.y + rect.size.height)) / self.cellSize.height)), 0
+    )
+    let rowEnd = min(
+      Int(ceil((self.frame.height - rect.origin.y) / self.cellSize.height)) - 1, self.grid.size.height  - 1
+    )
+    let columnStart = max(
+      Int(floor(rect.origin.x / self.cellSize.width)), 0
+    )
+    let columnEnd = min(
+      Int(ceil((rect.origin.x + rect.size.width) / self.cellSize.width)) - 1, self.grid.size.width - 1
+    )
+
+    return Region(top: rowStart, bottom: rowEnd, left: columnStart, right: columnEnd)
   }
   
   func pointInViewFor(position position: Position) -> CGPoint {
