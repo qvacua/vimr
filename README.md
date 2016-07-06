@@ -28,7 +28,7 @@ carthage update --platform osx
 git submodule update --init
 cd neovim
 ln -s ../NeoVimXpc/local.mk .
-make libnvim # optional, the nvox target in Xcode also does this
+make CMAKE_BUILD_TYPE=Release libnvim # optional, the nvox target in Xcode also does this
 ```
 
 Run the `nvox`-target in Xcode.
