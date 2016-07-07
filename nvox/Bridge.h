@@ -4,3 +4,5 @@
  */
 
 #import <SwiftNeoVim/SwiftNeoVim.h>
+#import "XpcMatchMakerProtocol.h"
+#import "NeoVimXpcManagerProtocol.h"

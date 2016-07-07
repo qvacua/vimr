@@ -7,15 +7,28 @@ import Cocoa
 import PureLayout
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate, NeoVimViewDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NeoVimViewDelegate, NeoVimXpcManagerProtocol {
 
   @IBOutlet weak var window: NSWindow!
   
   var neoVim: NeoVim!
+  
+  private let xpcConnection = NSXPCConnection(serviceName: "com.qvacua.nvox.xpc-match-maker")
+  private var xpcMatchMaker: XpcMatchMakerProtocol!
+  
+  let serverUuid = NSUUID().UUIDString
+  var neoVimUuid = NSUUID().UUIDString
+  var task = NSTask()
+  let executablePath = NSBundle.mainBundle().bundlePath + "/Contents/XPCServices/DummyXpc.xpc/Contents/MacOS/DummyXpc"
 
   @IBAction func debugSomething(sender: AnyObject!) {
-    let font = NSFont(name: "Courier", size: 14)!
-    self.neoVim.view.setFont(font)
+//    NSLog("!!!!!!! launching: \(self.executablePath)")
+    self.task.launchPath = self.executablePath
+    self.task.arguments = [ self.serverUuid, self.neoVimUuid ]
+    self.task.launch()
+
+//    let font = NSFont(name: "Courier", size: 14)!
+//    self.neoVim.view.setFont(font)
   }
 
   func applicationDidFinishLaunching(aNotification: NSNotification) {
@@ -32,9 +45,27 @@ class AppDelegate: NSObject, NSApplicationDelegate, NeoVimViewDelegate {
     view.autoPinEdgesToSuperviewEdges()
 
     self.window.makeFirstResponder(self.neoVim.view)
+    
+    self.xpcConnection.remoteObjectInterface = NSXPCInterface(withProtocol: XpcMatchMakerProtocol.self)
+
+    self.xpcMatchMaker = self.xpcConnection.remoteObjectProxy as! XpcMatchMakerProtocol
+    
+    self.xpcConnection.exportedInterface = NSXPCInterface(withProtocol: NeoVimXpcManagerProtocol.self)
+    self.xpcConnection.exportedObject = self
+
+    self.xpcConnection.resume()
+    self.xpcMatchMaker.setServerUuid(serverUuid)
+  }
+
+  func shouldAcceptEndpoint(endpoint: NSXPCListenerEndpoint!, forNeoVimUuid neoVimUuid: String!) {
+    NSLog("ACCEPT: \(neoVimUuid)")
   }
 
   func setTitle(title: String) {
     self.window.title = title
+  }
+  
+  func applicationWillTerminate(notification: NSNotification) {
+    self.task.terminate()
   }
 }
