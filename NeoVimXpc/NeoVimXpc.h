@@ -14,6 +14,8 @@
  */
 - (void)probe;
 
+- (void)startServerWithUuid:(NSString * _Nonnull)uuid;
+
 - (void)vimInput:(NSString * _Nonnull)input;
 - (void)vimInputMarkedText:(NSString *_Nonnull)markedText;
 - (void)deleteCharacters:(NSInteger)count;

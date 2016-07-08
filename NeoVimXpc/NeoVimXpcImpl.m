@@ -438,7 +438,26 @@ static void neovim_input(void **argv) {
   }
 }
 
-@implementation NeoVimXpcImpl
+static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFDataRef data, void *info) {
+  NeoVimXpcImpl *wrapper = (NeoVimXpcImpl *) info;
+  NSData *responseData = [wrapper handleMessageWithId:msgid data:(NSData *) data];
+  if (responseData == NULL) {
+    return NULL;
+  }
+
+  return CFDataCreate(kCFAllocatorDefault, responseData.bytes, responseData.length);
+}
+
+@implementation NeoVimXpcImpl {
+  NSString *_uuid;
+
+  CFMessagePortRef _localServerPort;
+  CFRunLoopSourceRef _localServerRunLoopSrc;
+  NSThread *_localServerThread;
+
+  CFMessagePortRef _remoteServerPort;
+  NSRunLoop *_localServerRunLoop;
+}
 
 - (instancetype)initWithNeoVimUi:(id <NeoVimUiBridgeProtocol>)ui {
   self = [super init];
@@ -479,6 +498,19 @@ static void neovim_input(void **argv) {
 - (void)dealloc {
   [_neo_vim_osx_ui release];
   [_backspace release];
+
+  [_uuid release];
+
+  CFMessagePortInvalidate(_remoteServerPort);
+  CFRelease(_remoteServerPort);
+
+  CFMessagePortInvalidate(_localServerPort);
+  CFRelease(_localServerPort);
+  CFRelease(_localServerRunLoopSrc);
+
+  [_localServerThread cancel];
+  [_localServerRunLoop release];
+  [_localServerThread release];
 
   // FIXME: uv_thread_join(&thread) here after terminating neovim
 
@@ -523,7 +555,7 @@ static void neovim_input(void **argv) {
 
 - (void)resizeToWidth:(int)width height:(int)height {
   xpc_sync(^{
-    // see sigwinch_cb() and update_size() in tui.c
+
     set_ui_size(_xpc_ui_data->bridge, width, height);
     loop_schedule(&main_loop, event_create(1, refresh_ui, 0));
   });
@@ -594,6 +626,59 @@ static void neovim_input(void **argv) {
     printf("%c", (unsigned char) *(ptr++));
   }
   printf("'\n---------------------\n");
+}
+
+- (void)startServerWithUuid:(NSString * _Nonnull)uuid {
+  _uuid = [uuid retain];
+
+  _localServerThread = [[NSThread alloc] initWithTarget:self selector:@selector(runLocalServer) object:nil];
+  [_localServerThread start];
+
+  [self sendAckToMain];
+}
+
+- (NSData *)handleMessageWithId:(SInt32)msgid data:(NSData *)data {
+  if (msgid == 13) {
+    NSLog(@"Hey you!!!!!!!!!!!!!!");
+  }
+
+  return nil;
+}
+
+- (void)runLocalServer {
+  unsigned char shouldFree = false;
+  CFMessagePortContext localContext = {
+      .version = 0,
+      .info = (void *) self,
+      .retain = NULL,
+      .release = NULL,
+      .copyDescription = NULL
+  };
+  _localServerPort = CFMessagePortCreateLocal(
+      kCFAllocatorDefault,
+      (CFStringRef) _uuid,
+      local_server_callback,
+      &localContext,
+      &shouldFree
+  );
+  _localServerRunLoopSrc = CFMessagePortCreateRunLoopSource(kCFAllocatorDefault, _localServerPort, 0);
+  _localServerRunLoop = [[NSRunLoop currentRunLoop] retain];
+  CFRunLoopRef cfRunLoop = _localServerRunLoop.getCFRunLoop;
+  CFRunLoopAddSource(cfRunLoop, _localServerRunLoopSrc, kCFRunLoopCommonModes);
+  [_localServerRunLoop run];
+}
+
+- (void)sendAckToMain {
+  NSString *remoteServerName = [NSString stringWithFormat:@"com.qvacua.nvox.%@", _uuid];
+  NSLog(@"remote server name for neovim: %@", remoteServerName);
+  _remoteServerPort = CFMessagePortCreateRemote(kCFAllocatorDefault, (CFStringRef) remoteServerName);
+  NSData *data = [@"JO" dataUsingEncoding:NSUTF8StringEncoding];
+  SInt32 responseCode = CFMessagePortSendRequest(_remoteServerPort, 0, (CFDataRef) data, 10, 10, NULL, NULL);
+  if (responseCode == kCFMessagePortSuccess) {
+    NSLog(@"SUCESSSfully sent!");
+  } else {
+    NSLog(@"@@@@@@@@@@@@");
+  }
 }
 
 @end

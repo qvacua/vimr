@@ -27,6 +27,10 @@ public class NeoVim {
 
     // bring the XPC service to life
     self.xpc.probe()
+    let uuid = NSUUID().UUIDString
+    let wrapper = NeoVimUiWrapper(uuid: uuid, xpc: self.xpc)
+    wrapper.runLocalServer()
+    self.xpc.startServerWithUuid(uuid)
   }
 
   deinit {

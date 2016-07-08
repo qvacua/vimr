@@ -17,6 +17,7 @@
 
 - (void)vimInput:(NSString *_Nonnull)input;
 - (void)vimInputMarkedText:(NSString *_Nonnull)markedText;
+- (NSData *)handleMessageWithId:(SInt32)msgid data:(NSData *)data;
 - (void)deleteCharacters:(NSInteger)count;
 - (void)forceRedraw;
 

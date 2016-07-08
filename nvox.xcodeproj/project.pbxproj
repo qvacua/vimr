@@ -30,6 +30,8 @@
 		4B56F2951D29903F00C1F92E /* SwiftNeoVim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; };
 		4B56F29D1D29926600C1F92E /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; };
 		4B56F29E1D29926600C1F92E /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29C1D29926600C1F92E /* Quick.framework */; };
+		4B570DC21D303CAF006EDC21 /* NeoVimUiWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B570DC01D303CAF006EDC21 /* NeoVimUiWrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B570DC31D303CAF006EDC21 /* NeoVimUiWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B570DC11D303CAF006EDC21 /* NeoVimUiWrapper.m */; };
 		4B9A15241D2993DA009F9F67 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B9A15251D2993DA009F9F67 /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29C1D29926600C1F92E /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B9A15261D2993DF009F9F67 /* SwiftNeoVim.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -155,6 +157,8 @@
 		4B56F2941D29903F00C1F92E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B56F29B1D29926600C1F92E /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/Mac/Nimble.framework; sourceTree = SOURCE_ROOT; };
 		4B56F29C1D29926600C1F92E /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/Mac/Quick.framework; sourceTree = SOURCE_ROOT; };
+		4B570DC01D303CAF006EDC21 /* NeoVimUiWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimUiWrapper.h; sourceTree = "<group>"; };
+		4B570DC11D303CAF006EDC21 /* NeoVimUiWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimUiWrapper.m; sourceTree = "<group>"; };
 		4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaExtensions.swift; sourceTree = "<group>"; };
 		4BDF641A1D0887C100D47E1D /* TextDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextDrawer.h; sourceTree = "<group>"; };
 		4BDF641B1D0887C100D47E1D /* TextDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDrawer.m; sourceTree = "<group>"; };
@@ -369,6 +373,8 @@
 				4BEE79111D16D0AC0012EDAA /* NeoVimViewUiBridge.swift */,
 				4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */,
 				4BFF04831D21984100063EF3 /* NeoVimViewResponder.swift */,
+				4B570DC01D303CAF006EDC21 /* NeoVimUiWrapper.h */,
+				4B570DC11D303CAF006EDC21 /* NeoVimUiWrapper.m */,
 			);
 			name = NeoVimView;
 			sourceTree = "<group>";
@@ -381,6 +387,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B2A2C091D0352CB0074CE9A /* NeoVimUiBridgeProtocol.h in Headers */,
+				4B570DC21D303CAF006EDC21 /* NeoVimUiWrapper.h in Headers */,
 				4BDF641C1D0887C100D47E1D /* TextDrawer.h in Headers */,
 				4B2A2BFA1D0351810074CE9A /* SwiftNeoVim.h in Headers */,
 				4BB202DC1D0359B0001D130D /* NeoVimXpc.h in Headers */,
@@ -605,6 +612,7 @@
 				4BFF04841D21984100063EF3 /* NeoVimViewResponder.swift in Sources */,
 				1929B728262BAA14FC93F6AC /* NeoVimView.swift in Sources */,
 				4BEF363D1D1EC045002A9898 /* NeoVimViewEvents.swift in Sources */,
+				4B570DC31D303CAF006EDC21 /* NeoVimUiWrapper.m in Sources */,
 				4BEE79121D16D0AC0012EDAA /* NeoVimViewUiBridge.swift in Sources */,
 				4BEE79151D16D2100012EDAA /* DispatchUtils.swift in Sources */,
 				4BDF641D1D0887C100D47E1D /* TextDrawer.m in Sources */,
