@@ -9,8 +9,8 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
 
   public func neoVimUiIsReady() {
     DispatchUtils.gui {
-    NSLog("\(#function): \(self.frame)")
-    self.resizeNeoVimUiTo(size: self.frame.size)
+      NSLog("\(#function): \(self.frame)")
+      self.resizeNeoVimUiTo(size: self.frame.size)
     }
   }
 

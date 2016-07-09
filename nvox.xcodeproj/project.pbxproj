@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1929B728262BAA14FC93F6AC /* NeoVimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF00B466B40629C2AABE /* NeoVimView.swift */; };
 		1929BEB90DCDAF7A2B68C886 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA6128BFDD54CA92F46E /* ColorUtils.swift */; };
+		1929BF81A40B4154D3EA33CE /* server_ui.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B93013228985F509C8F6 /* server_ui.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4B1BB3531D16C5E500CA4FEF /* InputTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1BB3521D16C5E500CA4FEF /* InputTestView.swift */; };
 		4B2A2BEC1D02261F0074CE9A /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BE21D0225800074CE9A /* RxCocoa.framework */; };
 		4B2A2BED1D02261F0074CE9A /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BE21D0225800074CE9A /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -30,29 +31,43 @@
 		4B56F2951D29903F00C1F92E /* SwiftNeoVim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; };
 		4B56F29D1D29926600C1F92E /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; };
 		4B56F29E1D29926600C1F92E /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29C1D29926600C1F92E /* Quick.framework */; };
-		4B570DC21D303CAF006EDC21 /* NeoVimUiWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B570DC01D303CAF006EDC21 /* NeoVimUiWrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4B570DC31D303CAF006EDC21 /* NeoVimUiWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B570DC11D303CAF006EDC21 /* NeoVimUiWrapper.m */; };
+		4B570DC21D303CAF006EDC21 /* NeoVimAgent.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B570DC01D303CAF006EDC21 /* NeoVimAgent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B570DC31D303CAF006EDC21 /* NeoVimAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B570DC11D303CAF006EDC21 /* NeoVimAgent.m */; };
+		4B854A1D1D31447C00E08DE1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B854A1C1D31447C00E08DE1 /* main.m */; };
 		4B9A15241D2993DA009F9F67 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B9A15251D2993DA009F9F67 /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29C1D29926600C1F92E /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B9A15261D2993DF009F9F67 /* SwiftNeoVim.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BB202DC1D0359B0001D130D /* NeoVimXpc.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B2A2C211D0359650074CE9A /* NeoVimXpc.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BCADE081D11ED12004DAD0F /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */; };
+		4BDCFACB1D31449700F62670 /* NeoVimServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BDCFACA1D31449700F62670 /* NeoVimServer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		4BDCFACD1D3145AC00F62670 /* libnvim.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFACC1D3145AC00F62670 /* libnvim.a */; };
+		4BDCFAD51D3145E500F62670 /* libjemalloc_pic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFACE1D3145E500F62670 /* libjemalloc_pic.a */; };
+		4BDCFAD61D3145E500F62670 /* libjemalloc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFACF1D3145E500F62670 /* libjemalloc.a */; };
+		4BDCFAD71D3145E500F62670 /* libluajit-5.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD01D3145E500F62670 /* libluajit-5.1.a */; };
+		4BDCFAD81D3145E500F62670 /* libluv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD11D3145E500F62670 /* libluv.a */; };
+		4BDCFAD91D3145E500F62670 /* libmsgpack.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD21D3145E500F62670 /* libmsgpack.a */; };
+		4BDCFADA1D3145E500F62670 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD31D3145E500F62670 /* libuv.a */; };
+		4BDCFADB1D3145E500F62670 /* libvterm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD41D3145E500F62670 /* libvterm.a */; };
+		4BDCFAE11D31475000F62670 /* libjemalloc_pic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFACE1D3145E500F62670 /* libjemalloc_pic.a */; };
+		4BDCFAE21D31475100F62670 /* libjemalloc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFACF1D3145E500F62670 /* libjemalloc.a */; };
+		4BDCFAE31D31475300F62670 /* libluajit-5.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD01D3145E500F62670 /* libluajit-5.1.a */; };
+		4BDCFAE41D31475500F62670 /* libluv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD11D3145E500F62670 /* libluv.a */; };
+		4BDCFAE51D31475700F62670 /* libmsgpack.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD21D3145E500F62670 /* libmsgpack.a */; };
+		4BDCFAE61D31475900F62670 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD31D3145E500F62670 /* libuv.a */; };
+		4BDCFAE71D31475B00F62670 /* libvterm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD41D3145E500F62670 /* libvterm.a */; };
+		4BDCFAE81D31475D00F62670 /* libnvim.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFACC1D3145AC00F62670 /* libnvim.a */; };
+		4BDCFAEA1D31486E00F62670 /* NeoVimServerMsgIds.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDCFAE91D3147A300F62670 /* NeoVimServerMsgIds.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		4BDCFAEB1D3148A100F62670 /* NeoVimServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDCFAC91D31449700F62670 /* NeoVimServer.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		4BDCFAED1D315CB800F62670 /* runtime in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA6621D00157A00673FDF /* runtime */; };
+		4BDCFAEF1D315CF200F62670 /* NeoVimServer in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B854A1A1D31447C00E08DE1 /* NeoVimServer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		4BDF641C1D0887C100D47E1D /* TextDrawer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDF641A1D0887C100D47E1D /* TextDrawer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BDF641D1D0887C100D47E1D /* TextDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BDF641B1D0887C100D47E1D /* TextDrawer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		4BDF64241D08CAB000D47E1D /* MMCoreTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDF64221D08CAB000D47E1D /* MMCoreTextView.h */; };
+		4BDF64241D08CAB000D47E1D /* MMCoreTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDF64221D08CAB000D47E1D /* MMCoreTextView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		4BDF64251D08CAB000D47E1D /* MMCoreTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BDF64231D08CAB000D47E1D /* MMCoreTextView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5081CFF374B00673FDF /* AppDelegate.swift */; };
 		4BEBA50B1CFF374B00673FDF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50A1CFF374B00673FDF /* Assets.xcassets */; };
 		4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50C1CFF374B00673FDF /* MainMenu.xib */; };
 		4BEBA5191CFF374B00673FDF /* nvoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5181CFF374B00673FDF /* nvoxTests.swift */; };
-		4BEBA5391CFF5E5D00673FDF /* libnvim.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBA5381CFF5E5D00673FDF /* libnvim.a */; };
-		4BEBA5431CFF5EA500673FDF /* libjemalloc_pic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBA53A1CFF5EA500673FDF /* libjemalloc_pic.a */; };
-		4BEBA5441CFF5EA500673FDF /* libjemalloc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBA53B1CFF5EA500673FDF /* libjemalloc.a */; };
-		4BEBA5451CFF5EA500673FDF /* libluajit-5.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBA53C1CFF5EA500673FDF /* libluajit-5.1.a */; };
-		4BEBA5461CFF5EA500673FDF /* libluv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBA53D1CFF5EA500673FDF /* libluv.a */; };
-		4BEBA5471CFF5EA500673FDF /* libmsgpack.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBA53E1CFF5EA500673FDF /* libmsgpack.a */; };
-		4BEBA54A1CFF5EA500673FDF /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBA5411CFF5EA500673FDF /* libuv.a */; };
-		4BEBA54B1CFF5EA500673FDF /* libvterm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBA5421CFF5EA500673FDF /* libvterm.a */; };
 		4BEBA6631D00157A00673FDF /* runtime in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA6621D00157A00673FDF /* runtime */; };
 		4BEE79121D16D0AC0012EDAA /* NeoVimViewUiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEE79111D16D0AC0012EDAA /* NeoVimViewUiBridge.swift */; };
 		4BEE79151D16D2100012EDAA /* DispatchUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEE79141D16D2100012EDAA /* DispatchUtils.swift */; };
@@ -69,19 +84,26 @@
 			remoteGlobalIDString = 4B2A2BF61D0351810074CE9A;
 			remoteInfo = SwiftNeoVim;
 		};
-		4B2A2C0B1D0353090074CE9A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4BEBA4FD1CFF374B00673FDF /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4BEBA5261CFF3DFF00673FDF;
-			remoteInfo = NeoVimXpc;
-		};
 		4B56F2961D29903F00C1F92E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4BEBA4FD1CFF374B00673FDF /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 4B2A2BF61D0351810074CE9A;
 			remoteInfo = SwiftNeoVim;
+		};
+		4B854A041D3137B000E08DE1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4BEBA4FD1CFF374B00673FDF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4BEBA5261CFF3DFF00673FDF;
+			remoteInfo = NeoVimXpc;
+		};
+		4BDCFADD1D31465100F62670 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4BEBA4FD1CFF374B00673FDF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4B854A191D31447C00E08DE1;
+			remoteInfo = NeoVimServer;
 		};
 		4BEBA5151CFF374B00673FDF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -117,6 +139,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4B854A061D3137B500E08DE1 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				4BDCFAEF1D315CF200F62670 /* NeoVimServer in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B854A181D31447C00E08DE1 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 		4B9A15231D2993D0009F9F67 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -132,7 +173,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1929B1A51F076E088EF4CCA4 /* server_globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_globals.h; sourceTree = "<group>"; };
 		1929B1C144A199B48B20EDE8 /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
+		1929B65CCAD78DAC01538B98 /* server_ui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_ui.h; sourceTree = "<group>"; };
+		1929B93013228985F509C8F6 /* server_ui.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = server_ui.m; sourceTree = "<group>"; };
 		1929BA6128BFDD54CA92F46E /* ColorUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorUtils.swift; sourceTree = "<group>"; };
 		1929BF00B466B40629C2AABE /* NeoVimView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimView.swift; sourceTree = "<group>"; };
 		4B1BB3521D16C5E500CA4FEF /* InputTestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputTestView.swift; sourceTree = "<group>"; };
@@ -157,9 +201,23 @@
 		4B56F2941D29903F00C1F92E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B56F29B1D29926600C1F92E /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/Mac/Nimble.framework; sourceTree = SOURCE_ROOT; };
 		4B56F29C1D29926600C1F92E /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/Mac/Quick.framework; sourceTree = SOURCE_ROOT; };
-		4B570DC01D303CAF006EDC21 /* NeoVimUiWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimUiWrapper.h; sourceTree = "<group>"; };
-		4B570DC11D303CAF006EDC21 /* NeoVimUiWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimUiWrapper.m; sourceTree = "<group>"; };
+		4B570DC01D303CAF006EDC21 /* NeoVimAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimAgent.h; sourceTree = "<group>"; };
+		4B570DC11D303CAF006EDC21 /* NeoVimAgent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimAgent.m; sourceTree = "<group>"; };
+		4B854A1A1D31447C00E08DE1 /* NeoVimServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NeoVimServer; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B854A1C1D31447C00E08DE1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaExtensions.swift; sourceTree = "<group>"; };
+		4BDCFAC91D31449700F62670 /* NeoVimServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimServer.h; sourceTree = "<group>"; };
+		4BDCFACA1D31449700F62670 /* NeoVimServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimServer.m; sourceTree = "<group>"; };
+		4BDCFACC1D3145AC00F62670 /* libnvim.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnvim.a; path = neovim/build/lib/libnvim.a; sourceTree = SOURCE_ROOT; };
+		4BDCFACE1D3145E500F62670 /* libjemalloc_pic.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjemalloc_pic.a; path = neovim/.deps/usr/lib/libjemalloc_pic.a; sourceTree = SOURCE_ROOT; };
+		4BDCFACF1D3145E500F62670 /* libjemalloc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjemalloc.a; path = neovim/.deps/usr/lib/libjemalloc.a; sourceTree = SOURCE_ROOT; };
+		4BDCFAD01D3145E500F62670 /* libluajit-5.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libluajit-5.1.a"; path = "neovim/.deps/usr/lib/libluajit-5.1.a"; sourceTree = SOURCE_ROOT; };
+		4BDCFAD11D3145E500F62670 /* libluv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluv.a; path = neovim/.deps/usr/lib/libluv.a; sourceTree = SOURCE_ROOT; };
+		4BDCFAD21D3145E500F62670 /* libmsgpack.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmsgpack.a; path = neovim/.deps/usr/lib/libmsgpack.a; sourceTree = SOURCE_ROOT; };
+		4BDCFAD31D3145E500F62670 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv.a; path = neovim/.deps/usr/lib/libuv.a; sourceTree = SOURCE_ROOT; };
+		4BDCFAD41D3145E500F62670 /* libvterm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvterm.a; path = neovim/.deps/usr/lib/libvterm.a; sourceTree = SOURCE_ROOT; };
+		4BDCFAE01D31471500F62670 /* nvim */ = {isa = PBXFileReference; lastKnownFileType = folder; name = nvim; path = neovim/src/nvim; sourceTree = SOURCE_ROOT; };
+		4BDCFAE91D3147A300F62670 /* NeoVimServerMsgIds.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NeoVimServerMsgIds.h; sourceTree = "<group>"; };
 		4BDF641A1D0887C100D47E1D /* TextDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextDrawer.h; sourceTree = "<group>"; };
 		4BDF641B1D0887C100D47E1D /* TextDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDrawer.m; sourceTree = "<group>"; };
 		4BDF64221D08CAB000D47E1D /* MMCoreTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCoreTextView.h; sourceTree = "<group>"; };
@@ -173,15 +231,6 @@
 		4BEBA5181CFF374B00673FDF /* nvoxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = nvoxTests.swift; sourceTree = "<group>"; };
 		4BEBA51A1CFF374B00673FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BEBA5271CFF3DFF00673FDF /* NeoVimXpc.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = NeoVimXpc.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BEBA5381CFF5E5D00673FDF /* libnvim.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnvim.a; path = neovim/build/lib/libnvim.a; sourceTree = SOURCE_ROOT; };
-		4BEBA53A1CFF5EA500673FDF /* libjemalloc_pic.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjemalloc_pic.a; path = neovim/.deps/usr/lib/libjemalloc_pic.a; sourceTree = SOURCE_ROOT; };
-		4BEBA53B1CFF5EA500673FDF /* libjemalloc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjemalloc.a; path = neovim/.deps/usr/lib/libjemalloc.a; sourceTree = SOURCE_ROOT; };
-		4BEBA53C1CFF5EA500673FDF /* libluajit-5.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libluajit-5.1.a"; path = "neovim/.deps/usr/lib/libluajit-5.1.a"; sourceTree = SOURCE_ROOT; };
-		4BEBA53D1CFF5EA500673FDF /* libluv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluv.a; path = neovim/.deps/usr/lib/libluv.a; sourceTree = SOURCE_ROOT; };
-		4BEBA53E1CFF5EA500673FDF /* libmsgpack.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmsgpack.a; path = neovim/.deps/usr/lib/libmsgpack.a; sourceTree = SOURCE_ROOT; };
-		4BEBA5411CFF5EA500673FDF /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv.a; path = neovim/.deps/usr/lib/libuv.a; sourceTree = SOURCE_ROOT; };
-		4BEBA5421CFF5EA500673FDF /* libvterm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvterm.a; path = neovim/.deps/usr/lib/libvterm.a; sourceTree = SOURCE_ROOT; };
-		4BEBA6611D0014A400673FDF /* nvim */ = {isa = PBXFileReference; lastKnownFileType = folder; name = nvim; path = neovim/src/nvim; sourceTree = SOURCE_ROOT; };
 		4BEBA6621D00157A00673FDF /* runtime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = runtime; path = neovim/runtime; sourceTree = SOURCE_ROOT; };
 		4BEE79111D16D0AC0012EDAA /* NeoVimViewUiBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimViewUiBridge.swift; sourceTree = "<group>"; };
 		4BEE79141D16D2100012EDAA /* DispatchUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchUtils.swift; sourceTree = "<group>"; };
@@ -208,6 +257,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4B854A171D31447C00E08DE1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BDCFACD1D3145AC00F62670 /* libnvim.a in Frameworks */,
+				4BDCFAD51D3145E500F62670 /* libjemalloc_pic.a in Frameworks */,
+				4BDCFAD81D3145E500F62670 /* libluv.a in Frameworks */,
+				4BDCFAD61D3145E500F62670 /* libjemalloc.a in Frameworks */,
+				4BDCFADA1D3145E500F62670 /* libuv.a in Frameworks */,
+				4BDCFAD91D3145E500F62670 /* libmsgpack.a in Frameworks */,
+				4BDCFADB1D3145E500F62670 /* libvterm.a in Frameworks */,
+				4BDCFAD71D3145E500F62670 /* libluajit-5.1.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4BEBA5021CFF374B00673FDF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -230,14 +294,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BEBA54A1CFF5EA500673FDF /* libuv.a in Frameworks */,
-				4BEBA5391CFF5E5D00673FDF /* libnvim.a in Frameworks */,
-				4BEBA5431CFF5EA500673FDF /* libjemalloc_pic.a in Frameworks */,
-				4BEBA5461CFF5EA500673FDF /* libluv.a in Frameworks */,
-				4BEBA54B1CFF5EA500673FDF /* libvterm.a in Frameworks */,
-				4BEBA5441CFF5EA500673FDF /* libjemalloc.a in Frameworks */,
-				4BEBA5471CFF5EA500673FDF /* libmsgpack.a in Frameworks */,
-				4BEBA5451CFF5EA500673FDF /* libluajit-5.1.a in Frameworks */,
+				4BDCFAE31D31475300F62670 /* libluajit-5.1.a in Frameworks */,
+				4BDCFAE51D31475700F62670 /* libmsgpack.a in Frameworks */,
+				4BDCFAE71D31475B00F62670 /* libvterm.a in Frameworks */,
+				4BDCFAE61D31475900F62670 /* libuv.a in Frameworks */,
+				4BDCFAE11D31475000F62670 /* libjemalloc_pic.a in Frameworks */,
+				4BDCFAE81D31475D00F62670 /* libnvim.a in Frameworks */,
+				4BDCFAE41D31475500F62670 /* libluv.a in Frameworks */,
+				4BDCFAE21D31475100F62670 /* libjemalloc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,13 +324,13 @@
 		4B2A2BF81D0351810074CE9A /* SwiftNeoVim */ = {
 			isa = PBXGroup;
 			children = (
+				4B854A151D31444800E08DE1 /* resources */,
+				4BEE79131D16D1C60012EDAA /* NeoVimView */,
 				4B2A2C0E1D0353E30074CE9A /* NeoVim.swift */,
 				4BEE79161D16D3800012EDAA /* CellAttributes.swift */,
-				4BEE79131D16D1C60012EDAA /* NeoVimView */,
 				1929BA6128BFDD54CA92F46E /* ColorUtils.swift */,
 				4B2A2C061D0352CB0074CE9A /* NeoVimUiBridgeProtocol.h */,
 				4B2A2BF91D0351810074CE9A /* SwiftNeoVim.h */,
-				4B2A2BFB1D0351810074CE9A /* Info.plist */,
 				4BDF641A1D0887C100D47E1D /* TextDrawer.h */,
 				4BDF641B1D0887C100D47E1D /* TextDrawer.m */,
 				4BDF64221D08CAB000D47E1D /* MMCoreTextView.h */,
@@ -288,9 +352,50 @@
 			path = SwiftNeoVimTests;
 			sourceTree = "<group>";
 		};
+		4B854A151D31444800E08DE1 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				4B2A2BFB1D0351810074CE9A /* Info.plist */,
+				4BEBA6621D00157A00673FDF /* runtime */,
+			);
+			name = resources;
+			sourceTree = "<group>";
+		};
+		4B854A1B1D31447C00E08DE1 /* NeoVimServer */ = {
+			isa = PBXGroup;
+			children = (
+				4BDCFADC1D3145EA00F62670 /* lib */,
+				4BDCFAE01D31471500F62670 /* nvim */,
+				4BDCFAE91D3147A300F62670 /* NeoVimServerMsgIds.h */,
+				4BDCFAC91D31449700F62670 /* NeoVimServer.h */,
+				4BDCFACA1D31449700F62670 /* NeoVimServer.m */,
+				4B854A1C1D31447C00E08DE1 /* main.m */,
+				1929B93013228985F509C8F6 /* server_ui.m */,
+				1929B65CCAD78DAC01538B98 /* server_ui.h */,
+				1929B1A51F076E088EF4CCA4 /* server_globals.h */,
+			);
+			path = NeoVimServer;
+			sourceTree = "<group>";
+		};
+		4BDCFADC1D3145EA00F62670 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				4BDCFACE1D3145E500F62670 /* libjemalloc_pic.a */,
+				4BDCFACF1D3145E500F62670 /* libjemalloc.a */,
+				4BDCFAD01D3145E500F62670 /* libluajit-5.1.a */,
+				4BDCFAD11D3145E500F62670 /* libluv.a */,
+				4BDCFAD21D3145E500F62670 /* libmsgpack.a */,
+				4BDCFAD31D3145E500F62670 /* libuv.a */,
+				4BDCFAD41D3145E500F62670 /* libvterm.a */,
+				4BDCFACC1D3145AC00F62670 /* libnvim.a */,
+			);
+			name = lib;
+			sourceTree = "<group>";
+		};
 		4BEBA4FC1CFF374B00673FDF = {
 			isa = PBXGroup;
 			children = (
+				4B854A1B1D31447C00E08DE1 /* NeoVimServer */,
 				4B2A2BE61D0225840074CE9A /* Frameworks */,
 				4BEBA5071CFF374B00673FDF /* nvox */,
 				4BEBA5171CFF374B00673FDF /* nvoxTests */,
@@ -309,6 +414,7 @@
 				4BEBA5271CFF3DFF00673FDF /* NeoVimXpc.xpc */,
 				4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */,
 				4B56F2901D29903F00C1F92E /* SwiftNeoVimTests.xctest */,
+				4B854A1A1D31447C00E08DE1 /* NeoVimServer */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -342,27 +448,9 @@
 				4B2A2C231D0359650074CE9A /* NeoVimXpcImpl.m */,
 				4B2A2C201D0359650074CE9A /* main.m */,
 				4B2A2C1F1D0359650074CE9A /* Info.plist */,
-				4BEBA5371CFF5E4100673FDF /* libs */,
-				4BEBA6611D0014A400673FDF /* nvim */,
-				4BEBA6621D00157A00673FDF /* runtime */,
 				1929B1C144A199B48B20EDE8 /* Logging.h */,
 			);
 			path = NeoVimXpc;
-			sourceTree = "<group>";
-		};
-		4BEBA5371CFF5E4100673FDF /* libs */ = {
-			isa = PBXGroup;
-			children = (
-				4BEBA53A1CFF5EA500673FDF /* libjemalloc_pic.a */,
-				4BEBA53B1CFF5EA500673FDF /* libjemalloc.a */,
-				4BEBA53C1CFF5EA500673FDF /* libluajit-5.1.a */,
-				4BEBA53D1CFF5EA500673FDF /* libluv.a */,
-				4BEBA53E1CFF5EA500673FDF /* libmsgpack.a */,
-				4BEBA5411CFF5EA500673FDF /* libuv.a */,
-				4BEBA5421CFF5EA500673FDF /* libvterm.a */,
-				4BEBA5381CFF5E5D00673FDF /* libnvim.a */,
-			);
-			name = libs;
 			sourceTree = "<group>";
 		};
 		4BEE79131D16D1C60012EDAA /* NeoVimView */ = {
@@ -373,8 +461,8 @@
 				4BEE79111D16D0AC0012EDAA /* NeoVimViewUiBridge.swift */,
 				4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */,
 				4BFF04831D21984100063EF3 /* NeoVimViewResponder.swift */,
-				4B570DC01D303CAF006EDC21 /* NeoVimUiWrapper.h */,
-				4B570DC11D303CAF006EDC21 /* NeoVimUiWrapper.m */,
+				4B570DC01D303CAF006EDC21 /* NeoVimAgent.h */,
+				4B570DC11D303CAF006EDC21 /* NeoVimAgent.m */,
 			);
 			name = NeoVimView;
 			sourceTree = "<group>";
@@ -387,11 +475,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B2A2C091D0352CB0074CE9A /* NeoVimUiBridgeProtocol.h in Headers */,
-				4B570DC21D303CAF006EDC21 /* NeoVimUiWrapper.h in Headers */,
+				4B570DC21D303CAF006EDC21 /* NeoVimAgent.h in Headers */,
 				4BDF641C1D0887C100D47E1D /* TextDrawer.h in Headers */,
 				4B2A2BFA1D0351810074CE9A /* SwiftNeoVim.h in Headers */,
 				4BB202DC1D0359B0001D130D /* NeoVimXpc.h in Headers */,
+				4BDCFAEB1D3148A100F62670 /* NeoVimServer.h in Headers */,
 				4BDF64241D08CAB000D47E1D /* MMCoreTextView.h in Headers */,
+				4BDCFAEA1D31486E00F62670 /* NeoVimServerMsgIds.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,11 +497,13 @@
 				4B2A2BF41D0351810074CE9A /* Headers */,
 				4B2A2BF51D0351810074CE9A /* Resources */,
 				4B2A2C031D03527D0074CE9A /* CopyFiles */,
+				4B854A061D3137B500E08DE1 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				4B2A2C0C1D0353090074CE9A /* PBXTargetDependency */,
+				4BDCFADE1D31465100F62670 /* PBXTargetDependency */,
+				4B854A051D3137B000E08DE1 /* PBXTargetDependency */,
 			);
 			name = SwiftNeoVim;
 			productName = SwiftNeoVim;
@@ -436,6 +528,23 @@
 			productName = SwiftNeoVimTests;
 			productReference = 4B56F2901D29903F00C1F92E /* SwiftNeoVimTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		4B854A191D31447C00E08DE1 /* NeoVimServer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4B854A1E1D31447C00E08DE1 /* Build configuration list for PBXNativeTarget "NeoVimServer" */;
+			buildPhases = (
+				4B854A161D31447C00E08DE1 /* Sources */,
+				4B854A171D31447C00E08DE1 /* Frameworks */,
+				4B854A181D31447C00E08DE1 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NeoVimServer;
+			productName = NeoVimServer;
+			productReference = 4B854A1A1D31447C00E08DE1 /* NeoVimServer */;
+			productType = "com.apple.product-type.tool";
 		};
 		4BEBA5041CFF374B00673FDF /* nvox */ = {
 			isa = PBXNativeTarget;
@@ -508,6 +617,9 @@
 					4B56F28F1D29903F00C1F92E = {
 						CreatedOnToolsVersion = 7.3.1;
 					};
+					4B854A191D31447C00E08DE1 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
 					4BEBA5041CFF374B00673FDF = {
 						CreatedOnToolsVersion = 7.3.1;
 					};
@@ -538,6 +650,7 @@
 				4BEBA5261CFF3DFF00673FDF /* NeoVimXpc */,
 				4B2A2BF61D0351810074CE9A /* SwiftNeoVim */,
 				4B56F28F1D29903F00C1F92E /* SwiftNeoVimTests */,
+				4B854A191D31447C00E08DE1 /* NeoVimServer */,
 			);
 		};
 /* End PBXProject section */
@@ -547,6 +660,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BDCFAED1D315CB800F62670 /* runtime in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -612,7 +726,7 @@
 				4BFF04841D21984100063EF3 /* NeoVimViewResponder.swift in Sources */,
 				1929B728262BAA14FC93F6AC /* NeoVimView.swift in Sources */,
 				4BEF363D1D1EC045002A9898 /* NeoVimViewEvents.swift in Sources */,
-				4B570DC31D303CAF006EDC21 /* NeoVimUiWrapper.m in Sources */,
+				4B570DC31D303CAF006EDC21 /* NeoVimAgent.m in Sources */,
 				4BEE79121D16D0AC0012EDAA /* NeoVimViewUiBridge.swift in Sources */,
 				4BEE79151D16D2100012EDAA /* DispatchUtils.swift in Sources */,
 				4BDF641D1D0887C100D47E1D /* TextDrawer.m in Sources */,
@@ -627,6 +741,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B56F2931D29903F00C1F92E /* SwiftNeoVimTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B854A161D31447C00E08DE1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BDCFACB1D31449700F62670 /* NeoVimServer.m in Sources */,
+				4B854A1D1D31447C00E08DE1 /* main.m in Sources */,
+				1929BF81A40B4154D3EA33CE /* server_ui.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -663,15 +787,20 @@
 			target = 4B2A2BF61D0351810074CE9A /* SwiftNeoVim */;
 			targetProxy = 4B2A2BFC1D0351810074CE9A /* PBXContainerItemProxy */;
 		};
-		4B2A2C0C1D0353090074CE9A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4BEBA5261CFF3DFF00673FDF /* NeoVimXpc */;
-			targetProxy = 4B2A2C0B1D0353090074CE9A /* PBXContainerItemProxy */;
-		};
 		4B56F2971D29903F00C1F92E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4B2A2BF61D0351810074CE9A /* SwiftNeoVim */;
 			targetProxy = 4B56F2961D29903F00C1F92E /* PBXContainerItemProxy */;
+		};
+		4B854A051D3137B000E08DE1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4BEBA5261CFF3DFF00673FDF /* NeoVimXpc */;
+			targetProxy = 4B854A041D3137B000E08DE1 /* PBXContainerItemProxy */;
+		};
+		4BDCFADE1D31465100F62670 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4B854A191D31447C00E08DE1 /* NeoVimServer */;
+			targetProxy = 4BDCFADD1D31465100F62670 /* PBXContainerItemProxy */;
 		};
 		4BEBA5161CFF374B00673FDF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -765,6 +894,52 @@
 				INFOPLIST_FILE = SwiftNeoVimTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.SwiftNeoVimTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		4B854A1F1D31447C00E08DE1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"CUSTOM_UI=1",
+					"INCLUDE_GENERATED_DECLARATIONS=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/neovim/build/include",
+					"$(PROJECT_DIR)/neovim/src",
+					"$(PROJECT_DIR)/neovim/.deps/usr/include",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/neovim/build/lib",
+					"$(PROJECT_DIR)/neovim/.deps/usr/lib",
+				);
+				OTHER_LDFLAGS = (
+					/usr/local/opt/gettext/lib/libintl.a,
+					"-liconv",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		4B854A201D31447C00E08DE1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/neovim/build/include",
+					"$(PROJECT_DIR)/neovim/src",
+					"$(PROJECT_DIR)/neovim/.deps/usr/include",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/neovim/build/lib",
+					"$(PROJECT_DIR)/neovim/.deps/usr/lib",
+				);
+				OTHER_LDFLAGS = (
+					/usr/local/opt/gettext/lib/libintl.a,
+					"-liconv",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -990,6 +1165,15 @@
 			buildConfigurations = (
 				4B56F2981D29903F00C1F92E /* Debug */,
 				4B56F2991D29903F00C1F92E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4B854A1E1D31447C00E08DE1 /* Build configuration list for PBXNativeTarget "NeoVimServer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B854A1F1D31447C00E08DE1 /* Debug */,
+				4B854A201D31447C00E08DE1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

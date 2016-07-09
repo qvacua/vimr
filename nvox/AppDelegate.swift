@@ -24,14 +24,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NeoVimViewDelegate {
 //    self.window.makeFirstResponder(testView)
 
     self.neoVim = NeoVim()
-    self.neoVim.view.delegate = self
-
-    let view = self.neoVim.view
-    view.translatesAutoresizingMaskIntoConstraints = false
-    self.window.contentView?.addSubview(self.neoVim.view)
-    view.autoPinEdgesToSuperviewEdges()
-
-    self.window.makeFirstResponder(self.neoVim.view)
   }
 
   func setTitle(title: String) {

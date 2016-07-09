@@ -6,34 +6,11 @@
 import Foundation
 
 public class NeoVim {
-
-  private static let qXpcName = "com.qvacua.nvox.xpc"
-
-  private let xpcConnection: NSXPCConnection = NSXPCConnection(serviceName: NeoVim.qXpcName)
   
-  public let xpc: NeoVimXpc
-  public let view: NeoVimView
+  private let agent: NeoVimAgent
 
   public init() {
-    self.xpcConnection.remoteObjectInterface = NSXPCInterface(withProtocol: NeoVimXpc.self)
-
-    self.xpc = self.xpcConnection.remoteObjectProxy as! NeoVimXpc
-    self.view = NeoVimView(xpc: self.xpc)
-    
-    self.xpcConnection.exportedInterface = NSXPCInterface(withProtocol: NeoVimUiBridgeProtocol.self)
-    self.xpcConnection.exportedObject = self.view
-
-    self.xpcConnection.resume()
-
-    // bring the XPC service to life
-    self.xpc.probe()
     let uuid = NSUUID().UUIDString
-    let wrapper = NeoVimUiWrapper(uuid: uuid, xpc: self.xpc)
-    wrapper.runLocalServer()
-    self.xpc.startServerWithUuid(uuid)
-  }
-
-  deinit {
-    self.xpcConnection.invalidate()
+    self.agent = NeoVimAgent(uuid: uuid)
   }
 }
