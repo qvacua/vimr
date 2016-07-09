@@ -5,7 +5,7 @@
 
 #import <Foundation/Foundation.h>
 #import "NeoVimUiBridgeProtocol.h"
-#import "NeoVimServerMsgIds.h"
+#import "NeoVimMsgIds.h"
 
 
 @interface NeoVimServer : NSObject
@@ -14,7 +14,6 @@
              localServerName:(NSString *)localServerName
             remoteServerName:(NSString *)remoteServerName;
 
-- (NSData *)handleMessageWithId:(SInt32)msgid data:(NSData *)data;
 - (void)sendMessageWithId:(NeoVimServerMsgId)msgid;
 - (void)sendMessageWithId:(NeoVimServerMsgId)msgid data:(NSData *)data;
 - (void)notifyReadiness;

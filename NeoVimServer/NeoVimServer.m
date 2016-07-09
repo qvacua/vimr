@@ -4,21 +4,35 @@
  */
 
 #import "NeoVimServer.h"
-#import "NeoVimServerMsgIds.h"
+#import "NeoVimMsgIds.h"
 #import "server_globals.h"
 
 
 static const double qTimeout = 10.0;
 
+#define data_to_array(type)                                               \
+static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
+  NSUInteger length = count * sizeof( type );                             \
+  if (data.length != length) {                                            \
+    return NULL;                                                          \
+  }                                                                       \
+  return ( type *) data.bytes;                                            \
+}
+
+data_to_array(int)
+data_to_array(NSInteger)
+
+@interface NeoVimServer ()
+
+- (void)handleMessageWithId:(SInt32)msgid data:(NSData *)data;
+
+@end
+
 static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFDataRef data, void *info) {
   @autoreleasepool {
     NeoVimServer *neoVimServer = (NeoVimServer *) info;
-    NSData *responseData = [neoVimServer handleMessageWithId:msgid data:(NSData *) data];
-    if (responseData == NULL) {
-      return NULL;
-    }
-
-    return CFDataCreate(kCFAllocatorDefault, responseData.bytes, responseData.length);
+    [neoVimServer handleMessageWithId:msgid data:(NSData *) data];
+    return NULL;
   }
 }
 
@@ -72,35 +86,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [super dealloc];
 }
 
-- (NSData *)handleMessageWithId:(SInt32)msgid data:(NSData *)data {
-  NSLog(@"msg received: %d -> %@", msgid, data);
-
-  switch (msgid) {
-
-    case NeoVimAgendMsgIdAgentReady:
-      start_neovim();
-      return nil;
-
-    case NeoVimAgentMsgIdInput:
-      return nil;
-
-    case NeoVimAgentMsgIdInputMarked:
-      return nil;
-
-    case NeoVimAgentMsgIdDelete:
-      return nil;
-
-    case NeoVimAgentMsgIdResize:
-      return nil;
-
-    case NeoVimAgentMsgIdRedraw:
-      return nil;
-
-    default:
-      return nil;
-  }
-}
-
 - (void)runLocalServer {
   @autoreleasepool {
     unsigned char shouldFree = false;
@@ -135,6 +120,11 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (void)sendMessageWithId:(NeoVimServerMsgId)msgid data:(NSData *)data {
+  if (_remoteServerPort == NULL) {
+    NSLog(@"WARNING: remote server is null");
+    return;
+  }
+
   SInt32 responseCode = CFMessagePortSendRequest(
       _remoteServerPort, msgid, (CFDataRef) data, qTimeout, qTimeout, NULL, NULL
   );
@@ -148,6 +138,53 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
 - (void)notifyReadiness {
   [self sendMessageWithId:NeoVimServerMsgIdServerReady data:nil];
+}
+
+- (void)handleMessageWithId:(SInt32)msgid data:(NSData *)data {
+//  NSLog(@"msg received: %d -> %@", msgid, data);
+
+  switch (msgid) {
+
+    case NeoVimAgentMsgIdAgentReady:
+      start_neovim();
+      return;
+
+    case NeoVimAgentMsgIdInput: {
+      NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+      do_vim_input(string);
+      [string release];
+
+      return;
+    }
+
+    case NeoVimAgentMsgIdInputMarked: {
+      NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+      do_vim_input_marked_text(string);
+      [string release];
+
+      return;
+    }
+
+    case NeoVimAgentMsgIdDelete: {
+      NSInteger *values = data_to_NSInteger_array(data, 1);
+      do_delete(values[0]);
+      return;
+    }
+
+    case NeoVimAgentMsgIdResize: {
+      int *values = data_to_int_array(data, 2);
+      NSLog(@"!!! server rcv resize: %d:%d", values[0], values[1]);
+      do_resize(values[0], values[1]);
+      return;
+    }
+
+    case NeoVimAgentMsgIdRedraw:
+      do_force_redraw();
+      return;
+
+    default:
+      return;
+  }
 }
 
 @end

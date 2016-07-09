@@ -72,8 +72,8 @@ public class NeoVimView: NSView {
   var yOffset = CGFloat(0)
   
   private let drawer: TextDrawer
-
-  let xpc: NeoVimXpc
+  
+  let agent = NeoVimAgent(uuid: NSUUID().UUIDString)
 
   var markedText: String?
   
@@ -91,9 +91,7 @@ public class NeoVimView: NSView {
 
   let grid = Grid()
 
-  init(frame rect: NSRect = CGRect.zero, xpc: NeoVimXpc) {
-    self.xpc = xpc
-    
+  override init(frame rect: NSRect = CGRect.zero) {
     self.font = NSFont(name: "Menlo", size: 16)!
     self.drawer = TextDrawer(font: font)
     
@@ -103,6 +101,15 @@ public class NeoVimView: NSView {
     self.cellSize = self.drawer.cellSize
     self.descent = self.drawer.descent
     self.leading = self.drawer.leading
+
+    // We cannot set bridge in init since self is not available before super.init()...
+    self.agent.bridge = self
+    self.agent.establishLocalServer()
+  }
+
+  // deinit would have been ideal for this, but if you quit the app, deinit does not necessarily get called...
+  public func cleanUp() {
+    self.agent.cleanUp()
   }
 
   public func debugInfo() {
@@ -150,7 +157,7 @@ public class NeoVimView: NSView {
     self.xOffset = floor((size.width - self.cellSize.width * CGFloat(discreteSize.width)) / 2)
     self.yOffset = floor((size.height - self.cellSize.height * CGFloat(discreteSize.height)) / 2)
 
-    self.xpc.resizeToWidth(Int32(discreteSize.width), height: Int32(discreteSize.height))
+    self.agent.resizeToWidth(Int32(discreteSize.width), height: Int32(discreteSize.height))
   }
 
   override public func drawRect(dirtyUnionRect: NSRect) {

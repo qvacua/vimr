@@ -9,50 +9,50 @@ import Cocoa
 extension NeoVimView {
 
   public override func moveForward(sender: AnyObject?) {
-    self.xpc.vimInput(self.vimNamedKeys("C-f"))
+    self.agent.vimInput(self.vimNamedKeys("C-f"))
   }
 
   public override func moveBackward(sender: AnyObject?) {
-    self.xpc.vimInput(self.vimNamedKeys("C-b"))
+    self.agent.vimInput(self.vimNamedKeys("C-b"))
   }
 
   public override func moveRight(sender: AnyObject?) {
-    self.xpc.vimInput(self.vimNamedKeys("Right"))
+    self.agent.vimInput(self.vimNamedKeys("Right"))
   }
 
   public override func moveLeft(sender: AnyObject?) {
-    self.xpc.vimInput(self.vimNamedKeys("Left"))
+    self.agent.vimInput(self.vimNamedKeys("Left"))
   }
 
   public override func moveUp(sender: AnyObject?) {
-    self.xpc.vimInput(self.vimNamedKeys("Up"))
+    self.agent.vimInput(self.vimNamedKeys("Up"))
   }
 
   public override func moveDown(sender: AnyObject?) {
-    self.xpc.vimInput(self.vimNamedKeys("Down"))
+    self.agent.vimInput(self.vimNamedKeys("Down"))
   }
 
   public override func deleteForward(sender: AnyObject?) {
-    self.xpc.vimInput(self.vimNamedKeys("DEL"))
+    self.agent.vimInput(self.vimNamedKeys("DEL"))
   }
 
   public override func deleteBackward(sender: AnyObject?) {
-    self.xpc.vimInput(self.vimNamedKeys("BS"))
+    self.agent.vimInput(self.vimNamedKeys("BS"))
   }
 
   public override func scrollPageUp(sender: AnyObject?) {
-    self.xpc.vimInput(self.vimNamedKeys("PageUp"))
+    self.agent.vimInput(self.vimNamedKeys("PageUp"))
   }
 
   public override func scrollPageDown(sender: AnyObject?) {
-    self.xpc.vimInput(self.vimNamedKeys("PageDown"))
+    self.agent.vimInput(self.vimNamedKeys("PageDown"))
   }
 
   public override func scrollToBeginningOfDocument(sender: AnyObject?) {
-    self.xpc.vimInput(self.vimNamedKeys("Home"))
+    self.agent.vimInput(self.vimNamedKeys("Home"))
   }
 
   public override func scrollToEndOfDocument(sender: AnyObject?) {
-    self.xpc.vimInput(self.vimNamedKeys("End"))
+    self.agent.vimInput(self.vimNamedKeys("End"))
   }
 }

@@ -237,6 +237,7 @@ static void xpc_ui_set_scroll_region(UI *ui __unused, int top, int bot, int left
 static void xpc_ui_scroll(UI *ui __unused, int count) {
   queue(^{
     int value = count;
+    NSLog(@"ui_scroll: %d", count);
     NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdScroll data:data];
     [data release];
@@ -321,7 +322,7 @@ static void xpc_ui_update_fg(UI *ui __unused, int fg) {
     if (fg == -1) {
       value = _default_foreground;
       NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdScroll data:data];
+      [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetForeground data:data];
       [data release];
 
       return;
@@ -331,7 +332,7 @@ static void xpc_ui_update_fg(UI *ui __unused, int fg) {
 
     value = fg;
     NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdScroll data:data];
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetForeground data:data];
     [data release];
   });
 }
@@ -343,7 +344,7 @@ static void xpc_ui_update_bg(UI *ui __unused, int bg) {
     if (bg == -1) {
       value = _default_background;
       NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdScroll data:data];
+      [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetBackground data:data];
       [data release];
 
       return;
@@ -352,7 +353,7 @@ static void xpc_ui_update_bg(UI *ui __unused, int bg) {
     _default_background = pun_type(unsigned int, bg);
     value = bg;
     NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdScroll data:data];
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetBackground data:data];
     [data release];
   });
 }
@@ -364,7 +365,7 @@ static void xpc_ui_update_sp(UI *ui __unused, int sp) {
     if (sp == -1) {
       value = _default_special;
       NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdScroll data:data];
+      [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetSpecial data:data];
       [data release];
 
       return;
@@ -373,7 +374,7 @@ static void xpc_ui_update_sp(UI *ui __unused, int sp) {
     _default_special = pun_type(unsigned int, sp);
     value = sp;
     NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdScroll data:data];
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetSpecial data:data];
     [data release];
   });
 }
@@ -510,3 +511,103 @@ void start_neovim() {
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdNeoVimReady];
 }
 
+void do_delete_marked_text() {
+  NSUInteger length = [_marked_text lengthOfBytesUsingEncoding:NSUTF32StringEncoding] / 4;
+
+  [_marked_text release];
+  _marked_text = nil;
+
+  for (int i = 0; i < length; i++) {
+    loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_backspace retain])); // release in neovim_input
+  }
+}
+
+void do_delete(NSInteger count) {
+  queue(^{
+    _marked_delta = 0;
+
+    // Very ugly: When we want to have the Hanja for 하, Cocoa first finalizes 하, then sets the Hanja as marked text.
+    // The main app will call this method when this happens, thus compute how many cell we have to go backward to
+    // correctly mark the will-be-soon-inserted Hanja... See also docs/notes-on-cocoa-text-input.md
+    int emptyCounter = 0;
+    for (int i = 0; i < count; i++) {
+      _marked_delta -= 1;
+
+      // TODO: -1 because we assume that the cursor is one cell ahead, probably not always correct...
+      schar_T character = ScreenLines[_put_row * screen_Rows + _put_column - i - emptyCounter - 1];
+      if (character == 0x00 || character == ' ') {
+        // FIXME: dunno yet, why we have to also match ' '...
+        _marked_delta -= 1;
+        emptyCounter += 1;
+      }
+    }
+
+//    log4Debug("put cursor: %d:%d, count: %li, delta: %d", _put_row, _put_column, count, _marked_delta);
+
+    for (int i = 0; i < count; i++) {
+      loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_backspace retain])); // release in neovim_input
+    }
+  });
+}
+
+void do_force_redraw() {
+  loop_schedule(&main_loop, event_create(1, force_redraw, 0));
+}
+
+void do_resize(int width, int height) {
+  queue(^{
+    NSLog(@"!!! do_resize: %d:%d", width, height);
+    set_ui_size(_xpc_ui_data->bridge, width, height);
+    loop_schedule(&main_loop, event_create(1, refresh_ui, 0));
+  });
+}
+
+void do_vim_input(NSString *input) {
+  queue(^{
+    if (_marked_text == nil) {
+      loop_schedule(&main_loop, event_create(1, neovim_input, 1, [input retain])); // release in neovim_input
+      return;
+    }
+
+    // Handle cases like ㅎ -> arrow key: The previously marked text is the same as the finalized text which should
+    // inserted. Neovim's drawing code is optimized such that it does not call put in this case again, thus, we have
+    // to manually unmark the cells in the main app.
+    if ([_marked_text isEqualToString:input]) {
+//      log4Debug("unmarking text: '%@'\t now at %d:%d", input, _put_row, _put_column);
+      const char *str = [_marked_text cStringUsingEncoding:NSUTF8StringEncoding];
+      size_t cellCount = mb_string2cells((const char_u *) str);
+      for (int i = 1; i <= cellCount; i++) {
+//        log4Debug("unmarking at %d:%d", _put_row, _put_column - i);
+        int values[] = { _put_row, MAX(_put_column - i, 0) };
+        NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
+        [_neovim_server sendMessageWithId:NeoVimServerMsgIdUnmark data:data];
+        [data release];
+      }
+    }
+
+    do_delete_marked_text();
+    loop_schedule(&main_loop, event_create(1, neovim_input, 1, [input retain])); // release in neovim_input
+  });
+}
+
+void do_vim_input_marked_text(NSString *markedText) {
+  queue(^{
+    if (_marked_text == nil) {
+      _marked_row = _put_row;
+      _marked_column = _put_column + _marked_delta;
+//      log4Debug("marking position: %d:%d(%d + %d)", _put_row, _marked_column, _put_column, _marked_delta);
+      _marked_delta = 0;
+    } else {
+      do_delete_marked_text();
+    }
+
+//    log4Debug("inserting marked text '%@' at %d:%d", markedText, _put_row, _put_column);
+    do_insert_marked_text(markedText);
+  });
+}
+
+void do_insert_marked_text(NSString *markedText) {
+  _marked_text = [markedText retain]; // release when the final text is input in -vimInput
+
+  loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_marked_text retain])); // release in neovim_input
+}

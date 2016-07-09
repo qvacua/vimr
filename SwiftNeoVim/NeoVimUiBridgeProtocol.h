@@ -4,6 +4,8 @@
  */
 
 @import Foundation;
+#import "NeoVimMsgIds.h"
+
 
 typedef NS_ENUM(NSUInteger, FontTrait) {
     FontTraitNone      = 0,
@@ -29,6 +31,8 @@ typedef struct {
 #define qDefaultForeground 0xFF000000
 #define qDefaultBackground 0xFFFFFFFF
 #define qDefaultSpecial    0xFFFF0000
+
+NS_ASSUME_NONNULL_BEGIN
 
 @protocol NeoVimUiBridgeProtocol <NSObject>
 
@@ -56,7 +60,7 @@ typedef struct {
  * 2. NeoVim wants to put the cursor at (row, column).
  * In case of 1. NeoVim will put in subsequent call. In case of 2. NeoVim seems to flush twice in a row.
  */
-- (void)gotoPosition:(Position)position screenCursor:(Position)screenCursor bufferCursor:(Position)bufferCursor;
+- (void)gotoPosition:(Position)position screenCursor:(Position)screenCursor;
 
 - (void)updateMenu;
 - (void)busyStart;
@@ -76,9 +80,9 @@ typedef struct {
 /**
  * Draw string at the current cursor which was set by a previous cursorGotoRow:column callback.
  */
-- (void)put:(NSString *_Nonnull)string;
+- (void)put:(NSString *)string;
 
-- (void)putMarkedText:(NSString *_Nonnull)markedText;
+- (void)putMarkedText:(NSString *)markedText;
 - (void)unmarkRow:(int)row column:(int)column;
 
 - (void)bell;
@@ -100,8 +104,8 @@ typedef struct {
  */
 - (void)updateSpecial:(int)sp;
 - (void)suspend;
-- (void)setTitle:(NSString *_Nonnull)title;
-- (void)setIcon:(NSString *_Nonnull)icon;
+- (void)setTitle:(NSString *)title;
+- (void)setIcon:(NSString *)icon;
 
 /**
  * NeoVim has been stopped.
@@ -109,3 +113,5 @@ typedef struct {
 - (void)stop;
 
 @end
+
+NS_ASSUME_NONNULL_END

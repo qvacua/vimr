@@ -45,10 +45,10 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     }
   }
   
-  public func gotoPosition(position: Position, screenCursor: Position, bufferCursor: Position) {
+  public func gotoPosition(position: Position, screenCursor: Position) {
     //if self.inLiveResize { return }
     DispatchUtils.gui {
-//      NSLog("\(#function): \(position), \(screenCursor), \(bufferCursor)")
+//      NSLog("\(#function): \(position), \(screenCursor)")
 
       self.setNeedsDisplay(cellPosition: self.grid.screenCursor) // redraw where the cursor was till now
       self.setNeedsDisplay(screenCursor: screenCursor) // draw the new cursor
@@ -88,6 +88,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   public func scroll(count: Int32) {
     //if self.inLiveResize { return }
     DispatchUtils.gui {
+      NSLog("bridge scroll: \(count)")
       self.grid.scroll(Int(count))
       self.setNeedsDisplay(region: self.grid.region)
     }

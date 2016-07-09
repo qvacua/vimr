@@ -4,14 +4,27 @@
  */
 
 #import "NeoVimAgent.h"
-#import "NeoVimServerMsgIds.h"
+#import "NeoVimMsgIds.h"
+#import "NeoVimUiBridgeProtocol.h"
 
 
 static const int qTimeout = 10;
 
+#define data_to_array(type)                                               \
+static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
+  NSUInteger length = count * sizeof( type );                             \
+  if (data.length != length) {                                            \
+    return NULL;                                                          \
+  }                                                                       \
+  return ( type *) data.bytes;                                            \
+}
+
+data_to_array(int)
+data_to_array(CellAttributes)
+
 @interface NeoVimAgent ()
 
-- (NSData *)handleMessageWithId:(SInt32)msgid data:(NSData *)data;
+- (void)handleMessageWithId:(SInt32)msgid data:(NSData *)data;
 
 @end
 
@@ -19,12 +32,8 @@ static const int qTimeout = 10;
 static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFDataRef data, void *info) {
   @autoreleasepool {
     NeoVimAgent *agent = (__bridge NeoVimAgent *) info;
-    NSData *responseData = [agent handleMessageWithId:msgid data:(__bridge NSData *) (data)];
-    if (responseData == NULL) {
-      return NULL;
-    }
-
-    return CFDataCreate(kCFAllocatorDefault, responseData.bytes, responseData.length);
+    [agent handleMessageWithId:msgid data:(__bridge NSData *) (data)];
+    return NULL;
   }
 }
 
@@ -46,6 +55,25 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   }
 
   _uuid = uuid;
+
+  return self;
+}
+
+// -dealloc would have been ideal for this, but if you quit the app, -dealloc does not necessarily get called...
+- (void)cleanUp {
+  CFMessagePortInvalidate(_remoteServerPort);
+  CFRelease(_remoteServerPort);
+
+  CFMessagePortInvalidate(_localServerPort);
+  CFRelease(_localServerPort);
+
+  [_localServerThread cancel];
+  [_neoVimServerTask interrupt];
+  [_neoVimServerTask terminate];
+  NSLog(@"terminated...");
+}
+
+- (void)establishLocalServer {
   _localServerThread = [[NSThread alloc] initWithTarget:self selector:@selector(runLocalServer) object:nil];
   [_localServerThread start];
 
@@ -55,23 +83,32 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
   _neoVimServerTask.arguments = @[ _uuid, [self localServerName], [self remoteServerName] ];
   [_neoVimServerTask launch];
-
-
-  return self;
 }
 
-- (NSString *)neoVimServerExecutablePath {
-  return [[[NSBundle bundleForClass:[self class]] builtInPlugInsPath] stringByAppendingPathComponent:@"NeoVimServer"];
+- (void)vimInput:(NSString *)string {
+  NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+  [self sendMessageWithId:NeoVimAgentMsgIdInput data:data];
 }
 
-- (void)dealloc {
-  CFMessagePortInvalidate(_localServerPort);
-  CFRelease(_localServerPort);
+- (void)vimInputMarkedText:(NSString *_Nonnull)markedText {
+  NSData *data = [markedText dataUsingEncoding:NSUTF8StringEncoding];
+  [self sendMessageWithId:NeoVimAgentMsgIdInputMarked data:data];
+}
 
-  [_localServerThread cancel];
+- (void)deleteCharacters:(NSInteger)count {
+  NSData *data = [[NSData alloc] initWithBytes:&count length:sizeof(NSInteger)];
+  [self sendMessageWithId:NeoVimAgentMsgIdDelete data:data];
+}
 
-  [_neoVimServerTask terminate];
-  NSLog(@"terminated...");
+- (void)forceRedraw {
+  [self sendMessageWithId:NeoVimAgentMsgIdRedraw data:nil];
+}
+
+- (void)resizeToWidth:(int)width height:(int)height {
+  NSLog(@"!!! agent resize: %d:%d", width, height);
+  int values[] = { width, height };
+  NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
+  [self sendMessageWithId:NeoVimAgentMsgIdResize data:data];
 }
 
 - (void)runLocalServer {
@@ -103,108 +140,34 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   }
 }
 
-- (NSData *)handleMessageWithId:(SInt32)msgid data:(NSData *)data {
-  NSLog(@"msg received: %d -> %@", msgid, data);
-
-  switch (msgid) {
-
-    case NeoVimServerMsgIdServerReady:
-      return [self setupNeoVimServer];
-
-    case NeoVimServerMsgIdNeoVimReady:
-      return nil;
-
-    case NeoVimServerMsgIdResize:
-      return nil;
-
-    case NeoVimServerMsgIdClear:
-      return nil;
-
-    case NeoVimServerMsgIdEolClear:
-      return nil;
-
-    case NeoVimServerMsgIdSetPosition:
-      return nil;
-
-    case NeoVimServerMsgIdSetMenu:
-      return nil;
-
-    case NeoVimServerMsgIdBusyStart:
-      return nil;
-
-    case NeoVimServerMsgIdBusyStop:
-      return nil;
-
-    case NeoVimServerMsgIdMouseOn:
-      return nil;
-
-    case NeoVimServerMsgIdMouseOff:
-      return nil;
-
-    case NeoVimServerMsgIdModeChange:
-      return nil;
-
-    case NeoVimServerMsgIdSetScrollRegion:
-      return nil;
-
-    case NeoVimServerMsgIdScroll:
-      return nil;
-
-    case NeoVimServerMsgIdSetHighlightAttributes:
-      return nil;
-
-    case NeoVimServerMsgIdPut:
-      return nil;
-
-    case NeoVimServerMsgIdPutMarked:
-      return nil;
-
-    case NeoVimServerMsgIdUnmark:
-      return nil;
-
-    case NeoVimServerMsgIdBell:
-      return nil;
-
-    case NeoVimServerMsgIdFlush:
-      return nil;
-
-    case NeoVimServerMsgIdSetForeground:
-      return nil;
-
-    case NeoVimServerMsgIdSetBackground:
-      return nil;
-
-    case NeoVimServerMsgIdSetSpecial:
-      return nil;
-
-    case NeoVimServerMsgIdSetTitle:
-      return nil;
-
-    case NeoVimServerMsgIdSetIcon:
-      return nil;
-
-    case NeoVimServerMsgIdStop:
-      return nil;
-
-    default:
-      return nil;
-  }
-}
-
-- (NSData *)setupNeoVimServer {
+- (void)establishNeoVimConnection {
   _remoteServerPort = CFMessagePortCreateRemote(
       kCFAllocatorDefault,
       (__bridge CFStringRef) [self remoteServerName]
   );
 
-  SInt32 responseCode = CFMessagePortSendRequest(
-      _remoteServerPort, NeoVimAgendMsgIdAgentReady, nil, qTimeout, qTimeout, NULL, NULL
-  );
-  if (responseCode == kCFMessagePortSuccess) {
-    NSLog(@"!!!!!!!! SUCCESS!!!!");
+  [self sendMessageWithId:NeoVimAgentMsgIdAgentReady data:nil];
+}
+
+- (void)sendMessageWithId:(NeoVimAgentMsgId)msgid data:(NSData *)data {
+  if (_remoteServerPort == NULL) {
+    NSLog(@"WARNING: remote server is null");
+    return;
   }
 
-  return nil;
+  SInt32 responseCode = CFMessagePortSendRequest(
+      _remoteServerPort, msgid, (__bridge CFDataRef) data, qTimeout, qTimeout, NULL, NULL
+  );
+
+  if (responseCode == kCFMessagePortSuccess) {
+    return;
+  }
+
+  NSLog(@"WARNING: (%d:%@) could not be sent!", (int) msgid, data);
+}
+
+- (NSString *)neoVimServerExecutablePath {
+  return [[[NSBundle bundleForClass:[self class]] builtInPlugInsPath] stringByAppendingPathComponent:@"NeoVimServer"];
 }
 
 - (NSString *)localServerName {
@@ -213,6 +176,157 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
 - (NSString *)remoteServerName {
   return [NSString stringWithFormat:@"com.qvacua.nvox.neovim-server.%@", _uuid];
+}
+
+- (void)handleMessageWithId:(SInt32)msgid data:(NSData *)data {
+//  NSLog(@"msg received: %d -> %@", msgid, data);
+
+  switch (msgid) {
+
+    case NeoVimServerMsgIdServerReady:
+      [self establishNeoVimConnection];
+      return;
+
+    case NeoVimServerMsgIdNeoVimReady:
+      [_bridge neoVimUiIsReady];
+      return;
+
+    case NeoVimServerMsgIdResize: {
+      int *values = data_to_int_array(data, 2);
+      if (values == nil) {
+        return;
+      }
+      [_bridge resizeToWidth:values[0] height:values[1]];
+      return;
+    }
+
+    case NeoVimServerMsgIdClear:
+      [_bridge clear];
+      return;
+
+    case NeoVimServerMsgIdEolClear:
+      [_bridge eolClear];
+      return;
+
+    case NeoVimServerMsgIdSetPosition: {
+      int *values = data_to_int_array(data, 4);
+      [_bridge gotoPosition:(Position) { .row = values[0], .column = values[1] }
+               screenCursor:(Position) { .row = values[2], .column = values[3] }];
+      return;
+    }
+
+    case NeoVimServerMsgIdSetMenu:
+      [_bridge updateMenu];
+      return;
+
+    case NeoVimServerMsgIdBusyStart:
+      [_bridge busyStart];
+      return;
+
+    case NeoVimServerMsgIdBusyStop:
+      [_bridge busyStop];
+      return;
+
+    case NeoVimServerMsgIdMouseOn:
+      [_bridge mouseOn];
+      return;
+
+    case NeoVimServerMsgIdMouseOff:
+      [_bridge mouseOff];
+      return;
+
+    case NeoVimServerMsgIdModeChange: {
+      int *values = data_to_int_array(data, 1);
+      [_bridge modeChange:values[0]];
+      return;
+    }
+
+    case NeoVimServerMsgIdSetScrollRegion: {
+      int *values = data_to_int_array(data, 4);
+      [_bridge setScrollRegionToTop:values[0] bottom:values[1] left:values[2] right:values[3]];
+      return;
+    }
+
+    case NeoVimServerMsgIdScroll: {
+      int *values = data_to_int_array(data, 1);
+      NSLog(@"msg rcv scroll: %d", values[0]);
+      [_bridge scroll:values[0]];
+      return;
+    }
+
+    case NeoVimServerMsgIdSetHighlightAttributes: {
+      CellAttributes *values = data_to_CellAttributes_array(data, 1);
+      [_bridge highlightSet:values[0]];
+      return;
+    }
+
+    case NeoVimServerMsgIdPut: {
+      NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+      [_bridge put:string];
+      return;
+    }
+
+    case NeoVimServerMsgIdPutMarked: {
+      NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+      [_bridge putMarkedText:string];
+      return;
+    }
+
+    case NeoVimServerMsgIdUnmark: {
+      int *values = data_to_int_array(data, 2);
+      [_bridge unmarkRow:values[0] column:values[1]];
+      return;
+    }
+
+    case NeoVimServerMsgIdBell:
+      [_bridge bell];
+      return;
+
+    case NeoVimServerMsgIdVisualBell:
+      [_bridge visualBell];
+      return;
+
+    case NeoVimServerMsgIdFlush:
+      [_bridge flush];
+      return;
+
+    case NeoVimServerMsgIdSetForeground: {
+      int *values = data_to_int_array(data, 1);
+      [_bridge updateForeground:values[0]];
+      return;
+    }
+
+    case NeoVimServerMsgIdSetBackground: {
+      int *values = data_to_int_array(data, 1);
+      [_bridge updateBackground:values[0]];
+      return;
+    }
+
+    case NeoVimServerMsgIdSetSpecial: {
+      int *values = data_to_int_array(data, 1);
+      [_bridge updateSpecial:values[0]];
+      return;
+    }
+
+    case NeoVimServerMsgIdSetTitle: {
+      NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+      [_bridge setTitle:string];
+      return;
+    }
+
+    case NeoVimServerMsgIdSetIcon: {
+      NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+      [_bridge setIcon:string];
+      return;
+    }
+
+    case NeoVimServerMsgIdStop:
+      [_bridge stop];
+      return;
+
+    default:
+      return;
+  }
 }
 
 @end

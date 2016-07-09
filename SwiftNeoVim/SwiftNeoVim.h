@@ -13,6 +13,6 @@ FOUNDATION_EXPORT const unsigned char SwiftNeoVimVersionString[];
 
 #import <SwiftNeoVim/NeoVimUiBridgeProtocol.h>
 // TODO: this header should not be public, but we cannot use a bridging header in a framework.
-#import <SwiftNeoVim/NeoVimXpc.h>
 #import <SwiftNeoVim/TextDrawer.h>
 #import <SwiftNeoVim/NeoVimAgent.h>
+#import <SwiftNeoVim/NeoVimMsgIds.h>

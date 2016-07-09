@@ -25,9 +25,9 @@ extension NeoVimView: NSTextInputClient {
 
     let vimModifiers = self.vimModifierFlags(modifierFlags)
     if vimModifiers.characters.count > 0 {
-      self.xpc.vimInput(self.vimNamedKeys(vimModifiers + charsIgnoringModifiers))
+      self.agent.vimInput(self.vimNamedKeys(vimModifiers + charsIgnoringModifiers))
     } else {
-      self.xpc.vimInput(self.vimPlainString(chars))
+      self.agent.vimInput(self.vimPlainString(chars))
     }
 
     self.keyDownDone = true
@@ -38,9 +38,9 @@ extension NeoVimView: NSTextInputClient {
 
     switch aString {
     case let string as String:
-      self.xpc.vimInput(self.vimPlainString(string))
+      self.agent.vimInput(self.vimPlainString(string))
     case let attributedString as NSAttributedString:
-      self.xpc.vimInput(self.vimPlainString(attributedString.string))
+      self.agent.vimInput(self.vimPlainString(attributedString.string))
     default:
       break;
     }
@@ -78,7 +78,7 @@ extension NeoVimView: NSTextInputClient {
     
     // eg 하 -> hanja popup, cf comment for self.lastMarkedText
     if replacementRange.length > 0 {
-      self.xpc.deleteCharacters(replacementRange.length)
+      self.agent.deleteCharacters(replacementRange.length)
     }
 
     switch aString {
@@ -92,7 +92,7 @@ extension NeoVimView: NSTextInputClient {
     
 //    NSLog("\(#function): \(self.markedText), \(selectedRange), \(replacementRange)")
 
-    self.xpc.vimInputMarkedText(self.markedText!)
+    self.agent.vimInputMarkedText(self.markedText!)
     self.keyDownDone = true
   }
 
