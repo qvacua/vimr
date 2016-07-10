@@ -4,7 +4,6 @@
  */
 
 #import "server_ui.h"
-#import "NeoVimUiBridgeProtocol.h"
 #import "Logging.h"
 #import "server_globals.h"
 #import "NeoVimServer.h"

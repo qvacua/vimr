@@ -70,7 +70,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [_localServerThread cancel];
   [_neoVimServerTask interrupt];
   [_neoVimServerTask terminate];
-  NSLog(@"terminated...");
 }
 
 - (void)establishLocalServer {
