@@ -77,8 +77,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [_localServerThread start];
 
   _neoVimServerTask = [[NSTask alloc] init];
+  _neoVimServerTask.currentDirectoryPath = NSHomeDirectory();
   _neoVimServerTask.launchPath = [self neoVimServerExecutablePath];
-
   _neoVimServerTask.arguments = @[ _uuid, [self localServerName], [self remoteServerName] ];
   [_neoVimServerTask launch];
 }
