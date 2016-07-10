@@ -5,6 +5,7 @@
 
 #import "NeoVimServer.h"
 #import "server_globals.h"
+#import "Logging.h"
 
 
 static const double qTimeout = 10.0;
@@ -38,7 +39,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
 
 @implementation NeoVimServer {
-  NSString *_uuid;
   NSString *_localServerName;
   NSString *_remoteServerName;
 
@@ -48,16 +48,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   CFMessagePortRef _remoteServerPort;
 }
 
-- (instancetype)initWithUuid:(NSString *)uuid
-             localServerName:(NSString *)localServerName
-            remoteServerName:(NSString *)remoteServerName
-{
+- (instancetype)initWithLocalServerName:(NSString *)localServerName remoteServerName:(NSString *)remoteServerName {
   self = [super init];
   if (self == nil) {
     return nil;
   }
 
-  _uuid = uuid;
   _localServerName = localServerName;
   _remoteServerName = remoteServerName;
 
@@ -114,7 +110,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
 - (void)sendMessageWithId:(NeoVimServerMsgId)msgid data:(NSData *)data {
   if (_remoteServerPort == NULL) {
-    NSLog(@"WARNING: remote server is null");
+    log4Warn("Remote server is null: The msg (%lu:%@) could not be sent.", (unsigned long) msgid, data);
     return;
   }
 
@@ -126,7 +122,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     return;
   }
 
-  NSLog(@"WARNING: (%d:%@) could not be sent!", (int) msgid, data);
+  log4Warn("The msg (%lu:%@) could not be sent: %d", (unsigned long) msgid, data, responseCode);
 }
 
 - (void)notifyReadiness {

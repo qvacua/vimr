@@ -6,6 +6,7 @@
 #import "NeoVimAgent.h"
 #import "NeoVimMsgIds.h"
 #import "NeoVimUiBridgeProtocol.h"
+#import "Logging.h"
 
 
 static const double qTimeout = 10;
@@ -80,7 +81,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   _neoVimServerTask = [[NSTask alloc] init];
   _neoVimServerTask.currentDirectoryPath = NSHomeDirectory();
   _neoVimServerTask.launchPath = [self neoVimServerExecutablePath];
-  _neoVimServerTask.arguments = @[ _uuid, [self localServerName], [self remoteServerName] ];
+  _neoVimServerTask.arguments = @[ [self localServerName], [self remoteServerName] ];
   [_neoVimServerTask launch];
 }
 
@@ -149,7 +150,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
 - (void)sendMessageWithId:(NeoVimAgentMsgId)msgid data:(NSData *)data {
   if (_remoteServerPort == NULL) {
-    NSLog(@"WARNING: remote server is null");
+    log4Warn("Remote server is null: The msg (%lu:%@) could not be sent.", (unsigned long) msgid, data);
     return;
   }
 
@@ -161,7 +162,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     return;
   }
 
-  NSLog(@"WARNING: (%d:%@) could not be sent!", (int) msgid, data);
+  log4Warn("The msg (%lu:%@) could not be sent: %d", (unsigned long) msgid, data, responseCode);
 }
 
 - (NSString *)neoVimServerExecutablePath {

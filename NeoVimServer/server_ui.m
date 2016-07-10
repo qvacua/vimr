@@ -504,6 +504,7 @@ void server_start_neovim() {
   uv_cond_init(&_condition);
 
   uv_thread_create(&_nvim_thread, run_neovim, NULL);
+  log4Info("NeoVim started");
 
   // continue only after our UI main code for neovim has been fully initialized
   uv_mutex_lock(&_mutex);

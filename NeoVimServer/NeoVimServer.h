@@ -10,9 +10,7 @@
 
 @interface NeoVimServer : NSObject
 
-- (instancetype)initWithUuid:(NSString *)uuid
-             localServerName:(NSString *)localServerName
-            remoteServerName:(NSString *)remoteServerName;
+- (instancetype)initWithLocalServerName:(NSString *)localServerName remoteServerName:(NSString *)remoteServerName;
 
 - (void)sendMessageWithId:(NeoVimServerMsgId)msgid;
 - (void)sendMessageWithId:(NeoVimServerMsgId)msgid data:(NSData *)data;

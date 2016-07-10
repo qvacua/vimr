@@ -43,13 +43,10 @@ int main(int argc, const char *argv[]) {
 
   @autoreleasepool {
     NSArray<NSString *> *arguments = [NSProcessInfo processInfo].arguments;
-    NSString *uuid = arguments[1];
-    NSString *remoteServerName = arguments[2];
-    NSString *localServerName = arguments[3];
+    NSString *remoteServerName = arguments[1];
+    NSString *localServerName = arguments[2];
 
-    _neovim_server = [[NeoVimServer alloc] initWithUuid:uuid
-                                        localServerName:localServerName
-                                       remoteServerName:remoteServerName];
+    _neovim_server = [[NeoVimServer alloc] initWithLocalServerName:localServerName remoteServerName:remoteServerName];
     [_neovim_server notifyReadiness];
   }
 
