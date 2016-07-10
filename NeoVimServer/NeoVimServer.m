@@ -4,7 +4,6 @@
  */
 
 #import "NeoVimServer.h"
-#import "NeoVimMsgIds.h"
 #import "server_globals.h"
 
 
@@ -30,10 +29,11 @@ data_to_array(NSInteger)
 
 static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFDataRef data, void *info) {
   @autoreleasepool {
-    NeoVimServer *neoVimServer = (NeoVimServer *) info;
-    [neoVimServer handleMessageWithId:msgid data:(NSData *) data];
-    return NULL;
+    NeoVimServer *neoVimServer = (__bridge NeoVimServer *) info;
+    [neoVimServer handleMessageWithId:msgid data:(__bridge NSData *) data];
   }
+
+  return NULL;
 }
 
 
@@ -57,33 +57,26 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     return nil;
   }
 
-  _uuid = [uuid retain];
-  _localServerName = [localServerName retain];
-  _remoteServerName = [remoteServerName retain];
+  _uuid = uuid;
+  _localServerName = localServerName;
+  _remoteServerName = remoteServerName;
 
   _localServerThread = [[NSThread alloc] initWithTarget:self selector:@selector(runLocalServer) object:nil];
   [_localServerThread start];
 
-  _remoteServerPort = CFMessagePortCreateRemote(kCFAllocatorDefault, (CFStringRef) _remoteServerName);
+  _remoteServerPort = CFMessagePortCreateRemote(kCFAllocatorDefault, (__bridge CFStringRef) _remoteServerName);
 
   return self;
 }
 
 - (void)dealloc {
-  [_uuid release];
-  [_localServerName release];
-  [_remoteServerName release];
-
   CFMessagePortInvalidate(_localServerPort);
   CFRelease(_localServerPort);
 
   [_localServerThread cancel];
-  [_localServerThread release];
 
   CFMessagePortInvalidate(_remoteServerPort);
   CFRelease(_remoteServerPort);
-
-  [super dealloc];
 }
 
 - (void)runLocalServer {
@@ -91,7 +84,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     unsigned char shouldFree = false;
     CFMessagePortContext localContext = {
         .version = 0,
-        .info = (void *) self,
+        .info = (__bridge void *) self,
         .retain = NULL,
         .release = NULL,
         .copyDescription = NULL
@@ -99,7 +92,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
     _localServerPort = CFMessagePortCreateLocal(
         kCFAllocatorDefault,
-        (CFStringRef) _localServerName,
+        (__bridge CFStringRef) _localServerName,
         local_server_callback,
         &localContext,
         &shouldFree
@@ -126,7 +119,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   }
 
   SInt32 responseCode = CFMessagePortSendRequest(
-      _remoteServerPort, msgid, (CFDataRef) data, qTimeout, qTimeout, NULL, NULL
+      _remoteServerPort, msgid, (__bridge CFDataRef) data, qTimeout, qTimeout, NULL, NULL
   );
 
   if (responseCode == kCFMessagePortSuccess) {
@@ -150,7 +143,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     case NeoVimAgentMsgIdInput: {
       NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
       server_vim_input(string);
-      [string release];
 
       return;
     }
@@ -158,7 +150,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     case NeoVimAgentMsgIdInputMarked: {
       NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
       server_vim_input_marked_text(string);
-      [string release];
 
       return;
     }

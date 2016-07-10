@@ -15,8 +15,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NeoVimViewDelegate {
   let view = NeoVimView(forAutoLayout: ())
 
   @IBAction func debugSomething(sender: AnyObject!) {
-//    let font = NSFont(name: "Courier", size: 14)!
-//    self.neoVim.view.setFont(font)
+    let font = NSFont(name: "Courier", size: 14)!
+    self.view.setFont(font)
   }
 
   func applicationDidFinishLaunching(aNotification: NSNotification) {

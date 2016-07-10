@@ -8,7 +8,7 @@
 #import "NeoVimUiBridgeProtocol.h"
 
 
-static const int qTimeout = 10;
+static const double qTimeout = 10;
 
 #define data_to_array(type)                                               \
 static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
@@ -33,8 +33,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   @autoreleasepool {
     NeoVimAgent *agent = (__bridge NeoVimAgent *) info;
     [agent handleMessageWithId:msgid data:(__bridge NSData *) (data)];
-    return NULL;
   }
+
+  return NULL;
 }
 
 
