@@ -151,6 +151,8 @@ static void suspend_event(void **argv) {
   CONTINUE(data->bridge);
 }
 
+#pragma mark NeoVim's UI callbacks
+
 static void server_ui_resize(UI *ui __unused, int width, int height) {
   queue(^{
     int values[] = { width, height };
@@ -413,6 +415,8 @@ static void server_ui_stop(UI *ui __unused) {
     data->stop = true;
   });
 }
+
+#pragma mark Helper functions
 
 static void force_redraw(void **argv __unused) {
   must_redraw = CLEAR;

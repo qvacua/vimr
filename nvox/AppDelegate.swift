@@ -11,7 +11,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NeoVimViewDelegate {
 
   @IBOutlet weak var window: NSWindow!
   
-  var neoVim: NeoVim!
   let view = NeoVimView(forAutoLayout: ())
 
   @IBAction func debugSomething(sender: AnyObject!) {
