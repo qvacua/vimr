@@ -4,7 +4,7 @@
 
 html {
   font: 10pt/1.5;
-  color: #333333; }
+  color: #333; }
 
 body {
   background: white; }
@@ -12,7 +12,7 @@ body {
 hr {
   border: none;
   height: 1px;
-  background-color: #e7e7e7; }
+  background-color: #E7E7E7; }
 
 header {
   width: 960px;
@@ -42,10 +42,14 @@ header {
     font-weight: normal;
     color: gray; }
 
+#news {
+  font-weight: normal;
+  margin-bottom: 2em; }
+
 #social-buttons {
   text-align: center;
-  border-top: 1px solid #e7e7e7;
-  border-bottom: 1px solid #e7e7e7; }
+  border-top: 1px solid #E7E7E7;
+  border-bottom: 1px solid #E7E7E7; }
   #social-buttons .content {
     width: 960px;
     margin: 0 auto;
@@ -63,12 +67,12 @@ header {
   text-align: center; }
   #features .feature {
     padding: 48px 0;
-    border-bottom: solid 1px #e7e7e7; }
+    border-bottom: solid 1px #E7E7E7; }
     #features .feature .content {
       width: 960px;
       margin: 0 auto; }
     #features .feature code {
-      color: #333333;
+      color: #333;
       border: none;
       background: none; }
     #features .feature h2 {
@@ -96,7 +100,7 @@ header {
 
 #credits {
   text-align: center;
-  border-bottom: solid 1px #e7e7e7; }
+  border-bottom: solid 1px #E7E7E7; }
   #credits .content {
     width: 960px;
     margin: 0 auto; }
@@ -118,3 +122,5 @@ footer {
   padding-top: 48px;
   padding-bottom: 24px;
   text-align: center; }
+
+/*# sourceMappingURL=main.css.map */
