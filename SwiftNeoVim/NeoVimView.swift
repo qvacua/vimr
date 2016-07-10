@@ -54,8 +54,29 @@ private struct RowRun: CustomStringConvertible {
 
 public class NeoVimView: NSView {
   
+  public let uuid = NSUUID().UUIDString
   public var delegate: NeoVimViewDelegate?
+  
+  let agent: NeoVimAgent
 
+  let grid = Grid()
+
+  var markedText: String?
+  /// We store the last marked text because Cocoa's text input system does the following:
+  /// 하 -> hanja popup -> insertText(하) -> attributedSubstring...() -> setMarkedText(下) -> ...
+  /// We want to return "하" in attributedSubstring...()
+  var lastMarkedText: String?
+  
+  var markedPosition = Position.null
+  var keyDownDone = true
+  
+  var xOffset = CGFloat(0)
+  var yOffset = CGFloat(0)
+  var cellSize = CGSize.zero
+  var descent = CGFloat(0)
+  var leading = CGFloat(0)
+
+  private let drawer: TextDrawer
   private var font: NSFont {
     didSet {
       self.drawer.font = self.font
@@ -68,32 +89,10 @@ public class NeoVimView: NSView {
     }
   }
   
-  var xOffset = CGFloat(0)
-  var yOffset = CGFloat(0)
-  
-  private let drawer: TextDrawer
-  
-  let agent = NeoVimAgent(uuid: NSUUID().UUIDString)
-
-  var markedText: String?
-  
-  /// We store the last marked text because Cocoa's text input system does the following:
-  /// 하 -> hanja popup -> insertText(하) -> attributedSubstring...() -> setMarkedText(下) -> ...
-  /// We want to return "하" in attributedSubstring...()
-  var lastMarkedText: String?
-  
-  var markedPosition = Position.null
-  var keyDownDone = true
-  
-  var cellSize = CGSize.zero
-  var descent = CGFloat(0)
-  var leading = CGFloat(0)
-
-  let grid = Grid()
-
   override init(frame rect: NSRect = CGRect.zero) {
     self.font = NSFont(name: "Menlo", size: 16)!
     self.drawer = TextDrawer(font: font)
+    self.agent = NeoVimAgent(uuid: self.uuid)
     
     super.init(frame: rect)
     
