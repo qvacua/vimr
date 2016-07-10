@@ -157,7 +157,6 @@ static void server_ui_resize(UI *ui __unused, int width, int height) {
     NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdResize data:data];
     [data release];
-    NSLog(@"resized");
   });
 }
 
@@ -236,7 +235,6 @@ static void server_ui_set_scroll_region(UI *ui __unused, int top, int bot, int l
 static void server_ui_scroll(UI *ui __unused, int count) {
   queue(^{
     int value = count;
-    NSLog(@"ui_scroll: %d", count);
     NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdScroll data:data];
     [data release];
@@ -556,7 +554,6 @@ void server_redraw() {
 
 void server_resize(int width, int height) {
   queue(^{
-    NSLog(@"!!! do_resize: %d:%d", width, height);
     set_ui_size(_server_ui_data->bridge, width, height);
     loop_schedule(&main_loop, event_create(1, refresh_ui, 0));
   });

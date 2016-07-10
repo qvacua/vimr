@@ -150,7 +150,7 @@ public class NeoVimView: NSView {
   }
 
   func resizeNeoVimUiTo(size size: CGSize) {
-    NSLog("\(#function): \(size)")
+//    NSLog("\(#function): \(size)")
     let discreteSize = Size(width: Int(floor(size.width / self.cellSize.width)),
                             height: Int(floor(size.height / self.cellSize.height)))
 

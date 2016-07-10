@@ -78,7 +78,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
   _neoVimServerTask = [[NSTask alloc] init];
   _neoVimServerTask.launchPath = [self neoVimServerExecutablePath];
-  NSLog(@"%@", [self neoVimServerExecutablePath]);
 
   _neoVimServerTask.arguments = @[ _uuid, [self localServerName], [self remoteServerName] ];
   [_neoVimServerTask launch];
@@ -104,7 +103,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (void)resizeToWidth:(int)width height:(int)height {
-  NSLog(@"!!! agent resize: %d:%d", width, height);
   int values[] = { width, height };
   NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
   [self sendMessageWithId:NeoVimAgentMsgIdResize data:data];
@@ -178,8 +176,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (void)handleMessageWithId:(SInt32)msgid data:(NSData *)data {
-//  NSLog(@"msg received: %d -> %@", msgid, data);
-
   switch (msgid) {
 
     case NeoVimServerMsgIdServerReady:
@@ -248,7 +244,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
     case NeoVimServerMsgIdScroll: {
       int *values = data_to_int_array(data, 1);
-      NSLog(@"msg rcv scroll: %d", values[0]);
       [_bridge scroll:values[0]];
       return;
     }

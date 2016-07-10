@@ -141,8 +141,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (void)handleMessageWithId:(SInt32)msgid data:(NSData *)data {
-//  NSLog(@"msg received: %d -> %@", msgid, data);
-
   switch (msgid) {
 
     case NeoVimAgentMsgIdAgentReady:
@@ -173,7 +171,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
     case NeoVimAgentMsgIdResize: {
       int *values = data_to_int_array(data, 2);
-      NSLog(@"!!! server rcv resize: %d:%d", values[0], values[1]);
       server_resize(values[0], values[1]);
       return;
     }

@@ -51,10 +51,9 @@ int main(int argc, const char *argv[]) {
                                         localServerName:localServerName
                                        remoteServerName:remoteServerName];
     [_neovim_server notifyReadiness];
-
-    CFRunLoopRun();
   }
 
+  CFRunLoopRun();
   return 0;
 }
 
