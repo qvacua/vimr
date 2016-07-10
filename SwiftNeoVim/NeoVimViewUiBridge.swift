@@ -167,7 +167,9 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   public func setTitle(title: String) {
-    self.delegate?.setTitle(title)
+    DispatchUtils.gui {
+      self.delegate?.setNeoVimTitle(title)
+    }
   }
   
   public func setIcon(icon: String) {

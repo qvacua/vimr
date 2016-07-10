@@ -7,5 +7,5 @@ import Cocoa
 
 public protocol NeoVimViewDelegate {
   
-  func setTitle(title: String)
+  func setNeoVimTitle(title: String)
 }
