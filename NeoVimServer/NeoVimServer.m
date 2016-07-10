@@ -106,13 +106,13 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     );
 
     // FIXME: handle shouldFree == true
-
-    CFRunLoopRef runLoop = CFRunLoopGetCurrent();
-    CFRunLoopSourceRef runLoopSrc = CFMessagePortCreateRunLoopSource(kCFAllocatorDefault, _localServerPort, 0);
-    CFRunLoopAddSource(runLoop, runLoopSrc, kCFRunLoopCommonModes);
-    CFRelease(runLoopSrc);
-    CFRunLoopRun();
   }
+
+  CFRunLoopRef runLoop = CFRunLoopGetCurrent();
+  CFRunLoopSourceRef runLoopSrc = CFMessagePortCreateRunLoopSource(kCFAllocatorDefault, _localServerPort, 0);
+  CFRunLoopAddSource(runLoop, runLoopSrc, kCFRunLoopCommonModes);
+  CFRelease(runLoopSrc);
+  CFRunLoopRun();
 }
 
 - (void)sendMessageWithId:(NeoVimServerMsgId)msgid {
