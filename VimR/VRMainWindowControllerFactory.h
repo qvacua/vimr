@@ -18,6 +18,7 @@
 @class VRFileItemManager;
 @class VROpenQuicklyWindowController;
 @class VRWorkspaceViewFactory;
+@class VRFileBrowserViewFactory;
 
 
 @interface VRMainWindowControllerFactory : NSObject <TBBean>
@@ -28,6 +29,7 @@
 @property (nonatomic, weak) VROpenQuicklyWindowController *openQuicklyWindowController;
 @property (nonatomic, weak) NSNotificationCenter *notificationCenter;
 @property (nonatomic, weak) VRWorkspaceViewFactory *workspaceViewFactory;
+@property (nonatomic, weak) VRFileBrowserViewFactory *fileBrowserViewFactory;
 @property (nonatomic, unsafe_unretained) NSFontManager *fontManager;
 
 - (VRMainWindowController *)newMainWindowControllerWithContentRect:(CGRect)contentRect

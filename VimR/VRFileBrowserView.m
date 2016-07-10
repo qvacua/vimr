@@ -8,6 +8,7 @@
 */
 
 #import <PureLayout/ALView+PureLayout.h>
+#import <MacVimFramework/MacVimFramework.h>
 #import "VRFileBrowserOutlineView.h"
 #import "VRFileBrowserView.h"
 #import "VRUtils.h"
@@ -386,10 +387,6 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSCom
 }
 
 #pragma mark Private
-- (MMVimController *)vimController {
-  return self.workspaceView.vimView.vimController;
-}
-
 - (void)addViews {
   NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:@"name"];
   tableColumn.dataCell = [[OakImageAndTextCell alloc] init];
@@ -537,7 +534,7 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSCom
 }
 
 - (NSArray *)filterWildIngoreNodes:(NSArray *)children forParentPath:(NSString *)parentPath {
-  NSSet *paths = [self.workspaceView nonFilteredWildIgnorePathsForParentPath:parentPath];
+  NSSet *paths = [self nonFilteredWildIgnorePathsForParentPath:parentPath];
 
   NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:paths.count];
   for (VRNode *node in children) {
@@ -547,6 +544,23 @@ static NSComparisonResult (^qNodeDirComparator)(NSNumber *, NSNumber *) = ^NSCom
   }
 
   return result;
+}
+
+- (NSSet *)nonFilteredWildIgnorePathsForParentPath:(NSString *)path {
+  NSString *pathExpression = SF(@"globpath(\"%@\", \"*\")", path);
+  NSString *dotPathExpression = SF(@"globpath(\"%@\", \".*\")", path);
+
+  // 공부 = ACF5 BD80 in composed Unicode, what Vim returns
+  // 공부 = 1100 1169 11BC 1107 116E in decomposed Unicode, what usual NSStrings use
+  NSMutableSet *paths = [NSMutableSet set];
+  [paths addObjectsFromArray:
+      [[_vimController evaluateVimExpression:pathExpression].decomposedStringWithCanonicalMapping componentsSeparatedByString:@"\n"]
+  ];
+  [paths addObjectsFromArray:
+      [[_vimController evaluateVimExpression:dotPathExpression].decomposedStringWithCanonicalMapping componentsSeparatedByString:@"\n"]
+  ];
+
+  return paths;
 }
 
 - (NSArray *)filterHiddenNodesIfNec:(NSArray *)nodes {

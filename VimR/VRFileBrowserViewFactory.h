@@ -14,6 +14,7 @@
 @class VRFileItemManager;
 @class VRFileBrowserView;
 @class VRWorkspaceView;
+@class MMVimController;
 
 
 @interface VRFileBrowserViewFactory : NSObject <TBBean>
@@ -23,6 +24,6 @@
 @property (nonatomic, weak) NSUserDefaults *userDefaults;
 @property (nonatomic, weak) NSNotificationCenter *notificationCenter;
 
-- (VRFileBrowserView *)newFileBrowserViewWithWorkspaceView:(VRWorkspaceView *)workspaceView rootUrl:(NSURL *)rootUrl;
+- (VRFileBrowserView *)newFileBrowserViewWithVimController:(MMVimController *)vimController rootUrl:(NSURL *)rootUrl;
 
 @end

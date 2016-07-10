@@ -11,6 +11,7 @@
 #import <MacVimFramework/MacVimFramework.h>
 #import "VRUserDefaults.h"
 #import "VRUserDefaultsObserver.h"
+#import "QVWorkspaceDelegate.h"
 
 
 @class VRWorkspaceController;
@@ -20,6 +21,9 @@
 @class VRPreviewWindowController;
 @class VRFileItemManager;
 @class VRWorkspaceViewFactory;
+@class VRFileBrowserViewFactory;
+
+@protocol QVToolbarDelegate;
 
 
 extern const int qMainWindowBorderThickness;
@@ -29,10 +33,11 @@ extern const int qMainWindowBorderThickness;
     NSWindowDelegate,
     MMVimControllerDelegate,
     VRUserDefaultsObserver,
-    NSUserInterfaceValidations>
+    NSUserInterfaceValidations, QVToolbarDelegate>
 
 @property (nonatomic, weak) VRWorkspace *workspace;
 @property (nonatomic, weak) VRWorkspaceViewFactory *workspaceViewFactory;
+@property (nonatomic, weak) VRFileBrowserViewFactory *fileBrowserViewFactory;
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;
 @property (nonatomic, weak) VROpenQuicklyWindowController *openQuicklyWindowController;
 @property (nonatomic, weak) NSUserDefaults *userDefaults;
@@ -67,6 +72,8 @@ extern const int qMainWindowBorderThickness;
 - (IBAction)zoomIn:(id)sender;
 - (IBAction)zoomOut:(id)sender;
 - (IBAction)selectNthTab:(id)sender;
+
+- (IBAction)toggleSyncWorkspaceWithPwd:(NSMenuItem *)sender;
 
 #pragma mark NSUserInterfaceValidations
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;

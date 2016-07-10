@@ -12,7 +12,7 @@
 
 
 @class VRFileBrowserViewFactory;
-@class VRWorkspaceView;
+@class QVWorkspace;
 
 
 @interface VRWorkspaceViewFactory : NSObject <TBBean>
@@ -20,6 +20,6 @@
 @property (nonatomic, weak) NSUserDefaults *userDefaults;
 @property (nonatomic, weak) VRFileBrowserViewFactory *fileBrowserViewFactory;
 
-- (VRWorkspaceView *)newWorkspaceViewWithFrame:(NSRect)frame vimView:(MMVimView *)vimView;
+- (QVWorkspace *)newWorkspaceViewWithFrame:(NSRect)frame vimView:(MMVimView *)vimView;
 
 @end

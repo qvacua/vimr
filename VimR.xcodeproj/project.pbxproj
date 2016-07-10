@@ -20,7 +20,6 @@
 		1929B15E4DE9D40CD001D126 /* VRScoredPath.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1929B54A396D27D81AEB116E /* VRScoredPath.mm */; };
 		1929B17F47B82FBA846A4936 /* VRFileBrowserOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC6450833D2DD65D870F /* VRFileBrowserOutlineView.m */; };
 		1929B1858DA515DAC0109F42 /* VRLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC59B996498760F6EDE5 /* VRLogFormatter.m */; };
-		1929B19571A09E107B6A806F /* PBXBuildFile */ = {isa = PBXBuildFile; fileRef = 1929BD04907C009FBFD8BA3D /* NSStringCategoryTest.m */; };
 		1929B1C7E68E1C86C0181882 /* VRFileItemManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B37A2B86D52B945AD0D8 /* VRFileItemManager.m */; };
 		1929B1D2E7F9326E3A3749C5 /* VRFileItemOperation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD08826A501D4F3AE082 /* VRFileItemOperation.mm */; };
 		1929B1EAA9A1E1827AD89D73 /* VRNoPluginPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9FEF57174D43BE0D166 /* VRNoPluginPreviewView.m */; };
@@ -151,6 +150,20 @@
 		1929BFD2A870FBF210148877 /* VRPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BAEC891444D375F472C8 /* VRPluginManager.m */; };
 		1929BFE651FC624FDBB6C8AB /* VRMainWindowControllerFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B19627AB3EEDD0C4A7E0 /* VRMainWindowControllerFactory.m */; };
 		1929BFEE218D1F29938F4E99 /* VRTextMateCppUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7D8D7809B241537B6F7 /* VRTextMateCppUtils.mm */; };
+		4B6BDCE91AF36DBE0019DB59 /* NSString+QVWorkspace.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BDCDA1AF36DBE0019DB59 /* NSString+QVWorkspace.m */; };
+		4B6BDCEA1AF36DBE0019DB59 /* NSString+QVWorkspace.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BDCDA1AF36DBE0019DB59 /* NSString+QVWorkspace.m */; };
+		4B6BDCEB1AF36DBE0019DB59 /* NSView+QVWorkspace.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BDCDC1AF36DBE0019DB59 /* NSView+QVWorkspace.m */; };
+		4B6BDCEC1AF36DBE0019DB59 /* NSView+QVWorkspace.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BDCDC1AF36DBE0019DB59 /* NSView+QVWorkspace.m */; };
+		4B6BDCED1AF36DBE0019DB59 /* QVSeparatorLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BDCDE1AF36DBE0019DB59 /* QVSeparatorLine.m */; };
+		4B6BDCEE1AF36DBE0019DB59 /* QVSeparatorLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BDCDE1AF36DBE0019DB59 /* QVSeparatorLine.m */; };
+		4B6BDCEF1AF36DBE0019DB59 /* QVTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BDCE01AF36DBE0019DB59 /* QVTool.m */; };
+		4B6BDCF01AF36DBE0019DB59 /* QVTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BDCE01AF36DBE0019DB59 /* QVTool.m */; };
+		4B6BDCF11AF36DBE0019DB59 /* QVToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BDCE21AF36DBE0019DB59 /* QVToolbar.m */; };
+		4B6BDCF21AF36DBE0019DB59 /* QVToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BDCE21AF36DBE0019DB59 /* QVToolbar.m */; };
+		4B6BDCF31AF36DBE0019DB59 /* QVToolbarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BDCE41AF36DBE0019DB59 /* QVToolbarButton.m */; };
+		4B6BDCF41AF36DBE0019DB59 /* QVToolbarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BDCE41AF36DBE0019DB59 /* QVToolbarButton.m */; };
+		4B6BDCF51AF36DBE0019DB59 /* QVWorkspace.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BDCE71AF36DBE0019DB59 /* QVWorkspace.m */; };
+		4B6BDCF61AF36DBE0019DB59 /* QVWorkspace.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BDCE71AF36DBE0019DB59 /* QVWorkspace.m */; };
 		4B6F24DB197B000100AB1DD8 /* NoPluginPreviewContent.html in Resources */ = {isa = PBXBuildFile; fileRef = 1929BADD87FEE7512FA3D9AE /* NoPluginPreviewContent.html */; };
 		4B6F2573197BAD4300AB1DD8 /* VimRPluginDefinition.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B6F2572197BAD4300AB1DD8 /* VimRPluginDefinition.framework */; };
 		4B6F2574197BAD5300AB1DD8 /* VimRPluginDefinition.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B6F2572197BAD4300AB1DD8 /* VimRPluginDefinition.framework */; };
@@ -296,6 +309,7 @@
 		1929B5FC0CACD06A926BB858 /* VROpenFilesInFrontmostWindowCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VROpenFilesInFrontmostWindowCommand.m; sourceTree = "<group>"; };
 		1929B60202DAE063135DD32C /* VRLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRLog.h; sourceTree = "<group>"; };
 		1929B610BD09830F426CB915 /* VRUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRUserDefaults.h; sourceTree = "<group>"; };
+		1929B625D1EA6CD6EFF958D6 /* QVToolbarDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QVToolbarDelegate.h; path = qvworkspace/Workspace/QVToolbarDelegate.h; sourceTree = "<group>"; };
 		1929B6422375B345DAA4E35A /* VRCppUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VRCppUtils.mm; sourceTree = "<group>"; };
 		1929B68C34C504CB9E6CF69B /* VROpenFilesInNewWindowCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VROpenFilesInNewWindowCommand.m; sourceTree = "<group>"; };
 		1929B68FDCF00DC74509A5DB /* VRInactiveTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRInactiveTableView.h; sourceTree = "<group>"; };
@@ -393,6 +407,22 @@
 		1929BFDF13D59CE5B6D54B2D /* VRGeneralPrefPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VRGeneralPrefPane.m; sourceTree = "<group>"; };
 		1929BFE6F9FFFCCA920EF56C /* VRPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRPluginManager.h; sourceTree = "<group>"; };
 		44ADE76C2C18B01D5595A5B8 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		4B6BDCD91AF36DBE0019DB59 /* NSString+QVWorkspace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+QVWorkspace.h"; path = "qvworkspace/Workspace/NSString+QVWorkspace.h"; sourceTree = "<group>"; };
+		4B6BDCDA1AF36DBE0019DB59 /* NSString+QVWorkspace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+QVWorkspace.m"; path = "qvworkspace/Workspace/NSString+QVWorkspace.m"; sourceTree = "<group>"; };
+		4B6BDCDB1AF36DBE0019DB59 /* NSView+QVWorkspace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSView+QVWorkspace.h"; path = "qvworkspace/Workspace/NSView+QVWorkspace.h"; sourceTree = "<group>"; };
+		4B6BDCDC1AF36DBE0019DB59 /* NSView+QVWorkspace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSView+QVWorkspace.m"; path = "qvworkspace/Workspace/NSView+QVWorkspace.m"; sourceTree = "<group>"; };
+		4B6BDCDD1AF36DBE0019DB59 /* QVSeparatorLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QVSeparatorLine.h; path = qvworkspace/Workspace/QVSeparatorLine.h; sourceTree = "<group>"; };
+		4B6BDCDE1AF36DBE0019DB59 /* QVSeparatorLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QVSeparatorLine.m; path = qvworkspace/Workspace/QVSeparatorLine.m; sourceTree = "<group>"; };
+		4B6BDCDF1AF36DBE0019DB59 /* QVTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QVTool.h; path = qvworkspace/Workspace/QVTool.h; sourceTree = "<group>"; };
+		4B6BDCE01AF36DBE0019DB59 /* QVTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QVTool.m; path = qvworkspace/Workspace/QVTool.m; sourceTree = "<group>"; };
+		4B6BDCE11AF36DBE0019DB59 /* QVToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QVToolbar.h; path = qvworkspace/Workspace/QVToolbar.h; sourceTree = "<group>"; };
+		4B6BDCE21AF36DBE0019DB59 /* QVToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QVToolbar.m; path = qvworkspace/Workspace/QVToolbar.m; sourceTree = "<group>"; };
+		4B6BDCE31AF36DBE0019DB59 /* QVToolbarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QVToolbarButton.h; path = qvworkspace/Workspace/QVToolbarButton.h; sourceTree = "<group>"; };
+		4B6BDCE41AF36DBE0019DB59 /* QVToolbarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QVToolbarButton.m; path = qvworkspace/Workspace/QVToolbarButton.m; sourceTree = "<group>"; };
+		4B6BDCE51AF36DBE0019DB59 /* QVToolbarButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QVToolbarButtonDelegate.h; path = qvworkspace/Workspace/QVToolbarButtonDelegate.h; sourceTree = "<group>"; };
+		4B6BDCE61AF36DBE0019DB59 /* QVWorkspace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QVWorkspace.h; path = qvworkspace/Workspace/QVWorkspace.h; sourceTree = "<group>"; };
+		4B6BDCE71AF36DBE0019DB59 /* QVWorkspace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QVWorkspace.m; path = qvworkspace/Workspace/QVWorkspace.m; sourceTree = "<group>"; };
+		4B6BDCE81AF36DBE0019DB59 /* QVWorkspaceDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QVWorkspaceDelegate.h; path = qvworkspace/Workspace/QVWorkspaceDelegate.h; sourceTree = "<group>"; };
 		4B6F2572197BAD4300AB1DD8 /* VimRPluginDefinition.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = VimRPluginDefinition.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B6F2585197BB59000AB1DD8 /* Markdown.vimr-plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = "Markdown.vimr-plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B89F119190A473F00AA0EE5 /* MacVimFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MacVimFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -701,6 +731,30 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		4B6BDCD81AF36D780019DB59 /* QVWorkspace */ = {
+			isa = PBXGroup;
+			children = (
+				4B6BDCD91AF36DBE0019DB59 /* NSString+QVWorkspace.h */,
+				4B6BDCDA1AF36DBE0019DB59 /* NSString+QVWorkspace.m */,
+				4B6BDCDB1AF36DBE0019DB59 /* NSView+QVWorkspace.h */,
+				4B6BDCDC1AF36DBE0019DB59 /* NSView+QVWorkspace.m */,
+				4B6BDCDD1AF36DBE0019DB59 /* QVSeparatorLine.h */,
+				4B6BDCDE1AF36DBE0019DB59 /* QVSeparatorLine.m */,
+				4B6BDCDF1AF36DBE0019DB59 /* QVTool.h */,
+				4B6BDCE01AF36DBE0019DB59 /* QVTool.m */,
+				4B6BDCE11AF36DBE0019DB59 /* QVToolbar.h */,
+				4B6BDCE21AF36DBE0019DB59 /* QVToolbar.m */,
+				4B6BDCE31AF36DBE0019DB59 /* QVToolbarButton.h */,
+				4B6BDCE41AF36DBE0019DB59 /* QVToolbarButton.m */,
+				4B6BDCE51AF36DBE0019DB59 /* QVToolbarButtonDelegate.h */,
+				4B6BDCE61AF36DBE0019DB59 /* QVWorkspace.h */,
+				4B6BDCE71AF36DBE0019DB59 /* QVWorkspace.m */,
+				4B6BDCE81AF36DBE0019DB59 /* QVWorkspaceDelegate.h */,
+				1929B625D1EA6CD6EFF958D6 /* QVToolbarDelegate.h */,
+			);
+			name = QVWorkspace;
+			sourceTree = "<group>";
+		};
 		4B6F2587197BB59800AB1DD8 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
@@ -721,6 +775,7 @@
 		4BE9240A18C20DBC00E67BB6 = {
 			isa = PBXGroup;
 			children = (
+				4B6BDCD81AF36D780019DB59 /* QVWorkspace */,
 				4BE9241C18C20DBC00E67BB6 /* VimR */,
 				4BE9243A18C20DBC00E67BB6 /* VimRTests */,
 				4B6F2587197BB59800AB1DD8 /* Plugins */,
@@ -928,8 +983,6 @@
 			mainGroup = 4BE9240A18C20DBC00E67BB6;
 			productRefGroup = 4BE9241418C20DBC00E67BB6 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-			);
 			projectRoot = "";
 			targets = (
 				4BE9241218C20DBC00E67BB6 /* VimR */,
@@ -1041,6 +1094,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BE9242A18C20DBC00E67BB6 /* VRAppDelegate.m in Sources */,
+				4B6BDCF31AF36DBE0019DB59 /* QVToolbarButton.m in Sources */,
 				4BE9242318C20DBC00E67BB6 /* main.m in Sources */,
 				1929BE2CA3488AB3824DF598 /* VRManualBeanProvider.m in Sources */,
 				1929BECCEE99FFCBA5ACD04E /* NSArray+VR.m in Sources */,
@@ -1049,6 +1103,7 @@
 				1929B22F52F120AB48CCEBE1 /* VRFileItem.m in Sources */,
 				1929B1C7E68E1C86C0181882 /* VRFileItemManager.m in Sources */,
 				1929B85F39A41C42C8860028 /* VROpenQuicklyWindow.m in Sources */,
+				4B6BDCEB1AF36DBE0019DB59 /* NSView+QVWorkspace.m in Sources */,
 				1929BF1D3C2F7A3F89D6DD98 /* VROpenQuicklyWindowController.m in Sources */,
 				1929BF36720565B5E5A0C630 /* VRScoredPath.mm in Sources */,
 				1929BB2FD516E0C54A7F9F38 /* VRFilterItemsOperation.mm in Sources */,
@@ -1063,6 +1118,7 @@
 				1929BC611C605EA2EA42D6CA /* VRCppUtils.mm in Sources */,
 				1929BA227E512755391D3A00 /* VRUtils.m in Sources */,
 				1929B96602CF1132D3C20FC0 /* VRAlert.m in Sources */,
+				4B6BDCEF1AF36DBE0019DB59 /* QVTool.m in Sources */,
 				1929BFEE218D1F29938F4E99 /* VRTextMateCppUtils.mm in Sources */,
 				1929B9588523C90BA38223FA /* VRWorkspaceView.m in Sources */,
 				1929B78E947C50865826F723 /* VRTextMateUiUtils.m in Sources */,
@@ -1083,11 +1139,14 @@
 				1929B06DA7EA030C15EA09FB /* VRGeneralPrefPane.m in Sources */,
 				1929B581DE1040A8E30A9368 /* VRFileBrowserPrefPane.m in Sources */,
 				1929BFE651FC624FDBB6C8AB /* VRMainWindowControllerFactory.m in Sources */,
+				4B6BDCED1AF36DBE0019DB59 /* QVSeparatorLine.m in Sources */,
 				1929B8D9F169426078FA957B /* VRWorkspaceFactory.m in Sources */,
 				1929B146BD30BF4DD3720188 /* VRWorkspaceViewFactory.m in Sources */,
 				1929B89B42D69989BF0CBC3D /* VRFileBrowserViewFactory.m in Sources */,
 				1929B683C26F3C2903644800 /* NSString+VR.m in Sources */,
+				4B6BDCF11AF36DBE0019DB59 /* QVToolbar.m in Sources */,
 				1929B9A5D27234DBF2990E31 /* VRApplication.m in Sources */,
+				4B6BDCE91AF36DBE0019DB59 /* NSString+QVWorkspace.m in Sources */,
 				1929B45FB56172D6481C412A /* VROpenFilesInNewWindowCommand.m in Sources */,
 				1929BB9338D726C44D38C16A /* VROpenFilesCommand.m in Sources */,
 				1929BDF505FDA350AFD3FD44 /* VROpenFilesInFrontmostWindowCommand.m in Sources */,
@@ -1096,6 +1155,7 @@
 				1929BDE700B7387B64B9BB40 /* VRPropertyService.m in Sources */,
 				1929B9F07662B5DE6F2D1A94 /* VROpenQuicklyIgnorePattern.m in Sources */,
 				1929B0FE2E3F340E4AFFC552 /* VRMenuItem.m in Sources */,
+				4B6BDCF51AF36DBE0019DB59 /* QVWorkspace.m in Sources */,
 				1929BA14409C8CB2603B8E8E /* VRKeyBinding.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1107,6 +1167,7 @@
 				4B8BE1EE18EB556C004840F1 /* VRAppDelegate.m in Sources */,
 				1929B65D8458FE1E5D4E0594 /* VRBaseTestCase.m in Sources */,
 				1929B93BBCD53898D16541CD /* VRManualBeanProvider.m in Sources */,
+				4B6BDCF61AF36DBE0019DB59 /* QVWorkspace.m in Sources */,
 				1929BD434C100AD15EDA2FAF /* VRMainWindowControllerTest.m in Sources */,
 				1929BD58ED16CFBDF23E41A5 /* VRWorkspaceControllerTest.m in Sources */,
 				1929B99E6ED2346227C88A2B /* VRAppDelegateTest.m in Sources */,
@@ -1133,10 +1194,12 @@
 				1929BD58A3D5B75CD348D907 /* VRMainWindow.m in Sources */,
 				1929B8B706AC7A4DEBEA23BA /* VRWorkspace.m in Sources */,
 				1929B3017554189DF3D5AB3E /* VRWorkspaceController.m in Sources */,
+				4B6BDCEA1AF36DBE0019DB59 /* NSString+QVWorkspace.m in Sources */,
 				1929BA573D9D927EF4FDA4E0 /* VRMainWindowController.m in Sources */,
 				1929B44A377085462454D47A /* VRCppUtils.mm in Sources */,
 				1929B64D6959587E9FAA14F2 /* VRUtils.m in Sources */,
 				1929BAFE398C4B624DAC7FD9 /* VRAlert.m in Sources */,
+				4B6BDCF41AF36DBE0019DB59 /* QVToolbarButton.m in Sources */,
 				1929B159A8EDC43B78E512AD /* VRTextMateCppUtils.mm in Sources */,
 				1929B55E015D40CDDCE5A13F /* VRWorkspaceView.m in Sources */,
 				1929BA0717682C263764E1D8 /* VRTextMateUiUtils.m in Sources */,
@@ -1155,9 +1218,11 @@
 				1929BB368BEEB9BEDE7797D9 /* VRPrefWindow.m in Sources */,
 				1929BBFC6EFD8C4DD4861506 /* VRUserDefaults.m in Sources */,
 				1929BFD2A870FBF210148877 /* VRPluginManager.m in Sources */,
+				4B6BDCEE1AF36DBE0019DB59 /* QVSeparatorLine.m in Sources */,
 				1929BB4F2309E600CC048F28 /* VRPluginManagerTest.m in Sources */,
 				1929BEFE9E22FDC8EBD5A63D /* VRDummyPlugins.m in Sources */,
 				1929B1EAA9A1E1827AD89D73 /* VRNoPluginPreviewView.m in Sources */,
+				4B6BDCF01AF36DBE0019DB59 /* QVTool.m in Sources */,
 				1929B620973945EF0B21A31F /* VRPreviewWindowController.m in Sources */,
 				1929BA323D66CF24342883A8 /* VRPrefPane.m in Sources */,
 				1929B489548A5818E1BA83F3 /* VRGeneralPrefPane.m in Sources */,
@@ -1177,8 +1242,10 @@
 				1929BB4053A03944A91AB10E /* VRPropertyService.m in Sources */,
 				1929BA1E08F2DA3328BA7D3C /* NSStringCategoryTest.m in Sources */,
 				1929BACF4FF114769BC0DCA8 /* VROpenQuicklyIgnorePattern.m in Sources */,
+				4B6BDCF21AF36DBE0019DB59 /* QVToolbar.m in Sources */,
 				1929BCAAC084135BB4FB7A8E /* VROpenQuicklyIgnorePatternTest.m in Sources */,
 				1929B9FD4D9474227497BFF0 /* VRMenuItem.m in Sources */,
+				4B6BDCEC1AF36DBE0019DB59 /* NSView+QVWorkspace.m in Sources */,
 				1929B7B8C69FAD008AFD9E13 /* VRKeyBinding.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

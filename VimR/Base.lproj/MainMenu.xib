@@ -333,8 +333,7 @@ Gw
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Navigate" id="Qkn-nP-qpX">
                         <items>
-                            <menuItem title="Show Folders First" id="jSN-4m-3wl" customClass="VRMenuItem">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Show Folders First" keyEquivalent="D" id="jSN-4m-3wl" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="navigate.show-folders-first"/>
                                 </userDefinedRuntimeAttributes>
@@ -342,8 +341,7 @@ Gw
                                     <action selector="toggleShowFoldersFirst:" target="-1" id="HcS-j8-6t6"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Show Hidden Files" id="9fO-Qz-cWQ" customClass="VRMenuItem">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Show Hidden Files" keyEquivalent="I" id="9fO-Qz-cWQ" customClass="VRMenuItem">
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="menuItemIdentifier" value="navigate.show-hidden-files"/>
                                 </userDefinedRuntimeAttributes>

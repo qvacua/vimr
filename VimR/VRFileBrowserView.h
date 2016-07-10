@@ -17,6 +17,7 @@
 @class VRFileBrowserOutlineView;
 @class VRNode;
 @class VRWorkspaceView;
+@class MMVimController;
 
 @protocol VRFileBrowserActionDelegate;
 
@@ -30,6 +31,7 @@
 @property (nonatomic, weak) VRFileItemManager *fileItemManager;
 @property (nonatomic, weak) NSUserDefaults *userDefaults;
 @property (nonatomic, weak) NSNotificationCenter *notificationCenter;
+@property (nonatomic, weak) MMVimController *vimController;
 
 @property (nonatomic) NSURL *rootUrl;
 
