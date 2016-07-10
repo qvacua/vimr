@@ -3,7 +3,7 @@
  * See LICENSE
  */
 
-#import "server_ui.h"
+#import <Foundation/Foundation.h>
 #import "Logging.h"
 #import "server_globals.h"
 #import "NeoVimServer.h"
@@ -51,7 +51,7 @@ static bool _is_ui_launched = false;
 static uv_mutex_t _mutex;
 static uv_cond_t _condition;
 
-static ServerUiData *_xpc_ui_data;
+static ServerUiData *_server_ui_data;
 
 static NSString *_marked_text = nil;
 
@@ -95,28 +95,28 @@ static void sigcont_cb(SignalWatcher *watcher __unused, int signum __unused, voi
   ((ServerUiData *) data)->cont_received = true;
 }
 
-static void osx_xpc_ui_scheduler(Event event, void *d) {
+static void server_ui_scheduler(Event event, void *d) {
   UI *ui = d;
   ServerUiData *data = ui->data;
   loop_schedule(data->loop, event);
 }
 
-static void osx_xpc_ui_main(UIBridgeData *bridge, UI *ui) {
+static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   Loop loop;
   loop_init(&loop, NULL);
 
-  _xpc_ui_data = xcalloc(1, sizeof(ServerUiData));
-  ui->data = _xpc_ui_data;
-  _xpc_ui_data->bridge = bridge;
-  _xpc_ui_data->loop = &loop;
+  _server_ui_data = xcalloc(1, sizeof(ServerUiData));
+  ui->data = _server_ui_data;
+  _server_ui_data->bridge = bridge;
+  _server_ui_data->loop = &loop;
 
   // FIXME: dunno whether we need this: copied from tui.c
-  signal_watcher_init(_xpc_ui_data->loop, &_xpc_ui_data->cont_handle, _xpc_ui_data);
-  signal_watcher_start(&_xpc_ui_data->cont_handle, sigcont_cb, SIGCONT);
+  signal_watcher_init(_server_ui_data->loop, &_server_ui_data->cont_handle, _server_ui_data);
+  signal_watcher_start(&_server_ui_data->cont_handle, sigcont_cb, SIGCONT);
 
   set_ui_size(bridge, 30, 15);
 
-  _xpc_ui_data->stop = false;
+  _server_ui_data->stop = false;
   CONTINUE(bridge);
 
   uv_mutex_lock(&_mutex);
@@ -124,14 +124,14 @@ static void osx_xpc_ui_main(UIBridgeData *bridge, UI *ui) {
   uv_cond_signal(&_condition);
   uv_mutex_unlock(&_mutex);
 
-  while (!_xpc_ui_data->stop) {
+  while (!_server_ui_data->stop) {
     loop_poll_events(&loop, -1);
   }
 
   ui_bridge_stopped(bridge);
   loop_close(&loop);
 
-  xfree(_xpc_ui_data);
+  xfree(_server_ui_data);
   xfree(ui);
 }
 
@@ -151,7 +151,7 @@ static void suspend_event(void **argv) {
   CONTINUE(data->bridge);
 }
 
-static void xpc_ui_resize(UI *ui __unused, int width, int height) {
+static void server_ui_resize(UI *ui __unused, int width, int height) {
   queue(^{
     int values[] = { width, height };
     NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
@@ -161,19 +161,19 @@ static void xpc_ui_resize(UI *ui __unused, int width, int height) {
   });
 }
 
-static void xpc_ui_clear(UI *ui __unused) {
+static void server_ui_clear(UI *ui __unused) {
   queue(^{
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdClear];
   });
 }
 
-static void xpc_ui_eol_clear(UI *ui __unused) {
+static void server_ui_eol_clear(UI *ui __unused) {
   queue(^{
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdEolClear];
   });
 }
 
-static void xpc_ui_cursor_goto(UI *ui __unused, int row, int col) {
+static void server_ui_cursor_goto(UI *ui __unused, int row, int col) {
   queue(^{
     _put_row = row;
     _put_column = col;
@@ -185,37 +185,37 @@ static void xpc_ui_cursor_goto(UI *ui __unused, int row, int col) {
   });
 }
 
-static void xpc_ui_update_menu(UI *ui __unused) {
+static void server_ui_update_menu(UI *ui __unused) {
   queue(^{
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetMenu];
   });
 }
 
-static void xpc_ui_busy_start(UI *ui __unused) {
+static void server_ui_busy_start(UI *ui __unused) {
   queue(^{
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdBusyStart];
   });
 }
 
-static void xpc_ui_busy_stop(UI *ui __unused) {
+static void server_ui_busy_stop(UI *ui __unused) {
   queue(^{
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdBusyStop];
   });
 }
 
-static void xpc_ui_mouse_on(UI *ui __unused) {
+static void server_ui_mouse_on(UI *ui __unused) {
   queue(^{
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdMouseOn];
   });
 }
 
-static void xpc_ui_mouse_off(UI *ui __unused) {
+static void server_ui_mouse_off(UI *ui __unused) {
   queue(^{
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdMouseOff];
   });
 }
 
-static void xpc_ui_mode_change(UI *ui __unused, int mode) {
+static void server_ui_mode_change(UI *ui __unused, int mode) {
   queue(^{
     int value = mode;
     NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
@@ -224,7 +224,7 @@ static void xpc_ui_mode_change(UI *ui __unused, int mode) {
   });
 }
 
-static void xpc_ui_set_scroll_region(UI *ui __unused, int top, int bot, int left, int right) {
+static void server_ui_set_scroll_region(UI *ui __unused, int top, int bot, int left, int right) {
   queue(^{
     int values[] = { top, bot, left, right };
     NSData *data = [[NSData alloc] initWithBytes:values length:(4 * sizeof(int))];
@@ -233,7 +233,7 @@ static void xpc_ui_set_scroll_region(UI *ui __unused, int top, int bot, int left
   });
 }
 
-static void xpc_ui_scroll(UI *ui __unused, int count) {
+static void server_ui_scroll(UI *ui __unused, int count) {
   queue(^{
     int value = count;
     NSLog(@"ui_scroll: %d", count);
@@ -243,7 +243,7 @@ static void xpc_ui_scroll(UI *ui __unused, int count) {
   });
 }
 
-static void xpc_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
+static void server_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
   queue(^{
     FontTrait trait = FontTraitNone;
     if (attrs.italic) {
@@ -274,7 +274,7 @@ static void xpc_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
   });
 }
 
-static void xpc_ui_put(UI *ui __unused, uint8_t *str, size_t len) {
+static void server_ui_put(UI *ui __unused, uint8_t *str, size_t len) {
   queue(^{
     NSString *string = [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
 //    printf("%s", [string cStringUsingEncoding:NSUTF8StringEncoding]);
@@ -296,25 +296,25 @@ static void xpc_ui_put(UI *ui __unused, uint8_t *str, size_t len) {
   });
 }
 
-static void xpc_ui_bell(UI *ui __unused) {
+static void server_ui_bell(UI *ui __unused) {
   queue(^{
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdBell];
   });
 }
 
-static void xpc_ui_visual_bell(UI *ui __unused) {
+static void server_ui_visual_bell(UI *ui __unused) {
   queue(^{
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdVisualBell];
   });
 }
 
-static void xpc_ui_flush(UI *ui __unused) {
+static void server_ui_flush(UI *ui __unused) {
   queue(^{
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdFlush];
   });
 }
 
-static void xpc_ui_update_fg(UI *ui __unused, int fg) {
+static void server_ui_update_fg(UI *ui __unused, int fg) {
   queue(^{
     int value;
 
@@ -336,7 +336,7 @@ static void xpc_ui_update_fg(UI *ui __unused, int fg) {
   });
 }
 
-static void xpc_ui_update_bg(UI *ui __unused, int bg) {
+static void server_ui_update_bg(UI *ui __unused, int bg) {
   queue(^{
     int value;
 
@@ -357,7 +357,7 @@ static void xpc_ui_update_bg(UI *ui __unused, int bg) {
   });
 }
 
-static void xpc_ui_update_sp(UI *ui __unused, int sp) {
+static void server_ui_update_sp(UI *ui __unused, int sp) {
   queue(^{
     int value;
 
@@ -378,7 +378,7 @@ static void xpc_ui_update_sp(UI *ui __unused, int sp) {
   });
 }
 
-static void xpc_ui_suspend(UI *ui __unused) {
+static void server_ui_suspend(UI *ui __unused) {
   queue(^{
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSuspend];
 
@@ -391,7 +391,7 @@ static void xpc_ui_suspend(UI *ui __unused) {
   });
 }
 
-static void xpc_ui_set_title(UI *ui __unused, char *title) {
+static void server_ui_set_title(UI *ui __unused, char *title) {
   queue(^{
     NSString *string = [[NSString alloc] initWithCString:title encoding:NSUTF8StringEncoding];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetTitle data:[string dataUsingEncoding:NSUTF8StringEncoding]];
@@ -399,7 +399,7 @@ static void xpc_ui_set_title(UI *ui __unused, char *title) {
   });
 }
 
-static void xpc_ui_set_icon(UI *ui __unused, char *icon) {
+static void server_ui_set_icon(UI *ui __unused, char *icon) {
   queue(^{
     NSString *string = [[NSString alloc] initWithCString:icon encoding:NSUTF8StringEncoding];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetIcon data:[string dataUsingEncoding:NSUTF8StringEncoding]];
@@ -407,54 +407,13 @@ static void xpc_ui_set_icon(UI *ui __unused, char *icon) {
   });
 }
 
-static void xpc_ui_stop(UI *ui __unused) {
+static void server_ui_stop(UI *ui __unused) {
   queue(^{
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdStop];
 
     ServerUiData *data = (ServerUiData *) ui->data;
     data->stop = true;
   });
-}
-
-static void run_neovim(void *arg __unused) {
-  char *argv[1];
-  argv[0] = "nvim";
-
-  int returnCode = nvim_main(1, argv);
-
-  log4Debug("neovim's main returned with code: %d", returnCode);
-}
-
-void custom_ui_start(void) {
-  UI *ui = xcalloc(1, sizeof(UI));
-
-  ui->rgb = true;
-  ui->stop = xpc_ui_stop;
-  ui->resize = xpc_ui_resize;
-  ui->clear = xpc_ui_clear;
-  ui->eol_clear = xpc_ui_eol_clear;
-  ui->cursor_goto = xpc_ui_cursor_goto;
-  ui->update_menu = xpc_ui_update_menu;
-  ui->busy_start = xpc_ui_busy_start;
-  ui->busy_stop = xpc_ui_busy_stop;
-  ui->mouse_on = xpc_ui_mouse_on;
-  ui->mouse_off = xpc_ui_mouse_off;
-  ui->mode_change = xpc_ui_mode_change;
-  ui->set_scroll_region = xpc_ui_set_scroll_region;
-  ui->scroll = xpc_ui_scroll;
-  ui->highlight_set = xpc_ui_highlight_set;
-  ui->put = xpc_ui_put;
-  ui->bell = xpc_ui_bell;
-  ui->visual_bell = xpc_ui_visual_bell;
-  ui->update_fg = xpc_ui_update_fg;
-  ui->update_bg = xpc_ui_update_bg;
-  ui->update_sp = xpc_ui_update_sp;
-  ui->flush = xpc_ui_flush;
-  ui->suspend = xpc_ui_suspend;
-  ui->set_title = xpc_ui_set_title;
-  ui->set_icon = xpc_ui_set_icon;
-
-  ui_bridge_attach(ui, osx_xpc_ui_main, osx_xpc_ui_scheduler);
 }
 
 static void force_redraw(void **argv __unused) {
@@ -466,7 +425,6 @@ static void refresh_ui(void **argv __unused) {
   ui_refresh();
 }
 
-// TODO: optimize away @autoreleasepool?
 static void neovim_input(void **argv) {
   @autoreleasepool {
     NSString *input = (NSString *) argv[0];
@@ -481,7 +439,61 @@ static void neovim_input(void **argv) {
   }
 }
 
-void start_neovim() {
+static void delete_marked_text() {
+  NSUInteger length = [_marked_text lengthOfBytesUsingEncoding:NSUTF32StringEncoding] / 4;
+
+  [_marked_text release];
+  _marked_text = nil;
+
+  for (int i = 0; i < length; i++) {
+    loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_backspace retain])); // release in neovim_input
+  }
+}
+
+static void run_neovim(void *arg __unused) {
+  char *argv[1];
+  argv[0] = "nvim";
+
+  int returnCode = nvim_main(1, argv);
+
+  NSLog(@"neovim's main returned with code: %d\n", returnCode);
+}
+
+#pragma mark Public
+
+void custom_ui_start(void) {
+  UI *ui = xcalloc(1, sizeof(UI));
+
+  ui->rgb = true;
+  ui->stop = server_ui_stop;
+  ui->resize = server_ui_resize;
+  ui->clear = server_ui_clear;
+  ui->eol_clear = server_ui_eol_clear;
+  ui->cursor_goto = server_ui_cursor_goto;
+  ui->update_menu = server_ui_update_menu;
+  ui->busy_start = server_ui_busy_start;
+  ui->busy_stop = server_ui_busy_stop;
+  ui->mouse_on = server_ui_mouse_on;
+  ui->mouse_off = server_ui_mouse_off;
+  ui->mode_change = server_ui_mode_change;
+  ui->set_scroll_region = server_ui_set_scroll_region;
+  ui->scroll = server_ui_scroll;
+  ui->highlight_set = server_ui_highlight_set;
+  ui->put = server_ui_put;
+  ui->bell = server_ui_bell;
+  ui->visual_bell = server_ui_visual_bell;
+  ui->update_fg = server_ui_update_fg;
+  ui->update_bg = server_ui_update_bg;
+  ui->update_sp = server_ui_update_sp;
+  ui->flush = server_ui_flush;
+  ui->suspend = server_ui_suspend;
+  ui->set_title = server_ui_set_title;
+  ui->set_icon = server_ui_set_icon;
+
+  ui_bridge_attach(ui, server_ui_main, server_ui_scheduler);
+}
+
+void server_start_neovim() {
   _queue = dispatch_queue_create("com.qvacua.nvox.neovim-server.queue", DISPATCH_QUEUE_SERIAL);
 
   // set $VIMRUNTIME to ${RESOURCE_PATH_OF_XPC_BUNDLE}/runtime
@@ -510,18 +522,7 @@ void start_neovim() {
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdNeoVimReady];
 }
 
-void do_delete_marked_text() {
-  NSUInteger length = [_marked_text lengthOfBytesUsingEncoding:NSUTF32StringEncoding] / 4;
-
-  [_marked_text release];
-  _marked_text = nil;
-
-  for (int i = 0; i < length; i++) {
-    loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_backspace retain])); // release in neovim_input
-  }
-}
-
-void do_delete(NSInteger count) {
+void server_delete(NSInteger count) {
   queue(^{
     _marked_delta = 0;
 
@@ -549,19 +550,19 @@ void do_delete(NSInteger count) {
   });
 }
 
-void do_force_redraw() {
+void server_redraw() {
   loop_schedule(&main_loop, event_create(1, force_redraw, 0));
 }
 
-void do_resize(int width, int height) {
+void server_resize(int width, int height) {
   queue(^{
     NSLog(@"!!! do_resize: %d:%d", width, height);
-    set_ui_size(_xpc_ui_data->bridge, width, height);
+    set_ui_size(_server_ui_data->bridge, width, height);
     loop_schedule(&main_loop, event_create(1, refresh_ui, 0));
   });
 }
 
-void do_vim_input(NSString *input) {
+void server_vim_input(NSString *input) {
   queue(^{
     if (_marked_text == nil) {
       loop_schedule(&main_loop, event_create(1, neovim_input, 1, [input retain])); // release in neovim_input
@@ -584,12 +585,12 @@ void do_vim_input(NSString *input) {
       }
     }
 
-    do_delete_marked_text();
+    delete_marked_text();
     loop_schedule(&main_loop, event_create(1, neovim_input, 1, [input retain])); // release in neovim_input
   });
 }
 
-void do_vim_input_marked_text(NSString *markedText) {
+void server_vim_input_marked_text(NSString *markedText) {
   queue(^{
     if (_marked_text == nil) {
       _marked_row = _put_row;
@@ -597,15 +598,15 @@ void do_vim_input_marked_text(NSString *markedText) {
 //      log4Debug("marking position: %d:%d(%d + %d)", _put_row, _marked_column, _put_column, _marked_delta);
       _marked_delta = 0;
     } else {
-      do_delete_marked_text();
+      delete_marked_text();
     }
 
 //    log4Debug("inserting marked text '%@' at %d:%d", markedText, _put_row, _put_column);
-    do_insert_marked_text(markedText);
+    server_insert_marked_text(markedText);
   });
 }
 
-void do_insert_marked_text(NSString *markedText) {
+void server_insert_marked_text(NSString *markedText) {
   _marked_text = [markedText retain]; // release when the final text is input in -vimInput
 
   loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_marked_text retain])); // release in neovim_input

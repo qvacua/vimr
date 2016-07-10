@@ -146,12 +146,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   switch (msgid) {
 
     case NeoVimAgentMsgIdAgentReady:
-      start_neovim();
+      server_start_neovim();
       return;
 
     case NeoVimAgentMsgIdInput: {
       NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-      do_vim_input(string);
+      server_vim_input(string);
       [string release];
 
       return;
@@ -159,7 +159,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
     case NeoVimAgentMsgIdInputMarked: {
       NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-      do_vim_input_marked_text(string);
+      server_vim_input_marked_text(string);
       [string release];
 
       return;
@@ -167,19 +167,19 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
     case NeoVimAgentMsgIdDelete: {
       NSInteger *values = data_to_NSInteger_array(data, 1);
-      do_delete(values[0]);
+      server_delete(values[0]);
       return;
     }
 
     case NeoVimAgentMsgIdResize: {
       int *values = data_to_int_array(data, 2);
       NSLog(@"!!! server rcv resize: %d:%d", values[0], values[1]);
-      do_resize(values[0], values[1]);
+      server_resize(values[0], values[1]);
       return;
     }
 
     case NeoVimAgentMsgIdRedraw:
-      do_force_redraw();
+      server_redraw();
       return;
 
     default:
