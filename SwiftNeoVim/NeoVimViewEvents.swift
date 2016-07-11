@@ -15,7 +15,9 @@ extension NeoVimView: NSTextInputClient {
     if self.keyDownDone && cocoaHandledEvent {
       return
     }
-    
+
+//    NSLog("\(#function): \(event)")
+
     let modifierFlags = event.modifierFlags
     let capslock = modifierFlags.contains(.AlphaShiftKeyMask)
     let shift = modifierFlags.contains(.ShiftKeyMask)
@@ -24,10 +26,18 @@ extension NeoVimView: NSTextInputClient {
                                                    : event.charactersIgnoringModifiers!
 
     let vimModifiers = self.vimModifierFlags(modifierFlags)
-    if vimModifiers.characters.count > 0 {
-      self.agent.vimInput(self.vimNamedKeys(vimModifiers + charsIgnoringModifiers))
+    if KeyUtils.isSpecial(key: charsIgnoringModifiers) {
+      if vimModifiers.characters.count > 0 {
+        self.agent.vimInput(self.wrapNamedKeys(vimModifiers + KeyUtils.namedKeyFrom(key: charsIgnoringModifiers)))
+      } else {
+        self.agent.vimInput(self.wrapNamedKeys(KeyUtils.namedKeyFrom(key: charsIgnoringModifiers)))
+      }
     } else {
-      self.agent.vimInput(self.vimPlainString(chars))
+      if vimModifiers.characters.count > 0 {
+        self.agent.vimInput(self.wrapNamedKeys(vimModifiers + charsIgnoringModifiers))
+      } else {
+        self.agent.vimInput(self.vimPlainString(chars))
+      }
     }
 
     self.keyDownDone = true

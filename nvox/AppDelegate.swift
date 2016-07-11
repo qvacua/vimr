@@ -21,9 +21,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     self.mainWindowManager.newMainWindow()
   }
   
-//  func applicationDidFinishLaunching(aNotification: NSNotification) {
+  func applicationDidFinishLaunching(aNotification: NSNotification) {
 //    let testView = InputTestView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
 //    self.window.contentView?.addSubview(testView)
 //    self.window.makeFirstResponder(testView)
-//  }
+
+    self.mainWindowManager.newMainWindow()
+  }
 }

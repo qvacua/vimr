@@ -4,7 +4,6 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "NeoVimUiBridgeProtocol.h"
 #import "NeoVimMsgIds.h"
 
 

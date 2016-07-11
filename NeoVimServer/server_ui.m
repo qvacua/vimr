@@ -7,6 +7,7 @@
 #import "Logging.h"
 #import "server_globals.h"
 #import "NeoVimServer.h"
+#import "NeoVimUiBridgeProtocol.h"
 
 // FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
 // them.

@@ -311,12 +311,12 @@ public class NeoVimView: NSView {
     )
   }
 
-  func vimNamedKeys(string: String) -> String {
+  func wrapNamedKeys(string: String) -> String {
     return "<\(string)>"
   }
   
   func vimPlainString(string: String) -> String {
-    return string.stringByReplacingOccurrencesOfString("<", withString: self.vimNamedKeys("lt"))
+    return string.stringByReplacingOccurrencesOfString("<", withString: self.wrapNamedKeys("lt"))
   }
   
   required public init?(coder: NSCoder) {
