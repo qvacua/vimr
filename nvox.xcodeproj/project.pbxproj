@@ -31,6 +31,7 @@
 		4B570DC21D303CAF006EDC21 /* NeoVimAgent.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B570DC01D303CAF006EDC21 /* NeoVimAgent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B570DC31D303CAF006EDC21 /* NeoVimAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B570DC11D303CAF006EDC21 /* NeoVimAgent.m */; };
 		4B854A1D1D31447C00E08DE1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B854A1C1D31447C00E08DE1 /* main.m */; };
+		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
 		4B9A15241D2993DA009F9F67 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B9A15251D2993DA009F9F67 /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29C1D29926600C1F92E /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B9A15261D2993DF009F9F67 /* SwiftNeoVim.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -179,6 +180,7 @@
 		4B7BD3321D32530900AAA45E /* Logging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
 		4B854A1A1D31447C00E08DE1 /* NeoVimServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NeoVimServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B854A1C1D31447C00E08DE1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4B97E2CD1D33F53D00FC0660 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaExtensions.swift; sourceTree = "<group>"; };
 		4BCF638F1D323CFD00F15CE4 /* nvim */ = {isa = PBXFileReference; lastKnownFileType = folder; name = nvim; path = neovim/src/nvim; sourceTree = SOURCE_ROOT; };
 		4BD3BF921D32A95800082605 /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
@@ -337,6 +339,17 @@
 			path = NeoVimServer;
 			sourceTree = "<group>";
 		};
+		4B97E2CF1D33F92200FC0660 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				4BEBA50C1CFF374B00673FDF /* MainMenu.xib */,
+				4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */,
+				4BEBA50A1CFF374B00673FDF /* Assets.xcassets */,
+				4BEBA50F1CFF374B00673FDF /* Info.plist */,
+			);
+			name = resources;
+			sourceTree = "<group>";
+		};
 		4BDCFADC1D3145EA00F62670 /* lib */ = {
 			isa = PBXGroup;
 			children = (
@@ -383,9 +396,7 @@
 				4BEBA5081CFF374B00673FDF /* AppDelegate.swift */,
 				4BD3BF961D32B0DB00082605 /* MainWindowManager.swift */,
 				4BD3BF921D32A95800082605 /* MainWindowController.swift */,
-				4BEBA50A1CFF374B00673FDF /* Assets.xcassets */,
-				4BEBA50C1CFF374B00673FDF /* MainMenu.xib */,
-				4BEBA50F1CFF374B00673FDF /* Info.plist */,
+				4B97E2CF1D33F92200FC0660 /* resources */,
 				4B2A2C0D1D0353750074CE9A /* Bridge.h */,
 			);
 			path = nvox;
@@ -602,6 +613,7 @@
 			files = (
 				4BEBA50B1CFF374B00673FDF /* Assets.xcassets in Resources */,
 				4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */,
+				4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -715,6 +727,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4B97E2CD1D33F53D00FC0660 /* Base */,
+			);
+			name = MainWindow.xib;
+			sourceTree = "<group>";
+		};
 		4BEBA50C1CFF374B00673FDF /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (

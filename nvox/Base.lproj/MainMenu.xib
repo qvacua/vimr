@@ -687,17 +687,27 @@
                 </menuItem>
             </items>
         </menu>
-        <window title="nvox" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
+        <window title="VimR" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="430" height="332"/>
+            <rect key="contentRect" x="335" y="390" width="165" height="125"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1177"/>
             <value key="minSize" type="size" width="240" height="140"/>
             <view key="contentView" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="430" height="332"/>
+                <rect key="frame" x="0.0" y="0.0" width="165" height="125"/>
                 <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Z3E-Xb-Y41">
+                        <rect key="frame" x="18" y="20" width="129" height="85"/>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Very early release of VimR with NeoVim backend  ⌘-N to get started!" id="SJI-z6-rr0">
+                            <font key="font" metaFont="systemBold"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                </subviews>
             </view>
-            <point key="canvasLocation" x="308" y="401"/>
+            <point key="canvasLocation" x="-33.5" y="178.5"/>
         </window>
     </objects>
 </document>

@@ -10,11 +10,11 @@ class MainWindowManager {
   private var mainWindowControllers: [String: MainWindowController] = [:]
   
   func newMainWindow() {
-    let mainWindowController = MainWindowController(contentRect: CGRect(x: 100, y: 100, width: 320, height: 240),
-                                                    manager: self)
-    mainWindowController.showWindow(self)
-    
+    let mainWindowController = MainWindowController(windowNibName: "MainWindow")
     self.mainWindowControllers[mainWindowController.uuid] = mainWindowController
+
+    mainWindowController.setup(manager: self)
+    mainWindowController.showWindow(self)
   }
   
   func closeMainWindow(mainWindowController: MainWindowController) {
