@@ -46,8 +46,10 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     DispatchUtils.gui {
 //      NSLog("\(#function): \(position), \(screenCursor)")
 
-      self.setNeedsDisplay(cellPosition: self.grid.screenCursor) // redraw where the cursor was till now
-      self.setNeedsDisplay(screenCursor: screenCursor) // draw the new cursor
+      // Because neovim fills blank space with "Space" and when we enter "Space" we don't get the puts.
+      self.setNeedsDisplay(cellPosition: self.grid.putPosition)
+      self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(self.grid.putPosition))
+      self.setNeedsDisplay(screenCursor: position)
 
       self.grid.goto(position)
       self.grid.moveCursor(screenCursor)
@@ -99,7 +101,9 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
 //      NSLog("\(#function): \(curPos) -> \(string)")
       self.grid.put(string)
       self.setNeedsDisplay(cellPosition: curPos)
-      
+      // When the cursor is in the command line, then we need this...
+      self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(curPos))
+
       self.setNeedsDisplay(screenCursor: self.grid.screenCursor)
     }
   }
@@ -111,6 +115,8 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
       self.grid.putMarkedText(markedText)
 
       self.setNeedsDisplay(position: curPos)
+      // When the cursor is in the command line, then we need this...
+      self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(curPos))
       if markedText.characters.count == 0 {
         self.setNeedsDisplay(position: self.grid.previousCellPosition(curPos))
       }
@@ -141,7 +147,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   public func flush() {
-//    Swift.print("\(self.grid)")
+//    NSLog("\(#function)")
   }
   
   public func updateForeground(fg: Int32) {

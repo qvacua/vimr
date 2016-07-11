@@ -207,8 +207,8 @@ public class NeoVimView: NSView {
 
   private func drawCursor(background: UInt32) {
     // FIXME: for now do some rudimentary cursor drawing
-    let cursorPosition = self.grid.screenCursor
-//    Swift.print("\(#function): \(cursorPosition)")
+    let cursorPosition = self.grid.putPosition
+//    NSLog("\(#function): \(cursorPosition)")
 
     var cursorRect = self.cellRectFor(row: cursorPosition.row, column: cursorPosition.column)
     if self.grid.isNextCellEmpty(cursorPosition) {
