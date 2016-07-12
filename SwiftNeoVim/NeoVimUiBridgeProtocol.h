@@ -4,7 +4,6 @@
  */
 
 @import Foundation;
-#import "NeoVimMsgIds.h"
 
 
 typedef NS_ENUM(NSUInteger, FontTrait) {
