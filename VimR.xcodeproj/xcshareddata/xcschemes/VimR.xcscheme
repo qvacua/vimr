@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4BEBA5041CFF374B00673FDF"
-               BuildableName = "nvox.app"
-               BlueprintName = "nvox"
-               ReferencedContainer = "container:nvox.xcodeproj">
+               BuildableName = "VimR.app"
+               BlueprintName = "VimR"
+               ReferencedContainer = "container:VimR.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4BEBA5131CFF374B00673FDF"
-               BuildableName = "nvoxTests.xctest"
-               BlueprintName = "nvoxTests"
-               ReferencedContainer = "container:nvox.xcodeproj">
+               BuildableName = "VimR.xctest"
+               BlueprintName = "VimRTests"
+               ReferencedContainer = "container:VimR.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -43,9 +43,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4BEBA5041CFF374B00673FDF"
-            BuildableName = "nvox.app"
-            BlueprintName = "nvox"
-            ReferencedContainer = "container:nvox.xcodeproj">
+            BuildableName = "VimR.app"
+            BlueprintName = "VimR"
+            ReferencedContainer = "container:VimR.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -66,9 +66,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4BEBA5041CFF374B00673FDF"
-            BuildableName = "nvox.app"
-            BlueprintName = "nvox"
-            ReferencedContainer = "container:nvox.xcodeproj">
+            BuildableName = "VimR.app"
+            BlueprintName = "VimR"
+            ReferencedContainer = "container:VimR.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -85,9 +85,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4BEBA5041CFF374B00673FDF"
-            BuildableName = "nvox.app"
-            BlueprintName = "nvox"
-            ReferencedContainer = "container:nvox.xcodeproj">
+            BuildableName = "VimR.app"
+            BlueprintName = "VimR"
+            ReferencedContainer = "container:VimR.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

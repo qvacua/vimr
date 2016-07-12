@@ -1,10 +1,7 @@
-//
-//  Keys.swift
-//  nvox
-//
-//  Created by Tae Won Ha on 11/07/16.
-//  Copyright © 2016 Tae Won Ha. All rights reserved.
-//
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 import Cocoa
 

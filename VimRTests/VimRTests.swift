@@ -1,15 +1,12 @@
-//
-//  nvoxTests.swift
-//  nvoxTests
-//
-//  Created by Tae Won Ha on 01/06/16.
-//  Copyright © 2016 Tae Won Ha. All rights reserved.
-//
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 import XCTest
-@testable import nvox
+@testable import VimR
 
-class nvoxTests: XCTestCase {
+class VimRTests: XCTestCase {
     
     override func setUp() {
         super.setUp()

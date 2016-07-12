@@ -170,11 +170,11 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (NSString *)localServerName {
-  return [NSString stringWithFormat:@"com.qvacua.nvox.%@", _uuid];
+  return [NSString stringWithFormat:@"com.qvacua.vimr.%@", _uuid];
 }
 
 - (NSString *)remoteServerName {
-  return [NSString stringWithFormat:@"com.qvacua.nvox.neovim-server.%@", _uuid];
+  return [NSString stringWithFormat:@"com.qvacua.vimr.neovim-server.%@", _uuid];
 }
 
 - (void)handleMessageWithId:(SInt32)msgid data:(NSData *)data {

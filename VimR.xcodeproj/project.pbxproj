@@ -57,7 +57,7 @@
 		4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5081CFF374B00673FDF /* AppDelegate.swift */; };
 		4BEBA50B1CFF374B00673FDF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50A1CFF374B00673FDF /* Assets.xcassets */; };
 		4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50C1CFF374B00673FDF /* MainMenu.xib */; };
-		4BEBA5191CFF374B00673FDF /* nvoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5181CFF374B00673FDF /* nvoxTests.swift */; };
+		4BEBA5191CFF374B00673FDF /* VimRTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5181CFF374B00673FDF /* VimRTests.swift */; };
 		4BEE79121D16D0AC0012EDAA /* NeoVimViewUiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEE79111D16D0AC0012EDAA /* NeoVimViewUiBridge.swift */; };
 		4BEE79151D16D2100012EDAA /* DispatchUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEE79141D16D2100012EDAA /* DispatchUtils.swift */; };
 		4BEE79171D16D3800012EDAA /* CellAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEE79161D16D3800012EDAA /* CellAttributes.swift */; };
@@ -191,13 +191,13 @@
 		4BDF641B1D0887C100D47E1D /* TextDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDrawer.m; sourceTree = "<group>"; };
 		4BDF64221D08CAB000D47E1D /* MMCoreTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCoreTextView.h; sourceTree = "<group>"; };
 		4BDF64231D08CAB000D47E1D /* MMCoreTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCoreTextView.m; sourceTree = "<group>"; };
-		4BEBA5051CFF374B00673FDF /* nvox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nvox.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BEBA5051CFF374B00673FDF /* VimR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VimR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BEBA5081CFF374B00673FDF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4BEBA50A1CFF374B00673FDF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4BEBA50D1CFF374B00673FDF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		4BEBA50F1CFF374B00673FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4BEBA5141CFF374B00673FDF /* nvoxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = nvoxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BEBA5181CFF374B00673FDF /* nvoxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = nvoxTests.swift; sourceTree = "<group>"; };
+		4BEBA5141CFF374B00673FDF /* VimR.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VimR.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BEBA5181CFF374B00673FDF /* VimRTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VimRTests.swift; sourceTree = "<group>"; };
 		4BEBA51A1CFF374B00673FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BEBA6621D00157A00673FDF /* runtime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = runtime; path = neovim/runtime; sourceTree = SOURCE_ROOT; };
 		4BEE79111D16D0AC0012EDAA /* NeoVimViewUiBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimViewUiBridge.swift; sourceTree = "<group>"; };
@@ -360,8 +360,8 @@
 		4BEBA4FC1CFF374B00673FDF = {
 			isa = PBXGroup;
 			children = (
-				4BEBA5071CFF374B00673FDF /* nvox */,
-				4BEBA5171CFF374B00673FDF /* nvoxTests */,
+				4BEBA5071CFF374B00673FDF /* VimR */,
+				4BEBA5171CFF374B00673FDF /* VimRTests */,
 				4B2A2BF81D0351810074CE9A /* SwiftNeoVim */,
 				4B56F2911D29903F00C1F92E /* SwiftNeoVimTests */,
 				4B854A1B1D31447C00E08DE1 /* NeoVimServer */,
@@ -373,8 +373,8 @@
 		4BEBA5061CFF374B00673FDF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4BEBA5051CFF374B00673FDF /* nvox.app */,
-				4BEBA5141CFF374B00673FDF /* nvoxTests.xctest */,
+				4BEBA5051CFF374B00673FDF /* VimR.app */,
+				4BEBA5141CFF374B00673FDF /* VimR.xctest */,
 				4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */,
 				4B56F2901D29903F00C1F92E /* SwiftNeoVimTests.xctest */,
 				4B854A1A1D31447C00E08DE1 /* NeoVimServer */,
@@ -382,7 +382,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4BEBA5071CFF374B00673FDF /* nvox */ = {
+		4BEBA5071CFF374B00673FDF /* VimR */ = {
 			isa = PBXGroup;
 			children = (
 				4BEBA5081CFF374B00673FDF /* AppDelegate.swift */,
@@ -391,16 +391,16 @@
 				4B97E2CF1D33F92200FC0660 /* resources */,
 				4B2A2C0D1D0353750074CE9A /* Bridge.h */,
 			);
-			path = nvox;
+			path = VimR;
 			sourceTree = "<group>";
 		};
-		4BEBA5171CFF374B00673FDF /* nvoxTests */ = {
+		4BEBA5171CFF374B00673FDF /* VimRTests */ = {
 			isa = PBXGroup;
 			children = (
-				4BEBA5181CFF374B00673FDF /* nvoxTests.swift */,
+				4BEBA5181CFF374B00673FDF /* VimRTests.swift */,
 				4BEBA51A1CFF374B00673FDF /* Info.plist */,
 			);
-			path = nvoxTests;
+			path = VimRTests;
 			sourceTree = "<group>";
 		};
 		4BEE79131D16D1C60012EDAA /* NeoVimView */ = {
@@ -492,9 +492,9 @@
 			productReference = 4B854A1A1D31447C00E08DE1 /* NeoVimServer */;
 			productType = "com.apple.product-type.tool";
 		};
-		4BEBA5041CFF374B00673FDF /* nvox */ = {
+		4BEBA5041CFF374B00673FDF /* VimR */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4BEBA51D1CFF374B00673FDF /* Build configuration list for PBXNativeTarget "nvox" */;
+			buildConfigurationList = 4BEBA51D1CFF374B00673FDF /* Build configuration list for PBXNativeTarget "VimR" */;
 			buildPhases = (
 				4BEBA5011CFF374B00673FDF /* Sources */,
 				4BEBA5021CFF374B00673FDF /* Frameworks */,
@@ -506,14 +506,14 @@
 			dependencies = (
 				4B2A2BFD1D0351810074CE9A /* PBXTargetDependency */,
 			);
-			name = nvox;
+			name = VimR;
 			productName = nvox;
-			productReference = 4BEBA5051CFF374B00673FDF /* nvox.app */;
+			productReference = 4BEBA5051CFF374B00673FDF /* VimR.app */;
 			productType = "com.apple.product-type.application";
 		};
-		4BEBA5131CFF374B00673FDF /* nvoxTests */ = {
+		4BEBA5131CFF374B00673FDF /* VimRTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4BEBA5201CFF374B00673FDF /* Build configuration list for PBXNativeTarget "nvoxTests" */;
+			buildConfigurationList = 4BEBA5201CFF374B00673FDF /* Build configuration list for PBXNativeTarget "VimRTests" */;
 			buildPhases = (
 				4BEBA5101CFF374B00673FDF /* Sources */,
 				4BEBA5111CFF374B00673FDF /* Frameworks */,
@@ -524,9 +524,9 @@
 			dependencies = (
 				4BEBA5161CFF374B00673FDF /* PBXTargetDependency */,
 			);
-			name = nvoxTests;
+			name = VimRTests;
 			productName = nvoxTests;
-			productReference = 4BEBA5141CFF374B00673FDF /* nvoxTests.xctest */;
+			productReference = 4BEBA5141CFF374B00673FDF /* VimR.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -559,7 +559,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 4BEBA5001CFF374B00673FDF /* Build configuration list for PBXProject "nvox" */;
+			buildConfigurationList = 4BEBA5001CFF374B00673FDF /* Build configuration list for PBXProject "VimR" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -572,8 +572,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4BEBA5041CFF374B00673FDF /* nvox */,
-				4BEBA5131CFF374B00673FDF /* nvoxTests */,
+				4BEBA5041CFF374B00673FDF /* VimR */,
+				4BEBA5131CFF374B00673FDF /* VimRTests */,
 				4B2A2BF61D0351810074CE9A /* SwiftNeoVim */,
 				4B56F28F1D29903F00C1F92E /* SwiftNeoVimTests */,
 				4B854A191D31447C00E08DE1 /* NeoVimServer */,
@@ -687,7 +687,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BEBA5191CFF374B00673FDF /* nvoxTests.swift in Sources */,
+				4BEBA5191CFF374B00673FDF /* VimRTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -711,7 +711,7 @@
 		};
 		4BEBA5161CFF374B00673FDF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4BEBA5041CFF374B00673FDF /* nvox */;
+			target = 4BEBA5041CFF374B00673FDF /* VimR */;
 			targetProxy = 4BEBA5151CFF374B00673FDF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -754,7 +754,7 @@
 				INFOPLIST_FILE = SwiftNeoVim/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.nvox.SwiftNeoVim;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR.SwiftNeoVim;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -779,7 +779,7 @@
 				INFOPLIST_FILE = SwiftNeoVim/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.nvox.SwiftNeoVim;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR.SwiftNeoVim;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -795,7 +795,7 @@
 				);
 				INFOPLIST_FILE = SwiftNeoVimTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.SwiftNeoVimTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.vimr.SwiftNeoVimTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -810,7 +810,7 @@
 				);
 				INFOPLIST_FILE = SwiftNeoVimTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.SwiftNeoVimTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.vimr.SwiftNeoVimTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -960,11 +960,11 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
-				INFOPLIST_FILE = nvox/Info.plist;
+				INFOPLIST_FILE = VimR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.nvox;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = nvox/Bridge.h;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR;
+				PRODUCT_NAME = VimR;
+				SWIFT_OBJC_BRIDGING_HEADER = VimR/Bridge.h;
 			};
 			name = Debug;
 		};
@@ -979,11 +979,11 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
-				INFOPLIST_FILE = nvox/Info.plist;
+				INFOPLIST_FILE = VimR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.nvox;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = nvox/Bridge.h;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR;
+				PRODUCT_NAME = VimR;
+				SWIFT_OBJC_BRIDGING_HEADER = VimR/Bridge.h;
 			};
 			name = Release;
 		};
@@ -992,11 +992,11 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = nvoxTests/Info.plist;
+				INFOPLIST_FILE = VimRTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.nvoxTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/nvox.app/Contents/MacOS/nvox";
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimRTests;
+				PRODUCT_NAME = VimR;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VimR.app/Contents/MacOS/VimR";
 			};
 			name = Debug;
 		};
@@ -1005,11 +1005,11 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = nvoxTests/Info.plist;
+				INFOPLIST_FILE = VimRTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.nvoxTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/nvox.app/Contents/MacOS/nvox";
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimRTests;
+				PRODUCT_NAME = VimR;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VimR.app/Contents/MacOS/VimR";
 			};
 			name = Release;
 		};
@@ -1043,7 +1043,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4BEBA5001CFF374B00673FDF /* Build configuration list for PBXProject "nvox" */ = {
+		4BEBA5001CFF374B00673FDF /* Build configuration list for PBXProject "VimR" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4BEBA51B1CFF374B00673FDF /* Debug */,
@@ -1052,7 +1052,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4BEBA51D1CFF374B00673FDF /* Build configuration list for PBXNativeTarget "nvox" */ = {
+		4BEBA51D1CFF374B00673FDF /* Build configuration list for PBXNativeTarget "VimR" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4BEBA51E1CFF374B00673FDF /* Debug */,
@@ -1061,7 +1061,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4BEBA5201CFF374B00673FDF /* Build configuration list for PBXNativeTarget "nvoxTests" */ = {
+		4BEBA5201CFF374B00673FDF /* Build configuration list for PBXNativeTarget "VimRTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4BEBA5211CFF374B00673FDF /* Debug */,

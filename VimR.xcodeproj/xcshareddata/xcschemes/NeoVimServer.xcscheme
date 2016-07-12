@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4B2A2BF61D0351810074CE9A"
-               BuildableName = "SwiftNeoVim.framework"
-               BlueprintName = "SwiftNeoVim"
-               ReferencedContainer = "container:nvox.xcodeproj">
+               BlueprintIdentifier = "4B854A191D31447C00E08DE1"
+               BuildableName = "NeoVimServer"
+               BlueprintName = "NeoVimServer"
+               ReferencedContainer = "container:VimR.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -28,24 +28,14 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4B56F28F1D29903F00C1F92E"
-               BuildableName = "SwiftNeoVimTests.xctest"
-               BlueprintName = "SwiftNeoVimTests"
-               ReferencedContainer = "container:nvox.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4B2A2BF61D0351810074CE9A"
-            BuildableName = "SwiftNeoVim.framework"
-            BlueprintName = "SwiftNeoVim"
-            ReferencedContainer = "container:nvox.xcodeproj">
+            BlueprintIdentifier = "4B854A191D31447C00E08DE1"
+            BuildableName = "NeoVimServer"
+            BlueprintName = "NeoVimServer"
+            ReferencedContainer = "container:VimR.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -61,15 +51,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4B2A2BF61D0351810074CE9A"
-            BuildableName = "SwiftNeoVim.framework"
-            BlueprintName = "SwiftNeoVim"
-            ReferencedContainer = "container:nvox.xcodeproj">
+            BlueprintIdentifier = "4B854A191D31447C00E08DE1"
+            BuildableName = "NeoVimServer"
+            BlueprintName = "NeoVimServer"
+            ReferencedContainer = "container:VimR.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -79,15 +70,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4B2A2BF61D0351810074CE9A"
-            BuildableName = "SwiftNeoVim.framework"
-            BlueprintName = "SwiftNeoVim"
-            ReferencedContainer = "container:nvox.xcodeproj">
+            BlueprintIdentifier = "4B854A191D31447C00E08DE1"
+            BuildableName = "NeoVimServer"
+            BlueprintName = "NeoVimServer"
+            ReferencedContainer = "container:VimR.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

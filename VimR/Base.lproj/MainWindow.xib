@@ -5,7 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="MainWindowController" customModule="nvox" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="MainWindowController" customModule="VimR" customModuleProvider="target">
             <connections>
                 <outlet property="window" destination="QvC-M9-y7g" id="Xb2-mB-2h2"/>
             </connections>

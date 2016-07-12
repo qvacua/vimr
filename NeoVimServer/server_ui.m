@@ -497,7 +497,7 @@ void custom_ui_start(void) {
 }
 
 void server_start_neovim() {
-  _queue = dispatch_queue_create("com.qvacua.nvox.neovim-server.queue", DISPATCH_QUEUE_SERIAL);
+  _queue = dispatch_queue_create("com.qvacua.vimr.neovim-server.queue", DISPATCH_QUEUE_SERIAL);
 
   // set $VIMRUNTIME to ${RESOURCE_PATH_OF_XPC_BUNDLE}/runtime
   NSString *bundlePath = [NSBundle bundleForClass:[NeoVimServer class]].bundlePath;

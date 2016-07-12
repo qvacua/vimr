@@ -43,17 +43,17 @@ carthage update --platform osx
 git submodule update --init
 cd neovim
 ln -s ../NeoVimXpc/local.mk .
-make CMAKE_BUILD_TYPE=Release libnvim # optional, the nvox target in Xcode also does this
+make CMAKE_BUILD_TYPE=Release libnvim # optional, the VimR target in Xcode also does this
 ```
 
-Run the `nvox`-target in Xcode.
+Run the `VimR`-target in Xcode.
 
 ## Project Setup
 
 ### Artifacts Hierarchy
 
 ```
-nvox.app
+VimR.app
 +-- SwiftNeoVim.framework
     +-- NeoVimView
     +-- runtime files for NeoVim
