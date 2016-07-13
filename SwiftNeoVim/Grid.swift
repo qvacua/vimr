@@ -36,6 +36,17 @@ extension Position: CustomStringConvertible {
   }
 }
 
+func == (left: Position, right: Position) -> Bool {
+  if left.row != right.row { return false }
+  if left.column != right.column { return false }
+  
+  return true
+}
+
+func != (left: Position, right: Position) -> Bool {
+  return !(left == right)
+}
+
 struct Size: CustomStringConvertible {
   
   static let zero = Size(width: 0, height: 0)

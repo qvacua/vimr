@@ -15,7 +15,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
 
   public func resizeToWidth(width: Int32, height: Int32) {
     DispatchUtils.gui {
-//      NSLog("\(#function): \(width):\(height)")
+      NSLog("\(#function): \(width):\(height)")
       self.grid.resize(Size(width: Int(width), height: Int(height)))
       self.needsDisplay = true
     }

@@ -25,15 +25,14 @@ extension NeoVimView: NSTextInputClient {
     let charsIgnoringModifiers = shift || capslock ? event.charactersIgnoringModifiers!.lowercaseString
                                                    : event.charactersIgnoringModifiers!
 
-    let vimModifiers = self.vimModifierFlags(modifierFlags)
     if KeyUtils.isSpecial(key: charsIgnoringModifiers) {
-      if vimModifiers.characters.count > 0 {
+      if let vimModifiers = self.vimModifierFlags(modifierFlags) {
         self.agent.vimInput(self.wrapNamedKeys(vimModifiers + KeyUtils.namedKeyFrom(key: charsIgnoringModifiers)))
       } else {
         self.agent.vimInput(self.wrapNamedKeys(KeyUtils.namedKeyFrom(key: charsIgnoringModifiers)))
       }
     } else {
-      if vimModifiers.characters.count > 0 {
+      if let vimModifiers = self.vimModifierFlags(modifierFlags) {
         self.agent.vimInput(self.wrapNamedKeys(vimModifiers + charsIgnoringModifiers))
       } else {
         self.agent.vimInput(self.vimPlainString(chars))
@@ -192,7 +191,7 @@ extension NeoVimView: NSTextInputClient {
     return 1
   }
   
-  private func vimModifierFlags(modifierFlags: NSEventModifierFlags) -> String {
+  func vimModifierFlags(modifierFlags: NSEventModifierFlags) -> String? {
     var result = ""
     
     let control = modifierFlags.contains(.ControlKeyMask)
@@ -211,97 +210,10 @@ extension NeoVimView: NSTextInputClient {
       result += "D-"
     }
 
-    return result
+    if result.characters.count > 0 {
+      return result
+    }
+
+    return nil
   }
 }
-
-/*
- public func moveWordForward(sender: AnyObject?)
- public func moveWordBackward(sender: AnyObject?)
- public func moveToBeginningOfLine(sender: AnyObject?)
- public func moveToEndOfLine(sender: AnyObject?)
- public func moveToBeginningOfParagraph(sender: AnyObject?)
- public func moveToEndOfParagraph(sender: AnyObject?)
- public func moveToEndOfDocument(sender: AnyObject?)
- public func moveToBeginningOfDocument(sender: AnyObject?)
- public func pageDown(sender: AnyObject?)
- public func pageUp(sender: AnyObject?)
- public func centerSelectionInVisibleArea(sender: AnyObject?)
- 
- public func moveBackwardAndModifySelection(sender: AnyObject?)
- public func moveForwardAndModifySelection(sender: AnyObject?)
- public func moveWordForwardAndModifySelection(sender: AnyObject?)
- public func moveWordBackwardAndModifySelection(sender: AnyObject?)
- public func moveUpAndModifySelection(sender: AnyObject?)
- public func moveDownAndModifySelection(sender: AnyObject?)
- 
- public func moveToBeginningOfLineAndModifySelection(sender: AnyObject?)
- public func moveToEndOfLineAndModifySelection(sender: AnyObject?)
- public func moveToBeginningOfParagraphAndModifySelection(sender: AnyObject?)
- public func moveToEndOfParagraphAndModifySelection(sender: AnyObject?)
- public func moveToEndOfDocumentAndModifySelection(sender: AnyObject?)
- public func moveToBeginningOfDocumentAndModifySelection(sender: AnyObject?)
- public func pageDownAndModifySelection(sender: AnyObject?)
- public func pageUpAndModifySelection(sender: AnyObject?)
- public func moveParagraphForwardAndModifySelection(sender: AnyObject?)
- public func moveParagraphBackwardAndModifySelection(sender: AnyObject?)
- 
- public func moveWordRight(sender: AnyObject?)
- public func moveWordLeft(sender: AnyObject?)
- public func moveRightAndModifySelection(sender: AnyObject?)
- public func moveLeftAndModifySelection(sender: AnyObject?)
- public func moveWordRightAndModifySelection(sender: AnyObject?)
- public func moveWordLeftAndModifySelection(sender: AnyObject?)
- 
- public func moveToLeftEndOfLine(sender: AnyObject?)
- public func moveToRightEndOfLine(sender: AnyObject?)
- public func moveToLeftEndOfLineAndModifySelection(sender: AnyObject?)
- public func moveToRightEndOfLineAndModifySelection(sender: AnyObject?)
- 
- public func scrollLineUp(sender: AnyObject?)
- public func scrollLineDown(sender: AnyObject?)
- 
- public func transpose(sender: AnyObject?)
- public func transposeWords(sender: AnyObject?)
- 
- public func selectAll(sender: AnyObject?)
- public func selectParagraph(sender: AnyObject?)
- public func selectLine(sender: AnyObject?)
- public func selectWord(sender: AnyObject?)
- 
- public func indent(sender: AnyObject?)
- public func insertTab(sender: AnyObject?)
- public func insertBacktab(sender: AnyObject?)
- public func insertNewline(sender: AnyObject?)
- public func insertParagraphSeparator(sender: AnyObject?)
- public func insertNewlineIgnoringFieldEditor(sender: AnyObject?)
- public func insertTabIgnoringFieldEditor(sender: AnyObject?)
- public func insertLineBreak(sender: AnyObject?)
- public func insertContainerBreak(sender: AnyObject?)
- public func insertSingleQuoteIgnoringSubstitution(sender: AnyObject?)
- public func insertDoubleQuoteIgnoringSubstitution(sender: AnyObject?)
- 
- public func changeCaseOfLetter(sender: AnyObject?)
- public func uppercaseWord(sender: AnyObject?)
- public func lowercaseWord(sender: AnyObject?)
- public func capitalizeWord(sender: AnyObject?)
- 
- public func deleteBackwardByDecomposingPreviousCharacter(sender: AnyObject?)
- public func deleteWordForward(sender: AnyObject?)
- public func deleteWordBackward(sender: AnyObject?)
- public func deleteToBeginningOfLine(sender: AnyObject?)
- public func deleteToEndOfLine(sender: AnyObject?)
- public func deleteToBeginningOfParagraph(sender: AnyObject?)
- public func deleteToEndOfParagraph(sender: AnyObject?)
- 
- public func yank(sender: AnyObject?)
- 
- public func complete(sender: AnyObject?)
- 
- public func setMark(sender: AnyObject?)
- public func deleteToMark(sender: AnyObject?)
- public func selectToMark(sender: AnyObject?)
- public func swapWithMark(sender: AnyObject?)
- 
- public func cancelOperation(sender: AnyObject?)
- */

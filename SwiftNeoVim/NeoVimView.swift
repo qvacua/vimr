@@ -34,6 +34,8 @@ public class NeoVimView: NSView {
   
   var markedPosition = Position.null
   var keyDownDone = true
+
+  var lastClickedCellPosition = Position.null
   
   var xOffset = CGFloat(0)
   var yOffset = CGFloat(0)
