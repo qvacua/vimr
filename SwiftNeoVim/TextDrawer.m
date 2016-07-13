@@ -91,7 +91,7 @@
   CGContextSaveGState(context);
 
   if (attrs.fontTrait & FontTraitUnderline) {
-    [self drawUnderline:positions count:positionsCount color:attrs.special context:context];
+    [self drawUnderline:positions count:positionsCount color:attrs.foreground context:context];
   }
 
   [self drawString:string positions:positions
