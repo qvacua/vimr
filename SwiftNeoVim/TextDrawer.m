@@ -161,13 +161,13 @@
     traits |= kCTFontItalicTrait;
   }
 
+  if (traits == 0) {
+    return CFRetain(_font);
+  }
+
   NSFont *cachedFont = _fontTraitCache[@(traits)];
   if (cachedFont != nil) {
     return CFRetain(cachedFont);
-  }
-
-  if (traits == 0) {
-    return CFRetain(_font);
   }
 
   CTFontRef fontWithTraits = CTFontCreateCopyWithSymbolicTraits((CTFontRef) _font, 0.0, NULL, traits, traits);
