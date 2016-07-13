@@ -5,41 +5,6 @@
 
 import Cocoa
 
-enum Mode {
-  /*
-#define NORMAL          0x01    /* Normal mode, command expected */
-#define VISUAL          0x02    /* Visual mode - use get_real_state() */
-#define OP_PENDING      0x04    /* Normal mode, operator is pending - use
-                                   get_real_state() */
-#define CMDLINE         0x08    /* Editing command line */
-#define INSERT          0x10    /* Insert mode */
-#define LANGMAP         0x20    /* Language mapping, can be combined with
-                                   INSERT and CMDLINE */
-
-#define REPLACE_FLAG    0x40    /* Replace mode flag */
-#define REPLACE         (REPLACE_FLAG + INSERT)
-# define VREPLACE_FLAG  0x80    /* Virtual-replace mode flag */
-# define VREPLACE       (REPLACE_FLAG + VREPLACE_FLAG + INSERT)
-#define LREPLACE        (REPLACE_FLAG + LANGMAP)
-
-#define NORMAL_BUSY     (0x100 + NORMAL) /* Normal mode, busy with a command */
-#define HITRETURN       (0x200 + NORMAL) /* waiting for return or command */
-#define ASKMORE         0x300   /* Asking if you want --more-- */
-#define SETWSIZE        0x400   /* window size has changed */
-#define ABBREV          0x500   /* abbreviation instead of mapping */
-#define EXTERNCMD       0x600   /* executing an external command */
-#define SHOWMATCH       (0x700 + INSERT) /* show matching paren */
-#define CONFIRM         0x800   /* ":confirm" prompt */
-#define SELECTMODE      0x1000  /* Select mode, only for mappings */
-#define TERM_FOCUS      0x2000  // Terminal focus mode
-
-// all mode bits used for mapping
-#define MAP_ALL_MODES   (0x3f | SELECTMODE | TERM_FOCUS)
-
-  */
-
-}
-
 /// Contiguous piece of cells of a row that has the same attributes.
 private struct RowRun: CustomStringConvertible {
 
@@ -224,7 +189,7 @@ public class NeoVimView: NSView {
     ColorUtils.colorIgnoringAlpha(background).set()
     let backgroundRect = CGRect(
       x: positions[0].x, y: positions[0].y,
-      width: positions.last!.x + self.cellSize.width, height: self.cellSize.height
+      width: CGFloat(positions.count) * self.cellSize.width, height: self.cellSize.height
     )
     backgroundRect.fill()
   }
@@ -323,4 +288,3 @@ public class NeoVimView: NSView {
     fatalError("init(coder:) has not been implemented")
   }
 }
-

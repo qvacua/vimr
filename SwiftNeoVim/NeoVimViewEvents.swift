@@ -60,9 +60,6 @@ extension NeoVimView: NSTextInputClient {
     self.markedText = nil
     self.markedPosition = Position.null
     self.keyDownDone = true
-    
-    // TODO: necessary?
-    self.setNeedsDisplayInRect(self.cellRectFor(row: self.grid.putPosition.row, column: self.grid.putPosition.column))
   }
 
   public override func doCommandBySelector(aSelector: Selector) {
