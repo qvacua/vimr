@@ -26,17 +26,9 @@ extension NeoVimView {
       column: min(Int(floor((self.bounds.height - location.y) / self.cellSize.height)), self.grid.size.height - 1)
     )
 
-    let fireVimInput: Bool
-    switch event.type {
-    case .LeftMouseDragged, .RightMouseDragged, .OtherMouseDragged:
-      if self.lastClickedCellPosition == cellPosition {
-        fireVimInput = false
-      } else {
-        fireVimInput = true
-        self.lastClickedCellPosition = cellPosition
-      }
-    default:
-      fireVimInput = true
+    guard self.shouldFireVimInputFor(event: event, newCellPosition: cellPosition) else {
+//      NSLog("\(#function): not firing vim input")
+      return
     }
 
     let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.row),\(cellPosition.column)")
@@ -49,13 +41,23 @@ extension NeoVimView {
       result = self.wrapNamedKeys("\(vimClickCount)\(vimName)") + vimMouseLocation
     }
 
-    guard fireVimInput else {
-//      NSLog("\(#function): not firing vim input")
-      return
-    }
-
 //    NSLog("\(#function): \(result)")
     self.agent.vimInput(result)
+  }
+
+  private func shouldFireVimInputFor(event event:NSEvent, newCellPosition: Position) -> Bool {
+    let type = event.type
+    guard type == .LeftMouseDragged || type == .RightMouseDragged || type == .OtherMouseDragged  else {
+      self.lastClickedCellPosition = newCellPosition
+      return true
+    }
+
+    if self.lastClickedCellPosition == newCellPosition {
+      return false
+    }
+
+    self.lastClickedCellPosition = newCellPosition
+    return true
   }
 
   private func vimClickCountFrom(event event: NSEvent) -> String {
