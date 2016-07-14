@@ -18,7 +18,7 @@ private struct RowRun: CustomStringConvertible {
 }
 
 public class NeoVimView: NSView {
-  
+
   public let uuid = NSUUID().UUIDString
   public var delegate: NeoVimViewDelegate?
   
@@ -42,6 +42,10 @@ public class NeoVimView: NSView {
   var cellSize = CGSize.zero
   var descent = CGFloat(0)
   var leading = CGFloat(0)
+  
+  var scrollGuardCounterX = 9
+  var scrollGuardCounterY = 9
+  let scrollGuardYield = 10
 
   private let drawer: TextDrawer
   private var font: NSFont {
@@ -60,7 +64,7 @@ public class NeoVimView: NSView {
     self.font = NSFont(name: "Menlo", size: 16)!
     self.drawer = TextDrawer(font: font)
     self.agent = NeoVimAgent(uuid: self.uuid)
-    
+
     super.init(frame: rect)
     
     self.wantsLayer = true
