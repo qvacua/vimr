@@ -22,30 +22,31 @@ public class NeoVimView: NSView {
   public let uuid = NSUUID().UUIDString
   public var delegate: NeoVimViewDelegate?
   
-  let agent: NeoVimAgent
+  private let agent: NeoVimAgent
 
-  let grid = Grid()
+  private let grid = Grid()
 
-  var markedText: String?
+  private var markedText: String?
+
   /// We store the last marked text because Cocoa's text input system does the following:
   /// 하 -> hanja popup -> insertText(하) -> attributedSubstring...() -> setMarkedText(下) -> ...
   /// We want to return "하" in attributedSubstring...()
-  var lastMarkedText: String?
+  private var lastMarkedText: String?
   
-  var markedPosition = Position.null
-  var keyDownDone = true
+  private var markedPosition = Position.null
+  private var keyDownDone = true
 
-  var lastClickedCellPosition = Position.null
+  private var lastClickedCellPosition = Position.null
   
-  var xOffset = CGFloat(0)
-  var yOffset = CGFloat(0)
-  var cellSize = CGSize.zero
-  var descent = CGFloat(0)
-  var leading = CGFloat(0)
+  private var xOffset = CGFloat(0)
+  private var yOffset = CGFloat(0)
+  private var cellSize = CGSize.zero
+  private var descent = CGFloat(0)
+  private var leading = CGFloat(0)
   
-  var scrollGuardCounterX = 9
-  var scrollGuardCounterY = 9
-  let scrollGuardYield = 10
+  private var scrollGuardCounterX = 9
+  private var scrollGuardCounterY = 9
+  private let scrollGuardYield = 10
 
   private let drawer: TextDrawer
   private var font: NSFont {
@@ -119,7 +120,7 @@ public class NeoVimView: NSView {
     self.resizeNeoVimUiTo(size: self.bounds.size)
   }
 
-  func resizeNeoVimUiTo(size size: CGSize) {
+  private func resizeNeoVimUiTo(size size: CGSize) {
 //    NSLog("\(#function): \(size)")
     let discreteSize = Size(width: Int(floor(size.width / self.cellSize.width)),
                             height: Int(floor(size.height / self.cellSize.height)))
@@ -250,22 +251,22 @@ public class NeoVimView: NSView {
     return Region(top: rowStart, bottom: rowEnd, left: columnStart, right: columnEnd)
   }
   
-  func pointInViewFor(position position: Position) -> CGPoint {
+  private func pointInViewFor(position position: Position) -> CGPoint {
     return self.pointInViewFor(row: position.row, column: position.column)
   }
 
-  func pointInViewFor(row row: Int, column: Int) -> CGPoint {
+  private func pointInViewFor(row row: Int, column: Int) -> CGPoint {
     return CGPoint(
       x: CGFloat(column) * self.cellSize.width + self.xOffset,
       y: self.frame.size.height - CGFloat(row) * self.cellSize.height - self.cellSize.height - self.yOffset
     )
   }
 
-  func cellRectFor(row row: Int, column: Int) -> CGRect {
+  private func cellRectFor(row row: Int, column: Int) -> CGRect {
     return CGRect(origin: self.pointInViewFor(row: row, column: column), size: self.cellSize)
   }
 
-  func regionRectFor(region region: Region) -> CGRect {
+  private func regionRectFor(region region: Region) -> CGRect {
     let top = CGFloat(region.top)
     let bottom = CGFloat(region.bottom)
     let left = CGFloat(region.left)
@@ -282,15 +283,617 @@ public class NeoVimView: NSView {
     )
   }
 
-  func wrapNamedKeys(string: String) -> String {
+  private func wrapNamedKeys(string: String) -> String {
     return "<\(string)>"
   }
   
-  func vimPlainString(string: String) -> String {
+  private func vimPlainString(string: String) -> String {
     return string.stringByReplacingOccurrencesOfString("<", withString: self.wrapNamedKeys("lt"))
   }
   
   required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+}
+
+// MARK: - Key Events
+extension NeoVimView: NSTextInputClient {
+
+  override public func keyDown(event: NSEvent) {
+    self.keyDownDone = false
+    
+    let context = NSTextInputContext.currentInputContext()!
+    let cocoaHandledEvent = context.handleEvent(event)
+    if self.keyDownDone && cocoaHandledEvent {
+      return
+    }
+
+//    NSLog("\(#function): \(event)")
+
+    let modifierFlags = event.modifierFlags
+    let capslock = modifierFlags.contains(.AlphaShiftKeyMask)
+    let shift = modifierFlags.contains(.ShiftKeyMask)
+    let chars = event.characters!
+    let charsIgnoringModifiers = shift || capslock ? event.charactersIgnoringModifiers!.lowercaseString
+                                                   : event.charactersIgnoringModifiers!
+
+    if KeyUtils.isSpecial(key: charsIgnoringModifiers) {
+      if let vimModifiers = self.vimModifierFlags(modifierFlags) {
+        self.agent.vimInput(self.wrapNamedKeys(vimModifiers + KeyUtils.namedKeyFrom(key: charsIgnoringModifiers)))
+      } else {
+        self.agent.vimInput(self.wrapNamedKeys(KeyUtils.namedKeyFrom(key: charsIgnoringModifiers)))
+      }
+    } else {
+      if let vimModifiers = self.vimModifierFlags(modifierFlags) {
+        self.agent.vimInput(self.wrapNamedKeys(vimModifiers + charsIgnoringModifiers))
+      } else {
+        self.agent.vimInput(self.vimPlainString(chars))
+      }
+    }
+
+    self.keyDownDone = true
+  }
+
+  public func insertText(aString: AnyObject, replacementRange: NSRange) {
+//    NSLog("\(#function): \(replacementRange): '\(aString)'")
+
+    switch aString {
+    case let string as String:
+      self.agent.vimInput(self.vimPlainString(string))
+    case let attributedString as NSAttributedString:
+      self.agent.vimInput(self.vimPlainString(attributedString.string))
+    default:
+      break;
+    }
+
+    // unmarkText()
+    self.lastMarkedText = self.markedText
+    self.markedText = nil
+    self.markedPosition = Position.null
+    self.keyDownDone = true
+  }
+
+  public override func doCommandBySelector(aSelector: Selector) {
+//    NSLog("\(#function): \(aSelector)");
+
+    // FIXME: handle when ㅎ -> delete
+
+    if self.respondsToSelector(aSelector) {
+      Swift.print("\(#function): calling \(aSelector)")
+      self.performSelector(aSelector, withObject: self)
+      self.keyDownDone = true
+      return
+    }
+
+//    NSLog("\(#function): "\(aSelector) not implemented, forwarding input to vim")
+    self.keyDownDone = false
+  }
+
+  public func setMarkedText(aString: AnyObject, selectedRange: NSRange, replacementRange: NSRange) {
+    if self.markedText == nil {
+      self.markedPosition = self.grid.putPosition
+    }
+    
+    // eg 하 -> hanja popup, cf comment for self.lastMarkedText
+    if replacementRange.length > 0 {
+      self.agent.deleteCharacters(replacementRange.length)
+    }
+
+    switch aString {
+    case let string as String:
+      self.markedText = string
+    case let attributedString as NSAttributedString:
+      self.markedText = attributedString.string
+    default:
+      self.markedText = String(aString) // should not occur
+    }
+    
+//    NSLog("\(#function): \(self.markedText), \(selectedRange), \(replacementRange)")
+
+    self.agent.vimInputMarkedText(self.markedText!)
+    self.keyDownDone = true
+  }
+
+  public func unmarkText() {
+//    NSLog("\(#function): ")
+    self.markedText = nil
+    self.markedPosition = Position.null
+    self.keyDownDone = true
+    
+    // TODO: necessary?
+    self.setNeedsDisplayInRect(self.cellRectFor(row: self.grid.putPosition.row, column: self.grid.putPosition.column))
+  }
+
+  /// Return the current selection (or the position of the cursor with empty-length range). For example when you enter
+  /// "Cmd-Ctrl-Return" you'll get the Emoji-popup at the rect by firstRectForCharacterRange(actualRange:) where the
+  /// first range is the result of this method.
+  public func selectedRange() -> NSRange {
+    // When the app starts and the Hangul input method is selected, this method gets called very early...
+    guard self.grid.hasData else {
+//      NSLog("\(#function): not found")
+      return NSRange(location: NSNotFound, length: 0)
+    }
+
+    let result = NSRange(location: self.grid.singleIndexFrom(self.grid.putPosition), length: 0)
+//    NSLog("\(#function): \(result)")
+    return result
+  }
+
+  public func markedRange() -> NSRange {
+    // FIXME: do we have to handle positions at the column borders?
+    if let markedText = self.markedText {
+      let result = NSRange(location: self.grid.singleIndexFrom(self.markedPosition),
+                           length: markedText.characters.count)
+//      NSLog("\(#function): \(result)")
+      return result
+    }
+
+    NSLog("\(#function): returning empty range")
+    return NSRange(location: NSNotFound, length: 0)
+  }
+
+  public func hasMarkedText() -> Bool {
+//    NSLog("\(#function)")
+    return self.markedText != nil
+  }
+
+  // FIXME: take into account the "return nil"-case
+  // FIXME: just fix me, PLEASE...
+  public func attributedSubstringForProposedRange(aRange: NSRange, actualRange: NSRangePointer) -> NSAttributedString? {
+//    NSLog("\(#function): \(aRange), \(actualRange[0])")
+    if aRange.location == NSNotFound {
+//      NSLog("\(#function): range not found: returning nil")
+      return nil
+    }
+    
+    guard let lastMarkedText = self.lastMarkedText else {
+//      NSLog("\(#function): no last marked text: returning nil")
+      return nil
+    }
+    
+    // we only support last marked text, thus fill dummy characters when Cocoa asks for more characters than marked...
+    let fillCount = aRange.length - lastMarkedText.characters.count
+    guard fillCount >= 0 else {
+      return nil
+    }
+
+    let fillChars = Array(0..<fillCount).reduce("") { (result, _) in return result + " " }
+    
+//    NSLog("\(#function): \(aRange), \(actualRange[0]): \(fillChars + lastMarkedText)")
+    return NSAttributedString(string: fillChars + lastMarkedText)
+  }
+
+  public func validAttributesForMarkedText() -> [String] {
+    return []
+  }
+
+  public func firstRectForCharacterRange(aRange: NSRange, actualRange: NSRangePointer) -> NSRect {
+    let position = self.grid.positionFromSingleIndex(aRange.location)
+    
+//    NSLog("\(#function): \(aRange),\(actualRange[0]) -> \(position.row):\(position.column)")
+
+    let resultInSelf = self.cellRectFor(row: position.row, column: position.column)
+    let result = self.window?.convertRectToScreen(self.convertRect(resultInSelf, toView: nil))
+
+    return result!
+  }
+
+  public func characterIndexForPoint(aPoint: NSPoint) -> Int {
+//    NSLog("\(#function): \(aPoint)")
+    return 1
+  }
+  
+  private func vimModifierFlags(modifierFlags: NSEventModifierFlags) -> String? {
+    var result = ""
+    
+    let control = modifierFlags.contains(.ControlKeyMask)
+    let option = modifierFlags.contains(.AlternateKeyMask)
+    let command = modifierFlags.contains(.CommandKeyMask)
+
+    if control {
+      result += "C-"
+    }
+    
+    if option {
+      result += "M-"
+    }
+    
+    if command {
+      result += "D-"
+    }
+
+    if result.characters.count > 0 {
+      return result
+    }
+
+    return nil
+  }
+}
+
+// MARK: - Mouse Events
+extension NeoVimView {
+
+  override public func mouseDown(event: NSEvent) {
+    self.mouse(event: event, vimName:"LeftMouse")
+  }
+
+  override public func mouseUp(event: NSEvent) {
+    self.mouse(event: event, vimName:"LeftRelease")
+  }
+
+  override public func mouseDragged(event: NSEvent) {
+    self.mouse(event: event, vimName:"LeftDrag")
+  }
+
+  override public func scrollWheel(event: NSEvent) {
+    let (deltaX, deltaY) = (event.scrollingDeltaX, event.scrollingDeltaY)
+    if deltaX == 0 && deltaY == 0 {
+      return
+    }
+    
+    let cellPosition = self.cellPositionFor(event: event)
+    let (vimInputX, vimInputY) = self.vimScrollInputFor(deltaX: deltaX, deltaY: deltaY,
+                                                    modifierFlags: event.modifierFlags,
+                                                    cellPosition: cellPosition)
+    
+    let (absDeltaX, absDeltaY) = (abs(deltaX), abs(deltaY))
+    
+    // The absolute delta values can get very very big when you use two finger scrolling on the trackpad:
+    // Cap them using heuristic values...
+    let numX = deltaX != 0 ? max(1, min(Int(absDeltaX / 20), 25)) : 0
+    let numY = deltaY != 0 ? max(1, min(Int(absDeltaY / 20), 25)) : 0
+
+    for i in 0..<max(numX, numY) {
+      if i < numX {
+        self.throttleScrollX(absDelta: absDeltaX, vimInput: vimInputX)
+      }
+      
+      if i < numY {
+        self.throttleScrollY(absDelta: absDeltaY, vimInput: vimInputY)
+      }
+    }
+  }
+
+  private func cellPositionFor(event event: NSEvent) -> Position {
+    let location = self.convertPoint(event.locationInWindow, fromView: nil)
+    let cellPosition = Position(
+      row: min(Int(floor(location.x / self.cellSize.width)), self.grid.size.width - 1),
+      column: min(Int(floor((self.bounds.height - location.y) / self.cellSize.height)), self.grid.size.height - 1)
+    )
+
+    return cellPosition
+  }
+
+  private func mouse(event event: NSEvent, vimName: String) {
+    let cellPosition = self.cellPositionFor(event: event)
+    guard self.shouldFireVimInputFor(event: event, newCellPosition: cellPosition) else {
+      return
+    }
+
+    let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.row),\(cellPosition.column)")
+    let vimClickCount = self.vimClickCountFrom(event: event)
+
+    let result: String
+    if let vimModifiers = self.vimModifierFlags(event.modifierFlags) {
+      result = self.wrapNamedKeys("\(vimModifiers)\(vimClickCount)\(vimName)") + vimMouseLocation
+    } else {
+      result = self.wrapNamedKeys("\(vimClickCount)\(vimName)") + vimMouseLocation
+    }
+
+//    NSLog("\(#function): \(result)")
+    self.agent.vimInput(result)
+  }
+
+  private func shouldFireVimInputFor(event event:NSEvent, newCellPosition: Position) -> Bool {
+    let type = event.type
+    guard type == .LeftMouseDragged || type == .RightMouseDragged || type == .OtherMouseDragged  else {
+      self.lastClickedCellPosition = newCellPosition
+      return true
+    }
+
+    if self.lastClickedCellPosition == newCellPosition {
+      return false
+    }
+
+    self.lastClickedCellPosition = newCellPosition
+    return true
+  }
+
+  private func vimClickCountFrom(event event: NSEvent) -> String {
+    let clickCount = event.clickCount
+
+    guard 2 <= clickCount && clickCount <= 4 else {
+      return ""
+    }
+
+    switch event.type {
+    case .LeftMouseDown, .LeftMouseUp, .RightMouseDown, .RightMouseUp:
+      return "\(clickCount)-"
+    default:
+      return ""
+    }
+  }
+  
+  private func vimScrollEventNamesFor(deltaX deltaX: CGFloat, deltaY: CGFloat) -> (String, String) {
+    let typeY: String
+    if deltaY > 0 {
+      typeY = "ScrollWheelUp"
+    } else {
+      typeY = "ScrollWheelDown"
+    }
+
+    let typeX: String
+    if deltaX < 0 {
+      typeX = "ScrollWheelRight"
+    } else {
+      typeX = "ScrollWheelLeft"
+    }
+    
+    return (typeX, typeY)
+  }
+  
+  private func vimScrollInputFor(deltaX deltaX: CGFloat, deltaY: CGFloat,
+                                        modifierFlags: NSEventModifierFlags,
+                                        cellPosition: Position) -> (String, String)
+  {
+    let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.row),\(cellPosition.column)")
+
+    let (typeX, typeY) = self.vimScrollEventNamesFor(deltaX: deltaX, deltaY: deltaY)
+    let resultX: String
+    let resultY: String
+    if let vimModifiers = self.vimModifierFlags(modifierFlags) {
+      resultX = self.wrapNamedKeys("\(vimModifiers)\(typeX)") + vimMouseLocation
+      resultY = self.wrapNamedKeys("\(vimModifiers)\(typeY)") + vimMouseLocation
+    } else {
+      resultX = self.wrapNamedKeys("\(typeX)") + vimMouseLocation
+      resultY = self.wrapNamedKeys("\(typeY)") + vimMouseLocation
+    }
+    
+    return (resultX, resultY)
+  }
+  
+  private func throttleScrollX(absDelta absDeltaX: CGFloat, vimInput: String) {
+    if absDeltaX == 0 {
+      self.scrollGuardCounterX = self.scrollGuardYield - 1
+    } else if absDeltaX <= 2 {
+      // Poor man's throttle for scroll value = 1 or 2
+      if self.scrollGuardCounterX % self.scrollGuardYield == 0  {
+        self.agent.vimInput(vimInput)
+        self.scrollGuardCounterX = 1
+      } else {
+        self.scrollGuardCounterX += 1
+      }
+    } else {
+      self.agent.vimInput(vimInput)
+    }
+  }
+  
+  private func throttleScrollY(absDelta absDeltaY: CGFloat, vimInput: String) {
+    if absDeltaY == 0 {
+      self.scrollGuardCounterY = self.scrollGuardYield - 1
+    } else if absDeltaY <= 2 {
+      // Poor man's throttle for scroll value = 1 or 2
+      if self.scrollGuardCounterY % self.scrollGuardYield == 0  {
+        self.agent.vimInput(vimInput)
+        self.scrollGuardCounterY = 1
+      } else {
+        self.scrollGuardCounterY += 1
+      }
+    } else {
+      self.agent.vimInput(vimInput)
+    }
+  }
+}
+
+// MARK: - NeoVimUiBridgeProtocol
+extension NeoVimView: NeoVimUiBridgeProtocol {
+
+  public func neoVimUiIsReady() {
+    DispatchUtils.gui {
+      self.resizeNeoVimUiTo(size: self.frame.size)
+    }
+  }
+
+  public func resizeToWidth(width: Int32, height: Int32) {
+    DispatchUtils.gui {
+      NSLog("\(#function): \(width):\(height)")
+      self.grid.resize(Size(width: Int(width), height: Int(height)))
+      self.needsDisplay = true
+    }
+  }
+  
+  public func clear() {
+    DispatchUtils.gui {
+      self.grid.clear()
+      self.needsDisplay = true
+    }
+  }
+  
+  public func eolClear() {
+    DispatchUtils.gui {
+      self.grid.eolClear()
+
+      let origin = self.pointInViewFor(position: self.grid.putPosition)
+      let size = CGSize(
+        width: CGFloat(self.grid.region.right - self.grid.putPosition.column + 1) * self.cellSize.width,
+        height: self.cellSize.height
+      )
+      let rect = CGRect(origin: origin, size: size)
+      self.setNeedsDisplayInRect(rect)
+    }
+  }
+  
+  public func gotoPosition(position: Position, screenCursor: Position) {
+    DispatchUtils.gui {
+//      NSLog("\(#function): \(position), \(screenCursor)")
+
+      // Because neovim fills blank space with "Space" and when we enter "Space" we don't get the puts.
+      self.setNeedsDisplay(cellPosition: self.grid.putPosition)
+      self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(self.grid.putPosition))
+      self.setNeedsDisplay(screenCursor: position)
+
+      self.grid.goto(position)
+      self.grid.moveCursor(screenCursor)
+    }
+  }
+  
+  public func updateMenu() {
+  }
+  
+  public func busyStart() {
+  }
+  
+  public func busyStop() {
+  }
+  
+  public func mouseOn() {
+  }
+  
+  public func mouseOff() {
+  }
+  
+  public func modeChange(mode: Int32) {
+  }
+  
+  public func setScrollRegionToTop(top: Int32, bottom: Int32, left: Int32, right: Int32) {
+    DispatchUtils.gui {
+      let region = Region(top: Int(top), bottom: Int(bottom), left: Int(left), right: Int(right))
+      self.grid.setScrollRegion(region)
+      self.setNeedsDisplay(region: region)
+    }
+  }
+  
+  public func scroll(count: Int32) {
+    DispatchUtils.gui {
+      self.grid.scroll(Int(count))
+      self.setNeedsDisplay(region: self.grid.region)
+    }
+  }
+
+  public func highlightSet(attrs: CellAttributes) {
+    DispatchUtils.gui {
+      self.grid.attrs = attrs
+    }
+  }
+  
+  public func put(string: String) {
+    DispatchUtils.gui {
+      let curPos = self.grid.putPosition
+//      NSLog("\(#function): \(curPos) -> \(string)")
+      self.grid.put(string)
+      self.setNeedsDisplay(cellPosition: curPos)
+      // When the cursor is in the command line, then we need this...
+      self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(curPos))
+
+      self.setNeedsDisplay(screenCursor: self.grid.screenCursor)
+    }
+  }
+
+  public func putMarkedText(markedText: String) {
+    DispatchUtils.gui {
+      NSLog("\(#function): '\(markedText)'")
+      let curPos = self.grid.putPosition
+      self.grid.putMarkedText(markedText)
+
+      self.setNeedsDisplay(position: curPos)
+      // When the cursor is in the command line, then we need this...
+      self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(curPos))
+      if markedText.characters.count == 0 {
+        self.setNeedsDisplay(position: self.grid.previousCellPosition(curPos))
+      }
+      self.setNeedsDisplay(screenCursor: self.grid.screenCursor)
+    }
+  }
+
+  public func unmarkRow(row: Int32, column: Int32) {
+    DispatchUtils.gui {
+      let position = Position(row: Int(row), column: Int(column))
+
+      NSLog("\(#function): \(position)")
+
+      self.grid.unmarkCell(position)
+      self.setNeedsDisplay(position: position)
+      
+      self.setNeedsDisplay(screenCursor: self.grid.screenCursor)
+    }
+  }
+
+  public func bell() {
+    DispatchUtils.gui {
+      NSBeep()
+    }
+  }
+  
+  public func visualBell() {
+  }
+  
+  public func flush() {
+//    NSLog("\(#function)")
+  }
+  
+  public func updateForeground(fg: Int32) {
+    DispatchUtils.gui {
+      self.grid.foreground = UInt32(bitPattern: fg)
+    }
+  }
+  
+  public func updateBackground(bg: Int32) {
+    DispatchUtils.gui {
+      self.grid.background = UInt32(bitPattern: bg)
+      self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).CGColor
+    }
+  }
+  
+  public func updateSpecial(sp: Int32) {
+    DispatchUtils.gui {
+      self.grid.special = UInt32(bitPattern: sp)
+    }
+  }
+  
+  public func suspend() {
+  }
+  
+  public func setTitle(title: String) {
+    DispatchUtils.gui {
+      self.delegate?.setNeoVimTitle(title)
+    }
+  }
+  
+  public func setIcon(icon: String) {
+  }
+  
+  public func stop() {
+  }
+  
+  private func setNeedsDisplay(region region: Region) {
+    self.setNeedsDisplayInRect(self.regionRectFor(region: region))
+  }
+  
+  private func setNeedsDisplay(cellPosition position: Position) {
+    self.setNeedsDisplay(position: position)
+    
+    if self.grid.isCellEmpty(position) {
+      self.setNeedsDisplay(position: self.grid.previousCellPosition(position))
+    }
+    
+    if self.grid.isNextCellEmpty(position) {
+      self.setNeedsDisplay(position: self.grid.nextCellPosition(position))
+    }
+  }
+
+  private func setNeedsDisplay(position position: Position) {
+    self.setNeedsDisplay(row: position.row, column: position.column)
+  }
+
+  private func setNeedsDisplay(row row: Int, column: Int) {
+//    Swift.print("\(#function): \(row):\(column)")
+    self.setNeedsDisplayInRect(self.cellRectFor(row: row, column: column))
+  }
+
+  private func setNeedsDisplay(screenCursor position: Position) {
+    self.setNeedsDisplay(position: position)
+    if self.grid.isNextCellEmpty(position) {
+      self.setNeedsDisplay(position: self.grid.nextCellPosition(position))
+    }
   }
 }
