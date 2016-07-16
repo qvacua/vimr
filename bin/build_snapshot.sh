@@ -22,7 +22,7 @@ carthage update --platform osx
 ./bin/bump_bundle_version.sh
 ./bin/set_snapshot_date.sh
 
-xcodebuild CODE_SIGN_IDENTITY="Developer ID Application: Tae Won Ha (H96Q2NKTQH)"
+xcodebuild CODE_SIGN_IDENTITY="Developer ID Application: Tae Won Ha (H96Q2NKTQH)" -configuration Release -target VimR
 
 git commit -am "Set snapshot version: $(./bin/current_marketing_version.sh)-$(./bin/current_bundle_version.sh)"
 git tag -a -m "$(./bin/current_marketing_version.sh) ($(./bin/current_bundle_version.sh))" snapshot/$(date +%Y%m%d.%H%M)-$(./bin/current_bundle_version.sh)
