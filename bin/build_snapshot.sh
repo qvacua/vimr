@@ -12,7 +12,7 @@ git submodule update --init
 # delete previously built libnvim
 pushd neovim
 ln -f -s ../local.mk .
-rm -r build
+rm -rf build
 make clean
 make CMAKE_BUILD_TYPE=Release libnvim
 popd
