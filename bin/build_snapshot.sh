@@ -4,6 +4,10 @@ set -e
 
 export PATH=/usr/local/bin:$PATH
 
+# delete all (local) branches
+git for-each-ref --format="%(refname:strip=2)" refs/heads/ | xargs git branch -D
+git checkout -b build_snapshot
+
 # delete previously built VimR
 rm -rf build
 
@@ -24,10 +28,17 @@ carthage update --platform osx
 
 xcodebuild CODE_SIGN_IDENTITY="Developer ID Application: Tae Won Ha (H96Q2NKTQH)" -configuration Release -target VimR
 
-git commit -am "Set snapshot version: $(./bin/current_marketing_version.sh)-$(./bin/current_bundle_version.sh)"
-git tag -a -m "$(./bin/current_marketing_version.sh) ($(./bin/current_bundle_version.sh))" snapshot/$(date +%Y%m%d.%H%M)-$(./bin/current_bundle_version.sh)
+CUR_MARKETING_VERSION=$(./bin/current_marketing_version.sh)
+CUR_BUNDLE_VERSION=$(./bin/current_bundle_version.sh)
+TAG_NAME=snapshot/$(date +%Y%m%d.%H%M)-${CUR_BUNDLE_VERSION}
+
+git commit -am "Set snapshot version: $CUR_MARKETING_VERSION-$CUR_BUNDLE_VERSION"
+git tag -a -m "$CUR_MARKETING_VERSION ($CUR_BUNDLE_VERSION)" snapshot/$(date +%Y%m%d.%H%M)-${CUR_BUNDLE_VERSION}
 
 pushd build/Release
-tar cjf VimR-$(./bin/current_marketing_version.sh).tar.bz2 VimR.app
-tar cjf SwiftNeoVim.framework-$(./bin/current_marketing_version.sh).tar.bz2 SwiftNeoVim.framework
+tar cjf VimR-${CUR_MARKETING_VERSION}.tar.bz2 VimR.app
+tar cjf SwiftNeoVim.framework-${CUR_MARKETING_VERSION}.tar.bz2 SwiftNeoVim.framework
 popd
+
+git push origin HEAD:${BRANCH}
+git push tag ${TAG_NAME}
