@@ -26,3 +26,8 @@ xcodebuild CODE_SIGN_IDENTITY="Developer ID Application: Tae Won Ha (H96Q2NKTQH)
 
 git commit -am "Set snapshot version: $(./bin/current_marketing_version.sh)-$(./bin/current_bundle_version.sh)"
 git tag -a -m "$(./bin/current_marketing_version.sh) ($(./bin/current_bundle_version.sh))" snapshot/$(date +%Y%m%d.%H%M)-$(./bin/current_bundle_version.sh)
+
+pushd build/Release
+tar cjf VimR-$(./bin/current_marketing_version.sh).tar.bz2 VimR.app
+tar cjf SwiftNeoVim.framework-$(./bin/current_marketing_version.sh).tar.bz2 SwiftNeoVim.framework
+popd
