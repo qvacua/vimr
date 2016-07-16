@@ -41,4 +41,4 @@ tar cjf SwiftNeoVim.framework-${CUR_MARKETING_VERSION}.tar.bz2 SwiftNeoVim.frame
 popd
 
 git push origin HEAD:${BRANCH}
-git push tag ${TAG_NAME}
+git push origin ${TAG_NAME}
