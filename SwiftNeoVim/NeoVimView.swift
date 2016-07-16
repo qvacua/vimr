@@ -43,10 +43,14 @@ public class NeoVimView: NSView {
   private var cellSize = CGSize.zero
   private var descent = CGFloat(0)
   private var leading = CGFloat(0)
-  
-  private var scrollGuardCounterX = 9
-  private var scrollGuardCounterY = 9
-  private let scrollGuardYield = 10
+
+  private let maxScrollDeltaX = 30
+  private let maxScrollDeltaY = 30
+  private let scrollLimiterX = CGFloat(20)
+  private let scrollLimiterY = CGFloat(20)
+  private var scrollGuardCounterX = 5
+  private var scrollGuardCounterY = 5
+  private let scrollGuardYield = 5
 
   private let drawer: TextDrawer
   private var font: NSFont {
@@ -540,8 +544,8 @@ extension NeoVimView {
     
     // The absolute delta values can get very very big when you use two finger scrolling on the trackpad:
     // Cap them using heuristic values...
-    let numX = deltaX != 0 ? max(1, min(Int(absDeltaX / 20), 25)) : 0
-    let numY = deltaY != 0 ? max(1, min(Int(absDeltaY / 20), 25)) : 0
+    let numX = deltaX != 0 ? max(1, min(Int(absDeltaX / self.scrollLimiterX), self.maxScrollDeltaX)) : 0
+    let numY = deltaY != 0 ? max(1, min(Int(absDeltaY / self.scrollLimiterY), self.maxScrollDeltaY)) : 0
 
     for i in 0..<max(numX, numY) {
       if i < numX {
