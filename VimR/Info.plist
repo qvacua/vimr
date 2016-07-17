@@ -29,6 +29,6 @@
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
+	<string>VimR.Application</string>
 </dict>
 </plist>
