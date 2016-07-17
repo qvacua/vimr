@@ -30,10 +30,11 @@ xcodebuild CODE_SIGN_IDENTITY="Developer ID Application: Tae Won Ha (H96Q2NKTQH)
 
 CUR_MARKETING_VERSION=$(./bin/current_marketing_version.sh)
 CUR_BUNDLE_VERSION=$(./bin/current_bundle_version.sh)
-TAG_NAME=snapshot/$(date +%Y%m%d.%H%M)-${CUR_BUNDLE_VERSION}
+SNAPSHOT_DATE=$(date +%Y%m%d.%H%M)
+TAG_NAME=snapshot/${SNAPSHOT_DATE}-${CUR_BUNDLE_VERSION}
 
 git commit -am "Set snapshot version: $CUR_MARKETING_VERSION-$CUR_BUNDLE_VERSION"
-git tag -a -m "$CUR_MARKETING_VERSION ($CUR_BUNDLE_VERSION)" snapshot/$(date +%Y%m%d.%H%M)-${CUR_BUNDLE_VERSION}
+git tag -a -m "$CUR_MARKETING_VERSION ($CUR_BUNDLE_VERSION)" snapshot/${SNAPSHOT_DATE}-${CUR_BUNDLE_VERSION}
 
 pushd build/Release
 tar cjf VimR-${CUR_MARKETING_VERSION}.tar.bz2 VimR.app
