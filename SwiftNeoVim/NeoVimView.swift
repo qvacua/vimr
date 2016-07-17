@@ -20,7 +20,7 @@ private struct RowRun: CustomStringConvertible {
 public class NeoVimView: NSView {
 
   public let uuid = NSUUID().UUIDString
-  public var delegate: NeoVimViewDelegate?
+  public weak var delegate: NeoVimViewDelegate?
   
   private let agent: NeoVimAgent
 
@@ -81,9 +81,14 @@ public class NeoVimView: NSView {
     self.agent.bridge = self
     self.agent.establishLocalServer()
   }
+  
+  deinit {
+    NSLog("deinit of view")
+  }
 
   // deinit would have been ideal for this, but if you quit the app, deinit does not necessarily get called...
   public func cleanUp() {
+//    NSLog("\(#function): clean up")
     self.agent.cleanUp()
   }
 
@@ -867,6 +872,9 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   public func stop() {
+    DispatchUtils.gui {
+      self.delegate?.neoVimStopped()
+    }
   }
   
   private func setNeedsDisplay(region region: Region) {

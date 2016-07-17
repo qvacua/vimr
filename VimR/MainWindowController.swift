@@ -6,7 +6,7 @@
 import Cocoa
 import PureLayout
 
-class MainWindowController: NSWindowController, NSWindowDelegate {
+class MainWindowController: NSWindowController, NSWindowDelegate, NeoVimViewDelegate {
   
   var uuid: String {
     return self.neoVimView.uuid
@@ -15,9 +15,14 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
   private weak var mainWindowManager: MainWindowManager?
   
   private let neoVimView = NeoVimView(forAutoLayout: ())
+  
+  deinit {
+    NSLog("deinit of window controller")
+  }
 
   func setup(manager manager: MainWindowManager) {
     self.mainWindowManager = manager
+    self.neoVimView.delegate = self
     self.addViews()
 
     self.window?.makeFirstResponder(self.neoVimView)
@@ -26,6 +31,14 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
   func windowWillClose(notification: NSNotification) {
     self.neoVimView.cleanUp()
     self.mainWindowManager?.closeMainWindow(self)
+  }
+  
+  func setNeoVimTitle(title: String) {
+    NSLog("\(#function): \(title)")
+  }
+  
+  func neoVimStopped() {
+    self.window?.performClose(self)
   }
   
   private func addViews() {

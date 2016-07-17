@@ -5,7 +5,9 @@
 
 import Cocoa
 
-public protocol NeoVimViewDelegate {
+// See http://stackoverflow.com/a/24104371 for class
+public protocol NeoVimViewDelegate: class {
   
   func setNeoVimTitle(title: String)
+  func neoVimStopped()
 }

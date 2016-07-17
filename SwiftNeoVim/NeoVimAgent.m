@@ -45,6 +45,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
   CFMessagePortRef _localServerPort;
   NSThread *_localServerThread;
+  
+  CFRunLoopRef _runLoop;
 
   NSTask *_neoVimServerTask;
   CFMessagePortRef _remoteServerPort;
@@ -61,6 +63,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   return self;
 }
 
+- (void)dealloc {
+  NSLog(@"dealloc of agent");
+}
+
 // -dealloc would have been ideal for this, but if you quit the app, -dealloc does not necessarily get called...
 - (void)cleanUp {
   CFMessagePortInvalidate(_remoteServerPort);
@@ -69,6 +75,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   CFMessagePortInvalidate(_localServerPort);
   CFRelease(_localServerPort);
 
+  CFRunLoopStop(_runLoop);
   [_localServerThread cancel];
   [_neoVimServerTask interrupt];
   [_neoVimServerTask terminate];
@@ -132,9 +139,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     // FIXME: handle shouldFreeLocalServer = true
   }
 
-  CFRunLoopRef runLoop = CFRunLoopGetCurrent();
+  _runLoop = CFRunLoopGetCurrent();
   CFRunLoopSourceRef runLoopSrc = CFMessagePortCreateRunLoopSource(kCFAllocatorDefault, _localServerPort, 0);
-  CFRunLoopAddSource(runLoop, runLoopSrc, kCFRunLoopCommonModes);
+  CFRunLoopAddSource(_runLoop, runLoopSrc, kCFRunLoopCommonModes);
   CFRelease(runLoopSrc);
   CFRunLoopRun();
 }
