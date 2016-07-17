@@ -15,10 +15,6 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NeoVimViewDele
   private weak var mainWindowManager: MainWindowManager?
   
   private let neoVimView = NeoVimView(forAutoLayout: ())
-  
-  deinit {
-    NSLog("deinit of window controller")
-  }
 
   func setup(manager manager: MainWindowManager) {
     self.mainWindowManager = manager
@@ -29,7 +25,6 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NeoVimViewDele
   }
 
   func windowWillClose(notification: NSNotification) {
-    self.neoVimView.cleanUp()
     self.mainWindowManager?.closeMainWindow(self)
   }
   

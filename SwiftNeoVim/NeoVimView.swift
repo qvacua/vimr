@@ -83,12 +83,6 @@ public class NeoVimView: NSView {
   }
   
   deinit {
-    NSLog("deinit of view")
-  }
-
-  // deinit would have been ideal for this, but if you quit the app, deinit does not necessarily get called...
-  public func cleanUp() {
-//    NSLog("\(#function): clean up")
     self.agent.cleanUp()
   }
 
