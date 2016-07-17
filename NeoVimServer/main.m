@@ -14,7 +14,7 @@ NeoVimServer *_neovim_server;
 
 // Ensure no parent-less NeoVimServer processes are left when the main app crashes.
 // From http://mac-os-x.10953.n7.nabble.com/Ensure-NSTask-terminates-when-parent-application-does-td31477.html
-static void observer_parent_termination(void *arg) {
+static void observe_parent_termination(void *arg) {
   pid_t ppid = getppid();     // get parent pid
 
   int kq = kqueue();
@@ -39,7 +39,7 @@ static void observer_parent_termination(void *arg) {
 
 int main(int argc, const char *argv[]) {
   uv_thread_t parent_observer_thread;
-  uv_thread_create(&parent_observer_thread, observer_parent_termination, NULL);
+  uv_thread_create(&parent_observer_thread, observe_parent_termination, NULL);
 
   @autoreleasepool {
     NSArray<NSString *> *arguments = [NSProcessInfo processInfo].arguments;
