@@ -24,15 +24,17 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NeoVimViewDele
     self.window?.makeFirstResponder(self.neoVimView)
   }
 
+  func isDirty() -> Bool {
+    return self.neoVimView.hasDirtyDocs()
+  }
+
   // MARK: - NSWindowDelegate
   func windowWillClose(notification: NSNotification) {
     self.mainWindowManager?.closeMainWindow(self)
   }
 
   func windowShouldClose(sender: AnyObject) -> Bool {
-    let hasDirtyDocs = self.neoVimView.hasDirtyDocs()
-
-    if !hasDirtyDocs {
+    if !self.isDirty() {
       return true
     }
 

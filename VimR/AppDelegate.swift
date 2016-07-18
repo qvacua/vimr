@@ -28,4 +28,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     self.mainWindowManager.newMainWindow()
   }
+
+  func applicationShouldTerminate(sender: NSApplication) -> NSApplicationTerminateReply {
+    if self.mainWindowManager.hasDirtyWindows() {
+      let alert = NSAlert()
+      alert.addButtonWithTitle("Cancel")
+      alert.addButtonWithTitle("Discard and Quit")
+      alert.messageText = "There are windows with unsaved buffers!"
+      alert.alertStyle = .WarningAlertStyle
+
+      if alert.runModal() == NSAlertSecondButtonReturn {
+        return .TerminateNow
+      }
+
+      return .TerminateCancel
+    }
+
+    return .TerminateNow
+  }
 }

@@ -20,4 +20,14 @@ class MainWindowManager {
   func closeMainWindow(mainWindowController: MainWindowController) {
     self.mainWindowControllers.removeValueForKey(mainWindowController.uuid)
   }
+
+  func hasDirtyWindows() -> Bool {
+    for windowController in self.mainWindowControllers.values {
+      if windowController.isDirty() {
+        return true
+      }
+    }
+
+    return false
+  }
 }
