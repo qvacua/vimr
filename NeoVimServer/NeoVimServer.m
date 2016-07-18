@@ -47,10 +47,11 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   NSString *_localServerName;
   NSString *_remoteServerName;
 
+  CFMessagePortRef _remoteServerPort;
+
   NSThread *_localServerThread;
   CFMessagePortRef _localServerPort;
-
-  CFMessagePortRef _remoteServerPort;
+  CFRunLoopRef _localServerRunLoop;
 }
 
 - (instancetype)initWithLocalServerName:(NSString *)localServerName remoteServerName:(NSString *)remoteServerName {
@@ -71,13 +72,18 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (void)dealloc {
-  CFMessagePortInvalidate(_localServerPort);
+  if (CFMessagePortIsValid(_remoteServerPort)) {
+    CFMessagePortInvalidate(_remoteServerPort);
+  }
+  CFRelease(_remoteServerPort);
+
+  if (CFMessagePortIsValid(_localServerPort)) {
+    CFMessagePortInvalidate(_localServerPort);
+  }
   CFRelease(_localServerPort);
 
+  CFRunLoopStop(_localServerRunLoop);
   [_localServerThread cancel];
-
-  CFMessagePortInvalidate(_remoteServerPort);
-  CFRelease(_remoteServerPort);
 }
 
 - (void)runLocalServer {
@@ -102,9 +108,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     // FIXME: handle shouldFree == true
   }
 
-  CFRunLoopRef runLoop = CFRunLoopGetCurrent();
+  _localServerRunLoop = CFRunLoopGetCurrent();
   CFRunLoopSourceRef runLoopSrc = CFMessagePortCreateRunLoopSource(kCFAllocatorDefault, _localServerPort, 0);
-  CFRunLoopAddSource(runLoop, runLoopSrc, kCFRunLoopCommonModes);
+  CFRunLoopAddSource(_localServerRunLoop, runLoopSrc, kCFRunLoopCommonModes);
   CFRelease(runLoopSrc);
   CFRunLoopRun();
 }

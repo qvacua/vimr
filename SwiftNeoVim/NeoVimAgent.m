@@ -44,13 +44,13 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 @implementation NeoVimAgent {
   NSString *_uuid;
 
+  CFMessagePortRef _remoteServerPort;
+
   CFMessagePortRef _localServerPort;
   NSThread *_localServerThread;
-
-  CFRunLoopRef _runLoop;
+  CFRunLoopRef _localServerRunLoop;
 
   NSTask *_neoVimServerTask;
-  CFMessagePortRef _remoteServerPort;
 }
 
 - (instancetype)initWithUuid:(NSString *)uuid {
@@ -66,13 +66,17 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
 // We cannot use -dealloc for this since -dealloc is not called until the run loop in the thread stops.
 - (void)cleanUp {
-  CFMessagePortInvalidate(_remoteServerPort);
+  if (CFMessagePortIsValid(_remoteServerPort)) {
+    CFMessagePortInvalidate(_remoteServerPort);
+  }
   CFRelease(_remoteServerPort);
 
-  CFMessagePortInvalidate(_localServerPort);
+  if (CFMessagePortIsValid(_localServerPort)) {
+    CFMessagePortInvalidate(_localServerPort);
+  }
   CFRelease(_localServerPort);
 
-  CFRunLoopStop(_runLoop);
+  CFRunLoopStop(_localServerRunLoop);
   [_localServerThread cancel];
 
   [_neoVimServerTask interrupt];
@@ -148,9 +152,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     // FIXME: handle shouldFreeLocalServer = true
   }
 
-  _runLoop = CFRunLoopGetCurrent();
+  _localServerRunLoop = CFRunLoopGetCurrent();
   CFRunLoopSourceRef runLoopSrc = CFMessagePortCreateRunLoopSource(kCFAllocatorDefault, _localServerPort, 0);
-  CFRunLoopAddSource(_runLoop, runLoopSrc, kCFRunLoopCommonModes);
+  CFRunLoopAddSource(_localServerRunLoop, runLoopSrc, kCFRunLoopCommonModes);
   CFRelease(runLoopSrc);
   CFRunLoopRun();
 }
