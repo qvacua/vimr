@@ -180,6 +180,10 @@ public class NeoVimView: NSView {
     self.drawCursor(self.grid.background)
   }
 
+  public func hasDirtyDocs() -> Bool {
+    return self.agent.hasDirtyDocs()
+  }
+
   private func drawCursor(background: UInt32) {
     // FIXME: for now do some rudimentary cursor drawing
     let cursorPosition = self.grid.putPosition

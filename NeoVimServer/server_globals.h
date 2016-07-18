@@ -17,3 +17,4 @@ extern void server_redraw();
 extern void server_resize(int width, int height);
 extern void server_vim_input_marked_text(NSString *markedText);
 extern void server_insert_marked_text(NSString *markedText);
+extern bool server_has_dirty_docs();

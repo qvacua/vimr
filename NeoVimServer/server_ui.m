@@ -20,7 +20,6 @@
 #import <nvim/ui_bridge.h>
 #import <nvim/event/signal.h>
 #import <nvim/main.h>
-#import <nvim/cursor.h>
 #import <nvim/screen.h>
 
 
@@ -613,4 +612,14 @@ void server_insert_marked_text(NSString *markedText) {
   _marked_text = [markedText retain]; // release when the final text is input in -vimInput
 
   loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_marked_text retain])); // release in neovim_input
+}
+
+bool server_has_dirty_docs() {
+  FOR_ALL_BUFFERS(buffer) {
+    if (buffer->b_changed) {
+      return true;
+    }
+  }
+
+  return false;
 }

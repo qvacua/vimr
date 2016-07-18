@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)forceRedraw;
 - (void)resizeToWidth:(int)width height:(int)height;
 
+- (bool)hasDirtyDocs;
+
 @end
 
 NS_ASSUME_NONNULL_END

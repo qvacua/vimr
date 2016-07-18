@@ -21,6 +21,7 @@ static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
 }
 
 data_to_array(int)
+data_to_array(bool)
 data_to_array(CellAttributes)
 
 @interface NeoVimAgent ()
@@ -45,7 +46,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
   CFMessagePortRef _localServerPort;
   NSThread *_localServerThread;
-  
+
   CFRunLoopRef _runLoop;
 
   NSTask *_neoVimServerTask;
@@ -114,6 +115,17 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [self sendMessageWithId:NeoVimAgentMsgIdResize data:data];
 }
 
+- (bool)hasDirtyDocs {
+  NSData *responseData = [self sendMessageWithId:NeoVimAgentMsgIdDirtyDocs data:nil];
+  if (responseData == NULL) {
+    NSLog(@"WARNING: agent got response data null");
+    return false;
+  }
+  
+  bool *values = data_to_bool_array(responseData, 1);
+  return values[0];
+}
+
 - (void)runLocalServer {
   @autoreleasepool {
     CFMessagePortContext localContext = {
@@ -152,21 +164,34 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [self sendMessageWithId:NeoVimAgentMsgIdAgentReady data:nil];
 }
 
-- (void)sendMessageWithId:(NeoVimAgentMsgId)msgid data:(NSData *)data {
+- (NSData *)sendMessageWithId:(NeoVimAgentMsgId)msgid data:(NSData *)data {
   if (_remoteServerPort == NULL) {
     log4Warn("Remote server is null: The msg (%lu:%@) could not be sent.", (unsigned long) msgid, data);
-    return;
+    return nil;
+  }
+
+  CFDataRef responseData = NULL;
+  CFStringRef replyMode = NULL;
+
+  // We only expect reply from NeoVimAgentMsgIdDirtyDocs
+  if (msgid == NeoVimAgentMsgIdDirtyDocs) {
+    replyMode = kCFRunLoopDefaultMode;
   }
 
   SInt32 responseCode = CFMessagePortSendRequest(
-      _remoteServerPort, msgid, (__bridge CFDataRef) data, qTimeout, qTimeout, NULL, NULL
+      _remoteServerPort, msgid, (__bridge CFDataRef) data, qTimeout, qTimeout, replyMode, &responseData
   );
 
-  if (responseCode == kCFMessagePortSuccess) {
-    return;
+  if (responseCode != kCFMessagePortSuccess) {
+    log4Warn("The msg (%lu:%@) could not be sent: %d", (unsigned long) msgid, data, responseCode);
+    return nil;
   }
 
-  log4Warn("The msg (%lu:%@) could not be sent: %d", (unsigned long) msgid, data, responseCode);
+  if (responseData == NULL) {
+    return nil;
+  }
+
+  return [NSData dataWithData:(__bridge NSData *) responseData];
 }
 
 - (NSString *)neoVimServerExecutablePath {

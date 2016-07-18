@@ -24,17 +24,22 @@ data_to_array(NSInteger)
 
 @interface NeoVimServer ()
 
-- (void)handleMessageWithId:(SInt32)msgid data:(NSData *)data;
+- (NSData *)handleMessageWithId:(SInt32)msgid data:(NSData *)data;
 
 @end
 
 static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFDataRef data, void *info) {
   @autoreleasepool {
     NeoVimServer *neoVimServer = (__bridge NeoVimServer *) info;
-    [neoVimServer handleMessageWithId:msgid data:(__bridge NSData *) data];
-  }
+    NSData *responseData = [neoVimServer handleMessageWithId:msgid data:(__bridge NSData *) data];
 
-  return NULL;
+    if (responseData == nil) {
+      return NULL;
+    }
+
+    log4Debug("server returning data: %@", responseData);
+    return CFDataCreateCopy(kCFAllocatorDefault, (__bridge CFDataRef) responseData);
+  }
 }
 
 
@@ -129,45 +134,50 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [self sendMessageWithId:NeoVimServerMsgIdServerReady data:nil];
 }
 
-- (void)handleMessageWithId:(SInt32)msgid data:(NSData *)data {
+- (NSData *)handleMessageWithId:(SInt32)msgid data:(NSData *)data {
   switch (msgid) {
 
     case NeoVimAgentMsgIdAgentReady:
       server_start_neovim();
-      return;
+      return nil;
 
     case NeoVimAgentMsgIdInput: {
       NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
       server_vim_input(string);
 
-      return;
+      return nil;
     }
 
     case NeoVimAgentMsgIdInputMarked: {
       NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
       server_vim_input_marked_text(string);
 
-      return;
+      return nil;
     }
 
     case NeoVimAgentMsgIdDelete: {
       NSInteger *values = data_to_NSInteger_array(data, 1);
       server_delete(values[0]);
-      return;
+      return nil;
     }
 
     case NeoVimAgentMsgIdResize: {
       int *values = data_to_int_array(data, 2);
       server_resize(values[0], values[1]);
-      return;
+      return nil;
     }
 
     case NeoVimAgentMsgIdRedraw:
       server_redraw();
-      return;
+      return nil;
+
+    case NeoVimAgentMsgIdDirtyDocs: {
+      bool dirty = server_has_dirty_docs();
+      return [NSData dataWithBytes:&dirty length:sizeof(bool)];
+    }
 
     default:
-      return;
+      return nil;
   }
 }
 

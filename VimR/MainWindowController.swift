@@ -24,18 +24,25 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NeoVimViewDele
     self.window?.makeFirstResponder(self.neoVimView)
   }
 
+  // MARK: - NSWindowDelegate
   func windowWillClose(notification: NSNotification) {
     self.mainWindowManager?.closeMainWindow(self)
   }
-  
+
+  func windowShouldClose(sender: AnyObject) -> Bool {
+    return !self.neoVimView.hasDirtyDocs()
+  }
+
+  // MARK: - NeoVimViewDelegate
   func setNeoVimTitle(title: String) {
     NSLog("\(#function): \(title)")
   }
   
   func neoVimStopped() {
-    self.window?.performClose(self)
+    self.close()
   }
-  
+
+  // MARK: - Private
   private func addViews() {
     self.window?.contentView?.addSubview(self.neoVimView)
     self.neoVimView.autoPinEdgesToSuperviewEdges()
