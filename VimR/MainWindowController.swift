@@ -30,7 +30,24 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NeoVimViewDele
   }
 
   func windowShouldClose(sender: AnyObject) -> Bool {
-    return !self.neoVimView.hasDirtyDocs()
+    let hasDirtyDocs = self.neoVimView.hasDirtyDocs()
+
+    if !hasDirtyDocs {
+      return true
+    }
+
+    let alert = NSAlert()
+    alert.addButtonWithTitle("Cancel")
+    alert.addButtonWithTitle("Discard and Close")
+    alert.messageText = "There are unsaved buffers!"
+    alert.alertStyle = .WarningAlertStyle
+    alert.beginSheetModalForWindow(self.window!) { response in
+      if response == NSAlertSecondButtonReturn {
+        self.close()
+      }
+    }
+
+    return false
   }
 
   // MARK: - NeoVimViewDelegate
