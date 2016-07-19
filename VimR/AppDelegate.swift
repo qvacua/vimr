@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import RxSwift
 import PureLayout
 
 @NSApplicationMain
@@ -12,6 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @IBOutlet weak var window: NSWindow!
   
   private let mainWindowManager = MainWindowManager()
+  private let prefWindowController = PrefWindowController(source: Observable.empty())
   
   @IBAction func debugSomething(sender: AnyObject!) {
     NSLog("debug sth...")
@@ -26,7 +28,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //    self.window.contentView?.addSubview(testView)
 //    self.window.makeFirstResponder(testView)
 
-    self.mainWindowManager.newMainWindow()
+//    self.mainWindowManager.newMainWindow()
+    self.prefWindowController.showWindow(self)
   }
 
   func applicationShouldTerminate(sender: NSApplication) -> NSApplicationTerminateReply {
