@@ -5,7 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="MainWindowController" customModule="VimR" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="NSWindowController">
             <connections>
                 <outlet property="window" destination="QvC-M9-y7g" id="Xb2-mB-2h2"/>
             </connections>
@@ -16,15 +16,12 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="140" y="800" width="320" height="240"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="280" height="120"/>
             <view key="contentView" id="EiT-Mj-1SZ">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="240"/>
                 <autoresizingMask key="autoresizingMask"/>
             </view>
-            <connections>
-                <outlet property="delegate" destination="-2" id="zSW-LT-joY"/>
-            </connections>
             <point key="canvasLocation" x="483.5" y="413.5"/>
         </window>
     </objects>

@@ -4,30 +4,22 @@
  */
 
 import Cocoa
+import RxSwift
 
 class MainWindowManager {
   
-  private var mainWindowControllers: [String: MainWindowController] = [:]
+  private var mainWindowComponents = [String:MainWindowComponent]()
   
   func newMainWindow() {
-    let mainWindowController = MainWindowController(windowNibName: "MainWindow")
-    self.mainWindowControllers[mainWindowController.uuid] = mainWindowController
-
-    mainWindowController.setup(manager: self)
-    mainWindowController.showWindow(self)
+    let mainWindowComponent = MainWindowComponent(source: Observable.empty(), manager: self)
+    self.mainWindowComponents[mainWindowComponent.uuid] = mainWindowComponent
   }
   
-  func closeMainWindow(mainWindowController: MainWindowController) {
-    self.mainWindowControllers.removeValueForKey(mainWindowController.uuid)
+  func closeMainWindow(mainWindowComponent: MainWindowComponent) {
+    self.mainWindowComponents.removeValueForKey(mainWindowComponent.uuid)
   }
 
   func hasDirtyWindows() -> Bool {
-    for windowController in self.mainWindowControllers.values {
-      if windowController.isDirty() {
-        return true
-      }
-    }
-
-    return false
+    return self.mainWindowComponents.values.reduce(false) { $0 ? true : $1.isDirty() }
   }
 }

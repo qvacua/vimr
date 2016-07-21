@@ -7,28 +7,40 @@ import Cocoa
 import RxSwift
 import PureLayout
 
-enum PrefAction {
-  case PrefChanged(prefs: [String: Any])
+struct PrefData {
+  var appearance: AppearancePrefData
 }
 
-class PrefWindowController: NSWindowController, NSTableViewDataSource, NSTableViewDelegate {
+class PrefWindowController: NSWindowController, NSTableViewDataSource, NSTableViewDelegate, Component {
 
   private let windowMask = NSTitledWindowMask
     | NSResizableWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask
   
   private let source: Observable<Any>
   private let disposeBag = DisposeBag()
-  let sink = PublishSubject<Any>().asObserver()
-  
+
+  private let subject = PublishSubject<Any>()
+  var sink: Observable<Any> {
+    return self.subject.asObservable()
+  }
+
+  private var data = PrefData(
+    appearance: AppearancePrefData(editorFont: NSFont(name: "Menlo", size: 13)!)
+  )
+
   private let categoryView = NSTableView(frame: CGRect.zero)
   private let categoryScrollView = NSScrollView(forAutoLayout: ())
   private let paneScrollView = NSScrollView(forAutoLayout: ())
 
   private let paneNames = [ "Appearance" ]
-  private let panes = [ AppearancePrefPane(forAutoLayout: ()) ]
+  private let panes: [ViewComponent]
 
   init(source: Observable<Any>) {
     self.source = source
+
+    self.panes = [
+      AppearancePrefPane(source: Observable.empty(), data: self.data.appearance)
+    ]
     
     let window = NSWindow(
       contentRect: CGRect(x: 100, y: 100, width: 640, height: 480),
@@ -43,8 +55,33 @@ class PrefWindowController: NSWindowController, NSTableViewDataSource, NSTableVi
     super.init(window: window)
     
     self.addViews()
+    self.addReactions()
   }
-  
+
+  deinit {
+    self.subject.onCompleted()
+  }
+
+  private func addReactions() {
+    self.panes
+      .map { $0.sink }
+      .toObservable()
+      .flatMap { $0 }
+      .map { action in
+        switch action {
+        case let data as AppearancePrefData:
+          NSLog("\(data)")
+          self.data.appearance = data
+        default:
+          NSLog("nothing to see here")
+        }
+
+        return self.data
+      }
+      .subscribeNext { self.subject.onNext($0) }
+      .addDisposableTo(self.disposeBag)
+  }
+
   private func addViews() {
     let tableColumn = NSTableColumn(identifier: "name")
     let textFieldCell = NSTextFieldCell()
@@ -93,7 +130,7 @@ class PrefWindowController: NSWindowController, NSTableViewDataSource, NSTableVi
     paneScrollView.autoPinEdgeToSuperviewEdge(.Bottom)
     paneScrollView.autoPinEdge(.Left, toEdge: .Right, ofView: categoryScrollView)
 
-    self.paneScrollView.documentView = self.panes[0]
+    self.paneScrollView.documentView = self.panes[0].view
   }
 
   required init?(coder: NSCoder) {
@@ -103,19 +140,19 @@ class PrefWindowController: NSWindowController, NSTableViewDataSource, NSTableVi
 
 // MARK: - NSTableViewDataSource
 extension PrefWindowController {
+
   func numberOfRowsInTableView(tableView: NSTableView) -> Int {
     return self.paneNames.count
   }
 
-  /* This method is required for the "Cell Based" TableView, and is optional for the "View Based" TableView. If implemented in the latter case, the value will be set to the view at a given row/column if the view responds to -setObjectValue: (such as NSControl and NSTableCellView).
-   */
-  func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
+  func tableView(_: NSTableView, objectValueForTableColumn _: NSTableColumn?, row: Int) -> AnyObject? {
     return self.paneNames[row]
   }
 }
 
 // MARK: - NSTableViewDelegate
 extension PrefWindowController {
+
   func tableViewSelectionDidChange(notification: NSNotification) {
   }
 }
