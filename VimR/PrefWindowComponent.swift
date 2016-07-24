@@ -13,6 +13,9 @@ struct PrefData {
 
 class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate, Component {
 
+  private static let windowWidth = CGFloat(640)
+  private static let defaultEditorFont = NSFont(name: "Menlo", size: 13)!
+
   private let windowMask = NSTitledWindowMask
     | NSResizableWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask
   
@@ -25,7 +28,7 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
   }
 
   private var data = PrefData(
-    appearance: AppearancePrefData(editorFont: NSFont(name: "Menlo", size: 13)!)
+    appearance: AppearancePrefData(editorFont: PrefWindowComponent.defaultEditorFont)
   )
 
   private let window: NSWindow
@@ -45,11 +48,13 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
     ]
     
     self.window = NSWindow(
-      contentRect: CGRect(x: 100, y: 100, width: 640, height: 480),
+      contentRect: CGRect(x: 100, y: 100, width: PrefWindowComponent.windowWidth, height: 300),
       styleMask: self.windowMask,
       backing: .Buffered,
       defer: true
     )
+    let window = self.window
+    window.minSize = CGSize(width: PrefWindowComponent.windowWidth, height: 240)
     window.title = "Preferences"
     window.releasedWhenClosed = false
     window.center()
@@ -119,12 +124,11 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
 
     let paneScrollView = self.paneScrollView
     paneScrollView.hasVerticalScroller = true;
-    paneScrollView.hasHorizontalScroller = true;
-    paneScrollView.borderType = .NoBorder;
+    paneScrollView.hasHorizontalScroller = false;
     paneScrollView.autohidesScrollers = true;
+    paneScrollView.borderType = .NoBorder;
     paneScrollView.autoresizesSubviews = true;
     paneScrollView.backgroundColor = NSColor.windowBackgroundColor();
-    paneScrollView.autohidesScrollers = true;
 
     self.window.contentView?.addSubview(categoryScrollView)
     self.window.contentView?.addSubview(paneScrollView)
@@ -139,7 +143,10 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
     paneScrollView.autoPinEdgeToSuperviewEdge(.Bottom)
     paneScrollView.autoPinEdge(.Left, toEdge: .Right, ofView: categoryScrollView)
 
-    self.paneScrollView.documentView = self.panes[0].view
+    let pane = self.panes[0].view
+    self.paneScrollView.documentView = pane
+    pane.autoPinEdgeToSuperviewEdge(.Right)
+    pane.autoPinEdgeToSuperviewEdge(.Left)
   }
 }
 

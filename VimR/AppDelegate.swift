@@ -23,6 +23,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     self.mainWindowManager.newMainWindow()
   }
 
+  @IBAction func showPrefWindow(sender: AnyObject!) {
+    self.prefWindowComponent.show()
+  }
+
   override init() {
     self.mainWindowManager = MainWindowManager(prefWindowComponent: self.prefWindowComponent)
     super.init()
@@ -33,8 +37,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //    self.window.contentView?.addSubview(testView)
 //    self.window.makeFirstResponder(testView)
 
-//    self.mainWindowManager.newMainWindow()
-    self.prefWindowComponent.show()
+    self.newDocument(self)
   }
 
   func applicationShouldTerminate(sender: NSApplication) -> NSApplicationTerminateReply {

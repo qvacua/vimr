@@ -28,7 +28,7 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
   private let sizes = [9, 10, 11, 12, 13, 14, 16, 18, 24, 36, 48, 64]
   private let sizeCombo = NSComboBox(forAutoLayout: ())
   private let fontPopup = NSPopUpButton(frame: CGRect.zero, pullsDown: false)
-  private let previewArea = NSTextField(forAutoLayout: ())
+  private let previewArea = NSTextView(frame: CGRect.zero)
 
   private var font: NSFont
   private var fontSize = CGFloat(13)
@@ -49,8 +49,6 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
     super.init(frame: CGRect.zero)
     self.translatesAutoresizingMaskIntoConstraints = false
 
-    self.wantsLayer = true
-    self.layer?.backgroundColor = NSColor.yellowColor().CGColor
     self.addViews()
   }
 
@@ -83,16 +81,7 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
       sizeCombo.addItemWithObjectValue(string)
     }
 
-    let previewArea = self.previewArea
-    previewArea.editable = false
-    previewArea.bezeled = true
-    previewArea.bezelStyle = .SquareBezel
-    previewArea.allowsEditingTextAttributes = false
-    previewArea.drawsBackground = true
-    previewArea.backgroundColor = NSColor.whiteColor()
-    previewArea.lineBreakMode = .ByTruncatingTail
-    previewArea.font = self.font
-    previewArea.stringValue =
+    let exampleText =
         "abcdefghijklmnopqrstuvwxyz\n" +
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ\n" +
         "0123456789\n" +
@@ -100,10 +89,29 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
         "<- -> => >> << >>= =<< .. \n" +
         ":: -< >- -<< >>- ++ /= =="
 
+    let previewArea = self.previewArea
+    previewArea.editable = true
+    previewArea.maxSize = CGSize(width: CGFloat.max, height: CGFloat.max)
+    previewArea.verticallyResizable = true
+    previewArea.horizontallyResizable = true
+    previewArea.textContainer?.heightTracksTextView = false
+    previewArea.textContainer?.widthTracksTextView = false
+    previewArea.autoresizingMask = [ .ViewWidthSizable, .ViewHeightSizable]
+    previewArea.textContainer?.containerSize = CGSize.init(width: CGFloat.max, height: CGFloat.max)
+    previewArea.layoutManager?.replaceTextStorage(NSTextStorage(string: exampleText))
+    previewArea.font = self.font
+
+    let previewScrollView = NSScrollView(forAutoLayout: ())
+    previewScrollView.hasVerticalScroller = true
+    previewScrollView.hasHorizontalScroller = true
+    previewScrollView.autohidesScrollers = true
+    previewScrollView.borderType = .BezelBorder
+    previewScrollView.documentView = previewArea
+
     self.addSubview(fontTitle)
     self.addSubview(fontPopup)
     self.addSubview(sizeCombo)
-    self.addSubview(previewArea)
+    self.addSubview(previewScrollView)
 
     fontTitle.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
     fontTitle.autoAlignAxis(.Baseline, toSameAxisOfView: fontPopup)
@@ -115,14 +123,13 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
     sizeCombo.autoSetDimension(.Width, toSize: 75)
     // If we use .Baseline the combo box is placed one pixel off...
     sizeCombo.autoAlignAxis(.Horizontal, toSameAxisOfView: fontPopup)
-    sizeCombo.autoPinEdgeToSuperviewEdge(.Right, withInset: 18)
     sizeCombo.autoPinEdge(.Left, toEdge: .Right, ofView: fontPopup, withOffset: 5)
 
-    previewArea.autoSetDimension(.Height, toSize: 150)
-    previewArea.autoPinEdge(.Top, toEdge: .Bottom, ofView: fontPopup, withOffset: 18)
-    previewArea.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 18)
-    previewArea.autoPinEdge(.Right, toEdge: .Right, ofView: sizeCombo)
-    previewArea.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
+    previewScrollView.autoSetDimension(.Height, toSize: 200)
+    previewScrollView.autoPinEdge(.Top, toEdge: .Bottom, ofView: fontPopup, withOffset: 18)
+    previewScrollView.autoPinEdgeToSuperviewEdge(.Right, withInset: 18)
+    previewScrollView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 18)
+    previewScrollView.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
 
     fontPopup.selectItemWithTitle(self.fontName)
     sizeCombo.stringValue = String(Int(self.fontSize))
