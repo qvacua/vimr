@@ -11,16 +11,21 @@ import PureLayout
 class AppDelegate: NSObject, NSApplicationDelegate {
 
   @IBOutlet weak var window: NSWindow!
-  
-  private let mainWindowManager = MainWindowManager()
-  private let prefWindowController = PrefWindowController(source: Observable.empty())
-  
+
+  private let prefWindowComponent = PrefWindowComponent(source: Observable.empty())
+  private let mainWindowManager: MainWindowManager
+
   @IBAction func debugSomething(sender: AnyObject!) {
     NSLog("debug sth...")
   }
   
   @IBAction func newDocument(sender: AnyObject!) {
     self.mainWindowManager.newMainWindow()
+  }
+
+  override init() {
+    self.mainWindowManager = MainWindowManager(prefWindowComponent: self.prefWindowComponent)
+    super.init()
   }
   
   func applicationDidFinishLaunching(aNotification: NSNotification) {
@@ -29,7 +34,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //    self.window.makeFirstResponder(testView)
 
 //    self.mainWindowManager.newMainWindow()
-    self.prefWindowController.showWindow(self)
+    self.prefWindowComponent.show()
   }
 
   func applicationShouldTerminate(sender: NSApplication) -> NSApplicationTerminateReply {

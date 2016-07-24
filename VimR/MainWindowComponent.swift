@@ -37,10 +37,16 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
 
     self.window.delegate = self
     self.neoVimView.delegate = self
+
     self.addViews()
+    self.addReactions()
 
     self.window.makeFirstResponder(self.neoVimView)
     self.windowController.showWindow(self)
+  }
+
+  deinit {
+    NSLog("\(#function)")
   }
 
   func isDirty() -> Bool {
@@ -50,6 +56,16 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
   private func addViews() {
     self.window.contentView?.addSubview(self.neoVimView)
     self.neoVimView.autoPinEdgesToSuperviewEdges()
+  }
+
+  private func addReactions() {
+    self.source
+      .filter { $0 is PrefData }
+      .map { ($0 as! PrefData).appearance.editorFont }
+      .subscribeNext { [unowned self] font in
+        self.neoVimView.setFont(font)
+      }
+      .addDisposableTo(self.disposeBag)
   }
 }
 

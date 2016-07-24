@@ -11,7 +11,7 @@ struct PrefData {
   var appearance: AppearancePrefData
 }
 
-class PrefWindowController: NSWindowController, NSTableViewDataSource, NSTableViewDelegate, Component {
+class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate, Component {
 
   private let windowMask = NSTitledWindowMask
     | NSResizableWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask
@@ -28,6 +28,8 @@ class PrefWindowController: NSWindowController, NSTableViewDataSource, NSTableVi
     appearance: AppearancePrefData(editorFont: NSFont(name: "Menlo", size: 13)!)
   )
 
+  private let window: NSWindow
+
   private let categoryView = NSTableView(frame: CGRect.zero)
   private let categoryScrollView = NSScrollView(forAutoLayout: ())
   private let paneScrollView = NSScrollView(forAutoLayout: ())
@@ -42,7 +44,7 @@ class PrefWindowController: NSWindowController, NSTableViewDataSource, NSTableVi
       AppearancePrefPane(source: Observable.empty(), data: self.data.appearance)
     ]
     
-    let window = NSWindow(
+    self.window = NSWindow(
       contentRect: CGRect(x: 100, y: 100, width: 640, height: 480),
       styleMask: self.windowMask,
       backing: .Buffered,
@@ -52,14 +54,22 @@ class PrefWindowController: NSWindowController, NSTableViewDataSource, NSTableVi
     window.releasedWhenClosed = false
     window.center()
 
-    super.init(window: window)
+    super.init()
     
     self.addViews()
     self.addReactions()
   }
 
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
   deinit {
     self.subject.onCompleted()
+  }
+
+  func show() {
+    self.window.makeKeyAndOrderFront(self)
   }
 
   private func addReactions() {
@@ -67,10 +77,9 @@ class PrefWindowController: NSWindowController, NSTableViewDataSource, NSTableVi
       .map { $0.sink }
       .toObservable()
       .flatMap { $0 }
-      .map { action in
+      .map { [unowned self] action in
         switch action {
         case let data as AppearancePrefData:
-          NSLog("\(data)")
           self.data.appearance = data
         default:
           NSLog("nothing to see here")
@@ -78,7 +87,7 @@ class PrefWindowController: NSWindowController, NSTableViewDataSource, NSTableVi
 
         return self.data
       }
-      .subscribeNext { self.subject.onNext($0) }
+      .subscribeNext { [unowned self] action in self.subject.onNext(action) }
       .addDisposableTo(self.disposeBag)
   }
 
@@ -117,8 +126,8 @@ class PrefWindowController: NSWindowController, NSTableViewDataSource, NSTableVi
     paneScrollView.backgroundColor = NSColor.windowBackgroundColor();
     paneScrollView.autohidesScrollers = true;
 
-    self.window?.contentView?.addSubview(categoryScrollView)
-    self.window?.contentView?.addSubview(paneScrollView)
+    self.window.contentView?.addSubview(categoryScrollView)
+    self.window.contentView?.addSubview(paneScrollView)
 
     categoryScrollView.autoSetDimension(.Width, toSize: 150)
     categoryScrollView.autoPinEdgeToSuperviewEdge(.Top, withInset: -1)
@@ -132,14 +141,10 @@ class PrefWindowController: NSWindowController, NSTableViewDataSource, NSTableVi
 
     self.paneScrollView.documentView = self.panes[0].view
   }
-
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
 }
 
 // MARK: - NSTableViewDataSource
-extension PrefWindowController {
+extension PrefWindowComponent {
 
   func numberOfRowsInTableView(tableView: NSTableView) -> Int {
     return self.paneNames.count
@@ -151,7 +156,7 @@ extension PrefWindowController {
 }
 
 // MARK: - NSTableViewDelegate
-extension PrefWindowController {
+extension PrefWindowComponent {
 
   func tableViewSelectionDidChange(notification: NSNotification) {
   }
