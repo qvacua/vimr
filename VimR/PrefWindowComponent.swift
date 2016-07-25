@@ -13,12 +13,8 @@ struct PrefData {
 
 class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate, Component {
 
-  private static let windowWidth = CGFloat(640)
   private static let defaultEditorFont = NSFont(name: "Menlo", size: 13)!
 
-  private let windowMask = NSTitledWindowMask
-    | NSResizableWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask
-  
   private let source: Observable<Any>
   private let disposeBag = DisposeBag()
 
