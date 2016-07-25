@@ -45,10 +45,6 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
     self.windowController.showWindow(self)
   }
 
-  deinit {
-    NSLog("\(#function)")
-  }
-
   func isDirty() -> Bool {
     return self.neoVimView.hasDirtyDocs()
   }
