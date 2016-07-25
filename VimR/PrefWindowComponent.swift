@@ -65,7 +65,7 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
   }
 
   func show() {
-    self.window.makeKeyAndOrderFront(self)
+    self.windowController.showWindow(self)
   }
 
   private func addReactions() {
