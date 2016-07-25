@@ -31,6 +31,7 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
     appearance: AppearancePrefData(editorFont: PrefWindowComponent.defaultEditorFont)
   )
 
+  private let windowController = NSWindowController(windowNibName: "PrefWindow")
   private let window: NSWindow
 
   private let categoryView = NSTableView(frame: CGRect.zero)
@@ -47,17 +48,7 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
       AppearancePrefPane(source: Observable.empty(), data: self.data.appearance)
     ]
     
-    self.window = NSWindow(
-      contentRect: CGRect(x: 100, y: 100, width: PrefWindowComponent.windowWidth, height: 300),
-      styleMask: self.windowMask,
-      backing: .Buffered,
-      defer: true
-    )
-    let window = self.window
-    window.minSize = CGSize(width: PrefWindowComponent.windowWidth, height: 240)
-    window.title = "Preferences"
-    window.releasedWhenClosed = false
-    window.center()
+    self.window = self.windowController.window!
 
     super.init()
     

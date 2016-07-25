@@ -11,6 +11,7 @@
 		1929B728262BAA14FC93F6AC /* NeoVimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF00B466B40629C2AABE /* NeoVimView.swift */; };
 		1929BEB90DCDAF7A2B68C886 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA6128BFDD54CA92F46E /* ColorUtils.swift */; };
 		1929BF81A40B4154D3EA33CE /* server_ui.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B93013228985F509C8F6 /* server_ui.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */; };
 		4B1BB3531D16C5E500CA4FEF /* InputTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1BB3521D16C5E500CA4FEF /* InputTestView.swift */; };
 		4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BE01D3BF24200CBDD98 /* Application.swift */; };
 		4B238BEC1D3ED54D00CBDD98 /* AppearancePrefPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BEB1D3ED54D00CBDD98 /* AppearancePrefPane.swift */; };
@@ -152,6 +153,7 @@
 		1929B93013228985F509C8F6 /* server_ui.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = server_ui.m; sourceTree = "<group>"; };
 		1929BA6128BFDD54CA92F46E /* ColorUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorUtils.swift; sourceTree = "<group>"; };
 		1929BF00B466B40629C2AABE /* NeoVimView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimView.swift; sourceTree = "<group>"; };
+		4B029F1B1D45E349004EE0D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrefWindow.xib; sourceTree = "<group>"; };
 		4B1BB3521D16C5E500CA4FEF /* InputTestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputTestView.swift; sourceTree = "<group>"; };
 		4B238BE01D3BF24200CBDD98 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		4B238BEB1D3ED54D00CBDD98 /* AppearancePrefPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearancePrefPane.swift; sourceTree = "<group>"; };
@@ -349,6 +351,7 @@
 			children = (
 				4BEBA50C1CFF374B00673FDF /* MainMenu.xib */,
 				4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */,
+				4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */,
 				4BEBA50A1CFF374B00673FDF /* Assets.xcassets */,
 				4BEBA50F1CFF374B00673FDF /* Info.plist */,
 			);
@@ -618,6 +621,7 @@
 				4BEBA50B1CFF374B00673FDF /* Assets.xcassets in Resources */,
 				4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */,
 				4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */,
+				4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -733,6 +737,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4B029F1B1D45E349004EE0D3 /* Base */,
+			);
+			name = PrefWindow.xib;
+			sourceTree = "<group>";
+		};
 		4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
