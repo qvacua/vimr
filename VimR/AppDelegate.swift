@@ -10,14 +10,38 @@ import PureLayout
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-  private let prefStore = PrefStore(source: Observable.empty())
+  private let disposeBag = DisposeBag()
+
+  private let changeSubject = PublishSubject<Any>()
+  private let changeSink: Observable<Any>
+  
+  private let actionSink: Observable<Any>
+
+  private let prefStore: PrefStore
 
   private let mainWindowManager: MainWindowManager
-  private let prefWindowComponent = PrefWindowComponent(source: Observable.empty())
+  private let prefWindowComponent: PrefWindowComponent
 
   override init() {
-    self.mainWindowManager = MainWindowManager(prefWindowComponent: self.prefWindowComponent)
+    self.changeSink = self.changeSubject.asObservable()
+    self.prefWindowComponent = PrefWindowComponent(source: self.changeSink)
+    self.mainWindowManager = MainWindowManager(source: self.changeSink)
+
+    self.actionSink = [ self.prefWindowComponent ]
+      .map { $0.sink }
+      .toObservable()
+      .flatMap { $0 }
+
+    self.prefStore = PrefStore(source: self.actionSink)
+
     super.init()
+
+    [ self.prefStore ]
+      .map { $0.sink }
+      .toObservable()
+      .flatMap { $0 }
+      .subscribe(self.changeSubject)
+      .addDisposableTo(self.disposeBag)
   }
 
   @IBAction func debugSomething(sender: AnyObject!) {

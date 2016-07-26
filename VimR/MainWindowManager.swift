@@ -8,15 +8,15 @@ import RxSwift
 
 class MainWindowManager {
 
-  private let prefWindowComponent: PrefWindowComponent
+  private let source: Observable<Any>
   private var mainWindowComponents = [String:MainWindowComponent]()
 
-  init(prefWindowComponent: PrefWindowComponent) {
-    self.prefWindowComponent = prefWindowComponent
+  init(source: Observable<Any>) {
+    self.source = source
   }
 
   func newMainWindow() {
-    let mainWindowComponent = MainWindowComponent(source: self.prefWindowComponent.sink, manager: self)
+   let mainWindowComponent = MainWindowComponent(source: self.source, manager: self)
     self.mainWindowComponents[mainWindowComponent.uuid] = mainWindowComponent
   }
   

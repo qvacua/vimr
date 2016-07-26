@@ -42,6 +42,7 @@ class PrefStore: Store {
     }
 
     self.subject.onNext(self.data)
+    self.addReactions()
   }
 
   private func prefDataFromDict(prefs: [String: AnyObject]) -> PrefData {
