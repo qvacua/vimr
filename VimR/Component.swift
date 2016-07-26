@@ -6,9 +6,13 @@
 import Foundation
 import RxSwift
 
-protocol Component {
+protocol Flow {
   var sink: Observable<Any> { get }
 }
+
+protocol Store: Flow {}
+
+protocol Component: Flow {}
 
 protocol ViewComponent: Component {
   var view: NSView { get }

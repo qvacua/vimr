@@ -10,10 +10,15 @@ import PureLayout
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-  @IBOutlet weak var window: NSWindow!
+  private let prefStore = PrefStore(source: Observable.empty())
 
-  private let prefWindowComponent = PrefWindowComponent(source: Observable.empty())
   private let mainWindowManager: MainWindowManager
+  private let prefWindowComponent = PrefWindowComponent(source: Observable.empty())
+
+  override init() {
+    self.mainWindowManager = MainWindowManager(prefWindowComponent: self.prefWindowComponent)
+    super.init()
+  }
 
   @IBAction func debugSomething(sender: AnyObject!) {
     NSLog("debug sth...")
@@ -27,11 +32,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     self.prefWindowComponent.show()
   }
 
-  override init() {
-    self.mainWindowManager = MainWindowManager(prefWindowComponent: self.prefWindowComponent)
-    super.init()
-  }
-  
   func applicationDidFinishLaunching(aNotification: NSNotification) {
 //    let testView = InputTestView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
 //    self.window.contentView?.addSubview(testView)
