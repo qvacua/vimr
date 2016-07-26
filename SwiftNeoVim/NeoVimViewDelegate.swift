@@ -9,5 +9,6 @@ import Cocoa
 public protocol NeoVimViewDelegate: class {
   
   func setNeoVimTitle(title: String)
+  func neoVimReady()
   func neoVimStopped()
 }

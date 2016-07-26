@@ -30,7 +30,7 @@ class PrefStore: Store {
   private let userDefaults = NSUserDefaults.standardUserDefaults()
   private let fontManager = NSFontManager.sharedFontManager()
 
-  private var data = PrefData(appearance: AppearancePrefData(editorFont: PrefStore.defaultEditorFont))
+  var data = PrefData(appearance: AppearancePrefData(editorFont: PrefStore.defaultEditorFont))
 
   init(source: Observable<Any>) {
     self.source = source
@@ -41,8 +41,11 @@ class PrefStore: Store {
       self.userDefaults.setValue(self.prefsDict(self.data), forKey: PrefStore.compatibleVersion)
     }
 
-    self.subject.onNext(self.data)
     self.addReactions()
+  }
+
+  deinit {
+    self.subject.onCompleted()
   }
 
   private func prefDataFromDict(prefs: [String: AnyObject]) -> PrefData {

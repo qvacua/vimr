@@ -66,7 +66,7 @@ public class NeoVimView: NSView {
   }
   
   override init(frame rect: NSRect = CGRect.zero) {
-    self.font = NSFont(name: "Menlo", size: 16)!
+    self.font = NSFont(name: "Menlo", size: 13)!
     self.drawer = TextDrawer(font: font)
     self.agent = NeoVimAgent(uuid: self.uuid)
 
@@ -698,6 +698,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   public func neoVimUiIsReady() {
     DispatchUtils.gui {
       self.resizeNeoVimUiTo(size: self.frame.size)
+      self.delegate?.neoVimReady()
     }
   }
 

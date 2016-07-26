@@ -22,16 +22,21 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
   private let windowController = NSWindowController(windowNibName: "MainWindow")
   private let window: NSWindow
 
+  // This is ugly, but since we don't know exactly when NeoVimServer will be ready, we store the initial PrefData here
+  // and apply it to NeoVimView in the NeoVimViewDelegate.neoVimReady() method.
+  private let initialData: PrefData
+
   var uuid: String {
     return self.neoVimView.uuid
   }
 
   private let neoVimView = NeoVimView(forAutoLayout: ())
 
-  init(source: Observable<Any>, manager: MainWindowManager) {
+  init(source: Observable<Any>, manager: MainWindowManager, initialData: PrefData) {
     self.source = source
     self.mainWindowManager = manager
     self.window = self.windowController.window!
+    self.initialData = initialData
 
     super.init()
 
@@ -43,6 +48,11 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
 
     self.window.makeFirstResponder(self.neoVimView)
     self.windowController.showWindow(self)
+    
+  }
+
+  deinit {
+    self.subject.onCompleted()
   }
 
   func isDirty() -> Bool {
@@ -70,6 +80,10 @@ extension MainWindowComponent {
 
   func setNeoVimTitle(title: String) {
     NSLog("\(#function): \(title)")
+  }
+
+  func neoVimReady() {
+    self.neoVimView.setFont(self.initialData.appearance.editorFont)
   }
   
   func neoVimStopped() {

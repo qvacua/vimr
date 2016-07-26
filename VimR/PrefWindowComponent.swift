@@ -13,8 +13,6 @@ struct PrefData {
 
 class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate, Component {
 
-  private static let defaultEditorFont = NSFont(name: "Menlo", size: 13)!
-
   private let source: Observable<Any>
   private let disposeBag = DisposeBag()
 
@@ -23,9 +21,7 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
     return self.subject.asObservable()
   }
 
-  private var data = PrefData(
-    appearance: AppearancePrefData(editorFont: PrefWindowComponent.defaultEditorFont)
-  )
+  private var data: PrefData
 
   private let windowController = NSWindowController(windowNibName: "PrefWindow")
   private let window: NSWindow
@@ -37,11 +33,12 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
   private let paneNames = [ "Appearance" ]
   private let panes: [ViewComponent]
 
-  init(source: Observable<Any>) {
+  init(source: Observable<Any>, initialData: PrefData) {
     self.source = source
+    self.data = initialData
 
     self.panes = [
-      AppearancePrefPane(source: Observable.empty(), data: self.data.appearance)
+      AppearancePrefPane(source: source, initialData: self.data.appearance)
     ]
     
     self.window = self.windowController.window!
@@ -50,10 +47,6 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
     
     self.addViews()
     self.addReactions()
-  }
-
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
   }
 
   deinit {
@@ -65,6 +58,18 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
   }
 
   private func addReactions() {
+    self.source
+      .filter { $0 is PrefData }
+      .map { $0 as! PrefData }
+      .subscribeNext { [unowned self] prefData in
+        if prefData.appearance.editorFont == self.data.appearance.editorFont {
+          return
+        }
+
+        self.data = prefData
+      }
+      .addDisposableTo(self.disposeBag)
+
     self.panes
       .map { $0.sink }
       .toObservable()

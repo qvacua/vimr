@@ -39,17 +39,18 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
     return true
   }
 
-  init(source: Observable<Any>, data: AppearancePrefData) {
+  init(source: Observable<Any>, initialData: AppearancePrefData) {
     self.source = source
 
-    self.font = data.editorFont
-    self.fontSize = data.editorFont.pointSize
-    self.fontName = data.editorFont.fontName
+    self.font = initialData.editorFont
+    self.fontSize = initialData.editorFont.pointSize
+    self.fontName = initialData.editorFont.fontName
 
     super.init(frame: CGRect.zero)
     self.translatesAutoresizingMaskIntoConstraints = false
 
     self.addViews()
+    self.addReactions()
   }
 
   deinit {
@@ -58,6 +59,20 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+
+  private func addReactions() {
+    self.source
+      .filter { $0 is PrefData }
+      .map { ($0 as! PrefData).appearance.editorFont }
+      .filter { $0 != self.font }
+      .subscribeNext { [unowned self] editorFont in
+        self.font = editorFont
+        self.fontName = editorFont.fontName
+        self.fontSize = editorFont.pointSize
+        self.updateViews()
+      }
+      .addDisposableTo(self.disposeBag)
   }
 
   private func addViews() {
@@ -99,7 +114,6 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
     previewArea.autoresizingMask = [ .ViewWidthSizable, .ViewHeightSizable]
     previewArea.textContainer?.containerSize = CGSize.init(width: CGFloat.max, height: CGFloat.max)
     previewArea.layoutManager?.replaceTextStorage(NSTextStorage(string: exampleText))
-    previewArea.font = self.font
 
     let previewScrollView = NSScrollView(forAutoLayout: ())
     previewScrollView.hasVerticalScroller = true
@@ -131,8 +145,13 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
     previewScrollView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 18)
     previewScrollView.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
 
-    fontPopup.selectItemWithTitle(self.fontName)
-    sizeCombo.stringValue = String(Int(self.fontSize))
+    self.updateViews()
+  }
+
+  private func updateViews() {
+    self.fontPopup.selectItemWithTitle(self.fontName)
+    self.sizeCombo.stringValue = String(Int(self.fontSize))
+    self.previewArea.font = self.font
   }
 }
 

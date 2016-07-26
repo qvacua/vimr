@@ -14,7 +14,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   private let changeSubject = PublishSubject<Any>()
   private let changeSink: Observable<Any>
-  
+
+  private let actionSubject = PublishSubject<Any>()
   private let actionSink: Observable<Any>
 
   private let prefStore: PrefStore
@@ -23,16 +24,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private let prefWindowComponent: PrefWindowComponent
 
   override init() {
+    self.actionSink = self.actionSubject.asObservable()
     self.changeSink = self.changeSubject.asObservable()
-    self.prefWindowComponent = PrefWindowComponent(source: self.changeSink)
-    self.mainWindowManager = MainWindowManager(source: self.changeSink)
-
-    self.actionSink = [ self.prefWindowComponent ]
-      .map { $0.sink }
-      .toObservable()
-      .flatMap { $0 }
 
     self.prefStore = PrefStore(source: self.actionSink)
+
+    self.prefWindowComponent = PrefWindowComponent(source: self.changeSink, initialData: self.prefStore.data)
+    self.mainWindowManager = MainWindowManager(source: self.changeSink, initialData: self.prefStore.data)
 
     super.init()
 
@@ -41,6 +39,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       .toObservable()
       .flatMap { $0 }
       .subscribe(self.changeSubject)
+      .addDisposableTo(self.disposeBag)
+
+    [ self.prefWindowComponent ]
+      .map { $0.sink }
+      .toObservable()
+      .flatMap { $0 }
+      .subscribe(self.actionSubject)
       .addDisposableTo(self.disposeBag)
   }
 

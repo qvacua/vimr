@@ -9,14 +9,21 @@ import RxSwift
 class MainWindowManager {
 
   private let source: Observable<Any>
+  private let disposeBag = DisposeBag()
+
   private var mainWindowComponents = [String:MainWindowComponent]()
 
-  init(source: Observable<Any>) {
+  private var data: PrefData
+
+  init(source: Observable<Any>, initialData: PrefData) {
     self.source = source
+    self.data = initialData
+
+    self.addReactions()
   }
 
   func newMainWindow() {
-   let mainWindowComponent = MainWindowComponent(source: self.source, manager: self)
+    let mainWindowComponent = MainWindowComponent(source: self.source, manager: self, initialData: self.data)
     self.mainWindowComponents[mainWindowComponent.uuid] = mainWindowComponent
   }
   
@@ -26,5 +33,15 @@ class MainWindowManager {
 
   func hasDirtyWindows() -> Bool {
     return self.mainWindowComponents.values.reduce(false) { $0 ? true : $1.isDirty() }
+  }
+
+  private func addReactions() {
+    self.source
+      .filter { $0 is PrefData }
+      .map { $0 as! PrefData }
+      .subscribeNext { [unowned self] prefData in
+        self.data = prefData
+      }
+      .addDisposableTo(self.disposeBag)
   }
 }
