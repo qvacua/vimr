@@ -36,15 +36,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     [ self.prefStore ]
       .map { $0.sink }
-      .toObservable()
-      .flatMap { $0 }
+      .toMergedObservables()
       .subscribe(self.changeSubject)
       .addDisposableTo(self.disposeBag)
 
     [ self.prefWindowComponent ]
       .map { $0.sink }
-      .toObservable()
-      .flatMap { $0 }
+      .toMergedObservables()
       .subscribe(self.actionSubject)
       .addDisposableTo(self.disposeBag)
   }
