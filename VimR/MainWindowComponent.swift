@@ -83,13 +83,15 @@ extension MainWindowComponent {
 
   @IBAction func makeFontBigger(sender: AnyObject!) {
     let curFont = self.neoVimView.font
-    let font = self.fontManager.convertFont(curFont, toSize: min(curFont.pointSize + 1, 128))
+    let font = self.fontManager.convertFont(curFont,
+                                            toSize: min(curFont.pointSize + 1, PrefStore.maximumEditorFontSize))
     self.neoVimView.font = font
   }
 
   @IBAction func makeFontSmaller(sender: AnyObject!) {
     let curFont = self.neoVimView.font
-    let font = self.fontManager.convertFont(curFont, toSize: max(curFont.pointSize - 1, 4))
+    let font = self.fontManager.convertFont(curFont,
+                                            toSize: max(curFont.pointSize - 1, PrefStore.minimumEditorFontSize))
     self.neoVimView.font = font
   }
 }
