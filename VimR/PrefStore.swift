@@ -16,8 +16,8 @@ class PrefStore: Store {
 
   private static let compatibleVersion = "38"
   private static let defaultEditorFont = NSFont(name: "Menlo", size: 13)!
-  private static let minimumEditorFontSize = CGFloat(4)
-  private static let maximumEditorFontSize = CGFloat(128)
+  static let minimumEditorFontSize = CGFloat(4)
+  static let maximumEditorFontSize = CGFloat(128)
 
   private let source: Observable<Any>
   private let disposeBag = DisposeBag()

@@ -53,8 +53,20 @@ public class NeoVimView: NSView {
   private let scrollGuardYield = 5
 
   private let drawer: TextDrawer
-  private var font: NSFont {
-    didSet {
+  
+  private var _font: NSFont
+  public var font: NSFont {
+    get {
+      return self._font
+    }
+
+    set {
+      guard newValue.fixedPitch else {
+        return
+      }
+
+      // FIXME: check the size whether too small or too big!
+      self._font = newValue
       self.drawer.font = self.font
       self.cellSize = self.drawer.cellSize
       self.descent = self.drawer.descent
@@ -66,8 +78,8 @@ public class NeoVimView: NSView {
   }
   
   override init(frame rect: NSRect = CGRect.zero) {
-    self.font = NSFont(name: "Menlo", size: 13)!
-    self.drawer = TextDrawer(font: font)
+    self._font = NSFont(name: "Menlo", size: 13)!
+    self.drawer = TextDrawer(font: self._font)
     self.agent = NeoVimAgent(uuid: self.uuid)
 
     super.init(frame: rect)
@@ -88,15 +100,6 @@ public class NeoVimView: NSView {
 
   public func debugInfo() {
     Swift.print(self.grid)
-  }
-
-  public func setFont(font: NSFont) {
-    guard font.fixedPitch else {
-      return
-    }
-
-    // FIXME: check the size whether too small or too big!
-    self.font = font
   }
 
   override public func setFrameSize(newSize: NSSize) {

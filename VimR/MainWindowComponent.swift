@@ -18,13 +18,12 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
   }
 
   private weak var mainWindowManager: MainWindowManager?
+  private let fontManager = NSFontManager.sharedFontManager()
 
   private let windowController = NSWindowController(windowNibName: "MainWindow")
   private let window: NSWindow
 
-  // This is ugly, but since we don't know exactly when NeoVimServer will be ready, we store the initial PrefData here
-  // and apply it to NeoVimView in the NeoVimViewDelegate.neoVimReady() method.
-  private let initialData: PrefData
+  private var defaultEditorFont: NSFont
 
   var uuid: String {
     return self.neoVimView.uuid
@@ -36,7 +35,7 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
     self.source = source
     self.mainWindowManager = manager
     self.window = self.windowController.window!
-    self.initialData = initialData
+    self.defaultEditorFont = initialData.appearance.editorFont
 
     super.init()
 
@@ -69,9 +68,29 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
       .filter { $0 is PrefData }
       .map { ($0 as! PrefData).appearance.editorFont }
       .subscribeNext { [unowned self] font in
-        self.neoVimView.setFont(font)
+        self.neoVimView.font = font
       }
       .addDisposableTo(self.disposeBag)
+  }
+}
+
+// MARK: - IBActions
+extension MainWindowComponent {
+
+  @IBAction func resetFontSize(sender: AnyObject!) {
+    self.neoVimView.font = self.defaultEditorFont
+  }
+
+  @IBAction func makeFontBigger(sender: AnyObject!) {
+    let curFont = self.neoVimView.font
+    let font = self.fontManager.convertFont(curFont, toSize: min(curFont.pointSize + 1, 128))
+    self.neoVimView.font = font
+  }
+
+  @IBAction func makeFontSmaller(sender: AnyObject!) {
+    let curFont = self.neoVimView.font
+    let font = self.fontManager.convertFont(curFont, toSize: max(curFont.pointSize - 1, 4))
+    self.neoVimView.font = font
   }
 }
 
@@ -83,7 +102,7 @@ extension MainWindowComponent {
   }
 
   func neoVimReady() {
-    self.neoVimView.setFont(self.initialData.appearance.editorFont)
+    self.neoVimView.font = self.defaultEditorFont
   }
   
   func neoVimStopped() {
