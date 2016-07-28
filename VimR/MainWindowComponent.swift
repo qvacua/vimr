@@ -99,8 +99,8 @@ extension MainWindowComponent {
 // MARK: - NeoVimViewDelegate
 extension MainWindowComponent {
 
-  func setNeoVimTitle(title: String) {
-    NSLog("\(#function): \(title)")
+  func setTitle(title: String) {
+    self.window.title = title
   }
 
   func neoVimReady() {

@@ -392,6 +392,10 @@ static void server_ui_suspend(UI *ui __unused) {
 }
 
 static void server_ui_set_title(UI *ui __unused, char *title) {
+  if (title == NULL) {
+    return;
+  }
+  
   queue(^{
     NSString *string = [[NSString alloc] initWithCString:title encoding:NSUTF8StringEncoding];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetTitle data:[string dataUsingEncoding:NSUTF8StringEncoding]];
@@ -400,6 +404,10 @@ static void server_ui_set_title(UI *ui __unused, char *title) {
 }
 
 static void server_ui_set_icon(UI *ui __unused, char *icon) {
+  if (icon == NULL) {
+    return;
+  }
+  
   queue(^{
     NSString *string = [[NSString alloc] initWithCString:icon encoding:NSUTF8StringEncoding];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetIcon data:[string dataUsingEncoding:NSUTF8StringEncoding]];

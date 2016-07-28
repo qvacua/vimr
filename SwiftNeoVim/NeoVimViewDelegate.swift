@@ -8,7 +8,7 @@ import Cocoa
 // See http://stackoverflow.com/a/24104371 for class
 public protocol NeoVimViewDelegate: class {
   
-  func setNeoVimTitle(title: String)
+  func setTitle(title: String)
   func neoVimReady()
   func neoVimStopped()
 }

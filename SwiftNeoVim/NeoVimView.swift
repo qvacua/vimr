@@ -866,7 +866,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   
   public func setTitle(title: String) {
     DispatchUtils.gui {
-      self.delegate?.setNeoVimTitle(title)
+      self.delegate?.setTitle(title)
     }
   }
   
