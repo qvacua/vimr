@@ -30,7 +30,7 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
   }
 
   private let neoVimView = NeoVimView(forAutoLayout: ())
-
+  
   init(source: Observable<Any>, manager: MainWindowManager, initialData: PrefData) {
     self.source = source
     self.mainWindowManager = manager

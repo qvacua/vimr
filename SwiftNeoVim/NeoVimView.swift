@@ -57,10 +57,14 @@ public class NeoVimView: NSView {
   private var scrollGuardCounterX = 5
   private var scrollGuardCounterY = 5
   private let scrollGuardYield = 5
+  
+  private var isCurrentlyPinching = false
+  private var pinchTargetScale = CGFloat(1)
+  private var pinchImage = NSImage()
 
   private let drawer: TextDrawer
   
-  private var _font: NSFont
+  private var _font = NeoVimView.defaultFont
   public var font: NSFont {
     get {
       return self._font
@@ -68,6 +72,10 @@ public class NeoVimView: NSView {
 
     set {
       guard newValue.fixedPitch else {
+        return
+      }
+
+      guard newValue.pointSize >= NeoVimView.minFontSize && newValue.pointSize <= NeoVimView.maxFontSize else {
         return
       }
 
@@ -84,7 +92,6 @@ public class NeoVimView: NSView {
   }
   
   override init(frame rect: NSRect = CGRect.zero) {
-    self._font = NeoVimView.defaultFont
     self.drawer = TextDrawer(font: self._font)
     self.agent = NeoVimAgent(uuid: self.uuid)
 
@@ -156,6 +163,14 @@ public class NeoVimView: NSView {
 
 //    NSLog("\(#function): \(dirtyUnionRect)")
     let context = NSGraphicsContext.currentContext()!.CGContext
+    
+    if self.isCurrentlyPinching {
+      let boundsSize = self.bounds.size
+      let targetSize = CGSize(width: boundsSize.width * self.pinchTargetScale,
+                              height: boundsSize.height * self.pinchTargetScale)
+      self.pinchImage.drawInRect(CGRect(origin: self.bounds.origin, size: targetSize))
+      return
+    }
 
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
     CGContextSetTextDrawingMode(context, .Fill);
@@ -531,21 +546,31 @@ extension NeoVimView {
   
   override public func magnifyWithEvent(event: NSEvent) {
     let factor = 1 + event.magnification
-    let targetSize = self.capFontSize(round(self._font.pointSize * factor))
-    
-    self.font = self.fontManager.convertFont(self._font, toSize: targetSize)
-  }
-  
-  private func capFontSize(size: CGFloat) -> CGFloat {
-    guard size >= NeoVimView.minFontSize else {
-      return NeoVimView.minFontSize
+    let pinchTargetScale = self.pinchTargetScale * factor
+    let resultingFontSize = round(pinchTargetScale * self._font.pointSize)
+    if resultingFontSize >= NeoVimView.minFontSize && resultingFontSize <= NeoVimView.maxFontSize {
+      self.pinchTargetScale = pinchTargetScale
     }
     
-    guard size <= NeoVimView.maxFontSize else {
-      return NeoVimView.maxFontSize
+    switch event.phase {
+    case NSEventPhase.Began:
+      let pinchImageRep = self.bitmapImageRepForCachingDisplayInRect(self.bounds)!
+      pinchImageRep.size = self.bounds.size
+      self.cacheDisplayInRect(self.bounds, toBitmapImageRep: pinchImageRep)
+      self.pinchImage = NSImage()
+      self.pinchImage.addRepresentation(pinchImageRep)
+
+      self.isCurrentlyPinching = true
+      self.needsDisplay = true
+      
+    case NSEventPhase.Ended, NSEventPhase.Cancelled:
+      self.isCurrentlyPinching = false
+      self.font = self.fontManager.convertFont(self._font, toSize: resultingFontSize)
+      self.pinchTargetScale = 1
+
+    default:
+      self.needsDisplay = true
     }
-    
-    return size
   }
 }
 
