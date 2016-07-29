@@ -18,9 +18,15 @@ private struct RowRun: CustomStringConvertible {
 }
 
 public class NeoVimView: NSView {
+  
+  public static let minFontSize = CGFloat(4)
+  public static let maxFontSize = CGFloat(128)
+  public static let defaultFont = NSFont(name: "Menlo", size: 13)!
 
   public let uuid = NSUUID().UUIDString
   public weak var delegate: NeoVimViewDelegate?
+  
+  private let fontManager = NSFontManager.sharedFontManager()
   
   private let agent: NeoVimAgent
 
@@ -78,7 +84,7 @@ public class NeoVimView: NSView {
   }
   
   override init(frame rect: NSRect = CGRect.zero) {
-    self._font = NSFont(name: "Menlo", size: 13)!
+    self._font = NeoVimView.defaultFont
     self.drawer = TextDrawer(font: self._font)
     self.agent = NeoVimAgent(uuid: self.uuid)
 
@@ -517,6 +523,29 @@ extension NeoVimView: NSTextInputClient {
     }
 
     return nil
+  }
+}
+
+// MARK: - Gesture Events
+extension NeoVimView {
+  
+  override public func magnifyWithEvent(event: NSEvent) {
+    let factor = 1 + event.magnification
+    let targetSize = self.capFontSize(round(self._font.pointSize * factor))
+    
+    self.font = self.fontManager.convertFont(self._font, toSize: targetSize)
+  }
+  
+  private func capFontSize(size: CGFloat) -> CGFloat {
+    guard size >= NeoVimView.minFontSize else {
+      return NeoVimView.minFontSize
+    }
+    
+    guard size <= NeoVimView.maxFontSize else {
+      return NeoVimView.maxFontSize
+    }
+    
+    return size
   }
 }
 

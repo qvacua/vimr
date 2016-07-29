@@ -15,9 +15,9 @@ private class PrefKeys {
 class PrefStore: Store {
 
   private static let compatibleVersion = "38"
-  private static let defaultEditorFont = NSFont(name: "Menlo", size: 13)!
-  static let minimumEditorFontSize = CGFloat(4)
-  static let maximumEditorFontSize = CGFloat(128)
+  private static let defaultEditorFont = NeoVimView.defaultFont
+  static let minimumEditorFontSize = NeoVimView.maxFontSize
+  static let maximumEditorFontSize = NeoVimView.minFontSize
 
   private let source: Observable<Any>
   private let disposeBag = DisposeBag()
