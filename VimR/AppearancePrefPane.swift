@@ -9,6 +9,7 @@ import RxSwift
 
 struct AppearancePrefData {
   let editorFont: NSFont
+  let editorUsesLigatures: Bool
 }
 
 class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelegate, ViewComponent {
@@ -28,6 +29,7 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
   private let sizes = [9, 10, 11, 12, 13, 14, 16, 18, 24, 36, 48, 64]
   private let sizeCombo = NSComboBox(forAutoLayout: ())
   private let fontPopup = NSPopUpButton(frame: CGRect.zero, pullsDown: false)
+  private let ligatureCheckbox = NSButton(forAutoLayout: ())
   private let previewArea = NSTextView(frame: CGRect.zero)
 
   private var font: NSFont
@@ -96,10 +98,12 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
       sizeCombo.addItemWithObjectValue(string)
     }
     
-    let ligatureCheckbox = NSButton(forAutoLayout: ())
+    let ligatureCheckbox = self.ligatureCheckbox
     ligatureCheckbox.title = "Use Ligatures"
     ligatureCheckbox.setButtonType(.SwitchButton)
     ligatureCheckbox.bezelStyle = .ThickSquareBezelStyle
+    ligatureCheckbox.target = self
+    ligatureCheckbox.action = #selector(AppearancePrefPane.usesLigaturesAction(_:))
 
     let exampleText =
         "abcdefghijklmnopqrstuvwxyz\n" +
@@ -166,6 +170,10 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
 
 // MARK: - Actions
 extension AppearancePrefPane {
+  
+  func usesLigaturesAction(sender: NSButton) {
+    self.publishData()
+  }
 
   func fontPopupAction(sender: NSPopUpButton) {
     if let selectedItem = self.fontPopup.selectedItem {
@@ -202,7 +210,8 @@ extension AppearancePrefPane {
 
     self.font = font
     self.previewArea.font = font
-    self.subject.onNext(AppearancePrefData(editorFont: font))
+    let usesLigatures = self.ligatureCheckbox.state == NSOnState
+    self.subject.onNext(AppearancePrefData(editorFont: font, editorUsesLigatures: usesLigatures))
   }
 
   private func cappedFontSize(size: Int) -> CGFloat {

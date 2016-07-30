@@ -10,6 +10,7 @@ private class PrefKeys {
 
   static let editorFontName = "editor-font-name"
   static let editorFontSize = "editor-font-size"
+  static let editorUsesLigatures = "editor-uses-ligatures"
 }
 
 class PrefStore: Store {
@@ -30,7 +31,8 @@ class PrefStore: Store {
   private let userDefaults = NSUserDefaults.standardUserDefaults()
   private let fontManager = NSFontManager.sharedFontManager()
 
-  var data = PrefData(appearance: AppearancePrefData(editorFont: PrefStore.defaultEditorFont))
+  var data = PrefData(appearance: AppearancePrefData(editorFont: PrefStore.defaultEditorFont,
+                                                     editorUsesLigatures: false))
 
   init(source: Observable<Any>) {
     self.source = source
@@ -63,8 +65,15 @@ class PrefStore: Store {
       || editorFont.pointSize > PrefStore.maximumEditorFontSize {
       editorFont = fontManager.convertFont(editorFont, toSize: CGFloat(defaultFontSize))
     }
+    
+    let usesLigatures: Bool
+    if let usesLigaturesFromPref = prefs[PrefKeys.editorUsesLigatures] as? NSNumber {
+      usesLigatures = usesLigaturesFromPref.boolValue
+    } else {
+      usesLigatures = false
+    }
 
-    return PrefData(appearance: AppearancePrefData(editorFont: editorFont))
+    return PrefData(appearance: AppearancePrefData(editorFont: editorFont, editorUsesLigatures: usesLigatures))
   }
 
   private func prefsDict(prefData: PrefData) -> [String: AnyObject] {
