@@ -23,12 +23,13 @@ public class NeoVimView: NSView {
   public static let maxFontSize = CGFloat(128)
   public static let defaultFont = NSFont(name: "Menlo", size: 13)!
 
+  private let fontManager = NSFontManager.sharedFontManager()
+
   public let uuid = NSUUID().UUIDString
   public weak var delegate: NeoVimViewDelegate?
-  
-  private let fontManager = NSFontManager.sharedFontManager()
-  
+
   private let agent: NeoVimAgent
+  private let drawer: TextDrawer
 
   private let grid = Grid()
 
@@ -62,8 +63,6 @@ public class NeoVimView: NSView {
   private var pinchTargetScale = CGFloat(1)
   private var pinchImage = NSImage()
 
-  private let drawer: TextDrawer
-  
   private var _font = NeoVimView.defaultFont
   public var font: NSFont {
     get {
@@ -75,18 +74,17 @@ public class NeoVimView: NSView {
         return
       }
 
-      guard newValue.pointSize >= NeoVimView.minFontSize && newValue.pointSize <= NeoVimView.maxFontSize else {
+      let size = newValue.pointSize
+      guard size >= NeoVimView.minFontSize && size <= NeoVimView.maxFontSize else {
         return
       }
 
-      // FIXME: check the size whether too small or too big!
       self._font = newValue
       self.drawer.font = self.font
       self.cellSize = self.drawer.cellSize
       self.descent = self.drawer.descent
       self.leading = self.drawer.leading
       
-      // We assume that the font is valid, eg fixed width, not too small, not too big, etc..
       self.resizeNeoVimUiTo(size: self.frame.size)
     }
   }
@@ -555,7 +553,6 @@ extension NeoVimView {
     switch event.phase {
     case NSEventPhase.Began:
       let pinchImageRep = self.bitmapImageRepForCachingDisplayInRect(self.bounds)!
-      pinchImageRep.size = self.bounds.size
       self.cacheDisplayInRect(self.bounds, toBitmapImageRep: pinchImageRep)
       self.pinchImage = NSImage()
       self.pinchImage.addRepresentation(pinchImageRep)
