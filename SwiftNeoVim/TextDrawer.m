@@ -8,7 +8,6 @@
 
 #import "TextDrawer.h"
 #import "MMCoreTextView.h"
-#import "NeoVimUiBridgeProtocol.h"
 
 #define ALPHA(color_code)    (((color_code >> 24) & 0xff) / 255.0f)
 #define RED(color_code)      (((color_code >> 16) & 0xff) / 255.0f)
@@ -52,12 +51,13 @@
   _underlineThickness = underlineThickness;
 }
 
-- (instancetype)initWithFont:(NSFont *_Nonnull)font {
+- (instancetype _Nonnull)initWithFont:(NSFont *_Nonnull)font useLigatures:(bool)useLigatures {
   self = [super init];
   if (self == nil) {
     return nil;
   }
 
+  _useLigatures = useLigatures;
   _layoutManager = [[NSLayoutManager alloc] init];
   _fontLookupCache = [[NSMutableArray alloc] init];
   _fontTraitCache = [[NSMutableDictionary alloc] init];
@@ -135,7 +135,7 @@
   CTFontRef fontWithTraits = [self fontWithTrait:fontTrait];
 
   CGContextSetRGBFillColor(context, RED(foreground), GREEN(foreground), BLUE(foreground), 1.0);
-  recurseDraw(unichars, glyphs, positions, unilength, context, fontWithTraits, _fontLookupCache, YES);
+  recurseDraw(unichars, glyphs, positions, unilength, context, fontWithTraits, _fontLookupCache, _useLigatures);
 
   CFRelease(fontWithTraits);
   free(glyphs);

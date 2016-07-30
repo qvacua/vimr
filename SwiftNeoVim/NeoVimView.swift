@@ -62,6 +62,12 @@ public class NeoVimView: NSView {
   private var isCurrentlyPinching = false
   private var pinchTargetScale = CGFloat(1)
   private var pinchImage = NSImage()
+  
+  public var useLigatures = false {
+    didSet {
+      self.needsDisplay = true
+    }
+  }
 
   private var _font = NeoVimView.defaultFont
   public var font: NSFont {
@@ -90,7 +96,7 @@ public class NeoVimView: NSView {
   }
   
   override init(frame rect: NSRect = CGRect.zero) {
-    self.drawer = TextDrawer(font: self._font)
+    self.drawer = TextDrawer(font: self._font, useLigatures: false)
     self.agent = NeoVimAgent(uuid: self.uuid)
 
     super.init(frame: rect)
