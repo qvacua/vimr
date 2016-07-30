@@ -79,8 +79,9 @@ class PrefStore: Store {
   private func prefsDict(prefData: PrefData) -> [String: AnyObject] {
     let appearanceData = prefData.appearance
     let prefs: [String: AnyObject] = [
-        PrefKeys.editorFontName: appearanceData.editorFont.fontName,
-        PrefKeys.editorFontSize: appearanceData.editorFont.pointSize
+      PrefKeys.editorFontName: appearanceData.editorFont.fontName,
+      PrefKeys.editorFontSize: appearanceData.editorFont.pointSize,
+      PrefKeys.editorUsesLigatures: appearanceData.editorUsesLigatures
     ]
     return prefs
   }

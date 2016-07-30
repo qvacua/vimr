@@ -83,7 +83,7 @@ struct Region: CustomStringConvertible {
 
 /// Almost a verbatim copy of ugrid.c of NeoVim
 class Grid: CustomStringConvertible {
-  
+
   private(set) var region = Region.zero
   private(set) var size = Size.zero
   private(set) var putPosition = Position.zero
@@ -199,6 +199,32 @@ class Grid: CustomStringConvertible {
 
   func singleIndexFrom(position: Position) -> Int {
     return position.row * self.size.width + position.column
+  }
+
+  func regionOfCurrentWord(position: Position) -> Region {
+    let row = position.row
+    let column = position.column
+    
+//    NSLog("current char: '\(self.cells[row][column])'")
+
+    var left = 0
+    for (idx, cell) in self.cells[row][0...column].enumerate().reverse() {
+      if cell.string == " " || cell.string == "" {
+        left = idx
+        break
+      }
+    }
+    
+    var right = self.region.right
+    for idx in column..<self.size.width {
+      let cell = self.cells[row][idx]
+      if cell.string == " " || cell.string == "" {
+        right = idx
+        break
+      }
+    }
+    
+    return Region(top: row, bottom: row, left: left, right: right)
   }
 
   func positionFromSingleIndex(idx: Int) -> Position {

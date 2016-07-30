@@ -57,7 +57,7 @@
     return nil;
   }
 
-  _useLigatures = useLigatures;
+  _usesLigatures = useLigatures;
   _layoutManager = [[NSLayoutManager alloc] init];
   _fontLookupCache = [[NSMutableArray alloc] init];
   _fontTraitCache = [[NSMutableDictionary alloc] init];
@@ -135,7 +135,7 @@
   CTFontRef fontWithTraits = [self fontWithTrait:fontTrait];
 
   CGContextSetRGBFillColor(context, RED(foreground), GREEN(foreground), BLUE(foreground), 1.0);
-  recurseDraw(unichars, glyphs, positions, unilength, context, fontWithTraits, _fontLookupCache, _useLigatures);
+  recurseDraw(unichars, glyphs, positions, unilength, context, fontWithTraits, _fontLookupCache, _usesLigatures);
 
   CFRelease(fontWithTraits);
   free(glyphs);

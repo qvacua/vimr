@@ -63,8 +63,9 @@ public class NeoVimView: NSView {
   private var pinchTargetScale = CGFloat(1)
   private var pinchImage = NSImage()
   
-  public var useLigatures = false {
+  public var usesLigatures = false {
     didSet {
+      self.drawer.usesLigatures = self.usesLigatures
       self.needsDisplay = true
     }
   }
@@ -180,6 +181,7 @@ public class NeoVimView: NSView {
     CGContextSetTextDrawingMode(context, .Fill);
 
     let dirtyRects = self.rectsBeingDrawn()
+//    NSLog("\(dirtyRects)")
 
     self.rowRunIntersecting(rects: dirtyRects).forEach { rowFrag in
       // For background drawing we don't filter out the put(0, 0)s: in some cases only the put(0, 0)-cells should be
@@ -292,8 +294,8 @@ public class NeoVimView: NSView {
 
   private func pointInViewFor(row row: Int, column: Int) -> CGPoint {
     return CGPoint(
-      x: CGFloat(column) * self.cellSize.width + self.xOffset,
-      y: self.frame.size.height - CGFloat(row) * self.cellSize.height - self.cellSize.height - self.yOffset
+      x: self.xOffset + CGFloat(column) * self.cellSize.width,
+      y: self.frame.size.height - self.yOffset - CGFloat(row) * self.cellSize.height - self.cellSize.height
     )
   }
 
@@ -310,11 +312,14 @@ public class NeoVimView: NSView {
     let width = right - left + 1
     let height = bottom - top + 1
 
+    let cellWidth = self.cellSize.width
+    let cellHeight = self.cellSize.height
+
     return CGRect(
-      x: left * self.cellSize.width + self.xOffset,
-      y: (CGFloat(self.grid.size.height) - bottom) * self.cellSize.height - self.yOffset,
-      width: width * self.cellSize.width,
-      height: height * self.cellSize.height
+      x: self.xOffset + left * cellWidth,
+      y: self.bounds.size.height - self.yOffset - top * cellHeight - height * cellHeight,
+      width: width * cellWidth,
+      height: height * cellHeight
     )
   }
 
@@ -849,10 +854,19 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
       let curPos = self.grid.putPosition
 //      NSLog("\(#function): \(curPos) -> \(string)")
       self.grid.put(string)
-      self.setNeedsDisplay(cellPosition: curPos)
+
+      if self.usesLigatures {
+        if string == " " {
+          self.setNeedsDisplay(cellPosition: curPos)
+        } else {
+          self.setNeedsDisplay(region: self.grid.regionOfCurrentWord(curPos))
+        }
+      } else {
+        self.setNeedsDisplay(cellPosition: curPos)
+      }
+
       // When the cursor is in the command line, then we need this...
       self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(curPos))
-
       self.setNeedsDisplay(screenCursor: self.grid.screenCursor)
     }
   }

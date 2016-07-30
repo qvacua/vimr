@@ -11,7 +11,7 @@
 @interface TextDrawer : NSObject
 
 @property (nonatomic, nonnull, retain) NSFont *font;
-@property (nonatomic) bool useLigatures;
+@property (nonatomic) bool usesLigatures;
 @property (nonatomic, readonly) CGFloat leading;
 @property (nonatomic, readonly) CGFloat descent;
 @property (nonatomic, readonly) CGSize cellSize;

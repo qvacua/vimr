@@ -35,6 +35,7 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
   private var font: NSFont
   private var fontSize = CGFloat(13)
   private var fontName = "Menlo"
+  private var usesLigatures = false
 
   // Return true to place this to the upper left corner when the scroll view is bigger than this view.
   override var flipped: Bool {
@@ -47,6 +48,7 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
     self.font = initialData.editorFont
     self.fontSize = initialData.editorFont.pointSize
     self.fontName = initialData.editorFont.fontName
+    self.usesLigatures = initialData.editorUsesLigatures
 
     super.init(frame: CGRect.zero)
     self.translatesAutoresizingMaskIntoConstraints = false
@@ -164,6 +166,7 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
   private func updateViews() {
     self.fontPopup.selectItemWithTitle(self.fontName)
     self.sizeCombo.stringValue = String(Int(self.fontSize))
+    self.ligatureCheckbox.state = self.usesLigatures ? NSOnState : NSOffState
     self.previewArea.font = self.font
   }
 }

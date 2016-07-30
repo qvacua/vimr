@@ -24,6 +24,7 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
   private let window: NSWindow
 
   private var defaultEditorFont: NSFont
+  private var usesLigatures: Bool
 
   var uuid: String {
     return self.neoVimView.uuid
@@ -36,6 +37,7 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
     self.mainWindowManager = manager
     self.window = self.windowController.window!
     self.defaultEditorFont = initialData.appearance.editorFont
+    self.usesLigatures = initialData.appearance.editorUsesLigatures
 
     super.init()
 
@@ -66,9 +68,10 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
   private func addReactions() {
     self.source
       .filter { $0 is PrefData }
-      .map { ($0 as! PrefData).appearance.editorFont }
-      .subscribeNext { [unowned self] font in
-        self.neoVimView.font = font
+      .map { ($0 as! PrefData).appearance }
+      .subscribeNext { [unowned self] appearance in
+        self.neoVimView.usesLigatures = appearance.editorUsesLigatures
+        self.neoVimView.font = appearance.editorFont
       }
       .addDisposableTo(self.disposeBag)
   }
@@ -105,6 +108,7 @@ extension MainWindowComponent {
 
   func neoVimReady() {
     self.neoVimView.font = self.defaultEditorFont
+    self.neoVimView.usesLigatures = self.usesLigatures
   }
   
   func neoVimStopped() {
