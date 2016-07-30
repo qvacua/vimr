@@ -16,8 +16,8 @@ class PrefStore: Store {
 
   private static let compatibleVersion = "38"
   private static let defaultEditorFont = NeoVimView.defaultFont
-  static let minimumEditorFontSize = NeoVimView.maxFontSize
-  static let maximumEditorFontSize = NeoVimView.minFontSize
+  static let minimumEditorFontSize = NeoVimView.minFontSize
+  static let maximumEditorFontSize = NeoVimView.maxFontSize
 
   private let source: Observable<Any>
   private let disposeBag = DisposeBag()
