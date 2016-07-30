@@ -95,6 +95,11 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
     self.sizes.forEach { string in
       sizeCombo.addItemWithObjectValue(string)
     }
+    
+    let ligatureCheckbox = NSButton(forAutoLayout: ())
+    ligatureCheckbox.title = "Use Ligatures"
+    ligatureCheckbox.setButtonType(.SwitchButton)
+    ligatureCheckbox.bezelStyle = .ThickSquareBezelStyle
 
     let exampleText =
         "abcdefghijklmnopqrstuvwxyz\n" +
@@ -125,6 +130,7 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
     self.addSubview(fontTitle)
     self.addSubview(fontPopup)
     self.addSubview(sizeCombo)
+    self.addSubview(ligatureCheckbox)
     self.addSubview(previewScrollView)
 
     fontTitle.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
@@ -138,9 +144,12 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
     // If we use .Baseline the combo box is placed one pixel off...
     sizeCombo.autoAlignAxis(.Horizontal, toSameAxisOfView: fontPopup)
     sizeCombo.autoPinEdge(.Left, toEdge: .Right, ofView: fontPopup, withOffset: 5)
+    
+    ligatureCheckbox.autoPinEdge(.Top, toEdge: .Bottom, ofView: sizeCombo, withOffset: 18)
+    ligatureCheckbox.autoPinEdge(.Left, toEdge: .Right, ofView: fontTitle, withOffset: 5)
 
     previewScrollView.autoSetDimension(.Height, toSize: 200)
-    previewScrollView.autoPinEdge(.Top, toEdge: .Bottom, ofView: fontPopup, withOffset: 18)
+    previewScrollView.autoPinEdge(.Top, toEdge: .Bottom, ofView: ligatureCheckbox, withOffset: 18)
     previewScrollView.autoPinEdgeToSuperviewEdge(.Right, withInset: 18)
     previewScrollView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 18)
     previewScrollView.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
