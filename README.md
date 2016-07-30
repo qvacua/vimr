@@ -62,7 +62,7 @@ carthage update --platform osx
 
 git submodule update --init
 cd neovim
-ln -s ../NeoVimXpc/local.mk .
+ln -s ../local.mk .
 make CMAKE_BUILD_TYPE=Release libnvim # optional, the VimR target in Xcode also does this
 ```
 
