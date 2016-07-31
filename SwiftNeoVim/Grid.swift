@@ -205,16 +205,15 @@ class Grid: CustomStringConvertible {
     let row = position.row
     let column = position.column
     
-//    NSLog("current char: '\(self.cells[row][column])'")
-
     var left = 0
-    for (idx, cell) in self.cells[row][0...column].enumerate().reverse() {
+    for idx in (0...column).reverse() {
+      let cell = self.cells[row][idx]
       if cell.string == " " || cell.string == "" {
         left = idx
         break
       }
     }
-    
+
     var right = self.region.right
     for idx in column..<self.size.width {
       let cell = self.cells[row][idx]
