@@ -201,7 +201,7 @@ class Grid: CustomStringConvertible {
     return position.row * self.size.width + position.column
   }
 
-  func regionOfCurrentWord(position: Position) -> Region {
+  func regionOfWord(at position: Position) -> Region {
     let row = position.row
     let column = position.column
     

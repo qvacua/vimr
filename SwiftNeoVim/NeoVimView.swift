@@ -859,7 +859,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
         if string == " " {
           self.setNeedsDisplay(cellPosition: curPos)
         } else {
-          self.setNeedsDisplay(region: self.grid.regionOfCurrentWord(curPos))
+          self.setNeedsDisplay(region: self.grid.regionOfWord(at: curPos))
         }
       } else {
         self.setNeedsDisplay(cellPosition: curPos)
