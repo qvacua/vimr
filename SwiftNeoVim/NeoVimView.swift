@@ -809,14 +809,14 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
       // redraw the put position.
       if self.usesLigatures {
         self.setNeedsDisplay(region: self.grid.regionOfWord(at: self.grid.putPosition))
-        self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(self.grid.putPosition))
         self.setNeedsDisplay(region: self.grid.regionOfWord(at: screenCursor))
       } else {
         self.setNeedsDisplay(cellPosition: self.grid.putPosition)
-        self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(self.grid.putPosition))
         self.setNeedsDisplay(screenCursor: position)
       }
 
+      self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(self.grid.putPosition))
+      
       self.grid.goto(position)
       self.grid.moveCursor(screenCursor)
     }
