@@ -27,6 +27,12 @@ If you want to support VimR financially, you can use [Bountysource](https://www.
 
 Pre-built binaries can be found [here](https://github.com/qvacua/vimr/releases).
 
+## Already Implemented
+
+* Multiple windows.
+* Basic input including Emojis and Hangul (+Hanja): We don't know whether other input systems work...
+* Basic mouse support: Left button actions and scrolling.
+* Ligatures: Turned off by default. Turn it on in the Preferences.
 
 ## Planned Features
 
