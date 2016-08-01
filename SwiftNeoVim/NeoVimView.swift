@@ -92,7 +92,7 @@ public class NeoVimView: NSView {
       self.descent = self.drawer.descent
       self.leading = self.drawer.leading
       
-      self.resizeNeoVimUiTo(size: self.frame.size)
+      self.resizeNeoVimUiTo(size: self.bounds.size)
     }
   }
   
@@ -129,7 +129,7 @@ public class NeoVimView: NSView {
     }
 
     if self.inLiveResize {
-      // TODO: Turn of live resizing for now.
+      // TODO: Turn off live resizing for now.
       // self.resizeNeoVimUiTo(size: newSize)
       return
     }
@@ -272,17 +272,21 @@ public class NeoVimView: NSView {
   }
 
   private func regionFor(rect rect: CGRect) -> Region {
+    let cellWidth = self.cellSize.width
+    let cellHeight = self.cellSize.height
+
     let rowStart = max(
-      Int(floor((self.frame.height - (rect.origin.y + rect.size.height)) / self.cellSize.height)), 0
+      Int(floor((self.bounds.height - self.yOffset - (rect.origin.y + rect.size.height)) / cellHeight)), 0
     )
     let rowEnd = min(
-      Int(ceil((self.frame.height - rect.origin.y) / self.cellSize.height)) - 1, self.grid.size.height  - 1
+      Int(ceil((self.bounds.height - self.yOffset - rect.origin.y) / cellHeight)) - 1,
+      self.grid.size.height  - 1
     )
     let columnStart = max(
-      Int(floor(rect.origin.x / self.cellSize.width)), 0
+      Int(floor((rect.origin.x - self.xOffset) / cellWidth)), 0
     )
     let columnEnd = min(
-      Int(ceil((rect.origin.x + rect.size.width) / self.cellSize.width)) - 1, self.grid.size.width - 1
+      Int(ceil((rect.origin.x - self.xOffset + rect.size.width) / cellWidth)) - 1, self.grid.size.width - 1
     )
 
     return Region(top: rowStart, bottom: rowEnd, left: columnStart, right: columnEnd)
@@ -295,7 +299,7 @@ public class NeoVimView: NSView {
   private func pointInViewFor(row row: Int, column: Int) -> CGPoint {
     return CGPoint(
       x: self.xOffset + CGFloat(column) * self.cellSize.width,
-      y: self.frame.size.height - self.yOffset - CGFloat(row) * self.cellSize.height - self.cellSize.height
+      y: self.bounds.size.height - self.yOffset - CGFloat(row) * self.cellSize.height - self.cellSize.height
     )
   }
 
@@ -762,7 +766,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
 
   public func neoVimUiIsReady() {
     DispatchUtils.gui {
-      self.resizeNeoVimUiTo(size: self.frame.size)
+      self.resizeNeoVimUiTo(size: self.bounds.size)
       self.delegate?.neoVimReady()
     }
   }
