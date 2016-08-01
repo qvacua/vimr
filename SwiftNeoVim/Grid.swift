@@ -204,9 +204,17 @@ class Grid: CustomStringConvertible {
   func regionOfWord(at position: Position) -> Region {
     let row = position.row
     let column = position.column
-    
+
+    guard row < self.size.height else {
+      return Region.zero
+    }
+
+    guard column < self.size.width else {
+      return Region.zero
+    }
+
     var left = 0
-    for idx in (0...column).reverse() {
+    for idx in (0..<column).reverse() {
       let cell = self.cells[row][idx]
       if cell.string == " " || cell.string == "" {
         left = idx
@@ -214,8 +222,8 @@ class Grid: CustomStringConvertible {
       }
     }
 
-    var right = self.region.right
-    for idx in column..<self.size.width {
+    var right = self.size.width - 1
+    for idx in (column + 1)..<self.size.width {
       let cell = self.cells[row][idx]
       if cell.string == " " || cell.string == "" {
         right = idx

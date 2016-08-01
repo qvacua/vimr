@@ -231,6 +231,7 @@ public class NeoVimView: NSView {
 
   private func drawBackground(positions positions: [CGPoint], background: UInt32) {
     ColorUtils.colorIgnoringAlpha(background).set()
+//    NSColor(calibratedRed: CGFloat(drand48()), green: CGFloat(drand48()), blue: CGFloat(drand48()), alpha: 1.0).set()
     let backgroundRect = CGRect(
       x: positions[0].x, y: positions[0].y,
       width: CGFloat(positions.count) * self.cellSize.width, height: self.cellSize.height
@@ -804,10 +805,16 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     DispatchUtils.gui {
 //      NSLog("\(#function): \(position), \(screenCursor)")
 
-      // Because neovim fills blank space with "Space" and when we enter "Space" we don't get the puts.
-      self.setNeedsDisplay(cellPosition: self.grid.putPosition)
-      self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(self.grid.putPosition))
-      self.setNeedsDisplay(screenCursor: position)
+      // Because neovim fills blank space with "Space" and when we enter "Space" we don't get the puts, thus we have to
+      // redraw the put position.
+      if self.usesLigatures {
+        self.setNeedsDisplay(region: self.grid.regionOfWord(at: self.grid.putPosition))
+        self.setNeedsDisplay(region: self.grid.regionOfWord(at: screenCursor))
+      } else {
+        self.setNeedsDisplay(cellPosition: self.grid.putPosition)
+        self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(self.grid.putPosition))
+        self.setNeedsDisplay(screenCursor: position)
+      }
 
       self.grid.goto(position)
       self.grid.moveCursor(screenCursor)
