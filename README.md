@@ -32,6 +32,7 @@ Pre-built binaries can be found [here](https://github.com/qvacua/vimr/releases).
 * Multiple windows.
 * Basic input including Emojis and Hangul (+Hanja): We don't know whether other input systems work...
 * Basic mouse support: Left button actions and scrolling.
+* Basic trackpad support: Pinching for zooming.
 * Ligatures: Turned off by default. Turn it on in the Preferences.
 
 ## Planned Features
@@ -44,7 +45,6 @@ The following are features we _plan_ to implement (some of which are already pre
 * File browser
 * Flexible workspace model a la JetBrain's IDEs: For this We'd probably port and extend [qvworkspace](https://github.com/qvacua/qvworkspace) to Swift
 * Preview for some file types, e.g. Markdown, HTML, etc.
-* Some trackpad gesture support, e.g. pinching for zooming
 * ...
 
 We will gradually create [issues](https://github.com/qvacua/vimr/issues) with more details.
