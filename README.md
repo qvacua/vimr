@@ -43,7 +43,7 @@ The following are features we _plan_ to implement (some of which are already pre
 * Improved rendering and input handling, especially Hangul/Hanja (Why is Korean so important? 🤔): The current implementation is really ugly and messy...
 * Fuzzy file finder a la Xcode's "Open Quickly..."
 * File browser
-* Flexible workspace model a la JetBrain's IDEs: For this We'd probably port and extend [qvworkspace](https://github.com/qvacua/qvworkspace) to Swift
+* Flexible workspace model a la JetBrain's IDEs: For this we'd probably port and extend [qvworkspace](https://github.com/qvacua/qvworkspace) to Swift
 * Preview for some file types, e.g. Markdown, HTML, etc.
 * ...
 
