@@ -32,6 +32,14 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
   private let ligatureCheckbox = NSButton(forAutoLayout: ())
   private let previewArea = NSTextView(frame: CGRect.zero)
 
+  private let exampleText =
+    "abcdefghijklmnopqrstuvwxyz\n" +
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ\n" +
+    "0123456789\n" +
+    "(){}[] +-*/= .,;:!?#&$%@|^\n" +
+    "<- -> => >> << >>= =<< .. \n" +
+    ":: -< >- -<< >>- ++ /= =="
+
   private var font: NSFont
   private var fontSize = CGFloat(13)
   private var fontName = "Menlo"
@@ -68,12 +76,15 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
   private func addReactions() {
     self.source
       .filter { $0 is PrefData }
-      .map { ($0 as! PrefData).appearance.editorFont }
-      .filter { $0 != self.font }
-      .subscribeNext { [unowned self] editorFont in
+      .map { ($0 as! PrefData).appearance }
+      .filter { $0.editorFont != self.font || $0.editorUsesLigatures != self.usesLigatures }
+      .subscribeNext { [unowned self] appearance in
+        NSLog("react")
+        let editorFont = appearance.editorFont
         self.font = editorFont
         self.fontName = editorFont.fontName
         self.fontSize = editorFont.pointSize
+        self.usesLigatures = appearance.editorUsesLigatures
         self.updateViews()
       }
       .addDisposableTo(self.disposeBag)
@@ -107,14 +118,6 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
     ligatureCheckbox.target = self
     ligatureCheckbox.action = #selector(AppearancePrefPane.usesLigaturesAction(_:))
 
-    let exampleText =
-        "abcdefghijklmnopqrstuvwxyz\n" +
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ\n" +
-        "0123456789\n" +
-        "(){}[] +-*/= .,;:!?#&$%@|^\n" +
-        "<- -> => >> << >>= =<< .. \n" +
-        ":: -< >- -<< >>- ++ /= =="
-
     let previewArea = self.previewArea
     previewArea.editable = true
     previewArea.maxSize = CGSize(width: CGFloat.max, height: CGFloat.max)
@@ -124,7 +127,9 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
     previewArea.textContainer?.widthTracksTextView = false
     previewArea.autoresizingMask = [ .ViewWidthSizable, .ViewHeightSizable]
     previewArea.textContainer?.containerSize = CGSize.init(width: CGFloat.max, height: CGFloat.max)
-    previewArea.layoutManager?.replaceTextStorage(NSTextStorage(string: exampleText))
+    previewArea.layoutManager?.replaceTextStorage(NSTextStorage(string: self.exampleText))
+    previewArea.richText = false
+    previewArea.turnOffLigatures(self)
 
     let previewScrollView = NSScrollView(forAutoLayout: ())
     previewScrollView.hasVerticalScroller = true
@@ -168,6 +173,11 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
     self.sizeCombo.stringValue = String(Int(self.fontSize))
     self.ligatureCheckbox.state = self.usesLigatures ? NSOnState : NSOffState
     self.previewArea.font = self.font
+    if self.usesLigatures {
+      self.previewArea.useAllLigatures(self)
+    } else {
+      self.previewArea.turnOffLigatures(self)
+    }
   }
 }
 
@@ -212,8 +222,9 @@ extension AppearancePrefPane {
     }
 
     self.font = font
-    self.previewArea.font = font
-    let usesLigatures = self.ligatureCheckbox.state == NSOnState
+    self.usesLigatures = self.ligatureCheckbox.state == NSOnState
+    self.updateViews()
+
     self.subject.onNext(AppearancePrefData(editorFont: font, editorUsesLigatures: usesLigatures))
   }
 

@@ -62,7 +62,8 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
       .filter { $0 is PrefData }
       .map { $0 as! PrefData }
       .subscribeNext { [unowned self] prefData in
-        if prefData.appearance.editorFont == self.data.appearance.editorFont {
+        if prefData.appearance.editorFont == self.data.appearance.editorFont
+          && prefData.appearance.editorUsesLigatures == self.data.appearance.editorUsesLigatures {
           return
         }
 
@@ -72,8 +73,7 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
 
     self.panes
       .map { $0.sink }
-      .toObservable()
-      .flatMap { $0 }
+      .toMergedObservables()
       .map { [unowned self] action in
         switch action {
         case let data as AppearancePrefData:
