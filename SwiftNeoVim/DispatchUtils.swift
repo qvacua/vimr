@@ -3,7 +3,7 @@
  * See LICENSE
  */
 
-import Foundation
+import Cocoa
 
 public class DispatchUtils {
   

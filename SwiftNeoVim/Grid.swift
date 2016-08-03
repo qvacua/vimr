@@ -3,7 +3,7 @@
  * See LICENSE
  */
 
-import Foundation
+import Cocoa
 
 struct Cell: CustomStringConvertible {
   private let attributes: CellAttributes
