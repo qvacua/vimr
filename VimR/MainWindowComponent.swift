@@ -77,7 +77,23 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
   }
 }
 
-// MARK: - IBActions
+// MARK: - Edit Menu Items
+extension MainWindowComponent {
+
+  @IBAction func cut(sender: AnyObject!) {
+    NSLog("\(#function)")
+  }
+
+  @IBAction func copy(sender: AnyObject!) {
+    NSLog("\(#function)")
+  }
+
+  @IBAction func paste(sender: AnyObject!) {
+    NSLog("\(#function)")
+  }
+}
+
+// MARK: - Font Menu Items
 extension MainWindowComponent {
 
   @IBAction func resetFontSize(sender: AnyObject!) {
