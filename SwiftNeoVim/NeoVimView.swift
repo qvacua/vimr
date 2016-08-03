@@ -23,13 +23,12 @@ public class NeoVimView: NSView {
   public static let maxFontSize = CGFloat(128)
   public static let defaultFont = NSFont(name: "Menlo", size: 13)!
 
-  private let fontManager = NSFontManager.sharedFontManager()
-
   public let uuid = NSUUID().UUIDString
   public weak var delegate: NeoVimViewDelegate?
 
   private let agent: NeoVimAgent
   private let drawer: TextDrawer
+  private let fontManager = NSFontManager.sharedFontManager()
 
   public private(set) var mode = Mode.Normal
 
