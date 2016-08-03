@@ -31,6 +31,8 @@ public class NeoVimView: NSView {
   private let agent: NeoVimAgent
   private let drawer: TextDrawer
 
+  public private(set) var mode = Mode.Normal
+
   private let grid = Grid()
 
   private var markedText: String?
@@ -837,7 +839,9 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   public func mouseOff() {
   }
   
-  public func modeChange(mode: Int32) {
+  public func modeChange(mode: Mode) {
+    NSLog("mode changed to: %02x", mode.rawValue)
+    self.mode = mode
   }
   
   public func setScrollRegionToTop(top: Int32, bottom: Int32, left: Int32, right: Int32) {

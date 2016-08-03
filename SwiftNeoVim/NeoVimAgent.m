@@ -267,7 +267,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
     case NeoVimServerMsgIdModeChange: {
       int *values = data_to_int_array(data, 1);
-      [_bridge modeChange:values[0]];
+      [_bridge modeChange:(Mode) values[0]];
       return;
     }
 

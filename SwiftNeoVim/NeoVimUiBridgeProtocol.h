@@ -6,6 +6,14 @@
 @import Foundation;
 
 
+typedef NS_ENUM(NSUInteger, Mode) {
+    Normal    = 0x01,
+    Visual    = 0x02,
+    OpPending = 0x04,
+    Cmdline   = 0x08,
+    Insert    = 0x10,
+};
+
 typedef NS_ENUM(NSUInteger, FontTrait) {
     FontTraitNone      = 0,
     FontTraitItalic    = (1 << 0),
@@ -70,7 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Mode changed to mode, cf vim.h.
  */
-- (void)modeChange:(int)mode;
+- (void)modeChange:(Mode)mode;
 
 - (void)setScrollRegionToTop:(int)top bottom:(int)bottom left:(int)left right:(int)right;
 - (void)scroll:(int)count;
