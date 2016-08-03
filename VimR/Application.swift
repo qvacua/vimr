@@ -8,8 +8,6 @@ import Cocoa
 class Application: NSApplication {
 
   override init() {
-    super.init()
-
     // Do very early initializtion here
 
     // disable default press and hold behavior (copied from MacVim)
@@ -18,6 +16,8 @@ class Application: NSApplication {
       "NO" as NSString,
       kCFPreferencesCurrentApplication
     )
+
+    super.init()
   }
 
   required init?(coder: NSCoder) {
