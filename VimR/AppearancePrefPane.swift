@@ -107,6 +107,8 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
 
     let sizeCombo = self.sizeCombo
     sizeCombo.setDelegate(self)
+    sizeCombo.target = self
+    sizeCombo.action = #selector(AppearancePrefPane.sizeComboBoxDidEnter(_:))
     self.sizes.forEach { string in
       sizeCombo.addItemWithObjectValue(string)
     }
@@ -207,11 +209,7 @@ extension AppearancePrefPane {
     self.publishData()
   }
 
-  override func controlTextDidChange(notification: NSNotification) {
-    guard notification.object! === self.sizeCombo else {
-      return
-    }
-
+  func sizeComboBoxDidEnter(sender: AnyObject!) {
     self.fontSize = self.cappedFontSize(self.sizeCombo.integerValue)
     self.publishData()
   }
