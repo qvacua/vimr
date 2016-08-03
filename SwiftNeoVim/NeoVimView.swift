@@ -281,8 +281,7 @@ public class NeoVimView: NSView {
       Int(floor((self.bounds.height - self.yOffset - (rect.origin.y + rect.size.height)) / cellHeight)), 0
     )
     let rowEnd = min(
-      Int(ceil((self.bounds.height - self.yOffset - rect.origin.y) / cellHeight)) - 1,
-      self.grid.size.height  - 1
+      Int(ceil((self.bounds.height - self.yOffset - rect.origin.y) / cellHeight)) - 1, self.grid.size.height  - 1
     )
     let columnStart = max(
       Int(floor((rect.origin.x - self.xOffset) / cellWidth)), 0
