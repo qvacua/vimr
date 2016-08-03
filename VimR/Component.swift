@@ -3,7 +3,7 @@
  * See LICENSE
  */
 
-import Foundation
+import Cocoa
 import RxSwift
 
 protocol Flow {
