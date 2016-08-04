@@ -414,7 +414,7 @@
                             <menuItem title="Debug1" id="IFh-6Q-w93">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="debugSomething:" target="Voe-Tx-rLC" id="Fcf-6c-PLQ"/>
+                                    <action selector="debug1:" target="-1" id="OSW-j0-HVo"/>
                                 </connections>
                             </menuItem>
                         </items>

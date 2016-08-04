@@ -147,6 +147,13 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       server_start_neovim();
       return nil;
 
+    case NeoVimAgentMsgIdCommand: {
+      NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+      server_vim_command(string);
+
+      return nil;
+    }
+
     case NeoVimAgentMsgIdInput: {
       NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
       server_vim_input(string);

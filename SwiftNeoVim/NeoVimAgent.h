@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)cleanUp;
 - (void)establishLocalServer;
 
+- (void)vimCommand:(NSString *)string;
+
 - (void)vimInput:(NSString *)string;
 - (void)vimInputMarkedText:(NSString *_Nonnull)markedText;
 - (void)deleteCharacters:(NSInteger)count;

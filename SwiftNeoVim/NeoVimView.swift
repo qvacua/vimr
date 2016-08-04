@@ -29,6 +29,7 @@ public class NeoVimView: NSView {
   private let agent: NeoVimAgent
   private let drawer: TextDrawer
   private let fontManager = NSFontManager.sharedFontManager()
+  private let pasteboard = NSPasteboard.generalPasteboard()
 
   public private(set) var mode = Mode.Normal
 
@@ -115,6 +116,10 @@ public class NeoVimView: NSView {
   
   deinit {
     self.agent.cleanUp()
+  }
+
+  @IBAction public func debug1(sender: AnyObject!) {
+    NSLog("DEBUG-1")
   }
 
   public func debugInfo() {
@@ -338,6 +343,40 @@ public class NeoVimView: NSView {
   
   required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+}
+
+// MARK: - Edit Menu Items
+extension NeoVimView {
+
+  @IBAction func cut(sender: AnyObject!) {
+    if self.mode == .Insert {
+      return
+    }
+
+    self.agent.vimCommand("norm! \"+d")
+  }
+
+  @IBAction func copy(sender: AnyObject!) {
+    if self.mode == .Insert {
+      return
+    }
+
+    self.agent.vimCommand("norm! \"+y")
+  }
+
+  @IBAction func paste(sender: AnyObject!) {
+    guard let content = self.pasteboard.stringForType(NSPasteboardTypeString) else {
+      return
+    }
+
+    switch self.mode {
+    case .Cmdline, .Insert:
+      self.agent.vimInput(self.vimPlainString(content))
+    default:
+      self.agent.vimCommand("norm! \"+p")
+      self.agent.vimInput(self.wrapNamedKeys(KeyUtils.specialKeys[NSRightArrowFunctionKey]!))
+    }
   }
 }
 

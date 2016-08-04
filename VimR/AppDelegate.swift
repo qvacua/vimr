@@ -46,10 +46,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       .subscribe(self.actionSubject)
       .addDisposableTo(self.disposeBag)
   }
-
-  @IBAction func debugSomething(sender: AnyObject!) {
-    NSLog("debug sth...")
-  }
   
   @IBAction func newDocument(sender: AnyObject!) {
     self.mainWindowManager.newMainWindow()

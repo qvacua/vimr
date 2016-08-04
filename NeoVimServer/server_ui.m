@@ -435,6 +435,23 @@ static void refresh_ui(void **argv __unused) {
   ui_refresh();
 }
 
+static void neovim_command(void **argv) {
+  @autoreleasepool {
+    NSString *input = (NSString *) argv[0];
+
+    // Use cStringUsingEncoding and not UTF8String since in vim_command does do_cmdline_cmd(str.data).
+    Error err;
+    vim_command((String) {
+        .data = (char *) [input cStringUsingEncoding:NSUTF8StringEncoding],
+        .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
+    }, &err);
+
+    // FIXME: handle err.set == true
+
+    [input release]; // retained in loop_schedule(&main_loop, ...) (in _queue) somewhere
+  }
+}
+
 static void neovim_input(void **argv) {
   @autoreleasepool {
     NSString *input = (NSString *) argv[0];
@@ -445,7 +462,7 @@ static void neovim_input(void **argv) {
         .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
     });
 
-    [input release]; // retain in loop_schedule(&main_loop, ...) (in _queue) somewhere
+    [input release]; // retained in loop_schedule(&main_loop, ...) (in _queue) somewhere
   }
 }
 
@@ -569,6 +586,12 @@ void server_resize(int width, int height) {
   queue(^{
     set_ui_size(_server_ui_data->bridge, width, height);
     loop_schedule(&main_loop, event_create(1, refresh_ui, 0));
+  });
+}
+
+void server_vim_command(NSString *input) {
+  queue(^{
+    loop_schedule(&main_loop, event_create(1, neovim_command, 1, [input retain])); // release in neovim_command
   });
 }
 

@@ -94,6 +94,11 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [_neoVimServerTask launch];
 }
 
+- (void)vimCommand:(NSString *)string {
+  NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+  [self sendMessageWithId:NeoVimAgentMsgIdCommand data:data];
+}
+
 - (void)vimInput:(NSString *)string {
   NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
   [self sendMessageWithId:NeoVimAgentMsgIdInput data:data];
