@@ -17,7 +17,7 @@ private struct RowRun: CustomStringConvertible {
   }
 }
 
-public class NeoVimView: NSView {
+public class NeoVimView: NSView, NSUserInterfaceValidations {
   
   public static let minFontSize = CGFloat(4)
   public static let maxFontSize = CGFloat(128)
@@ -346,23 +346,40 @@ public class NeoVimView: NSView {
   }
 }
 
+// MARK: - NSUserInterfaceValidationsProtocol
+extension NeoVimView {
+
+  public func validateUserInterfaceItem(item: NSValidatedUserInterfaceItem) -> Bool {
+    let canCopyOrCut = self.mode != .Insert && self.mode != .Cmdline
+
+    switch item.action() {
+    case NSSelectorFromString("copy:"), NSSelectorFromString("cut:"):
+      return canCopyOrCut
+    default:
+      return true
+    }
+  }
+}
+
 // MARK: - Edit Menu Items
 extension NeoVimView {
 
   @IBAction func cut(sender: AnyObject!) {
-    if self.mode == .Insert {
+    if self.mode == .Insert || self.mode == .Cmdline {
       return
     }
 
     self.agent.vimCommand("norm! \"+d")
+    self.agent.vimInput(self.wrapNamedKeys(KeyUtils.specialKeys[NSRightArrowFunctionKey]!))
   }
 
   @IBAction func copy(sender: AnyObject!) {
-    if self.mode == .Insert {
+    if self.mode == .Insert || self.mode == .Cmdline {
       return
     }
 
     self.agent.vimCommand("norm! \"+y")
+    self.agent.vimInput(self.wrapNamedKeys(KeyUtils.specialKeys[NSRightArrowFunctionKey]!))
   }
 
   @IBAction func paste(sender: AnyObject!) {
