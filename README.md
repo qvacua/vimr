@@ -34,6 +34,7 @@ Pre-built binaries can be found [here](https://github.com/qvacua/vimr/releases).
 * Basic mouse support: Left button actions and scrolling.
 * Basic trackpad support: Pinching for zooming.
 * Ligatures: Turned off by default. Turn it on in the Preferences.
+* Basic Edit menu: Cut/Copy/Paste.
 
 ## Planned Features
 
