@@ -877,7 +877,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   public func modeChange(mode: Mode) {
-    NSLog("mode changed to: %02x", mode.rawValue)
+//    NSLog("mode changed to: %02x", mode.rawValue)
     self.mode = mode
   }
   
