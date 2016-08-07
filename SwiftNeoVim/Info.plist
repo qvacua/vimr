@@ -15,11 +15,11 @@
 	<key>CFBundlePackageType</key>
 	<string>FMWK</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.9.0-SNAPSHOT-20160804.2342</string>
+	<string>0.9.0-SNAPSHOT-20160807.1627</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>45</string>
+	<string>46</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2016 Tae Won Ha. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
