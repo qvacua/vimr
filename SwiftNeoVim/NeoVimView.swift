@@ -213,14 +213,14 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
                              context: context)
     }
 
-    self.drawCursor(self.grid.background)
+    self.drawCursor(self.grid.foreground)
   }
 
   public func hasDirtyDocs() -> Bool {
     return self.agent.hasDirtyDocs()
   }
 
-  private func drawCursor(background: UInt32) {
+  private func drawCursor(foreground: UInt32) {
     // FIXME: for now do some rudimentary cursor drawing
     let cursorPosition = self.mode == .Cmdline ? self.grid.putPosition : self.grid.screenCursor
 //    NSLog("\(#function): \(cursorPosition)")
@@ -231,11 +231,15 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
       cursorRect = cursorRect.union(self.cellRectFor(row: nextPosition.row, column:nextPosition.column))
     }
 
-    ColorUtils.colorIgnoringAlpha(background).set()
+    ColorUtils.colorIgnoringAlpha(foreground).set()
     NSRectFillUsingOperation(cursorRect, .CompositeDifference)
   }
 
   private func drawBackground(positions positions: [CGPoint], background: UInt32) {
+    if background == self.grid.background {
+      return
+    }
+
     ColorUtils.colorIgnoringAlpha(background).set()
 //    NSColor(calibratedRed: CGFloat(drand48()), green: CGFloat(drand48()), blue: CGFloat(drand48()), alpha: 1.0).set()
     let backgroundRect = CGRect(
