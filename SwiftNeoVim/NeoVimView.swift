@@ -222,7 +222,7 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
 
   private func drawCursor(background: UInt32) {
     // FIXME: for now do some rudimentary cursor drawing
-    let cursorPosition = self.grid.putPosition
+    let cursorPosition = self.mode == .Cmdline ? self.grid.putPosition : self.grid.screenCursor
 //    NSLog("\(#function): \(cursorPosition)")
 
     var cursorRect = self.cellRectFor(row: cursorPosition.row, column: cursorPosition.column)
@@ -872,6 +872,9 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
       }
 
       self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(self.grid.putPosition))
+      
+      // Redraw where the cursor has been till now, ie remove the current cursor.
+      self.setNeedsDisplay(cellPosition: self.grid.screenCursor)
       
       self.grid.goto(position)
       self.grid.moveCursor(screenCursor)
