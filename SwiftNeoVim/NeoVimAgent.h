@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)vimInput:(NSString *)string;
 - (void)vimInputMarkedText:(NSString *_Nonnull)markedText;
 - (void)deleteCharacters:(NSInteger)count;
-- (void)forceRedraw;
+
 - (void)resizeToWidth:(int)width height:(int)height;
 
 - (bool)hasDirtyDocs;

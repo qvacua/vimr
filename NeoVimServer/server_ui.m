@@ -578,10 +578,6 @@ void server_delete(NSInteger count) {
   });
 }
 
-void server_redraw() {
-  loop_schedule(&main_loop, event_create(1, force_redraw, 0));
-}
-
 void server_resize(int width, int height) {
   queue(^{
     set_ui_size(_server_ui_data->bridge, width, height);

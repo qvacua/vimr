@@ -180,10 +180,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return nil;
     }
 
-    case NeoVimAgentMsgIdRedraw:
-      server_redraw();
-      return nil;
-
     case NeoVimAgentMsgIdDirtyDocs: {
       bool dirty = server_has_dirty_docs();
       return [NSData dataWithBytes:&dirty length:sizeof(bool)];

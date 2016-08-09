@@ -114,10 +114,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [self sendMessageWithId:NeoVimAgentMsgIdDelete data:data];
 }
 
-- (void)forceRedraw {
-  [self sendMessageWithId:NeoVimAgentMsgIdRedraw data:nil];
-}
-
 - (void)resizeToWidth:(int)width height:(int)height {
   int values[] = { width, height };
   NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
