@@ -46,14 +46,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       .subscribe(self.actionSubject)
       .addDisposableTo(self.disposeBag)
   }
-  
-  @IBAction func newDocument(sender: AnyObject!) {
-    self.mainWindowManager.newMainWindow()
-  }
-
-  @IBAction func showPrefWindow(sender: AnyObject!) {
-    self.prefWindowComponent.show()
-  }
 
   func applicationDidFinishLaunching(aNotification: NSNotification) {
 //    let testView = InputTestView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
@@ -79,5 +71,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     return .TerminateNow
+  }
+}
+
+// MARK: - IBActions
+extension AppDelegate {
+  
+  @IBAction func newDocument(sender: AnyObject!) {
+    self.mainWindowManager.newMainWindow()
+  }
+
+  @IBAction func showPrefWindow(sender: AnyObject!) {
+    self.prefWindowComponent.show()
   }
 }
