@@ -10,6 +10,8 @@ import PureLayout
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
+  @IBOutlet var debugMenu: NSMenuItem!
+
   private let disposeBag = DisposeBag()
 
   private let changeSubject = PublishSubject<Any>()
@@ -51,6 +53,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //    let testView = InputTestView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
 //    self.window.contentView?.addSubview(testView)
 //    self.window.makeFirstResponder(testView)
+
+    #if DEBUG
+      self.debugMenu.hidden = false
+    #endif
 
     self.newDocument(self)
   }
