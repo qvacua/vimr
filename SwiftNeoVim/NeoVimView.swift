@@ -404,9 +404,7 @@ extension NeoVimView {
 
   @IBAction func cut(sender: AnyObject!) {
     switch self.mode {
-    case .Visual:
-      self.agent.vimInput("\"+d")
-    case .Normal:
+    case .Visual, .Normal:
       self.agent.vimInput("\"+d")
     default:
       return
@@ -415,9 +413,7 @@ extension NeoVimView {
 
   @IBAction func copy(sender: AnyObject!) {
     switch self.mode {
-    case .Visual:
-      self.agent.vimInput("\"+y")
-    case .Normal:
+    case .Visual, .Normal:
       self.agent.vimInput("\"+y")
     default:
       return
