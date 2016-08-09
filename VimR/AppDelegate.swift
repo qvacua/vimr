@@ -82,12 +82,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 // MARK: - IBActions
 extension AppDelegate {
+
+  @IBAction func showPrefWindow(sender: AnyObject!) {
+    self.prefWindowComponent.show()
+  }
   
   @IBAction func newDocument(sender: AnyObject!) {
     self.mainWindowManager.newMainWindow()
   }
-
-  @IBAction func showPrefWindow(sender: AnyObject!) {
-    self.prefWindowComponent.show()
+  
+  @IBAction func newTab(sender: AnyObject!) {
+  }
+  
+  @IBAction func openDocument(sender: AnyObject!) {
+  }
+  
+  @IBAction func openInTab(sender: AnyObject!) {
   }
 }
