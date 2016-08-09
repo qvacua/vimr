@@ -354,11 +354,23 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
 extension NeoVimView {
 
   public func validateUserInterfaceItem(item: NSValidatedUserInterfaceItem) -> Bool {
-    let canCopyOrCut = self.mode != .Insert && self.mode != .Cmdline
+    let canUndoOrRedo = self.mode == .Insert || self.mode == .Replace || self.mode == .Normal || self.mode == .Visual
+    let canCopyOrCut = self.mode == .Normal || self.mode == .Visual
+    let canPaste = self.pasteboard.stringForType(NSPasteboardTypeString) != nil
+    let canDelete = self.mode == .Visual || self.mode == .Normal
+    let canSelectAll = self.mode == .Insert || self.mode == .Replace || self.mode == .Normal || self.mode == .Visual
 
     switch item.action() {
+    case NSSelectorFromString("undo:"), NSSelectorFromString("redo:"):
+      return canUndoOrRedo
     case NSSelectorFromString("copy:"), NSSelectorFromString("cut:"):
       return canCopyOrCut
+    case NSSelectorFromString("paste:"):
+      return canPaste
+    case NSSelectorFromString("delete:"):
+      return canDelete
+    case NSSelectorFromString("selectAll:"):
+      return canSelectAll
     default:
       return true
     }
@@ -368,22 +380,48 @@ extension NeoVimView {
 // MARK: - Edit Menu Items
 extension NeoVimView {
 
-  @IBAction func cut(sender: AnyObject!) {
-    if self.mode == .Insert || self.mode == .Cmdline {
+  @IBAction func undo(sender: AnyObject!) {
+    switch self.mode {
+    case .Insert, .Replace:
+      self.agent.vimInput("<Esc>ui")
+    case .Normal, .Visual:
+      self.agent.vimInput("u")
+    default:
       return
     }
+  }
 
-    self.agent.vimCommand("norm! \"+d")
-    self.agent.vimInput(self.wrapNamedKeys(KeyUtils.specialKeys[NSRightArrowFunctionKey]!))
+  @IBAction func redo(sender: AnyObject!) {
+    switch self.mode {
+    case .Insert, .Replace:
+      self.agent.vimInput("<Esc><C-r>i")
+    case .Normal, .Visual:
+      self.agent.vimInput("<C-r>")
+    default:
+      return
+    }
+  }
+
+  @IBAction func cut(sender: AnyObject!) {
+    switch self.mode {
+    case .Visual:
+      self.agent.vimInput("\"+d")
+    case .Normal:
+      self.agent.vimInput("\"+d")
+    default:
+      return
+    }
   }
 
   @IBAction func copy(sender: AnyObject!) {
-    if self.mode == .Insert || self.mode == .Cmdline {
+    switch self.mode {
+    case .Visual:
+      self.agent.vimInput("\"+y")
+    case .Normal:
+      self.agent.vimInput("\"+y")
+    default:
       return
     }
-
-    self.agent.vimCommand("norm! \"+y")
-    self.agent.vimInput(self.wrapNamedKeys(KeyUtils.specialKeys[NSRightArrowFunctionKey]!))
   }
 
   @IBAction func paste(sender: AnyObject!) {
@@ -392,11 +430,28 @@ extension NeoVimView {
     }
 
     switch self.mode {
-    case .Cmdline, .Insert:
+    case .Cmdline, .Insert, .Replace:
       self.agent.vimInput(self.vimPlainString(content))
+    case .Normal, .Visual:
+      self.agent.vimInput("\"+p")
+    }
+  }
+
+  @IBAction func delete(sender: AnyObject!) {
+    switch self.mode {
+    case .Normal, .Visual:
+      self.agent.vimInput("x")
     default:
-      self.agent.vimCommand("norm! \"+p")
-      self.agent.vimInput(self.wrapNamedKeys(KeyUtils.specialKeys[NSRightArrowFunctionKey]!))
+      return
+    }
+  }
+
+  @IBAction public override func selectAll(sender: AnyObject?) {
+    switch self.mode {
+    case .Insert, .Visual:
+      self.agent.vimInput("<Esc>ggVG")
+    default:
+      self.agent.vimInput("ggVG")
     }
   }
 }
@@ -901,7 +956,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   public func modeChange(mode: Mode) {
-//    NSLog("mode changed to: %02x", mode.rawValue)
+    NSLog("mode changed to: %02x", mode.rawValue)
     self.mode = mode
   }
   
