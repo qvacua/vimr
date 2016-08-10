@@ -37,7 +37,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return NULL;
     }
 
-    log4Debug("server returning data: %@", responseData);
     return CFDataCreateCopy(kCFAllocatorDefault, (__bridge CFDataRef) responseData);
   }
 }
