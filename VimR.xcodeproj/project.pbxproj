@@ -12,7 +12,6 @@
 		1929BEB90DCDAF7A2B68C886 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA6128BFDD54CA92F46E /* ColorUtils.swift */; };
 		1929BF81A40B4154D3EA33CE /* server_ui.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B93013228985F509C8F6 /* server_ui.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */; };
-		4B1BB3531D16C5E500CA4FEF /* InputTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1BB3521D16C5E500CA4FEF /* InputTestView.swift */; };
 		4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BE01D3BF24200CBDD98 /* Application.swift */; };
 		4B238BEC1D3ED54D00CBDD98 /* AppearancePrefPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BEB1D3ED54D00CBDD98 /* AppearancePrefPane.swift */; };
 		4B2A2BEC1D02261F0074CE9A /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BE21D0225800074CE9A /* RxCocoa.framework */; };
@@ -664,7 +663,6 @@
 			files = (
 				4BEE79171D16D3800012EDAA /* CellAttributes.swift in Sources */,
 				4BF6E29C1D34153C0053FA76 /* KeyUtils.swift in Sources */,
-				4B1BB3531D16C5E500CA4FEF /* InputTestView.swift in Sources */,
 				4BCADE081D11ED12004DAD0F /* CocoaExtensions.swift in Sources */,
 				4B401B1A1D046E0600D99EDC /* NeoVimViewDelegate.swift in Sources */,
 				1929B728262BAA14FC93F6AC /* NeoVimView.swift in Sources */,
