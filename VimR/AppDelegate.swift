@@ -100,7 +100,7 @@ extension AppDelegate {
       }
 
       let url = panel.URLs[0]
-      self.mainWindowManager.newMainWindow(url)
+      self.mainWindowManager.newMainWindow(url: url)
     }
   }
 }

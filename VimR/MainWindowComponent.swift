@@ -135,7 +135,7 @@ extension MainWindowComponent {
     self.neoVimView.usesLigatures = self.usesLigatures
 
     if let url = self.urlToBeOpenedWhenReady {
-      self.neoVimView.open(url)
+      self.neoVimView.open(url: url)
     }
   }
   

@@ -229,7 +229,7 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
     }
   }
 
-  public func open(url: NSURL) {
+  public func open(url url: NSURL) {
     guard let path = url.path else {
       return
     }
