@@ -91,12 +91,6 @@ extension AppDelegate {
     self.mainWindowManager.newMainWindow()
   }
   
-  @IBAction func newTab(sender: AnyObject!) {
-  }
-  
   @IBAction func openDocument(sender: AnyObject!) {
-  }
-  
-  @IBAction func openInTab(sender: AnyObject!) {
   }
 }

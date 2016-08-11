@@ -77,6 +77,28 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
   }
 }
 
+// MARK: - File Menu Items
+extension MainWindowComponent {
+  
+  @IBAction func newTab(sender: AnyObject!) {
+    self.neoVimView.newTab()
+  }
+  
+  @IBAction func openInTab(sender: AnyObject!) {
+    let panel = NSOpenPanel()
+    panel.canChooseDirectories = true
+    panel.beginSheetModalForWindow(self.window) { result in
+      guard result == NSFileHandlingPanelOKButton else {
+        return
+      }
+      
+      // The open panel can choose only one file.
+      let url = panel.URLs[0]
+      self.neoVimView.openInNewTab(url)
+    }
+  }
+}
+
 // MARK: - Font Menu Items
 extension MainWindowComponent {
 

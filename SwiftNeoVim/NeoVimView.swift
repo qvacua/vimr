@@ -219,6 +219,28 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
   public func hasDirtyDocs() -> Bool {
     return self.agent.hasDirtyDocs()
   }
+  
+  public func newTab() {
+    switch self.mode {
+    case .Normal:
+      self.agent.vimInput(":tabe<CR>")
+    default:
+      self.agent.vimInput("<Esc>:table<CR>")
+    }
+  }
+  
+  public func openInNewTab(url: NSURL) {
+    guard let path = url.path else {
+      return
+    }
+    
+    switch self.mode {
+    case .Normal:
+      self.agent.vimInput(":tabe \(path)<CR>")
+    default:
+      self.agent.vimInput("<Esc>:tabe \(path)<CR>")
+    }
+  }
 
   private func drawCursor(foreground: UInt32) {
     // FIXME: for now do some rudimentary cursor drawing
@@ -952,7 +974,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   }
   
   public func modeChange(mode: Mode) {
-    NSLog("mode changed to: %02x", mode.rawValue)
+//    NSLog("mode changed to: %02x", mode.rawValue)
     self.mode = mode
   }
   
