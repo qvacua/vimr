@@ -225,7 +225,7 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
     case .Normal:
       self.agent.vimInput(":tabe<CR>")
     default:
-      self.agent.vimInput("<Esc>:table<CR>")
+      self.agent.vimInput("<Esc>:tabe<CR>")
     }
   }
 
