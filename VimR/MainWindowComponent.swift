@@ -23,6 +23,8 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
   private let windowController = NSWindowController(windowNibName: "MainWindow")
   private let window: NSWindow
 
+  private var urlToBeOpenedWhenReady: NSURL?
+
   private var defaultEditorFont: NSFont
   private var usesLigatures: Bool
 
@@ -31,13 +33,14 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
   }
 
   private let neoVimView = NeoVimView(forAutoLayout: ())
-  
-  init(source: Observable<Any>, manager: MainWindowManager, initialData: PrefData) {
+
+  init(source: Observable<Any>, manager: MainWindowManager, url: NSURL? = nil, initialData: PrefData) {
     self.source = source
     self.mainWindowManager = manager
     self.window = self.windowController.window!
     self.defaultEditorFont = initialData.appearance.editorFont
     self.usesLigatures = initialData.appearance.editorUsesLigatures
+    self.urlToBeOpenedWhenReady = url
 
     super.init()
 
@@ -49,7 +52,6 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
 
     self.window.makeFirstResponder(self.neoVimView)
     self.windowController.showWindow(self)
-    
   }
 
   deinit {
@@ -83,7 +85,7 @@ extension MainWindowComponent {
   @IBAction func newTab(sender: AnyObject!) {
     self.neoVimView.newTab()
   }
-  
+
   @IBAction func openInTab(sender: AnyObject!) {
     let panel = NSOpenPanel()
     panel.canChooseDirectories = true
@@ -131,6 +133,10 @@ extension MainWindowComponent {
   func neoVimReady() {
     self.neoVimView.font = self.defaultEditorFont
     self.neoVimView.usesLigatures = self.usesLigatures
+
+    if let url = self.urlToBeOpenedWhenReady {
+      self.neoVimView.open(url)
+    }
   }
   
   func neoVimStopped() {

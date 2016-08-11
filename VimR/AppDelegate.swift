@@ -92,5 +92,15 @@ extension AppDelegate {
   }
   
   @IBAction func openDocument(sender: AnyObject!) {
+    let panel = NSOpenPanel()
+    panel.canChooseDirectories = true
+    panel.beginWithCompletionHandler { result in
+      guard result == NSFileHandlingPanelOKButton else {
+        return
+      }
+
+      let url = panel.URLs[0]
+      self.mainWindowManager.newMainWindow(url)
+    }
   }
 }

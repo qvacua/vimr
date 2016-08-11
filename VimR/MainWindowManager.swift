@@ -22,9 +22,10 @@ class MainWindowManager {
     self.addReactions()
   }
 
-  func newMainWindow() {
-    let mainWindowComponent = MainWindowComponent(source: self.source, manager: self, initialData: self.data)
+  func newMainWindow(url: NSURL? = nil) -> MainWindowComponent {
+    let mainWindowComponent = MainWindowComponent(source: self.source, manager: self, url: url, initialData: self.data)
     self.mainWindowComponents[mainWindowComponent.uuid] = mainWindowComponent
+    return mainWindowComponent
   }
   
   func closeMainWindow(mainWindowComponent: MainWindowComponent) {

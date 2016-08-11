@@ -228,6 +228,19 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
       self.agent.vimInput("<Esc>:table<CR>")
     }
   }
+
+  public func open(url: NSURL) {
+    guard let path = url.path else {
+      return
+    }
+
+    switch self.mode {
+    case .Normal:
+      self.agent.vimInput(":e \(path)<CR>")
+    default:
+      self.agent.vimInput("<Esc>:e \(path)<CR>")
+    }
+  }
   
   public func openInNewTab(url: NSURL) {
     guard let path = url.path else {
