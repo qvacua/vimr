@@ -20,7 +20,6 @@
 #import <nvim/ui_bridge.h>
 #import <nvim/event/signal.h>
 #import <nvim/main.h>
-#import <nvim/screen.h>
 
 
 #define pun_type(t, x) (*((t *)(&x)))
