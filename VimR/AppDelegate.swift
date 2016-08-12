@@ -48,6 +48,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       .subscribe(self.actionSubject)
       .addDisposableTo(self.disposeBag)
   }
+}
+
+// MARK: - NSApplicationDelegate
+extension AppDelegate {
 
   func applicationDidFinishLaunching(aNotification: NSNotification) {
 //    let testView = InputTestView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
@@ -77,6 +81,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     return .TerminateNow
+  }
+  
+  // For drag & dropping files on the App icon.
+  func application(sender: NSApplication, openFiles filenames: [String]) {
+    NSLog("\(filenames)")
   }
 }
 
