@@ -191,12 +191,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   }
 
   CFDataRef responseData = NULL;
-  CFStringRef replyMode = NULL;
-
-  // We only expect reply from NeoVimAgentMsgIdDirtyDocs
-  if (expectsReply) {
-    replyMode = kCFRunLoopDefaultMode;
-  }
+  CFStringRef replyMode = expectsReply ? kCFRunLoopDefaultMode : NULL;
 
   SInt32 responseCode = CFMessagePortSendRequest(
       _remoteServerPort, msgid, (__bridge CFDataRef) data, qTimeout, qTimeout, replyMode, &responseData
