@@ -87,11 +87,6 @@
                                     <action selector="openDocument:" target="-1" id="zbe-h0-oBM"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Open in New Tab…" keyEquivalent="T" id="u9z-N4-Ksj">
-                                <connections>
-                                    <action selector="openInTab:" target="-1" id="OwX-O7-EMJ"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="t9v-Ee-SaA"/>
                             <menuItem title="Close" keyEquivalent="w" id="DVo-aG-piG">
                                 <connections>

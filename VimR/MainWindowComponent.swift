@@ -98,18 +98,6 @@ extension MainWindowComponent {
       self.neoVimView.open(urls: panel.URLs)
     }
   }
-
-  @IBAction func openInTab(sender: AnyObject!) {
-    let panel = NSOpenPanel()
-    panel.canChooseDirectories = true
-    panel.beginSheetModalForWindow(self.window) { result in
-      guard result == NSFileHandlingPanelOKButton else {
-        return
-      }
-      
-      self.neoVimView.openInNewTab(urls: panel.URLs)
-    }
-  }
 }
 
 // MARK: - Font Menu Items

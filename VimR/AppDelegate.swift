@@ -101,7 +101,8 @@ extension AppDelegate {
   @IBAction func newDocument(sender: AnyObject!) {
     self.mainWindowManager.newMainWindow()
   }
-  
+
+  // Invoked when no main window is open.
   @IBAction func openDocument(sender: AnyObject!) {
     let panel = NSOpenPanel()
     panel.canChooseDirectories = true
