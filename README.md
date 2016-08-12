@@ -68,7 +68,9 @@ brew install libtool automake cmake pkg-config gettext ninja # install libs and 
 carthage update --platform osx
 
 git submodule update --init
-ln -s local.mk neovim/
+cd neovim
+ln -s ../local.mk local.mk
+cd ..
 
 xcodebuild -configuration Release -target VimR # VimR.app will be placed in build/Release
 ```
