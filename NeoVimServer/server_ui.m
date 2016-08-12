@@ -20,6 +20,7 @@
 #import <nvim/ui_bridge.h>
 #import <nvim/event/signal.h>
 #import <nvim/main.h>
+#import <nvim/ex_getln.h>
 
 
 #define pun_type(t, x) (*((t *)(&x)))
@@ -643,4 +644,14 @@ bool server_has_dirty_docs() {
   }
 
   return false;
+}
+
+NSString *server_escaped_filename(NSString *filename) {
+  const char *file_system_rep = filename.fileSystemRepresentation;
+
+  char_u *escaped_filename = vim_strsave_fnameescape((char_u *) file_system_rep, 0);
+  NSString *result = [NSString stringWithCString:(const char *) escaped_filename encoding:NSUTF8StringEncoding];
+  xfree(escaped_filename);
+
+  return result;
 }

@@ -96,32 +96,32 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
 - (void)vimCommand:(NSString *)string {
   NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
-  [self sendMessageWithId:NeoVimAgentMsgIdCommand data:data];
+  [self sendMessageWithId:NeoVimAgentMsgIdCommand data:data expectsReply:false];
 }
 
 - (void)vimInput:(NSString *)string {
   NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
-  [self sendMessageWithId:NeoVimAgentMsgIdInput data:data];
+  [self sendMessageWithId:NeoVimAgentMsgIdInput data:data expectsReply:false];
 }
 
 - (void)vimInputMarkedText:(NSString *_Nonnull)markedText {
   NSData *data = [markedText dataUsingEncoding:NSUTF8StringEncoding];
-  [self sendMessageWithId:NeoVimAgentMsgIdInputMarked data:data];
+  [self sendMessageWithId:NeoVimAgentMsgIdInputMarked data:data expectsReply:false];
 }
 
 - (void)deleteCharacters:(NSInteger)count {
   NSData *data = [[NSData alloc] initWithBytes:&count length:sizeof(NSInteger)];
-  [self sendMessageWithId:NeoVimAgentMsgIdDelete data:data];
+  [self sendMessageWithId:NeoVimAgentMsgIdDelete data:data expectsReply:false];
 }
 
 - (void)resizeToWidth:(int)width height:(int)height {
   int values[] = { width, height };
   NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
-  [self sendMessageWithId:NeoVimAgentMsgIdResize data:data];
+  [self sendMessageWithId:NeoVimAgentMsgIdResize data:data expectsReply:false];
 }
 
 - (bool)hasDirtyDocs {
-  NSData *responseData = [self sendMessageWithId:NeoVimAgentMsgIdDirtyDocs data:nil];
+  NSData *responseData = [self sendMessageWithId:NeoVimAgentMsgIdDirtyDocs data:nil expectsReply:YES];
   if (responseData == NULL) {
     NSLog(@"WARNING: agent got response data null");
     return false;
@@ -129,6 +129,14 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   
   bool *values = data_to_bool_array(responseData, 1);
   return values[0];
+}
+
+- (NSArray <NSString *>*)escapedFileNames:(NSArray <NSString *>*)fileNames {
+  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:fileNames];
+  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdEscapeFileNames data:data expectsReply:YES];
+
+  NSArray <NSString *> *escapedFileNames = [NSKeyedUnarchiver unarchiveObjectWithData:response];
+  return escapedFileNames;
 }
 
 - (void)runLocalServer {
@@ -166,10 +174,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       (__bridge CFStringRef) [self remoteServerName]
   );
 
-  [self sendMessageWithId:NeoVimAgentMsgIdAgentReady data:nil];
+  [self sendMessageWithId:NeoVimAgentMsgIdAgentReady data:nil expectsReply:false];
 }
 
-- (NSData *)sendMessageWithId:(NeoVimAgentMsgId)msgid data:(NSData *)data {
+- (NSData *)sendMessageWithId:(NeoVimAgentMsgId)msgid data:(NSData *)data expectsReply:(bool)expectsReply {
   if (_remoteServerPort == NULL) {
     log4Warn("Remote server is null: The msg (%lu:%@) could not be sent.", (unsigned long) msgid, data);
     return nil;
@@ -179,7 +187,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   CFStringRef replyMode = NULL;
 
   // We only expect reply from NeoVimAgentMsgIdDirtyDocs
-  if (msgid == NeoVimAgentMsgIdDirtyDocs) {
+  if (expectsReply) {
     replyMode = kCFRunLoopDefaultMode;
   }
 

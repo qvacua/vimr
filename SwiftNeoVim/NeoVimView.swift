@@ -230,28 +230,25 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
   }
 
   public func open(url url: NSURL) {
-    guard let path = url.path else {
-      return
-    }
-
-    switch self.mode {
-    case .Normal:
-      self.agent.vimInput(":e \(path)<CR>")
-    default:
-      self.agent.vimInput("<Esc>:e \(path)<CR>")
-    }
+    self.open(url, cmd: ":e")
   }
   
   public func openInNewTab(url: NSURL) {
+    self.open(url, cmd: ":tabe")
+  }
+  
+  private func open(url: NSURL, cmd: String) {
     guard let path = url.path else {
       return
     }
     
+    let escapedFileName = self.agent.escapedFileNames([path])[0]
+    
     switch self.mode {
     case .Normal:
-      self.agent.vimInput(":tabe \(path)<CR>")
+      self.agent.vimInput("\(cmd) \(escapedFileName)<CR>")
     default:
-      self.agent.vimInput("<Esc>:tabe \(path)<CR>")
+      self.agent.vimInput("<Esc>\(cmd) \(escapedFileName)<CR>")
     }
   }
 
