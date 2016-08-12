@@ -6,6 +6,7 @@
 #import <Foundation/Foundation.h>
 #import "NeoVimServer.h"
 #import "server_globals.h"
+#import "Logging.h"
 #import <sys/event.h>
 #import <uv.h>
 
@@ -33,7 +34,7 @@ static void observe_parent_termination(void *arg) {
     kevent(kq, &procEvent, 1, &procEvent, 1, 0);
   }
 
-  printf("Terminating--Parent Process Terminated\n");
+  log4Debug("Exiting NeoVimServer - parent terminated.");
   exit(0);
 }
 
