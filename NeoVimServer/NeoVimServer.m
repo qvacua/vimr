@@ -179,6 +179,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return nil;
     }
 
+    case NeoVimAgentMsgIdQuit:
+      server_quit();
+      return nil;
+
     case NeoVimAgentMsgIdDirtyDocs: {
       bool dirty = server_has_dirty_docs();
       return [NSData dataWithBytes:&dirty length:sizeof(bool)];

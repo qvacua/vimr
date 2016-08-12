@@ -25,6 +25,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private let mainWindowManager: MainWindowManager
   private let prefWindowComponent: PrefWindowComponent
   
+  private var quitWhenAllWindowsAreClosed = false
+  
   override init() {
     self.actionSink = self.actionSubject.asObservable()
     self.changeSink = self.changeSubject.asObservable()
@@ -35,6 +37,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     self.mainWindowManager = MainWindowManager(source: self.changeSink, initialData: self.prefStore.data)
 
     super.init()
+    
+    self.mainWindowManager.sink
+      .filter { $0 is MainWindowEvent }
+      .map { $0 as! MainWindowEvent }
+      .filter { $0 == MainWindowEvent.allWindowsClosed }
+      .subscribeNext { [unowned self] mainWindowEvent in
+        if self.quitWhenAllWindowsAreClosed {
+          NSApp.stop(self)
+        }
+      }.addDisposableTo(self.disposeBag)
 
     [ self.prefStore ]
       .map { $0.sink }
@@ -74,7 +86,9 @@ extension AppDelegate {
       alert.alertStyle = .WarningAlertStyle
 
       if alert.runModal() == NSAlertSecondButtonReturn {
-        return .TerminateNow
+        self.mainWindowManager.closeAllWindowsWithoutSaving()
+        self.quitWhenAllWindowsAreClosed = true
+        return .TerminateCancel
       }
 
       return .TerminateCancel

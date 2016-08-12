@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id <NeoVimUiBridgeProtocol> bridge;
 
 - (instancetype)initWithUuid:(NSString *)uuid;
-- (void)cleanUp;
+- (void)quit;
 - (void)establishLocalServer;
 
 - (void)vimCommand:(NSString *)string;

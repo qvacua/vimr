@@ -674,3 +674,8 @@ NSArray *server_buffers() {
   }
   return result;
 }
+
+void server_quit() {
+  log4Debug("NeoVimServer exiting...");
+  exit(0);
+}

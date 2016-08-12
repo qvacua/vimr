@@ -117,10 +117,6 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
   required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
-  deinit {
-    self.agent.cleanUp()
-  }
 
   @IBAction public func debug1(sender: AnyObject!) {
     NSLog("DEBUG-1")
@@ -161,6 +157,15 @@ extension NeoVimView {
   
   public func openInNewTab(urls urls: [NSURL]) {
     urls.forEach { self.open($0, cmd: ":tabe") }
+  }
+  
+  public func closeAllWindowsWithoutSaving() {
+    switch self.mode {
+    case .Normal:
+      self.agent.vimInput(":qa!<CR>")
+    default:
+      self.agent.vimInput("<Esc>:qa!<CR>")
+    }
   }
   
   private func open(url: NSURL, cmd: String) {
@@ -1127,6 +1132,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   public func stop() {
     DispatchUtils.gui {
       self.delegate?.neoVimStopped()
+      self.agent.quit()
     }
   }
   

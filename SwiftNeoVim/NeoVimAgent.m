@@ -66,7 +66,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 // We cannot use -dealloc for this since -dealloc is not called until the run loop in the thread stops.
-- (void)cleanUp {
+- (void)quit {
+  log4Debug("sending quit message to NeoVimServer");
+  [self sendMessageWithId:NeoVimAgentMsgIdQuit data:nil expectsReply:NO];
+
   if (CFMessagePortIsValid(_remoteServerPort)) {
     CFMessagePortInvalidate(_remoteServerPort);
   }
@@ -79,9 +82,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
   CFRunLoopStop(_localServerRunLoop);
   [_localServerThread cancel];
-
-  [_neoVimServerTask interrupt];
-  [_neoVimServerTask terminate];
 }
 
 - (void)establishLocalServer {
@@ -97,28 +97,28 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
 - (void)vimCommand:(NSString *)string {
   NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
-  [self sendMessageWithId:NeoVimAgentMsgIdCommand data:data expectsReply:false];
+  [self sendMessageWithId:NeoVimAgentMsgIdCommand data:data expectsReply:NO];
 }
 
 - (void)vimInput:(NSString *)string {
   NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
-  [self sendMessageWithId:NeoVimAgentMsgIdInput data:data expectsReply:false];
+  [self sendMessageWithId:NeoVimAgentMsgIdInput data:data expectsReply:NO];
 }
 
 - (void)vimInputMarkedText:(NSString *_Nonnull)markedText {
   NSData *data = [markedText dataUsingEncoding:NSUTF8StringEncoding];
-  [self sendMessageWithId:NeoVimAgentMsgIdInputMarked data:data expectsReply:false];
+  [self sendMessageWithId:NeoVimAgentMsgIdInputMarked data:data expectsReply:NO];
 }
 
 - (void)deleteCharacters:(NSInteger)count {
   NSData *data = [[NSData alloc] initWithBytes:&count length:sizeof(NSInteger)];
-  [self sendMessageWithId:NeoVimAgentMsgIdDelete data:data expectsReply:false];
+  [self sendMessageWithId:NeoVimAgentMsgIdDelete data:data expectsReply:NO];
 }
 
 - (void)resizeToWidth:(int)width height:(int)height {
   int values[] = { width, height };
   NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
-  [self sendMessageWithId:NeoVimAgentMsgIdResize data:data expectsReply:false];
+  [self sendMessageWithId:NeoVimAgentMsgIdResize data:data expectsReply:NO];
 }
 
 - (bool)hasDirtyDocs {

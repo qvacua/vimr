@@ -61,6 +61,10 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
   func isDirty() -> Bool {
     return self.neoVimView.hasDirtyDocs()
   }
+  
+  func closeAllNeoVimWindowsWithoutSaving() {
+    self.neoVimView.closeAllWindowsWithoutSaving()
+  }
 
   private func addViews() {
     self.window.contentView?.addSubview(self.neoVimView)

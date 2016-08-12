@@ -6,11 +6,20 @@
 import Cocoa
 import RxSwift
 
+enum MainWindowEvent {
+  case allWindowsClosed
+}
+
 class MainWindowManager {
 
   private let source: Observable<Any>
   private let disposeBag = DisposeBag()
 
+  private let subject = PublishSubject<Any>()
+  var sink: Observable<Any> {
+    return self.subject.asObservable()
+  }
+  
   private var mainWindowComponents = [String:MainWindowComponent]()
 
   private var data: PrefData
@@ -33,10 +42,19 @@ class MainWindowManager {
   
   func closeMainWindow(mainWindowComponent: MainWindowComponent) {
     self.mainWindowComponents.removeValueForKey(mainWindowComponent.uuid)
+    
+    if self.mainWindowComponents.isEmpty {
+      NSLog("\(#function) all closed")
+      self.subject.onNext(MainWindowEvent.allWindowsClosed)
+    }
   }
 
   func hasDirtyWindows() -> Bool {
     return self.mainWindowComponents.values.reduce(false) { $0 ? true : $1.isDirty() }
+  }
+  
+  func closeAllWindowsWithoutSaving() {
+    self.mainWindowComponents.values.forEach { $0.closeAllNeoVimWindowsWithoutSaving() }
   }
 
   private func addReactions() {
