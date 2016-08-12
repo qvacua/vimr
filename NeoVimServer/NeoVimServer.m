@@ -6,7 +6,6 @@
 #import "NeoVimServer.h"
 #import "server_globals.h"
 #import "Logging.h"
-#import "NeoVimTypes.h"
 
 
 static const double qTimeout = 10.0;
