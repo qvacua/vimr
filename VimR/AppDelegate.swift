@@ -46,7 +46,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if self.quitWhenAllWindowsAreClosed {
           NSApp.stop(self)
         }
-      }.addDisposableTo(self.disposeBag)
+      }
+      .addDisposableTo(self.disposeBag)
 
     [ self.prefStore ]
       .map { $0.sink }
