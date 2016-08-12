@@ -114,6 +114,10 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
     self.agent.establishLocalServer()
   }
   
+  required public init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   deinit {
     self.agent.cleanUp()
   }
@@ -125,6 +129,58 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
   public func debugInfo() {
     Swift.print(self.grid)
   }
+}
+
+// MARK: - API
+extension NeoVimView {
+
+  public func hasDirtyDocs() -> Bool {
+    return self.agent.hasDirtyDocs()
+  }
+  
+  public func newTab() {
+    switch self.mode {
+    case .Normal:
+      self.agent.vimInput(":tabe<CR>")
+    default:
+      self.agent.vimInput("<Esc>:tabe<CR>")
+    }
+  }
+
+  public func open(urls urls: [NSURL]) {
+    let currentBufferIsTransient = self.agent.buffers().filter { $0.current }.first?.transient ?? false
+
+    urls.enumerate().forEach { (idx, url) in
+      if idx == 0 && currentBufferIsTransient {
+        self.open(url, cmd: ":e")
+      } else {
+        self.open(url, cmd: ":tabe")
+      }
+    }
+  }
+  
+  public func openInNewTab(urls urls: [NSURL]) {
+    urls.forEach { self.open($0, cmd: ":tabe") }
+  }
+  
+  private func open(url: NSURL, cmd: String) {
+    guard let path = url.path else {
+      return
+    }
+    
+    let escapedFileName = self.agent.escapedFileNames([path])[0]
+    
+    switch self.mode {
+    case .Normal:
+      self.agent.vimInput("\(cmd) \(escapedFileName)<CR>")
+    default:
+      self.agent.vimInput("<Esc>\(cmd) \(escapedFileName)<CR>")
+    }
+  }
+}
+
+// MARK: - Resizing
+extension NeoVimView {
 
   override public func setFrameSize(newSize: NSSize) {
     super.setFrameSize(newSize)
@@ -160,6 +216,10 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
 
     self.agent.resizeToWidth(Int32(discreteSize.width), height: Int32(discreteSize.height))
   }
+}
+
+// MARK: - Drawing
+extension NeoVimView {
 
   override public func drawRect(dirtyUnionRect: NSRect) {
     guard self.grid.hasData else {
@@ -214,42 +274,6 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
     }
 
     self.drawCursor(self.grid.foreground)
-  }
-
-  public func hasDirtyDocs() -> Bool {
-    return self.agent.hasDirtyDocs()
-  }
-  
-  public func newTab() {
-    switch self.mode {
-    case .Normal:
-      self.agent.vimInput(":tabe<CR>")
-    default:
-      self.agent.vimInput("<Esc>:tabe<CR>")
-    }
-  }
-
-  public func open(url url: NSURL) {
-    self.open(url, cmd: ":e")
-  }
-  
-  public func openInNewTab(url url: NSURL) {
-    self.open(url, cmd: ":tabe")
-  }
-  
-  private func open(url: NSURL, cmd: String) {
-    guard let path = url.path else {
-      return
-    }
-    
-    let escapedFileName = self.agent.escapedFileNames([path])[0]
-    
-    switch self.mode {
-    case .Normal:
-      self.agent.vimInput("\(cmd) \(escapedFileName)<CR>")
-    default:
-      self.agent.vimInput("<Esc>\(cmd) \(escapedFileName)<CR>")
-    }
   }
 
   private func drawCursor(foreground: UInt32) {
@@ -375,10 +399,6 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
   
   private func vimPlainString(string: String) -> String {
     return string.stringByReplacingOccurrencesOfString("<", withString: self.wrapNamedKeys("lt"))
-  }
-  
-  required public init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
   }
 }
 

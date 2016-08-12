@@ -86,7 +86,7 @@ extension MainWindowComponent {
     self.neoVimView.newTab()
   }
 
-  @IBAction func openInTab(sender: AnyObject!) {
+  @IBAction func openDocument(sender: AnyObject!) {
     let panel = NSOpenPanel()
     panel.canChooseDirectories = true
     panel.beginSheetModalForWindow(self.window) { result in
@@ -95,8 +95,19 @@ extension MainWindowComponent {
       }
       
       // The open panel can choose only one file.
-      let url = panel.URLs[0]
-      self.neoVimView.openInNewTab(url: url)
+      self.neoVimView.open(urls: panel.URLs)
+    }
+  }
+
+  @IBAction func openInTab(sender: AnyObject!) {
+    let panel = NSOpenPanel()
+    panel.canChooseDirectories = true
+    panel.beginSheetModalForWindow(self.window) { result in
+      guard result == NSFileHandlingPanelOKButton else {
+        return
+      }
+      
+      self.neoVimView.openInNewTab(urls: panel.URLs)
     }
   }
 }
@@ -134,19 +145,7 @@ extension MainWindowComponent {
     self.neoVimView.font = self.defaultEditorFont
     self.neoVimView.usesLigatures = self.usesLigatures
 
-    if self.urlsToBeOpenedWhenReady.isEmpty {
-      return
-    }
-
-    self.urlsToBeOpenedWhenReady.enumerate().forEach { (idx, url) in
-      if idx == 0 {
-        self.neoVimView.open(url: url)
-      } else {
-        self.neoVimView.openInNewTab(url: url)
-      }
-    }
-
-//    self.neoVimView.open(url: url)
+    self.neoVimView.open(urls: self.urlsToBeOpenedWhenReady)
   }
   
   func neoVimStopped() {
