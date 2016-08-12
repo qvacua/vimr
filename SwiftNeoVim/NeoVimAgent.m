@@ -7,7 +7,7 @@
 #import "NeoVimMsgIds.h"
 #import "NeoVimUiBridgeProtocol.h"
 #import "Logging.h"
-#import "NeoVimTypes.h"
+#import "NeoVimBuffer.h"
 
 
 static const double qTimeout = 10;

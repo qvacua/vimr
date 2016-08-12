@@ -3,7 +3,7 @@
  * See LICENSE
  */
 
-#import "NeoVimTypes.h"
+#import "NeoVimBuffer.h"
 
 @implementation NeoVimBuffer
 
