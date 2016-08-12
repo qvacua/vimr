@@ -426,11 +426,6 @@ static void server_ui_stop(UI *ui __unused) {
 
 #pragma mark Helper functions
 
-static void force_redraw(void **argv __unused) {
-  must_redraw = CLEAR;
-  update_screen(0);
-}
-
 static void refresh_ui(void **argv __unused) {
   ui_refresh();
 }
