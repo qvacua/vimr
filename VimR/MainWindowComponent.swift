@@ -61,7 +61,7 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
   func isDirty() -> Bool {
     return self.neoVimView.hasDirtyDocs()
   }
-  
+
   func closeAllNeoVimWindowsWithoutSaving() {
     self.neoVimView.closeAllWindowsWithoutSaving()
   }
@@ -153,21 +153,22 @@ extension MainWindowComponent {
   }
 
   func windowShouldClose(sender: AnyObject) -> Bool {
-    guard self.isDirty() else {
-      return true
-    }
-
-    let alert = NSAlert()
-    alert.addButtonWithTitle("Cancel")
-    alert.addButtonWithTitle("Discard and Close")
-    alert.messageText = "There are unsaved buffers!"
-    alert.alertStyle = .WarningAlertStyle
-    alert.beginSheetModalForWindow(self.window) { response in
-      if response == NSAlertSecondButtonReturn {
-        self.windowController.close()
+    if self.neoVimView.isCurrentBufferDirty() {
+      let alert = NSAlert()
+      alert.addButtonWithTitle("Cancel")
+      alert.addButtonWithTitle("Discard and Close")
+      alert.messageText = "The current buffer has unsaved changes!"
+      alert.alertStyle = .WarningAlertStyle
+      alert.beginSheetModalForWindow(self.window) { response in
+        if response == NSAlertSecondButtonReturn {
+          self.neoVimView.closeCurrentTabWithoutSaving()
+        }
       }
+
+      return false
     }
 
+    self.neoVimView.closeCurrentTab()
     return false
   }
 }

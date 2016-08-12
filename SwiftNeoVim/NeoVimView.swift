@@ -133,6 +133,10 @@ extension NeoVimView {
   public func hasDirtyDocs() -> Bool {
     return self.agent.hasDirtyDocs()
   }
+
+  public func isCurrentBufferDirty() -> Bool {
+    return self.agent.buffers().filter { $0.current }.first?.dirty ?? true
+  }
   
   public func newTab() {
     switch self.mode {
@@ -157,6 +161,24 @@ extension NeoVimView {
   
   public func openInNewTab(urls urls: [NSURL]) {
     urls.forEach { self.open($0, cmd: ":tabe") }
+  }
+
+  public func closeCurrentTab() {
+    switch self.mode {
+    case .Normal:
+      self.agent.vimInput(":q<CR>")
+    default:
+      self.agent.vimInput("<Esc>:q<CR>")
+    }
+  }
+
+  public func closeCurrentTabWithoutSaving() {
+    switch self.mode {
+    case .Normal:
+      self.agent.vimInput(":q!<CR>")
+    default:
+      self.agent.vimInput("<Esc>:q!<CR>")
+    }
   }
   
   public func closeAllWindowsWithoutSaving() {
