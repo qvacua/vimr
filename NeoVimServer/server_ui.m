@@ -8,6 +8,7 @@
 #import "server_globals.h"
 #import "NeoVimServer.h"
 #import "NeoVimUiBridgeProtocol.h"
+#import "NeoVimTypes.h"
 
 // FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
 // them.
@@ -653,5 +654,23 @@ NSString *server_escaped_filename(NSString *filename) {
   NSString *result = [NSString stringWithCString:(const char *) escaped_filename encoding:NSUTF8StringEncoding];
   xfree(escaped_filename);
 
+  return result;
+}
+
+NSArray *server_buffers() {
+  NSMutableArray <NeoVimBuffer *> *result = [[NSMutableArray new] autorelease];
+  FOR_ALL_BUFFERS(buf) {
+    NSString *fileName = nil;
+    if (buf->b_ffname != NULL) {
+      fileName = [NSString stringWithCString:(const char *) buf->b_ffname encoding:NSUTF8StringEncoding];
+    }
+    bool current = curbuf == buf;
+    NeoVimBuffer *buffer = [[NeoVimBuffer alloc] initWithHandle:buf->handle
+                                                       fileName:fileName
+                                                          dirty:buf->b_changed
+                                                        current:current];
+    [result addObject:buffer];
+    [buffer release];
+  }
   return result;
 }

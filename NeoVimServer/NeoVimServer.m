@@ -6,6 +6,7 @@
 #import "NeoVimServer.h"
 #import "server_globals.h"
 #import "Logging.h"
+#import "NeoVimTypes.h"
 
 
 static const double qTimeout = 10.0;
@@ -193,6 +194,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       }];
 
       return [NSKeyedArchiver archivedDataWithRootObject:result];
+    }
+
+    case NeoVimAgentMsgIdGetBuffers: {
+      return [NSKeyedArchiver archivedDataWithRootObject:server_buffers()];
     }
 
     default:

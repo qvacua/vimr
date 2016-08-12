@@ -7,6 +7,7 @@
 #import "NeoVimMsgIds.h"
 #import "NeoVimUiBridgeProtocol.h"
 #import "Logging.h"
+#import "NeoVimTypes.h"
 
 
 static const double qTimeout = 10;
@@ -137,6 +138,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
   NSArray <NSString *> *escapedFileNames = [NSKeyedUnarchiver unarchiveObjectWithData:response];
   return escapedFileNames;
+}
+
+- (NSArray <NeoVimBuffer *> *)buffers {
+  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetBuffers data:nil expectsReply:YES];
+  NSArray <NeoVimBuffer *> *buffers = [NSKeyedUnarchiver unarchiveObjectWithData:response];
+  return buffers;
 }
 
 - (void)runLocalServer {

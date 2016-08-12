@@ -19,3 +19,4 @@ extern void server_vim_input_marked_text(NSString *markedText);
 extern void server_insert_marked_text(NSString *markedText);
 extern bool server_has_dirty_docs();
 extern NSString *server_escaped_filename(NSString *filename);
+extern NSArray *server_buffers();
