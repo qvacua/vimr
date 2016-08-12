@@ -23,6 +23,8 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
   private let windowController = NSWindowController(windowNibName: "MainWindow")
   private let window: NSWindow
 
+  private let urlsToBeOpenedWhenReady: [NSURL]
+
   private var defaultEditorFont: NSFont
   private var usesLigatures: Bool
 
@@ -31,13 +33,14 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
   }
 
   private let neoVimView = NeoVimView(forAutoLayout: ())
-  
-  init(source: Observable<Any>, manager: MainWindowManager, initialData: PrefData) {
+
+  init(source: Observable<Any>, manager: MainWindowManager, urls: [NSURL] = [], initialData: PrefData) {
     self.source = source
     self.mainWindowManager = manager
     self.window = self.windowController.window!
     self.defaultEditorFont = initialData.appearance.editorFont
     self.usesLigatures = initialData.appearance.editorUsesLigatures
+    self.urlsToBeOpenedWhenReady = urls
 
     super.init()
 
@@ -49,7 +52,6 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
 
     self.window.makeFirstResponder(self.neoVimView)
     self.windowController.showWindow(self)
-    
   }
 
   deinit {
@@ -74,6 +76,27 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
         self.neoVimView.font = appearance.editorFont
       }
       .addDisposableTo(self.disposeBag)
+  }
+}
+
+// MARK: - File Menu Items
+extension MainWindowComponent {
+  
+  @IBAction func newTab(sender: AnyObject!) {
+    self.neoVimView.newTab()
+  }
+
+  @IBAction func openDocument(sender: AnyObject!) {
+    let panel = NSOpenPanel()
+    panel.canChooseDirectories = true
+    panel.beginSheetModalForWindow(self.window) { result in
+      guard result == NSFileHandlingPanelOKButton else {
+        return
+      }
+      
+      // The open panel can choose only one file.
+      self.neoVimView.open(urls: panel.URLs)
+    }
   }
 }
 
@@ -109,6 +132,8 @@ extension MainWindowComponent {
   func neoVimReady() {
     self.neoVimView.font = self.defaultEditorFont
     self.neoVimView.usesLigatures = self.usesLigatures
+
+    self.neoVimView.open(urls: self.urlsToBeOpenedWhenReady)
   }
   
   func neoVimStopped() {

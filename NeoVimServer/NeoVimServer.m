@@ -37,7 +37,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return NULL;
     }
 
-    log4Debug("server returning data: %@", responseData);
     return CFDataCreateCopy(kCFAllocatorDefault, (__bridge CFDataRef) responseData);
   }
 }
@@ -183,6 +182,21 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     case NeoVimAgentMsgIdDirtyDocs: {
       bool dirty = server_has_dirty_docs();
       return [NSData dataWithBytes:&dirty length:sizeof(bool)];
+    }
+
+    case NeoVimAgentMsgIdEscapeFileNames: {
+      NSArray <NSString *> *fileNames = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+      NSMutableArray <NSString *> *result = [NSMutableArray new];
+
+      [fileNames enumerateObjectsUsingBlock:^(NSString* fileName, NSUInteger idx, BOOL *stop) {
+        [result addObject:server_escaped_filename(fileName)];
+      }];
+
+      return [NSKeyedArchiver archivedDataWithRootObject:result];
+    }
+
+    case NeoVimAgentMsgIdGetBuffers: {
+      return [NSKeyedArchiver archivedDataWithRootObject:server_buffers()];
     }
 
     default:

@@ -8,6 +8,7 @@
 #import "server_globals.h"
 #import "NeoVimServer.h"
 #import "NeoVimUiBridgeProtocol.h"
+#import "NeoVimBuffer.h"
 
 // FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
 // them.
@@ -20,7 +21,7 @@
 #import <nvim/ui_bridge.h>
 #import <nvim/event/signal.h>
 #import <nvim/main.h>
-#import <nvim/screen.h>
+#import <nvim/ex_getln.h>
 
 
 #define pun_type(t, x) (*((t *)(&x)))
@@ -426,11 +427,6 @@ static void server_ui_stop(UI *ui __unused) {
 
 #pragma mark Helper functions
 
-static void force_redraw(void **argv __unused) {
-  must_redraw = CLEAR;
-  update_screen(0);
-}
-
 static void refresh_ui(void **argv __unused) {
   ui_refresh();
 }
@@ -649,4 +645,32 @@ bool server_has_dirty_docs() {
   }
 
   return false;
+}
+
+NSString *server_escaped_filename(NSString *filename) {
+  const char *file_system_rep = filename.fileSystemRepresentation;
+
+  char_u *escaped_filename = vim_strsave_fnameescape((char_u *) file_system_rep, 0);
+  NSString *result = [NSString stringWithCString:(const char *) escaped_filename encoding:NSUTF8StringEncoding];
+  xfree(escaped_filename);
+
+  return result;
+}
+
+NSArray *server_buffers() {
+  NSMutableArray <NeoVimBuffer *> *result = [[NSMutableArray new] autorelease];
+  FOR_ALL_BUFFERS(buf) {
+    NSString *fileName = nil;
+    if (buf->b_ffname != NULL) {
+      fileName = [NSString stringWithCString:(const char *) buf->b_ffname encoding:NSUTF8StringEncoding];
+    }
+    bool current = curbuf == buf;
+    NeoVimBuffer *buffer = [[NeoVimBuffer alloc] initWithHandle:buf->handle
+                                                       fileName:fileName
+                                                          dirty:buf->b_changed
+                                                        current:current];
+    [result addObject:buffer];
+    [buffer release];
+  }
+  return result;
 }

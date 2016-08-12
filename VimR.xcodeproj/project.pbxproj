@@ -12,7 +12,9 @@
 		1929BEB90DCDAF7A2B68C886 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA6128BFDD54CA92F46E /* ColorUtils.swift */; };
 		1929BF81A40B4154D3EA33CE /* server_ui.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B93013228985F509C8F6 /* server_ui.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */; };
-		4B1BB3531D16C5E500CA4FEF /* InputTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1BB3521D16C5E500CA4FEF /* InputTestView.swift */; };
+		4B0C905B1D5DED69007753A3 /* NeoVimBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0C905A1D5DED69007753A3 /* NeoVimBuffer.m */; };
+		4B0E22581D5DEDC700C072E6 /* NeoVimBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0C90591D5DED69007753A3 /* NeoVimBuffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B0E22591D5DF62E00C072E6 /* NeoVimBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0C905A1D5DED69007753A3 /* NeoVimBuffer.m */; };
 		4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BE01D3BF24200CBDD98 /* Application.swift */; };
 		4B238BEC1D3ED54D00CBDD98 /* AppearancePrefPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BEB1D3ED54D00CBDD98 /* AppearancePrefPane.swift */; };
 		4B2A2BEC1D02261F0074CE9A /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BE21D0225800074CE9A /* RxCocoa.framework */; };
@@ -156,6 +158,8 @@
 		1929BA6128BFDD54CA92F46E /* ColorUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorUtils.swift; sourceTree = "<group>"; };
 		1929BF00B466B40629C2AABE /* NeoVimView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimView.swift; sourceTree = "<group>"; };
 		4B029F1B1D45E349004EE0D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrefWindow.xib; sourceTree = "<group>"; };
+		4B0C90591D5DED69007753A3 /* NeoVimBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimBuffer.h; sourceTree = "<group>"; };
+		4B0C905A1D5DED69007753A3 /* NeoVimBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimBuffer.m; sourceTree = "<group>"; };
 		4B1BB3521D16C5E500CA4FEF /* InputTestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputTestView.swift; sourceTree = "<group>"; };
 		4B238BE01D3BF24200CBDD98 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		4B238BEB1D3ED54D00CBDD98 /* AppearancePrefPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearancePrefPane.swift; sourceTree = "<group>"; };
@@ -341,6 +345,8 @@
 				4BDCFADC1D3145EA00F62670 /* lib */,
 				4B7BD3321D32530900AAA45E /* Logging.h */,
 				4BDCFAE91D3147A300F62670 /* NeoVimMsgIds.h */,
+				4B0C90591D5DED69007753A3 /* NeoVimBuffer.h */,
+				4B0C905A1D5DED69007753A3 /* NeoVimBuffer.m */,
 				4BDCFAC91D31449700F62670 /* NeoVimServer.h */,
 				4BDCFACA1D31449700F62670 /* NeoVimServer.m */,
 				4B854A1C1D31447C00E08DE1 /* main.m */,
@@ -449,6 +455,7 @@
 				4B2A2C091D0352CB0074CE9A /* NeoVimUiBridgeProtocol.h in Headers */,
 				4B570DC21D303CAF006EDC21 /* NeoVimAgent.h in Headers */,
 				4BDF641C1D0887C100D47E1D /* TextDrawer.h in Headers */,
+				4B0E22581D5DEDC700C072E6 /* NeoVimBuffer.h in Headers */,
 				4BDCFAEA1D31486E00F62670 /* NeoVimMsgIds.h in Headers */,
 				4B2A2BFA1D0351810074CE9A /* SwiftNeoVim.h in Headers */,
 				4BDF64241D08CAB000D47E1D /* MMCoreTextView.h in Headers */,
@@ -664,10 +671,10 @@
 			files = (
 				4BEE79171D16D3800012EDAA /* CellAttributes.swift in Sources */,
 				4BF6E29C1D34153C0053FA76 /* KeyUtils.swift in Sources */,
-				4B1BB3531D16C5E500CA4FEF /* InputTestView.swift in Sources */,
 				4BCADE081D11ED12004DAD0F /* CocoaExtensions.swift in Sources */,
 				4B401B1A1D046E0600D99EDC /* NeoVimViewDelegate.swift in Sources */,
 				1929B728262BAA14FC93F6AC /* NeoVimView.swift in Sources */,
+				4B0E22591D5DF62E00C072E6 /* NeoVimBuffer.m in Sources */,
 				4B570DC31D303CAF006EDC21 /* NeoVimAgent.m in Sources */,
 				4BEE79151D16D2100012EDAA /* DispatchUtils.swift in Sources */,
 				4BDF641D1D0887C100D47E1D /* TextDrawer.m in Sources */,
@@ -692,6 +699,7 @@
 				4BDCFACB1D31449700F62670 /* NeoVimServer.m in Sources */,
 				4B854A1D1D31447C00E08DE1 /* main.m in Sources */,
 				1929BF81A40B4154D3EA33CE /* server_ui.m in Sources */,
+				4B0C905B1D5DED69007753A3 /* NeoVimBuffer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -947,6 +955,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "-D DEBUG";
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";

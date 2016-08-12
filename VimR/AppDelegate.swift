@@ -10,6 +10,8 @@ import PureLayout
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
+  @IBOutlet var debugMenu: NSMenuItem!
+
   private let disposeBag = DisposeBag()
 
   private let changeSubject = PublishSubject<Any>()
@@ -22,7 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   private let mainWindowManager: MainWindowManager
   private let prefWindowComponent: PrefWindowComponent
-
+  
   override init() {
     self.actionSink = self.actionSubject.asObservable()
     self.changeSink = self.changeSubject.asObservable()
@@ -46,19 +48,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       .subscribe(self.actionSubject)
       .addDisposableTo(self.disposeBag)
   }
-  
-  @IBAction func newDocument(sender: AnyObject!) {
-    self.mainWindowManager.newMainWindow()
-  }
+}
 
-  @IBAction func showPrefWindow(sender: AnyObject!) {
-    self.prefWindowComponent.show()
-  }
+// MARK: - NSApplicationDelegate
+extension AppDelegate {
 
   func applicationDidFinishLaunching(aNotification: NSNotification) {
 //    let testView = InputTestView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
 //    self.window.contentView?.addSubview(testView)
 //    self.window.makeFirstResponder(testView)
+
+    #if DEBUG
+      self.debugMenu.hidden = false
+    #endif
 
     self.newDocument(self)
   }
@@ -79,5 +81,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     return .TerminateNow
+  }
+  
+  // For drag & dropping files on the App icon.
+  func application(sender: NSApplication, openFiles filenames: [String]) {
+    let urls = filenames.map { NSURL(fileURLWithPath: $0) }
+    self.mainWindowManager.newMainWindow(urls: urls)
+    sender.replyToOpenOrPrint(.Success)
+  }
+}
+
+// MARK: - IBActions
+extension AppDelegate {
+
+  @IBAction func showPrefWindow(sender: AnyObject!) {
+    self.prefWindowComponent.show()
+  }
+  
+  @IBAction func newDocument(sender: AnyObject!) {
+    self.mainWindowManager.newMainWindow()
+  }
+
+  // Invoked when no main window is open.
+  @IBAction func openDocument(sender: AnyObject!) {
+    let panel = NSOpenPanel()
+    panel.canChooseDirectories = true
+    panel.beginWithCompletionHandler { result in
+      guard result == NSFileHandlingPanelOKButton else {
+        return
+      }
+
+      self.mainWindowManager.newMainWindow(urls: panel.URLs)
+    }
   }
 }
