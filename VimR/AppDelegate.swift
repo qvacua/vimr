@@ -24,7 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   private let mainWindowManager: MainWindowManager
   private let prefWindowComponent: PrefWindowComponent
-
+  
   override init() {
     self.actionSink = self.actionSubject.asObservable()
     self.changeSink = self.changeSubject.asObservable()
@@ -85,7 +85,9 @@ extension AppDelegate {
   
   // For drag & dropping files on the App icon.
   func application(sender: NSApplication, openFiles filenames: [String]) {
-    NSLog("\(filenames)")
+    let urls = filenames.map { NSURL(fileURLWithPath: $0) }
+    self.mainWindowManager.newMainWindow(urls: urls)
+    sender.replyToOpenOrPrint(.Success)
   }
 }
 
@@ -108,8 +110,7 @@ extension AppDelegate {
         return
       }
 
-      let url = panel.URLs[0]
-      self.mainWindowManager.newMainWindow(url: url)
+      self.mainWindowManager.newMainWindow(urls: panel.URLs)
     }
   }
 }

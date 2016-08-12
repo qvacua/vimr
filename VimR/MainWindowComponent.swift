@@ -23,7 +23,7 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
   private let windowController = NSWindowController(windowNibName: "MainWindow")
   private let window: NSWindow
 
-  private var urlToBeOpenedWhenReady: NSURL?
+  private let urlsToBeOpenedWhenReady: [NSURL]
 
   private var defaultEditorFont: NSFont
   private var usesLigatures: Bool
@@ -34,13 +34,13 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
 
   private let neoVimView = NeoVimView(forAutoLayout: ())
 
-  init(source: Observable<Any>, manager: MainWindowManager, url: NSURL? = nil, initialData: PrefData) {
+  init(source: Observable<Any>, manager: MainWindowManager, urls: [NSURL] = [], initialData: PrefData) {
     self.source = source
     self.mainWindowManager = manager
     self.window = self.windowController.window!
     self.defaultEditorFont = initialData.appearance.editorFont
     self.usesLigatures = initialData.appearance.editorUsesLigatures
-    self.urlToBeOpenedWhenReady = url
+    self.urlsToBeOpenedWhenReady = urls
 
     super.init()
 
@@ -96,7 +96,7 @@ extension MainWindowComponent {
       
       // The open panel can choose only one file.
       let url = panel.URLs[0]
-      self.neoVimView.openInNewTab(url)
+      self.neoVimView.openInNewTab(url: url)
     }
   }
 }
@@ -134,9 +134,19 @@ extension MainWindowComponent {
     self.neoVimView.font = self.defaultEditorFont
     self.neoVimView.usesLigatures = self.usesLigatures
 
-    if let url = self.urlToBeOpenedWhenReady {
-      self.neoVimView.open(url: url)
+    if self.urlsToBeOpenedWhenReady.isEmpty {
+      return
     }
+
+    self.urlsToBeOpenedWhenReady.enumerate().forEach { (idx, url) in
+      if idx == 0 {
+        self.neoVimView.open(url: url)
+      } else {
+        self.neoVimView.openInNewTab(url: url)
+      }
+    }
+
+//    self.neoVimView.open(url: url)
   }
   
   func neoVimStopped() {

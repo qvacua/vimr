@@ -233,7 +233,7 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
     self.open(url, cmd: ":e")
   }
   
-  public func openInNewTab(url: NSURL) {
+  public func openInNewTab(url url: NSURL) {
     self.open(url, cmd: ":tabe")
   }
   
