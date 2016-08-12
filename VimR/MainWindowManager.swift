@@ -44,7 +44,6 @@ class MainWindowManager {
     self.mainWindowComponents.removeValueForKey(mainWindowComponent.uuid)
     
     if self.mainWindowComponents.isEmpty {
-      NSLog("\(#function) all closed")
       self.subject.onNext(MainWindowEvent.allWindowsClosed)
     }
   }
