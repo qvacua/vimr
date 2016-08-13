@@ -67,7 +67,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
 // We cannot use -dealloc for this since -dealloc is not called until the run loop in the thread stops.
 - (void)quit {
-  log4Debug("sending quit message to NeoVimServer");
   [self sendMessageWithId:NeoVimAgentMsgIdQuit data:nil expectsReply:NO];
 
   if (CFMessagePortIsValid(_remoteServerPort)) {
@@ -122,28 +121,35 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (bool)hasDirtyDocs {
-  NSData *responseData = [self sendMessageWithId:NeoVimAgentMsgIdDirtyDocs data:nil expectsReply:YES];
-  if (responseData == NULL) {
-    NSLog(@"WARNING: agent got response data null");
-    return false;
+  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdDirtyDocs data:nil expectsReply:YES];
+  if (response == nil) {
+    log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdDirtyDocs);
+    return YES;
   }
   
-  bool *values = data_to_bool_array(responseData, 1);
+  bool *values = data_to_bool_array(response, 1);
   return values[0];
 }
 
 - (NSArray <NSString *>*)escapedFileNames:(NSArray <NSString *>*)fileNames {
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:fileNames];
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdEscapeFileNames data:data expectsReply:YES];
+  if (response == nil) {
+    log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdEscapeFileNames);
+    return @[];
+  }
 
-  NSArray <NSString *> *escapedFileNames = [NSKeyedUnarchiver unarchiveObjectWithData:response];
-  return escapedFileNames;
+  return [NSKeyedUnarchiver unarchiveObjectWithData:response];
 }
 
 - (NSArray <NeoVimBuffer *> *)buffers {
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetBuffers data:nil expectsReply:YES];
-  NSArray <NeoVimBuffer *> *buffers = [NSKeyedUnarchiver unarchiveObjectWithData:response];
-  return buffers;
+  if (response == nil) {
+    log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetBuffers);
+    return @[];
+  }
+
+  return [NSKeyedUnarchiver unarchiveObjectWithData:response];
 }
 
 - (void)runLocalServer {
@@ -181,12 +187,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       (__bridge CFStringRef) [self remoteServerName]
   );
 
-  [self sendMessageWithId:NeoVimAgentMsgIdAgentReady data:nil expectsReply:false];
+  [self sendMessageWithId:NeoVimAgentMsgIdAgentReady data:nil expectsReply:NO];
 }
 
 - (NSData *)sendMessageWithId:(NeoVimAgentMsgId)msgid data:(NSData *)data expectsReply:(bool)expectsReply {
   if (_remoteServerPort == NULL) {
-    log4Warn("Remote server is null: The msg (%lu:%@) could not be sent.", (unsigned long) msgid, data);
+    log4Warn("Remote server is null: The msg %lu with data %@ could not be sent.", (unsigned long) msgid, data);
     return nil;
   }
 
@@ -198,7 +204,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   );
 
   if (responseCode != kCFMessagePortSuccess) {
-    log4Warn("The msg (%lu:%@) could not be sent: %d", (unsigned long) msgid, data, responseCode);
+    log4Warn("Got response %d for the msg %lu with data %@.", responseCode, (unsigned long) msgid, data);
     return nil;
   }
 

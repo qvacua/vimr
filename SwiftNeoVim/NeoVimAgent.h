@@ -29,8 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)resizeToWidth:(int)width height:(int)height;
 
 - (bool)hasDirtyDocs;
-- (NSArray <NSString *> *)escapedFileNames:(NSArray <NSString *> *)fileNames;
-- (NSArray <NeoVimBuffer *> *)buffers;
+- (NSArray<NSString *> *)escapedFileNames:(NSArray<NSString *> *)fileNames;
+- (NSArray<NeoVimBuffer *> *)buffers;
 
 @end
 
