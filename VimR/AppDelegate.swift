@@ -26,6 +26,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private let prefWindowComponent: PrefWindowComponent
   
   private var quitWhenAllWindowsAreClosed = false
+  private var launching = true
   
   override init() {
     self.actionSink = self.actionSubject.asObservable()
@@ -66,16 +67,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 // MARK: - NSApplicationDelegate
 extension AppDelegate {
 
-  func applicationDidFinishLaunching(aNotification: NSNotification) {
+  func applicationWillFinishLaunching(_: NSNotification) {
+    self.launching = true
+  }
+
+  func applicationDidFinishLaunching(_: NSNotification) {
 //    let testView = InputTestView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
 //    self.window.contentView?.addSubview(testView)
 //    self.window.makeFirstResponder(testView)
+    
+    self.launching = false
 
     #if DEBUG
       self.debugMenu.hidden = false
     #endif
+  }
 
+  func applicationOpenUntitledFile(sender: NSApplication) -> Bool {
     self.newDocument(self)
+    NSLog("\(#function)")
+    return true
   }
 
   func applicationShouldTerminate(sender: NSApplication) -> NSApplicationTerminateReply {
