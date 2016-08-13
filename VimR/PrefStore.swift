@@ -11,6 +11,9 @@ private class PrefKeys {
   static let editorFontName = "editor-font-name"
   static let editorFontSize = "editor-font-size"
   static let editorUsesLigatures = "editor-uses-ligatures"
+
+  static let openNewWindowWhenLaunching = "open-new-window-when-launching"
+  static let openNewWindowOnReactivation = "open-new-window-on-reactivation"
 }
 
 class PrefStore: Store {
@@ -51,29 +54,31 @@ class PrefStore: Store {
   }
 
   private func prefDataFromDict(prefs: [String: AnyObject]) -> PrefData {
-    let defaultFontSize = NSNumber(float: Float(PrefStore.defaultEditorFont.pointSize))
 
     let editorFontName = prefs[PrefKeys.editorFontName] as? String ?? PrefStore.defaultEditorFont.fontName
-    let editorFontSizeFromPref = prefs[PrefKeys.editorFontSize] as? NSNumber ?? defaultFontSize
-    let editorFontSize: CGFloat = CGFloat(editorFontSizeFromPref.floatValue) ?? CGFloat(defaultFontSize)
+    let editorFontSize = CGFloat(
+      (prefs[PrefKeys.editorFontSize] as? NSNumber)?.floatValue ?? Float(PrefStore.defaultEditorFont.pointSize)
+    )
+    let editorFont = self.saneFont(editorFontName, fontSize: editorFontSize)
+    
+    let usesLigatures = (prefs[PrefKeys.editorUsesLigatures] as? NSNumber)?.boolValue ?? false
+    let openNewWindowWhenLaunching = (prefs[PrefKeys.openNewWindowWhenLaunching] as? NSNumber)?.boolValue ?? true
+    let openNewWindowOnReactivation = (prefs[PrefKeys.openNewWindowOnReactivation] as? NSNumber)?.boolValue ?? true
 
-    var editorFont = NSFont(name: editorFontName, size: editorFontSize) ?? PrefStore.defaultEditorFont
+    return PrefData(appearance: AppearancePrefData(editorFont: editorFont, editorUsesLigatures: usesLigatures))
+  }
+
+  private func saneFont(fontName: String, fontSize: CGFloat) -> NSFont {
+    var editorFont = NSFont(name: fontName, size: fontSize) ?? PrefStore.defaultEditorFont
     if !editorFont.fixedPitch {
       editorFont = fontManager.convertFont(PrefStore.defaultEditorFont, toSize: editorFont.pointSize)
     }
     if editorFont.pointSize < PrefStore.minimumEditorFontSize
       || editorFont.pointSize > PrefStore.maximumEditorFontSize {
-      editorFont = fontManager.convertFont(editorFont, toSize: CGFloat(defaultFontSize))
-    }
-    
-    let usesLigatures: Bool
-    if let usesLigaturesFromPref = prefs[PrefKeys.editorUsesLigatures] as? NSNumber {
-      usesLigatures = usesLigaturesFromPref.boolValue
-    } else {
-      usesLigatures = false
+      editorFont = fontManager.convertFont(editorFont, toSize: PrefStore.defaultEditorFont.pointSize)
     }
 
-    return PrefData(appearance: AppearancePrefData(editorFont: editorFont, editorUsesLigatures: usesLigatures))
+    return editorFont
   }
 
   private func prefsDict(prefData: PrefData) -> [String: AnyObject] {
