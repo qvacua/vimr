@@ -12,19 +12,7 @@ struct AppearancePrefData {
   let editorUsesLigatures: Bool
 }
 
-class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelegate, ViewComponent {
-
-  private let source: Observable<Any>
-  private let disposeBag = DisposeBag()
-
-  private let subject = PublishSubject<Any>()
-  var sink: Observable<Any> {
-    return self.subject.asObservable()
-  }
-
-  var view: NSView {
-    return self
-  }
+class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate {
 
   private let sizes = [9, 10, 11, 12, 13, 14, 16, 18, 24, 36, 48, 64]
   private let sizeCombo = NSComboBox(forAutoLayout: ())
@@ -45,41 +33,25 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
   private var fontName = "Menlo"
   private var usesLigatures = false
 
-  // Return true to place this to the upper left corner when the scroll view is bigger than this view.
-  override var flipped: Bool {
-    return true
-  }
-
   init(source: Observable<Any>, initialData: AppearancePrefData) {
-    self.source = source
-
     self.font = initialData.editorFont
     self.fontSize = initialData.editorFont.pointSize
     self.fontName = initialData.editorFont.fontName
     self.usesLigatures = initialData.editorUsesLigatures
 
-    super.init(frame: CGRect.zero)
-    self.translatesAutoresizingMaskIntoConstraints = false
-
-    self.addViews()
-    self.addReactions()
-  }
-
-  deinit {
-    self.subject.onCompleted()
+    super.init(source: source)
   }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  private func addReactions() {
-    self.source
+  override func subscription(source source: Observable<Any>) -> Disposable {
+    return source
       .filter { $0 is PrefData }
       .map { ($0 as! PrefData).appearance }
       .filter { $0.editorFont != self.font || $0.editorUsesLigatures != self.usesLigatures }
       .subscribeNext { [unowned self] appearance in
-        NSLog("react")
         let editorFont = appearance.editorFont
         self.font = editorFont
         self.fontName = editorFont.fontName
@@ -87,10 +59,9 @@ class AppearancePrefPane: NSView, NSComboBoxDelegate, NSControlTextEditingDelega
         self.usesLigatures = appearance.editorUsesLigatures
         self.updateViews()
       }
-      .addDisposableTo(self.disposeBag)
   }
 
-  private func addViews() {
+  override func addViews() {
     let fontTitle = NSTextField(forAutoLayout: ())
     fontTitle.backgroundColor = NSColor.clearColor();
     fontTitle.stringValue = "Default Font:";
@@ -223,7 +194,7 @@ extension AppearancePrefPane {
     self.usesLigatures = self.ligatureCheckbox.state == NSOnState
     self.updateViews()
 
-    self.subject.onNext(AppearancePrefData(editorFont: font, editorUsesLigatures: usesLigatures))
+    self.publish(event: AppearancePrefData(editorFont: font, editorUsesLigatures: usesLigatures))
   }
 
   private func cappedFontSize(size: Int) -> CGFloat {
