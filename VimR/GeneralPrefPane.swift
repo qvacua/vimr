@@ -12,18 +12,24 @@ struct GeneralPrefData {
   let openNewWindowOnReactivation: Bool
 }
 
+func == (left: GeneralPrefData, right: GeneralPrefData) -> Bool {
+  return left.openNewWindowWhenLaunching == right.openNewWindowWhenLaunching
+    && left.openNewWindowOnReactivation == right.openNewWindowOnReactivation
+}
+
+func != (left: GeneralPrefData, right: GeneralPrefData) -> Bool {
+  return !(left == right)
+}
+
 class GeneralPrefPane: PrefPane {
 
-  private var openNewWindowWhenLaunching: Bool
-  private var openNewWindowOnReactivation: Bool
+  private var data: GeneralPrefData
 
   private let openWhenLaunchingCheckbox = NSButton(forAutoLayout: ())
   private let openOnReactivationCheckbox = NSButton(forAutoLayout: ())
 
   init(source: Observable<Any>, initialData: GeneralPrefData) {
-    self.openNewWindowWhenLaunching = initialData.openNewWindowWhenLaunching
-    self.openNewWindowOnReactivation = initialData.openNewWindowOnReactivation
-
+    self.data = initialData
     super.init(source: source)
   }
   
@@ -71,41 +77,47 @@ class GeneralPrefPane: PrefPane {
     return source
       .filter { $0 is GeneralPrefData }
       .map { $0 as! GeneralPrefData }
-      .filter { [unowned self] data in
-        data.openNewWindowWhenLaunching != self.openNewWindowWhenLaunching
-          || data.openNewWindowOnReactivation != self.openNewWindowOnReactivation
-      }
+      .filter { [unowned self] data in data != self.data }
       .subscribeNext { [unowned self] data in
-        self.openNewWindowWhenLaunching = data.openNewWindowWhenLaunching
-        self.openNewWindowOnReactivation = data.openNewWindowOnReactivation
-
-        self.updateViews()
+        self.updateViews(newData: data)
+        self.data = data
     }
   }
 
-  private func updateViews() {
-    self.openWhenLaunchingCheckbox.state = self.openNewWindowWhenLaunching ? NSOnState : NSOffState
-    self.openOnReactivationCheckbox.state = self.openNewWindowOnReactivation ? NSOnState : NSOffState
+  private func updateViews(newData newValue: GeneralPrefData? = nil) {
+    if let newData = newValue {
+      if newData.openNewWindowWhenLaunching != self.data.openNewWindowWhenLaunching {
+        self.openWhenLaunchingCheckbox.state = newData.openNewWindowWhenLaunching ? NSOnState : NSOffState
+      }
+
+      if newData.openNewWindowOnReactivation != self.data.openNewWindowOnReactivation {
+        self.openOnReactivationCheckbox.state = newData.openNewWindowOnReactivation ? NSOnState : NSOffState
+      }
+
+      return
+    }
+
+    self.openWhenLaunchingCheckbox.state = self.data.openNewWindowWhenLaunching ? NSOnState : NSOffState
+    self.openOnReactivationCheckbox.state = self.data.openNewWindowOnReactivation ? NSOnState : NSOffState
   }
 }
 
 // MARK: - Actions
 extension GeneralPrefPane {
 
-  private func publishData() {
-    self.publish(
-      event: GeneralPrefData(openNewWindowWhenLaunching: self.openNewWindowWhenLaunching,
-                             openNewWindowOnReactivation: self.openNewWindowOnReactivation)
-    )
-  }
-
   func openUntitledWindowWhenLaunchingAction(sender: NSButton) {
-    self.openNewWindowWhenLaunching = self.openWhenLaunchingCheckbox.state == NSOnState ? true : false
-    self.publishData()
+    let whenLaunching = self.openWhenLaunchingCheckbox.state == NSOnState ? true : false
+    self.data = GeneralPrefData(openNewWindowWhenLaunching: whenLaunching,
+                                openNewWindowOnReactivation: self.data.openNewWindowOnReactivation)
+
+    self.publish(event: self.data)
   }
 
   func openUntitledWindowOnReactivation(sender: NSButton) {
-    self.openNewWindowOnReactivation = self.openOnReactivationCheckbox.state == NSOnState ? true : false
-    self.publishData()
+    let onReactivation = self.openOnReactivationCheckbox.state == NSOnState ? true : false
+    self.data = GeneralPrefData(openNewWindowWhenLaunching: self.data.openNewWindowWhenLaunching,
+                                openNewWindowOnReactivation: onReactivation)
+
+    self.publish(event: self.data)
   }
 }
