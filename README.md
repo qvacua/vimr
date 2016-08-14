@@ -11,36 +11,40 @@ VimR — Vim Refined
 
 ## UPDATE
 
-We recently, June 2016, started to migrate the MacVim backend (VimR-MacVim) to a NeoVim backend. Well, it's a complete rewrite in Swift for which we use Objective-C when appropriate. We experimented with NeoVim a bit ([nvox](https://github.com/qvacua/nvox)) and now we are confident enough to think that VimR can be backed by NeoVim. It will take some time though till the transition/rewrite is complete. Bear with us!
+We recently, June 2016, started to migrate the MacVim backend (VimR-MacVim) to a NeoVim backend. It's a complete rewrite in Swift for which we use Objective-C when appropriate. We experimented with NeoVim a bit ([nvox](https://github.com/qvacua/nvox)) and now we are confident enough to think that VimR can be backed by NeoVim. It will take some time though till the transition/rewrite is complete. Bear with us!
 
-If you are here for VimR-MacVim, use the [macvim/master](https://github.com/qvacua/vimr/tree/macvim/master) branch.
-
-Since VimR-MacVim is not developed anymore, we also closed all issues involving VimR-MacVim.
+If you are here for VimR-MacVim, use the [macvim/master](https://github.com/qvacua/vimr/tree/macvim/master) branch and the version [0.8.0 (32)](https://github.com/qvacua/vimr/releases/tag/v0.8.0-32).
 
 ## About
 
 Project VimR is an attempt to refine the Vim experience. The goal is to build an editor that uses NeoVim inside with many of the convenience GUI features similar to those present in modern editors.
 
+There are other working NeoVim GUIs for OS X, e.g. [NyaoVim](https://github.com/rhysd/NyaoVim), [neovim-dot-app](https://github.com/rogual/neovim-dot-app), etc., why another?
+
+- play around (obviously) with [NeoVim](https://github.com/qvacua/neovim),
+- play around with Swift (and especially with [RxSwift](https://github.com/ReactiveX/RxSwift)) and
+- (most importantly) have fun!
+
 If you want to support VimR financially, you can use [Bountysource](https://www.bountysource.com/teams/vimr). Big thanks to [all](https://www.bountysource.com/teams/vimr/backers) who did support: We've spent the first 99€ for a year's worth of Apple's Developer Program as you may have noticed from the code-signed snapshot builds. Seriously you guys@Apple; You should make it free for free App makers and open source developers.
 
 ## Download
 
-Pre-built binaries can be found [here](https://github.com/qvacua/vimr/releases).
+Pre-built binaries can be found under [Releases](https://github.com/qvacua/vimr/releases).
 
-## Already Implemented
+## Already Implemented Features
 
 * Multiple windows.
 * Basic input including Emojis and Hangul (+Hanja): We don't know whether other input systems work...
 * Basic mouse support: Left button actions and scrolling.
 * Basic trackpad support: Pinching for zooming.
 * Ligatures: Turned off by default. Turn it on in the Preferences.
-* Basic Edit menu
+* Basic File and Edit menu items.
 
 ## Planned Features
 
 The following are features we _plan_ to implement (some of which are already present in VimR-MacVim). Bear in mind that we only recently started to completely rewrite VimR, which means it will take some time to have them all implemented. In no particular order:
 
-* Some standard OSX menu items, e.g. "File", "Edit", etc.
+* Some more standard OSX menu items.
 * Improved rendering and input handling, especially Hangul/Hanja (Why is Korean so important? 🤔): The current implementation is really ugly and messy...
 * Fuzzy file finder a la Xcode's "Open Quickly..."
 * File browser
