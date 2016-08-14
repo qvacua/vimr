@@ -12,7 +12,27 @@ struct AppearancePrefData {
   let editorUsesLigatures: Bool
 }
 
+func == (left: AppearancePrefData, right: AppearancePrefData) -> Bool {
+  return left.editorUsesLigatures == right.editorUsesLigatures && left.editorFont.isEqualTo(right.editorFont)
+}
+
+func != (left: AppearancePrefData, right: AppearancePrefData) -> Bool {
+  return !(left == right)
+}
+
 class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate {
+
+  private var data: AppearancePrefData {
+    willSet {
+      self.updateViews(newData: newValue)
+    }
+
+    didSet {
+      self.publish(event: self.data)
+    }
+  }
+
+  private let fontManager = NSFontManager.sharedFontManager()
 
   private let sizes = [9, 10, 11, 12, 13, 14, 16, 18, 24, 36, 48, 64]
   private let sizeCombo = NSComboBox(forAutoLayout: ())
@@ -28,17 +48,8 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     "<- -> => >> << >>= =<< .. \n" +
     ":: -< >- -<< >>- ++ /= =="
 
-  private var font: NSFont
-  private var fontSize = CGFloat(13)
-  private var fontName = "Menlo"
-  private var usesLigatures = false
-
   init(source: Observable<Any>, initialData: AppearancePrefData) {
-    self.font = initialData.editorFont
-    self.fontSize = initialData.editorFont.pointSize
-    self.fontName = initialData.editorFont.fontName
-    self.usesLigatures = initialData.editorUsesLigatures
-
+    self.data = initialData
     super.init(source: source)
   }
   
@@ -50,17 +61,8 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     return source
       .filter { $0 is PrefData }
       .map { ($0 as! PrefData).appearance }
-      .filter { [unowned self] appearance in
-        appearance.editorFont != self.font || appearance.editorUsesLigatures != self.usesLigatures
-      }
-      .subscribeNext { [unowned self] appearance in
-        let editorFont = appearance.editorFont
-        self.font = editorFont
-        self.fontName = editorFont.fontName
-        self.fontSize = editorFont.pointSize
-        self.usesLigatures = appearance.editorUsesLigatures
-        self.updateViews()
-    }
+      .filter { [unowned self] data in data != self.data }
+      .subscribeNext { [unowned self] data in self.data = data }
   }
 
   override func addViews() {
@@ -68,12 +70,11 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
 
     let fontTitle = self.titleTextField(title: "Default Font:")
 
-    let fontManager = NSFontManager.sharedFontManager()
     let fontPopup = self.fontPopup
     fontPopup.translatesAutoresizingMaskIntoConstraints = false
     fontPopup.target = self
     fontPopup.action = #selector(AppearancePrefPane.fontPopupAction)
-    fontPopup.addItemsWithTitles(fontManager.availableFontNamesWithTraits(.FixedPitchFontMask)!)
+    fontPopup.addItemsWithTitles(self.fontManager.availableFontNamesWithTraits(.FixedPitchFontMask)!)
 
     let sizeCombo = self.sizeCombo
     sizeCombo.setDelegate(self)
@@ -140,18 +141,32 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     previewScrollView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 18)
     previewScrollView.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
 
-    self.updateViews()
-  }
-
-  private func updateViews() {
-    self.fontPopup.selectItemWithTitle(self.fontName)
-    self.sizeCombo.stringValue = String(Int(self.fontSize))
-    self.ligatureCheckbox.state = self.usesLigatures ? NSOnState : NSOffState
-    self.previewArea.font = self.font
-    if self.usesLigatures {
+    self.fontPopup.selectItemWithTitle(self.data.editorFont.fontName)
+    self.sizeCombo.stringValue = String(Int(self.data.editorFont.pointSize))
+    self.ligatureCheckbox.state = self.data.editorUsesLigatures ? NSOnState : NSOffState
+    self.previewArea.font = self.data.editorFont
+    if self.data.editorUsesLigatures {
       self.previewArea.useAllLigatures(self)
     } else {
       self.previewArea.turnOffLigatures(self)
+    }
+  }
+
+  private func updateViews(newData newData: AppearancePrefData) {
+    let oldFont = self.data.editorFont
+    let newFont = newData.editorFont
+    let ligatureValueDiffers = newData.editorUsesLigatures != self.data.editorUsesLigatures
+
+    call(self.fontPopup.selectItemWithTitle(newFont.fontName), whenNot: newFont.fontName == oldFont.fontName)
+    call(self.sizeCombo.stringValue = String(Int(newFont.pointSize)), whenNot: newFont.pointSize == oldFont.pointSize)
+    call(self.ligatureCheckbox.boolState = newData.editorUsesLigatures, when: ligatureValueDiffers)
+    call(self.previewArea.font = newData.editorFont, whenNot: newFont.isEqualTo(self.data.editorFont))
+    if ligatureValueDiffers {
+      if newData.editorUsesLigatures {
+        self.previewArea.useAllLigatures(self)
+      } else {
+        self.previewArea.turnOffLigatures(self)
+      }
     }
   }
 }
@@ -160,17 +175,23 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
 extension AppearancePrefPane {
   
   func usesLigaturesAction(sender: NSButton) {
-    self.publishData()
+    self.data = AppearancePrefData(editorFont: self.data.editorFont, editorUsesLigatures: sender.boolState)
   }
 
   func fontPopupAction(sender: NSPopUpButton) {
-    if let selectedItem = self.fontPopup.selectedItem {
-      self.fontName = selectedItem.title
-    } else {
-      self.fontName = "Menlo"
+    guard let selectedItem = self.fontPopup.selectedItem else {
+      return
     }
 
-    self.publishData()
+    guard selectedItem != self.data.editorFont.fontName else {
+      return
+    }
+
+    guard let newFont = NSFont(name: selectedItem.title, size: self.data.editorFont.pointSize) else {
+      return
+    }
+
+    self.data = AppearancePrefData(editorFont: newFont, editorUsesLigatures: self.data.editorUsesLigatures)
   }
 
   func comboBoxSelectionDidChange(notification: NSNotification) {
@@ -178,25 +199,17 @@ extension AppearancePrefPane {
       return
     }
 
-    self.fontSize = self.cappedFontSize(Int(self.sizes[self.sizeCombo.indexOfSelectedItem]))
-    self.publishData()
+    let newFontSize = self.cappedFontSize(Int(self.sizes[self.sizeCombo.indexOfSelectedItem]))
+    let newFont = self.fontManager.convertFont(self.data.editorFont, toSize: newFontSize)
+
+    self.data = AppearancePrefData(editorFont: newFont, editorUsesLigatures: self.data.editorUsesLigatures)
   }
 
   func sizeComboBoxDidEnter(sender: AnyObject!) {
-    self.fontSize = self.cappedFontSize(self.sizeCombo.integerValue)
-    self.publishData()
-  }
+    let newFontSize = self.cappedFontSize(self.sizeCombo.integerValue)
+    let newFont = self.fontManager.convertFont(self.data.editorFont, toSize: newFontSize)
 
-  private func publishData() {
-    guard let font = NSFont(name: self.fontName, size: CGFloat(self.fontSize)) else {
-      return
-    }
-
-    self.font = font
-    self.usesLigatures = self.ligatureCheckbox.state == NSOnState
-    self.updateViews()
-
-    self.publish(event: AppearancePrefData(editorFont: font, editorUsesLigatures: usesLigatures))
+    self.data = AppearancePrefData(editorFont: newFont, editorUsesLigatures: self.data.editorUsesLigatures)
   }
 
   private func cappedFontSize(size: Int) -> CGFloat {

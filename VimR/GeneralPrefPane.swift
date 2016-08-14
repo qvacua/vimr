@@ -23,7 +23,15 @@ func != (left: GeneralPrefData, right: GeneralPrefData) -> Bool {
 
 class GeneralPrefPane: PrefPane {
 
-  private var data: GeneralPrefData
+  private var data: GeneralPrefData {
+    willSet {
+      self.updateViews(newData: newValue)
+    }
+
+    didSet {
+      self.publish(event: self.data)
+    }
+  }
 
   private let openWhenLaunchingCheckbox = NSButton(forAutoLayout: ())
   private let openOnReactivationCheckbox = NSButton(forAutoLayout: ())
@@ -70,35 +78,24 @@ class GeneralPrefPane: PrefPane {
     onReactivation.autoPinEdge(.Left, toEdge: .Left, ofView: whenLaunching)
     onReactivation.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 18)
 
-    self.updateViews()
+    self.openWhenLaunchingCheckbox.boolState = self.data.openNewWindowWhenLaunching
+    self.openOnReactivationCheckbox.boolState = self.data.openNewWindowOnReactivation
   }
 
   override func subscription(source source: Observable<Any>) -> Disposable {
     return source
-      .filter { $0 is GeneralPrefData }
-      .map { $0 as! GeneralPrefData }
+      .filter { $0 is PrefData }
+      .map { ($0 as! PrefData).general }
       .filter { [unowned self] data in data != self.data }
-      .subscribeNext { [unowned self] data in
-        self.updateViews(newData: data)
-        self.data = data
-    }
+      .subscribeNext { [unowned self] data in self.data = data }
   }
 
-  private func updateViews(newData newValue: GeneralPrefData? = nil) {
-    if let newData = newValue {
-      if newData.openNewWindowWhenLaunching != self.data.openNewWindowWhenLaunching {
-        self.openWhenLaunchingCheckbox.state = newData.openNewWindowWhenLaunching ? NSOnState : NSOffState
-      }
+  private func updateViews(newData newData: GeneralPrefData) {
+    call(self.openWhenLaunchingCheckbox.boolState = newData.openNewWindowWhenLaunching,
+         whenNot: newData.openNewWindowWhenLaunching == self.data.openNewWindowWhenLaunching)
 
-      if newData.openNewWindowOnReactivation != self.data.openNewWindowOnReactivation {
-        self.openOnReactivationCheckbox.state = newData.openNewWindowOnReactivation ? NSOnState : NSOffState
-      }
-
-      return
-    }
-
-    self.openWhenLaunchingCheckbox.state = self.data.openNewWindowWhenLaunching ? NSOnState : NSOffState
-    self.openOnReactivationCheckbox.state = self.data.openNewWindowOnReactivation ? NSOnState : NSOffState
+    call(self.openOnReactivationCheckbox.boolState = newData.openNewWindowOnReactivation,
+         whenNot: newData.openNewWindowOnReactivation == self.data.openNewWindowOnReactivation)
   }
 }
 
@@ -106,18 +103,12 @@ class GeneralPrefPane: PrefPane {
 extension GeneralPrefPane {
 
   func openUntitledWindowWhenLaunchingAction(sender: NSButton) {
-    let whenLaunching = self.openWhenLaunchingCheckbox.state == NSOnState ? true : false
-    self.data = GeneralPrefData(openNewWindowWhenLaunching: whenLaunching,
+    self.data = GeneralPrefData(openNewWindowWhenLaunching: self.openWhenLaunchingCheckbox.boolState,
                                 openNewWindowOnReactivation: self.data.openNewWindowOnReactivation)
-
-    self.publish(event: self.data)
   }
 
   func openUntitledWindowOnReactivation(sender: NSButton) {
-    let onReactivation = self.openOnReactivationCheckbox.state == NSOnState ? true : false
     self.data = GeneralPrefData(openNewWindowWhenLaunching: self.data.openNewWindowWhenLaunching,
-                                openNewWindowOnReactivation: onReactivation)
-
-    self.publish(event: self.data)
+                                openNewWindowOnReactivation: self.openOnReactivationCheckbox.boolState)
   }
 }

@@ -39,6 +39,8 @@
 		4B56F29E1D29926600C1F92E /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29C1D29926600C1F92E /* Quick.framework */; };
 		4B570DC21D303CAF006EDC21 /* NeoVimAgent.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B570DC01D303CAF006EDC21 /* NeoVimAgent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B570DC31D303CAF006EDC21 /* NeoVimAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B570DC11D303CAF006EDC21 /* NeoVimAgent.m */; };
+		4B6A70941D60E04200E12030 /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* CocoaExtensions.swift */; };
+		4B6A70961D6100E300E12030 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70951D6100E300E12030 /* SwiftCommons.swift */; };
 		4B854A1D1D31447C00E08DE1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B854A1C1D31447C00E08DE1 /* main.m */; };
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
 		4B9A15241D2993DA009F9F67 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -186,6 +188,8 @@
 		4B56F29C1D29926600C1F92E /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/Mac/Quick.framework; sourceTree = SOURCE_ROOT; };
 		4B570DC01D303CAF006EDC21 /* NeoVimAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimAgent.h; sourceTree = "<group>"; };
 		4B570DC11D303CAF006EDC21 /* NeoVimAgent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimAgent.m; sourceTree = "<group>"; };
+		4B6A70931D60E04200E12030 /* CocoaExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaExtensions.swift; sourceTree = "<group>"; };
+		4B6A70951D6100E300E12030 /* SwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftCommons.swift; sourceTree = "<group>"; };
 		4B7BD3321D32530900AAA45E /* Logging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
 		4B854A1A1D31447C00E08DE1 /* NeoVimServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NeoVimServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B854A1C1D31447C00E08DE1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -418,12 +422,14 @@
 		4BEBA5071CFF374B00673FDF /* VimR */ = {
 			isa = PBXGroup;
 			children = (
+				4B6A70951D6100E300E12030 /* SwiftCommons.swift */,
 				4B238BE01D3BF24200CBDD98 /* Application.swift */,
 				4BEBA5081CFF374B00673FDF /* AppDelegate.swift */,
 				1929B39DA7AC4A9B62D7CD39 /* Component.swift */,
 				4BD3BF961D32B0DB00082605 /* MainWindowManager.swift */,
 				4BD3BF921D32A95800082605 /* MainWindowComponent.swift */,
 				4BB1BEA81D48773200463C29 /* RxSwiftUtils.swift */,
+				4B6A70931D60E04200E12030 /* CocoaExtensions.swift */,
 				4B238BED1D3ED55300CBDD98 /* Preferences */,
 				4B97E2CF1D33F92200FC0660 /* resources */,
 				4B2A2C0D1D0353750074CE9A /* Bridge.h */,
@@ -714,12 +720,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */,
+				4B6A70941D60E04200E12030 /* CocoaExtensions.swift in Sources */,
 				4BD3BF971D32B0DB00082605 /* MainWindowManager.swift in Sources */,
 				4B238BEC1D3ED54D00CBDD98 /* AppearancePrefPane.swift in Sources */,
 				4BD3BF931D32A95800082605 /* MainWindowComponent.swift in Sources */,
 				4BB1BEA91D48773200463C29 /* RxSwiftUtils.swift in Sources */,
 				4B4546871D468CEC00A1E27F /* PrefStore.swift in Sources */,
 				4B4FC8E61D3E8739009352C3 /* PrefWindowComponent.swift in Sources */,
+				4B6A70961D6100E300E12030 /* SwiftCommons.swift in Sources */,
 				4B56CE301D5FC27100337673 /* GeneralPrefPane.swift in Sources */,
 				4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */,
 				1929B165820D7177743B537A /* Component.swift in Sources */,
