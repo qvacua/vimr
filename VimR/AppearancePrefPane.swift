@@ -64,12 +64,9 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
   }
 
   override func addViews() {
-    let fontTitle = NSTextField(forAutoLayout: ())
-    fontTitle.backgroundColor = NSColor.clearColor();
-    fontTitle.stringValue = "Default Font:";
-    fontTitle.editable = false;
-    fontTitle.bordered = false;
-    fontTitle.alignment = .Right;
+    let paneTitle = self.paneTitleTextField(title: "Appearance")
+
+    let fontTitle = self.titleTextField(title: "Default Font:")
 
     let fontManager = NSFontManager.sharedFontManager()
     let fontPopup = self.fontPopup
@@ -85,13 +82,11 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     self.sizes.forEach { string in
       sizeCombo.addItemWithObjectValue(string)
     }
-    
+
     let ligatureCheckbox = self.ligatureCheckbox
-    ligatureCheckbox.title = "Use Ligatures"
-    ligatureCheckbox.setButtonType(.SwitchButton)
-    ligatureCheckbox.bezelStyle = .ThickSquareBezelStyle
-    ligatureCheckbox.target = self
-    ligatureCheckbox.action = #selector(AppearancePrefPane.usesLigaturesAction(_:))
+    self.configureCheckbox(button: ligatureCheckbox,
+                           title: "Use Ligatures",
+                           action: #selector(AppearancePrefPane.usesLigaturesAction(_:)))
 
     let previewArea = self.previewArea
     previewArea.editable = true
@@ -113,16 +108,21 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     previewScrollView.borderType = .BezelBorder
     previewScrollView.documentView = previewArea
 
+    self.addSubview(paneTitle)
+
     self.addSubview(fontTitle)
     self.addSubview(fontPopup)
     self.addSubview(sizeCombo)
     self.addSubview(ligatureCheckbox)
     self.addSubview(previewScrollView)
 
-    fontTitle.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
+    paneTitle.autoPinEdgeToSuperviewEdge(.Top, withInset: 18)
+    paneTitle.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
+
+    fontTitle.autoPinEdge(.Left, toEdge: .Left, ofView: paneTitle)
     fontTitle.autoAlignAxis(.Baseline, toSameAxisOfView: fontPopup)
 
-    fontPopup.autoPinEdgeToSuperviewEdge(.Top, withInset: 18)
+    fontPopup.autoPinEdge(.Top, toEdge: .Bottom, ofView: paneTitle, withOffset: 18)
     fontPopup.autoPinEdge(.Left, toEdge: .Right, ofView: fontTitle, withOffset: 5)
     fontPopup.autoSetDimension(.Width, toSize: 240)
 

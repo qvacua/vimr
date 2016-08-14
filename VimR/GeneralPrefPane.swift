@@ -92,20 +92,20 @@ class GeneralPrefPane: PrefPane {
 // MARK: - Actions
 extension GeneralPrefPane {
 
-  private func generalPrefData() -> GeneralPrefData {
-    return GeneralPrefData(openNewWindowWhenLaunching: self.openNewWindowWhenLaunching,
-                           openNewWindowOnReactivation: self.openNewWindowOnReactivation)
+  private func publishData() {
+    self.publish(
+      event: GeneralPrefData(openNewWindowWhenLaunching: self.openNewWindowWhenLaunching,
+                             openNewWindowOnReactivation: self.openNewWindowOnReactivation)
+    )
   }
 
   func openUntitledWindowWhenLaunchingAction(sender: NSButton) {
-    NSLog("\(#function)")
     self.openNewWindowWhenLaunching = self.openWhenLaunchingCheckbox.state == NSOnState ? true : false
-    self.publish(event: generalPrefData())
+    self.publishData()
   }
 
   func openUntitledWindowOnReactivation(sender: NSButton) {
-    NSLog("\(#function)")
     self.openNewWindowOnReactivation = self.openOnReactivationCheckbox.state == NSOnState ? true : false
-    self.publish(event: generalPrefData())
+    self.publishData()
   }
 }
