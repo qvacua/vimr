@@ -30,8 +30,6 @@ class PrefPane: NSView, ViewComponent {
 
     super.init(frame: CGRect.zero)
     self.translatesAutoresizingMaskIntoConstraints = false
-    self.wantsLayer = true
-    self.layer?.backgroundColor = NSColor.magentaColor().CGColor
 
     self.addViews()
     self.subscription(source: self.source).addDisposableTo(self.disposeBag)
@@ -76,14 +74,12 @@ extension PrefPane {
     return field
   }
 
-  func checkbox(title title: String, action: Selector) -> NSButton {
-    let button = NSButton(forAutoLayout: ())
+  func configureCheckbox(button button: NSButton, title: String, action: Selector) {
     button.title = title
     button.setButtonType(.SwitchButton)
     button.bezelStyle = .ThickSquareBezelStyle
     button.target = self
     button.action = action
-    return button
   }
 
   private func defaultTitleTextField() -> NSTextField {

@@ -8,12 +8,12 @@ import RxSwift
 
 private class PrefKeys {
 
+  static let openNewWindowWhenLaunching = "open-new-window-when-launching"
+  static let openNewWindowOnReactivation = "open-new-window-on-reactivation"
+
   static let editorFontName = "editor-font-name"
   static let editorFontSize = "editor-font-size"
   static let editorUsesLigatures = "editor-uses-ligatures"
-
-  static let openNewWindowWhenLaunching = "open-new-window-when-launching"
-  static let openNewWindowOnReactivation = "open-new-window-on-reactivation"
 }
 
 class PrefStore: Store {
@@ -90,12 +90,20 @@ class PrefStore: Store {
   }
 
   private func prefsDict(prefData: PrefData) -> [String: AnyObject] {
+    let generalData = prefData.general
     let appearanceData = prefData.appearance
+
     let prefs: [String: AnyObject] = [
+      // General
+      PrefKeys.openNewWindowWhenLaunching: generalData.openNewWindowWhenLaunching,
+      PrefKeys.openNewWindowOnReactivation: generalData.openNewWindowOnReactivation,
+
+      // Appearance
       PrefKeys.editorFontName: appearanceData.editorFont.fontName,
       PrefKeys.editorFontSize: appearanceData.editorFont.pointSize,
       PrefKeys.editorUsesLigatures: appearanceData.editorUsesLigatures
     ]
+
     return prefs
   }
 

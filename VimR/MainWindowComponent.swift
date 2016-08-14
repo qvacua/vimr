@@ -75,6 +75,10 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
     self.source
       .filter { $0 is PrefData }
       .map { ($0 as! PrefData).appearance }
+      .filter { [unowned self] appearanceData in
+        !appearanceData.editorFont.isEqualTo(self.neoVimView.font)
+          || appearanceData.editorUsesLigatures != self.neoVimView.usesLigatures
+      }
       .subscribeNext { [unowned self] appearance in
         self.neoVimView.usesLigatures = appearance.editorUsesLigatures
         self.neoVimView.font = appearance.editorFont

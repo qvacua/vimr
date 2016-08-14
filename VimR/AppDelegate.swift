@@ -27,7 +27,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   
   private var quitWhenAllWindowsAreClosed = false
   private var launching = true
-  
+
   override init() {
     self.actionSink = self.actionSubject.asObservable()
     self.changeSink = self.changeSubject.asObservable()
@@ -75,7 +75,7 @@ extension AppDelegate {
 //    let testView = InputTestView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
 //    self.window.contentView?.addSubview(testView)
 //    self.window.makeFirstResponder(testView)
-    
+
     self.launching = false
 
     #if DEBUG
@@ -84,9 +84,19 @@ extension AppDelegate {
   }
 
   func applicationOpenUntitledFile(sender: NSApplication) -> Bool {
-    self.newDocument(self)
-    NSLog("\(#function)")
-    return true
+    if self.launching {
+      if self.prefStore.data.general.openNewWindowWhenLaunching {
+        self.newDocument(self)
+        return true
+      }
+    } else {
+      if self.prefStore.data.general.openNewWindowOnReactivation {
+        self.newDocument(self)
+        return true
+      }
+    }
+
+    return false
   }
 
   func applicationShouldTerminate(sender: NSApplication) -> NSApplicationTerminateReply {

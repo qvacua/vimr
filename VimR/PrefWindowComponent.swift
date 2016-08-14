@@ -94,6 +94,8 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
         switch action {
         case let data as AppearancePrefData:
           self.data.appearance = data
+        case let data as GeneralPrefData:
+          self.data.general = data
         default:
           NSLog("nothing to see here")
         }
@@ -151,7 +153,6 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
     paneContainer.autoPinEdgeToSuperviewEdge(.Right)
     paneContainer.autoPinEdgeToSuperviewEdge(.Bottom)
     paneContainer.autoPinEdge(.Left, toEdge: .Right, ofView: categoryScrollView)
-    paneContainer.backgroundColor = NSColor.yellowColor()
 
     self.currentPane = self.panes[0]
   }

@@ -50,7 +50,9 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     return source
       .filter { $0 is PrefData }
       .map { ($0 as! PrefData).appearance }
-      .filter { $0.editorFont != self.font || $0.editorUsesLigatures != self.usesLigatures }
+      .filter { [unowned self] appearance in
+        appearance.editorFont != self.font || appearance.editorUsesLigatures != self.usesLigatures
+      }
       .subscribeNext { [unowned self] appearance in
         let editorFont = appearance.editorFont
         self.font = editorFont
@@ -58,7 +60,7 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
         self.fontSize = editorFont.pointSize
         self.usesLigatures = appearance.editorUsesLigatures
         self.updateViews()
-      }
+    }
   }
 
   override func addViews() {
