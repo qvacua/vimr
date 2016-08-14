@@ -57,3 +57,40 @@ class PrefPane: NSView, ViewComponent {
     self.subject.onNext(event)
   }
 }
+
+// MARK: - Control Utils
+extension PrefPane {
+
+  func paneTitleTextField(title title: String) -> NSTextField {
+    let field = defaultTitleTextField()
+    field.font = NSFont.boldSystemFontOfSize(16)
+    field.alignment = .Left;
+    field.stringValue = title
+    return field
+  }
+
+  func titleTextField(title title: String) -> NSTextField {
+    let field = defaultTitleTextField()
+    field.alignment = .Right;
+    field.stringValue = title
+    return field
+  }
+
+  func checkbox(title title: String, action: Selector) -> NSButton {
+    let button = NSButton(forAutoLayout: ())
+    button.title = title
+    button.setButtonType(.SwitchButton)
+    button.bezelStyle = .ThickSquareBezelStyle
+    button.target = self
+    button.action = action
+    return button
+  }
+
+  private func defaultTitleTextField() -> NSTextField {
+    let field = NSTextField(forAutoLayout: ())
+    field.backgroundColor = NSColor.clearColor();
+    field.editable = false;
+    field.bordered = false;
+    return field
+  }
+}

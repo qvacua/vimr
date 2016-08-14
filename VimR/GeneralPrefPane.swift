@@ -28,28 +28,33 @@ class GeneralPrefPane: PrefPane {
     fatalError("init(coder:) has not been implemented")
   }
 
-  func paneTitleTextField(title title: String) -> NSTextField {
-    let field = NSTextField(forAutoLayout: ())
-    field.backgroundColor = NSColor.clearColor();
-    field.font = NSFont.boldSystemFontOfSize(16)
-    field.editable = false;
-    field.bordered = false;
-    field.alignment = .Left;
-
-    field.stringValue = title
-
-    return field
-  }
-
   override func addViews() {
     let paneTitle = paneTitleTextField(title: "General")
 
+    let openUntitledWindowTitle = titleTextField(title: "Open Untitled Window:")
+    let openWhenLaunching = self.checkbox(title: "On Launch",
+                                          action: #selector(GeneralPrefPane.openUntitledWindowWhenLaunchingAction(_:)))
+    let openOnReactivation = self.checkbox(title: "On Re-Activation",
+                                           action: #selector(GeneralPrefPane.openUntitledWindowOnReactivation(_:)))
+
     self.addSubview(paneTitle)
+
+    self.addSubview(openUntitledWindowTitle)
+    self.addSubview(openWhenLaunching)
+    self.addSubview(openOnReactivation)
 
     paneTitle.autoPinEdgeToSuperviewEdge(.Top, withInset: 18)
     paneTitle.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
-    paneTitle.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 18)
-    paneTitle.autoPinEdgeToSuperviewEdge(.Right, withInset: 18)
+
+    openUntitledWindowTitle.autoAlignAxis(.Baseline, toSameAxisOfView: openWhenLaunching, withOffset: 0)
+    openUntitledWindowTitle.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
+
+    openWhenLaunching.autoPinEdge(.Top, toEdge: .Bottom, ofView: paneTitle, withOffset: 18)
+    openWhenLaunching.autoPinEdge(.Left, toEdge: .Right, ofView: openUntitledWindowTitle, withOffset: 5)
+
+    openOnReactivation.autoPinEdge(.Top, toEdge: .Bottom, ofView: openWhenLaunching, withOffset: 5)
+    openOnReactivation.autoPinEdge(.Left, toEdge: .Left, ofView: openWhenLaunching)
+    openOnReactivation.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 18)
   }
 
   override func subscription(source source: Observable<Any>) -> Disposable {
@@ -57,5 +62,21 @@ class GeneralPrefPane: PrefPane {
       .subscribeNext { event in
 
     }
+  }
+
+  private func updateViews() {
+
+  }
+}
+
+// MARK: - Actions
+extension GeneralPrefPane {
+
+  func openUntitledWindowWhenLaunchingAction(sender: NSButton) {
+
+  }
+
+  func openUntitledWindowOnReactivation(sender: NSButton) {
+
   }
 }
