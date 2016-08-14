@@ -8,6 +8,7 @@ import RxSwift
 import PureLayout
 
 struct PrefData {
+  var general: GeneralPrefData
   var appearance: AppearancePrefData
 }
 
@@ -28,16 +29,31 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
 
   private let categoryView = NSTableView(frame: CGRect.zero)
   private let categoryScrollView = NSScrollView(forAutoLayout: ())
-  private let paneScrollView = NSScrollView(forAutoLayout: ())
+  private let paneContainer = NSScrollView(forAutoLayout: ())
 
-  private let paneNames = [ "Appearance" ]
-  private let panes: [ViewComponent]
+  private let paneNames = [ "General", "Appearance" ]
+  private let panes: [PrefPane]
+
+  private var currentPane: PrefPane {
+    get {
+      return self.paneContainer.documentView as! PrefPane
+    }
+
+    set {
+      self.paneContainer.documentView = newValue
+
+      // Auto-layout seems to be smart enough not to add redundant constraints.
+      newValue.autoPinEdgeToSuperviewEdge(.Right)
+      newValue.autoPinEdgeToSuperviewEdge(.Left)
+    }
+  }
 
   init(source: Observable<Any>, initialData: PrefData) {
     self.source = source
     self.data = initialData
 
     self.panes = [
+      GeneralPrefPane(source: source, initialData: self.data.general),
       AppearancePrefPane(source: source, initialData: self.data.appearance)
     ]
     
@@ -114,38 +130,37 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
     categoryScrollView.borderType = .BezelBorder
     categoryScrollView.documentView = categoryView
 
-    let paneScrollView = self.paneScrollView
-    paneScrollView.hasVerticalScroller = true;
-    paneScrollView.hasHorizontalScroller = false;
-    paneScrollView.autohidesScrollers = true;
-    paneScrollView.borderType = .NoBorder;
-    paneScrollView.autoresizesSubviews = true;
-    paneScrollView.backgroundColor = NSColor.windowBackgroundColor();
+    let paneContainer = self.paneContainer
+    paneContainer.hasVerticalScroller = true;
+    paneContainer.hasHorizontalScroller = true;
+    paneContainer.autohidesScrollers = true;
+    paneContainer.borderType = .NoBorder;
+    paneContainer.autoresizesSubviews = false;
+    paneContainer.backgroundColor = NSColor.windowBackgroundColor();
 
     self.window.contentView?.addSubview(categoryScrollView)
-    self.window.contentView?.addSubview(paneScrollView)
+    self.window.contentView?.addSubview(paneContainer)
 
     categoryScrollView.autoSetDimension(.Width, toSize: 150)
     categoryScrollView.autoPinEdgeToSuperviewEdge(.Top, withInset: -1)
     categoryScrollView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: -1)
     categoryScrollView.autoPinEdgeToSuperviewEdge(.Left, withInset: -1)
-    paneScrollView.autoSetDimension(.Width, toSize: 200, relation: .GreaterThanOrEqual)
-    paneScrollView.autoPinEdgeToSuperviewEdge(.Top)
-    paneScrollView.autoPinEdgeToSuperviewEdge(.Right)
-    paneScrollView.autoPinEdgeToSuperviewEdge(.Bottom)
-    paneScrollView.autoPinEdge(.Left, toEdge: .Right, ofView: categoryScrollView)
 
-    let pane = self.panes[0].view
-    self.paneScrollView.documentView = pane
-    pane.autoPinEdgeToSuperviewEdge(.Right)
-    pane.autoPinEdgeToSuperviewEdge(.Left)
+    paneContainer.autoSetDimension(.Width, toSize: 200, relation: .GreaterThanOrEqual)
+    paneContainer.autoPinEdgeToSuperviewEdge(.Top)
+    paneContainer.autoPinEdgeToSuperviewEdge(.Right)
+    paneContainer.autoPinEdgeToSuperviewEdge(.Bottom)
+    paneContainer.autoPinEdge(.Left, toEdge: .Right, ofView: categoryScrollView)
+    paneContainer.backgroundColor = NSColor.yellowColor()
+
+    self.currentPane = self.panes[0]
   }
 }
 
 // MARK: - NSTableViewDataSource
 extension PrefWindowComponent {
 
-  func numberOfRowsInTableView(tableView: NSTableView) -> Int {
+  func numberOfRowsInTableView(_: NSTableView) -> Int {
     return self.paneNames.count
   }
 
@@ -157,6 +172,8 @@ extension PrefWindowComponent {
 // MARK: - NSTableViewDelegate
 extension PrefWindowComponent {
 
-  func tableViewSelectionDidChange(notification: NSNotification) {
+  func tableViewSelectionDidChange(_: NSNotification) {
+    let idx = self.categoryView.selectedRow
+    self.currentPane = self.panes[idx]
   }
 }

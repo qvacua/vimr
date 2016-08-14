@@ -34,8 +34,10 @@ class PrefStore: Store {
   private let userDefaults = NSUserDefaults.standardUserDefaults()
   private let fontManager = NSFontManager.sharedFontManager()
 
-  var data = PrefData(appearance: AppearancePrefData(editorFont: PrefStore.defaultEditorFont,
-                                                     editorUsesLigatures: false))
+  var data = PrefData(
+    general: GeneralPrefData(openNewWindowWhenLaunching: true, openNewWindowOnReactivation: true),
+    appearance: AppearancePrefData(editorFont: PrefStore.defaultEditorFont, editorUsesLigatures: false)
+  )
 
   init(source: Observable<Any>) {
     self.source = source
@@ -65,7 +67,13 @@ class PrefStore: Store {
     let openNewWindowWhenLaunching = (prefs[PrefKeys.openNewWindowWhenLaunching] as? NSNumber)?.boolValue ?? true
     let openNewWindowOnReactivation = (prefs[PrefKeys.openNewWindowOnReactivation] as? NSNumber)?.boolValue ?? true
 
-    return PrefData(appearance: AppearancePrefData(editorFont: editorFont, editorUsesLigatures: usesLigatures))
+    return PrefData(
+      general: GeneralPrefData(
+        openNewWindowWhenLaunching: openNewWindowWhenLaunching,
+        openNewWindowOnReactivation: openNewWindowOnReactivation
+      ),
+      appearance: AppearancePrefData(editorFont: editorFont, editorUsesLigatures: usesLigatures)
+    )
   }
 
   private func saneFont(fontName: String, fontSize: CGFloat) -> NSFont {

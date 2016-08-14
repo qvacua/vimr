@@ -128,7 +128,7 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     // If we use .Baseline the combo box is placed one pixel off...
     sizeCombo.autoAlignAxis(.Horizontal, toSameAxisOfView: fontPopup)
     sizeCombo.autoPinEdge(.Left, toEdge: .Right, ofView: fontPopup, withOffset: 5)
-    
+
     ligatureCheckbox.autoPinEdge(.Top, toEdge: .Bottom, ofView: sizeCombo, withOffset: 18)
     ligatureCheckbox.autoPinEdge(.Left, toEdge: .Right, ofView: fontTitle, withOffset: 5)
 

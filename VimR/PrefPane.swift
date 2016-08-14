@@ -30,6 +30,8 @@ class PrefPane: NSView, ViewComponent {
 
     super.init(frame: CGRect.zero)
     self.translatesAutoresizingMaskIntoConstraints = false
+    self.wantsLayer = true
+    self.layer?.backgroundColor = NSColor.magentaColor().CGColor
 
     self.addViews()
     self.subscription(source: self.source).addDisposableTo(self.disposeBag)
