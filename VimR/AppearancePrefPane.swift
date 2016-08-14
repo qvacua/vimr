@@ -122,9 +122,9 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
 
     fontPopup.autoPinEdgeToSuperviewEdge(.Top, withInset: 18)
     fontPopup.autoPinEdge(.Left, toEdge: .Right, ofView: fontTitle, withOffset: 5)
-    fontPopup.autoSetDimension(.Width, toSize: 180)
+    fontPopup.autoSetDimension(.Width, toSize: 240)
 
-    sizeCombo.autoSetDimension(.Width, toSize: 75)
+    sizeCombo.autoSetDimension(.Width, toSize: 60)
     // If we use .Baseline the combo box is placed one pixel off...
     sizeCombo.autoAlignAxis(.Horizontal, toSameAxisOfView: fontPopup)
     sizeCombo.autoPinEdge(.Left, toEdge: .Right, ofView: fontPopup, withOffset: 5)
