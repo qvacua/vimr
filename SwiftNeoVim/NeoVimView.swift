@@ -235,13 +235,17 @@ extension NeoVimView {
 
   private func resizeNeoVimUiTo(size size: CGSize) {
 //    NSLog("\(#function): \(size)")
-    let discreteSize = Size(width: Int(floor(size.width / self.cellSize.width)),
-                            height: Int(floor(size.height / self.cellSize.height)))
+    let discreteSize = self.discreteSize(size: size)
 
     self.xOffset = floor((size.width - self.cellSize.width * CGFloat(discreteSize.width)) / 2)
     self.yOffset = floor((size.height - self.cellSize.height * CGFloat(discreteSize.height)) / 2)
 
     self.agent.resizeToWidth(Int32(discreteSize.width), height: Int32(discreteSize.height))
+  }
+  
+  private func discreteSize(size size: CGSize) -> Size {
+    return Size(width: Int(floor(size.width / self.cellSize.width)),
+                height: Int(floor(size.height / self.cellSize.height)))
   }
 }
 
@@ -254,8 +258,20 @@ extension NeoVimView {
     }
 
     if self.inLiveResize {
-      NSColor.lightGrayColor().set()
+      NSColor.windowBackgroundColor().set()
       dirtyUnionRect.fill()
+      
+      let boundsSize = self.bounds.size
+      let discreteSize = self.discreteSize(size: boundsSize)
+      
+      let displayStr = "\(discreteSize.width) × \(discreteSize.height)"
+      let attrs = [ NSFontAttributeName: NSFont.systemFontOfSize(24) ]
+      
+      let size = displayStr.sizeWithAttributes(attrs)
+      let x = (boundsSize.width - size.width) / 2
+      let y = (boundsSize.height - size.height) / 2
+      
+      displayStr.drawAtPoint(CGPoint(x: x, y: y), withAttributes: attrs)
       return
     }
 
