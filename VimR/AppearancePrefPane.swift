@@ -135,7 +135,7 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     ligatureCheckbox.autoPinEdge(.Top, toEdge: .Bottom, ofView: sizeCombo, withOffset: 18)
     ligatureCheckbox.autoPinEdge(.Left, toEdge: .Right, ofView: fontTitle, withOffset: 5)
 
-    previewScrollView.autoSetDimension(.Height, toSize: 200)
+    previewScrollView.autoSetDimension(.Height, toSize: 200, relation: .GreaterThanOrEqual)
     previewScrollView.autoPinEdge(.Top, toEdge: .Bottom, ofView: ligatureCheckbox, withOffset: 18)
     previewScrollView.autoPinEdgeToSuperviewEdge(.Right, withInset: 18)
     previewScrollView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 18)

@@ -76,7 +76,6 @@ class GeneralPrefPane: PrefPane {
 
     onReactivation.autoPinEdge(.Top, toEdge: .Bottom, ofView: whenLaunching, withOffset: 5)
     onReactivation.autoPinEdge(.Left, toEdge: .Left, ofView: whenLaunching)
-    onReactivation.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 18)
 
     self.openWhenLaunchingCheckbox.boolState = self.data.openNewWindowWhenLaunching
     self.openOnReactivationCheckbox.boolState = self.data.openNewWindowOnReactivation

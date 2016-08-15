@@ -43,8 +43,7 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
       self.paneContainer.documentView = newValue
 
       // Auto-layout seems to be smart enough not to add redundant constraints.
-      newValue.autoPinEdgeToSuperviewEdge(.Right)
-      newValue.autoPinEdgeToSuperviewEdge(.Left)
+      newValue.autoPinEdgesToSuperviewEdges()
     }
   }
 
