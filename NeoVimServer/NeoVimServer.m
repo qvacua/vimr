@@ -8,6 +8,12 @@
 #import "Logging.h"
 
 
+// When #define'd you can execute the NeoVimServer binary and neovim will be started:
+// $ ./NeoVimServer local remote
+#undef DEBUG_NEOVIM_SERVER_STANDALONE
+//#define DEBUG_NEOVIM_SERVER_STANDALONE
+
+
 static const double qTimeout = 10.0;
 
 #define data_to_array(type)                                               \
@@ -65,7 +71,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   _localServerThread = [[NSThread alloc] initWithTarget:self selector:@selector(runLocalServer) object:nil];
   [_localServerThread start];
 
+#ifndef DEBUG_NEOVIM_SERVER_STANDALONE
   _remoteServerPort = CFMessagePortCreateRemote(kCFAllocatorDefault, (__bridge CFStringRef) _remoteServerName);
+#endif
 
   return self;
 }
@@ -111,6 +119,11 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   CFRunLoopSourceRef runLoopSrc = CFMessagePortCreateRunLoopSource(kCFAllocatorDefault, _localServerPort, 0);
   CFRunLoopAddSource(_localServerRunLoop, runLoopSrc, kCFRunLoopCommonModes);
   CFRelease(runLoopSrc);
+
+#ifdef DEBUG_NEOVIM_SERVER_STANDALONE
+  server_start_neovim();
+#endif
+
   CFRunLoopRun();
 }
 
@@ -119,6 +132,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (void)sendMessageWithId:(NeoVimServerMsgId)msgid data:(NSData *)data {
+#ifdef DEBUG_NEOVIM_SERVER_STANDALONE
+  return;
+#endif
+  
   if (_remoteServerPort == NULL) {
     log4Warn("Remote server is null: The msg (%lu:%@) could not be sent.", (unsigned long) msgid, data);
     return;
@@ -136,7 +153,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (void)notifyReadiness {
+#ifndef DEBUG_NEOVIM_SERVER_STANDALONE
   [self sendMessageWithId:NeoVimServerMsgIdServerReady data:nil];
+#endif
 }
 
 - (NSData *)handleMessageWithId:(SInt32)msgid data:(NSData *)data {

@@ -234,9 +234,13 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       [self establishNeoVimConnection];
       return;
 
-    case NeoVimServerMsgIdNeoVimReady:
+    case NeoVimServerMsgIdNeoVimReady: {
+      if (data.length > 0) {
+        log4Warn("There was an error during the initialization of NeoVim. Use :messages to view the error messages.");
+      }
       [_bridge neoVimUiIsReady];
       return;
+    }
 
     case NeoVimServerMsgIdResize: {
       int *values = data_to_int_array(data, 2);

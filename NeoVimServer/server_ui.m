@@ -435,7 +435,6 @@ static void neovim_command(void **argv) {
   @autoreleasepool {
     NSString *input = (NSString *) argv[0];
 
-    // Use cStringUsingEncoding and not UTF8String since in vim_command does do_cmdline_cmd(str.data).
     Error err;
     vim_command((String) {
         .data = (char *) [input cStringUsingEncoding:NSUTF8StringEncoding],
@@ -454,7 +453,7 @@ static void neovim_input(void **argv) {
 
     // FIXME: check the length of the consumed bytes by neovim and if not fully consumed, call vim_input again.
     vim_input((String) {
-        .data = (char *) input.UTF8String,
+        .data = (char *) [input cStringUsingEncoding:NSUTF8StringEncoding],
         .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
     });
 
@@ -543,7 +542,13 @@ void server_start_neovim() {
 
   _backspace = [[NSString alloc] initWithString:@"<BS>"];
 
-  [_neovim_server sendMessageWithId:NeoVimServerMsgIdNeoVimReady];
+  NSData *data = nil;
+  if (msg_didany > 0) {
+    bool value = true;
+    data = [[NSData alloc] initWithBytes:&value length:sizeof(bool)];
+  }
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdNeoVimReady data:data];
+  [data release];
 }
 
 void server_delete(NSInteger count) {
