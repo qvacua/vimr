@@ -87,9 +87,9 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Draw string at the current cursor which was set by a previous cursorGotoRow:column callback.
  */
-- (void)put:(NSString *)string;
+- (void)put:(NSString *)string screenCursor:(Position)screenCursor;
 
-- (void)putMarkedText:(NSString *)markedText;
+- (void)putMarkedText:(NSString *)markedText screenCursor:(Position)screenCursor;
 - (void)unmarkRow:(int)row column:(int)column;
 
 - (void)bell;

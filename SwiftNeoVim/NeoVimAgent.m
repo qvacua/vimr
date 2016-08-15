@@ -310,15 +310,22 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return;
     }
 
-    case NeoVimServerMsgIdPut: {
-      NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-      [_bridge put:string];
-      return;
-    }
-
+    case NeoVimServerMsgIdPut:
     case NeoVimServerMsgIdPutMarked: {
-      NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-      [_bridge putMarkedText:string];
+      int *values = (int *) data.bytes;
+      int row = values[0];
+      int column = values[1];
+
+      NSString *string = [[NSString alloc] initWithBytes:(values + 2)
+                                                  length:data.length - 2 * sizeof(int)
+                                                encoding:NSUTF8StringEncoding];
+
+      if (msgid == NeoVimServerMsgIdPut) {
+        [_bridge put:string screenCursor:(Position) { .row=row, .column=column }];
+      } else {
+        [_bridge putMarkedText:string screenCursor:(Position) { .row=row, .column=column }];
+      }
+
       return;
     }
 

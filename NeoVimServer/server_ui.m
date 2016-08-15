@@ -279,8 +279,13 @@ static void server_ui_put(UI *ui __unused, uint8_t *str, size_t len) {
   queue(^{
     NSString *string = [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
 //    printf("%s", [string cStringUsingEncoding:NSUTF8StringEncoding]);
+    int cursor[] = { screen_cursor_row(), screen_cursor_column() };
 
-    NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableData *data = [[NSMutableData alloc]
+        initWithCapacity:2 * sizeof(int) + [string lengthOfBytesUsingEncoding:NSUTF8StringEncoding]];
+    [data appendBytes:cursor length:2 * sizeof(int)];
+    [data appendData:[string dataUsingEncoding:NSUTF8StringEncoding]];
+
     if (_marked_text != nil && _marked_row == _put_row && _marked_column == _put_column) {
 //      log4Debug("putting marked text: '%@'", string);
       [_neovim_server sendMessageWithId:NeoVimServerMsgIdPutMarked data:data];
@@ -293,6 +298,8 @@ static void server_ui_put(UI *ui __unused, uint8_t *str, size_t len) {
     }
 
     _put_column += 1;
+
+    [data release];
     [string release];
   });
 }

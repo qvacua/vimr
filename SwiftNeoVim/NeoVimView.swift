@@ -1056,7 +1056,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     }
   }
   
-  public func put(string: String) {
+  public func put(string: String, screenCursor: Position) {
     DispatchUtils.gui {
       let curPos = self.grid.putPosition
 //      NSLog("\(#function): \(curPos) -> \(string)")
@@ -1072,13 +1072,11 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
         self.setNeedsDisplay(cellPosition: curPos)
       }
 
-      // When the cursor is in the command line, then we need this...
-      self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(curPos))
-      self.setNeedsDisplay(screenCursor: self.grid.screenCursor)
+      self.updateCursorWhenPutting(currentPosition: curPos, screenCursor: screenCursor)
     }
   }
 
-  public func putMarkedText(markedText: String) {
+  public func putMarkedText(markedText: String, screenCursor: Position) {
     DispatchUtils.gui {
       NSLog("\(#function): '\(markedText)'")
       let curPos = self.grid.putPosition
@@ -1090,7 +1088,8 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
       if markedText.characters.count == 0 {
         self.setNeedsDisplay(position: self.grid.previousCellPosition(curPos))
       }
-      self.setNeedsDisplay(screenCursor: self.grid.screenCursor)
+
+      self.updateCursorWhenPutting(currentPosition: curPos, screenCursor: screenCursor)
     }
   }
 
@@ -1156,6 +1155,18 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
       self.delegate?.neoVimStopped()
       self.agent.quit()
     }
+  }
+  
+  private func updateCursorWhenPutting(currentPosition curPos: Position, screenCursor: Position) {
+    if self.mode == .Cmdline {
+      // When the cursor is in the command line, then we need this...
+      self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(curPos))
+      self.setNeedsDisplay(screenCursor: self.grid.screenCursor)
+    }
+    
+    self.setNeedsDisplay(screenCursor: screenCursor)
+    self.setNeedsDisplay(cellPosition: self.grid.screenCursor)
+    self.grid.moveCursor(screenCursor)
   }
   
   private func setNeedsDisplay(region region: Region) {
