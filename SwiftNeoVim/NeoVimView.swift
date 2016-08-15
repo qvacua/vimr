@@ -21,7 +21,7 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
   
   public static let minFontSize = CGFloat(4)
   public static let maxFontSize = CGFloat(128)
-  public static let defaultFont = NSFont(name: "Menlo", size: 13)!
+  public static let defaultFont = NSFont.userFixedPitchFontOfSize(13)!
 
   public let uuid = NSUUID().UUIDString
   public weak var delegate: NeoVimViewDelegate?
