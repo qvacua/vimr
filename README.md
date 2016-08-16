@@ -28,7 +28,7 @@ There are other working NeoVim GUIs for OS X, e.g. [NyaoVim](https://github.com/
 
 ### SwiftNeoVim
 
-[SwiftNeoVim](https://github.com/qvacua/vimr/tree/master/SwiftNeoVim) is the Cocoa Framework which bundles everything, e.g. the NeoVim's `runtime`-files, needed to embed NeoVim in a Cocoa App. It is really easy to embed NeoVim in your own App: Just add an instance of `NeoVimView` somewhere in your App and that's it! 😎 (You can treat it as any other `NSView`-subclasses)
+[SwiftNeoVim](https://github.com/qvacua/vimr/tree/master/SwiftNeoVim) is the Cocoa Framework which bundles everything, e.g. NeoVim's `runtime`-files, needed to embed NeoVim in a Cocoa App. It is really easy to embed NeoVim in your own App: Just add an instance of `NeoVimView` somewhere in your App and that's it! 😎 (You can treat it as any other `NSView`-subclasses)
 
 TBD: More details.
 
