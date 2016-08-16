@@ -316,10 +316,10 @@ extension NeoVimView {
                              context: context)
     }
 
-    self.drawCursor(self.grid.foreground)
+    self.drawCursor(color: self.grid.background)
   }
 
-  private func drawCursor(foreground: UInt32) {
+  private func drawCursor(color color: UInt32) {
     // FIXME: for now do some rudimentary cursor drawing
     let cursorPosition = self.mode == .Cmdline ? self.grid.putPosition : self.grid.screenCursor
 //    NSLog("\(#function): \(cursorPosition)")
@@ -330,15 +330,11 @@ extension NeoVimView {
       cursorRect = cursorRect.union(self.cellRectFor(row: nextPosition.row, column:nextPosition.column))
     }
 
-    ColorUtils.colorIgnoringAlpha(foreground).set()
+    ColorUtils.colorIgnoringAlpha(color).set()
     NSRectFillUsingOperation(cursorRect, .CompositeDifference)
   }
 
   private func drawBackground(positions positions: [CGPoint], background: UInt32) {
-    if background == self.grid.background {
-      return
-    }
-
     ColorUtils.colorIgnoringAlpha(background).set()
 //    NSColor(calibratedRed: CGFloat(drand48()), green: CGFloat(drand48()), blue: CGFloat(drand48()), alpha: 1.0).set()
     let backgroundRect = CGRect(
@@ -1018,7 +1014,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
         self.setNeedsDisplay(region: self.grid.regionOfWord(at: screenCursor))
       } else {
         self.setNeedsDisplay(cellPosition: self.grid.putPosition)
-        self.setNeedsDisplay(screenCursor: position)
+        self.setNeedsDisplay(screenCursor: screenCursor)
       }
 
       self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(self.grid.putPosition))
