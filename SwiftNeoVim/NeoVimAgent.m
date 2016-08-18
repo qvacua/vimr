@@ -83,11 +83,17 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [_localServerThread cancel];
 }
 
-- (void)establishLocalServer {
+- (void)runLocalServerAndNeoVimWithPath:(NSString *)path {
   _localServerThread = [[NSThread alloc] initWithTarget:self selector:@selector(runLocalServer) object:nil];
   [_localServerThread start];
 
+
   _neoVimServerTask = [[NSTask alloc] init];
+
+  NSMutableDictionary *env = [NSMutableDictionary dictionaryWithDictionary:[NSProcessInfo processInfo].environment];
+  env[@"PATH"] = path;
+
+  _neoVimServerTask.environment = env;
   _neoVimServerTask.currentDirectoryPath = NSHomeDirectory();
   _neoVimServerTask.launchPath = [self neoVimServerExecutablePath];
   _neoVimServerTask.arguments = @[ [self localServerName], [self remoteServerName] ];

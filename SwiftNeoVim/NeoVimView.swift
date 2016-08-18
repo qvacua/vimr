@@ -111,7 +111,7 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
 
     // We cannot set bridge in init since self is not available before super.init()...
     self.agent.bridge = self
-    self.agent.establishLocalServer()
+    self.agent.runLocalServerAndNeoVimWithPath(ShellUtils.pathForUserShell())
   }
   
   required public init?(coder: NSCoder) {
