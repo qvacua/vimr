@@ -40,7 +40,7 @@ class ShellUtils {
 
     var shellOptions = [String]()
     if shellUrl.lastPathComponent != "tsch" {
-      shellOptions.append("-l")
+      shellOptions.append("-l") // tsch allows the -l option only for interactive shell
     }
     shellOptions.append("-c")
     shellOptions.append(ShellUtils.cmdForPath)
