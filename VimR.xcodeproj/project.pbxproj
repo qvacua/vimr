@@ -41,6 +41,11 @@
 		4B570DC31D303CAF006EDC21 /* NeoVimAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B570DC11D303CAF006EDC21 /* NeoVimAgent.m */; };
 		4B6A70941D60E04200E12030 /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* CocoaExtensions.swift */; };
 		4B6A70961D6100E300E12030 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70951D6100E300E12030 /* SwiftCommons.swift */; };
+		4B6A70991D65058A00E12030 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; };
+		4B6A709A1D65058A00E12030 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29C1D29926600C1F92E /* Quick.framework */; };
+		4B6A709C1D6507A000E12030 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B6A709D1D6507A000E12030 /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29C1D29926600C1F92E /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B6A709F1D660CDA00E12030 /* ShellUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A709E1D660CDA00E12030 /* ShellUtils.swift */; };
 		4B854A1D1D31447C00E08DE1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B854A1C1D31447C00E08DE1 /* main.m */; };
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
 		4B9A15241D2993DA009F9F67 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -122,6 +127,17 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4B6A709B1D65079600E12030 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4B6A709C1D6507A000E12030 /* Nimble.framework in CopyFiles */,
+				4B6A709D1D6507A000E12030 /* Quick.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4B854A061D3137B500E08DE1 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -190,6 +206,7 @@
 		4B570DC11D303CAF006EDC21 /* NeoVimAgent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimAgent.m; sourceTree = "<group>"; };
 		4B6A70931D60E04200E12030 /* CocoaExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaExtensions.swift; sourceTree = "<group>"; };
 		4B6A70951D6100E300E12030 /* SwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftCommons.swift; sourceTree = "<group>"; };
+		4B6A709E1D660CDA00E12030 /* ShellUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShellUtils.swift; sourceTree = "<group>"; };
 		4B7BD3321D32530900AAA45E /* Logging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
 		4B854A1A1D31447C00E08DE1 /* NeoVimServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NeoVimServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B854A1C1D31447C00E08DE1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -219,7 +236,7 @@
 		4BEBA50A1CFF374B00673FDF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4BEBA50D1CFF374B00673FDF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		4BEBA50F1CFF374B00673FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4BEBA5141CFF374B00673FDF /* VimR.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VimR.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BEBA5141CFF374B00673FDF /* VimRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VimRTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BEBA5181CFF374B00673FDF /* VimRTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VimRTests.swift; sourceTree = "<group>"; };
 		4BEBA51A1CFF374B00673FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BEBA6621D00157A00673FDF /* runtime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = runtime; path = neovim/runtime; sourceTree = SOURCE_ROOT; };
@@ -277,6 +294,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B6A70991D65058A00E12030 /* Nimble.framework in Frameworks */,
+				4B6A709A1D65058A00E12030 /* Quick.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,6 +334,7 @@
 				4BEE79131D16D1C60012EDAA /* NeoVimView */,
 				4BEE79161D16D3800012EDAA /* CellAttributes.swift */,
 				1929BA6128BFDD54CA92F46E /* ColorUtils.swift */,
+				4B6A709E1D660CDA00E12030 /* ShellUtils.swift */,
 				4B2A2C061D0352CB0074CE9A /* NeoVimUiBridgeProtocol.h */,
 				4B2A2BF91D0351810074CE9A /* SwiftNeoVim.h */,
 				4BDF641A1D0887C100D47E1D /* TextDrawer.h */,
@@ -411,7 +431,7 @@
 			isa = PBXGroup;
 			children = (
 				4BEBA5051CFF374B00673FDF /* VimR.app */,
-				4BEBA5141CFF374B00673FDF /* VimR.xctest */,
+				4BEBA5141CFF374B00673FDF /* VimRTests.xctest */,
 				4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */,
 				4B56F2901D29903F00C1F92E /* SwiftNeoVimTests.xctest */,
 				4B854A1A1D31447C00E08DE1 /* NeoVimServer */,
@@ -560,6 +580,7 @@
 				4BEBA5101CFF374B00673FDF /* Sources */,
 				4BEBA5111CFF374B00673FDF /* Frameworks */,
 				4BEBA5121CFF374B00673FDF /* Resources */,
+				4B6A709B1D65079600E12030 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -568,7 +589,7 @@
 			);
 			name = VimRTests;
 			productName = nvoxTests;
-			productReference = 4BEBA5141CFF374B00673FDF /* VimR.xctest */;
+			productReference = 4BEBA5141CFF374B00673FDF /* VimRTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -681,6 +702,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B6A709F1D660CDA00E12030 /* ShellUtils.swift in Sources */,
 				4BEE79171D16D3800012EDAA /* CellAttributes.swift in Sources */,
 				4BF6E29C1D34153C0053FA76 /* KeyUtils.swift in Sources */,
 				4BCADE081D11ED12004DAD0F /* CocoaExtensions.swift in Sources */,
@@ -1021,6 +1043,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1039,6 +1062,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1057,10 +1081,14 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = VimRTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimRTests;
-				PRODUCT_NAME = VimR;
+				PRODUCT_NAME = VimRTests;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VimR.app/Contents/MacOS/VimR";
 			};
 			name = Debug;
@@ -1070,10 +1098,14 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = VimRTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimRTests;
-				PRODUCT_NAME = VimR;
+				PRODUCT_NAME = VimRTests;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VimR.app/Contents/MacOS/VimR";
 			};
 			name = Release;
