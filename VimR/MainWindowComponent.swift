@@ -143,6 +143,10 @@ extension MainWindowComponent {
 
     self.neoVimView.open(urls: self.urlsToBeOpenedWhenReady)
   }
+
+  func setDirtyStatus(dirty: Bool) {
+    self.windowController.setDocumentEdited(dirty)
+  }
   
   func neoVimStopped() {
     self.windowController.close()

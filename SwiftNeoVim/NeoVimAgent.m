@@ -383,6 +383,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return;
     }
 
+    case NeoVimServerMsgIdDirtyStatusChanged: {
+      bool *values = data_to_bool_array(data, 1);
+      [_bridge setDirtyStatus:values[0]];
+      return;
+    }
+
     case NeoVimServerMsgIdStop:
       [_bridge stop];
       return;

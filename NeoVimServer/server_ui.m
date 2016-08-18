@@ -22,6 +22,8 @@
 #import <nvim/event/signal.h>
 #import <nvim/main.h>
 #import <nvim/ex_getln.h>
+#import <nvim/fileio.h>
+#import <nvim/undo.h>
 
 
 #define pun_type(t, x) (*((t *)(&x)))
@@ -64,6 +66,8 @@ static int _marked_delta = 0;
 
 static int _put_row = -1;
 static int _put_column = -1;
+
+static bool _dirty = false;
 
 static NSString *_backspace = nil;
 
@@ -404,7 +408,7 @@ static void server_ui_set_title(UI *ui __unused, char *title) {
   if (title == NULL) {
     return;
   }
-  
+
   queue(^{
     NSString *string = [[NSString alloc] initWithCString:title encoding:NSUTF8StringEncoding];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetTitle data:[string dataUsingEncoding:NSUTF8StringEncoding]];
@@ -416,7 +420,7 @@ static void server_ui_set_icon(UI *ui __unused, char *icon) {
   if (icon == NULL) {
     return;
   }
-  
+
   queue(^{
     NSString *string = [[NSString alloc] initWithCString:icon encoding:NSUTF8StringEncoding];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetIcon data:[string dataUsingEncoding:NSUTF8StringEncoding]];
@@ -466,6 +470,22 @@ static void neovim_input(void **argv) {
     });
 
     [input release]; // retained in loop_schedule(&main_loop, ...) (in _queue) somewhere
+  }
+}
+
+static void neovim_send_dirty_status(void **argv) {
+  @autoreleasepool {
+    bool new_dirty_status = server_has_dirty_docs();
+//    log4Debug("dirty status: %d vs. %d", _dirty, new_dirty_status);
+    if (_dirty == new_dirty_status) {
+      return;
+    }
+
+    _dirty = new_dirty_status;
+//    log4Debug("sending dirty status: %d", _dirty);
+    NSData *data = [[NSData alloc] initWithBytes:&_dirty length:sizeof(bool)];
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdDirtyStatusChanged data:data];
+    [data release];
   }
 }
 
@@ -521,6 +541,24 @@ void custom_ui_start(void) {
   ui->set_icon = server_ui_set_icon;
 
   ui_bridge_attach(ui, server_ui_main, server_ui_scheduler);
+}
+
+void custom_ui_autocmds_groups(
+    event_T event, char_u *fname, char_u *fname_io, int group, bool force, buf_T *buf, exarg_T *eap
+) {
+  log4Debug("got event %d for file %s in group %d.", event, fname, group);
+  switch (event) {
+    // Did we get them all?
+    case EVENT_TEXTCHANGED:
+    case EVENT_TEXTCHANGEDI:
+    case EVENT_BUFWRITEPOST:
+    case EVENT_BUFLEAVE:
+      loop_schedule(&main_loop, event_create(1, neovim_send_dirty_status, 0));
+      return;
+
+    default:
+      return;
+  }
 }
 
 void server_start_neovim() {
@@ -652,7 +690,11 @@ void server_insert_marked_text(NSString *markedText) {
 
 bool server_has_dirty_docs() {
   FOR_ALL_BUFFERS(buffer) {
-    if (buffer->b_changed) {
+    if (buffer->b_p_bl == 0) {
+      continue;
+    }
+
+    if (bufIsChanged(buffer)) {
       return true;
     }
   }
@@ -673,6 +715,10 @@ NSString *server_escaped_filename(NSString *filename) {
 NSArray *server_buffers() {
   NSMutableArray <NeoVimBuffer *> *result = [[NSMutableArray new] autorelease];
   FOR_ALL_BUFFERS(buf) {
+    if (buf->b_p_bl == 0) {
+      continue;
+    }
+
     NSString *fileName = nil;
     if (buf->b_ffname != NULL) {
       fileName = [NSString stringWithCString:(const char *) buf->b_ffname encoding:NSUTF8StringEncoding];

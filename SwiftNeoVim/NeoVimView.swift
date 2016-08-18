@@ -1161,6 +1161,12 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   
   public func setIcon(icon: String) {
   }
+
+  public func setDirtyStatus(dirty: Bool) {
+    DispatchUtils.gui {
+      self.delegate?.setDirtyStatus(dirty)
+    }
+  }
   
   public func stop() {
     DispatchUtils.gui {
