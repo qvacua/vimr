@@ -33,7 +33,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4BEBA5131CFF374B00673FDF"
-               BuildableName = "VimR.xctest"
+               BuildableName = "VimRTests.xctest"
                BlueprintName = "VimRTests"
                ReferencedContainer = "container:VimR.xcodeproj">
             </BuildableReference>
