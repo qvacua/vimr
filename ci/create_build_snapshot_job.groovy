@@ -1,11 +1,20 @@
 // Install the following plugins in addition to recommended plugins when installing Jenkins
 // - Job DSL
 // - AnsiColor
+//
+// And set the "Markup Formatter" in "Manage Jenkins -> Configure Global Security" to "Safe HTML".
 
 def buildSnapshotJob = freeStyleJob('vimr_build_snapshot')
 
 buildSnapshotJob.with {
-  description 'Builds a new snapshot of VimR and pushes the tag'
+  description '''\
+Builds a new snapshot of VimR and pushes the tag:<br>
+<ul>
+  <li>
+    <a href="lastSuccessfulBuild/artifact/build/Release/">Last successful Release</a>
+  </li>
+</ul>
+'''
 
   logRotator {
     numToKeep(30)
