@@ -108,14 +108,21 @@ extension AppDelegate {
       alert.alertStyle = .WarningAlertStyle
 
       if alert.runModal() == NSAlertSecondButtonReturn {
-        self.mainWindowManager.closeAllWindowsWithoutSaving()
         self.quitWhenAllWindowsAreClosed = true
-        return .TerminateCancel
+        self.mainWindowManager.closeAllWindowsWithoutSaving()
       }
 
       return .TerminateCancel
     }
 
+    if self.mainWindowManager.hasMainWindow() {
+      self.quitWhenAllWindowsAreClosed = true
+      self.mainWindowManager.closeAllWindows()
+
+      return .TerminateCancel
+    }
+
+    // There are no open main window, then just quit.
     return .TerminateNow
   }
   

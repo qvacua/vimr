@@ -62,6 +62,10 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
     return self.neoVimView.hasDirtyDocs()
   }
 
+  func closeAllNeoVimWindows() {
+    self.neoVimView.closeAllWindows()
+  }
+
   func closeAllNeoVimWindowsWithoutSaving() {
     self.neoVimView.closeAllWindowsWithoutSaving()
   }

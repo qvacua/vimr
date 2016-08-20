@@ -56,6 +56,15 @@ class MainWindowManager {
     self.mainWindowComponents.values.forEach { $0.closeAllNeoVimWindowsWithoutSaving() }
   }
 
+  /// Assumes that no window is dirty.
+  func closeAllWindows() {
+    self.mainWindowComponents.values.forEach { $0.closeAllNeoVimWindows() }
+  }
+
+  func hasMainWindow() -> Bool {
+    return !self.mainWindowComponents.isEmpty
+  }
+
   private func addReactions() {
     self.source
       .filter { $0 is PrefData }

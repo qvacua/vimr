@@ -139,12 +139,7 @@ extension NeoVimView {
   }
   
   public func newTab() {
-    switch self.mode {
-    case .Normal:
-      self.agent.vimInput(":tabe<CR>")
-    default:
-      self.agent.vimInput("<Esc>:tabe<CR>")
-    }
+    self.exec(command: "tabe")
   }
 
   public func open(urls urls: [NSURL]) {
@@ -152,41 +147,42 @@ extension NeoVimView {
 
     urls.enumerate().forEach { (idx, url) in
       if idx == 0 && currentBufferIsTransient {
-        self.open(url, cmd: ":e")
+        self.open(url, cmd: "e")
       } else {
-        self.open(url, cmd: ":tabe")
+        self.open(url, cmd: "tabe")
       }
     }
   }
   
   public func openInNewTab(urls urls: [NSURL]) {
-    urls.forEach { self.open($0, cmd: ":tabe") }
+    urls.forEach { self.open($0, cmd: "tabe") }
   }
 
   public func closeCurrentTab() {
-    switch self.mode {
-    case .Normal:
-      self.agent.vimInput(":q<CR>")
-    default:
-      self.agent.vimInput("<Esc>:q<CR>")
-    }
+    self.exec(command: "q")
   }
 
   public func closeCurrentTabWithoutSaving() {
-    switch self.mode {
-    case .Normal:
-      self.agent.vimInput(":q!<CR>")
-    default:
-      self.agent.vimInput("<Esc>:q!<CR>")
-    }
+    self.exec(command: "q!")
+  }
+
+  public func closeAllWindows() {
+    self.exec(command: "qa")
   }
   
   public func closeAllWindowsWithoutSaving() {
+    self.exec(command: "qa!")
+  }
+
+  /// Does the following
+  /// - `Mode.Normal`: `:command<CR>`
+  /// - else: `:<Esc>:command<CR>`
+  private func exec(command cmd: String) {
     switch self.mode {
     case .Normal:
-      self.agent.vimInput(":qa!<CR>")
+      self.agent.vimInput(":\(cmd)<CR>")
     default:
-      self.agent.vimInput("<Esc>:qa!<CR>")
+      self.agent.vimInput("<Esc>:\(cmd)<CR>")
     }
   }
   
@@ -196,13 +192,7 @@ extension NeoVimView {
     }
     
     let escapedFileName = self.agent.escapedFileNames([path])[0]
-    
-    switch self.mode {
-    case .Normal:
-      self.agent.vimInput("\(cmd) \(escapedFileName)<CR>")
-    default:
-      self.agent.vimInput("<Esc>\(cmd) \(escapedFileName)<CR>")
-    }
+    self.exec(command: "\(cmd) \(escapedFileName)")
   }
 }
 
