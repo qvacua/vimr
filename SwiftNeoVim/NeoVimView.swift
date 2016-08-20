@@ -129,6 +129,10 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
 
 // MARK: - API
 extension NeoVimView {
+  
+  public func currentBuffer() -> NeoVimBuffer {
+    return self.agent.buffers().filter { $0.current }.first!
+  }
 
   public func hasDirtyDocs() -> Bool {
     return self.agent.hasDirtyDocs()
@@ -157,9 +161,26 @@ extension NeoVimView {
   public func openInNewTab(urls urls: [NSURL]) {
     urls.forEach { self.open($0, cmd: "tabe") }
   }
+  
+  public func openInCurrentTab(url url: NSURL) {
+    self.open(url, cmd: "e")
+  }
 
   public func closeCurrentTab() {
     self.exec(command: "q")
+  }
+  
+  public func saveCurrentTab() {
+    self.exec(command: "w")
+  }
+  
+  public func saveCurrentTab(url url: NSURL) {
+    guard let path = url.path else {
+      return
+    }
+    
+    let escapedFileName = self.agent.escapedFileNames([path])[0]
+    self.exec(command: "w \(escapedFileName)")
   }
 
   public func closeCurrentTabWithoutSaving() {

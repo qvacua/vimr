@@ -87,6 +87,16 @@
                                     <action selector="openDocument:" target="-1" id="zbe-h0-oBM"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Save..." keyEquivalent="s" id="Pgi-pt-dWC">
+                                <connections>
+                                    <action selector="saveDocument:" target="-1" id="Qhz-Mg-Anr"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Save As…" keyEquivalent="S" id="01H-3e-ZCV">
+                                <connections>
+                                    <action selector="saveDocumentAs:" target="-1" id="2iM-rb-3fJ"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="t9v-Ee-SaA"/>
                             <menuItem title="Close" keyEquivalent="w" id="DVo-aG-piG">
                                 <connections>

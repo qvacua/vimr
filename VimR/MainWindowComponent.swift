@@ -110,6 +110,60 @@ extension MainWindowComponent {
       self.neoVimView.open(urls: panel.URLs)
     }
   }
+
+  @IBAction func saveDocument(sender: AnyObject!) {
+    let curBuf = self.neoVimView.currentBuffer()
+    
+    if curBuf.fileName == nil {
+      self.savePanelSheet { self.neoVimView.saveCurrentTab(url: $0) }
+      return
+    }
+    
+    self.neoVimView.saveCurrentTab()
+  }
+  
+  @IBAction func saveDocumentAs(sender: AnyObject!) {
+    self.savePanelSheet { url in
+      self.neoVimView.saveCurrentTab(url: url)
+      
+      if self.neoVimView.isCurrentBufferDirty() {
+        self.neoVimView.openInNewTab(urls: [url])
+      } else {
+        self.neoVimView.openInCurrentTab(url: url)
+      }
+    }
+  }
+  
+  private func savePanelSheet(action action: (NSURL) -> Void) {
+    let panel = NSSavePanel()
+    panel.beginSheetModalForWindow(self.window) { result in
+      guard result == NSFileHandlingPanelOKButton else {
+        return
+      }
+      
+      let showAlert: () -> Void = {
+        let alert = NSAlert()
+        alert.addButtonWithTitle("OK")
+        alert.messageText = "Invalid File Name"
+        alert.informativeText = "The file name you have entered cannot be used. Please use a different name."
+        alert.alertStyle = .WarningAlertStyle
+        
+        alert.runModal()
+      }
+      
+      guard let url = panel.URL else {
+        showAlert()
+        return
+      }
+      
+      guard url.path != nil else {
+        showAlert()
+        return
+      }
+      
+      action(url)
+    }
+  }
 }
 
 // MARK: - Font Menu Items
