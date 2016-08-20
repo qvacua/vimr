@@ -81,10 +81,15 @@
                                     <action selector="newTab:" target="-1" id="RfK-C0-Bu9"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
                             <menuItem title="Open…" keyEquivalent="o" id="IAo-SY-fd9">
                                 <connections>
                                     <action selector="openDocument:" target="-1" id="zbe-h0-oBM"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="t9v-Ee-SaA"/>
+                            <menuItem title="Close" keyEquivalent="w" id="DVo-aG-piG">
+                                <connections>
+                                    <action selector="performClose:" target="-1" id="HmO-Ls-i7Q"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Save..." keyEquivalent="s" id="Pgi-pt-dWC">
@@ -95,12 +100,6 @@
                             <menuItem title="Save As…" keyEquivalent="S" id="01H-3e-ZCV">
                                 <connections>
                                     <action selector="saveDocumentAs:" target="-1" id="2iM-rb-3fJ"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="t9v-Ee-SaA"/>
-                            <menuItem title="Close" keyEquivalent="w" id="DVo-aG-piG">
-                                <connections>
-                                    <action selector="performClose:" target="-1" id="HmO-Ls-i7Q"/>
                                 </connections>
                             </menuItem>
                         </items>
