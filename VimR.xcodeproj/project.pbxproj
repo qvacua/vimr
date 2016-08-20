@@ -52,6 +52,7 @@
 		4B9A15251D2993DA009F9F67 /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29C1D29926600C1F92E /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B9A15261D2993DF009F9F67 /* SwiftNeoVim.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BB1BEA91D48773200463C29 /* RxSwiftUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1BEA81D48773200463C29 /* RxSwiftUtils.swift */; };
+		4BC146EC1D68F70D00120BF0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC146EB1D68F70D00120BF0 /* main.swift */; };
 		4BCADE081D11ED12004DAD0F /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */; };
 		4BD3BF931D32A95800082605 /* MainWindowComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD3BF921D32A95800082605 /* MainWindowComponent.swift */; };
 		4BD3BF971D32B0DB00082605 /* MainWindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD3BF961D32B0DB00082605 /* MainWindowManager.swift */; };
@@ -95,6 +96,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 4B2A2BF61D0351810074CE9A;
 			remoteInfo = SwiftNeoVim;
+		};
+		4BC146F01D69059800120BF0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4BEBA4FD1CFF374B00673FDF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4BC146E81D68F70D00120BF0;
+			remoteInfo = "vimr-commandline";
 		};
 		4BDCFADD1D31465100F62670 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -169,6 +177,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4BC146E71D68F70D00120BF0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -212,6 +229,8 @@
 		4B854A1C1D31447C00E08DE1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4B97E2CD1D33F53D00FC0660 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		4BB1BEA81D48773200463C29 /* RxSwiftUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftUtils.swift; sourceTree = "<group>"; };
+		4BC146E91D68F70D00120BF0 /* vimr */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = vimr; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BC146EB1D68F70D00120BF0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaExtensions.swift; sourceTree = "<group>"; };
 		4BCF638F1D323CFD00F15CE4 /* nvim */ = {isa = PBXFileReference; lastKnownFileType = folder; name = nvim; path = neovim/src/nvim; sourceTree = SOURCE_ROOT; };
 		4BD3BF921D32A95800082605 /* MainWindowComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowComponent.swift; sourceTree = "<group>"; };
@@ -276,6 +295,13 @@
 				4BDCFAD91D3145E500F62670 /* libmsgpack.a in Frameworks */,
 				4BDCFADB1D3145E500F62670 /* libvterm.a in Frameworks */,
 				4BDCFAD71D3145E500F62670 /* libluajit-5.1.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BC146E61D68F70D00120BF0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -399,6 +425,14 @@
 			name = resources;
 			sourceTree = "<group>";
 		};
+		4BC146EA1D68F70D00120BF0 /* vimr-commandline */ = {
+			isa = PBXGroup;
+			children = (
+				4BC146EB1D68F70D00120BF0 /* main.swift */,
+			);
+			path = "vimr-commandline";
+			sourceTree = "<group>";
+		};
 		4BDCFADC1D3145EA00F62670 /* lib */ = {
 			isa = PBXGroup;
 			children = (
@@ -422,6 +456,7 @@
 				4B2A2BF81D0351810074CE9A /* SwiftNeoVim */,
 				4B56F2911D29903F00C1F92E /* SwiftNeoVimTests */,
 				4B854A1B1D31447C00E08DE1 /* NeoVimServer */,
+				4BC146EA1D68F70D00120BF0 /* vimr-commandline */,
 				4B2A2BE61D0225840074CE9A /* Frameworks */,
 				4BEBA5061CFF374B00673FDF /* Products */,
 			);
@@ -435,6 +470,7 @@
 				4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */,
 				4B56F2901D29903F00C1F92E /* SwiftNeoVimTests.xctest */,
 				4B854A1A1D31447C00E08DE1 /* NeoVimServer */,
+				4BC146E91D68F70D00120BF0 /* vimr */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -554,6 +590,23 @@
 			productReference = 4B854A1A1D31447C00E08DE1 /* NeoVimServer */;
 			productType = "com.apple.product-type.tool";
 		};
+		4BC146E81D68F70D00120BF0 /* vimr-commandline */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4BC146EF1D68F70D00120BF0 /* Build configuration list for PBXNativeTarget "vimr-commandline" */;
+			buildPhases = (
+				4BC146E51D68F70D00120BF0 /* Sources */,
+				4BC146E61D68F70D00120BF0 /* Frameworks */,
+				4BC146E71D68F70D00120BF0 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "vimr-commandline";
+			productName = "vimr-commandline";
+			productReference = 4BC146E91D68F70D00120BF0 /* vimr */;
+			productType = "com.apple.product-type.tool";
+		};
 		4BEBA5041CFF374B00673FDF /* VimR */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4BEBA51D1CFF374B00673FDF /* Build configuration list for PBXNativeTarget "VimR" */;
@@ -566,6 +619,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				4BC146F11D69059800120BF0 /* PBXTargetDependency */,
 				4B2A2BFD1D0351810074CE9A /* PBXTargetDependency */,
 			);
 			name = VimR;
@@ -612,6 +666,9 @@
 					4B854A191D31447C00E08DE1 = {
 						CreatedOnToolsVersion = 7.3.1;
 					};
+					4BC146E81D68F70D00120BF0 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
 					4BEBA5041CFF374B00673FDF = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = H96Q2NKTQH;
@@ -640,6 +697,7 @@
 				4B2A2BF61D0351810074CE9A /* SwiftNeoVim */,
 				4B56F28F1D29903F00C1F92E /* SwiftNeoVimTests */,
 				4B854A191D31447C00E08DE1 /* NeoVimServer */,
+				4BC146E81D68F70D00120BF0 /* vimr-commandline */,
 			);
 		};
 /* End PBXProject section */
@@ -737,6 +795,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4BC146E51D68F70D00120BF0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BC146EC1D68F70D00120BF0 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4BEBA5011CFF374B00673FDF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -777,6 +843,11 @@
 			isa = PBXTargetDependency;
 			target = 4B2A2BF61D0351810074CE9A /* SwiftNeoVim */;
 			targetProxy = 4B56F2961D29903F00C1F92E /* PBXContainerItemProxy */;
+		};
+		4BC146F11D69059800120BF0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4BC146E81D68F70D00120BF0 /* vimr-commandline */;
+			targetProxy = 4BC146F01D69059800120BF0 /* PBXContainerItemProxy */;
 		};
 		4BDCFADE1D31465100F62670 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -950,6 +1021,22 @@
 					"-liconv",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		4BC146ED1D68F70D00120BF0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				PRODUCT_NAME = vimr;
+			};
+			name = Debug;
+		};
+		4BC146EE1D68F70D00120BF0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				PRODUCT_NAME = vimr;
 			};
 			name = Release;
 		};
@@ -1140,6 +1227,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		4BC146EF1D68F70D00120BF0 /* Build configuration list for PBXNativeTarget "vimr-commandline" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4BC146ED1D68F70D00120BF0 /* Debug */,
+				4BC146EE1D68F70D00120BF0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		4BEBA5001CFF374B00673FDF /* Build configuration list for PBXProject "VimR" */ = {
 			isa = XCConfigurationList;
