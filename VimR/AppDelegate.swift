@@ -81,6 +81,12 @@ extension AppDelegate {
     #if DEBUG
       self.debugMenu.hidden = false
     #endif
+    
+    let appleEventManager = NSAppleEventManager.sharedAppleEventManager()
+    appleEventManager.setEventHandler(self,
+                                      andSelector: #selector(AppDelegate.handleGetURLEvent(_:withReplyEvent:)),
+                                      forEventClass: UInt32(kInternetEventClass),
+                                      andEventID: UInt32(kAEGetURL))
   }
 
   func applicationOpenUntitledFile(sender: NSApplication) -> Bool {
@@ -131,6 +137,22 @@ extension AppDelegate {
     let urls = filenames.map { NSURL(fileURLWithPath: $0) }
     self.mainWindowManager.newMainWindow(urls: urls)
     sender.replyToOpenOrPrint(.Success)
+  }
+}
+
+// MARK: - AppleScript
+extension AppDelegate {
+  
+  func handleGetURLEvent(event:NSAppleEventDescriptor, withReplyEvent:NSAppleEventDescriptor) {
+    guard let url = event.paramDescriptorForKeyword(UInt32(keyDirectObject))?.stringValue else {
+      return
+    }
+    
+    guard url.hasPrefix("vimr://vimr-cli?args=") else {
+      return
+    }
+    
+    Swift.print("\(#function): \(url)")
   }
 }
 

@@ -35,6 +35,19 @@
 	<string>0.9.0-SNAPSHOT-20160820.1912</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.qvacua.vimr.url</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>vimr</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>60</string>
 	<key>LSMinimumSystemVersion</key>
