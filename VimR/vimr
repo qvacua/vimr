@@ -1,0 +1,59 @@
+#!/usr/bin/python
+
+import urllib
+import subprocess
+import argparse
+from pprint import pprint
+
+
+def call_open(arg, dry_run=False):
+    if dry_run:
+        print("/usr/bin/open {0}".format(arg))
+    else:
+        subprocess.call(["/usr/bin/open", arg])
+
+
+def vimr(action, args=None, dry_run=False):
+    files = args.file
+    cwd = args.cwd
+
+    query_params = {}
+    if cwd:
+        query_params["cwd"] = args.cwd
+    if files:
+        query_params["file"] = args.file
+
+    url = "vimr://{0}?{1}".format(action, urllib.urlencode(query_params, True))
+    call_open(url, dry_run)
+
+
+class Action:
+    ACTIVATE = "activate"
+    OPEN = "open"
+    NEW_WINDOWS = "new-windows"
+    SEPARATE_WINDOWS = "separate-windows"
+
+
+parser = argparse.ArgumentParser(description="Open files in VimR. By default all files are open in tabs in the front "
+                                             "most window or in a new window if there is none.")
+
+parser.add_argument("--dry-run", action="store_true", dest="dry_run", help="Just print the 'open' command.")
+parser.add_argument("--cwd", action="store", help="Set the working directory.")
+group = parser.add_mutually_exclusive_group()
+# no option => Open files in tabs in the front most window.
+group.add_argument("-n", action="store_true", dest="new_windows", help="Open files in tabs in a new window.")
+group.add_argument("-s", action="store_true", dest="separate_windows", help="Open files in separate windows.")
+parser.add_argument("file", nargs="*")
+args = parser.parse_args()
+dry_run = args.dry_run
+
+if not args.file:
+    action = Action.ACTIVATE
+elif args.new_windows:
+    action = Action.NEW_WINDOWS
+elif args.separate_windows:
+    action = Action.SEPARATE_WINDOWS
+else:
+    action = Action.OPEN
+
+vimr(action, args, dry_run)

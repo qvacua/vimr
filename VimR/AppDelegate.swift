@@ -7,6 +7,17 @@ import Cocoa
 import RxSwift
 import PureLayout
 
+private let filePrefix = "file="
+private let cwdPrefix = "cwd="
+
+/// Keep the rawValues in sync with Action in the `vimr` Python script.
+private enum VimRUrlAction: String {
+  case activate = "activate"
+  case open = "open"
+  case newWindows = "new-windows"
+  case separateWindows = "separate-windows"
+}
+
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -27,6 +38,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   
   private var quitWhenAllWindowsAreClosed = false
   private var launching = true
+  
+  private let app = NSApp
 
   override init() {
     self.actionSink = self.actionSubject.asObservable()
@@ -143,16 +156,46 @@ extension AppDelegate {
 // MARK: - AppleScript
 extension AppDelegate {
   
-  func handleGetURLEvent(event:NSAppleEventDescriptor, withReplyEvent:NSAppleEventDescriptor) {
-    guard let url = event.paramDescriptorForKeyword(UInt32(keyDirectObject))?.stringValue else {
+  func handleGetURLEvent(event: NSAppleEventDescriptor, withReplyEvent: NSAppleEventDescriptor) {
+    guard let urlString = event.paramDescriptorForKeyword(UInt32(keyDirectObject))?.stringValue else {
       return
     }
     
-    guard url.hasPrefix("vimr://vimr-cli?args=") else {
+    guard let url = NSURL(string: urlString) else {
       return
     }
     
-    Swift.print("\(#function): \(url)")
+    guard url.scheme == "vimr" else {
+      return
+    }
+    
+    guard let rawAction = url.host else {
+      return
+    }
+    
+    guard let action = VimRUrlAction(rawValue: rawAction) else {
+      return
+    }
+    
+    if action == .activate {
+      self.applicationOpenUntitledFile(self.app)
+      return
+    }
+    
+    guard let query = url.query else {
+      return
+    }
+    
+    let queryParams = query.componentsSeparatedByString("&")
+    let fileNames = queryParams
+      .filter { $0.hasPrefix(filePrefix) }
+      .flatMap { $0.without(prefix: filePrefix).stringByRemovingPercentEncoding }
+    let cwd = queryParams
+      .filter { $0.hasPrefix(cwdPrefix) }
+      .flatMap { $0.without(prefix: cwdPrefix).stringByRemovingPercentEncoding }
+      .first ?? NSHomeDirectory()
+    
+    NSLog("\(#function): \(action) in \(cwd): \(fileNames)")
   }
 }
 
