@@ -3,6 +3,7 @@
 import urllib
 import subprocess
 import argparse
+import os
 from pprint import pprint
 
 
@@ -15,13 +16,11 @@ def call_open(arg, dry_run=False):
 
 def vimr(action, args=None, dry_run=False):
     files = args.file
-    cwd = args.cwd
 
-    query_params = {}
-    if cwd:
-        query_params["cwd"] = args.cwd
+    query_params = { "cwd": args.cwd or os.getcwd() }
+
     if files:
-        query_params["file"] = args.file
+        query_params["file"] = files
 
     url = "vimr://{0}?{1}".format(action, urllib.urlencode(query_params, True))
     call_open(url, dry_run)
@@ -30,8 +29,8 @@ def vimr(action, args=None, dry_run=False):
 class Action:
     ACTIVATE = "activate"
     OPEN = "open"
-    NEW_WINDOWS = "new-windows"
-    SEPARATE_WINDOWS = "separate-windows"
+    NEW_WINDOW = "open-in-new-window"
+    SEPARATE_WINDOWS = "open-in-separate-windows"
 
 
 parser = argparse.ArgumentParser(description="Open files in VimR. By default all files are open in tabs in the front "
@@ -41,7 +40,7 @@ parser.add_argument("--dry-run", action="store_true", dest="dry_run", help="Just
 parser.add_argument("--cwd", action="store", help="Set the working directory.")
 group = parser.add_mutually_exclusive_group()
 # no option => Open files in tabs in the front most window.
-group.add_argument("-n", action="store_true", dest="new_windows", help="Open files in tabs in a new window.")
+group.add_argument("-n", action="store_true", dest="new_window", help="Open files in tabs in a new window.")
 group.add_argument("-s", action="store_true", dest="separate_windows", help="Open files in separate windows.")
 parser.add_argument("file", nargs="*")
 args = parser.parse_args()
@@ -49,8 +48,8 @@ dry_run = args.dry_run
 
 if not args.file:
     action = Action.ACTIVATE
-elif args.new_windows:
-    action = Action.NEW_WINDOWS
+elif args.new_window:
+    action = Action.NEW_WINDOW
 elif args.separate_windows:
     action = Action.SEPARATE_WINDOWS
 else:

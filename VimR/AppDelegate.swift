@@ -14,8 +14,8 @@ private let cwdPrefix = "cwd="
 private enum VimRUrlAction: String {
   case activate = "activate"
   case open = "open"
-  case newWindows = "new-windows"
-  case separateWindows = "separate-windows"
+  case newWindow = "open-in-new-window"
+  case separateWindows = "open-in-separate-windows"
 }
 
 @NSApplicationMain
@@ -97,7 +97,7 @@ extension AppDelegate {
     
     let appleEventManager = NSAppleEventManager.sharedAppleEventManager()
     appleEventManager.setEventHandler(self,
-                                      andSelector: #selector(AppDelegate.handleGetURLEvent(_:withReplyEvent:)),
+                                      andSelector: #selector(AppDelegate.handleGetUrlEvent(_:withReplyEvent:)),
                                       forEventClass: UInt32(kInternetEventClass),
                                       andEventID: UInt32(kAEGetURL))
   }
@@ -156,7 +156,7 @@ extension AppDelegate {
 // MARK: - AppleScript
 extension AppDelegate {
   
-  func handleGetURLEvent(event: NSAppleEventDescriptor, withReplyEvent: NSAppleEventDescriptor) {
+  func handleGetUrlEvent(event: NSAppleEventDescriptor, withReplyEvent: NSAppleEventDescriptor) {
     guard let urlString = event.paramDescriptorForKeyword(UInt32(keyDirectObject))?.stringValue else {
       return
     }
@@ -195,7 +195,17 @@ extension AppDelegate {
       .flatMap { $0.without(prefix: cwdPrefix).stringByRemovingPercentEncoding }
       .first ?? NSHomeDirectory()
     
-    NSLog("\(#function): \(action) in \(cwd): \(fileNames)")
+    NSLog("\(#function): \(action) in '\(cwd)': \(fileNames)")
+    switch action {
+    case .open:
+      return
+    case .newWindow:
+      return
+    case .separateWindows:
+      return
+    default:
+      return
+    }
   }
 }
 
