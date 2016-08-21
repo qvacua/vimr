@@ -112,6 +112,11 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
     // We cannot set bridge in init since self is not available before super.init()...
     self.agent.bridge = self
     self.agent.runLocalServerAndNeoVimWithPath(ShellUtils.pathForUserShell())
+    
+    // Neovim is ready now: resize neovim to bounds.
+    DispatchUtils.gui {
+      self.resizeNeoVimUiTo(size: self.bounds.size)
+    }
   }
   
   required public init?(coder: NSCoder) {
@@ -977,13 +982,6 @@ extension NeoVimView {
 
 // MARK: - NeoVimUiBridgeProtocol
 extension NeoVimView: NeoVimUiBridgeProtocol {
-
-  public func neoVimUiIsReady() {
-    DispatchUtils.gui {
-      self.resizeNeoVimUiTo(size: self.bounds.size)
-      self.delegate?.neoVimReady()
-    }
-  }
 
   public func resizeToWidth(width: Int32, height: Int32) {
     DispatchUtils.gui {

@@ -335,7 +335,6 @@
 				4BEE79161D16D3800012EDAA /* CellAttributes.swift */,
 				1929BA6128BFDD54CA92F46E /* ColorUtils.swift */,
 				4B6A709E1D660CDA00E12030 /* ShellUtils.swift */,
-				4B2A2C061D0352CB0074CE9A /* NeoVimUiBridgeProtocol.h */,
 				4B2A2BF91D0351810074CE9A /* SwiftNeoVim.h */,
 				4BDF641A1D0887C100D47E1D /* TextDrawer.h */,
 				4BDF641B1D0887C100D47E1D /* TextDrawer.m */,
@@ -473,6 +472,7 @@
 				4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */,
 				4B570DC01D303CAF006EDC21 /* NeoVimAgent.h */,
 				4B570DC11D303CAF006EDC21 /* NeoVimAgent.m */,
+				4B2A2C061D0352CB0074CE9A /* NeoVimUiBridgeProtocol.h */,
 			);
 			name = NeoVimView;
 			sourceTree = "<group>";

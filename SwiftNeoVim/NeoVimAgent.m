@@ -52,6 +52,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   CFRunLoopRef _localServerRunLoop;
 
   NSTask *_neoVimServerTask;
+  bool _neoVimIsReady;
 }
 
 - (instancetype)initWithUuid:(NSString *)uuid {
@@ -61,6 +62,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   }
 
   _uuid = uuid;
+  _neoVimIsReady = NO;
 
   return self;
 }
@@ -87,7 +89,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   _localServerThread = [[NSThread alloc] initWithTarget:self selector:@selector(runLocalServer) object:nil];
   [_localServerThread start];
 
-
   _neoVimServerTask = [[NSTask alloc] init];
 
   NSMutableDictionary *env = [NSMutableDictionary dictionaryWithDictionary:[NSProcessInfo processInfo].environment];
@@ -98,6 +99,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   _neoVimServerTask.launchPath = [self neoVimServerExecutablePath];
   _neoVimServerTask.arguments = @[ [self localServerName], [self remoteServerName] ];
   [_neoVimServerTask launch];
+
+  // Wait until neovim is ready.
+  while (!_neoVimIsReady
+      && [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]);
 }
 
 - (void)vimCommand:(NSString *)string {
@@ -241,10 +246,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return;
 
     case NeoVimServerMsgIdNeoVimReady: {
+      _neoVimIsReady = YES;
+
       if (data.length > 0) {
         log4Warn("There was an error during the initialization of NeoVim. Use :messages to view the error messages.");
       }
-      [_bridge neoVimUiIsReady];
+
       return;
     }
 

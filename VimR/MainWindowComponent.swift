@@ -23,8 +23,6 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
   private let windowController = NSWindowController(windowNibName: "MainWindow")
   private let window: NSWindow
 
-  private let urlsToBeOpenedWhenReady: [NSURL]
-
   private var defaultEditorFont: NSFont
   private var usesLigatures: Bool
 
@@ -40,7 +38,6 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
     self.window = self.windowController.window!
     self.defaultEditorFont = initialData.appearance.editorFont
     self.usesLigatures = initialData.appearance.editorUsesLigatures
-    self.urlsToBeOpenedWhenReady = urls
 
     super.init()
 
@@ -49,6 +46,10 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
 
     self.addViews()
     self.addReactions()
+    
+    self.neoVimView.font = self.defaultEditorFont
+    self.neoVimView.usesLigatures = self.usesLigatures
+    self.neoVimView.open(urls: urls)
 
     self.window.makeFirstResponder(self.neoVimView)
     self.windowController.showWindow(self)
@@ -193,13 +194,6 @@ extension MainWindowComponent {
 
   func setTitle(title: String) {
     self.window.title = title
-  }
-
-  func neoVimReady() {
-    self.neoVimView.font = self.defaultEditorFont
-    self.neoVimView.usesLigatures = self.usesLigatures
-
-    self.neoVimView.open(urls: self.urlsToBeOpenedWhenReady)
   }
 
   func setDirtyStatus(dirty: Bool) {
