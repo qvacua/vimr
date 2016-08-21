@@ -26,12 +26,46 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
   public let uuid = NSUUID().UUIDString
   public weak var delegate: NeoVimViewDelegate?
 
+  public private(set) var mode = Mode.Normal
+  
+  public var usesLigatures = false {
+    didSet {
+      self.drawer.usesLigatures = self.usesLigatures
+      self.needsDisplay = true
+    }
+  }
+  
+  public var font: NSFont {
+    get {
+      return self._font
+    }
+
+    set {
+      guard newValue.fixedPitch else {
+        return
+      }
+
+      let size = newValue.pointSize
+      guard size >= NeoVimView.minFontSize && size <= NeoVimView.maxFontSize else {
+        return
+      }
+
+      self._font = newValue
+      self.drawer.font = self.font
+      self.cellSize = self.drawer.cellSize
+      self.descent = self.drawer.descent
+      self.leading = self.drawer.leading
+      
+      self.resizeNeoVimUiTo(size: self.bounds.size)
+    }
+  }
+
+  private var _font = NeoVimView.defaultFont
+  
   private let agent: NeoVimAgent
   private let drawer: TextDrawer
   private let fontManager = NSFontManager.sharedFontManager()
   private let pasteboard = NSPasteboard.generalPasteboard()
-
-  public private(set) var mode = Mode.Normal
 
   private let grid = Grid()
 
@@ -64,39 +98,6 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
   private var isCurrentlyPinching = false
   private var pinchTargetScale = CGFloat(1)
   private var pinchImage = NSImage()
-  
-  public var usesLigatures = false {
-    didSet {
-      self.drawer.usesLigatures = self.usesLigatures
-      self.needsDisplay = true
-    }
-  }
-
-  private var _font = NeoVimView.defaultFont
-  public var font: NSFont {
-    get {
-      return self._font
-    }
-
-    set {
-      guard newValue.fixedPitch else {
-        return
-      }
-
-      let size = newValue.pointSize
-      guard size >= NeoVimView.minFontSize && size <= NeoVimView.maxFontSize else {
-        return
-      }
-
-      self._font = newValue
-      self.drawer.font = self.font
-      self.cellSize = self.drawer.cellSize
-      self.descent = self.drawer.descent
-      self.leading = self.drawer.leading
-      
-      self.resizeNeoVimUiTo(size: self.bounds.size)
-    }
-  }
   
   override init(frame rect: NSRect = CGRect.zero) {
     self.drawer = TextDrawer(font: self._font, useLigatures: false)
