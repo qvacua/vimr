@@ -38,8 +38,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   
   private var quitWhenAllWindowsAreClosed = false
   private var launching = true
-  
-  private let app = NSApp
 
   override init() {
     self.actionSink = self.actionSubject.asObservable()
