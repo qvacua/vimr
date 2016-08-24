@@ -202,12 +202,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       server_quit();
       return nil;
 
-    case NeoVimAgentMsgIdDirtyDocs: {
+    case NeoVimAgentMsgIdGetDirtyDocs: {
       bool dirty = server_has_dirty_docs();
       return [NSData dataWithBytes:&dirty length:sizeof(bool)];
     }
 
-    case NeoVimAgentMsgIdEscapeFileNames: {
+    case NeoVimAgentMsgIdGetEscapeFileNames: {
       NSArray <NSString *> *fileNames = [NSKeyedUnarchiver unarchiveObjectWithData:data];
       NSMutableArray <NSString *> *result = [NSMutableArray new];
 

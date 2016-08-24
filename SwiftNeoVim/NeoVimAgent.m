@@ -132,9 +132,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (bool)hasDirtyDocs {
-  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdDirtyDocs data:nil expectsReply:YES];
+  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetDirtyDocs data:nil expectsReply:YES];
   if (response == nil) {
-    log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdDirtyDocs);
+    log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetDirtyDocs);
     return YES;
   }
   
@@ -142,11 +142,15 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   return values[0];
 }
 
+- (NSString *)escapedFileName:(NSString *)fileName {
+  return [self escapedFileNames:@[ fileName ]][0];
+}
+
 - (NSArray <NSString *>*)escapedFileNames:(NSArray <NSString *>*)fileNames {
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:fileNames];
-  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdEscapeFileNames data:data expectsReply:YES];
+  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetEscapeFileNames data:data expectsReply:YES];
   if (response == nil) {
-    log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdEscapeFileNames);
+    log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetEscapeFileNames);
     return @[];
   }
 

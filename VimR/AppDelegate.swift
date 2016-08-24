@@ -177,33 +177,26 @@ extension AppDelegate {
       return
     }
     
-    if action == .activate {
-      self.applicationOpenUntitledFile(self.app)
-      return
-    }
-    
-    guard let query = url.query else {
-      return
-    }
-    
-    let queryParams = query.componentsSeparatedByString("&")
-    let fileNames = queryParams
+    let queryParams = url.query?.componentsSeparatedByString("&")
+    let urls = queryParams?
       .filter { $0.hasPrefix(filePrefix) }
       .flatMap { $0.without(prefix: filePrefix).stringByRemovingPercentEncoding }
-    let cwd = queryParams
+      .map { NSURL(fileURLWithPath: $0) } ?? []
+    let cwd = queryParams?
       .filter { $0.hasPrefix(cwdPrefix) }
       .flatMap { $0.without(prefix: cwdPrefix).stringByRemovingPercentEncoding }
-      .first ?? NSHomeDirectory()
+      .map { NSURL(fileURLWithPath: $0) }
+      .first ?? NSURL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
     
-    NSLog("\(#function): \(action) in '\(cwd)': \(fileNames)")
     switch action {
-    case .open:
+    case .activate, .newWindow:
+      self.mainWindowManager.newMainWindow(urls: urls, cwd: cwd)
       return
-    case .newWindow:
+    case .open:
+      self.mainWindowManager.openInKeyMainWindow(urls: urls, cwd: cwd)
       return
     case .separateWindows:
-      return
-    default:
+      urls.forEach { self.mainWindowManager.newMainWindow(urls: [$0], cwd: cwd) }
       return
     }
   }

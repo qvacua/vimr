@@ -4,7 +4,6 @@ import urllib
 import subprocess
 import argparse
 import os
-from pprint import pprint
 
 
 def call_open(arg, dry_run=False):
@@ -17,10 +16,12 @@ def call_open(arg, dry_run=False):
 def vimr(action, args=None, dry_run=False):
     files = args.file
 
-    query_params = { "cwd": args.cwd or os.getcwd() }
+    query_params = {
+        "cwd": args.cwd or os.getcwd()
+    }
 
     if files:
-        query_params["file"] = files
+        query_params["file"] = [os.path.abspath(f) for f in files]
 
     url = "vimr://{0}?{1}".format(action, urllib.urlencode(query_params, True))
     call_open(url, dry_run)
@@ -32,9 +33,12 @@ class Action:
     NEW_WINDOW = "open-in-new-window"
     SEPARATE_WINDOWS = "open-in-separate-windows"
 
+description = """
+Open files in VimR: By default all files are open in tabs in the front most window or in a new window if there is none.
+The working directory will be set to the current directory.
+"""
 
-parser = argparse.ArgumentParser(description="Open files in VimR. By default all files are open in tabs in the front "
-                                             "most window or in a new window if there is none.")
+parser = argparse.ArgumentParser(description=description)
 
 parser.add_argument("--dry-run", action="store_true", dest="dry_run", help="Just print the 'open' command.")
 parser.add_argument("--cwd", action="store", help="Set the working directory.")

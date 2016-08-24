@@ -58,6 +58,14 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
   deinit {
     self.subject.onCompleted()
   }
+  
+  func open(urls urls: [NSURL]) {
+    self.neoVimView.open(urls: urls)
+  }
+  
+  func set(cwd cwd: NSURL) {
+    self.neoVimView.set(cwd: cwd)
+  }
 
   func isDirty() -> Bool {
     return self.neoVimView.hasDirtyDocs()
@@ -207,6 +215,17 @@ extension MainWindowComponent {
 
 // MARK: - NSWindowDelegate
 extension MainWindowComponent {
+  
+  func windowDidBecomeKey(_: NSNotification) {
+    self.mainWindowManager?.setKeyWindow(self)
+  }
+  
+  func windowDidResignKey(_: NSNotification) {
+    // We do not
+    // self.mainWindowManager?.setKeyWindow(nil)
+    // here, since the inactivation of the App also calls this method. Instead, we do it in
+    // MainWindowManager.closeMainWindow()
+  }
 
   func windowWillClose(notification: NSNotification) {
     self.mainWindowManager?.closeMainWindow(self)
