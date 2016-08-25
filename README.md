@@ -48,6 +48,7 @@ Pre-built binaries can be found under [Releases](https://github.com/qvacua/vimr/
 * Basic trackpad support: Pinching for zooming.
 * Ligatures: Turned off by default. Turn it on in the Preferences.
 * Basic File and Edit menu items.
+* Command line tool
 
 ## Planned Features
 
