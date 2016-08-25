@@ -159,9 +159,8 @@ extension GeneralPrefPane {
       
       do {
         try NSFileManager.defaultManager().copyItemAtURL(vimrUrl, toURL: targetUrl)
-      } catch {
-        let pathInfo = targetUrl.path == nil ? "." : " to '\(targetUrl.path!)'."
-        self.alert(title: "Error copying 'vimr'", info: "The CLI tool 'vimr' could not be copied\(pathInfo)")
+      } catch let err as NSError {
+        self.alert(title: "Error copying 'vimr'", info: err.localizedDescription)
       }
     }
   }
