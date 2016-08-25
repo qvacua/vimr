@@ -112,10 +112,19 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
 
     // We cannot set bridge in init since self is not available before super.init()...
     self.agent.bridge = self
-    self.agent.runLocalServerAndNeoVimWithPath(ShellUtils.pathForUserShell())
-    
+    let noErrorDuringInitialization = self.agent.runLocalServerAndNeoVimWithPath(ShellUtils.pathForUserShell())
+
     // Neovim is ready now: resize neovim to bounds.
     DispatchUtils.gui {
+      if noErrorDuringInitialization == false {
+        let alert = NSAlert()
+        alert.alertStyle = .WarningAlertStyle
+        alert.messageText = "Error during initialization"
+        alert.informativeText = "There was an error during the initialization of NeoVim. "
+          + "Use :messages to view the error messages."
+        alert.runModal()
+      }
+
       self.resizeNeoVimUiTo(size: self.bounds.size)
     }
   }

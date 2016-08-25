@@ -597,11 +597,8 @@ void server_start_neovim() {
 
   _backspace = [[NSString alloc] initWithString:@"<BS>"];
 
-  NSData *data = nil;
-  if (msg_didany > 0) {
-    bool value = true;
-    data = [[NSData alloc] initWithBytes:&value length:sizeof(bool)];
-  }
+  bool value = msg_didany > 0;
+  NSData *data = [[NSData alloc] initWithBytes:&value length:sizeof(bool)];
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdNeoVimReady data:data];
   [data release];
 }
