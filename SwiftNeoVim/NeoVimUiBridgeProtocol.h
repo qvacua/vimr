@@ -97,17 +97,18 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Set the default foreground color.
  */
-- (void)updateForeground:(int)fg;
+- (void)updateForeground:(int)fg dark:(bool)dark;
 
 /**
  * Set the default background color.
  */
-- (void)updateBackground:(int)bg;
+- (void)updateBackground:(int)bg dark:(bool)dark;
 
 /**
  * Set the default special color, eg curly underline for spelling errors.
  */
-- (void)updateSpecial:(int)sp;
+- (void)updateSpecial:(int)sp dark:(bool)dark;
+
 - (void)suspend;
 - (void)setTitle:(NSString *)title;
 - (void)setIcon:(NSString *)icon;

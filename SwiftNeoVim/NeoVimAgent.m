@@ -365,20 +365,20 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return;
 
     case NeoVimServerMsgIdSetForeground: {
-      int *values = data_to_int_array(data, 1);
-      [_bridge updateForeground:values[0]];
+      int *values = data_to_int_array(data, 2);
+      [_bridge updateForeground:values[0] dark:(bool) values[1]];
       return;
     }
 
     case NeoVimServerMsgIdSetBackground: {
-      int *values = data_to_int_array(data, 1);
-      [_bridge updateBackground:values[0]];
+      int *values = data_to_int_array(data, 2);
+      [_bridge updateBackground:values[0] dark:(bool) values[1]];
       return;
     }
 
     case NeoVimServerMsgIdSetSpecial: {
-      int *values = data_to_int_array(data, 1);
-      [_bridge updateSpecial:values[0]];
+      int *values = data_to_int_array(data, 2);
+      [_bridge updateSpecial:values[0] dark:(bool) values[1]];
       return;
     }
 

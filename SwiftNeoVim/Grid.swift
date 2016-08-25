@@ -92,6 +92,7 @@ class Grid: CustomStringConvertible {
   var foreground = qDefaultForeground
   var background = qDefaultBackground
   var special = qDefaultSpecial
+  var dark = false
   
   var attrs: CellAttributes = CellAttributes(
     fontTrait: .None,

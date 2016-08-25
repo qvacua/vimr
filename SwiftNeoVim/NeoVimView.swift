@@ -61,7 +61,7 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
   }
   
   private var _font = NeoVimView.defaultFont
-  
+
   private let agent: NeoVimAgent
   private let drawer: TextDrawer
   private let fontManager = NSFontManager.sharedFontManager()
@@ -342,11 +342,12 @@ extension NeoVimView {
                              context: context)
     }
 
-    self.drawCursor(color: self.grid.background)
+    self.drawCursor()
   }
 
-  private func drawCursor(color color: UInt32) {
+  private func drawCursor() {
     // FIXME: for now do some rudimentary cursor drawing
+    let color = self.grid.dark ? self.grid.foreground : self.grid.background
     let cursorPosition = self.mode == .Cmdline ? self.grid.putPosition : self.grid.screenCursor
 //    NSLog("\(#function): \(cursorPosition)")
 
@@ -1150,21 +1151,24 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
 //    NSLog("\(#function)")
   }
   
-  public func updateForeground(fg: Int32) {
+  public func updateForeground(fg: Int32, dark: Bool) {
     DispatchUtils.gui {
+      self.grid.dark = dark
       self.grid.foreground = UInt32(bitPattern: fg)
     }
   }
   
-  public func updateBackground(bg: Int32) {
+  public func updateBackground(bg: Int32, dark: Bool) {
     DispatchUtils.gui {
+      self.grid.dark = dark
       self.grid.background = UInt32(bitPattern: bg)
       self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).CGColor
     }
   }
   
-  public func updateSpecial(sp: Int32) {
+  public func updateSpecial(sp: Int32, dark: Bool) {
     DispatchUtils.gui {
+      self.grid.dark = dark
       self.grid.special = UInt32(bitPattern: sp)
     }
   }
