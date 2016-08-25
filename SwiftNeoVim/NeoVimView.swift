@@ -862,11 +862,11 @@ extension NeoVimView {
 
   private func cellPositionFor(event event: NSEvent) -> Position {
     let location = self.convertPoint(event.locationInWindow, fromView: nil)
-    let cellPosition = Position(
-      row: min(Int(floor(location.x / self.cellSize.width)), self.grid.size.width - 1),
-      column: min(Int(floor((self.bounds.height - location.y) / self.cellSize.height)), self.grid.size.height - 1)
-    )
+    let row = Int((location.x - self.xOffset) / self.cellSize.width)
+    let column = Int((self.bounds.size.height - location.y - self.yOffset) / self.cellSize.height)
 
+    let cellPosition = Position(row: min(max(0, row), self.grid.size.width - 1),
+                                column: min(max(0, column), self.grid.size.height - 1))
     return cellPosition
   }
 
