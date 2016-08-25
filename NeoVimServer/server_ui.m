@@ -489,6 +489,12 @@ static void neovim_send_dirty_status(void **argv) {
   }
 }
 
+static void insert_marked_text(NSString *markedText) {
+  _marked_text = [markedText retain]; // release when the final text is input in -vimInput
+
+  loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_marked_text retain])); // release in neovim_input
+}
+
 static void delete_marked_text() {
   NSUInteger length = [_marked_text lengthOfBytesUsingEncoding:NSUTF32StringEncoding] / 4;
 
@@ -678,14 +684,8 @@ void server_vim_input_marked_text(NSString *markedText) {
     }
 
 //    log4Debug("inserting marked text '%@' at %d:%d", markedText, _put_row, _put_column);
-    server_insert_marked_text(markedText);
+    insert_marked_text(markedText);
   });
-}
-
-void server_insert_marked_text(NSString *markedText) {
-  _marked_text = [markedText retain]; // release when the final text is input in -vimInput
-
-  loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_marked_text retain])); // release in neovim_input
 }
 
 bool server_has_dirty_docs() {
