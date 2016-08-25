@@ -24,13 +24,17 @@ class PrefPane: NSView, ViewComponent {
   override var flipped: Bool {
     return true
   }
+  
+  var pinToContainer: Bool {
+    return false
+  }
 
   init(source: Observable<Any>) {
     self.source = source
 
     super.init(frame: CGRect.zero)
     self.translatesAutoresizingMaskIntoConstraints = false
-
+    
     self.addViews()
     self.subscription(source: self.source).addDisposableTo(self.disposeBag)
   }

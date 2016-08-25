@@ -21,6 +21,10 @@ func != (left: AppearancePrefData, right: AppearancePrefData) -> Bool {
 }
 
 class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate {
+  
+  override var pinToContainer: Bool {
+    return true
+  }
 
   private var data: AppearancePrefData {
     willSet {

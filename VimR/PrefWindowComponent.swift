@@ -43,7 +43,9 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
       self.paneContainer.documentView = newValue
 
       // Auto-layout seems to be smart enough not to add redundant constraints.
-      newValue.autoPinEdgesToSuperviewEdges()
+      if newValue.pinToContainer {
+        newValue.autoPinEdgesToSuperviewEdges()
+      }
     }
   }
 
@@ -132,12 +134,12 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
     categoryScrollView.documentView = categoryView
 
     let paneContainer = self.paneContainer
-    paneContainer.hasVerticalScroller = true;
-    paneContainer.hasHorizontalScroller = true;
-    paneContainer.autohidesScrollers = true;
-    paneContainer.borderType = .NoBorder;
-    paneContainer.autoresizesSubviews = false;
-    paneContainer.backgroundColor = NSColor.windowBackgroundColor();
+    paneContainer.hasVerticalScroller = true
+    paneContainer.hasHorizontalScroller = true
+    paneContainer.autohidesScrollers = true
+    paneContainer.borderType = .NoBorder
+    paneContainer.autoresizesSubviews = false
+    paneContainer.backgroundColor = NSColor.windowBackgroundColor()
 
     self.window.contentView?.addSubview(categoryScrollView)
     self.window.contentView?.addSubview(paneContainer)
