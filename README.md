@@ -3,7 +3,7 @@ VimR — Vim Refined
 
 ![App Icon](https://raw.github.com/qvacua/vimr/master/resources/vimr-app-icon.png)
 
-<http://vimr.org>
+[Pre-built binaries](https://github.com/qvacua/vimr/releases) • <http://vimr.org>
 
 [![Bountysource](https://www.bountysource.com/badge/team?team_id=933&style=raised)](https://www.bountysource.com/teams/vimr?utm_source=VimR%20%E2%80%94%20Vim%20Refined&utm_medium=shield&utm_campaign=raised)
 
