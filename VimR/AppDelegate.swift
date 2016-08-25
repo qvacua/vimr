@@ -80,6 +80,12 @@ extension AppDelegate {
 
   func applicationWillFinishLaunching(_: NSNotification) {
     self.launching = true
+    
+    let appleEventManager = NSAppleEventManager.sharedAppleEventManager()
+    appleEventManager.setEventHandler(self,
+                                      andSelector: #selector(AppDelegate.handleGetUrlEvent(_:withReplyEvent:)),
+                                      forEventClass: UInt32(kInternetEventClass),
+                                      andEventID: UInt32(kAEGetURL))
   }
 
   func applicationDidFinishLaunching(_: NSNotification) {
@@ -92,12 +98,6 @@ extension AppDelegate {
     #if DEBUG
       self.debugMenu.hidden = false
     #endif
-    
-    let appleEventManager = NSAppleEventManager.sharedAppleEventManager()
-    appleEventManager.setEventHandler(self,
-                                      andSelector: #selector(AppDelegate.handleGetUrlEvent(_:withReplyEvent:)),
-                                      forEventClass: UInt32(kInternetEventClass),
-                                      andEventID: UInt32(kAEGetURL))
   }
 
   func applicationOpenUntitledFile(sender: NSApplication) -> Bool {
