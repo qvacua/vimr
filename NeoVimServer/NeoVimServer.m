@@ -6,6 +6,7 @@
 #import "NeoVimServer.h"
 #import "server_globals.h"
 #import "Logging.h"
+#import "CocoaCategories.h"
 
 
 // When #define'd you can execute the NeoVimServer binary and neovim will be started:
@@ -137,7 +138,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 #endif
   
   if (_remoteServerPort == NULL) {
-    log4Warn("Remote server is null: The msg (%lu:%@) could not be sent.", (unsigned long) msgid, data);
+    WLOG("Remote server is null: The msg (%lu:%s) could not be sent.", (unsigned long) msgid, data.cdesc);
     return;
   }
 
@@ -149,7 +150,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     return;
   }
 
-  log4Warn("The msg (%lu:%@) could not be sent: %d", (unsigned long) msgid, data, responseCode);
+  WLOG("The msg (%lu:%s) could not be sent: %d", (unsigned long) msgid, data.cdesc, responseCode);
 }
 
 - (void)notifyReadiness {

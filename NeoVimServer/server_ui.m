@@ -9,6 +9,7 @@
 #import "NeoVimServer.h"
 #import "NeoVimUiBridgeProtocol.h"
 #import "NeoVimBuffer.h"
+#import "CocoaCategories.h"
 
 // FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
 // them.
@@ -283,7 +284,6 @@ static void server_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
 static void server_ui_put(UI *ui __unused, uint8_t *str, size_t len) {
   queue(^{
     NSString *string = [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
-//    printf("%s", [string cStringUsingEncoding:NSUTF8StringEncoding]);
     int cursor[] = { screen_cursor_row(), screen_cursor_column() };
 
     NSMutableData *data = [[NSMutableData alloc]
@@ -292,13 +292,13 @@ static void server_ui_put(UI *ui __unused, uint8_t *str, size_t len) {
     [data appendData:[string dataUsingEncoding:NSUTF8StringEncoding]];
 
     if (_marked_text != nil && _marked_row == _put_row && _marked_column == _put_column) {
-//      log4Debug("putting marked text: '%@'", string);
+      DLOG("putting marked text: '%s'", string.cstr);
       [_neovim_server sendMessageWithId:NeoVimServerMsgIdPutMarked data:data];
     } else if (_marked_text != nil && len == 0 && _marked_row == _put_row && _marked_column == _put_column - 1) {
-//      log4Debug("putting marked text cuz zero");
+      DLOG("putting marked text cuz zero");
       [_neovim_server sendMessageWithId:NeoVimServerMsgIdPutMarked data:data];
     } else {
-//      log4Debug("putting non-marked text: '%@'", string);
+      DLOG("putting non-marked text: '%s'", string.cstr);
       [_neovim_server sendMessageWithId:NeoVimServerMsgIdPut data:data];
     }
 
@@ -452,7 +452,7 @@ static void neovim_command(void **argv) {
 
     Error err;
     vim_command((String) {
-        .data = (char *) [input cStringUsingEncoding:NSUTF8StringEncoding],
+        .data = (char *) input.cstr,
         .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
     }, &err);
 
@@ -468,7 +468,7 @@ static void neovim_input(void **argv) {
 
     // FIXME: check the length of the consumed bytes by neovim and if not fully consumed, call vim_input again.
     vim_input((String) {
-        .data = (char *) [input cStringUsingEncoding:NSUTF8StringEncoding],
+        .data = (char *) input.cstr,
         .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
     });
 
@@ -479,13 +479,13 @@ static void neovim_input(void **argv) {
 static void neovim_send_dirty_status(void **argv) {
   @autoreleasepool {
     bool new_dirty_status = server_has_dirty_docs();
-//    log4Debug("dirty status: %d vs. %d", _dirty, new_dirty_status);
+    DLOG("dirty status: %d vs. %d", _dirty, new_dirty_status);
     if (_dirty == new_dirty_status) {
       return;
     }
 
     _dirty = new_dirty_status;
-//    log4Debug("sending dirty status: %d", _dirty);
+    DLOG("sending dirty status: %d", _dirty);
     NSData *data = [[NSData alloc] initWithBytes:&_dirty length:sizeof(bool)];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdDirtyStatusChanged data:data];
     [data release];
@@ -555,7 +555,7 @@ void custom_ui_start(void) {
 void custom_ui_autocmds_groups(
     event_T event, char_u *fname, char_u *fname_io, int group, bool force, buf_T *buf, exarg_T *eap
 ) {
-//  log4Debug("got event %d for file %s in group %d.", event, fname, group);
+  DLOG("got event %d for file %s in group %d.", event, fname, group);
   switch (event) {
     // Did we get them all?
     case EVENT_TEXTCHANGED:
@@ -583,7 +583,7 @@ void server_start_neovim() {
   uv_cond_init(&_condition);
 
   uv_thread_create(&_nvim_thread, run_neovim, NULL);
-  log4Debug("NeoVim started");
+  DLOG("NeoVim started");
 
   // continue only after our UI main code for neovim has been fully initialized
   uv_mutex_lock(&_mutex);
@@ -623,7 +623,7 @@ void server_delete(NSInteger count) {
       }
     }
 
-//    log4Debug("put cursor: %d:%d, count: %li, delta: %d", _put_row, _put_column, count, _marked_delta);
+    DLOG("put cursor: %d:%d, count: %li, delta: %d", _put_row, _put_column, count, _marked_delta);
 
     for (int i = 0; i < count; i++) {
       loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_backspace retain])); // release in neovim_input
@@ -655,11 +655,11 @@ void server_vim_input(NSString *input) {
     // inserted. Neovim's drawing code is optimized such that it does not call put in this case again, thus, we have
     // to manually unmark the cells in the main app.
     if ([_marked_text isEqualToString:input]) {
-//      log4Debug("unmarking text: '%@'\t now at %d:%d", input, _put_row, _put_column);
-      const char *str = [_marked_text cStringUsingEncoding:NSUTF8StringEncoding];
+      DLOG("unmarking text: '%s'\t now at %d:%d", input.cstr, _put_row, _put_column);
+      const char *str = _marked_text.cstr;
       size_t cellCount = mb_string2cells((const char_u *) str);
       for (int i = 1; i <= cellCount; i++) {
-//        log4Debug("unmarking at %d:%d", _put_row, _put_column - i);
+        DLOG("unmarking at %d:%d", _put_row, _put_column - i);
         int values[] = { _put_row, MAX(_put_column - i, 0) };
         NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
         [_neovim_server sendMessageWithId:NeoVimServerMsgIdUnmark data:data];
@@ -677,13 +677,13 @@ void server_vim_input_marked_text(NSString *markedText) {
     if (_marked_text == nil) {
       _marked_row = _put_row;
       _marked_column = _put_column + _marked_delta;
-//      log4Debug("marking position: %d:%d(%d + %d)", _put_row, _marked_column, _put_column, _marked_delta);
+      DLOG("marking position: %d:%d(%d + %d)", _put_row, _marked_column, _put_column, _marked_delta);
       _marked_delta = 0;
     } else {
       delete_marked_text();
     }
 
-//    log4Debug("inserting marked text '%@' at %d:%d", markedText, _put_row, _put_column);
+    DLOG("inserting marked text '%s' at %d:%d", markedText.cstr, _put_row, _put_column);
     insert_marked_text(markedText);
   });
 }
@@ -735,6 +735,6 @@ NSArray *server_buffers() {
 }
 
 void server_quit() {
-  log4Debug("NeoVimServer exiting...");
+  DLOG("NeoVimServer exiting...");
   exit(0);
 }

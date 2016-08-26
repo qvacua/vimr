@@ -7,6 +7,7 @@
 #import "NeoVimServer.h"
 #import "server_globals.h"
 #import "Logging.h"
+#import "CocoaCategories.h"
 #import <sys/event.h>
 #import <uv.h>
 
@@ -34,7 +35,7 @@ static void observe_parent_termination(void *arg) {
     kevent(kq, &procEvent, 1, &procEvent, 1, 0);
   }
 
-  log4Debug("Exiting NeoVimServer - parent terminated.");
+  DLOG("Exiting NeoVimServer: Parent terminated.");
   exit(0);
 }
 
@@ -48,10 +49,12 @@ int main(int argc, const char *argv[]) {
     NSString *localServerName = arguments[2];
 
     _neovim_server = [[NeoVimServer alloc] initWithLocalServerName:localServerName remoteServerName:remoteServerName];
+    DLOG("Started neovim server '%s' and connected it with the remote agent '%s'.",
+         localServerName.cstr, remoteServerName.cstr);
+
     [_neovim_server notifyReadiness];
   }
 
   CFRunLoopRun();
   return 0;
 }
-
