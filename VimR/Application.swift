@@ -23,4 +23,8 @@ class Application: NSApplication {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+
+  @IBAction override func showHelp(sender: AnyObject!) {
+    NSWorkspace.sharedWorkspace().openURL(NSURL(string: "https://github.com/qvacua/vimr/wiki")!)
+  }
 }
