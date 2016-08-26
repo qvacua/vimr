@@ -14,7 +14,7 @@
 		1929BEB90DCDAF7A2B68C886 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA6128BFDD54CA92F46E /* ColorUtils.swift */; };
 		1929BF81A40B4154D3EA33CE /* server_ui.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B93013228985F509C8F6 /* server_ui.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */; };
-		4B0BCC941D70320C00D3CE65 /* Logging.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0BCC931D70320C00D3CE65 /* Logging.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		4B0BCC941D70320C00D3CE65 /* Logger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0BCC931D70320C00D3CE65 /* Logger.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		4B0C905B1D5DED69007753A3 /* NeoVimBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0C905A1D5DED69007753A3 /* NeoVimBuffer.m */; };
 		4B0E22581D5DEDC700C072E6 /* NeoVimBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0C90591D5DED69007753A3 /* NeoVimBuffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B0E22591D5DF62E00C072E6 /* NeoVimBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0C905A1D5DED69007753A3 /* NeoVimBuffer.m */; };
@@ -185,7 +185,7 @@
 		1929BE69CF9AB1A10D0DD4F2 /* CocoaCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaCategories.h; sourceTree = "<group>"; };
 		1929BF00B466B40629C2AABE /* NeoVimView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimView.swift; sourceTree = "<group>"; };
 		4B029F1B1D45E349004EE0D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrefWindow.xib; sourceTree = "<group>"; };
-		4B0BCC931D70320C00D3CE65 /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logging.h; path = VimR/Logging.h; sourceTree = SOURCE_ROOT; };
+		4B0BCC931D70320C00D3CE65 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logger.h; path = VimR/Logger.h; sourceTree = SOURCE_ROOT; };
 		4B0C90591D5DED69007753A3 /* NeoVimBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimBuffer.h; sourceTree = "<group>"; };
 		4B0C905A1D5DED69007753A3 /* NeoVimBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimBuffer.m; sourceTree = "<group>"; };
 		4B1BB3521D16C5E500CA4FEF /* InputTestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputTestView.swift; sourceTree = "<group>"; };
@@ -480,7 +480,7 @@
 		4BEE79131D16D1C60012EDAA /* NeoVimView */ = {
 			isa = PBXGroup;
 			children = (
-				4B0BCC931D70320C00D3CE65 /* Logging.h */,
+				4B0BCC931D70320C00D3CE65 /* Logger.h */,
 				1929BF00B466B40629C2AABE /* NeoVimView.swift */,
 				4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */,
 				4B570DC01D303CAF006EDC21 /* NeoVimAgent.h */,
@@ -503,7 +503,7 @@
 				4B0E22581D5DEDC700C072E6 /* NeoVimBuffer.h in Headers */,
 				4BDCFAEA1D31486E00F62670 /* NeoVimMsgIds.h in Headers */,
 				4B2A2BFA1D0351810074CE9A /* SwiftNeoVim.h in Headers */,
-				4B0BCC941D70320C00D3CE65 /* Logging.h in Headers */,
+				4B0BCC941D70320C00D3CE65 /* Logger.h in Headers */,
 				4BDF64241D08CAB000D47E1D /* MMCoreTextView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

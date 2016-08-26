@@ -6,7 +6,7 @@
 #import "NeoVimAgent.h"
 #import "NeoVimMsgIds.h"
 #import "NeoVimUiBridgeProtocol.h"
-#import "Logging.h"
+#import "Logger.h"
 #import "NeoVimBuffer.h"
 
 
@@ -72,7 +72,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
 // We cannot use -dealloc for this since -dealloc is not called until the run loop in the thread stops.
 - (void)quit {
-  [self sendMessageWithId:NeoVimAgentMsgIdQuit data:nil expectsReply:NO];
+  // Wait till we get the response from the server.
+  // If we don't wait here, then the NSTask.terminate msg below could get caught by neovim which causes a warning log.
+  [self sendMessageWithId:NeoVimAgentMsgIdQuit data:nil expectsReply:YES];
 
   if (CFMessagePortIsValid(_remoteServerPort)) {
     CFMessagePortInvalidate(_remoteServerPort);
@@ -86,26 +88,47 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
   CFRunLoopStop(_localServerRunLoop);
   [_localServerThread cancel];
+
+  // Just to be sure...
+  [_neoVimServerTask interrupt];
+  [_neoVimServerTask terminate];
+}
+
+- (void)launchNeoVimUsingLoginShell {
+  NSString *shellPath = [NSProcessInfo processInfo].environment[@"SHELL"];
+  if (shellPath == nil) {
+    shellPath = @"/bin/bash";
+  }
+
+  NSMutableArray *shellArgs = [NSMutableArray new];
+  if (![shellPath.lastPathComponent isEqualToString:@"tcsh"]) {
+    [shellArgs addObject:@"-l"];
+  }
+  [shellArgs addObjectsFromArray:@[
+      @"-c",
+      [NSString stringWithFormat:@"eval \"%@ %@ %@\"",
+                                 [self neoVimServerExecutablePath],
+                                 [self localServerName],
+                                 [self remoteServerName]]
+  ]];
+
+  _neoVimServerTask = [[NSTask alloc] init];
+  _neoVimServerTask.currentDirectoryPath = NSHomeDirectory();
+  _neoVimServerTask.launchPath = shellPath;
+  _neoVimServerTask.arguments = shellArgs;
+  [_neoVimServerTask launch];
 }
 
 - (bool)runLocalServerAndNeoVimWithPath:(NSString *)path {
   _localServerThread = [[NSThread alloc] initWithTarget:self selector:@selector(runLocalServer) object:nil];
   [_localServerThread start];
 
-  _neoVimServerTask = [[NSTask alloc] init];
+  [self launchNeoVimUsingLoginShell];
 
-  NSMutableDictionary *env = [NSMutableDictionary dictionaryWithDictionary:[NSProcessInfo processInfo].environment];
-  env[@"PATH"] = path;
-
-  _neoVimServerTask.environment = env;
-  _neoVimServerTask.currentDirectoryPath = NSHomeDirectory();
-  _neoVimServerTask.launchPath = [self neoVimServerExecutablePath];
-  _neoVimServerTask.arguments = @[ [self localServerName], [self remoteServerName] ];
-  [_neoVimServerTask launch];
-
-  // Wait until neovim is ready.
+  // Wait until neovim is ready (max. 10s).
+  NSDate *deadline = [[NSDate date] dateByAddingTimeInterval:qTimeout];
   while (!_neoVimIsReady
-      && [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]);
+      && [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:deadline]);
 
   return !_isInitErrorPresent;
 }

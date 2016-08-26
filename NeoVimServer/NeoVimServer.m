@@ -70,6 +70,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   _remoteServerName = remoteServerName;
 
   _localServerThread = [[NSThread alloc] initWithTarget:self selector:@selector(runLocalServer) object:nil];
+  _localServerThread.name = localServerName;
   [_localServerThread start];
 
 #ifndef DEBUG_NEOVIM_SERVER_STANDALONE
@@ -159,6 +160,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 #endif
 }
 
+- (void)quit {
+  server_quit();
+}
+
 - (NSData *)handleMessageWithId:(SInt32)msgid data:(NSData *)data {
   switch (msgid) {
 
@@ -200,7 +205,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     }
 
     case NeoVimAgentMsgIdQuit:
-      server_quit();
+      // exit() after returning the response such that the agent can get the response and so does not log a warning.
+      [self performSelector:@selector(quit) onThread:_localServerThread withObject:nil waitUntilDone:NO];
       return nil;
 
     case NeoVimAgentMsgIdGetDirtyDocs: {
