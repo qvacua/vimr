@@ -119,7 +119,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [_neoVimServerTask launch];
 }
 
-- (bool)runLocalServerAndNeoVimWithPath:(NSString *)path {
+- (bool)runLocalServerAndNeoVim {
   _localServerThread = [[NSThread alloc] initWithTarget:self selector:@selector(runLocalServer) object:nil];
   [_localServerThread start];
 

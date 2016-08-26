@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithUuid:(NSString *)uuid;
 - (void)quit;
 
-- (bool)runLocalServerAndNeoVimWithPath:(NSString *)path;
+- (bool)runLocalServerAndNeoVim;
 
 - (void)vimCommand:(NSString *)string;
 
