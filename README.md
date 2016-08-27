@@ -97,7 +97,7 @@ make distclean
 brew reinstall -s libtool
 ```
 
-Then `xcodebuild` again in the project root folder. (See GH-263)
+Then `xcodebuild` again in the project root folder. (See [GH-263](https://github.com/qvacua/vimr/issues/263))
 
 ## Project Setup
 
