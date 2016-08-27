@@ -89,6 +89,16 @@ cd ..
 xcodebuild -configuration Release -target VimR # VimR.app will be placed in build/Release
 ```
 
+If you encounter `/usr/local/Library/ENV/4.3/sed: No such file or directory`, then try the following:
+
+```bash
+cd neovim
+make distclean
+brew reinstall -s libtool
+```
+
+Then `xcodebuild` again in the project root folder. (See GH-263)
+
 ## Project Setup
 
 ### Artifacts Hierarchy
