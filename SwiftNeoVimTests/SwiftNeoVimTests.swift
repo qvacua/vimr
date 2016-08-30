@@ -3,18 +3,14 @@
  * See LICENSE
  */
 
-import Quick
+import XCTest
 import Nimble
 @testable import SwiftNeoVim
 
-class GridSpec: QuickSpec {
+class GridTest: XCTestCase {
 
-  override func spec() {
-    describe("something") {
-      it("does things") {
-        let g = Grid()
-        expect(g.foreground).to(equal(qDefaultForeground))
-      }
-    }
+  func testStub() {
+    let g = Grid()
+    expect(g.foreground).to(equal(qDefaultForeground))
   }
 }

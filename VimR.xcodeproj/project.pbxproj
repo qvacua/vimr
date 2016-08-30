@@ -39,19 +39,15 @@
 		4B56F2931D29903F00C1F92E /* SwiftNeoVimTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B56F2921D29903F00C1F92E /* SwiftNeoVimTests.swift */; };
 		4B56F2951D29903F00C1F92E /* SwiftNeoVim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; };
 		4B56F29D1D29926600C1F92E /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; };
-		4B56F29E1D29926600C1F92E /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29C1D29926600C1F92E /* Quick.framework */; };
 		4B570DC21D303CAF006EDC21 /* NeoVimAgent.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B570DC01D303CAF006EDC21 /* NeoVimAgent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B570DC31D303CAF006EDC21 /* NeoVimAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B570DC11D303CAF006EDC21 /* NeoVimAgent.m */; };
 		4B6A70941D60E04200E12030 /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* CocoaExtensions.swift */; };
 		4B6A70961D6100E300E12030 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70951D6100E300E12030 /* SwiftCommons.swift */; };
 		4B6A70991D65058A00E12030 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; };
-		4B6A709A1D65058A00E12030 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29C1D29926600C1F92E /* Quick.framework */; };
 		4B6A709C1D6507A000E12030 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B6A709D1D6507A000E12030 /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29C1D29926600C1F92E /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B854A1D1D31447C00E08DE1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B854A1C1D31447C00E08DE1 /* main.m */; };
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
 		4B9A15241D2993DA009F9F67 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B9A15251D2993DA009F9F67 /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29C1D29926600C1F92E /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B9A15261D2993DF009F9F67 /* SwiftNeoVim.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BB1BEA91D48773200463C29 /* RxSwiftUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1BEA81D48773200463C29 /* RxSwiftUtils.swift */; };
 		4BCADE081D11ED12004DAD0F /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */; };
@@ -69,6 +65,9 @@
 		4BDCFAEA1D31486E00F62670 /* NeoVimMsgIds.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDCFAE91D3147A300F62670 /* NeoVimMsgIds.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BDCFAED1D315CB800F62670 /* runtime in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA6621D00157A00673FDF /* runtime */; };
 		4BDCFAEF1D315CF200F62670 /* NeoVimServer in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B854A1A1D31447C00E08DE1 /* NeoVimServer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		4BDF50081D7607BF00D8FBC3 /* EonilFileSystemEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF50071D7607BF00D8FBC3 /* EonilFileSystemEvents.framework */; };
+		4BDF50091D7607BF00D8FBC3 /* EonilFileSystemEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF50071D7607BF00D8FBC3 /* EonilFileSystemEvents.framework */; };
+		4BDF500A1D7607C600D8FBC3 /* EonilFileSystemEvents.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BDF50071D7607BF00D8FBC3 /* EonilFileSystemEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BDF641C1D0887C100D47E1D /* TextDrawer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDF641A1D0887C100D47E1D /* TextDrawer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BDF641D1D0887C100D47E1D /* TextDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BDF641B1D0887C100D47E1D /* TextDrawer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4BDF64241D08CAB000D47E1D /* MMCoreTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDF64221D08CAB000D47E1D /* MMCoreTextView.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -76,7 +75,6 @@
 		4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5081CFF374B00673FDF /* AppDelegate.swift */; };
 		4BEBA50B1CFF374B00673FDF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50A1CFF374B00673FDF /* Assets.xcassets */; };
 		4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50C1CFF374B00673FDF /* MainMenu.xib */; };
-		4BEBA5191CFF374B00673FDF /* VimRTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5181CFF374B00673FDF /* VimRTests.swift */; };
 		4BEE79151D16D2100012EDAA /* DispatchUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEE79141D16D2100012EDAA /* DispatchUtils.swift */; };
 		4BEE79171D16D3800012EDAA /* CellAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEE79161D16D3800012EDAA /* CellAttributes.swift */; };
 		4BF07EE41D51326A009BECEB /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4BF07EE61D51326A009BECEB /* Credits.rtf */; };
@@ -135,8 +133,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4BDF500A1D7607C600D8FBC3 /* EonilFileSystemEvents.framework in CopyFiles */,
 				4B6A709C1D6507A000E12030 /* Nimble.framework in CopyFiles */,
-				4B6A709D1D6507A000E12030 /* Quick.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,7 +165,6 @@
 			files = (
 				4B9A15261D2993DF009F9F67 /* SwiftNeoVim.framework in CopyFiles */,
 				4B9A15241D2993DA009F9F67 /* Nimble.framework in CopyFiles */,
-				4B9A15251D2993DA009F9F67 /* Quick.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,7 +206,6 @@
 		4B56F2921D29903F00C1F92E /* SwiftNeoVimTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftNeoVimTests.swift; sourceTree = "<group>"; };
 		4B56F2941D29903F00C1F92E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B56F29B1D29926600C1F92E /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/Mac/Nimble.framework; sourceTree = SOURCE_ROOT; };
-		4B56F29C1D29926600C1F92E /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/Mac/Quick.framework; sourceTree = SOURCE_ROOT; };
 		4B570DC01D303CAF006EDC21 /* NeoVimAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimAgent.h; sourceTree = "<group>"; };
 		4B570DC11D303CAF006EDC21 /* NeoVimAgent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimAgent.m; sourceTree = "<group>"; };
 		4B6A70931D60E04200E12030 /* CocoaExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaExtensions.swift; sourceTree = "<group>"; };
@@ -233,6 +229,7 @@
 		4BDCFAD31D3145E500F62670 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv.a; path = neovim/.deps/usr/lib/libuv.a; sourceTree = SOURCE_ROOT; };
 		4BDCFAD41D3145E500F62670 /* libvterm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvterm.a; path = neovim/.deps/usr/lib/libvterm.a; sourceTree = SOURCE_ROOT; };
 		4BDCFAE91D3147A300F62670 /* NeoVimMsgIds.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NeoVimMsgIds.h; sourceTree = "<group>"; };
+		4BDF50071D7607BF00D8FBC3 /* EonilFileSystemEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EonilFileSystemEvents.framework; path = Carthage/Build/Mac/EonilFileSystemEvents.framework; sourceTree = SOURCE_ROOT; };
 		4BDF641A1D0887C100D47E1D /* TextDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextDrawer.h; sourceTree = "<group>"; };
 		4BDF641B1D0887C100D47E1D /* TextDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDrawer.m; sourceTree = "<group>"; };
 		4BDF64221D08CAB000D47E1D /* MMCoreTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCoreTextView.h; sourceTree = "<group>"; };
@@ -243,7 +240,6 @@
 		4BEBA50D1CFF374B00673FDF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		4BEBA50F1CFF374B00673FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BEBA5141CFF374B00673FDF /* VimRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VimRTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BEBA5181CFF374B00673FDF /* VimRTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VimRTests.swift; sourceTree = "<group>"; };
 		4BEBA51A1CFF374B00673FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BEBA6621D00157A00673FDF /* runtime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = runtime; path = neovim/runtime; sourceTree = SOURCE_ROOT; };
 		4BEE79141D16D2100012EDAA /* DispatchUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchUtils.swift; sourceTree = "<group>"; };
@@ -266,7 +262,6 @@
 			files = (
 				4B56F2951D29903F00C1F92E /* SwiftNeoVim.framework in Frameworks */,
 				4B56F29D1D29926600C1F92E /* Nimble.framework in Frameworks */,
-				4B56F29E1D29926600C1F92E /* Quick.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +287,7 @@
 				4B2A2BFE1D0351810074CE9A /* SwiftNeoVim.framework in Frameworks */,
 				4B2A2BEE1D02261F0074CE9A /* RxSwift.framework in Frameworks */,
 				4B401B141D0454DC00D99EDC /* PureLayout.framework in Frameworks */,
+				4BDF50081D7607BF00D8FBC3 /* EonilFileSystemEvents.framework in Frameworks */,
 				4B2A2BEC1D02261F0074CE9A /* RxCocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -300,8 +296,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BDF50091D7607BF00D8FBC3 /* EonilFileSystemEvents.framework in Frameworks */,
 				4B6A70991D65058A00E12030 /* Nimble.framework in Frameworks */,
-				4B6A709A1D65058A00E12030 /* Quick.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,8 +320,8 @@
 		4B2A2BE61D0225840074CE9A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4BDF50071D7607BF00D8FBC3 /* EonilFileSystemEvents.framework */,
 				4B56F29B1D29926600C1F92E /* Nimble.framework */,
-				4B56F29C1D29926600C1F92E /* Quick.framework */,
 				4B401B131D0454DC00D99EDC /* PureLayout.framework */,
 				4B2A2BE21D0225800074CE9A /* RxCocoa.framework */,
 				4B2A2BE31D0225800074CE9A /* RxSwift.framework */,
@@ -468,7 +464,6 @@
 		4BEBA5171CFF374B00673FDF /* VimRTests */ = {
 			isa = PBXGroup;
 			children = (
-				4BEBA5181CFF374B00673FDF /* VimRTests.swift */,
 				4BEBA51A1CFF374B00673FDF /* Info.plist */,
 			);
 			path = VimRTests;
@@ -629,7 +624,6 @@
 					};
 					4BEBA5131CFF374B00673FDF = {
 						CreatedOnToolsVersion = 7.3.1;
-						TestTargetID = 4BEBA5041CFF374B00673FDF;
 					};
 				};
 			};
@@ -773,7 +767,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BEBA5191CFF374B00673FDF /* VimRTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1092,7 +1085,6 @@
 		4BEBA5211CFF374B00673FDF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1102,14 +1094,12 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimRTests;
 				PRODUCT_NAME = VimRTests;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VimR.app/Contents/MacOS/VimR";
 			};
 			name = Debug;
 		};
 		4BEBA5221CFF374B00673FDF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1119,7 +1109,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimRTests;
 				PRODUCT_NAME = VimRTests;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VimR.app/Contents/MacOS/VimR";
 			};
 			name = Release;
 		};
