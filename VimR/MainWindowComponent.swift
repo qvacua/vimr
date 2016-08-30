@@ -7,21 +7,11 @@ import Cocoa
 import PureLayout
 import RxSwift
 
-class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Component {
+class MainWindowComponent: WindowComponent, NSWindowDelegate, NeoVimViewDelegate {
 
-  private let source: Observable<Any>
-  private let disposeBag = DisposeBag()
-
-  private let subject = PublishSubject<Any>()
-  var sink: Observable<Any> {
-    return self.subject.asObservable()
-  }
-
+  // TODO: Use a delegate here!
   private weak var mainWindowManager: MainWindowManager?
   private let fontManager = NSFontManager.sharedFontManager()
-
-  private let windowController = NSWindowController(windowNibName: "MainWindow")
-  private let window: NSWindow
 
   private var defaultEditorFont: NSFont
   private var usesLigatures: Bool
@@ -33,32 +23,23 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
   private let neoVimView = NeoVimView(forAutoLayout: ())
 
   init(source: Observable<Any>, manager: MainWindowManager, urls: [NSURL] = [], initialData: PrefData) {
-    self.source = source
     self.mainWindowManager = manager
-    self.window = self.windowController.window!
     self.defaultEditorFont = initialData.appearance.editorFont
     self.usesLigatures = initialData.appearance.editorUsesLigatures
 
-    super.init()
+    super.init(source: source, nibName: "MainWindow")
 
     self.window.delegate = self
     self.neoVimView.delegate = self
 
-    self.addViews()
-    self.addReactions()
-    
     self.neoVimView.font = self.defaultEditorFont
     self.neoVimView.usesLigatures = self.usesLigatures
     self.neoVimView.open(urls: urls)
 
     self.window.makeFirstResponder(self.neoVimView)
-    self.windowController.showWindow(self)
+    self.show()
   }
 
-  deinit {
-    self.subject.onCompleted()
-  }
-  
   func open(urls urls: [NSURL]) {
     self.neoVimView.open(urls: urls)
   }
@@ -79,13 +60,13 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
     self.neoVimView.closeAllWindowsWithoutSaving()
   }
 
-  private func addViews() {
+  override func addViews() {
     self.window.contentView?.addSubview(self.neoVimView)
     self.neoVimView.autoPinEdgesToSuperviewEdges()
   }
 
-  private func addReactions() {
-    self.source
+  override func subscription(source source: Observable<Any>) -> Disposable {
+    return source
       .filter { $0 is PrefData }
       .map { ($0 as! PrefData).appearance }
       .filter { [unowned self] appearanceData in
@@ -95,8 +76,7 @@ class MainWindowComponent: NSObject, NSWindowDelegate, NeoVimViewDelegate, Compo
       .subscribeNext { [unowned self] appearance in
         self.neoVimView.usesLigatures = appearance.editorUsesLigatures
         self.neoVimView.font = appearance.editorFont
-      }
-      .addDisposableTo(self.disposeBag)
+    }
   }
 }
 

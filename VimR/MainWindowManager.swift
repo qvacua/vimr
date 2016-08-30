@@ -10,28 +10,19 @@ enum MainWindowEvent {
   case allWindowsClosed
 }
 
-class MainWindowManager {
+class MainWindowManager: StandardFlow {
   
   static private let userHomeUrl = NSURL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
 
-  private let source: Observable<Any>
-  private let disposeBag = DisposeBag()
-
-  private let subject = PublishSubject<Any>()
-  var sink: Observable<Any> {
-    return self.subject.asObservable()
-  }
-  
   private var mainWindowComponents = [String:MainWindowComponent]()
   private var keyMainWindow: MainWindowComponent?
 
   private var data: PrefData
 
   init(source: Observable<Any>, initialData: PrefData) {
-    self.source = source
     self.data = initialData
 
-    self.addReactions()
+    super.init(source: source)
   }
 
   func newMainWindow(urls urls: [NSURL] = [], cwd: NSURL = MainWindowManager.userHomeUrl) -> MainWindowComponent {
@@ -52,7 +43,7 @@ class MainWindowManager {
     self.mainWindowComponents.removeValueForKey(mainWindowComponent.uuid)
     
     if self.mainWindowComponents.isEmpty {
-      self.subject.onNext(MainWindowEvent.allWindowsClosed)
+      self.publish(event: MainWindowEvent.allWindowsClosed)
     }
   }
 
@@ -92,13 +83,12 @@ class MainWindowManager {
     return !self.mainWindowComponents.isEmpty
   }
 
-  private func addReactions() {
-    self.source
+  override func subscription(source source: Observable<Any>) -> Disposable {
+    return source
       .filter { $0 is PrefData }
       .map { $0 as! PrefData }
       .subscribeNext { [unowned self] prefData in
         self.data = prefData
-      }
-      .addDisposableTo(self.disposeBag)
+    }
   }
 }

@@ -12,20 +12,9 @@ struct PrefData {
   var appearance: AppearancePrefData
 }
 
-class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate, Component {
-
-  private let source: Observable<Any>
-  private let disposeBag = DisposeBag()
-
-  private let subject = PublishSubject<Any>()
-  var sink: Observable<Any> {
-    return self.subject.asObservable()
-  }
+class PrefWindowComponent: WindowComponent, NSTableViewDataSource, NSTableViewDelegate {
 
   private var data: PrefData
-
-  private let windowController = NSWindowController(windowNibName: "PrefWindow")
-  private let window: NSWindow
 
   private let categoryView = NSTableView(frame: CGRect.zero)
   private let categoryScrollView = NSScrollView(forAutoLayout: ())
@@ -50,7 +39,6 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
   }
 
   init(source: Observable<Any>, initialData: PrefData) {
-    self.source = source
     self.data = initialData
 
     self.panes = [
@@ -58,24 +46,13 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
       AppearancePrefPane(source: source, initialData: self.data.appearance)
     ]
     
-    self.window = self.windowController.window!
+    super.init(source: source, nibName: "PrefWindow")
 
-    super.init()
-    
-    self.addViews()
     self.addReactions()
   }
 
-  deinit {
-    self.subject.onCompleted()
-  }
-
-  func show() {
-    self.windowController.showWindow(self)
-  }
-
-  private func addReactions() {
-    self.source
+  override func subscription(source source: Observable<Any>) -> Disposable {
+    return source
       .filter { $0 is PrefData }
       .map { $0 as! PrefData }
       .subscribeNext { [unowned self] prefData in
@@ -86,28 +63,9 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
 
         self.data = prefData
       }
-      .addDisposableTo(self.disposeBag)
-
-    self.panes
-      .map { $0.sink }
-      .toMergedObservables()
-      .map { [unowned self] action in
-        switch action {
-        case let data as AppearancePrefData:
-          self.data.appearance = data
-        case let data as GeneralPrefData:
-          self.data.general = data
-        default:
-          NSLog("nothing to see here")
-        }
-
-        return self.data
-      }
-      .subscribeNext { [unowned self] action in self.subject.onNext(action) }
-      .addDisposableTo(self.disposeBag)
   }
 
-  private func addViews() {
+  override func addViews() {
     let tableColumn = NSTableColumn(identifier: "name")
     let textFieldCell = NSTextFieldCell()
     textFieldCell.allowsEditingTextAttributes = false
@@ -156,6 +114,26 @@ class PrefWindowComponent: NSObject, NSTableViewDataSource, NSTableViewDelegate,
     paneContainer.autoPinEdge(.Left, toEdge: .Right, ofView: categoryScrollView)
 
     self.currentPane = self.panes[0]
+  }
+
+  private func addReactions() {
+    self.panes
+      .map { $0.sink }
+      .toMergedObservables()
+      .map { [unowned self] action in
+        switch action {
+        case let data as AppearancePrefData:
+          self.data.appearance = data
+        case let data as GeneralPrefData:
+          self.data.general = data
+        default:
+          NSLog("nothing to see here")
+        }
+
+        return self.data
+      }
+      .subscribeNext { [unowned self] action in self.publish(event: action) }
+      .addDisposableTo(self.disposeBag)
   }
 }
 

@@ -93,6 +93,9 @@
 		4BDF500D1D760A6D00D8FBC3 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BE31D0225800074CE9A /* RxSwift.framework */; };
 		4BDF500E1D760A7500D8FBC3 /* RxSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B2A2BE31D0225800074CE9A /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BDF50121D760B7200D8FBC3 /* EonilFileSystemEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF50071D7607BF00D8FBC3 /* EonilFileSystemEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BDF50141D7617EA00D8FBC3 /* OpenQuicklyWindowComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDF50131D7617EA00D8FBC3 /* OpenQuicklyWindowComponent.swift */; };
+		4BDF50171D77540900D8FBC3 /* OpenQuicklyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF50191D77540900D8FBC3 /* OpenQuicklyWindow.xib */; };
+		4BDF501B1D77596500D8FBC3 /* OpenQuicklyWindowService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDF501A1D77596500D8FBC3 /* OpenQuicklyWindowService.swift */; };
 		4BDF641C1D0887C100D47E1D /* TextDrawer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDF641A1D0887C100D47E1D /* TextDrawer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BDF641D1D0887C100D47E1D /* TextDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BDF641B1D0887C100D47E1D /* TextDrawer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4BDF64241D08CAB000D47E1D /* MMCoreTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDF64221D08CAB000D47E1D /* MMCoreTextView.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -270,6 +273,9 @@
 		4BDCFAE91D3147A300F62670 /* NeoVimMsgIds.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NeoVimMsgIds.h; sourceTree = "<group>"; };
 		4BDF50071D7607BF00D8FBC3 /* EonilFileSystemEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EonilFileSystemEvents.framework; path = Carthage/Build/Mac/EonilFileSystemEvents.framework; sourceTree = SOURCE_ROOT; };
 		4BDF500B1D760A3500D8FBC3 /* FileUtilsTest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FileUtilsTest; sourceTree = "<group>"; };
+		4BDF50131D7617EA00D8FBC3 /* OpenQuicklyWindowComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyWindowComponent.swift; sourceTree = "<group>"; };
+		4BDF50181D77540900D8FBC3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OpenQuicklyWindow.xib; sourceTree = "<group>"; };
+		4BDF501A1D77596500D8FBC3 /* OpenQuicklyWindowService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyWindowService.swift; sourceTree = "<group>"; };
 		4BDF641A1D0887C100D47E1D /* TextDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextDrawer.h; sourceTree = "<group>"; };
 		4BDF641B1D0887C100D47E1D /* TextDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDrawer.m; sourceTree = "<group>"; };
 		4BDF64221D08CAB000D47E1D /* MMCoreTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCoreTextView.h; sourceTree = "<group>"; };
@@ -444,6 +450,7 @@
 				4BEBA50C1CFF374B00673FDF /* MainMenu.xib */,
 				4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */,
 				4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */,
+				4BDF50191D77540900D8FBC3 /* OpenQuicklyWindow.xib */,
 				4BEBA50A1CFF374B00673FDF /* Assets.xcassets */,
 				4BF07EE61D51326A009BECEB /* Credits.rtf */,
 				4BEBA50F1CFF374B00673FDF /* Info.plist */,
@@ -473,6 +480,8 @@
 				1929B39DA7AC4A9B62D7CD39 /* Component.swift */,
 				4BD3BF961D32B0DB00082605 /* MainWindowManager.swift */,
 				4BD3BF921D32A95800082605 /* MainWindowComponent.swift */,
+				4BDF501A1D77596500D8FBC3 /* OpenQuicklyWindowService.swift */,
+				4BDF50131D7617EA00D8FBC3 /* OpenQuicklyWindowComponent.swift */,
 				4B238BED1D3ED55300CBDD98 /* Preferences */,
 			);
 			name = UI;
@@ -757,6 +766,7 @@
 			files = (
 				4BF07EE41D51326A009BECEB /* Credits.rtf in Resources */,
 				4BEBA50B1CFF374B00673FDF /* Assets.xcassets in Resources */,
+				4BDF50171D77540900D8FBC3 /* OpenQuicklyWindow.xib in Resources */,
 				4B37ADB91D6E471B00970D55 /* vimr in Resources */,
 				4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */,
 				4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */,
@@ -835,6 +845,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */,
+				4BDF50141D7617EA00D8FBC3 /* OpenQuicklyWindowComponent.swift in Sources */,
 				4B6A70941D60E04200E12030 /* AppKitCommons.swift in Sources */,
 				4BD3BF971D32B0DB00082605 /* MainWindowManager.swift in Sources */,
 				4B238BEC1D3ED54D00CBDD98 /* AppearancePrefPane.swift in Sources */,
@@ -847,6 +858,7 @@
 				4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */,
 				1929B165820D7177743B537A /* Component.swift in Sources */,
 				1929B93DBAD09835E428F610 /* PrefPane.swift in Sources */,
+				4BDF501B1D77596500D8FBC3 /* OpenQuicklyWindowService.swift in Sources */,
 				1929B2ADD407219BADBD5A70 /* CwlUtils.swift in Sources */,
 				1929B462CD4935AFF6D69457 /* FileItem.swift in Sources */,
 				1929B6388EAF16C190B82955 /* FileItemIgnorePattern.swift in Sources */,
@@ -918,6 +930,14 @@
 				4B97E2CD1D33F53D00FC0660 /* Base */,
 			);
 			name = MainWindow.xib;
+			sourceTree = "<group>";
+		};
+		4BDF50191D77540900D8FBC3 /* OpenQuicklyWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4BDF50181D77540900D8FBC3 /* Base */,
+			);
+			name = OpenQuicklyWindow.xib;
 			sourceTree = "<group>";
 		};
 		4BEBA50C1CFF374B00673FDF /* MainMenu.xib */ = {

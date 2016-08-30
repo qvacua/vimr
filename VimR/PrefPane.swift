@@ -6,7 +6,7 @@
 import Cocoa
 import RxSwift
 
-class PrefPane: NSView, ViewComponent {
+class PrefPane: NSView, Component {
 
   private let source: Observable<Any>
   private let disposeBag = DisposeBag()
@@ -14,10 +14,6 @@ class PrefPane: NSView, ViewComponent {
   private let subject = PublishSubject<Any>()
   var sink: Observable<Any> {
     return self.subject.asObservable()
-  }
-
-  var view: NSView {
-    return self
   }
 
   // Return true to place this to the upper left corner when the scroll view is bigger than this view.
