@@ -9,6 +9,7 @@ import RxSwift
 
 enum MainWindowAction {
   case becomeKey(mainWindow: MainWindowComponent)
+  case openQuickly(mainWindow: MainWindowComponent)
   case close(mainWindow: MainWindowComponent)
 }
 
@@ -159,6 +160,10 @@ extension MainWindowComponent {
 
 // MARK: - Font Menu Items
 extension MainWindowComponent {
+
+  @IBAction func openQuickly(sender: AnyObject!) {
+    self.publish(event: MainWindowAction.openQuickly(mainWindow: self))
+  }
 
   @IBAction func resetFontSize(sender: AnyObject!) {
     self.neoVimView.font = self.defaultEditorFont

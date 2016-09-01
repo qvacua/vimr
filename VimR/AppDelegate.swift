@@ -33,7 +33,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   private let prefStore: PrefStore
 
-  private let mainWindowManager: MainWindowManager
+  private let mainWindowService: MainWindowService
+  private let openQuicklyWindowService: OpenQuicklyWindowService
   private let prefWindowComponent: PrefWindowComponent
   
   private var quitWhenAllWindowsAreClosed = false
@@ -46,20 +47,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     self.prefStore = PrefStore(source: self.actionSink)
 
     self.prefWindowComponent = PrefWindowComponent(source: self.changeSink, initialData: self.prefStore.data)
-    self.mainWindowManager = MainWindowManager(source: self.changeSink, initialData: self.prefStore.data)
+    self.mainWindowService = MainWindowService(source: self.changeSink, initialData: self.prefStore.data)
+    self.openQuicklyWindowService = OpenQuicklyWindowService(source: self.changeSink)
 
     super.init()
-    
-    self.mainWindowManager.sink
-      .filter { $0 is MainWindowEvent }
-      .map { $0 as! MainWindowEvent }
-      .filter { $0 == MainWindowEvent.allWindowsClosed }
-      .subscribeNext { [unowned self] mainWindowEvent in
-        if self.quitWhenAllWindowsAreClosed {
-          NSApp.stop(self)
+
+    self.mainWindowService.sink
+      .filter { $0 is MainWindowEvent || $0 is MainWindowAction }
+      .subscribeNext { [unowned self] event in
+        switch event {
+        case let MainWindowAction.openQuickly(mainWindow: mainWindow):
+          self.openQuicklyWindowService.open(forMainWindow: mainWindow)
+        case MainWindowEvent.allWindowsClosed:
+          if self.quitWhenAllWindowsAreClosed {
+            NSApp.stop(self)
+          }
+        default:
+          return
         }
-      }
-      .addDisposableTo(self.disposeBag)
+      }.addDisposableTo(self.disposeBag)
 
     [ self.prefStore ]
       .map { $0.sink }
@@ -117,7 +123,7 @@ extension AppDelegate {
   }
 
   func applicationShouldTerminate(sender: NSApplication) -> NSApplicationTerminateReply {
-    if self.mainWindowManager.hasDirtyWindows() {
+    if self.mainWindowService.hasDirtyWindows() {
       let alert = NSAlert()
       alert.addButtonWithTitle("Cancel")
       alert.addButtonWithTitle("Discard and Quit")
@@ -126,15 +132,15 @@ extension AppDelegate {
 
       if alert.runModal() == NSAlertSecondButtonReturn {
         self.quitWhenAllWindowsAreClosed = true
-        self.mainWindowManager.closeAllWindowsWithoutSaving()
+        self.mainWindowService.closeAllWindowsWithoutSaving()
       }
 
       return .TerminateCancel
     }
 
-    if self.mainWindowManager.hasMainWindow() {
+    if self.mainWindowService.hasMainWindow() {
       self.quitWhenAllWindowsAreClosed = true
-      self.mainWindowManager.closeAllWindows()
+      self.mainWindowService.closeAllWindows()
 
       return .TerminateCancel
     }
@@ -146,7 +152,7 @@ extension AppDelegate {
   // For drag & dropping files on the App icon.
   func application(sender: NSApplication, openFiles filenames: [String]) {
     let urls = filenames.map { NSURL(fileURLWithPath: $0) }
-    self.mainWindowManager.newMainWindow(urls: urls)
+    self.mainWindowService.newMainWindow(urls: urls)
     sender.replyToOpenOrPrint(.Success)
   }
 }
@@ -188,13 +194,13 @@ extension AppDelegate {
     
     switch action {
     case .activate, .newWindow:
-      self.mainWindowManager.newMainWindow(urls: urls, cwd: cwd)
+      self.mainWindowService.newMainWindow(urls: urls, cwd: cwd)
       return
     case .open:
-      self.mainWindowManager.openInKeyMainWindow(urls: urls, cwd: cwd)
+      self.mainWindowService.openInKeyMainWindow(urls: urls, cwd: cwd)
       return
     case .separateWindows:
-      urls.forEach { self.mainWindowManager.newMainWindow(urls: [$0], cwd: cwd) }
+      urls.forEach { self.mainWindowService.newMainWindow(urls: [$0], cwd: cwd) }
       return
     }
   }
@@ -208,7 +214,7 @@ extension AppDelegate {
   }
   
   @IBAction func newDocument(sender: AnyObject!) {
-    self.mainWindowManager.newMainWindow()
+    self.mainWindowService.newMainWindow()
   }
 
   // Invoked when no main window is open.
@@ -220,7 +226,7 @@ extension AppDelegate {
         return
       }
 
-      self.mainWindowManager.newMainWindow(urls: panel.URLs)
+      self.mainWindowService.newMainWindow(urls: panel.URLs)
     }
   }
 }

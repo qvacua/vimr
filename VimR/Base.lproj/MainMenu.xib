@@ -81,12 +81,18 @@
                                     <action selector="newTab:" target="-1" id="RfK-C0-Bu9"/>
                                 </connections>
                             </menuItem>
+                            <menuItem isSeparatorItem="YES" id="t9v-Ee-SaA"/>
                             <menuItem title="Open…" keyEquivalent="o" id="IAo-SY-fd9">
                                 <connections>
                                     <action selector="openDocument:" target="-1" id="zbe-h0-oBM"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="t9v-Ee-SaA"/>
+                            <menuItem title="Open Quickly…" keyEquivalent="O" id="0V2-yi-P2z">
+                                <connections>
+                                    <action selector="openQuickly:" target="-1" id="FSA-7W-F0m"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="Lje-kE-tCa"/>
                             <menuItem title="Close" keyEquivalent="w" id="DVo-aG-piG">
                                 <connections>
                                     <action selector="performClose:" target="-1" id="HmO-Ls-i7Q"/>
