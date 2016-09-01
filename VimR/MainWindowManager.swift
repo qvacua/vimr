@@ -15,7 +15,7 @@ class MainWindowManager: StandardFlow {
   static private let userHomeUrl = NSURL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
 
   private var mainWindowComponents = [String:MainWindowComponent]()
-  private var keyMainWindow: MainWindowComponent?
+  private weak var keyMainWindow: MainWindowComponent?
 
   private var data: PrefData
 
@@ -27,21 +27,34 @@ class MainWindowManager: StandardFlow {
 
   func newMainWindow(urls urls: [NSURL] = [], cwd: NSURL = MainWindowManager.userHomeUrl) -> MainWindowComponent {
     let mainWindowComponent = MainWindowComponent(
-      source: self.source, manager: self, urls: urls, initialData: self.data
+      source: self.source, urls: urls, initialData: self.data
     )
     mainWindowComponent.set(cwd: cwd)
     self.mainWindowComponents[mainWindowComponent.uuid] = mainWindowComponent
+
+    mainWindowComponent.sink
+      .filter { $0 is MainWindowAction }
+      .map { $0 as! MainWindowAction }
+      .subscribeNext { [unowned self] action in
+        switch action {
+        case let .becomeKey(mainWindow):
+          self.setKeyWindow(mainWindow)
+        case let .close(mainWindow):
+          self.closeMainWindow(mainWindow)
+        }
+      }
+      .addDisposableTo(self.disposeBag)
     
     return mainWindowComponent
   }
   
   func closeMainWindow(mainWindowComponent: MainWindowComponent) {
     if self.keyMainWindow === mainWindowComponent {
-//      NSLog("\(#function): Setting key main window to nil from \(self.keyMainWindow?.uuid)")
       self.keyMainWindow = nil
     }
-    self.mainWindowComponents.removeValueForKey(mainWindowComponent.uuid)
     
+    self.mainWindowComponents.removeValueForKey(mainWindowComponent.uuid)
+
     if self.mainWindowComponents.isEmpty {
       self.publish(event: MainWindowEvent.allWindowsClosed)
     }

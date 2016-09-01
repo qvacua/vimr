@@ -7,10 +7,13 @@ import Cocoa
 import PureLayout
 import RxSwift
 
+enum MainWindowAction {
+  case becomeKey(mainWindow: MainWindowComponent)
+  case close(mainWindow: MainWindowComponent)
+}
+
 class MainWindowComponent: WindowComponent, NSWindowDelegate, NeoVimViewDelegate {
 
-  // TODO: Use a delegate here!
-  private weak var mainWindowManager: MainWindowManager?
   private let fontManager = NSFontManager.sharedFontManager()
 
   private var defaultEditorFont: NSFont
@@ -22,8 +25,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NeoVimViewDelegate
 
   private let neoVimView = NeoVimView(forAutoLayout: ())
 
-  init(source: Observable<Any>, manager: MainWindowManager, urls: [NSURL] = [], initialData: PrefData) {
-    self.mainWindowManager = manager
+  init(source: Observable<Any>, urls: [NSURL] = [], initialData: PrefData) {
     self.defaultEditorFont = initialData.appearance.editorFont
     self.usesLigatures = initialData.appearance.editorUsesLigatures
 
@@ -197,18 +199,11 @@ extension MainWindowComponent {
 extension MainWindowComponent {
   
   func windowDidBecomeKey(_: NSNotification) {
-    self.mainWindowManager?.setKeyWindow(self)
-  }
-  
-  func windowDidResignKey(_: NSNotification) {
-    // We do not
-    // self.mainWindowManager?.setKeyWindow(nil)
-    // here, since the inactivation of the App also calls this method. Instead, we do it in
-    // MainWindowManager.closeMainWindow()
+    self.publish(event: MainWindowAction.becomeKey(mainWindow: self))
   }
 
   func windowWillClose(notification: NSNotification) {
-    self.mainWindowManager?.closeMainWindow(self)
+    self.publish(event: MainWindowAction.close(mainWindow: self))
   }
 
   func windowShouldClose(sender: AnyObject) -> Bool {
