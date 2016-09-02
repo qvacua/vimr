@@ -21,29 +21,11 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
   override func addViews() {
     let searchField = self.searchField
 
-    let tableColumn = NSTableColumn(identifier: "name")
-    let textFieldCell = NSTextFieldCell()
-    textFieldCell.allowsEditingTextAttributes = false
-    textFieldCell.lineBreakMode = .ByTruncatingTail
-    tableColumn.dataCell = textFieldCell
-
-    let fileView = NSTableView(frame: CGRect.zero)
-    fileView.addTableColumn(tableColumn)
-    fileView.rowSizeStyle	=	.Default
-    fileView.sizeLastColumnToFit()
-    fileView.allowsEmptySelection = false
-    fileView.allowsMultipleSelection = false
-    fileView.headerView = nil
-    fileView.focusRingType = .None
-    fileView.selectionHighlightStyle = .SourceList
+    let fileView = NSTableView.standardSourceListTableView()
     fileView.setDataSource(self)
     fileView.setDelegate(self)
 
-    let fileScrollView = NSScrollView(forAutoLayout: ())
-    fileScrollView.hasVerticalScroller = true
-    fileScrollView.hasHorizontalScroller = true
-    fileScrollView.autohidesScrollers = true
-    fileScrollView.borderType = .BezelBorder
+    let fileScrollView = NSScrollView.standardScrollView()
     fileScrollView.documentView = fileView
 
     let cwdControl = self.cwdControl

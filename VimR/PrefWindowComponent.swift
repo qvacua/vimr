@@ -16,8 +16,8 @@ class PrefWindowComponent: WindowComponent, NSTableViewDataSource, NSTableViewDe
 
   private var data: PrefData
 
-  private let categoryView = NSTableView(frame: CGRect.zero)
-  private let categoryScrollView = NSScrollView(forAutoLayout: ())
+  private let categoryView = NSTableView.standardSourceListTableView()
+  private let categoryScrollView = NSScrollView.standardScrollView()
   private let paneContainer = NSScrollView(forAutoLayout: ())
 
   private let paneNames = [ "General", "Appearance" ]
@@ -66,29 +66,11 @@ class PrefWindowComponent: WindowComponent, NSTableViewDataSource, NSTableViewDe
   }
 
   override func addViews() {
-    let tableColumn = NSTableColumn(identifier: "name")
-    let textFieldCell = NSTextFieldCell()
-    textFieldCell.allowsEditingTextAttributes = false
-    textFieldCell.lineBreakMode = .ByTruncatingTail
-    tableColumn.dataCell = textFieldCell
-
     let categoryView = self.categoryView
-    categoryView.addTableColumn(tableColumn)
-    categoryView.rowSizeStyle	=	.Default
-    categoryView.sizeLastColumnToFit()
-    categoryView.allowsEmptySelection = false
-    categoryView.allowsMultipleSelection = false
-    categoryView.headerView = nil
-    categoryView.focusRingType = .None
-    categoryView.selectionHighlightStyle = .SourceList
     categoryView.setDataSource(self)
     categoryView.setDelegate(self)
 
     let categoryScrollView = self.categoryScrollView
-    categoryScrollView.hasVerticalScroller = true
-    categoryScrollView.hasHorizontalScroller = true
-    categoryScrollView.autohidesScrollers = true
-    categoryScrollView.borderType = .BezelBorder
     categoryScrollView.documentView = categoryView
 
     let paneContainer = self.paneContainer
