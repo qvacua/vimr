@@ -186,7 +186,7 @@ static void server_ui_cursor_goto(UI *ui __unused, int row, int col) {
     _put_column = col;
 
     int values[] = { row, col, screen_cursor_row(), screen_cursor_column() };
-//    ILOG("%d:%d - %d:%d", values[0], values[1], values[2], values[3]);
+    DLOG("%d:%d - %d:%d", values[0], values[1], values[2], values[3]);
     NSData *data = [[NSData alloc] initWithBytes:values length:(4 * sizeof(int))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetPosition data:data];
     [data release];
