@@ -10,6 +10,7 @@ import RxSwift
 class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource {
   
   private let searchField = NSTextField(forAutoLayout: ())
+  private let cwdControl = NSPathControl(forAutoLayout: ())
 
   init(source: Observable<Any>) {
     super.init(source: source, nibName: "OpenQuicklyWindow")
@@ -18,18 +19,36 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
   }
 
   override func addViews() {
-    self.window.contentView?.addSubview(searchField)
-    self.searchField.autoPinEdgesToSuperviewEdgesWithInsets(NSEdgeInsets(top: 18, left: 18, bottom: 18, right: 18))
+    let cwdControl = self.cwdControl
+    cwdControl.pathStyle = .Standard
+    cwdControl.backgroundColor = NSColor.clearColor()
+    cwdControl.refusesFirstResponder = true
+    cwdControl.cell?.controlSize = .SmallControlSize
+    cwdControl.cell?.font = NSFont.systemFontOfSize(NSFont.smallSystemFontSize())
+    cwdControl.setContentCompressionResistancePriority(NSLayoutPriorityDefaultLow, forOrientation:.Horizontal)
 
-    self.searchField.becomeFirstResponder()
+    let searchField = self.searchField
+
+    self.window.contentView?.addSubview(searchField)
+    self.window.contentView?.addSubview(cwdControl)
+
+    searchField.autoPinEdgeToSuperviewEdge(.Top, withInset: 18)
+    searchField.autoPinEdgeToSuperviewEdge(.Right, withInset: 18)
+    searchField.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
+
+    cwdControl.autoPinEdge(.Top, toEdge: .Bottom, ofView: searchField, withOffset: 18)
+    cwdControl.autoPinEdge(.Right, toEdge: .Right, ofView: searchField)
+    cwdControl.autoPinEdge(.Left, toEdge: .Left, ofView: searchField)
+    cwdControl.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 18)
   }
 
   override func subscription(source source: Observable<Any>) -> Disposable {
     return NopDisposable.instance
   }
   
-  override func show() {
-    super.show()
+  func show(forMainWindow mainWindow: MainWindowComponent) {
+    self.cwdControl.URL = mainWindow.cwd
+    self.show()
     
     self.searchField.becomeFirstResponder()
   }

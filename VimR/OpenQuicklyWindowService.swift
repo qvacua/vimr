@@ -17,7 +17,7 @@ class OpenQuicklyWindowService: StandardFlow {
   }
 
   func open(forMainWindow mainWindow: MainWindowComponent) {
-    self.openQuicklyWindow.show()
+    self.openQuicklyWindow.show(forMainWindow: mainWindow)
   }
 
   override func subscription(source source: Observable<Any>) -> Disposable {

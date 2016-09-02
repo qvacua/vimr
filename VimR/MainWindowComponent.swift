@@ -24,6 +24,16 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NeoVimViewDelegate
     return self.neoVimView.uuid
   }
 
+  var cwd: NSURL {
+    get {
+      return self.neoVimView.cwd
+    }
+
+    set {
+      self.neoVimView.cwd = newValue
+    }
+  }
+
   private let neoVimView = NeoVimView(forAutoLayout: ())
 
   init(source: Observable<Any>, urls: [NSURL] = [], initialData: PrefData) {
@@ -45,10 +55,6 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NeoVimViewDelegate
 
   func open(urls urls: [NSURL]) {
     self.neoVimView.open(urls: urls)
-  }
-  
-  func set(cwd cwd: NSURL) {
-    self.neoVimView.cwd = cwd
   }
 
   func isDirty() -> Bool {

@@ -29,7 +29,7 @@ class MainWindowService: StandardFlow {
     let mainWindowComponent = MainWindowComponent(
       source: self.source, urls: urls, initialData: self.data
     )
-    mainWindowComponent.set(cwd: cwd)
+    mainWindowComponent.cwd = cwd
     self.mainWindowComponents[mainWindowComponent.uuid] = mainWindowComponent
 
     mainWindowComponent.sink
@@ -77,7 +77,7 @@ class MainWindowService: StandardFlow {
       return
     }
     
-    keyMainWindow.set(cwd: cwd)
+    keyMainWindow.cwd = cwd
     keyMainWindow.open(urls: urls)
   }
   
