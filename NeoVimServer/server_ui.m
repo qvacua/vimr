@@ -762,7 +762,7 @@ NSArray *server_buffers() {
       fileName = [NSString stringWithCString:(const char *) buf->b_ffname encoding:NSUTF8StringEncoding];
     }
     bool current = curbuf == buf;
-    NeoVimBuffer *buffer = [[NeoVimBuffer alloc] initWithHandle:buf->handle
+    NeoVimBuffer *buffer = [[NeoVimBuffer alloc] initWithHandle:(NSUInteger) buf->handle
                                                        fileName:fileName
                                                           dirty:buf->b_changed
                                                         current:current];
