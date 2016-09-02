@@ -48,7 +48,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NeoVimViewDelegate
   }
   
   func set(cwd cwd: NSURL) {
-    self.neoVimView.set(cwd: cwd)
+    self.neoVimView.cwd = cwd
   }
 
   func isDirty() -> Bool {

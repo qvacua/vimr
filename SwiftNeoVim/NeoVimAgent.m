@@ -55,6 +55,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
   bool _neoVimIsReady;
   bool _isInitErrorPresent;
+
+  NSUInteger _requestResponseId;
+  NSMutableDictionary *_requestResponseConditions;
+  NSMutableDictionary *_requestResponses;
 }
 
 - (instancetype)initWithUuid:(NSString *)uuid {
@@ -66,6 +70,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   _uuid = uuid;
   _neoVimIsReady = NO;
   _isInitErrorPresent = NO;
+
+  _requestResponseId = 0;
+  _requestResponseConditions = [NSMutableDictionary new];
+  _requestResponses = [NSMutableDictionary new];
 
   return self;
 }
@@ -136,6 +144,31 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 - (void)vimCommand:(NSString *)string {
   NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
   [self sendMessageWithId:NeoVimAgentMsgIdCommand data:data expectsReply:NO];
+}
+
+- (NSString *)vimCommandOutput:(NSString *)string {
+  NSUInteger reqId = _requestResponseId;
+  _requestResponseId++;
+
+  NSCondition *condition = [NSCondition new];
+  _requestResponseConditions[@(reqId)] = condition;
+
+  NSMutableData *data = [[NSMutableData alloc] initWithBytes:&reqId length:sizeof(NSUInteger)];
+  [data appendData:[string dataUsingEncoding:NSUTF8StringEncoding]];
+  [self sendMessageWithId:NeoVimAgentMsgIdCommandOutput data:data expectsReply:NO];
+
+  NSDate *deadline = [[NSDate date] dateByAddingTimeInterval:qTimeout];
+  [condition lock];
+  while (_requestResponses[@(reqId)] == nil) {
+    [condition waitUntilDate:deadline];
+  }
+  [condition unlock];
+  [_requestResponseConditions removeObjectForKey:@(reqId)];
+
+  NSString *result = _requestResponses[@(reqId)];
+  [_requestResponses removeObjectForKey:@(reqId)];
+
+  return [result stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
 - (void)vimInput:(NSString *)string {
@@ -424,6 +457,22 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     case NeoVimServerMsgIdDirtyStatusChanged: {
       bool *values = data_to_bool_array(data, 1);
       [_bridge setDirtyStatus:values[0]];
+      return;
+    }
+
+    case NeoVimServerMsgIdCommandOutputResult: {
+      NSUInteger *values = (NSUInteger *) data.bytes;
+      NSUInteger requestId = values[0];
+
+      NSString *output = [[NSString alloc] initWithBytes:++values
+                                                  length:data.length - sizeof(NSUInteger)
+                                                encoding:NSUTF8StringEncoding];
+
+      NSCondition *condition = _requestResponseConditions[@(requestId)];
+      [condition lock];
+      _requestResponses[@(requestId)] = output;
+      [condition broadcast];
+      [condition unlock];
       return;
     }
 

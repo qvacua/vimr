@@ -17,7 +17,6 @@ class OpenQuicklyWindowService: StandardFlow {
   }
 
   func open(forMainWindow mainWindow: MainWindowComponent) {
-    Swift.print("\(#function): \(mainWindow.uuid)")
     self.openQuicklyWindow.show()
   }
 

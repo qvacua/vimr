@@ -12,6 +12,7 @@ extern NeoVimServer *_neovim_server;
 
 extern void server_start_neovim();
 extern void server_vim_command(NSString *input);
+extern void server_vim_command_output(NSUInteger responseId, NSString *input);
 extern void server_vim_input(NSString *input);
 extern void server_delete(NSInteger count);
 extern void server_resize(int width, int height);

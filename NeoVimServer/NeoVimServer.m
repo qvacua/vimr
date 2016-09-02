@@ -178,6 +178,18 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return nil;
     }
 
+    case NeoVimAgentMsgIdCommandOutput: {
+      NSUInteger *values = (NSUInteger *) data.bytes;
+      NSUInteger responseId = values[0];
+      NSString *command = [[NSString alloc] initWithBytes:++values
+                                                   length:data.length - sizeof(NSUInteger)
+                                                 encoding:NSUTF8StringEncoding];
+
+      server_vim_command_output(responseId, command);
+
+      return nil;
+    }
+
     case NeoVimAgentMsgIdInput: {
       NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
       server_vim_input(string);

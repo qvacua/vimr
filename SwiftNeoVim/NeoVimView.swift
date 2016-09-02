@@ -59,6 +59,21 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
       self.resizeNeoVimUiTo(size: self.bounds.size)
     }
   }
+
+  public var cwd: NSURL {
+    get {
+      return NSURL(fileURLWithPath: self.agent.vimCommandOutput("silent pwd"))
+    }
+
+    set {
+      guard let path = cwd.path else {
+        return
+      }
+
+      let escapedCwd = self.agent.escapedFileName(path)
+      self.agent.vimCommand("cd \(escapedCwd)")
+    }
+  }
   
   private var _font = NeoVimView.defaultFont
 
@@ -135,6 +150,8 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
 
   @IBAction public func debug1(sender: AnyObject!) {
     Swift.print("DEBUG 1")
+    Swift.print(self.agent.vimCommandOutput("silent echo $PATH"))
+    Swift.print(self.agent.vimCommandOutput("silent pwd"))
   }
 
   public func debugInfo() {
@@ -144,15 +161,6 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
 
 // MARK: - API
 extension NeoVimView {
-  
-  public func set(cwd cwd: NSURL) {
-    guard let path = cwd.path else {
-      return
-    }
-    
-    let escapedCwd = self.agent.escapedFileName(path)
-    self.agent.vimCommand("cd \(escapedCwd)")
-  }
   
   public func currentBuffer() -> NeoVimBuffer {
     return self.agent.buffers().filter { $0.current }.first!

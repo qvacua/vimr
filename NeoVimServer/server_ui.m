@@ -27,7 +27,7 @@
 #import <nvim/undo.h>
 
 
-#define pun_type(t, x) (*((t *)(&x)))
+#define pun_type(t, x) (*((t *) (&(x))))
 
 typedef struct {
     UIBridgeData *bridge;
@@ -462,6 +462,32 @@ static void neovim_command(void **argv) {
   }
 }
 
+static void neovim_command_output(void **argv) {
+  @autoreleasepool {
+    NSUInteger *values = (NSUInteger *) argv[0];
+    NSUInteger responseId = values[0];
+    NSString *input = (NSString *) argv[1];
+
+    Error err;
+    String commandOutput = nvim_command_output((String) {
+        .data = (char *) input.cstr,
+        .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
+    }, &err);
+
+    // FIXME: handle err.set == true
+    NSData *outputData = [NSData dataWithBytes:commandOutput.data length:commandOutput.size];
+    xfree(commandOutput.data);
+
+    NSMutableData *data = [NSMutableData dataWithBytes:&responseId length:sizeof(NSUInteger)];
+    [data appendData:outputData];
+
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdCommandOutputResult data:data];
+
+    free(values); // malloc'ed in loop_schedule(&main_loop, ...) (in _queue) somewhere
+    [input release]; // retained in loop_schedule(&main_loop, ...) (in _queue) somewhere
+  }
+}
+
 static void neovim_input(void **argv) {
   @autoreleasepool {
     NSString *input = (NSString *) argv[0];
@@ -641,6 +667,18 @@ void server_resize(int width, int height) {
 void server_vim_command(NSString *input) {
   queue(^{
     loop_schedule(&main_loop, event_create(1, neovim_command, 1, [input retain])); // release in neovim_command
+  });
+}
+
+void server_vim_command_output(NSUInteger responseId, NSString *input) {
+  queue(^{
+    // We could use (NSInteger *) responseId, but that would be almost unreadable and would rely on the fact that
+    // (coincidentally) the pointers and NSUInteger are both 64bit wide.
+    NSUInteger *values = malloc(sizeof(NSUInteger));
+    values[0] = responseId;
+
+    // free release in neovim_command
+    loop_schedule(&main_loop, event_create(1, neovim_command_output, 2, values, [input retain]));
   });
 }
 
