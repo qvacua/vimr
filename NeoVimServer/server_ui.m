@@ -451,7 +451,7 @@ static void neovim_command(void **argv) {
     NSString *input = (NSString *) argv[0];
 
     Error err;
-    vim_command((String) {
+    nvim_command((String) {
         .data = (char *) input.cstr,
         .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
     }, &err);
@@ -467,7 +467,7 @@ static void neovim_input(void **argv) {
     NSString *input = (NSString *) argv[0];
 
     // FIXME: check the length of the consumed bytes by neovim and if not fully consumed, call vim_input again.
-    vim_input((String) {
+    nvim_input((String) {
         .data = (char *) input.cstr,
         .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
     });
