@@ -12,6 +12,12 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
   private let searchField = NSTextField(forAutoLayout: ())
   private let cwdControl = NSPathControl(forAutoLayout: ())
 
+  private var cwd = NSURL(fileURLWithPath: NSHomeDirectory(), isDirectory: true) {
+    didSet {
+      self.cwdControl.URL = self.cwd
+    }
+  }
+
   init(source: Observable<Any>) {
     super.init(source: source, nibName: "OpenQuicklyWindow")
 
@@ -61,7 +67,7 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
   }
   
   func show(forMainWindow mainWindow: MainWindowComponent) {
-    self.cwdControl.URL = mainWindow.cwd
+    self.cwd = mainWindow.cwd
     self.show()
     
     self.searchField.becomeFirstResponder()
