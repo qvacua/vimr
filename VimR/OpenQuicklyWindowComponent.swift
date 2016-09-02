@@ -19,6 +19,33 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
   }
 
   override func addViews() {
+    let searchField = self.searchField
+
+    let tableColumn = NSTableColumn(identifier: "name")
+    let textFieldCell = NSTextFieldCell()
+    textFieldCell.allowsEditingTextAttributes = false
+    textFieldCell.lineBreakMode = .ByTruncatingTail
+    tableColumn.dataCell = textFieldCell
+
+    let fileView = NSTableView(frame: CGRect.zero)
+    fileView.addTableColumn(tableColumn)
+    fileView.rowSizeStyle	=	.Default
+    fileView.sizeLastColumnToFit()
+    fileView.allowsEmptySelection = false
+    fileView.allowsMultipleSelection = false
+    fileView.headerView = nil
+    fileView.focusRingType = .None
+    fileView.selectionHighlightStyle = .SourceList
+    fileView.setDataSource(self)
+    fileView.setDelegate(self)
+
+    let fileScrollView = NSScrollView(forAutoLayout: ())
+    fileScrollView.hasVerticalScroller = true
+    fileScrollView.hasHorizontalScroller = true
+    fileScrollView.autohidesScrollers = true
+    fileScrollView.borderType = .BezelBorder
+    fileScrollView.documentView = fileView
+
     let cwdControl = self.cwdControl
     cwdControl.pathStyle = .Standard
     cwdControl.backgroundColor = NSColor.clearColor()
@@ -27,16 +54,21 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
     cwdControl.cell?.font = NSFont.systemFontOfSize(NSFont.smallSystemFontSize())
     cwdControl.setContentCompressionResistancePriority(NSLayoutPriorityDefaultLow, forOrientation:.Horizontal)
 
-    let searchField = self.searchField
-
-    self.window.contentView?.addSubview(searchField)
-    self.window.contentView?.addSubview(cwdControl)
+    let contentView = self.window.contentView!
+    contentView.addSubview(searchField)
+    contentView.addSubview(fileScrollView)
+    contentView.addSubview(cwdControl)
 
     searchField.autoPinEdgeToSuperviewEdge(.Top, withInset: 18)
     searchField.autoPinEdgeToSuperviewEdge(.Right, withInset: 18)
     searchField.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
 
-    cwdControl.autoPinEdge(.Top, toEdge: .Bottom, ofView: searchField, withOffset: 18)
+    fileScrollView.autoPinEdge(.Top, toEdge: .Bottom, ofView: searchField, withOffset: 18)
+    fileScrollView.autoPinEdge(.Right, toEdge: .Right, ofView: searchField)
+    fileScrollView.autoPinEdge(.Left, toEdge: .Left, ofView: searchField)
+    fileScrollView.autoSetDimension(.Height, toSize: 300)
+
+    cwdControl.autoPinEdge(.Top, toEdge: .Bottom, ofView: fileView, withOffset: 18)
     cwdControl.autoPinEdge(.Right, toEdge: .Right, ofView: searchField)
     cwdControl.autoPinEdge(.Left, toEdge: .Left, ofView: searchField)
     cwdControl.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 18)
@@ -51,5 +83,25 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
     self.show()
     
     self.searchField.becomeFirstResponder()
+  }
+}
+
+// MARK: - NSTableViewDataSource
+extension OpenQuicklyWindowComponent {
+
+  func numberOfRowsInTableView(_: NSTableView) -> Int {
+    return 2
+  }
+
+  func tableView(_: NSTableView, objectValueForTableColumn _: NSTableColumn?, row: Int) -> AnyObject? {
+    return "!!!"
+  }
+}
+
+// MARK: - NSTableViewDelegate
+extension OpenQuicklyWindowComponent {
+
+  func tableViewSelectionDidChange(_: NSNotification) {
+    Swift.print("selection changed")
   }
 }
