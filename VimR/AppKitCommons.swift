@@ -23,7 +23,7 @@ extension NSTableView {
   static func standardSourceListTableView() -> NSTableView {
     let tableView = NSTableView(frame: CGRect.zero)
 
-    tableView.addTableColumn(NSTableColumn.standardCellBasedColumn(withName: "name"))
+    tableView.addTableColumn(NSTableColumn(identifier: "name"))
     tableView.rowSizeStyle	=	.Default
     tableView.sizeLastColumnToFit()
     tableView.allowsEmptySelection = false
@@ -33,20 +33,6 @@ extension NSTableView {
     tableView.selectionHighlightStyle = .SourceList
 
     return tableView
-  }
-}
-
-extension NSTableColumn {
-
-  static func standardCellBasedColumn(withName name: String) -> NSTableColumn {
-    let tableColumn = NSTableColumn(identifier: name)
-    
-    let textFieldCell = NSTextFieldCell()
-    textFieldCell.allowsEditingTextAttributes = false
-    textFieldCell.lineBreakMode = .ByTruncatingTail
-    tableColumn.dataCell = textFieldCell
-
-    return tableColumn
   }
 }
 

@@ -39,6 +39,8 @@
 		4B0C905B1D5DED69007753A3 /* NeoVimBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0C905A1D5DED69007753A3 /* NeoVimBuffer.m */; };
 		4B0E22581D5DEDC700C072E6 /* NeoVimBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0C90591D5DED69007753A3 /* NeoVimBuffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B0E22591D5DF62E00C072E6 /* NeoVimBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0C905A1D5DED69007753A3 /* NeoVimBuffer.m */; };
+		4B22F7F01D7C029400929B0E /* ScorerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B22F7EF1D7C029400929B0E /* ScorerTest.swift */; };
+		4B22F7F21D7C6B9000929B0E /* ImageAndTextTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B22F7F11D7C6B9000929B0E /* ImageAndTextTableCell.swift */; };
 		4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BE01D3BF24200CBDD98 /* Application.swift */; };
 		4B238BEC1D3ED54D00CBDD98 /* AppearancePrefPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BEB1D3ED54D00CBDD98 /* AppearancePrefPane.swift */; };
 		4B2A2BEC1D02261F0074CE9A /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BE21D0225800074CE9A /* RxCocoa.framework */; };
@@ -227,6 +229,8 @@
 		4B0C90591D5DED69007753A3 /* NeoVimBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimBuffer.h; sourceTree = "<group>"; };
 		4B0C905A1D5DED69007753A3 /* NeoVimBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimBuffer.m; sourceTree = "<group>"; };
 		4B1BB3521D16C5E500CA4FEF /* InputTestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputTestView.swift; sourceTree = "<group>"; };
+		4B22F7EF1D7C029400929B0E /* ScorerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScorerTest.swift; sourceTree = "<group>"; };
+		4B22F7F11D7C6B9000929B0E /* ImageAndTextTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageAndTextTableCell.swift; sourceTree = "<group>"; };
 		4B238BE01D3BF24200CBDD98 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		4B238BEB1D3ED54D00CBDD98 /* AppearancePrefPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearancePrefPane.swift; sourceTree = "<group>"; };
 		4B2A2BE21D0225800074CE9A /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = Carthage/Build/Mac/RxCocoa.framework; sourceTree = SOURCE_ROOT; };
@@ -482,6 +486,7 @@
 				4BD3BF921D32A95800082605 /* MainWindowComponent.swift */,
 				4BDF501A1D77596500D8FBC3 /* OpenQuicklyWindowManager.swift */,
 				4BDF50131D7617EA00D8FBC3 /* OpenQuicklyWindowComponent.swift */,
+				4B22F7F11D7C6B9000929B0E /* ImageAndTextTableCell.swift */,
 				4B238BED1D3ED55300CBDD98 /* Preferences */,
 			);
 			name = UI;
@@ -559,6 +564,7 @@
 				1929BBC84557C8351EC6183E /* FileItemIgnorePatternTest.swift */,
 				1929B5D977261F1EBFA9E8F1 /* FileUtilsTest.swift */,
 				1929BC19C1BC19246AFF1621 /* MatcherTests.swift */,
+				4B22F7EF1D7C029400929B0E /* ScorerTest.swift */,
 				1929B41F745CDCDFE09ACDCF /* resources */,
 			);
 			path = VimRTests;
@@ -845,6 +851,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */,
+				4B22F7F21D7C6B9000929B0E /* ImageAndTextTableCell.swift in Sources */,
 				4BDF50141D7617EA00D8FBC3 /* OpenQuicklyWindowComponent.swift in Sources */,
 				4B6A70941D60E04200E12030 /* AppKitCommons.swift in Sources */,
 				4BD3BF971D32B0DB00082605 /* MainWindowManager.swift in Sources */,
@@ -883,6 +890,7 @@
 				1929B3BF1DB87B57559DC27D /* Matcher.swift in Sources */,
 				1929B63CD9CBB9C122BD99A5 /* ScoredFileItem.swift in Sources */,
 				1929B10DD8CD7EE0B8BE529F /* Scorer.swift in Sources */,
+				4B22F7F01D7C029400929B0E /* ScorerTest.swift in Sources */,
 				1929B4D3A4429651C2AF55E5 /* FoundationCommons.swift in Sources */,
 				1929BEFEABA0448306CDB6D4 /* FileItemIgnorePatternTest.swift in Sources */,
 				1929B7A2F2B423AA9740FD45 /* FileUtilsTest.swift in Sources */,

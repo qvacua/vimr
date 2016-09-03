@@ -8,7 +8,7 @@ import RxSwift
 
 class ScoredFileItem: Comparable {
   let score: Float
-  let url: NSURL
+  unowned let url: NSURL
 
   init(score: Float, url: NSURL) {
     self.score = score

@@ -3,7 +3,7 @@
  * See LICENSE
  */
 
-import Foundation
+import Cocoa
 import RxSwift
 import EonilFileSystemEvents
 
@@ -25,7 +25,7 @@ class FileItemService {
   private var ignoreToken = Token()
 
   /// When at least this much of non-directory and visible files are scanned, they are emitted.
-  private let emitChunkSize = 200
+  private let emitChunkSize = 1000
 
   private let scanDispatchQueue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
   private let monitorDispatchQueue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
@@ -34,9 +34,29 @@ class FileItemService {
 
   private let fileSystemEventsLatency = Double(2)
   private var monitors = [NSURL: FileSystemEventMonitor]()
+  
+  private let workspace = NSWorkspace.sharedWorkspace()
+  private let iconsCache = NSCache()
+  
+  init() {
+    self.iconsCache.countLimit = 2000
+    self.iconsCache.name = "icon-cache"
+  }
 
   func set(ignorePatterns patterns: Set<FileItemIgnorePattern>) {
     self.ignorePatterns = patterns
+  }
+  
+  func icon(forUrl url: NSURL) -> NSImage? {
+    guard let path = url.path else {
+      return nil
+    }
+    
+    let icon = workspace.iconForFile(path)
+    icon.size = CGSize(width: 16, height: 16)
+    self.iconsCache.setObject(icon, forKey: url)
+    
+    return icon
   }
 
   func monitor(url url: NSURL) {

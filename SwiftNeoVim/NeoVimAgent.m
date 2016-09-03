@@ -288,7 +288,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     return nil;
   }
 
-  return [NSData dataWithData:(__bridge NSData *) responseData];
+  NSData *result = (__bridge_transfer NSData *) responseData;
+  return result;
 }
 
 - (NSString *)neoVimServerExecutablePath {

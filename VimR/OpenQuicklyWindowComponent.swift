@@ -25,11 +25,15 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
   private var scoredItems = [ScoredFileItem]()
   private var sortedScoredItems = [ScoredFileItem]()
 
+  private var cwdPathCompsCount = 0
   private var cwd = NSURL(fileURLWithPath: NSHomeDirectory(), isDirectory: true) {
     didSet {
+      self.cwdPathCompsCount = self.cwd.pathComponents!.count
       self.cwdControl.URL = self.cwd
     }
   }
+  
+  private let filterOpQueue = NSOperationQueue()
 
   init(source: Observable<Any>, fileItemService: FileItemService) {
     self.fileItemService = fileItemService
@@ -37,40 +41,69 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
     super.init(source: source, nibName: "OpenQuicklyWindow")
 
     self.window.delegate = self
+    self.filterOpQueue.qualityOfService = .UserInitiated
+    self.filterOpQueue.name = "open-quickly-filter-operation-queue"
+    
     self.searchField.rx_text
       .throttle(0.2, scheduler: MainScheduler.instance)
       .distinctUntilChanged()
-      .subscribeOn(self.userInitiatedScheduler)
-      .doOnNext { _ in
-        self.scoredItems = []
-        self.sortedScoredItems = []
-      }
-      .flatMapLatest { [unowned self] pattern -> Observable<[ScoredFileItem]> in
-        if pattern.characters.count == 0 {
-          return self.flatFiles
-            .map { fileItems in
-              return fileItems.concurrentChunkMap(50) { item in
-                return ScoredFileItem(score: 0, url: item.url)
-              }
-          }
+      .flatMapLatest { [unowned self] pattern in
+        self.flatFiles.
+        self.filterOpQueue.addOperationWithBlock {
+          
         }
-
-        let useFullPath = pattern.containsString("/")
+        
         return self.flatFiles
-          .map { fileItems in
-            return fileItems.concurrentChunkMap(50) { item in
-              let url = item.url
-              let target = useFullPath ? url.path! : url.lastPathComponent!
-              return ScoredFileItem(score: Scorer.score(target, pattern: pattern), url: url)
-            }
-        }
       }
-      .observeOn(MainScheduler.instance)
-      .subscribeNext { [unowned self] items in
-        self.scoredItems.appendContentsOf(items)
-        self.sortedScoredItems = Array(self.scoredItems.sort(>)[0...min(500, self.scoredItems.count - 1)])
-        self.fileView.reloadData()
-      }
+      .subscribe(onNext: { [unowned self] pattern in
+        NSLog("filtering \(pattern)")
+        
+      })
+      
+//      .subscribeOn(self.userInitiatedScheduler)
+//      .doOnNext { _ in
+//        self.scoredItems = []
+//        self.sortedScoredItems = []
+//      }
+//      .subscribeOn(MainScheduler.instance)
+//      .doOnNext { _ in
+//        self.fileView.reloadData()
+//      }
+//      .subscribeOn(self.userInitiatedScheduler)
+//      .flatMapLatest { [unowned self] pattern -> Observable<[ScoredFileItem]> in
+//        NSLog("Flat map start: \(pattern)")
+//        if pattern.characters.count == 0 {
+//          return self.flatFiles
+//            .map { fileItems in
+//              return fileItems.concurrentChunkMap(200) { ScoredFileItem(score: 0, url: $0.url) }
+//          }
+//        }
+//
+//        let useFullPath = pattern.containsString("/")
+//        let cwdPath = self.cwd.path! + "/"
+//        
+//        let result: Observable<[ScoredFileItem]> = self.flatFiles
+//          .map { fileItems in
+//            return fileItems.concurrentChunkMap(200) { item in
+//              let url = item.url
+//              let target = useFullPath ? url.path!.stringByReplacingOccurrencesOfString(cwdPath, withString: "")
+//                                       : url.lastPathComponent!
+//              
+//              return ScoredFileItem(score: Scorer.score(target, pattern: pattern), url: url)
+//            }
+//        }
+//        NSLog("Flat map end: \(pattern)")
+//        
+//        return result
+//      }
+//      .doOnNext { [unowned self] items in
+//        self.scoredItems.appendContentsOf(items)
+//        self.sortedScoredItems = Array(self.scoredItems.sort(>)[0..<min(201, self.scoredItems.count)])
+//      }
+//      .observeOn(MainScheduler.instance)
+//      .subscribe(onNext: { [unowned self] items in
+//        self.fileView.reloadData()
+//        })
       .addDisposableTo(self.disposeBag)
   }
 
@@ -78,9 +111,10 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
     let searchField = self.searchField
 
     let fileView = self.fileView
+    fileView.intercellSpacing = CGSize(width: 4, height: 4)
     fileView.setDataSource(self)
     fileView.setDelegate(self)
-
+    
     let fileScrollView = NSScrollView.standardScrollView()
     fileScrollView.autoresizesSubviews = true
     fileScrollView.documentView = fileView
@@ -133,14 +167,14 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
     let flatFiles = self.fileItemService.flatFileItems(ofUrl: self.cwd)
       .subscribeOn(self.userInitiatedScheduler)
       .replayAll()
-    flatFiles.connect()
+    flatFiles.connect().addDisposableTo(self.flatFilesDisposeBag)
 
     flatFiles
       .observeOn(MainScheduler.instance)
-      .subscribeNext { [unowned self] items in
+      .subscribe(onNext: { [unowned self] items in
         self.count += items.count
         self.countField.stringValue = "\(self.count) items"
-      }
+        })
       .addDisposableTo(self.flatFilesDisposeBag)
 
     self.flatFiles = flatFiles
@@ -156,30 +190,70 @@ extension OpenQuicklyWindowComponent {
   func numberOfRowsInTableView(_: NSTableView) -> Int {
     return self.sortedScoredItems.count
   }
-
-  func tableView(_: NSTableView, objectValueForTableColumn _: NSTableColumn?, row: Int) -> AnyObject? {
-    return self.sortedScoredItems[row].url.lastPathComponent!
+  
+  func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
+    let url = self.sortedScoredItems[row].url
+    let pathComps = url.pathComponents!
+    let truncatedPathComps = pathComps[self.cwdPathCompsCount..<pathComps.count]
+    let name = truncatedPathComps.last!
+    let pathInfo = truncatedPathComps.dropLast().reverse().joinWithSeparator(" / ")
+    
+    let result = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
+    result.addAttribute(NSForegroundColorAttributeName, value: NSColor.lightGrayColor(),
+                        range: NSRange(location:name.characters.count, length: pathInfo.characters.count + 3))
+    
+    let cell = tableView.makeViewWithIdentifier("file-view-row", owner: self) as? ImageAndTextTableCell
+               ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
+    
+    cell.textField.attributedStringValue = result
+    cell.imageView.image = self.fileItemService.icon(forUrl: url)
+    
+    return cell
   }
+
+//  func tableView(_: NSTableView, objectValueForTableColumn _: NSTableColumn?, row: Int) -> AnyObject? {
+//    let url = self.sortedScoredItems[row].url
+//    let pathComps = self.sortedScoredItems[row].url.pathComponents!
+//    let truncatedPathComps = pathComps[self.cwdPathCompsCount..<pathComps.count]
+//    let name = truncatedPathComps.last!
+//    let pathInfo = truncatedPathComps.dropLast().reverse().joinWithSeparator("/")
+//    
+//    let textAttachment = NSTextAttachment()
+//    textAttachment.image = self.fileItemService.icon(forUrl: url)
+//    
+//    let result: NSMutableAttributedString = NSAttributedString(attachment: textAttachment).mutableCopy() as! NSMutableAttributedString
+//    result.mutableString.appendString("\(name) — \(pathInfo)")
+//    result.addAttribute(NSForegroundColorAttributeName, value: NSColor.lightGrayColor(),
+//                        range: NSRange(location:name.characters.count, length: pathInfo.characters.count + 3))
+//    
+//    return result
+//  }
 }
 
 // MARK: - NSTableViewDelegate
 extension OpenQuicklyWindowComponent {
 
   func tableViewSelectionDidChange(_: NSNotification) {
-    Swift.print("selection changed")
+//    NSLog("\(#function): selection changed")
   }
+  
+//  func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
+//    return 34
+//  }
 }
 
 // MARK: - NSWindowDelegate
 extension OpenQuicklyWindowComponent {
 
-  func windowDidClose(notification: NSNotification) {
-    self.searchField.stringValue = ""
-    self.countField.stringValue = "0 items"
+  func windowWillClose(notification: NSNotification) {
+    self.flatFilesDisposeBag = DisposeBag()
+    self.flatFiles = Observable.empty()
     self.count = 0
+    
     self.scoredItems = []
     self.sortedScoredItems = []
-    self.flatFiles = Observable.empty()
-    self.flatFilesDisposeBag = DisposeBag()
+    
+    self.searchField.stringValue = ""
+    self.countField.stringValue = "0 items"
   }
 }
