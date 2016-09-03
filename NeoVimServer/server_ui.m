@@ -22,9 +22,11 @@
 #import <nvim/ui_bridge.h>
 #import <nvim/event/signal.h>
 #import <nvim/main.h>
+#import <nvim/ex_docmd.h>
 #import <nvim/ex_getln.h>
 #import <nvim/fileio.h>
 #import <nvim/undo.h>
+#import <nvim/eval.h>
 
 
 #define pun_type(t, x) (*((t *) (&(x))))
@@ -469,14 +471,23 @@ static void neovim_command_output(void **argv) {
     NSString *input = (NSString *) argv[1];
 
     Error err;
-    String commandOutput = nvim_command_output((String) {
+    // We don't know why nvim_command_output does not work when the optimization level is set to -Os.
+    // If set to -O0, nvim_command_output works fine... -_-
+    // String commandOutput = nvim_command_output((String) {
+    //     .data = (char *) input.cstr,
+    //     .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
+    // }, &err);
+    do_cmdline_cmd("redir => v:command_output");
+    nvim_command((String) {
         .data = (char *) input.cstr,
         .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
     }, &err);
+    do_cmdline_cmd("redir END");
+
+    char_u *output = get_vim_var_str(VV_COMMAND_OUTPUT);
 
     // FIXME: handle err.set == true
-    NSData *outputData = [NSData dataWithBytes:commandOutput.data length:commandOutput.size];
-    xfree(commandOutput.data);
+    NSData *outputData = [NSData dataWithBytes:output length:strlen((const char *) output)];
 
     NSMutableData *data = [NSMutableData dataWithBytes:&responseId length:sizeof(NSUInteger)];
     [data appendData:outputData];

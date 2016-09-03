@@ -66,12 +66,12 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
     }
 
     set {
-      guard let path = cwd.path else {
+      guard let path = newValue.path else {
         return
       }
 
       let escapedCwd = self.agent.escapedFileName(path)
-      self.agent.vimCommand("cd \(escapedCwd)")
+      self.agent.vimCommand("silent cd \(escapedCwd)")
     }
   }
   
@@ -149,9 +149,10 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
   }
 
   @IBAction public func debug1(sender: AnyObject!) {
-    Swift.print("DEBUG 1")
-    Swift.print(self.agent.vimCommandOutput("silent echo $PATH"))
-    Swift.print(self.agent.vimCommandOutput("silent pwd"))
+    NSLog("DEBUG 1 - Start")
+    NSLog("\(self.agent.vimCommandOutput("silent echo $PATH"))")
+    NSLog("\(self.agent.vimCommandOutput("silent pwd"))")
+    NSLog("DEBUG 1 - End")
   }
 
   public func debugInfo() {

@@ -10,7 +10,7 @@ enum MainWindowEvent {
   case allWindowsClosed
 }
 
-class MainWindowService: StandardFlow {
+class MainWindowManager: StandardFlow {
   
   static private let userHomeUrl = NSURL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
 
@@ -25,7 +25,7 @@ class MainWindowService: StandardFlow {
     super.init(source: source)
   }
 
-  func newMainWindow(urls urls: [NSURL] = [], cwd: NSURL = MainWindowService.userHomeUrl) -> MainWindowComponent {
+  func newMainWindow(urls urls: [NSURL] = [], cwd: NSURL = MainWindowManager.userHomeUrl) -> MainWindowComponent {
     let mainWindowComponent = MainWindowComponent(
       source: self.source, urls: urls, initialData: self.data
     )
@@ -66,7 +66,7 @@ class MainWindowService: StandardFlow {
     return self.mainWindowComponents.values.reduce(false) { $0 ? true : $1.isDirty() }
   }
   
-  func openInKeyMainWindow(urls urls:[NSURL] = [], cwd: NSURL = MainWindowService.userHomeUrl) {
+  func openInKeyMainWindow(urls urls:[NSURL] = [], cwd: NSURL = MainWindowManager.userHomeUrl) {
     guard !self.mainWindowComponents.isEmpty else {
       self.newMainWindow(urls: urls, cwd: cwd)
       return
