@@ -9,8 +9,24 @@ import RxSwift
 import RxCocoa
 
 class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource {
+
+  let scanCondition = NSCondition()
+  var pauseScan = false
+
+  private(set) var pattern = ""
+  private(set) var cwd = NSURL(fileURLWithPath: NSHomeDirectory(), isDirectory: true) {
+    didSet {
+      self.cwdPathCompsCount = self.cwd.pathComponents!.count
+      self.cwdControl.URL = self.cwd
+    }
+  }
+  private(set) var flatFileItems = [FileItem]()
+  private(set) var fileViewItems = [ScoredFileItem]()
+
+  private let userInitiatedScheduler = ConcurrentDispatchQueueScheduler(globalConcurrentQueueQOS: .UserInitiated)
   
   private let searchField = NSTextField(forAutoLayout: ())
+  private let progressIndicator = NSProgressIndicator(forAutoLayout: ())
   private let cwdControl = NSPathControl(forAutoLayout: ())
   private let countField = NSTextField(forAutoLayout: ())
   private let fileView = NSTableView.standardSourceListTableView()
@@ -18,97 +34,32 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
   private let fileItemService: FileItemService
 
   private var count = 0
-  private var flatFiles = Observable<[FileItem]>.empty()
-  private var flatFilesDisposeBag = DisposeBag()
-  private let userInitiatedScheduler = ConcurrentDispatchQueueScheduler(globalConcurrentQueueQOS: .UserInitiated)
-
-  private var scoredItems = [ScoredFileItem]()
-  private var sortedScoredItems = [ScoredFileItem]()
+  private var perSessionDisposeBag = DisposeBag()
 
   private var cwdPathCompsCount = 0
-  private var cwd = NSURL(fileURLWithPath: NSHomeDirectory(), isDirectory: true) {
-    didSet {
-      self.cwdPathCompsCount = self.cwd.pathComponents!.count
-      self.cwdControl.URL = self.cwd
-    }
-  }
-  
+  private let searchStream: Observable<String>
   private let filterOpQueue = NSOperationQueue()
 
   init(source: Observable<Any>, fileItemService: FileItemService) {
     self.fileItemService = fileItemService
+    self.searchStream = self.searchField.rx_text
+      .throttle(0.2, scheduler: MainScheduler.instance)
+      .distinctUntilChanged()
     
     super.init(source: source, nibName: "OpenQuicklyWindow")
 
     self.window.delegate = self
     self.filterOpQueue.qualityOfService = .UserInitiated
     self.filterOpQueue.name = "open-quickly-filter-operation-queue"
-    
-    self.searchField.rx_text
-      .throttle(0.2, scheduler: MainScheduler.instance)
-      .distinctUntilChanged()
-      .flatMapLatest { [unowned self] pattern in
-        self.flatFiles.
-        self.filterOpQueue.addOperationWithBlock {
-          
-        }
-        
-        return self.flatFiles
-      }
-      .subscribe(onNext: { [unowned self] pattern in
-        NSLog("filtering \(pattern)")
-        
-      })
-      
-//      .subscribeOn(self.userInitiatedScheduler)
-//      .doOnNext { _ in
-//        self.scoredItems = []
-//        self.sortedScoredItems = []
-//      }
-//      .subscribeOn(MainScheduler.instance)
-//      .doOnNext { _ in
-//        self.fileView.reloadData()
-//      }
-//      .subscribeOn(self.userInitiatedScheduler)
-//      .flatMapLatest { [unowned self] pattern -> Observable<[ScoredFileItem]> in
-//        NSLog("Flat map start: \(pattern)")
-//        if pattern.characters.count == 0 {
-//          return self.flatFiles
-//            .map { fileItems in
-//              return fileItems.concurrentChunkMap(200) { ScoredFileItem(score: 0, url: $0.url) }
-//          }
-//        }
-//
-//        let useFullPath = pattern.containsString("/")
-//        let cwdPath = self.cwd.path! + "/"
-//        
-//        let result: Observable<[ScoredFileItem]> = self.flatFiles
-//          .map { fileItems in
-//            return fileItems.concurrentChunkMap(200) { item in
-//              let url = item.url
-//              let target = useFullPath ? url.path!.stringByReplacingOccurrencesOfString(cwdPath, withString: "")
-//                                       : url.lastPathComponent!
-//              
-//              return ScoredFileItem(score: Scorer.score(target, pattern: pattern), url: url)
-//            }
-//        }
-//        NSLog("Flat map end: \(pattern)")
-//        
-//        return result
-//      }
-//      .doOnNext { [unowned self] items in
-//        self.scoredItems.appendContentsOf(items)
-//        self.sortedScoredItems = Array(self.scoredItems.sort(>)[0..<min(201, self.scoredItems.count)])
-//      }
-//      .observeOn(MainScheduler.instance)
-//      .subscribe(onNext: { [unowned self] items in
-//        self.fileView.reloadData()
-//        })
-      .addDisposableTo(self.disposeBag)
   }
 
   override func addViews() {
     let searchField = self.searchField
+    let progressIndicator = self.progressIndicator
+    progressIndicator.indeterminate = true
+    progressIndicator.displayedWhenStopped = false
+    progressIndicator.style = .SpinningStyle
+    progressIndicator.controlSize = .SmallControlSize
 
     let fileView = self.fileView
     fileView.intercellSpacing = CGSize(width: 4, height: 4)
@@ -136,6 +87,7 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
 
     let contentView = self.window.contentView!
     contentView.addSubview(searchField)
+    contentView.addSubview(progressIndicator)
     contentView.addSubview(fileScrollView)
     contentView.addSubview(cwdControl)
     contentView.addSubview(countField)
@@ -143,6 +95,9 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
     searchField.autoPinEdgeToSuperviewEdge(.Top, withInset: 18)
     searchField.autoPinEdgeToSuperviewEdge(.Right, withInset: 18)
     searchField.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
+
+    progressIndicator.autoAlignAxis(.Horizontal, toSameAxisOfView: searchField)
+    progressIndicator.autoPinEdge(.Right, toEdge: .Right, ofView: searchField, withOffset: -4)
 
     fileScrollView.autoPinEdge(.Top, toEdge: .Bottom, ofView: searchField, withOffset: 18)
     fileScrollView.autoPinEdge(.Right, toEdge: .Right, ofView: searchField)
@@ -161,26 +116,59 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
   override func subscription(source source: Observable<Any>) -> Disposable {
     return NopDisposable.instance
   }
+
+  func reloadFileView(withScoredItems items: [ScoredFileItem]) {
+    self.fileViewItems = items
+    self.fileView.reloadData()
+  }
+
+  func startProgress() {
+    self.progressIndicator.startAnimation(self)
+  }
+
+  func endProgress() {
+    self.progressIndicator.stopAnimation(self)
+  }
   
   func show(forMainWindow mainWindow: MainWindowComponent) {
     self.cwd = mainWindow.cwd
     let flatFiles = self.fileItemService.flatFileItems(ofUrl: self.cwd)
       .subscribeOn(self.userInitiatedScheduler)
-      .replayAll()
-    flatFiles.connect().addDisposableTo(self.flatFilesDisposeBag)
+
+    self.searchStream
+      .subscribe(onNext: { [unowned self] pattern in
+        self.pattern = pattern
+        self.resetAndAddFilterOperation()
+        })
+      .addDisposableTo(self.perSessionDisposeBag)
 
     flatFiles
+      .subscribeOn(self.userInitiatedScheduler)
+      .doOnNext{ [unowned self] items in
+        self.scanCondition.lock()
+        while self.pauseScan {
+          self.scanCondition.wait()
+        }
+        self.scanCondition.unlock()
+
+        self.flatFileItems.appendContentsOf(items)
+        self.resetAndAddFilterOperation()
+      }
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] items in
         self.count += items.count
         self.countField.stringValue = "\(self.count) items"
         })
-      .addDisposableTo(self.flatFilesDisposeBag)
-
-    self.flatFiles = flatFiles
+      .addDisposableTo(self.perSessionDisposeBag)
 
     self.show()
     self.searchField.becomeFirstResponder()
+  }
+
+  private func resetAndAddFilterOperation() {
+    self.filterOpQueue.cancelAllOperations()
+    let op = OpenQuicklyFilterOperation(forOpenQuicklyWindow: self)
+    self.filterOpQueue.addOperation(op)
   }
 }
 
@@ -188,46 +176,39 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
 extension OpenQuicklyWindowComponent {
 
   func numberOfRowsInTableView(_: NSTableView) -> Int {
-    return self.sortedScoredItems.count
+    return self.fileViewItems.count
   }
-  
-  func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
-    let url = self.sortedScoredItems[row].url
-    let pathComps = url.pathComponents!
-    let truncatedPathComps = pathComps[self.cwdPathCompsCount..<pathComps.count]
-    let name = truncatedPathComps.last!
-    let pathInfo = truncatedPathComps.dropLast().reverse().joinWithSeparator(" / ")
-    
-    let result = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
-    result.addAttribute(NSForegroundColorAttributeName, value: NSColor.lightGrayColor(),
-                        range: NSRange(location:name.characters.count, length: pathInfo.characters.count + 3))
-    
-    let cell = tableView.makeViewWithIdentifier("file-view-row", owner: self) as? ImageAndTextTableCell
-               ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
-    
-    cell.textField.attributedStringValue = result
+
+  func tableView(tableView: NSTableView, viewForTableColumn _: NSTableColumn?, row: Int) -> NSView? {
+    let cachedCell = tableView.makeViewWithIdentifier("file-view-row", owner: self)
+    let cell = cachedCell as? ImageAndTextTableCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
+
+    let url = self.fileViewItems[row].url
+    cell.textField.attributedStringValue = self.rowText(forUrl: url)
     cell.imageView.image = self.fileItemService.icon(forUrl: url)
     
     return cell
   }
 
-//  func tableView(_: NSTableView, objectValueForTableColumn _: NSTableColumn?, row: Int) -> AnyObject? {
-//    let url = self.sortedScoredItems[row].url
-//    let pathComps = self.sortedScoredItems[row].url.pathComponents!
-//    let truncatedPathComps = pathComps[self.cwdPathCompsCount..<pathComps.count]
-//    let name = truncatedPathComps.last!
-//    let pathInfo = truncatedPathComps.dropLast().reverse().joinWithSeparator("/")
-//    
-//    let textAttachment = NSTextAttachment()
-//    textAttachment.image = self.fileItemService.icon(forUrl: url)
-//    
-//    let result: NSMutableAttributedString = NSAttributedString(attachment: textAttachment).mutableCopy() as! NSMutableAttributedString
-//    result.mutableString.appendString("\(name) — \(pathInfo)")
-//    result.addAttribute(NSForegroundColorAttributeName, value: NSColor.lightGrayColor(),
-//                        range: NSRange(location:name.characters.count, length: pathInfo.characters.count + 3))
-//    
-//    return result
-//  }
+  private func rowText(forUrl url: NSURL) -> NSAttributedString {
+    let pathComps = url.pathComponents!
+    let truncatedPathComps = pathComps[self.cwdPathCompsCount..<pathComps.count]
+    let name = truncatedPathComps.last!
+
+    if truncatedPathComps.dropLast().isEmpty {
+      return NSMutableAttributedString(string: name)
+    }
+
+    let rowText: NSMutableAttributedString
+    let pathInfo = truncatedPathComps.dropLast().reverse().joinWithSeparator(" / ")
+    rowText = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
+    rowText.addAttribute(NSForegroundColorAttributeName,
+                         value: NSColor.lightGrayColor(),
+                         range: NSRange(location:name.characters.count,
+                         length: pathInfo.characters.count + 3))
+
+    return rowText
+  }
 }
 
 // MARK: - NSTableViewDelegate
@@ -236,22 +217,23 @@ extension OpenQuicklyWindowComponent {
   func tableViewSelectionDidChange(_: NSNotification) {
 //    NSLog("\(#function): selection changed")
   }
-  
-//  func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-//    return 34
-//  }
 }
 
 // MARK: - NSWindowDelegate
 extension OpenQuicklyWindowComponent {
 
   func windowWillClose(notification: NSNotification) {
-    self.flatFilesDisposeBag = DisposeBag()
-    self.flatFiles = Observable.empty()
+    self.filterOpQueue.cancelAllOperations()
+
+    self.endProgress()
+
+    self.perSessionDisposeBag = DisposeBag()
+    self.pauseScan = false
     self.count = 0
-    
-    self.scoredItems = []
-    self.sortedScoredItems = []
+
+    self.pattern = ""
+    self.flatFileItems = []
+    self.fileViewItems = []
     
     self.searchField.stringValue = ""
     self.countField.stringValue = "0 items"
