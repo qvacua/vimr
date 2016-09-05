@@ -7,9 +7,29 @@ import Cocoa
 import PureLayout
 
 class ImageAndTextTableCell: NSView {
+
+  var text: NSAttributedString {
+    get {
+      return self.textField.attributedStringValue
+    }
+
+    set {
+      self.textField.attributedStringValue = newValue
+    }
+  }
+
+  var image: NSImage? {
+    get {
+      return self.imageView.image
+    }
+
+    set {
+      self.imageView.image = newValue
+    }
+  }
   
-  let textField: NSTextField = NSTextField(forAutoLayout: ())
-  let imageView: NSImageView = NSImageView(forAutoLayout: ())
+  private let textField: NSTextField = NSTextField(forAutoLayout: ())
+  private let imageView: NSImageView = NSImageView(forAutoLayout: ())
   
   init(withIdentifier identifier: String) {
     super.init(frame: CGRect.zero)
@@ -32,7 +52,6 @@ class ImageAndTextTableCell: NSView {
     imageView.autoSetDimension(.Width, toSize: 16)
     imageView.autoSetDimension(.Height, toSize: 16)
     
-//    textField.autoSetDimension(.Height, toSize: 23)
     textField.autoPinEdgeToSuperviewEdge(.Top, withInset: 2)
     textField.autoPinEdgeToSuperviewEdge(.Right, withInset: 2)
     textField.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 2)

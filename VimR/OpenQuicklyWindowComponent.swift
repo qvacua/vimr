@@ -184,8 +184,8 @@ extension OpenQuicklyWindowComponent {
     let cell = cachedCell as? ImageAndTextTableCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
     let url = self.fileViewItems[row].url
-    cell.textField.attributedStringValue = self.rowText(forUrl: url)
-    cell.imageView.image = self.fileItemService.icon(forUrl: url)
+    cell.text = self.rowText(forUrl: url)
+    cell.image = self.fileItemService.icon(forUrl: url)
     
     return cell
   }
