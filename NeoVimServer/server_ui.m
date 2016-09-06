@@ -513,20 +513,18 @@ static void neovim_input(void **argv) {
   }
 }
 
-static void neovim_send_dirty_status(void **argv) {
-  @autoreleasepool {
-    bool new_dirty_status = server_has_dirty_docs();
-    DLOG("dirty status: %d vs. %d", _dirty, new_dirty_status);
-    if (_dirty == new_dirty_status) {
-      return;
-    }
-
-    _dirty = new_dirty_status;
-    DLOG("sending dirty status: %d", _dirty);
-    NSData *data = [[NSData alloc] initWithBytes:&_dirty length:sizeof(bool)];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdDirtyStatusChanged data:data];
-    [data release];
+static void send_dirty_status() {
+  bool new_dirty_status = server_has_dirty_docs();
+  DLOG("dirty status: %d vs. %d", _dirty, new_dirty_status);
+  if (_dirty == new_dirty_status) {
+    return;
   }
+
+  _dirty = new_dirty_status;
+  DLOG("sending dirty status: %d", _dirty);
+  NSData *data = [[NSData alloc] initWithBytes:&_dirty length:sizeof(bool)];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdDirtyStatusChanged data:data];
+  [data release];
 }
 
 static void insert_marked_text(NSString *markedText) {
@@ -592,18 +590,22 @@ void custom_ui_start(void) {
 void custom_ui_autocmds_groups(
     event_T event, char_u *fname, char_u *fname_io, int group, bool force, buf_T *buf, exarg_T *eap
 ) {
-  DLOG("got event %d for file %s in group %d.", event, fname, group);
-  switch (event) {
-    // Did we get them all?
-    case EVENT_TEXTCHANGED:
-    case EVENT_TEXTCHANGEDI:
-    case EVENT_BUFWRITEPOST:
-    case EVENT_BUFLEAVE:
-      loop_schedule(&main_loop, event_create(1, neovim_send_dirty_status, 0));
-      return;
+  @autoreleasepool {
+    DLOG("got event %d for file %s in group %d.", event, fname, group);
+    switch (event) {
+      // Did we get them all?
+      case EVENT_TEXTCHANGED:
+      case EVENT_TEXTCHANGEDI:
+      case EVENT_BUFWRITEPOST:
+      case EVENT_BUFLEAVE:
+        send_dirty_status();
+        return;
 
-    default:
-      return;
+      case EVENT_CWDCHANGED:
+        ILOG("cwd changed");
+      default:
+        return;
+    }
   }
 }
 
