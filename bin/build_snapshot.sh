@@ -12,6 +12,7 @@ git for-each-ref --format="%(refname:strip=2)" refs/heads/ | xargs git branch -D
 git checkout -b build_snapshot
 
 # delete previously built VimR
+xcodebuild clean
 rm -rf build
 
 git submodule update --init
@@ -20,7 +21,7 @@ git submodule update --init
 pushd neovim
 ln -f -s ../local.mk .
 rm -rf build
-make clean
+make distclean
 make CMAKE_BUILD_TYPE=Release libnvim
 popd
 
