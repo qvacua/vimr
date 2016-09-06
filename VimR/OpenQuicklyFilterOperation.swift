@@ -15,8 +15,6 @@ class OpenQuicklyFilterOperation: NSOperation {
   private let flatFileItems: [FileItem]
   private let cwd: NSURL
 
-  private var spinLock: OSSpinLock = OS_SPINLOCK_INIT
-
   init(forOpenQuicklyWindow openQuicklyWindow: OpenQuicklyWindowComponent) {
     self.openQuicklyWindow = openQuicklyWindow
     self.pattern = openQuicklyWindow.pattern
@@ -53,6 +51,7 @@ class OpenQuicklyFilterOperation: NSOperation {
       let cwdPath = self.cwd.path! + "/"
 
       var result = [ScoredFileItem]()
+      var spinLock = OS_SPINLOCK_INIT
       dispatch_apply(chunksCount, dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) { [unowned self] idx in
         if self.cancelled {
           return
@@ -78,9 +77,9 @@ class OpenQuicklyFilterOperation: NSOperation {
           return
         }
 
-        OSSpinLockLock(&self.spinLock)
+        OSSpinLockLock(&spinLock)
         result.appendContentsOf(chunkedResult)
-        OSSpinLockUnlock(&self.spinLock)
+        OSSpinLockUnlock(&spinLock)
       }
 
       if self.cancelled {

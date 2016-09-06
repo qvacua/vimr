@@ -7,8 +7,6 @@ import Foundation
 
 class FileItem : CustomStringConvertible {
 
-  let mutex = PThreadMutex()
-
   let url: NSURL
   let dir: Bool
   let hidden: Bool

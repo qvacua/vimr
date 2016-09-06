@@ -37,6 +37,8 @@ class FileItemService {
   
   private let workspace = NSWorkspace.sharedWorkspace()
   private let iconsCache = NSCache()
+
+  private var spinLock = OS_SPINLOCK_INIT
   
   init() {
     self.iconsCache.countLimit = 2000
@@ -208,7 +210,8 @@ class FileItemService {
       }
 
       let child = FileItem(childUrl)
-      parent.mutex.sync { parent.children.append(child) }
+      self.syncAddChildren { parent.children.append(child) }
+
       return child
     }
 
@@ -216,8 +219,16 @@ class FileItemService {
   }
   
   private func scanChildren(item: FileItem) {
-    item.mutex.sync { item.children = FileUtils.directDescendants(item.url).map(FileItem.init) }
+    let children = FileUtils.directDescendants(item.url).map(FileItem.init)
+    self.syncAddChildren { item.children = children }
+
     item.childrenScanned = true
     item.needsScanChildren = false
+  }
+
+  private func syncAddChildren(@noescape fn: () -> Void) {
+    OSSpinLockLock(&self.spinLock)
+    fn()
+    OSSpinLockUnlock(&self.spinLock)
   }
 }

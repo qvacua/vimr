@@ -60,14 +60,17 @@ extension Array {
     let chunkedCount = Int(ceil(Float(count) / Float(chunk)))
     var result: [[R]] = []
 
-    let mutex = PThreadMutex()
-    
+    var spinLock = OS_SPINLOCK_INIT
+
     dispatch_apply(chunkedCount, queue) { idx in
       let startIndex = min(idx * chunk, count)
       let endIndex = min(startIndex + chunk, count)
 
       let mappedChunk = self[startIndex..<endIndex].map(transform)
-      mutex.sync { result.append(mappedChunk) }
+
+      OSSpinLockLock(&spinLock)
+      result.append(mappedChunk)
+      OSSpinLockUnlock(&spinLock)
     }
     
     return result.flatMap { $0 }
