@@ -8,8 +8,11 @@ import PureLayout
 import RxSwift
 import RxCocoa
 
-class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource {
-
+class OpenQuicklyWindowComponent: WindowComponent,
+                                  NSWindowDelegate,
+                                  NSTableViewDelegate, NSTableViewDataSource,
+                                  NSTextFieldDelegate
+{
   let scanCondition = NSCondition()
   var pauseScan = false
 
@@ -39,6 +42,8 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
   private var cwdPathCompsCount = 0
   private let searchStream: Observable<String>
   private let filterOpQueue = NSOperationQueue()
+  
+  weak private var mainWindow: MainWindowComponent?
 
   init(source: Observable<Any>, fileItemService: FileItemService) {
     self.fileItemService = fileItemService
@@ -55,6 +60,8 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
 
   override func addViews() {
     let searchField = self.searchField
+    searchField.rx_delegate.setForwardToDelegate(self, retainDelegate: false)
+
     let progressIndicator = self.progressIndicator
     progressIndicator.indeterminate = true
     progressIndicator.displayedWhenStopped = false
@@ -131,6 +138,22 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
   }
   
   func show(forMainWindow mainWindow: MainWindowComponent) {
+    self.mainWindow = mainWindow
+    self.mainWindow?.sink
+      .filter { $0 is MainWindowAction }
+      .map { $0 as! MainWindowAction }
+      .subscribeNext { [unowned self] action in
+        switch action {
+        case .close:
+          self.window.performClose(self)
+          return
+          
+        default:
+          return
+        }
+      }
+      .addDisposableTo(self.perSessionDisposeBag)
+    
     self.cwd = mainWindow.cwd
     let flatFiles = self.fileItemService.flatFileItems(ofUrl: self.cwd)
       .subscribeOn(self.userInitiatedScheduler)
@@ -178,6 +201,14 @@ extension OpenQuicklyWindowComponent {
   func numberOfRowsInTableView(_: NSTableView) -> Int {
     return self.fileViewItems.count
   }
+}
+
+// MARK: - NSTableViewDelegate
+extension OpenQuicklyWindowComponent {
+
+  func tableView(tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+    return OpenQuicklyFileViewRow()
+  }
 
   func tableView(tableView: NSTableView, viewForTableColumn _: NSTableColumn?, row: Int) -> NSView? {
     let cachedCell = tableView.makeViewWithIdentifier("file-view-row", owner: self)
@@ -188,6 +219,10 @@ extension OpenQuicklyWindowComponent {
     cell.image = self.fileItemService.icon(forUrl: url)
     
     return cell
+  }
+
+  func tableViewSelectionDidChange(_: NSNotification) {
+//    NSLog("\(#function): selection changed")
   }
 
   private func rowText(forUrl url: NSURL) -> NSAttributedString {
@@ -211,11 +246,48 @@ extension OpenQuicklyWindowComponent {
   }
 }
 
-// MARK: - NSTableViewDelegate
+// MARK: - NSTextFieldDelegate
 extension OpenQuicklyWindowComponent {
 
-  func tableViewSelectionDidChange(_: NSNotification) {
-//    NSLog("\(#function): selection changed")
+  func control(control: NSControl, textView: NSTextView, doCommandBySelector commandSelector: Selector) -> Bool {
+    switch commandSelector {
+    case NSSelectorFromString("cancelOperation:"):
+      self.window.performClose(self)
+      return true
+      
+    case NSSelectorFromString("insertNewline:"):
+      self.mainWindow?.open(urls: [self.fileViewItems[self.fileView.selectedRow].url])
+      self.window.performClose(self)
+      return true
+      
+    case NSSelectorFromString("moveUp:"):
+      self.moveSelection(ofTableView: self.fileView, byDelta: -1)
+      return true
+      
+    case NSSelectorFromString("moveDown:"):
+      self.moveSelection(ofTableView: self.fileView, byDelta: 1)
+      return true
+      
+    default:
+      return false
+    }
+  }
+
+  private func moveSelection(ofTableView tableView: NSTableView, byDelta delta: Int) {
+    let selectedRow = tableView.selectedRow
+    let lastIdx = tableView.numberOfRows - 1
+    let targetIdx: Int
+
+    if selectedRow + delta < 0 {
+      targetIdx = 0
+    } else if selectedRow + delta > lastIdx {
+      targetIdx = lastIdx
+    } else {
+      targetIdx = selectedRow + delta
+    }
+
+    tableView.selectRowIndexes(NSIndexSet(index: targetIdx), byExtendingSelection: false)
+    tableView.scrollRowToVisible(targetIdx)
   }
 }
 
@@ -223,9 +295,11 @@ extension OpenQuicklyWindowComponent {
 extension OpenQuicklyWindowComponent {
 
   func windowWillClose(notification: NSNotification) {
-    self.filterOpQueue.cancelAllOperations()
-
     self.endProgress()
+    
+    self.mainWindow = nil
+    
+    self.filterOpQueue.cancelAllOperations()
 
     self.perSessionDisposeBag = DisposeBag()
     self.pauseScan = false
