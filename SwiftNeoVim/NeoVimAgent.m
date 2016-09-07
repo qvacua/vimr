@@ -461,6 +461,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return;
     }
 
+    case NeoVimServerMsgIdCwdChanged:
+      [_bridge cwdChanged];
+      return;
+
     case NeoVimServerMsgIdCommandOutputResult: {
       NSUInteger *values = (NSUInteger *) data.bytes;
       NSUInteger requestId = values[0];

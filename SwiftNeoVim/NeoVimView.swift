@@ -1208,6 +1208,12 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
       self.delegate?.setDirtyStatus(dirty)
     }
   }
+
+  public func cwdChanged() {
+    DispatchUtils.gui {
+      self.delegate?.cwdChanged()
+    }
+  }
   
   public func stop() {
     DispatchUtils.gui {

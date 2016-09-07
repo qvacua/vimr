@@ -362,6 +362,17 @@
 			path = resources;
 			sourceTree = "<group>";
 		};
+		4B1AC1AF1D7F395300898F0B /* Open Quickly */ = {
+			isa = PBXGroup;
+			children = (
+				4BDF501A1D77596500D8FBC3 /* OpenQuicklyWindowManager.swift */,
+				4BDF50131D7617EA00D8FBC3 /* OpenQuicklyWindowComponent.swift */,
+				4B22F7F11D7C6B9000929B0E /* ImageAndTextTableCell.swift */,
+				4BAD84E71D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift */,
+			);
+			name = "Open Quickly";
+			sourceTree = "<group>";
+		};
 		4B238BED1D3ED55300CBDD98 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
@@ -483,10 +494,7 @@
 				1929B39DA7AC4A9B62D7CD39 /* Component.swift */,
 				4BD3BF961D32B0DB00082605 /* MainWindowManager.swift */,
 				4BD3BF921D32A95800082605 /* MainWindowComponent.swift */,
-				4BDF501A1D77596500D8FBC3 /* OpenQuicklyWindowManager.swift */,
-				4BDF50131D7617EA00D8FBC3 /* OpenQuicklyWindowComponent.swift */,
-				4B22F7F11D7C6B9000929B0E /* ImageAndTextTableCell.swift */,
-				4BAD84E71D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift */,
+				4B1AC1AF1D7F395300898F0B /* Open Quickly */,
 				4B238BED1D3ED55300CBDD98 /* Preferences */,
 			);
 			name = UI;

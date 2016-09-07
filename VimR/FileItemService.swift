@@ -34,6 +34,7 @@ class FileItemService {
 
   private let fileSystemEventsLatency = Double(2)
   private var monitors = [NSURL: FileSystemEventMonitor]()
+  private var monitorCounter = [NSURL: Int]()
   
   private let workspace = NSWorkspace.sharedWorkspace()
   private let iconsCache = NSCache()
@@ -78,10 +79,40 @@ class FileItemService {
     }
 
     self.monitors[url] = monitor
+    if let counter = self.monitorCounter[url] {
+      self.monitorCounter[url] = counter + 1
+    } else {
+      self.monitorCounter[url] = 1
+    }
   }
 
   func unmonitor(url url: NSURL) {
-    self.monitors.removeValueForKey(url)
+    guard let counter = self.monitorCounter[url] else {
+      return
+    }
+
+    let newCounter = counter - 1
+    if newCounter > 0 {
+      self.monitorCounter[url] = newCounter
+    } else {
+      self.monitorCounter.removeValueForKey(url)
+      self.monitors.removeValueForKey(url)
+
+      // TODO Remove cached items more aggressively?
+      let hasRelations = self.monitors.keys.reduce(false) { (result, monitoredUrl) in
+        return result ? result : monitoredUrl.parent(ofUrl: url) || url.parent(ofUrl: monitoredUrl)
+      }
+
+      if hasRelations {
+        return
+      }
+
+      self.parentFileItem(ofUrl: url).removeChild(withUrl: url)
+    }
+  }
+
+  private func parentFileItem(ofUrl url: NSURL) -> FileItem {
+    return self.fileItem(forPathComponents: Array(url.pathComponents!.dropLast()))!
   }
 
   func flatFileItems(ofUrl url: NSURL) -> Observable<[FileItem]> {

@@ -51,7 +51,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     self.fileItemService.set(ignorePatterns: Set([ "*/.git", "*.o", "*.d", "*.dia" ].map(FileItemIgnorePattern.init)))
 
     self.prefWindowComponent = PrefWindowComponent(source: self.changeSink, initialData: self.prefStore.data)
-    self.mainWindowManager = MainWindowManager(source: self.changeSink, initialData: self.prefStore.data)
+    self.mainWindowManager = MainWindowManager(source: self.changeSink,
+                                               fileItemService: self.fileItemService,
+                                               initialData: self.prefStore.data)
     self.openQuicklyWindowManager = OpenQuicklyWindowManager(source: self.changeSink,
                                                              fileItemService: self.fileItemService)
 

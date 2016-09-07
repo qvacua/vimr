@@ -6,6 +6,21 @@
 import Foundation
 
 extension NSURL {
+
+  func parent(ofUrl url: NSURL) -> Bool {
+    guard self.fileURL && url.fileURL else {
+      return false
+    }
+
+    let myPathComps = self.pathComponents!
+    let targetPathComps = url.pathComponents!
+
+    guard targetPathComps.count > myPathComps.count else {
+      return false
+    }
+
+    return Array(targetPathComps[0..<myPathComps.count]) == myPathComps
+  }
   
   /// Wrapper function for NSURL.getResourceValue for Bool values.
   /// Returns also `false` when

@@ -13,7 +13,7 @@ enum MainWindowAction {
   case close(mainWindow: MainWindowComponent)
 }
 
-class MainWindowComponent: WindowComponent, NSWindowDelegate, NeoVimViewDelegate {
+class MainWindowComponent: WindowComponent, NSWindowDelegate {
 
   private let fontManager = NSFontManager.sharedFontManager()
 
@@ -24,30 +24,49 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NeoVimViewDelegate
     return self.neoVimView.uuid
   }
 
+  private var _cwd: NSURL = NSURL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
   var cwd: NSURL {
     get {
-      return self.neoVimView.cwd
+      self._cwd = self.neoVimView.cwd
+      return self._cwd
     }
 
     set {
+      let oldValue = self._cwd
+      if oldValue == newValue {
+        return
+      }
+
+      self._cwd = newValue
       self.neoVimView.cwd = newValue
+      self.fileItemService.unmonitor(url: oldValue)
+      self.fileItemService.monitor(url: newValue)
     }
   }
+  private let fileItemService: FileItemService
 
   private let neoVimView = NeoVimView(forAutoLayout: ())
 
-  init(source: Observable<Any>, urls: [NSURL] = [], initialData: PrefData) {
+  init(
+    source: Observable<Any>, fileItemService: FileItemService, cwd: NSURL, urls: [NSURL] = [], initialData: PrefData
+    ) {
     self.defaultEditorFont = initialData.appearance.editorFont
     self.usesLigatures = initialData.appearance.editorUsesLigatures
+    self.fileItemService = fileItemService
+    self._cwd = cwd
 
     super.init(source: source, nibName: "MainWindow")
 
     self.window.delegate = self
-    self.neoVimView.delegate = self
 
+    self.neoVimView.cwd = cwd
+    self.neoVimView.delegate = self
     self.neoVimView.font = self.defaultEditorFont
     self.neoVimView.usesLigatures = self.usesLigatures
     self.neoVimView.open(urls: urls)
+
+    // We don't call self.fileItemService.monitor(url: cwd) here since self.neoVimView.cwd = cwd causes the call
+    // cwdChanged() and in that function we do monitor(...).
 
     self.window.makeFirstResponder(self.neoVimView)
     self.show()
@@ -109,6 +128,10 @@ extension MainWindowComponent {
     }
   }
 
+  @IBAction func openQuickly(sender: AnyObject!) {
+    self.publish(event: MainWindowAction.openQuickly(mainWindow: self))
+  }
+
   @IBAction func saveDocument(sender: AnyObject!) {
     let curBuf = self.neoVimView.currentBuffer()
     
@@ -167,10 +190,6 @@ extension MainWindowComponent {
 // MARK: - Font Menu Items
 extension MainWindowComponent {
 
-  @IBAction func openQuickly(sender: AnyObject!) {
-    self.publish(event: MainWindowAction.openQuickly(mainWindow: self))
-  }
-
   @IBAction func resetFontSize(sender: AnyObject!) {
     self.neoVimView.font = self.defaultEditorFont
   }
@@ -191,7 +210,7 @@ extension MainWindowComponent {
 }
 
 // MARK: - NeoVimViewDelegate
-extension MainWindowComponent {
+extension MainWindowComponent: NeoVimViewDelegate {
 
   func setTitle(title: String) {
     self.window.title = title
@@ -199,6 +218,13 @@ extension MainWindowComponent {
 
   func setDirtyStatus(dirty: Bool) {
     self.windowController.setDocumentEdited(dirty)
+  }
+
+  func cwdChanged() {
+    let old = self._cwd
+    self._cwd = self.neoVimView.cwd
+    self.fileItemService.unmonitor(url: old)
+    self.fileItemService.monitor(url: self._cwd)
   }
   
   func neoVimStopped() {
@@ -214,6 +240,7 @@ extension MainWindowComponent {
   }
 
   func windowWillClose(notification: NSNotification) {
+    self.fileItemService.unmonitor(url: self._cwd)
     self.publish(event: MainWindowAction.close(mainWindow: self))
   }
 

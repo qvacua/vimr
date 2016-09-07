@@ -32,4 +32,12 @@ class FileItem : CustomStringConvertible {
     self.dir = url.dir
     self.hidden = url.hidden
   }
+
+  func removeChild(withUrl url: NSURL) {
+    guard let idx = self.children.indexOf({ $0.url == url }) else {
+      return
+    }
+
+    self.children.removeAtIndex(idx)
+  }
 }

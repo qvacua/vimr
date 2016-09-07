@@ -17,9 +17,11 @@ class MainWindowManager: StandardFlow {
   private var mainWindowComponents = [String:MainWindowComponent]()
   private weak var keyMainWindow: MainWindowComponent?
 
+  private let fileItemService: FileItemService
   private var data: PrefData
 
-  init(source: Observable<Any>, initialData: PrefData) {
+  init(source: Observable<Any>, fileItemService: FileItemService, initialData: PrefData) {
+    self.fileItemService = fileItemService
     self.data = initialData
 
     super.init(source: source)
@@ -27,9 +29,8 @@ class MainWindowManager: StandardFlow {
 
   func newMainWindow(urls urls: [NSURL] = [], cwd: NSURL = MainWindowManager.userHomeUrl) -> MainWindowComponent {
     let mainWindowComponent = MainWindowComponent(
-      source: self.source, urls: urls, initialData: self.data
+      source: self.source, fileItemService: self.fileItemService, cwd: cwd, urls: urls, initialData: self.data
     )
-    mainWindowComponent.cwd = cwd
     self.mainWindowComponents[mainWindowComponent.uuid] = mainWindowComponent
 
     mainWindowComponent.sink
@@ -38,9 +39,12 @@ class MainWindowManager: StandardFlow {
       .subscribeNext { [unowned self] action in
         switch action {
         case let .becomeKey(mainWindow):
-          self.setKeyWindow(mainWindow)
+          self.set(keyMainWindow: mainWindow)
+
         case .openQuickly:
+          Swift.print(action)
           self.publish(event: action)
+
         case let .close(mainWindow):
           self.closeMainWindow(mainWindow)
         }
@@ -81,7 +85,7 @@ class MainWindowManager: StandardFlow {
     keyMainWindow.open(urls: urls)
   }
   
-  func setKeyWindow(mainWindow: MainWindowComponent?) {
+  private func set(keyMainWindow mainWindow: MainWindowComponent?) {
     self.keyMainWindow = mainWindow
   }
   

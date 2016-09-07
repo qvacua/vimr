@@ -602,7 +602,9 @@ void custom_ui_autocmds_groups(
         return;
 
       case EVENT_CWDCHANGED:
-        ILOG("cwd changed");
+        [_neovim_server sendMessageWithId:NeoVimServerMsgIdCwdChanged];
+        return;
+
       default:
         return;
     }
