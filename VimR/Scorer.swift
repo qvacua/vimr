@@ -9,7 +9,7 @@ class Scorer {
   
   static func score(target: String, pattern: String) -> Float {
     let wf = Matcher.wagnerFisherDistance(target, pattern: pattern)
-//    let fuzzy = Matcher.fuzzyIgnoringCase(target, pattern: pattern)
+    let fuzzy = Matcher.fuzzyIgnoringCase(target, pattern: pattern)
     let upper = Matcher.numberOfUppercaseMatches(target, pattern: pattern)
     let exactMatch = Matcher.exactMatchIgnoringCase(target, pattern: pattern)
 
@@ -23,8 +23,8 @@ class Scorer {
       exactScore = 5
     }
     
-    return (wf == 0 ? 0 : 5.0 / Float(wf))
-//      + Float(fuzzy.matches)
+    return (wf == 0 ? 0 : 2.5 / Float(wf))
+      + Float(fuzzy.matches)
       + Float(upper)
       + exactScore
   }

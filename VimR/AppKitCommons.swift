@@ -20,7 +20,7 @@ extension NSButton {
 
 extension NSTableView {
 
-  static func standardSourceListTableView() -> NSTableView {
+  static func standardTableView() -> NSTableView {
     let tableView = NSTableView(frame: CGRect.zero)
 
     tableView.addTableColumn(NSTableColumn(identifier: "name"))
@@ -30,6 +30,12 @@ extension NSTableView {
     tableView.allowsMultipleSelection = false
     tableView.headerView = nil
     tableView.focusRingType = .None
+
+    return tableView
+  }
+
+  static func standardSourceListTableView() -> NSTableView {
+    let tableView = self.standardTableView()
     tableView.selectionHighlightStyle = .SourceList
 
     return tableView

@@ -29,7 +29,7 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
   private let progressIndicator = NSProgressIndicator(forAutoLayout: ())
   private let cwdControl = NSPathControl(forAutoLayout: ())
   private let countField = NSTextField(forAutoLayout: ())
-  private let fileView = NSTableView.standardSourceListTableView()
+  private let fileView = NSTableView.standardTableView()
   
   private let fileItemService: FileItemService
 
@@ -92,25 +92,25 @@ class OpenQuicklyWindowComponent: WindowComponent, NSWindowDelegate, NSTableView
     contentView.addSubview(cwdControl)
     contentView.addSubview(countField)
 
-    searchField.autoPinEdgeToSuperviewEdge(.Top, withInset: 18)
-    searchField.autoPinEdgeToSuperviewEdge(.Right, withInset: 18)
-    searchField.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
+    searchField.autoPinEdgeToSuperviewEdge(.Top, withInset: 8)
+    searchField.autoPinEdgeToSuperviewEdge(.Right, withInset: 8)
+    searchField.autoPinEdgeToSuperviewEdge(.Left, withInset: 8)
 
     progressIndicator.autoAlignAxis(.Horizontal, toSameAxisOfView: searchField)
     progressIndicator.autoPinEdge(.Right, toEdge: .Right, ofView: searchField, withOffset: -4)
 
-    fileScrollView.autoPinEdge(.Top, toEdge: .Bottom, ofView: searchField, withOffset: 18)
-    fileScrollView.autoPinEdge(.Right, toEdge: .Right, ofView: searchField)
-    fileScrollView.autoPinEdge(.Left, toEdge: .Left, ofView: searchField)
-    fileScrollView.autoSetDimension(.Height, toSize: 300)
+    fileScrollView.autoPinEdge(.Top, toEdge: .Bottom, ofView: searchField, withOffset: 8)
+    fileScrollView.autoPinEdgeToSuperviewEdge(.Left, withInset: -1)
+    fileScrollView.autoPinEdgeToSuperviewEdge(.Right, withInset: -1)
+    fileScrollView.autoSetDimension(.Height, toSize: 200, relation: .GreaterThanOrEqual)
 
-    cwdControl.autoPinEdge(.Top, toEdge: .Bottom, ofView: fileScrollView, withOffset: 18)
-    cwdControl.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
-    cwdControl.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 18)
+    cwdControl.autoPinEdge(.Top, toEdge: .Bottom, ofView: fileScrollView, withOffset: 4)
+    cwdControl.autoPinEdgeToSuperviewEdge(.Left, withInset: 2)
+    cwdControl.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 4)
 
-    countField.autoPinEdge(.Top, toEdge: .Bottom, ofView: fileScrollView, withOffset: 18)
-    countField.autoPinEdgeToSuperviewEdge(.Right, withInset: 18)
-    countField.autoPinEdge(.Left, toEdge: .Right, ofView: cwdControl)
+    countField.autoPinEdge(.Top, toEdge: .Bottom, ofView: fileScrollView, withOffset: 4)
+    countField.autoPinEdgeToSuperviewEdge(.Right, withInset: 2)
+    countField.autoPinEdge(.Left, toEdge: .Right, ofView: cwdControl, withOffset: 4)
   }
 
   override func subscription(source source: Observable<Any>) -> Disposable {

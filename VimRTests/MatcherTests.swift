@@ -10,15 +10,6 @@ class MatcherTest: XCTestCase {
 
   let target = "UserDefaultContextTest.swift"
 
-  func testFnmatch() {
-    expect(fnmatch(
-      ".git".cStringUsingEncoding(NSUTF8StringEncoding),
-      "/test/.git".cStringUsingEncoding(NSUTF8StringEncoding),
-      0)
-      )
-      .to(equal(FNM_NOMATCH))
-  }
-
   func testExactMatch() {
     expect(Matcher.exactMatchIgnoringCase(self.target, pattern: "uSERdEFAULTcONTEXTtEST.SWIFT"))
       .to(equal(Matcher.ExactMatchResult.exact))

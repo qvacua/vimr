@@ -42,7 +42,6 @@ class MainWindowManager: StandardFlow {
           self.set(keyMainWindow: mainWindow)
 
         case .openQuickly:
-          Swift.print(action)
           self.publish(event: action)
 
         case let .close(mainWindow):
