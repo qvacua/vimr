@@ -7,10 +7,10 @@ import Foundation
 import RxSwift
 
 class ScoredFileItem: Comparable {
-  let score: Float
+  let score: Int
   unowned let url: NSURL
 
-  init(score: Float, url: NSURL) {
+  init(score: Int, url: NSURL) {
     self.score = score
     self.url = url
   }

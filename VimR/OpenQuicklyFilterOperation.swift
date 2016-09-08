@@ -52,6 +52,10 @@ class OpenQuicklyFilterOperation: NSOperation {
 
       var result = [ScoredFileItem]()
       var spinLock = OS_SPINLOCK_INIT
+      
+      let cleanedPattern = useFullPath ? self.pattern.stringByReplacingOccurrencesOfString("/", withString: "")
+                                       : self.pattern
+      
       dispatch_apply(chunksCount, dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) { [unowned self] idx in
         if self.cancelled {
           return
@@ -67,10 +71,15 @@ class OpenQuicklyFilterOperation: NSOperation {
           }
 
           let url = $0.url
-          let target = useFullPath ? url.path!.stringByReplacingOccurrencesOfString(cwdPath, withString: "")
-            : url.lastPathComponent!
-
-          return ScoredFileItem(score: Scorer.score(target, pattern: self.pattern), url: url)
+          
+          if useFullPath {
+            let target = url.path!.stringByReplacingOccurrencesOfString(cwdPath, withString: "")
+                                  .stringByReplacingOccurrencesOfString("/", withString: "")
+            
+            return ScoredFileItem(score: Scorer.score(target, pattern: cleanedPattern), url: url)
+          }
+          
+          return ScoredFileItem(score: Scorer.score(url.lastPathComponent!, pattern: cleanedPattern), url: url)
         }
 
         if self.cancelled {

@@ -20,7 +20,8 @@ class MatcherTest: XCTestCase {
   }
   
   func testUppercaseMatcher() {
-    expect(Matcher.numberOfUppercaseMatches(self.target, pattern: "xct")).to(equal(0))
+    expect(Matcher.numberOfUppercaseMatches("SwiftNeoVimNeoVimView.swift", pattern: "swnvv")).to(equal(4))
+    expect(Matcher.numberOfUppercaseMatches(self.target, pattern: "xct")).to(equal(2))
     expect(Matcher.numberOfUppercaseMatches(self.target, pattern: "uct")).to(equal(3))
     expect(Matcher.numberOfUppercaseMatches(self.target, pattern: "uDcT")).to(equal(4))
     expect(Matcher.numberOfUppercaseMatches(self.target, pattern: "dct")).to(equal(3))

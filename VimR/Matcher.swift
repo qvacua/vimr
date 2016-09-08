@@ -40,17 +40,22 @@ class Matcher {
   }
 
   static func numberOfUppercaseMatches(target: String, pattern: String) -> Int {
-    let tscalars = target.unicodeScalars.filter { uppercaseCharSet.longCharacterIsMember($0.value) }
+    var tscalars = target.unicodeScalars.filter { uppercaseCharSet.longCharacterIsMember($0.value) }
     
-    guard tscalars.count > 0 else {
+    let count = tscalars.count
+    guard count > 0 else {
       return 0
     }
     
     let pscalars = pattern.uppercaseString.unicodeScalars
-    let pidxStart = pscalars.startIndex
-    let pidx = tscalars.reduce(pidxStart) { pscalars[$0] == $1 ? $0.successor() : $0 }
-
-    return pidxStart.distanceTo(pidx)
+    
+    pscalars.forEach { scalar in
+      if let idx = tscalars.indexOf(scalar) {
+        tscalars.removeAtIndex(idx)
+      }
+    }
+    
+    return count - tscalars.count
   }
   
   /// Matches `pattern` to `target` in a fuzzy way.
