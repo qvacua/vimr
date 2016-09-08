@@ -108,9 +108,9 @@ extension AppDelegate {
 
     self.launching = false
 
-//    #if DEBUG
+    #if DEBUG
       self.debugMenu.hidden = false
-//    #endif
+    #endif
   }
 
   func applicationOpenUntitledFile(sender: NSApplication) -> Bool {
