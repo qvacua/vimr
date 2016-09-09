@@ -109,22 +109,29 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   }
 
   NSMutableArray *shellArgs = [NSMutableArray new];
+  // Some shells seem to need -XYZ to be start as login shell
+  [shellArgs addObject:[@"-" stringByAppendingString:shellPath.lastPathComponent]];
   if (![shellPath.lastPathComponent isEqualToString:@"tcsh"]) {
+    // tcsh does not like the -l option
     [shellArgs addObject:@"-l"];
   }
-  [shellArgs addObjectsFromArray:@[
-      @"-c",
-      [NSString stringWithFormat:@"eval \"%@ %@ %@\"",
-                                 [self neoVimServerExecutablePath],
-                                 [self localServerName],
-                                 [self remoteServerName]]
-  ]];
 
+  NSPipe *inputPipe = [NSPipe pipe];
   _neoVimServerTask = [[NSTask alloc] init];
+  _neoVimServerTask.standardInput = inputPipe;
   _neoVimServerTask.currentDirectoryPath = NSHomeDirectory();
   _neoVimServerTask.launchPath = shellPath;
   _neoVimServerTask.arguments = shellArgs;
   [_neoVimServerTask launch];
+
+  NSString *cmd = [NSString stringWithFormat:@"exec \"%@\" '%@' '%@'",
+                                             [self neoVimServerExecutablePath],
+                                             [self localServerName],
+                                             [self remoteServerName]];
+
+  NSFileHandle *writeHandle = inputPipe.fileHandleForWriting;
+  [writeHandle writeData:[cmd dataUsingEncoding:NSUTF8StringEncoding]];
+  [writeHandle closeFile];
 }
 
 - (bool)runLocalServerAndNeoVim {
