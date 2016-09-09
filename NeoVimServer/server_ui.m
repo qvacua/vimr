@@ -36,10 +36,6 @@ typedef struct {
     Loop *loop;
 
     bool stop;
-
-    // FIXME: dunno whether we need this: copied from tui.c
-    bool cont_received;
-    SignalWatcher cont_handle;
 } ServerUiData;
 
 // We declare nvim_main because it's not declared in any header files of neovim
@@ -99,10 +95,6 @@ static void set_ui_size(UIBridgeData *bridge, int width, int height) {
   bridge->bridge.height = height;
 }
 
-static void sigcont_cb(SignalWatcher *watcher __unused, int signum __unused, void *data) {
-  ((ServerUiData *) data)->cont_received = true;
-}
-
 static void server_ui_scheduler(Event event, void *d) {
   UI *ui = d;
   ServerUiData *data = ui->data;
@@ -117,10 +109,6 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   ui->data = _server_ui_data;
   _server_ui_data->bridge = bridge;
   _server_ui_data->loop = &loop;
-
-  // FIXME: dunno whether we need this: copied from tui.c
-  signal_watcher_init(_server_ui_data->loop, &_server_ui_data->cont_handle, _server_ui_data);
-  signal_watcher_start(&_server_ui_data->cont_handle, sigcont_cb, SIGCONT);
 
   set_ui_size(bridge, 30, 15);
 
@@ -141,22 +129,6 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
 
   xfree(_server_ui_data);
   xfree(ui);
-}
-
-// FIXME: dunno whether we need this: copied from tui.c
-static void suspend_event(void **argv) {
-  UI *ui = argv[0];
-  ServerUiData *data = ui->data;
-  data->cont_received = false;
-
-  kill(0, SIGTSTP);
-
-  while (!data->cont_received) {
-    // poll the event loop until SIGCONT is received
-    loop_poll_events(data->loop, -1);
-  }
-
-  CONTINUE(data->bridge);
 }
 
 #pragma mark NeoVim's UI callbacks
@@ -396,19 +368,6 @@ static void server_ui_update_sp(UI *ui __unused, int sp) {
   });
 }
 
-static void server_ui_suspend(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSuspend];
-
-    ServerUiData *data = ui->data;
-    // FIXME: dunno whether we need this: copied from tui.c
-    // kill(0, SIGTSTP) won't stop the UI thread, so we must poll for SIGCONT
-    // before continuing. This is done in another callback to avoid
-    // loop_poll_events recursion
-    queue_put_event(data->loop->fast_events, event_create(1, suspend_event, 1, ui));
-  });
-}
-
 static void server_ui_set_title(UI *ui __unused, char *title) {
   if (title == NULL) {
     return;
@@ -580,7 +539,7 @@ void custom_ui_start(void) {
   ui->update_bg = server_ui_update_bg;
   ui->update_sp = server_ui_update_sp;
   ui->flush = server_ui_flush;
-  ui->suspend = server_ui_suspend;
+  ui->suspend = NULL;
   ui->set_title = server_ui_set_title;
   ui->set_icon = server_ui_set_icon;
 
