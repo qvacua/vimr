@@ -45,7 +45,8 @@ Pre-built binaries can be found under [Releases](https://github.com/qvacua/vimr/
 * Multiple windows.
 * Basic input including Emojis and Hangul (+Hanja): We don't know whether other input systems work...
 * Basic mouse support: Left button actions and scrolling.
-* Basic trackpad support: Pinching for zooming.
+* Fuzzy file finder a la Xcode's "Open Quickly..."
+* Basic trackpad support: Pinching for zooming and two-finger scrolling.
 * Ligatures: Turned off by default. Turn it on in the Preferences.
 * Basic File and Edit menu items.
 * Command line tool
@@ -56,7 +57,6 @@ The following are features we _plan_ to implement (some of which are already pre
 
 * Some more standard OSX menu items.
 * Improved rendering and input handling, especially Hangul/Hanja (Why is Korean so important? 🤔): The current implementation is really ugly and messy...
-* Fuzzy file finder a la Xcode's "Open Quickly..."
 * File browser
 * Flexible workspace model a la JetBrain's IDEs: For this we'd probably port and extend [qvworkspace](https://github.com/qvacua/qvworkspace) to Swift
 * Preview for some file types, e.g. Markdown, HTML, etc.
