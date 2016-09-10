@@ -74,6 +74,23 @@ extension PrefPane {
     return field
   }
 
+  func infoTextField(text text: String) -> NSTextField {
+    let field = NSTextField(forAutoLayout: ())
+    field.font = NSFont.systemFontOfSize(NSFont.smallSystemFontSize())
+    field.textColor = NSColor.grayColor()
+    field.backgroundColor = NSColor.clearColor()
+    field.editable = false
+    field.bordered = false
+
+    // both are needed, otherwise hyperlink won't accept mousedown
+    field.selectable = true
+    field.allowsEditingTextAttributes = true
+
+    field.stringValue = text
+
+    return field
+  }
+
   func configureCheckbox(button button: NSButton, title: String, action: Selector) {
     button.title = title
     button.setButtonType(.SwitchButton)

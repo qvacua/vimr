@@ -18,6 +18,31 @@ extension NSButton {
   }
 }
 
+// From https://developer.apple.com/library/mac/qa/qa1487/_index.html
+extension NSAttributedString {
+
+  static func link(withUrl url: NSURL, text: String, font: NSFont? = nil) -> NSAttributedString {
+    let attrString = NSMutableAttributedString(string: text)
+    let range = NSRange(location: 0, length: attrString.length)
+
+    attrString.beginEditing()
+    if font != nil {
+      attrString.addAttribute(NSFontAttributeName, value: font!, range: range)
+    }
+    attrString.addAttribute(NSLinkAttributeName, value: url.absoluteString, range: range)
+    attrString.addAttribute(NSForegroundColorAttributeName, value: NSColor.blueColor(), range: range)
+    attrString.addAttribute(NSUnderlineStyleAttributeName,
+                            value: NSNumber(integer: NSUnderlineStyle.StyleSingle.rawValue), range: range)
+    attrString.endEditing()
+
+    return attrString
+  }
+
+  var wholeRange: NSRange {
+    return NSRange(location: 0, length: self.length)
+  }
+}
+
 extension NSTableView {
 
   static func standardTableView() -> NSTableView {
