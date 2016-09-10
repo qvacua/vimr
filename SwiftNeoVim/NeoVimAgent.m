@@ -108,12 +108,14 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     shellPath = @"/bin/bash";
   }
 
+  NSString *shellName = shellPath.lastPathComponent;
   NSMutableArray *shellArgs = [NSMutableArray new];
-  // Some shells seem to need -XYZ to be start as login shell
-  [shellArgs addObject:[@"-" stringByAppendingString:shellPath.lastPathComponent]];
-  if (![shellPath.lastPathComponent isEqualToString:@"tcsh"]) {
+  if (![shellName isEqualToString:@"tcsh"]) {
     // tcsh does not like the -l option
     [shellArgs addObject:@"-l"];
+  }
+  if ([shellName isEqualToString:@"zsh"]) {
+    [shellArgs addObject:@"-i"];
   }
 
   NSPipe *inputPipe = [NSPipe pipe];
