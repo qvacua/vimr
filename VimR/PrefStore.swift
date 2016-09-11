@@ -58,18 +58,6 @@ class PrefStore: Store {
     self.subject.onCompleted()
   }
 
-  private func ignorePatterns(fromString str: String) -> Set<FileItemIgnorePattern> {
-    return Set(str
-      .componentsSeparatedByString(",")
-      .map {
-        FileItemIgnorePattern(pattern: $0.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()))
-      })
-  }
-
-  private func ignorePatternString(fromSet set: Set<FileItemIgnorePattern>) -> String {
-    return set.reduce("") { "\($0), \($1.pattern)" }
-  }
-
   private func prefDataFromDict(prefs: [String: AnyObject]) -> PrefData {
 
     let editorFontName = prefs[PrefKeys.editorFontName] as? String ?? PrefStore.defaultEditorFont.fontName
@@ -83,7 +71,7 @@ class PrefStore: Store {
     let openNewWindowOnReactivation = (prefs[PrefKeys.openNewWindowOnReactivation] as? NSNumber)?.boolValue ?? true
 
     let ignorePatternsList = (prefs[PrefKeys.openQuicklyIgnorePatterns] as? String) ?? "*/.git, *.o, *.d, *.dia"
-    let ignorePatterns = self.ignorePatterns(fromString: ignorePatternsList)
+    let ignorePatterns = PrefUtils.ignorePatterns(fromString: ignorePatternsList)
 
     return PrefData(
       general: GeneralPrefData(
@@ -116,7 +104,7 @@ class PrefStore: Store {
       // General
       PrefKeys.openNewWindowWhenLaunching: generalData.openNewWindowWhenLaunching,
       PrefKeys.openNewWindowOnReactivation: generalData.openNewWindowOnReactivation,
-      PrefKeys.openQuicklyIgnorePatterns: self.ignorePatternString(fromSet: generalData.ignorePatterns),
+      PrefKeys.openQuicklyIgnorePatterns: PrefUtils.ignorePatternString(fromSet: generalData.ignorePatterns),
 
       // Appearance
       PrefKeys.editorFontName: appearanceData.editorFont.fontName,

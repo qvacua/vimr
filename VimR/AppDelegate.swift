@@ -48,7 +48,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     self.prefStore = PrefStore(source: self.actionSink)
 
-    self.fileItemService.set(ignorePatterns: Set([ "*/.git", "*.o", "*.d", "*.dia" ].map(FileItemIgnorePattern.init)))
+    self.fileItemService.set(ignorePatterns: self.prefStore.data.general.ignorePatterns)
 
     self.prefWindowComponent = PrefWindowComponent(source: self.changeSink, initialData: self.prefStore.data)
     self.mainWindowManager = MainWindowManager(source: self.changeSink,
@@ -58,6 +58,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                                              fileItemService: self.fileItemService)
 
     super.init()
+
+    self.prefStore.sink
+      .filter { $0 is PrefData }
+      .map { $0 as! PrefData }
+      .subscribeNext { [unowned self] data in
+        if data.general.ignorePatterns == self.fileItemService.ignorePatterns {
+          return
+        }
+
+        self.fileItemService.set(ignorePatterns: data.general.ignorePatterns)
+      }
+      .addDisposableTo(self.disposeBag)
 
     self.mainWindowManager.sink
       .filter { $0 is MainWindowEvent || $0 is MainWindowAction }

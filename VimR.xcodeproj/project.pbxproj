@@ -109,6 +109,7 @@
 		4BEE79171D16D3800012EDAA /* CellAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEE79161D16D3800012EDAA /* CellAttributes.swift */; };
 		4BF07EE41D51326A009BECEB /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4BF07EE61D51326A009BECEB /* Credits.rtf */; };
 		4BF6E29C1D34153C0053FA76 /* KeyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF6E29B1D34153C0053FA76 /* KeyUtils.swift */; };
+		4BF8EED81D85574800CAC08A /* PrefUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF8EED71D85574800CAC08A /* PrefUtils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -297,6 +298,7 @@
 		4BEE79161D16D3800012EDAA /* CellAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellAttributes.swift; sourceTree = "<group>"; };
 		4BF07EE51D51326A009BECEB /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Base; path = Base.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4BF6E29B1D34153C0053FA76 /* KeyUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyUtils.swift; sourceTree = "<group>"; };
+		4BF8EED71D85574800CAC08A /* PrefUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefUtils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -385,6 +387,7 @@
 				4B56CE2F1D5FC27100337673 /* GeneralPrefPane.swift */,
 				4B238BEB1D3ED54D00CBDD98 /* AppearancePrefPane.swift */,
 				4B37ADBA1D6EC11600970D55 /* TestPane.swift */,
+				4BF8EED71D85574800CAC08A /* PrefUtils.swift */,
 			);
 			name = Preferences;
 			sourceTree = "<group>";
@@ -873,6 +876,7 @@
 				4B4FC8E61D3E8739009352C3 /* PrefWindowComponent.swift in Sources */,
 				4B6A70961D6100E300E12030 /* SwiftCommons.swift in Sources */,
 				4B56CE301D5FC27100337673 /* GeneralPrefPane.swift in Sources */,
+				4BF8EED81D85574800CAC08A /* PrefUtils.swift in Sources */,
 				4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */,
 				1929B165820D7177743B537A /* Component.swift in Sources */,
 				1929B93DBAD09835E428F610 /* PrefPane.swift in Sources */,

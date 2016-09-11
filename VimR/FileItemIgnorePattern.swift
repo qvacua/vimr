@@ -6,13 +6,17 @@
 import Foundation
 
 func ==(lhs: FileItemIgnorePattern, rhs: FileItemIgnorePattern) -> Bool {
-  return false
+  return lhs.pattern == rhs.pattern
 }
 
-class FileItemIgnorePattern: Hashable {
+class FileItemIgnorePattern: Hashable, CustomStringConvertible {
   
   var hashValue: Int {
     return self.pattern.hashValue
+  }
+
+  var description: String {
+    return "<FileItemIgnorePattern: pattern: '\(self.pattern)', folderPattern: '\(self.folderPattern)'>"
   }
   
   let folderPattern: Bool

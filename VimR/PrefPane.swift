@@ -7,9 +7,10 @@ import Cocoa
 import RxSwift
 
 class PrefPane: NSView, Component {
+  
+  let disposeBag = DisposeBag()
 
   private let source: Observable<Any>
-  private let disposeBag = DisposeBag()
 
   private let subject = PublishSubject<Any>()
   var sink: Observable<Any> {

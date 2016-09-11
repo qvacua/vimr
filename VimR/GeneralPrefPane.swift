@@ -17,6 +17,7 @@ struct GeneralPrefData: Equatable {
 func == (left: GeneralPrefData, right: GeneralPrefData) -> Bool {
   return left.openNewWindowWhenLaunching == right.openNewWindowWhenLaunching
     && left.openNewWindowOnReactivation == right.openNewWindowOnReactivation
+    && left.ignorePatterns == right.ignorePatterns
 }
 
 class GeneralPrefPane: PrefPane {
@@ -25,22 +26,18 @@ class GeneralPrefPane: PrefPane {
     return true
   }
 
-  private var data: GeneralPrefData {
-    willSet {
-      self.updateViews(newData: newValue)
-    }
-
-    didSet {
-      self.publish(event: self.data)
-    }
-  }
+  private var data: GeneralPrefData
 
   private let openWhenLaunchingCheckbox = NSButton(forAutoLayout: ())
   private let openOnReactivationCheckbox = NSButton(forAutoLayout: ())
+  private let ignoreField = NSTextField(forAutoLayout: ())
 
   init(source: Observable<Any>, initialData: GeneralPrefData) {
     self.data = initialData
     super.init(source: source)
+
+    self.updateViews(newData: initialData)
+    self.addReactions()
   }
   
   required init?(coder: NSCoder) {
@@ -56,13 +53,13 @@ class GeneralPrefPane: PrefPane {
                            action: #selector(GeneralPrefPane.openUntitledWindowWhenLaunchingAction(_:)))
     self.configureCheckbox(button: self.openOnReactivationCheckbox,
                            title: "On Re-Activation",
-                           action: #selector(GeneralPrefPane.openUntitledWindowOnReactivation(_:)))
+                           action: #selector(GeneralPrefPane.openUntitledWindowOnReactivationAction(_:)))
 
     let whenLaunching = self.openWhenLaunchingCheckbox
     let onReactivation = self.openOnReactivationCheckbox
 
     let ignoreListTitle = self.titleTextField(title: "Files To Ignore:")
-    let ignoreField = NSTextField(forAutoLayout: ())
+    let ignoreField = self.ignoreField
     let ignoreInfo = self.infoTextField(text: "")
     ignoreInfo.attributedStringValue = self.ignoreInfoText()
 
@@ -139,40 +136,55 @@ class GeneralPrefPane: PrefPane {
       .filter { $0 is PrefData }
       .map { ($0 as! PrefData).general }
       .filter { [unowned self] data in data != self.data }
-      .subscribeNext { [unowned self] data in self.data = data }
+      .subscribeNext { [unowned self] data in
+        self.updateViews(newData: data)
+        self.data = data
+    }
+  }
+
+  private func addReactions() {
+    self.ignoreField.rx_text
+      .skip(1) // To skip the event when the field gets created and is not yet initialized.
+      .throttle(0.2, scheduler: MainScheduler.instance)
+      .distinctUntilChanged()
+      .flatMapLatest { Observable.just(PrefUtils.ignorePatterns(fromString: $0)) }
+      .subscribeNext { [unowned self] patterns in
+        self.ignorePatternsAction(patterns)
+      }
+      .addDisposableTo(self.disposeBag)
+  }
+
+  private func set(data data: GeneralPrefData) {
+    self.data = data
+    self.publish(event: data)
   }
 
   private func ignoreInfoText() -> NSAttributedString {
-    let wikiUrl = NSURL(string: "https://github.com/qvacua/vimr/wiki")!
     let font = NSFont.systemFontOfSize(NSFont.smallSystemFontSize())
+    let attrs = [
+      NSFontAttributeName: font,
+      NSForegroundColorAttributeName: NSColor.grayColor()
+    ]
+
+    let wikiUrl = NSURL(string: "https://github.com/qvacua/vimr/wiki")!
     let linkStr = NSAttributedString.link(withUrl: wikiUrl, text: "VimR Wiki", font: font)
+
     let ignoreInfoStr = NSMutableAttributedString(string:
       "Comma-separated list of ignore patterns\n"
         + "Matching files will be ignored in \"Open Quickly\".\n"
         + "Example: */.git, */node_modules\n"
         + "For detailed information go to ",
-                                                  attributes:[
-                                                    NSFontAttributeName: font,
-                                                    NSForegroundColorAttributeName: NSColor.grayColor()
-      ]
-    )
+                                                  attributes:attrs)
     ignoreInfoStr.appendAttributedString(linkStr)
-    ignoreInfoStr.appendAttributedString(
-      NSAttributedString(string: ".", attributes: [
-        NSFontAttributeName: font,
-        NSForegroundColorAttributeName: NSColor.grayColor()
-        ])
-    )
+    ignoreInfoStr.appendAttributedString(NSAttributedString(string: ".", attributes: attrs))
 
     return ignoreInfoStr
   }
 
   private func updateViews(newData newData: GeneralPrefData) {
-    call(self.openWhenLaunchingCheckbox.boolState = newData.openNewWindowWhenLaunching,
-         whenNot: newData.openNewWindowWhenLaunching == self.data.openNewWindowWhenLaunching)
-
-    call(self.openOnReactivationCheckbox.boolState = newData.openNewWindowOnReactivation,
-         whenNot: newData.openNewWindowOnReactivation == self.data.openNewWindowOnReactivation)
+    self.openWhenLaunchingCheckbox.boolState = newData.openNewWindowWhenLaunching
+    self.openOnReactivationCheckbox.boolState = newData.openNewWindowOnReactivation
+    self.ignoreField.stringValue = PrefUtils.ignorePatternString(fromSet: newData.ignorePatterns)
   }
 }
 
@@ -210,17 +222,29 @@ extension GeneralPrefPane {
   }
 
   func openUntitledWindowWhenLaunchingAction(sender: NSButton) {
-    self.data = GeneralPrefData(openNewWindowWhenLaunching: self.openWhenLaunchingCheckbox.boolState,
-                                openNewWindowOnReactivation: self.data.openNewWindowOnReactivation,
-                                ignorePatterns: self.data.ignorePatterns)
+    self.set(data: GeneralPrefData(
+      openNewWindowWhenLaunching: self.openWhenLaunchingCheckbox.boolState,
+      openNewWindowOnReactivation: self.data.openNewWindowOnReactivation,
+      ignorePatterns: self.data.ignorePatterns)
+    )
   }
 
-  func openUntitledWindowOnReactivation(sender: NSButton) {
-    self.data = GeneralPrefData(openNewWindowWhenLaunching: self.data.openNewWindowWhenLaunching,
-                                openNewWindowOnReactivation: self.openOnReactivationCheckbox.boolState,
-                                ignorePatterns: self.data.ignorePatterns)
+  func openUntitledWindowOnReactivationAction(sender: NSButton) {
+    self.set(data: GeneralPrefData(
+      openNewWindowWhenLaunching: self.data.openNewWindowWhenLaunching,
+      openNewWindowOnReactivation: self.openOnReactivationCheckbox.boolState,
+      ignorePatterns: self.data.ignorePatterns)
+    )
   }
-  
+
+  private func ignorePatternsAction(patterns: Set<FileItemIgnorePattern>) {
+    self.set(data: GeneralPrefData(
+      openNewWindowWhenLaunching: self.data.openNewWindowWhenLaunching,
+      openNewWindowOnReactivation: self.data.openNewWindowOnReactivation,
+      ignorePatterns: patterns)
+    )
+  }
+
   private func alert(title title: String, info: String) {
     let alert = NSAlert()
     alert.alertStyle = .WarningAlertStyle
