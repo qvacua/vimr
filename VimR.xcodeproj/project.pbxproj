@@ -72,7 +72,7 @@
 		4B9A15261D2993DF009F9F67 /* SwiftNeoVim.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BAD81D51D80B5D8004F91AE /* OpenQuicklyFileViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD81D41D80B5D8004F91AE /* OpenQuicklyFileViewRow.swift */; };
 		4BAD84E81D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD84E71D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift */; };
-		4BB1BEA91D48773200463C29 /* RxSwiftUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1BEA81D48773200463C29 /* RxSwiftUtils.swift */; };
+		4BB1BEA91D48773200463C29 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */; };
 		4BCADE081D11ED12004DAD0F /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */; };
 		4BD3BF931D32A95800082605 /* MainWindowComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD3BF921D32A95800082605 /* MainWindowComponent.swift */; };
 		4BD3BF971D32B0DB00082605 /* MainWindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD3BF961D32B0DB00082605 /* MainWindowManager.swift */; };
@@ -261,7 +261,7 @@
 		4B97E2CD1D33F53D00FC0660 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		4BAD81D41D80B5D8004F91AE /* OpenQuicklyFileViewRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyFileViewRow.swift; sourceTree = "<group>"; };
 		4BAD84E71D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyFilterOperation.swift; sourceTree = "<group>"; };
-		4BB1BEA81D48773200463C29 /* RxSwiftUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftUtils.swift; sourceTree = "<group>"; };
+		4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
 		4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaExtensions.swift; sourceTree = "<group>"; };
 		4BCF638F1D323CFD00F15CE4 /* nvim */ = {isa = PBXFileReference; lastKnownFileType = folder; name = nvim; path = neovim/src/nvim; sourceTree = SOURCE_ROOT; };
 		4BD3BF921D32A95800082605 /* MainWindowComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowComponent.swift; sourceTree = "<group>"; };
@@ -510,11 +510,8 @@
 			isa = PBXGroup;
 			children = (
 				4B6A70931D60E04200E12030 /* AppKitCommons.swift */,
-				1929BA8AC40B901B20F20B71 /* FileUtils.swift */,
 				1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */,
-				1929BEEB33113B0E33C3830F /* Matcher.swift */,
-				4BB1BEA81D48773200463C29 /* RxSwiftUtils.swift */,
-				1929B9D510177918080BE39B /* Scorer.swift */,
+				4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */,
 				4B6A70951D6100E300E12030 /* SwiftCommons.swift */,
 			);
 			name = Commons;
@@ -564,6 +561,7 @@
 				4BEBA5081CFF374B00673FDF /* AppDelegate.swift */,
 				4BDF500F1D760A9500D8FBC3 /* UI */,
 				4BDF50111D760B1100D8FBC3 /* File Items */,
+				4BF8EED91D858C4400CAC08A /* Utils */,
 				4BDF50101D760AB700D8FBC3 /* Commons */,
 				4B97E2CF1D33F92200FC0660 /* resources */,
 			);
@@ -594,6 +592,16 @@
 				4B2A2C061D0352CB0074CE9A /* NeoVimUiBridgeProtocol.h */,
 			);
 			name = NeoVimView;
+			sourceTree = "<group>";
+		};
+		4BF8EED91D858C4400CAC08A /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				1929BA8AC40B901B20F20B71 /* FileUtils.swift */,
+				1929BEEB33113B0E33C3830F /* Matcher.swift */,
+				1929B9D510177918080BE39B /* Scorer.swift */,
+			);
+			name = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -870,7 +878,7 @@
 				4BD3BF971D32B0DB00082605 /* MainWindowManager.swift in Sources */,
 				4B238BEC1D3ED54D00CBDD98 /* AppearancePrefPane.swift in Sources */,
 				4BD3BF931D32A95800082605 /* MainWindowComponent.swift in Sources */,
-				4BB1BEA91D48773200463C29 /* RxSwiftUtils.swift in Sources */,
+				4BB1BEA91D48773200463C29 /* RxSwiftCommons.swift in Sources */,
 				4BAD81D51D80B5D8004F91AE /* OpenQuicklyFileViewRow.swift in Sources */,
 				4B4546871D468CEC00A1E27F /* PrefStore.swift in Sources */,
 				4B4FC8E61D3E8739009352C3 /* PrefWindowComponent.swift in Sources */,
