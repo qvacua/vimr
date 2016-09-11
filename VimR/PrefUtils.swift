@@ -29,8 +29,9 @@ class PrefUtils {
   }
 
   static func ignorePatternString(fromSet set: Set<FileItemIgnorePattern>) -> String {
-    return set
+    return Array(set)
       .map { $0.pattern }
+      .sort()
       .joinWithSeparator(", ")
   }
 }
