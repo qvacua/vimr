@@ -1045,17 +1045,17 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
       // redraw the put position.
       if self.usesLigatures {
         self.setNeedsDisplay(region: self.grid.regionOfWord(at: self.grid.putPosition))
+        self.setNeedsDisplay(region: self.grid.regionOfWord(at: self.grid.screenCursor))
+        self.setNeedsDisplay(region: self.grid.regionOfWord(at: position))
         self.setNeedsDisplay(region: self.grid.regionOfWord(at: screenCursor))
       } else {
         self.setNeedsDisplay(cellPosition: self.grid.putPosition)
-        self.setNeedsDisplay(screenCursor: screenCursor)
+        // Redraw where the cursor has been till now, ie remove the current cursor.
+        self.setNeedsDisplay(cellPosition: self.grid.screenCursor)
+        self.setNeedsDisplay(cellPosition: position)
+        self.setNeedsDisplay(cellPosition: screenCursor)
       }
 
-      self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(self.grid.putPosition))
-      
-      // Redraw where the cursor has been till now, ie remove the current cursor.
-      self.setNeedsDisplay(cellPosition: self.grid.screenCursor)
-      
       self.grid.goto(position)
       self.grid.moveCursor(screenCursor)
     }
