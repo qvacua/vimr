@@ -54,6 +54,10 @@ extension NSURL {
   var hidden: Bool {
     return self.resourceValue(NSURLIsHiddenKey)
   }
+
+  var package: Bool {
+    return self.resourceValue(NSURLIsPackageKey)
+  }
 }
 
 extension Array {

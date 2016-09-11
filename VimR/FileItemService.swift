@@ -154,7 +154,7 @@ class FileItemService {
 
           curItem.children
             .filter { item in
-              if item.hidden {
+              if item.hidden || item.package {
                 return false
               }
 

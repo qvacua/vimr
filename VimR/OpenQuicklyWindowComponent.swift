@@ -308,8 +308,13 @@ extension OpenQuicklyWindowComponent {
     self.pattern = ""
     self.flatFileItems = []
     self.fileViewItems = []
+    self.fileView.reloadData()
     
     self.searchField.stringValue = ""
     self.countField.stringValue = "0 items"
+  }
+
+  func windowDidResignKey(notification: NSNotification) {
+    self.window.performClose(self)
   }
 }

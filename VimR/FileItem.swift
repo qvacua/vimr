@@ -10,6 +10,7 @@ class FileItem : CustomStringConvertible {
   let url: NSURL
   let dir: Bool
   let hidden: Bool
+  let package: Bool
 
   /// When nil, then it has never been fnmatch'ed.
   weak var ignoreToken: Token?
@@ -31,6 +32,7 @@ class FileItem : CustomStringConvertible {
     self.url = url
     self.dir = url.dir
     self.hidden = url.hidden
+    self.package = url.package
   }
 
   func removeChild(withUrl url: NSURL) {
