@@ -154,10 +154,6 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
     NSLog("\(self.agent.vimCommandOutput("silent pwd"))")
     NSLog("DEBUG 1 - End")
   }
-
-  public func debugInfo() {
-    Swift.print(self.grid)
-  }
 }
 
 // MARK: - API
