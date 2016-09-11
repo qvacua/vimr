@@ -7,18 +7,16 @@ import Cocoa
 import PureLayout
 import RxSwift
 
-struct GeneralPrefData {
+struct GeneralPrefData: Equatable {
   let openNewWindowWhenLaunching: Bool
   let openNewWindowOnReactivation: Bool
+
+  let ignorePatterns: Set<FileItemIgnorePattern>
 }
 
 func == (left: GeneralPrefData, right: GeneralPrefData) -> Bool {
   return left.openNewWindowWhenLaunching == right.openNewWindowWhenLaunching
     && left.openNewWindowOnReactivation == right.openNewWindowOnReactivation
-}
-
-func != (left: GeneralPrefData, right: GeneralPrefData) -> Bool {
-  return !(left == right)
 }
 
 class GeneralPrefPane: PrefPane {
@@ -213,12 +211,14 @@ extension GeneralPrefPane {
 
   func openUntitledWindowWhenLaunchingAction(sender: NSButton) {
     self.data = GeneralPrefData(openNewWindowWhenLaunching: self.openWhenLaunchingCheckbox.boolState,
-                                openNewWindowOnReactivation: self.data.openNewWindowOnReactivation)
+                                openNewWindowOnReactivation: self.data.openNewWindowOnReactivation,
+                                ignorePatterns: self.data.ignorePatterns)
   }
 
   func openUntitledWindowOnReactivation(sender: NSButton) {
     self.data = GeneralPrefData(openNewWindowWhenLaunching: self.data.openNewWindowWhenLaunching,
-                                openNewWindowOnReactivation: self.openOnReactivationCheckbox.boolState)
+                                openNewWindowOnReactivation: self.openOnReactivationCheckbox.boolState,
+                                ignorePatterns: self.data.ignorePatterns)
   }
   
   private func alert(title title: String, info: String) {

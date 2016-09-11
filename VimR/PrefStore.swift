@@ -10,6 +10,7 @@ private class PrefKeys {
 
   static let openNewWindowWhenLaunching = "open-new-window-when-launching"
   static let openNewWindowOnReactivation = "open-new-window-on-reactivation"
+  static let openQuicklyIgnorePatterns = "open-quickly-ignore-patterns"
 
   static let editorFontName = "editor-font-name"
   static let editorFontSize = "editor-font-size"
@@ -35,7 +36,9 @@ class PrefStore: Store {
   private let fontManager = NSFontManager.sharedFontManager()
 
   var data = PrefData(
-    general: GeneralPrefData(openNewWindowWhenLaunching: true, openNewWindowOnReactivation: true),
+    general: GeneralPrefData(openNewWindowWhenLaunching: true,
+                             openNewWindowOnReactivation: true,
+                             ignorePatterns: Set([ "*/.git", "*.o", "*.d", "*.dia" ].map(FileItemIgnorePattern.init))),
     appearance: AppearancePrefData(editorFont: PrefStore.defaultEditorFont, editorUsesLigatures: false)
   )
 
@@ -55,6 +58,18 @@ class PrefStore: Store {
     self.subject.onCompleted()
   }
 
+  private func ignorePatterns(fromString str: String) -> Set<FileItemIgnorePattern> {
+    return Set(str
+      .componentsSeparatedByString(",")
+      .map {
+        FileItemIgnorePattern(pattern: $0.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()))
+      })
+  }
+
+  private func ignorePatternString(fromSet set: Set<FileItemIgnorePattern>) -> String {
+    return set.reduce("") { "\($0), \($1.pattern)" }
+  }
+
   private func prefDataFromDict(prefs: [String: AnyObject]) -> PrefData {
 
     let editorFontName = prefs[PrefKeys.editorFontName] as? String ?? PrefStore.defaultEditorFont.fontName
@@ -67,10 +82,14 @@ class PrefStore: Store {
     let openNewWindowWhenLaunching = (prefs[PrefKeys.openNewWindowWhenLaunching] as? NSNumber)?.boolValue ?? true
     let openNewWindowOnReactivation = (prefs[PrefKeys.openNewWindowOnReactivation] as? NSNumber)?.boolValue ?? true
 
+    let ignorePatternsList = (prefs[PrefKeys.openQuicklyIgnorePatterns] as? String) ?? "*/.git, *.o, *.d, *.dia"
+    let ignorePatterns = self.ignorePatterns(fromString: ignorePatternsList)
+
     return PrefData(
       general: GeneralPrefData(
         openNewWindowWhenLaunching: openNewWindowWhenLaunching,
-        openNewWindowOnReactivation: openNewWindowOnReactivation
+        openNewWindowOnReactivation: openNewWindowOnReactivation,
+        ignorePatterns: ignorePatterns
       ),
       appearance: AppearancePrefData(editorFont: editorFont, editorUsesLigatures: usesLigatures)
     )
@@ -97,6 +116,7 @@ class PrefStore: Store {
       // General
       PrefKeys.openNewWindowWhenLaunching: generalData.openNewWindowWhenLaunching,
       PrefKeys.openNewWindowOnReactivation: generalData.openNewWindowOnReactivation,
+      PrefKeys.openQuicklyIgnorePatterns: self.ignorePatternString(fromSet: generalData.ignorePatterns),
 
       // Appearance
       PrefKeys.editorFontName: appearanceData.editorFont.fontName,
