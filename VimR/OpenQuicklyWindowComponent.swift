@@ -50,7 +50,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
     self.searchStream = self.searchField.rx_text
       .throttle(0.2, scheduler: MainScheduler.instance)
       .distinctUntilChanged()
-    
+
     super.init(source: source, nibName: "OpenQuicklyWindow")
 
     self.window.delegate = self

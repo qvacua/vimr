@@ -120,6 +120,13 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
   NSPipe *inputPipe = [NSPipe pipe];
   _neoVimServerTask = [[NSTask alloc] init];
+
+#ifndef DEBUG
+  NSFileHandle *nullFileHandle = [NSFileHandle fileHandleWithNullDevice];
+  _neoVimServerTask.standardOutput = nullFileHandle;
+  _neoVimServerTask.standardError = nullFileHandle;
+#endif
+
   _neoVimServerTask.standardInput = inputPipe;
   _neoVimServerTask.currentDirectoryPath = NSHomeDirectory();
   _neoVimServerTask.launchPath = shellPath;

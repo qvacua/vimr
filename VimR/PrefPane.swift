@@ -7,9 +7,10 @@ import Cocoa
 import RxSwift
 
 class PrefPane: NSView, Component {
+  
+  let disposeBag = DisposeBag()
 
   private let source: Observable<Any>
-  private let disposeBag = DisposeBag()
 
   private let subject = PublishSubject<Any>()
   var sink: Observable<Any> {
@@ -71,6 +72,23 @@ extension PrefPane {
     let field = defaultTitleTextField()
     field.alignment = .Right;
     field.stringValue = title
+    return field
+  }
+
+  func infoTextField(text text: String) -> NSTextField {
+    let field = NSTextField(forAutoLayout: ())
+    field.font = NSFont.systemFontOfSize(NSFont.smallSystemFontSize())
+    field.textColor = NSColor.grayColor()
+    field.backgroundColor = NSColor.clearColor()
+    field.editable = false
+    field.bordered = false
+
+    // both are needed, otherwise hyperlink won't accept mousedown
+    field.selectable = true
+    field.allowsEditingTextAttributes = true
+
+    field.stringValue = text
+
     return field
   }
 
