@@ -16,7 +16,7 @@ class FileItemIgnorePattern: Hashable, CustomStringConvertible {
   }
 
   var description: String {
-    return "<FileItemIgnorePattern: pattern: '\(self.pattern)', folderPattern: '\(self.folderPattern)'>"
+    return "<FileItemIgnorePattern: pattern=\(self.pattern), folderPattern=\(self.folderPattern)>"
   }
   
   let folderPattern: Bool

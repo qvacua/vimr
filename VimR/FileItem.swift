@@ -22,7 +22,7 @@ class FileItem : CustomStringConvertible {
   var children: [FileItem] = []
 
   var description: String {
-    return "<FileItem: \(self.url), dir=\(self.dir), hidden=\(self.hidden), "
+    return "<FileItem: \(self.url), dir=\(self.dir), hidden=\(self.hidden), package=\(self.package)"
       + "needsScan=\(self.needsScanChildren), childrenScanned=\(self.childrenScanned), "
       + "ignore=\(self.ignore), ignoreToken=\(self.ignoreToken), "
       + "children=\(self.children.count)>"
