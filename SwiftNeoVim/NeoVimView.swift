@@ -332,47 +332,75 @@ extension NeoVimView {
     let dirtyRects = self.rectsBeingDrawn()
 //    NSLog("\(dirtyRects)")
 
-    self.rowRunIntersecting(rects: dirtyRects).forEach { rowFrag in
-      // For background drawing we don't filter out the put(0, 0)s: in some cases only the put(0, 0)-cells should be
-      // redrawn. => FIXME: probably we have to consider this also when drawing further down, ie when the range starts
-      // with '0'...
-      self.drawBackground(positions: rowFrag.range.map { self.pointInViewFor(row: rowFrag.row, column: $0) },
-                          background: rowFrag.attrs.background)
-
-      let positions = rowFrag.range
-        // filter out the put(0, 0)s (after a wide character)
-        .filter { self.grid.cells[rowFrag.row][$0].string.characters.count > 0 }
-        .map { self.pointInViewFor(row: rowFrag.row, column: $0) }
-
-      if positions.isEmpty {
-        return
-      }
-
-      let string = self.grid.cells[rowFrag.row][rowFrag.range].reduce("") { $0 + $1.string }
-      let glyphPositions = positions.map { CGPoint(x: $0.x, y: $0.y + self.descent + self.leading) }
-      self.drawer.drawString(string,
-                             positions: UnsafeMutablePointer(glyphPositions), positionsCount: positions.count,
-                             highlightAttrs: rowFrag.attrs,
-                             context: context)
-    }
-
-    self.drawCursor()
+    self.rowRunIntersecting(rects: dirtyRects).forEach { self.draw(rowRun: $0, context: context) }
+    self.drawCursor(context: context)
   }
 
-  private func drawCursor() {
-    // FIXME: for now do some rudimentary cursor drawing
-    let color = self.grid.dark ? self.grid.foreground : self.grid.background
+  private func draw(rowRun rowFrag: RowRun, context: CGContext) {
+    // For background drawing we don't filter out the put(0, 0)s: in some cases only the put(0, 0)-cells should be
+    // redrawn. => FIXME: probably we have to consider this also when drawing further down, ie when the range starts
+    // with '0'...
+    self.drawBackground(positions: rowFrag.range.map { self.pointInViewFor(row: rowFrag.row, column: $0) },
+                        background: rowFrag.attrs.background)
+
+    let positions = rowFrag.range
+      // filter out the put(0, 0)s (after a wide character)
+      .filter { self.grid.cells[rowFrag.row][$0].string.characters.count > 0 }
+      .map { self.pointInViewFor(row: rowFrag.row, column: $0) }
+
+    if positions.isEmpty {
+      return
+    }
+
+    let string = self.grid.cells[rowFrag.row][rowFrag.range].reduce("") { $0 + $1.string }
+    let glyphPositions = positions.map { CGPoint(x: $0.x, y: $0.y + self.descent + self.leading) }
+    self.drawer.drawString(string,
+                           positions: UnsafeMutablePointer(glyphPositions), positionsCount: positions.count,
+                           highlightAttrs: rowFrag.attrs,
+                           context: context)
+  }
+
+  private func cursorRegion() -> Region {
     let cursorPosition = self.mode == .Cmdline ? self.grid.putPosition : self.grid.screenCursor
 //    NSLog("\(#function): \(cursorPosition)")
 
-    var cursorRect = self.cellRectFor(row: cursorPosition.row, column: cursorPosition.column)
-    if self.grid.isNextCellEmpty(cursorPosition) {
-      let nextPosition = self.grid.nextCellPosition(cursorPosition)
-      cursorRect = cursorRect.union(self.cellRectFor(row: nextPosition.row, column:nextPosition.column))
+    var cursorRegion = Region(top: cursorPosition.row, bottom: cursorPosition.row,
+                              left: cursorPosition.column, right: cursorPosition.column)
+
+    if self.grid.isPreviousCellEmpty(cursorPosition) {
+      cursorRegion = Region(top: cursorPosition.row, bottom: cursorPosition.row,
+                            left: max(0, cursorRegion.left - 1), right: cursorPosition.column)
     }
 
-    ColorUtils.colorIgnoringAlpha(color).set()
-    NSRectFillUsingOperation(cursorRect, .CompositeDifference)
+    if self.grid.isNextCellEmpty(cursorPosition) {
+      cursorRegion = Region(top: cursorPosition.row,
+                            bottom: cursorPosition.row,
+                            left: cursorPosition.column,
+                            right: min(self.grid.size.width - 1, cursorPosition.column + 1))
+    }
+
+//    NSLog("\(#function): \(cursorRegion)")
+    return cursorRegion
+  }
+
+  private func drawCursor(context context: CGContext) {
+    // FIXME: for now do some rudimentary cursor drawing
+    ColorUtils.colorIgnoringAlpha(self.grid.foreground).set()
+    let cursorRegion = self.cursorRegion()
+    let cursorRect = self.regionRectFor(region: cursorRegion)
+
+    cursorRect.fill()
+
+    let cursorRow = cursorRegion.top
+    let cursorColumnStart = cursorRegion.left
+    let attrs = self.grid.cells[cursorRow][cursorColumnStart].attrs
+    let invertedAttrs = CellAttributes(fontTrait: attrs.fontTrait,
+                                       foreground: attrs.background,
+                                       background: attrs.foreground,
+                                       special: attrs.special)
+
+    let rowRun = RowRun(row: cursorRegion.top, range: cursorRegion.columnRange, attrs: invertedAttrs)
+    self.draw(rowRun: rowRun, context: context)
   }
 
   private func drawBackground(positions positions: [CGPoint], background: UInt32) {
