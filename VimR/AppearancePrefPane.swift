@@ -22,7 +22,11 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     return true
   }
 
-  private var data: AppearancePrefData
+  private var data: AppearancePrefData {
+    didSet {
+      self.updateViews(newData: self.data)
+    }
+  }
 
   private let fontManager = NSFontManager.sharedFontManager()
 
@@ -62,7 +66,6 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
       .map { ($0 as! PrefData).appearance }
       .filter { [unowned self] data in data != self.data }
       .subscribeNext { [unowned self] data in
-        self.updateViews(newData: data)
         self.data = data
     }
   }

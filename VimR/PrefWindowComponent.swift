@@ -12,7 +12,7 @@ struct PrefData {
   var appearance: AppearancePrefData
 }
 
-class PrefWindowComponent: WindowComponent, NSTableViewDataSource, NSTableViewDelegate {
+class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSource, NSTableViewDelegate {
 
   private var data: PrefData
 
@@ -47,6 +47,8 @@ class PrefWindowComponent: WindowComponent, NSTableViewDataSource, NSTableViewDe
     ]
     
     super.init(source: source, nibName: "PrefWindow")
+
+    self.window.delegate = self
 
     self.addReactions()
   }
@@ -116,6 +118,10 @@ class PrefWindowComponent: WindowComponent, NSTableViewDataSource, NSTableViewDe
       }
       .subscribeNext { [unowned self] action in self.publish(event: action) }
       .addDisposableTo(self.disposeBag)
+  }
+
+  func windowWillClose(notification: NSNotification) {
+    self.panes.forEach { $0.windowWillClose() }
   }
 }
 

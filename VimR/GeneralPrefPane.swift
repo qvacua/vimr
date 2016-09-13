@@ -20,7 +20,7 @@ func == (left: GeneralPrefData, right: GeneralPrefData) -> Bool {
     && left.ignorePatterns == right.ignorePatterns
 }
 
-class GeneralPrefPane: PrefPane {
+class GeneralPrefPane: PrefPane, NSTextFieldDelegate {
 
   override var pinToContainer: Bool {
     return true
@@ -37,7 +37,6 @@ class GeneralPrefPane: PrefPane {
     super.init(source: source)
 
     self.updateViews(newData: initialData)
-    self.addReactions()
   }
   
   required init?(coder: NSCoder) {
@@ -60,6 +59,10 @@ class GeneralPrefPane: PrefPane {
 
     let ignoreListTitle = self.titleTextField(title: "Files To Ignore:")
     let ignoreField = self.ignoreField
+    NSNotificationCenter.defaultCenter()
+      .addObserverForName(NSControlTextDidEndEditingNotification, object: ignoreField, queue: nil) { [unowned self] _ in
+        self.ignorePatternsAction()
+    }
     let ignoreInfo = self.infoTextField(text: "")
     ignoreInfo.attributedStringValue = self.ignoreInfoText()
 
@@ -142,16 +145,8 @@ class GeneralPrefPane: PrefPane {
     }
   }
 
-  private func addReactions() {
-    self.ignoreField.rx_text
-      .skip(1) // To skip the event when the field gets created and is not yet initialized.
-      .throttle(0.2, scheduler: MainScheduler.instance)
-      .distinctUntilChanged()
-      .flatMapLatest { Observable.just(PrefUtils.ignorePatterns(fromString: $0)) }
-      .subscribeNext { [unowned self] patterns in
-        self.ignorePatternsAction(patterns)
-      }
-      .addDisposableTo(self.disposeBag)
+  override func windowWillClose() {
+    self.ignorePatternsAction()
   }
 
   private func set(data data: GeneralPrefData) {
@@ -237,7 +232,12 @@ extension GeneralPrefPane {
     )
   }
 
-  private func ignorePatternsAction(patterns: Set<FileItemIgnorePattern>) {
+  private func ignorePatternsAction() {
+    let patterns = PrefUtils.ignorePatterns(fromString: self.ignoreField.stringValue)
+    if patterns == self.data.ignorePatterns {
+      return
+    }
+
     self.set(data: GeneralPrefData(
       openNewWindowWhenLaunching: self.data.openNewWindowWhenLaunching,
       openNewWindowOnReactivation: self.data.openNewWindowOnReactivation,
@@ -253,3 +253,4 @@ extension GeneralPrefPane {
     alert.runModal()
   }
 }
+
