@@ -20,7 +20,6 @@
 #import <nvim/api/vim.h>
 #import <nvim/ui.h>
 #import <nvim/ui_bridge.h>
-#import <nvim/event/signal.h>
 #import <nvim/main.h>
 #import <nvim/ex_docmd.h>
 #import <nvim/ex_getln.h>
