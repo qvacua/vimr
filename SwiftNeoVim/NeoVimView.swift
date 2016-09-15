@@ -354,6 +354,7 @@ extension NeoVimView {
 
     let string = self.grid.cells[rowFrag.row][rowFrag.range].reduce("") { $0 + $1.string }
     let glyphPositions = positions.map { CGPoint(x: $0.x, y: $0.y + self.descent + self.leading) }
+
     self.drawer.drawString(string,
                            positions: UnsafeMutablePointer(glyphPositions), positionsCount: positions.count,
                            highlightAttrs: rowFrag.attrs,
@@ -367,11 +368,6 @@ extension NeoVimView {
     var cursorRegion = Region(top: cursorPosition.row, bottom: cursorPosition.row,
                               left: cursorPosition.column, right: cursorPosition.column)
 
-    if self.grid.isPreviousCellEmpty(cursorPosition) {
-      cursorRegion = Region(top: cursorPosition.row, bottom: cursorPosition.row,
-                            left: max(0, cursorRegion.left - 1), right: cursorPosition.column)
-    }
-
     if self.grid.isNextCellEmpty(cursorPosition) {
       cursorRegion = Region(top: cursorPosition.row,
                             bottom: cursorPosition.row,
@@ -379,27 +375,22 @@ extension NeoVimView {
                             right: min(self.grid.size.width - 1, cursorPosition.column + 1))
     }
 
-//    NSLog("\(#function): \(cursorRegion)")
     return cursorRegion
   }
 
   private func drawCursor(context context: CGContext) {
     // FIXME: for now do some rudimentary cursor drawing
-    ColorUtils.colorIgnoringAlpha(self.grid.foreground).set()
     let cursorRegion = self.cursorRegion()
-    let cursorRect = self.regionRectFor(region: cursorRegion)
-
-    cursorRect.fill()
-
     let cursorRow = cursorRegion.top
     let cursorColumnStart = cursorRegion.left
-    let attrs = self.grid.cells[cursorRow][cursorColumnStart].attrs
-    let invertedAttrs = CellAttributes(fontTrait: attrs.fontTrait,
-                                       foreground: attrs.background,
-                                       background: attrs.foreground,
-                                       special: attrs.special)
+    let attrsAtCursor = self.grid.cells[cursorRow][cursorColumnStart].attrs
+    let attrs = CellAttributes(fontTrait: attrsAtCursor.fontTrait,
+                               foreground: self.grid.background,
+                               background: self.grid.foreground,
+                               special: self.grid.special)
 
-    let rowRun = RowRun(row: cursorRegion.top, range: cursorRegion.columnRange, attrs: invertedAttrs)
+    // FIXME: take ligatures into account (is it a good idea to do this?)
+    let rowRun = RowRun(row: cursorRegion.top, range: cursorRegion.columnRange, attrs: attrs)
     self.draw(rowRun: rowRun, context: context)
   }
 
@@ -1069,17 +1060,25 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     DispatchUtils.gui {
 //      NSLog("\(#function): \(position), \(screenCursor)")
 
+      let curScreenCursor = self.grid.screenCursor
+
       // Because neovim fills blank space with "Space" and when we enter "Space" we don't get the puts, thus we have to
       // redraw the put position.
       if self.usesLigatures {
         self.setNeedsDisplay(region: self.grid.regionOfWord(at: self.grid.putPosition))
-        self.setNeedsDisplay(region: self.grid.regionOfWord(at: self.grid.screenCursor))
+        self.setNeedsDisplay(region: self.grid.regionOfWord(at: curScreenCursor))
         self.setNeedsDisplay(region: self.grid.regionOfWord(at: position))
         self.setNeedsDisplay(region: self.grid.regionOfWord(at: screenCursor))
       } else {
         self.setNeedsDisplay(cellPosition: self.grid.putPosition)
         // Redraw where the cursor has been till now, ie remove the current cursor.
-        self.setNeedsDisplay(cellPosition: self.grid.screenCursor)
+        self.setNeedsDisplay(cellPosition: curScreenCursor)
+        if self.grid.isPreviousCellEmpty(curScreenCursor) {
+          self.setNeedsDisplay(cellPosition: self.grid.previousCellPosition(curScreenCursor))
+        }
+        if self.grid.isNextCellEmpty(curScreenCursor) {
+          self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(curScreenCursor))
+        }
         self.setNeedsDisplay(cellPosition: position)
         self.setNeedsDisplay(cellPosition: screenCursor)
       }
@@ -1152,7 +1151,8 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
 
   public func putMarkedText(markedText: String, screenCursor: Position) {
     DispatchUtils.gui {
-      NSLog("\(#function): '\(markedText)'")
+      NSLog("\(#function): '\(markedText)' -> \(screenCursor)")
+
       let curPos = self.grid.putPosition
       self.grid.putMarkedText(markedText)
 
@@ -1197,6 +1197,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     DispatchUtils.gui {
       self.grid.dark = dark
       self.grid.foreground = UInt32(bitPattern: fg)
+//      NSLog("\(ColorUtils.colorIgnoringAlpha(UInt32(fg)))")
     }
   }
   
@@ -1205,6 +1206,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
       self.grid.dark = dark
       self.grid.background = UInt32(bitPattern: bg)
       self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).CGColor
+//      NSLog("\(ColorUtils.colorIgnoringAlpha(UInt32(bg)))")
     }
   }
   
@@ -1249,6 +1251,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   private func updateCursorWhenPutting(currentPosition curPos: Position, screenCursor: Position) {
     if self.mode == .Cmdline {
       // When the cursor is in the command line, then we need this...
+      self.setNeedsDisplay(cellPosition: self.grid.previousCellPosition(curPos))
       self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(curPos))
       self.setNeedsDisplay(screenCursor: self.grid.screenCursor)
     }

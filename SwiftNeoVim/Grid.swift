@@ -217,7 +217,7 @@ class Grid: CustomStringConvertible {
     var left = 0
     for idx in (0..<column).reverse() {
       let cell = self.cells[row][idx]
-      if cell.string == " " || cell.string == "" {
+      if cell.string == " " {
         left = idx + 1
         break
       }
@@ -226,7 +226,7 @@ class Grid: CustomStringConvertible {
     var right = self.size.width - 1
     for idx in (column + 1)..<self.size.width {
       let cell = self.cells[row][idx]
-      if cell.string == " " || cell.string == "" {
+      if cell.string == " " {
         right = idx - 1
         break
       }
