@@ -48,7 +48,10 @@ extension NSTableView {
   static func standardTableView() -> NSTableView {
     let tableView = NSTableView(frame: CGRect.zero)
 
-    tableView.addTableColumn(NSTableColumn(identifier: "name"))
+    let column = NSTableColumn(identifier: "name")
+    column.editable = false
+
+    tableView.addTableColumn(column)
     tableView.rowSizeStyle	=	.Default
     tableView.sizeLastColumnToFit()
     tableView.allowsEmptySelection = false

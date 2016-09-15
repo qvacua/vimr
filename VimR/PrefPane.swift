@@ -55,6 +55,10 @@ class PrefPane: NSView, Component {
   func publish(event event: Any) {
     self.subject.onNext(event)
   }
+
+  func windowWillClose() {
+    
+  }
 }
 
 // MARK: - Control Utils
