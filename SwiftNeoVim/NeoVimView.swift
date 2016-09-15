@@ -1171,7 +1171,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     DispatchUtils.gui {
       let position = Position(row: Int(row), column: Int(column))
 
-      NSLog("\(#function): \(position)")
+//      NSLog("\(#function): \(position)")
 
       self.grid.unmarkCell(position)
       self.setNeedsDisplay(position: position)
