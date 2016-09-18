@@ -41,6 +41,7 @@
 		4B22F7F21D7C6B9000929B0E /* ImageAndTextTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B22F7F11D7C6B9000929B0E /* ImageAndTextTableCell.swift */; };
 		4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BE01D3BF24200CBDD98 /* Application.swift */; };
 		4B238BEC1D3ED54D00CBDD98 /* AppearancePrefPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BEB1D3ED54D00CBDD98 /* AppearancePrefPane.swift */; };
+		4B280EFF1D945DA5003FE725 /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
 		4B2A2BEC1D02261F0074CE9A /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BE21D0225800074CE9A /* RxCocoa.framework */; };
 		4B2A2BED1D02261F0074CE9A /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BE21D0225800074CE9A /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B2A2BEE1D02261F0074CE9A /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BE31D0225800074CE9A /* RxSwift.framework */; };
@@ -62,6 +63,17 @@
 		4B56F29D1D29926600C1F92E /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; };
 		4B570DC21D303CAF006EDC21 /* NeoVimAgent.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B570DC01D303CAF006EDC21 /* NeoVimAgent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B570DC31D303CAF006EDC21 /* NeoVimAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B570DC11D303CAF006EDC21 /* NeoVimAgent.m */; };
+		4B6423961D8EFD7100FC78C8 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423951D8EFD7100FC78C8 /* Workspace.swift */; };
+		4B6423981D8EFDE000FC78C8 /* WorkspaceBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423971D8EFDE000FC78C8 /* WorkspaceBar.swift */; };
+		4B64239A1D8EFE3000FC78C8 /* WorkspaceTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423991D8EFE3000FC78C8 /* WorkspaceTool.swift */; };
+		4B6423A21D8EFE7500FC78C8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423A11D8EFE7500FC78C8 /* AppDelegate.swift */; };
+		4B6423A41D8EFE7500FC78C8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B6423A31D8EFE7500FC78C8 /* Assets.xcassets */; };
+		4B6423A71D8EFE7500FC78C8 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B6423A51D8EFE7500FC78C8 /* MainMenu.xib */; };
+		4B6423AC1D8EFE9800FC78C8 /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; };
+		4B6423AD1D8EFE9800FC78C8 /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B6423AF1D8EFEA800FC78C8 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423951D8EFD7100FC78C8 /* Workspace.swift */; };
+		4B6423B01D8EFEA800FC78C8 /* WorkspaceBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423971D8EFDE000FC78C8 /* WorkspaceBar.swift */; };
+		4B6423B11D8EFEA800FC78C8 /* WorkspaceTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423991D8EFE3000FC78C8 /* WorkspaceTool.swift */; };
 		4B6A70941D60E04200E12030 /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
 		4B6A70961D6100E300E12030 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70951D6100E300E12030 /* SwiftCommons.swift */; };
 		4B6A70991D65058A00E12030 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; };
@@ -73,6 +85,8 @@
 		4BAD81D51D80B5D8004F91AE /* OpenQuicklyFileViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD81D41D80B5D8004F91AE /* OpenQuicklyFileViewRow.swift */; };
 		4BAD84E81D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD84E71D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift */; };
 		4BB1BEA91D48773200463C29 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */; };
+		4BB489421D952CF6005BB0E8 /* WorkspaceToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */; };
+		4BB489431D952CF6005BB0E8 /* WorkspaceToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */; };
 		4BCADE081D11ED12004DAD0F /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */; };
 		4BD3BF931D32A95800082605 /* MainWindowComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD3BF921D32A95800082605 /* MainWindowComponent.swift */; };
 		4BD3BF971D32B0DB00082605 /* MainWindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD3BF961D32B0DB00082605 /* MainWindowManager.swift */; };
@@ -157,6 +171,17 @@
 				4B2A2BEF1D02261F0074CE9A /* RxSwift.framework in Embed Frameworks */,
 				4B401B161D0454E900D99EDC /* PureLayout.framework in Embed Frameworks */,
 				4B2A2BED1D02261F0074CE9A /* RxCocoa.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B6423AE1D8EFE9800FC78C8 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4B6423AD1D8EFE9800FC78C8 /* PureLayout.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -256,6 +281,14 @@
 		4B56F29B1D29926600C1F92E /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/Mac/Nimble.framework; sourceTree = SOURCE_ROOT; };
 		4B570DC01D303CAF006EDC21 /* NeoVimAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimAgent.h; sourceTree = "<group>"; };
 		4B570DC11D303CAF006EDC21 /* NeoVimAgent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimAgent.m; sourceTree = "<group>"; };
+		4B6423951D8EFD7100FC78C8 /* Workspace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Workspace.swift; path = Workspace/Workspace.swift; sourceTree = "<group>"; };
+		4B6423971D8EFDE000FC78C8 /* WorkspaceBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WorkspaceBar.swift; path = Workspace/WorkspaceBar.swift; sourceTree = "<group>"; };
+		4B6423991D8EFE3000FC78C8 /* WorkspaceTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WorkspaceTool.swift; path = Workspace/WorkspaceTool.swift; sourceTree = "<group>"; };
+		4B64239F1D8EFE7500FC78C8 /* VimR-Workspace-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VimR-Workspace-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B6423A11D8EFE7500FC78C8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4B6423A31D8EFE7500FC78C8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4B6423A61D8EFE7500FC78C8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		4B6423A81D8EFE7500FC78C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B6A70931D60E04200E12030 /* AppKitCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppKitCommons.swift; sourceTree = "<group>"; };
 		4B6A70951D6100E300E12030 /* SwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftCommons.swift; sourceTree = "<group>"; };
 		4B854A1A1D31447C00E08DE1 /* NeoVimServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NeoVimServer; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -264,6 +297,7 @@
 		4BAD81D41D80B5D8004F91AE /* OpenQuicklyFileViewRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyFileViewRow.swift; sourceTree = "<group>"; };
 		4BAD84E71D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyFilterOperation.swift; sourceTree = "<group>"; };
 		4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
+		4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WorkspaceToolButton.swift; path = Workspace/WorkspaceToolButton.swift; sourceTree = "<group>"; };
 		4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaExtensions.swift; sourceTree = "<group>"; };
 		4BCF638F1D323CFD00F15CE4 /* nvim */ = {isa = PBXFileReference; lastKnownFileType = folder; name = nvim; path = neovim/src/nvim; sourceTree = SOURCE_ROOT; };
 		4BD3BF921D32A95800082605 /* MainWindowComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowComponent.swift; sourceTree = "<group>"; };
@@ -318,6 +352,14 @@
 			files = (
 				4B56F2951D29903F00C1F92E /* SwiftNeoVim.framework in Frameworks */,
 				4B56F29D1D29926600C1F92E /* Nimble.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B64239C1D8EFE7500FC78C8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B6423AC1D8EFE9800FC78C8 /* PureLayout.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -437,6 +479,28 @@
 			path = SwiftNeoVimTests;
 			sourceTree = "<group>";
 		};
+		4B6423941D8EFD6100FC78C8 /* Workspace */ = {
+			isa = PBXGroup;
+			children = (
+				4B6423951D8EFD7100FC78C8 /* Workspace.swift */,
+				4B6423971D8EFDE000FC78C8 /* WorkspaceBar.swift */,
+				4B6423991D8EFE3000FC78C8 /* WorkspaceTool.swift */,
+				4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */,
+			);
+			name = Workspace;
+			sourceTree = "<group>";
+		};
+		4B6423A01D8EFE7500FC78C8 /* VimR-Workspace-Demo */ = {
+			isa = PBXGroup;
+			children = (
+				4B6423A11D8EFE7500FC78C8 /* AppDelegate.swift */,
+				4B6423A31D8EFE7500FC78C8 /* Assets.xcassets */,
+				4B6423A51D8EFE7500FC78C8 /* MainMenu.xib */,
+				4B6423A81D8EFE7500FC78C8 /* Info.plist */,
+			);
+			path = "VimR-Workspace-Demo";
+			sourceTree = "<group>";
+		};
 		4B854A151D31444800E08DE1 /* resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -538,6 +602,7 @@
 				4B2A2BF81D0351810074CE9A /* SwiftNeoVim */,
 				4B56F2911D29903F00C1F92E /* SwiftNeoVimTests */,
 				4B854A1B1D31447C00E08DE1 /* NeoVimServer */,
+				4B6423A01D8EFE7500FC78C8 /* VimR-Workspace-Demo */,
 				4B2A2BE61D0225840074CE9A /* Frameworks */,
 				4BEBA5061CFF374B00673FDF /* Products */,
 			);
@@ -551,6 +616,7 @@
 				4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */,
 				4B56F2901D29903F00C1F92E /* SwiftNeoVimTests.xctest */,
 				4B854A1A1D31447C00E08DE1 /* NeoVimServer */,
+				4B64239F1D8EFE7500FC78C8 /* VimR-Workspace-Demo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -565,6 +631,7 @@
 				4BDF50111D760B1100D8FBC3 /* File Items */,
 				4BF8EED91D858C4400CAC08A /* Utils */,
 				4BDF50101D760AB700D8FBC3 /* Commons */,
+				4B6423941D8EFD6100FC78C8 /* Workspace */,
 				4B97E2CF1D33F92200FC0660 /* resources */,
 			);
 			path = VimR;
@@ -668,6 +735,24 @@
 			productReference = 4B56F2901D29903F00C1F92E /* SwiftNeoVimTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		4B64239E1D8EFE7500FC78C8 /* VimR-Workspace-Demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4B6423A91D8EFE7500FC78C8 /* Build configuration list for PBXNativeTarget "VimR-Workspace-Demo" */;
+			buildPhases = (
+				4B64239B1D8EFE7500FC78C8 /* Sources */,
+				4B64239C1D8EFE7500FC78C8 /* Frameworks */,
+				4B64239D1D8EFE7500FC78C8 /* Resources */,
+				4B6423AE1D8EFE9800FC78C8 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "VimR-Workspace-Demo";
+			productName = "VimR-Workspace-Demo";
+			productReference = 4B64239F1D8EFE7500FC78C8 /* VimR-Workspace-Demo.app */;
+			productType = "com.apple.product-type.application";
+		};
 		4B854A191D31447C00E08DE1 /* NeoVimServer */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4B854A1E1D31447C00E08DE1 /* Build configuration list for PBXNativeTarget "NeoVimServer" */;
@@ -741,6 +826,9 @@
 					4B56F28F1D29903F00C1F92E = {
 						CreatedOnToolsVersion = 7.3.1;
 					};
+					4B64239E1D8EFE7500FC78C8 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
 					4B854A191D31447C00E08DE1 = {
 						CreatedOnToolsVersion = 7.3.1;
 					};
@@ -771,6 +859,7 @@
 				4B2A2BF61D0351810074CE9A /* SwiftNeoVim */,
 				4B56F28F1D29903F00C1F92E /* SwiftNeoVimTests */,
 				4B854A191D31447C00E08DE1 /* NeoVimServer */,
+				4B64239E1D8EFE7500FC78C8 /* VimR-Workspace-Demo */,
 			);
 		};
 /* End PBXProject section */
@@ -788,6 +877,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B64239D1D8EFE7500FC78C8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B6423A41D8EFE7500FC78C8 /* Assets.xcassets in Resources */,
+				4B6423A71D8EFE7500FC78C8 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -859,6 +957,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4B64239B1D8EFE7500FC78C8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B280EFF1D945DA5003FE725 /* AppKitCommons.swift in Sources */,
+				4B6423AF1D8EFEA800FC78C8 /* Workspace.swift in Sources */,
+				4B6423B01D8EFEA800FC78C8 /* WorkspaceBar.swift in Sources */,
+				4BB489431D952CF6005BB0E8 /* WorkspaceToolButton.swift in Sources */,
+				4B6423B11D8EFEA800FC78C8 /* WorkspaceTool.swift in Sources */,
+				4B6423A21D8EFE7500FC78C8 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4B854A161D31447C00E08DE1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -876,12 +987,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */,
+				4B6423961D8EFD7100FC78C8 /* Workspace.swift in Sources */,
 				4B22F7F21D7C6B9000929B0E /* ImageAndTextTableCell.swift in Sources */,
 				4BDF50141D7617EA00D8FBC3 /* OpenQuicklyWindowComponent.swift in Sources */,
 				4B6A70941D60E04200E12030 /* AppKitCommons.swift in Sources */,
 				4BD3BF971D32B0DB00082605 /* MainWindowManager.swift in Sources */,
 				4B238BEC1D3ED54D00CBDD98 /* AppearancePrefPane.swift in Sources */,
 				4BD3BF931D32A95800082605 /* MainWindowComponent.swift in Sources */,
+				4B6423981D8EFDE000FC78C8 /* WorkspaceBar.swift in Sources */,
 				4BB1BEA91D48773200463C29 /* RxSwiftCommons.swift in Sources */,
 				4BAD81D51D80B5D8004F91AE /* OpenQuicklyFileViewRow.swift in Sources */,
 				4B4546871D468CEC00A1E27F /* PrefStore.swift in Sources */,
@@ -892,6 +1005,7 @@
 				4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */,
 				1929B165820D7177743B537A /* Component.swift in Sources */,
 				1929B93DBAD09835E428F610 /* PrefPane.swift in Sources */,
+				4B64239A1D8EFE3000FC78C8 /* WorkspaceTool.swift in Sources */,
 				4BDF501B1D77596500D8FBC3 /* OpenQuicklyWindowManager.swift in Sources */,
 				1929B462CD4935AFF6D69457 /* FileItem.swift in Sources */,
 				1929B6388EAF16C190B82955 /* FileItemIgnorePattern.swift in Sources */,
@@ -900,6 +1014,7 @@
 				1929B3F5743967125F357C9F /* Matcher.swift in Sources */,
 				1929B53876E6952D378C2B30 /* ScoredFileItem.swift in Sources */,
 				1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */,
+				4BB489421D952CF6005BB0E8 /* WorkspaceToolButton.swift in Sources */,
 				4BAD84E81D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift in Sources */,
 				1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */,
 			);
@@ -958,6 +1073,14 @@
 				4B029F1B1D45E349004EE0D3 /* Base */,
 			);
 			name = PrefWindow.xib;
+			sourceTree = "<group>";
+		};
+		4B6423A51D8EFE7500FC78C8 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4B6423A61D8EFE7500FC78C8 /* Base */,
+			);
+			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
 		4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */ = {
@@ -1068,6 +1191,38 @@
 				INFOPLIST_FILE = SwiftNeoVimTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.vimr.SwiftNeoVimTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		4B6423AA1D8EFE7500FC78C8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				INFOPLIST_FILE = "VimR-Workspace-Demo/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.qvacua.VimR-Workspace-Demo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		4B6423AB1D8EFE7500FC78C8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				INFOPLIST_FILE = "VimR-Workspace-Demo/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.qvacua.VimR-Workspace-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1293,6 +1448,15 @@
 			buildConfigurations = (
 				4B56F2981D29903F00C1F92E /* Debug */,
 				4B56F2991D29903F00C1F92E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4B6423A91D8EFE7500FC78C8 /* Build configuration list for PBXNativeTarget "VimR-Workspace-Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B6423AA1D8EFE7500FC78C8 /* Debug */,
+				4B6423AB1D8EFE7500FC78C8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

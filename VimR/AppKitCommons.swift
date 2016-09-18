@@ -18,9 +18,28 @@ extension NSButton {
   }
 }
 
-// From https://developer.apple.com/library/mac/qa/qa1487/_index.html
 extension NSAttributedString {
 
+  func draw(at point: CGPoint, angle: CGFloat) {
+    let translation = NSAffineTransform()
+    let rotation = NSAffineTransform()
+
+    translation.translateXBy(point.x, yBy: point.y)
+    rotation.rotateByRadians(angle)
+
+    translation.concat()
+    rotation.concat()
+
+    self.drawAtPoint(CGPoint.zero)
+
+    rotation.invert()
+    translation.invert()
+
+    rotation.concat()
+    translation.concat()
+  }
+
+  // From https://developer.apple.com/library/mac/qa/qa1487/_index.html
   static func link(withUrl url: NSURL, text: String, font: NSFont? = nil) -> NSAttributedString {
     let attrString = NSMutableAttributedString(string: text)
     let range = NSRange(location: 0, length: attrString.length)
@@ -40,6 +59,17 @@ extension NSAttributedString {
 
   var wholeRange: NSRange {
     return NSRange(location: 0, length: self.length)
+  }
+}
+
+extension NSView {
+
+  func removeAllSubviews() {
+    self.subviews.forEach { $0.removeFromSuperview() }
+  }
+
+  func removeAllConstraints() {
+    self.removeConstraints(self.constraints)
   }
 }
 
