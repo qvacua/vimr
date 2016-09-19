@@ -365,8 +365,10 @@ extension NeoVimView {
     let cursorPosition = self.mode == .Cmdline ? self.grid.putPosition : self.grid.screenCursor
 //    NSLog("\(#function): \(cursorPosition)")
 
-    var cursorRegion = Region(top: cursorPosition.row, bottom: cursorPosition.row,
-                              left: cursorPosition.column, right: cursorPosition.column)
+    let saneRow = max(0, min(cursorPosition.row, self.grid.size.height - 1))
+    let saneColumn = max(0, min(cursorPosition.column, self.grid.size.width - 1))
+
+    var cursorRegion = Region(top: saneRow, bottom: saneRow, left: saneColumn, right: saneColumn)
 
     if self.grid.isNextCellEmpty(cursorPosition) {
       cursorRegion = Region(top: cursorPosition.row,
