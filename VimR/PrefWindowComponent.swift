@@ -21,9 +21,7 @@ class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSou
   private let categoryScrollView = NSScrollView.standardScrollView()
   private let paneContainer = NSScrollView(forAutoLayout: ())
 
-  private let paneNames = [ "General", "Appearance", "Advanced" ]
   private let panes: [PrefPane]
-
   private var currentPane: PrefPane {
     get {
       return self.paneContainer.documentView as! PrefPane
@@ -133,11 +131,11 @@ class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSou
 extension PrefWindowComponent {
 
   func numberOfRowsInTableView(_: NSTableView) -> Int {
-    return self.paneNames.count
+    return self.panes.count
   }
 
   func tableView(_: NSTableView, objectValueForTableColumn _: NSTableColumn?, row: Int) -> AnyObject? {
-    return self.paneNames[row]
+    return self.panes[row].displayName
   }
 }
 

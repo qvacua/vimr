@@ -17,6 +17,10 @@ func == (left: AdvancedPrefData, right: AdvancedPrefData) -> Bool {
 
 class AdvancedPrefPane: PrefPane {
 
+  override var displayName: String {
+    return "Advanced"
+  }
+
   override var pinToContainer: Bool {
     return true
   }

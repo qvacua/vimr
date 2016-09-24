@@ -22,6 +22,10 @@ func == (left: GeneralPrefData, right: GeneralPrefData) -> Bool {
 
 class GeneralPrefPane: PrefPane, NSTextFieldDelegate {
 
+  override var displayName: String {
+    return "General"
+  }
+
   override var pinToContainer: Bool {
     return true
   }

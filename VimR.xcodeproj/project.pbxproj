@@ -390,8 +390,8 @@
 				4B4FC8E51D3E8739009352C3 /* PrefWindowComponent.swift */,
 				1929BB251F74BEFC82CEEF84 /* PrefPane.swift */,
 				4B56CE2F1D5FC27100337673 /* GeneralPrefPane.swift */,
-				4BBDD3EC1D967DA2008FCC92 /* AdvancedPrefPane.swift */,
 				4B238BEB1D3ED54D00CBDD98 /* AppearancePrefPane.swift */,
+				4BBDD3EC1D967DA2008FCC92 /* AdvancedPrefPane.swift */,
 				4B37ADBA1D6EC11600970D55 /* TestPane.swift */,
 			);
 			name = Preferences;

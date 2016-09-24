@@ -21,6 +21,10 @@ class PrefPane: NSView, Component {
   override var flipped: Bool {
     return true
   }
+
+  var displayName: String {
+    preconditionFailure("Please override")
+  }
   
   var pinToContainer: Bool {
     return false
