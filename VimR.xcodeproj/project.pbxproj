@@ -54,6 +54,7 @@
 		4B401B141D0454DC00D99EDC /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; };
 		4B401B161D0454E900D99EDC /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B401B1A1D046E0600D99EDC /* NeoVimViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */; };
+		4B4147A31D97361400DD4A2C /* WorkspaceToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */; };
 		4B4192181D0C52D700A0BEB2 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4192171D0C52D700A0BEB2 /* Grid.swift */; };
 		4B4546871D468CEC00A1E27F /* PrefStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4546861D468CEC00A1E27F /* PrefStore.swift */; };
 		4B4FC8E61D3E8739009352C3 /* PrefWindowComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4FC8E51D3E8739009352C3 /* PrefWindowComponent.swift */; };
@@ -988,6 +989,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B4147A31D97361400DD4A2C /* WorkspaceToolButton.swift in Sources */,
 				4BBDD3ED1D967DA2008FCC92 /* AdvancedPrefPane.swift in Sources */,
 				4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */,
 				4B6423961D8EFD7100FC78C8 /* Workspace.swift in Sources */,
@@ -1017,7 +1019,6 @@
 				1929B3F5743967125F357C9F /* Matcher.swift in Sources */,
 				1929B53876E6952D378C2B30 /* ScoredFileItem.swift in Sources */,
 				1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */,
-				4BB489421D952CF6005BB0E8 /* WorkspaceToolButton.swift in Sources */,
 				4BAD84E81D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift in Sources */,
 				1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */,
 			);
