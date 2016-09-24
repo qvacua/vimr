@@ -73,6 +73,7 @@
 		4BAD81D51D80B5D8004F91AE /* OpenQuicklyFileViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD81D41D80B5D8004F91AE /* OpenQuicklyFileViewRow.swift */; };
 		4BAD84E81D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD84E71D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift */; };
 		4BB1BEA91D48773200463C29 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */; };
+		4BBDD3ED1D967DA2008FCC92 /* AdvancedPrefPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBDD3EC1D967DA2008FCC92 /* AdvancedPrefPane.swift */; };
 		4BCADE081D11ED12004DAD0F /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */; };
 		4BD3BF931D32A95800082605 /* MainWindowComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD3BF921D32A95800082605 /* MainWindowComponent.swift */; };
 		4BD3BF971D32B0DB00082605 /* MainWindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD3BF961D32B0DB00082605 /* MainWindowManager.swift */; };
@@ -264,6 +265,7 @@
 		4BAD81D41D80B5D8004F91AE /* OpenQuicklyFileViewRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyFileViewRow.swift; sourceTree = "<group>"; };
 		4BAD84E71D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyFilterOperation.swift; sourceTree = "<group>"; };
 		4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
+		4BBDD3EC1D967DA2008FCC92 /* AdvancedPrefPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedPrefPane.swift; sourceTree = "<group>"; };
 		4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaExtensions.swift; sourceTree = "<group>"; };
 		4BCF638F1D323CFD00F15CE4 /* nvim */ = {isa = PBXFileReference; lastKnownFileType = folder; name = nvim; path = neovim/src/nvim; sourceTree = SOURCE_ROOT; };
 		4BD3BF921D32A95800082605 /* MainWindowComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowComponent.swift; sourceTree = "<group>"; };
@@ -388,6 +390,7 @@
 				4B4FC8E51D3E8739009352C3 /* PrefWindowComponent.swift */,
 				1929BB251F74BEFC82CEEF84 /* PrefPane.swift */,
 				4B56CE2F1D5FC27100337673 /* GeneralPrefPane.swift */,
+				4BBDD3EC1D967DA2008FCC92 /* AdvancedPrefPane.swift */,
 				4B238BEB1D3ED54D00CBDD98 /* AppearancePrefPane.swift */,
 				4B37ADBA1D6EC11600970D55 /* TestPane.swift */,
 			);
@@ -875,6 +878,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BBDD3ED1D967DA2008FCC92 /* AdvancedPrefPane.swift in Sources */,
 				4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */,
 				4B22F7F21D7C6B9000929B0E /* ImageAndTextTableCell.swift in Sources */,
 				4BDF50141D7617EA00D8FBC3 /* OpenQuicklyWindowComponent.swift in Sources */,

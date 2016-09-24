@@ -48,10 +48,10 @@ class GeneralPrefPane: PrefPane, NSTextFieldDelegate {
 
     let openUntitledWindowTitle = self.titleTextField(title: "Open Untitled Window:")
     self.configureCheckbox(button: self.openWhenLaunchingCheckbox,
-                           title: "On Launch",
+                           title: "On launch",
                            action: #selector(GeneralPrefPane.openUntitledWindowWhenLaunchingAction(_:)))
     self.configureCheckbox(button: self.openOnReactivationCheckbox,
-                           title: "On Re-Activation",
+                           title: "On re-activation",
                            action: #selector(GeneralPrefPane.openUntitledWindowOnReactivationAction(_:)))
 
     let whenLaunching = self.openWhenLaunchingCheckbox
@@ -68,7 +68,7 @@ class GeneralPrefPane: PrefPane, NSTextFieldDelegate {
 
     let cliToolTitle = self.titleTextField(title: "CLI Tool:")
     let cliToolButton = NSButton(forAutoLayout: ())
-    cliToolButton.title = "Copy 'vimr' CLI tool..."
+    cliToolButton.title = "Copy 'vimr' CLI Tool..."
     cliToolButton.bezelStyle = .RoundedBezelStyle
     cliToolButton.bordered = true
     cliToolButton.setButtonType(.MomentaryPushInButton)
@@ -163,13 +163,12 @@ class GeneralPrefPane: PrefPane, NSTextFieldDelegate {
 
     let wikiUrl = NSURL(string: "https://github.com/qvacua/vimr/wiki")!
     let linkStr = NSAttributedString.link(withUrl: wikiUrl, text: "VimR Wiki", font: font)
-
-    let ignoreInfoStr = NSMutableAttributedString(string:
-      "Comma-separated list of ignore patterns\n"
+    let str = "Comma-separated list of ignore patterns\n"
         + "Matching files will be ignored in \"Open Quickly\".\n"
         + "Example: */.git, */node_modules\n"
-        + "For detailed information go to ",
-                                                  attributes:attrs)
+        + "For detailed information see "
+    
+    let ignoreInfoStr = NSMutableAttributedString(string:str, attributes:attrs)
     ignoreInfoStr.appendAttributedString(linkStr)
     ignoreInfoStr.appendAttributedString(NSAttributedString(string: ".", attributes: attrs))
 
