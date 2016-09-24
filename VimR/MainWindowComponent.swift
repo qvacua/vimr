@@ -45,11 +45,18 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
   }
   private let fileItemService: FileItemService
 
-  private let neoVimView = NeoVimView(forAutoLayout: ())
+  private let neoVimView: NeoVimView
 
-  init(
-    source: Observable<Any>, fileItemService: FileItemService, cwd: NSURL, urls: [NSURL] = [], initialData: PrefData
-    ) {
+  // TODO: Consider an option object for cwd, urls, etc...
+  init(source: Observable<Any>,
+       fileItemService: FileItemService,
+       cwd: NSURL,
+       urls: [NSURL] = [],
+       initialData: PrefData)
+  {
+    self.neoVimView = NeoVimView(frame: CGRect.zero,
+                                 options: LaunchOptions(useInteractiveZsh: initialData.advanced.useInteractiveZsh))
+    self.neoVimView.translatesAutoresizingMaskIntoConstraints = false
     self.defaultEditorFont = initialData.appearance.editorFont
     self.usesLigatures = initialData.appearance.editorUsesLigatures
     self.fileItemService = fileItemService

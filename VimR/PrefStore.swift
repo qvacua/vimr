@@ -15,6 +15,8 @@ private class PrefKeys {
   static let editorFontName = "editor-font-name"
   static let editorFontSize = "editor-font-size"
   static let editorUsesLigatures = "editor-uses-ligatures"
+
+  static let useInteractiveZsh = "use-interactive-zsh"
 }
 
 class PrefStore: Store {
@@ -39,7 +41,8 @@ class PrefStore: Store {
     general: GeneralPrefData(openNewWindowWhenLaunching: true,
                              openNewWindowOnReactivation: true,
                              ignorePatterns: Set([ "*/.git", "*.o", "*.d", "*.dia" ].map(FileItemIgnorePattern.init))),
-    appearance: AppearancePrefData(editorFont: PrefStore.defaultEditorFont, editorUsesLigatures: false)
+    appearance: AppearancePrefData(editorFont: PrefStore.defaultEditorFont, editorUsesLigatures: false),
+    advanced: AdvancedPrefData(useInteractiveZsh: false)
   )
 
   init(source: Observable<Any>) {
@@ -73,13 +76,16 @@ class PrefStore: Store {
     let ignorePatternsList = (prefs[PrefKeys.openQuicklyIgnorePatterns] as? String) ?? "*/.git, *.o, *.d, *.dia"
     let ignorePatterns = PrefUtils.ignorePatterns(fromString: ignorePatternsList)
 
+    let useInteractiveZsh = (prefs[PrefKeys.useInteractiveZsh] as? NSNumber)?.boolValue ?? false
+
     return PrefData(
       general: GeneralPrefData(
         openNewWindowWhenLaunching: openNewWindowWhenLaunching,
         openNewWindowOnReactivation: openNewWindowOnReactivation,
         ignorePatterns: ignorePatterns
       ),
-      appearance: AppearancePrefData(editorFont: editorFont, editorUsesLigatures: usesLigatures)
+      appearance: AppearancePrefData(editorFont: editorFont, editorUsesLigatures: usesLigatures),
+      advanced: AdvancedPrefData(useInteractiveZsh: useInteractiveZsh)
     )
   }
 
@@ -99,6 +105,7 @@ class PrefStore: Store {
   private func prefsDict(prefData: PrefData) -> [String: AnyObject] {
     let generalData = prefData.general
     let appearanceData = prefData.appearance
+    let advancedData = prefData.advanced
 
     let prefs: [String: AnyObject] = [
       // General
@@ -109,7 +116,10 @@ class PrefStore: Store {
       // Appearance
       PrefKeys.editorFontName: appearanceData.editorFont.fontName,
       PrefKeys.editorFontSize: appearanceData.editorFont.pointSize,
-      PrefKeys.editorUsesLigatures: appearanceData.editorUsesLigatures
+      PrefKeys.editorUsesLigatures: appearanceData.editorUsesLigatures,
+
+      // Advanced
+      PrefKeys.useInteractiveZsh: advancedData.useInteractiveZsh,
     ]
 
     return prefs

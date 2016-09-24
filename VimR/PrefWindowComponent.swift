@@ -10,6 +10,7 @@ import PureLayout
 struct PrefData {
   var general: GeneralPrefData
   var appearance: AppearancePrefData
+  var advanced: AdvancedPrefData
 }
 
 class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSource, NSTableViewDelegate {
@@ -20,9 +21,7 @@ class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSou
   private let categoryScrollView = NSScrollView.standardScrollView()
   private let paneContainer = NSScrollView(forAutoLayout: ())
 
-  private let paneNames = [ "General", "Appearance" ]
   private let panes: [PrefPane]
-
   private var currentPane: PrefPane {
     get {
       return self.paneContainer.documentView as! PrefPane
@@ -43,7 +42,8 @@ class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSou
 
     self.panes = [
       GeneralPrefPane(source: source, initialData: self.data.general),
-      AppearancePrefPane(source: source, initialData: self.data.appearance)
+      AppearancePrefPane(source: source, initialData: self.data.appearance),
+      AdvancedPrefPane(source: source, initialData: self.data.advanced)
     ]
     
     super.init(source: source, nibName: "PrefWindow")
@@ -110,6 +110,8 @@ class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSou
           self.data.appearance = data
         case let data as GeneralPrefData:
           self.data.general = data
+        case let data as AdvancedPrefData:
+          self.data.advanced = data
         default:
           NSLog("nothing to see here")
         }
@@ -129,11 +131,11 @@ class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSou
 extension PrefWindowComponent {
 
   func numberOfRowsInTableView(_: NSTableView) -> Int {
-    return self.paneNames.count
+    return self.panes.count
   }
 
   func tableView(_: NSTableView, objectValueForTableColumn _: NSTableColumn?, row: Int) -> AnyObject? {
-    return self.paneNames[row]
+    return self.panes[row].displayName
   }
 }
 

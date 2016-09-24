@@ -17,6 +17,14 @@ private struct RowRun: CustomStringConvertible {
   }
 }
 
+public struct LaunchOptions {
+  let useInteractiveZsh: Bool
+
+  public init(useInteractiveZsh: Bool) {
+    self.useInteractiveZsh = useInteractiveZsh
+  }
+}
+
 public class NeoVimView: NSView, NSUserInterfaceValidations {
   
   public static let minFontSize = CGFloat(4)
@@ -113,12 +121,12 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
   private var isCurrentlyPinching = false
   private var pinchTargetScale = CGFloat(1)
   private var pinchImage = NSImage()
-  
-  override init(frame rect: NSRect = CGRect.zero) {
+
+  public init(frame rect: NSRect, options: LaunchOptions) {
     self.drawer = TextDrawer(font: self._font, useLigatures: false)
     self.agent = NeoVimAgent(uuid: self.uuid)
 
-    super.init(frame: rect)
+    super.init(frame: CGRect.zero)
     
     self.wantsLayer = true
     self.cellSize = self.drawer.cellSize
@@ -127,6 +135,7 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
 
     // We cannot set bridge in init since self is not available before super.init()...
     self.agent.bridge = self
+    self.agent.useInteractiveZsh = options.useInteractiveZsh
     let noErrorDuringInitialization = self.agent.runLocalServerAndNeoVim()
 
     // Neovim is ready now: resize neovim to bounds.
@@ -144,6 +153,10 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
     }
   }
   
+  convenience override init(frame rect: NSRect) {
+    self.init(frame: rect, options: LaunchOptions(useInteractiveZsh: false))
+  }
+
   required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }

@@ -68,6 +68,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   }
 
   _uuid = uuid;
+  _useInteractiveZsh = NO;
   _neoVimIsReady = NO;
   _isInitErrorPresent = NO;
 
@@ -114,7 +115,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     // tcsh does not like the -l option
     [shellArgs addObject:@"-l"];
   }
-  if ([shellName isEqualToString:@"zsh"]) {
+  if (_useInteractiveZsh && [shellName isEqualToString:@"zsh"]) {
     [shellArgs addObject:@"-i"];
   }
 

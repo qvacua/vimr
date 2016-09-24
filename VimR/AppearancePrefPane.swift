@@ -17,6 +17,10 @@ func == (left: AppearancePrefData, right: AppearancePrefData) -> Bool {
 }
 
 class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate {
+
+  override var displayName: String {
+    return "Appearance"
+  }
   
   override var pinToContainer: Bool {
     return true
