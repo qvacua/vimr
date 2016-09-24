@@ -45,6 +45,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
   }
   private let fileItemService: FileItemService
 
+  private let workspace: Workspace
   private let neoVimView: NeoVimView
 
   // TODO: Consider an option object for cwd, urls, etc...
@@ -57,6 +58,9 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
     self.neoVimView = NeoVimView(frame: CGRect.zero,
                                  options: LaunchOptions(useInteractiveZsh: initialData.advanced.useInteractiveZsh))
     self.neoVimView.translatesAutoresizingMaskIntoConstraints = false
+
+    self.workspace = Workspace(mainView: self.neoVimView)
+
     self.defaultEditorFont = initialData.appearance.editorFont
     self.usesLigatures = initialData.appearance.editorUsesLigatures
     self.fileItemService = fileItemService
@@ -96,8 +100,8 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
   }
 
   override func addViews() {
-    self.window.contentView?.addSubview(self.neoVimView)
-    self.neoVimView.autoPinEdgesToSuperviewEdges()
+    self.window.contentView?.addSubview(self.workspace)
+    self.workspace.autoPinEdgesToSuperviewEdges()
   }
 
   override func subscription(source source: Observable<Any>) -> Disposable {
