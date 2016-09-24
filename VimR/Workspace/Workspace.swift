@@ -15,14 +15,20 @@ enum WorkspaceBarLocation {
 
 class Workspace: NSView {
 
-  var mainView: NSView
   private(set) var isBarVisible = true {
     didSet {
-      self.needsDisplay = true
+      self.relayout()
     }
   }
 
   private let bars: [WorkspaceBarLocation: WorkspaceBar]
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  // MARK: - API
+  let mainView: NSView
 
   init(mainView: NSView) {
     self.mainView = mainView
@@ -38,6 +44,22 @@ class Workspace: NSView {
 
     self.relayout()
   }
+
+  func append(tool tool: WorkspaceTool, location: WorkspaceBarLocation) {
+    self.bars[location]?.append(tool: tool)
+  }
+
+  func toggleAllTools() {
+    self.isBarVisible = !self.isBarVisible
+  }
+
+  func toggleToolButtons() {
+    self.bars.values.forEach { $0.isButtonVisible = !$0.isButtonVisible }
+  }
+}
+
+// MARK: - Layout
+extension Workspace {
 
   private func relayout() {
     // FIXME: I did not investigate why toggleButtons does not work correctly if we store all constraints in an array
@@ -92,26 +114,7 @@ class Workspace: NSView {
     mainView.autoPinEdge(.Right, toEdge: .Left, ofView: rightBar)
     mainView.autoPinEdge(.Bottom, toEdge: .Top, ofView: bottomBar)
     mainView.autoPinEdge(.Left, toEdge: .Right, ofView: leftBar)
-  }
 
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-}
-
-// MARK: - API
-extension Workspace {
-
-  func append(tool tool: WorkspaceTool, location: WorkspaceBarLocation) {
-    self.bars[location]?.append(tool: tool)
-  }
-
-  func toggleAllTools() {
-    self.isBarVisible = !self.isBarVisible
-    self.relayout()
-  }
-
-  func toggleToolButtons() {
-    self.bars.values.forEach { $0.isButtonVisible = !$0.isButtonVisible }
+    self.needsDisplay = true
   }
 }

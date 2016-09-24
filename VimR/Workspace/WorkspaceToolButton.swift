@@ -9,31 +9,20 @@ class WorkspaceToolButton: NSView {
   
   static private let titlePadding = CGSize(width: 8, height: 2)
 
+  private let title: NSAttributedString
+  private var trackingArea = NSTrackingArea()
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  // MARK: - API
   var location = WorkspaceBarLocation.left
   var isSelected: Bool {
     return self.tool?.isSelected ?? false
   }
 
   weak var tool: WorkspaceTool?
-
-  override var fittingSize: NSSize {
-    return self.intrinsicContentSize
-  }
-
-  override var intrinsicContentSize: NSSize {
-    let titleSize = self.title.size()
-    
-    let padding = WorkspaceToolButton.titlePadding
-    switch self.location {
-    case .top, .bottom:
-      return CGSize(width: titleSize.width + 2 * padding.width, height: titleSize.height + 2 * padding.height)
-    case .right, .left:
-      return CGSize(width: titleSize.height + 2 * padding.height, height: titleSize.width + 2 * padding.width)
-    }
-  }
-
-  private let title: NSAttributedString
-  private var trackingArea = NSTrackingArea()
 
   init(title: String) {
     self.title = NSAttributedString(string: title, attributes: [
@@ -45,9 +34,29 @@ class WorkspaceToolButton: NSView {
 
     self.wantsLayer = true
   }
-  
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
+
+  func highlight() {
+    self.layer?.backgroundColor = NSColor.controlShadowColor().CGColor
+  }
+
+  func dehighlight() {
+    self.layer?.backgroundColor = NSColor.clearColor().CGColor
+  }
+}
+
+// MARK: - NSView
+extension WorkspaceToolButton {
+
+  override var intrinsicContentSize: NSSize {
+    let titleSize = self.title.size()
+    
+    let padding = WorkspaceToolButton.titlePadding
+    switch self.location {
+    case .top, .bottom:
+      return CGSize(width: titleSize.width + 2 * padding.width, height: titleSize.height + 2 * padding.height)
+    case .right, .left:
+      return CGSize(width: titleSize.height + 2 * padding.height, height: titleSize.width + 2 * padding.width)
+    }
   }
 
   override func drawRect(dirtyRect: NSRect) {
@@ -94,13 +103,5 @@ class WorkspaceToolButton: NSView {
     }
 
     self.dehighlight()
-  }
-
-  func highlight() {
-    self.layer?.backgroundColor = NSColor.controlShadowColor().CGColor
-  }
-
-  func dehighlight() {
-    self.layer?.backgroundColor = NSColor.clearColor().CGColor
   }
 }

@@ -11,14 +11,6 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
   static private let separatorColor = NSColor.controlShadowColor()
   static private let separatorThickness = CGFloat(1)
 
-  let location: WorkspaceBarLocation
-  var isButtonVisible = true {
-    didSet {
-      self.relayout()
-    }
-  }
-  var dimensionConstraint = NSLayoutConstraint()
-
   private var tools = [WorkspaceTool]()
   private weak var selectedTool: WorkspaceTool?
 
@@ -26,6 +18,19 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
   private var dragIncrement = CGFloat(1)
 
   private var layoutConstraints = [NSLayoutConstraint]()
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  // MARK: - API
+  let location: WorkspaceBarLocation
+  var isButtonVisible = true {
+    didSet {
+      self.relayout()
+    }
+  }
+  var dimensionConstraint = NSLayoutConstraint()
 
   init(location: WorkspaceBarLocation) {
     self.location = location
@@ -37,9 +42,61 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
     self.layer!.backgroundColor = NSColor.windowBackgroundColor().CGColor
   }
 
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
+  func relayout() {
+    self.removeConstraints(self.layoutConstraints)
+    self.removeAllSubviews()
+
+    if self.isEmpty() {
+      self.set(dimension: 0)
+      return
+    }
+
+    if self.isButtonVisible {
+      self.layoutButtons()
+
+      if self.isOpen() {
+        let curTool = self.selectedTool!
+
+        self.layout(tool: curTool)
+
+        let newDimension = self.barDimension(withToolDimension: curTool.dimension)
+        self.set(dimension: newDimension)
+      } else {
+        self.set(dimension: self.barDimensionWithButtonsWithoutTool())
+      }
+
+    } else {
+      if self.isOpen() {
+        let curTool = self.selectedTool!
+
+        self.layoutWithoutButtons(tool: curTool)
+
+        let newDimension = self.barDimensionWithoutButtons(withToolDimension: curTool.dimension)
+        self.set(dimension: newDimension)
+      } else {
+        self.set(dimension: 0)
+      }
+    }
+
+    self.needsDisplay = true
   }
+
+  func append(tool tool: WorkspaceTool) {
+    tool.delegate = self
+    tool.location = self.location
+    tools.append(tool)
+
+    if self.isOpen() {
+      self.selectedTool?.isSelected = false
+      self.selectedTool = tool
+    }
+
+    self.relayout()
+  }
+}
+
+// MARK: - NSView
+extension WorkspaceBar {
 
   override func drawRect(dirtyRect: NSRect) {
     super.drawRect(dirtyRect)
@@ -50,49 +107,6 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 
     if self.isOpen() {
       self.drawOuterSeparator(dirtyRect)
-    }
-  }
-
-  private func drawInnerSeparator(dirtyRect: NSRect) {
-    WorkspaceBar.separatorColor.set()
-
-    let innerLineRect = self.innerSeparatorRect()
-    if dirtyRect.intersects(innerLineRect) {
-      NSRectFill(innerLineRect)
-    }
-  }
-
-  private func drawOuterSeparator(dirtyRect: NSRect) {
-    WorkspaceBar.separatorColor.set()
-
-    let outerLineRect = self.outerSeparatorRect()
-    if dirtyRect.intersects(outerLineRect) {
-      NSRectFill(outerLineRect)
-    }
-  }
-
-  private func buttonSize() -> CGSize {
-    if self.isEmpty() {
-      return CGSize.zero
-    }
-
-    return self.tools.first!.button.intrinsicContentSize
-  }
-
-  private func innerSeparatorRect() -> CGRect {
-    let bounds = self.bounds
-    let thickness = WorkspaceBar.separatorThickness
-    let bar = self.buttonSize()
-
-    switch self.location {
-    case .top:
-      return CGRect(x: 0, y: bounds.height - bar.height - thickness, width: bounds.width, height: thickness)
-    case .right:
-      return CGRect(x: bounds.width - bar.width - thickness, y: 0, width: thickness, height: bounds.height)
-    case .bottom:
-      return CGRect(x: 0, y: bar.height, width: bounds.width, height: thickness)
-    case .left:
-      return CGRect(x: bar.width, y: 0, width: thickness, height: bounds.height)
     }
   }
 
@@ -170,6 +184,49 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
     }
   }
 
+  private func drawInnerSeparator(dirtyRect: NSRect) {
+    WorkspaceBar.separatorColor.set()
+
+    let innerLineRect = self.innerSeparatorRect()
+    if dirtyRect.intersects(innerLineRect) {
+      NSRectFill(innerLineRect)
+    }
+  }
+
+  private func drawOuterSeparator(dirtyRect: NSRect) {
+    WorkspaceBar.separatorColor.set()
+
+    let outerLineRect = self.outerSeparatorRect()
+    if dirtyRect.intersects(outerLineRect) {
+      NSRectFill(outerLineRect)
+    }
+  }
+
+  private func buttonSize() -> CGSize {
+    if self.isEmpty() {
+      return CGSize.zero
+    }
+
+    return self.tools.first!.button.intrinsicContentSize
+  }
+
+  private func innerSeparatorRect() -> CGRect {
+    let bounds = self.bounds
+    let thickness = WorkspaceBar.separatorThickness
+    let bar = self.buttonSize()
+
+    switch self.location {
+    case .top:
+      return CGRect(x: 0, y: bounds.height - bar.height - thickness, width: bounds.width, height: thickness)
+    case .right:
+      return CGRect(x: bounds.width - bar.width - thickness, y: 0, width: thickness, height: bounds.height)
+    case .bottom:
+      return CGRect(x: 0, y: bar.height, width: bounds.width, height: thickness)
+    case .left:
+      return CGRect(x: bar.width, y: 0, width: thickness, height: bounds.height)
+    }
+  }
+
   private func newDimension(forLocationInSuperview locInSuperview: CGPoint) -> CGFloat {
     let dimension = self.dimension(forLocationInSuperview: locInSuperview)
     return self.dragIncrement * floor(dimension / self.dragIncrement)
@@ -233,6 +290,10 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
       self.selectedTool?.dimension = toolDimension
     }
   }
+}
+
+// MARK: - Layout
+extension WorkspaceBar {
 
   private func isEmpty() -> Bool {
     return self.tools.isEmpty
@@ -244,49 +305,6 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 
   private func isOpen() -> Bool {
     return self.selectedTool != nil
-  }
-}
-
-// MARK: - Layout
-extension WorkspaceBar {
-
-  func relayout() {
-    self.removeConstraints(self.layoutConstraints)
-    self.removeAllSubviews()
-
-    if self.isEmpty() {
-      self.set(dimension: 0)
-      return
-    }
-
-    if self.isButtonVisible {
-      self.layoutButtons()
-
-      if self.isOpen() {
-        let curTool = self.selectedTool!
-
-        self.layout(tool: curTool)
-
-        let newDimension = self.barDimension(withToolDimension: curTool.dimension)
-        self.set(dimension: newDimension)
-      } else {
-        self.set(dimension: self.barDimensionWithButtonsWithoutTool())
-      }
-
-    } else {
-      if self.isOpen() {
-        let curTool = self.selectedTool!
-
-        self.layoutWithoutButtons(tool: curTool)
-
-        let newDimension = self.barDimensionWithoutButtons(withToolDimension: curTool.dimension)
-        self.set(dimension: newDimension)
-      } else {
-        self.set(dimension: 0)
-      }
-    }
-
-    self.needsDisplay = true
   }
 
   private func layoutWithoutButtons(tool tool: WorkspaceTool) {
@@ -466,23 +484,6 @@ extension WorkspaceBar {
     }
 
     return barDimension - WorkspaceBar.separatorThickness
-  }
-}
-
-// MARK: - API
-extension WorkspaceBar {
-
-  func append(tool tool: WorkspaceTool) {
-    tool.delegate = self
-    tool.location = self.location
-    tools.append(tool)
-
-    if self.isOpen() {
-      self.selectedTool?.isSelected = false
-      self.selectedTool = tool
-    }
-
-    self.relayout()
   }
 }
 

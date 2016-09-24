@@ -12,6 +12,7 @@ protocol WorkspaceToolDelegate: class {
 
 class WorkspaceTool {
 
+  // MARK: - API
   let title: String
   let view: NSView
   let button: WorkspaceToolButton
