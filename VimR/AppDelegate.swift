@@ -7,9 +7,6 @@ import Cocoa
 import RxSwift
 import PureLayout
 
-private let filePrefix = "file="
-private let cwdPrefix = "cwd="
-
 /// Keep the rawValues in sync with Action in the `vimr` Python script.
 private enum VimRUrlAction: String {
   case activate = "activate"
@@ -21,7 +18,10 @@ private enum VimRUrlAction: String {
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-  @IBOutlet var debugMenu: NSMenuItem!
+  @IBOutlet var debugMenu: NSMenuItem?
+
+  fileprivate static let filePrefix = "file="
+  fileprivate static let cwdPrefix = "cwd="
 
   fileprivate let disposeBag = DisposeBag()
 
@@ -109,20 +109,16 @@ extension AppDelegate {
     
     let appleEventManager = NSAppleEventManager.shared()
     appleEventManager.setEventHandler(self,
-                                      andSelector: #selector(AppDelegate.handleGetUrlEvent(_:withReplyEvent:)),
+                                      andSelector: #selector(AppDelegate.handle(getUrlEvent:replyEvent:)),
                                       forEventClass: UInt32(kInternetEventClass),
                                       andEventID: UInt32(kAEGetURL))
   }
 
   func applicationDidFinishLaunching(_: Notification) {
-//    let testView = InputTestView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
-//    self.window.contentView?.addSubview(testView)
-//    self.window.makeFirstResponder(testView)
-
     self.launching = false
 
     #if DEBUG
-      self.debugMenu.isHidden = false
+      self.debugMenu?.isHidden = false
     #endif
   }
 
@@ -173,6 +169,7 @@ extension AppDelegate {
   func application(_ sender: NSApplication, openFiles filenames: [String]) {
     let urls = filenames.map { URL(fileURLWithPath: $0) }
     _ = self.mainWindowManager.newMainWindow(urls: urls)
+
     sender.reply(toOpenOrPrint: .success)
   }
 }
@@ -180,7 +177,7 @@ extension AppDelegate {
 // MARK: - AppleScript
 extension AppDelegate {
   
-  func handleGetUrlEvent(_ event: NSAppleEventDescriptor, withReplyEvent: NSAppleEventDescriptor) {
+  func handle(getUrlEvent event: NSAppleEventDescriptor, replyEvent: NSAppleEventDescriptor) {
     guard let urlString = event.paramDescriptor(forKeyword: UInt32(keyDirectObject))?.stringValue else {
       return
     }
@@ -203,12 +200,12 @@ extension AppDelegate {
     
     let queryParams = url.query?.components(separatedBy: "&")
     let urls = queryParams?
-      .filter { $0.hasPrefix(filePrefix) }
-      .flatMap { $0.without(prefix: filePrefix).removingPercentEncoding }
+      .filter { $0.hasPrefix(AppDelegate.filePrefix) }
+      .flatMap { $0.without(prefix: AppDelegate.filePrefix).removingPercentEncoding }
       .map { URL(fileURLWithPath: $0) } ?? []
     let cwd = queryParams?
-      .filter { $0.hasPrefix(cwdPrefix) }
-      .flatMap { $0.without(prefix: cwdPrefix).removingPercentEncoding }
+      .filter { $0.hasPrefix(AppDelegate.cwdPrefix) }
+      .flatMap { $0.without(prefix: AppDelegate.cwdPrefix).removingPercentEncoding }
       .map { URL(fileURLWithPath: $0) }
       .first ?? URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
     
