@@ -198,7 +198,8 @@ class OpenQuicklyWindowComponent: WindowComponent,
 // MARK: - NSTableViewDataSource
 extension OpenQuicklyWindowComponent {
 
-  @objc(numberOfRowsInTableView:) func numberOfRows(in _: NSTableView) -> Int {
+  @objc(numberOfRowsInTableView:)
+  func numberOfRows(in _: NSTableView) -> Int {
     return self.fileViewItems.count
   }
 }
@@ -210,7 +211,8 @@ extension OpenQuicklyWindowComponent {
     return OpenQuicklyFileViewRow()
   }
 
-  @objc(tableView:viewForTableColumn:row:) func tableView(_ tableView: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
+  @objc(tableView:viewForTableColumn:row:)
+  func tableView(_ tableView: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
     let cachedCell = tableView.make(withIdentifier: "file-view-row", owner: self)
     let cell = cachedCell as? ImageAndTextTableCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
@@ -249,7 +251,8 @@ extension OpenQuicklyWindowComponent {
 // MARK: - NSTextFieldDelegate
 extension OpenQuicklyWindowComponent {
 
-  @objc(control:textView:doCommandBySelector:) func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+  @objc(control:textView:doCommandBySelector:)
+  func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
     switch commandSelector {
     case NSSelectorFromString("cancelOperation:"):
       self.window.performClose(self)
