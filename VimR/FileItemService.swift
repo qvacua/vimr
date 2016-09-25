@@ -51,6 +51,10 @@ class FileItemService {
   }
   
   func icon(forUrl url: URL) -> NSImage? {
+    if let cached = self.iconsCache.object(forKey: url as NSURL) {
+      return cached
+    }
+
     let path = url.path
     let icon = workspace.icon(forFile: path)
     icon.size = CGSize(width: 16, height: 16)
