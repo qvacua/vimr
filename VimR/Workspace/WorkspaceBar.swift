@@ -128,6 +128,7 @@ extension WorkspaceBar {
     }
 
     self.isMouseDownOngoing = true
+    self.dimensionConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow - 1
 
     var dragged = false
     var curEvent = event
@@ -168,6 +169,7 @@ extension WorkspaceBar {
       dragged = true
     }
 
+    self.dimensionConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow
     self.isMouseDownOngoing = false
   }
 
