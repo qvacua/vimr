@@ -5,17 +5,17 @@
 
 import Foundation
 
-func call(@autoclosure closure: () -> Void, when condition: Bool) { if condition { closure() } }
-func call(@autoclosure closure: () -> Void, whenNot condition: Bool) { if !condition { closure() } }
+func call(_ closure: @autoclosure () -> Void, when condition: Bool) { if condition { closure() } }
+func call(_ closure: @autoclosure () -> Void, whenNot condition: Bool) { if !condition { closure() } }
 
 extension String {
 
-  func without(prefix prefix: String) -> String {
+  func without(prefix: String) -> String {
     guard self.hasPrefix(prefix) else {
       return self
     }
     
-    let idx = self.startIndex.advancedBy(prefix.characters.count)
+    let idx = self.characters.index(self.startIndex, offsetBy: prefix.characters.count)
     return self[idx..<self.endIndex]
   }
 }
@@ -30,8 +30,8 @@ extension Array {
   ///   - transform: The transform function.
   /// - returns: Transformed array of `self`.
   func concurrentChunkMap<R>(
-    chunk: Int = 100,
-    queue: dispatch_queue_t = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0),
+    _ chunk: Int = 100,
+    queue: DispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated),
     transform: (Element) -> R) -> [R]
   {
     let count = self.count
@@ -41,9 +41,9 @@ extension Array {
 
     var spinLock = OS_SPINLOCK_INIT
 
-    dispatch_apply(chunkedCount, queue) { idx in
-      let startIndex = min(idx * chunk, count)
-      let endIndex = min(startIndex + chunk, count)
+    DispatchQueue.concurrentPerform(iterations: chunkedCount) { idx in
+      let startIndex = Swift.min(idx * chunk, count)
+      let endIndex = Swift.min(startIndex + chunk, count)
 
       let mappedChunk = self[startIndex..<endIndex].map(transform)
 

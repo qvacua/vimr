@@ -6,7 +6,7 @@
 import Cocoa
 
 struct Cell: CustomStringConvertible {
-  private let attributes: CellAttributes
+  fileprivate let attributes: CellAttributes
 
   let string: String
   var marked: Bool
@@ -72,11 +72,11 @@ struct Region: CustomStringConvertible {
     return "Region<\(self.top)...\(self.bottom):\(self.left)...\(self.right)>"
   }
 
-  var rowRange: Range<Int> {
+  var rowRange: CountableClosedRange<Int> {
     return self.top...self.bottom
   }
 
-  var columnRange: Range<Int> {
+  var columnRange: CountableClosedRange<Int> {
     return self.left...self.right
   }
 }
@@ -84,10 +84,10 @@ struct Region: CustomStringConvertible {
 /// Almost a verbatim copy of ugrid.c of NeoVim
 class Grid: CustomStringConvertible {
 
-  private(set) var region = Region.zero
-  private(set) var size = Size.zero
-  private(set) var putPosition = Position.zero
-  private(set) var screenCursor = Position.zero
+  fileprivate(set) var region = Region.zero
+  fileprivate(set) var size = Size.zero
+  fileprivate(set) var putPosition = Position.zero
+  fileprivate(set) var screenCursor = Position.zero
   
   var foreground = qDefaultForeground
   var background = qDefaultBackground
@@ -95,11 +95,11 @@ class Grid: CustomStringConvertible {
   var dark = false
   
   var attrs: CellAttributes = CellAttributes(
-    fontTrait: .None,
+    fontTrait: .none,
     foreground: qDefaultForeground, background: qDefaultBackground, special: qDefaultSpecial
   )
   
-  private(set) var cells: [[Cell]] = []
+  fileprivate(set) var cells: [[Cell]] = []
 
   var hasData: Bool {
     return !self.cells.isEmpty
@@ -109,16 +109,16 @@ class Grid: CustomStringConvertible {
     return self.cells.reduce("<<< Grid\n") { $1.reduce($0) { $0 + $1.description } + "\n" } + ">>>"
   }
   
-  func resize(size: Size) {
+  func resize(_ size: Size) {
     self.region = Region(top: 0, bottom: size.height - 1, left: 0, right: size.width - 1)
     self.size = size
     self.putPosition = Position.zero
     
-    let emptyCellAttrs = CellAttributes(fontTrait: .None,
+    let emptyCellAttrs = CellAttributes(fontTrait: .none,
                                         foreground: self.foreground, background: self.background, special: self.special)
     
-    let emptyRow = Array(count: size.width, repeatedValue: Cell(string: " ", attrs: emptyCellAttrs))
-    self.cells = Array(count: size.height, repeatedValue: emptyRow)
+    let emptyRow = Array(repeating: Cell(string: " ", attrs: emptyCellAttrs), count: size.width)
+    self.cells = Array(repeating: emptyRow, count: size.height)
   }
   
   func clear() {
@@ -132,11 +132,11 @@ class Grid: CustomStringConvertible {
     )
   }
   
-  func setScrollRegion(region: Region) {
+  func setScrollRegion(_ region: Region) {
     self.region = region
   }
   
-  func scroll(count: Int) {
+  func scroll(_ count: Int) {
     var start, stop, step : Int
     if count > 0 {
       start = self.region.top;
@@ -150,8 +150,8 @@ class Grid: CustomStringConvertible {
 
     // copy cell data
     let rangeWithinRow = self.region.left...self.region.right
-    for i in start.stride(to: stop, by: step) {
-      self.cells[i].replaceRange(rangeWithinRow, with: self.cells[i + count][rangeWithinRow])
+    for i in stride(from: start, to: stop, by: step) {
+      self.cells[i].replaceSubrange(rangeWithinRow, with: self.cells[i + count][rangeWithinRow])
     }
 
     // clear cells in the emptied region,
@@ -166,15 +166,15 @@ class Grid: CustomStringConvertible {
     self.clearRegion(Region(top: clearTop, bottom: clearBottom, left: self.region.left, right: self.region.right))
   }
   
-  func goto(position: Position) {
+  func goto(_ position: Position) {
     self.putPosition = position
   }
   
-  func moveCursor(position: Position) {
+  func moveCursor(_ position: Position) {
     self.screenCursor = position
   }
   
-  func put(string: String) {
+  func put(_ string: String) {
     // FIXME: handle the following situation:
     // |abcde | <- type ㅎ
     // =>
@@ -187,18 +187,18 @@ class Grid: CustomStringConvertible {
     self.putPosition.column += 1
   }
 
-  func putMarkedText(string: String) {
+  func putMarkedText(_ string: String) {
     // NOTE: Maybe there's a better way to indicate marked text than inverting...
     self.cells[self.putPosition.row][self.putPosition.column] = Cell(string: string, attrs: self.attrs, marked: true)
     self.putPosition.column += 1
   }
 
-  func unmarkCell(position: Position) {
+  func unmarkCell(_ position: Position) {
 //    NSLog("\(#function): \(position)")
     self.cells[position.row][position.column].marked = false
   }
 
-  func singleIndexFrom(position: Position) -> Int {
+  func singleIndexFrom(_ position: Position) -> Int {
     return position.row * self.size.width + position.column
   }
 
@@ -215,7 +215,7 @@ class Grid: CustomStringConvertible {
     }
 
     var left = 0
-    for idx in (0..<column).reverse() {
+    for idx in (0..<column).reversed() {
       let cell = self.cells[row][idx]
       if cell.string == " " {
         left = idx + 1
@@ -235,14 +235,14 @@ class Grid: CustomStringConvertible {
     return Region(top: row, bottom: row, left: left, right: right)
   }
 
-  func positionFromSingleIndex(idx: Int) -> Position {
+  func positionFromSingleIndex(_ idx: Int) -> Position {
     let row = Int(floor(Double(idx) / Double(self.size.width)))
     let column = idx - row * self.size.width
 
     return Position(row: row, column: column)
   }
 
-  func isCellEmpty(position: Position) -> Bool {
+  func isCellEmpty(_ position: Position) -> Bool {
     guard self.isSane(position: position) else {
       return false
     }
@@ -254,44 +254,44 @@ class Grid: CustomStringConvertible {
     return false
   }
 
-  func isPreviousCellEmpty(position: Position) -> Bool {
+  func isPreviousCellEmpty(_ position: Position) -> Bool {
     return self.isCellEmpty(self.previousCellPosition(position))
   }
 
-  func isNextCellEmpty(position: Position) -> Bool {
+  func isNextCellEmpty(_ position: Position) -> Bool {
     return self.isCellEmpty(self.nextCellPosition(position))
   }
 
-  func previousCellPosition(position: Position) -> Position {
+  func previousCellPosition(_ position: Position) -> Position {
     return Position(row: position.row, column: max(position.column - 1, 0))
   }
   
-  func nextCellPosition(position: Position) -> Position {
+  func nextCellPosition(_ position: Position) -> Position {
     return Position(row: position.row, column: min(position.column + 1, self.size.width - 1))
   }
   
-  func cellForSingleIndex(idx: Int) -> Cell {
+  func cellForSingleIndex(_ idx: Int) -> Cell {
     let position = self.positionFromSingleIndex(idx)
     return self.cells[position.row][position.column]
   }
 
-  private func clearRegion(region: Region) {
+  fileprivate func clearRegion(_ region: Region) {
     // FIXME: sometimes clearRegion gets called without first resizing the Grid. Should we handle this?
     guard self.hasData else {
       return
     }
 
-    let clearedAttrs = CellAttributes(fontTrait: .None,
+    let clearedAttrs = CellAttributes(fontTrait: .none,
                                       foreground: self.foreground, background: self.background, special: self.special)
     
     let clearedCell = Cell(string: " ", attrs: clearedAttrs)
-    let clearedRow = Array(count: region.right - region.left + 1, repeatedValue: clearedCell)
+    let clearedRow = Array(repeating: clearedCell, count: region.right - region.left + 1)
     for i in region.top...region.bottom {
-      self.cells[i].replaceRange(region.left...region.right, with: clearedRow)
+      self.cells[i].replaceSubrange(region.left...region.right, with: clearedRow)
     }
   }
 
-  private func isSane(position position: Position) -> Bool {
+  fileprivate func isSane(position: Position) -> Bool {
     guard position.row < self.size.height && position.column < self.size.width else {
       return false
     }

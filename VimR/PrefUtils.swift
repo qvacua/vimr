@@ -7,17 +7,17 @@ import Foundation
 
 class PrefUtils {
 
-  private static let whitespaceCharSet = NSCharacterSet.whitespaceCharacterSet()
+  fileprivate static let whitespaceCharSet = CharacterSet.whitespaces
 
   static func ignorePatterns(fromString str: String) -> Set<FileItemIgnorePattern> {
-    if str.stringByTrimmingCharactersInSet(self.whitespaceCharSet).characters.count == 0 {
+    if str.trimmingCharacters(in: self.whitespaceCharSet).characters.count == 0 {
       return Set()
     }
 
     let patterns: [FileItemIgnorePattern] = str
-      .componentsSeparatedByString(",")
+      .components(separatedBy: ",")
       .flatMap {
-        let trimmed = $0.stringByTrimmingCharactersInSet(self.whitespaceCharSet)
+        let trimmed = $0.trimmingCharacters(in: self.whitespaceCharSet)
         if trimmed.characters.count == 0 {
           return nil
         }
@@ -31,7 +31,7 @@ class PrefUtils {
   static func ignorePatternString(fromSet set: Set<FileItemIgnorePattern>) -> String {
     return Array(set)
       .map { $0.pattern }
-      .sort()
-      .joinWithSeparator(", ")
+      .sorted()
+      .joined(separator: ", ")
   }
 }

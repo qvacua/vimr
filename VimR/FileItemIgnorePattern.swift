@@ -22,7 +22,7 @@ class FileItemIgnorePattern: Hashable, CustomStringConvertible {
   let folderPattern: Bool
   let pattern: String
   
-  private let patternAsFileSysRep: UnsafeMutablePointer<Int8>
+  fileprivate let patternAsFileSysRep: UnsafeMutablePointer<Int8>
   
   init(pattern: String) {
     self.pattern = pattern
@@ -31,14 +31,14 @@ class FileItemIgnorePattern: Hashable, CustomStringConvertible {
     let fileSysRep = (pattern as NSString).fileSystemRepresentation
     let len = Int(strlen(fileSysRep))
     
-    self.patternAsFileSysRep = UnsafeMutablePointer<Int8>.alloc(len + 1)
+    self.patternAsFileSysRep = UnsafeMutablePointer<Int8>.allocate(capacity: len + 1)
     memcpy(self.patternAsFileSysRep, fileSysRep, len)
     self.patternAsFileSysRep[len] = 0
   }
   
   deinit {
     let len = Int(strlen(self.patternAsFileSysRep))
-    self.patternAsFileSysRep.dealloc(len + 1)
+    self.patternAsFileSysRep.deallocate(capacity: len + 1)
   }
   
   func match(absolutePath path: String) -> Bool {

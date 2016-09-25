@@ -5,11 +5,11 @@
 
 import Cocoa
 
-public class DispatchUtils {
+open class DispatchUtils {
   
-  private static let qDispatchMainQueue = dispatch_get_main_queue()
+  fileprivate static let qDispatchMainQueue = DispatchQueue.main
   
-  public static func gui(call: () -> Void) {
-    dispatch_async(DispatchUtils.qDispatchMainQueue, call)
+  open static func gui(_ call: @escaping () -> Void) {
+    DispatchUtils.qDispatchMainQueue.async(execute: call)
   }
 }

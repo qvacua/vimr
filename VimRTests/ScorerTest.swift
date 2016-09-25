@@ -9,11 +9,11 @@ import Nimble
 class ScorerTest: XCTestCase {
 
   func testScore1() {
-    let pattern = "sw/nvv".stringByReplacingOccurrencesOfString("/", withString: "")
+    let pattern = "sw/nvv".replacingOccurrences(of: "/", with: "")
     let targets = [
       "SwiftNeoVim/NeoVimView.swift",
       "build/Release/NeoVimServer.dSYM/Contents/Resources/DWARF/NeoVimServer",
-    ].map { $0.stringByReplacingOccurrencesOfString("/", withString: "") }
+    ].map { $0.replacingOccurrences(of: "/", with: "") }
     
     expect(Scorer.score(targets[0], pattern: pattern)).to(beGreaterThan(Scorer.score(targets[1], pattern: pattern)))
   }

@@ -12,13 +12,13 @@ enum MainWindowEvent {
 
 class MainWindowManager: StandardFlow {
   
-  static private let userHomeUrl = NSURL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
+  static fileprivate let userHomeUrl = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
 
-  private var mainWindowComponents = [String:MainWindowComponent]()
-  private weak var keyMainWindow: MainWindowComponent?
+  fileprivate var mainWindowComponents = [String:MainWindowComponent]()
+  fileprivate weak var keyMainWindow: MainWindowComponent?
 
-  private let fileItemService: FileItemService
-  private var data: PrefData
+  fileprivate let fileItemService: FileItemService
+  fileprivate var data: PrefData
 
   init(source: Observable<Any>, fileItemService: FileItemService, initialData: PrefData) {
     self.fileItemService = fileItemService
@@ -27,7 +27,7 @@ class MainWindowManager: StandardFlow {
     super.init(source: source)
   }
 
-  func newMainWindow(urls urls: [NSURL] = [], cwd: NSURL = MainWindowManager.userHomeUrl) -> MainWindowComponent {
+  func newMainWindow(urls: [URL] = [], cwd: URL = MainWindowManager.userHomeUrl) -> MainWindowComponent {
     let mainWindowComponent = MainWindowComponent(
       source: self.source, fileItemService: self.fileItemService, cwd: cwd, urls: urls, initialData: self.data
     )
@@ -53,12 +53,12 @@ class MainWindowManager: StandardFlow {
     return mainWindowComponent
   }
   
-  func closeMainWindow(mainWindowComponent: MainWindowComponent) {
+  func closeMainWindow(_ mainWindowComponent: MainWindowComponent) {
     if self.keyMainWindow === mainWindowComponent {
       self.keyMainWindow = nil
     }
     
-    self.mainWindowComponents.removeValueForKey(mainWindowComponent.uuid)
+    self.mainWindowComponents.removeValue(forKey: mainWindowComponent.uuid)
 
     if self.mainWindowComponents.isEmpty {
       self.publish(event: MainWindowEvent.allWindowsClosed)
@@ -69,7 +69,7 @@ class MainWindowManager: StandardFlow {
     return self.mainWindowComponents.values.reduce(false) { $0 ? true : $1.isDirty() }
   }
   
-  func openInKeyMainWindow(urls urls:[NSURL] = [], cwd: NSURL = MainWindowManager.userHomeUrl) {
+  func openInKeyMainWindow(urls:[URL] = [], cwd: URL = MainWindowManager.userHomeUrl) {
     guard !self.mainWindowComponents.isEmpty else {
       self.newMainWindow(urls: urls, cwd: cwd)
       return
@@ -84,7 +84,7 @@ class MainWindowManager: StandardFlow {
     keyMainWindow.open(urls: urls)
   }
   
-  private func set(keyMainWindow mainWindow: MainWindowComponent?) {
+  fileprivate func set(keyMainWindow mainWindow: MainWindowComponent?) {
     self.keyMainWindow = mainWindow
   }
   
@@ -101,7 +101,7 @@ class MainWindowManager: StandardFlow {
     return !self.mainWindowComponents.isEmpty
   }
 
-  override func subscription(source source: Observable<Any>) -> Disposable {
+  override func subscription(source: Observable<Any>) -> Disposable {
     return source
       .filter { $0 is PrefData }
       .map { $0 as! PrefData }

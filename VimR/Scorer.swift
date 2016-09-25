@@ -7,7 +7,7 @@ import Foundation
 
 class Scorer {
   
-  static func score(target: String, pattern: String) -> Int {
+  static func score(_ target: String, pattern: String) -> Int {
     let wf = Matcher.wagnerFisherDistance(target, pattern: pattern)
     let fuzzy = Matcher.fuzzyIgnoringCase(target, pattern: pattern)
     let upper = Matcher.numberOfUppercaseMatches(target, pattern: pattern)

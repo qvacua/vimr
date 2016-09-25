@@ -16,80 +16,80 @@ class OpenQuicklyWindowComponent: WindowComponent,
   let scanCondition = NSCondition()
   var pauseScan = false
 
-  private(set) var pattern = ""
-  private(set) var cwd = NSURL(fileURLWithPath: NSHomeDirectory(), isDirectory: true) {
+  fileprivate(set) var pattern = ""
+  fileprivate(set) var cwd = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true) {
     didSet {
-      self.cwdPathCompsCount = self.cwd.pathComponents!.count
-      self.cwdControl.URL = self.cwd
+      self.cwdPathCompsCount = self.cwd.pathComponents.count
+      self.cwdControl.url = self.cwd
     }
   }
-  private(set) var flatFileItems = [FileItem]()
-  private(set) var fileViewItems = [ScoredFileItem]()
+  fileprivate(set) var flatFileItems = [FileItem]()
+  fileprivate(set) var fileViewItems = [ScoredFileItem]()
 
-  private let userInitiatedScheduler = ConcurrentDispatchQueueScheduler(globalConcurrentQueueQOS: .UserInitiated)
+  fileprivate let userInitiatedScheduler = ConcurrentDispatchQueueScheduler(globalConcurrentQueueQOS: .userInitiated)
   
-  private let searchField = NSTextField(forAutoLayout: ())
-  private let progressIndicator = NSProgressIndicator(forAutoLayout: ())
-  private let cwdControl = NSPathControl(forAutoLayout: ())
-  private let countField = NSTextField(forAutoLayout: ())
-  private let fileView = NSTableView.standardTableView()
+  fileprivate let searchField = NSTextField(forAutoLayout: ())
+  fileprivate let progressIndicator = NSProgressIndicator(forAutoLayout: ())
+  fileprivate let cwdControl = NSPathControl(forAutoLayout: ())
+  fileprivate let countField = NSTextField(forAutoLayout: ())
+  fileprivate let fileView = NSTableView.standardTableView()
   
-  private let fileItemService: FileItemService
+  fileprivate let fileItemService: FileItemService
 
-  private var count = 0
-  private var perSessionDisposeBag = DisposeBag()
+  fileprivate var count = 0
+  fileprivate var perSessionDisposeBag = DisposeBag()
 
-  private var cwdPathCompsCount = 0
-  private let searchStream: Observable<String>
-  private let filterOpQueue = NSOperationQueue()
+  fileprivate var cwdPathCompsCount = 0
+  fileprivate let searchStream: Observable<String>
+  fileprivate let filterOpQueue = OperationQueue()
   
-  weak private var mainWindow: MainWindowComponent?
+  weak fileprivate var mainWindow: MainWindowComponent?
 
   init(source: Observable<Any>, fileItemService: FileItemService) {
     self.fileItemService = fileItemService
-    self.searchStream = self.searchField.rx_text
+    self.searchStream = self.searchField.rx.textInput.text
       .throttle(0.2, scheduler: MainScheduler.instance)
       .distinctUntilChanged()
 
     super.init(source: source, nibName: "OpenQuicklyWindow")
 
     self.window.delegate = self
-    self.filterOpQueue.qualityOfService = .UserInitiated
+    self.filterOpQueue.qualityOfService = .userInitiated
     self.filterOpQueue.name = "open-quickly-filter-operation-queue"
   }
 
   override func addViews() {
     let searchField = self.searchField
-    searchField.rx_delegate.setForwardToDelegate(self, retainDelegate: false)
+    searchField.rx.delegate.setForwardToDelegate(self, retainDelegate: false)
 
     let progressIndicator = self.progressIndicator
-    progressIndicator.indeterminate = true
-    progressIndicator.displayedWhenStopped = false
-    progressIndicator.style = .SpinningStyle
-    progressIndicator.controlSize = .SmallControlSize
+    progressIndicator.isIndeterminate = true
+    progressIndicator.isDisplayedWhenStopped = false
+    progressIndicator.style = .spinningStyle
+    progressIndicator.controlSize = .small
 
     let fileView = self.fileView
     fileView.intercellSpacing = CGSize(width: 4, height: 4)
-    fileView.setDataSource(self)
-    fileView.setDelegate(self)
+    fileView.dataSource = self
+    fileView.delegate = self
     
     let fileScrollView = NSScrollView.standardScrollView()
     fileScrollView.autoresizesSubviews = true
     fileScrollView.documentView = fileView
 
     let cwdControl = self.cwdControl
-    cwdControl.pathStyle = .Standard
-    cwdControl.backgroundColor = NSColor.clearColor()
+    cwdControl.pathStyle = .standard
+    cwdControl.backgroundColor = NSColor.clear
     cwdControl.refusesFirstResponder = true
-    cwdControl.cell?.controlSize = .SmallControlSize
-    cwdControl.cell?.font = NSFont.systemFontOfSize(NSFont.smallSystemFontSize())
-    cwdControl.setContentCompressionResistancePriority(NSLayoutPriorityDefaultLow, forOrientation:.Horizontal)
+    cwdControl.cell?.controlSize = .small
+    cwdControl.cell?.font = NSFont.systemFont(ofSize: NSFont.smallSystemFontSize())
+    cwdControl.setContentCompressionResistancePriority(NSLayoutPriorityDefaultLow, for:.horizontal)
 
     let countField = self.countField
-    countField.editable = false
-    countField.bordered = false
-    countField.alignment = .Right
-    countField.backgroundColor = NSColor.clearColor()
+    countField.isEditable = false
+    countField.isBordered = false
+    countField.alignment = .right
+    countField.backgroundColor = NSColor.clear
     countField.stringValue = "0 items"
 
     let contentView = self.window.contentView!
@@ -99,28 +99,28 @@ class OpenQuicklyWindowComponent: WindowComponent,
     contentView.addSubview(cwdControl)
     contentView.addSubview(countField)
 
-    searchField.autoPinEdgeToSuperviewEdge(.Top, withInset: 8)
-    searchField.autoPinEdgeToSuperviewEdge(.Right, withInset: 8)
-    searchField.autoPinEdgeToSuperviewEdge(.Left, withInset: 8)
+    searchField.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
+    searchField.autoPinEdge(toSuperviewEdge: .right, withInset: 8)
+    searchField.autoPinEdge(toSuperviewEdge: .left, withInset: 8)
 
-    progressIndicator.autoAlignAxis(.Horizontal, toSameAxisOfView: searchField)
-    progressIndicator.autoPinEdge(.Right, toEdge: .Right, ofView: searchField, withOffset: -4)
+    progressIndicator.autoAlignAxis(.horizontal, toSameAxisOf: searchField)
+    progressIndicator.autoPinEdge(.right, to: .right, of: searchField, withOffset: -4)
 
-    fileScrollView.autoPinEdge(.Top, toEdge: .Bottom, ofView: searchField, withOffset: 8)
-    fileScrollView.autoPinEdgeToSuperviewEdge(.Left, withInset: -1)
-    fileScrollView.autoPinEdgeToSuperviewEdge(.Right, withInset: -1)
-    fileScrollView.autoSetDimension(.Height, toSize: 200, relation: .GreaterThanOrEqual)
+    fileScrollView.autoPinEdge(.top, to: .bottom, of: searchField, withOffset: 8)
+    fileScrollView.autoPinEdge(toSuperviewEdge: .left, withInset: -1)
+    fileScrollView.autoPinEdge(toSuperviewEdge: .right, withInset: -1)
+    fileScrollView.autoSetDimension(.height, toSize: 200, relation: .greaterThanOrEqual)
 
-    cwdControl.autoPinEdge(.Top, toEdge: .Bottom, ofView: fileScrollView, withOffset: 4)
-    cwdControl.autoPinEdgeToSuperviewEdge(.Left, withInset: 2)
-    cwdControl.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 4)
+    cwdControl.autoPinEdge(.top, to: .bottom, of: fileScrollView, withOffset: 4)
+    cwdControl.autoPinEdge(toSuperviewEdge: .left, withInset: 2)
+    cwdControl.autoPinEdge(toSuperviewEdge: .bottom, withInset: 4)
 
-    countField.autoPinEdge(.Top, toEdge: .Bottom, ofView: fileScrollView, withOffset: 4)
-    countField.autoPinEdgeToSuperviewEdge(.Right, withInset: 2)
-    countField.autoPinEdge(.Left, toEdge: .Right, ofView: cwdControl, withOffset: 4)
+    countField.autoPinEdge(.top, to: .bottom, of: fileScrollView, withOffset: 4)
+    countField.autoPinEdge(toSuperviewEdge: .right, withInset: 2)
+    countField.autoPinEdge(.left, to: .right, of: cwdControl, withOffset: 4)
   }
 
-  override func subscription(source source: Observable<Any>) -> Disposable {
+  override func subscription(source: Observable<Any>) -> Disposable {
     return NopDisposable.instance
   }
 
@@ -154,7 +154,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
       }
       .addDisposableTo(self.perSessionDisposeBag)
     
-    self.cwd = mainWindow.cwd
+    self.cwd = mainWindow.cwd as URL
     let flatFiles = self.fileItemService.flatFileItems(ofUrl: self.cwd)
       .subscribeOn(self.userInitiatedScheduler)
 
@@ -174,7 +174,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
         }
         self.scanCondition.unlock()
 
-        self.flatFileItems.appendContentsOf(items)
+        self.flatFileItems.append(contentsOf: items)
         self.resetAndAddFilterOperation()
       }
       .observeOn(MainScheduler.instance)
@@ -188,7 +188,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
     self.searchField.becomeFirstResponder()
   }
 
-  private func resetAndAddFilterOperation() {
+  fileprivate func resetAndAddFilterOperation() {
     self.filterOpQueue.cancelAllOperations()
     let op = OpenQuicklyFilterOperation(forOpenQuicklyWindow: self)
     self.filterOpQueue.addOperation(op)
@@ -198,7 +198,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
 // MARK: - NSTableViewDataSource
 extension OpenQuicklyWindowComponent {
 
-  func numberOfRowsInTableView(_: NSTableView) -> Int {
+  @objc(numberOfRowsInTableView:) func numberOfRows(in _: NSTableView) -> Int {
     return self.fileViewItems.count
   }
 }
@@ -206,27 +206,27 @@ extension OpenQuicklyWindowComponent {
 // MARK: - NSTableViewDelegate
 extension OpenQuicklyWindowComponent {
 
-  func tableView(tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+  func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
     return OpenQuicklyFileViewRow()
   }
 
-  func tableView(tableView: NSTableView, viewForTableColumn _: NSTableColumn?, row: Int) -> NSView? {
-    let cachedCell = tableView.makeViewWithIdentifier("file-view-row", owner: self)
+  @objc(tableView:viewForTableColumn:row:) func tableView(_ tableView: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
+    let cachedCell = tableView.make(withIdentifier: "file-view-row", owner: self)
     let cell = cachedCell as? ImageAndTextTableCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
     let url = self.fileViewItems[row].url
-    cell.text = self.rowText(forUrl: url)
+    cell.text = self.rowText(forUrl: url as URL)
     cell.image = self.fileItemService.icon(forUrl: url)
     
     return cell
   }
 
-  func tableViewSelectionDidChange(_: NSNotification) {
+  func tableViewSelectionDidChange(_: Notification) {
 //    NSLog("\(#function): selection changed")
   }
 
-  private func rowText(forUrl url: NSURL) -> NSAttributedString {
-    let pathComps = url.pathComponents!
+  fileprivate func rowText(forUrl url: URL) -> NSAttributedString {
+    let pathComps = url.pathComponents
     let truncatedPathComps = pathComps[self.cwdPathCompsCount..<pathComps.count]
     let name = truncatedPathComps.last!
 
@@ -235,10 +235,10 @@ extension OpenQuicklyWindowComponent {
     }
 
     let rowText: NSMutableAttributedString
-    let pathInfo = truncatedPathComps.dropLast().reverse().joinWithSeparator(" / ")
+    let pathInfo = truncatedPathComps.dropLast().reversed().joined(separator: " / ")
     rowText = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
     rowText.addAttribute(NSForegroundColorAttributeName,
-                         value: NSColor.lightGrayColor(),
+                         value: NSColor.lightGray,
                          range: NSRange(location:name.characters.count,
                          length: pathInfo.characters.count + 3))
 
@@ -249,7 +249,7 @@ extension OpenQuicklyWindowComponent {
 // MARK: - NSTextFieldDelegate
 extension OpenQuicklyWindowComponent {
 
-  func control(control: NSControl, textView: NSTextView, doCommandBySelector commandSelector: Selector) -> Bool {
+  @objc(control:textView:doCommandBySelector:) func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
     switch commandSelector {
     case NSSelectorFromString("cancelOperation:"):
       self.window.performClose(self)
@@ -273,7 +273,7 @@ extension OpenQuicklyWindowComponent {
     }
   }
 
-  private func moveSelection(ofTableView tableView: NSTableView, byDelta delta: Int) {
+  fileprivate func moveSelection(ofTableView tableView: NSTableView, byDelta delta: Int) {
     let selectedRow = tableView.selectedRow
     let lastIdx = tableView.numberOfRows - 1
     let targetIdx: Int
@@ -286,7 +286,7 @@ extension OpenQuicklyWindowComponent {
       targetIdx = selectedRow + delta
     }
 
-    tableView.selectRowIndexes(NSIndexSet(index: targetIdx), byExtendingSelection: false)
+    tableView.selectRowIndexes(IndexSet(integer: targetIdx), byExtendingSelection: false)
     tableView.scrollRowToVisible(targetIdx)
   }
 }
@@ -294,7 +294,7 @@ extension OpenQuicklyWindowComponent {
 // MARK: - NSWindowDelegate
 extension OpenQuicklyWindowComponent {
 
-  func windowWillClose(notification: NSNotification) {
+  func windowWillClose(_ notification: Notification) {
     self.endProgress()
     
     self.mainWindow = nil
@@ -314,7 +314,7 @@ extension OpenQuicklyWindowComponent {
     self.countField.stringValue = "0 items"
   }
 
-  func windowDidResignKey(notification: NSNotification) {
+  func windowDidResignKey(_ notification: Notification) {
     self.window.performClose(self)
   }
 }

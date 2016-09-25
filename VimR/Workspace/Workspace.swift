@@ -19,13 +19,13 @@ class Workspace: NSView {
     let mainViewMinimumSize: CGSize
   }
 
-  private(set) var isBarVisible = true {
+  fileprivate(set) var isBarVisible = true {
     didSet {
       self.relayout()
     }
   }
 
-  private let bars: [WorkspaceBarLocation: WorkspaceBar]
+  fileprivate let bars: [WorkspaceBarLocation: WorkspaceBar]
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -52,7 +52,7 @@ class Workspace: NSView {
     self.relayout()
   }
 
-  func append(tool tool: WorkspaceTool, location: WorkspaceBarLocation) {
+  func append(tool: WorkspaceTool, location: WorkspaceBarLocation) {
     self.bars[location]?.append(tool: tool)
   }
 
@@ -68,7 +68,7 @@ class Workspace: NSView {
 // MARK: - Layout
 extension Workspace {
 
-  private func relayout() {
+  fileprivate func relayout() {
     // FIXME: I did not investigate why toggleButtons does not work correctly if we store all constraints in an array
     // and remove them here by self.removeConstraints(${all constraints). The following seems to work...
     self.subviews.forEach { $0.removeAllConstraints() }
@@ -77,8 +77,8 @@ extension Workspace {
     let mainView = self.mainView
     self.addSubview(mainView)
 
-    mainView.autoSetDimension(.Width, toSize: self.config.mainViewMinimumSize.width, relation: .GreaterThanOrEqual)
-    mainView.autoSetDimension(.Height, toSize: self.config.mainViewMinimumSize.height, relation: .GreaterThanOrEqual)
+    mainView.autoSetDimension(.width, toSize: self.config.mainViewMinimumSize.width, relation: .greaterThanOrEqual)
+    mainView.autoSetDimension(.height, toSize: self.config.mainViewMinimumSize.height, relation: .greaterThanOrEqual)
 
     guard self.isBarVisible else {
       mainView.autoPinEdgesToSuperviewEdges()
@@ -95,35 +95,35 @@ extension Workspace {
     self.addSubview(bottomBar)
     self.addSubview(leftBar)
 
-    topBar.autoPinEdgeToSuperviewEdge(.Top)
-    topBar.autoPinEdgeToSuperviewEdge(.Right)
-    topBar.autoPinEdgeToSuperviewEdge(.Left)
+    topBar.autoPinEdge(toSuperviewEdge: .top)
+    topBar.autoPinEdge(toSuperviewEdge: .right)
+    topBar.autoPinEdge(toSuperviewEdge: .left)
 
-    rightBar.autoPinEdge(.Top, toEdge: .Bottom, ofView: topBar)
-    rightBar.autoPinEdgeToSuperviewEdge(.Right)
-    rightBar.autoPinEdge(.Bottom, toEdge: .Top, ofView: bottomBar)
+    rightBar.autoPinEdge(.top, to: .bottom, of: topBar)
+    rightBar.autoPinEdge(toSuperviewEdge: .right)
+    rightBar.autoPinEdge(.bottom, to: .top, of: bottomBar)
 
-    bottomBar.autoPinEdgeToSuperviewEdge(.Right)
-    bottomBar.autoPinEdgeToSuperviewEdge(.Bottom)
-    bottomBar.autoPinEdgeToSuperviewEdge(.Left)
+    bottomBar.autoPinEdge(toSuperviewEdge: .right)
+    bottomBar.autoPinEdge(toSuperviewEdge: .bottom)
+    bottomBar.autoPinEdge(toSuperviewEdge: .left)
 
-    leftBar.autoPinEdge(.Top, toEdge: .Bottom, ofView: topBar)
-    leftBar.autoPinEdgeToSuperviewEdge(.Left)
-    leftBar.autoPinEdge(.Bottom, toEdge: .Top, ofView: bottomBar)
+    leftBar.autoPinEdge(.top, to: .bottom, of: topBar)
+    leftBar.autoPinEdge(toSuperviewEdge: .left)
+    leftBar.autoPinEdge(.bottom, to: .top, of: bottomBar)
 
     NSLayoutConstraint.autoSetPriority(NSLayoutPriorityDragThatCannotResizeWindow) {
-      topBar.dimensionConstraint = topBar.autoSetDimension(.Height, toSize: 50)
-      rightBar.dimensionConstraint = rightBar.autoSetDimension(.Width, toSize: 50)
-      bottomBar.dimensionConstraint = bottomBar.autoSetDimension(.Height, toSize: 50)
-      leftBar.dimensionConstraint = leftBar.autoSetDimension(.Width, toSize: 50)
+      topBar.dimensionConstraint = topBar.autoSetDimension(.height, toSize: 50)
+      rightBar.dimensionConstraint = rightBar.autoSetDimension(.width, toSize: 50)
+      bottomBar.dimensionConstraint = bottomBar.autoSetDimension(.height, toSize: 50)
+      leftBar.dimensionConstraint = leftBar.autoSetDimension(.width, toSize: 50)
     }
 
     self.bars.values.forEach { $0.relayout() }
 
-    mainView.autoPinEdge(.Top, toEdge: .Bottom, ofView: topBar)
-    mainView.autoPinEdge(.Right, toEdge: .Left, ofView: rightBar)
-    mainView.autoPinEdge(.Bottom, toEdge: .Top, ofView: bottomBar)
-    mainView.autoPinEdge(.Left, toEdge: .Right, ofView: leftBar)
+    mainView.autoPinEdge(.top, to: .bottom, of: topBar)
+    mainView.autoPinEdge(.right, to: .left, of: rightBar)
+    mainView.autoPinEdge(.bottom, to: .top, of: bottomBar)
+    mainView.autoPinEdge(.left, to: .right, of: leftBar)
     
     self.needsDisplay = true
   }

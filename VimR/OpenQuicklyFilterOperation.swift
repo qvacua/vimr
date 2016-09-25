@@ -5,20 +5,20 @@
 
 import Cocoa
 
-class OpenQuicklyFilterOperation: NSOperation {
+class OpenQuicklyFilterOperation: Operation {
 
-  private let chunkSize = 100
-  private let maxResultCount = 500
+  fileprivate let chunkSize = 100
+  fileprivate let maxResultCount = 500
 
-  private unowned let openQuicklyWindow: OpenQuicklyWindowComponent
-  private let pattern: String
-  private let flatFileItems: [FileItem]
-  private let cwd: NSURL
+  fileprivate unowned let openQuicklyWindow: OpenQuicklyWindowComponent
+  fileprivate let pattern: String
+  fileprivate let flatFileItems: [FileItem]
+  fileprivate let cwd: URL
 
   init(forOpenQuicklyWindow openQuicklyWindow: OpenQuicklyWindowComponent) {
     self.openQuicklyWindow = openQuicklyWindow
     self.pattern = openQuicklyWindow.pattern
-    self.cwd = openQuicklyWindow.cwd
+    self.cwd = openQuicklyWindow.cwd as URL
     self.flatFileItems = openQuicklyWindow.flatFileItems
     
     super.init()
@@ -33,7 +33,7 @@ class OpenQuicklyFilterOperation: NSOperation {
       self.openQuicklyWindow.scanCondition.unlock()
     }
 
-    if self.cancelled {
+    if self.isCancelled {
       return
     }
 
@@ -47,17 +47,17 @@ class OpenQuicklyFilterOperation: NSOperation {
 
       let count = self.flatFileItems.count
       let chunksCount = Int(ceil(Float(count) / Float(self.chunkSize)))
-      let useFullPath = pattern.containsString("/")
-      let cwdPath = self.cwd.path! + "/"
+      let useFullPath = pattern.contains("/")
+      let cwdPath = self.cwd.path + "/"
 
       var result = [ScoredFileItem]()
       var spinLock = OS_SPINLOCK_INIT
       
-      let cleanedPattern = useFullPath ? self.pattern.stringByReplacingOccurrencesOfString("/", withString: "")
+      let cleanedPattern = useFullPath ? self.pattern.replacingOccurrences(of: "/", with: "")
                                        : self.pattern
       
-      dispatch_apply(chunksCount, dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) { [unowned self] idx in
-        if self.cancelled {
+      DispatchQueue.concurrentPerform(iterations: chunksCount) { [unowned self] idx in
+        if self.isCancelled {
           return
         }
 
@@ -66,39 +66,39 @@ class OpenQuicklyFilterOperation: NSOperation {
 
         let chunkedItems = self.flatFileItems[startIndex..<endIndex]
         let chunkedResult: [ScoredFileItem] = chunkedItems.flatMap {
-          if self.cancelled {
+          if self.isCancelled {
             return nil
           }
 
           let url = $0.url
           
           if useFullPath {
-            let target = url.path!.stringByReplacingOccurrencesOfString(cwdPath, withString: "")
-                                  .stringByReplacingOccurrencesOfString("/", withString: "")
+            let target = url.path.replacingOccurrences(of: cwdPath, with: "")
+                                 .replacingOccurrences(of: "/", with: "")
             
             return ScoredFileItem(score: Scorer.score(target, pattern: cleanedPattern), url: url)
           }
           
-          return ScoredFileItem(score: Scorer.score(url.lastPathComponent!, pattern: cleanedPattern), url: url)
+          return ScoredFileItem(score: Scorer.score(url.lastPathComponent, pattern: cleanedPattern), url: url)
         }
 
-        if self.cancelled {
+        if self.isCancelled {
           return
         }
 
         OSSpinLockLock(&spinLock)
-        result.appendContentsOf(chunkedResult)
+        result.append(contentsOf: chunkedResult)
         OSSpinLockUnlock(&spinLock)
       }
 
-      if self.cancelled {
+      if self.isCancelled {
         return
       }
 
-      sorted = result.sort(>)
+      sorted = result.sorted(by: >)
     }
 
-    if self.cancelled {
+    if self.isCancelled {
       return
     }
 

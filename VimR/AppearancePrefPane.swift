@@ -13,7 +13,7 @@ struct AppearancePrefData: Equatable {
 }
 
 func == (left: AppearancePrefData, right: AppearancePrefData) -> Bool {
-  return left.editorUsesLigatures == right.editorUsesLigatures && left.editorFont.isEqualTo(right.editorFont)
+  return left.editorUsesLigatures == right.editorUsesLigatures && left.editorFont.isEqual(to: right.editorFont)
 }
 
 class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate {
@@ -26,21 +26,21 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     return true
   }
 
-  private var data: AppearancePrefData {
+  fileprivate var data: AppearancePrefData {
     didSet {
       self.updateViews(newData: self.data)
     }
   }
 
-  private let fontManager = NSFontManager.sharedFontManager()
+  fileprivate let fontManager = NSFontManager.shared()
 
-  private let sizes = [9, 10, 11, 12, 13, 14, 16, 18, 24, 36, 48, 64]
-  private let sizeCombo = NSComboBox(forAutoLayout: ())
-  private let fontPopup = NSPopUpButton(frame: CGRect.zero, pullsDown: false)
-  private let ligatureCheckbox = NSButton(forAutoLayout: ())
-  private let previewArea = NSTextView(frame: CGRect.zero)
+  fileprivate let sizes = [9, 10, 11, 12, 13, 14, 16, 18, 24, 36, 48, 64]
+  fileprivate let sizeCombo = NSComboBox(forAutoLayout: ())
+  fileprivate let fontPopup = NSPopUpButton(frame: CGRect.zero, pullsDown: false)
+  fileprivate let ligatureCheckbox = NSButton(forAutoLayout: ())
+  fileprivate let previewArea = NSTextView(frame: CGRect.zero)
 
-  private let exampleText =
+  fileprivate let exampleText =
     "abcdefghijklmnopqrstuvwxyz\n" +
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ\n" +
     "0123456789\n" +
@@ -59,12 +59,12 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     fatalError("init(coder:) has not been implemented")
   }
 
-  private func set(data data: AppearancePrefData) {
+  fileprivate func set(data: AppearancePrefData) {
     self.data = data
     self.publish(event: data)
   }
 
-  override func subscription(source source: Observable<Any>) -> Disposable {
+  override func subscription(source: Observable<Any>) -> Disposable {
     return source
       .filter { $0 is PrefData }
       .map { ($0 as! PrefData).appearance }
@@ -83,14 +83,14 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     fontPopup.translatesAutoresizingMaskIntoConstraints = false
     fontPopup.target = self
     fontPopup.action = #selector(AppearancePrefPane.fontPopupAction)
-    fontPopup.addItemsWithTitles(self.fontManager.availableFontNamesWithTraits(.FixedPitchFontMask)!)
+    fontPopup.addItems(withTitles: self.fontManager.availableFontNames(with: .fixedPitchFontMask)!)
 
     let sizeCombo = self.sizeCombo
-    sizeCombo.setDelegate(self)
+    sizeCombo.delegate = self
     sizeCombo.target = self
     sizeCombo.action = #selector(AppearancePrefPane.sizeComboBoxDidEnter(_:))
     self.sizes.forEach { string in
-      sizeCombo.addItemWithObjectValue(string)
+      sizeCombo.addItem(withObjectValue: string)
     }
 
     let ligatureCheckbox = self.ligatureCheckbox
@@ -99,23 +99,23 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
                            action: #selector(AppearancePrefPane.usesLigaturesAction(_:)))
 
     let previewArea = self.previewArea
-    previewArea.editable = true
-    previewArea.maxSize = CGSize(width: CGFloat.max, height: CGFloat.max)
-    previewArea.verticallyResizable = true
-    previewArea.horizontallyResizable = true
+    previewArea.isEditable = true
+    previewArea.maxSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+    previewArea.isVerticallyResizable = true
+    previewArea.isHorizontallyResizable = true
     previewArea.textContainer?.heightTracksTextView = false
     previewArea.textContainer?.widthTracksTextView = false
-    previewArea.autoresizingMask = [ .ViewWidthSizable, .ViewHeightSizable]
-    previewArea.textContainer?.containerSize = CGSize.init(width: CGFloat.max, height: CGFloat.max)
+    previewArea.autoresizingMask = [ .viewWidthSizable, .viewHeightSizable]
+    previewArea.textContainer?.containerSize = CGSize.init(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
     previewArea.layoutManager?.replaceTextStorage(NSTextStorage(string: self.exampleText))
-    previewArea.richText = false
+    previewArea.isRichText = false
     previewArea.turnOffLigatures(self)
 
     let previewScrollView = NSScrollView(forAutoLayout: ())
     previewScrollView.hasVerticalScroller = true
     previewScrollView.hasHorizontalScroller = true
     previewScrollView.autohidesScrollers = true
-    previewScrollView.borderType = .BezelBorder
+    previewScrollView.borderType = .bezelBorder
     previewScrollView.documentView = previewArea
 
     self.addSubview(paneTitle)
@@ -126,31 +126,31 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     self.addSubview(ligatureCheckbox)
     self.addSubview(previewScrollView)
 
-    paneTitle.autoPinEdgeToSuperviewEdge(.Top, withInset: 18)
-    paneTitle.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
+    paneTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 18)
+    paneTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
 
-    fontTitle.autoPinEdge(.Left, toEdge: .Left, ofView: paneTitle)
-    fontTitle.autoAlignAxis(.Baseline, toSameAxisOfView: fontPopup)
+    fontTitle.autoPinEdge(.left, to: .left, of: paneTitle)
+    fontTitle.autoAlignAxis(.baseline, toSameAxisOf: fontPopup)
 
-    fontPopup.autoPinEdge(.Top, toEdge: .Bottom, ofView: paneTitle, withOffset: 18)
-    fontPopup.autoPinEdge(.Left, toEdge: .Right, ofView: fontTitle, withOffset: 5)
-    fontPopup.autoSetDimension(.Width, toSize: 240)
+    fontPopup.autoPinEdge(.top, to: .bottom, of: paneTitle, withOffset: 18)
+    fontPopup.autoPinEdge(.left, to: .right, of: fontTitle, withOffset: 5)
+    fontPopup.autoSetDimension(.width, toSize: 240)
 
-    sizeCombo.autoSetDimension(.Width, toSize: 60)
+    sizeCombo.autoSetDimension(.width, toSize: 60)
     // If we use .Baseline the combo box is placed one pixel off...
-    sizeCombo.autoAlignAxis(.Horizontal, toSameAxisOfView: fontPopup)
-    sizeCombo.autoPinEdge(.Left, toEdge: .Right, ofView: fontPopup, withOffset: 5)
+    sizeCombo.autoAlignAxis(.horizontal, toSameAxisOf: fontPopup)
+    sizeCombo.autoPinEdge(.left, to: .right, of: fontPopup, withOffset: 5)
 
-    ligatureCheckbox.autoPinEdge(.Top, toEdge: .Bottom, ofView: sizeCombo, withOffset: 18)
-    ligatureCheckbox.autoPinEdge(.Left, toEdge: .Right, ofView: fontTitle, withOffset: 5)
+    ligatureCheckbox.autoPinEdge(.top, to: .bottom, of: sizeCombo, withOffset: 18)
+    ligatureCheckbox.autoPinEdge(.left, to: .right, of: fontTitle, withOffset: 5)
 
-    previewScrollView.autoSetDimension(.Height, toSize: 200, relation: .GreaterThanOrEqual)
-    previewScrollView.autoPinEdge(.Top, toEdge: .Bottom, ofView: ligatureCheckbox, withOffset: 18)
-    previewScrollView.autoPinEdgeToSuperviewEdge(.Right, withInset: 18)
-    previewScrollView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 18)
-    previewScrollView.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
+    previewScrollView.autoSetDimension(.height, toSize: 200, relation: .greaterThanOrEqual)
+    previewScrollView.autoPinEdge(.top, to: .bottom, of: ligatureCheckbox, withOffset: 18)
+    previewScrollView.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
+    previewScrollView.autoPinEdge(toSuperviewEdge: .bottom, withInset: 18)
+    previewScrollView.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
 
-    self.fontPopup.selectItemWithTitle(self.data.editorFont.fontName)
+    self.fontPopup.selectItem(withTitle: self.data.editorFont.fontName)
     self.sizeCombo.stringValue = String(Int(self.data.editorFont.pointSize))
     self.ligatureCheckbox.state = self.data.editorUsesLigatures ? NSOnState : NSOffState
     self.previewArea.font = self.data.editorFont
@@ -161,10 +161,10 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     }
   }
 
-  private func updateViews(newData newData: AppearancePrefData) {
+  fileprivate func updateViews(newData: AppearancePrefData) {
     let newFont = newData.editorFont
 
-    self.fontPopup.selectItemWithTitle(newFont.fontName)
+    self.fontPopup.selectItem(withTitle: newFont.fontName)
     self.sizeCombo.stringValue = String(Int(newFont.pointSize))
     self.ligatureCheckbox.boolState = newData.editorUsesLigatures
     self.previewArea.font = newData.editorFont
@@ -180,16 +180,16 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
 // MARK: - Actions
 extension AppearancePrefPane {
   
-  func usesLigaturesAction(sender: NSButton) {
+  func usesLigaturesAction(_ sender: NSButton) {
     self.set(data: AppearancePrefData(editorFont: self.data.editorFont, editorUsesLigatures: sender.boolState))
   }
 
-  func fontPopupAction(sender: NSPopUpButton) {
+  func fontPopupAction(_ sender: NSPopUpButton) {
     guard let selectedItem = self.fontPopup.selectedItem else {
       return
     }
 
-    guard selectedItem != self.data.editorFont.fontName else {
+    guard selectedItem.title != self.data.editorFont.fontName else {
       return
     }
 
@@ -200,25 +200,25 @@ extension AppearancePrefPane {
     self.set(data: AppearancePrefData(editorFont: newFont, editorUsesLigatures: self.data.editorUsesLigatures))
   }
 
-  func comboBoxSelectionDidChange(notification: NSNotification) {
-    guard notification.object! === self.sizeCombo else {
+  func comboBoxSelectionDidChange(_ notification: Notification) {
+    guard (notification.object as! NSComboBox) === self.sizeCombo else {
       return
     }
 
     let newFontSize = self.cappedFontSize(Int(self.sizes[self.sizeCombo.indexOfSelectedItem]))
-    let newFont = self.fontManager.convertFont(self.data.editorFont, toSize: newFontSize)
+    let newFont = self.fontManager.convert(self.data.editorFont, toSize: newFontSize)
 
     self.set(data: AppearancePrefData(editorFont: newFont, editorUsesLigatures: self.data.editorUsesLigatures))
   }
 
-  func sizeComboBoxDidEnter(sender: AnyObject!) {
+  func sizeComboBoxDidEnter(_ sender: AnyObject!) {
     let newFontSize = self.cappedFontSize(self.sizeCombo.integerValue)
-    let newFont = self.fontManager.convertFont(self.data.editorFont, toSize: newFontSize)
+    let newFont = self.fontManager.convert(self.data.editorFont, toSize: newFontSize)
 
     self.set(data: AppearancePrefData(editorFont: newFont, editorUsesLigatures: self.data.editorUsesLigatures))
   }
 
-  private func cappedFontSize(size: Int) -> CGFloat {
+  fileprivate func cappedFontSize(_ size: Int) -> CGFloat {
     guard size >= 4 else {
       return 13
     }

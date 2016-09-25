@@ -8,9 +8,9 @@ import RxSwift
 
 class ScoredFileItem: Comparable {
   let score: Int
-  unowned let url: NSURL
+  let url: URL
 
-  init(score: Int, url: NSURL) {
+  init(score: Int, url: URL) {
     self.score = score
     self.url = url
   }

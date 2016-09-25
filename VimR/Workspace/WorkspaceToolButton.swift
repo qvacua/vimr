@@ -7,10 +7,10 @@ import Cocoa
 
 class WorkspaceToolButton: NSView {
   
-  static private let titlePadding = CGSize(width: 8, height: 2)
+  static fileprivate let titlePadding = CGSize(width: 8, height: 2)
 
-  private let title: NSAttributedString
-  private var trackingArea = NSTrackingArea()
+  fileprivate let title: NSAttributedString
+  fileprivate var trackingArea = NSTrackingArea()
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -26,7 +26,7 @@ class WorkspaceToolButton: NSView {
 
   init(title: String) {
     self.title = NSAttributedString(string: title, attributes: [
-      NSFontAttributeName: NSFont.systemFontOfSize(11)
+      NSFontAttributeName: NSFont.systemFont(ofSize: 11)
     ])
 
     super.init(frame: CGRect.zero)
@@ -36,11 +36,11 @@ class WorkspaceToolButton: NSView {
   }
 
   func highlight() {
-    self.layer?.backgroundColor = NSColor.controlShadowColor().CGColor
+    self.layer?.backgroundColor = NSColor.controlShadowColor.cgColor
   }
 
   func dehighlight() {
-    self.layer?.backgroundColor = NSColor.clearColor().CGColor
+    self.layer?.backgroundColor = NSColor.clear.cgColor
   }
 }
 
@@ -59,13 +59,13 @@ extension WorkspaceToolButton {
     }
   }
 
-  override func drawRect(dirtyRect: NSRect) {
-    super.drawRect(dirtyRect)
+  override func draw(_ dirtyRect: NSRect) {
+    super.draw(dirtyRect)
     
     let padding = WorkspaceToolButton.titlePadding
     switch self.location {
     case .top, .bottom:
-      self.title.drawAtPoint(CGPoint(x: padding.width, y: padding.height))
+      self.title.draw(at: CGPoint(x: padding.width, y: padding.height))
     case .right:
       self.title.draw(at: CGPoint(x: padding.height, y: self.bounds.height - padding.width), angle: -CGFloat(M_PI_2))
     case .left:
@@ -77,7 +77,7 @@ extension WorkspaceToolButton {
     self.removeTrackingArea(self.trackingArea)
 
     self.trackingArea = NSTrackingArea(rect: self.bounds,
-                                       options: [.MouseEnteredAndExited, .ActiveInActiveApp],
+                                       options: [.mouseEnteredAndExited, .activeInActiveApp],
                                        owner: self,
                                        userInfo: nil)
     self.addTrackingArea(self.trackingArea)
@@ -85,11 +85,11 @@ extension WorkspaceToolButton {
     super.updateTrackingAreas()
   }
 
-  override func mouseDown(event: NSEvent) {
+  override func mouseDown(with event: NSEvent) {
     self.tool?.toggle()
   }
 
-  override func mouseEntered(_: NSEvent) {
+  override func mouseEntered(with _: NSEvent) {
     if self.isSelected {
       return
     }
@@ -97,7 +97,7 @@ extension WorkspaceToolButton {
     self.highlight()
   }
 
-  override func mouseExited(_: NSEvent) {
+  override func mouseExited(with _: NSEvent) {
     if self.isSelected {
       return
     }

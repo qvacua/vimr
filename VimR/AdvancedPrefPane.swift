@@ -25,9 +25,9 @@ class AdvancedPrefPane: PrefPane {
     return true
   }
 
-  private var data: AdvancedPrefData
+  fileprivate var data: AdvancedPrefData
 
-  private let useInteractiveZshCheckbox = NSButton(forAutoLayout: ())
+  fileprivate let useInteractiveZshCheckbox = NSButton(forAutoLayout: ())
 
   init(source: Observable<Any>, initialData: AdvancedPrefData) {
     self.data = initialData
@@ -59,20 +59,20 @@ class AdvancedPrefPane: PrefPane {
     self.addSubview(useInteractiveZsh)
     self.addSubview(useInteractiveZshInfo)
 
-    paneTitle.autoPinEdgeToSuperviewEdge(.Top, withInset: 18)
-    paneTitle.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
-    paneTitle.autoPinEdgeToSuperviewEdge(.Right, withInset: 18, relation: .GreaterThanOrEqual)
+    paneTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 18)
+    paneTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
+    paneTitle.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
 
-    useInteractiveZsh.autoPinEdge(.Top, toEdge: .Bottom, ofView: paneTitle, withOffset: 18)
-    useInteractiveZsh.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
+    useInteractiveZsh.autoPinEdge(.top, to: .bottom, of: paneTitle, withOffset: 18)
+    useInteractiveZsh.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
 
-    useInteractiveZshInfo.autoPinEdge(.Top, toEdge: .Bottom, ofView: useInteractiveZsh, withOffset: 5)
-    useInteractiveZshInfo.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
+    useInteractiveZshInfo.autoPinEdge(.top, to: .bottom, of: useInteractiveZsh, withOffset: 5)
+    useInteractiveZshInfo.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
 
     useInteractiveZsh.boolState = self.data.useInteractiveZsh
   }
 
-  override func subscription(source source: Observable<Any>) -> Disposable {
+  override func subscription(source: Observable<Any>) -> Disposable {
     return source
       .filter { $0 is PrefData }
       .map { ($0 as! PrefData).advanced }
@@ -83,12 +83,12 @@ class AdvancedPrefPane: PrefPane {
     }
   }
 
-  private func set(data data: AdvancedPrefData) {
+  fileprivate func set(data: AdvancedPrefData) {
     self.data = data
     self.publish(event: data)
   }
 
-  private func updateViews(newData newData: AdvancedPrefData) {
+  fileprivate func updateViews(newData: AdvancedPrefData) {
     self.useInteractiveZshCheckbox.boolState = newData.useInteractiveZsh
   }
 }
@@ -96,7 +96,7 @@ class AdvancedPrefPane: PrefPane {
 // MARK: - Actions
 extension AdvancedPrefPane {
 
-  func useInteractiveZshAction(sender: NSButton) {
+  func useInteractiveZshAction(_ sender: NSButton) {
     self.set(data: AdvancedPrefData(useInteractiveZsh: self.useInteractiveZshCheckbox.boolState))
   }
 }

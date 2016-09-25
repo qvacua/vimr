@@ -30,11 +30,11 @@ class GeneralPrefPane: PrefPane, NSTextFieldDelegate {
     return true
   }
 
-  private var data: GeneralPrefData
+  fileprivate var data: GeneralPrefData
 
-  private let openWhenLaunchingCheckbox = NSButton(forAutoLayout: ())
-  private let openOnReactivationCheckbox = NSButton(forAutoLayout: ())
-  private let ignoreField = NSTextField(forAutoLayout: ())
+  fileprivate let openWhenLaunchingCheckbox = NSButton(forAutoLayout: ())
+  fileprivate let openOnReactivationCheckbox = NSButton(forAutoLayout: ())
+  fileprivate let ignoreField = NSTextField(forAutoLayout: ())
 
   init(source: Observable<Any>, initialData: GeneralPrefData) {
     self.data = initialData
@@ -63,8 +63,8 @@ class GeneralPrefPane: PrefPane, NSTextFieldDelegate {
 
     let ignoreListTitle = self.titleTextField(title: "Files To Ignore:")
     let ignoreField = self.ignoreField
-    NSNotificationCenter.defaultCenter()
-      .addObserverForName(NSControlTextDidEndEditingNotification, object: ignoreField, queue: nil) { [unowned self] _ in
+    NotificationCenter.default
+      .addObserver(forName: NSNotification.Name.NSControlTextDidEndEditing, object: ignoreField, queue: nil) { [unowned self] _ in
         self.ignorePatternsAction()
     }
     let ignoreInfo = self.infoTextField(text: "")
@@ -73,9 +73,9 @@ class GeneralPrefPane: PrefPane, NSTextFieldDelegate {
     let cliToolTitle = self.titleTextField(title: "CLI Tool:")
     let cliToolButton = NSButton(forAutoLayout: ())
     cliToolButton.title = "Copy 'vimr' CLI Tool..."
-    cliToolButton.bezelStyle = .RoundedBezelStyle
-    cliToolButton.bordered = true
-    cliToolButton.setButtonType(.MomentaryPushInButton)
+    cliToolButton.bezelStyle = .rounded
+    cliToolButton.isBordered = true
+    cliToolButton.setButtonType(.momentaryPushIn)
     cliToolButton.target = self
     cliToolButton.action = #selector(GeneralPrefPane.copyCliTool(_:))
     let cliToolInfo = self.infoTextField(
@@ -95,50 +95,50 @@ class GeneralPrefPane: PrefPane, NSTextFieldDelegate {
     self.addSubview(cliToolButton)
     self.addSubview(cliToolInfo)
 
-    paneTitle.autoPinEdgeToSuperviewEdge(.Top, withInset: 18)
-    paneTitle.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
-    paneTitle.autoPinEdgeToSuperviewEdge(.Right, withInset: 18, relation: .GreaterThanOrEqual)
+    paneTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 18)
+    paneTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
+    paneTitle.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
 
-    openUntitledWindowTitle.autoAlignAxis(.Baseline, toSameAxisOfView: whenLaunching, withOffset: 0)
-    openUntitledWindowTitle.autoPinEdgeToSuperviewEdge(.Left, withInset: 18)
+    openUntitledWindowTitle.autoAlignAxis(.baseline, toSameAxisOf: whenLaunching, withOffset: 0)
+    openUntitledWindowTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
 
-    whenLaunching.autoPinEdge(.Top, toEdge: .Bottom, ofView: paneTitle, withOffset: 18)
-    whenLaunching.autoPinEdge(.Left, toEdge: .Right, ofView: openUntitledWindowTitle, withOffset: 5)
-    whenLaunching.autoPinEdgeToSuperviewEdge(.Right, withInset: 18, relation: .GreaterThanOrEqual)
+    whenLaunching.autoPinEdge(.top, to: .bottom, of: paneTitle, withOffset: 18)
+    whenLaunching.autoPinEdge(.left, to: .right, of: openUntitledWindowTitle, withOffset: 5)
+    whenLaunching.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
 
-    onReactivation.autoPinEdge(.Top, toEdge: .Bottom, ofView: whenLaunching, withOffset: 5)
-    onReactivation.autoPinEdge(.Left, toEdge: .Left, ofView: whenLaunching)
-    onReactivation.autoPinEdgeToSuperviewEdge(.Right, withInset: 18, relation: .GreaterThanOrEqual)
+    onReactivation.autoPinEdge(.top, to: .bottom, of: whenLaunching, withOffset: 5)
+    onReactivation.autoPinEdge(.left, to: .left, of: whenLaunching)
+    onReactivation.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
 
-    ignoreListTitle.autoAlignAxis(.Baseline, toSameAxisOfView: ignoreField)
-    ignoreListTitle.autoPinEdge(.Right, toEdge: .Right, ofView: openUntitledWindowTitle)
-    ignoreListTitle.autoPinEdgeToSuperviewEdge(.Left, withInset: 18, relation: .GreaterThanOrEqual)
+    ignoreListTitle.autoAlignAxis(.baseline, toSameAxisOf: ignoreField)
+    ignoreListTitle.autoPinEdge(.right, to: .right, of: openUntitledWindowTitle)
+    ignoreListTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
 
-    ignoreField.autoPinEdge(.Top, toEdge: .Bottom, ofView: onReactivation, withOffset: 18)
-    ignoreField.autoPinEdgeToSuperviewEdge(.Right, withInset: 18)
-    ignoreField.autoPinEdge(.Left, toEdge: .Right, ofView: ignoreListTitle, withOffset: 5)
+    ignoreField.autoPinEdge(.top, to: .bottom, of: onReactivation, withOffset: 18)
+    ignoreField.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
+    ignoreField.autoPinEdge(.left, to: .right, of: ignoreListTitle, withOffset: 5)
 
-    ignoreInfo.autoPinEdge(.Top, toEdge: .Bottom, ofView: ignoreField, withOffset: 5)
-    ignoreInfo.autoPinEdgeToSuperviewEdge(.Right, withInset: 18)
-    ignoreInfo.autoPinEdge(.Left, toEdge: .Right, ofView: ignoreListTitle, withOffset: 5)
+    ignoreInfo.autoPinEdge(.top, to: .bottom, of: ignoreField, withOffset: 5)
+    ignoreInfo.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
+    ignoreInfo.autoPinEdge(.left, to: .right, of: ignoreListTitle, withOffset: 5)
     
-    cliToolTitle.autoAlignAxis(.Baseline, toSameAxisOfView: cliToolButton)
-    cliToolTitle.autoPinEdgeToSuperviewEdge(.Left, withInset: 18, relation: .GreaterThanOrEqual)
-    cliToolTitle.autoPinEdge(.Right, toEdge: .Right, ofView: openUntitledWindowTitle)
+    cliToolTitle.autoAlignAxis(.baseline, toSameAxisOf: cliToolButton)
+    cliToolTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
+    cliToolTitle.autoPinEdge(.right, to: .right, of: openUntitledWindowTitle)
     
-    cliToolButton.autoPinEdge(.Top, toEdge: .Bottom, ofView: ignoreInfo, withOffset: 18)
-    cliToolButton.autoPinEdgeToSuperviewEdge(.Right, withInset: 18, relation: .GreaterThanOrEqual)
-    cliToolButton.autoPinEdge(.Left, toEdge: .Right, ofView: cliToolTitle, withOffset: 5)
+    cliToolButton.autoPinEdge(.top, to: .bottom, of: ignoreInfo, withOffset: 18)
+    cliToolButton.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
+    cliToolButton.autoPinEdge(.left, to: .right, of: cliToolTitle, withOffset: 5)
     
-    cliToolInfo.autoPinEdge(.Top, toEdge: .Bottom, ofView: cliToolButton, withOffset: 5)
-    cliToolInfo.autoPinEdgeToSuperviewEdge(.Right, withInset: 18, relation: .GreaterThanOrEqual)
-    cliToolInfo.autoPinEdge(.Left, toEdge: .Right, ofView: cliToolTitle, withOffset: 5)
+    cliToolInfo.autoPinEdge(.top, to: .bottom, of: cliToolButton, withOffset: 5)
+    cliToolInfo.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
+    cliToolInfo.autoPinEdge(.left, to: .right, of: cliToolTitle, withOffset: 5)
     
     self.openWhenLaunchingCheckbox.boolState = self.data.openNewWindowWhenLaunching
     self.openOnReactivationCheckbox.boolState = self.data.openNewWindowOnReactivation
   }
 
-  override func subscription(source source: Observable<Any>) -> Disposable {
+  override func subscription(source: Observable<Any>) -> Disposable {
     return source
       .filter { $0 is PrefData }
       .map { ($0 as! PrefData).general }
@@ -153,19 +153,19 @@ class GeneralPrefPane: PrefPane, NSTextFieldDelegate {
     self.ignorePatternsAction()
   }
 
-  private func set(data data: GeneralPrefData) {
+  fileprivate func set(data: GeneralPrefData) {
     self.data = data
     self.publish(event: data)
   }
 
-  private func ignoreInfoText() -> NSAttributedString {
-    let font = NSFont.systemFontOfSize(NSFont.smallSystemFontSize())
+  fileprivate func ignoreInfoText() -> NSAttributedString {
+    let font = NSFont.systemFont(ofSize: NSFont.smallSystemFontSize())
     let attrs = [
       NSFontAttributeName: font,
-      NSForegroundColorAttributeName: NSColor.grayColor()
+      NSForegroundColorAttributeName: NSColor.gray
     ]
 
-    let wikiUrl = NSURL(string: "https://github.com/qvacua/vimr/wiki")!
+    let wikiUrl = URL(string: "https://github.com/qvacua/vimr/wiki")!
     let linkStr = NSAttributedString.link(withUrl: wikiUrl, text: "VimR Wiki", font: font)
     let str = "Comma-separated list of ignore patterns\n"
         + "Matching files will be ignored in \"Open Quickly\".\n"
@@ -173,13 +173,13 @@ class GeneralPrefPane: PrefPane, NSTextFieldDelegate {
         + "For detailed information see "
     
     let ignoreInfoStr = NSMutableAttributedString(string:str, attributes:attrs)
-    ignoreInfoStr.appendAttributedString(linkStr)
-    ignoreInfoStr.appendAttributedString(NSAttributedString(string: ".", attributes: attrs))
+    ignoreInfoStr.append(linkStr)
+    ignoreInfoStr.append(NSAttributedString(string: ".", attributes: attrs))
 
     return ignoreInfoStr
   }
 
-  private func updateViews(newData newData: GeneralPrefData) {
+  fileprivate func updateViews(newData: GeneralPrefData) {
     self.openWhenLaunchingCheckbox.boolState = newData.openNewWindowWhenLaunching
     self.openOnReactivationCheckbox.boolState = newData.openNewWindowOnReactivation
     self.ignoreField.stringValue = PrefUtils.ignorePatternString(fromSet: newData.ignorePatterns)
@@ -189,37 +189,37 @@ class GeneralPrefPane: PrefPane, NSTextFieldDelegate {
 // MARK: - Actions
 extension GeneralPrefPane {
   
-  func copyCliTool(sender: NSButton) {
+  func copyCliTool(_ sender: NSButton) {
     let panel = NSOpenPanel()
     panel.canChooseFiles = false
     panel.canChooseDirectories = true
     
-    panel.beginSheetModalForWindow(self.window!) { result in
+    panel.beginSheetModal(for: self.window!) { result in
       guard result == NSFileHandlingPanelOKButton else {
         return
       }
       
-      guard let vimrUrl = NSBundle.mainBundle().URLForResource("vimr", withExtension: nil) else {
+      guard let vimrUrl = Bundle.main.url(forResource: "vimr", withExtension: nil) else {
         self.alert(title: "Something Went Wrong.",
                    info: "The CLI tool 'vimr' could not be found. Please re-download VimR and try again.")
         return
       }
       
-      guard let targetUrl = panel.URL?.URLByAppendingPathComponent("vimr") else {
+      guard let targetUrl = panel.url?.appendingPathComponent("vimr") else {
         self.alert(title: "Something Went Wrong.",
                    info: "The target directory could not be determined. Please try again with a different directory.")
         return
       }
       
       do {
-        try NSFileManager.defaultManager().copyItemAtURL(vimrUrl, toURL: targetUrl)
+        try FileManager.default.copyItem(at: vimrUrl, to: targetUrl)
       } catch let err as NSError {
         self.alert(title: "Error copying 'vimr'", info: err.localizedDescription)
       }
     }
   }
 
-  func openUntitledWindowWhenLaunchingAction(sender: NSButton) {
+  func openUntitledWindowWhenLaunchingAction(_ sender: NSButton) {
     self.set(data: GeneralPrefData(
       openNewWindowWhenLaunching: self.openWhenLaunchingCheckbox.boolState,
       openNewWindowOnReactivation: self.data.openNewWindowOnReactivation,
@@ -227,7 +227,7 @@ extension GeneralPrefPane {
     )
   }
 
-  func openUntitledWindowOnReactivationAction(sender: NSButton) {
+  func openUntitledWindowOnReactivationAction(_ sender: NSButton) {
     self.set(data: GeneralPrefData(
       openNewWindowWhenLaunching: self.data.openNewWindowWhenLaunching,
       openNewWindowOnReactivation: self.openOnReactivationCheckbox.boolState,
@@ -235,7 +235,7 @@ extension GeneralPrefPane {
     )
   }
 
-  private func ignorePatternsAction() {
+  fileprivate func ignorePatternsAction() {
     let patterns = PrefUtils.ignorePatterns(fromString: self.ignoreField.stringValue)
     if patterns == self.data.ignorePatterns {
       return
@@ -248,9 +248,9 @@ extension GeneralPrefPane {
     )
   }
 
-  private func alert(title title: String, info: String) {
+  fileprivate func alert(title: String, info: String) {
     let alert = NSAlert()
-    alert.alertStyle = .WarningAlertStyle
+    alert.alertStyle = .warning
     alert.messageText = title
     alert.informativeText = info
     alert.runModal()

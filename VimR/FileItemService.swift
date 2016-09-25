@@ -15,31 +15,31 @@ class Token: Equatable {}
 
 class FileItemService {
 
-  private(set) var ignorePatterns: Set<FileItemIgnorePattern> = [] {
+  fileprivate(set) var ignorePatterns: Set<FileItemIgnorePattern> = [] {
     didSet {
       self.ignoreToken = Token()
     }
   }
 
   /// Used to cache fnmatch calls in `FileItem`.
-  private var ignoreToken = Token()
+  fileprivate var ignoreToken = Token()
 
   /// When at least this much of non-directory and visible files are scanned, they are emitted.
-  private let emitChunkSize = 1000
+  fileprivate let emitChunkSize = 1000
 
-  private let scanDispatchQueue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
-  private let monitorDispatchQueue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
+  fileprivate let scanDispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated)
+  fileprivate let monitorDispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated)
 
-  private let root = FileItem(NSURL(fileURLWithPath: "/", isDirectory: true))
+  fileprivate let root = FileItem(URL(fileURLWithPath: "/", isDirectory: true))
 
-  private let fileSystemEventsLatency = Double(2)
-  private var monitors = [NSURL: FileSystemEventMonitor]()
-  private var monitorCounter = [NSURL: Int]()
+  fileprivate let fileSystemEventsLatency = Double(2)
+  fileprivate var monitors = [URL: FileSystemEventMonitor]()
+  fileprivate var monitorCounter = [URL: Int]()
   
-  private let workspace = NSWorkspace.sharedWorkspace()
-  private let iconsCache = NSCache()
+  fileprivate let workspace = NSWorkspace.shared()
+  fileprivate let iconsCache = NSCache<NSURL, NSImage>()
 
-  private var spinLock = OS_SPINLOCK_INIT
+  fileprivate var spinLock = OS_SPINLOCK_INIT
   
   init() {
     self.iconsCache.countLimit = 2000
@@ -50,22 +50,17 @@ class FileItemService {
     self.ignorePatterns = patterns
   }
   
-  func icon(forUrl url: NSURL) -> NSImage? {
-    guard let path = url.path else {
-      return nil
-    }
-    
-    let icon = workspace.iconForFile(path)
+  func icon(forUrl url: URL) -> NSImage? {
+    let path = url.path
+    let icon = workspace.icon(forFile: path)
     icon.size = CGSize(width: 16, height: 16)
-    self.iconsCache.setObject(icon, forKey: url)
+    self.iconsCache.setObject(icon, forKey: url as NSURL)
     
     return icon
   }
 
-  func monitor(url url: NSURL) {
-    guard let path = url.path else {
-      return
-    }
+  func monitor(url: URL) {
+    let path = url.path
 
     // FIXME: Handle EonilFileSystemEventFlag.RootChanged, ie watchRoot: true
     let monitor = FileSystemEventMonitor(pathsToWatch: [path],
@@ -73,7 +68,7 @@ class FileItemService {
                                          watchRoot: false,
                                          queue: self.monitorDispatchQueue)
     { [unowned self] events in
-      let urls = events.map { NSURL(fileURLWithPath: $0.path) }
+      let urls = events.map { URL(fileURLWithPath: $0.path) }
       let parent = FileUtils.commonParent(ofUrls: urls)
       self.fileItem(forUrl: parent)?.needsScanChildren = true
     }
@@ -86,7 +81,7 @@ class FileItemService {
     }
   }
 
-  func unmonitor(url url: NSURL) {
+  func unmonitor(url: URL) {
     guard let counter = self.monitorCounter[url] else {
       return
     }
@@ -95,8 +90,8 @@ class FileItemService {
     if newCounter > 0 {
       self.monitorCounter[url] = newCounter
     } else {
-      self.monitorCounter.removeValueForKey(url)
-      self.monitors.removeValueForKey(url)
+      self.monitorCounter.removeValue(forKey: url)
+      self.monitors.removeValue(forKey: url)
 
       // TODO Remove cached items more aggressively?
       let hasRelations = self.monitors.keys.reduce(false) { (result, monitoredUrl) in
@@ -111,12 +106,12 @@ class FileItemService {
     }
   }
 
-  private func parentFileItem(ofUrl url: NSURL) -> FileItem {
-    return self.fileItem(forPathComponents: Array(url.pathComponents!.dropLast()))!
+  fileprivate func parentFileItem(ofUrl url: URL) -> FileItem {
+    return self.fileItem(forPathComponents: Array(url.pathComponents.dropLast()))!
   }
 
-  func flatFileItems(ofUrl url: NSURL) -> Observable<[FileItem]> {
-    guard url.fileURL else {
+  func flatFileItems(ofUrl url: URL) -> Observable<[FileItem]> {
+    guard url.isFileURL else {
       return Observable.empty()
     }
 
@@ -124,16 +119,13 @@ class FileItemService {
       return Observable.empty()
     }
 
-    guard let pathComponents = url.pathComponents else {
-      return Observable.empty()
-    }
-
+    let pathComponents = url.pathComponents
     return Observable.create { [unowned self] observer in
       let cancel = AnonymousDisposable {
         // noop
       }
 
-      dispatch_async(self.scanDispatchQueue) { [unowned self] in
+      self.scanDispatchQueue.async { [unowned self] in
         guard let targetItem = self.fileItem(forPathComponents: pathComponents) else {
           observer.onCompleted()
           return
@@ -166,7 +158,7 @@ class FileItemService {
               item.ignoreToken = self.ignoreToken
               item.ignore = false
 
-              let path = item.url.path!
+              let path = item.url.path
               for pattern in self.ignorePatterns {
                 // We don't use `String.FnMatchOption.leadingDir` (`FNM_LEADING_DIR`) for directories since we do not
                 // scan ignored directories at all when filtering. For example "*/.git" would create a `FileItem`
@@ -197,11 +189,8 @@ class FileItemService {
     }
   }
 
-  private func fileItem(forUrl url: NSURL) -> FileItem? {
-    guard let pathComponents = url.pathComponents else {
-      return nil
-    }
-
+  fileprivate func fileItem(forUrl url: URL) -> FileItem? {
+    let pathComponents = url.pathComponents
     return self.fileItem(forPathComponents: pathComponents)
   }
 
@@ -209,7 +198,7 @@ class FileItemService {
   /// instantiates the intermediate `FileItem`s.
   ///
   /// - returns: `FileItem` corresponding to `pathComponents`. `nil` if the file does not exist.
-  private func fileItem(forPathComponents pathComponents: [String]) -> FileItem? {
+  fileprivate func fileItem(forPathComponents pathComponents: [String]) -> FileItem? {
     let result = pathComponents.dropFirst().reduce(self.root) { (resultItem, childName) -> FileItem? in
       guard let parent = resultItem else {
         return nil
@@ -230,11 +219,11 @@ class FileItemService {
   ///   - parent: parent of the child.
   ///   - create: whether to create the child `FileItem` if it's not scanned yet.
   /// - returns: child `FileItem` or nil.
-  private func child(withName name: String, ofParent parent: FileItem, create: Bool = false) -> FileItem? {
+  fileprivate func child(withName name: String, ofParent parent: FileItem, create: Bool = false) -> FileItem? {
     let filteredChildren = parent.children.filter { $0.url.lastPathComponent == name }
 
     if filteredChildren.isEmpty && create {
-      let childUrl = parent.url.URLByAppendingPathComponent(name)
+      let childUrl = parent.url.appendingPathComponent(name)
 
       guard FileUtils.fileExistsAtUrl(childUrl) else {
         return nil
@@ -249,7 +238,7 @@ class FileItemService {
     return filteredChildren.first
   }
   
-  private func scanChildren(item: FileItem) {
+  fileprivate func scanChildren(_ item: FileItem) {
     let children = FileUtils.directDescendants(item.url).map(FileItem.init)
     self.syncAddChildren { item.children = children }
 
@@ -257,7 +246,7 @@ class FileItemService {
     item.needsScanChildren = false
   }
 
-  private func syncAddChildren(@noescape fn: () -> Void) {
+  fileprivate func syncAddChildren(_ fn: () -> Void) {
     OSSpinLockLock(&self.spinLock)
     fn()
     OSSpinLockUnlock(&self.spinLock)

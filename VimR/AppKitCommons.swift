@@ -21,26 +21,26 @@ extension NSButton {
 extension NSAttributedString {
 
   func draw(at point: CGPoint, angle: CGFloat) {
-    let translation = NSAffineTransform()
-    let rotation = NSAffineTransform()
+    var translation = AffineTransform.identity
+    var rotation = AffineTransform.identity
 
-    translation.translateXBy(point.x, yBy: point.y)
-    rotation.rotateByRadians(angle)
+    translation.translate(x: point.x, y: point.y)
+    rotation.rotate(byRadians: angle)
 
-    translation.concat()
-    rotation.concat()
+    (translation as NSAffineTransform).concat()
+    (rotation as NSAffineTransform).concat()
 
-    self.drawAtPoint(CGPoint.zero)
+    self.draw(at: CGPoint.zero)
 
     rotation.invert()
     translation.invert()
 
-    rotation.concat()
-    translation.concat()
+    (rotation as NSAffineTransform).concat()
+    (translation as NSAffineTransform).concat()
   }
 
   // From https://developer.apple.com/library/mac/qa/qa1487/_index.html
-  static func link(withUrl url: NSURL, text: String, font: NSFont? = nil) -> NSAttributedString {
+  static func link(withUrl url: URL, text: String, font: NSFont? = nil) -> NSAttributedString {
     let attrString = NSMutableAttributedString(string: text)
     let range = NSRange(location: 0, length: attrString.length)
 
@@ -49,9 +49,9 @@ extension NSAttributedString {
       attrString.addAttribute(NSFontAttributeName, value: font!, range: range)
     }
     attrString.addAttribute(NSLinkAttributeName, value: url.absoluteString, range: range)
-    attrString.addAttribute(NSForegroundColorAttributeName, value: NSColor.blueColor(), range: range)
+    attrString.addAttribute(NSForegroundColorAttributeName, value: NSColor.blue, range: range)
     attrString.addAttribute(NSUnderlineStyleAttributeName,
-                            value: NSNumber(integer: NSUnderlineStyle.StyleSingle.rawValue), range: range)
+                            value: NSNumber(value: NSUnderlineStyle.styleSingle.rawValue as Int), range: range)
     attrString.endEditing()
 
     return attrString
@@ -79,22 +79,22 @@ extension NSTableView {
     let tableView = NSTableView(frame: CGRect.zero)
 
     let column = NSTableColumn(identifier: "name")
-    column.editable = false
+    column.isEditable = false
 
     tableView.addTableColumn(column)
-    tableView.rowSizeStyle	=	.Default
+    tableView.rowSizeStyle	=	.default
     tableView.sizeLastColumnToFit()
     tableView.allowsEmptySelection = false
     tableView.allowsMultipleSelection = false
     tableView.headerView = nil
-    tableView.focusRingType = .None
+    tableView.focusRingType = .none
 
     return tableView
   }
 
   static func standardSourceListTableView() -> NSTableView {
     let tableView = self.standardTableView()
-    tableView.selectionHighlightStyle = .SourceList
+    tableView.selectionHighlightStyle = .sourceList
 
     return tableView
   }
@@ -109,7 +109,7 @@ extension NSScrollView {
     scrollView.hasVerticalScroller = true
     scrollView.hasHorizontalScroller = true
     scrollView.autohidesScrollers = true
-    scrollView.borderType = .BezelBorder
+    scrollView.borderType = .bezelBorder
 
     return scrollView
   }

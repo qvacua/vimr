@@ -58,7 +58,7 @@ class KeyUtils {
     NSF35FunctionKey: "F35",
   ]
 
-  static func isSpecial(key key: String) -> Bool {
+  static func isSpecial(key: String) -> Bool {
     guard key.characters.count == 1 else {
       return false
     }
@@ -70,7 +70,7 @@ class KeyUtils {
     return false
   }
 
-  static func namedKeyFrom(key key: String) -> String {
+  static func namedKeyFrom(key: String) -> String {
     if let firstChar = key.utf16.first {
       if KeyUtils.specialKeys.keys.contains(Int(firstChar)) {
         return KeyUtils.specialKeys[Int(firstChar)]!

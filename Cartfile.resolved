@@ -1,4 +1,4 @@
-github "eonil/FileSystemEvents" "01f622d3b446612d573b1035b46afb7a6eee0240"
-github "Quick/Nimble" "v4.1.0"
+github "eonil/FileSystemEvents" "aa5c6af1fd35939f9aca3b9eba3b672bfa549b3a"
+github "Quick/Nimble" "v5.0.0"
 github "PureLayout/PureLayout" "v3.0.2"
-github "ReactiveX/RxSwift" "2.6.0"
+github "ReactiveX/RxSwift" "3.0.0-beta.1"

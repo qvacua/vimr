@@ -15,17 +15,17 @@ enum MainWindowAction {
 
 class MainWindowComponent: WindowComponent, NSWindowDelegate {
 
-  private let fontManager = NSFontManager.sharedFontManager()
+  fileprivate let fontManager = NSFontManager.shared()
 
-  private var defaultEditorFont: NSFont
-  private var usesLigatures: Bool
+  fileprivate var defaultEditorFont: NSFont
+  fileprivate var usesLigatures: Bool
 
   var uuid: String {
     return self.neoVimView.uuid
   }
 
-  private var _cwd: NSURL = NSURL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
-  var cwd: NSURL {
+  fileprivate var _cwd: URL = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
+  var cwd: URL {
     get {
       self._cwd = self.neoVimView.cwd
       return self._cwd
@@ -43,16 +43,16 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
       self.fileItemService.monitor(url: newValue)
     }
   }
-  private let fileItemService: FileItemService
+  fileprivate let fileItemService: FileItemService
 
-  private let workspace: Workspace
-  private let neoVimView: NeoVimView
+  fileprivate let workspace: Workspace
+  fileprivate let neoVimView: NeoVimView
 
   // TODO: Consider an option object for cwd, urls, etc...
   init(source: Observable<Any>,
        fileItemService: FileItemService,
-       cwd: NSURL,
-       urls: [NSURL] = [],
+       cwd: URL,
+       urls: [URL] = [],
        initialData: PrefData)
   {
     self.neoVimView = NeoVimView(frame: CGRect.zero,
@@ -83,7 +83,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
     self.show()
   }
 
-  func open(urls urls: [NSURL]) {
+  func open(urls: [URL]) {
     self.neoVimView.open(urls: urls)
   }
 
@@ -104,12 +104,12 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
     self.workspace.autoPinEdgesToSuperviewEdges()
   }
 
-  override func subscription(source source: Observable<Any>) -> Disposable {
+  override func subscription(source: Observable<Any>) -> Disposable {
     return source
       .filter { $0 is PrefData }
       .map { ($0 as! PrefData).appearance }
       .filter { [unowned self] appearanceData in
-        !appearanceData.editorFont.isEqualTo(self.neoVimView.font)
+        !appearanceData.editorFont.isEqual(to: self.neoVimView.font)
           || appearanceData.editorUsesLigatures != self.neoVimView.usesLigatures
       }
       .subscribeNext { [unowned self] appearance in
@@ -122,28 +122,28 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
 // MARK: - File Menu Items
 extension MainWindowComponent {
   
-  @IBAction func newTab(sender: AnyObject!) {
+  @IBAction func newTab(_ sender: AnyObject!) {
     self.neoVimView.newTab()
   }
 
-  @IBAction func openDocument(sender: AnyObject!) {
+  @IBAction func openDocument(_ sender: AnyObject!) {
     let panel = NSOpenPanel()
     panel.canChooseDirectories = true
-    panel.beginSheetModalForWindow(self.window) { result in
+    panel.beginSheetModal(for: self.window) { result in
       guard result == NSFileHandlingPanelOKButton else {
         return
       }
       
       // The open panel can choose only one file.
-      self.neoVimView.open(urls: panel.URLs)
+      self.neoVimView.open(urls: panel.urls)
     }
   }
 
-  @IBAction func openQuickly(sender: AnyObject!) {
+  @IBAction func openQuickly(_ sender: AnyObject!) {
     self.publish(event: MainWindowAction.openQuickly(mainWindow: self))
   }
 
-  @IBAction func saveDocument(sender: AnyObject!) {
+  @IBAction func saveDocument(_ sender: AnyObject!) {
     let curBuf = self.neoVimView.currentBuffer()
     
     if curBuf.fileName == nil {
@@ -154,7 +154,7 @@ extension MainWindowComponent {
     self.neoVimView.saveCurrentTab()
   }
   
-  @IBAction func saveDocumentAs(sender: AnyObject!) {
+  @IBAction func saveDocumentAs(_ sender: AnyObject!) {
     self.savePanelSheet { url in
       self.neoVimView.saveCurrentTab(url: url)
       
@@ -166,24 +166,24 @@ extension MainWindowComponent {
     }
   }
   
-  private func savePanelSheet(action action: (NSURL) -> Void) {
+  fileprivate func savePanelSheet(action: @escaping (URL) -> Void) {
     let panel = NSSavePanel()
-    panel.beginSheetModalForWindow(self.window) { result in
+    panel.beginSheetModal(for: self.window) { result in
       guard result == NSFileHandlingPanelOKButton else {
         return
       }
       
       let showAlert: () -> Void = {
         let alert = NSAlert()
-        alert.addButtonWithTitle("OK")
+        alert.addButton(withTitle: "OK")
         alert.messageText = "Invalid File Name"
         alert.informativeText = "The file name you have entered cannot be used. Please use a different name."
-        alert.alertStyle = .WarningAlertStyle
+        alert.alertStyle = .warning
         
         alert.runModal()
       }
       
-      guard let url = panel.URL else {
+      guard let url = panel.url else {
         showAlert()
         return
       }
@@ -201,20 +201,20 @@ extension MainWindowComponent {
 // MARK: - Font Menu Items
 extension MainWindowComponent {
 
-  @IBAction func resetFontSize(sender: AnyObject!) {
+  @IBAction func resetFontSize(_ sender: AnyObject!) {
     self.neoVimView.font = self.defaultEditorFont
   }
 
-  @IBAction func makeFontBigger(sender: AnyObject!) {
+  @IBAction func makeFontBigger(_ sender: AnyObject!) {
     let curFont = self.neoVimView.font
-    let font = self.fontManager.convertFont(curFont,
+    let font = self.fontManager.convert(curFont,
                                             toSize: min(curFont.pointSize + 1, PrefStore.maximumEditorFontSize))
     self.neoVimView.font = font
   }
 
-  @IBAction func makeFontSmaller(sender: AnyObject!) {
+  @IBAction func makeFontSmaller(_ sender: AnyObject!) {
     let curFont = self.neoVimView.font
-    let font = self.fontManager.convertFont(curFont,
+    let font = self.fontManager.convert(curFont,
                                             toSize: max(curFont.pointSize - 1, PrefStore.minimumEditorFontSize))
     self.neoVimView.font = font
   }
@@ -223,11 +223,11 @@ extension MainWindowComponent {
 // MARK: - NeoVimViewDelegate
 extension MainWindowComponent: NeoVimViewDelegate {
 
-  func setTitle(title: String) {
+  func setTitle(_ title: String) {
     self.window.title = title
   }
 
-  func setDirtyStatus(dirty: Bool) {
+  func setDirtyStatus(_ dirty: Bool) {
     self.windowController.setDocumentEdited(dirty)
   }
 
@@ -246,27 +246,27 @@ extension MainWindowComponent: NeoVimViewDelegate {
 // MARK: - NSWindowDelegate
 extension MainWindowComponent {
   
-  func windowDidBecomeKey(_: NSNotification) {
+  func windowDidBecomeKey(_: Notification) {
     self.publish(event: MainWindowAction.becomeKey(mainWindow: self))
   }
 
-  func windowWillClose(notification: NSNotification) {
+  func windowWillClose(_ notification: Notification) {
     self.fileItemService.unmonitor(url: self._cwd)
     self.publish(event: MainWindowAction.close(mainWindow: self))
   }
 
-  func windowShouldClose(sender: AnyObject) -> Bool {
+  func windowShouldClose(_ sender: Any) -> Bool {
     if self.neoVimView.isCurrentBufferDirty() {
       let alert = NSAlert()
-      alert.addButtonWithTitle("Cancel")
-      alert.addButtonWithTitle("Discard and Close")
+      alert.addButton(withTitle: "Cancel")
+      alert.addButton(withTitle: "Discard and Close")
       alert.messageText = "The current buffer has unsaved changes!"
-      alert.alertStyle = .WarningAlertStyle
-      alert.beginSheetModalForWindow(self.window) { response in
+      alert.alertStyle = .warning
+      alert.beginSheetModal(for: self.window, completionHandler: { response in
         if response == NSAlertSecondButtonReturn {
           self.neoVimView.closeCurrentTabWithoutSaving()
         }
-      }
+      }) 
 
       return false
     }

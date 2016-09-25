@@ -10,15 +10,15 @@ class PrefPane: NSView, Component {
   
   let disposeBag = DisposeBag()
 
-  private let source: Observable<Any>
+  fileprivate let source: Observable<Any>
 
-  private let subject = PublishSubject<Any>()
+  fileprivate let subject = PublishSubject<Any>()
   var sink: Observable<Any> {
     return self.subject.asObservable()
   }
 
   // Return true to place this to the upper left corner when the scroll view is bigger than this view.
-  override var flipped: Bool {
+  override var isFlipped: Bool {
     return true
   }
 
@@ -52,11 +52,11 @@ class PrefPane: NSView, Component {
     preconditionFailure("Please override")
   }
 
-  func subscription(source source: Observable<Any>) -> Disposable {
+  func subscription(source: Observable<Any>) -> Disposable {
     preconditionFailure("Please override")
   }
   
-  func publish(event event: Any) {
+  func publish(event: Any) {
     self.subject.onNext(event)
   }
 
@@ -68,31 +68,31 @@ class PrefPane: NSView, Component {
 // MARK: - Control Utils
 extension PrefPane {
 
-  func paneTitleTextField(title title: String) -> NSTextField {
+  func paneTitleTextField(title: String) -> NSTextField {
     let field = defaultTitleTextField()
-    field.font = NSFont.boldSystemFontOfSize(16)
-    field.alignment = .Left;
+    field.font = NSFont.boldSystemFont(ofSize: 16)
+    field.alignment = .left;
     field.stringValue = title
     return field
   }
 
-  func titleTextField(title title: String) -> NSTextField {
+  func titleTextField(title: String) -> NSTextField {
     let field = defaultTitleTextField()
-    field.alignment = .Right;
+    field.alignment = .right;
     field.stringValue = title
     return field
   }
 
-  func infoTextField(text text: String) -> NSTextField {
+  func infoTextField(text: String) -> NSTextField {
     let field = NSTextField(forAutoLayout: ())
-    field.font = NSFont.systemFontOfSize(NSFont.smallSystemFontSize())
-    field.textColor = NSColor.grayColor()
-    field.backgroundColor = NSColor.clearColor()
-    field.editable = false
-    field.bordered = false
+    field.font = NSFont.systemFont(ofSize: NSFont.smallSystemFontSize())
+    field.textColor = NSColor.gray
+    field.backgroundColor = NSColor.clear
+    field.isEditable = false
+    field.isBordered = false
 
     // both are needed, otherwise hyperlink won't accept mousedown
-    field.selectable = true
+    field.isSelectable = true
     field.allowsEditingTextAttributes = true
 
     field.stringValue = text
@@ -100,19 +100,19 @@ extension PrefPane {
     return field
   }
 
-  func configureCheckbox(button button: NSButton, title: String, action: Selector) {
+  func configureCheckbox(button: NSButton, title: String, action: Selector) {
     button.title = title
-    button.setButtonType(.SwitchButton)
-    button.bezelStyle = .ThickSquareBezelStyle
+    button.setButtonType(.switch)
+//    button.bezelStyle = .ThickSquareBezelStyle
     button.target = self
     button.action = action
   }
 
-  private func defaultTitleTextField() -> NSTextField {
+  fileprivate func defaultTitleTextField() -> NSTextField {
     let field = NSTextField(forAutoLayout: ())
-    field.backgroundColor = NSColor.clearColor();
-    field.editable = false;
-    field.bordered = false;
+    field.backgroundColor = NSColor.clear;
+    field.isEditable = false;
+    field.isBordered = false;
     return field
   }
 }

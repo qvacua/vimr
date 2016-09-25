@@ -15,14 +15,14 @@ struct PrefData {
 
 class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSource, NSTableViewDelegate {
 
-  private var data: PrefData
+  fileprivate var data: PrefData
 
-  private let categoryView = NSTableView.standardSourceListTableView()
-  private let categoryScrollView = NSScrollView.standardScrollView()
-  private let paneContainer = NSScrollView(forAutoLayout: ())
+  fileprivate let categoryView = NSTableView.standardSourceListTableView()
+  fileprivate let categoryScrollView = NSScrollView.standardScrollView()
+  fileprivate let paneContainer = NSScrollView(forAutoLayout: ())
 
-  private let panes: [PrefPane]
-  private var currentPane: PrefPane {
+  fileprivate let panes: [PrefPane]
+  fileprivate var currentPane: PrefPane {
     get {
       return self.paneContainer.documentView as! PrefPane
     }
@@ -53,7 +53,7 @@ class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSou
     self.addReactions()
   }
 
-  override func subscription(source source: Observable<Any>) -> Disposable {
+  override func subscription(source: Observable<Any>) -> Disposable {
     return source
       .filter { $0 is PrefData }
       .map { $0 as! PrefData }
@@ -69,8 +69,8 @@ class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSou
 
   override func addViews() {
     let categoryView = self.categoryView
-    categoryView.setDataSource(self)
-    categoryView.setDelegate(self)
+    categoryView.dataSource = self
+    categoryView.delegate = self
 
     let categoryScrollView = self.categoryScrollView
     categoryScrollView.documentView = categoryView
@@ -79,28 +79,28 @@ class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSou
     paneContainer.hasVerticalScroller = true
     paneContainer.hasHorizontalScroller = true
     paneContainer.autohidesScrollers = true
-    paneContainer.borderType = .NoBorder
+    paneContainer.borderType = .noBorder
     paneContainer.autoresizesSubviews = false
-    paneContainer.backgroundColor = NSColor.windowBackgroundColor()
+    paneContainer.backgroundColor = NSColor.windowBackgroundColor
 
     self.window.contentView?.addSubview(categoryScrollView)
     self.window.contentView?.addSubview(paneContainer)
 
-    categoryScrollView.autoSetDimension(.Width, toSize: 150)
-    categoryScrollView.autoPinEdgeToSuperviewEdge(.Top, withInset: -1)
-    categoryScrollView.autoPinEdgeToSuperviewEdge(.Bottom, withInset: -1)
-    categoryScrollView.autoPinEdgeToSuperviewEdge(.Left, withInset: -1)
+    categoryScrollView.autoSetDimension(.width, toSize: 150)
+    categoryScrollView.autoPinEdge(toSuperviewEdge: .top, withInset: -1)
+    categoryScrollView.autoPinEdge(toSuperviewEdge: .bottom, withInset: -1)
+    categoryScrollView.autoPinEdge(toSuperviewEdge: .left, withInset: -1)
 
-    paneContainer.autoSetDimension(.Width, toSize: 200, relation: .GreaterThanOrEqual)
-    paneContainer.autoPinEdgeToSuperviewEdge(.Top)
-    paneContainer.autoPinEdgeToSuperviewEdge(.Right)
-    paneContainer.autoPinEdgeToSuperviewEdge(.Bottom)
-    paneContainer.autoPinEdge(.Left, toEdge: .Right, ofView: categoryScrollView)
+    paneContainer.autoSetDimension(.width, toSize: 200, relation: .greaterThanOrEqual)
+    paneContainer.autoPinEdge(toSuperviewEdge: .top)
+    paneContainer.autoPinEdge(toSuperviewEdge: .right)
+    paneContainer.autoPinEdge(toSuperviewEdge: .bottom)
+    paneContainer.autoPinEdge(.left, to: .right, of: categoryScrollView)
 
     self.currentPane = self.panes[0]
   }
 
-  private func addReactions() {
+  fileprivate func addReactions() {
     self.panes
       .map { $0.sink }
       .toMergedObservables()
@@ -122,7 +122,7 @@ class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSou
       .addDisposableTo(self.disposeBag)
   }
 
-  func windowWillClose(notification: NSNotification) {
+  func windowWillClose(_ notification: Notification) {
     self.panes.forEach { $0.windowWillClose() }
   }
 }
@@ -130,11 +130,11 @@ class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSou
 // MARK: - NSTableViewDataSource
 extension PrefWindowComponent {
 
-  func numberOfRowsInTableView(_: NSTableView) -> Int {
+  @objc(numberOfRowsInTableView:) func numberOfRows(in _: NSTableView) -> Int {
     return self.panes.count
   }
 
-  func tableView(_: NSTableView, objectValueForTableColumn _: NSTableColumn?, row: Int) -> AnyObject? {
+  @objc(tableView:objectValueForTableColumn:row:) func tableView(_: NSTableView, objectValueFor _: NSTableColumn?, row: Int) -> Any? {
     return self.panes[row].displayName
   }
 }
@@ -142,7 +142,7 @@ extension PrefWindowComponent {
 // MARK: - NSTableViewDelegate
 extension PrefWindowComponent {
 
-  func tableViewSelectionDidChange(_: NSNotification) {
+  func tableViewSelectionDidChange(_: Notification) {
     let idx = self.categoryView.selectedRow
     self.currentPane = self.panes[idx]
   }

@@ -28,8 +28,8 @@ class ImageAndTextTableCell: NSView {
     }
   }
   
-  private let textField: NSTextField = NSTextField(forAutoLayout: ())
-  private let imageView: NSImageView = NSImageView(forAutoLayout: ())
+  fileprivate let textField: NSTextField = NSTextField(forAutoLayout: ())
+  fileprivate let imageView: NSImageView = NSImageView(forAutoLayout: ())
   
   init(withIdentifier identifier: String) {
     super.init(frame: CGRect.zero)
@@ -37,9 +37,9 @@ class ImageAndTextTableCell: NSView {
     self.identifier = identifier
     
     let textField = self.textField
-    textField.bordered = false
-    textField.editable = false
-    textField.lineBreakMode = .ByTruncatingTail
+    textField.isBordered = false
+    textField.isEditable = false
+    textField.lineBreakMode = .byTruncatingTail
     textField.drawsBackground = false
     
     let imageView = self.imageView
@@ -47,15 +47,15 @@ class ImageAndTextTableCell: NSView {
     self.addSubview(textField)
     self.addSubview(imageView)
     
-    imageView.autoPinEdgeToSuperviewEdge(.Top, withInset: 2)
-    imageView.autoPinEdgeToSuperviewEdge(.Left, withInset: 2)
-    imageView.autoSetDimension(.Width, toSize: 16)
-    imageView.autoSetDimension(.Height, toSize: 16)
+    imageView.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
+    imageView.autoPinEdge(toSuperviewEdge: .left, withInset: 2)
+    imageView.autoSetDimension(.width, toSize: 16)
+    imageView.autoSetDimension(.height, toSize: 16)
     
-    textField.autoPinEdgeToSuperviewEdge(.Top, withInset: 2)
-    textField.autoPinEdgeToSuperviewEdge(.Right, withInset: 2)
-    textField.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 2)
-    textField.autoPinEdge(.Left, toEdge: .Right, ofView: imageView, withOffset: 4)
+    textField.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
+    textField.autoPinEdge(toSuperviewEdge: .right, withInset: 2)
+    textField.autoPinEdge(toSuperviewEdge: .bottom, withInset: 2)
+    textField.autoPinEdge(.left, to: .right, of: imageView, withOffset: 4)
   }
   
   required init?(coder: NSCoder) {

@@ -7,18 +7,18 @@ import Cocoa
 
 class OpenQuicklyFileViewRow: NSTableRowView {
 
-  override func drawSelectionInRect(dirtyRect: NSRect) {
-    if self.selected {
-      NSColor.selectedControlColor().set()
+  override func drawSelection(in dirtyRect: NSRect) {
+    if self.isSelected {
+      NSColor.selectedControlColor.set()
     } else {
-      NSColor.clearColor().set()
+      NSColor.clear.set()
     }
 
-    self.rectsBeingDrawn().forEach { NSRectFillUsingOperation(NSIntersectionRect($0, dirtyRect), .CompositeSourceOver) }
+    self.rectsBeingDrawn().forEach { NSRectFillUsingOperation(NSIntersectionRect($0, dirtyRect), .sourceOver) }
   }
 
-  private func rectsBeingDrawn() -> [CGRect] {
-    var rectsPtr: UnsafePointer<CGRect> = nil
+  fileprivate func rectsBeingDrawn() -> [CGRect] {
+    var rectsPtr: UnsafePointer<CGRect>? = nil
     var count: Int = 0
     self.getRectsBeingDrawn(&rectsPtr, count: &count)
 

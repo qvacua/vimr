@@ -21,21 +21,21 @@ private class PrefKeys {
 
 class PrefStore: Store {
 
-  private static let compatibleVersion = "38"
-  private static let defaultEditorFont = NeoVimView.defaultFont
+  fileprivate static let compatibleVersion = "38"
+  fileprivate static let defaultEditorFont = NeoVimView.defaultFont
   static let minimumEditorFontSize = NeoVimView.minFontSize
   static let maximumEditorFontSize = NeoVimView.maxFontSize
 
-  private let source: Observable<Any>
-  private let disposeBag = DisposeBag()
+  fileprivate let source: Observable<Any>
+  fileprivate let disposeBag = DisposeBag()
 
-  private let subject = PublishSubject<Any>()
+  fileprivate let subject = PublishSubject<Any>()
   var sink: Observable<Any> {
     return self.subject.asObservable()
   }
 
-  private let userDefaults = NSUserDefaults.standardUserDefaults()
-  private let fontManager = NSFontManager.sharedFontManager()
+  fileprivate let userDefaults = UserDefaults.standard
+  fileprivate let fontManager = NSFontManager.shared()
 
   var data = PrefData(
     general: GeneralPrefData(openNewWindowWhenLaunching: true,
@@ -48,7 +48,7 @@ class PrefStore: Store {
   init(source: Observable<Any>) {
     self.source = source
 
-    if let prefs = self.userDefaults.dictionaryForKey(PrefStore.compatibleVersion) {
+    if let prefs = self.userDefaults.dictionary(forKey: PrefStore.compatibleVersion) {
       self.data = self.prefDataFromDict(prefs)
     } else {
       self.userDefaults.setValue(self.prefsDict(self.data), forKey: PrefStore.compatibleVersion)
@@ -61,7 +61,7 @@ class PrefStore: Store {
     self.subject.onCompleted()
   }
 
-  private func prefDataFromDict(prefs: [String: AnyObject]) -> PrefData {
+  fileprivate func prefDataFromDict(_ prefs: [String: Any]) -> PrefData {
 
     let editorFontName = prefs[PrefKeys.editorFontName] as? String ?? PrefStore.defaultEditorFont.fontName
     let editorFontSize = CGFloat(
@@ -89,43 +89,43 @@ class PrefStore: Store {
     )
   }
 
-  private func saneFont(fontName: String, fontSize: CGFloat) -> NSFont {
+  fileprivate func saneFont(_ fontName: String, fontSize: CGFloat) -> NSFont {
     var editorFont = NSFont(name: fontName, size: fontSize) ?? PrefStore.defaultEditorFont
-    if !editorFont.fixedPitch {
-      editorFont = fontManager.convertFont(PrefStore.defaultEditorFont, toSize: editorFont.pointSize)
+    if !editorFont.isFixedPitch {
+      editorFont = fontManager.convert(PrefStore.defaultEditorFont, toSize: editorFont.pointSize)
     }
     if editorFont.pointSize < PrefStore.minimumEditorFontSize
       || editorFont.pointSize > PrefStore.maximumEditorFontSize {
-      editorFont = fontManager.convertFont(editorFont, toSize: PrefStore.defaultEditorFont.pointSize)
+      editorFont = fontManager.convert(editorFont, toSize: PrefStore.defaultEditorFont.pointSize)
     }
 
     return editorFont
   }
 
-  private func prefsDict(prefData: PrefData) -> [String: AnyObject] {
+  fileprivate func prefsDict(_ prefData: PrefData) -> [String: AnyObject] {
     let generalData = prefData.general
     let appearanceData = prefData.appearance
     let advancedData = prefData.advanced
 
     let prefs: [String: AnyObject] = [
       // General
-      PrefKeys.openNewWindowWhenLaunching: generalData.openNewWindowWhenLaunching,
-      PrefKeys.openNewWindowOnReactivation: generalData.openNewWindowOnReactivation,
-      PrefKeys.openQuicklyIgnorePatterns: PrefUtils.ignorePatternString(fromSet: generalData.ignorePatterns),
+      PrefKeys.openNewWindowWhenLaunching: generalData.openNewWindowWhenLaunching as AnyObject,
+      PrefKeys.openNewWindowOnReactivation: generalData.openNewWindowOnReactivation as AnyObject,
+      PrefKeys.openQuicklyIgnorePatterns: PrefUtils.ignorePatternString(fromSet: generalData.ignorePatterns) as AnyObject,
 
       // Appearance
-      PrefKeys.editorFontName: appearanceData.editorFont.fontName,
-      PrefKeys.editorFontSize: appearanceData.editorFont.pointSize,
-      PrefKeys.editorUsesLigatures: appearanceData.editorUsesLigatures,
+      PrefKeys.editorFontName: appearanceData.editorFont.fontName as AnyObject,
+      PrefKeys.editorFontSize: appearanceData.editorFont.pointSize as AnyObject,
+      PrefKeys.editorUsesLigatures: appearanceData.editorUsesLigatures as AnyObject,
 
       // Advanced
-      PrefKeys.useInteractiveZsh: advancedData.useInteractiveZsh,
+      PrefKeys.useInteractiveZsh: advancedData.useInteractiveZsh as AnyObject,
     ]
 
     return prefs
   }
 
-  private func addReactions() {
+  fileprivate func addReactions() {
     self.source
       .filter { $0 is PrefData }
       .map { $0 as! PrefData }

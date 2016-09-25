@@ -34,11 +34,11 @@ class StandardFlow: Flow {
     self.subject.onCompleted()
   }
 
-  func subscription(source source: Observable<Any>) -> Disposable {
+  func subscription(source: Observable<Any>) -> Disposable {
     preconditionFailure("Please override")
   }
 
-  func publish(event event: Any) {
+  func publish(event: Any) {
     self.subject.onNext(event)
   }
 }
@@ -69,11 +69,11 @@ class StandardComponent: NSObject, Component {
     preconditionFailure("Please override")
   }
 
-  func subscription(source source: Observable<Any>) -> Disposable {
+  func subscription(source: Observable<Any>) -> Disposable {
     preconditionFailure("Please override")
   }
 
-  func publish(event event: Any) {
+  func publish(event: Any) {
     self.subject.onNext(event)
   }
 }

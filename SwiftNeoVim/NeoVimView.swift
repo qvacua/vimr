@@ -9,7 +9,7 @@ import Cocoa
 private struct RowRun: CustomStringConvertible {
 
   let row: Int
-  let range: Range<Int>
+  let range: CountableClosedRange<Int>
   let attrs: CellAttributes
 
   var description: String {
@@ -17,7 +17,7 @@ private struct RowRun: CustomStringConvertible {
   }
 }
 
-public class NeoVimView: NSView, NSUserInterfaceValidations {
+open class NeoVimView: NSView, NSUserInterfaceValidations {
 
   public struct Config {
     let useInteractiveZsh: Bool
@@ -27,29 +27,29 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
     }
   }
   
-  public static let minFontSize = CGFloat(4)
-  public static let maxFontSize = CGFloat(128)
-  public static let defaultFont = NSFont.userFixedPitchFontOfSize(13)!
+  open static let minFontSize = CGFloat(4)
+  open static let maxFontSize = CGFloat(128)
+  open static let defaultFont = NSFont.userFixedPitchFont(ofSize: 13)!
 
-  public let uuid = NSUUID().UUIDString
-  public weak var delegate: NeoVimViewDelegate?
+  open let uuid = UUID().uuidString
+  open weak var delegate: NeoVimViewDelegate?
 
-  public private(set) var mode = Mode.Normal
+  open fileprivate(set) var mode = Mode.Normal
   
-  public var usesLigatures = false {
+  open var usesLigatures = false {
     didSet {
       self.drawer.usesLigatures = self.usesLigatures
       self.needsDisplay = true
     }
   }
   
-  public var font: NSFont {
+  open var font: NSFont {
     get {
       return self._font
     }
 
     set {
-      guard newValue.fixedPitch else {
+      guard newValue.isFixedPitch else {
         return
       }
 
@@ -68,59 +68,56 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
     }
   }
 
-  public var cwd: NSURL {
+  open var cwd: URL {
     get {
-      return NSURL(fileURLWithPath: self.agent.vimCommandOutput("silent pwd"))
+      return URL(fileURLWithPath: self.agent.vimCommandOutput("silent pwd"))
     }
 
     set {
-      guard let path = newValue.path else {
-        return
-      }
-
+      let path = newValue.path
       let escapedCwd = self.agent.escapedFileName(path)
       self.agent.vimCommand("silent cd \(escapedCwd)")
     }
   }
   
-  private var _font = NeoVimView.defaultFont
+  fileprivate var _font = NeoVimView.defaultFont
 
-  private let agent: NeoVimAgent
-  private let drawer: TextDrawer
-  private let fontManager = NSFontManager.sharedFontManager()
-  private let pasteboard = NSPasteboard.generalPasteboard()
+  fileprivate let agent: NeoVimAgent
+  fileprivate let drawer: TextDrawer
+  fileprivate let fontManager = NSFontManager.shared()
+  fileprivate let pasteboard = NSPasteboard.general()
 
-  private let grid = Grid()
+  fileprivate let grid = Grid()
 
-  private var markedText: String?
+  fileprivate var markedText: String?
 
   /// We store the last marked text because Cocoa's text input system does the following:
   /// 하 -> hanja popup -> insertText(하) -> attributedSubstring...() -> setMarkedText(下) -> ...
   /// We want to return "하" in attributedSubstring...()
-  private var lastMarkedText: String?
+  fileprivate var lastMarkedText: String?
   
-  private var markedPosition = Position.null
-  private var keyDownDone = true
+  fileprivate var markedPosition = Position.null
+  fileprivate var keyDownDone = true
 
-  private var lastClickedCellPosition = Position.null
+  fileprivate var lastClickedCellPosition = Position.null
   
-  private var xOffset = CGFloat(0)
-  private var yOffset = CGFloat(0)
-  private var cellSize = CGSize.zero
-  private var descent = CGFloat(0)
-  private var leading = CGFloat(0)
+  fileprivate var xOffset = CGFloat(0)
+  fileprivate var yOffset = CGFloat(0)
+  fileprivate var cellSize = CGSize.zero
+  fileprivate var descent = CGFloat(0)
+  fileprivate var leading = CGFloat(0)
 
-  private let maxScrollDeltaX = 30
-  private let maxScrollDeltaY = 30
-  private let scrollLimiterX = CGFloat(20)
-  private let scrollLimiterY = CGFloat(20)
-  private var scrollGuardCounterX = 5
-  private var scrollGuardCounterY = 5
-  private let scrollGuardYield = 5
+  fileprivate let maxScrollDeltaX = 30
+  fileprivate let maxScrollDeltaY = 30
+  fileprivate let scrollLimiterX = CGFloat(20)
+  fileprivate let scrollLimiterY = CGFloat(20)
+  fileprivate var scrollGuardCounterX = 5
+  fileprivate var scrollGuardCounterY = 5
+  fileprivate let scrollGuardYield = 5
   
-  private var isCurrentlyPinching = false
-  private var pinchTargetScale = CGFloat(1)
-  private var pinchImage = NSImage()
+  fileprivate var isCurrentlyPinching = false
+  fileprivate var pinchTargetScale = CGFloat(1)
+  fileprivate var pinchImage = NSImage()
 
   public init(frame rect: NSRect, config: Config) {
     self.drawer = TextDrawer(font: self._font, useLigatures: false)
@@ -142,7 +139,7 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
     DispatchUtils.gui {
       if noErrorDuringInitialization == false {
         let alert = NSAlert()
-        alert.alertStyle = .WarningAlertStyle
+        alert.alertStyle = .warning
         alert.messageText = "Error during initialization"
         alert.informativeText = "There was an error during the initialization of NeoVim. "
           + "Use :messages to view the error messages."
@@ -161,7 +158,7 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
     fatalError("init(coder:) has not been implemented")
   }
 
-  @IBAction public func debug1(sender: AnyObject!) {
+  @IBAction open func debug1(_ sender: AnyObject!) {
     NSLog("DEBUG 1 - Start")
     NSLog("\(self.agent.vimCommandOutput("silent echo $PATH"))")
     NSLog("\(self.agent.vimCommandOutput("silent pwd"))")
@@ -188,10 +185,10 @@ extension NeoVimView {
     self.exec(command: "tabe")
   }
 
-  public func open(urls urls: [NSURL]) {
+  public func open(urls: [URL]) {
     let currentBufferIsTransient = self.agent.buffers().filter { $0.current }.first?.transient ?? false
 
-    urls.enumerate().forEach { (idx, url) in
+    urls.enumerated().forEach { (idx, url) in
       if idx == 0 && currentBufferIsTransient {
         self.open(url, cmd: "e")
       } else {
@@ -200,11 +197,11 @@ extension NeoVimView {
     }
   }
   
-  public func openInNewTab(urls urls: [NSURL]) {
+  public func openInNewTab(urls: [URL]) {
     urls.forEach { self.open($0, cmd: "tabe") }
   }
   
-  public func openInCurrentTab(url url: NSURL) {
+  public func openInCurrentTab(url: URL) {
     self.open(url, cmd: "e")
   }
 
@@ -216,11 +213,8 @@ extension NeoVimView {
     self.exec(command: "w")
   }
   
-  public func saveCurrentTab(url url: NSURL) {
-    guard let path = url.path else {
-      return
-    }
-    
+  public func saveCurrentTab(url: URL) {
+    let path = url.path
     let escapedFileName = self.agent.escapedFileName(path)
     self.exec(command: "w \(escapedFileName)")
   }
@@ -240,7 +234,7 @@ extension NeoVimView {
   /// Does the following
   /// - `Mode.Normal`: `:command<CR>`
   /// - else: `:<Esc>:command<CR>`
-  private func exec(command cmd: String) {
+  fileprivate func exec(command cmd: String) {
     switch self.mode {
     case .Normal:
       self.agent.vimInput(":\(cmd)<CR>")
@@ -249,11 +243,8 @@ extension NeoVimView {
     }
   }
   
-  private func open(url: NSURL, cmd: String) {
-    guard let path = url.path else {
-      return
-    }
-    
+  fileprivate func open(_ url: URL, cmd: String) {
+    let path = url.path
     let escapedFileName = self.agent.escapedFileName(path)
     self.exec(command: "\(cmd) \(escapedFileName)")
   }
@@ -262,7 +253,7 @@ extension NeoVimView {
 // MARK: - Resizing
 extension NeoVimView {
 
-  override public func setFrameSize(newSize: NSSize) {
+  override open func setFrameSize(_ newSize: NSSize) {
     super.setFrameSize(newSize)
 
     // initial resizing is done when grid has data
@@ -281,22 +272,22 @@ extension NeoVimView {
     self.resizeNeoVimUiTo(size: newSize)
   }
 
-  override public func viewDidEndLiveResize() {
+  override open func viewDidEndLiveResize() {
     super.viewDidEndLiveResize()
     self.resizeNeoVimUiTo(size: self.bounds.size)
   }
 
-  private func resizeNeoVimUiTo(size size: CGSize) {
+  fileprivate func resizeNeoVimUiTo(size: CGSize) {
 //    NSLog("\(#function): \(size)")
     let discreteSize = self.discreteSize(size: size)
 
     self.xOffset = floor((size.width - self.cellSize.width * CGFloat(discreteSize.width)) / 2)
     self.yOffset = floor((size.height - self.cellSize.height * CGFloat(discreteSize.height)) / 2)
 
-    self.agent.resizeToWidth(Int32(discreteSize.width), height: Int32(discreteSize.height))
+    self.agent.resize(toWidth: Int32(discreteSize.width), height: Int32(discreteSize.height))
   }
   
-  private func discreteSize(size size: CGSize) -> Size {
+  fileprivate func discreteSize(size: CGSize) -> Size {
     return Size(width: Int(floor(size.width / self.cellSize.width)),
                 height: Int(floor(size.height / self.cellSize.height)))
   }
@@ -305,42 +296,42 @@ extension NeoVimView {
 // MARK: - Drawing
 extension NeoVimView {
 
-  override public func drawRect(dirtyUnionRect: NSRect) {
+  override open func draw(_ dirtyUnionRect: NSRect) {
     guard self.grid.hasData else {
       return
     }
 
     if self.inLiveResize {
-      NSColor.windowBackgroundColor().set()
+      NSColor.windowBackgroundColor.set()
       dirtyUnionRect.fill()
       
       let boundsSize = self.bounds.size
       let discreteSize = self.discreteSize(size: boundsSize)
       
       let displayStr = "\(discreteSize.width) × \(discreteSize.height)"
-      let attrs = [ NSFontAttributeName: NSFont.systemFontOfSize(24) ]
+      let attrs = [ NSFontAttributeName: NSFont.systemFont(ofSize: 24) ]
       
-      let size = displayStr.sizeWithAttributes(attrs)
+      let size = displayStr.size(withAttributes: attrs)
       let x = (boundsSize.width - size.width) / 2
       let y = (boundsSize.height - size.height) / 2
       
-      displayStr.drawAtPoint(CGPoint(x: x, y: y), withAttributes: attrs)
+      displayStr.draw(at: CGPoint(x: x, y: y), withAttributes: attrs)
       return
     }
 
 //    NSLog("\(#function): \(dirtyUnionRect)")
-    let context = NSGraphicsContext.currentContext()!.CGContext
+    let context = NSGraphicsContext.current()!.cgContext
     
     if self.isCurrentlyPinching {
       let boundsSize = self.bounds.size
       let targetSize = CGSize(width: boundsSize.width * self.pinchTargetScale,
                               height: boundsSize.height * self.pinchTargetScale)
-      self.pinchImage.drawInRect(CGRect(origin: self.bounds.origin, size: targetSize))
+      self.pinchImage.draw(in: CGRect(origin: self.bounds.origin, size: targetSize))
       return
     }
 
-    CGContextSetTextMatrix(context, CGAffineTransformIdentity);
-    CGContextSetTextDrawingMode(context, .Fill);
+    context.textMatrix = CGAffineTransform.identity;
+    context.setTextDrawingMode(.fill);
 
     let dirtyRects = self.rectsBeingDrawn()
 //    NSLog("\(dirtyRects)")
@@ -349,7 +340,7 @@ extension NeoVimView {
     self.drawCursor(context: context)
   }
 
-  private func draw(rowRun rowFrag: RowRun, context: CGContext) {
+  fileprivate func draw(rowRun rowFrag: RowRun, context: CGContext) {
     // For background drawing we don't filter out the put(0, 0)s: in some cases only the put(0, 0)-cells should be
     // redrawn. => FIXME: probably we have to consider this also when drawing further down, ie when the range starts
     // with '0'...
@@ -368,13 +359,13 @@ extension NeoVimView {
     let string = self.grid.cells[rowFrag.row][rowFrag.range].reduce("") { $0 + $1.string }
     let glyphPositions = positions.map { CGPoint(x: $0.x, y: $0.y + self.descent + self.leading) }
 
-    self.drawer.drawString(string,
-                           positions: UnsafeMutablePointer(glyphPositions), positionsCount: positions.count,
+    self.drawer.draw(string,
+                           positions: UnsafeMutablePointer(mutating: glyphPositions), positionsCount: positions.count,
                            highlightAttrs: rowFrag.attrs,
                            context: context)
   }
 
-  private func cursorRegion() -> Region {
+  fileprivate func cursorRegion() -> Region {
     let cursorPosition = self.mode == .Cmdline ? self.grid.putPosition : self.grid.screenCursor
 //    NSLog("\(#function): \(cursorPosition)")
 
@@ -393,7 +384,7 @@ extension NeoVimView {
     return cursorRegion
   }
 
-  private func drawCursor(context context: CGContext) {
+  fileprivate func drawCursor(context: CGContext) {
     // FIXME: for now do some rudimentary cursor drawing
     let cursorRegion = self.cursorRegion()
     let cursorRow = cursorRegion.top
@@ -409,7 +400,7 @@ extension NeoVimView {
     self.draw(rowRun: rowRun, context: context)
   }
 
-  private func drawBackground(positions positions: [CGPoint], background: UInt32) {
+  fileprivate func drawBackground(positions: [CGPoint], background: UInt32) {
     ColorUtils.colorIgnoringAlpha(background).set()
 //    NSColor(calibratedRed: CGFloat(drand48()), green: CGFloat(drand48()), blue: CGFloat(drand48()), alpha: 1.0).set()
     let backgroundRect = CGRect(
@@ -419,9 +410,9 @@ extension NeoVimView {
     backgroundRect.fill()
   }
 
-  private func rowRunIntersecting(rects rects: [CGRect]) -> [RowRun] {
+  fileprivate func rowRunIntersecting(rects: [CGRect]) -> [RowRun] {
     return rects
-      .map { rect -> (Range<Int>, Range<Int>) in
+      .map { rect -> (CountableClosedRange<Int>, CountableClosedRange<Int>) in
         // Get all Regions that intersects with the given rects. There can be overlaps between the Regions, but for the
         // time being we ignore them; probably not necessary to optimize them away.
         let region = self.regionFor(rect: rect)
@@ -431,17 +422,17 @@ extension NeoVimView {
       .flatMap { $0 }                                         // Flattened RowRuns for all Regions.
   }
 
-  private func rowRunsFor(rowRange rowRange: Range<Int>, columnRange: Range<Int>) -> [RowRun] {
+  fileprivate func rowRunsFor(rowRange: CountableClosedRange<Int>, columnRange: CountableClosedRange<Int>) -> [RowRun] {
     return rowRange
       .map { (row) -> [RowRun] in
         let rowCells = self.grid.cells[row]
-        let startIdx = columnRange.startIndex
+        let startIdx = columnRange.lowerBound
 
         var result = [ RowRun(row: row, range: startIdx...startIdx, attrs: rowCells[startIdx].attrs) ]
         columnRange.forEach { idx in
           if rowCells[idx].attrs == result.last!.attrs {
             let last = result.popLast()!
-            result.append(RowRun(row: row, range: last.range.startIndex...idx, attrs: last.attrs))
+            result.append(RowRun(row: row, range: last.range.lowerBound...idx, attrs: last.attrs))
           } else {
             result.append(RowRun(row: row, range: idx...idx, attrs: rowCells[idx].attrs))
           }
@@ -452,7 +443,7 @@ extension NeoVimView {
       .flatMap { $0 } // Flattened RowRuns for a Region.
   }
 
-  private func regionFor(rect rect: CGRect) -> Region {
+  fileprivate func regionFor(rect: CGRect) -> Region {
     let cellWidth = self.cellSize.width
     let cellHeight = self.cellSize.height
 
@@ -472,22 +463,22 @@ extension NeoVimView {
     return Region(top: rowStart, bottom: rowEnd, left: columnStart, right: columnEnd)
   }
   
-  private func pointInViewFor(position position: Position) -> CGPoint {
+  fileprivate func pointInViewFor(position: Position) -> CGPoint {
     return self.pointInViewFor(row: position.row, column: position.column)
   }
 
-  private func pointInViewFor(row row: Int, column: Int) -> CGPoint {
+  fileprivate func pointInViewFor(row: Int, column: Int) -> CGPoint {
     return CGPoint(
       x: self.xOffset + CGFloat(column) * self.cellSize.width,
       y: self.bounds.size.height - self.yOffset - CGFloat(row) * self.cellSize.height - self.cellSize.height
     )
   }
 
-  private func cellRectFor(row row: Int, column: Int) -> CGRect {
+  fileprivate func cellRectFor(row: Int, column: Int) -> CGRect {
     return CGRect(origin: self.pointInViewFor(row: row, column: column), size: self.cellSize)
   }
 
-  private func regionRectFor(region region: Region) -> CGRect {
+  fileprivate func regionRectFor(region: Region) -> CGRect {
     let top = CGFloat(region.top)
     let bottom = CGFloat(region.bottom)
     let left = CGFloat(region.left)
@@ -507,35 +498,39 @@ extension NeoVimView {
     )
   }
 
-  private func wrapNamedKeys(string: String) -> String {
+  fileprivate func wrapNamedKeys(_ string: String) -> String {
     return "<\(string)>"
   }
   
-  private func vimPlainString(string: String) -> String {
-    return string.stringByReplacingOccurrencesOfString("<", withString: self.wrapNamedKeys("lt"))
+  fileprivate func vimPlainString(_ string: String) -> String {
+    return string.replacingOccurrences(of: "<", with: self.wrapNamedKeys("lt"))
   }
 }
 
 // MARK: - NSUserInterfaceValidationsProtocol
 extension NeoVimView {
 
-  public func validateUserInterfaceItem(item: NSValidatedUserInterfaceItem) -> Bool {
+  public func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
     let canUndoOrRedo = self.mode == .Insert || self.mode == .Replace || self.mode == .Normal || self.mode == .Visual
     let canCopyOrCut = self.mode == .Normal || self.mode == .Visual
-    let canPaste = self.pasteboard.stringForType(NSPasteboardTypeString) != nil
+    let canPaste = self.pasteboard.string(forType: NSPasteboardTypeString) != nil
     let canDelete = self.mode == .Visual || self.mode == .Normal
     let canSelectAll = self.mode == .Insert || self.mode == .Replace || self.mode == .Normal || self.mode == .Visual
 
-    switch item.action() {
-    case NSSelectorFromString("undo:"), NSSelectorFromString("redo:"):
+    guard let action = item.action else {
+      return true
+    }
+
+    switch action {
+    case Selector("undo:"), Selector("redo:"):
       return canUndoOrRedo
-    case NSSelectorFromString("copy:"), NSSelectorFromString("cut:"):
+    case Selector("copy:"), Selector("cut:"):
       return canCopyOrCut
-    case NSSelectorFromString("paste:"):
+    case Selector("paste:"):
       return canPaste
-    case NSSelectorFromString("delete:"):
+    case Selector("delete:"):
       return canDelete
-    case NSSelectorFromString("selectAll:"):
+    case Selector("selectAll:"):
       return canSelectAll
     default:
       return true
@@ -546,7 +541,7 @@ extension NeoVimView {
 // MARK: - Edit Menu Items
 extension NeoVimView {
 
-  @IBAction func undo(sender: AnyObject!) {
+  @IBAction func undo(_ sender: AnyObject!) {
     switch self.mode {
     case .Insert, .Replace:
       self.agent.vimInput("<Esc>ui")
@@ -557,7 +552,7 @@ extension NeoVimView {
     }
   }
 
-  @IBAction func redo(sender: AnyObject!) {
+  @IBAction func redo(_ sender: AnyObject!) {
     switch self.mode {
     case .Insert, .Replace:
       self.agent.vimInput("<Esc><C-r>i")
@@ -568,7 +563,7 @@ extension NeoVimView {
     }
   }
 
-  @IBAction func cut(sender: AnyObject!) {
+  @IBAction func cut(_ sender: AnyObject!) {
     switch self.mode {
     case .Visual, .Normal:
       self.agent.vimInput("\"+d")
@@ -577,7 +572,7 @@ extension NeoVimView {
     }
   }
 
-  @IBAction func copy(sender: AnyObject!) {
+  @IBAction func copy(_ sender: AnyObject!) {
     switch self.mode {
     case .Visual, .Normal:
       self.agent.vimInput("\"+y")
@@ -586,8 +581,8 @@ extension NeoVimView {
     }
   }
 
-  @IBAction func paste(sender: AnyObject!) {
-    guard let content = self.pasteboard.stringForType(NSPasteboardTypeString) else {
+  @IBAction func paste(_ sender: AnyObject!) {
+    guard let content = self.pasteboard.string(forType: NSPasteboardTypeString) else {
       return
     }
 
@@ -599,7 +594,7 @@ extension NeoVimView {
     }
   }
 
-  @IBAction func delete(sender: AnyObject!) {
+  @IBAction func delete(_ sender: AnyObject!) {
     switch self.mode {
     case .Normal, .Visual:
       self.agent.vimInput("x")
@@ -608,7 +603,7 @@ extension NeoVimView {
     }
   }
 
-  @IBAction public override func selectAll(sender: AnyObject?) {
+  @IBAction open override func selectAll(_ sender: Any?) {
     switch self.mode {
     case .Insert, .Visual:
       self.agent.vimInput("<Esc>ggVG")
@@ -621,10 +616,10 @@ extension NeoVimView {
 // MARK: - Key Events
 extension NeoVimView: NSTextInputClient {
 
-  override public func keyDown(event: NSEvent) {
+  override open func keyDown(with event: NSEvent) {
     self.keyDownDone = false
     
-    let context = NSTextInputContext.currentInputContext()!
+    let context = NSTextInputContext.current()!
     let cocoaHandledEvent = context.handleEvent(event)
     if self.keyDownDone && cocoaHandledEvent {
       return
@@ -633,10 +628,10 @@ extension NeoVimView: NSTextInputClient {
 //    NSLog("\(#function): \(event)")
 
     let modifierFlags = event.modifierFlags
-    let capslock = modifierFlags.contains(.AlphaShiftKeyMask)
-    let shift = modifierFlags.contains(.ShiftKeyMask)
+    let capslock = modifierFlags.contains(.capsLock)
+    let shift = modifierFlags.contains(.shift)
     let chars = event.characters!
-    let charsIgnoringModifiers = shift || capslock ? event.charactersIgnoringModifiers!.lowercaseString
+    let charsIgnoringModifiers = shift || capslock ? event.charactersIgnoringModifiers!.lowercased()
                                                    : event.charactersIgnoringModifiers!
 
     if KeyUtils.isSpecial(key: charsIgnoringModifiers) {
@@ -656,7 +651,7 @@ extension NeoVimView: NSTextInputClient {
     self.keyDownDone = true
   }
 
-  public func insertText(aString: AnyObject, replacementRange: NSRange) {
+  public func insertText(_ aString: Any, replacementRange: NSRange) {
 //    NSLog("\(#function): \(replacementRange): '\(aString)'")
 
     switch aString {
@@ -675,14 +670,14 @@ extension NeoVimView: NSTextInputClient {
     self.keyDownDone = true
   }
 
-  public override func doCommandBySelector(aSelector: Selector) {
+  open override func doCommand(by aSelector: Selector) {
 //    NSLog("\(#function): \(aSelector)");
 
     // FIXME: handle when ㅎ -> delete
 
-    if self.respondsToSelector(aSelector) {
+    if self.responds(to: aSelector) {
       Swift.print("\(#function): calling \(aSelector)")
-      self.performSelector(aSelector, withObject: self)
+      self.perform(aSelector, with: self)
       self.keyDownDone = true
       return
     }
@@ -691,7 +686,7 @@ extension NeoVimView: NSTextInputClient {
     self.keyDownDone = false
   }
 
-  public func setMarkedText(aString: AnyObject, selectedRange: NSRange, replacementRange: NSRange) {
+  public func setMarkedText(_ aString: Any, selectedRange: NSRange, replacementRange: NSRange) {
     if self.markedText == nil {
       self.markedPosition = self.grid.putPosition
     }
@@ -707,7 +702,7 @@ extension NeoVimView: NSTextInputClient {
     case let attributedString as NSAttributedString:
       self.markedText = attributedString.string
     default:
-      self.markedText = String(aString) // should not occur
+      self.markedText = String(describing: aString) // should not occur
     }
     
 //    NSLog("\(#function): \(self.markedText), \(selectedRange), \(replacementRange)")
@@ -723,7 +718,7 @@ extension NeoVimView: NSTextInputClient {
     self.keyDownDone = true
     
     // TODO: necessary?
-    self.setNeedsDisplayInRect(self.cellRectFor(row: self.grid.putPosition.row, column: self.grid.putPosition.column))
+    self.setNeedsDisplay(self.cellRectFor(row: self.grid.putPosition.row, column: self.grid.putPosition.column))
   }
 
   /// Return the current selection (or the position of the cursor with empty-length range). For example when you enter
@@ -761,7 +756,7 @@ extension NeoVimView: NSTextInputClient {
 
   // FIXME: take into account the "return nil"-case
   // FIXME: just fix me, PLEASE...
-  public func attributedSubstringForProposedRange(aRange: NSRange, actualRange: NSRangePointer) -> NSAttributedString? {
+  public func attributedSubstring(forProposedRange aRange: NSRange, actualRange: NSRangePointer?) -> NSAttributedString? {
 //    NSLog("\(#function): \(aRange), \(actualRange[0])")
     if aRange.location == NSNotFound {
 //      NSLog("\(#function): range not found: returning nil")
@@ -789,28 +784,28 @@ extension NeoVimView: NSTextInputClient {
     return []
   }
 
-  public func firstRectForCharacterRange(aRange: NSRange, actualRange: NSRangePointer) -> NSRect {
+  public func firstRect(forCharacterRange aRange: NSRange, actualRange: NSRangePointer?) -> NSRect {
     let position = self.grid.positionFromSingleIndex(aRange.location)
     
 //    NSLog("\(#function): \(aRange),\(actualRange[0]) -> \(position.row):\(position.column)")
 
     let resultInSelf = self.cellRectFor(row: position.row, column: position.column)
-    let result = self.window?.convertRectToScreen(self.convertRect(resultInSelf, toView: nil))
+    let result = self.window?.convertToScreen(self.convert(resultInSelf, to: nil))
 
     return result!
   }
 
-  public func characterIndexForPoint(aPoint: NSPoint) -> Int {
+  public func characterIndex(for aPoint: NSPoint) -> Int {
 //    NSLog("\(#function): \(aPoint)")
     return 1
   }
   
-  private func vimModifierFlags(modifierFlags: NSEventModifierFlags) -> String? {
+  fileprivate func vimModifierFlags(_ modifierFlags: NSEventModifierFlags) -> String? {
     var result = ""
     
-    let control = modifierFlags.contains(.ControlKeyMask)
-    let option = modifierFlags.contains(.AlternateKeyMask)
-    let command = modifierFlags.contains(.CommandKeyMask)
+    let control = modifierFlags.contains(.control)
+    let option = modifierFlags.contains(.option)
+    let command = modifierFlags.contains(.command)
 
     if control {
       result += "C-"
@@ -835,7 +830,7 @@ extension NeoVimView: NSTextInputClient {
 // MARK: - Gesture Events
 extension NeoVimView {
   
-  override public func magnifyWithEvent(event: NSEvent) {
+  override open func magnify(with event: NSEvent) {
     let factor = 1 + event.magnification
     let pinchTargetScale = self.pinchTargetScale * factor
     let resultingFontSize = round(pinchTargetScale * self._font.pointSize)
@@ -844,18 +839,18 @@ extension NeoVimView {
     }
     
     switch event.phase {
-    case NSEventPhase.Began:
-      let pinchImageRep = self.bitmapImageRepForCachingDisplayInRect(self.bounds)!
-      self.cacheDisplayInRect(self.bounds, toBitmapImageRep: pinchImageRep)
+    case NSEventPhase.began:
+      let pinchImageRep = self.bitmapImageRepForCachingDisplay(in: self.bounds)!
+      self.cacheDisplay(in: self.bounds, to: pinchImageRep)
       self.pinchImage = NSImage()
       self.pinchImage.addRepresentation(pinchImageRep)
 
       self.isCurrentlyPinching = true
       self.needsDisplay = true
       
-    case NSEventPhase.Ended, NSEventPhase.Cancelled:
+    case NSEventPhase.ended, NSEventPhase.cancelled:
       self.isCurrentlyPinching = false
-      self.font = self.fontManager.convertFont(self._font, toSize: resultingFontSize)
+      self.font = self.fontManager.convert(self._font, toSize: resultingFontSize)
       self.pinchTargetScale = 1
 
     default:
@@ -867,19 +862,19 @@ extension NeoVimView {
 // MARK: - Mouse Events
 extension NeoVimView {
 
-  override public func mouseDown(event: NSEvent) {
+  override open func mouseDown(with event: NSEvent) {
     self.mouse(event: event, vimName:"LeftMouse")
   }
 
-  override public func mouseUp(event: NSEvent) {
+  override open func mouseUp(with event: NSEvent) {
     self.mouse(event: event, vimName:"LeftRelease")
   }
 
-  override public func mouseDragged(event: NSEvent) {
+  override open func mouseDragged(with event: NSEvent) {
     self.mouse(event: event, vimName:"LeftDrag")
   }
 
-  override public func scrollWheel(event: NSEvent) {
+  override open func scrollWheel(with event: NSEvent) {
     let (deltaX, deltaY) = (event.scrollingDeltaX, event.scrollingDeltaY)
     if deltaX == 0 && deltaY == 0 {
       return
@@ -908,8 +903,8 @@ extension NeoVimView {
     }
   }
 
-  private func cellPositionFor(event event: NSEvent) -> Position {
-    let location = self.convertPoint(event.locationInWindow, fromView: nil)
+  fileprivate func cellPositionFor(event: NSEvent) -> Position {
+    let location = self.convert(event.locationInWindow, from: nil)
     let row = Int((location.x - self.xOffset) / self.cellSize.width)
     let column = Int((self.bounds.size.height - location.y - self.yOffset) / self.cellSize.height)
 
@@ -918,7 +913,7 @@ extension NeoVimView {
     return cellPosition
   }
 
-  private func mouse(event event: NSEvent, vimName: String) {
+  fileprivate func mouse(event: NSEvent, vimName: String) {
     let cellPosition = self.cellPositionFor(event: event)
     guard self.shouldFireVimInputFor(event: event, newCellPosition: cellPosition) else {
       return
@@ -938,9 +933,9 @@ extension NeoVimView {
     self.agent.vimInput(result)
   }
 
-  private func shouldFireVimInputFor(event event:NSEvent, newCellPosition: Position) -> Bool {
+  fileprivate func shouldFireVimInputFor(event:NSEvent, newCellPosition: Position) -> Bool {
     let type = event.type
-    guard type == .LeftMouseDragged || type == .RightMouseDragged || type == .OtherMouseDragged  else {
+    guard type == .leftMouseDragged || type == .rightMouseDragged || type == .otherMouseDragged  else {
       self.lastClickedCellPosition = newCellPosition
       return true
     }
@@ -953,7 +948,7 @@ extension NeoVimView {
     return true
   }
 
-  private func vimClickCountFrom(event event: NSEvent) -> String {
+  fileprivate func vimClickCountFrom(event: NSEvent) -> String {
     let clickCount = event.clickCount
 
     guard 2 <= clickCount && clickCount <= 4 else {
@@ -961,14 +956,14 @@ extension NeoVimView {
     }
 
     switch event.type {
-    case .LeftMouseDown, .LeftMouseUp, .RightMouseDown, .RightMouseUp:
+    case .leftMouseDown, .leftMouseUp, .rightMouseDown, .rightMouseUp:
       return "\(clickCount)-"
     default:
       return ""
     }
   }
   
-  private func vimScrollEventNamesFor(deltaX deltaX: CGFloat, deltaY: CGFloat) -> (String, String) {
+  fileprivate func vimScrollEventNamesFor(deltaX: CGFloat, deltaY: CGFloat) -> (String, String) {
     let typeY: String
     if deltaY > 0 {
       typeY = "ScrollWheelUp"
@@ -986,7 +981,7 @@ extension NeoVimView {
     return (typeX, typeY)
   }
   
-  private func vimScrollInputFor(deltaX deltaX: CGFloat, deltaY: CGFloat,
+  fileprivate func vimScrollInputFor(deltaX: CGFloat, deltaY: CGFloat,
                                         modifierFlags: NSEventModifierFlags,
                                         cellPosition: Position) -> (String, String)
   {
@@ -1006,7 +1001,7 @@ extension NeoVimView {
     return (resultX, resultY)
   }
   
-  private func throttleScrollX(absDelta absDeltaX: CGFloat, vimInput: String) {
+  fileprivate func throttleScrollX(absDelta absDeltaX: CGFloat, vimInput: String) {
     if absDeltaX == 0 {
       self.scrollGuardCounterX = self.scrollGuardYield - 1
     } else if absDeltaX <= 2 {
@@ -1022,7 +1017,7 @@ extension NeoVimView {
     }
   }
   
-  private func throttleScrollY(absDelta absDeltaY: CGFloat, vimInput: String) {
+  fileprivate func throttleScrollY(absDelta absDeltaY: CGFloat, vimInput: String) {
     if absDeltaY == 0 {
       self.scrollGuardCounterY = self.scrollGuardYield - 1
     } else if absDeltaY <= 2 {
@@ -1042,7 +1037,7 @@ extension NeoVimView {
 // MARK: - NeoVimUiBridgeProtocol
 extension NeoVimView: NeoVimUiBridgeProtocol {
 
-  public func resizeToWidth(width: Int32, height: Int32) {
+  public func resize(toWidth width: Int32, height: Int32) {
     DispatchUtils.gui {
 //      NSLog("\(#function): \(width):\(height)")
       self.grid.resize(Size(width: Int(width), height: Int(height)))
@@ -1067,11 +1062,11 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
         height: self.cellSize.height
       )
       let rect = CGRect(origin: origin, size: size)
-      self.setNeedsDisplayInRect(rect)
+      self.setNeedsDisplay(rect)
     }
   }
   
-  public func gotoPosition(position: Position, screenCursor: Position) {
+  public func gotoPosition(_ position: Position, screenCursor: Position) {
     DispatchUtils.gui {
 //      NSLog("\(#function): \(position), \(screenCursor)")
 
@@ -1118,12 +1113,12 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   public func mouseOff() {
   }
   
-  public func modeChange(mode: Mode) {
+  public func modeChange(_ mode: Mode) {
 //    NSLog("mode changed to: %02x", mode.rawValue)
     self.mode = mode
   }
   
-  public func setScrollRegionToTop(top: Int32, bottom: Int32, left: Int32, right: Int32) {
+  public func setScrollRegionToTop(_ top: Int32, bottom: Int32, left: Int32, right: Int32) {
     DispatchUtils.gui {
       let region = Region(top: Int(top), bottom: Int(bottom), left: Int(left), right: Int(right))
       self.grid.setScrollRegion(region)
@@ -1131,20 +1126,20 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     }
   }
   
-  public func scroll(count: Int32) {
+  public func scroll(_ count: Int32) {
     DispatchUtils.gui {
       self.grid.scroll(Int(count))
       self.setNeedsDisplay(region: self.grid.region)
     }
   }
 
-  public func highlightSet(attrs: CellAttributes) {
+  public func highlightSet(_ attrs: CellAttributes) {
     DispatchUtils.gui {
       self.grid.attrs = attrs
     }
   }
   
-  public func put(string: String, screenCursor: Position) {
+  public func put(_ string: String, screenCursor: Position) {
     DispatchUtils.gui {
       let curPos = self.grid.putPosition
 //      NSLog("\(#function): \(curPos) -> \(string)")
@@ -1164,7 +1159,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     }
   }
 
-  public func putMarkedText(markedText: String, screenCursor: Position) {
+  public func putMarkedText(_ markedText: String, screenCursor: Position) {
     DispatchUtils.gui {
       NSLog("\(#function): '\(markedText)' -> \(screenCursor)")
 
@@ -1182,7 +1177,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     }
   }
 
-  public func unmarkRow(row: Int32, column: Int32) {
+  public func unmarkRow(_ row: Int32, column: Int32) {
     DispatchUtils.gui {
       let position = Position(row: Int(row), column: Int(column))
 
@@ -1208,7 +1203,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
 //    NSLog("\(#function)")
   }
   
-  public func updateForeground(fg: Int32, dark: Bool) {
+  public func updateForeground(_ fg: Int32, dark: Bool) {
     DispatchUtils.gui {
       self.grid.dark = dark
       self.grid.foreground = UInt32(bitPattern: fg)
@@ -1216,16 +1211,16 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     }
   }
   
-  public func updateBackground(bg: Int32, dark: Bool) {
+  public func updateBackground(_ bg: Int32, dark: Bool) {
     DispatchUtils.gui {
       self.grid.dark = dark
       self.grid.background = UInt32(bitPattern: bg)
-      self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).CGColor
+      self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).cgColor
 //      NSLog("\(ColorUtils.colorIgnoringAlpha(UInt32(bg)))")
     }
   }
   
-  public func updateSpecial(sp: Int32, dark: Bool) {
+  public func updateSpecial(_ sp: Int32, dark: Bool) {
     DispatchUtils.gui {
       self.grid.dark = dark
       self.grid.special = UInt32(bitPattern: sp)
@@ -1235,16 +1230,16 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   public func suspend() {
   }
   
-  public func setTitle(title: String) {
+  public func setTitle(_ title: String) {
     DispatchUtils.gui {
       self.delegate?.setTitle(title)
     }
   }
   
-  public func setIcon(icon: String) {
+  public func setIcon(_ icon: String) {
   }
 
-  public func setDirtyStatus(dirty: Bool) {
+  public func setDirtyStatus(_ dirty: Bool) {
     DispatchUtils.gui {
       self.delegate?.setDirtyStatus(dirty)
     }
@@ -1263,7 +1258,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     }
   }
   
-  private func updateCursorWhenPutting(currentPosition curPos: Position, screenCursor: Position) {
+  fileprivate func updateCursorWhenPutting(currentPosition curPos: Position, screenCursor: Position) {
     if self.mode == .Cmdline {
       // When the cursor is in the command line, then we need this...
       self.setNeedsDisplay(cellPosition: self.grid.previousCellPosition(curPos))
@@ -1276,11 +1271,11 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     self.grid.moveCursor(screenCursor)
   }
   
-  private func setNeedsDisplay(region region: Region) {
-    self.setNeedsDisplayInRect(self.regionRectFor(region: region))
+  fileprivate func setNeedsDisplay(region: Region) {
+    self.setNeedsDisplay(self.regionRectFor(region: region))
   }
   
-  private func setNeedsDisplay(cellPosition position: Position) {
+  fileprivate func setNeedsDisplay(cellPosition position: Position) {
     self.setNeedsDisplay(position: position)
     
     if self.grid.isCellEmpty(position) {
@@ -1292,16 +1287,16 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
     }
   }
 
-  private func setNeedsDisplay(position position: Position) {
+  fileprivate func setNeedsDisplay(position: Position) {
     self.setNeedsDisplay(row: position.row, column: position.column)
   }
 
-  private func setNeedsDisplay(row row: Int, column: Int) {
+  fileprivate func setNeedsDisplay(row: Int, column: Int) {
 //    Swift.print("\(#function): \(row):\(column)")
-    self.setNeedsDisplayInRect(self.cellRectFor(row: row, column: column))
+    self.setNeedsDisplay(self.cellRectFor(row: row, column: column))
   }
 
-  private func setNeedsDisplay(screenCursor position: Position) {
+  fileprivate func setNeedsDisplay(screenCursor position: Position) {
     self.setNeedsDisplay(position: position)
     if self.grid.isNextCellEmpty(position) {
       self.setNeedsDisplay(position: self.grid.nextCellPosition(position))

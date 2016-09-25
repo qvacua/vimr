@@ -30,7 +30,7 @@ extension NSView {
   /// - Returns: Rects currently being drawn
   /// - Warning: Call only in drawRect()
   func rectsBeingDrawn() -> [CGRect] {
-    var rectsPtr: UnsafePointer<CGRect> = nil
+    var rectsPtr: UnsafePointer<CGRect>? = nil
     var count: Int = 0
     self.getRectsBeingDrawn(&rectsPtr, count: &count)
 

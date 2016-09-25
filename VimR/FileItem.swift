@@ -7,7 +7,7 @@ import Foundation
 
 class FileItem : CustomStringConvertible {
 
-  let url: NSURL
+  let url: URL
   let dir: Bool
   let hidden: Bool
   let package: Bool
@@ -28,18 +28,18 @@ class FileItem : CustomStringConvertible {
       + "children=\(self.children.count)>"
   }
 
-  init(_ url: NSURL) {
+  init(_ url: URL) {
     self.url = url
     self.dir = url.dir
     self.hidden = url.hidden
     self.package = url.package
   }
 
-  func removeChild(withUrl url: NSURL) {
-    guard let idx = self.children.indexOf({ $0.url == url }) else {
+  func removeChild(withUrl url: URL) {
+    guard let idx = self.children.index(where: { $0.url == url }) else {
       return
     }
 
-    self.children.removeAtIndex(idx)
+    self.children.remove(at: idx)
   }
 }

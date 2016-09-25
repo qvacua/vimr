@@ -5,15 +5,15 @@
 
 import Foundation
 
-extension NSURL {
+extension URL {
 
-  func parent(ofUrl url: NSURL) -> Bool {
-    guard self.fileURL && url.fileURL else {
+  func parent(ofUrl url: URL) -> Bool {
+    guard self.isFileURL && url.isFileURL else {
       return false
     }
 
-    let myPathComps = self.pathComponents!
-    let targetPathComps = url.pathComponents!
+    let myPathComps = self.pathComponents
+    let targetPathComps = url.pathComponents
 
     guard targetPathComps.count > myPathComps.count else {
       return false
@@ -29,11 +29,11 @@ extension NSURL {
   ///
   /// - parameters:
   ///   - key: The `key`-parameter of `NSURL.getResourceValue`.
-  func resourceValue(key: String) -> Bool {
+  func resourceValue(_ key: String) -> Bool {
     var rsrc: AnyObject?
     
     do {
-      try self.getResourceValue(&rsrc, forKey: key)
+      try (self as NSURL).getResourceValue(&rsrc, forKey: URLResourceKey(rawValue: key))
     } catch {
       // FIXME error handling
       print("\(#function): \(self) -> ERROR while getting \(key)")
@@ -48,14 +48,14 @@ extension NSURL {
   }
 
   var dir: Bool {
-    return self.resourceValue(NSURLIsDirectoryKey)
+    return self.resourceValue(URLResourceKey.isDirectoryKey.rawValue)
   }
 
   var hidden: Bool {
-    return self.resourceValue(NSURLIsHiddenKey)
+    return self.resourceValue(URLResourceKey.isHiddenKey.rawValue)
   }
 
   var package: Bool {
-    return self.resourceValue(NSURLIsPackageKey)
+    return self.resourceValue(URLResourceKey.isPackageKey.rawValue)
   }
 }

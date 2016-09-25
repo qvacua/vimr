@@ -7,7 +7,7 @@ import Cocoa
 
 protocol WorkspaceToolDelegate: class {
 
-  func toggle(tool tool: WorkspaceTool)
+  func toggle(_ tool: WorkspaceTool)
 }
 
 class WorkspaceTool {
@@ -46,7 +46,7 @@ class WorkspaceTool {
   }
 
   func toggle() {
-    self.delegate?.toggle(tool: self)
+    self.delegate?.toggle(self)
     self.isSelected = !self.isSelected
   }
 }

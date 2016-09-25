@@ -8,8 +8,8 @@ import RxSwift
 
 class OpenQuicklyWindowManager: StandardFlow {
 
-  private let openQuicklyWindow: OpenQuicklyWindowComponent
-  private let fileItemService: FileItemService
+  fileprivate let openQuicklyWindow: OpenQuicklyWindowComponent
+  fileprivate let fileItemService: FileItemService
 
   init(source: Observable<Any>, fileItemService: FileItemService) {
     self.fileItemService = fileItemService
@@ -22,7 +22,7 @@ class OpenQuicklyWindowManager: StandardFlow {
     self.openQuicklyWindow.show(forMainWindow: mainWindow)
   }
 
-  override func subscription(source source: Observable<Any>) -> Disposable {
+  override func subscription(source: Observable<Any>) -> Disposable {
     return NopDisposable.instance
   }
 }

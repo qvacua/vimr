@@ -7,23 +7,23 @@ import Foundation
 
 class FileUtils {
   
-  private static let keysToGet = [
-    NSURLIsDirectoryKey,
-    NSURLIsHiddenKey,
-    NSURLIsAliasFileKey,
-    NSURLIsSymbolicLinkKey
+  fileprivate static let keysToGet = [
+    URLResourceKey.isDirectoryKey,
+    URLResourceKey.isHiddenKey,
+    URLResourceKey.isAliasFileKey,
+    URLResourceKey.isSymbolicLinkKey
   ]
   
-  private static let scanOptions: NSDirectoryEnumerationOptions = [
-    NSDirectoryEnumerationOptions.SkipsSubdirectoryDescendants,
-    NSDirectoryEnumerationOptions.SkipsPackageDescendants
+  fileprivate static let scanOptions: FileManager.DirectoryEnumerationOptions = [
+    FileManager.DirectoryEnumerationOptions.skipsSubdirectoryDescendants,
+    FileManager.DirectoryEnumerationOptions.skipsPackageDescendants
   ]
   
-  private static let fileManager = NSFileManager.defaultManager()
+  fileprivate static let fileManager = FileManager.default
   
-  static func directDescendants(url: NSURL) -> [NSURL] {
-    guard let childUrls = try? self.fileManager.contentsOfDirectoryAtURL(
-      url, includingPropertiesForKeys: self.keysToGet, options: self.scanOptions
+  static func directDescendants(_ url: URL) -> [URL] {
+    guard let childUrls = try? self.fileManager.contentsOfDirectory(
+      at: url, includingPropertiesForKeys: self.keysToGet, options: self.scanOptions
     ) else {
       // FIXME error handling
       return []
@@ -32,33 +32,30 @@ class FileUtils {
     return childUrls
   }
   
-  static func fileExistsAtUrl(url: NSURL) -> Bool {
-    guard url.fileURL else {
+  static func fileExistsAtUrl(_ url: URL) -> Bool {
+    guard url.isFileURL else {
       return false
     }
 
-    guard let path = url.path else {
-      return false
-    }
-    
-    return self.fileManager.fileExistsAtPath(path)
+    let path = url.path
+    return self.fileManager.fileExists(atPath: path)
   }
 
-  static func commonParent(ofUrls urls: [NSURL]) -> NSURL {
+  static func commonParent(ofUrls urls: [URL]) -> URL {
     guard urls.count > 0 else {
-      return NSURL(fileURLWithPath: "/", isDirectory: true)
+      return URL(fileURLWithPath: "/", isDirectory: true)
     }
 
-    let pathComps = urls.map { $0.pathComponents! }
+    let pathComps = urls.map { $0.pathComponents }
     let min = pathComps.reduce(pathComps[0].count) { (result, comps) in result < comps.count ? result : comps.count }
     let pathCompsWithMinCount = pathComps.filter { $0.count == min }
-    let possibleParent = NSURL.fileURLWithPathComponents(pathCompsWithMinCount[0])!
+    let possibleParent = NSURL.fileURL(withPathComponents: pathCompsWithMinCount[0])!
 
     let minPathComponents = Set(pathComps.map { $0[min - 1] })
     if minPathComponents.count == 1 {
-      return possibleParent.dir ? possibleParent : possibleParent.URLByDeletingLastPathComponent!
+      return possibleParent.dir ? possibleParent : possibleParent.deletingLastPathComponent()
     }
 
-    return possibleParent.URLByDeletingLastPathComponent!
+    return possibleParent.deletingLastPathComponent()
   }
 }
