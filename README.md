@@ -72,7 +72,7 @@ We will gradually create [issues](https://github.com/qvacua/vimr/issues) with mo
 
 ## How to Build
 
-First install `homebrew`, then:
+You have to use Xcode 8. First install `homebrew`, then:
 
 ```bash
 xcode-select --install # install the Xcode command line tools
