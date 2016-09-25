@@ -55,7 +55,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
        initialData: PrefData)
   {
     self.neoVimView = NeoVimView(frame: CGRect.zero,
-                                 options: LaunchOptions(useInteractiveZsh: initialData.advanced.useInteractiveZsh))
+                                 config: NeoVimView.Config(useInteractiveZsh: initialData.advanced.useInteractiveZsh))
     self.neoVimView.translatesAutoresizingMaskIntoConstraints = false
     self.defaultEditorFont = initialData.appearance.editorFont
     self.usesLigatures = initialData.appearance.editorUsesLigatures
