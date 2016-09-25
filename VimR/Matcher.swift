@@ -60,7 +60,8 @@ class Matcher {
   
   /// Matches `pattern` to `target` in a fuzzy way.
   /// - returns: `Array` of `Range<String.UnicodeScalarIndex>`
-  static func fuzzyIgnoringCase(_ target: String, pattern: String) -> (matches: Int, ranges: [CountableRange<Int>]) {
+  static func fuzzyIgnoringCase(_ target: String,
+                                pattern: String) -> (matches: Int, ranges: [CountableClosedRange<Int>]) {
     let tlower = target.lowercased()
     let plower = pattern.lowercased()
     
@@ -77,7 +78,7 @@ class Matcher {
       }
     }
     
-    var ranges: [CountableRange<Int>] = []
+    var ranges: [CountableClosedRange<Int>] = []
     var matches = 0
     
     var lastTrue = -1
@@ -93,14 +94,14 @@ class Matcher {
         
         if i == flags.count &- 1 {
           if lastTrue > -1 && curTrue > -1 {
-            ranges.append(CountableRange(lastTrue...curTrue))
+            ranges.append(lastTrue...curTrue)
             lastTrue = -1
             curTrue = -1
           }
         }
       } else {
         if lastTrue > -1 && curTrue > -1 {
-          ranges.append(CountableRange(lastTrue...curTrue))
+          ranges.append(lastTrue...curTrue)
           lastTrue = -1
           curTrue = -1
         }
