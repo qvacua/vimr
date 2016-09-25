@@ -37,6 +37,10 @@ class OpenQuicklyFilterOperation: Operation {
       return
     }
 
+    if self.flatFileItems.isEmpty {
+      return
+    }
+
     let sorted: [ScoredFileItem]
     if pattern.characters.count == 0 {
       let truncatedItems = self.flatFileItems[0...min(self.maxResultCount, self.flatFileItems.count - 1)]

@@ -154,9 +154,8 @@ class OpenQuicklyWindowComponent: WindowComponent,
       })
       .addDisposableTo(self.perSessionDisposeBag)
     
-    self.cwd = mainWindow.cwd as URL
+    self.cwd = mainWindow.cwd
     let flatFiles = self.fileItemService.flatFileItems(ofUrl: self.cwd)
-      .subscribeOn(self.userInitiatedScheduler)
 
     self.searchStream
       .subscribe(onNext: { [unowned self] pattern in
