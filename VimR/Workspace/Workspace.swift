@@ -13,11 +13,11 @@ enum WorkspaceBarLocation {
   case left
 }
 
-struct MainViewConfig {
-  let minimumSize: CGSize
-}
-
 class Workspace: NSView {
+
+  struct Config {
+    let mainViewMinimumSize: CGSize
+  }
 
   private(set) var isBarVisible = true {
     didSet {
@@ -33,11 +33,11 @@ class Workspace: NSView {
 
   // MARK: - API
   let mainView: NSView
-  let mainViewConfig: MainViewConfig
+  let config: Config
 
-  init(mainView: NSView, config: MainViewConfig = MainViewConfig(minimumSize: CGSize(width: 100, height: 100))) {
+  init(mainView: NSView, config: Config = Config(mainViewMinimumSize: CGSize(width: 100, height: 100))) {
+    self.config = config
     self.mainView = mainView
-    self.mainViewConfig = config
 
     self.bars = [
       .top: WorkspaceBar(location: .top),
@@ -76,8 +76,9 @@ extension Workspace {
 
     let mainView = self.mainView
     self.addSubview(mainView)
-    mainView.autoSetDimension(.Width, toSize: self.mainViewConfig.minimumSize.width, relation: .GreaterThanOrEqual)
-    mainView.autoSetDimension(.Height, toSize: self.mainViewConfig.minimumSize.height, relation: .GreaterThanOrEqual)
+
+    mainView.autoSetDimension(.Width, toSize: self.config.mainViewMinimumSize.width, relation: .GreaterThanOrEqual)
+    mainView.autoSetDimension(.Height, toSize: self.config.mainViewMinimumSize.height, relation: .GreaterThanOrEqual)
 
     guard self.isBarVisible else {
       mainView.autoPinEdgesToSuperviewEdges()
