@@ -129,11 +129,11 @@ class PrefStore: Store {
     self.source
       .filter { $0 is PrefData }
       .map { $0 as! PrefData }
-      .subscribeNext { [unowned self] prefData in
+      .subscribe(onNext: { [unowned self] prefData in
         self.data = prefData
         self.userDefaults.setValue(self.prefsDict(prefData), forKey: PrefStore.compatibleVersion)
         self.subject.onNext(prefData)
-      }
+      })
       .addDisposableTo(self.disposeBag)
   }
 }

@@ -143,10 +143,10 @@ class GeneralPrefPane: PrefPane, NSTextFieldDelegate {
       .filter { $0 is PrefData }
       .map { ($0 as! PrefData).general }
       .filter { [unowned self] data in data != self.data }
-      .subscribeNext { [unowned self] data in
+      .subscribe(onNext: { [unowned self] data in
         self.updateViews(newData: data)
         self.data = data
-    }
+    })
   }
 
   override func windowWillClose() {

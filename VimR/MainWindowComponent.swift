@@ -112,10 +112,10 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
         !appearanceData.editorFont.isEqual(to: self.neoVimView.font)
           || appearanceData.editorUsesLigatures != self.neoVimView.usesLigatures
       }
-      .subscribeNext { [unowned self] appearance in
+      .subscribe(onNext: { [unowned self] appearance in
         self.neoVimView.usesLigatures = appearance.editorUsesLigatures
         self.neoVimView.font = appearance.editorFont
-    }
+    })
   }
 }
 
@@ -184,11 +184,6 @@ extension MainWindowComponent {
       }
       
       guard let url = panel.url else {
-        showAlert()
-        return
-      }
-      
-      guard url.path != nil else {
         showAlert()
         return
       }

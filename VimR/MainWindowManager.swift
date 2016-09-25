@@ -36,7 +36,7 @@ class MainWindowManager: StandardFlow {
     mainWindowComponent.sink
       .filter { $0 is MainWindowAction }
       .map { $0 as! MainWindowAction }
-      .subscribeNext { [unowned self] action in
+      .subscribe(onNext: { [unowned self] action in
         switch action {
         case let .becomeKey(mainWindow):
           self.set(keyMainWindow: mainWindow)
@@ -47,7 +47,7 @@ class MainWindowManager: StandardFlow {
         case let .close(mainWindow):
           self.closeMainWindow(mainWindow)
         }
-      }
+      })
       .addDisposableTo(self.disposeBag)
     
     return mainWindowComponent
@@ -71,12 +71,12 @@ class MainWindowManager: StandardFlow {
   
   func openInKeyMainWindow(urls:[URL] = [], cwd: URL = MainWindowManager.userHomeUrl) {
     guard !self.mainWindowComponents.isEmpty else {
-      self.newMainWindow(urls: urls, cwd: cwd)
+      _ = self.newMainWindow(urls: urls, cwd: cwd)
       return
     }
     
     guard let keyMainWindow = self.keyMainWindow else {
-      self.newMainWindow(urls: urls, cwd: cwd)
+      _ = self.newMainWindow(urls: urls, cwd: cwd)
       return
     }
     
@@ -105,8 +105,8 @@ class MainWindowManager: StandardFlow {
     return source
       .filter { $0 is PrefData }
       .map { $0 as! PrefData }
-      .subscribeNext { [unowned self] prefData in
+      .subscribe(onNext: { [unowned self] prefData in
         self.data = prefData
-    }
+    })
   }
 }

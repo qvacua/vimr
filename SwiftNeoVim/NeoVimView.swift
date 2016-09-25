@@ -522,15 +522,15 @@ extension NeoVimView {
     }
 
     switch action {
-    case Selector("undo:"), Selector("redo:"):
+    case #selector(undo(_:)), #selector(redo(_:)):
       return canUndoOrRedo
-    case Selector("copy:"), Selector("cut:"):
+    case #selector(copy(_:)), #selector(cut(_:)):
       return canCopyOrCut
-    case Selector("paste:"):
+    case #selector(paste(_:)):
       return canPaste
-    case Selector("delete:"):
+    case #selector(delete(_:)):
       return canDelete
-    case Selector("selectAll:"):
+    case #selector(selectAll(_:)):
       return canSelectAll
     default:
       return true

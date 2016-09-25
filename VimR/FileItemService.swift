@@ -121,7 +121,7 @@ class FileItemService {
 
     let pathComponents = url.pathComponents
     return Observable.create { [unowned self] observer in
-      let cancel = AnonymousDisposable {
+      let cancel = Disposables.create {
         // noop
       }
 
@@ -135,7 +135,7 @@ class FileItemService {
 
         var dirStack: [FileItem] = [targetItem]
         while let curItem = dirStack.popLast() {
-          if cancel.disposed {
+          if cancel.isDisposed {
             observer.onCompleted()
             return
           }
@@ -179,7 +179,7 @@ class FileItemService {
           }
         }
 
-        if !cancel.disposed {
+        if !cancel.isDisposed {
           observer.onNext(flatNewFileItems)
           observer.onCompleted()
         }

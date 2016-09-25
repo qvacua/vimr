@@ -62,18 +62,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     self.prefStore.sink
       .filter { $0 is PrefData }
       .map { $0 as! PrefData }
-      .subscribeNext { [unowned self] data in
+      .subscribe(onNext: { [unowned self] data in
         if data.general.ignorePatterns == self.fileItemService.ignorePatterns {
           return
         }
 
         self.fileItemService.set(ignorePatterns: data.general.ignorePatterns)
-      }
+      })
       .addDisposableTo(self.disposeBag)
 
     self.mainWindowManager.sink
       .filter { $0 is MainWindowEvent || $0 is MainWindowAction }
-      .subscribeNext { [unowned self] event in
+      .subscribe(onNext: { [unowned self] event in
         switch event {
         case let MainWindowAction.openQuickly(mainWindow: mainWindow):
           self.openQuicklyWindowManager.open(forMainWindow: mainWindow)
@@ -84,7 +84,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         default:
           return
         }
-      }.addDisposableTo(self.disposeBag)
+      })
+      .addDisposableTo(self.disposeBag)
 
     [ self.prefStore ]
       .map { $0.sink }
@@ -171,7 +172,7 @@ extension AppDelegate {
   // For drag & dropping files on the App icon.
   func application(_ sender: NSApplication, openFiles filenames: [String]) {
     let urls = filenames.map { URL(fileURLWithPath: $0) }
-    self.mainWindowManager.newMainWindow(urls: urls)
+    _ = self.mainWindowManager.newMainWindow(urls: urls)
     sender.reply(toOpenOrPrint: .success)
   }
 }
@@ -213,13 +214,13 @@ extension AppDelegate {
     
     switch action {
     case .activate, .newWindow:
-      self.mainWindowManager.newMainWindow(urls: urls, cwd: cwd)
+      _ = self.mainWindowManager.newMainWindow(urls: urls, cwd: cwd)
       return
     case .open:
       self.mainWindowManager.openInKeyMainWindow(urls: urls, cwd: cwd)
       return
     case .separateWindows:
-      urls.forEach { self.mainWindowManager.newMainWindow(urls: [$0], cwd: cwd) }
+      urls.forEach { _ = self.mainWindowManager.newMainWindow(urls: [$0], cwd: cwd) }
       return
     }
   }
@@ -233,7 +234,7 @@ extension AppDelegate {
   }
   
   @IBAction func newDocument(_ sender: AnyObject!) {
-    self.mainWindowManager.newMainWindow()
+    _ = self.mainWindowManager.newMainWindow()
   }
 
   // Invoked when no main window is open.
@@ -245,7 +246,7 @@ extension AppDelegate {
         return
       }
 
-      self.mainWindowManager.newMainWindow(urls: panel.urls)
+      _ = self.mainWindowManager.newMainWindow(urls: panel.urls)
     }
   }
 }

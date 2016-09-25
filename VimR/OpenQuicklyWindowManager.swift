@@ -23,6 +23,6 @@ class OpenQuicklyWindowManager: StandardFlow {
   }
 
   override func subscription(source: Observable<Any>) -> Disposable {
-    return NopDisposable.instance
+    return Disposables.create()
   }
 }

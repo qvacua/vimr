@@ -121,7 +121,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
   }
 
   override func subscription(source: Observable<Any>) -> Disposable {
-    return NopDisposable.instance
+    return Disposables.create()
   }
 
   func reloadFileView(withScoredItems items: [ScoredFileItem]) {
@@ -142,7 +142,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
     self.mainWindow?.sink
       .filter { $0 is MainWindowAction }
       .map { $0 as! MainWindowAction }
-      .subscribeNext { [unowned self] action in
+      .subscribe(onNext: { [unowned self] action in
         switch action {
         case .close:
           self.window.performClose(self)
@@ -151,7 +151,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
         default:
           return
         }
-      }
+      })
       .addDisposableTo(self.perSessionDisposeBag)
     
     self.cwd = mainWindow.cwd as URL
@@ -167,7 +167,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
 
     flatFiles
       .subscribeOn(self.userInitiatedScheduler)
-      .doOnNext{ [unowned self] items in
+      .do(onNext: { [unowned self] items in
         self.scanCondition.lock()
         while self.pauseScan {
           self.scanCondition.wait()
@@ -176,7 +176,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
 
         self.flatFileItems.append(contentsOf: items)
         self.resetAndAddFilterOperation()
-      }
+      })
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] items in
         self.count += items.count

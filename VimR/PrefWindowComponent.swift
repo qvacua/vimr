@@ -57,14 +57,14 @@ class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSou
     return source
       .filter { $0 is PrefData }
       .map { $0 as! PrefData }
-      .subscribeNext { [unowned self] prefData in
+      .subscribe(onNext: { [unowned self] prefData in
         if prefData.appearance.editorFont == self.data.appearance.editorFont
           && prefData.appearance.editorUsesLigatures == self.data.appearance.editorUsesLigatures {
           return
         }
 
         self.data = prefData
-      }
+      })
   }
 
   override func addViews() {
@@ -118,7 +118,7 @@ class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSou
 
         return self.data
       }
-      .subscribeNext { [unowned self] action in self.publish(event: action) }
+      .subscribe(onNext: { [unowned self] action in self.publish(event: action) })
       .addDisposableTo(self.disposeBag)
   }
 

@@ -69,9 +69,9 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
       .filter { $0 is PrefData }
       .map { ($0 as! PrefData).appearance }
       .filter { [unowned self] data in data != self.data }
-      .subscribeNext { [unowned self] data in
+      .subscribe(onNext: { [unowned self] data in
         self.data = data
-    }
+    })
   }
 
   override func addViews() {
