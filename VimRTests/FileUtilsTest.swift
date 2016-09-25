@@ -8,8 +8,8 @@ import Nimble
 
 class FileUtilsTest: XCTestCase {
 
-  var fileUtilsRsrcUrl = URL()
-  var a1Dir = URL()
+  var fileUtilsRsrcUrl = URL(fileURLWithPath: "/")
+  var a1Dir = URL(fileURLWithPath: "/")
 
   override func setUp() {
     fileUtilsRsrcUrl = Bundle.init(for: type(of: self)).url(forResource: "FileUtilsTest", withExtension: "")!
