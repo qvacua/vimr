@@ -13,6 +13,10 @@ enum WorkspaceBarLocation {
   case left
 }
 
+struct MainViewConfig {
+  let minimumSize: CGSize
+}
+
 class Workspace: NSView {
 
   private(set) var isBarVisible = true {
@@ -29,9 +33,12 @@ class Workspace: NSView {
 
   // MARK: - API
   let mainView: NSView
+  let mainViewConfig: MainViewConfig
 
-  init(mainView: NSView) {
+  init(mainView: NSView, config: MainViewConfig = MainViewConfig(minimumSize: CGSize(width: 100, height: 100))) {
     self.mainView = mainView
+    self.mainViewConfig = config
+
     self.bars = [
       .top: WorkspaceBar(location: .top),
       .right: WorkspaceBar(location: .right),
@@ -69,6 +76,8 @@ extension Workspace {
 
     let mainView = self.mainView
     self.addSubview(mainView)
+    mainView.autoSetDimension(.Width, toSize: self.mainViewConfig.minimumSize.width, relation: .GreaterThanOrEqual)
+    mainView.autoSetDimension(.Height, toSize: self.mainViewConfig.minimumSize.height, relation: .GreaterThanOrEqual)
 
     guard self.isBarVisible else {
       mainView.autoPinEdgesToSuperviewEdges()
@@ -85,21 +94,21 @@ extension Workspace {
     self.addSubview(bottomBar)
     self.addSubview(leftBar)
 
-      topBar.autoPinEdgeToSuperviewEdge(.Top)
-      topBar.autoPinEdgeToSuperviewEdge(.Right)
-      topBar.autoPinEdgeToSuperviewEdge(.Left)
+    topBar.autoPinEdgeToSuperviewEdge(.Top)
+    topBar.autoPinEdgeToSuperviewEdge(.Right)
+    topBar.autoPinEdgeToSuperviewEdge(.Left)
 
-      rightBar.autoPinEdge(.Top, toEdge: .Bottom, ofView: topBar)
-      rightBar.autoPinEdgeToSuperviewEdge(.Right)
-      rightBar.autoPinEdge(.Bottom, toEdge: .Top, ofView: bottomBar)
+    rightBar.autoPinEdge(.Top, toEdge: .Bottom, ofView: topBar)
+    rightBar.autoPinEdgeToSuperviewEdge(.Right)
+    rightBar.autoPinEdge(.Bottom, toEdge: .Top, ofView: bottomBar)
 
-      bottomBar.autoPinEdgeToSuperviewEdge(.Right)
-      bottomBar.autoPinEdgeToSuperviewEdge(.Bottom)
-      bottomBar.autoPinEdgeToSuperviewEdge(.Left)
+    bottomBar.autoPinEdgeToSuperviewEdge(.Right)
+    bottomBar.autoPinEdgeToSuperviewEdge(.Bottom)
+    bottomBar.autoPinEdgeToSuperviewEdge(.Left)
 
-      leftBar.autoPinEdge(.Top, toEdge: .Bottom, ofView: topBar)
-      leftBar.autoPinEdgeToSuperviewEdge(.Left)
-      leftBar.autoPinEdge(.Bottom, toEdge: .Top, ofView: bottomBar)
+    leftBar.autoPinEdge(.Top, toEdge: .Bottom, ofView: topBar)
+    leftBar.autoPinEdgeToSuperviewEdge(.Left)
+    leftBar.autoPinEdge(.Bottom, toEdge: .Top, ofView: bottomBar)
 
     NSLayoutConstraint.autoSetPriority(NSLayoutPriorityDragThatCannotResizeWindow) {
       topBar.dimensionConstraint = topBar.autoSetDimension(.Height, toSize: 50)
@@ -114,7 +123,7 @@ extension Workspace {
     mainView.autoPinEdge(.Right, toEdge: .Left, ofView: rightBar)
     mainView.autoPinEdge(.Bottom, toEdge: .Top, ofView: bottomBar)
     mainView.autoPinEdge(.Left, toEdge: .Right, ofView: leftBar)
-
+    
     self.needsDisplay = true
   }
 }
