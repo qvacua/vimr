@@ -15,16 +15,24 @@ enum MainWindowAction {
 
 class MainWindowComponent: WindowComponent, NSWindowDelegate {
 
-  fileprivate let fontManager = NSFontManager.shared()
+  fileprivate static let nibName = "MainWindow"
 
   fileprivate var defaultEditorFont: NSFont
   fileprivate var usesLigatures: Bool
 
+  fileprivate var _cwd: URL = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
+
+  fileprivate let fontManager = NSFontManager.shared()
+  fileprivate let fileItemService: FileItemService
+
+  fileprivate let workspace: Workspace
+  fileprivate let neoVimView: NeoVimView
+
+  // MARK: - API
   var uuid: String {
     return self.neoVimView.uuid
   }
 
-  fileprivate var _cwd: URL = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
   var cwd: URL {
     get {
       self._cwd = self.neoVimView.cwd
@@ -43,10 +51,6 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
       self.fileItemService.monitor(url: newValue)
     }
   }
-  fileprivate let fileItemService: FileItemService
-
-  fileprivate let workspace: Workspace
-  fileprivate let neoVimView: NeoVimView
 
   // TODO: Consider an option object for cwd, urls, etc...
   init(source: Observable<Any>,
@@ -66,7 +70,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
     self.fileItemService = fileItemService
     self._cwd = cwd
 
-    super.init(source: source, nibName: "MainWindow")
+    super.init(source: source, nibName: MainWindowComponent.nibName)
 
     self.window.delegate = self
 
@@ -99,6 +103,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
     self.neoVimView.closeAllWindowsWithoutSaving()
   }
 
+  // MARK: - WindowComponent
   override func addViews() {
     self.window.contentView?.addSubview(self.workspace)
     self.workspace.autoPinEdgesToSuperviewEdges()
@@ -122,11 +127,11 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
 // MARK: - File Menu Items
 extension MainWindowComponent {
   
-  @IBAction func newTab(_ sender: AnyObject!) {
+  @IBAction func newTab(_ sender: Any?) {
     self.neoVimView.newTab()
   }
 
-  @IBAction func openDocument(_ sender: AnyObject!) {
+  @IBAction func openDocument(_ sender: Any?) {
     let panel = NSOpenPanel()
     panel.canChooseDirectories = true
     panel.beginSheetModal(for: self.window) { result in
@@ -139,11 +144,11 @@ extension MainWindowComponent {
     }
   }
 
-  @IBAction func openQuickly(_ sender: AnyObject!) {
+  @IBAction func openQuickly(_ sender: Any?) {
     self.publish(event: MainWindowAction.openQuickly(mainWindow: self))
   }
 
-  @IBAction func saveDocument(_ sender: AnyObject!) {
+  @IBAction func saveDocument(_ sender: Any?) {
     let curBuf = self.neoVimView.currentBuffer()
     
     if curBuf.fileName == nil {
@@ -154,7 +159,7 @@ extension MainWindowComponent {
     self.neoVimView.saveCurrentTab()
   }
   
-  @IBAction func saveDocumentAs(_ sender: AnyObject!) {
+  @IBAction func saveDocumentAs(_ sender: Any?) {
     self.savePanelSheet { url in
       self.neoVimView.saveCurrentTab(url: url)
       
@@ -196,18 +201,18 @@ extension MainWindowComponent {
 // MARK: - Font Menu Items
 extension MainWindowComponent {
 
-  @IBAction func resetFontSize(_ sender: AnyObject!) {
+  @IBAction func resetFontSize(_ sender: Any?) {
     self.neoVimView.font = self.defaultEditorFont
   }
 
-  @IBAction func makeFontBigger(_ sender: AnyObject!) {
+  @IBAction func makeFontBigger(_ sender: Any?) {
     let curFont = self.neoVimView.font
     let font = self.fontManager.convert(curFont,
                                             toSize: min(curFont.pointSize + 1, PrefStore.maximumEditorFontSize))
     self.neoVimView.font = font
   }
 
-  @IBAction func makeFontSmaller(_ sender: AnyObject!) {
+  @IBAction func makeFontSmaller(_ sender: Any?) {
     let curFont = self.neoVimView.font
     let font = self.fontManager.convert(curFont,
                                             toSize: max(curFont.pointSize - 1, PrefStore.minimumEditorFontSize))
@@ -218,12 +223,12 @@ extension MainWindowComponent {
 // MARK: - NeoVimViewDelegate
 extension MainWindowComponent: NeoVimViewDelegate {
 
-  func setTitle(_ title: String) {
+  func set(title: String) {
     self.window.title = title
   }
 
-  func setDirtyStatus(_ dirty: Bool) {
-    self.windowController.setDocumentEdited(dirty)
+  func set(dirtyStatus: Bool) {
+    self.windowController.setDocumentEdited(dirtyStatus)
   }
 
   func cwdChanged() {

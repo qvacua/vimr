@@ -1232,7 +1232,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   
   public func setTitle(_ title: String) {
     DispatchUtils.gui {
-      self.delegate?.setTitle(title)
+      self.delegate?.set(title: title)
     }
   }
   
@@ -1241,7 +1241,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
 
   public func setDirtyStatus(_ dirty: Bool) {
     DispatchUtils.gui {
-      self.delegate?.setDirtyStatus(dirty)
+      self.delegate?.set(dirtyStatus: dirty)
     }
   }
 
