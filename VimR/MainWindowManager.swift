@@ -46,6 +46,9 @@ class MainWindowManager: StandardFlow {
 
         case let .close(mainWindow):
           self.closeMainWindow(mainWindow)
+
+        case .changeCwd:
+          break
         }
       })
       .addDisposableTo(self.disposeBag)

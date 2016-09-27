@@ -1,0 +1,138 @@
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
+
+import Cocoa
+import RxSwift
+
+class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineViewDelegate {
+
+  fileprivate static let userHomeUrl = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
+
+  fileprivate var cwd = FileBrowserComponent.userHomeUrl
+  fileprivate var cwdFileItem = FileItem(FileBrowserComponent.userHomeUrl)
+
+  fileprivate let fileView = NSOutlineView.standardOutlineView()
+  fileprivate let dumb = [NSAttributedString(string: "A"), NSAttributedString(string: "B")]
+
+  fileprivate let fileItemService: FileItemService
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  init(source: Observable<Any>, fileItemService: FileItemService) {
+    self.fileItemService = fileItemService
+    super.init(source: source)
+  }
+
+  override func addViews() {
+    let fileView = self.fileView
+    fileView.dataSource = self
+    fileView.delegate = self
+
+    let scrollView = NSScrollView.standardScrollView()
+    scrollView.borderType = .noBorder
+    scrollView.backgroundColor = NSColor.windowBackgroundColor
+    scrollView.documentView = fileView
+
+    self.addSubview(scrollView)
+    scrollView.autoPinEdgesToSuperviewEdges()
+  }
+
+  override func subscription(source: Observable<Any>) -> Disposable {
+    return source
+      .filter { $0 is MainWindowAction }
+      .map { $0 as! MainWindowAction }
+      .subscribe(onNext: { [unowned self] action in
+        switch action {
+        case let .changeCwd(mainWindow: mainWindow):
+          self.cwd = mainWindow.cwd
+          self.cwdFileItem = self.fileItemService.fileItemWithChildren(for: self.cwd) ??
+                             self.fileItemService.fileItemWithChildren(for: FileBrowserComponent.userHomeUrl)!
+          NSLog("cwd changed to \(self.cwd) of \(mainWindow.uuid)")
+          self.fileView.reloadData()
+
+        default:
+          break
+        }
+      })
+  }
+}
+
+// MARK: - NSOutlineViewDataSource
+extension FileBrowserComponent {
+
+  func outlineView(_: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
+    if item == nil {
+      return self.fileItemService.fileItemWithChildren(for: self.cwd)?.children
+        .filter { !$0.hidden }
+        .count ?? 0
+    }
+
+    guard let fileItem = item as? FileItem else {
+      return 0
+    }
+
+    if fileItem.dir {
+      return self.fileItemService.fileItemWithChildren(for: fileItem.url)?.children
+        .filter { !$0.hidden }
+        .count ?? 0
+    }
+
+    return 0
+  }
+
+  func outlineView(_: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
+    if item == nil {
+      return self.fileItemService.fileItemWithChildren(for: self.cwd)!.children.filter { !$0.hidden }[index]
+    }
+    
+    guard let fileItem = item as? FileItem else {
+      preconditionFailure("Should not happen")
+    }
+    
+    return self.fileItemService.fileItemWithChildren(for: fileItem.url)!.children.filter { !$0.hidden }[index]
+  }
+
+  func outlineView(_: NSOutlineView, isItemExpandable item: Any) ->  Bool {
+    guard let fileItem = item as? FileItem else {
+      return false
+    }
+    
+    return fileItem.dir && !fileItem.package
+  }
+
+  @objc(outlineView:objectValueForTableColumn:byItem:)
+  func outlineView(_: NSOutlineView, objectValueFor: NSTableColumn?, byItem item: Any?) -> Any? {
+    guard let fileItem = item as? FileItem else {
+      return nil
+    }
+    
+    return fileItem
+  }
+}
+
+// MARK: - NSOutlineViewDelegate
+extension FileBrowserComponent {
+  
+  @objc(outlineView:viewForTableColumn:item:)
+  func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
+    guard let fileItem = item as? FileItem else {
+      return nil
+    }
+    
+    let cachedCell = outlineView.make(withIdentifier: "file-view-row", owner: self)
+    let cell = cachedCell as? ImageAndTextTableCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
+
+    cell.text = fileItem.url.lastPathComponent
+    cell.image = self.fileItemService.icon(forUrl: fileItem.url)
+
+    return cell
+  }
+  
+  func outlineView(_ outlineView: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
+    return 20
+  }
+}

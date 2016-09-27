@@ -8,13 +8,23 @@ import PureLayout
 
 class ImageAndTextTableCell: NSView {
 
-  var text: NSAttributedString {
+  var attributedText: NSAttributedString {
     get {
       return self.textField.attributedStringValue
     }
-
+    
     set {
       self.textField.attributedStringValue = newValue
+    }
+  }
+  
+  var text: String {
+    get {
+      return self.textField.stringValue
+    }
+
+    set {
+      self.textField.stringValue = newValue
     }
   }
 
@@ -38,7 +48,11 @@ class ImageAndTextTableCell: NSView {
     
     let textField = self.textField
     textField.isBordered = false
+    textField.isBezeled = false
+    textField.allowsDefaultTighteningForTruncation = true
+    textField.allowsEditingTextAttributes = false
     textField.isEditable = false
+    textField.usesSingleLineMode = true
     textField.lineBreakMode = .byTruncatingTail
     textField.drawsBackground = false
     

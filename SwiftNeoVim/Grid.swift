@@ -26,7 +26,7 @@ struct Cell: CustomStringConvertible {
   }
 }
 
-extension Position: CustomStringConvertible {
+extension Position: CustomStringConvertible, Equatable {
   
   static let zero = Position(row: 0, column: 0)
   static let null = Position(row: -1, column: -1)
@@ -36,18 +36,14 @@ extension Position: CustomStringConvertible {
   }
 }
 
-func == (left: Position, right: Position) -> Bool {
+public func == (left: Position, right: Position) -> Bool {
   if left.row != right.row { return false }
   if left.column != right.column { return false }
   
   return true
 }
 
-func != (left: Position, right: Position) -> Bool {
-  return !(left == right)
-}
-
-struct Size: CustomStringConvertible {
+struct Size: CustomStringConvertible, Equatable {
   
   static let zero = Size(width: 0, height: 0)
   
@@ -57,6 +53,10 @@ struct Size: CustomStringConvertible {
   var description: String {
     return "Size<\(self.width):\(self.height)>"
   }
+}
+
+func == (left: Size, right: Size) -> Bool {
+  return left.width == right.width && left.height == right.height
 }
 
 struct Region: CustomStringConvertible {

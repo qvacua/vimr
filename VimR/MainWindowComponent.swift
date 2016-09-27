@@ -10,10 +10,16 @@ import RxSwift
 enum MainWindowAction {
   case becomeKey(mainWindow: MainWindowComponent)
   case openQuickly(mainWindow: MainWindowComponent)
+  case changeCwd(mainWindow: MainWindowComponent)
   case close(mainWindow: MainWindowComponent)
 }
 
-class MainWindowComponent: WindowComponent, NSWindowDelegate {
+fileprivate enum Tool {
+
+  case fileBrowser
+}
+
+class MainWindowComponent: WindowComponent, NSWindowDelegate, WorkspaceDelegate {
 
   fileprivate static let nibName = "MainWindow"
 
@@ -27,6 +33,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
 
   fileprivate let workspace: Workspace
   fileprivate let neoVimView: NeoVimView
+  fileprivate var tools = [Tool: WorkspaceTool]()
 
   // MARK: - API
   var uuid: String {
@@ -73,8 +80,18 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
     super.init(source: source, nibName: MainWindowComponent.nibName)
 
     self.window.delegate = self
+    self.workspace.delegate = self
 
-    self.neoVimView.cwd = cwd
+    let fileBrowser = FileBrowserComponent(source: self.sink, fileItemService: fileItemService)
+    let fileBrowserTool = WorkspaceTool(title: "Files", view: fileBrowser)
+    self.tools[.fileBrowser] = fileBrowserTool
+    self.workspace.append(tool: fileBrowserTool, location: .left)
+
+    // FIXME: temporarily for dev
+    fileBrowserTool.dimension = 200
+    self.workspace.bars[.left]?.toggle(fileBrowserTool)
+
+    self.neoVimView.cwd = cwd // This will publish the MainWindowAction.changeCwd action for the file browser.
     self.neoVimView.delegate = self
     self.neoVimView.font = self.defaultEditorFont
     self.neoVimView.usesLigatures = self.usesLigatures
@@ -121,6 +138,18 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
         self.neoVimView.usesLigatures = appearance.editorUsesLigatures
         self.neoVimView.font = appearance.editorFont
     })
+  }
+}
+
+// MARK: - WorkspaceDelegate
+extension MainWindowComponent {
+
+  func resizeWillStart(workspace: Workspace) {
+    self.neoVimView.enterResizeMode()
+  }
+
+  func resizeDidEnd(workspace: Workspace) {
+    self.neoVimView.exitResizeMode()
   }
 }
 
@@ -236,6 +265,8 @@ extension MainWindowComponent: NeoVimViewDelegate {
     self._cwd = self.neoVimView.cwd
     self.fileItemService.unmonitor(url: old)
     self.fileItemService.monitor(url: self._cwd)
+
+    self.publish(event: MainWindowAction.changeCwd(mainWindow: self))
   }
   
   func neoVimStopped() {

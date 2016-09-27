@@ -13,7 +13,13 @@ enum WorkspaceBarLocation {
   case left
 }
 
-class Workspace: NSView {
+protocol WorkspaceDelegate: class {
+
+  func resizeWillStart(workspace: Workspace)
+  func resizeDidEnd(workspace: Workspace)
+}
+
+class Workspace: NSView, WorkspaceBarDelegate {
 
   struct Config {
     let mainViewMinimumSize: CGSize
@@ -25,15 +31,16 @@ class Workspace: NSView {
     }
   }
 
-  fileprivate let bars: [WorkspaceBarLocation: WorkspaceBar]
-
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
   // MARK: - API
   let mainView: NSView
+  let bars: [WorkspaceBarLocation: WorkspaceBar]
   let config: Config
+
+  weak var delegate: WorkspaceDelegate?
 
   init(mainView: NSView, config: Config = Config(mainViewMinimumSize: CGSize(width: 100, height: 100))) {
     self.config = config
@@ -49,6 +56,8 @@ class Workspace: NSView {
     super.init(frame: CGRect.zero)
     self.translatesAutoresizingMaskIntoConstraints = false
 
+    self.bars.values.forEach { [unowned self] in $0.delegate = self }
+
     self.relayout()
   }
 
@@ -62,6 +71,18 @@ class Workspace: NSView {
 
   func toggleToolButtons() {
     self.bars.values.forEach { $0.isButtonVisible = !$0.isButtonVisible }
+  }
+}
+
+// MARK: - WorkspaceBarDelegate
+extension Workspace {
+
+  func resizeWillStart(workspaceBar: WorkspaceBar) {
+    self.delegate?.resizeWillStart(workspace: self)
+  }
+
+  func resizeDidEnd(workspaceBar: WorkspaceBar) {
+    self.delegate?.resizeDidEnd(workspace: self)
   }
 }
 

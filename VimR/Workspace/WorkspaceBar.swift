@@ -6,6 +6,12 @@
 import Cocoa
 import PureLayout
 
+protocol WorkspaceBarDelegate: class {
+
+  func resizeWillStart(workspaceBar: WorkspaceBar)
+  func resizeDidEnd(workspaceBar: WorkspaceBar)
+}
+
 class WorkspaceBar: NSView, WorkspaceToolDelegate {
 
   static fileprivate let separatorColor = NSColor.controlShadowColor
@@ -32,6 +38,8 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
   }
   var dimensionConstraint = NSLayoutConstraint()
 
+  weak var delegate: WorkspaceBarDelegate?
+
   init(location: WorkspaceBarLocation) {
     self.location = location
 
@@ -47,7 +55,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
     self.removeAllSubviews()
 
     if self.isEmpty() {
-      self.set(0)
+      self.set(dimension: 0)
       return
     }
 
@@ -60,9 +68,9 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
         self.layout(curTool)
 
         let newDimension = self.barDimension(withToolDimension: curTool.dimension)
-        self.set(newDimension)
+        self.set(dimension: newDimension)
       } else {
-        self.set(self.barDimensionWithButtonsWithoutTool())
+        self.set(dimension: self.barDimensionWithButtonsWithoutTool())
       }
 
     } else {
@@ -72,13 +80,11 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
         self.layoutWithoutButtons(curTool)
 
         let newDimension = self.barDimensionWithoutButtons(withToolDimension: curTool.dimension)
-        self.set(newDimension)
+        self.set(dimension: newDimension)
       } else {
-        self.set(0)
+        self.set(dimension: 0)
       }
     }
-
-    self.needsDisplay = true
   }
 
   func append(tool: WorkspaceTool) {
@@ -110,6 +116,14 @@ extension WorkspaceBar {
     }
   }
 
+  override func hitTest(_ point: NSPoint) -> NSView? {
+    if self.resizeRect().contains(point) {
+      return self
+    }
+
+    return super.hitTest(point)
+  }
+
   override func mouseDown(with event: NSEvent) {
     guard self.isOpen() else {
       return
@@ -128,6 +142,7 @@ extension WorkspaceBar {
     }
 
     self.isMouseDownOngoing = true
+    self.delegate?.resizeWillStart(workspaceBar: self)
     self.dimensionConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow - 1
 
     var dragged = false
@@ -138,10 +153,10 @@ extension WorkspaceBar {
       NSEventMask.leftMouseUp
     ]
     while curEvent.type != .leftMouseUp {
-      let nextEvent = NSApp.nextEvent(matching: NSEventMask(rawValue: UInt64(Int(nextEventMask.rawValue))),
-                                                  until: Date.distantFuture,
-                                                  inMode: RunLoopMode.eventTrackingRunLoopMode,
-                                                  dequeue: true)
+      let nextEvent = NSApp.nextEvent(matching: nextEventMask,
+                                      until: Date.distantFuture,
+                                      inMode: RunLoopMode.eventTrackingRunLoopMode,
+                                      dequeue: true)
       guard nextEvent != nil else {
         break
       }
@@ -162,15 +177,14 @@ extension WorkspaceBar {
       let locInSuperview = self.superview!.convert(curEvent.locationInWindow, from: nil)
       let newDimension = self.newDimension(forLocationInSuperview: locInSuperview)
 
-      self.set(newDimension)
-
-      self.window?.invalidateCursorRects(for: self)
+      self.set(dimension: newDimension)
 
       dragged = true
     }
 
     self.dimensionConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow
     self.isMouseDownOngoing = false
+    self.delegate?.resizeDidEnd(workspaceBar: self)
   }
 
   override func resetCursorRects() {
@@ -284,13 +298,19 @@ extension WorkspaceBar {
     }
   }
 
-  fileprivate func set(_ dimension: CGFloat) {
+  fileprivate func set(dimension: CGFloat) {
     self.dimensionConstraint.constant = dimension
 
     let toolDimension = self.toolDimension(fromBarDimension: dimension)
     if self.isOpen() {
       self.selectedTool?.dimension = toolDimension
     }
+
+    // In 10.12 we need the following, otherwise resizing the tools does not work correctly.
+    self.layoutSubtreeIfNeeded()
+
+    self.window?.invalidateCursorRects(for: self)
+    self.needsDisplay = true
   }
 }
 
@@ -493,6 +513,8 @@ extension WorkspaceBar {
 extension WorkspaceBar {
 
   func toggle(_ tool: WorkspaceTool) {
+    self.delegate?.resizeWillStart(workspaceBar: self)
+
     if self.isOpen() {
       let curTool = self.selectedTool!
       if curTool === tool {
@@ -508,5 +530,7 @@ extension WorkspaceBar {
     }
     
     self.relayout()
+
+    self.delegate?.resizeDidEnd(workspaceBar: self)
   }
 }

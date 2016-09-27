@@ -100,6 +100,26 @@ extension NSTableView {
   }
 }
 
+extension NSOutlineView {
+
+  static func standardOutlineView() -> NSOutlineView {
+    let outlineView = NSOutlineView(frame: CGRect.zero)
+
+    let column = NSTableColumn(identifier: "name")
+    column.isEditable = false
+
+    outlineView.addTableColumn(column)
+    outlineView.outlineTableColumn = column
+    outlineView.sizeLastColumnToFit()
+    outlineView.allowsEmptySelection = false
+    outlineView.allowsMultipleSelection = false
+    outlineView.headerView = nil
+    outlineView.focusRingType = .none
+
+    return outlineView
+  }
+}
+
 extension NSScrollView {
 
   static func standardScrollView() -> NSScrollView {

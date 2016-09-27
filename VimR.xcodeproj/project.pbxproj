@@ -33,6 +33,8 @@
 		1929BEFEABA0448306CDB6D4 /* FileItemIgnorePatternTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBC84557C8351EC6183E /* FileItemIgnorePatternTest.swift */; };
 		1929BF81A40B4154D3EA33CE /* server_ui.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B93013228985F509C8F6 /* server_ui.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */; };
+		4B0677371D99D9C3001A2588 /* FileBrowserComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0677361D99D9C3001A2588 /* FileBrowserComponent.swift */; };
+		4B06773C1D9DCF23001A2588 /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B39DA7AC4A9B62D7CD39 /* Component.swift */; };
 		4B0BCC941D70320C00D3CE65 /* Logger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0BCC931D70320C00D3CE65 /* Logger.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		4B0C905B1D5DED69007753A3 /* NeoVimBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0C905A1D5DED69007753A3 /* NeoVimBuffer.m */; };
 		4B0E22581D5DEDC700C072E6 /* NeoVimBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0C90591D5DED69007753A3 /* NeoVimBuffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -253,6 +255,7 @@
 		1929BEEB33113B0E33C3830F /* Matcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Matcher.swift; sourceTree = "<group>"; };
 		1929BF00B466B40629C2AABE /* NeoVimView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimView.swift; sourceTree = "<group>"; };
 		4B029F1B1D45E349004EE0D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrefWindow.xib; sourceTree = "<group>"; };
+		4B0677361D99D9C3001A2588 /* FileBrowserComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBrowserComponent.swift; sourceTree = "<group>"; };
 		4B0BCC931D70320C00D3CE65 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logger.h; path = VimR/Logger.h; sourceTree = SOURCE_ROOT; };
 		4B0C90591D5DED69007753A3 /* NeoVimBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimBuffer.h; sourceTree = "<group>"; };
 		4B0C905A1D5DED69007753A3 /* NeoVimBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimBuffer.m; sourceTree = "<group>"; };
@@ -413,6 +416,14 @@
 			path = resources;
 			sourceTree = "<group>";
 		};
+		4B0677351D99D9A2001A2588 /* File Browser */ = {
+			isa = PBXGroup;
+			children = (
+				4B0677361D99D9C3001A2588 /* FileBrowserComponent.swift */,
+			);
+			name = "File Browser";
+			sourceTree = "<group>";
+		};
 		4B1AC1AF1D7F395300898F0B /* Open Quickly */ = {
 			isa = PBXGroup;
 			children = (
@@ -569,6 +580,7 @@
 				1929B39DA7AC4A9B62D7CD39 /* Component.swift */,
 				4BD3BF961D32B0DB00082605 /* MainWindowManager.swift */,
 				4BD3BF921D32A95800082605 /* MainWindowComponent.swift */,
+				4B0677351D99D9A2001A2588 /* File Browser */,
 				4B1AC1AF1D7F395300898F0B /* Open Quickly */,
 				4B238BED1D3ED55300CBDD98 /* Preferences */,
 			);
@@ -1023,6 +1035,7 @@
 				1929B67DA3EB21A631EF1DBB /* FileUtils.swift in Sources */,
 				1929B3F5743967125F357C9F /* Matcher.swift in Sources */,
 				1929B53876E6952D378C2B30 /* ScoredFileItem.swift in Sources */,
+				4B0677371D99D9C3001A2588 /* FileBrowserComponent.swift in Sources */,
 				1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */,
 				4BAD84E81D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift in Sources */,
 				1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */,
@@ -1033,6 +1046,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B06773C1D9DCF23001A2588 /* Component.swift in Sources */,
 				4BF8EEDC1D85908400CAC08A /* PrefUtils.swift in Sources */,
 				1929B43FBA7A31F39D294CD0 /* FileItem.swift in Sources */,
 				1929B741C4E58EEDAF901353 /* FileItemIgnorePattern.swift in Sources */,

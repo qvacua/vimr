@@ -13,13 +13,7 @@ func == (left: Token, right: Token) -> Bool {
 
 class Token: Equatable {}
 
-class FileItemService {
-
-  fileprivate(set) var ignorePatterns: Set<FileItemIgnorePattern> = [] {
-    didSet {
-      self.ignoreToken = Token()
-    }
-  }
+class FileItemService: PublishingFlow {
 
   /// Used to cache fnmatch calls in `FileItem`.
   fileprivate var ignoreToken = Token()
@@ -40,8 +34,15 @@ class FileItemService {
   fileprivate let iconsCache = NSCache<NSURL, NSImage>()
 
   fileprivate var spinLock = OS_SPINLOCK_INIT
-  
-  init() {
+
+  // MARK: - API
+  fileprivate(set) var ignorePatterns: Set<FileItemIgnorePattern> = [] {
+    didSet {
+      self.ignoreToken = Token()
+    }
+  }
+
+  override init() {
     self.iconsCache.countLimit = 2000
     self.iconsCache.name = "icon-cache"
   }
@@ -74,7 +75,7 @@ class FileItemService {
     { [unowned self] events in
       let urls = events.map { URL(fileURLWithPath: $0.path) }
       let parent = FileUtils.commonParent(ofUrls: urls)
-      self.fileItem(forUrl: parent)?.needsScanChildren = true
+      self.fileItem(for: parent)?.needsScanChildren = true
     }
 
     self.monitors[url] = monitor
@@ -106,12 +107,8 @@ class FileItemService {
         return
       }
 
-      self.parentFileItem(ofUrl: url).removeChild(withUrl: url)
+      self.parentFileItem(of: url).removeChild(withUrl: url)
     }
-  }
-
-  fileprivate func parentFileItem(ofUrl url: URL) -> FileItem {
-    return self.fileItem(forPathComponents: Array(url.pathComponents.dropLast()))!
   }
 
   func flatFileItems(ofUrl url: URL) -> Observable<[FileItem]> {
@@ -130,7 +127,7 @@ class FileItemService {
       }
 
       self.scanDispatchQueue.async { [unowned self] in
-        guard let targetItem = self.fileItem(forPathComponents: pathComponents) else {
+        guard let targetItem = self.fileItem(for: pathComponents) else {
           observer.onCompleted()
           return
         }
@@ -193,16 +190,41 @@ class FileItemService {
     }
   }
 
-  fileprivate func fileItem(forUrl url: URL) -> FileItem? {
+  /// Returns the `FileItem` corresponding to the `url` parameter with children. This is like mkdir -p, i.e. it
+  /// instantiates the intermediate `FileItem`s.
+  ///
+  /// - returns: `FileItem` corresponding to `url` with children. `nil` if the file does not exist.
+  func fileItemWithChildren(for url: URL) -> FileItem? {
+    guard let fileItem = self.fileItem(for: url) else {
+      return nil
+    }
+
+    if !fileItem.childrenScanned || fileItem.needsScanChildren {
+      self.scanChildren(fileItem)
+    }
+
+    return fileItem
+  }
+
+  // FIXME: what if root?
+  fileprivate func parentFileItem(of url: URL) -> FileItem {
+    return self.fileItem(for: Array(url.pathComponents.dropLast()))!
+  }
+
+  /// Returns the `FileItem` corresponding to the `url` parameter. This is like mkdir -p, i.e. it
+  /// instantiates the intermediate `FileItem`s. The children of the result may be empty.
+  ///
+  /// - returns: `FileItem` corresponding to `pathComponents`. `nil` if the file does not exist.
+  fileprivate func fileItem(for url: URL) -> FileItem? {
     let pathComponents = url.pathComponents
-    return self.fileItem(forPathComponents: pathComponents)
+    return self.fileItem(for: pathComponents)
   }
 
   /// Returns the `FileItem` corresponding to the `pathComponents` parameter. This is like mkdir -p, i.e. it
-  /// instantiates the intermediate `FileItem`s.
+  /// instantiates the intermediate `FileItem`s. The children of the result may be empty.
   ///
   /// - returns: `FileItem` corresponding to `pathComponents`. `nil` if the file does not exist.
-  fileprivate func fileItem(forPathComponents pathComponents: [String]) -> FileItem? {
+  fileprivate func fileItem(for pathComponents: [String]) -> FileItem? {
     let result = pathComponents.dropFirst().reduce(self.root) { (resultItem, childName) -> FileItem? in
       guard let parent = resultItem else {
         return nil

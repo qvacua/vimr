@@ -19,20 +19,12 @@ private class PrefKeys {
   static let useInteractiveZsh = "use-interactive-zsh"
 }
 
-class PrefStore: Store {
+class PrefStore: StandardFlow {
 
   fileprivate static let compatibleVersion = "38"
   fileprivate static let defaultEditorFont = NeoVimView.defaultFont
   static let minimumEditorFontSize = NeoVimView.minFontSize
   static let maximumEditorFontSize = NeoVimView.maxFontSize
-
-  fileprivate let source: Observable<Any>
-  fileprivate let disposeBag = DisposeBag()
-
-  fileprivate let subject = PublishSubject<Any>()
-  var sink: Observable<Any> {
-    return self.subject.asObservable()
-  }
 
   fileprivate let userDefaults = UserDefaults.standard
   fileprivate let fontManager = NSFontManager.shared()
@@ -45,20 +37,14 @@ class PrefStore: Store {
     advanced: AdvancedPrefData(useInteractiveZsh: false)
   )
 
-  init(source: Observable<Any>) {
-    self.source = source
+  override init(source: Observable<Any>) {
+    super.init(source: source)
 
     if let prefs = self.userDefaults.dictionary(forKey: PrefStore.compatibleVersion) {
       self.data = self.prefDataFromDict(prefs)
     } else {
       self.userDefaults.setValue(self.prefsDict(self.data), forKey: PrefStore.compatibleVersion)
     }
-
-    self.addReactions()
-  }
-
-  deinit {
-    self.subject.onCompleted()
   }
 
   fileprivate func prefDataFromDict(_ prefs: [String: Any]) -> PrefData {
@@ -125,15 +111,14 @@ class PrefStore: Store {
     return prefs
   }
 
-  fileprivate func addReactions() {
-    self.source
+  override func subscription(source: Observable<Any>) -> Disposable {
+    return source
       .filter { $0 is PrefData }
       .map { $0 as! PrefData }
       .subscribe(onNext: { [unowned self] prefData in
         self.data = prefData
         self.userDefaults.setValue(self.prefsDict(prefData), forKey: PrefStore.compatibleVersion)
-        self.subject.onNext(prefData)
+        self.publish(event: prefData)
       })
-      .addDisposableTo(self.disposeBag)
   }
 }

@@ -6,17 +6,8 @@
 import Cocoa
 import RxSwift
 
-class PrefPane: NSView, Component {
+class PrefPane: ViewComponent {
   
-  let disposeBag = DisposeBag()
-
-  fileprivate let source: Observable<Any>
-
-  fileprivate let subject = PublishSubject<Any>()
-  var sink: Observable<Any> {
-    return self.subject.asObservable()
-  }
-
   // Return true to place this to the upper left corner when the scroll view is bigger than this view.
   override var isFlipped: Bool {
     return true
@@ -30,38 +21,8 @@ class PrefPane: NSView, Component {
     return false
   }
 
-  init(source: Observable<Any>) {
-    self.source = source
-
-    super.init(frame: CGRect.zero)
-    self.translatesAutoresizingMaskIntoConstraints = false
-    
-    self.addViews()
-    self.subscription(source: self.source).addDisposableTo(self.disposeBag)
-  }
-
-  deinit {
-    self.subject.onCompleted()
-  }
-  
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-
-  func addViews() {
-    preconditionFailure("Please override")
-  }
-
-  func subscription(source: Observable<Any>) -> Disposable {
-    preconditionFailure("Please override")
-  }
-  
-  func publish(event: Any) {
-    self.subject.onNext(event)
-  }
-
   func windowWillClose() {
-    
+    // noop, override
   }
 }
 
@@ -103,7 +64,6 @@ extension PrefPane {
   func configureCheckbox(button: NSButton, title: String, action: Selector) {
     button.title = title
     button.setButtonType(.switch)
-//    button.bezelStyle = .ThickSquareBezelStyle
     button.target = self
     button.action = action
   }
