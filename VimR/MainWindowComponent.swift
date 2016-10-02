@@ -26,7 +26,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, WorkspaceDelegate 
   fileprivate var defaultEditorFont: NSFont
   fileprivate var usesLigatures: Bool
 
-  fileprivate var _cwd: URL = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
+  fileprivate var _cwd: URL = FileUtils.userHomeUrl
 
   fileprivate let fontManager = NSFontManager.shared()
   fileprivate let fileItemService: FileItemService

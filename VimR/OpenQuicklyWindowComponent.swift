@@ -17,7 +17,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
   var pauseScan = false
 
   fileprivate(set) var pattern = ""
-  fileprivate(set) var cwd = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true) {
+  fileprivate(set) var cwd = FileUtils.userHomeUrl {
     didSet {
       self.cwdPathCompsCount = self.cwd.pathComponents.count
       self.cwdControl.url = self.cwd

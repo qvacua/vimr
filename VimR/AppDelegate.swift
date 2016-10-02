@@ -207,7 +207,7 @@ extension AppDelegate {
       .filter { $0.hasPrefix(AppDelegate.cwdPrefix) }
       .flatMap { $0.without(prefix: AppDelegate.cwdPrefix).removingPercentEncoding }
       .map { URL(fileURLWithPath: $0) }
-      .first ?? URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
+      .first ?? FileUtils.userHomeUrl
     
     switch action {
     case .activate, .newWindow:
