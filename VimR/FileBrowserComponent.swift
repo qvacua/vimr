@@ -31,6 +31,7 @@ class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineVie
     let fileView = self.fileView
     fileView.dataSource = self
     fileView.delegate = self
+    fileView.doubleAction = #selector(FileBrowserComponent.fileViewDoubleAction)
 
     let scrollView = NSScrollView.standardScrollView()
     scrollView.borderType = .noBorder
@@ -58,6 +59,22 @@ class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineVie
           break
         }
       })
+  }
+}
+
+// MARK: - Actions
+extension FileBrowserComponent {
+
+  func fileViewDoubleAction() {
+    guard let item = self.fileView.selectedItem as? FileItem else {
+      return
+    }
+
+    if item.dir {
+      self.fileView.expandItem(item)
+    } else {
+      NSLog("open \(item)")
+    }
   }
 }
 

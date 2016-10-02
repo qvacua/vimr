@@ -118,6 +118,18 @@ extension NSOutlineView {
 
     return outlineView
   }
+
+  /**
+   The selected item. When the selection is empty, then returns `nil`. When multiple items are selected, then returns
+   the last selected item.
+   */
+  var selectedItem: Any? {
+    if self.selectedRow < 0 {
+      return nil
+    }
+
+    return self.item(atRow: self.selectedRow)
+  }
 }
 
 extension NSScrollView {
