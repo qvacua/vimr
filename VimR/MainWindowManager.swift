@@ -11,8 +11,6 @@ enum MainWindowEvent {
 }
 
 class MainWindowManager: StandardFlow {
-  
-  static fileprivate let userHomeUrl = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
 
   fileprivate var mainWindowComponents = [String:MainWindowComponent]()
   fileprivate weak var keyMainWindow: MainWindowComponent?
@@ -27,7 +25,7 @@ class MainWindowManager: StandardFlow {
     super.init(source: source)
   }
 
-  func newMainWindow(urls: [URL] = [], cwd: URL = MainWindowManager.userHomeUrl) -> MainWindowComponent {
+  func newMainWindow(urls: [URL] = [], cwd: URL = FileUtils.userHomeUrl) -> MainWindowComponent {
     let mainWindowComponent = MainWindowComponent(
       source: self.source, fileItemService: self.fileItemService, cwd: cwd, urls: urls, initialData: self.data
     )
@@ -72,7 +70,7 @@ class MainWindowManager: StandardFlow {
     return self.mainWindowComponents.values.reduce(false) { $0 ? true : $1.isDirty() }
   }
   
-  func openInKeyMainWindow(urls:[URL] = [], cwd: URL = MainWindowManager.userHomeUrl) {
+  func openInKeyMainWindow(urls:[URL] = [], cwd: URL = FileUtils.userHomeUrl) {
     guard !self.mainWindowComponents.isEmpty else {
       _ = self.newMainWindow(urls: urls, cwd: cwd)
       return

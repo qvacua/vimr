@@ -8,10 +8,8 @@ import RxSwift
 
 class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineViewDelegate {
 
-  fileprivate static let userHomeUrl = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
-
-  fileprivate var cwd = FileBrowserComponent.userHomeUrl
-  fileprivate var cwdFileItem = FileItem(FileBrowserComponent.userHomeUrl)
+  fileprivate var cwd = FileUtils.userHomeUrl
+  fileprivate var cwdFileItem = FileItem(FileUtils.userHomeUrl)
 
   fileprivate let fileView = NSOutlineView.standardOutlineView()
   fileprivate let dumb = [NSAttributedString(string: "A"), NSAttributedString(string: "B")]
@@ -51,7 +49,7 @@ class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineVie
         case let .changeCwd(mainWindow: mainWindow):
           self.cwd = mainWindow.cwd
           self.cwdFileItem = self.fileItemService.fileItemWithChildren(for: self.cwd) ??
-                             self.fileItemService.fileItemWithChildren(for: FileBrowserComponent.userHomeUrl)!
+                             self.fileItemService.fileItemWithChildren(for: FileUtils.userHomeUrl)!
           NSLog("cwd changed to \(self.cwd) of \(mainWindow.uuid)")
           self.fileView.reloadData()
 
