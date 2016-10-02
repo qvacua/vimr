@@ -6,7 +6,7 @@
 import Cocoa
 import RxSwift
 
-protocol Flow {
+protocol Flow: class {
 
   var sink: Observable<Any> { get }
 }

@@ -35,6 +35,8 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, WorkspaceDelegate 
   fileprivate let neoVimView: NeoVimView
   fileprivate var tools = [Tool: WorkspaceTool]()
 
+  fileprivate var flows = [Flow]()
+
   // MARK: - API
   var uuid: String {
     return self.neoVimView.uuid
@@ -87,9 +89,13 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, WorkspaceDelegate 
     self.tools[.fileBrowser] = fileBrowserTool
     self.workspace.append(tool: fileBrowserTool, location: .left)
 
+    self.flows.append(fileBrowser)
+
     // FIXME: temporarily for dev
     fileBrowserTool.dimension = 200
     self.workspace.bars[.left]?.toggle(fileBrowserTool)
+
+    self.addReactions()
 
     self.neoVimView.cwd = cwd // This will publish the MainWindowAction.changeCwd action for the file browser.
     self.neoVimView.delegate = self
@@ -118,6 +124,23 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, WorkspaceDelegate 
 
   func closeAllNeoVimWindowsWithoutSaving() {
     self.neoVimView.closeAllWindowsWithoutSaving()
+  }
+
+  // MARK: - Private
+  fileprivate func addReactions() {
+    self.flows
+      .map { $0.sink }
+      .toMergedObservables()
+      .subscribe(onNext: { [unowned self] action in
+        switch action {
+        case let FileBrowserAction.open(url: url):
+          self.open(urls: [url])
+        default:
+          NSLog("unrecognized action: \(action)")
+          return
+        }
+      })
+      .addDisposableTo(self.disposeBag)
   }
 
   // MARK: - WindowComponent

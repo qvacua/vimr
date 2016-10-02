@@ -6,6 +6,11 @@
 import Cocoa
 import RxSwift
 
+enum FileBrowserAction {
+
+  case open(url: URL)
+}
+
 class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineViewDelegate {
 
   fileprivate var cwd = FileUtils.userHomeUrl
@@ -33,7 +38,6 @@ class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineVie
 
     let scrollView = NSScrollView.standardScrollView()
     scrollView.borderType = .noBorder
-    scrollView.backgroundColor = NSColor.windowBackgroundColor
     scrollView.documentView = fileView
 
     self.addSubview(scrollView)
@@ -71,7 +75,7 @@ extension FileBrowserComponent {
     if item.dir {
       self.fileView.expandItem(item)
     } else {
-      NSLog("open \(item)")
+      self.publish(event: FileBrowserAction.open(url: item.url))
     }
   }
 }
@@ -116,7 +120,7 @@ extension FileBrowserComponent {
       return false
     }
     
-    return fileItem.dir && !fileItem.package
+    return fileItem.dir
   }
 
   @objc(outlineView:objectValueForTableColumn:byItem:)
