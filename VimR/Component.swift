@@ -53,6 +53,33 @@ class StandardFlow: PublishingFlow {
   }
 }
 
+class EmbeddableComponent: Flow {
+
+  var sink: Observable<Any> {
+    return self.subject.asObservable()
+  }
+
+  fileprivate let subject = PublishSubject<Any>()
+  fileprivate let source: Observable<Any>
+  fileprivate let disposeBag = DisposeBag()
+
+  init(source: Observable<Any>) {
+    self.source = source
+  }
+
+  deinit {
+    self.subject.onCompleted()
+  }
+
+  func set(subscription: ((Observable<Any>) -> Disposable)) {
+    subscription(source).addDisposableTo(self.disposeBag)
+  }
+
+  func publish(event: Any) {
+    self.subject.onNext(event)
+  }
+}
+
 class StandardComponent: NSObject, Flow {
 
   var sink: Observable<Any> {

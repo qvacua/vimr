@@ -28,7 +28,7 @@ fileprivate enum Tool {
   case fileBrowser
 }
 
-class MainWindowComponent: WindowComponent, NSWindowDelegate, WorkspaceDelegate {
+class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceValidations, WorkspaceDelegate {
 
   fileprivate static let nibName = "MainWindow"
 
@@ -121,7 +121,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, WorkspaceDelegate 
     }
 
     if mainWindowData.isFileBrowserVisible {
-      self.workspace.bars[.left]?.toggle(fileBrowserTool)
+      fileBrowserTool.toggle()
     }
 
     self.window.makeFirstResponder(self.neoVimView)
@@ -130,6 +130,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, WorkspaceDelegate 
 
   func open(urls: [URL]) {
     self.neoVimView.open(urls: urls)
+    self.window.makeFirstResponder(self.neoVimView)
   }
 
   func isDirty() -> Bool {
@@ -268,15 +269,37 @@ extension MainWindowComponent {
   }
 }
 
-// MARK: - View Menu Item Actions
+// MARK: - Tools Menu Item Actions
 extension MainWindowComponent {
 
   @IBAction func toggleAllTools(_ sender: Any?) {
     self.workspace.toggleAllTools()
+    self.focusNeoVimView(self)
   }
 
   @IBAction func toggleToolButtons(_ sender: Any?) {
     self.workspace.toggleToolButtons()
+  }
+
+  @IBAction func toggleFileBrowser(_ sender: Any?) {
+    let fileBrowserTool = self.tools[.fileBrowser]!
+
+    if fileBrowserTool.isSelected {
+      if fileBrowserTool.viewComponent.isFirstResponder {
+        fileBrowserTool.toggle()
+      } else {
+        fileBrowserTool.viewComponent.beFirstResponder()
+      }
+
+      return
+    }
+
+    fileBrowserTool.toggle()
+    fileBrowserTool.viewComponent.beFirstResponder()
+  }
+
+  @IBAction func focusNeoVimView(_ sender: Any?) {
+    self.window.makeFirstResponder(self.neoVimView)
   }
 }
 
@@ -364,5 +387,21 @@ extension MainWindowComponent {
 
     self.neoVimView.closeCurrentTab()
     return false
+  }
+}
+
+// MARK: - NSUserInterfaceValidationsProtocol
+extension MainWindowComponent {
+
+  public func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
+    guard item.action == #selector(focusNeoVimView(_:)) else {
+      return true
+    }
+
+    if self.window.firstResponder == self.neoVimView {
+      return false
+    }
+
+    return true
   }
 }

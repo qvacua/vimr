@@ -16,22 +16,47 @@ class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineVie
   fileprivate var cwd = FileUtils.userHomeUrl
   fileprivate var cwdFileItem = FileItem(FileUtils.userHomeUrl)
 
-  fileprivate let fileView = NSOutlineView.standardOutlineView()
   fileprivate let dumb = [NSAttributedString(string: "A"), NSAttributedString(string: "B")]
 
+  fileprivate let fileView: FileOutlineView
   fileprivate let fileItemService: FileItemService
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
+  override var isFirstResponder: Bool {
+    return self.fileView.isFirstResponder
+  }
+
   init(source: Observable<Any>, fileItemService: FileItemService) {
     self.fileItemService = fileItemService
+    self.fileView = FileOutlineView(source: source)
+    
     super.init(source: source)
+    self.addReactions()
+  }
+
+  override func beFirstResponder() {
+    self.window?.makeFirstResponder(self.fileView)
+  }
+
+  fileprivate func addReactions() {
+    self.fileView.sink
+      .filter { $0 is FileOutlineViewAction }
+      .map { $0 as! FileOutlineViewAction }
+      .subscribe(onNext: { [unowned self] action in
+        switch action {
+        case let .openFileItem(fileItem):
+          self.doubleAction(for: fileItem)
+        }
+      })
+      .addDisposableTo(self.disposeBag)
   }
 
   override func addViews() {
     let fileView = self.fileView
+    NSOutlineView.configure(toStandard: fileView)
     fileView.dataSource = self
     fileView.delegate = self
     fileView.doubleAction = #selector(FileBrowserComponent.fileViewDoubleAction)
@@ -72,8 +97,12 @@ extension FileBrowserComponent {
       return
     }
 
+    self.doubleAction(for: item)
+  }
+
+  fileprivate func doubleAction(for item: FileItem) {
     if item.dir {
-      self.fileView.expandItem(item)
+      self.fileView.toggle(item: item)
     } else {
       self.publish(event: FileBrowserAction.open(url: item.url))
     }

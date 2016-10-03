@@ -71,6 +71,14 @@ extension NSView {
   func removeAllConstraints() {
     self.removeConstraints(self.constraints)
   }
+
+  var isFirstResponder: Bool {
+    return self.window?.firstResponder == self
+  }
+
+  func beFirstResponder() {
+    self.window?.makeFirstResponder(self)
+  }
 }
 
 extension NSTableView {
@@ -104,7 +112,11 @@ extension NSOutlineView {
 
   static func standardOutlineView() -> NSOutlineView {
     let outlineView = NSOutlineView(frame: CGRect.zero)
+    NSOutlineView.configure(toStandard: outlineView)
+    return outlineView
+  }
 
+  static func configure(toStandard outlineView: NSOutlineView) {
     let column = NSTableColumn(identifier: "name")
     column.isEditable = false
 
@@ -115,8 +127,6 @@ extension NSOutlineView {
     outlineView.allowsMultipleSelection = false
     outlineView.headerView = nil
     outlineView.focusRingType = .none
-
-    return outlineView
   }
 
   /**
@@ -129,6 +139,14 @@ extension NSOutlineView {
     }
 
     return self.item(atRow: self.selectedRow)
+  }
+
+  func toggle(item: Any) {
+    if self.isItemExpanded(item) {
+      self.collapseItem(item)
+    } else {
+      self.expandItem(item)
+    }
   }
 }
 

@@ -85,6 +85,7 @@
 		4B6A70961D6100E300E12030 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70951D6100E300E12030 /* SwiftCommons.swift */; };
 		4B6A70991D65058A00E12030 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; };
 		4B6A709C1D6507A000E12030 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B6B0A781DA2A1A500212D6D /* FileOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6B0A771DA2A1A500212D6D /* FileOutlineView.swift */; };
 		4B854A1D1D31447C00E08DE1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B854A1C1D31447C00E08DE1 /* main.m */; };
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
 		4B9A15241D2993DA009F9F67 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -299,6 +300,7 @@
 		4B6423A81D8EFE7500FC78C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B6A70931D60E04200E12030 /* AppKitCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppKitCommons.swift; sourceTree = "<group>"; };
 		4B6A70951D6100E300E12030 /* SwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftCommons.swift; sourceTree = "<group>"; };
+		4B6B0A771DA2A1A500212D6D /* FileOutlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileOutlineView.swift; sourceTree = "<group>"; };
 		4B854A1A1D31447C00E08DE1 /* NeoVimServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NeoVimServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B854A1C1D31447C00E08DE1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4B97E2CD1D33F53D00FC0660 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
@@ -423,6 +425,7 @@
 		4B0677351D99D9A2001A2588 /* File Browser */ = {
 			isa = PBXGroup;
 			children = (
+				4B6B0A771DA2A1A500212D6D /* FileOutlineView.swift */,
 				4B0677361D99D9C3001A2588 /* FileBrowserComponent.swift */,
 			);
 			name = "File Browser";
@@ -1041,6 +1044,7 @@
 				1929B53876E6952D378C2B30 /* ScoredFileItem.swift in Sources */,
 				4B0677371D99D9C3001A2588 /* FileBrowserComponent.swift in Sources */,
 				1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */,
+				4B6B0A781DA2A1A500212D6D /* FileOutlineView.swift in Sources */,
 				4BAD84E81D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift in Sources */,
 				1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */,
 			);

@@ -161,7 +161,6 @@ class PrefStore: StandardFlow {
           self.data = prefData
 
         case let mainWindowPrefData as MainWindowPrefData:
-          NSLog("\(mainWindowPrefData)")
           self.data.mainWindow = mainWindowPrefData
 
         default:
