@@ -38,6 +38,9 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
       self.relayout()
     }
   }
+  var isOpen: Bool {
+    return self.selectedTool != nil
+  }
   var dimensionConstraint = NSLayoutConstraint()
 
   weak var delegate: WorkspaceBarDelegate?
@@ -64,7 +67,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
     if self.isButtonVisible {
       self.layoutButtons()
 
-      if self.isOpen() {
+      if self.isOpen {
         let curTool = self.selectedTool!
 
         self.layout(curTool)
@@ -76,7 +79,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
       }
 
     } else {
-      if self.isOpen() {
+      if self.isOpen {
         let curTool = self.selectedTool!
 
         self.layoutWithoutButtons(curTool)
@@ -94,7 +97,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
     tool.location = self.location
     tools.append(tool)
 
-    if self.isOpen() {
+    if self.isOpen {
       self.selectedTool?.isSelected = false
       self.selectedTool = tool
     }
@@ -113,7 +116,7 @@ extension WorkspaceBar {
       self.drawInnerSeparator(dirtyRect)
     }
 
-    if self.isOpen() {
+    if self.isOpen {
       self.drawOuterSeparator(dirtyRect)
     }
   }
@@ -127,7 +130,7 @@ extension WorkspaceBar {
   }
 
   override func mouseDown(with event: NSEvent) {
-    guard self.isOpen() else {
+    guard self.isOpen else {
       return
     }
 
@@ -190,7 +193,7 @@ extension WorkspaceBar {
   }
 
   override func resetCursorRects() {
-    guard self.isOpen() else {
+    guard self.isOpen else {
       return
     }
 
@@ -306,7 +309,7 @@ extension WorkspaceBar {
     self.dimensionConstraint.constant = saneDimension
 
     let toolDimension = self.toolDimension(fromBarDimension: saneDimension)
-    if self.isOpen() {
+    if self.isOpen {
       self.selectedTool?.dimension = toolDimension
     }
 
@@ -322,7 +325,7 @@ extension WorkspaceBar {
       return 0
     }
 
-    if self.isOpen() {
+    if self.isOpen {
       return max(dimension, self.selectedTool!.minimumDimension, WorkspaceBar.minimumDimension)
     }
 
@@ -339,10 +342,6 @@ extension WorkspaceBar {
 
   fileprivate func hasTools() -> Bool {
     return !self.isEmpty()
-  }
-
-  fileprivate func isOpen() -> Bool {
-    return self.selectedTool != nil
   }
 
   fileprivate func layoutWithoutButtons(_ tool: WorkspaceTool) {
@@ -531,7 +530,7 @@ extension WorkspaceBar {
   func toggle(_ tool: WorkspaceTool) {
     self.delegate?.resizeWillStart(workspaceBar: self)
 
-    if self.isOpen() {
+    if self.isOpen {
       let curTool = self.selectedTool!
       if curTool === tool {
         // In this case, curTool.isSelected is already set to false in WorkspaceTool.toggle()

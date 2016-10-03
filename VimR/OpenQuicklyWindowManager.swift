@@ -23,6 +23,16 @@ class OpenQuicklyWindowManager: StandardFlow {
   }
 
   override func subscription(source: Observable<Any>) -> Disposable {
-    return Disposables.create()
+    return source
+      .filter { $0 is MainWindowAction }
+      .map { $0 as! MainWindowAction }
+      .subscribe(onNext: { [unowned self] event in
+        switch event {
+        case let .openQuickly(mainWindow: mainWindow):
+          self.open(forMainWindow: mainWindow)
+        default:
+          return
+        }
+        })
   }
 }

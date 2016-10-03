@@ -25,9 +25,14 @@ class Workspace: NSView, WorkspaceBarDelegate {
     let mainViewMinimumSize: CGSize
   }
 
-  fileprivate(set) var isBarVisible = true {
+  fileprivate(set) var isAllToolsVisible = true {
     didSet {
       self.relayout()
+    }
+  }
+  fileprivate(set) var isToolButtonsVisible = true {
+    didSet {
+      self.bars.values.forEach { $0.isButtonVisible = !$0.isButtonVisible }
     }
   }
 
@@ -66,11 +71,11 @@ class Workspace: NSView, WorkspaceBarDelegate {
   }
 
   func toggleAllTools() {
-    self.isBarVisible = !self.isBarVisible
+    self.isAllToolsVisible = !self.isAllToolsVisible
   }
 
   func toggleToolButtons() {
-    self.bars.values.forEach { $0.isButtonVisible = !$0.isButtonVisible }
+    self.isToolButtonsVisible = !self.isToolButtonsVisible
   }
 }
 
@@ -101,7 +106,7 @@ extension Workspace {
     mainView.autoSetDimension(.width, toSize: self.config.mainViewMinimumSize.width, relation: .greaterThanOrEqual)
     mainView.autoSetDimension(.height, toSize: self.config.mainViewMinimumSize.height, relation: .greaterThanOrEqual)
 
-    guard self.isBarVisible else {
+    guard self.isAllToolsVisible else {
       mainView.autoPinEdgesToSuperviewEdges()
       return
     }

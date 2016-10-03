@@ -5,6 +5,12 @@
 
 import Foundation
 
+class Token: Equatable {}
+
+func == (left: Token, right: Token) -> Bool {
+  return left === right
+}
+
 class FileItem : CustomStringConvertible {
 
   let url: URL

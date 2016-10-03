@@ -25,7 +25,6 @@
 		1929B73E5EC0B108B83F82EB /* FileItemService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B3A98687DF171307AAC8 /* FileItemService.swift */; };
 		1929B741C4E58EEDAF901353 /* FileItemIgnorePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B69499B2569793350CEC /* FileItemIgnorePattern.swift */; };
 		1929B7A2F2B423AA9740FD45 /* FileUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5D977261F1EBFA9E8F1 /* FileUtilsTest.swift */; };
-		1929B7C981A0EFCC8D631E3F /* FileItemService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B3A98687DF171307AAC8 /* FileItemService.swift */; };
 		1929B93DBAD09835E428F610 /* PrefPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB251F74BEFC82CEEF84 /* PrefPane.swift */; };
 		1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D510177918080BE39B /* Scorer.swift */; };
 		1929BD4CA2204E061A86A140 /* MatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC19C1BC19246AFF1621 /* MatcherTests.swift */; };
@@ -1060,7 +1059,6 @@
 				4BF8EEDC1D85908400CAC08A /* PrefUtils.swift in Sources */,
 				1929B43FBA7A31F39D294CD0 /* FileItem.swift in Sources */,
 				1929B741C4E58EEDAF901353 /* FileItemIgnorePattern.swift in Sources */,
-				1929B7C981A0EFCC8D631E3F /* FileItemService.swift in Sources */,
 				1929B2E1A64297B8E05BB64A /* FileUtils.swift in Sources */,
 				1929B3BF1DB87B57559DC27D /* Matcher.swift in Sources */,
 				4BF8EEDB1D85903000CAC08A /* PrefUtilsTest.swift in Sources */,

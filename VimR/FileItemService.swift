@@ -7,13 +7,7 @@ import Cocoa
 import RxSwift
 import EonilFileSystemEvents
 
-func == (left: Token, right: Token) -> Bool {
-  return left === right
-}
-
-class Token: Equatable {}
-
-class FileItemService: PublishingFlow {
+class FileItemService: StandardFlow {
 
   /// Used to cache fnmatch calls in `FileItem`.
   fileprivate var ignoreToken = Token()
@@ -29,7 +23,7 @@ class FileItemService: PublishingFlow {
   fileprivate let fileSystemEventsLatency = Double(2)
   fileprivate var monitors = [URL: FileSystemEventMonitor]()
   fileprivate var monitorCounter = [URL: Int]()
-  
+
   fileprivate let workspace = NSWorkspace.shared()
   fileprivate let iconsCache = NSCache<NSURL, NSImage>()
 
@@ -42,7 +36,9 @@ class FileItemService: PublishingFlow {
     }
   }
 
-  override init() {
+  override init(source: Observable<Any>) {
+    super.init(source: source)
+
     self.iconsCache.countLimit = 2000
     self.iconsCache.name = "icon-cache"
   }
@@ -50,7 +46,7 @@ class FileItemService: PublishingFlow {
   func set(ignorePatterns patterns: Set<FileItemIgnorePattern>) {
     self.ignorePatterns = patterns
   }
-  
+
   func icon(forUrl url: URL) -> NSImage? {
     if let cached = self.iconsCache.object(forKey: url as NSURL) {
       return cached
@@ -60,7 +56,7 @@ class FileItemService: PublishingFlow {
     let icon = workspace.icon(forFile: path)
     icon.size = CGSize(width: 16, height: 16)
     self.iconsCache.setObject(icon, forKey: url as NSURL)
-    
+
     return icon
   }
 
@@ -263,7 +259,7 @@ class FileItemService: PublishingFlow {
 
     return filteredChildren.first
   }
-  
+
   fileprivate func scanChildren(_ item: FileItem) {
     let children = FileUtils.directDescendants(item.url).map(FileItem.init)
     self.syncAddChildren { item.children = children }
@@ -276,5 +272,18 @@ class FileItemService: PublishingFlow {
     OSSpinLockLock(&self.spinLock)
     fn()
     OSSpinLockUnlock(&self.spinLock)
+  }
+
+  override func subscription(source: Observable<Any>) -> Disposable {
+    return source
+      .filter { $0 is PrefData }
+      .map { $0 as! PrefData }
+      .subscribe(onNext: { [unowned self] data in
+        if data.general.ignorePatterns == self.ignorePatterns {
+          return
+        }
+        
+        self.set(ignorePatterns: data.general.ignorePatterns)
+        })
   }
 }

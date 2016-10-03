@@ -7,12 +7,6 @@ import Cocoa
 import RxSwift
 import PureLayout
 
-struct PrefData {
-  var general: GeneralPrefData
-  var appearance: AppearancePrefData
-  var advanced: AdvancedPrefData
-}
-
 class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSource, NSTableViewDelegate {
 
   fileprivate var data: PrefData

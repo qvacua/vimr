@@ -6,6 +6,14 @@
 import Cocoa
 import RxSwift
 
+struct PrefData {
+  var general: GeneralPrefData
+  var appearance: AppearancePrefData
+  var advanced: AdvancedPrefData
+
+  var mainWindow: MainWindowPrefData
+}
+
 private class PrefKeys {
 
   static let openNewWindowWhenLaunching = "open-new-window-when-launching"
@@ -17,8 +25,15 @@ private class PrefKeys {
   static let editorUsesLigatures = "editor-uses-ligatures"
 
   static let useInteractiveZsh = "use-interactive-zsh"
+
+  static let isAllToolsVisible = "is-all-tools-visible"
+  static let isToolButtonsShown = "is-tool-buttons-visible"
+
+  static let isFileBrowserOpen = "is-file-browser-visible"
+  static let fileBrowserWidth = "file-browser-width"
 }
 
+// TODO: We should generalize the persisting of pref data.
 class PrefStore: StandardFlow {
 
   fileprivate static let compatibleVersion = "38"
@@ -34,7 +49,11 @@ class PrefStore: StandardFlow {
                              openNewWindowOnReactivation: true,
                              ignorePatterns: Set([ "*/.git", "*.o", "*.d", "*.dia" ].map(FileItemIgnorePattern.init))),
     appearance: AppearancePrefData(editorFont: PrefStore.defaultEditorFont, editorUsesLigatures: false),
-    advanced: AdvancedPrefData(useInteractiveZsh: false)
+    advanced: AdvancedPrefData(useInteractiveZsh: false),
+    mainWindow: MainWindowPrefData(isAllToolsVisible: true,
+                                   isToolButtonsVisible: true,
+                                   isFileBrowserVisible: true,
+                                   fileBrowserWidth: 200)
   )
 
   override init(source: Observable<Any>) {
@@ -54,15 +73,20 @@ class PrefStore: StandardFlow {
       (prefs[PrefKeys.editorFontSize] as? NSNumber)?.floatValue ?? Float(PrefStore.defaultEditorFont.pointSize)
     )
     let editorFont = self.saneFont(editorFontName, fontSize: editorFontSize)
-    
-    let usesLigatures = (prefs[PrefKeys.editorUsesLigatures] as? NSNumber)?.boolValue ?? false
-    let openNewWindowWhenLaunching = (prefs[PrefKeys.openNewWindowWhenLaunching] as? NSNumber)?.boolValue ?? true
-    let openNewWindowOnReactivation = (prefs[PrefKeys.openNewWindowOnReactivation] as? NSNumber)?.boolValue ?? true
+
+    let usesLigatures = self.bool(from: prefs, for: PrefKeys.editorUsesLigatures, default: false)
+    let openNewWindowWhenLaunching = self.bool(from: prefs, for: PrefKeys.openNewWindowWhenLaunching, default: true)
+    let openNewWindowOnReactivation = self.bool(from: prefs, for: PrefKeys.openNewWindowOnReactivation, default: true)
 
     let ignorePatternsList = (prefs[PrefKeys.openQuicklyIgnorePatterns] as? String) ?? "*/.git, *.o, *.d, *.dia"
     let ignorePatterns = PrefUtils.ignorePatterns(fromString: ignorePatternsList)
 
-    let useInteractiveZsh = (prefs[PrefKeys.useInteractiveZsh] as? NSNumber)?.boolValue ?? false
+    let useInteractiveZsh = self.bool(from: prefs, for: PrefKeys.useInteractiveZsh, default: false)
+
+    let isAllToolsVisible = self.bool(from: prefs, for: PrefKeys.isAllToolsVisible, default: true)
+    let isToolButtonsVisible = self.bool(from: prefs, for: PrefKeys.isToolButtonsShown, default: true)
+    let isFileBrowserVisible = self.bool(from: prefs, for: PrefKeys.isFileBrowserOpen, default: true)
+    let fileBrowserWidth = (prefs[PrefKeys.fileBrowserWidth] as? NSNumber)?.floatValue ?? Float(200)
 
     return PrefData(
       general: GeneralPrefData(
@@ -71,8 +95,16 @@ class PrefStore: StandardFlow {
         ignorePatterns: ignorePatterns
       ),
       appearance: AppearancePrefData(editorFont: editorFont, editorUsesLigatures: usesLigatures),
-      advanced: AdvancedPrefData(useInteractiveZsh: useInteractiveZsh)
+      advanced: AdvancedPrefData(useInteractiveZsh: useInteractiveZsh),
+      mainWindow: MainWindowPrefData(isAllToolsVisible: isAllToolsVisible,
+                                     isToolButtonsVisible: isToolButtonsVisible,
+                                     isFileBrowserVisible: isFileBrowserVisible,
+                                     fileBrowserWidth: fileBrowserWidth)
     )
+  }
+
+  fileprivate func bool(from prefs: [String: Any], for key: String, default defaultValue: Bool) -> Bool {
+    return (prefs[key] as? NSNumber)?.boolValue ?? defaultValue
   }
 
   fileprivate func saneFont(_ fontName: String, fontSize: CGFloat) -> NSFont {
@@ -88,24 +120,33 @@ class PrefStore: StandardFlow {
     return editorFont
   }
 
-  fileprivate func prefsDict(_ prefData: PrefData) -> [String: AnyObject] {
+  fileprivate func prefsDict(_ prefData: PrefData) -> [String: Any] {
     let generalData = prefData.general
     let appearanceData = prefData.appearance
     let advancedData = prefData.advanced
+    let mainWindowData = prefData.mainWindow
 
-    let prefs: [String: AnyObject] = [
+    let ignorePatterns = PrefUtils.ignorePatternString(fromSet: generalData.ignorePatterns) as Any
+
+    let prefs: [String: Any] = [
       // General
-      PrefKeys.openNewWindowWhenLaunching: generalData.openNewWindowWhenLaunching as AnyObject,
-      PrefKeys.openNewWindowOnReactivation: generalData.openNewWindowOnReactivation as AnyObject,
-      PrefKeys.openQuicklyIgnorePatterns: PrefUtils.ignorePatternString(fromSet: generalData.ignorePatterns) as AnyObject,
+      PrefKeys.openNewWindowWhenLaunching: generalData.openNewWindowWhenLaunching as Any,
+      PrefKeys.openNewWindowOnReactivation: generalData.openNewWindowOnReactivation as Any,
+      PrefKeys.openQuicklyIgnorePatterns: ignorePatterns,
 
       // Appearance
-      PrefKeys.editorFontName: appearanceData.editorFont.fontName as AnyObject,
-      PrefKeys.editorFontSize: appearanceData.editorFont.pointSize as AnyObject,
-      PrefKeys.editorUsesLigatures: appearanceData.editorUsesLigatures as AnyObject,
+      PrefKeys.editorFontName: appearanceData.editorFont.fontName as Any,
+      PrefKeys.editorFontSize: appearanceData.editorFont.pointSize as Any,
+      PrefKeys.editorUsesLigatures: appearanceData.editorUsesLigatures as Any,
 
       // Advanced
-      PrefKeys.useInteractiveZsh: advancedData.useInteractiveZsh as AnyObject,
+      PrefKeys.useInteractiveZsh: advancedData.useInteractiveZsh as Any,
+
+      // MainWindow
+      PrefKeys.isAllToolsVisible: mainWindowData.isAllToolsVisible,
+      PrefKeys.isToolButtonsShown: mainWindowData.isToolButtonsVisible,
+      PrefKeys.isFileBrowserOpen: mainWindowData.isFileBrowserVisible,
+      PrefKeys.fileBrowserWidth: mainWindowData.fileBrowserWidth
     ]
 
     return prefs
@@ -113,12 +154,22 @@ class PrefStore: StandardFlow {
 
   override func subscription(source: Observable<Any>) -> Disposable {
     return source
-      .filter { $0 is PrefData }
-      .map { $0 as! PrefData }
-      .subscribe(onNext: { [unowned self] prefData in
-        self.data = prefData
-        self.userDefaults.setValue(self.prefsDict(prefData), forKey: PrefStore.compatibleVersion)
-        self.publish(event: prefData)
-      })
+      .filter { $0 is PrefData || $0 is MainWindowPrefData }
+      .subscribe(onNext: { [unowned self] data in
+        switch data {
+        case let prefData as PrefData:
+          self.data = prefData
+
+        case let mainWindowPrefData as MainWindowPrefData:
+          NSLog("\(mainWindowPrefData)")
+          self.data.mainWindow = mainWindowPrefData
+
+        default:
+          return
+        }
+
+        self.userDefaults.setValue(self.prefsDict(self.data), forKey: PrefStore.compatibleVersion)
+        self.publish(event: self.data)
+        })
   }
 }

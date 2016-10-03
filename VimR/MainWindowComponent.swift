@@ -11,7 +11,16 @@ enum MainWindowAction {
   case becomeKey(mainWindow: MainWindowComponent)
   case openQuickly(mainWindow: MainWindowComponent)
   case changeCwd(mainWindow: MainWindowComponent)
-  case close(mainWindow: MainWindowComponent)
+  case close(mainWindow: MainWindowComponent, mainWindowPrefData: MainWindowPrefData)
+}
+
+struct MainWindowPrefData {
+
+  let isAllToolsVisible: Bool
+  let isToolButtonsVisible: Bool
+
+  let isFileBrowserVisible: Bool
+  let fileBrowserWidth: Float
 }
 
 fileprivate enum Tool {
@@ -80,6 +89,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, WorkspaceDelegate 
     super.init(source: source, nibName: MainWindowComponent.nibName)
 
     self.window.delegate = self
+
     self.workspace.delegate = self
 
     let fileBrowser = FileBrowserComponent(source: self.sink, fileItemService: fileItemService)
@@ -97,6 +107,22 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, WorkspaceDelegate 
 
     // We don't call self.fileItemService.monitor(url: cwd) here since self.neoVimView.cwd = cwd causes the call
     // cwdChanged() and in that function we do monitor(...).
+
+    // By default the tool buttons are shown and no tools are shown.
+    let mainWindowData = initialData.mainWindow
+    fileBrowserTool.dimension = CGFloat(mainWindowData.fileBrowserWidth)
+
+    if !mainWindowData.isAllToolsVisible {
+      self.toggleAllTools(self)
+    }
+
+    if !mainWindowData.isToolButtonsVisible {
+      self.toggleToolButtons(self)
+    }
+
+    if mainWindowData.isFileBrowserVisible {
+      self.workspace.bars[.left]?.toggle(fileBrowserTool)
+    }
 
     self.window.makeFirstResponder(self.neoVimView)
     self.show()
@@ -310,7 +336,14 @@ extension MainWindowComponent {
 
   func windowWillClose(_ notification: Notification) {
     self.fileItemService.unmonitor(url: self._cwd)
-    self.publish(event: MainWindowAction.close(mainWindow: self))
+
+    let fileBrowser = self.tools[.fileBrowser]!
+    let prefData = MainWindowPrefData(isAllToolsVisible: self.workspace.isAllToolsVisible,
+                                      isToolButtonsVisible: self.workspace.isToolButtonsVisible,
+                                      isFileBrowserVisible: self.workspace.bars[.left]?.isOpen ?? true,
+                                      fileBrowserWidth: Float(fileBrowser.dimension))
+
+    self.publish(event: MainWindowAction.close(mainWindow: self, mainWindowPrefData: prefData))
   }
 
   func windowShouldClose(_ sender: Any) -> Bool {
