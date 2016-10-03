@@ -87,10 +87,6 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, WorkspaceDelegate 
     self.tools[.fileBrowser] = fileBrowserTool
     self.workspace.append(tool: fileBrowserTool, location: .left)
 
-    // FIXME: temporarily for dev
-    fileBrowserTool.dimension = 200
-    self.workspace.bars[.left]?.toggle(fileBrowserTool)
-
     self.addReactions()
 
     self.neoVimView.cwd = cwd // This will publish the MainWindowAction.changeCwd action for the file browser.
@@ -172,7 +168,7 @@ extension MainWindowComponent {
   }
 }
 
-// MARK: - File Menu Items
+// MARK: - File Menu Item Actions
 extension MainWindowComponent {
   
   @IBAction func newTab(_ sender: Any?) {
@@ -246,7 +242,19 @@ extension MainWindowComponent {
   }
 }
 
-// MARK: - Font Menu Items
+// MARK: - View Menu Item Actions
+extension MainWindowComponent {
+
+  @IBAction func toggleAllTools(_ sender: Any?) {
+    self.workspace.toggleAllTools()
+  }
+
+  @IBAction func toggleToolButtons(_ sender: Any?) {
+    self.workspace.toggleToolButtons()
+  }
+}
+
+// MARK: - Font Menu Item Actions
 extension MainWindowComponent {
 
   @IBAction func resetFontSize(_ sender: Any?) {
