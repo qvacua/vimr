@@ -11,10 +11,6 @@ protocol Flow: class {
   var sink: Observable<Any> { get }
 }
 
-protocol Store: Flow {}
-
-protocol Component: Flow {}
-
 class PublishingFlow: Flow {
 
   var sink: Observable<Any> {
@@ -57,7 +53,7 @@ class StandardFlow: PublishingFlow {
   }
 }
 
-class StandardComponent: NSObject, Component {
+class StandardComponent: NSObject, Flow {
 
   var sink: Observable<Any> {
     return self.subject.asObservable()
@@ -92,7 +88,7 @@ class StandardComponent: NSObject, Component {
   }
 }
 
-class ViewComponent: NSView, Component {
+class ViewComponent: NSView, Flow {
 
   var view: NSView {
     preconditionFailure("Please override")
@@ -134,6 +130,19 @@ class ViewComponent: NSView, Component {
 
   func publish(event: Any) {
     self.subject.onNext(event)
+  }
+}
+
+class WorkspaceToolComponent: WorkspaceTool, Flow {
+
+  let viewComponent: ViewComponent
+  var sink: Observable<Any> {
+    return self.viewComponent.sink
+  }
+
+  init(title: String, viewComponent: ViewComponent, minimumDimension: CGFloat = 50) {
+    self.viewComponent = viewComponent
+    super.init(title: title, view: viewComponent, minimumDimension: minimumDimension)
   }
 }
 

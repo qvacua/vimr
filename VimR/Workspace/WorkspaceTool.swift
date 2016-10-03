@@ -34,12 +34,14 @@ class WorkspaceTool {
 
   weak var delegate: WorkspaceToolDelegate?
 
-  let minimumDimension = CGFloat(30)
-  var dimension = CGFloat(50)
+  let minimumDimension: CGFloat
+  var dimension: CGFloat
 
-  init(title: String, view: NSView) {
+  init(title: String, view: NSView, minimumDimension: CGFloat = 50) {
     self.title = title
     self.view = view
+    self.minimumDimension = minimumDimension
+    self.dimension = minimumDimension
     self.button = WorkspaceToolButton(title: title)
     
     self.button.tool = self

@@ -33,9 +33,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, WorkspaceDelegate 
 
   fileprivate let workspace: Workspace
   fileprivate let neoVimView: NeoVimView
-  fileprivate var tools = [Tool: WorkspaceTool]()
-
-  fileprivate var flows = [Flow]()
+  fileprivate var tools = [Tool: WorkspaceToolComponent]()
 
   // MARK: - API
   var uuid: String {
@@ -85,11 +83,9 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, WorkspaceDelegate 
     self.workspace.delegate = self
 
     let fileBrowser = FileBrowserComponent(source: self.sink, fileItemService: fileItemService)
-    let fileBrowserTool = WorkspaceTool(title: "Files", view: fileBrowser)
+    let fileBrowserTool = WorkspaceToolComponent(title: "Files", viewComponent: fileBrowser, minimumDimension: 100)
     self.tools[.fileBrowser] = fileBrowserTool
     self.workspace.append(tool: fileBrowserTool, location: .left)
-
-    self.flows.append(fileBrowser)
 
     // FIXME: temporarily for dev
     fileBrowserTool.dimension = 200
@@ -128,7 +124,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, WorkspaceDelegate 
 
   // MARK: - Private
   fileprivate func addReactions() {
-    self.flows
+    self.tools.values
       .map { $0.sink }
       .toMergedObservables()
       .subscribe(onNext: { [unowned self] action in

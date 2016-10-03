@@ -30,6 +30,8 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
   }
 
   // MARK: - API
+  static let minimumDimension = CGFloat(50)
+
   let location: WorkspaceBarLocation
   var isButtonVisible = true {
     didSet {
@@ -299,9 +301,11 @@ extension WorkspaceBar {
   }
 
   fileprivate func set(dimension: CGFloat) {
-    self.dimensionConstraint.constant = dimension
+    let saneDimension = self.saneDimension(from: dimension)
 
-    let toolDimension = self.toolDimension(fromBarDimension: dimension)
+    self.dimensionConstraint.constant = saneDimension
+
+    let toolDimension = self.toolDimension(fromBarDimension: saneDimension)
     if self.isOpen() {
       self.selectedTool?.dimension = toolDimension
     }
@@ -311,6 +315,18 @@ extension WorkspaceBar {
 
     self.window?.invalidateCursorRects(for: self)
     self.needsDisplay = true
+  }
+
+  fileprivate func saneDimension(from dimension: CGFloat) -> CGFloat {
+    if dimension == 0 {
+      return 0
+    }
+
+    if self.isOpen() {
+      return max(dimension, self.selectedTool!.minimumDimension, WorkspaceBar.minimumDimension)
+    }
+
+    return max(dimension, self.barDimensionWithButtonsWithoutTool())
   }
 }
 

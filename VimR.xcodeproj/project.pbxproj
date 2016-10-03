@@ -35,6 +35,11 @@
 		4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */; };
 		4B0677371D99D9C3001A2588 /* FileBrowserComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0677361D99D9C3001A2588 /* FileBrowserComponent.swift */; };
 		4B06773C1D9DCF23001A2588 /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B39DA7AC4A9B62D7CD39 /* Component.swift */; };
+		4B0677401DA170D5001A2588 /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
+		4B0677411DA170D5001A2588 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423951D8EFD7100FC78C8 /* Workspace.swift */; };
+		4B0677421DA170D5001A2588 /* WorkspaceBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423971D8EFDE000FC78C8 /* WorkspaceBar.swift */; };
+		4B0677431DA170D5001A2588 /* WorkspaceTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423991D8EFE3000FC78C8 /* WorkspaceTool.swift */; };
+		4B0677441DA170D5001A2588 /* WorkspaceToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */; };
 		4B0BCC941D70320C00D3CE65 /* Logger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0BCC931D70320C00D3CE65 /* Logger.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		4B0C905B1D5DED69007753A3 /* NeoVimBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0C905A1D5DED69007753A3 /* NeoVimBuffer.m */; };
 		4B0E22581D5DEDC700C072E6 /* NeoVimBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0C90591D5DED69007753A3 /* NeoVimBuffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1046,6 +1051,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B0677401DA170D5001A2588 /* AppKitCommons.swift in Sources */,
+				4B0677411DA170D5001A2588 /* Workspace.swift in Sources */,
+				4B0677421DA170D5001A2588 /* WorkspaceBar.swift in Sources */,
+				4B0677431DA170D5001A2588 /* WorkspaceTool.swift in Sources */,
+				4B0677441DA170D5001A2588 /* WorkspaceToolButton.swift in Sources */,
 				4B06773C1D9DCF23001A2588 /* Component.swift in Sources */,
 				4BF8EEDC1D85908400CAC08A /* PrefUtils.swift in Sources */,
 				1929B43FBA7A31F39D294CD0 /* FileItem.swift in Sources */,
