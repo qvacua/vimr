@@ -16,8 +16,6 @@ class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineVie
   fileprivate var cwd = FileUtils.userHomeUrl
   fileprivate var cwdFileItem = FileItem(FileUtils.userHomeUrl)
 
-  fileprivate let dumb = [NSAttributedString(string: "A"), NSAttributedString(string: "B")]
-
   fileprivate let fileView: FileOutlineView
   fileprivate let fileItemService: FileItemService
 
