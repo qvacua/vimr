@@ -79,7 +79,7 @@ class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineVie
           self.cwd = mainWindow.cwd
           self.cwdFileItem = self.fileItemService.fileItemWithChildren(for: self.cwd) ??
                              self.fileItemService.fileItemWithChildren(for: FileUtils.userHomeUrl)!
-          NSLog("cwd changed to \(self.cwd) of \(mainWindow.uuid)")
+//          NSLog("cwd changed to \(self.cwd) of \(mainWindow.uuid)")
           self.fileView.reloadData()
 
         default:
