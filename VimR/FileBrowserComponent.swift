@@ -50,6 +50,24 @@ class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineVie
         }
       })
       .addDisposableTo(self.disposeBag)
+
+    self.fileItemService.sink
+      .filter { $0 is FileItemServiceChange }
+      .map { $0 as! FileItemServiceChange }
+      .subscribe(onNext: { [unowned self] action in
+        switch action {
+        case let .childrenChanged(root, fileItem):
+          guard root == self.cwd else {
+            return
+          }
+
+//          NSLog("\(root) -> \(fileItem)")
+          DispatchUtils.gui {
+            self.fileView.reloadItem(fileItem, reloadChildren: true)
+          }
+        }
+        })
+      .addDisposableTo(self.disposeBag)
   }
 
   override func addViews() {

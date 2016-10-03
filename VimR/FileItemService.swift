@@ -7,6 +7,11 @@ import Cocoa
 import RxSwift
 import EonilFileSystemEvents
 
+enum FileItemServiceChange {
+
+  case childrenChanged(root: URL, fileItem: FileItem?)
+}
+
 class FileItemService: StandardFlow {
 
   /// Used to cache fnmatch calls in `FileItem`.
@@ -71,7 +76,11 @@ class FileItemService: StandardFlow {
     { [unowned self] events in
       let urls = events.map { URL(fileURLWithPath: $0.path) }
       let parent = FileUtils.commonParent(ofUrls: urls)
-      self.fileItem(for: parent)?.needsScanChildren = true
+
+      let parentItem = self.fileItem(for: parent)
+
+      parentItem?.needsScanChildren = true
+      self.publish(event: FileItemServiceChange.childrenChanged(root: url, fileItem: parentItem))
     }
 
     self.monitors[url] = monitor

@@ -92,6 +92,8 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
 
     self.workspace.delegate = self
 
+    // FIXME: We do not use [self.sink, source].toMergedObservables. If we do so, then self.sink seems to live as long
+    // as source, i.e. forever. Thus, self (MainWindowComponent) does not get deallocated. Not nice...
     let fileBrowser = FileBrowserComponent(source: self.sink, fileItemService: fileItemService)
     let fileBrowserTool = WorkspaceToolComponent(title: "Files", viewComponent: fileBrowser, minimumDimension: 100)
     self.tools[.fileBrowser] = fileBrowserTool

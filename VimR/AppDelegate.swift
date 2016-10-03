@@ -75,7 +75,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         })
       .addDisposableTo(self.disposeBag)
 
-    let changeFlows: [Flow] = [ self.prefStore ]
+    let changeFlows: [Flow] = [ self.prefStore, self.fileItemService ]
     let actionFlows: [Flow] = [ self.prefWindowComponent, self.mainWindowManager ]
 
     changeFlows
@@ -83,7 +83,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       .toMergedObservables()
       .subscribe(self.changeSubject)
       .addDisposableTo(self.disposeBag)
-
 
     actionFlows
       .map { $0.sink }
