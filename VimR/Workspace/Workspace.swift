@@ -13,19 +13,28 @@ enum WorkspaceBarLocation {
   case left
 }
 
-class Workspace: NSView {
+protocol WorkspaceDelegate: class {
+
+  func resizeWillStart(workspace: Workspace)
+  func resizeDidEnd(workspace: Workspace)
+}
+
+class Workspace: NSView, WorkspaceBarDelegate {
 
   struct Config {
     let mainViewMinimumSize: CGSize
   }
 
-  fileprivate(set) var isBarVisible = true {
+  fileprivate(set) var isAllToolsVisible = true {
     didSet {
       self.relayout()
     }
   }
-
-  fileprivate let bars: [WorkspaceBarLocation: WorkspaceBar]
+  fileprivate(set) var isToolButtonsVisible = true {
+    didSet {
+      self.bars.values.forEach { $0.isButtonVisible = !$0.isButtonVisible }
+    }
+  }
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -33,7 +42,10 @@ class Workspace: NSView {
 
   // MARK: - API
   let mainView: NSView
+  let bars: [WorkspaceBarLocation: WorkspaceBar]
   let config: Config
+
+  weak var delegate: WorkspaceDelegate?
 
   init(mainView: NSView, config: Config = Config(mainViewMinimumSize: CGSize(width: 100, height: 100))) {
     self.config = config
@@ -49,6 +61,8 @@ class Workspace: NSView {
     super.init(frame: CGRect.zero)
     self.translatesAutoresizingMaskIntoConstraints = false
 
+    self.bars.values.forEach { [unowned self] in $0.delegate = self }
+
     self.relayout()
   }
 
@@ -57,11 +71,23 @@ class Workspace: NSView {
   }
 
   func toggleAllTools() {
-    self.isBarVisible = !self.isBarVisible
+    self.isAllToolsVisible = !self.isAllToolsVisible
   }
 
   func toggleToolButtons() {
-    self.bars.values.forEach { $0.isButtonVisible = !$0.isButtonVisible }
+    self.isToolButtonsVisible = !self.isToolButtonsVisible
+  }
+}
+
+// MARK: - WorkspaceBarDelegate
+extension Workspace {
+
+  func resizeWillStart(workspaceBar: WorkspaceBar) {
+    self.delegate?.resizeWillStart(workspace: self)
+  }
+
+  func resizeDidEnd(workspaceBar: WorkspaceBar) {
+    self.delegate?.resizeDidEnd(workspace: self)
   }
 }
 
@@ -80,7 +106,7 @@ extension Workspace {
     mainView.autoSetDimension(.width, toSize: self.config.mainViewMinimumSize.width, relation: .greaterThanOrEqual)
     mainView.autoSetDimension(.height, toSize: self.config.mainViewMinimumSize.height, relation: .greaterThanOrEqual)
 
-    guard self.isBarVisible else {
+    guard self.isAllToolsVisible else {
       mainView.autoPinEdgesToSuperviewEdges()
       return
     }

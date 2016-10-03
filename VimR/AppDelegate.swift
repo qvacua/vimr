@@ -37,63 +37,55 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   fileprivate let openQuicklyWindowManager: OpenQuicklyWindowManager
   fileprivate let prefWindowComponent: PrefWindowComponent
 
-  fileprivate let fileItemService = FileItemService()
-  
+  fileprivate let fileItemService: FileItemService
+
   fileprivate var quitWhenAllWindowsAreClosed = false
   fileprivate var launching = true
 
   override init() {
     self.actionSink = self.actionSubject.asObservable()
     self.changeSink = self.changeSubject.asObservable()
+    let actionAndChangeSink = [self.changeSink, self.actionSink].toMergedObservables()
 
     self.prefStore = PrefStore(source: self.actionSink)
 
+    self.fileItemService = FileItemService(source: self.changeSink)
     self.fileItemService.set(ignorePatterns: self.prefStore.data.general.ignorePatterns)
 
     self.prefWindowComponent = PrefWindowComponent(source: self.changeSink, initialData: self.prefStore.data)
+
     self.mainWindowManager = MainWindowManager(source: self.changeSink,
                                                fileItemService: self.fileItemService,
                                                initialData: self.prefStore.data)
-    self.openQuicklyWindowManager = OpenQuicklyWindowManager(source: self.changeSink,
+    self.openQuicklyWindowManager = OpenQuicklyWindowManager(source: actionAndChangeSink,
                                                              fileItemService: self.fileItemService)
 
     super.init()
 
-    self.prefStore.sink
-      .filter { $0 is PrefData }
-      .map { $0 as! PrefData }
-      .subscribe(onNext: { [unowned self] data in
-        if data.general.ignorePatterns == self.fileItemService.ignorePatterns {
-          return
-        }
-
-        self.fileItemService.set(ignorePatterns: data.general.ignorePatterns)
-      })
-      .addDisposableTo(self.disposeBag)
-
     self.mainWindowManager.sink
-      .filter { $0 is MainWindowEvent || $0 is MainWindowAction }
+      .filter { $0 is MainWindowManagerAction }
+      .map { $0 as! MainWindowManagerAction }
       .subscribe(onNext: { [unowned self] event in
         switch event {
-        case let MainWindowAction.openQuickly(mainWindow: mainWindow):
-          self.openQuicklyWindowManager.open(forMainWindow: mainWindow)
-        case MainWindowEvent.allWindowsClosed:
+        case .allWindowsClosed:
           if self.quitWhenAllWindowsAreClosed {
             NSApp.stop(self)
           }
-        default:
-          return
         }
-      })
+        })
       .addDisposableTo(self.disposeBag)
 
-    [ self.prefStore ]
+    let changeFlows: [Flow] = [ self.prefStore ]
+    let actionFlows: [Flow] = [ self.prefWindowComponent, self.mainWindowManager ]
+
+    changeFlows
       .map { $0.sink }
       .toMergedObservables()
       .subscribe(self.changeSubject)
       .addDisposableTo(self.disposeBag)
 
-    [ self.prefWindowComponent ]
+
+    actionFlows
       .map { $0.sink }
       .toMergedObservables()
       .subscribe(self.actionSubject)
@@ -106,7 +98,7 @@ extension AppDelegate {
 
   func applicationWillFinishLaunching(_: Notification) {
     self.launching = true
-    
+
     let appleEventManager = NSAppleEventManager.shared()
     appleEventManager.setEventHandler(self,
                                       andSelector: #selector(AppDelegate.handle(getUrlEvent:replyEvent:)),
@@ -164,7 +156,7 @@ extension AppDelegate {
     // There are no open main window, then just quit.
     return .terminateNow
   }
-  
+
   // For drag & dropping files on the App icon.
   func application(_ sender: NSApplication, openFiles filenames: [String]) {
     let urls = filenames.map { URL(fileURLWithPath: $0) }
@@ -176,28 +168,28 @@ extension AppDelegate {
 
 // MARK: - AppleScript
 extension AppDelegate {
-  
+
   func handle(getUrlEvent event: NSAppleEventDescriptor, replyEvent: NSAppleEventDescriptor) {
     guard let urlString = event.paramDescriptor(forKeyword: UInt32(keyDirectObject))?.stringValue else {
       return
     }
-    
+
     guard let url = URL(string: urlString) else {
       return
     }
-    
+
     guard url.scheme == "vimr" else {
       return
     }
-    
+
     guard let rawAction = url.host else {
       return
     }
-    
+
     guard let action = VimRUrlAction(rawValue: rawAction) else {
       return
     }
-    
+
     let queryParams = url.query?.components(separatedBy: "&")
     let urls = queryParams?
       .filter { $0.hasPrefix(AppDelegate.filePrefix) }
@@ -207,8 +199,8 @@ extension AppDelegate {
       .filter { $0.hasPrefix(AppDelegate.cwdPrefix) }
       .flatMap { $0.without(prefix: AppDelegate.cwdPrefix).removingPercentEncoding }
       .map { URL(fileURLWithPath: $0) }
-      .first ?? URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
-    
+      .first ?? FileUtils.userHomeUrl
+
     switch action {
     case .activate, .newWindow:
       _ = self.mainWindowManager.newMainWindow(urls: urls, cwd: cwd)
@@ -229,7 +221,7 @@ extension AppDelegate {
   @IBAction func showPrefWindow(_ sender: AnyObject!) {
     self.prefWindowComponent.show()
   }
-  
+
   @IBAction func newDocument(_ sender: AnyObject!) {
     _ = self.mainWindowManager.newMainWindow()
   }
@@ -242,7 +234,7 @@ extension AppDelegate {
       guard result == NSFileHandlingPanelOKButton else {
         return
       }
-
+      
       _ = self.mainWindowManager.newMainWindow(urls: panel.urls)
     }
   }

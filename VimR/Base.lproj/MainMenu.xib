@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11201"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -182,10 +182,40 @@
                                 </menu>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="NXP-NG-aHV"/>
-                            <menuItem title="Enter Full Screen" keyEquivalent="f" id="izE-hB-PjH">
+                            <menuItem title="Enter Full Screen" keyEquivalent="f" id="Co5-Y0-sqo">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <connections>
-                                    <action selector="toggleFullScreen:" target="-1" id="hl6-CI-dSN"/>
+                                    <action selector="toggleFullScreen:" target="-1" id="b4d-vv-b5h"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Tools" id="zhG-4I-P01">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Tools" id="7MO-P5-uU3">
+                        <items>
+                            <menuItem title="Toggle All Tools" keyEquivalent="\" id="Lb6-TZ-LgL">
+                                <connections>
+                                    <action selector="toggleAllTools:" target="-1" id="V97-0e-bES"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Toggle Tool Buttons" id="oK0-ZG-w1f">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleToolButtons:" target="-1" id="bxj-O1-Vo9"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="UAq-9D-Jex"/>
+                            <menuItem title="Toggle File Browser" keyEquivalent="1" id="PWx-V8-0cQ">
+                                <connections>
+                                    <action selector="toggleFileBrowser:" target="-1" id="Ggq-4w-iN7"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="XHW-5e-Vad"/>
+                            <menuItem title="Focus NeoVim View" keyEquivalent="." id="TtL-Gg-pCj">
+                                <connections>
+                                    <action selector="focusNeoVimView:" target="-1" id="zsS-Ax-dPe"/>
                                 </connections>
                             </menuItem>
                         </items>

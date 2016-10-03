@@ -6,27 +6,41 @@
 import Cocoa
 import RxSwift
 
-protocol Flow {
+protocol Flow: class {
 
   var sink: Observable<Any> { get }
 }
 
-protocol Store: Flow {}
-
-protocol Component: Flow {}
-
-class StandardFlow: Flow {
+class PublishingFlow: Flow {
 
   var sink: Observable<Any> {
     return self.subject.asObservable()
   }
 
   let subject = PublishSubject<Any>()
+
+  init() {
+    
+  }
+
+  deinit {
+    self.subject.onCompleted()
+  }
+
+  func publish(event: Any) {
+    self.subject.onNext(event)
+  }
+}
+
+class StandardFlow: PublishingFlow {
+
   let source: Observable<Any>
   let disposeBag = DisposeBag()
 
   init(source: Observable<Any>) {
     self.source = source
+    super.init()
+    
     self.subscription(source: source).addDisposableTo(self.disposeBag)
   }
 
@@ -37,13 +51,36 @@ class StandardFlow: Flow {
   func subscription(source: Observable<Any>) -> Disposable {
     preconditionFailure("Please override")
   }
+}
+
+class EmbeddableComponent: Flow {
+
+  var sink: Observable<Any> {
+    return self.subject.asObservable()
+  }
+
+  fileprivate let subject = PublishSubject<Any>()
+  fileprivate let source: Observable<Any>
+  fileprivate let disposeBag = DisposeBag()
+
+  init(source: Observable<Any>) {
+    self.source = source
+  }
+
+  deinit {
+    self.subject.onCompleted()
+  }
+
+  func set(subscription: ((Observable<Any>) -> Disposable)) {
+    subscription(source).addDisposableTo(self.disposeBag)
+  }
 
   func publish(event: Any) {
     self.subject.onNext(event)
   }
 }
 
-class StandardComponent: NSObject, Component {
+class StandardComponent: NSObject, Flow {
 
   var sink: Observable<Any> {
     return self.subject.asObservable()
@@ -75,6 +112,64 @@ class StandardComponent: NSObject, Component {
 
   func publish(event: Any) {
     self.subject.onNext(event)
+  }
+}
+
+class ViewComponent: NSView, Flow {
+
+  var view: NSView {
+    preconditionFailure("Please override")
+  }
+
+  var sink: Observable<Any> {
+    return self.subject.asObservable()
+  }
+
+  let subject = PublishSubject<Any>()
+  let source: Observable<Any>
+  let disposeBag = DisposeBag()
+
+  init(source: Observable<Any>) {
+    self.source = source
+
+    super.init(frame: CGRect.zero)
+    self.translatesAutoresizingMaskIntoConstraints = false
+
+    self.addViews()
+    self.subscription(source: source).addDisposableTo(self.disposeBag)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  deinit {
+    self.subject.onCompleted()
+  }
+
+  func addViews() {
+    preconditionFailure("Please override")
+  }
+
+  func subscription(source: Observable<Any>) -> Disposable {
+    preconditionFailure("Please override")
+  }
+
+  func publish(event: Any) {
+    self.subject.onNext(event)
+  }
+}
+
+class WorkspaceToolComponent: WorkspaceTool, Flow {
+
+  let viewComponent: ViewComponent
+  var sink: Observable<Any> {
+    return self.viewComponent.sink
+  }
+
+  init(title: String, viewComponent: ViewComponent, minimumDimension: CGFloat = 50) {
+    self.viewComponent = viewComponent
+    super.init(title: title, view: viewComponent, minimumDimension: minimumDimension)
   }
 }
 

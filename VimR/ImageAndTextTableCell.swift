@@ -6,47 +6,64 @@
 import Cocoa
 import PureLayout
 
-class ImageAndTextTableCell: NSView {
+class ImageAndTextTableCell: NSTableCellView {
 
-  var text: NSAttributedString {
+  fileprivate let _textField = NSTextField(forAutoLayout: ())
+  fileprivate let _imageView = NSImageView(forAutoLayout: ())
+
+  var attributedText: NSAttributedString {
     get {
-      return self.textField.attributedStringValue
+      return self.textField!.attributedStringValue
+    }
+    
+    set {
+      self.textField?.attributedStringValue = newValue
+    }
+  }
+  
+  var text: String {
+    get {
+      return self.textField!.stringValue
     }
 
     set {
-      self.textField.attributedStringValue = newValue
+      self.textField?.stringValue = newValue
     }
   }
 
   var image: NSImage? {
     get {
-      return self.imageView.image
+      return self.imageView?.image
     }
 
     set {
-      self.imageView.image = newValue
+      self.imageView?.image = newValue
     }
   }
-  
-  fileprivate let textField: NSTextField = NSTextField(forAutoLayout: ())
-  fileprivate let imageView: NSImageView = NSImageView(forAutoLayout: ())
   
   init(withIdentifier identifier: String) {
     super.init(frame: CGRect.zero)
     
     self.identifier = identifier
-    
-    let textField = self.textField
+
+    self.textField = self._textField
+    self.imageView = self._imageView
+
+    let textField = self._textField
     textField.isBordered = false
+    textField.isBezeled = false
+    textField.allowsDefaultTighteningForTruncation = true
+    textField.allowsEditingTextAttributes = false
     textField.isEditable = false
+    textField.usesSingleLineMode = true
     textField.lineBreakMode = .byTruncatingTail
     textField.drawsBackground = false
-    
-    let imageView = self.imageView
-    
+
+    let imageView = self._imageView
+
     self.addSubview(textField)
     self.addSubview(imageView)
-    
+
     imageView.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
     imageView.autoPinEdge(toSuperviewEdge: .left, withInset: 2)
     imageView.autoSetDimension(.width, toSize: 16)

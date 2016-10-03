@@ -17,7 +17,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
   var pauseScan = false
 
   fileprivate(set) var pattern = ""
-  fileprivate(set) var cwd = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true) {
+  fileprivate(set) var cwd = FileUtils.userHomeUrl {
     didSet {
       self.cwdPathCompsCount = self.cwd.pathComponents.count
       self.cwdControl.url = self.cwd
@@ -216,7 +216,7 @@ extension OpenQuicklyWindowComponent {
     let cell = cachedCell as? ImageAndTextTableCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
     let url = self.fileViewItems[row].url
-    cell.text = self.rowText(forUrl: url as URL)
+    cell.attributedText = self.rowText(forUrl: url as URL)
     cell.image = self.fileItemService.icon(forUrl: url)
     
     return cell
@@ -240,9 +240,8 @@ extension OpenQuicklyWindowComponent {
     rowText = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
     rowText.addAttribute(NSForegroundColorAttributeName,
                          value: NSColor.lightGray,
-                         range: NSRange(location:name.characters.count,
-                         length: pathInfo.characters.count + 3))
-
+                         range: NSRange(location:name.characters.count, length: pathInfo.characters.count + 3))
+    
     return rowText
   }
 }

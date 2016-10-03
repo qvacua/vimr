@@ -10,21 +10,45 @@ import RxSwift
 enum MainWindowAction {
   case becomeKey(mainWindow: MainWindowComponent)
   case openQuickly(mainWindow: MainWindowComponent)
-  case close(mainWindow: MainWindowComponent)
+  case changeCwd(mainWindow: MainWindowComponent)
+  case close(mainWindow: MainWindowComponent, mainWindowPrefData: MainWindowPrefData)
 }
 
-class MainWindowComponent: WindowComponent, NSWindowDelegate {
+struct MainWindowPrefData {
 
-  fileprivate let fontManager = NSFontManager.shared()
+  let isAllToolsVisible: Bool
+  let isToolButtonsVisible: Bool
+
+  let isFileBrowserVisible: Bool
+  let fileBrowserWidth: Float
+}
+
+fileprivate enum Tool {
+
+  case fileBrowser
+}
+
+class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceValidations, WorkspaceDelegate {
+
+  fileprivate static let nibName = "MainWindow"
 
   fileprivate var defaultEditorFont: NSFont
   fileprivate var usesLigatures: Bool
 
+  fileprivate var _cwd: URL = FileUtils.userHomeUrl
+
+  fileprivate let fontManager = NSFontManager.shared()
+  fileprivate let fileItemService: FileItemService
+
+  fileprivate let workspace: Workspace
+  fileprivate let neoVimView: NeoVimView
+  fileprivate var tools = [Tool: WorkspaceToolComponent]()
+
+  // MARK: - API
   var uuid: String {
     return self.neoVimView.uuid
   }
 
-  fileprivate var _cwd: URL = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
   var cwd: URL {
     get {
       self._cwd = self.neoVimView.cwd
@@ -43,10 +67,6 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
       self.fileItemService.monitor(url: newValue)
     }
   }
-  fileprivate let fileItemService: FileItemService
-
-  fileprivate let workspace: Workspace
-  fileprivate let neoVimView: NeoVimView
 
   // TODO: Consider an option object for cwd, urls, etc...
   init(source: Observable<Any>,
@@ -66,11 +86,20 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
     self.fileItemService = fileItemService
     self._cwd = cwd
 
-    super.init(source: source, nibName: "MainWindow")
+    super.init(source: source, nibName: MainWindowComponent.nibName)
 
     self.window.delegate = self
 
-    self.neoVimView.cwd = cwd
+    self.workspace.delegate = self
+
+    let fileBrowser = FileBrowserComponent(source: self.sink, fileItemService: fileItemService)
+    let fileBrowserTool = WorkspaceToolComponent(title: "Files", viewComponent: fileBrowser, minimumDimension: 100)
+    self.tools[.fileBrowser] = fileBrowserTool
+    self.workspace.append(tool: fileBrowserTool, location: .left)
+
+    self.addReactions()
+
+    self.neoVimView.cwd = cwd // This will publish the MainWindowAction.changeCwd action for the file browser.
     self.neoVimView.delegate = self
     self.neoVimView.font = self.defaultEditorFont
     self.neoVimView.usesLigatures = self.usesLigatures
@@ -79,12 +108,29 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
     // We don't call self.fileItemService.monitor(url: cwd) here since self.neoVimView.cwd = cwd causes the call
     // cwdChanged() and in that function we do monitor(...).
 
+    // By default the tool buttons are shown and no tools are shown.
+    let mainWindowData = initialData.mainWindow
+    fileBrowserTool.dimension = CGFloat(mainWindowData.fileBrowserWidth)
+
+    if !mainWindowData.isAllToolsVisible {
+      self.toggleAllTools(self)
+    }
+
+    if !mainWindowData.isToolButtonsVisible {
+      self.toggleToolButtons(self)
+    }
+
+    if mainWindowData.isFileBrowserVisible {
+      fileBrowserTool.toggle()
+    }
+
     self.window.makeFirstResponder(self.neoVimView)
     self.show()
   }
 
   func open(urls: [URL]) {
     self.neoVimView.open(urls: urls)
+    self.window.makeFirstResponder(self.neoVimView)
   }
 
   func isDirty() -> Bool {
@@ -99,6 +145,24 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
     self.neoVimView.closeAllWindowsWithoutSaving()
   }
 
+  // MARK: - Private
+  fileprivate func addReactions() {
+    self.tools.values
+      .map { $0.sink }
+      .toMergedObservables()
+      .subscribe(onNext: { [unowned self] action in
+        switch action {
+        case let FileBrowserAction.open(url: url):
+          self.open(urls: [url])
+        default:
+          NSLog("unrecognized action: \(action)")
+          return
+        }
+      })
+      .addDisposableTo(self.disposeBag)
+  }
+
+  // MARK: - WindowComponent
   override func addViews() {
     self.window.contentView?.addSubview(self.workspace)
     self.workspace.autoPinEdgesToSuperviewEdges()
@@ -119,14 +183,26 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate {
   }
 }
 
-// MARK: - File Menu Items
+// MARK: - WorkspaceDelegate
+extension MainWindowComponent {
+
+  func resizeWillStart(workspace: Workspace) {
+    self.neoVimView.enterResizeMode()
+  }
+
+  func resizeDidEnd(workspace: Workspace) {
+    self.neoVimView.exitResizeMode()
+  }
+}
+
+// MARK: - File Menu Item Actions
 extension MainWindowComponent {
   
-  @IBAction func newTab(_ sender: AnyObject!) {
+  @IBAction func newTab(_ sender: Any?) {
     self.neoVimView.newTab()
   }
 
-  @IBAction func openDocument(_ sender: AnyObject!) {
+  @IBAction func openDocument(_ sender: Any?) {
     let panel = NSOpenPanel()
     panel.canChooseDirectories = true
     panel.beginSheetModal(for: self.window) { result in
@@ -139,11 +215,11 @@ extension MainWindowComponent {
     }
   }
 
-  @IBAction func openQuickly(_ sender: AnyObject!) {
+  @IBAction func openQuickly(_ sender: Any?) {
     self.publish(event: MainWindowAction.openQuickly(mainWindow: self))
   }
 
-  @IBAction func saveDocument(_ sender: AnyObject!) {
+  @IBAction func saveDocument(_ sender: Any?) {
     let curBuf = self.neoVimView.currentBuffer()
     
     if curBuf.fileName == nil {
@@ -154,7 +230,7 @@ extension MainWindowComponent {
     self.neoVimView.saveCurrentTab()
   }
   
-  @IBAction func saveDocumentAs(_ sender: AnyObject!) {
+  @IBAction func saveDocumentAs(_ sender: Any?) {
     self.savePanelSheet { url in
       self.neoVimView.saveCurrentTab(url: url)
       
@@ -193,21 +269,55 @@ extension MainWindowComponent {
   }
 }
 
-// MARK: - Font Menu Items
+// MARK: - Tools Menu Item Actions
 extension MainWindowComponent {
 
-  @IBAction func resetFontSize(_ sender: AnyObject!) {
+  @IBAction func toggleAllTools(_ sender: Any?) {
+    self.workspace.toggleAllTools()
+    self.focusNeoVimView(self)
+  }
+
+  @IBAction func toggleToolButtons(_ sender: Any?) {
+    self.workspace.toggleToolButtons()
+  }
+
+  @IBAction func toggleFileBrowser(_ sender: Any?) {
+    let fileBrowserTool = self.tools[.fileBrowser]!
+
+    if fileBrowserTool.isSelected {
+      if fileBrowserTool.viewComponent.isFirstResponder {
+        fileBrowserTool.toggle()
+      } else {
+        fileBrowserTool.viewComponent.beFirstResponder()
+      }
+
+      return
+    }
+
+    fileBrowserTool.toggle()
+    fileBrowserTool.viewComponent.beFirstResponder()
+  }
+
+  @IBAction func focusNeoVimView(_ sender: Any?) {
+    self.window.makeFirstResponder(self.neoVimView)
+  }
+}
+
+// MARK: - Font Menu Item Actions
+extension MainWindowComponent {
+
+  @IBAction func resetFontSize(_ sender: Any?) {
     self.neoVimView.font = self.defaultEditorFont
   }
 
-  @IBAction func makeFontBigger(_ sender: AnyObject!) {
+  @IBAction func makeFontBigger(_ sender: Any?) {
     let curFont = self.neoVimView.font
     let font = self.fontManager.convert(curFont,
                                             toSize: min(curFont.pointSize + 1, PrefStore.maximumEditorFontSize))
     self.neoVimView.font = font
   }
 
-  @IBAction func makeFontSmaller(_ sender: AnyObject!) {
+  @IBAction func makeFontSmaller(_ sender: Any?) {
     let curFont = self.neoVimView.font
     let font = self.fontManager.convert(curFont,
                                             toSize: max(curFont.pointSize - 1, PrefStore.minimumEditorFontSize))
@@ -218,12 +328,12 @@ extension MainWindowComponent {
 // MARK: - NeoVimViewDelegate
 extension MainWindowComponent: NeoVimViewDelegate {
 
-  func setTitle(_ title: String) {
+  func set(title: String) {
     self.window.title = title
   }
 
-  func setDirtyStatus(_ dirty: Bool) {
-    self.windowController.setDocumentEdited(dirty)
+  func set(dirtyStatus: Bool) {
+    self.windowController.setDocumentEdited(dirtyStatus)
   }
 
   func cwdChanged() {
@@ -231,6 +341,8 @@ extension MainWindowComponent: NeoVimViewDelegate {
     self._cwd = self.neoVimView.cwd
     self.fileItemService.unmonitor(url: old)
     self.fileItemService.monitor(url: self._cwd)
+
+    self.publish(event: MainWindowAction.changeCwd(mainWindow: self))
   }
   
   func neoVimStopped() {
@@ -247,7 +359,14 @@ extension MainWindowComponent {
 
   func windowWillClose(_ notification: Notification) {
     self.fileItemService.unmonitor(url: self._cwd)
-    self.publish(event: MainWindowAction.close(mainWindow: self))
+
+    let fileBrowser = self.tools[.fileBrowser]!
+    let prefData = MainWindowPrefData(isAllToolsVisible: self.workspace.isAllToolsVisible,
+                                      isToolButtonsVisible: self.workspace.isToolButtonsVisible,
+                                      isFileBrowserVisible: self.workspace.bars[.left]?.isOpen ?? true,
+                                      fileBrowserWidth: Float(fileBrowser.dimension))
+
+    self.publish(event: MainWindowAction.close(mainWindow: self, mainWindowPrefData: prefData))
   }
 
   func windowShouldClose(_ sender: Any) -> Bool {
@@ -268,5 +387,21 @@ extension MainWindowComponent {
 
     self.neoVimView.closeCurrentTab()
     return false
+  }
+}
+
+// MARK: - NSUserInterfaceValidationsProtocol
+extension MainWindowComponent {
+
+  public func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
+    guard item.action == #selector(focusNeoVimView(_:)) else {
+      return true
+    }
+
+    if self.window.firstResponder == self.neoVimView {
+      return false
+    }
+
+    return true
   }
 }

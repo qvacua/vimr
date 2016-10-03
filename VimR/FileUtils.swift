@@ -20,6 +20,8 @@ class FileUtils {
   ]
   
   fileprivate static let fileManager = FileManager.default
+
+  static let userHomeUrl = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
   
   static func directDescendants(_ url: URL) -> [URL] {
     guard let childUrls = try? self.fileManager.contentsOfDirectory(

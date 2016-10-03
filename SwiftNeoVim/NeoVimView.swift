@@ -79,6 +79,10 @@ open class NeoVimView: NSView, NSUserInterfaceValidations {
       self.agent.vimCommand("silent cd \(escapedCwd)")
     }
   }
+
+  override open var acceptsFirstResponder: Bool {
+    return true
+  }
   
   fileprivate var _font = NeoVimView.defaultFont
 
@@ -119,12 +123,14 @@ open class NeoVimView: NSView, NSUserInterfaceValidations {
   fileprivate var pinchTargetScale = CGFloat(1)
   fileprivate var pinchImage = NSImage()
 
+  fileprivate var currentlyResizing = false
+
   public init(frame rect: NSRect, config: Config) {
     self.drawer = TextDrawer(font: self._font, useLigatures: false)
     self.agent = NeoVimAgent(uuid: self.uuid)
 
     super.init(frame: CGRect.zero)
-    
+
     self.wantsLayer = true
     self.cellSize = self.drawer.cellSize
     self.descent = self.drawer.descent
@@ -168,6 +174,17 @@ open class NeoVimView: NSView, NSUserInterfaceValidations {
 
 // MARK: - API
 extension NeoVimView {
+
+  public func enterResizeMode() {
+    self.currentlyResizing = true
+    self.needsDisplay = true
+  }
+
+  public func exitResizeMode() {
+    self.currentlyResizing = false
+    self.needsDisplay = true
+    self.resizeNeoVimUiTo(size: self.bounds.size)
+  }
   
   public func currentBuffer() -> NeoVimBuffer {
     return self.agent.buffers().filter { $0.current }.first!
@@ -261,7 +278,7 @@ extension NeoVimView {
       return
     }
 
-    if self.inLiveResize {
+    if self.inLiveResize || self.currentlyResizing {
       // TODO: Turn off live resizing for now.
       // self.resizeNeoVimUiTo(size: newSize)
       return
@@ -280,6 +297,10 @@ extension NeoVimView {
   fileprivate func resizeNeoVimUiTo(size: CGSize) {
 //    NSLog("\(#function): \(size)")
     let discreteSize = self.discreteSize(size: size)
+
+    if discreteSize == self.grid.size {
+      return
+    }
 
     self.xOffset = floor((size.width - self.cellSize.width * CGFloat(discreteSize.width)) / 2)
     self.yOffset = floor((size.height - self.cellSize.height * CGFloat(discreteSize.height)) / 2)
@@ -301,7 +322,7 @@ extension NeoVimView {
       return
     }
 
-    if self.inLiveResize {
+    if self.inLiveResize || self.currentlyResizing {
       NSColor.windowBackgroundColor.set()
       dirtyUnionRect.fill()
       
@@ -863,6 +884,7 @@ extension NeoVimView {
 extension NeoVimView {
 
   override open func mouseDown(with event: NSEvent) {
+//    self.window?.makeFirstResponder(self)
     self.mouse(event: event, vimName:"LeftMouse")
   }
 
@@ -1232,7 +1254,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   
   public func setTitle(_ title: String) {
     DispatchUtils.gui {
-      self.delegate?.setTitle(title)
+      self.delegate?.set(title: title)
     }
   }
   
@@ -1241,7 +1263,7 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
 
   public func setDirtyStatus(_ dirty: Bool) {
     DispatchUtils.gui {
-      self.delegate?.setDirtyStatus(dirty)
+      self.delegate?.set(dirtyStatus: dirty)
     }
   }
 

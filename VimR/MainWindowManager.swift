@@ -6,13 +6,12 @@
 import Cocoa
 import RxSwift
 
-enum MainWindowEvent {
+enum MainWindowManagerAction {
+
   case allWindowsClosed
 }
 
 class MainWindowManager: StandardFlow {
-  
-  static fileprivate let userHomeUrl = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
 
   fileprivate var mainWindowComponents = [String:MainWindowComponent]()
   fileprivate weak var keyMainWindow: MainWindowComponent?
@@ -27,10 +26,13 @@ class MainWindowManager: StandardFlow {
     super.init(source: source)
   }
 
-  func newMainWindow(urls: [URL] = [], cwd: URL = MainWindowManager.userHomeUrl) -> MainWindowComponent {
-    let mainWindowComponent = MainWindowComponent(
-      source: self.source, fileItemService: self.fileItemService, cwd: cwd, urls: urls, initialData: self.data
-    )
+  func newMainWindow(urls: [URL] = [], cwd: URL = FileUtils.userHomeUrl) -> MainWindowComponent {
+    let mainWindowComponent = MainWindowComponent(source: self.source,
+                                                  fileItemService: self.fileItemService,
+                                                  cwd: cwd,
+                                                  urls: urls,
+                                                  initialData: self.data)
+
     self.mainWindowComponents[mainWindowComponent.uuid] = mainWindowComponent
 
     mainWindowComponent.sink
@@ -44,8 +46,11 @@ class MainWindowManager: StandardFlow {
         case .openQuickly:
           self.publish(event: action)
 
-        case let .close(mainWindow):
-          self.closeMainWindow(mainWindow)
+        case let .close(mainWindow, mainWindowPrefData):
+          self.close(mainWindow, prefData: mainWindowPrefData)
+
+        case .changeCwd:
+          break
         }
       })
       .addDisposableTo(self.disposeBag)
@@ -53,7 +58,11 @@ class MainWindowManager: StandardFlow {
     return mainWindowComponent
   }
   
-  func closeMainWindow(_ mainWindowComponent: MainWindowComponent) {
+  func close(_ mainWindowComponent: MainWindowComponent, prefData: MainWindowPrefData) {
+    // Save the tools settings of the last closed main window.
+    // TODO: Think about a better time to save this.
+    self.publish(event: prefData)
+
     if self.keyMainWindow === mainWindowComponent {
       self.keyMainWindow = nil
     }
@@ -61,7 +70,7 @@ class MainWindowManager: StandardFlow {
     self.mainWindowComponents.removeValue(forKey: mainWindowComponent.uuid)
 
     if self.mainWindowComponents.isEmpty {
-      self.publish(event: MainWindowEvent.allWindowsClosed)
+      self.publish(event: MainWindowManagerAction.allWindowsClosed)
     }
   }
 
@@ -69,7 +78,7 @@ class MainWindowManager: StandardFlow {
     return self.mainWindowComponents.values.reduce(false) { $0 ? true : $1.isDirty() }
   }
   
-  func openInKeyMainWindow(urls:[URL] = [], cwd: URL = MainWindowManager.userHomeUrl) {
+  func openInKeyMainWindow(urls:[URL] = [], cwd: URL = FileUtils.userHomeUrl) {
     guard !self.mainWindowComponents.isEmpty else {
       _ = self.newMainWindow(urls: urls, cwd: cwd)
       return

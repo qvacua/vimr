@@ -71,6 +71,14 @@ extension NSView {
   func removeAllConstraints() {
     self.removeConstraints(self.constraints)
   }
+
+  var isFirstResponder: Bool {
+    return self.window?.firstResponder == self
+  }
+
+  func beFirstResponder() {
+    self.window?.makeFirstResponder(self)
+  }
 }
 
 extension NSTableView {
@@ -97,6 +105,48 @@ extension NSTableView {
     tableView.selectionHighlightStyle = .sourceList
 
     return tableView
+  }
+}
+
+extension NSOutlineView {
+
+  static func standardOutlineView() -> NSOutlineView {
+    let outlineView = NSOutlineView(frame: CGRect.zero)
+    NSOutlineView.configure(toStandard: outlineView)
+    return outlineView
+  }
+
+  static func configure(toStandard outlineView: NSOutlineView) {
+    let column = NSTableColumn(identifier: "name")
+    column.isEditable = false
+
+    outlineView.addTableColumn(column)
+    outlineView.outlineTableColumn = column
+    outlineView.sizeLastColumnToFit()
+    outlineView.allowsEmptySelection = false
+    outlineView.allowsMultipleSelection = false
+    outlineView.headerView = nil
+    outlineView.focusRingType = .none
+  }
+
+  /**
+   The selected item. When the selection is empty, then returns `nil`. When multiple items are selected, then returns
+   the last selected item.
+   */
+  var selectedItem: Any? {
+    if self.selectedRow < 0 {
+      return nil
+    }
+
+    return self.item(atRow: self.selectedRow)
+  }
+
+  func toggle(item: Any) {
+    if self.isItemExpanded(item) {
+      self.collapseItem(item)
+    } else {
+      self.expandItem(item)
+    }
   }
 }
 
