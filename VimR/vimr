@@ -23,7 +23,7 @@ def vimr(action, args=None, dry_run=False):
     if files:
         query_params["file"] = [os.path.abspath(f) for f in files]
 
-    url = "vimr://{0}?{1}".format(action, urllib.urlencode(query_params, True))
+    url = "vimr://{0}?{1}".format(action, urllib.urlencode(query_params, True).replace('+', '%20'))
     call_open(url, dry_run)
 
 
