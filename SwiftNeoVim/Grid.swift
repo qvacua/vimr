@@ -6,6 +6,7 @@
 import Cocoa
 
 struct Cell: CustomStringConvertible {
+  
   fileprivate let attributes: CellAttributes
 
   let string: String
