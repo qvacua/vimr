@@ -1137,7 +1137,9 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   
   public func modeChange(_ mode: Mode) {
 //    NSLog("mode changed to: %02x", mode.rawValue)
-    self.mode = mode
+    DispatchUtils.gui {
+      self.mode = mode
+    }
   }
   
   public func setScrollRegionToTop(_ top: Int32, bottom: Int32, left: Int32, right: Int32) {
