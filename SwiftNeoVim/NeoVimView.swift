@@ -1225,26 +1225,23 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
 //    NSLog("\(#function)")
   }
   
-  public func updateForeground(_ fg: Int32, dark: Bool) {
+  public func updateForeground(_ fg: Int32) {
     DispatchUtils.gui {
-      self.grid.dark = dark
       self.grid.foreground = UInt32(bitPattern: fg)
 //      NSLog("\(ColorUtils.colorIgnoringAlpha(UInt32(fg)))")
     }
   }
   
-  public func updateBackground(_ bg: Int32, dark: Bool) {
+  public func updateBackground(_ bg: Int32) {
     DispatchUtils.gui {
-      self.grid.dark = dark
       self.grid.background = UInt32(bitPattern: bg)
       self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).cgColor
 //      NSLog("\(ColorUtils.colorIgnoringAlpha(UInt32(bg)))")
     }
   }
   
-  public func updateSpecial(_ sp: Int32, dark: Bool) {
+  public func updateSpecial(_ sp: Int32) {
     DispatchUtils.gui {
-      self.grid.dark = dark
       self.grid.special = UInt32(bitPattern: sp)
     }
   }
