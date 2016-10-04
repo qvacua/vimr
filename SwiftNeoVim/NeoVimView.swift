@@ -270,6 +270,12 @@ extension NeoVimView {
 // MARK: - Resizing
 extension NeoVimView {
 
+  fileprivate func test() {
+    if Thread.current != Thread.main {
+      NSLog("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    }
+  }
+
   override open func setFrameSize(_ newSize: NSSize) {
     super.setFrameSize(newSize)
 
@@ -295,6 +301,7 @@ extension NeoVimView {
   }
 
   fileprivate func resizeNeoVimUiTo(size: CGSize) {
+    test()
 //    NSLog("\(#function): \(size)")
     let discreteSize = self.discreteSize(size: size)
 

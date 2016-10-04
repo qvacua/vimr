@@ -27,7 +27,6 @@ class FileOutlineView: NSOutlineView, Flow {
     self.flow = EmbeddableComponent(source: source)
 
     super.init(frame: CGRect.zero)
-    self.translatesAutoresizingMaskIntoConstraints = false
   }
 
   override func keyDown(with event: NSEvent) {

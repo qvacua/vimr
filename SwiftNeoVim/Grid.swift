@@ -85,6 +85,8 @@ struct Region: CustomStringConvertible {
 /// Almost a verbatim copy of ugrid.c of NeoVim
 class Grid: CustomStringConvertible {
 
+  fileprivate let lock = NSRecursiveLock()
+
   fileprivate(set) var region = Region.zero
   fileprivate(set) var size = Size.zero
   fileprivate(set) var putPosition = Position.zero
@@ -102,7 +104,11 @@ class Grid: CustomStringConvertible {
   fileprivate(set) var cells: [[Cell]] = []
 
   var hasData: Bool {
-    return !self.cells.isEmpty
+    lock.lock()
+    let result = !self.cells.isEmpty
+    lock.unlock()
+
+    return result
   }
   
   var description: String {
@@ -110,6 +116,7 @@ class Grid: CustomStringConvertible {
   }
   
   func resize(_ size: Size) {
+    lock.lock()
     self.region = Region(top: 0, bottom: size.height - 1, left: 0, right: size.width - 1)
     self.size = size
     self.putPosition = Position.zero
@@ -119,10 +126,13 @@ class Grid: CustomStringConvertible {
     
     let emptyRow = Array(repeating: Cell(string: " ", attrs: emptyCellAttrs), count: size.width)
     self.cells = Array(repeating: emptyRow, count: size.height)
+    lock.unlock()
   }
   
   func clear() {
+    lock.lock()
     self.clearRegion(self.region)
+    lock.unlock()
   }
   
   func eolClear() {
@@ -133,10 +143,13 @@ class Grid: CustomStringConvertible {
   }
   
   func setScrollRegion(_ region: Region) {
+    lock.lock()
     self.region = region
+    lock.unlock()
   }
   
   func scroll(_ count: Int) {
+    lock.lock()
     var start, stop, step : Int
     if count > 0 {
       start = self.region.top;
@@ -164,17 +177,23 @@ class Grid: CustomStringConvertible {
       clearTop = stop + count + 1
     }
     self.clearRegion(Region(top: clearTop, bottom: clearBottom, left: self.region.left, right: self.region.right))
+    lock.unlock()
   }
   
   func goto(_ position: Position) {
+    lock.lock()
     self.putPosition = position
+    lock.unlock()
   }
   
   func moveCursor(_ position: Position) {
+    lock.lock()
     self.screenCursor = position
+    lock.unlock()
   }
   
   func put(_ string: String) {
+    lock.lock()
     // FIXME: handle the following situation:
     // |abcde | <- type ㅎ
     // =>
@@ -185,32 +204,44 @@ class Grid: CustomStringConvertible {
     // Increment the column of the put position because neovim calls sets the position only once when drawing
     // consecutive cells in the same line
     self.putPosition.column += 1
+    lock.unlock()
   }
 
   func putMarkedText(_ string: String) {
+    lock.lock()
     // NOTE: Maybe there's a better way to indicate marked text than inverting...
     self.cells[self.putPosition.row][self.putPosition.column] = Cell(string: string, attrs: self.attrs, marked: true)
     self.putPosition.column += 1
+    lock.unlock()
   }
 
   func unmarkCell(_ position: Position) {
-//    NSLog("\(#function): \(position)")
+    lock.lock()
+    //    NSLog("\(#function): \(position)")
     self.cells[position.row][position.column].marked = false
+    lock.unlock()
   }
 
   func singleIndexFrom(_ position: Position) -> Int {
-    return position.row * self.size.width + position.column
+    lock.lock()
+    let result = position.row * self.size.width + position.column
+    lock.unlock()
+
+    return result
   }
 
   func regionOfWord(at position: Position) -> Region {
+    lock.lock()
     let row = position.row
     let column = position.column
 
     guard row < self.size.height else {
+      lock.unlock()
       return Region.zero
     }
 
     guard column < self.size.width else {
+      lock.unlock()
       return Region.zero
     }
 
@@ -231,48 +262,75 @@ class Grid: CustomStringConvertible {
         break
       }
     }
-    
+    lock.unlock()
+
     return Region(top: row, bottom: row, left: left, right: right)
   }
 
   func positionFromSingleIndex(_ idx: Int) -> Position {
+    lock.lock()
     let row = Int(floor(Double(idx) / Double(self.size.width)))
     let column = idx - row * self.size.width
+    lock.unlock()
 
     return Position(row: row, column: column)
   }
 
   func isCellEmpty(_ position: Position) -> Bool {
+    lock.lock()
     guard self.isSane(position: position) else {
+      lock.unlock()
       return false
     }
 
     if self.cells[position.row][position.column].string.characters.count == 0 {
+      lock.unlock()
       return true
     }
 
+    lock.unlock()
     return false
   }
 
   func isPreviousCellEmpty(_ position: Position) -> Bool {
-    return self.isCellEmpty(self.previousCellPosition(position))
+    lock.lock()
+    let result = self.isCellEmpty(self.previousCellPosition(position))
+    lock.unlock()
+
+    return result
   }
 
   func isNextCellEmpty(_ position: Position) -> Bool {
-    return self.isCellEmpty(self.nextCellPosition(position))
+    lock.lock()
+    let result = self.isCellEmpty(self.nextCellPosition(position))
+    lock.unlock()
+
+    return result
   }
 
   func previousCellPosition(_ position: Position) -> Position {
-    return Position(row: position.row, column: max(position.column - 1, 0))
+    lock.lock()
+    let result = Position(row: position.row, column: max(position.column - 1, 0))
+    lock.unlock()
+
+    return result
   }
   
   func nextCellPosition(_ position: Position) -> Position {
-    return Position(row: position.row, column: min(position.column + 1, self.size.width - 1))
+    lock.lock()
+    let result = Position(row: position.row, column: min(position.column + 1, self.size.width - 1))
+    lock.unlock()
+
+    return result
   }
   
   func cellForSingleIndex(_ idx: Int) -> Cell {
+    lock.unlock()
     let position = self.positionFromSingleIndex(idx)
-    return self.cells[position.row][position.column]
+    let result = self.cells[position.row][position.column]
+    lock.unlock()
+
+    return result
   }
 
   fileprivate func clearRegion(_ region: Region) {
