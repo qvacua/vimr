@@ -545,7 +545,7 @@ void custom_ui_start(void) {
 void custom_ui_autocmds_groups(
     event_T event, char_u *fname, char_u *fname_io, int group, bool force, buf_T *buf, exarg_T *eap
 ) {
-  @autoreleasepool {
+  queue(^{
     DLOG("got event %d for file %s in group %d.", event, fname, group);
     switch (event) {
       // Did we get them all?
@@ -563,7 +563,7 @@ void custom_ui_autocmds_groups(
       default:
         return;
     }
-  }
+  });
 }
 
 void server_start_neovim() {
