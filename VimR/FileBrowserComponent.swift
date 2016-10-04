@@ -61,6 +61,10 @@ class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineVie
             return
           }
 
+          guard self.fileView.row(forItem: fileItem) > -1 else {
+            return
+          }
+
 //          NSLog("\(root) -> \(fileItem)")
           DispatchUtils.gui {
             self.fileView.reloadItem(fileItem, reloadChildren: true)
