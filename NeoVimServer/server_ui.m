@@ -302,12 +302,11 @@ static void server_ui_flush(UI *ui __unused) {
 
 static void server_ui_update_fg(UI *ui __unused, int fg) {
   queue(^{
-    int value[2];
-    value[1] = *p_bg == 'd' ? true : false;
+    int value[1];
 
     if (fg == -1) {
       value[0] = _default_foreground;
-      NSData *data = [[NSData alloc] initWithBytes:value length:(2 * sizeof(int))];
+      NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
       [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetForeground data:data];
       [data release];
 
@@ -317,7 +316,7 @@ static void server_ui_update_fg(UI *ui __unused, int fg) {
     _default_foreground = pun_type(unsigned int, fg);
 
     value[0] = fg;
-    NSData *data = [[NSData alloc] initWithBytes:value length:(2 * sizeof(int))];
+    NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetForeground data:data];
     [data release];
   });
@@ -325,12 +324,11 @@ static void server_ui_update_fg(UI *ui __unused, int fg) {
 
 static void server_ui_update_bg(UI *ui __unused, int bg) {
   queue(^{
-    int value[2];
-    value[1] = *p_bg == 'd' ? true : false;
+    int value[1];
 
     if (bg == -1) {
       value[0] = _default_background;
-      NSData *data = [[NSData alloc] initWithBytes:value length:(2 * sizeof(int))];
+      NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
       [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetBackground data:data];
       [data release];
 
@@ -339,7 +337,7 @@ static void server_ui_update_bg(UI *ui __unused, int bg) {
 
     _default_background = pun_type(unsigned int, bg);
     value[0] = bg;
-    NSData *data = [[NSData alloc] initWithBytes:value length:(2 * sizeof(int))];
+    NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetBackground data:data];
     [data release];
   });
@@ -348,11 +346,10 @@ static void server_ui_update_bg(UI *ui __unused, int bg) {
 static void server_ui_update_sp(UI *ui __unused, int sp) {
   queue(^{
     int value[2];
-    value[1] = *p_bg == 'd' ? true : false;
 
     if (sp == -1) {
       value[0] = _default_special;
-      NSData *data = [[NSData alloc] initWithBytes:&value length:(2 * sizeof(int))];
+      NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
       [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetSpecial data:data];
       [data release];
 
@@ -361,7 +358,7 @@ static void server_ui_update_sp(UI *ui __unused, int sp) {
 
     _default_special = pun_type(unsigned int, sp);
     value[0] = sp;
-    NSData *data = [[NSData alloc] initWithBytes:&value length:(2 * sizeof(int))];
+    NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetSpecial data:data];
     [data release];
   });
