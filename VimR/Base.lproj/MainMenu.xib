@@ -200,8 +200,8 @@
                                     <action selector="toggleAllTools:" target="-1" id="V97-0e-bES"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Toggle Tool Buttons" id="oK0-ZG-w1f">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Toggle Tool Buttons" keyEquivalent="\" id="oK0-ZG-w1f">
+                                <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <connections>
                                     <action selector="toggleToolButtons:" target="-1" id="bxj-O1-Vo9"/>
                                 </connections>
