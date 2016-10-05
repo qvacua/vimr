@@ -11,13 +11,19 @@ enum FileBrowserAction {
   case open(url: URL)
 }
 
-class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineViewDelegate {
-
-  fileprivate var cwd = FileUtils.userHomeUrl
-  fileprivate var cwdFileItem = FileItem(FileUtils.userHomeUrl)
+class FileBrowserComponent: ViewComponent {
 
   fileprivate let fileView: FileOutlineView
   fileprivate let fileItemService: FileItemService
+
+  fileprivate var cwd: URL {
+    get {
+      return self.fileView.cwd
+    }
+    set {
+      self.fileView.cwd = newValue
+    }
+  }
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -29,7 +35,7 @@ class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineVie
 
   init(source: Observable<Any>, fileItemService: FileItemService) {
     self.fileItemService = fileItemService
-    self.fileView = FileOutlineView(source: source)
+    self.fileView = FileOutlineView(source: source, fileItemService: fileItemService)
     
     super.init(source: source)
     self.addReactions()
@@ -61,14 +67,20 @@ class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineVie
             return
           }
 
+          // FIXME: restore expanded states
+          if fileItem?.url == self.cwd {
+            DispatchUtils.gui {
+              self.fileView.reloadItem(nil, reloadChildren: true)
+            }
+          }
+
           guard self.fileView.row(forItem: fileItem) > -1 else {
             return
           }
-
-//          NSLog("\(root) -> \(fileItem)")
+          
+          // FIXME: restore expanded states
           DispatchUtils.gui {
             self.fileView.reloadItem(fileItem, reloadChildren: true)
-            self.adjustFileViewWidth()
           }
         }
         })
@@ -78,8 +90,6 @@ class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineVie
   override func addViews() {
     let fileView = self.fileView
     NSOutlineView.configure(toStandard: fileView)
-    fileView.dataSource = self
-    fileView.delegate = self
     fileView.doubleAction = #selector(FileBrowserComponent.fileViewDoubleAction)
 
     let scrollView = NSScrollView.standardScrollView()
@@ -98,11 +108,8 @@ class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineVie
         switch action {
         case let .changeCwd(mainWindow: mainWindow):
           self.cwd = mainWindow.cwd
-          self.cwdFileItem = self.fileItemService.fileItemWithChildren(for: self.cwd) ??
-                             self.fileItemService.fileItemWithChildren(for: FileUtils.userHomeUrl)!
 //          NSLog("cwd changed to \(self.cwd) of \(mainWindow.uuid)")
           self.fileView.reloadData()
-          self.adjustFileViewWidth()
 
         default:
           break
@@ -128,110 +135,5 @@ extension FileBrowserComponent {
     } else {
       self.publish(event: FileBrowserAction.open(url: item.url))
     }
-  }
-}
-
-// MARK: - NSOutlineViewDataSource
-extension FileBrowserComponent {
-
-  func outlineView(_: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
-    if item == nil {
-      return self.fileItemService.fileItemWithChildren(for: self.cwd)?.children
-        .filter { !$0.hidden }
-        .count ?? 0
-    }
-
-    guard let fileItem = item as? FileItem else {
-      return 0
-    }
-
-    if fileItem.dir {
-      return self.fileItemService.fileItemWithChildren(for: fileItem.url)?.children
-        .filter { !$0.hidden }
-        .count ?? 0
-    }
-
-    return 0
-  }
-
-  func outlineView(_: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
-    if item == nil {
-      return self.fileItemService.fileItemWithChildren(for: self.cwd)!.children.filter { !$0.hidden }[index]
-    }
-    
-    guard let fileItem = item as? FileItem else {
-      preconditionFailure("Should not happen")
-    }
-    
-    return self.fileItemService.fileItemWithChildren(for: fileItem.url)!.children.filter { !$0.hidden }[index]
-  }
-
-  func outlineView(_: NSOutlineView, isItemExpandable item: Any) ->  Bool {
-    guard let fileItem = item as? FileItem else {
-      return false
-    }
-    
-    return fileItem.dir
-  }
-
-  @objc(outlineView:objectValueForTableColumn:byItem:)
-  func outlineView(_: NSOutlineView, objectValueFor: NSTableColumn?, byItem item: Any?) -> Any? {
-    guard let fileItem = item as? FileItem else {
-      return nil
-    }
-    
-    return fileItem
-  }
-}
-
-// MARK: - NSOutlineViewDelegate
-extension FileBrowserComponent {
-  
-  @objc(outlineView:viewForTableColumn:item:)
-  func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
-    guard let fileItem = item as? FileItem else {
-      return nil
-    }
-    
-    let cachedCell = outlineView.make(withIdentifier: "file-view-row", owner: self)
-    let cell = cachedCell as? ImageAndTextTableCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
-
-    cell.text = fileItem.url.lastPathComponent
-    cell.image = self.fileItemService.icon(forUrl: fileItem.url)
-
-    return cell
-  }
-  
-  func outlineView(_ outlineView: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
-    return 20
-  }
-
-  func outlineViewItemDidExpand(_ notification: Notification) {
-    self.adjustFileViewWidth()
-  }
-
-  func outlineViewItemDidCollapse(_ notification: Notification) {
-    self.adjustFileViewWidth()
-  }
-
-  fileprivate func adjustFileViewWidth() {
-    let indentationPerLevel = self.fileView.indentationPerLevel
-    let attrs = [NSFontAttributeName: ImageAndTextTableCell.font]
-
-    let maxWidth = (0..<self.fileView.numberOfRows).reduce(CGFloat(0)) { (curMaxWidth, idx) in
-      guard let item = self.fileView.item(atRow: idx) as? FileItem else {
-        return curMaxWidth
-      }
-
-      let level = CGFloat(self.fileView.level(forRow: idx) + 1)
-      let indentation = level * indentationPerLevel
-      let width = (item.url.lastPathComponent as NSString).size(withAttributes: attrs).width + indentation
-
-      return max(curMaxWidth, width)
-    }
-
-    let column = self.fileView.outlineTableColumn!
-    column.minWidth = maxWidth + ImageAndTextTableCell.widthWithoutText
-    column.maxWidth = column.minWidth
   }
 }

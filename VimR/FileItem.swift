@@ -11,12 +11,20 @@ func == (left: Token, right: Token) -> Bool {
   return left === right
 }
 
-class FileItem : CustomStringConvertible {
+func ==(left: FileItem, right: FileItem) -> Bool {
+  return left.url == right.url
+}
+
+class FileItem : CustomStringConvertible, Hashable {
 
   let url: URL
   let dir: Bool
   let hidden: Bool
   let package: Bool
+
+  var hashValue: Int {
+    return url.hashValue
+  }
 
   /// When nil, then it has never been fnmatch'ed.
   weak var ignoreToken: Token?
