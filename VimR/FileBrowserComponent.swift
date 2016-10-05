@@ -68,6 +68,7 @@ class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineVie
 //          NSLog("\(root) -> \(fileItem)")
           DispatchUtils.gui {
             self.fileView.reloadItem(fileItem, reloadChildren: true)
+            self.adjustFileViewWidth()
           }
         }
         })
@@ -101,6 +102,7 @@ class FileBrowserComponent: ViewComponent, NSOutlineViewDataSource, NSOutlineVie
                              self.fileItemService.fileItemWithChildren(for: FileUtils.userHomeUrl)!
 //          NSLog("cwd changed to \(self.cwd) of \(mainWindow.uuid)")
           self.fileView.reloadData()
+          self.adjustFileViewWidth()
 
         default:
           break
