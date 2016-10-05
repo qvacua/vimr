@@ -203,4 +203,33 @@ extension FileBrowserComponent {
   func outlineView(_ outlineView: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
     return 20
   }
+
+  func outlineViewItemDidExpand(_ notification: Notification) {
+    self.adjustFileViewWidth()
+  }
+
+  func outlineViewItemDidCollapse(_ notification: Notification) {
+    self.adjustFileViewWidth()
+  }
+
+  fileprivate func adjustFileViewWidth() {
+    let indentationPerLevel = self.fileView.indentationPerLevel
+    let attrs = [NSFontAttributeName: ImageAndTextTableCell.font]
+
+    let maxWidth = (0..<self.fileView.numberOfRows).reduce(CGFloat(0)) { (curMaxWidth, idx) in
+      guard let item = self.fileView.item(atRow: idx) as? FileItem else {
+        return curMaxWidth
+      }
+
+      let level = CGFloat(self.fileView.level(forRow: idx) + 1)
+      let indentation = level * indentationPerLevel
+      let width = (item.url.lastPathComponent as NSString).size(withAttributes: attrs).width + indentation
+
+      return max(curMaxWidth, width)
+    }
+
+    let column = self.fileView.outlineTableColumn!
+    column.minWidth = maxWidth + ImageAndTextTableCell.widthWithoutText
+    column.maxWidth = column.minWidth
+  }
 }

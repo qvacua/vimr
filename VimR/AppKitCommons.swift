@@ -122,7 +122,6 @@ extension NSOutlineView {
 
     outlineView.addTableColumn(column)
     outlineView.outlineTableColumn = column
-    outlineView.sizeLastColumnToFit()
     outlineView.allowsEmptySelection = false
     outlineView.allowsMultipleSelection = false
     outlineView.headerView = nil
