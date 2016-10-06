@@ -51,7 +51,7 @@ Pre-built binaries can be found under [Releases](https://github.com/qvacua/vimr/
 * Basic File and Edit menu items.
 * Command line tool.
 * (Simple) File browser
-* Flexible workspace model a la JetBrain's IDEs: Not using it yet, but it's there 🙂.
+* Flexible workspace model a la JetBrain's IDEs: Currently used only by the file browser.
 
 ## Planned Features
 
