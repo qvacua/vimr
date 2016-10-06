@@ -55,6 +55,22 @@ class FileUtilsTest: XCTestCase {
     expect(FileUtils.commonParent(ofUrls: urls)).to(equal(a1Dir))
   }
 
+  func testBug1() {
+    let paths = [
+      fileUtilsRsrcUrl.appendingPathComponent("Downloads/test2/some/nginx.config"),
+      fileUtilsRsrcUrl.appendingPathComponent(".Trash/nginx.config")
+    ]
+    expect(FileUtils.commonParent(ofUrls: paths)).to(equal(fileUtilsRsrcUrl))
+  }
+
+  func testBug2() {
+    let paths = [
+      fileUtilsRsrcUrl.appendingPathComponent("Downloads/test2/some/nginx.config"),
+      fileUtilsRsrcUrl.appendingPathComponent(".Trash/nginx.config/de/nginx.config")
+    ]
+    expect(FileUtils.commonParent(ofUrls: paths)).to(equal(fileUtilsRsrcUrl))
+  }
+
   func testCommonParent3() {
     let urls = [
       fileUtilsRsrcUrl.appendingPathComponent("a1"),

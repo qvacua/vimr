@@ -50,14 +50,18 @@ class FileUtils {
 
     let pathComps = urls.map { $0.pathComponents }
     let min = pathComps.reduce(pathComps[0].count) { (result, comps) in result < comps.count ? result : comps.count }
-    let pathCompsWithMinCount = pathComps.filter { $0.count == min }
-    let possibleParent = NSURL.fileURL(withPathComponents: pathCompsWithMinCount[0])!
-
-    let minPathComponents = Set(pathComps.map { $0[min - 1] })
-    if minPathComponents.count == 1 {
-      return possibleParent.dir ? possibleParent : possibleParent.deletingLastPathComponent()
+    let pathCompsOnlyMin = pathComps.map { Array($0[0..<min]) }
+    let commonIdx = (0..<min).reversed().reduce(min - 1) { (result, idx) in
+      if Set(pathCompsOnlyMin.map { $0[idx] }).count > 1 {
+        return idx - 1
+      } else {
+        return result
+      }
     }
 
-    return possibleParent.deletingLastPathComponent()
+    let result = pathCompsOnlyMin[0]
+    let possibleParent = NSURL.fileURL(withPathComponents: Array(result[0...commonIdx]))!
+
+    return possibleParent.dir ? possibleParent : possibleParent.deletingLastPathComponent()
   }
 }

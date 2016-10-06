@@ -47,10 +47,11 @@ extension FileOutlineView {
     let selectedItem = self.selectedItem
     let visibleRect = self.enclosingScrollView?.contentView.visibleRect
 
+    let expandedItems = self.expandedItems
     super.reloadItem(item, reloadChildren: reloadChildren)
     self.adjustFileViewWidth()
 
-    self.restoreExpandedItems()
+    self.restore(expandedItems: expandedItems)
     self.scrollToVisible(visibleRect!)
 
     guard let selectedFileItem = selectedItem as? FileItem else {
@@ -70,6 +71,7 @@ extension FileOutlineView {
   }
 
   fileprivate func restoreExpandedState(for item: FileItem, states: Set<FileItem>) {
+    //NSLog("\(#function): \(item)")
     guard item.dir && states.contains(item) else {
       return
     }
@@ -81,8 +83,8 @@ extension FileOutlineView {
     }
   }
 
-  fileprivate func restoreExpandedItems() {
-    if self.expandedItems.isEmpty {
+  fileprivate func restore(expandedItems: Set<FileItem>) {
+    if expandedItems.isEmpty {
       return
     }
 
@@ -91,9 +93,8 @@ extension FileOutlineView {
       return
     }
 
-    let curExpandedItems = self.expandedItems
     self.expandedItems.removeAll()
-    root.children.forEach { self.restoreExpandedState(for: $0, states: curExpandedItems) }
+    root.children.forEach { self.restoreExpandedState(for: $0, states: expandedItems) }
   }
 }
 
