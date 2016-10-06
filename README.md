@@ -50,6 +50,7 @@ Pre-built binaries can be found under [Releases](https://github.com/qvacua/vimr/
 * Ligatures: Turned off by default. Turn it on in the Preferences.
 * Basic File and Edit menu items.
 * Command line tool.
+* (Simple) File browser
 * Flexible workspace model a la JetBrain's IDEs: Not using it yet, but it's there 🙂.
 
 ## Planned Features
@@ -58,7 +59,6 @@ The following are features we _plan_ to implement (some of which are already pre
 
 * Some more standard OSX menu items.
 * Improved rendering and input handling, especially Hangul/Hanja (Why is Korean so important? 🤔): The current implementation is really ugly and messy...
-* File browser
 * Preview for some file types, e.g. Markdown, HTML, etc.
 * ...
 
