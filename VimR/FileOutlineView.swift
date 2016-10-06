@@ -44,14 +44,16 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
 extension FileOutlineView {
 
   override func reloadItem(_ item: Any?, reloadChildren: Bool) {
+//    NSLog("\(#function): \(item)")
     let selectedItem = self.selectedItem
     let visibleRect = self.enclosingScrollView?.contentView.visibleRect
 
     let expandedItems = self.expandedItems
     super.reloadItem(item, reloadChildren: reloadChildren)
-    self.adjustFileViewWidth()
 
     self.restore(expandedItems: expandedItems)
+    self.adjustFileViewWidth()
+
     self.scrollToVisible(visibleRect!)
 
     guard let selectedFileItem = selectedItem as? FileItem else {
@@ -71,12 +73,12 @@ extension FileOutlineView {
   }
 
   fileprivate func restoreExpandedState(for item: FileItem, states: Set<FileItem>) {
-    //NSLog("\(#function): \(item)")
     guard item.dir && states.contains(item) else {
       return
     }
 
     self.expandItem(item)
+    self.expandedItems.insert(item)
 
     item.children.forEach { [unowned self] child in
       self.restoreExpandedState(for: child, states: states)
@@ -84,6 +86,7 @@ extension FileOutlineView {
   }
 
   fileprivate func restore(expandedItems: Set<FileItem>) {
+//    NSLog("\(#function): \(expandedItems)")
     if expandedItems.isEmpty {
       return
     }
@@ -173,31 +176,19 @@ extension FileOutlineView {
     return 20
   }
 
-  func outlineView(_ outlineView: NSOutlineView, shouldExpandItem item: Any) -> Bool {
-    guard let fileItem = item as? FileItem else {
-      return true
-    }
-
-    self.expandedItems.insert(fileItem)
-
-    return true
-  }
-
-  func outlineView(_ outlineView: NSOutlineView, shouldCollapseItem item: Any) -> Bool {
-    guard let fileItem = item as? FileItem else {
-      return true
-    }
-
-    self.expandedItems.remove(fileItem)
-
-    return true
-  }
-
   func outlineViewItemDidExpand(_ notification: Notification) {
+    if let fileItem = notification.userInfo?["NSObject"] as? FileItem {
+      self.expandedItems.insert(fileItem)
+    }
+    
     self.adjustFileViewWidth()
   }
 
   func outlineViewItemDidCollapse(_ notification: Notification) {
+    if let fileItem = notification.userInfo?["NSObject"] as? FileItem {
+      self.expandedItems.remove(fileItem)
+    }
+
     self.adjustFileViewWidth()
   }
 
