@@ -62,7 +62,7 @@ GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release release
     --repo vimr \
     --tag ${TAG_NAME} \
     --name ${RELEASE_VERSION} \
-    --description ${RELEASE_NOTES} \
+    --description "${RELEASE_NOTES}" \
     --pre-release
 
 GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release upload \
