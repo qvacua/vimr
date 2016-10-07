@@ -52,6 +52,8 @@ extension FileOutlineView {
 
     let expandedItems = self.expandedItems
 
+    NSLog("\(#function): \(self.fileItems.count)")
+
     if item == nil {
       self.fileItems.removeAll()
     } else {

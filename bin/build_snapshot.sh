@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# prerequisites:
+# brew install github-release
+# echo ${GITHUB_QVACUA_RELEASE_ACCESS_TOKEN} > ~/.config/github.qvacua.release.token
+# chmod 700 ~/.config/github.qvacua.release.token
+
 set -e
 
 export PATH=/usr/local/bin:$PATH
@@ -42,10 +47,27 @@ git commit -am "Set snapshot version: $RELEASE_VERSION"
 git tag -a -m "$CUR_MARKETING_VERSION ($CUR_BUNDLE_VERSION)" snapshot/${SNAPSHOT_DATE}-${CUR_BUNDLE_VERSION}
 
 pushd build/Release
-tar cjf VimR-${RELEASE_VERSION}.tar.bz2 VimR.app
+
+VIMR_FILE_NAME=VimR-${RELEASE_VERSION}.tar.bz2
+
+tar cjf ${VIMR_FILE_NAME} VimR.app
 tar cjf SwiftNeoVim.framework-${RELEASE_VERSION}.tar.bz2 SwiftNeoVim.framework
 echo ${RELEASE_VERSION} > "$RELEASE_VERSION"
-popd
 
 git push origin HEAD:${BRANCH}
 git push origin ${TAG_NAME}
+
+GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release release \
+    --user qvacua \
+    --repo vimr \
+    --tag ${TAG_NAME} \
+    --name ${RELEASE_VERSION} \
+    --description ${RELEASE_NOTES} \
+    --pre-release
+
+GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release upload \
+    --user qvacua \
+    --repo vimr \
+    --tag ${TAG_NAME} \
+    --name ${RELEASE_VERSION} \
+    --file ${VIMR_FILE_NAME}
