@@ -16,6 +16,8 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
   fileprivate let flow: EmbeddableComponent
   fileprivate let fileItemService: FileItemService
 
+  fileprivate var fileItems = Set<FileItem>()
+
   fileprivate var expandedItems = Set<FileItem>()
 
   required init?(coder: NSCoder) {
@@ -49,6 +51,22 @@ extension FileOutlineView {
     let visibleRect = self.enclosingScrollView?.contentView.visibleRect
 
     let expandedItems = self.expandedItems
+
+    if item == nil {
+      self.fileItems.removeAll()
+    } else {
+      guard let fileItem = item as? FileItem else {
+        preconditionFailure("Should not happen")
+      }
+
+      self.fileItems.remove(fileItem)
+      if fileItem.dir {
+        self.fileItems
+          .filter { fileItem.url.parent(ofUrl: $0.url) }
+          .forEach { self.fileItems.remove($0) }
+      }
+    }
+
     super.reloadItem(item, reloadChildren: reloadChildren)
 
     self.restore(expandedItems: expandedItems)
@@ -126,14 +144,20 @@ extension FileOutlineView {
 
   func outlineView(_: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
     if item == nil {
-      return self.fileItemService.fileItemWithChildren(for: self.cwd)!.children.filter { !$0.hidden }[index]
+      let result = self.fileItemService.fileItemWithChildren(for: self.cwd)!.children.filter { !$0.hidden }[index]
+      self.fileItems.insert(result)
+
+      return result
     }
 
     guard let fileItem = item as? FileItem else {
       preconditionFailure("Should not happen")
     }
 
-    return self.fileItemService.fileItemWithChildren(for: fileItem.url)!.children.filter { !$0.hidden }[index]
+    let result = self.fileItemService.fileItemWithChildren(for: fileItem.url)!.children.filter { !$0.hidden }[index]
+    self.fileItems.insert(result)
+
+    return result
   }
 
   func outlineView(_: NSOutlineView, isItemExpandable item: Any) ->  Bool {
