@@ -1,6 +1,8 @@
 VimR — Vim Refined
 ==================
 
+[![Join the chat at https://gitter.im/vimr/Lobby](https://badges.gitter.im/vimr/Lobby.svg)](https://gitter.im/vimr/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ![App Icon](https://raw.github.com/qvacua/vimr/master/resources/vimr-app-icon.png)
 
 [Pre-built binaries](https://github.com/qvacua/vimr/releases) • <http://vimr.org>
