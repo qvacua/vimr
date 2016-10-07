@@ -22,7 +22,7 @@ Builds a new snapshot of VimR and pushes the tag:<br>
 
   parameters {
     stringParam('BRANCH', 'master', 'Branch to build; defaults to master')
-    stringParam('RELEASE_NOTES', '', 'Release notes')
+    textParam('RELEASE_NOTES', null, 'Release notes')
   }
 
   scm {
