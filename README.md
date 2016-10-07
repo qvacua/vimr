@@ -34,7 +34,7 @@ TBD: More details.
 
 ---
 
-If you want to support VimR financially, you can use [Bountysource](https://www.bountysource.com/teams/vimr). Big thanks to [all](https://www.bountysource.com/teams/vimr/backers) who did support: We've spent the first 99€ for a year's worth of Apple's Developer Program as you may have noticed from the code-signed snapshot builds. Seriously you guys@Apple; You should make it free for free App makers and open source developers.
+If you want to support VimR financially, you can use [Bountysource](https://www.bountysource.com/teams/vimr). Big thanks to [all](https://www.bountysource.com/teams/vimr/backers) who did support: We've spent 2 × 99€ for two year's worth of Apple's Developer Program as you may have noticed from the code-signed snapshot builds. Seriously you guys@Apple; You should make it free for free App makers and open source developers.
 
 ## Download
 
