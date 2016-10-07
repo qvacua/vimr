@@ -36,4 +36,3 @@ extension CellAttributes: CustomStringConvertible {
     return result
   }
 }
-

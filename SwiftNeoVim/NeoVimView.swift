@@ -6,7 +6,7 @@
 import Cocoa
 
 /// Contiguous piece of cells of a row that has the same attributes.
-private struct RowRun: CustomStringConvertible {
+fileprivate struct RowRun: CustomStringConvertible {
 
   let row: Int
   let range: CountableClosedRange<Int>
@@ -17,7 +17,7 @@ private struct RowRun: CustomStringConvertible {
   }
 }
 
-open class NeoVimView: NSView, NSUserInterfaceValidations {
+public class NeoVimView: NSView, NSUserInterfaceValidations {
 
   public struct Config {
     let useInteractiveZsh: Bool
@@ -27,23 +27,23 @@ open class NeoVimView: NSView, NSUserInterfaceValidations {
     }
   }
   
-  open static let minFontSize = CGFloat(4)
-  open static let maxFontSize = CGFloat(128)
-  open static let defaultFont = NSFont.userFixedPitchFont(ofSize: 13)!
+  public static let minFontSize = CGFloat(4)
+  public static let maxFontSize = CGFloat(128)
+  public static let defaultFont = NSFont.userFixedPitchFont(ofSize: 13)!
 
-  open let uuid = UUID().uuidString
-  open weak var delegate: NeoVimViewDelegate?
+  public let uuid = UUID().uuidString
+  public weak var delegate: NeoVimViewDelegate?
 
-  open fileprivate(set) var mode = Mode.Normal
+  public fileprivate(set) var mode = Mode.Normal
   
-  open var usesLigatures = false {
+  public var usesLigatures = false {
     didSet {
       self.drawer.usesLigatures = self.usesLigatures
       self.needsDisplay = true
     }
   }
   
-  open var font: NSFont {
+  public var font: NSFont {
     get {
       return self._font
     }
@@ -68,7 +68,7 @@ open class NeoVimView: NSView, NSUserInterfaceValidations {
     }
   }
 
-  open var cwd: URL {
+  public var cwd: URL {
     get {
       return URL(fileURLWithPath: self.agent.vimCommandOutput("silent pwd"))
     }
@@ -80,7 +80,7 @@ open class NeoVimView: NSView, NSUserInterfaceValidations {
     }
   }
 
-  override open var acceptsFirstResponder: Bool {
+  override public var acceptsFirstResponder: Bool {
     return true
   }
   
@@ -164,7 +164,7 @@ open class NeoVimView: NSView, NSUserInterfaceValidations {
     fatalError("init(coder:) has not been implemented")
   }
 
-  @IBAction open func debug1(_ sender: AnyObject!) {
+  @IBAction public func debug1(_ sender: AnyObject!) {
     NSLog("DEBUG 1 - Start")
     NSLog("\(self.agent.vimCommandOutput("silent echo $PATH"))")
     NSLog("\(self.agent.vimCommandOutput("silent pwd"))")
@@ -270,7 +270,7 @@ extension NeoVimView {
 // MARK: - Resizing
 extension NeoVimView {
 
-  override open func setFrameSize(_ newSize: NSSize) {
+  override public func setFrameSize(_ newSize: NSSize) {
     super.setFrameSize(newSize)
 
     // initial resizing is done when grid has data
@@ -289,7 +289,7 @@ extension NeoVimView {
     self.resizeNeoVimUiTo(size: newSize)
   }
 
-  override open func viewDidEndLiveResize() {
+  override public func viewDidEndLiveResize() {
     super.viewDidEndLiveResize()
     self.resizeNeoVimUiTo(size: self.bounds.size)
   }
@@ -317,7 +317,7 @@ extension NeoVimView {
 // MARK: - Drawing
 extension NeoVimView {
 
-  override open func draw(_ dirtyUnionRect: NSRect) {
+  override public func draw(_ dirtyUnionRect: NSRect) {
     guard self.grid.hasData else {
       return
     }
@@ -624,7 +624,7 @@ extension NeoVimView {
     }
   }
 
-  @IBAction open override func selectAll(_ sender: Any?) {
+  @IBAction public override func selectAll(_ sender: Any?) {
     switch self.mode {
     case .Insert, .Visual:
       self.agent.vimInput("<Esc>ggVG")
@@ -637,7 +637,7 @@ extension NeoVimView {
 // MARK: - Key Events
 extension NeoVimView: NSTextInputClient {
 
-  override open func keyDown(with event: NSEvent) {
+  override public func keyDown(with event: NSEvent) {
     self.keyDownDone = false
     
     let context = NSTextInputContext.current()!
@@ -691,7 +691,7 @@ extension NeoVimView: NSTextInputClient {
     self.keyDownDone = true
   }
 
-  open override func doCommand(by aSelector: Selector) {
+  public override func doCommand(by aSelector: Selector) {
 //    NSLog("\(#function): \(aSelector)");
 
     // FIXME: handle when ㅎ -> delete
@@ -851,7 +851,7 @@ extension NeoVimView: NSTextInputClient {
 // MARK: - Gesture Events
 extension NeoVimView {
   
-  override open func magnify(with event: NSEvent) {
+  override public func magnify(with event: NSEvent) {
     let factor = 1 + event.magnification
     let pinchTargetScale = self.pinchTargetScale * factor
     let resultingFontSize = round(pinchTargetScale * self._font.pointSize)
@@ -883,20 +883,20 @@ extension NeoVimView {
 // MARK: - Mouse Events
 extension NeoVimView {
 
-  override open func mouseDown(with event: NSEvent) {
+  override public func mouseDown(with event: NSEvent) {
 //    self.window?.makeFirstResponder(self)
     self.mouse(event: event, vimName:"LeftMouse")
   }
 
-  override open func mouseUp(with event: NSEvent) {
+  override public func mouseUp(with event: NSEvent) {
     self.mouse(event: event, vimName:"LeftRelease")
   }
 
-  override open func mouseDragged(with event: NSEvent) {
+  override public func mouseDragged(with event: NSEvent) {
     self.mouse(event: event, vimName:"LeftDrag")
   }
 
-  override open func scrollWheel(with event: NSEvent) {
+  override public func scrollWheel(with event: NSEvent) {
     let (deltaX, deltaY) = (event.scrollingDeltaX, event.scrollingDeltaY)
     if deltaX == 0 && deltaY == 0 {
       return
