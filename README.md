@@ -62,7 +62,7 @@ The following are features we _plan_ to implement (some of which are already pre
 * Preview for some file types, e.g. Markdown, HTML, etc.
 * ...
 
-We will gradually create [issues](https://github.com/qvacua/vimr/issues) with more details.
+We will gradually create [issues](https://github.com/qvacua/vimr/issues) with more details. For the current status see the [project board](https://github.com/qvacua/vimr/projects/1).
 
 ### Stuff with Question Marks
 
