@@ -11,7 +11,7 @@ VimR — Vim Refined
 
 ## UPDATE
 
-We recently, June 2016, started to migrate the MacVim backend (VimR-MacVim) to a NeoVim backend. It's a complete rewrite in Swift for which we use Objective-C when appropriate. We experimented with NeoVim a bit ([nvox](https://github.com/qvacua/nvox)) and now we are confident enough to think that VimR can be backed by NeoVim. It will take some time though till the transition/rewrite is complete. Bear with us!
+We recently, June 2016, started to migrate the MacVim backend (VimR-MacVim) to a NeoVim backend. It's a complete rewrite in Swift for which we use Objective-C when appropriate. We experimented with NeoVim a bit and now we are confident enough to think that VimR can be backed by NeoVim. It will take some time though till the transition/rewrite is complete. Bear with us!
 
 If you are here for VimR-MacVim, use the [macvim/master](https://github.com/qvacua/vimr/tree/macvim/master) branch and the version [0.8.0 (32)](https://github.com/qvacua/vimr/releases/tag/v0.8.0-32).
 
