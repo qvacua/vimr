@@ -49,8 +49,8 @@ class FileUtils {
     }
 
     let pathComps = urls.map { $0.pathComponents }
-    let min = pathComps.reduce(pathComps[0].count) { (result, comps) in result < comps.count ? result : comps.count }
-    let pathCompsOnlyMin = pathComps.map { Array($0[0..<min]) }
+    let min = pathComps.map { $0.count }.min()!
+    let pathCompsOnlyMin = pathComps.map { $0[0..<min] }
     let commonIdx = (0..<min).reversed().reduce(min - 1) { (result, idx) in
       if Set(pathCompsOnlyMin.map { $0[idx] }).count > 1 {
         return idx - 1
