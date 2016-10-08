@@ -124,7 +124,7 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   }
 
   ui_bridge_stopped(bridge);
-  loop_close(&loop);
+  loop_close(&loop, false);
 
   xfree(_server_ui_data);
   xfree(ui);
