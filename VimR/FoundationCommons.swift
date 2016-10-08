@@ -7,7 +7,7 @@ import Foundation
 
 extension URL {
 
-  func parent(ofUrl url: URL) -> Bool {
+  func isParent(of url: URL) -> Bool {
     guard self.isFileURL && url.isFileURL else {
       return false
     }

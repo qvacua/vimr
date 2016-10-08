@@ -105,7 +105,7 @@ class FileItemService: StandardFlow {
 
       // TODO Remove cached items more aggressively?
       let hasRelations = self.monitors.keys.reduce(false) { (result, monitoredUrl) in
-        return result ? result : monitoredUrl.parent(ofUrl: url) || url.parent(ofUrl: monitoredUrl)
+        return result ? result : monitoredUrl.isParent(of: url) || url.isParent(of: monitoredUrl)
       }
 
       if hasRelations {

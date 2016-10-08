@@ -62,7 +62,7 @@ extension FileOutlineView {
       self.fileItems.remove(fileItem)
       if fileItem.dir {
         self.fileItems
-          .filter { fileItem.url.parent(ofUrl: $0.url) }
+          .filter { fileItem.url.isParent(of: $0.url) }
           .forEach { self.fileItems.remove($0) }
       }
     }
