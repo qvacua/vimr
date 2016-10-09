@@ -87,6 +87,12 @@
                                     <action selector="openDocument:" target="-1" id="zbe-h0-oBM"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Open In New Window…" keyEquivalent="o" id="c6W-bD-wRy">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="openInNewWindow:" target="-1" id="2ZC-Rl-rjR"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Open Quickly…" keyEquivalent="O" id="0V2-yi-P2z">
                                 <connections>
                                     <action selector="openQuickly:" target="-1" id="FSA-7W-F0m"/>

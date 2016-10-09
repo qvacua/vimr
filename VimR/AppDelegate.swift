@@ -217,16 +217,20 @@ extension AppDelegate {
 // MARK: - IBActions
 extension AppDelegate {
 
-  @IBAction func showPrefWindow(_ sender: AnyObject!) {
+  @IBAction func openInNewWindow(_ sender: Any?) {
+    self.openDocument(sender)
+  }
+
+  @IBAction func showPrefWindow(_ sender: Any?) {
     self.prefWindowComponent.show()
   }
 
-  @IBAction func newDocument(_ sender: AnyObject!) {
+  @IBAction func newDocument(_ sender: Any?) {
     _ = self.mainWindowManager.newMainWindow()
   }
 
   // Invoked when no main window is open.
-  @IBAction func openDocument(_ sender: AnyObject!) {
+  @IBAction func openDocument(_ sender: Any?) {
     let panel = NSOpenPanel()
     panel.canChooseDirectories = true
     panel.begin { result in
