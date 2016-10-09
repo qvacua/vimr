@@ -20,7 +20,7 @@ git checkout -b build_snapshot
 xcodebuild clean
 rm -rf build
 
-git submodule update --init
+git submodule update --init --force
 
 # Build NeoVim
 # 0. Delete previously built things
@@ -62,7 +62,7 @@ git tag -a -m "$CUR_MARKETING_VERSION ($CUR_BUNDLE_VERSION)" snapshot/${SNAPSHOT
 
 pushd build/Release
 
-VIMR_FILE_NAME=VimR-${RELEASE_VERSION}.tar.bz2
+VIMR_FILE_NAME="VimR-$RELEASE_VERSION.tar.bz2"
 
 tar cjf ${VIMR_FILE_NAME} VimR.app
 tar cjf SwiftNeoVim.framework-${RELEASE_VERSION}.tar.bz2 SwiftNeoVim.framework
@@ -76,7 +76,7 @@ GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release release
     --repo vimr \
     --tag ${TAG_NAME} \
     --name ${RELEASE_VERSION} \
-    --description "${RELEASE_NOTES}" \
+    --description "$RELEASE_NOTES" \
     --pre-release
 
 GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release upload \
