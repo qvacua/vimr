@@ -74,14 +74,14 @@ git push origin ${TAG_NAME}
 GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release release \
     --user qvacua \
     --repo vimr \
-    --tag ${TAG_NAME} \
-    --name ${RELEASE_VERSION} \
+    --tag "$TAG_NAME" \
+    --name "$RELEASE_VERSION" \
     --description "$RELEASE_NOTES" \
     --pre-release
 
 GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release upload \
     --user qvacua \
     --repo vimr \
-    --tag ${TAG_NAME} \
-    --name ${RELEASE_VERSION} \
-    --file ${VIMR_FILE_NAME}
+    --tag "$TAG_NAME" \
+    --name "$RELEASE_VERSION" \
+    --file "$VIMR_FILE_NAME"
