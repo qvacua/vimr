@@ -62,7 +62,7 @@ git tag -a -m "$CUR_MARKETING_VERSION ($CUR_BUNDLE_VERSION)" snapshot/${SNAPSHOT
 
 pushd build/Release
 
-VIMR_FILE_NAME="VimR-$RELEASE_VERSION.tar.bz2"
+VIMR_FILE_NAME="VimR-${RELEASE_VERSION}.tar.bz2"
 
 tar cjf ${VIMR_FILE_NAME} VimR.app
 tar cjf SwiftNeoVim.framework-${RELEASE_VERSION}.tar.bz2 SwiftNeoVim.framework
