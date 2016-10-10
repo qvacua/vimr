@@ -83,5 +83,5 @@ GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release upload 
     --user qvacua \
     --repo vimr \
     --tag "$TAG_NAME" \
-    --name "$RELEASE_VERSION" \
+    --name "$VIMR_FILE_NAME" \
     --file "$VIMR_FILE_NAME"
