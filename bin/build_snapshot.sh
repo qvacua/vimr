@@ -9,6 +9,12 @@ set -e
 
 export PATH=/usr/local/bin:$PATH
 
+CUR_MARKETING_VERSION=$(./bin/current_marketing_version.sh)
+CUR_BUNDLE_VERSION=$(./bin/current_bundle_version.sh)
+RELEASE_VERSION="$CUR_MARKETING_VERSION-$CUR_BUNDLE_VERSION"
+SNAPSHOT_DATE=$(date +%Y%m%d.%H%M)
+TAG_NAME=snapshot/${SNAPSHOT_DATE}-${CUR_BUNDLE_VERSION}
+
 # delete all (local) tags
 git tag | xargs git tag -d
 
@@ -40,24 +46,30 @@ cp -r /tmp/nvim/share/nvim/runtime .
 make clean
 rm -rf build
 
+echo "### Building neovim"
 make libnvim
+
+echo "### Tagging neovim"
+git tag -a -m "$CUR_MARKETING_VERSION ($CUR_BUNDLE_VERSION)" snapshot/${SNAPSHOT_DATE}-${CUR_BUNDLE_VERSION}
+
+echo "### Pushing tag to neovim repository"
+git push origin ${TAG_NAME}
 
 popd
 
+echo "### Updating carthage"
 carthage update --platform osx
 
 ./bin/bump_bundle_version.sh
 ./bin/set_snapshot_date.sh
 
+echo "### Building VimR"
 xcodebuild CODE_SIGN_IDENTITY="Developer ID Application: Tae Won Ha (H96Q2NKTQH)" -configuration Release -target VimR
 
-CUR_MARKETING_VERSION=$(./bin/current_marketing_version.sh)
-CUR_BUNDLE_VERSION=$(./bin/current_bundle_version.sh)
-RELEASE_VERSION="$CUR_MARKETING_VERSION-$CUR_BUNDLE_VERSION"
-SNAPSHOT_DATE=$(date +%Y%m%d.%H%M)
-TAG_NAME=snapshot/${SNAPSHOT_DATE}-${CUR_BUNDLE_VERSION}
-
+echo "### Committing version bump"
 git commit -am "Set snapshot version: $RELEASE_VERSION"
+
+echo "### Tagging VimR"
 git tag -a -m "$CUR_MARKETING_VERSION ($CUR_BUNDLE_VERSION)" snapshot/${SNAPSHOT_DATE}-${CUR_BUNDLE_VERSION}
 
 pushd build/Release
@@ -68,9 +80,11 @@ tar cjf ${VIMR_FILE_NAME} VimR.app
 tar cjf SwiftNeoVim.framework-${RELEASE_VERSION}.tar.bz2 SwiftNeoVim.framework
 echo ${RELEASE_VERSION} > "$RELEASE_VERSION"
 
+echo "### Pushing commit and tag to vimr repository"
 git push origin HEAD:${BRANCH}
 git push origin ${TAG_NAME}
 
+echo "### Creating release"
 GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release release \
     --user qvacua \
     --repo vimr \
@@ -79,6 +93,7 @@ GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release release
     --description "$RELEASE_NOTES" \
     --pre-release
 
+echo "### Uploading build"
 GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release upload \
     --user qvacua \
     --repo vimr \
