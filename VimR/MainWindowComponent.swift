@@ -222,7 +222,9 @@ extension MainWindowComponent {
   }
 
   @IBAction func saveDocument(_ sender: Any?) {
-    let curBuf = self.neoVimView.currentBuffer()
+    guard let curBuf = self.neoVimView.currentBuffer() else {
+      return
+    }
     
     if curBuf.fileName == nil {
       self.savePanelSheet { self.neoVimView.saveCurrentTab(url: $0) }
@@ -233,6 +235,10 @@ extension MainWindowComponent {
   }
   
   @IBAction func saveDocumentAs(_ sender: Any?) {
+    if self.neoVimView.currentBuffer() == nil {
+      return
+    }
+
     self.savePanelSheet { url in
       self.neoVimView.saveCurrentTab(url: url)
       
@@ -396,14 +402,34 @@ extension MainWindowComponent {
 extension MainWindowComponent {
 
   public func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
-    guard item.action == #selector(focusNeoVimView(_:)) else {
+    let canSave = self.neoVimView.currentBuffer() != nil
+    let canSaveAs = canSave
+    let canOpen = canSave
+    let canOpenQuickly = canSave
+    let canFocusNeoVimView = self.window.firstResponder != self.neoVimView
+
+    guard let action = item.action else {
       return true
     }
 
-    if self.window.firstResponder == self.neoVimView {
-      return false
-    }
+    switch action {
+    case #selector(focusNeoVimView(_:)):
+      return canFocusNeoVimView
 
-    return true
+    case #selector(openDocument(_:)):
+      return canOpen
+
+    case #selector(openQuickly(_:)):
+      return canOpenQuickly
+
+    case #selector(saveDocument(_:)):
+      return canSave
+
+    case #selector(saveDocumentAs(_:)):
+      return canSaveAs
+
+    default:
+      return true
+    }
   }
 }

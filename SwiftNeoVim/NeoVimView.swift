@@ -166,8 +166,7 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
 
   @IBAction public func debug1(_ sender: AnyObject!) {
     NSLog("DEBUG 1 - Start")
-    NSLog("\(self.agent.vimCommandOutput("silent echo $PATH"))")
-    NSLog("\(self.agent.vimCommandOutput("silent pwd"))")
+    NSLog("\(self.agent.buffers())")
     NSLog("DEBUG 1 - End")
   }
 }
@@ -185,9 +184,12 @@ extension NeoVimView {
     self.needsDisplay = true
     self.resizeNeoVimUiTo(size: self.bounds.size)
   }
-  
-  public func currentBuffer() -> NeoVimBuffer {
-    return self.agent.buffers().filter { $0.current }.first!
+
+  /**
+   - returns: nil when for exampls a quickfix panel is open.
+   */
+  public func currentBuffer() -> NeoVimBuffer? {
+    return self.agent.buffers().filter { $0.current }.first
   }
 
   public func hasDirtyDocs() -> Bool {
@@ -195,7 +197,8 @@ extension NeoVimView {
   }
 
   public func isCurrentBufferDirty() -> Bool {
-    return self.agent.buffers().filter { $0.current }.first?.dirty ?? true
+    let curBuf = self.currentBuffer()
+    return curBuf?.dirty ?? true
   }
   
   public func newTab() {
