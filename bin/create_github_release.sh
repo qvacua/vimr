@@ -1,9 +1,8 @@
 #!/bin/bash
 
 COMPOUND_VERSION=$1
-RELEASE_NOTES=$2
-
-VIMR_FILE_NAME="VimR-${COMPOUND_VERSION}.tar.bz2"
+VIMR_FILE_NAME=$2
+RELEASE_NOTES=$3
 
 pushd build/Release
 

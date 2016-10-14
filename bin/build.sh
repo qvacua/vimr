@@ -23,7 +23,13 @@ COMPOUND_VERSION="v${MARKETING_VERSION}-${BUNDLE_VERSION}"
 if [ ${IS_SNAPSHOT} = true ] ; then
     COMPOUND_VERSION="v${MARKETING_VERSION}-${BUNDLE_VERSION}"
 fi
+TAG=${COMPOUND_VERSION}
+VIMR_FILE_NAME="VimR-${COMPOUND_VERSION}.tar.bz2"
 
-./bin/commit_and_push_tags.sh "${BRANCH}" "${COMPOUND_VERSION}"
+#./bin/commit_and_push_tags.sh "${BRANCH}" "${TAG}"
 
-./bin/create_github_release.sh "${COMPOUND_VERSION}" "${RELEASE_NOTES}"
+#./bin/create_github_release.sh "${TAG}" "${VIMR_FILE_NAME}" "${RELEASE_NOTES}"
+
+pushd build/Release
+./bin/set_appcast.py "${VIMR_FILE_NAME}" "${BUNDLE_VERSION}" "${MARKETING_VERSION}" "${TAG}"
+popd
