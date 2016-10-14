@@ -14,6 +14,7 @@ from string import Template
 
 SIGN_UPDATE = './bin/sign_update'
 PRIVATE_KEY_PATH = os.path.expanduser('~/Projects/sparkle_priv.pem')
+GITHUB_TOKEN_PATH = os.path.expanduser('~/.config/github.qvacua.release.token')
 
 file_path = sys.argv[1]
 bundle_version = sys.argv[2]
@@ -27,7 +28,12 @@ appcast_template_file = open('resources/appcast_template.xml', 'r')
 appcast_template = Template(appcast_template_file.read())
 appcast_template_file.close()
 
-release_response = requests.get('https://api.github.com/repos/qvacua/vimr/releases/tags/{0}'.format(tag_name))
+token_file = open(GITHUB_TOKEN_PATH, 'r')
+token = token_file.read().strip()
+token_file.close()
+
+release_response = requests.get('https://api.github.com/repos/qvacua/vimr/releases/tags/{0}'.format(tag_name),
+                                params={'access_token': token})
 release_json = json.loads(release_response.content)
 
 title = release_json['name']
