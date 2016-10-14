@@ -57,6 +57,7 @@
 		4B2A2BFF1D0351810074CE9A /* SwiftNeoVim.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B2A2C091D0352CB0074CE9A /* NeoVimUiBridgeProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B2A2C061D0352CB0074CE9A /* NeoVimUiBridgeProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B37ADB91D6E471B00970D55 /* vimr in Resources */ = {isa = PBXBuildFile; fileRef = 4B37ADB81D6E471B00970D55 /* vimr */; };
+		4B3AC8941DB031C600AC5823 /* sparkle_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */; };
 		4B401B141D0454DC00D99EDC /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; };
 		4B401B161D0454E900D99EDC /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B401B1A1D046E0600D99EDC /* NeoVimViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */; };
@@ -110,6 +111,8 @@
 		4BDCFAEA1D31486E00F62670 /* NeoVimMsgIds.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDCFAE91D3147A300F62670 /* NeoVimMsgIds.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BDCFAED1D315CB800F62670 /* runtime in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA6621D00157A00673FDF /* runtime */; };
 		4BDCFAEF1D315CF200F62670 /* NeoVimServer in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B854A1A1D31447C00E08DE1 /* NeoVimServer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		4BDD056A1DB0CAB700D1B405 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDD05691DB0CAB700D1B405 /* Sparkle.framework */; };
+		4BDD056B1DB0CACB00D1B405 /* Sparkle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDD05691DB0CAB700D1B405 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BDF50081D7607BF00D8FBC3 /* EonilFileSystemEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF50071D7607BF00D8FBC3 /* EonilFileSystemEvents.framework */; };
 		4BDF50091D7607BF00D8FBC3 /* EonilFileSystemEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF50071D7607BF00D8FBC3 /* EonilFileSystemEvents.framework */; };
 		4BDF500A1D7607C600D8FBC3 /* EonilFileSystemEvents.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BDF50071D7607BF00D8FBC3 /* EonilFileSystemEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -174,6 +177,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4BDD056B1DB0CACB00D1B405 /* Sparkle.framework in Embed Frameworks */,
 				4BDF50121D760B7200D8FBC3 /* EonilFileSystemEvents.framework in Embed Frameworks */,
 				4B2A2BFF1D0351810074CE9A /* SwiftNeoVim.framework in Embed Frameworks */,
 				4B2A2BEF1D02261F0074CE9A /* RxSwift.framework in Embed Frameworks */,
@@ -278,6 +282,7 @@
 		4B2A2C0D1D0353750074CE9A /* Bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bridge.h; sourceTree = "<group>"; };
 		4B37ADB81D6E471B00970D55 /* vimr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = vimr; sourceTree = "<group>"; };
 		4B37ADBA1D6EC11600970D55 /* TestPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestPane.swift; sourceTree = "<group>"; };
+		4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sparkle_pub.pem; sourceTree = "<group>"; };
 		4B401B131D0454DC00D99EDC /* PureLayout.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureLayout.framework; path = Carthage/Build/Mac/PureLayout.framework; sourceTree = SOURCE_ROOT; };
 		4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimViewDelegate.swift; sourceTree = "<group>"; };
 		4B4192171D0C52D700A0BEB2 /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
@@ -324,6 +329,7 @@
 		4BDCFAD31D3145E500F62670 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv.a; path = neovim/.deps/usr/lib/libuv.a; sourceTree = SOURCE_ROOT; };
 		4BDCFAD41D3145E500F62670 /* libvterm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvterm.a; path = neovim/.deps/usr/lib/libvterm.a; sourceTree = SOURCE_ROOT; };
 		4BDCFAE91D3147A300F62670 /* NeoVimMsgIds.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NeoVimMsgIds.h; sourceTree = "<group>"; };
+		4BDD05691DB0CAB700D1B405 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Carthage/Build/Mac/Sparkle.framework; sourceTree = SOURCE_ROOT; };
 		4BDF50071D7607BF00D8FBC3 /* EonilFileSystemEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EonilFileSystemEvents.framework; path = Carthage/Build/Mac/EonilFileSystemEvents.framework; sourceTree = SOURCE_ROOT; };
 		4BDF500B1D760A3500D8FBC3 /* FileUtilsTest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FileUtilsTest; sourceTree = "<group>"; };
 		4BDF50131D7617EA00D8FBC3 /* OpenQuicklyWindowComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyWindowComponent.swift; sourceTree = "<group>"; };
@@ -394,6 +400,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B2A2BFE1D0351810074CE9A /* SwiftNeoVim.framework in Frameworks */,
+				4BDD056A1DB0CAB700D1B405 /* Sparkle.framework in Frameworks */,
 				4B2A2BEE1D02261F0074CE9A /* RxSwift.framework in Frameworks */,
 				4B401B141D0454DC00D99EDC /* PureLayout.framework in Frameworks */,
 				4BDF50081D7607BF00D8FBC3 /* EonilFileSystemEvents.framework in Frameworks */,
@@ -460,6 +467,7 @@
 		4B2A2BE61D0225840074CE9A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4BDD05691DB0CAB700D1B405 /* Sparkle.framework */,
 				4BDF50071D7607BF00D8FBC3 /* EonilFileSystemEvents.framework */,
 				4B56F29B1D29926600C1F92E /* Nimble.framework */,
 				4B401B131D0454DC00D99EDC /* PureLayout.framework */,
@@ -562,6 +570,7 @@
 				4BF07EE61D51326A009BECEB /* Credits.rtf */,
 				4BEBA50F1CFF374B00673FDF /* Info.plist */,
 				4B37ADB81D6E471B00970D55 /* vimr */,
+				4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */,
 			);
 			name = resources;
 			sourceTree = "<group>";
@@ -927,6 +936,7 @@
 				4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */,
 				4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */,
 				4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */,
+				4B3AC8941DB031C600AC5823 /* sparkle_pub.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1414,6 +1424,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
+					"$(PROJECT_DIR)/nvox/Carthage/Build/Mac",
 				);
 				INFOPLIST_FILE = VimR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -1433,6 +1444,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
+					"$(PROJECT_DIR)/nvox/Carthage/Build/Mac",
 				);
 				INFOPLIST_FILE = VimR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";

@@ -1,0 +1,14 @@
+<item>
+  <title>${title}</title>
+  <sparkle:releaseNotesLink>
+    ${release_notes_link}
+  </sparkle:releaseNotesLink>
+  <pubDate>${publication_date}</pubDate>
+  <sparkle:minimumSystemVersion>${min_macos_version}</sparkle:minimumSystemVersion>
+  <enclosure url="${file_url}"
+             sparkle:version="${bundle_version}"
+             sparkle:shortVersionString="${marketing_version}"
+             sparkle:dsaSignature="${signature}"
+             length="${file_length}"
+             type="application/octet-stream" />
+</item>

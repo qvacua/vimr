@@ -17,6 +17,7 @@
                 <outlet property="debugMenu" destination="RmS-Zn-Snd" id="anN-h2-97s"/>
             </connections>
         </customObject>
+        <customObject id="S3g-Zj-cVf" customClass="SUUpdater"/>
         <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
             <items>
                 <menuItem title="VimR" id="1Xt-HY-uBw">
@@ -27,6 +28,12 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="orderFrontStandardAboutPanel:" target="-1" id="Exp-CZ-Vem"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Check for Updates..." id="4WL-0C-T6J">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="checkForUpdates:" target="S3g-Zj-cVf" id="z20-xD-yvr"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
