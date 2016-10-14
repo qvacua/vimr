@@ -68,10 +68,20 @@ class PrefStore: StandardFlow {
       self.userDefaults.setValue(self.prefsDict(self.data), forKey: PrefStore.compatibleVersion)
     }
 
-    if self.data.advanced.useSnapshotUpdateChannel {
-      SUUpdater.shared().feedURL = URL(
-        string: "https://raw.githubusercontent.com/qvacua/vimr/master/appcast_snapshot.xml"
-      )
+    self.setSparkleUrl()
+  }
+
+  fileprivate func setSparkleUrl() {
+    DispatchUtils.gui {
+      if self.data.advanced.useSnapshotUpdateChannel {
+        SUUpdater.shared().feedURL = URL(
+          string: "https://raw.githubusercontent.com/qvacua/vimr/master/appcast_snapshot.xml"
+        )
+      } else {
+        SUUpdater.shared().feedURL = URL(
+          string: "https://raw.githubusercontent.com/qvacua/vimr/master/appcast.xml"
+        )
+      }
     }
   }
 
@@ -180,6 +190,7 @@ class PrefStore: StandardFlow {
         }
 
         self.userDefaults.setValue(self.prefsDict(self.data), forKey: PrefStore.compatibleVersion)
+        self.setSparkleUrl()
         self.publish(event: self.data)
         })
   }
