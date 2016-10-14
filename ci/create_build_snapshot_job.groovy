@@ -4,7 +4,7 @@
 //
 // And set the "Markup Formatter" in "Manage Jenkins -> Configure Global Security" to "Safe HTML".
 
-def buildSnapshotJob = freeStyleJob('vimr_build_snapshot')
+def buildSnapshotJob = freeStyleJob('vimr_build')
 
 buildSnapshotJob.with {
   description '''\
@@ -23,6 +23,8 @@ Builds a new snapshot of VimR and pushes the tag:<br>
   parameters {
     stringParam('BRANCH', 'master', 'Branch to build; defaults to master')
     textParam('RELEASE_NOTES', null, 'Release notes')
+    booleanParam('IS_SNAPSHOT', true)
+    stringParam('MARKETING_VERSION', null, 'If IS_SNAPSHOT is unchecked, you have to enter this.')
   }
 
   scm {
@@ -40,7 +42,7 @@ Builds a new snapshot of VimR and pushes the tag:<br>
   }
 
   steps {
-    shell('./bin/build_snapshot.sh')
+    shell('./bin/build.sh')
   }
 
   publishers {
