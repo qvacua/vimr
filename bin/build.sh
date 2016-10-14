@@ -28,6 +28,6 @@ VIMR_FILE_NAME="VimR-${COMPOUND_VERSION}.tar.bz2"
 
 ./bin/commit_and_push_tags.sh "${BRANCH}" "${TAG}" ${IS_SNAPSHOT}
 
-./bin/create_github_release.sh "${TAG}" "${VIMR_FILE_NAME}" "${RELEASE_NOTES}"
+./bin/create_github_release.sh "${COMPOUND_VERSION}" "${TAG}" "${VIMR_FILE_NAME}" "${RELEASE_NOTES}"
 
 ./bin/set_appcast.py "build/Release/${VIMR_FILE_NAME}" "${BUNDLE_VERSION}" "${MARKETING_VERSION}" "${TAG}" ${IS_SNAPSHOT}
