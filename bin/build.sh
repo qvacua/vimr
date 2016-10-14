@@ -10,7 +10,7 @@ IS_SNAPSHOT=$2
 MARKETING_VERSION=$3
 
 ./bin/prepare_repositories.sh
-#./bin/clean_old_builds.sh
+./bin/clean_old_builds.sh
 ./bin/set_new_versions.sh ${IS_SNAPSHOT} "${MARKETING_VERSION}"
 ./bin/build_vimr.sh
 
