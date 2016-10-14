@@ -53,4 +53,10 @@ appcast = appcast_template.substitute(
     signature=file_signature
 )
 
-print(appcast)
+appcast_file = open('build/Release/appcast.xml', 'w')
+appcast_file.write(appcast)
+appcast_file.close()
+
+print('--------------------------------')
+print(appcast.strip())
+print('--------------------------------')
