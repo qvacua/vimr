@@ -12,23 +12,20 @@ pushd neovim
 ln -f -s ../local.mk .
 
 rm -rf build
-make distclean
+make clean
 
 echo "### Building nvim to get the runtime folder"
 make CMAKE_FLAGS="-DCUSTOM_UI=0"
 make CMAKE_FLAGS="-DCMAKE_INSTALL_PREFIX=/tmp/nvim" install
 cp -r /tmp/nvim/share/nvim/runtime .
 
-make clean
 rm -rf build
+make clean
 
 echo "### Building libnvim"
 make libnvim
 
 popd
-
-echo "### Updating carthage"
-carthage update --platform osx
 
 echo "### Building vimr target"
 xcodebuild CODE_SIGN_IDENTITY="Developer ID Application: Tae Won Ha (H96Q2NKTQH)" -configuration Release -target VimR
