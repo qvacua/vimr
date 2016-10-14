@@ -1,5 +1,8 @@
 #!/bin/bash
 
+MARKETING_VERSION=$1
+IS_SNAPSHOT=$2
+
 echo "### Setting versions of VimR"
 
 # ## bundle version
