@@ -5,7 +5,7 @@ COMPOUND_VERSION=$2
 IS_SNAPSHOT=$3
 TAG_NAME=$COMPOUND_VERSION
 
-if [ ${IS_SNAPSHOT} = true ] ; then
+if [ "${IS_SNAPSHOT}" = true ] ; then
     TAG_NAME="snapshot/${COMPOUND_VERSION}"
 fi
 
