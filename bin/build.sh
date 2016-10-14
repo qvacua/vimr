@@ -6,13 +6,13 @@ export PATH=/usr/local/bin:$PATH
 
 # # parameters
 BRANCH=$1
-MARKETING_VERSION=$2
-IS_SNAPSHOT=$3
+IS_SNAPSHOT=$2
+MARKETING_VERSION=$3
 
-#./bin/prepare_repositories.sh
+./bin/prepare_repositories.sh
 #./bin/clean_old_builds.sh
-#./bin/set_new_versions.sh "${MARKETING_VERSION}" ${IS_IS_SNAPSHOT}
-#./bin/build_vimr.sh
+./bin/set_new_versions.sh ${IS_SNAPSHOT} "${MARKETING_VERSION}"
+./bin/build_vimr.sh
 
 BUNDLE_VERSION=$(agvtool what-version | sed '2q;d' | sed -E 's/ +(.+)/\1/')
 MARKETING_VERSION=$(agvtool what-marketing-version | tail -n 1 | sed -E 's/.*of "(.*)" in.*/\1/')
