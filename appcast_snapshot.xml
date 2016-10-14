@@ -11,7 +11,7 @@ https://github.com/qvacua/vimr/releases/tag/v0.8.0-32
   <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.8.0-32/VimR-0.8.0.tar.bz2"
              sparkle:version="32"
              sparkle:shortVersionString="0.8.0"
-             sparkle:dsaSignature="dummy"
+             sparkle:dsaSignature="MC0CFEER9vhbxAWQKY9Da8J3TECHHp/pAhUA1HB3l3SXXCv59+1/ZUK2l0b5jlU="
              length="8902573"
              type="application/octet-stream" />
 </item>
