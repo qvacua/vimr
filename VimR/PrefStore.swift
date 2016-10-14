@@ -70,7 +70,7 @@ class PrefStore: StandardFlow {
 
     if self.data.advanced.useSnapshotUpdateChannel {
       SUUpdater.shared().feedURL = URL(
-        string: "https://raw.githubusercontent.com/qvacua/vimr/master/appcast_staging.xml"
+        string: "https://raw.githubusercontent.com/qvacua/vimr/master/appcast_snapshot.xml"
       )
     }
   }

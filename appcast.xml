@@ -1,0 +1,17 @@
+<item>
+  <title>v0.8.0-32</title>
+  <description><![CDATA[
+This is the last version of VimR with MacVim backend.
+  ]]></description>
+  <sparkle:releaseNotesLink>
+https://github.com/qvacua/vimr/releases/tag/v0.8.0-32
+  </sparkle:releaseNotesLink>
+  <pubDate>2015-09-06T21:20:01.957213</pubDate>
+  <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
+  <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.8.0-32/VimR-0.8.0.tar.bz2"
+             sparkle:version="32"
+             sparkle:shortVersionString="0.8.0"
+             sparkle:dsaSignature="dummy"
+             length="8902573"
+             type="application/octet-stream" />
+</item>
