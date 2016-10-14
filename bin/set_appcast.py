@@ -20,6 +20,7 @@ file_path = sys.argv[1]
 bundle_version = sys.argv[2]
 marketing_version = sys.argv[3]
 tag_name = sys.argv[4]
+is_snapshot = True if sys.argv[5] == "true" else False
 
 file_size = os.stat(file_path).st_size
 file_signature = subprocess.check_output([SIGN_UPDATE, file_path, PRIVATE_KEY_PATH]).strip()
@@ -53,7 +54,9 @@ appcast = appcast_template.substitute(
     signature=file_signature
 )
 
-appcast_file = open('build/Release/appcast.xml', 'w')
+appcast_file_name = 'appcast_snapshot.xml' if is_snapshot else 'appcast.xml'
+
+appcast_file = open('build/Release/{0}'.format(appcast_file_name), 'w+')
 appcast_file.write(appcast)
 appcast_file.close()
 
