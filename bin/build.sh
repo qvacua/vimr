@@ -26,7 +26,7 @@ if [ "${IS_SNAPSHOT}" = true ] ; then
 fi
 VIMR_FILE_NAME="VimR-${COMPOUND_VERSION}.tar.bz2"
 
-./bin/commit_and_push_tags.sh "${BRANCH}" "${TAG}" ${IS_SNAPSHOT}
+./bin/commit_and_push_tags.sh "${BRANCH}" "${TAG}"
 
 ./bin/create_github_release.sh "${COMPOUND_VERSION}" "${TAG}" "${VIMR_FILE_NAME}" "${RELEASE_NOTES}"
 

@@ -1,30 +1,24 @@
 #!/bin/bash
 
 BRANCH=$1
-COMPOUND_VERSION=$2
-IS_SNAPSHOT=$3
-TAG_NAME=$COMPOUND_VERSION
-
-if [ "${IS_SNAPSHOT}" = true ] ; then
-    TAG_NAME="snapshot/${COMPOUND_VERSION}"
-fi
+TAG=$2
 
 echo "### Committing version bump"
-git commit -am "Bump version: ${COMPOUND_VERSION}"
+git commit -am "Bump version: ${TAG}"
 
 echo "### Tagging VimR"
-git tag -a -m "${TAG_NAME}" "${TAG_NAME}"
+git tag -a -m "${TAG}" "${TAG}"
 
 echo "### Pushing commit and tag to vimr repository"
 git push origin HEAD:"${BRANCH}"
-git push origin "${TAG_NAME}"
+git push origin "${TAG}"
 
 pushd neovim
 
 echo "### Tagging neovim"
-git tag -a -m "vimr/${TAG_NAME}" "vimr/${TAG_NAME}"
+git tag -a -m "vimr/${TAG}" "vimr/${TAG}"
 
 echo "### Pushing tag to neovim repository"
-git push origin "vimr/${TAG_NAME}"
+git push origin "vimr/${TAG}"
 
 popd neovim
