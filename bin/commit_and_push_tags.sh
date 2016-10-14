@@ -16,9 +16,9 @@ echo git push origin "${COMPOUND_VERSION}"
 pushd neovim
 
 echo "### Tagging neovim"
-git tag -a -m "${COMPOUND_VERSION}" "${COMPOUND_VERSION}"
+git tag -a -m "vimr/${COMPOUND_VERSION}" "vimr/${COMPOUND_VERSION}"
 
 echo "### Pushing tag to neovim repository"
-echo git push origin "${COMPOUND_VERSION}"
+echo git push origin "vimr/${COMPOUND_VERSION}"
 
 popd neovim

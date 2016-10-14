@@ -1,13 +1,16 @@
 #!/bin/bash
 
+# For jenkins
+
 set -e
 
 export PATH=/usr/local/bin:$PATH
 
 # # parameters
-BRANCH=$1
-IS_SNAPSHOT=$2
-MARKETING_VERSION=$3
+# - BRANCH
+# - IS_SNAPSHOT
+# - MARKETING_VERSION
+# - RELEASE_NOTES
 
 ./bin/prepare_repositories.sh
 ./bin/clean_old_builds.sh
@@ -21,13 +24,6 @@ if [ ${IS_SNAPSHOT} = true ] ; then
     COMPOUND_VERSION="v${MARKETING_VERSION}-${BUNDLE_VERSION}"
 fi
 
-#./bin/commit_and_push_tags.sh "${BRANCH}" "${COMPOUND_VERSION}"
+./bin/commit_and_push_tags.sh "${BRANCH}" "${COMPOUND_VERSION}"
 
-exit 0
-
-pushd build/Release
-
-VIMR_FILE_NAME="VimR-${COMPOUND_VERSION}.tar.bz2"
-tar cjf "${VIMR_FILE_NAME}" VimR.app
-
-popd
+./bin/create_github_release.sh "${COMPOUND_VERSION}" "${RELEASE_NOTES}"
