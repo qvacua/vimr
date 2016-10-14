@@ -11,11 +11,11 @@
       <description><![CDATA[
     ${release_notes}
   ]]></description>
-      <sparkle:releaseNotesLink>
+      <releaseNotesLink>
         ${release_notes_link}
-      </sparkle:releaseNotesLink>
+      </releaseNotesLink>
       <pubDate>${publication_date}</pubDate>
-      <sparkle:minimumSystemVersion>10.11.0</sparkle:minimumSystemVersion>
+      <minimumSystemVersion>10.11.0</minimumSystemVersion>
       <enclosure url="${file_url}"
                  sparkle:version="${bundle_version}"
                  sparkle:shortVersionString="${marketing_version}"

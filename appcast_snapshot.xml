@@ -11,11 +11,11 @@
       <description><![CDATA[
 This is the last version of VimR with MacVim backend.
   ]]></description>
-      <sparkle:releaseNotesLink>
+      <releaseNotesLink>
         https://github.com/qvacua/vimr/releases/tag/v0.8.0-32
-      </sparkle:releaseNotesLink>
+      </releaseNotesLink>
       <pubDate>2014-07-30 20:40:11 +0000</pubDate>
-      <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
+      <minimumSystemVersion>10.9.0</minimumSystemVersion>
       <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.8.0-32/VimR-0.8.0.tar.bz2"
                  sparkle:version="32"
                  sparkle:shortVersionString="0.8.0"
