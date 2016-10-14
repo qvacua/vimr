@@ -5,6 +5,7 @@
 
 import Cocoa
 import RxSwift
+import Sparkle
 
 struct PrefData {
   var general: GeneralPrefData
@@ -24,6 +25,7 @@ private class PrefKeys {
   static let editorFontSize = "editor-font-size"
   static let editorUsesLigatures = "editor-uses-ligatures"
 
+  static let useSnapshotUpdateChannel = "use-snapshot-update-channel"
   static let useInteractiveZsh = "use-interactive-zsh"
 
   static let isAllToolsVisible = "is-all-tools-visible"
@@ -49,7 +51,8 @@ class PrefStore: StandardFlow {
                              openNewWindowOnReactivation: true,
                              ignorePatterns: Set([ "*/.git", "*.o", "*.d", "*.dia" ].map(FileItemIgnorePattern.init))),
     appearance: AppearancePrefData(editorFont: PrefStore.defaultEditorFont, editorUsesLigatures: false),
-    advanced: AdvancedPrefData(useInteractiveZsh: false),
+    advanced: AdvancedPrefData(useSnapshotUpdateChannel: false,
+                               useInteractiveZsh: false),
     mainWindow: MainWindowPrefData(isAllToolsVisible: true,
                                    isToolButtonsVisible: true,
                                    isFileBrowserVisible: true,
@@ -63,6 +66,12 @@ class PrefStore: StandardFlow {
       self.data = self.prefDataFromDict(prefs)
     } else {
       self.userDefaults.setValue(self.prefsDict(self.data), forKey: PrefStore.compatibleVersion)
+    }
+
+    if self.data.advanced.useSnapshotUpdateChannel {
+      SUUpdater.shared().feedURL = URL(
+        string: "https://raw.githubusercontent.com/qvacua/vimr/master/appcast_staging.xml"
+      )
     }
   }
 
@@ -81,6 +90,7 @@ class PrefStore: StandardFlow {
     let ignorePatternsList = (prefs[PrefKeys.openQuicklyIgnorePatterns] as? String) ?? "*/.git, *.o, *.d, *.dia"
     let ignorePatterns = PrefUtils.ignorePatterns(fromString: ignorePatternsList)
 
+    let useSnapshotUpdate = self.bool(from: prefs, for: PrefKeys.useSnapshotUpdateChannel, default: false)
     let useInteractiveZsh = self.bool(from: prefs, for: PrefKeys.useInteractiveZsh, default: false)
 
     let isAllToolsVisible = self.bool(from: prefs, for: PrefKeys.isAllToolsVisible, default: true)
@@ -95,7 +105,8 @@ class PrefStore: StandardFlow {
         ignorePatterns: ignorePatterns
       ),
       appearance: AppearancePrefData(editorFont: editorFont, editorUsesLigatures: usesLigatures),
-      advanced: AdvancedPrefData(useInteractiveZsh: useInteractiveZsh),
+      advanced: AdvancedPrefData(useSnapshotUpdateChannel: useSnapshotUpdate,
+                                 useInteractiveZsh: useInteractiveZsh),
       mainWindow: MainWindowPrefData(isAllToolsVisible: isAllToolsVisible,
                                      isToolButtonsVisible: isToolButtonsVisible,
                                      isFileBrowserVisible: isFileBrowserVisible,
@@ -140,6 +151,7 @@ class PrefStore: StandardFlow {
       PrefKeys.editorUsesLigatures: appearanceData.editorUsesLigatures as Any,
 
       // Advanced
+      PrefKeys.useSnapshotUpdateChannel: advancedData.useSnapshotUpdateChannel as Any,
       PrefKeys.useInteractiveZsh: advancedData.useInteractiveZsh as Any,
 
       // MainWindow
