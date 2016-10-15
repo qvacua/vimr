@@ -7,20 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.9.0-SNAPSHOT-20161015.1036-105</title>
+      <title>v0.9.0-SNAPSHOT-20161015.2319-106</title>
       <description><![CDATA[
-    <p>This is a test build. Do not use.</p>
+    <ul>
+<li>GH-220: Add automatic update using Sparkle. If you want to notified about the snapshot builds, turn on "Use Snapshot Update Channel" under the "Advanced" preferences pane.</li>
+</ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.9.0-SNAPSHOT-20161015.1036-105
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.9.0-SNAPSHOT-20161015.2319-106
       </releaseNotesLink>
-      <pubDate>2016-10-15T10:41:09.847970</pubDate>
+      <pubDate>2016-10-15T23:25:14.163031</pubDate>
       <minimumSystemVersion>10.11.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.9.0-SNAPSHOT-20161015.1036-105/VimR-v0.9.0-SNAPSHOT-20161015.1036-105.tar.bz2"
-                 sparkle:version="105"
-                 sparkle:shortVersionString="0.9.0-SNAPSHOT-20161015.1036"
-                 sparkle:dsaSignature="MC0CFBAOAmJhpbwQZGHVOHOq7wI7AAF0AhUAvRIQsePoz9eeZu6u8BHuPjG9AS0="
-                 length="8900829"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.9.0-SNAPSHOT-20161015.2319-106/VimR-v0.9.0-SNAPSHOT-20161015.2319-106.tar.bz2"
+                 sparkle:version="106"
+                 sparkle:shortVersionString="0.9.0-SNAPSHOT-20161015.2319"
+                 sparkle:dsaSignature="MCwCFDiq90oNpV4gra/eNK2xZ/e6Ptz1AhQnuHJV2KrqnB+irXQnC/WKdWlgyg=="
+                 length="8898795"
                  type="application/octet-stream"/>
     </item>
   </channel>
