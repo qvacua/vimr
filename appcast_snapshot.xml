@@ -7,20 +7,20 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.9.0-alpha1-104</title>
+      <title>v0.9.0-SNAPSHOT-20161015.1036-105</title>
       <description><![CDATA[
     <p>This is a test build. Do not use.</p>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.9.0-alpha1-104
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.9.0-SNAPSHOT-20161015.1036-105
       </releaseNotesLink>
-      <pubDate>2016-10-15T10:29:59.984288</pubDate>
+      <pubDate>2016-10-15T10:41:09.847970</pubDate>
       <minimumSystemVersion>10.11.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.9.0-alpha1-104/VimR-v0.9.0-alpha1-104.tar.bz2"
-                 sparkle:version="104"
-                 sparkle:shortVersionString="0.9.0-alpha1"
-                 sparkle:dsaSignature="MCwCFHNnzxU8vEejWeteJwHSuDGT8FRNAhQgWxUA/61FfA6cpqhy69E2ZXFy4w=="
-                 length="8900652"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.9.0-SNAPSHOT-20161015.1036-105/VimR-v0.9.0-SNAPSHOT-20161015.1036-105.tar.bz2"
+                 sparkle:version="105"
+                 sparkle:shortVersionString="0.9.0-SNAPSHOT-20161015.1036"
+                 sparkle:dsaSignature="MC0CFBAOAmJhpbwQZGHVOHOq7wI7AAF0AhUAvRIQsePoz9eeZu6u8BHuPjG9AS0="
+                 length="8900829"
                  type="application/octet-stream"/>
     </item>
   </channel>
