@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "### Building VimR"
+echo "### Building VimR target"
 
 # Build NeoVim
 # 0. Delete previously built things
@@ -27,7 +27,7 @@ make libnvim
 
 popd
 
-echo "### Building vimr target"
+echo "### Xcodebuilding"
 xcodebuild CODE_SIGN_IDENTITY="Developer ID Application: Tae Won Ha (H96Q2NKTQH)" -configuration Release -target VimR
 
-echo "### Built VimR"
+echo "### Built VimR target"
