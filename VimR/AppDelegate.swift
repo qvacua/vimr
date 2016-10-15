@@ -6,6 +6,7 @@
 import Cocoa
 import RxSwift
 import PureLayout
+import Sparkle
 
 /// Keep the rawValues in sync with Action in the `vimr` Python script.
 private enum VimRUrlAction: String {
@@ -19,6 +20,7 @@ private enum VimRUrlAction: String {
 class AppDelegate: NSObject, NSApplicationDelegate {
 
   @IBOutlet var debugMenu: NSMenuItem?
+  @IBOutlet var updater: SUUpdater?
 
   fileprivate static let filePrefix = "file="
   fileprivate static let cwdPrefix = "cwd="
@@ -75,6 +77,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         })
       .addDisposableTo(self.disposeBag)
 
+    self.prefStore.sink
+      .filter { $0 is PrefData }
+      .map { $0 as! PrefData }
+      .subscribe(onNext: { [unowned self] prefData in
+        self.setSparkleUrl()
+        })
+      .addDisposableTo(self.disposeBag)
+
+    self.setSparkleUrl()
+
     let changeFlows: [Flow] = [ self.prefStore, self.fileItemService ]
     let actionFlows: [Flow] = [ self.prefWindowComponent, self.mainWindowManager ]
 
@@ -89,6 +101,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       .toMergedObservables()
       .subscribe(self.actionSubject)
       .addDisposableTo(self.disposeBag)
+  }
+
+  fileprivate func setSparkleUrl() {
+    DispatchUtils.gui {
+      if self.prefStore.data.advanced.useSnapshotUpdateChannel {
+        self.updater?.feedURL = URL(
+          string: "https://raw.githubusercontent.com/qvacua/vimr/master/appcast_snapshot.xml"
+        )
+      } else {
+        self.updater?.feedURL = URL(
+          string: "https://raw.githubusercontent.com/qvacua/vimr/master/appcast.xml"
+        )
+      }
+    }
   }
 }
 

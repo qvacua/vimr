@@ -15,6 +15,7 @@
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="VimR" customModuleProvider="target">
             <connections>
                 <outlet property="debugMenu" destination="RmS-Zn-Snd" id="anN-h2-97s"/>
+                <outlet property="updater" destination="S3g-Zj-cVf" id="SRv-ky-Arj"/>
             </connections>
         </customObject>
         <customObject id="S3g-Zj-cVf" customClass="SUUpdater"/>
