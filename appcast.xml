@@ -7,20 +7,20 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.8.0-32</title>
+      <title>v0.9.0-alpha3-101</title>
       <description><![CDATA[
-This is the last version of VimR with MacVim backend.
+    <p>Ignore this build!</p>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.8.0-32
+        https://github.com/qvacua/vimr/releases/tag/v0.9.0-alpha3-101
       </releaseNotesLink>
-      <pubDate>2014-07-30 20:40:11 +0000</pubDate>
-      <minimumSystemVersion>10.9.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.8.0-32/VimR-0.8.0.tar.bz2"
-                 sparkle:version="32"
-                 sparkle:shortVersionString="0.8.0"
-                 sparkle:dsaSignature="MC0CFEER9vhbxAWQKY9Da8J3TECHHp/pAhUA1HB3l3SXXCv59+1/ZUK2l0b5jlU="
-                 length="8902573"
+      <pubDate>2016-10-15T09:42:19.706634</pubDate>
+      <minimumSystemVersion>10.11.0</minimumSystemVersion>
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.9.0-alpha3-101/VimR-v0.9.0-alpha3-101.tar.bz2"
+                 sparkle:version="101"
+                 sparkle:shortVersionString="0.9.0-alpha3"
+                 sparkle:dsaSignature="MC0CFBYzCdhjwJLSmGLlqh39/2VZVyJaAhUAxilkOu7UpwcdWZDtRghPg1EqsF4="
+                 length="881"
                  type="application/octet-stream"/>
     </item>
   </channel>
