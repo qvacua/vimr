@@ -5,7 +5,6 @@
 
 import Cocoa
 import RxSwift
-import Sparkle
 
 struct PrefData {
   var general: GeneralPrefData

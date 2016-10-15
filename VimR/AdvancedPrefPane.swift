@@ -64,7 +64,7 @@ class AdvancedPrefPane: PrefPane {
                            action: #selector(AdvancedPrefPane.useSnapshotUpdateChannelAction(_:)))
 
     let useSnapshotUpdateInfo = self.infoTextField(
-      text: "If you are adventurous and want to live on the bleeding-edge, check this.\n"
+      text: "If you are adventurous, check this.\n"
         + "You'll be test driving the newest snapshot builds of VimR in no time!"
     )
 
