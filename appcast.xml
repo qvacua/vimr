@@ -7,19 +7,19 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.9.0-alpha3-101</title>
+      <title>v0.9.0-alpha5-102</title>
       <description><![CDATA[
     <p>Ignore this build!</p>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.9.0-alpha3-101
+        https://github.com/qvacua/vimr/releases/tag/v0.9.0-alpha5-102
       </releaseNotesLink>
-      <pubDate>2016-10-15T09:42:19.706634</pubDate>
+      <pubDate>2016-10-15T09:50:35.251769</pubDate>
       <minimumSystemVersion>10.11.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.9.0-alpha3-101/VimR-v0.9.0-alpha3-101.tar.bz2"
-                 sparkle:version="101"
-                 sparkle:shortVersionString="0.9.0-alpha3"
-                 sparkle:dsaSignature="MC0CFBYzCdhjwJLSmGLlqh39/2VZVyJaAhUAxilkOu7UpwcdWZDtRghPg1EqsF4="
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.9.0-alpha5-102/VimR-v0.9.0-alpha5-102.tar.bz2"
+                 sparkle:version="102"
+                 sparkle:shortVersionString="0.9.0-alpha5"
+                 sparkle:dsaSignature="MC0CFQDKmr25UI5NK85Aenu6G/2BLuRaeQIURsBAF68fa77rGtDtRCBxu1LOU6U="
                  length="881"
                  type="application/octet-stream"/>
     </item>
