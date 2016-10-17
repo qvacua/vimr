@@ -26,7 +26,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
   fileprivate(set) var flatFileItems = [FileItem]()
   fileprivate(set) var fileViewItems = [ScoredFileItem]()
 
-  fileprivate let userInitiatedScheduler = ConcurrentDispatchQueueScheduler(globalConcurrentQueueQOS: .userInitiated)
+  fileprivate let userInitiatedScheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
   
   fileprivate let searchField = NSTextField(forAutoLayout: ())
   fileprivate let progressIndicator = NSProgressIndicator(forAutoLayout: ())
