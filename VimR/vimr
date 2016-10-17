@@ -13,15 +13,19 @@ def call_open(arg, dry_run=False):
         subprocess.call(["/usr/bin/open", arg])
 
 
+def abspath(path):
+    return os.path.abspath(os.path.expanduser(path))
+
+
 def vimr(action, args=None, dry_run=False):
     files = args.file
 
     query_params = {
-        "cwd": args.cwd or os.getcwd()
+        "cwd": abspath(args.cwd) or os.getcwd()
     }
 
     if files:
-        query_params["file"] = [os.path.abspath(f) for f in files]
+        query_params["file"] = [abspath(f) for f in files]
 
     url = "vimr://{0}?{1}".format(action, urllib.urlencode(query_params, True).replace('+', '%20'))
     call_open(url, dry_run)
