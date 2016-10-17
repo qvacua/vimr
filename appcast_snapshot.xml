@@ -7,22 +7,24 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.9.0-SNAPSHOT-20161015.2319-106</title>
+      <title>v0.9.0-SNAPSHOT-20161017.2152-107</title>
       <description><![CDATA[
     <ul>
-<li>GH-220: Add automatic update using Sparkle. If you want to notified about the snapshot builds, turn on "Use Snapshot Update Channel" under the "Advanced" preferences pane.</li>
+<li>GH-306: Fix path expansion in the command line tool <code>vimr</code>. You have to re-install the command line tool <code>vimr</code> from the General preferences.</li>
+<li>Update RxSwift to 3.0.0-rc.1</li>
+<li>Update NeoVim to neovim/neovim@869a9078e189ed14284fee7c341d669d8a4611d5</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.9.0-SNAPSHOT-20161015.2319-106
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.9.0-SNAPSHOT-20161017.2152-107
       </releaseNotesLink>
-      <pubDate>2016-10-15T23:25:14.163031</pubDate>
+      <pubDate>2016-10-17T21:58:15.212158</pubDate>
       <minimumSystemVersion>10.11.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.9.0-SNAPSHOT-20161015.2319-106/VimR-v0.9.0-SNAPSHOT-20161015.2319-106.tar.bz2"
-                 sparkle:version="106"
-                 sparkle:shortVersionString="0.9.0-SNAPSHOT-20161015.2319"
-                 sparkle:dsaSignature="MCwCFDiq90oNpV4gra/eNK2xZ/e6Ptz1AhQnuHJV2KrqnB+irXQnC/WKdWlgyg=="
-                 length="8898795"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.9.0-SNAPSHOT-20161017.2152-107/VimR-v0.9.0-SNAPSHOT-20161017.2152-107.tar.bz2"
+                 sparkle:version="107"
+                 sparkle:shortVersionString="0.9.0-SNAPSHOT-20161017.2152"
+                 sparkle:dsaSignature="MCwCFDY+1DVBM0qoJGQ2aZCHwJdMtWOhAhQf0fde0Z7MHSpG7GpWhWiaQ26riA=="
+                 length="8901834"
                  type="application/octet-stream"/>
     </item>
   </channel>
