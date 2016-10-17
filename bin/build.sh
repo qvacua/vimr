@@ -17,7 +17,7 @@ echo "### Building VimR"
 ./bin/prepare_repositories.sh
 ./bin/clean_old_builds.sh
 ./bin/set_new_versions.sh ${IS_SNAPSHOT} "${MARKETING_VERSION}"
-./bin/build_vimr.sh
+./bin/build_vimr.sh true
 
 BUNDLE_VERSION=$(agvtool what-version | sed '2q;d' | sed -E 's/ +(.+)/\1/')
 MARKETING_VERSION=$(agvtool what-marketing-version | tail -n 1 | sed -E 's/.*of "(.*)" in.*/\1/')

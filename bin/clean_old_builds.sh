@@ -10,7 +10,4 @@ rm -rf build
 make distclean
 popd
 
-echo "### Updating carthage"
-carthage update --platform osx
-
 echo "### Cleaned old builds"

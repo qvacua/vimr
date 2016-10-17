@@ -1,5 +1,7 @@
 #!/bin/bash
 
+CODE_SIGN=$1
+
 echo "### Building VimR target"
 
 # Build NeoVim
@@ -27,7 +29,15 @@ make libnvim
 
 popd
 
+echo "### Updating carthage"
+carthage update --platform osx
+
 echo "### Xcodebuilding"
-xcodebuild CODE_SIGN_IDENTITY="Developer ID Application: Tae Won Ha (H96Q2NKTQH)" -configuration Release -target VimR
+
+if [ "${CODE_SIGN}" = true ] ; then
+    xcodebuild CODE_SIGN_IDENTITY="Developer ID Application: Tae Won Ha (H96Q2NKTQH)" -configuration Release -target VimR
+else
+    xcodebuild -configuration Release -target VimR
+fi
 
 echo "### Built VimR target"
