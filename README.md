@@ -70,21 +70,14 @@ We will gradually create [issues](https://github.com/qvacua/vimr/issues) with mo
 
 ## How to Build
 
-You have to use Xcode 8. First install `homebrew`, then:
+You have to use Xcode 8. First install `homebrew`, then in the project root:
 
 ```bash
 xcode-select --install # install the Xcode command line tools
 brew install carthage # install Carthage for dependency management
 brew install libtool automake cmake pkg-config gettext ninja # install libs and tools for neovim
 
-carthage update --platform osx
-
-git submodule update --init
-cd neovim
-ln -s ../local.mk local.mk
-cd ..
-
-xcodebuild -configuration Release -target VimR # VimR.app will be placed in build/Release
+./bin/build_vimr.sh # VimR.app will be placed in build/Release
 ```
 
 If you encounter `/usr/local/Library/ENV/4.3/sed: No such file or directory`, then try the following:
