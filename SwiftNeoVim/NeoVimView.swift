@@ -83,6 +83,13 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
   override public var acceptsFirstResponder: Bool {
     return true
   }
+
+  fileprivate static let emojis: [UInt32] = [
+    0x1F600...0x1F64F,
+    0x1F910...0x1F918,
+    0x1F980...0x1F984,
+    0x1F9C0...0x1F9C0
+    ].flatMap { $0 }
   
   fileprivate var _font = NeoVimView.defaultFont
 
@@ -124,6 +131,14 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
   fileprivate var pinchImage = NSImage()
 
   fileprivate var currentlyResizing = false
+  fileprivate var currentEmoji = "😎"
+  fileprivate let emojiAttrs = [
+    NSFontAttributeName: NSFont(name: "AppleColorEmoji", size: 72)!
+  ]
+  fileprivate let resizeTextAttrs = [
+    NSFontAttributeName: NSFont.systemFont(ofSize: 18),
+    NSForegroundColorAttributeName: NSColor.darkGray
+  ]
 
   public init(frame rect: NSRect, config: Config) {
     self.drawer = TextDrawer(font: self._font, useLigatures: false)
@@ -298,6 +313,8 @@ extension NeoVimView {
   }
 
   fileprivate func resizeNeoVimUiTo(size: CGSize) {
+    self.currentEmoji = self.randomEmoji()
+
 //    NSLog("\(#function): \(size)")
     let discreteSize = self.discreteSize(size: size)
 
@@ -330,16 +347,21 @@ extension NeoVimView {
       dirtyUnionRect.fill()
       
       let boundsSize = self.bounds.size
+
+      let emojiSize = self.currentEmoji.size(withAttributes: self.emojiAttrs)
+      let emojiX = (boundsSize.width - emojiSize.width) / 2
+      let emojiY = (boundsSize.height - emojiSize.height) / 2
+
       let discreteSize = self.discreteSize(size: boundsSize)
-      
       let displayStr = "\(discreteSize.width) × \(discreteSize.height)"
-      let attrs = [ NSFontAttributeName: NSFont.systemFont(ofSize: 24) ]
-      
-      let size = displayStr.size(withAttributes: attrs)
+
+      let size = displayStr.size(withAttributes: self.resizeTextAttrs)
       let x = (boundsSize.width - size.width) / 2
-      let y = (boundsSize.height - size.height) / 2
-      
-      displayStr.draw(at: CGPoint(x: x, y: y), withAttributes: attrs)
+      let y = emojiY - size.height
+
+      self.currentEmoji.draw(at: CGPoint(x: emojiX, y: emojiY), withAttributes: self.emojiAttrs)
+      displayStr.draw(at: CGPoint(x: x, y: y), withAttributes: self.resizeTextAttrs)
+
       return
     }
 
@@ -362,6 +384,15 @@ extension NeoVimView {
 
     self.rowRunIntersecting(rects: dirtyRects).forEach { self.draw(rowRun: $0, context: context) }
     self.drawCursor(context: context)
+  }
+
+  fileprivate func randomEmoji() -> String {
+    let idx = Int(arc4random_uniform(UInt32(NeoVimView.emojis.count)))
+    guard let scalar = UnicodeScalar(NeoVimView.emojis[idx]) else {
+      return "😎"
+    }
+
+    return String(scalar)
   }
 
   fileprivate func draw(rowRun rowFrag: RowRun, context: CGContext) {
