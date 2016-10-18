@@ -20,8 +20,12 @@ def abspath(path):
 def vimr(action, args=None, dry_run=False):
     files = args.file
 
+    cwd = os.getcwd()
+    if args.cwd is not None:
+        cwd = abspath(args.cwd)
+
     query_params = {
-        "cwd": abspath(args.cwd) or os.getcwd()
+        "cwd": cwd
     }
 
     if files:
