@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 BRANCH=$1
 COMPOUND_VERSION=$2
 IS_SNAPSHOT=$3

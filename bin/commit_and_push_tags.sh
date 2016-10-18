@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 BRANCH=$1
 TAG=$2
 

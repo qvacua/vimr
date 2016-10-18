@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 COMPOUND_VERSION=$1
 TAG=$2
 VIMR_FILE_NAME=$3

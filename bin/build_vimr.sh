@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 CODE_SIGN=$1
 
 echo "### Building VimR target"
@@ -17,8 +19,7 @@ rm -rf build
 make clean
 
 echo "### Building nvim to get the runtime folder"
-make CMAKE_FLAGS="-DCUSTOM_UI=0"
-make CMAKE_FLAGS="-DCMAKE_INSTALL_PREFIX=/tmp/nvim" install
+make CMAKE_FLAGS="-DCUSTOM_UI=0 -DCMAKE_INSTALL_PREFIX=/tmp/nvim" install
 cp -r /tmp/nvim/share/nvim/runtime .
 
 rm -rf build

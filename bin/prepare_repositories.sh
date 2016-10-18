@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 echo "### Preparing repositories"
 
 # delete all (local) tags
