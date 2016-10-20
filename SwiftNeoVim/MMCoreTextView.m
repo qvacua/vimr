@@ -9,7 +9,7 @@
  */
 
 /**
- * Extracted from snapshot-106 of MacVim
+ * Extracted from snapshot-112 of MacVim
  * https://github.com/macvim-dev/macvim
  * See VIM.LICENSE
  */
