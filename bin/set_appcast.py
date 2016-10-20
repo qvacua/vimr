@@ -4,6 +4,7 @@
 # pip install Markdown
 
 import os
+import io
 import sys
 import subprocess
 import requests
@@ -56,9 +57,8 @@ appcast = appcast_template.substitute(
 
 appcast_file_name = 'appcast_snapshot.xml' if is_snapshot else 'appcast.xml'
 
-appcast_file = open('build/Release/{0}'.format(appcast_file_name), 'w+')
-appcast_file.write(appcast)
-appcast_file.close()
+with io.open('build/Release/{0}'.format(appcast_file_name), 'w+') as appcast_file:
+    appcast_file.write(appcast)
 
 print('--------------------------------')
 print(appcast.strip())
