@@ -7,20 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.9.0-SNAPSHOT-20161018.1801-110</title>
+      <title>v0.9.0-SNAPSHOT-20161020.2036-111</title>
       <description><![CDATA[
-    <p>GH-306: Fix <code>vimr</code> command line tool. Re-install it in the General preferences pane after updating VimR.</p>
+    <ul>
+<li>Added some Emojis somewhere 😆</li>
+<li>Probably the last snapshot before the 0.9.0 release</li>
+</ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.9.0-SNAPSHOT-20161018.1801-110
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.9.0-SNAPSHOT-20161020.2036-111
       </releaseNotesLink>
-      <pubDate>2016-10-18T18:10:51.358302</pubDate>
+      <pubDate>2016-10-20T20:58:12.032129</pubDate>
       <minimumSystemVersion>10.11.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.9.0-SNAPSHOT-20161018.1801-110/VimR-v0.9.0-SNAPSHOT-20161018.1801-110.tar.bz2"
-                 sparkle:version="110"
-                 sparkle:shortVersionString="0.9.0-SNAPSHOT-20161018.1801"
-                 sparkle:dsaSignature="MC0CFQDiaCaYZwIJE9RtqwLPVyFLTCRrzQIUd3rIArxTn+HQiiq7lU9rFCjW4zA="
-                 length="8904453"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.9.0-SNAPSHOT-20161020.2036-111/VimR-v0.9.0-SNAPSHOT-20161020.2036-111.tar.bz2"
+                 sparkle:version="111"
+                 sparkle:shortVersionString="0.9.0-SNAPSHOT-20161020.2036"
+                 sparkle:dsaSignature="MC4CFQCSGsT+1hVeuVqaIUZTCz1FLewPwwIVAOX2yCgFT8X12b13NlW1oMjtWZGs"
+                 length="8902946"
                  type="application/octet-stream"/>
     </item>
   </channel>
