@@ -7,23 +7,28 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.9.0-SNAPSHOT-20161020.2036-111</title>
+      <title>v0.9.0-112</title>
       <description><![CDATA[
-    <ul>
-<li>Added some Emojis somewhere 😆</li>
-<li>Probably the last snapshot before the 0.9.0 release</li>
+    <h2>First release of VimR with NeoVim backend</h2>
+<ul>
+<li>NeoVim rulez! 😆 (neovim/neovim@5bcb7aa8bf75966416f2df5a838e5cb71d439ae7)</li>
+<li>Pinch to zoom in or out</li>
+<li>Simple file browser</li>
+<li>Open quickly a la Xcode</li>
+<li>Ligatures support</li>
+<li>Command line tool</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.9.0-SNAPSHOT-20161020.2036-111
+        https://github.com/qvacua/vimr/releases/tag/v0.9.0-112
       </releaseNotesLink>
-      <pubDate>2016-10-20T20:58:12.032129</pubDate>
+      <pubDate>2016-10-21T23:16:09.959684</pubDate>
       <minimumSystemVersion>10.11.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.9.0-SNAPSHOT-20161020.2036-111/VimR-v0.9.0-SNAPSHOT-20161020.2036-111.tar.bz2"
-                 sparkle:version="111"
-                 sparkle:shortVersionString="0.9.0-SNAPSHOT-20161020.2036"
-                 sparkle:dsaSignature="MC4CFQCSGsT+1hVeuVqaIUZTCz1FLewPwwIVAOX2yCgFT8X12b13NlW1oMjtWZGs"
-                 length="8902946"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.9.0-112/VimR-v0.9.0-112.tar.bz2"
+                 sparkle:version="112"
+                 sparkle:shortVersionString="0.9.0"
+                 sparkle:dsaSignature="MC0CFQCeS5M0WeT+fIYvFaEK4O9AyjYU6gIUdyR8I+CA1mahnM8CzbwiEG8/sr4="
+                 length="8904754"
                  type="application/octet-stream"/>
     </item>
   </channel>
