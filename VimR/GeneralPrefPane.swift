@@ -168,7 +168,7 @@ class GeneralPrefPane: PrefPane, NSTextFieldDelegate {
     let wikiUrl = URL(string: "https://github.com/qvacua/vimr/wiki")!
     let linkStr = NSAttributedString.link(withUrl: wikiUrl, text: "VimR Wiki", font: font)
     let str = "Comma-separated list of ignore patterns\n"
-        + "Matching files will be ignored in \"Open Quickly\".\n"
+        + "Matching files will be ignored in \"Open Quickly\" and the file browser.\n"
         + "Example: */.git, */node_modules\n"
         + "For detailed information see "
     
