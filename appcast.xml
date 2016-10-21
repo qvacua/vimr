@@ -7,20 +7,28 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.9.0-alpha1-104</title>
+      <title>v0.9.0-112</title>
       <description><![CDATA[
-    <p>This is a test build. Do not use.</p>
+    <h2>First release of VimR with NeoVim backend</h2>
+<ul>
+<li>NeoVim rulez! 😆 (neovim/neovim@5bcb7aa8bf75966416f2df5a838e5cb71d439ae7)</li>
+<li>Pinch to zoom in or out</li>
+<li>Simple file browser</li>
+<li>Open quickly a la Xcode</li>
+<li>Ligatures support</li>
+<li>Command line tool</li>
+</ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.9.0-alpha1-104
+        https://github.com/qvacua/vimr/releases/tag/v0.9.0-112
       </releaseNotesLink>
-      <pubDate>2016-10-15T10:29:59.984288</pubDate>
+      <pubDate>2016-10-21T23:16:09.959684</pubDate>
       <minimumSystemVersion>10.11.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.9.0-alpha1-104/VimR-v0.9.0-alpha1-104.tar.bz2"
-                 sparkle:version="104"
-                 sparkle:shortVersionString="0.9.0-alpha1"
-                 sparkle:dsaSignature="MCwCFHNnzxU8vEejWeteJwHSuDGT8FRNAhQgWxUA/61FfA6cpqhy69E2ZXFy4w=="
-                 length="8900652"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.9.0-112/VimR-v0.9.0-112.tar.bz2"
+                 sparkle:version="112"
+                 sparkle:shortVersionString="0.9.0"
+                 sparkle:dsaSignature="MC0CFQCeS5M0WeT+fIYvFaEK4O9AyjYU6gIUdyR8I+CA1mahnM8CzbwiEG8/sr4="
+                 length="8904754"
                  type="application/octet-stream"/>
     </item>
   </channel>
