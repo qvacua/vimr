@@ -43,7 +43,7 @@ download_url = release_json['assets'][0]['browser_download_url']
 release_notes_url = release_json['html_url']
 release_notes = release_json['body']
 
-appcast = appcast_template.substitute(
+appcast = unicode(appcast_template.substitute(
     title=title,
     release_notes=markdown.markdown(release_notes),
     release_notes_link=release_notes_url,
@@ -53,7 +53,7 @@ appcast = appcast_template.substitute(
     marketing_version=marketing_version,
     file_length=file_size,
     signature=file_signature
-)
+))
 
 appcast_file_name = 'appcast_snapshot.xml' if is_snapshot else 'appcast.xml'
 
