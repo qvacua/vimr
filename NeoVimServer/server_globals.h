@@ -3,7 +3,7 @@
  * See LICENSE
  */
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 
 @class NeoVimServer;

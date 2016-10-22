@@ -3,7 +3,8 @@
  * See LICENSE
  */
 
-#import <Foundation/Foundation.h>
+@import Foundation;
+
 #import "Logging.h"
 #import "server_globals.h"
 #import "NeoVimServer.h"
