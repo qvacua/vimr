@@ -31,7 +31,6 @@ typedef NS_ENUM(NSUInteger, NeoVimServerMsgId) {
   NeoVimServerMsgIdSetForeground,
   NeoVimServerMsgIdSetBackground,
   NeoVimServerMsgIdSetSpecial,
-  NeoVimServerMsgIdSuspend,
   NeoVimServerMsgIdSetTitle,
   NeoVimServerMsgIdSetIcon,
   NeoVimServerMsgIdDirtyStatusChanged,
