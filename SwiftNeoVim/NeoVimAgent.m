@@ -8,6 +8,7 @@
 #import "NeoVimUiBridgeProtocol.h"
 #import "Logger.h"
 #import "NeoVimBuffer.h"
+#import "NeoVimWindow.h"
 
 
 static const double qTimeout = 10;
@@ -239,6 +240,16 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetBuffers data:nil expectsReply:YES];
   if (response == nil) {
     log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetBuffers);
+    return @[];
+  }
+
+  return [NSKeyedUnarchiver unarchiveObjectWithData:response];
+}
+
+- (NSArray<NeoVimWindow *> *)tabs {
+  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetTabs data:nil expectsReply:YES];
+  if (response == nil) {
+    log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetTabs);
     return @[];
   }
 

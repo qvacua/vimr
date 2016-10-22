@@ -17,3 +17,5 @@ FOUNDATION_EXPORT const unsigned char SwiftNeoVimVersionString[];
 #import <SwiftNeoVim/NeoVimAgent.h>
 #import <SwiftNeoVim/NeoVimMsgIds.h>
 #import <SwiftNeoVim/NeoVimBuffer.h>
+#import <SwiftNeoVim/NeoVimTab.h>
+#import <SwiftNeoVim/NeoVimWindow.h>

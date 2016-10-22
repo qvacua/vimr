@@ -7,7 +7,7 @@
 
 @implementation NeoVimBuffer
 
-- (instancetype)initWithHandle:(NSUInteger)handle
+- (instancetype)initWithHandle:(NSInteger)handle
                       fileName:(NSString *)fileName
                          dirty:(bool)dirty
                        current:(bool)current {
@@ -28,7 +28,7 @@
   self = [super init];
   if (self) {
     NSNumber *objHandle = [coder decodeObjectForKey:@"handle"];
-    _handle = objHandle.unsignedIntegerValue;
+    _handle = objHandle.integerValue;
     _fileName = [coder decodeObjectForKey:@"fileName"];
     _isDirty = [coder decodeBoolForKey:@"dirty"];
     _isCurrent = [coder decodeBoolForKey:@"current"];
@@ -46,7 +46,7 @@
 
 - (NSString *)description {
   NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
-  [description appendFormat:@"self.handle=%lu", self.handle];
+  [description appendFormat:@"self.handle=%li", self.handle];
   [description appendFormat:@", self.fileName=%@", self.fileName];
   [description appendFormat:@", self.dirty=%d", self.isDirty];
   [description appendFormat:@", self.current=%d", self.isCurrent];
