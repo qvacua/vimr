@@ -4,6 +4,8 @@
 
 set -e
 
+# for utf-8 for python script
+export LC_CTYPE=en_US.UTF-8
 export PATH=/usr/local/bin:$PATH
 
 # # parameters
