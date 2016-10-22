@@ -18,8 +18,8 @@
 
   _handle = handle;
   _fileName = fileName;
-  _dirty = dirty;
-  _current = current;
+  _isDirty = dirty;
+  _isCurrent = current;
 
   return self;
 }
@@ -30,8 +30,8 @@
     NSNumber *objHandle = [coder decodeObjectForKey:@"handle"];
     _handle = objHandle.unsignedIntegerValue;
     _fileName = [coder decodeObjectForKey:@"fileName"];
-    _dirty = [coder decodeBoolForKey:@"dirty"];
-    _current = [coder decodeBoolForKey:@"current"];
+    _isDirty = [coder decodeBoolForKey:@"dirty"];
+    _isCurrent = [coder decodeBoolForKey:@"current"];
   }
 
   return self;
@@ -40,22 +40,22 @@
 - (void)encodeWithCoder:(NSCoder *)coder {
   [coder encodeObject:@(self.handle) forKey:@"handle"];
   [coder encodeObject:self.fileName forKey:@"fileName"];
-  [coder encodeBool:self.dirty forKey:@"dirty"];
-  [coder encodeBool:self.current forKey:@"current"];
+  [coder encodeBool:self.isDirty forKey:@"dirty"];
+  [coder encodeBool:self.isCurrent forKey:@"current"];
 }
 
 - (NSString *)description {
   NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
   [description appendFormat:@"self.handle=%lu", self.handle];
   [description appendFormat:@", self.fileName=%@", self.fileName];
-  [description appendFormat:@", self.dirty=%d", self.dirty];
-  [description appendFormat:@", self.current=%d", self.current];
+  [description appendFormat:@", self.dirty=%d", self.isDirty];
+  [description appendFormat:@", self.current=%d", self.isCurrent];
   [description appendString:@">"];
   return description;
 }
 
 - (bool)isTransient {
-  if (self.dirty) {
+  if (self.isDirty) {
     return NO;
   }
 

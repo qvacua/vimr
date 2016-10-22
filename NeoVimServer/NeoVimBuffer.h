@@ -11,9 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) NSUInteger handle;
 @property (nonatomic, retain, nullable) NSString *fileName;
-@property (nonatomic, readonly, getter=isDirty) bool dirty;
-@property (nonatomic, readonly, getter=isCurrent) bool current;
-@property (nonatomic, readonly, getter=isTransient) bool transient;
+@property (nonatomic, readonly) bool isDirty;
+@property (nonatomic, readonly) bool isCurrent;
+@property (nonatomic, readonly) bool isTransient;
 
 - (instancetype)initWithHandle:(NSUInteger)handle
                       fileName:(NSString * _Nullable)fileName
