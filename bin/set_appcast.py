@@ -21,7 +21,7 @@ file_path = sys.argv[1]
 bundle_version = sys.argv[2]
 marketing_version = sys.argv[3]
 tag_name = sys.argv[4]
-is_snapshot = True if sys.argv[5] == "true" else False
+is_snapshot = True if len(sys.argv) > 5 and sys.argv[5] == "true" else False
 
 file_size = os.stat(file_path).st_size
 file_signature = subprocess.check_output([SIGN_UPDATE, file_path, PRIVATE_KEY_PATH]).strip()
