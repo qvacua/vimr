@@ -14,6 +14,11 @@ export PATH=/usr/local/bin:$PATH
 # - MARKETING_VERSION
 # - RELEASE_NOTES
 
+echo "### Installing some python packages"
+
+pip install requests
+pip install Markdown
+
 echo "### Building VimR"
 
 ./bin/prepare_repositories.sh
