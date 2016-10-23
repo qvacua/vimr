@@ -14,8 +14,8 @@
       (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
         i[r] = i[r] || function () {
-          (i[r].q = i[r].q || []).push(arguments)
-        }, i[r].l = 1 * new Date();
+              (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
         a = s.createElement(o),
             m = s.getElementsByTagName(o)[0];
         a.async = 1;
@@ -43,16 +43,15 @@
   </div>
 
   <div class="download-button">
-    <a href="https://github.com/qvacua/vimr/releases"
+    <a href="https://github.com/qvacua/vimr/releases/tag/v0.9.0-112"
        class="btn btn-primary btn-lg btn-success" role="button"><i class="fa fa-download"></i> Download</a>
   </div>
 
   <div id="news">
     <em>UPDATE:</em> We recently, June 2016, started to migrate the VimR from MacVim backend to a NeoVim backend. We
-    experimented with NeoVim a bit and now we are confident enough
-    to
-    think that VimR can be backed by NeoVim. It will take some time though till the transition is complete. Bear with
-    us! If you want to try it out, download the latest <a href="https://github.com/qvacua/vimr/releases">pre-built package</a>.
+    experimented with NeoVim a bit and now we are confident enough to think that VimR can be backed by NeoVim. Try the
+    <a href="https://github.com/qvacua/vimr/releases/tag/v0.9.0-112">latest release</a> with NeoVim. If you want to live
+    dangerously, then you can download the <a href="https://github.com/qvacua/vimr/releases">snapshot builds</a>.
   </div>
 
   <div class="version-info">
@@ -87,8 +86,17 @@
         }(document, 'script', 'twitter-wjs');</script>
       </li>
       <li>
-        <a href="https://twitter.com/share" class="twitter-share-button" data-via="VimRefined" data-count="none" data-hashtags="vimr">Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+        <a href="https://twitter.com/share" class="twitter-share-button" data-via="VimRefined" data-count="none"
+           data-hashtags="vimr">Tweet</a>
+        <script>!function (d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+          if (!d.getElementById(id)) {
+            js = d.createElement(s);
+            js.id = id;
+            js.src = p + '://platform.twitter.com/widgets.js';
+            fjs.parentNode.insertBefore(js, fjs);
+          }
+        }(document, 'script', 'twitter-wjs');</script>
       </li>
       <li>
         <iframe src="http://ghbtns.com/github-btn.html?user=qvacua&repo=vimr&type=watch&count=true"
