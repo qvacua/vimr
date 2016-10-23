@@ -7,28 +7,26 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.9.0-112</title>
+      <title>v0.10.0-SNAPSHOT-20161023.2005-113</title>
       <description><![CDATA[
-    <h2>First release of VimR with NeoVim backend</h2>
-<ul>
-<li>NeoVim rulez! 😆 (neovim/neovim@5bcb7aa8bf75966416f2df5a838e5cb71d439ae7)</li>
-<li>Pinch to zoom in or out</li>
-<li>Simple file browser</li>
-<li>Open quickly a la Xcode</li>
-<li>Ligatures support</li>
-<li>Command line tool</li>
+    <ul>
+<li>GH-309: When opening a file via a GUI action, check whether the file is already open.<ul>
+<li>Open in a tab or split: select the tab/split</li>
+<li>Open in another (GUI) window: let NeoVim handle it.</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.9.0-112
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.10.0-SNAPSHOT-20161023.2005-113
       </releaseNotesLink>
-      <pubDate>2016-10-21T23:16:09.959684</pubDate>
+      <pubDate>2016-10-23T20:15:09.198887</pubDate>
       <minimumSystemVersion>10.11.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.9.0-112/VimR-v0.9.0-112.tar.bz2"
-                 sparkle:version="112"
-                 sparkle:shortVersionString="0.9.0"
-                 sparkle:dsaSignature="MC0CFQCeS5M0WeT+fIYvFaEK4O9AyjYU6gIUdyR8I+CA1mahnM8CzbwiEG8/sr4="
-                 length="8904754"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.10.0-SNAPSHOT-20161023.2005-113/VimR-v0.10.0-SNAPSHOT-20161023.2005-113.tar.bz2"
+                 sparkle:version="113"
+                 sparkle:shortVersionString="0.10.0-SNAPSHOT-20161023.2005"
+                 sparkle:dsaSignature="MC0CFQCSWRfSooxsIICJKd08vGbpAWnrxQIUY1zsYtOwOjwhnwd/6Q52eYHGzNo="
+                 length="8898384"
                  type="application/octet-stream"/>
     </item>
   </channel>
