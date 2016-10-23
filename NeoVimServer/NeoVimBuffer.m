@@ -7,7 +7,7 @@
 
 @implementation NeoVimBuffer
 
-- (instancetype)initWithHandle:(NSUInteger)handle
+- (instancetype)initWithHandle:(NSInteger)handle
                       fileName:(NSString *)fileName
                          dirty:(bool)dirty
                        current:(bool)current {
@@ -18,8 +18,8 @@
 
   _handle = handle;
   _fileName = fileName;
-  _dirty = dirty;
-  _current = current;
+  _isDirty = dirty;
+  _isCurrent = current;
 
   return self;
 }
@@ -28,34 +28,57 @@
   self = [super init];
   if (self) {
     NSNumber *objHandle = [coder decodeObjectForKey:@"handle"];
-    _handle = objHandle.unsignedIntegerValue;
+    _handle = objHandle.integerValue;
     _fileName = [coder decodeObjectForKey:@"fileName"];
-    _dirty = [coder decodeBoolForKey:@"dirty"];
-    _current = [coder decodeBoolForKey:@"current"];
+    _isDirty = [coder decodeBoolForKey:@"dirty"];
+    _isCurrent = [coder decodeBoolForKey:@"current"];
   }
 
   return self;
 }
 
+- (BOOL)isEqual:(id)other {
+  if (other == self)
+    return YES;
+  if (!other || ![[other class] isEqual:[self class]])
+    return NO;
+
+  return [self isEqualToBuffer:other];
+}
+
+- (BOOL)isEqualToBuffer:(NeoVimBuffer *)buffer {
+  if (self == buffer)
+    return YES;
+  if (buffer == nil)
+    return NO;
+  if (self.handle != buffer.handle)
+    return NO;
+  return YES;
+}
+
+- (NSUInteger)hash {
+  return (NSUInteger) self.handle;
+}
+
 - (void)encodeWithCoder:(NSCoder *)coder {
   [coder encodeObject:@(self.handle) forKey:@"handle"];
   [coder encodeObject:self.fileName forKey:@"fileName"];
-  [coder encodeBool:self.dirty forKey:@"dirty"];
-  [coder encodeBool:self.current forKey:@"current"];
+  [coder encodeBool:self.isDirty forKey:@"dirty"];
+  [coder encodeBool:self.isCurrent forKey:@"current"];
 }
 
 - (NSString *)description {
   NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
-  [description appendFormat:@"self.handle=%lu", self.handle];
+  [description appendFormat:@"self.handle=%li", self.handle];
   [description appendFormat:@", self.fileName=%@", self.fileName];
-  [description appendFormat:@", self.dirty=%d", self.dirty];
-  [description appendFormat:@", self.current=%d", self.current];
+  [description appendFormat:@", self.dirty=%d", self.isDirty];
+  [description appendFormat:@", self.current=%d", self.isCurrent];
   [description appendString:@">"];
   return description;
 }
 
 - (bool)isTransient {
-  if (self.dirty) {
+  if (self.isDirty) {
     return NO;
   }
 

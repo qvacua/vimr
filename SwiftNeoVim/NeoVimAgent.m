@@ -8,6 +8,7 @@
 #import "NeoVimUiBridgeProtocol.h"
 #import "Logger.h"
 #import "NeoVimBuffer.h"
+#import "NeoVimWindow.h"
 
 
 static const double qTimeout = 10;
@@ -224,6 +225,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   return [self escapedFileNames:@[ fileName ]][0];
 }
 
+- (void)selectWindow:(NeoVimWindow *)window {
+  int values[] = { (int) window.handle };
+  NSData *data = [[NSData alloc] initWithBytes:values length:sizeof(int)];
+  [self sendMessageWithId:NeoVimAgentMsgIdSelectWindow data:data expectsReply:NO];
+}
+
 - (NSArray <NSString *>*)escapedFileNames:(NSArray <NSString *>*)fileNames {
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:fileNames];
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetEscapeFileNames data:data expectsReply:YES];
@@ -239,6 +246,16 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetBuffers data:nil expectsReply:YES];
   if (response == nil) {
     log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetBuffers);
+    return @[];
+  }
+
+  return [NSKeyedUnarchiver unarchiveObjectWithData:response];
+}
+
+- (NSArray<NeoVimWindow *> *)tabs {
+  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetTabs data:nil expectsReply:YES];
+  if (response == nil) {
+    log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetTabs);
     return @[];
   }
 

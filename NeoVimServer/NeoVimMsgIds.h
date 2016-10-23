@@ -3,7 +3,7 @@
  * See LICENSE
  */
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 
 typedef NS_ENUM(NSUInteger, NeoVimServerMsgId) {
@@ -31,7 +31,6 @@ typedef NS_ENUM(NSUInteger, NeoVimServerMsgId) {
   NeoVimServerMsgIdSetForeground,
   NeoVimServerMsgIdSetBackground,
   NeoVimServerMsgIdSetSpecial,
-  NeoVimServerMsgIdSuspend,
   NeoVimServerMsgIdSetTitle,
   NeoVimServerMsgIdSetIcon,
   NeoVimServerMsgIdDirtyStatusChanged,
@@ -52,11 +51,13 @@ typedef NS_ENUM(NSUInteger, NeoVimAgentMsgId) {
   NeoVimAgentMsgIdInputMarked,
   NeoVimAgentMsgIdDelete,
   NeoVimAgentMsgIdResize,
+  NeoVimAgentMsgIdSelectWindow,
   NeoVimAgentMsgIdQuit,
 
   NeoVimAgentMsgIdGetDirtyDocs,
   NeoVimAgentMsgIdGetEscapeFileNames,
   NeoVimAgentMsgIdGetBuffers,
+  NeoVimAgentMsgIdGetTabs,
 
 #ifdef DEBUG
   NeoVimAgentDebug1,

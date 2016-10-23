@@ -3,19 +3,19 @@
  * See LICENSE
  */
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NeoVimBuffer : NSObject <NSCoding>
 
-@property (nonatomic, readonly) NSUInteger handle;
+@property (nonatomic, readonly) NSInteger handle;
 @property (nonatomic, retain, nullable) NSString *fileName;
-@property (nonatomic, readonly, getter=isDirty) bool dirty;
-@property (nonatomic, readonly, getter=isCurrent) bool current;
-@property (nonatomic, readonly, getter=isTransient) bool transient;
+@property (nonatomic, readonly) bool isDirty;
+@property (nonatomic, readonly) bool isCurrent;
+@property (nonatomic, readonly) bool isTransient;
 
-- (instancetype)initWithHandle:(NSUInteger)handle
+- (instancetype)initWithHandle:(NSInteger)handle
                       fileName:(NSString * _Nullable)fileName
                          dirty:(bool)dirty
                        current:(bool)current;
@@ -28,3 +28,11 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+@interface NeoVimBuffer (Equality)
+
+- (BOOL)isEqual:(id _Nullable)other;
+- (BOOL)isEqualToBuffer:(NeoVimBuffer * _Nullable)buffer;
+- (NSUInteger)hash;
+
+@end

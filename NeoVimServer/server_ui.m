@@ -3,12 +3,15 @@
  * See LICENSE
  */
 
-#import <Foundation/Foundation.h>
+@import Foundation;
+
 #import "Logging.h"
 #import "server_globals.h"
 #import "NeoVimServer.h"
 #import "NeoVimUiBridgeProtocol.h"
 #import "NeoVimBuffer.h"
+#import "NeoVimWindow.h"
+#import "NeoVimTab.h"
 #import "CocoaCategories.h"
 
 // FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
@@ -468,6 +471,18 @@ static void neovim_input(void **argv) {
   }
 }
 
+static void neovim_select_window(void **argv) {
+  win_T *window = (win_T *) argv[0];
+
+  Error err;
+  nvim_set_current_win(window->handle, &err);
+  // TODO: handle error
+  WLOG("Error selecting window with handle %d: %s", window->handle, err.msg);
+
+  // nvim_set_current_win() does not seem to trigger a redraw.
+  ui_schedule_refresh();
+}
+
 static void send_dirty_status() {
   bool new_dirty_status = server_has_dirty_docs();
   DLOG("dirty status: %d vs. %d", _dirty, new_dirty_status);
@@ -720,26 +735,71 @@ NSString *server_escaped_filename(NSString *filename) {
   return result;
 }
 
+static NeoVimBuffer *buffer_for(buf_T *buf) {
+  if (buf->b_p_bl == 0) {
+    return nil;
+  }
+
+  NSString *fileName = nil;
+  if (buf->b_ffname != NULL) {
+    fileName = [NSString stringWithCString:(const char *) buf->b_ffname encoding:NSUTF8StringEncoding];
+  }
+
+  bool current = curbuf == buf;
+
+  NeoVimBuffer *buffer = [[NeoVimBuffer alloc] initWithHandle:buf->handle
+                                                     fileName:fileName
+                                                        dirty:buf->b_changed
+                                                      current:current];
+
+  return [buffer autorelease];
+}
+
 NSArray *server_buffers() {
   NSMutableArray <NeoVimBuffer *> *result = [[NSMutableArray new] autorelease];
   FOR_ALL_BUFFERS(buf) {
-    if (buf->b_p_bl == 0) {
+    NeoVimBuffer *buffer = buffer_for(buf);
+    if (buffer == nil) {
       continue;
     }
 
-    NSString *fileName = nil;
-    if (buf->b_ffname != NULL) {
-      fileName = [NSString stringWithCString:(const char *) buf->b_ffname encoding:NSUTF8StringEncoding];
-    }
-    bool current = curbuf == buf;
-    NeoVimBuffer *buffer = [[NeoVimBuffer alloc] initWithHandle:(NSUInteger) buf->handle
-                                                       fileName:fileName
-                                                          dirty:buf->b_changed
-                                                        current:current];
     [result addObject:buffer];
-    [buffer release];
   }
   return result;
+}
+
+NSArray *server_tabs() {
+  NSMutableArray *tabs = [[NSMutableArray new] autorelease];
+  FOR_ALL_TABS(t) {
+    NSMutableArray *windows = [NSMutableArray new];
+
+    FOR_ALL_WINDOWS_IN_TAB(win, t) {
+      NeoVimBuffer *buffer = buffer_for(win->w_buffer);
+      if (buffer == nil) {
+        continue;
+      }
+
+      NeoVimWindow *window = [[NeoVimWindow alloc] initWithHandle:win->handle buffer:buffer];
+      [windows addObject:window];
+      [window release];
+    }
+
+    NeoVimTab *tab = [[NeoVimTab alloc] initWithHandle:t->handle windows:windows];
+    [windows release];
+
+    [tabs addObject:tab];
+    [tab release];
+  }
+
+  return tabs;
+}
+
+void server_select_win(int window_handle) {
+  FOR_ALL_TAB_WINDOWS(tab, win) {
+    if (win->handle == window_handle) {
+      loop_schedule(&main_loop, event_create(1, neovim_select_window, 1, win));
+    }
+  }
 }
 
 void server_quit() {

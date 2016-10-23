@@ -181,7 +181,8 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
 
   @IBAction public func debug1(_ sender: AnyObject!) {
     NSLog("DEBUG 1 - Start")
-    NSLog("\(self.agent.buffers())")
+    let buffers = self.agent.tabs().map { $0.allBuffers() }.flatMap { $0 }
+    NSLog("\(Set(buffers))")
     NSLog("DEBUG 1 - End")
   }
 }
@@ -204,7 +205,7 @@ extension NeoVimView {
    - returns: nil when for exampls a quickfix panel is open.
    */
   public func currentBuffer() -> NeoVimBuffer? {
-    return self.agent.buffers().filter { $0.current }.first
+    return self.agent.buffers().filter { $0.isCurrent }.first
   }
 
   public func hasDirtyDocs() -> Bool {
@@ -213,7 +214,7 @@ extension NeoVimView {
 
   public func isCurrentBufferDirty() -> Bool {
     let curBuf = self.currentBuffer()
-    return curBuf?.dirty ?? true
+    return curBuf?.isDirty ?? true
   }
   
   public func newTab() {
@@ -221,9 +222,23 @@ extension NeoVimView {
   }
 
   public func open(urls: [URL]) {
-    let currentBufferIsTransient = self.agent.buffers().filter { $0.current }.first?.transient ?? false
+    let tabs = self.agent.tabs()
+    let buffers = tabs.map { $0.allBuffers() }.flatMap { $0 }
+    let currentBufferIsTransient = buffers.filter { $0.isCurrent }.first?.isTransient ?? false
 
     urls.enumerated().forEach { (idx, url) in
+      let path = url.path
+      if buffers.filter({ $0.fileName == path }).first != nil {
+        for window in tabs.map({ $0.windows }).flatMap({ $0 }) {
+
+          if window.buffer.fileName == path {
+            Swift.print(window)
+            self.agent.select(window)
+            return
+          }
+        }
+      }
+
       if idx == 0 && currentBufferIsTransient {
         self.open(url, cmd: "e")
       } else {

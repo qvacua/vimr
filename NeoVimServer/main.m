@@ -3,18 +3,20 @@
  * See LICENSE
  */
 
-#import <Foundation/Foundation.h>
+@import Foundation;
+
+#import <sys/event.h>
+#import <uv.h>
+
 #import "NeoVimServer.h"
 #import "server_globals.h"
 #import "Logging.h"
 #import "CocoaCategories.h"
-#import <sys/event.h>
-#import <uv.h>
 
 
 NeoVimServer *_neovim_server;
 
-// Ensure no parent-less NeoVimServer processes are left when the main app crashes.
+// Ensure that no parent-less NeoVimServer processes are left when the main app crashes.
 // From http://mac-os-x.10953.n7.nabble.com/Ensure-NSTask-terminates-when-parent-application-does-td31477.html
 static void observe_parent_termination(void *arg) {
   pid_t ppid = getppid();     // get parent pid
@@ -35,7 +37,7 @@ static void observe_parent_termination(void *arg) {
     kevent(kq, &procEvent, 1, &procEvent, 1, 0);
   }
 
-  DLOG("Exiting NeoVimServer: Parent terminated.");
+  ILOG("Exiting NeoVimServer: Parent terminated.");
   exit(0);
 }
 
