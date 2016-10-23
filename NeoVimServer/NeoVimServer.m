@@ -216,6 +216,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return nil;
     }
 
+    case NeoVimAgentMsgIdSelectWindow: {
+      int *values = data_to_int_array(data, 1);
+      server_select_win(values[0]);
+      return nil;
+    }
+
     case NeoVimAgentMsgIdQuit:
       // exit() after returning the response such that the agent can get the response and so does not log a warning.
       [self performSelector:@selector(quit) onThread:_localServerThread withObject:nil waitUntilDone:NO];

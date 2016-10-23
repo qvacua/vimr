@@ -471,6 +471,18 @@ static void neovim_input(void **argv) {
   }
 }
 
+static void neovim_select_window(void **argv) {
+  win_T *window = (win_T *) argv[0];
+
+  Error err;
+  nvim_set_current_win(window->handle, &err);
+  // TODO: handle error
+  WLOG("Error selecting window with handle %d: %s", window->handle, err.msg);
+
+  // nvim_set_current_win() does not seem to trigger a redraw.
+  ui_schedule_refresh();
+}
+
 static void send_dirty_status() {
   bool new_dirty_status = server_has_dirty_docs();
   DLOG("dirty status: %d vs. %d", _dirty, new_dirty_status);
@@ -780,6 +792,14 @@ NSArray *server_tabs() {
   }
 
   return tabs;
+}
+
+void server_select_win(int window_handle) {
+  FOR_ALL_TAB_WINDOWS(tab, win) {
+    if (win->handle == window_handle) {
+      loop_schedule(&main_loop, event_create(1, neovim_select_window, 1, win));
+    }
+  }
 }
 
 void server_quit() {

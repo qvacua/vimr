@@ -9,6 +9,7 @@
 @protocol NeoVimUiBridgeProtocol;
 @class NeoVimBuffer;
 @class NeoVimTab;
+@class NeoVimWindow;
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -37,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<NSString *> *)escapedFileNames:(NSArray<NSString *> *)fileNames;
 - (NSArray<NeoVimBuffer *> *)buffers;
 - (NSArray<NeoVimTab*> *)tabs;
+- (void)selectWindow:(NeoVimWindow *)window;
 
 @end
 
