@@ -28,3 +28,11 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+@interface NeoVimBuffer (Equality)
+
+- (BOOL)isEqual:(id _Nullable)other;
+- (BOOL)isEqualToBuffer:(NeoVimBuffer * _Nullable)buffer;
+- (NSUInteger)hash;
+
+@end

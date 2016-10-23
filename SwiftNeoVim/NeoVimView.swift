@@ -181,7 +181,8 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
 
   @IBAction public func debug1(_ sender: AnyObject!) {
     NSLog("DEBUG 1 - Start")
-    NSLog("\(self.agent.tabs())")
+    let buffers = self.agent.tabs().map { $0.allBuffers() }.flatMap { $0 }
+    NSLog("\(Set(buffers))")
     NSLog("DEBUG 1 - End")
   }
 }

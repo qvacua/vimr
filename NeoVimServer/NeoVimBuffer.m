@@ -37,6 +37,29 @@
   return self;
 }
 
+- (BOOL)isEqual:(id)other {
+  if (other == self)
+    return YES;
+  if (!other || ![[other class] isEqual:[self class]])
+    return NO;
+
+  return [self isEqualToBuffer:other];
+}
+
+- (BOOL)isEqualToBuffer:(NeoVimBuffer *)buffer {
+  if (self == buffer)
+    return YES;
+  if (buffer == nil)
+    return NO;
+  if (self.handle != buffer.handle)
+    return NO;
+  return YES;
+}
+
+- (NSUInteger)hash {
+  return (NSUInteger) self.handle;
+}
+
 - (void)encodeWithCoder:(NSCoder *)coder {
   [coder encodeObject:@(self.handle) forKey:@"handle"];
   [coder encodeObject:self.fileName forKey:@"fileName"];
