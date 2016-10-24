@@ -391,6 +391,9 @@ extension NeoVimView {
       return
     }
 
+    // When both anti-aliasing and font smoothing is turned on, then the "Use LCD font smoothing when available" setting
+    // is used to render texts, cf. chapter 11 from "Programming with Quartz".
+    context.setShouldSmoothFonts(true);
     context.textMatrix = CGAffineTransform.identity;
     context.setTextDrawingMode(.fill);
 
