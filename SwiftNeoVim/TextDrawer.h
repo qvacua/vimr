@@ -15,6 +15,7 @@
 @property (nonatomic, readonly) CGFloat leading;
 @property (nonatomic, readonly) CGFloat descent;
 @property (nonatomic, readonly) CGSize cellSize;
+@property (nonatomic) bool usesFontSmoothing;
 
 - (instancetype _Nonnull)initWithFont:(NSFont *_Nonnull)font useLigatures:(bool)useLigatures;
 
