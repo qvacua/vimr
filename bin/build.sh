@@ -42,7 +42,7 @@ echo "### Tag: ${TAG}"
 echo "### VimR archive file name: ${VIMR_FILE_NAME}"
 
 ./bin/commit_and_push_tags.sh "${BRANCH}" "${TAG}"
-./bin/create_github_release.sh "${COMPOUND_VERSION}" "${TAG}" "${VIMR_FILE_NAME}" "${RELEASE_NOTES}"
+./bin/create_github_release.sh "${COMPOUND_VERSION}" "${TAG}" "${VIMR_FILE_NAME}" "${RELEASE_NOTES}" ${IS_SNAPSHOT}
 ./bin/set_appcast.py "build/Release/${VIMR_FILE_NAME}" "${BUNDLE_VERSION}" "${MARKETING_VERSION}" "${TAG}" ${IS_SNAPSHOT}
 ./bin/commit_and_push_appcast.sh "${BRANCH}" "${COMPOUND_VERSION}" ${IS_SNAPSHOT}
 

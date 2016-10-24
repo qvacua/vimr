@@ -6,10 +6,16 @@ COMPOUND_VERSION=$1
 TAG=$2
 VIMR_FILE_NAME=$3
 RELEASE_NOTES=$4
+IS_SNAPSHOT=$5
 
 pushd build/Release
 
 tar cjf ${VIMR_FILE_NAME} VimR.app
+
+PRERELEASE=""
+if [ "${IS_SNAPSHOT}" = true ] ; then
+    PRERELEASE="--pre-release"
+fi
 
 echo "### Creating release"
 GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release release \
@@ -18,7 +24,7 @@ GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release release
     --tag "${TAG}" \
     --name "${COMPOUND_VERSION}" \
     --description "${RELEASE_NOTES}" \
-    --pre-release
+    "${PRERELEASE}"
 
 echo "### Uploading build"
 GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release upload \
