@@ -7,26 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.10.0-SNAPSHOT-20161023.2005-113</title>
+      <title>v0.10.0-SNAPSHOT-20161024.2203-114</title>
       <description><![CDATA[
     <ul>
-<li>GH-309: When opening a file via a GUI action, check whether the file is already open.<ul>
-<li>Open in a tab or split: select the tab/split</li>
-<li>Open in another (GUI) window: let NeoVim handle it.</li>
-</ul>
-</li>
+<li>GH-239, GH-312: Try to fix the thinner-font-rendering problem on non-retina displays.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.10.0-SNAPSHOT-20161023.2005-113
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.10.0-SNAPSHOT-20161024.2203-114
       </releaseNotesLink>
-      <pubDate>2016-10-23T20:15:09.198887</pubDate>
+      <pubDate>2016-10-24T22:13:04.808004</pubDate>
       <minimumSystemVersion>10.11.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.10.0-SNAPSHOT-20161023.2005-113/VimR-v0.10.0-SNAPSHOT-20161023.2005-113.tar.bz2"
-                 sparkle:version="113"
-                 sparkle:shortVersionString="0.10.0-SNAPSHOT-20161023.2005"
-                 sparkle:dsaSignature="MC0CFQCSWRfSooxsIICJKd08vGbpAWnrxQIUY1zsYtOwOjwhnwd/6Q52eYHGzNo="
-                 length="8898384"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.10.0-SNAPSHOT-20161024.2203-114/VimR-v0.10.0-SNAPSHOT-20161024.2203-114.tar.bz2"
+                 sparkle:version="114"
+                 sparkle:shortVersionString="0.10.0-SNAPSHOT-20161024.2203"
+                 sparkle:dsaSignature="MC0CFA2/4zo/0DL7bfOjHvV8FRryRf+uAhUAqjLB4/YZuIJ0kDXDsLPYtxFrpVg="
+                 length="8900331"
                  type="application/octet-stream"/>
     </item>
   </channel>
