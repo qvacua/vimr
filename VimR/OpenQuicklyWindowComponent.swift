@@ -47,7 +47,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
 
   init(source: Observable<Any>, fileItemService: FileItemService) {
     self.fileItemService = fileItemService
-    self.searchStream = self.searchField.rx.textInput.text
+    self.searchStream = self.searchField.rx.textInput.text.orEmpty
       .throttle(0.2, scheduler: MainScheduler.instance)
       .distinctUntilChanged()
 
