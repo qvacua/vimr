@@ -7,7 +7,7 @@ import Cocoa
 
 // The definition can be found in NeoVimUiBridgeProtocol.h
 
-func == (left: CellAttributes, right: CellAttributes) -> Bool {
+public func == (left: CellAttributes, right: CellAttributes) -> Bool {
   if left.foreground != right.foreground { return false }
   if left.fontTrait != right.fontTrait { return false }
   
@@ -17,11 +17,7 @@ func == (left: CellAttributes, right: CellAttributes) -> Bool {
   return true
 }
 
-func != (left: CellAttributes, right: CellAttributes) -> Bool {
-  return !(left == right)
-}
-
-extension CellAttributes: CustomStringConvertible {
+extension CellAttributes: CustomStringConvertible, Equatable {
   
   public var description: String {
     return "CellAttributes<fg: \(String(format: "%x", self.foreground)), bg: \(String(format: "%x", self.background)))"
