@@ -151,8 +151,6 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
     self.descent = self.drawer.descent
     self.leading = self.drawer.leading
 
-    self.drawer.usesFontSmoothing = self.usesFontSmoothing()
-
     // We cannot set bridge in init since self is not available before super.init()...
     self.agent.bridge = self
     self.agent.useInteractiveZsh = config.useInteractiveZsh
@@ -183,10 +181,8 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
 
   @IBAction public func debug1(_ sender: AnyObject!) {
     NSLog("DEBUG 1 - Start")
-    NSLog("current font smoothing: \(self.drawer.usesFontSmoothing)")
-    self.drawer.usesFontSmoothing = !self.drawer.usesFontSmoothing
-    NSLog("changed to \(self.drawer.usesFontSmoothing)")
-    self.needsDisplay = true
+    let buffers = self.agent.tabs().map { $0.allBuffers() }.flatMap { $0 }
+    NSLog("\(Set(buffers))")
     NSLog("DEBUG 1 - End")
   }
 }
@@ -403,16 +399,6 @@ extension NeoVimView {
 
     self.rowRunIntersecting(rects: dirtyRects).forEach { self.draw(rowRun: $0, context: context) }
     self.drawCursor(context: context)
-  }
-
-  override public func viewDidChangeBackingProperties() {
-    self.drawer.usesFontSmoothing = self.usesFontSmoothing()
-  }
-
-  fileprivate func usesFontSmoothing() -> Bool {
-    let scale = self.window?.screen?.backingScaleFactor ?? 1
-    let isRetina = scale > 1
-    return !isRetina
   }
 
   fileprivate func randomEmoji() -> String {

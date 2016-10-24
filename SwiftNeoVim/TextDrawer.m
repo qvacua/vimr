@@ -14,7 +14,6 @@
 #define GREEN(color_code)    (((color_code >>  8) & 0xff) / 255.0f)
 #define BLUE(color_code)     (((color_code      ) & 0xff) / 255.0f)
 
-
 @implementation TextDrawer {
   NSLayoutManager *_layoutManager;
 
@@ -90,10 +89,6 @@
            context:(CGContextRef _Nonnull)context
 {
   CGContextSaveGState(context);
-
-  if (_usesFontSmoothing) {
-    CGContextSetShouldSmoothFonts(context, YES);
-  }
 
   if (attrs.fontTrait & FontTraitUnderline) {
     [self drawUnderline:positions count:positionsCount color:attrs.foreground context:context];
