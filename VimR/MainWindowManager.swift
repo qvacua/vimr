@@ -54,6 +54,8 @@ class MainWindowManager: StandardFlow {
         }
       })
       .addDisposableTo(self.disposeBag)
+
+    mainWindowComponent.show()
     
     return mainWindowComponent
   }
@@ -79,16 +81,16 @@ class MainWindowManager: StandardFlow {
   }
   
   func openInKeyMainWindow(urls:[URL] = [], cwd: URL = FileUtils.userHomeUrl) {
-    guard !self.mainWindowComponents.isEmpty else {
+    if self.mainWindowComponents.isEmpty {
       _ = self.newMainWindow(urls: urls, cwd: cwd)
       return
     }
-    
+
     guard let keyMainWindow = self.keyMainWindow else {
       _ = self.newMainWindow(urls: urls, cwd: cwd)
       return
     }
-    
+
     keyMainWindow.cwd = cwd
     keyMainWindow.open(urls: urls)
   }

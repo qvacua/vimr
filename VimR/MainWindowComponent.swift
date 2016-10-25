@@ -69,6 +69,9 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
   }
 
   // TODO: Consider an option object for cwd, urls, etc...
+  /**
+   The init() method does not show the window. Call MainWindowComponent.show() to do so.
+   */
   init(source: Observable<Any>,
        fileItemService: FileItemService,
        cwd: URL,
@@ -127,7 +130,6 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
     }
 
     self.window.makeFirstResponder(self.neoVimView)
-    self.show()
   }
 
   func open(urls: [URL]) {
