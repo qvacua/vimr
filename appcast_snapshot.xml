@@ -7,22 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.10.0-SNAPSHOT-20161024.2203-114</title>
+      <title>v0.10.0-SNAPSHOT-20161025.0814-115</title>
       <description><![CDATA[
     <ul>
-<li>GH-239, GH-312: Try to fix the thinner-font-rendering problem on non-retina displays.</li>
+<li>GH-239, GH-312 Turn on font smoothing such that the "Use LCD font smoothing when available" setting from the General system preferences pane is respected.</li>
+<li>Update RxSwift from <code>3.0.0-rc.1</code> to <code>3.0.0</code>.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.10.0-SNAPSHOT-20161024.2203-114
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.10.0-SNAPSHOT-20161025.0814-115
       </releaseNotesLink>
-      <pubDate>2016-10-24T22:13:04.808004</pubDate>
+      <pubDate>2016-10-25T08:25:17.743123</pubDate>
       <minimumSystemVersion>10.11.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.10.0-SNAPSHOT-20161024.2203-114/VimR-v0.10.0-SNAPSHOT-20161024.2203-114.tar.bz2"
-                 sparkle:version="114"
-                 sparkle:shortVersionString="0.10.0-SNAPSHOT-20161024.2203"
-                 sparkle:dsaSignature="MC0CFA2/4zo/0DL7bfOjHvV8FRryRf+uAhUAqjLB4/YZuIJ0kDXDsLPYtxFrpVg="
-                 length="8900331"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.10.0-SNAPSHOT-20161025.0814-115/VimR-v0.10.0-SNAPSHOT-20161025.0814-115.tar.bz2"
+                 sparkle:version="115"
+                 sparkle:shortVersionString="0.10.0-SNAPSHOT-20161025.0814"
+                 sparkle:dsaSignature="MC4CFQDT1SbhhgtGPqnp2BqRF1kitH6AtQIVAIrVRTXjBRy64PkVlNdAs1d8N2Uk"
+                 length="8880833"
                  type="application/octet-stream"/>
     </item>
   </channel>
