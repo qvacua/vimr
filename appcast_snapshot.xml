@@ -7,23 +7,26 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.10.0-SNAPSHOT-20161025.0814-115</title>
+      <title>v0.10.0-SNAPSHOT-20161025.2226-116</title>
       <description><![CDATA[
     <ul>
-<li>GH-239, GH-312 Turn on font smoothing such that the "Use LCD font smoothing when available" setting from the General system preferences pane is respected.</li>
-<li>Update RxSwift from <code>3.0.0-rc.1</code> to <code>3.0.0</code>.</li>
+<li>Fix exceptions when opening some preferences panes. RxSwift <code>3.0.0</code> has a bug: https://github.com/ReactiveX/RxSwift/pull/957<ul>
+<li>Thus, downgrade to <code>3.0.0-rc1</code> for the time being</li>
+</ul>
+</li>
+<li>Bugfix: The command line tool <code>vimr</code> sometimes does not open the files in the frontmost window.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.10.0-SNAPSHOT-20161025.0814-115
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.10.0-SNAPSHOT-20161025.2226-116
       </releaseNotesLink>
-      <pubDate>2016-10-25T08:25:17.743123</pubDate>
+      <pubDate>2016-10-25T22:36:28.544023</pubDate>
       <minimumSystemVersion>10.11.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.10.0-SNAPSHOT-20161025.0814-115/VimR-v0.10.0-SNAPSHOT-20161025.0814-115.tar.bz2"
-                 sparkle:version="115"
-                 sparkle:shortVersionString="0.10.0-SNAPSHOT-20161025.0814"
-                 sparkle:dsaSignature="MC4CFQDT1SbhhgtGPqnp2BqRF1kitH6AtQIVAIrVRTXjBRy64PkVlNdAs1d8N2Uk"
-                 length="8880833"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.10.0-SNAPSHOT-20161025.2226-116/VimR-v0.10.0-SNAPSHOT-20161025.2226-116.tar.bz2"
+                 sparkle:version="116"
+                 sparkle:shortVersionString="0.10.0-SNAPSHOT-20161025.2226"
+                 sparkle:dsaSignature="MC0CFQDTb/bmVlVA44e89C0XOEGN/SfD5wIUXIlsvpb88W1XQmRZz9OFnYfJf9I="
+                 length="8899277"
                  type="application/octet-stream"/>
     </item>
   </channel>
