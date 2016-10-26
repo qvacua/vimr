@@ -9,14 +9,14 @@ import RxSwift
 
 struct AppearancePrefData: Equatable {
   let editorFont: NSFont
-  let editorFontLinespacing: CGFloat
+  let editorLinespacing: CGFloat
   let editorUsesLigatures: Bool
 }
 
 func == (left: AppearancePrefData, right: AppearancePrefData) -> Bool {
   return left.editorUsesLigatures == right.editorUsesLigatures
     && left.editorFont.isEqual(to: right.editorFont)
-    && left.editorFontLinespacing == right.editorFontLinespacing
+    && left.editorLinespacing == right.editorLinespacing
 }
 
 class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate {
@@ -157,6 +157,12 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     linespacingField.autoPinEdge(.top, to: .bottom, of: sizeCombo, withOffset: 18)
     linespacingField.autoPinEdge(.left, to: .right, of: linespacingTitle, withOffset: 5)
     linespacingField.autoSetDimension(.width, toSize: 60)
+    NotificationCenter.default.addObserver(forName: NSNotification.Name.NSControlTextDidEndEditing,
+                                           object: linespacingField,
+                                           queue: nil)
+    { [unowned self] _ in
+      self.linespacingAction()
+    }
 
     ligatureCheckbox.autoPinEdge(.top, to: .bottom, of: linespacingField, withOffset: 18)
     ligatureCheckbox.autoPinEdge(.left, to: .right, of: fontTitle, withOffset: 5)
@@ -183,7 +189,7 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
 
     self.fontPopup.selectItem(withTitle: newFont.fontName)
     self.sizeCombo.stringValue = String(Int(newFont.pointSize))
-    self.linespacingField.floatValue = Float(newData.editorFontLinespacing)
+    self.linespacingField.floatValue = Float(newData.editorLinespacing)
     self.ligatureCheckbox.boolState = newData.editorUsesLigatures
     self.previewArea.font = newData.editorFont
 
@@ -200,7 +206,7 @@ extension AppearancePrefPane {
   
   func usesLigaturesAction(_ sender: NSButton) {
     self.set(data: AppearancePrefData(editorFont: self.data.editorFont,
-                                      editorFontLinespacing: self.data.editorFontLinespacing,
+                                      editorLinespacing: self.data.editorLinespacing,
                                       editorUsesLigatures: sender.boolState))
   }
 
@@ -218,7 +224,7 @@ extension AppearancePrefPane {
     }
 
     self.set(data: AppearancePrefData(editorFont: newFont,
-                                      editorFontLinespacing: self.data.editorFontLinespacing,
+                                      editorLinespacing: self.data.editorLinespacing,
                                       editorUsesLigatures: self.data.editorUsesLigatures))
   }
 
@@ -231,7 +237,7 @@ extension AppearancePrefPane {
     let newFont = self.fontManager.convert(self.data.editorFont, toSize: newFontSize)
 
     self.set(data: AppearancePrefData(editorFont: newFont,
-                                      editorFontLinespacing: self.data.editorFontLinespacing,
+                                      editorLinespacing: self.data.editorLinespacing,
                                       editorUsesLigatures: self.data.editorUsesLigatures))
   }
 
@@ -240,8 +246,12 @@ extension AppearancePrefPane {
     let newFont = self.fontManager.convert(self.data.editorFont, toSize: newFontSize)
 
     self.set(data: AppearancePrefData(editorFont: newFont,
-                                      editorFontLinespacing: self.data.editorFontLinespacing,
+                                      editorLinespacing: self.data.editorLinespacing,
                                       editorUsesLigatures: self.data.editorUsesLigatures))
+  }
+
+  func linespacingAction() {
+    
   }
 
   fileprivate func cappedFontSize(_ size: Int) -> CGFloat {

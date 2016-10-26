@@ -22,7 +22,7 @@ private class PrefKeys {
 
   static let editorFontName = "editor-font-name"
   static let editorFontSize = "editor-font-size"
-  static let editorFontLinespacing = "editor-font-linespacing"
+  static let editorLinespacing = "editor-linespacing"
   static let editorUsesLigatures = "editor-uses-ligatures"
 
   static let useSnapshotUpdateChannel = "use-snapshot-update-channel"
@@ -56,7 +56,7 @@ class PrefStore: StandardFlow {
                              openNewWindowOnReactivation: true,
                              ignorePatterns: Set([ "*/.git", "*.o", "*.d", "*.dia" ].map(FileItemIgnorePattern.init))),
     appearance: AppearancePrefData(editorFont: PrefStore.defaultEditorFont,
-                                   editorFontLinespacing: 1,
+                                   editorLinespacing: 1,
                                    editorUsesLigatures: false),
     advanced: AdvancedPrefData(useSnapshotUpdateChannel: false,
                                useInteractiveZsh: false),
@@ -86,7 +86,7 @@ class PrefStore: StandardFlow {
 
     let usesLigatures = self.bool(from: prefs, for: PrefKeys.editorUsesLigatures, default: false)
     let linespacing = self.saneLinespacing(
-      CGFloat((prefs[PrefKeys.editorFontLinespacing] as? NSNumber)?.floatValue ?? Float(1))
+      CGFloat((prefs[PrefKeys.editorLinespacing] as? NSNumber)?.floatValue ?? Float(1))
     )
     let openNewWindowWhenLaunching = self.bool(from: prefs, for: PrefKeys.openNewWindowWhenLaunching, default: true)
     let openNewWindowOnReactivation = self.bool(from: prefs, for: PrefKeys.openNewWindowOnReactivation, default: true)
@@ -109,7 +109,7 @@ class PrefStore: StandardFlow {
         ignorePatterns: ignorePatterns
       ),
       appearance: AppearancePrefData(editorFont: editorFont,
-                                     editorFontLinespacing: linespacing,
+                                     editorLinespacing: linespacing,
                                      editorUsesLigatures: usesLigatures),
       advanced: AdvancedPrefData(useSnapshotUpdateChannel: useSnapshotUpdate,
                                  useInteractiveZsh: useInteractiveZsh),
@@ -161,7 +161,7 @@ class PrefStore: StandardFlow {
       // Appearance
       PrefKeys.editorFontName: appearanceData.editorFont.fontName as Any,
       PrefKeys.editorFontSize: appearanceData.editorFont.pointSize as Any,
-      PrefKeys.editorFontLinespacing: appearanceData.editorFontLinespacing as Any,
+      PrefKeys.editorLinespacing: appearanceData.editorLinespacing as Any,
       PrefKeys.editorUsesLigatures: appearanceData.editorUsesLigatures as Any,
 
       // Advanced
