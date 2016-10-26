@@ -30,6 +30,10 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
   public static let minFontSize = CGFloat(4)
   public static let maxFontSize = CGFloat(128)
   public static let defaultFont = NSFont.userFixedPitchFont(ofSize: 13)!
+  public static let defaultLinespacing = CGFloat(1)
+
+  public static let minLinespacing = CGFloat(0.5)
+  public static let maxLinespacing = CGFloat(8)
 
   public let uuid = UUID().uuidString
   public weak var delegate: NeoVimViewDelegate?
@@ -42,7 +46,24 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
       self.needsDisplay = true
     }
   }
-  
+
+  public var linespacing: CGFloat {
+    get {
+      return self._linespacing
+    }
+
+    set {
+      guard newValue >= NeoVimView.minLinespacing && newValue <= NeoVimView.maxLinespacing else {
+        return
+      }
+
+      self._linespacing = newValue
+      self.drawer.linespacing = self.linespacing
+
+      self.updateFontMetaData()
+    }
+  }
+
   public var font: NSFont {
     get {
       return self._font
@@ -60,11 +81,8 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
 
       self._font = newValue
       self.drawer.font = self.font
-      self.cellSize = self.drawer.cellSize
-      self.descent = self.drawer.descent
-      self.leading = self.drawer.leading
 
-      self.resizeNeoVimUiTo(size: self.bounds.size)
+      self.updateFontMetaData()
     }
   }
 
@@ -92,6 +110,7 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
     ].flatMap { $0 }
   
   fileprivate var _font = NeoVimView.defaultFont
+  fileprivate var _linespacing = NeoVimView.defaultLinespacing
 
   fileprivate let agent: NeoVimAgent
   fileprivate let drawer: TextDrawer
@@ -184,6 +203,14 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
     let buffers = self.agent.tabs().map { $0.allBuffers() }.flatMap { $0 }
     NSLog("\(Set(buffers))")
     NSLog("DEBUG 1 - End")
+  }
+
+  fileprivate func updateFontMetaData() {
+    self.cellSize = self.drawer.cellSize
+    self.descent = self.drawer.descent
+    self.leading = self.drawer.leading
+
+    self.resizeNeoVimUiTo(size: self.bounds.size)
   }
 }
 

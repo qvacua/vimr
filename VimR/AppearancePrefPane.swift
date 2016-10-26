@@ -9,11 +9,14 @@ import RxSwift
 
 struct AppearancePrefData: Equatable {
   let editorFont: NSFont
+  let editorFontLinespacing: CGFloat
   let editorUsesLigatures: Bool
 }
 
 func == (left: AppearancePrefData, right: AppearancePrefData) -> Bool {
-  return left.editorUsesLigatures == right.editorUsesLigatures && left.editorFont.isEqual(to: right.editorFont)
+  return left.editorUsesLigatures == right.editorUsesLigatures
+    && left.editorFont.isEqual(to: right.editorFont)
+    && left.editorFontLinespacing == right.editorFontLinespacing
 }
 
 class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate {
@@ -181,7 +184,9 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
 extension AppearancePrefPane {
   
   func usesLigaturesAction(_ sender: NSButton) {
-    self.set(data: AppearancePrefData(editorFont: self.data.editorFont, editorUsesLigatures: sender.boolState))
+    self.set(data: AppearancePrefData(editorFont: self.data.editorFont,
+                                      editorFontLinespacing: self.data.editorFontLinespacing,
+                                      editorUsesLigatures: sender.boolState))
   }
 
   func fontPopupAction(_ sender: NSPopUpButton) {
@@ -197,7 +202,9 @@ extension AppearancePrefPane {
       return
     }
 
-    self.set(data: AppearancePrefData(editorFont: newFont, editorUsesLigatures: self.data.editorUsesLigatures))
+    self.set(data: AppearancePrefData(editorFont: newFont,
+                                      editorFontLinespacing: self.data.editorFontLinespacing,
+                                      editorUsesLigatures: self.data.editorUsesLigatures))
   }
 
   func comboBoxSelectionDidChange(_ notification: Notification) {
@@ -208,14 +215,18 @@ extension AppearancePrefPane {
     let newFontSize = self.cappedFontSize(Int(self.sizes[self.sizeCombo.indexOfSelectedItem]))
     let newFont = self.fontManager.convert(self.data.editorFont, toSize: newFontSize)
 
-    self.set(data: AppearancePrefData(editorFont: newFont, editorUsesLigatures: self.data.editorUsesLigatures))
+    self.set(data: AppearancePrefData(editorFont: newFont,
+                                      editorFontLinespacing: self.data.editorFontLinespacing,
+                                      editorUsesLigatures: self.data.editorUsesLigatures))
   }
 
   func sizeComboBoxDidEnter(_ sender: AnyObject!) {
     let newFontSize = self.cappedFontSize(self.sizeCombo.integerValue)
     let newFont = self.fontManager.convert(self.data.editorFont, toSize: newFontSize)
 
-    self.set(data: AppearancePrefData(editorFont: newFont, editorUsesLigatures: self.data.editorUsesLigatures))
+    self.set(data: AppearancePrefData(editorFont: newFont,
+                                      editorFontLinespacing: self.data.editorFontLinespacing,
+                                      editorUsesLigatures: self.data.editorUsesLigatures))
   }
 
   fileprivate func cappedFontSize(_ size: Int) -> CGFloat {
