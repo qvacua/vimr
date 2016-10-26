@@ -39,8 +39,8 @@ class PrefStore: StandardFlow {
 
   fileprivate static let compatibleVersion = "38"
   fileprivate static let defaultEditorFont = NeoVimView.defaultFont
-  static let minimumEditorFontSize = NeoVimView.minFontSize
-  static let maximumEditorFontSize = NeoVimView.maxFontSize
+  static let minEditorFontSize = NeoVimView.minFontSize
+  static let maxEditorFontSize = NeoVimView.maxFontSize
 
   fileprivate let userDefaults = UserDefaults.standard
   fileprivate let fontManager = NSFontManager.shared()
@@ -116,8 +116,7 @@ class PrefStore: StandardFlow {
     if !editorFont.isFixedPitch {
       editorFont = fontManager.convert(PrefStore.defaultEditorFont, toSize: editorFont.pointSize)
     }
-    if editorFont.pointSize < PrefStore.minimumEditorFontSize
-      || editorFont.pointSize > PrefStore.maximumEditorFontSize {
+    if editorFont.pointSize < PrefStore.minEditorFontSize || editorFont.pointSize > PrefStore.maxEditorFontSize {
       editorFont = fontManager.convert(editorFont, toSize: PrefStore.defaultEditorFont.pointSize)
     }
 
