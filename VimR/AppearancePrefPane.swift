@@ -40,6 +40,7 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
   fileprivate let sizes = [9, 10, 11, 12, 13, 14, 16, 18, 24, 36, 48, 64]
   fileprivate let sizeCombo = NSComboBox(forAutoLayout: ())
   fileprivate let fontPopup = NSPopUpButton(frame: CGRect.zero, pullsDown: false)
+  fileprivate let linespacingField = NSTextField(forAutoLayout: ())
   fileprivate let ligatureCheckbox = NSButton(forAutoLayout: ())
   fileprivate let previewArea = NSTextView(frame: CGRect.zero)
 
@@ -96,6 +97,9 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
       sizeCombo.addItem(withObjectValue: string)
     }
 
+    let linespacingTitle = self.titleTextField(title: "Line Spacing:")
+    let linespacingField = self.linespacingField
+
     let ligatureCheckbox = self.ligatureCheckbox
     self.configureCheckbox(button: ligatureCheckbox,
                            title: "Use Ligatures",
@@ -126,13 +130,15 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     self.addSubview(fontTitle)
     self.addSubview(fontPopup)
     self.addSubview(sizeCombo)
+    self.addSubview(linespacingTitle)
+    self.addSubview(linespacingField)
     self.addSubview(ligatureCheckbox)
     self.addSubview(previewScrollView)
 
     paneTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 18)
     paneTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
 
-    fontTitle.autoPinEdge(.left, to: .left, of: paneTitle)
+    fontTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
     fontTitle.autoAlignAxis(.baseline, toSameAxisOf: fontPopup)
 
     fontPopup.autoPinEdge(.top, to: .bottom, of: paneTitle, withOffset: 18)
@@ -144,7 +150,15 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     sizeCombo.autoAlignAxis(.horizontal, toSameAxisOf: fontPopup)
     sizeCombo.autoPinEdge(.left, to: .right, of: fontPopup, withOffset: 5)
 
-    ligatureCheckbox.autoPinEdge(.top, to: .bottom, of: sizeCombo, withOffset: 18)
+    linespacingTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
+    linespacingTitle.autoPinEdge(.right, to: .right, of: fontTitle)
+    linespacingTitle.autoAlignAxis(.baseline, toSameAxisOf: linespacingField)
+
+    linespacingField.autoPinEdge(.top, to: .bottom, of: sizeCombo, withOffset: 18)
+    linespacingField.autoPinEdge(.left, to: .right, of: linespacingTitle, withOffset: 5)
+    linespacingField.autoSetDimension(.width, toSize: 60)
+
+    ligatureCheckbox.autoPinEdge(.top, to: .bottom, of: linespacingField, withOffset: 18)
     ligatureCheckbox.autoPinEdge(.left, to: .right, of: fontTitle, withOffset: 5)
 
     previewScrollView.autoSetDimension(.height, toSize: 200, relation: .greaterThanOrEqual)
@@ -169,6 +183,7 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
 
     self.fontPopup.selectItem(withTitle: newFont.fontName)
     self.sizeCombo.stringValue = String(Int(newFont.pointSize))
+    self.linespacingField.floatValue = Float(newData.editorFontLinespacing)
     self.ligatureCheckbox.boolState = newData.editorUsesLigatures
     self.previewArea.font = newData.editorFont
 

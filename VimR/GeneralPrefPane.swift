@@ -63,9 +63,11 @@ class GeneralPrefPane: PrefPane, NSTextFieldDelegate {
 
     let ignoreListTitle = self.titleTextField(title: "Files To Ignore:")
     let ignoreField = self.ignoreField
-    NotificationCenter.default
-      .addObserver(forName: NSNotification.Name.NSControlTextDidEndEditing, object: ignoreField, queue: nil) { [unowned self] _ in
-        self.ignorePatternsAction()
+    NotificationCenter.default.addObserver(forName: NSNotification.Name.NSControlTextDidEndEditing,
+                                           object: ignoreField,
+                                           queue: nil)
+    { [unowned self] _ in
+      self.ignorePatternsAction()
     }
     let ignoreInfo = self.infoTextField(text: "")
     ignoreInfo.attributedStringValue = self.ignoreInfoText()
