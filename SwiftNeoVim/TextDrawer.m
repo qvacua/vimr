@@ -18,11 +18,23 @@
   NSLayoutManager *_layoutManager;
 
   NSFont *_font;
+  CGFloat _ascent;
   CGFloat _underlinePosition;
   CGFloat _underlineThickness;
+  CGFloat _linespacing;
 
   NSMutableArray *_fontLookupCache;
   NSMutableDictionary *_fontTraitCache;
+}
+
+- (CGFloat)baselineOffset {
+  return _cellSize.height - _ascent;
+}
+
+- (void)setLinespacing:(CGFloat)linespacing {
+  // FIXME: reasonable min and max
+  _linespacing = linespacing;
+  _cellSize = [self cellSizeWithFont:_font linespacing:_linespacing];
 }
 
 - (void)setFont:(NSFont *)font {
@@ -32,32 +44,25 @@
   [_fontTraitCache removeAllObjects];
   [_fontLookupCache removeAllObjects];
 
-  // cf. https://developer.apple.com/library/mac/documentation/TextFonts/Conceptual/CocoaTextArchitecture/FontHandling/FontHandling.html
-  CGFloat ascent = CTFontGetAscent((CTFontRef) _font);
-  CGFloat descent = CTFontGetDescent((CTFontRef) _font);
-  CGFloat leading = CTFontGetLeading((CTFontRef) _font);
-  CGFloat underlinePosition = CTFontGetUnderlinePosition((CTFontRef) _font);
-  CGFloat underlineThickness = CTFontGetUnderlineThickness((CTFontRef) _font);
+  _cellSize = [self cellSizeWithFont:font linespacing:_linespacing];
 
-  _cellSize = CGSizeMake(
-      round([@"m" sizeWithAttributes:@{ NSFontAttributeName : _font }].width),
-      ceil(ascent + descent + leading)
-  );
-
-  _leading = leading;
-  _descent = descent;
-  _underlinePosition = underlinePosition; // This seems to take the thickness into account
+  _ascent = CTFontGetAscent((CTFontRef) _font);
+  _leading = CTFontGetLeading((CTFontRef) _font);
+  _descent = CTFontGetDescent((CTFontRef) _font);
+  _underlinePosition = CTFontGetUnderlinePosition((CTFontRef) _font); // This seems to take the thickness into account
   // TODO: Maybe we should use 0.5 or 1 as minimum thickness for Retina and non-Retina, respectively.
-  _underlineThickness = underlineThickness;
+  _underlineThickness = CTFontGetUnderlineThickness((CTFontRef) _font);
 }
 
-- (instancetype _Nonnull)initWithFont:(NSFont *_Nonnull)font useLigatures:(bool)useLigatures {
+- (instancetype _Nonnull)initWithFont:(NSFont *_Nonnull)font {
   self = [super init];
   if (self == nil) {
     return nil;
   }
 
-  _usesLigatures = useLigatures;
+  _usesLigatures = NO;
+  _linespacing = 1;
+
   _layoutManager = [[NSLayoutManager alloc] init];
   _fontLookupCache = [[NSMutableArray alloc] init];
   _fontTraitCache = [[NSMutableDictionary alloc] init];
@@ -142,6 +147,20 @@
   if (unibuffer != NULL) {
     free(unibuffer);
   }
+}
+
+- (CGSize)cellSizeWithFont:(NSFont *)font linespacing:(CGFloat)linespacing {
+  // cf. https://developer.apple.com/library/mac/documentation/TextFonts/Conceptual/CocoaTextArchitecture/FontHandling/FontHandling.html
+  CGFloat ascent = CTFontGetAscent((CTFontRef) _font);
+  CGFloat descent = CTFontGetDescent((CTFontRef) _font);
+  CGFloat leading = CTFontGetLeading((CTFontRef) _font);
+
+  CGSize result = CGSizeMake(
+      round([@"m" sizeWithAttributes:@{ NSFontAttributeName : _font }].width),
+      ceil(linespacing * (ascent + descent + leading))
+  );
+
+  return result;
 }
 
 /**

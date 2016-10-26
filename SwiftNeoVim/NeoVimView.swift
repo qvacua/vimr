@@ -63,7 +63,7 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
       self.cellSize = self.drawer.cellSize
       self.descent = self.drawer.descent
       self.leading = self.drawer.leading
-      
+
       self.resizeNeoVimUiTo(size: self.bounds.size)
     }
   }
@@ -141,7 +141,7 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
   ]
 
   public init(frame rect: NSRect, config: Config) {
-    self.drawer = TextDrawer(font: self._font, useLigatures: false)
+    self.drawer = TextDrawer(font: self._font)
     self.agent = NeoVimAgent(uuid: self.uuid)
 
     super.init(frame: CGRect.zero)
@@ -430,7 +430,8 @@ extension NeoVimView {
     }
 
     let string = self.grid.cells[rowFrag.row][rowFrag.range].reduce("") { $0 + $1.string }
-    let glyphPositions = positions.map { CGPoint(x: $0.x, y: $0.y + self.descent + self.leading) }
+    let offset = self.drawer.baselineOffset
+    let glyphPositions = positions.map { CGPoint(x: $0.x, y: $0.y + offset) }
 
     self.drawer.draw(string,
                      positions: UnsafeMutablePointer(mutating: glyphPositions), positionsCount: positions.count,
