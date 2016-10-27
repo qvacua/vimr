@@ -43,10 +43,11 @@ class PrefStore: StandardFlow {
   fileprivate static let defaultEditorFont = NeoVimView.defaultFont
   static let minEditorFontSize = NeoVimView.minFontSize
   static let maxEditorFontSize = NeoVimView.maxFontSize
+  static let defaultEditorFontSize = NeoVimView.defaultFont.pointSize
 
-  fileprivate static let defaultEditorFontLinespacing = NeoVimView.defaultLinespacing
-  static let minEditorFontLinespacing = NeoVimView.minLinespacing
-  static let maxEditorFontLinespacing = NeoVimView.maxLinespacing
+  static let defaultEditorLinespacing = NeoVimView.defaultLinespacing
+  static let minEditorLinespacing = NeoVimView.minLinespacing
+  static let maxEditorLinespacing = NeoVimView.maxLinespacing
 
   fileprivate let userDefaults = UserDefaults.standard
   fileprivate let fontManager = NSFontManager.shared()
@@ -137,8 +138,8 @@ class PrefStore: StandardFlow {
   }
 
   fileprivate func saneLinespacing(_ linespacing: CGFloat) -> CGFloat {
-    guard linespacing >= PrefStore.minEditorFontLinespacing && linespacing <= PrefStore.maxEditorFontLinespacing else {
-      return PrefStore.defaultEditorFontLinespacing
+    guard linespacing >= PrefStore.minEditorLinespacing && linespacing <= PrefStore.maxEditorLinespacing else {
+      return PrefStore.defaultEditorLinespacing
     }
 
     return linespacing

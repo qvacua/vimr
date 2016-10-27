@@ -33,7 +33,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
   fileprivate static let nibName = "MainWindow"
 
   fileprivate var defaultEditorFont: NSFont
-  fileprivate var usesLigatures: Bool
+//  fileprivate var usesLigatures: Bool
 
   fileprivate var _cwd: URL = FileUtils.userHomeUrl
 
@@ -85,7 +85,6 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
     self.workspace = Workspace(mainView: self.neoVimView)
 
     self.defaultEditorFont = initialData.appearance.editorFont
-    self.usesLigatures = initialData.appearance.editorUsesLigatures
     self.fileItemService = fileItemService
     self._cwd = cwd
 
@@ -107,7 +106,8 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
     self.neoVimView.cwd = cwd // This will publish the MainWindowAction.changeCwd action for the file browser.
     self.neoVimView.delegate = self
     self.neoVimView.font = self.defaultEditorFont
-    self.neoVimView.usesLigatures = self.usesLigatures
+    self.neoVimView.usesLigatures = initialData.appearance.editorUsesLigatures
+    self.neoVimView.linespacing = initialData.appearance.editorLinespacing
     self.neoVimView.open(urls: urls)
 
     // We don't call self.fileItemService.monitor(url: cwd) here since self.neoVimView.cwd = cwd causes the call
@@ -179,10 +179,12 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
       .filter { [unowned self] appearanceData in
         !appearanceData.editorFont.isEqual(to: self.neoVimView.font)
           || appearanceData.editorUsesLigatures != self.neoVimView.usesLigatures
+          || appearanceData.editorLinespacing != self.neoVimView.linespacing
       }
       .subscribe(onNext: { [unowned self] appearance in
         self.neoVimView.usesLigatures = appearance.editorUsesLigatures
         self.neoVimView.font = appearance.editorFont
+        self.neoVimView.linespacing = appearance.editorLinespacing
     })
   }
 }

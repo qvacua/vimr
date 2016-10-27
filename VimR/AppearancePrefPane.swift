@@ -199,6 +199,10 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
       self.previewArea.turnOffLigatures(self)
     }
   }
+
+  override func windowWillClose() {
+    self.linespacingAction()
+  }
 }
 
 // MARK: - Actions
@@ -251,18 +255,59 @@ extension AppearancePrefPane {
   }
 
   func linespacingAction() {
-    
+    let newLinespacing = self.cappedLinespacing(self.linespacingField.floatValue)
+    self.set(data: AppearancePrefData(editorFont: self.data.editorFont,
+                                      editorLinespacing: newLinespacing,
+                                      editorUsesLigatures: self.data.editorUsesLigatures))
+  }
+
+  fileprivate func cappedLinespacing(_ linespacing: Float) -> CGFloat {
+    let cgfLinespacing = CGFloat(linespacing)
+
+    guard cgfLinespacing >= PrefStore.minEditorLinespacing else {
+      return PrefStore.defaultEditorLinespacing
+    }
+
+    guard cgfLinespacing <= PrefStore.maxEditorLinespacing else {
+      return PrefStore.maxEditorLinespacing
+    }
+
+    return cgfLinespacing
   }
 
   fileprivate func cappedFontSize(_ size: Int) -> CGFloat {
-    guard size >= 4 else {
-      return 13
+    let cgfSize = CGFloat(size)
+
+    guard cgfSize >= PrefStore.minEditorFontSize else {
+      return PrefStore.defaultEditorFontSize
     }
 
-    guard size <= 128 else {
-      return 128
+    guard cgfSize <= PrefStore.maxEditorFontSize else {
+      return PrefStore.maxEditorFontSize
     }
 
-    return CGFloat(size)
+    return cgfSize
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
