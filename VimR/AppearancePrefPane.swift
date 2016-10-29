@@ -189,7 +189,7 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
 
     self.fontPopup.selectItem(withTitle: newFont.fontName)
     self.sizeCombo.stringValue = String(Int(newFont.pointSize))
-    self.linespacingField.floatValue = Float(newData.editorLinespacing)
+    self.linespacingField.stringValue = String(format: "%.2f", newData.editorLinespacing)
     self.ligatureCheckbox.boolState = newData.editorUsesLigatures
     self.previewArea.font = newData.editorFont
 
@@ -289,25 +289,3 @@ extension AppearancePrefPane {
     return cgfSize
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -36,6 +36,11 @@ private class PrefKeys {
 }
 
 // TODO: We should generalize the persisting of pref data.
+/**
+ To reset prefs
+ $ defaults write com.qvacua.vimr 38 -dict editor-font-name InputMonoCompressed-Regular editor-font-size 13 editor-uses-ligatures 0 open-new-window-on-reactivation 1 open-new-window-when-launching 1
+ $ defaults read ~/Library/Preferences/com.qvacua.VimR
+ */
 class PrefStore: StandardFlow {
 
   fileprivate static let compatibleVersion = "38"
@@ -86,9 +91,7 @@ class PrefStore: StandardFlow {
     let editorFont = self.saneFont(editorFontName, fontSize: editorFontSize)
 
     let usesLigatures = self.bool(from: prefs, for: PrefKeys.editorUsesLigatures, default: false)
-    let linespacing = self.saneLinespacing(
-      CGFloat((prefs[PrefKeys.editorLinespacing] as? NSNumber)?.floatValue ?? Float(1))
-    )
+    let linespacing = self.saneLinespacing(Float((prefs[PrefKeys.editorLinespacing] as? String) ?? "1") ?? 1)
     let openNewWindowWhenLaunching = self.bool(from: prefs, for: PrefKeys.openNewWindowWhenLaunching, default: true)
     let openNewWindowOnReactivation = self.bool(from: prefs, for: PrefKeys.openNewWindowOnReactivation, default: true)
 
@@ -137,7 +140,8 @@ class PrefStore: StandardFlow {
     return editorFont
   }
 
-  fileprivate func saneLinespacing(_ linespacing: CGFloat) -> CGFloat {
+  fileprivate func saneLinespacing(_ fLinespacing: Float) -> CGFloat {
+    let linespacing = CGFloat(fLinespacing)
     guard linespacing >= PrefStore.minEditorLinespacing && linespacing <= PrefStore.maxEditorLinespacing else {
       return PrefStore.defaultEditorLinespacing
     }
@@ -162,7 +166,7 @@ class PrefStore: StandardFlow {
       // Appearance
       PrefKeys.editorFontName: appearanceData.editorFont.fontName as Any,
       PrefKeys.editorFontSize: appearanceData.editorFont.pointSize as Any,
-      PrefKeys.editorLinespacing: appearanceData.editorLinespacing as Any,
+      PrefKeys.editorLinespacing: String(format: "%.2f", appearanceData.editorLinespacing) as Any,
       PrefKeys.editorUsesLigatures: appearanceData.editorUsesLigatures as Any,
 
       // Advanced
