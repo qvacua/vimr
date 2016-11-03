@@ -34,9 +34,9 @@ extension URL {
     
     do {
       try (self as NSURL).getResourceValue(&rsrc, forKey: URLResourceKey(rawValue: key))
-    } catch {
+    } catch let error as NSError {
       // FIXME error handling
-      print("\(#function): \(self) -> ERROR while getting \(key)")
+      print("\(#function): \(self) -> ERROR while getting \(key): \(error)")
       return false
     }
     

@@ -142,6 +142,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
     self.mainWindow?.sink
       .filter { $0 is MainWindowAction }
       .map { $0 as! MainWindowAction }
+      .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] action in
         switch action {
         case .close:

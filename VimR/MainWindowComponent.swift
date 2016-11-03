@@ -178,6 +178,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
         !appearanceData.editorFont.isEqual(to: self.neoVimView.font)
           || appearanceData.editorUsesLigatures != self.neoVimView.usesLigatures
       }
+      .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] appearance in
         self.neoVimView.usesLigatures = appearance.editorUsesLigatures
         self.neoVimView.font = appearance.editorFont
