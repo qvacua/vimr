@@ -7,23 +7,30 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.10.0-SNAPSHOT-20161029.1904-117</title>
+      <title>v0.10.0-118</title>
       <description><![CDATA[
     <ul>
-<li>GH-270 Add a preference entry for linespacing in the Appearances pane.</li>
-<li>neovim/neovim@3d49fc1f5043f0d6cd3a58fbb29767cfba40b014</li>
+<li>GH-309: When opening a file via a GUI action, check whether the file is already open.<ul>
+<li>Open in a tab or split: select the tab/split</li>
+<li>Open in another (GUI) window: let NeoVim handle it.</li>
+</ul>
+</li>
+<li>GH-239, GH-312: Turn on font smoothing such that the 'Use LCD font smoothing when available' setting from the General system preferences pane is respected.</li>
+<li>GH-270: Make line spacing configurable via the 'Appearances' preferences pane.</li>
+<li>GH-322: Fix crashes related to the file browser.</li>
+<li>Bugfix: The command line tool <code>vimr</code> sometimes does not open the files in the frontmost window.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.10.0-SNAPSHOT-20161029.1904-117
+        https://github.com/qvacua/vimr/releases/tag/v0.10.0-118
       </releaseNotesLink>
-      <pubDate>2016-10-29T19:18:09.977641</pubDate>
+      <pubDate>2016-11-04T22:32:39.114160</pubDate>
       <minimumSystemVersion>10.11.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.10.0-SNAPSHOT-20161029.1904-117/VimR-v0.10.0-SNAPSHOT-20161029.1904-117.tar.bz2"
-                 sparkle:version="117"
-                 sparkle:shortVersionString="0.10.0-SNAPSHOT-20161029.1904"
-                 sparkle:dsaSignature="MCwCFH6Snu71JCT/Z+wIqz0Caj62cPAlAhQ/VxenGt8/gQMdWmbO26Bway2jzg=="
-                 length="8895709"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.10.0-118/VimR-v0.10.0-118.tar.bz2"
+                 sparkle:version="118"
+                 sparkle:shortVersionString="0.10.0"
+                 sparkle:dsaSignature="MC0CFBtKoWkAkHfFgnw811sMOJRINPafAhUAxFmCmw1sfphw5kfjAfjK9JHYsR4="
+                 length="9008094"
                  type="application/octet-stream"/>
     </item>
   </channel>
