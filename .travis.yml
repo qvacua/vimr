@@ -4,5 +4,5 @@ git:
     depth: 1
 before_install:
     - brew update
-    - brew install libtool automake cmake pkg-config gettext ninja
+    - brew install libtool automake gettext ninja
 script: ./bin/build_for_yosemite.sh
