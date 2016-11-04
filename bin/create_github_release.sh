@@ -12,18 +12,24 @@ pushd build/Release
 
 tar cjf ${VIMR_FILE_NAME} VimR.app
 
-PRERELEASE=""
+echo "### Creating release"
 if [ "${IS_SNAPSHOT}" = true ] ; then
-    PRERELEASE="--pre-release"
+    GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release release \
+        --user qvacua \
+        --repo vimr \
+        --tag "${TAG}" \
+        --pre-release \
+        --name "${COMPOUND_VERSION}" \
+        --description "${RELEASE_NOTES}"
+else
+    GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release release \
+        --user qvacua \
+        --repo vimr \
+        --tag "${TAG}" \
+        --name "${COMPOUND_VERSION}" \
+        --description "${RELEASE_NOTES}"
 fi
 
-echo "### Creating release"
-GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release release \
-    --user qvacua \
-    --repo vimr \
-    --tag "${TAG}" \
-    --name "${COMPOUND_VERSION}" "${PRERELEASE}" \
-    --description "${RELEASE_NOTES}"
 
 echo "### Uploading build"
 GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release upload \
