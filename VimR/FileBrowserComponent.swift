@@ -60,6 +60,7 @@ class FileBrowserComponent: ViewComponent {
     self.fileItemService.sink
       .filter { $0 is FileItemServiceChange }
       .map { $0 as! FileItemServiceChange }
+      .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] action in
         switch action {
         case let .childrenChanged(root, fileItem):
@@ -69,9 +70,7 @@ class FileBrowserComponent: ViewComponent {
 
           // FIXME: restore expanded states
           if fileItem?.url == self.cwd {
-            DispatchUtils.gui {
-              self.fileView.reloadItem(nil, reloadChildren: true)
-            }
+            self.fileView.reloadItem(nil, reloadChildren: true)
           }
 
           guard self.fileView.row(forItem: fileItem) > -1 else {
@@ -79,9 +78,7 @@ class FileBrowserComponent: ViewComponent {
           }
           
           // FIXME: restore expanded states
-          DispatchUtils.gui {
-            self.fileView.reloadItem(fileItem, reloadChildren: true)
-          }
+          self.fileView.reloadItem(fileItem, reloadChildren: true)
         }
         })
       .addDisposableTo(self.disposeBag)
@@ -104,6 +101,7 @@ class FileBrowserComponent: ViewComponent {
     return source
       .filter { $0 is MainWindowAction }
       .map { $0 as! MainWindowAction }
+      .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] action in
         switch action {
         case let .changeCwd(mainWindow: mainWindow):

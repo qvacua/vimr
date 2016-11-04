@@ -181,6 +181,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
           || appearanceData.editorUsesLigatures != self.neoVimView.usesLigatures
           || appearanceData.editorLinespacing != self.neoVimView.linespacing
       }
+      .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] appearance in
         self.neoVimView.usesLigatures = appearance.editorUsesLigatures
         self.neoVimView.font = appearance.editorFont
