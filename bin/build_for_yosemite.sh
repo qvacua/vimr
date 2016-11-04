@@ -6,4 +6,4 @@ set -e
 
 ./bin/prepare_repositories.sh
 ./bin/clean_old_builds.sh
-./bin/build_vimr.sh true
+./bin/build_vimr.sh false
