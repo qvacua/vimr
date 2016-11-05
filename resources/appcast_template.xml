@@ -15,7 +15,7 @@
         ${release_notes_link}
       </releaseNotesLink>
       <pubDate>${publication_date}</pubDate>
-      <minimumSystemVersion>10.11.0</minimumSystemVersion>
+      <minimumSystemVersion>10.10.0</minimumSystemVersion>
       <enclosure url="${file_url}"
                  sparkle:version="${bundle_version}"
                  sparkle:shortVersionString="${marketing_version}"
