@@ -21,7 +21,7 @@ Builds a new snapshot of VimR and pushes the tag:<br>
   }
 
   parameters {
-    stringParam('BRANCH', 'master', 'Branch to build; defaults to master')
+    stringParam('BRANCH', 'develop', 'Branch to build; defaults to develop')
     textParam('RELEASE_NOTES', null, 'Release notes')
     booleanParam('IS_SNAPSHOT', true)
     booleanParam('UPDATE_APPCAST', true)
@@ -38,7 +38,6 @@ Builds a new snapshot of VimR and pushes the tag:<br>
   }
 
   wrappers {
-    timestamps()
     colorizeOutput()
   }
 

@@ -3,6 +3,7 @@
 # For jenkins
 
 set -e
+set -x
 
 # for utf-8 for python script
 export LC_CTYPE=en_US.UTF-8
@@ -14,6 +15,31 @@ export PATH=/usr/local/bin:$PATH
 # - MARKETING_VERSION
 # - RELEASE_NOTES
 # - UPDATE_APPCAST
+
+if [ "${IS_SNAPSHOT}" = false ] && [ "${MARKETING_VERSION}" == "" ] ; then
+    echo "### ERROR If not snapshot, then the marketing version must be set!"
+    exit 1
+fi
+
+if [ "${RELEASE_NOTES}" == "" ] ; then
+    echo "### ERROR No release notes!"
+    exit 1
+fi
+
+if [ "${IS_SNAPSHOT}" = false ] && [ $"{UPDATE_APPCAST}" = false ] ; then
+    echo "### ERROR Not updating appcast for release!"
+    exit 1
+fi
+
+if [ "${IS_SNAPSHOT}" = false ] && [ $"{BRANCH}" != "master" ] ; then
+    echo "### ERROR Not building master for release!"
+    exit 1
+fi
+
+if [ "${IS_SNAPSHOT}" = true ] && [ $"{BRANCH}" == "master" ] ; then
+    echo "### ERROR Building master for snapshot!"
+    exit 1
+fi
 
 echo "### Installing some python packages"
 

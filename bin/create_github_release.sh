@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -x
 
 COMPOUND_VERSION=$1
 TAG=$2

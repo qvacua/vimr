@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -x
 
 IS_SNAPSHOT=$1
 MARKETING_VERSION=$2
