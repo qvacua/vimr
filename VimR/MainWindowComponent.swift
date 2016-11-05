@@ -212,12 +212,12 @@ extension MainWindowComponent {
   @IBAction func openDocument(_ sender: Any?) {
     let panel = NSOpenPanel()
     panel.canChooseDirectories = true
+    panel.allowsMultipleSelection = true
     panel.beginSheetModal(for: self.window) { result in
       guard result == NSFileHandlingPanelOKButton else {
         return
       }
       
-      // The open panel can choose only one file.
       self.neoVimView.open(urls: panel.urls)
     }
   }

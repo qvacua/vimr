@@ -259,6 +259,7 @@ extension AppDelegate {
   @IBAction func openDocument(_ sender: Any?) {
     let panel = NSOpenPanel()
     panel.canChooseDirectories = true
+    panel.allowsMultipleSelection = true
     panel.begin { result in
       guard result == NSFileHandlingPanelOKButton else {
         return
