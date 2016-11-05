@@ -11,7 +11,6 @@ if [ "${IS_SNAPSHOT}" = true ] ; then
     cp ./build/Release/appcast_snapshot.xml .
 else
     cp ./build/Release/appcast.xml .
-    cp ./build/Release/appcast.xml ./appcast_snapshot.xml
 fi
 
 echo "### Commiting and pushing appcast"

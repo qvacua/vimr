@@ -107,7 +107,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     DispatchUtils.gui {
       if self.prefStore.data.advanced.useSnapshotUpdateChannel {
         self.updater?.feedURL = URL(
-          string: "https://raw.githubusercontent.com/qvacua/vimr/master/appcast_snapshot.xml"
+          string: "https://raw.githubusercontent.com/qvacua/vimr/develop/appcast_snapshot.xml"
         )
       } else {
         self.updater?.feedURL = URL(
