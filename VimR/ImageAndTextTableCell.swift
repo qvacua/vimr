@@ -56,7 +56,6 @@ class ImageAndTextTableCell: NSTableCellView {
     textField.font = ImageAndTextTableCell.font
     textField.isBordered = false
     textField.isBezeled = false
-    textField.allowsDefaultTighteningForTruncation = true
     textField.allowsEditingTextAttributes = false
     textField.isEditable = false
     textField.usesSingleLineMode = true
