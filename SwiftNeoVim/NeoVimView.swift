@@ -234,6 +234,10 @@ extension NeoVimView {
   public func currentBuffer() -> NeoVimBuffer? {
     return self.agent.buffers().filter { $0.isCurrent }.first
   }
+  
+  public func allBuffers() -> [NeoVimBuffer] {
+    return self.agent.tabs().map { $0.allBuffers() }.flatMap { $0 }
+  }
 
   public func hasDirtyDocs() -> Bool {
     return self.agent.hasDirtyDocs()
@@ -250,7 +254,7 @@ extension NeoVimView {
 
   public func open(urls: [URL]) {
     let tabs = self.agent.tabs()
-    let buffers = tabs.map { $0.allBuffers() }.flatMap { $0 }
+    let buffers = self.allBuffers()
     let currentBufferIsTransient = buffers.filter { $0.isCurrent }.first?.isTransient ?? false
 
     urls.enumerated().forEach { (idx, url) in

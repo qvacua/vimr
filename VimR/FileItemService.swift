@@ -75,7 +75,7 @@ class FileItemService: StandardFlow {
                                          queue: self.monitorDispatchQueue)
     { [unowned self] events in
       let urls = events.map { URL(fileURLWithPath: $0.path) }
-      let parent = FileUtils.commonParent(ofUrls: urls)
+      let parent = FileUtils.commonParent(of: urls)
 
       let parentItem = self.fileItem(for: parent)
 

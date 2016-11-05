@@ -103,11 +103,12 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
 
     self.addReactions()
 
-    self.neoVimView.cwd = cwd // This will publish the MainWindowAction.changeCwd action for the file browser.
     self.neoVimView.delegate = self
     self.neoVimView.font = self.defaultEditorFont
     self.neoVimView.usesLigatures = initialData.appearance.editorUsesLigatures
     self.neoVimView.linespacing = initialData.appearance.editorLinespacing
+    
+    self.neoVimView.cwd = cwd // This will publish the MainWindowAction.changeCwd action for the file browser.
     self.neoVimView.open(urls: urls)
 
     // We don't call self.fileItemService.monitor(url: cwd) here since self.neoVimView.cwd = cwd causes the call
@@ -218,7 +219,14 @@ extension MainWindowComponent {
         return
       }
       
-      self.neoVimView.open(urls: panel.urls)
+      let urls = panel.urls
+      if self.neoVimView.allBuffers().count == 1 {
+        let isTransient = self.neoVimView.allBuffers().first?.isTransient ?? false
+        if isTransient {
+          self.neoVimView.cwd = FileUtils.commonParent(of: urls)
+        }
+      }
+      self.neoVimView.open(urls: urls)
     }
   }
 

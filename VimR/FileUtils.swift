@@ -43,7 +43,7 @@ class FileUtils {
     return self.fileManager.fileExists(atPath: path)
   }
 
-  static func commonParent(ofUrls urls: [URL]) -> URL {
+  static func commonParent(of urls: [URL]) -> URL {
     guard urls.count > 0 else {
       return URL(fileURLWithPath: "/", isDirectory: true)
     }

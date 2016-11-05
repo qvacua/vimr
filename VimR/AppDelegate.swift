@@ -265,7 +265,10 @@ extension AppDelegate {
         return
       }
       
-      _ = self.mainWindowManager.newMainWindow(urls: panel.urls)
+      let urls = panel.urls
+      let commonParentUrl = FileUtils.commonParent(of: urls)
+      
+      _ = self.mainWindowManager.newMainWindow(urls: urls, cwd: commonParentUrl)
     }
   }
 }
