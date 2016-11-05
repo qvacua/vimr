@@ -28,11 +28,11 @@ There are other working NeoVim GUIs for OS X, e.g. [NyaoVim](https://github.com/
 
 ### SwiftNeoVim
 
-[SwiftNeoVim](https://github.com/qvacua/vimr/tree/master/SwiftNeoVim) is VimR's Cocoa Framework which bundles everything, e.g. NeoVim's `runtime`-files, needed to embed NeoVim in a Cocoa App. See [the wiki page](https://github.com/qvacua/vimr/wiki/SwiftNeoVim-Framework) for more details.
+[SwiftNeoVim](https://github.com/qvacua/vimr/tree/master/SwiftNeoVim) is VimR's Cocoa Framework which bundles everything, e.g. NeoVim's `runtime`-files, needed to embed NeoVim in a Cocoa App. See the [wiki](https://github.com/qvacua/vimr/wiki/SwiftNeoVim-Framework) for more details.
 
 ---
 
-If you want to support VimR financially, you can use [Bountysource](https://www.bountysource.com/teams/vimr). Big thanks to [all](https://www.bountysource.com/teams/vimr/backers) who did support: We've spent 2 × 99€ for two year's worth of Apple's Developer Program as you may have noticed from the code-signed snapshot builds. Seriously you guys@Apple; You should make it free for free App makers and open source developers.
+If you want to support VimR financially, you can use [Bountysource](https://www.bountysource.com/teams/vimr). Big thanks to [all](https://www.bountysource.com/teams/vimr/backers) who did support: We list our spendings in the [wiki](https://github.com/qvacua/vimr/wiki/How-we-use-the-donations).
 
 ## Download
 
