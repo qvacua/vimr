@@ -1,8 +1,0 @@
-language: objective-c
-osx_image: xcode8
-git:
-    depth: 1
-before_install:
-    - brew update
-    - brew install libtool automake gettext ninja
-script: ./bin/build_for_yosemite.sh
