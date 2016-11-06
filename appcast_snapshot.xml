@@ -7,30 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.10.0-118</title>
+      <title>v0.11.0-SNAPSHOT-20161106.2224-119</title>
       <description><![CDATA[
     <ul>
-<li>GH-309: When opening a file via a GUI action, check whether the file is already open.<ul>
-<li>Open in a tab or split: select the tab/split</li>
-<li>Open in another (GUI) window: let NeoVim handle it.</li>
-</ul>
-</li>
-<li>GH-239, GH-312: Turn on font smoothing such that the 'Use LCD font smoothing when available' setting from the General system preferences pane is respected.</li>
-<li>GH-270: Make line spacing configurable via the 'Appearances' preferences pane.</li>
-<li>GH-322: Fix crashes related to the file browser.</li>
-<li>Bugfix: The command line tool <code>vimr</code> sometimes does not open the files in the frontmost window.</li>
+<li>GH-308: When opening a file in a new window set <code>cwd</code> to the parent folder of the file.</li>
+<li>GH-321: Fix <code>Cmd-V</code> in terminal mode.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.10.0-118
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161106.2224-119
       </releaseNotesLink>
-      <pubDate>2016-11-04T22:32:39.114160</pubDate>
-      <minimumSystemVersion>10.11.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.10.0-118/VimR-v0.10.0-118.tar.bz2"
-                 sparkle:version="118"
-                 sparkle:shortVersionString="0.10.0"
-                 sparkle:dsaSignature="MC0CFBtKoWkAkHfFgnw811sMOJRINPafAhUAxFmCmw1sfphw5kfjAfjK9JHYsR4="
-                 length="9008094"
+      <pubDate>2016-11-06T22:33:39.592067</pubDate>
+      <minimumSystemVersion>10.10.0</minimumSystemVersion>
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161106.2224-119/VimR-v0.11.0-SNAPSHOT-20161106.2224-119.tar.bz2"
+                 sparkle:version="119"
+                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161106.2224"
+                 sparkle:dsaSignature="MC0CFQDryC3oXMlzOlFPL9SnZqwoc7teVgIUPGHyyiRcX8KM+wiWvSeO6VloxEA="
+                 length="9070589"
                  type="application/octet-stream"/>
     </item>
   </channel>
