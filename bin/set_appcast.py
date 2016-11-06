@@ -59,7 +59,3 @@ appcast_file_name = 'appcast_snapshot.xml' if is_snapshot else 'appcast.xml'
 
 with io.open('build/Release/{0}'.format(appcast_file_name), 'w+') as appcast_file:
     appcast_file.write(appcast)
-
-print('--------------------------------')
-print(appcast.strip())
-print('--------------------------------')
