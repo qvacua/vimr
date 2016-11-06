@@ -7,23 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.11.0-SNAPSHOT-20161106.2224-119</title>
+      <title>v0.11.0-SNAPSHOT-20161106.2304-120</title>
       <description><![CDATA[
     <ul>
-<li>GH-308: When opening a file in a new window set <code>cwd</code> to the parent folder of the file.</li>
-<li>GH-321: Fix <code>Cmd-V</code> in terminal mode.</li>
+<li>GH-321: Fix for real this time... 😶</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161106.2224-119
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161106.2304-120
       </releaseNotesLink>
-      <pubDate>2016-11-06T22:33:39.592067</pubDate>
+      <pubDate>2016-11-06T23:20:58.635549</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161106.2224-119/VimR-v0.11.0-SNAPSHOT-20161106.2224-119.tar.bz2"
-                 sparkle:version="119"
-                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161106.2224"
-                 sparkle:dsaSignature="MC0CFQDryC3oXMlzOlFPL9SnZqwoc7teVgIUPGHyyiRcX8KM+wiWvSeO6VloxEA="
-                 length="9070589"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161106.2304-120/VimR-v0.11.0-SNAPSHOT-20161106.2304-120.tar.bz2"
+                 sparkle:version="120"
+                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161106.2304"
+                 sparkle:dsaSignature="MC4CFQDmOvYq8bk6RP3MY7jgyMQd89BBLAIVAN7wrRtO4h9dpcFQJVYaq3qacslK"
+                 length="8926970"
                  type="application/octet-stream"/>
     </item>
   </channel>
