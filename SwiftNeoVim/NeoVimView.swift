@@ -692,7 +692,7 @@ extension NeoVimView {
     }
 
     switch self.mode {
-    case .Cmdline, .Insert, .Replace:
+    case .Cmdline, .Insert, .Replace, .Term:
       self.agent.vimInput(self.vimPlainString(content))
     case .Normal, .Visual:
       self.agent.vimInput("\"+p")

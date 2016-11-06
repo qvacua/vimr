@@ -6,12 +6,14 @@
 @import Foundation;
 
 
+// Keep in sync with the constants in vim.h
 typedef NS_ENUM(NSUInteger, Mode) {
     Normal    = 0x01,
     Visual    = 0x02,
     Cmdline   = 0x08,
     Insert    = 0x10,
     Replace   = 0x50,
+    Term      = 0x2000,
 };
 
 typedef NS_ENUM(NSUInteger, FontTrait) {
