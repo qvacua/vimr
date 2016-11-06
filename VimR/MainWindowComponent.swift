@@ -308,6 +308,7 @@ extension MainWindowComponent {
     if fileBrowserTool.isSelected {
       if fileBrowserTool.viewComponent.isFirstResponder {
         fileBrowserTool.toggle()
+        self.focusNeoVimView(self)
       } else {
         fileBrowserTool.viewComponent.beFirstResponder()
       }
