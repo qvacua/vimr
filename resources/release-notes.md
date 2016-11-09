@@ -1,7 +1,4 @@
-* GH-309: When opening a file via a GUI action, check whether the file is already open.
-    - Open in a tab or split: select the tab/split
-    - Open in another (GUI) window: let NeoVim handle it.
-* GH-239, GH-312: Turn on font smoothing such that the "Use LCD font smoothing when available" setting from the General system preferences pane is respected.
-* GH-270: Make line spacing configurable via the "Appearances" preferences pane.
-* GH-322: Fix crashes related to the file browser.
-* Bugfix: The command line tool `vimr` sometimes does not open the files in the frontmost window.
+* GH-321: Cmd-V now works in the terminal mode.
+* GH-330: Closing the file browser with Cmd-1 now focuses the Neovim view.
+* Update RxSwift from 3.0.0-rc1 to 3.0.1
+
