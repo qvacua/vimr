@@ -1,6 +1,9 @@
 #!/bin/bash
 
 set -e
+
+TOKEN=$(cat ~/.config/github.qvacua.release.token)
+
 set -x
 
 COMPOUND_VERSION=$1
@@ -15,7 +18,7 @@ tar cjf ${VIMR_FILE_NAME} VimR.app
 
 echo "### Creating release"
 if [ "${IS_SNAPSHOT}" = true ] ; then
-    GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release release \
+    GITHUB_TOKEN="${TOKEN}" github-release release \
         --user qvacua \
         --repo vimr \
         --tag "${TAG}" \
@@ -23,7 +26,7 @@ if [ "${IS_SNAPSHOT}" = true ] ; then
         --name "${COMPOUND_VERSION}" \
         --description "${RELEASE_NOTES}"
 else
-    GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release release \
+    GITHUB_TOKEN="${TOKEN}" github-release release \
         --user qvacua \
         --repo vimr \
         --tag "${TAG}" \
@@ -33,7 +36,7 @@ fi
 
 
 echo "### Uploading build"
-GITHUB_TOKEN=$(cat ~/.config/github.qvacua.release.token) github-release upload \
+GITHUB_TOKEN="${TOKEN}" github-release upload \
     --user qvacua \
     --repo vimr \
     --tag "${TAG}" \
