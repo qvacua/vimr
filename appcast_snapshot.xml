@@ -7,22 +7,24 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.11.0-SNAPSHOT-20161106.2304-120</title>
+      <title>v0.11.0-SNAPSHOT-20161109.2136-121</title>
       <description><![CDATA[
     <ul>
-<li>GH-321: Fix for real this time... 😶</li>
+<li>GH-330: Closing the file browser with Cmd-1 now focuses the Neovim view.</li>
+<li>Update RxSwift from 3.0.0-rc1 to 3.0.1</li>
+<li>Update Neovim to neovim/neovim@0213e99aaf6eba303fd459183dd14a4a11cc5b07 (inccommand)</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161106.2304-120
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161109.2136-121
       </releaseNotesLink>
-      <pubDate>2016-11-06T23:20:58.635549</pubDate>
+      <pubDate>2016-11-09T21:48:05.494262</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161106.2304-120/VimR-v0.11.0-SNAPSHOT-20161106.2304-120.tar.bz2"
-                 sparkle:version="120"
-                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161106.2304"
-                 sparkle:dsaSignature="MC4CFQDmOvYq8bk6RP3MY7jgyMQd89BBLAIVAN7wrRtO4h9dpcFQJVYaq3qacslK"
-                 length="8926970"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161109.2136-121/VimR-v0.11.0-SNAPSHOT-20161109.2136-121.tar.bz2"
+                 sparkle:version="121"
+                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161109.2136"
+                 sparkle:dsaSignature="MC4CFQDFu04Gbm+w+2KgGF66NHTavi42WQIVAKLXgbzxQ0QMGUJ+pOlrsaqIMcW4"
+                 length="8907180"
                  type="application/octet-stream"/>
     </item>
   </channel>
