@@ -29,6 +29,17 @@ static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
 data_to_array(int)
 data_to_array(NSInteger)
 
+static inline NSUInteger response_id_from_data(NSData *data) {
+  NSUInteger *values = data.bytes;
+  return values[0];
+}
+
+static inline NSData *data_without_response_id(NSData *data) {
+  NSUInteger *values = data.bytes;
+  NSUInteger length = data.length - sizeof(NSUInteger);
+  return length == 0 ? NSData.new : [NSData dataWithBytes:(values + 1) length:length];
+}
+
 @interface NeoVimServer ()
 
 - (NSData *)handleMessageWithId:(SInt32)msgid data:(NSData *)data;
@@ -179,14 +190,18 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     }
 
     case NeoVimAgentMsgIdCommandOutput: {
-      NSUInteger *values = (NSUInteger *) data.bytes;
-      NSUInteger responseId = values[0];
-      NSString *command = [[NSString alloc] initWithBytes:++values
-                                                   length:data.length - sizeof(NSUInteger)
-                                                 encoding:NSUTF8StringEncoding];
+      NSUInteger responseId = response_id_from_data(data);
+      NSString *command = [[NSString alloc] initWithData:data_without_response_id(data) encoding:NSUTF8StringEncoding];
 
       server_vim_command_output(responseId, command);
+      return nil;
+    }
 
+    case NeoVimAgentMsgIdInputSync: {
+      NSUInteger responseId = response_id_from_data(data);
+      NSString *input = [[NSString alloc] initWithData:data_without_response_id(data) encoding:NSUTF8StringEncoding];
+
+      server_vim_input_sync(responseId, input);
       return nil;
     }
 
@@ -252,16 +267,25 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     }
 
     case NeoVimAgentMsgIdGetBoolOption: {
-      NSString *optionName = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-      return [NSKeyedArchiver archivedDataWithRootObject:server_get_bool_option(optionName)];
+      NSUInteger responseId = response_id_from_data(data);
+      NSString *optionName = [[NSString alloc] initWithData:data_without_response_id(data)
+                                                  encoding:NSUTF8StringEncoding];
+
+      server_get_bool_option(responseId, optionName);
+      return nil;
     }
 
     case NeoVimAgentMsgIdSetBoolOption: {
-      bool *values = (bool *) data.bytes;
-      const char *string = (const char *)(values + 1);
+      NSUInteger responseId = response_id_from_data(data);
+
+      NSData *paramData = data_without_response_id(data);
+      bool *optionValues = (bool *) paramData.bytes;
+      bool optionValue = optionValues[0];
+
+      const char *string = (const char *)(optionValues + 1);
       NSString *optionName = [[NSString alloc] initWithCString:string encoding:NSUTF8StringEncoding];
 
-      server_set_bool_option(optionName, values[0]);
+      server_set_bool_option(responseId, optionName, optionValue);
       return nil;
     }
 

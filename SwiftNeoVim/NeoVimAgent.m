@@ -188,6 +188,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   id result = _requestResponses[@(reqId)];
   [_requestResponses removeObjectForKey:@(reqId)];
 
+  NSLog(@"!!!!!! %lu -> %@", reqId, result);
+
   return result;
 }
 
@@ -201,6 +203,16 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   NSData *resultData = [self responseByWaitingForId:reqId];
   NSString *result = [NSKeyedUnarchiver unarchiveObjectWithData:resultData];
   return [result stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
+- (void)vimInputSync:(NSString *)string {
+  NSUInteger reqId = [self nextRequestResponseId];
+
+  NSMutableData *data = [[NSMutableData alloc] initWithBytes:&reqId length:sizeof(NSUInteger)];
+  [data appendData:[string dataUsingEncoding:NSUTF8StringEncoding]];
+  [self sendMessageWithId:NeoVimAgentMsgIdInputSync data:data expectsReply:NO];
+
+  [self responseByWaitingForId:reqId];
 }
 
 - (void)vimInput:(NSString *)string {
@@ -240,28 +252,34 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (bool)boolOption:(NSString *)option {
-  NSData *data = [option dataUsingEncoding:NSUTF8StringEncoding];
-  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetBoolOption data:data expectsReply:YES];
-  id object = [NSKeyedUnarchiver unarchiveObjectWithData:response];
+  NSUInteger reqId = [self nextRequestResponseId];
 
-  if ([object isKindOfClass:[NSNumber class]]) {
-    return ((NSNumber *) object).boolValue;
-  }
+  NSMutableData *data = [[NSMutableData alloc] initWithBytes:&reqId length:sizeof(NSUInteger)];
+  [data appendData:[option dataUsingEncoding:NSUTF8StringEncoding]];
 
-  return NO;
+  [self sendMessageWithId:NeoVimAgentMsgIdGetBoolOption data:data expectsReply:NO];
+
+  NSData *resultData = [self responseByWaitingForId:reqId];
+  NSNumber *result = [NSKeyedUnarchiver unarchiveObjectWithData:resultData];
+
+  return result.boolValue;
 }
 
 - (void)setBoolOption:(NSString *)option to:(bool)value {
+  NSUInteger reqId = [self nextRequestResponseId];
+
   NSMutableData *data = [NSMutableData new];
 
   bool values[] = { value };
   const char *cstr = [option cStringUsingEncoding:NSUTF8StringEncoding];
-  NSUInteger clength = [option lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
 
+  [data appendBytes:&reqId length:sizeof(NSUInteger)];
   [data appendBytes:values length:sizeof(bool)];
-  [data appendBytes:cstr length:clength + 1];
+  [data appendBytes:cstr length:strlen(cstr)];
 
-  [self sendMessageWithId:NeoVimAgentMsgIdSetBoolOption data:data expectsReply:YES];
+  [self sendMessageWithId:NeoVimAgentMsgIdSetBoolOption data:data expectsReply:NO];
+
+  [self responseByWaitingForId:reqId];
 }
 
 - (void)selectWindow:(NeoVimWindow *)window {
@@ -538,17 +556,24 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       [_bridge cwdChanged];
       return;
 
-    case NeoVimServerMsgIdAsyncResult: {
+    case NeoVimServerMsgIdSyncResult: {
       NSUInteger *values = (NSUInteger *) data.bytes;
       NSUInteger requestId = values[0];
 
-      NSData *resultData = [[NSData alloc] initWithBytes:++values length:data.length - sizeof(NSUInteger)];
+      NSUInteger resultDataLength = data.length - sizeof(NSUInteger);
+      NSData *resultData;
+      if (resultDataLength == 0) {
+        resultData = NSData.new;
+      } else {
+        resultData = [[NSData alloc] initWithBytes:(values + 1) length:resultDataLength];
+      }
 
       NSCondition *condition = _requestResponseConditions[@(requestId)];
       [condition lock];
       _requestResponses[@(requestId)] = resultData;
       [condition broadcast];
       [condition unlock];
+
       return;
     }
 
