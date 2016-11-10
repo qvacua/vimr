@@ -3,4 +3,5 @@
 * GU-308: Set `cwd` to the parent folder of the file when opening a file in a new window 
 * Update RxSwift from `3.0.0-rc1` to `3.0.1`
 * Update Neovim to neovim/neovim@0213e99aaf6eba303fd459183dd14a4a11cc5b07
+    - includes `inccommand`! 😆
 
