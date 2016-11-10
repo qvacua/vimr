@@ -443,13 +443,16 @@ static void neovim_command_output(void **argv) {
     char_u *output = get_vim_var_str(VV_COMMAND_OUTPUT);
 
     // FIXME: handle err.set == true
-    NSData *outputData = [NSData dataWithBytes:output length:strlen((const char *) output)];
+    NSString *result = [[NSString alloc] initWithCString:(const char *) output encoding:NSUTF8StringEncoding];
+    NSData *resultData = [NSKeyedArchiver archivedDataWithRootObject:result];
+//    NSData *outputData = [NSData dataWithBytes:output length:strlen((const char *) output)];
 
     NSMutableData *data = [NSMutableData dataWithBytes:&responseId length:sizeof(NSUInteger)];
-    [data appendData:outputData];
+    [data appendData:resultData];
 
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdCommandOutputResult data:data];
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdAsyncResult data:data];
 
+    [result release];
     free(values); // malloc'ed in loop_schedule(&main_loop, ...) (in _queue) somewhere
     [input release]; // retained in loop_schedule(&main_loop, ...) (in _queue) somewhere
   }
@@ -815,18 +818,40 @@ id <NSCoding> server_get_bool_option(NSString *option) {
   }
 }
 
-void server_set_bool_option(NSString *option, bool value) {
-  Error err;
+static void neovim_set_bool_option(void **argv) {
+  @autoreleasepool {
+    NSString *option = argv[0];
+    bool *values = argv[1];
 
-  Object object = OBJECT_INIT;
-  object.type = kObjectTypeBoolean;
-  object.data.boolean = value;
+    Error err;
+//    err.set = false;
 
-  nvim_set_option(vim_string_from(option), object, &err);
+    Object object = OBJECT_INIT;
+    object.type = kObjectTypeBoolean;
+    object.data.boolean = values[0];
 
-  if (err.set) {
-    WLOG("Error setting the option '%s' to %d: %s", option.cstr, value, err.msg);
+    NSLog(@"%@ to set: %d", option, values[0]);
+
+    nvim_set_option(vim_string_from(option), object, &err);
+    NSLog(@"option set!");
+
+    if (err.set) {
+      WLOG("Error setting the option '%s' to %d: %s", option.cstr, values[0], err.msg);
+    }
+
+    free(values);
+    [option release];
   }
+}
+
+void server_set_bool_option(NSString *option, bool value) {
+  queue(^{
+    bool *values = malloc(sizeof(bool));
+    values[0] = value;
+
+    // release and free in neovim_set_bool_option
+    loop_schedule(&main_loop, event_create(1, neovim_set_bool_option, 2, [option retain], values));
+  });
 }
 
 void server_quit() {
