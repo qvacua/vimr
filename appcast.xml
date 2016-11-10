@@ -7,30 +7,29 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.10.0-118</title>
+      <title>v0.10.1-122</title>
       <description><![CDATA[
     <ul>
-<li>GH-309: When opening a file via a GUI action, check whether the file is already open.<ul>
-<li>Open in a tab or split: select the tab/split</li>
-<li>Open in another (GUI) window: let NeoVim handle it.</li>
+<li>GH-321: <code>Cmd-V</code> now works in the terminal mode.</li>
+<li>GH-330: Closing the file browser with <code>Cmd-1</code> now focuses the Neovim view.</li>
+<li>GU-308: Set <code>cwd</code> to the parent folder of the file when opening a file in a new window</li>
+<li>Update RxSwift from <code>3.0.0-rc1</code> to <code>3.0.1</code></li>
+<li>Update Neovim to neovim/neovim@0213e99aaf6eba303fd459183dd14a4a11cc5b07<ul>
+<li>includes <code>inccommand</code>! 😆</li>
 </ul>
 </li>
-<li>GH-239, GH-312: Turn on font smoothing such that the 'Use LCD font smoothing when available' setting from the General system preferences pane is respected.</li>
-<li>GH-270: Make line spacing configurable via the 'Appearances' preferences pane.</li>
-<li>GH-322: Fix crashes related to the file browser.</li>
-<li>Bugfix: The command line tool <code>vimr</code> sometimes does not open the files in the frontmost window.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.10.0-118
+        https://github.com/qvacua/vimr/releases/tag/v0.10.1-122
       </releaseNotesLink>
-      <pubDate>2016-11-04T22:32:39.114160</pubDate>
-      <minimumSystemVersion>10.11.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.10.0-118/VimR-v0.10.0-118.tar.bz2"
-                 sparkle:version="118"
-                 sparkle:shortVersionString="0.10.0"
-                 sparkle:dsaSignature="MC0CFBtKoWkAkHfFgnw811sMOJRINPafAhUAxFmCmw1sfphw5kfjAfjK9JHYsR4="
-                 length="9008094"
+      <pubDate>2016-11-10T15:28:19.011522</pubDate>
+      <minimumSystemVersion>10.10.0</minimumSystemVersion>
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.10.1-122/VimR-v0.10.1-122.tar.bz2"
+                 sparkle:version="122"
+                 sparkle:shortVersionString="0.10.1"
+                 sparkle:dsaSignature="MC0CFC7+7qp8frwZsNq2uDKyx3nEDw10AhUA4cj44vvMUiFB63oVZay/zZxcAGU="
+                 length="8906932"
                  type="application/octet-stream"/>
     </item>
   </channel>
