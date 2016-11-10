@@ -4,13 +4,17 @@ set -e
 
 TOKEN=$(cat ~/.config/github.qvacua.release.token)
 
-set -x
-
 COMPOUND_VERSION=$1
 TAG=$2
 VIMR_FILE_NAME=$3
 RELEASE_NOTES=$4
 IS_SNAPSHOT=$5
+
+echo "COMPOUND_VERSION: ${COMPOUND_VERSION}"
+echo "TAG: ${TAG}"
+echo "VIMR_FILE_NAME: ${VIMR_FILE_NAME}"
+echo "RELEASE_NOTES: ${RELEASE_NOTES}"
+echo "IS_SNAPSHOT: ${IS_SNAPSHOT}"
 
 pushd build/Release
 
