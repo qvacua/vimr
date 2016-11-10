@@ -26,17 +26,17 @@ if [ "${RELEASE_NOTES}" == "" ] ; then
     exit 1
 fi
 
-if [ "${IS_SNAPSHOT}" = false ] && [ $"{UPDATE_APPCAST}" = false ] ; then
+if [ "${IS_SNAPSHOT}" = false ] && [ "${UPDATE_APPCAST}" = false ] ; then
     echo "### ERROR Not updating appcast for release!"
     exit 1
 fi
 
-if [ "${IS_SNAPSHOT}" = false ] && [ $"{BRANCH}" != "master" ] ; then
+if [ "${IS_SNAPSHOT}" = false ] && [ "${BRANCH}" != "master" ] ; then
     echo "### ERROR Not building master for release!"
     exit 1
 fi
 
-if [ "${IS_SNAPSHOT}" = true ] && [ $"{BRANCH}" == "master" ] ; then
+if [ "${IS_SNAPSHOT}" = true ] && [ "${BRANCH}" == "master" ] ; then
     echo "### ERROR Building master for snapshot!"
     exit 1
 fi
