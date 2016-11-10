@@ -19,4 +19,8 @@
   return [self cStringUsingEncoding:NSUTF8StringEncoding];
 }
 
+- (NSUInteger)clength {
+  return [self lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
+}
+
 @end

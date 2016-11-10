@@ -225,6 +225,31 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   return [self escapedFileNames:@[ fileName ]][0];
 }
 
+- (bool)boolOption:(NSString *)option {
+  NSData *data = [option dataUsingEncoding:NSUTF8StringEncoding];
+  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetBoolOption data:data expectsReply:YES];
+  id object = [NSKeyedUnarchiver unarchiveObjectWithData:response];
+
+  if ([object isKindOfClass:[NSNumber class]]) {
+    return ((NSNumber *) object).boolValue;
+  }
+
+  return NO;
+}
+
+- (void)setBoolOption:(NSString *)option to:(bool)value {
+  NSMutableData *data = [NSMutableData new];
+
+  bool values[] = { value };
+  const char *cstr = [option cStringUsingEncoding:NSUTF8StringEncoding];
+  NSUInteger clength = [option lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
+
+  [data appendBytes:values length:sizeof(bool)];
+  [data appendBytes:cstr length:clength + 1];
+
+  [self sendMessageWithId:NeoVimAgentMsgIdSetBoolOption data:data expectsReply:YES];
+}
+
 - (void)selectWindow:(NeoVimWindow *)window {
   int values[] = { (int) window.handle };
   NSData *data = [[NSData alloc] initWithBytes:values length:sizeof(int)];

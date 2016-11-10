@@ -251,6 +251,20 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return [NSKeyedArchiver archivedDataWithRootObject:server_tabs()];
     }
 
+    case NeoVimAgentMsgIdGetBoolOption: {
+      NSString *optionName = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+      return [NSKeyedArchiver archivedDataWithRootObject:server_get_bool_option(optionName)];
+    }
+
+    case NeoVimAgentMsgIdSetBoolOption: {
+      bool *values = (bool *) data.bytes;
+      const char *string = (const char *)(values + 1);
+      NSString *optionName = [[NSString alloc] initWithCString:string encoding:NSUTF8StringEncoding];
+
+      server_set_bool_option(optionName, values[0]);
+      return nil;
+    }
+
     default:
       return nil;
   }

@@ -90,6 +90,10 @@ static inline void queue(void (^block)()) {
   });
 }
 
+static inline String vim_string_from(NSString *str) {
+  return (String) { .data = (char *) str.cstr, .size = str.clength };
+}
+
 static void set_ui_size(UIBridgeData *bridge, int width, int height) {
   bridge->ui->width = width;
   bridge->ui->height = height;
@@ -411,10 +415,7 @@ static void neovim_command(void **argv) {
     NSString *input = (NSString *) argv[0];
 
     Error err;
-    nvim_command((String) {
-        .data = (char *) input.cstr,
-        .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
-    }, &err);
+    nvim_command(vim_string_from(input), &err);
 
     // FIXME: handle err.set == true
 
@@ -436,10 +437,7 @@ static void neovim_command_output(void **argv) {
     //     .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
     // }, &err);
     do_cmdline_cmd("redir => v:command_output");
-    nvim_command((String) {
-        .data = (char *) input.cstr,
-        .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
-    }, &err);
+    nvim_command(vim_string_from(input), &err);
     do_cmdline_cmd("redir END");
 
     char_u *output = get_vim_var_str(VV_COMMAND_OUTPUT);
@@ -462,10 +460,7 @@ static void neovim_input(void **argv) {
     NSString *input = (NSString *) argv[0];
 
     // FIXME: check the length of the consumed bytes by neovim and if not fully consumed, call vim_input again.
-    nvim_input((String) {
-        .data = (char *) input.cstr,
-        .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
-    });
+    nvim_input(vim_string_from(input));
 
     [input release]; // retained in loop_schedule(&main_loop, ...) (in _queue) somewhere
   }
@@ -799,6 +794,38 @@ void server_select_win(int window_handle) {
     if (win->handle == window_handle) {
       loop_schedule(&main_loop, event_create(1, neovim_select_window, 1, win));
     }
+  }
+}
+
+id <NSCoding> server_get_bool_option(NSString *option) {
+  Error err;
+  Object result = nvim_get_option(vim_string_from(option), &err);
+
+  if (err.set) {
+    WLOG("Error getting the option '%s': %s", option.cstr, err.msg);
+    return NSNull.null;
+  }
+
+  switch (result.type) {
+    case kObjectTypeBoolean:
+      return [@(result.data.boolean) autorelease];
+    default:
+      WLOG("The result type was %d, not a boolean value for '%s'", result.type, option.cstr);
+      return NSNull.null;
+  }
+}
+
+void server_set_bool_option(NSString *option, bool value) {
+  Error err;
+
+  Object object = OBJECT_INIT;
+  object.type = kObjectTypeBoolean;
+  object.data.boolean = value;
+
+  nvim_set_option(vim_string_from(option), object, &err);
+
+  if (err.set) {
+    WLOG("Error setting the option '%s' to %d: %s", option.cstr, value, err.msg);
   }
 }
 

@@ -21,5 +21,7 @@ extern bool server_has_dirty_docs();
 extern NSString *server_escaped_filename(NSString *filename);
 extern NSArray *server_buffers();
 extern NSArray *server_tabs();
+extern id <NSCoding> server_get_bool_option(NSString *option);
+extern void server_set_bool_option(NSString *option, bool value);
 extern void server_select_win(int window_handle);
 extern void server_quit();

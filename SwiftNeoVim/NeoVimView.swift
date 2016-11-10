@@ -200,8 +200,7 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
 
   @IBAction public func debug1(_ sender: AnyObject!) {
     NSLog("DEBUG 1 - Start")
-    let buffers = self.agent.tabs().map { $0.allBuffers() }.flatMap { $0 }
-    NSLog("\(Set(buffers))")
+    self.agent.setBoolOption("paste", to: true)
     NSLog("DEBUG 1 - End")
   }
 

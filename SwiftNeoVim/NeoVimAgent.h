@@ -38,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<NSString *> *)escapedFileNames:(NSArray<NSString *> *)fileNames;
 - (NSArray<NeoVimBuffer *> *)buffers;
 - (NSArray<NeoVimTab*> *)tabs;
+- (bool)boolOption:(NSString *)option;
+- (void)setBoolOption:(NSString *)option to:(bool)value;
 - (void)selectWindow:(NeoVimWindow *)window;
 
 @end

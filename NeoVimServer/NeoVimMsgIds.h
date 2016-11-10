@@ -59,6 +59,9 @@ typedef NS_ENUM(NSUInteger, NeoVimAgentMsgId) {
   NeoVimAgentMsgIdGetBuffers,
   NeoVimAgentMsgIdGetTabs,
 
+  NeoVimAgentMsgIdGetBoolOption,
+  NeoVimAgentMsgIdSetBoolOption,
+
 #ifdef DEBUG
   NeoVimAgentDebug1,
 #endif
