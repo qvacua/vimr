@@ -7,23 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.11.0-SNAPSHOT-20161111.1436-123</title>
+      <title>v0.11.0-SNAPSHOT-20161111.2237-124</title>
       <description><![CDATA[
     <ul>
-<li>GH-332: Turn on <code>paste</code> option before <code>Cmd-V</code>ing (and reset the value)</li>
-<li>GH-333: Set <code>$LANG</code> to <code>utf-8</code> such that non-ASCII characters are not garbled when copied to the system clipboard.</li>
+<li>GH-334: <code>set</code> <code>title</code> and <code>termguicolors</code> by default such that airline works without changing <code>init.vim</code>.</li>
+<li>GH-276: Draw a different, i.e. thin, cursor in the insert mode.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161111.1436-123
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161111.2237-124
       </releaseNotesLink>
-      <pubDate>2016-11-11T14:46:42.402928</pubDate>
+      <pubDate>2016-11-11T22:49:07.920858</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161111.1436-123/VimR-v0.11.0-SNAPSHOT-20161111.1436-123.tar.bz2"
-                 sparkle:version="123"
-                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161111.1436"
-                 sparkle:dsaSignature="MC0CFQCADKMrjewQ4qdtjQKSU4H8s9Tz0gIUQza42bnjEeEqd/BAAa0BMswAXUc="
-                 length="8908838"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161111.2237-124/VimR-v0.11.0-SNAPSHOT-20161111.2237-124.tar.bz2"
+                 sparkle:version="124"
+                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161111.2237"
+                 sparkle:dsaSignature="MC4CFQCOGu5fTZBv5EX90p9Wczf9yoJz2gIVAINv51sNEwdb5FmrtxVBr66LZ7zr"
+                 length="8912485"
                  type="application/octet-stream"/>
     </item>
   </channel>
