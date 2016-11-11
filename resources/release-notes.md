@@ -1,6 +1,7 @@
 # next
 
 * GH-332: Turn on `paste` option before `Cmd-V`ing (and reset the value)
+* GH-333: Set `$LANG` to `utf-8` such that non-ASCII characters are not garbled when copied to the system clipboard.
 
 # 0.10.1-122
 
