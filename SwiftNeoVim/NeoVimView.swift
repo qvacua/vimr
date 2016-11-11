@@ -198,7 +198,7 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
     fatalError("init(coder:) has not been implemented")
   }
 
-  @IBAction public func debug1(_ sender: AnyObject!) {
+  @IBAction public func debug1(_ sender: AnyObject?) {
     NSLog("DEBUG 1 - Start")
     Swift.print("!!!!!!!!!!!!!!!!! \(self.agent.boolOption("paste"))")
     self.agent.setBoolOption("paste", to: true)
@@ -648,7 +648,7 @@ extension NeoVimView {
 // MARK: - Edit Menu Items
 extension NeoVimView {
 
-  @IBAction func undo(_ sender: AnyObject!) {
+  @IBAction func undo(_ sender: AnyObject?) {
     switch self.mode {
     case .Insert, .Replace:
       self.agent.vimInput("<Esc>ui")
@@ -659,7 +659,7 @@ extension NeoVimView {
     }
   }
 
-  @IBAction func redo(_ sender: AnyObject!) {
+  @IBAction func redo(_ sender: AnyObject?) {
     switch self.mode {
     case .Insert, .Replace:
       self.agent.vimInput("<Esc><C-r>i")
@@ -670,7 +670,7 @@ extension NeoVimView {
     }
   }
 
-  @IBAction func cut(_ sender: AnyObject!) {
+  @IBAction func cut(_ sender: AnyObject?) {
     switch self.mode {
     case .Visual, .Normal:
       self.agent.vimInput("\"+d")
@@ -679,7 +679,7 @@ extension NeoVimView {
     }
   }
 
-  @IBAction func copy(_ sender: AnyObject!) {
+  @IBAction func copy(_ sender: AnyObject?) {
     switch self.mode {
     case .Visual, .Normal:
       self.agent.vimInput("\"+y")
@@ -688,7 +688,7 @@ extension NeoVimView {
     }
   }
 
-  @IBAction func paste(_ sender: AnyObject!) {
+  @IBAction func paste(_ sender: AnyObject?) {
     guard let content = self.pasteboard.string(forType: NSPasteboardTypeString) else {
       return
     }
@@ -717,7 +717,7 @@ extension NeoVimView {
     }
   }
 
-  @IBAction func delete(_ sender: AnyObject!) {
+  @IBAction func delete(_ sender: AnyObject?) {
     switch self.mode {
     case .Normal, .Visual:
       self.agent.vimInput("x")
