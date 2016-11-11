@@ -177,6 +177,9 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
 
     // Neovim is ready now: resize neovim to bounds.
     DispatchUtils.gui {
+      self.agent.setBoolOption("title", to: true)
+      self.agent.setBoolOption("termguicolors", to: true)
+
       if noErrorDuringInitialization == false {
         let alert = NSAlert()
         alert.alertStyle = .warning
