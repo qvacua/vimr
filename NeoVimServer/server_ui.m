@@ -462,22 +462,6 @@ static void neovim_command_output(void **argv) {
   }
 }
 
-static void neovim_input_sync(void **argv) {
-  @autoreleasepool {
-    NSUInteger *values = (NSUInteger *) argv[0];
-    NSString *input = (NSString *) argv[1];
-
-    // FIXME: check the length of the consumed bytes by neovim and if not fully consumed, call vim_input again.
-    nvim_input(vim_string_from(input));
-
-    NSData *data = [NSData dataWithBytes:values length:sizeof(NSUInteger)];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSyncResult data:data];
-
-    free(values);
-    [input release]; // retained in loop_schedule(&main_loop, ...) (in _queue) somewhere
-  }
-}
-
 static void neovim_input(void **argv) {
   @autoreleasepool {
     NSString *input = (NSString *) argv[0];
@@ -685,16 +669,6 @@ void server_vim_command_output(NSUInteger responseId, NSString *input) {
   });
 }
 
-void server_vim_input_sync(NSUInteger responseId, NSString *input) {
-  queue(^{
-    NSUInteger *values = malloc(sizeof(NSUInteger));
-    values[0] = responseId;
-
-    // free, release in neovim_input_sync
-    loop_schedule(&main_loop, event_create(1, neovim_input_sync, 2, values, [input retain]));
-  });
-}
-
 void server_vim_input(NSString *input) {
   queue(^{
     if (_marked_text == nil) {
@@ -891,7 +865,7 @@ static void neovim_set_bool_option(void **argv) {
     object.type = kObjectTypeBoolean;
     object.data.boolean = values[0];
 
-    NSLog(@"%@ to set: %d", option, values[0]);
+//    NSLog(@"%@ to set: %d", option, values[0]);
 
     nvim_set_option(vim_string_from(option), object, &err);
 

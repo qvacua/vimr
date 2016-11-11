@@ -188,7 +188,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   id result = _requestResponses[@(reqId)];
   [_requestResponses removeObjectForKey:@(reqId)];
 
-  NSLog(@"!!!!!! %lu -> %@", reqId, result);
+//  NSLog(@"!!!!!! %lu -> %@", reqId, result);
 
   return result;
 }
@@ -203,16 +203,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   NSData *resultData = [self responseByWaitingForId:reqId];
   NSString *result = [NSKeyedUnarchiver unarchiveObjectWithData:resultData];
   return [result stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-}
-
-- (void)vimInputSync:(NSString *)string {
-  NSUInteger reqId = [self nextRequestResponseId];
-
-  NSMutableData *data = [[NSMutableData alloc] initWithBytes:&reqId length:sizeof(NSUInteger)];
-  [data appendData:[string dataUsingEncoding:NSUTF8StringEncoding]];
-  [self sendMessageWithId:NeoVimAgentMsgIdInputSync data:data expectsReply:NO];
-
-  [self responseByWaitingForId:reqId];
 }
 
 - (void)vimInput:(NSString *)string {

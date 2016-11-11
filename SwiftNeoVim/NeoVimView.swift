@@ -203,6 +203,7 @@ public class NeoVimView: NSView, NSUserInterfaceValidations {
     Swift.print("!!!!!!!!!!!!!!!!! \(self.agent.boolOption("paste"))")
     self.agent.setBoolOption("paste", to: true)
     self.agent.vimInput(self.vimPlainString("foo\nbar"))
+    self.agent.setBoolOption("paste", to: false)
     NSLog("DEBUG 1 - End")
   }
 
@@ -695,7 +696,6 @@ extension NeoVimView {
     let curPasteMode = self.agent.boolOption("paste")
     let pasteModeSet: Bool
 
-    NSLog("current: \(curPasteMode)")
     if curPasteMode == false {
       self.agent.setBoolOption("paste", to: true)
       pasteModeSet = true
@@ -704,10 +704,12 @@ extension NeoVimView {
     }
 
     switch self.mode {
-    case .Cmdline, .Insert, .Replace, .Term:
-      self.agent.vimInputSync(self.vimPlainString(content))
+    case .Insert:
+      self.agent.vimInput("<ESC>\"+Pi")
+    case .Cmdline, .Replace, .Term:
+      self.agent.vimInput(self.vimPlainString(content))
     case .Normal, .Visual:
-      self.agent.vimInputSync("\"+p")
+      self.agent.vimInput("\"+p")
     }
 
     if pasteModeSet {
