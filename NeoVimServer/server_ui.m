@@ -828,7 +828,7 @@ static void neovim_get_bool_option(void ** argv) {
       WLOG("Error got no boolean value, but %d, for option '%s': %s", resultObj.type, option.cstr, err.msg);
     }
 
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:[@(result) autorelease]];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@(result)];
     NSData *responseData = data_with_response_id_prefix(responseId, data);
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSyncResult data:responseData];
   }
