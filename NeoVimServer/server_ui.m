@@ -810,36 +810,27 @@ static void neovim_get_bool_option(void ** argv) {
     NSUInteger responseId = values[0];
     NSString *option = argv[1];
 
+    bool result = false;
+
     Error err;
-    Object result = nvim_get_option(vim_string_from(option), &err);
+    Object resultObj = nvim_get_option(vim_string_from(option), &err);
 
     free(values);
     [option release];
 
-    NSData *data;
-    NSData *responseData;
-
     if (err.set) {
-      WLOG("Error getting the option '%s': %s", option.cstr, err.msg);
-      data = [NSKeyedArchiver archivedDataWithRootObject:[@(NO) autorelease]];
-      responseData = data_with_response_id_prefix(responseId, data);
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdSyncResult data:responseData];
-      return;
+      WLOG("Error getting the boolean option '%s': %s", option.cstr, err.msg);
+    }
+    
+    if (resultObj.type == kObjectTypeBoolean) {
+      result = resultObj.data.boolean;
+    } else {
+      WLOG("Error got no boolean value, but %d, for option '%s': %s", resultObj.type, option.cstr, err.msg);
     }
 
-    switch (result.type) {
-      case kObjectTypeBoolean:
-        data = [NSKeyedArchiver archivedDataWithRootObject:[@(result.data.boolean) autorelease]];
-        responseData = data_with_response_id_prefix(responseId, data);
-        [_neovim_server sendMessageWithId:NeoVimServerMsgIdSyncResult data:responseData];
-        return;
-      default:
-        WLOG("The result type was %d, not a boolean value for '%s'", result.type, option.cstr);
-        data = [NSKeyedArchiver archivedDataWithRootObject:[@(NO) autorelease]];
-        responseData = data_with_response_id_prefix(responseId, data);
-        [_neovim_server sendMessageWithId:NeoVimServerMsgIdSyncResult data:responseData];
-        return;
-    }
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:[@(result) autorelease]];
+    NSData *responseData = data_with_response_id_prefix(responseId, data);
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSyncResult data:responseData];
   }
 }
 

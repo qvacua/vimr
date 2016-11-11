@@ -30,12 +30,12 @@ data_to_array(int)
 data_to_array(NSInteger)
 
 static inline NSUInteger response_id_from_data(NSData *data) {
-  NSUInteger *values = data.bytes;
+  NSUInteger *values = (NSUInteger *) data.bytes;
   return values[0];
 }
 
 static inline NSData *data_without_response_id(NSData *data) {
-  NSUInteger *values = data.bytes;
+  NSUInteger *values = (NSUInteger *) data.bytes;
   NSUInteger length = data.length - sizeof(NSUInteger);
   return length == 0 ? NSData.new : [NSData dataWithBytes:(values + 1) length:length];
 }
