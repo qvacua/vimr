@@ -495,10 +495,19 @@ extension NeoVimView {
   }
 
   fileprivate func drawCursor(context: CGContext) {
-    // FIXME: for now do some rudimentary cursor drawing
     let cursorRegion = self.cursorRegion()
     let cursorRow = cursorRegion.top
     let cursorColumnStart = cursorRegion.left
+
+    if self.mode == .Insert {
+      ColorUtils.colorIgnoringAlpha(self.grid.foreground).withAlphaComponent(0.75).set()
+      var cursorRect = self.cellRectFor(row: cursorRow, column: cursorColumnStart)
+      cursorRect.size.width = 2
+      cursorRect.fill()
+      return
+    }
+
+    // FIXME: for now do some rudimentary cursor drawing
     let attrsAtCursor = self.grid.cells[cursorRow][cursorColumnStart].attrs
     let attrs = CellAttributes(fontTrait: attrsAtCursor.fontTrait,
                                foreground: self.grid.background,
