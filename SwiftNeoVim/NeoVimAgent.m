@@ -129,6 +129,14 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   _neoVimServerTask.standardError = nullFileHandle;
 #endif
 
+  // Set $LANG to en_US.UTF-8 such that the copied text to the system clipboard is not garbled.
+  NSMutableDictionary<NSString *, NSString *> *environment = _neoVimServerTask.environment.mutableCopy;
+  if (environment == nil) {
+    environment = NSMutableDictionary.new;
+  }
+  environment[@"LANG"] = @"en_US.UTF-8";
+  _neoVimServerTask.environment = environment;
+
   _neoVimServerTask.standardInput = inputPipe;
   _neoVimServerTask.currentDirectoryPath = NSHomeDirectory();
   _neoVimServerTask.launchPath = shellPath;
