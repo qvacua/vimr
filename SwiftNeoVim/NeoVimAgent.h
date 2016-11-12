@@ -27,7 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)vimCommand:(NSString *)string;
 - (NSString *)vimCommandOutput:(NSString *)string;
 
-- (void)vimInputSync:(NSString *)string;
 - (void)vimInput:(NSString *)string;
 - (void)vimInputMarkedText:(NSString *_Nonnull)markedText;
 - (void)deleteCharacters:(NSInteger)count;
