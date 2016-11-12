@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1108" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11201"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="FileBrowserComponent" customModule="VimR" customModuleProvider="target">
+            <connections>
+                <outlet property="menu" destination="U77-2i-bwE" id="ev9-Ky-wcG"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <menu id="U77-2i-bwE">
+            <items>
+                <menuItem title="Open" id="ata-oi-J0p">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="doubleClickAction:" target="-1" id="FhT-5s-ioH"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="lNm-6A-JJM"/>
+                <menuItem title="Open In New Tab" id="ivP-25-6an">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="openInNewTab:" target="-1" id="GqY-zH-YNp"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Open In Current Tab" id="Rrq-LY-70J">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="openInCurrentTab:" target="-1" id="ieI-as-QFe"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="kYd-Qk-ovX"/>
+                <menuItem title="Open In Horizontal Split" id="9jV-O9-XDm">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="openInHorizontalSplit:" target="-1" id="GmL-Yh-2hZ"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Open In Vertical Split" id="VHo-nQ-PDM">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="openInVerticalSplit:" target="-1" id="oxd-lh-ci7"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="m5x-pf-2gI"/>
+                <menuItem title="Set As Working Directory" id="5Ph-01-gFz">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="setAsWorkingDirectory:" target="-1" id="tpe-qN-Zn6"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Set Parent As Working Directory" id="t6c-sV-7po">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="setParentAsWorkingDirectory:" target="-1" id="kfF-1O-e7p"/>
+                    </connections>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="97" y="-58"/>
+        </menu>
+    </objects>
+</document>

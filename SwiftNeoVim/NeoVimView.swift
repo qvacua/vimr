@@ -254,7 +254,7 @@ extension NeoVimView {
   }
   
   public func newTab() {
-    self.exec(command: "tabe")
+    self.agent.vimCommand("tabe")
   }
 
   public func open(urls: [URL]) {
@@ -291,48 +291,44 @@ extension NeoVimView {
     self.open(url, cmd: "e")
   }
 
+  public func openInHorizontalSplit(urls: [URL]) {
+    urls.forEach { self.open($0, cmd: "sp") }
+  }
+
+  public func openInVerticalSplit(urls: [URL]) {
+    urls.forEach { self.open($0, cmd: "vsp") }
+  }
+
   public func closeCurrentTab() {
-    self.exec(command: "q")
+    self.agent.vimCommand("q")
   }
   
   public func saveCurrentTab() {
-    self.exec(command: "w")
+    self.agent.vimCommand("w")
   }
   
   public func saveCurrentTab(url: URL) {
     let path = url.path
     let escapedFileName = self.agent.escapedFileName(path)
-    self.exec(command: "w \(escapedFileName)")
+    self.agent.vimCommand("w \(escapedFileName)")
   }
 
   public func closeCurrentTabWithoutSaving() {
-    self.exec(command: "q!")
+    self.agent.vimCommand("q!")
   }
 
   public func closeAllWindows() {
-    self.exec(command: "qa")
+    self.agent.vimCommand("qa")
   }
   
   public func closeAllWindowsWithoutSaving() {
-    self.exec(command: "qa!")
-  }
-
-  /// Does the following
-  /// - `Mode.Normal`: `:command<CR>`
-  /// - else: `:<Esc>:command<CR>`
-  fileprivate func exec(command cmd: String) {
-    switch self.mode {
-    case .Normal:
-      self.agent.vimInput(":\(cmd)<CR>")
-    default:
-      self.agent.vimInput("<Esc>:\(cmd)<CR>")
-    }
+    self.agent.vimCommand("qa!")
   }
   
   fileprivate func open(_ url: URL, cmd: String) {
     let path = url.path
     let escapedFileName = self.agent.escapedFileName(path)
-    self.exec(command: "\(cmd) \(escapedFileName)")
+    self.agent.vimCommand("\(cmd) \(escapedFileName)")
   }
 }
 

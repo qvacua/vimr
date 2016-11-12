@@ -9,6 +9,12 @@ import RxSwift
 enum FileBrowserAction {
 
   case open(url: URL)
+  case openInNewTab(url: URL)
+  case openInCurrentTab(url: URL)
+  case openInHorizontalSplit(url: URL)
+  case openInVerticalSplit(url: URL)
+  case setAsWorkingDirectory(url: URL)
+  case setParentAsWorkingDirectory(url: URL)
 }
 
 class FileBrowserComponent: ViewComponent {
@@ -36,7 +42,7 @@ class FileBrowserComponent: ViewComponent {
   init(source: Observable<Any>, fileItemService: FileItemService) {
     self.fileItemService = fileItemService
     self.fileView = FileOutlineView(source: source, fileItemService: fileItemService)
-    
+
     super.init(source: source)
     self.addReactions()
   }
@@ -49,12 +55,19 @@ class FileBrowserComponent: ViewComponent {
     self.fileView.sink
       .filter { $0 is FileOutlineViewAction }
       .map { $0 as! FileOutlineViewAction }
-      .subscribe(onNext: { [unowned self] action in
-        switch action {
-        case let .openFileItem(fileItem):
-          self.doubleAction(for: fileItem)
+      .map {
+        switch $0 {
+        case let .open(fileItem): return FileBrowserAction.open(url: fileItem.url)
+        case let .openFileInNewTab(fileItem): return FileBrowserAction.openInNewTab(url: fileItem.url)
+        case let .openFileInCurrentTab(fileItem): return FileBrowserAction.openInCurrentTab(url: fileItem.url)
+        case let .openFileInHorizontalSplit(fileItem): return FileBrowserAction.openInHorizontalSplit(url: fileItem.url)
+        case let .openFileInVerticalSplit(fileItem): return FileBrowserAction.openInVerticalSplit(url: fileItem.url)
+        case let .setAsWorkingDirectory(fileItem): return FileBrowserAction.setAsWorkingDirectory(url: fileItem.url)
+        case let .setParentAsWorkingDirectory(fileItem):
+          return FileBrowserAction.setParentAsWorkingDirectory(url: fileItem.url)
         }
-      })
+      }
+      .subscribe(onNext: { [unowned self] action in self.publish(event: action) })
       .addDisposableTo(self.disposeBag)
 
     self.fileItemService.sink
@@ -87,7 +100,6 @@ class FileBrowserComponent: ViewComponent {
   override func addViews() {
     let fileView = self.fileView
     NSOutlineView.configure(toStandard: fileView)
-    fileView.doubleAction = #selector(FileBrowserComponent.fileViewDoubleAction)
 
     let scrollView = NSScrollView.standardScrollView()
     scrollView.borderType = .noBorder
@@ -113,25 +125,5 @@ class FileBrowserComponent: ViewComponent {
           break
         }
       })
-  }
-}
-
-// MARK: - Actions
-extension FileBrowserComponent {
-
-  func fileViewDoubleAction() {
-    guard let item = self.fileView.selectedItem as? FileItem else {
-      return
-    }
-
-    self.doubleAction(for: item)
-  }
-
-  fileprivate func doubleAction(for item: FileItem) {
-    if item.dir {
-      self.fileView.toggle(item: item)
-    } else {
-      self.publish(event: FileBrowserAction.open(url: item.url))
-    }
   }
 }

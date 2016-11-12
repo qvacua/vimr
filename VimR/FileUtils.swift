@@ -62,6 +62,6 @@ class FileUtils {
     let result = pathCompsOnlyMin[0]
     let possibleParent = NSURL.fileURL(withPathComponents: Array(result[0...commonIdx]))!
 
-    return possibleParent.dir ? possibleParent : possibleParent.deletingLastPathComponent()
+    return possibleParent.isDir ? possibleParent : possibleParent.parent
   }
 }

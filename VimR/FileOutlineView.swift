@@ -8,7 +8,13 @@ import RxSwift
 
 enum FileOutlineViewAction {
 
-  case openFileItem(fileItem: FileItem)
+  case open(fileItem: FileItem)
+  case openFileInNewTab(fileItem: FileItem)
+  case openFileInCurrentTab(fileItem: FileItem)
+  case openFileInHorizontalSplit(fileItem: FileItem)
+  case openFileInVerticalSplit(fileItem: FileItem)
+  case setAsWorkingDirectory(fileItem: FileItem)
+  case setParentAsWorkingDirectory(fileItem: FileItem)
 }
 
 class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineViewDelegate {
@@ -39,6 +45,13 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
 
     self.dataSource = self
     self.delegate = self
+
+    guard Bundle.main.loadNibNamed("FileBrowserMenu", owner: self, topLevelObjects: nil) else {
+      NSLog("WARN: FileBrowserMenu.xib could not be loaded")
+      return
+    }
+
+    self.doubleAction = #selector(FileOutlineView.doubleClickAction)
   }
 }
 
@@ -60,7 +73,7 @@ extension FileOutlineView {
       }
 
       self.fileItems.remove(fileItem)
-      if fileItem.dir {
+      if fileItem.isDir {
         self.fileItems
           .filter { fileItem.url.isParent(of: $0.url) }
           .forEach { self.fileItems.remove($0) }
@@ -91,7 +104,7 @@ extension FileOutlineView {
   }
 
   fileprivate func restoreExpandedState(for item: FileItem, states: Set<FileItem>) {
-    guard item.dir && states.contains(item) else {
+    guard item.isDir && states.contains(item) else {
       return
     }
 
@@ -125,7 +138,7 @@ extension FileOutlineView {
   func outlineView(_: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
     if item == nil {
       return self.fileItemService.fileItemWithChildren(for: self.cwd)?.children
-        .filter { !$0.hidden }
+        .filter { !$0.isHidden }
         .count ?? 0
     }
 
@@ -133,9 +146,9 @@ extension FileOutlineView {
       return 0
     }
 
-    if fileItem.dir {
+    if fileItem.isDir {
       return self.fileItemService.fileItemWithChildren(for: fileItem.url)?.children
-        .filter { !$0.hidden }
+        .filter { !$0.isHidden }
         .count ?? 0
     }
 
@@ -144,7 +157,7 @@ extension FileOutlineView {
 
   func outlineView(_: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
     if item == nil {
-      let result = self.fileItemService.fileItemWithChildren(for: self.cwd)!.children.filter { !$0.hidden }[index]
+      let result = self.fileItemService.fileItemWithChildren(for: self.cwd)!.children.filter { !$0.isHidden }[index]
       self.fileItems.insert(result)
 
       return result
@@ -154,7 +167,7 @@ extension FileOutlineView {
       preconditionFailure("Should not happen")
     }
 
-    let result = self.fileItemService.fileItemWithChildren(for: fileItem.url)!.children.filter { !$0.hidden }[index]
+    let result = self.fileItemService.fileItemWithChildren(for: fileItem.url)!.children.filter { !$0.isHidden }[index]
     self.fileItems.insert(result)
 
     return result
@@ -165,7 +178,7 @@ extension FileOutlineView {
       return false
     }
 
-    return fileItem.dir
+    return fileItem.isDir
   }
 
   @objc(outlineView:objectValueForTableColumn:byItem:)
@@ -238,6 +251,100 @@ extension FileOutlineView {
   }
 }
 
+// MARK: - Actions
+extension FileOutlineView {
+
+  @IBAction func doubleClickAction(_: Any?) {
+    guard let item = self.clickedItem as? FileItem else {
+      return
+    }
+
+    if item.isDir {
+      self.toggle(item: item)
+    } else {
+      self.flow.publish(event: FileOutlineViewAction.open(fileItem: item))
+    }
+  }
+
+  @IBAction func openInNewTab(_: Any?) {
+    guard let item = self.clickedItem as? FileItem else {
+      return
+    }
+
+    self.flow.publish(event: FileOutlineViewAction.openFileInNewTab(fileItem: item))
+  }
+
+  @IBAction func openInCurrentTab(_: Any?) {
+    guard let item = self.clickedItem as? FileItem else {
+      return
+    }
+
+    self.flow.publish(event: FileOutlineViewAction.openFileInCurrentTab(fileItem: item))
+  }
+
+  @IBAction func openInHorizontalSplit(_: Any?) {
+    guard let item = self.clickedItem as? FileItem else {
+      return
+    }
+
+    self.flow.publish(event: FileOutlineViewAction.openFileInHorizontalSplit(fileItem: item))
+  }
+
+  @IBAction func openInVerticalSplit(_: Any?) {
+    guard let item = self.clickedItem as? FileItem else {
+      return
+    }
+
+    self.flow.publish(event: FileOutlineViewAction.openFileInVerticalSplit(fileItem: item))
+  }
+
+  @IBAction func setAsWorkingDirectory(_: Any?) {
+    guard let item = self.clickedItem as? FileItem else {
+      return
+    }
+
+    guard item.isDir else {
+      return
+    }
+
+    self.flow.publish(event: FileOutlineViewAction.setAsWorkingDirectory(fileItem: item))
+  }
+
+  @IBAction func setParentAsWorkingDirectory(_: Any?) {
+    guard let item = self.clickedItem as? FileItem else {
+      return
+    }
+
+    guard item.isDir else {
+      return
+    }
+
+    guard item.url.path != "/" else {
+      return
+    }
+
+    self.flow.publish(event: FileOutlineViewAction.setParentAsWorkingDirectory(fileItem: item))
+  }
+}
+
+// MARK: - NSUserInterfaceValidations
+extension FileOutlineView {
+
+  override func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
+    guard let clickedItem = self.clickedItem as? FileItem else {
+      return true
+    }
+
+    if item.action == #selector(setAsWorkingDirectory(_:))
+      || item.action == #selector(setParentAsWorkingDirectory(_:))
+    {
+      return clickedItem.isDir
+    }
+
+    return true
+  }
+}
+
 // MARK: - NSView
 extension FileOutlineView {
 
@@ -254,10 +361,10 @@ extension FileOutlineView {
 
     switch char {
     case " ", "\r": // Why "\r" and not "\n"?
-      if item.dir || item.package {
+      if item.isDir || item.isPackage {
         self.toggle(item: item)
       } else {
-        self.flow.publish(event: FileOutlineViewAction.openFileItem(fileItem: item))
+        self.flow.publish(event: FileOutlineViewAction.openFileInNewTab(fileItem: item))
       }
 
     default:

@@ -21,6 +21,14 @@ extension URL {
 
     return Array(targetPathComps[0..<myPathComps.count]) == myPathComps
   }
+
+  var parent: URL {
+    if self.path == "/" {
+      return self
+    }
+
+    return self.deletingLastPathComponent()
+  }
   
   /// Wrapper function for NSURL.getResourceValue for Bool values.
   /// Returns also `false` when
@@ -47,15 +55,15 @@ extension URL {
     return false
   }
 
-  var dir: Bool {
+  var isDir: Bool {
     return self.resourceValue(URLResourceKey.isDirectoryKey.rawValue)
   }
 
-  var hidden: Bool {
+  var isHidden: Bool {
     return self.resourceValue(URLResourceKey.isHiddenKey.rawValue)
   }
 
-  var package: Bool {
+  var isPackage: Bool {
     return self.resourceValue(URLResourceKey.isPackageKey.rawValue)
   }
 }

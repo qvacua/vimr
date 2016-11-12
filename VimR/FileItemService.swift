@@ -152,7 +152,7 @@ class FileItemService: StandardFlow {
 
           curItem.children
             .filter { item in
-              if item.hidden || item.package {
+              if item.isHidden || item.isPackage {
                 return false
               }
 
@@ -177,7 +177,7 @@ class FileItemService: StandardFlow {
 
               return true
             }
-            .forEach { $0.dir ? dirStack.append($0) : flatNewFileItems.append($0) }
+            .forEach { $0.isDir ? dirStack.append($0) : flatNewFileItems.append($0) }
 
           if flatNewFileItems.count >= self.emitChunkSize {
             observer.onNext(flatNewFileItems)

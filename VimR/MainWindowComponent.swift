@@ -157,12 +157,34 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
       .toMergedObservables()
       .subscribe(onNext: { [unowned self] action in
         switch action {
+
         case let FileBrowserAction.open(url: url):
-          self.open(urls: [url])
+          self.neoVimView.open(urls: [url])
+          
+        case let FileBrowserAction.openInNewTab(url: url):
+          self.neoVimView.openInNewTab(urls: [url])
+
+        case let FileBrowserAction.openInCurrentTab(url: url):
+          self.neoVimView.openInCurrentTab(url: url)
+
+        case let FileBrowserAction.openInHorizontalSplit(url: url):
+          self.neoVimView.openInHorizontalSplit(urls: [url])
+
+        case let FileBrowserAction.openInVerticalSplit(url: url):
+          self.neoVimView.openInVerticalSplit(urls: [url])
+
+        case let FileBrowserAction.setAsWorkingDirectory(url: url):
+          self.neoVimView.cwd = url
+
+        case let FileBrowserAction.setParentAsWorkingDirectory(url: url):
+          self.neoVimView.cwd = self.neoVimView.cwd.parent
+
         default:
           NSLog("unrecognized action: \(action)")
           return
         }
+
+        self.window.makeFirstResponder(self.neoVimView)
       })
       .addDisposableTo(self.disposeBag)
   }

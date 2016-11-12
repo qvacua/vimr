@@ -18,9 +18,9 @@ func ==(left: FileItem, right: FileItem) -> Bool {
 class FileItem : CustomStringConvertible, Hashable {
 
   let url: URL
-  let dir: Bool
-  let hidden: Bool
-  let package: Bool
+  let isDir: Bool
+  let isHidden: Bool
+  let isPackage: Bool
 
   var hashValue: Int {
     return url.hashValue
@@ -36,7 +36,7 @@ class FileItem : CustomStringConvertible, Hashable {
   var children: [FileItem] = []
 
   var description: String {
-    return "<FileItem: \(self.url), dir=\(self.dir), hidden=\(self.hidden), package=\(self.package), "
+    return "<FileItem: \(self.url), dir=\(self.isDir), hidden=\(self.isHidden), package=\(self.isPackage), "
       + "needsScan=\(self.needsScanChildren), childrenScanned=\(self.childrenScanned), "
       + "ignore=\(self.ignore), ignoreToken=\(self.ignoreToken), "
       + "children=\(self.children.count)>"
@@ -44,9 +44,9 @@ class FileItem : CustomStringConvertible, Hashable {
 
   init(_ url: URL) {
     self.url = url
-    self.dir = url.dir
-    self.hidden = url.hidden
-    self.package = url.package
+    self.isDir = url.isDir
+    self.isHidden = url.isHidden
+    self.isPackage = url.isPackage
   }
 
   func removeChild(withUrl url: URL) {
