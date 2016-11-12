@@ -1011,12 +1011,25 @@ extension NeoVimView {
     if deltaX == 0 && deltaY == 0 {
       return
     }
-    
+
+    let isTrackpad = event.hasPreciseScrollingDeltas
+
     let cellPosition = self.cellPositionFor(event: event)
     let (vimInputX, vimInputY) = self.vimScrollInputFor(deltaX: deltaX, deltaY: deltaY,
-                                                    modifierFlags: event.modifierFlags,
-                                                    cellPosition: cellPosition)
-    
+                                                        modifierFlags: event.modifierFlags,
+                                                        cellPosition: cellPosition)
+
+    // We patched neovim such that it scrolls only 1 line for each scroll input. The default is 3 and for mouse
+    // scrolling we restore the original behavior.
+    if isTrackpad == false {
+      (0..<3).forEach { _ in
+        self.agent.vimInput(vimInputX)
+        self.agent.vimInput(vimInputY)
+      }
+
+      return
+    }
+
     let (absDeltaX, absDeltaY) = (abs(deltaX), abs(deltaY))
     
     // The absolute delta values can get very very big when you use two finger scrolling on the trackpad:
@@ -1114,8 +1127,8 @@ extension NeoVimView {
   }
   
   fileprivate func vimScrollInputFor(deltaX: CGFloat, deltaY: CGFloat,
-                                        modifierFlags: NSEventModifierFlags,
-                                        cellPosition: Position) -> (String, String)
+                                     modifierFlags: NSEventModifierFlags,
+                                     cellPosition: Position) -> (String, String)
   {
     let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.row),\(cellPosition.column)")
 

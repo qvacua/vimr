@@ -5,6 +5,7 @@
 * GH-334: `set` `title` and `termguicolors` by default such that airline works without changing `init.vim`.
 * GH-276: Draw a different, i.e. thin, cursor in the insert mode.
 * GH-299: Add a context menu to the file browser.
+* GH-237: Increase mouse scrollwheel sensitivity.
 
 # 0.10.1-122
 
