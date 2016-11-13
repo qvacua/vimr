@@ -592,6 +592,9 @@ void server_start_neovim() {
   NSString *runtimePath = [resourcesPath stringByAppendingPathComponent:@"runtime"];
   setenv("VIMRUNTIME", runtimePath.fileSystemRepresentation, true);
 
+  // Set $LANG to en_US.UTF-8 such that the copied text to the system clipboard is not garbled.
+  setenv("LANG", "en_US.UTF-8", true);
+
   uv_mutex_init(&_mutex);
   uv_cond_init(&_condition);
 
