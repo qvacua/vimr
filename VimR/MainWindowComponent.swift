@@ -177,7 +177,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
           self.neoVimView.cwd = url
 
         case let FileBrowserAction.setParentAsWorkingDirectory(url: url):
-          self.neoVimView.cwd = self.neoVimView.cwd.parent
+          self.neoVimView.cwd = url.parent
 
         default:
           NSLog("unrecognized action: \(action)")

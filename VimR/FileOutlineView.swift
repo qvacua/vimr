@@ -315,7 +315,7 @@ extension FileOutlineView {
       return
     }
 
-    guard item.isDir else {
+    guard self.level(forItem: clickedItem) > 0 else {
       return
     }
 
@@ -335,10 +335,12 @@ extension FileOutlineView {
       return true
     }
 
-    if item.action == #selector(setAsWorkingDirectory(_:))
-      || item.action == #selector(setParentAsWorkingDirectory(_:))
-    {
+    if item.action == #selector(setAsWorkingDirectory(_:)) {
       return clickedItem.isDir
+    }
+
+    if item.action == #selector(setParentAsWorkingDirectory(_:)) {
+      return self.level(forItem: clickedItem) > 0
     }
 
     return true
