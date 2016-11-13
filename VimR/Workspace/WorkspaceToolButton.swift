@@ -145,7 +145,15 @@ extension WorkspaceToolButton {
 // MARK: - NSPasteboardItemDataProvider
 extension WorkspaceToolButton {
 
-  func pasteboard(_ pasteboard: NSPasteboard?, item: NSPasteboardItem, provideDataForType type: String) {
-    // FIXME
+  func pasteboard(_ pasteboardOptional: NSPasteboard?, item: NSPasteboardItem, provideDataForType type: String) {
+    guard let pasteboard = pasteboardOptional else {
+      return
+    }
+
+    guard type == WorkspaceToolButton.toolUti else {
+      return
+    }
+
+    pasteboard.writeObjects([self.tool!.uuid as NSString])
   }
 }

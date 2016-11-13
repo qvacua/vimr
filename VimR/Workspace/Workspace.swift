@@ -43,6 +43,7 @@ class Workspace: NSView, WorkspaceBarDelegate {
   // MARK: - API
   let mainView: NSView
   let bars: [WorkspaceBarLocation: WorkspaceBar]
+  var tools = [WorkspaceTool]()
   let config: Config
 
   weak var delegate: WorkspaceDelegate?
@@ -67,6 +68,11 @@ class Workspace: NSView, WorkspaceBarDelegate {
   }
 
   func append(tool: WorkspaceTool, location: WorkspaceBarLocation) {
+    if self.tools.contains(tool) {
+      return
+    }
+
+    self.tools.append(tool)
     self.bars[location]?.append(tool: tool)
   }
 

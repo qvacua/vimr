@@ -10,9 +10,14 @@ protocol WorkspaceToolDelegate: class {
   func toggle(_ tool: WorkspaceTool)
 }
 
-class WorkspaceTool {
+class WorkspaceTool: Equatable {
+
+  static func ==(left: WorkspaceTool, right: WorkspaceTool) -> Bool {
+    return left.uuid == right.uuid
+  }
 
   // MARK: - API
+  let uuid = UUID().uuidString
   let title: String
   let view: NSView
   let button: WorkspaceToolButton
