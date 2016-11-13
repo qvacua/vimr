@@ -7,23 +7,20 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.11.0-SNAPSHOT-20161112.1708-125</title>
+      <title>v0.11.0-SNAPSHOT-20161113.1502-126</title>
       <description><![CDATA[
-    <ul>
-<li>GH-299: Add a context menu to the file browser.</li>
-<li>GH-237: Increase mouse scrollwheel sensitivity.</li>
-</ul>
+    <p>GH-337: With the first version of GH-333, strangely, on 10.12.X <code>init.vim</code> did not get read. GH-337 fixes this issue.</p>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161112.1708-125
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161113.1502-126
       </releaseNotesLink>
-      <pubDate>2016-11-12T17:19:39.546774</pubDate>
+      <pubDate>2016-11-13T15:14:23.304475</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161112.1708-125/VimR-v0.11.0-SNAPSHOT-20161112.1708-125.tar.bz2"
-                 sparkle:version="125"
-                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161112.1708"
-                 sparkle:dsaSignature="MC4CFQDIMdbM6EZsQaEazNplNyFz5yIPVwIVAOp/SebNlfZuXqoL3abnPIxAjKos"
-                 length="8925765"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161113.1502-126/VimR-v0.11.0-SNAPSHOT-20161113.1502-126.tar.bz2"
+                 sparkle:version="126"
+                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161113.1502"
+                 sparkle:dsaSignature="MCwCFEEjqAIlJDjlgoVh0PzaYrbBv29PAhRDYKujxrRcQE2NEO1+qdcgh9mTSA=="
+                 length="8923917"
                  type="application/octet-stream"/>
     </item>
   </channel>
