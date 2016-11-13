@@ -5,7 +5,9 @@
 
 import Cocoa
 
-class WorkspaceToolButton: NSView {
+class WorkspaceToolButton: NSView, NSDraggingSource, NSPasteboardItemDataProvider {
+
+  static fileprivate let toolUti = "com.qvacua.vimr.tool"
   
   static fileprivate let titlePadding = CGSize(width: 8, height: 2)
 
@@ -86,7 +88,29 @@ extension WorkspaceToolButton {
   }
 
   override func mouseDown(with event: NSEvent) {
-    self.tool?.toggle()
+    guard let nextEvent = self.window!.nextEvent(matching: [NSLeftMouseUpMask, NSLeftMouseDraggedMask]) else {
+      return
+    }
+
+    switch nextEvent.type {
+
+    case NSLeftMouseUp:
+      self.tool?.toggle()
+      return
+
+    case NSLeftMouseDragged:
+      let pasteboardItem = NSPasteboardItem()
+      pasteboardItem.setDataProvider(self, forTypes: [WorkspaceToolButton.toolUti])
+
+      let draggingItem = NSDraggingItem(pasteboardWriter: pasteboardItem)
+      draggingItem.setDraggingFrame(self.bounds, contents:self.snapshot())
+
+      self.beginDraggingSession(with: [draggingItem], event: nextEvent, source: self)
+      return
+
+    default:
+      return
+    }
   }
 
   override func mouseEntered(with _: NSEvent) {
@@ -103,5 +127,25 @@ extension WorkspaceToolButton {
     }
 
     self.dehighlight()
+  }
+
+  @objc(draggingSession:sourceOperationMaskForDraggingContext:)
+  func draggingSession(_ session: NSDraggingSession, sourceOperationMaskFor ctx: NSDraggingContext) -> NSDragOperation {
+    return .generic
+  }
+
+  // https://www.raywenderlich.com/136272/drag-and-drop-tutorial-for-macos
+  fileprivate func snapshot() -> NSImage {
+    let pdfData = self.dataWithPDF(inside: self.bounds)
+    let image = NSImage(data: pdfData)
+    return image ?? NSImage()
+  }
+}
+
+// MARK: - NSPasteboardItemDataProvider
+extension WorkspaceToolButton {
+
+  func pasteboard(_ pasteboard: NSPasteboard?, item: NSPasteboardItem, provideDataForType type: String) {
+    // FIXME
   }
 }
