@@ -2,6 +2,7 @@
 
 * GH-332: Turn on `paste` option before `Cmd-V`ing (and reset the value)
 * GH-333: Set `$LANG` to `utf-8` such that non-ASCII characters are not garbled when copied to the system clipboard.
+    - GH-337: With the first version of GH-333, strangely, on 10.12.X `init.vim` did not get read. GH-337 fixes this issue.
 * GH-334: `set` `title` and `termguicolors` by default such that airline works without changing `init.vim`.
 * GH-276: Draw a different, i.e. thin, cursor in the insert mode.
 * GH-299: Add a context menu to the file browser.
