@@ -36,6 +36,8 @@ class Workspace: NSView, WorkspaceBarDelegate {
     }
   }
 
+  fileprivate var tools = [WorkspaceTool]()
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -43,7 +45,6 @@ class Workspace: NSView, WorkspaceBarDelegate {
   // MARK: - API
   let mainView: NSView
   let bars: [WorkspaceBarLocation: WorkspaceBar]
-  var tools = [WorkspaceTool]()
   let config: Config
 
   weak var delegate: WorkspaceDelegate?

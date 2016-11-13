@@ -532,7 +532,7 @@ extension WorkspaceBar {
 
     if self.isOpen {
       let curTool = self.selectedTool!
-      if curTool === tool {
+      if curTool == tool {
         // In this case, curTool.isSelected is already set to false in WorkspaceTool.toggle()
         self.selectedTool = nil
       } else {
