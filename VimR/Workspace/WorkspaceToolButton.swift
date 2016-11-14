@@ -7,9 +7,8 @@ import Cocoa
 
 class WorkspaceToolButton: NSView, NSDraggingSource, NSPasteboardItemDataProvider {
 
-  static fileprivate let toolUti = "com.qvacua.vimr.tool"
-  
   static fileprivate let titlePadding = CGSize(width: 8, height: 2)
+  static fileprivate let dummyButton = WorkspaceToolButton(title: "Dummy")
 
   fileprivate let title: NSAttributedString
   fileprivate var trackingArea = NSTrackingArea()
@@ -19,12 +18,28 @@ class WorkspaceToolButton: NSView, NSDraggingSource, NSPasteboardItemDataProvide
   }
 
   // MARK: - API
-  var location = WorkspaceBarLocation.left
+  static let toolUti = "com.qvacua.vimr.tool"
+
+  var location = WorkspaceBarLocation.top
   var isSelected: Bool {
     return self.tool?.isSelected ?? false
   }
 
   weak var tool: WorkspaceTool?
+
+  static func dimension() -> CGFloat {
+    return self.dummyButton.intrinsicContentSize.height
+  }
+
+  static func size(forLocation loc: WorkspaceBarLocation) -> CGSize {
+    switch loc {
+    case .top, .bottom:
+      return self.dummyButton.intrinsicContentSize
+    case .right, .left:
+      return CGSize(width: self.dummyButton.intrinsicContentSize.height,
+                    height: self.dummyButton.intrinsicContentSize.width)
+    }
+  }
 
   init(title: String) {
     self.title = NSAttributedString(string: title, attributes: [
@@ -32,7 +47,7 @@ class WorkspaceToolButton: NSView, NSDraggingSource, NSPasteboardItemDataProvide
     ])
 
     super.init(frame: CGRect.zero)
-    self.translatesAutoresizingMaskIntoConstraints = false
+    self.configureForAutoLayout()
 
     self.wantsLayer = true
   }
@@ -131,7 +146,7 @@ extension WorkspaceToolButton {
 
   @objc(draggingSession:sourceOperationMaskForDraggingContext:)
   func draggingSession(_ session: NSDraggingSession, sourceOperationMaskFor ctx: NSDraggingContext) -> NSDragOperation {
-    return .generic
+    return .move
   }
 
   // https://www.raywenderlich.com/136272/drag-and-drop-tutorial-for-macos

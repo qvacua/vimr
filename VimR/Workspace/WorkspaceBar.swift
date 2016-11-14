@@ -49,10 +49,19 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
     self.location = location
 
     super.init(frame: CGRect.zero)
-    super.translatesAutoresizingMaskIntoConstraints = false
+    self.configureForAutoLayout()
 
     self.wantsLayer = true
     self.layer!.backgroundColor = NSColor.windowBackgroundColor.cgColor
+  }
+
+  func dimensionWithoutTool() -> CGFloat {
+    switch self.location {
+    case .top, .bottom:
+      return WorkspaceToolButton.dimension() + WorkspaceBar.separatorThickness
+    case .right, .left:
+      return WorkspaceToolButton.dimension() + WorkspaceBar.separatorThickness
+    }
   }
 
   func relayout() {
@@ -228,7 +237,7 @@ extension WorkspaceBar {
       return CGSize.zero
     }
 
-    return self.tools.first!.button.intrinsicContentSize
+    return WorkspaceToolButton.size(forLocation: self.location)
   }
 
   fileprivate func innerSeparatorRect() -> CGRect {

@@ -11,6 +11,8 @@ enum WorkspaceBarLocation {
   case right
   case bottom
   case left
+
+  static let all = [ top, right, bottom, left ]
 }
 
 protocol WorkspaceDelegate: class {
@@ -61,8 +63,9 @@ class Workspace: NSView, WorkspaceBarDelegate {
     ]
 
     super.init(frame: CGRect.zero)
-    self.translatesAutoresizingMaskIntoConstraints = false
+    self.configureForAutoLayout()
 
+    self.register(forDraggedTypes: [WorkspaceToolButton.toolUti])
     self.bars.values.forEach { [unowned self] in $0.delegate = self }
 
     self.relayout()
@@ -83,6 +86,78 @@ class Workspace: NSView, WorkspaceBarDelegate {
 
   func toggleToolButtons() {
     self.isToolButtonsVisible = !self.isToolButtonsVisible
+  }
+}
+
+// MARK: - NSDraggingDestination
+extension Workspace {
+
+  override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+//    NSLog("\(#function): \(sender.draggingSource())")
+    return .move
+  }
+
+  override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
+    let loc = self.convert(sender.draggingLocation(), from: nil)
+
+    if let barLoc = self.bar(inLocation: loc) {
+      NSLog("\(barLoc)")
+    }
+
+    return .move
+  }
+
+  override func draggingEnded(_ sender: NSDraggingInfo?) {
+//    NSLog("\(#function): \(sender)")
+  }
+
+  override func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool {
+    let loc = self.convert(sender.draggingLocation(), from: nil)
+
+    for barLoc in WorkspaceBarLocation.all {
+      if rect(forBar: barLoc).contains(loc) {
+        return true
+      }
+    }
+
+    return false
+  }
+
+  override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+    let loc = self.convert(sender.draggingLocation(), from: nil)
+    guard let barLoc = self.bar(inLocation: loc) else {
+      return false
+    }
+
+    NSLog("\(#function): \(barLoc)")
+
+    return false
+  }
+
+  fileprivate func bar(inLocation loc: CGPoint) -> WorkspaceBarLocation? {
+    for barLoc in WorkspaceBarLocation.all {
+      if rect(forBar: barLoc).contains(loc) {
+        return barLoc
+      }
+    }
+
+    return nil
+  }
+
+  fileprivate func rect(forBar location: WorkspaceBarLocation) -> CGRect {
+    let size = self.bounds.size
+    let dimension = self.bars[location]!.dimensionWithoutTool()
+
+    switch location {
+    case .top:
+      return CGRect(x: 0, y: size.height - dimension, width: size.width, height: dimension)
+    case .right:
+      return CGRect(x: size.width - dimension, y: 0, width: dimension, height: size.height)
+    case .bottom:
+      return CGRect(x: 0, y: 0, width: size.width, height: dimension)
+    case .left:
+      return CGRect(x: 0, y: 0, width: dimension, height: size.height)
+    }
   }
 }
 
