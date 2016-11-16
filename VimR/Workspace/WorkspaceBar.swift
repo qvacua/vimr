@@ -534,31 +534,33 @@ extension WorkspaceBar {
     }
 
     var lastButton = firstButton
-    for button in self.tools[1..<self.tools.count].map({ $0.button }) {
-      switch self.location {
-      case .top:
-        self.layoutConstraints.append(contentsOf: [
-          button.autoPinEdge(toSuperviewEdge: .top),
-          button.autoPinEdge(.left, to: .right, of: lastButton),
-          ])
-      case .right:
-        self.layoutConstraints.append(contentsOf: [
-          button.autoPinEdge(.top, to: .bottom, of: lastButton),
-          button.autoPinEdge(toSuperviewEdge: .right),
-          ])
-      case .bottom:
-        self.layoutConstraints.append(contentsOf: [
-          button.autoPinEdge(.left, to: .right, of: lastButton),
-          button.autoPinEdge(toSuperviewEdge: .bottom),
-          ])
-      case .left:
-        self.layoutConstraints.append(contentsOf: [
-          button.autoPinEdge(.top, to: .bottom, of: lastButton),
-          button.autoPinEdge(toSuperviewEdge: .left),
-          ])
-      }
-
-      lastButton = button
+    self.tools[1..<self.tools.count]
+      .map({ $0.button })
+      .forEach { button in
+        switch self.location {
+        case .top:
+          self.layoutConstraints.append(contentsOf: [
+            button.autoPinEdge(toSuperviewEdge: .top),
+            button.autoPinEdge(.left, to: .right, of: lastButton),
+            ])
+        case .right:
+          self.layoutConstraints.append(contentsOf: [
+            button.autoPinEdge(.top, to: .bottom, of: lastButton),
+            button.autoPinEdge(toSuperviewEdge: .right),
+            ])
+        case .bottom:
+          self.layoutConstraints.append(contentsOf: [
+            button.autoPinEdge(.left, to: .right, of: lastButton),
+            button.autoPinEdge(toSuperviewEdge: .bottom),
+            ])
+        case .left:
+          self.layoutConstraints.append(contentsOf: [
+            button.autoPinEdge(.top, to: .bottom, of: lastButton),
+            button.autoPinEdge(toSuperviewEdge: .left),
+            ])
+        }
+        
+        lastButton = button
     }
   }
 
