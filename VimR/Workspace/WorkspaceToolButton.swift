@@ -5,7 +5,7 @@
 
 import Cocoa
 
-class WorkspaceToolButton: NSView, NSDraggingSource, NSPasteboardItemDataProvider {
+class WorkspaceToolButton: NSView, NSDraggingSource {
 
   static fileprivate let titlePadding = CGSize(width: 8, height: 2)
   static fileprivate let dummyButton = WorkspaceToolButton(title: "Dummy")
@@ -123,12 +123,12 @@ extension WorkspaceToolButton {
 
     case NSLeftMouseDragged:
       let pasteboardItem = NSPasteboardItem()
-      pasteboardItem.setDataProvider(self, forTypes: [WorkspaceToolButton.toolUti])
+      pasteboardItem.setString(self.tool!.uuid, forType: WorkspaceToolButton.toolUti)
 
       let draggingItem = NSDraggingItem(pasteboardWriter: pasteboardItem)
       draggingItem.setDraggingFrame(self.bounds, contents:self.snapshot())
 
-      self.beginDraggingSession(with: [draggingItem], event: nextEvent, source: self)
+      self.beginDraggingSession(with: [draggingItem], event: event, source: self)
       return
 
     default:
@@ -152,11 +152,6 @@ extension WorkspaceToolButton {
     self.dehighlight()
   }
 
-  @objc(draggingSession:sourceOperationMaskForDraggingContext:)
-  func draggingSession(_ session: NSDraggingSession, sourceOperationMaskFor ctx: NSDraggingContext) -> NSDragOperation {
-    return .move
-  }
-
   // https://www.raywenderlich.com/136272/drag-and-drop-tutorial-for-macos
   fileprivate func snapshot() -> NSImage {
     let pdfData = self.dataWithPDF(inside: self.bounds)
@@ -165,18 +160,23 @@ extension WorkspaceToolButton {
   }
 }
 
-// MARK: - NSPasteboardItemDataProvider
+// MARK: - NSDraggingSource
 extension WorkspaceToolButton {
+  @objc(draggingSession:sourceOperationMaskForDraggingContext:)
+  func draggingSession(_ session: NSDraggingSession, sourceOperationMaskFor ctc: NSDraggingContext) -> NSDragOperation {
+    return .move
+  }
 
-  func pasteboard(_ pasteboardOptional: NSPasteboard?, item: NSPasteboardItem, provideDataForType type: String) {
-    guard let pasteboard = pasteboardOptional else {
+  @objc(draggingSession:endedAtPoint:operation:)
+  func draggingSession(_ session: NSDraggingSession, endedAt screenPoint: NSPoint, operation: NSDragOperation) {
+    guard let pointInWindow = self.window?.convertFromScreen(CGRect(origin: screenPoint, size: .zero)) else {
       return
     }
 
-    guard type == WorkspaceToolButton.toolUti else {
-      return
+    let pointInView = self.convert(pointInWindow, from: nil)
+    // Sometimes if the drag ends, the button does not get dehighlighted.
+    if !self.frame.contains(pointInView) {
+      self.dehighlight()
     }
-
-    pasteboard.writeObjects([self.tool!.uuid as NSString])
   }
 }

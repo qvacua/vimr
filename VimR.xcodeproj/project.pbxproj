@@ -93,6 +93,8 @@
 		4BAD84E81D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD84E71D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift */; };
 		4BB1BEA91D48773200463C29 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */; };
 		4BB409E51DD68CCC005F39A2 /* FileBrowserMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BB409E71DD68CCC005F39A2 /* FileBrowserMenu.xib */; };
+		4BB409EE1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */; };
+		4BB409EF1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */; };
 		4BB489431D952CF6005BB0E8 /* WorkspaceToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */; };
 		4BBDD3ED1D967DA2008FCC92 /* AdvancedPrefPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBDD3EC1D967DA2008FCC92 /* AdvancedPrefPane.swift */; };
 		4BCADE081D11ED12004DAD0F /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */; };
@@ -320,6 +322,7 @@
 		4BAD84E71D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyFilterOperation.swift; sourceTree = "<group>"; };
 		4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
 		4BB409E61DD68CCC005F39A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/FileBrowserMenu.xib; sourceTree = "<group>"; };
+		4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProxyWorkspaceBar.swift; path = Workspace/ProxyWorkspaceBar.swift; sourceTree = "<group>"; };
 		4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WorkspaceToolButton.swift; path = Workspace/WorkspaceToolButton.swift; sourceTree = "<group>"; };
 		4BBDD3EC1D967DA2008FCC92 /* AdvancedPrefPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedPrefPane.swift; sourceTree = "<group>"; };
 		4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaExtensions.swift; sourceTree = "<group>"; };
@@ -543,6 +546,7 @@
 				4B6423971D8EFDE000FC78C8 /* WorkspaceBar.swift */,
 				4B6423991D8EFE3000FC78C8 /* WorkspaceTool.swift */,
 				4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */,
+				4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */,
 			);
 			name = Workspace;
 			sourceTree = "<group>";
@@ -1036,6 +1040,7 @@
 				4B6423AF1D8EFEA800FC78C8 /* Workspace.swift in Sources */,
 				4B6423B01D8EFEA800FC78C8 /* WorkspaceBar.swift in Sources */,
 				4BB489431D952CF6005BB0E8 /* WorkspaceToolButton.swift in Sources */,
+				4BB409EF1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */,
 				4B6423B11D8EFEA800FC78C8 /* WorkspaceTool.swift in Sources */,
 				4B6423A21D8EFE7500FC78C8 /* AppDelegate.swift in Sources */,
 			);
@@ -1091,6 +1096,7 @@
 				4B0677371D99D9C3001A2588 /* FileBrowserComponent.swift in Sources */,
 				1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */,
 				4B6B0A781DA2A1A500212D6D /* FileOutlineView.swift in Sources */,
+				4BB409EE1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */,
 				4BAD84E81D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift in Sources */,
 				1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */,
 			);

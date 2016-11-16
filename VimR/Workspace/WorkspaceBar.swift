@@ -27,6 +27,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 
   fileprivate var isDragOngoing = false
   fileprivate var draggedOnBarButton: WorkspaceToolButton?
+  fileprivate var buttonFrames: [WorkspaceTool: CGRect] = [:]
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -123,7 +124,20 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 // MARK: - NSDraggingDestination
 extension WorkspaceBar {
 
+  fileprivate func isTool(_ tool: WorkspaceTool, beingDragged info: NSDraggingInfo) -> Bool {
+    let pasteboard = info.draggingPasteboard()
+
+    guard let uuid = pasteboard.string(forType: WorkspaceToolButton.toolUti) else {
+      return false
+    }
+
+    return self.tools.filter { $0.uuid == uuid }.first == tool
+  }
+
   override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+    self.buttonFrames.removeAll()
+    self.tools.forEach { self.buttonFrames[$0] = $0.button.frame }
+
     self.isDragOngoing = true
     return .move
   }
@@ -131,15 +145,18 @@ extension WorkspaceBar {
   override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
     let loc = self.convert(sender.draggingLocation(), from: nil)
 
-    let currentDraggedOnButton = self.tools
-      .map { $0.button }
-      .reduce(nil) { (result, button) -> WorkspaceToolButton? in
+    let currentDraggedOnButton = self.buttonFrames
+      .reduce(nil) { (result, entry) -> WorkspaceToolButton? in
         if result != nil {
           return result
         }
 
-        if button.frame.contains(loc) {
-          return button
+        if entry.value.contains(loc) {
+          if self.isTool(entry.key, beingDragged: sender) {
+            return nil
+          }
+
+          return entry.key.button
         }
 
         return nil
@@ -165,6 +182,7 @@ extension WorkspaceBar {
   fileprivate func endDrag() {
     self.isDragOngoing = false
     self.draggedOnBarButton = nil
+    self.relayout()
   }
 }
 
@@ -172,7 +190,7 @@ extension WorkspaceBar {
 extension WorkspaceBar {
 
   override func draw(_ dirtyRect: NSRect) {
-    super.draw(dirtyRect)
+//    super.draw(dirtyRect)
 
     if self.isButtonVisible {
       self.drawInnerSeparator(dirtyRect)
@@ -498,9 +516,30 @@ extension WorkspaceBar {
     }
   }
 
-  fileprivate func layoutButtons() {
-    NSLog("\(#function)")
+  fileprivate func draggedButtonDimension() -> CGFloat {
+    guard let button = self.draggedOnBarButton else {
+      return 0
+    }
 
+    switch button.location {
+    case .top, .bottom:
+      switch self.location {
+      case .top, .bottom:
+        return button.intrinsicContentSize.width
+      case .left, .right:
+        return button.intrinsicContentSize.width
+      }
+    case .left, .right:
+      switch self.location {
+      case .top, .bottom:
+        return button.intrinsicContentSize.height
+      case .left, .right:
+        return button.intrinsicContentSize.height
+      }
+    }
+  }
+
+  fileprivate func layoutButtons() {
     guard let firstTool = self.tools.first else {
       return
     }
@@ -509,26 +548,29 @@ extension WorkspaceBar {
       .map { $0.button }
       .forEach(self.addSubview)
 
+    let dimensionForDraggedButton = self.draggedButtonDimension()
+
     let firstButton = firstTool.button
+    let firstButtonMargin = self.draggedOnBarButton == firstButton ? dimensionForDraggedButton : 0
     switch self.location {
     case .top:
       self.layoutConstraints.append(contentsOf: [
         firstButton.autoPinEdge(toSuperviewEdge: .top),
-        firstButton.autoPinEdge(toSuperviewEdge: .left),
+        firstButton.autoPinEdge(toSuperviewEdge: .left, withInset: firstButtonMargin),
         ])
     case .right:
       self.layoutConstraints.append(contentsOf: [
-        firstButton.autoPinEdge(toSuperviewEdge: .top),
+        firstButton.autoPinEdge(toSuperviewEdge: .top, withInset: firstButtonMargin),
         firstButton.autoPinEdge(toSuperviewEdge: .right),
         ])
     case .bottom:
       self.layoutConstraints.append(contentsOf: [
-        firstButton.autoPinEdge(toSuperviewEdge: .left),
+        firstButton.autoPinEdge(toSuperviewEdge: .left, withInset: firstButtonMargin),
         firstButton.autoPinEdge(toSuperviewEdge: .bottom),
         ])
     case .left:
       self.layoutConstraints.append(contentsOf: [
-        firstButton.autoPinEdge(toSuperviewEdge: .top),
+        firstButton.autoPinEdge(toSuperviewEdge: .top, withInset: firstButtonMargin),
         firstButton.autoPinEdge(toSuperviewEdge: .left),
         ])
     }
@@ -537,25 +579,26 @@ extension WorkspaceBar {
     self.tools[1..<self.tools.count]
       .map({ $0.button })
       .forEach { button in
+        let margin = self.draggedOnBarButton == button ? dimensionForDraggedButton : 0
         switch self.location {
         case .top:
           self.layoutConstraints.append(contentsOf: [
             button.autoPinEdge(toSuperviewEdge: .top),
-            button.autoPinEdge(.left, to: .right, of: lastButton),
+            button.autoPinEdge(.left, to: .right, of: lastButton, withOffset: margin),
             ])
         case .right:
           self.layoutConstraints.append(contentsOf: [
-            button.autoPinEdge(.top, to: .bottom, of: lastButton),
+            button.autoPinEdge(.top, to: .bottom, of: lastButton, withOffset: margin),
             button.autoPinEdge(toSuperviewEdge: .right),
             ])
         case .bottom:
           self.layoutConstraints.append(contentsOf: [
-            button.autoPinEdge(.left, to: .right, of: lastButton),
+            button.autoPinEdge(.left, to: .right, of: lastButton, withOffset: margin),
             button.autoPinEdge(toSuperviewEdge: .bottom),
             ])
         case .left:
           self.layoutConstraints.append(contentsOf: [
-            button.autoPinEdge(.top, to: .bottom, of: lastButton),
+            button.autoPinEdge(.top, to: .bottom, of: lastButton, withOffset: margin),
             button.autoPinEdge(toSuperviewEdge: .left),
             ])
         }
