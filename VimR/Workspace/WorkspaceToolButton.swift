@@ -20,6 +20,14 @@ class WorkspaceToolButton: NSView, NSDraggingSource, NSPasteboardItemDataProvide
   // MARK: - API
   static let toolUti = "com.qvacua.vimr.tool"
 
+  static func ==(left: WorkspaceToolButton, right: WorkspaceToolButton) -> Bool {
+    guard let leftTool = left.tool, let rightTool = right.tool else {
+      return false
+    }
+
+    return leftTool == rightTool
+  }
+
   var location = WorkspaceBarLocation.top
   var isSelected: Bool {
     return self.tool?.isSelected ?? false

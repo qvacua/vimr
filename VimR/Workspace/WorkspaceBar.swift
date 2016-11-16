@@ -25,6 +25,9 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 
   fileprivate var layoutConstraints = [NSLayoutConstraint]()
 
+  fileprivate var isDragOngoing = false
+  fileprivate var draggedOnBarButton: WorkspaceToolButton?
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -50,6 +53,8 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 
     super.init(frame: CGRect.zero)
     self.configureForAutoLayout()
+
+    self.register(forDraggedTypes: [WorkspaceToolButton.toolUti])
 
     self.wantsLayer = true
     self.layer!.backgroundColor = NSColor.windowBackgroundColor.cgColor
@@ -112,6 +117,54 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
     }
 
     self.relayout()
+  }
+}
+
+// MARK: - NSDraggingDestination
+extension WorkspaceBar {
+
+  override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+    self.isDragOngoing = true
+    return .move
+  }
+
+  override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
+    let loc = self.convert(sender.draggingLocation(), from: nil)
+
+    let currentDraggedOnButton = self.tools
+      .map { $0.button }
+      .reduce(nil) { (result, button) -> WorkspaceToolButton? in
+        if result != nil {
+          return result
+        }
+
+        if button.frame.contains(loc) {
+          return button
+        }
+
+        return nil
+    }
+
+    if currentDraggedOnButton == self.draggedOnBarButton {
+      return .move
+    }
+
+    self.draggedOnBarButton = currentDraggedOnButton
+    self.relayout()
+    return .move
+  }
+
+  override func draggingEnded(_ sender: NSDraggingInfo?) {
+    self.endDrag()
+  }
+
+  override func draggingExited(_ sender: NSDraggingInfo?) {
+    self.endDrag()
+  }
+
+  fileprivate func endDrag() {
+    self.isDragOngoing = false
+    self.draggedOnBarButton = nil
   }
 }
 
@@ -446,6 +499,8 @@ extension WorkspaceBar {
   }
 
   fileprivate func layoutButtons() {
+    NSLog("\(#function)")
+
     guard let firstTool = self.tools.first else {
       return
     }

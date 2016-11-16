@@ -40,6 +40,9 @@ class Workspace: NSView, WorkspaceBarDelegate {
 
   fileprivate var tools = [WorkspaceTool]()
 
+  fileprivate var isDragOngoing = false
+  fileprivate var draggedOnBarLocation: WorkspaceBarLocation?
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -93,22 +96,28 @@ class Workspace: NSView, WorkspaceBarDelegate {
 extension Workspace {
 
   override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
-//    NSLog("\(#function): \(sender.draggingSource())")
+    self.isDragOngoing = true
     return .move
   }
 
   override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
     let loc = self.convert(sender.draggingLocation(), from: nil)
-
-    if let barLoc = self.bar(inLocation: loc) {
-      NSLog("\(barLoc)")
-    }
+    self.draggedOnBarLocation = self.bar(inLocation: loc)
 
     return .move
   }
 
+  override func draggingExited(_ sender: NSDraggingInfo?) {
+    self.endDrag()
+  }
+
   override func draggingEnded(_ sender: NSDraggingInfo?) {
-//    NSLog("\(#function): \(sender)")
+    self.endDrag()
+  }
+
+  fileprivate func endDrag() {
+    self.isDragOngoing = false
+    self.draggedOnBarLocation = nil
   }
 
   override func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool {
