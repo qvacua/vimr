@@ -26,8 +26,8 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
   fileprivate var layoutConstraints = [NSLayoutConstraint]()
 
   fileprivate var isDragOngoing = false
-  fileprivate var draggedOnBarButton: WorkspaceToolButton?
-  fileprivate var buttonFrames: [WorkspaceTool: CGRect] = [:]
+  fileprivate var draggedOnToolIdx: Int?
+  fileprivate var buttonFrames: [CGRect] = []
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -140,19 +140,20 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 // MARK: - NSDraggingDestination
 extension WorkspaceBar {
 
-  fileprivate func isTool(_ tool: WorkspaceTool, beingDragged info: NSDraggingInfo) -> Bool {
+  fileprivate func isTool(atIndex idx: Int, beingDragged info: NSDraggingInfo) -> Bool {
     let pasteboard = info.draggingPasteboard()
 
     guard let uuid = pasteboard.string(forType: WorkspaceToolButton.toolUti) else {
       return false
     }
 
+    let tool = self.tools[idx]
     return self.tools.filter { $0.uuid == uuid }.first == tool
   }
 
   override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
     self.buttonFrames.removeAll()
-    self.tools.forEach { self.buttonFrames[$0] = $0.button.frame }
+    self.buttonFrames = self.tools.map { $0.button.frame }
 
     self.isDragOngoing = true
     return .move
@@ -161,28 +162,28 @@ extension WorkspaceBar {
   override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
     let loc = self.convert(sender.draggingLocation(), from: nil)
 
-    let currentDraggedOnButton = self.buttonFrames
-      .reduce(nil) { (result, entry) -> WorkspaceToolButton? in
+    let currentDraggedOnToolIdx = self.buttonFrames.enumerated()
+      .reduce(nil) { (result, entry) -> Int? in
         if result != nil {
           return result
         }
 
-        if entry.value.contains(loc) {
-          if self.isTool(entry.key, beingDragged: sender) {
+        if entry.element.contains(loc) {
+          if self.isTool(atIndex: entry.offset, beingDragged: sender) {
             return nil
           }
 
-          return entry.key.button
+          return entry.offset
         }
 
         return nil
     }
 
-    if currentDraggedOnButton == self.draggedOnBarButton {
+    if currentDraggedOnToolIdx == self.draggedOnToolIdx {
       return .move
     }
 
-    self.draggedOnBarButton = currentDraggedOnButton
+    self.draggedOnToolIdx = currentDraggedOnToolIdx
     self.relayout()
     return .move
   }
@@ -197,7 +198,7 @@ extension WorkspaceBar {
 
   fileprivate func endDrag() {
     self.isDragOngoing = false
-    self.draggedOnBarButton = nil
+    self.draggedOnToolIdx = nil
     self.relayout()
   }
 }
@@ -533,9 +534,11 @@ extension WorkspaceBar {
   }
 
   fileprivate func draggedButtonDimension() -> CGFloat {
-    guard let button = self.draggedOnBarButton else {
+    guard let idx = self.draggedOnToolIdx else {
       return 0
     }
+
+    let button = self.tools[idx].button
 
     switch button.location {
     case .top, .bottom:
@@ -567,7 +570,7 @@ extension WorkspaceBar {
     let dimensionForDraggedButton = self.draggedButtonDimension()
 
     let firstButton = firstTool.button
-    let firstButtonMargin = self.draggedOnBarButton == firstButton ? dimensionForDraggedButton : 0
+    let firstButtonMargin = self.draggedOnToolIdx == 0 ? dimensionForDraggedButton : 0
     switch self.location {
     case .top:
       self.layoutConstraints.append(contentsOf: [
@@ -592,10 +595,16 @@ extension WorkspaceBar {
     }
 
     var lastButton = firstButton
-    self.tools[1..<self.tools.count]
+    self.tools
       .map({ $0.button })
-      .forEach { button in
-        let margin = self.draggedOnBarButton == button ? dimensionForDraggedButton : 0
+      .enumerated()
+      .forEach { (idx, button) in
+        // self.tools.first is already done above
+        guard idx > 0 else {
+          return
+        }
+
+        let margin = self.draggedOnToolIdx == idx ? dimensionForDraggedButton : 0
         switch self.location {
         case .top:
           self.layoutConstraints.append(contentsOf: [
