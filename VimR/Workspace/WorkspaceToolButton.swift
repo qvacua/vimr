@@ -175,7 +175,7 @@ extension WorkspaceToolButton {
 
     let pointInView = self.convert(pointInWindow, from: nil)
     // Sometimes if the drag ends, the button does not get dehighlighted.
-    if !self.frame.contains(pointInView) {
+    if !self.frame.contains(pointInView) && !(self.tool?.isSelected ?? false) {
       self.dehighlight()
     }
   }

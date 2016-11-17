@@ -115,7 +115,9 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 
     if self.isOpen || tool.isSelected {
       self.selectedTool?.isSelected = false
+
       self.selectedTool = tool
+      self.selectedTool?.isSelected = true
     }
 
     self.relayout()
@@ -129,7 +131,9 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 
     if self.isOpen || tool.isSelected {
       self.selectedTool?.isSelected = false
+
       self.selectedTool = tool
+      self.selectedTool?.isSelected = true
     }
 
     self.relayout()
@@ -224,18 +228,25 @@ extension WorkspaceBar {
       // This means:
       // 1. the dragged tool is from this bar and is dropped at the same spot
       // 2. the dragged tool is from this bar and is dropped at the end of the bar
-      // 3. the dragged tool is dropped at the end of the bar
+      // 3. the dragged tool is not from this bar and is dropped at the end of the bar
 
-      guard self.tools.filter({ $0.uuid == tool.uuid }).isEmpty else {
-        // 1 and 2
-        NSLog("doing nothing")
-        return false
+      guard let toolIdx = self.tools.index(of: tool) else {
+        // 3.
+        tool.bar?.remove(tool: tool)
+        self.append(tool: tool)
+        return true
       }
 
-      // 3
-      tool.bar?.remove(tool: tool)
-      self.append(tool: tool)
-      return true
+      // 2.
+      let loc = self.convert(sender.draggingLocation(), from: nil)
+      if self.buttonFrames.filter({ $0.contains(loc) }).isEmpty {
+        self.tools.remove(at: toolIdx)
+        self.tools.append(tool)
+        return true
+      }
+
+      // 1.
+      return false
     }
 
     // If we are here, the dragged tool is dropped somewhere in the middle and

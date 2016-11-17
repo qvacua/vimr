@@ -143,14 +143,8 @@ extension Workspace {
       return false
     }
 
-    let openToolAfterwards = tool.isSelected
-
     tool.bar?.remove(tool: tool)
     self.bars[barLoc]?.append(tool: tool)
-
-    if openToolAfterwards {
-      tool.toggle()
-    }
 
     return true
   }
