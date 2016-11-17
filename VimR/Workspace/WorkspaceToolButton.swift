@@ -152,11 +152,24 @@ extension WorkspaceToolButton {
     self.dehighlight()
   }
 
-  // https://www.raywenderlich.com/136272/drag-and-drop-tutorial-for-macos
+  // Modified version of snapshot() from https://www.raywenderlich.com/136272/drag-and-drop-tutorial-for-macos
   fileprivate func snapshot() -> NSImage {
     let pdfData = self.dataWithPDF(inside: self.bounds)
-    let image = NSImage(data: pdfData)
-    return image ?? NSImage()
+    guard let image = NSImage(data: pdfData) else {
+      return NSImage()
+    }
+
+    let result = NSImage()
+    let rect = CGRect(origin: .zero, size: image.size)
+    result.size = rect.size
+
+    result.lockFocus()
+    NSColor.controlShadowColor.set()
+    NSRectFill(rect)
+    image.draw(in: rect)
+    result.unlockFocus()
+
+    return result
   }
 }
 
