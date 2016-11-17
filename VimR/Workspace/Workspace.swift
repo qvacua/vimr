@@ -129,27 +129,30 @@ extension Workspace {
     self.proxyBar.removeAllConstraints()
   }
 
-  override func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool {
-    let loc = self.convert(sender.draggingLocation(), from: nil)
-
-    for barLoc in WorkspaceBarLocation.all {
-      if rect(forBar: barLoc).contains(loc) {
-        return true
-      }
-    }
-
-    return false
-  }
-
   override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
     let loc = self.convert(sender.draggingLocation(), from: nil)
     guard let barLoc = self.barLocation(inPoint: loc) else {
       return false
     }
 
-    NSLog("\(#function): \(barLoc)")
+    guard let toolButton = sender.draggingSource() as? WorkspaceToolButton else {
+      return false
+    }
 
-    return false
+    guard let tool = toolButton.tool else {
+      return false
+    }
+
+    let openToolAfterwards = tool.isSelected
+
+    self.bars[tool.location]?.remove(tool: tool)
+    self.bars[barLoc]?.append(tool: tool)
+
+    if openToolAfterwards {
+      tool.toggle()
+    }
+
+    return true
   }
 
   fileprivate func barLocation(inPoint loc: CGPoint) -> WorkspaceBarLocation? {

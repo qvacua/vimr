@@ -110,11 +110,27 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
   func append(tool: WorkspaceTool) {
     tool.delegate = self
     tool.location = self.location
-    tools.append(tool)
+    self.tools.append(tool)
 
     if self.isOpen {
       self.selectedTool?.isSelected = false
       self.selectedTool = tool
+    }
+
+    self.relayout()
+  }
+
+  func remove(tool: WorkspaceTool) {
+    guard let idx = self.tools.index(of: tool) else {
+      return
+    }
+
+    tool.delegate = nil
+    self.tools.remove(at: idx)
+
+    if self.isOpen && self.selectedTool == tool {
+      tool.isSelected = false
+      self.selectedTool = self.tools.first
     }
 
     self.relayout()
