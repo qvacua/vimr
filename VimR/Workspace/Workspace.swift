@@ -159,6 +159,7 @@ extension Workspace {
     return nil
   }
 
+  // We copy and pasted WorkspaceBar.barFrame() since we need the rect for the proxy bars.
   fileprivate func rect(forBar location: WorkspaceBarLocation) -> CGRect {
     let size = self.bounds.size
     let dimension = self.bars[location]!.dimensionWithoutTool()

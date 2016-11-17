@@ -70,6 +70,22 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
     }
   }
 
+  func barFrame() -> CGRect {
+    let size = self.bounds.size
+    let dimension = self.dimensionWithoutTool()
+
+    switch self.location {
+    case .top:
+      return CGRect(x: 0, y: size.height - dimension, width: size.width, height: dimension)
+    case .right:
+      return CGRect(x: size.width - dimension, y: 0, width: dimension, height: size.height)
+    case .bottom:
+      return CGRect(x: 0, y: 0, width: size.width, height: dimension)
+    case .left:
+      return CGRect(x: 0, y: 0, width: dimension, height: size.height)
+    }
+  }
+
   func relayout() {
     self.removeConstraints(self.layoutConstraints)
     self.removeAllSubviews()
@@ -239,7 +255,7 @@ extension WorkspaceBar {
 
       // 2.
       let loc = self.convert(sender.draggingLocation(), from: nil)
-      if self.buttonFrames.filter({ $0.contains(loc) }).isEmpty {
+      if self.buttonFrames.filter({ $0.contains(loc) }).isEmpty && self.barFrame().contains(loc) {
         self.tools.remove(at: toolIdx)
         self.tools.append(tool)
         return true
