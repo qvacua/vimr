@@ -12,6 +12,32 @@ protocol WorkspaceBarDelegate: class {
   func resizeDidEnd(workspaceBar: WorkspaceBar)
 }
 
+/**
+ TODO: Refactor to include the buttons and the inner separator. Currently it's just a pass-through view only for drag &
+ drop due to the drag & drop infrastructure of Cocoa.
+ */
+fileprivate class ProxyBar: NSView {
+
+  fileprivate var isDragOngoing = false
+  fileprivate var draggedOnToolIdx: Int?
+  fileprivate var buttonFrames: [CGRect] = []
+
+  fileprivate weak var container: WorkspaceBar?
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  init() {
+    super.init(frame: .zero)
+    self.configureForAutoLayout()
+
+    self.register(forDraggedTypes: [WorkspaceToolButton.toolUti])
+
+    self.wantsLayer = true
+  }
+}
+
 class WorkspaceBar: NSView, WorkspaceToolDelegate {
 
   static fileprivate let separatorColor = NSColor.controlShadowColor
@@ -25,9 +51,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 
   fileprivate var layoutConstraints = [NSLayoutConstraint]()
 
-  fileprivate var isDragOngoing = false
-  fileprivate var draggedOnToolIdx: Int?
-  fileprivate var buttonFrames: [CGRect] = []
+  fileprivate let proxyBar = ProxyBar()
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -55,10 +79,10 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
     super.init(frame: CGRect.zero)
     self.configureForAutoLayout()
 
-    self.register(forDraggedTypes: [WorkspaceToolButton.toolUti])
-
     self.wantsLayer = true
     self.layer!.backgroundColor = NSColor.windowBackgroundColor.cgColor
+
+    self.proxyBar.container = self
   }
 
   func dimensionWithoutTool() -> CGFloat {
@@ -88,6 +112,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 
   func relayout() {
     self.removeConstraints(self.layoutConstraints)
+    self.proxyBar.removeAllConstraints()
     self.removeAllSubviews()
 
     if self.isEmpty() {
@@ -120,6 +145,36 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
       } else {
         self.set(dimension: 0)
       }
+    }
+
+    let proxyBar = self.proxyBar
+    self.addSubview(proxyBar)
+    switch self.location {
+
+    case .top:
+      proxyBar.autoPinEdge(toSuperviewEdge: .top)
+      proxyBar.autoPinEdge(toSuperviewEdge: .right)
+      proxyBar.autoPinEdge(toSuperviewEdge: .left)
+      proxyBar.autoSetDimension(.height, toSize: self.barDimensionWithButtonsWithoutTool())
+
+    case .right:
+      proxyBar.autoPinEdge(toSuperviewEdge: .top)
+      proxyBar.autoPinEdge(toSuperviewEdge: .bottom)
+      proxyBar.autoPinEdge(toSuperviewEdge: .right)
+      proxyBar.autoSetDimension(.width, toSize: self.barDimensionWithButtonsWithoutTool())
+
+    case .bottom:
+      proxyBar.autoPinEdge(toSuperviewEdge: .right)
+      proxyBar.autoPinEdge(toSuperviewEdge: .bottom)
+      proxyBar.autoPinEdge(toSuperviewEdge: .left)
+      proxyBar.autoSetDimension(.height, toSize: self.barDimensionWithButtonsWithoutTool())
+
+    case .left:
+      proxyBar.autoPinEdge(toSuperviewEdge: .top)
+      proxyBar.autoPinEdge(toSuperviewEdge: .bottom)
+      proxyBar.autoPinEdge(toSuperviewEdge: .left)
+      proxyBar.autoSetDimension(.width, toSize: self.barDimensionWithButtonsWithoutTool())
+
     }
   }
 
@@ -173,7 +228,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 }
 
 // MARK: - NSDraggingDestination
-extension WorkspaceBar {
+extension ProxyBar {
 
   fileprivate func isTool(atIndex idx: Int, beingDragged info: NSDraggingInfo) -> Bool {
     let pasteboard = info.draggingPasteboard()
@@ -182,13 +237,13 @@ extension WorkspaceBar {
       return false
     }
 
-    let tool = self.tools[idx]
-    return self.tools.filter { $0.uuid == uuid }.first == tool
+    let tool = self.container!.tools[idx]
+    return self.container!.tools.filter { $0.uuid == uuid }.first == tool
   }
 
   override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
     self.buttonFrames.removeAll()
-    self.buttonFrames = self.tools.map { $0.button.frame }
+    self.buttonFrames = self.container!.tools.map { $0.button.frame }
 
     self.isDragOngoing = true
     return .move
@@ -219,7 +274,7 @@ extension WorkspaceBar {
     }
 
     self.draggedOnToolIdx = currentDraggedOnToolIdx
-    self.relayout()
+    self.container!.relayout()
     return .move
   }
 
@@ -246,18 +301,18 @@ extension WorkspaceBar {
       // 2. the dragged tool is from this bar and is dropped at the end of the bar
       // 3. the dragged tool is not from this bar and is dropped at the end of the bar
 
-      guard let toolIdx = self.tools.index(of: tool) else {
+      guard let toolIdx = self.container!.tools.index(of: tool) else {
         // 3.
         tool.bar?.remove(tool: tool)
-        self.append(tool: tool)
+        self.container!.append(tool: tool)
         return true
       }
 
       // 2.
       let loc = self.convert(sender.draggingLocation(), from: nil)
-      if self.buttonFrames.filter({ $0.contains(loc) }).isEmpty && self.barFrame().contains(loc) {
-        self.tools.remove(at: toolIdx)
-        self.tools.append(tool)
+      if self.buttonFrames.filter({ $0.contains(loc) }).isEmpty && self.container!.barFrame().contains(loc) {
+        self.container!.tools.remove(at: toolIdx)
+        self.container!.tools.append(tool)
         return true
       }
 
@@ -269,18 +324,20 @@ extension WorkspaceBar {
     // 1. is not from this bar
     // 2. is from this bar
 
-    guard let toolIdx = self.tools.index(of: tool) else {
+    guard let toolIdx = self.container!.tools.index(of: tool) else {
       // 1.
       tool.bar?.remove(tool: tool)
-      self.insert(tool: tool, at: draggedOnToolIdx)
+      self.container!.insert(tool: tool, at: draggedOnToolIdx)
       return true
     }
 
     // 2.
     if draggedOnToolIdx > toolIdx {
-      (toolIdx..<draggedOnToolIdx).forEach { swap(&self.tools[$0], &self.tools[$0 + 1]) }
+      (toolIdx..<draggedOnToolIdx).forEach { swap(&self.container!.tools[$0], &self.container!.tools[$0 + 1]) }
     } else {
-      (draggedOnToolIdx..<toolIdx).reversed().forEach { swap(&self.tools[$0 + 1], &self.tools[$0]) }
+      (draggedOnToolIdx..<toolIdx).reversed().forEach {
+        swap(&self.container!.tools[$0 + 1], &self.container!.tools[$0])
+      }
     }
     return true
   }
@@ -288,7 +345,7 @@ extension WorkspaceBar {
   fileprivate func endDrag() {
     self.isDragOngoing = false
     self.draggedOnToolIdx = nil
-    self.relayout()
+    self.container!.relayout()
   }
 }
 
@@ -623,7 +680,7 @@ extension WorkspaceBar {
   }
 
   fileprivate func draggedButtonDimension() -> CGFloat {
-    guard let idx = self.draggedOnToolIdx else {
+    guard let idx = self.proxyBar.draggedOnToolIdx else {
       return 0
     }
 
@@ -659,7 +716,7 @@ extension WorkspaceBar {
     let dimensionForDraggedButton = self.draggedButtonDimension()
 
     let firstButton = firstTool.button
-    let firstButtonMargin = self.draggedOnToolIdx == 0 ? dimensionForDraggedButton : 0
+    let firstButtonMargin = self.proxyBar.draggedOnToolIdx == 0 ? dimensionForDraggedButton : 0
     switch self.location {
     case .top:
       self.layoutConstraints.append(contentsOf: [
@@ -693,7 +750,7 @@ extension WorkspaceBar {
           return
         }
 
-        let margin = self.draggedOnToolIdx == idx ? dimensionForDraggedButton : 0
+        let margin = self.proxyBar.draggedOnToolIdx == idx ? dimensionForDraggedButton : 0
         switch self.location {
         case .top:
           self.layoutConstraints.append(contentsOf: [
