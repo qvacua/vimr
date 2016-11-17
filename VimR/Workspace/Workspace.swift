@@ -42,6 +42,7 @@ class Workspace: NSView, WorkspaceBarDelegate {
 
   fileprivate var isDragOngoing = false
   fileprivate var draggedOnBarLocation: WorkspaceBarLocation?
+  fileprivate let proxyBar = ProxyWorkspaceBar(forAutoLayout: ())
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -102,8 +103,14 @@ extension Workspace {
 
   override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
     let loc = self.convert(sender.draggingLocation(), from: nil)
-    self.draggedOnBarLocation = self.bar(inLocation: loc)
+    let currentBarLoc = self.barLocation(inPoint: loc)
 
+    if currentBarLoc == self.draggedOnBarLocation {
+      return .move
+    }
+
+    self.draggedOnBarLocation = currentBarLoc
+    self.relayout()
     return .move
   }
 
@@ -118,6 +125,8 @@ extension Workspace {
   fileprivate func endDrag() {
     self.isDragOngoing = false
     self.draggedOnBarLocation = nil
+    self.proxyBar.removeFromSuperview()
+    self.proxyBar.removeAllConstraints()
   }
 
   override func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool {
@@ -134,7 +143,7 @@ extension Workspace {
 
   override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
     let loc = self.convert(sender.draggingLocation(), from: nil)
-    guard let barLoc = self.bar(inLocation: loc) else {
+    guard let barLoc = self.barLocation(inPoint: loc) else {
       return false
     }
 
@@ -143,7 +152,7 @@ extension Workspace {
     return false
   }
 
-  fileprivate func bar(inLocation loc: CGPoint) -> WorkspaceBarLocation? {
+  fileprivate func barLocation(inPoint loc: CGPoint) -> WorkspaceBarLocation? {
     for barLoc in WorkspaceBarLocation.all {
       if rect(forBar: barLoc).contains(loc) {
         return barLoc
@@ -241,7 +250,41 @@ extension Workspace {
     mainView.autoPinEdge(.right, to: .left, of: rightBar)
     mainView.autoPinEdge(.bottom, to: .top, of: bottomBar)
     mainView.autoPinEdge(.left, to: .right, of: leftBar)
-    
+
+    if let barLoc = self.draggedOnBarLocation {
+      let proxyBar = self.proxyBar
+      self.addSubview(proxyBar)
+
+      let barRect = self.rect(forBar: barLoc)
+      switch barLoc {
+
+      case .top:
+        proxyBar.autoPinEdge(toSuperviewEdge: .top)
+        proxyBar.autoPinEdge(toSuperviewEdge: .right)
+        proxyBar.autoPinEdge(toSuperviewEdge: .left)
+        proxyBar.autoSetDimension(.height, toSize: barRect.height)
+
+      case .right:
+        proxyBar.autoPinEdge(.top, to: .bottom, of: topBar)
+        proxyBar.autoPinEdge(toSuperviewEdge: .right)
+        proxyBar.autoPinEdge(.bottom, to: .top, of: bottomBar)
+        proxyBar.autoSetDimension(.width, toSize: barRect.width)
+
+      case .bottom:
+        proxyBar.autoPinEdge(toSuperviewEdge: .right)
+        proxyBar.autoPinEdge(toSuperviewEdge: .bottom)
+        proxyBar.autoPinEdge(toSuperviewEdge: .left)
+        proxyBar.autoSetDimension(.height, toSize: barRect.height)
+
+      case .left:
+        proxyBar.autoPinEdge(.top, to: .bottom, of: topBar)
+        proxyBar.autoPinEdge(toSuperviewEdge: .left)
+        proxyBar.autoPinEdge(.bottom, to: .top, of: bottomBar)
+        proxyBar.autoSetDimension(.width, toSize: barRect.width)
+
+      }
+    }
+
     self.needsDisplay = true
   }
 }
