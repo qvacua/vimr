@@ -113,7 +113,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
     tool.location = self.location
     self.tools.append(tool)
 
-    if self.isOpen {
+    if self.isOpen || tool.isSelected {
       self.selectedTool?.isSelected = false
       self.selectedTool = tool
     }
@@ -127,7 +127,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
     tool.location = self.location
     self.tools.insert(tool, at: idx)
 
-    if self.isOpen {
+    if self.isOpen || tool.isSelected {
       self.selectedTool?.isSelected = false
       self.selectedTool = tool
     }
@@ -145,7 +145,6 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
     self.tools.remove(at: idx)
 
     if self.isOpen && self.selectedTool == tool {
-      tool.isSelected = false
       self.selectedTool = self.tools.first
     }
 
@@ -234,9 +233,9 @@ extension WorkspaceBar {
       }
 
       // 3
-      NSLog("append at the end")
-
-      return false
+      tool.bar?.remove(tool: tool)
+      self.append(tool: tool)
+      return true
     }
 
     // If we are here, the dragged tool is dropped somewhere in the middle and
