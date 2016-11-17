@@ -108,9 +108,24 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
   }
 
   func append(tool: WorkspaceTool) {
+    tool.bar = self
     tool.delegate = self
     tool.location = self.location
     self.tools.append(tool)
+
+    if self.isOpen {
+      self.selectedTool?.isSelected = false
+      self.selectedTool = tool
+    }
+
+    self.relayout()
+  }
+
+  func insert(tool: WorkspaceTool, at idx: Int) {
+    tool.bar = self
+    tool.delegate = self
+    tool.location = self.location
+    self.tools.insert(tool, at: idx)
 
     if self.isOpen {
       self.selectedTool?.isSelected = false
@@ -125,6 +140,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
       return
     }
 
+    tool.bar = nil
     tool.delegate = nil
     self.tools.remove(at: idx)
 
@@ -194,6 +210,53 @@ extension WorkspaceBar {
 
   override func draggingExited(_ sender: NSDraggingInfo?) {
     self.endDrag()
+  }
+
+  override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+    guard let toolButton = sender.draggingSource() as? WorkspaceToolButton else {
+      return false
+    }
+
+    guard let tool = toolButton.tool else {
+      return false
+    }
+
+    guard let draggedOnToolIdx = self.draggedOnToolIdx else {
+      // This means:
+      // 1. the dragged tool is from this bar and is dropped at the same spot
+      // 2. the dragged tool is from this bar and is dropped at the end of the bar
+      // 3. the dragged tool is dropped at the end of the bar
+
+      guard self.tools.filter({ $0.uuid == tool.uuid }).isEmpty else {
+        // 1 and 2
+        NSLog("doing nothing")
+        return false
+      }
+
+      // 3
+      NSLog("append at the end")
+
+      return false
+    }
+
+    // If we are here, the dragged tool is dropped somewhere in the middle and
+    // 1. is not from this bar
+    // 2. is from this bar
+
+    guard let toolIdx = self.tools.index(of: tool) else {
+      // 1.
+      tool.bar?.remove(tool: tool)
+      self.insert(tool: tool, at: draggedOnToolIdx)
+      return true
+    }
+
+    // 2.
+    if draggedOnToolIdx > toolIdx {
+      (toolIdx..<draggedOnToolIdx).forEach { swap(&self.tools[$0], &self.tools[$0 + 1]) }
+    } else {
+      (draggedOnToolIdx..<toolIdx).reversed().forEach { swap(&self.tools[$0 + 1], &self.tools[$0]) }
+    }
+    return true
   }
 
   fileprivate func endDrag() {

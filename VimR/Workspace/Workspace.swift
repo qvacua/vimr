@@ -145,7 +145,7 @@ extension Workspace {
 
     let openToolAfterwards = tool.isSelected
 
-    self.bars[tool.location]?.remove(tool: tool)
+    tool.bar?.remove(tool: tool)
     self.bars[barLoc]?.append(tool: tool)
 
     if openToolAfterwards {
