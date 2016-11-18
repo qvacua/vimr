@@ -333,11 +333,11 @@ extension ProxyBar {
 
     // 2.
     if draggedOnToolIdx > toolIdx {
-      (toolIdx..<draggedOnToolIdx).forEach { swap(&self.container!.tools[$0], &self.container!.tools[$0 + 1]) }
+      self.container!.tools.remove(at: toolIdx)
+      self.container!.tools.insert(tool, at: draggedOnToolIdx - 1)
     } else {
-      (draggedOnToolIdx..<toolIdx).reversed().forEach {
-        swap(&self.container!.tools[$0 + 1], &self.container!.tools[$0])
-      }
+      self.container!.tools.remove(at: toolIdx)
+      self.container!.tools.insert(tool, at: draggedOnToolIdx)
     }
     return true
   }
