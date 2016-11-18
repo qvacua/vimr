@@ -162,12 +162,14 @@ class ViewComponent: NSView, Flow {
 
 class WorkspaceToolComponent: WorkspaceTool, Flow {
 
+  let toolIdentifier: ToolIdentifier
   let viewComponent: ViewComponent
   var sink: Observable<Any> {
     return self.viewComponent.sink
   }
 
-  init(title: String, viewComponent: ViewComponent, minimumDimension: CGFloat = 50) {
+  init(title: String, viewComponent: ViewComponent, toolIdentifier: ToolIdentifier, minimumDimension: CGFloat = 50) {
+    self.toolIdentifier = toolIdentifier
     self.viewComponent = viewComponent
     super.init(title: title, view: viewComponent, minimumDimension: minimumDimension)
   }

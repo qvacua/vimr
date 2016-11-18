@@ -84,6 +84,9 @@
 		4B6A70991D65058A00E12030 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; };
 		4B6A709C1D6507A000E12030 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B6B0A781DA2A1A500212D6D /* FileOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6B0A771DA2A1A500212D6D /* FileOutlineView.swift */; };
+		4B705BA11DDF7639005F844B /* ToolPrefData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B705BA01DDF7639005F844B /* ToolPrefData.swift */; };
+		4B705BA21DDF7736005F844B /* ProxyWorkspaceBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */; };
+		4B705BA31DDF7742005F844B /* ToolPrefData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B705BA01DDF7639005F844B /* ToolPrefData.swift */; };
 		4B854A1D1D31447C00E08DE1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B854A1C1D31447C00E08DE1 /* main.m */; };
 		4B8AC0441DBCB3A2007CCC9B /* NeoVimObjectsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8AC0431DBCB3A1007CCC9B /* NeoVimObjectsExtensions.swift */; };
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
@@ -314,6 +317,7 @@
 		4B6A70931D60E04200E12030 /* AppKitCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppKitCommons.swift; sourceTree = "<group>"; };
 		4B6A70951D6100E300E12030 /* SwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftCommons.swift; sourceTree = "<group>"; };
 		4B6B0A771DA2A1A500212D6D /* FileOutlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileOutlineView.swift; sourceTree = "<group>"; };
+		4B705BA01DDF7639005F844B /* ToolPrefData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolPrefData.swift; sourceTree = "<group>"; };
 		4B854A1A1D31447C00E08DE1 /* NeoVimServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NeoVimServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B854A1C1D31447C00E08DE1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4B8AC0431DBCB3A1007CCC9B /* NeoVimObjectsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimObjectsExtensions.swift; sourceTree = "<group>"; };
@@ -562,6 +566,15 @@
 			path = "VimR-Workspace-Demo";
 			sourceTree = "<group>";
 		};
+		4B705B9F1DDF761C005F844B /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				4B705BA01DDF7639005F844B /* ToolPrefData.swift */,
+				4B0677351D99D9A2001A2588 /* File Browser */,
+			);
+			name = Tools;
+			sourceTree = "<group>";
+		};
 		4B854A151D31444800E08DE1 /* resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -628,7 +641,7 @@
 				1929B39DA7AC4A9B62D7CD39 /* Component.swift */,
 				4BD3BF961D32B0DB00082605 /* MainWindowManager.swift */,
 				4BD3BF921D32A95800082605 /* MainWindowComponent.swift */,
-				4B0677351D99D9A2001A2588 /* File Browser */,
+				4B705B9F1DDF761C005F844B /* Tools */,
 				4B1AC1AF1D7F395300898F0B /* Open Quickly */,
 				4B238BED1D3ED55300CBDD98 /* Preferences */,
 			);
@@ -1070,6 +1083,7 @@
 				4B6423961D8EFD7100FC78C8 /* Workspace.swift in Sources */,
 				4B22F7F21D7C6B9000929B0E /* ImageAndTextTableCell.swift in Sources */,
 				4BDF50141D7617EA00D8FBC3 /* OpenQuicklyWindowComponent.swift in Sources */,
+				4B705BA11DDF7639005F844B /* ToolPrefData.swift in Sources */,
 				4B6A70941D60E04200E12030 /* AppKitCommons.swift in Sources */,
 				4BD3BF971D32B0DB00082605 /* MainWindowManager.swift in Sources */,
 				4B238BEC1D3ED54D00CBDD98 /* AppearancePrefPane.swift in Sources */,
@@ -1106,6 +1120,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B705BA31DDF7742005F844B /* ToolPrefData.swift in Sources */,
+				4B705BA21DDF7736005F844B /* ProxyWorkspaceBar.swift in Sources */,
 				4B0677401DA170D5001A2588 /* AppKitCommons.swift in Sources */,
 				4B0677411DA170D5001A2588 /* Workspace.swift in Sources */,
 				4B0677421DA170D5001A2588 /* WorkspaceBar.swift in Sources */,

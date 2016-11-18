@@ -19,13 +19,14 @@ struct MainWindowPrefData {
   let isAllToolsVisible: Bool
   let isToolButtonsVisible: Bool
 
+  // FIXME: REMOVE!
   let isFileBrowserVisible: Bool
   let fileBrowserWidth: Float
 }
 
-fileprivate enum Tool {
+enum ToolIdentifier: String {
 
-  case fileBrowser
+  case fileBrowser = "com.qvacua.vimr.tool.file-browser"
 }
 
 class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceValidations, WorkspaceDelegate {
@@ -42,7 +43,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
 
   fileprivate let workspace: Workspace
   fileprivate let neoVimView: NeoVimView
-  fileprivate var tools = [Tool: WorkspaceToolComponent]()
+  fileprivate var tools = [ToolIdentifier: WorkspaceToolComponent]()
 
   // MARK: - API
   var uuid: String {
@@ -97,7 +98,10 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
     // FIXME: We do not use [self.sink, source].toMergedObservables. If we do so, then self.sink seems to live as long
     // as source, i.e. forever. Thus, self (MainWindowComponent) does not get deallocated. Not nice...
     let fileBrowser = FileBrowserComponent(source: self.sink, fileItemService: fileItemService)
-    let fileBrowserTool = WorkspaceToolComponent(title: "Files", viewComponent: fileBrowser, minimumDimension: 100)
+    let fileBrowserTool = WorkspaceToolComponent(title: "Files",
+                                                 viewComponent: fileBrowser,
+                                                 toolIdentifier: .fileBrowser,
+                                                 minimumDimension: 100)
     self.tools[.fileBrowser] = fileBrowserTool
     self.workspace.append(tool: fileBrowserTool, location: .left)
 
