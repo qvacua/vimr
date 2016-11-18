@@ -5,6 +5,7 @@
 
 import XCTest
 import Nimble
+@testable import VimR
 
 class FileItemIgnorePatternTest: XCTestCase {
 
