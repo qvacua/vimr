@@ -7,17 +7,59 @@ import Cocoa
 import PureLayout
 import RxSwift
 
-struct GeneralPrefData: Equatable {
-  let openNewWindowWhenLaunching: Bool
-  let openNewWindowOnReactivation: Bool
+struct GeneralPrefData: Equatable, StandardPrefData {
 
-  let ignorePatterns: Set<FileItemIgnorePattern>
-}
+  fileprivate static let openNewWindowWhenLaunching = "open-new-window-when-launching"
+  fileprivate static let openNewWindowOnReactivation = "open-new-window-on-reactivation"
+  fileprivate static let ignorePatterns = "ignore-patterns"
 
-func == (left: GeneralPrefData, right: GeneralPrefData) -> Bool {
-  return left.openNewWindowWhenLaunching == right.openNewWindowWhenLaunching
-    && left.openNewWindowOnReactivation == right.openNewWindowOnReactivation
-    && left.ignorePatterns == right.ignorePatterns
+  fileprivate static let defaultIgnorePatterns = Set(
+      [ "*/.git", "*.o", "*.d", "*.dia" ].map(FileItemIgnorePattern.init)
+  )
+
+  static func ==(left: GeneralPrefData, right: GeneralPrefData) -> Bool {
+    return left.openNewWindowWhenLaunching == right.openNewWindowWhenLaunching
+        && left.openNewWindowOnReactivation == right.openNewWindowOnReactivation
+        && left.ignorePatterns == right.ignorePatterns
+  }
+
+  static let `default` = GeneralPrefData(openNewWindowWhenLaunching: true,
+                                         openNewWindowOnReactivation: true,
+                                         ignorePatterns: GeneralPrefData.defaultIgnorePatterns)
+
+  var openNewWindowWhenLaunching: Bool
+  var openNewWindowOnReactivation: Bool
+  var ignorePatterns: Set<FileItemIgnorePattern>
+
+  init(openNewWindowWhenLaunching: Bool,
+       openNewWindowOnReactivation: Bool,
+       ignorePatterns: Set<FileItemIgnorePattern>)
+  {
+    self.openNewWindowWhenLaunching  = openNewWindowWhenLaunching
+    self.openNewWindowOnReactivation = openNewWindowOnReactivation
+    self.ignorePatterns = ignorePatterns
+  }
+
+  init?(dict: [String: Any]) {
+    guard let openNewWinWhenLaunching = PrefUtils.bool(from: dict, for: GeneralPrefData.openNewWindowWhenLaunching),
+          let openNewWinOnReactivation = PrefUtils.bool(from: dict, for: GeneralPrefData.openNewWindowOnReactivation),
+          let ignorePatternsStr = dict[GeneralPrefData.ignorePatterns] as? String
+        else {
+      return nil
+    }
+
+    self.init(openNewWindowWhenLaunching: openNewWinWhenLaunching,
+              openNewWindowOnReactivation: openNewWinOnReactivation,
+              ignorePatterns: PrefUtils.ignorePatterns(fromString: ignorePatternsStr))
+  }
+
+  func dict() -> [String: Any] {
+    return [
+        GeneralPrefData.openNewWindowWhenLaunching: self.openNewWindowWhenLaunching,
+        GeneralPrefData.openNewWindowOnReactivation: self.openNewWindowOnReactivation,
+        GeneralPrefData.ignorePatterns: PrefUtils.ignorePatternString(fromSet: self.ignorePatterns),
+    ]
+  }
 }
 
 class GeneralPrefPane: PrefPane, NSTextFieldDelegate {

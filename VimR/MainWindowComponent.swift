@@ -14,19 +14,62 @@ enum MainWindowAction {
   case close(mainWindow: MainWindowComponent, mainWindowPrefData: MainWindowPrefData)
 }
 
-struct MainWindowPrefData {
+struct MainWindowPrefData: StandardPrefData {
 
-  let isAllToolsVisible: Bool
-  let isToolButtonsVisible: Bool
+  fileprivate static let isAllToolsVisible = "is-all-tools-visible"
+  fileprivate static let isToolButtonsVisible = "is-tool-buttons-visible"
+  fileprivate static let toolPrefDatas = "tool-pref-datas"
 
-  // FIXME: REMOVE!
-  let isFileBrowserVisible: Bool
-  let fileBrowserWidth: Float
-}
+  static let `default` = MainWindowPrefData(isAllToolsVisible: true,
+                                            isToolButtonsVisible: true,
+                                            toolPrefDatas: [ ToolPrefData.defaults[.fileBrowser]! ])
 
-enum ToolIdentifier: String {
+  var isAllToolsVisible: Bool
+  var isToolButtonsVisible: Bool
+  var toolPrefDatas: [ToolPrefData]
 
-  case fileBrowser = "com.qvacua.vimr.tool.file-browser"
+  init(isAllToolsVisible: Bool, isToolButtonsVisible: Bool, toolPrefDatas: [ToolPrefData]) {
+    self.isAllToolsVisible = isAllToolsVisible
+    self.isToolButtonsVisible = isToolButtonsVisible
+    self.toolPrefDatas = toolPrefDatas
+  }
+
+  init?(dict: [String: Any]) {
+
+    guard let isAllToolsVisible = PrefUtils.bool(from: dict, for: MainWindowPrefData.isAllToolsVisible),
+          let isToolButtonsVisible = PrefUtils.bool(from: dict, for: MainWindowPrefData.isToolButtonsVisible),
+          let toolDataDicts = dict[MainWindowPrefData.toolPrefDatas] as? [[String: Any]]
+        else {
+      return nil
+    }
+
+    // Add default tool pref data for missing identifiers.
+    let toolDatas = toolDataDicts.map { ToolPrefData(dict: $0) }.flatMap { $0 }
+    let missingToolDatas = Set(ToolIdentifier.all)
+        .subtracting(toolDatas.map { $0.identifier })
+        .map { ToolPrefData.defaults[$0] }
+        .flatMap { $0 }
+
+    self.init(isAllToolsVisible: isAllToolsVisible,
+              isToolButtonsVisible: isToolButtonsVisible,
+              toolPrefDatas: [ toolDatas, missingToolDatas ].flatMap { $0 })
+  }
+
+  func dict() -> [String: Any] {
+    return [
+      MainWindowPrefData.isAllToolsVisible: self.isAllToolsVisible,
+      MainWindowPrefData.isToolButtonsVisible: self.isToolButtonsVisible,
+      MainWindowPrefData.toolPrefDatas: self.toolPrefDatas.map { $0.dict() },
+    ]
+  }
+
+  func toolPrefData(for identifier: ToolIdentifier) -> ToolPrefData {
+    guard let tool = self.toolPrefDatas.filter({ $0.identifier == identifier }).first else {
+      preconditionFailure("[ERROR] No tool for \(identifier) found!")
+    }
+
+    return tool
+  }
 }
 
 class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceValidations, WorkspaceDelegate {
@@ -103,7 +146,6 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
                                                  toolIdentifier: .fileBrowser,
                                                  minimumDimension: 100)
     self.tools[.fileBrowser] = fileBrowserTool
-    self.workspace.append(tool: fileBrowserTool, location: .left)
 
     self.addReactions()
 
@@ -120,7 +162,9 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
 
     // By default the tool buttons are shown and no tools are shown.
     let mainWindowData = initialData.mainWindow
-    fileBrowserTool.dimension = CGFloat(mainWindowData.fileBrowserWidth)
+    let fileBrowserToolData = mainWindowData.toolPrefData(for: .fileBrowser)
+    self.workspace.append(tool: fileBrowserTool, location: fileBrowserToolData.location)
+    fileBrowserTool.dimension = CGFloat(fileBrowserToolData.dimension)
 
     if !mainWindowData.isAllToolsVisible {
       self.toggleAllTools(self)
@@ -130,7 +174,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
       self.toggleToolButtons(self)
     }
 
-    if mainWindowData.isFileBrowserVisible {
+    if fileBrowserToolData.isVisible {
       fileBrowserTool.toggle()
     }
 
@@ -360,13 +404,13 @@ extension MainWindowComponent {
 
   @IBAction func makeFontBigger(_ sender: Any?) {
     let curFont = self.neoVimView.font
-    let font = self.fontManager.convert(curFont, toSize: min(curFont.pointSize + 1, PrefStore.maxEditorFontSize))
+    let font = self.fontManager.convert(curFont, toSize: min(curFont.pointSize + 1, NeoVimView.maxFontSize))
     self.neoVimView.font = font
   }
 
   @IBAction func makeFontSmaller(_ sender: Any?) {
     let curFont = self.neoVimView.font
-    let font = self.fontManager.convert(curFont, toSize: max(curFont.pointSize - 1, PrefStore.minEditorFontSize))
+    let font = self.fontManager.convert(curFont, toSize: max(curFont.pointSize - 1, NeoVimView.minFontSize))
     self.neoVimView.font = font
   }
 }
@@ -407,10 +451,13 @@ extension MainWindowComponent {
     self.fileItemService.unmonitor(url: self._cwd)
 
     let fileBrowser = self.tools[.fileBrowser]!
+    let fileBrowserData = ToolPrefData(identifier: .fileBrowser,
+                                       location: fileBrowser.location,
+                                       isVisible: fileBrowser.isSelected,
+                                       dimension: fileBrowser.dimension)
     let prefData = MainWindowPrefData(isAllToolsVisible: self.workspace.isAllToolsVisible,
                                       isToolButtonsVisible: self.workspace.isToolButtonsVisible,
-                                      isFileBrowserVisible: self.workspace.bars[.left]?.isOpen ?? true,
-                                      fileBrowserWidth: Float(fileBrowser.dimension))
+                                      toolPrefDatas: [ fileBrowserData ])
 
     self.publish(event: MainWindowAction.close(mainWindow: self, mainWindowPrefData: prefData))
   }

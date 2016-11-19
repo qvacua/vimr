@@ -72,6 +72,7 @@
 		4B6A709C1D6507A000E12030 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B6B0A781DA2A1A500212D6D /* FileOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6B0A771DA2A1A500212D6D /* FileOutlineView.swift */; };
 		4B705BA11DDF7639005F844B /* ToolPrefData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B705BA01DDF7639005F844B /* ToolPrefData.swift */; };
+		4B705BDA1DE04F83005F844B /* Pref38To128Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B705BD91DE04F83005F844B /* Pref38To128Converter.swift */; };
 		4B854A1D1D31447C00E08DE1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B854A1C1D31447C00E08DE1 /* main.m */; };
 		4B8AC0441DBCB3A2007CCC9B /* NeoVimObjectsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8AC0431DBCB3A1007CCC9B /* NeoVimObjectsExtensions.swift */; };
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
@@ -296,6 +297,7 @@
 		4B6A70951D6100E300E12030 /* SwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftCommons.swift; sourceTree = "<group>"; };
 		4B6B0A771DA2A1A500212D6D /* FileOutlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileOutlineView.swift; sourceTree = "<group>"; };
 		4B705BA01DDF7639005F844B /* ToolPrefData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolPrefData.swift; sourceTree = "<group>"; };
+		4B705BD91DE04F83005F844B /* Pref38To128Converter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pref38To128Converter.swift; sourceTree = "<group>"; };
 		4B854A1A1D31447C00E08DE1 /* NeoVimServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NeoVimServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B854A1C1D31447C00E08DE1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4B8AC0431DBCB3A1007CCC9B /* NeoVimObjectsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimObjectsExtensions.swift; sourceTree = "<group>"; };
@@ -470,6 +472,7 @@
 				4B238BEB1D3ED54D00CBDD98 /* AppearancePrefPane.swift */,
 				4BBDD3EC1D967DA2008FCC92 /* AdvancedPrefPane.swift */,
 				4B37ADBA1D6EC11600970D55 /* TestPane.swift */,
+				4B705BD91DE04F83005F844B /* Pref38To128Converter.swift */,
 			);
 			name = Preferences;
 			sourceTree = "<group>";
@@ -1070,6 +1073,7 @@
 				4BAD81D51D80B5D8004F91AE /* OpenQuicklyFileViewRow.swift in Sources */,
 				4B4546871D468CEC00A1E27F /* PrefStore.swift in Sources */,
 				4B4FC8E61D3E8739009352C3 /* PrefWindowComponent.swift in Sources */,
+				4B705BDA1DE04F83005F844B /* Pref38To128Converter.swift in Sources */,
 				4B6A70961D6100E300E12030 /* SwiftCommons.swift in Sources */,
 				4B56CE301D5FC27100337673 /* GeneralPrefPane.swift in Sources */,
 				4BF8EED81D85574800CAC08A /* PrefUtils.swift in Sources */,

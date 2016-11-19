@@ -7,14 +7,42 @@ import Cocoa
 import PureLayout
 import RxSwift
 
-struct AdvancedPrefData: Equatable {
+struct AdvancedPrefData: Equatable, StandardPrefData {
+  
+  fileprivate static let useSnapshotUpdateChannel = "use-snapshot-update-channel"
+  fileprivate static let useInteractiveZsh = "use-interactive-zsh"
+
+  static func ==(left: AdvancedPrefData, right: AdvancedPrefData) -> Bool {
+    return left.useSnapshotUpdateChannel == right.useSnapshotUpdateChannel &&
+        left.useInteractiveZsh == right.useInteractiveZsh
+  }
+
+  static let `default` = AdvancedPrefData(useSnapshotUpdateChannel: false, useInteractiveZsh: false)
+
   let useSnapshotUpdateChannel: Bool
   let useInteractiveZsh: Bool
-}
 
-func == (left: AdvancedPrefData, right: AdvancedPrefData) -> Bool {
-  return left.useSnapshotUpdateChannel == right.useSnapshotUpdateChannel &&
-    left.useInteractiveZsh == right.useInteractiveZsh
+  init(useSnapshotUpdateChannel: Bool, useInteractiveZsh: Bool) {
+    self.useSnapshotUpdateChannel = useSnapshotUpdateChannel
+    self.useInteractiveZsh = useInteractiveZsh
+  }
+
+  init?(dict: [String: Any]) {
+    guard let useSnapshot = PrefUtils.bool(from: dict, for: AdvancedPrefData.useSnapshotUpdateChannel),
+          let useInteractiveZsh = PrefUtils.bool(from: dict, for: AdvancedPrefData.useInteractiveZsh)
+        else {
+      return nil
+    }
+
+    self.init(useSnapshotUpdateChannel: useSnapshot, useInteractiveZsh: useInteractiveZsh)
+  }
+
+  func dict() -> [String: Any] {
+    return [
+        AdvancedPrefData.useSnapshotUpdateChannel: self.useSnapshotUpdateChannel,
+        AdvancedPrefData.useInteractiveZsh: self.useInteractiveZsh,
+    ]
+  }
 }
 
 class AdvancedPrefPane: PrefPane {

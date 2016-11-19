@@ -7,16 +7,55 @@ import Cocoa
 import PureLayout
 import RxSwift
 
-struct AppearancePrefData: Equatable {
-  let editorFont: NSFont
-  let editorLinespacing: CGFloat
-  let editorUsesLigatures: Bool
-}
+struct AppearancePrefData: Equatable, StandardPrefData {
 
-func == (left: AppearancePrefData, right: AppearancePrefData) -> Bool {
-  return left.editorUsesLigatures == right.editorUsesLigatures
-    && left.editorFont.isEqual(to: right.editorFont)
-    && left.editorLinespacing == right.editorLinespacing
+  fileprivate static let editorFontName = "editor-font-name"
+  fileprivate static let editorFontSize = "editor-font-size"
+  fileprivate static let editorLinespacing = "editor-linespacing"
+  fileprivate static let editorUsesLigatures = "editor-uses-ligatures"
+
+  static func ==(left: AppearancePrefData, right: AppearancePrefData) -> Bool {
+    return left.editorUsesLigatures == right.editorUsesLigatures
+        && left.editorFont.isEqual(to: right.editorFont)
+        && left.editorLinespacing == right.editorLinespacing
+  }
+
+  static let `default` = AppearancePrefData(editorFont: NeoVimView.defaultFont,
+                                            editorLinespacing: NeoVimView.defaultLinespacing,
+                                            editorUsesLigatures: false)
+
+  var editorFont: NSFont
+  var editorLinespacing: CGFloat
+  var editorUsesLigatures: Bool
+
+  init(editorFont: NSFont, editorLinespacing: CGFloat, editorUsesLigatures: Bool) {
+    self.editorFont = editorFont
+    self.editorLinespacing = editorLinespacing
+    self.editorUsesLigatures = editorUsesLigatures
+  }
+
+  init?(dict: [String: Any]) {
+    guard let editorFontName = dict[AppearancePrefData.editorFontName] as? String,
+          let fEditorFontSize = PrefUtils.float(from: dict, for: AppearancePrefData.editorFontSize),
+          let fEditorLinespacing = PrefUtils.float(from: dict, for: AppearancePrefData.editorLinespacing),
+          let editorUsesLigatures = PrefUtils.bool(from: dict, for: AppearancePrefData.editorUsesLigatures)
+        else {
+      return nil
+    }
+
+    self.init(editorFont: PrefUtils.saneFont(editorFontName, fontSize: CGFloat(fEditorFontSize)),
+              editorLinespacing: CGFloat(fEditorLinespacing),
+              editorUsesLigatures: editorUsesLigatures)
+  }
+
+  func dict() -> [String: Any] {
+    return [
+        AppearancePrefData.editorFontName: self.editorFont.fontName,
+        AppearancePrefData.editorFontSize: Float(self.editorFont.pointSize),
+        AppearancePrefData.editorLinespacing: Float(self.editorLinespacing),
+        AppearancePrefData.editorUsesLigatures: self.editorUsesLigatures,
+    ]
+  }
 }
 
 class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate {
@@ -264,12 +303,12 @@ extension AppearancePrefPane {
   fileprivate func cappedLinespacing(_ linespacing: Float) -> CGFloat {
     let cgfLinespacing = CGFloat(linespacing)
 
-    guard cgfLinespacing >= PrefStore.minEditorLinespacing else {
-      return PrefStore.defaultEditorLinespacing
+    guard cgfLinespacing >= NeoVimView.minLinespacing else {
+      return NeoVimView.defaultLinespacing
     }
 
-    guard cgfLinespacing <= PrefStore.maxEditorLinespacing else {
-      return PrefStore.maxEditorLinespacing
+    guard cgfLinespacing <= NeoVimView.maxLinespacing else {
+      return NeoVimView.maxLinespacing
     }
 
     return cgfLinespacing
@@ -278,12 +317,12 @@ extension AppearancePrefPane {
   fileprivate func cappedFontSize(_ size: Int) -> CGFloat {
     let cgfSize = CGFloat(size)
 
-    guard cgfSize >= PrefStore.minEditorFontSize else {
-      return PrefStore.defaultEditorFontSize
+    guard cgfSize >= NeoVimView.minFontSize else {
+      return NeoVimView.defaultFont.pointSize
     }
 
-    guard cgfSize <= PrefStore.maxEditorFontSize else {
-      return PrefStore.maxEditorFontSize
+    guard cgfSize <= NeoVimView.maxFontSize else {
+      return NeoVimView.maxFontSize
     }
 
     return cgfSize
