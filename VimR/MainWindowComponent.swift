@@ -8,6 +8,7 @@ import PureLayout
 import RxSwift
 
 enum MainWindowAction {
+
   case becomeKey(mainWindow: MainWindowComponent)
   case openQuickly(mainWindow: MainWindowComponent)
   case changeCwd(mainWindow: MainWindowComponent)
@@ -153,7 +154,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
     self.neoVimView.font = self.defaultEditorFont
     self.neoVimView.usesLigatures = initialData.appearance.editorUsesLigatures
     self.neoVimView.linespacing = initialData.appearance.editorLinespacing
-    
+
     self.neoVimView.cwd = cwd // This will publish the MainWindowAction.changeCwd action for the file browser.
     self.neoVimView.open(urls: urls)
 
@@ -208,7 +209,7 @@ class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceVal
 
         case let FileBrowserAction.open(url: url):
           self.neoVimView.open(urls: [url])
-          
+
         case let FileBrowserAction.openInNewTab(url: url):
           self.neoVimView.openInNewTab(urls: [url])
 
@@ -275,7 +276,7 @@ extension MainWindowComponent {
 
 // MARK: - File Menu Item Actions
 extension MainWindowComponent {
-  
+
   @IBAction func newTab(_ sender: Any?) {
     self.neoVimView.newTab()
   }
@@ -288,7 +289,7 @@ extension MainWindowComponent {
       guard result == NSFileHandlingPanelOKButton else {
         return
       }
-      
+
       let urls = panel.urls
       if self.neoVimView.allBuffers().count == 1 {
         let isTransient = self.neoVimView.allBuffers().first?.isTransient ?? false
@@ -308,15 +309,15 @@ extension MainWindowComponent {
     guard let curBuf = self.neoVimView.currentBuffer() else {
       return
     }
-    
+
     if curBuf.fileName == nil {
       self.savePanelSheet { self.neoVimView.saveCurrentTab(url: $0) }
       return
     }
-    
+
     self.neoVimView.saveCurrentTab()
   }
-  
+
   @IBAction func saveDocumentAs(_ sender: Any?) {
     if self.neoVimView.currentBuffer() == nil {
       return
@@ -324,7 +325,7 @@ extension MainWindowComponent {
 
     self.savePanelSheet { url in
       self.neoVimView.saveCurrentTab(url: url)
-      
+
       if self.neoVimView.isCurrentBufferDirty() {
         self.neoVimView.openInNewTab(urls: [url])
       } else {
@@ -332,29 +333,29 @@ extension MainWindowComponent {
       }
     }
   }
-  
+
   fileprivate func savePanelSheet(action: @escaping (URL) -> Void) {
     let panel = NSSavePanel()
     panel.beginSheetModal(for: self.window) { result in
       guard result == NSFileHandlingPanelOKButton else {
         return
       }
-      
+
       let showAlert: () -> Void = {
         let alert = NSAlert()
         alert.addButton(withTitle: "OK")
         alert.messageText = "Invalid File Name"
         alert.informativeText = "The file name you have entered cannot be used. Please use a different name."
         alert.alertStyle = .warning
-        
+
         alert.runModal()
       }
-      
+
       guard let url = panel.url else {
         showAlert()
         return
       }
-      
+
       action(url)
     }
   }
@@ -434,7 +435,7 @@ extension MainWindowComponent: NeoVimViewDelegate {
 
     self.publish(event: MainWindowAction.changeCwd(mainWindow: self))
   }
-  
+
   func neoVimStopped() {
     self.windowController.close()
   }
@@ -442,7 +443,7 @@ extension MainWindowComponent: NeoVimViewDelegate {
 
 // MARK: - NSWindowDelegate
 extension MainWindowComponent {
-  
+
   func windowDidBecomeKey(_: Notification) {
     self.publish(event: MainWindowAction.becomeKey(mainWindow: self))
   }
@@ -473,7 +474,7 @@ extension MainWindowComponent {
         if response == NSAlertSecondButtonReturn {
           self.neoVimView.closeCurrentTabWithoutSaving()
         }
-      }) 
+      })
 
       return false
     }
