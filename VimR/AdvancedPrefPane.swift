@@ -13,8 +13,8 @@ struct AdvancedPrefData: Equatable, StandardPrefData {
   fileprivate static let useInteractiveZsh = "use-interactive-zsh"
 
   static func ==(left: AdvancedPrefData, right: AdvancedPrefData) -> Bool {
-    return left.useSnapshotUpdateChannel == right.useSnapshotUpdateChannel &&
-        left.useInteractiveZsh == right.useInteractiveZsh
+    return left.useSnapshotUpdateChannel == right.useSnapshotUpdateChannel
+        && left.useInteractiveZsh == right.useInteractiveZsh
   }
 
   static let `default` = AdvancedPrefData(useSnapshotUpdateChannel: false, useInteractiveZsh: false)

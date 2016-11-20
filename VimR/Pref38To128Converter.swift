@@ -28,8 +28,8 @@ fileprivate class PrefKeys38 {
 
 class Pref38To128Converter {
   
-  static let fromVersion = "38"
-  static let toVersion = "128"
+  fileprivate static let fromVersion = "38"
+  fileprivate static let toVersion = "128"
 
   fileprivate let userDefaults = UserDefaults.standard
   fileprivate let fontManager = NSFontManager.shared()
