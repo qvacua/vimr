@@ -24,7 +24,7 @@ class PrefUtils {
 
         return FileItemIgnorePattern(pattern: trimmed)
     }
-    
+
     return Set(patterns)
   }
 
@@ -86,5 +86,24 @@ class PrefUtils {
     }
 
     return linespacing
+  }
+
+  static func location(from strValue: String) -> WorkspaceBarLocation? {
+    switch strValue {
+    case "top": return .top
+    case "right": return .right
+    case "bottom": return .bottom
+    case "left": return .left
+    default: return nil
+    }
+  }
+
+  static func locationAsString(for loc: WorkspaceBarLocation) -> String {
+    switch loc {
+    case .top: return "top"
+    case .right: return "right"
+    case .bottom: return "bottom"
+    case .left: return "left"
+    }
   }
 }
