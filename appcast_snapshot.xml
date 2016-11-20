@@ -7,22 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.11.0-SNAPSHOT-20161120.1138-128</title>
+      <title>v0.11.0-SNAPSHOT-20161120.1616-129</title>
       <description><![CDATA[
     <ul>
-<li>GH-296: Drag &amp; drop the file browser to any side of the window! 😀</li>
+<li>GH-341: Do not become unresponsive when opening a file with existing swap file via the file browser. (This bug was introduced with GH-299)</li>
+<li>GH-347: Do not become unresponsive when you <code>wq</code> the last tab or buffer.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161120.1138-128
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161120.1616-129
       </releaseNotesLink>
-      <pubDate>2016-11-20T11:46:27.258710</pubDate>
+      <pubDate>2016-11-20T16:24:06.822878</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161120.1138-128/VimR-v0.11.0-SNAPSHOT-20161120.1138-128.tar.bz2"
-                 sparkle:version="128"
-                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161120.1138"
-                 sparkle:dsaSignature="MC0CFGTISgW9AykpXOnBsWegqTkH1EV7AhUA9H5fLmGIqXP8xfoipAqIwXN90jk="
-                 length="9087508"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161120.1616-129/VimR-v0.11.0-SNAPSHOT-20161120.1616-129.tar.bz2"
+                 sparkle:version="129"
+                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161120.1616"
+                 sparkle:dsaSignature="MC0CFQC1pLKJLo1u30RHLu5VapuF5ezQiAIUFop2PPdPKroPUx2ZEJCqzvAePGw="
+                 length="9096343"
                  type="application/octet-stream"/>
     </item>
   </channel>
