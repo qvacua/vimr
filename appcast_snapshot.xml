@@ -7,20 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.11.0-SNAPSHOT-20161113.1502-126</title>
+      <title>v0.11.0-SNAPSHOT-20161120.1138-128</title>
       <description><![CDATA[
-    <p>GH-337: With the first version of GH-333, strangely, on 10.12.X <code>init.vim</code> did not get read. GH-337 fixes this issue.</p>
+    <ul>
+<li>GH-296: Drag &amp; drop the file browser to any side of the window! 😀</li>
+</ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161113.1502-126
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161120.1138-128
       </releaseNotesLink>
-      <pubDate>2016-11-13T15:14:23.304475</pubDate>
+      <pubDate>2016-11-20T11:46:27.258710</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161113.1502-126/VimR-v0.11.0-SNAPSHOT-20161113.1502-126.tar.bz2"
-                 sparkle:version="126"
-                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161113.1502"
-                 sparkle:dsaSignature="MCwCFEEjqAIlJDjlgoVh0PzaYrbBv29PAhRDYKujxrRcQE2NEO1+qdcgh9mTSA=="
-                 length="8923917"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161120.1138-128/VimR-v0.11.0-SNAPSHOT-20161120.1138-128.tar.bz2"
+                 sparkle:version="128"
+                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161120.1138"
+                 sparkle:dsaSignature="MC0CFGTISgW9AykpXOnBsWegqTkH1EV7AhUA9H5fLmGIqXP8xfoipAqIwXN90jk="
+                 length="9087508"
                  type="application/octet-stream"/>
     </item>
   </channel>
