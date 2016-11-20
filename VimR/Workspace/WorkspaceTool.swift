@@ -20,6 +20,9 @@ class WorkspaceTool: Hashable {
   var hashValue: Int {
     return self.uuid.hashValue
   }
+  /**
+   This UUID is only memory-persistent. It's generated when the tool is instantiated.
+   */
   let uuid = UUID().uuidString
   let title: String
   let view: NSView
@@ -52,7 +55,7 @@ class WorkspaceTool: Hashable {
     self.minimumDimension = minimumDimension
     self.dimension = minimumDimension
     self.button = WorkspaceToolButton(title: title)
-    
+
     self.button.tool = self
   }
 

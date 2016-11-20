@@ -25,6 +25,7 @@ protocol WorkspaceDelegate: class {
 class Workspace: NSView, WorkspaceBarDelegate {
 
   struct Config {
+
     let mainViewMinimumSize: CGSize
   }
 
