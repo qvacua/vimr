@@ -17,7 +17,7 @@ fileprivate struct RowRun: CustomStringConvertible {
   }
 }
 
-public class NeoVimView: NSView, NSUserInterfaceValidations {
+public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidations {
 
   public struct Config {
     let useInteractiveZsh: Bool
@@ -1197,7 +1197,7 @@ extension NeoVimView {
 }
 
 // MARK: - NeoVimUiBridgeProtocol
-extension NeoVimView: NeoVimUiBridgeProtocol {
+extension NeoVimView {
 
   public func resize(toWidth width: Int32, height: Int32) {
     DispatchUtils.gui {
@@ -1398,6 +1398,13 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   public func setIcon(_ icon: String) {
   }
 
+  public func stop() {
+    DispatchUtils.gui {
+      self.delegate?.neoVimStopped()
+      self.agent.quit()
+    }
+  }
+
   public func setDirtyStatus(_ dirty: Bool) {
     DispatchUtils.gui {
       self.delegate?.set(dirtyStatus: dirty)
@@ -1407,13 +1414,6 @@ extension NeoVimView: NeoVimUiBridgeProtocol {
   public func cwdChanged() {
     DispatchUtils.gui {
       self.delegate?.cwdChanged()
-    }
-  }
-
-  public func stop() {
-    DispatchUtils.gui {
-      self.delegate?.neoVimStopped()
-      self.agent.quit()
     }
   }
 
