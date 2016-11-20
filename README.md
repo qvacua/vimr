@@ -5,7 +5,7 @@ VimR — Vim Refined
 
 [Download](https://github.com/qvacua/vimr/releases) • <http://vimr.org>
 
-[![Bountysource](https://www.bountysource.com/badge/team?team_id=933&style=raised)](https://www.bountysource.com/teams/vimr?utm_source=VimR%20%E2%80%94%20Vim%20Refined&utm_medium=shield&utm_campaign=raised) [![Chat at https://gitter.im/vimr/vimr](https://badges.gitter.im/vimr/vimr.svg)](https://gitter.im/vimr/vimr?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Travis builds](https://travis-ci.org/qvacua/vimr.svg?branch=develop)](https://travis-ci.org/qvacua/vimr)
+[![Bountysource](https://www.bountysource.com/badge/team?team_id=933&style=raised)](https://www.bountysource.com/teams/vimr?utm_source=VimR%20%E2%80%94%20Vim%20Refined&utm_medium=shield&utm_campaign=raised) [![Chat at https://gitter.im/vimr/vimr](https://badges.gitter.im/vimr/vimr.svg)](https://gitter.im/vimr/vimr?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Travis builds](https://travis-ci.org/qvacua/vimr.svg?branch=develop)](https://travis-ci.org/qvacua/vimr) [![Stories in Ready](https://badge.waffle.io/qvacua/vimr.svg?label=ready&title=Ready)](http://waffle.io/qvacua/vimr)
 
 ![Screenshot](https://raw.githubusercontent.com/qvacua/vimr/master/resources/screenshot.png)
 
@@ -57,7 +57,7 @@ The following are features we _plan_ to implement (some of which are already pre
 * Preview for some file types, e.g. Markdown, HTML, etc.
 * ...
 
-We will gradually create [issues](https://github.com/qvacua/vimr/issues) with more details. For the current status see the [project board](https://github.com/qvacua/vimr/projects/1).
+We will gradually create [issues](https://github.com/qvacua/vimr/issues) with more details. For the current status see the [project board](https://waffle.io/qvacua/vimr).
 
 ### Stuff with Question Marks
 
