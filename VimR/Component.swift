@@ -5,6 +5,7 @@
 
 import Cocoa
 import RxSwift
+import PureLayout
 
 protocol Flow: class {
 
@@ -20,7 +21,7 @@ class PublishingFlow: Flow {
   let subject = PublishSubject<Any>()
 
   init() {
-    
+
   }
 
   deinit {
@@ -40,7 +41,7 @@ class StandardFlow: PublishingFlow {
   init(source: Observable<Any>) {
     self.source = source
     super.init()
-    
+
     self.subscription(source: source).addDisposableTo(self.disposeBag)
   }
 
@@ -133,12 +134,12 @@ class ViewComponent: NSView, Flow {
     self.source = source
 
     super.init(frame: CGRect.zero)
-    self.translatesAutoresizingMaskIntoConstraints = false
+    self.configureForAutoLayout()
 
     self.addViews()
     self.subscription(source: source).addDisposableTo(self.disposeBag)
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
