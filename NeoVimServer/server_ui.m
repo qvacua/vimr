@@ -575,10 +575,50 @@ void custom_ui_autocmds_groups(
 
       case EVENT_CWDCHANGED:
         [_neovim_server sendMessageWithId:NeoVimServerMsgIdCwdChanged];
-        return;
+        break;
 
       default:
-        return;
+        break;
+    }
+
+    switch (event) {
+      case EVENT_BUFADD:
+      case EVENT_BUFDELETE:
+      case EVENT_BUFENTER:
+      case EVENT_BUFFILEPOST:
+      case EVENT_BUFFILEPRE:
+      case EVENT_BUFHIDDEN:
+      case EVENT_BUFLEAVE:
+      case EVENT_BUFNEW:
+      case EVENT_BUFNEWFILE:
+      case EVENT_BUFREADCMD:
+      case EVENT_BUFREADPOST:
+      case EVENT_BUFREADPRE:
+      case EVENT_BUFUNLOAD:
+      case EVENT_BUFWINENTER:
+      case EVENT_BUFWINLEAVE:
+      case EVENT_BUFWIPEOUT:
+      case EVENT_BUFWRITECMD:
+      case EVENT_BUFWRITEPOST:
+      case EVENT_BUFWRITEPRE:
+        ILOG("BUFFER EVENT!!!!!");
+        break;
+
+      case EVENT_TABCLOSED:
+      case EVENT_TABENTER:
+      case EVENT_TABLEAVE:
+      case EVENT_TABNEW:
+      case EVENT_TABNEWENTERED:
+        ILOG("TAB EVENT!!!!!!");
+        break;
+
+      case EVENT_WINENTER:
+      case EVENT_WINLEAVE:
+        ILOG("WIN EVENT!!!!!!");
+        break;
+
+      default:
+        break;
     }
   }
 }
@@ -824,7 +864,7 @@ static void neovim_get_bool_option(void ** argv) {
     if (err.set) {
       WLOG("Error getting the boolean option '%s': %s", option.cstr, err.msg);
     }
-    
+
     if (resultObj.type == kObjectTypeBoolean) {
       result = resultObj.data.boolean;
     } else {
