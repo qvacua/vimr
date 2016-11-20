@@ -1,5 +1,9 @@
 # next
 
+* ...
+
+# 0.10.2-127
+
 * GH-332: Turn on `paste` option before `Cmd-V`ing (and reset the value)
 * GH-333: Set `$LANG` to `utf-8` such that non-ASCII characters are not garbled when copied to the system clipboard.
     - GH-337: With the first version of GH-333, strangely, on 10.12.X `init.vim` did not get read. GH-337 fixes this issue.
@@ -7,6 +11,7 @@
 * GH-276: Draw a different, i.e. thin, cursor in the insert mode.
 * GH-299: Add a context menu to the file browser.
 * GH-237: Increase mouse scrollwheel sensitivity.
+* neovim/neovim@598f5af58b21747ea9d6dc0a7d846cb85ae52824
 
 # 0.10.1-122
 

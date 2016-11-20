@@ -7,29 +7,31 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.10.1-122</title>
+      <title>v0.10.2-127</title>
       <description><![CDATA[
     <ul>
-<li>GH-321: <code>Cmd-V</code> now works in the terminal mode.</li>
-<li>GH-330: Closing the file browser with <code>Cmd-1</code> now focuses the Neovim view.</li>
-<li>GU-308: Set <code>cwd</code> to the parent folder of the file when opening a file in a new window</li>
-<li>Update RxSwift from <code>3.0.0-rc1</code> to <code>3.0.1</code></li>
-<li>Update Neovim to neovim/neovim@0213e99aaf6eba303fd459183dd14a4a11cc5b07<ul>
-<li>includes <code>inccommand</code>! 😆</li>
+<li>GH-332: Turn on <code>paste</code> option before <code>Cmd-V</code>ing (and reset the value)</li>
+<li>GH-333: Set <code>$LANG</code> to <code>utf-8</code> such that non-ASCII characters are not garbled when copied to the system clipboard.<ul>
+<li>GH-337: With the first version of GH-333, strangely, on 10.12.X <code>init.vim</code> did not get read. GH-337 fixes this issue.</li>
 </ul>
 </li>
+<li>GH-334: <code>set</code> <code>title</code> and <code>termguicolors</code> by default such that airline works without changing <code>init.vim</code>.</li>
+<li>GH-276: Draw a different, i.e. thin, cursor in the insert mode.</li>
+<li>GH-299: Add a context menu to the file browser.</li>
+<li>GH-237: Increase mouse scrollwheel sensitivity.</li>
+<li>neovim/neovim@598f5af58b21747ea9d6dc0a7d846cb85ae52824</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.10.1-122
+        https://github.com/qvacua/vimr/releases/tag/v0.10.2-127
       </releaseNotesLink>
-      <pubDate>2016-11-10T15:28:19.011522</pubDate>
+      <pubDate>2016-11-14T23:42:19.142910</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.10.1-122/VimR-v0.10.1-122.tar.bz2"
-                 sparkle:version="122"
-                 sparkle:shortVersionString="0.10.1"
-                 sparkle:dsaSignature="MC0CFC7+7qp8frwZsNq2uDKyx3nEDw10AhUA4cj44vvMUiFB63oVZay/zZxcAGU="
-                 length="8906932"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.10.2-127/VimR-v0.10.2-127.tar.bz2"
+                 sparkle:version="127"
+                 sparkle:shortVersionString="0.10.2"
+                 sparkle:dsaSignature="MC0CFQCll8J9mjwkBuTRXfUEWa/EC8583gIUT1eY52uanc3nNZNxa9uVCf90hAg="
+                 length="8924729"
                  type="application/octet-stream"/>
     </item>
   </channel>
