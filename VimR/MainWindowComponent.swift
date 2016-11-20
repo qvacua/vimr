@@ -419,6 +419,10 @@ extension MainWindowComponent {
 // MARK: - NeoVimViewDelegate
 extension MainWindowComponent: NeoVimViewDelegate {
 
+  func neoVimStopped() {
+    self.windowController.close()
+  }
+
   func set(title: String) {
     self.window.title = title
   }
@@ -434,10 +438,6 @@ extension MainWindowComponent: NeoVimViewDelegate {
     self.fileItemService.monitor(url: self._cwd)
 
     self.publish(event: MainWindowAction.changeCwd(mainWindow: self))
-  }
-
-  func neoVimStopped() {
-    self.windowController.close()
   }
 }
 
