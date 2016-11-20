@@ -11,7 +11,7 @@
 #import "NeoVimWindow.h"
 
 
-static const double qTimeout = 10;
+static const double qTimeout = 2;
 
 #define data_to_array(type)                                               \
 static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
@@ -232,7 +232,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetDirtyDocs);
     return YES;
   }
-  
+
   bool *values = data_to_bool_array(response, 1);
   return values[0];
 }

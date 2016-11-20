@@ -15,7 +15,7 @@
 //#define DEBUG_NEOVIM_SERVER_STANDALONE
 
 
-static const double qTimeout = 10.0;
+static const double qTimeout = 2;
 
 #define data_to_array(type)                                               \
 static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
@@ -148,7 +148,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 #ifdef DEBUG_NEOVIM_SERVER_STANDALONE
   return;
 #endif
-  
+
   if (_remoteServerPort == NULL) {
     WLOG("Remote server is null: The msg (%lu:%s) could not be sent.", (unsigned long) msgid, data.cdesc);
     return;
