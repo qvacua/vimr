@@ -1,6 +1,6 @@
 # next
 
-* ...
+* GH-296: Drag & drop the file browser to any side of the window! 😀
 
 # 0.10.2-127
 
