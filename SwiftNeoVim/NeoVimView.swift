@@ -254,7 +254,7 @@ extension NeoVimView {
   }
 
   public func newTab() {
-    self.agent.vimCommand("tabe")
+    self.exec(command: "tabe")
   }
 
   public func open(urls: [URL]) {
@@ -300,35 +300,52 @@ extension NeoVimView {
   }
 
   public func closeCurrentTab() {
-    self.agent.vimCommand("q")
+    self.exec(command: "q")
   }
 
   public func saveCurrentTab() {
-    self.agent.vimCommand("w")
+    self.exec(command: "w")
   }
 
   public func saveCurrentTab(url: URL) {
     let path = url.path
     let escapedFileName = self.agent.escapedFileName(path)
-    self.agent.vimCommand("w \(escapedFileName)")
+    self.exec(command: "w \(escapedFileName)")
   }
 
   public func closeCurrentTabWithoutSaving() {
-    self.agent.vimCommand("q!")
+    self.exec(command: "q!")
   }
 
   public func closeAllWindows() {
-    self.agent.vimCommand("qa")
+    self.exec(command: "qa")
   }
 
   public func closeAllWindowsWithoutSaving() {
-    self.agent.vimCommand("qa!")
+    self.exec(command: "qa!")
   }
 
   fileprivate func open(_ url: URL, cmd: String) {
     let path = url.path
     let escapedFileName = self.agent.escapedFileName(path)
-    self.agent.vimCommand("\(cmd) \(escapedFileName)")
+    self.exec(command: "\(cmd) \(escapedFileName)")
+  }
+
+  /**
+   Does the following
+   - `Mode.Normal`: `:command<CR>`
+   - else: `:<Esc>:command<CR>`
+
+   We don't use NeoVimAgent.vimCommand because if we do for example "e /some/file" and its swap file already exists,
+   then NeoVimServer spins and become unresponsive.
+   */
+  fileprivate func exec(command cmd: String) {
+    switch self.mode {
+    case .Normal:
+      self.agent.vimInput(":\(cmd)<CR>")
+    default:
+      self.agent.vimInput("<Esc>:\(cmd)<CR>")
+    }
   }
 }
 
