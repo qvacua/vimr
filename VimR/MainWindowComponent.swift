@@ -11,7 +11,7 @@ enum MainWindowAction {
 
   case becomeKey(mainWindow: MainWindowComponent)
   case openQuickly(mainWindow: MainWindowComponent)
-  case changeCwd(mainWindow: MainWindowComponent)
+  case changeCwd(mainWindow: MainWindowComponent, cwd: URL)
   case changeBufferList(mainWindow: MainWindowComponent, buffers: [NeoVimBuffer])
   case close(mainWindow: MainWindowComponent, mainWindowPrefData: MainWindowPrefData)
 }
@@ -443,7 +443,7 @@ extension MainWindowComponent {
     self.fileItemService.unmonitor(url: old)
     self.fileItemService.monitor(url: self._cwd)
 
-    self.publish(event: MainWindowAction.changeCwd(mainWindow: self))
+    self.publish(event: MainWindowAction.changeCwd(mainWindow: self, cwd: self._cwd))
   }
 
   func bufferListChanged() {

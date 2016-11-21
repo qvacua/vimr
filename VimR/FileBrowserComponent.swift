@@ -117,8 +117,8 @@ class FileBrowserComponent: ViewComponent {
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] action in
         switch action {
-        case let .changeCwd(mainWindow: mainWindow):
-          self.cwd = mainWindow.cwd
+        case let .changeCwd(mainWindow: _, cwd: cwd):
+          self.cwd = cwd
 //          NSLog("cwd changed to \(self.cwd) of \(mainWindow.uuid)")
           self.fileView.reloadData()
 
