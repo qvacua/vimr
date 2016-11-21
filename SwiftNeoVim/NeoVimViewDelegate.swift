@@ -12,5 +12,5 @@ public protocol NeoVimViewDelegate: class {
   func set(title: String)
   func set(dirtyStatus: Bool)
   func cwdChanged()
-  func buffersChanged()
+  func bufferListChanged()
 }

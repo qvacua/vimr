@@ -12,6 +12,7 @@ enum MainWindowAction {
   case becomeKey(mainWindow: MainWindowComponent)
   case openQuickly(mainWindow: MainWindowComponent)
   case changeCwd(mainWindow: MainWindowComponent)
+  case changeBufferList(mainWindow: MainWindowComponent, buffers: [NeoVimBuffer])
   case close(mainWindow: MainWindowComponent, mainWindowPrefData: MainWindowPrefData)
 }
 
@@ -73,7 +74,12 @@ struct MainWindowPrefData: StandardPrefData {
   }
 }
 
-class MainWindowComponent: WindowComponent, NSWindowDelegate, NSUserInterfaceValidations, WorkspaceDelegate {
+class MainWindowComponent: WindowComponent,
+                           NeoVimViewDelegate,
+                           NSWindowDelegate,
+                           NSUserInterfaceValidations,
+                           WorkspaceDelegate
+{
 
   fileprivate static let nibName = "MainWindow"
 
@@ -417,7 +423,7 @@ extension MainWindowComponent {
 }
 
 // MARK: - NeoVimViewDelegate
-extension MainWindowComponent: NeoVimViewDelegate {
+extension MainWindowComponent {
 
   func neoVimStopped() {
     self.windowController.close()
@@ -440,8 +446,8 @@ extension MainWindowComponent: NeoVimViewDelegate {
     self.publish(event: MainWindowAction.changeCwd(mainWindow: self))
   }
 
-  func buffersChanged() {
-    NSLog("buffer changed")
+  func bufferListChanged() {
+    NSLog("buffer changed to: \(self.neoVimView.allBuffers())")
   }
 }
 

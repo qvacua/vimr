@@ -51,6 +51,9 @@ class MainWindowManager: StandardFlow {
 
         case .changeCwd:
           break
+
+        case .changeBufferList:
+          break;
         }
       })
       .addDisposableTo(self.disposeBag)

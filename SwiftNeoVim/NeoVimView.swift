@@ -1417,9 +1417,9 @@ extension NeoVimView {
     }
   }
 
-  public func buffersChanged() {
+  public func bufferListChanged() {
     DispatchUtils.gui {
-      self.delegate?.buffersChanged()
+      self.delegate?.bufferListChanged()
     }
   }
 
