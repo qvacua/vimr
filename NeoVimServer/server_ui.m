@@ -564,8 +564,9 @@ void custom_ui_autocmds_groups(
 ) {
   @autoreleasepool {
     DLOG("got event %d for file %s in group %d.", event, fname, group);
+
     switch (event) {
-      // Did we get them all?
+      // Dirty status: Did we get them all?
       case EVENT_TEXTCHANGED:
       case EVENT_TEXTCHANGEDI:
       case EVENT_BUFWRITEPOST:
@@ -573,49 +574,13 @@ void custom_ui_autocmds_groups(
         send_dirty_status();
         return;
 
+      // For buffer list changes
+      case EVENT_BUFWINENTER:
+        [_neovim_server sendMessageWithId:NeoVimServerMsgIdBufferEvent];
+        break;
+
       case EVENT_CWDCHANGED:
         [_neovim_server sendMessageWithId:NeoVimServerMsgIdCwdChanged];
-        break;
-
-      default:
-        break;
-    }
-
-    switch (event) {
-//      case EVENT_BUFADD:
-//      case EVENT_BUFDELETE:
-//      case EVENT_BUFENTER:
-//      case EVENT_BUFFILEPOST:
-//      case EVENT_BUFFILEPRE:
-//      case EVENT_BUFHIDDEN:
-//      case EVENT_BUFLEAVE:
-//      case EVENT_BUFNEW:
-//      case EVENT_BUFNEWFILE:
-//      case EVENT_BUFREADCMD:
-//      case EVENT_BUFREADPOST:
-//      case EVENT_BUFREADPRE:
-//      case EVENT_BUFUNLOAD:
-      case EVENT_BUFWINENTER:
-//      case EVENT_BUFWINLEAVE:
-//      case EVENT_BUFWIPEOUT:
-//      case EVENT_BUFWRITECMD:
-//      case EVENT_BUFWRITEPOST:
-//      case EVENT_BUFWRITEPRE:
-        [_neovim_server sendMessageWithId:NeoVimServerMsgIdBufferEvent];
-        NSLog(@"Buffer event sent to the UI: %d", event);
-        break;
-
-      case EVENT_TABCLOSED:
-      case EVENT_TABENTER:
-      case EVENT_TABLEAVE:
-      case EVENT_TABNEW:
-      case EVENT_TABNEWENTERED:
-        DLOG("Tab event");
-        break;
-
-      case EVENT_WINENTER:
-      case EVENT_WINLEAVE:
-        DLOG("Win event");
         break;
 
       default:
