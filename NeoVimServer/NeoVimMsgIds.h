@@ -38,6 +38,7 @@ typedef NS_ENUM(NSUInteger, NeoVimServerMsgId) {
     NeoVimServerMsgIdDirtyStatusChanged,
     NeoVimServerMsgIdCwdChanged,
     NeoVimServerMsgIdSyncResult,
+    NeoVimServerMsgIdBufferEvent,
 
 #ifdef DEBUG
     NeoVimServerDebug1,

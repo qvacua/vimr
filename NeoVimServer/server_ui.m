@@ -582,26 +582,27 @@ void custom_ui_autocmds_groups(
     }
 
     switch (event) {
-      case EVENT_BUFADD:
-      case EVENT_BUFDELETE:
-      case EVENT_BUFENTER:
-      case EVENT_BUFFILEPOST:
-      case EVENT_BUFFILEPRE:
-      case EVENT_BUFHIDDEN:
-      case EVENT_BUFLEAVE:
-      case EVENT_BUFNEW:
-      case EVENT_BUFNEWFILE:
-      case EVENT_BUFREADCMD:
-      case EVENT_BUFREADPOST:
-      case EVENT_BUFREADPRE:
-      case EVENT_BUFUNLOAD:
+//      case EVENT_BUFADD:
+//      case EVENT_BUFDELETE:
+//      case EVENT_BUFENTER:
+//      case EVENT_BUFFILEPOST:
+//      case EVENT_BUFFILEPRE:
+//      case EVENT_BUFHIDDEN:
+//      case EVENT_BUFLEAVE:
+//      case EVENT_BUFNEW:
+//      case EVENT_BUFNEWFILE:
+//      case EVENT_BUFREADCMD:
+//      case EVENT_BUFREADPOST:
+//      case EVENT_BUFREADPRE:
+//      case EVENT_BUFUNLOAD:
       case EVENT_BUFWINENTER:
-      case EVENT_BUFWINLEAVE:
-      case EVENT_BUFWIPEOUT:
-      case EVENT_BUFWRITECMD:
-      case EVENT_BUFWRITEPOST:
-      case EVENT_BUFWRITEPRE:
-        ILOG("BUFFER EVENT!!!!!");
+//      case EVENT_BUFWINLEAVE:
+//      case EVENT_BUFWIPEOUT:
+//      case EVENT_BUFWRITECMD:
+//      case EVENT_BUFWRITEPOST:
+//      case EVENT_BUFWRITEPRE:
+        [_neovim_server sendMessageWithId:NeoVimServerMsgIdBufferEvent];
+        NSLog(@"Buffer event sent to the UI: %d", event);
         break;
 
       case EVENT_TABCLOSED:
@@ -609,12 +610,12 @@ void custom_ui_autocmds_groups(
       case EVENT_TABLEAVE:
       case EVENT_TABNEW:
       case EVENT_TABNEWENTERED:
-        ILOG("TAB EVENT!!!!!!");
+        DLOG("Tab event");
         break;
 
       case EVENT_WINENTER:
       case EVENT_WINLEAVE:
-        ILOG("WIN EVENT!!!!!!");
+        DLOG("Win event");
         break;
 
       default:

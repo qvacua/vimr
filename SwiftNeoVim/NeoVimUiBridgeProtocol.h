@@ -116,6 +116,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setIcon:(NSString *)icon;
 - (void)setDirtyStatus:(bool)dirty;
 - (void)cwdChanged;
+- (void)buffersChanged;
 
 /**
  * NeoVim has been stopped.

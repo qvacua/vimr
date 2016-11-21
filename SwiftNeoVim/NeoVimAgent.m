@@ -571,6 +571,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return;
     }
 
+    case NeoVimServerMsgIdBufferEvent:
+      [_bridge buffersChanged];
+      return;
+
     default:
       return;
   }

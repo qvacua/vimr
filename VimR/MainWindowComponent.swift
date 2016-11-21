@@ -439,6 +439,10 @@ extension MainWindowComponent: NeoVimViewDelegate {
 
     self.publish(event: MainWindowAction.changeCwd(mainWindow: self))
   }
+
+  func buffersChanged() {
+    NSLog("buffer changed")
+  }
 }
 
 // MARK: - NSWindowDelegate

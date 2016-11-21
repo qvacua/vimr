@@ -1417,6 +1417,12 @@ extension NeoVimView {
     }
   }
 
+  public func buffersChanged() {
+    DispatchUtils.gui {
+      self.delegate?.buffersChanged()
+    }
+  }
+
   fileprivate func updateCursorWhenPutting(currentPosition curPos: Position, screenCursor: Position) {
     if self.mode == .Cmdline {
       // When the cursor is in the command line, then we need this...
