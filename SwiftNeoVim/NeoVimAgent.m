@@ -11,7 +11,7 @@
 #import "NeoVimWindow.h"
 
 
-static const double qTimeout = 2;
+static const double qTimeout = 10;
 
 #define data_to_array(type)                                               \
 static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
