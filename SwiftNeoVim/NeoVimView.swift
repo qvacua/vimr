@@ -730,7 +730,7 @@ extension NeoVimView {
 
     switch self.mode {
     case .Insert:
-      self.agent.vimInput("<ESC>\"+Pi")
+      self.agent.vimInput("<ESC>\"+pa")
     case .Cmdline, .Replace, .Term:
       self.agent.vimInput(self.vimPlainString(content))
     case .Normal, .Visual:

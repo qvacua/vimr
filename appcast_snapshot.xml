@@ -7,23 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.11.0-SNAPSHOT-20161120.1616-129</title>
+      <title>v0.11.0-SNAPSHOT-20161121.2039-130</title>
       <description><![CDATA[
     <ul>
-<li>GH-341: Do not become unresponsive when opening a file with existing swap file via the file browser. (This bug was introduced with GH-299)</li>
-<li>GH-347: Do not become unresponsive when you <code>wq</code> the last tab or buffer.</li>
+<li>Revert the IPC timeout to 10: Since it was changed to 2, we often get a no-response-error.. Maybe this fixes it...</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161120.1616-129
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161121.2039-130
       </releaseNotesLink>
-      <pubDate>2016-11-20T16:24:06.822878</pubDate>
+      <pubDate>2016-11-21T20:50:39.994409</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161120.1616-129/VimR-v0.11.0-SNAPSHOT-20161120.1616-129.tar.bz2"
-                 sparkle:version="129"
-                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161120.1616"
-                 sparkle:dsaSignature="MC0CFQC1pLKJLo1u30RHLu5VapuF5ezQiAIUFop2PPdPKroPUx2ZEJCqzvAePGw="
-                 length="9096343"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161121.2039-130/VimR-v0.11.0-SNAPSHOT-20161121.2039-130.tar.bz2"
+                 sparkle:version="130"
+                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161121.2039"
+                 sparkle:dsaSignature="MC0CFFjKNk9WZcsheA/6O6Xk083Z7AY2AhUAlfCl8XMUnLqEwOg19b2gC1CKx60="
+                 length="8977465"
                  type="application/octet-stream"/>
     </item>
   </channel>

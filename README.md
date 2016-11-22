@@ -1,4 +1,4 @@
-VimR — Vim Refined
+VimR — Neovim Refined
 ==================
 
 ![App Icon](https://raw.github.com/qvacua/vimr/master/resources/vimr-app-icon.png)
@@ -11,21 +11,21 @@ VimR — Vim Refined
 
 ## UPDATE
 
-We recently, June 2016, started to migrate the MacVim backend (VimR-MacVim) to a NeoVim backend. It's a complete rewrite in Swift for which we use Objective-C when appropriate.
+We recently, June 2016, started to migrate the MacVim backend (VimR-MacVim) to a Neovim backend. It's a complete rewrite in Swift for which we use Objective-C when appropriate.
 
 ## About
 
-Project VimR is an attempt to refine the NeoVim experience (or it is just YA NeoVim GUI for mac OS). The goal is to build an editor that uses NeoVim inside with many of the convenience GUI features similar to those present in modern editors. We mainly use Swift, but also use Objective-C when its C-nature helps
+Project VimR is an attempt to refine the Neovim experience (or it is just YA Neovim GUI for mac OS). The goal is to build an editor that uses Neovim inside with many of the convenience GUI features similar to those present in modern editors. We mainly use Swift, but also use Objective-C when its C-nature helps
 
-There are other working NeoVim GUIs for OS X, e.g. [NyaoVim](https://github.com/rhysd/NyaoVim), [neovim-dot-app](https://github.com/rogual/neovim-dot-app), etc., why another?
+There are other working Neovim GUIs for OS X, e.g. [NyaoVim](https://github.com/rhysd/NyaoVim), [neovim-dot-app](https://github.com/rogual/neovim-dot-app), etc., why another?
 
-- play around (obviously) with [NeoVim](https://github.com/qvacua/neovim),
+- play around (obviously) with [Neovim](https://github.com/qvacua/neovim),
 - play around with Swift (and especially with [RxSwift](https://github.com/ReactiveX/RxSwift)) and
 - (most importantly) have fun!
 
-### SwiftNeoVim
+### SwiftNeovim
 
-[SwiftNeoVim](https://github.com/qvacua/vimr/tree/master/SwiftNeoVim) is VimR's Cocoa Framework which bundles everything, e.g. NeoVim's `runtime`-files, needed to embed NeoVim in a Cocoa App. See the [wiki](https://github.com/qvacua/vimr/wiki/SwiftNeoVim-Framework) for more details.
+[SwiftNeovim](https://github.com/qvacua/vimr/tree/master/SwiftNeovim) is VimR's Cocoa Framework which bundles everything, e.g. Neovim's `runtime`-files, needed to embed Neovim in a Cocoa App. See the [wiki](https://github.com/qvacua/vimr/wiki/SwiftNeovim-Framework) for more details.
 
 ---
 
@@ -95,17 +95,17 @@ Then `./bin/build_vimr.sh` again in the project root folder. (See [GH-263](https
 VimR.app
 +-- SwiftNeoVim.framework
     +-- NeoVimView
-    +-- runtime files for NeoVim
+    +-- runtime files for Neovim
     +-- NeoVimServer
         +-- libnvim
-        +-- other libs for NeoVim
+        +-- other libs for Neovim
 ```
 
-### Libraries for NeoVim
+### Libraries for Neovim
 
 * The library `libiconv` is linked by the linker flag `-liconv`. The version bundled with OSX will be linked.
 * The library `libintl` should be installed by `homebrew` and is statically linked by explicitly using the linker flag `/usr/local/opt/gettext/lib/libintl.a`.
-* Other libraries used by NeoVim, which are automatically built by building `libnvim`, are linked by adding them to the Xcode project.
+* Other libraries used by Neovim, which are automatically built by building `libnvim`, are linked by adding them to the Xcode project.
 
 ## License
 
