@@ -24,7 +24,10 @@ struct MainWindowPrefData: StandardPrefData {
 
   static let `default` = MainWindowPrefData(isAllToolsVisible: true,
                                             isToolButtonsVisible: true,
-                                            toolPrefDatas: [ ToolPrefData.defaults[.fileBrowser]! ])
+                                            toolPrefDatas: [
+                                                ToolPrefData.defaults[.fileBrowser]!,
+                                                ToolPrefData.defaults[.bufferList]!,
+                                            ])
 
   var isAllToolsVisible: Bool
   var isToolButtonsVisible: Bool
@@ -131,7 +134,7 @@ class MainWindowComponent: WindowComponent,
   {
     self.neoVimView = NeoVimView(frame: CGRect.zero,
                                  config: NeoVimView.Config(useInteractiveZsh: initialData.advanced.useInteractiveZsh))
-    self.neoVimView.translatesAutoresizingMaskIntoConstraints = false
+    self.neoVimView.configureForAutoLayout()
 
     self.workspace = Workspace(mainView: self.neoVimView)
 
@@ -142,9 +145,26 @@ class MainWindowComponent: WindowComponent,
     super.init(source: source, nibName: MainWindowComponent.nibName)
 
     self.window.delegate = self
-
     self.workspace.delegate = self
 
+    self.setupTools(with: initialData.mainWindow)
+
+    self.neoVimView.delegate = self
+    self.neoVimView.font = self.defaultEditorFont
+    self.neoVimView.usesLigatures = initialData.appearance.editorUsesLigatures
+    self.neoVimView.linespacing = initialData.appearance.editorLinespacing
+    self.neoVimView.cwd = cwd // This will publish the MainWindowAction.changeCwd action for the file browser.
+    self.neoVimView.open(urls: urls)
+
+    // We don't call self.fileItemService.monitor(url: cwd) here since self.neoVimView.cwd = cwd causes the call
+    // cwdChanged() and in that function we do monitor(...).
+
+    self.addReactions()
+
+    self.window.makeFirstResponder(self.neoVimView)
+  }
+
+  fileprivate func setupTools(with mainWindowData: MainWindowPrefData) {
     // FIXME: We do not use [self.sink, source].toMergedObservables. If we do so, then self.sink seems to live as long
     // as source, i.e. forever. Thus, self (MainWindowComponent) does not get deallocated. Not nice...
     let fileBrowser = FileBrowserComponent(source: self.sink, fileItemService: fileItemService)
@@ -154,24 +174,22 @@ class MainWindowComponent: WindowComponent,
                                                  minimumDimension: 100)
     self.tools[.fileBrowser] = fileBrowserTool
 
-    self.addReactions()
-
-    self.neoVimView.delegate = self
-    self.neoVimView.font = self.defaultEditorFont
-    self.neoVimView.usesLigatures = initialData.appearance.editorUsesLigatures
-    self.neoVimView.linespacing = initialData.appearance.editorLinespacing
-
-    self.neoVimView.cwd = cwd // This will publish the MainWindowAction.changeCwd action for the file browser.
-    self.neoVimView.open(urls: urls)
-
-    // We don't call self.fileItemService.monitor(url: cwd) here since self.neoVimView.cwd = cwd causes the call
-    // cwdChanged() and in that function we do monitor(...).
+    let bufferList = BufferListComponent(source: self.sink)
+    let bufferListTool = WorkspaceToolComponent(title: "Buffers",
+                                                viewComponent: bufferList,
+                                                toolIdentifier: .bufferList,
+                                                minimumDimension: 100)
+    self.tools[.bufferList] = bufferListTool
 
     // By default the tool buttons are shown and no tools are shown.
-    let mainWindowData = initialData.mainWindow
     let fileBrowserToolData = mainWindowData.toolPrefData(for: .fileBrowser)
+    let bufferListToolData = mainWindowData.toolPrefData(for: .bufferList)
+
     self.workspace.append(tool: fileBrowserTool, location: fileBrowserToolData.location)
-    fileBrowserTool.dimension = CGFloat(fileBrowserToolData.dimension)
+    self.workspace.append(tool: bufferListTool, location: bufferListToolData.location)
+
+    fileBrowserTool.dimension = fileBrowserToolData.dimension
+    bufferListTool.dimension = bufferListToolData.dimension
 
     if !mainWindowData.isAllToolsVisible {
       self.toggleAllTools(self)
@@ -185,7 +203,9 @@ class MainWindowComponent: WindowComponent,
       fileBrowserTool.toggle()
     }
 
-    self.window.makeFirstResponder(self.neoVimView)
+    if bufferListToolData.isVisible {
+      bufferListTool.toggle()
+    }
   }
 
   func open(urls: [URL]) {
@@ -447,7 +467,9 @@ extension MainWindowComponent {
   }
 
   func bufferListChanged() {
-    NSLog("buffer changed to: \(self.neoVimView.allBuffers())")
+    let buffers = self.neoVimView.allBuffers()
+    NSLog("buffer changed to: \(buffers)")
+    self.publish(event: MainWindowAction.changeBufferList(mainWindow: self, buffers: buffers))
   }
 }
 
@@ -461,16 +483,27 @@ extension MainWindowComponent {
   func windowWillClose(_ notification: Notification) {
     self.fileItemService.unmonitor(url: self._cwd)
 
+    let prefData = MainWindowPrefData(isAllToolsVisible: self.workspace.isAllToolsVisible,
+                                      isToolButtonsVisible: self.workspace.isToolButtonsVisible,
+                                      toolPrefDatas: self.toolPrefDatas())
+
+    self.publish(event: MainWindowAction.close(mainWindow: self, mainWindowPrefData: prefData))
+  }
+
+  fileprivate func toolPrefDatas() -> [ToolPrefData] {
     let fileBrowser = self.tools[.fileBrowser]!
     let fileBrowserData = ToolPrefData(identifier: .fileBrowser,
                                        location: fileBrowser.location,
                                        isVisible: fileBrowser.isSelected,
                                        dimension: fileBrowser.dimension)
-    let prefData = MainWindowPrefData(isAllToolsVisible: self.workspace.isAllToolsVisible,
-                                      isToolButtonsVisible: self.workspace.isToolButtonsVisible,
-                                      toolPrefDatas: [ fileBrowserData ])
 
-    self.publish(event: MainWindowAction.close(mainWindow: self, mainWindowPrefData: prefData))
+    let bufferList = self.tools[.bufferList]!
+    let bufferListData = ToolPrefData(identifier: .bufferList,
+                                      location: bufferList.location,
+                                      isVisible: bufferList.isSelected,
+                                      dimension: bufferList.dimension)
+
+    return [ fileBrowserData, bufferListData ]
   }
 
   func windowShouldClose(_ sender: Any) -> Bool {

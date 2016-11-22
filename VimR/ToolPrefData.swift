@@ -8,8 +8,9 @@ import Foundation
 enum ToolIdentifier: String {
 
   case fileBrowser = "com.qvacua.vimr.tool.file-browser"
+  case bufferList = "com.qvacua.vimr.tool.buffer-list"
 
-  static let all = [ fileBrowser ]
+  static let all = [ fileBrowser, bufferList ]
 }
 
 struct ToolPrefData: StandardPrefData {
@@ -21,6 +22,7 @@ struct ToolPrefData: StandardPrefData {
 
   static let defaults: [ToolIdentifier: ToolPrefData] = [
       .fileBrowser: ToolPrefData(identifier: .fileBrowser, location: .left, isVisible: true, dimension: 200),
+      .bufferList: ToolPrefData(identifier: .bufferList, location: .left, isVisible: true, dimension: 200),
   ]
 
   var identifier: ToolIdentifier
