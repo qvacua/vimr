@@ -1,4 +1,4 @@
-VimR — Vim Refined
+VimR — Neovim Refined
 ==================
 
 ![App Icon](https://raw.github.com/qvacua/vimr/master/resources/vimr-app-icon.png)
