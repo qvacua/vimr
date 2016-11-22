@@ -9,16 +9,20 @@ import PureLayout
 
 class BufferListComponent: ViewComponent, NSTableViewDataSource, NSTableViewDelegate {
 
-  let dummy = [ "a", "b", "c" ]
-  var buffers: [NeoVimBuffer] = []
+  fileprivate var buffers: [NeoVimBuffer] = []
+  fileprivate let bufferList = NSTableView.standardTableView()
 
-  let bufferList = NSTableView.standardTableView()
+  fileprivate let fileItemService: FileItemService
+  fileprivate let genericIcon: NSImage
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  override init(source: Observable<Any>) {
+  init(source: Observable<Any>, fileItemService: FileItemService) {
+    self.fileItemService = fileItemService
+    self.genericIcon = fileItemService.icon(forType: "public.data")
+
     super.init(source: source)
 
     self.bufferList.dataSource = self
@@ -60,14 +64,33 @@ extension BufferListComponent {
   func numberOfRows(in tableView: NSTableView) -> Int {
     return self.buffers.count
   }
-
-  @objc(tableView:objectValueForTableColumn:row:)
-  func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
-    return self.buffers[row].name ?? "No Name"
-  }
 }
 
 // MARK: - NSTableViewDelegate
 extension BufferListComponent {
 
+  func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+    let cachedCell = tableView.make(withIdentifier: "buffer-list-row", owner: self)
+    let cell = cachedCell as? ImageAndTextTableCell ?? ImageAndTextTableCell(withIdentifier: "buffer-list-row")
+
+    let buffer = self.buffers[row]
+    cell.text = buffer.name ?? "No Name"
+    cell.image = self.icon(forBuffer: buffer)
+
+    return cell
+  }
+
+  fileprivate func icon(forBuffer buffer: NeoVimBuffer) -> NSImage? {
+    if let fileName = buffer.fileName {
+
+      if let url = URL(string: fileName) {
+        return self.fileItemService.icon(forUrl: url)
+      } else {
+        return self.genericIcon
+      }
+
+    } else {
+      return self.genericIcon
+    }
+  }
 }

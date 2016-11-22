@@ -52,6 +52,10 @@ class FileItemService: StandardFlow {
     self.ignorePatterns = patterns
   }
 
+  func icon(forType type: String) -> NSImage {
+    return self.workspace.icon(forFileType: type)
+  }
+
   func icon(forUrl url: URL) -> NSImage? {
     if let cached = self.iconsCache.object(forKey: url as NSURL) {
       return cached
@@ -291,7 +295,7 @@ class FileItemService: StandardFlow {
         if data.general.ignorePatterns == self.ignorePatterns {
           return
         }
-        
+
         self.set(ignorePatterns: data.general.ignorePatterns)
         })
   }
