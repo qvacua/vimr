@@ -10,6 +10,7 @@ import PureLayout
 class BufferListComponent: ViewComponent, NSTableViewDataSource, NSTableViewDelegate {
 
   let dummy = [ "a", "b", "c" ]
+  var buffers: [NeoVimBuffer] = []
 
   let bufferList = NSTableView.standardTableView()
 
@@ -34,7 +35,21 @@ class BufferListComponent: ViewComponent, NSTableViewDataSource, NSTableViewDele
   }
 
   override func subscription(source: Observable<Any>) -> Disposable {
-    return Disposables.create()
+    return source
+        .filter { $0 is MainWindowAction }
+        .map { $0 as! MainWindowAction }
+        .subscribe(onNext: { action in
+          switch action {
+
+          case let .changeBufferList(mainWindow:_, buffers:buffers):
+            self.buffers = buffers
+            self.bufferList.reloadData()
+
+          default:
+            return
+
+          }
+        })
   }
 }
 
@@ -43,12 +58,12 @@ extension BufferListComponent {
 
   @objc(numberOfRowsInTableView:)
   func numberOfRows(in tableView: NSTableView) -> Int {
-    return dummy.count
+    return self.buffers.count
   }
 
   @objc(tableView:objectValueForTableColumn:row:)
   func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
-    return dummy[row]
+    return self.buffers[row].name ?? "No Name"
   }
 }
 

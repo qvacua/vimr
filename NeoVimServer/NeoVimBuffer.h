@@ -10,7 +10,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NeoVimBuffer : NSObject <NSCoding>
 
 @property (nonatomic, readonly) NSInteger handle;
+/**
+ * Full path
+ */
 @property (nonatomic, retain, nullable) NSString *fileName;
+/**
+ * Only the file name
+ */
+@property (nonatomic, readonly, nullable) NSString *name;
 @property (nonatomic, readonly) bool isDirty;
 @property (nonatomic, readonly) bool isCurrent;
 @property (nonatomic, readonly) bool isTransient;

@@ -77,6 +77,14 @@
   return description;
 }
 
+- (NSString *)name {
+  if (self.fileName == nil) {
+    return nil;
+  }
+
+  return self.fileName.lastPathComponent;
+}
+
 - (bool)isTransient {
   if (self.isDirty) {
     return NO;
