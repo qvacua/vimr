@@ -10,6 +10,7 @@
 - (instancetype)initWithHandle:(NSInteger)handle
                       fileName:(NSString *)fileName
                          dirty:(bool)dirty
+                      readOnly:(bool)readOnly
                        current:(bool)current {
   self = [super init];
   if (self == nil) {
@@ -19,6 +20,7 @@
   _handle = handle;
   _fileName = fileName;
   _isDirty = dirty;
+  _isReadOnly = readOnly;
   _isCurrent = current;
 
   return self;
@@ -31,6 +33,7 @@
     _handle = objHandle.integerValue;
     _fileName = [coder decodeObjectForKey:@"fileName"];
     _isDirty = [coder decodeBoolForKey:@"dirty"];
+    _isReadOnly = [coder decodeBoolForKey:@"readOnly"];
     _isCurrent = [coder decodeBoolForKey:@"current"];
   }
 
@@ -64,6 +67,7 @@
   [coder encodeObject:@(self.handle) forKey:@"handle"];
   [coder encodeObject:self.fileName forKey:@"fileName"];
   [coder encodeBool:self.isDirty forKey:@"dirty"];
+  [coder encodeBool:self.isReadOnly forKey:@"readOnly"];
   [coder encodeBool:self.isCurrent forKey:@"current"];
 }
 
@@ -72,6 +76,7 @@
   [description appendFormat:@"self.handle=%li", self.handle];
   [description appendFormat:@", self.fileName=%@", self.fileName];
   [description appendFormat:@", self.dirty=%d", self.isDirty];
+  [description appendFormat:@", self.readOnly=%d", self.isReadOnly];
   [description appendFormat:@", self.current=%d", self.isCurrent];
   [description appendString:@">"];
   return description;

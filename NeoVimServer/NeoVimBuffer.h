@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  * Only the file name
  */
 @property (nonatomic, readonly, nullable) NSString *name;
+@property (nonatomic, readonly) bool isReadOnly;
 @property (nonatomic, readonly) bool isDirty;
 @property (nonatomic, readonly) bool isCurrent;
 @property (nonatomic, readonly) bool isTransient;
@@ -25,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithHandle:(NSInteger)handle
                       fileName:(NSString * _Nullable)fileName
                          dirty:(bool)dirty
+                      readOnly:(bool)readOnly
                        current:(bool)current;
 
 - (instancetype)initWithCoder:(NSCoder *)coder;
