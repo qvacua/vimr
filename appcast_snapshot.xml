@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.11.0-SNAPSHOT-20161123.2218-133</title>
+      <title>v0.11.0-SNAPSHOT-20161123.2350-134</title>
       <description><![CDATA[
     <ul>
-<li>GH-297: Add a buffer list tool.</li>
+<li>Downgrade Neovim due to jemalloc/jemalloc#494: VimR crashed on 10.11.x</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161123.2218-133
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161123.2350-134
       </releaseNotesLink>
-      <pubDate>2016-11-23T22:26:29.013759</pubDate>
+      <pubDate>2016-11-24T00:04:04.812203</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161123.2218-133/VimR-v0.11.0-SNAPSHOT-20161123.2218-133.tar.bz2"
-                 sparkle:version="133"
-                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161123.2218"
-                 sparkle:dsaSignature="MC0CFQDSHc7argS5GzGNNT+KyflDrXHlZAIUF+n58c1b1rjKHWpbbvJuOAS14po="
-                 length="9110339"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161123.2350-134/VimR-v0.11.0-SNAPSHOT-20161123.2350-134.tar.bz2"
+                 sparkle:version="134"
+                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161123.2350"
+                 sparkle:dsaSignature="MCwCFFnm8a7blLqEqALQSpXLK/ZLiu8gAhRxxPL8nYCj5nr7yUIdftDnLfaHZQ=="
+                 length="8988310"
                  type="application/octet-stream"/>
     </item>
   </channel>
