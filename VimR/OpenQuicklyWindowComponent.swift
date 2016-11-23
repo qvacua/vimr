@@ -217,7 +217,7 @@ extension OpenQuicklyWindowComponent {
     let cell = cachedCell as? ImageAndTextTableCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
     let url = self.fileViewItems[row].url
-    cell.attributedText = self.rowText(forUrl: url as URL)
+    cell.attributedText = self.rowText(for: url as URL)
     cell.image = self.fileItemService.icon(forUrl: url)
     
     return cell
@@ -227,7 +227,7 @@ extension OpenQuicklyWindowComponent {
 //    NSLog("\(#function): selection changed")
   }
 
-  fileprivate func rowText(forUrl url: URL) -> NSAttributedString {
+  fileprivate func rowText(for url: URL) -> NSAttributedString {
     let pathComps = url.pathComponents
     let truncatedPathComps = pathComps[self.cwdPathCompsCount..<pathComps.count]
     let name = truncatedPathComps.last!
