@@ -471,7 +471,6 @@ extension MainWindowComponent {
 
   func bufferListChanged() {
     let buffers = self.neoVimView.allBuffers()
-    NSLog("buffer changed to: \(buffers)")
     self.publish(event: MainWindowAction.changeBufferList(mainWindow: self, buffers: buffers))
   }
 }

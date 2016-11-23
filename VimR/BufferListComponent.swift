@@ -72,7 +72,6 @@ extension BufferListComponent {
       return
     }
 
-    NSLog("double clicked: \(self.buffers[clickedRow])")
     self.publish(event: BufferListAction.open(buffer: self.buffers[clickedRow]))
   }
 }
