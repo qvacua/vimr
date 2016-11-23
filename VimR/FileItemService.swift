@@ -125,7 +125,7 @@ class FileItemService: StandardFlow {
       return Observable.empty()
     }
 
-    guard FileUtils.fileExistsAtUrl(url) else {
+    guard FileUtils.fileExists(at: url) else {
       return Observable.empty()
     }
 
@@ -260,7 +260,7 @@ class FileItemService: StandardFlow {
     if filteredChildren.isEmpty && create {
       let childUrl = parent.url.appendingPathComponent(name)
 
-      guard FileUtils.fileExistsAtUrl(childUrl) else {
+      guard FileUtils.fileExists(at: childUrl) else {
         return nil
       }
 
@@ -274,7 +274,7 @@ class FileItemService: StandardFlow {
   }
 
   fileprivate func scanChildren(_ item: FileItem) {
-    let children = FileUtils.directDescendants(item.url).map(FileItem.init)
+    let children = FileUtils.directDescendants(of: item.url).map(FileItem.init)
     self.syncAddChildren { item.children = children }
 
     item.childrenScanned = true

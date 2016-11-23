@@ -23,7 +23,7 @@ class FileUtils {
 
   static let userHomeUrl = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
   
-  static func directDescendants(_ url: URL) -> [URL] {
+  static func directDescendants(of url: URL) -> [URL] {
     guard let childUrls = try? self.fileManager.contentsOfDirectory(
       at: url, includingPropertiesForKeys: self.keysToGet, options: self.scanOptions
     ) else {
@@ -34,7 +34,7 @@ class FileUtils {
     return childUrls
   }
   
-  static func fileExistsAtUrl(_ url: URL) -> Bool {
+  static func fileExists(at url: URL) -> Bool {
     guard url.isFileURL else {
       return false
     }
