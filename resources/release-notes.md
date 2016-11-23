@@ -1,9 +1,9 @@
 # Next
 
-* GH-296: Drag & drop the file browser to any side of the window! 😀
 * GH-341: Do not become unresponsive when opening a file with existing swap file via the file browser. (This bug was introduced with GH-299)
 * GH-347: Do not become unresponsive when you `wq` the last tab or buffer.
 * GH-297: Add a buffer list tool.
+* GH-296: Drag & drop tools, currently the file browser and the buffer list, to any side of the window! 😀
 * Make `Cmd-V` a bit better
 
 # 0.10.2-127
