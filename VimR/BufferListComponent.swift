@@ -7,6 +7,11 @@ import Cocoa
 import RxSwift
 import PureLayout
 
+enum BufferListAction {
+
+  case open(buffer: NeoVimBuffer)
+}
+
 class BufferListComponent: ViewComponent, NSTableViewDataSource, NSTableViewDelegate {
 
   fileprivate var buffers: [NeoVimBuffer] = []
@@ -27,6 +32,7 @@ class BufferListComponent: ViewComponent, NSTableViewDataSource, NSTableViewDele
 
     self.bufferList.dataSource = self
     self.bufferList.delegate = self
+    self.bufferList.doubleAction = #selector(BufferListComponent.doubleClickAction)
   }
 
   override func addViews() {
@@ -54,6 +60,20 @@ class BufferListComponent: ViewComponent, NSTableViewDataSource, NSTableViewDele
 
           }
         })
+  }
+}
+
+// MARK: - Actions
+extension BufferListComponent {
+
+  func doubleClickAction(_ sender: Any?) {
+    let clickedRow = self.bufferList.clickedRow
+    guard clickedRow >= 0 && clickedRow < self.buffers.count else {
+      return
+    }
+
+    NSLog("double clicked: \(self.buffers[clickedRow])")
+    self.publish(event: BufferListAction.open(buffer: self.buffers[clickedRow]))
   }
 }
 
