@@ -112,11 +112,12 @@ extension BufferListComponent {
   }
 
   fileprivate func text(for buffer: NeoVimBuffer) -> NSAttributedString {
-    guard let name = buffer.name, let fileName = buffer.fileName else {
+    guard let name = buffer.name else {
       return NSAttributedString(string: "No Name")
     }
 
-    guard let url = URL(string: fileName) else {
+    guard let url = buffer.url else {
+      NSLog("WARN No URL for \(buffer.fileName)")
       return NSAttributedString(string: name)
     }
 

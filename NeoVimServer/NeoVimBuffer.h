@@ -11,13 +11,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) NSInteger handle;
 /**
- * Full path
+ * Full path without escaping, e.g. /some/path with spaces/file.txt
  */
 @property (nonatomic, retain, nullable) NSString *fileName;
 /**
  * Only the file name
  */
 @property (nonatomic, readonly, nullable) NSString *name;
+@property (nonatomic, readonly, nullable) NSURL *url;
 @property (nonatomic, readonly) bool isReadOnly;
 @property (nonatomic, readonly) bool isDirty;
 @property (nonatomic, readonly) bool isCurrent;

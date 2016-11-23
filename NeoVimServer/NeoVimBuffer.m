@@ -90,6 +90,17 @@
   return self.fileName.lastPathComponent;
 }
 
+- (NSURL *)url {
+  if (self.fileName == nil) {
+    return nil;
+  }
+
+  NSString *percentageEscaped = [self.fileName stringByAddingPercentEncodingWithAllowedCharacters:
+      [NSCharacterSet URLQueryAllowedCharacterSet]
+  ];
+  return [[NSURL alloc] initWithString:percentageEscaped];
+}
+
 - (bool)isTransient {
   if (self.isDirty) {
     return NO;
