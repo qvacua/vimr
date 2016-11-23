@@ -576,6 +576,7 @@ void custom_ui_autocmds_groups(
 
       // For buffer list changes
       case EVENT_BUFWINENTER:
+      case EVENT_BUFWINLEAVE:
         [_neovim_server sendMessageWithId:NeoVimServerMsgIdBufferEvent];
         break;
 
