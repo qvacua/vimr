@@ -48,18 +48,29 @@ class BufferListComponent: ViewComponent, NSTableViewDataSource, NSTableViewDele
     return source
         .filter { $0 is MainWindowAction }
         .map { $0 as! MainWindowAction }
-        .subscribe(onNext: { action in
+        .subscribe(onNext: { [unowned self] action in
           switch action {
 
           case let .changeBufferList(mainWindow:_, buffers:buffers):
             self.buffers = buffers
             self.bufferList.reloadData()
+            self.adjustFileViewWidth()
 
           default:
             return
 
           }
         })
+  }
+
+  fileprivate func adjustFileViewWidth() {
+    let maxWidth = self.buffers.reduce(CGFloat(0)) { (curMaxWidth, buffer) in
+      return max(self.text(for: buffer).size().width, curMaxWidth)
+    }
+
+    let column = self.bufferList.tableColumns[0]
+    column.minWidth = maxWidth + ImageAndTextTableCell.widthWithoutText
+    column.maxWidth = column.minWidth
   }
 }
 
@@ -94,13 +105,31 @@ extension BufferListComponent {
     let cell = cachedCell as? ImageAndTextTableCell ?? ImageAndTextTableCell(withIdentifier: "buffer-list-row")
 
     let buffer = self.buffers[row]
-    cell.text = buffer.name ?? "No Name"
-    cell.image = self.icon(forBuffer: buffer)
+    cell.attributedText = self.text(for: buffer)
+    cell.image = self.icon(for: buffer)
 
     return cell
   }
 
-  fileprivate func icon(forBuffer buffer: NeoVimBuffer) -> NSImage? {
+  fileprivate func text(for buffer: NeoVimBuffer) -> NSAttributedString {
+    guard let name = buffer.name, let fileName = buffer.fileName else {
+      return NSAttributedString(string: "No Name")
+    }
+
+    guard let url = URL(string: fileName) else {
+      return NSAttributedString(string: name)
+    }
+
+    let pathInfo = url.pathComponents.dropFirst().dropLast().reversed().joined(separator: " / ") + " /"
+    let rowText = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
+    rowText.addAttribute(NSForegroundColorAttributeName,
+                         value: NSColor.lightGray,
+                         range: NSRange(location:name.characters.count, length: pathInfo.characters.count + 3))
+
+    return rowText
+  }
+
+  fileprivate func icon(for buffer: NeoVimBuffer) -> NSImage? {
     if let fileName = buffer.fileName {
 
       if let url = URL(string: fileName) {
