@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.11.0-SNAPSHOT-20161123.2001-132</title>
+      <title>v0.11.0-SNAPSHOT-20161123.2218-133</title>
       <description><![CDATA[
     <ul>
-<li>Improve resize area of the tool bars.</li>
+<li>GH-297: Add a buffer list tool.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161123.2001-132
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161123.2218-133
       </releaseNotesLink>
-      <pubDate>2016-11-23T20:11:20.179663</pubDate>
+      <pubDate>2016-11-23T22:26:29.013759</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161123.2001-132/VimR-v0.11.0-SNAPSHOT-20161123.2001-132.tar.bz2"
-                 sparkle:version="132"
-                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161123.2001"
-                 sparkle:dsaSignature="MC0CFGh5fxuYtlcxF4qfjPNBLntLyz7cAhUA7iGEPAZFGSzFc6vDq2TLN9Igvxw="
-                 length="9096139"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161123.2218-133/VimR-v0.11.0-SNAPSHOT-20161123.2218-133.tar.bz2"
+                 sparkle:version="133"
+                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161123.2218"
+                 sparkle:dsaSignature="MC0CFQDSHc7argS5GzGNNT+KyflDrXHlZAIUF+n58c1b1rjKHWpbbvJuOAS14po="
+                 length="9110339"
                  type="application/octet-stream"/>
     </item>
   </channel>
