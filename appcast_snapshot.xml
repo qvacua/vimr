@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.11.0-SNAPSHOT-20161122.2157-131</title>
+      <title>v0.11.0-SNAPSHOT-20161123.2001-132</title>
       <description><![CDATA[
     <ul>
-<li>Make <code>Cmd-V</code> a bit better.</li>
+<li>Improve resize area of the tool bars.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161122.2157-131
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161123.2001-132
       </releaseNotesLink>
-      <pubDate>2016-11-22T22:05:33.647393</pubDate>
+      <pubDate>2016-11-23T20:11:20.179663</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161122.2157-131/VimR-v0.11.0-SNAPSHOT-20161122.2157-131.tar.bz2"
-                 sparkle:version="131"
-                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161122.2157"
-                 sparkle:dsaSignature="MC0CFQCfD6ApBa7l0hAkt1hXUsXDWYXG1QIUecfgTw8m/P8MKd6rbXQPOWpvjxQ="
-                 length="9094903"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161123.2001-132/VimR-v0.11.0-SNAPSHOT-20161123.2001-132.tar.bz2"
+                 sparkle:version="132"
+                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161123.2001"
+                 sparkle:dsaSignature="MC0CFGh5fxuYtlcxF4qfjPNBLntLyz7cAhUA7iGEPAZFGSzFc6vDq2TLN9Igvxw="
+                 length="9096139"
                  type="application/octet-stream"/>
     </item>
   </channel>
