@@ -371,7 +371,8 @@ extension WorkspaceBar {
   }
 
   override func hitTest(_ point: NSPoint) -> NSView? {
-    if self.resizeRect().contains(point) {
+    let loc = self.convert(point, from: nil)
+    if self.resizeRect().contains(loc) {
       return self
     }
 
