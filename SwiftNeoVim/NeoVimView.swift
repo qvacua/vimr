@@ -299,6 +299,15 @@ extension NeoVimView {
     urls.forEach { self.open($0, cmd: "vsp") }
   }
 
+  public func select(buffer: NeoVimBuffer) {
+    for window in self.agent.tabs().map({ $0.windows }).flatMap({ $0 }) {
+      if window.buffer.handle == buffer.handle {
+        self.agent.select(window)
+        return
+      }
+    }
+  }
+
   public func closeCurrentTab() {
     self.exec(command: "q")
   }

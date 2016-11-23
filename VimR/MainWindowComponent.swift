@@ -254,8 +254,11 @@ class MainWindowComponent: WindowComponent,
         case let FileBrowserAction.setParentAsWorkingDirectory(url: url):
           self.neoVimView.cwd = url.parent
 
+        case let BufferListAction.open(buffer: buffer):
+          self.neoVimView.select(buffer: buffer)
+
         default:
-          NSLog("unrecognized action: \(action)")
+          NSLog("WARN unrecognized action: \(action)")
           return
         }
 
