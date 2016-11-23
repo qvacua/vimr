@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.11.0-SNAPSHOT-20161121.2039-130</title>
+      <title>v0.11.0-SNAPSHOT-20161123.2001-132</title>
       <description><![CDATA[
     <ul>
-<li>Revert the IPC timeout to 10: Since it was changed to 2, we often get a no-response-error.. Maybe this fixes it...</li>
+<li>Improve resize area of the tool bars.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161121.2039-130
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161123.2001-132
       </releaseNotesLink>
-      <pubDate>2016-11-21T20:50:39.994409</pubDate>
+      <pubDate>2016-11-23T20:11:20.179663</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161121.2039-130/VimR-v0.11.0-SNAPSHOT-20161121.2039-130.tar.bz2"
-                 sparkle:version="130"
-                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161121.2039"
-                 sparkle:dsaSignature="MC0CFFjKNk9WZcsheA/6O6Xk083Z7AY2AhUAlfCl8XMUnLqEwOg19b2gC1CKx60="
-                 length="8977465"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161123.2001-132/VimR-v0.11.0-SNAPSHOT-20161123.2001-132.tar.bz2"
+                 sparkle:version="132"
+                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161123.2001"
+                 sparkle:dsaSignature="MC0CFGh5fxuYtlcxF4qfjPNBLntLyz7cAhUA7iGEPAZFGSzFc6vDq2TLN9Igvxw="
+                 length="9096139"
                  type="application/octet-stream"/>
     </item>
   </channel>
