@@ -28,10 +28,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     contentView.addSubview(workspace)
     workspace.autoPinEdgesToSuperviewEdges()
-    
-//    workspace.append(tool: WorkspaceTool(title: "Top-1", view: self.view(NSColor.white)), location: .top)
-//    workspace.append(tool: WorkspaceTool(title: "Right-1", view: self.view(NSColor.white)), location: .right)
-//    workspace.append(tool: WorkspaceTool(title: "Right-2", view: self.view(NSColor.green)), location: .right)
+
+    workspace.append(tool: WorkspaceTool(title: "Top-1", view: self.view(NSColor.white)), location: .top)
+    workspace.append(tool: WorkspaceTool(title: "Right-1", view: self.view(NSColor.white)), location: .right)
+    workspace.append(tool: WorkspaceTool(title: "Right-2", view: self.view(NSColor.green)), location: .right)
     workspace.append(tool: WorkspaceTool(title: "Left-1", view: self.view(NSColor.white)), location: .left)
     workspace.append(tool: WorkspaceTool(title: "Left-2", view: self.view(NSColor.green)), location: .left)
     workspace.append(tool: WorkspaceTool(title: "Left-3", view: self.view(NSColor.magenta)), location: .left)

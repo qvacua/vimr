@@ -250,7 +250,8 @@ extension ProxyBar {
   }
 
   override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
-    let loc = self.convert(sender.draggingLocation(), from: nil)
+    let locInProxy = self.convert(sender.draggingLocation(), from: nil)
+    let locInBar = self.convert(locInProxy, to: self.container)
 
     let currentDraggedOnToolIdx = self.buttonFrames.enumerated()
       .reduce(nil) { (result, entry) -> Int? in
@@ -258,7 +259,7 @@ extension ProxyBar {
           return result
         }
 
-        if entry.element.contains(loc) {
+        if entry.element.contains(locInBar) {
           if self.isTool(atIndex: entry.offset, beingDragged: sender) {
             return nil
           }
@@ -309,14 +310,19 @@ extension ProxyBar {
       }
 
       // 2.
-      let loc = self.convert(sender.draggingLocation(), from: nil)
-      if self.buttonFrames.filter({ $0.contains(loc) }).isEmpty && self.container!.barFrame().contains(loc) {
+      let locInProxy = self.convert(sender.draggingLocation(), from: nil)
+      let locInBar = self.convert(locInProxy, to: self.container)
+
+      if self.buttonFrames.filter({ $0.contains(locInBar) }).isEmpty
+             && self.container!.barFrame().contains(locInBar)
+      {
         self.container!.tools.remove(at: toolIdx)
         self.container!.tools.append(tool)
         return true
       }
 
       // 1.
+      NSLog("same spot: \(self.container!.barFrame().contains(locInBar))")
       return false
     }
 
@@ -773,7 +779,7 @@ extension WorkspaceBar {
             button.autoPinEdge(toSuperviewEdge: .left),
             ])
         }
-        
+
         lastButton = button
     }
   }
@@ -819,11 +825,11 @@ extension WorkspaceBar {
         curTool.isSelected = false
         self.selectedTool = tool
       }
-      
+
     } else {
       self.selectedTool = tool
     }
-    
+
     self.relayout()
 
     self.delegate?.resizeDidEnd(workspaceBar: self)
