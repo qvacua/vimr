@@ -8,17 +8,18 @@
 @implementation NeoVimBuffer
 
 - (instancetype)initWithHandle:(NSInteger)handle
-                      fileName:(NSString *)fileName
+                 unescapedPath:(NSString *_Nullable)unescapedPath
                          dirty:(bool)dirty
                       readOnly:(bool)readOnly
-                       current:(bool)current {
+                       current:(bool)current
+{
   self = [super init];
   if (self == nil) {
     return nil;
   }
 
   _handle = handle;
-  _fileName = fileName;
+  _url = unescapedPath == nil ? nil : [NSURL fileURLWithPath:unescapedPath];
   _isDirty = dirty;
   _isReadOnly = readOnly;
   _isCurrent = current;
@@ -31,13 +32,21 @@
   if (self) {
     NSNumber *objHandle = [coder decodeObjectForKey:@"handle"];
     _handle = objHandle.integerValue;
-    _fileName = [coder decodeObjectForKey:@"fileName"];
+    _url = [coder decodeObjectForKey:@"url"];
     _isDirty = [coder decodeBoolForKey:@"dirty"];
     _isReadOnly = [coder decodeBoolForKey:@"readOnly"];
     _isCurrent = [coder decodeBoolForKey:@"current"];
   }
 
   return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder {
+  [coder encodeObject:@(self.handle) forKey:@"handle"];
+  [coder encodeObject:self.url forKey:@"url"];
+  [coder encodeBool:self.isDirty forKey:@"dirty"];
+  [coder encodeBool:self.isReadOnly forKey:@"readOnly"];
+  [coder encodeBool:self.isCurrent forKey:@"current"];
 }
 
 - (BOOL)isEqual:(id)other {
@@ -63,18 +72,10 @@
   return (NSUInteger) self.handle;
 }
 
-- (void)encodeWithCoder:(NSCoder *)coder {
-  [coder encodeObject:@(self.handle) forKey:@"handle"];
-  [coder encodeObject:self.fileName forKey:@"fileName"];
-  [coder encodeBool:self.isDirty forKey:@"dirty"];
-  [coder encodeBool:self.isReadOnly forKey:@"readOnly"];
-  [coder encodeBool:self.isCurrent forKey:@"current"];
-}
-
 - (NSString *)description {
   NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
   [description appendFormat:@"self.handle=%li", self.handle];
-  [description appendFormat:@", self.fileName=%@", self.fileName];
+  [description appendFormat:@"self.url=%@", self.url];
   [description appendFormat:@", self.dirty=%d", self.isDirty];
   [description appendFormat:@", self.readOnly=%d", self.isReadOnly];
   [description appendFormat:@", self.current=%d", self.isCurrent];
@@ -83,22 +84,11 @@
 }
 
 - (NSString *)name {
-  if (self.fileName == nil) {
+  if (self.url == nil) {
     return nil;
   }
 
-  return self.fileName.lastPathComponent;
-}
-
-- (NSURL *)url {
-  if (self.fileName == nil) {
-    return nil;
-  }
-
-  NSString *percentageEscaped = [self.fileName stringByAddingPercentEncodingWithAllowedCharacters:
-      [NSCharacterSet URLQueryAllowedCharacterSet]
-  ];
-  return [[NSURL alloc] initWithString:percentageEscaped];
+  return self.url.lastPathComponent;
 }
 
 - (bool)isTransient {
@@ -106,7 +96,7 @@
     return NO;
   }
 
-  if (self.fileName != nil) {
+  if (self.url != nil) {
     return NO;
   }
 

@@ -263,24 +263,21 @@ extension NeoVimView {
     let currentBufferIsTransient = buffers.filter { $0.isCurrent }.first?.isTransient ?? false
 
     urls.enumerated().forEach { (idx, url) in
-      let path = url.path
-      if buffers.filter({ $0.fileName == path }).first != nil {
-        for window in tabs.map({ $0.windows }).flatMap({ $0 }) {
+          if buffers.filter({ $0.url == url }).first != nil {
+            for window in tabs.map({ $0.windows }).flatMap({ $0 }) {
+              if window.buffer.url == url {
+                self.agent.select(window)
+                return
+              }
+            }
+          }
 
-          if window.buffer.fileName == path {
-            Swift.print(window)
-            self.agent.select(window)
-            return
+          if currentBufferIsTransient {
+            self.open(url, cmd: "e")
+          } else {
+            self.open(url, cmd: "tabe")
           }
         }
-      }
-
-      if idx == 0 && currentBufferIsTransient {
-        self.open(url, cmd: "e")
-      } else {
-        self.open(url, cmd: "tabe")
-      }
-    }
   }
 
   public func openInNewTab(urls: [URL]) {

@@ -339,7 +339,7 @@ extension MainWindowComponent {
       return
     }
 
-    if curBuf.fileName == nil {
+    if curBuf.url == nil {
       self.savePanelSheet { self.neoVimView.saveCurrentTab(url: $0) }
       return
     }

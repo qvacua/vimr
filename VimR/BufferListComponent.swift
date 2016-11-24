@@ -117,7 +117,6 @@ extension BufferListComponent {
     }
 
     guard let url = buffer.url else {
-      NSLog("WARN No URL for \(buffer.fileName)")
       return NSAttributedString(string: name)
     }
 
@@ -131,16 +130,10 @@ extension BufferListComponent {
   }
 
   fileprivate func icon(for buffer: NeoVimBuffer) -> NSImage? {
-    if let fileName = buffer.fileName {
-
-      if let url = URL(string: fileName) {
-        return self.fileItemService.icon(forUrl: url)
-      } else {
-        return self.genericIcon
-      }
-
-    } else {
-      return self.genericIcon
+    if let url = buffer.url {
+      return self.fileItemService.icon(forUrl: url)
     }
+
+    return self.genericIcon
   }
 }

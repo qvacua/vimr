@@ -760,7 +760,7 @@ static NeoVimBuffer *buffer_for(buf_T *buf) {
   bool current = curbuf == buf;
 
   NeoVimBuffer *buffer = [[NeoVimBuffer alloc] initWithHandle:buf->handle
-                                                     fileName:fileName
+                                                unescapedPath:fileName
                                                         dirty:buf->b_changed
                                                      readOnly:buf->b_p_ro
                                                       current:current];

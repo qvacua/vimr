@@ -10,22 +10,18 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NeoVimBuffer : NSObject <NSCoding>
 
 @property (nonatomic, readonly) NSInteger handle;
-/**
- * Full path without escaping, e.g. /some/path with spaces/file.txt
- */
-@property (nonatomic, retain, nullable) NSString *fileName;
+@property (nonatomic, readonly, nullable) NSURL *url;
 /**
  * Only the file name
  */
 @property (nonatomic, readonly, nullable) NSString *name;
-@property (nonatomic, readonly, nullable) NSURL *url;
 @property (nonatomic, readonly) bool isReadOnly;
 @property (nonatomic, readonly) bool isDirty;
 @property (nonatomic, readonly) bool isCurrent;
 @property (nonatomic, readonly) bool isTransient;
 
 - (instancetype)initWithHandle:(NSInteger)handle
-                      fileName:(NSString * _Nullable)fileName
+                 unescapedPath:(NSString *_Nullable)unescapedPath
                          dirty:(bool)dirty
                       readOnly:(bool)readOnly
                        current:(bool)current;
