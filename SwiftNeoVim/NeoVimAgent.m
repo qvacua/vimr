@@ -26,6 +26,31 @@ data_to_array(int)
 data_to_array(bool)
 data_to_array(CellAttributes)
 
+static void log_cfmachport_error(SInt32 err, NeoVimAgentMsgId msgid, NSData *inputData) {
+  switch (err) {
+    case kCFMessagePortSendTimeout:
+      log4Warn("Got response kCFMessagePortSendTimeout = %d for the msg %lu with data %@.",
+          err, (unsigned long) msgid, inputData);
+    case kCFMessagePortReceiveTimeout:
+      log4Warn("Got response kCFMessagePortReceiveTimeout = %d for the msg %lu with data %@.",
+          err, (unsigned long) msgid, inputData);
+    case kCFMessagePortIsInvalid:
+      log4Warn("Got response kCFMessagePortIsInvalid = %d for the msg %lu with data %@.",
+          err, (unsigned long) msgid, inputData);
+    case kCFMessagePortTransportError:
+      log4Warn("Got response kCFMessagePortTransportError = %d for the msg %lu with data %@.",
+          err, (unsigned long) msgid, inputData);
+    case kCFMessagePortBecameInvalidError:
+      log4Warn("Got response kCFMessagePortBecameInvalidError = %d for the msg %lu with data %@.",
+          err, (unsigned long) msgid, inputData);
+      return;
+
+    default:
+      return;
+  }
+}
+
+
 @interface NeoVimAgent ()
 
 - (void)handleMessageWithId:(SInt32)msgid data:(NSData *)data;
@@ -361,7 +386,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   );
 
   if (responseCode != kCFMessagePortSuccess) {
-    log4Warn("Got response %d for the msg %lu with data %@.", responseCode, (unsigned long) msgid, data);
+    log_cfmachport_error(responseCode, msgid, data);
     return nil;
   }
 
