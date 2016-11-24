@@ -12,7 +12,9 @@ class Token: Equatable {
   }
 }
 
-class FileItem : CustomStringConvertible, Hashable {
+class FileItem : CustomStringConvertible, Hashable, Copyable {
+
+  typealias InstanceType = FileItem
 
   static func ==(left: FileItem, right: FileItem) -> Bool {
     return left.url == right.url
@@ -48,6 +50,17 @@ class FileItem : CustomStringConvertible, Hashable {
     self.isDir = url.isDir
     self.isHidden = url.isHidden
     self.isPackage = url.isPackage
+  }
+
+  fileprivate init(url: URL, dir: Bool, hidden: Bool, package: Bool) {
+    self.url = url
+    self.isDir = dir
+    self.isHidden = hidden
+    self.isPackage = package
+  }
+
+  func copy() -> FileItem {
+    return FileItem(url: self.url, dir: self.isDir, hidden: self.isHidden, package: self.isPackage)
   }
 
   func removeChild(withUrl url: URL) {

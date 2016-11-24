@@ -10,6 +10,7 @@
 		1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */; };
 		1929B165820D7177743B537A /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B39DA7AC4A9B62D7CD39 /* Component.swift */; };
 		1929B1E05C116514C1D3A384 /* CocoaCategories.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5C3F2F1CA4113DABFFD /* CocoaCategories.m */; };
+		1929B3CEE0C1A1850E9CCE2F /* BasicTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B2FBE11048569391E092 /* BasicTypes.swift */; };
 		1929B3F5743967125F357C9F /* Matcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEEB33113B0E33C3830F /* Matcher.swift */; };
 		1929B462CD4935AFF6D69457 /* FileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7CB4863F80230C32D3C /* FileItem.swift */; };
 		1929B53876E6952D378C2B30 /* ScoredFileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDF9EBAF1D9D44399045 /* ScoredFileItem.swift */; };
@@ -238,6 +239,7 @@
 /* Begin PBXFileReference section */
 		1929B15B7EDC9B0F40E5E95C /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
 		1929B1A51F076E088EF4CCA4 /* server_globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_globals.h; sourceTree = "<group>"; };
+		1929B2FBE11048569391E092 /* BasicTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicTypes.swift; sourceTree = "<group>"; };
 		1929B39DA7AC4A9B62D7CD39 /* Component.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Component.swift; sourceTree = "<group>"; };
 		1929B3A98687DF171307AAC8 /* FileItemService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemService.swift; sourceTree = "<group>"; };
 		1929B5C3F2F1CA4113DABFFD /* CocoaCategories.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaCategories.m; sourceTree = "<group>"; };
@@ -637,6 +639,7 @@
 				1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */,
 				4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */,
 				4B6A70951D6100E300E12030 /* SwiftCommons.swift */,
+				1929B2FBE11048569391E092 /* BasicTypes.swift */,
 			);
 			name = Commons;
 			sourceTree = "<group>";
@@ -1098,6 +1101,7 @@
 				4BB409EE1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */,
 				4BAD84E81D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift in Sources */,
 				1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */,
+				1929B3CEE0C1A1850E9CCE2F /* BasicTypes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
