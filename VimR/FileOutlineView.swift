@@ -217,7 +217,7 @@ extension FileOutlineView {
     if let fileItem = notification.userInfo?["NSObject"] as? FileItem {
       self.expandedItems.insert(fileItem)
     }
-    
+
     self.adjustFileViewWidth()
   }
 

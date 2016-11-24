@@ -116,7 +116,7 @@ class FileItemService: StandardFlow {
         return
       }
 
-      self.parentFileItem(of: url).removeChild(withUrl: url)
+      self.parentFileItem(of: url).remove(childWith: url)
     }
   }
 

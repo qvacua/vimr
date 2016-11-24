@@ -63,7 +63,32 @@ class FileItem : CustomStringConvertible, Hashable, Copyable {
     return FileItem(url: self.url, dir: self.isDir, hidden: self.isHidden, package: self.isPackage)
   }
 
-  func removeChild(withUrl url: URL) {
+  func child(with url: URL) -> FileItem? {
+    guard let idx = self.children.index(where: { $0.url == url }) else {
+      return nil
+    }
+
+    return self.children[idx]
+  }
+
+  func deepChild(with url: URL) -> FileItem? {
+    let pathComps = self.url.pathComponents
+    let childPathComps = url.pathComponents
+
+    guard childPathComps.count > pathComps.count else {
+      return nil
+    }
+
+    return childPathComps[pathComps.count..<childPathComps.count].reduce(self) { (result, pathComp) -> FileItem? in
+      guard let parent = result else {
+        return nil
+      }
+
+      return parent.child(with: parent.url.appendingPathComponent(pathComp))
+    }
+  }
+
+  func remove(childWith url: URL) {
     guard let idx = self.children.index(where: { $0.url == url }) else {
       return
     }
