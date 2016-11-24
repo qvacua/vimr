@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.11.0-SNAPSHOT-20161123.2350-134</title>
+      <title>v0.11.0-SNAPSHOT-20161124.2022-135</title>
       <description><![CDATA[
     <ul>
-<li>Downgrade Neovim due to jemalloc/jemalloc#494: VimR crashed on 10.11.x</li>
+<li>GH-297: Add path info to the buffer list.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161123.2350-134
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161124.2022-135
       </releaseNotesLink>
-      <pubDate>2016-11-24T00:04:04.812203</pubDate>
+      <pubDate>2016-11-24T20:30:26.705476</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161123.2350-134/VimR-v0.11.0-SNAPSHOT-20161123.2350-134.tar.bz2"
-                 sparkle:version="134"
-                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161123.2350"
-                 sparkle:dsaSignature="MCwCFFnm8a7blLqEqALQSpXLK/ZLiu8gAhRxxPL8nYCj5nr7yUIdftDnLfaHZQ=="
-                 length="8988310"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161124.2022-135/VimR-v0.11.0-SNAPSHOT-20161124.2022-135.tar.bz2"
+                 sparkle:version="135"
+                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161124.2022"
+                 sparkle:dsaSignature="MCwCFDqvjDz0NAmFirWxOEuRJDP/ztltAhQ3Gn9iAqVj/vb0QbEQZ0Ub7lExEQ=="
+                 length="9109722"
                  type="application/octet-stream"/>
     </item>
   </channel>
