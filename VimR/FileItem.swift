@@ -5,17 +5,18 @@
 
 import Foundation
 
-class Token: Equatable {}
+class Token: Equatable {
 
-func == (left: Token, right: Token) -> Bool {
-  return left === right
-}
-
-func ==(left: FileItem, right: FileItem) -> Bool {
-  return left.url == right.url
+  static func == (left: Token, right: Token) -> Bool {
+    return left === right
+  }
 }
 
 class FileItem : CustomStringConvertible, Hashable {
+
+  static func ==(left: FileItem, right: FileItem) -> Bool {
+    return left.url == right.url
+  }
 
   let url: URL
   let isDir: Bool
@@ -32,7 +33,7 @@ class FileItem : CustomStringConvertible, Hashable {
 
   var needsScanChildren = false
   var childrenScanned = false
-  
+
   var children: [FileItem] = []
 
   var description: String {
