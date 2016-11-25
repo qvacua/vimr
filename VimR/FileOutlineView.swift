@@ -38,6 +38,10 @@ fileprivate class FileBrowserItem: Hashable {
   init(fileItem: FileItem) {
     self.fileItem = fileItem.copy()
   }
+
+  func child(with url: URL) -> FileBrowserItem? {
+    return self.children.filter { $0.fileItem.url == url }.first
+  }
 }
 
 class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineViewDelegate {
@@ -82,10 +86,29 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
   }
 
   func update(_ fileItem: FileItem) {
+    guard let fileBrowserItem = self.fileBrowserItem(with: fileItem.url) else {
+      return
+    }
 
-    var fileBrowserItem = self.root
+    Swift.print("\(fileItem.url) ->\n\(fileBrowserItem.fileItem)")
+  }
 
+  fileprivate func fileBrowserItem(with url: URL) -> FileBrowserItem? {
+    guard self.cwd.isParent(of: url) else {
+      return nil
+    }
 
+    let rootPathComps = self.cwd.pathComponents
+    let pathComps = url.pathComponents
+    let childPart = pathComps[rootPathComps.count ..< pathComps.count]
+
+    return childPart.reduce(self.root) { (resultItem, childName) -> FileBrowserItem? in
+      guard let parent = resultItem else {
+        return nil
+      }
+
+      return parent.child(with: parent.fileItem.url.appendingPathComponent(childName))
+    }
   }
 }
 
