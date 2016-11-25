@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import PureLayout
 import RxSwift
 
 enum FileOutlineViewAction {
@@ -78,6 +79,28 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
 
     self.doubleAction = #selector(FileOutlineView.doubleClickAction)
   }
+
+  @IBAction func debug1(_ sender: Any?) {
+    let size = self.frame.size
+    self.setFrameSize(CGSize(width: 700, height: size.height))
+  }
+}
+
+extension FileOutlineView {
+
+  override func reloadItem(_ item: Any?, reloadChildren: Bool) {
+    NSLog("\(#function)")
+    super.reloadItem(item, reloadChildren: reloadChildren)
+
+    self.adjustFileViewWidth()
+  }
+
+  override func reloadItem(_ item: Any?) {
+    NSLog("\(#function)")
+    super.reloadItem(item)
+
+    self.adjustFileViewWidth()
+  }
 }
 
 // MARK: - NSOutlineViewDataSource
@@ -140,6 +163,82 @@ extension FileOutlineView {
 // MARK: - NSOutlineViewDelegate
 extension FileOutlineView {
 
+  fileprivate func adjustFileViewWidth() {
+    let indentationPerLevel = self.indentationPerLevel
+    let attrs = [NSFontAttributeName: ImageAndTextTableCell.font]
+
+    let maxWidth = (0 ..< self.numberOfRows).reduce(CGFloat(0)) { (curMaxWidth, idx) in
+      guard let cell = self.rowView(atRow: idx, makeIfNecessary: false)?.view(atColumn: 0) as? ImageAndTextTableCell
+          else {
+        return curMaxWidth
+      }
+
+      guard let item = self.item(atRow: idx) as? FileBrowserItem else {
+        return curMaxWidth
+      }
+
+      let level = CGFloat(self.level(forRow: idx) + 1)
+      let indentation = level * (indentationPerLevel + 20)
+      let name = item.fileItem.url.lastPathComponent
+      let textWidth = (name as NSString).size(withAttributes: attrs).width + indentation
+
+      let width = indentation + ImageAndTextTableCell.widthWithoutText + textWidth
+      return max(curMaxWidth, width)
+    }
+
+    let column = self.outlineTableColumn!
+    Swift.print("\(column.width) vs \(maxWidth)")
+    guard column.minWidth < maxWidth else {
+      return
+    }
+
+    column.minWidth = maxWidth
+    column.maxWidth = column.minWidth
+    (0 ..< self.numberOfRows).forEach {
+      self.rowView(atRow: $0, makeIfNecessary: false)?.needsDisplay = true
+    }
+  }
+
+//  func outlineView(_ outlineView: NSOutlineView,
+//                   didAdd rowView: NSTableRowView,
+//                   forRow row: Int)
+//  {
+//    guard let cell = rowView.view(atColumn: 0) as? ImageAndTextTableCell else {
+//      return
+//    }
+//    let column = self.outlineTableColumn!
+//    DispatchUtils.gui {
+//      let width = max(column.width, rowView.frame.width)
+//      self.setFrameSize(CGSize(width: width, height:self.frame.height))
+////      column.minWidth = max(column.width, rowView.frame.width)
+////      column.maxWidth = column.minWidth
+////      column.width = column.minWidth
+////      rowView.needsDisplay = true
+//    }
+//
+//    NSLog("\(#function): \(rowView.frame.width) vs \(cell.intrinsicContentSize.width)")
+////
+////    let level = CGFloat(self.level(forRow: row) + 1)
+////    let indentation = level * self.indentationPerLevel
+////    let width = indentation + cell.intrinsicContentSize.width
+////    let height = cell.intrinsicContentSize.height
+////
+//////    let column = self.outlineTableColumn!
+//////    guard column.width < width else {
+//////      return
+//////    }
+////
+////    cell.configureForAutoLayout()
+////    cell.autoSetDimension(.width, toSize: width)
+////    cell.autoSetDimension(.height, toSize: height)
+////    cell.autoPinEdge(toSuperviewEdge: .left)
+////    cell.autoPinEdge(toSuperviewEdge: .right)
+////    Swift.print("\(cell.text): \(cell.frame.width)")
+//////    column.width = width
+//////    column.minWidth = width
+//////    column.maxWidth = width
+//  }
+
   @objc(outlineView:viewForTableColumn:item:)
   func outlineView(_: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
     guard let fileBrowserItem = item as? FileBrowserItem else {
@@ -163,12 +262,16 @@ extension FileOutlineView {
     if let item = notification.userInfo?["NSObject"] as? FileBrowserItem {
       item.isExpanded = true
     }
+
+    self.adjustFileViewWidth()
   }
 
   func outlineViewItemDidCollapse(_ notification: Notification) {
     if let item = notification.userInfo?["NSObject"] as? FileBrowserItem {
       item.isExpanded = false
     }
+
+    self.adjustFileViewWidth()
   }
 }
 

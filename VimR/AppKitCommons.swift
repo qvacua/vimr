@@ -118,6 +118,7 @@ extension NSOutlineView {
 
   static func configure(toStandard outlineView: NSOutlineView) {
     let column = NSTableColumn(identifier: "name")
+    column.resizingMask = .autoresizingMask
     column.isEditable = false
 
     outlineView.addTableColumn(column)

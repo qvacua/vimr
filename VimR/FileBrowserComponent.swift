@@ -90,7 +90,7 @@ class FileBrowserComponent: ViewComponent {
           guard self.fileView.row(forItem: fileItem) > -1 else {
             return
           }
-          
+
           // FIXME: restore expanded states
           self.fileView.reloadItem(fileItem, reloadChildren: true)
         }

@@ -76,6 +76,13 @@
 		4B705BA11DDF7639005F844B /* ToolPrefData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B705BA01DDF7639005F844B /* ToolPrefData.swift */; };
 		4B705BDA1DE04F83005F844B /* Pref38To128Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B705BD91DE04F83005F844B /* Pref38To128Converter.swift */; };
 		4B705C0E1DE2167A005F844B /* BufferListComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B705C0D1DE2167A005F844B /* BufferListComponent.swift */; };
+		4B81B3CB1DE8827600ED1672 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B81B3CA1DE8827600ED1672 /* AppDelegate.swift */; };
+		4B81B3CD1DE8827600ED1672 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B81B3CC1DE8827600ED1672 /* Assets.xcassets */; };
+		4B81B3D01DE8827600ED1672 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B81B3CE1DE8827600ED1672 /* MainMenu.xib */; };
+		4B81B3D51DE8827E00ED1672 /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; };
+		4B81B3D61DE8827E00ED1672 /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B81B3D81DE8829500ED1672 /* ImageAndTextTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B22F7F11D7C6B9000929B0E /* ImageAndTextTableCell.swift */; };
+		4B81B3D91DE882D500ED1672 /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
 		4B854A1D1D31447C00E08DE1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B854A1C1D31447C00E08DE1 /* main.m */; };
 		4B8AC0441DBCB3A2007CCC9B /* NeoVimObjectsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8AC0431DBCB3A1007CCC9B /* NeoVimObjectsExtensions.swift */; };
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
@@ -205,6 +212,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4B81B3D71DE8827E00ED1672 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4B81B3D61DE8827E00ED1672 /* PureLayout.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4B854A061D3137B500E08DE1 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -304,6 +322,11 @@
 		4B705BA01DDF7639005F844B /* ToolPrefData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolPrefData.swift; sourceTree = "<group>"; };
 		4B705BD91DE04F83005F844B /* Pref38To128Converter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pref38To128Converter.swift; sourceTree = "<group>"; };
 		4B705C0D1DE2167A005F844B /* BufferListComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BufferListComponent.swift; sourceTree = "<group>"; };
+		4B81B3C81DE8827600ED1672 /* OutlineViewTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OutlineViewTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B81B3CA1DE8827600ED1672 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4B81B3CC1DE8827600ED1672 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4B81B3CF1DE8827600ED1672 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		4B81B3D11DE8827600ED1672 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B854A1A1D31447C00E08DE1 /* NeoVimServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NeoVimServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B854A1C1D31447C00E08DE1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4B8AC0431DBCB3A1007CCC9B /* NeoVimObjectsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimObjectsExtensions.swift; sourceTree = "<group>"; };
@@ -384,6 +407,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B6423AC1D8EFE9800FC78C8 /* PureLayout.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B81B3C51DE8827600ED1672 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B81B3D51DE8827E00ED1672 /* PureLayout.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -561,6 +592,17 @@
 			name = Tools;
 			sourceTree = "<group>";
 		};
+		4B81B3C91DE8827600ED1672 /* OutlineViewTest */ = {
+			isa = PBXGroup;
+			children = (
+				4B81B3CA1DE8827600ED1672 /* AppDelegate.swift */,
+				4B81B3CC1DE8827600ED1672 /* Assets.xcassets */,
+				4B81B3CE1DE8827600ED1672 /* MainMenu.xib */,
+				4B81B3D11DE8827600ED1672 /* Info.plist */,
+			);
+			path = OutlineViewTest;
+			sourceTree = "<group>";
+		};
 		4B854A151D31444800E08DE1 /* resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -666,6 +708,7 @@
 				4B56F2911D29903F00C1F92E /* SwiftNeoVimTests */,
 				4B854A1B1D31447C00E08DE1 /* NeoVimServer */,
 				4B6423A01D8EFE7500FC78C8 /* VimR-Workspace-Demo */,
+				4B81B3C91DE8827600ED1672 /* OutlineViewTest */,
 				4B2A2BE61D0225840074CE9A /* Frameworks */,
 				4BEBA5061CFF374B00673FDF /* Products */,
 			);
@@ -680,6 +723,7 @@
 				4B56F2901D29903F00C1F92E /* SwiftNeoVimTests.xctest */,
 				4B854A1A1D31447C00E08DE1 /* NeoVimServer */,
 				4B64239F1D8EFE7500FC78C8 /* VimR-Workspace-Demo.app */,
+				4B81B3C81DE8827600ED1672 /* OutlineViewTest.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -819,6 +863,24 @@
 			productReference = 4B64239F1D8EFE7500FC78C8 /* VimR-Workspace-Demo.app */;
 			productType = "com.apple.product-type.application";
 		};
+		4B81B3C71DE8827600ED1672 /* OutlineViewTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4B81B3D41DE8827600ED1672 /* Build configuration list for PBXNativeTarget "OutlineViewTest" */;
+			buildPhases = (
+				4B81B3C41DE8827600ED1672 /* Sources */,
+				4B81B3C51DE8827600ED1672 /* Frameworks */,
+				4B81B3C61DE8827600ED1672 /* Resources */,
+				4B81B3D71DE8827E00ED1672 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OutlineViewTest;
+			productName = OutlineViewTest;
+			productReference = 4B81B3C81DE8827600ED1672 /* OutlineViewTest.app */;
+			productType = "com.apple.product-type.application";
+		};
 		4B854A191D31447C00E08DE1 /* NeoVimServer */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4B854A1E1D31447C00E08DE1 /* Build configuration list for PBXNativeTarget "NeoVimServer" */;
@@ -881,7 +943,7 @@
 		4BEBA4FD1CFF374B00673FDF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0730;
+				LastSwiftUpdateCheck = 0810;
 				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Tae Won Ha";
 				TargetAttributes = {
@@ -897,6 +959,10 @@
 					4B64239E1D8EFE7500FC78C8 = {
 						CreatedOnToolsVersion = 7.3.1;
 						LastSwiftMigration = 0800;
+					};
+					4B81B3C71DE8827600ED1672 = {
+						CreatedOnToolsVersion = 8.1;
+						ProvisioningStyle = Automatic;
 					};
 					4B854A191D31447C00E08DE1 = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -932,6 +998,7 @@
 				4B56F28F1D29903F00C1F92E /* SwiftNeoVimTests */,
 				4B854A191D31447C00E08DE1 /* NeoVimServer */,
 				4B64239E1D8EFE7500FC78C8 /* VimR-Workspace-Demo */,
+				4B81B3C71DE8827600ED1672 /* OutlineViewTest */,
 			);
 		};
 /* End PBXProject section */
@@ -958,6 +1025,15 @@
 			files = (
 				4B6423A41D8EFE7500FC78C8 /* Assets.xcassets in Resources */,
 				4B6423A71D8EFE7500FC78C8 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B81B3C61DE8827600ED1672 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B81B3CD1DE8827600ED1672 /* Assets.xcassets in Resources */,
+				4B81B3D01DE8827600ED1672 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1045,6 +1121,16 @@
 				4BB409EF1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */,
 				4B6423B11D8EFEA800FC78C8 /* WorkspaceTool.swift in Sources */,
 				4B6423A21D8EFE7500FC78C8 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B81B3C41DE8827600ED1672 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B81B3D91DE882D500ED1672 /* AppKitCommons.swift in Sources */,
+				4B81B3D81DE8829500ED1672 /* ImageAndTextTableCell.swift in Sources */,
+				4B81B3CB1DE8827600ED1672 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1159,6 +1245,14 @@
 			isa = PBXVariantGroup;
 			children = (
 				4B6423A61D8EFE7500FC78C8 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		4B81B3CE1DE8827600ED1672 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4B81B3CF1DE8827600ED1672 /* Base */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -1312,6 +1406,49 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.qvacua.VimR-Workspace-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		4B81B3D21DE8827600ED1672 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				INFOPLIST_FILE = OutlineViewTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.OutlineViewTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		4B81B3D31DE8827600ED1672 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				INFOPLIST_FILE = OutlineViewTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.OutlineViewTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -1558,6 +1695,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		4B81B3D41DE8827600ED1672 /* Build configuration list for PBXNativeTarget "OutlineViewTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B81B3D21DE8827600ED1672 /* Debug */,
+				4B81B3D31DE8827600ED1672 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		4B854A1E1D31447C00E08DE1 /* Build configuration list for PBXNativeTarget "NeoVimServer" */ = {
 			isa = XCConfigurationList;
