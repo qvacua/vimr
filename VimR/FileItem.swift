@@ -60,7 +60,12 @@ class FileItem : CustomStringConvertible, Hashable, Copyable {
   }
 
   func copy() -> FileItem {
-    return FileItem(url: self.url, dir: self.isDir, hidden: self.isHidden, package: self.isPackage)
+    let item = FileItem(url: self.url, dir: self.isDir, hidden: self.isHidden, package: self.isPackage)
+    item.needsScanChildren = self.needsScanChildren
+    item.childrenScanned = self.childrenScanned
+    item.children = self.children
+
+    return item
   }
 
   func child(with url: URL) -> FileItem? {

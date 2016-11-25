@@ -17,14 +17,35 @@ enum FileOutlineViewAction {
   case setParentAsWorkingDirectory(fileItem: FileItem)
 }
 
+fileprivate class FileBrowserItem: Hashable {
+
+  static func ==(left: FileBrowserItem, right: FileBrowserItem) -> Bool {
+    return left.fileItem == right.fileItem
+  }
+
+  var hashValue: Int {
+    return self.fileItem.hashValue
+  }
+
+  let fileItem: FileItem
+  var children: [FileBrowserItem] = []
+  var isExpanded = false
+
+  /**
+    `fileItem` is copied.
+   */
+  init(fileItem: FileItem) {
+    self.fileItem = fileItem.copy()
+  }
+}
+
 class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineViewDelegate {
 
   fileprivate let flow: EmbeddableComponent
+
+  fileprivate var root: FileBrowserItem
+
   fileprivate let fileItemService: FileItemService
-
-  fileprivate var fileItems = Set<FileItem>()
-
-  fileprivate var expandedItems = Set<FileItem>()
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -40,6 +61,10 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
   init(source: Observable<Any>, fileItemService: FileItemService) {
     self.flow = EmbeddableComponent(source: source)
     self.fileItemService = fileItemService
+
+    let rootFileItem = fileItemService.fileItemWithChildren(for: self.cwd)
+        ?? fileItemService.fileItemWithChildren(for: FileUtils.userHomeUrl)!
+    self.root = FileBrowserItem(fileItem: rootFileItem)
 
     super.init(frame: CGRect.zero)
 
@@ -59,77 +84,38 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
 extension FileOutlineView {
 
   override func reloadItem(_ item: Any?, reloadChildren: Bool) {
-//    NSLog("\(#function): \(item)")
-    let selectedItem = self.selectedItem
-    let visibleRect = self.enclosingScrollView?.contentView.visibleRect
-
-    let expandedItems = self.expandedItems
-
-    if item == nil {
-      self.fileItems.removeAll()
-    } else {
-      guard let fileItem = item as? FileItem else {
-        preconditionFailure("Should not happen")
-      }
-
-      self.fileItems.remove(fileItem)
-      if fileItem.isDir {
-        self.fileItems
-          .filter { fileItem.url.isParent(of: $0.url) }
-          .forEach { self.fileItems.remove($0) }
-      }
-    }
-
     super.reloadItem(item, reloadChildren: reloadChildren)
 
-    self.restore(expandedItems: expandedItems)
     self.adjustFileViewWidth()
-
-    self.scrollToVisible(visibleRect!)
-
-    guard let selectedFileItem = selectedItem as? FileItem else {
-      return
-    }
-
-    for idx in 0..<self.numberOfRows {
-      guard let itemAtRow = self.item(atRow: idx) as? FileItem else {
-        continue
-      }
-
-      if itemAtRow == selectedFileItem {
-        self.selectRowIndexes(IndexSet([idx]), byExtendingSelection: false)
-        return
-      }
-    }
   }
 
-  fileprivate func restoreExpandedState(for item: FileItem, states: Set<FileItem>) {
-    guard item.isDir && states.contains(item) else {
-      return
-    }
-
-    self.expandItem(item)
-    self.expandedItems.insert(item)
-
-    item.children.forEach { [unowned self] child in
-      self.restoreExpandedState(for: child, states: states)
-    }
-  }
-
-  fileprivate func restore(expandedItems: Set<FileItem>) {
+//  fileprivate func restoreExpandedState(for item: FileItem, states: Set<FileItem>) {
+//    guard item.isDir && states.contains(item) else {
+//      return
+//    }
+//
+//    self.expandItem(item)
+//    self.expandedItems.insert(item)
+//
+//    item.children.forEach { [unowned self] child in
+//      self.restoreExpandedState(for: child, states: states)
+//    }
+//  }
+//
+//  fileprivate func restore(expandedItems: Set<FileItem>) {
 //    NSLog("\(#function): \(expandedItems)")
-    if expandedItems.isEmpty {
-      return
-    }
-
-    guard let root = self.fileItemService.fileItemWithChildren(for: self.cwd) else {
-      self.expandedItems.removeAll()
-      return
-    }
-
-    self.expandedItems.removeAll()
-    root.children.forEach { self.restoreExpandedState(for: $0, states: expandedItems) }
-  }
+//    if expandedItems.isEmpty {
+//      return
+//    }
+//
+//    guard let root = self.fileItemService.fileItemWithChildren(for: self.cwd) else {
+//      self.expandedItems.removeAll()
+//      return
+//    }
+//
+//    self.expandedItems.removeAll()
+//    root.children.forEach { self.restoreExpandedState(for: $0, states: expandedItems) }
+//  }
 }
 
 // MARK: - NSOutlineViewDataSource
@@ -137,19 +123,23 @@ extension FileOutlineView {
 
   func outlineView(_: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
     if item == nil {
-      return self.fileItemService.fileItemWithChildren(for: self.cwd)?.children
-        .filter { !$0.isHidden }
-        .count ?? 0
+      let rootFileItem = fileItemService.fileItemWithChildren(for: self.cwd)
+          ?? fileItemService.fileItemWithChildren(for: FileUtils.userHomeUrl)!
+      self.root = FileBrowserItem(fileItem: rootFileItem)
+      self.root.children = rootFileItem.children.map(FileBrowserItem.init)
+
+      return self.root.children.filter { !$0.fileItem.isHidden }.count
     }
 
-    guard let fileItem = item as? FileItem else {
+    guard let fileBrowserItem = item as? FileBrowserItem else {
       return 0
     }
 
+    let fileItem = fileBrowserItem.fileItem
     if fileItem.isDir {
-      return self.fileItemService.fileItemWithChildren(for: fileItem.url)?.children
-        .filter { !$0.isHidden }
-        .count ?? 0
+      let fileItemChildren = self.fileItemService.fileItemWithChildren(for: fileItem.url)?.children ?? []
+      fileBrowserItem.children = fileItemChildren.map(FileBrowserItem.init)
+      return fileBrowserItem.children.filter { !$0.fileItem.isHidden }.count
     }
 
     return 0
@@ -157,37 +147,31 @@ extension FileOutlineView {
 
   func outlineView(_: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
     if item == nil {
-      let result = self.fileItemService.fileItemWithChildren(for: self.cwd)!.children.filter { !$0.isHidden }[index]
-      self.fileItems.insert(result)
-
-      return result
+      return self.root.children.filter({ !$0.fileItem.isHidden })[index]
     }
 
-    guard let fileItem = item as? FileItem else {
+    guard let fileBrowserItem = item as? FileBrowserItem else {
       preconditionFailure("Should not happen")
     }
 
-    let result = self.fileItemService.fileItemWithChildren(for: fileItem.url)!.children.filter { !$0.isHidden }[index]
-    self.fileItems.insert(result)
-
-    return result
+    return fileBrowserItem.children.filter({ !$0.fileItem.isHidden })[index]
   }
 
   func outlineView(_: NSOutlineView, isItemExpandable item: Any) ->  Bool {
-    guard let fileItem = item as? FileItem else {
+    guard let fileBrowserItem = item as? FileBrowserItem else {
       return false
     }
 
-    return fileItem.isDir
+    return fileBrowserItem.fileItem.isDir
   }
 
   @objc(outlineView:objectValueForTableColumn:byItem:)
   func outlineView(_: NSOutlineView, objectValueFor: NSTableColumn?, byItem item: Any?) -> Any? {
-    guard let fileItem = item as? FileItem else {
+    guard let fileBrowserItem = item as? FileBrowserItem else {
       return nil
     }
 
-    return fileItem
+    return fileBrowserItem
   }
 }
 
@@ -196,15 +180,15 @@ extension FileOutlineView {
 
   @objc(outlineView:viewForTableColumn:item:)
   func outlineView(_: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
-    guard let fileItem = item as? FileItem else {
+    guard let fileBrowserItem = item as? FileBrowserItem else {
       return nil
     }
 
     let cachedCell = self.make(withIdentifier: "file-view-row", owner: self)
     let cell = cachedCell as? ImageAndTextTableCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
-    cell.text = fileItem.url.lastPathComponent
-    cell.image = self.fileItemService.icon(forUrl: fileItem.url)
+    cell.text = fileBrowserItem.fileItem.url.lastPathComponent
+    cell.image = self.fileItemService.icon(forUrl: fileBrowserItem.fileItem.url)
 
     return cell
   }
@@ -212,22 +196,22 @@ extension FileOutlineView {
   func outlineView(_: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
     return 20
   }
-
-  func outlineViewItemDidExpand(_ notification: Notification) {
-    if let fileItem = notification.userInfo?["NSObject"] as? FileItem {
-      self.expandedItems.insert(fileItem)
-    }
-
-    self.adjustFileViewWidth()
-  }
-
-  func outlineViewItemDidCollapse(_ notification: Notification) {
-    if let fileItem = notification.userInfo?["NSObject"] as? FileItem {
-      self.expandedItems.remove(fileItem)
-    }
-
-    self.adjustFileViewWidth()
-  }
+//
+//  func outlineViewItemDidExpand(_ notification: Notification) {
+//    if let fileItem = notification.userInfo?["NSObject"] as? FileItem {
+//      self.expandedItems.insert(fileItem)
+//    }
+//
+//    self.adjustFileViewWidth()
+//  }
+//
+//  func outlineViewItemDidCollapse(_ notification: Notification) {
+//    if let fileItem = notification.userInfo?["NSObject"] as? FileItem {
+//      self.expandedItems.remove(fileItem)
+//    }
+//
+//    self.adjustFileViewWidth()
+//  }
 
   fileprivate func adjustFileViewWidth() {
     let indentationPerLevel = self.indentationPerLevel
@@ -255,63 +239,63 @@ extension FileOutlineView {
 extension FileOutlineView {
 
   @IBAction func doubleClickAction(_: Any?) {
-    guard let item = self.clickedItem as? FileItem else {
+    guard let item = self.clickedItem as? FileBrowserItem else {
       return
     }
 
-    if item.isDir {
+    if item.fileItem.isDir {
       self.toggle(item: item)
     } else {
-      self.flow.publish(event: FileOutlineViewAction.open(fileItem: item))
+      self.flow.publish(event: FileOutlineViewAction.open(fileItem: item.fileItem))
     }
   }
 
   @IBAction func openInNewTab(_: Any?) {
-    guard let item = self.clickedItem as? FileItem else {
+    guard let item = self.clickedItem as? FileBrowserItem else {
       return
     }
 
-    self.flow.publish(event: FileOutlineViewAction.openFileInNewTab(fileItem: item))
+    self.flow.publish(event: FileOutlineViewAction.openFileInNewTab(fileItem: item.fileItem))
   }
 
   @IBAction func openInCurrentTab(_: Any?) {
-    guard let item = self.clickedItem as? FileItem else {
+    guard let item = self.clickedItem as? FileBrowserItem else {
       return
     }
 
-    self.flow.publish(event: FileOutlineViewAction.openFileInCurrentTab(fileItem: item))
+    self.flow.publish(event: FileOutlineViewAction.openFileInCurrentTab(fileItem: item.fileItem))
   }
 
   @IBAction func openInHorizontalSplit(_: Any?) {
-    guard let item = self.clickedItem as? FileItem else {
+    guard let item = self.clickedItem as? FileBrowserItem else {
       return
     }
 
-    self.flow.publish(event: FileOutlineViewAction.openFileInHorizontalSplit(fileItem: item))
+    self.flow.publish(event: FileOutlineViewAction.openFileInHorizontalSplit(fileItem: item.fileItem))
   }
 
   @IBAction func openInVerticalSplit(_: Any?) {
-    guard let item = self.clickedItem as? FileItem else {
+    guard let item = self.clickedItem as? FileBrowserItem else {
       return
     }
 
-    self.flow.publish(event: FileOutlineViewAction.openFileInVerticalSplit(fileItem: item))
+    self.flow.publish(event: FileOutlineViewAction.openFileInVerticalSplit(fileItem: item.fileItem))
   }
 
   @IBAction func setAsWorkingDirectory(_: Any?) {
-    guard let item = self.clickedItem as? FileItem else {
+    guard let item = self.clickedItem as? FileBrowserItem else {
       return
     }
 
-    guard item.isDir else {
+    guard item.fileItem.isDir else {
       return
     }
 
-    self.flow.publish(event: FileOutlineViewAction.setAsWorkingDirectory(fileItem: item))
+    self.flow.publish(event: FileOutlineViewAction.setAsWorkingDirectory(fileItem: item.fileItem))
   }
 
   @IBAction func setParentAsWorkingDirectory(_: Any?) {
-    guard let item = self.clickedItem as? FileItem else {
+    guard let item = self.clickedItem as? FileBrowserItem else {
       return
     }
 
@@ -319,11 +303,11 @@ extension FileOutlineView {
       return
     }
 
-    guard item.url.path != "/" else {
+    guard item.fileItem.url.path != "/" else {
       return
     }
 
-    self.flow.publish(event: FileOutlineViewAction.setParentAsWorkingDirectory(fileItem: item))
+    self.flow.publish(event: FileOutlineViewAction.setParentAsWorkingDirectory(fileItem: item.fileItem))
   }
 }
 
@@ -331,12 +315,12 @@ extension FileOutlineView {
 extension FileOutlineView {
 
   override func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
-    guard let clickedItem = self.clickedItem as? FileItem else {
+    guard let clickedItem = self.clickedItem as? FileBrowserItem else {
       return true
     }
 
     if item.action == #selector(setAsWorkingDirectory(_:)) {
-      return clickedItem.isDir
+      return clickedItem.fileItem.isDir
     }
 
     if item.action == #selector(setParentAsWorkingDirectory(_:)) {
@@ -356,17 +340,17 @@ extension FileOutlineView {
       return
     }
 
-    guard let item = self.selectedItem as? FileItem else {
+    guard let item = self.selectedItem as? FileBrowserItem else {
       super.keyDown(with: event)
       return
     }
 
     switch char {
     case " ", "\r": // Why "\r" and not "\n"?
-      if item.isDir || item.isPackage {
+      if item.fileItem.isDir || item.fileItem.isPackage {
         self.toggle(item: item)
       } else {
-        self.flow.publish(event: FileOutlineViewAction.openFileInNewTab(fileItem: item))
+        self.flow.publish(event: FileOutlineViewAction.openFileInNewTab(fileItem: item.fileItem))
       }
 
     default:
