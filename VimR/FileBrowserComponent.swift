@@ -99,12 +99,9 @@ class FileBrowserComponent: ViewComponent {
   }
 
   override func addViews() {
-    let fileView = self.fileView
-    NSOutlineView.configure(toStandard: fileView)
-
     let scrollView = NSScrollView.standardScrollView()
     scrollView.borderType = .noBorder
-    scrollView.documentView = fileView
+    scrollView.documentView = self.fileView
 
     self.addSubview(scrollView)
     scrollView.autoPinEdgesToSuperviewEdges()
