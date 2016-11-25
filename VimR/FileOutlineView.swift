@@ -32,7 +32,7 @@ fileprivate class FileBrowserItem: Hashable {
   var isExpanded = false
 
   /**
-    `fileItem` is copied.
+    `fileItem` is copied. Children are _not_ populated.
    */
   init(fileItem: FileItem) {
     self.fileItem = fileItem.copy()
@@ -196,22 +196,22 @@ extension FileOutlineView {
   func outlineView(_: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
     return 20
   }
-//
-//  func outlineViewItemDidExpand(_ notification: Notification) {
-//    if let fileItem = notification.userInfo?["NSObject"] as? FileItem {
-//      self.expandedItems.insert(fileItem)
-//    }
-//
-//    self.adjustFileViewWidth()
-//  }
-//
-//  func outlineViewItemDidCollapse(_ notification: Notification) {
-//    if let fileItem = notification.userInfo?["NSObject"] as? FileItem {
-//      self.expandedItems.remove(fileItem)
-//    }
-//
-//    self.adjustFileViewWidth()
-//  }
+
+  func outlineViewItemDidExpand(_ notification: Notification) {
+    if let item = notification.userInfo?["NSObject"] as? FileBrowserItem {
+      item.isExpanded = true
+    }
+
+    self.adjustFileViewWidth()
+  }
+
+  func outlineViewItemDidCollapse(_ notification: Notification) {
+    if let item = notification.userInfo?["NSObject"] as? FileBrowserItem {
+      item.isExpanded = false
+    }
+
+    self.adjustFileViewWidth()
+  }
 
   fileprivate func adjustFileViewWidth() {
     let indentationPerLevel = self.indentationPerLevel
