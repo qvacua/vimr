@@ -50,7 +50,8 @@ class AppDelegate: NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate, NSA
                                Item([
                                         Item([]), Item([]), Item([]),
                                     ]),
-                           ]), Item([
+                           ]),
+                      Item([
                                Item([]), Item([]), Item([]), Item([]),
                            ]),
                       Item([
@@ -65,6 +66,12 @@ class AppDelegate: NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate, NSA
                            ]),
                       Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]), Item([]),
                   ])
+
+  @IBAction func debug1(_ sender: Any?) {
+    let item = self.data.children[2]
+    outlineView.reloadItem(item, reloadChildren: true)
+    NSLog("reloaded")
+  }
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     outlineView.dataSource = self
@@ -116,7 +123,6 @@ class AppDelegate: NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate, NSA
 
     if item == nil {
       self.adjustColumnWidth(for: data.children, outlineViewLevel: level)
-      NSLog("nil: \(self.outlineView.level(forItem: nil))")
       return data.children[index]
     }
 
