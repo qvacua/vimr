@@ -72,30 +72,20 @@ class FileBrowserComponent: ViewComponent {
       .addDisposableTo(self.disposeBag)
 
     self.fileItemService.sink
-      .filter { $0 is FileItemServiceChange }
-      .map { $0 as! FileItemServiceChange }
-      .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { [unowned self] action in
-        switch action {
-        case let .childrenChanged(root, fileItem):
-          guard root == self.cwd else {
-            return
-          }
+        .filter { $0 is FileItemServiceChange }
+        .map { $0 as! FileItemServiceChange }
+        .observeOn(MainScheduler.instance)
+        .subscribe(onNext: { [unowned self] action in
+          switch action {
+          case let .childrenChanged(root, fileItem):
+            guard root == self.cwd else {
+              return
+            }
 
-          // FIXME: restore expanded states
-          if fileItem?.url == self.cwd {
-            self.fileView.reloadItem(nil, reloadChildren: true)
+            self.fileView.update(fileItem)
           }
-
-          guard self.fileView.row(forItem: fileItem) > -1 else {
-            return
-          }
-
-          // FIXME: restore expanded states
-          self.fileView.reloadItem(fileItem, reloadChildren: true)
-        }
         })
-      .addDisposableTo(self.disposeBag)
+        .addDisposableTo(self.disposeBag)
   }
 
   override func addViews() {

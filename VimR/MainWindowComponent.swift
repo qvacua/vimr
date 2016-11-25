@@ -153,11 +153,13 @@ class MainWindowComponent: WindowComponent,
     self.neoVimView.font = self.defaultEditorFont
     self.neoVimView.usesLigatures = initialData.appearance.editorUsesLigatures
     self.neoVimView.linespacing = initialData.appearance.editorLinespacing
-    self.neoVimView.cwd = cwd // This will publish the MainWindowAction.changeCwd action for the file browser.
+    let neoVimViewCwd = self.neoVimView.cwd
+    if neoVimViewCwd == cwd {
+      self.fileItemService.monitor(url: cwd)
+    } else {
+      self.neoVimView.cwd = cwd // This will publish the MainWindowAction.changeCwd action for the file browser.
+    }
     self.neoVimView.open(urls: urls)
-
-    // We don't call self.fileItemService.monitor(url: cwd) here since self.neoVimView.cwd = cwd causes the call
-    // cwdChanged() and in that function we do monitor(...).
 
     self.addReactions()
 

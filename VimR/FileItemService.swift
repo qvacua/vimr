@@ -9,7 +9,7 @@ import EonilFileSystemEvents
 
 enum FileItemServiceChange {
 
-  case childrenChanged(root: URL, fileItem: FileItem?)
+  case childrenChanged(root: URL, fileItem: FileItem)
 }
 
 class FileItemService: StandardFlow {
@@ -81,9 +81,11 @@ class FileItemService: StandardFlow {
       let urls = events.map { URL(fileURLWithPath: $0.path) }
       let parent = FileUtils.commonParent(of: urls)
 
-      let parentItem = self.fileItem(for: parent)
+      guard let parentItem = self.fileItem(for: parent) else {
+        return
+      }
 
-      parentItem?.needsScanChildren = true
+      parentItem.needsScanChildren = true
       self.publish(event: FileItemServiceChange.childrenChanged(root: url, fileItem: parentItem))
     }
 

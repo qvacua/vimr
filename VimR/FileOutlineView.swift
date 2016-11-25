@@ -80,23 +80,13 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
 
     self.doubleAction = #selector(FileOutlineView.doubleClickAction)
   }
-}
 
-extension FileOutlineView {
+  func update(_ fileItem: FileItem) {
 
-//  override func reloadItem(_ item: Any?, reloadChildren: Bool) {
-//    NSLog("\(#function)")
-//    super.reloadItem(item, reloadChildren: reloadChildren)
-//
-//    self.adjustFileViewWidth()
-//  }
-//
-//  override func reloadItem(_ item: Any?) {
-//    NSLog("\(#function)")
-//    super.reloadItem(item)
-//
-//    self.adjustFileViewWidth()
-//  }
+    var fileBrowserItem = self.root
+
+
+  }
 }
 
 // MARK: - NSOutlineViewDataSource
