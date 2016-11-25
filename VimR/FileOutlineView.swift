@@ -80,44 +80,6 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
   }
 }
 
-// MARK: - NSOutlineView
-extension FileOutlineView {
-
-  override func reloadItem(_ item: Any?, reloadChildren: Bool) {
-    super.reloadItem(item, reloadChildren: reloadChildren)
-
-    self.adjustFileViewWidth()
-  }
-
-//  fileprivate func restoreExpandedState(for item: FileItem, states: Set<FileItem>) {
-//    guard item.isDir && states.contains(item) else {
-//      return
-//    }
-//
-//    self.expandItem(item)
-//    self.expandedItems.insert(item)
-//
-//    item.children.forEach { [unowned self] child in
-//      self.restoreExpandedState(for: child, states: states)
-//    }
-//  }
-//
-//  fileprivate func restore(expandedItems: Set<FileItem>) {
-//    NSLog("\(#function): \(expandedItems)")
-//    if expandedItems.isEmpty {
-//      return
-//    }
-//
-//    guard let root = self.fileItemService.fileItemWithChildren(for: self.cwd) else {
-//      self.expandedItems.removeAll()
-//      return
-//    }
-//
-//    self.expandedItems.removeAll()
-//    root.children.forEach { self.restoreExpandedState(for: $0, states: expandedItems) }
-//  }
-}
-
 // MARK: - NSOutlineViewDataSource
 extension FileOutlineView {
 
@@ -201,37 +163,12 @@ extension FileOutlineView {
     if let item = notification.userInfo?["NSObject"] as? FileBrowserItem {
       item.isExpanded = true
     }
-
-    self.adjustFileViewWidth()
   }
 
   func outlineViewItemDidCollapse(_ notification: Notification) {
     if let item = notification.userInfo?["NSObject"] as? FileBrowserItem {
       item.isExpanded = false
     }
-
-    self.adjustFileViewWidth()
-  }
-
-  fileprivate func adjustFileViewWidth() {
-    let indentationPerLevel = self.indentationPerLevel
-    let attrs = [NSFontAttributeName: ImageAndTextTableCell.font]
-
-    let maxWidth = (0..<self.numberOfRows).reduce(CGFloat(0)) { (curMaxWidth, idx) in
-      guard let item = self.item(atRow: idx) as? FileItem else {
-        return curMaxWidth
-      }
-
-      let level = CGFloat(self.level(forRow: idx) + 1)
-      let indentation = level * indentationPerLevel
-      let width = (item.url.lastPathComponent as NSString).size(withAttributes: attrs).width + indentation
-
-      return max(curMaxWidth, width)
-    }
-
-    let column = self.outlineTableColumn!
-    column.minWidth = maxWidth + ImageAndTextTableCell.widthWithoutText
-    column.maxWidth = column.minWidth
   }
 }
 
