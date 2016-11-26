@@ -38,7 +38,6 @@ fileprivate class FileBrowserItem: Hashable, Comparable, CustomStringConvertible
 
   let fileItem: FileItem
   var children: [FileBrowserItem] = []
-  var isExpanded = false
 
   /**
     `fileItem` is copied. Children are _not_ populated.
@@ -251,6 +250,31 @@ extension FileOutlineView {
     return fileBrowserItem
   }
 
+  fileprivate func adjustColumnWidth() {
+    let column = self.outlineTableColumn!
+
+    let rows = (0..<self.numberOfRows).map {
+      (item: self.item(atRow: $0) as! FileBrowserItem?, level: self.level(forRow: $0))
+    }
+
+    let cellWidth = rows.concurrentChunkMap(20) {
+        guard let fileBrowserItem = $0.item else {
+          return 0
+        }
+
+        return ImageAndTextTableCell.width(with: fileBrowserItem.fileItem.url.lastPathComponent)
+          + (CGFloat($0.level + 2) * (self.indentationPerLevel + 2)) // + 2 just to have a buffer... -_-
+      }
+      .max() ?? column.width
+
+    guard column.minWidth != cellWidth else {
+      return
+    }
+
+    column.minWidth = cellWidth
+    column.maxWidth = cellWidth
+  }
+
   fileprivate func adjustColumnWidth(for items: [FileBrowserItem], outlineViewLevel level: Int) {
     let column = self.outlineTableColumn!
 
@@ -259,7 +283,7 @@ extension FileOutlineView {
         let result = ImageAndTextTableCell.width(with: $0.fileItem.url.lastPathComponent)
         return result
       }
-      .max() ?? column.maxWidth
+      .max() ?? column.width
 
     let width = cellWidth + (CGFloat(level + 2) * (self.indentationPerLevel + 2)) // + 2 just to have a buffer... -_-
 
@@ -294,16 +318,8 @@ extension FileOutlineView {
     return 20
   }
 
-  func outlineViewItemDidExpand(_ notification: Notification) {
-    if let item = notification.userInfo?["NSObject"] as? FileBrowserItem {
-      item.isExpanded = true
-    }
-  }
-
   func outlineViewItemDidCollapse(_ notification: Notification) {
-    if let item = notification.userInfo?["NSObject"] as? FileBrowserItem {
-      item.isExpanded = false
-    }
+    self.adjustColumnWidth()
   }
 }
 
