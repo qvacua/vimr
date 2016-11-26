@@ -18,14 +18,22 @@ enum FileOutlineViewAction {
   case setParentAsWorkingDirectory(fileItem: FileItem)
 }
 
-fileprivate class FileBrowserItem: Hashable {
+fileprivate class FileBrowserItem: Hashable, Comparable, CustomStringConvertible {
 
   static func ==(left: FileBrowserItem, right: FileBrowserItem) -> Bool {
     return left.fileItem == right.fileItem
   }
 
+  static func <(left: FileBrowserItem, right: FileBrowserItem) -> Bool {
+    return left.fileItem.url.lastPathComponent < right.fileItem.url.lastPathComponent
+  }
+
   var hashValue: Int {
     return self.fileItem.hashValue
+  }
+
+  var description: String {
+    return self.fileItem.url.path
   }
 
   let fileItem: FileItem
@@ -86,14 +94,46 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
   }
 
   func update(_ fileItem: FileItem) {
-    guard let fileBrowserItem = self.fileBrowserItem(with: fileItem.url) else {
+    let url = fileItem.url
+    Swift.print("updating \(url)")
+    guard let fileBrowserItem = self.fileBrowserItem(with: url) else {
       return
     }
 
-    Swift.print("\(fileItem.url) ->\n\(fileBrowserItem.fileItem)")
+    Swift.print("got \(fileBrowserItem) to update")
+//    self.update(fileBrowserItem)
+  }
+
+  fileprivate func update(_ fileBrowserItem: FileBrowserItem) {
+//    let url = fileBrowserItem.fileItem.url
+//
+//    let curChildren = fileBrowserItem.children.filter { !$0.fileItem.isHidden }
+//    let newChildren = (self.fileItemService.fileItemWithChildren(for: url)?.children ?? [])
+//        .map(FileBrowserItem.init)
+//        .filter { !$0.fileItem.isHidden }
+//
+//    Swift.print("\(fileBrowserItem.fileItem.url.lastPathComponent): \(curChildren.count) vs \(newChildren.count)")
+//
+//    let childrenToAdd = newChildren.filter { curChildren.contains($0) == false }
+//    let keptChildren = curChildren.filter { newChildren.contains($0) }
+//
+//    let resultChildren = childrenToAdd.add(keptChildren)
+//    fileBrowserItem.children = Array(resultChildren)
+//    Swift.print("new resulting children: \(resultChildren)")
+//
+//    let childrenToRecurse = keptChildren.filter{ self.isItemExpanded(self.fileBrowserItem(with: $0.fileItem.url)) }
+//    Swift.print("to recurse: \(childrenToRecurse)")
+//
+//    self.reloadItem(fileBrowserItem, reloadChildren: false)
+//
+//    childrenToRecurse.forEach(self.update)
   }
 
   fileprivate func fileBrowserItem(with url: URL) -> FileBrowserItem? {
+    if self.cwd == url {
+      return self.root
+    }
+
     guard self.cwd.isParent(of: url) else {
       return nil
     }
@@ -115,6 +155,10 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
 // MARK: - NSOutlineViewDataSource
 extension FileOutlineView {
 
+  fileprivate func prepare(_ children: [FileBrowserItem]) -> [FileBrowserItem] {
+    return children.filter { !$0.fileItem.isHidden }.sorted()
+  }
+
   func outlineView(_: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
     if item == nil {
       let rootFileItem = fileItemService.fileItemWithChildren(for: self.cwd)
@@ -122,7 +166,7 @@ extension FileOutlineView {
       self.root = FileBrowserItem(fileItem: rootFileItem)
       self.root.children = rootFileItem.children.map(FileBrowserItem.init)
 
-      return self.root.children.filter { !$0.fileItem.isHidden }.count
+      return self.prepare(self.root.children).count
     }
 
     guard let fileBrowserItem = item as? FileBrowserItem else {
@@ -132,8 +176,9 @@ extension FileOutlineView {
     let fileItem = fileBrowserItem.fileItem
     if fileItem.isDir {
       let fileItemChildren = self.fileItemService.fileItemWithChildren(for: fileItem.url)?.children ?? []
+      fileBrowserItem.fileItem.children = fileItemChildren
       fileBrowserItem.children = fileItemChildren.map(FileBrowserItem.init)
-      return fileBrowserItem.children.filter { !$0.fileItem.isHidden }.count
+      return self.prepare(fileBrowserItem.children).count
     }
 
     return 0
@@ -144,7 +189,7 @@ extension FileOutlineView {
 
     if item == nil {
       self.adjustColumnWidth(for: self.root.children, outlineViewLevel: level)
-      return self.root.children.filter({ !$0.fileItem.isHidden })[index]
+      return self.prepare(self.root.children)[index]
     }
 
     guard let fileBrowserItem = item as? FileBrowserItem else {
@@ -152,10 +197,10 @@ extension FileOutlineView {
     }
 
     self.adjustColumnWidth(for: fileBrowserItem.children, outlineViewLevel: level)
-    return fileBrowserItem.children.filter({ !$0.fileItem.isHidden })[index]
+    return self.prepare(fileBrowserItem.children)[index]
   }
 
-  func outlineView(_: NSOutlineView, isItemExpandable item: Any) ->  Bool {
+  func outlineView(_: NSOutlineView, isItemExpandable item: Any) -> Bool {
     guard let fileBrowserItem = item as? FileBrowserItem else {
       return false
     }
@@ -163,7 +208,7 @@ extension FileOutlineView {
     return fileBrowserItem.fileItem.isDir
   }
 
-  @objc(outlineView:objectValueForTableColumn:byItem:)
+  @objc(outlineView: objectValueForTableColumn:byItem:)
   func outlineView(_: NSOutlineView, objectValueFor: NSTableColumn?, byItem item: Any?) -> Any? {
     guard let fileBrowserItem = item as? FileBrowserItem else {
       return nil
@@ -196,7 +241,7 @@ extension FileOutlineView {
 // MARK: - NSOutlineViewDelegate
 extension FileOutlineView {
 
-  @objc(outlineView:viewForTableColumn:item:)
+  @objc(outlineView: viewForTableColumn:item:)
   func outlineView(_: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
     guard let fileBrowserItem = item as? FileBrowserItem else {
       return nil
