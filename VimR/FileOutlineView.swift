@@ -95,38 +95,51 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
 
   func update(_ fileItem: FileItem) {
     let url = fileItem.url
-    Swift.print("updating \(url)")
+
     guard let fileBrowserItem = self.fileBrowserItem(with: url) else {
       return
     }
 
     Swift.print("got \(fileBrowserItem) to update")
-//    self.update(fileBrowserItem)
+    self.update(fileBrowserItem)
   }
 
   fileprivate func update(_ fileBrowserItem: FileBrowserItem) {
-//    let url = fileBrowserItem.fileItem.url
-//
-//    let curChildren = fileBrowserItem.children.filter { !$0.fileItem.isHidden }
-//    let newChildren = (self.fileItemService.fileItemWithChildren(for: url)?.children ?? [])
-//        .map(FileBrowserItem.init)
-//        .filter { !$0.fileItem.isHidden }
-//
-//    Swift.print("\(fileBrowserItem.fileItem.url.lastPathComponent): \(curChildren.count) vs \(newChildren.count)")
-//
+    let url = fileBrowserItem.fileItem.url
+
+    // Sort the arrays to keep the order.
+    let curChildren = fileBrowserItem.children.sorted()
+    let newChildren = (self.fileItemService.fileItemWithChildren(for: url)?.children ?? [])
+        .map(FileBrowserItem.init)
+        .sorted()
+
+    let curPreparedChildren = self.prepare(curChildren)
+    let newPreparedChildren = self.prepare(newChildren)
+
+    // Handle removals.
+    let childrenToRemoveIndices = curPreparedChildren
+        .enumerated()
+        .filter { newPreparedChildren.contains($0.1) == false }
+        .map { $0.0 }
+    self.removeItems(at: IndexSet(childrenToRemoveIndices), inParent: fileBrowserItem)
+    fileBrowserItem.children = curChildren.filter { newChildren.contains($0) }
+
+    // Handle additions.
+
+    // Handle children.
+    let keptChildren = curChildren.filter { newChildren.contains($0) }
+
 //    let childrenToAdd = newChildren.filter { curChildren.contains($0) == false }
-//    let keptChildren = curChildren.filter { newChildren.contains($0) }
-//
 //    let resultChildren = childrenToAdd.add(keptChildren)
 //    fileBrowserItem.children = Array(resultChildren)
 //    Swift.print("new resulting children: \(resultChildren)")
-//
-//    let childrenToRecurse = keptChildren.filter{ self.isItemExpanded(self.fileBrowserItem(with: $0.fileItem.url)) }
-//    Swift.print("to recurse: \(childrenToRecurse)")
-//
+
+    let childrenToRecurse = keptChildren.filter { self.isItemExpanded(self.fileBrowserItem(with: $0.fileItem.url)) }
+    Swift.print("to recurse: \(childrenToRecurse)")
+
 //    self.reloadItem(fileBrowserItem, reloadChildren: false)
-//
-//    childrenToRecurse.forEach(self.update)
+
+    childrenToRecurse.forEach(self.update)
   }
 
   fileprivate func fileBrowserItem(with url: URL) -> FileBrowserItem? {
