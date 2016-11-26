@@ -4,6 +4,7 @@
 * GH-347: Do not become unresponsive when you `wq` the last tab or buffer.
 * GH-297: Add a buffer list tool.
 * GH-296: Drag & drop tools, currently the file browser and the buffer list, to any side of the window! 😀
+* GH-351: Improve file browser updating. It also became better at keeping the expanded states of folders.
 * Make `Cmd-V` a bit better
 
 # 0.10.2-127
