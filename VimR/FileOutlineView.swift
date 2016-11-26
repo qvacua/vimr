@@ -104,30 +104,43 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
     self.update(fileBrowserItem)
   }
 
-  fileprivate func update(_ fileBrowserItem: FileBrowserItem) {
-    let url = fileBrowserItem.fileItem.url
-
-    // Sort the arrays to keep the order.
+  fileprivate func handleRemovals(for fileBrowserItem: FileBrowserItem, new newChildren: [FileBrowserItem]) {
     let curChildren = fileBrowserItem.children.sorted()
-    let newChildren = (self.fileItemService.fileItemWithChildren(for: url)?.children ?? [])
-        .map(FileBrowserItem.init)
-        .sorted()
 
     let curPreparedChildren = self.prepare(curChildren)
     let newPreparedChildren = self.prepare(newChildren)
 
-    // Handle removals.
     let childrenToRemoveIndices = curPreparedChildren
         .enumerated()
         .filter { newPreparedChildren.contains($0.1) == false }
         .map { $0.0 }
-    self.removeItems(at: IndexSet(childrenToRemoveIndices), inParent: fileBrowserItem)
+
     fileBrowserItem.children = curChildren.filter { newChildren.contains($0) }
 
-    // Handle additions.
+    let parent = fileBrowserItem == self.root ? nil : fileBrowserItem
+    self.removeItems(at: IndexSet(childrenToRemoveIndices), inParent: parent)
+  }
 
-    // Handle children.
-    let keptChildren = curChildren.filter { newChildren.contains($0) }
+  fileprivate func handleAdditions(for fileBrowserItem: FileBrowserItem, new newChildren: [FileBrowserItem]) {
+    let curChildren = fileBrowserItem.children.sorted()
+
+    let curPreparedChildren = self.prepare(curChildren)
+    let newPreparedChildren = self.prepare(newChildren)
+
+
+
+
+
+
+  }
+
+  fileprivate func handleChildren(for fileBrowserItem: FileBrowserItem, new newChildren: [FileBrowserItem]) {
+    let curChildren = fileBrowserItem.children.sorted()
+
+    let curPreparedChildren = self.prepare(curChildren)
+    let newPreparedChildren = self.prepare(newChildren)
+
+    let keptChildren = curPreparedChildren.filter { newPreparedChildren.contains($0) }
 
 //    let childrenToAdd = newChildren.filter { curChildren.contains($0) == false }
 //    let resultChildren = childrenToAdd.add(keptChildren)
@@ -139,7 +152,20 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
 
 //    self.reloadItem(fileBrowserItem, reloadChildren: false)
 
-    childrenToRecurse.forEach(self.update)
+//    childrenToRecurse.forEach(self.update)
+  }
+
+  fileprivate func update(_ fileBrowserItem: FileBrowserItem) {
+    let url = fileBrowserItem.fileItem.url
+
+    // Sort the array to keep the order.
+    let newChildren = (self.fileItemService.fileItemWithChildren(for: url)?.children ?? [])
+        .map(FileBrowserItem.init)
+        .sorted()
+
+    self.handleRemovals(for: fileBrowserItem, new: newChildren)
+    self.handleAdditions(for: fileBrowserItem, new: newChildren)
+    self.handleChildren(for: fileBrowserItem, new: newChildren)
   }
 
   fileprivate func fileBrowserItem(with url: URL) -> FileBrowserItem? {
