@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.11.0-SNAPSHOT-20161124.2022-135</title>
+      <title>v0.11.0-SNAPSHOT-20161126.2239-136</title>
       <description><![CDATA[
     <ul>
-<li>GH-297: Add path info to the buffer list.</li>
+<li>GH-351: Improve file browser updating. It also became better at keeping the expanded states of folders.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161124.2022-135
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161126.2239-136
       </releaseNotesLink>
-      <pubDate>2016-11-24T20:30:26.705476</pubDate>
+      <pubDate>2016-11-26T22:47:36.663342</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161124.2022-135/VimR-v0.11.0-SNAPSHOT-20161124.2022-135.tar.bz2"
-                 sparkle:version="135"
-                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161124.2022"
-                 sparkle:dsaSignature="MCwCFDqvjDz0NAmFirWxOEuRJDP/ztltAhQ3Gn9iAqVj/vb0QbEQZ0Ub7lExEQ=="
-                 length="9109722"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161126.2239-136/VimR-v0.11.0-SNAPSHOT-20161126.2239-136.tar.bz2"
+                 sparkle:version="136"
+                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161126.2239"
+                 sparkle:dsaSignature="MC4CFQDoFJ0G9fvBIWP+837ciIAX7pCFtgIVAORBjU8IBmrowHF/iM0O11nMJtp2"
+                 length="9088977"
                  type="application/octet-stream"/>
     </item>
   </channel>
