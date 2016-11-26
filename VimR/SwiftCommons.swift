@@ -32,7 +32,8 @@ extension Array {
   func concurrentChunkMap<R>(
       _ chunk: Int = 100,
       queue: DispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated),
-      transform: (Element) -> R) -> [R] {
+      transform: (Element) -> R) -> [R]
+  {
     let count = self.count
 
     let chunkedCount = Int(ceil(Float(count) / Float(chunk)))

@@ -60,6 +60,8 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
 
   fileprivate let fileItemService: FileItemService
 
+  fileprivate let cellWidthCache = NSCache<NSString, NSNumber>()
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -255,17 +257,23 @@ extension FileOutlineView {
   }
 
   fileprivate func adjustColumnWidth(for items: [FileBrowserItem], outlineViewLevel level: Int) {
-    let cellWidth = items.reduce(CGFloat(0)) { (curMaxWidth, item) in
-      let itemWidth = ImageAndTextTableCell.width(with: item.fileItem.url.lastPathComponent)
-      if itemWidth > curMaxWidth {
-        return itemWidth
+    let column = self.outlineTableColumn!
+
+    let cellWidth = items.concurrentChunkMap(20) {
+      let name = $0.fileItem.url.lastPathComponent
+
+      guard let cached = self.cellWidthCache.object(forKey: name as NSString) else {
+        let result = ImageAndTextTableCell.width(with: name)
+        self.cellWidthCache.setObject(NSNumber(value: Float(result)), forKey: name as NSString)
+        return result
       }
 
-      return curMaxWidth
+      return CGFloat(cached.floatValue)
     }
+    .max() ?? column.maxWidth
 
     let width = cellWidth + (CGFloat(level + 2) * (self.indentationPerLevel + 2)) // + 2 just to have a buffer... -_-
-    let column = self.outlineTableColumn!
+
     guard column.minWidth < width else {
       return
     }
