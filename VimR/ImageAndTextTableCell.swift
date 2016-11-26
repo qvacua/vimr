@@ -14,16 +14,28 @@ class ImageAndTextTableCell: NSTableCellView {
   fileprivate let _textField = NSTextField(forAutoLayout: ())
   fileprivate let _imageView = NSImageView(forAutoLayout: ())
 
+  static func width(with text: String) -> CGFloat {
+    let attrStr = NSAttributedString(string: text,
+                                     attributes: [NSFontAttributeName: ImageAndTextTableCell.font])
+
+    return self.widthWithoutText + attrStr.size().width
+  }
+
+  override var intrinsicContentSize: CGSize {
+    return CGSize(width: ImageAndTextTableCell.widthWithoutText + self._textField.intrinsicContentSize.width,
+                  height: max(self._textField.intrinsicContentSize.height, 16))
+  }
+
   var attributedText: NSAttributedString {
     get {
       return self.textField!.attributedStringValue
     }
-    
+
     set {
       self.textField?.attributedStringValue = newValue
     }
   }
-  
+
   var text: String {
     get {
       return self.textField!.stringValue
@@ -46,7 +58,7 @@ class ImageAndTextTableCell: NSTableCellView {
 
   init(withIdentifier identifier: String) {
     super.init(frame: CGRect.zero)
-    
+
     self.identifier = identifier
 
     self.textField = self._textField
@@ -70,13 +82,13 @@ class ImageAndTextTableCell: NSTableCellView {
     imageView.autoPinEdge(toSuperviewEdge: .left, withInset: 2)
     imageView.autoSetDimension(.width, toSize: 16)
     imageView.autoSetDimension(.height, toSize: 16)
-    
+
     textField.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
     textField.autoPinEdge(toSuperviewEdge: .right, withInset: 2)
     textField.autoPinEdge(toSuperviewEdge: .bottom, withInset: 2)
     textField.autoPinEdge(.left, to: .right, of: imageView, withOffset: 4)
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }

@@ -12,10 +12,16 @@ class Token: Equatable {
   }
 }
 
-class FileItem : CustomStringConvertible, Hashable {
+class FileItem : CustomStringConvertible, Hashable, Comparable, Copyable {
+
+  typealias InstanceType = FileItem
 
   static func ==(left: FileItem, right: FileItem) -> Bool {
     return left.url == right.url
+  }
+
+  static func <(left: FileItem, right: FileItem) -> Bool {
+    return left.url.lastPathComponent < right.url.lastPathComponent
   }
 
   let url: URL
@@ -50,7 +56,48 @@ class FileItem : CustomStringConvertible, Hashable {
     self.isPackage = url.isPackage
   }
 
-  func removeChild(withUrl url: URL) {
+  fileprivate init(url: URL, dir: Bool, hidden: Bool, package: Bool) {
+    self.url = url
+    self.isDir = dir
+    self.isHidden = hidden
+    self.isPackage = package
+  }
+
+  func copy() -> FileItem {
+    let item = FileItem(url: self.url, dir: self.isDir, hidden: self.isHidden, package: self.isPackage)
+    item.needsScanChildren = self.needsScanChildren
+    item.childrenScanned = self.childrenScanned
+    item.children = self.children
+
+    return item
+  }
+
+  func child(with url: URL) -> FileItem? {
+    guard let idx = self.children.index(where: { $0.url == url }) else {
+      return nil
+    }
+
+    return self.children[idx]
+  }
+
+  func deepChild(with url: URL) -> FileItem? {
+    let pathComps = self.url.pathComponents
+    let childPathComps = url.pathComponents
+
+    guard childPathComps.count > pathComps.count else {
+      return nil
+    }
+
+    return childPathComps[pathComps.count..<childPathComps.count].reduce(self) { (result, pathComp) -> FileItem? in
+      guard let parent = result else {
+        return nil
+      }
+
+      return parent.child(with: parent.url.appendingPathComponent(pathComp))
+    }
+  }
+
+  func remove(childWith url: URL) {
     guard let idx = self.children.index(where: { $0.url == url }) else {
       return
     }
