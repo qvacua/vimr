@@ -12,12 +12,16 @@ class Token: Equatable {
   }
 }
 
-class FileItem : CustomStringConvertible, Hashable, Copyable {
+class FileItem : CustomStringConvertible, Hashable, Comparable, Copyable {
 
   typealias InstanceType = FileItem
 
   static func ==(left: FileItem, right: FileItem) -> Bool {
     return left.url == right.url
+  }
+
+  static func <(left: FileItem, right: FileItem) -> Bool {
+    return left.url.lastPathComponent < right.url.lastPathComponent
   }
 
   let url: URL

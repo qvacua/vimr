@@ -217,6 +217,19 @@ class FileItemService: StandardFlow {
     return fileItem
   }
 
+  func sortedChildren(for url: URL) -> [FileItem] {
+    guard let fileItem = self.fileItem(for: url) else {
+      return []
+    }
+
+    if !fileItem.childrenScanned || fileItem.needsScanChildren {
+      self.scanChildren(fileItem, sorted: true)
+      return fileItem.children
+    }
+
+    return fileItem.children.sorted()
+  }
+
   // FIXME: what if root?
   fileprivate func parentFileItem(of url: URL) -> FileItem {
     return self.fileItem(for: Array(url.pathComponents.dropLast()))!
@@ -226,7 +239,7 @@ class FileItemService: StandardFlow {
   /// instantiates the intermediate `FileItem`s. The children of the result may be empty.
   ///
   /// - returns: `FileItem` corresponding to `pathComponents`. `nil` if the file does not exist.
-  fileprivate func fileItem(for url: URL) -> FileItem? {
+  func fileItem(for url: URL) -> FileItem? {
     let pathComponents = url.pathComponents
     return self.fileItem(for: pathComponents)
   }
@@ -275,9 +288,15 @@ class FileItemService: StandardFlow {
     return filteredChildren.first
   }
 
-  fileprivate func scanChildren(_ item: FileItem) {
+  fileprivate func scanChildren(_ item: FileItem, sorted: Bool = false) {
     let children = FileUtils.directDescendants(of: item.url).map(FileItem.init)
-    self.syncAddChildren { item.children = children }
+    self.syncAddChildren {
+      if sorted {
+        item.children = children.sorted()
+      } else {
+        item.children = children
+      }
+    }
 
     item.childrenScanned = true
     item.needsScanChildren = false

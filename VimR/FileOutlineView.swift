@@ -60,8 +60,6 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
 
   fileprivate let fileItemService: FileItemService
 
-  fileprivate let cellWidthCache = NSCache<NSString, NSNumber>()
-
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -77,8 +75,7 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
     self.flow = EmbeddableComponent(source: source)
     self.fileItemService = fileItemService
 
-    let rootFileItem = fileItemService.fileItemWithChildren(for: self.cwd)
-        ?? fileItemService.fileItemWithChildren(for: FileUtils.userHomeUrl)!
+    let rootFileItem = fileItemService.fileItem(for: self.cwd) ?? fileItemService.fileItem(for: FileUtils.userHomeUrl)!
     self.root = FileBrowserItem(fileItem: rootFileItem)
 
     super.init(frame: CGRect.zero)
@@ -108,7 +105,7 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
   }
 
   fileprivate func handleRemovals(for fileBrowserItem: FileBrowserItem, new newChildren: [FileBrowserItem]) {
-    let curChildren = fileBrowserItem.children.sorted()
+    let curChildren = fileBrowserItem.children
 
     let curPreparedChildren = self.prepare(curChildren)
     let newPreparedChildren = self.prepare(newChildren)
@@ -125,7 +122,7 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
   }
 
   fileprivate func handleAdditions(for fileBrowserItem: FileBrowserItem, new newChildren: [FileBrowserItem]) {
-    let curChildren = fileBrowserItem.children.sorted()
+    let curChildren = fileBrowserItem.children
 
     // We don't just take newChildren because NSOutlineView look at the pointer equality for preserving the expanded
     // states...
@@ -144,7 +141,7 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
   }
 
   fileprivate func handleChildren(for fileBrowserItem: FileBrowserItem, new newChildren: [FileBrowserItem]) {
-    let curChildren = fileBrowserItem.children.sorted()
+    let curChildren = fileBrowserItem.children
 
     let curPreparedChildren = self.prepare(curChildren)
     let newPreparedChildren = self.prepare(newChildren)
@@ -159,9 +156,7 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
     let url = fileBrowserItem.fileItem.url
 
     // Sort the array to keep the order.
-    let newChildren = (self.fileItemService.fileItemWithChildren(for: url)?.children ?? [])
-        .map(FileBrowserItem.init)
-        .sorted()
+    let newChildren = self.fileItemService.sortedChildren(for: url).map(FileBrowserItem.init)
 
     self.handleRemovals(for: fileBrowserItem, new: newChildren)
     self.handleAdditions(for: fileBrowserItem, new: newChildren)
@@ -195,15 +190,15 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
 extension FileOutlineView {
 
   fileprivate func prepare(_ children: [FileBrowserItem]) -> [FileBrowserItem] {
-    return children.filter { !$0.fileItem.isHidden }.sorted()
+    return children.filter { !$0.fileItem.isHidden }
   }
 
   func outlineView(_: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
     if item == nil {
-      let rootFileItem = fileItemService.fileItemWithChildren(for: self.cwd)
-          ?? fileItemService.fileItemWithChildren(for: FileUtils.userHomeUrl)!
+      let rootFileItem = fileItemService.fileItem(for: self.cwd)
+        ?? fileItemService.fileItem(for: FileUtils.userHomeUrl)!
       self.root = FileBrowserItem(fileItem: rootFileItem)
-      self.root.children = rootFileItem.children.map(FileBrowserItem.init)
+      self.root.children = fileItemService.sortedChildren(for: self.cwd).map(FileBrowserItem.init)
 
       return self.prepare(self.root.children).count
     }
@@ -214,7 +209,7 @@ extension FileOutlineView {
 
     let fileItem = fileBrowserItem.fileItem
     if fileItem.isDir {
-      let fileItemChildren = self.fileItemService.fileItemWithChildren(for: fileItem.url)?.children ?? []
+      let fileItemChildren = self.fileItemService.sortedChildren(for: fileItem.url)
       fileBrowserItem.fileItem.children = fileItemChildren
       fileBrowserItem.children = fileItemChildren.map(FileBrowserItem.init)
       return self.prepare(fileBrowserItem.children).count
@@ -259,18 +254,12 @@ extension FileOutlineView {
   fileprivate func adjustColumnWidth(for items: [FileBrowserItem], outlineViewLevel level: Int) {
     let column = self.outlineTableColumn!
 
+    // It seems like that caching the widths is slower due to thread-safeness of NSCache...
     let cellWidth = items.concurrentChunkMap(20) {
-      let name = $0.fileItem.url.lastPathComponent
-
-      guard let cached = self.cellWidthCache.object(forKey: name as NSString) else {
-        let result = ImageAndTextTableCell.width(with: name)
-        self.cellWidthCache.setObject(NSNumber(value: Float(result)), forKey: name as NSString)
+        let result = ImageAndTextTableCell.width(with: $0.fileItem.url.lastPathComponent)
         return result
       }
-
-      return CGFloat(cached.floatValue)
-    }
-    .max() ?? column.maxWidth
+      .max() ?? column.maxWidth
 
     let width = cellWidth + (CGFloat(level + 2) * (self.indentationPerLevel + 2)) // + 2 just to have a buffer... -_-
 
