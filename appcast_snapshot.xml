@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.11.0-SNAPSHOT-20161126.2239-136</title>
+      <title>v0.11.0-SNAPSHOT-20161127.1106-137</title>
       <description><![CDATA[
     <ul>
-<li>GH-351: Improve file browser updating. It also became better at keeping the expanded states of folders.</li>
+<li>Make the color of the file name white when selected in the buffer list</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161126.2239-136
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161127.1106-137
       </releaseNotesLink>
-      <pubDate>2016-11-26T22:47:36.663342</pubDate>
+      <pubDate>2016-11-27T11:14:47.299900</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161126.2239-136/VimR-v0.11.0-SNAPSHOT-20161126.2239-136.tar.bz2"
-                 sparkle:version="136"
-                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161126.2239"
-                 sparkle:dsaSignature="MC4CFQDoFJ0G9fvBIWP+837ciIAX7pCFtgIVAORBjU8IBmrowHF/iM0O11nMJtp2"
-                 length="9088977"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161127.1106-137/VimR-v0.11.0-SNAPSHOT-20161127.1106-137.tar.bz2"
+                 sparkle:version="137"
+                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161127.1106"
+                 sparkle:dsaSignature="MC0CFBePybBNyYBbx1Tr/RYImmqvWCeHAhUAuP8zBSWAkk9TfWr++RMgY3rB6wY="
+                 length="9094760"
                  type="application/octet-stream"/>
     </item>
   </channel>
