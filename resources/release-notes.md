@@ -6,6 +6,7 @@
 * GH-296: Drag & drop tools, currently the file browser and the buffer list, to any side of the window! 😀
 * GH-351: Improve file browser updating. It also became better at keeping the expanded states of folders.
 * Make `Cmd-V` a bit better
+* neovim/neovim@42033bc5bd4bd0f06b33391e12672900bc21b993
 
 # 0.10.2-127
 
