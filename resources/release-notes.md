@@ -42,7 +42,7 @@
 
 ## First release of VimR with NeoVim backend
 
-* NeoVim rulez! ?? (neovim/neovim@5bcb7aa8bf75966416f2df5a838e5cb71d439ae7)
+* NeoVim rulez! 😆 (neovim/neovim@5bcb7aa8bf75966416f2df5a838e5cb71d439ae7)
 * Pinch to zoom in or out
 * Simple file browser
 * Open quickly a la Xcode
