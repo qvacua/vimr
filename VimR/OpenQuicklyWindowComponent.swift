@@ -27,13 +27,13 @@ class OpenQuicklyWindowComponent: WindowComponent,
   fileprivate(set) var fileViewItems = [ScoredFileItem]()
 
   fileprivate let userInitiatedScheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
-  
+
   fileprivate let searchField = NSTextField(forAutoLayout: ())
   fileprivate let progressIndicator = NSProgressIndicator(forAutoLayout: ())
   fileprivate let cwdControl = NSPathControl(forAutoLayout: ())
   fileprivate let countField = NSTextField(forAutoLayout: ())
   fileprivate let fileView = NSTableView.standardTableView()
-  
+
   fileprivate let fileItemService: FileItemService
 
   fileprivate var count = 0
@@ -42,7 +42,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
   fileprivate var cwdPathCompsCount = 0
   fileprivate let searchStream: Observable<String>
   fileprivate let filterOpQueue = OperationQueue()
-  
+
   weak fileprivate var mainWindow: MainWindowComponent?
 
   init(source: Observable<Any>, fileItemService: FileItemService) {
@@ -72,7 +72,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
     fileView.intercellSpacing = CGSize(width: 4, height: 4)
     fileView.dataSource = self
     fileView.delegate = self
-    
+
     let fileScrollView = NSScrollView.standardScrollView()
     fileScrollView.autoresizesSubviews = true
     fileScrollView.documentView = fileView
@@ -136,7 +136,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
   func endProgress() {
     self.progressIndicator.stopAnimation(self)
   }
-  
+
   func show(forMainWindow mainWindow: MainWindowComponent) {
     self.mainWindow = mainWindow
     self.mainWindow?.sink
@@ -148,13 +148,13 @@ class OpenQuicklyWindowComponent: WindowComponent,
         case .close:
           self.window.performClose(self)
           return
-          
+
         default:
           return
         }
       })
       .addDisposableTo(self.perSessionDisposeBag)
-    
+
     self.cwd = mainWindow.cwd
     let flatFiles = self.fileItemService.flatFileItems(ofUrl: self.cwd)
 
@@ -213,13 +213,13 @@ extension OpenQuicklyWindowComponent {
 
   @objc(tableView:viewForTableColumn:row:)
   func tableView(_ tableView: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
-    let cachedCell = tableView.make(withIdentifier: "file-view-row", owner: self)
-    let cell = cachedCell as? ImageAndTextTableCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
+    let cachedCell = (tableView.make(withIdentifier: "file-view-row", owner: self) as? ImageAndTextTableCell)?.reset()
+    let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
     let url = self.fileViewItems[row].url
     cell.attributedText = self.rowText(for: url as URL)
     cell.image = self.fileItemService.icon(forUrl: url)
-    
+
     return cell
   }
 
@@ -242,7 +242,7 @@ extension OpenQuicklyWindowComponent {
     rowText.addAttribute(NSForegroundColorAttributeName,
                          value: NSColor.lightGray,
                          range: NSRange(location:name.characters.count, length: pathInfo.characters.count + 3))
-    
+
     return rowText
   }
 }
@@ -256,20 +256,20 @@ extension OpenQuicklyWindowComponent {
     case NSSelectorFromString("cancelOperation:"):
       self.window.performClose(self)
       return true
-      
+
     case NSSelectorFromString("insertNewline:"):
       self.mainWindow?.open(urls: [self.fileViewItems[self.fileView.selectedRow].url])
       self.window.performClose(self)
       return true
-      
+
     case NSSelectorFromString("moveUp:"):
       self.moveSelection(ofTableView: self.fileView, byDelta: -1)
       return true
-      
+
     case NSSelectorFromString("moveDown:"):
       self.moveSelection(ofTableView: self.fileView, byDelta: 1)
       return true
-      
+
     default:
       return false
     }
@@ -298,9 +298,9 @@ extension OpenQuicklyWindowComponent {
 
   func windowWillClose(_ notification: Notification) {
     self.endProgress()
-    
+
     self.mainWindow = nil
-    
+
     self.filterOpQueue.cancelAllOperations()
 
     self.perSessionDisposeBag = DisposeBag()
@@ -311,7 +311,7 @@ extension OpenQuicklyWindowComponent {
     self.flatFileItems = []
     self.fileViewItems = []
     self.fileView.reloadData()
-    
+
     self.searchField.stringValue = ""
     self.countField.stringValue = "0 items"
   }

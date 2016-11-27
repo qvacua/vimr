@@ -305,8 +305,8 @@ extension FileOutlineView {
       return nil
     }
 
-    let cachedCell = self.make(withIdentifier: "file-view-row", owner: self)
-    let cell = cachedCell as? ImageAndTextTableCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
+    let cachedCell = (self.make(withIdentifier: "file-view-row", owner: self) as? ImageAndTextTableCell)?.reset()
+    let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
     cell.text = fileBrowserItem.fileItem.url.lastPathComponent
     cell.image = self.fileItemService.icon(forUrl: fileBrowserItem.fileItem.url)

@@ -101,8 +101,8 @@ extension BufferListComponent {
 
   @objc(tableView:viewForTableColumn:row:)
   func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-    let cachedCell = tableView.make(withIdentifier: "buffer-list-row", owner: self)
-    let cell = cachedCell as? ImageAndTextTableCell ?? ImageAndTextTableCell(withIdentifier: "buffer-list-row")
+    let cachedCell = (tableView.make(withIdentifier: "buffer-list-row", owner: self) as? ImageAndTextTableCell)?.reset()
+    let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "buffer-list-row")
 
     let buffer = self.buffers[row]
     cell.attributedText = self.text(for: buffer)
