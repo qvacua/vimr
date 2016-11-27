@@ -44,6 +44,8 @@
 		4B2A2BFF1D0351810074CE9A /* SwiftNeoVim.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B2A2C091D0352CB0074CE9A /* NeoVimUiBridgeProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B2A2C061D0352CB0074CE9A /* NeoVimUiBridgeProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B37ADB91D6E471B00970D55 /* vimr in Resources */ = {isa = PBXBuildFile; fileRef = 4B37ADB81D6E471B00970D55 /* vimr */; };
+		4B3965361DEB21300082D3C1 /* InnterToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3965351DEB21300082D3C1 /* InnterToolBar.swift */; };
+		4B3965371DEB21300082D3C1 /* InnterToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3965351DEB21300082D3C1 /* InnterToolBar.swift */; };
 		4B3AC8941DB031C600AC5823 /* sparkle_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */; };
 		4B401B141D0454DC00D99EDC /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; };
 		4B401B161D0454E900D99EDC /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -297,6 +299,7 @@
 		4B2A2C0D1D0353750074CE9A /* Bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bridge.h; sourceTree = "<group>"; };
 		4B37ADB81D6E471B00970D55 /* vimr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = vimr; sourceTree = "<group>"; };
 		4B37ADBA1D6EC11600970D55 /* TestPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestPane.swift; sourceTree = "<group>"; };
+		4B3965351DEB21300082D3C1 /* InnterToolBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InnterToolBar.swift; path = Workspace/InnterToolBar.swift; sourceTree = "<group>"; };
 		4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sparkle_pub.pem; sourceTree = "<group>"; };
 		4B401B131D0454DC00D99EDC /* PureLayout.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureLayout.framework; path = Carthage/Build/Mac/PureLayout.framework; sourceTree = SOURCE_ROOT; };
 		4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimViewDelegate.swift; sourceTree = "<group>"; };
@@ -569,6 +572,7 @@
 				4B6423991D8EFE3000FC78C8 /* WorkspaceTool.swift */,
 				4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */,
 				4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */,
+				4B3965351DEB21300082D3C1 /* InnterToolBar.swift */,
 			);
 			name = Workspace;
 			sourceTree = "<group>";
@@ -1118,6 +1122,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B280EFF1D945DA5003FE725 /* AppKitCommons.swift in Sources */,
+				4B3965371DEB21300082D3C1 /* InnterToolBar.swift in Sources */,
 				4B6423AF1D8EFEA800FC78C8 /* Workspace.swift in Sources */,
 				4B6423B01D8EFEA800FC78C8 /* WorkspaceBar.swift in Sources */,
 				4BB489431D952CF6005BB0E8 /* WorkspaceToolButton.swift in Sources */,
@@ -1164,6 +1169,7 @@
 				4B705BA11DDF7639005F844B /* ToolPrefData.swift in Sources */,
 				4B6A70941D60E04200E12030 /* AppKitCommons.swift in Sources */,
 				4BD3BF971D32B0DB00082605 /* MainWindowManager.swift in Sources */,
+				4B3965361DEB21300082D3C1 /* InnterToolBar.swift in Sources */,
 				4B238BEC1D3ED54D00CBDD98 /* AppearancePrefPane.swift in Sources */,
 				4BD3BF931D32A95800082605 /* MainWindowComponent.swift in Sources */,
 				4B6423981D8EFDE000FC78C8 /* WorkspaceBar.swift in Sources */,
@@ -1707,6 +1713,7 @@
 				4B81B3D31DE8827600ED1672 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4B854A1E1D31447C00E08DE1 /* Build configuration list for PBXNativeTarget "NeoVimServer" */ = {
 			isa = XCConfigurationList;
