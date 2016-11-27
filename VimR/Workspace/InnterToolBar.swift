@@ -16,82 +16,133 @@ class InnerToolBar: NSView {
 
   static fileprivate let separatorColor = NSColor.controlShadowColor
   static fileprivate let separatorThickness = CGFloat(1)
-  static fileprivate let iconDimension = CGFloat(18)
+  static fileprivate let iconDimension = CGFloat(19)
+  static fileprivate let height = InnerToolBar.iconDimension + 2 + 2 + InnerToolBar.separatorThickness
+
+  static fileprivate let backgroundColor = NSColor(red: 0.899, green: 0.934, blue: 0.997, alpha: 1)
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
   fileprivate let closeButton = NSButton(forAutoLayout:())
-  fileprivate let cogButton = NSButton(forAutoLayout:())
+  fileprivate let cogButton = NSPopUpButton(forAutoLayout:())
+
+  // MARK: - API
+
+  var customMenu: NSMenu?
+  var tool: WorkspaceTool?
 
   override var intrinsicContentSize: CGSize {
     if #available(macOS 10.11, *) {
-      return CGSize(width: NSViewNoIntrinsicMetric, height: 24 + InnerToolBar.separatorThickness)
+      return CGSize(width: NSViewNoIntrinsicMetric, height: InnerToolBar.height)
     } else {
-      return CGSize(width: -1, height: 24)
+      return CGSize(width: -1, height: InnerToolBar.height)
     }
   }
 
   override init(frame: NSRect) {
     super.init(frame: frame)
 
+    self.cogButton.configureForAutoLayout()
+
     // Because other views also want layer, this view also must want layer. Otherwise the z-index ordering is not set
     // correctly: views w/ wantsLayer = false are behind views w/ wantsLayer = true even when added later.
     self.wantsLayer = true
-    self.layer?.backgroundColor = NSColor.yellow.cgColor
+    self.layer?.backgroundColor = InnerToolBar.backgroundColor.cgColor
 
     self.addViews()
   }
 
   override func draw(_ dirtyRect: NSRect) {
     InnerToolBar.separatorColor.set()
+    let bottomSeparatorRect = self.bottomSeparatorRect()
+    if dirtyRect.intersects(bottomSeparatorRect) {
+      NSRectFill(bottomSeparatorRect)
+    }
 
-    let separatorRect = self.bottomSeparatorRect()
-    if dirtyRect.intersects(separatorRect) {
-      NSRectFill(separatorRect)
+    let innerSeparatorRect = self.innerSeparatorRect()
+    if dirtyRect.intersects(innerSeparatorRect) {
+      NSRectFill(innerSeparatorRect)
     }
   }
 
   fileprivate func configureToStandardIconButton(button: NSButton, image: NSImage?) {
-    button.image = image
     button.imagePosition = .imageOnly
+    button.image = image
     button.isBordered = false
+
     // The following disables the square appearing when pushed.
-    (button.cell as? NSButtonCell)?.highlightsBy = .contentsCellMask
+    let cell = button.cell as? NSButtonCell
+    cell?.highlightsBy = .contentsCellMask
   }
 
   fileprivate func addViews() {
     let close = self.closeButton
     let cog = self.cogButton
 
-    self.configureToStandardIconButton(button: close,
-                                       image: NSImage.fontAwesomeIcon(code: "fa-times-circle",
-                                                                      textColor: .darkGray,
-                                                                      dimension: InnerToolBar.iconDimension))
+    let closeIcon = NSImage.fontAwesomeIcon(code: "fa-times-circle",
+                                            textColor: .darkGray,
+                                            dimension: InnerToolBar.iconDimension)
+    let cogIcon = NSImage.fontAwesomeIcon(name: .cog,
+                                          textColor: .darkGray,
+                                          dimension: InnerToolBar.iconDimension)
 
-    self.configureToStandardIconButton(button: cog,
-                                       image: NSImage.fontAwesomeIcon(name: .cog,
-                                                                      textColor: .darkGray,
-                                                                      dimension: InnerToolBar.iconDimension))
+    self.configureToStandardIconButton(button: close, image: closeIcon)
+
+    cog.imagePosition = .imageOnly
+    cog.pullsDown = true
+    cog.isBordered = false
+
+    let cogCell = cog.cell as? NSPopUpButtonCell
+    cogCell?.arrowPosition = .noArrow
+
+    let cogMenu = NSMenu()
+
+    let cogMenuItem = NSMenuItem(title: "Cog", action: nil, keyEquivalent: "")
+    cogMenuItem.image = cogIcon
+
+    let moveToMenu = NSMenu()
+    let topMenuItem = NSMenuItem(title: "Top", action: nil, keyEquivalent: "")
+    let rightMenuItem = NSMenuItem(title: "Right", action: nil, keyEquivalent: "")
+    let bottomMenuItem = NSMenuItem(title: "Bottom", action: nil, keyEquivalent: "")
+    let leftMenuItem = NSMenuItem(title: "Left", action: nil, keyEquivalent: "")
+    moveToMenu.addItem(leftMenuItem)
+    moveToMenu.addItem(rightMenuItem)
+    moveToMenu.addItem(bottomMenuItem)
+    moveToMenu.addItem(topMenuItem)
+
+    let moveToMenuItem = NSMenuItem(
+      title: "Move To",
+      action: nil,
+      keyEquivalent: ""
+    )
+    moveToMenuItem.submenu = moveToMenu
+
+    cogMenu.addItem(cogMenuItem)
+    cogMenu.addItem(moveToMenuItem)
+
+    cog.menu = cogMenu
 
     self.addSubview(close)
     self.addSubview(cog)
 
     close.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
     close.autoPinEdge(toSuperviewEdge: .right, withInset: 2)
-    close.autoSetDimension(.width, toSize: InnerToolBar.iconDimension)
-    close.autoSetDimension(.height, toSize: InnerToolBar.iconDimension)
 
-    cog.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
-    cog.autoPinEdge(.right, to: .left, of: close, withOffset: -2)
-    cog.autoSetDimension(.width, toSize: InnerToolBar.iconDimension)
-    cog.autoSetDimension(.height, toSize: InnerToolBar.iconDimension)
+    cog.autoPinEdge(.right, to: .left, of: close, withOffset: 5)
+    cog.autoPinEdge(toSuperviewEdge: .top, withInset: -1)
   }
 
   fileprivate func bottomSeparatorRect() -> CGRect {
     let bounds = self.bounds
     return CGRect(x: bounds.minX, y: bounds.minY, width: bounds.width, height: InnerToolBar.separatorThickness)
+  }
+
+  fileprivate func innerSeparatorRect() -> CGRect {
+    let cogBounds = self.cogButton.frame
+    let bounds = self.bounds
+    return CGRect(x: cogBounds.minX + 6, y: bounds.minY + 4, width: 1, height: bounds.height - 4 - 4)
   }
 }
 

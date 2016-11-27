@@ -43,8 +43,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     workspace.append(tool: WorkspaceTool(title: "Bottom-1", view: DummyToolView(NSColor.cyan)), location: .bottom)
     workspace.append(tool: WorkspaceTool(title: "Bottom-2", view: DummyToolView(NSColor.blue)), location: .bottom)
 
-    let left = workspace.bars[.left]!
-    left.toggle(tool)
+    tool.toggle()
   }
 }
 
@@ -72,6 +71,7 @@ class DummyToolView: NSView {
     dummyView.autoPinEdge(.top, to: .bottom, of: innerToolbar)
     dummyView.autoPinEdge(toSuperviewEdge: .right)
     dummyView.autoPinEdge(toSuperviewEdge: .left)
+    dummyView.autoPinEdge(toSuperviewEdge: .bottom)
   }
 }
 
