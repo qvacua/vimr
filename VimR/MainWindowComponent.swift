@@ -465,6 +465,12 @@ extension MainWindowComponent {
   func cwdChanged() {
     let old = self._cwd
     self._cwd = self.neoVimView.cwd
+
+    // FIXME: This can still happen...
+    if old == self._cwd {
+      return
+    }
+
     self.fileItemService.unmonitor(url: old)
     self.fileItemService.monitor(url: self._cwd)
 
