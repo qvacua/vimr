@@ -5,6 +5,7 @@
 
 import Cocoa
 import PureLayout
+import CocoaFontAwesome
 
 /**
  This class is the base class for inner toolbars for workspace tools. It's got two default buttons:
@@ -15,6 +16,7 @@ class InnerToolBar: NSView {
 
   static fileprivate let separatorColor = NSColor.controlShadowColor
   static fileprivate let separatorThickness = CGFloat(1)
+  static fileprivate let iconDimension = CGFloat(18)
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -51,31 +53,40 @@ class InnerToolBar: NSView {
     }
   }
 
+  fileprivate func configureToStandardIconButton(button: NSButton, image: NSImage?) {
+    button.image = image
+    button.imagePosition = .imageOnly
+    button.isBordered = false
+    // The following disables the square appearing when pushed.
+    (button.cell as? NSButtonCell)?.highlightsBy = .contentsCellMask
+  }
+
   fileprivate func addViews() {
     let close = self.closeButton
     let cog = self.cogButton
 
-    close.imagePosition = .imageOnly
-    close.isBordered = false
+    self.configureToStandardIconButton(button: close,
+                                       image: NSImage.fontAwesomeIcon(code: "fa-times-circle",
+                                                                      textColor: .darkGray,
+                                                                      dimension: InnerToolBar.iconDimension))
 
-    cog.imagePosition = .imageOnly
-    cog.isBordered = false
+    self.configureToStandardIconButton(button: cog,
+                                       image: NSImage.fontAwesomeIcon(name: .cog,
+                                                                      textColor: .darkGray,
+                                                                      dimension: InnerToolBar.iconDimension))
 
     self.addSubview(close)
     self.addSubview(cog)
 
     close.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
     close.autoPinEdge(toSuperviewEdge: .right, withInset: 2)
-    close.autoSetDimension(.width, toSize: 18)
-    close.autoSetDimension(.height, toSize: 18)
+    close.autoSetDimension(.width, toSize: InnerToolBar.iconDimension)
+    close.autoSetDimension(.height, toSize: InnerToolBar.iconDimension)
 
     cog.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
     cog.autoPinEdge(.right, to: .left, of: close, withOffset: -2)
-    cog.autoSetDimension(.width, toSize: 18)
-    cog.autoSetDimension(.height, toSize: 18)
-
-    close.image = NSImage(named: NSImageNameStopProgressTemplate)
-    cog.image = NSImage(named: NSImageNameActionTemplate)
+    cog.autoSetDimension(.width, toSize: InnerToolBar.iconDimension)
+    cog.autoSetDimension(.height, toSize: InnerToolBar.iconDimension)
   }
 
   fileprivate func bottomSeparatorRect() -> CGRect {

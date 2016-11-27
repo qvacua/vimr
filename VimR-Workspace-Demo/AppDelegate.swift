@@ -30,12 +30,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     workspace.autoPinEdgesToSuperviewEdges()
 
     workspace.append(tool: WorkspaceTool(title: "Top-1", view: DummyToolView(NSColor.yellow)), location: .top)
+
     workspace.append(tool: WorkspaceTool(title: "Right-1", view: DummyToolView(NSColor.magenta)), location: .right)
     workspace.append(tool: WorkspaceTool(title: "Right-2", view: DummyToolView(NSColor.black)), location: .right)
-    let tool = WorkspaceTool(title: "Left-1", view: DummyToolView(NSColor.green))
+
+    let tool = WorkspaceTool(title: "Left-1", view: DummyToolView(NSColor.green), minimumDimension: 200)
     workspace.append(tool: tool, location: .left)
+
     workspace.append(tool: WorkspaceTool(title: "Left-2", view: DummyToolView(NSColor.red)), location: .left)
     workspace.append(tool: WorkspaceTool(title: "Left-3", view: DummyToolView(NSColor.gray)), location: .left)
+
     workspace.append(tool: WorkspaceTool(title: "Bottom-1", view: DummyToolView(NSColor.cyan)), location: .bottom)
     workspace.append(tool: WorkspaceTool(title: "Bottom-2", view: DummyToolView(NSColor.blue)), location: .bottom)
 
