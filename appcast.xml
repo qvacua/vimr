@@ -7,31 +7,28 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.10.2-127</title>
+      <title>v0.11.0-138</title>
       <description><![CDATA[
     <ul>
-<li>GH-332: Turn on <code>paste</code> option before <code>Cmd-V</code>ing (and reset the value)</li>
-<li>GH-333: Set <code>$LANG</code> to <code>utf-8</code> such that non-ASCII characters are not garbled when copied to the system clipboard.<ul>
-<li>GH-337: With the first version of GH-333, strangely, on 10.12.X <code>init.vim</code> did not get read. GH-337 fixes this issue.</li>
-</ul>
-</li>
-<li>GH-334: <code>set</code> <code>title</code> and <code>termguicolors</code> by default such that airline works without changing <code>init.vim</code>.</li>
-<li>GH-276: Draw a different, i.e. thin, cursor in the insert mode.</li>
-<li>GH-299: Add a context menu to the file browser.</li>
-<li>GH-237: Increase mouse scrollwheel sensitivity.</li>
-<li>neovim/neovim@598f5af58b21747ea9d6dc0a7d846cb85ae52824</li>
+<li>GH-341: Do not become unresponsive when opening a file with existing swap file via the file browser. (This bug was introduced with GH-299)</li>
+<li>GH-347: Do not become unresponsive when you <code>wq</code> the last tab or buffer.</li>
+<li>GH-297: Add a buffer list tool.</li>
+<li>GH-296: Drag &amp; drop tools, currently the file browser and the buffer list, to any side of the window! 😀</li>
+<li>GH-351: Improve file browser updating. It also became better at keeping the expanded states of folders.</li>
+<li>Make <code>Cmd-V</code> a bit better</li>
+<li>neovim/neovim@42033bc5bd4bd0f06b33391e12672900bc21b993</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.10.2-127
+        https://github.com/qvacua/vimr/releases/tag/v0.11.0-138
       </releaseNotesLink>
-      <pubDate>2016-11-14T23:42:19.142910</pubDate>
+      <pubDate>2016-11-28T19:30:46.801729</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.10.2-127/VimR-v0.10.2-127.tar.bz2"
-                 sparkle:version="127"
-                 sparkle:shortVersionString="0.10.2"
-                 sparkle:dsaSignature="MC0CFQCll8J9mjwkBuTRXfUEWa/EC8583gIUT1eY52uanc3nNZNxa9uVCf90hAg="
-                 length="8924729"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.11.0-138/VimR-v0.11.0-138.tar.bz2"
+                 sparkle:version="138"
+                 sparkle:shortVersionString="0.11.0"
+                 sparkle:dsaSignature="MCwCFBI7Jb+ch6v9vUbZ/d64I2VKJw83AhQQE7h0uG22ytrHEbX8MrQI0FqTeQ=="
+                 length="9093520"
                  type="application/octet-stream"/>
     </item>
   </channel>
