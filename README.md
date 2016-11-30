@@ -67,6 +67,14 @@ We will gradually create [issues](https://github.com/qvacua/vimr/issues) with mo
 
 ## How to Build
 
+First after cloning the VimR source tree you need to initialize git submodules
+(right now the only one used is for neovim source tree):
+
+```bash
+git submodule init
+git submodule update
+```
+
 You have to use Xcode 8. First install `homebrew`, then in the project root:
 
 ```bash
