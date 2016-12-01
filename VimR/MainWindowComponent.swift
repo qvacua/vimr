@@ -280,16 +280,17 @@ class MainWindowComponent: WindowComponent,
       .filter { $0 is PrefData }
       .map { ($0 as! PrefData).appearance }
       .filter { [unowned self] appearanceData in
-        !appearanceData.editorFont.isEqual(to: self.neoVimView.font)
-          || appearanceData.editorUsesLigatures != self.neoVimView.usesLigatures
-          || appearanceData.editorLinespacing != self.neoVimView.linespacing
+        let curData = AppearancePrefData(editorFont: self.neoVimView.font,
+                                         editorLinespacing: self.neoVimView.linespacing,
+                                         editorUsesLigatures: self.neoVimView.usesLigatures)
+        return appearanceData != curData
       }
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] appearance in
         self.neoVimView.usesLigatures = appearance.editorUsesLigatures
         self.neoVimView.font = appearance.editorFont
         self.neoVimView.linespacing = appearance.editorLinespacing
-    })
+      })
   }
 }
 
