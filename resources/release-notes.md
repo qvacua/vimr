@@ -1,3 +1,7 @@
+# 0.11.1-140
+
+* GH-354: Bugfix: a file browser related bug.
+
 # 0.11.0-138
 
 * GH-341: Do not become unresponsive when opening a file with existing swap file via the file browser. (This bug was introduced with GH-299)
