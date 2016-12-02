@@ -7,28 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.11.0-138</title>
+      <title>v0.11.1-140</title>
       <description><![CDATA[
     <ul>
-<li>GH-341: Do not become unresponsive when opening a file with existing swap file via the file browser. (This bug was introduced with GH-299)</li>
-<li>GH-347: Do not become unresponsive when you <code>wq</code> the last tab or buffer.</li>
-<li>GH-297: Add a buffer list tool.</li>
-<li>GH-296: Drag &amp; drop tools, currently the file browser and the buffer list, to any side of the window! 😀</li>
-<li>GH-351: Improve file browser updating. It also became better at keeping the expanded states of folders.</li>
-<li>Make <code>Cmd-V</code> a bit better</li>
-<li>neovim/neovim@42033bc5bd4bd0f06b33391e12672900bc21b993</li>
+<li>GH-354: Bugfix: a file browser related bug.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.11.0-138
+        https://github.com/qvacua/vimr/releases/tag/v0.11.1-140
       </releaseNotesLink>
-      <pubDate>2016-11-28T19:30:46.801729</pubDate>
+      <pubDate>2016-12-02T23:56:58.208278</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.11.0-138/VimR-v0.11.0-138.tar.bz2"
-                 sparkle:version="138"
-                 sparkle:shortVersionString="0.11.0"
-                 sparkle:dsaSignature="MCwCFBI7Jb+ch6v9vUbZ/d64I2VKJw83AhQQE7h0uG22ytrHEbX8MrQI0FqTeQ=="
-                 length="9093520"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.11.1-140/VimR-v0.11.1-140.tar.bz2"
+                 sparkle:version="140"
+                 sparkle:shortVersionString="0.11.1"
+                 sparkle:dsaSignature="MC4CFQDW1u4LcBC+GNY8QL6v7iG895cxYAIVAJk9Y1W6qln94Jhou3OX+ZSkSx1z"
+                 length="9095668"
                  type="application/octet-stream"/>
     </item>
   </channel>
