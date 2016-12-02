@@ -68,21 +68,21 @@ class FileBrowserComponent: ViewComponent {
           return FileBrowserAction.setParentAsWorkingDirectory(url: fileItem.url)
         }
       }
-      .subscribe(onNext: { [unowned self] action in self.publish(event: action) })
+      .subscribe(onNext: { [weak self] action in self?.publish(event: action) })
       .addDisposableTo(self.disposeBag)
 
     self.fileItemService.sink
         .filter { $0 is FileItemServiceChange }
         .map { $0 as! FileItemServiceChange }
         .observeOn(MainScheduler.instance)
-        .subscribe(onNext: { [unowned self] action in
+        .subscribe(onNext: { [weak self] action in
           switch action {
           case let .childrenChanged(root, fileItem):
-            guard root == self.cwd else {
+            guard root == self?.cwd else {
               return
             }
 
-            self.fileView.update(fileItem)
+            self?.fileView.update(fileItem)
           }
         })
         .addDisposableTo(self.disposeBag)
@@ -102,12 +102,12 @@ class FileBrowserComponent: ViewComponent {
       .filter { $0 is MainWindowAction }
       .map { $0 as! MainWindowAction }
       .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { [unowned self] action in
+      .subscribe(onNext: { [weak self] action in
         switch action {
         case let .changeCwd(mainWindow: _, cwd: cwd):
-          self.cwd = cwd
+          self?.cwd = cwd
 //          NSLog("cwd changed to \(self.cwd) of \(mainWindow.uuid)")
-          self.fileView.reloadData()
+          self?.fileView.reloadData()
 
         default:
           break

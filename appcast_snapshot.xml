@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.11.0-SNAPSHOT-20161127.1106-137</title>
+      <title>v0.12.0-SNAPSHOT-20161130.1903-139</title>
       <description><![CDATA[
     <ul>
-<li>Make the color of the file name white when selected in the buffer list</li>
+<li>GH-354: Try to fix a file browser related crash by using [weak self] instead of [unowned self] (as described in http://stackoverflow.com/questions/24414998/why-does-weak-self-work-but-unowned-self-break-in-a-swift-closure)</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.0-SNAPSHOT-20161127.1106-137
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.12.0-SNAPSHOT-20161130.1903-139
       </releaseNotesLink>
-      <pubDate>2016-11-27T11:14:47.299900</pubDate>
+      <pubDate>2016-11-30T19:12:04.231336</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.0-SNAPSHOT-20161127.1106-137/VimR-v0.11.0-SNAPSHOT-20161127.1106-137.tar.bz2"
-                 sparkle:version="137"
-                 sparkle:shortVersionString="0.11.0-SNAPSHOT-20161127.1106"
-                 sparkle:dsaSignature="MC0CFBePybBNyYBbx1Tr/RYImmqvWCeHAhUAuP8zBSWAkk9TfWr++RMgY3rB6wY="
-                 length="9094760"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.12.0-SNAPSHOT-20161130.1903-139/VimR-v0.12.0-SNAPSHOT-20161130.1903-139.tar.bz2"
+                 sparkle:version="139"
+                 sparkle:shortVersionString="0.12.0-SNAPSHOT-20161130.1903"
+                 sparkle:dsaSignature="MC0CFQDJ2yVKzy5HJMfjtQS6SBwLOBkeLwIUXL39bJxqW8vgej83YOuewOl5lbU="
+                 length="9094211"
                  type="application/octet-stream"/>
     </item>
   </channel>
