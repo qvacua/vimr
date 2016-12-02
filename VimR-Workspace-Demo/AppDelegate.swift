@@ -34,7 +34,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     workspace.append(tool: WorkspaceTool(title: "Right-1", view: DummyToolView(NSColor.magenta)), location: .right)
     workspace.append(tool: WorkspaceTool(title: "Right-2", view: DummyToolView(NSColor.black)), location: .right)
 
-    let tool = WorkspaceTool(title: "Left-1", view: DummyToolView(NSColor.green), minimumDimension: 200)
+    let dummyView = DummyToolView(NSColor.green)
+    let tool = WorkspaceTool(title: "Left-1", view: dummyView, minimumDimension: 200)
+    dummyView.innerToolbar.tool = tool
     workspace.append(tool: tool, location: .left)
 
     workspace.append(tool: WorkspaceTool(title: "Left-2", view: DummyToolView(NSColor.red)), location: .left)
@@ -49,6 +51,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 class DummyToolView: NSView {
 
+  let innerToolbar = InnerToolBar(forAutoLayout:())
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -58,7 +62,6 @@ class DummyToolView: NSView {
     self.configureForAutoLayout()
     self.wantsLayer = true
 
-    let innerToolbar = InnerToolBar(forAutoLayout:())
     let dummyView = DummyView(color)
 
     self.addSubview(innerToolbar)

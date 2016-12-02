@@ -12,7 +12,7 @@ import CocoaFontAwesome
  - Close button
  - Cog button: not shown when there's no menu
  */
-class InnerToolBar: NSView {
+class InnerToolBar: NSView, NSUserInterfaceValidations {
 
   static fileprivate let separatorColor = NSColor.controlShadowColor
   static fileprivate let separatorThickness = CGFloat(1)
@@ -27,6 +27,13 @@ class InnerToolBar: NSView {
 
   fileprivate let closeButton = NSButton(forAutoLayout:())
   fileprivate let cogButton = NSPopUpButton(forAutoLayout:())
+
+  fileprivate let locToSelector: [WorkspaceBarLocation: Selector] = [
+    .top: #selector(InnerToolBar.moveToTopAction(_:)),
+    .right: #selector(InnerToolBar.moveToRightAction(_:)),
+    .bottom: #selector(InnerToolBar.moveToBottomAction(_:)),
+    .left: #selector(InnerToolBar.moveToLeftAction(_:)),
+  ]
 
   // MARK: - API
 
@@ -103,10 +110,22 @@ class InnerToolBar: NSView {
     cogMenuItem.image = cogIcon
 
     let moveToMenu = NSMenu()
-    let topMenuItem = NSMenuItem(title: "Top", action: nil, keyEquivalent: "")
-    let rightMenuItem = NSMenuItem(title: "Right", action: nil, keyEquivalent: "")
-    let bottomMenuItem = NSMenuItem(title: "Bottom", action: nil, keyEquivalent: "")
-    let leftMenuItem = NSMenuItem(title: "Left", action: nil, keyEquivalent: "")
+    let topMenuItem = NSMenuItem(title: "Top",
+                                 action: #selector(InnerToolBar.moveToTopAction(_:)),
+                                 keyEquivalent: "")
+    topMenuItem.target = self
+    let rightMenuItem = NSMenuItem(title: "Right",
+                                   action: #selector(InnerToolBar.moveToRightAction(_:)),
+                                   keyEquivalent: "")
+    rightMenuItem.target = self
+    let bottomMenuItem = NSMenuItem(title: "Bottom",
+                                    action: #selector(InnerToolBar.moveToBottomAction(_:)),
+                                    keyEquivalent: "")
+    bottomMenuItem.target = self
+    let leftMenuItem = NSMenuItem(title: "Left",
+                                  action: #selector(InnerToolBar.moveToLeftAction(_:)),
+                                  keyEquivalent: "")
+    leftMenuItem.target = self
     moveToMenu.addItem(leftMenuItem)
     moveToMenu.addItem(rightMenuItem)
     moveToMenu.addItem(bottomMenuItem)
@@ -146,3 +165,38 @@ class InnerToolBar: NSView {
   }
 }
 
+// MARK: - Actions
+extension InnerToolBar {
+
+  func moveToTopAction(_ sender: Any?) {
+
+  }
+
+  func moveToRightAction(_ sender: Any?) {
+
+  }
+
+  func moveToBottomAction(_ sender: Any?) {
+
+  }
+
+  func moveToLeftAction(_ sender: Any?) {
+
+  }
+}
+
+// MARK: - NSUserInterfaceValidations
+extension InnerToolBar {
+
+  func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
+    guard let loc = self.tool?.location else {
+      return true
+    }
+
+    if item.action == self.locToSelector[loc] {
+      return false
+    }
+
+    return true
+  }
+}
