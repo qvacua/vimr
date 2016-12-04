@@ -15,7 +15,6 @@ enum FileOutlineViewAction {
   case openFileInHorizontalSplit(fileItem: FileItem)
   case openFileInVerticalSplit(fileItem: FileItem)
   case setAsWorkingDirectory(fileItem: FileItem)
-  case setParentAsWorkingDirectory(fileItem: FileItem)
 }
 
 fileprivate class FileBrowserItem: Hashable, Comparable, CustomStringConvertible {
@@ -381,22 +380,6 @@ extension FileOutlineView {
 
     self.flow.publish(event: FileOutlineViewAction.setAsWorkingDirectory(fileItem: item.fileItem))
   }
-
-  @IBAction func setParentAsWorkingDirectory(_: Any?) {
-    guard let item = self.clickedItem as? FileBrowserItem else {
-      return
-    }
-
-    guard self.level(forItem: clickedItem) > 0 else {
-      return
-    }
-
-    guard item.fileItem.url.path != "/" else {
-      return
-    }
-
-    self.flow.publish(event: FileOutlineViewAction.setParentAsWorkingDirectory(fileItem: item.fileItem))
-  }
 }
 
 // MARK: - NSUserInterfaceValidations
@@ -409,10 +392,6 @@ extension FileOutlineView {
 
     if item.action == #selector(setAsWorkingDirectory(_:)) {
       return clickedItem.fileItem.isDir
-    }
-
-    if item.action == #selector(setParentAsWorkingDirectory(_:)) {
-      return self.level(forItem: clickedItem) > 0
     }
 
     return true

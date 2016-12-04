@@ -174,8 +174,7 @@ class MainWindowComponent: WindowComponent,
                                                  view: fileBrowser,
                                                  minimumDimension: 100,
                                                  withInnerToolbar: true,
-                                                 customToolbar: nil,
-                                                 customMenuItems: [])
+                                                 customToolbar: fileBrowser.innerCustomToolbar)
     let fileBrowserTool = WorkspaceToolComponent(toolIdentifier: .fileBrowser, config: fileBrowserConfig)
     self.tools[.fileBrowser] = fileBrowserTool
 
@@ -183,9 +182,7 @@ class MainWindowComponent: WindowComponent,
     let bufferListConfig = WorkspaceTool.Config(title: "Buffers",
                                                 view: bufferList,
                                                 minimumDimension: 100,
-                                                withInnerToolbar: true,
-                                                customToolbar: nil,
-                                                customMenuItems: [])
+                                                withInnerToolbar: true)
     let bufferListTool = WorkspaceToolComponent(toolIdentifier: .bufferList, config: bufferListConfig)
     self.tools[.bufferList] = bufferListTool
 
@@ -258,9 +255,6 @@ class MainWindowComponent: WindowComponent,
 
         case let FileBrowserAction.setAsWorkingDirectory(url: url):
           self.neoVimView.cwd = url
-
-        case let FileBrowserAction.setParentAsWorkingDirectory(url: url):
-          self.neoVimView.cwd = url.parent
 
         case let BufferListAction.open(buffer: buffer):
           self.neoVimView.select(buffer: buffer)

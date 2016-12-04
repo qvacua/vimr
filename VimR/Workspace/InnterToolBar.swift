@@ -14,12 +14,9 @@ import CocoaFontAwesome
  */
 class InnerToolBar: NSView, NSUserInterfaceValidations {
 
-  static let toolbarHeight = InnerToolBar.iconDimension
-
-  static fileprivate let separatorColor = NSColor.controlShadowColor
-  static fileprivate let separatorThickness = CGFloat(1)
-  static fileprivate let iconDimension = CGFloat(19)
-  static fileprivate let height = InnerToolBar.iconDimension + 2 + 2 + InnerToolBar.separatorThickness
+  fileprivate static let separatorColor = NSColor.controlShadowColor
+  fileprivate static let separatorThickness = CGFloat(1)
+  fileprivate static let height = InnerToolBar.iconDimension + 2 + 2 + InnerToolBar.separatorThickness
 
   static fileprivate let backgroundColor = NSColor(red: 0.899, green: 0.934, blue: 0.997, alpha: 1)
 
@@ -39,6 +36,19 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
   ]
 
   // MARK: - API
+  static let toolbarHeight = InnerToolBar.iconDimension
+  static let iconDimension = CGFloat(19)
+  static let iconColor = NSColor.darkGray
+
+  static func configureToStandardIconButton(button: NSButton, image: NSImage?) {
+    button.imagePosition = .imageOnly
+    button.image = image
+    button.isBordered = false
+
+    // The following disables the square appearing when pushed.
+    let cell = button.cell as? NSButtonCell
+    cell?.highlightsBy = .contentsCellMask
+  }
 
   let customMenuItems: [NSMenuItem]
   var customToolbar: NSView?
@@ -85,16 +95,6 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     }
   }
 
-  fileprivate func configureToStandardIconButton(button: NSButton, image: NSImage?) {
-    button.imagePosition = .imageOnly
-    button.image = image
-    button.isBordered = false
-
-    // The following disables the square appearing when pushed.
-    let cell = button.cell as? NSButtonCell
-    cell?.highlightsBy = .contentsCellMask
-  }
-
   fileprivate func addViews() {
     let title = self.titleField
     let close = self.closeButton
@@ -107,14 +107,14 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     title.controlSize = .small
 
     let closeIcon = NSImage.fontAwesomeIcon(code: "fa-times-circle",
-                                            textColor: .darkGray,
+                                            textColor: InnerToolBar.iconColor,
                                             dimension: InnerToolBar.iconDimension)
-    self.configureToStandardIconButton(button: close, image: closeIcon)
+    InnerToolBar.configureToStandardIconButton(button: close, image: closeIcon)
     close.target = self
     close.action = #selector(InnerToolBar.closeAction)
 
     let cogIcon = NSImage.fontAwesomeIcon(name: .cog,
-                                          textColor: .darkGray,
+                                          textColor: InnerToolBar.iconColor,
                                           dimension: InnerToolBar.iconDimension)
 
     cog.configureForAutoLayout()
@@ -172,6 +172,7 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     cog.menu = cogMenu
 
     if let customToolbar = self.customToolbar {
+      customToolbar.configureForAutoLayout()
       self.addSubview(customToolbar)
     }
     self.addSubview(title)

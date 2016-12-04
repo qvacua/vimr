@@ -6,6 +6,7 @@
 import Cocoa
 import RxSwift
 import PureLayout
+import CocoaFontAwesome
 
 enum FileBrowserAction {
 
@@ -15,7 +16,6 @@ enum FileBrowserAction {
   case openInHorizontalSplit(url: URL)
   case openInVerticalSplit(url: URL)
   case setAsWorkingDirectory(url: URL)
-  case setParentAsWorkingDirectory(url: URL)
 }
 
 class FileBrowserComponent: ViewComponent {
@@ -29,6 +29,7 @@ class FileBrowserComponent: ViewComponent {
     }
     set {
       self.fileView.cwd = newValue
+      self.innerCustomToolbar.goToParentButton.isEnabled = newValue.path != "/"
     }
   }
 
@@ -36,15 +37,56 @@ class FileBrowserComponent: ViewComponent {
     fatalError("init(coder:) has not been implemented")
   }
 
+  class InnerCustomToolbar: NSView {
+
+    fileprivate var fileBrowser: FileBrowserComponent? {
+      didSet {
+        self.goToParentButton.target = self.fileBrowser
+      }
+    }
+
+    required init?(coder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
+    }
+
+    let goToParentButton = NSButton(forAutoLayout:())
+
+    init() {
+      super.init(frame: .zero)
+      self.configureForAutoLayout()
+
+      self.addViews()
+    }
+
+    fileprivate func addViews() {
+      let goToParentIcon = NSImage.fontAwesomeIcon(name: .levelUp,
+                                                   textColor: InnerToolBar.iconColor,
+                                                   dimension: InnerToolBar.iconDimension)
+
+      let goToParent = self.goToParentButton
+      InnerToolBar.configureToStandardIconButton(button: goToParent, image: goToParentIcon)
+      goToParent.action = #selector(FileBrowserComponent.goToParentAction)
+
+      self.addSubview(goToParent)
+
+      goToParent.autoPinEdge(toSuperviewEdge: .top)
+      goToParent.autoPinEdge(toSuperviewEdge: .right)
+    }
+  }
+
   override var isFirstResponder: Bool {
     return self.fileView.isFirstResponder
   }
+
+  let innerCustomToolbar = InnerCustomToolbar()
 
   init(source: Observable<Any>, fileItemService: FileItemService) {
     self.fileItemService = fileItemService
     self.fileView = FileOutlineView(source: source, fileItemService: fileItemService)
 
     super.init(source: source)
+
+    self.innerCustomToolbar.fileBrowser = self
     self.addReactions()
   }
 
@@ -64,8 +106,6 @@ class FileBrowserComponent: ViewComponent {
         case let .openFileInHorizontalSplit(fileItem): return FileBrowserAction.openInHorizontalSplit(url: fileItem.url)
         case let .openFileInVerticalSplit(fileItem): return FileBrowserAction.openInVerticalSplit(url: fileItem.url)
         case let .setAsWorkingDirectory(fileItem): return FileBrowserAction.setAsWorkingDirectory(url: fileItem.url)
-        case let .setParentAsWorkingDirectory(fileItem):
-          return FileBrowserAction.setParentAsWorkingDirectory(url: fileItem.url)
         }
       }
       .subscribe(onNext: { [weak self] action in self?.publish(event: action) })
@@ -113,5 +153,13 @@ class FileBrowserComponent: ViewComponent {
           break
         }
       })
+  }
+}
+
+// MARK: - Actions
+extension FileBrowserComponent {
+
+  func goToParentAction(_ sender: Any?) {
+    self.publish(event: FileBrowserAction.setAsWorkingDirectory(url: self.cwd.parent))
   }
 }
