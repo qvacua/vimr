@@ -27,6 +27,7 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     fatalError("init(coder:) has not been implemented")
   }
 
+  fileprivate let titleField = NSTextField(forAutoLayout:())
   fileprivate let closeButton = NSButton(forAutoLayout:())
   fileprivate let cogButton = NSPopUpButton(forAutoLayout:())
 
@@ -42,7 +43,11 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
   let customMenuItems: [NSMenuItem]
   var customToolbar: NSView?
 
-  var tool: WorkspaceTool?
+  var tool: WorkspaceTool? {
+    didSet {
+      self.titleField.stringValue = self.tool?.title ?? ""
+    }
+  }
 
   override var intrinsicContentSize: CGSize {
     if #available(macOS 10.11, *) {
@@ -91,8 +96,15 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
   }
 
   fileprivate func addViews() {
+    let title = self.titleField
     let close = self.closeButton
     let cog = self.cogButton
+
+    title.isBezeled = false
+    title.drawsBackground = false
+    title.isEditable = false
+    title.isSelectable = false
+    title.controlSize = .small
 
     let closeIcon = NSImage.fontAwesomeIcon(code: "fa-times-circle",
                                             textColor: .darkGray,
@@ -162,8 +174,12 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     if let customToolbar = self.customToolbar {
       self.addSubview(customToolbar)
     }
+    self.addSubview(title)
     self.addSubview(close)
     self.addSubview(cog)
+
+    title.autoAlignAxis(toSuperviewAxis: .horizontal)
+    title.autoPinEdge(toSuperviewEdge: .left, withInset: 4)
 
     close.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
     close.autoPinEdge(toSuperviewEdge: .right, withInset: 2)
@@ -175,7 +191,7 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
       customToolbar.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
       customToolbar.autoPinEdge(.right, to: .left, of: cog, withOffset: 5 - InnerToolBar.separatorThickness)
       customToolbar.autoPinEdge(toSuperviewEdge: .bottom, withInset: 2 + InnerToolBar.separatorThickness)
-      customToolbar.autoPinEdge(toSuperviewEdge: .left, withInset: 2)
+      customToolbar.autoPinEdge(.left, to: .right, of: title, withOffset: 2)
     }
   }
 
