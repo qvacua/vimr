@@ -46,6 +46,10 @@ class WorkspaceTool: Hashable {
   weak var delegate: WorkspaceToolDelegate?
   weak var bar: WorkspaceBar?
 
+  var workspace: Workspace? {
+    return self.bar?.workspace
+  }
+
   let minimumDimension: CGFloat
   var dimension: CGFloat
 

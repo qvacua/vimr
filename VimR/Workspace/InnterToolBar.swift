@@ -96,6 +96,8 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
                                           dimension: InnerToolBar.iconDimension)
 
     self.configureToStandardIconButton(button: close, image: closeIcon)
+    close.target = self
+    close.action = #selector(InnerToolBar.closeAction)
 
     cog.imagePosition = .imageOnly
     cog.pullsDown = true
@@ -111,19 +113,19 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
 
     let moveToMenu = NSMenu()
     let topMenuItem = NSMenuItem(title: "Top",
-                                 action: #selector(InnerToolBar.moveToTopAction(_:)),
+                                 action: #selector(InnerToolBar.moveToTopAction),
                                  keyEquivalent: "")
     topMenuItem.target = self
     let rightMenuItem = NSMenuItem(title: "Right",
-                                   action: #selector(InnerToolBar.moveToRightAction(_:)),
+                                   action: #selector(InnerToolBar.moveToRightAction),
                                    keyEquivalent: "")
     rightMenuItem.target = self
     let bottomMenuItem = NSMenuItem(title: "Bottom",
-                                    action: #selector(InnerToolBar.moveToBottomAction(_:)),
+                                    action: #selector(InnerToolBar.moveToBottomAction),
                                     keyEquivalent: "")
     bottomMenuItem.target = self
     let leftMenuItem = NSMenuItem(title: "Left",
-                                  action: #selector(InnerToolBar.moveToLeftAction(_:)),
+                                  action: #selector(InnerToolBar.moveToLeftAction),
                                   keyEquivalent: "")
     leftMenuItem.target = self
     moveToMenu.addItem(leftMenuItem)
@@ -168,20 +170,32 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
 // MARK: - Actions
 extension InnerToolBar {
 
-  func moveToTopAction(_ sender: Any?) {
+  func closeAction(_ sender: Any?) {
+    self.tool?.toggle()
+  }
 
+  func moveToTopAction(_ sender: Any?) {
+    self.move(to: .top)
   }
 
   func moveToRightAction(_ sender: Any?) {
-
+    self.move(to: .right)
   }
 
   func moveToBottomAction(_ sender: Any?) {
-
+    self.move(to: .bottom)
   }
 
   func moveToLeftAction(_ sender: Any?) {
+    self.move(to: .left)
+  }
 
+  fileprivate func move(to location: WorkspaceBarLocation) {
+    guard let tool = self.tool else {
+      return
+    }
+
+    tool.workspace?.move(tool: tool, to: location)
   }
 }
 

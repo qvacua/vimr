@@ -72,6 +72,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
   var dimensionConstraint = NSLayoutConstraint()
 
   weak var delegate: WorkspaceBarDelegate?
+  weak var workspace: Workspace?
 
   init(location: WorkspaceBarLocation) {
     self.location = location
