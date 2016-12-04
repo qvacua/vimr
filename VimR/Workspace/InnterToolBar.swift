@@ -14,6 +14,8 @@ import CocoaFontAwesome
  */
 class InnerToolBar: NSView, NSUserInterfaceValidations {
 
+  static let toolbarHeight = InnerToolBar.iconDimension
+
   static fileprivate let separatorColor = NSColor.controlShadowColor
   static fileprivate let separatorThickness = CGFloat(1)
   static fileprivate let iconDimension = CGFloat(19)
@@ -37,7 +39,9 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
 
   // MARK: - API
 
-  var customMenu: NSMenu?
+  let customMenuItems: [NSMenuItem]
+  var customToolbar: NSView?
+
   var tool: WorkspaceTool?
 
   override var intrinsicContentSize: CGSize {
@@ -48,10 +52,12 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     }
   }
 
-  override init(frame: NSRect) {
-    super.init(frame: frame)
+  init(customToolbar: NSView? = nil, customMenuItems: [NSMenuItem] = []) {
+    self.customMenuItems = customMenuItems
+    self.customToolbar = customToolbar
 
-    self.cogButton.configureForAutoLayout()
+    super.init(frame: .zero)
+    self.configureForAutoLayout()
 
     // Because other views also want layer, this view also must want layer. Otherwise the z-index ordering is not set
     // correctly: views w/ wantsLayer = false are behind views w/ wantsLayer = true even when added later.
@@ -91,14 +97,15 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     let closeIcon = NSImage.fontAwesomeIcon(code: "fa-times-circle",
                                             textColor: .darkGray,
                                             dimension: InnerToolBar.iconDimension)
-    let cogIcon = NSImage.fontAwesomeIcon(name: .cog,
-                                          textColor: .darkGray,
-                                          dimension: InnerToolBar.iconDimension)
-
     self.configureToStandardIconButton(button: close, image: closeIcon)
     close.target = self
     close.action = #selector(InnerToolBar.closeAction)
 
+    let cogIcon = NSImage.fontAwesomeIcon(name: .cog,
+                                          textColor: .darkGray,
+                                          dimension: InnerToolBar.iconDimension)
+
+    cog.configureForAutoLayout()
     cog.imagePosition = .imageOnly
     cog.pullsDown = true
     cog.isBordered = false
@@ -128,6 +135,7 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
                                   action: #selector(InnerToolBar.moveToLeftAction),
                                   keyEquivalent: "")
     leftMenuItem.target = self
+
     moveToMenu.addItem(leftMenuItem)
     moveToMenu.addItem(rightMenuItem)
     moveToMenu.addItem(bottomMenuItem)
@@ -141,10 +149,19 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     moveToMenuItem.submenu = moveToMenu
 
     cogMenu.addItem(cogMenuItem)
+
+    if self.customMenuItems.isEmpty == false {
+      self.customMenuItems.forEach(cogMenu.addItem)
+      cogMenu.addItem(NSMenuItem.separator())
+    }
+
     cogMenu.addItem(moveToMenuItem)
 
     cog.menu = cogMenu
 
+    if let customToolbar = self.customToolbar {
+      self.addSubview(customToolbar)
+    }
     self.addSubview(close)
     self.addSubview(cog)
 
@@ -153,6 +170,13 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
 
     cog.autoPinEdge(.right, to: .left, of: close, withOffset: 5)
     cog.autoPinEdge(toSuperviewEdge: .top, withInset: -1)
+
+    if let customToolbar = self.customToolbar {
+      customToolbar.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
+      customToolbar.autoPinEdge(.right, to: .left, of: cog, withOffset: 5 - InnerToolBar.separatorThickness)
+      customToolbar.autoPinEdge(toSuperviewEdge: .bottom, withInset: 2 + InnerToolBar.separatorThickness)
+      customToolbar.autoPinEdge(toSuperviewEdge: .left, withInset: 2)
+    }
   }
 
   fileprivate func bottomSeparatorRect() -> CGRect {

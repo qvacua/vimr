@@ -51,13 +51,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 class DummyToolView: NSView {
 
-  let innerToolbar = InnerToolBar(forAutoLayout:())
+  let innerToolbar: InnerToolBar
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
   init(_ color: NSColor) {
+    let menuItems = [
+      NSMenuItem(title: "First", action: nil, keyEquivalent: ""),
+      NSMenuItem(title: "Second", action: nil, keyEquivalent: ""),
+      NSMenuItem(title: "Third", action: nil, keyEquivalent: ""),
+      NSMenuItem(title: "Fourth", action: nil, keyEquivalent: ""),
+      NSMenuItem(title: "Fifth", action: nil, keyEquivalent: ""),
+    ]
+
+    self.innerToolbar = InnerToolBar(customToolbar: DummyView(.magenta), customMenuItems: menuItems)
+
     super.init(frame: .zero)
     self.configureForAutoLayout()
     self.wantsLayer = true
