@@ -170,17 +170,23 @@ class MainWindowComponent: WindowComponent,
     // FIXME: We do not use [self.sink, source].toMergedObservables. If we do so, then self.sink seems to live as long
     // as source, i.e. forever. Thus, self (MainWindowComponent) does not get deallocated. Not nice...
     let fileBrowser = FileBrowserComponent(source: self.sink, fileItemService: self.fileItemService)
-    let fileBrowserTool = WorkspaceToolComponent(title: "Files",
-                                                 viewComponent: fileBrowser,
-                                                 toolIdentifier: .fileBrowser,
-                                                 minimumDimension: 100)
+    let fileBrowserConfig = WorkspaceTool.Config(title: "Files",
+                                                 view: fileBrowser,
+                                                 minimumDimension: 100,
+                                                 withInnerToolbar: true,
+                                                 customToolbar: nil,
+                                                 customMenuItems: [])
+    let fileBrowserTool = WorkspaceToolComponent(toolIdentifier: .fileBrowser, config: fileBrowserConfig)
     self.tools[.fileBrowser] = fileBrowserTool
 
     let bufferList = BufferListComponent(source: self.sink, fileItemService: self.fileItemService)
-    let bufferListTool = WorkspaceToolComponent(title: "Buffers",
-                                                viewComponent: bufferList,
-                                                toolIdentifier: .bufferList,
-                                                minimumDimension: 100)
+    let bufferListConfig = WorkspaceTool.Config(title: "Buffers",
+                                                view: bufferList,
+                                                minimumDimension: 100,
+                                                withInnerToolbar: true,
+                                                customToolbar: nil,
+                                                customMenuItems: [])
+    let bufferListTool = WorkspaceToolComponent(toolIdentifier: .bufferList, config: bufferListConfig)
     self.tools[.bufferList] = bufferListTool
 
     // By default the tool buttons are shown and no tools are shown.

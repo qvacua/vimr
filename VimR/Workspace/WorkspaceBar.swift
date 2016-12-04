@@ -596,7 +596,7 @@ extension WorkspaceBar {
   }
 
   fileprivate func layoutWithoutButtons(_ tool: WorkspaceTool) {
-    let view = tool.view
+    let view = tool
     let thickness = WorkspaceBar.separatorThickness
 
     self.addSubview(view)
@@ -641,7 +641,7 @@ extension WorkspaceBar {
   }
 
   fileprivate func layout(_ tool: WorkspaceTool) {
-    let view = tool.view
+    let view = tool
     let button = tool.button
     let thickness = WorkspaceBar.separatorThickness
 
