@@ -43,6 +43,10 @@ class PrefUtils {
     return dict[key] as? T ?? defaultValue
   }
 
+  static func dict(from dict: [String: Any], for key: String) -> [String: Any]? {
+    return dict[key] as? [String: Any]
+  }
+
   static func float(from dict: [String: Any], for key: String, default defaultValue: Float) -> Float {
     return (dict[key] as? NSNumber)?.floatValue ?? defaultValue
   }

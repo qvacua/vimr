@@ -18,7 +18,34 @@ enum FileBrowserAction {
   case setAsWorkingDirectory(url: URL)
 }
 
-class FileBrowserComponent: ViewComponent {
+struct FileBrowserData: StandardPrefData {
+
+  fileprivate static let isShowHidden = "is-show-hidden"
+
+  static let `default` = FileBrowserData(isShowHidden: false)
+
+  var isShowHidden: Bool
+
+  init(isShowHidden: Bool) {
+    self.isShowHidden = isShowHidden
+  }
+
+  init?(dict: [String: Any]) {
+    guard let isShowHidden = PrefUtils.bool(from: dict, for: FileBrowserData.isShowHidden) else {
+      return nil
+    }
+
+    self.init(isShowHidden: isShowHidden)
+  }
+
+  func dict() -> [String: Any] {
+    return [
+      FileBrowserData.isShowHidden: self.isShowHidden
+    ]
+  }
+}
+
+class FileBrowserComponent: ViewComponent, ToolDataHolder {
 
   fileprivate let fileView: FileOutlineView
   fileprivate let fileItemService: FileItemService
@@ -32,6 +59,8 @@ class FileBrowserComponent: ViewComponent {
       self.innerCustomToolbar.goToParentButton.isEnabled = newValue.path != "/"
     }
   }
+
+  fileprivate var isShowHidden = false
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -78,11 +107,16 @@ class FileBrowserComponent: ViewComponent {
     return self.fileView.isFirstResponder
   }
 
+  var toolDataDict: [String: Any] {
+    return FileBrowserData(isShowHidden: self.isShowHidden).dict()
+  }
+
   let innerCustomToolbar = InnerCustomToolbar()
 
-  init(source: Observable<Any>, fileItemService: FileItemService) {
+  init(source: Observable<Any>, fileItemService: FileItemService, initialData: FileBrowserData) {
     self.fileItemService = fileItemService
     self.fileView = FileOutlineView(source: source, fileItemService: fileItemService)
+    self.isShowHidden = initialData.isShowHidden
 
     super.init(source: source)
 

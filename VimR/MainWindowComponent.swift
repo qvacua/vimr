@@ -167,9 +167,17 @@ class MainWindowComponent: WindowComponent,
   }
 
   fileprivate func setupTools(with mainWindowData: MainWindowPrefData) {
+    // By default the tool buttons are shown and only the file browser tool is shown.
+    let fileBrowserToolData = mainWindowData.toolPrefData(for: .fileBrowser)
+    let bufferListToolData = mainWindowData.toolPrefData(for: .bufferList)
+
+    let fileBrowserData = FileBrowserData(dict: fileBrowserToolData.toolData) ?? FileBrowserData.default
+
     // FIXME: We do not use [self.sink, source].toMergedObservables. If we do so, then self.sink seems to live as long
     // as source, i.e. forever. Thus, self (MainWindowComponent) does not get deallocated. Not nice...
-    let fileBrowser = FileBrowserComponent(source: self.sink, fileItemService: self.fileItemService)
+    let fileBrowser = FileBrowserComponent(source: self.sink,
+                                           fileItemService: self.fileItemService,
+                                           initialData: fileBrowserData)
     let fileBrowserConfig = WorkspaceTool.Config(title: "Files",
                                                  view: fileBrowser,
                                                  minimumDimension: 100,
@@ -185,10 +193,6 @@ class MainWindowComponent: WindowComponent,
                                                 withInnerToolbar: true)
     let bufferListTool = WorkspaceToolComponent(toolIdentifier: .bufferList, config: bufferListConfig)
     self.tools[.bufferList] = bufferListTool
-
-    // By default the tool buttons are shown and no tools are shown.
-    let fileBrowserToolData = mainWindowData.toolPrefData(for: .fileBrowser)
-    let bufferListToolData = mainWindowData.toolPrefData(for: .bufferList)
 
     self.workspace.append(tool: fileBrowserTool, location: fileBrowserToolData.location)
     self.workspace.append(tool: bufferListTool, location: bufferListToolData.location)
@@ -506,7 +510,8 @@ extension MainWindowComponent {
     let fileBrowserData = ToolPrefData(identifier: .fileBrowser,
                                        location: fileBrowser.location,
                                        isVisible: fileBrowser.isSelected,
-                                       dimension: fileBrowser.dimension)
+                                       dimension: fileBrowser.dimension,
+                                       toolData: fileBrowser.toolDataDict)
 
     let bufferList = self.tools[.bufferList]!
     let bufferListData = ToolPrefData(identifier: .bufferList,

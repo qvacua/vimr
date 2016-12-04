@@ -173,6 +173,14 @@ class WorkspaceToolComponent: WorkspaceTool, Flow {
     return self.viewComponent.sink
   }
 
+  var toolDataDict: [String: Any] {
+    guard let toolDataHolder = self.viewComponent as? ToolDataHolder else {
+      return [:]
+    }
+
+    return toolDataHolder.toolDataDict
+  }
+
   init(toolIdentifier: ToolIdentifier, config: WorkspaceTool.Config) {
     guard let viewComponent = config.view as? ViewComponent else {
       preconditionFailure("ERROR view must be a ViewComponent!")
