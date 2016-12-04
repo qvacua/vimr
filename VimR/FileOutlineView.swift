@@ -188,7 +188,8 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
 extension FileOutlineView {
 
   fileprivate func prepare(_ children: [FileBrowserItem]) -> [FileBrowserItem] {
-    return children.filter { !$0.fileItem.isHidden }
+//    return children.filter { !$0.fileItem.isHidden }
+    return children
   }
 
   func outlineView(_: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
@@ -308,7 +309,8 @@ extension FileOutlineView {
     let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
     cell.text = fileBrowserItem.fileItem.url.lastPathComponent
-    cell.image = self.fileItemService.icon(forUrl: fileBrowserItem.fileItem.url)
+    let icon = self.fileItemService.icon(forUrl: fileBrowserItem.fileItem.url)
+    cell.image = fileBrowserItem.fileItem.isHidden ? icon?.tinting(with: NSColor.white.withAlphaComponent(0.4)) : icon
 
     return cell
   }

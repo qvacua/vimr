@@ -5,6 +5,21 @@
 
 import Cocoa
 
+extension NSImage {
+
+  func tinting(with color: NSColor) -> NSImage {
+
+    let result: NSImage = self.copy() as! NSImage
+
+    result.lockFocus()
+    color.set()
+    NSRectFillUsingOperation(CGRect(origin: .zero, size: self.size), .sourceAtop)
+    result.unlockFocus()
+
+    return result
+  }
+}
+
 extension NSButton {
 
   var boolState: Bool {
