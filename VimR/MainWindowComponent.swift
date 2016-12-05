@@ -483,11 +483,12 @@ extension MainWindowComponent {
     self.publish(event: MainWindowAction.changeBufferList(mainWindow: self, buffers: buffers))
   }
 
-  func ipcBecameInvalid() {
+  func ipcBecameInvalid(reason: String) {
     let alert = NSAlert()
     alert.addButton(withTitle: "Close")
     alert.messageText = "Sorry, an error occurred."
-    alert.informativeText = "VimR encountered an error from which it cannot recover. This window will now close."
+    alert.informativeText = "VimR encountered an error from which it cannot recover. This window will now close.\n"
+      + reason
     alert.alertStyle = .critical
     alert.beginSheetModal(for: self.window) { [weak self] response in
       self?.windowController.close()

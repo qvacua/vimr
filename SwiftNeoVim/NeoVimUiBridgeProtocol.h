@@ -123,7 +123,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)stop;
 
-- (void)ipcBecameInvalid;
+- (void)ipcBecameInvalid:(NSString *)reason;
 
 @end
 

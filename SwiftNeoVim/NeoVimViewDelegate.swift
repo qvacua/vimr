@@ -14,5 +14,5 @@ public protocol NeoVimViewDelegate: class {
   func cwdChanged()
   func bufferListChanged()
 
-  func ipcBecameInvalid()
+  func ipcBecameInvalid(reason: String)
 }

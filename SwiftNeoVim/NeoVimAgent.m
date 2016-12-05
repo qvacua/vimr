@@ -395,7 +395,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
   if (responseCode != kCFMessagePortSuccess) {
     log_cfmachport_error(responseCode, msgid, data);
-    [_bridge ipcBecameInvalid];
+    [_bridge ipcBecameInvalid:
+        [NSString stringWithFormat:@"Reason: sendMsg failed for %d with %d", msgid, responseCode]
+    ];
     return nil;
   }
 

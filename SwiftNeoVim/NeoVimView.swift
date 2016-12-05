@@ -89,7 +89,7 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
   public var cwd: URL {
     get {
       guard let output = self.agent.vimCommandOutput("silent pwd") else {
-        self.ipcBecameInvalid()
+        self.ipcBecameInvalid("Reason: 'silent pwd' failed")
         return URL(fileURLWithPath: NSHomeDirectory())
       }
 
@@ -730,7 +730,7 @@ extension NeoVimView {
     }
 
     guard let curPasteMode = self.agent.boolOption("paste") else {
-      self.ipcBecameInvalid()
+      self.ipcBecameInvalid("Reason: 'set paste' failed")
       return
     }
 
@@ -1438,10 +1438,10 @@ extension NeoVimView {
     }
   }
 
-  public func ipcBecameInvalid() {
+  public func ipcBecameInvalid(_ reason: String) {
     NSLog("ERROR \(#function): force-quitting")
     DispatchUtils.gui {
-      self.delegate?.ipcBecameInvalid()
+      self.delegate?.ipcBecameInvalid(reason: reason)
       self.agent.quit()
     }
   }
