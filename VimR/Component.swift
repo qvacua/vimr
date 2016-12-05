@@ -173,12 +173,12 @@ class WorkspaceToolComponent: WorkspaceTool, Flow {
     return self.viewComponent.sink
   }
 
-  var toolDataDict: [String: Any] {
+  var toolData: StandardPrefData {
     guard let toolDataHolder = self.viewComponent as? ToolDataHolder else {
-      return [:]
+      return EmptyPrefData.default
     }
 
-    return toolDataHolder.toolDataDict
+    return toolDataHolder.toolData
   }
 
   init(toolIdentifier: ToolIdentifier, config: WorkspaceTool.Config) {

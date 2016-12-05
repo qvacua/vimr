@@ -171,7 +171,7 @@ class MainWindowComponent: WindowComponent,
     let fileBrowserToolData = mainWindowData.toolPrefData(for: .fileBrowser)
     let bufferListToolData = mainWindowData.toolPrefData(for: .bufferList)
 
-    let fileBrowserData = FileBrowserData(dict: fileBrowserToolData.toolData) ?? FileBrowserData.default
+    let fileBrowserData = fileBrowserToolData.toolData as? FileBrowserData ?? FileBrowserData.default
 
     // FIXME: We do not use [self.sink, source].toMergedObservables. If we do so, then self.sink seems to live as long
     // as source, i.e. forever. Thus, self (MainWindowComponent) does not get deallocated. Not nice...
@@ -511,7 +511,7 @@ extension MainWindowComponent {
                                        location: fileBrowser.location,
                                        isVisible: fileBrowser.isSelected,
                                        dimension: fileBrowser.dimension,
-                                       toolData: fileBrowser.toolDataDict)
+                                       toolData: fileBrowser.toolData)
 
     let bufferList = self.tools[.bufferList]!
     let bufferListData = ToolPrefData(identifier: .bufferList,

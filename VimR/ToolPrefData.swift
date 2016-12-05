@@ -15,7 +15,7 @@ enum ToolIdentifier: String {
 
 protocol ToolDataHolder: class {
 
-  var toolDataDict: [String: Any] { get }
+  var toolData: StandardPrefData { get }
 }
 
 struct ToolPrefData: StandardPrefData {
@@ -31,24 +31,25 @@ struct ToolPrefData: StandardPrefData {
                                location: .left,
                                isVisible: true,
                                dimension: 200,
-                               toolData: FileBrowserData.default.dict()),
+                               toolData: FileBrowserData.default),
     .bufferList: ToolPrefData(identifier: .bufferList,
                               location: .left,
                               isVisible: true,
-                              dimension: 200),
+                              dimension: 200,
+                              toolData: EmptyPrefData.default),
   ]
 
   var identifier: ToolIdentifier
   var location: WorkspaceBarLocation
   var isVisible: Bool
   var dimension: CGFloat
-  var toolData: [String: Any]
+  var toolData: StandardPrefData
 
   init(identifier: ToolIdentifier,
        location: WorkspaceBarLocation,
        isVisible: Bool,
        dimension: CGFloat,
-       toolData: [String: Any] = [:])
+       toolData: StandardPrefData = EmptyPrefData.default)
   {
     self.identifier = identifier
     self.location = location
@@ -63,7 +64,7 @@ struct ToolPrefData: StandardPrefData {
       ToolPrefData.location: PrefUtils.locationAsString(for: self.location),
       ToolPrefData.isVisible: self.isVisible,
       ToolPrefData.dimension: Float(self.dimension),
-      ToolPrefData.toolData: self.toolData
+      ToolPrefData.toolData: self.toolData.dict()
     ]
   }
 
@@ -72,7 +73,7 @@ struct ToolPrefData: StandardPrefData {
           let locationRawValue = dict[ToolPrefData.location] as? String,
           let isVisible = PrefUtils.bool(from: dict, for: ToolPrefData.isVisible),
           let fDimension = PrefUtils.float(from: dict, for: ToolPrefData.dimension),
-          let toolData = PrefUtils.dict(from: dict, for: ToolPrefData.toolData)
+          let toolDataDict = PrefUtils.dict(from: dict, for: ToolPrefData.toolData)
         else {
       return nil
     }
@@ -81,6 +82,14 @@ struct ToolPrefData: StandardPrefData {
           let location = PrefUtils.location(from: locationRawValue)
         else {
       return nil
+    }
+
+    let toolData: StandardPrefData
+    switch identifier {
+    case .fileBrowser:
+      toolData = FileBrowserData(dict: toolDataDict) ?? FileBrowserData.default
+    default:
+      toolData = EmptyPrefData.default
     }
 
     self.init(identifier: identifier,

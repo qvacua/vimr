@@ -107,8 +107,8 @@ class FileBrowserComponent: ViewComponent, ToolDataHolder {
     return self.fileView.isFirstResponder
   }
 
-  var toolDataDict: [String: Any] {
-    return FileBrowserData(isShowHidden: self.isShowHidden).dict()
+  var toolData: StandardPrefData {
+    return FileBrowserData(isShowHidden: self.isShowHidden)
   }
 
   let innerCustomToolbar = InnerCustomToolbar()
