@@ -25,10 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (bool)runLocalServerAndNeoVim;
 
 - (void)vimCommand:(NSString *)string;
-- (NSString *)vimCommandOutput:(NSString *)string;
 
 - (void)vimInput:(NSString *)string;
-- (void)vimInputMarkedText:(NSString *_Nonnull)markedText;
+- (void)vimInputMarkedText:(NSString *)markedText;
 - (void)deleteCharacters:(NSInteger)count;
 
 - (void)resizeToWidth:(int)width height:(int)height;
@@ -38,9 +37,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<NSString *> *)escapedFileNames:(NSArray<NSString *> *)fileNames;
 - (NSArray<NeoVimBuffer *> *)buffers;
 - (NSArray<NeoVimTab*> *)tabs;
-- (bool)boolOption:(NSString *)option;
-- (void)setBoolOption:(NSString *)option to:(bool)value;
 - (void)selectWindow:(NeoVimWindow *)window;
+
+// WAITS
+- (NSString * _Nullable)vimCommandOutput:(NSString *)string;
+- (NSNumber * _Nullable)boolOption:(NSString *)option;
+- (bool)setBoolOption:(NSString *)option to:(bool)value;
 
 @end
 

@@ -482,6 +482,17 @@ extension MainWindowComponent {
     let buffers = self.neoVimView.allBuffers()
     self.publish(event: MainWindowAction.changeBufferList(mainWindow: self, buffers: buffers))
   }
+
+  func ipcBecameInvalid() {
+    let alert = NSAlert()
+    alert.addButton(withTitle: "Close")
+    alert.messageText = "Sorry, an error occurred."
+    alert.informativeText = "VimR encountered an error from which it cannot recover. This window will now close."
+    alert.alertStyle = .critical
+    alert.beginSheetModal(for: self.window) { [weak self] response in
+      self?.windowController.close()
+    }
+  }
 }
 
 // MARK: - NSWindowDelegate

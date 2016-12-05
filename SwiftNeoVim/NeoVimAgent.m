@@ -11,7 +11,7 @@
 #import "NeoVimWindow.h"
 
 
-static const double qTimeout = 10;
+static const double qTimeout = 1;
 
 #define data_to_array(type)                                               \
 static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
@@ -204,10 +204,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   NSDate *deadline = [[NSDate date] dateByAddingTimeInterval:qTimeout];
 
   [condition lock];
-  while (_requestResponses[@(reqId)] == nil) {
-    [condition waitUntilDate:deadline];
-  }
+  while (_requestResponses[@(reqId)] == nil && [condition waitUntilDate:deadline]);
   [condition unlock];
+
   [_requestResponseConditions removeObjectForKey:@(reqId)];
 
   id result = _requestResponses[@(reqId)];
@@ -226,6 +225,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [self sendMessageWithId:NeoVimAgentMsgIdCommandOutput data:data expectsReply:NO];
 
   NSData *resultData = [self responseByWaitingForId:reqId];
+  if (resultData == nil) {
+    return nil;
+  }
+
   NSString *result = [NSKeyedUnarchiver unarchiveObjectWithData:resultData];
   return [result stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
@@ -266,7 +269,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   return [self escapedFileNames:@[ fileName ]][0];
 }
 
-- (bool)boolOption:(NSString *)option {
+- (NSNumber *)boolOption:(NSString *)option {
   NSUInteger reqId = [self nextRequestResponseId];
 
   NSMutableData *data = [[NSMutableData alloc] initWithBytes:&reqId length:sizeof(NSUInteger)];
@@ -275,12 +278,15 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [self sendMessageWithId:NeoVimAgentMsgIdGetBoolOption data:data expectsReply:NO];
 
   NSData *resultData = [self responseByWaitingForId:reqId];
-  NSNumber *result = [NSKeyedUnarchiver unarchiveObjectWithData:resultData];
+  if (resultData == nil) {
+    return nil;
+  }
 
-  return result.boolValue;
+  NSNumber *result = [NSKeyedUnarchiver unarchiveObjectWithData:resultData];
+  return result;
 }
 
-- (void)setBoolOption:(NSString *)option to:(bool)value {
+- (bool)setBoolOption:(NSString *)option to:(bool)value {
   NSUInteger reqId = [self nextRequestResponseId];
 
   NSMutableData *data = [NSMutableData new];
@@ -295,6 +301,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [self sendMessageWithId:NeoVimAgentMsgIdSetBoolOption data:data expectsReply:NO];
 
   [self responseByWaitingForId:reqId];
+
+  return true;
 }
 
 - (void)selectWindow:(NeoVimWindow *)window {
@@ -387,6 +395,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
   if (responseCode != kCFMessagePortSuccess) {
     log_cfmachport_error(responseCode, msgid, data);
+    [_bridge ipcBecameInvalid];
     return nil;
   }
 

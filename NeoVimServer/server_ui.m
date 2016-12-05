@@ -425,7 +425,12 @@ static void neovim_command(void **argv) {
 
 static NSData *data_with_response_id_prefix(NSUInteger responseId, NSData *data) {
   NSMutableData *result = [NSMutableData dataWithBytes:&responseId length:sizeof(NSUInteger)];
-  [result appendData:data];
+
+  if (data != nil) {
+    [result appendData:data];
+  } else {
+    NSLog(@"!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+  }
 
   return result;
 }
@@ -450,13 +455,16 @@ static void neovim_command_output(void **argv) {
     char_u *output = get_vim_var_str(VV_COMMAND_OUTPUT);
 
     // FIXME: handle err.set == true
-    NSString *result = [[NSString alloc] initWithCString:(const char *) output encoding:NSUTF8StringEncoding];
-    NSData *resultData = [NSKeyedArchiver archivedDataWithRootObject:result];
+    NSData *resultData = nil;
+    if (output != NULL) {
+      NSString *result = [[NSString alloc] initWithCString:(const char *) output encoding:NSUTF8StringEncoding];
+      resultData = [NSKeyedArchiver archivedDataWithRootObject:result];
+      [result release];
+    }
 
     NSData *data = data_with_response_id_prefix(responseId, resultData);
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSyncResult data:data];
 
-    [result release];
     free(values); // malloc'ed in loop_schedule(&main_loop, ...) (in _queue) somewhere
     [input release]; // retained in loop_schedule(&main_loop, ...) (in _queue) somewhere
   }
