@@ -182,7 +182,8 @@ class MainWindowComponent: WindowComponent,
                                                  view: fileBrowser,
                                                  minimumDimension: 100,
                                                  withInnerToolbar: true,
-                                                 customToolbar: fileBrowser.innerCustomToolbar)
+                                                 customToolbar: fileBrowser.innerCustomToolbar,
+                                                 customMenuItems: fileBrowser.menuItems)
     let fileBrowserTool = WorkspaceToolComponent(toolIdentifier: .fileBrowser, config: fileBrowserConfig)
     self.tools[.fileBrowser] = fileBrowserTool
 

@@ -68,6 +68,15 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
   }
 
   var cwd: URL = FileUtils.userHomeUrl
+  var isShowHidden = false {
+    didSet {
+      if oldValue == self.isShowHidden {
+        return
+      }
+
+      self.reloadItem(nil)
+    }
+  }
 
   init(source: Observable<Any>, fileItemService: FileItemService) {
     self.flow = EmbeddableComponent(source: source)
@@ -188,8 +197,7 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
 extension FileOutlineView {
 
   fileprivate func prepare(_ children: [FileBrowserItem]) -> [FileBrowserItem] {
-//    return children.filter { !$0.fileItem.isHidden }
-    return children
+    return self.isShowHidden ? children : children.filter { !$0.fileItem.isHidden }
   }
 
   func outlineView(_: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {

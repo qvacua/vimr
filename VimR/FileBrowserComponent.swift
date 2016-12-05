@@ -60,7 +60,15 @@ class FileBrowserComponent: ViewComponent, ToolDataHolder {
     }
   }
 
-  fileprivate var isShowHidden = false
+  fileprivate var isShowHidden: Bool {
+    get {
+      return self.fileView.isShowHidden
+    }
+
+    set {
+      self.fileView.isShowHidden = newValue
+    }
+  }
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -112,15 +120,26 @@ class FileBrowserComponent: ViewComponent, ToolDataHolder {
   }
 
   let innerCustomToolbar = InnerCustomToolbar()
+  let menuItems: [NSMenuItem]
 
   init(source: Observable<Any>, fileItemService: FileItemService, initialData: FileBrowserData) {
     self.fileItemService = fileItemService
     self.fileView = FileOutlineView(source: source, fileItemService: fileItemService)
-    self.isShowHidden = initialData.isShowHidden
+    self.fileView.isShowHidden = initialData.isShowHidden
+
+    let showHiddenMenuItem = NSMenuItem(title: "Show Hidden Files",
+                                        action: #selector(FileBrowserComponent.showHiddenAction),
+                                        keyEquivalent: "")
+    showHiddenMenuItem.state = initialData.isShowHidden ? NSOnState : NSOffState
+    self.menuItems = [
+      showHiddenMenuItem,
+    ]
 
     super.init(source: source)
 
     self.innerCustomToolbar.fileBrowser = self
+    showHiddenMenuItem.target = self
+
     self.addReactions()
   }
 
@@ -192,6 +211,13 @@ class FileBrowserComponent: ViewComponent, ToolDataHolder {
 
 // MARK: - Actions
 extension FileBrowserComponent {
+
+  func showHiddenAction(_ sender: Any?) {
+    self.isShowHidden = !self.isShowHidden
+    if let menuItem = sender as? NSMenuItem {
+      menuItem.state = self.isShowHidden ? NSOnState : NSOffState
+    }
+  }
 
   func goToParentAction(_ sender: Any?) {
     self.publish(event: FileBrowserAction.setAsWorkingDirectory(url: self.cwd.parent))
