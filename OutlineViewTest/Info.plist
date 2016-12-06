@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.11.1</string>
+	<string>0.11.1-SNAPSHOT-20161206.2148</string>
 	<key>CFBundleVersion</key>
-	<string>140</string>
+	<string>141</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSHumanReadableCopyright</key>
