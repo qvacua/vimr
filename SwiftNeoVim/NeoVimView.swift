@@ -1442,7 +1442,7 @@ extension NeoVimView {
     NSLog("ERROR \(#function): force-quitting")
     DispatchUtils.gui {
       self.delegate?.ipcBecameInvalid(reason: reason)
-      self.agent.quit()
+//      self.agent.quit()
     }
   }
 
