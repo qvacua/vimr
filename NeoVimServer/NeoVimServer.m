@@ -15,7 +15,7 @@
 //#define DEBUG_NEOVIM_SERVER_STANDALONE
 
 
-static const double qTimeout = 1;
+static const double qTimeout = 10;
 
 #define data_to_array(type)                                               \
 static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
