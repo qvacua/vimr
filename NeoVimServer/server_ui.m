@@ -756,6 +756,11 @@ NSString *server_escaped_filename(NSString *filename) {
 }
 
 static NeoVimBuffer *buffer_for(buf_T *buf) {
+  // To be sure...
+  if (buf == NULL) {
+    return nil;
+  }
+
   if (buf->b_p_bl == 0) {
     return nil;
   }
