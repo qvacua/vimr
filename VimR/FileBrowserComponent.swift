@@ -16,6 +16,7 @@ enum FileBrowserAction {
   case openInHorizontalSplit(url: URL)
   case openInVerticalSplit(url: URL)
   case setAsWorkingDirectory(url: URL)
+  case scrollToSource(cwd: URL)
 }
 
 struct FileBrowserData: StandardPrefData {
@@ -79,6 +80,7 @@ class FileBrowserComponent: ViewComponent, ToolDataHolder {
     fileprivate var fileBrowser: FileBrowserComponent? {
       didSet {
         self.goToParentButton.target = self.fileBrowser
+        self.scrollToSourceButton.target = self.fileBrowser
       }
     }
 
@@ -87,6 +89,7 @@ class FileBrowserComponent: ViewComponent, ToolDataHolder {
     }
 
     let goToParentButton = NSButton(forAutoLayout:())
+    let scrollToSourceButton = NSButton(forAutoLayout:())
 
     init() {
       super.init(frame: .zero)
@@ -101,13 +104,25 @@ class FileBrowserComponent: ViewComponent, ToolDataHolder {
                                                    dimension: InnerToolBar.iconDimension)
 
       let goToParent = self.goToParentButton
+      goToParent.toolTip = "Set parent as working directory"
       InnerToolBar.configureToStandardIconButton(button: goToParent, image: goToParentIcon)
       goToParent.action = #selector(FileBrowserComponent.goToParentAction)
 
+      let scrollToSourceIcon = NSImage.fontAwesomeIcon(name: .bullseye,
+                                                       textColor: InnerToolBar.iconColor,
+                                                       dimension: InnerToolBar.iconDimension)
+      let scrollToSource = self.scrollToSourceButton
+      scrollToSource.toolTip = "Navigate to the current buffer"
+      InnerToolBar.configureToStandardIconButton(button: scrollToSource, image: scrollToSourceIcon)
+      scrollToSource.action = #selector(FileBrowserComponent.scrollToSourceAction)
+
       self.addSubview(goToParent)
+      self.addSubview(scrollToSource)
 
       goToParent.autoPinEdge(toSuperviewEdge: .top)
       goToParent.autoPinEdge(toSuperviewEdge: .right)
+      scrollToSource.autoPinEdge(toSuperviewEdge: .top)
+      scrollToSource.autoPinEdge(.right, to: .left, of: goToParent)
     }
   }
 
@@ -221,5 +236,9 @@ extension FileBrowserComponent {
 
   func goToParentAction(_ sender: Any?) {
     self.publish(event: FileBrowserAction.setAsWorkingDirectory(url: self.cwd.parent))
+  }
+
+  func scrollToSourceAction(_ sender: Any?) {
+    self.publish(event: FileBrowserAction.scrollToSource(cwd: self.cwd))
   }
 }

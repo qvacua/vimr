@@ -261,6 +261,12 @@ class MainWindowComponent: WindowComponent,
         case let FileBrowserAction.setAsWorkingDirectory(url: url):
           self.neoVimView.cwd = url
 
+        case let FileBrowserAction.scrollToSource(cwd: cwd):
+          guard self.neoVimView.currentBuffer()?.url?.isContained(in: cwd) == true else {
+            return
+          }
+
+
         case let BufferListAction.open(buffer: buffer):
           self.neoVimView.select(buffer: buffer)
 

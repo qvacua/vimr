@@ -56,6 +56,10 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
   var tool: WorkspaceTool? {
     didSet {
       self.titleField.stringValue = self.tool?.title ?? ""
+
+      let toolTitle = self.tool?.title ?? "Tool"
+      self.closeButton.toolTip = "Close \(toolTitle)"
+      self.cogButton.toolTip = "\(toolTitle) Settings"
     }
   }
 
@@ -110,6 +114,7 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
                                             textColor: InnerToolBar.iconColor,
                                             dimension: InnerToolBar.iconDimension)
     InnerToolBar.configureToStandardIconButton(button: close, image: closeIcon)
+
     close.target = self
     close.action = #selector(InnerToolBar.closeAction)
 
