@@ -7,22 +7,20 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.12.0-SNAPSHOT-20161130.1903-139</title>
+      <title>v0.11.1-SNAPSHOT-20161207.2041-142</title>
       <description><![CDATA[
-    <ul>
-<li>GH-354: Try to fix a file browser related crash by using [weak self] instead of [unowned self] (as described in http://stackoverflow.com/questions/24414998/why-does-weak-self-work-but-unowned-self-break-in-a-swift-closure)</li>
-</ul>
+    <p>GH-360, GH-364: Try not to crash when using CtrlP or FZF in some cases.</p>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.12.0-SNAPSHOT-20161130.1903-139
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.1-SNAPSHOT-20161207.2041-142
       </releaseNotesLink>
-      <pubDate>2016-11-30T19:12:04.231336</pubDate>
+      <pubDate>2016-12-07T20:49:49.160376</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.12.0-SNAPSHOT-20161130.1903-139/VimR-v0.12.0-SNAPSHOT-20161130.1903-139.tar.bz2"
-                 sparkle:version="139"
-                 sparkle:shortVersionString="0.12.0-SNAPSHOT-20161130.1903"
-                 sparkle:dsaSignature="MC0CFQDJ2yVKzy5HJMfjtQS6SBwLOBkeLwIUXL39bJxqW8vgej83YOuewOl5lbU="
-                 length="9094211"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.1-SNAPSHOT-20161207.2041-142/VimR-v0.11.1-SNAPSHOT-20161207.2041-142.tar.bz2"
+                 sparkle:version="142"
+                 sparkle:shortVersionString="0.11.1-SNAPSHOT-20161207.2041"
+                 sparkle:dsaSignature="MC0CFErtW7sAPe14iFhBaFX0Rso85lpgAhUAjgiaUxAW2upoICmTEa+GVCAeVj0="
+                 length="9099045"
                  type="application/octet-stream"/>
     </item>
   </channel>
