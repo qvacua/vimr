@@ -204,10 +204,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   NSDate *deadline = [[NSDate date] dateByAddingTimeInterval:qTimeout];
 
   [condition lock];
-  while (_requestResponses[@(reqId)] == nil) {
-    [condition waitUntilDate:deadline];
-  }
+  while (_requestResponses[@(reqId)] == nil && [condition waitUntilDate:deadline]);
   [condition unlock];
+
   [_requestResponseConditions removeObjectForKey:@(reqId)];
 
   id result = _requestResponses[@(reqId)];
@@ -226,6 +225,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [self sendMessageWithId:NeoVimAgentMsgIdCommandOutput data:data expectsReply:NO];
 
   NSData *resultData = [self responseByWaitingForId:reqId];
+  if (resultData == nil) {
+    return nil;
+  }
+
   NSString *result = [NSKeyedUnarchiver unarchiveObjectWithData:resultData];
   return [result stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
@@ -266,7 +269,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   return [self escapedFileNames:@[ fileName ]][0];
 }
 
-- (bool)boolOption:(NSString *)option {
+- (NSNumber *)boolOption:(NSString *)option {
   NSUInteger reqId = [self nextRequestResponseId];
 
   NSMutableData *data = [[NSMutableData alloc] initWithBytes:&reqId length:sizeof(NSUInteger)];
@@ -275,9 +278,11 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [self sendMessageWithId:NeoVimAgentMsgIdGetBoolOption data:data expectsReply:NO];
 
   NSData *resultData = [self responseByWaitingForId:reqId];
-  NSNumber *result = [NSKeyedUnarchiver unarchiveObjectWithData:resultData];
+  if (resultData == nil) {
+    return nil;
+  }
 
-  return result.boolValue;
+  return [NSKeyedUnarchiver unarchiveObjectWithData:resultData];
 }
 
 - (void)setBoolOption:(NSString *)option to:(bool)value {
@@ -385,8 +390,16 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       _remoteServerPort, msgid, (__bridge CFDataRef) data, qTimeout, qTimeout, replyMode, &responseData
   );
 
+  if (msgid == NeoVimAgentMsgIdQuit) {
+    return nil;
+  }
+
   if (responseCode != kCFMessagePortSuccess) {
     log_cfmachport_error(responseCode, msgid, data);
+
+    [_bridge ipcBecameInvalid:
+        [NSString stringWithFormat:@"Reason: sending msg to neovim failed for %d with %d", msgid, responseCode]
+    ];
     return nil;
   }
 
