@@ -87,7 +87,6 @@ class MainWindowComponent: WindowComponent,
   fileprivate static let nibName = "MainWindow"
 
   fileprivate var defaultEditorFont: NSFont
-//  fileprivate var usesLigatures: Bool
 
   fileprivate var _cwd: URL = FileUtils.userHomeUrl
 
