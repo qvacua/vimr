@@ -428,8 +428,6 @@ static NSData *data_with_response_id_prefix(NSUInteger responseId, NSData *data)
 
   if (data != nil) {
     [result appendData:data];
-  } else {
-    NSLog(@"!!!!!!!!!!!!!!!!!!!!!!!!!!!");
   }
 
   return result;

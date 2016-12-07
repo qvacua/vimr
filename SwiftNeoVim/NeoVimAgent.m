@@ -282,11 +282,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     return nil;
   }
 
-  NSNumber *result = [NSKeyedUnarchiver unarchiveObjectWithData:resultData];
-  return result;
+  return [NSKeyedUnarchiver unarchiveObjectWithData:resultData];
 }
 
-- (bool)setBoolOption:(NSString *)option to:(bool)value {
+- (void)setBoolOption:(NSString *)option to:(bool)value {
   NSUInteger reqId = [self nextRequestResponseId];
 
   NSMutableData *data = [NSMutableData new];
@@ -301,8 +300,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [self sendMessageWithId:NeoVimAgentMsgIdSetBoolOption data:data expectsReply:NO];
 
   [self responseByWaitingForId:reqId];
-
-  return true;
 }
 
 - (void)selectWindow:(NeoVimWindow *)window {
@@ -393,10 +390,15 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       _remoteServerPort, msgid, (__bridge CFDataRef) data, qTimeout, qTimeout, replyMode, &responseData
   );
 
+  if (msgid == NeoVimAgentMsgIdQuit) {
+    return nil;
+  }
+
   if (responseCode != kCFMessagePortSuccess) {
     log_cfmachport_error(responseCode, msgid, data);
+
     [_bridge ipcBecameInvalid:
-        [NSString stringWithFormat:@"Reason: sendMsg failed for %d with %d", msgid, responseCode]
+        [NSString stringWithFormat:@"Reason: sending msg to neovim failed for %d with %d", msgid, responseCode]
     ];
     return nil;
   }
