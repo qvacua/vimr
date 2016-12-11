@@ -15,7 +15,6 @@ enum FileOutlineViewAction {
   case openFileInHorizontalSplit(fileItem: FileItem)
   case openFileInVerticalSplit(fileItem: FileItem)
   case setAsWorkingDirectory(fileItem: FileItem)
-  case setParentAsWorkingDirectory(fileItem: FileItem)
 }
 
 fileprivate class FileBrowserItem: Hashable, Comparable, CustomStringConvertible {
@@ -38,6 +37,7 @@ fileprivate class FileBrowserItem: Hashable, Comparable, CustomStringConvertible
 
   let fileItem: FileItem
   var children: [FileBrowserItem] = []
+  var isChildrenScanned = false
 
   /**
     `fileItem` is copied. Children are _not_ populated.
@@ -47,7 +47,7 @@ fileprivate class FileBrowserItem: Hashable, Comparable, CustomStringConvertible
   }
 
   func child(with url: URL) -> FileBrowserItem? {
-    return self.children.filter { $0.fileItem.url == url }.first
+    return self.children.first { $0.fileItem.url == url }
   }
 }
 
@@ -69,6 +69,15 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
   }
 
   var cwd: URL = FileUtils.userHomeUrl
+  var isShowHidden = false {
+    didSet {
+      if oldValue == self.isShowHidden {
+        return
+      }
+
+      self.reloadItem(nil)
+    }
+  }
 
   init(source: Observable<Any>, fileItemService: FileItemService) {
     self.flow = EmbeddableComponent(source: source)
@@ -101,6 +110,35 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
     self.beginUpdates()
     self.update(fileBrowserItem)
     self.endUpdates()
+  }
+
+  func select(_ url: URL) {
+    var itemsToExpand: [FileBrowserItem] = []
+    var stack = [ self.root ]
+
+    while let item = stack.popLast() {
+      if item.isChildrenScanned == false {
+        item.children = self.fileItemService.sortedChildren(for: item.fileItem.url).map(FileBrowserItem.init)
+        item.isChildrenScanned = true
+      }
+
+      itemsToExpand.append(item)
+
+      if item.fileItem.url.isDirectParent(of: url) {
+        if let targetItem = item.children.first(where: { $0.fileItem.url == url }) {
+          itemsToExpand.append(targetItem)
+        }
+        break
+      }
+
+      stack.append(contentsOf: item.children.filter { $0.fileItem.url.isParent(of: url) })
+    }
+
+    itemsToExpand.forEach { self.expandItem($0) }
+
+    let targetRow = self.row(forItem: itemsToExpand.last)
+    self.selectRowIndexes(IndexSet(integer: targetRow), byExtendingSelection: false)
+    self.scrollRowToVisible(targetRow)
   }
 
   fileprivate func handleRemovals(for fileBrowserItem: FileBrowserItem, new newChildren: [FileBrowserItem]) {
@@ -189,7 +227,7 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
 extension FileOutlineView {
 
   fileprivate func prepare(_ children: [FileBrowserItem]) -> [FileBrowserItem] {
-    return children.filter { !$0.fileItem.isHidden }
+    return self.isShowHidden ? children : children.filter { !$0.fileItem.isHidden }
   }
 
   func outlineView(_: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
@@ -197,7 +235,10 @@ extension FileOutlineView {
       let rootFileItem = fileItemService.fileItem(for: self.cwd)
         ?? fileItemService.fileItem(for: FileUtils.userHomeUrl)!
       self.root = FileBrowserItem(fileItem: rootFileItem)
-      self.root.children = fileItemService.sortedChildren(for: self.cwd).map(FileBrowserItem.init)
+      if self.root.isChildrenScanned == false {
+        self.root.children = fileItemService.sortedChildren(for: self.cwd).map(FileBrowserItem.init)
+        self.root.isChildrenScanned = true
+      }
 
       return self.prepare(self.root.children).count
     }
@@ -208,9 +249,13 @@ extension FileOutlineView {
 
     let fileItem = fileBrowserItem.fileItem
     if fileItem.isDir {
-      let fileItemChildren = self.fileItemService.sortedChildren(for: fileItem.url)
-      fileBrowserItem.fileItem.children = fileItemChildren
-      fileBrowserItem.children = fileItemChildren.map(FileBrowserItem.init)
+      if fileBrowserItem.isChildrenScanned == false {
+        let fileItemChildren = self.fileItemService.sortedChildren(for: fileItem.url)
+        fileBrowserItem.fileItem.children = fileItemChildren
+        fileBrowserItem.children = fileItemChildren.map(FileBrowserItem.init)
+        fileBrowserItem.isChildrenScanned = true
+      }
+
       return self.prepare(fileBrowserItem.children).count
     }
 
@@ -309,7 +354,8 @@ extension FileOutlineView {
     let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
     cell.text = fileBrowserItem.fileItem.url.lastPathComponent
-    cell.image = self.fileItemService.icon(forUrl: fileBrowserItem.fileItem.url)
+    let icon = self.fileItemService.icon(forUrl: fileBrowserItem.fileItem.url)
+    cell.image = fileBrowserItem.fileItem.isHidden ? icon?.tinting(with: NSColor.white.withAlphaComponent(0.4)) : icon
 
     return cell
   }
@@ -381,22 +427,6 @@ extension FileOutlineView {
 
     self.flow.publish(event: FileOutlineViewAction.setAsWorkingDirectory(fileItem: item.fileItem))
   }
-
-  @IBAction func setParentAsWorkingDirectory(_: Any?) {
-    guard let item = self.clickedItem as? FileBrowserItem else {
-      return
-    }
-
-    guard self.level(forItem: clickedItem) > 0 else {
-      return
-    }
-
-    guard item.fileItem.url.path != "/" else {
-      return
-    }
-
-    self.flow.publish(event: FileOutlineViewAction.setParentAsWorkingDirectory(fileItem: item.fileItem))
-  }
 }
 
 // MARK: - NSUserInterfaceValidations
@@ -409,10 +439,6 @@ extension FileOutlineView {
 
     if item.action == #selector(setAsWorkingDirectory(_:)) {
       return clickedItem.fileItem.isDir
-    }
-
-    if item.action == #selector(setParentAsWorkingDirectory(_:)) {
-      return self.level(forItem: clickedItem) > 0
     }
 
     return true

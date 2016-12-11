@@ -13,6 +13,7 @@ enum MainWindowAction {
   case openQuickly(mainWindow: MainWindowComponent)
   case changeCwd(mainWindow: MainWindowComponent, cwd: URL)
   case changeBufferList(mainWindow: MainWindowComponent, buffers: [NeoVimBuffer])
+  case changeFileBrowserSelection(mainWindow: MainWindowComponent, url: URL)
   case close(mainWindow: MainWindowComponent, mainWindowPrefData: MainWindowPrefData)
 }
 
@@ -87,7 +88,6 @@ class MainWindowComponent: WindowComponent,
   fileprivate static let nibName = "MainWindow"
 
   fileprivate var defaultEditorFont: NSFont
-//  fileprivate var usesLigatures: Bool
 
   fileprivate var _cwd: URL = FileUtils.userHomeUrl
 
@@ -167,25 +167,33 @@ class MainWindowComponent: WindowComponent,
   }
 
   fileprivate func setupTools(with mainWindowData: MainWindowPrefData) {
+    // By default the tool buttons are shown and only the file browser tool is shown.
+    let fileBrowserToolData = mainWindowData.toolPrefData(for: .fileBrowser)
+    let bufferListToolData = mainWindowData.toolPrefData(for: .bufferList)
+
+    let fileBrowserData = fileBrowserToolData.toolData as? FileBrowserData ?? FileBrowserData.default
+
     // FIXME: We do not use [self.sink, source].toMergedObservables. If we do so, then self.sink seems to live as long
     // as source, i.e. forever. Thus, self (MainWindowComponent) does not get deallocated. Not nice...
-    let fileBrowser = FileBrowserComponent(source: self.sink, fileItemService: self.fileItemService)
-    let fileBrowserTool = WorkspaceToolComponent(title: "Files",
-                                                 viewComponent: fileBrowser,
-                                                 toolIdentifier: .fileBrowser,
-                                                 minimumDimension: 100)
+    let fileBrowser = FileBrowserComponent(source: self.sink,
+                                           fileItemService: self.fileItemService,
+                                           initialData: fileBrowserData)
+    let fileBrowserConfig = WorkspaceTool.Config(title: "Files",
+                                                 view: fileBrowser,
+                                                 minimumDimension: 100,
+                                                 withInnerToolbar: true,
+                                                 customToolbar: fileBrowser.innerCustomToolbar,
+                                                 customMenuItems: fileBrowser.menuItems)
+    let fileBrowserTool = WorkspaceToolComponent(toolIdentifier: .fileBrowser, config: fileBrowserConfig)
     self.tools[.fileBrowser] = fileBrowserTool
 
     let bufferList = BufferListComponent(source: self.sink, fileItemService: self.fileItemService)
-    let bufferListTool = WorkspaceToolComponent(title: "Buffers",
-                                                viewComponent: bufferList,
-                                                toolIdentifier: .bufferList,
-                                                minimumDimension: 100)
+    let bufferListConfig = WorkspaceTool.Config(title: "Buffers",
+                                                view: bufferList,
+                                                minimumDimension: 100,
+                                                withInnerToolbar: true)
+    let bufferListTool = WorkspaceToolComponent(toolIdentifier: .bufferList, config: bufferListConfig)
     self.tools[.bufferList] = bufferListTool
-
-    // By default the tool buttons are shown and no tools are shown.
-    let fileBrowserToolData = mainWindowData.toolPrefData(for: .fileBrowser)
-    let bufferListToolData = mainWindowData.toolPrefData(for: .bufferList)
 
     self.workspace.append(tool: fileBrowserTool, location: fileBrowserToolData.location)
     self.workspace.append(tool: bufferListTool, location: bufferListToolData.location)
@@ -253,8 +261,18 @@ class MainWindowComponent: WindowComponent,
         case let FileBrowserAction.setAsWorkingDirectory(url: url):
           self.neoVimView.cwd = url
 
-        case let FileBrowserAction.setParentAsWorkingDirectory(url: url):
-          self.neoVimView.cwd = url.parent
+        case let FileBrowserAction.scrollToSource(cwd: cwd):
+          guard let curBufUrl = self.neoVimView.currentBuffer()?.url else {
+            NSLog("no buffer")
+            return
+          }
+
+          guard curBufUrl.isContained(in: cwd) else {
+            NSLog("buffer not contained")
+            return
+          }
+
+          self.publish(event: MainWindowAction.changeFileBrowserSelection(mainWindow: self, url: curBufUrl))
 
         case let BufferListAction.open(buffer: buffer):
           self.neoVimView.select(buffer: buffer)
@@ -518,7 +536,8 @@ extension MainWindowComponent {
     let fileBrowserData = ToolPrefData(identifier: .fileBrowser,
                                        location: fileBrowser.location,
                                        isVisible: fileBrowser.isSelected,
-                                       dimension: fileBrowser.dimension)
+                                       dimension: fileBrowser.dimension,
+                                       toolData: fileBrowser.toolData)
 
     let bufferList = self.tools[.bufferList]!
     let bufferListData = ToolPrefData(identifier: .bufferList,

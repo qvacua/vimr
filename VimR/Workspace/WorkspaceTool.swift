@@ -4,20 +4,25 @@
  */
 
 import Cocoa
+import PureLayout
 
 protocol WorkspaceToolDelegate: class {
 
   func toggle(_ tool: WorkspaceTool)
 }
 
-class WorkspaceTool: Hashable {
+class WorkspaceTool: NSView {
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
 
   static func ==(left: WorkspaceTool, right: WorkspaceTool) -> Bool {
     return left.uuid == right.uuid
   }
 
   // MARK: - API
-  var hashValue: Int {
+  override var hashValue: Int {
     return self.uuid.hashValue
   }
   /**
@@ -46,21 +51,88 @@ class WorkspaceTool: Hashable {
   weak var delegate: WorkspaceToolDelegate?
   weak var bar: WorkspaceBar?
 
+  var workspace: Workspace? {
+    return self.bar?.workspace
+  }
+
+  var innerToolbar: InnerToolBar?
+
   let minimumDimension: CGFloat
   var dimension: CGFloat
 
-  init(title: String, view: NSView, minimumDimension: CGFloat = 50) {
-    self.title = title
-    self.view = view
-    self.minimumDimension = minimumDimension
+  struct Config {
+
+    let title: String
+    let view: NSView
+    let minimumDimension: CGFloat
+
+    let isWithInnerToolbar: Bool
+
+    let customToolbar: NSView?
+    let customMenuItems: [NSMenuItem]
+
+    init(title: String,
+         view: NSView,
+         minimumDimension: CGFloat = 50,
+         withInnerToolbar: Bool = true,
+         customToolbar: NSView? = nil,
+         customMenuItems: [NSMenuItem] = [])
+    {
+      self.title = title
+      self.view = view
+      self.minimumDimension = minimumDimension
+
+      self.isWithInnerToolbar = withInnerToolbar
+
+      self.customToolbar = customToolbar
+      self.customMenuItems = customMenuItems
+    }
+  }
+
+  init(_ config: Config) {
+    self.title = config.title
+    self.view = config.view
+    self.minimumDimension = config.minimumDimension
     self.dimension = minimumDimension
+
     self.button = WorkspaceToolButton(title: title)
 
+    super.init(frame: .zero)
+    self.configureForAutoLayout()
+
     self.button.tool = self
+    if config.isWithInnerToolbar {
+      self.innerToolbar = InnerToolBar(customToolbar: config.customToolbar, customMenuItems: config.customMenuItems)
+      self.innerToolbar?.tool = self
+    }
+
+    self.addViews()
   }
 
   func toggle() {
     self.delegate?.toggle(self)
     self.isSelected = !self.isSelected
+  }
+
+  fileprivate func addViews() {
+    let view = self.view
+    self.addSubview(view)
+
+    if let innerToolbar = self.innerToolbar {
+      self.addSubview(innerToolbar)
+
+      innerToolbar.autoPinEdge(toSuperviewEdge: .top)
+      innerToolbar.autoPinEdge(toSuperviewEdge: .right)
+      innerToolbar.autoPinEdge(toSuperviewEdge: .left)
+
+      view.autoPinEdge(.top, to: .bottom, of: innerToolbar)
+      view.autoPinEdge(toSuperviewEdge: .right)
+      view.autoPinEdge(toSuperviewEdge: .bottom)
+      view.autoPinEdge(toSuperviewEdge: .left)
+
+      return
+    }
+
+    view.autoPinEdgesToSuperviewEdges()
   }
 }

@@ -12,19 +12,34 @@ protocol StandardPrefData {
   func dict() -> [String: Any]
 }
 
+struct EmptyPrefData: StandardPrefData {
+
+  static let `default` = EmptyPrefData()
+
+  init() {}
+
+  init?(dict: [String: Any]) {
+    self.init()
+  }
+
+  func dict() -> [String: Any] {
+    return [:]
+  }
+}
+
 struct PrefData: StandardPrefData {
-  
+
   fileprivate static let general = "general"
   fileprivate static let appearance = "appearance"
   fileprivate static let advanced = "advanced"
   fileprivate static let mainWindow = "mainWindow"
 
   static let `default` = PrefData(general: .default, appearance: .default, advanced: .default, mainWindow: .default)
-  
+
   var general: GeneralPrefData
   var appearance: AppearancePrefData
   var advanced: AdvancedPrefData
-  
+
   var mainWindow: MainWindowPrefData
 
   init(general: GeneralPrefData,

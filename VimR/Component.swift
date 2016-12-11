@@ -163,16 +163,33 @@ class ViewComponent: NSView, Flow {
 
 class WorkspaceToolComponent: WorkspaceTool, Flow {
 
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
   let toolIdentifier: ToolIdentifier
   let viewComponent: ViewComponent
   var sink: Observable<Any> {
     return self.viewComponent.sink
   }
 
-  init(title: String, viewComponent: ViewComponent, toolIdentifier: ToolIdentifier, minimumDimension: CGFloat = 50) {
+  var toolData: StandardPrefData {
+    guard let toolDataHolder = self.viewComponent as? ToolDataHolder else {
+      return EmptyPrefData.default
+    }
+
+    return toolDataHolder.toolData
+  }
+
+  init(toolIdentifier: ToolIdentifier, config: WorkspaceTool.Config) {
+    guard let viewComponent = config.view as? ViewComponent else {
+      preconditionFailure("ERROR view must be a ViewComponent!")
+    }
+
     self.toolIdentifier = toolIdentifier
     self.viewComponent = viewComponent
-    super.init(title: title, view: viewComponent, minimumDimension: minimumDimension)
+
+    super.init(config)
   }
 }
 

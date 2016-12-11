@@ -72,7 +72,10 @@ class Workspace: NSView, WorkspaceBarDelegate {
     self.configureForAutoLayout()
 
     self.register(forDraggedTypes: [WorkspaceToolButton.toolUti])
-    self.bars.values.forEach { [unowned self] in $0.delegate = self }
+    self.bars.values.forEach {
+      $0.workspace = self
+      $0.delegate = self
+    }
 
     self.relayout()
   }
@@ -83,6 +86,11 @@ class Workspace: NSView, WorkspaceBarDelegate {
     }
 
     self.tools.append(tool)
+    self.bars[location]?.append(tool: tool)
+  }
+
+  func move(tool: WorkspaceTool, to location: WorkspaceBarLocation) {
+    tool.bar?.remove(tool: tool)
     self.bars[location]?.append(tool: tool)
   }
 
@@ -145,8 +153,7 @@ extension Workspace {
       return false
     }
 
-    tool.bar?.remove(tool: tool)
-    self.bars[barLoc]?.append(tool: tool)
+    self.move(tool: tool, to: barLoc)
 
     return true
   }

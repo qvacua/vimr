@@ -72,6 +72,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
   var dimensionConstraint = NSLayoutConstraint()
 
   weak var delegate: WorkspaceBarDelegate?
+  weak var workspace: Workspace?
 
   init(location: WorkspaceBarLocation) {
     self.location = location
@@ -238,7 +239,7 @@ extension ProxyBar {
     }
 
     let tool = self.container!.tools[idx]
-    return self.container!.tools.filter { $0.uuid == uuid }.first == tool
+    return self.container!.tools.first { $0.uuid == uuid } == tool
   }
 
   override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
@@ -595,7 +596,7 @@ extension WorkspaceBar {
   }
 
   fileprivate func layoutWithoutButtons(_ tool: WorkspaceTool) {
-    let view = tool.view
+    let view = tool
     let thickness = WorkspaceBar.separatorThickness
 
     self.addSubview(view)
@@ -640,7 +641,7 @@ extension WorkspaceBar {
   }
 
   fileprivate func layout(_ tool: WorkspaceTool) {
-    let view = tool.view
+    let view = tool
     let button = tool.button
     let thickness = WorkspaceBar.separatorThickness
 
