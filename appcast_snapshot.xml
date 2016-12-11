@@ -7,20 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.11.1-SNAPSHOT-20161207.2041-142</title>
+      <title>v0.11.1-SNAPSHOT-20161211.1138-143</title>
       <description><![CDATA[
-    <p>GH-360, GH-364: Try not to crash when using CtrlP or FZF in some cases.</p>
+    <ul>
+<li>GH-363: Accidentaly included the (problematic for pre 10.12) jemalloc upgrade for Neovim. Revert it.</li>
+</ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.1-SNAPSHOT-20161207.2041-142
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.11.1-SNAPSHOT-20161211.1138-143
       </releaseNotesLink>
-      <pubDate>2016-12-07T20:49:49.160376</pubDate>
+      <pubDate>2016-12-11T11:45:01.386165</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.1-SNAPSHOT-20161207.2041-142/VimR-v0.11.1-SNAPSHOT-20161207.2041-142.tar.bz2"
-                 sparkle:version="142"
-                 sparkle:shortVersionString="0.11.1-SNAPSHOT-20161207.2041"
-                 sparkle:dsaSignature="MC0CFErtW7sAPe14iFhBaFX0Rso85lpgAhUAjgiaUxAW2upoICmTEa+GVCAeVj0="
-                 length="9099045"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.11.1-SNAPSHOT-20161211.1138-143/VimR-v0.11.1-SNAPSHOT-20161211.1138-143.tar.bz2"
+                 sparkle:version="143"
+                 sparkle:shortVersionString="0.11.1-SNAPSHOT-20161211.1138"
+                 sparkle:dsaSignature="MC0CFHMhmdyAaIFLQbeBFDKMJCj3MAnpAhUAuaITtUtRPv6Q4pbW9vr+WvALmJg="
+                 length="9095627"
                  type="application/octet-stream"/>
     </item>
   </channel>
