@@ -1,3 +1,8 @@
+# next
+
+* GH-360 Bugfix: a buffer list related bug.
+* GH-363: Accidentaly included the (problematic for pre 10.12) jemalloc upgrade for Neovim. Revert it.
+
 # 0.11.1-140
 
 * GH-354: Bugfix: a file browser related bug.
