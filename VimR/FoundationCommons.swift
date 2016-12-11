@@ -22,19 +22,19 @@ extension URL {
     return Array(targetPathComps[0..<myPathComps.count]) == myPathComps
   }
 
-  func isContained(in url: URL) -> Bool {
-    if url == self || url.isParent(of: self) {
+  func isContained(in parentUrl: URL) -> Bool {
+    if parentUrl == self {
       return false
     }
 
     let pathComps = self.pathComponents
-    let targetPathComps = url.pathComponents
+    let parentPathComps = parentUrl.pathComponents
 
-    guard targetPathComps.count > pathComps.count else {
+    guard pathComps.count > parentPathComps.count else {
       return false
     }
 
-    guard Array(targetPathComps[0..<pathComps.endIndex]) == pathComps else {
+    guard Array(pathComps[0..<parentPathComps.endIndex]) == parentPathComps else {
       return false
     }
 

@@ -111,6 +111,10 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
     self.endUpdates()
   }
 
+  func select(_ url: URL) {
+    NSLog("select \(url)")
+  }
+
   fileprivate func handleRemovals(for fileBrowserItem: FileBrowserItem, new newChildren: [FileBrowserItem]) {
     let curChildren = fileBrowserItem.children
 

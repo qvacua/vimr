@@ -217,6 +217,9 @@ class FileBrowserComponent: ViewComponent, ToolDataHolder {
 //          NSLog("cwd changed to \(self.cwd) of \(mainWindow.uuid)")
           self?.fileView.reloadData()
 
+        case let .changeFileBrowserSelection(mainWindow: _, url: url):
+          self?.fileView.select(url)
+
         default:
           break
         }

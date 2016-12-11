@@ -49,20 +49,17 @@ class MainWindowManager: StandardFlow {
         case let .close(mainWindow, mainWindowPrefData):
           self.close(mainWindow, prefData: mainWindowPrefData)
 
-        case .changeCwd:
-          break
-
-        case .changeBufferList:
+        case .changeCwd, .changeBufferList, .changeFileBrowserSelection:
           break;
         }
       })
       .addDisposableTo(self.disposeBag)
 
     mainWindowComponent.show()
-    
+
     return mainWindowComponent
   }
-  
+
   func close(_ mainWindowComponent: MainWindowComponent, prefData: MainWindowPrefData) {
     // Save the tools settings of the last closed main window.
     // TODO: Think about a better time to save this.
@@ -71,7 +68,7 @@ class MainWindowManager: StandardFlow {
     if self.keyMainWindow === mainWindowComponent {
       self.keyMainWindow = nil
     }
-    
+
     self.mainWindowComponents.removeValue(forKey: mainWindowComponent.uuid)
 
     if self.mainWindowComponents.isEmpty {
@@ -82,7 +79,7 @@ class MainWindowManager: StandardFlow {
   func hasDirtyWindows() -> Bool {
     return self.mainWindowComponents.values.reduce(false) { $0 ? true : $1.isDirty() }
   }
-  
+
   func openInKeyMainWindow(urls:[URL] = [], cwd: URL = FileUtils.userHomeUrl) {
     if self.mainWindowComponents.isEmpty {
       _ = self.newMainWindow(urls: urls, cwd: cwd)
@@ -97,11 +94,11 @@ class MainWindowManager: StandardFlow {
     keyMainWindow.cwd = cwd
     keyMainWindow.open(urls: urls)
   }
-  
+
   fileprivate func set(keyMainWindow mainWindow: MainWindowComponent?) {
     self.keyMainWindow = mainWindow
   }
-  
+
   func closeAllWindowsWithoutSaving() {
     self.mainWindowComponents.values.forEach { $0.closeAllNeoVimWindowsWithoutSaving() }
   }

@@ -13,6 +13,7 @@ enum MainWindowAction {
   case openQuickly(mainWindow: MainWindowComponent)
   case changeCwd(mainWindow: MainWindowComponent, cwd: URL)
   case changeBufferList(mainWindow: MainWindowComponent, buffers: [NeoVimBuffer])
+  case changeFileBrowserSelection(mainWindow: MainWindowComponent, url: URL)
   case close(mainWindow: MainWindowComponent, mainWindowPrefData: MainWindowPrefData)
 }
 
@@ -261,10 +262,17 @@ class MainWindowComponent: WindowComponent,
           self.neoVimView.cwd = url
 
         case let FileBrowserAction.scrollToSource(cwd: cwd):
-          guard self.neoVimView.currentBuffer()?.url?.isContained(in: cwd) == true else {
+          guard let curBufUrl = self.neoVimView.currentBuffer()?.url else {
+            NSLog("no buffer")
             return
           }
 
+          guard curBufUrl.isContained(in: cwd) else {
+            NSLog("buffer not contained")
+            return
+          }
+
+          self.publish(event: MainWindowAction.changeFileBrowserSelection(mainWindow: self, url: curBufUrl))
 
         case let BufferListAction.open(buffer: buffer):
           self.neoVimView.select(buffer: buffer)
