@@ -218,6 +218,7 @@ class FileBrowserComponent: ViewComponent, ToolDataHolder {
           self?.fileView.reloadData()
 
         case let .changeFileBrowserSelection(mainWindow: _, url: url):
+          DispatchUtils.gui { self?.beFirstResponder() } // TODO: Why do we need DispatchUtils.gui here?
           self?.fileView.select(url)
 
         default:

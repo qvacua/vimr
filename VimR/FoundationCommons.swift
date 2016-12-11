@@ -7,6 +7,21 @@ import Foundation
 
 extension URL {
 
+  func isDirectParent(of url: URL) -> Bool {
+    guard self.isFileURL && url.isFileURL else {
+      return false
+    }
+
+    let myPathComps = self.pathComponents
+    let targetPathComps = url.pathComponents
+
+    guard targetPathComps.count == myPathComps.count + 1 else {
+      return false
+    }
+
+    return Array(targetPathComps[0..<myPathComps.count]) == myPathComps
+  }
+
   func isParent(of url: URL) -> Bool {
     guard self.isFileURL && url.isFileURL else {
       return false
