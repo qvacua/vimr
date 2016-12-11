@@ -242,7 +242,7 @@ extension NeoVimView {
    - returns: nil when for exampls a quickfix panel is open.
    */
   public func currentBuffer() -> NeoVimBuffer? {
-    return self.agent.buffers().filter { $0.isCurrent }.first
+    return self.agent.buffers().first { $0.isCurrent }
   }
 
   public func allBuffers() -> [NeoVimBuffer] {
@@ -265,7 +265,7 @@ extension NeoVimView {
   public func open(urls: [URL]) {
     let tabs = self.agent.tabs()
     let buffers = self.allBuffers()
-    let currentBufferIsTransient = buffers.filter { $0.isCurrent }.first?.isTransient ?? false
+    let currentBufferIsTransient = buffers.first { $0.isCurrent }?.isTransient ?? false
 
     urls.enumerated().forEach { (idx, url) in
           if buffers.filter({ $0.url == url }).first != nil {

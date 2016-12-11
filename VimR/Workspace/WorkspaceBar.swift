@@ -239,7 +239,7 @@ extension ProxyBar {
     }
 
     let tool = self.container!.tools[idx]
-    return self.container!.tools.filter { $0.uuid == uuid }.first == tool
+    return self.container!.tools.first { $0.uuid == uuid } == tool
   }
 
   override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {

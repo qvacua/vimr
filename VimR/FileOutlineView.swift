@@ -47,7 +47,7 @@ fileprivate class FileBrowserItem: Hashable, Comparable, CustomStringConvertible
   }
 
   func child(with url: URL) -> FileBrowserItem? {
-    return self.children.filter { $0.fileItem.url == url }.first
+    return self.children.first { $0.fileItem.url == url }
   }
 }
 
