@@ -264,12 +264,10 @@ class MainWindowComponent: WindowComponent,
 
         case let FileBrowserAction.scrollToSource(cwd: cwd):
           guard let curBufUrl = self.neoVimView.currentBuffer()?.url else {
-            NSLog("no buffer")
             return
           }
 
           guard curBufUrl.isContained(in: cwd) else {
-            NSLog("buffer not contained")
             return
           }
 
