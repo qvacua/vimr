@@ -7,28 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.12.0-SNAPSHOT-20161211.2311-144</title>
+      <title>v0.12.0-SNAPSHOT-20161213.1835-146</title>
       <description><![CDATA[
     <ul>
-<li>GH-293: More tool, i.e. file browser and buffer list improvements<ul>
-<li>option to show hidden files</li>
-<li>move tool to top/right/bottom/left</li>
-<li>add a button for <code>cd ..</code></li>
-<li>select the currently open file: "Scroll from source" from IntelliJ</li>
-</ul>
-</li>
+<li>GH-369: Bugfix: set the <code>cwd</code> correctly when opening files using the <code>vimr</code> command line tool</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.12.0-SNAPSHOT-20161211.2311-144
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.12.0-SNAPSHOT-20161213.1835-146
       </releaseNotesLink>
-      <pubDate>2016-12-11T23:17:12.238222</pubDate>
+      <pubDate>2016-12-13T18:43:36.888787</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.12.0-SNAPSHOT-20161211.2311-144/VimR-v0.12.0-SNAPSHOT-20161211.2311-144.tar.bz2"
-                 sparkle:version="144"
-                 sparkle:shortVersionString="0.12.0-SNAPSHOT-20161211.2311"
-                 sparkle:dsaSignature="MC0CFQDT8/j5qJLJSxU1Uw7g+Z9fX/CF7QIUYLInB9N3qaTKRk2WfU6CvGz0fiE="
-                 length="9343637"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.12.0-SNAPSHOT-20161213.1835-146/VimR-v0.12.0-SNAPSHOT-20161213.1835-146.tar.bz2"
+                 sparkle:version="146"
+                 sparkle:shortVersionString="0.12.0-SNAPSHOT-20161213.1835"
+                 sparkle:dsaSignature="MCwCFCdSzx7wRioaJkoT0tKAAhKeLNYIAhQCoU2jq6+DmFYwrMB6GX374RC+Nw=="
+                 length="9350023"
                  type="application/octet-stream"/>
     </item>
   </channel>
