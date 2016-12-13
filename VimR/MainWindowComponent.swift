@@ -140,7 +140,6 @@ class MainWindowComponent: WindowComponent,
 
     self.defaultEditorFont = initialData.appearance.editorFont
     self.fileItemService = fileItemService
-    self._cwd = cwd
 
     super.init(source: source, nibName: MainWindowComponent.nibName)
 
@@ -157,9 +156,11 @@ class MainWindowComponent: WindowComponent,
     if neoVimViewCwd == cwd {
       self.fileItemService.monitor(url: cwd)
     } else {
-      self.neoVimView.cwd = cwd // This will publish the MainWindowAction.changeCwd action for the file browser.
+      self.neoVimView.cwd = cwd // The above will publish the MainWindowAction.changeCwd action for the file browser.
     }
     self.neoVimView.open(urls: urls)
+
+    self._cwd = cwd
 
     self.addReactions()
 
