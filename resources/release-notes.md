@@ -1,12 +1,13 @@
 # next
 
 * GH-360 Bugfix: a buffer list related bug.
-* GH-363: Accidentaly included the (problematic for pre 10.12) jemalloc upgrade for Neovim. Revert it.
+* GH-363: Upgrade to jemalloc 4.4.0 to see whether VimR launches on 10.10 (and 10.11)
 * GH-293: More tool, i.e. file browser and buffer list improvements
     - option to show hidden files
     - move tool to top/right/bottom/left
     - add a button for `cd ..`
     - select the currently open file: "Scroll from source" from IntelliJ
+* GH-369: Bugfix: set the `cwd` correctly when opening files using the `vimr` command line tool
 
 # 0.11.1-140
 
