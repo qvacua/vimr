@@ -111,6 +111,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   return self;
 }
 
+- (bool)neoVimIsQuitting {
+  return _neoVimIsQuitting == 1;
+}
+
 // We cannot use -dealloc for this since -dealloc is not called until the run loop in the thread stops.
 - (void)quit {
   OSAtomicOr32Barrier(1, &_neoVimIsQuitting);
@@ -407,9 +411,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   if (responseCode != kCFMessagePortSuccess) {
     log_cfmachport_error(responseCode, msgid, data);
 
-    [_bridge ipcBecameInvalid:
-        [NSString stringWithFormat:@"Reason: sending msg to neovim failed for %d with %d", msgid, responseCode]
-    ];
+    if (_neoVimIsQuitting == 0) {
+      [_bridge ipcBecameInvalid:
+          [NSString stringWithFormat:@"Reason: sending msg to neovim failed for %d with %d", msgid, responseCode]
+      ];
+    }
+
     return nil;
   }
 
