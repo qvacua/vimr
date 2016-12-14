@@ -80,7 +80,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   NSTask *_neoVimServerTask;
 
   bool _neoVimIsReady;
+  NSCondition *_neoVimReadyCondition;
   bool _isInitErrorPresent;
+
+  uint32_t _neoVimIsQuitting;
 
   NSUInteger _requestResponseId;
   NSMutableDictionary *_requestResponseConditions;
@@ -96,7 +99,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   _uuid = uuid;
   _useInteractiveZsh = NO;
   _neoVimIsReady = NO;
+  _neoVimReadyCondition = [NSCondition new];
   _isInitErrorPresent = NO;
+
+  _neoVimIsQuitting = 0;
 
   _requestResponseId = 0;
   _requestResponseConditions = [NSMutableDictionary new];
@@ -107,6 +113,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
 // We cannot use -dealloc for this since -dealloc is not called until the run loop in the thread stops.
 - (void)quit {
+  OSAtomicOr32Barrier(1, &_neoVimIsQuitting);
+
   // Wait till we get the response from the server.
   // If we don't wait here, then the NSTask.terminate msg below could get caught by neovim which causes a warning log.
   [self sendMessageWithId:NeoVimAgentMsgIdQuit data:nil expectsReply:YES];
@@ -176,10 +184,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
   [self launchNeoVimUsingLoginShell];
 
-  // Wait until neovim is ready (max. 10s).
+  // Wait until neovim is ready.
   NSDate *deadline = [[NSDate date] dateByAddingTimeInterval:qTimeout];
-  while (!_neoVimIsReady
-      && [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:deadline]);
+  [_neoVimReadyCondition lock];
+  while (!_neoVimIsReady && [_neoVimReadyCondition waitUntilDate:deadline]);
+  [_neoVimReadyCondition unlock];
+  _neoVimReadyCondition = nil;
 
   return !_isInitErrorPresent;
 }
@@ -390,7 +400,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       _remoteServerPort, msgid, (__bridge CFDataRef) data, qTimeout, qTimeout, replyMode, &responseData
   );
 
-  if (msgid == NeoVimAgentMsgIdQuit) {
+  if (msgid == NeoVimAgentMsgIdQuit || _neoVimIsQuitting == 1) {
     return nil;
   }
 
@@ -434,7 +444,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       bool *value = data_to_bool_array(data, 1);
       _isInitErrorPresent = value[0];
 
+      [_neoVimReadyCondition lock];
       _neoVimIsReady = YES;
+      [_neoVimReadyCondition signal];
+      [_neoVimReadyCondition unlock];
 
       return;
     }
