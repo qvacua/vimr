@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.12.0-SNAPSHOT-20161213.1852-147</title>
+      <title>v0.12.0-SNAPSHOT-20161214.2022-148</title>
       <description><![CDATA[
     <ul>
-<li>GH-369: Bugfix: set the <code>cwd</code> correctly when opening files using the <code>vimr</code> command line tool</li>
+<li>Last snapshot before 0.12.0 🙂</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.12.0-SNAPSHOT-20161213.1852-147
+        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.12.0-SNAPSHOT-20161214.2022-148
       </releaseNotesLink>
-      <pubDate>2016-12-13T18:59:39.783389</pubDate>
+      <pubDate>2016-12-14T20:29:48.683687</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.12.0-SNAPSHOT-20161213.1852-147/VimR-v0.12.0-SNAPSHOT-20161213.1852-147.tar.bz2"
-                 sparkle:version="147"
-                 sparkle:shortVersionString="0.12.0-SNAPSHOT-20161213.1852"
-                 sparkle:dsaSignature="MCwCFGS+Ey4dktMaYToll0D2EvUzpKiIAhQGxPkd9Z1hRu0SOSar8osOd6C7yA=="
-                 length="9350341"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.12.0-SNAPSHOT-20161214.2022-148/VimR-v0.12.0-SNAPSHOT-20161214.2022-148.tar.bz2"
+                 sparkle:version="148"
+                 sparkle:shortVersionString="0.12.0-SNAPSHOT-20161214.2022"
+                 sparkle:dsaSignature="MC0CFQCa6xZCdJk9zYybQftTncWxEUPu2gIUQtHnHlq3vcb/sRv3bzKTt9Ekcvo="
+                 length="9354528"
                  type="application/octet-stream"/>
     </item>
   </channel>
