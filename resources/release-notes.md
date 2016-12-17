@@ -1,4 +1,4 @@
-# next
+# 0.12.0-150
 
 * GH-360: Bugfix: a buffer list related bug.
 * GH-363: Upgrade to jemalloc 4.4.0 for 10.10 (and 10.11)
