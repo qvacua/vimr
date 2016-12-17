@@ -24,7 +24,7 @@ class ScorerTest: XCTestCase {
     let targets = [
       "NeoVimView.swift",
       "NeoVimViewDelegate.swift",
-      "NeoVimServer",
+      "NeoVimAgent",
     ]
 
     expect(Scorer.score(targets[0], pattern: pattern)).to(beGreaterThan(Scorer.score(targets[1], pattern: pattern)))

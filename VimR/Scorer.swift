@@ -6,28 +6,26 @@
 import Foundation
 
 class Scorer {
-  
+
   static func score(_ target: String, pattern: String) -> Int {
-    let wf = Matcher.wagnerFisherDistance(target, pattern: pattern)
     let fuzzy = Matcher.fuzzyIgnoringCase(target, pattern: pattern)
     let upper = Matcher.numberOfUppercaseMatches(target, pattern: pattern)
     let exactMatch = Matcher.exactMatchIgnoringCase(target, pattern: pattern)
+    let wf = Matcher.wagnerFisherDistance(target, pattern: pattern)
 
     let exactScore: Int
     switch exactMatch {
     case .none:
       exactScore = 0
     case .exact:
-      return 100
+      return 1000
     case .prefix, .contains, .suffix:
       exactScore = 5
     }
 
-    let wfScore = 0 - (wf / 10)
-
     return exactScore
-      + wfScore
-      + fuzzy.matches
-      + 2 * upper
+           + 10 * fuzzy
+           + 5 * upper
+           - wf
   }
 }

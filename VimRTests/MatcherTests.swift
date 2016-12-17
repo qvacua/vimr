@@ -19,7 +19,7 @@ class MatcherTest: XCTestCase {
     expect(Matcher.exactMatchIgnoringCase(self.target, pattern: "swIFt")).to(equal(Matcher.ExactMatchResult.suffix))
     expect(Matcher.exactMatchIgnoringCase(self.target, pattern: "userdecon")).to(equal(Matcher.ExactMatchResult.none))
   }
-  
+
   func testUppercaseMatcher() {
     expect(Matcher.numberOfUppercaseMatches("SwiftNeoVimNeoVimView.swift", pattern: "swnvv")).to(equal(4))
     expect(Matcher.numberOfUppercaseMatches(self.target, pattern: "xct")).to(equal(2))
@@ -29,12 +29,12 @@ class MatcherTest: XCTestCase {
     expect(Matcher.numberOfUppercaseMatches(self.target, pattern: "ut")).to(equal(2))
     expect(Matcher.numberOfUppercaseMatches(self.target, pattern: "de")).to(equal(1))
   }
-  
+
   func testFuzzyMatcher() {
-    expect(Matcher.fuzzyIgnoringCase(self.target, pattern: "ucotft").matches).to(equal(6))
-    expect(Matcher.fuzzyIgnoringCase(self.target, pattern: "uco-tft").matches).to(equal(3))
+    expect(Matcher.fuzzyIgnoringCase(self.target, pattern: "ucotft")).to(equal(6 + 5))
+    expect(Matcher.fuzzyIgnoringCase(self.target, pattern: "uco-tft")).to(equal(3 + 5))
   }
-  
+
   func testWagerFischerAlgo() {
     expect(Matcher.wagnerFisherDistance("sitting", pattern: "kitten")).to(equal(3))
     expect(Matcher.wagnerFisherDistance("saturday", pattern: "sunday")).to(equal(3))
