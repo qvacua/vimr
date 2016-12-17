@@ -1,7 +1,7 @@
 # next
 
-* GH-360 Bugfix: a buffer list related bug.
-* GH-363: Upgrade to jemalloc 4.4.0 to see whether VimR launches on 10.10 (and 10.11)
+* GH-360: Bugfix: a buffer list related bug.
+* GH-363: Upgrade to jemalloc 4.4.0 for 10.10 (and 10.11)
 * GH-293: More tool, i.e. file browser and buffer list improvements
     - option to show hidden files
     - move tool to top/right/bottom/left
