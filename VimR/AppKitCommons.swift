@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import CocoaMarkdown
 
 extension NSImage {
 
@@ -74,6 +75,32 @@ extension NSAttributedString {
 
   var wholeRange: NSRange {
     return NSRange(location: 0, length: self.length)
+  }
+
+  static func infoLabel(markdown: String) -> NSAttributedString {
+    let size = NSFont.smallSystemFontSize()
+    let document = CMDocument(data: markdown.data(using: .utf8), options: .normalize)
+
+    let attrs = CMTextAttributes()
+    attrs?.textAttributes = [
+      NSFontAttributeName: NSFont.systemFont(ofSize: size),
+      NSForegroundColorAttributeName: NSColor.gray,
+    ]
+    attrs?.inlineCodeAttributes = [
+      NSFontAttributeName: NSFont.userFixedPitchFont(ofSize: size)!,
+      NSForegroundColorAttributeName: NSColor.gray,
+    ]
+
+    let renderer = CMAttributedStringRenderer(document: document, attributes: attrs)
+    renderer?.register(CMHTMLStrikethroughTransformer())
+    renderer?.register(CMHTMLSuperscriptTransformer())
+    renderer?.register(CMHTMLUnderlineTransformer())
+
+    guard let result = renderer?.render() else {
+      preconditionFailure("Wrong markdown: \(markdown)")
+    }
+
+    return result
   }
 }
 

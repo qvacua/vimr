@@ -44,19 +44,18 @@ extension PrefPane {
     return field
   }
 
-  func infoTextField(text: String) -> NSTextField {
+  func infoTextField(markdown: String) -> NSTextField {
     let field = NSTextField(forAutoLayout: ())
-    field.font = NSFont.systemFont(ofSize: NSFont.smallSystemFontSize())
-    field.textColor = NSColor.gray
     field.backgroundColor = NSColor.clear
     field.isEditable = false
     field.isBordered = false
+    field.usesSingleLineMode = false
 
     // both are needed, otherwise hyperlink won't accept mousedown
     field.isSelectable = true
     field.allowsEditingTextAttributes = true
 
-    field.stringValue = text
+    field.attributedStringValue = NSAttributedString.infoLabel(markdown: markdown)
 
     return field
   }
