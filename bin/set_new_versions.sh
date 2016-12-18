@@ -13,7 +13,8 @@ agvtool bump -all
 
 # marketing version
 if [ "${IS_SNAPSHOT}" = true ] ; then
-    MARKETING_VERSION=$(agvtool what-marketing-version | tail -n 1 | sed -E 's/.*of "(.*)" in.*/\1/' | sed -E "s/^([0-9]+)\.([0-9]+)\.([0-9]+).*/\1.\2.\3-SNAPSHOT-$(date +%Y%m%d.%H%M)/")
+    BUNDLE_VERSION=$(agvtool what-version | sed '2q;d' | sed -E 's/ +(.+)/\1/')
+    MARKETING_VERSION="SNAPSHOT-${BUNDLE_VERSION}"
 fi
 
 agvtool new-marketing-version ${MARKETING_VERSION}

@@ -57,9 +57,12 @@ BUNDLE_VERSION=$(agvtool what-version | sed '2q;d' | sed -E 's/ +(.+)/\1/')
 MARKETING_VERSION=$(agvtool what-marketing-version | tail -n 1 | sed -E 's/.*of "(.*)" in.*/\1/')
 COMPOUND_VERSION="v${MARKETING_VERSION}-${BUNDLE_VERSION}"
 TAG=${COMPOUND_VERSION}
+
 if [ "${IS_SNAPSHOT}" = true ] ; then
-    TAG="snapshot/${COMPOUND_VERSION}"
+    COMPOUND_VERSION="SNAPSHOT-${BUNDLE_VERSION}"
+    TAG="snapshot/${BUNDLE_VERSION}"
 fi
+
 VIMR_FILE_NAME="VimR-${COMPOUND_VERSION}.tar.bz2"
 
 echo "### Bundle version: ${BUNDLE_VERSION}"
