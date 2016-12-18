@@ -3,3 +3,4 @@ github "PureLayout/PureLayout" == 3.0.2
 github "eonil/FileSystemEvents" "master"
 github "sparkle-project/Sparkle" == 1.14.0
 github "qvacua/CocoaFontAwesome" "master"
+github "qvacua/CocoaMarkdown" "master"

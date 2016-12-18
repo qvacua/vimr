@@ -1,4 +1,5 @@
 github "qvacua/CocoaFontAwesome" "71865fc2c0275ebc5c8601edc23290e85aca9979"
+github "qvacua/CocoaMarkdown" "cfb0a355d46745cad965ed8f3396883c46dd42a4"
 github "eonil/FileSystemEvents" "aa5c6af1fd35939f9aca3b9eba3b672bfa549b3a"
 github "Quick/Nimble" "v5.1.0"
 github "PureLayout/PureLayout" "v3.0.2"
