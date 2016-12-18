@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.12.0-SNAPSHOT-20161214.2022-148</title>
+      <title>SNAPSHOT-151</title>
       <description><![CDATA[
     <ul>
-<li>Last snapshot before 0.12.0 🙂</li>
+<li>GH-292: Improve Open Quickly results</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/v0.12.0-SNAPSHOT-20161214.2022-148
+        https://github.com/qvacua/vimr/releases/tag/snapshot/151
       </releaseNotesLink>
-      <pubDate>2016-12-14T20:29:48.683687</pubDate>
+      <pubDate>2016-12-18T11:37:22.684987</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/v0.12.0-SNAPSHOT-20161214.2022-148/VimR-v0.12.0-SNAPSHOT-20161214.2022-148.tar.bz2"
-                 sparkle:version="148"
-                 sparkle:shortVersionString="0.12.0-SNAPSHOT-20161214.2022"
-                 sparkle:dsaSignature="MC0CFQCa6xZCdJk9zYybQftTncWxEUPu2gIUQtHnHlq3vcb/sRv3bzKTt9Ekcvo="
-                 length="9354528"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/151/VimR-SNAPSHOT-151.tar.bz2"
+                 sparkle:version="151"
+                 sparkle:shortVersionString="SNAPSHOT-151"
+                 sparkle:dsaSignature="MC0CFQCXOIi0RFtQh7465J1Q/EQXbKGHUQIUSLAqxvKX1nAEYsSnuJXrbAmaXD8="
+                 length="9336180"
                  type="application/octet-stream"/>
     </item>
   </channel>
