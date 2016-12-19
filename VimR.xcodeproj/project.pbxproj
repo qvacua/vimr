@@ -33,7 +33,6 @@
 		4B0677371D99D9C3001A2588 /* FileBrowserComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0677361D99D9C3001A2588 /* FileBrowserComponent.swift */; };
 		4B0BCC941D70320C00D3CE65 /* Logger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0BCC931D70320C00D3CE65 /* Logger.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		4B183E0E1E06E2940079E8A8 /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; };
-		4B183E0F1E06E29C0079E8A8 /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; };
 		4B183E101E06E29C0079E8A8 /* CocoaMarkdown.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B183E161E07C1420079E8A8 /* preview in Resources */ = {isa = PBXBuildFile; fileRef = 4B183E151E07C1420079E8A8 /* preview */; };
 		4B183E1B1E08748B0079E8A8 /* NeoVimAutoCommandEvent.generated.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B183E1A1E08748B0079E8A8 /* NeoVimAutoCommandEvent.generated.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -469,7 +468,6 @@
 				4B183E0E1E06E2940079E8A8 /* CocoaMarkdown.framework in Frameworks */,
 				4B2A2BEE1D02261F0074CE9A /* RxSwift.framework in Frameworks */,
 				4B401B141D0454DC00D99EDC /* PureLayout.framework in Frameworks */,
-				4B183E0F1E06E29C0079E8A8 /* CocoaMarkdown.framework in Frameworks */,
 				4BDF50081D7607BF00D8FBC3 /* EonilFileSystemEvents.framework in Frameworks */,
 				4B2A2BEC1D02261F0074CE9A /* RxCocoa.framework in Frameworks */,
 			);
@@ -991,7 +989,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0810;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Tae Won Ha";
 				TargetAttributes = {
 					4B2A2BF61D0351810074CE9A = {
