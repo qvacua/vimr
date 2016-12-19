@@ -9,8 +9,9 @@ enum ToolIdentifier: String {
 
   case fileBrowser = "com.qvacua.vimr.tool.file-browser"
   case bufferList = "com.qvacua.vimr.tool.buffer-list"
+  case preview = "com.qvacua.vimr.tool.preview"
 
-  static let all = [ fileBrowser, bufferList ]
+  static let all = [ fileBrowser, bufferList, preview ]
 }
 
 protocol ToolDataHolder: class {
@@ -37,6 +38,11 @@ struct ToolPrefData: StandardPrefData {
                               isVisible: true,
                               dimension: 200,
                               toolData: EmptyPrefData.default),
+    .preview: ToolPrefData(identifier: .preview,
+                           location: .right,
+                           isVisible: false,
+                           dimension: 300,
+                           toolData: EmptyPrefData.default),
   ]
 
   var identifier: ToolIdentifier

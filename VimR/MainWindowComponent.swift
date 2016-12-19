@@ -28,6 +28,7 @@ struct MainWindowPrefData: StandardPrefData {
                                             toolPrefDatas: [
                                                 ToolPrefData.defaults[.fileBrowser]!,
                                                 ToolPrefData.defaults[.bufferList]!,
+                                                ToolPrefData.defaults[.preview]!,
                                             ])
 
   var isAllToolsVisible: Bool
@@ -70,7 +71,7 @@ struct MainWindowPrefData: StandardPrefData {
   }
 
   func toolPrefData(for identifier: ToolIdentifier) -> ToolPrefData {
-    guard let tool = self.toolPrefDatas.filter({ $0.identifier == identifier }).first else {
+    guard let tool = self.toolPrefDatas.first(where: { $0.identifier == identifier }) else {
       preconditionFailure("[ERROR] No tool for \(identifier) found!")
     }
 
@@ -171,6 +172,7 @@ class MainWindowComponent: WindowComponent,
     // By default the tool buttons are shown and only the file browser tool is shown.
     let fileBrowserToolData = mainWindowData.toolPrefData(for: .fileBrowser)
     let bufferListToolData = mainWindowData.toolPrefData(for: .bufferList)
+    let previewToolData = mainWindowData.toolPrefData(for: .preview)
 
     let fileBrowserData = fileBrowserToolData.toolData as? FileBrowserData ?? FileBrowserData.default
 
@@ -196,11 +198,21 @@ class MainWindowComponent: WindowComponent,
     let bufferListTool = WorkspaceToolComponent(toolIdentifier: .bufferList, config: bufferListConfig)
     self.tools[.bufferList] = bufferListTool
 
+    let preview = PreviewComponent(source: self.sink)
+    let previewConfig = WorkspaceTool.Config(title: "Preview",
+                                             view: preview,
+                                             minimumDimension: 200,
+                                             withInnerToolbar: true)
+    let previewTool = WorkspaceToolComponent(toolIdentifier: .preview, config: previewConfig)
+    self.tools[.preview] = previewTool
+
     self.workspace.append(tool: fileBrowserTool, location: fileBrowserToolData.location)
     self.workspace.append(tool: bufferListTool, location: bufferListToolData.location)
+    self.workspace.append(tool: previewTool, location: previewToolData.location)
 
     fileBrowserTool.dimension = fileBrowserToolData.dimension
     bufferListTool.dimension = bufferListToolData.dimension
+    previewTool.dimension = previewToolData.dimension
 
     if !mainWindowData.isAllToolsVisible {
       self.toggleAllTools(self)
@@ -216,6 +228,10 @@ class MainWindowComponent: WindowComponent,
 
     if bufferListToolData.isVisible {
       bufferListTool.toggle()
+    }
+
+    if previewToolData.isVisible {
+      previewTool.toggle()
     }
   }
 
@@ -544,7 +560,13 @@ extension MainWindowComponent {
                                       isVisible: bufferList.isSelected,
                                       dimension: bufferList.dimension)
 
-    return [ fileBrowserData, bufferListData ]
+    let preview = self.tools[.preview]!
+    let previewData = ToolPrefData(identifier: .preview,
+                                   location: preview.location,
+                                   isVisible: preview.isSelected,
+                                   dimension: preview.dimension)
+
+    return [ fileBrowserData, bufferListData, previewData ]
   }
 
   func windowShouldClose(_ sender: Any) -> Bool {
