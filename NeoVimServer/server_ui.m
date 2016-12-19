@@ -491,20 +491,6 @@ static void neovim_select_window(void **argv) {
   ui_schedule_refresh();
 }
 
-static void send_dirty_status() {
-  bool new_dirty_status = server_has_dirty_docs();
-  DLOG("dirty status: %d vs. %d", _dirty, new_dirty_status);
-  if (_dirty == new_dirty_status) {
-    return;
-  }
-
-  _dirty = new_dirty_status;
-  DLOG("sending dirty status: %d", _dirty);
-  NSData *data = [[NSData alloc] initWithBytes:&_dirty length:sizeof(bool)];
-  [_neovim_server sendMessageWithId:NeoVimServerMsgIdDirtyStatusChanged data:data];
-  [data release];
-}
-
 static void insert_marked_text(NSString *markedText) {
   _marked_text = [markedText retain]; // release when the final text is input in -vimInput
 
@@ -571,28 +557,10 @@ void custom_ui_autocmds_groups(
   @autoreleasepool {
     DLOG("got event %d for file %s in group %d.", event, fname, group);
 
-    switch (event) {
-      // Dirty status: Did we get them all?
-      case EVENT_TEXTCHANGED:
-      case EVENT_TEXTCHANGEDI:
-      case EVENT_BUFWRITEPOST:
-      case EVENT_BUFLEAVE:
-        send_dirty_status();
-        return;
-
-      // For buffer list changes
-      case EVENT_BUFWINENTER:
-      case EVENT_BUFWINLEAVE:
-        [_neovim_server sendMessageWithId:NeoVimServerMsgIdBufferEvent];
-        break;
-
-      case EVENT_CWDCHANGED:
-        [_neovim_server sendMessageWithId:NeoVimServerMsgIdCwdChanged];
-        break;
-
-      default:
-        break;
-    }
+    NSUInteger eventCode = event;
+    NSData *eventCodeData = [[NSData alloc] initWithBytes:&eventCode length:sizeof(NSUInteger)];
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdAutoCommandEvent data:eventCodeData];
+    [eventCodeData release];
   }
 }
 

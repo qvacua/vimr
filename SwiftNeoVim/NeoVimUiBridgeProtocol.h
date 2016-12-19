@@ -5,6 +5,8 @@
 
 @import Foundation;
 
+#import "NeoVimAutoCommandEvent.generated.h"
+
 
 // Keep in sync with the constants in vim.h
 typedef NS_ENUM(NSUInteger, Mode) {
@@ -114,9 +116,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)suspend;
 - (void)setTitle:(NSString *)title;
 - (void)setIcon:(NSString *)icon;
-- (void)setDirtyStatus:(bool)dirty;
-- (void)cwdChanged;
-- (void)bufferListChanged;
+
+- (void)autoCommandEvent:(NeoVimAutoCommandEvent)event;
 
 /**
  * NeoVim has been stopped.

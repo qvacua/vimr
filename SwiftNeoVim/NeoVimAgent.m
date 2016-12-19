@@ -23,6 +23,7 @@ static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
 }
 
 data_to_array(int)
+data_to_array(NSUInteger)
 data_to_array(bool)
 data_to_array(CellAttributes)
 
@@ -598,15 +599,11 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       [_bridge stop];
       return;
 
-    case NeoVimServerMsgIdDirtyStatusChanged: {
-      bool *values = data_to_bool_array(data, 1);
-      [_bridge setDirtyStatus:values[0]];
+    case NeoVimServerMsgIdAutoCommandEvent: {
+      NSUInteger *values = data_to_NSUInteger_array(data, 1);
+      [_bridge autoCommandEvent:(NeoVimAutoCommandEvent) values[0]];
       return;
     }
-
-    case NeoVimServerMsgIdCwdChanged:
-      [_bridge cwdChanged];
-      return;
 
     case NeoVimServerMsgIdSyncResult: {
       NSUInteger *values = (NSUInteger *) data.bytes;
@@ -628,10 +625,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
       return;
     }
-
-    case NeoVimServerMsgIdBufferEvent:
-      [_bridge bufferListChanged];
-      return;
 
     default:
       return;

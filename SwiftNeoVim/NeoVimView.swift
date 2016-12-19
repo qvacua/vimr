@@ -1420,21 +1420,21 @@ extension NeoVimView {
     }
   }
 
-  public func setDirtyStatus(_ dirty: Bool) {
-    DispatchUtils.gui {
-      self.delegate?.set(dirtyStatus: dirty)
+  public func autoCommandEvent(_ event: NeoVimAutoCommandEvent) {
+    if event == .BUFWINENTER || event == .BUFWINLEAVE {
+      self.bufferListChanged()
     }
-  }
 
-  public func cwdChanged() {
-    DispatchUtils.gui {
-      self.delegate?.cwdChanged()
+    if event == .TEXTCHANGED || event == .TEXTCHANGEDI || event == .BUFWRITEPOST || event == .BUFLEAVE {
+      self.setDirtyStatus(self.agent.hasDirtyDocs())
     }
-  }
 
-  public func bufferListChanged() {
-    DispatchUtils.gui {
-      self.delegate?.bufferListChanged()
+    if event == .CWDCHANGED {
+      self.cwdChanged()
+    }
+
+    if event == .BUFREADPOST || event == .BUFWRITEPOST {
+      NSLog("read or write")
     }
   }
 
@@ -1448,6 +1448,24 @@ extension NeoVimView {
 
       NSLog("ERROR \(#function): force-quitting")
       self.agent.quit()
+    }
+  }
+
+  fileprivate func setDirtyStatus(_ dirty: Bool) {
+    DispatchUtils.gui {
+      self.delegate?.set(dirtyStatus: dirty)
+    }
+  }
+
+  fileprivate func cwdChanged() {
+    DispatchUtils.gui {
+      self.delegate?.cwdChanged()
+    }
+  }
+
+  fileprivate func bufferListChanged() {
+    DispatchUtils.gui {
+      self.delegate?.bufferListChanged()
     }
   }
 

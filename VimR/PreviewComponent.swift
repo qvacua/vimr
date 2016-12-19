@@ -36,6 +36,8 @@ class PreviewComponent: ViewComponent {
 
   override init(source: Observable<Any>) {
     super.init(source: source)
+
+    webview.loadHTMLString(self.previewService.emptyPreview(), baseURL: nil)
   }
 
   override func addViews() {
@@ -45,8 +47,6 @@ class PreviewComponent: ViewComponent {
     self.addSubview(webview)
 
     webview.autoPinEdgesToSuperviewEdges()
-
-    webview.loadHTMLString(self.previewService.emptyPreview(), baseURL: nil)
   }
 
   override func subscription(source: Observable<Any>) -> Disposable {
