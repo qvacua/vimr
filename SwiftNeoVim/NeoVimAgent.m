@@ -600,8 +600,15 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return;
 
     case NeoVimServerMsgIdAutoCommandEvent: {
-      NSUInteger *values = data_to_NSUInteger_array(data, 1);
-      [_bridge autoCommandEvent:(NeoVimAutoCommandEvent) values[0]];
+      if (data.length == sizeof(NSUInteger) + sizeof(NSInteger)) {
+        NSUInteger *values = (NSUInteger *) data.bytes;
+        NeoVimAutoCommandEvent event = (NeoVimAutoCommandEvent) values[0];
+        NSInteger bufferHandle = ((NSInteger *)(values + 1))[0];
+        [_bridge autoCommandEvent:event bufferHandle:bufferHandle];
+      } else {
+        NSUInteger *values = data_to_NSUInteger_array(data, 1);
+        [_bridge autoCommandEvent:(NeoVimAutoCommandEvent) values[0] bufferHandle:-1];
+      }
       return;
     }
 

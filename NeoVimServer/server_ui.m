@@ -68,8 +68,6 @@ static int _marked_delta = 0;
 static int _put_row = -1;
 static int _put_column = -1;
 
-static bool _dirty = false;
-
 static NSString *_backspace = nil;
 
 static dispatch_queue_t _queue;
@@ -554,13 +552,31 @@ void custom_ui_start(void) {
 void custom_ui_autocmds_groups(
     event_T event, char_u *fname, char_u *fname_io, int group, bool force, buf_T *buf, exarg_T *eap
 ) {
+  // We don't need these events in the UI (yet) and they slow down scrolling: Enable them, if necessary, only after
+  // optimizing the scrolling.
+  if (event == EVENT_CURSORMOVED || event == EVENT_CURSORMOVEDI) {
+    return;
+  }
+
   @autoreleasepool {
     DLOG("got event %d for file %s in group %d.", event, fname, group);
 
     NSUInteger eventCode = event;
-    NSData *eventCodeData = [[NSData alloc] initWithBytes:&eventCode length:sizeof(NSUInteger)];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdAutoCommandEvent data:eventCodeData];
-    [eventCodeData release];
+
+    NSMutableData *data;
+    if (buf == NULL) {
+      data = [[NSMutableData alloc] initWithBytes:&eventCode length:sizeof(NSUInteger)];
+    } else {
+      NSInteger bufHandle = buf->handle;
+
+      data = [[NSMutableData alloc] initWithCapacity:(sizeof(NSUInteger) + sizeof(NSInteger))];
+      [data appendBytes:&eventCode length:sizeof(NSUInteger)];
+      [data appendBytes:&bufHandle length:sizeof(NSInteger)];
+    }
+
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdAutoCommandEvent data:data];
+
+    [data release];
   }
 }
 

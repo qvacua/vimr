@@ -516,6 +516,10 @@ extension MainWindowComponent {
     self.publish(event: MainWindowAction.changeBufferList(mainWindow: self, buffers: buffers))
   }
 
+  func currentBufferChanged() {
+    NSLog("current buffer changed!!!")
+  }
+
   func ipcBecameInvalid(reason: String) {
     let alert = NSAlert()
     alert.addButton(withTitle: "Close")

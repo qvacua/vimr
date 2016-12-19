@@ -1420,7 +1420,9 @@ extension NeoVimView {
     }
   }
 
-  public func autoCommandEvent(_ event: NeoVimAutoCommandEvent) {
+  public func autoCommandEvent(_ event: NeoVimAutoCommandEvent, bufferHandle: Int) {
+//    NSLog("\(event.rawValue) with buffer \(bufferHandle)")
+
     if event == .BUFWINENTER || event == .BUFWINLEAVE {
       self.bufferListChanged()
     }
@@ -1434,7 +1436,9 @@ extension NeoVimView {
     }
 
     if event == .BUFREADPOST || event == .BUFWRITEPOST {
-      NSLog("read or write")
+      if self.currentBuffer()?.handle == bufferHandle {
+        self.currentBufferChanged()
+      }
     }
   }
 
@@ -1448,6 +1452,12 @@ extension NeoVimView {
 
       NSLog("ERROR \(#function): force-quitting")
       self.agent.quit()
+    }
+  }
+
+  fileprivate func currentBufferChanged() {
+    DispatchUtils.gui {
+      self.delegate?.currentBufferChanged()
     }
   }
 

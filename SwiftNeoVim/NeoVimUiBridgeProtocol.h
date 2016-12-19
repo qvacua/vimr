@@ -117,7 +117,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setTitle:(NSString *)title;
 - (void)setIcon:(NSString *)icon;
 
-- (void)autoCommandEvent:(NeoVimAutoCommandEvent)event;
+- (void)autoCommandEvent:(NeoVimAutoCommandEvent)event bufferHandle:(NSInteger)bufferHandle;
 
 /**
  * NeoVim has been stopped.
