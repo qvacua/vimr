@@ -1436,9 +1436,7 @@ extension NeoVimView {
     }
 
     if event == .BUFREADPOST || event == .BUFWRITEPOST {
-      if self.currentBuffer()?.handle == bufferHandle {
-        self.currentBufferChanged()
-      }
+      self.currentBufferChanged(bufferHandle)
     }
   }
 
@@ -1455,9 +1453,17 @@ extension NeoVimView {
     }
   }
 
-  fileprivate func currentBufferChanged() {
+  fileprivate func currentBufferChanged(_ handle: Int) {
     DispatchUtils.gui {
-      self.delegate?.currentBufferChanged()
+      guard let currentBuffer = self.currentBuffer() else {
+        return
+      }
+
+      guard currentBuffer.handle == handle else {
+        return
+      }
+
+      self.delegate?.currentBufferChanged(currentBuffer)
     }
   }
 

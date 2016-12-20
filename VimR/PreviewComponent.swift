@@ -50,6 +50,19 @@ class PreviewComponent: ViewComponent {
   }
 
   override func subscription(source: Observable<Any>) -> Disposable {
-    return Disposables.create()
+    return source
+      .filter { $0 is MainWindowAction }
+      .map { $0 as! MainWindowAction }
+      .subscribe(onNext: { action in
+        switch action {
+
+        case let .currentBufferChanged(mainWindow, currentBuffer):
+          NSLog("\(currentBuffer)")
+
+        default:
+          return
+
+        }
+      })
   }
 }

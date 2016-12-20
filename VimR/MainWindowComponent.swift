@@ -15,6 +15,8 @@ enum MainWindowAction {
   case changeBufferList(mainWindow: MainWindowComponent, buffers: [NeoVimBuffer])
   case changeFileBrowserSelection(mainWindow: MainWindowComponent, url: URL)
   case close(mainWindow: MainWindowComponent, mainWindowPrefData: MainWindowPrefData)
+
+  case currentBufferChanged(mainWindow: MainWindowComponent, buffer: NeoVimBuffer)
 }
 
 struct MainWindowPrefData: StandardPrefData {
@@ -516,8 +518,8 @@ extension MainWindowComponent {
     self.publish(event: MainWindowAction.changeBufferList(mainWindow: self, buffers: buffers))
   }
 
-  func currentBufferChanged() {
-    NSLog("current buffer changed!!!")
+  func currentBufferChanged(_ currentBuffer: NeoVimBuffer) {
+    self.publish(event: MainWindowAction.currentBufferChanged(mainWindow: self, buffer: currentBuffer))
   }
 
   func ipcBecameInvalid(reason: String) {

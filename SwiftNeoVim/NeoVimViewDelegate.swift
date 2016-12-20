@@ -13,7 +13,7 @@ public protocol NeoVimViewDelegate: class {
   func set(dirtyStatus: Bool)
   func cwdChanged()
   func bufferListChanged()
-  func currentBufferChanged()
+  func currentBufferChanged(_ currentBuffer: NeoVimBuffer)
 
   func ipcBecameInvalid(reason: String)
 }

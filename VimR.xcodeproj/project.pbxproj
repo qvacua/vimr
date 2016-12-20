@@ -1121,7 +1121,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"${CONFIGURATION}\" = \"Debug\" ]; then ]\n    if [ -f \"SwiftNeoVim/NeoVimAutoCommandEvent.generated.h\" ]; then\n        exit 0\n    fi\nfi\n\nsed 's/^typedef enum auto_event/typedef NS_ENUM(NSUInteger, NeoVimAutoCommandEvent)/' <./neovim/build/include/auevents_enum.generated.h | sed 's/ event_T//' | sed 's/EVENT_/NeoVimAutoCommandEvent/' | sed 's/NUM_EVENTS/NumberOfAutoCommandEvents/' | sed -e '1s/^/@import Foundation;\\'$'\\n/' > SwiftNeoVim/NeoVimAutoCommandEvent.generated.h\n";
+			shellScript = "if [ \"${CONFIGURATION}\" = \"Debug\" ]; then\n    if [ -f \"SwiftNeoVim/NeoVimAutoCommandEvent.generated.h\" ]; then\n        exit 0\n    fi\nfi\n\nsed 's/^typedef enum auto_event/typedef NS_ENUM(NSUInteger, NeoVimAutoCommandEvent)/' <./neovim/build/include/auevents_enum.generated.h | sed 's/ event_T//' | sed 's/EVENT_/NeoVimAutoCommandEvent/' | sed 's/NUM_EVENTS/NumberOfAutoCommandEvents/' | sed -e '1s/^/@import Foundation;\\'$'\\n/' > SwiftNeoVim/NeoVimAutoCommandEvent.generated.h\n";
 		};
 		4BBA71F11D319E0900E16612 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
