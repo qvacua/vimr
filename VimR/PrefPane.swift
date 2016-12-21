@@ -6,7 +6,7 @@
 import Cocoa
 import RxSwift
 
-class PrefPane: ViewComponent {
+class PrefPane: StandardViewComponent {
   
   // Return true to place this to the upper left corner when the scroll view is bigger than this view.
   override var isFlipped: Bool {

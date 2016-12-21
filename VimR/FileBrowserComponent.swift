@@ -46,7 +46,7 @@ struct FileBrowserData: StandardPrefData {
   }
 }
 
-class FileBrowserComponent: ViewComponent, ToolDataHolder {
+class FileBrowserComponent: StandardViewComponent, ToolDataHolder {
 
   fileprivate let fileView: FileOutlineView
   fileprivate let fileItemService: FileItemService

@@ -12,7 +12,7 @@ enum BufferListAction {
   case open(buffer: NeoVimBuffer)
 }
 
-class BufferListComponent: ViewComponent, NSTableViewDataSource, NSTableViewDelegate {
+class BufferListComponent: StandardViewComponent, NSTableViewDataSource, NSTableViewDelegate {
 
   fileprivate var buffers: [NeoVimBuffer] = []
   fileprivate let bufferList = NSTableView.standardTableView()

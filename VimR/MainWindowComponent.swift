@@ -444,18 +444,18 @@ extension MainWindowComponent {
     let fileBrowserTool = self.tools[.fileBrowser]!
 
     if fileBrowserTool.isSelected {
-      if fileBrowserTool.viewComponent.isFirstResponder {
+      if fileBrowserTool.viewComponent.view.isFirstResponder {
         fileBrowserTool.toggle()
         self.focusNeoVimView(self)
       } else {
-        fileBrowserTool.viewComponent.beFirstResponder()
+        fileBrowserTool.viewComponent.view.beFirstResponder()
       }
 
       return
     }
 
     fileBrowserTool.toggle()
-    fileBrowserTool.viewComponent.beFirstResponder()
+    fileBrowserTool.viewComponent.view.beFirstResponder()
   }
 
   @IBAction func focusNeoVimView(_ sender: Any?) {

@@ -12,6 +12,11 @@ protocol Flow: class {
   var sink: Observable<Any> { get }
 }
 
+protocol ViewComponent: Flow {
+
+  var view: NSView { get }
+}
+
 class PublishingFlow: Flow {
 
   var sink: Observable<Any> {
@@ -62,7 +67,7 @@ class EmbeddableComponent: Flow {
 
   fileprivate let subject = PublishSubject<Any>()
   fileprivate let source: Observable<Any>
-  fileprivate let disposeBag = DisposeBag()
+  let disposeBag = DisposeBag()
 
   init(source: Observable<Any>) {
     self.source = source
@@ -116,10 +121,11 @@ class StandardComponent: NSObject, Flow {
   }
 }
 
-class ViewComponent: NSView, Flow {
+
+class StandardViewComponent: NSView, ViewComponent {
 
   var view: NSView {
-    preconditionFailure("Please override")
+    return self
   }
 
   var sink: Observable<Any> {

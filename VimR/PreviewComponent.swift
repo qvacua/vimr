@@ -8,6 +8,11 @@ import RxSwift
 import PureLayout
 import WebKit
 
+enum PreviewAction {
+
+  case refresh(url: URL)
+}
+
 struct PreviewPrefData: StandardPrefData {
 
   static let `default` = PreviewPrefData()
@@ -24,23 +29,44 @@ struct PreviewPrefData: StandardPrefData {
   }
 }
 
-class PreviewComponent: ViewComponent {
+class PreviewComponent: NSView, ViewComponent {
+
+  fileprivate let flow: EmbeddableComponent
 
   fileprivate let previewService = PreviewService()
+  fileprivate let markdownRenderer: MarkdownRenderer
 
-  let webview = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
+  fileprivate let webview = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  override init(source: Observable<Any>) {
-    super.init(source: source)
-
-    webview.loadHTMLString(self.previewService.emptyPreview(), baseURL: nil)
+  var sink: Observable<Any> {
+    return self.flow.sink
   }
 
-  override func addViews() {
+  var view: NSView {
+    return self
+  }
+
+  init(source: Observable<Any>) {
+    self.flow = EmbeddableComponent(source: source)
+    self.markdownRenderer = MarkdownRenderer(source: self.flow.sink)
+
+    super.init(frame: .zero)
+    self.configureForAutoLayout()
+
+    self.flow.set(subscription: self.subscription)
+
+
+    self.webview.loadHTMLString(self.previewService.emptyPreview(), baseURL: nil)
+
+    self.addViews()
+    self.addReactions()
+  }
+
+  fileprivate func addViews() {
     let webview = self.webview
     webview.configureForAutoLayout()
 
@@ -49,7 +75,7 @@ class PreviewComponent: ViewComponent {
     webview.autoPinEdgesToSuperviewEdges()
   }
 
-  override func subscription(source: Observable<Any>) -> Disposable {
+  fileprivate func subscription(source: Observable<Any>) -> Disposable {
     return source
       .filter { $0 is MainWindowAction }
       .map { $0 as! MainWindowAction }
@@ -57,12 +83,34 @@ class PreviewComponent: ViewComponent {
         switch action {
 
         case let .currentBufferChanged(mainWindow, currentBuffer):
-          NSLog("\(currentBuffer)")
+          guard let url = currentBuffer.url else {
+            return
+          }
+
+          self.flow.publish(event: PreviewAction.refresh(url: url))
 
         default:
           return
 
         }
       })
+  }
+
+  fileprivate func addReactions() {
+    self.markdownRenderer.sink
+      .filter { $0 is PreviewRendererAction }
+      .map { $0 as! PreviewRendererAction }
+      .subscribe(onNext: { action in
+        switch action {
+
+        case let .htmlString(html):
+          self.webview.loadHTMLString(html, baseURL: nil)
+
+        case .error:
+          self.webview.loadHTMLString(self.previewService.emptyPreview(), baseURL: nil)
+
+        }
+      })
+      .addDisposableTo(self.flow.disposeBag)
   }
 }

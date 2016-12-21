@@ -36,6 +36,7 @@
 		4B183E101E06E29C0079E8A8 /* CocoaMarkdown.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B183E161E07C1420079E8A8 /* preview in Resources */ = {isa = PBXBuildFile; fileRef = 4B183E151E07C1420079E8A8 /* preview */; };
 		4B183E1B1E08748B0079E8A8 /* NeoVimAutoCommandEvent.generated.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B183E1A1E08748B0079E8A8 /* NeoVimAutoCommandEvent.generated.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B183E1E1E09931E0079E8A8 /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B183E1D1E09931E0079E8A8 /* MarkdownRenderer.swift */; };
 		4B22F7F01D7C029400929B0E /* ScorerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B22F7EF1D7C029400929B0E /* ScorerTest.swift */; };
 		4B22F7F21D7C6B9000929B0E /* ImageAndTextTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B22F7F11D7C6B9000929B0E /* ImageAndTextTableCell.swift */; };
 		4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BE01D3BF24200CBDD98 /* Application.swift */; };
@@ -303,6 +304,7 @@
 		4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaMarkdown.framework; path = Carthage/Build/Mac/CocoaMarkdown.framework; sourceTree = SOURCE_ROOT; };
 		4B183E151E07C1420079E8A8 /* preview */ = {isa = PBXFileReference; lastKnownFileType = folder; path = preview; sourceTree = "<group>"; };
 		4B183E1A1E08748B0079E8A8 /* NeoVimAutoCommandEvent.generated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimAutoCommandEvent.generated.h; sourceTree = "<group>"; };
+		4B183E1D1E09931E0079E8A8 /* MarkdownRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownRenderer.swift; sourceTree = "<group>"; };
 		4B1BB3521D16C5E500CA4FEF /* InputTestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputTestView.swift; sourceTree = "<group>"; };
 		4B22F7EF1D7C029400929B0E /* ScorerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScorerTest.swift; sourceTree = "<group>"; };
 		4B22F7F11D7C6B9000929B0E /* ImageAndTextTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageAndTextTableCell.swift; sourceTree = "<group>"; };
@@ -495,6 +497,7 @@
 		1929BA610ADEA2BA4424FBE5 /* Preview */ = {
 			isa = PBXGroup;
 			children = (
+				4B183E1C1E0992FD0079E8A8 /* Preview Renderers */,
 				1929B8DA5AA33536F0082200 /* PreviewComponent.swift */,
 				1929BB8BCA48637156F92945 /* PreviewService.swift */,
 			);
@@ -521,6 +524,14 @@
 				4B0677361D99D9C3001A2588 /* FileBrowserComponent.swift */,
 			);
 			name = "File Browser";
+			sourceTree = "<group>";
+		};
+		4B183E1C1E0992FD0079E8A8 /* Preview Renderers */ = {
+			isa = PBXGroup;
+			children = (
+				4B183E1D1E09931E0079E8A8 /* MarkdownRenderer.swift */,
+			);
+			name = "Preview Renderers";
 			sourceTree = "<group>";
 		};
 		4B1AC1AF1D7F395300898F0B /* Open Quickly */ = {
@@ -1249,6 +1260,7 @@
 				1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */,
 				4B6B0A781DA2A1A500212D6D /* FileOutlineView.swift in Sources */,
 				4BB409EE1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */,
+				4B183E1E1E09931E0079E8A8 /* MarkdownRenderer.swift in Sources */,
 				4BAD84E81D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift in Sources */,
 				1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */,
 				1929B3CEE0C1A1850E9CCE2F /* BasicTypes.swift in Sources */,
