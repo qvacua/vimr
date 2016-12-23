@@ -20,6 +20,8 @@ protocol WorkspaceDelegate: class {
 
   func resizeWillStart(workspace: Workspace)
   func resizeDidEnd(workspace: Workspace)
+
+  func toggled(tool: WorkspaceTool)
 }
 
 class Workspace: NSView, WorkspaceBarDelegate {
@@ -195,6 +197,10 @@ extension Workspace {
 
   func resizeDidEnd(workspaceBar: WorkspaceBar) {
     self.delegate?.resizeDidEnd(workspace: self)
+  }
+
+  func toggle(tool: WorkspaceTool) {
+    self.delegate?.toggled(tool: tool)
   }
 }
 

@@ -4,3 +4,4 @@ github "eonil/FileSystemEvents" "master"
 github "sparkle-project/Sparkle" == 1.14.0
 github "qvacua/CocoaFontAwesome" "master"
 github "qvacua/CocoaMarkdown" "master"
+github "sindresorhus/github-markdown-css" == 2.4.1

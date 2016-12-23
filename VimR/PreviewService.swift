@@ -7,25 +7,52 @@ import Foundation
 
 class PreviewService {
 
-  fileprivate let emptyPreviewHtml: String
+  fileprivate let empty: String
+  fileprivate let error: String
+  fileprivate let saveFirst: String
 
   init() {
+    guard let emptyUrl = Bundle.main.url(forResource: "empty", withExtension: "html", subdirectory: "preview") else {
+      preconditionFailure("No empty.html!")
+    }
 
-    guard let emptyUrl = Bundle.main.url(forResource: "empty-preview",
-                                         withExtension: "html",
-                                         subdirectory: "preview")
+    guard let errorUrl = Bundle.main.url(forResource: "error", withExtension: "html", subdirectory: "preview") else {
+      preconditionFailure("No error.html!")
+    }
+
+    guard let saveFirstUrl = Bundle.main.url(forResource: "error",
+                                             withExtension: "html",
+                                             subdirectory: "preview")
       else {
-      preconditionFailure("No empty-preview.html!")
+      preconditionFailure("No save-first.html!")
     }
 
     guard let emptyHtml = try? String(contentsOf: emptyUrl) else {
-      preconditionFailure("Error getting empty-preview.html!")
+      preconditionFailure("Error getting empty.html!")
     }
 
-    self.emptyPreviewHtml = emptyHtml
+    guard let errorHtml = try? String(contentsOf: errorUrl) else {
+      preconditionFailure("Error getting error.html!")
+    }
+
+    guard let saveFirstHtml = try? String(contentsOf: saveFirstUrl) else {
+      preconditionFailure("Error getting save-first.html!")
+    }
+
+    self.empty = emptyHtml
+    self.error = errorHtml
+    self.saveFirst = saveFirstHtml
   }
 
-  func emptyPreview() -> String {
-    return self.emptyPreviewHtml
+  func emptyHtml() -> String {
+    return self.empty
+  }
+
+  func errorHtml() -> String {
+    return self.error
+  }
+
+  func saveFirstHtml() -> String {
+    return self.saveFirst
   }
 }

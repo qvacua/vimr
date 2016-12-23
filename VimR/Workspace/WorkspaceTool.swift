@@ -110,8 +110,8 @@ class WorkspaceTool: NSView {
   }
 
   func toggle() {
-    self.delegate?.toggle(self)
     self.isSelected = !self.isSelected
+    self.delegate?.toggle(self)
   }
 
   fileprivate func addViews() {

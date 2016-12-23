@@ -8,25 +8,36 @@ import RxSwift
 import PureLayout
 import CocoaMarkdown
 
-enum PreviewRendererAction {
+protocol PreviewRenderer: class {
 
-  case htmlString(html: String)
-  case error
 }
 
-class MarkdownRenderer: StandardFlow {
+enum PreviewRendererAction {
+
+  case htmlString(renderer: PreviewRenderer, html: String)
+  case error(renderer: PreviewRenderer)
+}
+
+class MarkdownRenderer: StandardFlow, PreviewRenderer {
+
+  fileprivate let extensions = Set([ "md", "markdown", ])
+
+  fileprivate func canRender(fileExtension: String) -> Bool {
+    return extensions.contains(fileExtension)
+  }
 
   override func subscription(source: Observable<Any>) -> Disposable {
     return source
       .filter { $0 is PreviewAction }
       .map { $0 as! PreviewAction }
-      .subscribe(onNext: { action in
+      .map { action in
         switch action {
-        case let .refresh(url):
-          self.render(from: url)
-
+        case let .automaticRefresh(url):
+          return url
         }
-      })
+      }
+      .filter { self.canRender(fileExtension: $0.pathExtension) }
+      .subscribe(onNext: { [unowned self] url in self.render(from: url) })
   }
 
   fileprivate func render(from url: URL) {
@@ -38,6 +49,6 @@ class MarkdownRenderer: StandardFlow {
       return
     }
 
-    self.publish(event: PreviewRendererAction.htmlString(html: html))
+    self.publish(event: PreviewRendererAction.htmlString(renderer: self, html: html))
   }
 }

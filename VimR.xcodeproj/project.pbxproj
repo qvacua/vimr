@@ -37,6 +37,7 @@
 		4B183E161E07C1420079E8A8 /* preview in Resources */ = {isa = PBXBuildFile; fileRef = 4B183E151E07C1420079E8A8 /* preview */; };
 		4B183E1B1E08748B0079E8A8 /* NeoVimAutoCommandEvent.generated.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B183E1A1E08748B0079E8A8 /* NeoVimAutoCommandEvent.generated.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B183E1E1E09931E0079E8A8 /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B183E1D1E09931E0079E8A8 /* MarkdownRenderer.swift */; };
+		4B19164C1E0B1D53007EA025 /* github-markdown.css in Resources */ = {isa = PBXBuildFile; fileRef = 4B19164B1E0B1D53007EA025 /* github-markdown.css */; };
 		4B22F7F01D7C029400929B0E /* ScorerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B22F7EF1D7C029400929B0E /* ScorerTest.swift */; };
 		4B22F7F21D7C6B9000929B0E /* ImageAndTextTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B22F7F11D7C6B9000929B0E /* ImageAndTextTableCell.swift */; };
 		4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BE01D3BF24200CBDD98 /* Application.swift */; };
@@ -305,6 +306,7 @@
 		4B183E151E07C1420079E8A8 /* preview */ = {isa = PBXFileReference; lastKnownFileType = folder; path = preview; sourceTree = "<group>"; };
 		4B183E1A1E08748B0079E8A8 /* NeoVimAutoCommandEvent.generated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimAutoCommandEvent.generated.h; sourceTree = "<group>"; };
 		4B183E1D1E09931E0079E8A8 /* MarkdownRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownRenderer.swift; sourceTree = "<group>"; };
+		4B19164B1E0B1D53007EA025 /* github-markdown.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; name = "github-markdown.css"; path = "Carthage/Checkouts/github-markdown-css/github-markdown.css"; sourceTree = SOURCE_ROOT; };
 		4B1BB3521D16C5E500CA4FEF /* InputTestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputTestView.swift; sourceTree = "<group>"; };
 		4B22F7EF1D7C029400929B0E /* ScorerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScorerTest.swift; sourceTree = "<group>"; };
 		4B22F7F11D7C6B9000929B0E /* ImageAndTextTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageAndTextTableCell.swift; sourceTree = "<group>"; };
@@ -685,6 +687,7 @@
 		4B97E2CF1D33F92200FC0660 /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				4B19164B1E0B1D53007EA025 /* github-markdown.css */,
 				4B183E151E07C1420079E8A8 /* preview */,
 				4BEBA50C1CFF374B00673FDF /* MainMenu.xib */,
 				4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */,
@@ -1102,6 +1105,7 @@
 				4BDF50171D77540900D8FBC3 /* OpenQuicklyWindow.xib in Resources */,
 				4B37ADB91D6E471B00970D55 /* vimr in Resources */,
 				4BB409E51DD68CCC005F39A2 /* FileBrowserMenu.xib in Resources */,
+				4B19164C1E0B1D53007EA025 /* github-markdown.css in Resources */,
 				4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */,
 				4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */,
 				4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */,

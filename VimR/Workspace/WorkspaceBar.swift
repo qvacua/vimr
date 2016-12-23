@@ -10,6 +10,8 @@ protocol WorkspaceBarDelegate: class {
 
   func resizeWillStart(workspaceBar: WorkspaceBar)
   func resizeDidEnd(workspaceBar: WorkspaceBar)
+
+  func toggle(tool: WorkspaceTool)
 }
 
 /**
@@ -835,5 +837,6 @@ extension WorkspaceBar {
     self.relayout()
 
     self.delegate?.resizeDidEnd(workspaceBar: self)
+    self.delegate?.toggle(tool: tool)
   }
 }

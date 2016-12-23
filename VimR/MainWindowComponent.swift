@@ -16,6 +16,7 @@ enum MainWindowAction {
   case changeFileBrowserSelection(mainWindow: MainWindowComponent, url: URL)
   case close(mainWindow: MainWindowComponent, mainWindowPrefData: MainWindowPrefData)
 
+  case toggleTool(tool: WorkspaceTool)
   case currentBufferChanged(mainWindow: MainWindowComponent, buffer: NeoVimBuffer)
 }
 
@@ -338,6 +339,10 @@ extension MainWindowComponent {
 
   func resizeDidEnd(workspace: Workspace) {
     self.neoVimView.exitResizeMode()
+  }
+
+  func toggled(tool: WorkspaceTool) {
+    self.publish(event: MainWindowAction.toggleTool(tool: tool))
   }
 }
 

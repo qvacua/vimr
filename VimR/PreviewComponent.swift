@@ -10,7 +10,7 @@ import WebKit
 
 enum PreviewAction {
 
-  case refresh(url: URL)
+  case automaticRefresh(url: URL)
 }
 
 struct PreviewPrefData: StandardPrefData {
@@ -38,6 +38,12 @@ class PreviewComponent: NSView, ViewComponent {
 
   fileprivate let webview = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
 
+  fileprivate var currentRenderer: PreviewRenderer?
+
+  fileprivate let renderers: [PreviewRenderer]
+
+  fileprivate var isOpen = false
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -54,13 +60,16 @@ class PreviewComponent: NSView, ViewComponent {
     self.flow = EmbeddableComponent(source: source)
     self.markdownRenderer = MarkdownRenderer(source: self.flow.sink)
 
+    self.renderers = [
+      self.markdownRenderer,
+    ]
+
     super.init(frame: .zero)
     self.configureForAutoLayout()
 
     self.flow.set(subscription: self.subscription)
 
-
-    self.webview.loadHTMLString(self.previewService.emptyPreview(), baseURL: nil)
+    self.webview.loadHTMLString(self.previewService.emptyHtml(), baseURL: nil)
 
     self.addViews()
     self.addReactions()
@@ -82,12 +91,18 @@ class PreviewComponent: NSView, ViewComponent {
       .subscribe(onNext: { action in
         switch action {
 
-        case let .currentBufferChanged(mainWindow, currentBuffer):
+        case let .currentBufferChanged(_, currentBuffer):
           guard let url = currentBuffer.url else {
             return
           }
 
-          self.flow.publish(event: PreviewAction.refresh(url: url))
+          self.flow.publish(event: PreviewAction.automaticRefresh(url: url))
+
+        case let .toggleTool(tool):
+          guard tool.view == self else {
+            return
+          }
+          self.isOpen = tool.isSelected
 
         default:
           return
@@ -100,14 +115,18 @@ class PreviewComponent: NSView, ViewComponent {
     self.markdownRenderer.sink
       .filter { $0 is PreviewRendererAction }
       .map { $0 as! PreviewRendererAction }
-      .subscribe(onNext: { action in
+      .subscribe(onNext: { [unowned self] action in
+        guard self.isOpen else {
+          return
+        }
+
         switch action {
 
-        case let .htmlString(html):
+        case let .htmlString(_, html):
           self.webview.loadHTMLString(html, baseURL: nil)
 
         case .error:
-          self.webview.loadHTMLString(self.previewService.emptyPreview(), baseURL: nil)
+          self.webview.loadHTMLString(self.previewService.errorHtml(), baseURL: nil)
 
         }
       })
