@@ -53,7 +53,7 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
   let customMenuItems: [NSMenuItem]
   var customToolbar: NSView?
 
-  var tool: WorkspaceTool? {
+  weak var tool: WorkspaceTool? {
     didSet {
       self.titleField.stringValue = self.tool?.title ?? ""
 
