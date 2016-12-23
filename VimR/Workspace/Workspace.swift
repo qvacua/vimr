@@ -70,7 +70,7 @@ class Workspace: NSView, WorkspaceBarDelegate {
       .left: WorkspaceBar(location: .left)
     ]
 
-    super.init(frame: CGRect.zero)
+    super.init(frame: .zero)
     self.configureForAutoLayout()
 
     self.register(forDraggedTypes: [WorkspaceToolButton.toolUti])

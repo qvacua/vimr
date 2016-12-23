@@ -7,31 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.12.0-150</title>
+      <title>v0.12.1-151</title>
       <description><![CDATA[
     <ul>
-<li>GH-360: Bugfix: a buffer list related bug.</li>
-<li>GH-363: Upgrade to jemalloc 4.4.0 for 10.10 (and 10.11)</li>
-<li>GH-293: More tool, i.e. file browser and buffer list improvements<ul>
-<li>option to show hidden files</li>
-<li>move tool to top/right/bottom/left</li>
-<li>add a button for <code>cd ..</code></li>
-<li>select the currently open file: "Scroll from source" from IntelliJ</li>
-</ul>
-</li>
-<li>GH-369: Bugfix: set the <code>cwd</code> correctly when opening files using the <code>vimr</code> command line tool</li>
+<li>Fix memory leak</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.12.0-150
+        https://github.com/qvacua/vimr/releases/tag/v0.12.1-151
       </releaseNotesLink>
-      <pubDate>2016-12-17T14:41:39.010620</pubDate>
+      <pubDate>2016-12-23T15:38:51.704270</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.12.0-150/VimR-v0.12.0-150.tar.bz2"
-                 sparkle:version="150"
-                 sparkle:shortVersionString="0.12.0"
-                 sparkle:dsaSignature="MCwCFEX/6uqHYzv9Tl8BGLxS3k6XESM7AhQYUBEIgb9zOx7yhTlXkIjfpNFJrA=="
-                 length="9355519"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.12.1-151/VimR-v0.12.1-151.tar.bz2"
+                 sparkle:version="151"
+                 sparkle:shortVersionString="0.12.1"
+                 sparkle:dsaSignature="MC0CFQCW3JCrClDYmRHXdiXmYZp74+SdXwIUIbj6wJW6k93dQVBFIgus+mPNtUo="
+                 length="9353806"
                  type="application/octet-stream"/>
     </item>
   </channel>

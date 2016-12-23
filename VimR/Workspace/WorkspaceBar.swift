@@ -79,7 +79,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
   init(location: WorkspaceBarLocation) {
     self.location = location
 
-    super.init(frame: CGRect.zero)
+    super.init(frame: .zero)
     self.configureForAutoLayout()
 
     self.wantsLayer = true

@@ -77,7 +77,7 @@ class FileBrowserComponent: StandardViewComponent, ToolDataHolder {
 
   class InnerCustomToolbar: NSView {
 
-    fileprivate var fileBrowser: FileBrowserComponent? {
+    fileprivate weak var fileBrowser: FileBrowserComponent? {
       didSet {
         self.goToParentButton.target = self.fileBrowser
         self.scrollToSourceButton.target = self.fileBrowser
