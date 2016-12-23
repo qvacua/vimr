@@ -1,3 +1,7 @@
+# 0.12.1-151
+
+* Fix memory leak
+
 # 0.12.0-150
 
 * GH-360: Bugfix: a buffer list related bug.
