@@ -1,6 +1,7 @@
 # next
 
 * GH-292: Improve Open Quickly results
+* Update Sparkle to [0.15.1](https://github.com/sparkle-project/Sparkle/releases/tag/1.15.1)
 
 # 0.12.1-151
 
