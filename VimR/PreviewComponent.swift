@@ -38,6 +38,8 @@ class PreviewComponent: NSView, ViewComponent {
 
   fileprivate let webview = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
 
+  fileprivate let baseUrl: URL
+
   fileprivate var currentRenderer: PreviewRenderer?
 
   fileprivate let renderers: [PreviewRenderer]
@@ -58,6 +60,8 @@ class PreviewComponent: NSView, ViewComponent {
 
   init(source: Observable<Any>) {
     self.flow = EmbeddableComponent(source: source)
+
+    self.baseUrl = self.previewService.baseUrl()
     self.markdownRenderer = MarkdownRenderer(source: self.flow.sink)
 
     self.renderers = [
@@ -69,7 +73,7 @@ class PreviewComponent: NSView, ViewComponent {
 
     self.flow.set(subscription: self.subscription)
 
-    self.webview.loadHTMLString(self.previewService.emptyHtml(), baseURL: nil)
+    self.webview.loadHTMLString(self.previewService.emptyHtml(), baseURL: self.baseUrl)
 
     self.addViews()
     self.addReactions()
@@ -93,6 +97,10 @@ class PreviewComponent: NSView, ViewComponent {
 
         case let .currentBufferChanged(_, currentBuffer):
           guard let url = currentBuffer.url else {
+            return
+          }
+
+          guard self.isOpen else {
             return
           }
 
@@ -122,11 +130,11 @@ class PreviewComponent: NSView, ViewComponent {
 
         switch action {
 
-        case let .htmlString(_, html):
-          self.webview.loadHTMLString(html, baseURL: nil)
+        case let .htmlString(_, html, baseUrl):
+          self.webview.loadHTMLString(html, baseURL: baseUrl)
 
         case .error:
-          self.webview.loadHTMLString(self.previewService.errorHtml(), baseURL: nil)
+          self.webview.loadHTMLString(self.previewService.errorHtml(), baseURL: self.baseUrl)
 
         }
       })

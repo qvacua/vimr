@@ -14,13 +14,38 @@ protocol PreviewRenderer: class {
 
 enum PreviewRendererAction {
 
-  case htmlString(renderer: PreviewRenderer, html: String)
+  case htmlString(renderer: PreviewRenderer, html: String, baseUrl: URL)
   case error(renderer: PreviewRenderer)
 }
 
 class MarkdownRenderer: StandardFlow, PreviewRenderer {
 
-  fileprivate let extensions = Set([ "md", "markdown", ])
+  fileprivate let baseUrl = Bundle.main.resourceURL!.appendingPathComponent("markdown")
+  fileprivate let extensions = Set(["md", "markdown", ])
+  fileprivate let template: String
+
+  override init(source: Observable<Any>) {
+    guard let templateUrl = Bundle.main.url(forResource: "template",
+                                            withExtension: "html",
+                                            subdirectory: "markdown")
+      else {
+      preconditionFailure("ERROR Cannot load markdown template")
+    }
+
+    guard let template = try? String(contentsOf: templateUrl) else {
+      preconditionFailure("ERROR Cannot load markdown template")
+    }
+
+    self.template = template
+
+    super.init(source: source)
+  }
+
+  fileprivate func filledTemplate(body: String, title: String) -> String {
+    return self.template
+      .replacingOccurrences(of: "{{ title }}", with: title)
+      .replacingOccurrences(of: "{{ body }}", with: body)
+  }
 
   fileprivate func canRender(fileExtension: String) -> Bool {
     return extensions.contains(fileExtension)
@@ -41,14 +66,19 @@ class MarkdownRenderer: StandardFlow, PreviewRenderer {
   }
 
   fileprivate func render(from url: URL) {
+    NSLog("\(#function): \(url)")
+
     let doc = CMDocument(contentsOfFile: url.path)
     let renderer = CMHTMLRenderer(document: doc)
 
-    guard let html = renderer?.render() else {
+    guard let body = renderer?.render() else {
       self.publish(event: PreviewRendererAction.error)
       return
     }
 
-    self.publish(event: PreviewRendererAction.htmlString(renderer: self, html: html))
+    let html = filledTemplate(body: body, title: url.lastPathComponent)
+
+    try? html.write(toFile: "/tmp/markdown-preview.html", atomically: false, encoding: .utf8)
+    self.publish(event: PreviewRendererAction.htmlString(renderer: self, html: html, baseUrl: self.baseUrl))
   }
 }

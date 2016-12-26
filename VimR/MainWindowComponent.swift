@@ -296,7 +296,7 @@ class MainWindowComponent: WindowComponent,
           self.neoVimView.select(buffer: buffer)
 
         default:
-          NSLog("WARN unrecognized action: \(action)")
+          NSLog("Not handled action: \(action)")
           return
         }
 

@@ -44,6 +44,10 @@ class PreviewService {
     self.saveFirst = saveFirstHtml
   }
 
+  func baseUrl() -> URL {
+    return Bundle.main.resourceURL!.appendingPathComponent("preview")
+  }
+
   func emptyHtml() -> String {
     return self.empty
   }
