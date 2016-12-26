@@ -20,6 +20,7 @@ enum PreviewRendererAction {
 
 class MarkdownRenderer: StandardFlow, PreviewRenderer {
 
+  fileprivate let scheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
   fileprivate let baseUrl = Bundle.main.resourceURL!.appendingPathComponent("markdown")
   fileprivate let extensions = Set(["md", "markdown", ])
   fileprivate let template: String
@@ -53,6 +54,7 @@ class MarkdownRenderer: StandardFlow, PreviewRenderer {
 
   override func subscription(source: Observable<Any>) -> Disposable {
     return source
+      .observeOn(self.scheduler)
       .filter { $0 is PreviewAction }
       .map { $0 as! PreviewAction }
       .map { action in

@@ -123,6 +123,7 @@ class PreviewComponent: NSView, ViewComponent {
     self.markdownRenderer.sink
       .filter { $0 is PreviewRendererAction }
       .map { $0 as! PreviewRendererAction }
+      .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] action in
         guard self.isOpen else {
           return
