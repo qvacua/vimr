@@ -70,7 +70,7 @@ class MarkdownRenderer: StandardFlow, PreviewRenderer {
   fileprivate func render(from url: URL) {
     NSLog("\(#function): \(url)")
 
-    let doc = CMDocument(contentsOfFile: url.path)
+    let doc = CMDocument(contentsOfFile: url.path, options: .sourcepos)
     let renderer = CMHTMLRenderer(document: doc)
 
     guard let body = renderer?.render() else {
