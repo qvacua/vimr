@@ -7,14 +7,50 @@ import Cocoa
 import RxSwift
 import PureLayout
 import CocoaMarkdown
+import WebKit
 
 protocol PreviewRenderer: class {
 
 }
 
+fileprivate class WebviewMessageHandler: NSObject, WKScriptMessageHandler {
+
+  enum Action {
+
+    case scroll(lineBegin: Int, columnBegin: Int, lineEnd: Int, columnEnd: Int)
+  }
+
+  fileprivate let flow: EmbeddableComponent
+
+  override init() {
+    flow = EmbeddableComponent(source: Observable.empty())
+    super.init()
+  }
+
+  func userContentController(_: WKUserContentController, didReceive message: WKScriptMessage) {
+    guard let msgBody = message.body as? [String: Int] else {
+      return
+    }
+
+
+    guard let lineBegin = msgBody["lineBegin"],
+          let columnBegin = msgBody["columnBegin"],
+          let lineEnd = msgBody["lineEnd"],
+          let columnEnd = msgBody["columnEnd"]
+      else {
+      return
+    }
+
+    flow.publish(event: Action.scroll(lineBegin: lineBegin, columnBegin: columnBegin,
+                                      lineEnd: lineEnd, columnEnd: columnEnd))
+  }
+}
+
+
 enum PreviewRendererAction {
 
   case htmlString(renderer: PreviewRenderer, html: String, baseUrl: URL)
+  case view(renderer: PreviewRenderer, view: NSView)
   case error(renderer: PreviewRenderer)
 }
 
@@ -24,6 +60,11 @@ class MarkdownRenderer: StandardFlow, PreviewRenderer {
   fileprivate let baseUrl = Bundle.main.resourceURL!.appendingPathComponent("markdown")
   fileprivate let extensions = Set(["md", "markdown", ])
   fileprivate let template: String
+
+  fileprivate let userContentController = WKUserContentController()
+  fileprivate let webviewMessageHandler = WebviewMessageHandler()
+
+  fileprivate let webview: WKWebView
 
   override init(source: Observable<Any>) {
     guard let templateUrl = Bundle.main.url(forResource: "template",
@@ -39,7 +80,28 @@ class MarkdownRenderer: StandardFlow, PreviewRenderer {
 
     self.template = template
 
+    let configuration = WKWebViewConfiguration()
+    configuration.userContentController = self.userContentController
+    self.webview = WKWebView(frame: .zero, configuration: configuration)
+    self.webview.configureForAutoLayout()
+
     super.init(source: source)
+
+    self.addReactions()
+    self.userContentController.add(webviewMessageHandler, name: "com_vimr_preview_markdown")
+  }
+
+  fileprivate func addReactions() {
+    self.webviewMessageHandler.flow.sink
+      .filter { $0 is WebviewMessageHandler.Action }
+      .map { $0 as! WebviewMessageHandler.Action }
+      .subscribe(onNext: { action in
+        switch action {
+        case let .scroll(lineBegin, columnBegin, lineEnd, columnEnd):
+          NSLog("\(lineBegin):\(columnBegin) - \(lineEnd):\(columnEnd)")
+        }
+      })
+      .addDisposableTo(self.disposeBag)
   }
 
   fileprivate func filledTemplate(body: String, title: String) -> String {
@@ -68,6 +130,7 @@ class MarkdownRenderer: StandardFlow, PreviewRenderer {
   }
 
   fileprivate func render(from url: URL) {
+
     NSLog("\(#function): \(url)")
 
     let doc = CMDocument(contentsOfFile: url.path, options: .sourcepos)
@@ -79,8 +142,9 @@ class MarkdownRenderer: StandardFlow, PreviewRenderer {
     }
 
     let html = filledTemplate(body: body, title: url.lastPathComponent)
+    self.webview.loadHTMLString(html, baseURL: self.baseUrl)
 
     try? html.write(toFile: "/tmp/markdown-preview.html", atomically: false, encoding: .utf8)
-    self.publish(event: PreviewRendererAction.htmlString(renderer: self, html: html, baseUrl: self.baseUrl))
+    self.publish(event: PreviewRendererAction.view(renderer: self, view: self.webview))
   }
 }

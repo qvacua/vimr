@@ -3,6 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="github-markdown.css">
+  <script>
+    const sourceposRegex = /(\d+):(\d+)-(\d+):(\d+)/;
+
+    function isTopLeftInsideInViewport(el) {
+      const rect = el.getBoundingClientRect();
+      return rect.top >= 0 && rect.left >= 0;
+    }
+
+    function isElementVisibleInViewport(el) {
+      const rect = el.getBoundingClientRect();
+
+      return (
+        (rect.top >= 0 || (rect.top < 0 && rect.bottom > 0)) &&
+        (rect.left >= 0 || (rect.left < 0 && rect.right > 0))
+      );
+    }
+
+    function toArray(nodeList) {
+      return Array.prototype.slice.call(nodeList)
+    }
+
+    function scrollCallback() {
+      const mdElements = toArray(document.querySelectorAll("[data-sourcepos]"));
+      const candidate = mdElements.find(isTopLeftInsideInViewport) || mdElements.find(isElementVisibleInViewport);
+
+      if (!candidate) {
+        return;
+      }
+
+      const regexResult = candidate.dataset.sourcepos.match(sourceposRegex);
+      if (regexResult.length != 5) {
+        return;
+      }
+
+      const result = {
+        lineBegin: parseInt(regexResult[1], 10),
+        columnBegin: parseInt(regexResult[2], 10),
+        lineEnd: parseInt(regexResult[3], 10),
+        columnEnd: parseInt(regexResult[4], 10)
+      };
+
+      window.webkit.messageHandlers.com_vimr_preview_markdown.postMessage(result);
+    }
+
+    let lastKnownScrollPos = 0;
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+      lastKnownScrollPos = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (lastKnownScrollPos >= 0) {
+            scrollCallback();
+          }
+          ticking = false;
+        });
+      }
+      ticking = true;
+    });
+  </script>
   <title>{{ title }}</title>
 </head>
 <body class="markdown-body">

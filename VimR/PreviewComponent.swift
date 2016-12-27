@@ -33,18 +33,26 @@ class PreviewComponent: NSView, ViewComponent {
 
   fileprivate let flow: EmbeddableComponent
 
-  fileprivate let previewService = PreviewService()
+  fileprivate let renderers: [PreviewRenderer]
+  fileprivate var currentRenderer: PreviewRenderer?
   fileprivate let markdownRenderer: MarkdownRenderer
 
-  fileprivate let webview = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
-
   fileprivate let baseUrl: URL
-
-  fileprivate var currentRenderer: PreviewRenderer?
-
-  fileprivate let renderers: [PreviewRenderer]
+  fileprivate let webview = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
+  fileprivate let previewService = PreviewService()
 
   fileprivate var isOpen = false
+  fileprivate var currentView: NSView {
+    willSet {
+      self.currentView.removeAllConstraints()
+      self.currentView.removeFromSuperview()
+    }
+
+    didSet {
+      self.addSubview(self.currentView)
+      self.currentView.autoPinEdgesToSuperviewEdges()
+    }
+  }
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -68,6 +76,9 @@ class PreviewComponent: NSView, ViewComponent {
       self.markdownRenderer,
     ]
 
+    self.webview.configureForAutoLayout()
+    self.currentView = self.webview
+
     super.init(frame: .zero)
     self.configureForAutoLayout()
 
@@ -80,12 +91,8 @@ class PreviewComponent: NSView, ViewComponent {
   }
 
   fileprivate func addViews() {
-    let webview = self.webview
-    webview.configureForAutoLayout()
-
-    self.addSubview(webview)
-
-    webview.autoPinEdgesToSuperviewEdges()
+    self.addSubview(self.currentView)
+    self.currentView.autoPinEdgesToSuperviewEdges()
   }
 
   fileprivate func subscription(source: Observable<Any>) -> Disposable {
@@ -133,6 +140,9 @@ class PreviewComponent: NSView, ViewComponent {
 
         case let .htmlString(_, html, baseUrl):
           self.webview.loadHTMLString(html, baseURL: baseUrl)
+
+        case let .view(_, view):
+          self.currentView = view
 
         case .error:
           self.webview.loadHTMLString(self.previewService.errorHtml(), baseURL: self.baseUrl)
