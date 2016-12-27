@@ -295,6 +295,10 @@ class MainWindowComponent: WindowComponent,
         case let BufferListAction.open(buffer: buffer):
           self.neoVimView.select(buffer: buffer)
 
+        case let PreviewComponent.Action.scroll(to: position):
+          NSLog("\(position)")
+          return
+
         default:
           NSLog("Not handled action: \(action)")
           return

@@ -9,10 +9,6 @@ import PureLayout
 import CocoaMarkdown
 import WebKit
 
-protocol PreviewRenderer: class {
-
-}
-
 fileprivate class WebviewMessageHandler: NSObject, WKScriptMessageHandler {
 
   enum Action {
@@ -32,7 +28,6 @@ fileprivate class WebviewMessageHandler: NSObject, WKScriptMessageHandler {
       return
     }
 
-
     guard let lineBegin = msgBody["lineBegin"],
           let columnBegin = msgBody["columnBegin"],
           let lineEnd = msgBody["lineEnd"],
@@ -44,14 +39,6 @@ fileprivate class WebviewMessageHandler: NSObject, WKScriptMessageHandler {
     flow.publish(event: Action.scroll(lineBegin: lineBegin, columnBegin: columnBegin,
                                       lineEnd: lineEnd, columnEnd: columnEnd))
   }
-}
-
-
-enum PreviewRendererAction {
-
-  case htmlString(renderer: PreviewRenderer, html: String, baseUrl: URL)
-  case view(renderer: PreviewRenderer, view: NSView)
-  case error(renderer: PreviewRenderer)
 }
 
 class MarkdownRenderer: StandardFlow, PreviewRenderer {
@@ -95,10 +82,10 @@ class MarkdownRenderer: StandardFlow, PreviewRenderer {
     self.webviewMessageHandler.flow.sink
       .filter { $0 is WebviewMessageHandler.Action }
       .map { $0 as! WebviewMessageHandler.Action }
-      .subscribe(onNext: { action in
+      .subscribe(onNext: { [weak self] action in
         switch action {
-        case let .scroll(lineBegin, columnBegin, lineEnd, columnEnd):
-          NSLog("\(lineBegin):\(columnBegin) - \(lineEnd):\(columnEnd)")
+        case let .scroll(lineBegin, columnBegin, _, _):
+          self?.publish(event: PreviewRendererAction.scroll(to: Position(row: lineBegin, column: columnBegin)))
         }
       })
       .addDisposableTo(self.disposeBag)
@@ -117,12 +104,15 @@ class MarkdownRenderer: StandardFlow, PreviewRenderer {
   override func subscription(source: Observable<Any>) -> Disposable {
     return source
       .observeOn(self.scheduler)
-      .filter { $0 is PreviewAction }
-      .map { $0 as! PreviewAction }
-      .map { action in
+      .mapOmittingNil { action in
+
         switch action {
-        case let .automaticRefresh(url):
+        case let PreviewComponent.Action.automaticRefresh(url):
           return url
+
+        default:
+          return nil
+
         }
       }
       .filter { self.canRender(fileExtension: $0.pathExtension) }

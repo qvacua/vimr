@@ -8,11 +8,6 @@ import RxSwift
 import PureLayout
 import WebKit
 
-enum PreviewAction {
-
-  case automaticRefresh(url: URL)
-}
-
 struct PreviewPrefData: StandardPrefData {
 
   static let `default` = PreviewPrefData()
@@ -30,6 +25,12 @@ struct PreviewPrefData: StandardPrefData {
 }
 
 class PreviewComponent: NSView, ViewComponent {
+
+  enum Action {
+
+    case automaticRefresh(url: URL)
+    case scroll(to: Position)
+  }
 
   fileprivate let flow: EmbeddableComponent
 
@@ -111,7 +112,7 @@ class PreviewComponent: NSView, ViewComponent {
             return
           }
 
-          self.flow.publish(event: PreviewAction.automaticRefresh(url: url))
+          self.flow.publish(event: PreviewComponent.Action.automaticRefresh(url: url))
 
         case let .toggleTool(tool):
           guard tool.view == self else {
@@ -131,7 +132,7 @@ class PreviewComponent: NSView, ViewComponent {
       .filter { $0 is PreviewRendererAction }
       .map { $0 as! PreviewRendererAction }
       .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { [unowned self] action in
+      .subscribe(onNext: { action in
         guard self.isOpen else {
           return
         }
@@ -143,6 +144,9 @@ class PreviewComponent: NSView, ViewComponent {
 
         case let .view(_, view):
           self.currentView = view
+
+        case let .scroll(to: position):
+          self.flow.publish(event: PreviewComponent.Action.scroll(to: position))
 
         case .error:
           self.webview.loadHTMLString(self.previewService.errorHtml(), baseURL: self.baseUrl)
