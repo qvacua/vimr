@@ -115,7 +115,6 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 
   func relayout() {
     self.removeConstraints(self.layoutConstraints)
-    self.proxyBar.removeAllConstraints()
     self.removeAllSubviews()
 
     if self.isEmpty() {

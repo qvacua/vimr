@@ -41,7 +41,9 @@ fileprivate class WebviewMessageHandler: NSObject, WKScriptMessageHandler {
   }
 }
 
-class MarkdownRenderer: StandardFlow, PreviewRenderer {
+class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
+
+  fileprivate let flow: EmbeddableComponent
 
   fileprivate let scheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
   fileprivate let baseUrl = Bundle.main.resourceURL!.appendingPathComponent("markdown")
@@ -53,7 +55,14 @@ class MarkdownRenderer: StandardFlow, PreviewRenderer {
 
   fileprivate let webview: WKWebView
 
-  override init(source: Observable<Any>) {
+  var sink: Observable<Any> {
+    return self.flow.sink
+  }
+
+  let toolbar: NSView? = NSView(forAutoLayout: ())
+  let menuItems: [NSMenuItem]?
+
+  init(source: Observable<Any>) {
     guard let templateUrl = Bundle.main.url(forResource: "template",
                                             withExtension: "html",
                                             subdirectory: "markdown")
@@ -67,41 +76,50 @@ class MarkdownRenderer: StandardFlow, PreviewRenderer {
 
     self.template = template
 
+    self.flow = EmbeddableComponent(source: source)
+
     let configuration = WKWebViewConfiguration()
     configuration.userContentController = self.userContentController
     self.webview = WKWebView(frame: .zero, configuration: configuration)
     self.webview.configureForAutoLayout()
 
-    super.init(source: source)
+    let forwardSearchMenuItem = NSMenuItem(title: "Forward Search", action: nil, keyEquivalent: "")
+    let reverseSearchMenuItem = NSMenuItem(title: "Reverse Search", action: nil, keyEquivalent: "")
+    let automaticForwardMenuItem = NSMenuItem(title: "Automatic Forward Search", action: nil, keyEquivalent: "")
+    let automaticReverseMenuItem = NSMenuItem(title: "Automatic Reverse Search", action: nil, keyEquivalent: "")
+
+    self.menuItems = [
+      forwardSearchMenuItem,
+      reverseSearchMenuItem,
+      NSMenuItem.separator(),
+      automaticForwardMenuItem,
+      automaticReverseMenuItem,
+    ]
+
+    super.init()
+
+    self.flow.set(subscription: self.subscription)
+
+    self.initCustomUiElements()
+
+    forwardSearchMenuItem.target = self
+    forwardSearchMenuItem.action = #selector(MarkdownRenderer.forwardSearchAction)
+    reverseSearchMenuItem.target = self
+    reverseSearchMenuItem.action = #selector(MarkdownRenderer.reverseSearchAction)
+    automaticForwardMenuItem.target = self
+    automaticForwardMenuItem.action = #selector(MarkdownRenderer.automaticForwardSearchAction)
+    automaticReverseMenuItem.target = self
+    automaticReverseMenuItem.action = #selector(MarkdownRenderer.automaticReverseSearchAction)
 
     self.addReactions()
     self.userContentController.add(webviewMessageHandler, name: "com_vimr_preview_markdown")
   }
 
-  fileprivate func addReactions() {
-    self.webviewMessageHandler.flow.sink
-      .filter { $0 is WebviewMessageHandler.Action }
-      .map { $0 as! WebviewMessageHandler.Action }
-      .subscribe(onNext: { [weak self] action in
-        switch action {
-        case let .scroll(lineBegin, columnBegin, _, _):
-          self?.publish(event: PreviewRendererAction.scroll(to: Position(row: lineBegin, column: columnBegin)))
-        }
-      })
-      .addDisposableTo(self.disposeBag)
-  }
-
-  fileprivate func filledTemplate(body: String, title: String) -> String {
-    return self.template
-      .replacingOccurrences(of: "{{ title }}", with: title)
-      .replacingOccurrences(of: "{{ body }}", with: body)
-  }
-
-  fileprivate func canRender(fileExtension: String) -> Bool {
+  func canRender(fileExtension: String) -> Bool {
     return extensions.contains(fileExtension)
   }
 
-  override func subscription(source: Observable<Any>) -> Disposable {
+  fileprivate func subscription(source: Observable<Any>) -> Disposable {
     return source
       .observeOn(self.scheduler)
       .mapOmittingNil { action in
@@ -115,8 +133,50 @@ class MarkdownRenderer: StandardFlow, PreviewRenderer {
 
         }
       }
-      .filter { self.canRender(fileExtension: $0.pathExtension) }
+      .filter { self.canRender(fileExtension: $1.pathExtension) }
       .subscribe(onNext: { [unowned self] url in self.render(from: url) })
+  }
+
+  fileprivate func initCustomUiElements() {
+    let forward = NSButton(forAutoLayout: ())
+    InnerToolBar.configureToStandardIconButton(button: forward, iconName: .chevronCircleRight)
+    forward.toolTip = "Forward Search"
+    forward.target = self
+    forward.action = #selector(MarkdownRenderer.forwardSearchAction)
+
+    let reverse = NSButton(forAutoLayout: ())
+    InnerToolBar.configureToStandardIconButton(button: reverse, iconName: .chevronCircleLeft)
+    reverse.toolTip = "Reverse Search"
+    reverse.target = self
+    reverse.action = #selector(MarkdownRenderer.reverseSearchAction)
+
+    self.toolbar?.addSubview(forward)
+    self.toolbar?.addSubview(reverse)
+
+    forward.autoPinEdge(toSuperviewEdge: .top)
+    forward.autoPinEdge(toSuperviewEdge: .right)
+
+    reverse.autoPinEdge(toSuperviewEdge: .top)
+    reverse.autoPinEdge(.right, to: .left, of: forward)
+  }
+
+  fileprivate func addReactions() {
+    self.webviewMessageHandler.flow.sink
+      .filter { $0 is WebviewMessageHandler.Action }
+      .map { $0 as! WebviewMessageHandler.Action }
+      .subscribe(onNext: { [weak self] action in
+        switch action {
+        case let .scroll(lineBegin, columnBegin, _, _):
+          self?.flow.publish(event: PreviewRendererAction.scroll(to: Position(row: lineBegin, column: columnBegin)))
+        }
+      })
+      .addDisposableTo(self.flow.disposeBag)
+  }
+
+  fileprivate func filledTemplate(body: String, title: String) -> String {
+    return self.template
+      .replacingOccurrences(of: "{{ title }}", with: title)
+      .replacingOccurrences(of: "{{ body }}", with: body)
   }
 
   fileprivate func render(from url: URL) {
@@ -127,7 +187,7 @@ class MarkdownRenderer: StandardFlow, PreviewRenderer {
     let renderer = CMHTMLRenderer(document: doc)
 
     guard let body = renderer?.render() else {
-      self.publish(event: PreviewRendererAction.error)
+      self.flow.publish(event: PreviewRendererAction.error)
       return
     }
 
@@ -135,6 +195,26 @@ class MarkdownRenderer: StandardFlow, PreviewRenderer {
     self.webview.loadHTMLString(html, baseURL: self.baseUrl)
 
     try? html.write(toFile: "/tmp/markdown-preview.html", atomically: false, encoding: .utf8)
-    self.publish(event: PreviewRendererAction.view(renderer: self, view: self.webview))
+    self.flow.publish(event: PreviewRendererAction.view(renderer: self, view: self.webview))
+  }
+}
+
+// MARK: - Actions
+extension MarkdownRenderer {
+
+  func forwardSearchAction(_: Any?) {
+    NSLog("\(#function)")
+  }
+
+  func reverseSearchAction(_: Any?) {
+    NSLog("\(#function)")
+  }
+
+  func automaticForwardSearchAction(_: Any?) {
+    NSLog("\(#function)")
+  }
+
+  func automaticReverseSearchAction(_: Any?) {
+    NSLog("\(#function)")
   }
 }

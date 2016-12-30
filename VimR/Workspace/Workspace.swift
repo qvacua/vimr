@@ -138,7 +138,6 @@ extension Workspace {
     self.isDragOngoing = false
     self.draggedOnBarLocation = nil
     self.proxyBar.removeFromSuperview()
-    self.proxyBar.removeAllConstraints()
   }
 
   override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {

@@ -34,8 +34,23 @@ class PreviewComponent: NSView, ViewComponent {
 
   fileprivate let flow: EmbeddableComponent
 
+  fileprivate var currentUrl: URL?
+
   fileprivate let renderers: [PreviewRenderer]
-  fileprivate var currentRenderer: PreviewRenderer?
+  fileprivate var currentRenderer: PreviewRenderer? {
+    didSet {
+      guard oldValue !== currentRenderer else {
+        return
+      }
+
+      if let toolbar = self.currentRenderer?.toolbar {
+        self.workspaceTool?.customInnerToolbar = toolbar
+      }
+      if let menuItems = self.currentRenderer?.menuItems {
+        self.workspaceTool?.customInnerMenuItems = menuItems
+      }
+    }
+  }
   fileprivate let markdownRenderer: MarkdownRenderer
 
   fileprivate let baseUrl: URL
@@ -45,7 +60,6 @@ class PreviewComponent: NSView, ViewComponent {
   fileprivate var isOpen = false
   fileprivate var currentView: NSView {
     willSet {
-      self.currentView.removeAllConstraints()
       self.currentView.removeFromSuperview()
     }
 
@@ -59,6 +73,8 @@ class PreviewComponent: NSView, ViewComponent {
     fatalError("init(coder:) has not been implemented")
   }
 
+  weak var workspaceTool: WorkspaceTool?
+
   var sink: Observable<Any> {
     return self.flow.sink
   }
@@ -66,7 +82,7 @@ class PreviewComponent: NSView, ViewComponent {
   var view: NSView {
     return self
   }
-
+  
   init(source: Observable<Any>) {
     self.flow = EmbeddableComponent(source: source)
 
@@ -104,7 +120,12 @@ class PreviewComponent: NSView, ViewComponent {
         switch action {
 
         case let .currentBufferChanged(_, currentBuffer):
+          self.currentUrl = currentBuffer.url
+
           guard let url = currentBuffer.url else {
+            self.currentRenderer = nil
+            self.currentView = self.webview
+            self.webview.loadHTMLString(self.previewService.saveFirstHtml(), baseURL: self.baseUrl)
             return
           }
 
@@ -112,6 +133,7 @@ class PreviewComponent: NSView, ViewComponent {
             return
           }
 
+          self.currentRenderer = self.renderers.first { $0.canRender(fileExtension: url.pathExtension) }
           self.flow.publish(event: PreviewComponent.Action.automaticRefresh(url: url))
 
         case let .toggleTool(tool):
@@ -119,6 +141,18 @@ class PreviewComponent: NSView, ViewComponent {
             return
           }
           self.isOpen = tool.isSelected
+
+          guard let url = self.currentUrl else {
+            self.currentRenderer = nil
+            self.currentView = self.webview
+            self.webview.loadHTMLString(self.previewService.saveFirstHtml(), baseURL: self.baseUrl)
+            return
+          }
+
+          self.currentRenderer = self.renderers.first { $0.canRender(fileExtension: url.pathExtension) }
+          if self.currentRenderer != nil {
+            self.flow.publish(event: PreviewComponent.Action.automaticRefresh(url: url))
+          }
 
         default:
           return

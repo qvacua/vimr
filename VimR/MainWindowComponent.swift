@@ -207,6 +207,7 @@ class MainWindowComponent: WindowComponent,
                                              minimumDimension: 200,
                                              withInnerToolbar: true)
     let previewTool = WorkspaceToolComponent(toolIdentifier: .preview, config: previewConfig)
+    preview.workspaceTool = previewTool
     self.tools[.preview] = previewTool
 
     self.workspace.append(tool: fileBrowserTool, location: fileBrowserToolData.location)

@@ -7,6 +7,10 @@ import Cocoa
 
 protocol PreviewRenderer: class {
 
+  var toolbar: NSView? { get }
+  var menuItems: [NSMenuItem]? { get }
+
+  func canRender(fileExtension: String) -> Bool
 }
 
 enum PreviewRendererAction {
