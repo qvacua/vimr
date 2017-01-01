@@ -43,6 +43,52 @@ fileprivate class WebviewMessageHandler: NSObject, WKScriptMessageHandler {
 
 class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
+  static let identifier = "com.qvacua.vimr.tool.preview.markdown"
+  static func prefData(from dict: [String: Any]) -> StandardPrefData? {
+    return PrefData(dict: dict)
+  }
+
+  struct PrefData: StandardPrefData {
+
+    fileprivate static let identifier = "identifier"
+    fileprivate static let isForwardSearchAutomatically = "is-forward-search-automatically"
+    fileprivate static let isReverseSearchAutomatically = "is-reverse-search-automatically"
+
+    static let `default` = PrefData(isForwardSearchAutomatically: false, isReverseSearchAutomatically: false)
+
+    var isForwardSearchAutomatically: Bool
+    var isReverseSearchAutomatically: Bool
+
+    init(isForwardSearchAutomatically: Bool, isReverseSearchAutomatically: Bool) {
+      self.isForwardSearchAutomatically = isForwardSearchAutomatically
+      self.isReverseSearchAutomatically = isReverseSearchAutomatically
+    }
+
+    init?(dict: [String: Any]) {
+      guard PrefUtils.string(from: dict, for: PrefData.identifier) == MarkdownRenderer.identifier else {
+        return nil
+      }
+
+      guard let isForward = PrefUtils.bool(from: dict, for: PrefData.isForwardSearchAutomatically) else {
+        return nil
+      }
+
+      guard let isReverse = PrefUtils.bool(from: dict, for: PrefData.isReverseSearchAutomatically) else {
+        return nil
+      }
+
+      self.init(isForwardSearchAutomatically: isForward, isReverseSearchAutomatically: isReverse)
+    }
+
+    func dict() -> [String: Any] {
+      return [
+        PrefData.identifier: MarkdownRenderer.identifier,
+        PrefData.isForwardSearchAutomatically: self.isForwardSearchAutomatically,
+        PrefData.isReverseSearchAutomatically: self.isReverseSearchAutomatically,
+      ]
+    }
+  }
+
   fileprivate let flow: EmbeddableComponent
 
   fileprivate let scheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
@@ -53,7 +99,16 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
   fileprivate let userContentController = WKUserContentController()
   fileprivate let webviewMessageHandler = WebviewMessageHandler()
 
+  fileprivate var isForwardSearchAutomatically = false
+  fileprivate var isReverseSearchAutomatically = false
+
   fileprivate let webview: WKWebView
+
+  let identifier: String = MarkdownRenderer.identifier
+  var prefData: StandardPrefData? {
+    return PrefData(isForwardSearchAutomatically: self.isForwardSearchAutomatically,
+                    isReverseSearchAutomatically: self.isReverseSearchAutomatically)
+  }
 
   var sink: Observable<Any> {
     return self.flow.sink
@@ -133,7 +188,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
         }
       }
-      .filter { self.canRender(fileExtension: $1.pathExtension) }
+      .filter { self.canRender(fileExtension: $0.pathExtension) }
       .subscribe(onNext: { [unowned self] url in self.render(from: url) })
   }
 
@@ -211,10 +266,12 @@ extension MarkdownRenderer {
   }
 
   func automaticForwardSearchAction(_: Any?) {
+    self.isForwardSearchAutomatically = !self.isForwardSearchAutomatically
     NSLog("\(#function)")
   }
 
   func automaticReverseSearchAction(_: Any?) {
+    self.isReverseSearchAutomatically = !self.isReverseSearchAutomatically
     NSLog("\(#function)")
   }
 }

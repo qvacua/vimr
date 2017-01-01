@@ -42,7 +42,7 @@ struct ToolPrefData: StandardPrefData {
                            location: .right,
                            isVisible: false,
                            dimension: 300,
-                           toolData: EmptyPrefData.default),
+                           toolData: PreviewComponent.PrefData.default),
   ]
 
   var identifier: ToolIdentifier
@@ -94,6 +94,8 @@ struct ToolPrefData: StandardPrefData {
     switch identifier {
     case .fileBrowser:
       toolData = FileBrowserData(dict: toolDataDict) ?? FileBrowserData.default
+    case .preview:
+      toolData = PreviewComponent.PrefData(dict: toolDataDict) ?? PreviewComponent.PrefData.default
     default:
       toolData = EmptyPrefData.default
     }

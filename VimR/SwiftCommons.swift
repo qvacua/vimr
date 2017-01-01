@@ -56,6 +56,29 @@ extension Array {
   }
 }
 
+func toDict<K: Hashable, V, S: Sequence>(_ sequence: S) -> Dictionary<K, V> where S.Iterator.Element == (K, V) {
+  var result = Dictionary<K, V>(minimumCapacity: sequence.underestimatedCount)
+
+  for (key, value) in sequence {
+    result[key] = value
+  }
+
+  return result
+}
+
+extension Dictionary {
+
+  func mapToDict<T>(_ transform: ((key: Key, value: Value)) throws -> (Key, T)) rethrows -> Dictionary<Key, T> {
+    let array = try self.map(transform)
+    return toDict(array)
+  }
+
+  func flatMapToDict<T>(_ transform: ((key: Key, value: Value)) throws -> (Key, T)?) rethrows -> Dictionary<Key, T> {
+    let array = try self.flatMap(transform)
+    return toDict(array)
+  }
+}
+
 extension Array where Element: Equatable {
 
   /**
@@ -66,7 +89,7 @@ extension Array where Element: Equatable {
    */
   func substituting(elements: [Element]) -> [Element] {
     let elementsInArray = elements.filter { self.contains($0) }
-    let indices = elementsInArray.map { self.index(of: $0) }.flatMap { $0 }
+    let indices = elementsInArray.flatMap { self.index(of: $0) }
 
     var result = self
     indices.enumerated().forEach { result[$0.1] = elementsInArray[$0.0] }

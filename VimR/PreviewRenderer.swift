@@ -7,6 +7,12 @@ import Cocoa
 
 protocol PreviewRenderer: class {
 
+  static var identifier: String { get }
+  static func prefData(from: [String: Any]) -> StandardPrefData?
+
+  var identifier: String { get }
+  var prefData: StandardPrefData? { get }
+
   var toolbar: NSView? { get }
   var menuItems: [NSMenuItem]? { get }
 

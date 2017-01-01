@@ -54,11 +54,10 @@ struct MainWindowPrefData: StandardPrefData {
     }
 
     // Add default tool pref data for missing identifiers.
-    let toolDatas = toolDataDicts.map { ToolPrefData(dict: $0) }.flatMap { $0 }
+    let toolDatas = toolDataDicts.flatMap { ToolPrefData(dict: $0) }
     let missingToolDatas = Set(ToolIdentifier.all)
         .subtracting(toolDatas.map { $0.identifier })
-        .map { ToolPrefData.defaults[$0] }
-        .flatMap { $0 }
+        .flatMap { ToolPrefData.defaults[$0] }
 
     self.init(isAllToolsVisible: isAllToolsVisible,
               isToolButtonsVisible: isToolButtonsVisible,
@@ -580,7 +579,8 @@ extension MainWindowComponent {
     let previewData = ToolPrefData(identifier: .preview,
                                    location: preview.location,
                                    isVisible: preview.isSelected,
-                                   dimension: preview.dimension)
+                                   dimension: preview.dimension,
+                                   toolData: preview.toolData)
 
     return [ fileBrowserData, bufferListData, previewData ]
   }

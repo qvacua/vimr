@@ -71,6 +71,10 @@ class PrefUtils {
     return (dict[key] as? NSNumber)?.boolValue ?? defaultValue
   }
 
+  static func string(from dict: [String: Any], for key: String) -> String? {
+    return dict[key] as? String
+  }
+
   static func saneFont(_ fontName: String, fontSize: CGFloat) -> NSFont {
     var editorFont = NSFont(name: fontName, size: fontSize) ?? NeoVimView.defaultFont
     if !editorFont.isFixedPitch {

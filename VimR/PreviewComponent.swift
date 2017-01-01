@@ -8,28 +8,69 @@ import RxSwift
 import PureLayout
 import WebKit
 
-struct PreviewPrefData: StandardPrefData {
-
-  static let `default` = PreviewPrefData()
-
-  init() {
-  }
-
-  init?(dict: [String: Any]) {
-    self.init()
-  }
-
-  func dict() -> [String: Any] {
-    return [:]
-  }
-}
-
-class PreviewComponent: NSView, ViewComponent {
+class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
 
   enum Action {
 
     case automaticRefresh(url: URL)
     case scroll(to: Position)
+  }
+
+  struct PrefData: StandardPrefData {
+
+    fileprivate static let rendererDatas = "renderer-datas"
+
+    fileprivate static let rendererPrefDataFns = [
+      MarkdownRenderer.identifier: MarkdownRenderer.prefData,
+    ]
+
+    fileprivate static let rendererDefaultPrefDatas = [
+      MarkdownRenderer.identifier: MarkdownRenderer.PrefData.default,
+    ]
+
+    static let `default` = PrefData(rendererDatas: PrefData.rendererDefaultPrefDatas)
+
+    var rendererDatas: [String: StandardPrefData]
+
+    init(rendererDatas: [String: StandardPrefData]) {
+      self.rendererDatas = rendererDatas
+    }
+
+    init?(dict: [String: Any]) {
+      guard let rendererDataDict = dict[PrefData.rendererDatas] as? [String: [String: Any]] else {
+        return nil
+      }
+
+      let storedRendererDatas: [(String, StandardPrefData)] = rendererDataDict.flatMap { (identifier, dict) in
+        guard let prefDataFn = PrefData.rendererPrefDataFns[identifier] else {
+          return nil
+        }
+
+        guard let prefData = prefDataFn(dict) else {
+          return nil
+        }
+
+        return (identifier, prefData)
+      }
+
+      let missingRendererDatas: [(String, StandardPrefData)] = Set(PrefData.rendererDefaultPrefDatas.keys)
+        .subtracting(storedRendererDatas.map { $0.0 })
+        .flatMap { identifier in
+          guard let data = PrefData.rendererDefaultPrefDatas[identifier] else {
+            return nil
+          }
+
+          return (identifier, data)
+        }
+
+      self.init(rendererDatas: toDict([storedRendererDatas, missingRendererDatas].flatMap { $0 }))
+    }
+
+    func dict() -> [String: Any] {
+      return [
+        PrefData.rendererDatas: self.rendererDatas.mapToDict { (key, value) in (key, value.dict()) }
+      ]
+    }
   }
 
   fileprivate let flow: EmbeddableComponent
@@ -74,6 +115,17 @@ class PreviewComponent: NSView, ViewComponent {
   }
 
   weak var workspaceTool: WorkspaceTool?
+
+  var toolData: StandardPrefData {
+    let rendererDatas = self.renderers.flatMap { (renderer) -> (String, StandardPrefData)? in
+      guard let data = renderer.prefData else {
+        return nil
+      }
+      return (renderer.identifier, data)
+    }
+
+    return PrefData(rendererDatas: toDict(rendererDatas))
+  }
 
   var sink: Observable<Any> {
     return self.flow.sink
