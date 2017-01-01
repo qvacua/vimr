@@ -70,11 +70,11 @@ struct MainWindowPrefData: StandardPrefData {
   }
 
   func toolPrefData(for identifier: ToolIdentifier) -> ToolPrefData {
-    guard let tool = self.toolPrefDatas.filter({ $0.identifier == identifier }).first else {
+    guard let data = self.toolPrefDatas.filter({ $0.identifier == identifier }).first else {
       preconditionFailure("[ERROR] No tool for \(identifier) found!")
     }
 
-    return tool
+    return data
   }
 }
 

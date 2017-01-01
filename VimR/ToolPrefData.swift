@@ -34,7 +34,7 @@ struct ToolPrefData: StandardPrefData {
                                toolData: FileBrowserData.default),
     .bufferList: ToolPrefData(identifier: .bufferList,
                               location: .left,
-                              isVisible: true,
+                              isVisible: false,
                               dimension: 200,
                               toolData: EmptyPrefData.default),
   ]
