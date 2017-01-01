@@ -168,7 +168,7 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
     return source
       .filter { $0 is MainWindowAction }
       .map { $0 as! MainWindowAction }
-      .subscribe(onNext: { action in
+      .subscribe(onNext: { [unowned self] action in
         switch action {
 
         case let .currentBufferChanged(_, currentBuffer):
@@ -218,7 +218,7 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
       .filter { $0 is PreviewRendererAction }
       .map { $0 as! PreviewRendererAction }
       .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { action in
+      .subscribe(onNext: { [unowned self] action in
         guard self.isOpen else {
           return
         }
