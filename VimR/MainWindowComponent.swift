@@ -77,7 +77,7 @@ struct MainWindowPrefData: StandardPrefData {
       preconditionFailure("[ERROR] No tool for \(identifier) found!")
     }
 
-    return tool
+    return data
   }
 }
 
