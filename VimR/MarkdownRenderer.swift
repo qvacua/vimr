@@ -156,6 +156,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     self.isReverseSearchAutomatically = initialData.isReverseSearchAutomatically
     self.isRefreshOnWrite = initialData.isRefreshOnWrite
 
+    let refreshMenuItem = NSMenuItem(title: "Refresh Now", action: nil, keyEquivalent: "")
     let forwardSearchMenuItem = NSMenuItem(title: "Forward Search", action: nil, keyEquivalent: "")
     let reverseSearchMenuItem = NSMenuItem(title: "Reverse Search", action: nil, keyEquivalent: "")
     let automaticForwardMenuItem = NSMenuItem(title: "Automatic Forward Search", action: nil, keyEquivalent: "")
@@ -167,6 +168,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     refreshOnWriteMenuItem.boolState = self.isRefreshOnWrite
 
     self.menuItems = [
+      refreshMenuItem,
       forwardSearchMenuItem,
       reverseSearchMenuItem,
       NSMenuItem.separator(),
@@ -182,6 +184,8 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
     self.initCustomUiElements()
 
+    refreshMenuItem.target = self
+    refreshMenuItem.action = #selector(MarkdownRenderer.refreshNowAction)
     forwardSearchMenuItem.target = self
     forwardSearchMenuItem.action = #selector(MarkdownRenderer.forwardSearchAction)
     reverseSearchMenuItem.target = self
@@ -190,6 +194,8 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     automaticForwardMenuItem.action = #selector(MarkdownRenderer.automaticForwardSearchAction)
     automaticReverseMenuItem.target = self
     automaticReverseMenuItem.action = #selector(MarkdownRenderer.automaticReverseSearchAction)
+    refreshOnWriteMenuItem.target = self
+    refreshOnWriteMenuItem.action = #selector(MarkdownRenderer.refreshOnWriteAction)
 
     self.addReactions()
     self.userContentController.add(webviewMessageHandler, name: "com_vimr_preview_markdown")
@@ -226,7 +232,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     InnerToolBar.configureToStandardIconButton(button: refresh, iconName: .refresh)
     refresh.toolTip = "Refresh Now"
     refresh.target = self
-    refresh.action = #selector(MarkdownRenderer.refreshAction)
+    refresh.action = #selector(MarkdownRenderer.refreshNowAction)
 
     let forward = NSButton(forAutoLayout: ())
     InnerToolBar.configureToStandardIconButton(button: forward, iconName: .chevronCircleRight)
@@ -296,7 +302,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 // MARK: - Actions
 extension MarkdownRenderer {
 
-  func refreshAction(_: Any?) {
+  func refreshNowAction(_: Any?) {
     NSLog("\(#function)")
   }
 
