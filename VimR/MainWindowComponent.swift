@@ -527,6 +527,11 @@ extension MainWindowComponent {
                                       isToolButtonsVisible: self.workspace.isToolButtonsVisible,
                                       toolPrefDatas: self.toolPrefDatas())
 
+    // When exiting full screen, often, some delegate methods of NSWindow get called after deallocation. This is just
+    // a quick-and-dirty fix.
+    // TODO: fix it for real...
+    self.windowController.window?.delegate = nil
+
     self.publish(event: MainWindowAction.close(mainWindow: self, mainWindowPrefData: prefData))
   }
 
