@@ -772,8 +772,8 @@ static NeoVimBuffer *buffer_for(buf_T *buf) {
 
   NeoVimBuffer *buffer = [[NeoVimBuffer alloc] initWithHandle:buf->handle
                                                 unescapedPath:fileName
-                                                        dirty:buf->b_changed
-                                                     readOnly:buf->b_p_ro
+                                                        dirty:(bool) buf->b_changed
+                                                     readOnly:(bool) buf->b_p_ro
                                                       current:current];
 
   return [buffer autorelease];
