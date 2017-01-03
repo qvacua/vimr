@@ -129,11 +129,13 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     CFMessagePortInvalidate(_remoteServerPort);
   }
   CFRelease(_remoteServerPort);
+  _remoteServerPort = NULL;
 
   if (CFMessagePortIsValid(_localServerPort)) {
     CFMessagePortInvalidate(_localServerPort);
   }
   CFRelease(_localServerPort);
+  _localServerPort = NULL;
 
   CFRunLoopStop(_localServerRunLoop);
   [_localServerThread cancel];
@@ -401,6 +403,14 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (NSData *)sendMessageWithId:(NeoVimAgentMsgId)msgid data:(NSData *)data expectsReply:(bool)expectsReply {
+  if (_neoVimIsQuitting == 1 && msgid != NeoVimAgentMsgIdQuit) {
+    // This happens often, e.g. when exiting full screen by closing all buffers. We try to resize the window after
+    // the message port has been closed. This is a quick-and-dirty fix.
+    // TODO: Fix for real...
+    log4Warn("Neovim is quitting, but trying to send message: %d", msgid);
+    return nil;
+  }
+
   if (_remoteServerPort == NULL) {
     log4Warn("Remote server is null: The msg %lu with data %@ could not be sent.", (unsigned long) msgid, data);
     return nil;
