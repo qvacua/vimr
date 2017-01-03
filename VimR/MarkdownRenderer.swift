@@ -193,6 +193,12 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
   }
 
   fileprivate func initCustomUiElements() {
+    let refresh = NSButton(forAutoLayout: ())
+    InnerToolBar.configureToStandardIconButton(button: refresh, iconName: .refresh)
+    refresh.toolTip = "Refresh Now"
+    refresh.target = self
+    refresh.action = #selector(MarkdownRenderer.refreshAction)
+
     let forward = NSButton(forAutoLayout: ())
     InnerToolBar.configureToStandardIconButton(button: forward, iconName: .chevronCircleRight)
     forward.toolTip = "Forward Search"
@@ -207,12 +213,16 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
     self.toolbar?.addSubview(forward)
     self.toolbar?.addSubview(reverse)
+    self.toolbar?.addSubview(refresh)
 
     forward.autoPinEdge(toSuperviewEdge: .top)
     forward.autoPinEdge(toSuperviewEdge: .right)
 
     reverse.autoPinEdge(toSuperviewEdge: .top)
     reverse.autoPinEdge(.right, to: .left, of: forward)
+
+    refresh.autoPinEdge(toSuperviewEdge: .top)
+    refresh.autoPinEdge(.right, to: .left, of: reverse)
   }
 
   fileprivate func addReactions() {
@@ -256,6 +266,10 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
 // MARK: - Actions
 extension MarkdownRenderer {
+
+  func refreshAction(_: Any?) {
+    NSLog("\(#function)")
+  }
 
   func forwardSearchAction(_: Any?) {
     NSLog("\(#function)")
