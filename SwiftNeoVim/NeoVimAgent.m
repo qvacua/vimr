@@ -85,6 +85,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
   uint32_t _neoVimIsQuitting;
 
+  OSSpinLock _requestIdSpinLock;
   NSUInteger _requestResponseId;
   NSMutableDictionary *_requestResponseConditions;
   NSMutableDictionary *_requestResponses;
@@ -104,6 +105,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
   _neoVimIsQuitting = 0;
 
+  _requestIdSpinLock = OS_SPINLOCK_INIT;
   _requestResponseId = 0;
   _requestResponseConditions = [NSMutableDictionary new];
   _requestResponses = [NSMutableDictionary new];
@@ -204,11 +206,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (NSUInteger)nextRequestResponseId {
-  NSUInteger reqId = _requestResponseId;
-  _requestResponseId++;
-
-  NSCondition *condition = [NSCondition new];
-  _requestResponseConditions[@(reqId)] = condition;
+  OSSpinLockLock(&_requestIdSpinLock);
+  NSUInteger reqId = _requestResponseId++;
+  _requestResponseConditions[@(reqId)] = [NSCondition new];
+  OSSpinLockUnlock(&_requestIdSpinLock);
 
   return reqId;
 }
@@ -221,12 +222,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   while (_requestResponses[@(reqId)] == nil && [condition waitUntilDate:deadline]);
   [condition unlock];
 
-  [_requestResponseConditions removeObjectForKey:@(reqId)];
-
   id result = _requestResponses[@(reqId)];
-  [_requestResponses removeObjectForKey:@(reqId)];
 
-//  NSLog(@"!!!!!! %lu -> %@", reqId, result);
+  OSSpinLockLock(&_requestIdSpinLock);
+  [_requestResponseConditions removeObjectForKey:@(reqId)];
+  [_requestResponses removeObjectForKey:@(reqId)];
+  OSSpinLockUnlock(&_requestIdSpinLock);
 
   return result;
 }
