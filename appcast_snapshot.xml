@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-152</title>
+      <title>SNAPSHOT-154</title>
       <description><![CDATA[
     <ul>
-<li>Downgrade neovim: current master of Neovim has some problems (due to active development)</li>
+<li>GH-376: Try to fix the crashes...</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/152
+        https://github.com/qvacua/vimr/releases/tag/snapshot/154
       </releaseNotesLink>
-      <pubDate>2016-12-20T17:17:48.623881</pubDate>
+      <pubDate>2017-01-03T14:55:20.384864</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/152/VimR-SNAPSHOT-152.tar.bz2"
-                 sparkle:version="152"
-                 sparkle:shortVersionString="SNAPSHOT-152"
-                 sparkle:dsaSignature="MC0CFQDj/bH3GbtqqzkuacZ3hS86xdOGlgIUJLJLPEZpBRaSz0oWEFGT/c4nsbI="
-                 length="9354269"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/154/VimR-SNAPSHOT-154.tar.bz2"
+                 sparkle:version="154"
+                 sparkle:shortVersionString="SNAPSHOT-154"
+                 sparkle:dsaSignature="MC4CFQDhnjjGxtrpC7F3hbjW8nt0xvQjWgIVAKLNptDabnd0ft9ErulKvzRuP1P8"
+                 length="9307274"
                  type="application/octet-stream"/>
     </item>
   </channel>
