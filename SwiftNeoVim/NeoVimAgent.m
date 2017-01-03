@@ -335,13 +335,17 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (NSArray <NeoVimBuffer *> *)buffers {
-  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetBuffers data:nil expectsReply:YES];
-  if (response == nil) {
+  NSUInteger reqId = [self nextRequestResponseId];
+  NSData *data = [NSData dataWithBytes:&reqId length:sizeof(NSUInteger)];
+
+  [self sendMessageWithId:NeoVimAgentMsgIdGetBuffers data:data expectsReply:NO];
+  NSData *responseData = [self responseByWaitingForId:reqId];
+  if (responseData == nil) {
     log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetBuffers);
     return @[];
   }
 
-  return [NSKeyedUnarchiver unarchiveObjectWithData:response];
+  return [NSKeyedUnarchiver unarchiveObjectWithData:responseData];
 }
 
 - (NSArray<NeoVimWindow *> *)tabs {
@@ -351,6 +355,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [self sendMessageWithId:NeoVimAgentMsgIdGetTabs data:data expectsReply:NO];
   NSData *responseData = [self responseByWaitingForId:reqId];
   if (responseData == nil) {
+    log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetTabs);
     return @[];
   }
 
