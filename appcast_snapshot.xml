@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-154</title>
+      <title>SNAPSHOT-155</title>
       <description><![CDATA[
     <ul>
-<li>GH-376: Try to fix the crashes...</li>
+<li>GH-376: Bugfix: Exiting full-screen sometimes causes crashes.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/154
+        https://github.com/qvacua/vimr/releases/tag/snapshot/155
       </releaseNotesLink>
-      <pubDate>2017-01-03T14:55:20.384864</pubDate>
+      <pubDate>2017-01-03T16:31:51.572342</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/154/VimR-SNAPSHOT-154.tar.bz2"
-                 sparkle:version="154"
-                 sparkle:shortVersionString="SNAPSHOT-154"
-                 sparkle:dsaSignature="MC4CFQDhnjjGxtrpC7F3hbjW8nt0xvQjWgIVAKLNptDabnd0ft9ErulKvzRuP1P8"
-                 length="9307274"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/155/VimR-SNAPSHOT-155.tar.bz2"
+                 sparkle:version="155"
+                 sparkle:shortVersionString="SNAPSHOT-155"
+                 sparkle:dsaSignature="MC0CFChO38SeiLdPgBlj+bCPGkfidJrzAhUA0wW+82GFrpOSo4lMO0o6+RgtsfM="
+                 length="9308132"
                  type="application/octet-stream"/>
     </item>
   </channel>
