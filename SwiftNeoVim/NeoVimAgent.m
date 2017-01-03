@@ -86,6 +86,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
   uint32_t _neoVimIsQuitting;
 
+  OSSpinLock _requestIdSpinLock;
   NSUInteger _requestResponseId;
   NSMutableDictionary *_requestResponseConditions;
   NSMutableDictionary *_requestResponses;
@@ -105,6 +106,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
   _neoVimIsQuitting = 0;
 
+  _requestIdSpinLock = OS_SPINLOCK_INIT;
   _requestResponseId = 0;
   _requestResponseConditions = [NSMutableDictionary new];
   _requestResponses = [NSMutableDictionary new];
@@ -128,11 +130,13 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     CFMessagePortInvalidate(_remoteServerPort);
   }
   CFRelease(_remoteServerPort);
+  _remoteServerPort = NULL;
 
   if (CFMessagePortIsValid(_localServerPort)) {
     CFMessagePortInvalidate(_localServerPort);
   }
   CFRelease(_localServerPort);
+  _localServerPort = NULL;
 
   CFRunLoopStop(_localServerRunLoop);
   [_localServerThread cancel];
@@ -205,11 +209,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (NSUInteger)nextRequestResponseId {
-  NSUInteger reqId = _requestResponseId;
-  _requestResponseId++;
-
-  NSCondition *condition = [NSCondition new];
-  _requestResponseConditions[@(reqId)] = condition;
+  OSSpinLockLock(&_requestIdSpinLock);
+  NSUInteger reqId = _requestResponseId++;
+  _requestResponseConditions[@(reqId)] = [NSCondition new];
+  OSSpinLockUnlock(&_requestIdSpinLock);
 
   return reqId;
 }
@@ -222,12 +225,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   while (_requestResponses[@(reqId)] == nil && [condition waitUntilDate:deadline]);
   [condition unlock];
 
-  [_requestResponseConditions removeObjectForKey:@(reqId)];
-
   id result = _requestResponses[@(reqId)];
-  [_requestResponses removeObjectForKey:@(reqId)];
 
-//  NSLog(@"!!!!!! %lu -> %@", reqId, result);
+  OSSpinLockLock(&_requestIdSpinLock);
+  [_requestResponseConditions removeObjectForKey:@(reqId)];
+  [_requestResponses removeObjectForKey:@(reqId)];
+  OSSpinLockUnlock(&_requestIdSpinLock);
 
   return result;
 }
@@ -335,23 +338,31 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (NSArray <NeoVimBuffer *> *)buffers {
-  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetBuffers data:nil expectsReply:YES];
-  if (response == nil) {
+  NSUInteger reqId = [self nextRequestResponseId];
+  NSData *data = [NSData dataWithBytes:&reqId length:sizeof(NSUInteger)];
+
+  [self sendMessageWithId:NeoVimAgentMsgIdGetBuffers data:data expectsReply:NO];
+  NSData *responseData = [self responseByWaitingForId:reqId];
+  if (responseData == nil) {
     log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetBuffers);
     return @[];
   }
 
-  return [NSKeyedUnarchiver unarchiveObjectWithData:response];
+  return [NSKeyedUnarchiver unarchiveObjectWithData:responseData];
 }
 
 - (NSArray<NeoVimWindow *> *)tabs {
-  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetTabs data:nil expectsReply:YES];
-  if (response == nil) {
+  NSUInteger reqId = [self nextRequestResponseId];
+  NSData *data = [NSData dataWithBytes:&reqId length:sizeof(NSUInteger)];
+  
+  [self sendMessageWithId:NeoVimAgentMsgIdGetTabs data:data expectsReply:NO];
+  NSData *responseData = [self responseByWaitingForId:reqId];
+  if (responseData == nil) {
     log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetTabs);
     return @[];
   }
 
-  return [NSKeyedUnarchiver unarchiveObjectWithData:response];
+  return [NSKeyedUnarchiver unarchiveObjectWithData:responseData];
 }
 
 - (void)runLocalServer {
@@ -393,6 +404,14 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (NSData *)sendMessageWithId:(NeoVimAgentMsgId)msgid data:(NSData *)data expectsReply:(bool)expectsReply {
+  if (_neoVimIsQuitting == 1 && msgid != NeoVimAgentMsgIdQuit) {
+    // This happens often, e.g. when exiting full screen by closing all buffers. We try to resize the window after
+    // the message port has been closed. This is a quick-and-dirty fix.
+    // TODO: Fix for real...
+    log4Warn("Neovim is quitting, but trying to send message: %d", msgid);
+    return nil;
+  }
+
   if (_remoteServerPort == NULL) {
     log4Warn("Remote server is null: The msg %lu with data %@ could not be sent.", (unsigned long) msgid, data);
     return nil;
