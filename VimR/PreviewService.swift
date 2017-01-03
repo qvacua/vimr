@@ -20,7 +20,7 @@ class PreviewService {
       preconditionFailure("No error.html!")
     }
 
-    guard let saveFirstUrl = Bundle.main.url(forResource: "error",
+    guard let saveFirstUrl = Bundle.main.url(forResource: "save-first",
                                              withExtension: "html",
                                              subdirectory: "preview")
       else {
