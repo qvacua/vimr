@@ -200,7 +200,8 @@ class MainWindowComponent: WindowComponent,
     let bufferListTool = WorkspaceToolComponent(toolIdentifier: .bufferList, config: bufferListConfig)
     self.tools[.bufferList] = bufferListTool
 
-    let preview = PreviewComponent(source: self.sink)
+    let previewData = previewToolData.toolData as? PreviewComponent.PrefData ?? PreviewComponent.PrefData.default
+    let preview = PreviewComponent(source: self.sink, initialData: previewData)
     let previewConfig = WorkspaceTool.Config(title: "Preview",
                                              view: preview,
                                              minimumDimension: 200,

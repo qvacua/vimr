@@ -135,11 +135,13 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
     return self
   }
   
-  init(source: Observable<Any>) {
+  init(source: Observable<Any>, initialData: PrefData) {
     self.flow = EmbeddableComponent(source: source)
 
     self.baseUrl = self.previewService.baseUrl()
-    self.markdownRenderer = MarkdownRenderer(source: self.flow.sink)
+    let markdownData = initialData.rendererDatas[MarkdownRenderer.identifier] as? MarkdownRenderer.PrefData ??
+                       MarkdownRenderer.PrefData.default
+    self.markdownRenderer = MarkdownRenderer(source: self.flow.sink, initialData: markdownData)
 
     self.renderers = [
       self.markdownRenderer,

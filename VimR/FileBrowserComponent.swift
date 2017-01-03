@@ -138,7 +138,7 @@ class FileBrowserComponent: StandardViewComponent, ToolDataHolder {
     let showHiddenMenuItem = NSMenuItem(title: "Show Hidden Files",
                                         action: #selector(FileBrowserComponent.showHiddenAction),
                                         keyEquivalent: "")
-    showHiddenMenuItem.state = initialData.isShowHidden ? NSOnState : NSOffState
+    showHiddenMenuItem.boolState = initialData.isShowHidden
     self.menuItems = [
       showHiddenMenuItem,
     ]

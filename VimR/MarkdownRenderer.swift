@@ -131,7 +131,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
   let toolbar: NSView? = NSView(forAutoLayout: ())
   let menuItems: [NSMenuItem]?
 
-  init(source: Observable<Any>) {
+  init(source: Observable<Any>, initialData: PrefData) {
     guard let templateUrl = Bundle.main.url(forResource: "template",
                                             withExtension: "html",
                                             subdirectory: "markdown")
@@ -152,11 +152,19 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     self.webview = WKWebView(frame: .zero, configuration: configuration)
     self.webview.configureForAutoLayout()
 
+    self.isForwardSearchAutomatically = initialData.isForwardSearchAutomatically
+    self.isReverseSearchAutomatically = initialData.isReverseSearchAutomatically
+    self.isRefreshOnWrite = initialData.isRefreshOnWrite
+
     let forwardSearchMenuItem = NSMenuItem(title: "Forward Search", action: nil, keyEquivalent: "")
     let reverseSearchMenuItem = NSMenuItem(title: "Reverse Search", action: nil, keyEquivalent: "")
     let automaticForwardMenuItem = NSMenuItem(title: "Automatic Forward Search", action: nil, keyEquivalent: "")
     let automaticReverseMenuItem = NSMenuItem(title: "Automatic Reverse Search", action: nil, keyEquivalent: "")
     let refreshOnWriteMenuItem = NSMenuItem(title: "Refresh on Write", action: nil, keyEquivalent: "")
+
+    forwardSearchMenuItem.boolState = self.isForwardSearchAutomatically
+    reverseSearchMenuItem.boolState = self.isReverseSearchAutomatically
+    refreshOnWriteMenuItem.boolState = self.isRefreshOnWrite
 
     self.menuItems = [
       forwardSearchMenuItem,

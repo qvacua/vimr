@@ -34,6 +34,19 @@ extension NSButton {
   }
 }
 
+extension NSMenuItem {
+
+  var boolState: Bool {
+    get {
+      return self.state == NSOnState ? true : false
+    }
+
+    set {
+      self.state = newValue ? NSOnState : NSOffState
+    }
+  }
+}
+
 extension NSAttributedString {
 
   func draw(at point: CGPoint, angle: CGFloat) {
