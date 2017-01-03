@@ -53,15 +53,20 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     fileprivate static let identifier = "identifier"
     fileprivate static let isForwardSearchAutomatically = "is-forward-search-automatically"
     fileprivate static let isReverseSearchAutomatically = "is-reverse-search-automatically"
+    fileprivate static let isRefreshOnWrite = "is-refresh-on-write"
 
-    static let `default` = PrefData(isForwardSearchAutomatically: false, isReverseSearchAutomatically: false)
+    static let `default` = PrefData(isForwardSearchAutomatically: false,
+                                    isReverseSearchAutomatically: false,
+                                    isRefreshOnWrite: true)
 
     var isForwardSearchAutomatically: Bool
     var isReverseSearchAutomatically: Bool
+    var isRefreshOnWrite: Bool
 
-    init(isForwardSearchAutomatically: Bool, isReverseSearchAutomatically: Bool) {
+    init(isForwardSearchAutomatically: Bool, isReverseSearchAutomatically: Bool, isRefreshOnWrite: Bool) {
       self.isForwardSearchAutomatically = isForwardSearchAutomatically
       self.isReverseSearchAutomatically = isReverseSearchAutomatically
+      self.isRefreshOnWrite = isRefreshOnWrite
     }
 
     init?(dict: [String: Any]) {
@@ -77,7 +82,13 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
         return nil
       }
 
-      self.init(isForwardSearchAutomatically: isForward, isReverseSearchAutomatically: isReverse)
+      guard let isRefreshOnWrite = PrefUtils.bool(from: dict, for: PrefData.isRefreshOnWrite) else {
+        return nil
+      }
+
+      self.init(isForwardSearchAutomatically: isForward,
+                isReverseSearchAutomatically: isReverse,
+                isRefreshOnWrite: isRefreshOnWrite)
     }
 
     func dict() -> [String: Any] {
@@ -85,6 +96,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
         PrefData.identifier: MarkdownRenderer.identifier,
         PrefData.isForwardSearchAutomatically: self.isForwardSearchAutomatically,
         PrefData.isReverseSearchAutomatically: self.isReverseSearchAutomatically,
+        PrefData.isRefreshOnWrite: self.isRefreshOnWrite,
       ]
     }
   }
@@ -101,13 +113,15 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
   fileprivate var isForwardSearchAutomatically = false
   fileprivate var isReverseSearchAutomatically = false
+  fileprivate var isRefreshOnWrite = true
 
   fileprivate let webview: WKWebView
 
   let identifier: String = MarkdownRenderer.identifier
   var prefData: StandardPrefData? {
     return PrefData(isForwardSearchAutomatically: self.isForwardSearchAutomatically,
-                    isReverseSearchAutomatically: self.isReverseSearchAutomatically)
+                    isReverseSearchAutomatically: self.isReverseSearchAutomatically,
+                    isRefreshOnWrite: self.isRefreshOnWrite)
   }
 
   var sink: Observable<Any> {
@@ -142,6 +156,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     let reverseSearchMenuItem = NSMenuItem(title: "Reverse Search", action: nil, keyEquivalent: "")
     let automaticForwardMenuItem = NSMenuItem(title: "Automatic Forward Search", action: nil, keyEquivalent: "")
     let automaticReverseMenuItem = NSMenuItem(title: "Automatic Reverse Search", action: nil, keyEquivalent: "")
+    let refreshOnWriteMenuItem = NSMenuItem(title: "Refresh on Write", action: nil, keyEquivalent: "")
 
     self.menuItems = [
       forwardSearchMenuItem,
@@ -149,6 +164,8 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
       NSMenuItem.separator(),
       automaticForwardMenuItem,
       automaticReverseMenuItem,
+      NSMenuItem.separator(),
+      refreshOnWriteMenuItem,
     ]
 
     super.init()
@@ -181,6 +198,10 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
         switch action {
         case let PreviewComponent.Action.automaticRefresh(url):
+          guard self.isRefreshOnWrite else {
+            return nil
+          }
+
           return url
 
         default:
@@ -286,6 +307,11 @@ extension MarkdownRenderer {
 
   func automaticReverseSearchAction(_: Any?) {
     self.isReverseSearchAutomatically = !self.isReverseSearchAutomatically
+    NSLog("\(#function)")
+  }
+
+  func refreshOnWriteAction(_: Any?) {
+    self.isRefreshOnWrite = !self.isRefreshOnWrite
     NSLog("\(#function)")
   }
 }
