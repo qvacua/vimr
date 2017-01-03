@@ -255,7 +255,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     }
 
     case NeoVimAgentMsgIdGetTabs: {
-      return [NSKeyedArchiver archivedDataWithRootObject:server_tabs()];
+      NSUInteger responseId = response_id_from_data(data);
+      server_tabs(responseId);
+
+      return nil;
     }
 
     case NeoVimAgentMsgIdGetBoolOption: {
