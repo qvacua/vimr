@@ -1,6 +1,11 @@
 # next
 
-* GH-376: Try not to crash
+* ...
+
+# 0.12.3-154
+
+* * GH-376: Bugfix: Exiting full-screen sometimes causes crashes.
+* Update RxSwift to [3.1.0](https://github.com/ReactiveX/RxSwift/releases/tag/3.1.0)
 
 # 0.12.2-153
 
