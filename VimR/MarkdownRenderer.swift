@@ -131,7 +131,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
   let toolbar: NSView? = NSView(forAutoLayout: ())
   let menuItems: [NSMenuItem]?
 
-  init(source: Observable<Any>, initialData: PrefData) {
+  init(source: Observable<Any>, scrollSource: Observable<Any>, initialData: PrefData) {
     guard let templateUrl = Bundle.main.url(forResource: "template",
                                             withExtension: "html",
                                             subdirectory: "markdown")
@@ -196,6 +196,13 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     automaticReverseMenuItem.action = #selector(MarkdownRenderer.automaticReverseSearchAction)
     refreshOnWriteMenuItem.target = self
     refreshOnWriteMenuItem.action = #selector(MarkdownRenderer.refreshOnWriteAction)
+
+    scrollSource
+      .filter { $0 is MainWindowComponent.ScrollAction }
+      .subscribe(onNext: { action in
+        NSLog("renderer scroll")
+      })
+      .addDisposableTo(self.flow.disposeBag)
 
     self.addReactions()
     self.userContentController.add(webviewMessageHandler, name: "com_vimr_preview_markdown")

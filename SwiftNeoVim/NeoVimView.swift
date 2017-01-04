@@ -1307,6 +1307,7 @@ extension NeoVimView {
     DispatchUtils.gui {
       self.grid.scroll(Int(count))
       self.setNeedsDisplay(region: self.grid.region)
+      self.delegate?.scroll()
     }
   }
 

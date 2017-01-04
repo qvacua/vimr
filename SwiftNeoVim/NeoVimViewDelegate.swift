@@ -16,4 +16,6 @@ public protocol NeoVimViewDelegate: class {
   func currentBufferChanged(_ currentBuffer: NeoVimBuffer)
 
   func ipcBecameInvalid(reason: String)
+
+  func scroll()
 }

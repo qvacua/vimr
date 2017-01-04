@@ -88,6 +88,11 @@ class MainWindowComponent: WindowComponent,
                            WorkspaceDelegate
 {
 
+  enum ScrollAction {
+
+    case scroll
+  }
+
   fileprivate static let nibName = "MainWindow"
 
   fileprivate var defaultEditorFont: NSFont
@@ -100,6 +105,8 @@ class MainWindowComponent: WindowComponent,
   fileprivate let workspace: Workspace
   fileprivate let neoVimView: NeoVimView
   fileprivate var tools = [ToolIdentifier: WorkspaceToolComponent]()
+
+  fileprivate let scrollFlow: EmbeddableComponent
 
   // MARK: - API
   var uuid: String {
@@ -143,6 +150,8 @@ class MainWindowComponent: WindowComponent,
 
     self.defaultEditorFont = initialData.appearance.editorFont
     self.fileItemService = fileItemService
+
+    self.scrollFlow = EmbeddableComponent(source: Observable.empty())
 
     super.init(source: source, nibName: MainWindowComponent.nibName)
 
@@ -201,7 +210,9 @@ class MainWindowComponent: WindowComponent,
     self.tools[.bufferList] = bufferListTool
 
     let previewData = previewToolData.toolData as? PreviewComponent.PrefData ?? PreviewComponent.PrefData.default
-    let preview = PreviewComponent(source: self.sink, initialData: previewData)
+    let preview = PreviewComponent(source: self.sink,
+                                   scrollSource: self.scrollFlow.sink,
+                                   initialData: previewData)
     let previewConfig = WorkspaceTool.Config(title: "Preview",
                                              view: preview,
                                              minimumDimension: 200,
@@ -542,6 +553,10 @@ extension MainWindowComponent {
     alert.beginSheetModal(for: self.window) { [weak self] response in
       self?.windowController.close()
     }
+  }
+
+  func scroll() {
+    self.scrollFlow.publish(event: ScrollAction.scroll)
   }
 }
 
