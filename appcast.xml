@@ -7,23 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.12.2-153</title>
+      <title>v0.12.3-156</title>
       <description><![CDATA[
     <ul>
-<li>Bugfix: Store preferences correctly.</li>
-<li>Update Sparkle to 0.15.1</li>
+<li>GH-376: Bugfix: Exiting full-screen sometimes causes crashes.</li>
+<li>Update RxSwift to <a href="https://github.com/ReactiveX/RxSwift/releases/tag/3.1.0">3.1.0</a></li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.12.2-153
+        https://github.com/qvacua/vimr/releases/tag/v0.12.3-156
       </releaseNotesLink>
-      <pubDate>2017-01-01T17:39:07.286416</pubDate>
+      <pubDate>2017-01-04T17:20:06.803676</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.12.2-153/VimR-v0.12.2-153.tar.bz2"
-                 sparkle:version="153"
-                 sparkle:shortVersionString="0.12.2"
-                 sparkle:dsaSignature="MC0CFQDdt+N/n6Kqyz9Y8iZJq6BOFSlH3wIUNxLGRM8oAKxgvPC5hTVy6leUHDY="
-                 length="9306542"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.12.3-156/VimR-v0.12.3-156.tar.bz2"
+                 sparkle:version="156"
+                 sparkle:shortVersionString="0.12.3"
+                 sparkle:dsaSignature="MC4CFQCQyiK2/6pfHjxmvohzD4dBMANGnAIVAMXTNq+A/0LD8rF2aNKSOQgOFBEm"
+                 length="9306801"
                  type="application/octet-stream"/>
     </item>
   </channel>
