@@ -146,7 +146,7 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
                        MarkdownRenderer.PrefData.default
     self.markdownRenderer = MarkdownRenderer(
       source: self.flow.sink,
-      scrollSource: scrollSource.throttle(0.5, latest: true, scheduler: MainScheduler.instance),
+      scrollSource: scrollSource,
       neoVimInfoProvider: neoVimInfoProvider,
       initialData: markdownData
     )

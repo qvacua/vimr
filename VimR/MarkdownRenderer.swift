@@ -202,6 +202,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     refreshOnWriteMenuItem.action = #selector(MarkdownRenderer.refreshOnWriteAction)
 
     scrollSource
+      .throttle(1, latest: true, scheduler: self.scheduler)
       .filter { $0 is MainWindowComponent.ScrollAction }
       .subscribe(onNext: { action in
         NSLog("renderer scroll")
