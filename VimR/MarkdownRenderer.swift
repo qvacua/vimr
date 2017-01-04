@@ -117,6 +117,8 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
   fileprivate let webview: WKWebView
 
+  weak fileprivate var neoVimInfoProvider: NeoVimInfoProvider?
+
   let identifier: String = MarkdownRenderer.identifier
   var prefData: StandardPrefData? {
     return PrefData(isForwardSearchAutomatically: self.isForwardSearchAutomatically,
@@ -131,7 +133,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
   let toolbar: NSView? = NSView(forAutoLayout: ())
   let menuItems: [NSMenuItem]?
 
-  init(source: Observable<Any>, scrollSource: Observable<Any>, initialData: PrefData) {
+  init(source: Observable<Any>, scrollSource: Observable<Any>, neoVimInfoProvider: NeoVimInfoProvider, initialData: PrefData) {
     guard let templateUrl = Bundle.main.url(forResource: "template",
                                             withExtension: "html",
                                             subdirectory: "markdown")
@@ -142,6 +144,8 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     guard let template = try? String(contentsOf: templateUrl) else {
       preconditionFailure("ERROR Cannot load markdown template")
     }
+
+    self.neoVimInfoProvider = neoVimInfoProvider
 
     self.template = template
 
@@ -314,7 +318,7 @@ extension MarkdownRenderer {
   }
 
   func forwardSearchAction(_: Any?) {
-    NSLog("\(#function)")
+    NSLog("\(#function) for \(self.neoVimInfoProvider?.currentLine()) x \(self.neoVimInfoProvider?.currentColumn())")
   }
 
   func reverseSearchAction(_: Any?) {

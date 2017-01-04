@@ -336,6 +336,10 @@ extension NeoVimView {
     self.exec(command: "qa!")
   }
 
+  public func vimOutput(of command: String) -> String {
+    return self.agent.vimCommandOutput(command) ?? ""
+  }
+
   fileprivate func open(_ url: URL, cmd: String) {
     let path = url.path
     let escapedFileName = self.agent.escapedFileName(path)

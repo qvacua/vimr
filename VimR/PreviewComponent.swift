@@ -110,6 +110,8 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
     }
   }
 
+  weak fileprivate var neoVimInfoProvider: NeoVimInfoProvider?
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -135,7 +137,8 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
     return self
   }
   
-  init(source: Observable<Any>, scrollSource: Observable<Any>, initialData: PrefData) {
+  init(source: Observable<Any>, scrollSource: Observable<Any>, neoVimInfoProvider: NeoVimInfoProvider, initialData: PrefData) {
+    self.neoVimInfoProvider = neoVimInfoProvider
     self.flow = EmbeddableComponent(source: source)
 
     self.baseUrl = self.previewService.baseUrl()
@@ -144,6 +147,7 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
     self.markdownRenderer = MarkdownRenderer(
       source: self.flow.sink,
       scrollSource: scrollSource.throttle(0.5, latest: true, scheduler: MainScheduler.instance),
+      neoVimInfoProvider: neoVimInfoProvider,
       initialData: markdownData
     )
 

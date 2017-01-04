@@ -212,6 +212,7 @@ class MainWindowComponent: WindowComponent,
     let previewData = previewToolData.toolData as? PreviewComponent.PrefData ?? PreviewComponent.PrefData.default
     let preview = PreviewComponent(source: self.sink,
                                    scrollSource: self.scrollFlow.sink,
+                                   neoVimInfoProvider: self.neoVimView,
                                    initialData: previewData)
     let previewConfig = WorkspaceTool.Config(title: "Preview",
                                              view: preview,
