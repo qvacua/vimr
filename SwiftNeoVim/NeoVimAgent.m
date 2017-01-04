@@ -347,16 +347,13 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (NSArray<NeoVimWindow *> *)tabs {
-  NSUInteger reqId = [self nextRequestResponseId];
-  NSData *data = [NSData dataWithBytes:&reqId length:sizeof(NSUInteger)];
-  
-  [self sendMessageWithId:NeoVimAgentMsgIdGetTabs data:data expectsReply:NO];
-  NSData *responseData = [self responseByWaitingForId:reqId];
-  if (responseData == nil) {
+  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetTabs data:nil expectsReply:YES];
+  if (response == nil) {
+    log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetTabs);
     return @[];
   }
 
-  return [NSKeyedUnarchiver unarchiveObjectWithData:responseData];
+  return [NSKeyedUnarchiver unarchiveObjectWithData:response];
 }
 
 - (void)runLocalServer {

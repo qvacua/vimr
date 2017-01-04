@@ -792,10 +792,7 @@ NSArray *server_buffers() {
   return result;
 }
 
-static void neovim_tabs(void **argv) {
-  NSUInteger *values = (NSUInteger *) argv[0];
-  NSUInteger responseId = values[0];
-
+NSArray *server_tabs() {
   NSMutableArray *tabs = [[NSMutableArray new] autorelease];
   FOR_ALL_TABS(t) {
     NSMutableArray *windows = [NSMutableArray new];
@@ -818,22 +815,7 @@ static void neovim_tabs(void **argv) {
     [tab release];
   }
 
-  NSData *resultData = [NSKeyedArchiver archivedDataWithRootObject:tabs];
-  NSData *data = data_with_response_id_prefix(responseId, resultData);
-
-  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSyncResult data:data];
-
-  free(values); // malloc'ed in loop_schedule(&main_loop, ...) (in _queue) somewhere
-}
-
-void server_tabs(NSUInteger responseId) {
-  queue(^{
-      NSUInteger *values = malloc(sizeof(NSUInteger));
-      values[0] = responseId;
-
-      // free release in neovim_command
-      loop_schedule(&main_loop, event_create(1, neovim_tabs, 1, values));
-  });
+  return tabs;
 }
 
 void server_select_win(int window_handle) {
