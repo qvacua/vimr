@@ -117,6 +117,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
   fileprivate let webview: WKWebView
 
+  fileprivate var currentPreviewPosition = Position(row: 0, column: 0)
   weak fileprivate var neoVimInfoProvider: NeoVimInfoProvider?
 
   let identifier: String = MarkdownRenderer.identifier
@@ -205,7 +206,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
       .throttle(1, latest: true, scheduler: self.scheduler)
       .filter { $0 is MainWindowComponent.ScrollAction }
       .subscribe(onNext: { action in
-        NSLog("renderer scroll")
+        NSLog("neovim scrolled to  \(self.neoVimInfoProvider?.currentLine()) x \(self.neoVimInfoProvider?.currentColumn())")
       })
       .addDisposableTo(self.flow.disposeBag)
 
@@ -279,6 +280,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
       .subscribe(onNext: { [weak self] action in
         switch action {
         case let .scroll(lineBegin, columnBegin, _, _):
+          self?.currentPreviewPosition = Position(row: lineBegin, column: columnBegin)
           self?.flow.publish(event: PreviewRendererAction.scroll(to: Position(row: lineBegin, column: columnBegin)))
         }
       })
@@ -323,7 +325,7 @@ extension MarkdownRenderer {
   }
 
   func reverseSearchAction(_: Any?) {
-    NSLog("\(#function)")
+    NSLog("\(#function) for \(self.currentPreviewPosition)")
   }
 
   func automaticForwardSearchAction(_: Any?) {

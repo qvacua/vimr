@@ -309,7 +309,7 @@ class MainWindowComponent: WindowComponent,
           self.neoVimView.select(buffer: buffer)
 
         case let PreviewComponent.Action.scroll(to: position):
-          NSLog("\(position)")
+          NSLog("preview scrolled to \(position)")
           return
 
         default:
