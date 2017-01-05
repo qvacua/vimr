@@ -13,6 +13,7 @@
 #import "NeoVimWindow.h"
 #import "NeoVimTab.h"
 #import "CocoaCategories.h"
+#import "Wrapper.h"
 
 // FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
 // them.
@@ -479,18 +480,6 @@ static void neovim_input(void **argv) {
   }
 }
 
-static void neovim_select_window(void **argv) {
-  win_T *window = (win_T *) argv[0];
-
-  Error err;
-  nvim_set_current_win(window->handle, &err);
-  // TODO: handle error
-  WLOG("Error selecting window with handle %d: %s", window->handle, err.msg);
-
-  // nvim_set_current_win() does not seem to trigger a redraw.
-  ui_schedule_refresh();
-}
-
 static void send_dirty_status() {
   bool new_dirty_status = server_has_dirty_docs();
   DLOG("dirty status: %d vs. %d", _dirty, new_dirty_status);
@@ -818,14 +807,6 @@ NSArray *server_tabs() {
   return tabs;
 }
 
-void server_select_win(int window_handle) {
-  FOR_ALL_TAB_WINDOWS(tab, win) {
-    if (win->handle == window_handle) {
-      loop_schedule(&main_loop, event_create(1, neovim_select_window, 1, win));
-    }
-  }
-}
-
 static void neovim_get_bool_option(void ** argv) {
   @autoreleasepool {
     NSUInteger *values = (NSUInteger *) argv[0];
@@ -911,4 +892,68 @@ void server_set_bool_option(NSUInteger responseId, NSString *option, bool value)
 void server_quit() {
   DLOG("NeoVimServer exiting...");
   exit(0);
+}
+
+static inline NSUInteger response_id_from_data(NSData *data) {
+  NSUInteger *values = (NSUInteger *) data.bytes;
+  return values[0];
+}
+
+void neovim_select_window(void **argv) {
+  NSData *data = argv[0];
+  int handle = ((int *) data.bytes)[0];
+  [data release]; // retained in local_server_callback
+
+  FOR_ALL_TAB_WINDOWS(tab, win) {
+      if (win->handle == handle) {
+        Error err;
+        nvim_set_current_win(win->handle, &err);
+
+        if (err.set) {
+          WLOG("Error selecting window with handle %d: %s", win->handle, err.msg);
+          return;
+        }
+
+        // nvim_set_current_win() does not seem to trigger a redraw.
+        ui_schedule_refresh();
+
+        return;
+      }
+    }
+}
+
+void neovim_tabs(void **argv) {
+  NSData *data = argv[0];
+  [data release]; // retained in local_server_callback
+
+  NSCondition *outputCondition = argv[1];
+  [outputCondition lock];
+
+  Wrapper *wrapper = argv[2];
+
+  NSMutableArray *tabs = [[NSMutableArray new] autorelease];
+  FOR_ALL_TABS(t) {
+    NSMutableArray *windows = [NSMutableArray new];
+
+    FOR_ALL_WINDOWS_IN_TAB(win, t) {
+      NeoVimBuffer *buffer = buffer_for(win->w_buffer);
+      if (buffer == nil) {
+        continue;
+      }
+
+      NeoVimWindow *window = [[NeoVimWindow alloc] initWithHandle:win->handle buffer:buffer];
+      [windows addObject:window];
+      [window release];
+    }
+
+    NeoVimTab *tab = [[NeoVimTab alloc] initWithHandle:t->handle windows:windows];
+    [windows release];
+
+    [tabs addObject:tab];
+    [tab release];
+  }
+
+  wrapper.data = [NSKeyedArchiver archivedDataWithRootObject:tabs];
+  [outputCondition signal];
+  [outputCondition unlock];
 }

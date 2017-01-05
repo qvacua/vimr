@@ -23,5 +23,7 @@ extern NSArray *server_buffers();
 extern NSArray *server_tabs();
 extern void server_get_bool_option(NSUInteger responseId, NSString *option);
 extern void server_set_bool_option(NSUInteger responseId, NSString *option, bool value);
-extern void server_select_win(int window_handle);
 extern void server_quit();
+
+extern void neovim_select_window(void **argv);
+extern void neovim_tabs(void **argv);

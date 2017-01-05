@@ -7,6 +7,15 @@
 #import "server_globals.h"
 #import "Logging.h"
 #import "CocoaCategories.h"
+#import "Wrapper.h"
+
+#define FileInfo CarbonFileInfo
+#define Boolean CarbonBoolean
+
+#import <nvim/vim.h>
+#import <nvim/api/vim.h>
+#import <nvim/main.h>
+#import <nvim/ui.h>
 
 
 // When #define'd you can execute the NeoVimServer binary and neovim will be started:
@@ -42,13 +51,46 @@ static inline NSData *data_without_response_id(NSData *data) {
 
 @interface NeoVimServer ()
 
+- (NSCondition *)outputCondition;
 - (NSData *)handleMessageWithId:(SInt32)msgid data:(NSData *)data;
 
 @end
 
+static CFDataRef dataByWaiting(NSCondition *condition, CFDataRef data, argv_callback cb) {
+  Wrapper *wrapper = [[Wrapper alloc] init];
+  NSDate *deadline = [[NSDate date] dateByAddingTimeInterval:qTimeout];
+
+  [condition lock];
+
+  loop_schedule(&main_loop, event_create(1, cb, 3, data, condition, wrapper));
+
+  while (wrapper.data == nil && [condition waitUntilDate:deadline]);
+  [condition unlock];
+
+  return (__bridge CFDataRef) wrapper.data;
+}
+
 static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFDataRef data, void *info) {
   @autoreleasepool {
     NeoVimServer *neoVimServer = (__bridge NeoVimServer *) info;
+    CFRetain(data); // release in the loop callbacks!
+
+    switch (msgid) {
+
+      case NeoVimAgentMsgIdSelectWindow: {
+        loop_schedule(&main_loop, event_create(1, neovim_select_window, 1, data));
+        return NULL;
+      }
+
+      case NeoVimAgentMsgIdGetTabs: {
+        return dataByWaiting(neoVimServer.outputCondition, data, neovim_tabs);
+      }
+
+      default:
+        break;
+
+    }
+
     NSData *responseData = [neoVimServer handleMessageWithId:msgid data:(__bridge NSData *) data];
 
     if (responseData == nil) {
@@ -69,6 +111,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   NSThread *_localServerThread;
   CFMessagePortRef _localServerPort;
   CFRunLoopRef _localServerRunLoop;
+
+  NSCondition *_outputCondition;
+}
+
+- (NSCondition *)outputCondition {
+  return _outputCondition;
 }
 
 - (instancetype)initWithLocalServerName:(NSString *)localServerName remoteServerName:(NSString *)remoteServerName {
@@ -76,6 +124,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   if (self == nil) {
     return nil;
   }
+
+  _outputCondition = [[NSCondition alloc] init];
 
   _localServerName = localServerName;
   _remoteServerName = remoteServerName;
@@ -223,12 +273,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return nil;
     }
 
-    case NeoVimAgentMsgIdSelectWindow: {
-      int *values = data_to_int_array(data, 1);
-      server_select_win(values[0]);
-      return nil;
-    }
-
     case NeoVimAgentMsgIdQuit:
       // exit() after returning the response such that the agent can get the response and so does not log a warning.
       [self performSelector:@selector(quit) onThread:_localServerThread withObject:nil waitUntilDone:NO];
@@ -252,10 +296,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
     case NeoVimAgentMsgIdGetBuffers: {
       return [NSKeyedArchiver archivedDataWithRootObject:server_buffers()];
-    }
-
-    case NeoVimAgentMsgIdGetTabs: {
-      return [NSKeyedArchiver archivedDataWithRootObject:server_tabs()];
     }
 
     case NeoVimAgentMsgIdGetBoolOption: {
