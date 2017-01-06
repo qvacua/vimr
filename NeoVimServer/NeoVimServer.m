@@ -56,12 +56,12 @@ static inline NSData *data_without_response_id(NSData *data) {
 
 @end
 
-static CFDataRef nullDataNotWaiting(CFDataRef data, argv_callback cb) {
+static CFDataRef null_data_async(CFDataRef data, argv_callback cb) {
   loop_schedule(&main_loop, event_create(1, cb, 1, data));
   return NULL;
 }
 
-static CFDataRef dataByWaiting(NSCondition *condition, CFDataRef data, argv_callback cb) {
+static CFDataRef data_sync(CFDataRef data, NSCondition *condition, argv_callback cb) {
   Wrapper *wrapper = [[Wrapper alloc] init];
   NSDate *deadline = [[NSDate date] dateByAddingTimeInterval:qTimeout];
 
@@ -83,20 +83,13 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
     switch (msgid) {
 
-      case NeoVimAgentMsgIdSelectWindow: {
-        return nullDataNotWaiting(data, neovim_select_window);
-      }
+      case NeoVimAgentMsgIdSelectWindow: return null_data_async(data, neovim_select_window);
 
-      case NeoVimAgentMsgIdGetTabs: {
-        return dataByWaiting(outputCondition, data, neovim_tabs);
-      }
+      case NeoVimAgentMsgIdGetTabs: return data_sync(data, outputCondition, neovim_tabs);
       
-      case NeoVimAgentMsgIdGetBuffers: {
-        return dataByWaiting(outputCondition, data, neovim_buffers);
-      }
+      case NeoVimAgentMsgIdGetBuffers: return data_sync(data, outputCondition, neovim_buffers);
 
-      default:
-        break;
+      default: break;
 
     }
 

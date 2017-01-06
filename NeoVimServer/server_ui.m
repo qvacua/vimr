@@ -894,94 +894,131 @@ void server_quit() {
   exit(0);
 }
 
-static inline NSUInteger response_id_from_data(NSData *data) {
-  NSUInteger *values = (NSUInteger *) data.bytes;
-  return values[0];
-}
+typedef NSData *(^work_block)(NSData *);
 
-void neovim_select_window(void **argv) {
-  NSData *data = argv[0];
-  int handle = ((int *) data.bytes)[0];
-  [data release]; // retained in local_server_callback
-
-  FOR_ALL_TAB_WINDOWS(tab, win) {
-      if (win->handle == handle) {
-        Error err;
-        nvim_set_current_win(win->handle, &err);
-
-        if (err.set) {
-          WLOG("Error selecting window with handle %d: %s", win->handle, err.msg);
-          return;
-        }
-
-        // nvim_set_current_win() does not seem to trigger a redraw.
-        ui_schedule_refresh();
-
-        return;
-      }
-    }
-}
-
-void neovim_tabs(void **argv) {
-  NSData *data = argv[0];
-  [data release]; // retained in local_server_callback
-
+static void work_and_write_data_sync(void **argv, work_block block) {
   NSCondition *outputCondition = argv[1];
   [outputCondition lock];
 
+  NSData *data = argv[0];
   Wrapper *wrapper = argv[2];
+  wrapper.data = block(data);
+  [data release]; // retained in local_server_callback
 
-  NSMutableArray *tabs = [[NSMutableArray new] autorelease];
-  FOR_ALL_TABS(t) {
-    NSMutableArray *windows = [NSMutableArray new];
+  [outputCondition signal];
+  [outputCondition unlock];
+}
 
-    FOR_ALL_WINDOWS_IN_TAB(win, t) {
-      NeoVimBuffer *buffer = buffer_for(win->w_buffer);
+static void work_async(void **argv, work_block block) {
+  NSData *data = argv[0];
+  block(data);
+  [data release]; // retained in local_server_callback
+}
+
+void neovim_select_window(void **argv) {
+  work_async(argv, ^NSData *(NSData *data) {
+    int handle = ((int *) data.bytes)[0];
+
+    FOR_ALL_TAB_WINDOWS(tab, win) {
+        if (win->handle == handle) {
+          Error err;
+          nvim_set_current_win(win->handle, &err);
+
+          if (err.set) {
+            WLOG("Error selecting window with handle %d: %s", win->handle, err.msg);
+            return nil;
+          }
+
+          // nvim_set_current_win() does not seem to trigger a redraw.
+          ui_schedule_refresh();
+
+          return nil;
+        }
+      }
+
+    return nil;
+  });
+}
+
+void neovim_tabs(void **argv) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
+    NSMutableArray *tabs = [[NSMutableArray new] autorelease];
+    FOR_ALL_TABS(t) {
+      NSMutableArray *windows = [NSMutableArray new];
+
+      FOR_ALL_WINDOWS_IN_TAB(win, t) {
+        NeoVimBuffer *buffer = buffer_for(win->w_buffer);
+        if (buffer == nil) {
+          continue;
+        }
+
+        NeoVimWindow *window = [[NeoVimWindow alloc] initWithHandle:win->handle buffer:buffer];
+        [windows addObject:window];
+        [window release];
+      }
+
+      NeoVimTab *tab = [[NeoVimTab alloc] initWithHandle:t->handle windows:windows];
+      [windows release];
+
+      [tabs addObject:tab];
+      [tab release];
+    }
+
+    WLOG("tabs: %s", tabs.description.cstr);
+    return [NSKeyedArchiver archivedDataWithRootObject:tabs];
+  });
+}
+
+void neovim_buffers(void **argv) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
+    NSMutableArray *buffers = [[NSMutableArray new] autorelease];
+    FOR_ALL_BUFFERS(buf) {
+      NeoVimBuffer *buffer = buffer_for(buf);
       if (buffer == nil) {
         continue;
       }
 
-      NeoVimWindow *window = [[NeoVimWindow alloc] initWithHandle:win->handle buffer:buffer];
-      [windows addObject:window];
-      [window release];
+      [buffers addObject:buffer];
     }
 
-    NeoVimTab *tab = [[NeoVimTab alloc] initWithHandle:t->handle windows:windows];
-    [windows release];
-
-    [tabs addObject:tab];
-    [tab release];
-  }
-
-  WLOG("tabs: %s", tabs.description.cstr);
-
-  wrapper.data = [NSKeyedArchiver archivedDataWithRootObject:tabs];
-  [outputCondition signal];
-  [outputCondition unlock];
+    WLOG("buffers: %s", buffers.description.cstr);
+    return [NSKeyedArchiver archivedDataWithRootObject:buffers];
+  });
 }
 
-void neovim_buffers(void **argv) {
-  NSData *data = argv[0];
-  [data release]; // retained in local_server_callback
+void neovim_vim_command_output(void **argv) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
+    return nil;
 
-  NSCondition *outputCondition = argv[1];
-  [outputCondition lock];
+/*    NSUInteger *values = (NSUInteger *) argv[0];
+    NSUInteger responseId = values[0];
+    NSString *input = (NSString *) argv[1];
 
-  Wrapper *wrapper = argv[2];
+    Error err;
+    // We don't know why nvim_command_output does not work when the optimization level is set to -Os.
+    // If set to -O0, nvim_command_output works fine... -_-
+    // String commandOutput = nvim_command_output((String) {
+    //     .data = (char *) input.cstr,
+    //     .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
+    // }, &err);
+    do_cmdline_cmd("redir => v:command_output");
+    nvim_command(vim_string_from(input), &err);
+    do_cmdline_cmd("redir END");
 
-  NSMutableArray *buffers = [[NSMutableArray new] autorelease];
-  FOR_ALL_BUFFERS(buf) {
-    NeoVimBuffer *buffer = buffer_for(buf);
-    if (buffer == nil) {
-      continue;
+    char_u *output = get_vim_var_str(VV_COMMAND_OUTPUT);
+
+    // FIXME: handle err.set == true
+    NSData *resultData = nil;
+    if (output != NULL) {
+      NSString *result = [[NSString alloc] initWithCString:(const char *) output encoding:NSUTF8StringEncoding];
+      resultData = [NSKeyedArchiver archivedDataWithRootObject:result];
+      [result release];
     }
 
-    [buffers addObject:buffer];
-  }
+    NSData *data = data_with_response_id_prefix(responseId, resultData);
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSyncResult data:data];
 
-  WLOG("buffers: %s", buffers.description.cstr);
-
-  wrapper.data = [NSKeyedArchiver archivedDataWithRootObject:buffers];
-  [outputCondition signal];
-  [outputCondition unlock];
+    free(values); // malloc'ed in loop_schedule(&main_loop, ...) (in _queue) somewhere
+    [input release]; // retained in loop_schedule(&main_loop, ...) (in _queue) somewhere*/
+  });
 }
