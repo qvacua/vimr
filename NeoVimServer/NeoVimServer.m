@@ -26,16 +26,6 @@
 
 static const double qTimeout = 10;
 
-#define data_to_array(type)                                               \
-static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
-  NSUInteger length = count * sizeof( type );                             \
-  if (data.length != length) {                                            \
-    return NULL;                                                          \
-  }                                                                       \
-  return ( type *) data.bytes;                                            \
-}
-
-data_to_array(NSInteger)
 
 @interface NeoVimServer ()
 

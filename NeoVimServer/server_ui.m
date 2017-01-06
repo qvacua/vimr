@@ -755,7 +755,7 @@ void neovim_has_dirty_docs(void **argv) {
 
 void neovim_resize(void **argv) {
   work_async(argv, ^NSData *(NSData *data) {
-    int *values = data.bytes;
+    const int *values = data.bytes;
     int width = values[0];
     int height = values[1];
 
@@ -837,7 +837,7 @@ void neovim_vim_input_marked_text(void **argv) {
 
 void neovim_delete(void **argv) {
   work_async(argv, ^NSData *(NSData *data) {
-    NSInteger *values = data.bytes;
+    const NSInteger *values = data.bytes;
     NSInteger count = values[0];
 
     _marked_delta = 0;

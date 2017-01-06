@@ -84,11 +84,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   bool _isInitErrorPresent;
 
   uint32_t _neoVimIsQuitting;
-
-  OSSpinLock _requestIdSpinLock;
-  NSUInteger _requestResponseId;
-  NSMutableDictionary *_requestResponseConditions;
-  NSMutableDictionary *_requestResponses;
 }
 
 - (instancetype)initWithUuid:(NSString *)uuid {
@@ -104,11 +99,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   _isInitErrorPresent = NO;
 
   _neoVimIsQuitting = 0;
-
-  _requestIdSpinLock = OS_SPINLOCK_INIT;
-  _requestResponseId = 0;
-  _requestResponseConditions = [NSMutableDictionary new];
-  _requestResponses = [NSMutableDictionary new];
 
   return self;
 }
@@ -205,33 +195,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 - (void)vimCommand:(NSString *)string {
   NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
   [self sendMessageWithId:NeoVimAgentMsgIdCommand data:data expectsReply:NO];
-}
-
-- (NSUInteger)nextRequestResponseId {
-  OSSpinLockLock(&_requestIdSpinLock);
-  NSUInteger reqId = _requestResponseId++;
-  _requestResponseConditions[@(reqId)] = [NSCondition new];
-  OSSpinLockUnlock(&_requestIdSpinLock);
-
-  return reqId;
-}
-
-- (id)responseByWaitingForId:(NSUInteger)reqId {
-  NSCondition *condition = _requestResponseConditions[@(reqId)];
-  NSDate *deadline = [[NSDate date] dateByAddingTimeInterval:qTimeout];
-
-  [condition lock];
-  while (_requestResponses[@(reqId)] == nil && [condition waitUntilDate:deadline]);
-  [condition unlock];
-
-  id result = _requestResponses[@(reqId)];
-
-  OSSpinLockLock(&_requestIdSpinLock);
-  [_requestResponseConditions removeObjectForKey:@(reqId)];
-  [_requestResponses removeObjectForKey:@(reqId)];
-  OSSpinLockUnlock(&_requestIdSpinLock);
-
-  return result;
 }
 
 - (NSString *)vimCommandOutput:(NSString *)string {
@@ -381,7 +344,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     // This happens often, e.g. when exiting full screen by closing all buffers. We try to resize the window after
     // the message port has been closed. This is a quick-and-dirty fix.
     // TODO: Fix for real...
-    log4Warn("Neovim is quitting, but trying to send message: %d", msgid);
+    log4Warn("Neovim is quitting, but trying to send message: %lu", (unsigned long) msgid);
     return nil;
   }
 
@@ -406,7 +369,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
     if (_neoVimIsQuitting == 0) {
       [_bridge ipcBecameInvalid:
-          [NSString stringWithFormat:@"Reason: sending msg to neovim failed for %d with %d", msgid, responseCode]
+        [NSString stringWithFormat:
+          @"Reason: sending msg to neovim failed for %lu with %d", (unsigned long) msgid, responseCode
+        ]
       ];
     }
 
@@ -600,27 +565,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     case NeoVimServerMsgIdCwdChanged:
       [_bridge cwdChanged];
       return;
-
-    case NeoVimServerMsgIdSyncResult: {
-      NSUInteger *values = (NSUInteger *) data.bytes;
-      NSUInteger requestId = values[0];
-
-      NSUInteger resultDataLength = data.length - sizeof(NSUInteger);
-      NSData *resultData;
-      if (resultDataLength == 0) {
-        resultData = NSData.new;
-      } else {
-        resultData = [[NSData alloc] initWithBytes:(values + 1) length:resultDataLength];
-      }
-
-      NSCondition *condition = _requestResponseConditions[@(requestId)];
-      [condition lock];
-      _requestResponses[@(requestId)] = resultData;
-      [condition broadcast];
-      [condition unlock];
-
-      return;
-    }
 
     case NeoVimServerMsgIdBufferEvent:
       [_bridge bufferListChanged];
