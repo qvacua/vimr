@@ -271,8 +271,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     return YES;
   }
 
-  bool *values = data_to_bool_array(response, 1);
-  return values[0];
+  NSNumber *value = [NSKeyedUnarchiver unarchiveObjectWithData:response];
+  return (bool) value.boolValue;
 }
 
 - (NSString *)escapedFileName:(NSString *)fileName {

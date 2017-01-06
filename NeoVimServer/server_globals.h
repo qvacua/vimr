@@ -16,7 +16,6 @@ extern void server_vim_input(NSString *input);
 extern void server_delete(NSInteger count);
 extern void server_resize(int width, int height);
 extern void server_vim_input_marked_text(NSString *markedText);
-extern bool server_has_dirty_docs();
 extern void server_quit();
 
 extern void neovim_select_window(void **argv);
@@ -26,3 +25,4 @@ extern void neovim_vim_command_output(void **argv);
 extern void neovim_set_bool_option(void **argv);
 extern void neovim_get_bool_option(void **argv);
 extern void neovim_escaped_filenames(void **argv);
+extern void neovim_has_dirty_docs(void **argv);

@@ -97,6 +97,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
       case NeoVimAgentMsgIdGetEscapeFileNames: return data_sync(data, outputCondition, neovim_escaped_filenames);
 
+      case NeoVimAgentMsgIdGetDirtyDocs: return data_sync(data, outputCondition, neovim_has_dirty_docs);
+
       default: break;
 
     }
@@ -279,11 +281,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       // exit() after returning the response such that the agent can get the response and so does not log a warning.
       [self performSelector:@selector(quit) onThread:_localServerThread withObject:nil waitUntilDone:NO];
       return nil;
-
-    case NeoVimAgentMsgIdGetDirtyDocs: {
-      bool dirty = server_has_dirty_docs();
-      return [NSData dataWithBytes:&dirty length:sizeof(bool)];
-    }
 
     default:
       return nil;

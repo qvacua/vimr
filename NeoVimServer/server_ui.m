@@ -445,8 +445,22 @@ static void neovim_input(void **argv) {
   }
 }
 
+static bool has_dirty_docs() {
+  FOR_ALL_BUFFERS(buffer) {
+    if (buffer->b_p_bl == 0) {
+      continue;
+    }
+
+    if (bufIsChanged(buffer)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 static void send_dirty_status() {
-  bool new_dirty_status = server_has_dirty_docs();
+  bool new_dirty_status = has_dirty_docs();
   DLOG("dirty status: %d vs. %d", _dirty, new_dirty_status);
   if (_dirty == new_dirty_status) {
     return;
@@ -671,21 +685,6 @@ void server_vim_input_marked_text(NSString *markedText) {
   });
 }
 
-bool server_has_dirty_docs() {
-  FOR_ALL_BUFFERS(buffer) {
-    if (buffer->b_p_bl == 0) {
-      continue;
-    }
-
-    if (bufIsChanged(buffer)) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-
 static NeoVimBuffer *buffer_for(buf_T *buf) {
   // To be sure...
   if (buf == NULL) {
@@ -770,6 +769,19 @@ static void work_and_write_data_sync(void **argv, work_block block) {
 
   [outputCondition signal];
   [outputCondition unlock];
+}
+
+#pragma mark Functions for neovim's main loop
+// already in an autorelease pool and in neovim's main loop
+
+static NSString *escaped_filename(NSString *filename) {
+  const char *file_system_rep = filename.fileSystemRepresentation;
+
+  char_u *escaped_filename = vim_strsave_fnameescape((char_u *) file_system_rep, 0);
+  NSString *result = [NSString stringWithCString:(const char *) escaped_filename encoding:NSUTF8StringEncoding];
+  xfree(escaped_filename);
+
+  return result;
 }
 
 static void work_async(void **argv, work_block block) {
@@ -941,16 +953,6 @@ void neovim_get_bool_option(void **argv) {
   });
 }
 
-static NSString *escaped_filename(NSString *filename) {
-  const char *file_system_rep = filename.fileSystemRepresentation;
-
-  char_u *escaped_filename = vim_strsave_fnameescape((char_u *) file_system_rep, 0);
-  NSString *result = [NSString stringWithCString:(const char *) escaped_filename encoding:NSUTF8StringEncoding];
-  xfree(escaped_filename);
-
-  return result;
-}
-
 void neovim_escaped_filenames(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     NSArray *fileNames = [NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -961,5 +963,11 @@ void neovim_escaped_filenames(void **argv) {
     }];
 
     return [NSKeyedArchiver archivedDataWithRootObject:result];
+  });
+}
+
+void neovim_has_dirty_docs(void **argv) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
+    return [NSKeyedArchiver archivedDataWithRootObject:@(has_dirty_docs())];
   });
 }
