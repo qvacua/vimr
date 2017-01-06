@@ -763,42 +763,20 @@ static NeoVimBuffer *buffer_for(buf_T *buf) {
   return [buffer autorelease];
 }
 
-static void neovim_buffers(void **argv) {
-  NSUInteger *values = (NSUInteger *) argv[0];
-  NSUInteger responseId = values[0];
-
-  NSMutableArray <NeoVimBuffer *> *buffers = [[NSMutableArray new] autorelease];
+NSArray *server_buffers() {
+  NSMutableArray <NeoVimBuffer *> *result = [[NSMutableArray new] autorelease];
   FOR_ALL_BUFFERS(buf) {
     NeoVimBuffer *buffer = buffer_for(buf);
     if (buffer == nil) {
       continue;
     }
 
-    [buffers addObject:buffer];
+    [result addObject:buffer];
   }
-
-  NSData *resultData = [NSKeyedArchiver archivedDataWithRootObject:buffers];
-  NSData *data = data_with_response_id_prefix(responseId, resultData);
-
-  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSyncResult data:data];
-
-  free(values); // malloc'ed in loop_schedule(&main_loop, ...) (in _queue) somewhere
+  return result;
 }
 
-void server_buffers(NSUInteger responseId) {
-  queue(^{
-      NSUInteger *values = malloc(sizeof(NSUInteger));
-      values[0] = responseId;
-
-      // free release in neovim_command
-      loop_schedule(&main_loop, event_create(1, neovim_buffers, 1, values));
-  });
-}
-
-static void neovim_tabs(void **argv) {
-  NSUInteger *values = (NSUInteger *) argv[0];
-  NSUInteger responseId = values[0];
-
+NSArray *server_tabs() {
   NSMutableArray *tabs = [[NSMutableArray new] autorelease];
   FOR_ALL_TABS(t) {
     NSMutableArray *windows = [NSMutableArray new];
@@ -821,22 +799,7 @@ static void neovim_tabs(void **argv) {
     [tab release];
   }
 
-  NSData *resultData = [NSKeyedArchiver archivedDataWithRootObject:tabs];
-  NSData *data = data_with_response_id_prefix(responseId, resultData);
-
-  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSyncResult data:data];
-
-  free(values); // malloc'ed in loop_schedule(&main_loop, ...) (in _queue) somewhere
-}
-
-void server_tabs(NSUInteger responseId) {
-  queue(^{
-      NSUInteger *values = malloc(sizeof(NSUInteger));
-      values[0] = responseId;
-
-      // free release in neovim_command
-      loop_schedule(&main_loop, event_create(1, neovim_tabs, 1, values));
-  });
+  return tabs;
 }
 
 void server_select_win(int window_handle) {

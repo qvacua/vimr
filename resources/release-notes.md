@@ -1,6 +1,6 @@
-# next
+# 0.12.4-156
 
-* ...
+* GH-376: Fix a part of the bug. There's still an issue, cf. discussions in GH-376.
 
 # 0.12.3-154
 
