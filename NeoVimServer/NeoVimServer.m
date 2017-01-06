@@ -69,7 +69,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
         start_neovim();
         return NULL;
 
-      case NeoVimAgentMsgIdQuit: [neoVimServer handleQuitMsg];
+      case NeoVimAgentMsgIdQuit:
+        [neoVimServer handleQuitMsg];
+        return NULL;
 
       case NeoVimAgentMsgIdCommandOutput: return data_sync(data, outputCondition, neovim_vim_command_output);
 
