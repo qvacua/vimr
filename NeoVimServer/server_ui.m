@@ -577,7 +577,7 @@ void neovim_select_window(void **argv) {
 
     FOR_ALL_TAB_WINDOWS(tab, win) {
         if (win->handle == handle) {
-          Error err;
+          Error err = ERROR_INIT;
           nvim_set_current_win(win->handle, &err);
 
           if (err.set) {
@@ -646,8 +646,7 @@ void neovim_vim_command_output(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     NSString *input = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
-    Error err;
-    err.set = false;
+    Error err = ERROR_INIT;
 
     // We don't know why nvim_command_output does not work when the optimization level is set to -Os.
     // If set to -O0, nvim_command_output works fine... -_-
@@ -690,7 +689,7 @@ void neovim_set_bool_option(void **argv) {
     const char *string = (const char *)(optionValues + 1);
     NSString *optionName = [[NSString alloc] initWithCString:string encoding:NSUTF8StringEncoding];
 
-    Error err;
+    Error err = ERROR_INIT;
 
     Object object = OBJECT_INIT;
     object.type = kObjectTypeBoolean;
@@ -715,7 +714,7 @@ void neovim_get_bool_option(void **argv) {
     NSString *option = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     bool result = false;
 
-    Error err;
+    Error err = ERROR_INIT;
     Object resultObj = nvim_get_option(vim_string_from(option), &err);
 
     if (err.set) {
@@ -770,7 +769,7 @@ void neovim_vim_command(void **argv) {
   work_async(argv, ^NSData *(NSData *data) {
     NSString *input = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
-    Error err;
+    Error err = ERROR_INIT;
     nvim_command(vim_string_from(input), &err);
 
     // FIXME: handle err.set == true
