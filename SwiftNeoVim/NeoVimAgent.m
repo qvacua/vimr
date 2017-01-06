@@ -296,20 +296,15 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (void)setBoolOption:(NSString *)option to:(bool)value {
-  NSUInteger reqId = [self nextRequestResponseId];
-
   NSMutableData *data = [NSMutableData new];
 
   bool values[] = { value };
   const char *cstr = [option cStringUsingEncoding:NSUTF8StringEncoding];
 
-  [data appendBytes:&reqId length:sizeof(NSUInteger)];
   [data appendBytes:values length:sizeof(bool)];
   [data appendBytes:cstr length:strlen(cstr)];
 
-  [self sendMessageWithId:NeoVimAgentMsgIdSetBoolOption data:data expectsReply:NO];
-
-  [self responseByWaitingForId:reqId];
+  [self sendMessageWithId:NeoVimAgentMsgIdSetBoolOption data:data expectsReply:YES];
 }
 
 - (void)selectWindow:(NeoVimWindow *)window {

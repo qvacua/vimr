@@ -800,48 +800,6 @@ void server_get_bool_option(NSUInteger responseId, NSString *option) {
   });
 }
 
-static void neovim_set_bool_option(void **argv) {
-  @autoreleasepool {
-    NSUInteger *responseIds = (NSUInteger *) argv[0];
-    NSString *option = argv[1];
-    bool *values = argv[2];
-
-    Error err;
-
-    Object object = OBJECT_INIT;
-    object.type = kObjectTypeBoolean;
-    object.data.boolean = values[0];
-
-//    NSLog(@"%@ to set: %d", option, values[0]);
-
-    nvim_set_option(vim_string_from(option), object, &err);
-
-    if (err.set) {
-      WLOG("Error setting the option '%s' to %d: %s", option.cstr, values[0], err.msg);
-    }
-
-    NSData *data = [NSData dataWithBytes:responseIds length:sizeof(NSUInteger)];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSyncResult data:data];
-
-    free(responseIds);
-    free(values);
-    [option release];
-  }
-}
-
-void server_set_bool_option(NSUInteger responseId, NSString *option, bool value) {
-  queue(^{
-    NSUInteger *responseIds = malloc(sizeof(NSUInteger));
-    responseIds[0] = responseId;
-
-    bool *values = malloc(sizeof(bool));
-    values[0] = value;
-
-    // release and free in neovim_set_bool_option
-    loop_schedule(&main_loop, event_create(1, neovim_set_bool_option, 3, responseIds, [option retain], values));
-  });
-}
-
 void server_quit() {
   DLOG("NeoVimServer exiting...");
   exit(0);
@@ -856,6 +814,7 @@ static void work_and_write_data_sync(void **argv, work_block block) {
   NSData *data = argv[0];
   Wrapper *wrapper = argv[2];
   wrapper.data = block(data);
+  wrapper.dataReady = YES;
   [data release]; // retained in local_server_callback
 
   [outputCondition signal];
@@ -976,5 +935,33 @@ void neovim_vim_command_output(void **argv) {
     [input release];
 
     return resultData;
+  });
+}
+
+void neovim_set_bool_option(void **argv) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
+    bool *optionValues = (bool *) data.bytes;
+    bool optionValue = optionValues[0];
+
+    const char *string = (const char *)(optionValues + 1);
+    NSString *optionName = [[NSString alloc] initWithCString:string encoding:NSUTF8StringEncoding];
+
+    Error err;
+
+    Object object = OBJECT_INIT;
+    object.type = kObjectTypeBoolean;
+    object.data.boolean = optionValue;
+
+    DLOG("%s to set: %d", optionName.cstr, optionValue);
+
+    nvim_set_option(vim_string_from(optionName), object, &err);
+
+    if (err.set) {
+      WLOG("Error setting the option '%s' to %d: %s", optionName.cstr, optionValue, err.msg);
+    }
+
+    [optionName release];
+
+    return nil;
   });
 }

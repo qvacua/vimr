@@ -8,6 +8,7 @@
 
 @interface Wrapper : NSObject
 
-@property (strong, nonatomic, nonnull) NSData *data;
+@property (strong) NSData *data;
+@property (getter=isDataReady) bool dataReady;
 
 @end

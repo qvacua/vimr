@@ -69,7 +69,7 @@ static CFDataRef data_sync(CFDataRef data, NSCondition *condition, argv_callback
 
   loop_schedule(&main_loop, event_create(1, cb, 3, data, condition, wrapper));
 
-  while (wrapper.data == nil && [condition waitUntilDate:deadline]);
+  while (wrapper.isDataReady == false && [condition waitUntilDate:deadline]);
   [condition unlock];
 
   return (__bridge CFDataRef) wrapper.data;
@@ -90,6 +90,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       case NeoVimAgentMsgIdGetTabs: return data_sync(data, outputCondition, neovim_tabs);
       
       case NeoVimAgentMsgIdGetBuffers: return data_sync(data, outputCondition, neovim_buffers);
+
+      case NeoVimAgentMsgIdSetBoolOption: return data_sync(data, outputCondition, neovim_set_bool_option);
 
       default: break;
 
@@ -296,20 +298,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
                                                   encoding:NSUTF8StringEncoding];
 
       server_get_bool_option(responseId, optionName);
-      return nil;
-    }
-
-    case NeoVimAgentMsgIdSetBoolOption: {
-      NSUInteger responseId = response_id_from_data(data);
-
-      NSData *paramData = data_without_response_id(data);
-      bool *optionValues = (bool *) paramData.bytes;
-      bool optionValue = optionValues[0];
-
-      const char *string = (const char *)(optionValues + 1);
-      NSString *optionName = [[NSString alloc] initWithCString:string encoding:NSUTF8StringEncoding];
-
-      server_set_bool_option(responseId, optionName, optionValue);
       return nil;
     }
 
