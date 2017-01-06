@@ -26,6 +26,7 @@ enum PreviewRendererAction {
   case htmlString(renderer: PreviewRenderer, html: String, baseUrl: URL)
   case view(renderer: PreviewRenderer, view: NSView)
 
+  case reverseSearch(to: Position)
   case scroll(to: Position)
 
   case error(renderer: PreviewRenderer)

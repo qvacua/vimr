@@ -340,12 +340,6 @@ extension NeoVimView {
     return self.agent.vimCommandOutput(command) ?? ""
   }
 
-  fileprivate func open(_ url: URL, cmd: String) {
-    let path = url.path
-    let escapedFileName = self.agent.escapedFileName(path)
-    self.exec(command: "\(cmd) \(escapedFileName)")
-  }
-
   /**
    Does the following
    - `Mode.Normal`: `:command<CR>`
@@ -354,13 +348,19 @@ extension NeoVimView {
    We don't use NeoVimAgent.vimCommand because if we do for example "e /some/file" and its swap file already exists,
    then NeoVimServer spins and become unresponsive.
    */
-  fileprivate func exec(command cmd: String) {
+  public func exec(command cmd: String) {
     switch self.mode {
     case .Normal:
       self.agent.vimInput(":\(cmd)<CR>")
     default:
       self.agent.vimInput("<Esc>:\(cmd)<CR>")
     }
+  }
+
+  fileprivate func open(_ url: URL, cmd: String) {
+    let path = url.path
+    let escapedFileName = self.agent.escapedFileName(path)
+    self.exec(command: "\(cmd) \(escapedFileName)")
   }
 }
 

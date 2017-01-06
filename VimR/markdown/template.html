@@ -40,9 +40,13 @@
       return Array.prototype.slice.call(nodeList)
     }
 
-    function scrollCallback() {
+    function currentTopMarkdownElement() {
       const mdElements = toArray(document.querySelectorAll("[data-sourcepos]"));
-      const candidate = mdElements.find(isTopLeftInsideViewport) || mdElements.find(isElementVisibleInViewport);
+      return mdElements.find(isTopLeftInsideViewport) || mdElements.find(isElementVisibleInViewport);
+    }
+
+    function scrollCallback() {
+      const candidate = currentTopMarkdownElement();
 
       if (!candidate) {
         return;
@@ -114,6 +118,17 @@
       }
 
       return { x: x, y: y };
+    }
+  </script>
+  <script>
+    // Reverse search
+    function currentPosition() {
+      const candidate = currentTopMarkdownElement();
+      if (!candidate) {
+        return null;
+      }
+
+      return positionOfMarkdownElement(candidate);
     }
   </script>
   <title>{{ title }}</title>

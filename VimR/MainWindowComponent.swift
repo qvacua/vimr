@@ -308,6 +308,10 @@ class MainWindowComponent: WindowComponent,
         case let BufferListAction.open(buffer: buffer):
           self.neoVimView.select(buffer: buffer)
 
+        case let PreviewComponent.Action.reverseSearch(to: position):
+          self.neoVimView.exec(command: "cal cursor(\(position.row), \(position.column))")
+          return
+
         case let PreviewComponent.Action.scroll(to: position):
           NSLog("preview scrolled to \(position)")
           return

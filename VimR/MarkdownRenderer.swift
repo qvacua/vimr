@@ -342,7 +342,18 @@ extension MarkdownRenderer {
   }
 
   func reverseSearchAction(_: Any?) {
-    NSLog("\(#function) for \(self.currentPreviewPosition)")
+    self.webview.evaluateJavaScript("currentPosition();") { resultObj, error in
+      guard let resultDict = resultObj as? [String: Int] else {
+        return
+      }
+
+      guard let lineBegin = resultDict["lineBegin"], let columnBegin = resultDict["columnBegin"] else {
+        return
+      }
+
+      self.flow.publish(event: PreviewRendererAction.reverseSearch(to: Position(row: lineBegin, column: columnBegin)))
+    }
+//    NSLog("\(#function) for \(self.currentPreviewPosition)")
   }
 
   func automaticForwardSearchAction(_: Any?) {

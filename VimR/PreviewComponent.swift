@@ -13,6 +13,7 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
   enum Action {
 
     case automaticRefresh(url: URL)
+    case reverseSearch(to: Position)
     case scroll(to: Position)
   }
 
@@ -235,11 +236,13 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
         }
 
         switch action {
-        case let .scroll(to:position):
-          self.flow.publish(event: PreviewComponent.Action.scroll(to: position))
+
+        case let .scroll(to: position):
+          self.flow.publish(event: Action.scroll(to: position))
 
         default:
           return
+
         }
       })
       .addDisposableTo(self.flow.disposeBag)
@@ -254,6 +257,9 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
         }
 
         switch action {
+
+        case let .reverseSearch(to: position):
+          self.flow.publish(event: Action.reverseSearch(to: position))
 
         case let .htmlString(_, html, baseUrl):
           self.webview.loadHTMLString(html, baseURL: baseUrl)
