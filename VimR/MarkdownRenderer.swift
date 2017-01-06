@@ -174,8 +174,8 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     let automaticReverseMenuItem = NSMenuItem(title: "Automatic Reverse Search", action: nil, keyEquivalent: "")
     let refreshOnWriteMenuItem = NSMenuItem(title: "Refresh on Write", action: nil, keyEquivalent: "")
 
-    forwardSearchMenuItem.boolState = self.isForwardSearchAutomatically
-    reverseSearchMenuItem.boolState = self.isReverseSearchAutomatically
+    automaticForwardMenuItem.boolState = self.isForwardSearchAutomatically
+    automaticReverseMenuItem.boolState = self.isReverseSearchAutomatically
     refreshOnWriteMenuItem.boolState = self.isRefreshOnWrite
 
     self.menuItems = [
