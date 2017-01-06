@@ -102,6 +102,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
   }
 
   fileprivate let flow: EmbeddableComponent
+  fileprivate let scrollFlow: EmbeddableComponent
 
   fileprivate let scheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
   fileprivate let baseUrl = Bundle.main.resourceURL!.appendingPathComponent("markdown")
@@ -131,6 +132,10 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     return self.flow.sink
   }
 
+  var scrollSink: Observable<Any> {
+    return self.scrollFlow.sink
+  }
+
   let toolbar: NSView? = NSView(forAutoLayout: ())
   let menuItems: [NSMenuItem]?
 
@@ -151,6 +156,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     self.template = template
 
     self.flow = EmbeddableComponent(source: source)
+    self.scrollFlow = EmbeddableComponent(source: scrollSource)
 
     let configuration = WKWebViewConfiguration()
     configuration.userContentController = self.userContentController
@@ -185,8 +191,6 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
     super.init()
 
-    self.flow.set(subscription: self.subscription)
-
     self.initCustomUiElements()
 
     refreshMenuItem.target = self
@@ -202,13 +206,8 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     refreshOnWriteMenuItem.target = self
     refreshOnWriteMenuItem.action = #selector(MarkdownRenderer.refreshOnWriteAction)
 
-    scrollSource
-      .throttle(1, latest: true, scheduler: self.scheduler)
-      .filter { $0 is MainWindowComponent.ScrollAction }
-      .subscribe(onNext: { action in
-        NSLog("neovim scrolled to  \(self.neoVimInfoProvider?.currentLine()) x \(self.neoVimInfoProvider?.currentColumn())")
-      })
-      .addDisposableTo(self.flow.disposeBag)
+    self.flow.set(subscription: self.subscription)
+    self.scrollFlow.set(subscription: self.scrollSubscription)
 
     self.addReactions()
     self.userContentController.add(webviewMessageHandler, name: "com_vimr_preview_markdown")
@@ -216,6 +215,15 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
   func canRender(fileExtension: String) -> Bool {
     return extensions.contains(fileExtension)
+  }
+
+  fileprivate func scrollSubscription(source: Observable<Any>) -> Disposable {
+    return source
+      .throttle(1, latest: true, scheduler: self.scheduler)
+      .filter { $0 is MainWindowComponent.ScrollAction }
+      .subscribe(onNext: { [unowned self] action in
+        NSLog("neovim scrolled to  \(self.neoVimInfoProvider?.currentLine()) x \(self.neoVimInfoProvider?.currentColumn())")
+      })
   }
 
   fileprivate func subscription(source: Observable<Any>) -> Disposable {
@@ -281,7 +289,9 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
         switch action {
         case let .scroll(lineBegin, columnBegin, _, _):
           self?.currentPreviewPosition = Position(row: lineBegin, column: columnBegin)
-          self?.flow.publish(event: PreviewRendererAction.scroll(to: Position(row: lineBegin, column: columnBegin)))
+          self?.scrollFlow.publish(
+            event: PreviewRendererAction.scroll(to: Position(row: lineBegin, column: columnBegin))
+          )
         }
       })
       .addDisposableTo(self.flow.disposeBag)

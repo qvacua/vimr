@@ -73,6 +73,7 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
     }
   }
 
+  fileprivate let scheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
   fileprivate let flow: EmbeddableComponent
 
   fileprivate var currentUrl: URL?
@@ -136,7 +137,7 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
   var view: NSView {
     return self
   }
-  
+
   init(source: Observable<Any>, scrollSource: Observable<Any>, neoVimInfoProvider: NeoVimInfoProvider, initialData: PrefData) {
     self.neoVimInfoProvider = neoVimInfoProvider
     self.flow = EmbeddableComponent(source: source)
@@ -224,6 +225,25 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
   }
 
   fileprivate func addReactions() {
+    self.markdownRenderer.scrollSink
+      .throttle(1, latest: true, scheduler: self.scheduler)
+      .filter { $0 is PreviewRendererAction }
+      .map { $0 as! PreviewRendererAction }
+      .subscribe(onNext: { action in
+        guard self.isOpen else {
+          return
+        }
+
+        switch action {
+        case let .scroll(to:position):
+          self.flow.publish(event: PreviewComponent.Action.scroll(to: position))
+
+        default:
+          return
+        }
+      })
+      .addDisposableTo(self.flow.disposeBag)
+
     self.markdownRenderer.sink
       .filter { $0 is PreviewRendererAction }
       .map { $0 as! PreviewRendererAction }
@@ -241,11 +261,11 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
         case let .view(_, view):
           self.currentView = view
 
-        case let .scroll(to: position):
-          self.flow.publish(event: PreviewComponent.Action.scroll(to: position))
-
         case .error:
           self.webview.loadHTMLString(self.previewService.errorHtml(), baseURL: self.baseUrl)
+
+        default:
+          return
 
         }
       })

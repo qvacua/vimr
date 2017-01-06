@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import RxSwift
 
 protocol PreviewRenderer: class {
 
@@ -12,6 +13,7 @@ protocol PreviewRenderer: class {
 
   var identifier: String { get }
   var prefData: StandardPrefData? { get }
+  var scrollSink: Observable<Any> { get }
 
   var toolbar: NSView? { get }
   var menuItems: [NSMenuItem]? { get }
