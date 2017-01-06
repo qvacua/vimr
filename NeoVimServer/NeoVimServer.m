@@ -60,7 +60,11 @@ static CFDataRef data_sync(CFDataRef data, NSCondition *condition, argv_callback
   while (wrapper.isDataReady == false && [condition waitUntilDate:deadline]);
   [condition unlock];
 
-  return (__bridge CFDataRef) wrapper.data;
+  if (wrapper.data == nil) {
+    return NULL;
+  }
+
+  return CFDataCreateCopy(kCFAllocatorDefault, (__bridge CFDataRef) wrapper.data);
 }
 
 static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFDataRef data, void *info) {
