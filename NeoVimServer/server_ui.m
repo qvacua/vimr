@@ -14,6 +14,7 @@
 #import "NeoVimTab.h"
 #import "CocoaCategories.h"
 #import "DataWrapper.h"
+#import "vim.h"
 
 // FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
 // them.
@@ -661,18 +662,16 @@ void neovim_vim_command_output(void **argv) {
     char_u *output = get_vim_var_str(VV_COMMAND_OUTPUT);
 
     // FIXME: handle err.set == true
-    NSString *result;
+    NSString *result = nil;
     if (output == NULL) {
       WLOG("vim command output is null");
-      result = [[NSString alloc] initWithString:@""];
-    } else if (err.set == true) {
-      WLOG("vim command output ERROR was set to true");
-      result = [[NSString alloc] initWithString:@""];
+    } else if (err.set) {
+      WLOG("vim command output for '%s' was not successful: %s", input.cstr, err.msg);
     } else {
       result = [[NSString alloc] initWithCString:(const char *) output encoding:NSUTF8StringEncoding];
     }
 
-    NSData *resultData = [NSKeyedArchiver archivedDataWithRootObject:result];
+    NSData *resultData = result == nil ? nil : [NSKeyedArchiver archivedDataWithRootObject:result];
 
     [result release];
     [input release];

@@ -202,6 +202,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
                                     data:[string dataUsingEncoding:NSUTF8StringEncoding]
                             expectsReply:YES];
 
+  if (data == nil) {
+    return nil;
+  }
+
   NSString *result = [NSKeyedUnarchiver unarchiveObjectWithData:data];
   return [result stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
