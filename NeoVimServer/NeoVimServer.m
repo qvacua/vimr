@@ -75,6 +75,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
     switch (msgid) {
 
+      case NeoVimAgentMsgIdAgentReady:
+        server_start_neovim();
+        return nil;
+
       case NeoVimAgentMsgIdCommandOutput: return data_sync(data, outputCondition, neovim_vim_command_output);
 
       case NeoVimAgentMsgIdSelectWindow: return null_data_async(data, neovim_select_window);
@@ -235,10 +239,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
 - (NSData *)handleMessageWithId:(SInt32)msgid data:(NSData *)data {
   switch (msgid) {
-
-    case NeoVimAgentMsgIdAgentReady:
-      server_start_neovim();
-      return nil;
 
     case NeoVimAgentMsgIdInput: {
       NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
