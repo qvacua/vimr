@@ -14,7 +14,6 @@
 #import "NeoVimTab.h"
 #import "CocoaCategories.h"
 #import "DataWrapper.h"
-#import "vim.h"
 
 // FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
 // them.
@@ -512,22 +511,31 @@ void quit_neovim() {
 }
 
 #pragma mark Functions for neovim's main loop
-// already in an autorelease pool and in neovim's main loop
 
 typedef NSData *(^work_block)(NSData *);
 
 static void work_and_write_data_sync(void **argv, work_block block) {
-  NSCondition *outputCondition = argv[1];
-  [outputCondition lock];
+  @autoreleasepool {
+    NSCondition *outputCondition = argv[1];
+    [outputCondition lock];
 
-  NSData *data = argv[0];
-  DataWrapper *wrapper = argv[2];
-  wrapper.data = block(data);
-  wrapper.dataReady = YES;
-  [data release]; // retained in local_server_callback
+    NSData *data = argv[0];
+    DataWrapper *wrapper = argv[2];
+    wrapper.data = block(data);
+    wrapper.dataReady = YES;
+    [data release]; // retained in local_server_callback
 
-  [outputCondition signal];
-  [outputCondition unlock];
+    [outputCondition signal];
+    [outputCondition unlock];
+  }
+}
+
+static void work_async(void **argv, work_block block) {
+  @autoreleasepool {
+    NSData *data = argv[0];
+    block(data);
+    [data release]; // retained in local_server_callback
+  }
 }
 
 static NSString *escaped_filename(NSString *filename) {
@@ -538,12 +546,6 @@ static NSString *escaped_filename(NSString *filename) {
   xfree(escaped_filename);
 
   return result;
-}
-
-static void work_async(void **argv, work_block block) {
-  NSData *data = argv[0];
-  block(data);
-  [data release]; // retained in local_server_callback
 }
 
 static NeoVimBuffer *buffer_for(buf_T *buf) {
