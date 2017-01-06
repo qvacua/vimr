@@ -13,7 +13,7 @@
 #import "NeoVimWindow.h"
 #import "NeoVimTab.h"
 #import "CocoaCategories.h"
-#import "Wrapper.h"
+#import "DataWrapper.h"
 
 // FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
 // them.
@@ -520,7 +520,7 @@ static void work_and_write_data_sync(void **argv, work_block block) {
   [outputCondition lock];
 
   NSData *data = argv[0];
-  Wrapper *wrapper = argv[2];
+  DataWrapper *wrapper = argv[2];
   wrapper.data = block(data);
   wrapper.dataReady = YES;
   [data release]; // retained in local_server_callback

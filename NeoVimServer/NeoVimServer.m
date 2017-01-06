@@ -7,7 +7,7 @@
 #import "server_globals.h"
 #import "Logging.h"
 #import "CocoaCategories.h"
-#import "Wrapper.h"
+#import "DataWrapper.h"
 
 // FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
 // them.
@@ -40,7 +40,7 @@ static CFDataRef null_data_async(CFDataRef data, argv_callback cb) {
 }
 
 static CFDataRef data_sync(CFDataRef data, NSCondition *condition, argv_callback cb) {
-  Wrapper *wrapper = [[Wrapper alloc] init];
+  DataWrapper *wrapper = [[DataWrapper alloc] init];
   NSDate *deadline = [[NSDate date] dateByAddingTimeInterval:qTimeout];
 
   [condition lock];
