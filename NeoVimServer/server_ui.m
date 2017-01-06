@@ -760,46 +760,6 @@ NSArray *server_tabs() {
   return tabs;
 }
 
-static void neovim_get_bool_option(void ** argv) {
-  @autoreleasepool {
-    NSUInteger *values = (NSUInteger *) argv[0];
-    NSUInteger responseId = values[0];
-    NSString *option = argv[1];
-
-    bool result = false;
-
-    Error err;
-    Object resultObj = nvim_get_option(vim_string_from(option), &err);
-
-    free(values);
-    [option release];
-
-    if (err.set) {
-      WLOG("Error getting the boolean option '%s': %s", option.cstr, err.msg);
-    }
-
-    if (resultObj.type == kObjectTypeBoolean) {
-      result = resultObj.data.boolean;
-    } else {
-      WLOG("Error got no boolean value, but %d, for option '%s': %s", resultObj.type, option.cstr, err.msg);
-    }
-
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@(result)];
-    NSData *responseData = data_with_response_id_prefix(responseId, data);
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSyncResult data:responseData];
-  }
-}
-
-void server_get_bool_option(NSUInteger responseId, NSString *option) {
-  queue(^{
-    NSUInteger *values = malloc(sizeof(NSUInteger));
-    values[0] = responseId;
-
-    // free, release in neovim_get_bool_option
-    loop_schedule(&main_loop, event_create(1, neovim_get_bool_option, 2, values, [option retain]));
-  });
-}
-
 void server_quit() {
   DLOG("NeoVimServer exiting...");
   exit(0);
@@ -963,5 +923,29 @@ void neovim_set_bool_option(void **argv) {
     [optionName release];
 
     return nil;
+  });
+}
+
+void neovim_get_bool_option(void **argv) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
+    NSString *option = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    bool result = false;
+
+    Error err;
+    Object resultObj = nvim_get_option(vim_string_from(option), &err);
+
+    if (err.set) {
+      WLOG("Error getting the boolean option '%s': %s", option.cstr, err.msg);
+    }
+
+    if (resultObj.type == kObjectTypeBoolean) {
+      result = resultObj.data.boolean;
+    } else {
+      WLOG("Error got no boolean value, but %d, for option '%s': %s", resultObj.type, option.cstr, err.msg);
+    }
+
+    [option release];
+
+    return [NSKeyedArchiver archivedDataWithRootObject:@(result)];
   });
 }

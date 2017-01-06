@@ -91,6 +91,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       
       case NeoVimAgentMsgIdGetBuffers: return data_sync(data, outputCondition, neovim_buffers);
 
+      case NeoVimAgentMsgIdGetBoolOption: return data_sync(data, outputCondition, neovim_get_bool_option);
+
       case NeoVimAgentMsgIdSetBoolOption: return data_sync(data, outputCondition, neovim_set_bool_option);
 
       default: break;
@@ -290,15 +292,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       }];
 
       return [NSKeyedArchiver archivedDataWithRootObject:result];
-    }
-
-    case NeoVimAgentMsgIdGetBoolOption: {
-      NSUInteger responseId = response_id_from_data(data);
-      NSString *optionName = [[NSString alloc] initWithData:data_without_response_id(data)
-                                                  encoding:NSUTF8StringEncoding];
-
-      server_get_bool_option(responseId, optionName);
-      return nil;
     }
 
     default:
