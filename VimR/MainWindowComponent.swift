@@ -309,7 +309,10 @@ class MainWindowComponent: WindowComponent,
           self.neoVimView.select(buffer: buffer)
 
         case let PreviewComponent.Action.reverseSearch(to: position):
-          self.neoVimView.exec(command: "cal cursor(\(position.row), \(position.column))")
+          self.neoVimView.vimExCommand("norm \(position.row)G\(position.column)|")
+          // The above command does not refresh the cursor...
+          self.neoVimView.vimInput("<ESC>")
+
           return
 
         case let PreviewComponent.Action.scroll(to: position):
@@ -334,6 +337,7 @@ class MainWindowComponent: WindowComponent,
 
   override func subscription(source: Observable<Any>) -> Disposable {
     return source
+      .do(onNext: { any in NSLog("\(any)") })
       .filter { $0 is PrefData }
       .map { ($0 as! PrefData).appearance }
       .filter { [unowned self] appearanceData in

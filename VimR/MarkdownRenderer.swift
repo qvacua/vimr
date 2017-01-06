@@ -116,6 +116,14 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
   fileprivate var isReverseSearchAutomatically = false
   fileprivate var isRefreshOnWrite = true
 
+  fileprivate let automaticForwardMenuItem = NSMenuItem(title: "Automatic Forward Search",
+                                                        action: nil,
+                                                        keyEquivalent: "")
+  fileprivate let automaticReverseMenuItem = NSMenuItem(title: "Automatic Reverse Search",
+                                                        action: nil,
+                                                        keyEquivalent: "")
+  fileprivate let refreshOnWriteMenuItem = NSMenuItem(title: "Refresh on Write", action: nil, keyEquivalent: "")
+
   fileprivate let webview: WKWebView
 
   fileprivate var currentPreviewPosition = Position(row: 0, column: 0)
@@ -170,23 +178,24 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     let refreshMenuItem = NSMenuItem(title: "Refresh Now", action: nil, keyEquivalent: "")
     let forwardSearchMenuItem = NSMenuItem(title: "Forward Search", action: nil, keyEquivalent: "")
     let reverseSearchMenuItem = NSMenuItem(title: "Reverse Search", action: nil, keyEquivalent: "")
-    let automaticForwardMenuItem = NSMenuItem(title: "Automatic Forward Search", action: nil, keyEquivalent: "")
-    let automaticReverseMenuItem = NSMenuItem(title: "Automatic Reverse Search", action: nil, keyEquivalent: "")
-    let refreshOnWriteMenuItem = NSMenuItem(title: "Refresh on Write", action: nil, keyEquivalent: "")
 
-    automaticForwardMenuItem.boolState = self.isForwardSearchAutomatically
-    automaticReverseMenuItem.boolState = self.isReverseSearchAutomatically
-    refreshOnWriteMenuItem.boolState = self.isRefreshOnWrite
+    let automaticForward = self.automaticForwardMenuItem
+    let automaticReverse = self.automaticReverseMenuItem
+    let refreshOnWrite = self.refreshOnWriteMenuItem
+
+    automaticForward.boolState = self.isForwardSearchAutomatically
+    automaticReverse.boolState = self.isReverseSearchAutomatically
+    refreshOnWrite.boolState = self.isRefreshOnWrite
 
     self.menuItems = [
       refreshMenuItem,
       forwardSearchMenuItem,
       reverseSearchMenuItem,
       NSMenuItem.separator(),
-      automaticForwardMenuItem,
-      automaticReverseMenuItem,
+      automaticForward,
+      automaticReverse,
       NSMenuItem.separator(),
-      refreshOnWriteMenuItem,
+      refreshOnWrite,
     ]
 
     super.init()
@@ -199,12 +208,12 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     forwardSearchMenuItem.action = #selector(MarkdownRenderer.forwardSearchAction)
     reverseSearchMenuItem.target = self
     reverseSearchMenuItem.action = #selector(MarkdownRenderer.reverseSearchAction)
-    automaticForwardMenuItem.target = self
-    automaticForwardMenuItem.action = #selector(MarkdownRenderer.automaticForwardSearchAction)
-    automaticReverseMenuItem.target = self
-    automaticReverseMenuItem.action = #selector(MarkdownRenderer.automaticReverseSearchAction)
-    refreshOnWriteMenuItem.target = self
-    refreshOnWriteMenuItem.action = #selector(MarkdownRenderer.refreshOnWriteAction)
+    automaticForward.target = self
+    automaticForward.action = #selector(MarkdownRenderer.automaticForwardSearchAction)
+    automaticReverse.target = self
+    automaticReverse.action = #selector(MarkdownRenderer.automaticReverseSearchAction)
+    refreshOnWrite.target = self
+    refreshOnWrite.action = #selector(MarkdownRenderer.refreshOnWriteAction)
 
     self.flow.set(subscription: self.subscription)
     self.scrollFlow.set(subscription: self.scrollSubscription)

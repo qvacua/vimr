@@ -208,10 +208,8 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
 
   @IBAction public func debug1(_ sender: AnyObject?) {
     NSLog("DEBUG 1 - Start")
-    Swift.print("!!!!!!!!!!!!!!!!! \(self.agent.boolOption("paste"))")
-    self.agent.setBoolOption("paste", to: true)
-    self.agent.vimInput(self.vimPlainString("foo\nbar"))
-    self.agent.setBoolOption("paste", to: false)
+    self.vimExCommand("norm 10G5|")
+    self.vimInput("<ESC>")
     NSLog("DEBUG 1 - End")
   }
 
@@ -340,6 +338,14 @@ extension NeoVimView {
     return self.agent.vimCommandOutput(command) ?? ""
   }
 
+  public func vimExCommand(_ command: String) {
+    self.agent.vimCommand(command)
+  }
+
+  public func vimInput(_ input: String) {
+    self.agent.vimInput(input)
+  }
+
   /**
    Does the following
    - `Mode.Normal`: `:command<CR>`
@@ -348,7 +354,7 @@ extension NeoVimView {
    We don't use NeoVimAgent.vimCommand because if we do for example "e /some/file" and its swap file already exists,
    then NeoVimServer spins and become unresponsive.
    */
-  public func exec(command cmd: String) {
+   public func exec(command cmd: String) {
     switch self.mode {
     case .Normal:
       self.agent.vimInput(":\(cmd)<CR>")
