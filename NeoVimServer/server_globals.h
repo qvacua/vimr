@@ -10,8 +10,8 @@
 
 extern NeoVimServer *_neovim_server;
 
-extern void server_start_neovim();
-extern void server_quit();
+extern void start_neovim();
+extern void quit_neovim();
 
 extern void neovim_select_window(void **argv);
 extern void neovim_tabs(void **argv);

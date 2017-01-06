@@ -75,6 +75,7 @@ static NSString *_backspace = nil;
 
 static dispatch_queue_t _queue;
 
+#pragma mark Helper functions
 static inline int screen_cursor_row() {
   return curwin->w_winrow + curwin->w_wrow;
 }
@@ -93,6 +94,60 @@ static inline void queue(void (^block)()) {
 
 static inline String vim_string_from(NSString *str) {
   return (String) { .data = (char *) str.cstr, .size = str.clength };
+}
+
+static bool has_dirty_docs() {
+  FOR_ALL_BUFFERS(buffer) {
+    if (buffer->b_p_bl == 0) {
+      continue;
+    }
+
+    if (bufIsChanged(buffer)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+static void send_dirty_status() {
+  bool new_dirty_status = has_dirty_docs();
+  DLOG("dirty status: %d vs. %d", _dirty, new_dirty_status);
+  if (_dirty == new_dirty_status) {
+    return;
+  }
+
+  _dirty = new_dirty_status;
+  DLOG("sending dirty status: %d", _dirty);
+  NSData *data = [[NSData alloc] initWithBytes:&_dirty length:sizeof(bool)];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdDirtyStatusChanged data:data];
+  [data release];
+}
+
+static void insert_marked_text(NSString *markedText) {
+  _marked_text = [markedText retain]; // release when the final text is input in -vimInput
+
+  nvim_input(vim_string_from(markedText));
+}
+
+static void delete_marked_text() {
+  NSUInteger length = [_marked_text lengthOfBytesUsingEncoding:NSUTF32StringEncoding] / 4;
+
+  [_marked_text release];
+  _marked_text = nil;
+
+  for (int i = 0; i < length; i++) {
+    nvim_input(vim_string_from(_backspace));
+  }
+}
+
+static void run_neovim(void *arg __unused) {
+  char *argv[1];
+  argv[0] = "nvim";
+
+  int returnCode = nvim_main(1, argv);
+
+  NSLog(@"neovim's main returned with code: %d\n", returnCode);
 }
 
 static void set_ui_size(UIBridgeData *bridge, int width, int height) {
@@ -139,7 +194,6 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
 }
 
 #pragma mark NeoVim's UI callbacks
-
 static void server_ui_resize(UI *ui __unused, int width, int height) {
   queue(^{
     int values[] = { width, height };
@@ -405,62 +459,8 @@ static void server_ui_stop(UI *ui __unused) {
   });
 }
 
-#pragma mark Helper functions
-static bool has_dirty_docs() {
-  FOR_ALL_BUFFERS(buffer) {
-    if (buffer->b_p_bl == 0) {
-      continue;
-    }
-
-    if (bufIsChanged(buffer)) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-static void send_dirty_status() {
-  bool new_dirty_status = has_dirty_docs();
-  DLOG("dirty status: %d vs. %d", _dirty, new_dirty_status);
-  if (_dirty == new_dirty_status) {
-    return;
-  }
-
-  _dirty = new_dirty_status;
-  DLOG("sending dirty status: %d", _dirty);
-  NSData *data = [[NSData alloc] initWithBytes:&_dirty length:sizeof(bool)];
-  [_neovim_server sendMessageWithId:NeoVimServerMsgIdDirtyStatusChanged data:data];
-  [data release];
-}
-
-static void insert_marked_text(NSString *markedText) {
-  _marked_text = [markedText retain]; // release when the final text is input in -vimInput
-
-  nvim_input(vim_string_from(markedText));
-}
-
-static void delete_marked_text() {
-  NSUInteger length = [_marked_text lengthOfBytesUsingEncoding:NSUTF32StringEncoding] / 4;
-
-  [_marked_text release];
-  _marked_text = nil;
-
-  for (int i = 0; i < length; i++) {
-    nvim_input(vim_string_from(_backspace));
-  }
-}
-
-static void run_neovim(void *arg __unused) {
-  char *argv[1];
-  argv[0] = "nvim";
-
-  int returnCode = nvim_main(1, argv);
-
-  NSLog(@"neovim's main returned with code: %d\n", returnCode);
-}
-
 #pragma mark Public
+// called by neovim
 
 void custom_ui_start(void) {
   UI *ui = xcalloc(1, sizeof(UI));
@@ -525,7 +525,8 @@ void custom_ui_autocmds_groups(
   }
 }
 
-void server_start_neovim() {
+#pragma mark Other help functions
+void start_neovim() {
   _queue = dispatch_queue_create("com.qvacua.vimr.neovim-server.queue", DISPATCH_QUEUE_SERIAL);
 
   // set $VIMRUNTIME to ${RESOURCE_PATH_OF_XPC_BUNDLE}/runtime
@@ -561,6 +562,46 @@ void server_start_neovim() {
   [data release];
 }
 
+void quit_neovim() {
+  DLOG("NeoVimServer exiting...");
+  exit(0);
+}
+
+#pragma mark Functions for neovim's main loop
+// already in an autorelease pool and in neovim's main loop
+
+typedef NSData *(^work_block)(NSData *);
+
+static void work_and_write_data_sync(void **argv, work_block block) {
+  NSCondition *outputCondition = argv[1];
+  [outputCondition lock];
+
+  NSData *data = argv[0];
+  Wrapper *wrapper = argv[2];
+  wrapper.data = block(data);
+  wrapper.dataReady = YES;
+  [data release]; // retained in local_server_callback
+
+  [outputCondition signal];
+  [outputCondition unlock];
+}
+
+static NSString *escaped_filename(NSString *filename) {
+  const char *file_system_rep = filename.fileSystemRepresentation;
+
+  char_u *escaped_filename = vim_strsave_fnameescape((char_u *) file_system_rep, 0);
+  NSString *result = [NSString stringWithCString:(const char *) escaped_filename encoding:NSUTF8StringEncoding];
+  xfree(escaped_filename);
+
+  return result;
+}
+
+static void work_async(void **argv, work_block block) {
+  NSData *data = argv[0];
+  block(data);
+  [data release]; // retained in local_server_callback
+}
+
 static NeoVimBuffer *buffer_for(buf_T *buf) {
   // To be sure...
   if (buf == NULL) {
@@ -585,85 +626,6 @@ static NeoVimBuffer *buffer_for(buf_T *buf) {
                                                       current:current];
 
   return [buffer autorelease];
-}
-
-NSArray *server_buffers() {
-  NSMutableArray <NeoVimBuffer *> *result = [[NSMutableArray new] autorelease];
-  FOR_ALL_BUFFERS(buf) {
-    NeoVimBuffer *buffer = buffer_for(buf);
-    if (buffer == nil) {
-      continue;
-    }
-
-    [result addObject:buffer];
-  }
-  return result;
-}
-
-NSArray *server_tabs() {
-  NSMutableArray *tabs = [[NSMutableArray new] autorelease];
-  FOR_ALL_TABS(t) {
-    NSMutableArray *windows = [NSMutableArray new];
-
-    FOR_ALL_WINDOWS_IN_TAB(win, t) {
-      NeoVimBuffer *buffer = buffer_for(win->w_buffer);
-      if (buffer == nil) {
-        continue;
-      }
-
-      NeoVimWindow *window = [[NeoVimWindow alloc] initWithHandle:win->handle buffer:buffer];
-      [windows addObject:window];
-      [window release];
-    }
-
-    NeoVimTab *tab = [[NeoVimTab alloc] initWithHandle:t->handle windows:windows];
-    [windows release];
-
-    [tabs addObject:tab];
-    [tab release];
-  }
-
-  return tabs;
-}
-
-void server_quit() {
-  DLOG("NeoVimServer exiting...");
-  exit(0);
-}
-
-typedef NSData *(^work_block)(NSData *);
-
-static void work_and_write_data_sync(void **argv, work_block block) {
-  NSCondition *outputCondition = argv[1];
-  [outputCondition lock];
-
-  NSData *data = argv[0];
-  Wrapper *wrapper = argv[2];
-  wrapper.data = block(data);
-  wrapper.dataReady = YES;
-  [data release]; // retained in local_server_callback
-
-  [outputCondition signal];
-  [outputCondition unlock];
-}
-
-#pragma mark Functions for neovim's main loop
-// already in an autorelease pool and in neovim's main loop
-
-static NSString *escaped_filename(NSString *filename) {
-  const char *file_system_rep = filename.fileSystemRepresentation;
-
-  char_u *escaped_filename = vim_strsave_fnameescape((char_u *) file_system_rep, 0);
-  NSString *result = [NSString stringWithCString:(const char *) escaped_filename encoding:NSUTF8StringEncoding];
-  xfree(escaped_filename);
-
-  return result;
-}
-
-static void work_async(void **argv, work_block block) {
-  NSData *data = argv[0];
-  block(data);
-  [data release]; // retained in local_server_callback
 }
 
 void neovim_select_window(void **argv) {
@@ -715,7 +677,7 @@ void neovim_tabs(void **argv) {
       [tab release];
     }
 
-    WLOG("tabs: %s", tabs.description.cstr);
+    DLOG("tabs: %s", tabs.description.cstr);
     return [NSKeyedArchiver archivedDataWithRootObject:tabs];
   });
 }
@@ -732,7 +694,7 @@ void neovim_buffers(void **argv) {
       [buffers addObject:buffer];
     }
 
-    WLOG("buffers: %s", buffers.description.cstr);
+    DLOG("buffers: %s", buffers.description.cstr);
     return [NSKeyedArchiver archivedDataWithRootObject:buffers];
   });
 }

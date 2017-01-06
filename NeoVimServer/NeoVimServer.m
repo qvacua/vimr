@@ -9,13 +9,13 @@
 #import "CocoaCategories.h"
 #import "Wrapper.h"
 
+// FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
+// them.
 #define FileInfo CarbonFileInfo
 #define Boolean CarbonBoolean
 
 #import <nvim/vim.h>
-#import <nvim/api/vim.h>
 #import <nvim/main.h>
-#import <nvim/ui.h>
 
 
 // When #define'd you can execute the NeoVimServer binary and neovim will be started:
@@ -40,7 +40,7 @@ data_to_array(NSInteger)
 @interface NeoVimServer ()
 
 - (NSCondition *)outputCondition;
-- (NSData *)handleMessageWithId:(SInt32)msgid data:(NSData *)data;
+- (void)handleQuitMsg;
 
 @end
 
@@ -76,8 +76,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     switch (msgid) {
 
       case NeoVimAgentMsgIdAgentReady:
-        server_start_neovim();
-        return nil;
+        start_neovim();
+        return NULL;
+
+      case NeoVimAgentMsgIdQuit: [neoVimServer handleQuitMsg];
 
       case NeoVimAgentMsgIdCommandOutput: return data_sync(data, outputCondition, neovim_vim_command_output);
 
@@ -105,17 +107,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
       case NeoVimAgentMsgIdDelete: return null_data_async(data, neovim_delete);
 
-      default: break;
+      default: return NULL;
 
     }
-
-    NSData *responseData = [neoVimServer handleMessageWithId:msgid data:(__bridge NSData *) data];
-
-    if (responseData == nil) {
-      return NULL;
-    }
-
-    return CFDataCreateCopy(kCFAllocatorDefault, (__bridge CFDataRef) responseData);
   }
 }
 
@@ -240,20 +234,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (void)quit {
-  server_quit();
+  quit_neovim();
 }
 
-- (NSData *)handleMessageWithId:(SInt32)msgid data:(NSData *)data {
-  switch (msgid) {
-
-    case NeoVimAgentMsgIdQuit:
-      // exit() after returning the response such that the agent can get the response and so does not log a warning.
-      [self performSelector:@selector(quit) onThread:_localServerThread withObject:nil waitUntilDone:NO];
-      return nil;
-
-    default:
-      return nil;
-  }
+- (void)handleQuitMsg {
+  // exit() after returning the response such that the agent can get the response and so does not log a warning.
+  [self performSelector:@selector(quit) onThread:_localServerThread withObject:nil waitUntilDone:NO];
 }
 
 @end
