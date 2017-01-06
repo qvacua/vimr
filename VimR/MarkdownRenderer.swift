@@ -331,7 +331,14 @@ extension MarkdownRenderer {
   }
 
   func forwardSearchAction(_: Any?) {
-    NSLog("\(#function) for \(self.neoVimInfoProvider?.currentLine()) x \(self.neoVimInfoProvider?.currentColumn())")
+    guard let row = self.neoVimInfoProvider?.currentLine(),
+          let column = self.neoVimInfoProvider?.currentColumn()
+      else {
+      return
+    }
+
+//    NSLog("\(#function) for \(row) x \(column)")
+    self.webview.evaluateJavaScript("scrollToPosition(\(row), \(column));")
   }
 
   func reverseSearchAction(_: Any?) {
