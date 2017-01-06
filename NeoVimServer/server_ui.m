@@ -434,41 +434,6 @@ static NSData *data_with_response_id_prefix(NSUInteger responseId, NSData *data)
   return result;
 }
 
-static void neovim_command_output(void **argv) {
-  @autoreleasepool {
-    NSUInteger *values = (NSUInteger *) argv[0];
-    NSUInteger responseId = values[0];
-    NSString *input = (NSString *) argv[1];
-
-    Error err;
-    // We don't know why nvim_command_output does not work when the optimization level is set to -Os.
-    // If set to -O0, nvim_command_output works fine... -_-
-    // String commandOutput = nvim_command_output((String) {
-    //     .data = (char *) input.cstr,
-    //     .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
-    // }, &err);
-    do_cmdline_cmd("redir => v:command_output");
-    nvim_command(vim_string_from(input), &err);
-    do_cmdline_cmd("redir END");
-
-    char_u *output = get_vim_var_str(VV_COMMAND_OUTPUT);
-
-    // FIXME: handle err.set == true
-    NSData *resultData = nil;
-    if (output != NULL) {
-      NSString *result = [[NSString alloc] initWithCString:(const char *) output encoding:NSUTF8StringEncoding];
-      resultData = [NSKeyedArchiver archivedDataWithRootObject:result];
-      [result release];
-    }
-
-    NSData *data = data_with_response_id_prefix(responseId, resultData);
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSyncResult data:data];
-
-    free(values); // malloc'ed in loop_schedule(&main_loop, ...) (in _queue) somewhere
-    [input release]; // retained in loop_schedule(&main_loop, ...) (in _queue) somewhere
-  }
-}
-
 static void neovim_input(void **argv) {
   @autoreleasepool {
     NSString *input = (NSString *) argv[0];
@@ -659,18 +624,6 @@ void server_resize(int width, int height) {
 void server_vim_command(NSString *input) {
   queue(^{
     loop_schedule(&main_loop, event_create(1, neovim_command, 1, [input retain])); // release in neovim_command
-  });
-}
-
-void server_vim_command_output(NSUInteger responseId, NSString *input) {
-  queue(^{
-    // We could use (NSInteger *) responseId, but that would be almost unreadable and would rely on the fact that
-    // (coincidentally) the pointers and NSUInteger are both 64bit wide.
-    NSUInteger *values = malloc(sizeof(NSUInteger));
-    values[0] = responseId;
-
-    // free release in neovim_command
-    loop_schedule(&main_loop, event_create(1, neovim_command_output, 2, values, [input retain]));
   });
 }
 
@@ -988,13 +941,11 @@ void neovim_buffers(void **argv) {
 
 void neovim_vim_command_output(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {
-    return nil;
-
-/*    NSUInteger *values = (NSUInteger *) argv[0];
-    NSUInteger responseId = values[0];
-    NSString *input = (NSString *) argv[1];
+    NSString *input = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
     Error err;
+    err.set = false;
+
     // We don't know why nvim_command_output does not work when the optimization level is set to -Os.
     // If set to -O0, nvim_command_output works fine... -_-
     // String commandOutput = nvim_command_output((String) {
@@ -1008,17 +959,22 @@ void neovim_vim_command_output(void **argv) {
     char_u *output = get_vim_var_str(VV_COMMAND_OUTPUT);
 
     // FIXME: handle err.set == true
-    NSData *resultData = nil;
-    if (output != NULL) {
-      NSString *result = [[NSString alloc] initWithCString:(const char *) output encoding:NSUTF8StringEncoding];
-      resultData = [NSKeyedArchiver archivedDataWithRootObject:result];
-      [result release];
+    NSString *result;
+    if (output == NULL) {
+      WLOG("vim command output is null");
+      result = [[NSString alloc] initWithString:@""];
+    } else if (err.set == true) {
+      WLOG("vim command output ERROR was set to true");
+      result = [[NSString alloc] initWithString:@""];
+    } else {
+      result = [[NSString alloc] initWithCString:(const char *) output encoding:NSUTF8StringEncoding];
     }
 
-    NSData *data = data_with_response_id_prefix(responseId, resultData);
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSyncResult data:data];
+    NSData *resultData = [NSKeyedArchiver archivedDataWithRootObject:result];
 
-    free(values); // malloc'ed in loop_schedule(&main_loop, ...) (in _queue) somewhere
-    [input release]; // retained in loop_schedule(&main_loop, ...) (in _queue) somewhere*/
+    [result release];
+    [input release];
+
+    return resultData;
   });
 }

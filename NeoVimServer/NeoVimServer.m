@@ -83,6 +83,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
     switch (msgid) {
 
+      case NeoVimAgentMsgIdCommandOutput: return data_sync(data, outputCondition, neovim_vim_command_output);
+
       case NeoVimAgentMsgIdSelectWindow: return null_data_async(data, neovim_select_window);
 
       case NeoVimAgentMsgIdGetTabs: return data_sync(data, outputCondition, neovim_tabs);
@@ -238,14 +240,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
       server_vim_command(string);
 
-      return nil;
-    }
-
-    case NeoVimAgentMsgIdCommandOutput: {
-      NSUInteger responseId = response_id_from_data(data);
-      NSString *command = [[NSString alloc] initWithData:data_without_response_id(data) encoding:NSUTF8StringEncoding];
-
-      server_vim_command_output(responseId, command);
       return nil;
     }
 
