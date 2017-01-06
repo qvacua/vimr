@@ -406,23 +406,6 @@ static void server_ui_stop(UI *ui __unused) {
 }
 
 #pragma mark Helper functions
-
-static void refresh_ui(void **argv __unused) {
-}
-
-static void neovim_command(void **argv) {
-  @autoreleasepool {
-    NSString *input = (NSString *) argv[0];
-
-    Error err;
-    nvim_command(vim_string_from(input), &err);
-
-    // FIXME: handle err.set == true
-
-    [input release]; // retained in loop_schedule(&main_loop, ...) (in _queue) somewhere
-  }
-}
-
 static void neovim_input(void **argv) {
   @autoreleasepool {
     NSString *input = (NSString *) argv[0];
@@ -614,12 +597,6 @@ void server_delete(NSInteger count) {
     for (int i = 0; i < count; i++) {
       loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_backspace retain])); // release in neovim_input
     }
-  });
-}
-
-void server_vim_command(NSString *input) {
-  queue(^{
-    loop_schedule(&main_loop, event_create(1, neovim_command, 1, [input retain])); // release in neovim_command
   });
 }
 
@@ -962,6 +939,21 @@ void neovim_resize(void **argv) {
 
     set_ui_size(_server_ui_data->bridge, width, height);
     ui_refresh();
+
+    return nil;
+  });
+}
+
+void neovim_vim_command(void **argv) {
+  work_async(argv, ^NSData *(NSData *data) {
+    NSString *input = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+
+    Error err;
+    nvim_command(vim_string_from(input), &err);
+
+    // FIXME: handle err.set == true
+
+    [input release];
 
     return nil;
   });
