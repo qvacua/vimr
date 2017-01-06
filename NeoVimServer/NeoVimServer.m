@@ -35,19 +35,7 @@ static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
   return ( type *) data.bytes;                                            \
 }
 
-data_to_array(int)
 data_to_array(NSInteger)
-
-static inline NSUInteger response_id_from_data(NSData *data) {
-  NSUInteger *values = (NSUInteger *) data.bytes;
-  return values[0];
-}
-
-static inline NSData *data_without_response_id(NSData *data) {
-  NSUInteger *values = (NSUInteger *) data.bytes;
-  NSUInteger length = data.length - sizeof(NSUInteger);
-  return length == 0 ? NSData.new : [NSData dataWithBytes:(values + 1) length:length];
-}
 
 @interface NeoVimServer ()
 
@@ -98,6 +86,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       case NeoVimAgentMsgIdGetEscapeFileNames: return data_sync(data, outputCondition, neovim_escaped_filenames);
 
       case NeoVimAgentMsgIdGetDirtyDocs: return data_sync(data, outputCondition, neovim_has_dirty_docs);
+
+      case NeoVimAgentMsgIdResize: return null_data_async(data, neovim_resize);
 
       default: break;
 
@@ -268,12 +258,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     case NeoVimAgentMsgIdDelete: {
       NSInteger *values = data_to_NSInteger_array(data, 1);
       server_delete(values[0]);
-      return nil;
-    }
-
-    case NeoVimAgentMsgIdResize: {
-      int *values = data_to_int_array(data, 2);
-      server_resize(values[0], values[1]);
       return nil;
     }
 

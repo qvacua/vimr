@@ -408,7 +408,6 @@ static void server_ui_stop(UI *ui __unused) {
 #pragma mark Helper functions
 
 static void refresh_ui(void **argv __unused) {
-  ui_refresh();
 }
 
 static void neovim_command(void **argv) {
@@ -422,16 +421,6 @@ static void neovim_command(void **argv) {
 
     [input release]; // retained in loop_schedule(&main_loop, ...) (in _queue) somewhere
   }
-}
-
-static NSData *data_with_response_id_prefix(NSUInteger responseId, NSData *data) {
-  NSMutableData *result = [NSMutableData dataWithBytes:&responseId length:sizeof(NSUInteger)];
-
-  if (data != nil) {
-    [result appendData:data];
-  }
-
-  return result;
 }
 
 static void neovim_input(void **argv) {
@@ -625,13 +614,6 @@ void server_delete(NSInteger count) {
     for (int i = 0; i < count; i++) {
       loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_backspace retain])); // release in neovim_input
     }
-  });
-}
-
-void server_resize(int width, int height) {
-  queue(^{
-    set_ui_size(_server_ui_data->bridge, width, height);
-    loop_schedule(&main_loop, event_create(1, refresh_ui, 0));
   });
 }
 
@@ -969,5 +951,18 @@ void neovim_escaped_filenames(void **argv) {
 void neovim_has_dirty_docs(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     return [NSKeyedArchiver archivedDataWithRootObject:@(has_dirty_docs())];
+  });
+}
+
+void neovim_resize(void **argv) {
+  work_async(argv, ^NSData *(NSData *data) {
+    int *values = data.bytes;
+    int width = values[0];
+    int height = values[1];
+
+    set_ui_size(_server_ui_data->bridge, width, height);
+    ui_refresh();
+
+    return nil;
   });
 }
