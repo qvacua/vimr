@@ -73,8 +73,6 @@ static bool _dirty = false;
 
 static NSString *_backspace = nil;
 
-static dispatch_queue_t _queue;
-
 #pragma mark Helper functions
 static inline int screen_cursor_row() {
   return curwin->w_winrow + curwin->w_wrow;
@@ -82,14 +80,6 @@ static inline int screen_cursor_row() {
 
 static inline int screen_cursor_column() {
   return curwin->w_wincol + curwin->w_wcol;
-}
-
-static inline void queue(void (^block)()) {
-  dispatch_sync(_queue, ^{
-    @autoreleasepool {
-      block();
-    }
-  });
 }
 
 static inline String vim_string_from(NSString *str) {
@@ -194,236 +184,197 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
 }
 
 #pragma mark NeoVim's UI callbacks
+
 static void server_ui_resize(UI *ui __unused, int width, int height) {
-  queue(^{
-    int values[] = { width, height };
-    NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdResize data:data];
-    [data release];
-  });
+  int values[] = {width, height};
+  NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdResize data:data];
+  [data release];
 }
 
 static void server_ui_clear(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdClear];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdClear];
 }
 
 static void server_ui_eol_clear(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdEolClear];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdEolClear];
 }
 
 static void server_ui_cursor_goto(UI *ui __unused, int row, int col) {
-  queue(^{
-    _put_row = row;
-    _put_column = col;
+  _put_row = row;
+  _put_column = col;
 
-    int values[] = { row, col, screen_cursor_row(), screen_cursor_column() };
-    DLOG("%d:%d - %d:%d", values[0], values[1], values[2], values[3]);
-    NSData *data = [[NSData alloc] initWithBytes:values length:(4 * sizeof(int))];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetPosition data:data];
-    [data release];
-  });
+  int values[] = {row, col, screen_cursor_row(), screen_cursor_column()};
+  DLOG("%d:%d - %d:%d", values[0], values[1], values[2], values[3]);
+  NSData *data = [[NSData alloc] initWithBytes:values length:(4 * sizeof(int))];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetPosition data:data];
+  [data release];
 }
 
 static void server_ui_update_menu(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetMenu];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetMenu];
 }
 
 static void server_ui_busy_start(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdBusyStart];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdBusyStart];
 }
 
 static void server_ui_busy_stop(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdBusyStop];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdBusyStop];
 }
 
 static void server_ui_mouse_on(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdMouseOn];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdMouseOn];
 }
 
 static void server_ui_mouse_off(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdMouseOff];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdMouseOff];
 }
 
 static void server_ui_mode_change(UI *ui __unused, int mode) {
-  queue(^{
-    int value = mode;
-    NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdModeChange data:data];
-    [data release];
-  });
+  int value = mode;
+  NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdModeChange data:data];
+  [data release];
 }
 
 static void server_ui_set_scroll_region(UI *ui __unused, int top, int bot, int left, int right) {
-  queue(^{
-    int values[] = { top, bot, left, right };
-    NSData *data = [[NSData alloc] initWithBytes:values length:(4 * sizeof(int))];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetScrollRegion data:data];
-    [data release];
-  });
+  int values[] = {top, bot, left, right};
+  NSData *data = [[NSData alloc] initWithBytes:values length:(4 * sizeof(int))];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetScrollRegion data:data];
+  [data release];
 }
 
 static void server_ui_scroll(UI *ui __unused, int count) {
-  queue(^{
-    int value = count;
-    NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdScroll data:data];
-    [data release];
-  });
+  int value = count;
+  NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdScroll data:data];
+  [data release];
 }
 
 static void server_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
-  queue(^{
-    FontTrait trait = FontTraitNone;
-    if (attrs.italic) {
-      trait |= FontTraitItalic;
-    }
-    if (attrs.bold) {
-      trait |= FontTraitBold;
-    }
-    if (attrs.underline) {
-      trait |= FontTraitUnderline;
-    }
-    if (attrs.undercurl) {
-      trait |= FontTraitUndercurl;
-    }
-    CellAttributes cellAttrs;
-    cellAttrs.fontTrait = trait;
+  FontTrait trait = FontTraitNone;
+  if (attrs.italic) {
+    trait |= FontTraitItalic;
+  }
+  if (attrs.bold) {
+    trait |= FontTraitBold;
+  }
+  if (attrs.underline) {
+    trait |= FontTraitUnderline;
+  }
+  if (attrs.undercurl) {
+    trait |= FontTraitUndercurl;
+  }
+  CellAttributes cellAttrs;
+  cellAttrs.fontTrait = trait;
 
-    unsigned int fg = attrs.foreground == -1 ? _default_foreground : pun_type(unsigned int, attrs.foreground);
-    unsigned int bg = attrs.background == -1 ? _default_background : pun_type(unsigned int, attrs.background);
+  unsigned int fg = attrs.foreground == -1 ? _default_foreground : pun_type(unsigned int, attrs.foreground);
+  unsigned int bg = attrs.background == -1 ? _default_background : pun_type(unsigned int, attrs.background);
 
-    cellAttrs.foreground = attrs.reverse ? bg : fg;
-    cellAttrs.background = attrs.reverse ? fg : bg;
-    cellAttrs.special = attrs.special == -1 ? _default_special : pun_type(unsigned int, attrs.special);
+  cellAttrs.foreground = attrs.reverse ? bg : fg;
+  cellAttrs.background = attrs.reverse ? fg : bg;
+  cellAttrs.special = attrs.special == -1 ? _default_special : pun_type(unsigned int, attrs.special);
 
-    NSData *data = [[NSData alloc] initWithBytes:&cellAttrs length:sizeof(CellAttributes)];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetHighlightAttributes data:data];
-    [data release];
-  });
+  NSData *data = [[NSData alloc] initWithBytes:&cellAttrs length:sizeof(CellAttributes)];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetHighlightAttributes data:data];
+  [data release];
 }
 
 static void server_ui_put(UI *ui __unused, uint8_t *str, size_t len) {
-  queue(^{
-    NSString *string = [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
-    int cursor[] = { screen_cursor_row(), screen_cursor_column() };
+  NSString *string = [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
+  int cursor[] = {screen_cursor_row(), screen_cursor_column()};
 
-    NSMutableData *data = [[NSMutableData alloc]
-        initWithCapacity:2 * sizeof(int) + [string lengthOfBytesUsingEncoding:NSUTF8StringEncoding]];
-    [data appendBytes:cursor length:2 * sizeof(int)];
-    [data appendData:[string dataUsingEncoding:NSUTF8StringEncoding]];
+  NSMutableData *data = [[NSMutableData alloc]
+    initWithCapacity:2 * sizeof(int) + [string lengthOfBytesUsingEncoding:NSUTF8StringEncoding]];
+  [data appendBytes:cursor length:2 * sizeof(int)];
+  [data appendData:[string dataUsingEncoding:NSUTF8StringEncoding]];
 
-    if (_marked_text != nil && _marked_row == _put_row && _marked_column == _put_column) {
-      DLOG("putting marked text: '%s'", string.cstr);
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdPutMarked data:data];
-    } else if (_marked_text != nil && len == 0 && _marked_row == _put_row && _marked_column == _put_column - 1) {
-      DLOG("putting marked text cuz zero");
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdPutMarked data:data];
-    } else {
-      DLOG("putting non-marked text: '%s'", string.cstr);
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdPut data:data];
-    }
+  if (_marked_text != nil && _marked_row == _put_row && _marked_column == _put_column) {
+    DLOG("putting marked text: '%s'", string.cstr);
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdPutMarked data:data];
+  } else if (_marked_text != nil && len == 0 && _marked_row == _put_row && _marked_column == _put_column - 1) {
+    DLOG("putting marked text cuz zero");
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdPutMarked data:data];
+  } else {
+    DLOG("putting non-marked text: '%s'", string.cstr);
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdPut data:data];
+  }
 
-    _put_column += 1;
+  _put_column += 1;
 
-    [data release];
-    [string release];
-  });
+  [data release];
+  [string release];
 }
 
 static void server_ui_bell(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdBell];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdBell];
 }
 
 static void server_ui_visual_bell(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdVisualBell];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdVisualBell];
 }
 
 static void server_ui_flush(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdFlush];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdFlush];
 }
 
 static void server_ui_update_fg(UI *ui __unused, int fg) {
-  queue(^{
-    int value[1];
+  int value[1];
 
-    if (fg == -1) {
-      value[0] = _default_foreground;
-      NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetForeground data:data];
-      [data release];
-
-      return;
-    }
-
-    _default_foreground = pun_type(unsigned int, fg);
-
-    value[0] = fg;
+  if (fg == -1) {
+    value[0] = _default_foreground;
     NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetForeground data:data];
     [data release];
-  });
+
+    return;
+  }
+
+  _default_foreground = pun_type(unsigned int, fg);
+
+  value[0] = fg;
+  NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetForeground data:data];
+  [data release];
 }
 
 static void server_ui_update_bg(UI *ui __unused, int bg) {
-  queue(^{
-    int value[1];
+  int value[1];
 
-    if (bg == -1) {
-      value[0] = _default_background;
-      NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetBackground data:data];
-      [data release];
-
-      return;
-    }
-
-    _default_background = pun_type(unsigned int, bg);
-    value[0] = bg;
+  if (bg == -1) {
+    value[0] = _default_background;
     NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetBackground data:data];
     [data release];
-  });
+
+    return;
+  }
+
+  _default_background = pun_type(unsigned int, bg);
+  value[0] = bg;
+  NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetBackground data:data];
+  [data release];
 }
 
 static void server_ui_update_sp(UI *ui __unused, int sp) {
-  queue(^{
-    int value[2];
+  int value[2];
 
-    if (sp == -1) {
-      value[0] = _default_special;
-      NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetSpecial data:data];
-      [data release];
-
-      return;
-    }
-
-    _default_special = pun_type(unsigned int, sp);
-    value[0] = sp;
+  if (sp == -1) {
+    value[0] = _default_special;
     NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetSpecial data:data];
     [data release];
-  });
+
+    return;
+  }
+
+  _default_special = pun_type(unsigned int, sp);
+  value[0] = sp;
+  NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetSpecial data:data];
+  [data release];
 }
 
 static void server_ui_set_title(UI *ui __unused, char *title) {
@@ -431,11 +382,9 @@ static void server_ui_set_title(UI *ui __unused, char *title) {
     return;
   }
 
-  queue(^{
-    NSString *string = [[NSString alloc] initWithCString:title encoding:NSUTF8StringEncoding];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetTitle data:[string dataUsingEncoding:NSUTF8StringEncoding]];
-    [string release];
-  });
+  NSString *string = [[NSString alloc] initWithCString:title encoding:NSUTF8StringEncoding];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetTitle data:[string dataUsingEncoding:NSUTF8StringEncoding]];
+  [string release];
 }
 
 static void server_ui_set_icon(UI *ui __unused, char *icon) {
@@ -443,20 +392,16 @@ static void server_ui_set_icon(UI *ui __unused, char *icon) {
     return;
   }
 
-  queue(^{
-    NSString *string = [[NSString alloc] initWithCString:icon encoding:NSUTF8StringEncoding];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetIcon data:[string dataUsingEncoding:NSUTF8StringEncoding]];
-    [string release];
-  });
+  NSString *string = [[NSString alloc] initWithCString:icon encoding:NSUTF8StringEncoding];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetIcon data:[string dataUsingEncoding:NSUTF8StringEncoding]];
+  [string release];
 }
 
 static void server_ui_stop(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdStop];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdStop];
 
-    ServerUiData *data = (ServerUiData *) ui->data;
-    data->stop = true;
-  });
+  ServerUiData *data = (ServerUiData *) ui->data;
+  data->stop = true;
 }
 
 #pragma mark Public
@@ -527,8 +472,6 @@ void custom_ui_autocmds_groups(
 
 #pragma mark Other help functions
 void start_neovim() {
-  _queue = dispatch_queue_create("com.qvacua.vimr.neovim-server.queue", DISPATCH_QUEUE_SERIAL);
-
   // set $VIMRUNTIME to ${RESOURCE_PATH_OF_XPC_BUNDLE}/runtime
   NSString *bundlePath = [NSBundle bundleForClass:[NeoVimServer class]].bundlePath;
   NSString *resourcesPath = [bundlePath.stringByDeletingLastPathComponent stringByAppendingPathComponent:@"Resources"];
