@@ -685,15 +685,6 @@ bool server_has_dirty_docs() {
   return false;
 }
 
-NSString *server_escaped_filename(NSString *filename) {
-  const char *file_system_rep = filename.fileSystemRepresentation;
-
-  char_u *escaped_filename = vim_strsave_fnameescape((char_u *) file_system_rep, 0);
-  NSString *result = [NSString stringWithCString:(const char *) escaped_filename encoding:NSUTF8StringEncoding];
-  xfree(escaped_filename);
-
-  return result;
-}
 
 static NeoVimBuffer *buffer_for(buf_T *buf) {
   // To be sure...
@@ -947,5 +938,28 @@ void neovim_get_bool_option(void **argv) {
     [option release];
 
     return [NSKeyedArchiver archivedDataWithRootObject:@(result)];
+  });
+}
+
+static NSString *escaped_filename(NSString *filename) {
+  const char *file_system_rep = filename.fileSystemRepresentation;
+
+  char_u *escaped_filename = vim_strsave_fnameescape((char_u *) file_system_rep, 0);
+  NSString *result = [NSString stringWithCString:(const char *) escaped_filename encoding:NSUTF8StringEncoding];
+  xfree(escaped_filename);
+
+  return result;
+}
+
+void neovim_escaped_filenames(void **argv) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
+    NSArray *fileNames = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    NSMutableArray *result = [NSMutableArray new];
+
+    [fileNames enumerateObjectsUsingBlock:^(NSString* fileName, NSUInteger idx, BOOL *stop) {
+      [result addObject:escaped_filename(fileName)];
+    }];
+
+    return [NSKeyedArchiver archivedDataWithRootObject:result];
   });
 }
