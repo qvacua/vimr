@@ -99,6 +99,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
       case NeoVimAgentMsgIdCommand: return null_data_async(data, neovim_vim_command);
 
+      case NeoVimAgentMsgIdInput: return null_data_async(data, neovim_vim_input);
+
+      case NeoVimAgentMsgIdInputMarked: return null_data_async(data, neovim_vim_input_marked_text);
+
+      case NeoVimAgentMsgIdDelete: return null_data_async(data, neovim_delete);
+
       default: break;
 
     }
@@ -239,26 +245,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
 - (NSData *)handleMessageWithId:(SInt32)msgid data:(NSData *)data {
   switch (msgid) {
-
-    case NeoVimAgentMsgIdInput: {
-      NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-      server_vim_input(string);
-
-      return nil;
-    }
-
-    case NeoVimAgentMsgIdInputMarked: {
-      NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-      server_vim_input_marked_text(string);
-
-      return nil;
-    }
-
-    case NeoVimAgentMsgIdDelete: {
-      NSInteger *values = data_to_NSInteger_array(data, 1);
-      server_delete(values[0]);
-      return nil;
-    }
 
     case NeoVimAgentMsgIdQuit:
       // exit() after returning the response such that the agent can get the response and so does not log a warning.
