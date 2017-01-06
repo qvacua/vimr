@@ -8,6 +8,6 @@
 
 @interface Wrapper : NSObject
 
-@property (nonatomic, nonnull) NSData *data;
+@property (strong, nonatomic, nonnull) NSData *data;
 
 @end

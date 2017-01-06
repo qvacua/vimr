@@ -953,7 +953,35 @@ void neovim_tabs(void **argv) {
     [tab release];
   }
 
+  WLOG("tabs: %s", tabs.description.cstr);
+
   wrapper.data = [NSKeyedArchiver archivedDataWithRootObject:tabs];
+  [outputCondition signal];
+  [outputCondition unlock];
+}
+
+void neovim_buffers(void **argv) {
+  NSData *data = argv[0];
+  [data release]; // retained in local_server_callback
+
+  NSCondition *outputCondition = argv[1];
+  [outputCondition lock];
+
+  Wrapper *wrapper = argv[2];
+
+  NSMutableArray *buffers = [[NSMutableArray new] autorelease];
+  FOR_ALL_BUFFERS(buf) {
+    NeoVimBuffer *buffer = buffer_for(buf);
+    if (buffer == nil) {
+      continue;
+    }
+
+    [buffers addObject:buffer];
+  }
+
+  WLOG("buffers: %s", buffers.description.cstr);
+
+  wrapper.data = [NSKeyedArchiver archivedDataWithRootObject:buffers];
   [outputCondition signal];
   [outputCondition unlock];
 }

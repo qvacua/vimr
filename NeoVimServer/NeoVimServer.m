@@ -56,6 +56,11 @@ static inline NSData *data_without_response_id(NSData *data) {
 
 @end
 
+static CFDataRef nullDataNotWaiting(CFDataRef data, argv_callback cb) {
+  loop_schedule(&main_loop, event_create(1, cb, 1, data));
+  return NULL;
+}
+
 static CFDataRef dataByWaiting(NSCondition *condition, CFDataRef data, argv_callback cb) {
   Wrapper *wrapper = [[Wrapper alloc] init];
   NSDate *deadline = [[NSDate date] dateByAddingTimeInterval:qTimeout];
@@ -73,17 +78,21 @@ static CFDataRef dataByWaiting(NSCondition *condition, CFDataRef data, argv_call
 static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFDataRef data, void *info) {
   @autoreleasepool {
     NeoVimServer *neoVimServer = (__bridge NeoVimServer *) info;
+    NSCondition *outputCondition = neoVimServer.outputCondition;
     CFRetain(data); // release in the loop callbacks!
 
     switch (msgid) {
 
       case NeoVimAgentMsgIdSelectWindow: {
-        loop_schedule(&main_loop, event_create(1, neovim_select_window, 1, data));
-        return NULL;
+        return nullDataNotWaiting(data, neovim_select_window);
       }
 
       case NeoVimAgentMsgIdGetTabs: {
-        return dataByWaiting(neoVimServer.outputCondition, data, neovim_tabs);
+        return dataByWaiting(outputCondition, data, neovim_tabs);
+      }
+      
+      case NeoVimAgentMsgIdGetBuffers: {
+        return dataByWaiting(outputCondition, data, neovim_buffers);
       }
 
       default:
@@ -292,10 +301,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       }];
 
       return [NSKeyedArchiver archivedDataWithRootObject:result];
-    }
-
-    case NeoVimAgentMsgIdGetBuffers: {
-      return [NSKeyedArchiver archivedDataWithRootObject:server_buffers()];
     }
 
     case NeoVimAgentMsgIdGetBoolOption: {

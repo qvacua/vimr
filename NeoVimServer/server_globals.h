@@ -27,3 +27,4 @@ extern void server_quit();
 
 extern void neovim_select_window(void **argv);
 extern void neovim_tabs(void **argv);
+extern void neovim_buffers(void **argv);
