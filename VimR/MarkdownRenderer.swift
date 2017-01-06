@@ -222,7 +222,12 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
       .throttle(1, latest: true, scheduler: self.scheduler)
       .filter { $0 is MainWindowComponent.ScrollAction }
       .subscribe(onNext: { [unowned self] action in
-        NSLog("neovim scrolled to  \(self.neoVimInfoProvider?.currentLine()) x \(self.neoVimInfoProvider?.currentColumn())")
+//        NSLog("neovim scrolled to  \(self.neoVimInfoProvider?.currentLine()) x \(self.neoVimInfoProvider?.currentColumn())")
+        guard self.isForwardSearchAutomatically else {
+          return
+        }
+
+        self.forwardSearchAction(nil)
       })
   }
 
@@ -286,11 +291,15 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
       .filter { $0 is WebviewMessageHandler.Action }
       .map { $0 as! WebviewMessageHandler.Action }
       .subscribe(onNext: { [weak self] action in
+        guard self?.isReverseSearchAutomatically == true else {
+          return
+        }
+
         switch action {
         case let .scroll(lineBegin, columnBegin, _, _):
           self?.currentPreviewPosition = Position(row: lineBegin, column: columnBegin)
-          self?.scrollFlow.publish(
-            event: PreviewRendererAction.scroll(to: Position(row: lineBegin, column: columnBegin))
+          self?.flow.publish(
+            event: PreviewRendererAction.reverseSearch(to: Position(row: lineBegin, column: columnBegin))
           )
         }
       })
