@@ -355,9 +355,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (NSData *)sendMessageWithId:(NeoVimAgentMsgId)msgid data:(NSData *)data expectsReply:(bool)expectsReply {
-  if (!NSThread.isMainThread) {
-    NSLog(@"THREAD: %@\t msgid: %d\t data: %@", NSThread.currentThread, msgid, data);
-  }
   if (_neoVimIsQuitting == 1 && msgid != NeoVimAgentMsgIdQuit) {
     // This happens often, e.g. when exiting full screen by closing all buffers. We try to resize the window after
     // the message port has been closed. This is a quick-and-dirty fix.
