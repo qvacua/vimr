@@ -1449,10 +1449,6 @@ extension NeoVimView {
         self.bufferListChanged()
       }
 
-//      if event == .TEXTCHANGED || event == .TEXTCHANGEDI || event == .BUFWRITEPOST || event == .BUFLEAVE {
-//        self.setDirtyStatus(self.agent.hasDirtyDocs())
-//      }
-
       if event == .CWDCHANGED {
         self.cwdChanged()
       }
