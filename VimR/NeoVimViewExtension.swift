@@ -15,13 +15,11 @@ protocol NeoVimInfoProvider: class {
 extension NeoVimView: NeoVimInfoProvider {
 
   func currentLine() -> Int {
-    let output = self.vimOutput(of: "echo line('.')")
-    return Int(output) ?? 0
+    return self.currentPosition.row
   }
 
 
   func currentColumn() -> Int {
-    let output = self.vimOutput(of: "echo virtcol('.')")
-    return Int(output) ?? 0
+    return self.currentPosition.column
   }
 }

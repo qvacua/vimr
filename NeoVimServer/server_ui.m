@@ -190,9 +190,15 @@ static void server_ui_cursor_goto(UI *ui __unused, int row, int col) {
   _put_row = row;
   _put_column = col;
 
-  int values[] = {row, col, screen_cursor_row(), screen_cursor_column()};
-  DLOG("%d:%d - %d:%d", values[0], values[1], values[2], values[3]);
-  NSData *data = [[NSData alloc] initWithBytes:values length:(4 * sizeof(int))];
+  int values[] = {
+    row, col,
+    screen_cursor_row(), screen_cursor_column(),
+    (int) curwin->w_cursor.lnum, curwin->w_cursor.col + 1
+  };
+
+  DLOG("%d:%d - %d:%d - %d:%d", values[0], values[1], values[2], values[3], values[4], values[5]);
+
+  NSData *data = [[NSData alloc] initWithBytes:values length:(6 * sizeof(int))];
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetPosition data:data];
   [data release];
 }
@@ -639,15 +645,17 @@ void neovim_vim_command_output(void **argv) {
 
     // We don't know why nvim_command_output does not work when the optimization level is set to -Os.
     // If set to -O0, nvim_command_output works fine... -_-
-    // String commandOutput = nvim_command_output((String) {
-    //     .data = (char *) input.cstr,
-    //     .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
-    // }, &err);
-    do_cmdline_cmd("redir => v:command_output");
-    nvim_command(vim_string_from(input), &err);
-    do_cmdline_cmd("redir END");
+     String commandOutput = nvim_command_output((String) {
+         .data = (char *) input.cstr,
+         .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
+     }, &err);
+//    do_cmdline_cmd("redir => v:command_output");
+//    nvim_command(vim_string_from(input), &err);
+//    do_cmdline_cmd("redir END");
+//
+//    char_u *output = get_vim_var_str(VV_COMMAND_OUTPUT);
 
-    char_u *output = get_vim_var_str(VV_COMMAND_OUTPUT);
+    char_u *output = (char_u *) commandOutput.data;
 
     // FIXME: handle err.set == true
     NSString *result = nil;

@@ -107,6 +107,8 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
     return true
   }
 
+  public fileprivate(set) var currentPosition = Position(row: 1, column: 1)
+
   fileprivate static let emojis: [UInt32] = [
     0x1F600...0x1F64F,
     0x1F910...0x1F918,
@@ -1252,8 +1254,9 @@ extension NeoVimView {
     }
   }
 
-  public func gotoPosition(_ position: Position, screenCursor: Position) {
+  public func gotoPosition(_ position: Position, screenCursor: Position, currentPosition: Position) {
     DispatchUtils.gui {
+      self.currentPosition = currentPosition
 //      NSLog("\(#function): \(position), \(screenCursor)")
 
       let curScreenCursor = self.grid.screenCursor
@@ -1316,10 +1319,9 @@ extension NeoVimView {
     DispatchUtils.gui {
       self.grid.scroll(Int(count))
       self.setNeedsDisplay(region: self.grid.region)
-      DispatchUtils.gui {
-        // We do this in the next tick since we could (and do) call the agent again in the delegate method.
-        self.delegate?.scroll()
-      }
+      // Do not send msgs to agent -> neovim in the delegate method. It causes spinning when you're opening a file with
+      // existing swap file.
+      self.delegate?.scroll()
     }
   }
 
