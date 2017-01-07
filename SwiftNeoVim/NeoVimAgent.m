@@ -109,7 +109,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (void)debug {
+#ifdef DEBUG
   [self sendMessageWithId:NeoVimAgentDebug1 data:nil expectsReply:NO];
+#endif
 }
 
 // We cannot use -dealloc for this since -dealloc is not called until the run loop in the thread stops.
