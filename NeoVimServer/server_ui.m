@@ -29,9 +29,7 @@
 #import <nvim/ex_getln.h>
 #import <nvim/fileio.h>
 #import <nvim/undo.h>
-#import <nvim/eval.h>
 #import <nvim/api/window.h>
-#import <nvim/screen.h>
 
 
 #define pun_type(t, x) (*((t *) (&(x))))
@@ -70,6 +68,8 @@ static int _marked_delta = 0;
 
 static int _put_row = -1;
 static int _put_column = -1;
+
+static bool _dirty = false;
 
 static NSString *_backspace = nil;
 
@@ -167,6 +167,20 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
 
   xfree(_server_ui_data);
   xfree(ui);
+}
+
+static void send_dirty_status() {
+  bool new_dirty_status = has_dirty_docs();
+  DLOG("dirty status: %d vs. %d", _dirty, new_dirty_status);
+  if (_dirty == new_dirty_status) {
+    return;
+  }
+
+  _dirty = new_dirty_status;
+  DLOG("sending dirty status: %d", _dirty);
+  NSData *data = [[NSData alloc] initWithBytes:&_dirty length:sizeof(bool)];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdDirtyStatusChanged data:data];
+  [data release];
 }
 
 #pragma mark NeoVim's UI callbacks
@@ -442,6 +456,14 @@ void custom_ui_autocmds_groups(
 
   @autoreleasepool {
     DLOG("got event %d for file %s in group %d.", event, fname, group);
+
+    if (event == EVENT_TEXTCHANGED
+      || event == EVENT_TEXTCHANGEDI
+      || event == EVENT_BUFWRITEPOST
+      || event == EVENT_BUFLEAVE)
+    {
+      send_dirty_status();
+    }
 
     NSUInteger eventCode = event;
 

@@ -1435,6 +1435,12 @@ extension NeoVimView {
     }
   }
 
+  public func setDirtyStatus(_ dirty: Bool) {
+    DispatchUtils.gui {
+      self.delegate?.set(dirtyStatus: dirty)
+    }
+  }
+
   public func autoCommandEvent(_ event: NeoVimAutoCommandEvent, bufferHandle: Int) {
     DispatchUtils.gui {
 //    NSLog("\(event.rawValue) with buffer \(bufferHandle)")
@@ -1443,9 +1449,9 @@ extension NeoVimView {
         self.bufferListChanged()
       }
 
-      if event == .TEXTCHANGED || event == .TEXTCHANGEDI || event == .BUFWRITEPOST || event == .BUFLEAVE {
-        self.setDirtyStatus(self.agent.hasDirtyDocs())
-      }
+//      if event == .TEXTCHANGED || event == .TEXTCHANGEDI || event == .BUFWRITEPOST || event == .BUFLEAVE {
+//        self.setDirtyStatus(self.agent.hasDirtyDocs())
+//      }
 
       if event == .CWDCHANGED {
         self.cwdChanged()
@@ -1481,12 +1487,6 @@ extension NeoVimView {
       }
 
       self.delegate?.currentBufferChanged(currentBuffer)
-    }
-  }
-
-  fileprivate func setDirtyStatus(_ dirty: Bool) {
-    DispatchUtils.gui {
-      self.delegate?.set(dirtyStatus: dirty)
     }
   }
 
