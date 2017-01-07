@@ -208,14 +208,7 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
 
   @IBAction public func debug1(_ sender: AnyObject?) {
     NSLog("DEBUG 1 - Start")
-//    self.vimExCommand("norm 10G5|")
-//    self.vimExCommand("redraw")
-//    self.vimExCommand("cal cursor(10,5)")
-//    self.exec(command: "cal cursor(10,5)")
-//    self.vimOutput(of: "cal nvim_win_set_cursor(1000, [10, 5])")
-//    self.vimExCommand("redraw")
-//    self.vimInput("<ESC>")
-    self.agent.debug()
+    self.agent.cursorGo(toRow: 10, column: 5)
     NSLog("DEBUG 1 - End")
   }
 
@@ -348,8 +341,8 @@ extension NeoVimView {
     self.agent.vimCommand(command)
   }
 
-  public func vimInput(_ input: String) {
-    self.agent.vimInput(input)
+  public func cursorGo(to position: Position) {
+    self.agent.cursorGo(toRow: Int32(position.row), column: Int32(position.column))
   }
 
   /**
@@ -359,8 +352,8 @@ extension NeoVimView {
 
    We don't use NeoVimAgent.vimCommand because if we do for example "e /some/file" and its swap file already exists,
    then NeoVimServer spins and become unresponsive.
-   */
-   public func exec(command cmd: String) {
+  */
+  fileprivate func exec(command cmd: String) {
     switch self.mode {
     case .Normal:
       self.agent.vimInput(":\(cmd)<CR>")

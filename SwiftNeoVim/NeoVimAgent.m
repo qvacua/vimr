@@ -236,6 +236,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [self sendMessageWithId:NeoVimAgentMsgIdResize data:data expectsReply:NO];
 }
 
+- (void)cursorGoToRow:(int)row column:(int)column {
+  int values[] = { row, column };
+  NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
+  [self sendMessageWithId:NeoVimAgentMsgIdCursorGoto data:data expectsReply:NO];
+}
+
 - (bool)hasDirtyDocs {
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetDirtyDocs data:nil expectsReply:YES];
   if (response == nil) {

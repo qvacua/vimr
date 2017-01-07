@@ -858,17 +858,21 @@ void neovim_delete(void **argv) {
 
 void neovim_cursor_goto(void **argv) {
   work_async(argv, ^NSData *(NSData *data) {
+    const int *values = data.bytes;
+
     Array position = ARRAY_DICT_INIT;
+
     position.size = 2;
-    position.items = xmalloc(sizeof(Object) * 2);
+    position.capacity = 2;
+    position.items = xmalloc(2 * sizeof(Object));
 
     Object row = OBJECT_INIT;
     row.type = kObjectTypeInteger;
-    row.data.integer = 10;
+    row.data.integer = values[0];
 
     Object col = OBJECT_INIT;
     col.type = kObjectTypeInteger;
-    col.data.integer = 5;
+    col.data.integer = values[1];
 
     position.items[0] = row;
     position.items[1] = col;
@@ -876,7 +880,8 @@ void neovim_cursor_goto(void **argv) {
     Error err = ERROR_INIT;
 
     nvim_win_set_cursor(nvim_get_current_win(), position, &err);
-//    nvim_input((String){.data="<ESC>", .size=5});
+    // The above call seems to be not enough...
+    nvim_input((String) { .data="<ESC>", .size=5 });
 
     xfree(position.items);
 
