@@ -1323,7 +1323,10 @@ extension NeoVimView {
     DispatchUtils.gui {
       self.grid.scroll(Int(count))
       self.setNeedsDisplay(region: self.grid.region)
-      self.delegate?.scroll()
+      DispatchUtils.gui {
+        // We do this in the next tick since we could (and do) call the agent again in the delegate method.
+        self.delegate?.scroll()
+      }
     }
   }
 
@@ -1438,22 +1441,24 @@ extension NeoVimView {
   }
 
   public func autoCommandEvent(_ event: NeoVimAutoCommandEvent, bufferHandle: Int) {
+    DispatchUtils.gui {
 //    NSLog("\(event.rawValue) with buffer \(bufferHandle)")
 
-    if event == .BUFWINENTER || event == .BUFWINLEAVE {
-      self.bufferListChanged()
-    }
+      if event == .BUFWINENTER || event == .BUFWINLEAVE {
+        self.bufferListChanged()
+      }
 
-    if event == .TEXTCHANGED || event == .TEXTCHANGEDI || event == .BUFWRITEPOST || event == .BUFLEAVE {
-      self.setDirtyStatus(self.agent.hasDirtyDocs())
-    }
+      if event == .TEXTCHANGED || event == .TEXTCHANGEDI || event == .BUFWRITEPOST || event == .BUFLEAVE {
+        self.setDirtyStatus(self.agent.hasDirtyDocs())
+      }
 
-    if event == .CWDCHANGED {
-      self.cwdChanged()
-    }
+      if event == .CWDCHANGED {
+        self.cwdChanged()
+      }
 
-    if event == .BUFREADPOST || event == .BUFWRITEPOST {
-      self.currentBufferChanged(bufferHandle)
+      if event == .BUFREADPOST || event == .BUFWRITEPOST {
+        self.currentBufferChanged(bufferHandle)
+      }
     }
   }
 
