@@ -198,6 +198,11 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
           }
 
           self.currentRenderer = self.renderers.first { $0.canRender(fileExtension: url.pathExtension) }
+          if self.currentRenderer == nil {
+            self.currentView = self.webview
+            self.webview.loadHTMLString(self.previewService.emptyHtml(), baseURL: self.baseUrl)
+          }
+
           self.flow.publish(event: PreviewComponent.Action.automaticRefresh(url: url))
 
         case let .toggleTool(tool):

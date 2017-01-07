@@ -126,6 +126,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
   fileprivate let webview: WKWebView
 
+  fileprivate var currentUrl: URL?
   fileprivate var currentPreviewPosition = Position(row: 0, column: 0)
   weak fileprivate var neoVimInfoProvider: NeoVimInfoProvider?
 
@@ -231,7 +232,6 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
       .throttle(0.5, latest: true, scheduler: self.scheduler)
       .filter { $0 is MainWindowComponent.ScrollAction }
       .subscribe(onNext: { [unowned self] action in
-//        NSLog("neovim scrolled to  \(self.neoVimInfoProvider?.currentLine()) x \(self.neoVimInfoProvider?.currentColumn())")
         guard self.isForwardSearchAutomatically else {
           return
         }
@@ -243,7 +243,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
   fileprivate func subscription(source: Observable<Any>) -> Disposable {
     return source
       .observeOn(self.scheduler)
-      .mapOmittingNil { action in
+      .mapOmittingNil { (action) -> URL? in
 
         switch action {
         case let PreviewComponent.Action.automaticRefresh(url):
@@ -258,8 +258,15 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
         }
       }
-      .filter { self.canRender(fileExtension: $0.pathExtension) }
-      .subscribe(onNext: { [unowned self] url in self.render(from: url) })
+      .subscribe(onNext: { [unowned self] url in
+        self.currentUrl = url
+
+        guard self.canRender(fileExtension: url.pathExtension) else {
+          return
+        }
+
+        self.render(from: url)
+      })
   }
 
   fileprivate func initCustomUiElements() {
@@ -347,7 +354,15 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 extension MarkdownRenderer {
 
   func refreshNowAction(_: Any?) {
-    NSLog("\(#function)")
+    guard let url = self.currentUrl else {
+      return
+    }
+
+    guard self.canRender(fileExtension: url.pathExtension) else {
+      return
+    }
+
+    self.render(from: url)
   }
 
   func forwardSearchAction(_: Any?) {
@@ -357,12 +372,10 @@ extension MarkdownRenderer {
       return
     }
 
-//    NSLog("\(#function) for \(row) x \(column)")
     self.webview.evaluateJavaScript("scrollToPosition(\(row), \(column));")
   }
 
   func reverseSearchAction(_: Any?) {
-//    NSLog("\(#function) for \(self.currentPreviewPosition)")
     self.flow.publish(event: PreviewRendererAction.reverseSearch(to: self.currentPreviewPosition))
   }
 
