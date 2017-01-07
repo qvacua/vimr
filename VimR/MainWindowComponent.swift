@@ -337,7 +337,6 @@ class MainWindowComponent: WindowComponent,
 
   override func subscription(source: Observable<Any>) -> Disposable {
     return source
-      .do(onNext: { any in NSLog("\(any)") })
       .filter { $0 is PrefData }
       .map { ($0 as! PrefData).appearance }
       .filter { [unowned self] appearanceData in
