@@ -13,6 +13,7 @@
 #import "NeoVimWindow.h"
 #import "NeoVimTab.h"
 #import "CocoaCategories.h"
+#import "DataWrapper.h"
 
 // FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
 // them.
@@ -70,8 +71,7 @@ static int _put_column = -1;
 
 static NSString *_backspace = nil;
 
-static dispatch_queue_t _queue;
-
+#pragma mark Helper functions
 static inline int screen_cursor_row() {
   return curwin->w_winrow + curwin->w_wrow;
 }
@@ -80,16 +80,48 @@ static inline int screen_cursor_column() {
   return curwin->w_wincol + curwin->w_wcol;
 }
 
-static inline void queue(void (^block)()) {
-  dispatch_sync(_queue, ^{
-    @autoreleasepool {
-      block();
-    }
-  });
-}
-
 static inline String vim_string_from(NSString *str) {
   return (String) { .data = (char *) str.cstr, .size = str.clength };
+}
+
+static bool has_dirty_docs() {
+  FOR_ALL_BUFFERS(buffer) {
+    if (buffer->b_p_bl == 0) {
+      continue;
+    }
+
+    if (bufIsChanged(buffer)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+static void insert_marked_text(NSString *markedText) {
+  _marked_text = [markedText retain]; // release when the final text is input in -vimInput
+
+  nvim_input(vim_string_from(markedText));
+}
+
+static void delete_marked_text() {
+  NSUInteger length = [_marked_text lengthOfBytesUsingEncoding:NSUTF32StringEncoding] / 4;
+
+  [_marked_text release];
+  _marked_text = nil;
+
+  for (int i = 0; i < length; i++) {
+    nvim_input(vim_string_from(_backspace));
+  }
+}
+
+static void run_neovim(void *arg __unused) {
+  char *argv[1];
+  argv[0] = "nvim";
+
+  int returnCode = nvim_main(1, argv);
+
+  NSLog(@"neovim's main returned with code: %d\n", returnCode);
 }
 
 static void set_ui_size(UIBridgeData *bridge, int width, int height) {
@@ -138,235 +170,195 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
 #pragma mark NeoVim's UI callbacks
 
 static void server_ui_resize(UI *ui __unused, int width, int height) {
-  queue(^{
-    int values[] = { width, height };
-    NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdResize data:data];
-    [data release];
-  });
+  int values[] = {width, height};
+  NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdResize data:data];
+  [data release];
 }
 
 static void server_ui_clear(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdClear];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdClear];
 }
 
 static void server_ui_eol_clear(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdEolClear];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdEolClear];
 }
 
 static void server_ui_cursor_goto(UI *ui __unused, int row, int col) {
-  queue(^{
-    _put_row = row;
-    _put_column = col;
+  _put_row = row;
+  _put_column = col;
 
-    int values[] = { row, col, screen_cursor_row(), screen_cursor_column() };
-    DLOG("%d:%d - %d:%d", values[0], values[1], values[2], values[3]);
-    NSData *data = [[NSData alloc] initWithBytes:values length:(4 * sizeof(int))];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetPosition data:data];
-    [data release];
-  });
+  int values[] = {row, col, screen_cursor_row(), screen_cursor_column()};
+  DLOG("%d:%d - %d:%d", values[0], values[1], values[2], values[3]);
+  NSData *data = [[NSData alloc] initWithBytes:values length:(4 * sizeof(int))];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetPosition data:data];
+  [data release];
 }
 
 static void server_ui_update_menu(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetMenu];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetMenu];
 }
 
 static void server_ui_busy_start(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdBusyStart];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdBusyStart];
 }
 
 static void server_ui_busy_stop(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdBusyStop];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdBusyStop];
 }
 
 static void server_ui_mouse_on(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdMouseOn];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdMouseOn];
 }
 
 static void server_ui_mouse_off(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdMouseOff];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdMouseOff];
 }
 
 static void server_ui_mode_change(UI *ui __unused, int mode) {
-  queue(^{
-    int value = mode;
-    NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdModeChange data:data];
-    [data release];
-  });
+  int value = mode;
+  NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdModeChange data:data];
+  [data release];
 }
 
 static void server_ui_set_scroll_region(UI *ui __unused, int top, int bot, int left, int right) {
-  queue(^{
-    int values[] = { top, bot, left, right };
-    NSData *data = [[NSData alloc] initWithBytes:values length:(4 * sizeof(int))];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetScrollRegion data:data];
-    [data release];
-  });
+  int values[] = {top, bot, left, right};
+  NSData *data = [[NSData alloc] initWithBytes:values length:(4 * sizeof(int))];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetScrollRegion data:data];
+  [data release];
 }
 
 static void server_ui_scroll(UI *ui __unused, int count) {
-  queue(^{
-    int value = count;
-    NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdScroll data:data];
-    [data release];
-  });
+  int value = count;
+  NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdScroll data:data];
+  [data release];
 }
 
 static void server_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
-  queue(^{
-    FontTrait trait = FontTraitNone;
-    if (attrs.italic) {
-      trait |= FontTraitItalic;
-    }
-    if (attrs.bold) {
-      trait |= FontTraitBold;
-    }
-    if (attrs.underline) {
-      trait |= FontTraitUnderline;
-    }
-    if (attrs.undercurl) {
-      trait |= FontTraitUndercurl;
-    }
-    CellAttributes cellAttrs;
-    cellAttrs.fontTrait = trait;
+  FontTrait trait = FontTraitNone;
+  if (attrs.italic) {
+    trait |= FontTraitItalic;
+  }
+  if (attrs.bold) {
+    trait |= FontTraitBold;
+  }
+  if (attrs.underline) {
+    trait |= FontTraitUnderline;
+  }
+  if (attrs.undercurl) {
+    trait |= FontTraitUndercurl;
+  }
+  CellAttributes cellAttrs;
+  cellAttrs.fontTrait = trait;
 
-    unsigned int fg = attrs.foreground == -1 ? _default_foreground : pun_type(unsigned int, attrs.foreground);
-    unsigned int bg = attrs.background == -1 ? _default_background : pun_type(unsigned int, attrs.background);
+  unsigned int fg = attrs.foreground == -1 ? _default_foreground : pun_type(unsigned int, attrs.foreground);
+  unsigned int bg = attrs.background == -1 ? _default_background : pun_type(unsigned int, attrs.background);
 
-    cellAttrs.foreground = attrs.reverse ? bg : fg;
-    cellAttrs.background = attrs.reverse ? fg : bg;
-    cellAttrs.special = attrs.special == -1 ? _default_special : pun_type(unsigned int, attrs.special);
+  cellAttrs.foreground = attrs.reverse ? bg : fg;
+  cellAttrs.background = attrs.reverse ? fg : bg;
+  cellAttrs.special = attrs.special == -1 ? _default_special : pun_type(unsigned int, attrs.special);
 
-    NSData *data = [[NSData alloc] initWithBytes:&cellAttrs length:sizeof(CellAttributes)];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetHighlightAttributes data:data];
-    [data release];
-  });
+  NSData *data = [[NSData alloc] initWithBytes:&cellAttrs length:sizeof(CellAttributes)];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetHighlightAttributes data:data];
+  [data release];
 }
 
 static void server_ui_put(UI *ui __unused, uint8_t *str, size_t len) {
-  queue(^{
-    NSString *string = [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
-    int cursor[] = { screen_cursor_row(), screen_cursor_column() };
+  NSString *string = [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
+  int cursor[] = {screen_cursor_row(), screen_cursor_column()};
 
-    NSMutableData *data = [[NSMutableData alloc]
-        initWithCapacity:2 * sizeof(int) + [string lengthOfBytesUsingEncoding:NSUTF8StringEncoding]];
-    [data appendBytes:cursor length:2 * sizeof(int)];
-    [data appendData:[string dataUsingEncoding:NSUTF8StringEncoding]];
+  NSMutableData *data = [[NSMutableData alloc]
+    initWithCapacity:2 * sizeof(int) + [string lengthOfBytesUsingEncoding:NSUTF8StringEncoding]];
+  [data appendBytes:cursor length:2 * sizeof(int)];
+  [data appendData:[string dataUsingEncoding:NSUTF8StringEncoding]];
 
-    if (_marked_text != nil && _marked_row == _put_row && _marked_column == _put_column) {
-      DLOG("putting marked text: '%s'", string.cstr);
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdPutMarked data:data];
-    } else if (_marked_text != nil && len == 0 && _marked_row == _put_row && _marked_column == _put_column - 1) {
-      DLOG("putting marked text cuz zero");
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdPutMarked data:data];
-    } else {
-      DLOG("putting non-marked text: '%s'", string.cstr);
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdPut data:data];
-    }
+  if (_marked_text != nil && _marked_row == _put_row && _marked_column == _put_column) {
+    DLOG("putting marked text: '%s'", string.cstr);
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdPutMarked data:data];
+  } else if (_marked_text != nil && len == 0 && _marked_row == _put_row && _marked_column == _put_column - 1) {
+    DLOG("putting marked text cuz zero");
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdPutMarked data:data];
+  } else {
+    DLOG("putting non-marked text: '%s'", string.cstr);
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdPut data:data];
+  }
 
-    _put_column += 1;
+  _put_column += 1;
 
-    [data release];
-    [string release];
-  });
+  [data release];
+  [string release];
 }
 
 static void server_ui_bell(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdBell];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdBell];
 }
 
 static void server_ui_visual_bell(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdVisualBell];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdVisualBell];
 }
 
 static void server_ui_flush(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdFlush];
-  });
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdFlush];
 }
 
 static void server_ui_update_fg(UI *ui __unused, int fg) {
-  queue(^{
-    int value[1];
+  int value[1];
 
-    if (fg == -1) {
-      value[0] = _default_foreground;
-      NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetForeground data:data];
-      [data release];
-
-      return;
-    }
-
-    _default_foreground = pun_type(unsigned int, fg);
-
-    value[0] = fg;
+  if (fg == -1) {
+    value[0] = _default_foreground;
     NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetForeground data:data];
     [data release];
-  });
+
+    return;
+  }
+
+  _default_foreground = pun_type(unsigned int, fg);
+
+  value[0] = fg;
+  NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetForeground data:data];
+  [data release];
 }
 
 static void server_ui_update_bg(UI *ui __unused, int bg) {
-  queue(^{
-    int value[1];
+  int value[1];
 
-    if (bg == -1) {
-      value[0] = _default_background;
-      NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetBackground data:data];
-      [data release];
-
-      return;
-    }
-
-    _default_background = pun_type(unsigned int, bg);
-    value[0] = bg;
+  if (bg == -1) {
+    value[0] = _default_background;
     NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetBackground data:data];
     [data release];
-  });
+
+    return;
+  }
+
+  _default_background = pun_type(unsigned int, bg);
+  value[0] = bg;
+  NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetBackground data:data];
+  [data release];
 }
 
 static void server_ui_update_sp(UI *ui __unused, int sp) {
-  queue(^{
-    int value[2];
+  int value[2];
 
-    if (sp == -1) {
-      value[0] = _default_special;
-      NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetSpecial data:data];
-      [data release];
-
-      return;
-    }
-
-    _default_special = pun_type(unsigned int, sp);
-    value[0] = sp;
+  if (sp == -1) {
+    value[0] = _default_special;
     NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetSpecial data:data];
     [data release];
-  });
+
+    return;
+  }
+
+  _default_special = pun_type(unsigned int, sp);
+  value[0] = sp;
+  NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetSpecial data:data];
+  [data release];
 }
 
 static void server_ui_set_title(UI *ui __unused, char *title) {
@@ -374,11 +366,9 @@ static void server_ui_set_title(UI *ui __unused, char *title) {
     return;
   }
 
-  queue(^{
-    NSString *string = [[NSString alloc] initWithCString:title encoding:NSUTF8StringEncoding];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetTitle data:[string dataUsingEncoding:NSUTF8StringEncoding]];
-    [string release];
-  });
+  NSString *string = [[NSString alloc] initWithCString:title encoding:NSUTF8StringEncoding];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetTitle data:[string dataUsingEncoding:NSUTF8StringEncoding]];
+  [string release];
 }
 
 static void server_ui_set_icon(UI *ui __unused, char *icon) {
@@ -386,136 +376,20 @@ static void server_ui_set_icon(UI *ui __unused, char *icon) {
     return;
   }
 
-  queue(^{
-    NSString *string = [[NSString alloc] initWithCString:icon encoding:NSUTF8StringEncoding];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetIcon data:[string dataUsingEncoding:NSUTF8StringEncoding]];
-    [string release];
-  });
+  NSString *string = [[NSString alloc] initWithCString:icon encoding:NSUTF8StringEncoding];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetIcon data:[string dataUsingEncoding:NSUTF8StringEncoding]];
+  [string release];
 }
 
 static void server_ui_stop(UI *ui __unused) {
-  queue(^{
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdStop];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdStop];
 
-    ServerUiData *data = (ServerUiData *) ui->data;
-    data->stop = true;
-  });
-}
-
-#pragma mark Helper functions
-
-static void refresh_ui(void **argv __unused) {
-  ui_refresh();
-}
-
-static void neovim_command(void **argv) {
-  @autoreleasepool {
-    NSString *input = (NSString *) argv[0];
-
-    Error err;
-    nvim_command(vim_string_from(input), &err);
-
-    // FIXME: handle err.set == true
-
-    [input release]; // retained in loop_schedule(&main_loop, ...) (in _queue) somewhere
-  }
-}
-
-static NSData *data_with_response_id_prefix(NSUInteger responseId, NSData *data) {
-  NSMutableData *result = [NSMutableData dataWithBytes:&responseId length:sizeof(NSUInteger)];
-
-  if (data != nil) {
-    [result appendData:data];
-  }
-
-  return result;
-}
-
-static void neovim_command_output(void **argv) {
-  @autoreleasepool {
-    NSUInteger *values = (NSUInteger *) argv[0];
-    NSUInteger responseId = values[0];
-    NSString *input = (NSString *) argv[1];
-
-    Error err;
-    // We don't know why nvim_command_output does not work when the optimization level is set to -Os.
-    // If set to -O0, nvim_command_output works fine... -_-
-    // String commandOutput = nvim_command_output((String) {
-    //     .data = (char *) input.cstr,
-    //     .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
-    // }, &err);
-    do_cmdline_cmd("redir => v:command_output");
-    nvim_command(vim_string_from(input), &err);
-    do_cmdline_cmd("redir END");
-
-    char_u *output = get_vim_var_str(VV_COMMAND_OUTPUT);
-
-    // FIXME: handle err.set == true
-    NSData *resultData = nil;
-    if (output != NULL) {
-      NSString *result = [[NSString alloc] initWithCString:(const char *) output encoding:NSUTF8StringEncoding];
-      resultData = [NSKeyedArchiver archivedDataWithRootObject:result];
-      [result release];
-    }
-
-    NSData *data = data_with_response_id_prefix(responseId, resultData);
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSyncResult data:data];
-
-    free(values); // malloc'ed in loop_schedule(&main_loop, ...) (in _queue) somewhere
-    [input release]; // retained in loop_schedule(&main_loop, ...) (in _queue) somewhere
-  }
-}
-
-static void neovim_input(void **argv) {
-  @autoreleasepool {
-    NSString *input = (NSString *) argv[0];
-
-    // FIXME: check the length of the consumed bytes by neovim and if not fully consumed, call vim_input again.
-    nvim_input(vim_string_from(input));
-
-    [input release]; // retained in loop_schedule(&main_loop, ...) (in _queue) somewhere
-  }
-}
-
-static void neovim_select_window(void **argv) {
-  win_T *window = (win_T *) argv[0];
-
-  Error err;
-  nvim_set_current_win(window->handle, &err);
-  // TODO: handle error
-  WLOG("Error selecting window with handle %d: %s", window->handle, err.msg);
-
-  // nvim_set_current_win() does not seem to trigger a redraw.
-  ui_schedule_refresh();
-}
-
-static void insert_marked_text(NSString *markedText) {
-  _marked_text = [markedText retain]; // release when the final text is input in -vimInput
-
-  loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_marked_text retain])); // release in neovim_input
-}
-
-static void delete_marked_text() {
-  NSUInteger length = [_marked_text lengthOfBytesUsingEncoding:NSUTF32StringEncoding] / 4;
-
-  [_marked_text release];
-  _marked_text = nil;
-
-  for (int i = 0; i < length; i++) {
-    loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_backspace retain])); // release in neovim_input
-  }
-}
-
-static void run_neovim(void *arg __unused) {
-  char *argv[1];
-  argv[0] = "nvim";
-
-  int returnCode = nvim_main(1, argv);
-
-  NSLog(@"neovim's main returned with code: %d\n", returnCode);
+  ServerUiData *data = (ServerUiData *) ui->data;
+  data->stop = true;
 }
 
 #pragma mark Public
+// called by neovim
 
 void custom_ui_start(void) {
   UI *ui = xcalloc(1, sizeof(UI));
@@ -580,9 +454,8 @@ void custom_ui_autocmds_groups(
   }
 }
 
-void server_start_neovim() {
-  _queue = dispatch_queue_create("com.qvacua.vimr.neovim-server.queue", DISPATCH_QUEUE_SERIAL);
-
+#pragma mark Other help functions
+void start_neovim() {
   // set $VIMRUNTIME to ${RESOURCE_PATH_OF_XPC_BUNDLE}/runtime
   NSString *bundlePath = [NSBundle bundleForClass:[NeoVimServer class]].bundlePath;
   NSString *resourcesPath = [bundlePath.stringByDeletingLastPathComponent stringByAppendingPathComponent:@"Resources"];
@@ -616,118 +489,40 @@ void server_start_neovim() {
   [data release];
 }
 
-void server_delete(NSInteger count) {
-  queue(^{
-    _marked_delta = 0;
-
-    // Very ugly: When we want to have the Hanja for 하, Cocoa first finalizes 하, then sets the Hanja as marked text.
-    // The main app will call this method when this happens, thus compute how many cell we have to go backward to
-    // correctly mark the will-be-soon-inserted Hanja... See also docs/notes-on-cocoa-text-input.md
-    int emptyCounter = 0;
-    for (int i = 0; i < count; i++) {
-      _marked_delta -= 1;
-
-      // TODO: -1 because we assume that the cursor is one cell ahead, probably not always correct...
-      schar_T character = ScreenLines[_put_row * screen_Rows + _put_column - i - emptyCounter - 1];
-      if (character == 0x00 || character == ' ') {
-        // FIXME: dunno yet, why we have to also match ' '...
-        _marked_delta -= 1;
-        emptyCounter += 1;
-      }
-    }
-
-    DLOG("put cursor: %d:%d, count: %li, delta: %d", _put_row, _put_column, count, _marked_delta);
-
-    for (int i = 0; i < count; i++) {
-      loop_schedule(&main_loop, event_create(1, neovim_input, 1, [_backspace retain])); // release in neovim_input
-    }
-  });
+void quit_neovim() {
+  DLOG("NeoVimServer exiting...");
+  exit(0);
 }
 
-void server_resize(int width, int height) {
-  queue(^{
-    set_ui_size(_server_ui_data->bridge, width, height);
-    loop_schedule(&main_loop, event_create(1, refresh_ui, 0));
-  });
-}
+#pragma mark Functions for neovim's main loop
 
-void server_vim_command(NSString *input) {
-  queue(^{
-    loop_schedule(&main_loop, event_create(1, neovim_command, 1, [input retain])); // release in neovim_command
-  });
-}
+typedef NSData *(^work_block)(NSData *);
 
-void server_vim_command_output(NSUInteger responseId, NSString *input) {
-  queue(^{
-    // We could use (NSInteger *) responseId, but that would be almost unreadable and would rely on the fact that
-    // (coincidentally) the pointers and NSUInteger are both 64bit wide.
-    NSUInteger *values = malloc(sizeof(NSUInteger));
-    values[0] = responseId;
+static void work_and_write_data_sync(void **argv, work_block block) {
+  @autoreleasepool {
+    NSCondition *outputCondition = argv[1];
+    [outputCondition lock];
 
-    // free release in neovim_command
-    loop_schedule(&main_loop, event_create(1, neovim_command_output, 2, values, [input retain]));
-  });
-}
+    NSData *data = argv[0];
+    DataWrapper *wrapper = argv[2];
+    wrapper.data = block(data);
+    wrapper.dataReady = YES;
+    [data release]; // retained in local_server_callback
 
-void server_vim_input(NSString *input) {
-  queue(^{
-    if (_marked_text == nil) {
-      loop_schedule(&main_loop, event_create(1, neovim_input, 1, [input retain])); // release in neovim_input
-      return;
-    }
-
-    // Handle cases like ㅎ -> arrow key: The previously marked text is the same as the finalized text which should
-    // inserted. Neovim's drawing code is optimized such that it does not call put in this case again, thus, we have
-    // to manually unmark the cells in the main app.
-    if ([_marked_text isEqualToString:input]) {
-      DLOG("unmarking text: '%s'\t now at %d:%d", input.cstr, _put_row, _put_column);
-      const char *str = _marked_text.cstr;
-      size_t cellCount = mb_string2cells((const char_u *) str);
-      for (int i = 1; i <= cellCount; i++) {
-        DLOG("unmarking at %d:%d", _put_row, _put_column - i);
-        int values[] = { _put_row, MAX(_put_column - i, 0) };
-        NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
-        [_neovim_server sendMessageWithId:NeoVimServerMsgIdUnmark data:data];
-        [data release];
-      }
-    }
-
-    delete_marked_text();
-    loop_schedule(&main_loop, event_create(1, neovim_input, 1, [input retain])); // release in neovim_input
-  });
-}
-
-void server_vim_input_marked_text(NSString *markedText) {
-  queue(^{
-    if (_marked_text == nil) {
-      _marked_row = _put_row;
-      _marked_column = _put_column + _marked_delta;
-      DLOG("marking position: %d:%d(%d + %d)", _put_row, _marked_column, _put_column, _marked_delta);
-      _marked_delta = 0;
-    } else {
-      delete_marked_text();
-    }
-
-    DLOG("inserting marked text '%s' at %d:%d", markedText.cstr, _put_row, _put_column);
-    insert_marked_text(markedText);
-  });
-}
-
-bool server_has_dirty_docs() {
-  FOR_ALL_BUFFERS(buffer) {
-    if (buffer->b_p_bl == 0) {
-      continue;
-    }
-
-    if (bufIsChanged(buffer)) {
-      return true;
-    }
+    [outputCondition signal];
+    [outputCondition unlock];
   }
-
-  return false;
 }
 
-NSString *server_escaped_filename(NSString *filename) {
+static void work_async(void **argv, work_block block) {
+  @autoreleasepool {
+    NSData *data = argv[0];
+    block(data);
+    [data release]; // retained in local_server_callback
+  }
+}
+
+static NSString *escaped_filename(NSString *filename) {
   const char *file_system_rep = filename.fileSystemRepresentation;
 
   char_u *escaped_filename = vim_strsave_fnameescape((char_u *) file_system_rep, 0);
@@ -763,66 +558,149 @@ static NeoVimBuffer *buffer_for(buf_T *buf) {
   return [buffer autorelease];
 }
 
-NSArray *server_buffers() {
-  NSMutableArray <NeoVimBuffer *> *result = [[NSMutableArray new] autorelease];
-  FOR_ALL_BUFFERS(buf) {
-    NeoVimBuffer *buffer = buffer_for(buf);
-    if (buffer == nil) {
-      continue;
-    }
+void neovim_select_window(void **argv) {
+  work_async(argv, ^NSData *(NSData *data) {
+    int handle = ((int *) data.bytes)[0];
 
-    [result addObject:buffer];
-  }
-  return result;
+    FOR_ALL_TAB_WINDOWS(tab, win) {
+        if (win->handle == handle) {
+          Error err = ERROR_INIT;
+          nvim_set_current_win(win->handle, &err);
+
+          if (err.set) {
+            WLOG("Error selecting window with handle %d: %s", win->handle, err.msg);
+            return nil;
+          }
+
+          // nvim_set_current_win() does not seem to trigger a redraw.
+          ui_schedule_refresh();
+
+          return nil;
+        }
+      }
+
+    return nil;
+  });
 }
 
-NSArray *server_tabs() {
-  NSMutableArray *tabs = [[NSMutableArray new] autorelease];
-  FOR_ALL_TABS(t) {
-    NSMutableArray *windows = [NSMutableArray new];
+void neovim_tabs(void **argv) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
+    NSMutableArray *tabs = [[NSMutableArray new] autorelease];
+    FOR_ALL_TABS(t) {
+      NSMutableArray *windows = [NSMutableArray new];
 
-    FOR_ALL_WINDOWS_IN_TAB(win, t) {
-      NeoVimBuffer *buffer = buffer_for(win->w_buffer);
+      FOR_ALL_WINDOWS_IN_TAB(win, t) {
+        NeoVimBuffer *buffer = buffer_for(win->w_buffer);
+        if (buffer == nil) {
+          continue;
+        }
+
+        NeoVimWindow *window = [[NeoVimWindow alloc] initWithHandle:win->handle buffer:buffer];
+        [windows addObject:window];
+        [window release];
+      }
+
+      NeoVimTab *tab = [[NeoVimTab alloc] initWithHandle:t->handle windows:windows];
+      [windows release];
+
+      [tabs addObject:tab];
+      [tab release];
+    }
+
+    DLOG("tabs: %s", tabs.description.cstr);
+    return [NSKeyedArchiver archivedDataWithRootObject:tabs];
+  });
+}
+
+void neovim_buffers(void **argv) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
+    NSMutableArray *buffers = [[NSMutableArray new] autorelease];
+    FOR_ALL_BUFFERS(buf) {
+      NeoVimBuffer *buffer = buffer_for(buf);
       if (buffer == nil) {
         continue;
       }
 
-      NeoVimWindow *window = [[NeoVimWindow alloc] initWithHandle:win->handle buffer:buffer];
-      [windows addObject:window];
-      [window release];
+      [buffers addObject:buffer];
     }
 
-    NeoVimTab *tab = [[NeoVimTab alloc] initWithHandle:t->handle windows:windows];
-    [windows release];
-
-    [tabs addObject:tab];
-    [tab release];
-  }
-
-  return tabs;
+    DLOG("buffers: %s", buffers.description.cstr);
+    return [NSKeyedArchiver archivedDataWithRootObject:buffers];
+  });
 }
 
-void server_select_win(int window_handle) {
-  FOR_ALL_TAB_WINDOWS(tab, win) {
-    if (win->handle == window_handle) {
-      loop_schedule(&main_loop, event_create(1, neovim_select_window, 1, win));
+void neovim_vim_command_output(void **argv) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
+    NSString *input = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+
+    Error err = ERROR_INIT;
+
+    // We don't know why nvim_command_output does not work when the optimization level is set to -Os.
+    // If set to -O0, nvim_command_output works fine... -_-
+    // String commandOutput = nvim_command_output((String) {
+    //     .data = (char *) input.cstr,
+    //     .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
+    // }, &err);
+    do_cmdline_cmd("redir => v:command_output");
+    nvim_command(vim_string_from(input), &err);
+    do_cmdline_cmd("redir END");
+
+    char_u *output = get_vim_var_str(VV_COMMAND_OUTPUT);
+
+    // FIXME: handle err.set == true
+    NSString *result = nil;
+    if (output == NULL) {
+      WLOG("vim command output is null");
+    } else if (err.set) {
+      WLOG("vim command output for '%s' was not successful: %s", input.cstr, err.msg);
+    } else {
+      result = [[NSString alloc] initWithCString:(const char *) output encoding:NSUTF8StringEncoding];
     }
-  }
+
+    NSData *resultData = result == nil ? nil : [NSKeyedArchiver archivedDataWithRootObject:result];
+
+    [result release];
+    [input release];
+
+    return resultData;
+  });
 }
 
-static void neovim_get_bool_option(void ** argv) {
-  @autoreleasepool {
-    NSUInteger *values = (NSUInteger *) argv[0];
-    NSUInteger responseId = values[0];
-    NSString *option = argv[1];
+void neovim_set_bool_option(void **argv) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
+    bool *optionValues = (bool *) data.bytes;
+    bool optionValue = optionValues[0];
 
+    const char *string = (const char *)(optionValues + 1);
+    NSString *optionName = [[NSString alloc] initWithCString:string encoding:NSUTF8StringEncoding];
+
+    Error err = ERROR_INIT;
+
+    Object object = OBJECT_INIT;
+    object.type = kObjectTypeBoolean;
+    object.data.boolean = optionValue;
+
+    DLOG("%s to set: %d", optionName.cstr, optionValue);
+
+    nvim_set_option(vim_string_from(optionName), object, &err);
+
+    if (err.set) {
+      WLOG("Error setting the option '%s' to %d: %s", optionName.cstr, optionValue, err.msg);
+    }
+
+    [optionName release];
+
+    return nil;
+  });
+}
+
+void neovim_get_bool_option(void **argv) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
+    NSString *option = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     bool result = false;
 
-    Error err;
+    Error err = ERROR_INIT;
     Object resultObj = nvim_get_option(vim_string_from(option), &err);
-
-    free(values);
-    [option release];
 
     if (err.set) {
       WLOG("Error getting the boolean option '%s': %s", option.cstr, err.msg);
@@ -834,65 +712,142 @@ static void neovim_get_bool_option(void ** argv) {
       WLOG("Error got no boolean value, but %d, for option '%s': %s", resultObj.type, option.cstr, err.msg);
     }
 
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@(result)];
-    NSData *responseData = data_with_response_id_prefix(responseId, data);
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSyncResult data:responseData];
-  }
-}
+    [option release];
 
-void server_get_bool_option(NSUInteger responseId, NSString *option) {
-  queue(^{
-    NSUInteger *values = malloc(sizeof(NSUInteger));
-    values[0] = responseId;
-
-    // free, release in neovim_get_bool_option
-    loop_schedule(&main_loop, event_create(1, neovim_get_bool_option, 2, values, [option retain]));
+    return [NSKeyedArchiver archivedDataWithRootObject:@(result)];
   });
 }
 
-static void neovim_set_bool_option(void **argv) {
-  @autoreleasepool {
-    NSUInteger *responseIds = (NSUInteger *) argv[0];
-    NSString *option = argv[1];
-    bool *values = argv[2];
+void neovim_escaped_filenames(void **argv) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
+    NSArray *fileNames = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    NSMutableArray *result = [NSMutableArray new];
 
-    Error err;
+    [fileNames enumerateObjectsUsingBlock:^(NSString* fileName, NSUInteger idx, BOOL *stop) {
+      [result addObject:escaped_filename(fileName)];
+    }];
 
-    Object object = OBJECT_INIT;
-    object.type = kObjectTypeBoolean;
-    object.data.boolean = values[0];
+    return [NSKeyedArchiver archivedDataWithRootObject:result];
+  });
+}
 
-//    NSLog(@"%@ to set: %d", option, values[0]);
+void neovim_has_dirty_docs(void **argv) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
+    return [NSKeyedArchiver archivedDataWithRootObject:@(has_dirty_docs())];
+  });
+}
 
-    nvim_set_option(vim_string_from(option), object, &err);
+void neovim_resize(void **argv) {
+  work_async(argv, ^NSData *(NSData *data) {
+    const int *values = data.bytes;
+    int width = values[0];
+    int height = values[1];
 
-    if (err.set) {
-      WLOG("Error setting the option '%s' to %d: %s", option.cstr, values[0], err.msg);
+    set_ui_size(_server_ui_data->bridge, width, height);
+    ui_refresh();
+
+    return nil;
+  });
+}
+
+void neovim_vim_command(void **argv) {
+  work_async(argv, ^NSData *(NSData *data) {
+    NSString *input = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+
+    Error err = ERROR_INIT;
+    nvim_command(vim_string_from(input), &err);
+
+    // FIXME: handle err.set == true
+
+    [input release];
+
+    return nil;
+  });
+}
+
+void neovim_vim_input(void **argv) {
+  work_async(argv, ^NSData *(NSData *data) {
+    NSString *input = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+
+    if (_marked_text == nil) {
+      nvim_input(vim_string_from(input));
+      return nil;
     }
 
-    NSData *data = [NSData dataWithBytes:responseIds length:sizeof(NSUInteger)];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSyncResult data:data];
+    // Handle cases like ㅎ -> arrow key: The previously marked text is the same as the finalized text which should
+    // inserted. Neovim's drawing code is optimized such that it does not call put in this case again, thus, we have
+    // to manually unmark the cells in the main app.
+    if ([_marked_text isEqualToString:input]) {
+      DLOG("unmarking text: '%s'\t now at %d:%d", input.cstr, _put_row, _put_column);
+      const char *str = _marked_text.cstr;
+      size_t cellCount = mb_string2cells((const char_u *) str);
 
-    free(responseIds);
-    free(values);
-    [option release];
-  }
-}
+      for (int i = 1; i <= cellCount; i++) {
+        DLOG("unmarking at %d:%d", _put_row, _put_column - i);
+        int values[] = {_put_row, MAX(_put_column - i, 0)};
 
-void server_set_bool_option(NSUInteger responseId, NSString *option, bool value) {
-  queue(^{
-    NSUInteger *responseIds = malloc(sizeof(NSUInteger));
-    responseIds[0] = responseId;
+        NSData *unmarkData = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
+        [_neovim_server sendMessageWithId:NeoVimServerMsgIdUnmark data:unmarkData];
+        [unmarkData release];
+      }
+    }
 
-    bool *values = malloc(sizeof(bool));
-    values[0] = value;
+    delete_marked_text();
+    nvim_input(vim_string_from(input));
 
-    // release and free in neovim_set_bool_option
-    loop_schedule(&main_loop, event_create(1, neovim_set_bool_option, 3, responseIds, [option retain], values));
+    return nil;
   });
 }
 
-void server_quit() {
-  DLOG("NeoVimServer exiting...");
-  exit(0);
+void neovim_vim_input_marked_text(void **argv) {
+  work_async(argv, ^NSData *(NSData *data) {
+    NSString *markedText = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+
+    if (_marked_text == nil) {
+      _marked_row = _put_row;
+      _marked_column = _put_column + _marked_delta;
+      DLOG("marking position: %d:%d(%d + %d)", _put_row, _marked_column, _put_column, _marked_delta);
+      _marked_delta = 0;
+    } else {
+      delete_marked_text();
+    }
+
+    DLOG("inserting marked text '%s' at %d:%d", markedText.cstr, _put_row, _put_column);
+    insert_marked_text(markedText);
+
+    return nil;
+  });
+}
+
+void neovim_delete(void **argv) {
+  work_async(argv, ^NSData *(NSData *data) {
+    const NSInteger *values = data.bytes;
+    NSInteger count = values[0];
+
+    _marked_delta = 0;
+
+    // Very ugly: When we want to have the Hanja for 하, Cocoa first finalizes 하, then sets the Hanja as marked text.
+    // The main app will call this method when this happens, thus compute how many cell we have to go backward to
+    // correctly mark the will-be-soon-inserted Hanja... See also docs/notes-on-cocoa-text-input.md
+    int emptyCounter = 0;
+    for (int i = 0; i < count; i++) {
+      _marked_delta -= 1;
+
+      // TODO: -1 because we assume that the cursor is one cell ahead, probably not always correct...
+      schar_T character = ScreenLines[_put_row * screen_Rows + _put_column - i - emptyCounter - 1];
+      if (character == 0x00 || character == ' ') {
+        // FIXME: dunno yet, why we have to also match ' '...
+        _marked_delta -= 1;
+        emptyCounter += 1;
+      }
+    }
+
+    DLOG("put cursor: %d:%d, count: %li, delta: %d", _put_row, _put_column, count, _marked_delta);
+
+    for (int i = 0; i < count; i++) {
+      nvim_input(vim_string_from(_backspace));
+    }
+
+    return nil;
+  });
 }

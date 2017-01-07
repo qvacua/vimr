@@ -7,6 +7,15 @@
 #import "server_globals.h"
 #import "Logging.h"
 #import "CocoaCategories.h"
+#import "DataWrapper.h"
+
+// FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
+// them.
+#define FileInfo CarbonFileInfo
+#define Boolean CarbonBoolean
+
+#import <nvim/vim.h>
+#import <nvim/main.h>
 
 
 // When #define'd you can execute the NeoVimServer binary and neovim will be started:
@@ -17,45 +26,82 @@
 
 static const double qTimeout = 10;
 
-#define data_to_array(type)                                               \
-static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
-  NSUInteger length = count * sizeof( type );                             \
-  if (data.length != length) {                                            \
-    return NULL;                                                          \
-  }                                                                       \
-  return ( type *) data.bytes;                                            \
-}
-
-data_to_array(int)
-data_to_array(NSInteger)
-
-static inline NSUInteger response_id_from_data(NSData *data) {
-  NSUInteger *values = (NSUInteger *) data.bytes;
-  return values[0];
-}
-
-static inline NSData *data_without_response_id(NSData *data) {
-  NSUInteger *values = (NSUInteger *) data.bytes;
-  NSUInteger length = data.length - sizeof(NSUInteger);
-  return length == 0 ? NSData.new : [NSData dataWithBytes:(values + 1) length:length];
-}
 
 @interface NeoVimServer ()
 
-- (NSData *)handleMessageWithId:(SInt32)msgid data:(NSData *)data;
+- (NSCondition *)outputCondition;
+- (void)handleQuitMsg;
 
 @end
+
+static CFDataRef null_data_async(CFDataRef data, argv_callback cb) {
+  loop_schedule(&main_loop, event_create(1, cb, 1, data));
+  return NULL;
+}
+
+static CFDataRef data_sync(CFDataRef data, NSCondition *condition, argv_callback cb) {
+  DataWrapper *wrapper = [[DataWrapper alloc] init];
+  NSDate *deadline = [[NSDate date] dateByAddingTimeInterval:qTimeout];
+
+  [condition lock];
+
+  loop_schedule(&main_loop, event_create(1, cb, 3, data, condition, wrapper));
+
+  while (wrapper.isDataReady == false && [condition waitUntilDate:deadline]);
+  [condition unlock];
+
+  if (wrapper.data == nil) {
+    return NULL;
+  }
+
+  return CFDataCreateCopy(kCFAllocatorDefault, (__bridge CFDataRef) wrapper.data);
+}
 
 static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFDataRef data, void *info) {
   @autoreleasepool {
     NeoVimServer *neoVimServer = (__bridge NeoVimServer *) info;
-    NSData *responseData = [neoVimServer handleMessageWithId:msgid data:(__bridge NSData *) data];
+    NSCondition *outputCondition = neoVimServer.outputCondition;
+    CFRetain(data); // release in the loop callbacks!
 
-    if (responseData == nil) {
-      return NULL;
+    switch (msgid) {
+
+      case NeoVimAgentMsgIdAgentReady:
+        start_neovim();
+        return NULL;
+
+      case NeoVimAgentMsgIdQuit:
+        [neoVimServer handleQuitMsg];
+        return NULL;
+
+      case NeoVimAgentMsgIdCommandOutput: return data_sync(data, outputCondition, neovim_vim_command_output);
+
+      case NeoVimAgentMsgIdSelectWindow: return null_data_async(data, neovim_select_window);
+
+      case NeoVimAgentMsgIdGetTabs: return data_sync(data, outputCondition, neovim_tabs);
+      
+      case NeoVimAgentMsgIdGetBuffers: return data_sync(data, outputCondition, neovim_buffers);
+
+      case NeoVimAgentMsgIdGetBoolOption: return data_sync(data, outputCondition, neovim_get_bool_option);
+
+      case NeoVimAgentMsgIdSetBoolOption: return data_sync(data, outputCondition, neovim_set_bool_option);
+
+      case NeoVimAgentMsgIdGetEscapeFileNames: return data_sync(data, outputCondition, neovim_escaped_filenames);
+
+      case NeoVimAgentMsgIdGetDirtyDocs: return data_sync(data, outputCondition, neovim_has_dirty_docs);
+
+      case NeoVimAgentMsgIdResize: return null_data_async(data, neovim_resize);
+
+      case NeoVimAgentMsgIdCommand: return null_data_async(data, neovim_vim_command);
+
+      case NeoVimAgentMsgIdInput: return null_data_async(data, neovim_vim_input);
+
+      case NeoVimAgentMsgIdInputMarked: return null_data_async(data, neovim_vim_input_marked_text);
+
+      case NeoVimAgentMsgIdDelete: return null_data_async(data, neovim_delete);
+
+      default: return NULL;
+
     }
-
-    return CFDataCreateCopy(kCFAllocatorDefault, (__bridge CFDataRef) responseData);
   }
 }
 
@@ -69,6 +115,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   NSThread *_localServerThread;
   CFMessagePortRef _localServerPort;
   CFRunLoopRef _localServerRunLoop;
+
+  NSCondition *_outputCondition;
+}
+
+- (NSCondition *)outputCondition {
+  return _outputCondition;
 }
 
 - (instancetype)initWithLocalServerName:(NSString *)localServerName remoteServerName:(NSString *)remoteServerName {
@@ -76,6 +128,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   if (self == nil) {
     return nil;
   }
+
+  _outputCondition = [[NSCondition alloc] init];
 
   _localServerName = localServerName;
   _remoteServerName = remoteServerName;
@@ -172,118 +226,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (void)quit {
-  server_quit();
+  quit_neovim();
 }
 
-- (NSData *)handleMessageWithId:(SInt32)msgid data:(NSData *)data {
-  switch (msgid) {
-
-    case NeoVimAgentMsgIdAgentReady:
-      server_start_neovim();
-      return nil;
-
-    case NeoVimAgentMsgIdCommand: {
-      NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-      server_vim_command(string);
-
-      return nil;
-    }
-
-    case NeoVimAgentMsgIdCommandOutput: {
-      NSUInteger responseId = response_id_from_data(data);
-      NSString *command = [[NSString alloc] initWithData:data_without_response_id(data) encoding:NSUTF8StringEncoding];
-
-      server_vim_command_output(responseId, command);
-      return nil;
-    }
-
-    case NeoVimAgentMsgIdInput: {
-      NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-      server_vim_input(string);
-
-      return nil;
-    }
-
-    case NeoVimAgentMsgIdInputMarked: {
-      NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-      server_vim_input_marked_text(string);
-
-      return nil;
-    }
-
-    case NeoVimAgentMsgIdDelete: {
-      NSInteger *values = data_to_NSInteger_array(data, 1);
-      server_delete(values[0]);
-      return nil;
-    }
-
-    case NeoVimAgentMsgIdResize: {
-      int *values = data_to_int_array(data, 2);
-      server_resize(values[0], values[1]);
-      return nil;
-    }
-
-    case NeoVimAgentMsgIdSelectWindow: {
-      int *values = data_to_int_array(data, 1);
-      server_select_win(values[0]);
-      return nil;
-    }
-
-    case NeoVimAgentMsgIdQuit:
-      // exit() after returning the response such that the agent can get the response and so does not log a warning.
-      [self performSelector:@selector(quit) onThread:_localServerThread withObject:nil waitUntilDone:NO];
-      return nil;
-
-    case NeoVimAgentMsgIdGetDirtyDocs: {
-      bool dirty = server_has_dirty_docs();
-      return [NSData dataWithBytes:&dirty length:sizeof(bool)];
-    }
-
-    case NeoVimAgentMsgIdGetEscapeFileNames: {
-      NSArray <NSString *> *fileNames = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-      NSMutableArray <NSString *> *result = [NSMutableArray new];
-
-      [fileNames enumerateObjectsUsingBlock:^(NSString* fileName, NSUInteger idx, BOOL *stop) {
-        [result addObject:server_escaped_filename(fileName)];
-      }];
-
-      return [NSKeyedArchiver archivedDataWithRootObject:result];
-    }
-
-    case NeoVimAgentMsgIdGetBuffers: {
-      return [NSKeyedArchiver archivedDataWithRootObject:server_buffers()];
-    }
-
-    case NeoVimAgentMsgIdGetTabs: {
-      return [NSKeyedArchiver archivedDataWithRootObject:server_tabs()];
-    }
-
-    case NeoVimAgentMsgIdGetBoolOption: {
-      NSUInteger responseId = response_id_from_data(data);
-      NSString *optionName = [[NSString alloc] initWithData:data_without_response_id(data)
-                                                  encoding:NSUTF8StringEncoding];
-
-      server_get_bool_option(responseId, optionName);
-      return nil;
-    }
-
-    case NeoVimAgentMsgIdSetBoolOption: {
-      NSUInteger responseId = response_id_from_data(data);
-
-      NSData *paramData = data_without_response_id(data);
-      bool *optionValues = (bool *) paramData.bytes;
-      bool optionValue = optionValues[0];
-
-      const char *string = (const char *)(optionValues + 1);
-      NSString *optionName = [[NSString alloc] initWithCString:string encoding:NSUTF8StringEncoding];
-
-      server_set_bool_option(responseId, optionName, optionValue);
-      return nil;
-    }
-
-    default:
-      return nil;
-  }
+- (void)handleQuitMsg {
+  // exit() after returning the response such that the agent can get the response and so does not log a warning.
+  [self performSelector:@selector(quit) onThread:_localServerThread withObject:nil waitUntilDone:NO];
 }
 
 @end
