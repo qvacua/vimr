@@ -84,7 +84,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   NSCondition *_neoVimReadyCondition;
   bool _isInitErrorPresent;
 
-  uint32_t _neoVimIsQuitting;
+  volatile uint32_t _neoVimIsQuitting;
 }
 
 - (instancetype)initWithUuid:(NSString *)uuid {
@@ -106,6 +106,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
 - (bool)neoVimIsQuitting {
   return _neoVimIsQuitting == 1;
+}
+
+- (void)debug {
+  [self sendMessageWithId:NeoVimAgentDebug1 data:nil expectsReply:NO];
 }
 
 // We cannot use -dealloc for this since -dealloc is not called until the run loop in the thread stops.
@@ -236,7 +240,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetDirtyDocs data:nil expectsReply:YES];
   if (response == nil) {
     log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetDirtyDocs);
-    return YES;
+    return NO;
   }
 
   NSNumber *value = [NSKeyedUnarchiver unarchiveObjectWithData:response];

@@ -309,9 +309,11 @@ class MainWindowComponent: WindowComponent,
           self.neoVimView.select(buffer: buffer)
 
         case let PreviewComponent.Action.reverseSearch(to: position):
-          self.neoVimView.vimExCommand("norm \(position.row)G\(position.column)|")
+          let command = "norm \(position.row)G\(position.column)|"
+          self.neoVimView.exec(command: "call nvim_win_set_cursor(1000, 10, 5)")
+//          self.neoVimView.vimExCommand(command)
           // The above command does not refresh the cursor...
-          self.neoVimView.vimInput("<ESC>")
+//          self.neoVimView.vimInput("<ESC>")
 
           return
 

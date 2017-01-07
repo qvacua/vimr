@@ -208,8 +208,14 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
 
   @IBAction public func debug1(_ sender: AnyObject?) {
     NSLog("DEBUG 1 - Start")
-    self.vimExCommand("norm 10G5|")
-    self.vimInput("<ESC>")
+//    self.vimExCommand("norm 10G5|")
+//    self.vimExCommand("redraw")
+//    self.vimExCommand("cal cursor(10,5)")
+//    self.exec(command: "cal cursor(10,5)")
+//    self.vimOutput(of: "cal nvim_win_set_cursor(1000, [10, 5])")
+//    self.vimExCommand("redraw")
+//    self.vimInput("<ESC>")
+    self.agent.debug()
     NSLog("DEBUG 1 - End")
   }
 

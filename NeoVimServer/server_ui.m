@@ -30,6 +30,8 @@
 #import <nvim/fileio.h>
 #import <nvim/undo.h>
 #import <nvim/eval.h>
+#import <nvim/api/window.h>
+#import <nvim/screen.h>
 
 
 #define pun_type(t, x) (*((t *) (&(x))))
@@ -757,7 +759,9 @@ void neovim_vim_command(void **argv) {
     Error err = ERROR_INIT;
     nvim_command(vim_string_from(input), &err);
 
-    // FIXME: handle err.set == true
+    if (err.set) {
+      WLOG("ERROR while executing command %s: %s", input.cstr, err.msg);
+    }
 
     [input release];
 
@@ -847,6 +851,34 @@ void neovim_delete(void **argv) {
     for (int i = 0; i < count; i++) {
       nvim_input(vim_string_from(_backspace));
     }
+
+    return nil;
+  });
+}
+
+void neovim_cursor_goto(void **argv) {
+  work_async(argv, ^NSData *(NSData *data) {
+    Array position = ARRAY_DICT_INIT;
+    position.size = 2;
+    position.items = xmalloc(sizeof(Object) * 2);
+
+    Object row = OBJECT_INIT;
+    row.type = kObjectTypeInteger;
+    row.data.integer = 10;
+
+    Object col = OBJECT_INIT;
+    col.type = kObjectTypeInteger;
+    col.data.integer = 5;
+
+    position.items[0] = row;
+    position.items[1] = col;
+
+    Error err = ERROR_INIT;
+
+    nvim_win_set_cursor(nvim_get_current_win(), position, &err);
+//    nvim_input((String){.data="<ESC>", .size=5});
+
+    xfree(position.items);
 
     return nil;
   });

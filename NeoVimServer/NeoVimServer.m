@@ -99,6 +99,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
       case NeoVimAgentMsgIdDelete: return null_data_async(data, neovim_delete);
 
+      case NeoVimAgentDebug1: return null_data_async(data, neovim_cursor_goto);
+
       default: return NULL;
 
     }
