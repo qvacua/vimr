@@ -120,17 +120,6 @@
       return { x: x, y: y };
     }
   </script>
-  <script>
-    // Reverse search
-    function currentPosition() {
-      const candidate = currentTopMarkdownElement();
-      if (!candidate) {
-        return null;
-      }
-
-      return positionOfMarkdownElement(candidate);
-    }
-  </script>
   <title>{{ title }}</title>
 </head>
 <body class="markdown-body">

@@ -228,7 +228,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
   fileprivate func scrollSubscription(source: Observable<Any>) -> Disposable {
     return source
-      .throttle(1, latest: true, scheduler: self.scheduler)
+      .throttle(0.5, latest: true, scheduler: self.scheduler)
       .filter { $0 is MainWindowComponent.ScrollAction }
       .subscribe(onNext: { [unowned self] action in
 //        NSLog("neovim scrolled to  \(self.neoVimInfoProvider?.currentLine()) x \(self.neoVimInfoProvider?.currentColumn())")
@@ -297,16 +297,18 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
   fileprivate func addReactions() {
     self.webviewMessageHandler.flow.sink
+      .throttle(0.5, latest: true, scheduler: self.scheduler)
       .filter { $0 is WebviewMessageHandler.Action }
       .map { $0 as! WebviewMessageHandler.Action }
       .subscribe(onNext: { [weak self] action in
-        guard self?.isReverseSearchAutomatically == true else {
-          return
-        }
-
         switch action {
         case let .scroll(lineBegin, columnBegin, _, _):
           self?.currentPreviewPosition = Position(row: lineBegin, column: columnBegin)
+
+          guard self?.isReverseSearchAutomatically == true else {
+            return
+          }
+
           self?.flow.publish(
             event: PreviewRendererAction.reverseSearch(to: Position(row: lineBegin, column: columnBegin))
           )
@@ -360,32 +362,22 @@ extension MarkdownRenderer {
   }
 
   func reverseSearchAction(_: Any?) {
-    self.webview.evaluateJavaScript("currentPosition();") { resultObj, error in
-      guard let resultDict = resultObj as? [String: Int] else {
-        return
-      }
-
-      guard let lineBegin = resultDict["lineBegin"], let columnBegin = resultDict["columnBegin"] else {
-        return
-      }
-
-      self.flow.publish(event: PreviewRendererAction.reverseSearch(to: Position(row: lineBegin, column: columnBegin)))
-    }
 //    NSLog("\(#function) for \(self.currentPreviewPosition)")
+    self.flow.publish(event: PreviewRendererAction.reverseSearch(to: self.currentPreviewPosition))
   }
 
   func automaticForwardSearchAction(_: Any?) {
     self.isForwardSearchAutomatically = !self.isForwardSearchAutomatically
-    NSLog("\(#function)")
+    self.automaticForwardMenuItem.boolState = self.isForwardSearchAutomatically
   }
 
   func automaticReverseSearchAction(_: Any?) {
     self.isReverseSearchAutomatically = !self.isReverseSearchAutomatically
-    NSLog("\(#function)")
+    self.automaticReverseMenuItem.boolState = self.isReverseSearchAutomatically
   }
 
   func refreshOnWriteAction(_: Any?) {
     self.isRefreshOnWrite = !self.isRefreshOnWrite
-    NSLog("\(#function)")
+    self.refreshOnWriteMenuItem.boolState = self.isRefreshOnWrite
   }
 }
