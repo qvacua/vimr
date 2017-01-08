@@ -1,6 +1,6 @@
-# next
+# 0.12.5-159
 
-* GH-376: Bugfix, cf. GH-376
+* GH-376: Bugfix: Sometimes the communication between the UI and the Neovim backend breaks.
 
 # 0.12.4-156
 
