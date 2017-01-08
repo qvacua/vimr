@@ -229,6 +229,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
   fileprivate func scrollSubscription(source: Observable<Any>) -> Disposable {
     return source
+      .observeOn(self.scheduler)
       .throttle(0.5, latest: true, scheduler: self.scheduler)
       .filter { $0 is MainWindowComponent.ScrollAction }
       .subscribe(onNext: { [unowned self] action in

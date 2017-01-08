@@ -7,6 +7,8 @@
     // Scrolling
     const sourceposRegex = /(\d+):(\d+)-(\d+):(\d+)/;
 
+    let suppressNextScrollEvent = false;
+
     function isTopLeftInsideViewport(el) {
       const rect = el.getBoundingClientRect();
       return rect.top >= 0 && rect.left >= 0;
@@ -45,6 +47,13 @@
       return mdElements.find(isTopLeftInsideViewport) || mdElements.find(isElementVisibleInViewport);
     }
 
+    let lastMarkdownPosition = {
+      lineBegin: 1,
+      columnBegin: 1,
+      lineEnd: 1,
+      columnEnd: 1
+    };
+
     function scrollCallback() {
       const candidate = currentTopMarkdownElement();
 
@@ -53,6 +62,15 @@
       }
 
       const result = positionOfMarkdownElement(candidate);
+      if (result.lineBegin == lastMarkdownPosition.lineBegin
+        && result.columnBegin == lastMarkdownPosition.columnBegin
+        && result.lineEnd == lastMarkdownPosition.lineEnd
+        && result.columnEnd == lastMarkdownPosition.columnEnd)
+      {
+        return;
+      }
+
+      lastMarkdownPosition = result;
       window.webkit.messageHandlers.com_vimr_preview_markdown.postMessage(result);
     }
 
@@ -63,16 +81,17 @@
       lastKnownScrollPos = window.scrollY;
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          if (lastKnownScrollPos >= 0) {
+          if (lastKnownScrollPos >= 0 && !suppressNextScrollEvent) {
             scrollCallback();
           }
+
+          suppressNextScrollEvent = false;
           ticking = false;
         });
       }
       ticking = true;
     });
-  </script>
-  <script>
+
     // Forward search
     function scrollToPosition(row, column) {
       const entries = toArray(document.querySelectorAll("[data-sourcepos]"))
@@ -103,6 +122,7 @@
       }
 
       let {x, y}  = scrollPosition(candidateEntry.element);
+      suppressNextScrollEvent = true;
       window.scrollTo(x, y);
     }
 
