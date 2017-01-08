@@ -49,7 +49,7 @@ class MainWindowManager: StandardFlow {
         case let .close(mainWindow, mainWindowPrefData):
           self.close(mainWindow, prefData: mainWindowPrefData)
 
-        case .changeCwd, .changeBufferList, .changeFileBrowserSelection:
+        default:
           break;
         }
       })

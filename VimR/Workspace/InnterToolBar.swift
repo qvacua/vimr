@@ -24,9 +24,9 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     fatalError("init(coder:) has not been implemented")
   }
 
-  fileprivate let titleField = NSTextField(forAutoLayout:())
-  fileprivate let closeButton = NSButton(forAutoLayout:())
-  fileprivate let cogButton = NSPopUpButton(forAutoLayout:())
+  fileprivate let titleField = NSTextField(forAutoLayout: ())
+  fileprivate let closeButton = NSButton(forAutoLayout: ())
+  fileprivate let cogButton = NSPopUpButton(forAutoLayout: ())
 
   fileprivate let locToSelector: [WorkspaceBarLocation: Selector] = [
     .top: #selector(InnerToolBar.moveToTopAction(_:)),
@@ -40,9 +40,13 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
   static let iconDimension = CGFloat(19)
   static let iconColor = NSColor.darkGray
 
-  static func configureToStandardIconButton(button: NSButton, image: NSImage?) {
+  static func configureToStandardIconButton(button: NSButton, iconName: CocoaFontAwesome.FontAwesome) {
+    let icon = NSImage.fontAwesomeIcon(name: iconName,
+                                       textColor: InnerToolBar.iconColor,
+                                       dimension: InnerToolBar.iconDimension)
+
     button.imagePosition = .imageOnly
-    button.image = image
+    button.image = icon
     button.isBordered = false
 
     // The following disables the square appearing when pushed.
@@ -50,8 +54,18 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     cell?.highlightsBy = .contentsCellMask
   }
 
-  let customMenuItems: [NSMenuItem]
-  var customToolbar: NSView?
+  var customMenuItems: [NSMenuItem]? {
+    didSet {
+      self.removeCustomUiElements()
+      self.addViews()
+    }
+  }
+  var customToolbar: NSView? {
+    didSet {
+      self.removeCustomUiElements()
+      self.addViews()
+    }
+  }
 
   weak var tool: WorkspaceTool? {
     didSet {
@@ -99,6 +113,11 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     }
   }
 
+  fileprivate func removeCustomUiElements() {
+    [self.titleField, self.customToolbar, self.closeButton, self.cogButton].forEach { $0?.removeFromSuperview() }
+    self.cogButton.menu = nil
+  }
+
   fileprivate func addViews() {
     let title = self.titleField
     let close = self.closeButton
@@ -110,18 +129,13 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     title.isSelectable = false
     title.controlSize = .small
 
-    let closeIcon = NSImage.fontAwesomeIcon(code: "fa-times-circle",
-                                            textColor: InnerToolBar.iconColor,
-                                            dimension: InnerToolBar.iconDimension)
-    InnerToolBar.configureToStandardIconButton(button: close, image: closeIcon)
-
+    InnerToolBar.configureToStandardIconButton(button: close, iconName: .timesCircle)
     close.target = self
     close.action = #selector(InnerToolBar.closeAction)
 
     let cogIcon = NSImage.fontAwesomeIcon(name: .cog,
                                           textColor: InnerToolBar.iconColor,
                                           dimension: InnerToolBar.iconDimension)
-
     cog.configureForAutoLayout()
     cog.imagePosition = .imageOnly
     cog.pullsDown = true
@@ -167,8 +181,8 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
 
     cogMenu.addItem(cogMenuItem)
 
-    if self.customMenuItems.isEmpty == false {
-      self.customMenuItems.forEach(cogMenu.addItem)
+    if self.customMenuItems?.isEmpty == false {
+      self.customMenuItems?.forEach(cogMenu.addItem)
       cogMenu.addItem(NSMenuItem.separator())
     }
 

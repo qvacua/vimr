@@ -16,3 +16,13 @@ extension Array {
       .flatMap { $0 }
   }
 }
+
+extension ObservableType {
+
+  func mapOmittingNil<R>(_ transform: @escaping (Self.E) throws -> R?) -> RxSwift.Observable<R> {
+    return self
+      .map(transform)
+      .filter { $0 != nil }
+      .map { $0! }
+  }
+}

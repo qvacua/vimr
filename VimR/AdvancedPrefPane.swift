@@ -80,10 +80,10 @@ class AdvancedPrefPane: PrefPane {
                            action: #selector(AdvancedPrefPane.useInteractiveZshAction(_:)))
 
     let useInteractiveZshInfo = self.infoTextField(
-      text: "If your login shell is zsh, when checked, the '-i' option will be used to launch zsh.\n"
-        + "Checking this option may break VimR if your .zshrc contains complex stuff.\n"
-        + "It may be a good idea to put the PATH-settings in .zshenv and let this unchecked.\n"
-        + "Use with caution."
+      markdown: "If your login shell is `zsh`, when checked, the `-i` option will be used to launch `zsh`.  \n"
+                + "Checking this option may break VimR if your `.zshrc` contains complex stuff.  \n"
+                + "It may be a good idea to put the `PATH`-settings in `.zshenv` and let this unchecked.  \n"
+                + "Use with caution."
     )
 
     let useSnapshotUpdate = self.useSnapshotUpdateCheckbox
@@ -92,8 +92,8 @@ class AdvancedPrefPane: PrefPane {
                            action: #selector(AdvancedPrefPane.useSnapshotUpdateChannelAction(_:)))
 
     let useSnapshotUpdateInfo = self.infoTextField(
-      text: "If you are adventurous, check this.\n"
-        + "You'll be test driving the newest snapshot builds of VimR in no time!"
+      markdown: "If you are adventurous, check this.  \n"
+                + "You'll be test driving the newest snapshot builds of VimR in no time!"
     )
 
     self.addSubview(paneTitle)

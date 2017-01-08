@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="github-markdown.css">
+  <script>
+    // Scrolling
+    const sourceposRegex = /(\d+):(\d+)-(\d+):(\d+)/;
+
+    let suppressNextScrollEvent = false;
+
+    function isTopLeftInsideViewport(el) {
+      const rect = el.getBoundingClientRect();
+      return rect.top >= 0 && rect.left >= 0;
+    }
+
+    function isElementVisibleInViewport(el) {
+      const rect = el.getBoundingClientRect();
+
+      return (
+        ((rect.top >= 0 && window.innerHeight - rect.top >= 0) || (rect.top < 0 && rect.bottom > 0)) &&
+        ((rect.left >= 0 && window.innerWidth - rect.left >= 0) || (rect.left < 0 && rect.right > 0))
+      );
+    }
+
+    function positionOfMarkdownElement(element) {
+      const regexResult = element.dataset.sourcepos.match(sourceposRegex);
+
+      if (regexResult.length != 5) {
+        return null;
+      }
+
+      return {
+        lineBegin: parseInt(regexResult[1], 10),
+        columnBegin: parseInt(regexResult[2], 10),
+        lineEnd: parseInt(regexResult[3], 10),
+        columnEnd: parseInt(regexResult[4], 10)
+      };
+    }
+
+    function toArray(nodeList) {
+      return Array.prototype.slice.call(nodeList)
+    }
+
+    function currentTopMarkdownElement() {
+      const mdElements = toArray(document.querySelectorAll("[data-sourcepos]"));
+      return mdElements.find(isTopLeftInsideViewport) || mdElements.find(isElementVisibleInViewport);
+    }
+
+    let lastMarkdownPosition = {
+      lineBegin: 1,
+      columnBegin: 1,
+      lineEnd: 1,
+      columnEnd: 1
+    };
+
+    function scrollCallback() {
+      const candidate = currentTopMarkdownElement();
+
+      if (!candidate) {
+        return;
+      }
+
+      const result = positionOfMarkdownElement(candidate);
+      if (result.lineBegin == lastMarkdownPosition.lineBegin
+        && result.columnBegin == lastMarkdownPosition.columnBegin
+        && result.lineEnd == lastMarkdownPosition.lineEnd
+        && result.columnEnd == lastMarkdownPosition.columnEnd)
+      {
+        return;
+      }
+
+      lastMarkdownPosition = result;
+//      console.log(`webview scrolled to ${result.lineBegin}:${result.columnBegin}`);
+      window.webkit.messageHandlers.com_vimr_preview_markdown.postMessage(result);
+    }
+
+    let lastKnownScrollPos = 0;
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+      lastKnownScrollPos = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (lastKnownScrollPos >= 0 && !suppressNextScrollEvent) {
+            scrollCallback();
+          }
+
+          suppressNextScrollEvent = false;
+          ticking = false;
+        });
+      }
+      ticking = true;
+    });
+
+    // Forward search
+    function scrollToPosition(row, column) {
+      const entries = toArray(document.querySelectorAll("[data-sourcepos]"))
+        .map(element => {
+          const position = positionOfMarkdownElement(element);
+          return {
+            element: element,
+            position: position,
+            rowDistance: Math.abs(row - position.lineBegin),
+            columnDistance: Math.abs(column - position.columnBegin)
+          };
+        });
+
+      const minRowDistance = entries.reduce((result, entry) => {
+        return Math.min(result, entry.rowDistance)
+      }, Number.MAX_SAFE_INTEGER);
+
+      const entriesWithMinRowDistance = entries.filter(entry => entry.rowDistance == minRowDistance);
+
+      const minColumnDistance = entriesWithMinRowDistance.reduce((result, entry) => {
+        return Math.min(result, entry.columnDistance)
+      }, Number.MAX_SAFE_INTEGER);
+
+      const candidateEntry = entriesWithMinRowDistance.find(entry => entry.columnDistance == minColumnDistance);
+      if (!candidateEntry) {
+        return;
+      }
+
+      const element = candidateEntry.element;
+      if (isElementVisibleInViewport(element)) {
+        return;
+      }
+
+      let {x, y}  = scrollPosition(element);
+      suppressNextScrollEvent = true;
+      window.scrollTo(x, y);
+//      console.log(`scrolled webview to ${x}:${y}`);
+    }
+
+    function scrollPosition(element) {
+      let {x, y} = { x: 0, y: 0 };
+
+      let curEl = element;
+      while (curEl) {
+        x += curEl.offsetLeft;
+        y += curEl.offsetTop;
+
+        curEl = curEl.offsetParent;
+      }
+
+      return { x: x, y: y };
+    }
+  </script>
+  <title>{{ title }}</title>
+</head>
+<body class="markdown-body">
+{{ body }}
+</body>
+</html>

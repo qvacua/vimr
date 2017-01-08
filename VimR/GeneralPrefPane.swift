@@ -111,8 +111,13 @@ class GeneralPrefPane: PrefPane, NSTextFieldDelegate {
     { [unowned self] _ in
       self.ignorePatternsAction()
     }
-    let ignoreInfo = self.infoTextField(text: "")
-    ignoreInfo.attributedStringValue = self.ignoreInfoText()
+    let ignoreInfo =
+      self.infoTextField(markdown:
+                         "Comma-separated list of ignore patterns  \n"
+                         + "Matching files will be ignored in \"Open Quickly\" and the file browser.  \n"
+                         + "Example: `*/.git, */node_modules`  \n"
+                         + "For detailed information see [VimR Wiki](https://github.com/qvacua/vimr/wiki)."
+      )
 
     let cliToolTitle = self.titleTextField(title: "CLI Tool:")
     let cliToolButton = NSButton(forAutoLayout: ())
@@ -123,7 +128,7 @@ class GeneralPrefPane: PrefPane, NSTextFieldDelegate {
     cliToolButton.target = self
     cliToolButton.action = #selector(GeneralPrefPane.copyCliTool(_:))
     let cliToolInfo = self.infoTextField(
-      text: "Put the executable 'vimr' in your $PATH and execute 'vimr -h' for help."
+      markdown: "Put the executable `vimr` in your `$PATH` and execute `vimr -h` for help."
     )
 
     self.addSubview(paneTitle)
@@ -203,24 +208,12 @@ class GeneralPrefPane: PrefPane, NSTextFieldDelegate {
   }
 
   fileprivate func ignoreInfoText() -> NSAttributedString {
-    let font = NSFont.systemFont(ofSize: NSFont.smallSystemFontSize())
-    let attrs = [
-      NSFontAttributeName: font,
-      NSForegroundColorAttributeName: NSColor.gray
-    ]
+    let markdown = "Comma-separated list of ignore patterns\n\n"
+                   + "Matching files will be ignored in \"Open Quickly\" and the file browser.\n\n"
+                   + "Example: `*/.git, */node_modules`\n\n"
+                   + "For detailed information see [VimR Wiki](https://github.com/qvacua/vimr/wiki)."
 
-    let wikiUrl = URL(string: "https://github.com/qvacua/vimr/wiki")!
-    let linkStr = NSAttributedString.link(withUrl: wikiUrl, text: "VimR Wiki", font: font)
-    let str = "Comma-separated list of ignore patterns\n"
-        + "Matching files will be ignored in \"Open Quickly\" and the file browser.\n"
-        + "Example: */.git, */node_modules\n"
-        + "For detailed information see "
-    
-    let ignoreInfoStr = NSMutableAttributedString(string:str, attributes:attrs)
-    ignoreInfoStr.append(linkStr)
-    ignoreInfoStr.append(NSAttributedString(string: ".", attributes: attrs))
-
-    return ignoreInfoStr
+    return NSAttributedString.infoLabel(markdown: markdown)
   }
 
   fileprivate func updateViews(newData: GeneralPrefData) {

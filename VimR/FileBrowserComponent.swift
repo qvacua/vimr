@@ -46,7 +46,7 @@ struct FileBrowserData: StandardPrefData {
   }
 }
 
-class FileBrowserComponent: ViewComponent, ToolDataHolder {
+class FileBrowserComponent: StandardViewComponent, ToolDataHolder {
 
   fileprivate let fileView: FileOutlineView
   fileprivate let fileItemService: FileItemService
@@ -99,21 +99,14 @@ class FileBrowserComponent: ViewComponent, ToolDataHolder {
     }
 
     fileprivate func addViews() {
-      let goToParentIcon = NSImage.fontAwesomeIcon(name: .levelUp,
-                                                   textColor: InnerToolBar.iconColor,
-                                                   dimension: InnerToolBar.iconDimension)
-
       let goToParent = self.goToParentButton
+      InnerToolBar.configureToStandardIconButton(button: goToParent, iconName: .levelUp)
       goToParent.toolTip = "Set parent as working directory"
-      InnerToolBar.configureToStandardIconButton(button: goToParent, image: goToParentIcon)
       goToParent.action = #selector(FileBrowserComponent.goToParentAction)
 
-      let scrollToSourceIcon = NSImage.fontAwesomeIcon(name: .bullseye,
-                                                       textColor: InnerToolBar.iconColor,
-                                                       dimension: InnerToolBar.iconDimension)
       let scrollToSource = self.scrollToSourceButton
+      InnerToolBar.configureToStandardIconButton(button: scrollToSource, iconName: .bullseye)
       scrollToSource.toolTip = "Navigate to the current buffer"
-      InnerToolBar.configureToStandardIconButton(button: scrollToSource, image: scrollToSourceIcon)
       scrollToSource.action = #selector(FileBrowserComponent.scrollToSourceAction)
 
       self.addSubview(goToParent)
@@ -145,7 +138,7 @@ class FileBrowserComponent: ViewComponent, ToolDataHolder {
     let showHiddenMenuItem = NSMenuItem(title: "Show Hidden Files",
                                         action: #selector(FileBrowserComponent.showHiddenAction),
                                         keyEquivalent: "")
-    showHiddenMenuItem.state = initialData.isShowHidden ? NSOnState : NSOffState
+    showHiddenMenuItem.boolState = initialData.isShowHidden
     self.menuItems = [
       showHiddenMenuItem,
     ]

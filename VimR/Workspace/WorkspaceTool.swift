@@ -13,6 +13,8 @@ protocol WorkspaceToolDelegate: class {
 
 class WorkspaceTool: NSView {
 
+  fileprivate var innerToolbar: InnerToolBar?
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -55,10 +57,29 @@ class WorkspaceTool: NSView {
     return self.bar?.workspace
   }
 
-  var innerToolbar: InnerToolBar?
-
   let minimumDimension: CGFloat
   var dimension: CGFloat
+
+  var customInnerToolbar: NSView? {
+    get {
+      return self.innerToolbar?.customToolbar
+    }
+
+    set {
+      DispatchUtils.gui {
+        self.innerToolbar?.customToolbar = newValue
+      }
+    }
+  }
+  var customInnerMenuItems: [NSMenuItem]? {
+    get {
+      return self.innerToolbar?.customMenuItems
+    }
+
+    set {
+      self.innerToolbar?.customMenuItems = newValue
+    }
+  }
 
   struct Config {
 
@@ -76,8 +97,7 @@ class WorkspaceTool: NSView {
          minimumDimension: CGFloat = 50,
          withInnerToolbar: Bool = true,
          customToolbar: NSView? = nil,
-         customMenuItems: [NSMenuItem] = [])
-    {
+         customMenuItems: [NSMenuItem] = []) {
       self.title = title
       self.view = view
       self.minimumDimension = minimumDimension
@@ -110,8 +130,8 @@ class WorkspaceTool: NSView {
   }
 
   func toggle() {
-    self.delegate?.toggle(self)
     self.isSelected = !self.isSelected
+    self.delegate?.toggle(self)
   }
 
   fileprivate func addViews() {

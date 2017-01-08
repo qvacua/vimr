@@ -5,6 +5,8 @@
 
 @import Foundation;
 
+#import "NeoVimAutoCommandEvent.generated.h"
+
 
 // Keep in sync with the constants in vim.h
 typedef NS_ENUM(NSUInteger, Mode) {
@@ -67,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 2. NeoVim wants to put the cursor at (row, column).
  * In case of 1. NeoVim will put in subsequent call. In case of 2. NeoVim seems to flush twice in a row.
  */
-- (void)gotoPosition:(Position)position screenCursor:(Position)screenCursor;
+- (void)gotoPosition:(Position)position screenCursor:(Position)screenCursor currentPosition:(Position)currentPosition;
 
 - (void)updateMenu;
 - (void)busyStart;
@@ -115,8 +117,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setTitle:(NSString *)title;
 - (void)setIcon:(NSString *)icon;
 - (void)setDirtyStatus:(bool)dirty;
-- (void)cwdChanged;
-- (void)bufferListChanged;
+- (void)autoCommandEvent:(NeoVimAutoCommandEvent)event bufferHandle:(NSInteger)bufferHandle;
 
 /**
  * NeoVim has been stopped.

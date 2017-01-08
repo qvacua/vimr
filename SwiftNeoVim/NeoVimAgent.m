@@ -23,6 +23,7 @@ static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
 }
 
 data_to_array(int)
+data_to_array(NSUInteger)
 data_to_array(bool)
 data_to_array(CellAttributes)
 
@@ -83,7 +84,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   NSCondition *_neoVimReadyCondition;
   bool _isInitErrorPresent;
 
-  uint32_t _neoVimIsQuitting;
+  volatile uint32_t _neoVimIsQuitting;
 }
 
 - (instancetype)initWithUuid:(NSString *)uuid {
@@ -105,6 +106,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
 - (bool)neoVimIsQuitting {
   return _neoVimIsQuitting == 1;
+}
+
+- (void)debug {
+#ifdef DEBUG
+  [self sendMessageWithId:NeoVimAgentDebug1 data:nil expectsReply:NO];
+#endif
 }
 
 // We cannot use -dealloc for this since -dealloc is not called until the run loop in the thread stops.
@@ -231,11 +238,17 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [self sendMessageWithId:NeoVimAgentMsgIdResize data:data expectsReply:NO];
 }
 
+- (void)cursorGoToRow:(int)row column:(int)column {
+  int values[] = { row, column };
+  NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
+  [self sendMessageWithId:NeoVimAgentMsgIdCursorGoto data:data expectsReply:NO];
+}
+
 - (bool)hasDirtyDocs {
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetDirtyDocs data:nil expectsReply:YES];
   if (response == nil) {
     log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetDirtyDocs);
-    return YES;
+    return NO;
   }
 
   NSNumber *value = [NSKeyedUnarchiver unarchiveObjectWithData:response];
@@ -439,9 +452,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return;
 
     case NeoVimServerMsgIdSetPosition: {
-      int *values = data_to_int_array(data, 4);
+      int *values = data_to_int_array(data, 6);
       [_bridge gotoPosition:(Position) { .row = values[0], .column = values[1] }
-               screenCursor:(Position) { .row = values[2], .column = values[3] }];
+               screenCursor:(Position) { .row = values[2], .column = values[3] }
+            currentPosition:(Position) { .row = values[4], .column = values[5] }];
       return;
     }
 
@@ -566,13 +580,18 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return;
     }
 
-    case NeoVimServerMsgIdCwdChanged:
-      [_bridge cwdChanged];
+    case NeoVimServerMsgIdAutoCommandEvent: {
+      if (data.length == sizeof(NSUInteger) + sizeof(NSInteger)) {
+        NSUInteger *values = (NSUInteger *) data.bytes;
+        NeoVimAutoCommandEvent event = (NeoVimAutoCommandEvent) values[0];
+        NSInteger bufferHandle = ((NSInteger *)(values + 1))[0];
+        [_bridge autoCommandEvent:event bufferHandle:bufferHandle];
+      } else {
+        NSUInteger *values = data_to_NSUInteger_array(data, 1);
+        [_bridge autoCommandEvent:(NeoVimAutoCommandEvent) values[0] bufferHandle:-1];
+      }
       return;
-
-    case NeoVimServerMsgIdBufferEvent:
-      [_bridge bufferListChanged];
-      return;
+    }
 
     default:
       return;

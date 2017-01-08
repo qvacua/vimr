@@ -107,6 +107,8 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
     return true
   }
 
+  public fileprivate(set) var currentPosition = Position(row: 1, column: 1)
+
   fileprivate static let emojis: [UInt32] = [
     0x1F600...0x1F64F,
     0x1F910...0x1F918,
@@ -208,10 +210,7 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
 
   @IBAction public func debug1(_ sender: AnyObject?) {
     NSLog("DEBUG 1 - Start")
-    Swift.print("!!!!!!!!!!!!!!!!! \(self.agent.boolOption("paste"))")
-    self.agent.setBoolOption("paste", to: true)
-    self.agent.vimInput(self.vimPlainString("foo\nbar"))
-    self.agent.setBoolOption("paste", to: false)
+    self.agent.cursorGo(toRow: 10, column: 5)
     NSLog("DEBUG 1 - End")
   }
 
@@ -336,10 +335,16 @@ extension NeoVimView {
     self.exec(command: "qa!")
   }
 
-  fileprivate func open(_ url: URL, cmd: String) {
-    let path = url.path
-    let escapedFileName = self.agent.escapedFileName(path)
-    self.exec(command: "\(cmd) \(escapedFileName)")
+  public func vimOutput(of command: String) -> String {
+    return self.agent.vimCommandOutput(command) ?? ""
+  }
+
+  public func vimExCommand(_ command: String) {
+    self.agent.vimCommand(command)
+  }
+
+  public func cursorGo(to position: Position) {
+    self.agent.cursorGo(toRow: Int32(position.row), column: Int32(position.column))
   }
 
   /**
@@ -349,7 +354,7 @@ extension NeoVimView {
 
    We don't use NeoVimAgent.vimCommand because if we do for example "e /some/file" and its swap file already exists,
    then NeoVimServer spins and become unresponsive.
-   */
+  */
   fileprivate func exec(command cmd: String) {
     switch self.mode {
     case .Normal:
@@ -357,6 +362,12 @@ extension NeoVimView {
     default:
       self.agent.vimInput("<Esc>:\(cmd)<CR>")
     }
+  }
+
+  fileprivate func open(_ url: URL, cmd: String) {
+    let path = url.path
+    let escapedFileName = self.agent.escapedFileName(path)
+    self.exec(command: "\(cmd) \(escapedFileName)")
   }
 }
 
@@ -1246,8 +1257,9 @@ extension NeoVimView {
     }
   }
 
-  public func gotoPosition(_ position: Position, screenCursor: Position) {
+  public func gotoPosition(_ position: Position, screenCursor: Position, currentPosition: Position) {
     DispatchUtils.gui {
+      self.currentPosition = currentPosition
 //      NSLog("\(#function): \(position), \(screenCursor)")
 
       let curScreenCursor = self.grid.screenCursor
@@ -1275,6 +1287,9 @@ extension NeoVimView {
 
       self.grid.goto(position)
       self.grid.moveCursor(screenCursor)
+    }
+    DispatchUtils.gui {
+      self.delegate?.cursor(to: currentPosition)
     }
   }
 
@@ -1310,6 +1325,9 @@ extension NeoVimView {
     DispatchUtils.gui {
       self.grid.scroll(Int(count))
       self.setNeedsDisplay(region: self.grid.region)
+      // Do not send msgs to agent -> neovim in the delegate method. It causes spinning when you're opening a file with
+      // existing swap file.
+      self.delegate?.scroll()
     }
   }
 
@@ -1429,15 +1447,25 @@ extension NeoVimView {
     }
   }
 
-  public func cwdChanged() {
+  public func autoCommandEvent(_ event: NeoVimAutoCommandEvent, bufferHandle: Int) {
     DispatchUtils.gui {
-      self.delegate?.cwdChanged()
-    }
-  }
+//    NSLog("\(event.rawValue) with buffer \(bufferHandle)")
 
-  public func bufferListChanged() {
-    DispatchUtils.gui {
-      self.delegate?.bufferListChanged()
+      if event == .BUFWINENTER || event == .BUFWINLEAVE {
+        self.bufferListChanged()
+      }
+
+      if event == .TABENTER {
+        self.tabChanged()
+      }
+
+      if event == .CWDCHANGED {
+        self.cwdChanged()
+      }
+
+      if event == .BUFREADPOST || event == .BUFWRITEPOST {
+        self.currentBufferChanged(bufferHandle)
+      }
     }
   }
 
@@ -1452,6 +1480,30 @@ extension NeoVimView {
       NSLog("ERROR \(#function): force-quitting")
       self.agent.quit()
     }
+  }
+
+  fileprivate func currentBufferChanged(_ handle: Int) {
+    guard let currentBuffer = self.currentBuffer() else {
+      return
+    }
+
+    guard currentBuffer.handle == handle else {
+      return
+    }
+
+    self.delegate?.currentBufferChanged(currentBuffer)
+  }
+
+  fileprivate func tabChanged() {
+    self.delegate?.tabChanged()
+  }
+
+  fileprivate func cwdChanged() {
+    self.delegate?.cwdChanged()
+  }
+
+  fileprivate func bufferListChanged() {
+    self.delegate?.bufferListChanged()
   }
 
   fileprivate func updateCursorWhenPutting(currentPosition curPos: Position, screenCursor: Position) {

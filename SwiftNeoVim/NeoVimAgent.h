@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id <NeoVimUiBridgeProtocol> bridge;
 
 - (instancetype)initWithUuid:(NSString *)uuid;
+
+- (void)debug;
+
 - (void)quit;
 
 - (bool)runLocalServerAndNeoVim;
@@ -32,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)deleteCharacters:(NSInteger)count;
 
 - (void)resizeToWidth:(int)width height:(int)height;
+- (void)cursorGoToRow:(int)row column:(int)column;
 
 - (bool)hasDirtyDocs;
 - (NSString *)escapedFileName:(NSString *)fileName;

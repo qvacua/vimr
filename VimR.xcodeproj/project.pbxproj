@@ -13,6 +13,7 @@
 		1929B1E05C116514C1D3A384 /* CocoaCategories.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5C3F2F1CA4113DABFFD /* CocoaCategories.m */; };
 		1929B3CEE0C1A1850E9CCE2F /* BasicTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B2FBE11048569391E092 /* BasicTypes.swift */; };
 		1929B3F5743967125F357C9F /* Matcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEEB33113B0E33C3830F /* Matcher.swift */; };
+		1929B4145AA81F006BAF3B5C /* PreviewService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB8BCA48637156F92945 /* PreviewService.swift */; };
 		1929B462CD4935AFF6D69457 /* FileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7CB4863F80230C32D3C /* FileItem.swift */; };
 		1929B53876E6952D378C2B30 /* ScoredFileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDF9EBAF1D9D44399045 /* ScoredFileItem.swift */; };
 		1929B6388EAF16C190B82955 /* FileItemIgnorePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B69499B2569793350CEC /* FileItemIgnorePattern.swift */; };
@@ -22,15 +23,23 @@
 		1929B7A2F2B423AA9740FD45 /* FileUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5D977261F1EBFA9E8F1 /* FileUtilsTest.swift */; };
 		1929B93DBAD09835E428F610 /* PrefPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB251F74BEFC82CEEF84 /* PrefPane.swift */; };
 		1929BA120290D6A2A61A4468 /* ArrayCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B477E1E62433BC48E10B /* ArrayCommonsTest.swift */; };
+		1929BA3BB94B77E9AE051FE5 /* PreviewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8DA5AA33536F0082200 /* PreviewComponent.swift */; };
 		1929BCF444CE7F1D14D421DE /* FileItemTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B4778E20696E3AAFB69B /* FileItemTest.swift */; };
 		1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D510177918080BE39B /* Scorer.swift */; };
 		1929BD4CA2204E061A86A140 /* MatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC19C1BC19246AFF1621 /* MatcherTests.swift */; };
+		1929BD52275A6570C666A7BA /* PreviewRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1EC32D8A26958FB39B1 /* PreviewRenderer.swift */; };
 		1929BEB90DCDAF7A2B68C886 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA6128BFDD54CA92F46E /* ColorUtils.swift */; };
 		1929BEFEABA0448306CDB6D4 /* FileItemIgnorePatternTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBC84557C8351EC6183E /* FileItemIgnorePatternTest.swift */; };
 		1929BF81A40B4154D3EA33CE /* server_ui.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B93013228985F509C8F6 /* server_ui.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */; };
 		4B0677371D99D9C3001A2588 /* FileBrowserComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0677361D99D9C3001A2588 /* FileBrowserComponent.swift */; };
 		4B0BCC941D70320C00D3CE65 /* Logger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0BCC931D70320C00D3CE65 /* Logger.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		4B183E0E1E06E2940079E8A8 /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; };
+		4B183E101E06E29C0079E8A8 /* CocoaMarkdown.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B183E1B1E08748B0079E8A8 /* NeoVimAutoCommandEvent.generated.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B183E1A1E08748B0079E8A8 /* NeoVimAutoCommandEvent.generated.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B183E1E1E09931E0079E8A8 /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B183E1D1E09931E0079E8A8 /* MarkdownRenderer.swift */; };
+		4B19BEFC1E110183007E823C /* markdown in Resources */ = {isa = PBXBuildFile; fileRef = 4B19BEFA1E110183007E823C /* markdown */; };
+		4B19BEFD1E110183007E823C /* preview in Resources */ = {isa = PBXBuildFile; fileRef = 4B19BEFB1E110183007E823C /* preview */; };
 		4B22F7F01D7C029400929B0E /* ScorerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B22F7EF1D7C029400929B0E /* ScorerTest.swift */; };
 		4B22F7F21D7C6B9000929B0E /* ImageAndTextTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B22F7F11D7C6B9000929B0E /* ImageAndTextTableCell.swift */; };
 		4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BE01D3BF24200CBDD98 /* Application.swift */; };
@@ -192,6 +201,7 @@
 				4BDD056B1DB0CACB00D1B405 /* Sparkle.framework in Embed Frameworks */,
 				4BDF50121D760B7200D8FBC3 /* EonilFileSystemEvents.framework in Embed Frameworks */,
 				4B91FFF61DEB772B00447068 /* CocoaFontAwesome.framework in Embed Frameworks */,
+				4B183E101E06E29C0079E8A8 /* CocoaMarkdown.framework in Embed Frameworks */,
 				4B2A2BFF1D0351810074CE9A /* SwiftNeoVim.framework in Embed Frameworks */,
 				4B2A2BEF1D02261F0074CE9A /* RxSwift.framework in Embed Frameworks */,
 				4B401B161D0454E900D99EDC /* PureLayout.framework in Embed Frameworks */,
@@ -269,6 +279,7 @@
 		1929B0EEBE4A765934AF8335 /* DataWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataWrapper.h; sourceTree = "<group>"; };
 		1929B15B7EDC9B0F40E5E95C /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
 		1929B1A51F076E088EF4CCA4 /* server_globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_globals.h; sourceTree = "<group>"; };
+		1929B1EC32D8A26958FB39B1 /* PreviewRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewRenderer.swift; sourceTree = "<group>"; };
 		1929B2FBE11048569391E092 /* BasicTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicTypes.swift; sourceTree = "<group>"; };
 		1929B39DA7AC4A9B62D7CD39 /* Component.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Component.swift; sourceTree = "<group>"; };
 		1929B3A98687DF171307AAC8 /* FileItemService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemService.swift; sourceTree = "<group>"; };
@@ -278,6 +289,7 @@
 		1929B5D977261F1EBFA9E8F1 /* FileUtilsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileUtilsTest.swift; sourceTree = "<group>"; };
 		1929B69499B2569793350CEC /* FileItemIgnorePattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemIgnorePattern.swift; sourceTree = "<group>"; };
 		1929B7CB4863F80230C32D3C /* FileItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
+		1929B8DA5AA33536F0082200 /* PreviewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewComponent.swift; sourceTree = "<group>"; };
 		1929B93013228985F509C8F6 /* server_ui.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = server_ui.m; sourceTree = "<group>"; };
 		1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationCommons.swift; sourceTree = "<group>"; };
 		1929B9D510177918080BE39B /* Scorer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scorer.swift; sourceTree = "<group>"; };
@@ -285,6 +297,7 @@
 		1929BA8AC40B901B20F20B71 /* FileUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileUtils.swift; sourceTree = "<group>"; };
 		1929BB251F74BEFC82CEEF84 /* PrefPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefPane.swift; sourceTree = "<group>"; };
 		1929BB6CFF4CC0B5E8B00C62 /* DataWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataWrapper.m; sourceTree = "<group>"; };
+		1929BB8BCA48637156F92945 /* PreviewService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewService.swift; sourceTree = "<group>"; };
 		1929BBC84557C8351EC6183E /* FileItemIgnorePatternTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemIgnorePatternTest.swift; sourceTree = "<group>"; };
 		1929BC19C1BC19246AFF1621 /* MatcherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatcherTests.swift; sourceTree = "<group>"; };
 		1929BDF9EBAF1D9D44399045 /* ScoredFileItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoredFileItem.swift; sourceTree = "<group>"; };
@@ -294,6 +307,11 @@
 		4B029F1B1D45E349004EE0D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrefWindow.xib; sourceTree = "<group>"; };
 		4B0677361D99D9C3001A2588 /* FileBrowserComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBrowserComponent.swift; sourceTree = "<group>"; };
 		4B0BCC931D70320C00D3CE65 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logger.h; path = VimR/Logger.h; sourceTree = SOURCE_ROOT; };
+		4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaMarkdown.framework; path = Carthage/Build/Mac/CocoaMarkdown.framework; sourceTree = SOURCE_ROOT; };
+		4B183E1A1E08748B0079E8A8 /* NeoVimAutoCommandEvent.generated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimAutoCommandEvent.generated.h; sourceTree = "<group>"; };
+		4B183E1D1E09931E0079E8A8 /* MarkdownRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownRenderer.swift; sourceTree = "<group>"; };
+		4B19BEFA1E110183007E823C /* markdown */ = {isa = PBXFileReference; lastKnownFileType = folder; path = markdown; sourceTree = "<group>"; };
+		4B19BEFB1E110183007E823C /* preview */ = {isa = PBXFileReference; lastKnownFileType = folder; path = preview; sourceTree = "<group>"; };
 		4B1BB3521D16C5E500CA4FEF /* InputTestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputTestView.swift; sourceTree = "<group>"; };
 		4B22F7EF1D7C029400929B0E /* ScorerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScorerTest.swift; sourceTree = "<group>"; };
 		4B22F7F11D7C6B9000929B0E /* ImageAndTextTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageAndTextTableCell.swift; sourceTree = "<group>"; };
@@ -456,6 +474,7 @@
 				4B2A2BFE1D0351810074CE9A /* SwiftNeoVim.framework in Frameworks */,
 				4BDD056A1DB0CAB700D1B405 /* Sparkle.framework in Frameworks */,
 				4B337FBB1DEB76F20020ADD2 /* CocoaFontAwesome.framework in Frameworks */,
+				4B183E0E1E06E2940079E8A8 /* CocoaMarkdown.framework in Frameworks */,
 				4B2A2BEE1D02261F0074CE9A /* RxSwift.framework in Frameworks */,
 				4B401B141D0454DC00D99EDC /* PureLayout.framework in Frameworks */,
 				4BDF50081D7607BF00D8FBC3 /* EonilFileSystemEvents.framework in Frameworks */,
@@ -482,6 +501,16 @@
 			path = resources;
 			sourceTree = "<group>";
 		};
+		1929BA610ADEA2BA4424FBE5 /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				4B183E1C1E0992FD0079E8A8 /* Preview Renderers */,
+				1929B8DA5AA33536F0082200 /* PreviewComponent.swift */,
+				1929BB8BCA48637156F92945 /* PreviewService.swift */,
+			);
+			name = Preview;
+			sourceTree = "<group>";
+		};
 		1929BFC86BF38D341F2DDCBD /* NeoVim Objects */ = {
 			isa = PBXGroup;
 			children = (
@@ -502,6 +531,15 @@
 				4B0677361D99D9C3001A2588 /* FileBrowserComponent.swift */,
 			);
 			name = "File Browser";
+			sourceTree = "<group>";
+		};
+		4B183E1C1E0992FD0079E8A8 /* Preview Renderers */ = {
+			isa = PBXGroup;
+			children = (
+				4B183E1D1E09931E0079E8A8 /* MarkdownRenderer.swift */,
+				1929B1EC32D8A26958FB39B1 /* PreviewRenderer.swift */,
+			);
+			name = "Preview Renderers";
 			sourceTree = "<group>";
 		};
 		4B1AC1AF1D7F395300898F0B /* Open Quickly */ = {
@@ -534,6 +572,7 @@
 		4B2A2BE61D0225840074CE9A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */,
 				4B337FBA1DEB76F20020ADD2 /* CocoaFontAwesome.framework */,
 				4BDD05691DB0CAB700D1B405 /* Sparkle.framework */,
 				4BDF50071D7607BF00D8FBC3 /* EonilFileSystemEvents.framework */,
@@ -607,6 +646,7 @@
 				4B705BA01DDF7639005F844B /* ToolPrefData.swift */,
 				4B0677351D99D9A2001A2588 /* File Browser */,
 				4B705C0D1DE2167A005F844B /* BufferListComponent.swift */,
+				1929BA610ADEA2BA4424FBE5 /* Preview */,
 			);
 			name = Tools;
 			sourceTree = "<group>";
@@ -655,6 +695,8 @@
 		4B97E2CF1D33F92200FC0660 /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				4B19BEFA1E110183007E823C /* markdown */,
+				4B19BEFB1E110183007E823C /* preview */,
 				4BEBA50C1CFF374B00673FDF /* MainMenu.xib */,
 				4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */,
 				4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */,
@@ -789,6 +831,7 @@
 				4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */,
 				4B570DC01D303CAF006EDC21 /* NeoVimAgent.h */,
 				4B570DC11D303CAF006EDC21 /* NeoVimAgent.m */,
+				4B183E1A1E08748B0079E8A8 /* NeoVimAutoCommandEvent.generated.h */,
 				4B2A2C061D0352CB0074CE9A /* NeoVimUiBridgeProtocol.h */,
 			);
 			name = NeoVimView;
@@ -820,6 +863,7 @@
 				4BDD05881DBBC50000D1B405 /* NeoVimTab.h in Headers */,
 				4BDCFAEA1D31486E00F62670 /* NeoVimMsgIds.h in Headers */,
 				4B2A2BFA1D0351810074CE9A /* SwiftNeoVim.h in Headers */,
+				4B183E1B1E08748B0079E8A8 /* NeoVimAutoCommandEvent.generated.h in Headers */,
 				4B0BCC941D70320C00D3CE65 /* Logger.h in Headers */,
 				4BDF64241D08CAB000D47E1D /* MMCoreTextView.h in Headers */,
 			);
@@ -832,6 +876,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4B2A2C021D0351810074CE9A /* Build configuration list for PBXNativeTarget "SwiftNeoVim" */;
 			buildPhases = (
+				4B183E191E08746B0079E8A8 /* ShellScript */,
 				4B2A2BF21D0351810074CE9A /* Sources */,
 				4B2A2BF31D0351810074CE9A /* Frameworks */,
 				4B2A2BF41D0351810074CE9A /* Headers */,
@@ -925,6 +970,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4BEBA51D1CFF374B00673FDF /* Build configuration list for PBXNativeTarget "VimR" */;
 			buildPhases = (
+				4B19BEFF1E110208007E823C /* ShellScript */,
 				4BEBA5011CFF374B00673FDF /* Sources */,
 				4BEBA5021CFF374B00673FDF /* Frameworks */,
 				4BEBA5031CFF374B00673FDF /* Resources */,
@@ -966,7 +1012,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0810;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Tae Won Ha";
 				TargetAttributes = {
 					4B2A2BF61D0351810074CE9A = {
@@ -1070,7 +1116,9 @@
 				4BB409E51DD68CCC005F39A2 /* FileBrowserMenu.xib in Resources */,
 				4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */,
 				4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */,
+				4B19BEFC1E110183007E823C /* markdown in Resources */,
 				4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */,
+				4B19BEFD1E110183007E823C /* preview in Resources */,
 				4B3AC8941DB031C600AC5823 /* sparkle_pub.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1086,6 +1134,32 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		4B183E191E08746B0079E8A8 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"${CONFIGURATION}\" = \"Debug\" ]; then\n    if [ -f \"SwiftNeoVim/NeoVimAutoCommandEvent.generated.h\" ]; then\n        exit 0\n    fi\nfi\n\nsed 's/^typedef enum auto_event/typedef NS_ENUM(NSUInteger, NeoVimAutoCommandEvent)/' <./neovim/build/include/auevents_enum.generated.h | sed 's/ event_T//' | sed 's/EVENT_/NeoVimAutoCommandEvent/' | sed 's/NUM_EVENTS/NumberOfAutoCommandEvents/' | sed -e '1s/^/@import Foundation;\\'$'\\n/' > SwiftNeoVim/NeoVimAutoCommandEvent.generated.h\n";
+		};
+		4B19BEFF1E110208007E823C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp ${SRCROOT}/Carthage/Checkouts/github-markdown-css/github-markdown.css ${SRCROOT}/VimR/markdown/";
+		};
 		4BBA71F11D319E0900E16612 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1213,9 +1287,13 @@
 				1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */,
 				4B6B0A781DA2A1A500212D6D /* FileOutlineView.swift in Sources */,
 				4BB409EE1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */,
+				4B183E1E1E09931E0079E8A8 /* MarkdownRenderer.swift in Sources */,
 				4BAD84E81D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift in Sources */,
 				1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */,
 				1929B3CEE0C1A1850E9CCE2F /* BasicTypes.swift in Sources */,
+				1929BA3BB94B77E9AE051FE5 /* PreviewComponent.swift in Sources */,
+				1929B4145AA81F006BAF3B5C /* PreviewService.swift in Sources */,
+				1929BD52275A6570C666A7BA /* PreviewRenderer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

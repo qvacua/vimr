@@ -10,6 +10,8 @@ protocol WorkspaceBarDelegate: class {
 
   func resizeWillStart(workspaceBar: WorkspaceBar)
   func resizeDidEnd(workspaceBar: WorkspaceBar)
+
+  func toggle(tool: WorkspaceTool)
 }
 
 /**
@@ -113,7 +115,6 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 
   func relayout() {
     self.removeConstraints(self.layoutConstraints)
-    self.proxyBar.removeAllConstraints()
     self.removeAllSubviews()
 
     if self.isEmpty() {
@@ -835,5 +836,6 @@ extension WorkspaceBar {
     self.relayout()
 
     self.delegate?.resizeDidEnd(workspaceBar: self)
+    self.delegate?.toggle(tool: tool)
   }
 }

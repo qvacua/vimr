@@ -24,12 +24,10 @@
 #import <nvim/api/vim.h>
 #import <nvim/ui.h>
 #import <nvim/ui_bridge.h>
-#import <nvim/main.h>
-#import <nvim/ex_docmd.h>
 #import <nvim/ex_getln.h>
 #import <nvim/fileio.h>
 #import <nvim/undo.h>
-#import <nvim/eval.h>
+#import <nvim/api/window.h>
 
 
 #define pun_type(t, x) (*((t *) (&(x))))
@@ -98,20 +96,6 @@ static bool has_dirty_docs() {
   }
 
   return false;
-}
-
-static void send_dirty_status() {
-  bool new_dirty_status = has_dirty_docs();
-  DLOG("dirty status: %d vs. %d", _dirty, new_dirty_status);
-  if (_dirty == new_dirty_status) {
-    return;
-  }
-
-  _dirty = new_dirty_status;
-  DLOG("sending dirty status: %d", _dirty);
-  NSData *data = [[NSData alloc] initWithBytes:&_dirty length:sizeof(bool)];
-  [_neovim_server sendMessageWithId:NeoVimServerMsgIdDirtyStatusChanged data:data];
-  [data release];
 }
 
 static void insert_marked_text(NSString *markedText) {
@@ -183,6 +167,20 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   xfree(ui);
 }
 
+static void send_dirty_status() {
+  bool new_dirty_status = has_dirty_docs();
+  DLOG("dirty status: %d vs. %d", _dirty, new_dirty_status);
+  if (_dirty == new_dirty_status) {
+    return;
+  }
+
+  _dirty = new_dirty_status;
+  DLOG("sending dirty status: %d", _dirty);
+  NSData *data = [[NSData alloc] initWithBytes:&_dirty length:sizeof(bool)];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdDirtyStatusChanged data:data];
+  [data release];
+}
+
 #pragma mark NeoVim's UI callbacks
 
 static void server_ui_resize(UI *ui __unused, int width, int height) {
@@ -204,9 +202,15 @@ static void server_ui_cursor_goto(UI *ui __unused, int row, int col) {
   _put_row = row;
   _put_column = col;
 
-  int values[] = {row, col, screen_cursor_row(), screen_cursor_column()};
-  DLOG("%d:%d - %d:%d", values[0], values[1], values[2], values[3]);
-  NSData *data = [[NSData alloc] initWithBytes:values length:(4 * sizeof(int))];
+  int values[] = {
+    row, col,
+    screen_cursor_row(), screen_cursor_column(),
+    (int) curwin->w_cursor.lnum, curwin->w_cursor.col + 1
+  };
+
+  DLOG("%d:%d - %d:%d - %d:%d", values[0], values[1], values[2], values[3], values[4], values[5]);
+
+  NSData *data = [[NSData alloc] initWithBytes:values length:(6 * sizeof(int))];
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetPosition data:data];
   [data release];
 }
@@ -442,31 +446,39 @@ void custom_ui_start(void) {
 void custom_ui_autocmds_groups(
     event_T event, char_u *fname, char_u *fname_io, int group, bool force, buf_T *buf, exarg_T *eap
 ) {
+  // We don't need these events in the UI (yet) and they slow down scrolling: Enable them, if necessary, only after
+  // optimizing the scrolling.
+  if (event == EVENT_CURSORMOVED || event == EVENT_CURSORMOVEDI) {
+    return;
+  }
+
   @autoreleasepool {
     DLOG("got event %d for file %s in group %d.", event, fname, group);
 
-    switch (event) {
-      // Dirty status: Did we get them all?
-      case EVENT_TEXTCHANGED:
-      case EVENT_TEXTCHANGEDI:
-      case EVENT_BUFWRITEPOST:
-      case EVENT_BUFLEAVE:
-        send_dirty_status();
-        return;
-
-      // For buffer list changes
-      case EVENT_BUFWINENTER:
-      case EVENT_BUFWINLEAVE:
-        [_neovim_server sendMessageWithId:NeoVimServerMsgIdBufferEvent];
-        break;
-
-      case EVENT_CWDCHANGED:
-        [_neovim_server sendMessageWithId:NeoVimServerMsgIdCwdChanged];
-        break;
-
-      default:
-        break;
+    if (event == EVENT_TEXTCHANGED
+      || event == EVENT_TEXTCHANGEDI
+      || event == EVENT_BUFWRITEPOST
+      || event == EVENT_BUFLEAVE)
+    {
+      send_dirty_status();
     }
+
+    NSUInteger eventCode = event;
+
+    NSMutableData *data;
+    if (buf == NULL) {
+      data = [[NSMutableData alloc] initWithBytes:&eventCode length:sizeof(NSUInteger)];
+    } else {
+      NSInteger bufHandle = buf->handle;
+
+      data = [[NSMutableData alloc] initWithCapacity:(sizeof(NSUInteger) + sizeof(NSInteger))];
+      [data appendBytes:&eventCode length:sizeof(NSUInteger)];
+      [data appendBytes:&bufHandle length:sizeof(NSInteger)];
+    }
+
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdAutoCommandEvent data:data];
+
+    [data release];
   }
 }
 
@@ -650,18 +662,8 @@ void neovim_vim_command_output(void **argv) {
     NSString *input = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
     Error err = ERROR_INIT;
-
-    // We don't know why nvim_command_output does not work when the optimization level is set to -Os.
-    // If set to -O0, nvim_command_output works fine... -_-
-    // String commandOutput = nvim_command_output((String) {
-    //     .data = (char *) input.cstr,
-    //     .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
-    // }, &err);
-    do_cmdline_cmd("redir => v:command_output");
-    nvim_command(vim_string_from(input), &err);
-    do_cmdline_cmd("redir END");
-
-    char_u *output = get_vim_var_str(VV_COMMAND_OUTPUT);
+    String commandOutput = nvim_command_output(vim_string_from(input), &err);
+    char_u *output = (char_u *) commandOutput.data;
 
     // FIXME: handle err.set == true
     NSString *result = nil;
@@ -773,7 +775,9 @@ void neovim_vim_command(void **argv) {
     Error err = ERROR_INIT;
     nvim_command(vim_string_from(input), &err);
 
-    // FIXME: handle err.set == true
+    if (err.set) {
+      WLOG("ERROR while executing command %s: %s", input.cstr, err.msg);
+    }
 
     [input release];
 
@@ -863,6 +867,39 @@ void neovim_delete(void **argv) {
     for (int i = 0; i < count; i++) {
       nvim_input(vim_string_from(_backspace));
     }
+
+    return nil;
+  });
+}
+
+void neovim_cursor_goto(void **argv) {
+  work_async(argv, ^NSData *(NSData *data) {
+    const int *values = data.bytes;
+
+    Array position = ARRAY_DICT_INIT;
+
+    position.size = 2;
+    position.capacity = 2;
+    position.items = xmalloc(2 * sizeof(Object));
+
+    Object row = OBJECT_INIT;
+    row.type = kObjectTypeInteger;
+    row.data.integer = values[0];
+
+    Object col = OBJECT_INIT;
+    col.type = kObjectTypeInteger;
+    col.data.integer = values[1];
+
+    position.items[0] = row;
+    position.items[1] = col;
+
+    Error err = ERROR_INIT;
+
+    nvim_win_set_cursor(nvim_get_current_win(), position, &err);
+    // The above call seems to be not enough...
+    nvim_input((String) { .data="<ESC>", .size=5 });
+
+    xfree(position.items);
 
     return nil;
   });

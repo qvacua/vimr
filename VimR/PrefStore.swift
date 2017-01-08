@@ -130,6 +130,6 @@ class PrefStore: StandardFlow {
 
         self.userDefaults.setValue(self.data.dict(), forKey: PrefStore.compatibleVersion)
         self.publish(event: self.data)
-        })
+      })
   }
 }

@@ -15,6 +15,9 @@ enum MainWindowAction {
   case changeBufferList(mainWindow: MainWindowComponent, buffers: [NeoVimBuffer])
   case changeFileBrowserSelection(mainWindow: MainWindowComponent, url: URL)
   case close(mainWindow: MainWindowComponent, mainWindowPrefData: MainWindowPrefData)
+
+  case toggleTool(tool: WorkspaceTool)
+  case currentBufferChanged(mainWindow: MainWindowComponent, buffer: NeoVimBuffer)
 }
 
 struct MainWindowPrefData: StandardPrefData {
@@ -28,6 +31,7 @@ struct MainWindowPrefData: StandardPrefData {
                                             toolPrefDatas: [
                                                 ToolPrefData.defaults[.fileBrowser]!,
                                                 ToolPrefData.defaults[.bufferList]!,
+                                                ToolPrefData.defaults[.preview]!,
                                             ])
 
   var isAllToolsVisible: Bool
@@ -50,11 +54,10 @@ struct MainWindowPrefData: StandardPrefData {
     }
 
     // Add default tool pref data for missing identifiers.
-    let toolDatas = toolDataDicts.map { ToolPrefData(dict: $0) }.flatMap { $0 }
+    let toolDatas = toolDataDicts.flatMap { ToolPrefData(dict: $0) }
     let missingToolDatas = Set(ToolIdentifier.all)
         .subtracting(toolDatas.map { $0.identifier })
-        .map { ToolPrefData.defaults[$0] }
-        .flatMap { $0 }
+        .flatMap { ToolPrefData.defaults[$0] }
 
     self.init(isAllToolsVisible: isAllToolsVisible,
               isToolButtonsVisible: isToolButtonsVisible,
@@ -70,7 +73,7 @@ struct MainWindowPrefData: StandardPrefData {
   }
 
   func toolPrefData(for identifier: ToolIdentifier) -> ToolPrefData {
-    guard let data = self.toolPrefDatas.filter({ $0.identifier == identifier }).first else {
+    guard let data = self.toolPrefDatas.first(where: { $0.identifier == identifier }) else {
       preconditionFailure("[ERROR] No tool for \(identifier) found!")
     }
 
@@ -85,6 +88,12 @@ class MainWindowComponent: WindowComponent,
                            WorkspaceDelegate
 {
 
+  enum ScrollAction {
+
+    case scroll(to: Position)
+    case cursor(to: Position)
+  }
+
   fileprivate static let nibName = "MainWindow"
 
   fileprivate var defaultEditorFont: NSFont
@@ -97,6 +106,8 @@ class MainWindowComponent: WindowComponent,
   fileprivate let workspace: Workspace
   fileprivate let neoVimView: NeoVimView
   fileprivate var tools = [ToolIdentifier: WorkspaceToolComponent]()
+
+  fileprivate let scrollFlow: EmbeddableComponent
 
   // MARK: - API
   var uuid: String {
@@ -141,6 +152,8 @@ class MainWindowComponent: WindowComponent,
     self.defaultEditorFont = initialData.appearance.editorFont
     self.fileItemService = fileItemService
 
+    self.scrollFlow = EmbeddableComponent(source: Observable.empty())
+
     super.init(source: source, nibName: MainWindowComponent.nibName)
 
     self.window.delegate = self
@@ -171,6 +184,7 @@ class MainWindowComponent: WindowComponent,
     // By default the tool buttons are shown and only the file browser tool is shown.
     let fileBrowserToolData = mainWindowData.toolPrefData(for: .fileBrowser)
     let bufferListToolData = mainWindowData.toolPrefData(for: .bufferList)
+    let previewToolData = mainWindowData.toolPrefData(for: .preview)
 
     let fileBrowserData = fileBrowserToolData.toolData as? FileBrowserData ?? FileBrowserData.default
 
@@ -196,11 +210,25 @@ class MainWindowComponent: WindowComponent,
     let bufferListTool = WorkspaceToolComponent(toolIdentifier: .bufferList, config: bufferListConfig)
     self.tools[.bufferList] = bufferListTool
 
+    let previewData = previewToolData.toolData as? PreviewComponent.PrefData ?? PreviewComponent.PrefData.default
+    let preview = PreviewComponent(source: self.sink,
+                                   scrollSource: self.scrollFlow.sink,
+                                   initialData: previewData)
+    let previewConfig = WorkspaceTool.Config(title: "Preview",
+                                             view: preview,
+                                             minimumDimension: 200,
+                                             withInnerToolbar: true)
+    let previewTool = WorkspaceToolComponent(toolIdentifier: .preview, config: previewConfig)
+    preview.workspaceTool = previewTool
+    self.tools[.preview] = previewTool
+
     self.workspace.append(tool: fileBrowserTool, location: fileBrowserToolData.location)
     self.workspace.append(tool: bufferListTool, location: bufferListToolData.location)
+    self.workspace.append(tool: previewTool, location: previewToolData.location)
 
     fileBrowserTool.dimension = fileBrowserToolData.dimension
     bufferListTool.dimension = bufferListToolData.dimension
+    previewTool.dimension = previewToolData.dimension
 
     if !mainWindowData.isAllToolsVisible {
       self.toggleAllTools(self)
@@ -216,6 +244,10 @@ class MainWindowComponent: WindowComponent,
 
     if bufferListToolData.isVisible {
       bufferListTool.toggle()
+    }
+
+    if previewToolData.isVisible {
+      previewTool.toggle()
     }
   }
 
@@ -276,8 +308,16 @@ class MainWindowComponent: WindowComponent,
         case let BufferListAction.open(buffer: buffer):
           self.neoVimView.select(buffer: buffer)
 
+        case let PreviewComponent.Action.reverseSearch(to: position):
+          self.neoVimView.cursorGo(to: position)
+          return
+
+        case let PreviewComponent.Action.scroll(to: position):
+          NSLog("preview scrolled to \(position)")
+          return
+
         default:
-          NSLog("WARN unrecognized action: \(action)")
+          NSLog("Not handled action: \(action)")
           return
         }
 
@@ -320,6 +360,10 @@ extension MainWindowComponent {
 
   func resizeDidEnd(workspace: Workspace) {
     self.neoVimView.exitResizeMode()
+  }
+
+  func toggled(tool: WorkspaceTool) {
+    self.publish(event: MainWindowAction.toggleTool(tool: tool))
   }
 }
 
@@ -426,18 +470,18 @@ extension MainWindowComponent {
     let fileBrowserTool = self.tools[.fileBrowser]!
 
     if fileBrowserTool.isSelected {
-      if fileBrowserTool.viewComponent.isFirstResponder {
+      if fileBrowserTool.viewComponent.view.isFirstResponder {
         fileBrowserTool.toggle()
         self.focusNeoVimView(self)
       } else {
-        fileBrowserTool.viewComponent.beFirstResponder()
+        fileBrowserTool.viewComponent.view.beFirstResponder()
       }
 
       return
     }
 
     fileBrowserTool.toggle()
-    fileBrowserTool.viewComponent.beFirstResponder()
+    fileBrowserTool.viewComponent.view.beFirstResponder()
   }
 
   @IBAction func focusNeoVimView(_ sender: Any?) {
@@ -500,6 +544,18 @@ extension MainWindowComponent {
     self.publish(event: MainWindowAction.changeBufferList(mainWindow: self, buffers: buffers))
   }
 
+  func currentBufferChanged(_ currentBuffer: NeoVimBuffer) {
+    self.publish(event: MainWindowAction.currentBufferChanged(mainWindow: self, buffer: currentBuffer))
+  }
+
+  func tabChanged() {
+    guard let currentBuffer = self.neoVimView.currentBuffer() else {
+      return
+    }
+
+    self.publish(event: MainWindowAction.currentBufferChanged(mainWindow: self, buffer: currentBuffer))
+  }
+
   func ipcBecameInvalid(reason: String) {
     let alert = NSAlert()
     alert.addButton(withTitle: "Close")
@@ -510,6 +566,14 @@ extension MainWindowComponent {
     alert.beginSheetModal(for: self.window) { [weak self] response in
       self?.windowController.close()
     }
+  }
+
+  func scroll() {
+    self.scrollFlow.publish(event: ScrollAction.scroll(to: self.neoVimView.currentPosition))
+  }
+
+  func cursor(to position: Position) {
+    self.scrollFlow.publish(event: ScrollAction.cursor(to: self.neoVimView.currentPosition))
   }
 }
 
@@ -549,7 +613,14 @@ extension MainWindowComponent {
                                       isVisible: bufferList.isSelected,
                                       dimension: bufferList.dimension)
 
-    return [ fileBrowserData, bufferListData ]
+    let preview = self.tools[.preview]!
+    let previewData = ToolPrefData(identifier: .preview,
+                                   location: preview.location,
+                                   isVisible: preview.isSelected,
+                                   dimension: preview.dimension,
+                                   toolData: preview.toolData)
+
+    return [ fileBrowserData, bufferListData, previewData ]
   }
 
   func windowShouldClose(_ sender: Any) -> Bool {
