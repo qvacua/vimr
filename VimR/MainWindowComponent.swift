@@ -548,6 +548,14 @@ extension MainWindowComponent {
     self.publish(event: MainWindowAction.currentBufferChanged(mainWindow: self, buffer: currentBuffer))
   }
 
+  func tabChanged() {
+    guard let currentBuffer = self.neoVimView.currentBuffer() else {
+      return
+    }
+
+    self.publish(event: MainWindowAction.currentBufferChanged(mainWindow: self, buffer: currentBuffer))
+  }
+
   func ipcBecameInvalid(reason: String) {
     let alert = NSAlert()
     alert.addButton(withTitle: "Close")

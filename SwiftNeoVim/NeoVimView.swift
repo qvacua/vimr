@@ -1455,6 +1455,10 @@ extension NeoVimView {
         self.bufferListChanged()
       }
 
+      if event == .TABENTER {
+        self.tabChanged()
+      }
+
       if event == .CWDCHANGED {
         self.cwdChanged()
       }
@@ -1479,29 +1483,27 @@ extension NeoVimView {
   }
 
   fileprivate func currentBufferChanged(_ handle: Int) {
-    DispatchUtils.gui {
-      guard let currentBuffer = self.currentBuffer() else {
-        return
-      }
-
-      guard currentBuffer.handle == handle else {
-        return
-      }
-
-      self.delegate?.currentBufferChanged(currentBuffer)
+    guard let currentBuffer = self.currentBuffer() else {
+      return
     }
+
+    guard currentBuffer.handle == handle else {
+      return
+    }
+
+    self.delegate?.currentBufferChanged(currentBuffer)
+  }
+
+  fileprivate func tabChanged() {
+    self.delegate?.tabChanged()
   }
 
   fileprivate func cwdChanged() {
-    DispatchUtils.gui {
-      self.delegate?.cwdChanged()
-    }
+    self.delegate?.cwdChanged()
   }
 
   fileprivate func bufferListChanged() {
-    DispatchUtils.gui {
-      self.delegate?.bufferListChanged()
-    }
+    self.delegate?.bufferListChanged()
   }
 
   fileprivate func updateCursorWhenPutting(currentPosition curPos: Position, screenCursor: Position) {
