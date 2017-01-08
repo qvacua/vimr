@@ -516,7 +516,7 @@ void start_neovim() {
 }
 
 void quit_neovim() {
-  WLOG("NeoVimServer exiting...");
+  DLOG("NeoVimServer exiting...");
   CFRunLoopStop(_mainRunLoop);
 }
 

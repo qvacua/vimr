@@ -54,6 +54,6 @@ int main(int argc, const char *argv[]) {
 
   CFRunLoopRun();
 
-  WLOG("NeoVimServer returning.");
+  DLOG("NeoVimServer returning.");
   return 0;
 }
