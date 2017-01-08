@@ -291,7 +291,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
   fileprivate func scrollSubscription(source: Observable<Any>) -> Disposable {
     return source
-      .throttle(1, latest: true, scheduler: MainScheduler.instance)
+      .throttle(0.75, latest: true, scheduler: MainScheduler.instance)
       .filter { $0 is MainWindowComponent.ScrollAction }
       .map { $0 as! MainWindowComponent.ScrollAction }
       .subscribe(onNext: { [unowned self] action in
@@ -311,7 +311,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
   fileprivate func addReactions() {
     self.webviewMessageHandler.flow.sink
-      .throttle(1, latest: true, scheduler: MainScheduler.instance)
+      .throttle(0.75, latest: true, scheduler: MainScheduler.instance)
       .filter { $0 is WebviewMessageHandler.Action }
       .map { $0 as! WebviewMessageHandler.Action }
       .subscribe(onNext: { [weak self] action in

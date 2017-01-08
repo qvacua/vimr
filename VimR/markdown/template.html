@@ -18,8 +18,8 @@
       const rect = el.getBoundingClientRect();
 
       return (
-        (rect.top >= 0 || (rect.top < 0 && rect.bottom > 0)) &&
-        (rect.left >= 0 || (rect.left < 0 && rect.right > 0))
+        ((rect.top >= 0 && window.innerHeight - rect.top >= 0) || (rect.top < 0 && rect.bottom > 0)) &&
+        ((rect.left >= 0 && window.innerWidth - rect.left >= 0) || (rect.left < 0 && rect.right > 0))
       );
     }
 
@@ -71,6 +71,7 @@
       }
 
       lastMarkdownPosition = result;
+//      console.log(`webview scrolled to ${result.lineBegin}:${result.columnBegin}`);
       window.webkit.messageHandlers.com_vimr_preview_markdown.postMessage(result);
     }
 
@@ -116,14 +117,19 @@
       }, Number.MAX_SAFE_INTEGER);
 
       const candidateEntry = entriesWithMinRowDistance.find(entry => entry.columnDistance == minColumnDistance);
-
       if (!candidateEntry) {
         return;
       }
 
-      let {x, y}  = scrollPosition(candidateEntry.element);
+      const element = candidateEntry.element;
+      if (isElementVisibleInViewport(element)) {
+        return;
+      }
+
+      let {x, y}  = scrollPosition(element);
       suppressNextScrollEvent = true;
       window.scrollTo(x, y);
+//      console.log(`scrolled webview to ${x}:${y}`);
     }
 
     function scrollPosition(element) {
