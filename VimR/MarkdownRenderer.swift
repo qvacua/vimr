@@ -126,6 +126,8 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
   fileprivate let webview: WKWebView
 
+  fileprivate var ignoreNextForwardSearch = false;
+
   fileprivate var currentUrl: URL?
   fileprivate var currentPreviewPosition = Position(row: 0, column: 0)
   weak fileprivate var neoVimInfoProvider: NeoVimInfoProvider?
@@ -227,20 +229,6 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     return extensions.contains(fileExtension)
   }
 
-  fileprivate func scrollSubscription(source: Observable<Any>) -> Disposable {
-    return source
-      .observeOn(self.scheduler)
-      .throttle(0.5, latest: true, scheduler: self.scheduler)
-      .filter { $0 is MainWindowComponent.ScrollAction }
-      .subscribe(onNext: { [unowned self] action in
-        guard self.isForwardSearchAutomatically else {
-          return
-        }
-
-        self.forwardSearchAction(nil)
-      })
-  }
-
   fileprivate func subscription(source: Observable<Any>) -> Disposable {
     return source
       .observeOn(self.scheduler)
@@ -303,9 +291,23 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     refresh.autoPinEdge(.right, to: .left, of: reverse)
   }
 
+  fileprivate func scrollSubscription(source: Observable<Any>) -> Disposable {
+    return source
+      .throttle(0.5, latest: true, scheduler: MainScheduler.instance)
+      .filter { $0 is MainWindowComponent.ScrollAction }
+      .subscribe(onNext: { [unowned self] action in
+        guard self.isForwardSearchAutomatically && self.ignoreNextForwardSearch == false else {
+          self.ignoreNextForwardSearch = false
+          return
+        }
+
+        self.forwardSearchAction(nil)
+      })
+  }
+
   fileprivate func addReactions() {
     self.webviewMessageHandler.flow.sink
-      .throttle(0.5, latest: true, scheduler: self.scheduler)
+      .throttle(0.5, latest: true, scheduler: MainScheduler.instance)
       .filter { $0 is WebviewMessageHandler.Action }
       .map { $0 as! WebviewMessageHandler.Action }
       .subscribe(onNext: { [weak self] action in
@@ -315,6 +317,10 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
           guard self?.isReverseSearchAutomatically == true else {
             return
+          }
+
+          if self?.isForwardSearchAutomatically == true {
+            self?.ignoreNextForwardSearch = true
           }
 
           self?.flow.publish(
