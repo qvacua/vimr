@@ -455,13 +455,13 @@ void custom_ui_autocmds_groups(
   @autoreleasepool {
     DLOG("got event %d for file %s in group %d.", event, fname, group);
 
-    if (event == EVENT_TEXTCHANGED
-      || event == EVENT_TEXTCHANGEDI
-      || event == EVENT_BUFWRITEPOST
-      || event == EVENT_BUFLEAVE)
-    {
-      send_dirty_status();
-    }
+//    if (event == EVENT_TEXTCHANGED
+//      || event == EVENT_TEXTCHANGEDI
+//      || event == EVENT_BUFWRITEPOST
+//      || event == EVENT_BUFLEAVE)
+//    {
+//      send_dirty_status();
+//    }
 
     NSUInteger eventCode = event;
 
