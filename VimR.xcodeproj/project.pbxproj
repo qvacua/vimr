@@ -28,7 +28,6 @@
 		1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D510177918080BE39B /* Scorer.swift */; };
 		1929BD4CA2204E061A86A140 /* MatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC19C1BC19246AFF1621 /* MatcherTests.swift */; };
 		1929BD52275A6570C666A7BA /* PreviewRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1EC32D8A26958FB39B1 /* PreviewRenderer.swift */; };
-		1929BE27005D80C5C129BF42 /* NeoVimViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B60F33F13D64762740E0 /* NeoVimViewExtension.swift */; };
 		1929BEB90DCDAF7A2B68C886 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA6128BFDD54CA92F46E /* ColorUtils.swift */; };
 		1929BEFEABA0448306CDB6D4 /* FileItemIgnorePatternTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBC84557C8351EC6183E /* FileItemIgnorePatternTest.swift */; };
 		1929BF81A40B4154D3EA33CE /* server_ui.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B93013228985F509C8F6 /* server_ui.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -288,7 +287,6 @@
 		1929B477E1E62433BC48E10B /* ArrayCommonsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayCommonsTest.swift; sourceTree = "<group>"; };
 		1929B5C3F2F1CA4113DABFFD /* CocoaCategories.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaCategories.m; sourceTree = "<group>"; };
 		1929B5D977261F1EBFA9E8F1 /* FileUtilsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileUtilsTest.swift; sourceTree = "<group>"; };
-		1929B60F33F13D64762740E0 /* NeoVimViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimViewExtension.swift; sourceTree = "<group>"; };
 		1929B69499B2569793350CEC /* FileItemIgnorePattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemIgnorePattern.swift; sourceTree = "<group>"; };
 		1929B7CB4863F80230C32D3C /* FileItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
 		1929B8DA5AA33536F0082200 /* PreviewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewComponent.swift; sourceTree = "<group>"; };
@@ -298,8 +296,8 @@
 		1929BA6128BFDD54CA92F46E /* ColorUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorUtils.swift; sourceTree = "<group>"; };
 		1929BA8AC40B901B20F20B71 /* FileUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileUtils.swift; sourceTree = "<group>"; };
 		1929BB251F74BEFC82CEEF84 /* PrefPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefPane.swift; sourceTree = "<group>"; };
-		1929BB8BCA48637156F92945 /* PreviewService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewService.swift; sourceTree = "<group>"; };
 		1929BB6CFF4CC0B5E8B00C62 /* DataWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataWrapper.m; sourceTree = "<group>"; };
+		1929BB8BCA48637156F92945 /* PreviewService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewService.swift; sourceTree = "<group>"; };
 		1929BBC84557C8351EC6183E /* FileItemIgnorePatternTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemIgnorePatternTest.swift; sourceTree = "<group>"; };
 		1929BC19C1BC19246AFF1621 /* MatcherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatcherTests.swift; sourceTree = "<group>"; };
 		1929BDF9EBAF1D9D44399045 /* ScoredFileItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoredFileItem.swift; sourceTree = "<group>"; };
@@ -737,7 +735,6 @@
 				4B705B9F1DDF761C005F844B /* Tools */,
 				4B1AC1AF1D7F395300898F0B /* Open Quickly */,
 				4B238BED1D3ED55300CBDD98 /* Preferences */,
-				1929B60F33F13D64762740E0 /* NeoVimViewExtension.swift */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -1297,7 +1294,6 @@
 				1929BA3BB94B77E9AE051FE5 /* PreviewComponent.swift in Sources */,
 				1929B4145AA81F006BAF3B5C /* PreviewService.swift in Sources */,
 				1929BD52275A6570C666A7BA /* PreviewRenderer.swift in Sources */,
-				1929BE27005D80C5C129BF42 /* NeoVimViewExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

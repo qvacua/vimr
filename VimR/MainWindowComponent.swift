@@ -90,7 +90,7 @@ class MainWindowComponent: WindowComponent,
 
   enum ScrollAction {
 
-    case scroll
+    case scroll(to: Position)
   }
 
   fileprivate static let nibName = "MainWindow"
@@ -212,7 +212,6 @@ class MainWindowComponent: WindowComponent,
     let previewData = previewToolData.toolData as? PreviewComponent.PrefData ?? PreviewComponent.PrefData.default
     let preview = PreviewComponent(source: self.sink,
                                    scrollSource: self.scrollFlow.sink,
-                                   neoVimInfoProvider: self.neoVimView,
                                    initialData: previewData)
     let previewConfig = WorkspaceTool.Config(title: "Preview",
                                              view: preview,
@@ -561,7 +560,8 @@ extension MainWindowComponent {
   }
 
   func scroll() {
-    self.scrollFlow.publish(event: ScrollAction.scroll)
+    let pos = self.neoVimView.currentPosition
+    self.scrollFlow.publish(event: ScrollAction.scroll(to: pos))
   }
 }
 

@@ -128,9 +128,9 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
   fileprivate var ignoreNextForwardSearch = false;
 
+  fileprivate var currentEditorPosition = Position(row: 1, column: 1)
   fileprivate var currentUrl: URL?
-  fileprivate var currentPreviewPosition = Position(row: 0, column: 0)
-  weak fileprivate var neoVimInfoProvider: NeoVimInfoProvider?
+  fileprivate var currentPreviewPosition = Position(row: 1, column: 1)
 
   let identifier: String = MarkdownRenderer.identifier
   var prefData: StandardPrefData? {
@@ -150,7 +150,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
   let toolbar: NSView? = NSView(forAutoLayout: ())
   let menuItems: [NSMenuItem]?
 
-  init(source: Observable<Any>, scrollSource: Observable<Any>, neoVimInfoProvider: NeoVimInfoProvider, initialData: PrefData) {
+  init(source: Observable<Any>, scrollSource: Observable<Any>, initialData: PrefData) {
     guard let templateUrl = Bundle.main.url(forResource: "template",
                                             withExtension: "html",
                                             subdirectory: "markdown")
@@ -161,8 +161,6 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     guard let template = try? String(contentsOf: templateUrl) else {
       preconditionFailure("ERROR Cannot load markdown template")
     }
-
-    self.neoVimInfoProvider = neoVimInfoProvider
 
     self.template = template
 
@@ -295,13 +293,19 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     return source
       .throttle(0.5, latest: true, scheduler: MainScheduler.instance)
       .filter { $0 is MainWindowComponent.ScrollAction }
+      .map { $0 as! MainWindowComponent.ScrollAction }
       .subscribe(onNext: { [unowned self] action in
+        switch action {
+        case let .scroll(to: position):
+          self.currentEditorPosition = position
+        }
+
         guard self.isForwardSearchAutomatically && self.ignoreNextForwardSearch == false else {
           self.ignoreNextForwardSearch = false
           return
         }
 
-        self.forwardSearchAction(nil)
+        self.forwardSearch(position: self.currentEditorPosition)
       })
   }
 
@@ -357,6 +361,10 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 // MARK: - Actions
 extension MarkdownRenderer {
 
+  fileprivate func forwardSearch(position: Position) {
+    self.webview.evaluateJavaScript("scrollToPosition(\(position.row), \(position.column));")
+  }
+
   func refreshNowAction(_: Any?) {
     guard let url = self.currentUrl else {
       return
@@ -370,13 +378,7 @@ extension MarkdownRenderer {
   }
 
   func forwardSearchAction(_: Any?) {
-    guard let row = self.neoVimInfoProvider?.currentLine(),
-          let column = self.neoVimInfoProvider?.currentColumn()
-      else {
-      return
-    }
-
-    self.webview.evaluateJavaScript("scrollToPosition(\(row), \(column));")
+    self.forwardSearch(position: self.currentEditorPosition)
   }
 
   func reverseSearchAction(_: Any?) {
