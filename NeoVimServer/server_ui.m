@@ -24,8 +24,6 @@
 #import <nvim/api/vim.h>
 #import <nvim/ui.h>
 #import <nvim/ui_bridge.h>
-#import <nvim/main.h>
-#import <nvim/ex_docmd.h>
 #import <nvim/ex_getln.h>
 #import <nvim/fileio.h>
 #import <nvim/undo.h>
@@ -664,19 +662,7 @@ void neovim_vim_command_output(void **argv) {
     NSString *input = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
     Error err = ERROR_INIT;
-
-    // We don't know why nvim_command_output does not work when the optimization level is set to -Os.
-    // If set to -O0, nvim_command_output works fine... -_-
-     String commandOutput = nvim_command_output((String) {
-         .data = (char *) input.cstr,
-         .size = [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
-     }, &err);
-//    do_cmdline_cmd("redir => v:command_output");
-//    nvim_command(vim_string_from(input), &err);
-//    do_cmdline_cmd("redir END");
-//
-//    char_u *output = get_vim_var_str(VV_COMMAND_OUTPUT);
-
+    String commandOutput = nvim_command_output(vim_string_from(input), &err);
     char_u *output = (char_u *) commandOutput.data;
 
     // FIXME: handle err.set == true
