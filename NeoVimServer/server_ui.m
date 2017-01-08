@@ -119,9 +119,7 @@ static void run_neovim(void *arg __unused) {
   char *argv[1];
   argv[0] = "nvim";
 
-  int returnCode = nvim_main(1, argv);
-
-  NSLog(@"neovim's main returned with code: %d\n", returnCode);
+  nvim_main(1, argv);
 }
 
 static void set_ui_size(UIBridgeData *bridge, int width, int height) {
@@ -518,8 +516,8 @@ void start_neovim() {
 }
 
 void quit_neovim() {
-  DLOG("NeoVimServer exiting...");
-  exit(0);
+  WLOG("NeoVimServer exiting...");
+  CFRunLoopStop(_mainRunLoop);
 }
 
 #pragma mark Functions for neovim's main loop

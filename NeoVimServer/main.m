@@ -29,7 +29,7 @@ void observe_parent_termination() {
 
   dispatch_source_set_event_handler(source, ^{
     WLOG("Exiting neovim server due to parent termination.");
-    CFRunLoopStop(_mainRunLoop);
+    quit_neovim();
     dispatch_source_cancel(source);
   });
 
@@ -53,6 +53,7 @@ int main(int argc, const char *argv[]) {
   }
 
   CFRunLoopRun();
-  WLOG("Returning neovim server");
+
+  WLOG("NeoVimServer returning.");
   return 0;
 }

@@ -9,6 +9,7 @@
 @class NeoVimServer;
 
 extern NeoVimServer *_neovim_server;
+extern CFRunLoopRef _mainRunLoop;
 
 extern void start_neovim();
 extern void quit_neovim();
