@@ -91,6 +91,7 @@ class MainWindowComponent: WindowComponent,
   enum ScrollAction {
 
     case scroll(to: Position)
+    case cursor(to: Position)
   }
 
   fileprivate static let nibName = "MainWindow"
@@ -560,8 +561,11 @@ extension MainWindowComponent {
   }
 
   func scroll() {
-    let pos = self.neoVimView.currentPosition
-    self.scrollFlow.publish(event: ScrollAction.scroll(to: pos))
+    self.scrollFlow.publish(event: ScrollAction.scroll(to: self.neoVimView.currentPosition))
+  }
+
+  func cursor(to position: Position) {
+    self.scrollFlow.publish(event: ScrollAction.cursor(to: self.neoVimView.currentPosition))
   }
 }
 

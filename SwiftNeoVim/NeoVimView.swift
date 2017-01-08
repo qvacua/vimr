@@ -1288,6 +1288,9 @@ extension NeoVimView {
       self.grid.goto(position)
       self.grid.moveCursor(screenCursor)
     }
+    DispatchUtils.gui {
+      self.delegate?.cursor(to: currentPosition)
+    }
   }
 
   public func updateMenu() {

@@ -18,4 +18,5 @@ public protocol NeoVimViewDelegate: class {
   func ipcBecameInvalid(reason: String)
 
   func scroll()
+  func cursor(to: Position)
 }
