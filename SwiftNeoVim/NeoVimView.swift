@@ -99,7 +99,7 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
     set {
       let path = newValue.path
       let escapedCwd = self.agent.escapedFileName(path)
-      self.agent.vimCommand("silent cd \(escapedCwd)")
+      self.agent.vimCommandOutput("cd \(escapedCwd)")
     }
   }
 
