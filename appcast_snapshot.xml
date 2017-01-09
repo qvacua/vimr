@@ -7,22 +7,20 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-160</title>
+      <title>SNAPSHOT-161</title>
       <description><![CDATA[
-    <ul>
-<li>GH-339: First draft of markdown previewer. Please report issues in GH-339 <a href="https://github.com/qvacua/vimr/issues/339">https://github.com/qvacua/vimr/issues/339</a>.</li>
-</ul>
+    <p>GH-382: Bugfix: <code>cd</code> to the working directory when using <code>vimr</code> sometimes does not work</p>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/160
+        https://github.com/qvacua/vimr/releases/tag/snapshot/161
       </releaseNotesLink>
-      <pubDate>2017-01-08T16:18:48.294323</pubDate>
+      <pubDate>2017-01-09T22:14:48.709048</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/160/VimR-SNAPSHOT-160.tar.bz2"
-                 sparkle:version="160"
-                 sparkle:shortVersionString="SNAPSHOT-160"
-                 sparkle:dsaSignature="MCwCFEO9VvVDMijr6WD77f3ygWxe95aGAhQlQqAZa3URSy5wusg7nFWr80ab4A=="
-                 length="9555137"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/161/VimR-SNAPSHOT-161.tar.bz2"
+                 sparkle:version="161"
+                 sparkle:shortVersionString="SNAPSHOT-161"
+                 sparkle:dsaSignature="MC0CFQCKyPolvPEE0BFs27tniRWwTOTgZAIUFmZvuc75pJ4A1D3hvqATI9ommNs="
+                 length="9556963"
                  type="application/octet-stream"/>
     </item>
   </channel>
