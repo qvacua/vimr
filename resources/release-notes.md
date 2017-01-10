@@ -1,3 +1,7 @@
+# 0.12.6-162
+
+* GH-382: Bugfix: Sometimes the working directory is not set correctly when using the command line tool `vimr`.
+
 # 0.12.5-159
 
 * GH-376: Bugfix: Sometimes the communication between the UI and the Neovim backend breaks.
