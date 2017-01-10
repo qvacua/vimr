@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.12.5-159</title>
+      <title>v0.12.6-162</title>
       <description><![CDATA[
     <ul>
-<li>GH-376: Bugfix: Sometimes the communication between the UI and the Neovim backend breaks.</li>
+<li>GH-382: Bugfix: Sometimes the working directory is not set correctly when using the command line tool <code>vimr</code>.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.12.5-159
+        https://github.com/qvacua/vimr/releases/tag/v0.12.6-162
       </releaseNotesLink>
-      <pubDate>2017-01-08T14:34:02.722799</pubDate>
+      <pubDate>2017-01-10T18:14:29.004786</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.12.5-159/VimR-v0.12.5-159.tar.bz2"
-                 sparkle:version="159"
-                 sparkle:shortVersionString="0.12.5"
-                 sparkle:dsaSignature="MCwCFA3gUfa7u1aJrmfR1Z5s0J6l85DfAhRPJTezUoxhsaRGxhHtdLl66UojUA=="
-                 length="9309441"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.12.6-162/VimR-v0.12.6-162.tar.bz2"
+                 sparkle:version="162"
+                 sparkle:shortVersionString="0.12.6"
+                 sparkle:dsaSignature="MCwCFF3ViTcKEUFOLCWumRD05YbMpepyAhRq8oVXonWqpYwo1Vn0x0SNQ1EwUg=="
+                 length="9310930"
                  type="application/octet-stream"/>
     </item>
   </channel>
