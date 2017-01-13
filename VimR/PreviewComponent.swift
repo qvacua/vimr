@@ -7,6 +7,7 @@ import Cocoa
 import RxSwift
 import PureLayout
 import WebKit
+import Swifter
 
 class PreviewComponent: NSView, ViewComponent, ToolDataHolder, WKNavigationDelegate {
 
@@ -112,6 +113,8 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder, WKNavigationDeleg
     }
   }
 
+  fileprivate let httpServer: HttpServer
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -137,14 +140,16 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder, WKNavigationDeleg
     return self
   }
 
-  init(source: Observable<Any>, scrollSource: Observable<Any>, initialData: PrefData) {
+  init(source: Observable<Any>, scrollSource: Observable<Any>, httpServer: HttpServer, initialData: PrefData) {
     self.flow = EmbeddableComponent(source: source)
+    self.httpServer = httpServer
 
     self.baseUrl = self.previewService.baseUrl()
     let markdownData = initialData.rendererDatas[MarkdownRenderer.identifier] as? MarkdownRenderer.PrefData ??
                        MarkdownRenderer.PrefData.default
     self.markdownRenderer = MarkdownRenderer(source: self.flow.sink,
                                              scrollSource: scrollSource,
+                                             httpServer: self.httpServer,
                                              initialData: markdownData)
 
     self.renderers = [
@@ -231,7 +236,7 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder, WKNavigationDeleg
       .throttle(1, latest: true, scheduler: self.scheduler)
       .filter { $0 is PreviewRendererAction }
       .map { $0 as! PreviewRendererAction }
-      .subscribe(onNext: { action in
+      .subscribe(onNext: { [unowned self] action in
         guard self.isOpen else {
           return
         }

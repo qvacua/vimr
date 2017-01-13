@@ -6,6 +6,7 @@
 import Cocoa
 import PureLayout
 import RxSwift
+import Swifter
 
 enum MainWindowAction {
 
@@ -109,6 +110,8 @@ class MainWindowComponent: WindowComponent,
 
   fileprivate let scrollFlow: EmbeddableComponent
 
+  fileprivate let httpServer: HttpServer;
+
   // MARK: - API
   var uuid: String {
     return self.neoVimView.uuid
@@ -141,6 +144,7 @@ class MainWindowComponent: WindowComponent,
        fileItemService: FileItemService,
        cwd: URL,
        urls: [URL] = [],
+       httpServer: HttpServer,
        initialData: PrefData)
   {
     self.neoVimView = NeoVimView(frame: CGRect.zero,
@@ -153,6 +157,8 @@ class MainWindowComponent: WindowComponent,
     self.fileItemService = fileItemService
 
     self.scrollFlow = EmbeddableComponent(source: Observable.empty())
+
+    self.httpServer = httpServer
 
     super.init(source: source, nibName: MainWindowComponent.nibName)
 
@@ -213,6 +219,7 @@ class MainWindowComponent: WindowComponent,
     let previewData = previewToolData.toolData as? PreviewComponent.PrefData ?? PreviewComponent.PrefData.default
     let preview = PreviewComponent(source: self.sink,
                                    scrollSource: self.scrollFlow.sink,
+                                   httpServer: self.httpServer,
                                    initialData: previewData)
     let previewConfig = WorkspaceTool.Config(title: "Preview",
                                              view: preview,

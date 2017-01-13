@@ -5,6 +5,7 @@
 
 import Cocoa
 import RxSwift
+import Swifter
 
 enum MainWindowManagerAction {
 
@@ -19,9 +20,19 @@ class MainWindowManager: StandardFlow {
   fileprivate let fileItemService: FileItemService
   fileprivate var data: PrefData
 
+  fileprivate let httpServer = HttpServer() // TODO: WRONG: service-ify this!!!
+
   init(source: Observable<Any>, fileItemService: FileItemService, initialData: PrefData) {
     self.fileItemService = fileItemService
     self.data = initialData
+
+    let port = NetUtils.openPort()
+    NSLog("\(#function): opening a server on port \(port)")
+    do {
+      try self.httpServer.start(port)
+    } catch {
+      NSLog("ERROR \(#function): could not start the http server on port \(port)")
+    }
 
     super.init(source: source)
   }
@@ -31,6 +42,7 @@ class MainWindowManager: StandardFlow {
                                                   fileItemService: self.fileItemService,
                                                   cwd: cwd,
                                                   urls: urls,
+                                                  httpServer: self.httpServer,
                                                   initialData: self.data)
 
     self.mainWindowComponents[mainWindowComponent.uuid] = mainWindowComponent
@@ -58,6 +70,10 @@ class MainWindowManager: StandardFlow {
     mainWindowComponent.show()
 
     return mainWindowComponent
+  }
+
+  deinit {
+    self.httpServer.stop()
   }
 
   func close(_ mainWindowComponent: MainWindowComponent, prefData: MainWindowPrefData) {
