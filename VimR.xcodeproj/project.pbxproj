@@ -16,6 +16,7 @@
 		1929B4145AA81F006BAF3B5C /* PreviewService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB8BCA48637156F92945 /* PreviewService.swift */; };
 		1929B462CD4935AFF6D69457 /* FileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7CB4863F80230C32D3C /* FileItem.swift */; };
 		1929B53876E6952D378C2B30 /* ScoredFileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDF9EBAF1D9D44399045 /* ScoredFileItem.swift */; };
+		1929B5CF6ECCBCC3FB5292CE /* HttpServerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0D767ED19EE1281ECD9 /* HttpServerService.swift */; };
 		1929B6388EAF16C190B82955 /* FileItemIgnorePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B69499B2569793350CEC /* FileItemIgnorePattern.swift */; };
 		1929B67DA3EB21A631EF1DBB /* FileUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA8AC40B901B20F20B71 /* FileUtils.swift */; };
 		1929B728262BAA14FC93F6AC /* NeoVimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF00B466B40629C2AABE /* NeoVimView.swift */; };
@@ -281,6 +282,7 @@
 
 /* Begin PBXFileReference section */
 		1929B02440BC99C42F9EBD45 /* NetUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetUtils.m; sourceTree = "<group>"; };
+		1929B0D767ED19EE1281ECD9 /* HttpServerService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServerService.swift; sourceTree = "<group>"; };
 		1929B0EEBE4A765934AF8335 /* DataWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataWrapper.h; sourceTree = "<group>"; };
 		1929B15B7EDC9B0F40E5E95C /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
 		1929B1A51F076E088EF4CCA4 /* server_globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_globals.h; sourceTree = "<group>"; };
@@ -812,6 +814,7 @@
 				4BDF50101D760AB700D8FBC3 /* Commons */,
 				4B6423941D8EFD6100FC78C8 /* Workspace */,
 				4B97E2CF1D33F92200FC0660 /* resources */,
+				1929B0D767ED19EE1281ECD9 /* HttpServerService.swift */,
 			);
 			path = VimR;
 			sourceTree = "<group>";
@@ -1306,6 +1309,7 @@
 				1929B4145AA81F006BAF3B5C /* PreviewService.swift in Sources */,
 				1929BD52275A6570C666A7BA /* PreviewRenderer.swift in Sources */,
 				1929BD2F41D93ADFF43C1C98 /* NetUtils.m in Sources */,
+				1929B5CF6ECCBCC3FB5292CE /* HttpServerService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

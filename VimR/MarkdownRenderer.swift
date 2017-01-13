@@ -42,12 +42,26 @@ fileprivate class WebviewMessageHandler: NSObject, WKScriptMessageHandler {
   }
 }
 
+fileprivate func shareFile(_ path: String) -> ((HttpRequest) -> HttpResponse) {
+  return { r in
+    guard let file = try? path.openForReading() else {
+      return .notFound
+    }
+
+    return .raw(200, "OK", [:], { writer in
+      try? writer.write(file)
+      file.close()
+    })
+  }
+}
+
 class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
   static let identifier = "com.qvacua.vimr.tool.preview.markdown"
   static func prefData(from dict: [String: Any]) -> StandardPrefData? {
     return PrefData(dict: dict)
   }
+  static let serverPath = "tool/preview/markdown"
 
   struct PrefData: StandardPrefData {
 
@@ -134,6 +148,11 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
   fileprivate var currentUrl: URL?
   fileprivate var currentPreviewPosition = Position(row: 1, column: 1)
 
+  fileprivate let uuid = UUID().uuidString
+  fileprivate var server = HttpServer()
+  fileprivate let port: in_port_t
+  fileprivate let tempDir = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+
   let identifier: String = MarkdownRenderer.identifier
   var prefData: StandardPrefData? {
     return PrefData(isForwardSearchAutomatically: self.isForwardSearchAutomatically,
@@ -152,9 +171,6 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
   let toolbar: NSView? = NSView(forAutoLayout: ())
   let menuItems: [NSMenuItem]?
 
-  fileprivate var server = HttpServer()
-  fileprivate let port: in_port_t
-
   init(source: Observable<Any>, scrollSource: Observable<Any>, initialData: PrefData) {
     guard let templateUrl = Bundle.main.url(forResource: "template",
                                             withExtension: "html",
@@ -167,12 +183,17 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
       preconditionFailure("ERROR Cannot load markdown template")
     }
 
-    self.server["/preview/markdown/:path"] = shareFilesFromDirectory("/Users/hat/Downloads")
-    let css = (try? String(contentsOf: self.resourceBaesUrl.appendingPathComponent("github-markdown.css"))) ?? ""
-    self.server.GET["/preview/markdown/github-markdown.css"] = { arg in .ok(.html(css)) }
+    self.server.GET["/\(MarkdownRenderer.serverPath)/github-markdown.css"] = shareFile(
+      self.resourceBaesUrl.appendingPathComponent("github-markdown.css").path
+    )
+
     self.port = NetUtils.openPort()
-    NSLog("opening a server on port \(port)")
-    do { try self.server.start(port) } catch { NSLog("!!!!!!!!!!!!!!!!!!!!!!!") }
+    NSLog("\(#function): opening a server on port \(port)")
+    do {
+      try self.server.start(port)
+    } catch {
+      NSLog("ERROR \(#function): could not start the http server on port \(self.port)")
+    }
 
     self.template = template
 
@@ -353,7 +374,6 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
   fileprivate func filledTemplate(body: String, title: String) -> String {
     return self.template
-      .replacingOccurrences(of: "{{ resource-base-path }}", with: self.resourceBaesUrl.path)
       .replacingOccurrences(of: "{{ title }}", with: title)
       .replacingOccurrences(of: "{{ body }}", with: body)
   }
@@ -368,15 +388,23 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     }
 
     let html = filledTemplate(body: body, title: url.lastPathComponent)
-    try? html.write(toFile: "/tmp/markdown-preview.html", atomically: false, encoding: .utf8)
+    let htmlFilePath = tempDir.appendingPathComponent("\(MarkdownRenderer.identifier).\(self.uuid).html").path
+    do {
+      try html.write(toFile: htmlFilePath, atomically: true, encoding: .utf8)
+    } catch {
+      NSLog("ERROR \(#function): could not write preview file to \(htmlFilePath)")
+      self.flow.publish(event: PreviewRendererAction.error(renderer: self))
+      return
+    }
 
-    let baseUrl = url.deletingLastPathComponent()
-    NSLog("baseUrl: \(baseUrl)")
+    self.server["/\(MarkdownRenderer.serverPath)/:path"] = shareFilesFromDirectory(url.deletingLastPathComponent().path)
+    self.server.GET["/\(MarkdownRenderer.serverPath)/index.html"] = shareFile(htmlFilePath)
 
-    self.server.GET["/preview/markdown/index.html"] = { arg in .ok(.html(html)) }
+    let urlRequest = URLRequest(
+      url: URL(string: "http://localhost:\(self.port)/\(MarkdownRenderer.serverPath)/index.html")!
+    )
+    self.webview.load(urlRequest)
 
-    let url = URL(string: "http://localhost:\(self.port)/preview/markdown/index.html")!
-    self.webview.load(URLRequest(url: url))
     self.flow.publish(event: PreviewRendererAction.view(renderer: self, view: self.webview))
   }
 }
