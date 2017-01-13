@@ -4,3 +4,4 @@
  */
 
 #import <SwiftNeoVim/SwiftNeoVim.h>
+#import "NetUtils.h"

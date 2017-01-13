@@ -8,6 +8,7 @@ import RxSwift
 import PureLayout
 import CocoaMarkdown
 import WebKit
+import Swifter
 
 fileprivate class WebviewMessageHandler: NSObject, WKScriptMessageHandler {
 
@@ -105,7 +106,8 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
   fileprivate let scrollFlow: EmbeddableComponent
 
   fileprivate let scheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
-  fileprivate let baseUrl = Bundle.main.resourceURL!.appendingPathComponent("markdown")
+  fileprivate var baseUrl = FileUtils.userHomeUrl
+  fileprivate let resourceBaesUrl = Bundle.main.resourceURL!.appendingPathComponent("markdown")
   fileprivate let extensions = Set(["md", "markdown", ])
   fileprivate let template: String
 
@@ -150,6 +152,9 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
   let toolbar: NSView? = NSView(forAutoLayout: ())
   let menuItems: [NSMenuItem]?
 
+  fileprivate var server = HttpServer()
+  fileprivate let port: in_port_t
+
   init(source: Observable<Any>, scrollSource: Observable<Any>, initialData: PrefData) {
     guard let templateUrl = Bundle.main.url(forResource: "template",
                                             withExtension: "html",
@@ -161,6 +166,13 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     guard let template = try? String(contentsOf: templateUrl) else {
       preconditionFailure("ERROR Cannot load markdown template")
     }
+
+    self.server["/preview/markdown/:path"] = shareFilesFromDirectory("/Users/hat/Downloads")
+    let css = (try? String(contentsOf: self.resourceBaesUrl.appendingPathComponent("github-markdown.css"))) ?? ""
+    self.server.GET["/preview/markdown/github-markdown.css"] = { arg in .ok(.html(css)) }
+    self.port = NetUtils.openPort()
+    NSLog("opening a server on port \(port)")
+    do { try self.server.start(port) } catch { NSLog("!!!!!!!!!!!!!!!!!!!!!!!") }
 
     self.template = template
 
@@ -221,6 +233,10 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
     self.addReactions()
     self.userContentController.add(webviewMessageHandler, name: "com_vimr_preview_markdown")
+  }
+
+  deinit {
+    self.server.stop()
   }
 
   func canRender(fileExtension: String) -> Bool {
@@ -337,6 +353,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
   fileprivate func filledTemplate(body: String, title: String) -> String {
     return self.template
+      .replacingOccurrences(of: "{{ resource-base-path }}", with: self.resourceBaesUrl.path)
       .replacingOccurrences(of: "{{ title }}", with: title)
       .replacingOccurrences(of: "{{ body }}", with: body)
   }
@@ -351,9 +368,15 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
     }
 
     let html = filledTemplate(body: body, title: url.lastPathComponent)
-    self.webview.loadHTMLString(html, baseURL: self.baseUrl)
-
     try? html.write(toFile: "/tmp/markdown-preview.html", atomically: false, encoding: .utf8)
+
+    let baseUrl = url.deletingLastPathComponent()
+    NSLog("baseUrl: \(baseUrl)")
+
+    self.server.GET["/preview/markdown/index.html"] = { arg in .ok(.html(html)) }
+
+    let url = URL(string: "http://localhost:\(self.port)/preview/markdown/index.html")!
+    self.webview.load(URLRequest(url: url))
     self.flow.publish(event: PreviewRendererAction.view(renderer: self, view: self.webview))
   }
 }

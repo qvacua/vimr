@@ -8,7 +8,7 @@ import RxSwift
 import PureLayout
 import WebKit
 
-class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
+class PreviewComponent: NSView, ViewComponent, ToolDataHolder, WKNavigationDelegate {
 
   enum Action {
 
@@ -157,6 +157,8 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
     super.init(frame: .zero)
     self.configureForAutoLayout()
 
+    self.webview.navigationDelegate = self
+
     self.flow.set(subscription: self.subscription)
 
     self.webview.loadHTMLString(self.previewService.emptyHtml(), baseURL: self.baseUrl)
@@ -275,5 +277,9 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder {
         }
       })
       .addDisposableTo(self.flow.disposeBag)
+  }
+
+  func webView(_: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+    NSLog("ERROR preview component's webview: \(error)")
   }
 }

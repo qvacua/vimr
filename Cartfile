@@ -5,3 +5,4 @@ github "sparkle-project/Sparkle" == 1.15.1
 github "qvacua/CocoaFontAwesome" "master"
 github "qvacua/CocoaMarkdown" "master"
 github "sindresorhus/github-markdown-css" == 2.4.1
+github "httpswift/swifter" == 1.3.2
