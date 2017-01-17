@@ -56,6 +56,16 @@ extension Array {
   }
 }
 
+extension Array where Element: Hashable {
+
+  func toDict<V>(by mapper: @escaping (Element) -> V) -> Dictionary<Element, V> {
+    var result = Dictionary<Element, V>(minimumCapacity: self.count)
+    self.forEach { result[$0] = mapper($0) }
+
+    return result
+  }
+}
+
 func toDict<K: Hashable, V, S: Sequence>(_ sequence: S) -> Dictionary<K, V> where S.Iterator.Element == (K, V) {
   var result = Dictionary<K, V>(minimumCapacity: sequence.underestimatedCount)
 

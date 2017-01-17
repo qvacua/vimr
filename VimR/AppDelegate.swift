@@ -19,6 +19,11 @@ private enum VimRUrlAction: String {
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
+  enum Action {
+
+    case newMainWindow(urls: [URL], cwd: URL)
+  }
+
   @IBOutlet var debugMenu: NSMenuItem?
   @IBOutlet var updater: SUUpdater?
 
@@ -45,6 +50,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   fileprivate var launching = true
 
   override init() {
+    let source = self.stateContext.stateSource.mapOmittingNil { $0 as? MainWindowStates }
+    self.uiRoot = UiRoot(source: source,
+                         emitter: self.stateContext.actionEmitter,
+                         state: AppState.default.mainWindows)
+
+
     self.actionSink = self.actionSubject.asObservable()
     self.changeSink = self.changeSubject.asObservable()
     let actionAndChangeSink = [self.changeSink, self.actionSink].toMergedObservables()
@@ -116,6 +127,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       }
     }
   }
+
+  fileprivate let stateContext = StateContext()
+  fileprivate let uiRoot: UiRoot
 }
 
 // MARK: - NSApplicationDelegate
@@ -243,16 +257,16 @@ extension AppDelegate {
 // MARK: - IBActions
 extension AppDelegate {
 
+  @IBAction func newDocument(_ sender: Any?) {
+    self.stateContext.actionEmitter.emit(Action.newMainWindow(urls: [], cwd: FileUtils.userHomeUrl))
+  }
+
   @IBAction func openInNewWindow(_ sender: Any?) {
     self.openDocument(sender)
   }
 
   @IBAction func showPrefWindow(_ sender: Any?) {
     self.prefWindowComponent.show()
-  }
-
-  @IBAction func newDocument(_ sender: Any?) {
-    _ = self.mainWindowManager.newMainWindow()
   }
 
   // Invoked when no main window is open.
@@ -268,7 +282,7 @@ extension AppDelegate {
       let urls = panel.urls
       let commonParentUrl = FileUtils.commonParent(of: urls)
       
-      _ = self.mainWindowManager.newMainWindow(urls: urls, cwd: commonParentUrl)
+      self.stateContext.actionEmitter.emit(Action.newMainWindow(urls: urls, cwd: commonParentUrl))
     }
   }
 }
