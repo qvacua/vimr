@@ -50,10 +50,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   fileprivate var launching = true
 
   override init() {
-    let source = self.stateContext.stateSource.mapOmittingNil { $0 as? MainWindowStates }
+    let source = self.stateContext.stateSource
     self.uiRoot = UiRoot(source: source,
                          emitter: self.stateContext.actionEmitter,
-                         state: AppState.default.mainWindows)
+                         state: AppState.default) // FIXME
 
 
     self.actionSink = self.actionSubject.asObservable()

@@ -1,34 +1,34 @@
-//
-// Created by Tae Won Ha on 1/17/17.
-// Copyright (c) 2017 Tae Won Ha. All rights reserved.
-//
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 import Foundation
 import RxSwift
 
 class UiRootTransformer: Transformer {
 
-  typealias Pair = StateActionPair<MainWindowStates, UuidAction<MainWindow.Action>>
+  typealias Pair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
 
   func transform(_ source: Observable<Pair>) -> Observable<Pair> {
     return source.map { pair in
-      var state = pair.state
+      var appState = pair.state
       let uuid = pair.action.uuid
 
       switch pair.action.payload {
 
       case .becomeKey:
-        state.last = state.current[uuid] ?? state.last
+        appState.currentMainWindow = appState.mainWindows[uuid] ?? appState.currentMainWindow
 
       case .close:
-        state.current.removeValue(forKey: uuid)
+        appState.mainWindows.removeValue(forKey: uuid)
 
       default:
-        break
+        return pair
 
       }
 
-      return StateActionPair(state: state, action: pair.action)
+      return StateActionPair(state: appState, action: pair.action)
     }
   }
 }

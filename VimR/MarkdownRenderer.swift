@@ -149,7 +149,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
   fileprivate var currentPreviewPosition = Position(row: 1, column: 1)
 
   fileprivate let uuid = UUID().uuidString
-  fileprivate let httpServer: HttpServer
+  fileprivate let httpServer: Swifter.HttpServer
   fileprivate let port: Int
   fileprivate let tempDir = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
 
@@ -171,7 +171,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
   let toolbar: NSView? = NSView(forAutoLayout: ())
   let menuItems: [NSMenuItem]?
 
-  init(source: Observable<Any>, scrollSource: Observable<Any>, httpServer: HttpServer, initialData: PrefData) {
+  init(source: Observable<Any>, scrollSource: Observable<Any>, httpServer: Swifter.HttpServer, initialData: PrefData) {
     NSLog("\(#function) \(uuid)")
     NSLog("\(#function) \(self.tempDir)")
 

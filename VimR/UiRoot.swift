@@ -1,28 +1,29 @@
-//
-// Created by Tae Won Ha on 1/16/17.
-// Copyright (c) 2017 Tae Won Ha. All rights reserved.
-//
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 import Cocoa
 import RxSwift
 
 class UiRoot: UiComponent {
 
-  typealias StateType = MainWindowStates
+  typealias StateType = AppState
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+  required init(source: StateSource, emitter: ActionEmitter, state: StateType) {
     self.source = source
     self.emitter = emitter
 
     source
+      .mapOmittingNil { $0 as? StateType }
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
         let keys = Set(self.mainWindows.keys)
-        let keysInState = Set(state.current.keys)
+        let keysInState = Set(state.mainWindows.keys)
 
         keysInState
           .subtracting(self.mainWindows.keys)
-          .flatMap { state.current[$0] }
+          .flatMap { state.mainWindows[$0] }
           .forEach(self.createNewMainWindow)
 
         keys
@@ -36,15 +37,13 @@ class UiRoot: UiComponent {
   }
 
   fileprivate func createNewMainWindow(with state: MainWindow.State) {
-    let mainWindow = MainWindow(source: self.source.mapOmittingNil { $0.current[state.uuid] },
-                                emitter: self.emitter,
-                                state: state)
+    let mainWindow = MainWindow(source: source, emitter: self.emitter, state: state)
     self.mainWindows[state.uuid] = mainWindow
 
     mainWindow.show()
   }
 
-  fileprivate let source: Observable<StateType>
+  fileprivate let source: StateSource
   fileprivate let emitter: ActionEmitter
   fileprivate let disposeBag = DisposeBag()
 

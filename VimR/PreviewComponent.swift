@@ -113,7 +113,7 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder, WKNavigationDeleg
     }
   }
 
-  fileprivate let httpServer: HttpServer
+  fileprivate let httpServer: Swifter.HttpServer
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -140,7 +140,7 @@ class PreviewComponent: NSView, ViewComponent, ToolDataHolder, WKNavigationDeleg
     return self
   }
 
-  init(source: Observable<Any>, scrollSource: Observable<Any>, httpServer: HttpServer, initialData: PrefData) {
+  init(source: Observable<Any>, scrollSource: Observable<Any>, httpServer: Swifter.HttpServer, initialData: PrefData) {
     self.flow = EmbeddableComponent(source: source)
     self.httpServer = httpServer
 

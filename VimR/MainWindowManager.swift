@@ -20,7 +20,7 @@ class MainWindowManager: StandardFlow {
   fileprivate let fileItemService: FileItemService
   fileprivate var data: PrefData
 
-  fileprivate let httpServer = HttpServer() // TODO: WRONG: service-ify this!!!
+  fileprivate let httpServer = Swifter.HttpServer() // TODO: WRONG: service-ify this!!!
 
   init(source: Observable<Any>, fileItemService: FileItemService, initialData: PrefData) {
     self.fileItemService = fileItemService

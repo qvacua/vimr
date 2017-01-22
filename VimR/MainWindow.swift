@@ -1,7 +1,7 @@
-//
-// Created by Tae Won Ha on 1/16/17.
-// Copyright (c) 2017 Tae Won Ha. All rights reserved.
-//
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 import Cocoa
 import RxSwift
@@ -12,7 +12,28 @@ protocol UiComponent {
 
   associatedtype StateType
 
-  init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType)
+  init(source: StateSource, emitter: ActionEmitter, state: StateType)
+}
+
+class Debouncer<T> {
+
+  let observable: Observable<T>
+
+  init(interval: RxTimeInterval) {
+    self.observable = self.subject.throttle(interval, latest: true, scheduler: self.scheduler)
+  }
+
+  deinit {
+    self.subject.onCompleted()
+  }
+
+  func call(_ element: T) {
+    self.subject.onNext(element)
+  }
+
+  fileprivate let subject = PublishSubject<T>()
+  fileprivate let scheduler = SerialDispatchQueueScheduler(qos: .userInteractive)
+  fileprivate let disposeBag = DisposeBag()
 }
 
 class MainWindow: NSObject,
@@ -27,7 +48,12 @@ class MainWindow: NSObject,
     case cd(to: URL)
     case setBufferList([NeoVimBuffer])
 
+    case setCurrentBuffer(NeoVimBuffer)
+
     case becomeKey
+
+    case scroll(to: Position)
+    case setCursor(to: Position)
 
     case close
   }
@@ -41,7 +67,7 @@ class MainWindow: NSObject,
     case verticalSplit
   }
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+  required init(source: StateSource, emitter: ActionEmitter, state: StateType) {
     self.uuid = state.uuid
     self.emitter = emitter
 
@@ -54,11 +80,27 @@ class MainWindow: NSObject,
     self.windowController = NSWindowController(windowNibName: "MainWindow")
 
     super.init()
+
+    self.scrollDebouncer.observable
+      .subscribe(onNext: { [unowned self] action in
+        self.emitter.emit(self.uuidAction(for: action))
+      })
+      .addDisposableTo(self.disposeBag)
+
+    self.cursorDebouncer.observable
+      .subscribe(onNext: { [unowned self] action in
+        self.emitter.emit(self.uuidAction(for: action))
+      })
+      .addDisposableTo(self.disposeBag)
+
     self.addViews()
 
     self.windowController.window?.delegate = self
 
     source
+      .mapOmittingNil { $0 as? UuidState<StateType> }
+      .filter { $0.uuid == state.uuid }
+      .debug()
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
       })
@@ -123,6 +165,13 @@ class MainWindow: NSObject,
 
   fileprivate let workspace: Workspace
   fileprivate let neoVimView: NeoVimView
+
+  fileprivate let scrollDebouncer = Debouncer<Action>(interval: 0.75)
+  fileprivate let cursorDebouncer = Debouncer<Action>(interval: 0.75)
+
+  fileprivate func uuidAction(for action: Action) -> UuidAction<Action> {
+    return UuidAction(uuid: self.uuid, action: action)
+  }
 }
 
 // MARK: - NeoVimViewDelegate
@@ -141,24 +190,24 @@ extension MainWindow {
   }
 
   func cwdChanged() {
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.cd(to: self.neoVimView.cwd)))
+    self.emitter.emit(self.uuidAction(for: .cd(to: self.neoVimView.cwd)))
   }
 
   func bufferListChanged() {
     let buffers = self.neoVimView.allBuffers()
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.setBufferList(buffers)))
+    self.emitter.emit(self.uuidAction(for: .setBufferList(buffers)))
   }
 
   func currentBufferChanged(_ currentBuffer: NeoVimBuffer) {
-//    self.publish(event: MainWindowAction.currentBufferChanged(mainWindow: self, buffer: currentBuffer))
+    self.emitter.emit(self.uuidAction(for: .setCurrentBuffer(currentBuffer)))
   }
 
   func tabChanged() {
-//    guard let currentBuffer = self.neoVimView.currentBuffer() else {
-//      return
-//    }
-//
-//    self.publish(event: MainWindowAction.currentBufferChanged(mainWindow: self, buffer: currentBuffer))
+    guard let currentBuffer = self.neoVimView.currentBuffer() else {
+      return
+    }
+
+    self.currentBufferChanged(currentBuffer)
   }
 
   func ipcBecameInvalid(reason: String) {
@@ -174,11 +223,11 @@ extension MainWindow {
   }
 
   func scroll() {
-//    self.scrollFlow.publish(event: ScrollAction.scroll(to: self.neoVimView.currentPosition))
+    self.scrollDebouncer.call(.scroll(to: self.neoVimView.currentPosition))
   }
 
   func cursor(to position: Position) {
-//    self.scrollFlow.publish(event: ScrollAction.cursor(to: self.neoVimView.currentPosition))
+    self.cursorDebouncer.call(.setCursor(to: position))
   }
 }
 
@@ -186,11 +235,11 @@ extension MainWindow {
 extension MainWindow {
 
   func windowDidBecomeKey(_: Notification) {
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.becomeKey))
+    self.emitter.emit(self.uuidAction(for: .becomeKey))
   }
 
   func windowWillClose(_: Notification) {
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.close))
+    self.emitter.emit(self.uuidAction(for: .close))
   }
 
   func windowShouldClose(_: Any) -> Bool {

@@ -110,7 +110,7 @@ class MainWindowComponent: WindowComponent,
 
   fileprivate let scrollFlow: EmbeddableComponent
 
-  fileprivate let httpServer: HttpServer;
+  fileprivate let httpServer: Swifter.HttpServer;
 
   // MARK: - API
   var uuid: String {
@@ -144,7 +144,7 @@ class MainWindowComponent: WindowComponent,
        fileItemService: FileItemService,
        cwd: URL,
        urls: [URL] = [],
-       httpServer: HttpServer,
+       httpServer: Swifter.HttpServer,
        initialData: PrefData)
   {
     self.neoVimView = NeoVimView(frame: CGRect.zero,

@@ -1,14 +1,14 @@
-//
-// Created by Tae Won Ha on 1/16/17.
-// Copyright (c) 2017 Tae Won Ha. All rights reserved.
-//
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 import Foundation
 import RxSwift
 
 class AppDelegateTransformer: Transformer {
 
-  typealias Pair = StateActionPair<MainWindowStates, AppDelegate.Action>
+  typealias Pair = StateActionPair<AppState, AppDelegate.Action>
 
   func transform(_ source: Observable<Pair>) -> Observable<Pair> {
     return source.map { pair in
@@ -17,12 +17,13 @@ class AppDelegateTransformer: Transformer {
       case let .newMainWindow(urls, cwd):
         var state = pair.state
 
-        var mainWindow = state.last
+        var mainWindow = state.currentMainWindow
         mainWindow.uuid = UUID().uuidString
+        mainWindow.serverBaseUrl = state.baseServerUrl.appendingPathComponent("\(mainWindow.uuid)")
         mainWindow.urlsToOpen = urls.toDict { url in MainWindow.OpenMode.default }
         mainWindow.cwd = cwd
 
-        state.current[mainWindow.uuid] = mainWindow
+        state.mainWindows[mainWindow.uuid] = mainWindow
 
         return StateActionPair(state: state, action: pair.action)
 

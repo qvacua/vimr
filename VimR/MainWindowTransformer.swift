@@ -1,7 +1,7 @@
-//
-// Created by Tae Won Ha on 1/17/17.
-// Copyright (c) 2017 Tae Won Ha. All rights reserved.
-//
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 import Foundation
 import RxSwift
@@ -27,8 +27,11 @@ class MainWindowTransformer: Transformer {
           .forEach { state.urlsToOpen.removeValue(forKey: $0) }
         state.buffers = buffers
 
+      case let .setCurrentBuffer(buffer):
+        state.currentBuffer = buffer
+
       default:
-        break
+        return pair
 
       }
 
