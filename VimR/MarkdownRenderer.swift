@@ -172,9 +172,6 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
   let menuItems: [NSMenuItem]?
 
   init(source: Observable<Any>, scrollSource: Observable<Any>, httpServer: HttpServer, initialData: PrefData) {
-    NSLog("\(#function) \(uuid)")
-    NSLog("\(#function) \(self.tempDir)")
-
     guard let templateUrl = Bundle.main.url(forResource: "template",
                                             withExtension: "html",
                                             subdirectory: "markdown")
