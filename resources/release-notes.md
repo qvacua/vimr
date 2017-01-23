@@ -1,3 +1,12 @@
+# next
+
+* Make pinch-zooming fast (enough) on Retina-displays.
+* Make markdown previewing more robust against non-existing file.
+
+# 0.13.0-164
+
+* GH-339: Add a simple markdown previewer.
+
 # 0.12.6-162
 
 * GH-382: Bugfix: Sometimes the working directory is not set correctly when using the command line tool `vimr`.

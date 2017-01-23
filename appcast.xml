@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.12.6-162</title>
+      <title>v0.13.0-164</title>
       <description><![CDATA[
     <ul>
-<li>GH-382: Bugfix: Sometimes the working directory is not set correctly when using the command line tool <code>vimr</code>.</li>
+<li>GH-339: Add a simple markdown previewer.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.12.6-162
+        https://github.com/qvacua/vimr/releases/tag/v0.13.0-164
       </releaseNotesLink>
-      <pubDate>2017-01-10T18:14:29.004786</pubDate>
+      <pubDate>2017-01-22T13:58:21.099701</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.12.6-162/VimR-v0.12.6-162.tar.bz2"
-                 sparkle:version="162"
-                 sparkle:shortVersionString="0.12.6"
-                 sparkle:dsaSignature="MCwCFF3ViTcKEUFOLCWumRD05YbMpepyAhRq8oVXonWqpYwo1Vn0x0SNQ1EwUg=="
-                 length="9310930"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.13.0-164/VimR-v0.13.0-164.tar.bz2"
+                 sparkle:version="164"
+                 sparkle:shortVersionString="0.13.0"
+                 sparkle:dsaSignature="MC0CFBisDu8IMsFxggGI65USNOTxlqDVAhUArhoMY5Y3vTuLKEkBkoDKUdgF52Y="
+                 length="11830454"
                  type="application/octet-stream"/>
     </item>
   </channel>

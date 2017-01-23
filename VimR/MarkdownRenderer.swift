@@ -172,9 +172,6 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
   let menuItems: [NSMenuItem]?
 
   init(source: Observable<Any>, scrollSource: Observable<Any>, httpServer: Swifter.HttpServer, initialData: PrefData) {
-    NSLog("\(#function) \(uuid)")
-    NSLog("\(#function) \(self.tempDir)")
-
     guard let templateUrl = Bundle.main.url(forResource: "template",
                                             withExtension: "html",
                                             subdirectory: "markdown")
@@ -269,6 +266,10 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
         switch action {
         case let PreviewComponent.Action.automaticRefresh(url):
           guard self.isRefreshOnWrite else {
+            return nil
+          }
+
+          guard FileUtils.fileExists(at: url) else {
             return nil
           }
 

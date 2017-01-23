@@ -154,7 +154,7 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
 
   fileprivate var isCurrentlyPinching = false
   fileprivate var pinchTargetScale = CGFloat(1)
-  fileprivate var pinchImage = NSImage()
+  fileprivate var pinchBitmap: NSBitmapImageRep?
 
   fileprivate var currentlyResizing = false
   fileprivate var currentEmoji = "😎"
@@ -451,10 +451,21 @@ extension NeoVimView {
     let context = NSGraphicsContext.current()!.cgContext
 
     if self.isCurrentlyPinching {
+      let interpolationQuality = context.interpolationQuality
+      context.interpolationQuality = .none
+
       let boundsSize = self.bounds.size
       let targetSize = CGSize(width: boundsSize.width * self.pinchTargetScale,
                               height: boundsSize.height * self.pinchTargetScale)
-      self.pinchImage.draw(in: CGRect(origin: self.bounds.origin, size: targetSize))
+      self.pinchBitmap?.draw(in: CGRect(origin: self.bounds.origin, size: targetSize),
+                             from: CGRect.zero,
+                             operation: .sourceOver,
+                             fraction: 1,
+                             respectFlipped: true,
+                             hints: nil)
+
+      context.interpolationQuality = interpolationQuality
+
       return
     }
 
@@ -1015,8 +1026,7 @@ extension NeoVimView {
     case NSEventPhase.began:
       let pinchImageRep = self.bitmapImageRepForCachingDisplay(in: self.bounds)!
       self.cacheDisplay(in: self.bounds, to: pinchImageRep)
-      self.pinchImage = NSImage()
-      self.pinchImage.addRepresentation(pinchImageRep)
+      self.pinchBitmap = pinchImageRep
 
       self.isCurrentlyPinching = true
       self.needsDisplay = true
