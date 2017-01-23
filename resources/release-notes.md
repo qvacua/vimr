@@ -1,3 +1,8 @@
+# next
+
+* Make pinch-zooming fast (enough) on Retina-displays.
+* Make markdown previewing more robust against non-existing file.
+
 # 0.13.0-164
 
 * GH-339: Add a simple markdown previewer.
