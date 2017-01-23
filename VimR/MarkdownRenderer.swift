@@ -269,6 +269,10 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
             return nil
           }
 
+          guard FileUtils.fileExists(at: url) else {
+            return nil
+          }
+
           return url
 
         default:
