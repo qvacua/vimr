@@ -8,14 +8,14 @@ import RxSwift
 
 class StateContext {
 
-  let stateSource: Observable<Any>
+  let stateSource: Observable<AppState>
   let actionEmitter = Emitter<Any>()
 
   init() {
     self.stateSource = self.stateSubject.asObservable()
     let actionSource = self.actionEmitter.observable
 
-    self.previewTransformer = PreviewTransformer(port: in_port_t(self.appState.baseServerUrl.port ?? 0))
+    self.httpServerService = HttpServerService(port: NetUtils.openPort())
 
     Observable
       .of(
@@ -53,9 +53,11 @@ class StateContext {
       .transform(by: self.mainWindowTransformer)
       .transform(by: self.previewTransformer)
       .filter { $0.modified }
-      .subscribe(onNext: { pair in
-        self.appState.mainWindows[pair.state.uuid] = pair.state.payload
-        self.stateSubject.onNext(pair.state)
+      .map { $0.state }
+      .applyState(to: self.httpServerService)
+      .subscribe(onNext: { state in
+        self.appState.mainWindows[state.uuid] = state.payload
+        self.stateSubject.onNext(self.appState)
       })
       .addDisposableTo(self.disposeBag)
 
@@ -63,7 +65,7 @@ class StateContext {
     stateSource.debug().subscribe().addDisposableTo(self.disposeBag)
   }
 
-  fileprivate let stateSubject = PublishSubject<Any>()
+  fileprivate let stateSubject = PublishSubject<AppState>()
   fileprivate let scheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
   fileprivate let disposeBag = DisposeBag()
 
@@ -72,16 +74,18 @@ class StateContext {
   fileprivate let appDelegateTransformer = AppDelegateTransformer()
   fileprivate let uiRootTransformer = UiRootTransformer()
   fileprivate let mainWindowTransformer = MainWindowTransformer()
-  fileprivate let previewTransformer: PreviewTransformer
+  fileprivate let previewTransformer = PreviewTransformer()
+
+  fileprivate let httpServerService: HttpServerService
 }
 
 extension Observable {
 
-  fileprivate func transform<T:Transformer>(by transformers: [T]) -> Observable<Element> where T.Element == Element {
-    return transformers.reduce(self) { (prevSource, transformer) in transformer.transform(prevSource) }
+  fileprivate func transform<T: Transformer>(by transformer: T) -> Observable<Element> where T.Element == Element {
+    return transformer.transform(self)
   }
 
-  fileprivate func transform<T:Transformer>(by transformer: T) -> Observable<Element> where T.Element == Element {
-    return transformer.transform(self)
+  fileprivate func applyState<S: Service>(to service: S) -> Observable<Element> where S.StateType == Element {
+    return service.apply(self)
   }
 }

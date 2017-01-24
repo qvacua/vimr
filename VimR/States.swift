@@ -7,7 +7,6 @@ import Foundation
 import RxSwift
 
 typealias ActionEmitter = Emitter<Any>
-typealias StateSource = Observable<Any>
 
 class Emitter<T> {
 

@@ -10,24 +10,23 @@ class UiRoot: UiComponent {
 
   typealias StateType = AppState
 
-  required init(source: StateSource, emitter: ActionEmitter, state: StateType) {
+  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.source = source
     self.emitter = emitter
 
     source
-      .mapOmittingNil { $0 as? StateType }
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
-        let keys = Set(self.mainWindows.keys)
-        let keysInState = Set(state.mainWindows.keys)
+        let uuids = Set(self.mainWindows.keys)
+        let uuidsInState = Set(state.mainWindows.keys)
 
-        keysInState
+        uuidsInState
           .subtracting(self.mainWindows.keys)
           .flatMap { state.mainWindows[$0] }
           .forEach(self.createNewMainWindow)
 
-        keys
-          .subtracting(keysInState)
+        uuids
+          .subtracting(uuidsInState)
           .forEach {
             self.mainWindows.removeValue(forKey: $0)
           }
@@ -37,13 +36,15 @@ class UiRoot: UiComponent {
   }
 
   fileprivate func createNewMainWindow(with state: MainWindow.State) {
-    let mainWindow = MainWindow(source: source, emitter: self.emitter, state: state)
+    let mainWindow = MainWindow(source: source.mapOmittingNil { $0.mainWindows[state.uuid] },
+                                emitter: self.emitter,
+                                state: state)
     self.mainWindows[state.uuid] = mainWindow
 
     mainWindow.show()
   }
 
-  fileprivate let source: StateSource
+  fileprivate let source: Observable<AppState>
   fileprivate let emitter: ActionEmitter
   fileprivate let disposeBag = DisposeBag()
 

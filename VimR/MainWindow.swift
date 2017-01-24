@@ -12,7 +12,7 @@ protocol UiComponent {
 
   associatedtype StateType
 
-  init(source: StateSource, emitter: ActionEmitter, state: StateType)
+  init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType)
 }
 
 class Debouncer<T> {
@@ -67,7 +67,7 @@ class MainWindow: NSObject,
     case verticalSplit
   }
 
-  required init(source: StateSource, emitter: ActionEmitter, state: StateType) {
+  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.uuid = state.uuid
     self.emitter = emitter
 

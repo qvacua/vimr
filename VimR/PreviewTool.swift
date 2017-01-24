@@ -22,7 +22,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
   static let basePath = "tools/previews"
 
-  required init(source: StateSource, emitter: ActionEmitter, state: StateType) {
+  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.webview.configureForAutoLayout()
 
     super.init(frame: .zero)

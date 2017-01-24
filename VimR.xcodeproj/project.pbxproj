@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1929B015B183885FA5B68CA5 /* HttpServerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEEF8E74F28394D7E480 /* HttpServerService.swift */; };
 		1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */; };
 		1929B0FF696312F754BC96E2 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD8CBADC191CF8C85309 /* MainWindow.swift */; };
 		1929B165820D7177743B537A /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B39DA7AC4A9B62D7CD39 /* Component.swift */; };
@@ -327,6 +328,7 @@
 		1929BE37AA2843779CAFA76F /* PreviewTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewTransformer.swift; sourceTree = "<group>"; };
 		1929BE69CF9AB1A10D0DD4F2 /* CocoaCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaCategories.h; sourceTree = "<group>"; };
 		1929BEEB33113B0E33C3830F /* Matcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Matcher.swift; sourceTree = "<group>"; };
+		1929BEEF8E74F28394D7E480 /* HttpServerService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServerService.swift; sourceTree = "<group>"; };
 		1929BF00B466B40629C2AABE /* NeoVimView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimView.swift; sourceTree = "<group>"; };
 		4B029F1B1D45E349004EE0D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrefWindow.xib; sourceTree = "<group>"; };
 		4B0677361D99D9C3001A2588 /* FileBrowserComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBrowserComponent.swift; sourceTree = "<group>"; };
@@ -565,6 +567,7 @@
 				1929B34FC23D805A8B29E8F7 /* Context.swift */,
 				1929B32401E8914DE9BF76CA /* Components */,
 				1929B5E773BDB3B4EE9D00C1 /* Transformers */,
+				1929BEEF8E74F28394D7E480 /* HttpServerService.swift */,
 			);
 			name = Redesign;
 			sourceTree = "<group>";
@@ -1366,6 +1369,7 @@
 				1929BB4A9B2FA42A64CCCC76 /* MainWindowTransformer.swift in Sources */,
 				1929B8FB248D71BF88A35761 /* PreviewTool.swift in Sources */,
 				1929B4B70926DE113E6BF990 /* PreviewTransformer.swift in Sources */,
+				1929B015B183885FA5B68CA5 /* HttpServerService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
