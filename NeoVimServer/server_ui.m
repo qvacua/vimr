@@ -165,20 +165,6 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   xfree(ui);
 }
 
-static void send_dirty_status() {
-  bool new_dirty_status = has_dirty_docs();
-  DLOG("dirty status: %d vs. %d", _dirty, new_dirty_status);
-  if (_dirty == new_dirty_status) {
-    return;
-  }
-
-  _dirty = new_dirty_status;
-  DLOG("sending dirty status: %d", _dirty);
-  NSData *data = [[NSData alloc] initWithBytes:&_dirty length:sizeof(bool)];
-  [_neovim_server sendMessageWithId:NeoVimServerMsgIdDirtyStatusChanged data:data];
-  [data release];
-}
-
 #pragma mark NeoVim's UI callbacks
 
 static void server_ui_resize(UI *ui __unused, int width, int height) {
