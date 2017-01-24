@@ -2,6 +2,7 @@
 
 * Make pinch-zooming fast (enough) on Retina-displays.
 * Make markdown previewing more robust against non-existing file.
+* GH-392: Bugfix: fix a weird scroll issue.
 
 # 0.13.0-164
 
