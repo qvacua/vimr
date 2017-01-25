@@ -1316,7 +1316,6 @@ extension NeoVimView {
   public func setScrollRegionToTop(_ top: Int32, bottom: Int32, left: Int32, right: Int32) {
       let region = Region(top: Int(top), bottom: Int(bottom), left: Int(left), right: Int(right))
       self.grid.setScrollRegion(region)
-      self.markForRender(region: region)
   }
 
   public func scroll(_ count: Int32) {
