@@ -902,7 +902,7 @@ extension NeoVimView: NSTextInputClient {
     self.keyDownDone = true
 
     // TODO: necessary?
-    self.setNeedsDisplay(self.cellRectFor(row: self.grid.putPosition.row, column: self.grid.putPosition.column))
+    self.markForRender(row: self.grid.putPosition.row, column: self.grid.putPosition.column)
   }
 
   /// Return the current selection (or the position of the cursor with empty-length range). For example when you enter
@@ -1238,14 +1238,14 @@ extension NeoVimView {
     DispatchUtils.gui {
 //      NSLog("\(#function): \(width):\(height)")
       self.grid.resize(Size(width: Int(width), height: Int(height)))
-      self.needsDisplay = true
+      self.markForRenderWholeView()
     }
   }
 
   public func clear() {
     DispatchUtils.gui {
       self.grid.clear()
-      self.needsDisplay = true
+      self.markForRenderWholeView()
     }
   }
 
@@ -1253,13 +1253,12 @@ extension NeoVimView {
     DispatchUtils.gui {
       self.grid.eolClear()
 
-      let origin = self.pointInViewFor(position: self.grid.putPosition)
-      let size = CGSize(
-        width: CGFloat(self.grid.region.right - self.grid.putPosition.column + 1) * self.cellSize.width,
-        height: self.cellSize.height
-      )
-      let rect = CGRect(origin: origin, size: size)
-      self.setNeedsDisplay(rect)
+      let putPosition = self.grid.putPosition
+      let region = Region(top: putPosition.row,
+                          bottom: putPosition.row,
+                          left: putPosition.column,
+                          right: self.grid.region.right)
+      self.markForRender(region: region)
     }
   }
 
@@ -1531,10 +1530,6 @@ extension NeoVimView {
     self.grid.moveCursor(screenCursor)
   }
 
-  fileprivate func markForRender(region: Region) {
-    self.setNeedsDisplay(self.regionRectFor(region: region))
-  }
-
   fileprivate func markForRender(cellPosition position: Position) {
     self.markForRender(position: position)
 
@@ -1551,15 +1546,22 @@ extension NeoVimView {
     self.markForRender(row: position.row, column: position.column)
   }
 
-  fileprivate func markForRender(row: Int, column: Int) {
-//    Swift.print("\(#function): \(row):\(column)")
-    self.setNeedsDisplay(self.cellRectFor(row: row, column: column))
-  }
-
   fileprivate func markForRender(screenCursor position: Position) {
     self.markForRender(position: position)
     if self.grid.isNextCellEmpty(position) {
       self.markForRender(position: self.grid.nextCellPosition(position))
     }
+  }
+
+  fileprivate func markForRenderWholeView() {
+    self.needsDisplay = true
+  }
+
+  fileprivate func markForRender(region: Region) {
+    self.setNeedsDisplay(self.regionRectFor(region: region))
+  }
+
+  fileprivate func markForRender(row: Int, column: Int) {
+    self.setNeedsDisplay(self.cellRectFor(row: row, column: column))
   }
 }
