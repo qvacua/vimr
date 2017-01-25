@@ -166,6 +166,8 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
     NSForegroundColorAttributeName: NSColor.darkGray
   ]
 
+  fileprivate var rectsMarkedForRender = [CGRect]()
+
   public init(frame rect: NSRect, config: Config) {
     self.drawer = TextDrawer(font: self._font)
     self.agent = NeoVimAgent(uuid: self.uuid)
@@ -1403,12 +1405,18 @@ extension NeoVimView {
   }
 
   public func flush() {
-    NSLog("\(#function)")
+    if self.rectsMarkedForRender.isEmpty {
+      return
+    }
+
+    DispatchUtils.gui {
+      self.rectsMarkedForRender.forEach(self.setNeedsDisplay)
+      self.rectsMarkedForRender.removeAll()
+    }
   }
 
   public func updateForeground(_ fg: Int32) {
     DispatchUtils.gui {
-      NSLog("\(#function)")
       self.grid.foreground = UInt32(bitPattern: fg)
 //      NSLog("\(ColorUtils.colorIgnoringAlpha(UInt32(fg)))")
     }
@@ -1416,7 +1424,6 @@ extension NeoVimView {
 
   public func updateBackground(_ bg: Int32) {
     DispatchUtils.gui {
-      NSLog("\(#function)")
       self.grid.background = UInt32(bitPattern: bg)
       self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).cgColor
 //      NSLog("\(ColorUtils.colorIgnoringAlpha(UInt32(bg)))")
@@ -1424,6 +1431,7 @@ extension NeoVimView {
   }
 
   public func updateSpecial(_ sp: Int32) {
+    NSLog("\(Thread.current)")
     DispatchUtils.gui {
       self.grid.special = UInt32(bitPattern: sp)
     }
@@ -1554,14 +1562,14 @@ extension NeoVimView {
   }
 
   fileprivate func markForRenderWholeView() {
-    self.needsDisplay = true
+    self.rectsMarkedForRender.append(self.bounds)
   }
 
   fileprivate func markForRender(region: Region) {
-    self.setNeedsDisplay(self.regionRectFor(region: region))
+    self.rectsMarkedForRender.append(self.regionRectFor(region: region))
   }
 
   fileprivate func markForRender(row: Int, column: Int) {
-    self.setNeedsDisplay(self.cellRectFor(row: row, column: column))
+    self.rectsMarkedForRender.append(self.cellRectFor(row: row, column: column))
   }
 }
