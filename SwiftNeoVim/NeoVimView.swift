@@ -1237,17 +1237,22 @@ extension NeoVimView {
 extension NeoVimView {
 
   public func resize(toWidth width: Int32, height: Int32) {
+    DispatchUtils.gui {
 //      NSLog("\(#function): \(width):\(height)")
       self.grid.resize(Size(width: Int(width), height: Int(height)))
       self.markForRenderWholeView()
+    }
   }
 
   public func clear() {
+    DispatchUtils.gui {
       self.grid.clear()
       self.markForRenderWholeView()
+    }
   }
 
   public func eolClear() {
+    DispatchUtils.gui {
       self.grid.eolClear()
 
       let putPosition = self.grid.putPosition
@@ -1256,9 +1261,11 @@ extension NeoVimView {
                           left: putPosition.column,
                           right: self.grid.region.right)
       self.markForRender(region: region)
+    }
   }
 
   public func gotoPosition(_ position: Position, screenCursor: Position, currentPosition: Position) {
+    DispatchUtils.gui {
       self.currentPosition = currentPosition
 //      NSLog("\(#function): \(position), \(screenCursor)")
 
@@ -1287,7 +1294,7 @@ extension NeoVimView {
 
       self.grid.goto(position)
       self.grid.moveCursor(screenCursor)
-
+    }
     DispatchUtils.gui {
       self.delegate?.cursor(to: currentPosition)
     }
@@ -1314,25 +1321,30 @@ extension NeoVimView {
   }
 
   public func setScrollRegionToTop(_ top: Int32, bottom: Int32, left: Int32, right: Int32) {
+    DispatchUtils.gui {
       let region = Region(top: Int(top), bottom: Int(bottom), left: Int(left), right: Int(right))
       self.grid.setScrollRegion(region)
+    }
   }
 
   public func scroll(_ count: Int32) {
+    DispatchUtils.gui {
       self.grid.scroll(Int(count))
       self.markForRender(region: self.grid.region)
       // Do not send msgs to agent -> neovim in the delegate method. It causes spinning when you're opening a file with
       // existing swap file.
-    DispatchUtils.gui {
       self.delegate?.scroll()
     }
   }
 
   public func highlightSet(_ attrs: CellAttributes) {
+    DispatchUtils.gui {
       self.grid.attrs = attrs
+    }
   }
 
   public func put(_ string: String, screenCursor: Position) {
+    DispatchUtils.gui {
       let curPos = self.grid.putPosition
 //      NSLog("\(#function): \(curPos) -> \(string)")
       self.grid.put(string)
@@ -1348,9 +1360,11 @@ extension NeoVimView {
       }
 
       self.updateCursorWhenPutting(currentPosition: curPos, screenCursor: screenCursor)
+    }
   }
 
   public func putMarkedText(_ markedText: String, screenCursor: Position) {
+    DispatchUtils.gui {
       NSLog("\(#function): '\(markedText)' -> \(screenCursor)")
 
       let curPos = self.grid.putPosition
@@ -1364,9 +1378,11 @@ extension NeoVimView {
       }
 
       self.updateCursorWhenPutting(currentPosition: curPos, screenCursor: screenCursor)
+    }
   }
 
   public func unmarkRow(_ row: Int32, column: Int32) {
+    DispatchUtils.gui {
       let position = Position(row: Int(row), column: Int(column))
 
 //      NSLog("\(#function): \(position)")
@@ -1375,10 +1391,13 @@ extension NeoVimView {
       self.markForRender(position: position)
 
       self.markForRender(screenCursor: self.grid.screenCursor)
+    }
   }
 
   public func bell() {
+    DispatchUtils.gui {
       NSBeep()
+    }
   }
 
   public func visualBell() {
@@ -1389,27 +1408,31 @@ extension NeoVimView {
       return
     }
 
-    let rects = self.rectsMarkedForRender
-    self.rectsMarkedForRender.removeAll()
-
     DispatchUtils.gui {
-      rects.forEach(self.setNeedsDisplay)
+      self.rectsMarkedForRender.forEach(self.setNeedsDisplay)
+      self.rectsMarkedForRender.removeAll()
     }
   }
 
   public func updateForeground(_ fg: Int32) {
+    DispatchUtils.gui {
       self.grid.foreground = UInt32(bitPattern: fg)
 //      NSLog("\(ColorUtils.colorIgnoringAlpha(UInt32(fg)))")
+    }
   }
 
   public func updateBackground(_ bg: Int32) {
+    DispatchUtils.gui {
       self.grid.background = UInt32(bitPattern: bg)
       self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).cgColor
 //      NSLog("\(ColorUtils.colorIgnoringAlpha(UInt32(bg)))")
+    }
   }
 
   public func updateSpecial(_ sp: Int32) {
+    DispatchUtils.gui {
       self.grid.special = UInt32(bitPattern: sp)
+    }
   }
 
   public func suspend() {
