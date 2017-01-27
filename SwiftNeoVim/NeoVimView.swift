@@ -166,7 +166,7 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
     NSForegroundColorAttributeName: NSColor.darkGray
   ]
 
-  fileprivate var rectsMarkedForRender = [CGRect]()
+  fileprivate let colorSpace = NSColorSpace.sRGB
 
   public init(frame rect: NSRect, config: Config) {
     self.drawer = TextDrawer(font: self._font)
@@ -200,6 +200,10 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
 
       self.resizeNeoVimUiTo(size: self.bounds.size)
     }
+  }
+
+  override public func viewDidMoveToWindow() {
+    self.window?.colorSpace = self.colorSpace
   }
 
   convenience override init(frame rect: NSRect) {
@@ -1404,14 +1408,6 @@ extension NeoVimView {
   }
 
   public func flush() {
-    if self.rectsMarkedForRender.isEmpty {
-      return
-    }
-
-    DispatchUtils.gui {
-      self.rectsMarkedForRender.forEach(self.setNeedsDisplay)
-      self.rectsMarkedForRender.removeAll()
-    }
   }
 
   public func updateForeground(_ fg: Int32) {
@@ -1560,14 +1556,14 @@ extension NeoVimView {
   }
 
   fileprivate func markForRenderWholeView() {
-    self.rectsMarkedForRender.append(self.bounds)
+    self.needsDisplay = true
   }
 
   fileprivate func markForRender(region: Region) {
-    self.rectsMarkedForRender.append(self.regionRectFor(region: region))
+    self.setNeedsDisplay(self.regionRectFor(region: region))
   }
 
   fileprivate func markForRender(row: Int, column: Int) {
-    self.rectsMarkedForRender.append(self.cellRectFor(row: row, column: column))
+    self.setNeedsDisplay(self.cellRectFor(row: row, column: column))
   }
 }
