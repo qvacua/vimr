@@ -7,24 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-165</title>
+      <title>SNAPSHOT-166</title>
       <description><![CDATA[
     <ul>
-<li>Make pinch-zooming fast (enough) on Retina-displays.</li>
-<li>Make markdown previewing more robust against non-existing file.</li>
-<li>GH-392: Bugfix: fix a weird scroll issue.</li>
+<li>GH-371: Small scroll performance improvment.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/165
+        https://github.com/qvacua/vimr/releases/tag/snapshot/166
       </releaseNotesLink>
-      <pubDate>2017-01-24T18:55:05.417693</pubDate>
+      <pubDate>2017-01-31T21:09:25.866658</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/165/VimR-SNAPSHOT-165.tar.bz2"
-                 sparkle:version="165"
-                 sparkle:shortVersionString="SNAPSHOT-165"
-                 sparkle:dsaSignature="MC0CFQDtJ2mNPNzHRHH6JzSE5eE1iERxUwIUPUfJE9zFOieKpjJvBUrbnGB9+Ok="
-                 length="11829058"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/166/VimR-SNAPSHOT-166.tar.bz2"
+                 sparkle:version="166"
+                 sparkle:shortVersionString="SNAPSHOT-166"
+                 sparkle:dsaSignature="MC0CFDr/Dko4utGXgzmllZum0A4Pk1UPAhUA6e0Mejk9UTS1h6CsTiuIfnDFAaw="
+                 length="11832776"
                  type="application/octet-stream"/>
     </item>
   </channel>
