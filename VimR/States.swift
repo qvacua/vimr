@@ -62,7 +62,7 @@ class UuidState<S>: CustomStringConvertible {
   let payload: S
 
   var description: String {
-    return "UuidAction(uuid: \(uuid), payload: \(String(reflecting: payload)))"
+    return "UuidState(uuid: \(uuid), payload: \(String(reflecting: payload)))"
   }
 
   init(uuid: String, state: S) {
@@ -104,6 +104,14 @@ struct AppState {
   }
 }
 
+struct PreviewState {
+
+  static let `default` = PreviewState(lastRefresh: Date.distantPast, url: nil)
+
+  var lastRefresh: Date
+  var url: URL?
+}
+
 extension MainWindow {
 
   struct State {
@@ -116,6 +124,8 @@ extension MainWindow {
     var isToolButtonsVisible = true
 
     ////// transient
+
+    var preview = PreviewState.default
 
     // neovim
     var uuid = UUID().uuidString

@@ -53,16 +53,18 @@ class StateContext {
       .transform(by: self.mainWindowTransformer)
       .transform(by: self.previewTransformer)
       .filter { $0.modified }
+      .apply(to: self.httpServerService)
       .map { $0.state }
-      .applyState(to: self.httpServerService)
       .subscribe(onNext: { state in
         self.appState.mainWindows[state.uuid] = state.payload
         self.stateSubject.onNext(self.appState)
       })
       .addDisposableTo(self.disposeBag)
 
+#if DEBUG
     actionSource.debug().subscribe().addDisposableTo(self.disposeBag)
     stateSource.debug().subscribe().addDisposableTo(self.disposeBag)
+#endif
   }
 
   fileprivate let stateSubject = PublishSubject<AppState>()
@@ -81,11 +83,11 @@ class StateContext {
 
 extension Observable {
 
-  fileprivate func transform<T: Transformer>(by transformer: T) -> Observable<Element> where T.Element == Element {
+  fileprivate func transform<T:Transformer>(by transformer: T) -> Observable<Element> where T.Element == Element {
     return transformer.transform(self)
   }
 
-  fileprivate func applyState<S: Service>(to service: S) -> Observable<Element> where S.StateType == Element {
-    return service.apply(self)
+  fileprivate func apply<S:Service>(to service: S) -> Observable<Element> where S.Pair == Element {
+    return self.do(onNext: service.apply)
   }
 }

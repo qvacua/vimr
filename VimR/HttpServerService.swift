@@ -9,14 +9,14 @@ import RxSwift
 
 protocol Service {
 
-  associatedtype StateType
+  associatedtype Pair
 
-  func apply(_: Observable<StateType>) -> Observable<StateType>
+  func apply(_: Pair)
 }
 
 class HttpServerService: Service {
 
-  typealias StateType = UuidState<MainWindow.State>
+  typealias Pair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
   init(port: in_port_t) {
     do {
@@ -31,9 +31,29 @@ class HttpServerService: Service {
     }
   }
 
-  func apply(_ source: Observable<StateType>) -> Observable<StateType> {
-    NSLog("\(#file): \(#function)")
-    return source
+  func apply(_ pair: Pair) {
+    NSLog("!!!!!!!!!!!")
+    let uuid = pair.state.uuid
+    var state = pair.state.payload
+
+    switch pair.action {
+
+    case let .setCurrentBuffer(buffer):
+      guard let url = buffer.url else {
+        return
+      }
+
+      guard FileUtils.fileExists(at: url) else {
+        return
+      }
+
+    case .close:
+      return
+
+    default:
+      return
+
+    }
   }
 
   fileprivate let server = HttpServer()
