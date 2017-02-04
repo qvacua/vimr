@@ -15,7 +15,9 @@ class StateContext {
     self.stateSource = self.stateSubject.asObservable()
     let actionSource = self.actionEmitter.observable
 
-    self.httpServerService = HttpServerService(port: NetUtils.openPort())
+    let port = NetUtils.openPort()
+    self.previewTransformer = PreviewTransformer(baseServerUrl: URL(string: "http://localhost:\(port)")!)
+    self.httpServerService = HttpServerService(port: port)
 
     Observable
       .of(
@@ -53,6 +55,7 @@ class StateContext {
       .transform(by: self.mainWindowTransformer)
       .transform(by: self.previewTransformer)
       .filter { $0.modified }
+      .apply(to: self.previewService)
       .apply(to: self.httpServerService)
       .map { $0.state }
       .subscribe(onNext: { state in
@@ -76,8 +79,9 @@ class StateContext {
   fileprivate let appDelegateTransformer = AppDelegateTransformer()
   fileprivate let uiRootTransformer = UiRootTransformer()
   fileprivate let mainWindowTransformer = MainWindowTransformer()
-  fileprivate let previewTransformer = PreviewTransformer()
+  fileprivate let previewTransformer: PreviewTransformer
 
+  fileprivate let previewService = PreviewNewService()
   fileprivate let httpServerService: HttpServerService
 }
 

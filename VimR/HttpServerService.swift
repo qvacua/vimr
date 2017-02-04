@@ -14,11 +14,25 @@ protocol Service {
   func apply(_: Pair)
 }
 
+fileprivate func shareFile(_ path: String) -> ((HttpRequest) -> HttpResponse) {
+  return { r in
+    guard let file = try? path.openForReading() else {
+      return .notFound
+    }
+
+    return .raw(200, "OK", [:], { writer in
+      try? writer.write(file)
+      file.close()
+    })
+  }
+}
+
 class HttpServerService: Service {
 
   typealias Pair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
   init(port: in_port_t) {
+    self.port = port
     do {
       try self.server.start(port)
       NSLog("server started on http://localhost:\(port)")
@@ -32,29 +46,25 @@ class HttpServerService: Service {
   }
 
   func apply(_ pair: Pair) {
-    NSLog("!!!!!!!!!!!")
-    let uuid = pair.state.uuid
-    var state = pair.state.payload
-
-    switch pair.action {
-
-    case let .setCurrentBuffer(buffer):
-      guard let url = buffer.url else {
-        return
-      }
-
-      guard FileUtils.fileExists(at: url) else {
-        return
-      }
-
-    case .close:
+    guard case .setCurrentBuffer = pair.action else {
       return
-
-    default:
-      return
-
     }
+
+    guard case let .markdown(file:buffer, html:html, server:server) = pair.state.payload.preview else {
+      return
+    }
+
+    NSLog("Serving \(html) on \(server)")
+
+    let htmlBasePath = server.deletingLastPathComponent().path
+    let cssPath = self.resourceBaesUrl.appendingPathComponent("github-markdown.css").path
+
+    self.server["\(htmlBasePath)/:path"] = shareFilesFromDirectory(buffer.deletingLastPathComponent().path)
+    self.server.GET[server.path] = shareFile(html.path)
+    self.server.GET["\(htmlBasePath)/github-markdown.css"] = shareFile(cssPath)
   }
 
   fileprivate let server = HttpServer()
+  fileprivate let resourceBaesUrl = Bundle.main.resourceURL!.appendingPathComponent("markdown")
+  fileprivate let port: in_port_t
 }

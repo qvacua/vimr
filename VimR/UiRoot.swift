@@ -27,9 +27,15 @@ class UiRoot: UiComponent {
 
         uuids
           .subtracting(uuidsInState)
-          .forEach {
-            self.mainWindows.removeValue(forKey: $0)
+          .forEach { uuid in
+            self.mainWindows[uuid]?.closeAllNeoVimWindowsWithoutSaving()
+            self.mainWindows.removeValue(forKey: uuid)
           }
+
+        // remove already closed windows
+        state.mainWindows
+          .filter { (uuid, mainWindow) in return mainWindow.isClosed }
+          .forEach { (uuid, mainWindow) in self.mainWindows.removeValue(forKey: uuid) }
 
       })
       .addDisposableTo(self.disposeBag)

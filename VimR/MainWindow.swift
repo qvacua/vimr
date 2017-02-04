@@ -147,6 +147,10 @@ class MainWindow: NSObject,
     self.windowController.showWindow(self)
   }
 
+  func closeAllNeoVimWindowsWithoutSaving() {
+    self.neoVimView.closeAllWindowsWithoutSaving()
+  }
+
   fileprivate func addViews() {
     let contentView = self.window.contentView!
 

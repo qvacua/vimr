@@ -9,10 +9,16 @@ import RxSwift
 import Swifter
 import CocoaMarkdown
 
+fileprivate let markdownPath = "tools/preview/markdown"
+
 // Currently supports only markdown
 class PreviewTransformer: Transformer {
 
   typealias Pair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
+
+  init(baseServerUrl: URL) {
+    self.baseServerUrl = baseServerUrl
+  }
 
   func transform(_ source: Observable<Pair>) -> Observable<Pair> {
     return source.map { pair in
@@ -23,15 +29,26 @@ class PreviewTransformer: Transformer {
 
       case let .setCurrentBuffer(buffer):
         guard let url = buffer.url else {
-          return pair
+          state.preview = .notSaved(server: self.serverUrl(for: uuid, lastComponent: "not-saved.html"))
+          break
         }
 
         guard FileUtils.fileExists(at: url) else {
-          return pair
+          state.preview = .error(server: self.serverUrl(for: uuid, lastComponent: "error.html"))
+          break
         }
 
+        guard self.extensions.contains(url.pathExtension) else {
+          state.preview = .none(server: self.serverUrl(for: uuid, lastComponent: "none.html"))
+          break
+        }
+
+        state.preview = .markdown(file: url,
+                                  html: self.htmlUrl(with: uuid),
+                                  server: self.serverUrl(for: uuid, lastComponent: "index.html"))
+
       case .close:
-        break
+        state.preview = .none(server: self.serverUrl(for: uuid, lastComponent: "none.html"))
 
       default:
         return pair
@@ -41,37 +58,15 @@ class PreviewTransformer: Transformer {
     }
   }
 
-  fileprivate func render(from url: URL) {
-//    let doc = CMDocument(contentsOfFile: url.path, options: .sourcepos)
-//    let renderer = CMHTMLRenderer(document: doc)
-//
-//    guard let body = renderer?.render() else {
-//      self.flow.publish(event: PreviewRendererAction.error)
-//      return
-//    }
-//
-//    let html = filledTemplate(body: body, title: url.lastPathComponent)
-//    let htmlFilePath = self.htmlFileUrl().path
-//    do {
-//      try html.write(toFile: htmlFilePath, atomically: true, encoding: .utf8)
-//    } catch {
-//      NSLog("ERROR \(#function): could not write preview file to \(htmlFilePath)")
-//      self.flow.publish(event: PreviewRendererAction.error(renderer: self))
-//      return
-//    }
-//
-//    self.httpServer["/\(MarkdownRenderer.serverPath)/\(self.uuid)/:path"] =
-//    shareFilesFromDirectory(url.deletingLastPathComponent().path)
-//
-//    self.httpServer.GET["/\(MarkdownRenderer.serverPath)/\(self.uuid)/index.html"] = shareFile(htmlFilePath)
-//
-//    let urlRequest = URLRequest(
-//      url: URL(string: "http://localhost:\(self.port)/\(MarkdownRenderer.serverPath)/\(self.uuid)/index.html")!
-//    )
-//    self.webview.load(urlRequest)
-//
-//    self.flow.publish(event: PreviewRendererAction.view(renderer: self, view: self.webview))
+  fileprivate func serverUrl(for uuid: String, lastComponent: String) -> URL {
+    return self.baseServerUrl.appendingPathComponent("\(uuid)/\(markdownPath)/\(lastComponent)")
+  }
+
+  fileprivate func htmlUrl(with uuid: String) -> URL {
+    return self.tempDir.appendingPathComponent("\(uuid)-markdown-index.html")
   }
 
   fileprivate let extensions = Set(["md", "markdown"])
+  fileprivate let tempDir = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+  fileprivate let baseServerUrl: URL
 }

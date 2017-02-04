@@ -30,6 +30,9 @@ class MainWindowTransformer: Transformer {
       case let .setCurrentBuffer(buffer):
         state.currentBuffer = buffer
 
+      case .close:
+        state.isClosed = true
+
       default:
         return pair
 

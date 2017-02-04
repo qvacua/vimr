@@ -22,6 +22,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   enum Action {
 
     case newMainWindow(urls: [URL], cwd: URL)
+    case closeAllMainWindowsWithoutSaving
+    case closeAllMainWindows
   }
 
   @IBOutlet var debugMenu: NSMenuItem?
@@ -55,7 +57,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                          emitter: self.stateContext.actionEmitter,
                          state: AppState.default) // FIXME
 
-
     self.actionSink = self.actionSubject.asObservable()
     self.changeSink = self.changeSubject.asObservable()
     let actionAndChangeSink = [self.changeSink, self.actionSink].toMergedObservables()
@@ -74,6 +75,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                                              fileItemService: self.fileItemService)
 
     super.init()
+
+    source
+      .subscribe(onNext: { appState in
+        self.hasMainWindows = !appState.mainWindows.isEmpty
+        self.hasDirtyWindows = appState.mainWindows.values.reduce(false) { $1.isDirty ? true : $0 }
+
+        if self.quitWhenAllWindowsAreClosed && appState.mainWindows.isEmpty {
+          NSApp.stop(self)
+        }
+      })
+      .addDisposableTo(self.disposeBag)
 
     self.mainWindowManager.sink
       .filter { $0 is MainWindowManagerAction }
@@ -130,6 +142,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   fileprivate let stateContext = StateContext()
   fileprivate let uiRoot: UiRoot
+  fileprivate var hasDirtyWindows = true
+  fileprivate var hasMainWindows = false
 }
 
 // MARK: - NSApplicationDelegate
@@ -188,6 +202,28 @@ extension AppDelegate {
     if self.mainWindowManager.hasMainWindow() {
       self.quitWhenAllWindowsAreClosed = true
       self.mainWindowManager.closeAllWindows()
+
+      return .terminateCancel
+    }
+
+    if self.hasDirtyWindows {
+      let alert = NSAlert()
+      alert.addButton(withTitle: "Cancel")
+      alert.addButton(withTitle: "Discard and Quit")
+      alert.messageText = "There are windows with unsaved buffers!"
+      alert.alertStyle = .warning
+
+      if alert.runModal() == NSAlertSecondButtonReturn {
+        self.quitWhenAllWindowsAreClosed = true
+        self.stateContext.actionEmitter.emit(AppDelegate.Action.closeAllMainWindowsWithoutSaving)
+      }
+
+      return .terminateCancel
+    }
+
+    if self.hasMainWindows {
+      self.quitWhenAllWindowsAreClosed = true
+      self.stateContext.actionEmitter.emit(AppDelegate.Action.closeAllMainWindows)
 
       return .terminateCancel
     }

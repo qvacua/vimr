@@ -104,28 +104,27 @@ struct AppState {
   }
 }
 
-struct PreviewState {
+enum PreviewState {
 
-  static let `default` = PreviewState(lastRefresh: Date.distantPast, url: nil)
-
-  var lastRefresh: Date
-  var url: URL?
+  case none(server: URL)
+  case error(server: URL)
+  case notSaved(server: URL)
+  case markdown(file: URL, html: URL, server: URL)
 }
 
 extension MainWindow {
 
   struct State {
 
-    static let `default` = State(serverBaseUrl: URL(string: "http://localhost/dummy")!,
-                                 isAllToolsVisible: true,
-                                 isToolButtonsVisible: true)
+    static let `default` = State(isAllToolsVisible: true, isToolButtonsVisible: true)
 
     var isAllToolsVisible = true
     var isToolButtonsVisible = true
 
     ////// transient
 
-    var preview = PreviewState.default
+    var preview = PreviewState.none(server: URL(string: "http://localhost/dummy")!)
+    var isClosed = false
 
     // neovim
     var uuid = UUID().uuidString
@@ -140,13 +139,10 @@ extension MainWindow {
     var isUseLigatures = false
     var isUseInteractiveZsh = false
 
-    var serverBaseUrl: URL
-
     // transient^2
     var urlsToOpen = [URL: OpenMode]()
 
-    init(serverBaseUrl: URL, isAllToolsVisible: Bool, isToolButtonsVisible: Bool) {
-      self.serverBaseUrl = serverBaseUrl
+    init(isAllToolsVisible: Bool, isToolButtonsVisible: Bool) {
       self.isAllToolsVisible = isAllToolsVisible
       self.isToolButtonsVisible = isToolButtonsVisible
     }

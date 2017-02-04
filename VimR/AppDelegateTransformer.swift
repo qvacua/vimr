@@ -12,19 +12,22 @@ class AppDelegateTransformer: Transformer {
 
   func transform(_ source: Observable<Pair>) -> Observable<Pair> {
     return source.map { pair in
+      var state = pair.state
+
       switch pair.action {
 
       case let .newMainWindow(urls, cwd):
-        var state = pair.state
-
         var mainWindow = state.currentMainWindow
         mainWindow.uuid = UUID().uuidString
-        mainWindow.serverBaseUrl = state.baseServerUrl.appendingPathComponent("\(mainWindow.uuid)")
         mainWindow.urlsToOpen = urls.toDict { url in MainWindow.OpenMode.default }
         mainWindow.cwd = cwd
 
         state.mainWindows[mainWindow.uuid] = mainWindow
 
+        return StateActionPair(state: state, action: pair.action)
+
+      case .closeAllMainWindowsWithoutSaving, .closeAllMainWindows:
+        state.mainWindows.removeAll()
         return StateActionPair(state: state, action: pair.action)
 
       }
