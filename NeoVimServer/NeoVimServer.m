@@ -34,11 +34,6 @@ static const double qTimeout = 10;
 
 @end
 
-static CFDataRef null_data_async(CFDataRef data, argv_callback cb) {
-  loop_schedule(&main_loop, event_create(1, cb, 1, data));
-  return NULL;
-}
-
 static CFDataRef data_sync(CFDataRef data, NSCondition *condition, argv_callback cb) {
   DataWrapper *wrapper = [[DataWrapper alloc] init];
   NSDate *deadline = [[NSDate date] dateByAddingTimeInterval:qTimeout];
@@ -75,7 +70,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
       case NeoVimAgentMsgIdCommandOutput: return data_sync(data, outputCondition, neovim_vim_command_output);
 
-      case NeoVimAgentMsgIdSelectWindow: return null_data_async(data, neovim_select_window);
+      case NeoVimAgentMsgIdSelectWindow: return data_sync (data, outputCondition, neovim_select_window);
 
       case NeoVimAgentMsgIdGetTabs: return data_sync(data, outputCondition, neovim_tabs);
       
@@ -89,17 +84,17 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
       case NeoVimAgentMsgIdGetDirtyDocs: return data_sync(data, outputCondition, neovim_has_dirty_docs);
 
-      case NeoVimAgentMsgIdResize: return null_data_async(data, neovim_resize);
+      case NeoVimAgentMsgIdResize: return data_sync (data, outputCondition, neovim_resize);
 
-      case NeoVimAgentMsgIdCommand: return null_data_async(data, neovim_vim_command);
+      case NeoVimAgentMsgIdCommand: return data_sync (data, outputCondition, neovim_vim_command);
 
-      case NeoVimAgentMsgIdInput: return null_data_async(data, neovim_vim_input);
+      case NeoVimAgentMsgIdInput: return data_sync (data, outputCondition, neovim_vim_input);
 
-      case NeoVimAgentMsgIdInputMarked: return null_data_async(data, neovim_vim_input_marked_text);
+      case NeoVimAgentMsgIdInputMarked: return data_sync (data, outputCondition, neovim_vim_input_marked_text);
 
-      case NeoVimAgentMsgIdDelete: return null_data_async(data, neovim_delete);
+      case NeoVimAgentMsgIdDelete: return data_sync (data, outputCondition, neovim_delete);
 
-      case NeoVimAgentMsgIdCursorGoto: return null_data_async(data, neovim_cursor_goto);
+      case NeoVimAgentMsgIdCursorGoto: return data_sync (data, outputCondition, neovim_cursor_goto);
 
       default: return NULL;
 

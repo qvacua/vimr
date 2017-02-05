@@ -14,6 +14,19 @@
 #define GREEN(color_code)    (((color_code >>  8) & 0xff) / 255.0f)
 #define BLUE(color_code)     (((color_code      ) & 0xff) / 255.0f)
 
+static dispatch_once_t token;
+static NSMutableDictionary *colorCache;
+
+static CGColorRef color_for(unsigned int value) {
+  NSColor *color = colorCache[@(value)];
+  if (color == nil) {
+    color = [NSColor colorWithSRGBRed:RED(value) green:GREEN(value) blue:BLUE(value) alpha:1];
+    colorCache[@(value)] = color;
+  }
+
+  return color.CGColor;
+}
+
 @implementation TextDrawer {
   NSLayoutManager *_layoutManager;
 
@@ -55,6 +68,10 @@
 }
 
 - (instancetype _Nonnull)initWithFont:(NSFont *_Nonnull)font {
+  dispatch_once (&token, ^{
+    colorCache = [[NSMutableDictionary alloc] init];
+  });
+
   self = [super init];
   if (self == nil) {
     return nil;
@@ -111,7 +128,7 @@
                 color:(unsigned int)color
               context:(CGContextRef _Nonnull)context
 {
-  CGContextSetRGBFillColor(context, RED(color), GREEN(color), BLUE(color), ALPHA(color));
+  CGContextSetFillColorWithColor(context, color_for(color));
   CGRect rect = {
       {positions[0].x, positions[0].y + _underlinePosition},
       {positions[0].x + positions[count - 1].x + _cellSize.width, _underlineThickness}
@@ -139,7 +156,7 @@
   CGGlyph *glyphs = malloc(unilength * sizeof(CGGlyph));
   CTFontRef fontWithTraits = [self fontWithTrait:fontTrait];
 
-  CGContextSetRGBFillColor(context, RED(foreground), GREEN(foreground), BLUE(foreground), 1.0);
+  CGContextSetFillColorWithColor(context, color_for(foreground));
   recurseDraw(unichars, glyphs, positions, unilength, context, fontWithTraits, _fontLookupCache, _usesLigatures);
 
   CFRelease(fontWithTraits);

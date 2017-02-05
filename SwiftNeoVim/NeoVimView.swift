@@ -166,6 +166,8 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
     NSForegroundColorAttributeName: NSColor.darkGray
   ]
 
+  fileprivate let colorSpace = NSColorSpace.sRGB
+
   public init(frame rect: NSRect, config: Config) {
     self.drawer = TextDrawer(font: self._font)
     self.agent = NeoVimAgent(uuid: self.uuid)
@@ -198,6 +200,10 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
 
       self.resizeNeoVimUiTo(size: self.bounds.size)
     }
+  }
+
+  override public func viewDidMoveToWindow() {
+    self.window?.colorSpace = self.colorSpace
   }
 
   convenience override init(frame rect: NSRect) {
@@ -902,7 +908,7 @@ extension NeoVimView: NSTextInputClient {
     self.keyDownDone = true
 
     // TODO: necessary?
-    self.setNeedsDisplay(self.cellRectFor(row: self.grid.putPosition.row, column: self.grid.putPosition.column))
+    self.markForRender(row: self.grid.putPosition.row, column: self.grid.putPosition.column)
   }
 
   /// Return the current selection (or the position of the cursor with empty-length range). For example when you enter
@@ -1238,14 +1244,14 @@ extension NeoVimView {
     DispatchUtils.gui {
 //      NSLog("\(#function): \(width):\(height)")
       self.grid.resize(Size(width: Int(width), height: Int(height)))
-      self.needsDisplay = true
+      self.markForRenderWholeView()
     }
   }
 
   public func clear() {
     DispatchUtils.gui {
       self.grid.clear()
-      self.needsDisplay = true
+      self.markForRenderWholeView()
     }
   }
 
@@ -1253,13 +1259,12 @@ extension NeoVimView {
     DispatchUtils.gui {
       self.grid.eolClear()
 
-      let origin = self.pointInViewFor(position: self.grid.putPosition)
-      let size = CGSize(
-        width: CGFloat(self.grid.region.right - self.grid.putPosition.column + 1) * self.cellSize.width,
-        height: self.cellSize.height
-      )
-      let rect = CGRect(origin: origin, size: size)
-      self.setNeedsDisplay(rect)
+      let putPosition = self.grid.putPosition
+      let region = Region(top: putPosition.row,
+                          bottom: putPosition.row,
+                          left: putPosition.column,
+                          right: self.grid.region.right)
+      self.markForRender(region: region)
     }
   }
 
@@ -1273,22 +1278,22 @@ extension NeoVimView {
       // Because neovim fills blank space with "Space" and when we enter "Space" we don't get the puts, thus we have to
       // redraw the put position.
       if self.usesLigatures {
-        self.setNeedsDisplay(region: self.grid.regionOfWord(at: self.grid.putPosition))
-        self.setNeedsDisplay(region: self.grid.regionOfWord(at: curScreenCursor))
-        self.setNeedsDisplay(region: self.grid.regionOfWord(at: position))
-        self.setNeedsDisplay(region: self.grid.regionOfWord(at: screenCursor))
+        self.markForRender(region: self.grid.regionOfWord(at: self.grid.putPosition))
+        self.markForRender(region: self.grid.regionOfWord(at: curScreenCursor))
+        self.markForRender(region: self.grid.regionOfWord(at: position))
+        self.markForRender(region: self.grid.regionOfWord(at: screenCursor))
       } else {
-        self.setNeedsDisplay(cellPosition: self.grid.putPosition)
+        self.markForRender(cellPosition: self.grid.putPosition)
         // Redraw where the cursor has been till now, ie remove the current cursor.
-        self.setNeedsDisplay(cellPosition: curScreenCursor)
+        self.markForRender(cellPosition: curScreenCursor)
         if self.grid.isPreviousCellEmpty(curScreenCursor) {
-          self.setNeedsDisplay(cellPosition: self.grid.previousCellPosition(curScreenCursor))
+          self.markForRender(cellPosition: self.grid.previousCellPosition(curScreenCursor))
         }
         if self.grid.isNextCellEmpty(curScreenCursor) {
-          self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(curScreenCursor))
+          self.markForRender(cellPosition: self.grid.nextCellPosition(curScreenCursor))
         }
-        self.setNeedsDisplay(cellPosition: position)
-        self.setNeedsDisplay(cellPosition: screenCursor)
+        self.markForRender(cellPosition: position)
+        self.markForRender(cellPosition: screenCursor)
       }
 
       self.grid.goto(position)
@@ -1323,14 +1328,13 @@ extension NeoVimView {
     DispatchUtils.gui {
       let region = Region(top: Int(top), bottom: Int(bottom), left: Int(left), right: Int(right))
       self.grid.setScrollRegion(region)
-      self.setNeedsDisplay(region: region)
     }
   }
 
   public func scroll(_ count: Int32) {
     DispatchUtils.gui {
       self.grid.scroll(Int(count))
-      self.setNeedsDisplay(region: self.grid.region)
+      self.markForRender(region: self.grid.region)
       // Do not send msgs to agent -> neovim in the delegate method. It causes spinning when you're opening a file with
       // existing swap file.
       self.delegate?.scroll()
@@ -1351,12 +1355,12 @@ extension NeoVimView {
 
       if self.usesLigatures {
         if string == " " {
-          self.setNeedsDisplay(cellPosition: curPos)
+          self.markForRender(cellPosition: curPos)
         } else {
-          self.setNeedsDisplay(region: self.grid.regionOfWord(at: curPos))
+          self.markForRender(region: self.grid.regionOfWord(at: curPos))
         }
       } else {
-        self.setNeedsDisplay(cellPosition: curPos)
+        self.markForRender(cellPosition: curPos)
       }
 
       self.updateCursorWhenPutting(currentPosition: curPos, screenCursor: screenCursor)
@@ -1370,11 +1374,11 @@ extension NeoVimView {
       let curPos = self.grid.putPosition
       self.grid.putMarkedText(markedText)
 
-      self.setNeedsDisplay(position: curPos)
+      self.markForRender(position: curPos)
       // When the cursor is in the command line, then we need this...
-      self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(curPos))
+      self.markForRender(cellPosition: self.grid.nextCellPosition(curPos))
       if markedText.characters.count == 0 {
-        self.setNeedsDisplay(position: self.grid.previousCellPosition(curPos))
+        self.markForRender(position: self.grid.previousCellPosition(curPos))
       }
 
       self.updateCursorWhenPutting(currentPosition: curPos, screenCursor: screenCursor)
@@ -1388,9 +1392,9 @@ extension NeoVimView {
 //      NSLog("\(#function): \(position)")
 
       self.grid.unmarkCell(position)
-      self.setNeedsDisplay(position: position)
+      self.markForRender(position: position)
 
-      self.setNeedsDisplay(screenCursor: self.grid.screenCursor)
+      self.markForRender(screenCursor: self.grid.screenCursor)
     }
   }
 
@@ -1404,7 +1408,6 @@ extension NeoVimView {
   }
 
   public func flush() {
-//    NSLog("\(#function)")
   }
 
   public func updateForeground(_ fg: Int32) {
@@ -1519,45 +1522,48 @@ extension NeoVimView {
   fileprivate func updateCursorWhenPutting(currentPosition curPos: Position, screenCursor: Position) {
     if self.mode == .Cmdline {
       // When the cursor is in the command line, then we need this...
-      self.setNeedsDisplay(cellPosition: self.grid.previousCellPosition(curPos))
-      self.setNeedsDisplay(cellPosition: self.grid.nextCellPosition(curPos))
-      self.setNeedsDisplay(screenCursor: self.grid.screenCursor)
+      self.markForRender(cellPosition: self.grid.previousCellPosition(curPos))
+      self.markForRender(cellPosition: self.grid.nextCellPosition(curPos))
+      self.markForRender(screenCursor: self.grid.screenCursor)
     }
 
-    self.setNeedsDisplay(screenCursor: screenCursor)
-    self.setNeedsDisplay(cellPosition: self.grid.screenCursor)
+    self.markForRender(screenCursor: screenCursor)
+    self.markForRender(cellPosition: self.grid.screenCursor)
     self.grid.moveCursor(screenCursor)
   }
 
-  fileprivate func setNeedsDisplay(region: Region) {
+  fileprivate func markForRender(cellPosition position: Position) {
+    self.markForRender(position: position)
+
+    if self.grid.isCellEmpty(position) {
+      self.markForRender(position: self.grid.previousCellPosition(position))
+    }
+
+    if self.grid.isNextCellEmpty(position) {
+      self.markForRender(position: self.grid.nextCellPosition(position))
+    }
+  }
+
+  fileprivate func markForRender(position: Position) {
+    self.markForRender(row: position.row, column: position.column)
+  }
+
+  fileprivate func markForRender(screenCursor position: Position) {
+    self.markForRender(position: position)
+    if self.grid.isNextCellEmpty(position) {
+      self.markForRender(position: self.grid.nextCellPosition(position))
+    }
+  }
+
+  fileprivate func markForRenderWholeView() {
+    self.needsDisplay = true
+  }
+
+  fileprivate func markForRender(region: Region) {
     self.setNeedsDisplay(self.regionRectFor(region: region))
   }
 
-  fileprivate func setNeedsDisplay(cellPosition position: Position) {
-    self.setNeedsDisplay(position: position)
-
-    if self.grid.isCellEmpty(position) {
-      self.setNeedsDisplay(position: self.grid.previousCellPosition(position))
-    }
-
-    if self.grid.isNextCellEmpty(position) {
-      self.setNeedsDisplay(position: self.grid.nextCellPosition(position))
-    }
-  }
-
-  fileprivate func setNeedsDisplay(position: Position) {
-    self.setNeedsDisplay(row: position.row, column: position.column)
-  }
-
-  fileprivate func setNeedsDisplay(row: Int, column: Int) {
-//    Swift.print("\(#function): \(row):\(column)")
+  fileprivate func markForRender(row: Int, column: Int) {
     self.setNeedsDisplay(self.cellRectFor(row: row, column: column))
-  }
-
-  fileprivate func setNeedsDisplay(screenCursor position: Position) {
-    self.setNeedsDisplay(position: position)
-    if self.grid.isNextCellEmpty(position) {
-      self.setNeedsDisplay(position: self.grid.nextCellPosition(position))
-    }
   }
 }

@@ -165,20 +165,6 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   xfree(ui);
 }
 
-static void send_dirty_status() {
-  bool new_dirty_status = has_dirty_docs();
-  DLOG("dirty status: %d vs. %d", _dirty, new_dirty_status);
-  if (_dirty == new_dirty_status) {
-    return;
-  }
-
-  _dirty = new_dirty_status;
-  DLOG("sending dirty status: %d", _dirty);
-  NSData *data = [[NSData alloc] initWithBytes:&_dirty length:sizeof(bool)];
-  [_neovim_server sendMessageWithId:NeoVimServerMsgIdDirtyStatusChanged data:data];
-  [data release];
-}
-
 #pragma mark NeoVim's UI callbacks
 
 static void server_ui_resize(UI *ui __unused, int width, int height) {
@@ -540,13 +526,13 @@ static void work_and_write_data_sync(void **argv, work_block block) {
   }
 }
 
-static void work_async(void **argv, work_block block) {
-  @autoreleasepool {
-    NSData *data = argv[0];
-    block(data);
-    [data release]; // retained in local_server_callback
-  }
-}
+//static void work_async(void **argv, work_block block) {
+//  @autoreleasepool {
+//    NSData *data = argv[0];
+//    block(data);
+//    [data release]; // retained in local_server_callback
+//  }
+//}
 
 static NSString *escaped_filename(NSString *filename) {
   const char *file_system_rep = filename.fileSystemRepresentation;
@@ -585,7 +571,7 @@ static NeoVimBuffer *buffer_for(buf_T *buf) {
 }
 
 void neovim_select_window(void **argv) {
-  work_async(argv, ^NSData *(NSData *data) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     int handle = ((int *) data.bytes)[0];
 
     FOR_ALL_TAB_WINDOWS(tab, win) {
@@ -754,7 +740,7 @@ void neovim_has_dirty_docs(void **argv) {
 }
 
 void neovim_resize(void **argv) {
-  work_async(argv, ^NSData *(NSData *data) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     const int *values = data.bytes;
     int width = values[0];
     int height = values[1];
@@ -767,7 +753,7 @@ void neovim_resize(void **argv) {
 }
 
 void neovim_vim_command(void **argv) {
-  work_async(argv, ^NSData *(NSData *data) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     NSString *input = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
     Error err = ERROR_INIT;
@@ -784,7 +770,7 @@ void neovim_vim_command(void **argv) {
 }
 
 void neovim_vim_input(void **argv) {
-  work_async(argv, ^NSData *(NSData *data) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     NSString *input = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
 
     if (_marked_text == nil) {
@@ -818,7 +804,7 @@ void neovim_vim_input(void **argv) {
 }
 
 void neovim_vim_input_marked_text(void **argv) {
-  work_async(argv, ^NSData *(NSData *data) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     NSString *markedText = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
 
     if (_marked_text == nil) {
@@ -838,7 +824,7 @@ void neovim_vim_input_marked_text(void **argv) {
 }
 
 void neovim_delete(void **argv) {
-  work_async(argv, ^NSData *(NSData *data) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     const NSInteger *values = data.bytes;
     NSInteger count = values[0];
 
@@ -871,7 +857,7 @@ void neovim_delete(void **argv) {
 }
 
 void neovim_cursor_goto(void **argv) {
-  work_async(argv, ^NSData *(NSData *data) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     const int *values = data.bytes;
 
     Array position = ARRAY_DICT_INIT;
