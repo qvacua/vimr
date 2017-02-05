@@ -29,26 +29,34 @@ class PreviewTransformer: Transformer {
 
       case let .setCurrentBuffer(buffer):
         guard let url = buffer.url else {
-          state.preview = .notSaved(server: self.serverUrl(for: uuid, lastComponent: "not-saved.html"))
+          state.preview = PreviewState(buffer: nil,
+                                       html: nil,
+                                       server: self.serverUrl(for: uuid, lastComponent: "save-first.html"))
           break
         }
 
         guard FileUtils.fileExists(at: url) else {
-          state.preview = .error(server: self.serverUrl(for: uuid, lastComponent: "error.html"))
+          state.preview = PreviewState(buffer: nil,
+                                       html: nil,
+                                       server: self.serverUrl(for: uuid, lastComponent: "error.html"))
           break
         }
 
         guard self.extensions.contains(url.pathExtension) else {
-          state.preview = .none(server: self.serverUrl(for: uuid, lastComponent: "none.html"))
+          state.preview = PreviewState(buffer: nil,
+                                       html: nil,
+                                       server: self.serverUrl(for: uuid, lastComponent: "none.html"))
           break
         }
 
-        state.preview = .markdown(file: url,
-                                  html: self.htmlUrl(with: uuid),
-                                  server: self.serverUrl(for: uuid, lastComponent: "index.html"))
+        state.preview = PreviewState(buffer: url,
+                                     html: self.htmlUrl(with: uuid),
+                                     server: self.serverUrl(for: uuid, lastComponent: "index.html"))
 
       case .close:
-        state.preview = .none(server: self.serverUrl(for: uuid, lastComponent: "none.html"))
+        state.preview = PreviewState(buffer: nil,
+                                     html: nil,
+                                     server: self.serverUrl(for: uuid, lastComponent: "none.html"))
 
       default:
         return pair

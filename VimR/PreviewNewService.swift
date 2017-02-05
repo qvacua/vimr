@@ -33,20 +33,8 @@ class PreviewNewService: Service {
 
     let uuid = pair.state.uuid
 
-    switch pair.state.payload.preview {
-
-    case let .markdown(file:file, html:html, server:_):
-      NSLog("\(file) -> \(html)")
-      do {
-        try self.render(file, to: html)
-        self.previewFiles[uuid] = html
-      } catch let error as NSError {
-        // FIXME: error handling!
-        NSLog("ERROR rendering \(file) to \(html): \(error)")
-        return
-      }
-
-    default:
+    let preview = pair.state.payload.preview
+    guard let buffer = preview.buffer, let html = preview.html else {
       guard let previewUrl = self.previewFiles[uuid] else {
         return
       }
@@ -54,6 +42,17 @@ class PreviewNewService: Service {
       try? FileManager.default.removeItem(at: previewUrl)
       self.previewFiles.removeValue(forKey: uuid)
 
+      return
+    }
+
+    NSLog("\(buffer) -> \(html)")
+    do {
+      try self.render(buffer, to: html)
+      self.previewFiles[uuid] = html
+    } catch let error as NSError {
+      // FIXME: error handling!
+      NSLog("ERROR rendering \(buffer) to \(html): \(error)")
+      return
     }
   }
 

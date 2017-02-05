@@ -43,7 +43,8 @@ class HttpServerService: Service {
       return
     }
 
-    guard case let .markdown(file:buffer, html:html, server:server) = pair.state.payload.preview else {
+    let preview = pair.state.payload.preview
+    guard let buffer = preview.buffer, let html = preview.html, let server = preview.server else {
       return
     }
 

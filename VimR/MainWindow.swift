@@ -76,6 +76,7 @@ class MainWindow: NSObject,
     self.neoVimView.configureForAutoLayout()
 
     self.workspace = Workspace(mainView: self.neoVimView)
+    self.preview = PreviewTool(source: source, emitter: emitter, state: state)
 
     self.windowController = NSWindowController(windowNibName: "MainWindow")
 
@@ -149,10 +150,20 @@ class MainWindow: NSObject,
     self.neoVimView.closeAllWindowsWithoutSaving()
   }
 
+  fileprivate func setupTools() {
+    let previewConfig = WorkspaceTool.Config(title: "Preview", view: self.preview)
+    let previewContainer = WorkspaceTool(previewConfig)
+    previewContainer.dimension = 300
+
+    self.workspace.append(tool: previewContainer, location: .right)
+    previewContainer.toggle()
+  }
+
   fileprivate func addViews() {
     let contentView = self.window.contentView!
 
     contentView.addSubview(self.workspace)
+    self.setupTools()
 
     self.workspace.autoPinEdgesToSuperviewEdges()
   }
@@ -167,6 +178,8 @@ class MainWindow: NSObject,
 
   fileprivate let workspace: Workspace
   fileprivate let neoVimView: NeoVimView
+
+  fileprivate let preview: PreviewTool
 
   fileprivate let scrollDebouncer = Debouncer<Action>(interval: 0.75)
   fileprivate let cursorDebouncer = Debouncer<Action>(interval: 0.75)

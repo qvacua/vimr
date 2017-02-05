@@ -20,8 +20,6 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
   typealias StateType = MainWindow.State
 
-  static let basePath = "tools/previews"
-
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.webview.configureForAutoLayout()
 
@@ -32,6 +30,15 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
     self.webview.loadHTMLString("", baseURL: nil)
 
     self.addViews()
+
+    source
+      .map { $0.preview }
+      .mapOmittingNil { $0.server }
+      .subscribe(onNext: { [unowned self] serverUrl in
+        let urlReq = URLRequest(url: serverUrl)
+        self.webview.load(urlReq)
+      })
+      .addDisposableTo(self.disposeBag)
   }
 
   fileprivate func addViews() {
@@ -44,6 +51,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   }
 
   fileprivate let webview = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
+  fileprivate let disposeBag = DisposeBag()
   fileprivate var isOpen = false
 
   required init?(coder: NSCoder) {

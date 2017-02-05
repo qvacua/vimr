@@ -111,12 +111,13 @@ struct AppState {
   }
 }
 
-enum PreviewState {
+struct PreviewState {
 
-  case none(server: URL)
-  case error(server: URL)
-  case notSaved(server: URL)
-  case markdown(file: URL, html: URL, server: URL)
+  static let `default` = PreviewState(buffer: nil, html: nil, server: nil)
+
+  var buffer: URL?
+  var html: URL?
+  var server: URL?
 }
 
 extension MainWindow {
@@ -130,7 +131,7 @@ extension MainWindow {
 
     ////// transient
 
-    var preview = PreviewState.none(server: URL(string: "http://localhost/dummy")!)
+    var preview = PreviewState.default
     var isClosed = false
 
     // neovim
