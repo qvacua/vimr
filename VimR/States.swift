@@ -89,6 +89,13 @@ protocol Transformer: Morpher {
   func transform(_ source: Observable<Element>) -> Observable<Element>
 }
 
+protocol Service {
+
+  associatedtype Element
+
+  func apply(_: Element)
+}
+
 struct AppState {
 
   static let `default` = AppState(mainWindow: MainWindow.State.default)

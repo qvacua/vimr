@@ -91,7 +91,7 @@ extension Observable {
     return transformer.transform(self)
   }
 
-  fileprivate func apply<S:Service>(to service: S) -> Observable<Element> where S.Pair == Element {
+  fileprivate func apply<S:Service>(to service: S) -> Observable<Element> where S.Element == Element {
     return self.do(onNext: service.apply)
   }
 }

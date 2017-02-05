@@ -8,7 +8,7 @@ import CocoaMarkdown
 
 class PreviewNewService: Service {
 
-  typealias Pair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
+  typealias Element = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
   init() {
     guard let templateUrl = Bundle.main.url(forResource: "template",
@@ -25,7 +25,7 @@ class PreviewNewService: Service {
     self.template = template
   }
 
-  func apply(_ pair: Pair) {
+  func apply(_ pair: Element) {
 
     guard case .setCurrentBuffer = pair.action else {
       return

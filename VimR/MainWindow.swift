@@ -98,8 +98,6 @@ class MainWindow: NSObject,
     self.windowController.window?.delegate = self
 
     source
-      .mapOmittingNil { $0 as? UuidState<StateType> }
-      .filter { $0.uuid == state.uuid }
       .debug()
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in

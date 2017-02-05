@@ -7,13 +7,6 @@ import Foundation
 import Swifter
 import RxSwift
 
-protocol Service {
-
-  associatedtype Pair
-
-  func apply(_: Pair)
-}
-
 fileprivate func shareFile(_ path: String) -> ((HttpRequest) -> HttpResponse) {
   return { r in
     guard let file = try? path.openForReading() else {
@@ -29,7 +22,7 @@ fileprivate func shareFile(_ path: String) -> ((HttpRequest) -> HttpResponse) {
 
 class HttpServerService: Service {
 
-  typealias Pair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
+  typealias Element = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
   init(port: in_port_t) {
     self.port = port
@@ -45,7 +38,7 @@ class HttpServerService: Service {
     }
   }
 
-  func apply(_ pair: Pair) {
+  func apply(_ pair: Element) {
     guard case .setCurrentBuffer = pair.action else {
       return
     }
