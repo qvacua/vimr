@@ -7,22 +7,25 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.13.0-164</title>
+      <title>v0.13.1-167</title>
       <description><![CDATA[
     <ul>
-<li>GH-339: Add a simple markdown previewer.</li>
+<li>Make pinch-zooming fast (enough) on Retina-displays.</li>
+<li>Make markdown previewing more robust against non-existing file.</li>
+<li>GH-392: Bugfix: fix a weird scroll issue.</li>
+<li>GH-371: Small scroll performance improvment.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.13.0-164
+        https://github.com/qvacua/vimr/releases/tag/v0.13.1-167
       </releaseNotesLink>
-      <pubDate>2017-01-22T13:58:21.099701</pubDate>
+      <pubDate>2017-02-06T22:55:03.980618</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.13.0-164/VimR-v0.13.0-164.tar.bz2"
-                 sparkle:version="164"
-                 sparkle:shortVersionString="0.13.0"
-                 sparkle:dsaSignature="MC0CFBisDu8IMsFxggGI65USNOTxlqDVAhUArhoMY5Y3vTuLKEkBkoDKUdgF52Y="
-                 length="11830454"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.13.1-167/VimR-v0.13.1-167.tar.bz2"
+                 sparkle:version="167"
+                 sparkle:shortVersionString="0.13.1"
+                 sparkle:dsaSignature="MCwCFG5z5tVWPbMrysDESci8oG4mipI7AhQbx4kVC4pBPqLgeCgDp/V++JogNQ=="
+                 length="11834343"
                  type="application/octet-stream"/>
     </item>
   </channel>
