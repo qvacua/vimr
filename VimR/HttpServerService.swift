@@ -26,13 +26,18 @@ class HttpServerService: Service {
 
   init(port: Int) {
     self.port = port
+
+    let resourceUrl = Bundle.main.resourceURL!
+    let previewResourceUrl = resourceUrl.appendingPathComponent("preview")
+
+    self.githubCssUrl = resourceUrl.appendingPathComponent("markdown/github-markdown.css")
+
     do {
       try self.server.start(in_port_t(port))
       NSLog("server started on http://localhost:\(port)")
 
-      self.server[PreviewTransformer.errorPath] = { r in .ok(.html("ERROR!")) }
-      self.server[PreviewTransformer.saveFirstPath] = { r in .ok(.html("SAVE FIRST!")) }
-      self.server[PreviewTransformer.nonePath] = { r in .ok(.html("NO PREVIEW!")) }
+      self.server["\(PreviewTransformer.basePath)/:path"] = shareFilesFromDirectory(previewResourceUrl.path)
+      self.server.GET["\(PreviewTransformer.basePath)/github-markdown.css"] = shareFile(self.githubCssUrl.path)
     } catch {
       NSLog("ERROR server could not be started on port \(port)")
     }
@@ -55,14 +60,13 @@ class HttpServerService: Service {
     NSLog("Serving \(html) on \(server)")
 
     let htmlBasePath = server.deletingLastPathComponent().path
-    let cssPath = self.resourceBaesUrl.appendingPathComponent("github-markdown.css").path
 
     self.server["\(htmlBasePath)/:path"] = shareFilesFromDirectory(buffer.deletingLastPathComponent().path)
     self.server.GET[server.path] = shareFile(html.path)
-    self.server.GET["\(htmlBasePath)/github-markdown.css"] = shareFile(cssPath)
+    self.server.GET["\(htmlBasePath)/github-markdown.css"] = shareFile(self.githubCssUrl.path)
   }
 
   fileprivate let server = HttpServer()
-  fileprivate let resourceBaesUrl = Bundle.main.resourceURL!.appendingPathComponent("markdown")
+  fileprivate let githubCssUrl: URL
   fileprivate let port: Int
 }

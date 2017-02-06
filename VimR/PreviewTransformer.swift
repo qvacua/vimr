@@ -16,9 +16,10 @@ class PreviewTransformer: Transformer {
 
   typealias Pair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
-  static let saveFirstPath = "/tools/preview/save-first"
-  static let errorPath = "/tools/preview/error"
-  static let nonePath = "/tools/preview/none"
+  static let basePath = "/tools/preview"
+  static let saveFirstPath = "/tools/preview/save-first.html"
+  static let errorPath = "/tools/preview/error.html"
+  static let nonePath = "/tools/preview/empty.html"
 
   init(baseServerUrl: URL) {
     self.baseServerUrl = baseServerUrl
