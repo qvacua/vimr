@@ -11,13 +11,14 @@ class StateContext {
   let stateSource: Observable<AppState>
   let actionEmitter = Emitter<Any>()
 
-  init() {
+  init(_ initialState: AppState) {
+    self.appState = initialState
     self.stateSource = self.stateSubject.asObservable()
     let actionSource = self.actionEmitter.observable
 
-    let port = NetUtils.openPort()
-    self.previewTransformer = PreviewTransformer(baseServerUrl: URL(string: "http://localhost:\(port)")!)
-    self.httpServerService = HttpServerService(port: port)
+    self.appDelegateTransformer = AppDelegateTransformer(baseServerUrl: initialState.baseServerUrl)
+    self.previewTransformer = PreviewTransformer(baseServerUrl: initialState.baseServerUrl)
+    self.httpServerService = HttpServerService(port: initialState.baseServerUrl.port ?? 0)
 
     Observable
       .of(
@@ -74,9 +75,9 @@ class StateContext {
   fileprivate let scheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
   fileprivate let disposeBag = DisposeBag()
 
-  fileprivate var appState = AppState.default
+  fileprivate var appState: AppState
 
-  fileprivate let appDelegateTransformer = AppDelegateTransformer()
+  fileprivate let appDelegateTransformer: AppDelegateTransformer
   fileprivate let uiRootTransformer = UiRootTransformer()
   fileprivate let mainWindowTransformer = MainWindowTransformer()
   fileprivate let previewTransformer: PreviewTransformer

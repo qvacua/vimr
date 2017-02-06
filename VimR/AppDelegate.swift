@@ -52,10 +52,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   fileprivate var launching = true
 
   override init() {
+    let initialAppState = AppState.default
+    self.stateContext = StateContext(initialAppState)
+
     let source = self.stateContext.stateSource
     self.uiRoot = UiRoot(source: source,
                          emitter: self.stateContext.actionEmitter,
-                         state: AppState.default) // FIXME
+                         state: initialAppState) // FIXME
 
     self.actionSink = self.actionSubject.asObservable()
     self.changeSink = self.changeSubject.asObservable()
@@ -140,7 +143,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
   }
 
-  fileprivate let stateContext = StateContext()
+  fileprivate let stateContext: StateContext
   fileprivate let uiRoot: UiRoot
   fileprivate var hasDirtyWindows = true
   fileprivate var hasMainWindows = false

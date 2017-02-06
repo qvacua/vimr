@@ -24,10 +24,10 @@ class HttpServerService: Service {
 
   typealias Element = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
-  init(port: in_port_t) {
+  init(port: Int) {
     self.port = port
     do {
-      try self.server.start(port)
+      try self.server.start(in_port_t(port))
       NSLog("server started on http://localhost:\(port)")
 
       self.server["/tools/preview/error"] = { r in .ok(.html("ERROR!")) }
@@ -64,5 +64,5 @@ class HttpServerService: Service {
 
   fileprivate let server = HttpServer()
   fileprivate let resourceBaesUrl = Bundle.main.resourceURL!.appendingPathComponent("markdown")
-  fileprivate let port: in_port_t
+  fileprivate let port: Int
 }

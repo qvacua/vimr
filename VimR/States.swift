@@ -98,15 +98,16 @@ protocol Service {
 
 struct AppState {
 
-  static let `default` = AppState(mainWindow: MainWindow.State.default)
+  static let `default` = AppState(baseServerUrl: URL(string: "http://localhost:\(NetUtils.openPort())")!,
+                                  mainWindow: MainWindow.State.default)
 
   var currentMainWindow: MainWindow.State
   var mainWindows: [String: MainWindow.State] = [:]
 
   let baseServerUrl: URL
 
-  init(mainWindow: MainWindow.State) {
-    self.baseServerUrl = URL(string: "http://localhost:\(NetUtils.openPort())")!
+  init(baseServerUrl: URL, mainWindow: MainWindow.State) {
+    self.baseServerUrl = baseServerUrl
     self.currentMainWindow = mainWindow
   }
 }
