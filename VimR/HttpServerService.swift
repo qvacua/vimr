@@ -32,7 +32,7 @@ class HttpServerService: Service {
 
       self.server["/tools/preview/error"] = { r in .ok(.html("ERROR!")) }
       self.server["/tools/preview/save-first"] = { r in .ok(.html("SAVE FIRST!")) }
-      self.server["/tools/preview/empty"] = { r in .ok(.html("NO PREVIEW!")) }
+      self.server["/tools/preview/none"] = { r in .ok(.html("NO PREVIEW!")) }
     } catch {
       NSLog("ERROR server could not be started on port \(port)")
     }
@@ -44,7 +44,11 @@ class HttpServerService: Service {
     }
 
     let preview = pair.state.payload.preview
-    guard let buffer = preview.buffer, let html = preview.html, let server = preview.server else {
+    guard case .markdown = preview.status,
+          let buffer = preview.buffer,
+          let html = preview.html,
+          let server = preview.server
+      else {
       return
     }
 

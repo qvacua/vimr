@@ -29,34 +29,39 @@ class PreviewTransformer: Transformer {
 
       case let .setCurrentBuffer(buffer):
         guard let url = buffer.url else {
-          state.preview = PreviewState(buffer: nil,
+          state.preview = PreviewState(status: .notSaved,
+                                       buffer: nil,
                                        html: nil,
-                                       server: self.serverUrl(for: uuid, lastComponent: "save-first.html"))
+                                       server: self.baseServerUrl.appendingPathComponent("/tools/preview/save-first"))
           break
         }
 
         guard FileUtils.fileExists(at: url) else {
-          state.preview = PreviewState(buffer: nil,
+          state.preview = PreviewState(status: .error,
+                                       buffer: nil,
                                        html: nil,
-                                       server: self.serverUrl(for: uuid, lastComponent: "error.html"))
+                                       server: self.baseServerUrl.appendingPathComponent("/tools/preview/error"))
           break
         }
 
         guard self.extensions.contains(url.pathExtension) else {
-          state.preview = PreviewState(buffer: nil,
+          state.preview = PreviewState(status: .none,
+                                       buffer: nil,
                                        html: nil,
-                                       server: self.serverUrl(for: uuid, lastComponent: "none.html"))
+                                       server: self.baseServerUrl.appendingPathComponent("/tools/preview/none"))
           break
         }
 
-        state.preview = PreviewState(buffer: url,
+        state.preview = PreviewState(status: .markdown,
+                                     buffer: url,
                                      html: self.htmlUrl(with: uuid),
                                      server: self.serverUrl(for: uuid, lastComponent: "index.html"))
 
       case .close:
-        state.preview = PreviewState(buffer: nil,
+        state.preview = PreviewState(status: .none,
+                                     buffer: nil,
                                      html: nil,
-                                     server: self.serverUrl(for: uuid, lastComponent: "none.html"))
+                                     server: self.baseServerUrl.appendingPathComponent("/tools/preview/none"))
 
       default:
         return pair

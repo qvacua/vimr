@@ -113,7 +113,17 @@ struct AppState {
 
 struct PreviewState {
 
-  static let `default` = PreviewState(buffer: nil, html: nil, server: nil)
+  static let `default` = PreviewState(status: .none, buffer: nil, html: nil, server: nil)
+
+  enum Status {
+
+    case none
+    case notSaved
+    case error
+    case markdown
+  }
+
+  var status = Status.none
 
   var buffer: URL?
   var html: URL?
