@@ -16,6 +16,10 @@ class PreviewTransformer: Transformer {
 
   typealias Pair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
+  static let saveFirstPath = "/tools/preview/save-first"
+  static let errorPath = "/tools/preview/error"
+  static let nonePath = "/tools/preview/none"
+
   init(baseServerUrl: URL) {
     self.baseServerUrl = baseServerUrl
   }
@@ -32,7 +36,7 @@ class PreviewTransformer: Transformer {
           state.preview = PreviewState(status: .notSaved,
                                        buffer: nil,
                                        html: nil,
-                                       server: self.baseServerUrl.appendingPathComponent("/tools/preview/save-first"))
+                                       server: self.simpleServerUrl(with: PreviewTransformer.saveFirstPath))
           break
         }
 
@@ -40,7 +44,7 @@ class PreviewTransformer: Transformer {
           state.preview = PreviewState(status: .error,
                                        buffer: nil,
                                        html: nil,
-                                       server: self.baseServerUrl.appendingPathComponent("/tools/preview/error"))
+                                       server: self.simpleServerUrl(with: PreviewTransformer.errorPath))
           break
         }
 
@@ -48,7 +52,7 @@ class PreviewTransformer: Transformer {
           state.preview = PreviewState(status: .none,
                                        buffer: nil,
                                        html: nil,
-                                       server: self.baseServerUrl.appendingPathComponent("/tools/preview/none"))
+                                       server: self.simpleServerUrl(with: PreviewTransformer.nonePath))
           break
         }
 
@@ -61,7 +65,7 @@ class PreviewTransformer: Transformer {
         state.preview = PreviewState(status: .none,
                                      buffer: nil,
                                      html: nil,
-                                     server: self.baseServerUrl.appendingPathComponent("/tools/preview/none"))
+                                     server: self.simpleServerUrl(with: PreviewTransformer.nonePath))
 
       default:
         return pair
@@ -77,6 +81,10 @@ class PreviewTransformer: Transformer {
 
   fileprivate func htmlUrl(with uuid: String) -> URL {
     return self.tempDir.appendingPathComponent("\(uuid)-markdown-index.html")
+  }
+
+  fileprivate func simpleServerUrl(with path: String) -> URL {
+    return self.baseServerUrl.appendingPathComponent(path)
   }
 
   fileprivate let extensions = Set(["md", "markdown"])

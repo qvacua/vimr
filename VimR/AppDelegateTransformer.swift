@@ -25,7 +25,7 @@ class AppDelegateTransformer: Transformer {
         mainWindow.uuid = UUID().uuidString
         mainWindow.urlsToOpen = urls.toDict { url in MainWindow.OpenMode.default }
         mainWindow.cwd = cwd
-        mainWindow.preview.server = self.baseServerUrl.appendingPathComponent("/tools/preview/none")
+        mainWindow.preview.server = self.baseServerUrl.appendingPathComponent(PreviewTransformer.nonePath)
 
         state.mainWindows[mainWindow.uuid] = mainWindow
 

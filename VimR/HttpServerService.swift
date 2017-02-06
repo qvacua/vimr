@@ -30,9 +30,9 @@ class HttpServerService: Service {
       try self.server.start(in_port_t(port))
       NSLog("server started on http://localhost:\(port)")
 
-      self.server["/tools/preview/error"] = { r in .ok(.html("ERROR!")) }
-      self.server["/tools/preview/save-first"] = { r in .ok(.html("SAVE FIRST!")) }
-      self.server["/tools/preview/none"] = { r in .ok(.html("NO PREVIEW!")) }
+      self.server[PreviewTransformer.errorPath] = { r in .ok(.html("ERROR!")) }
+      self.server[PreviewTransformer.saveFirstPath] = { r in .ok(.html("SAVE FIRST!")) }
+      self.server[PreviewTransformer.nonePath] = { r in .ok(.html("NO PREVIEW!")) }
     } catch {
       NSLog("ERROR server could not be started on port \(port)")
     }
