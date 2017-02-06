@@ -6,7 +6,6 @@
 import Foundation
 import CocoaMarkdown
 import RxSwift
-import Swifter
 import CocoaMarkdown
 
 fileprivate let markdownPath = "tools/preview/markdown"
@@ -33,40 +32,41 @@ class PreviewTransformer: Transformer {
       switch pair.action {
 
       case let .setCurrentBuffer(buffer):
+        guard state.previewTool.isRefreshOnWrite else {
+          return pair
+        }
+
         guard let url = buffer.url else {
           state.preview = PreviewState(status: .notSaved,
-                                       buffer: nil,
-                                       html: nil,
-                                       server: self.simpleServerUrl(with: PreviewTransformer.saveFirstPath))
+                                       server: self.simpleServerUrl(with: PreviewTransformer.saveFirstPath),
+                                       updateDate: Date())
           break
         }
 
         guard FileUtils.fileExists(at: url) else {
           state.preview = PreviewState(status: .error,
-                                       buffer: nil,
-                                       html: nil,
-                                       server: self.simpleServerUrl(with: PreviewTransformer.errorPath))
+                                       server: self.simpleServerUrl(with: PreviewTransformer.errorPath),
+                                       updateDate: Date())
           break
         }
 
         guard self.extensions.contains(url.pathExtension) else {
           state.preview = PreviewState(status: .none,
-                                       buffer: nil,
-                                       html: nil,
-                                       server: self.simpleServerUrl(with: PreviewTransformer.nonePath))
+                                       server: self.simpleServerUrl(with: PreviewTransformer.nonePath),
+                                       updateDate: Date())
           break
         }
 
         state.preview = PreviewState(status: .markdown,
                                      buffer: url,
                                      html: self.htmlUrl(with: uuid),
-                                     server: self.serverUrl(for: uuid, lastComponent: "index.html"))
+                                     server: self.serverUrl(for: uuid, lastComponent: "index.html"),
+                                     updateDate: Date())
 
       case .close:
         state.preview = PreviewState(status: .none,
-                                     buffer: nil,
-                                     html: nil,
-                                     server: self.simpleServerUrl(with: PreviewTransformer.nonePath))
+                                     server: self.simpleServerUrl(with: PreviewTransformer.nonePath),
+                                     updateDate: Date())
 
       default:
         return pair

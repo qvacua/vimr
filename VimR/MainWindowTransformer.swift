@@ -30,6 +30,9 @@ class MainWindowTransformer: Transformer {
       case let .setCurrentBuffer(buffer):
         state.currentBuffer = buffer
 
+      case let .scroll(to: position), let .setCursor(to: position):
+        state.cursorPosition = position
+
       case .close:
         state.isClosed = true
 

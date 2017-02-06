@@ -114,7 +114,7 @@ struct AppState {
 
 struct PreviewState {
 
-  static let `default` = PreviewState(status: .none, buffer: nil, html: nil, server: nil)
+  static let `default` = PreviewState()
 
   enum Status {
 
@@ -129,6 +129,25 @@ struct PreviewState {
   var buffer: URL?
   var html: URL?
   var server: URL?
+
+  var updateDate = Date.distantPast
+
+  var scrollPosition = Position(row: 1, column: 1)
+
+  init(status: Status = .none,
+       buffer: URL? = nil,
+       html: URL? = nil,
+       server: URL? = nil,
+       updateDate: Date = Date.distantPast,
+       scrollPosition: Position = Position(row: 1, column: 1))
+  {
+    self.status = status
+    self.buffer = buffer
+    self.html = html
+    self.server = server
+    self.updateDate = updateDate
+    self.scrollPosition = scrollPosition
+  }
 }
 
 extension MainWindow {
@@ -143,6 +162,8 @@ extension MainWindow {
     ////// transient
 
     var preview = PreviewState.default
+    var previewTool = PreviewTool.State.default
+
     var isClosed = false
 
     // neovim
@@ -150,6 +171,7 @@ extension MainWindow {
     var currentBuffer: NeoVimBuffer?
     var buffers = [NeoVimBuffer]()
     var cwd = FileUtils.userHomeUrl
+    var cursorPosition = Position(row: 1, column: 1)
 
     var isDirty = false
 
@@ -168,3 +190,14 @@ extension MainWindow {
   }
 }
 
+extension PreviewTool {
+
+  struct State {
+
+    static let `default` = State()
+
+    var isForwardSearchAutomatically = false
+    var isReverseSearchAutomatically = false
+    var isRefreshOnWrite = true
+  }
+}

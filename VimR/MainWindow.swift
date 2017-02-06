@@ -151,7 +151,9 @@ class MainWindow: NSObject,
   }
 
   fileprivate func setupTools() {
-    let previewConfig = WorkspaceTool.Config(title: "Preview", view: self.preview)
+    let previewConfig = WorkspaceTool.Config(title: "Preview",
+                                             view: self.preview,
+                                             customMenuItems: self.preview.menuItems)
     let previewContainer = WorkspaceTool(previewConfig)
     previewContainer.dimension = 300
 
