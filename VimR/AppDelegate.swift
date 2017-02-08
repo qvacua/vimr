@@ -101,6 +101,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       .toMergedObservables()
       .subscribe(self.actionSubject)
       .addDisposableTo(self.disposeBag)
+    
+    var actualArguments = Array(Process.arguments[1..<Process.arguments.count])
+    actualArguments = actualArguments.reverse()
+    
+    while let arg = actualArguments.popLast() {
+      switch (arg) {
+      case "--cwd":
+        let cwd = actualArguments.popLast()
+        NSFileManager.defaultManager().changeCurrentDirectoryPath(cwd!)
+        print("changing folder to \(cwd)")
+      default:
+        if (arg.characters.first == "-") {
+          // unsupported option, skip the rest
+          break
+        }
+      }
+    }
   }
 
   fileprivate func setSparkleUrl() {
