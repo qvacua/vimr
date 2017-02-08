@@ -31,7 +31,7 @@ class MainWindowTransformer: Transformer {
         state.currentBuffer = buffer
 
       case let .scroll(to: position), let .setCursor(to: position):
-        state.cursorPosition = position
+        state.preview.editorPosition = Marked(position)
 
       case .close:
         state.isClosed = true

@@ -12,13 +12,16 @@ class StateContext {
   let actionEmitter = Emitter<Any>()
 
   init(_ initialState: AppState) {
-    self.appState = initialState
-    self.stateSource = self.stateSubject.asObservable()
-    let actionSource = self.actionEmitter.observable
-
     self.appDelegateTransformer = AppDelegateTransformer(baseServerUrl: initialState.baseServerUrl)
     self.previewTransformer = PreviewTransformer(baseServerUrl: initialState.baseServerUrl)
     self.httpServerService = HttpServerService(port: initialState.baseServerUrl.port ?? 0)
+
+    self.appState = initialState
+
+    self.stateSource = self.stateSubject.asObservable()
+    let actionSource = self.actionEmitter.observable/*.do(onNext: { _ in
+      self.appState.mainWindows.keys.forEach { self.appState.mainWindows[$0]?.resetInstantStates() }
+    })*/
 
     Observable
       .of(

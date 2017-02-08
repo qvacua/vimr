@@ -80,14 +80,17 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
-        self.currentEditorPosition = state.cursorPosition
         self.automaticForwardMenuItem.boolState = state.previewTool.isForwardSearchAutomatically
         self.automaticReverseMenuItem.boolState = state.previewTool.isReverseSearchAutomatically
         self.refreshOnWriteMenuItem.boolState = state.previewTool.isRefreshOnWrite
 
-        if state.previewTool.isForwardSearchAutomatically {
-          self.forwardSearch(position: state.cursorPosition)
+        if state.previewTool.isForwardSearchAutomatically
+           && state.preview.editorPosition.mark != self.editorPosition.mark
+        {
+          self.forwardSearch(position: state.preview.editorPosition.payload)
         }
+
+        self.editorPosition = state.preview.editorPosition
 
         guard state.preview.updateDate > self.lastUpdateDate else { return }
         guard let serverUrl = state.preview.server else { return }
@@ -100,7 +103,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
     self.webviewMessageHandler.source
       .throttle(0.75, latest: true, scheduler: self.scheduler)
       .subscribe(onNext: { [unowned self] position in
-        self.currentPreviewPosition = position
+        self.previewPosition = position
         self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.reverseSearch(to: position)))
       })
       .addDisposableTo(self.disposeBag)
@@ -129,8 +132,8 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   fileprivate var isOpen = false
 
   fileprivate var lastUpdateDate = Date.distantPast
-  fileprivate var currentEditorPosition = Position(row: 1, column: 1)
-  fileprivate var currentPreviewPosition = Position(row: 1, column: 1)
+  fileprivate var editorPosition = Marked(Position(row: 1, column: 1))
+  fileprivate var previewPosition = Position(row: 1, column: 1)
 
   fileprivate let userContentController = WKUserContentController()
   fileprivate let webviewMessageHandler = WebviewMessageHandler()
@@ -160,11 +163,11 @@ extension PreviewTool {
   }
 
   func forwardSearchAction(_: Any?) {
-    self.forwardSearch(position: self.currentEditorPosition)
+    self.forwardSearch(position: self.editorPosition.payload)
   }
 
   func reverseSearchAction(_: Any?) {
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.reverseSearch(to: self.currentPreviewPosition)))
+    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.reverseSearch(to: self.previewPosition)))
   }
 
   func automaticForwardSearchAction(_ sender: NSMenuItem) {

@@ -71,6 +71,16 @@ class UuidState<S>: CustomStringConvertible {
   }
 }
 
+class Marked<T> {
+
+  let mark = Token()
+  let payload: T
+
+  init(_ payload: T) {
+    self.payload = payload
+  }
+}
+
 protocol Morpher {
 
   associatedtype In
@@ -132,21 +142,20 @@ struct PreviewState {
 
   var updateDate = Date.distantPast
 
-  var scrollPosition = Position(row: 1, column: 1)
+  var editorPosition = Marked(Position(row: 1, column: 1))
+  var previewPosition = Marked(Position(row: 1, column: 1))
 
   init(status: Status = .none,
        buffer: URL? = nil,
        html: URL? = nil,
        server: URL? = nil,
-       updateDate: Date = Date.distantPast,
-       scrollPosition: Position = Position(row: 1, column: 1))
+       updateDate: Date = Date.distantPast)
   {
     self.status = status
     self.buffer = buffer
     self.html = html
     self.server = server
     self.updateDate = updateDate
-    self.scrollPosition = scrollPosition
   }
 }
 
@@ -171,7 +180,6 @@ extension MainWindow {
     var currentBuffer: NeoVimBuffer?
     var buffers = [NeoVimBuffer]()
     var cwd = FileUtils.userHomeUrl
-    var cursorPosition = Position(row: 1, column: 1)
 
     var isDirty = false
 
