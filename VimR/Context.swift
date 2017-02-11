@@ -68,9 +68,30 @@ class StateContext {
       })
       .addDisposableTo(self.disposeBag)
 
+    actionSource
+      .mapOmittingNil { $0 as? UuidAction<PreviewTool.Action> }
+      .mapOmittingNil { action in
+        guard let mainWindowState = self.appState.mainWindows[action.uuid] else {
+          return nil
+        }
+
+        return StateActionPair(state: UuidState(uuid: action.uuid, state: mainWindowState),
+                               action: action.payload,
+                               modified: false)
+      }
+      .transform(by: self.previewToolTransformer)
+      .filter { $0.modified }
+      .map { $0.state }
+      .subscribe(onNext: { state in
+        self.appState.mainWindows[state.uuid] = state.payload
+        self.stateSubject.onNext(self.appState)
+      })
+      .addDisposableTo(self.disposeBag)
+
+
 #if DEBUG
-    actionSource.debug().subscribe().addDisposableTo(self.disposeBag)
-    stateSource.debug().subscribe().addDisposableTo(self.disposeBag)
+//    actionSource.debug().subscribe().addDisposableTo(self.disposeBag)
+//    stateSource.debug().subscribe().addDisposableTo(self.disposeBag)
 #endif
   }
 
@@ -84,6 +105,7 @@ class StateContext {
   fileprivate let uiRootTransformer = UiRootTransformer()
   fileprivate let mainWindowTransformer = MainWindowTransformer()
   fileprivate let previewTransformer: PreviewTransformer
+  fileprivate let previewToolTransformer = PreviewToolTransformer()
 
   fileprivate let previewService = PreviewNewService()
   fileprivate let httpServerService: HttpServerService

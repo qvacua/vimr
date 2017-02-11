@@ -28,16 +28,17 @@ class PreviewToolTransformer: Transformer {
         return pair
 
       case let .scroll(to:position):
-        state.preview.previewPosition = Marked(position)
+        state.preview.previewPosition = position
+        state.preview.ignoreNextForward = true
 
       case let .setAutomaticReverseSearch(to:value):
-        return pair
+        state.previewTool.isReverseSearchAutomatically = value
 
       case let .setAutomaticForwardSearch(to:value):
-        return pair
+        state.previewTool.isForwardSearchAutomatically = value
 
       case let .setRefreshOnWrite(to:value):
-        return pair
+        state.previewTool.isRefreshOnWrite = value
 
       }
 

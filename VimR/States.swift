@@ -73,10 +73,15 @@ class UuidState<S>: CustomStringConvertible {
 
 class Marked<T> {
 
-  let mark = Token()
+  let mark: Token
   let payload: T
 
-  init(_ payload: T) {
+  convenience init(_ payload: T) {
+    self.init(mark: Token(), payload: payload)
+  }
+
+  init(mark: Token, payload: T) {
+    self.mark = mark
     self.payload = payload
   }
 }
@@ -144,6 +149,7 @@ struct PreviewState {
 
   var editorPosition = Marked(Position(row: 1, column: 1))
   var previewPosition = Marked(Position(row: 1, column: 1))
+  var ignoreNextForward = false
 
   init(status: Status = .none,
        buffer: URL? = nil,

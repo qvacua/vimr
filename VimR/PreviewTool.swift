@@ -14,10 +14,10 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   enum Action {
 
     case refreshNow
-    case reverseSearch(to: Position)
+    case reverseSearch(to: Marked<Position>)
     case forwardSearch
 
-    case scroll(to: Position)
+    case scroll(to: Marked<Position>)
 
     case setAutomaticReverseSearch(to: Bool)
     case setAutomaticForwardSearch(to: Bool)
@@ -87,6 +87,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
         if state.previewTool.isForwardSearchAutomatically
            && state.preview.editorPosition.mark != self.editorPosition.mark
         {
+          NSLog("!!!!!!!!!!!!!!! forward!")
           self.forwardSearch(position: state.preview.editorPosition.payload)
         }
 
@@ -103,8 +104,8 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
     self.webviewMessageHandler.source
       .throttle(0.75, latest: true, scheduler: self.scheduler)
       .subscribe(onNext: { [unowned self] position in
-        self.previewPosition = position
-        self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.reverseSearch(to: position)))
+        self.previewPosition = Marked(position)
+        self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.scroll(to: self.previewPosition)))
       })
       .addDisposableTo(self.disposeBag)
   }
@@ -133,7 +134,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
   fileprivate var lastUpdateDate = Date.distantPast
   fileprivate var editorPosition = Marked(Position(row: 1, column: 1))
-  fileprivate var previewPosition = Position(row: 1, column: 1)
+  fileprivate var previewPosition = Marked(Position(row: 1, column: 1))
 
   fileprivate let userContentController = WKUserContentController()
   fileprivate let webviewMessageHandler = WebviewMessageHandler()
@@ -167,6 +168,7 @@ extension PreviewTool {
   }
 
   func reverseSearchAction(_: Any?) {
+    self.previewPosition = Marked(self.previewPosition.payload)
     self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.reverseSearch(to: self.previewPosition)))
   }
 

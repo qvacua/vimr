@@ -52,8 +52,8 @@ class MainWindow: NSObject,
 
     case becomeKey
 
-    case scroll(to: Position)
-    case setCursor(to: Position)
+    case scroll(to: Marked<Position>)
+    case setCursor(to: Marked<Position>)
 
     case close
   }
@@ -70,6 +70,9 @@ class MainWindow: NSObject,
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.uuid = state.uuid
     self.emitter = emitter
+
+    self.editorPosition = state.preview.editorPosition
+    self.previewPosition = state.preview.previewPosition
 
     self.neoVimView = NeoVimView(frame: CGRect.zero,
                                  config: NeoVimView.Config(useInteractiveZsh: state.isUseInteractiveZsh))
@@ -99,9 +102,17 @@ class MainWindow: NSObject,
     self.windowController.window?.delegate = self
 
     source
-      .debug()
+//      .debug()
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
+        if state.previewTool.isReverseSearchAutomatically
+           && state.preview.previewPosition.mark != self.previewPosition.mark
+        {
+          NSLog("!!!!!!!!!!!!!!! reverse!")
+          self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
+        }
+
+        self.previewPosition = state.preview.previewPosition
       })
       .addDisposableTo(self.disposeBag)
 
@@ -182,6 +193,8 @@ class MainWindow: NSObject,
   fileprivate let neoVimView: NeoVimView
 
   fileprivate let preview: PreviewTool
+  fileprivate var editorPosition: Marked<Position>
+  fileprivate var previewPosition: Marked<Position>
 
   fileprivate let scrollDebouncer = Debouncer<Action>(interval: 0.75)
   fileprivate let cursorDebouncer = Debouncer<Action>(interval: 0.75)
@@ -240,11 +253,16 @@ extension MainWindow {
   }
 
   func scroll() {
-    self.scrollDebouncer.call(.scroll(to: self.neoVimView.currentPosition))
+    self.scrollDebouncer.call(.scroll(to: Marked(self.neoVimView.currentPosition)))
   }
 
   func cursor(to position: Position) {
-    self.cursorDebouncer.call(.setCursor(to: position))
+    if position == self.editorPosition.payload {
+      return
+    }
+
+    self.editorPosition = Marked(position)
+    self.cursorDebouncer.call(.setCursor(to: self.editorPosition))
   }
 }
 

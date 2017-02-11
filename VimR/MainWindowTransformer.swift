@@ -30,8 +30,16 @@ class MainWindowTransformer: Transformer {
       case let .setCurrentBuffer(buffer):
         state.currentBuffer = buffer
 
-      case let .scroll(to: position), let .setCursor(to: position):
-        state.preview.editorPosition = Marked(position)
+      // if we scroll for reverse search we get scroll and set cursor event
+      case let .setCursor(to: position):
+        if state.preview.ignoreNextForward {
+          NSLog("ignoring!!!!!  \(pair.action) -> \(position.payload)")
+          state.preview.editorPosition = Marked(mark: state.preview.editorPosition.mark, payload: position.payload)
+          state.preview.ignoreNextForward = false
+        } else {
+          NSLog("not ignoring!!!!! \(pair.action) -> \(position.payload)")
+          state.preview.editorPosition = position
+        }
 
       case .close:
         state.isClosed = true
