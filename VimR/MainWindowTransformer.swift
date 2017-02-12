@@ -35,11 +35,9 @@ class MainWindowTransformer: Transformer {
         state.preview.forceNextReverse = false
 
         if state.preview.ignoreNextForward {
-          NSLog("ignoring!!!!!  \(pair.action) -> \(position.payload)")
           state.preview.editorPosition = Marked(mark: state.preview.editorPosition.mark, payload: position.payload)
           state.preview.ignoreNextForward = false
         } else {
-          NSLog("not ignoring!!!!! \(pair.action) -> \(position.payload)")
           state.preview.editorPosition = position
         }
 

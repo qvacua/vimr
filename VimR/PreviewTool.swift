@@ -86,7 +86,6 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
         if state.previewTool.isForwardSearchAutomatically
            && state.preview.editorPosition.hasDifferentMark(as: self.editorPosition)
         {
-          NSLog("!!!!!!!!!!!!!!! forward!")
           self.forwardSearch(position: state.preview.editorPosition.payload)
         }
 
