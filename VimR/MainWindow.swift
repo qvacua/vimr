@@ -8,34 +8,6 @@ import RxSwift
 import SwiftNeoVim
 import PureLayout
 
-protocol UiComponent {
-
-  associatedtype StateType
-
-  init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType)
-}
-
-class Debouncer<T> {
-
-  let observable: Observable<T>
-
-  init(interval: RxTimeInterval) {
-    self.observable = self.subject.throttle(interval, latest: true, scheduler: self.scheduler)
-  }
-
-  deinit {
-    self.subject.onCompleted()
-  }
-
-  func call(_ element: T) {
-    self.subject.onNext(element)
-  }
-
-  fileprivate let subject = PublishSubject<T>()
-  fileprivate let scheduler = SerialDispatchQueueScheduler(qos: .userInteractive)
-  fileprivate let disposeBag = DisposeBag()
-}
-
 class MainWindow: NSObject,
                   UiComponent,
                   NeoVimViewDelegate,
@@ -112,12 +84,8 @@ class MainWindow: NSObject,
           if state.previewTool.isReverseSearchAutomatically
              && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition)
           {
-            NSLog("!!!!!!!!!!!!!!! reverse!")
             self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
-          }
-
-          if state.preview.forceNextReverse {
-            NSLog("!!!!!!!!!!!!!!! force reverse!")
+          } else if state.preview.forceNextReverse {
             self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
           }
 
@@ -283,10 +251,6 @@ extension MainWindow {
 
   func windowDidBecomeKey(_: Notification) {
     self.emitter.emit(self.uuidAction(for: .becomeKey))
-  }
-
-  func windowWillClose(_: Notification) {
-//    self.emitter.emit(self.uuidAction(for: .close))
   }
 
   func windowShouldClose(_: Any) -> Bool {
