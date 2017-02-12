@@ -110,7 +110,8 @@ class MainWindow: NSObject,
           }
 
           if state.previewTool.isReverseSearchAutomatically
-             && state.preview.previewPosition.mark != self.previewPosition.mark {
+             && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition)
+          {
             NSLog("!!!!!!!!!!!!!!! reverse!")
             self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
           }

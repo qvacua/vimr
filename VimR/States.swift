@@ -84,6 +84,10 @@ class Marked<T> {
     self.mark = mark
     self.payload = payload
   }
+
+  func hasDifferentMark(as other: Marked<T>) -> Bool {
+    return self.mark != other.mark
+  }
 }
 
 protocol Morpher {

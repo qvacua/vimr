@@ -84,7 +84,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
         self.refreshOnWriteMenuItem.boolState = state.previewTool.isRefreshOnWrite
 
         if state.previewTool.isForwardSearchAutomatically
-           && state.preview.editorPosition.mark != self.editorPosition.mark
+           && state.preview.editorPosition.hasDifferentMark(as: self.editorPosition)
         {
           NSLog("!!!!!!!!!!!!!!! forward!")
           self.forwardSearch(position: state.preview.editorPosition.payload)
