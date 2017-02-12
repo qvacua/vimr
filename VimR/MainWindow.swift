@@ -116,6 +116,11 @@ class MainWindow: NSObject,
             self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
           }
 
+          if state.preview.forceNextReverse {
+            NSLog("!!!!!!!!!!!!!!! force reverse!")
+            self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
+          }
+
           self.previewPosition = state.preview.previewPosition
         },
         onCompleted: {

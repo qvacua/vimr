@@ -28,10 +28,12 @@ class PreviewToolTransformer: Transformer {
       case let .reverseSearch(to:position):
         state.preview.previewPosition = position
         state.preview.ignoreNextForward = true
+        state.preview.forceNextReverse = true
 
       case let .scroll(to:position):
         state.preview.previewPosition = position
         state.preview.ignoreNextForward = true
+        state.preview.forceNextReverse = false
 
       case let .setAutomaticReverseSearch(to:value):
         state.previewTool.isReverseSearchAutomatically = value

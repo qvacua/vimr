@@ -32,6 +32,8 @@ class MainWindowTransformer: Transformer {
 
       // if we scroll for reverse search we get scroll and set cursor event
       case let .setCursor(to: position):
+        state.preview.forceNextReverse = false
+
         if state.preview.ignoreNextForward {
           NSLog("ignoring!!!!!  \(pair.action) -> \(position.payload)")
           state.preview.editorPosition = Marked(mark: state.preview.editorPosition.mark, payload: position.payload)
