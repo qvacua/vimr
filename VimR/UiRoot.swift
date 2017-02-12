@@ -29,25 +29,40 @@ class UiRoot: UiComponent {
           .subtracting(uuidsInState)
           .forEach { uuid in
             self.mainWindows[uuid]?.closeAllNeoVimWindowsWithoutSaving()
-            self.mainWindows.removeValue(forKey: uuid)
+            self.removeMainWindow(with: uuid)
           }
 
         // remove already closed windows
         state.mainWindows
           .filter { (uuid, mainWindow) in return mainWindow.isClosed }
-          .forEach { (uuid, mainWindow) in self.mainWindows.removeValue(forKey: uuid) }
+          .forEach { (uuid, _) in self.removeMainWindow(with: uuid) }
 
+        if state.quitWhenNoMainWindow && self.mainWindows.isEmpty {
+          NSApp.stop(self)
+        }
       })
       .addDisposableTo(self.disposeBag)
   }
 
   fileprivate func createNewMainWindow(with state: MainWindow.State) {
-    let mainWindow = MainWindow(source: source.mapOmittingNil { $0.mainWindows[state.uuid] },
-                                emitter: self.emitter,
-                                state: state)
-    self.mainWindows[state.uuid] = mainWindow
+    let subject = PublishSubject<MainWindow.State>()
+    let source = self.source.mapOmittingNil { $0.mainWindows[state.uuid] }
 
+    self.subjectForMainWindows[state.uuid] = subject
+    self.disposables[state.uuid] = source.subscribe(subject)
+
+    let mainWindow = MainWindow(source: subject.asObservable(), emitter: self.emitter, state: state)
+    self.mainWindows[state.uuid] = mainWindow
     mainWindow.show()
+  }
+
+  fileprivate func removeMainWindow(with uuid: String) {
+    self.subjectForMainWindows[uuid]?.onCompleted()
+    self.disposables[uuid]?.dispose()
+
+    self.subjectForMainWindows.removeValue(forKey: uuid)
+    self.disposables.removeValue(forKey: uuid)
+    self.mainWindows.removeValue(forKey: uuid)
   }
 
   fileprivate let source: Observable<AppState>
@@ -55,4 +70,6 @@ class UiRoot: UiComponent {
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate var mainWindows = [String: MainWindow]()
+  fileprivate var subjectForMainWindows = [String: PublishSubject<MainWindow.State>]()
+  fileprivate var disposables = [String: Disposable]()
 }

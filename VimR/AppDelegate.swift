@@ -22,8 +22,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   enum Action {
 
     case newMainWindow(urls: [URL], cwd: URL)
-    case closeAllMainWindowsWithoutSaving
-    case closeAllMainWindows
+    case quitWithoutSaving
+    case quit
   }
 
   @IBOutlet var debugMenu: NSMenuItem?
@@ -83,10 +83,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       .subscribe(onNext: { appState in
         self.hasMainWindows = !appState.mainWindows.isEmpty
         self.hasDirtyWindows = appState.mainWindows.values.reduce(false) { $1.isDirty ? true : $0 }
-
-        if self.quitWhenAllWindowsAreClosed && appState.mainWindows.isEmpty {
-          NSApp.stop(self)
-        }
       })
       .addDisposableTo(self.disposeBag)
 
@@ -145,7 +141,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   fileprivate let stateContext: StateContext
   fileprivate let uiRoot: UiRoot
-  fileprivate var hasDirtyWindows = true
+  fileprivate var hasDirtyWindows = false
   fileprivate var hasMainWindows = false
 }
 
@@ -218,7 +214,7 @@ extension AppDelegate {
 
       if alert.runModal() == NSAlertSecondButtonReturn {
         self.quitWhenAllWindowsAreClosed = true
-        self.stateContext.actionEmitter.emit(AppDelegate.Action.closeAllMainWindowsWithoutSaving)
+        self.stateContext.actionEmitter.emit(AppDelegate.Action.quitWithoutSaving)
       }
 
       return .terminateCancel
@@ -226,7 +222,7 @@ extension AppDelegate {
 
     if self.hasMainWindows {
       self.quitWhenAllWindowsAreClosed = true
-      self.stateContext.actionEmitter.emit(AppDelegate.Action.closeAllMainWindows)
+      self.stateContext.actionEmitter.emit(AppDelegate.Action.quit)
 
       return .terminateCancel
     }

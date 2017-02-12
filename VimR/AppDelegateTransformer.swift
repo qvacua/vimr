@@ -29,13 +29,13 @@ class AppDelegateTransformer: Transformer {
 
         state.mainWindows[mainWindow.uuid] = mainWindow
 
-        return StateActionPair(state: state, action: pair.action)
-
-      case .closeAllMainWindowsWithoutSaving, .closeAllMainWindows:
+      case .quitWithoutSaving, .quit:
         state.mainWindows.removeAll()
-        return StateActionPair(state: state, action: pair.action)
+        state.quitWhenNoMainWindow = true
 
       }
+
+      return StateActionPair(state: state, action: pair.action)
     }
   }
 

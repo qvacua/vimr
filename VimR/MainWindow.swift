@@ -102,18 +102,24 @@ class MainWindow: NSObject,
     self.windowController.window?.delegate = self
 
     source
-//      .debug()
       .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { [unowned self] state in
-        if state.previewTool.isReverseSearchAutomatically
-           && state.preview.previewPosition.mark != self.previewPosition.mark
-        {
-          NSLog("!!!!!!!!!!!!!!! reverse!")
-          self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
-        }
+      .subscribe(
+        onNext: { [unowned self] state in
+          if state.isClosed {
+            return
+          }
 
-        self.previewPosition = state.preview.previewPosition
-      })
+          if state.previewTool.isReverseSearchAutomatically
+             && state.preview.previewPosition.mark != self.previewPosition.mark {
+            NSLog("!!!!!!!!!!!!!!! reverse!")
+            self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
+          }
+
+          self.previewPosition = state.preview.previewPosition
+        },
+        onCompleted: {
+          self.windowController.close()
+        })
       .addDisposableTo(self.disposeBag)
 
     let neoVimView = self.neoVimView
@@ -208,7 +214,7 @@ class MainWindow: NSObject,
 extension MainWindow {
 
   func neoVimStopped() {
-    self.windowController.close()
+    self.emitter.emit(self.uuidAction(for: .close))
   }
 
   func set(title: String) {
@@ -274,7 +280,7 @@ extension MainWindow {
   }
 
   func windowWillClose(_: Notification) {
-    self.emitter.emit(self.uuidAction(for: .close))
+//    self.emitter.emit(self.uuidAction(for: .close))
   }
 
   func windowShouldClose(_: Any) -> Bool {

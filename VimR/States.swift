@@ -118,6 +118,7 @@ struct AppState {
 
   var currentMainWindow: MainWindow.State
   var mainWindows: [String: MainWindow.State] = [:]
+  var quitWhenNoMainWindow = false
 
   let baseServerUrl: URL
 

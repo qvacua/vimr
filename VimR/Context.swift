@@ -95,6 +95,10 @@ class StateContext {
 #endif
   }
 
+  deinit {
+    self.stateSubject.onCompleted()
+  }
+
   fileprivate let stateSubject = PublishSubject<AppState>()
   fileprivate let scheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
   fileprivate let disposeBag = DisposeBag()
