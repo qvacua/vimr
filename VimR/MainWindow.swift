@@ -57,13 +57,9 @@ class MainWindow: NSObject,
 
     super.init()
 
-    self.scrollDebouncer.observable
-      .subscribe(onNext: { [unowned self] action in
-        self.emitter.emit(self.uuidAction(for: action))
-      })
-      .addDisposableTo(self.disposeBag)
-
-    self.cursorDebouncer.observable
+    Observable
+      .of(self.scrollDebouncer.observable, self.cursorDebouncer.observable)
+      .merge()
       .subscribe(onNext: { [unowned self] action in
         self.emitter.emit(self.uuidAction(for: action))
       })
@@ -82,8 +78,7 @@ class MainWindow: NSObject,
           }
 
           if state.previewTool.isReverseSearchAutomatically
-             && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition)
-          {
+             && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition) {
             self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
           } else if state.preview.forceNextReverse {
             self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
