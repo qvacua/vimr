@@ -144,9 +144,9 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
   fileprivate var ignoreNextForwardSearch = false;
 
-  fileprivate var currentEditorPosition = Position(row: 1, column: 1)
+  fileprivate var currentEditorPosition = Position.beginning
   fileprivate var currentUrl: URL?
-  fileprivate var currentPreviewPosition = Position(row: 1, column: 1)
+  fileprivate var currentPreviewPosition = Position.beginning
 
   fileprivate let uuid = UUID().uuidString
   fileprivate let httpServer: Swifter.HttpServer

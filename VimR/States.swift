@@ -148,8 +148,8 @@ struct PreviewState {
 
   var updateDate: Date
 
-  var editorPosition = Marked(Position(row: 1, column: 1))
-  var previewPosition = Marked(Position(row: 1, column: 1))
+  var editorPosition = Marked(Position.beginning)
+  var previewPosition = Marked(Position.beginning)
   var ignoreNextForward = false
 
   init(status: Status = .none,

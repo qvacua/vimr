@@ -132,8 +132,8 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   fileprivate var isOpen = false
 
   fileprivate var lastUpdateDate = Date.distantPast
-  fileprivate var editorPosition = Marked(Position(row: 1, column: 1))
-  fileprivate var previewPosition = Marked(Position(row: 1, column: 1))
+  fileprivate var editorPosition = Marked(Position.beginning)
+  fileprivate var previewPosition = Marked(Position.beginning)
 
   fileprivate let userContentController = WKUserContentController()
   fileprivate let webviewMessageHandler = WebviewMessageHandler()
