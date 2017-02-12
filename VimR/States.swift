@@ -146,7 +146,7 @@ struct PreviewState {
   var html: URL?
   var server: URL?
 
-  var updateDate = Date.distantPast
+  var updateDate: Date
 
   var editorPosition = Marked(Position(row: 1, column: 1))
   var previewPosition = Marked(Position(row: 1, column: 1))
@@ -156,7 +156,7 @@ struct PreviewState {
        buffer: URL? = nil,
        html: URL? = nil,
        server: URL? = nil,
-       updateDate: Date = Date.distantPast)
+       updateDate: Date = Date())
   {
     self.status = status
     self.buffer = buffer

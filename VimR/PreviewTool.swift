@@ -15,7 +15,6 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
     case refreshNow
     case reverseSearch(to: Marked<Position>)
-    case forwardSearch
 
     case scroll(to: Marked<Position>)
 
@@ -168,22 +167,19 @@ extension PreviewTool {
   }
 
   func reverseSearchAction(_: Any?) {
-    self.previewPosition = Marked(self.previewPosition.payload)
+    self.previewPosition = Marked(self.previewPosition.payload) // set a new mark
     self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.reverseSearch(to: self.previewPosition)))
   }
 
   func automaticForwardSearchAction(_ sender: NSMenuItem) {
-    NSLog("\(sender.boolState) -> \(!sender.boolState)")
     self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.setAutomaticForwardSearch(to: !sender.boolState)))
   }
 
   func automaticReverseSearchAction(_ sender: NSMenuItem) {
-    NSLog("\(sender.boolState) -> \(!sender.boolState)")
     self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.setAutomaticReverseSearch(to: !sender.boolState)))
   }
 
   func refreshOnWriteAction(_ sender: NSMenuItem) {
-    NSLog("\(sender.boolState) -> \(!sender.boolState)")
     self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.setRefreshOnWrite(to: !sender.boolState)))
   }
 }

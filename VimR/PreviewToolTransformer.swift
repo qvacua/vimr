@@ -4,13 +4,15 @@
  */
 
 import Foundation
-import CocoaMarkdown
 import RxSwift
-import CocoaMarkdown
 
 class PreviewToolTransformer: Transformer {
 
   typealias Pair = StateActionPair<UuidState<MainWindow.State>, PreviewTool.Action>
+
+  init(baseServerUrl: URL) {
+    self.baseServerUrl = baseServerUrl
+  }
 
   func transform(_ source: Observable<Pair>) -> Observable<Pair> {
     return source.map { pair in
@@ -19,13 +21,13 @@ class PreviewToolTransformer: Transformer {
       switch pair.action {
 
       case .refreshNow:
-        return pair
+        state.preview = PreviewUtils.state(for: pair.state.uuid,
+                                           baseUrl: self.baseServerUrl,
+                                           buffer: state.currentBuffer)
 
       case let .reverseSearch(to:position):
-        return pair
-
-      case .forwardSearch:
-        return pair
+        state.preview.previewPosition = position
+        state.preview.ignoreNextForward = true
 
       case let .scroll(to:position):
         state.preview.previewPosition = position
@@ -45,4 +47,6 @@ class PreviewToolTransformer: Transformer {
       return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
     }
   }
+
+  fileprivate let baseServerUrl: URL
 }

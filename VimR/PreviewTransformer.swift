@@ -4,11 +4,7 @@
  */
 
 import Foundation
-import CocoaMarkdown
 import RxSwift
-import CocoaMarkdown
-
-fileprivate let markdownPath = "tools/preview/markdown"
 
 // Currently supports only markdown
 class PreviewTransformer: Transformer {
@@ -26,7 +22,6 @@ class PreviewTransformer: Transformer {
 
   func transform(_ source: Observable<Pair>) -> Observable<Pair> {
     return source.map { pair in
-      let uuid = pair.state.uuid
       var state = pair.state.payload
 
       switch pair.action {
@@ -36,37 +31,10 @@ class PreviewTransformer: Transformer {
           return pair
         }
 
-        guard let url = buffer.url else {
-          state.preview = PreviewState(status: .notSaved,
-                                       server: self.simpleServerUrl(with: PreviewTransformer.saveFirstPath),
-                                       updateDate: Date())
-          break
-        }
-
-        guard FileUtils.fileExists(at: url) else {
-          state.preview = PreviewState(status: .error,
-                                       server: self.simpleServerUrl(with: PreviewTransformer.errorPath),
-                                       updateDate: Date())
-          break
-        }
-
-        guard self.extensions.contains(url.pathExtension) else {
-          state.preview = PreviewState(status: .none,
-                                       server: self.simpleServerUrl(with: PreviewTransformer.nonePath),
-                                       updateDate: Date())
-          break
-        }
-
-        state.preview = PreviewState(status: .markdown,
-                                     buffer: url,
-                                     html: self.htmlUrl(with: uuid),
-                                     server: self.serverUrl(for: uuid, lastComponent: "index.html"),
-                                     updateDate: Date())
+        state.preview = PreviewUtils.state(for: pair.state.uuid, baseUrl: self.baseServerUrl, buffer: buffer)
 
       case .close:
-        state.preview = PreviewState(status: .none,
-                                     server: self.simpleServerUrl(with: PreviewTransformer.nonePath),
-                                     updateDate: Date())
+        state.preview = PreviewUtils.state(for: .none, baseUrl: self.baseServerUrl)
 
       default:
         return pair
@@ -76,19 +44,5 @@ class PreviewTransformer: Transformer {
     }
   }
 
-  fileprivate func serverUrl(for uuid: String, lastComponent: String) -> URL {
-    return self.baseServerUrl.appendingPathComponent("\(uuid)/\(markdownPath)/\(lastComponent)")
-  }
-
-  fileprivate func htmlUrl(with uuid: String) -> URL {
-    return self.tempDir.appendingPathComponent("\(uuid)-markdown-index.html")
-  }
-
-  fileprivate func simpleServerUrl(with path: String) -> URL {
-    return self.baseServerUrl.appendingPathComponent(path)
-  }
-
-  fileprivate let extensions = Set(["md", "markdown"])
-  fileprivate let tempDir = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
   fileprivate let baseServerUrl: URL
 }

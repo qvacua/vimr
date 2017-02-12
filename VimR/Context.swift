@@ -12,16 +12,15 @@ class StateContext {
   let actionEmitter = Emitter<Any>()
 
   init(_ initialState: AppState) {
+    self.httpServerService = HttpServerService(port: initialState.baseServerUrl.port ?? 0)
     self.appDelegateTransformer = AppDelegateTransformer(baseServerUrl: initialState.baseServerUrl)
     self.previewTransformer = PreviewTransformer(baseServerUrl: initialState.baseServerUrl)
-    self.httpServerService = HttpServerService(port: initialState.baseServerUrl.port ?? 0)
+    self.previewToolTransformer = PreviewToolTransformer(baseServerUrl: initialState.baseServerUrl)
 
     self.appState = initialState
 
     self.stateSource = self.stateSubject.asObservable()
-    let actionSource = self.actionEmitter.observable/*.do(onNext: { _ in
-      self.appState.mainWindows.keys.forEach { self.appState.mainWindows[$0]?.resetInstantStates() }
-    })*/
+    let actionSource = self.actionEmitter.observable
 
     Observable
       .of(
@@ -45,7 +44,7 @@ class StateContext {
       })
       .addDisposableTo(self.disposeBag)
 
-    actionSource
+    let mainWindowSource = actionSource
       .mapOmittingNil { $0 as? UuidAction<MainWindow.Action> }
       .mapOmittingNil { action in
         guard let mainWindowState = self.appState.mainWindows[action.uuid] else {
@@ -62,13 +61,8 @@ class StateContext {
       .apply(to: self.previewService)
       .apply(to: self.httpServerService)
       .map { $0.state }
-      .subscribe(onNext: { state in
-        self.appState.mainWindows[state.uuid] = state.payload
-        self.stateSubject.onNext(self.appState)
-      })
-      .addDisposableTo(self.disposeBag)
 
-    actionSource
+    let previewToolSource = actionSource
       .mapOmittingNil { $0 as? UuidAction<PreviewTool.Action> }
       .mapOmittingNil { action in
         guard let mainWindowState = self.appState.mainWindows[action.uuid] else {
@@ -82,6 +76,10 @@ class StateContext {
       .transform(by: self.previewToolTransformer)
       .filter { $0.modified }
       .map { $0.state }
+
+    Observable
+      .of(mainWindowSource, previewToolSource)
+      .merge()
       .subscribe(onNext: { state in
         self.appState.mainWindows[state.uuid] = state.payload
         self.stateSubject.onNext(self.appState)
@@ -109,7 +107,7 @@ class StateContext {
   fileprivate let uiRootTransformer = UiRootTransformer()
   fileprivate let mainWindowTransformer = MainWindowTransformer()
   fileprivate let previewTransformer: PreviewTransformer
-  fileprivate let previewToolTransformer = PreviewToolTransformer()
+  fileprivate let previewToolTransformer: PreviewToolTransformer
 
   fileprivate let previewService = PreviewNewService()
   fileprivate let httpServerService: HttpServerService
