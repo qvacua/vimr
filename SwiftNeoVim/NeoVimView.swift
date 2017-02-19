@@ -1472,7 +1472,7 @@ extension NeoVimView {
         self.tabChanged()
       }
 
-      if event == .DIRCHANGED {
+      if event == .CWDCHANGED {
         self.cwdChanged()
       }
 
