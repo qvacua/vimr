@@ -15,6 +15,8 @@ struct AppState {
   var mainWindows: [String: MainWindow.State] = [:]
   var quitWhenNoMainWindow = false
 
+  let root = FileItem(URL(fileURLWithPath: "/", isDirectory: true))
+
   let baseServerUrl: URL
 
   init(baseServerUrl: URL, mainWindow: MainWindow.State) {

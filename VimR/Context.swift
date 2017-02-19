@@ -86,6 +86,18 @@ class StateContext {
       })
       .addDisposableTo(self.disposeBag)
 
+    actionSource
+      .mapOmittingNil { $0 as? FileMonitor.Action }
+      .map { StateActionPair(state: self.appState, action: $0) }
+      .transform(by: self.fileMonitorTransformer)
+      .filter { $0.modified }
+      .map { $0.state }
+      .subscribe(onNext: { state in
+        self.appState = state
+        self.stateSubject.onNext(self.appState)
+      })
+      .addDisposableTo(self.disposeBag)
+
 
 #if DEBUG
 //    actionSource.debug().subscribe().addDisposableTo(self.disposeBag)
@@ -105,6 +117,7 @@ class StateContext {
 
   fileprivate let appDelegateTransformer: AppDelegateTransformer
   fileprivate let uiRootTransformer = UiRootTransformer()
+  fileprivate let fileMonitorTransformer = FileMonitorTransformer()
   fileprivate let mainWindowTransformer = MainWindowTransformer()
   fileprivate let previewTransformer: PreviewTransformer
   fileprivate let previewToolTransformer: PreviewToolTransformer

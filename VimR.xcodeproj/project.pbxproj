@@ -22,10 +22,14 @@
 		1929B4B70926DE113E6BF990 /* PreviewTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE37AA2843779CAFA76F /* PreviewTransformer.swift */; };
 		1929B4FEE6EB56EF3F56B805 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B34FC23D805A8B29E8F7 /* Context.swift */; };
 		1929B53876E6952D378C2B30 /* ScoredFileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDF9EBAF1D9D44399045 /* ScoredFileItem.swift */; };
+		1929B5543B1E31A26096E656 /* FileMonitorTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B04EC69F616EEFAF5F96 /* FileMonitorTransformer.swift */; };
+		1929B588BFC94EB808762EEF /* FileHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8401A4EC1F8ABAAD338 /* FileHandler.swift */; };
 		1929B59FA5C286E010F70BEE /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFC0A5A9C6DB09BE1368 /* Types.swift */; };
 		1929B5C1BABBC0D09D97C3EF /* PreviewNewService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B617C229B19DB3E987B8 /* PreviewNewService.swift */; };
+		1929B5F016431A76292D1E84 /* FileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B365A6434354B568B04F /* FileMonitor.swift */; };
 		1929B6388EAF16C190B82955 /* FileItemIgnorePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B69499B2569793350CEC /* FileItemIgnorePattern.swift */; };
 		1929B67DA3EB21A631EF1DBB /* FileUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA8AC40B901B20F20B71 /* FileUtils.swift */; };
+		1929B6D8F5FC723B7109031F /* OpenQuicklyTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B12CE56A9B36980288A4 /* OpenQuicklyTransformer.swift */; };
 		1929B728262BAA14FC93F6AC /* NeoVimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF00B466B40629C2AABE /* NeoVimView.swift */; };
 		1929B73E5EC0B108B83F82EB /* FileItemService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B3A98687DF171307AAC8 /* FileItemService.swift */; };
 		1929B7A2F2B423AA9740FD45 /* FileUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5D977261F1EBFA9E8F1 /* FileUtilsTest.swift */; };
@@ -297,14 +301,17 @@
 
 /* Begin PBXFileReference section */
 		1929B02440BC99C42F9EBD45 /* NetUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetUtils.m; sourceTree = "<group>"; };
+		1929B04EC69F616EEFAF5F96 /* FileMonitorTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileMonitorTransformer.swift; sourceTree = "<group>"; };
 		1929B0EEBE4A765934AF8335 /* DataWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataWrapper.h; sourceTree = "<group>"; };
 		1929B1215220464EF4A7AD2B /* OpenQuicklyWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyWindow.swift; sourceTree = "<group>"; };
+		1929B12CE56A9B36980288A4 /* OpenQuicklyTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyTransformer.swift; sourceTree = "<group>"; };
 		1929B15B7EDC9B0F40E5E95C /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
 		1929B1A51F076E088EF4CCA4 /* server_globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_globals.h; sourceTree = "<group>"; };
 		1929B1DC584C89C477E83FA2 /* HttpServerService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServerService.swift; sourceTree = "<group>"; };
 		1929B1EC32D8A26958FB39B1 /* PreviewRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewRenderer.swift; sourceTree = "<group>"; };
 		1929B2FBE11048569391E092 /* BasicTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicTypes.swift; sourceTree = "<group>"; };
 		1929B34FC23D805A8B29E8F7 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
+		1929B365A6434354B568B04F /* FileMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileMonitor.swift; sourceTree = "<group>"; };
 		1929B39DA7AC4A9B62D7CD39 /* Component.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Component.swift; sourceTree = "<group>"; };
 		1929B3A98687DF171307AAC8 /* FileItemService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemService.swift; sourceTree = "<group>"; };
 		1929B457B9D0FA4D21F3751E /* UiRootTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiRootTransformer.swift; sourceTree = "<group>"; };
@@ -317,6 +324,7 @@
 		1929B6C6C7792B05164B0216 /* PreviewTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewTool.swift; sourceTree = "<group>"; };
 		1929B7A68B7109CEFAF105E8 /* AppDelegateTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegateTransformer.swift; sourceTree = "<group>"; };
 		1929B7CB4863F80230C32D3C /* FileItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
+		1929B8401A4EC1F8ABAAD338 /* FileHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileHandler.swift; sourceTree = "<group>"; };
 		1929B8DA5AA33536F0082200 /* PreviewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewComponent.swift; sourceTree = "<group>"; };
 		1929B93013228985F509C8F6 /* server_ui.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = server_ui.m; sourceTree = "<group>"; };
 		1929B9A55E12B703DDD673FD /* Debouncer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
@@ -540,6 +548,7 @@
 				1929BD4149D5A25C82064DD8 /* UiRoot.swift */,
 				1929B6C6C7792B05164B0216 /* PreviewTool.swift */,
 				1929B1215220464EF4A7AD2B /* OpenQuicklyWindow.swift */,
+				1929B365A6434354B568B04F /* FileMonitor.swift */,
 			);
 			name = Components;
 			sourceTree = "<group>";
@@ -569,6 +578,8 @@
 				1929BD83A13BF133741766CC /* MainWindowTransformer.swift */,
 				1929BE37AA2843779CAFA76F /* PreviewTransformer.swift */,
 				1929BFB0F294F3714D5E095F /* PreviewToolTransformer.swift */,
+				1929B12CE56A9B36980288A4 /* OpenQuicklyTransformer.swift */,
+				1929B04EC69F616EEFAF5F96 /* FileMonitorTransformer.swift */,
 			);
 			name = Transformers;
 			sourceTree = "<group>";
@@ -593,6 +604,7 @@
 				1929BFA93DC859DD76C46192 /* Services */,
 				1929B452B8E7E8DF65FC5F78 /* Utils */,
 				1929BFC0A5A9C6DB09BE1368 /* Types.swift */,
+				1929B8401A4EC1F8ABAAD338 /* FileHandler.swift */,
 			);
 			name = Redesign;
 			sourceTree = "<group>";
@@ -975,7 +987,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4B2A2C021D0351810074CE9A /* Build configuration list for PBXNativeTarget "SwiftNeoVim" */;
 			buildPhases = (
-				4B183E191E08746B0079E8A8 /* ShellScript */,
 				4B2A2BF21D0351810074CE9A /* Sources */,
 				4B2A2BF31D0351810074CE9A /* Frameworks */,
 				4B2A2BF41D0351810074CE9A /* Headers */,
@@ -1052,6 +1063,7 @@
 			buildConfigurationList = 4B854A1E1D31447C00E08DE1 /* Build configuration list for PBXNativeTarget "NeoVimServer" */;
 			buildPhases = (
 				4BBA71F11D319E0900E16612 /* ShellScript */,
+				4BDFAC751E59BAC30056122C /* ShellScript */,
 				4B854A161D31447C00E08DE1 /* Sources */,
 				4B854A171D31447C00E08DE1 /* Frameworks */,
 				4B854A181D31447C00E08DE1 /* CopyFiles */,
@@ -1233,19 +1245,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4B183E191E08746B0079E8A8 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [ \"${CONFIGURATION}\" = \"Debug\" ]; then\n    if [ -f \"SwiftNeoVim/NeoVimAutoCommandEvent.generated.h\" ]; then\n        exit 0\n    fi\nfi\n\nsed 's/^typedef enum auto_event/typedef NS_ENUM(NSUInteger, NeoVimAutoCommandEvent)/' <./neovim/build/include/auevents_enum.generated.h | sed 's/ event_T//' | sed 's/EVENT_/NeoVimAutoCommandEvent/' | sed 's/NUM_EVENTS/NumberOfAutoCommandEvents/' | sed -e '1s/^/@import Foundation;\\'$'\\n/' > SwiftNeoVim/NeoVimAutoCommandEvent.generated.h\n";
-		};
 		4B19BEFF1E110208007E823C /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1271,6 +1270,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "pushd neovim\nmake libnvim\npopd";
+		};
+		4BDFAC751E59BAC30056122C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"${CONFIGURATION}\" = \"Debug\" ]; then\nif [ -f \"SwiftNeoVim/NeoVimAutoCommandEvent.generated.h\" ]; then\nexit 0\nfi\nfi\n\nsed 's/^typedef enum auto_event/typedef NS_ENUM(NSUInteger, NeoVimAutoCommandEvent)/' <./neovim/build/include/auevents_enum.generated.h | sed 's/ event_T//' | sed 's/EVENT_/NeoVimAutoCommandEvent/' | sed 's/NUM_EVENTS/NumberOfAutoCommandEvents/' | sed -e '1s/^/@import Foundation;\\'$'\\n/' > SwiftNeoVim/NeoVimAutoCommandEvent.generated.h\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1410,6 +1422,10 @@
 				1929B59FA5C286E010F70BEE /* Types.swift in Sources */,
 				1929BF3F3841B4BF0B4397ED /* Debouncer.swift in Sources */,
 				1929BD8BFE753FE724958320 /* OpenQuicklyWindow.swift in Sources */,
+				1929B6D8F5FC723B7109031F /* OpenQuicklyTransformer.swift in Sources */,
+				1929B588BFC94EB808762EEF /* FileHandler.swift in Sources */,
+				1929B5543B1E31A26096E656 /* FileMonitorTransformer.swift in Sources */,
+				1929B5F016431A76292D1E84 /* FileMonitor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

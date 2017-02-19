@@ -27,6 +27,8 @@ class MainWindow: NSObject,
     case scroll(to: Marked<Position>)
     case setCursor(to: Marked<Position>)
 
+    case openQuickly
+
     case close
   }
 
@@ -195,6 +197,7 @@ extension MainWindow {
   }
 
   func cwdChanged() {
+    NSLog("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     self.emitter.emit(self.uuidAction(for: .cd(to: self.neoVimView.cwd)))
   }
 

@@ -33,6 +33,7 @@ class OpenQuicklyWindow: NSObject,
 
   fileprivate(set) var flatFileItems = [FileItem]()
   fileprivate(set) var fileViewItems = [ScoredFileItem]()
+  fileprivate var cwdPathCompsCount = 0
 
   fileprivate let windowController: NSWindowController
 

@@ -14,6 +14,8 @@ class UiRoot: UiComponent {
     self.source = source
     self.emitter = emitter
 
+    self.fileMonitor = FileMonitor(source: source, emitter: emitter, state: state)
+
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
@@ -72,4 +74,6 @@ class UiRoot: UiComponent {
   fileprivate var mainWindows = [String: MainWindow]()
   fileprivate var subjectForMainWindows = [String: PublishSubject<MainWindow.State>]()
   fileprivate var disposables = [String: Disposable]()
+
+  fileprivate let fileMonitor: FileMonitor
 }
