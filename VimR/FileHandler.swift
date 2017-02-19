@@ -6,13 +6,12 @@
 import Cocoa
 import RxSwift
 
-class FileHandler {
+class FileItemUtils {
 
   static func flatFileItems(ofUrl url: URL,
                             ignorePatterns: [FileItemIgnorePattern],
                             ignoreToken: Token,
-                            root: FileItem) -> Observable<[FileItem]>
-  {
+                            root: FileItem) -> Observable<[FileItem]> {
     guard url.isFileURL else {
       return Observable.empty()
     }
@@ -90,6 +89,10 @@ class FileHandler {
       return cancel
     }
   }
+
+  static func item(for url: URL, root: FileItem, create: Bool = true) -> FileItem? {
+    return fileItem(for: url.pathComponents, root: root, create: create)
+  }
 }
 
 /// When at least this much of non-directory and visible files are scanned, they are emitted.
@@ -103,54 +106,7 @@ fileprivate func syncAddChildren(_ fn: () -> Void) {
   OSSpinLockUnlock(&spinLock)
 }
 
-/// Returns the `FileItem` corresponding to the `url` parameter with children. This is like mkdir -p, i.e. it
-/// instantiates the intermediate `FileItem`s.
-///
-/// - returns: `FileItem` corresponding to `url` with children. `nil` if the file does not exist.
-fileprivate func fileItemWithChildren(for url: URL, root: FileItem) -> FileItem? {
-  guard let fileItem = fileItem(for: url, root: root) else {
-    return nil
-  }
-
-  if !fileItem.childrenScanned || fileItem.needsScanChildren {
-    scanChildren(fileItem)
-  }
-
-  return fileItem
-}
-
-fileprivate func sortedChildren(for url: URL, root: FileItem) -> [FileItem] {
-  guard let fileItem = fileItem(for: url, root: root) else {
-    return []
-  }
-
-  if !fileItem.childrenScanned || fileItem.needsScanChildren {
-    scanChildren(fileItem, sorted: true)
-    return fileItem.children
-  }
-
-  return fileItem.children.sorted()
-}
-
-// FIXME: what if root?
-fileprivate func parentFileItem(of url: URL, root: FileItem) -> FileItem {
-  return fileItem(for: Array(url.pathComponents.dropLast()), root: root)!
-}
-
-/// Returns the `FileItem` corresponding to the `url` parameter. This is like mkdir -p, i.e. it
-/// instantiates the intermediate `FileItem`s. The children of the result may be empty.
-///
-/// - returns: `FileItem` corresponding to `pathComponents`. `nil` if the file does not exist.
-fileprivate func fileItem(for url: URL, root: FileItem) -> FileItem? {
-  let pathComponents = url.pathComponents
-  return fileItem(for: pathComponents, root: root)
-}
-
-/// Returns the `FileItem` corresponding to the `pathComponents` parameter. This is like mkdir -p, i.e. it
-/// instantiates the intermediate `FileItem`s. The children of the result may be empty.
-///
-/// - returns: `FileItem` corresponding to `pathComponents`. `nil` if the file does not exist.
-fileprivate func fileItem(for pathComponents: [String], root: FileItem) -> FileItem? {
+fileprivate func fileItem(for pathComponents: [String], root: FileItem, create: Bool = true) -> FileItem? {
   let result = pathComponents.dropFirst().reduce(root) { (resultItem, childName) -> FileItem? in
     guard let parent = resultItem else {
       return nil
