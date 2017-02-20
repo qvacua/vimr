@@ -12,10 +12,12 @@ class StateContext {
   let actionEmitter = Emitter<Any>()
 
   init(_ initialState: AppState) {
-    self.httpServerService = HttpServerService(port: initialState.baseServerUrl.port ?? 0)
-    self.appDelegateTransformer = AppDelegateTransformer(baseServerUrl: initialState.baseServerUrl)
-    self.previewTransformer = PreviewTransformer(baseServerUrl: initialState.baseServerUrl)
-    self.previewToolTransformer = PreviewToolTransformer(baseServerUrl: initialState.baseServerUrl)
+    let baseServerUrl = URL(string: "http://localhost:\(NetUtils.openPort())")!
+
+    self.httpServerService = HttpServerService(port: baseServerUrl.port ?? 0)
+    self.appDelegateTransformer = AppDelegateTransformer(baseServerUrl: baseServerUrl)
+    self.previewTransformer = PreviewTransformer(baseServerUrl: baseServerUrl)
+    self.previewToolTransformer = PreviewToolTransformer(baseServerUrl: baseServerUrl)
 
     self.appState = initialState
 

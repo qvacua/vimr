@@ -8,8 +8,7 @@ import RxSwift
 
 struct AppState {
 
-  static let `default` = AppState(baseServerUrl: URL(string: "http://localhost:\(NetUtils.openPort())")!,
-                                  mainWindow: MainWindow.State.default)
+  static let `default` = AppState(mainWindow: MainWindow.State.default)
 
   var currentMainWindow: MainWindow.State
   var mainWindows: [String: MainWindow.State] = [:]
@@ -17,10 +16,7 @@ struct AppState {
 
   let root = FileItem(URL(fileURLWithPath: "/", isDirectory: true))
 
-  let baseServerUrl: URL
-
-  init(baseServerUrl: URL, mainWindow: MainWindow.State) {
-    self.baseServerUrl = baseServerUrl
+  init(mainWindow: MainWindow.State) {
     self.currentMainWindow = mainWindow
   }
 }
