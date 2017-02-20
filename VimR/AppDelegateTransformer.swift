@@ -21,7 +21,7 @@ class AppDelegateTransformer: Transformer {
       switch pair.action {
 
       case let .newMainWindow(urls, cwd):
-        var mainWindow = state.currentMainWindow
+        var mainWindow = state.mainWindowTemplate
         mainWindow.uuid = UUID().uuidString
         mainWindow.urlsToOpen = urls.toDict { url in MainWindow.OpenMode.default }
         mainWindow.cwd = cwd

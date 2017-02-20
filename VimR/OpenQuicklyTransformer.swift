@@ -6,20 +6,61 @@
 import Foundation
 import RxSwift
 
-class OpenQuicklyTransformer: Transformer {
+class MainWindowToOpenQuicklyTransformer: Transformer {
 
-  typealias Pair = StateActionPair<AppState, MainWindow.Action>
+  typealias Pair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
 
   func transform(_ source: Observable<Pair>) -> Observable<Pair> {
     return source.map { pair in
 
-      switch pair.action {
+      switch pair.action.payload {
 
       case .openQuickly:
-        return pair
+        var appState = pair.state
+
+        guard let uuid = appState.currentMainWindowUuid else {
+          return pair
+        }
+
+        guard let cwd = appState.mainWindows[uuid]?.cwd else {
+          return pair
+        }
+
+        appState.openQuickly.open = true
+        appState.openQuickly.cwd = cwd
+        appState.openQuickly.flatFileItems = FileItemUtils.flatFileItems(
+          ofUrl: cwd,
+          ignorePatterns: appState.openQuickly.ignorePatterns,
+          ignoreToken: appState.openQuickly.ignoreToken,
+          root: appState.root
+        )
+
+        return StateActionPair(state: appState, action: pair.action)
 
       default:
         return pair
+
+      }
+    }
+  }
+}
+
+class OpenQuicklyTransformer: Transformer {
+
+  typealias Pair = StateActionPair<AppState, OpenQuicklyWindow.Action>
+
+  func transform(_ source: Observable<Pair>) -> Observable<Pair> {
+    return source.map { pair in
+      switch pair.action {
+
+        case .close:
+          var appState = pair.state
+
+          appState.openQuickly.open = false
+          appState.openQuickly.flatFileItems = Observable.empty()
+          appState.openQuickly.cwd = FileUtils.userHomeUrl
+
+          return StateActionPair(state: appState, action: pair.action)
 
       }
     }

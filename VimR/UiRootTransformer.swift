@@ -18,9 +18,14 @@ class UiRootTransformer: Transformer {
       switch pair.action.payload {
 
       case .becomeKey:
-        appState.currentMainWindow = appState.mainWindows[uuid] ?? appState.currentMainWindow
+        appState.currentMainWindowUuid = uuid
+        appState.mainWindowTemplate = appState.mainWindows[uuid] ?? appState.mainWindowTemplate
 
       case .close:
+        if appState.currentMainWindowUuid == uuid {
+          appState.currentMainWindowUuid = nil
+        }
+
         appState.mainWindows.removeValue(forKey: uuid)
 
       default:

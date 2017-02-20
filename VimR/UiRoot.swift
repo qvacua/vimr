@@ -15,6 +15,7 @@ class UiRoot: UiComponent {
     self.emitter = emitter
 
     self.fileMonitor = FileMonitor(source: source, emitter: emitter, state: state)
+    self.openQuicklyWindow = OpenQuicklyWindow(source: source, emitter: emitter, state: state)
 
     source
       .observeOn(MainScheduler.instance)
@@ -76,4 +77,6 @@ class UiRoot: UiComponent {
   fileprivate var disposables = [String: Disposable]()
 
   fileprivate let fileMonitor: FileMonitor
+
+  fileprivate let openQuicklyWindow: OpenQuicklyWindow
 }

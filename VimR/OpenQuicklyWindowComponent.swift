@@ -189,9 +189,9 @@ class OpenQuicklyWindowComponent: WindowComponent,
   }
 
   fileprivate func resetAndAddFilterOperation() {
-    self.filterOpQueue.cancelAllOperations()
-    let op = OpenQuicklyFilterOperation(forOpenQuicklyWindow: self)
-    self.filterOpQueue.addOperation(op)
+//    self.filterOpQueue.cancelAllOperations()
+//    let op = OpenQuicklyFilterOperation(forOpenQuicklyWindow: self)
+//    self.filterOpQueue.addOperation(op)
   }
 }
 

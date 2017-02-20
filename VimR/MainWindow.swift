@@ -271,3 +271,11 @@ extension MainWindow {
     return false
   }
 }
+
+// MARK: - IBActions
+extension MainWindow {
+
+  @IBAction func openQuickly(_ sender: Any?) {
+    self.emitter.emit(self.uuidAction(for: .openQuickly))
+  }
+}

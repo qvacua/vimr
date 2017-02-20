@@ -10,14 +10,33 @@ struct AppState {
 
   static let `default` = AppState(mainWindow: MainWindow.State.default)
 
-  var currentMainWindow: MainWindow.State
+  var mainWindowTemplate: MainWindow.State
+  var currentMainWindowUuid: String?
+
   var mainWindows: [String: MainWindow.State] = [:]
   var quitWhenNoMainWindow = false
 
   let root = FileItem(URL(fileURLWithPath: "/", isDirectory: true))
 
+  var openQuickly = OpenQuicklyWindow.State.default
+
   init(mainWindow: MainWindow.State) {
-    self.currentMainWindow = mainWindow
+    self.mainWindowTemplate = mainWindow
+  }
+}
+
+extension OpenQuicklyWindow {
+
+  struct State {
+
+    static let `default` = State()
+
+    var flatFileItems = Observable<[FileItem]>.empty()
+    var cwd = FileUtils.userHomeUrl
+    var ignorePatterns = [FileItemIgnorePattern]()
+    var ignoreToken = Token()
+
+    var open = false
   }
 }
 
