@@ -28,6 +28,7 @@ class MainWindowToOpenQuicklyTransformer: Transformer {
 
         appState.openQuickly.open = true
         appState.openQuickly.cwd = cwd
+        NSLog("!!!!!!!!!!!!!!!!!!!!!!!! \(cwd)")
         appState.openQuickly.flatFileItems = FileItemUtils.flatFileItems(
           ofUrl: cwd,
           ignorePatterns: appState.openQuickly.ignorePatterns,
@@ -51,18 +52,29 @@ class OpenQuicklyTransformer: Transformer {
 
   func transform(_ source: Observable<Pair>) -> Observable<Pair> {
     return source.map { pair in
+      var appState = pair.state
+
+      appState.openQuickly.open = false
+      appState.openQuickly.flatFileItems = Observable.empty()
+      appState.openQuickly.cwd = FileUtils.userHomeUrl
+
       switch pair.action {
 
+        case let .open(url):
+          guard let uuid = appState.currentMainWindowUuid else {
+            return pair
+          }
+
+          NSLog("\(url) -> \(uuid)")
+
+          appState.mainWindows[uuid]?.urlsToOpen.append(Marked([url: .newTab]))
+
         case .close:
-          var appState = pair.state
-
-          appState.openQuickly.open = false
-          appState.openQuickly.flatFileItems = Observable.empty()
-          appState.openQuickly.cwd = FileUtils.userHomeUrl
-
-          return StateActionPair(state: appState, action: pair.action)
+          break
 
       }
+
+      return StateActionPair(state: appState, action: pair.action)
     }
   }
 }

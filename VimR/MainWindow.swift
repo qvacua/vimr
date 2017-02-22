@@ -17,6 +17,8 @@ class MainWindow: NSObject,
 
   enum Action {
 
+    case open(Set<Token>)
+
     case cd(to: URL)
     case setBufferList([NeoVimBuffer])
 
@@ -87,6 +89,12 @@ class MainWindow: NSObject,
           }
 
           self.previewPosition = state.preview.previewPosition
+
+          self.marksForOpenedUrls.subtracting(state.urlsToOpen.map { $0.mark }).forEach {
+            self.marksForOpenedUrls.remove($0)
+          }
+
+          self.open(markedUrls: state.urlsToOpen)
         },
         onCompleted: {
           self.windowController.close()
@@ -102,30 +110,7 @@ class MainWindow: NSObject,
       self.neoVimView.cwd = state.cwd
     }
 
-    // If we don't call the following in the next tick, only half of the existing swap file warning is displayed.
-    // Dunno why...
-    DispatchUtils.gui {
-      state.urlsToOpen.forEach { (url: URL, openMode: OpenMode) in
-        switch openMode {
-
-        case .default:
-          self.neoVimView.open(urls: [url])
-
-        case .currentTab:
-          self.neoVimView.openInCurrentTab(url: url)
-
-        case .newTab:
-          self.neoVimView.openInNewTab(urls: [url])
-
-        case .horizontalSplit:
-          self.neoVimView.openInHorizontalSplit(urls: [url])
-
-        case .verticalSplit:
-          self.neoVimView.openInVerticalSplit(urls: [url])
-
-        }
-      }
-    }
+    self.open(markedUrls: state.urlsToOpen)
 
     self.window.makeFirstResponder(neoVimView)
   }
@@ -136,6 +121,52 @@ class MainWindow: NSObject,
 
   func closeAllNeoVimWindowsWithoutSaving() {
     self.neoVimView.closeAllWindowsWithoutSaving()
+  }
+
+  fileprivate func open(markedUrls: [Marked<[URL: OpenMode]>]) {
+    let markedUrlsToOpen = markedUrls.filter { !self.marksForOpenedUrls.contains($0.mark) }
+
+    markedUrls.map { $0.mark }.forEach {
+      self.marksForOpenedUrls.insert($0)
+    }
+
+    guard markedUrlsToOpen.count > 0 else {
+      return
+    }
+
+    // If we don't call the following in the next tick, only half of the existing swap file warning is displayed.
+    // Dunno why...
+    DispatchUtils.gui {
+      markedUrlsToOpen.forEach { marked in
+        marked.payload.forEach { (url: URL, openMode: OpenMode) in
+          switch openMode {
+
+          case .default:
+            self.neoVimView.open(urls: [url])
+
+          case .currentTab:
+            self.neoVimView.openInCurrentTab(url: url)
+
+          case .newTab:
+            NSLog("state: \(markedUrls.map { $0.mark })")
+            NSLog("self: \(self.marksForOpenedUrls)")
+            NSLog("opening!!!!!!!!!!!!!!!!!!!!!! \(marked.mark)")
+            self.neoVimView.openInNewTab(urls: [url])
+
+          case .horizontalSplit:
+            self.neoVimView.openInHorizontalSplit(urls: [url])
+
+          case .verticalSplit:
+            self.neoVimView.openInVerticalSplit(urls: [url])
+
+          }
+        }
+      }
+
+      // not good, but we need it because we don't want to re-build the whole tab/window/buffer state of neovim in
+      // MainWindow.State
+      self.emitter.emit(self.uuidAction(for: Action.open(Set(markedUrls.map { $0.mark }))))
+    }
   }
 
   fileprivate func setupTools() {
@@ -175,6 +206,8 @@ class MainWindow: NSObject,
 
   fileprivate let scrollDebouncer = Debouncer<Action>(interval: 0.75)
   fileprivate let cursorDebouncer = Debouncer<Action>(interval: 0.75)
+
+  fileprivate var marksForOpenedUrls = Set<Token>()
 
   fileprivate func uuidAction(for action: Action) -> UuidAction<Action> {
     return UuidAction(uuid: self.uuid, action: action)

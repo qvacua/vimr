@@ -16,6 +16,7 @@ class OpenQuicklyWindow: NSObject,
 
   enum Action {
 
+    case open(URL)
     case close
   }
 
@@ -43,15 +44,20 @@ class OpenQuicklyWindow: NSObject,
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
-        self.cwd = state.openQuickly.cwd
-        self.cwdPathCompsCount = self.cwd.pathComponents.count
-        self.cwdControl.url = self.cwd
-        self.flatFileItemsSource = state.openQuickly.flatFileItems
-
         guard state.openQuickly.open else {
           self.window.performClose(self)
           return
         }
+
+        if self.window.isKeyWindow {
+          // already open, so do nothing
+          return
+        }
+
+        self.cwd = state.openQuickly.cwd
+        self.cwdPathCompsCount = self.cwd.pathComponents.count
+        self.cwdControl.url = self.cwd
+        self.flatFileItemsSource = state.openQuickly.flatFileItems
 
         self.searchStream
           .subscribe(onNext: { [unowned self] pattern in
@@ -69,6 +75,7 @@ class OpenQuicklyWindow: NSObject,
             }
             self.scanCondition.unlock()
 
+            //
             self.flatFileItems.append(contentsOf: items)
             self.resetAndAddFilterOperation()
           })
@@ -251,6 +258,53 @@ extension OpenQuicklyWindow {
   }
 }
 
+// MARK: - NSTextFieldDelegate
+extension OpenQuicklyWindow {
+
+  @objc(control: textView:doCommandBySelector:)
+  func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+    switch commandSelector {
+    case NSSelectorFromString("cancelOperation:"):
+      self.window.performClose(self)
+      return true
+
+    case NSSelectorFromString("insertNewline:"):
+      // TODO open the url
+      self.emitter.emit(Action.open(self.fileViewItems[self.fileView.selectedRow].url))
+      self.window.performClose(self)
+      return true
+
+    case NSSelectorFromString("moveUp:"):
+      self.moveSelection(ofTableView: self.fileView, byDelta: -1)
+      return true
+
+    case NSSelectorFromString("moveDown:"):
+      self.moveSelection(ofTableView: self.fileView, byDelta: 1)
+      return true
+
+    default:
+      return false
+    }
+  }
+
+  fileprivate func moveSelection(ofTableView tableView: NSTableView, byDelta delta: Int) {
+    let selectedRow = tableView.selectedRow
+    let lastIdx = tableView.numberOfRows - 1
+    let targetIdx: Int
+
+    if selectedRow + delta < 0 {
+      targetIdx = 0
+    } else if selectedRow + delta > lastIdx {
+      targetIdx = lastIdx
+    } else {
+      targetIdx = selectedRow + delta
+    }
+
+    tableView.selectRowIndexes(IndexSet(integer: targetIdx), byExtendingSelection: false)
+    tableView.scrollRowToVisible(targetIdx)
+  }
+}
+
 // MARK: - NSWindowDelegate
 extension OpenQuicklyWindow {
 
@@ -270,5 +324,9 @@ extension OpenQuicklyWindow {
 
     self.searchField.stringValue = ""
     self.countField.stringValue = "0 items"
+  }
+
+  func windowDidResignKey(_: Notification) {
+    self.window.performClose(self)
   }
 }

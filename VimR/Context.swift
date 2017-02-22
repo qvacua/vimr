@@ -102,7 +102,7 @@ class StateContext {
       .addDisposableTo(self.disposeBag)
 
 #if DEBUG
-//    actionSource.debug().subscribe().addDisposableTo(self.disposeBag)
+    actionSource.debug().subscribe().addDisposableTo(self.disposeBag)
 //    stateSource.debug().subscribe().addDisposableTo(self.disposeBag)
 #endif
   }

@@ -109,7 +109,7 @@ extension MainWindow {
     var isUseInteractiveZsh = false
 
     // transient^2
-    var urlsToOpen = [URL: OpenMode]()
+    var urlsToOpen = [Marked<[URL: OpenMode]>]()
 
     init(isAllToolsVisible: Bool, isToolButtonsVisible: Bool) {
       self.isAllToolsVisible = isAllToolsVisible

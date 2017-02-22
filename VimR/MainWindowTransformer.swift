@@ -16,22 +16,22 @@ class MainWindowTransformer: Transformer {
 
       switch pair.action {
 
-      case let .cd(to: cwd):
+      case let .open(marks):
+        state.urlsToOpen = state.urlsToOpen.filter { !marks.contains($0.mark) }
+
+      case let .cd(to:cwd):
         if state.cwd != cwd {
           state.cwd = cwd
         }
 
       case let .setBufferList(buffers):
-        buffers
-          .flatMap { $0.url }
-          .forEach { state.urlsToOpen.removeValue(forKey: $0) }
         state.buffers = buffers
 
       case let .setCurrentBuffer(buffer):
         state.currentBuffer = buffer
 
-      // if we scroll for reverse search we get scroll and set cursor event
-      case let .setCursor(to: position):
+        // if we scroll for reverse search we get scroll and set cursor event
+      case let .setCursor(to:position):
         state.preview.forceNextReverse = false
 
         if state.preview.ignoreNextForward {
