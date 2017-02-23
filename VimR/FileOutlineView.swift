@@ -38,6 +38,7 @@ class FileOutlineView: NSOutlineView,
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.uuid = state.uuid
     self.root = FileBrowserItem(fileItem: state.root)
+    self.fileSystemRoot = state.root
     self.emitter = emitter
 
     super.init(frame: .zero)
@@ -56,21 +57,13 @@ class FileOutlineView: NSOutlineView,
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { state in
+        if state.lastFileSystemUpdate.mark == self.lastFileSystemUpdateMark {
+          return
+        }
 
+        self.update(state.lastFileSystemUpdate.payload)
       })
       .addDisposableTo(self.disposeBag)
-  }
-
-  func update(_ fileItem: FileItem) {
-    let url = fileItem.url
-
-    guard let fileBrowserItem = self.fileBrowserItem(with: url) else {
-      return
-    }
-
-    self.beginUpdates()
-    self.update(fileBrowserItem)
-    self.endUpdates()
   }
 
   func select(_ url: URL) {
@@ -79,7 +72,7 @@ class FileOutlineView: NSOutlineView,
 
     while let item = stack.popLast() {
       if item.isChildrenScanned == false {
-        item.children = FileItemUtils.sortedChildren(for: item.fileItem.url, root: self.root.fileItem)
+        item.children = FileItemUtils.sortedChildren(for: item.fileItem.url, root: self.fileSystemRoot)
                                      .map(FileBrowserItem.init)
         item.isChildrenScanned = true
       }
@@ -107,11 +100,25 @@ class FileOutlineView: NSOutlineView,
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate let uuid: String
+  fileprivate var lastFileSystemUpdateMark = Token()
 
   fileprivate var root: FileBrowserItem
+  fileprivate let fileSystemRoot: FileItem
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+
+  fileprivate func update(_ fileItem: FileItem) {
+    let url = fileItem.url
+
+    guard let fileBrowserItem = self.fileBrowserItem(with: url) else {
+      return
+    }
+
+    self.beginUpdates()
+    self.update(fileBrowserItem)
+    self.endUpdates()
   }
 
   fileprivate func handleRemovals(for fileBrowserItem: FileBrowserItem, new newChildren: [FileBrowserItem]) {
@@ -166,7 +173,7 @@ class FileOutlineView: NSOutlineView,
     let url = fileBrowserItem.fileItem.url
 
     // Sort the array to keep the order.
-    let newChildren = FileItemUtils.sortedChildren(for: url, root: self.root.fileItem).map(FileBrowserItem.init)
+    let newChildren = FileItemUtils.sortedChildren(for: url, root: self.fileSystemRoot).map(FileBrowserItem.init)
 
     self.handleRemovals(for: fileBrowserItem, new: newChildren)
     self.handleAdditions(for: fileBrowserItem, new: newChildren)
@@ -205,11 +212,11 @@ extension FileOutlineView {
 
   func outlineView(_: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
     if item == nil {
-      let rootFileItem = FileItemUtils.item(for: self.cwd, root: self.root.fileItem)
-                         ?? FileItemUtils.item(for: FileUtils.userHomeUrl, root: self.root.fileItem)!
+      let rootFileItem = FileItemUtils.item(for: self.cwd, root: self.fileSystemRoot)
+                         ?? FileItemUtils.item(for: FileUtils.userHomeUrl, root: self.fileSystemRoot)!
       self.root = FileBrowserItem(fileItem: rootFileItem)
       if self.root.isChildrenScanned == false {
-        self.root.children = FileItemUtils.sortedChildren(for: self.cwd, root: self.root.fileItem)
+        self.root.children = FileItemUtils.sortedChildren(for: self.cwd, root: self.fileSystemRoot)
                                           .map(FileBrowserItem.init)
         self.root.isChildrenScanned = true
       }
@@ -224,7 +231,7 @@ extension FileOutlineView {
     let fileItem = fileBrowserItem.fileItem
     if fileItem.isDir {
       if fileBrowserItem.isChildrenScanned == false {
-        let fileItemChildren = FileItemUtils.sortedChildren(for: fileItem.url, root: self.root.fileItem)
+        let fileItemChildren = FileItemUtils.sortedChildren(for: fileItem.url, root: self.fileSystemRoot)
         fileBrowserItem.fileItem.children = fileItemChildren
         fileBrowserItem.children = fileItemChildren.map(FileBrowserItem.init)
         fileBrowserItem.isChildrenScanned = true

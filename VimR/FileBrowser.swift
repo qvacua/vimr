@@ -14,20 +14,12 @@ class FileBrowser: NSView,
 
   enum Action {
 
-    case open(url: URL)
-    case openInNewTab(url: URL)
-    case openInCurrentTab(url: URL)
-    case openInHorizontalSplit(url: URL)
-    case openInVerticalSplit(url: URL)
     case setAsWorkingDirectory(url: URL)
     case scrollToSource(cwd: URL)
   }
 
   let innerCustomToolbar = InnerCustomToolbar()
   let menuItems: [NSMenuItem]
-
-  let goToParentButton = NSButton(forAutoLayout:())
-  let scrollToSourceButton = NSButton(forAutoLayout:())
 
   override var isFirstResponder: Bool {
     return self.fileView.isFirstResponder
@@ -48,6 +40,8 @@ class FileBrowser: NSView,
     ]
 
     super.init(frame: .zero)
+
+    self.addViews()
 
     source
       .subscribe(onNext: { state in
@@ -88,23 +82,12 @@ class FileBrowser: NSView,
   }
 
   fileprivate func addViews() {
-    let goToParent = self.goToParentButton
-    InnerToolBar.configureToStandardIconButton(button: goToParent, iconName: .levelUp)
-    goToParent.toolTip = "Set parent as working directory"
-    goToParent.action = #selector(FileBrowser.goToParentAction)
+    let scrollView = NSScrollView.standardScrollView()
+    scrollView.borderType = .noBorder
+    scrollView.documentView = self.fileView
 
-    let scrollToSource = self.scrollToSourceButton
-    InnerToolBar.configureToStandardIconButton(button: scrollToSource, iconName: .bullseye)
-    scrollToSource.toolTip = "Navigate to the current buffer"
-    scrollToSource.action = #selector(FileBrowser.scrollToSourceAction)
-
-    self.addSubview(goToParent)
-    self.addSubview(scrollToSource)
-
-    goToParent.autoPinEdge(toSuperviewEdge: .top)
-    goToParent.autoPinEdge(toSuperviewEdge: .right)
-    scrollToSource.autoPinEdge(toSuperviewEdge: .top)
-    scrollToSource.autoPinEdge(.right, to: .left, of: goToParent)
+    self.addSubview(scrollView)
+    scrollView.autoPinEdgesToSuperviewEdges()
   }
 }
 

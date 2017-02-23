@@ -56,6 +56,7 @@ class MainWindow: NSObject,
 
     self.workspace = Workspace(mainView: self.neoVimView)
     self.preview = PreviewTool(source: source, emitter: emitter, state: state)
+    self.fileBrowser = FileBrowser(source: source, emitter: emitter, state: state)
 
     self.windowController = NSWindowController(windowNibName: "MainWindow")
 
@@ -123,6 +124,32 @@ class MainWindow: NSObject,
     self.neoVimView.closeAllWindowsWithoutSaving()
   }
 
+  fileprivate let emitter: ActionEmitter
+  fileprivate let disposeBag = DisposeBag()
+
+  fileprivate let uuid: String
+
+  fileprivate let windowController: NSWindowController
+  fileprivate var window: NSWindow { return self.windowController.window! }
+
+  fileprivate let workspace: Workspace
+  fileprivate let neoVimView: NeoVimView
+
+  fileprivate let preview: PreviewTool
+  fileprivate var editorPosition: Marked<Position>
+  fileprivate var previewPosition: Marked<Position>
+
+  fileprivate let fileBrowser: FileBrowser
+
+  fileprivate let scrollDebouncer = Debouncer<Action>(interval: 0.75)
+  fileprivate let cursorDebouncer = Debouncer<Action>(interval: 0.75)
+
+  fileprivate var marksForOpenedUrls = Set<Token>()
+
+  fileprivate func uuidAction(for action: Action) -> UuidAction<Action> {
+    return UuidAction(uuid: self.uuid, action: action)
+  }
+
   fileprivate func open(markedUrls: [Marked<[URL: OpenMode]>]) {
     let markedUrlsToOpen = markedUrls.filter { !self.marksForOpenedUrls.contains($0.mark) }
 
@@ -176,8 +203,17 @@ class MainWindow: NSObject,
     let previewContainer = WorkspaceTool(previewConfig)
     previewContainer.dimension = 300
 
+    let fileBrowserConfig = WorkspaceTool.Config(title: "Files",
+                                                 view: self.fileBrowser,
+                                                 customToolbar: self.fileBrowser.innerCustomToolbar,
+                                                 customMenuItems: self.fileBrowser.menuItems)
+    let fileBrowserContainer = WorkspaceTool(fileBrowserConfig)
+    fileBrowserContainer.dimension = 200
+
     self.workspace.append(tool: previewContainer, location: .right)
-    previewContainer.toggle()
+    self.workspace.append(tool: fileBrowserContainer, location: .left)
+
+    fileBrowserContainer.toggle()
   }
 
   fileprivate func addViews() {
@@ -187,30 +223,6 @@ class MainWindow: NSObject,
     self.setupTools()
 
     self.workspace.autoPinEdgesToSuperviewEdges()
-  }
-
-  fileprivate let emitter: ActionEmitter
-  fileprivate let disposeBag = DisposeBag()
-
-  fileprivate let uuid: String
-
-  fileprivate let windowController: NSWindowController
-  fileprivate var window: NSWindow { return self.windowController.window! }
-
-  fileprivate let workspace: Workspace
-  fileprivate let neoVimView: NeoVimView
-
-  fileprivate let preview: PreviewTool
-  fileprivate var editorPosition: Marked<Position>
-  fileprivate var previewPosition: Marked<Position>
-
-  fileprivate let scrollDebouncer = Debouncer<Action>(interval: 0.75)
-  fileprivate let cursorDebouncer = Debouncer<Action>(interval: 0.75)
-
-  fileprivate var marksForOpenedUrls = Set<Token>()
-
-  fileprivate func uuidAction(for action: Action) -> UuidAction<Action> {
-    return UuidAction(uuid: self.uuid, action: action)
   }
 }
 

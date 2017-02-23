@@ -120,6 +120,7 @@ extension AppDelegate {
 //    return false
 
     // FIXME
+    self.newDocument(self)
     return true
   }
 

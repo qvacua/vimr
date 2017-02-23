@@ -93,6 +93,7 @@ extension MainWindow {
 
     // must be replaced
     var root = FileItem(URL(fileURLWithPath: "/", isDirectory: true))
+    var lastFileSystemUpdate = Marked(FileItem(URL(fileURLWithPath: "/", isDirectory: true)))
 
     var preview = PreviewState.default
     var previewTool = PreviewTool.State.default

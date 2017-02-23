@@ -12,13 +12,25 @@ class FileMonitorTransformer: Transformer {
 
   func transform(_ source: Observable<Pair>) -> Observable<Pair> {
     return source.map { pair in
-      let state = pair.state
+      var state = pair.state
 
       switch pair.action {
 
       case let .change(in: url):
         NSLog("change in \(url)")
-        FileItemUtils.item(for: url, root: state.root, create: false)?.needsScanChildren = true
+
+        guard let fileItem = FileItemUtils.item(for: url, root: state.root, create: false) else {
+          return pair
+        }
+
+        fileItem.needsScanChildren = true
+
+        state.mainWindows
+          .filter { (uuid, mainWindow) in url == mainWindow.cwd || url.isContained(in: mainWindow.cwd) }
+          .map { $0.0 }
+          .forEach { uuid in
+            state.mainWindows[uuid]?.lastFileSystemUpdate = Marked(fileItem)
+          }
 
       }
 
