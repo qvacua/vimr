@@ -71,10 +71,14 @@ class UuidState<S>: CustomStringConvertible {
   }
 }
 
-class Marked<T> {
+class Marked<T>: CustomStringConvertible {
 
   let mark: Token
   let payload: T
+
+  var description: String {
+    return "Marked<\(mark) -> \(self.payload)>"
+  }
 
   convenience init(_ payload: T) {
     self.init(mark: Token(), payload: payload)
