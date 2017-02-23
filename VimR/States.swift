@@ -22,6 +22,7 @@ struct AppState {
 
   init(mainWindow: MainWindow.State) {
     self.mainWindowTemplate = mainWindow
+    self.mainWindowTemplate.root = self.root
   }
 }
 
@@ -90,8 +91,13 @@ extension MainWindow {
 
     ////// transient
 
+    // must be replaced
+    var root = FileItem(URL(fileURLWithPath: "/", isDirectory: true))
+
     var preview = PreviewState.default
     var previewTool = PreviewTool.State.default
+
+    var fileBrowserShowHidden = false
 
     var isClosed = false
 

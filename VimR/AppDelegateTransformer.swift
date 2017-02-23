@@ -22,6 +22,7 @@ class AppDelegateTransformer: Transformer {
 
       case let .newMainWindow(urls, cwd):
         var mainWindow = state.mainWindowTemplate
+        mainWindow.root = state.root
         mainWindow.uuid = UUID().uuidString
         let markedUrls = Marked(urls.toDict { url in MainWindow.OpenMode.default })
         mainWindow.urlsToOpen.append(markedUrls)
@@ -29,6 +30,10 @@ class AppDelegateTransformer: Transformer {
         mainWindow.preview.server = self.baseServerUrl.appendingPathComponent(PreviewTransformer.nonePath)
 
         state.mainWindows[mainWindow.uuid] = mainWindow
+
+      case let .openInKeyWindow(urls, cwd):
+        // FIXME
+        return pair
 
       case .quitWithoutSaving, .quit:
         state.mainWindows.removeAll()

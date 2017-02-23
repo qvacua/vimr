@@ -5,6 +5,7 @@
 
 import Cocoa
 import RxSwift
+import RxCocoa
 import PureLayout
 
 class OpenQuicklyWindow: NSObject,

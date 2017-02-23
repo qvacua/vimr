@@ -93,6 +93,19 @@ class FileItemUtils {
   static func item(for url: URL, root: FileItem, create: Bool = true) -> FileItem? {
     return fileItem(for: url.pathComponents, root: root, create: create)
   }
+
+  static func sortedChildren(for url: URL, root: FileItem) -> [FileItem] {
+    guard let fileItem = fileItem(for: url, root: root) else {
+      return []
+    }
+
+    if !fileItem.childrenScanned || fileItem.needsScanChildren {
+      scanChildren(fileItem, sorted: true)
+      return fileItem.children
+    }
+
+    return fileItem.children.sorted()
+  }
 }
 
 /// When at least this much of non-directory and visible files are scanned, they are emitted.
@@ -116,6 +129,10 @@ fileprivate func fileItem(for pathComponents: [String], root: FileItem, create: 
   }
 
   return result
+}
+
+fileprivate func fileItem(for url: URL, root: FileItem, create: Bool = true) -> FileItem? {
+  return fileItem(for: url.pathComponents, root: root, create: create)
 }
 
 /// Even when the result is nil it does not mean that there's no child with the given name. It could well be that
