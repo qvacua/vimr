@@ -41,13 +41,13 @@ class StateContext {
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? FileMonitor.Action }
-          .map { StateActionPair(state: self.appState, action: $0) }
+          .map { StateActionPair(state: self.appState, action: $0, modified: false) }
           .transform(by: self.fileMonitorTransformer)
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? OpenQuicklyWindow.Action }
-          .map { StateActionPair(state: self.appState, action: $0) }
+          .map { StateActionPair(state: self.appState, action: $0, modified: false) }
           .transform(by: self.openQuicklyTransformer)
           .filter { $0.modified }
           .map { $0.state }
