@@ -29,6 +29,7 @@
 		1929B6388EAF16C190B82955 /* FileItemIgnorePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B69499B2569793350CEC /* FileItemIgnorePattern.swift */; };
 		1929B67DA3EB21A631EF1DBB /* FileUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA8AC40B901B20F20B71 /* FileUtils.swift */; };
 		1929B6D8F5FC723B7109031F /* OpenQuicklyTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B12CE56A9B36980288A4 /* OpenQuicklyTransformer.swift */; };
+		1929B71381946860626E5224 /* FileBrowserTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDC8F5D48578A90236E9 /* FileBrowserTransformer.swift */; };
 		1929B728262BAA14FC93F6AC /* NeoVimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF00B466B40629C2AABE /* NeoVimView.swift */; };
 		1929B7A2F2B423AA9740FD45 /* FileUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5D977261F1EBFA9E8F1 /* FileUtilsTest.swift */; };
 		1929B8FB248D71BF88A35761 /* PreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6C6C7792B05164B0216 /* PreviewTool.swift */; };
@@ -324,6 +325,7 @@
 		1929BD4149D5A25C82064DD8 /* UiRoot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiRoot.swift; sourceTree = "<group>"; };
 		1929BD83A13BF133741766CC /* MainWindowTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowTransformer.swift; sourceTree = "<group>"; };
 		1929BD8CBADC191CF8C85309 /* MainWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
+		1929BDC8F5D48578A90236E9 /* FileBrowserTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBrowserTransformer.swift; sourceTree = "<group>"; };
 		1929BDF9EBAF1D9D44399045 /* ScoredFileItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoredFileItem.swift; sourceTree = "<group>"; };
 		1929BE37AA2843779CAFA76F /* PreviewTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewTransformer.swift; sourceTree = "<group>"; };
 		1929BE69CF9AB1A10D0DD4F2 /* CocoaCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaCategories.h; sourceTree = "<group>"; };
@@ -563,6 +565,7 @@
 				1929BFB0F294F3714D5E095F /* PreviewToolTransformer.swift */,
 				1929B12CE56A9B36980288A4 /* OpenQuicklyTransformer.swift */,
 				1929B04EC69F616EEFAF5F96 /* FileMonitorTransformer.swift */,
+				1929BDC8F5D48578A90236E9 /* FileBrowserTransformer.swift */,
 			);
 			name = Transformers;
 			sourceTree = "<group>";
@@ -1390,6 +1393,7 @@
 				1929B5543B1E31A26096E656 /* FileMonitorTransformer.swift in Sources */,
 				1929B5F016431A76292D1E84 /* FileMonitor.swift in Sources */,
 				1929BE3936E6CF0F80D4183C /* FileBrowser.swift in Sources */,
+				1929B71381946860626E5224 /* FileBrowserTransformer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

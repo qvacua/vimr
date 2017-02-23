@@ -59,41 +59,54 @@ class StateContext {
       })
       .addDisposableTo(self.disposeBag)
 
-    let mainWindowSource = actionSource
-      .mapOmittingNil { $0 as? UuidAction<MainWindow.Action> }
-      .mapOmittingNil { action in
-        guard let mainWindowState = self.appState.mainWindows[action.uuid] else {
-          return nil
-        }
-
-        return StateActionPair(state: UuidState(uuid: action.uuid, state: mainWindowState),
-                               action: action.payload,
-                               modified: false)
-      }
-      .transform(by: self.mainWindowTransformer)
-      .transform(by: self.previewTransformer)
-      .filter { $0.modified }
-      .apply(to: self.previewService)
-      .apply(to: self.httpServerService)
-      .map { $0.state }
-
-    let previewToolSource = actionSource
-      .mapOmittingNil { $0 as? UuidAction<PreviewTool.Action> }
-      .mapOmittingNil { action in
-        guard let mainWindowState = self.appState.mainWindows[action.uuid] else {
-          return nil
-        }
-
-        return StateActionPair(state: UuidState(uuid: action.uuid, state: mainWindowState),
-                               action: action.payload,
-                               modified: false)
-      }
-      .transform(by: self.previewToolTransformer)
-      .filter { $0.modified }
-      .map { $0.state }
-
     Observable
-      .of(mainWindowSource, previewToolSource)
+      .of(
+        actionSource
+          .mapOmittingNil { $0 as? UuidAction<MainWindow.Action> }
+          .mapOmittingNil { action in
+            guard let mainWindowState = self.appState.mainWindows[action.uuid] else {
+              return nil
+            }
+
+            return StateActionPair(state: UuidState(uuid: action.uuid, state: mainWindowState),
+                                   action: action.payload,
+                                   modified: false)
+          }
+          .transform(by: self.mainWindowTransformer)
+          .transform(by: self.previewTransformer)
+          .filter { $0.modified }
+          .apply(to: self.previewService)
+          .apply(to: self.httpServerService)
+          .map { $0.state },
+        actionSource
+          .mapOmittingNil { $0 as? UuidAction<PreviewTool.Action> }
+          .mapOmittingNil { action in
+            guard let mainWindowState = self.appState.mainWindows[action.uuid] else {
+              return nil
+            }
+
+            return StateActionPair(state: UuidState(uuid: action.uuid, state: mainWindowState),
+                                   action: action.payload,
+                                   modified: false)
+          }
+          .transform(by: self.previewToolTransformer)
+          .filter { $0.modified }
+          .map { $0.state },
+        actionSource
+          .mapOmittingNil { $0 as? UuidAction<FileOutlineView.Action> }
+          .mapOmittingNil { action in
+            guard let mainWindowState = self.appState.mainWindows[action.uuid] else {
+              return nil
+            }
+
+            return StateActionPair(state: UuidState(uuid: action.uuid, state: mainWindowState),
+                                   action: action.payload,
+                                   modified: false)
+          }
+          .transform(by: self.fileOutlineViewTransformer)
+          .filter { $0.modified }
+          .map { $0.state }
+      )
       .merge()
       .subscribe(onNext: { state in
         self.appState.mainWindows[state.uuid] = state.payload
@@ -101,8 +114,9 @@ class StateContext {
       })
       .addDisposableTo(self.disposeBag)
 
+
 #if DEBUG
-    actionSource.debug().subscribe().addDisposableTo(self.disposeBag)
+//    actionSource.debug().subscribe().addDisposableTo(self.disposeBag)
 //    stateSource.debug().subscribe().addDisposableTo(self.disposeBag)
 #endif
   }
@@ -128,6 +142,8 @@ class StateContext {
 
   fileprivate let previewTransformer: PreviewTransformer
   fileprivate let previewToolTransformer: PreviewToolTransformer
+
+  fileprivate let fileOutlineViewTransformer = FileOutlineViewTransformer()
 
   fileprivate let previewService = PreviewNewService()
   fileprivate let httpServerService: HttpServerService
