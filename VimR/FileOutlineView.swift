@@ -56,11 +56,21 @@ class FileOutlineView: NSOutlineView,
 
     source
       .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { state in
+      .subscribe(onNext: { [unowned self] state in
+        if state.cwd != self.cwd {
+          self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
+          self.cwd = state.cwd
+
+          self.reloadData()
+
+          return
+        }
+
         if state.lastFileSystemUpdate.mark == self.lastFileSystemUpdateMark {
           return
         }
 
+        self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
         self.update(state.lastFileSystemUpdate.payload)
       })
       .addDisposableTo(self.disposeBag)
