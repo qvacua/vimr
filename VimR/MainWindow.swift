@@ -29,9 +29,18 @@ class MainWindow: NSObject,
     case scroll(to: Marked<Position>)
     case setCursor(to: Marked<Position>)
 
+    case focus(FocusableView)
+
     case openQuickly
 
     case close
+  }
+
+  enum FocusableView {
+
+    case neoVimView
+    case fileBrowser
+    case preview
   }
 
   enum OpenMode {
@@ -60,6 +69,24 @@ class MainWindow: NSObject,
 
     self.windowController = NSWindowController(windowNibName: "MainWindow")
 
+    let previewConfig = WorkspaceTool.Config(title: "Preview",
+                                             view: self.preview,
+                                             customMenuItems: self.preview.menuItems)
+    self.previewContainer = WorkspaceTool(previewConfig)
+    previewContainer.dimension = 300
+
+    let fileBrowserConfig = WorkspaceTool.Config(title: "Files",
+                                                 view: self.fileBrowser,
+                                                 customToolbar: self.fileBrowser.innerCustomToolbar,
+                                                 customMenuItems: self.fileBrowser.menuItems)
+    self.fileBrowserContainer = WorkspaceTool(fileBrowserConfig)
+    fileBrowserContainer.dimension = 200
+
+    self.workspace.append(tool: previewContainer, location: .right)
+    self.workspace.append(tool: fileBrowserContainer, location: .left)
+
+    fileBrowserContainer.toggle()
+
     super.init()
 
     Observable
@@ -80,6 +107,10 @@ class MainWindow: NSObject,
         onNext: { [unowned self] state in
           if state.isClosed {
             return
+          }
+
+          if case .neoVimView = state.focusedView {
+            self.window.makeFirstResponder(self.neoVimView)
           }
 
           if state.previewTool.isReverseSearchAutomatically
@@ -135,6 +166,9 @@ class MainWindow: NSObject,
   fileprivate let workspace: Workspace
   fileprivate let neoVimView: NeoVimView
 
+  fileprivate let previewContainer: WorkspaceTool
+  fileprivate let fileBrowserContainer: WorkspaceTool
+
   fileprivate let preview: PreviewTool
   fileprivate var editorPosition: Marked<Position>
   fileprivate var previewPosition: Marked<Position>
@@ -175,9 +209,6 @@ class MainWindow: NSObject,
             self.neoVimView.openInCurrentTab(url: url)
 
           case .newTab:
-            NSLog("state: \(markedUrls.map { $0.mark })")
-            NSLog("self: \(self.marksForOpenedUrls)")
-            NSLog("opening!!!!!!!!!!!!!!!!!!!!!! \(marked.mark)")
             self.neoVimView.openInNewTab(urls: [url])
 
           case .horizontalSplit:
@@ -196,31 +227,10 @@ class MainWindow: NSObject,
     }
   }
 
-  fileprivate func setupTools() {
-    let previewConfig = WorkspaceTool.Config(title: "Preview",
-                                             view: self.preview,
-                                             customMenuItems: self.preview.menuItems)
-    let previewContainer = WorkspaceTool(previewConfig)
-    previewContainer.dimension = 300
-
-    let fileBrowserConfig = WorkspaceTool.Config(title: "Files",
-                                                 view: self.fileBrowser,
-                                                 customToolbar: self.fileBrowser.innerCustomToolbar,
-                                                 customMenuItems: self.fileBrowser.menuItems)
-    let fileBrowserContainer = WorkspaceTool(fileBrowserConfig)
-    fileBrowserContainer.dimension = 200
-
-    self.workspace.append(tool: previewContainer, location: .right)
-    self.workspace.append(tool: fileBrowserContainer, location: .left)
-
-    fileBrowserContainer.toggle()
-  }
-
   fileprivate func addViews() {
     let contentView = self.window.contentView!
 
     contentView.addSubview(self.workspace)
-    self.setupTools()
 
     self.workspace.autoPinEdgesToSuperviewEdges()
   }
@@ -242,7 +252,6 @@ extension MainWindow {
   }
 
   func cwdChanged() {
-    NSLog("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     self.emitter.emit(self.uuidAction(for: .cd(to: self.neoVimView.cwd)))
   }
 
@@ -317,10 +326,161 @@ extension MainWindow {
   }
 }
 
-// MARK: - IBActions
+// MARK: - File Menu Item Actions
 extension MainWindow {
+
+  @IBAction func newTab(_ sender: Any?) {
+    self.neoVimView.newTab()
+  }
+
+  @IBAction func openDocument(_ sender: Any?) {
+    let panel = NSOpenPanel()
+    panel.canChooseDirectories = true
+    panel.allowsMultipleSelection = true
+    panel.beginSheetModal(for: self.window) { result in
+      guard result == NSFileHandlingPanelOKButton else {
+        return
+      }
+
+      let urls = panel.urls
+      if self.neoVimView.allBuffers().count == 1 {
+        let isTransient = self.neoVimView.allBuffers().first?.isTransient ?? false
+        if isTransient {
+          self.neoVimView.cwd = FileUtils.commonParent(of: urls)
+        }
+      }
+      self.neoVimView.open(urls: urls)
+    }
+  }
 
   @IBAction func openQuickly(_ sender: Any?) {
     self.emitter.emit(self.uuidAction(for: .openQuickly))
+  }
+
+  @IBAction func saveDocument(_ sender: Any?) {
+    guard let curBuf = self.neoVimView.currentBuffer() else {
+      return
+    }
+
+    if curBuf.url == nil {
+      self.savePanelSheet { self.neoVimView.saveCurrentTab(url: $0) }
+      return
+    }
+
+    self.neoVimView.saveCurrentTab()
+  }
+
+  @IBAction func saveDocumentAs(_ sender: Any?) {
+    if self.neoVimView.currentBuffer() == nil {
+      return
+    }
+
+    self.savePanelSheet { url in
+      self.neoVimView.saveCurrentTab(url: url)
+
+      if self.neoVimView.isCurrentBufferDirty() {
+        self.neoVimView.openInNewTab(urls: [url])
+      } else {
+        self.neoVimView.openInCurrentTab(url: url)
+      }
+    }
+  }
+
+  fileprivate func savePanelSheet(action: @escaping (URL) -> Void) {
+    let panel = NSSavePanel()
+    panel.beginSheetModal(for: self.window) { result in
+      guard result == NSFileHandlingPanelOKButton else {
+        return
+      }
+
+      let showAlert: () -> Void = {
+        let alert = NSAlert()
+        alert.addButton(withTitle: "OK")
+        alert.messageText = "Invalid File Name"
+        alert.informativeText = "The file name you have entered cannot be used. Please use a different name."
+        alert.alertStyle = .warning
+
+        alert.runModal()
+      }
+
+      guard let url = panel.url else {
+        showAlert()
+        return
+      }
+
+      action(url)
+    }
+  }
+}
+
+// MARK: - Tools Menu Item Actions
+extension MainWindow {
+
+  @IBAction func toggleAllTools(_ sender: Any?) {
+    self.workspace.toggleAllTools()
+    self.focusNeoVimView(self)
+  }
+
+  @IBAction func toggleToolButtons(_ sender: Any?) {
+    self.workspace.toggleToolButtons()
+  }
+
+  @IBAction func toggleFileBrowser(_ sender: Any?) {
+    let fileBrowser = self.fileBrowserContainer
+
+    if fileBrowser.isSelected {
+      if fileBrowser.view.isFirstResponder {
+        fileBrowser.toggle()
+        self.focusNeoVimView(self)
+      } else {
+        self.emitter.emit(self.uuidAction(for: .focus(.fileBrowser)))
+      }
+
+      return
+    }
+
+    fileBrowser.toggle()
+    self.emitter.emit(self.uuidAction(for: .focus(.fileBrowser)))
+  }
+
+  @IBAction func focusNeoVimView(_: Any?) {
+//    self.window.makeFirstResponder(self.neoVimView)
+    self.emitter.emit(self.uuidAction(for: .focus(.neoVimView)))
+  }
+}
+
+// MARK: - NSUserInterfaceValidationsProtocol
+extension MainWindow {
+
+  public func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
+    let canSave = self.neoVimView.currentBuffer() != nil
+    let canSaveAs = canSave
+    let canOpen = canSave
+    let canOpenQuickly = canSave
+    let canFocusNeoVimView = self.window.firstResponder != self.neoVimView
+
+    guard let action = item.action else {
+      return true
+    }
+
+    switch action {
+    case #selector(focusNeoVimView(_:)):
+      return canFocusNeoVimView
+
+    case #selector(openDocument(_:)):
+      return canOpen
+
+    case #selector(openQuickly(_:)):
+      return canOpenQuickly
+
+    case #selector(saveDocument(_:)):
+      return canSave
+
+    case #selector(saveDocumentAs(_:)):
+      return canSaveAs
+
+    default:
+      return true
+    }
   }
 }

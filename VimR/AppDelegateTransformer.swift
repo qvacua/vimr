@@ -22,11 +22,14 @@ class AppDelegateTransformer: Transformer {
 
       case let .newMainWindow(urls, cwd):
         var mainWindow = state.mainWindowTemplate
-        mainWindow.root = state.root
         mainWindow.uuid = UUID().uuidString
+        mainWindow.root = state.root
+
         let markedUrls = Marked(urls.toDict { url in MainWindow.OpenMode.default })
         mainWindow.urlsToOpen.append(markedUrls)
+
         mainWindow.cwd = cwd
+
         mainWindow.preview.server = self.baseServerUrl.appendingPathComponent(PreviewTransformer.nonePath)
 
         state.mainWindows[mainWindow.uuid] = mainWindow

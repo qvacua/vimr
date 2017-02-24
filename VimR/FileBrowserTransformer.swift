@@ -18,6 +18,7 @@ class FileBrowserTransformer: Transformer {
 
       case let .open(url, mode):
         state.urlsToOpen.append(Marked([url: mode]))
+        state.focusedView = .neoVimView
 
       case let .setAsWorkingDirectory(url):
         state.cwd = url

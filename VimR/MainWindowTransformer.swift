@@ -41,6 +41,9 @@ class MainWindowTransformer: Transformer {
           state.preview.editorPosition = position
         }
 
+      case let .focus(view):
+        state.focusedView = view
+
       case .close:
         state.isClosed = true
 

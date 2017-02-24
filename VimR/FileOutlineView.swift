@@ -47,6 +47,10 @@ class FileOutlineView: NSOutlineView,
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
+        if case .fileBrowser = state.focusedView {
+          self.beFirstResponder()
+        }
+
         if state.cwd != self.cwd {
           self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
           self.cwd = state.cwd

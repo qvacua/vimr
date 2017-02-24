@@ -79,6 +79,10 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
+        if case .preview = state.focusedView {
+          self.beFirstResponder()
+        }
+
         self.automaticForwardMenuItem.boolState = state.previewTool.isForwardSearchAutomatically
         self.automaticReverseMenuItem.boolState = state.previewTool.isReverseSearchAutomatically
         self.refreshOnWriteMenuItem.boolState = state.previewTool.isRefreshOnWrite
