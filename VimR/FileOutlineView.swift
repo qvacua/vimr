@@ -14,12 +14,6 @@ class FileOutlineView: NSOutlineView,
 
   typealias StateType = MainWindow.State
 
-  enum Action {
-
-    case open(url: URL, mode: MainWindow.OpenMode)
-    case setAsWorkingDirectory(URL)
-  }
-
   var cwd: URL = FileUtils.userHomeUrl
   var isShowHidden = false {
     didSet {
@@ -367,7 +361,9 @@ extension FileOutlineView {
     if item.fileItem.isDir {
       self.toggle(item: item)
     } else {
-      self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.open(url: item.fileItem.url, mode: .default)))
+      self.emitter.emit(
+        UuidAction(uuid: self.uuid, action: FileBrowser.Action.open(url: item.fileItem.url, mode: .default))
+      )
     }
   }
 
@@ -376,7 +372,9 @@ extension FileOutlineView {
       return
     }
 
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.open(url: item.fileItem.url, mode: .newTab)))
+    self.emitter.emit(
+      UuidAction(uuid: self.uuid, action: FileBrowser.Action.open(url: item.fileItem.url, mode: .newTab))
+    )
   }
 
   @IBAction func openInCurrentTab(_: Any?) {
@@ -384,7 +382,9 @@ extension FileOutlineView {
       return
     }
 
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.open(url: item.fileItem.url, mode: .currentTab)))
+    self.emitter.emit(
+      UuidAction(uuid: self.uuid, action: FileBrowser.Action.open(url: item.fileItem.url, mode: .currentTab))
+    )
   }
 
   @IBAction func openInHorizontalSplit(_: Any?) {
@@ -392,7 +392,9 @@ extension FileOutlineView {
       return
     }
 
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.open(url: item.fileItem.url, mode: .horizontalSplit)))
+    self.emitter.emit(
+      UuidAction(uuid: self.uuid, action: FileBrowser.Action.open(url: item.fileItem.url, mode: .horizontalSplit))
+    )
   }
 
   @IBAction func openInVerticalSplit(_: Any?) {
@@ -400,7 +402,9 @@ extension FileOutlineView {
       return
     }
 
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.open(url: item.fileItem.url, mode: .verticalSplit)))
+    self.emitter.emit(
+      UuidAction(uuid: self.uuid, action: FileBrowser.Action.open(url: item.fileItem.url, mode: .verticalSplit))
+    )
   }
 
   @IBAction func setAsWorkingDirectory(_: Any?) {
@@ -412,7 +416,9 @@ extension FileOutlineView {
       return
     }
 
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.setAsWorkingDirectory(item.fileItem.url)))
+    self.emitter.emit(
+      UuidAction(uuid: self.uuid, action: FileBrowser.Action.setAsWorkingDirectory(item.fileItem.url))
+    )
   }
 }
 
@@ -451,7 +457,9 @@ extension FileOutlineView {
       if item.fileItem.isDir || item.fileItem.isPackage {
         self.toggle(item: item)
       } else {
-        self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.open(url: item.fileItem.url, mode: .newTab)))
+        self.emitter.emit(
+          UuidAction(uuid: self.uuid, action: FileBrowser.Action.open(url: item.fileItem.url, mode: .newTab))
+        )
       }
 
     default:

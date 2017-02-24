@@ -93,7 +93,7 @@ class StateContext {
           .filter { $0.modified }
           .map { $0.state },
         actionSource
-          .mapOmittingNil { $0 as? UuidAction<FileOutlineView.Action> }
+          .mapOmittingNil { $0 as? UuidAction<FileBrowser.Action> }
           .mapOmittingNil { action in
             guard let mainWindowState = self.appState.mainWindows[action.uuid] else {
               return nil
@@ -103,7 +103,7 @@ class StateContext {
                                    action: action.payload,
                                    modified: false)
           }
-          .transform(by: self.fileOutlineViewTransformer)
+          .transform(by: self.fileBrowserTransformer)
           .filter { $0.modified }
           .map { $0.state }
       )
@@ -143,7 +143,7 @@ class StateContext {
   fileprivate let previewTransformer: PreviewTransformer
   fileprivate let previewToolTransformer: PreviewToolTransformer
 
-  fileprivate let fileOutlineViewTransformer = FileOutlineViewTransformer()
+  fileprivate let fileBrowserTransformer = FileBrowserTransformer()
 
   fileprivate let previewService = PreviewNewService()
   fileprivate let httpServerService: HttpServerService

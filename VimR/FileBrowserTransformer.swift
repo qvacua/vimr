@@ -6,9 +6,9 @@
 import Foundation
 import RxSwift
 
-class FileOutlineViewTransformer: Transformer {
+class FileBrowserTransformer: Transformer {
 
-  typealias Pair = StateActionPair<UuidState<MainWindow.State>, FileOutlineView.Action>
+  typealias Pair = StateActionPair<UuidState<MainWindow.State>, FileBrowser.Action>
 
   func transform(_ source: Observable<Pair>) -> Observable<Pair> {
     return source.map { pair in
@@ -26,14 +26,5 @@ class FileOutlineViewTransformer: Transformer {
 
       return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
     }
-  }
-}
-
-class FileBrowserTransformer {
-
-  typealias Pair = StateActionPair<UuidState<MainWindow.State>, FileBrowser.Action>
-
-  func transform(_ source: Observable<Pair>) -> Observable<Pair> {
-    return source
   }
 }

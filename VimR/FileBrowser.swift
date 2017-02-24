@@ -14,8 +14,8 @@ class FileBrowser: NSView,
 
   enum Action {
 
-    case setAsWorkingDirectory(url: URL)
-    case scrollToSource(cwd: URL)
+    case open(url: URL, mode: MainWindow.OpenMode)
+    case setAsWorkingDirectory(URL)
   }
 
   let innerCustomToolbar = InnerCustomToolbar()
@@ -44,8 +44,8 @@ class FileBrowser: NSView,
     self.addViews()
 
     source
-      .subscribe(onNext: { state in
-
+      .subscribe(onNext: { [unowned self] state in
+        self.currentBufferUrl = state.currentBuffer?.url
       })
       .addDisposableTo(self.disposeBag)
   }
@@ -54,6 +54,8 @@ class FileBrowser: NSView,
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate let uuid: String
+
+  fileprivate var currentBufferUrl: URL?
 
   fileprivate let fileView: FileOutlineView
 
@@ -149,10 +151,14 @@ extension FileBrowser {
   }
 
   func goToParentAction(_ sender: Any?) {
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.setAsWorkingDirectory(url: self.cwd.parent)))
+    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.setAsWorkingDirectory(self.cwd.parent)))
   }
 
   func scrollToSourceAction(_ sender: Any?) {
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.scrollToSource(cwd: self.cwd)))
+    guard let url = self.currentBufferUrl else {
+      return
+    }
+
+    self.fileView.select(url)
   }
 }
