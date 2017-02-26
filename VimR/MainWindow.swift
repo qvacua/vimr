@@ -140,6 +140,13 @@ class MainWindow: NSObject,
           }
 
           self.open(markedUrls: state.urlsToOpen)
+
+          if self.currentBuffer != state.currentBuffer {
+            self.currentBuffer = state.currentBuffer
+            if let currentBuffer = self.currentBuffer {
+              self.neoVimView.select(buffer: currentBuffer)
+            }
+          }
         },
         onCompleted: {
           self.windowController.close()
@@ -172,6 +179,8 @@ class MainWindow: NSObject,
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate let uuid: String
+
+  fileprivate var currentBuffer: NeoVimBuffer?
 
   fileprivate let windowController: NSWindowController
   fileprivate var window: NSWindow { return self.windowController.window! }
@@ -277,8 +286,12 @@ extension MainWindow {
   }
 
   func currentBufferChanged(_ currentBuffer: NeoVimBuffer) {
-    NSLog("\(#function)")
+    if self.currentBuffer == currentBuffer {
+      return
+    }
+
     self.emitter.emit(self.uuidAction(for: .setCurrentBuffer(currentBuffer)))
+    self.currentBuffer = currentBuffer
   }
 
   func tabChanged() {

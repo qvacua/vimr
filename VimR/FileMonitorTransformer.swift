@@ -17,8 +17,6 @@ class FileMonitorTransformer: Transformer {
       switch pair.action {
 
       case let .change(in: url):
-        NSLog("change in \(url)")
-
         guard let fileItem = FileItemUtils.item(for: url, root: state.root, create: false) else {
           return pair
         }

@@ -105,6 +105,20 @@ class StateContext {
           }
           .transform(by: self.fileBrowserTransformer)
           .filter { $0.modified }
+          .map { $0.state },
+        actionSource
+          .mapOmittingNil { $0 as? UuidAction<OpenedFileList.Action> }
+          .mapOmittingNil { action in
+            guard let mainWindowState = self.appState.mainWindows[action.uuid] else {
+              return nil
+            }
+
+            return StateActionPair(state: UuidState(uuid: action.uuid, state: mainWindowState),
+                                   action: action.payload,
+                                   modified: false)
+          }
+          .transform(by: self.openedFileListTransformer)
+          .filter { $0.modified }
           .map { $0.state }
       )
       .merge()
@@ -144,6 +158,8 @@ class StateContext {
   fileprivate let previewToolTransformer: PreviewToolTransformer
 
   fileprivate let fileBrowserTransformer = FileBrowserTransformer()
+
+  fileprivate let openedFileListTransformer = OpenedFileListTransformer()
 
   fileprivate let previewService = PreviewNewService()
   fileprivate let httpServerService: HttpServerService
