@@ -46,7 +46,7 @@ class OpenQuicklyWindow: NSObject,
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
         guard state.openQuickly.open else {
-          self.window.performClose(self)
+          self.windowController.close()
           return
         }
 
@@ -308,6 +308,12 @@ extension OpenQuicklyWindow {
 
 // MARK: - NSWindowDelegate
 extension OpenQuicklyWindow {
+
+  func windowShouldClose(_: Any) -> Bool {
+    self.emitter.emit(Action.close)
+
+    return false
+  }
 
   func windowWillClose(_: Notification) {
     self.endProgress()

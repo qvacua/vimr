@@ -60,17 +60,15 @@ class OpenQuicklyTransformer: Transformer {
 
       switch pair.action {
 
-        case let .open(url):
-          guard let uuid = appState.currentMainWindowUuid else {
-            return pair
-          }
+      case let .open(url):
+        guard let uuid = appState.currentMainWindowUuid else {
+          return pair
+        }
 
-          NSLog("\(url) -> \(uuid)")
+        appState.mainWindows[uuid]?.urlsToOpen.append(Marked([url: .newTab]))
 
-          appState.mainWindows[uuid]?.urlsToOpen.append(Marked([url: .newTab]))
-
-        case .close:
-          break
+      case .close:
+        break
 
       }
 
