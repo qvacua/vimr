@@ -73,9 +73,9 @@ class StateContext {
                                    modified: false)
           }
           .transform(by: self.mainWindowTransformer)
-          .transform(by: self.previewTransformer)
+          .transform(by: self.previewTransformer.forMainWindow)
           .filter { $0.modified }
-          .apply(to: self.previewService)
+          .apply(to: self.previewService.forMainWindow)
           .apply(to: self.httpServerService)
           .map { $0.state },
         actionSource
@@ -118,7 +118,9 @@ class StateContext {
                                    modified: false)
           }
           .transform(by: self.openedFileListTransformer)
+          .transform(by: self.previewTransformer.forOpenedFileList)
           .filter { $0.modified }
+          .apply(to: self.previewService.forOpenedFileList)
           .map { $0.state }
       )
       .merge()
@@ -161,7 +163,7 @@ class StateContext {
 
   fileprivate let openedFileListTransformer = OpenedFileListTransformer()
 
-  fileprivate let previewService = PreviewNewService()
+  fileprivate let previewService = PreviewService()
   fileprivate let httpServerService: HttpServerService
 }
 

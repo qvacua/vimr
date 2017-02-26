@@ -6,9 +6,10 @@
 import Foundation
 import CocoaMarkdown
 
-class PreviewNewService: Service {
+class PreviewService {
 
-  typealias Element = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
+  let forMainWindow = MainWindowPreviewService()
+  let forOpenedFileList = OpenedFileListPreviewService()
 
   init() {
     guard let templateUrl = Bundle.main.url(forResource: "template",
@@ -23,37 +24,9 @@ class PreviewNewService: Service {
     }
 
     self.template = template
-  }
 
-  func apply(_ pair: Element) {
-
-    guard case .setCurrentBuffer = pair.action else {
-      return
-    }
-
-    let uuid = pair.state.uuid
-
-    let preview = pair.state.payload.preview
-    guard let buffer = preview.buffer, let html = preview.html else {
-      guard let previewUrl = self.previewFiles[uuid] else {
-        return
-      }
-
-      try? FileManager.default.removeItem(at: previewUrl)
-      self.previewFiles.removeValue(forKey: uuid)
-
-      return
-    }
-
-    NSLog("\(buffer) -> \(html)")
-    do {
-      try self.render(buffer, to: html)
-      self.previewFiles[uuid] = html
-    } catch let error as NSError {
-      // FIXME: error handling!
-      NSLog("ERROR rendering \(buffer) to \(html): \(error)")
-      return
-    }
+    self.forMainWindow.parentService = self
+    self.forOpenedFileList.parentService = self
   }
 
   fileprivate func filledTemplate(body: String, title: String) -> String {
@@ -77,7 +50,68 @@ class PreviewNewService: Service {
     try html.write(toFile: htmlFilePath, atomically: true, encoding: .utf8)
   }
 
+  fileprivate func apply(_ state: UuidState<MainWindow.State>) {
+    let uuid = state.uuid
+
+    let preview = state.payload.preview
+    guard let buffer = preview.buffer, let html = preview.html else {
+      guard let previewUrl = self.previewFiles[uuid] else {
+        return
+      }
+
+      try? FileManager.default.removeItem(at: previewUrl)
+      self.previewFiles.removeValue(forKey: uuid)
+
+      return
+    }
+
+    NSLog("\(buffer) -> \(html)")
+    do {
+      try self.render(buffer, to: html)
+      self.previewFiles[uuid] = html
+    } catch let error as NSError {
+      // FIXME: error handling!
+      NSLog("ERROR rendering \(buffer) to \(html): \(error)")
+      return
+    }
+  }
+
   fileprivate let template: String
   fileprivate let tempDir = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
   fileprivate var previewFiles = [String: URL]()
+}
+
+extension PreviewService {
+
+  class OpenedFileListPreviewService: Service {
+
+    typealias Element = StateActionPair<UuidState<MainWindow.State>, OpenedFileList.Action>
+
+    func apply(_ pair: Element) {
+
+      guard case .open = pair.action else {
+        return
+      }
+
+      self.parentService?.apply(pair.state)
+    }
+
+    fileprivate var parentService: PreviewService?
+  }
+
+  class MainWindowPreviewService: Service {
+
+    typealias Element = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
+
+    func apply(_ pair: Element) {
+
+      guard case .setCurrentBuffer = pair.action else {
+        return
+      }
+
+      self.parentService?.apply(pair.state)
+    }
+
+    fileprivate var parentService: PreviewService?
+  }
 }
