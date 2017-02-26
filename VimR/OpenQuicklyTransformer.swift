@@ -28,7 +28,6 @@ class MainWindowToOpenQuicklyTransformer: Transformer {
 
         appState.openQuickly.open = true
         appState.openQuickly.cwd = cwd
-        NSLog("!!!!!!!!!!!!!!!!!!!!!!!! \(cwd)")
         appState.openQuickly.flatFileItems = FileItemUtils.flatFileItems(
           ofUrl: cwd,
           ignorePatterns: appState.openQuickly.ignorePatterns,
