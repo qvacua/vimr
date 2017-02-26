@@ -30,6 +30,9 @@ class MainWindowTransformer: Transformer {
       case let .setCurrentBuffer(buffer):
         state.currentBuffer = buffer
 
+      case let .setDirtyStatus(status):
+        state.isDirty = status
+
         // if we scroll for reverse search we get scroll and set cursor event
       case let .setCursor(to:position):
         state.preview.forceNextReverse = false

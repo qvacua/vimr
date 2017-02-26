@@ -23,6 +23,7 @@ class MainWindow: NSObject,
     case setBufferList([NeoVimBuffer])
 
     case setCurrentBuffer(NeoVimBuffer)
+    case setDirtyStatus(Bool)
 
     case becomeKey
 
@@ -112,6 +113,8 @@ class MainWindow: NSObject,
           if case .neoVimView = state.focusedView {
             self.window.makeFirstResponder(self.neoVimView)
           }
+
+          self.windowController.setDocumentEdited(state.isDirty)
 
           if state.previewTool.isReverseSearchAutomatically
              && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition) {
@@ -248,7 +251,7 @@ extension MainWindow {
   }
 
   func set(dirtyStatus: Bool) {
-    self.windowController.setDocumentEdited(dirtyStatus)
+    self.emitter.emit(self.uuidAction(for: .setDirtyStatus(dirtyStatus)))
   }
 
   func cwdChanged() {
