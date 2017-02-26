@@ -9,7 +9,7 @@ import PureLayout
 import Sparkle
 
 /// Keep the rawValues in sync with Action in the `vimr` Python script.
-private enum VimRUrlAction: String {
+fileprivate enum VimRUrlAction: String {
   case activate = "activate"
   case open = "open"
   case newWindow = "open-in-new-window"

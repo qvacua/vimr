@@ -14,9 +14,6 @@ class FileOutlineView: NSOutlineView,
 
   typealias StateType = MainWindow.State
 
-  var cwd: URL = FileUtils.userHomeUrl
-  var isShowHidden: Bool
-
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emitter = emitter
 
@@ -114,6 +111,9 @@ class FileOutlineView: NSOutlineView,
 
   fileprivate let uuid: String
   fileprivate var lastFileSystemUpdateMark = Token()
+
+  fileprivate var cwd: URL = FileUtils.userHomeUrl
+  fileprivate var isShowHidden: Bool
 
   fileprivate var root: FileBrowserItem
   fileprivate let fileSystemRoot: FileItem
