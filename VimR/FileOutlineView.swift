@@ -42,6 +42,10 @@ class FileOutlineView: NSOutlineView,
       return
     }
 
+    // If the target of the menu items is set to the first responder, the actions are not invoked at all when the file
+    // monitor fires in the background... Dunno why it worked before the redesign... -_-
+    self.menu?.items.forEach { $0.target = self }
+
     self.doubleAction = #selector(FileOutlineView.doubleClickAction)
 
     source

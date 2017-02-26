@@ -44,6 +44,7 @@ class FileBrowser: NSView,
     self.addViews()
 
     source
+      .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
         self.currentBufferUrl = state.currentBuffer?.url
       })
