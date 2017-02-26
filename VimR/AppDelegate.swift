@@ -49,7 +49,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       .subscribe(onNext: { appState in
         self.hasMainWindows = !appState.mainWindows.isEmpty
         self.hasDirtyWindows = appState.mainWindows.values.reduce(false) { $1.isDirty ? true : $0 }
-        NSLog("has dirty: \(self.hasDirtyWindows)")
       })
       .addDisposableTo(self.disposeBag)
 

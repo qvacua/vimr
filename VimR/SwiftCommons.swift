@@ -30,10 +30,9 @@ extension Array {
   ///   - transform: The transform function.
   /// - returns: Transformed array of `self`.
   func concurrentChunkMap<R>(
-      _ chunk: Int = 100,
-      queue: DispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated),
-      transform: (Element) -> R) -> [R]
-  {
+    _ chunk: Int = 100,
+    queue: DispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated),
+    transform: (Element) -> R) -> [R] {
     let count = self.count
 
     let chunkedCount = Int(ceil(Float(count) / Float(chunk)))
@@ -45,7 +44,7 @@ extension Array {
       let startIndex = Swift.min(idx * chunk, count)
       let endIndex = Swift.min(startIndex + chunk, count)
 
-      let mappedChunk = self[startIndex ..< endIndex].map(transform)
+      let mappedChunk = self[startIndex..<endIndex].map(transform)
 
       OSSpinLockLock(&spinLock)
       result.append(mappedChunk)
@@ -53,6 +52,21 @@ extension Array {
     }
 
     return result.flatMap { $0 }
+  }
+}
+
+extension Array where Element: Equatable {
+
+  func removingDuplicatesPreservingFromBeginning() -> [Element] {
+    var result = [Element]()
+
+    for value in self {
+      if result.contains(value) == false {
+        result.append(value)
+      }
+    }
+
+    return result
   }
 }
 

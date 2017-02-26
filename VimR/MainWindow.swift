@@ -67,6 +67,7 @@ class MainWindow: NSObject,
     self.workspace = Workspace(mainView: self.neoVimView)
     self.preview = PreviewTool(source: source, emitter: emitter, state: state)
     self.fileBrowser = FileBrowser(source: source, emitter: emitter, state: state)
+    self.openedFileList = OpenedFileList(source: source, emitter: emitter, state: state)
 
     self.windowController = NSWindowController(windowNibName: "MainWindow")
 
@@ -83,8 +84,13 @@ class MainWindow: NSObject,
     self.fileBrowserContainer = WorkspaceTool(fileBrowserConfig)
     fileBrowserContainer.dimension = 200
 
+    let openedFileListConfig = WorkspaceTool.Config(title: "Opened", view: self.openedFileList)
+    self.openedFileListContainer = WorkspaceTool(openedFileListConfig)
+    self.openedFileListContainer.dimension = 200
+
     self.workspace.append(tool: previewContainer, location: .right)
     self.workspace.append(tool: fileBrowserContainer, location: .left)
+    self.workspace.append(tool: openedFileListContainer, location: .left)
 
     fileBrowserContainer.toggle()
 
@@ -175,12 +181,15 @@ class MainWindow: NSObject,
 
   fileprivate let previewContainer: WorkspaceTool
   fileprivate let fileBrowserContainer: WorkspaceTool
+  fileprivate let openedFileListContainer: WorkspaceTool
 
   fileprivate let preview: PreviewTool
   fileprivate var editorPosition: Marked<Position>
   fileprivate var previewPosition: Marked<Position>
 
   fileprivate let fileBrowser: FileBrowser
+
+  fileprivate let openedFileList: OpenedFileList
 
   fileprivate let scrollDebouncer = Debouncer<Action>(interval: 0.75)
   fileprivate let cursorDebouncer = Debouncer<Action>(interval: 0.75)
@@ -268,6 +277,7 @@ extension MainWindow {
   }
 
   func currentBufferChanged(_ currentBuffer: NeoVimBuffer) {
+    NSLog("\(#function)")
     self.emitter.emit(self.uuidAction(for: .setCurrentBuffer(currentBuffer)))
   }
 
