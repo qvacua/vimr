@@ -116,6 +116,10 @@ class MainWindow: NSObject,
 
           self.windowController.setDocumentEdited(state.isDirty)
 
+          if self.neoVimView.cwd != state.cwd {
+            self.neoVimView.cwd = state.cwd
+          }
+
           if state.previewTool.isReverseSearchAutomatically
              && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition) {
             self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)

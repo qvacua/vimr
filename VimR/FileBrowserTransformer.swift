@@ -23,6 +23,9 @@ class FileBrowserTransformer: Transformer {
       case let .setAsWorkingDirectory(url):
         state.cwd = url
 
+      case let .setShowHidden(show):
+        state.fileBrowserShowHidden = show
+
       }
 
       return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)

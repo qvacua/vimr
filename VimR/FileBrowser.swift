@@ -16,6 +16,7 @@ class FileBrowser: NSView,
 
     case open(url: URL, mode: MainWindow.OpenMode)
     case setAsWorkingDirectory(URL)
+    case setShowHidden(Bool)
   }
 
   let innerCustomToolbar = InnerCustomToolbar()
@@ -29,9 +30,11 @@ class FileBrowser: NSView,
     self.uuid = state.uuid
     self.emitter = emitter
 
+    self.cwd = state.cwd
+
     self.fileView = FileOutlineView(source: source, emitter: emitter, state: state)
 
-    let showHiddenMenuItem = NSMenuItem(title: "Show Hidden Files",
+    self.showHiddenMenuItem = NSMenuItem(title: "Show Hidden Files",
                                         action: #selector(FileBrowser.showHiddenAction),
                                         keyEquivalent: "")
     showHiddenMenuItem.boolState = state.fileBrowserShowHidden
@@ -42,11 +45,18 @@ class FileBrowser: NSView,
     super.init(frame: .zero)
 
     self.addViews()
+    self.showHiddenMenuItem.target = self
 
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
+        if self.cwd != state.cwd {
+          self.cwd = state.cwd
+          self.innerCustomToolbar.goToParentButton.isEnabled = state.cwd.path != "/"
+        }
+
         self.currentBufferUrl = state.currentBuffer?.url
+        self.showHiddenMenuItem.boolState = state.fileBrowserShowHidden
       })
       .addDisposableTo(self.disposeBag)
   }
@@ -59,26 +69,9 @@ class FileBrowser: NSView,
   fileprivate var currentBufferUrl: URL?
 
   fileprivate let fileView: FileOutlineView
+  fileprivate let showHiddenMenuItem: NSMenuItem
 
-  fileprivate var cwd: URL {
-    get {
-      return self.fileView.cwd
-    }
-    set {
-      self.fileView.cwd = newValue
-      self.innerCustomToolbar.goToParentButton.isEnabled = newValue.path != "/"
-    }
-  }
-
-  fileprivate var isShowHidden: Bool {
-    get {
-      return self.fileView.isShowHidden
-    }
-
-    set {
-      self.fileView.isShowHidden = newValue
-    }
-  }
+  fileprivate var cwd: URL
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -145,10 +138,11 @@ extension FileBrowser {
 extension FileBrowser {
 
   func showHiddenAction(_ sender: Any?) {
-    self.isShowHidden = !self.isShowHidden
-    if let menuItem = sender as? NSMenuItem {
-      menuItem.state = self.isShowHidden ? NSOnState : NSOffState
+    guard let menuItem = sender as? NSMenuItem else {
+      return
     }
+
+    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.setShowHidden(!menuItem.boolState)))
   }
 
   func goToParentAction(_ sender: Any?) {

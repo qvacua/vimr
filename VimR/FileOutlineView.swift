@@ -15,21 +15,15 @@ class FileOutlineView: NSOutlineView,
   typealias StateType = MainWindow.State
 
   var cwd: URL = FileUtils.userHomeUrl
-  var isShowHidden = false {
-    didSet {
-      if oldValue == self.isShowHidden {
-        return
-      }
-
-      self.reloadItem(nil)
-    }
-  }
+  var isShowHidden: Bool
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+    self.emitter = emitter
+
     self.uuid = state.uuid
     self.root = FileBrowserItem(fileItem: state.root)
     self.fileSystemRoot = state.root
-    self.emitter = emitter
+    self.isShowHidden = state.fileBrowserShowHidden
 
     super.init(frame: .zero)
     NSOutlineView.configure(toStandard: self)
@@ -55,12 +49,23 @@ class FileOutlineView: NSOutlineView,
           self.beFirstResponder()
         }
 
+        var reloadData = false
+
+        if self.isShowHidden != state.fileBrowserShowHidden {
+          self.isShowHidden = state.fileBrowserShowHidden
+          reloadData = true
+        }
+
         if state.cwd != self.cwd {
           self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
           self.cwd = state.cwd
 
-          self.reloadData()
+          reloadData = true
+        }
 
+        if reloadData {
+          self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
+          self.reloadData()
           return
         }
 
