@@ -38,6 +38,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let initialAppState = AppState.default
     self.stateContext = StateContext(initialAppState)
 
+    self.openNewMainWindowOnLaunch = initialAppState.openNewMainWindowOnLaunch
+    self.openNewMainWindowOnReactivation = initialAppState.openNewMainWindowOnReactivation
+
     let source = self.stateContext.stateSource
     self.uiRoot = UiRoot(source: source,
                          emitter: self.stateContext.actionEmitter,
@@ -77,6 +80,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   fileprivate var hasDirtyWindows = false
   fileprivate var hasMainWindows = false
 
+  var openNewMainWindowOnLaunch: Bool
+  var openNewMainWindowOnReactivation: Bool
+
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate var quitWhenAllWindowsAreClosed = false
@@ -105,23 +111,19 @@ extension AppDelegate {
   }
 
   func applicationOpenUntitledFile(_ sender: NSApplication) -> Bool {
-//    if self.launching {
-//      if self.prefStore.data.general.openNewWindowWhenLaunching {
-//        self.newDocument(self)
-//        return true
-//      }
-//    } else {
-//      if self.prefStore.data.general.openNewWindowOnReactivation {
-//        self.newDocument(self)
-//        return true
-//      }
-//    }
-//
-//    return false
+    if self.launching {
+      if self.openNewMainWindowOnLaunch {
+        self.newDocument(self)
+        return true
+      }
+    } else {
+      if self.openNewMainWindowOnReactivation {
+        self.newDocument(self)
+        return true
+      }
+    }
 
-    // FIXME
-    self.newDocument(self)
-    return true
+    return false
   }
 
   func applicationShouldTerminate(_ sender: NSApplication) -> NSApplicationTerminateReply {

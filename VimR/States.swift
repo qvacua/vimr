@@ -10,6 +10,9 @@ struct AppState {
 
   static let `default` = AppState(mainWindow: MainWindow.State.default)
 
+  var openNewMainWindowOnLaunch = true
+  var openNewMainWindowOnReactivation = true
+
   var mainWindowTemplate: MainWindow.State
   var currentMainWindowUuid: String?
 
