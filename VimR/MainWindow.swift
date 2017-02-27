@@ -57,6 +57,8 @@ class MainWindow: NSObject,
     self.uuid = state.uuid
     self.emitter = emitter
 
+    self.defaultEditorFont = state.font
+
     self.editorPosition = state.preview.editorPosition
     self.previewPosition = state.preview.previewPosition
 
@@ -184,6 +186,9 @@ class MainWindow: NSObject,
 
   fileprivate let windowController: NSWindowController
   fileprivate var window: NSWindow { return self.windowController.window! }
+
+  fileprivate var defaultEditorFont: NSFont
+  fileprivate let fontManager = NSFontManager.shared()
 
   fileprivate let workspace: Workspace
   fileprivate let neoVimView: NeoVimView
@@ -440,6 +445,26 @@ extension MainWindow {
 
       action(url)
     }
+  }
+}
+
+// MARK: - Font Menu Item Actions
+extension MainWindow {
+
+  @IBAction func resetFontSize(_ sender: Any?) {
+    self.neoVimView.font = self.defaultEditorFont
+  }
+
+  @IBAction func makeFontBigger(_ sender: Any?) {
+    let curFont = self.neoVimView.font
+    let font = self.fontManager.convert(curFont, toSize: min(curFont.pointSize + 1, NeoVimView.maxFontSize))
+    self.neoVimView.font = font
+  }
+
+  @IBAction func makeFontSmaller(_ sender: Any?) {
+    let curFont = self.neoVimView.font
+    let font = self.fontManager.convert(curFont, toSize: max(curFont.pointSize - 1, NeoVimView.minFontSize))
+    self.neoVimView.font = font
   }
 }
 
