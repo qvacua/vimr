@@ -13,6 +13,8 @@ struct AppState {
   var openNewMainWindowOnLaunch = true
   var openNewMainWindowOnReactivation = true
 
+  var preferencesOpen = Marked(false)
+
   var mainWindowTemplate: MainWindow.State
   var currentMainWindowUuid: String?
 
@@ -37,7 +39,7 @@ extension OpenQuicklyWindow {
 
     var flatFileItems = Observable<[FileItem]>.empty()
     var cwd = FileUtils.userHomeUrl
-    var ignorePatterns = [FileItemIgnorePattern]()
+    var ignorePatterns = Set(["*/.git", "*.o", "*.d", "*.dia"].map(FileItemIgnorePattern.init))
     var ignoreToken = Token()
 
     var open = false
@@ -73,8 +75,7 @@ struct PreviewState {
        buffer: URL? = nil,
        html: URL? = nil,
        server: URL? = nil,
-       updateDate: Date = Date())
-  {
+       updateDate: Date = Date()) {
     self.status = status
     self.buffer = buffer
     self.html = html

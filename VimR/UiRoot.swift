@@ -15,6 +15,7 @@ class UiRoot: UiComponent {
     self.emitter = emitter
 
     self.fileMonitor = FileMonitor(source: source, emitter: emitter, state: state)
+    self.prefWindow = PrefWindow(source: source, emitter: emitter, state: state)
     self.openQuicklyWindow = OpenQuicklyWindow(source: source, emitter: emitter, state: state)
 
     source
@@ -47,6 +48,18 @@ class UiRoot: UiComponent {
       .addDisposableTo(self.disposeBag)
   }
 
+  fileprivate let source: Observable<AppState>
+  fileprivate let emitter: ActionEmitter
+  fileprivate let disposeBag = DisposeBag()
+
+  fileprivate let fileMonitor: FileMonitor
+  fileprivate let prefWindow: PrefWindow
+  fileprivate let openQuicklyWindow: OpenQuicklyWindow
+
+  fileprivate var mainWindows = [String: MainWindow]()
+  fileprivate var subjectForMainWindows = [String: PublishSubject<MainWindow.State>]()
+  fileprivate var disposables = [String: Disposable]()
+
   fileprivate func createNewMainWindow(with state: MainWindow.State) {
     let subject = PublishSubject<MainWindow.State>()
     let source = self.source.mapOmittingNil { $0.mainWindows[state.uuid] }
@@ -67,16 +80,4 @@ class UiRoot: UiComponent {
     self.disposables.removeValue(forKey: uuid)
     self.mainWindows.removeValue(forKey: uuid)
   }
-
-  fileprivate let source: Observable<AppState>
-  fileprivate let emitter: ActionEmitter
-  fileprivate let disposeBag = DisposeBag()
-
-  fileprivate var mainWindows = [String: MainWindow]()
-  fileprivate var subjectForMainWindows = [String: PublishSubject<MainWindow.State>]()
-  fileprivate var disposables = [String: Disposable]()
-
-  fileprivate let fileMonitor: FileMonitor
-
-  fileprivate let openQuicklyWindow: OpenQuicklyWindow
 }

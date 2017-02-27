@@ -34,6 +34,9 @@ class AppDelegateTransformer: Transformer {
         state.mainWindows[uuid]?.urlsToOpen.append(Marked(urls.toDict { url in MainWindow.OpenMode.default }))
         state.mainWindows[uuid]?.cwd = cwd
 
+      case .preferences:
+        state.preferencesOpen = Marked(true)
+
       case .quitWithoutSaving, .quit:
         state.mainWindows.removeAll()
         state.quitWhenNoMainWindow = true

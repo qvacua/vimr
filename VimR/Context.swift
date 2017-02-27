@@ -130,6 +130,27 @@ class StateContext {
       })
       .addDisposableTo(self.disposeBag)
 
+    Observable
+      .of(
+        actionSource
+          .mapOmittingNil { $0 as? PrefWindow.Action }
+          .map { StateActionPair(state: self.appState, action: $0, modified: false) }
+          .transform(by: self.prefWindowTransformer)
+          .filter { $0.modified }
+          .map { $0.state },
+        actionSource
+          .mapOmittingNil { $0 as? GeneralPref.Action }
+          .map { StateActionPair(state: self.appState, action: $0, modified: false) }
+          .transform(by: self.generalPrefTransformer)
+          .filter { $0.modified }
+          .map { $0.state }
+      )
+      .merge()
+      .subscribe(onNext: { state in
+        self.appState = state
+        self.stateSubject.onNext(self.appState)
+      })
+      .addDisposableTo(self.disposeBag)
 
 #if DEBUG
 //    actionSource.debug().subscribe().addDisposableTo(self.disposeBag)
@@ -150,6 +171,9 @@ class StateContext {
   fileprivate let appDelegateTransformer: AppDelegateTransformer
   fileprivate let uiRootTransformer = UiRootTransformer()
   fileprivate let fileMonitorTransformer = FileMonitorTransformer()
+
+  fileprivate let prefWindowTransformer = PrefWindowTransformer()
+  fileprivate let generalPrefTransformer = GeneralPrefTransformer()
 
   fileprivate let mainWindowTransformer = MainWindowTransformer()
   fileprivate let mainWindowOpenQuicklyTransformer = MainWindowToOpenQuicklyTransformer()

@@ -27,6 +27,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     case newMainWindow(urls: [URL], cwd: URL)
     case openInKeyWindow(urls: [URL], cwd: URL)
 
+    case preferences
+
     case quitWithoutSaving
     case quit
   }
@@ -52,6 +54,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       .subscribe(onNext: { appState in
         self.hasMainWindows = !appState.mainWindows.isEmpty
         self.hasDirtyWindows = appState.mainWindows.values.reduce(false) { $1.isDirty ? true : $0 }
+
+        self.openNewMainWindowOnLaunch = appState.openNewMainWindowOnLaunch
+        self.openNewMainWindowOnReactivation = appState.openNewMainWindowOnReactivation
       })
       .addDisposableTo(self.disposeBag)
 
@@ -224,8 +229,7 @@ extension AppDelegate {
   }
 
   @IBAction func showPrefWindow(_ sender: Any?) {
-    // FIXME
-//    self.prefWindowComponent.show()
+    self.stateContext.actionEmitter.emit(Action.preferences)
   }
 
   // Invoked when no main window is open.

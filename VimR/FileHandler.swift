@@ -9,7 +9,7 @@ import RxSwift
 class FileItemUtils {
 
   static func flatFileItems(ofUrl url: URL,
-                            ignorePatterns: [FileItemIgnorePattern],
+                            ignorePatterns: Set<FileItemIgnorePattern>,
                             ignoreToken: Token,
                             root: FileItem) -> Observable<[FileItem]> {
     guard url.isFileURL else {
