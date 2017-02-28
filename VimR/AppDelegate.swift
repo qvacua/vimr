@@ -38,7 +38,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   override init() {
     let initialAppState = AppState.default
-    self.stateContext = StateContext(initialAppState)
+    self.stateContext = Context(initialAppState)
 
     self.openNewMainWindowOnLaunch = initialAppState.openNewMainWindowOnLaunch
     self.openNewMainWindowOnReactivation = initialAppState.openNewMainWindowOnReactivation
@@ -78,7 +78,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //    }
 //  }
 
-  fileprivate let stateContext: StateContext
+  fileprivate let stateContext: Context
 
   fileprivate let uiRoot: UiRoot
 

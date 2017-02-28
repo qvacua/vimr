@@ -6,7 +6,7 @@
 import Foundation
 import RxSwift
 
-class StateContext {
+class Context {
 
   let stateSource: Observable<AppState>
   let actionEmitter = Emitter<Any>()
