@@ -22,13 +22,11 @@ class UiRootTransformer: Transformer {
         appState.mainWindowTemplate = appState.mainWindows[uuid] ?? appState.mainWindowTemplate
 
       case .close:
-        NSLog("close of ui root")
         if appState.currentMainWindowUuid == uuid {
           appState.currentMainWindowUuid = nil
         }
 
         appState.mainWindows.removeValue(forKey: uuid)
-        Swift.print(appState.dict())
 
       default:
         return pair

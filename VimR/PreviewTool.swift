@@ -75,6 +75,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
     refreshOnWrite.action = #selector(PreviewTool.refreshOnWriteAction)
 
     self.addViews()
+    self.webview.load(URLRequest(url: state.preview.server!))
 
     source
       .observeOn(MainScheduler.instance)
@@ -100,6 +101,11 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
         self.lastUpdateDate = state.preview.updateDate
         self.webview.load(URLRequest(url: serverUrl))
+      }, onCompleted: { [unowned self] in
+        // We have to do the following to avoid a crash... Dunno why... -_-
+        self.webviewMessageHandler.subject.onCompleted()
+        self.webview.navigationDelegate = nil
+        self.webview.removeFromSuperview()
       })
       .addDisposableTo(self.disposeBag)
 
@@ -115,7 +121,6 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   fileprivate func addViews() {
     self.webview.navigationDelegate = self
     self.userContentController.add(webviewMessageHandler, name: "com_vimr_tools_preview_markdown")
-//    self.webview.loadHTMLString("", baseURL: nil)
     self.webview.configureForAutoLayout()
 
     self.addSubview(self.webview)
