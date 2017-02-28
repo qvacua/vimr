@@ -5,137 +5,11 @@
 
 import Foundation
 
-fileprivate class Keys {
-
-  static let openNewOnLaunch = "open-new-window-when-launching"
-  static let openNewOnReactivation = "open-new-window-on-reactivation"
-  static let useSnapshotUpdateChannel = "use-snapshot-update-channel"
-
-  class OpenQuickly {
-
-    static let key = "open-quickly"
-
-    static let ignorePatterns = "ignore-patterns"
-  }
-
-  class Appearance {
-
-    static let key = "appearance"
-
-    static let editorFontName = "editor-font-name"
-    static let editorFontSize = "editor-font-size"
-    static let editorLinespacing = "editor-linespacing"
-    static let editorUsesLigatures = "editor-uses-ligatures"
-  }
-
-  class MainWindow {
-
-    static let key = "main-window"
-
-    static let allToolsVisible = "is-all-tools-visible"
-    static let toolButtonsVisible = "is-tool-buttons-visible"
-
-    static let isShowHidden = "is-show-hidden"
-  }
-
-  class PreviewTool {
-
-    static let key = "preview-tool"
-
-    static let forwardSearchAutomatically = "is-forward-search-automatically"
-    static let reverseSearchAutomatically = "is-reverse-search-automatically"
-    static let refreshOnWrite = "is-refresh-on-write"
-  }
-
-  class WorkspaceTool {
-
-    static let key = "workspace-tool"
-
-    static let location = "location"
-    static let open = "is-visible"
-    static let dimension = "dimension"
-  }
-}
-
 protocol SerializableState {
 
+  init?(dict: [String: Any])
+
   func dict() -> [String: Any]
-}
-
-extension AppState: SerializableState {
-
-  func dict() -> [String: Any] {
-    return [
-      Keys.openNewOnLaunch: self.openNewMainWindowOnLaunch,
-      Keys.openNewOnReactivation: self.openNewMainWindowOnReactivation,
-      Keys.useSnapshotUpdateChannel: self.useSnapshotUpdate,
-
-      Keys.OpenQuickly.key: self.openQuickly.dict(),
-
-      Keys.MainWindow.key: self.mainWindowTemplate.dict(),
-    ]
-  }
-}
-
-extension OpenQuicklyWindow.State: SerializableState {
-
-  func dict() -> [String: Any] {
-    return [
-      Keys.OpenQuickly.ignorePatterns: FileItemIgnorePattern.toString(self.ignorePatterns)
-    ]
-  }
-}
-
-extension AppearanceState: SerializableState {
-
-  func dict() -> [String: Any] {
-    return [
-      Keys.Appearance.editorFontName: self.font.fontName,
-      Keys.Appearance.editorFontSize: Float(self.font.pointSize),
-      Keys.Appearance.editorLinespacing: Float(self.linespacing),
-      Keys.Appearance.editorUsesLigatures: self.usesLigatures,
-    ]
-  }
-}
-
-extension WorkspaceToolState: SerializableState {
-
-  func dict() -> [String: Any] {
-    return [
-      Keys.WorkspaceTool.location: PrefUtils.locationAsString(for: self.location),
-      Keys.WorkspaceTool.open: self.open,
-      Keys.WorkspaceTool.dimension: Float(self.dimension),
-    ]
-  }
-}
-
-extension PreviewTool.State: SerializableState {
-
-  func dict() -> [String: Any] {
-    return [
-      Keys.PreviewTool.forwardSearchAutomatically: self.isForwardSearchAutomatically,
-      Keys.PreviewTool.reverseSearchAutomatically: self.isReverseSearchAutomatically,
-      Keys.PreviewTool.refreshOnWrite: self.isRefreshOnWrite,
-    ]
-  }
-}
-
-extension MainWindow.State: SerializableState {
-
-  func dict() -> [String: Any] {
-    return [
-      Keys.MainWindow.allToolsVisible: self.isAllToolsVisible,
-      Keys.MainWindow.toolButtonsVisible: self.isToolButtonsVisible,
-
-      Keys.Appearance.key: self.appearance.dict(),
-      Keys.WorkspaceTool.key: Array(self.tools.keys.map { $0.rawValue })
-        .toDict { self.tools[MainWindow.Tools(rawValue: $0)!]!.dict() },
-
-      Keys.PreviewTool.key: self.previewTool.dict(),
-
-      Keys.MainWindow.isShowHidden: self.fileBrowserShowHidden,
-    ]
-  }
 }
 
 class PrefUtils {
@@ -246,5 +120,57 @@ class PrefUtils {
     case .bottom: return "bottom"
     case .left: return "left"
     }
+  }
+}
+
+class Keys {
+
+  static let openNewOnLaunch = "open-new-window-when-launching"
+  static let openNewOnReactivation = "open-new-window-on-reactivation"
+  static let useSnapshotUpdateChannel = "use-snapshot-update-channel"
+
+  class OpenQuickly {
+
+    static let key = "open-quickly"
+
+    static let ignorePatterns = "ignore-patterns"
+  }
+
+  class Appearance {
+
+    static let key = "appearance"
+
+    static let editorFontName = "editor-font-name"
+    static let editorFontSize = "editor-font-size"
+    static let editorLinespacing = "editor-linespacing"
+    static let editorUsesLigatures = "editor-uses-ligatures"
+  }
+
+  class MainWindow {
+
+    static let key = "main-window"
+
+    static let allToolsVisible = "is-all-tools-visible"
+    static let toolButtonsVisible = "is-tool-buttons-visible"
+
+    static let isShowHidden = "is-show-hidden"
+  }
+
+  class PreviewTool {
+
+    static let key = "preview-tool"
+
+    static let forwardSearchAutomatically = "is-forward-search-automatically"
+    static let reverseSearchAutomatically = "is-reverse-search-automatically"
+    static let refreshOnWrite = "is-refresh-on-write"
+  }
+
+  class WorkspaceTool {
+
+    static let key = "workspace-tool"
+
+    static let location = "location"
+    static let open = "is-visible"
+    static let dimension = "dimension"
   }
 }

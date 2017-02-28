@@ -6,7 +6,7 @@
 import Foundation
 import RxSwift
 
-struct AppState {
+struct AppState: SerializableState {
 
   static let `default` = AppState(mainWindow: MainWindow.State.default)
 
@@ -31,11 +31,27 @@ struct AppState {
     self.mainWindowTemplate = mainWindow
     self.mainWindowTemplate.root = self.root
   }
+
+  init?(dict: [String: Any]) {
+    return nil
+  }
+
+  func dict() -> [String: Any] {
+    return [
+      Keys.openNewOnLaunch: self.openNewMainWindowOnLaunch,
+      Keys.openNewOnReactivation: self.openNewMainWindowOnReactivation,
+      Keys.useSnapshotUpdateChannel: self.useSnapshotUpdate,
+
+      Keys.OpenQuickly.key: self.openQuickly.dict(),
+
+      Keys.MainWindow.key: self.mainWindowTemplate.dict(),
+    ]
+  }
 }
 
 extension OpenQuicklyWindow {
 
-  struct State {
+  struct State: SerializableState {
 
     static let `default` = State()
 
@@ -45,6 +61,24 @@ extension OpenQuicklyWindow {
     var ignoreToken = Token()
 
     var open = false
+
+    init() {
+
+    }
+
+    init?(dict: [String: Any]) {
+      guard let patternsString = PrefUtils.string(from: dict, for: Keys.OpenQuickly.ignorePatterns) else {
+        return nil
+      }
+
+      self.ignorePatterns = FileItemIgnorePattern.from(string: patternsString)
+    }
+
+    func dict() -> [String: Any] {
+      return [
+        Keys.OpenQuickly.ignorePatterns: FileItemIgnorePattern.toString(self.ignorePatterns)
+      ]
+    }
   }
 }
 
@@ -86,18 +120,45 @@ struct PreviewState {
   }
 }
 
-struct AppearanceState {
+struct AppearanceState: SerializableState {
 
   static let `default` = AppearanceState()
 
   var font = NSFont.userFixedPitchFont(ofSize: 13)!
   var linespacing: CGFloat = 1
   var usesLigatures = false
+
+  init() {
+
+  }
+
+  init?(dict: [String: Any]) {
+    guard let editorFontName = dict[Keys.Appearance.editorFontName] as? String,
+          let fEditorFontSize = PrefUtils.float(from: dict, for: Keys.Appearance.editorFontSize),
+          let fEditorLinespacing = PrefUtils.float(from: dict, for: Keys.Appearance.editorLinespacing),
+          let editorUsesLigatures = PrefUtils.bool(from: dict, for: Keys.Appearance.editorUsesLigatures)
+      else {
+      return nil
+    }
+
+    self.font = PrefUtils.saneFont(editorFontName, fontSize: CGFloat(fEditorFontSize))
+    self.linespacing = CGFloat(fEditorLinespacing)
+    self.usesLigatures = editorUsesLigatures
+  }
+
+  func dict() -> [String: Any] {
+    return [
+      Keys.Appearance.editorFontName: self.font.fontName,
+      Keys.Appearance.editorFontSize: Float(self.font.pointSize),
+      Keys.Appearance.editorLinespacing: Float(self.linespacing),
+      Keys.Appearance.editorUsesLigatures: self.usesLigatures,
+    ]
+  }
 }
 
 extension MainWindow {
 
-  struct State {
+  struct State: SerializableState  {
 
     static let `default` = State(isAllToolsVisible: true, isToolButtonsVisible: true)
 
@@ -112,11 +173,7 @@ extension MainWindow {
     var root = FileItem(URL(fileURLWithPath: "/", isDirectory: true))
     var lastFileSystemUpdate = Marked(FileItem(URL(fileURLWithPath: "/", isDirectory: true)))
 
-    var tools = [
-      MainWindow.Tools.fileBrowser: WorkspaceToolState(location: .left, dimension: 200, open: true),
-      MainWindow.Tools.openedFilesList: WorkspaceToolState(location: .left, dimension: 200, open: false),
-      MainWindow.Tools.preview: WorkspaceToolState(location: .right, dimension: 250, open: false),
-    ]
+    var tools = WorkspaceToolState.default
 
     var preview = PreviewState.default
     var previewTool = PreviewTool.State.default
@@ -141,26 +198,129 @@ extension MainWindow {
       self.isAllToolsVisible = isAllToolsVisible
       self.isToolButtonsVisible = isToolButtonsVisible
     }
+
+    init?(dict: [String: Any]) {
+      guard let isAllToolsVisible = PrefUtils.bool(from: dict, for: Keys.MainWindow.allToolsVisible),
+            let isToolButtonsVisible = PrefUtils.bool(from: dict, for: Keys.MainWindow.toolButtonsVisible),
+            let isShowHidden = PrefUtils.bool(from: dict, for: Keys.MainWindow.isShowHidden)
+        else {
+        return nil
+      }
+
+      self.isAllToolsVisible = isAllToolsVisible
+      self.isToolButtonsVisible = isToolButtonsVisible
+
+      let appearanceDict = dict[Keys.Appearance.key] as? [String: Any] ?? [:]
+      self.appearance = AppearanceState(dict: appearanceDict) ?? AppearanceState.default
+
+      let workspaceToolsDict = dict[Keys.WorkspaceTool.key] as? [String: [String: Any]] ?? [:]
+      let toolKeys = workspaceToolsDict.keys.flatMap { MainWindow.Tools(rawValue: $0) }
+      if MainWindow.Tools.all == Set(toolKeys) {
+        self.tools = Array(toolKeys).toDict { tool in
+          return WorkspaceToolState(dict: workspaceToolsDict[tool.rawValue]!) ?? WorkspaceToolState.default[tool]!
+        }
+      }
+
+      let previewToolDict = dict[Keys.PreviewTool.key] as? [String: Any] ?? [:]
+      self.previewTool = PreviewTool.State(dict: previewToolDict) ?? PreviewTool.State.default
+
+      self.fileBrowserShowHidden = isShowHidden
+    }
+
+    func dict() -> [String: Any] {
+      return [
+        Keys.MainWindow.allToolsVisible: self.isAllToolsVisible,
+        Keys.MainWindow.toolButtonsVisible: self.isToolButtonsVisible,
+
+        Keys.Appearance.key: self.appearance.dict(),
+        Keys.WorkspaceTool.key: Array(self.tools.keys.map { $0.rawValue })
+          .toDict { self.tools[MainWindow.Tools(rawValue: $0)!]!.dict() },
+
+        Keys.PreviewTool.key: self.previewTool.dict(),
+
+        Keys.MainWindow.isShowHidden: self.fileBrowserShowHidden,
+      ]
+    }
   }
 }
 
-struct WorkspaceToolState {
+struct WorkspaceToolState: SerializableState {
 
-  static let `default` = WorkspaceToolState()
+  static let `default` = [
+    MainWindow.Tools.fileBrowser: WorkspaceToolState(location: .left, dimension: 200, open: true),
+    MainWindow.Tools.openedFilesList: WorkspaceToolState(location: .left, dimension: 200, open: false),
+    MainWindow.Tools.preview: WorkspaceToolState(location: .right, dimension: 250, open: false),
+  ]
 
   var location = WorkspaceBarLocation.left
   var dimension = CGFloat(200)
   var open = false
+
+  init(location: WorkspaceBarLocation, dimension: CGFloat, open: Bool) {
+    self.location = location
+    self.dimension = dimension
+    self.open = open
+  }
+
+  init?(dict: [String: Any]) {
+    guard let locationRawValue = dict[Keys.WorkspaceTool.location] as? String,
+          let isOpen = PrefUtils.bool(from: dict, for: Keys.WorkspaceTool.open),
+          let fDimension = PrefUtils.float(from: dict, for: Keys.WorkspaceTool.dimension)
+      else {
+      return nil
+    }
+
+    guard let location = PrefUtils.location(from: locationRawValue) else {
+      return nil
+    }
+
+    self.location = location
+    self.dimension = CGFloat(fDimension)
+    self.open = isOpen
+  }
+
+  func dict() -> [String: Any] {
+    return [
+      Keys.WorkspaceTool.location: PrefUtils.locationAsString(for: self.location),
+      Keys.WorkspaceTool.open: self.open,
+      Keys.WorkspaceTool.dimension: Float(self.dimension),
+    ]
+  }
 }
 
 extension PreviewTool {
 
-  struct State {
+  struct State: SerializableState {
 
     static let `default` = State()
 
     var isForwardSearchAutomatically = false
     var isReverseSearchAutomatically = false
     var isRefreshOnWrite = true
+
+    init() {
+
+    }
+
+    init?(dict: [String: Any]) {
+      guard let isForward = PrefUtils.bool(from: dict, for: Keys.PreviewTool.forwardSearchAutomatically),
+            let isReverse = PrefUtils.bool(from: dict, for: Keys.PreviewTool.reverseSearchAutomatically),
+            let isRefreshOnWrite = PrefUtils.bool(from: dict, for: Keys.PreviewTool.refreshOnWrite)
+        else {
+        return nil
+      }
+
+      self.isRefreshOnWrite = isRefreshOnWrite
+      self.isForwardSearchAutomatically = isForward
+      self.isReverseSearchAutomatically = isReverse
+    }
+
+    func dict() -> [String: Any] {
+      return [
+        Keys.PreviewTool.forwardSearchAutomatically: self.isForwardSearchAutomatically,
+        Keys.PreviewTool.reverseSearchAutomatically: self.isReverseSearchAutomatically,
+        Keys.PreviewTool.refreshOnWrite: self.isRefreshOnWrite,
+      ]
+    }
   }
 }

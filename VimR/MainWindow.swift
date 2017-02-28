@@ -52,10 +52,11 @@ class MainWindow: NSObject,
 
   enum Tools: String {
 
+    static let all = Set([Tools.fileBrowser, Tools.openedFilesList, Tools.preview])
+
     case fileBrowser = "com.qvacua.vimr.tools.file-browser"
     case openedFilesList = "com.qvacua.vimr.tools.opened-files-list"
     case preview = "com.qvacua.vimr.tools.preview"
-
   }
 
   enum OpenMode {
