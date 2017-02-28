@@ -61,22 +61,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.openNewMainWindowOnReactivation = appState.openNewMainWindowOnReactivation
 
         if self.useSnapshot != appState.useSnapshotUpdate {
+          self.useSnapshot = appState.useSnapshotUpdate
           self.setSparkleUrl(self.useSnapshot)
         }
       })
       .addDisposableTo(self.disposeBag)
-  }
-
-  fileprivate func setSparkleUrl(_ snapshot: Bool) {
-    if snapshot {
-      self.updater?.feedURL = URL(
-        string: "https://raw.githubusercontent.com/qvacua/vimr/develop/appcast_snapshot.xml"
-      )
-    } else {
-      self.updater?.feedURL = URL(
-        string: "https://raw.githubusercontent.com/qvacua/vimr/master/appcast.xml"
-      )
-    }
   }
 
   fileprivate let stateContext: Context
@@ -94,6 +83,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   fileprivate var quitWhenAllWindowsAreClosed = false
   fileprivate var launching = true
+
+  fileprivate func setSparkleUrl(_ snapshot: Bool) {
+    if snapshot {
+      self.updater?.feedURL = URL(
+        string: "https://raw.githubusercontent.com/qvacua/vimr/develop/appcast_snapshot.xml"
+      )
+    } else {
+      self.updater?.feedURL = URL(
+        string: "https://raw.githubusercontent.com/qvacua/vimr/master/appcast.xml"
+      )
+    }
+  }
 }
 
 // MARK: - NSApplicationDelegate
