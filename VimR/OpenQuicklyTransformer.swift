@@ -6,72 +6,81 @@
 import Foundation
 import RxSwift
 
-class MainWindowToOpenQuicklyTransformer: Transformer {
+class OpenQuicklyTransformer {
 
-  typealias Pair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
+  let forMainWindow = MainWindowTransformer()
+  let forOpenQuicklyWindow = OpenQuicklyWindowTransformer()
+}
 
-  func transform(_ source: Observable<Pair>) -> Observable<Pair> {
-    return source.map { pair in
+extension OpenQuicklyTransformer {
 
-      switch pair.action.payload {
+  class OpenQuicklyWindowTransformer: Transformer {
 
-      case .openQuickly:
+    typealias Pair = StateActionPair<AppState, OpenQuicklyWindow.Action>
+
+    func transform(_ source: Observable<Pair>) -> Observable<Pair> {
+      return source.map { pair in
         var appState = pair.state
 
-        guard let uuid = appState.currentMainWindowUuid else {
-          return pair
-        }
+        appState.openQuickly.open = false
+        appState.openQuickly.flatFileItems = Observable.empty()
+        appState.openQuickly.cwd = FileUtils.userHomeUrl
 
-        guard let cwd = appState.mainWindows[uuid]?.cwd else {
-          return pair
-        }
+        switch pair.action {
 
-        appState.openQuickly.open = true
-        appState.openQuickly.cwd = cwd
-        appState.openQuickly.flatFileItems = FileItemUtils.flatFileItems(
-          ofUrl: cwd,
-          ignorePatterns: appState.openQuickly.ignorePatterns,
-          ignoreToken: appState.openQuickly.ignoreToken,
-          root: appState.root
-        )
+        case let .open(url):
+          guard let uuid = appState.currentMainWindowUuid else {
+            return pair
+          }
+
+          appState.mainWindows[uuid]?.urlsToOpen.append(Marked([url: .newTab]))
+
+        case .close:
+          break
+
+        }
 
         return StateActionPair(state: appState, action: pair.action)
-
-      default:
-        return pair
-
       }
     }
   }
-}
 
-class OpenQuicklyTransformer: Transformer {
+  class MainWindowTransformer: Transformer {
 
-  typealias Pair = StateActionPair<AppState, OpenQuicklyWindow.Action>
+    typealias Pair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
 
-  func transform(_ source: Observable<Pair>) -> Observable<Pair> {
-    return source.map { pair in
-      var appState = pair.state
+    func transform(_ source: Observable<Pair>) -> Observable<Pair> {
+      return source.map { pair in
 
-      appState.openQuickly.open = false
-      appState.openQuickly.flatFileItems = Observable.empty()
-      appState.openQuickly.cwd = FileUtils.userHomeUrl
+        switch pair.action.payload {
 
-      switch pair.action {
+        case .openQuickly:
+          var appState = pair.state
 
-      case let .open(url):
-        guard let uuid = appState.currentMainWindowUuid else {
+          guard let uuid = appState.currentMainWindowUuid else {
+            return pair
+          }
+
+          guard let cwd = appState.mainWindows[uuid]?.cwd else {
+            return pair
+          }
+
+          appState.openQuickly.open = true
+          appState.openQuickly.cwd = cwd
+          appState.openQuickly.flatFileItems = FileItemUtils.flatFileItems(
+            ofUrl: cwd,
+            ignorePatterns: appState.openQuickly.ignorePatterns,
+            ignoreToken: appState.openQuickly.ignoreToken,
+            root: appState.root
+          )
+
+          return StateActionPair(state: appState, action: pair.action)
+
+        default:
           return pair
+
         }
-
-        appState.mainWindows[uuid]?.urlsToOpen.append(Marked([url: .newTab]))
-
-      case .close:
-        break
-
       }
-
-      return StateActionPair(state: appState, action: pair.action)
     }
   }
 }

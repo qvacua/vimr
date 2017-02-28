@@ -14,29 +14,29 @@ class StateContext {
   init(_ initialState: AppState) {
     let baseServerUrl = URL(string: "http://localhost:\(NetUtils.openPort())")!
 
-    self.httpServerService = HttpServerService(port: baseServerUrl.port ?? 0)
-    self.appDelegateTransformer = AppDelegateTransformer(baseServerUrl: baseServerUrl)
-    self.previewTransformer = PreviewTransformer(baseServerUrl: baseServerUrl)
-    self.previewToolTransformer = PreviewToolTransformer(baseServerUrl: baseServerUrl)
-
     self.appState = initialState
 
     self.stateSource = self.stateSubject.asObservable()
     let actionSource = self.actionEmitter.observable
+
+    let openQuicklyTransformer = OpenQuicklyTransformer()
+    let previewTransformer = PreviewTransformer(baseServerUrl: baseServerUrl)
+
+    let previewService = PreviewService()
 
     Observable
       .of(
         actionSource
           .mapOmittingNil { $0 as? AppDelegate.Action }
           .map { StateActionPair(state: self.appState, action: $0, modified: false) }
-          .transform(by: self.appDelegateTransformer)
+          .transform(by: AppDelegateTransformer(baseServerUrl: baseServerUrl))
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? UuidAction<MainWindow.Action> }
           .map { StateActionPair(state: self.appState, action: $0, modified: false) }
           .transform(by: UiRootTransformer())
-          .transform(by: MainWindowToOpenQuicklyTransformer())
+          .transform(by: openQuicklyTransformer.forMainWindow)
           .filter { $0.modified }
           .map { $0.state },
         actionSource
@@ -48,7 +48,7 @@ class StateContext {
         actionSource
           .mapOmittingNil { $0 as? OpenQuicklyWindow.Action }
           .map { StateActionPair(state: self.appState, action: $0, modified: false) }
-          .transform(by: OpenQuicklyTransformer())
+          .transform(by: openQuicklyTransformer.forOpenQuicklyWindow)
           .filter { $0.modified }
           .map { $0.state }
       )
@@ -72,11 +72,11 @@ class StateContext {
                                    action: action.payload,
                                    modified: false)
           }
-          .transform(by: self.mainWindowTransformer)
-          .transform(by: self.previewTransformer.forMainWindow)
+          .transform(by: MainWindowTransformer())
+          .transform(by: previewTransformer.forMainWindow)
           .filter { $0.modified }
-          .apply(to: self.previewService.forMainWindow)
-          .apply(to: self.httpServerService)
+          .apply(to: previewService.forMainWindow)
+          .apply(to: HttpServerService(port: baseServerUrl.port ?? 0))
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? UuidAction<PreviewTool.Action> }
@@ -89,7 +89,7 @@ class StateContext {
                                    action: action.payload,
                                    modified: false)
           }
-          .transform(by: self.previewToolTransformer)
+          .transform(by: PreviewToolTransformer(baseServerUrl: baseServerUrl))
           .filter { $0.modified }
           .map { $0.state },
         actionSource
@@ -103,7 +103,7 @@ class StateContext {
                                    action: action.payload,
                                    modified: false)
           }
-          .transform(by: self.fileBrowserTransformer)
+          .transform(by: FileBrowserTransformer())
           .filter { $0.modified }
           .map { $0.state },
         actionSource
@@ -117,10 +117,10 @@ class StateContext {
                                    action: action.payload,
                                    modified: false)
           }
-          .transform(by: self.openedFileListTransformer)
-          .transform(by: self.previewTransformer.forOpenedFileList)
+          .transform(by: OpenedFileListTransformer())
+          .transform(by: previewTransformer.forOpenedFileList)
           .filter { $0.modified }
-          .apply(to: self.previewService.forOpenedFileList)
+          .apply(to: previewService.forOpenedFileList)
           .map { $0.state }
       )
       .merge()
@@ -173,20 +173,6 @@ class StateContext {
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate var appState: AppState
-
-  fileprivate let appDelegateTransformer: AppDelegateTransformer
-
-  fileprivate let mainWindowTransformer = MainWindowTransformer()
-
-  fileprivate let previewTransformer: PreviewTransformer
-  fileprivate let previewToolTransformer: PreviewToolTransformer
-
-  fileprivate let fileBrowserTransformer = FileBrowserTransformer()
-
-  fileprivate let openedFileListTransformer = OpenedFileListTransformer()
-
-  fileprivate let previewService = PreviewService()
-  fileprivate let httpServerService: HttpServerService
 }
 
 extension Observable {
