@@ -36,11 +36,6 @@ class UiRoot: UiComponent {
             self.removeMainWindow(with: uuid)
           }
 
-        // remove already closed windows
-        state.mainWindows
-          .filter { (uuid, mainWindow) in return mainWindow.isClosed }
-          .forEach { (uuid, _) in self.removeMainWindow(with: uuid) }
-
         if state.quitWhenNoMainWindow && self.mainWindows.isEmpty {
           NSApp.stop(self)
         }

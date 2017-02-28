@@ -123,8 +123,6 @@ extension MainWindow {
 
     var fileBrowserShowHidden = false
 
-    var isClosed = false
-
     // neovim
     var uuid = UUID().uuidString
     var currentBuffer: NeoVimBuffer?

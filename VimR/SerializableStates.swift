@@ -34,6 +34,17 @@ fileprivate class Keys {
 
     static let allToolsVisible = "is-all-tools-visible"
     static let toolButtonsVisible = "is-tool-buttons-visible"
+
+    static let isShowHidden = "is-show-hidden"
+  }
+
+  class PreviewTool {
+
+    static let key = "preview-tool"
+
+    static let forwardSearchAutomatically = "is-forward-search-automatically"
+    static let reverseSearchAutomatically = "is-reverse-search-automatically"
+    static let refreshOnWrite = "is-refresh-on-write"
   }
 
   class WorkspaceTool {
@@ -60,6 +71,8 @@ extension AppState: SerializableState {
       Keys.useSnapshotUpdateChannel: self.useSnapshotUpdate,
 
       Keys.OpenQuickly.key: self.openQuickly.dict(),
+
+      Keys.MainWindow.key: self.mainWindowTemplate.dict(),
     ]
   }
 }
@@ -96,6 +109,17 @@ extension WorkspaceToolState: SerializableState {
   }
 }
 
+extension PreviewTool.State: SerializableState {
+
+  func dict() -> [String: Any] {
+    return [
+      Keys.PreviewTool.forwardSearchAutomatically: self.isForwardSearchAutomatically,
+      Keys.PreviewTool.reverseSearchAutomatically: self.isReverseSearchAutomatically,
+      Keys.PreviewTool.refreshOnWrite: self.isRefreshOnWrite,
+    ]
+  }
+}
+
 extension MainWindow.State: SerializableState {
 
   func dict() -> [String: Any] {
@@ -104,7 +128,12 @@ extension MainWindow.State: SerializableState {
       Keys.MainWindow.toolButtonsVisible: self.isToolButtonsVisible,
 
       Keys.Appearance.key: self.appearance.dict(),
-      Keys.WorkspaceTool.key: Array(self.tools.keys).toDict { self.tools[$0]!.dict() }
+      Keys.WorkspaceTool.key: Array(self.tools.keys.map { $0.rawValue })
+        .toDict { self.tools[MainWindow.Tools(rawValue: $0)!]!.dict() },
+
+      Keys.PreviewTool.key: self.previewTool.dict(),
+
+      Keys.MainWindow.isShowHidden: self.fileBrowserShowHidden,
     ]
   }
 }

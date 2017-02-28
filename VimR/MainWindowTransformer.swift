@@ -58,9 +58,6 @@ class MainWindowTransformer: Transformer {
       case let .toggleToolButtons(value):
         state.isToolButtonsVisible = value
 
-      case .close:
-        state.isClosed = true
-
       default:
         return pair
 

@@ -40,9 +40,7 @@ class MainWindow: NSObject,
     case toggleToolButtons(Bool)
     case setState(for: Tools, with: WorkspaceTool)
 
-    // not pretty...
     case close
-    case closed
   }
 
   enum FocusableView {
@@ -134,10 +132,6 @@ class MainWindow: NSObject,
       .observeOn(MainScheduler.instance)
       .subscribe(
         onNext: { [unowned self] state in
-          if state.isClosed {
-            return
-          }
-
           if case .neoVimView = state.focusedView {
             self.window.makeFirstResponder(self.neoVimView)
           }
@@ -394,10 +388,6 @@ extension MainWindow {
     })
 
     return false
-  }
-
-  func windowWillClose(_: Notification) {
-    self.emitter.emit(self.uuidAction(for: .closed))
   }
 }
 
