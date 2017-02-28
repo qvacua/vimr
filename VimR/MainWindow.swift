@@ -11,7 +11,9 @@ import PureLayout
 class MainWindow: NSObject,
                   UiComponent,
                   NeoVimViewDelegate,
-                  NSWindowDelegate {
+                  NSWindowDelegate,
+                  NSUserInterfaceValidations,
+                  WorkspaceDelegate {
 
   typealias StateType = State
 
@@ -34,7 +36,13 @@ class MainWindow: NSObject,
 
     case openQuickly
 
+    case toggleAllTools(Bool)
+    case toggleToolButtons(Bool)
+    case setState(for: Tools, with: WorkspaceTool)
+
+    // not pretty...
     case close
+    case closed
   }
 
   enum FocusableView {
@@ -42,6 +50,14 @@ class MainWindow: NSObject,
     case neoVimView
     case fileBrowser
     case preview
+  }
+
+  enum Tools: String {
+
+    case fileBrowser = "com.qvacua.vimr.tools.file-browser"
+    case openedFilesList = "com.qvacua.vimr.tools.opened-files-list"
+    case preview = "com.qvacua.vimr.tools.preview"
+
   }
 
   enum OpenMode {
@@ -79,26 +95,28 @@ class MainWindow: NSObject,
                                              view: self.preview,
                                              customMenuItems: self.preview.menuItems)
     self.previewContainer = WorkspaceTool(previewConfig)
-    previewContainer.dimension = 300
+    previewContainer.dimension = state.tools[.preview]?.dimension ?? 250
 
     let fileBrowserConfig = WorkspaceTool.Config(title: "Files",
                                                  view: self.fileBrowser,
                                                  customToolbar: self.fileBrowser.innerCustomToolbar,
                                                  customMenuItems: self.fileBrowser.menuItems)
     self.fileBrowserContainer = WorkspaceTool(fileBrowserConfig)
-    fileBrowserContainer.dimension = 200
+    fileBrowserContainer.dimension = state.tools[.fileBrowser]?.dimension ?? 200
 
     let openedFileListConfig = WorkspaceTool.Config(title: "Opened", view: self.openedFileList)
     self.openedFileListContainer = WorkspaceTool(openedFileListConfig)
-    self.openedFileListContainer.dimension = 200
+    self.openedFileListContainer.dimension = state.tools[.openedFilesList]?.dimension ?? 200
 
-    self.workspace.append(tool: previewContainer, location: .right)
-    self.workspace.append(tool: fileBrowserContainer, location: .left)
-    self.workspace.append(tool: openedFileListContainer, location: .left)
+    self.workspace.append(tool: previewContainer, location: state.tools[.preview]?.location ?? .right)
+    self.workspace.append(tool: fileBrowserContainer, location: state.tools[.fileBrowser]?.location ?? .left)
+    self.workspace.append(tool: openedFileListContainer, location: state.tools[.openedFilesList]?.location ?? .left)
 
     fileBrowserContainer.toggle()
 
     super.init()
+
+    self.workspace.delegate = self
 
     Observable
       .of(self.scrollDebouncer.observable, self.cursorDebouncer.observable)
@@ -377,6 +395,10 @@ extension MainWindow {
 
     return false
   }
+
+  func windowWillClose(_: Notification) {
+    self.emitter.emit(self.uuidAction(for: .closed))
+  }
 }
 
 // MARK: - File Menu Item Actions
@@ -492,10 +514,13 @@ extension MainWindow {
   @IBAction func toggleAllTools(_ sender: Any?) {
     self.workspace.toggleAllTools()
     self.focusNeoVimView(self)
+
+    self.emitter.emit(self.uuidAction(for: .toggleAllTools(self.workspace.isAllToolsVisible)))
   }
 
   @IBAction func toggleToolButtons(_ sender: Any?) {
     self.workspace.toggleToolButtons()
+    self.emitter.emit(self.uuidAction(for: .toggleToolButtons(self.workspace.isToolButtonsVisible)))
   }
 
   @IBAction func toggleFileBrowser(_ sender: Any?) {
@@ -519,6 +544,52 @@ extension MainWindow {
   @IBAction func focusNeoVimView(_: Any?) {
 //    self.window.makeFirstResponder(self.neoVimView)
     self.emitter.emit(self.uuidAction(for: .focus(.neoVimView)))
+  }
+}
+
+// MARK: - WorkspaceDelegate
+extension MainWindow {
+
+  func resizeWillStart(workspace: Workspace, tool: WorkspaceTool?) {
+    self.neoVimView.enterResizeMode()
+  }
+
+  func resizeDidEnd(workspace: Workspace, tool: WorkspaceTool?) {
+    self.neoVimView.exitResizeMode()
+
+    if let workspaceTool = tool, let toolIdentifier = self.toolIdentifier(for: workspaceTool) {
+      self.emitter.emit(self.uuidAction(for: .setState(for: toolIdentifier, with: workspaceTool)))
+    }
+  }
+
+  func toggled(tool: WorkspaceTool) {
+    if let toolIdentifier = self.toolIdentifier(for: tool) {
+      self.emitter.emit(self.uuidAction(for: .setState(for: toolIdentifier, with: tool)))
+    }
+  }
+
+  func moved(tool: WorkspaceTool) {
+    if let toolIdentifier = self.toolIdentifier(for: tool) {
+      self.emitter.emit(self.uuidAction(for: .setState(for: toolIdentifier, with: tool)))
+    }
+  }
+
+  fileprivate func toolIdentifier(for tool: WorkspaceTool) -> Tools? {
+    switch tool {
+
+    case self.fileBrowserContainer:
+      return .fileBrowser
+
+    case self.openedFileListContainer:
+      return .openedFilesList
+
+    case self.previewContainer:
+      return .preview
+
+    default:
+      return nil
+
+    }
   }
 }
 

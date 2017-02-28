@@ -47,6 +47,17 @@ class MainWindowTransformer: Transformer {
       case let .focus(view):
         state.focusedView = view
 
+      case let .setState(for: tool, with: workspaceTool):
+        state.tools[tool]?.location = workspaceTool.location
+        state.tools[tool]?.dimension = workspaceTool.dimension
+        state.tools[tool]?.open = workspaceTool.isSelected
+
+      case let .toggleAllTools(value):
+        state.isAllToolsVisible = value
+
+      case let .toggleToolButtons(value):
+        state.isToolButtonsVisible = value
+
       case .close:
         state.isClosed = true
 

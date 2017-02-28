@@ -137,7 +137,11 @@ class Context {
 
 #if DEBUG
 //    actionSource.debug().subscribe().addDisposableTo(self.disposeBag)
-//    stateSource.debug().subscribe().addDisposableTo(self.disposeBag)
+//    stateSource
+//      .debug()
+//      .subscribe(onNext: { state in
+//      })
+//      .addDisposableTo(self.disposeBag)
 #endif
   }
 

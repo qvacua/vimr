@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1929B00BA624DA8DC75F7E02 /* SerializableStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA42AB6F1BF631B57399 /* SerializableStates.swift */; };
 		1929B05B9D664052EC2D23EF /* FileOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCE3E156C06EDF1F2806 /* FileOutlineView.swift */; };
 		1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */; };
 		1929B0F599D1F62C7BE53D2C /* HttpServerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1DC584C89C477E83FA2 /* HttpServerService.swift */; };
@@ -328,7 +329,9 @@
 		1929B93013228985F509C8F6 /* server_ui.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = server_ui.m; sourceTree = "<group>"; };
 		1929B9A55E12B703DDD673FD /* Debouncer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
 		1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationCommons.swift; sourceTree = "<group>"; };
+		1929B9B97596868A9552E2EB /* GeneralPrefPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralPrefPane.swift; sourceTree = "<group>"; };
 		1929B9D510177918080BE39B /* Scorer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scorer.swift; sourceTree = "<group>"; };
+		1929BA42AB6F1BF631B57399 /* SerializableStates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SerializableStates.swift; sourceTree = "<group>"; };
 		1929BA43449BA41666CD55ED /* OpenedFileList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenedFileList.swift; sourceTree = "<group>"; };
 		1929BA5C7099CDEB04B76BA4 /* FileBrowser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBrowser.swift; sourceTree = "<group>"; };
 		1929BA6128BFDD54CA92F46E /* ColorUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorUtils.swift; sourceTree = "<group>"; };
@@ -354,6 +357,7 @@
 		1929BE69CF9AB1A10D0DD4F2 /* CocoaCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaCategories.h; sourceTree = "<group>"; };
 		1929BED01F5D94BFCA4CF80F /* AppearancePrefTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearancePrefTransformer.swift; sourceTree = "<group>"; };
 		1929BEEB33113B0E33C3830F /* Matcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Matcher.swift; sourceTree = "<group>"; };
+		1929BEEC52800C8BA6333E5E /* AppearancePrefPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearancePrefPane.swift; sourceTree = "<group>"; };
 		1929BF00B466B40629C2AABE /* NeoVimView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimView.swift; sourceTree = "<group>"; };
 		1929BFB0F294F3714D5E095F /* PreviewToolTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewToolTransformer.swift; sourceTree = "<group>"; };
 		1929BFC0A5A9C6DB09BE1368 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
@@ -625,6 +629,7 @@
 				1929B452B8E7E8DF65FC5F78 /* Utils */,
 				1929BFC0A5A9C6DB09BE1368 /* Types.swift */,
 				1929B8401A4EC1F8ABAAD338 /* FileHandler.swift */,
+				1929BA42AB6F1BF631B57399 /* SerializableStates.swift */,
 			);
 			name = Redesign;
 			sourceTree = "<group>";
@@ -711,6 +716,8 @@
 				4BBDD3EC1D967DA2008FCC92 /* AdvancedPrefPane.swift */,
 				4B37ADBA1D6EC11600970D55 /* TestPane.swift */,
 				4B705BD91DE04F83005F844B /* Pref38To128Converter.swift */,
+				1929B9B97596868A9552E2EB /* GeneralPrefPane.swift */,
+				1929BEEC52800C8BA6333E5E /* AppearancePrefPane.swift */,
 			);
 			name = Preferences;
 			sourceTree = "<group>";
@@ -1458,6 +1465,7 @@
 				1929B50D933A369A86A165DE /* AdvencedPref.swift in Sources */,
 				1929BCC7908DD899999B70BE /* AppearancePrefTransformer.swift in Sources */,
 				1929B387E6B085D96945CCAB /* AdvancedPrefTransformer.swift in Sources */,
+				1929B00BA624DA8DC75F7E02 /* SerializableStates.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -21,7 +21,7 @@ class UiRootTransformer: Transformer {
         appState.currentMainWindowUuid = uuid
         appState.mainWindowTemplate = appState.mainWindows[uuid] ?? appState.mainWindowTemplate
 
-      case .close:
+      case .closed:
         if appState.currentMainWindowUuid == uuid {
           appState.currentMainWindowUuid = nil
         }

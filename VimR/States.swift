@@ -112,6 +112,12 @@ extension MainWindow {
     var root = FileItem(URL(fileURLWithPath: "/", isDirectory: true))
     var lastFileSystemUpdate = Marked(FileItem(URL(fileURLWithPath: "/", isDirectory: true)))
 
+    var tools = [
+      MainWindow.Tools.fileBrowser: WorkspaceToolState(location: .left, dimension: 200, open: true),
+      MainWindow.Tools.openedFilesList: WorkspaceToolState(location: .left, dimension: 200, open: false),
+      MainWindow.Tools.preview: WorkspaceToolState(location: .right, dimension: 250, open: false),
+    ]
+
     var preview = PreviewState.default
     var previewTool = PreviewTool.State.default
 
@@ -138,6 +144,15 @@ extension MainWindow {
       self.isToolButtonsVisible = isToolButtonsVisible
     }
   }
+}
+
+struct WorkspaceToolState {
+
+  static let `default` = WorkspaceToolState()
+
+  var location = WorkspaceBarLocation.left
+  var dimension = CGFloat(200)
+  var open = false
 }
 
 extension PreviewTool {

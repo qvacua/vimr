@@ -8,8 +8,8 @@ import PureLayout
 
 protocol WorkspaceBarDelegate: class {
 
-  func resizeWillStart(workspaceBar: WorkspaceBar)
-  func resizeDidEnd(workspaceBar: WorkspaceBar)
+  func resizeWillStart(workspaceBar: WorkspaceBar, tool: WorkspaceTool?)
+  func resizeDidEnd(workspaceBar: WorkspaceBar, tool: WorkspaceTool?)
 
   func toggle(tool: WorkspaceTool)
 }
@@ -399,7 +399,7 @@ extension WorkspaceBar {
     }
 
     self.isMouseDownOngoing = true
-    self.delegate?.resizeWillStart(workspaceBar: self)
+    self.delegate?.resizeWillStart(workspaceBar: self, tool: self.selectedTool)
     self.dimensionConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow - 1
 
     var dragged = false
@@ -441,7 +441,7 @@ extension WorkspaceBar {
 
     self.dimensionConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow
     self.isMouseDownOngoing = false
-    self.delegate?.resizeDidEnd(workspaceBar: self)
+    self.delegate?.resizeDidEnd(workspaceBar: self, tool: self.selectedTool)
   }
 
   override func resetCursorRects() {
@@ -817,7 +817,7 @@ extension WorkspaceBar {
 extension WorkspaceBar {
 
   func toggle(_ tool: WorkspaceTool) {
-    self.delegate?.resizeWillStart(workspaceBar: self)
+    self.delegate?.resizeWillStart(workspaceBar: self, tool: self.selectedTool)
 
     if self.isOpen {
       let curTool = self.selectedTool!
@@ -835,7 +835,7 @@ extension WorkspaceBar {
 
     self.relayout()
 
-    self.delegate?.resizeDidEnd(workspaceBar: self)
+    self.delegate?.resizeDidEnd(workspaceBar: self, tool: self.selectedTool)
     self.delegate?.toggle(tool: tool)
   }
 }
