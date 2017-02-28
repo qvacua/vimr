@@ -39,6 +39,7 @@ class Context {
           .transform(by: UiRootTransformer())
           .transform(by: openQuicklyTransformer.forMainWindow)
           .filter { $0.modified }
+          .apply(to: PrefService())
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? FileMonitor.Action }

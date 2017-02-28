@@ -115,7 +115,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   fileprivate func addViews() {
     self.webview.navigationDelegate = self
     self.userContentController.add(webviewMessageHandler, name: "com_vimr_tools_preview_markdown")
-    self.webview.loadHTMLString("", baseURL: nil)
+//    self.webview.loadHTMLString("", baseURL: nil)
     self.webview.configureForAutoLayout()
 
     self.addSubview(self.webview)
