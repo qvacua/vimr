@@ -12,11 +12,15 @@
 		1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */; };
 		1929B0F599D1F62C7BE53D2C /* HttpServerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1DC584C89C477E83FA2 /* HttpServerService.swift */; };
 		1929B0FF696312F754BC96E2 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD8CBADC191CF8C85309 /* MainWindow.swift */; };
+		1929B13A458CB49BC44A92F5 /* ImageAndTextTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B015804B46789F719C01 /* ImageAndTextTableCell.swift */; };
 		1929B165820D7177743B537A /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B39DA7AC4A9B62D7CD39 /* Component.swift */; };
+		1929B1837C750CADB3A5BCB9 /* OpenQuicklyFileViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1558455B3A74D93EF2A /* OpenQuicklyFileViewRow.swift */; };
 		1929B18A0D7C7407C51DB642 /* DataWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB6CFF4CC0B5E8B00C62 /* DataWrapper.m */; };
 		1929B1E05C116514C1D3A384 /* CocoaCategories.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5C3F2F1CA4113DABFFD /* CocoaCategories.m */; };
 		1929B29B95AD176D57942E08 /* UiRootTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B457B9D0FA4D21F3751E /* UiRootTransformer.swift */; };
 		1929B3217A7A3D79E28C80DB /* PrefWindowTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B49E6924847AD085C8C9 /* PrefWindowTransformer.swift */; };
+		1929B333855A5406C400DA92 /* OpenQuicklyFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEDE7F92BC7B49E802AF /* OpenQuicklyFilterOperation.swift */; };
+		1929B3557317755A43513B17 /* OpenQuicklyWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B71A92C24FEFE79A851E /* OpenQuicklyWindow.swift */; };
 		1929B387E6B085D96945CCAB /* AdvancedPrefTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5792DE4EFE4D1FEB664 /* AdvancedPrefTransformer.swift */; };
 		1929B3AC66EFE35D68C020E3 /* PreviewToolTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFB0F294F3714D5E095F /* PreviewToolTransformer.swift */; };
 		1929B3CEE0C1A1850E9CCE2F /* BasicTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B2FBE11048569391E092 /* BasicTypes.swift */; };
@@ -40,6 +44,7 @@
 		1929B71381946860626E5224 /* FileBrowserTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDC8F5D48578A90236E9 /* FileBrowserTransformer.swift */; };
 		1929B728262BAA14FC93F6AC /* NeoVimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF00B466B40629C2AABE /* NeoVimView.swift */; };
 		1929B7A2F2B423AA9740FD45 /* FileUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5D977261F1EBFA9E8F1 /* FileUtilsTest.swift */; };
+		1929B8EE07CA6D47855E7332 /* ImageAndTextTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B015804B46789F719C01 /* ImageAndTextTableCell.swift */; };
 		1929B8FB248D71BF88A35761 /* PreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6C6C7792B05164B0216 /* PreviewTool.swift */; };
 		1929B902534935D0EADED52E /* PreviewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC589C366CF02CDB4997 /* PreviewUtils.swift */; };
 		1929B9EA63C082532B1DAB7E /* PrefService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B62BAFF6701A80337420 /* PrefService.swift */; };
@@ -55,7 +60,6 @@
 		1929BD3878A3A47B8D685CD2 /* AppDelegateTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7A68B7109CEFAF105E8 /* AppDelegateTransformer.swift */; };
 		1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D510177918080BE39B /* Scorer.swift */; };
 		1929BD4CA2204E061A86A140 /* MatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC19C1BC19246AFF1621 /* MatcherTests.swift */; };
-		1929BD8BFE753FE724958320 /* OpenQuicklyWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1215220464EF4A7AD2B /* OpenQuicklyWindow.swift */; };
 		1929BE0DAEE9664C5BCFA211 /* States.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB6608B4F0E037CA0F4C /* States.swift */; };
 		1929BEAE0592096BC1191B67 /* PrefPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B07A4A9209C88380E015 /* PrefPane.swift */; };
 		1929BEB90DCDAF7A2B68C886 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA6128BFDD54CA92F46E /* ColorUtils.swift */; };
@@ -71,7 +75,6 @@
 		4B19BEFC1E110183007E823C /* markdown in Resources */ = {isa = PBXBuildFile; fileRef = 4B19BEFA1E110183007E823C /* markdown */; };
 		4B19BEFD1E110183007E823C /* preview in Resources */ = {isa = PBXBuildFile; fileRef = 4B19BEFB1E110183007E823C /* preview */; };
 		4B22F7F01D7C029400929B0E /* ScorerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B22F7EF1D7C029400929B0E /* ScorerTest.swift */; };
-		4B22F7F21D7C6B9000929B0E /* ImageAndTextTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B22F7F11D7C6B9000929B0E /* ImageAndTextTableCell.swift */; };
 		4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BE01D3BF24200CBDD98 /* Application.swift */; };
 		4B280EFF1D945DA5003FE725 /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
 		4B2A2BEC1D02261F0074CE9A /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BE21D0225800074CE9A /* RxCocoa.framework */; };
@@ -118,7 +121,6 @@
 		4B81B3D01DE8827600ED1672 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B81B3CE1DE8827600ED1672 /* MainMenu.xib */; };
 		4B81B3D51DE8827E00ED1672 /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; };
 		4B81B3D61DE8827E00ED1672 /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B81B3D81DE8829500ED1672 /* ImageAndTextTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B22F7F11D7C6B9000929B0E /* ImageAndTextTableCell.swift */; };
 		4B81B3D91DE882D500ED1672 /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
 		4B854A1D1D31447C00E08DE1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B854A1C1D31447C00E08DE1 /* main.m */; };
 		4B8AC0441DBCB3A2007CCC9B /* NeoVimObjectsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8AC0431DBCB3A1007CCC9B /* NeoVimObjectsExtensions.swift */; };
@@ -127,8 +129,6 @@
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
 		4B9A15241D2993DA009F9F67 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B9A15261D2993DF009F9F67 /* SwiftNeoVim.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BAD81D51D80B5D8004F91AE /* OpenQuicklyFileViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD81D41D80B5D8004F91AE /* OpenQuicklyFileViewRow.swift */; };
-		4BAD84E81D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD84E71D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift */; };
 		4BB1BEA91D48773200463C29 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */; };
 		4BB409E51DD68CCC005F39A2 /* FileBrowserMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BB409E71DD68CCC005F39A2 /* FileBrowserMenu.xib */; };
 		4BB409EE1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */; };
@@ -295,14 +295,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1929B015804B46789F719C01 /* ImageAndTextTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageAndTextTableCell.swift; sourceTree = "<group>"; };
 		1929B02440BC99C42F9EBD45 /* NetUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetUtils.m; sourceTree = "<group>"; };
 		1929B04EC69F616EEFAF5F96 /* FileMonitorTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileMonitorTransformer.swift; sourceTree = "<group>"; };
 		1929B07A4A9209C88380E015 /* PrefPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefPane.swift; sourceTree = "<group>"; };
 		1929B0EB3F49C42A57D083AF /* GeneralPrefTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralPrefTransformer.swift; sourceTree = "<group>"; };
 		1929B0EEBE4A765934AF8335 /* DataWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataWrapper.h; sourceTree = "<group>"; };
 		1929B0FBFB766042CF06E463 /* AppearancePref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearancePref.swift; sourceTree = "<group>"; };
-		1929B1215220464EF4A7AD2B /* OpenQuicklyWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyWindow.swift; sourceTree = "<group>"; };
 		1929B12CE56A9B36980288A4 /* OpenQuicklyTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyTransformer.swift; sourceTree = "<group>"; };
+		1929B1558455B3A74D93EF2A /* OpenQuicklyFileViewRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyFileViewRow.swift; sourceTree = "<group>"; };
 		1929B15B7EDC9B0F40E5E95C /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
 		1929B1A51F076E088EF4CCA4 /* server_globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_globals.h; sourceTree = "<group>"; };
 		1929B1DC584C89C477E83FA2 /* HttpServerService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServerService.swift; sourceTree = "<group>"; };
@@ -324,6 +325,7 @@
 		1929B67A10E6BB2986B2416E /* OpenedFileListTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenedFileListTransformer.swift; sourceTree = "<group>"; };
 		1929B69499B2569793350CEC /* FileItemIgnorePattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemIgnorePattern.swift; sourceTree = "<group>"; };
 		1929B6C6C7792B05164B0216 /* PreviewTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewTool.swift; sourceTree = "<group>"; };
+		1929B71A92C24FEFE79A851E /* OpenQuicklyWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyWindow.swift; sourceTree = "<group>"; };
 		1929B7A68B7109CEFAF105E8 /* AppDelegateTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegateTransformer.swift; sourceTree = "<group>"; };
 		1929B7CB4863F80230C32D3C /* FileItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
 		1929B8401A4EC1F8ABAAD338 /* FileHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileHandler.swift; sourceTree = "<group>"; };
@@ -358,6 +360,7 @@
 		1929BE37AA2843779CAFA76F /* PreviewTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewTransformer.swift; sourceTree = "<group>"; };
 		1929BE69CF9AB1A10D0DD4F2 /* CocoaCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaCategories.h; sourceTree = "<group>"; };
 		1929BED01F5D94BFCA4CF80F /* AppearancePrefTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearancePrefTransformer.swift; sourceTree = "<group>"; };
+		1929BEDE7F92BC7B49E802AF /* OpenQuicklyFilterOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyFilterOperation.swift; sourceTree = "<group>"; };
 		1929BEEB33113B0E33C3830F /* Matcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Matcher.swift; sourceTree = "<group>"; };
 		1929BEEC52800C8BA6333E5E /* AppearancePrefPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearancePrefPane.swift; sourceTree = "<group>"; };
 		1929BF00B466B40629C2AABE /* NeoVimView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimView.swift; sourceTree = "<group>"; };
@@ -373,7 +376,6 @@
 		4B19BEFB1E110183007E823C /* preview */ = {isa = PBXFileReference; lastKnownFileType = folder; path = preview; sourceTree = "<group>"; };
 		4B1BB3521D16C5E500CA4FEF /* InputTestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputTestView.swift; sourceTree = "<group>"; };
 		4B22F7EF1D7C029400929B0E /* ScorerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScorerTest.swift; sourceTree = "<group>"; };
-		4B22F7F11D7C6B9000929B0E /* ImageAndTextTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageAndTextTableCell.swift; sourceTree = "<group>"; };
 		4B238BE01D3BF24200CBDD98 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		4B2A2BE21D0225800074CE9A /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = Carthage/Build/Mac/RxCocoa.framework; sourceTree = SOURCE_ROOT; };
 		4B2A2BE31D0225800074CE9A /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/Mac/RxSwift.framework; sourceTree = SOURCE_ROOT; };
@@ -420,8 +422,6 @@
 		4B854A1C1D31447C00E08DE1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4B8AC0431DBCB3A1007CCC9B /* NeoVimObjectsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimObjectsExtensions.swift; sourceTree = "<group>"; };
 		4B97E2CD1D33F53D00FC0660 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		4BAD81D41D80B5D8004F91AE /* OpenQuicklyFileViewRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyFileViewRow.swift; sourceTree = "<group>"; };
-		4BAD84E71D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyFilterOperation.swift; sourceTree = "<group>"; };
 		4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
 		4BB409E61DD68CCC005F39A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/FileBrowserMenu.xib; sourceTree = "<group>"; };
 		4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProxyWorkspaceBar.swift; path = Workspace/ProxyWorkspaceBar.swift; sourceTree = "<group>"; };
@@ -568,11 +568,11 @@
 				1929BD8CBADC191CF8C85309 /* MainWindow.swift */,
 				1929BD4149D5A25C82064DD8 /* UiRoot.swift */,
 				1929B6C6C7792B05164B0216 /* PreviewTool.swift */,
-				1929B1215220464EF4A7AD2B /* OpenQuicklyWindow.swift */,
 				1929B365A6434354B568B04F /* FileMonitor.swift */,
 				1929BA43449BA41666CD55ED /* OpenedFileList.swift */,
 				1929BC56ADBA3275E7A0A598 /* Preferences */,
 				1929B1645977E0AEFE53193D /* File Browser */,
+				1929BD9EEC30C0A498877E5B /* Open Quickly */,
 			);
 			name = Components;
 			sourceTree = "<group>";
@@ -659,6 +659,17 @@
 			name = Preferences;
 			sourceTree = "<group>";
 		};
+		1929BD9EEC30C0A498877E5B /* Open Quickly */ = {
+			isa = PBXGroup;
+			children = (
+				1929B71A92C24FEFE79A851E /* OpenQuicklyWindow.swift */,
+				1929B015804B46789F719C01 /* ImageAndTextTableCell.swift */,
+				1929BEDE7F92BC7B49E802AF /* OpenQuicklyFilterOperation.swift */,
+				1929B1558455B3A74D93EF2A /* OpenQuicklyFileViewRow.swift */,
+			);
+			name = "Open Quickly";
+			sourceTree = "<group>";
+		};
 		1929BFA93DC859DD76C46192 /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -703,9 +714,6 @@
 			children = (
 				4BDF501A1D77596500D8FBC3 /* OpenQuicklyWindowManager.swift */,
 				4BDF50131D7617EA00D8FBC3 /* OpenQuicklyWindowComponent.swift */,
-				4B22F7F11D7C6B9000929B0E /* ImageAndTextTableCell.swift */,
-				4BAD84E71D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift */,
-				4BAD81D41D80B5D8004F91AE /* OpenQuicklyFileViewRow.swift */,
 			);
 			name = "Open Quickly";
 			sourceTree = "<group>";
@@ -1386,8 +1394,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B81B3D91DE882D500ED1672 /* AppKitCommons.swift in Sources */,
-				4B81B3D81DE8829500ED1672 /* ImageAndTextTableCell.swift in Sources */,
 				4B81B3CB1DE8827600ED1672 /* AppDelegate.swift in Sources */,
+				1929B8EE07CA6D47855E7332 /* ImageAndTextTableCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1413,12 +1421,10 @@
 				4B4147A31D97361400DD4A2C /* WorkspaceToolButton.swift in Sources */,
 				4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */,
 				4B6423961D8EFD7100FC78C8 /* Workspace.swift in Sources */,
-				4B22F7F21D7C6B9000929B0E /* ImageAndTextTableCell.swift in Sources */,
 				4B6A70941D60E04200E12030 /* AppKitCommons.swift in Sources */,
 				4B3965361DEB21300082D3C1 /* InnterToolBar.swift in Sources */,
 				4B6423981D8EFDE000FC78C8 /* WorkspaceBar.swift in Sources */,
 				4BB1BEA91D48773200463C29 /* RxSwiftCommons.swift in Sources */,
-				4BAD81D51D80B5D8004F91AE /* OpenQuicklyFileViewRow.swift in Sources */,
 				4B6A70961D6100E300E12030 /* SwiftCommons.swift in Sources */,
 				4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */,
 				1929B165820D7177743B537A /* Component.swift in Sources */,
@@ -1430,7 +1436,6 @@
 				1929B53876E6952D378C2B30 /* ScoredFileItem.swift in Sources */,
 				1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */,
 				4BB409EE1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */,
-				4BAD84E81D7CA8FC00A79CC3 /* OpenQuicklyFilterOperation.swift in Sources */,
 				1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */,
 				1929B3CEE0C1A1850E9CCE2F /* BasicTypes.swift in Sources */,
 				1929BD2F41D93ADFF43C1C98 /* NetUtils.m in Sources */,
@@ -1449,7 +1454,6 @@
 				1929B902534935D0EADED52E /* PreviewUtils.swift in Sources */,
 				1929B59FA5C286E010F70BEE /* Types.swift in Sources */,
 				1929BF3F3841B4BF0B4397ED /* Debouncer.swift in Sources */,
-				1929BD8BFE753FE724958320 /* OpenQuicklyWindow.swift in Sources */,
 				1929B6D8F5FC723B7109031F /* OpenQuicklyTransformer.swift in Sources */,
 				1929B588BFC94EB808762EEF /* FileHandler.swift in Sources */,
 				1929B5543B1E31A26096E656 /* FileMonitorTransformer.swift in Sources */,
@@ -1470,6 +1474,10 @@
 				1929B387E6B085D96945CCAB /* AdvancedPrefTransformer.swift in Sources */,
 				1929B00BA624DA8DC75F7E02 /* SerializableStates.swift in Sources */,
 				1929B9EA63C082532B1DAB7E /* PrefService.swift in Sources */,
+				1929B3557317755A43513B17 /* OpenQuicklyWindow.swift in Sources */,
+				1929B13A458CB49BC44A92F5 /* ImageAndTextTableCell.swift in Sources */,
+				1929B333855A5406C400DA92 /* OpenQuicklyFilterOperation.swift in Sources */,
+				1929B1837C750CADB3A5BCB9 /* OpenQuicklyFileViewRow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
