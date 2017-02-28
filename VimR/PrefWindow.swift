@@ -26,7 +26,8 @@ class PrefWindow: NSObject,
     self.windowController = NSWindowController(windowNibName: "PrefWindow")
 
     self.panes = [
-      GeneralPref(source: source, emitter: emitter, state: state)
+      GeneralPref(source: source, emitter: emitter, state: state),
+      AppearancePref(source: source, emitter: emitter, state: state),
     ]
 
     super.init()

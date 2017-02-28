@@ -35,20 +35,20 @@ class StateContext {
         actionSource
           .mapOmittingNil { $0 as? UuidAction<MainWindow.Action> }
           .map { StateActionPair(state: self.appState, action: $0, modified: false) }
-          .transform(by: self.uiRootTransformer)
-          .transform(by: self.mainWindowOpenQuicklyTransformer)
+          .transform(by: UiRootTransformer())
+          .transform(by: MainWindowToOpenQuicklyTransformer())
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? FileMonitor.Action }
           .map { StateActionPair(state: self.appState, action: $0, modified: false) }
-          .transform(by: self.fileMonitorTransformer)
+          .transform(by: FileMonitorTransformer())
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? OpenQuicklyWindow.Action }
           .map { StateActionPair(state: self.appState, action: $0, modified: false) }
-          .transform(by: self.openQuicklyTransformer)
+          .transform(by: OpenQuicklyTransformer())
           .filter { $0.modified }
           .map { $0.state }
       )
@@ -135,13 +135,19 @@ class StateContext {
         actionSource
           .mapOmittingNil { $0 as? PrefWindow.Action }
           .map { StateActionPair(state: self.appState, action: $0, modified: false) }
-          .transform(by: self.prefWindowTransformer)
+          .transform(by: PrefWindowTransformer())
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? GeneralPref.Action }
           .map { StateActionPair(state: self.appState, action: $0, modified: false) }
-          .transform(by: self.generalPrefTransformer)
+          .transform(by: GeneralPrefTransformer())
+          .filter { $0.modified }
+          .map { $0.state },
+        actionSource
+          .mapOmittingNil { $0 as? AppearancePref.Action }
+          .map { StateActionPair(state: self.appState, action: $0, modified: false) }
+          .transform(by: AppearancePrefTransformer())
           .filter { $0.modified }
           .map { $0.state }
       )
@@ -169,16 +175,8 @@ class StateContext {
   fileprivate var appState: AppState
 
   fileprivate let appDelegateTransformer: AppDelegateTransformer
-  fileprivate let uiRootTransformer = UiRootTransformer()
-  fileprivate let fileMonitorTransformer = FileMonitorTransformer()
-
-  fileprivate let prefWindowTransformer = PrefWindowTransformer()
-  fileprivate let generalPrefTransformer = GeneralPrefTransformer()
 
   fileprivate let mainWindowTransformer = MainWindowTransformer()
-  fileprivate let mainWindowOpenQuicklyTransformer = MainWindowToOpenQuicklyTransformer()
-
-  fileprivate let openQuicklyTransformer = OpenQuicklyTransformer()
 
   fileprivate let previewTransformer: PreviewTransformer
   fileprivate let previewToolTransformer: PreviewToolTransformer

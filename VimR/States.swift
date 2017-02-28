@@ -84,6 +84,15 @@ struct PreviewState {
   }
 }
 
+struct AppearanceState {
+
+  static let `default` = AppearanceState()
+
+  var font = NSFont.userFixedPitchFont(ofSize: 13)!
+  var linespacing: CGFloat = 1
+  var usesLigatures = false
+}
+
 extension MainWindow {
 
   struct State {
@@ -116,9 +125,7 @@ extension MainWindow {
 
     var isDirty = false
 
-    var font = NSFont.userFixedPitchFont(ofSize: 13)!
-    var linespacing: CGFloat = 1
-    var isUseLigatures = false
+    var appearance = AppearanceState.default
     var isUseInteractiveZsh = false
 
     // transient^2

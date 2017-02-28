@@ -7,74 +7,67 @@ import Cocoa
 import PureLayout
 import RxSwift
 
-struct AppearancePrefData: Equatable, StandardPrefData {
+class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate {
 
-  fileprivate static let editorFontName = "editor-font-name"
-  fileprivate static let editorFontSize = "editor-font-size"
-  fileprivate static let editorLinespacing = "editor-linespacing"
-  fileprivate static let editorUsesLigatures = "editor-uses-ligatures"
+  typealias StateType = AppState
 
-  static func ==(left: AppearancePrefData, right: AppearancePrefData) -> Bool {
-    return left.editorUsesLigatures == right.editorUsesLigatures
-        && left.editorFont.isEqual(to: right.editorFont)
-        && left.editorLinespacing == right.editorLinespacing
+  enum Action {
+
+    case setUsesLigatures(Bool)
+    case setFont(NSFont)
+    case setLinespacing(CGFloat)
   }
-
-  static let `default` = AppearancePrefData(editorFont: NeoVimView.defaultFont,
-                                            editorLinespacing: NeoVimView.defaultLinespacing,
-                                            editorUsesLigatures: false)
-
-  var editorFont: NSFont
-  var editorLinespacing: CGFloat
-  var editorUsesLigatures: Bool
-
-  init(editorFont: NSFont, editorLinespacing: CGFloat, editorUsesLigatures: Bool) {
-    self.editorFont = editorFont
-    self.editorLinespacing = editorLinespacing
-    self.editorUsesLigatures = editorUsesLigatures
-  }
-
-  init?(dict: [String: Any]) {
-    guard let editorFontName = dict[AppearancePrefData.editorFontName] as? String,
-          let fEditorFontSize = PrefUtils.float(from: dict, for: AppearancePrefData.editorFontSize),
-          let fEditorLinespacing = PrefUtils.float(from: dict, for: AppearancePrefData.editorLinespacing),
-          let editorUsesLigatures = PrefUtils.bool(from: dict, for: AppearancePrefData.editorUsesLigatures)
-        else {
-      return nil
-    }
-
-    self.init(editorFont: PrefUtils.saneFont(editorFontName, fontSize: CGFloat(fEditorFontSize)),
-              editorLinespacing: CGFloat(fEditorLinespacing),
-              editorUsesLigatures: editorUsesLigatures)
-  }
-
-  func dict() -> [String: Any] {
-    return [
-        AppearancePrefData.editorFontName: self.editorFont.fontName,
-        AppearancePrefData.editorFontSize: Float(self.editorFont.pointSize),
-        AppearancePrefData.editorLinespacing: Float(self.editorLinespacing),
-        AppearancePrefData.editorUsesLigatures: self.editorUsesLigatures,
-    ]
-  }
-}
-
-class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate {
 
   override var displayName: String {
     return "Appearance"
   }
-  
+
   override var pinToContainer: Bool {
     return true
   }
 
-  fileprivate var data: AppearancePrefData {
-    didSet {
-      self.updateViews(newData: self.data)
-    }
+  override func windowWillClose() {
+    self.linespacingAction()
   }
 
+  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+    self.emitter = emitter
+
+    self.font = state.mainWindowTemplate.appearance.font
+    self.linespacing = state.mainWindowTemplate.appearance.linespacing
+    self.usesLigatures = state.mainWindowTemplate.appearance.usesLigatures
+
+    super.init(frame: .zero)
+
+    self.addViews()
+    self.updateViews()
+
+    source
+      .observeOn(MainScheduler.instance)
+      .subscribe(onNext: { state in
+        let appearance = state.mainWindowTemplate.appearance
+
+        if self.font != appearance.font
+           || self.linespacing != appearance.linespacing
+           || self.usesLigatures != appearance.usesLigatures {
+          self.font = appearance.font
+          self.linespacing = appearance.linespacing
+          self.usesLigatures = appearance.usesLigatures
+
+          self.updateViews()
+        }
+      })
+      .addDisposableTo(self.disposeBag)
+  }
+
+  fileprivate let emitter: ActionEmitter
+  fileprivate let disposeBag = DisposeBag()
+
   fileprivate let fontManager = NSFontManager.shared()
+
+  fileprivate var font: NSFont
+  fileprivate var linespacing: CGFloat
+  fileprivate var usesLigatures: Bool
 
   fileprivate let sizes = [9, 10, 11, 12, 13, 14, 16, 18, 24, 36, 48, 64]
   fileprivate let sizeCombo = NSComboBox(forAutoLayout: ())
@@ -91,33 +84,11 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     "<- -> => >> << >>= =<< .. \n" +
     ":: -< >- -<< >>- ++ /= =="
 
-  init(source: Observable<Any>, initialData: AppearancePrefData) {
-    self.data = initialData
-    super.init(source: source)
-
-    self.updateViews(newData: initialData)
-  }
-  
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  fileprivate func set(data: AppearancePrefData) {
-    self.data = data
-    self.publish(event: data)
-  }
-
-  override func subscription(source: Observable<Any>) -> Disposable {
-    return source
-      .filter { $0 is PrefData }
-      .map { ($0 as! PrefData).appearance }
-      .filter { [unowned self] data in data != self.data }
-      .subscribe(onNext: { [unowned self] data in
-        self.data = data
-    })
-  }
-
-  override func addViews() {
+  fileprivate func addViews() {
     let paneTitle = self.paneTitleTextField(title: "Appearance")
 
     let fontTitle = self.titleTextField(title: "Default Font:")
@@ -125,13 +96,13 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     let fontPopup = self.fontPopup
     fontPopup.translatesAutoresizingMaskIntoConstraints = false
     fontPopup.target = self
-    fontPopup.action = #selector(AppearancePrefPane.fontPopupAction)
+    fontPopup.action = #selector(AppearancePref.fontPopupAction)
     fontPopup.addItems(withTitles: self.fontManager.availableFontNames(with: .fixedPitchFontMask)!)
 
     let sizeCombo = self.sizeCombo
     sizeCombo.delegate = self
     sizeCombo.target = self
-    sizeCombo.action = #selector(AppearancePrefPane.sizeComboBoxDidEnter(_:))
+    sizeCombo.action = #selector(AppearancePref.sizeComboBoxDidEnter(_:))
     self.sizes.forEach { string in
       sizeCombo.addItem(withObjectValue: string)
     }
@@ -142,7 +113,7 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     let ligatureCheckbox = self.ligatureCheckbox
     self.configureCheckbox(button: ligatureCheckbox,
                            title: "Use Ligatures",
-                           action: #selector(AppearancePrefPane.usesLigaturesAction(_:)))
+                           action: #selector(AppearancePref.usesLigaturesAction(_:)))
 
     let previewArea = self.previewArea
     previewArea.isEditable = true
@@ -151,7 +122,7 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     previewArea.isHorizontallyResizable = true
     previewArea.textContainer?.heightTracksTextView = false
     previewArea.textContainer?.widthTracksTextView = false
-    previewArea.autoresizingMask = [ .viewWidthSizable, .viewHeightSizable]
+    previewArea.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
     previewArea.textContainer?.containerSize = CGSize.init(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
     previewArea.layoutManager?.replaceTextStorage(NSTextStorage(string: self.exampleText))
     previewArea.isRichText = false
@@ -198,8 +169,7 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     linespacingField.autoSetDimension(.width, toSize: 60)
     NotificationCenter.default.addObserver(forName: NSNotification.Name.NSControlTextDidEndEditing,
                                            object: linespacingField,
-                                           queue: nil)
-    { [unowned self] _ in
+                                           queue: nil) { [unowned self] _ in
       self.linespacingAction()
     }
 
@@ -211,46 +181,28 @@ class AppearancePrefPane: PrefPane, NSComboBoxDelegate, NSControlTextEditingDele
     previewScrollView.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
     previewScrollView.autoPinEdge(toSuperviewEdge: .bottom, withInset: 18)
     previewScrollView.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
+  }
 
-    self.fontPopup.selectItem(withTitle: self.data.editorFont.fontName)
-    self.sizeCombo.stringValue = String(Int(self.data.editorFont.pointSize))
-    self.ligatureCheckbox.state = self.data.editorUsesLigatures ? NSOnState : NSOffState
-    self.previewArea.font = self.data.editorFont
-    if self.data.editorUsesLigatures {
+  fileprivate func updateViews() {
+    self.fontPopup.selectItem(withTitle: self.font.fontName)
+    self.sizeCombo.stringValue = String(Int(self.font.pointSize))
+    self.linespacingField.stringValue = String(format: "%.2f", self.linespacing)
+    self.ligatureCheckbox.boolState = self.usesLigatures
+    self.previewArea.font = self.font
+
+    if self.usesLigatures {
       self.previewArea.useAllLigatures(self)
     } else {
       self.previewArea.turnOffLigatures(self)
     }
-  }
-
-  fileprivate func updateViews(newData: AppearancePrefData) {
-    let newFont = newData.editorFont
-
-    self.fontPopup.selectItem(withTitle: newFont.fontName)
-    self.sizeCombo.stringValue = String(Int(newFont.pointSize))
-    self.linespacingField.stringValue = String(format: "%.2f", newData.editorLinespacing)
-    self.ligatureCheckbox.boolState = newData.editorUsesLigatures
-    self.previewArea.font = newData.editorFont
-
-    if newData.editorUsesLigatures {
-      self.previewArea.useAllLigatures(self)
-    } else {
-      self.previewArea.turnOffLigatures(self)
-    }
-  }
-
-  override func windowWillClose() {
-    self.linespacingAction()
   }
 }
 
 // MARK: - Actions
-extension AppearancePrefPane {
-  
+extension AppearancePref {
+
   func usesLigaturesAction(_ sender: NSButton) {
-    self.set(data: AppearancePrefData(editorFont: self.data.editorFont,
-                                      editorLinespacing: self.data.editorLinespacing,
-                                      editorUsesLigatures: sender.boolState))
+    self.emitter.emit(Action.setUsesLigatures(sender.boolState))
   }
 
   func fontPopupAction(_ sender: NSPopUpButton) {
@@ -258,17 +210,15 @@ extension AppearancePrefPane {
       return
     }
 
-    guard selectedItem.title != self.data.editorFont.fontName else {
+    guard selectedItem.title != self.font.fontName else {
       return
     }
 
-    guard let newFont = NSFont(name: selectedItem.title, size: self.data.editorFont.pointSize) else {
+    guard let newFont = NSFont(name: selectedItem.title, size: self.font.pointSize) else {
       return
     }
 
-    self.set(data: AppearancePrefData(editorFont: newFont,
-                                      editorLinespacing: self.data.editorLinespacing,
-                                      editorUsesLigatures: self.data.editorUsesLigatures))
+    self.emitter.emit(Action.setFont(newFont))
   }
 
   func comboBoxSelectionDidChange(_ notification: Notification) {
@@ -277,27 +227,21 @@ extension AppearancePrefPane {
     }
 
     let newFontSize = self.cappedFontSize(Int(self.sizes[self.sizeCombo.indexOfSelectedItem]))
-    let newFont = self.fontManager.convert(self.data.editorFont, toSize: newFontSize)
+    let newFont = self.fontManager.convert(self.font, toSize: newFontSize)
 
-    self.set(data: AppearancePrefData(editorFont: newFont,
-                                      editorLinespacing: self.data.editorLinespacing,
-                                      editorUsesLigatures: self.data.editorUsesLigatures))
+    self.emitter.emit(Action.setFont(newFont))
   }
 
   func sizeComboBoxDidEnter(_ sender: AnyObject!) {
     let newFontSize = self.cappedFontSize(self.sizeCombo.integerValue)
-    let newFont = self.fontManager.convert(self.data.editorFont, toSize: newFontSize)
+    let newFont = self.fontManager.convert(self.font, toSize: newFontSize)
 
-    self.set(data: AppearancePrefData(editorFont: newFont,
-                                      editorLinespacing: self.data.editorLinespacing,
-                                      editorUsesLigatures: self.data.editorUsesLigatures))
+    self.emitter.emit(Action.setFont(newFont))
   }
 
   func linespacingAction() {
     let newLinespacing = self.cappedLinespacing(self.linespacingField.floatValue)
-    self.set(data: AppearancePrefData(editorFont: self.data.editorFont,
-                                      editorLinespacing: newLinespacing,
-                                      editorUsesLigatures: self.data.editorUsesLigatures))
+    self.emitter.emit(Action.setLinespacing(newLinespacing))
   }
 
   fileprivate func cappedLinespacing(_ linespacing: Float) -> CGFloat {

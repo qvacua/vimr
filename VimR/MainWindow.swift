@@ -57,7 +57,9 @@ class MainWindow: NSObject,
     self.uuid = state.uuid
     self.emitter = emitter
 
-    self.defaultEditorFont = state.font
+    self.defaultFont = state.appearance.font
+    self.linespacing = state.appearance.linespacing
+    self.usesLigatures = state.appearance.usesLigatures
 
     self.editorPosition = state.preview.editorPosition
     self.previewPosition = state.preview.previewPosition
@@ -149,24 +151,31 @@ class MainWindow: NSObject,
               self.neoVimView.select(buffer: currentBuffer)
             }
           }
+
+          if self.defaultFont != state.appearance.font
+             || self.linespacing != state.appearance.linespacing
+             || self.usesLigatures != state.appearance.usesLigatures {
+            self.defaultFont = state.appearance.font
+            self.linespacing = state.appearance.linespacing
+            self.usesLigatures = state.appearance.usesLigatures
+
+            self.updateNeoVimAppearance()
+          }
         },
         onCompleted: {
           self.windowController.close()
         })
       .addDisposableTo(self.disposeBag)
 
-    let neoVimView = self.neoVimView
-    neoVimView.delegate = self
-    neoVimView.font = state.font
-    neoVimView.linespacing = state.linespacing
-    neoVimView.usesLigatures = state.isUseLigatures
-    if neoVimView.cwd != state.cwd {
+    self.updateNeoVimAppearance()
+    self.neoVimView.delegate = self
+    if self.neoVimView.cwd != state.cwd {
       self.neoVimView.cwd = state.cwd
     }
 
     self.open(markedUrls: state.urlsToOpen)
 
-    self.window.makeFirstResponder(neoVimView)
+    self.window.makeFirstResponder(self.neoVimView)
   }
 
   func show() {
@@ -187,7 +196,10 @@ class MainWindow: NSObject,
   fileprivate let windowController: NSWindowController
   fileprivate var window: NSWindow { return self.windowController.window! }
 
-  fileprivate var defaultEditorFont: NSFont
+  fileprivate var defaultFont: NSFont
+  fileprivate var linespacing: CGFloat
+  fileprivate var usesLigatures: Bool
+
   fileprivate let fontManager = NSFontManager.shared()
 
   fileprivate let workspace: Workspace
@@ -209,6 +221,12 @@ class MainWindow: NSObject,
   fileprivate let cursorDebouncer = Debouncer<Action>(interval: 0.75)
 
   fileprivate var marksForOpenedUrls = Set<Token>()
+
+  fileprivate func updateNeoVimAppearance() {
+    self.neoVimView.font = self.defaultFont
+    self.neoVimView.linespacing = self.linespacing
+    self.neoVimView.usesLigatures = self.usesLigatures
+  }
 
   fileprivate func uuidAction(for action: Action) -> UuidAction<Action> {
     return UuidAction(uuid: self.uuid, action: action)
@@ -452,7 +470,7 @@ extension MainWindow {
 extension MainWindow {
 
   @IBAction func resetFontSize(_ sender: Any?) {
-    self.neoVimView.font = self.defaultEditorFont
+    self.neoVimView.font = self.defaultFont
   }
 
   @IBAction func makeFontBigger(_ sender: Any?) {
