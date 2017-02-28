@@ -13,6 +13,8 @@ struct AppState {
   var openNewMainWindowOnLaunch = true
   var openNewMainWindowOnReactivation = true
 
+  var useSnapshotUpdate = false
+
   var preferencesOpen = Marked(false)
 
   var mainWindowTemplate: MainWindow.State
@@ -126,7 +128,7 @@ extension MainWindow {
     var isDirty = false
 
     var appearance = AppearanceState.default
-    var isUseInteractiveZsh = false
+    var useInteractiveZsh = false
 
     // transient^2
     var urlsToOpen = [Marked<[URL: OpenMode]>]()

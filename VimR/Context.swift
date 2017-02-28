@@ -120,6 +120,12 @@ class Context {
           .map { self.appStateActionPair(for: $0) }
           .transform(by: AppearancePrefTransformer())
           .filter { $0.modified }
+          .map { $0.state },
+        actionSource
+          .mapOmittingNil { $0 as? AdvancedPref.Action }
+          .map { self.appStateActionPair(for: $0) }
+          .transform(by: AdvancedPrefTransformer())
+          .filter { $0.modified }
           .map { $0.state }
       )
       .merge()

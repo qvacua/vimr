@@ -42,6 +42,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     self.openNewMainWindowOnLaunch = initialAppState.openNewMainWindowOnLaunch
     self.openNewMainWindowOnReactivation = initialAppState.openNewMainWindowOnReactivation
+    self.useSnapshot = initialAppState.useSnapshotUpdate
 
     let source = self.stateContext.stateSource
     self.uiRoot = UiRoot(source: source,
@@ -51,32 +52,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     super.init()
 
     source
+      .observeOn(MainScheduler.instance)
       .subscribe(onNext: { appState in
         self.hasMainWindows = !appState.mainWindows.isEmpty
         self.hasDirtyWindows = appState.mainWindows.values.reduce(false) { $1.isDirty ? true : $0 }
 
         self.openNewMainWindowOnLaunch = appState.openNewMainWindowOnLaunch
         self.openNewMainWindowOnReactivation = appState.openNewMainWindowOnReactivation
+
+        if self.useSnapshot != appState.useSnapshotUpdate {
+          self.setSparkleUrl(self.useSnapshot)
+        }
       })
       .addDisposableTo(self.disposeBag)
-
-    // FIXME
-//    self.setSparkleUrl()
   }
 
-//  fileprivate func setSparkleUrl() {
-//    DispatchUtils.gui {
-//      if self.prefStore.data.advanced.useSnapshotUpdateChannel {
-//        self.updater?.feedURL = URL(
-//          string: "https://raw.githubusercontent.com/qvacua/vimr/develop/appcast_snapshot.xml"
-//        )
-//      } else {
-//        self.updater?.feedURL = URL(
-//          string: "https://raw.githubusercontent.com/qvacua/vimr/master/appcast.xml"
-//        )
-//      }
-//    }
-//  }
+  fileprivate func setSparkleUrl(_ snapshot: Bool) {
+    if snapshot {
+      self.updater?.feedURL = URL(
+        string: "https://raw.githubusercontent.com/qvacua/vimr/develop/appcast_snapshot.xml"
+      )
+    } else {
+      self.updater?.feedURL = URL(
+        string: "https://raw.githubusercontent.com/qvacua/vimr/master/appcast.xml"
+      )
+    }
+  }
 
   fileprivate let stateContext: Context
 
@@ -85,8 +86,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   fileprivate var hasDirtyWindows = false
   fileprivate var hasMainWindows = false
 
-  var openNewMainWindowOnLaunch: Bool
-  var openNewMainWindowOnReactivation: Bool
+  fileprivate var openNewMainWindowOnLaunch: Bool
+  fileprivate var openNewMainWindowOnReactivation: Bool
+  fileprivate var useSnapshot: Bool
 
   fileprivate let disposeBag = DisposeBag()
 

@@ -65,7 +65,7 @@ class MainWindow: NSObject,
     self.previewPosition = state.preview.previewPosition
 
     self.neoVimView = NeoVimView(frame: CGRect.zero,
-                                 config: NeoVimView.Config(useInteractiveZsh: state.isUseInteractiveZsh))
+                                 config: NeoVimView.Config(useInteractiveZsh: state.useInteractiveZsh))
     self.neoVimView.configureForAutoLayout()
 
     self.workspace = Workspace(mainView: self.neoVimView)

@@ -28,6 +28,7 @@ class PrefWindow: NSObject,
     self.panes = [
       GeneralPref(source: source, emitter: emitter, state: state),
       AppearancePref(source: source, emitter: emitter, state: state),
+      AdvancedPref(source: source, emitter: emitter, state: state),
     ]
 
     super.init()
@@ -126,9 +127,9 @@ extension PrefWindow {
     return false
   }
 
-//  func windowWillClose(_: Notification) {
-//
-//  }
+  func windowWillClose(_: Notification) {
+    self.panes.forEach { $0.windowWillClose() }
+  }
 }
 
 // MARK: - NSTableViewDataSource
