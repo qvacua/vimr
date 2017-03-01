@@ -8,7 +8,7 @@ import RxSwift
 
 struct AppState: SerializableState {
 
-  static let `default` = AppState(mainWindow: MainWindow.State.default)
+  static let `default` = AppState()
 
   var openNewMainWindowOnLaunch = true
   var openNewMainWindowOnReactivation = true
@@ -17,7 +17,7 @@ struct AppState: SerializableState {
 
   var preferencesOpen = Marked(false)
 
-  var mainWindowTemplate: MainWindow.State
+  var mainWindowTemplate = MainWindow.State.default
   var currentMainWindowUuid: String?
 
   var mainWindows: [String: MainWindow.State] = [:]
@@ -27,13 +27,27 @@ struct AppState: SerializableState {
 
   var openQuickly = OpenQuicklyWindow.State.default
 
-  init(mainWindow: MainWindow.State) {
-    self.mainWindowTemplate = mainWindow
+  init() {
     self.mainWindowTemplate.root = self.root
   }
 
   init?(dict: [String: Any]) {
-    return nil
+    guard let openOnLaunch = PrefUtils.bool(from: dict, for: Keys.openNewOnLaunch),
+          let openOnReactivation = PrefUtils.bool(from: dict, for: Keys.openNewOnReactivation),
+          let useSnapshot = PrefUtils.bool(from: dict, for: Keys.useSnapshotUpdateChannel)
+      else {
+      return nil
+    }
+
+    self.openNewMainWindowOnLaunch = openOnLaunch
+    self.openNewMainWindowOnReactivation = openOnReactivation
+    self.useSnapshotUpdate = useSnapshot
+
+    let openQuicklyDict = dict[Keys.OpenQuickly.key] as? [String: Any] ?? [:]
+    self.openQuickly = OpenQuicklyWindow.State(dict: openQuicklyDict) ?? OpenQuicklyWindow.State.default
+
+    let mainWindowDict = dict[Keys.MainWindow.key] as? [String: Any] ?? [:]
+    self.mainWindowTemplate = MainWindow.State(dict: mainWindowDict) ?? MainWindow.State.default
   }
 
   func dict() -> [String: Any] {
@@ -158,7 +172,7 @@ struct AppearanceState: SerializableState {
 
 extension MainWindow {
 
-  struct State: SerializableState  {
+  struct State: SerializableState {
 
     static let `default` = State(isAllToolsVisible: true, isToolButtonsVisible: true)
 

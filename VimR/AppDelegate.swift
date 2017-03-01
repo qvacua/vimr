@@ -37,7 +37,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @IBOutlet var updater: SUUpdater?
 
   override init() {
-    let initialAppState = AppState.default
+    let stateDict = UserDefaults.standard.value(forKey: PrefService.compatibleVersion) as? [String: Any] ?? [:]
+    let initialAppState = AppState(dict: stateDict) ?? AppState.default
     self.stateContext = Context(initialAppState)
 
     self.openNewMainWindowOnLaunch = initialAppState.openNewMainWindowOnLaunch
@@ -45,9 +46,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     self.useSnapshot = initialAppState.useSnapshotUpdate
 
     let source = self.stateContext.stateSource
-    self.uiRoot = UiRoot(source: source,
-                         emitter: self.stateContext.actionEmitter,
-                         state: initialAppState) // FIXME
+    self.uiRoot = UiRoot(source: source, emitter: self.stateContext.actionEmitter, state: initialAppState)
 
     super.init()
 

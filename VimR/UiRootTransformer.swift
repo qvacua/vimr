@@ -22,7 +22,13 @@ class UiRootTransformer: Transformer {
         appState.mainWindowTemplate = appState.mainWindows[uuid] ?? appState.mainWindowTemplate
 
       case .close:
-        if appState.currentMainWindowUuid == uuid {
+        if appState.currentMainWindowUuid == uuid, let mainWindowToClose = appState.mainWindows[uuid] {
+          appState.mainWindowTemplate.isAllToolsVisible = mainWindowToClose.isAllToolsVisible
+          appState.mainWindowTemplate.isToolButtonsVisible = mainWindowToClose.isToolButtonsVisible
+          appState.mainWindowTemplate.tools = mainWindowToClose.tools
+          appState.mainWindowTemplate.previewTool = mainWindowToClose.previewTool
+          appState.mainWindowTemplate.fileBrowserShowHidden = mainWindowToClose.fileBrowserShowHidden
+
           appState.currentMainWindowUuid = nil
         }
 

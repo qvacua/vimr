@@ -111,9 +111,19 @@ class MainWindow: NSObject,
     self.workspace.append(tool: fileBrowserContainer, location: state.tools[.fileBrowser]?.location ?? .left)
     self.workspace.append(tool: openedFileListContainer, location: state.tools[.openedFilesList]?.location ?? .left)
 
-    fileBrowserContainer.toggle()
+    self.tools = [
+      .fileBrowser: self.fileBrowserContainer,
+      .openedFilesList: self.openedFileListContainer,
+      .preview: self.previewContainer,
+    ]
 
     super.init()
+
+    self.tools.forEach {
+      if state.tools[$0]?.open == true {
+        $1.toggle()
+      }
+    }
 
     self.workspace.delegate = self
 
@@ -222,13 +232,14 @@ class MainWindow: NSObject,
   fileprivate let fileBrowserContainer: WorkspaceTool
   fileprivate let openedFileListContainer: WorkspaceTool
 
-  fileprivate let preview: PreviewTool
   fileprivate var editorPosition: Marked<Position>
   fileprivate var previewPosition: Marked<Position>
 
+  fileprivate let preview: PreviewTool
   fileprivate let fileBrowser: FileBrowser
-
   fileprivate let openedFileList: OpenedFileList
+
+  fileprivate let tools: [Tools: WorkspaceTool]
 
   fileprivate let scrollDebouncer = Debouncer<Action>(interval: 0.75)
   fileprivate let cursorDebouncer = Debouncer<Action>(interval: 0.75)

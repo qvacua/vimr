@@ -48,9 +48,14 @@ class MainWindowTransformer: Transformer {
         state.focusedView = view
 
       case let .setState(for: tool, with: workspaceTool):
-        state.tools[tool]?.location = workspaceTool.location
-        state.tools[tool]?.dimension = workspaceTool.dimension
-        state.tools[tool]?.open = workspaceTool.isSelected
+        state.tools[tool] = WorkspaceToolState(location: workspaceTool.location,
+                                               dimension: workspaceTool.dimension,
+                                               open: workspaceTool.isSelected)
+        if workspaceTool.isSelected {
+          state.tools
+            .filter { $0 != tool && $1.location == workspaceTool.location }
+            .forEach { state.tools[$0.0]?.open = false }
+        }
 
       case let .toggleAllTools(value):
         state.isAllToolsVisible = value
@@ -63,6 +68,7 @@ class MainWindowTransformer: Transformer {
 
       }
 
+      NSLog("\(state.tools[.preview])")
       return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
     }
   }
