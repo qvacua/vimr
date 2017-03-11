@@ -1,5 +1,8 @@
 # next
 
+* GH-405: Redesign
+    - Redux-like architecture combined with RxSwift
+
 # 0.13.1-167
 
 * Make pinch-zooming fast (enough) on Retina-displays.
