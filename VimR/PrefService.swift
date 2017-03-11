@@ -7,7 +7,6 @@ import Foundation
 import Swifter
 import RxSwift
 
-
 fileprivate let defaults = UserDefaults.standard
 
 class PrefService: Service {
@@ -22,7 +21,7 @@ class PrefService: Service {
       return
     }
 
-    NSLog("saving pref!")
+    NSLog("Saving pref!")
     defaults.setValue(pair.state.dict(), forKey: PrefService.compatibleVersion)
   }
 }

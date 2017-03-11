@@ -6,7 +6,7 @@
 import Foundation
 import RxSwift
 
-class FileBrowserTransformer: Transformer {
+class FileBrowserTransformer: Reducer {
 
   typealias Pair = StateActionPair<UuidState<MainWindow.State>, FileBrowser.Action>
 

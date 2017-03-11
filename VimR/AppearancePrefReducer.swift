@@ -6,7 +6,7 @@
 import Foundation
 import RxSwift
 
-class AppearancePrefTransformer: Transformer {
+class AppearancePrefTransformer: Reducer {
 
   typealias Pair = StateActionPair<AppState, AppearancePref.Action>
 

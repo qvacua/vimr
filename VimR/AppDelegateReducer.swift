@@ -6,7 +6,7 @@
 import Foundation
 import RxSwift
 
-class AppDelegateTransformer: Transformer {
+class AppDelegateTransformer: Reducer {
 
   typealias Pair = StateActionPair<AppState, AppDelegate.Action>
 

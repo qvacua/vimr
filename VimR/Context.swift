@@ -174,7 +174,7 @@ class Context {
 
 extension Observable {
 
-  fileprivate func transform<T:Transformer>(by transformer: T) -> Observable<Element> where T.Element == Element {
+  fileprivate func transform<T:Reducer>(by transformer: T) -> Observable<Element> where T.Element == Element {
     return transformer.transform(self)
   }
 

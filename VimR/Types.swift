@@ -94,7 +94,7 @@ class Marked<T>: CustomStringConvertible {
   }
 }
 
-protocol Transformer {
+protocol Reducer {
 
   associatedtype Element
 

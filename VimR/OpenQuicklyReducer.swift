@@ -14,7 +14,7 @@ class OpenQuicklyTransformer {
 
 extension OpenQuicklyTransformer {
 
-  class OpenQuicklyWindowTransformer: Transformer {
+  class OpenQuicklyWindowTransformer: Reducer {
 
     typealias Pair = StateActionPair<AppState, OpenQuicklyWindow.Action>
 
@@ -45,7 +45,7 @@ extension OpenQuicklyTransformer {
     }
   }
 
-  class MainWindowTransformer: Transformer {
+  class MainWindowTransformer: Reducer {
 
     typealias Pair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
 

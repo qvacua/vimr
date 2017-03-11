@@ -6,7 +6,7 @@
 import Foundation
 import RxSwift
 
-class OpenedFileListTransformer: Transformer {
+class OpenedFileListTransformer: Reducer {
 
   typealias Pair = StateActionPair<UuidState<MainWindow.State>, OpenedFileList.Action>
 

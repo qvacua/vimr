@@ -29,7 +29,7 @@ class PreviewTransformer {
 
 extension PreviewTransformer {
 
-  class MainWindowPreviewTransformer: Transformer {
+  class MainWindowPreviewTransformer: Reducer {
 
     typealias Pair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
@@ -64,7 +64,7 @@ extension PreviewTransformer {
     fileprivate var parentTransformer: PreviewTransformer?
   }
 
-  class OpenedFileListTransformer: Transformer {
+  class OpenedFileListTransformer: Reducer {
 
     typealias Pair = StateActionPair<UuidState<MainWindow.State>, OpenedFileList.Action>
 
