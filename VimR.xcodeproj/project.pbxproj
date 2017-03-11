@@ -307,12 +307,10 @@
 		1929B15B7EDC9B0F40E5E95C /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
 		1929B1A51F076E088EF4CCA4 /* server_globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_globals.h; sourceTree = "<group>"; };
 		1929B1DC584C89C477E83FA2 /* HttpServerService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServerService.swift; sourceTree = "<group>"; };
-		1929B1EC32D8A26958FB39B1 /* PreviewRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewRenderer.swift; sourceTree = "<group>"; };
 		1929B2FBE11048569391E092 /* BasicTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicTypes.swift; sourceTree = "<group>"; };
 		1929B34FC23D805A8B29E8F7 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		1929B364460D86F17E80943C /* PrefService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefService.swift; sourceTree = "<group>"; };
 		1929B365A6434354B568B04F /* FileMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileMonitor.swift; sourceTree = "<group>"; };
-		1929B39DA7AC4A9B62D7CD39 /* Component.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Component.swift; sourceTree = "<group>"; };
 		1929B3A98687DF171307AAC8 /* FileItemService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemService.swift; sourceTree = "<group>"; };
 		1929B425F452260E00E8142B /* Pref128ToCurrentConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pref128ToCurrentConverter.swift; sourceTree = "<group>"; };
 		1929B457B9D0FA4D21F3751E /* UiRootTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiRootTransformer.swift; sourceTree = "<group>"; };
@@ -330,11 +328,9 @@
 		1929B7A68B7109CEFAF105E8 /* AppDelegateTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegateTransformer.swift; sourceTree = "<group>"; };
 		1929B7CB4863F80230C32D3C /* FileItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
 		1929B8401A4EC1F8ABAAD338 /* FileHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileHandler.swift; sourceTree = "<group>"; };
-		1929B8DA5AA33536F0082200 /* PreviewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewComponent.swift; sourceTree = "<group>"; };
 		1929B93013228985F509C8F6 /* server_ui.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = server_ui.m; sourceTree = "<group>"; };
 		1929B9A55E12B703DDD673FD /* Debouncer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
 		1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationCommons.swift; sourceTree = "<group>"; };
-		1929B9B97596868A9552E2EB /* GeneralPrefPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralPrefPane.swift; sourceTree = "<group>"; };
 		1929B9D510177918080BE39B /* Scorer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scorer.swift; sourceTree = "<group>"; };
 		1929BA42AB6F1BF631B57399 /* SerializableStates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SerializableStates.swift; sourceTree = "<group>"; };
 		1929BA43449BA41666CD55ED /* OpenedFileList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenedFileList.swift; sourceTree = "<group>"; };
@@ -342,11 +338,9 @@
 		1929BA6128BFDD54CA92F46E /* ColorUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorUtils.swift; sourceTree = "<group>"; };
 		1929BA8AC40B901B20F20B71 /* FileUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileUtils.swift; sourceTree = "<group>"; };
 		1929BADEB143008EFA6F3318 /* NetUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetUtils.h; sourceTree = "<group>"; };
-		1929BB251F74BEFC82CEEF84 /* PrefPaneOld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefPaneOld.swift; sourceTree = "<group>"; };
 		1929BB55946DAEBF55D24048 /* GeneralPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralPref.swift; sourceTree = "<group>"; };
 		1929BB6608B4F0E037CA0F4C /* States.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = States.swift; sourceTree = "<group>"; };
 		1929BB6CFF4CC0B5E8B00C62 /* DataWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataWrapper.m; sourceTree = "<group>"; };
-		1929BB8BCA48637156F92945 /* PreviewServiceOld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewServiceOld.swift; sourceTree = "<group>"; };
 		1929BBC84557C8351EC6183E /* FileItemIgnorePatternTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemIgnorePatternTest.swift; sourceTree = "<group>"; };
 		1929BBE0A534F2F6009D31BE /* AdvencedPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvencedPref.swift; sourceTree = "<group>"; };
 		1929BC19C1BC19246AFF1621 /* MatcherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatcherTests.swift; sourceTree = "<group>"; };
@@ -363,16 +357,13 @@
 		1929BED01F5D94BFCA4CF80F /* AppearancePrefTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearancePrefTransformer.swift; sourceTree = "<group>"; };
 		1929BEDE7F92BC7B49E802AF /* OpenQuicklyFilterOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyFilterOperation.swift; sourceTree = "<group>"; };
 		1929BEEB33113B0E33C3830F /* Matcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Matcher.swift; sourceTree = "<group>"; };
-		1929BEEC52800C8BA6333E5E /* AppearancePrefPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearancePrefPane.swift; sourceTree = "<group>"; };
 		1929BF00B466B40629C2AABE /* NeoVimView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimView.swift; sourceTree = "<group>"; };
 		1929BFB0F294F3714D5E095F /* PreviewToolTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewToolTransformer.swift; sourceTree = "<group>"; };
 		1929BFC0A5A9C6DB09BE1368 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		4B029F1B1D45E349004EE0D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrefWindow.xib; sourceTree = "<group>"; };
-		4B0677361D99D9C3001A2588 /* FileBrowserComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBrowserComponent.swift; sourceTree = "<group>"; };
 		4B0BCC931D70320C00D3CE65 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logger.h; path = VimR/Logger.h; sourceTree = SOURCE_ROOT; };
 		4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaMarkdown.framework; path = Carthage/Build/Mac/CocoaMarkdown.framework; sourceTree = SOURCE_ROOT; };
 		4B183E1A1E08748B0079E8A8 /* NeoVimAutoCommandEvent.generated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimAutoCommandEvent.generated.h; sourceTree = "<group>"; };
-		4B183E1D1E09931E0079E8A8 /* MarkdownRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownRenderer.swift; sourceTree = "<group>"; };
 		4B19BEFA1E110183007E823C /* markdown */ = {isa = PBXFileReference; lastKnownFileType = folder; path = markdown; sourceTree = "<group>"; };
 		4B19BEFB1E110183007E823C /* preview */ = {isa = PBXFileReference; lastKnownFileType = folder; path = preview; sourceTree = "<group>"; };
 		4B1BB3521D16C5E500CA4FEF /* InputTestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputTestView.swift; sourceTree = "<group>"; };
@@ -387,14 +378,11 @@
 		4B2A2C0D1D0353750074CE9A /* Bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bridge.h; sourceTree = "<group>"; };
 		4B337FBA1DEB76F20020ADD2 /* CocoaFontAwesome.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaFontAwesome.framework; path = Carthage/Build/Mac/CocoaFontAwesome.framework; sourceTree = SOURCE_ROOT; };
 		4B37ADB81D6E471B00970D55 /* vimr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = vimr; sourceTree = "<group>"; };
-		4B37ADBA1D6EC11600970D55 /* TestPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestPane.swift; sourceTree = "<group>"; };
 		4B3965351DEB21300082D3C1 /* InnterToolBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InnterToolBar.swift; path = Workspace/InnterToolBar.swift; sourceTree = "<group>"; };
 		4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sparkle_pub.pem; sourceTree = "<group>"; };
 		4B401B131D0454DC00D99EDC /* PureLayout.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureLayout.framework; path = Carthage/Build/Mac/PureLayout.framework; sourceTree = SOURCE_ROOT; };
 		4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimViewDelegate.swift; sourceTree = "<group>"; };
 		4B4192171D0C52D700A0BEB2 /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
-		4B4546861D468CEC00A1E27F /* PrefStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefStore.swift; sourceTree = "<group>"; };
-		4B4FC8E51D3E8739009352C3 /* PrefWindowComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefWindowComponent.swift; sourceTree = "<group>"; };
 		4B56F2901D29903F00C1F92E /* SwiftNeoVimTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftNeoVimTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B56F2921D29903F00C1F92E /* SwiftNeoVimTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftNeoVimTests.swift; sourceTree = "<group>"; };
 		4B56F2941D29903F00C1F92E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -411,9 +399,6 @@
 		4B6423A81D8EFE7500FC78C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B6A70931D60E04200E12030 /* AppKitCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppKitCommons.swift; sourceTree = "<group>"; };
 		4B6A70951D6100E300E12030 /* SwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftCommons.swift; sourceTree = "<group>"; };
-		4B705BA01DDF7639005F844B /* ToolPrefData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolPrefData.swift; sourceTree = "<group>"; };
-		4B705BD91DE04F83005F844B /* Pref38To128Converter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pref38To128Converter.swift; sourceTree = "<group>"; };
-		4B705C0D1DE2167A005F844B /* BufferListComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BufferListComponent.swift; sourceTree = "<group>"; };
 		4B81B3C81DE8827600ED1672 /* OutlineViewTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OutlineViewTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B81B3CA1DE8827600ED1672 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4B81B3CC1DE8827600ED1672 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -427,12 +412,9 @@
 		4BB409E61DD68CCC005F39A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/FileBrowserMenu.xib; sourceTree = "<group>"; };
 		4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProxyWorkspaceBar.swift; path = Workspace/ProxyWorkspaceBar.swift; sourceTree = "<group>"; };
 		4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WorkspaceToolButton.swift; path = Workspace/WorkspaceToolButton.swift; sourceTree = "<group>"; };
-		4BBDD3EC1D967DA2008FCC92 /* AdvancedPrefPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedPrefPane.swift; sourceTree = "<group>"; };
 		4BBFF8611E280E31008A3C1A /* Swifter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Swifter.framework; path = Carthage/Build/Mac/Swifter.framework; sourceTree = SOURCE_ROOT; };
 		4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaExtensions.swift; sourceTree = "<group>"; };
 		4BCF638F1D323CFD00F15CE4 /* nvim */ = {isa = PBXFileReference; lastKnownFileType = folder; name = nvim; path = neovim/src/nvim; sourceTree = SOURCE_ROOT; };
-		4BD3BF921D32A95800082605 /* MainWindowComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowComponent.swift; sourceTree = "<group>"; };
-		4BD3BF961D32B0DB00082605 /* MainWindowManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowManager.swift; sourceTree = "<group>"; };
 		4BDCFAC91D31449700F62670 /* NeoVimServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimServer.h; sourceTree = "<group>"; };
 		4BDCFACA1D31449700F62670 /* NeoVimServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimServer.m; sourceTree = "<group>"; };
 		4BDCFACC1D3145AC00F62670 /* libnvim.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnvim.a; path = neovim/build/lib/libnvim.a; sourceTree = SOURCE_ROOT; };
@@ -453,9 +435,7 @@
 		4BDD05841DBBC50000D1B405 /* NeoVimWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NeoVimWindow.m; path = NeoVimServer/NeoVimWindow.m; sourceTree = SOURCE_ROOT; };
 		4BDF50071D7607BF00D8FBC3 /* EonilFileSystemEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EonilFileSystemEvents.framework; path = Carthage/Build/Mac/EonilFileSystemEvents.framework; sourceTree = SOURCE_ROOT; };
 		4BDF500B1D760A3500D8FBC3 /* FileUtilsTest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FileUtilsTest; sourceTree = "<group>"; };
-		4BDF50131D7617EA00D8FBC3 /* OpenQuicklyWindowComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyWindowComponent.swift; sourceTree = "<group>"; };
 		4BDF50181D77540900D8FBC3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OpenQuicklyWindow.xib; sourceTree = "<group>"; };
-		4BDF501A1D77596500D8FBC3 /* OpenQuicklyWindowManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyWindowManager.swift; sourceTree = "<group>"; };
 		4BDF641A1D0887C100D47E1D /* TextDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextDrawer.h; sourceTree = "<group>"; };
 		4BDF641B1D0887C100D47E1D /* TextDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDrawer.m; sourceTree = "<group>"; };
 		4BDF64221D08CAB000D47E1D /* MMCoreTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCoreTextView.h; sourceTree = "<group>"; };
@@ -612,16 +592,6 @@
 			name = Transformers;
 			sourceTree = "<group>";
 		};
-		1929BA610ADEA2BA4424FBE5 /* Preview */ = {
-			isa = PBXGroup;
-			children = (
-				4B183E1C1E0992FD0079E8A8 /* Preview Renderers */,
-				1929B8DA5AA33536F0082200 /* PreviewComponent.swift */,
-				1929BB8BCA48637156F92945 /* PreviewServiceOld.swift */,
-			);
-			name = Preview;
-			sourceTree = "<group>";
-		};
 		1929BA652D3B88FC071531EC /* Redesign */ = {
 			isa = PBXGroup;
 			children = (
@@ -694,47 +664,6 @@
 			path = "NeoVim Objects";
 			sourceTree = "<group>";
 		};
-		4B0677351D99D9A2001A2588 /* File Browser */ = {
-			isa = PBXGroup;
-			children = (
-				4B0677361D99D9C3001A2588 /* FileBrowserComponent.swift */,
-			);
-			name = "File Browser";
-			sourceTree = "<group>";
-		};
-		4B183E1C1E0992FD0079E8A8 /* Preview Renderers */ = {
-			isa = PBXGroup;
-			children = (
-				4B183E1D1E09931E0079E8A8 /* MarkdownRenderer.swift */,
-				1929B1EC32D8A26958FB39B1 /* PreviewRenderer.swift */,
-			);
-			name = "Preview Renderers";
-			sourceTree = "<group>";
-		};
-		4B1AC1AF1D7F395300898F0B /* Open Quickly */ = {
-			isa = PBXGroup;
-			children = (
-				4BDF501A1D77596500D8FBC3 /* OpenQuicklyWindowManager.swift */,
-				4BDF50131D7617EA00D8FBC3 /* OpenQuicklyWindowComponent.swift */,
-			);
-			name = "Open Quickly";
-			sourceTree = "<group>";
-		};
-		4B238BED1D3ED55300CBDD98 /* Preferences */ = {
-			isa = PBXGroup;
-			children = (
-				4B4546861D468CEC00A1E27F /* PrefStore.swift */,
-				4B4FC8E51D3E8739009352C3 /* PrefWindowComponent.swift */,
-				1929BB251F74BEFC82CEEF84 /* PrefPaneOld.swift */,
-				4BBDD3EC1D967DA2008FCC92 /* AdvancedPrefPane.swift */,
-				4B37ADBA1D6EC11600970D55 /* TestPane.swift */,
-				4B705BD91DE04F83005F844B /* Pref38To128Converter.swift */,
-				1929B9B97596868A9552E2EB /* GeneralPrefPane.swift */,
-				1929BEEC52800C8BA6333E5E /* AppearancePrefPane.swift */,
-			);
-			name = Preferences;
-			sourceTree = "<group>";
-		};
 		4B2A2BE61D0225840074CE9A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -805,17 +734,6 @@
 				4B6423A81D8EFE7500FC78C8 /* Info.plist */,
 			);
 			path = "VimR-Workspace-Demo";
-			sourceTree = "<group>";
-		};
-		4B705B9F1DDF761C005F844B /* Tools */ = {
-			isa = PBXGroup;
-			children = (
-				4B705BA01DDF7639005F844B /* ToolPrefData.swift */,
-				4B0677351D99D9A2001A2588 /* File Browser */,
-				4B705C0D1DE2167A005F844B /* BufferListComponent.swift */,
-				1929BA610ADEA2BA4424FBE5 /* Preview */,
-			);
-			name = Tools;
 			sourceTree = "<group>";
 		};
 		4B81B3C91DE8827600ED1672 /* OutlineViewTest */ = {
@@ -893,19 +811,6 @@
 			name = lib;
 			sourceTree = "<group>";
 		};
-		4BDF500F1D760A9500D8FBC3 /* UI */ = {
-			isa = PBXGroup;
-			children = (
-				1929B39DA7AC4A9B62D7CD39 /* Component.swift */,
-				4BD3BF961D32B0DB00082605 /* MainWindowManager.swift */,
-				4BD3BF921D32A95800082605 /* MainWindowComponent.swift */,
-				4B705B9F1DDF761C005F844B /* Tools */,
-				4B1AC1AF1D7F395300898F0B /* Open Quickly */,
-				4B238BED1D3ED55300CBDD98 /* Preferences */,
-			);
-			name = UI;
-			sourceTree = "<group>";
-		};
 		4BDF50101D760AB700D8FBC3 /* Commons */ = {
 			isa = PBXGroup;
 			children = (
@@ -964,7 +869,6 @@
 				4B2A2C0D1D0353750074CE9A /* Bridge.h */,
 				4B238BE01D3BF24200CBDD98 /* Application.swift */,
 				4BEBA5081CFF374B00673FDF /* AppDelegate.swift */,
-				4BDF500F1D760A9500D8FBC3 /* UI */,
 				4BDF50111D760B1100D8FBC3 /* File Items */,
 				4BF8EED91D858C4400CAC08A /* Utils */,
 				4BDF50101D760AB700D8FBC3 /* Commons */,
