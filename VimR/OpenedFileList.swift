@@ -7,35 +7,63 @@ import Cocoa
 import RxSwift
 import PureLayout
 
-enum BufferListAction {
+class OpenedFileList: NSView,
+                      UiComponent,
+                      NSTableViewDataSource,
+                      NSTableViewDelegate {
 
-  case open(buffer: NeoVimBuffer)
-}
+  typealias StateType = MainWindow.State
 
-class BufferListComponent: StandardViewComponent, NSTableViewDataSource, NSTableViewDelegate {
+  enum Action {
 
-  fileprivate var buffers: [NeoVimBuffer] = []
+    case open(NeoVimBuffer)
+  }
+
+  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+    self.emitter = emitter
+    self.uuid = state.uuid
+
+    self.genericIcon = FileUtils.icon(forType: "public.data")
+
+    super.init(frame: .zero)
+
+    self.bufferList.dataSource = self
+    self.bufferList.delegate = self
+    self.bufferList.target = self
+    self.bufferList.doubleAction = #selector(OpenedFileList.doubleClickAction)
+
+    self.addViews()
+
+    source
+      .observeOn(MainScheduler.instance)
+      .subscribe(onNext: { state in
+        let buffers = state.buffers.removingDuplicatesPreservingFromBeginning()
+        if self.buffers == buffers {
+          return
+        }
+
+        self.buffers = buffers
+        self.bufferList.reloadData()
+        self.adjustFileViewWidth()
+      })
+      .addDisposableTo(self.disposeBag)
+  }
+  
+  fileprivate let emitter: ActionEmitter
+  fileprivate let disposeBag = DisposeBag()
+
+  fileprivate let uuid: String
+
   fileprivate let bufferList = NSTableView.standardTableView()
-
-  fileprivate let fileItemService: FileItemService
   fileprivate let genericIcon: NSImage
+
+  fileprivate var buffers = [NeoVimBuffer]()
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  init(source: Observable<Any>, fileItemService: FileItemService) {
-    self.fileItemService = fileItemService
-    self.genericIcon = fileItemService.icon(forType: "public.data")
-
-    super.init(source: source)
-
-    self.bufferList.dataSource = self
-    self.bufferList.delegate = self
-    self.bufferList.doubleAction = #selector(BufferListComponent.doubleClickAction)
-  }
-
-  override func addViews() {
+  fileprivate func addViews() {
     let scrollView = NSScrollView.standardScrollView()
     scrollView.borderType = .noBorder
     scrollView.documentView = self.bufferList
@@ -43,26 +71,7 @@ class BufferListComponent: StandardViewComponent, NSTableViewDataSource, NSTable
     self.addSubview(scrollView)
     scrollView.autoPinEdgesToSuperviewEdges()
   }
-
-  override func subscription(source: Observable<Any>) -> Disposable {
-    return source
-        .filter { $0 is MainWindowAction }
-        .map { $0 as! MainWindowAction }
-        .subscribe(onNext: { [unowned self] action in
-          switch action {
-
-          case let .changeBufferList(mainWindow:_, buffers:buffers):
-            self.buffers = buffers
-            self.bufferList.reloadData()
-            self.adjustFileViewWidth()
-
-          default:
-            return
-
-          }
-        })
-  }
-
+  
   fileprivate func adjustFileViewWidth() {
     let maxWidth = self.buffers.reduce(CGFloat(0)) { (curMaxWidth, buffer) in
       return max(self.text(for: buffer).size().width, curMaxWidth)
@@ -75,7 +84,7 @@ class BufferListComponent: StandardViewComponent, NSTableViewDataSource, NSTable
 }
 
 // MARK: - Actions
-extension BufferListComponent {
+extension OpenedFileList {
 
   func doubleClickAction(_ sender: Any?) {
     let clickedRow = self.bufferList.clickedRow
@@ -83,12 +92,12 @@ extension BufferListComponent {
       return
     }
 
-    self.publish(event: BufferListAction.open(buffer: self.buffers[clickedRow]))
+    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.open(self.buffers[clickedRow])))
   }
 }
 
 // MARK: - NSTableViewDataSource
-extension BufferListComponent {
+extension OpenedFileList {
 
   @objc(numberOfRowsInTableView:)
   func numberOfRows(in tableView: NSTableView) -> Int {
@@ -97,9 +106,9 @@ extension BufferListComponent {
 }
 
 // MARK: - NSTableViewDelegate
-extension BufferListComponent {
+extension OpenedFileList {
 
-  @objc(tableView:viewForTableColumn:row:)
+  @objc(tableView: viewForTableColumn:row:)
   func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
     let cachedCell = (tableView.make(withIdentifier: "buffer-list-row", owner: self) as? ImageAndTextTableCell)?.reset()
     let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "buffer-list-row")
@@ -124,14 +133,14 @@ extension BufferListComponent {
     let rowText = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
     rowText.addAttribute(NSForegroundColorAttributeName,
                          value: NSColor.lightGray,
-                         range: NSRange(location:name.characters.count, length: pathInfo.characters.count + 3))
+                         range: NSRange(location: name.characters.count, length: pathInfo.characters.count + 3))
 
     return rowText
   }
 
   fileprivate func icon(for buffer: NeoVimBuffer) -> NSImage? {
     if let url = buffer.url {
-      return self.fileItemService.icon(forUrl: url)
+      return FileUtils.icon(forUrl: url)
     }
 
     return self.genericIcon

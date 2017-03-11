@@ -72,7 +72,7 @@
 
       lastMarkdownPosition = result;
 //      console.log(`webview scrolled to ${result.lineBegin}:${result.columnBegin}`);
-      window.webkit.messageHandlers.com_vimr_preview_markdown.postMessage(result);
+      window.webkit.messageHandlers.com_vimr_tools_preview_markdown.postMessage(result);
     }
 
     let lastKnownScrollPos = 0;

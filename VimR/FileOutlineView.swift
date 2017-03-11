@@ -7,86 +7,22 @@ import Cocoa
 import PureLayout
 import RxSwift
 
-enum FileOutlineViewAction {
+class FileOutlineView: NSOutlineView,
+                       UiComponent,
+                       NSOutlineViewDataSource,
+                       NSOutlineViewDelegate {
 
-  case open(fileItem: FileItem)
-  case openFileInNewTab(fileItem: FileItem)
-  case openFileInCurrentTab(fileItem: FileItem)
-  case openFileInHorizontalSplit(fileItem: FileItem)
-  case openFileInVerticalSplit(fileItem: FileItem)
-  case setAsWorkingDirectory(fileItem: FileItem)
-}
+  typealias StateType = MainWindow.State
 
-fileprivate class FileBrowserItem: Hashable, Comparable, CustomStringConvertible {
+  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+    self.emitter = emitter
 
-  static func ==(left: FileBrowserItem, right: FileBrowserItem) -> Bool {
-    return left.fileItem == right.fileItem
-  }
+    self.uuid = state.uuid
+    self.root = FileBrowserItem(fileItem: state.root)
+    self.fileSystemRoot = state.root
+    self.isShowHidden = state.fileBrowserShowHidden
 
-  static func <(left: FileBrowserItem, right: FileBrowserItem) -> Bool {
-    return left.fileItem.url.lastPathComponent < right.fileItem.url.lastPathComponent
-  }
-
-  var hashValue: Int {
-    return self.fileItem.hashValue
-  }
-
-  var description: String {
-    return self.fileItem.url.path
-  }
-
-  let fileItem: FileItem
-  var children: [FileBrowserItem] = []
-  var isChildrenScanned = false
-
-  /**
-    `fileItem` is copied. Children are _not_ populated.
-   */
-  init(fileItem: FileItem) {
-    self.fileItem = fileItem.copy()
-  }
-
-  func child(with url: URL) -> FileBrowserItem? {
-    return self.children.first { $0.fileItem.url == url }
-  }
-}
-
-class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineViewDelegate {
-
-  fileprivate let flow: EmbeddableComponent
-
-  fileprivate var root: FileBrowserItem
-
-  fileprivate let fileItemService: FileItemService
-
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-
-  // MARK: - API
-  var sink: Observable<Any> {
-    return self.flow.sink
-  }
-
-  var cwd: URL = FileUtils.userHomeUrl
-  var isShowHidden = false {
-    didSet {
-      if oldValue == self.isShowHidden {
-        return
-      }
-
-      self.reloadItem(nil)
-    }
-  }
-
-  init(source: Observable<Any>, fileItemService: FileItemService) {
-    self.flow = EmbeddableComponent(source: source)
-    self.fileItemService = fileItemService
-
-    let rootFileItem = fileItemService.fileItem(for: self.cwd) ?? fileItemService.fileItem(for: FileUtils.userHomeUrl)!
-    self.root = FileBrowserItem(fileItem: rootFileItem)
-
-    super.init(frame: CGRect.zero)
+    super.init(frame: .zero)
     NSOutlineView.configure(toStandard: self)
 
     self.dataSource = self
@@ -97,28 +33,57 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
       return
     }
 
+    // If the target of the menu items is set to the first responder, the actions are not invoked at all when the file
+    // monitor fires in the background... Dunno why it worked before the redesign... -_-
+    self.menu?.items.forEach { $0.target = self }
+
     self.doubleAction = #selector(FileOutlineView.doubleClickAction)
-  }
 
-  func update(_ fileItem: FileItem) {
-    let url = fileItem.url
+    source
+      .observeOn(MainScheduler.instance)
+      .subscribe(onNext: { [unowned self] state in
+        if case .fileBrowser = state.focusedView {
+          self.beFirstResponder()
+        }
 
-    guard let fileBrowserItem = self.fileBrowserItem(with: url) else {
-      return
-    }
+        var reloadData = false
 
-    self.beginUpdates()
-    self.update(fileBrowserItem)
-    self.endUpdates()
+        if self.isShowHidden != state.fileBrowserShowHidden {
+          self.isShowHidden = state.fileBrowserShowHidden
+          reloadData = true
+        }
+
+        if state.cwd != self.cwd {
+          self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
+          self.cwd = state.cwd
+
+          reloadData = true
+        }
+
+        if reloadData {
+          self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
+          self.reloadData()
+          return
+        }
+
+        if state.lastFileSystemUpdate.mark == self.lastFileSystemUpdateMark {
+          return
+        }
+
+        self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
+        self.update(state.lastFileSystemUpdate.payload)
+      })
+      .addDisposableTo(self.disposeBag)
   }
 
   func select(_ url: URL) {
     var itemsToExpand: [FileBrowserItem] = []
-    var stack = [ self.root ]
+    var stack = [self.root]
 
     while let item = stack.popLast() {
       if item.isChildrenScanned == false {
-        item.children = self.fileItemService.sortedChildren(for: item.fileItem.url).map(FileBrowserItem.init)
+        item.children = FileItemUtils.sortedChildren(for: item.fileItem.url, root: self.fileSystemRoot)
+                                     .map(FileBrowserItem.init)
         item.isChildrenScanned = true
       }
 
@@ -141,6 +106,34 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
     self.scrollRowToVisible(targetRow)
   }
 
+  fileprivate let emitter: ActionEmitter
+  fileprivate let disposeBag = DisposeBag()
+
+  fileprivate let uuid: String
+  fileprivate var lastFileSystemUpdateMark = Token()
+
+  fileprivate var cwd: URL = FileUtils.userHomeUrl
+  fileprivate var isShowHidden: Bool
+
+  fileprivate var root: FileBrowserItem
+  fileprivate let fileSystemRoot: FileItem
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  fileprivate func update(_ fileItem: FileItem) {
+    let url = fileItem.url
+
+    guard let fileBrowserItem = self.fileBrowserItem(with: url) else {
+      return
+    }
+
+    self.beginUpdates()
+    self.update(fileBrowserItem)
+    self.endUpdates()
+  }
+
   fileprivate func handleRemovals(for fileBrowserItem: FileBrowserItem, new newChildren: [FileBrowserItem]) {
     let curChildren = fileBrowserItem.children
 
@@ -148,9 +141,9 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
     let newPreparedChildren = self.prepare(newChildren)
 
     let childrenToRemoveIndices = curPreparedChildren
-        .enumerated()
-        .filter { newPreparedChildren.contains($0.1) == false }
-        .map { $0.0 }
+      .enumerated()
+      .filter { newPreparedChildren.contains($0.1) == false }
+      .map { $0.0 }
 
     fileBrowserItem.children = curChildren.filter { newChildren.contains($0) }
 
@@ -169,9 +162,9 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
     let newPreparedChildren = self.prepare(newChildren)
 
     let indicesToInsert = newPreparedChildren
-        .enumerated()
-        .filter { curPreparedChildren.contains($0.1) == false }
-        .map { $0.0 }
+      .enumerated()
+      .filter { curPreparedChildren.contains($0.1) == false }
+      .map { $0.0 }
 
     let parent = fileBrowserItem == self.root ? nil : fileBrowserItem
     self.insertItems(at: IndexSet(indicesToInsert), inParent: parent)
@@ -193,7 +186,7 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
     let url = fileBrowserItem.fileItem.url
 
     // Sort the array to keep the order.
-    let newChildren = self.fileItemService.sortedChildren(for: url).map(FileBrowserItem.init)
+    let newChildren = FileItemUtils.sortedChildren(for: url, root: self.fileSystemRoot).map(FileBrowserItem.init)
 
     self.handleRemovals(for: fileBrowserItem, new: newChildren)
     self.handleAdditions(for: fileBrowserItem, new: newChildren)
@@ -211,7 +204,7 @@ class FileOutlineView: NSOutlineView, Flow, NSOutlineViewDataSource, NSOutlineVi
 
     let rootPathComps = self.cwd.pathComponents
     let pathComps = url.pathComponents
-    let childPart = pathComps[rootPathComps.count ..< pathComps.count]
+    let childPart = pathComps[rootPathComps.count..<pathComps.count]
 
     return childPart.reduce(self.root) { (resultItem, childName) -> FileBrowserItem? in
       guard let parent = resultItem else {
@@ -232,11 +225,12 @@ extension FileOutlineView {
 
   func outlineView(_: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
     if item == nil {
-      let rootFileItem = fileItemService.fileItem(for: self.cwd)
-        ?? fileItemService.fileItem(for: FileUtils.userHomeUrl)!
+      let rootFileItem = FileItemUtils.item(for: self.cwd, root: self.fileSystemRoot)
+                         ?? FileItemUtils.item(for: FileUtils.userHomeUrl, root: self.fileSystemRoot)!
       self.root = FileBrowserItem(fileItem: rootFileItem)
       if self.root.isChildrenScanned == false {
-        self.root.children = fileItemService.sortedChildren(for: self.cwd).map(FileBrowserItem.init)
+        self.root.children = FileItemUtils.sortedChildren(for: self.cwd, root: self.fileSystemRoot)
+                                          .map(FileBrowserItem.init)
         self.root.isChildrenScanned = true
       }
 
@@ -250,7 +244,7 @@ extension FileOutlineView {
     let fileItem = fileBrowserItem.fileItem
     if fileItem.isDir {
       if fileBrowserItem.isChildrenScanned == false {
-        let fileItemChildren = self.fileItemService.sortedChildren(for: fileItem.url)
+        let fileItemChildren = FileItemUtils.sortedChildren(for: fileItem.url, root: self.fileSystemRoot)
         fileBrowserItem.fileItem.children = fileItemChildren
         fileBrowserItem.children = fileItemChildren.map(FileBrowserItem.init)
         fileBrowserItem.isChildrenScanned = true
@@ -303,14 +297,14 @@ extension FileOutlineView {
     }
 
     let cellWidth = rows.concurrentChunkMap(20) {
-        guard let fileBrowserItem = $0.item else {
-          return 0
-        }
+                          guard let fileBrowserItem = $0.item else {
+                            return 0
+                          }
 
-        return ImageAndTextTableCell.width(with: fileBrowserItem.fileItem.url.lastPathComponent)
-          + (CGFloat($0.level + 2) * (self.indentationPerLevel + 2)) // + 2 just to have a buffer... -_-
-      }
-      .max() ?? column.width
+                          return ImageAndTextTableCell.width(with: fileBrowserItem.fileItem.url.lastPathComponent)
+                                 + (CGFloat($0.level + 2) * (self.indentationPerLevel + 2)) // + 2 just to have a buffer... -_-
+                        }
+                        .max() ?? column.width
 
     guard column.minWidth != cellWidth else {
       return
@@ -325,10 +319,10 @@ extension FileOutlineView {
 
     // It seems like that caching the widths is slower due to thread-safeness of NSCache...
     let cellWidth = items.concurrentChunkMap(20) {
-        let result = ImageAndTextTableCell.width(with: $0.fileItem.url.lastPathComponent)
-        return result
-      }
-      .max() ?? column.width
+                           let result = ImageAndTextTableCell.width(with: $0.fileItem.url.lastPathComponent)
+                           return result
+                         }
+                         .max() ?? column.width
 
     let width = cellWidth + (CGFloat(level + 2) * (self.indentationPerLevel + 2)) // + 2 just to have a buffer... -_-
 
@@ -354,7 +348,7 @@ extension FileOutlineView {
     let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
     cell.text = fileBrowserItem.fileItem.url.lastPathComponent
-    let icon = self.fileItemService.icon(forUrl: fileBrowserItem.fileItem.url)
+    let icon = FileUtils.icon(forUrl: fileBrowserItem.fileItem.url)
     cell.image = fileBrowserItem.fileItem.isHidden ? icon?.tinting(with: NSColor.white.withAlphaComponent(0.4)) : icon
 
     return cell
@@ -380,7 +374,9 @@ extension FileOutlineView {
     if item.fileItem.isDir {
       self.toggle(item: item)
     } else {
-      self.flow.publish(event: FileOutlineViewAction.open(fileItem: item.fileItem))
+      self.emitter.emit(
+        UuidAction(uuid: self.uuid, action: FileBrowser.Action.open(url: item.fileItem.url, mode: .default))
+      )
     }
   }
 
@@ -389,7 +385,9 @@ extension FileOutlineView {
       return
     }
 
-    self.flow.publish(event: FileOutlineViewAction.openFileInNewTab(fileItem: item.fileItem))
+    self.emitter.emit(
+      UuidAction(uuid: self.uuid, action: FileBrowser.Action.open(url: item.fileItem.url, mode: .newTab))
+    )
   }
 
   @IBAction func openInCurrentTab(_: Any?) {
@@ -397,7 +395,9 @@ extension FileOutlineView {
       return
     }
 
-    self.flow.publish(event: FileOutlineViewAction.openFileInCurrentTab(fileItem: item.fileItem))
+    self.emitter.emit(
+      UuidAction(uuid: self.uuid, action: FileBrowser.Action.open(url: item.fileItem.url, mode: .currentTab))
+    )
   }
 
   @IBAction func openInHorizontalSplit(_: Any?) {
@@ -405,7 +405,9 @@ extension FileOutlineView {
       return
     }
 
-    self.flow.publish(event: FileOutlineViewAction.openFileInHorizontalSplit(fileItem: item.fileItem))
+    self.emitter.emit(
+      UuidAction(uuid: self.uuid, action: FileBrowser.Action.open(url: item.fileItem.url, mode: .horizontalSplit))
+    )
   }
 
   @IBAction func openInVerticalSplit(_: Any?) {
@@ -413,7 +415,9 @@ extension FileOutlineView {
       return
     }
 
-    self.flow.publish(event: FileOutlineViewAction.openFileInVerticalSplit(fileItem: item.fileItem))
+    self.emitter.emit(
+      UuidAction(uuid: self.uuid, action: FileBrowser.Action.open(url: item.fileItem.url, mode: .verticalSplit))
+    )
   }
 
   @IBAction func setAsWorkingDirectory(_: Any?) {
@@ -425,7 +429,9 @@ extension FileOutlineView {
       return
     }
 
-    self.flow.publish(event: FileOutlineViewAction.setAsWorkingDirectory(fileItem: item.fileItem))
+    self.emitter.emit(
+      UuidAction(uuid: self.uuid, action: FileBrowser.Action.setAsWorkingDirectory(item.fileItem.url))
+    )
   }
 }
 
@@ -464,11 +470,47 @@ extension FileOutlineView {
       if item.fileItem.isDir || item.fileItem.isPackage {
         self.toggle(item: item)
       } else {
-        self.flow.publish(event: FileOutlineViewAction.openFileInNewTab(fileItem: item.fileItem))
+        self.emitter.emit(
+          UuidAction(uuid: self.uuid, action: FileBrowser.Action.open(url: item.fileItem.url, mode: .newTab))
+        )
       }
 
     default:
       super.keyDown(with: event)
     }
+  }
+}
+
+fileprivate class FileBrowserItem: Hashable, Comparable, CustomStringConvertible {
+
+  static func ==(left: FileBrowserItem, right: FileBrowserItem) -> Bool {
+    return left.fileItem == right.fileItem
+  }
+
+  static func <(left: FileBrowserItem, right: FileBrowserItem) -> Bool {
+    return left.fileItem.url.lastPathComponent < right.fileItem.url.lastPathComponent
+  }
+
+  var hashValue: Int {
+    return self.fileItem.hashValue
+  }
+
+  var description: String {
+    return self.fileItem.url.path
+  }
+
+  let fileItem: FileItem
+  var children: [FileBrowserItem] = []
+  var isChildrenScanned = false
+
+  /**
+    `fileItem` is copied. Children are _not_ populated.
+   */
+  init(fileItem: FileItem) {
+    self.fileItem = fileItem.copy()
+  }
+
+  func child(with url: URL) -> FileBrowserItem? {
+    return self.children.first { $0.fileItem.url == url }
   }
 }

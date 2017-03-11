@@ -107,7 +107,7 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
     return true
   }
 
-  public fileprivate(set) var currentPosition = Position(row: 1, column: 1)
+  public fileprivate(set) var currentPosition = Position.beginning
 
   fileprivate static let emojis: [UInt32] = [
     0x1F600...0x1F64F,

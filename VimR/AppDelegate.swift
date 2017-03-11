@@ -9,111 +9,98 @@ import PureLayout
 import Sparkle
 
 /// Keep the rawValues in sync with Action in the `vimr` Python script.
-private enum VimRUrlAction: String {
+fileprivate enum VimRUrlAction: String {
   case activate = "activate"
   case open = "open"
   case newWindow = "open-in-new-window"
   case separateWindows = "open-in-separate-windows"
 }
 
+fileprivate let filePrefix = "file="
+fileprivate let cwdPrefix = "cwd="
+
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
+
+  enum Action {
+
+    case newMainWindow(urls: [URL], cwd: URL)
+    case openInKeyWindow(urls: [URL], cwd: URL)
+
+    case preferences
+
+    case quitWithoutSaving
+    case quit
+  }
 
   @IBOutlet var debugMenu: NSMenuItem?
   @IBOutlet var updater: SUUpdater?
 
-  fileprivate static let filePrefix = "file="
-  fileprivate static let cwdPrefix = "cwd="
+  override init() {
+    let initialAppState: AppState
+    if let stateDict = UserDefaults.standard.value(forKey: PrefService.compatibleVersion) as? [String: Any] {
+      initialAppState = AppState(dict: stateDict) ?? .default
+    } else {
+      if let oldDict = UserDefaults.standard.value(forKey: PrefService.lastCompatibleVersion) as? [String: Any] {
+        initialAppState = Pref128ToCurrentConverter.appState(from: oldDict)
+      } else {
+        initialAppState = .default
+      }
+    }
+
+    self.stateContext = Context(initialAppState)
+
+    self.openNewMainWindowOnLaunch = initialAppState.openNewMainWindowOnLaunch
+    self.openNewMainWindowOnReactivation = initialAppState.openNewMainWindowOnReactivation
+    self.useSnapshot = initialAppState.useSnapshotUpdate
+
+    let source = self.stateContext.stateSource
+    self.uiRoot = UiRoot(source: source, emitter: self.stateContext.actionEmitter, state: initialAppState)
+
+    super.init()
+
+    source
+      .observeOn(MainScheduler.instance)
+      .subscribe(onNext: { appState in
+        self.hasMainWindows = !appState.mainWindows.isEmpty
+        self.hasDirtyWindows = appState.mainWindows.values.reduce(false) { $1.isDirty ? true : $0 }
+
+        self.openNewMainWindowOnLaunch = appState.openNewMainWindowOnLaunch
+        self.openNewMainWindowOnReactivation = appState.openNewMainWindowOnReactivation
+
+        if self.useSnapshot != appState.useSnapshotUpdate {
+          self.useSnapshot = appState.useSnapshotUpdate
+          self.setSparkleUrl(self.useSnapshot)
+        }
+      })
+      .addDisposableTo(self.disposeBag)
+  }
+
+  fileprivate let stateContext: Context
+
+  fileprivate let uiRoot: UiRoot
+
+  fileprivate var hasDirtyWindows = false
+  fileprivate var hasMainWindows = false
+
+  fileprivate var openNewMainWindowOnLaunch: Bool
+  fileprivate var openNewMainWindowOnReactivation: Bool
+  fileprivate var useSnapshot: Bool
 
   fileprivate let disposeBag = DisposeBag()
-
-  fileprivate let changeSubject = PublishSubject<Any>()
-  fileprivate let changeSink: Observable<Any>
-
-  fileprivate let actionSubject = PublishSubject<Any>()
-  fileprivate let actionSink: Observable<Any>
-
-  fileprivate let prefStore: PrefStore
-
-  fileprivate let mainWindowManager: MainWindowManager
-  fileprivate let openQuicklyWindowManager: OpenQuicklyWindowManager
-  fileprivate let prefWindowComponent: PrefWindowComponent
-
-  fileprivate let fileItemService: FileItemService
 
   fileprivate var quitWhenAllWindowsAreClosed = false
   fileprivate var launching = true
 
-  override init() {
-    self.actionSink = self.actionSubject.asObservable()
-    self.changeSink = self.changeSubject.asObservable()
-    let actionAndChangeSink = [self.changeSink, self.actionSink].toMergedObservables()
-
-    self.prefStore = PrefStore(source: self.actionSink)
-
-    self.fileItemService = FileItemService(source: self.changeSink)
-    self.fileItemService.set(ignorePatterns: self.prefStore.data.general.ignorePatterns)
-
-    self.prefWindowComponent = PrefWindowComponent(source: self.changeSink, initialData: self.prefStore.data)
-
-    self.mainWindowManager = MainWindowManager(source: self.changeSink,
-                                               fileItemService: self.fileItemService,
-                                               initialData: self.prefStore.data)
-    self.openQuicklyWindowManager = OpenQuicklyWindowManager(source: actionAndChangeSink,
-                                                             fileItemService: self.fileItemService)
-
-    super.init()
-
-    self.mainWindowManager.sink
-      .filter { $0 is MainWindowManagerAction }
-      .map { $0 as! MainWindowManagerAction }
-      .subscribe(onNext: { [unowned self] event in
-        switch event {
-        case .allWindowsClosed:
-          if self.quitWhenAllWindowsAreClosed {
-            NSApp.stop(self)
-          }
-        }
-        })
-      .addDisposableTo(self.disposeBag)
-
-    self.prefStore.sink
-      .filter { $0 is PrefData }
-      .map { $0 as! PrefData }
-      .subscribe(onNext: { [unowned self] prefData in
-        self.setSparkleUrl()
-        })
-      .addDisposableTo(self.disposeBag)
-
-    self.setSparkleUrl()
-
-    let changeFlows: [Flow] = [ self.prefStore, self.fileItemService ]
-    let actionFlows: [Flow] = [ self.prefWindowComponent, self.mainWindowManager ]
-
-    changeFlows
-      .map { $0.sink }
-      .toMergedObservables()
-      .subscribe(self.changeSubject)
-      .addDisposableTo(self.disposeBag)
-
-    actionFlows
-      .map { $0.sink }
-      .toMergedObservables()
-      .subscribe(self.actionSubject)
-      .addDisposableTo(self.disposeBag)
-  }
-
-  fileprivate func setSparkleUrl() {
-    DispatchUtils.gui {
-      if self.prefStore.data.advanced.useSnapshotUpdateChannel {
-        self.updater?.feedURL = URL(
-          string: "https://raw.githubusercontent.com/qvacua/vimr/develop/appcast_snapshot.xml"
-        )
-      } else {
-        self.updater?.feedURL = URL(
-          string: "https://raw.githubusercontent.com/qvacua/vimr/master/appcast.xml"
-        )
-      }
+  fileprivate func setSparkleUrl(_ snapshot: Bool) {
+    if snapshot {
+      self.updater?.feedURL = URL(
+        string: "https://raw.githubusercontent.com/qvacua/vimr/develop/appcast_snapshot.xml"
+      )
+    } else {
+      self.updater?.feedURL = URL(
+        string: "https://raw.githubusercontent.com/qvacua/vimr/master/appcast.xml"
+      )
     }
   }
 }
@@ -134,19 +121,19 @@ extension AppDelegate {
   func applicationDidFinishLaunching(_: Notification) {
     self.launching = false
 
-    #if DEBUG
-      self.debugMenu?.isHidden = false
-    #endif
+#if DEBUG
+    self.debugMenu?.isHidden = false
+#endif
   }
 
   func applicationOpenUntitledFile(_ sender: NSApplication) -> Bool {
     if self.launching {
-      if self.prefStore.data.general.openNewWindowWhenLaunching {
+      if self.openNewMainWindowOnLaunch {
         self.newDocument(self)
         return true
       }
     } else {
-      if self.prefStore.data.general.openNewWindowOnReactivation {
+      if self.openNewMainWindowOnReactivation {
         self.newDocument(self)
         return true
       }
@@ -156,7 +143,7 @@ extension AppDelegate {
   }
 
   func applicationShouldTerminate(_ sender: NSApplication) -> NSApplicationTerminateReply {
-    if self.mainWindowManager.hasDirtyWindows() {
+    if self.hasDirtyWindows {
       let alert = NSAlert()
       alert.addButton(withTitle: "Cancel")
       alert.addButton(withTitle: "Discard and Quit")
@@ -165,15 +152,15 @@ extension AppDelegate {
 
       if alert.runModal() == NSAlertSecondButtonReturn {
         self.quitWhenAllWindowsAreClosed = true
-        self.mainWindowManager.closeAllWindowsWithoutSaving()
+        self.stateContext.actionEmitter.emit(AppDelegate.Action.quitWithoutSaving)
       }
 
       return .terminateCancel
     }
 
-    if self.mainWindowManager.hasMainWindow() {
+    if self.hasMainWindows {
       self.quitWhenAllWindowsAreClosed = true
-      self.mainWindowManager.closeAllWindows()
+      self.stateContext.actionEmitter.emit(AppDelegate.Action.quit)
 
       return .terminateCancel
     }
@@ -185,7 +172,7 @@ extension AppDelegate {
   // For drag & dropping files on the App icon.
   func application(_ sender: NSApplication, openFiles filenames: [String]) {
     let urls = filenames.map { URL(fileURLWithPath: $0) }
-    _ = self.mainWindowManager.newMainWindow(urls: urls)
+    self.stateContext.actionEmitter.emit(Action.newMainWindow(urls: urls, cwd: FileUtils.userHomeUrl))
 
     sender.reply(toOpenOrPrint: .success)
   }
@@ -217,25 +204,26 @@ extension AppDelegate {
 
     let queryParams = url.query?.components(separatedBy: "&")
     let urls = queryParams?
-      .filter { $0.hasPrefix(AppDelegate.filePrefix) }
-      .flatMap { $0.without(prefix: AppDelegate.filePrefix).removingPercentEncoding }
-      .map { URL(fileURLWithPath: $0) } ?? []
+                 .filter { $0.hasPrefix(filePrefix) }
+                 .flatMap { $0.without(prefix: filePrefix).removingPercentEncoding }
+                 .map { URL(fileURLWithPath: $0) } ?? []
     let cwd = queryParams?
-      .filter { $0.hasPrefix(AppDelegate.cwdPrefix) }
-      .flatMap { $0.without(prefix: AppDelegate.cwdPrefix).removingPercentEncoding }
-      .map { URL(fileURLWithPath: $0) }
-      .first ?? FileUtils.userHomeUrl
+                .filter { $0.hasPrefix(cwdPrefix) }
+                .flatMap { $0.without(prefix: cwdPrefix).removingPercentEncoding }
+                .map { URL(fileURLWithPath: $0) }
+                .first ?? FileUtils.userHomeUrl
 
     switch action {
+
     case .activate, .newWindow:
-      _ = self.mainWindowManager.newMainWindow(urls: urls, cwd: cwd)
-      return
+      self.stateContext.actionEmitter.emit(Action.newMainWindow(urls: urls, cwd: cwd))
+
     case .open:
-      self.mainWindowManager.openInKeyMainWindow(urls: urls, cwd: cwd)
-      return
+      self.stateContext.actionEmitter.emit(Action.openInKeyWindow(urls: urls, cwd: cwd))
+
     case .separateWindows:
-      urls.forEach { _ = self.mainWindowManager.newMainWindow(urls: [$0], cwd: cwd) }
-      return
+      urls.forEach { self.stateContext.actionEmitter.emit(Action.newMainWindow(urls: [$0], cwd: cwd)) }
+
     }
   }
 }
@@ -243,20 +231,20 @@ extension AppDelegate {
 // MARK: - IBActions
 extension AppDelegate {
 
+  @IBAction func newDocument(_ sender: Any?) {
+    self.stateContext.actionEmitter.emit(Action.newMainWindow(urls: [], cwd: FileUtils.userHomeUrl))
+  }
+
   @IBAction func openInNewWindow(_ sender: Any?) {
     self.openDocument(sender)
   }
 
   @IBAction func showPrefWindow(_ sender: Any?) {
-    self.prefWindowComponent.show()
-  }
-
-  @IBAction func newDocument(_ sender: Any?) {
-    _ = self.mainWindowManager.newMainWindow()
+    self.stateContext.actionEmitter.emit(Action.preferences)
   }
 
   // Invoked when no main window is open.
-  @IBAction func openDocument(_ sender: Any?) {
+  @IBAction func openDocument(_: Any?) {
     let panel = NSOpenPanel()
     panel.canChooseDirectories = true
     panel.allowsMultipleSelection = true
@@ -264,11 +252,11 @@ extension AppDelegate {
       guard result == NSFileHandlingPanelOKButton else {
         return
       }
-      
+
       let urls = panel.urls
       let commonParentUrl = FileUtils.commonParent(of: urls)
-      
-      _ = self.mainWindowManager.newMainWindow(urls: urls, cwd: commonParentUrl)
+
+      self.stateContext.actionEmitter.emit(Action.newMainWindow(urls: urls, cwd: commonParentUrl))
     }
   }
 }

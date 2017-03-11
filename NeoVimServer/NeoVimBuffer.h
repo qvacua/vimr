@@ -31,6 +31,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSString *)description;
 
+- (BOOL)isEqual:(id)other;
+
+- (BOOL)isEqualToBuffer:(NeoVimBuffer *)buffer;
+
+- (NSUInteger)hash;
+
 @end
 
 NS_ASSUME_NONNULL_END

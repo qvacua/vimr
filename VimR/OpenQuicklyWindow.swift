@@ -4,29 +4,125 @@
  */
 
 import Cocoa
-import PureLayout
 import RxSwift
 import RxCocoa
+import PureLayout
 
-class OpenQuicklyWindowComponent: WindowComponent,
-                                  NSWindowDelegate,
-                                  NSTableViewDelegate, NSTableViewDataSource,
-                                  NSTextFieldDelegate
-{
+class OpenQuicklyWindow: NSObject,
+                         UiComponent,
+                         NSWindowDelegate,
+                         NSTableViewDelegate, NSTableViewDataSource {
+
+  typealias StateType = AppState
+
+  enum Action {
+
+    case open(URL)
+    case close
+  }
+
   let scanCondition = NSCondition()
   var pauseScan = false
 
-  fileprivate(set) var pattern = ""
-  fileprivate(set) var cwd = FileUtils.userHomeUrl {
-    didSet {
-      self.cwdPathCompsCount = self.cwd.pathComponents.count
-      self.cwdControl.url = self.cwd
-    }
+  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+    self.emitter = emitter
+    self.windowController = NSWindowController(windowNibName: "OpenQuicklyWindow")
+
+    self.searchStream = self.searchField.rx
+      .text.orEmpty
+      .throttle(0.2, scheduler: MainScheduler.instance)
+      .distinctUntilChanged()
+
+    super.init()
+
+    self.window.delegate = self
+
+    self.filterOpQueue.qualityOfService = .userInitiated
+    self.filterOpQueue.name = "open-quickly-filter-operation-queue"
+
+    self.addViews()
+
+    source
+      .observeOn(MainScheduler.instance)
+      .subscribe(onNext: { [unowned self] state in
+        guard state.openQuickly.open else {
+          self.windowController.close()
+          return
+        }
+
+        if self.window.isKeyWindow {
+          // already open, so do nothing
+          return
+        }
+
+        self.cwd = state.openQuickly.cwd
+        self.cwdPathCompsCount = self.cwd.pathComponents.count
+        self.cwdControl.url = self.cwd
+        self.flatFileItemsSource = state.openQuickly.flatFileItems
+
+        self.searchStream
+          .subscribe(onNext: { [unowned self] pattern in
+            self.pattern = pattern
+            self.resetAndAddFilterOperation()
+          })
+          .addDisposableTo(self.perSessionDisposeBag)
+
+        self.flatFileItemsSource
+          .subscribeOn(self.scheduler)
+          .do(onNext: { [unowned self] items in
+            self.scanCondition.lock()
+            while self.pauseScan {
+              self.scanCondition.wait()
+            }
+            self.scanCondition.unlock()
+
+            //
+            self.flatFileItems.append(contentsOf: items)
+            self.resetAndAddFilterOperation()
+          })
+          .observeOn(MainScheduler.instance)
+          .subscribe(onNext: { [unowned self] items in
+            self.count += items.count
+            self.countField.stringValue = "\(self.count) items"
+          })
+          .addDisposableTo(self.perSessionDisposeBag)
+
+        self.windowController.showWindow(self)
+      })
+      .addDisposableTo(self.disposeBag)
   }
+
+  func reloadFileView(withScoredItems items: [ScoredFileItem]) {
+    self.fileViewItems = items
+    self.fileView.reloadData()
+  }
+
+  func startProgress() {
+    self.progressIndicator.startAnimation(self)
+  }
+
+  func endProgress() {
+    self.progressIndicator.stopAnimation(self)
+  }
+
+  fileprivate let emitter: ActionEmitter
+  fileprivate let disposeBag = DisposeBag()
+
+  fileprivate var flatFileItemsSource = Observable<[FileItem]>.empty()
+  fileprivate(set) var cwd = FileUtils.userHomeUrl
+  fileprivate var cwdPathCompsCount = 0
+
+  // FIXME: migrate to State later...
+  fileprivate(set) var pattern = ""
   fileprivate(set) var flatFileItems = [FileItem]()
   fileprivate(set) var fileViewItems = [ScoredFileItem]()
+  fileprivate var count = 0
+  fileprivate var perSessionDisposeBag = DisposeBag()
+  fileprivate let filterOpQueue = OperationQueue()
 
-  fileprivate let userInitiatedScheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
+  fileprivate let scheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
+
+  fileprivate let windowController: NSWindowController
 
   fileprivate let searchField = NSTextField(forAutoLayout: ())
   fileprivate let progressIndicator = NSProgressIndicator(forAutoLayout: ())
@@ -34,31 +130,19 @@ class OpenQuicklyWindowComponent: WindowComponent,
   fileprivate let countField = NSTextField(forAutoLayout: ())
   fileprivate let fileView = NSTableView.standardTableView()
 
-  fileprivate let fileItemService: FileItemService
-
-  fileprivate var count = 0
-  fileprivate var perSessionDisposeBag = DisposeBag()
-
-  fileprivate var cwdPathCompsCount = 0
   fileprivate let searchStream: Observable<String>
-  fileprivate let filterOpQueue = OperationQueue()
 
-  weak fileprivate var mainWindow: MainWindowComponent?
-
-  init(source: Observable<Any>, fileItemService: FileItemService) {
-    self.fileItemService = fileItemService
-    self.searchStream = self.searchField.rx.text.orEmpty
-      .throttle(0.2, scheduler: MainScheduler.instance)
-      .distinctUntilChanged()
-
-    super.init(source: source, nibName: "OpenQuicklyWindow")
-
-    self.window.delegate = self
-    self.filterOpQueue.qualityOfService = .userInitiated
-    self.filterOpQueue.name = "open-quickly-filter-operation-queue"
+  fileprivate var window: NSWindow {
+    return self.windowController.window!
   }
 
-  override func addViews() {
+  fileprivate func resetAndAddFilterOperation() {
+    self.filterOpQueue.cancelAllOperations()
+    let op = OpenQuicklyFilterOperation(forOpenQuickly: self)
+    self.filterOpQueue.addOperation(op)
+  }
+
+  fileprivate func addViews() {
     let searchField = self.searchField
     searchField.rx.delegate.setForwardToDelegate(self, retainDelegate: false)
 
@@ -83,7 +167,7 @@ class OpenQuicklyWindowComponent: WindowComponent,
     cwdControl.refusesFirstResponder = true
     cwdControl.cell?.controlSize = .small
     cwdControl.cell?.font = NSFont.systemFont(ofSize: NSFont.smallSystemFontSize())
-    cwdControl.setContentCompressionResistancePriority(NSLayoutPriorityDefaultLow, for:.horizontal)
+    cwdControl.setContentCompressionResistancePriority(NSLayoutPriorityDefaultLow, for: .horizontal)
 
     let countField = self.countField
     countField.isEditable = false
@@ -112,91 +196,19 @@ class OpenQuicklyWindowComponent: WindowComponent,
     fileScrollView.autoSetDimension(.height, toSize: 200, relation: .greaterThanOrEqual)
 
     cwdControl.autoPinEdge(.top, to: .bottom, of: fileScrollView, withOffset: 4)
+//    cwdControl.autoPinEdge(toSuperviewEdge: .bottom)
     cwdControl.autoPinEdge(toSuperviewEdge: .left, withInset: 2)
     cwdControl.autoPinEdge(toSuperviewEdge: .bottom, withInset: 4)
 
+//    countField.autoPinEdge(toSuperviewEdge: .bottom)
     countField.autoPinEdge(.top, to: .bottom, of: fileScrollView, withOffset: 4)
     countField.autoPinEdge(toSuperviewEdge: .right, withInset: 2)
     countField.autoPinEdge(.left, to: .right, of: cwdControl, withOffset: 4)
   }
-
-  override func subscription(source: Observable<Any>) -> Disposable {
-    return Disposables.create()
-  }
-
-  func reloadFileView(withScoredItems items: [ScoredFileItem]) {
-    self.fileViewItems = items
-    self.fileView.reloadData()
-  }
-
-  func startProgress() {
-    self.progressIndicator.startAnimation(self)
-  }
-
-  func endProgress() {
-    self.progressIndicator.stopAnimation(self)
-  }
-
-  func show(forMainWindow mainWindow: MainWindowComponent) {
-    self.mainWindow = mainWindow
-    self.mainWindow?.sink
-      .filter { $0 is MainWindowAction }
-      .map { $0 as! MainWindowAction }
-      .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { [unowned self] action in
-        switch action {
-        case .close:
-          self.window.performClose(self)
-          return
-
-        default:
-          return
-        }
-      })
-      .addDisposableTo(self.perSessionDisposeBag)
-
-    self.cwd = mainWindow.cwd
-    let flatFiles = self.fileItemService.flatFileItems(ofUrl: self.cwd)
-
-    self.searchStream
-      .subscribe(onNext: { [unowned self] pattern in
-        self.pattern = pattern
-        self.resetAndAddFilterOperation()
-        })
-      .addDisposableTo(self.perSessionDisposeBag)
-
-    flatFiles
-      .subscribeOn(self.userInitiatedScheduler)
-      .do(onNext: { [unowned self] items in
-        self.scanCondition.lock()
-        while self.pauseScan {
-          self.scanCondition.wait()
-        }
-        self.scanCondition.unlock()
-
-        self.flatFileItems.append(contentsOf: items)
-        self.resetAndAddFilterOperation()
-      })
-      .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { [unowned self] items in
-        self.count += items.count
-        self.countField.stringValue = "\(self.count) items"
-        })
-      .addDisposableTo(self.perSessionDisposeBag)
-
-    self.show()
-    self.searchField.becomeFirstResponder()
-  }
-
-  fileprivate func resetAndAddFilterOperation() {
-    self.filterOpQueue.cancelAllOperations()
-    let op = OpenQuicklyFilterOperation(forOpenQuicklyWindow: self)
-    self.filterOpQueue.addOperation(op)
-  }
 }
 
 // MARK: - NSTableViewDataSource
-extension OpenQuicklyWindowComponent {
+extension OpenQuicklyWindow {
 
   @objc(numberOfRowsInTableView:)
   func numberOfRows(in _: NSTableView) -> Int {
@@ -205,20 +217,20 @@ extension OpenQuicklyWindowComponent {
 }
 
 // MARK: - NSTableViewDelegate
-extension OpenQuicklyWindowComponent {
+extension OpenQuicklyWindow {
 
   func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
     return OpenQuicklyFileViewRow()
   }
 
-  @objc(tableView:viewForTableColumn:row:)
+  @objc(tableView: viewForTableColumn:row:)
   func tableView(_ tableView: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
     let cachedCell = (tableView.make(withIdentifier: "file-view-row", owner: self) as? ImageAndTextTableCell)?.reset()
     let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
     let url = self.fileViewItems[row].url
     cell.attributedText = self.rowText(for: url as URL)
-    cell.image = self.fileItemService.icon(forUrl: url)
+    cell.image = FileUtils.icon(forUrl: url)
 
     return cell
   }
@@ -241,16 +253,16 @@ extension OpenQuicklyWindowComponent {
     rowText = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
     rowText.addAttribute(NSForegroundColorAttributeName,
                          value: NSColor.lightGray,
-                         range: NSRange(location:name.characters.count, length: pathInfo.characters.count + 3))
+                         range: NSRange(location: name.characters.count, length: pathInfo.characters.count + 3))
 
     return rowText
   }
 }
 
 // MARK: - NSTextFieldDelegate
-extension OpenQuicklyWindowComponent {
+extension OpenQuicklyWindow {
 
-  @objc(control:textView:doCommandBySelector:)
+  @objc(control: textView:doCommandBySelector:)
   func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
     switch commandSelector {
     case NSSelectorFromString("cancelOperation:"):
@@ -258,7 +270,8 @@ extension OpenQuicklyWindowComponent {
       return true
 
     case NSSelectorFromString("insertNewline:"):
-      self.mainWindow?.open(urls: [self.fileViewItems[self.fileView.selectedRow].url])
+      // TODO open the url
+      self.emitter.emit(Action.open(self.fileViewItems[self.fileView.selectedRow].url))
       self.window.performClose(self)
       return true
 
@@ -294,12 +307,16 @@ extension OpenQuicklyWindowComponent {
 }
 
 // MARK: - NSWindowDelegate
-extension OpenQuicklyWindowComponent {
+extension OpenQuicklyWindow {
 
-  func windowWillClose(_ notification: Notification) {
+  func windowShouldClose(_: Any) -> Bool {
+    self.emitter.emit(Action.close)
+
+    return false
+  }
+
+  func windowWillClose(_: Notification) {
     self.endProgress()
-
-    self.mainWindow = nil
 
     self.filterOpQueue.cancelAllOperations()
 
@@ -316,7 +333,7 @@ extension OpenQuicklyWindowComponent {
     self.countField.stringValue = "0 items"
   }
 
-  func windowDidResignKey(_ notification: Notification) {
+  func windowDidResignKey(_: Notification) {
     self.window.performClose(self)
   }
 }

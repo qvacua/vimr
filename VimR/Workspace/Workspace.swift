@@ -18,10 +18,11 @@ enum WorkspaceBarLocation {
 
 protocol WorkspaceDelegate: class {
 
-  func resizeWillStart(workspace: Workspace)
-  func resizeDidEnd(workspace: Workspace)
+  func resizeWillStart(workspace: Workspace, tool: WorkspaceTool?)
+  func resizeDidEnd(workspace: Workspace, tool: WorkspaceTool?)
 
   func toggled(tool: WorkspaceTool)
+  func moved(tool: WorkspaceTool)
 }
 
 class Workspace: NSView, WorkspaceBarDelegate {
@@ -94,6 +95,8 @@ class Workspace: NSView, WorkspaceBarDelegate {
   func move(tool: WorkspaceTool, to location: WorkspaceBarLocation) {
     tool.bar?.remove(tool: tool)
     self.bars[location]?.append(tool: tool)
+
+    self.delegate?.moved(tool: tool)
   }
 
   func toggleAllTools() {
@@ -190,16 +193,20 @@ extension Workspace {
 // MARK: - WorkspaceBarDelegate
 extension Workspace {
 
-  func resizeWillStart(workspaceBar: WorkspaceBar) {
-    self.delegate?.resizeWillStart(workspace: self)
+  func resizeWillStart(workspaceBar: WorkspaceBar, tool: WorkspaceTool?) {
+    self.delegate?.resizeWillStart(workspace: self, tool: tool)
   }
 
-  func resizeDidEnd(workspaceBar: WorkspaceBar) {
-    self.delegate?.resizeDidEnd(workspace: self)
+  func resizeDidEnd(workspaceBar: WorkspaceBar, tool: WorkspaceTool?) {
+    self.delegate?.resizeDidEnd(workspace: self, tool: tool)
   }
 
   func toggle(tool: WorkspaceTool) {
     self.delegate?.toggled(tool: tool)
+  }
+
+  func moved(tool: WorkspaceTool) {
+
   }
 }
 

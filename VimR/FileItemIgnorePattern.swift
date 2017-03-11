@@ -5,12 +5,40 @@
 
 import Foundation
 
-func ==(lhs: FileItemIgnorePattern, rhs: FileItemIgnorePattern) -> Bool {
-  return lhs.pattern == rhs.pattern
-}
+fileprivate let whitespaceCharSet = CharacterSet.whitespaces
 
 class FileItemIgnorePattern: Hashable, CustomStringConvertible {
-  
+
+  static func ==(lhs: FileItemIgnorePattern, rhs: FileItemIgnorePattern) -> Bool {
+    return lhs.pattern == rhs.pattern
+  }
+
+  static func from(string str: String) -> Set<FileItemIgnorePattern> {
+    if str.trimmingCharacters(in: whitespaceCharSet).characters.count == 0 {
+      return Set()
+    }
+
+    let patterns: [FileItemIgnorePattern] = str
+      .components(separatedBy: ",")
+      .flatMap {
+        let trimmed = $0.trimmingCharacters(in: whitespaceCharSet)
+        if trimmed.characters.count == 0 {
+          return nil
+        }
+
+        return FileItemIgnorePattern(pattern: trimmed)
+      }
+
+    return Set(patterns)
+  }
+
+  static func toString(_ set: Set<FileItemIgnorePattern>) -> String {
+    return Array(set)
+      .map { $0.pattern }
+      .sorted()
+      .joined(separator: ", ")
+  }
+
   var hashValue: Int {
     return self.pattern.hashValue
   }

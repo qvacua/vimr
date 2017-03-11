@@ -65,17 +65,21 @@
     return NO;
   if (self.handle != buffer.handle)
     return NO;
+  if (self.url != buffer.url && ![self.url isEqual:buffer.url])
+    return NO;
   return YES;
 }
 
 - (NSUInteger)hash {
-  return (NSUInteger) self.handle;
+  NSUInteger hash = (NSUInteger) self.handle;
+  hash = hash * 31u + [self.url hash];
+  return hash;
 }
 
 - (NSString *)description {
   NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
   [description appendFormat:@"self.handle=%li", self.handle];
-  [description appendFormat:@"self.url=%@", self.url];
+  [description appendFormat:@", self.url=%@", self.url];
   [description appendFormat:@", self.dirty=%d", self.isDirty];
   [description appendFormat:@", self.readOnly=%d", self.isReadOnly];
   [description appendFormat:@", self.current=%d", self.isCurrent];

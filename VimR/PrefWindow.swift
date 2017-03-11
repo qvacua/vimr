@@ -7,9 +7,62 @@ import Cocoa
 import RxSwift
 import PureLayout
 
-class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSource, NSTableViewDelegate {
+class PrefWindow: NSObject,
+                  UiComponent,
+                  NSWindowDelegate,
+                  NSTableViewDataSource, NSTableViewDelegate {
 
-  fileprivate var data: PrefData
+  typealias StateType = AppState
+
+  enum Action {
+
+    case close
+  }
+
+  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+    self.emitter = emitter
+    self.openStatusMark = state.preferencesOpen.mark
+
+    self.windowController = NSWindowController(windowNibName: "PrefWindow")
+
+    self.panes = [
+      GeneralPref(source: source, emitter: emitter, state: state),
+      AppearancePref(source: source, emitter: emitter, state: state),
+      AdvancedPref(source: source, emitter: emitter, state: state),
+    ]
+
+    super.init()
+
+    self.window.delegate = self
+
+    self.addViews()
+
+    source
+      .observeOn(MainScheduler.instance)
+      .subscribe(onNext: { state in
+        if state.preferencesOpen.payload == false {
+          self.openStatusMark = state.preferencesOpen.mark
+          self.windowController.close()
+          return
+        }
+
+        if state.preferencesOpen.mark == self.openStatusMark {
+          return
+        }
+
+        self.openStatusMark = state.preferencesOpen.mark
+        self.windowController.showWindow(self)
+      })
+      .addDisposableTo(self.disposeBag)
+  }
+
+  fileprivate let emitter: ActionEmitter
+  fileprivate let disposeBag = DisposeBag()
+
+  fileprivate var openStatusMark: Token
+
+  fileprivate let windowController: NSWindowController
+  fileprivate var window: NSWindow { return self.windowController.window! }
 
   fileprivate let categoryView = NSTableView.standardSourceListTableView()
   fileprivate let categoryScrollView = NSScrollView.standardScrollView()
@@ -31,30 +84,7 @@ class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSou
     }
   }
 
-  init(source: Observable<Any>, initialData: PrefData) {
-    self.data = initialData
-
-    self.panes = [
-      GeneralPrefPane(source: source, initialData: self.data.general),
-      AppearancePrefPane(source: source, initialData: self.data.appearance),
-      AdvancedPrefPane(source: source, initialData: self.data.advanced)
-    ]
-    
-    super.init(source: source, nibName: "PrefWindow")
-
-    self.window.delegate = self
-
-    self.addReactions()
-  }
-
-  override func subscription(source: Observable<Any>) -> Disposable {
-    return source
-      .filter { $0 is PrefData }
-      .map { $0 as! PrefData }
-      .subscribe(onNext: { [unowned self] prefData in self.data = prefData })
-  }
-
-  override func addViews() {
+  fileprivate func addViews() {
     let categoryView = self.categoryView
     categoryView.dataSource = self
     categoryView.delegate = self
@@ -86,36 +116,24 @@ class PrefWindowComponent: WindowComponent, NSWindowDelegate, NSTableViewDataSou
 
     self.currentPane = self.panes[0]
   }
+}
 
-  fileprivate func addReactions() {
-    self.panes
-      .map { $0.sink }
-      .toMergedObservables()
-      .map { [unowned self] action in
-        switch action {
-        case let data as AppearancePrefData:
-          self.data.appearance = data
-        case let data as GeneralPrefData:
-          self.data.general = data
-        case let data as AdvancedPrefData:
-          self.data.advanced = data
-        default:
-          NSLog("nothing to see here")
-        }
+// MARK: - NSWindowDelegate
+extension PrefWindow {
 
-        return self.data
-      }
-      .subscribe(onNext: { [unowned self] action in self.publish(event: action) })
-      .addDisposableTo(self.disposeBag)
+  func windowShouldClose(_: Any) -> Bool {
+    self.emitter.emit(Action.close)
+
+    return false
   }
 
-  func windowWillClose(_ notification: Notification) {
+  func windowWillClose(_: Notification) {
     self.panes.forEach { $0.windowWillClose() }
   }
 }
 
 // MARK: - NSTableViewDataSource
-extension PrefWindowComponent {
+extension PrefWindow {
 
   @objc(numberOfRowsInTableView:) func numberOfRows(in _: NSTableView) -> Int {
     return self.panes.count
@@ -127,7 +145,7 @@ extension PrefWindowComponent {
 }
 
 // MARK: - NSTableViewDelegate
-extension PrefWindowComponent {
+extension PrefWindow {
 
   func tableViewSelectionDidChange(_: Notification) {
     let idx = self.categoryView.selectedRow

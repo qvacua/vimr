@@ -5,6 +5,9 @@
 
 import Foundation
 
+fileprivate let workspace = NSWorkspace.shared()
+fileprivate let iconsCache = NSCache<NSURL, NSImage>()
+
 class FileUtils {
   
   fileprivate static let keysToGet = [
@@ -63,5 +66,22 @@ class FileUtils {
     let possibleParent = NSURL.fileURL(withPathComponents: Array(result[0...commonIdx]))!
 
     return possibleParent.isDir ? possibleParent : possibleParent.parent
+  }
+
+  static func icon(forType type: String) -> NSImage {
+    return workspace.icon(forFileType: type)
+  }
+
+  static func icon(forUrl url: URL) -> NSImage? {
+    if let cached = iconsCache.object(forKey: url as NSURL) {
+      return cached
+    }
+
+    let path = url.path
+    let icon = workspace.icon(forFile: path)
+    icon.size = CGSize(width: 16, height: 16)
+    iconsCache.setObject(icon, forKey: url as NSURL)
+
+    return icon
   }
 }

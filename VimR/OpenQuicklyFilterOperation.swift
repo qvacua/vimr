@@ -10,27 +10,28 @@ class OpenQuicklyFilterOperation: Operation {
   fileprivate let chunkSize = 100
   fileprivate let maxResultCount = 500
 
-  fileprivate unowned let openQuicklyWindow: OpenQuicklyWindowComponent
   fileprivate let pattern: String
   fileprivate let flatFileItems: [FileItem]
   fileprivate let cwd: URL
 
-  init(forOpenQuicklyWindow openQuicklyWindow: OpenQuicklyWindowComponent) {
-    self.openQuicklyWindow = openQuicklyWindow
-    self.pattern = openQuicklyWindow.pattern
-    self.cwd = openQuicklyWindow.cwd as URL
-    self.flatFileItems = openQuicklyWindow.flatFileItems
-    
+  fileprivate unowned let openQuickly: OpenQuicklyWindow
+
+  init(forOpenQuickly openQuickly: OpenQuicklyWindow) {
+    self.openQuickly = openQuickly
+    self.pattern = openQuickly.pattern
+    self.cwd = openQuickly.cwd as URL
+    self.flatFileItems = openQuickly.flatFileItems
+
     super.init()
   }
 
   override func main() {
-    self.openQuicklyWindow.scanCondition.lock()
-    self.openQuicklyWindow.pauseScan = true
+    self.openQuickly.scanCondition.lock()
+    self.openQuickly.pauseScan = true
     defer {
-      self.openQuicklyWindow.pauseScan = false
-      self.openQuicklyWindow.scanCondition.broadcast()
-      self.openQuicklyWindow.scanCondition.unlock()
+      self.openQuickly.pauseScan = false
+      self.openQuickly.scanCondition.broadcast()
+      self.openQuickly.scanCondition.unlock()
     }
 
     if self.isCancelled {
@@ -46,8 +47,8 @@ class OpenQuicklyFilterOperation: Operation {
       let truncatedItems = self.flatFileItems[0...min(self.maxResultCount, self.flatFileItems.count - 1)]
       sorted = truncatedItems.map { ScoredFileItem(score: 0, url: $0.url) }
     } else {
-      DispatchUtils.gui { self.openQuicklyWindow.startProgress() }
-      defer { DispatchUtils.gui { self.openQuicklyWindow.endProgress() } }
+      DispatchUtils.gui { self.openQuickly.startProgress() }
+      defer { DispatchUtils.gui { self.openQuickly.endProgress() } }
 
       let count = self.flatFileItems.count
       let chunksCount = Int(ceil(Float(count) / Float(self.chunkSize)))
@@ -108,7 +109,7 @@ class OpenQuicklyFilterOperation: Operation {
 
     DispatchUtils.gui {
       let result = Array(sorted[0...min(self.maxResultCount, sorted.count - 1)])
-      self.openQuicklyWindow.reloadFileView(withScoredItems: result)
+      self.openQuickly.reloadFileView(withScoredItems: result)
     }
   }
 }

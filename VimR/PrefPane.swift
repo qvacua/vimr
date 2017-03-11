@@ -1,13 +1,12 @@
-/**
- * Tae Won Ha - http://taewon.de - @hataewon
- * See LICENSE
- */
+//
+// Created by Tae Won Ha on 2/27/17.
+// Copyright (c) 2017 Tae Won Ha. All rights reserved.
+//
 
-import Cocoa
-import RxSwift
+import Foundation
 
-class PrefPane: StandardViewComponent {
-  
+class PrefPane: NSView {
+
   // Return true to place this to the upper left corner when the scroll view is bigger than this view.
   override var isFlipped: Bool {
     return true
@@ -16,7 +15,7 @@ class PrefPane: StandardViewComponent {
   var displayName: String {
     preconditionFailure("Please override")
   }
-  
+
   var pinToContainer: Bool {
     return false
   }
