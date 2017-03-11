@@ -144,12 +144,12 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
 
   fileprivate var ignoreNextForwardSearch = false;
 
-  fileprivate var currentEditorPosition = Position.beginning
+  fileprivate var currentEditorPosition = Position(row: 1, column: 1)
   fileprivate var currentUrl: URL?
-  fileprivate var currentPreviewPosition = Position.beginning
+  fileprivate var currentPreviewPosition = Position(row: 1, column: 1)
 
   fileprivate let uuid = UUID().uuidString
-  fileprivate let httpServer: Swifter.HttpServer
+  fileprivate let httpServer: HttpServer
   fileprivate let port: Int
   fileprivate let tempDir = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
 
@@ -171,7 +171,7 @@ class MarkdownRenderer: NSObject, Flow, PreviewRenderer {
   let toolbar: NSView? = NSView(forAutoLayout: ())
   let menuItems: [NSMenuItem]?
 
-  init(source: Observable<Any>, scrollSource: Observable<Any>, httpServer: Swifter.HttpServer, initialData: PrefData) {
+  init(source: Observable<Any>, scrollSource: Observable<Any>, httpServer: HttpServer, initialData: PrefData) {
     guard let templateUrl = Bundle.main.url(forResource: "template",
                                             withExtension: "html",
                                             subdirectory: "markdown")

@@ -37,8 +37,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @IBOutlet var updater: SUUpdater?
 
   override init() {
-    let stateDict = UserDefaults.standard.value(forKey: PrefService.compatibleVersion) as? [String: Any] ?? [:]
-    let initialAppState = AppState(dict: stateDict) ?? AppState.default
+    let initialAppState: AppState
+    if let stateDict = UserDefaults.standard.value(forKey: PrefService.compatibleVersion) as? [String: Any] {
+      initialAppState = AppState(dict: stateDict) ?? .default
+    } else {
+      if let oldDict = UserDefaults.standard.value(forKey: PrefService.lastCompatibleVersion) as? [String: Any] {
+        initialAppState = Pref128ToCurrentConverter.appState(from: oldDict)
+      } else {
+        initialAppState = .default
+      }
+    }
+
     self.stateContext = Context(initialAppState)
 
     self.openNewMainWindowOnLaunch = initialAppState.openNewMainWindowOnLaunch

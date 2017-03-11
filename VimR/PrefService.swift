@@ -7,7 +7,6 @@ import Foundation
 import Swifter
 import RxSwift
 
-fileprivate let lastCompatibleVersion = "128"
 
 fileprivate let defaults = UserDefaults.standard
 
@@ -16,6 +15,7 @@ class PrefService: Service {
   typealias Element = StateActionPair<AppState, UuidAction<MainWindow.Action>>
 
   static let compatibleVersion = "200" // yet dummy
+  static let lastCompatibleVersion = "128"
 
   func apply(_ pair: Element) {
     guard case .close = pair.action.payload else {
