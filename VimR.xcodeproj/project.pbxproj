@@ -311,7 +311,6 @@
 		1929B34FC23D805A8B29E8F7 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		1929B364460D86F17E80943C /* PrefService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefService.swift; sourceTree = "<group>"; };
 		1929B365A6434354B568B04F /* FileMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileMonitor.swift; sourceTree = "<group>"; };
-		1929B3A98687DF171307AAC8 /* FileItemService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemService.swift; sourceTree = "<group>"; };
 		1929B457B9D0FA4D21F3751E /* UiRootTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiRootTransformer.swift; sourceTree = "<group>"; };
 		1929B4778E20696E3AAFB69B /* FileItemTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemTest.swift; sourceTree = "<group>"; };
 		1929B477E1E62433BC48E10B /* ArrayCommonsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayCommonsTest.swift; sourceTree = "<group>"; };
@@ -818,7 +817,6 @@
 				1929B7CB4863F80230C32D3C /* FileItem.swift */,
 				1929B69499B2569793350CEC /* FileItemIgnorePattern.swift */,
 				1929BDF9EBAF1D9D44399045 /* ScoredFileItem.swift */,
-				1929B3A98687DF171307AAC8 /* FileItemService.swift */,
 			);
 			name = "File Items";
 			sourceTree = "<group>";
