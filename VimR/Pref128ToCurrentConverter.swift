@@ -19,6 +19,8 @@ class Pref128ToCurrentConverter {
 
     appState.useSnapshotUpdate = prefData.advanced.useSnapshotUpdateChannel
 
+    appState.openQuickly.ignorePatterns = prefData.general.ignorePatterns
+
     appState.mainWindowTemplate.useInteractiveZsh = prefData.advanced.useInteractiveZsh
     appState.mainWindowTemplate.isAllToolsVisible = prefData.mainWindow.isAllToolsVisible
     appState.mainWindowTemplate.isToolButtonsVisible = prefData.mainWindow.isAllToolsVisible
