@@ -98,7 +98,12 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
 
     set {
       let path = newValue.path
-      let escapedCwd = self.agent.escapedFileName(path)
+      guard let escapedCwd = self.agent.escapedFileName(path) else {
+        // this happens when VimR is quitting with some main windows open...
+        NSLog("WARN \(#function): escaped file name returned nil")
+        return
+      }
+
       self.agent.vimCommandOutput("cd \(escapedCwd)")
     }
   }
@@ -325,7 +330,11 @@ extension NeoVimView {
 
   public func saveCurrentTab(url: URL) {
     let path = url.path
-    let escapedFileName = self.agent.escapedFileName(path)
+    guard let escapedFileName = self.agent.escapedFileName(path) else {
+      NSLog("WARN \(#function): escaped file name returned nil")
+      return
+    }
+
     self.exec(command: "w \(escapedFileName)")
   }
 
@@ -368,7 +377,11 @@ extension NeoVimView {
 
   fileprivate func open(_ url: URL, cmd: String) {
     let path = url.path
-    let escapedFileName = self.agent.escapedFileName(path)
+    guard let escapedFileName = self.agent.escapedFileName(path) else {
+      NSLog("WARN \(#function): escaped file name returned nil")
+      return
+    }
+
     self.exec(command: "\(cmd) \(escapedFileName)")
   }
 }

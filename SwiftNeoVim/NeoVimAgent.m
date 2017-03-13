@@ -256,7 +256,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (NSString *)escapedFileName:(NSString *)fileName {
-  return [self escapedFileNames:@[ fileName ]][0];
+  NSArray<NSString *> *fileNames = [self escapedFileNames:@[ fileName ]];
+  if (fileNames.count == 0) {
+    return nil;
+  }
+
+  return fileNames[0];
 }
 
 - (NSNumber *)boolOption:(NSString *)option {

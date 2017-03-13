@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)cursorGoToRow:(int)row column:(int)column;
 
 - (bool)hasDirtyDocs;
-- (NSString *)escapedFileName:(NSString *)fileName;
+- (NSString * _Nullable)escapedFileName:(NSString *)fileName;
 - (NSArray<NSString *> *)escapedFileNames:(NSArray<NSString *> *)fileNames;
 - (NSArray<NeoVimBuffer *> *)buffers;
 - (NSArray<NeoVimTab*> *)tabs;
