@@ -25,6 +25,10 @@ class Pref128ToCurrentConverter {
     appState.mainWindowTemplate.isAllToolsVisible = prefData.mainWindow.isAllToolsVisible
     appState.mainWindowTemplate.isToolButtonsVisible = prefData.mainWindow.isAllToolsVisible
 
+    appState.mainWindowTemplate.appearance.font = prefData.appearance.editorFont
+    appState.mainWindowTemplate.appearance.usesLigatures = prefData.appearance.editorUsesLigatures
+    appState.mainWindowTemplate.appearance.linespacing = prefData.appearance.editorLinespacing
+
     let toolPrefData = prefData.mainWindow.toolPrefDatas
 
     guard let fileBrowserData = toolPrefData.first(where: { $0.identifier == .fileBrowser }) else {
