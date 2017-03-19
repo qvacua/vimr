@@ -31,6 +31,11 @@ class MainWindowTransformer: Reducer {
         state.currentBuffer = buffer
 
       case let .setDirtyStatus(status):
+        // When I gt or w around, we change tab somehow... Dunno why...
+        if status == pair.state.payload.isDirty {
+          return pair
+        }
+
         state.isDirty = status
 
         // if we scroll for reverse search we get scroll and set cursor event
