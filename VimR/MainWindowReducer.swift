@@ -73,7 +73,6 @@ class MainWindowTransformer: Reducer {
 
       }
 
-      NSLog("\(state.tools[.preview])")
       return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
     }
   }
