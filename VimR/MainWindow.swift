@@ -52,11 +52,12 @@ class MainWindow: NSObject,
 
   enum Tools: String {
 
-    static let all = Set([Tools.fileBrowser, Tools.openedFilesList, Tools.preview])
+    static let all = Set([Tools.fileBrowser, Tools.openedFilesList, Tools.preview, Tools.htmlPreview])
 
     case fileBrowser = "com.qvacua.vimr.tools.file-browser"
     case openedFilesList = "com.qvacua.vimr.tools.opened-files-list"
     case preview = "com.qvacua.vimr.tools.preview"
+    case htmlPreview = "com.qvacua.vimr.tools.html-preview"
   }
 
   enum OpenMode {
@@ -84,6 +85,7 @@ class MainWindow: NSObject,
     self.neoVimView.configureForAutoLayout()
 
     self.workspace = Workspace(mainView: self.neoVimView)
+    self.htmlPreview = HtmlPreviewTool(source: source, emitter: emitter, state: state)
     self.preview = PreviewTool(source: source, emitter: emitter, state: state)
     self.fileBrowser = FileBrowser(source: source, emitter: emitter, state: state)
     self.openedFileList = OpenedFileList(source: source, emitter: emitter, state: state)
@@ -95,6 +97,12 @@ class MainWindow: NSObject,
                                              customMenuItems: self.preview.menuItems)
     self.previewContainer = WorkspaceTool(previewConfig)
     previewContainer.dimension = state.tools[.preview]?.dimension ?? 250
+
+    let htmlPreviewConfig = WorkspaceTool.Config(title: "HTML Preview",
+        view: self.htmlPreview,
+        customToolbar: self.htmlPreview.innerCustomToolbar)
+    let htmlPreviewContainer = WorkspaceTool(htmlPreviewConfig)
+    htmlPreviewContainer.dimension = state.tools[.htmlPreview]?.dimension ?? 250
 
     let fileBrowserConfig = WorkspaceTool.Config(title: "Files",
                                                  view: self.fileBrowser,
@@ -108,6 +116,7 @@ class MainWindow: NSObject,
     self.openedFileListContainer.dimension = state.tools[.openedFilesList]?.dimension ?? 200
 
     self.workspace.append(tool: previewContainer, location: state.tools[.preview]?.location ?? .right)
+    self.workspace.append(tool: htmlPreviewContainer, location: state.tools[.htmlPreview]?.location ?? .right)
     self.workspace.append(tool: fileBrowserContainer, location: state.tools[.fileBrowser]?.location ?? .left)
     self.workspace.append(tool: openedFileListContainer, location: state.tools[.openedFilesList]?.location ?? .left)
 
@@ -115,6 +124,7 @@ class MainWindow: NSObject,
       .fileBrowser: self.fileBrowserContainer,
       .openedFilesList: self.openedFileListContainer,
       .preview: self.previewContainer,
+      .htmlPreview: htmlPreviewContainer,
     ]
 
     super.init()
@@ -236,6 +246,7 @@ class MainWindow: NSObject,
   fileprivate var previewPosition: Marked<Position>
 
   fileprivate let preview: PreviewTool
+  fileprivate let htmlPreview: HtmlPreviewTool
   fileprivate let fileBrowser: FileBrowser
   fileprivate let openedFileList: OpenedFileList
 

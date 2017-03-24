@@ -20,27 +20,64 @@ fileprivate func shareFile(_ path: String) -> ((HttpRequest) -> HttpResponse) {
   }
 }
 
-class HttpServerService: Service {
+class HttpService {
 
-  typealias Element = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
+  let forMainWindow: MainWindowHttpServerService
+  let forHtmlPreviewTool: HtmlPreviewToolHttpServerService
 
   init(port: Int) {
     self.port = port
 
+    self.forMainWindow = MainWindowHttpServerService(server: self.server)
+    self.forHtmlPreviewTool = HtmlPreviewToolHttpServerService(server: self.server)
+
+    do {
+      try self.server.start(in_port_t(port))
+      NSLog("server started on http://localhost:\(port)")
+    } catch {
+      NSLog("ERROR server could not be started on port \(port)")
+    }
+  }
+
+  fileprivate let server = HttpServer()
+  fileprivate let port: Int
+}
+
+class HtmlPreviewToolHttpServerService: Service {
+
+  typealias Element = StateActionPair<UuidState<MainWindow.State>, HtmlPreviewTool.Action>
+
+  init(server: HttpServer) {
+    self.server = server
     let resourceUrl = Bundle.main.resourceURL!
     let previewResourceUrl = resourceUrl.appendingPathComponent("preview")
 
     self.githubCssUrl = resourceUrl.appendingPathComponent("markdown/github-markdown.css")
 
-    do {
-      try self.server.start(in_port_t(port))
-      NSLog("server started on http://localhost:\(port)")
+    self.server["\(PreviewTransformer.basePath)/:path"] = shareFilesFromDirectory(previewResourceUrl.path)
+    self.server.GET["\(PreviewTransformer.basePath)/github-markdown.css"] = shareFile(self.githubCssUrl.path)
+  }
 
-      self.server["\(PreviewTransformer.basePath)/:path"] = shareFilesFromDirectory(previewResourceUrl.path)
-      self.server.GET["\(PreviewTransformer.basePath)/github-markdown.css"] = shareFile(self.githubCssUrl.path)
-    } catch {
-      NSLog("ERROR server could not be started on port \(port)")
-    }
+  func apply(_ pair: Element) {
+  }
+
+  fileprivate let server: HttpServer
+  fileprivate let githubCssUrl: URL
+}
+
+class MainWindowHttpServerService: Service {
+
+  typealias Element = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
+
+  init(server: HttpServer) {
+    self.server = server
+    let resourceUrl = Bundle.main.resourceURL!
+    let previewResourceUrl = resourceUrl.appendingPathComponent("preview")
+
+    self.githubCssUrl = resourceUrl.appendingPathComponent("markdown/github-markdown.css")
+
+    self.server["\(PreviewTransformer.basePath)/:path"] = shareFilesFromDirectory(previewResourceUrl.path)
+    self.server.GET["\(PreviewTransformer.basePath)/github-markdown.css"] = shareFile(self.githubCssUrl.path)
   }
 
   func apply(_ pair: Element) {
@@ -66,7 +103,6 @@ class HttpServerService: Service {
     self.server.GET["\(htmlBasePath)/github-markdown.css"] = shareFile(self.githubCssUrl.path)
   }
 
-  fileprivate let server = HttpServer()
+  fileprivate let server: HttpServer
   fileprivate let githubCssUrl: URL
-  fileprivate let port: Int
 }

@@ -61,6 +61,8 @@ class Context {
       })
       .addDisposableTo(self.disposeBag)
 
+    self.httpService = HttpService(port: baseServerUrl.port!)
+
     // MainWindow.State
     Observable
       .of(
@@ -71,12 +73,18 @@ class Context {
           .transform(by: previewTransformer.forMainWindow)
           .filter { $0.modified }
           .apply(to: previewService.forMainWindow)
-          .apply(to: HttpServerService(port: baseServerUrl.port ?? 0))
+          .apply(to: self.httpService.forMainWindow)
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? UuidAction<PreviewTool.Action> }
           .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
           .transform(by: PreviewToolTransformer(baseServerUrl: baseServerUrl))
+          .filter { $0.modified }
+          .map { $0.state },
+        actionSource
+          .mapOmittingNil { $0 as? UuidAction<HtmlPreviewTool.Action> }
+          .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
+          .transform(by: self.httpService.forHtmlPreviewTool)
           .filter { $0.modified }
           .map { $0.state },
         actionSource
@@ -149,6 +157,8 @@ class Context {
   deinit {
     self.stateSubject.onCompleted()
   }
+
+  fileprivate let httpService: HttpService
 
   fileprivate let stateSubject = PublishSubject<AppState>()
   fileprivate let scheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
