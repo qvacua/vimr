@@ -111,7 +111,7 @@ class MainWindow: NSObject,
     self.fileBrowserContainer = WorkspaceTool(fileBrowserConfig)
     fileBrowserContainer.dimension = state.tools[.fileBrowser]?.dimension ?? 200
 
-    let openedFileListConfig = WorkspaceTool.Config(title: "Opened", view: self.openedFileList)
+    let openedFileListConfig = WorkspaceTool.Config(title: "Buffers", view: self.openedFileList)
     self.openedFileListContainer = WorkspaceTool(openedFileListConfig)
     self.openedFileListContainer.dimension = state.tools[.openedFilesList]?.dimension ?? 200
 

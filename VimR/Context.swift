@@ -188,6 +188,13 @@ extension Observable {
     return transformer.transform(self)
   }
 
+  // If the following is used, the compiler does not finish...
+//  fileprivate func transform<T:Reducer>(by transformers: [T]) -> Observable<Element> where T.Element == Element {
+//    return transformers.reduce(self) { (result: Observable<Element>, transformer: T) -> Observable<Element> in
+//      transformer.transform(result)
+//    }
+//  }
+
   fileprivate func apply<S:Service>(to service: S) -> Observable<Element> where S.Element == Element {
     return self.do(onNext: service.apply)
   }
