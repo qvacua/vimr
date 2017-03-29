@@ -46,6 +46,7 @@ class FileBrowser: NSView,
 
     self.addViews()
     self.showHiddenMenuItem.target = self
+    self.innerCustomToolbar.fileBrowser = self
 
     source
       .observeOn(MainScheduler.instance)
