@@ -13,7 +13,7 @@ class PrefService: Service {
 
   typealias Pair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
 
-  static let compatibleVersion = "168" // yet dummy
+  static let compatibleVersion = "168"
   static let lastCompatibleVersion = "128"
 
   func apply(_ pair: Pair) {
