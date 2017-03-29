@@ -6,7 +6,7 @@
 import Foundation
 import RxSwift
 
-class PreviewToolTransformer: Reducer {
+class PreviewToolReducer: Reducer {
 
   typealias Pair = StateActionPair<UuidState<MainWindow.State>, PreviewTool.Action>
 

@@ -6,7 +6,7 @@
 import Foundation
 import RxSwift
 
-class PrefWindowTransformer: Reducer {
+class PrefWindowReducer: Reducer {
 
   typealias Pair = StateActionPair<AppState, PrefWindow.Action>
 

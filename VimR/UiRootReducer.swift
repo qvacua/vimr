@@ -6,7 +6,7 @@
 import Foundation
 import RxSwift
 
-class UiRootTransformer: Reducer {
+class UiRootReducer: Reducer {
 
   typealias Pair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
 

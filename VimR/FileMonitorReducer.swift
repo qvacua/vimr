@@ -6,7 +6,7 @@
 import Foundation
 import RxSwift
 
-class FileMonitorTransformer: Reducer {
+class FileMonitorReducer: Reducer {
 
   typealias Pair = StateActionPair<AppState, FileMonitor.Action>
 

@@ -36,8 +36,8 @@ class HttpServerService: Service {
       try self.server.start(in_port_t(port))
       NSLog("server started on http://localhost:\(port)")
 
-      self.server["\(PreviewTransformer.basePath)/:path"] = shareFilesFromDirectory(previewResourceUrl.path)
-      self.server.GET["\(PreviewTransformer.basePath)/github-markdown.css"] = shareFile(self.githubCssUrl.path)
+      self.server["\(PreviewReducer.basePath)/:path"] = shareFilesFromDirectory(previewResourceUrl.path)
+      self.server.GET["\(PreviewReducer.basePath)/github-markdown.css"] = shareFile(self.githubCssUrl.path)
     } catch {
       NSLog("ERROR server could not be started on port \(port)")
     }

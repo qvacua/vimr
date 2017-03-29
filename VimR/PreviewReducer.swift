@@ -7,15 +7,15 @@ import Foundation
 import RxSwift
 
 // Currently supports only markdown
-class PreviewTransformer {
+class PreviewReducer {
 
   static let basePath = "/tools/preview"
   static let saveFirstPath = "/tools/preview/save-first.html"
   static let errorPath = "/tools/preview/error.html"
   static let nonePath = "/tools/preview/empty.html"
 
-  let forMainWindow = MainWindowPreviewTransformer()
-  let forOpenedFileList = OpenedFileListTransformer()
+  let forMainWindow = MainWindowPreviewReducer()
+  let forOpenedFileList = OpenedFileListReducer()
 
   init(baseServerUrl: URL) {
     self.baseServerUrl = baseServerUrl
@@ -27,9 +27,9 @@ class PreviewTransformer {
   fileprivate let baseServerUrl: URL
 }
 
-extension PreviewTransformer {
+extension PreviewReducer {
 
-  class MainWindowPreviewTransformer: Reducer {
+  class MainWindowPreviewReducer: Reducer {
 
     typealias Pair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
@@ -61,10 +61,10 @@ extension PreviewTransformer {
       }
     }
 
-    fileprivate var parentTransformer: PreviewTransformer?
+    fileprivate var parentTransformer: PreviewReducer?
   }
 
-  class OpenedFileListTransformer: Reducer {
+  class OpenedFileListReducer: Reducer {
 
     typealias Pair = StateActionPair<UuidState<MainWindow.State>, OpenedFileList.Action>
 
@@ -87,6 +87,6 @@ extension PreviewTransformer {
       }
     }
 
-    fileprivate var parentTransformer: PreviewTransformer?
+    fileprivate var parentTransformer: PreviewReducer?
   }
 }

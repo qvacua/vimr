@@ -19,8 +19,8 @@ class Context {
     self.stateSource = self.stateSubject.asObservable()
     let actionSource = self.actionEmitter.observable
 
-    let openQuicklyTransformer = OpenQuicklyTransformer()
-    let previewTransformer = PreviewTransformer(baseServerUrl: baseServerUrl)
+    let openQuicklyReducer = OpenQuicklyReducer()
+    let previewReducer = PreviewReducer(baseServerUrl: baseServerUrl)
 
     let previewService = PreviewService()
 
@@ -30,27 +30,27 @@ class Context {
         actionSource
           .mapOmittingNil { $0 as? AppDelegate.Action }
           .map { self.appStateActionPair(for: $0) }
-          .transform(by: AppDelegateTransformer(baseServerUrl: baseServerUrl))
+          .reduce(by: AppDelegateReducer(baseServerUrl: baseServerUrl))
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? UuidAction<MainWindow.Action> }
           .map { self.appStateActionPair(for: $0) }
-          .transform(by: UiRootTransformer())
-          .transform(by: openQuicklyTransformer.forMainWindow)
+          .reduce(by: UiRootReducer())
+          .reduce(by: openQuicklyReducer.forMainWindow)
           .filter { $0.modified }
           .apply(to: PrefService())
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? FileMonitor.Action }
           .map { self.appStateActionPair(for: $0) }
-          .transform(by: FileMonitorTransformer())
+          .reduce(by: FileMonitorReducer())
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? OpenQuicklyWindow.Action }
           .map { self.appStateActionPair(for: $0) }
-          .transform(by: openQuicklyTransformer.forOpenQuicklyWindow)
+          .reduce(by: openQuicklyReducer.forOpenQuicklyWindow)
           .filter { $0.modified }
           .map { $0.state }
       )
@@ -67,8 +67,8 @@ class Context {
         actionSource
           .mapOmittingNil { $0 as? UuidAction<MainWindow.Action> }
           .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
-          .transform(by: MainWindowTransformer())
-          .transform(by: previewTransformer.forMainWindow)
+          .reduce(by: MainWindowReducer())
+          .reduce(by: previewReducer.forMainWindow)
           .filter { $0.modified }
           .apply(to: previewService.forMainWindow)
           .apply(to: HttpServerService(port: baseServerUrl.port ?? 0))
@@ -76,20 +76,20 @@ class Context {
         actionSource
           .mapOmittingNil { $0 as? UuidAction<PreviewTool.Action> }
           .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
-          .transform(by: PreviewToolTransformer(baseServerUrl: baseServerUrl))
+          .reduce(by: PreviewToolReducer(baseServerUrl: baseServerUrl))
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? UuidAction<FileBrowser.Action> }
           .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
-          .transform(by: FileBrowserTransformer())
+          .reduce(by: FileBrowserReducer())
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? UuidAction<OpenedFileList.Action> }
           .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
-          .transform(by: OpenedFileListTransformer())
-          .transform(by: previewTransformer.forOpenedFileList)
+          .reduce(by: OpenedFileListReducer())
+          .reduce(by: previewReducer.forOpenedFileList)
           .filter { $0.modified }
           .apply(to: previewService.forOpenedFileList)
           .map { $0.state }
@@ -107,25 +107,25 @@ class Context {
         actionSource
           .mapOmittingNil { $0 as? PrefWindow.Action }
           .map { self.appStateActionPair(for: $0) }
-          .transform(by: PrefWindowTransformer())
+          .reduce(by: PrefWindowReducer())
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? GeneralPref.Action }
           .map { self.appStateActionPair(for: $0) }
-          .transform(by: GeneralPrefTransformer())
+          .reduce(by: GeneralPrefReducer())
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? AppearancePref.Action }
           .map { self.appStateActionPair(for: $0) }
-          .transform(by: AppearancePrefTransformer())
+          .reduce(by: AppearancePrefReducer())
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? AdvancedPref.Action }
           .map { self.appStateActionPair(for: $0) }
-          .transform(by: AdvancedPrefTransformer())
+          .reduce(by: AdvancedPrefTransformer())
           .filter { $0.modified }
           .map { $0.state }
       )
@@ -174,7 +174,7 @@ class Context {
 
 extension Observable {
 
-  fileprivate func transform<T:Reducer>(by transformer: T) -> Observable<Element> where T.Element == Element {
+  fileprivate func reduce<T:Reducer>(by transformer: T) -> Observable<Element> where T.Element == Element {
     return transformer.transform(self)
   }
 

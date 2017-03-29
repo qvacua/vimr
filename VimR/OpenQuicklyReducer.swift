@@ -6,15 +6,15 @@
 import Foundation
 import RxSwift
 
-class OpenQuicklyTransformer {
+class OpenQuicklyReducer {
 
-  let forMainWindow = MainWindowTransformer()
-  let forOpenQuicklyWindow = OpenQuicklyWindowTransformer()
+  let forMainWindow = MainWindowReducer()
+  let forOpenQuicklyWindow = OpenQuicklyWindowReducer()
 }
 
-extension OpenQuicklyTransformer {
+extension OpenQuicklyReducer {
 
-  class OpenQuicklyWindowTransformer: Reducer {
+  class OpenQuicklyWindowReducer: Reducer {
 
     typealias Pair = StateActionPair<AppState, OpenQuicklyWindow.Action>
 
@@ -45,7 +45,7 @@ extension OpenQuicklyTransformer {
     }
   }
 
-  class MainWindowTransformer: Reducer {
+  class MainWindowReducer: Reducer {
 
     typealias Pair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
 
