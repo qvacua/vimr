@@ -98,7 +98,7 @@ protocol Reducer {
 
   associatedtype Element
 
-  func transform(_ source: Observable<Element>) -> Observable<Element>
+  func reduce(_ source: Observable<Element>) -> Observable<Element>
 }
 
 protocol Service {

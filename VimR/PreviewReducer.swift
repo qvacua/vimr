@@ -33,7 +33,7 @@ extension PreviewReducer {
 
     typealias Pair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
-    func transform(_ source: Observable<Pair>) -> Observable<Pair> {
+    func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
       return source.map { pair in
         guard let baseServerUrl = self.parentTransformer?.baseServerUrl else {
           return pair
@@ -68,7 +68,7 @@ extension PreviewReducer {
 
     typealias Pair = StateActionPair<UuidState<MainWindow.State>, OpenedFileList.Action>
 
-    func transform(_ source: Observable<Pair>) -> Observable<Pair> {
+    func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
       return source.map { pair in
         guard let baseServerUrl = self.parentTransformer?.baseServerUrl else {
           return pair

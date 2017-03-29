@@ -10,7 +10,7 @@ class PrefWindowReducer: Reducer {
 
   typealias Pair = StateActionPair<AppState, PrefWindow.Action>
 
-  func transform(_ source: Observable<Pair>) -> Observable<Pair> {
+  func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
     return source.map { pair in
       var state = pair.state
 

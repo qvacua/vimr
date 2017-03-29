@@ -18,7 +18,7 @@ extension OpenQuicklyReducer {
 
     typealias Pair = StateActionPair<AppState, OpenQuicklyWindow.Action>
 
-    func transform(_ source: Observable<Pair>) -> Observable<Pair> {
+    func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
       return source.map { pair in
         var appState = pair.state
 
@@ -49,7 +49,7 @@ extension OpenQuicklyReducer {
 
     typealias Pair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
 
-    func transform(_ source: Observable<Pair>) -> Observable<Pair> {
+    func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
       return source.map { pair in
 
         switch pair.action.payload {

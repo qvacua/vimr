@@ -175,7 +175,7 @@ class Context {
 extension Observable {
 
   fileprivate func reduce<T:Reducer>(by transformer: T) -> Observable<Element> where T.Element == Element {
-    return transformer.transform(self)
+    return transformer.reduce(self)
   }
 
   // If the following is used, the compiler does not finish...
