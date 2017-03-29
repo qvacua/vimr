@@ -24,6 +24,12 @@ class Context {
 
     let previewService = PreviewService()
 
+    // For clean quit
+    stateSource
+      .filter { $0.quitWhenNoMainWindow && state.mainWindows.isEmpty }
+      .subscribe(onNext: { state in NSApp.stop(self) })
+      .addDisposableTo(self.disposeBag)
+
     // AppState
     Observable
       .of(

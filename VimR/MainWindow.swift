@@ -143,6 +143,12 @@ class MainWindow: NSObject,
       .observeOn(MainScheduler.instance)
       .subscribe(
         onNext: { [unowned self] state in
+          if state.close && !self.isClosing {
+            self.closeAllNeoVimWindowsWithoutSaving()
+            self.isClosing = true
+            return
+          }
+
           if case .neoVimView = state.focusedView {
             self.window.makeFirstResponder(self.neoVimView)
           }
@@ -245,6 +251,8 @@ class MainWindow: NSObject,
   fileprivate let cursorDebouncer = Debouncer<Action>(interval: 0.75)
 
   fileprivate var marksForOpenedUrls = Set<Token>()
+
+  fileprivate var isClosing = false
 
   fileprivate func updateNeoVimAppearance() {
     self.neoVimView.font = self.defaultFont

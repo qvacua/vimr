@@ -207,6 +207,7 @@ extension MainWindow {
 
     // transient^2
     var urlsToOpen = [Marked<[URL: OpenMode]>]()
+    var close = false
 
     init(isAllToolsVisible: Bool, isToolButtonsVisible: Bool) {
       self.isAllToolsVisible = isAllToolsVisible

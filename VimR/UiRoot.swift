@@ -35,10 +35,6 @@ class UiRoot: UiComponent {
             self.mainWindows[uuid]?.closeAllNeoVimWindowsWithoutSaving()
             self.removeMainWindow(with: uuid)
           }
-
-        if state.quitWhenNoMainWindow && state.mainWindows.isEmpty {
-          NSApp.stop(self)
-        }
       })
       .addDisposableTo(self.disposeBag)
   }

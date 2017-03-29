@@ -1459,8 +1459,8 @@ extension NeoVimView {
   public func stop() {
     DispatchUtils.gui {
       self.delegate?.neoVimStopped()
-      self.agent.quit()
     }
+    self.agent.quit()
   }
 
   public func setDirtyStatus(_ dirty: Bool) {
