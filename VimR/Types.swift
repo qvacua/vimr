@@ -96,16 +96,16 @@ class Marked<T>: CustomStringConvertible {
 
 protocol Reducer {
 
-  associatedtype Element
+  associatedtype Pair
 
-  func reduce(_ source: Observable<Element>) -> Observable<Element>
+  func reduce(_ source: Observable<Pair>) -> Observable<Pair>
 }
 
 protocol Service {
 
-  associatedtype Element
+  associatedtype Pair
 
-  func apply(_: Element)
+  func apply(_: Pair)
 }
 
 protocol UiComponent {

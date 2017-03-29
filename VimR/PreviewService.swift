@@ -85,9 +85,9 @@ extension PreviewService {
 
   class OpenedFileListPreviewService: Service {
 
-    typealias Element = StateActionPair<UuidState<MainWindow.State>, OpenedFileList.Action>
+    typealias Pair = StateActionPair<UuidState<MainWindow.State>, OpenedFileList.Action>
 
-    func apply(_ pair: Element) {
+    func apply(_ pair: Pair) {
 
       guard case .open = pair.action else {
         return
@@ -101,9 +101,9 @@ extension PreviewService {
 
   class MainWindowPreviewService: Service {
 
-    typealias Element = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
+    typealias Pair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
-    func apply(_ pair: Element) {
+    func apply(_ pair: Pair) {
 
       guard case .setCurrentBuffer = pair.action else {
         return

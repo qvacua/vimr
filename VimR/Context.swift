@@ -174,7 +174,7 @@ class Context {
 
 extension Observable {
 
-  fileprivate func reduce<T:Reducer>(by transformer: T) -> Observable<Element> where T.Element == Element {
+  fileprivate func reduce<T:Reducer>(by transformer: T) -> Observable<Element> where T.Pair == Element {
     return transformer.reduce(self)
   }
 
@@ -185,7 +185,7 @@ extension Observable {
 //    }
 //  }
 
-  fileprivate func apply<S:Service>(to service: S) -> Observable<Element> where S.Element == Element {
+  fileprivate func apply<S:Service>(to service: S) -> Observable<Element> where S.Pair == Element {
     return self.do(onNext: service.apply)
   }
 }

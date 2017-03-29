@@ -22,7 +22,7 @@ fileprivate func shareFile(_ path: String) -> ((HttpRequest) -> HttpResponse) {
 
 class HttpServerService: Service {
 
-  typealias Element = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
+  typealias Pair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
   init(port: Int) {
     self.port = port
@@ -43,7 +43,7 @@ class HttpServerService: Service {
     }
   }
 
-  func apply(_ pair: Element) {
+  func apply(_ pair: Pair) {
     guard case .setCurrentBuffer = pair.action else {
       return
     }
