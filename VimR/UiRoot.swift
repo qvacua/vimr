@@ -36,7 +36,7 @@ class UiRoot: UiComponent {
             self.removeMainWindow(with: uuid)
           }
 
-        if state.quitWhenNoMainWindow && self.mainWindows.isEmpty {
+        if state.quitWhenNoMainWindow && state.mainWindows.isEmpty {
           NSApp.stop(self)
         }
       })
