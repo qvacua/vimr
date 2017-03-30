@@ -7,26 +7,26 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-171</title>
+      <title>SNAPSHOT-172</title>
       <description><![CDATA[
     <ul>
 <li><em>WARNING</em>: This snapshot may be very unstable due to (almost complete) redesign; use at your own risk. If you have issues with this build, please report them under GH-405.</li>
 <li>GH-405: Redesign<ul>
-<li>Fix flickering when switching tabs and <code>:w</code>ing</li>
+<li>Let neovim delete swp files when quitting VimR</li>
 </ul>
 </li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/171
+        https://github.com/qvacua/vimr/releases/tag/snapshot/172
       </releaseNotesLink>
-      <pubDate>2017-03-28T22:43:53.767365</pubDate>
+      <pubDate>2017-03-30T20:18:57.486789</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/171/VimR-SNAPSHOT-171.tar.bz2"
-                 sparkle:version="171"
-                 sparkle:shortVersionString="SNAPSHOT-171"
-                 sparkle:dsaSignature="MCwCFBIZIADPpdsNVVm1f5O5RuUCCPKbAhRwSLmTiQeia8dqeE0r8OkWbOoyvw=="
-                 length="12008195"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/172/VimR-SNAPSHOT-172.tar.bz2"
+                 sparkle:version="172"
+                 sparkle:shortVersionString="SNAPSHOT-172"
+                 sparkle:dsaSignature="MC0CFQC+UyW896vY/R8FHAhcJgEnE9krFwIUT7tCk99AKG3zdiA67WPkRb0qHS0="
+                 length="12076362"
                  type="application/octet-stream"/>
     </item>
   </channel>
