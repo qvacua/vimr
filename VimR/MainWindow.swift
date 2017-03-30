@@ -88,6 +88,10 @@ class MainWindow: NSObject,
     self.fileBrowser = FileBrowser(source: source, emitter: emitter, state: state)
     self.openedFileList = OpenedFileList(source: source, emitter: emitter, state: state)
 
+    if !state.isToolButtonsVisible {
+      self.workspace.toggleToolButtons()
+    }
+
     self.windowController = NSWindowController(windowNibName: "MainWindow")
 
     let previewConfig = WorkspaceTool.Config(title: "Preview",
