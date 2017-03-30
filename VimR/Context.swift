@@ -131,7 +131,7 @@ class Context {
         actionSource
           .mapOmittingNil { $0 as? AdvancedPref.Action }
           .map { self.appStateActionPair(for: $0) }
-          .reduce(by: AdvancedPrefTransformer())
+          .reduce(by: AdvancedPrefReducer())
           .filter { $0.modified }
           .map { $0.state }
       )
