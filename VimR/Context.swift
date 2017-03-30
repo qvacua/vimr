@@ -26,7 +26,7 @@ class Context {
 
     // For clean quit
     stateSource
-      .filter { $0.quitWhenNoMainWindow && state.mainWindows.isEmpty }
+      .filter { $0.quitWhenNoMainWindow && $0.mainWindows.isEmpty }
       .subscribe(onNext: { state in NSApp.stop(self) })
       .addDisposableTo(self.disposeBag)
 
