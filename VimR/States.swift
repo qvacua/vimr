@@ -182,8 +182,6 @@ extension MainWindow {
 
     ////// transient
 
-    var focusedView = FocusableView.neoVimView
-
     // must be replaced
     var root = FileItem(URL(fileURLWithPath: "/", isDirectory: true))
     var lastFileSystemUpdate = Marked(FileItem(URL(fileURLWithPath: "/", isDirectory: true)))
@@ -211,6 +209,7 @@ extension MainWindow {
 
     // to be cleaned
     var urlsToOpen = [URL: OpenMode]()
+    var viewToBeFocused: FocusableView? = FocusableView.neoVimView
 
     init(isAllToolsVisible: Bool, isToolButtonsVisible: Bool) {
       self.isAllToolsVisible = isAllToolsVisible

@@ -47,7 +47,7 @@ class MainWindowReducer: Reducer {
         }
 
       case let .focus(view):
-        state.focusedView = view
+        state.viewToBeFocused = view
 
       case let .setState(for: tool, with: workspaceTool):
         state.tools[tool] = WorkspaceToolState(location: workspaceTool.location,

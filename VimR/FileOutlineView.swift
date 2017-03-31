@@ -42,7 +42,7 @@ class FileOutlineView: NSOutlineView,
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
-        if case .fileBrowser = state.focusedView {
+        if state.viewToBeFocused != nil, case .fileBrowser = state.viewToBeFocused! {
           self.beFirstResponder()
         }
 

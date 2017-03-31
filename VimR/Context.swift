@@ -171,6 +171,7 @@ class Context {
 
   fileprivate func cleanUpAppState() {
     self.appState.mainWindows.keys.forEach { uuid in
+      self.appState.mainWindows[uuid]?.viewToBeFocused = nil
       self.appState.mainWindows[uuid]?.urlsToOpen.removeAll()
     }
   }

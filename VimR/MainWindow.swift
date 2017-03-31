@@ -121,9 +121,9 @@ class MainWindow: NSObject,
 
     super.init()
 
-    self.tools.forEach {
-      if state.tools[$0]?.open == true {
-        $1.toggle()
+    self.tools.forEach { (toolId, toolContainer) in
+      if state.tools[toolId]?.open == true {
+        toolContainer.toggle()
       }
     }
 
@@ -151,7 +151,7 @@ class MainWindow: NSObject,
             return
           }
 
-          if case .neoVimView = state.focusedView {
+          if state.viewToBeFocused != nil, case .neoVimView = state.viewToBeFocused! {
             self.window.makeFirstResponder(self.neoVimView)
           }
 
@@ -164,10 +164,8 @@ class MainWindow: NSObject,
           if state.previewTool.isReverseSearchAutomatically
              && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition)
              && !state.preview.ignoreNextReverse {
-            NSLog("!!!!!!!!!!!!! scrolling cuz new preview position")
             self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
           } else if state.preview.forceNextReverse {
-            NSLog("!!!!!!!!!!!!! scrolling cuz forced")
             self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
           }
 
