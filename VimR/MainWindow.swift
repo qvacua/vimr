@@ -164,9 +164,13 @@ class MainWindow: NSObject,
           }
 
           if state.previewTool.isReverseSearchAutomatically
-             && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition) {
+             && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition)
+             && !state.preview.ignoreNextReverse
+          {
+            NSLog("!!!!!!!!!!!!! scrolling cuz new preview position")
             self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
           } else if state.preview.forceNextReverse {
+            NSLog("!!!!!!!!!!!!! scrolling cuz forced")
             self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
           }
 
@@ -345,10 +349,6 @@ extension MainWindow {
   }
 
   func currentBufferChanged(_ currentBuffer: NeoVimBuffer) {
-    if self.currentBuffer == currentBuffer {
-      return
-    }
-
     self.emitter.emit(self.uuidAction(for: .setCurrentBuffer(currentBuffer)))
     self.currentBuffer = currentBuffer
   }

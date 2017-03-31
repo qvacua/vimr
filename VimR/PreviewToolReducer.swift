@@ -26,12 +26,16 @@ class PreviewToolReducer: Reducer {
                                            buffer: state.currentBuffer)
 
       case let .reverseSearch(to:position):
+        NSLog("reverse !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         state.preview.previewPosition = position
+        state.preview.ignoreNextReverse = false
         state.preview.ignoreNextForward = true
         state.preview.forceNextReverse = true
 
       case let .scroll(to:position):
+        NSLog("scroll !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         state.preview.previewPosition = position
+        state.preview.ignoreNextReverse = false
         state.preview.ignoreNextForward = true
         state.preview.forceNextReverse = false
 

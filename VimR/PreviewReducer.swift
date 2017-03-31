@@ -45,6 +45,7 @@ extension PreviewReducer {
           }
 
           state.preview = PreviewUtils.state(for: pair.state.uuid, baseUrl: self.baseServerUrl, buffer: buffer)
+          state.preview.ignoreNextReverse = true
 
         case .close:
           state.preview = PreviewUtils.state(for: .none, baseUrl: self.baseServerUrl)

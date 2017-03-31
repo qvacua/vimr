@@ -119,6 +119,7 @@ struct PreviewState {
   var editorPosition = Marked(Position.beginning)
   var previewPosition = Marked(Position.beginning)
   var ignoreNextForward = false
+  var ignoreNextReverse = false
   var forceNextReverse = false
 
   init(status: Status = .none,
