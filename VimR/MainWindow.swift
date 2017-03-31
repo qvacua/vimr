@@ -19,8 +19,6 @@ class MainWindow: NSObject,
 
   enum Action {
 
-    case open(Set<Token>)
-
     case cd(to: URL)
     case setBufferList([NeoVimBuffer])
 
@@ -165,8 +163,7 @@ class MainWindow: NSObject,
 
           if state.previewTool.isReverseSearchAutomatically
              && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition)
-             && !state.preview.ignoreNextReverse
-          {
+             && !state.preview.ignoreNextReverse {
             NSLog("!!!!!!!!!!!!! scrolling cuz new preview position")
             self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
           } else if state.preview.forceNextReverse {
@@ -176,11 +173,7 @@ class MainWindow: NSObject,
 
           self.previewPosition = state.preview.previewPosition
 
-          self.marksForOpenedUrls.subtracting(state.urlsToOpen.map { $0.mark }).forEach {
-            self.marksForOpenedUrls.remove($0)
-          }
-
-          self.open(markedUrls: state.urlsToOpen)
+          self.open(urls: state.urlsToOpen)
 
           if self.currentBuffer != state.currentBuffer {
             self.currentBuffer = state.currentBuffer
@@ -210,7 +203,7 @@ class MainWindow: NSObject,
       self.neoVimView.cwd = state.cwd
     }
 
-    self.open(markedUrls: state.urlsToOpen)
+    self.open(urls: state.urlsToOpen)
 
     self.window.makeFirstResponder(self.neoVimView)
   }
@@ -258,8 +251,6 @@ class MainWindow: NSObject,
   fileprivate let scrollDebouncer = Debouncer<Action>(interval: 0.75)
   fileprivate let cursorDebouncer = Debouncer<Action>(interval: 0.75)
 
-  fileprivate var marksForOpenedUrls = Set<Token>()
-
   fileprivate var isClosing = false
 
   fileprivate func updateNeoVimAppearance() {
@@ -272,46 +263,30 @@ class MainWindow: NSObject,
     return UuidAction(uuid: self.uuid, action: action)
   }
 
-  fileprivate func open(markedUrls: [Marked<[URL: OpenMode]>]) {
-    let markedUrlsToOpen = markedUrls.filter { !self.marksForOpenedUrls.contains($0.mark) }
-
-    markedUrls.map { $0.mark }.forEach {
-      self.marksForOpenedUrls.insert($0)
-    }
-
-    guard markedUrlsToOpen.count > 0 else {
-      return
-    }
-
+  fileprivate func open(urls: [URL: OpenMode]) {
     // If we don't call the following in the next tick, only half of the existing swap file warning is displayed.
     // Dunno why...
     DispatchUtils.gui {
-      markedUrlsToOpen.forEach { marked in
-        marked.payload.forEach { (url: URL, openMode: OpenMode) in
-          switch openMode {
+      urls.forEach { (url: URL, openMode: OpenMode) in
+        switch openMode {
 
-          case .default:
-            self.neoVimView.open(urls: [url])
+        case .default:
+          self.neoVimView.open(urls: [url])
 
-          case .currentTab:
-            self.neoVimView.openInCurrentTab(url: url)
+        case .currentTab:
+          self.neoVimView.openInCurrentTab(url: url)
 
-          case .newTab:
-            self.neoVimView.openInNewTab(urls: [url])
+        case .newTab:
+          self.neoVimView.openInNewTab(urls: [url])
 
-          case .horizontalSplit:
-            self.neoVimView.openInHorizontalSplit(urls: [url])
+        case .horizontalSplit:
+          self.neoVimView.openInHorizontalSplit(urls: [url])
 
-          case .verticalSplit:
-            self.neoVimView.openInVerticalSplit(urls: [url])
+        case .verticalSplit:
+          self.neoVimView.openInVerticalSplit(urls: [url])
 
-          }
         }
       }
-
-      // not good, but we need it because we don't want to re-build the whole tab/window/buffer state of neovim in
-      // MainWindow.State
-      self.emitter.emit(self.uuidAction(for: Action.open(Set(markedUrls.map { $0.mark }))))
     }
   }
 
@@ -325,6 +300,7 @@ class MainWindow: NSObject,
 }
 
 // MARK: - NeoVimViewDelegate
+
 extension MainWindow {
 
   func neoVimStopped() {
@@ -388,6 +364,7 @@ extension MainWindow {
 }
 
 // MARK: - NSWindowDelegate
+
 extension MainWindow {
 
   func windowDidBecomeKey(_: Notification) {
@@ -416,6 +393,7 @@ extension MainWindow {
 }
 
 // MARK: - File Menu Item Actions
+
 extension MainWindow {
 
   @IBAction func newTab(_ sender: Any?) {
@@ -503,6 +481,7 @@ extension MainWindow {
 }
 
 // MARK: - Font Menu Item Actions
+
 extension MainWindow {
 
   @IBAction func resetFontSize(_ sender: Any?) {
@@ -523,6 +502,7 @@ extension MainWindow {
 }
 
 // MARK: - Tools Menu Item Actions
+
 extension MainWindow {
 
   @IBAction func toggleAllTools(_ sender: Any?) {
@@ -562,6 +542,7 @@ extension MainWindow {
 }
 
 // MARK: - WorkspaceDelegate
+
 extension MainWindow {
 
   func resizeWillStart(workspace: Workspace, tool: WorkspaceTool?) {
@@ -608,6 +589,7 @@ extension MainWindow {
 }
 
 // MARK: - NSUserInterfaceValidationsProtocol
+
 extension MainWindow {
 
   public func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {

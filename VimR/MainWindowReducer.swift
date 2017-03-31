@@ -16,9 +16,6 @@ class MainWindowReducer: Reducer {
 
       switch pair.action {
 
-      case let .open(marks):
-        state.urlsToOpen = state.urlsToOpen.filter { !marks.contains($0.mark) }
-
       case let .cd(to:cwd):
         if state.cwd != cwd {
           state.cwd = cwd

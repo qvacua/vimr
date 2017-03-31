@@ -33,7 +33,7 @@ extension OpenQuicklyReducer {
             return pair
           }
 
-          appState.mainWindows[uuid]?.urlsToOpen.append(Marked([url: .newTab]))
+          appState.mainWindows[uuid]?.urlsToOpen[url] = .newTab
 
         case .close:
           break

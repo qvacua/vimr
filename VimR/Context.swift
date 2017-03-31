@@ -61,10 +61,7 @@ class Context {
           .map { $0.state }
       )
       .merge()
-      .subscribe(onNext: { state in
-        self.appState = state
-        self.stateSubject.onNext(self.appState)
-      })
+      .subscribe(onNext: self.emitAppState)
       .addDisposableTo(self.disposeBag)
 
     // MainWindow.State
@@ -101,10 +98,7 @@ class Context {
           .map { $0.state }
       )
       .merge()
-      .subscribe(onNext: { state in
-        self.appState.mainWindows[state.uuid] = state.payload
-        self.stateSubject.onNext(self.appState)
-      })
+      .subscribe(onNext: self.emitAppState)
       .addDisposableTo(self.disposeBag)
 
     // Preferences
@@ -136,21 +130,18 @@ class Context {
           .map { $0.state }
       )
       .merge()
-      .subscribe(onNext: { state in
-        self.appState = state
-        self.stateSubject.onNext(self.appState)
-      })
+      .subscribe(onNext: self.emitAppState)
       .addDisposableTo(self.disposeBag)
 
 #if DEBUG
 //    actionSource.debug().subscribe().addDisposableTo(self.disposeBag)
-    stateSource
-      .filter { $0.mainWindows.values.count > 0 }
-      .map { Array($0.mainWindows.values)[0].preview }
-      .debug()
-      .subscribe(onNext: { state in
-      })
-      .addDisposableTo(self.disposeBag)
+//    stateSource
+//      .filter { $0.mainWindows.values.count > 0 }
+//      .map { Array($0.mainWindows.values)[0].preview }
+//      .debug()
+//      .subscribe(onNext: { state in
+//      })
+//      .addDisposableTo(self.disposeBag)
 #endif
   }
 
@@ -163,6 +154,26 @@ class Context {
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate var appState: AppState
+
+  fileprivate func emitAppState(_ mainWindow: UuidState<MainWindow.State>) {
+    self.appState.mainWindows[mainWindow.uuid] = mainWindow.payload
+    self.stateSubject.onNext(self.appState)
+
+    self.cleanUpAppState()
+  }
+
+  fileprivate func emitAppState(_ appState: AppState) {
+    self.appState = appState
+    self.stateSubject.onNext(self.appState)
+
+    self.cleanUpAppState()
+  }
+
+  fileprivate func cleanUpAppState() {
+    self.appState.mainWindows.keys.forEach { uuid in
+      self.appState.mainWindows[uuid]?.urlsToOpen.removeAll()
+    }
+  }
 
   fileprivate func appStateActionPair<ActionType>(for action: ActionType) -> StateActionPair<AppState, ActionType> {
     return StateActionPair(state: self.appState, action: action, modified: false)

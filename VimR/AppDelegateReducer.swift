@@ -31,7 +31,7 @@ class AppDelegateReducer: Reducer {
           break
         }
 
-        state.mainWindows[uuid]?.urlsToOpen.append(Marked(urls.toDict { url in MainWindow.OpenMode.default }))
+        state.mainWindows[uuid]?.urlsToOpen = urls.toDict { url in MainWindow.OpenMode.default }
         state.mainWindows[uuid]?.cwd = cwd
 
       case .preferences:
@@ -54,8 +54,7 @@ class AppDelegateReducer: Reducer {
     mainWindow.uuid = UUID().uuidString
     mainWindow.root = state.root
 
-    let markedUrls = Marked(urls.toDict { url in MainWindow.OpenMode.default })
-    mainWindow.urlsToOpen.append(markedUrls)
+    mainWindow.urlsToOpen = urls.toDict { url in MainWindow.OpenMode.default }
 
     mainWindow.cwd = cwd
 

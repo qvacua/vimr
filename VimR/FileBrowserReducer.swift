@@ -17,7 +17,7 @@ class FileBrowserReducer: Reducer {
       switch pair.action {
 
       case let .open(url, mode):
-        state.urlsToOpen.append(Marked([url: mode]))
+        state.urlsToOpen[url] = mode
         state.focusedView = .neoVimView
 
       case let .setAsWorkingDirectory(url):
