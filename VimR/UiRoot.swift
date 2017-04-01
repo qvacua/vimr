@@ -21,20 +21,16 @@ class UiRoot: UiComponent {
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
-        let uuids = Set(self.mainWindows.keys)
-        let uuidsInState = Set(state.mainWindows.keys)
+        let uuidsInState = Set(state.mainWindows.keys.filter { !(state.mainWindows[$0]?.close ?? false) })
 
         uuidsInState
           .subtracting(self.mainWindows.keys)
           .flatMap { state.mainWindows[$0] }
           .forEach(self.createNewMainWindow)
 
-        uuids
-          .subtracting(uuidsInState)
-          .forEach { uuid in
-            self.mainWindows[uuid]?.closeAllNeoVimWindowsWithoutSaving()
-            self.removeMainWindow(with: uuid)
-          }
+        state.mainWindows.keys
+          .filter { state.mainWindows[$0]?.close ?? false }
+          .forEach(self.removeMainWindow)
       })
       .addDisposableTo(self.disposeBag)
   }
