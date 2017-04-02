@@ -13,7 +13,7 @@ import EonilFileSystemEvents
 fileprivate let fileSystemEventsLatency = 2.0
 fileprivate let monitorDispatchQueue = DispatchQueue.global(qos: .userInitiated)
 
-class HtmlPreviewTool: NSView, UiComponent {
+class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
   enum Action {
 
@@ -34,6 +34,7 @@ class HtmlPreviewTool: NSView, UiComponent {
     super.init(frame: .zero)
     self.configureForAutoLayout()
 
+    self.webview.navigationDelegate = self
     self.innerCustomToolbar.htmlPreviewTool = self
 
     self.addViews()
@@ -57,13 +58,22 @@ class HtmlPreviewTool: NSView, UiComponent {
                                               watchRoot: false,
                                               queue: monitorDispatchQueue)
         { [unowned self] events in
-          self.webview.load(URLRequest(url: serverUrl.payload))
+          self.reloadWebview(with: serverUrl.payload)
         }
 
         self.mark = serverUrl.mark
-        self.webview.load(URLRequest(url: serverUrl.payload))
+        self.reloadWebview(with: serverUrl.payload)
       })
       .addDisposableTo(self.disposeBag)
+  }
+
+  fileprivate func reloadWebview(with url: URL) {
+    self.webview.evaluateJavaScript("document.body.scrollTop") { (result, error) in
+      self.scrollTop = result as? Int ?? 0
+
+      self.webview.load(URLRequest(url: url))
+      NSLog("\(self.scrollTop)")
+    }
   }
 
   fileprivate func addViews() {
@@ -77,6 +87,7 @@ class HtmlPreviewTool: NSView, UiComponent {
   fileprivate let uuid: String
 
   fileprivate var mark = Token()
+  fileprivate var scrollTop = 0
 
   fileprivate let webview: WKWebView
   fileprivate var monitor: FileSystemEventMonitor?
@@ -103,6 +114,10 @@ class HtmlPreviewTool: NSView, UiComponent {
 
       self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.selectHtmlFile(urls[0])))
     }
+  }
+
+  func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    self.webview.evaluateJavaScript("document.body.scrollTop = \(self.scrollTop)")
   }
 }
 
