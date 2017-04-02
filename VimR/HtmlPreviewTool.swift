@@ -53,9 +53,9 @@ class HtmlPreviewTool: NSView, UiComponent {
         }
 
         self.monitor = FileSystemEventMonitor(pathsToWatch: [htmlFileUrl.path],
-                                             latency: fileSystemEventsLatency,
-                                             watchRoot: false,
-                                             queue: monitorDispatchQueue)
+                                              latency: fileSystemEventsLatency,
+                                              watchRoot: false,
+                                              queue: monitorDispatchQueue)
         { [unowned self] events in
           self.webview.load(URLRequest(url: serverUrl.payload))
         }
@@ -116,7 +116,7 @@ extension HtmlPreviewTool {
       }
     }
 
-    let selectHtmlFile = NSButton(forAutoLayout:())
+    let selectHtmlFile = NSButton(forAutoLayout: ())
 
     init() {
       super.init(frame: .zero)
