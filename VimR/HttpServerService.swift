@@ -35,20 +35,22 @@ extension HttpServerService {
 
     init(server: HttpServer) {
       self.server = server
-      let resourceUrl = Bundle.main.resourceURL!
-      let previewResourceUrl = resourceUrl.appendingPathComponent("preview")
-
-      self.githubCssUrl = resourceUrl.appendingPathComponent("markdown/github-markdown.css")
-
-      self.server["\(PreviewReducer.basePath)/:path"] = shareFilesFromDirectory(previewResourceUrl.path)
-      self.server.GET["\(PreviewReducer.basePath)/github-markdown.css"] = shareFile(self.githubCssUrl.path)
     }
 
     func apply(_ pair: Pair) {
+      let state = pair.state.payload
+
+      guard let serverUrl = state.htmlPreview.server, let htmlFileUrl = state.htmlPreview.htmlFile else {
+        return
+      }
+
+      let basePath = serverUrl.deletingLastPathComponent().path
+
+      self.server.GET[serverUrl.path] = shareFile(htmlFileUrl.path)
+      self.server["\(basePath)/:path"] = shareFilesFromDirectory(htmlFileUrl.parent.path)
     }
 
     fileprivate let server: HttpServer
-    fileprivate let githubCssUrl: URL
   }
 
   class MainWindowService: Service {
@@ -92,6 +94,7 @@ extension HttpServerService {
     fileprivate let server: HttpServer
     fileprivate let githubCssUrl: URL
   }
+
 }
 
 fileprivate func shareFile(_ path: String) -> ((HttpRequest) -> HttpResponse) {

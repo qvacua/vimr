@@ -139,7 +139,8 @@ struct HtmlPreviewState {
 
   static let `default` = HtmlPreviewState()
 
-  var url: URL?
+  var htmlFile: URL?
+  var server: URL?
 }
 
 struct AppearanceState: SerializableState {
@@ -196,8 +197,9 @@ extension MainWindow {
     var tools = WorkspaceToolState.default
 
     var preview = PreviewState.default
+    var htmlPreview = HtmlPreviewState.default
+
     var previewTool = PreviewTool.State.default
-    var htmlPreviewTool = HtmlPreviewState.default
 
     var fileBrowserShowHidden = false
 
