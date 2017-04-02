@@ -9,19 +9,38 @@ import RxSwift
 
 fileprivate let defaults = UserDefaults.standard
 
-class PrefService: Service {
-
-  typealias Pair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
+class PrefService {
 
   static let compatibleVersion = "168"
   static let lastCompatibleVersion = "128"
 
-  func apply(_ pair: Pair) {
-    guard case .close = pair.action.payload else {
-      return
-    }
+  let forMainWindow = PrefMainWindowService()
+  let forPrefPanes = PrefPaneService()
+}
 
-    NSLog("Saving pref!")
-    defaults.setValue(pair.state.dict(), forKey: PrefService.compatibleVersion)
+extension PrefService {
+
+  class PrefMainWindowService: Service {
+
+    typealias Pair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
+
+    func apply(_ pair: Pair) {
+      guard case .close = pair.action.payload else {
+        return
+      }
+
+      NSLog("Saving pref!")
+      defaults.setValue(pair.state.dict(), forKey: PrefService.compatibleVersion)
+    }
+  }
+
+  class PrefPaneService: StateService {
+
+    typealias StateType = AppState
+
+    func apply(_ state: StateType) {
+      NSLog("Saving pref!")
+      defaults.setValue(state.dict(), forKey: PrefService.compatibleVersion)
+    }
   }
 }
