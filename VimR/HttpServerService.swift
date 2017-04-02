@@ -26,8 +26,6 @@ class HttpService {
   let forHtmlPreviewTool: HtmlPreviewToolHttpServerService
 
   init(port: Int) {
-    self.port = port
-
     self.forMainWindow = MainWindowHttpServerService(server: self.server)
     self.forHtmlPreviewTool = HtmlPreviewToolHttpServerService(server: self.server)
 
@@ -40,7 +38,6 @@ class HttpService {
   }
 
   fileprivate let server = HttpServer()
-  fileprivate let port: Int
 }
 
 class HtmlPreviewToolHttpServerService: Service {
