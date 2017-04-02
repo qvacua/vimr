@@ -19,7 +19,7 @@ class Context {
     self.stateSource = self.stateSubject.asObservable()
     let actionSource = self.actionEmitter.observable
 
-    self.httpService = HttpService(port: baseServerUrl.port!)
+    self.httpService = HttpServerService(port: baseServerUrl.port!)
 
     let openQuicklyReducer = OpenQuicklyReducer()
     let previewReducer = PreviewReducer(baseServerUrl: baseServerUrl)
@@ -161,7 +161,7 @@ class Context {
     self.stateSubject.onCompleted()
   }
 
-  fileprivate let httpService: HttpService
+  fileprivate let httpService: HttpServerService
 
   fileprivate let stateSubject = PublishSubject<AppState>()
   fileprivate let scheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
