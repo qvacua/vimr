@@ -25,8 +25,9 @@ class HtmlPreviewToolReducer: Reducer {
 
       case let .selectHtmlFile(url):
         state.htmlPreview.htmlFile = url
-        state.htmlPreview.server = self.baseServerUrl
-          .appendingPathComponent("\(uuid)/\(HtmlPreviewToolReducer.basePath)/index.html")
+        state.htmlPreview.server = Marked(
+          self.baseServerUrl .appendingPathComponent("\(uuid)/\(HtmlPreviewToolReducer.basePath)/index.html")
+        )
 
       }
 

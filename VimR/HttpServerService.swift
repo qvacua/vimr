@@ -44,9 +44,9 @@ extension HttpServerService {
         return
       }
 
-      let basePath = serverUrl.deletingLastPathComponent().path
+      let basePath = serverUrl.payload.deletingLastPathComponent().path
 
-      self.server.GET[serverUrl.path] = shareFile(htmlFileUrl.path)
+      self.server.GET[serverUrl.payload.path] = shareFile(htmlFileUrl.path)
       self.server["\(basePath)/:path"] = shareFilesFromDirectory(htmlFileUrl.parent.path)
     }
 

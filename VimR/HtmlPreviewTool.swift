@@ -39,6 +39,16 @@ class HtmlPreviewTool: NSView, UiComponent {
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
+        guard let serverUrl = state.htmlPreview.server else {
+          return
+        }
+
+        if serverUrl.mark == self.mark {
+          return
+        }
+
+        self.mark = serverUrl.mark
+        self.webview.load(URLRequest(url: serverUrl.payload))
       })
       .addDisposableTo(self.disposeBag)
   }
@@ -52,6 +62,8 @@ class HtmlPreviewTool: NSView, UiComponent {
 
   fileprivate let emitter: ActionEmitter
   fileprivate let uuid: String
+
+  fileprivate var mark = Token()
 
   fileprivate let webview: WKWebView
 

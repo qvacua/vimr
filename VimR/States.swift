@@ -140,7 +140,7 @@ struct HtmlPreviewState {
   static let `default` = HtmlPreviewState()
 
   var htmlFile: URL?
-  var server: URL?
+  var server: Marked<URL>?
 }
 
 struct AppearanceState: SerializableState {
