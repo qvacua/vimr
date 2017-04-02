@@ -22,6 +22,7 @@ class Context {
     let openQuicklyReducer = OpenQuicklyReducer()
     let previewReducer = PreviewReducer(baseServerUrl: baseServerUrl)
 
+    let prefService = PrefService()
     let previewService = PreviewService()
 
     // For clean quit
@@ -45,7 +46,7 @@ class Context {
           .reduce(by: UiRootReducer())
           .reduce(by: openQuicklyReducer.forMainWindow)
           .filter { $0.modified }
-          .apply(to: PrefService())
+          .apply(to: prefService.forMainWindow)
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? FileMonitor.Action }
@@ -130,6 +131,7 @@ class Context {
           .map { $0.state }
       )
       .merge()
+      .apply(to: prefService.forPrefPanes)
       .subscribe(onNext: self.emitAppState)
       .addDisposableTo(self.disposeBag)
 
@@ -211,6 +213,10 @@ extension Observable {
 //  }
 
   fileprivate func apply<S:Service>(to service: S) -> Observable<Element> where S.Pair == Element {
+    return self.do(onNext: service.apply)
+  }
+
+  fileprivate func apply<S:StateService>(to service: S) -> Observable<Element> where S.StateType == Element {
     return self.do(onNext: service.apply)
   }
 }

@@ -108,6 +108,13 @@ protocol Service {
   func apply(_: Pair)
 }
 
+protocol StateService {
+
+  associatedtype StateType
+
+  func apply(_: StateType)
+}
+
 protocol UiComponent {
 
   associatedtype StateType
