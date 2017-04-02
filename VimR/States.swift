@@ -119,6 +119,7 @@ struct PreviewState {
   var editorPosition = Marked(Position.beginning)
   var previewPosition = Marked(Position.beginning)
   var ignoreNextForward = false
+  var ignoreNextReverse = false
   var forceNextReverse = false
 
   init(status: Status = .none,
@@ -188,8 +189,6 @@ extension MainWindow {
 
     ////// transient
 
-    var focusedView = FocusableView.neoVimView
-
     // must be replaced
     var root = FileItem(URL(fileURLWithPath: "/", isDirectory: true))
     var lastFileSystemUpdate = Marked(FileItem(URL(fileURLWithPath: "/", isDirectory: true)))
@@ -214,7 +213,11 @@ extension MainWindow {
     var useInteractiveZsh = false
 
     // transient^2
-    var urlsToOpen = [Marked<[URL: OpenMode]>]()
+    var close = false
+
+    // to be cleaned
+    var urlsToOpen = [URL: OpenMode]()
+    var viewToBeFocused: FocusableView? = FocusableView.neoVimView
 
     init(isAllToolsVisible: Bool, isToolButtonsVisible: Bool) {
       self.isAllToolsVisible = isAllToolsVisible

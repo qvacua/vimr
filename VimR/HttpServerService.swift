@@ -45,7 +45,7 @@ class HttpService {
 
 class HtmlPreviewToolHttpServerService: Service {
 
-  typealias Element = StateActionPair<UuidState<MainWindow.State>, HtmlPreviewTool.Action>
+  typealias Pair = StateActionPair<UuidState<MainWindow.State>, HtmlPreviewTool.Action>
 
   init(server: HttpServer) {
     self.server = server
@@ -54,11 +54,11 @@ class HtmlPreviewToolHttpServerService: Service {
 
     self.githubCssUrl = resourceUrl.appendingPathComponent("markdown/github-markdown.css")
 
-    self.server["\(PreviewTransformer.basePath)/:path"] = shareFilesFromDirectory(previewResourceUrl.path)
-    self.server.GET["\(PreviewTransformer.basePath)/github-markdown.css"] = shareFile(self.githubCssUrl.path)
+    self.server["\(PreviewReducer.basePath)/:path"] = shareFilesFromDirectory(previewResourceUrl.path)
+    self.server.GET["\(PreviewReducer.basePath)/github-markdown.css"] = shareFile(self.githubCssUrl.path)
   }
 
-  func apply(_ pair: Element) {
+  func apply(_ pair: Pair) {
   }
 
   fileprivate let server: HttpServer
@@ -67,7 +67,7 @@ class HtmlPreviewToolHttpServerService: Service {
 
 class MainWindowHttpServerService: Service {
 
-  typealias Element = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
+  typealias Pair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
   init(server: HttpServer) {
     self.server = server
@@ -76,11 +76,11 @@ class MainWindowHttpServerService: Service {
 
     self.githubCssUrl = resourceUrl.appendingPathComponent("markdown/github-markdown.css")
 
-    self.server["\(PreviewTransformer.basePath)/:path"] = shareFilesFromDirectory(previewResourceUrl.path)
-    self.server.GET["\(PreviewTransformer.basePath)/github-markdown.css"] = shareFile(self.githubCssUrl.path)
+    self.server["\(PreviewReducer.basePath)/:path"] = shareFilesFromDirectory(previewResourceUrl.path)
+    self.server.GET["\(PreviewReducer.basePath)/github-markdown.css"] = shareFile(self.githubCssUrl.path)
   }
 
-  func apply(_ pair: Element) {
+  func apply(_ pair: Pair) {
     guard case .setCurrentBuffer = pair.action else {
       return
     }

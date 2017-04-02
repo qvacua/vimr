@@ -6,11 +6,11 @@
 import Foundation
 import RxSwift
 
-class UiRootTransformer: Reducer {
+class UiRootReducer: Reducer {
 
   typealias Pair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
 
-  func transform(_ source: Observable<Pair>) -> Observable<Pair> {
+  func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
     return source.map { pair in
       var appState = pair.state
       let uuid = pair.action.uuid
@@ -32,7 +32,7 @@ class UiRootTransformer: Reducer {
           appState.currentMainWindowUuid = nil
         }
 
-        appState.mainWindows.removeValue(forKey: uuid)
+        appState.mainWindows[uuid]?.close = true
 
       default:
         return pair

@@ -14,7 +14,7 @@ class HtmlPreviewToolReducer: Reducer {
     self.baseServerUrl = baseServerUrl
   }
 
-  func transform(_ source: Observable<Pair>) -> Observable<Pair> {
+  func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
     return source.map { pair in
       var state = pair.state.payload
 
@@ -25,7 +25,8 @@ class HtmlPreviewToolReducer: Reducer {
                                            baseUrl: self.baseServerUrl,
                                            buffer: state.currentBuffer)
 
-      return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
+        return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
+      }
     }
   }
 

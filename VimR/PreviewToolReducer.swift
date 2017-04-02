@@ -6,7 +6,7 @@
 import Foundation
 import RxSwift
 
-class PreviewToolTransformer: Reducer {
+class PreviewToolReducer: Reducer {
 
   typealias Pair = StateActionPair<UuidState<MainWindow.State>, PreviewTool.Action>
 
@@ -14,7 +14,7 @@ class PreviewToolTransformer: Reducer {
     self.baseServerUrl = baseServerUrl
   }
 
-  func transform(_ source: Observable<Pair>) -> Observable<Pair> {
+  func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
     return source.map { pair in
       var state = pair.state.payload
 
@@ -27,11 +27,13 @@ class PreviewToolTransformer: Reducer {
 
       case let .reverseSearch(to:position):
         state.preview.previewPosition = position
+        state.preview.ignoreNextReverse = false
         state.preview.ignoreNextForward = true
         state.preview.forceNextReverse = true
 
       case let .scroll(to:position):
         state.preview.previewPosition = position
+        state.preview.ignoreNextReverse = false
         state.preview.ignoreNextForward = true
         state.preview.forceNextReverse = false
 

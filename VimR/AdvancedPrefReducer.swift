@@ -6,11 +6,11 @@
 import Foundation
 import RxSwift
 
-class AdvancedPrefTransformer: Reducer {
+class AdvancedPrefReducer: Reducer {
 
   typealias Pair = StateActionPair<AppState, AdvancedPref.Action>
 
-  func transform(_ source: Observable<Pair>) -> Observable<Pair> {
+  func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
     return source.map { pair in
       var state = pair.state
 

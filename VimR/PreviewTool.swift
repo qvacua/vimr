@@ -80,7 +80,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
-        if case .preview = state.focusedView {
+        if state.viewToBeFocused != nil, case .preview = state.viewToBeFocused! {
           self.beFirstResponder()
         }
 

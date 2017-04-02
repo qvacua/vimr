@@ -19,10 +19,20 @@ class Context {
     self.stateSource = self.stateSubject.asObservable()
     let actionSource = self.actionEmitter.observable
 
-    let openQuicklyTransformer = OpenQuicklyTransformer()
-    let previewTransformer = PreviewTransformer(baseServerUrl: baseServerUrl)
+    self.httpService = HttpService(port: baseServerUrl.port!)
+
+    let openQuicklyReducer = OpenQuicklyReducer()
+    let previewReducer = PreviewReducer(baseServerUrl: baseServerUrl)
+
+    let htmlPreviewToolReducer = HtmlPreviewToolReducer(baseServerUrl: baseServerUrl)
 
     let previewService = PreviewService()
+
+    // For clean quit
+    stateSource
+      .filter { $0.quitWhenNoMainWindow && $0.mainWindows.isEmpty }
+      .subscribe(onNext: { state in NSApp.stop(self) })
+      .addDisposableTo(self.disposeBag)
 
     // AppState
     Observable
@@ -30,38 +40,33 @@ class Context {
         actionSource
           .mapOmittingNil { $0 as? AppDelegate.Action }
           .map { self.appStateActionPair(for: $0) }
-          .transform(by: AppDelegateTransformer(baseServerUrl: baseServerUrl))
+          .reduce(by: AppDelegateReducer(baseServerUrl: baseServerUrl))
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? UuidAction<MainWindow.Action> }
           .map { self.appStateActionPair(for: $0) }
-          .transform(by: UiRootTransformer())
-          .transform(by: openQuicklyTransformer.forMainWindow)
+          .reduce(by: UiRootReducer())
+          .reduce(by: openQuicklyReducer.forMainWindow)
           .filter { $0.modified }
           .apply(to: PrefService())
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? FileMonitor.Action }
           .map { self.appStateActionPair(for: $0) }
-          .transform(by: FileMonitorTransformer())
+          .reduce(by: FileMonitorReducer())
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? OpenQuicklyWindow.Action }
           .map { self.appStateActionPair(for: $0) }
-          .transform(by: openQuicklyTransformer.forOpenQuicklyWindow)
+          .reduce(by: openQuicklyReducer.forOpenQuicklyWindow)
           .filter { $0.modified }
           .map { $0.state }
       )
       .merge()
-      .subscribe(onNext: { state in
-        self.appState = state
-        self.stateSubject.onNext(self.appState)
-      })
+      .subscribe(onNext: self.emitAppState)
       .addDisposableTo(self.disposeBag)
-
-    self.httpService = HttpService(port: baseServerUrl.port!)
 
     // MainWindow.State
     Observable
@@ -69,8 +74,8 @@ class Context {
         actionSource
           .mapOmittingNil { $0 as? UuidAction<MainWindow.Action> }
           .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
-          .transform(by: MainWindowTransformer())
-          .transform(by: previewTransformer.forMainWindow)
+          .reduce(by: MainWindowReducer())
+          .reduce(by: previewReducer.forMainWindow)
           .filter { $0.modified }
           .apply(to: previewService.forMainWindow)
           .apply(to: self.httpService.forMainWindow)
@@ -78,35 +83,33 @@ class Context {
         actionSource
           .mapOmittingNil { $0 as? UuidAction<PreviewTool.Action> }
           .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
-          .transform(by: PreviewToolTransformer(baseServerUrl: baseServerUrl))
+          .reduce(by: PreviewToolReducer(baseServerUrl: baseServerUrl))
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? UuidAction<HtmlPreviewTool.Action> }
           .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
-          .transform(by: self.httpService.forHtmlPreviewTool)
+          .reduce(by: htmlPreviewToolReducer)
           .filter { $0.modified }
+          .apply(to: self.httpService.forHtmlPreviewTool)
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? UuidAction<FileBrowser.Action> }
           .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
-          .transform(by: FileBrowserTransformer())
+          .reduce(by: FileBrowserReducer())
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? UuidAction<OpenedFileList.Action> }
           .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
-          .transform(by: OpenedFileListTransformer())
-          .transform(by: previewTransformer.forOpenedFileList)
+          .reduce(by: OpenedFileListReducer())
+          .reduce(by: previewReducer.forOpenedFileList)
           .filter { $0.modified }
           .apply(to: previewService.forOpenedFileList)
           .map { $0.state }
       )
       .merge()
-      .subscribe(onNext: { state in
-        self.appState.mainWindows[state.uuid] = state.payload
-        self.stateSubject.onNext(self.appState)
-      })
+      .subscribe(onNext: self.emitAppState)
       .addDisposableTo(self.disposeBag)
 
     // Preferences
@@ -115,38 +118,37 @@ class Context {
         actionSource
           .mapOmittingNil { $0 as? PrefWindow.Action }
           .map { self.appStateActionPair(for: $0) }
-          .transform(by: PrefWindowTransformer())
+          .reduce(by: PrefWindowReducer())
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? GeneralPref.Action }
           .map { self.appStateActionPair(for: $0) }
-          .transform(by: GeneralPrefTransformer())
+          .reduce(by: GeneralPrefReducer())
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? AppearancePref.Action }
           .map { self.appStateActionPair(for: $0) }
-          .transform(by: AppearancePrefTransformer())
+          .reduce(by: AppearancePrefReducer())
           .filter { $0.modified }
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? AdvancedPref.Action }
           .map { self.appStateActionPair(for: $0) }
-          .transform(by: AdvancedPrefTransformer())
+          .reduce(by: AdvancedPrefReducer())
           .filter { $0.modified }
           .map { $0.state }
       )
       .merge()
-      .subscribe(onNext: { state in
-        self.appState = state
-        self.stateSubject.onNext(self.appState)
-      })
+      .subscribe(onNext: self.emitAppState)
       .addDisposableTo(self.disposeBag)
 
 #if DEBUG
 //    actionSource.debug().subscribe().addDisposableTo(self.disposeBag)
 //    stateSource
+//      .filter { $0.mainWindows.values.count > 0 }
+//      .map { Array($0.mainWindows.values)[0].preview }
 //      .debug()
 //      .subscribe(onNext: { state in
 //      })
@@ -166,6 +168,32 @@ class Context {
 
   fileprivate var appState: AppState
 
+  fileprivate func emitAppState(_ mainWindow: UuidState<MainWindow.State>) {
+    self.appState.mainWindows[mainWindow.uuid] = mainWindow.payload
+    self.stateSubject.onNext(self.appState)
+
+    self.cleanUpAppState()
+  }
+
+  fileprivate func emitAppState(_ appState: AppState) {
+    self.appState = appState
+    self.stateSubject.onNext(self.appState)
+
+    self.cleanUpAppState()
+  }
+
+  fileprivate func cleanUpAppState() {
+    self.appState.mainWindows.keys.forEach { uuid in
+      if self.appState.mainWindows[uuid]?.close == true {
+        self.appState.mainWindows.removeValue(forKey: uuid)
+        return
+      }
+
+      self.appState.mainWindows[uuid]?.viewToBeFocused = nil
+      self.appState.mainWindows[uuid]?.urlsToOpen.removeAll()
+    }
+  }
+
   fileprivate func appStateActionPair<ActionType>(for action: ActionType) -> StateActionPair<AppState, ActionType> {
     return StateActionPair(state: self.appState, action: action, modified: false)
   }
@@ -184,8 +212,8 @@ class Context {
 
 extension Observable {
 
-  fileprivate func transform<T:Reducer>(by transformer: T) -> Observable<Element> where T.Element == Element {
-    return transformer.transform(self)
+  fileprivate func reduce<T:Reducer>(by transformer: T) -> Observable<Element> where T.Pair == Element {
+    return transformer.reduce(self)
   }
 
   // If the following is used, the compiler does not finish...
@@ -195,7 +223,7 @@ extension Observable {
 //    }
 //  }
 
-  fileprivate func apply<S:Service>(to service: S) -> Observable<Element> where S.Element == Element {
+  fileprivate func apply<S:Service>(to service: S) -> Observable<Element> where S.Pair == Element {
     return self.do(onNext: service.apply)
   }
 }

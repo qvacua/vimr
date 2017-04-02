@@ -21,7 +21,6 @@
 		1929B3217A7A3D79E28C80DB /* PrefWindowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B49E6924847AD085C8C9 /* PrefWindowReducer.swift */; };
 		1929B333855A5406C400DA92 /* OpenQuicklyFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEDE7F92BC7B49E802AF /* OpenQuicklyFilterOperation.swift */; };
 		1929B3557317755A43513B17 /* OpenQuicklyWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B71A92C24FEFE79A851E /* OpenQuicklyWindow.swift */; };
-		1929B387E6B085D96945CCAB /* AdvancedPrefTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5792DE4EFE4D1FEB664 /* AdvancedPrefTransformer.swift */; };
 		1929B3AC66EFE35D68C020E3 /* PreviewToolReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFB0F294F3714D5E095F /* PreviewToolReducer.swift */; };
 		1929B3CEE0C1A1850E9CCE2F /* BasicTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B2FBE11048569391E092 /* BasicTypes.swift */; };
 		1929B3F5743967125F357C9F /* Matcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEEB33113B0E33C3830F /* Matcher.swift */; };
@@ -58,6 +57,7 @@
 		1929BCC7908DD899999B70BE /* AppearancePrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BED01F5D94BFCA4CF80F /* AppearancePrefReducer.swift */; };
 		1929BCC9D3604933DFF07E2E /* FileBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA5C7099CDEB04B76BA4 /* FileBrowser.swift */; };
 		1929BCF444CE7F1D14D421DE /* FileItemTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B4778E20696E3AAFB69B /* FileItemTest.swift */; };
+		1929BCF7F7B9CC5499A3F506 /* AdvancedPrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7039C5689CE45F53888 /* AdvancedPrefReducer.swift */; };
 		1929BD2F41D93ADFF43C1C98 /* NetUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B02440BC99C42F9EBD45 /* NetUtils.m */; };
 		1929BD3878A3A47B8D685CD2 /* AppDelegateReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7A68B7109CEFAF105E8 /* AppDelegateReducer.swift */; };
 		1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D510177918080BE39B /* Scorer.swift */; };
@@ -319,7 +319,6 @@
 		1929B49E6924847AD085C8C9 /* PrefWindowReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefWindowReducer.swift; sourceTree = "<group>"; };
 		1929B5046239709E33516F5C /* Pref128ToCurrentConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pref128ToCurrentConverter.swift; sourceTree = "<group>"; };
 		1929B56C8ED31834BA9D8543 /* FileItemUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemUtils.swift; sourceTree = "<group>"; };
-		1929B5792DE4EFE4D1FEB664 /* AdvancedPrefTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedPrefTransformer.swift; sourceTree = "<group>"; };
 		1929B5C3F2F1CA4113DABFFD /* CocoaCategories.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaCategories.m; sourceTree = "<group>"; };
 		1929B5D977261F1EBFA9E8F1 /* FileUtilsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileUtilsTest.swift; sourceTree = "<group>"; };
 		1929B617C229B19DB3E987B8 /* PreviewService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewService.swift; sourceTree = "<group>"; };
@@ -327,6 +326,7 @@
 		1929B69499B2569793350CEC /* FileItemIgnorePattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemIgnorePattern.swift; sourceTree = "<group>"; };
 		1929B6AD3396160AA2C46919 /* Debouncer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
 		1929B6C6C7792B05164B0216 /* PreviewTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewTool.swift; sourceTree = "<group>"; };
+		1929B7039C5689CE45F53888 /* AdvancedPrefReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedPrefReducer.swift; sourceTree = "<group>"; };
 		1929B71A92C24FEFE79A851E /* OpenQuicklyWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyWindow.swift; sourceTree = "<group>"; };
 		1929B7A68B7109CEFAF105E8 /* AppDelegateReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegateReducer.swift; sourceTree = "<group>"; };
 		1929B7CB4863F80230C32D3C /* FileItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
@@ -540,7 +540,6 @@
 			children = (
 				1929BCE3E156C06EDF1F2806 /* FileOutlineView.swift */,
 				1929BA5C7099CDEB04B76BA4 /* FileBrowser.swift */,
-				1929B5792DE4EFE4D1FEB664 /* AdvancedPrefTransformer.swift */,
 			);
 			name = "File Browser";
 			sourceTree = "<group>";
@@ -607,6 +606,7 @@
 				1929B49E6924847AD085C8C9 /* PrefWindowReducer.swift */,
 				1929B0EB3F49C42A57D083AF /* GeneralPrefReducer.swift */,
 				1929BED01F5D94BFCA4CF80F /* AppearancePrefReducer.swift */,
+				1929B7039C5689CE45F53888 /* AdvancedPrefReducer.swift */,
 			);
 			name = Preferences;
 			sourceTree = "<group>";
@@ -1369,7 +1369,6 @@
 				1929B4F0612224E594E89B92 /* AppearancePref.swift in Sources */,
 				1929B50D933A369A86A165DE /* AdvencedPref.swift in Sources */,
 				1929BCC7908DD899999B70BE /* AppearancePrefReducer.swift in Sources */,
-				1929B387E6B085D96945CCAB /* AdvancedPrefTransformer.swift in Sources */,
 				1929B00BA624DA8DC75F7E02 /* SerializableStates.swift in Sources */,
 				1929B3557317755A43513B17 /* OpenQuicklyWindow.swift in Sources */,
 				1929B13A458CB49BC44A92F5 /* ImageAndTextTableCell.swift in Sources */,
@@ -1382,6 +1381,7 @@
 				1929B94083273D4B321AD848 /* FileItemUtils.swift in Sources */,
 				1929BFDE22D155F7C4B19E96 /* HtmlPreviewTool.swift in Sources */,
 				1929B4B00D7BB191A9A6532D /* HtmlPreviewToolReducer.swift in Sources */,
+				1929BCF7F7B9CC5499A3F506 /* AdvancedPrefReducer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1499,7 +1499,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 171;
+				DYLIB_CURRENT_VERSION = 174;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1523,7 +1523,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 171;
+				DYLIB_CURRENT_VERSION = 174;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1715,7 +1715,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 171;
+				CURRENT_PROJECT_VERSION = 174;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1765,7 +1765,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 171;
+				CURRENT_PROJECT_VERSION = 174;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

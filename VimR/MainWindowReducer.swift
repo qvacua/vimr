@@ -6,18 +6,15 @@
 import Foundation
 import RxSwift
 
-class MainWindowTransformer: Reducer {
+class MainWindowReducer: Reducer {
 
   typealias Pair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
-  func transform(_ source: Observable<Pair>) -> Observable<Pair> {
+  func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
     return source.map { pair in
       var state = pair.state.payload
 
       switch pair.action {
-
-      case let .open(marks):
-        state.urlsToOpen = state.urlsToOpen.filter { !marks.contains($0.mark) }
 
       case let .cd(to:cwd):
         if state.cwd != cwd {
@@ -50,7 +47,7 @@ class MainWindowTransformer: Reducer {
         }
 
       case let .focus(view):
-        state.focusedView = view
+        state.viewToBeFocused = view
 
       case let .setState(for: tool, with: workspaceTool):
         state.tools[tool] = WorkspaceToolState(location: workspaceTool.location,

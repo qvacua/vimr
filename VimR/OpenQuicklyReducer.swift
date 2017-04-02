@@ -6,19 +6,19 @@
 import Foundation
 import RxSwift
 
-class OpenQuicklyTransformer {
+class OpenQuicklyReducer {
 
-  let forMainWindow = MainWindowTransformer()
-  let forOpenQuicklyWindow = OpenQuicklyWindowTransformer()
+  let forMainWindow = MainWindowReducer()
+  let forOpenQuicklyWindow = OpenQuicklyWindowReducer()
 }
 
-extension OpenQuicklyTransformer {
+extension OpenQuicklyReducer {
 
-  class OpenQuicklyWindowTransformer: Reducer {
+  class OpenQuicklyWindowReducer: Reducer {
 
     typealias Pair = StateActionPair<AppState, OpenQuicklyWindow.Action>
 
-    func transform(_ source: Observable<Pair>) -> Observable<Pair> {
+    func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
       return source.map { pair in
         var appState = pair.state
 
@@ -33,7 +33,7 @@ extension OpenQuicklyTransformer {
             return pair
           }
 
-          appState.mainWindows[uuid]?.urlsToOpen.append(Marked([url: .newTab]))
+          appState.mainWindows[uuid]?.urlsToOpen[url] = .newTab
 
         case .close:
           break
@@ -45,11 +45,11 @@ extension OpenQuicklyTransformer {
     }
   }
 
-  class MainWindowTransformer: Reducer {
+  class MainWindowReducer: Reducer {
 
     typealias Pair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
 
-    func transform(_ source: Observable<Pair>) -> Observable<Pair> {
+    func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
       return source.map { pair in
 
         switch pair.action.payload {

@@ -6,19 +6,19 @@
 import Foundation
 import RxSwift
 
-class FileBrowserTransformer: Reducer {
+class FileBrowserReducer: Reducer {
 
   typealias Pair = StateActionPair<UuidState<MainWindow.State>, FileBrowser.Action>
 
-  func transform(_ source: Observable<Pair>) -> Observable<Pair> {
+  func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
     return source.map { pair in
       var state = pair.state.payload
 
       switch pair.action {
 
       case let .open(url, mode):
-        state.urlsToOpen.append(Marked([url: mode]))
-        state.focusedView = .neoVimView
+        state.urlsToOpen[url] = mode
+        state.viewToBeFocused = .neoVimView
 
       case let .setAsWorkingDirectory(url):
         state.cwd = url

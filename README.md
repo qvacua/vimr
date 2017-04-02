@@ -7,6 +7,7 @@ VimR — Neovim Refined
 
 [![Bountysource](https://www.bountysource.com/badge/team?team_id=933&style=raised)](https://www.bountysource.com/teams/vimr?utm_source=VimR%20%E2%80%94%20Vim%20Refined&utm_medium=shield&utm_campaign=raised) [![Chat at https://gitter.im/vimr/vimr](https://badges.gitter.im/vimr/vimr.svg)](https://gitter.im/vimr/vimr?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Travis builds](https://travis-ci.org/qvacua/vimr.svg?branch=develop)](https://travis-ci.org/qvacua/vimr) [![Stories in Ready](https://badge.waffle.io/qvacua/vimr.svg?label=ready&title=Ready)](http://waffle.io/qvacua/vimr)
 
+![Screenshot 0](https://raw.githubusercontent.com/qvacua/vimr/develop/resources/screenshot0.png)
 ![Screenshot 1](https://raw.githubusercontent.com/qvacua/vimr/develop/resources/screenshot1.png)
 ![Screenshot 2](https://raw.githubusercontent.com/qvacua/vimr/develop/resources/screenshot2.png)
 
@@ -40,6 +41,7 @@ Pre-built binaries can be found under [Releases](https://github.com/qvacua/vimr/
 
 * Multiple windows.
 * Basic input including Emojis and Hangul (+Hanja): We don't know whether other input systems work...
+* Markdown preview
 * Basic mouse support: Left button actions and scrolling.
 * Fuzzy file finder a la Xcode's "Open Quickly..."
 * Basic trackpad support: Pinching for zooming and two-finger scrolling.
@@ -55,7 +57,7 @@ The following are features we _plan_ to implement (some of which are already pre
 
 * Some more standard OSX menu items.
 * Improved rendering and input handling, especially Hangul/Hanja (Why is Korean so important? 🤔): The current implementation is really ugly and messy...
-* Preview for some file types, e.g. Markdown, HTML, etc.
+* General HTML preview
 * ...
 
 We will gradually create [issues](https://github.com/qvacua/vimr/issues) with more details. For the current status see the [project board](https://waffle.io/qvacua/vimr).

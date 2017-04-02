@@ -6,7 +6,7 @@
 import Foundation
 import RxSwift
 
-class AppDelegateTransformer: Reducer {
+class AppDelegateReducer: Reducer {
 
   typealias Pair = StateActionPair<AppState, AppDelegate.Action>
 
@@ -14,7 +14,7 @@ class AppDelegateTransformer: Reducer {
     self.baseServerUrl = baseServerUrl
   }
 
-  func transform(_ source: Observable<Pair>) -> Observable<Pair> {
+  func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
     return source.map { pair in
       var state = pair.state
 
@@ -31,14 +31,14 @@ class AppDelegateTransformer: Reducer {
           break
         }
 
-        state.mainWindows[uuid]?.urlsToOpen.append(Marked(urls.toDict { url in MainWindow.OpenMode.default }))
+        state.mainWindows[uuid]?.urlsToOpen = urls.toDict { url in MainWindow.OpenMode.default }
         state.mainWindows[uuid]?.cwd = cwd
 
       case .preferences:
         state.preferencesOpen = Marked(true)
 
       case .quitWithoutSaving, .quit:
-        state.mainWindows.removeAll()
+        state.mainWindows.keys.forEach { state.mainWindows[$0]?.close = true }
         state.quitWhenNoMainWindow = true
 
       }
@@ -54,12 +54,11 @@ class AppDelegateTransformer: Reducer {
     mainWindow.uuid = UUID().uuidString
     mainWindow.root = state.root
 
-    let markedUrls = Marked(urls.toDict { url in MainWindow.OpenMode.default })
-    mainWindow.urlsToOpen.append(markedUrls)
+    mainWindow.urlsToOpen = urls.toDict { url in MainWindow.OpenMode.default }
 
     mainWindow.cwd = cwd
 
-    mainWindow.preview.server = self.baseServerUrl.appendingPathComponent(PreviewTransformer.nonePath)
+    mainWindow.preview.server = self.baseServerUrl.appendingPathComponent(PreviewReducer.nonePath)
 
     return mainWindow
   }

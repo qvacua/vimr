@@ -7,38 +7,34 @@ import Foundation
 import RxSwift
 
 // Currently supports only markdown
-class PreviewTransformer {
+class PreviewReducer {
 
   static let basePath = "/tools/preview"
   static let saveFirstPath = "/tools/preview/save-first.html"
   static let errorPath = "/tools/preview/error.html"
   static let nonePath = "/tools/preview/empty.html"
 
-  let forMainWindow = MainWindowPreviewTransformer()
-  let forOpenedFileList = OpenedFileListTransformer()
+  let forMainWindow: MainWindowPreviewReducer
+  let forOpenedFileList: OpenedFileListReducer
 
   init(baseServerUrl: URL) {
-    self.baseServerUrl = baseServerUrl
-
-    self.forMainWindow.parentTransformer = self
-    self.forOpenedFileList.parentTransformer = self
+    self.forMainWindow = MainWindowPreviewReducer(baseServerUrl)
+    self.forOpenedFileList = OpenedFileListReducer(baseServerUrl)
   }
-
-  fileprivate let baseServerUrl: URL
 }
 
-extension PreviewTransformer {
+extension PreviewReducer {
 
-  class MainWindowPreviewTransformer: Reducer {
+  class MainWindowPreviewReducer: Reducer {
 
     typealias Pair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
-    func transform(_ source: Observable<Pair>) -> Observable<Pair> {
-      return source.map { pair in
-        guard let baseServerUrl = self.parentTransformer?.baseServerUrl else {
-          return pair
-        }
+    init(_ baseServerUrl: URL) {
+      self.baseServerUrl = baseServerUrl
+    }
 
+    func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
+      return source.map { pair in
         var state = pair.state.payload
 
         switch pair.action {
@@ -48,10 +44,11 @@ extension PreviewTransformer {
             return pair
           }
 
-          state.preview = PreviewUtils.state(for: pair.state.uuid, baseUrl: baseServerUrl, buffer: buffer)
+          state.preview = PreviewUtils.state(for: pair.state.uuid, baseUrl: self.baseServerUrl, buffer: buffer)
+          state.preview.ignoreNextReverse = true
 
         case .close:
-          state.preview = PreviewUtils.state(for: .none, baseUrl: baseServerUrl)
+          state.preview = PreviewUtils.state(for: .none, baseUrl: self.baseServerUrl)
 
         default:
           return pair
@@ -61,25 +58,25 @@ extension PreviewTransformer {
       }
     }
 
-    fileprivate var parentTransformer: PreviewTransformer?
+    fileprivate let baseServerUrl: URL
   }
 
-  class OpenedFileListTransformer: Reducer {
+  class OpenedFileListReducer: Reducer {
 
     typealias Pair = StateActionPair<UuidState<MainWindow.State>, OpenedFileList.Action>
 
-    func transform(_ source: Observable<Pair>) -> Observable<Pair> {
-      return source.map { pair in
-        guard let baseServerUrl = self.parentTransformer?.baseServerUrl else {
-          return pair
-        }
+    init(_ baseServerUrl: URL) {
+      self.baseServerUrl = baseServerUrl
+    }
 
+    func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
+      return source.map { pair in
         var state = pair.state.payload
 
         switch pair.action {
 
         case let .open(buffer):
-          state.preview = PreviewUtils.state(for: pair.state.uuid, baseUrl: baseServerUrl, buffer: buffer)
+          state.preview = PreviewUtils.state(for: pair.state.uuid, baseUrl: self.baseServerUrl, buffer: buffer)
 
         }
 
@@ -87,6 +84,6 @@ extension PreviewTransformer {
       }
     }
 
-    fileprivate var parentTransformer: PreviewTransformer?
+    fileprivate let baseServerUrl: URL
   }
 }
