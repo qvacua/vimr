@@ -8,6 +8,10 @@ import RxSwift
 import PureLayout
 import WebKit
 import Swifter
+import EonilFileSystemEvents
+
+fileprivate let fileSystemEventsLatency = 2.0
+fileprivate let monitorDispatchQueue = DispatchQueue.global(qos: .userInitiated)
 
 class HtmlPreviewTool: NSView, UiComponent {
 
@@ -39,12 +43,21 @@ class HtmlPreviewTool: NSView, UiComponent {
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
-        guard let serverUrl = state.htmlPreview.server else {
+        guard let serverUrl = state.htmlPreview.server, let htmlFileUrl = state.htmlPreview.htmlFile else {
+          self.monitor = nil
           return
         }
 
         if serverUrl.mark == self.mark {
           return
+        }
+
+        self.monitor = FileSystemEventMonitor(pathsToWatch: [htmlFileUrl.path],
+                                             latency: fileSystemEventsLatency,
+                                             watchRoot: false,
+                                             queue: monitorDispatchQueue)
+        { [unowned self] events in
+          self.webview.load(URLRequest(url: serverUrl.payload))
         }
 
         self.mark = serverUrl.mark
@@ -66,6 +79,7 @@ class HtmlPreviewTool: NSView, UiComponent {
   fileprivate var mark = Token()
 
   fileprivate let webview: WKWebView
+  fileprivate var monitor: FileSystemEventMonitor?
 
   fileprivate let disposeBag = DisposeBag()
 
