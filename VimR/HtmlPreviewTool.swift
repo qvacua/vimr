@@ -10,7 +10,7 @@ import WebKit
 import Swifter
 import EonilFileSystemEvents
 
-fileprivate let fileSystemEventsLatency = 2.0
+fileprivate let fileSystemEventsLatency = 1.0
 fileprivate let monitorDispatchQueue = DispatchQueue.global(qos: .userInitiated)
 
 class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
