@@ -219,6 +219,10 @@ static void server_ui_mouse_off(UI *ui __unused) {
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdMouseOff];
 }
 
+static void server_ui_cursor_style_set(UI *ui __unused, Dictionary cursor_shapes __unused) {
+  // yet noop
+}
+
 static void server_ui_mode_change(UI *ui __unused, int mode) {
   int value = mode;
   NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
@@ -409,6 +413,7 @@ void custom_ui_start(void) {
   ui->busy_stop = server_ui_busy_stop;
   ui->mouse_on = server_ui_mouse_on;
   ui->mouse_off = server_ui_mouse_off;
+  ui->cursor_style_set = server_ui_cursor_style_set;
   ui->mode_change = server_ui_mode_change;
   ui->set_scroll_region = server_ui_set_scroll_region;
   ui->scroll = server_ui_scroll;
