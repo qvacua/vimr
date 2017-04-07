@@ -29,7 +29,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     contentView.addSubview(workspace)
     workspace.autoPinEdgesToSuperviewEdges()
 
-    workspace.append(tool: dummyTool(title: "Top-1", color: .yellow), location: .top)
+//    workspace.append(tool: dummyTool(title: "Top-1", color: .yellow), location: .top)
 
     workspace.append(tool: dummyTool(title: "Right-1", color: .magenta), location: .right)
     workspace.append(tool: dummyTool(title: "Right-2", color: .black), location: .right)
@@ -44,14 +44,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     let tool = dummyTool(title: "Left-1", color: .blue, customToolbar: DummyView(.orange), customMenu: menuItems)
 
-    workspace.append(tool: tool, location: .left)
-    workspace.append(tool: dummyTool(title: "Left-2", color: .red), location: .left)
-    workspace.append(tool: dummyTool(title: "Left-3", color: .gray), location: .left)
+    workspace.append(tool: tool, location: .right)
+//    workspace.append(tool: dummyTool(title: "Left-2", color: .red), location: .left)
+//    workspace.append(tool: dummyTool(title: "Left-3", color: .gray), location: .left)
 
-    workspace.append(tool: dummyTool(title: "Bottom-1", color: .cyan), location: .bottom)
-    workspace.append(tool: dummyTool(title: "Bottom-2", color: .blue), location: .bottom)
+//    workspace.append(tool: dummyTool(title: "Bottom-1", color: .cyan), location: .bottom)
+//    workspace.append(tool: dummyTool(title: "Bottom-2", color: .blue), location: .bottom)
 
     tool.toggle()
+
+    // FIXME: GH-422
   }
 
   fileprivate func dummyTool(title: String,
