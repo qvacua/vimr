@@ -53,6 +53,7 @@ class AppDelegateReducer: Reducer {
     var mainWindow = state.mainWindowTemplate
     mainWindow.uuid = UUID().uuidString
     mainWindow.root = state.root
+    mainWindow.isDirty = false
 
     mainWindow.urlsToOpen = urls.toDict { url in MainWindow.OpenMode.default }
 
