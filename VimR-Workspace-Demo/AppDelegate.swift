@@ -7,7 +7,7 @@ import Cocoa
 import PureLayout
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, WorkspaceDelegate {
 
   @IBOutlet weak var window: NSWindow!
 
@@ -44,16 +44,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     let tool = dummyTool(title: "Left-1", color: .blue, customToolbar: DummyView(.orange), customMenu: menuItems)
 
-    workspace.append(tool: tool, location: .right)
-//    workspace.append(tool: dummyTool(title: "Left-2", color: .red), location: .left)
-//    workspace.append(tool: dummyTool(title: "Left-3", color: .gray), location: .left)
+    workspace.append(tool: tool, location: .left)
+    workspace.append(tool: dummyTool(title: "Left-2", color: .red), location: .left)
+    workspace.append(tool: dummyTool(title: "Left-3", color: .gray), location: .left)
 
-//    workspace.append(tool: dummyTool(title: "Bottom-1", color: .cyan), location: .bottom)
-//    workspace.append(tool: dummyTool(title: "Bottom-2", color: .blue), location: .bottom)
+    workspace.append(tool: dummyTool(title: "Bottom-1", color: .cyan), location: .bottom)
+    workspace.append(tool: dummyTool(title: "Bottom-2", color: .blue), location: .bottom)
 
     tool.toggle()
 
     // FIXME: GH-422
+    workspace.delegate = self
   }
 
   fileprivate func dummyTool(title: String,
@@ -69,6 +70,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                       customMenuItems: customMenu)
 
     return WorkspaceTool(config)
+  }
+
+  func resizeWillStart(workspace: Workspace, tool: WorkspaceTool?) {
+    NSLog("\(#function)")
+  }
+
+  func resizeDidEnd(workspace: Workspace, tool: WorkspaceTool?) {
+    NSLog("\(#function)")
+  }
+
+  func toggled(tool: WorkspaceTool) {
+    NSLog("\(#function)")
+  }
+
+  func moved(tool: WorkspaceTool) {
+    NSLog("\(#function)")
   }
 }
 

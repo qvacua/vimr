@@ -12,6 +12,7 @@ protocol WorkspaceBarDelegate: class {
   func resizeDidEnd(workspaceBar: WorkspaceBar, tool: WorkspaceTool?)
 
   func toggle(tool: WorkspaceTool)
+  func moved(tool: WorkspaceTool)
 }
 
 /**
@@ -308,6 +309,7 @@ extension ProxyBar {
         // 3.
         tool.bar?.remove(tool: tool)
         self.container!.append(tool: tool)
+        self.container?.delegate?.moved(tool: tool)
         return true
       }
 
@@ -320,6 +322,7 @@ extension ProxyBar {
       {
         self.container!.tools.remove(at: toolIdx)
         self.container!.tools.append(tool)
+        self.container?.delegate?.moved(tool: tool)
         return true
       }
 
@@ -336,6 +339,7 @@ extension ProxyBar {
       // 1.
       tool.bar?.remove(tool: tool)
       self.container!.insert(tool: tool, at: draggedOnToolIdx)
+      self.container?.delegate?.moved(tool: tool)
       return true
     }
 
@@ -347,6 +351,7 @@ extension ProxyBar {
       self.container!.tools.remove(at: toolIdx)
       self.container!.tools.insert(tool, at: draggedOnToolIdx)
     }
+    self.container?.delegate?.moved(tool: tool)
     return true
   }
 

@@ -206,7 +206,7 @@ extension Workspace {
   }
 
   func moved(tool: WorkspaceTool) {
-
+    self.delegate?.moved(tool: tool)
   }
 }
 
