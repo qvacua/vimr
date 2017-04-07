@@ -145,7 +145,7 @@
 		4BDCFAD61D3145E500F62670 /* libjemalloc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFACF1D3145E500F62670 /* libjemalloc.a */; };
 		4BDCFAD71D3145E500F62670 /* libluajit-5.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD01D3145E500F62670 /* libluajit-5.1.a */; };
 		4BDCFAD81D3145E500F62670 /* libluv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD11D3145E500F62670 /* libluv.a */; };
-		4BDCFAD91D3145E500F62670 /* libmsgpack.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD21D3145E500F62670 /* libmsgpack.a */; };
+		4BDCFAD91D3145E500F62670 /* libmsgpackc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD21D3145E500F62670 /* libmsgpackc.a */; };
 		4BDCFADA1D3145E500F62670 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD31D3145E500F62670 /* libuv.a */; };
 		4BDCFADB1D3145E500F62670 /* libvterm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD41D3145E500F62670 /* libvterm.a */; };
 		4BDCFAEA1D31486E00F62670 /* NeoVimMsgIds.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDCFAE91D3147A300F62670 /* NeoVimMsgIds.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -425,7 +425,7 @@
 		4BDCFACF1D3145E500F62670 /* libjemalloc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjemalloc.a; path = neovim/.deps/usr/lib/libjemalloc.a; sourceTree = SOURCE_ROOT; };
 		4BDCFAD01D3145E500F62670 /* libluajit-5.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libluajit-5.1.a"; path = "neovim/.deps/usr/lib/libluajit-5.1.a"; sourceTree = SOURCE_ROOT; };
 		4BDCFAD11D3145E500F62670 /* libluv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluv.a; path = neovim/.deps/usr/lib/libluv.a; sourceTree = SOURCE_ROOT; };
-		4BDCFAD21D3145E500F62670 /* libmsgpack.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmsgpack.a; path = neovim/.deps/usr/lib/libmsgpack.a; sourceTree = SOURCE_ROOT; };
+		4BDCFAD21D3145E500F62670 /* libmsgpackc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmsgpackc.a; path = neovim/.deps/usr/lib/libmsgpackc.a; sourceTree = SOURCE_ROOT; };
 		4BDCFAD31D3145E500F62670 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv.a; path = neovim/.deps/usr/lib/libuv.a; sourceTree = SOURCE_ROOT; };
 		4BDCFAD41D3145E500F62670 /* libvterm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvterm.a; path = neovim/.deps/usr/lib/libvterm.a; sourceTree = SOURCE_ROOT; };
 		4BDCFAE91D3147A300F62670 /* NeoVimMsgIds.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NeoVimMsgIds.h; sourceTree = "<group>"; };
@@ -502,7 +502,7 @@
 				4BDCFAD81D3145E500F62670 /* libluv.a in Frameworks */,
 				4BDCFAD61D3145E500F62670 /* libjemalloc.a in Frameworks */,
 				4BDCFADA1D3145E500F62670 /* libuv.a in Frameworks */,
-				4BDCFAD91D3145E500F62670 /* libmsgpack.a in Frameworks */,
+				4BDCFAD91D3145E500F62670 /* libmsgpackc.a in Frameworks */,
 				4BDCFADB1D3145E500F62670 /* libvterm.a in Frameworks */,
 				4BDCFAD71D3145E500F62670 /* libluajit-5.1.a in Frameworks */,
 			);
@@ -796,7 +796,7 @@
 				4BDCFACF1D3145E500F62670 /* libjemalloc.a */,
 				4BDCFAD01D3145E500F62670 /* libluajit-5.1.a */,
 				4BDCFAD11D3145E500F62670 /* libluv.a */,
-				4BDCFAD21D3145E500F62670 /* libmsgpack.a */,
+				4BDCFAD21D3145E500F62670 /* libmsgpackc.a */,
 				4BDCFAD31D3145E500F62670 /* libuv.a */,
 				4BDCFAD41D3145E500F62670 /* libvterm.a */,
 				4BDCFACC1D3145AC00F62670 /* libnvim.a */,
