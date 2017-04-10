@@ -100,20 +100,20 @@ class MainWindow: NSObject,
                                              view: self.preview,
                                              customMenuItems: self.preview.menuItems)
     self.previewContainer = WorkspaceTool(previewConfig)
-    previewContainer.dimension = state.tools[.preview]?.dimension ?? 250
+    self.previewContainer.dimension = state.tools[.preview]?.dimension ?? 250
 
     let htmlPreviewConfig = WorkspaceTool.Config(title: "HTML Preview",
-        view: self.htmlPreview,
-        customToolbar: self.htmlPreview.innerCustomToolbar)
-    let htmlPreviewContainer = WorkspaceTool(htmlPreviewConfig)
-    htmlPreviewContainer.dimension = state.tools[.htmlPreview]?.dimension ?? 250
+                                                 view: self.htmlPreview,
+                                                 customToolbar: self.htmlPreview.innerCustomToolbar)
+    self.htmlPreviewContainer = WorkspaceTool(htmlPreviewConfig)
+    self.htmlPreviewContainer.dimension = state.tools[.htmlPreview]?.dimension ?? 250
 
     let fileBrowserConfig = WorkspaceTool.Config(title: "Files",
                                                  view: self.fileBrowser,
                                                  customToolbar: self.fileBrowser.innerCustomToolbar,
                                                  customMenuItems: self.fileBrowser.menuItems)
     self.fileBrowserContainer = WorkspaceTool(fileBrowserConfig)
-    fileBrowserContainer.dimension = state.tools[.fileBrowser]?.dimension ?? 200
+    self.fileBrowserContainer.dimension = state.tools[.fileBrowser]?.dimension ?? 200
 
     let openedFileListConfig = WorkspaceTool.Config(title: "Buffers", view: self.openedFileList)
     self.openedFileListContainer = WorkspaceTool(openedFileListConfig)
@@ -123,7 +123,7 @@ class MainWindow: NSObject,
       .fileBrowser: self.fileBrowserContainer,
       .openedFilesList: self.openedFileListContainer,
       .preview: self.previewContainer,
-      .htmlPreview: htmlPreviewContainer,
+      .htmlPreview: self.htmlPreviewContainer,
     ]
 
     self.tools = tools
@@ -252,6 +252,7 @@ class MainWindow: NSObject,
   fileprivate let previewContainer: WorkspaceTool
   fileprivate let fileBrowserContainer: WorkspaceTool
   fileprivate let openedFileListContainer: WorkspaceTool
+  fileprivate let htmlPreviewContainer: WorkspaceTool
 
   fileprivate var editorPosition: Marked<Position>
   fileprivate var previewPosition: Marked<Position>
@@ -587,8 +588,6 @@ extension MainWindow {
       return (toolId, tool)
     }
 
-    NSLog("\(tools)")
-
     self.emitter.emit(self.uuidAction(for: .setToolsState(tools)))
   }
 
@@ -603,6 +602,9 @@ extension MainWindow {
 
     case self.previewContainer:
       return .preview
+
+    case self.htmlPreviewContainer:
+      return .htmlPreview
 
     default:
       return nil

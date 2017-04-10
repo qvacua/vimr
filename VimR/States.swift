@@ -251,10 +251,12 @@ extension MainWindow {
 
       let workspaceToolsDict = dict[Keys.WorkspaceTool.key] as? [String: [String: Any]] ?? [:]
       let toolKeys = workspaceToolsDict.keys.flatMap { MainWindow.Tools(rawValue: $0) }
-      if MainWindow.Tools.all == Set(toolKeys) {
-        self.tools = Array(toolKeys).toDict { tool in
-          return WorkspaceToolState(dict: workspaceToolsDict[tool.rawValue]!) ?? WorkspaceToolState.default[tool]!
-        }
+      guard MainWindow.Tools.all == Set(toolKeys) else {
+        return nil
+      }
+
+      self.tools = Array(toolKeys).toDict { tool in
+        return WorkspaceToolState(dict: workspaceToolsDict[tool.rawValue]!) ?? WorkspaceToolState.default[tool]!
       }
 
       let previewToolDict = dict[Keys.PreviewTool.key] as? [String: Any] ?? [:]
@@ -288,13 +290,14 @@ struct WorkspaceToolState: SerializableState {
     MainWindow.Tools.fileBrowser: WorkspaceToolState(location: .left, dimension: 200, open: true),
     MainWindow.Tools.openedFilesList: WorkspaceToolState(location: .left, dimension: 200, open: false),
     MainWindow.Tools.preview: WorkspaceToolState(location: .right, dimension: 250, open: false),
-    MainWindow.Tools.htmlPreview: WorkspaceToolState(location: .right, dimension: 500, open: true),
+    MainWindow.Tools.htmlPreview: WorkspaceToolState(location: .right, dimension: 500, open: false),
   ]
 
   static let `orderedDefault` = [
     MainWindow.Tools.fileBrowser,
     MainWindow.Tools.openedFilesList,
     MainWindow.Tools.preview,
+    MainWindow.Tools.htmlPreview,
   ]
 
   var location = WorkspaceBarLocation.left
