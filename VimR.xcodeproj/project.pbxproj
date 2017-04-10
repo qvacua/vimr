@@ -136,6 +136,9 @@
 		4BB409EE1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */; };
 		4BB409EF1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */; };
 		4BB489431D952CF6005BB0E8 /* WorkspaceToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */; };
+		4BB727131E97A6E5001571C1 /* DispatchUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEE79141D16D2100012EDAA /* DispatchUtils.swift */; };
+		4BB727141E97A718001571C1 /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; };
+		4BB727151E97A718001571C1 /* CocoaMarkdown.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BBFF8621E280E31008A3C1A /* Swifter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BBFF8611E280E31008A3C1A /* Swifter.framework */; };
 		4BBFF8631E2810FE008A3C1A /* Swifter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BBFF8611E280E31008A3C1A /* Swifter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BCADE081D11ED12004DAD0F /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */; };
@@ -237,6 +240,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4BB727151E97A718001571C1 /* CocoaMarkdown.framework in Embed Frameworks */,
 				4B6423AD1D8EFE9800FC78C8 /* PureLayout.framework in Embed Frameworks */,
 				4B91FFF41DEB772200447068 /* CocoaFontAwesome.framework in Embed Frameworks */,
 			);
@@ -480,6 +484,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BB727141E97A718001571C1 /* CocoaMarkdown.framework in Frameworks */,
 				4B6423AC1D8EFE9800FC78C8 /* PureLayout.framework in Frameworks */,
 				4B337FBC1DEB76F20020ADD2 /* CocoaFontAwesome.framework in Frameworks */,
 			);
@@ -1280,6 +1285,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BB727131E97A6E5001571C1 /* DispatchUtils.swift in Sources */,
 				4B280EFF1D945DA5003FE725 /* AppKitCommons.swift in Sources */,
 				4B3965371DEB21300082D3C1 /* InnterToolBar.swift in Sources */,
 				4B6423AF1D8EFEA800FC78C8 /* Workspace.swift in Sources */,

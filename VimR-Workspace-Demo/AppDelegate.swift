@@ -7,7 +7,7 @@ import Cocoa
 import PureLayout
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, WorkspaceDelegate {
 
   @IBOutlet weak var window: NSWindow!
 
@@ -29,7 +29,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     contentView.addSubview(workspace)
     workspace.autoPinEdgesToSuperviewEdges()
 
-    workspace.append(tool: dummyTool(title: "Top-1", color: .yellow), location: .top)
+//    workspace.append(tool: dummyTool(title: "Top-1", color: .yellow), location: .top)
 
     workspace.append(tool: dummyTool(title: "Right-1", color: .magenta), location: .right)
     workspace.append(tool: dummyTool(title: "Right-2", color: .black), location: .right)
@@ -52,6 +52,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     workspace.append(tool: dummyTool(title: "Bottom-2", color: .blue), location: .bottom)
 
     tool.toggle()
+
+    // FIXME: GH-422
+    workspace.delegate = self
   }
 
   fileprivate func dummyTool(title: String,
@@ -67,6 +70,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                       customMenuItems: customMenu)
 
     return WorkspaceTool(config)
+  }
+
+  func resizeWillStart(workspace: Workspace, tool: WorkspaceTool?) {
+    NSLog("\(#function)")
+  }
+
+  func resizeDidEnd(workspace: Workspace, tool: WorkspaceTool?) {
+    NSLog("\(#function)")
+  }
+
+  func toggled(tool: WorkspaceTool) {
+    NSLog("\(#function)")
+  }
+
+  func moved(tool: WorkspaceTool) {
+    NSLog("\(#function)")
   }
 }
 

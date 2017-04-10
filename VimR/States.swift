@@ -195,6 +195,7 @@ extension MainWindow {
     var lastFileSystemUpdate = Marked(FileItem(URL(fileURLWithPath: "/", isDirectory: true)))
 
     var tools = WorkspaceToolState.default
+    var orderedTools = WorkspaceToolState.orderedDefault
 
     var preview = PreviewState.default
     var htmlPreview = HtmlPreviewState.default
@@ -229,6 +230,7 @@ extension MainWindow {
     init?(dict: [String: Any]) {
       guard let isAllToolsVisible = PrefUtils.bool(from: dict, for: Keys.MainWindow.allToolsVisible),
             let isToolButtonsVisible = PrefUtils.bool(from: dict, for: Keys.MainWindow.toolButtonsVisible),
+            let orderedToolsAsString = dict[Keys.MainWindow.orderedTools] as? [String],
             let isShowHidden = PrefUtils.bool(from: dict, for: Keys.MainWindow.isShowHidden)
         else {
         return nil
@@ -239,6 +241,13 @@ extension MainWindow {
 
       let appearanceDict = dict[Keys.Appearance.key] as? [String: Any] ?? [:]
       self.appearance = AppearanceState(dict: appearanceDict) ?? AppearanceState.default
+
+      self.orderedTools = orderedToolsAsString.flatMap { MainWindow.Tools(rawValue: $0) }
+      guard self.orderedTools.count == MainWindow.Tools.all.count
+            && Set(self.orderedTools) == MainWindow.Tools.all
+        else {
+        return nil
+      }
 
       let workspaceToolsDict = dict[Keys.WorkspaceTool.key] as? [String: [String: Any]] ?? [:]
       let toolKeys = workspaceToolsDict.keys.flatMap { MainWindow.Tools(rawValue: $0) }
@@ -263,6 +272,8 @@ extension MainWindow {
         Keys.WorkspaceTool.key: Array(self.tools.keys.map { $0.rawValue })
           .toDict { self.tools[MainWindow.Tools(rawValue: $0)!]!.dict() },
 
+        Keys.MainWindow.orderedTools: self.orderedTools.map { $0.rawValue },
+
         Keys.PreviewTool.key: self.previewTool.dict(),
 
         Keys.MainWindow.isShowHidden: self.fileBrowserShowHidden,
@@ -278,6 +289,12 @@ struct WorkspaceToolState: SerializableState {
     MainWindow.Tools.openedFilesList: WorkspaceToolState(location: .left, dimension: 200, open: false),
     MainWindow.Tools.preview: WorkspaceToolState(location: .right, dimension: 250, open: false),
     MainWindow.Tools.htmlPreview: WorkspaceToolState(location: .right, dimension: 500, open: true),
+  ]
+
+  static let `orderedDefault` = [
+    MainWindow.Tools.fileBrowser,
+    MainWindow.Tools.openedFilesList,
+    MainWindow.Tools.preview,
   ]
 
   var location = WorkspaceBarLocation.left
