@@ -577,8 +577,6 @@ extension MainWindow {
       return (toolId, tool)
     }
 
-    NSLog("\(tools)")
-
     self.emitter.emit(self.uuidAction(for: .setToolsState(tools)))
   }
 

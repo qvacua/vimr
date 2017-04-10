@@ -77,8 +77,6 @@ class MainWindowReducer: Reducer {
           }
 
           state.orderedTools.append(toolId)
-
-          NSLog("\(state.orderedTools)")
         }
 
       case let .toggleAllTools(value):

@@ -233,19 +233,21 @@ extension MainWindow {
       self.appearance = AppearanceState(dict: appearanceDict) ?? AppearanceState.default
 
       self.orderedTools = orderedToolsAsString.flatMap { MainWindow.Tools(rawValue: $0) }
-      guard self.orderedTools.count == MainWindow.Tools.all.count
-            && Set(self.orderedTools) == MainWindow.Tools.all
-        else {
-        return nil
-      }
+      let missingOrderedTools = MainWindow.Tools.all.subtracting(self.orderedTools)
+      self.orderedTools.append(contentsOf: missingOrderedTools)
 
       let workspaceToolsDict = dict[Keys.WorkspaceTool.key] as? [String: [String: Any]] ?? [:]
       let toolKeys = workspaceToolsDict.keys.flatMap { MainWindow.Tools(rawValue: $0) }
-      if MainWindow.Tools.all == Set(toolKeys) {
-        self.tools = Array(toolKeys).toDict { tool in
-          return WorkspaceToolState(dict: workspaceToolsDict[tool.rawValue]!) ?? WorkspaceToolState.default[tool]!
-        }
+      let missingToolKeys = MainWindow.Tools.all.subtracting(toolKeys)
+
+      var tools = Array(toolKeys).toDict { tool in
+        return WorkspaceToolState(dict: workspaceToolsDict[tool.rawValue]!) ?? WorkspaceToolState.default[tool]!
       }
+      missingToolKeys.forEach { missingTool in
+        tools[missingTool] = WorkspaceToolState.default[missingTool]!
+      }
+
+      self.tools = tools
 
       let previewToolDict = dict[Keys.PreviewTool.key] as? [String: Any] ?? [:]
       self.previewTool = PreviewTool.State(dict: previewToolDict) ?? PreviewTool.State.default
