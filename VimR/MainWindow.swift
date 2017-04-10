@@ -37,6 +37,7 @@ class MainWindow: NSObject,
     case toggleAllTools(Bool)
     case toggleToolButtons(Bool)
     case setState(for: Tools, with: WorkspaceTool)
+    case setToolsState([(Tools, WorkspaceTool)])
 
     case close
   }
@@ -81,7 +82,8 @@ class MainWindow: NSObject,
                                  config: NeoVimView.Config(useInteractiveZsh: state.useInteractiveZsh))
     self.neoVimView.configureForAutoLayout()
 
-    self.workspace = Workspace(mainView: self.neoVimView)
+    let workspace = Workspace(mainView: self.neoVimView)
+    self.workspace = workspace
     self.preview = PreviewTool(source: source, emitter: emitter, state: state)
     self.fileBrowser = FileBrowser(source: source, emitter: emitter, state: state)
     self.openedFileList = OpenedFileList(source: source, emitter: emitter, state: state)
@@ -109,15 +111,20 @@ class MainWindow: NSObject,
     self.openedFileListContainer = WorkspaceTool(openedFileListConfig)
     self.openedFileListContainer.dimension = state.tools[.openedFilesList]?.dimension ?? 200
 
-    self.workspace.append(tool: previewContainer, location: state.tools[.preview]?.location ?? .right)
-    self.workspace.append(tool: fileBrowserContainer, location: state.tools[.fileBrowser]?.location ?? .left)
-    self.workspace.append(tool: openedFileListContainer, location: state.tools[.openedFilesList]?.location ?? .left)
-
-    self.tools = [
+    let tools: [Tools: WorkspaceTool] = [
       .fileBrowser: self.fileBrowserContainer,
       .openedFilesList: self.openedFileListContainer,
       .preview: self.previewContainer,
     ]
+
+    self.tools = tools
+    state.orderedTools.forEach { toolId in
+      guard let tool = tools[toolId] else {
+        return
+      }
+
+      workspace.append(tool: tool, location: state.tools[toolId]?.location ?? .left)
+    }
 
     super.init()
 
@@ -562,9 +569,17 @@ extension MainWindow {
   }
 
   func moved(tool: WorkspaceTool) {
-    if let toolIdentifier = self.toolIdentifier(for: tool) {
-      self.emitter.emit(self.uuidAction(for: .setState(for: toolIdentifier, with: tool)))
+    let tools = self.workspace.orderedTools.flatMap { (tool: WorkspaceTool) -> (Tools, WorkspaceTool)? in
+      guard let toolId = self.toolIdentifier(for: tool) else {
+        return nil
+      }
+
+      return (toolId, tool)
     }
+
+    NSLog("\(tools)")
+
+    self.emitter.emit(self.uuidAction(for: .setToolsState(tools)))
   }
 
   fileprivate func toolIdentifier(for tool: WorkspaceTool) -> Tools? {

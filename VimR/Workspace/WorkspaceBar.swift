@@ -46,7 +46,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
   static fileprivate let separatorColor = NSColor.controlShadowColor
   static fileprivate let separatorThickness = CGFloat(1)
 
-  fileprivate var tools = [WorkspaceTool]()
+  fileprivate(set) var tools = [WorkspaceTool]()
   fileprivate weak var selectedTool: WorkspaceTool?
 
   fileprivate var isMouseDownOngoing = false

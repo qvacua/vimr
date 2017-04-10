@@ -44,6 +44,9 @@ class Workspace: NSView, WorkspaceBarDelegate {
   }
 
   fileprivate var tools = [WorkspaceTool]()
+  var orderedTools: [WorkspaceTool] {
+    return self.bars.values.reduce([]) { [$0, $1.tools].flatMap { $0 } }
+  }
 
   fileprivate var isDragOngoing = false
   fileprivate var draggedOnBarLocation: WorkspaceBarLocation?

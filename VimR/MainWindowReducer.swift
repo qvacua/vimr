@@ -59,6 +59,28 @@ class MainWindowReducer: Reducer {
             .forEach { state.tools[$0.0]?.open = false }
         }
 
+      case let .setToolsState(tools):
+        state.orderedTools = []
+        tools.forEach { toolPair in
+          let toolId = toolPair.0
+          let tool = toolPair.1
+
+          state.tools[toolId] = WorkspaceToolState(location: tool.location,
+                                                   dimension: tool.dimension,
+                                                   open: tool.isSelected)
+
+
+          if tool.isSelected {
+            state.tools
+              .filter { $0 != toolId && $1.location == tool.location }
+              .forEach { state.tools[$0.0]?.open = false }
+          }
+
+          state.orderedTools.append(toolId)
+
+          NSLog("\(state.orderedTools)")
+        }
+
       case let .toggleAllTools(value):
         state.isAllToolsVisible = value
 
