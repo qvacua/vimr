@@ -29,7 +29,6 @@ extension PrefService {
         return
       }
 
-      NSLog("Saving pref!")
       defaults.setValue(pair.state.dict(), forKey: PrefService.compatibleVersion)
     }
   }
@@ -39,7 +38,6 @@ extension PrefService {
     typealias StateType = AppState
 
     func apply(_ state: StateType) {
-      NSLog("Saving pref!")
       defaults.setValue(state.dict(), forKey: PrefService.compatibleVersion)
     }
   }
