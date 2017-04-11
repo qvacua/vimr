@@ -7,7 +7,7 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-176</title>
+      <title>SNAPSHOT-177</title>
       <description><![CDATA[
     <ul>
 <li>GH-405: Redesign: Redux-like architecture using RxSwift</li>
@@ -15,15 +15,15 @@
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/176
+        https://github.com/qvacua/vimr/releases/tag/snapshot/177
       </releaseNotesLink>
-      <pubDate>2017-04-11T20:05:31.058407</pubDate>
+      <pubDate>2017-04-11T22:50:52.282542</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/176/VimR-SNAPSHOT-176.tar.bz2"
-                 sparkle:version="176"
-                 sparkle:shortVersionString="SNAPSHOT-176"
-                 sparkle:dsaSignature="MC0CFQDsf2rah1h4/0iOVgznuz3mDr3ZzAIUF6oP1FhhDpECV2sYgPyWoogfePQ="
-                 length="12129335"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/177/VimR-SNAPSHOT-177.tar.bz2"
+                 sparkle:version="177"
+                 sparkle:shortVersionString="SNAPSHOT-177"
+                 sparkle:dsaSignature="MCwCFGPqt1v+uz1qWpcxdXXPQWaCRapEAhQW18XXqjHkm+MMyh0sVL/RWyWvKg=="
+                 length="12134626"
                  type="application/octet-stream"/>
     </item>
   </channel>
