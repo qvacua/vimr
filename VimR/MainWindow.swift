@@ -96,13 +96,13 @@ class MainWindow: NSObject,
 
     self.windowController = NSWindowController(windowNibName: "MainWindow")
 
-    let previewConfig = WorkspaceTool.Config(title: "Preview",
+    let previewConfig = WorkspaceTool.Config(title: "Markdown",
                                              view: self.preview,
                                              customMenuItems: self.preview.menuItems)
     self.previewContainer = WorkspaceTool(previewConfig)
     self.previewContainer.dimension = state.tools[.preview]?.dimension ?? 250
 
-    let htmlPreviewConfig = WorkspaceTool.Config(title: "HTML Preview",
+    let htmlPreviewConfig = WorkspaceTool.Config(title: "HTML",
                                                  view: self.htmlPreview,
                                                  customToolbar: self.htmlPreview.innerCustomToolbar)
     self.htmlPreviewContainer = WorkspaceTool(htmlPreviewConfig)
