@@ -28,6 +28,7 @@ class UiRootReducer: Reducer {
           appState.mainWindowTemplate.tools = mainWindowToClose.tools
           appState.mainWindowTemplate.previewTool = mainWindowToClose.previewTool
           appState.mainWindowTemplate.fileBrowserShowHidden = mainWindowToClose.fileBrowserShowHidden
+          appState.mainWindowTemplate.htmlPreview = .default
 
           appState.currentMainWindowUuid = nil
         }

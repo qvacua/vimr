@@ -49,7 +49,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         initialAppState = .default
       }
     }
-    initialAppState.mainWindowTemplate.htmlPreview.server = Marked(baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath))
+    initialAppState.mainWindowTemplate.htmlPreview.server
+      = Marked(baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath))
 
     self.stateContext = Context(baseServerUrl: baseServerUrl, state: initialAppState)
 

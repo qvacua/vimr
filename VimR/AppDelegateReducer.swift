@@ -54,6 +54,10 @@ class AppDelegateReducer: Reducer {
     mainWindow.uuid = UUID().uuidString
     mainWindow.root = state.root
     mainWindow.isDirty = false
+    mainWindow.htmlPreview = HtmlPreviewState(
+      htmlFile: nil,
+      server: Marked(self.baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath))
+    )
 
     mainWindow.urlsToOpen = urls.toDict { url in MainWindow.OpenMode.default }
 
