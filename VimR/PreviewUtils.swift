@@ -14,15 +14,15 @@ class PreviewUtils {
 
     case .none:
       return PreviewState(status: .none,
-                          server: self.simpleServerUrl(with: PreviewReducer.nonePath, baseUrl: baseUrl))
+                          server: self.simpleServerUrl(with: MarkdownReducer.nonePath, baseUrl: baseUrl))
 
     case .error:
       return PreviewState(status: .error,
-                          server: self.simpleServerUrl(with: PreviewReducer.errorPath, baseUrl: baseUrl))
+                          server: self.simpleServerUrl(with: MarkdownReducer.errorPath, baseUrl: baseUrl))
 
     case .notSaved:
       return PreviewState(status: .notSaved,
-                          server: self.simpleServerUrl(with: PreviewReducer.saveFirstPath, baseUrl: baseUrl))
+                          server: self.simpleServerUrl(with: MarkdownReducer.saveFirstPath, baseUrl: baseUrl))
 
     case .markdown:
       preconditionFailure("ERROR Use the other previewState()!")

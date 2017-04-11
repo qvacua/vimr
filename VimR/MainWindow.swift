@@ -51,11 +51,12 @@ class MainWindow: NSObject,
 
   enum Tools: String {
 
-    static let all = Set([Tools.fileBrowser, Tools.openedFilesList, Tools.preview])
+    static let all = Set([Tools.fileBrowser, Tools.openedFilesList, Tools.preview, Tools.htmlPreview])
 
     case fileBrowser = "com.qvacua.vimr.tools.file-browser"
     case openedFilesList = "com.qvacua.vimr.tools.opened-files-list"
     case preview = "com.qvacua.vimr.tools.preview"
+    case htmlPreview = "com.qvacua.vimr.tools.html-preview"
   }
 
   enum OpenMode {
@@ -87,6 +88,7 @@ class MainWindow: NSObject,
     self.preview = PreviewTool(source: source, emitter: emitter, state: state)
     self.fileBrowser = FileBrowser(source: source, emitter: emitter, state: state)
     self.openedFileList = OpenedFileList(source: source, emitter: emitter, state: state)
+    self.htmlPreview = HtmlPreviewTool(source: source, emitter: emitter, state: state)
 
     if !state.isToolButtonsVisible {
       self.workspace.toggleToolButtons()
@@ -94,18 +96,24 @@ class MainWindow: NSObject,
 
     self.windowController = NSWindowController(windowNibName: "MainWindow")
 
-    let previewConfig = WorkspaceTool.Config(title: "Preview",
+    let previewConfig = WorkspaceTool.Config(title: "Markdown",
                                              view: self.preview,
                                              customMenuItems: self.preview.menuItems)
     self.previewContainer = WorkspaceTool(previewConfig)
-    previewContainer.dimension = state.tools[.preview]?.dimension ?? 250
+    self.previewContainer.dimension = state.tools[.preview]?.dimension ?? 250
+
+    let htmlPreviewConfig = WorkspaceTool.Config(title: "HTML",
+                                                 view: self.htmlPreview,
+                                                 customToolbar: self.htmlPreview.innerCustomToolbar)
+    self.htmlPreviewContainer = WorkspaceTool(htmlPreviewConfig)
+    self.htmlPreviewContainer.dimension = state.tools[.htmlPreview]?.dimension ?? 250
 
     let fileBrowserConfig = WorkspaceTool.Config(title: "Files",
                                                  view: self.fileBrowser,
                                                  customToolbar: self.fileBrowser.innerCustomToolbar,
                                                  customMenuItems: self.fileBrowser.menuItems)
     self.fileBrowserContainer = WorkspaceTool(fileBrowserConfig)
-    fileBrowserContainer.dimension = state.tools[.fileBrowser]?.dimension ?? 200
+    self.fileBrowserContainer.dimension = state.tools[.fileBrowser]?.dimension ?? 200
 
     let openedFileListConfig = WorkspaceTool.Config(title: "Buffers", view: self.openedFileList)
     self.openedFileListContainer = WorkspaceTool(openedFileListConfig)
@@ -115,6 +123,7 @@ class MainWindow: NSObject,
       .fileBrowser: self.fileBrowserContainer,
       .openedFilesList: self.openedFileListContainer,
       .preview: self.previewContainer,
+      .htmlPreview: self.htmlPreviewContainer,
     ]
 
     self.tools = tools
@@ -243,11 +252,13 @@ class MainWindow: NSObject,
   fileprivate let previewContainer: WorkspaceTool
   fileprivate let fileBrowserContainer: WorkspaceTool
   fileprivate let openedFileListContainer: WorkspaceTool
+  fileprivate let htmlPreviewContainer: WorkspaceTool
 
   fileprivate var editorPosition: Marked<Position>
   fileprivate var previewPosition: Marked<Position>
 
   fileprivate let preview: PreviewTool
+  fileprivate let htmlPreview: HtmlPreviewTool
   fileprivate let fileBrowser: FileBrowser
   fileprivate let openedFileList: OpenedFileList
 
@@ -591,6 +602,9 @@ extension MainWindow {
 
     case self.previewContainer:
       return .preview
+
+    case self.htmlPreviewContainer:
+      return .htmlPreview
 
     default:
       return nil

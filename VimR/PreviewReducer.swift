@@ -6,13 +6,12 @@
 import Foundation
 import RxSwift
 
-// Currently supports only markdown
-class PreviewReducer {
+class MarkdownReducer {
 
-  static let basePath = "/tools/preview"
-  static let saveFirstPath = "/tools/preview/save-first.html"
-  static let errorPath = "/tools/preview/error.html"
-  static let nonePath = "/tools/preview/empty.html"
+  static let basePath = "/tools/markdown"
+  static let saveFirstPath = "/tools/markdown/save-first.html"
+  static let errorPath = "/tools/markdown/error.html"
+  static let nonePath = "/tools/markdown/empty.html"
 
   let forMainWindow: MainWindowPreviewReducer
   let forOpenedFileList: OpenedFileListReducer
@@ -23,7 +22,7 @@ class PreviewReducer {
   }
 }
 
-extension PreviewReducer {
+extension MarkdownReducer {
 
   class MainWindowPreviewReducer: Reducer {
 

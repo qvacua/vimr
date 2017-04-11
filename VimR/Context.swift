@@ -11,18 +11,20 @@ class Context {
   let stateSource: Observable<AppState>
   let actionEmitter = Emitter<Any>()
 
-  init(_ state: AppState) {
-    let baseServerUrl = URL(string: "http://localhost:\(NetUtils.openPort())")!
+  init(baseServerUrl: URL, state: AppState) {
 
     self.appState = state
 
     self.stateSource = self.stateSubject.asObservable()
     let actionSource = self.actionEmitter.observable
 
+    self.httpService = HttpServerService(port: baseServerUrl.port!)
+
     let openQuicklyReducer = OpenQuicklyReducer()
-    let previewReducer = PreviewReducer(baseServerUrl: baseServerUrl)
+    let markdownReducer = MarkdownReducer(baseServerUrl: baseServerUrl)
 
     let prefService = PrefService()
+    let htmlPreviewToolReducer = HtmlPreviewToolReducer(baseServerUrl: baseServerUrl)
     let previewService = PreviewService()
 
     // For clean quit
@@ -72,16 +74,23 @@ class Context {
           .mapOmittingNil { $0 as? UuidAction<MainWindow.Action> }
           .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
           .reduce(by: MainWindowReducer())
-          .reduce(by: previewReducer.forMainWindow)
+          .reduce(by: markdownReducer.forMainWindow)
           .filter { $0.modified }
           .apply(to: previewService.forMainWindow)
-          .apply(to: HttpServerService(port: baseServerUrl.port ?? 0))
+          .apply(to: self.httpService.forMainWindow)
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? UuidAction<PreviewTool.Action> }
           .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
           .reduce(by: PreviewToolReducer(baseServerUrl: baseServerUrl))
           .filter { $0.modified }
+          .map { $0.state },
+        actionSource
+          .mapOmittingNil { $0 as? UuidAction<HtmlPreviewTool.Action> }
+          .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
+          .reduce(by: htmlPreviewToolReducer)
+          .filter { $0.modified }
+          .apply(to: self.httpService.forHtmlPreviewTool)
           .map { $0.state },
         actionSource
           .mapOmittingNil { $0 as? UuidAction<FileBrowser.Action> }
@@ -93,7 +102,7 @@ class Context {
           .mapOmittingNil { $0 as? UuidAction<OpenedFileList.Action> }
           .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
           .reduce(by: OpenedFileListReducer())
-          .reduce(by: previewReducer.forOpenedFileList)
+          .reduce(by: markdownReducer.forOpenedFileList)
           .filter { $0.modified }
           .apply(to: previewService.forOpenedFileList)
           .map { $0.state }
@@ -150,6 +159,8 @@ class Context {
   deinit {
     self.stateSubject.onCompleted()
   }
+
+  fileprivate let httpService: HttpServerService
 
   fileprivate let stateSubject = PublishSubject<AppState>()
   fileprivate let scheduler = SerialDispatchQueueScheduler(qos: .userInitiated)

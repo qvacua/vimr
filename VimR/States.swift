@@ -135,6 +135,14 @@ struct PreviewState {
   }
 }
 
+struct HtmlPreviewState {
+
+  static let `default` = HtmlPreviewState()
+
+  var htmlFile: URL?
+  var server: Marked<URL>?
+}
+
 struct AppearanceState: SerializableState {
 
   static let `default` = AppearanceState()
@@ -190,6 +198,8 @@ extension MainWindow {
     var orderedTools = WorkspaceToolState.orderedDefault
 
     var preview = PreviewState.default
+    var htmlPreview = HtmlPreviewState.default
+
     var previewTool = PreviewTool.State.default
 
     var fileBrowserShowHidden = false
@@ -280,12 +290,14 @@ struct WorkspaceToolState: SerializableState {
     MainWindow.Tools.fileBrowser: WorkspaceToolState(location: .left, dimension: 200, open: true),
     MainWindow.Tools.openedFilesList: WorkspaceToolState(location: .left, dimension: 200, open: false),
     MainWindow.Tools.preview: WorkspaceToolState(location: .right, dimension: 250, open: false),
+    MainWindow.Tools.htmlPreview: WorkspaceToolState(location: .right, dimension: 500, open: false),
   ]
 
   static let `orderedDefault` = [
     MainWindow.Tools.fileBrowser,
     MainWindow.Tools.openedFilesList,
     MainWindow.Tools.preview,
+    MainWindow.Tools.htmlPreview,
   ]
 
   var location = WorkspaceBarLocation.left
