@@ -19,6 +19,17 @@ class HttpServerService {
     do {
       try self.server.start(in_port_t(port))
       NSLog("server started on http://localhost:\(port)")
+
+      let resourceUrl = Bundle.main.resourceURL!
+      let previewResourceUrl = resourceUrl.appendingPathComponent("preview")
+
+      let githubCssUrl = resourceUrl.appendingPathComponent("markdown/github-markdown.css")
+
+      self.server["\(MarkdownReducer.basePath)/:path"] = shareFilesFromDirectory(previewResourceUrl.path)
+      self.server.GET["\(MarkdownReducer.basePath)/github-markdown.css"] = shareFile(githubCssUrl.path)
+
+      self.server["\(HtmlPreviewToolReducer.basePath)/:path"] = shareFilesFromDirectory(previewResourceUrl.path)
+      self.server.GET["\(HtmlPreviewToolReducer.basePath)/github-markdown.css"] = shareFile(githubCssUrl.path)
     } catch {
       NSLog("ERROR server could not be started on port \(port)")
     }
@@ -59,13 +70,9 @@ extension HttpServerService {
 
     init(server: HttpServer) {
       self.server = server
+      
       let resourceUrl = Bundle.main.resourceURL!
-      let previewResourceUrl = resourceUrl.appendingPathComponent("preview")
-
       self.githubCssUrl = resourceUrl.appendingPathComponent("markdown/github-markdown.css")
-
-      self.server["\(PreviewReducer.basePath)/:path"] = shareFilesFromDirectory(previewResourceUrl.path)
-      self.server.GET["\(PreviewReducer.basePath)/github-markdown.css"] = shareFile(self.githubCssUrl.path)
     }
 
     func apply(_ pair: Pair) {

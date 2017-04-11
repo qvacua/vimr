@@ -59,7 +59,7 @@ class AppDelegateReducer: Reducer {
 
     mainWindow.cwd = cwd
 
-    mainWindow.preview.server = self.baseServerUrl.appendingPathComponent(PreviewReducer.nonePath)
+    mainWindow.preview.server = self.baseServerUrl.appendingPathComponent(MarkdownReducer.nonePath)
 
     return mainWindow
   }

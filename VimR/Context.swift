@@ -11,8 +11,7 @@ class Context {
   let stateSource: Observable<AppState>
   let actionEmitter = Emitter<Any>()
 
-  init(_ state: AppState) {
-    let baseServerUrl = URL(string: "http://localhost:\(NetUtils.openPort())")!
+  init(baseServerUrl: URL, state: AppState) {
 
     self.appState = state
 
@@ -22,7 +21,7 @@ class Context {
     self.httpService = HttpServerService(port: baseServerUrl.port!)
 
     let openQuicklyReducer = OpenQuicklyReducer()
-    let previewReducer = PreviewReducer(baseServerUrl: baseServerUrl)
+    let markdownReducer = MarkdownReducer(baseServerUrl: baseServerUrl)
 
     let prefService = PrefService()
     let htmlPreviewToolReducer = HtmlPreviewToolReducer(baseServerUrl: baseServerUrl)
@@ -75,7 +74,7 @@ class Context {
           .mapOmittingNil { $0 as? UuidAction<MainWindow.Action> }
           .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
           .reduce(by: MainWindowReducer())
-          .reduce(by: previewReducer.forMainWindow)
+          .reduce(by: markdownReducer.forMainWindow)
           .filter { $0.modified }
           .apply(to: previewService.forMainWindow)
           .apply(to: self.httpService.forMainWindow)
@@ -103,7 +102,7 @@ class Context {
           .mapOmittingNil { $0 as? UuidAction<OpenedFileList.Action> }
           .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
           .reduce(by: OpenedFileListReducer())
-          .reduce(by: previewReducer.forOpenedFileList)
+          .reduce(by: markdownReducer.forOpenedFileList)
           .filter { $0.modified }
           .apply(to: previewService.forOpenedFileList)
           .map { $0.state }

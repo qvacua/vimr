@@ -8,7 +8,8 @@ import RxSwift
 
 class HtmlPreviewToolReducer: Reducer {
 
-  static let basePath = "tools/html-preview"
+  static let basePath = "/tools/html-preview"
+  static let selectFirstPath = "/tools/html-preview/select-first.html"
 
   typealias Pair = StateActionPair<UuidState<MainWindow.State>, HtmlPreviewTool.Action>
 

@@ -39,7 +39,9 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
     self.addViews()
 
-    self.webview.load(URLRequest(url: URL(string: "http://apple.com")!))
+    if let serverUrl = state.htmlPreview.server?.payload {
+      self.webview.load(URLRequest(url: serverUrl))
+    }
 
     source
       .observeOn(MainScheduler.instance)

@@ -37,7 +37,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @IBOutlet var updater: SUUpdater?
 
   override init() {
-    let initialAppState: AppState
+    let baseServerUrl = URL(string: "http://localhost:\(NetUtils.openPort())")!
+
+    var initialAppState: AppState
     if let stateDict = UserDefaults.standard.value(forKey: PrefService.compatibleVersion) as? [String: Any] {
       initialAppState = AppState(dict: stateDict) ?? .default
     } else {
@@ -47,8 +49,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         initialAppState = .default
       }
     }
+    initialAppState.mainWindowTemplate.htmlPreview.server = Marked(baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath))
 
-    self.stateContext = Context(initialAppState)
+    self.stateContext = Context(baseServerUrl: baseServerUrl, state: initialAppState)
 
     self.openNewMainWindowOnLaunch = initialAppState.openNewMainWindowOnLaunch
     self.openNewMainWindowOnReactivation = initialAppState.openNewMainWindowOnReactivation
