@@ -72,7 +72,6 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
       self.scrollTop = result as? Int ?? 0
 
       self.webview.load(URLRequest(url: url))
-      NSLog("\(self.scrollTop)")
     }
   }
 
