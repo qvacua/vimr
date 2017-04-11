@@ -63,6 +63,7 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
           self.reloadWebview(with: serverUrl.payload)
         }
 
+        self.innerCustomToolbar.selectHtmlFile.toolTip = (htmlFileUrl.path as NSString).abbreviatingWithTildeInPath
         self.mark = serverUrl.mark
         self.reloadWebview(with: serverUrl.payload)
       })
