@@ -7,28 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-175</title>
+      <title>SNAPSHOT-176</title>
       <description><![CDATA[
     <ul>
-<li><em>WARNING</em>: This snapshot may be very unstable due to (almost complete) redesign; use at your own risk. If you have issues with this build, please report them under GH-405.</li>
-<li>GH-405: Redesign<ul>
-<li>Fix a bug regarding the dirty dot in the main window's close button</li>
-<li>Store the order and locations of the tools correctly</li>
-<li>neovim/neovim@30e1cda8acb7bd8120348d1812cfd9ecd8be8528</li>
-</ul>
-</li>
+<li>GH-405: Redesign: Redux-like architecture using RxSwift</li>
+<li>GH-383: Add a general web view preview which preserves the scroll position when (automatically) reloading the selected file.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/175
+        https://github.com/qvacua/vimr/releases/tag/snapshot/176
       </releaseNotesLink>
-      <pubDate>2017-04-10T22:58:50.409634</pubDate>
+      <pubDate>2017-04-11T20:05:31.058407</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/175/VimR-SNAPSHOT-175.tar.bz2"
-                 sparkle:version="175"
-                 sparkle:shortVersionString="SNAPSHOT-175"
-                 sparkle:dsaSignature="MC0CFQCG8rzXdgQWiLeRoQUkIYdZruX0RgIUB7FRLDcDpgOgj6K32VO0QTXAL4Y="
-                 length="12080989"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/176/VimR-SNAPSHOT-176.tar.bz2"
+                 sparkle:version="176"
+                 sparkle:shortVersionString="SNAPSHOT-176"
+                 sparkle:dsaSignature="MC0CFQDsf2rah1h4/0iOVgznuz3mDr3ZzAIUF6oP1FhhDpECV2sYgPyWoogfePQ="
+                 length="12129335"
                  type="application/octet-stream"/>
     </item>
   </channel>
