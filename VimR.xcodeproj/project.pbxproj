@@ -573,7 +573,7 @@
 			path = resources;
 			sourceTree = "<group>";
 		};
-		1929B5E773BDB3B4EE9D00C1 /* Transformers */ = {
+		1929B5E773BDB3B4EE9D00C1 /* Reducers */ = {
 			isa = PBXGroup;
 			children = (
 				1929B7A68B7109CEFAF105E8 /* AppDelegateReducer.swift */,
@@ -588,7 +588,7 @@
 				1929BB4CF1C1FFEE6CCDD6FD /* Preferences */,
 				1929BE5AEA3D0980860EED50 /* HtmlPreviewToolReducer.swift */,
 			);
-			name = Transformers;
+			name = Reducers;
 			sourceTree = "<group>";
 		};
 		1929BA652D3B88FC071531EC /* UI */ = {
@@ -597,7 +597,7 @@
 				1929BB6608B4F0E037CA0F4C /* States.swift */,
 				1929B34FC23D805A8B29E8F7 /* Context.swift */,
 				1929B32401E8914DE9BF76CA /* Components */,
-				1929B5E773BDB3B4EE9D00C1 /* Transformers */,
+				1929B5E773BDB3B4EE9D00C1 /* Reducers */,
 				1929BFA93DC859DD76C46192 /* Services */,
 				1929BFC0A5A9C6DB09BE1368 /* Types.swift */,
 				1929BA42AB6F1BF631B57399 /* SerializableStates.swift */,
