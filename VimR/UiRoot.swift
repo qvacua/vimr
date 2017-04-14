@@ -10,6 +10,12 @@ class UiRoot: UiComponent {
 
   typealias StateType = AppState
 
+  enum Action {
+
+    case cancelQuit
+    case quitWithoutSaving
+  }
+
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.source = source
     self.emitter = emitter
@@ -29,8 +35,34 @@ class UiRoot: UiComponent {
           .forEach(self.createNewMainWindow)
 
         state.mainWindows.keys
-          .filter { state.mainWindows[$0]?.close ?? false }
+          .filter { !uuidsInState.contains($0) }
           .forEach(self.removeMainWindow)
+
+        guard state.quit else {
+          return
+        }
+
+        if self.mainWindows.isEmpty {
+          NSApp.stop(self)
+          return
+        }
+
+        let isDirty = state.mainWindows.values.reduce(false) { $1.isDirty ? true : $0 }
+        if isDirty {
+          let alert = NSAlert()
+          alert.addButton(withTitle: "Cancel")
+          alert.addButton(withTitle: "Discard and Quit")
+          alert.messageText = "There are windows with unsaved buffers!"
+          alert.alertStyle = .warning
+
+          if alert.runModal() == NSAlertSecondButtonReturn {
+            self.emitter.emit(Action.quitWithoutSaving)
+          } else {
+            self.emitter.emit(Action.cancelQuit)
+          }
+        } else {
+          self.emitter.emit(Action.quitWithoutSaving)
+        }
       })
       .addDisposableTo(self.disposeBag)
   }

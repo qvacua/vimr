@@ -33,7 +33,7 @@ class UiRootReducer: Reducer {
           appState.currentMainWindowUuid = nil
         }
 
-        appState.mainWindows[uuid]?.close = true
+        appState.mainWindows.removeValue(forKey: uuid)
 
       default:
         return pair
@@ -41,6 +41,30 @@ class UiRootReducer: Reducer {
       }
 
       return StateActionPair(state: appState, action: pair.action)
+    }
+  }
+}
+
+class AppReducer: Reducer {
+
+  typealias Pair = StateActionPair<AppState, UiRoot.Action>
+
+  func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
+    return source.map { pair in
+      var state = pair.state
+
+      switch pair.action {
+
+      case .cancelQuit:
+        state.quit = false
+
+      case .quitWithoutSaving:
+        state.quit = true
+        state.mainWindows.keys.forEach { state.mainWindows[$0]?.closeRequested = true }
+
+      }
+
+      return StateActionPair(state: state, action: pair.action)
     }
   }
 }

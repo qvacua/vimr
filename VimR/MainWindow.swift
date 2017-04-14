@@ -161,7 +161,11 @@ class MainWindow: NSObject,
       .observeOn(MainScheduler.instance)
       .subscribe(
         onNext: { [unowned self] state in
-          if state.close && !self.isClosing {
+          if self.isClosing {
+            return
+          }
+
+          if state.closeRequested && !self.isClosing {
             self.closeAllNeoVimWindowsWithoutSaving()
             self.isClosing = true
             return

@@ -29,7 +29,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     case preferences
 
-    case quitWithoutSaving
     case quit
   }
 
@@ -147,30 +146,33 @@ extension AppDelegate {
   }
 
   func applicationShouldTerminate(_ sender: NSApplication) -> NSApplicationTerminateReply {
-    if self.hasDirtyWindows {
-      let alert = NSAlert()
-      alert.addButton(withTitle: "Cancel")
-      alert.addButton(withTitle: "Discard and Quit")
-      alert.messageText = "There are windows with unsaved buffers!"
-      alert.alertStyle = .warning
+    self.stateContext.actionEmitter.emit(AppDelegate.Action.quit)
+    return .terminateCancel
 
-      if alert.runModal() == NSAlertSecondButtonReturn {
-        self.quitWhenAllWindowsAreClosed = true
-        self.stateContext.actionEmitter.emit(AppDelegate.Action.quitWithoutSaving)
-      }
-
-      return .terminateCancel
-    }
-
-    if self.hasMainWindows {
-      self.quitWhenAllWindowsAreClosed = true
-      self.stateContext.actionEmitter.emit(AppDelegate.Action.quit)
-
-      return .terminateCancel
-    }
-
-    // There are no open main window, then just quit.
-    return .terminateNow
+//    if self.hasDirtyWindows {
+//      let alert = NSAlert()
+//      alert.addButton(withTitle: "Cancel")
+//      alert.addButton(withTitle: "Discard and Quit")
+//      alert.messageText = "There are windows with unsaved buffers!"
+//      alert.alertStyle = .warning
+//
+//      if alert.runModal() == NSAlertSecondButtonReturn {
+//        self.quitWhenAllWindowsAreClosed = true
+//        self.stateContext.actionEmitter.emit(AppDelegate.Action.quitWithoutSaving)
+//      }
+//
+//      return .terminateCancel
+//    }
+//
+//    if self.hasMainWindows {
+//      self.quitWhenAllWindowsAreClosed = true
+//      self.stateContext.actionEmitter.emit(AppDelegate.Action.quit)
+//
+//      return .terminateCancel
+//    }
+//
+//    // There are no open main window, then just quit.
+//    return .terminateNow
   }
 
   // For drag & dropping files on the App icon.

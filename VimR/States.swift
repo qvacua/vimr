@@ -21,7 +21,7 @@ struct AppState: SerializableState {
   var currentMainWindowUuid: String?
 
   var mainWindows: [String: MainWindow.State] = [:]
-  var quitWhenNoMainWindow = false
+  var quit = false
 
   let root = FileItem(URL(fileURLWithPath: "/", isDirectory: true))
 
@@ -217,6 +217,7 @@ extension MainWindow {
 
     // transient^2
     var close = false
+    var closeRequested = false
 
     // to be cleaned
     var urlsToOpen = [URL: OpenMode]()

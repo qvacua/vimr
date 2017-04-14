@@ -37,9 +37,8 @@ class AppDelegateReducer: Reducer {
       case .preferences:
         state.preferencesOpen = Marked(true)
 
-      case .quitWithoutSaving, .quit:
-        state.mainWindows.keys.forEach { state.mainWindows[$0]?.close = true }
-        state.quitWhenNoMainWindow = true
+      case .quit:
+        state.quit = true
 
       }
 
