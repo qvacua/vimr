@@ -25,7 +25,6 @@
   sin.sin_len = sizeof(sin);
   sin.sin_family = AF_INET;
   sin.sin_port = htons(0);
-  sin.sin_addr.s_addr= INADDR_ANY;
 
   if (bind(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0) {
     if(errno == EADDRINUSE) {
