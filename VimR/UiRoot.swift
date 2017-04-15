@@ -10,6 +10,10 @@ class UiRoot: UiComponent {
 
   typealias StateType = AppState
 
+  var hasMainWindows: Bool {
+    return !self.mainWindows.isEmpty
+  }
+
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.source = source
     self.emitter = emitter
@@ -21,16 +25,20 @@ class UiRoot: UiComponent {
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
-        let uuidsInState = Set(state.mainWindows.keys.filter { !(state.mainWindows[$0]?.close ?? false) })
+        let uuidsInState = Set(state.mainWindows.keys)
 
         uuidsInState
           .subtracting(self.mainWindows.keys)
           .flatMap { state.mainWindows[$0] }
           .forEach(self.createNewMainWindow)
 
-        state.mainWindows.keys
-          .filter { state.mainWindows[$0]?.close ?? false }
+        self.mainWindows.keys
+          .filter { !uuidsInState.contains($0) }
           .forEach(self.removeMainWindow)
+
+        if state.quitWhenNoMainWindow && self.mainWindows.isEmpty {
+          NSApp.terminate(self)
+        }
       })
       .addDisposableTo(self.disposeBag)
   }

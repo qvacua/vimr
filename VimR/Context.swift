@@ -27,12 +27,6 @@ class Context {
     let htmlPreviewToolReducer = HtmlPreviewToolReducer(baseServerUrl: baseServerUrl)
     let previewService = PreviewService()
 
-    // For clean quit
-    stateSource
-      .filter { $0.quitWhenNoMainWindow && $0.mainWindows.isEmpty }
-      .subscribe(onNext: { state in NSApp.stop(self) })
-      .addDisposableTo(self.disposeBag)
-
     // AppState
     Observable
       .of(
@@ -145,7 +139,7 @@ class Context {
       .addDisposableTo(self.disposeBag)
 
 #if DEBUG
-//    actionSource.debug().subscribe().addDisposableTo(self.disposeBag)
+    actionSource.debug().subscribe().addDisposableTo(self.disposeBag)
 //    stateSource
 //      .filter { $0.mainWindows.values.count > 0 }
 //      .map { Array($0.mainWindows.values)[0].preview }
@@ -184,11 +178,6 @@ class Context {
 
   fileprivate func cleanUpAppState() {
     self.appState.mainWindows.keys.forEach { uuid in
-      if self.appState.mainWindows[uuid]?.close == true {
-        self.appState.mainWindows.removeValue(forKey: uuid)
-        return
-      }
-
       self.appState.mainWindows[uuid]?.viewToBeFocused = nil
       self.appState.mainWindows[uuid]?.urlsToOpen.removeAll()
     }

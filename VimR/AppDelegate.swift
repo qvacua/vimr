@@ -29,6 +29,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     case preferences
 
+    case cancelQuit
     case quitWithoutSaving
     case quit
   }
@@ -93,7 +94,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   fileprivate let disposeBag = DisposeBag()
 
-  fileprivate var quitWhenAllWindowsAreClosed = false
   fileprivate var launching = true
 
   fileprivate func setSparkleUrl(_ snapshot: Bool) {
@@ -147,7 +147,7 @@ extension AppDelegate {
   }
 
   func applicationShouldTerminate(_ sender: NSApplication) -> NSApplicationTerminateReply {
-    if self.hasDirtyWindows {
+    if self.hasDirtyWindows && self.uiRoot.hasMainWindows {
       let alert = NSAlert()
       alert.addButton(withTitle: "Cancel")
       alert.addButton(withTitle: "Discard and Quit")
@@ -155,15 +155,15 @@ extension AppDelegate {
       alert.alertStyle = .warning
 
       if alert.runModal() == NSAlertSecondButtonReturn {
-        self.quitWhenAllWindowsAreClosed = true
         self.stateContext.actionEmitter.emit(AppDelegate.Action.quitWithoutSaving)
+      } else {
+        self.stateContext.actionEmitter.emit(AppDelegate.Action.cancelQuit)
       }
 
       return .terminateCancel
     }
 
-    if self.hasMainWindows {
-      self.quitWhenAllWindowsAreClosed = true
+    if self.uiRoot.hasMainWindows {
       self.stateContext.actionEmitter.emit(AppDelegate.Action.quit)
 
       return .terminateCancel

@@ -33,7 +33,7 @@ class UiRootReducer: Reducer {
           appState.currentMainWindowUuid = nil
         }
 
-        appState.mainWindows[uuid]?.close = true
+        appState.mainWindows.removeValue(forKey: uuid)
 
       default:
         return pair

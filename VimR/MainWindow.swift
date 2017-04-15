@@ -161,6 +161,10 @@ class MainWindow: NSObject,
       .observeOn(MainScheduler.instance)
       .subscribe(
         onNext: { [unowned self] state in
+          if self.isClosing {
+            return
+          }
+
           if state.close && !self.isClosing {
             self.closeAllNeoVimWindowsWithoutSaving()
             self.isClosing = true
@@ -320,6 +324,7 @@ class MainWindow: NSObject,
 extension MainWindow {
 
   func neoVimStopped() {
+    self.isClosing = true
     self.emitter.emit(self.uuidAction(for: .close))
   }
 
