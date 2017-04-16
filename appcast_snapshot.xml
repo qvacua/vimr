@@ -7,23 +7,26 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-177</title>
+      <title>SNAPSHOT-178</title>
       <description><![CDATA[
     <ul>
-<li>GH-405: Redesign: Redux-like architecture using RxSwift</li>
-<li>GH-383: Add a general web view preview which preserves the scroll position when (automatically) reloading the selected file.</li>
+<li>GH-405: Redesign: Redux-like architecture using RxSwift<ul>
+<li>Quit cleanly</li>
+</ul>
+</li>
+<li>GH-398: Set the represented icon in the window title bar</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/177
+        https://github.com/qvacua/vimr/releases/tag/snapshot/178
       </releaseNotesLink>
-      <pubDate>2017-04-11T22:50:52.282542</pubDate>
+      <pubDate>2017-04-16T20:34:50.360772</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/177/VimR-SNAPSHOT-177.tar.bz2"
-                 sparkle:version="177"
-                 sparkle:shortVersionString="SNAPSHOT-177"
-                 sparkle:dsaSignature="MCwCFGPqt1v+uz1qWpcxdXXPQWaCRapEAhQW18XXqjHkm+MMyh0sVL/RWyWvKg=="
-                 length="12134626"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/178/VimR-SNAPSHOT-178.tar.bz2"
+                 sparkle:version="178"
+                 sparkle:shortVersionString="SNAPSHOT-178"
+                 sparkle:dsaSignature="MCwCFGLMkXw4n7cgto2h2bSFtfLYVeK/AhRcnzHyjGcvoypPeG1mXjirtRtVHQ=="
+                 length="12099568"
                  type="application/octet-stream"/>
     </item>
   </channel>
