@@ -348,6 +348,7 @@ extension MainWindow {
   func currentBufferChanged(_ currentBuffer: NeoVimBuffer) {
     self.emitter.emit(self.uuidAction(for: .setCurrentBuffer(currentBuffer)))
     self.currentBuffer = currentBuffer
+    self.window.representedURL = self.currentBuffer?.url
   }
 
   func tabChanged() {

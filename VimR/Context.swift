@@ -139,7 +139,7 @@ class Context {
       .addDisposableTo(self.disposeBag)
 
 #if DEBUG
-    actionSource.debug().subscribe().addDisposableTo(self.disposeBag)
+//    actionSource.debug().subscribe().addDisposableTo(self.disposeBag)
 //    stateSource
 //      .filter { $0.mainWindows.values.count > 0 }
 //      .map { Array($0.mainWindows.values)[0].preview }
