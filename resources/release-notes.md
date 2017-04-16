@@ -3,6 +3,7 @@
 * GH-405: Redesign
     - Redux-like architecture combined with RxSwift
 * GH-383: Add a general web view preview which preserves the scroll position when (automatically) reloading the selected file.
+* GH-398: Set the represented icon in the window title bar.
 
 # 0.13.1-167
 
