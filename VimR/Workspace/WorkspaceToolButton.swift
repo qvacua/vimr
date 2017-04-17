@@ -92,9 +92,9 @@ extension WorkspaceToolButton {
     case .top, .bottom:
       self.title.draw(at: CGPoint(x: padding.width, y: padding.height))
     case .right:
-      self.title.draw(at: CGPoint(x: padding.height, y: self.bounds.height - padding.width), angle: -CGFloat(M_PI_2))
+      self.title.draw(at: CGPoint(x: padding.height, y: self.bounds.height - padding.width), angle: -(.pi / 2))
     case .left:
-      self.title.draw(at: CGPoint(x: self.bounds.width - padding.height, y: padding.width), angle: CGFloat(M_PI_2))
+      self.title.draw(at: CGPoint(x: self.bounds.width - padding.height, y: padding.width), angle: .pi / 2)
     }
   }
 
@@ -133,6 +133,7 @@ extension WorkspaceToolButton {
 
     default:
       return
+
     }
   }
 
@@ -175,6 +176,7 @@ extension WorkspaceToolButton {
 
 // MARK: - NSDraggingSource
 extension WorkspaceToolButton {
+
   @objc(draggingSession:sourceOperationMaskForDraggingContext:)
   func draggingSession(_ session: NSDraggingSession, sourceOperationMaskFor ctc: NSDraggingContext) -> NSDragOperation {
     return .move
