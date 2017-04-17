@@ -383,6 +383,11 @@ extension WorkspaceBar {
 
   override func hitTest(_ point: NSPoint) -> NSView? {
     let loc = self.convert(point, from: nil)
+
+    guard self.isOpen else {
+      return super.hitTest(point)
+    }
+
     if self.resizeRect().contains(loc) {
       return self
     }
