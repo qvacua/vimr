@@ -9,9 +9,11 @@ import PureLayout
 protocol WorkspaceBarDelegate: class {
 
   func resizeWillStart(workspaceBar: WorkspaceBar, tool: WorkspaceTool?)
+
   func resizeDidEnd(workspaceBar: WorkspaceBar, tool: WorkspaceTool?)
 
   func toggle(tool: WorkspaceTool)
+
   func moved(tool: WorkspaceTool)
 }
 
@@ -19,6 +21,7 @@ protocol WorkspaceBarDelegate: class {
  TODO: Refactor to include the buttons and the inner separator. Currently it's just a pass-through view only for drag &
  drop due to the drag & drop infrastructure of Cocoa.
  */
+
 fileprivate class ProxyBar: NSView {
 
   fileprivate var isDragOngoing = false
@@ -231,6 +234,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 }
 
 // MARK: - NSDraggingDestination
+
 extension ProxyBar {
 
   fileprivate func isTool(atIndex idx: Int, beingDragged info: NSDraggingInfo) -> Bool {
@@ -271,7 +275,7 @@ extension ProxyBar {
         }
 
         return nil
-    }
+      }
 
     if currentDraggedOnToolIdx == self.draggedOnToolIdx {
       return .move
@@ -318,8 +322,7 @@ extension ProxyBar {
       let locInBar = self.convert(locInProxy, to: self.container)
 
       if self.buttonFrames.filter({ $0.contains(locInBar) }).isEmpty
-             && self.container!.barFrame().contains(locInBar)
-      {
+         && self.container!.barFrame().contains(locInBar) {
         self.container!.tools.remove(at: toolIdx)
         self.container!.tools.append(tool)
         self.container?.delegate?.moved(tool: tool)
@@ -363,6 +366,7 @@ extension ProxyBar {
 }
 
 // MARK: - NSView
+
 extension WorkspaceBar {
 
   override func draw(_ dirtyRect: NSRect) {
@@ -409,15 +413,12 @@ extension WorkspaceBar {
 
     var dragged = false
     var curEvent = event
-    let nextEventMask: NSEventMask = [
-      NSEventMask.leftMouseDragged,
-      NSEventMask.leftMouseDown,
-      NSEventMask.leftMouseUp
-    ]
+    let nextEventMask: NSEventMask = [.leftMouseDragged, .leftMouseDown, .leftMouseUp]
+
     while curEvent.type != .leftMouseUp {
       let nextEvent = NSApp.nextEvent(matching: nextEventMask,
-                                      until: Date.distantFuture,
-                                      inMode: RunLoopMode.eventTrackingRunLoopMode,
+                                      until: .distantFuture,
+                                      inMode: .eventTrackingRunLoopMode,
                                       dequeue: true)
       guard nextEvent != nil else {
         break
@@ -591,6 +592,7 @@ extension WorkspaceBar {
 }
 
 // MARK: - Layout
+
 extension WorkspaceBar {
 
   fileprivate func isEmpty() -> Bool {
@@ -615,7 +617,7 @@ extension WorkspaceBar {
         view.autoPinEdge(toSuperviewEdge: .left),
 
         view.autoSetDimension(.height, toSize: tool.minimumDimension, relation: .greaterThanOrEqual)
-        ])
+      ])
     case .right:
       self.layoutConstraints.append(contentsOf: [
         view.autoPinEdge(toSuperviewEdge: .top),
@@ -624,7 +626,7 @@ extension WorkspaceBar {
         view.autoPinEdge(toSuperviewEdge: .left, withInset: thickness),
 
         view.autoSetDimension(.width, toSize: tool.minimumDimension, relation: .greaterThanOrEqual)
-        ])
+      ])
     case .bottom:
       self.layoutConstraints.append(contentsOf: [
         view.autoPinEdge(toSuperviewEdge: .top, withInset: thickness),
@@ -633,7 +635,7 @@ extension WorkspaceBar {
         view.autoPinEdge(toSuperviewEdge: .left),
 
         view.autoSetDimension(.height, toSize: tool.minimumDimension, relation: .greaterThanOrEqual)
-        ])
+      ])
     case .left:
       self.layoutConstraints.append(contentsOf: [
         view.autoPinEdge(toSuperviewEdge: .top),
@@ -642,7 +644,7 @@ extension WorkspaceBar {
         view.autoPinEdge(toSuperviewEdge: .left),
 
         view.autoSetDimension(.width, toSize: tool.minimumDimension, relation: .greaterThanOrEqual)
-        ])
+      ])
     }
   }
 
@@ -662,16 +664,16 @@ extension WorkspaceBar {
         view.autoPinEdge(toSuperviewEdge: .left),
 
         view.autoSetDimension(.height, toSize: tool.minimumDimension, relation: .greaterThanOrEqual)
-        ])
+      ])
     case .right:
       self.layoutConstraints.append(contentsOf: [
         view.autoPinEdge(toSuperviewEdge: .top),
-        view.autoPinEdge(.right, to: .left, of: button, withOffset: -thickness),  // Offset is count l -> r,
+        view.autoPinEdge(.right, to: .left, of: button, withOffset: -thickness), // Offset is count l -> r,
         view.autoPinEdge(toSuperviewEdge: .bottom),
         view.autoPinEdge(toSuperviewEdge: .left, withInset: thickness),
 
         view.autoSetDimension(.width, toSize: tool.minimumDimension, relation: .greaterThanOrEqual)
-        ])
+      ])
     case .bottom:
       self.layoutConstraints.append(contentsOf: [
         view.autoPinEdge(toSuperviewEdge: .top, withInset: thickness),
@@ -680,7 +682,7 @@ extension WorkspaceBar {
         view.autoPinEdge(toSuperviewEdge: .left),
 
         view.autoSetDimension(.height, toSize: tool.minimumDimension, relation: .greaterThanOrEqual)
-        ])
+      ])
     case .left:
       self.layoutConstraints.append(contentsOf: [
         view.autoPinEdge(toSuperviewEdge: .top),
@@ -689,7 +691,7 @@ extension WorkspaceBar {
         view.autoPinEdge(.left, to: .right, of: button, withOffset: thickness),
 
         view.autoSetDimension(.width, toSize: tool.minimumDimension, relation: .greaterThanOrEqual)
-        ])
+      ])
     }
   }
 
@@ -736,22 +738,22 @@ extension WorkspaceBar {
       self.layoutConstraints.append(contentsOf: [
         firstButton.autoPinEdge(toSuperviewEdge: .top),
         firstButton.autoPinEdge(toSuperviewEdge: .left, withInset: firstButtonMargin),
-        ])
+      ])
     case .right:
       self.layoutConstraints.append(contentsOf: [
         firstButton.autoPinEdge(toSuperviewEdge: .top, withInset: firstButtonMargin),
         firstButton.autoPinEdge(toSuperviewEdge: .right),
-        ])
+      ])
     case .bottom:
       self.layoutConstraints.append(contentsOf: [
         firstButton.autoPinEdge(toSuperviewEdge: .left, withInset: firstButtonMargin),
         firstButton.autoPinEdge(toSuperviewEdge: .bottom),
-        ])
+      ])
     case .left:
       self.layoutConstraints.append(contentsOf: [
         firstButton.autoPinEdge(toSuperviewEdge: .top, withInset: firstButtonMargin),
         firstButton.autoPinEdge(toSuperviewEdge: .left),
-        ])
+      ])
     }
 
     var lastButton = firstButton
@@ -770,26 +772,26 @@ extension WorkspaceBar {
           self.layoutConstraints.append(contentsOf: [
             button.autoPinEdge(toSuperviewEdge: .top),
             button.autoPinEdge(.left, to: .right, of: lastButton, withOffset: margin),
-            ])
+          ])
         case .right:
           self.layoutConstraints.append(contentsOf: [
             button.autoPinEdge(.top, to: .bottom, of: lastButton, withOffset: margin),
             button.autoPinEdge(toSuperviewEdge: .right),
-            ])
+          ])
         case .bottom:
           self.layoutConstraints.append(contentsOf: [
             button.autoPinEdge(.left, to: .right, of: lastButton, withOffset: margin),
             button.autoPinEdge(toSuperviewEdge: .bottom),
-            ])
+          ])
         case .left:
           self.layoutConstraints.append(contentsOf: [
             button.autoPinEdge(.top, to: .bottom, of: lastButton, withOffset: margin),
             button.autoPinEdge(toSuperviewEdge: .left),
-            ])
+          ])
         }
 
         lastButton = button
-    }
+      }
   }
 
   fileprivate func barDimensionWithButtonsWithoutTool() -> CGFloat {
@@ -819,6 +821,7 @@ extension WorkspaceBar {
 }
 
 // MARK: - WorkspaceToolDelegate
+
 extension WorkspaceBar {
 
   func toggle(_ tool: WorkspaceTool) {
