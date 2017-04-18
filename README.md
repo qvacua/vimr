@@ -42,6 +42,7 @@ Pre-built binaries can be found under [Releases](https://github.com/qvacua/vimr/
 * Multiple windows.
 * Basic input including Emojis and Hangul (+Hanja): We don't know whether other input systems work...
 * Markdown preview
+* Generic HTML preview (retains the scroll position when reloading)
 * Basic mouse support: Left button actions and scrolling.
 * Fuzzy file finder a la Xcode's "Open Quickly..."
 * Basic trackpad support: Pinching for zooming and two-finger scrolling.
@@ -49,7 +50,7 @@ Pre-built binaries can be found under [Releases](https://github.com/qvacua/vimr/
 * Basic File and Edit menu items.
 * Command line tool.
 * (Simple) File browser
-* Flexible workspace model a la JetBrain's IDEs: Currently used only by the file browser.
+* Flexible workspace model a la JetBrain's IDEs
 
 ## Planned Features
 
@@ -57,7 +58,6 @@ The following are features we _plan_ to implement (some of which are already pre
 
 * Some more standard OSX menu items.
 * Improved rendering and input handling, especially Hangul/Hanja (Why is Korean so important? 🤔): The current implementation is really ugly and messy...
-* General HTML preview
 * ...
 
 We will gradually create [issues](https://github.com/qvacua/vimr/issues) with more details. For the current status see the [project board](https://waffle.io/qvacua/vimr).
