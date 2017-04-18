@@ -51,7 +51,7 @@ class FileUtils {
       return URL(fileURLWithPath: "/", isDirectory: true)
     }
 
-    let pathComps = urls.map { $0.pathComponents }
+    let pathComps = urls.map { $0.deletingLastPathComponent().pathComponents }
     let min = pathComps.map { $0.count }.min()!
     let pathCompsOnlyMin = pathComps.map { $0[0..<min] }
     let commonIdx = (0..<min).reversed().reduce(min - 1) { (result, idx) in
