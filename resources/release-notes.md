@@ -5,6 +5,7 @@
 * GH-383: Add a general web view preview which preserves the scroll position when (automatically) reloading the selected file.
 * GH-398: Set the represented icon in the window title bar.
 * GH-389: Bugfix: The Files tool does not update when one folder is created.
+* GH-374: Bugfix: The tool buttons have a narrow area which does not react to mouse down when the tool is closed.
 
 # 0.13.1-167
 
