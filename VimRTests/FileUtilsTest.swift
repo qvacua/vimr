@@ -22,7 +22,7 @@ class FileUtilsTest: XCTestCase {
       fileUtilsRsrcUrl.appendingPathComponent("a1"),
     ]
 
-    expect(FileUtils.commonParent(of: urls)).to(equal(a1Dir))
+    expect(FileUtils.commonParent(of: urls)).to(equal(fileUtilsRsrcUrl))
   }
 
   func testCommonParentOneFileUrl() {
@@ -43,7 +43,7 @@ class FileUtilsTest: XCTestCase {
       fileUtilsRsrcUrl.appendingPathComponent("a1/a1-file1"),
     ]
 
-    expect(FileUtils.commonParent(of: urls)).to(equal(a1Dir))
+    expect(FileUtils.commonParent(of: urls)).to(equal(fileUtilsRsrcUrl))
   }
 
   func testCommonParent2() {
@@ -53,7 +53,7 @@ class FileUtilsTest: XCTestCase {
       fileUtilsRsrcUrl.appendingPathComponent("a1/a2/a1-a2-file1"),
     ]
 
-    expect(FileUtils.commonParent(of: urls)).to(equal(a1Dir))
+    expect(FileUtils.commonParent(of: urls)).to(equal(fileUtilsRsrcUrl))
   }
 
   func testBug1() {
