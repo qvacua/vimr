@@ -52,6 +52,7 @@
 		1929BA120290D6A2A61A4468 /* ArrayCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B477E1E62433BC48E10B /* ArrayCommonsTest.swift */; };
 		1929BA715337FE26155B2071 /* OpenedFileList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA43449BA41666CD55ED /* OpenedFileList.swift */; };
 		1929BA76A1D97D8226F7CFB1 /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6AD3396160AA2C46919 /* Debouncer.swift */; };
+		1929BAA19A6BEE73963BD4A8 /* NeoVimWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B868F11F398A159EF554 /* NeoVimWindow.swift */; };
 		1929BAE4900D72A7877741B1 /* PrefWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE168F31344B69E61B62 /* PrefWindow.swift */; };
 		1929BAFF1E011321D3186EE6 /* UiRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD4149D5A25C82064DD8 /* UiRoot.swift */; };
 		1929BB4A9B2FA42A64CCCC76 /* MainWindowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD83A13BF133741766CC /* MainWindowReducer.swift */; };
@@ -119,13 +120,13 @@
 		4B6A70991D65058A00E12030 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; };
 		4B6A709C1D6507A000E12030 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B77808D1EAA25FF00CB4E10 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B77808C1EAA25FF00CB4E10 /* AppDelegate.swift */; };
-		4B77808F1EAA25FF00CB4E10 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B77808E1EAA25FF00CB4E10 /* ViewController.swift */; };
 		4B7780911EAA25FF00CB4E10 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B7780901EAA25FF00CB4E10 /* Assets.xcassets */; };
-		4B7780941EAA25FF00CB4E10 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B7780921EAA25FF00CB4E10 /* Main.storyboard */; };
 		4B7780991EAA262300CB4E10 /* SwiftNeoVim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; };
 		4B77809A1EAA262300CB4E10 /* SwiftNeoVim.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B77809E1EAA265400CB4E10 /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; };
 		4B77809F1EAA265400CB4E10 /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B7780A21EAA2D3100CB4E10 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B7780A41EAA2D3100CB4E10 /* MainMenu.xib */; };
+		4B7780A71EAA2E3200CB4E10 /* NeoVimWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B7780A91EAA2E3200CB4E10 /* NeoVimWindow.xib */; };
 		4B81B3CB1DE8827600ED1672 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B81B3CA1DE8827600ED1672 /* AppDelegate.swift */; };
 		4B81B3CD1DE8827600ED1672 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B81B3CC1DE8827600ED1672 /* Assets.xcassets */; };
 		4B81B3D01DE8827600ED1672 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B81B3CE1DE8827600ED1672 /* MainMenu.xib */; };
@@ -362,6 +363,7 @@
 		1929B7A68B7109CEFAF105E8 /* AppDelegateReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegateReducer.swift; sourceTree = "<group>"; };
 		1929B7CB4863F80230C32D3C /* FileItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
 		1929B85023B042C485409CE1 /* HtmlPreviewTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HtmlPreviewTool.swift; sourceTree = "<group>"; };
+		1929B868F11F398A159EF554 /* NeoVimWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimWindow.swift; sourceTree = "<group>"; };
 		1929B8EF9A9F5ACC175452BD /* PreviewUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewUtils.swift; sourceTree = "<group>"; };
 		1929B93013228985F509C8F6 /* server_ui.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = server_ui.m; sourceTree = "<group>"; };
 		1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationCommons.swift; sourceTree = "<group>"; };
@@ -435,10 +437,10 @@
 		4B6A70951D6100E300E12030 /* SwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftCommons.swift; sourceTree = "<group>"; };
 		4B77808A1EAA25FF00CB4E10 /* MacNeovim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacNeovim.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B77808C1EAA25FF00CB4E10 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4B77808E1EAA25FF00CB4E10 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		4B7780901EAA25FF00CB4E10 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		4B7780931EAA25FF00CB4E10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4B7780951EAA25FF00CB4E10 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4B7780A31EAA2D3100CB4E10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		4B7780A81EAA2E3200CB4E10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/NeoVimWindow.xib; sourceTree = "<group>"; };
 		4B81B3C81DE8827600ED1672 /* OutlineViewTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OutlineViewTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B81B3CA1DE8827600ED1672 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4B81B3CC1DE8827600ED1672 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -780,11 +782,12 @@
 			isa = PBXGroup;
 			children = (
 				4B77808C1EAA25FF00CB4E10 /* AppDelegate.swift */,
-				4B77808E1EAA25FF00CB4E10 /* ViewController.swift */,
 				4B7780901EAA25FF00CB4E10 /* Assets.xcassets */,
-				4B7780921EAA25FF00CB4E10 /* Main.storyboard */,
 				4B7780951EAA25FF00CB4E10 /* Info.plist */,
 				1929B5E3E722EFA5172E3455 /* Application.swift */,
+				1929B868F11F398A159EF554 /* NeoVimWindow.swift */,
+				4B7780A41EAA2D3100CB4E10 /* MainMenu.xib */,
+				4B7780A91EAA2E3200CB4E10 /* NeoVimWindow.xib */,
 			);
 			path = MacNeovim;
 			sourceTree = "<group>";
@@ -1256,7 +1259,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B7780911EAA25FF00CB4E10 /* Assets.xcassets in Resources */,
-				4B7780941EAA25FF00CB4E10 /* Main.storyboard in Resources */,
+				4B7780A21EAA2D3100CB4E10 /* MainMenu.xib in Resources */,
+				4B7780A71EAA2E3200CB4E10 /* NeoVimWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1390,9 +1394,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B77808F1EAA25FF00CB4E10 /* ViewController.swift in Sources */,
 				4B77808D1EAA25FF00CB4E10 /* AppDelegate.swift in Sources */,
 				1929B6B886CFBCBF01D4B04A /* Application.swift in Sources */,
+				1929BAA19A6BEE73963BD4A8 /* NeoVimWindow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1550,12 +1554,20 @@
 			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
-		4B7780921EAA25FF00CB4E10 /* Main.storyboard */ = {
+		4B7780A41EAA2D3100CB4E10 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				4B7780931EAA25FF00CB4E10 /* Base */,
+				4B7780A31EAA2D3100CB4E10 /* Base */,
 			);
-			name = Main.storyboard;
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		4B7780A91EAA2E3200CB4E10 /* NeoVimWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4B7780A81EAA2E3200CB4E10 /* Base */,
+			);
+			name = NeoVimWindow.xib;
 			sourceTree = "<group>";
 		};
 		4B81B3CE1DE8827600ED1672 /* MainMenu.xib */ = {
@@ -2061,6 +2073,7 @@
 				4B7780971EAA25FF00CB4E10 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4B81B3D41DE8827600ED1672 /* Build configuration list for PBXNativeTarget "OutlineViewTest" */ = {
 			isa = XCConfigurationList;

@@ -6,18 +6,35 @@
 import Cocoa
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NeoVimWindowDelegate {
 
-
-
-  func applicationDidFinishLaunching(_ aNotification: Notification) {
-    // Insert code here to initialize your application
-  }
-
-  func applicationWillTerminate(_ aNotification: Notification) {
-    // Insert code here to tear down your application
-  }
-
-
+  fileprivate var neoVimWindows = Set<NeoVimWindow>()
 }
 
+// MARK: - NSApplicationDelegate
+extension AppDelegate {
+
+  func applicationOpenUntitledFile(_ sender: NSApplication) -> Bool {
+    self.newDocument(self)
+    return true
+  }
+}
+
+// MARK: - NeoVimWindow.Delegate
+extension AppDelegate {
+
+  func neoVimWindowDidClose(neoVimWindow: NeoVimWindow) {
+    self.neoVimWindows.remove(neoVimWindow)
+  }
+}
+
+// MARK: - IBActions
+extension AppDelegate {
+
+  @IBAction func newDocument(_: Any?) {
+    let neoVimWindow = NeoVimWindow(delegate: self)
+    self.neoVimWindows.insert(neoVimWindow)
+
+    neoVimWindow.window.makeKeyAndOrderFront(self)
+  }
+}
