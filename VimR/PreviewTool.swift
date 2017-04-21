@@ -75,6 +75,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
     refreshOnWrite.action = #selector(PreviewTool.refreshOnWriteAction)
 
     self.addViews()
+    self.webview.navigationDelegate = self
     self.webview.load(URLRequest(url: state.preview.server!))
 
     source
@@ -98,6 +99,11 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
         guard state.preview.updateDate > self.lastUpdateDate else { return }
         guard let serverUrl = state.preview.server else { return }
+        if serverUrl != self.url {
+          self.url = serverUrl
+          self.scrollTop = 0
+          self.previewPosition = Marked(Position.beginning)
+        }
 
         self.lastUpdateDate = state.preview.updateDate
         self.webview.load(URLRequest(url: serverUrl))
@@ -111,8 +117,9 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
     self.webviewMessageHandler.source
       .throttle(0.75, latest: true, scheduler: self.scheduler)
-      .subscribe(onNext: { [unowned self] position in
+      .subscribe(onNext: { [unowned self] (position, scrollTop) in
         self.previewPosition = Marked(position)
+        self.scrollTop = scrollTop
         self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.scroll(to: self.previewPosition)))
       })
       .addDisposableTo(self.disposeBag)
@@ -131,6 +138,10 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
     NSLog("ERROR preview component's webview: \(error)")
   }
 
+  func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    self.webview.evaluateJavaScript("document.body.scrollTop = \(self.scrollTop)")
+  }
+
   fileprivate let emitter: ActionEmitter
   fileprivate let uuid: String
 
@@ -139,9 +150,11 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   fileprivate let scheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
   fileprivate var isOpen = false
 
+  fileprivate var url: URL?
   fileprivate var lastUpdateDate = Date.distantPast
   fileprivate var editorPosition = Marked(Position.beginning)
   fileprivate var previewPosition = Marked(Position.beginning)
+  fileprivate var scrollTop = 0
 
   fileprivate let userContentController = WKUserContentController()
   fileprivate let webviewMessageHandler = WebviewMessageHandler()
@@ -194,7 +207,7 @@ extension PreviewTool {
 
 fileprivate class WebviewMessageHandler: NSObject, WKScriptMessageHandler {
 
-  var source: Observable<Position> {
+  var source: Observable<(Position, Int)> {
     return self.subject.asObservable()
   }
 
@@ -207,12 +220,15 @@ fileprivate class WebviewMessageHandler: NSObject, WKScriptMessageHandler {
       return
     }
 
-    guard let lineBegin = msgBody["lineBegin"], let columnBegin = msgBody["columnBegin"] else {
+    guard let lineBegin = msgBody["lineBegin"],
+          let columnBegin = msgBody["columnBegin"],
+          let scrollTop = msgBody["scrollTop"]
+      else {
       return
     }
 
-    self.subject.onNext(Position(row: lineBegin, column: columnBegin))
+    self.subject.onNext((Position(row: lineBegin, column: columnBegin), scrollTop))
   }
 
-  fileprivate let subject = PublishSubject<Position>()
+  fileprivate let subject = PublishSubject<(Position, Int)>()
 }

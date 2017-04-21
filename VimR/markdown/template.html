@@ -26,7 +26,7 @@
     function positionOfMarkdownElement(element) {
       const regexResult = element.dataset.sourcepos.match(sourceposRegex);
 
-      if (regexResult.length != 5) {
+      if (regexResult.length !== 5) {
         return null;
       }
 
@@ -62,13 +62,14 @@
       }
 
       const result = positionOfMarkdownElement(candidate);
-      if (result.lineBegin == lastMarkdownPosition.lineBegin
-        && result.columnBegin == lastMarkdownPosition.columnBegin
-        && result.lineEnd == lastMarkdownPosition.lineEnd
-        && result.columnEnd == lastMarkdownPosition.columnEnd)
+      if (result.lineBegin === lastMarkdownPosition.lineBegin
+        && result.columnBegin === lastMarkdownPosition.columnBegin
+        && result.lineEnd === lastMarkdownPosition.lineEnd
+        && result.columnEnd === lastMarkdownPosition.columnEnd)
       {
         return;
       }
+      result.scrollTop = document.body.scrollTop;
 
       lastMarkdownPosition = result;
 //      console.log(`webview scrolled to ${result.lineBegin}:${result.columnBegin}`);
@@ -110,13 +111,13 @@
         return Math.min(result, entry.rowDistance)
       }, Number.MAX_SAFE_INTEGER);
 
-      const entriesWithMinRowDistance = entries.filter(entry => entry.rowDistance == minRowDistance);
+      const entriesWithMinRowDistance = entries.filter(entry => entry.rowDistance === minRowDistance);
 
       const minColumnDistance = entriesWithMinRowDistance.reduce((result, entry) => {
         return Math.min(result, entry.columnDistance)
       }, Number.MAX_SAFE_INTEGER);
 
-      const candidateEntry = entriesWithMinRowDistance.find(entry => entry.columnDistance == minColumnDistance);
+      const candidateEntry = entriesWithMinRowDistance.find(entry => entry.columnDistance === minColumnDistance);
       if (!candidateEntry) {
         return;
       }
