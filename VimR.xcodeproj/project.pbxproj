@@ -457,7 +457,6 @@
 		4BEE79161D16D3800012EDAA /* CellAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellAttributes.swift; sourceTree = "<group>"; };
 		4BF07EE51D51326A009BECEB /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Base; path = Base.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4BF6E29B1D34153C0053FA76 /* KeyUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyUtils.swift; sourceTree = "<group>"; };
-		4BF8EED71D85574800CAC08A /* PrefUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefUtils.swift; sourceTree = "<group>"; };
 		4BF8EEDA1D85903000CAC08A /* PrefUtilsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefUtilsTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -906,7 +905,6 @@
 		4BF8EED91D858C4400CAC08A /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				4BF8EED71D85574800CAC08A /* PrefUtils.swift */,
 				1929BA8AC40B901B20F20B71 /* FileUtils.swift */,
 				1929BEEB33113B0E33C3830F /* Matcher.swift */,
 				1929B9D510177918080BE39B /* Scorer.swift */,
