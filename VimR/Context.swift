@@ -169,24 +169,3 @@ class Context {
                            modified: false)
   }
 }
-
-extension Observable {
-
-  fileprivate func reduce<R:Reducer>(by reducer: R) -> Observable<Element> where R.Pair == Element {
-    return reducer.reduce(self)
-  }
-
-  fileprivate func apply<S:Service>(to service: S) -> Observable<Element> where S.Pair == Element {
-    return self.do(onNext: service.apply)
-  }
-
-  fileprivate func apply<S:StateService>(to service: S) -> Observable<Element> where S.StateType == Element {
-    return self.do(onNext: service.apply)
-  }
-
-  fileprivate func filterMapPair<S, A>() -> Observable<S> where Element == StateActionPair<S, A> {
-    return self
-      .filter { $0.modified }
-      .map { $0.state }
-  }
-}

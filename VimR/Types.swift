@@ -6,6 +6,34 @@
 import Foundation
 import RxSwift
 
+protocol Reducer {
+
+  associatedtype Pair
+
+  func reduce(_ source: Observable<Pair>) -> Observable<Pair>
+}
+
+protocol Service {
+
+  associatedtype Pair
+
+  func apply(_: Pair)
+}
+
+protocol StateService {
+
+  associatedtype StateType
+
+  func apply(_: StateType)
+}
+
+protocol UiComponent {
+
+  associatedtype StateType
+
+  init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType)
+}
+
 class ActionEmitter {
 
   let observable: Observable<Any>
@@ -109,32 +137,25 @@ class Marked<T>: CustomStringConvertible {
   }
 }
 
-protocol Reducer {
+extension Observable {
 
-  associatedtype Pair
+  func reduce<R:Reducer>(by reducer: R) -> Observable<Element> where R.Pair == Element {
+    return reducer.reduce(self)
+  }
 
-  func reduce(_ source: Observable<Pair>) -> Observable<Pair>
-}
+  func apply<S:Service>(to service: S) -> Observable<Element> where S.Pair == Element {
+    return self.do(onNext: service.apply)
+  }
 
-protocol Service {
+  func apply<S:StateService>(to service: S) -> Observable<Element> where S.StateType == Element {
+    return self.do(onNext: service.apply)
+  }
 
-  associatedtype Pair
-
-  func apply(_: Pair)
-}
-
-protocol StateService {
-
-  associatedtype StateType
-
-  func apply(_: StateType)
-}
-
-protocol UiComponent {
-
-  associatedtype StateType
-
-  init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType)
+  func filterMapPair<S, A>() -> Observable<S> where Element == StateActionPair<S, A> {
+    return self
+      .filter { $0.modified }
+      .map { $0.state }
+  }
 }
 
 class UiComponentTemplate: UiComponent {
@@ -169,7 +190,7 @@ class UiComponentTemplate: UiComponent {
       .disposed(by: self.disposeBag)
   }
 
-  func someFunction() {
+  func someAction() {
     // when the user does something, emit an action
     self.emit(.doSth)
   }
