@@ -5,21 +5,6 @@
 
 import Foundation
 
-class Token: Hashable, CustomStringConvertible {
-
-  var hashValue: Int {
-    return ObjectIdentifier(self).hashValue
-  }
-
-  var description: String {
-    return ObjectIdentifier(self).debugDescription
-  }
-
-  static func == (left: Token, right: Token) -> Bool {
-    return left === right
-  }
-}
-
 class FileItem : CustomStringConvertible, Hashable, Comparable, Copyable {
 
   typealias InstanceType = FileItem
