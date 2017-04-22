@@ -96,7 +96,7 @@ class Context {
         self.actionSourceForAppState()
             .reduce(by: AdvancedPrefReducer())
             .filterMapPair()
-        )
+      )
       .merge()
       .apply(to: prefService.forPrefPanes)
       .subscribe(onNext: self.emitAppState)
@@ -141,15 +141,16 @@ class Context {
     }
   }
 
-  fileprivate func actionSourceForAppState<T>() -> Observable<StateActionPair<AppState, T>> {
+  fileprivate func actionSourceForAppState<ActionType>() -> Observable<StateActionPair<AppState, ActionType>> {
     return self.actionEmitter.observable
-      .mapOmittingNil { $0 as? T }
+      .mapOmittingNil { $0 as? ActionType }
       .map { self.appStateActionPair(for: $0) }
   }
 
-  fileprivate func actionSourceForMainWindow<T>() -> Observable<StateActionPair<UuidState<MainWindow.State>, T>> {
+  fileprivate func actionSourceForMainWindow<ActionType>()
+      -> Observable<StateActionPair<UuidState<MainWindow.State>, ActionType>> {
     return self.actionEmitter.observable
-      .mapOmittingNil { $0 as? UuidAction<T> }
+      .mapOmittingNil { $0 as? UuidAction<ActionType> }
       .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
   }
 
@@ -171,7 +172,7 @@ class Context {
 
 extension Observable {
 
-  fileprivate func reduce<T:Reducer>(by reducer: T) -> Observable<Element> where T.Pair == Element {
+  fileprivate func reduce<R:Reducer>(by reducer: R) -> Observable<Element> where R.Pair == Element {
     return reducer.reduce(self)
   }
 
