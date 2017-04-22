@@ -121,3 +121,46 @@ protocol UiComponent {
 
   init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType)
 }
+
+class UiComponentTemplate: UiComponent {
+
+  typealias StateType = State
+
+  struct State {
+
+    var someField: String
+  }
+
+  enum Action {
+
+    case doSth
+  }
+
+  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+    // set the typed action emit function
+    self.emit = emitter.typedEmitFunction()
+
+    // init the component with the initial state "state"
+    self.someField = state.someField
+
+    // react to the new state
+    source
+      .observeOn(MainScheduler.instance)
+      .subscribe(
+        onNext: { [unowned self] state in
+          print("Hello, \(self.someField)")
+        }
+      )
+      .disposed(by: self.disposeBag)
+  }
+
+  func someFunction() {
+    // when the user does something, emit an action
+    self.emit(.doSth)
+  }
+
+  fileprivate let emit: (Action) -> Void
+  fileprivate let disposeBag = DisposeBag()
+
+  fileprivate let someField: String
+}
