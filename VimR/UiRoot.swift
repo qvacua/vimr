@@ -40,7 +40,7 @@ class UiRoot: UiComponent {
           NSApp.terminate(self)
         }
       })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
   }
 
   fileprivate let source: Observable<AppState>

@@ -79,7 +79,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
           self.setSparkleUrl(self.useSnapshot)
         }
       })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
   }
 
   fileprivate let stateContext: Context

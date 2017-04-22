@@ -55,7 +55,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
 
       })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
   }
 
   fileprivate let emit: (Action) -> Void

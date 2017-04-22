@@ -59,7 +59,7 @@ class FileBrowser: NSView,
         self.currentBufferUrl = state.currentBuffer?.url
         self.showHiddenMenuItem.boolState = state.fileBrowserShowHidden
       })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
   }
 
   fileprivate let emit: (UuidAction<Action>) -> Void

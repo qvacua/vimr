@@ -67,7 +67,7 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
         self.mark = serverUrl.mark
         self.reloadWebview(with: serverUrl.payload)
       })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
   }
 
   fileprivate func reloadWebview(with url: URL) {

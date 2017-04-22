@@ -46,7 +46,7 @@ class OpenedFileList: NSView,
         self.bufferList.reloadData()
         self.adjustFileViewWidth()
       })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
   }
   
   fileprivate let emit: (UuidAction<Action>) -> Void

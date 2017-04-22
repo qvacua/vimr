@@ -73,7 +73,7 @@ class FileOutlineView: NSOutlineView,
         self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
         self.update(state.lastFileSystemUpdate.payload)
       })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
   }
 
   func select(_ url: URL) {

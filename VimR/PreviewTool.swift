@@ -113,7 +113,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
         self.webview.navigationDelegate = nil
         self.webview.removeFromSuperview()
       })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
 
     self.webviewMessageHandler.source
       .throttle(0.75, latest: true, scheduler: self.scheduler)
@@ -122,7 +122,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
         self.scrollTop = scrollTop
         self.emit(UuidAction(uuid: self.uuid, action: .scroll(to: self.previewPosition)))
       })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
   }
 
   fileprivate func addViews() {

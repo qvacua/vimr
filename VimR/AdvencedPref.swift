@@ -47,7 +47,7 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
           self.updateViews()
         }
       })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
   }
 
   fileprivate let emit: (Action) -> Void

@@ -89,7 +89,7 @@ class OpenQuicklyWindow: NSObject,
 
         self.windowController.showWindow(self)
       })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
   }
 
   func reloadFileView(withScoredItems items: [ScoredFileItem]) {

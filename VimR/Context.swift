@@ -47,7 +47,7 @@ class Context {
       )
       .merge()
       .subscribe(onNext: self.emitAppState)
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
 
     // MainWindow.State
     Observable
@@ -79,7 +79,7 @@ class Context {
       )
       .merge()
       .subscribe(onNext: self.emitAppState)
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
 
     // Preferences
     Observable
@@ -100,11 +100,11 @@ class Context {
       .merge()
       .apply(to: prefService.forPrefPanes)
       .subscribe(onNext: self.emitAppState)
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
 
 #if DEBUG
-//    actionSource.debug().subscribe().addDisposableTo(self.disposeBag)
-//    stateSource.debug().subscribe().addDisposableTo(self.disposeBag)
+//    actionSource.debug().subscribe().disposed(by: self.disposeBag)
+//    stateSource.debug().subscribe().disposed(by: self.disposeBag)
 #endif
   }
 

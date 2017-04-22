@@ -151,7 +151,7 @@ class MainWindow: NSObject,
       .subscribe(onNext: { [unowned self] action in
         self.emit(self.uuidAction(for: action))
       })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
 
     self.addViews()
 
@@ -213,7 +213,7 @@ class MainWindow: NSObject,
         onCompleted: {
           self.windowController.close()
         })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
 
     self.updateNeoVimAppearance()
     self.neoVimView.delegate = self

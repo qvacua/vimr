@@ -55,7 +55,7 @@ class FileMonitor: UiComponent {
           self.monitors.removeValue(forKey: url)
         }
       })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
   }
 
   fileprivate let emit: (Action) -> Void
