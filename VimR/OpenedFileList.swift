@@ -20,7 +20,7 @@ class OpenedFileList: NSView,
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emitter = emitter
+    self.emit = emitter.typedEmitFunction()
     self.uuid = state.uuid
 
     self.genericIcon = FileUtils.icon(forType: "public.data")
@@ -49,7 +49,7 @@ class OpenedFileList: NSView,
       .addDisposableTo(self.disposeBag)
   }
   
-  fileprivate let emitter: ActionEmitter
+  fileprivate let emit: (UuidAction<Action>) -> Void
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate let uuid: String
@@ -92,7 +92,7 @@ extension OpenedFileList {
       return
     }
 
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.open(self.buffers[clickedRow])))
+    self.emit(UuidAction(uuid: self.uuid, action: .open(self.buffers[clickedRow])))
   }
 }
 

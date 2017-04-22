@@ -6,18 +6,18 @@
 import Foundation
 import RxSwift
 
-typealias ActionEmitter = Emitter<Any>
+class ActionEmitter {
 
-class Emitter<T> {
-
-  let observable: Observable<T>
+  let observable: Observable<Any>
 
   init() {
     self.observable = self.subject.asObservable().observeOn(scheduler)
   }
 
-  func emit(_ action: T) {
-    self.subject.onNext(action)
+  func typedEmitFunction<T>() -> ((T) -> Void) {
+    return { (action: T) in
+      self.subject.onNext(action)
+    }
   }
 
   deinit {
@@ -25,7 +25,7 @@ class Emitter<T> {
   }
 
   fileprivate let scheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
-  fileprivate let subject = PublishSubject<T>()
+  fileprivate let subject = PublishSubject<Any>()
 }
 
 class StateActionPair<S, A> {

@@ -28,7 +28,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   let menuItems: [NSMenuItem]
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emitter = emitter
+    self.emit = emitter.typedEmitFunction()
     self.uuid = state.uuid
 
     let configuration = WKWebViewConfiguration()
@@ -120,7 +120,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
       .subscribe(onNext: { [unowned self] (position, scrollTop) in
         self.previewPosition = Marked(position)
         self.scrollTop = scrollTop
-        self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.scroll(to: self.previewPosition)))
+        self.emit(UuidAction(uuid: self.uuid, action: .scroll(to: self.previewPosition)))
       })
       .addDisposableTo(self.disposeBag)
   }
@@ -142,7 +142,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
     self.webview.evaluateJavaScript("document.body.scrollTop = \(self.scrollTop)")
   }
 
-  fileprivate let emitter: ActionEmitter
+  fileprivate let emit: (UuidAction<Action>) -> Void
   fileprivate let uuid: String
 
   fileprivate let webview: WKWebView
@@ -180,7 +180,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
 extension PreviewTool {
 
   func refreshNowAction(_: Any?) {
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.refreshNow))
+    self.emit(UuidAction(uuid: self.uuid, action: .refreshNow))
   }
 
   func forwardSearchAction(_: Any?) {
@@ -189,19 +189,19 @@ extension PreviewTool {
 
   func reverseSearchAction(_: Any?) {
     self.previewPosition = Marked(self.previewPosition.payload) // set a new mark
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.reverseSearch(to: self.previewPosition)))
+    self.emit(UuidAction(uuid: self.uuid, action: .reverseSearch(to: self.previewPosition)))
   }
 
   func automaticForwardSearchAction(_ sender: NSMenuItem) {
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.setAutomaticForwardSearch(to: !sender.boolState)))
+    self.emit(UuidAction(uuid: self.uuid, action: .setAutomaticForwardSearch(to: !sender.boolState)))
   }
 
   func automaticReverseSearchAction(_ sender: NSMenuItem) {
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.setAutomaticReverseSearch(to: !sender.boolState)))
+    self.emit(UuidAction(uuid: self.uuid, action: .setAutomaticReverseSearch(to: !sender.boolState)))
   }
 
   func refreshOnWriteAction(_ sender: NSMenuItem) {
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.setRefreshOnWrite(to: !sender.boolState)))
+    self.emit(UuidAction(uuid: self.uuid, action: .setRefreshOnWrite(to: !sender.boolState)))
   }
 }
 

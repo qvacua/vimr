@@ -25,7 +25,7 @@ class OpenQuicklyWindow: NSObject,
   var pauseScan = false
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emitter = emitter
+    self.emit = emitter.typedEmitFunction()
     self.windowController = NSWindowController(windowNibName: "OpenQuicklyWindow")
 
     self.searchStream = self.searchField.rx
@@ -105,7 +105,7 @@ class OpenQuicklyWindow: NSObject,
     self.progressIndicator.stopAnimation(self)
   }
 
-  fileprivate let emitter: ActionEmitter
+  fileprivate let emit: (Action) -> Void
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate var flatFileItemsSource = Observable<[FileItem]>.empty()
@@ -271,7 +271,7 @@ extension OpenQuicklyWindow {
 
     case NSSelectorFromString("insertNewline:"):
       // TODO open the url
-      self.emitter.emit(Action.open(self.fileViewItems[self.fileView.selectedRow].url))
+      self.emit(.open(self.fileViewItems[self.fileView.selectedRow].url))
       self.window.performClose(self)
       return true
 
@@ -310,7 +310,7 @@ extension OpenQuicklyWindow {
 extension OpenQuicklyWindow {
 
   func windowShouldClose(_: Any) -> Bool {
-    self.emitter.emit(Action.close)
+    self.emit(.close)
 
     return false
   }

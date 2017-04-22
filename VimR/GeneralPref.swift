@@ -31,7 +31,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emitter = emitter
+    self.emit = emitter.typedEmitFunction()
 
     super.init(frame: .zero)
 
@@ -58,7 +58,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
       .addDisposableTo(self.disposeBag)
   }
 
-  fileprivate let emitter: ActionEmitter
+  fileprivate let emit: (Action) -> Void
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate let openWhenLaunchingCheckbox = NSButton(forAutoLayout: ())
@@ -200,12 +200,12 @@ extension GeneralPref {
   }
 
   func openUntitledWindowWhenLaunchingAction(_ sender: NSButton) {
-    self.emitter.emit(Action.setOpenOnLaunch(self.openWhenLaunchingCheckbox.boolState))
+    self.emit(.setOpenOnLaunch(self.openWhenLaunchingCheckbox.boolState))
   }
 
   func openUntitledWindowOnReactivationAction(_ sender: NSButton) {
     NSLog("\(self.openOnReactivationCheckbox.boolState)")
-    self.emitter.emit(Action.setOpenOnReactivation(self.openOnReactivationCheckbox.boolState))
+    self.emit(.setOpenOnReactivation(self.openOnReactivationCheckbox.boolState))
   }
 
   fileprivate func ignorePatternsAction() {
@@ -215,7 +215,7 @@ extension GeneralPref {
     }
 
     self.ignorePatterns = patterns
-    self.emitter.emit(Action.setIgnorePatterns(ignorePatterns))
+    self.emit(.setIgnorePatterns(ignorePatterns))
   }
 
   fileprivate func alert(title: String, info: String) {

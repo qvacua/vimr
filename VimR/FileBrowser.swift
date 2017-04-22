@@ -27,8 +27,8 @@ class FileBrowser: NSView,
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+    self.emit = emitter.typedEmitFunction()
     self.uuid = state.uuid
-    self.emitter = emitter
 
     self.cwd = state.cwd
 
@@ -62,7 +62,7 @@ class FileBrowser: NSView,
       .addDisposableTo(self.disposeBag)
   }
 
-  fileprivate let emitter: ActionEmitter
+  fileprivate let emit: (UuidAction<Action>) -> Void
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate let uuid: String
@@ -143,11 +143,11 @@ extension FileBrowser {
       return
     }
 
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.setShowHidden(!menuItem.boolState)))
+    self.emit(UuidAction(uuid: self.uuid, action: .setShowHidden(!menuItem.boolState)))
   }
 
   func goToParentAction(_ sender: Any?) {
-    self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.setAsWorkingDirectory(self.cwd.parent)))
+    self.emit(UuidAction(uuid: self.uuid, action: .setAsWorkingDirectory(self.cwd.parent)))
   }
 
   func scrollToSourceAction(_ sender: Any?) {

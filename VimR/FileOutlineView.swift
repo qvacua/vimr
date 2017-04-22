@@ -15,9 +15,9 @@ class FileOutlineView: NSOutlineView,
   typealias StateType = MainWindow.State
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emitter = emitter
-
+    self.emit = emitter.typedEmitFunction()
     self.uuid = state.uuid
+
     self.root = FileBrowserItem(fileItem: state.root)
     self.fileSystemRoot = state.root
     self.isShowHidden = state.fileBrowserShowHidden
@@ -106,7 +106,7 @@ class FileOutlineView: NSOutlineView,
     self.scrollRowToVisible(targetRow)
   }
 
-  fileprivate let emitter: ActionEmitter
+  fileprivate let emit: (UuidAction<FileBrowser.Action>) -> Void
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate let uuid: String
@@ -374,8 +374,8 @@ extension FileOutlineView {
     if item.fileItem.isDir {
       self.toggle(item: item)
     } else {
-      self.emitter.emit(
-        UuidAction(uuid: self.uuid, action: FileBrowser.Action.open(url: item.fileItem.url, mode: .default))
+      self.emit(
+        UuidAction(uuid: self.uuid, action: .open(url: item.fileItem.url, mode: .default))
       )
     }
   }
@@ -385,8 +385,8 @@ extension FileOutlineView {
       return
     }
 
-    self.emitter.emit(
-      UuidAction(uuid: self.uuid, action: FileBrowser.Action.open(url: item.fileItem.url, mode: .newTab))
+    self.emit(
+      UuidAction(uuid: self.uuid, action: .open(url: item.fileItem.url, mode: .newTab))
     )
   }
 
@@ -395,8 +395,8 @@ extension FileOutlineView {
       return
     }
 
-    self.emitter.emit(
-      UuidAction(uuid: self.uuid, action: FileBrowser.Action.open(url: item.fileItem.url, mode: .currentTab))
+    self.emit(
+      UuidAction(uuid: self.uuid, action: .open(url: item.fileItem.url, mode: .currentTab))
     )
   }
 
@@ -405,8 +405,8 @@ extension FileOutlineView {
       return
     }
 
-    self.emitter.emit(
-      UuidAction(uuid: self.uuid, action: FileBrowser.Action.open(url: item.fileItem.url, mode: .horizontalSplit))
+    self.emit(
+      UuidAction(uuid: self.uuid, action: .open(url: item.fileItem.url, mode: .horizontalSplit))
     )
   }
 
@@ -415,8 +415,8 @@ extension FileOutlineView {
       return
     }
 
-    self.emitter.emit(
-      UuidAction(uuid: self.uuid, action: FileBrowser.Action.open(url: item.fileItem.url, mode: .verticalSplit))
+    self.emit(
+      UuidAction(uuid: self.uuid, action: .open(url: item.fileItem.url, mode: .verticalSplit))
     )
   }
 
@@ -429,8 +429,8 @@ extension FileOutlineView {
       return
     }
 
-    self.emitter.emit(
-      UuidAction(uuid: self.uuid, action: FileBrowser.Action.setAsWorkingDirectory(item.fileItem.url))
+    self.emit(
+      UuidAction(uuid: self.uuid, action: .setAsWorkingDirectory(item.fileItem.url))
     )
   }
 }
@@ -470,8 +470,8 @@ extension FileOutlineView {
       if item.fileItem.isDir || item.fileItem.isPackage {
         self.toggle(item: item)
       } else {
-        self.emitter.emit(
-          UuidAction(uuid: self.uuid, action: FileBrowser.Action.open(url: item.fileItem.url, mode: .newTab))
+        self.emit(
+          UuidAction(uuid: self.uuid, action: .open(url: item.fileItem.url, mode: .newTab))
         )
       }
 

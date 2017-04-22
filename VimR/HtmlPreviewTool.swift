@@ -25,7 +25,7 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
   let innerCustomToolbar = InnerCustomToolbar()
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emitter = emitter
+    self.emit = emitter.typedEmitFunction()
     self.uuid = state.uuid
 
     let configuration = WKWebViewConfiguration()
@@ -85,7 +85,7 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
     self.webview.autoPinEdgesToSuperviewEdges()
   }
 
-  fileprivate let emitter: ActionEmitter
+  fileprivate let emit: (UuidAction<Action>) -> Void
   fileprivate let uuid: String
 
   fileprivate var mark = Token()
@@ -114,7 +114,7 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
         return
       }
 
-      self.emitter.emit(UuidAction(uuid: self.uuid, action: Action.selectHtmlFile(urls[0])))
+      self.emit(UuidAction(uuid: self.uuid, action: .selectHtmlFile(urls[0])))
     }
   }
 

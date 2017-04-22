@@ -31,7 +31,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emitter = emitter
+    self.emit = emitter.typedEmitFunction()
 
     self.font = state.mainWindowTemplate.appearance.font
     self.linespacing = state.mainWindowTemplate.appearance.linespacing
@@ -60,7 +60,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
       .addDisposableTo(self.disposeBag)
   }
 
-  fileprivate let emitter: ActionEmitter
+  fileprivate let emit: (Action) -> Void
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate let fontManager = NSFontManager.shared()
@@ -202,7 +202,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 extension AppearancePref {
 
   func usesLigaturesAction(_ sender: NSButton) {
-    self.emitter.emit(Action.setUsesLigatures(sender.boolState))
+    self.emit(.setUsesLigatures(sender.boolState))
   }
 
   func fontPopupAction(_ sender: NSPopUpButton) {
@@ -218,7 +218,7 @@ extension AppearancePref {
       return
     }
 
-    self.emitter.emit(Action.setFont(newFont))
+    self.emit(.setFont(newFont))
   }
 
   func comboBoxSelectionDidChange(_ notification: Notification) {
@@ -229,19 +229,19 @@ extension AppearancePref {
     let newFontSize = self.cappedFontSize(Int(self.sizes[self.sizeCombo.indexOfSelectedItem]))
     let newFont = self.fontManager.convert(self.font, toSize: newFontSize)
 
-    self.emitter.emit(Action.setFont(newFont))
+    self.emit(.setFont(newFont))
   }
 
   func sizeComboBoxDidEnter(_ sender: AnyObject!) {
     let newFontSize = self.cappedFontSize(self.sizeCombo.integerValue)
     let newFont = self.fontManager.convert(self.font, toSize: newFontSize)
 
-    self.emitter.emit(Action.setFont(newFont))
+    self.emit(.setFont(newFont))
   }
 
   func linespacingAction() {
     let newLinespacing = self.cappedLinespacing(self.linespacingField.floatValue)
-    self.emitter.emit(Action.setLinespacing(newLinespacing))
+    self.emit(.setLinespacing(newLinespacing))
   }
 
   fileprivate func cappedLinespacing(_ linespacing: Float) -> CGFloat {

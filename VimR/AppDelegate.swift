@@ -54,6 +54,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       = Marked(baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath))
 
     self.stateContext = Context(baseServerUrl: baseServerUrl, state: initialAppState)
+    self.emit = self.stateContext.actionEmitter.typedEmitFunction()
 
     self.openNewMainWindowOnLaunch = initialAppState.openNewMainWindowOnLaunch
     self.openNewMainWindowOnReactivation = initialAppState.openNewMainWindowOnReactivation
@@ -82,6 +83,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   fileprivate let stateContext: Context
+  fileprivate let emit: (Action) -> Void
 
   fileprivate let uiRoot: UiRoot
 
@@ -155,16 +157,16 @@ extension AppDelegate {
       alert.alertStyle = .warning
 
       if alert.runModal() == NSAlertSecondButtonReturn {
-        self.stateContext.actionEmitter.emit(AppDelegate.Action.quitWithoutSaving)
+        self.emit(.quitWithoutSaving)
       } else {
-        self.stateContext.actionEmitter.emit(AppDelegate.Action.cancelQuit)
+        self.emit(.cancelQuit)
       }
 
       return .terminateCancel
     }
 
     if self.uiRoot.hasMainWindows {
-      self.stateContext.actionEmitter.emit(AppDelegate.Action.quit)
+      self.emit(.quit)
 
       return .terminateCancel
     }
@@ -176,7 +178,7 @@ extension AppDelegate {
   // For drag & dropping files on the App icon.
   func application(_ sender: NSApplication, openFiles filenames: [String]) {
     let urls = filenames.map { URL(fileURLWithPath: $0) }
-    self.stateContext.actionEmitter.emit(Action.newMainWindow(urls: urls, cwd: FileUtils.userHomeUrl))
+    self.emit(.newMainWindow(urls: urls, cwd: FileUtils.userHomeUrl))
 
     sender.reply(toOpenOrPrint: .success)
   }
@@ -220,13 +222,13 @@ extension AppDelegate {
     switch action {
 
     case .activate, .newWindow:
-      self.stateContext.actionEmitter.emit(Action.newMainWindow(urls: urls, cwd: cwd))
+      self.emit(.newMainWindow(urls: urls, cwd: cwd))
 
     case .open:
-      self.stateContext.actionEmitter.emit(Action.openInKeyWindow(urls: urls, cwd: cwd))
+      self.emit(.openInKeyWindow(urls: urls, cwd: cwd))
 
     case .separateWindows:
-      urls.forEach { self.stateContext.actionEmitter.emit(Action.newMainWindow(urls: [$0], cwd: cwd)) }
+      urls.forEach { self.emit(.newMainWindow(urls: [$0], cwd: cwd)) }
 
     }
   }
@@ -236,7 +238,7 @@ extension AppDelegate {
 extension AppDelegate {
 
   @IBAction func newDocument(_ sender: Any?) {
-    self.stateContext.actionEmitter.emit(Action.newMainWindow(urls: [], cwd: FileUtils.userHomeUrl))
+    self.emit(.newMainWindow(urls: [], cwd: FileUtils.userHomeUrl))
   }
 
   @IBAction func openInNewWindow(_ sender: Any?) {
@@ -244,7 +246,7 @@ extension AppDelegate {
   }
 
   @IBAction func showPrefWindow(_ sender: Any?) {
-    self.stateContext.actionEmitter.emit(Action.preferences)
+    self.emit(.preferences)
   }
 
   // Invoked when no main window is open.
@@ -260,7 +262,7 @@ extension AppDelegate {
       let urls = panel.urls
       let commonParentUrl = FileUtils.commonParent(of: urls)
 
-      self.stateContext.actionEmitter.emit(Action.newMainWindow(urls: urls, cwd: commonParentUrl))
+      self.emit(.newMainWindow(urls: urls, cwd: commonParentUrl))
     }
   }
 }

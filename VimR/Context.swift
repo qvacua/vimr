@@ -9,7 +9,7 @@ import RxSwift
 class Context {
 
   let stateSource: Observable<AppState>
-  let actionEmitter = Emitter<Any>()
+  let actionEmitter = ActionEmitter()
 
   init(baseServerUrl: URL, state: AppState) {
 
