@@ -219,7 +219,7 @@ static void server_ui_mouse_off(UI *ui __unused) {
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdMouseOff];
 }
 
-static void server_ui_cursor_style_set(UI *ui __unused, Dictionary cursor_shapes __unused) {
+static void server_ui_mode_info_set(UI *ui __unused, bool enabled __unused, Array cursor_styles __unused) {
   // yet noop
 }
 
@@ -413,7 +413,7 @@ void custom_ui_start(void) {
   ui->busy_stop = server_ui_busy_stop;
   ui->mouse_on = server_ui_mouse_on;
   ui->mouse_off = server_ui_mouse_off;
-  ui->cursor_style_set = server_ui_cursor_style_set;
+  ui->mode_info_set = server_ui_mode_info_set;
   ui->mode_change = server_ui_mode_change;
   ui->set_scroll_region = server_ui_set_scroll_region;
   ui->scroll = server_ui_scroll;
@@ -542,7 +542,7 @@ static void work_and_write_data_sync(void **argv, work_block block) {
 static NSString *escaped_filename(NSString *filename) {
   const char *file_system_rep = filename.fileSystemRepresentation;
 
-  char_u *escaped_filename = vim_strsave_fnameescape((char_u *) file_system_rep, 0);
+  char *escaped_filename = vim_strsave_fnameescape(file_system_rep, 0);
   NSString *result = [NSString stringWithCString:(const char *) escaped_filename encoding:NSUTF8StringEncoding];
   xfree(escaped_filename);
 
