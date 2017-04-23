@@ -7,23 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-179</title>
+      <title>SNAPSHOT-180</title>
       <description><![CDATA[
     <ul>
-<li>GH-389: Bugfix: The Files tool does not update when one folder is created.</li>
-<li>GH-374: Bugfix: The tool buttons have a narrow area which does not react to mouse down when the tool is closed.</li>
+<li>Hopefully the last snapshot before next release... 🙄</li>
+<li>GH-405: Retain scroll position after reloading markdown</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/179
+        https://github.com/qvacua/vimr/releases/tag/snapshot/180
       </releaseNotesLink>
-      <pubDate>2017-04-18T20:29:01.988795</pubDate>
+      <pubDate>2017-04-23T22:14:51.677227</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/179/VimR-SNAPSHOT-179.tar.bz2"
-                 sparkle:version="179"
-                 sparkle:shortVersionString="SNAPSHOT-179"
-                 sparkle:dsaSignature="MCwCFAFGLFa7V2SQYzW4n7Dn597DYd1pAhQza31EfX9DDPask+g/0rVCowRIoA=="
-                 length="12098297"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/180/VimR-SNAPSHOT-180.tar.bz2"
+                 sparkle:version="180"
+                 sparkle:shortVersionString="SNAPSHOT-180"
+                 sparkle:dsaSignature="MC0CFGo8Gdgf38jMxf6/8Z8bKiuwC1bhAhUAnYOLIwl4CeaTluqpOV4t1plXmz0="
+                 length="12205687"
                  type="application/octet-stream"/>
     </item>
   </channel>
