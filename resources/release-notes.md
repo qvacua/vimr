@@ -6,6 +6,13 @@
 * GH-398: Set the represented icon in the window title bar.
 * GH-389: Bugfix: The Files tool does not update when one folder is created.
 * GH-374: Bugfix: The tool buttons have a narrow area which does not react to mouse down when the tool is closed.
+* Dependencies updates:
+    - RxSwift: 3.4.0
+    - Sparkle: 1.17
+    - github-markdown-css: 2.6.0
+    - swifter: 1.3.3
+    - Nimble: 6.1.0
+    - neovim: neovim/neovim@337299c8082347feecb5e733bed993c6a5933456
 
 # 0.13.1-167
 
