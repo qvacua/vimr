@@ -1650,7 +1650,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
-					"CUSTOM_UI=1",
 					"INCLUDE_GENERATED_DECLARATIONS=1",
 				);
 				HEADER_SEARCH_PATHS = (
@@ -1675,10 +1674,7 @@
 		4B854A201D31447C00E08DE1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"INCLUDE_GENERATED_DECLARATIONS=1",
-					"CUSTOM_UI=1",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "INCLUDE_GENERATED_DECLARATIONS=1";
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/neovim/build/include",
 					"$(PROJECT_DIR)/neovim/src",
