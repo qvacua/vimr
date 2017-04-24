@@ -66,7 +66,7 @@ class WorkspaceTool: NSView {
     }
 
     set {
-      DispatchUtils.gui {
+      DispatchQueue.main.async {
         self.innerToolbar?.customToolbar = newValue
       }
     }

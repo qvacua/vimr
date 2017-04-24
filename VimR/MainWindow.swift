@@ -286,7 +286,7 @@ class MainWindow: NSObject,
   fileprivate func open(urls: [URL: OpenMode]) {
     // If we don't call the following in the next tick, only half of the existing swap file warning is displayed.
     // Dunno why...
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       urls.forEach { (url: URL, openMode: OpenMode) in
         switch openMode {
 
