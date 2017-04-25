@@ -119,7 +119,7 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
     0x1F910...0x1F918,
     0x1F980...0x1F984,
     0x1F9C0...0x1F9C0
-    ].flatMap { $0 }
+  ].flatMap { $0 }
 
   fileprivate var _font = NeoVimView.defaultFont
   fileprivate var _linespacing = NeoVimView.defaultLinespacing
@@ -190,7 +190,7 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
     let noErrorDuringInitialization = self.agent.runLocalServerAndNeoVim()
 
     // Neovim is ready now: resize neovim to bounds.
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       self.agent.setBoolOption("title", to: true)
       self.agent.setBoolOption("termguicolors", to: true)
 
@@ -199,7 +199,7 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
         alert.alertStyle = .warning
         alert.messageText = "Error during initialization"
         alert.informativeText = "There was an error during the initialization of NeoVim. "
-          + "Use :messages to view the error messages."
+                                + "Use :messages to view the error messages."
         alert.runModal()
       }
 
@@ -278,21 +278,21 @@ extension NeoVimView {
     let currentBufferIsTransient = buffers.first { $0.isCurrent }?.isTransient ?? false
 
     urls.enumerated().forEach { (idx, url) in
-          if buffers.filter({ $0.url == url }).first != nil {
-            for window in tabs.map({ $0.windows }).flatMap({ $0 }) {
-              if window.buffer.url == url {
-                self.agent.select(window)
-                return
-              }
-            }
-          }
-
-          if currentBufferIsTransient {
-            self.open(url, cmd: "e")
-          } else {
-            self.open(url, cmd: "tabe")
+      if buffers.filter({ $0.url == url }).first != nil {
+        for window in tabs.map({ $0.windows }).flatMap({ $0 }) {
+          if window.buffer.url == url {
+            self.agent.select(window)
+            return
           }
         }
+      }
+
+      if currentBufferIsTransient {
+        self.open(url, cmd: "e")
+      } else {
+        self.open(url, cmd: "tabe")
+      }
+    }
   }
 
   public func openInNewTab(urls: [URL]) {
@@ -608,7 +608,7 @@ extension NeoVimView {
         let rowCells = self.grid.cells[row]
         let startIdx = columnRange.lowerBound
 
-        var result = [ RowRun(row: row, range: startIdx...startIdx, attrs: rowCells[startIdx].attrs) ]
+        var result = [RowRun(row: row, range: startIdx...startIdx, attrs: rowCells[startIdx].attrs)]
         columnRange.forEach { idx in
           if rowCells[idx].attrs == result.last!.attrs {
             let last = result.popLast()!
@@ -631,7 +631,7 @@ extension NeoVimView {
       Int(floor((self.bounds.height - self.yOffset - (rect.origin.y + rect.size.height)) / cellHeight)), 0
     )
     let rowEnd = min(
-      Int(ceil((self.bounds.height - self.yOffset - rect.origin.y) / cellHeight)) - 1, self.grid.size.height  - 1
+      Int(ceil((self.bounds.height - self.yOffset - rect.origin.y) / cellHeight)) - 1, self.grid.size.height - 1
     )
     let columnStart = max(
       Int(floor((rect.origin.x - self.xOffset) / cellWidth)), 0
@@ -834,8 +834,9 @@ extension NeoVimView: NSTextInputClient {
     let capslock = modifierFlags.contains(.capsLock)
     let shift = modifierFlags.contains(.shift)
     let chars = event.characters!
-    let charsIgnoringModifiers = shift || capslock ? event.charactersIgnoringModifiers!.lowercased()
-                                                   : event.charactersIgnoringModifiers!
+    let charsIgnoringModifiers = shift || capslock
+      ? event.charactersIgnoringModifiers!.lowercased()
+      : event.charactersIgnoringModifiers!
 
     if KeyUtils.isSpecial(key: charsIgnoringModifiers) {
       if let vimModifiers = self.vimModifierFlags(modifierFlags) {
@@ -1066,15 +1067,15 @@ extension NeoVimView {
 
   override public func mouseDown(with event: NSEvent) {
 //    self.window?.makeFirstResponder(self)
-    self.mouse(event: event, vimName:"LeftMouse")
+    self.mouse(event: event, vimName: "LeftMouse")
   }
 
   override public func mouseUp(with event: NSEvent) {
-    self.mouse(event: event, vimName:"LeftRelease")
+    self.mouse(event: event, vimName: "LeftRelease")
   }
 
   override public func mouseDragged(with event: NSEvent) {
-    self.mouse(event: event, vimName:"LeftDrag")
+    self.mouse(event: event, vimName: "LeftDrag")
   }
 
   override public func scrollWheel(with event: NSEvent) {
@@ -1149,9 +1150,9 @@ extension NeoVimView {
     self.agent.vimInput(result)
   }
 
-  fileprivate func shouldFireVimInputFor(event:NSEvent, newCellPosition: Position) -> Bool {
+  fileprivate func shouldFireVimInputFor(event: NSEvent, newCellPosition: Position) -> Bool {
     let type = event.type
-    guard type == .leftMouseDragged || type == .rightMouseDragged || type == .otherMouseDragged  else {
+    guard type == .leftMouseDragged || type == .rightMouseDragged || type == .otherMouseDragged else {
       self.lastClickedCellPosition = newCellPosition
       return true
     }
@@ -1199,8 +1200,7 @@ extension NeoVimView {
 
   fileprivate func vimScrollInputFor(deltaX: CGFloat, deltaY: CGFloat,
                                      modifierFlags: NSEventModifierFlags,
-                                     cellPosition: Position) -> (String, String)
-  {
+                                     cellPosition: Position) -> (String, String) {
     let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.row),\(cellPosition.column)")
 
     let (typeX, typeY) = self.vimScrollEventNamesFor(deltaX: deltaX, deltaY: deltaY)
@@ -1222,7 +1222,7 @@ extension NeoVimView {
       self.scrollGuardCounterX = self.scrollGuardYield - 1
     } else if absDeltaX <= 2 {
       // Poor man's throttle for scroll value = 1 or 2
-      if self.scrollGuardCounterX % self.scrollGuardYield == 0  {
+      if self.scrollGuardCounterX % self.scrollGuardYield == 0 {
         self.agent.vimInput(vimInput)
         self.scrollGuardCounterX = 1
       } else {
@@ -1238,7 +1238,7 @@ extension NeoVimView {
       self.scrollGuardCounterY = self.scrollGuardYield - 1
     } else if absDeltaY <= 2 {
       // Poor man's throttle for scroll value = 1 or 2
-      if self.scrollGuardCounterY % self.scrollGuardYield == 0  {
+      if self.scrollGuardCounterY % self.scrollGuardYield == 0 {
         self.agent.vimInput(vimInput)
         self.scrollGuardCounterY = 1
       } else {
@@ -1254,7 +1254,7 @@ extension NeoVimView {
 extension NeoVimView {
 
   public func resize(toWidth width: Int32, height: Int32) {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
 //      NSLog("\(#function): \(width):\(height)")
       self.grid.resize(Size(width: Int(width), height: Int(height)))
       self.markForRenderWholeView()
@@ -1262,14 +1262,14 @@ extension NeoVimView {
   }
 
   public func clear() {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       self.grid.clear()
       self.markForRenderWholeView()
     }
   }
 
   public func eolClear() {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       self.grid.eolClear()
 
       let putPosition = self.grid.putPosition
@@ -1282,7 +1282,7 @@ extension NeoVimView {
   }
 
   public func gotoPosition(_ position: Position, screenCursor: Position, currentPosition: Position) {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       self.currentPosition = currentPosition
 //      NSLog("\(#function): \(position), \(screenCursor)")
 
@@ -1312,7 +1312,7 @@ extension NeoVimView {
       self.grid.goto(position)
       self.grid.moveCursor(screenCursor)
     }
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       self.delegate?.cursor(to: currentPosition)
     }
   }
@@ -1338,14 +1338,14 @@ extension NeoVimView {
   }
 
   public func setScrollRegionToTop(_ top: Int32, bottom: Int32, left: Int32, right: Int32) {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       let region = Region(top: Int(top), bottom: Int(bottom), left: Int(left), right: Int(right))
       self.grid.setScrollRegion(region)
     }
   }
 
   public func scroll(_ count: Int32) {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       self.grid.scroll(Int(count))
       self.markForRender(region: self.grid.region)
       // Do not send msgs to agent -> neovim in the delegate method. It causes spinning when you're opening a file with
@@ -1355,13 +1355,13 @@ extension NeoVimView {
   }
 
   public func highlightSet(_ attrs: CellAttributes) {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       self.grid.attrs = attrs
     }
   }
 
   public func put(_ string: String, screenCursor: Position) {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       let curPos = self.grid.putPosition
 //      NSLog("\(#function): \(curPos) -> \(string)")
       self.grid.put(string)
@@ -1381,7 +1381,7 @@ extension NeoVimView {
   }
 
   public func putMarkedText(_ markedText: String, screenCursor: Position) {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       NSLog("\(#function): '\(markedText)' -> \(screenCursor)")
 
       let curPos = self.grid.putPosition
@@ -1399,7 +1399,7 @@ extension NeoVimView {
   }
 
   public func unmarkRow(_ row: Int32, column: Int32) {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       let position = Position(row: Int(row), column: Int(column))
 
 //      NSLog("\(#function): \(position)")
@@ -1412,7 +1412,7 @@ extension NeoVimView {
   }
 
   public func bell() {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       NSBeep()
     }
   }
@@ -1424,14 +1424,14 @@ extension NeoVimView {
   }
 
   public func updateForeground(_ fg: Int32) {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       self.grid.foreground = UInt32(bitPattern: fg)
 //      NSLog("\(ColorUtils.colorIgnoringAlpha(UInt32(fg)))")
     }
   }
 
   public func updateBackground(_ bg: Int32) {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       self.grid.background = UInt32(bitPattern: bg)
       self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).cgColor
 //      NSLog("\(ColorUtils.colorIgnoringAlpha(UInt32(bg)))")
@@ -1439,7 +1439,7 @@ extension NeoVimView {
   }
 
   public func updateSpecial(_ sp: Int32) {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       self.grid.special = UInt32(bitPattern: sp)
     }
   }
@@ -1448,7 +1448,7 @@ extension NeoVimView {
   }
 
   public func setTitle(_ title: String) {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       self.delegate?.set(title: title)
     }
   }
@@ -1457,20 +1457,20 @@ extension NeoVimView {
   }
 
   public func stop() {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       self.delegate?.neoVimStopped()
     }
     self.agent.quit()
   }
 
   public func setDirtyStatus(_ dirty: Bool) {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       self.delegate?.set(dirtyStatus: dirty)
     }
   }
 
   public func autoCommandEvent(_ event: NeoVimAutoCommandEvent, bufferHandle: Int) {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
 //    NSLog("\(event.rawValue) with buffer \(bufferHandle)")
 
       if (event == .TEXTCHANGED || event == .TEXTCHANGEDI || event == .BUFWRITEPOST || event == .BUFLEAVE) {
@@ -1496,7 +1496,7 @@ extension NeoVimView {
   }
 
   public func ipcBecameInvalid(_ reason: String) {
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       if self.agent.neoVimIsQuitting {
         return
       }

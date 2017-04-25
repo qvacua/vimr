@@ -30,11 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)encodeWithCoder:(NSCoder *)coder;
 
 - (NSString *)description;
-
-- (BOOL)isEqual:(id)other;
-
+- (BOOL)isEqual:(id _Nullable)other;
 - (BOOL)isEqualToBuffer:(NeoVimBuffer *)buffer;
-
 - (NSUInteger)hash;
 
 @end

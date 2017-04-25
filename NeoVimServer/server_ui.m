@@ -67,8 +67,6 @@ static int _marked_delta = 0;
 static int _put_row = -1;
 static int _put_column = -1;
 
-static bool _dirty = false;
-
 static NSString *_backspace = nil;
 
 #pragma mark Helper functions

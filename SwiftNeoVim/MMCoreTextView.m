@@ -9,10 +9,14 @@
  */
 
 /**
- * Extracted from snapshot-112 of MacVim
+ * Extracted from snapshot-131 of MacVim
  * https://github.com/macvim-dev/macvim
  * See VIM.LICENSE
  */
+
+// We suppress the following warnings since the original code does have it...
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
 
 #import "MMCoreTextView.h"
 
@@ -288,3 +292,4 @@ recurseDraw(const unichar *chars, CGGlyph *glyphs, CGPoint *positions,
     }
 }
 
+#pragma clang diagnostic pop

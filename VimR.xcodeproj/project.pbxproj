@@ -135,7 +135,6 @@
 		4BB409EE1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */; };
 		4BB409EF1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */; };
 		4BB489431D952CF6005BB0E8 /* WorkspaceToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */; };
-		4BB727131E97A6E5001571C1 /* DispatchUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEE79141D16D2100012EDAA /* DispatchUtils.swift */; };
 		4BB727141E97A718001571C1 /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; };
 		4BB727151E97A718001571C1 /* CocoaMarkdown.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BBFF8621E280E31008A3C1A /* Swifter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BBFF8611E280E31008A3C1A /* Swifter.framework */; };
@@ -175,7 +174,6 @@
 		4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5081CFF374B00673FDF /* AppDelegate.swift */; };
 		4BEBA50B1CFF374B00673FDF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50A1CFF374B00673FDF /* Assets.xcassets */; };
 		4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50C1CFF374B00673FDF /* MainMenu.xib */; };
-		4BEE79151D16D2100012EDAA /* DispatchUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEE79141D16D2100012EDAA /* DispatchUtils.swift */; };
 		4BEE79171D16D3800012EDAA /* CellAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEE79161D16D3800012EDAA /* CellAttributes.swift */; };
 		4BF07EE41D51326A009BECEB /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4BF07EE61D51326A009BECEB /* Credits.rtf */; };
 		4BF6E29C1D34153C0053FA76 /* KeyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF6E29B1D34153C0053FA76 /* KeyUtils.swift */; };
@@ -453,7 +451,6 @@
 		4BEBA5141CFF374B00673FDF /* VimRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VimRTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BEBA51A1CFF374B00673FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BEBA6621D00157A00673FDF /* runtime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = runtime; path = neovim/runtime; sourceTree = SOURCE_ROOT; };
-		4BEE79141D16D2100012EDAA /* DispatchUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchUtils.swift; sourceTree = "<group>"; };
 		4BEE79161D16D3800012EDAA /* CellAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellAttributes.swift; sourceTree = "<group>"; };
 		4BF07EE51D51326A009BECEB /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Base; path = Base.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4BF6E29B1D34153C0053FA76 /* KeyUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyUtils.swift; sourceTree = "<group>"; };
@@ -691,7 +688,6 @@
 				4B4192171D0C52D700A0BEB2 /* Grid.swift */,
 				4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */,
 				4B1BB3521D16C5E500CA4FEF /* InputTestView.swift */,
-				4BEE79141D16D2100012EDAA /* DispatchUtils.swift */,
 				4BF6E29B1D34153C0053FA76 /* KeyUtils.swift */,
 				4B8AC0431DBCB3A1007CCC9B /* NeoVimObjectsExtensions.swift */,
 			);
@@ -1258,7 +1254,6 @@
 				4B401B1A1D046E0600D99EDC /* NeoVimViewDelegate.swift in Sources */,
 				1929B728262BAA14FC93F6AC /* NeoVimView.swift in Sources */,
 				4B570DC31D303CAF006EDC21 /* NeoVimAgent.m in Sources */,
-				4BEE79151D16D2100012EDAA /* DispatchUtils.swift in Sources */,
 				4BDF641D1D0887C100D47E1D /* TextDrawer.m in Sources */,
 				4BDF64251D08CAB000D47E1D /* MMCoreTextView.m in Sources */,
 				4BDD058C1DBBC50000D1B405 /* NeoVimWindow.m in Sources */,
@@ -1280,7 +1275,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BB727131E97A6E5001571C1 /* DispatchUtils.swift in Sources */,
 				4B280EFF1D945DA5003FE725 /* AppKitCommons.swift in Sources */,
 				4B3965371DEB21300082D3C1 /* InnterToolBar.swift in Sources */,
 				4B6423AF1D8EFEA800FC78C8 /* Workspace.swift in Sources */,
@@ -1499,7 +1493,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 179;
+				DYLIB_CURRENT_VERSION = 180;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1523,7 +1517,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 179;
+				DYLIB_CURRENT_VERSION = 180;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1650,7 +1644,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
-					"CUSTOM_UI=1",
 					"INCLUDE_GENERATED_DECLARATIONS=1",
 				);
 				HEADER_SEARCH_PATHS = (
@@ -1675,10 +1668,7 @@
 		4B854A201D31447C00E08DE1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"INCLUDE_GENERATED_DECLARATIONS=1",
-					"CUSTOM_UI=1",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "INCLUDE_GENERATED_DECLARATIONS=1";
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/neovim/build/include",
 					"$(PROJECT_DIR)/neovim/src",
@@ -1719,7 +1709,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 179;
+				CURRENT_PROJECT_VERSION = 180;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1769,7 +1759,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 179;
+				CURRENT_PROJECT_VERSION = 180;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
