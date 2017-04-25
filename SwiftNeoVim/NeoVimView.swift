@@ -119,7 +119,7 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
     0x1F910...0x1F918,
     0x1F980...0x1F984,
     0x1F9C0...0x1F9C0
-    ].flatMap { $0 }
+  ].flatMap { $0 }
 
   fileprivate var _font = NeoVimView.defaultFont
   fileprivate var _linespacing = NeoVimView.defaultLinespacing
@@ -199,7 +199,7 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
         alert.alertStyle = .warning
         alert.messageText = "Error during initialization"
         alert.informativeText = "There was an error during the initialization of NeoVim. "
-          + "Use :messages to view the error messages."
+                                + "Use :messages to view the error messages."
         alert.runModal()
       }
 
@@ -278,21 +278,21 @@ extension NeoVimView {
     let currentBufferIsTransient = buffers.first { $0.isCurrent }?.isTransient ?? false
 
     urls.enumerated().forEach { (idx, url) in
-          if buffers.filter({ $0.url == url }).first != nil {
-            for window in tabs.map({ $0.windows }).flatMap({ $0 }) {
-              if window.buffer.url == url {
-                self.agent.select(window)
-                return
-              }
-            }
-          }
-
-          if currentBufferIsTransient {
-            self.open(url, cmd: "e")
-          } else {
-            self.open(url, cmd: "tabe")
+      if buffers.filter({ $0.url == url }).first != nil {
+        for window in tabs.map({ $0.windows }).flatMap({ $0 }) {
+          if window.buffer.url == url {
+            self.agent.select(window)
+            return
           }
         }
+      }
+
+      if currentBufferIsTransient {
+        self.open(url, cmd: "e")
+      } else {
+        self.open(url, cmd: "tabe")
+      }
+    }
   }
 
   public func openInNewTab(urls: [URL]) {
@@ -608,7 +608,7 @@ extension NeoVimView {
         let rowCells = self.grid.cells[row]
         let startIdx = columnRange.lowerBound
 
-        var result = [ RowRun(row: row, range: startIdx...startIdx, attrs: rowCells[startIdx].attrs) ]
+        var result = [RowRun(row: row, range: startIdx...startIdx, attrs: rowCells[startIdx].attrs)]
         columnRange.forEach { idx in
           if rowCells[idx].attrs == result.last!.attrs {
             let last = result.popLast()!
@@ -631,7 +631,7 @@ extension NeoVimView {
       Int(floor((self.bounds.height - self.yOffset - (rect.origin.y + rect.size.height)) / cellHeight)), 0
     )
     let rowEnd = min(
-      Int(ceil((self.bounds.height - self.yOffset - rect.origin.y) / cellHeight)) - 1, self.grid.size.height  - 1
+      Int(ceil((self.bounds.height - self.yOffset - rect.origin.y) / cellHeight)) - 1, self.grid.size.height - 1
     )
     let columnStart = max(
       Int(floor((rect.origin.x - self.xOffset) / cellWidth)), 0
@@ -834,8 +834,9 @@ extension NeoVimView: NSTextInputClient {
     let capslock = modifierFlags.contains(.capsLock)
     let shift = modifierFlags.contains(.shift)
     let chars = event.characters!
-    let charsIgnoringModifiers = shift || capslock ? event.charactersIgnoringModifiers!.lowercased()
-                                                   : event.charactersIgnoringModifiers!
+    let charsIgnoringModifiers = shift || capslock
+      ? event.charactersIgnoringModifiers!.lowercased()
+      : event.charactersIgnoringModifiers!
 
     if KeyUtils.isSpecial(key: charsIgnoringModifiers) {
       if let vimModifiers = self.vimModifierFlags(modifierFlags) {
@@ -1066,15 +1067,15 @@ extension NeoVimView {
 
   override public func mouseDown(with event: NSEvent) {
 //    self.window?.makeFirstResponder(self)
-    self.mouse(event: event, vimName:"LeftMouse")
+    self.mouse(event: event, vimName: "LeftMouse")
   }
 
   override public func mouseUp(with event: NSEvent) {
-    self.mouse(event: event, vimName:"LeftRelease")
+    self.mouse(event: event, vimName: "LeftRelease")
   }
 
   override public func mouseDragged(with event: NSEvent) {
-    self.mouse(event: event, vimName:"LeftDrag")
+    self.mouse(event: event, vimName: "LeftDrag")
   }
 
   override public func scrollWheel(with event: NSEvent) {
@@ -1149,9 +1150,9 @@ extension NeoVimView {
     self.agent.vimInput(result)
   }
 
-  fileprivate func shouldFireVimInputFor(event:NSEvent, newCellPosition: Position) -> Bool {
+  fileprivate func shouldFireVimInputFor(event: NSEvent, newCellPosition: Position) -> Bool {
     let type = event.type
-    guard type == .leftMouseDragged || type == .rightMouseDragged || type == .otherMouseDragged  else {
+    guard type == .leftMouseDragged || type == .rightMouseDragged || type == .otherMouseDragged else {
       self.lastClickedCellPosition = newCellPosition
       return true
     }
@@ -1199,8 +1200,7 @@ extension NeoVimView {
 
   fileprivate func vimScrollInputFor(deltaX: CGFloat, deltaY: CGFloat,
                                      modifierFlags: NSEventModifierFlags,
-                                     cellPosition: Position) -> (String, String)
-  {
+                                     cellPosition: Position) -> (String, String) {
     let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.row),\(cellPosition.column)")
 
     let (typeX, typeY) = self.vimScrollEventNamesFor(deltaX: deltaX, deltaY: deltaY)
@@ -1222,7 +1222,7 @@ extension NeoVimView {
       self.scrollGuardCounterX = self.scrollGuardYield - 1
     } else if absDeltaX <= 2 {
       // Poor man's throttle for scroll value = 1 or 2
-      if self.scrollGuardCounterX % self.scrollGuardYield == 0  {
+      if self.scrollGuardCounterX % self.scrollGuardYield == 0 {
         self.agent.vimInput(vimInput)
         self.scrollGuardCounterX = 1
       } else {
@@ -1238,7 +1238,7 @@ extension NeoVimView {
       self.scrollGuardCounterY = self.scrollGuardYield - 1
     } else if absDeltaY <= 2 {
       // Poor man's throttle for scroll value = 1 or 2
-      if self.scrollGuardCounterY % self.scrollGuardYield == 0  {
+      if self.scrollGuardCounterY % self.scrollGuardYield == 0 {
         self.agent.vimInput(vimInput)
         self.scrollGuardCounterY = 1
       } else {
