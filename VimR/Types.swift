@@ -42,7 +42,7 @@ class ActionEmitter {
     self.observable = self.subject.asObservable().observeOn(scheduler)
   }
 
-  func typedEmitFunction<T>() -> ((T) -> Void) {
+  func typedEmit<T>() -> ((T) -> Void) {
     return { (action: T) in
       self.subject.onNext(action)
     }
@@ -174,7 +174,7 @@ class UiComponentTemplate: UiComponent {
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     // set the typed action emit function
-    self.emit = emitter.typedEmitFunction()
+    self.emit = emitter.typedEmit()
 
     // init the component with the initial state "state"
     self.someField = state.someField

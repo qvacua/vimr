@@ -31,7 +31,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmitFunction()
+    self.emit = emitter.typedEmit()
 
     super.init(frame: .zero)
 

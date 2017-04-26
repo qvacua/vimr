@@ -20,7 +20,7 @@ class OpenedFileList: NSView,
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmitFunction()
+    self.emit = emitter.typedEmit()
     self.uuid = state.uuid
 
     self.genericIcon = FileUtils.icon(forType: "public.data")

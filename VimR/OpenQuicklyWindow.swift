@@ -25,7 +25,7 @@ class OpenQuicklyWindow: NSObject,
   var pauseScan = false
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmitFunction()
+    self.emit = emitter.typedEmit()
     self.windowController = NSWindowController(windowNibName: "OpenQuicklyWindow")
 
     self.searchStream = self.searchField.rx

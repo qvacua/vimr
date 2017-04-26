@@ -25,7 +25,7 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
   let innerCustomToolbar = InnerCustomToolbar()
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmitFunction()
+    self.emit = emitter.typedEmit()
     self.uuid = state.uuid
 
     let configuration = WKWebViewConfiguration()

@@ -54,7 +54,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       = Marked(baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath))
 
     self.stateContext = Context(baseServerUrl: baseServerUrl, state: initialAppState)
-    self.emit = self.stateContext.actionEmitter.typedEmitFunction()
+    self.emit = self.stateContext.actionEmitter.typedEmit()
 
     self.openNewMainWindowOnLaunch = initialAppState.openNewMainWindowOnLaunch
     self.openNewMainWindowOnReactivation = initialAppState.openNewMainWindowOnReactivation
