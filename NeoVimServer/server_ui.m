@@ -582,7 +582,7 @@ void neovim_select_window(void **argv) {
           Error err = ERROR_INIT;
           nvim_set_current_win(win->handle, &err);
 
-          if (err.set) {
+          if (ERROR_SET(&err)) {
             WLOG("Error selecting window with handle %d: %s", win->handle, err.msg);
             return nil;
           }
@@ -656,7 +656,7 @@ void neovim_vim_command_output(void **argv) {
     NSString *result = nil;
     if (output == NULL) {
       WLOG("vim command output is null");
-    } else if (err.set) {
+    } else if (ERROR_SET(&err)) {
       WLOG("vim command output for '%s' was not successful: %s", input.cstr, err.msg);
     } else {
       result = [[NSString alloc] initWithCString:(const char *) output encoding:NSUTF8StringEncoding];
@@ -689,7 +689,7 @@ void neovim_set_bool_option(void **argv) {
 
     nvim_set_option(vim_string_from(optionName), object, &err);
 
-    if (err.set) {
+    if (ERROR_SET(&err)) {
       WLOG("Error setting the option '%s' to %d: %s", optionName.cstr, optionValue, err.msg);
     }
 
@@ -707,7 +707,7 @@ void neovim_get_bool_option(void **argv) {
     Error err = ERROR_INIT;
     Object resultObj = nvim_get_option(vim_string_from(option), &err);
 
-    if (err.set) {
+    if (ERROR_SET(&err)) {
       WLOG("Error getting the boolean option '%s': %s", option.cstr, err.msg);
     }
 
@@ -762,7 +762,7 @@ void neovim_vim_command(void **argv) {
     Error err = ERROR_INIT;
     nvim_command(vim_string_from(input), &err);
 
-    if (err.set) {
+    if (ERROR_SET(&err)) {
       WLOG("ERROR while executing command %s: %s", input.cstr, err.msg);
     }
 
