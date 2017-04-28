@@ -20,7 +20,7 @@ class FileMonitor: UiComponent {
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmitFunction()
+    self.emit = emitter.typedEmit()
 
     source
       .subscribe(onNext: { [unowned self] appState in

@@ -28,7 +28,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   let menuItems: [NSMenuItem]
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmitFunction()
+    self.emit = emitter.typedEmit()
     self.uuid = state.uuid
 
     let configuration = WKWebViewConfiguration()

@@ -26,7 +26,7 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmitFunction()
+    self.emit = emitter.typedEmit()
 
     self.useInteractiveZsh = state.mainWindowTemplate.useInteractiveZsh
     self.useSnapshotUpdate = state.useSnapshotUpdate

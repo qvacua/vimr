@@ -31,7 +31,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmitFunction()
+    self.emit = emitter.typedEmit()
 
     self.font = state.mainWindowTemplate.appearance.font
     self.linespacing = state.mainWindowTemplate.appearance.linespacing

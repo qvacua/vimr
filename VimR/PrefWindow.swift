@@ -20,7 +20,7 @@ class PrefWindow: NSObject,
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmitFunction()
+    self.emit = emitter.typedEmit()
     self.openStatusMark = state.preferencesOpen.mark
 
     self.windowController = NSWindowController(windowNibName: "PrefWindow")

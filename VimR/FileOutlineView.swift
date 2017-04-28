@@ -15,7 +15,7 @@ class FileOutlineView: NSOutlineView,
   typealias StateType = MainWindow.State
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmitFunction()
+    self.emit = emitter.typedEmit()
     self.uuid = state.uuid
 
     self.root = FileBrowserItem(fileItem: state.root)
@@ -142,8 +142,8 @@ class FileOutlineView: NSOutlineView,
 
     let childrenToRemoveIndices = curPreparedChildren
       .enumerated()
-      .filter { newPreparedChildren.contains($0.1) == false }
-      .map { $0.0 }
+      .filter { (_, fileBrowserItem) in newPreparedChildren.contains(fileBrowserItem) == false }
+      .map { (idx, _) in idx }
 
     fileBrowserItem.children = curChildren.filter { newChildren.contains($0) }
 
