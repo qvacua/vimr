@@ -8,9 +8,9 @@ import Cocoa
 /// Contiguous piece of cells of a row that has the same attributes.
 fileprivate struct RowRun: CustomStringConvertible {
 
-  let row: Int
-  let range: CountableClosedRange<Int>
-  let attrs: CellAttributes
+  var row: Int
+  var range: CountableClosedRange<Int>
+  var attrs: CellAttributes
 
   var description: String {
     return "RowRun<\(row): \(range)\n\(attrs)>"
@@ -20,7 +20,8 @@ fileprivate struct RowRun: CustomStringConvertible {
 public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidations {
 
   public struct Config {
-    let useInteractiveZsh: Bool
+
+    var useInteractiveZsh: Bool
 
     public init(useInteractiveZsh: Bool) {
       self.useInteractiveZsh = useInteractiveZsh

@@ -52,7 +52,7 @@ class ActionEmitter {
     self.subject.onCompleted()
   }
 
-  fileprivate let scheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
+  fileprivate let scheduler = SerialDispatchQueueScheduler(qos: .userInteractive)
   fileprivate let subject = PublishSubject<Any>()
 }
 
