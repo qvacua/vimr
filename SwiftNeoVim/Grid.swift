@@ -6,9 +6,10 @@
 import Cocoa
 
 struct Cell: CustomStringConvertible {
+
   fileprivate let attributes: CellAttributes
 
-  let string: String
+  var string: String
   var marked: Bool
 
   var attrs: CellAttributes {
@@ -30,43 +31,43 @@ extension Position: CustomStringConvertible, Equatable {
   
   static let zero = Position(row: 0, column: 0)
   static let null = Position(row: -1, column: -1)
+
+  public static func ==(left: Position, right: Position) -> Bool {
+    if left.row != right.row { return false }
+    if left.column != right.column { return false }
+
+    return true
+  }
   
   public var description: String {
     return "Position<\(self.row):\(self.column)>"
   }
 }
 
-public func == (left: Position, right: Position) -> Bool {
-  if left.row != right.row { return false }
-  if left.column != right.column { return false }
-  
-  return true
-}
-
 struct Size: CustomStringConvertible, Equatable {
   
   static let zero = Size(width: 0, height: 0)
+
+  static func ==(left: Size, right: Size) -> Bool {
+    return left.width == right.width && left.height == right.height
+  }
   
-  let width: Int
-  let height: Int
+  var width: Int
+  var height: Int
 
   var description: String {
     return "Size<\(self.width):\(self.height)>"
   }
 }
 
-func == (left: Size, right: Size) -> Bool {
-  return left.width == right.width && left.height == right.height
-}
-
 struct Region: CustomStringConvertible {
   
   static let zero = Region(top: 0, bottom: 0, left: 0, right: 0)
   
-  let top: Int
-  let bottom: Int
-  let left: Int
-  let right: Int
+  var top: Int
+  var bottom: Int
+  var left: Int
+  var right: Int
 
   var description: String {
     return "Region<\(self.top)...\(self.bottom):\(self.left)...\(self.right)>"
