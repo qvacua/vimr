@@ -20,7 +20,7 @@ class FileMonitor: UiComponent {
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emitter = emitter
+    self.emit = emitter.typedEmit()
 
     source
       .subscribe(onNext: { [unowned self] appState in
@@ -43,7 +43,7 @@ class FileMonitor: UiComponent {
             let urls = events.map { URL(fileURLWithPath: $0.path) }
             let parent = FileUtils.commonParent(of: urls)
 
-            self.emitter.emit(Action.change(in: parent))
+            self.emit(.change(in: parent))
           }
 
           self.monitors[url] = monitor
@@ -55,10 +55,10 @@ class FileMonitor: UiComponent {
           self.monitors.removeValue(forKey: url)
         }
       })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
   }
 
-  fileprivate let emitter: ActionEmitter
+  fileprivate let emit: (Action) -> Void
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate var monitoredUrls = Set<URL>()

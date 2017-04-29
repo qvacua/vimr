@@ -20,7 +20,7 @@ class PrefWindow: NSObject,
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emitter = emitter
+    self.emit = emitter.typedEmit()
     self.openStatusMark = state.preferencesOpen.mark
 
     self.windowController = NSWindowController(windowNibName: "PrefWindow")
@@ -53,10 +53,10 @@ class PrefWindow: NSObject,
         self.openStatusMark = state.preferencesOpen.mark
         self.windowController.showWindow(self)
       })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
   }
 
-  fileprivate let emitter: ActionEmitter
+  fileprivate let emit: (Action) -> Void
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate var openStatusMark: Token
@@ -122,7 +122,7 @@ class PrefWindow: NSObject,
 extension PrefWindow {
 
   func windowShouldClose(_: Any) -> Bool {
-    self.emitter.emit(Action.close)
+    self.emit(.close)
 
     return false
   }

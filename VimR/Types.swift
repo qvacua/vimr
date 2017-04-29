@@ -6,26 +6,54 @@
 import Foundation
 import RxSwift
 
-typealias ActionEmitter = Emitter<Any>
+protocol Reducer {
 
-class Emitter<T> {
+  associatedtype Pair
 
-  let observable: Observable<T>
+  func reduce(_ source: Observable<Pair>) -> Observable<Pair>
+}
+
+protocol Service {
+
+  associatedtype Pair
+
+  func apply(_: Pair)
+}
+
+protocol StateService {
+
+  associatedtype StateType
+
+  func apply(_: StateType)
+}
+
+protocol UiComponent {
+
+  associatedtype StateType
+
+  init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType)
+}
+
+class ActionEmitter {
+
+  let observable: Observable<Any>
 
   init() {
     self.observable = self.subject.asObservable().observeOn(scheduler)
   }
 
-  func emit(_ action: T) {
-    self.subject.onNext(action)
+  func typedEmit<T>() -> ((T) -> Void) {
+    return { (action: T) in
+      self.subject.onNext(action)
+    }
   }
 
   deinit {
     self.subject.onCompleted()
   }
 
-  fileprivate let scheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
-  fileprivate let subject = PublishSubject<T>()
+  fileprivate let scheduler = SerialDispatchQueueScheduler(qos: .userInteractive)
+  fileprivate let subject = PublishSubject<Any>()
 }
 
 class StateActionPair<S, A> {
@@ -71,6 +99,21 @@ class UuidState<S>: CustomStringConvertible {
   }
 }
 
+class Token: Hashable, CustomStringConvertible {
+
+  var hashValue: Int {
+    return ObjectIdentifier(self).hashValue
+  }
+
+  var description: String {
+    return ObjectIdentifier(self).debugDescription
+  }
+
+  static func == (left: Token, right: Token) -> Bool {
+    return left === right
+  }
+}
+
 class Marked<T>: CustomStringConvertible {
 
   let mark: Token
@@ -94,30 +137,66 @@ class Marked<T>: CustomStringConvertible {
   }
 }
 
-protocol Reducer {
+extension Observable {
 
-  associatedtype Pair
+  func reduce<R:Reducer>(by reducer: R) -> Observable<Element> where R.Pair == Element {
+    return reducer.reduce(self)
+  }
 
-  func reduce(_ source: Observable<Pair>) -> Observable<Pair>
+  func apply<S:Service>(to service: S) -> Observable<Element> where S.Pair == Element {
+    return self.do(onNext: service.apply)
+  }
+
+  func apply<S:StateService>(to service: S) -> Observable<Element> where S.StateType == Element {
+    return self.do(onNext: service.apply)
+  }
+
+  func filterMapPair<S, A>() -> Observable<S> where Element == StateActionPair<S, A> {
+    return self
+      .filter { $0.modified }
+      .map { $0.state }
+  }
 }
 
-protocol Service {
+class UiComponentTemplate: UiComponent {
 
-  associatedtype Pair
+  typealias StateType = State
 
-  func apply(_: Pair)
-}
+  struct State {
 
-protocol StateService {
+    var someField: String
+  }
 
-  associatedtype StateType
+  enum Action {
 
-  func apply(_: StateType)
-}
+    case doSth
+  }
 
-protocol UiComponent {
+  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+    // set the typed action emit function
+    self.emit = emitter.typedEmit()
 
-  associatedtype StateType
+    // init the component with the initial state "state"
+    self.someField = state.someField
 
-  init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType)
+    // react to the new state
+    source
+      .observeOn(MainScheduler.instance)
+      .subscribe(
+        onNext: { [unowned self] state in
+          print("Hello, \(self.someField)")
+        }
+      )
+      .disposed(by: self.disposeBag)
+  }
+
+  func someAction() {
+    // when the user does something, emit an action
+    self.emit(.doSth)
+  }
+
+  fileprivate let emit: (Action) -> Void
+  fileprivate let disposeBag = DisposeBag()
+
+  fileprivate let someField: String
 }

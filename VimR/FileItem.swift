@@ -5,21 +5,6 @@
 
 import Foundation
 
-class Token: Hashable, CustomStringConvertible {
-
-  var hashValue: Int {
-    return ObjectIdentifier(self).hashValue
-  }
-
-  var description: String {
-    return ObjectIdentifier(self).debugDescription
-  }
-
-  static func == (left: Token, right: Token) -> Bool {
-    return left === right
-  }
-}
-
 class FileItem : CustomStringConvertible, Hashable, Comparable, Copyable {
 
   typealias InstanceType = FileItem
@@ -53,7 +38,7 @@ class FileItem : CustomStringConvertible, Hashable, Comparable, Copyable {
   var description: String {
     return "<FileItem: \(self.url), dir=\(self.isDir), hidden=\(self.isHidden), package=\(self.isPackage), "
       + "needsScan=\(self.needsScanChildren), childrenScanned=\(self.childrenScanned), "
-      + "ignore=\(self.ignore), ignoreToken=\(self.ignoreToken), "
+      + "ignore=\(self.ignore), ignoreToken=\(String(describing: self.ignoreToken)), "
       + "children=\(self.children.count)>"
   }
 

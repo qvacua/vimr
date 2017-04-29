@@ -67,8 +67,6 @@ static int _marked_delta = 0;
 static int _put_row = -1;
 static int _put_column = -1;
 
-static bool _dirty = false;
-
 static NSString *_backspace = nil;
 
 #pragma mark Helper functions
@@ -219,7 +217,7 @@ static void server_ui_mouse_off(UI *ui __unused) {
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdMouseOff];
 }
 
-static void server_ui_cursor_style_set(UI *ui __unused, Dictionary cursor_shapes __unused) {
+static void server_ui_cursor_style_set(UI *ui __unused, bool enabled __unused, Dictionary cursor_styles __unused) {
   // yet noop
 }
 
@@ -542,7 +540,7 @@ static void work_and_write_data_sync(void **argv, work_block block) {
 static NSString *escaped_filename(NSString *filename) {
   const char *file_system_rep = filename.fileSystemRepresentation;
 
-  char_u *escaped_filename = vim_strsave_fnameescape((char_u *) file_system_rep, 0);
+  char *escaped_filename = vim_strsave_fnameescape(file_system_rep, 0);
   NSString *result = [NSString stringWithCString:(const char *) escaped_filename encoding:NSUTF8StringEncoding];
   xfree(escaped_filename);
 

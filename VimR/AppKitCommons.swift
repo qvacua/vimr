@@ -68,24 +68,6 @@ extension NSAttributedString {
     (translation as NSAffineTransform).concat()
   }
 
-  // From https://developer.apple.com/library/mac/qa/qa1487/_index.html
-  static func link(withUrl url: URL, text: String, font: NSFont? = nil) -> NSAttributedString {
-    let attrString = NSMutableAttributedString(string: text)
-    let range = NSRange(location: 0, length: attrString.length)
-
-    attrString.beginEditing()
-    if font != nil {
-      attrString.addAttribute(NSFontAttributeName, value: font!, range: range)
-    }
-    attrString.addAttribute(NSLinkAttributeName, value: url.absoluteString, range: range)
-    attrString.addAttribute(NSForegroundColorAttributeName, value: NSColor.blue, range: range)
-    attrString.addAttribute(NSUnderlineStyleAttributeName,
-                            value: NSNumber(value: NSUnderlineStyle.styleSingle.rawValue as Int), range: range)
-    attrString.endEditing()
-
-    return attrString
-  }
-
   var wholeRange: NSRange {
     return NSRange(location: 0, length: self.length)
   }

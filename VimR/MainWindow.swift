@@ -69,8 +69,8 @@ class MainWindow: NSObject,
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+    self.emit = emitter.typedEmit()
     self.uuid = state.uuid
-    self.emitter = emitter
 
     self.defaultFont = state.appearance.font
     self.linespacing = state.appearance.linespacing
@@ -149,9 +149,9 @@ class MainWindow: NSObject,
       .of(self.scrollDebouncer.observable, self.cursorDebouncer.observable)
       .merge()
       .subscribe(onNext: { [unowned self] action in
-        self.emitter.emit(self.uuidAction(for: action))
+        self.emit(self.uuidAction(for: action))
       })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
 
     self.addViews()
 
@@ -213,7 +213,7 @@ class MainWindow: NSObject,
         onCompleted: {
           self.windowController.close()
         })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
 
     self.updateNeoVimAppearance()
     self.neoVimView.delegate = self
@@ -234,7 +234,7 @@ class MainWindow: NSObject,
     self.neoVimView.closeAllWindowsWithoutSaving()
   }
 
-  fileprivate let emitter: ActionEmitter
+  fileprivate let emit: (UuidAction<Action>) -> Void
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate let uuid: String
@@ -286,7 +286,7 @@ class MainWindow: NSObject,
   fileprivate func open(urls: [URL: OpenMode]) {
     // If we don't call the following in the next tick, only half of the existing swap file warning is displayed.
     // Dunno why...
-    DispatchUtils.gui {
+    DispatchQueue.main.async {
       urls.forEach { (url: URL, openMode: OpenMode) in
         switch openMode {
 
@@ -325,7 +325,7 @@ extension MainWindow {
 
   func neoVimStopped() {
     self.isClosing = true
-    self.emitter.emit(self.uuidAction(for: .close))
+    self.emit(self.uuidAction(for: .close))
   }
 
   func set(title: String) {
@@ -333,20 +333,20 @@ extension MainWindow {
   }
 
   func set(dirtyStatus: Bool) {
-    self.emitter.emit(self.uuidAction(for: .setDirtyStatus(dirtyStatus)))
+    self.emit(self.uuidAction(for: .setDirtyStatus(dirtyStatus)))
   }
 
   func cwdChanged() {
-    self.emitter.emit(self.uuidAction(for: .cd(to: self.neoVimView.cwd)))
+    self.emit(self.uuidAction(for: .cd(to: self.neoVimView.cwd)))
   }
 
   func bufferListChanged() {
     let buffers = self.neoVimView.allBuffers()
-    self.emitter.emit(self.uuidAction(for: .setBufferList(buffers)))
+    self.emit(self.uuidAction(for: .setBufferList(buffers)))
   }
 
   func currentBufferChanged(_ currentBuffer: NeoVimBuffer) {
-    self.emitter.emit(self.uuidAction(for: .setCurrentBuffer(currentBuffer)))
+    self.emit(self.uuidAction(for: .setCurrentBuffer(currentBuffer)))
     self.currentBuffer = currentBuffer
     self.window.representedURL = self.currentBuffer?.url
   }
@@ -390,7 +390,7 @@ extension MainWindow {
 extension MainWindow {
 
   func windowDidBecomeKey(_: Notification) {
-    self.emitter.emit(self.uuidAction(for: .becomeKey))
+    self.emit(self.uuidAction(for: .becomeKey))
   }
 
   func windowShouldClose(_: Any) -> Bool {
@@ -443,7 +443,7 @@ extension MainWindow {
   }
 
   @IBAction func openQuickly(_ sender: Any?) {
-    self.emitter.emit(self.uuidAction(for: .openQuickly))
+    self.emit(self.uuidAction(for: .openQuickly))
   }
 
   @IBAction func saveDocument(_ sender: Any?) {
@@ -531,12 +531,12 @@ extension MainWindow {
     self.workspace.toggleAllTools()
     self.focusNeoVimView(self)
 
-    self.emitter.emit(self.uuidAction(for: .toggleAllTools(self.workspace.isAllToolsVisible)))
+    self.emit(self.uuidAction(for: .toggleAllTools(self.workspace.isAllToolsVisible)))
   }
 
   @IBAction func toggleToolButtons(_ sender: Any?) {
     self.workspace.toggleToolButtons()
-    self.emitter.emit(self.uuidAction(for: .toggleToolButtons(self.workspace.isToolButtonsVisible)))
+    self.emit(self.uuidAction(for: .toggleToolButtons(self.workspace.isToolButtonsVisible)))
   }
 
   @IBAction func toggleFileBrowser(_ sender: Any?) {
@@ -547,19 +547,19 @@ extension MainWindow {
         fileBrowser.toggle()
         self.focusNeoVimView(self)
       } else {
-        self.emitter.emit(self.uuidAction(for: .focus(.fileBrowser)))
+        self.emit(self.uuidAction(for: .focus(.fileBrowser)))
       }
 
       return
     }
 
     fileBrowser.toggle()
-    self.emitter.emit(self.uuidAction(for: .focus(.fileBrowser)))
+    self.emit(self.uuidAction(for: .focus(.fileBrowser)))
   }
 
   @IBAction func focusNeoVimView(_: Any?) {
 //    self.window.makeFirstResponder(self.neoVimView)
-    self.emitter.emit(self.uuidAction(for: .focus(.neoVimView)))
+    self.emit(self.uuidAction(for: .focus(.neoVimView)))
   }
 }
 
@@ -575,13 +575,13 @@ extension MainWindow {
     self.neoVimView.exitResizeMode()
 
     if let workspaceTool = tool, let toolIdentifier = self.toolIdentifier(for: workspaceTool) {
-      self.emitter.emit(self.uuidAction(for: .setState(for: toolIdentifier, with: workspaceTool)))
+      self.emit(self.uuidAction(for: .setState(for: toolIdentifier, with: workspaceTool)))
     }
   }
 
   func toggled(tool: WorkspaceTool) {
     if let toolIdentifier = self.toolIdentifier(for: tool) {
-      self.emitter.emit(self.uuidAction(for: .setState(for: toolIdentifier, with: tool)))
+      self.emit(self.uuidAction(for: .setState(for: toolIdentifier, with: tool)))
     }
   }
 
@@ -594,7 +594,7 @@ extension MainWindow {
       return (toolId, tool)
     }
 
-    self.emitter.emit(self.uuidAction(for: .setToolsState(tools)))
+    self.emit(self.uuidAction(for: .setToolsState(tools)))
   }
 
   fileprivate func toolIdentifier(for tool: WorkspaceTool) -> Tools? {

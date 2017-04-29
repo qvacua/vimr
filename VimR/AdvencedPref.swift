@@ -26,7 +26,7 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emitter = emitter
+    self.emit = emitter.typedEmit()
 
     self.useInteractiveZsh = state.mainWindowTemplate.useInteractiveZsh
     self.useSnapshotUpdate = state.useSnapshotUpdate
@@ -47,10 +47,10 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
           self.updateViews()
         }
       })
-      .addDisposableTo(self.disposeBag)
+      .disposed(by: self.disposeBag)
   }
 
-  fileprivate let emitter: ActionEmitter
+  fileprivate let emit: (Action) -> Void
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate var useInteractiveZsh: Bool
@@ -122,10 +122,10 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
 extension AdvancedPref {
 
   func useInteractiveZshAction(_ sender: NSButton) {
-    self.emitter.emit(Action.setUseInteractiveZsh(sender.boolState))
+    self.emit(.setUseInteractiveZsh(sender.boolState))
   }
 
   func useSnapshotUpdateChannelAction(_ sender: NSButton) {
-    self.emitter.emit(Action.setUseSnapshotUpdate(sender.boolState))
+    self.emit(.setUseSnapshotUpdate(sender.boolState))
   }
 }
