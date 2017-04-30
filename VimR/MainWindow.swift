@@ -623,7 +623,7 @@ extension MainWindow {
 
 extension MainWindow {
 
-  public func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
+  func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
     let canSave = self.neoVimView.currentBuffer() != nil
     let canSaveAs = canSave
     let canOpen = canSave
