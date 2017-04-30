@@ -217,7 +217,7 @@ static void server_ui_mouse_off(UI *ui __unused) {
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdMouseOff];
 }
 
-static void server_ui_cursor_style_set(UI *ui __unused, bool enabled __unused, Dictionary cursor_styles __unused) {
+static void server_ui_mode_info_set(UI *ui __unused, bool enabled __unused, Array cursor_styles __unused) {
   // yet noop
 }
 
@@ -411,7 +411,7 @@ void custom_ui_start(void) {
   ui->busy_stop = server_ui_busy_stop;
   ui->mouse_on = server_ui_mouse_on;
   ui->mouse_off = server_ui_mouse_off;
-  ui->cursor_style_set = server_ui_cursor_style_set;
+  ui->mode_info_set = server_ui_mode_info_set;
   ui->mode_change = server_ui_mode_change;
   ui->set_scroll_region = server_ui_set_scroll_region;
   ui->scroll = server_ui_scroll;
@@ -582,7 +582,7 @@ void neovim_select_window(void **argv) {
           Error err = ERROR_INIT;
           nvim_set_current_win(win->handle, &err);
 
-          if (err.set) {
+          if (ERROR_SET(&err)) {
             WLOG("Error selecting window with handle %d: %s", win->handle, err.msg);
             return nil;
           }
@@ -656,7 +656,7 @@ void neovim_vim_command_output(void **argv) {
     NSString *result = nil;
     if (output == NULL) {
       WLOG("vim command output is null");
-    } else if (err.set) {
+    } else if (ERROR_SET(&err)) {
       WLOG("vim command output for '%s' was not successful: %s", input.cstr, err.msg);
     } else {
       result = [[NSString alloc] initWithCString:(const char *) output encoding:NSUTF8StringEncoding];
@@ -689,7 +689,7 @@ void neovim_set_bool_option(void **argv) {
 
     nvim_set_option(vim_string_from(optionName), object, &err);
 
-    if (err.set) {
+    if (ERROR_SET(&err)) {
       WLOG("Error setting the option '%s' to %d: %s", optionName.cstr, optionValue, err.msg);
     }
 
@@ -707,7 +707,7 @@ void neovim_get_bool_option(void **argv) {
     Error err = ERROR_INIT;
     Object resultObj = nvim_get_option(vim_string_from(option), &err);
 
-    if (err.set) {
+    if (ERROR_SET(&err)) {
       WLOG("Error getting the boolean option '%s': %s", option.cstr, err.msg);
     }
 
@@ -762,7 +762,7 @@ void neovim_vim_command(void **argv) {
     Error err = ERROR_INIT;
     nvim_command(vim_string_from(input), &err);
 
-    if (err.set) {
+    if (ERROR_SET(&err)) {
       WLOG("ERROR while executing command %s: %s", input.cstr, err.msg);
     }
 

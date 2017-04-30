@@ -8,14 +8,27 @@
 #import "NeoVimAutoCommandEvent.generated.h"
 
 
-// Keep in sync with the constants in vim.h
-typedef NS_ENUM(NSUInteger, Mode) {
-    Normal    = 0x01,
-    Visual    = 0x02,
-    Cmdline   = 0x08,
-    Insert    = 0x10,
-    Replace   = 0x50,
-    Term      = 0x2000,
+// Keep in sync with ModeShape enum in cursor_shape.h.
+typedef NS_ENUM(NSUInteger, CursorModeShape) {
+  CursorModeShapeNormal = 0,
+  CursorModeShapeVisual = 1,
+  CursorModeShapeInsert = 2,
+  CursorModeShapeReplace = 3,
+  CursorModeShapeCmdline = 4,
+  CursorModeShapeCmdlineInsert = 5,
+  CursorModeShapeCmdlineReplace = 6,
+  CursorModeShapeOperatorPending = 7,
+  CursorModeShapeVisualExclusive = 8,
+  CursorModeShapeOnCmdline = 9,
+  CursorModeShapeOnStatusLine = 10,
+  CursorModeShapeDraggingStatusLine = 11,
+  CursorModeShapeOnVerticalSepLine = 12,
+  CursorModeShapeDraggingVerticalSepLine = 13,
+  CursorModeShapeMore = 14,
+  CursorModeShapeMoreLastLine = 15,
+  CursorModeShapeShowingMatchingParen = 16,
+  CursorModeShapeTermFocus = 17,
+  CursorModeShapeCount = 18,
 };
 
 typedef NS_ENUM(NSUInteger, FontTrait) {
@@ -80,7 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Mode changed to mode, cf vim.h.
  */
-- (void)modeChange:(Mode)mode;
+- (void)modeChange:(CursorModeShape)mode;
 
 - (void)setScrollRegionToTop:(int)top bottom:(int)bottom left:(int)left right:(int)right;
 - (void)scroll:(int)count;
