@@ -19,8 +19,13 @@ class UiRoot: UiComponent {
     self.emitter = emitter
 
     self.fileMonitor = FileMonitor(source: source, emitter: emitter, state: state)
-    self.prefWindow = PrefWindow(source: source, emitter: emitter, state: state)
     self.openQuicklyWindow = OpenQuicklyWindow(source: source, emitter: emitter, state: state)
+
+    // We dispatch the initialization of the pref window in the background since the population of the font list
+    // in the appearance pref pane takes approx. 0.8s - 1s on my machine... -_-
+    DispatchQueue.global(qos: .background).async {
+      self.prefWindow = PrefWindow(source: source, emitter: emitter, state: state)
+    }
 
     source
       .observeOn(MainScheduler.instance)
@@ -48,8 +53,8 @@ class UiRoot: UiComponent {
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate let fileMonitor: FileMonitor
-  fileprivate let prefWindow: PrefWindow
   fileprivate let openQuicklyWindow: OpenQuicklyWindow
+  fileprivate var prefWindow: PrefWindow?
 
   fileprivate var mainWindows = [String: MainWindow]()
   fileprivate var subjectForMainWindows = [String: PublishSubject<MainWindow.State>]()
