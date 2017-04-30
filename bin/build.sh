@@ -63,7 +63,11 @@ if [ "${IS_SNAPSHOT}" = true ] ; then
     TAG="snapshot/${BUNDLE_VERSION}"
 fi
 
+echo "### Compressing the app"
 VIMR_FILE_NAME="VimR-${COMPOUND_VERSION}.tar.bz2"
+pushd build/Release
+tar cjf ${VIMR_FILE_NAME} VimR.app
+popd
 
 echo "### Bundle version: ${BUNDLE_VERSION}"
 echo "### Marketing version: ${MARKETING_VERSION}"

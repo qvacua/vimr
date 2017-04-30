@@ -18,8 +18,6 @@ echo "IS_SNAPSHOT: ${IS_SNAPSHOT}"
 
 pushd build/Release
 
-tar cjf ${VIMR_FILE_NAME} VimR.app
-
 echo "### Creating release"
 if [ "${IS_SNAPSHOT}" = true ] ; then
     GITHUB_TOKEN="${TOKEN}" github-release release \
