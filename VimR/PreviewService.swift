@@ -8,8 +8,8 @@ import CocoaMarkdown
 
 class PreviewService {
 
-  let forMainWindow = MainWindowPreviewService()
-  let forOpenedFileList = OpenedFileListPreviewService()
+  typealias OpenedFileListPair = StateActionPair<UuidState<MainWindow.State>, OpenedFileList.Action>
+  typealias MainWindowPair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
   init() {
     guard let templateUrl = Bundle.main.url(forResource: "template",
@@ -24,9 +24,22 @@ class PreviewService {
     }
 
     self.template = template
+  }
 
-    self.forMainWindow.parentService = self
-    self.forOpenedFileList.parentService = self
+  func applyOpenedFileList(_ pair: OpenedFileListPair) {
+    guard case .open = pair.action else {
+      return
+    }
+
+    self.apply(pair.state)
+  }
+
+  func applyMainWindow(_ pair: MainWindowPair) {
+    guard case .setCurrentBuffer = pair.action else {
+      return
+    }
+
+    self.apply(pair.state)
   }
 
   fileprivate func filledTemplate(body: String, title: String) -> String {
@@ -65,7 +78,7 @@ class PreviewService {
       return
     }
 
-    NSLog("\(buffer) -> \(html)")
+//    NSLog("\(buffer) -> \(html)")
     do {
       try self.render(buffer, to: html)
       self.previewFiles[uuid] = html
@@ -79,39 +92,4 @@ class PreviewService {
   fileprivate let template: String
   fileprivate let tempDir = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
   fileprivate var previewFiles = [String: URL]()
-}
-
-extension PreviewService {
-
-  class OpenedFileListPreviewService: Service {
-
-    typealias Pair = StateActionPair<UuidState<MainWindow.State>, OpenedFileList.Action>
-
-    func apply(_ pair: Pair) {
-
-      guard case .open = pair.action else {
-        return
-      }
-
-      self.parentService?.apply(pair.state)
-    }
-
-    fileprivate var parentService: PreviewService?
-  }
-
-  class MainWindowPreviewService: Service {
-
-    typealias Pair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
-
-    func apply(_ pair: Pair) {
-
-      guard case .setCurrentBuffer = pair.action else {
-        return
-      }
-
-      self.parentService?.apply(pair.state)
-    }
-
-    fileprivate var parentService: PreviewService?
-  }
 }

@@ -4,24 +4,21 @@
  */
 
 import Foundation
-import RxSwift
 
-class PrefWindowReducer: Reducer {
+class PrefWindowReducer {
 
   typealias Pair = StateActionPair<AppState, PrefWindow.Action>
 
-  func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
-    return source.map { pair in
-      var state = pair.state
+  func reduce(_ pair: Pair) -> Pair {
+    var state = pair.state
 
-      switch pair.action {
+    switch pair.action {
 
-        case .close:
-          state.preferencesOpen = Marked(false)
+    case .close:
+      state.preferencesOpen = Marked(false)
 
-      }
-
-      return StateActionPair(state: state, action: pair.action)
     }
+
+    return StateActionPair(state: state, action: pair.action)
   }
 }

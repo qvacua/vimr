@@ -6,27 +6,6 @@
 import Foundation
 import RxSwift
 
-protocol Reducer {
-
-  associatedtype Pair
-
-  func reduce(_ source: Observable<Pair>) -> Observable<Pair>
-}
-
-protocol Service {
-
-  associatedtype Pair
-
-  func apply(_: Pair)
-}
-
-protocol StateService {
-
-  associatedtype StateType
-
-  func apply(_: StateType)
-}
-
 protocol UiComponent {
 
   associatedtype StateType
@@ -139,16 +118,12 @@ class Marked<T>: CustomStringConvertible {
 
 extension Observable {
 
-  func reduce<R:Reducer>(by reducer: R) -> Observable<Element> where R.Pair == Element {
-    return reducer.reduce(self)
+  func reduce(by reduce: @escaping (Element) -> Element) -> Observable<Element> {
+    return self.map(reduce)
   }
 
-  func apply<S:Service>(to service: S) -> Observable<Element> where S.Pair == Element {
-    return self.do(onNext: service.apply)
-  }
-
-  func apply<S:StateService>(to service: S) -> Observable<Element> where S.StateType == Element {
-    return self.do(onNext: service.apply)
+  func apply(_ apply: @escaping (Element) -> Void) -> Observable<Element> {
+    return self.do(onNext: apply)
   }
 
   func filterMapPair<S, A>() -> Observable<S> where Element == StateActionPair<S, A> {
