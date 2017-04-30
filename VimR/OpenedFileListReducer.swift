@@ -4,24 +4,21 @@
  */
 
 import Foundation
-import RxSwift
 
-class OpenedFileListReducer: Reducer {
+class OpenedFileListReducer {
 
   typealias Pair = StateActionPair<UuidState<MainWindow.State>, OpenedFileList.Action>
 
-  func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
-    return source.map { pair in
-      var state = pair.state.payload
+  func reduce(_ pair: Pair) -> Pair {
+    var state = pair.state.payload
 
-      switch pair.action {
+    switch pair.action {
 
-        case let .open(buffer):
-          state.currentBuffer = buffer
+    case let .open(buffer):
+      state.currentBuffer = buffer
 
-      }
-
-      return StateActionPair(state: UuidState(uuid: pair.state.uuid, state: state), action: pair.action)
     }
+
+    return StateActionPair(state: UuidState(uuid: pair.state.uuid, state: state), action: pair.action)
   }
 }

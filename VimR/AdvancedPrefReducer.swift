@@ -4,26 +4,23 @@
  */
 
 import Foundation
-import RxSwift
 
-class AdvancedPrefReducer: Reducer {
+class AdvancedPrefReducer {
 
   typealias Pair = StateActionPair<AppState, AdvancedPref.Action>
 
-  func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
-    return source.map { pair in
-      var state = pair.state
+  func reduce(_ pair: Pair) -> Pair {
+    var state = pair.state
 
-      switch pair.action {
+    switch pair.action {
 
-      case let .setUseInteractiveZsh(value):
-        state.mainWindowTemplate.useInteractiveZsh = value
+    case let .setUseInteractiveZsh(value):
+      state.mainWindowTemplate.useInteractiveZsh = value
 
-      case let .setUseSnapshotUpdate(value):
-        state.useSnapshotUpdate = value
-      }
-
-      return StateActionPair(state: state, action: pair.action)
+    case let .setUseSnapshotUpdate(value):
+      state.useSnapshotUpdate = value
     }
+
+    return StateActionPair(state: state, action: pair.action)
   }
 }

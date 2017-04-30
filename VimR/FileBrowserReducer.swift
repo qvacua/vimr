@@ -4,31 +4,28 @@
  */
 
 import Foundation
-import RxSwift
 
-class FileBrowserReducer: Reducer {
+class FileBrowserReducer {
 
   typealias Pair = StateActionPair<UuidState<MainWindow.State>, FileBrowser.Action>
 
-  func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
-    return source.map { pair in
-      var state = pair.state.payload
+  func reduce(_ pair: Pair) -> Pair {
+    var state = pair.state.payload
 
-      switch pair.action {
+    switch pair.action {
 
-      case let .open(url, mode):
-        state.urlsToOpen[url] = mode
-        state.viewToBeFocused = .neoVimView
+    case let .open(url, mode):
+      state.urlsToOpen[url] = mode
+      state.viewToBeFocused = .neoVimView
 
-      case let .setAsWorkingDirectory(url):
-        state.cwd = url
+    case let .setAsWorkingDirectory(url):
+      state.cwd = url
 
-      case let .setShowHidden(show):
-        state.fileBrowserShowHidden = show
+    case let .setShowHidden(show):
+      state.fileBrowserShowHidden = show
 
-      }
-
-      return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
     }
+
+    return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
   }
 }

@@ -4,31 +4,28 @@
  */
 
 import Foundation
-import RxSwift
 
-class GeneralPrefReducer: Reducer {
+class GeneralPrefReducer {
 
   typealias Pair = StateActionPair<AppState, GeneralPref.Action>
 
-  func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
-    return source.map { pair in
-      var state = pair.state
+  func reduce(_ pair: Pair) -> Pair {
+    var state = pair.state
 
-      switch pair.action {
+    switch pair.action {
 
-      case let .setOpenOnLaunch(value):
-        state.openNewMainWindowOnLaunch = value
+    case let .setOpenOnLaunch(value):
+      state.openNewMainWindowOnLaunch = value
 
-      case let .setOpenOnReactivation(value):
-        state.openNewMainWindowOnReactivation = value
+    case let .setOpenOnReactivation(value):
+      state.openNewMainWindowOnReactivation = value
 
-      case let .setIgnorePatterns(patterns):
-        state.openQuickly.ignorePatterns = patterns
-        state.openQuickly.ignoreToken = Token()
+    case let .setIgnorePatterns(patterns):
+      state.openQuickly.ignorePatterns = patterns
+      state.openQuickly.ignoreToken = Token()
 
-      }
-
-      return StateActionPair(state: state, action: pair.action)
     }
+
+    return StateActionPair(state: state, action: pair.action)
   }
 }
