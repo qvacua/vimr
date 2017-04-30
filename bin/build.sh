@@ -21,8 +21,8 @@ if [ "${IS_SNAPSHOT}" = false ] && [ "${MARKETING_VERSION}" == "" ] ; then
     exit 1
 fi
 
-if [ "${RELEASE_NOTES}" == "" ] ; then
-    echo "### ERROR No release notes!"
+if [ "${PUBLISH}" = true ] && [ "${RELEASE_NOTES}" == "" ] ; then
+    echo "### ERROR No release notes, but publishing to Github!"
     exit 1
 fi
 
@@ -63,13 +63,22 @@ if [ "${IS_SNAPSHOT}" = true ] ; then
     TAG="snapshot/${BUNDLE_VERSION}"
 fi
 
+echo "### Compressing the app"
 VIMR_FILE_NAME="VimR-${COMPOUND_VERSION}.tar.bz2"
+pushd build/Release
+tar cjf ${VIMR_FILE_NAME} VimR.app
+popd
 
 echo "### Bundle version: ${BUNDLE_VERSION}"
 echo "### Marketing version: ${MARKETING_VERSION}"
 echo "### Compund version: ${COMPOUND_VERSION}"
 echo "### Tag: ${TAG}"
 echo "### VimR archive file name: ${VIMR_FILE_NAME}"
+
+if [ "${PUBLISH}" = false ] ; then
+    echo "Do not publish => exiting now..."
+    exit 0
+fi
 
 ./bin/commit_and_push_tags.sh "${BRANCH}" "${TAG}"
 ./bin/create_github_release.sh "${COMPOUND_VERSION}" "${TAG}" "${VIMR_FILE_NAME}" "${RELEASE_NOTES}" ${IS_SNAPSHOT}
