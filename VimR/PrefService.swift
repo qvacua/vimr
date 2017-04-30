@@ -5,40 +5,25 @@
 
 import Foundation
 import Swifter
-import RxSwift
 
 fileprivate let defaults = UserDefaults.standard
 
 class PrefService {
 
+  typealias MainWindowPair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
+
   static let compatibleVersion = "168"
   static let lastCompatibleVersion = "128"
 
-  let forMainWindow = PrefMainWindowService()
-  let forPrefPanes = PrefPaneService()
-}
-
-extension PrefService {
-
-  class PrefMainWindowService: Service {
-
-    typealias Pair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
-
-    func apply(_ pair: Pair) {
-      guard case .close = pair.action.payload else {
-        return
-      }
-
-      defaults.setValue(pair.state.dict(), forKey: PrefService.compatibleVersion)
-    }
+  func applyPref<ActionType>(_ pair: StateActionPair<AppState, ActionType>) {
+    defaults.setValue(pair.state.dict(), forKey: PrefService.compatibleVersion)
   }
 
-  class PrefPaneService: StateService {
-
-    typealias StateType = AppState
-
-    func apply(_ state: StateType) {
-      defaults.setValue(state.dict(), forKey: PrefService.compatibleVersion)
+  func applyMainWindow(_ pair: MainWindowPair) {
+    guard case .close = pair.action.payload else {
+      return
     }
+
+    defaults.setValue(pair.state.dict(), forKey: PrefService.compatibleVersion)
   }
 }

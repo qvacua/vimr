@@ -12,38 +12,34 @@ class Context {
   let actionEmitter = ActionEmitter()
 
   init(baseServerUrl: URL, state: AppState) {
-
     self.appState = state
-
     self.stateSource = self.stateSubject.asObservable()
-
-    self.httpService = HttpServerService(port: baseServerUrl.port!)
 
     let openQuicklyReducer = OpenQuicklyReducer()
     let markdownReducer = MarkdownReducer(baseServerUrl: baseServerUrl)
 
     let prefService = PrefService()
-    let htmlPreviewToolReducer = HtmlPreviewToolReducer(baseServerUrl: baseServerUrl)
     let previewService = PreviewService()
+    let httpService: HttpServerService = HttpServerService(port: baseServerUrl.port!)
 
     // AppState
     Observable
       .of(
         self.actionSourceForAppState()
-            .reduce(by: AppDelegateReducer(baseServerUrl: baseServerUrl))
-            .filterMapPair(),
+          .reduce(by: AppDelegateReducer(baseServerUrl: baseServerUrl).reduce)
+          .filterMapPair(),
         self.actionSourceForAppState()
-            .reduce(by: UiRootReducer())
-            .reduce(by: openQuicklyReducer.forMainWindow)
-            .filter { $0.modified }
-            .apply(to: prefService.forMainWindow)
-            .map { $0.state },
+          .reduce(by: UiRootReducer().reduce)
+          .reduce(by: openQuicklyReducer.reduceMainWindow)
+          .filter { $0.modified }
+          .apply(prefService.applyMainWindow)
+          .map { $0.state },
         self.actionSourceForAppState()
-            .reduce(by: FileMonitorReducer())
-            .filterMapPair(),
+          .reduce(by: FileMonitorReducer().reduce)
+          .filterMapPair(),
         self.actionSourceForAppState()
-            .reduce(by: openQuicklyReducer.forOpenQuicklyWindow)
-            .filterMapPair()
+          .reduce(by: openQuicklyReducer.reduceOpenQuicklyWindow)
+          .filterMapPair()
       )
       .merge()
       .subscribe(onNext: self.emitAppState)
@@ -53,29 +49,29 @@ class Context {
     Observable
       .of(
         self.actionSourceForMainWindow()
-            .reduce(by: MainWindowReducer())
-            .reduce(by: markdownReducer.forMainWindow)
-            .filter { $0.modified }
-            .apply(to: previewService.forMainWindow)
-            .apply(to: self.httpService.forMainWindow)
-            .map { $0.state },
+          .reduce(by: MainWindowReducer().reduce)
+          .reduce(by: markdownReducer.reduceMainWindow)
+          .filter { $0.modified }
+          .apply(previewService.applyMainWindow)
+          .apply(httpService.applyMainWindow)
+          .map { $0.state },
         self.actionSourceForMainWindow()
-            .reduce(by: PreviewToolReducer(baseServerUrl: baseServerUrl))
-            .filterMapPair(),
+          .reduce(by: PreviewToolReducer(baseServerUrl: baseServerUrl).reduce)
+          .filterMapPair(),
         self.actionSourceForMainWindow()
-            .reduce(by: htmlPreviewToolReducer)
-            .filter { $0.modified }
-            .apply(to: self.httpService.forHtmlPreviewTool)
-            .map { $0.state },
+          .reduce(by: HtmlPreviewToolReducer(baseServerUrl: baseServerUrl).reduce)
+          .filter { $0.modified }
+          .apply(httpService.applyHtmlPreview)
+          .map { $0.state },
         self.actionSourceForMainWindow()
-            .reduce(by: FileBrowserReducer())
-            .filterMapPair(),
+          .reduce(by: FileBrowserReducer().reduce)
+          .filterMapPair(),
         self.actionSourceForMainWindow()
-            .reduce(by: OpenedFileListReducer())
-            .reduce(by: markdownReducer.forOpenedFileList)
-            .filter { $0.modified }
-            .apply(to: previewService.forOpenedFileList)
-            .map { $0.state }
+          .reduce(by: OpenedFileListReducer().reduce)
+          .reduce(by: markdownReducer.reduceOpenedFileList)
+          .filter { $0.modified }
+          .apply(previewService.applyOpenedFileList)
+          .map { $0.state }
       )
       .merge()
       .subscribe(onNext: self.emitAppState)
@@ -84,21 +80,12 @@ class Context {
     // Preferences
     Observable
       .of(
-        self.actionSourceForAppState()
-            .reduce(by: PrefWindowReducer())
-            .filterMapPair(),
-        self.actionSourceForAppState()
-            .reduce(by: GeneralPrefReducer())
-            .filterMapPair(),
-        self.actionSourceForAppState()
-            .reduce(by: AppearancePrefReducer())
-            .filterMapPair(),
-        self.actionSourceForAppState()
-            .reduce(by: AdvancedPrefReducer())
-            .filterMapPair()
+        self.prefStateSource(by: PrefWindowReducer().reduce, prefService: prefService),
+        self.prefStateSource(by: GeneralPrefReducer().reduce, prefService: prefService),
+        self.prefStateSource(by: AppearancePrefReducer().reduce, prefService: prefService),
+        self.prefStateSource(by: AdvancedPrefReducer().reduce, prefService: prefService)
       )
       .merge()
-      .apply(to: prefService.forPrefPanes)
       .subscribe(onNext: self.emitAppState)
       .disposed(by: self.disposeBag)
 
@@ -111,8 +98,6 @@ class Context {
   deinit {
     self.stateSubject.onCompleted()
   }
-
-  fileprivate let httpService: HttpServerService
 
   fileprivate let stateSubject = PublishSubject<AppState>()
   fileprivate let scheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
@@ -152,6 +137,17 @@ class Context {
     return self.actionEmitter.observable
       .mapOmittingNil { $0 as? UuidAction<ActionType> }
       .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
+  }
+
+  fileprivate func prefStateSource<ActionType>(
+    by reduce: @escaping (StateActionPair<AppState, ActionType>) -> StateActionPair<AppState, ActionType>,
+    prefService: PrefService
+  ) -> Observable<AppState> {
+    return self.actionSourceForAppState()
+      .reduce(by: reduce)
+      .filter { $0.modified }
+      .apply(prefService.applyPref)
+      .map { $0.state }
   }
 
   fileprivate func appStateActionPair<ActionType>(for action: ActionType) -> StateActionPair<AppState, ActionType> {

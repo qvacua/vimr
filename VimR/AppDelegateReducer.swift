@@ -4,9 +4,8 @@
  */
 
 import Foundation
-import RxSwift
 
-class AppDelegateReducer: Reducer {
+class AppDelegateReducer {
 
   typealias Pair = StateActionPair<AppState, AppDelegate.Action>
 
@@ -14,40 +13,38 @@ class AppDelegateReducer: Reducer {
     self.baseServerUrl = baseServerUrl
   }
 
-  func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
-    return source.map { pair in
-      var state = pair.state
+  func reduce(_ pair: Pair) -> Pair {
+    var state = pair.state
 
-      switch pair.action {
+    switch pair.action {
 
-      case let .newMainWindow(urls, cwd):
+    case let .newMainWindow(urls, cwd):
+      let mainWindow = self.newMainWindow(with: state, urls: urls, cwd: cwd)
+      state.mainWindows[mainWindow.uuid] = mainWindow
+
+    case let .openInKeyWindow(urls, cwd):
+      guard let uuid = state.currentMainWindowUuid, state.mainWindows[uuid] != nil else {
         let mainWindow = self.newMainWindow(with: state, urls: urls, cwd: cwd)
         state.mainWindows[mainWindow.uuid] = mainWindow
-
-      case let .openInKeyWindow(urls, cwd):
-        guard let uuid = state.currentMainWindowUuid, state.mainWindows[uuid] != nil else {
-          let mainWindow = self.newMainWindow(with: state, urls: urls, cwd: cwd)
-          state.mainWindows[mainWindow.uuid] = mainWindow
-          break
-        }
-
-        state.mainWindows[uuid]?.urlsToOpen = urls.toDict { url in MainWindow.OpenMode.default }
-        state.mainWindows[uuid]?.cwd = cwd
-
-      case .preferences:
-        state.preferencesOpen = Marked(true)
-
-      case .cancelQuit:
-        state.quitWhenNoMainWindow = false
-
-      case .quitWithoutSaving, .quit:
-        state.mainWindows.keys.forEach { state.mainWindows[$0]?.close = true }
-        state.quitWhenNoMainWindow = true
-
+        break
       }
 
-      return StateActionPair(state: state, action: pair.action)
+      state.mainWindows[uuid]?.urlsToOpen = urls.toDict { url in MainWindow.OpenMode.default }
+      state.mainWindows[uuid]?.cwd = cwd
+
+    case .preferences:
+      state.preferencesOpen = Marked(true)
+
+    case .cancelQuit:
+      state.quitWhenNoMainWindow = false
+
+    case .quitWithoutSaving, .quit:
+      state.mainWindows.keys.forEach { state.mainWindows[$0]?.close = true }
+      state.quitWhenNoMainWindow = true
+
     }
+
+    return StateActionPair(state: state, action: pair.action)
   }
 
   fileprivate let baseServerUrl: URL

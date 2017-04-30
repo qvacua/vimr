@@ -8,79 +8,61 @@ import RxSwift
 
 class OpenQuicklyReducer {
 
-  let forMainWindow = MainWindowReducer()
-  let forOpenQuicklyWindow = OpenQuicklyWindowReducer()
-}
+  typealias OpenQuicklyWindowPair = StateActionPair<AppState, OpenQuicklyWindow.Action>
+  typealias MainWindowPair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
 
-extension OpenQuicklyReducer {
+  func reduceOpenQuicklyWindow(_ pair: OpenQuicklyWindowPair) -> OpenQuicklyWindowPair {
+    var appState = pair.state
 
-  class OpenQuicklyWindowReducer: Reducer {
+    appState.openQuickly.open = false
+    appState.openQuickly.flatFileItems = Observable.empty()
+    appState.openQuickly.cwd = FileUtils.userHomeUrl
 
-    typealias Pair = StateActionPair<AppState, OpenQuicklyWindow.Action>
+    switch pair.action {
 
-    func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
-      return source.map { pair in
-        var appState = pair.state
-
-        appState.openQuickly.open = false
-        appState.openQuickly.flatFileItems = Observable.empty()
-        appState.openQuickly.cwd = FileUtils.userHomeUrl
-
-        switch pair.action {
-
-        case let .open(url):
-          guard let uuid = appState.currentMainWindowUuid else {
-            return pair
-          }
-
-          appState.mainWindows[uuid]?.urlsToOpen[url] = .newTab
-
-        case .close:
-          break
-
-        }
-
-        return StateActionPair(state: appState, action: pair.action)
+    case let .open(url):
+      guard let uuid = appState.currentMainWindowUuid else {
+        return pair
       }
+
+      appState.mainWindows[uuid]?.urlsToOpen[url] = .newTab
+
+    case .close:
+      break
+
     }
+
+    return StateActionPair(state: appState, action: pair.action)
   }
 
-  class MainWindowReducer: Reducer {
+  func reduceMainWindow(_ pair: MainWindowPair) -> MainWindowPair {
+    switch pair.action.payload {
 
-    typealias Pair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
+    case .openQuickly:
+      var appState = pair.state
 
-    func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
-      return source.map { pair in
-
-        switch pair.action.payload {
-
-        case .openQuickly:
-          var appState = pair.state
-
-          guard let uuid = appState.currentMainWindowUuid else {
-            return pair
-          }
-
-          guard let cwd = appState.mainWindows[uuid]?.cwd else {
-            return pair
-          }
-
-          appState.openQuickly.open = true
-          appState.openQuickly.cwd = cwd
-          appState.openQuickly.flatFileItems = FileItemUtils.flatFileItems(
-            ofUrl: cwd,
-            ignorePatterns: appState.openQuickly.ignorePatterns,
-            ignoreToken: appState.openQuickly.ignoreToken,
-            root: appState.root
-          )
-
-          return StateActionPair(state: appState, action: pair.action)
-
-        default:
-          return pair
-
-        }
+      guard let uuid = appState.currentMainWindowUuid else {
+        return pair
       }
+
+      guard let cwd = appState.mainWindows[uuid]?.cwd else {
+        return pair
+      }
+
+      appState.openQuickly.open = true
+      appState.openQuickly.cwd = cwd
+      appState.openQuickly.flatFileItems = FileItemUtils.flatFileItems(
+        ofUrl: cwd,
+        ignorePatterns: appState.openQuickly.ignorePatterns,
+        ignoreToken: appState.openQuickly.ignoreToken,
+        root: appState.root
+      )
+
+      return StateActionPair(state: appState, action: pair.action)
+
+    default:
+      return pair
+
     }
   }
 }

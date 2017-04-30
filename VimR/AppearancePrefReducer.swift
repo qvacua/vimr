@@ -4,34 +4,31 @@
  */
 
 import Foundation
-import RxSwift
 
-class AppearancePrefReducer: Reducer {
+class AppearancePrefReducer {
 
   typealias Pair = StateActionPair<AppState, AppearancePref.Action>
 
-  func reduce(_ source: Observable<Pair>) -> Observable<Pair> {
-    return source.map { pair in
-      var state = pair.state
-      var appearance = state.mainWindowTemplate.appearance
+  func reduce(_ pair: Pair) -> Pair {
+    var state = pair.state
+    var appearance = state.mainWindowTemplate.appearance
 
-      switch pair.action {
+    switch pair.action {
 
-      case let .setUsesLigatures(value):
-        appearance.usesLigatures = value
+    case let .setUsesLigatures(value):
+      appearance.usesLigatures = value
 
-      case let .setFont(font):
-        appearance.font = font
+    case let .setFont(font):
+      appearance.font = font
 
-      case let .setLinespacing(linespacing):
-        appearance.linespacing = linespacing
+    case let .setLinespacing(linespacing):
+      appearance.linespacing = linespacing
 
-      }
-
-      self.modify(state: &state, with: appearance)
-
-      return StateActionPair(state: state, action: pair.action)
     }
+
+    self.modify(state: &state, with: appearance)
+
+    return StateActionPair(state: state, action: pair.action)
   }
 
   fileprivate func modify(state: inout AppState, with appearance: AppearanceState) {
