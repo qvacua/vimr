@@ -21,11 +21,6 @@ if [ "${IS_SNAPSHOT}" = false ] && [ "${MARKETING_VERSION}" == "" ] ; then
     exit 1
 fi
 
-if [ "${RELEASE_NOTES}" == "" ] ; then
-    echo "### ERROR No release notes!"
-    exit 1
-fi
-
 if [ "${PUBLISH}" = true ] && [ "${RELEASE_NOTES}" == "" ] ; then
     echo "### ERROR No release notes, but publishing to Github!"
     exit 1
