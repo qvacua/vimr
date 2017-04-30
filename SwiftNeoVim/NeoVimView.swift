@@ -39,7 +39,7 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
   public let uuid = UUID().uuidString
   public weak var delegate: NeoVimViewDelegate?
 
-  public fileprivate(set) var mode = Mode.Normal
+  public fileprivate(set) var mode = CursorModeShape.normal
 
   public var usesLigatures = false {
     didSet {
@@ -361,7 +361,7 @@ extension NeoVimView {
 
   /**
    Does the following
-   - `Mode.Normal`: `:command<CR>`
+   - normal mode: `:command<CR>`
    - else: `:<Esc>:command<CR>`
 
    We don't use NeoVimAgent.vimCommand because if we do for example "e /some/file" and its swap file already exists,
@@ -369,7 +369,7 @@ extension NeoVimView {
   */
   fileprivate func exec(command cmd: String) {
     switch self.mode {
-    case .Normal:
+    case .normal:
       self.agent.vimInput(":\(cmd)<CR>")
     default:
       self.agent.vimInput("<Esc>:\(cmd)<CR>")
@@ -538,7 +538,7 @@ extension NeoVimView {
   }
 
   fileprivate func cursorRegion() -> Region {
-    let cursorPosition = self.mode == .Cmdline ? self.grid.putPosition : self.grid.screenCursor
+    let cursorPosition = self.mode == .cmdline ? self.grid.putPosition : self.grid.screenCursor
 //    NSLog("\(#function): \(cursorPosition)")
 
     let saneRow = max(0, min(cursorPosition.row, self.grid.size.height - 1))
@@ -561,7 +561,7 @@ extension NeoVimView {
     let cursorRow = cursorRegion.top
     let cursorColumnStart = cursorRegion.left
 
-    if self.mode == .Insert {
+    if self.mode == .insert {
       ColorUtils.colorIgnoringAlpha(self.grid.foreground).withAlphaComponent(0.75).set()
       var cursorRect = self.cellRectFor(row: cursorRow, column: cursorColumnStart)
       cursorRect.size.width = 2
@@ -692,11 +692,11 @@ extension NeoVimView {
 extension NeoVimView {
 
   public func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
-    let canUndoOrRedo = self.mode == .Insert || self.mode == .Replace || self.mode == .Normal || self.mode == .Visual
-    let canCopyOrCut = self.mode == .Normal || self.mode == .Visual
+    let canUndoOrRedo = self.mode == .insert || self.mode == .replace || self.mode == .normal || self.mode == .visual
+    let canCopyOrCut = self.mode == .normal || self.mode == .visual
     let canPaste = self.pasteboard.string(forType: NSPasteboardTypeString) != nil
-    let canDelete = self.mode == .Visual || self.mode == .Normal
-    let canSelectAll = self.mode == .Insert || self.mode == .Replace || self.mode == .Normal || self.mode == .Visual
+    let canDelete = self.mode == .visual || self.mode == .normal
+    let canSelectAll = self.mode == .insert || self.mode == .replace || self.mode == .normal || self.mode == .visual
 
     guard let action = item.action else {
       return true
@@ -724,9 +724,9 @@ extension NeoVimView {
 
   @IBAction func undo(_ sender: AnyObject?) {
     switch self.mode {
-    case .Insert, .Replace:
+    case .insert, .replace:
       self.agent.vimInput("<Esc>ui")
-    case .Normal, .Visual:
+    case .normal, .visual:
       self.agent.vimInput("u")
     default:
       return
@@ -735,9 +735,9 @@ extension NeoVimView {
 
   @IBAction func redo(_ sender: AnyObject?) {
     switch self.mode {
-    case .Insert, .Replace:
+    case .insert, .replace:
       self.agent.vimInput("<Esc><C-r>i")
-    case .Normal, .Visual:
+    case .normal, .visual:
       self.agent.vimInput("<C-r>")
     default:
       return
@@ -746,7 +746,7 @@ extension NeoVimView {
 
   @IBAction func cut(_ sender: AnyObject?) {
     switch self.mode {
-    case .Visual, .Normal:
+    case .visual, .normal:
       self.agent.vimInput("\"+d")
     default:
       return
@@ -755,7 +755,7 @@ extension NeoVimView {
 
   @IBAction func copy(_ sender: AnyObject?) {
     switch self.mode {
-    case .Visual, .Normal:
+    case .visual, .normal:
       self.agent.vimInput("\"+y")
     default:
       return
@@ -767,7 +767,7 @@ extension NeoVimView {
       return
     }
 
-    if self.mode == .Cmdline || self.mode == .Replace || self.mode == .Term {
+    if self.mode == .cmdline || self.mode == .replace || self.mode == .termFocus {
       self.agent.vimInput(self.vimPlainString(content))
       return
     }
@@ -789,9 +789,9 @@ extension NeoVimView {
     let resetPasteModeCmd = pasteModeSet ? ":set nopaste<CR>" : ""
 
     switch self.mode {
-    case .Insert:
+    case .insert:
       self.agent.vimInput("<ESC>\"+p\(resetPasteModeCmd)a")
-    case .Normal, .Visual:
+    case .normal, .visual:
       self.agent.vimInput("\"+p\(resetPasteModeCmd)")
     default:
       return
@@ -800,7 +800,7 @@ extension NeoVimView {
 
   @IBAction func delete(_ sender: AnyObject?) {
     switch self.mode {
-    case .Normal, .Visual:
+    case .normal, .visual:
       self.agent.vimInput("x")
     default:
       return
@@ -809,7 +809,7 @@ extension NeoVimView {
 
   @IBAction public override func selectAll(_ sender: Any?) {
     switch self.mode {
-    case .Insert, .Visual:
+    case .insert, .visual:
       self.agent.vimInput("<Esc>ggVG")
     default:
       self.agent.vimInput("ggVG")
@@ -1333,7 +1333,7 @@ extension NeoVimView {
   public func mouseOff() {
   }
 
-  public func modeChange(_ mode: Mode) {
+  public func modeChange(_ mode: CursorModeShape) {
 //    NSLog("mode changed to: %02x", mode.rawValue)
     self.mode = mode
   }
@@ -1534,7 +1534,7 @@ extension NeoVimView {
   }
 
   fileprivate func updateCursorWhenPutting(currentPosition curPos: Position, screenCursor: Position) {
-    if self.mode == .Cmdline {
+    if self.mode == .cmdline {
       // When the cursor is in the command line, then we need this...
       self.markForRender(cellPosition: self.grid.previousCellPosition(curPos))
       self.markForRender(cellPosition: self.grid.nextCellPosition(curPos))

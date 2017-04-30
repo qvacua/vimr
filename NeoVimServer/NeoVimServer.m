@@ -40,7 +40,7 @@ static CFDataRef data_sync(CFDataRef data, NSCondition *condition, argv_callback
 
   [condition lock];
 
-  loop_schedule(&main_loop, event_create(1, cb, 3, data, condition, wrapper));
+  loop_schedule(&main_loop, event_create(cb, 3, data, condition, wrapper));
 
   while (wrapper.isDataReady == false && [condition waitUntilDate:deadline]);
   [condition unlock];
