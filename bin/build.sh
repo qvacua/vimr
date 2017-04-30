@@ -26,6 +26,11 @@ if [ "${RELEASE_NOTES}" == "" ] ; then
     exit 1
 fi
 
+if [ "${PUBLISH}" = true ] && [ "${RELEASE_NOTES}" == "" ] ; then
+    echo "### ERROR No release notes, but publishing to Github!"
+    exit 1
+fi
+
 if [ "${IS_SNAPSHOT}" = false ] && [ "${UPDATE_APPCAST}" = false ] ; then
     echo "### ERROR Not updating appcast for release!"
     exit 1
@@ -70,6 +75,11 @@ echo "### Marketing version: ${MARKETING_VERSION}"
 echo "### Compund version: ${COMPOUND_VERSION}"
 echo "### Tag: ${TAG}"
 echo "### VimR archive file name: ${VIMR_FILE_NAME}"
+
+if [ "${PUBLISH}" = false ] ; then
+    echo "Do not publish => exiting now..."
+    exit 0
+fi
 
 ./bin/commit_and_push_tags.sh "${BRANCH}" "${TAG}"
 ./bin/create_github_release.sh "${COMPOUND_VERSION}" "${TAG}" "${VIMR_FILE_NAME}" "${RELEASE_NOTES}" ${IS_SNAPSHOT}
