@@ -97,6 +97,8 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     fontPopup.translatesAutoresizingMaskIntoConstraints = false
     fontPopup.target = self
     fontPopup.action = #selector(AppearancePref.fontPopupAction)
+
+    // This takes approx. 0.8s - 1s on my machine... -_-
     fontPopup.addItems(withTitles: self.fontManager.availableFontNames(with: .fixedPitchFontMask)!)
 
     let sizeCombo = self.sizeCombo
