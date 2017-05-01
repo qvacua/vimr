@@ -7,38 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.14.0-181</title>
+      <title>v0.14.1-182</title>
       <description><![CDATA[
     <ul>
-<li>GH-405: Redesign<ul>
-<li>Redux-like architecture using RxSwift</li>
-</ul>
-</li>
-<li>GH-383: Add a general web view preview which preserves the scroll position when (automatically) reloading the selected file.</li>
-<li>GH-398: Set the represented icon in the window title bar.</li>
-<li>GH-389: Bugfix: The Files tool does not update when one folder is created.</li>
-<li>GH-374: Bugfix: The tool buttons have a narrow area which does not react to mouse down when the tool is closed.</li>
-<li>Dependencies updates:<ul>
-<li>RxSwift: 3.4.0</li>
-<li>Sparkle: 1.17</li>
-<li>github-markdown-css: 2.6.0</li>
-<li>swifter: 1.3.3</li>
-<li>Nimble: 6.1.0</li>
-<li>neovim: neovim/neovim@337299c8082347feecb5e733bed993c6a5933456</li>
-</ul>
-</li>
+<li>Make app launch time much faster: now just one bounce in the Dock on my machine 😆</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.14.0-181
+        https://github.com/qvacua/vimr/releases/tag/v0.14.1-182
       </releaseNotesLink>
-      <pubDate>2017-04-30T19:14:21.693350</pubDate>
+      <pubDate>2017-05-01T11:02:53.057696</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.14.0-181/VimR-v0.14.0-181.tar.bz2"
-                 sparkle:version="181"
-                 sparkle:shortVersionString="0.14.0"
-                 sparkle:dsaSignature="MC0CFQCrqnWmxyv3os2asdBgFoa4RFGH5gIUMmLSqoeJU1DArlBh5AJPdyYfSeU="
-                 length="12169796"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.14.1-182/VimR-v0.14.1-182.tar.bz2"
+                 sparkle:version="182"
+                 sparkle:shortVersionString="0.14.1"
+                 sparkle:dsaSignature="MC0CFQCn/FY33VnX7Wkr9bMp+RdWFD8tygIUXZnAsmGsnKE2XKbpuys+2ZLn4eQ="
+                 length="12175315"
                  type="application/octet-stream"/>
     </item>
   </channel>
