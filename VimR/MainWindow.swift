@@ -85,10 +85,6 @@ class MainWindow: NSObject,
 
     let workspace = Workspace(mainView: self.neoVimView)
     self.workspace = workspace
-    self.preview = PreviewTool(source: source, emitter: emitter, state: state)
-    self.fileBrowser = FileBrowser(source: source, emitter: emitter, state: state)
-    self.openedFileList = OpenedFileList(source: source, emitter: emitter, state: state)
-    self.htmlPreview = HtmlPreviewTool(source: source, emitter: emitter, state: state)
 
     if !state.isToolButtonsVisible {
       self.workspace.toggleToolButtons()
@@ -96,35 +92,45 @@ class MainWindow: NSObject,
 
     self.windowController = NSWindowController(windowNibName: "MainWindow")
 
-    let previewConfig = WorkspaceTool.Config(title: "Markdown",
-                                             view: self.preview,
-                                             customMenuItems: self.preview.menuItems)
-    self.previewContainer = WorkspaceTool(previewConfig)
-    self.previewContainer.dimension = state.tools[.preview]?.dimension ?? 250
+    var tools: [Tools: WorkspaceTool] = [:]
+    if state.activeTools[.preview] == true {
+      self.preview = PreviewTool(source: source, emitter: emitter, state: state)
+      let previewConfig = WorkspaceTool.Config(title: "Markdown",
+                                               view: self.preview!,
+                                               customMenuItems: self.preview!.menuItems)
+      self.previewContainer = WorkspaceTool(previewConfig)
+      self.previewContainer!.dimension = state.tools[.preview]?.dimension ?? 250
+      tools[.preview] = self.previewContainer
+    }
 
-    let htmlPreviewConfig = WorkspaceTool.Config(title: "HTML",
-                                                 view: self.htmlPreview,
-                                                 customToolbar: self.htmlPreview.innerCustomToolbar)
-    self.htmlPreviewContainer = WorkspaceTool(htmlPreviewConfig)
-    self.htmlPreviewContainer.dimension = state.tools[.htmlPreview]?.dimension ?? 250
+    if state.activeTools[.htmlPreview] == true {
+      self.htmlPreview = HtmlPreviewTool(source: source, emitter: emitter, state: state)
+      let htmlPreviewConfig = WorkspaceTool.Config(title: "HTML",
+                                                   view: self.htmlPreview!,
+                                                   customToolbar: self.htmlPreview!.innerCustomToolbar)
+      self.htmlPreviewContainer = WorkspaceTool(htmlPreviewConfig)
+      self.htmlPreviewContainer!.dimension = state.tools[.htmlPreview]?.dimension ?? 250
+      tools[.htmlPreview] = self.htmlPreviewContainer
+    }
 
-    let fileBrowserConfig = WorkspaceTool.Config(title: "Files",
-                                                 view: self.fileBrowser,
-                                                 customToolbar: self.fileBrowser.innerCustomToolbar,
-                                                 customMenuItems: self.fileBrowser.menuItems)
-    self.fileBrowserContainer = WorkspaceTool(fileBrowserConfig)
-    self.fileBrowserContainer.dimension = state.tools[.fileBrowser]?.dimension ?? 200
+    if state.activeTools[.fileBrowser] == true {
+      self.fileBrowser = FileBrowser(source: source, emitter: emitter, state: state)
+      let fileBrowserConfig = WorkspaceTool.Config(title: "Files",
+                                                   view: self.fileBrowser!,
+                                                   customToolbar: self.fileBrowser!.innerCustomToolbar,
+                                                   customMenuItems: self.fileBrowser!.menuItems)
+      self.fileBrowserContainer = WorkspaceTool(fileBrowserConfig)
+      self.fileBrowserContainer!.dimension = state.tools[.fileBrowser]?.dimension ?? 200
+      tools[.fileBrowser] = self.fileBrowserContainer
+    }
 
-    let openedFileListConfig = WorkspaceTool.Config(title: "Buffers", view: self.openedFileList)
-    self.openedFileListContainer = WorkspaceTool(openedFileListConfig)
-    self.openedFileListContainer.dimension = state.tools[.openedFilesList]?.dimension ?? 200
-
-    let tools: [Tools: WorkspaceTool] = [
-      .fileBrowser: self.fileBrowserContainer,
-      .openedFilesList: self.openedFileListContainer,
-      .preview: self.previewContainer,
-      .htmlPreview: self.htmlPreviewContainer,
-    ]
+    if state.activeTools[.openedFilesList] == true {
+      self.openedFileList = OpenedFileList(source: source, emitter: emitter, state: state)
+      let openedFileListConfig = WorkspaceTool.Config(title: "Buffers", view: self.openedFileList!)
+      self.openedFileListContainer = WorkspaceTool(openedFileListConfig)
+      self.openedFileListContainer!.dimension = state.tools[.openedFilesList]?.dimension ?? 200
+      tools[.openedFilesList] = self.openedFileListContainer
+    }
 
     self.tools = tools
     state.orderedTools.forEach { toolId in
@@ -253,18 +259,18 @@ class MainWindow: NSObject,
   fileprivate let workspace: Workspace
   fileprivate let neoVimView: NeoVimView
 
-  fileprivate let previewContainer: WorkspaceTool
-  fileprivate let fileBrowserContainer: WorkspaceTool
-  fileprivate let openedFileListContainer: WorkspaceTool
-  fileprivate let htmlPreviewContainer: WorkspaceTool
+  fileprivate var previewContainer: WorkspaceTool?
+  fileprivate var fileBrowserContainer: WorkspaceTool?
+  fileprivate var openedFileListContainer: WorkspaceTool?
+  fileprivate var htmlPreviewContainer: WorkspaceTool?
 
   fileprivate var editorPosition: Marked<Position>
   fileprivate var previewPosition: Marked<Position>
 
-  fileprivate let preview: PreviewTool
-  fileprivate let htmlPreview: HtmlPreviewTool
-  fileprivate let fileBrowser: FileBrowser
-  fileprivate let openedFileList: OpenedFileList
+  fileprivate var preview: PreviewTool?
+  fileprivate var htmlPreview: HtmlPreviewTool?
+  fileprivate var fileBrowser: FileBrowser?
+  fileprivate var openedFileList: OpenedFileList?
 
   fileprivate let tools: [Tools: WorkspaceTool]
 
@@ -502,27 +508,6 @@ extension MainWindow {
   }
 }
 
-// MARK: - Font Menu Item Actions
-
-extension MainWindow {
-
-  @IBAction func resetFontSize(_ sender: Any?) {
-    self.neoVimView.font = self.defaultFont
-  }
-
-  @IBAction func makeFontBigger(_ sender: Any?) {
-    let curFont = self.neoVimView.font
-    let font = self.fontManager.convert(curFont, toSize: min(curFont.pointSize + 1, NeoVimView.maxFontSize))
-    self.neoVimView.font = font
-  }
-
-  @IBAction func makeFontSmaller(_ sender: Any?) {
-    let curFont = self.neoVimView.font
-    let font = self.fontManager.convert(curFont, toSize: max(curFont.pointSize - 1, NeoVimView.minFontSize))
-    self.neoVimView.font = font
-  }
-}
-
 // MARK: - Tools Menu Item Actions
 
 extension MainWindow {
@@ -542,9 +527,9 @@ extension MainWindow {
   @IBAction func toggleFileBrowser(_ sender: Any?) {
     let fileBrowser = self.fileBrowserContainer
 
-    if fileBrowser.isSelected {
-      if fileBrowser.view.isFirstResponder {
-        fileBrowser.toggle()
+    if fileBrowser?.isSelected == true {
+      if fileBrowser?.view.isFirstResponder == true {
+        fileBrowser?.toggle()
         self.focusNeoVimView(self)
       } else {
         self.emit(self.uuidAction(for: .focus(.fileBrowser)))
@@ -553,7 +538,7 @@ extension MainWindow {
       return
     }
 
-    fileBrowser.toggle()
+    fileBrowser?.toggle()
     self.emit(self.uuidAction(for: .focus(.fileBrowser)))
   }
 
@@ -598,24 +583,23 @@ extension MainWindow {
   }
 
   fileprivate func toolIdentifier(for tool: WorkspaceTool) -> Tools? {
-    switch tool {
-
-    case self.fileBrowserContainer:
+    if tool == self.fileBrowserContainer {
       return .fileBrowser
-
-    case self.openedFileListContainer:
-      return .openedFilesList
-
-    case self.previewContainer:
-      return .preview
-
-    case self.htmlPreviewContainer:
-      return .htmlPreview
-
-    default:
-      return nil
-
     }
+
+    if tool == self.openedFileListContainer {
+      return .openedFilesList
+    }
+
+    if tool == self.previewContainer {
+      return .preview
+    }
+
+    if tool == self.htmlPreviewContainer {
+      return .htmlPreview
+    }
+
+    return nil
   }
 }
 
@@ -629,12 +613,21 @@ extension MainWindow {
     let canOpen = canSave
     let canOpenQuickly = canSave
     let canFocusNeoVimView = self.window.firstResponder != self.neoVimView
+    let canToggleFileBrowser = self.tools.keys.contains(.fileBrowser)
+    let canToggleTools = !self.tools.isEmpty
 
     guard let action = item.action else {
       return true
     }
 
     switch action {
+
+    case #selector(toggleAllTools(_:)), #selector(toggleToolButtons(_:)):
+      return canToggleTools
+
+    case #selector(toggleFileBrowser(_:)):
+      return canToggleFileBrowser
+
     case #selector(focusNeoVimView(_:)):
       return canFocusNeoVimView
 
@@ -652,6 +645,7 @@ extension MainWindow {
 
     default:
       return true
+
     }
   }
 }

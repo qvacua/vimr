@@ -7,23 +7,20 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-180</title>
+      <title>SNAPSHOT-183</title>
       <description><![CDATA[
-    <ul>
-<li>Hopefully the last snapshot before next release... 🙄</li>
-<li>GH-405: Retain scroll position after reloading markdown</li>
-</ul>
+    <p>GH-426: Make it possible to turn off some or all tools, e.g. the file browser, Markdown preview, etc..</p>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/180
+        https://github.com/qvacua/vimr/releases/tag/snapshot/183
       </releaseNotesLink>
-      <pubDate>2017-04-23T22:14:51.677227</pubDate>
+      <pubDate>2017-05-01T22:15:22.663484</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/180/VimR-SNAPSHOT-180.tar.bz2"
-                 sparkle:version="180"
-                 sparkle:shortVersionString="SNAPSHOT-180"
-                 sparkle:dsaSignature="MC0CFGo8Gdgf38jMxf6/8Z8bKiuwC1bhAhUAnYOLIwl4CeaTluqpOV4t1plXmz0="
-                 length="12205687"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/183/VimR-SNAPSHOT-183.tar.bz2"
+                 sparkle:version="183"
+                 sparkle:shortVersionString="SNAPSHOT-183"
+                 sparkle:dsaSignature="MC4CFQC8xBNbmWBq56WRWJnrD+YDMzPg6gIVANLPSMyjYZ+dwf0punogEL6q/ZiX"
+                 length="12274181"
                  type="application/octet-stream"/>
     </item>
   </channel>

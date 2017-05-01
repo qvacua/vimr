@@ -92,12 +92,12 @@ func toDict<K: Hashable, V, S: Sequence>(_ sequence: S) -> Dictionary<K, V> wher
 
 extension Dictionary {
 
-  func mapToDict<T>(_ transform: ((key: Key, value: Value)) throws -> (Key, T)) rethrows -> Dictionary<Key, T> {
+  func mapToDict<K, T>(_ transform: ((key: Key, value: Value)) throws -> (K, T)) rethrows -> Dictionary<K, T> {
     let array = try self.map(transform)
     return toDict(array)
   }
 
-  func flatMapToDict<T>(_ transform: ((key: Key, value: Value)) throws -> (Key, T)?) rethrows -> Dictionary<Key, T> {
+  func flatMapToDict<K, T>(_ transform: ((key: Key, value: Value)) throws -> (K, T)?) rethrows -> Dictionary<K, T> {
     let array = try self.flatMap(transform)
     return toDict(array)
   }

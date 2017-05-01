@@ -7,25 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.13.1-167</title>
+      <title>v0.14.1-182</title>
       <description><![CDATA[
     <ul>
-<li>Make pinch-zooming fast (enough) on Retina-displays.</li>
-<li>Make markdown previewing more robust against non-existing file.</li>
-<li>GH-392: Bugfix: fix a weird scroll issue.</li>
-<li>GH-371: Small scroll performance improvment.</li>
+<li>Make app launch time much faster: now just one bounce in the Dock on my machine 😆</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.13.1-167
+        https://github.com/qvacua/vimr/releases/tag/v0.14.1-182
       </releaseNotesLink>
-      <pubDate>2017-02-06T22:55:03.980618</pubDate>
+      <pubDate>2017-05-01T11:02:53.057696</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.13.1-167/VimR-v0.13.1-167.tar.bz2"
-                 sparkle:version="167"
-                 sparkle:shortVersionString="0.13.1"
-                 sparkle:dsaSignature="MCwCFG5z5tVWPbMrysDESci8oG4mipI7AhQbx4kVC4pBPqLgeCgDp/V++JogNQ=="
-                 length="11834343"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.14.1-182/VimR-v0.14.1-182.tar.bz2"
+                 sparkle:version="182"
+                 sparkle:shortVersionString="0.14.1"
+                 sparkle:dsaSignature="MC0CFQCn/FY33VnX7Wkr9bMp+RdWFD8tygIUXZnAsmGsnKE2XKbpuys+2ZLn4eQ="
+                 length="12175315"
                  type="application/octet-stream"/>
     </item>
   </channel>

@@ -61,7 +61,7 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
       self._linespacing = newValue
       self.drawer.linespacing = self.linespacing
 
-      self.updateFontMetaData()
+      self.updateFontMetaData(self._font)
     }
   }
 
@@ -81,9 +81,8 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
       }
 
       self._font = newValue
-      self.drawer.font = self.font
 
-      self.updateFontMetaData()
+      self.updateFontMetaData(newValue)
     }
   }
 
@@ -226,7 +225,9 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
     NSLog("DEBUG 1 - End")
   }
 
-  fileprivate func updateFontMetaData() {
+  fileprivate func updateFontMetaData(_ newFont: NSFont) {
+    self.drawer.font = newFont
+
     self.cellSize = self.drawer.cellSize
     self.descent = self.drawer.descent
     self.leading = self.drawer.leading
@@ -817,6 +818,26 @@ extension NeoVimView {
   }
 }
 
+// MARK: - Font Menu Items
+extension NeoVimView {
+
+  @IBAction func resetFontSize(_ sender: Any?) {
+    self.font = self._font
+  }
+
+  @IBAction func makeFontBigger(_ sender: Any?) {
+    let curFont = self.drawer.font
+    let font = self.fontManager.convert(curFont, toSize: min(curFont.pointSize + 1, NeoVimView.maxFontSize))
+    self.updateFontMetaData(font)
+  }
+
+  @IBAction func makeFontSmaller(_ sender: Any?) {
+    let curFont = self.drawer.font
+    let font = self.fontManager.convert(curFont, toSize: max(curFont.pointSize - 1, NeoVimView.minFontSize))
+    self.updateFontMetaData(font)
+  }
+}
+
 // MARK: - Key Events
 extension NeoVimView: NSTextInputClient {
 
@@ -1054,7 +1075,7 @@ extension NeoVimView {
 
     case NSEventPhase.ended, NSEventPhase.cancelled:
       self.isCurrentlyPinching = false
-      self.font = self.fontManager.convert(self._font, toSize: resultingFontSize)
+      self.updateFontMetaData(self.fontManager.convert(self._font, toSize: resultingFontSize))
       self.pinchTargetScale = 1
 
     default:

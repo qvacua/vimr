@@ -82,6 +82,7 @@ class Context {
       .of(
         self.prefStateSource(by: PrefWindowReducer().reduce, prefService: prefService),
         self.prefStateSource(by: GeneralPrefReducer().reduce, prefService: prefService),
+        self.prefStateSource(by: ToolsPrefReducer().reduce, prefService: prefService),
         self.prefStateSource(by: AppearancePrefReducer().reduce, prefService: prefService),
         self.prefStateSource(by: AdvancedPrefReducer().reduce, prefService: prefService)
       )

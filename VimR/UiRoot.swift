@@ -19,8 +19,8 @@ class UiRoot: UiComponent {
     self.emitter = emitter
 
     self.fileMonitor = FileMonitor(source: source, emitter: emitter, state: state)
-    self.prefWindow = PrefWindow(source: source, emitter: emitter, state: state)
     self.openQuicklyWindow = OpenQuicklyWindow(source: source, emitter: emitter, state: state)
+    self.prefWindow = PrefWindow(source: source, emitter: emitter, state: state)
 
     source
       .observeOn(MainScheduler.instance)
@@ -48,8 +48,8 @@ class UiRoot: UiComponent {
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate let fileMonitor: FileMonitor
-  fileprivate let prefWindow: PrefWindow
   fileprivate let openQuicklyWindow: OpenQuicklyWindow
+  fileprivate let prefWindow: PrefWindow
 
   fileprivate var mainWindows = [String: MainWindow]()
   fileprivate var subjectForMainWindows = [String: PublishSubject<MainWindow.State>]()
