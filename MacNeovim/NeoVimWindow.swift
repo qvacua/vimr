@@ -36,6 +36,10 @@ class NeoVimWindow: NSObject, NSWindowDelegate, NeoVimViewDelegate {
     self.window.makeFirstResponder(self.neoVimView)
   }
 
+  func closeNeoVimWithoutSaving() {
+    self.neoVimView.closeAllWindowsWithoutSaving()
+  }
+
   fileprivate let windowController: NSWindowController
   fileprivate let neoVimView: NeoVimView
   fileprivate var defaultFont: NSFont = NeoVimView.defaultFont

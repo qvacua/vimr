@@ -9,6 +9,7 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate, NeoVimWindowDelegate {
 
   fileprivate var neoVimWindows = Set<NeoVimWindow>()
+  fileprivate var quit = false
 }
 
 // MARK: - NSApplicationDelegate
@@ -18,6 +19,33 @@ extension AppDelegate {
     self.newDocument(self)
     return true
   }
+
+  func applicationShouldTerminate(_ sender: NSApplication) -> NSApplicationTerminateReply {
+    if self.neoVimWindows.isEmpty {
+      return .terminateNow
+    }
+
+    let isDirty = self.neoVimWindows.reduce(false) { $0 ? true : $1.window.isDocumentEdited }
+    guard isDirty else {
+      self.neoVimWindows.forEach { $0.closeNeoVimWithoutSaving() }
+      self.quit = true
+      return .terminateCancel
+    }
+
+    let alert = NSAlert()
+    alert.addButton(withTitle: "Cancel")
+    alert.addButton(withTitle: "Discard and Quit")
+    alert.messageText = "There are windows with unsaved buffers!"
+    alert.alertStyle = .warning
+
+    if alert.runModal() == NSAlertSecondButtonReturn {
+      self.neoVimWindows.forEach { $0.closeNeoVimWithoutSaving() }
+      self.quit = true
+      return .terminateCancel
+    }
+
+    return .terminateCancel
+  }
 }
 
 // MARK: - NeoVimWindow.Delegate
@@ -25,6 +53,10 @@ extension AppDelegate {
 
   func neoVimWindowDidClose(neoVimWindow: NeoVimWindow) {
     self.neoVimWindows.remove(neoVimWindow)
+
+    if self.quit {
+      NSApp.terminate(self)
+    }
   }
 }
 
