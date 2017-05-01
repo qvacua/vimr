@@ -40,6 +40,7 @@
 		1929B67DA3EB21A631EF1DBB /* FileUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA8AC40B901B20F20B71 /* FileUtils.swift */; };
 		1929B6B886CFBCBF01D4B04A /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5E3E722EFA5172E3455 /* Application.swift */; };
 		1929B6BE1610892E6C4C0CE6 /* GeneralPrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0EB3F49C42A57D083AF /* GeneralPrefReducer.swift */; };
+		1929B6C0393DE40E34F4A49A /* ToolsPrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B694508FB5FDE607513A /* ToolsPrefReducer.swift */; };
 		1929B6D8F5FC723B7109031F /* OpenQuicklyReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B12CE56A9B36980288A4 /* OpenQuicklyReducer.swift */; };
 		1929B71381946860626E5224 /* FileBrowserReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDC8F5D48578A90236E9 /* FileBrowserReducer.swift */; };
 		1929B71610FF1DC6E459BA49 /* PreviewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8EF9A9F5ACC175452BD /* PreviewUtils.swift */; };
@@ -354,6 +355,7 @@
 		1929B5E3E722EFA5172E3455 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		1929B617C229B19DB3E987B8 /* PreviewService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewService.swift; sourceTree = "<group>"; };
 		1929B67A10E6BB2986B2416E /* OpenedFileListReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenedFileListReducer.swift; sourceTree = "<group>"; };
+		1929B694508FB5FDE607513A /* ToolsPrefReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolsPrefReducer.swift; sourceTree = "<group>"; };
 		1929B69499B2569793350CEC /* FileItemIgnorePattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemIgnorePattern.swift; sourceTree = "<group>"; };
 		1929B6AD3396160AA2C46919 /* Debouncer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
 		1929B6C6C7792B05164B0216 /* PreviewTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewTool.swift; sourceTree = "<group>"; };
@@ -654,6 +656,7 @@
 				1929B0EB3F49C42A57D083AF /* GeneralPrefReducer.swift */,
 				1929BED01F5D94BFCA4CF80F /* AppearancePrefReducer.swift */,
 				1929B7039C5689CE45F53888 /* AdvancedPrefReducer.swift */,
+				1929B694508FB5FDE607513A /* ToolsPrefReducer.swift */,
 			);
 			name = Preferences;
 			sourceTree = "<group>";
@@ -1487,6 +1490,7 @@
 				1929B4B00D7BB191A9A6532D /* HtmlPreviewToolReducer.swift in Sources */,
 				1929BCF7F7B9CC5499A3F506 /* AdvancedPrefReducer.swift in Sources */,
 				1929BF03FD6465F289AA80B2 /* ToolsPref.swift in Sources */,
+				1929B6C0393DE40E34F4A49A /* ToolsPrefReducer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

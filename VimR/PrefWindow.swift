@@ -27,9 +27,9 @@ class PrefWindow: NSObject,
 
     self.panes = [
       GeneralPref(source: source, emitter: emitter, state: state),
+      ToolsPref(source: source, emitter: emitter, state: state),
       AppearancePref(source: source, emitter: emitter, state: state),
       AdvancedPref(source: source, emitter: emitter, state: state),
-      ToolsPref(source: source, emitter: emitter, state: state),
     ]
 
     super.init()

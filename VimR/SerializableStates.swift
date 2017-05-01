@@ -153,6 +153,7 @@ class Keys {
     static let allToolsVisible = "is-all-tools-visible"
     static let toolButtonsVisible = "is-tool-buttons-visible"
     static let orderedTools = "ordered-tools"
+    static let activeTools = "active-tools"
 
     static let isShowHidden = "is-show-hidden"
   }

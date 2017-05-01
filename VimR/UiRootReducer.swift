@@ -17,16 +17,14 @@ class UiRootReducer {
 
     case .becomeKey:
       appState.currentMainWindowUuid = uuid
-      appState.mainWindowTemplate = appState.mainWindows[uuid] ?? appState.mainWindowTemplate
+      appState.mainWindowTemplate = self.mainWindowTemplate(
+        from: appState.mainWindowTemplate, new: appState.mainWindows[uuid] ?? appState.mainWindowTemplate
+      )
 
     case .close:
       if appState.currentMainWindowUuid == uuid, let mainWindowToClose = appState.mainWindows[uuid] {
-        appState.mainWindowTemplate.isAllToolsVisible = mainWindowToClose.isAllToolsVisible
-        appState.mainWindowTemplate.isToolButtonsVisible = mainWindowToClose.isToolButtonsVisible
-        appState.mainWindowTemplate.tools = mainWindowToClose.tools
-        appState.mainWindowTemplate.previewTool = mainWindowToClose.previewTool
-        appState.mainWindowTemplate.fileBrowserShowHidden = mainWindowToClose.fileBrowserShowHidden
-        appState.mainWindowTemplate.htmlPreview = .default
+        appState.mainWindowTemplate = self.mainWindowTemplate(from: appState.mainWindowTemplate,
+                                                              new: mainWindowToClose)
 
         appState.currentMainWindowUuid = nil
       }
@@ -39,5 +37,18 @@ class UiRootReducer {
     }
 
     return StateActionPair(state: appState, action: pair.action)
+  }
+  
+  fileprivate func mainWindowTemplate(from old: MainWindow.State, new: MainWindow.State) -> MainWindow.State {
+    var result = old
+
+    result.isAllToolsVisible = new.isAllToolsVisible
+    result.isToolButtonsVisible = new.isToolButtonsVisible
+    result.tools = new.tools
+    result.previewTool = new.previewTool
+    result.fileBrowserShowHidden = new.fileBrowserShowHidden
+    result.htmlPreview = .default
+
+    return result
   }
 }

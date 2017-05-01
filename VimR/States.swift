@@ -187,6 +187,12 @@ extension MainWindow {
 
     var isAllToolsVisible = true
     var isToolButtonsVisible = true
+    var activeTools = [
+      Tools.fileBrowser: true,
+      Tools.openedFilesList: true,
+      Tools.preview: true,
+      Tools.htmlPreview: true,
+    ]
 
     ////// transient
 
@@ -246,6 +252,18 @@ extension MainWindow {
       let missingOrderedTools = MainWindow.Tools.all.subtracting(self.orderedTools)
       self.orderedTools.append(contentsOf: missingOrderedTools)
 
+      // To stay compatible with 168 we do not guard against nil activeToolsAsString.
+      let activeToolsAsString = dict[Keys.MainWindow.activeTools] as? [String: Bool] ?? [:]
+      self.activeTools = activeToolsAsString.flatMapToDict { (key, value) in
+        guard let toolId = MainWindow.Tools(rawValue: key) else {
+          return nil
+        }
+
+        return (toolId, value)
+      }
+      let missingActiveTools = MainWindow.Tools.all.subtracting(self.activeTools.keys)
+      missingActiveTools.forEach { self.activeTools[$0] = true }
+
       let workspaceToolsDict = dict[Keys.WorkspaceTool.key] as? [String: [String: Any]] ?? [:]
       let toolKeys = workspaceToolsDict.keys.flatMap { MainWindow.Tools(rawValue: $0) }
       let missingToolKeys = MainWindow.Tools.all.subtracting(toolKeys)
@@ -271,10 +289,10 @@ extension MainWindow {
         Keys.MainWindow.toolButtonsVisible: self.isToolButtonsVisible,
 
         Keys.Appearance.key: self.appearance.dict(),
-        Keys.WorkspaceTool.key: Array(self.tools.keys.map { $0.rawValue })
-          .toDict { self.tools[MainWindow.Tools(rawValue: $0)!]!.dict() },
+        Keys.WorkspaceTool.key: self.tools.mapToDict { ($0.rawValue, $1.dict()) },
 
         Keys.MainWindow.orderedTools: self.orderedTools.map { $0.rawValue },
+        Keys.MainWindow.activeTools: self.activeTools.mapToDict { ($0.rawValue, $1) },
 
         Keys.PreviewTool.key: self.previewTool.dict(),
 

@@ -13,6 +13,7 @@ class ToolsPref: PrefPane, UiComponent {
 
   enum Action {
 
+    case setActiveTools([MainWindow.Tools: Bool])
   }
 
   override var displayName: String {
@@ -25,6 +26,8 @@ class ToolsPref: PrefPane, UiComponent {
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
+
+    self.tools = state.mainWindowTemplate.activeTools
 
     super.init(frame: .zero)
 
@@ -43,6 +46,8 @@ class ToolsPref: PrefPane, UiComponent {
   fileprivate let emit: (Action) -> Void
   fileprivate let disposeBag = DisposeBag()
 
+  fileprivate var tools: [MainWindow.Tools: Bool]
+
   fileprivate let fileBrowserCheckbox = NSButton(forAutoLayout: ())
   fileprivate let openedFilesListCheckbox = NSButton(forAutoLayout: ())
   fileprivate let previewCheckbox = NSButton(forAutoLayout: ())
@@ -53,27 +58,35 @@ class ToolsPref: PrefPane, UiComponent {
   }
 
   fileprivate func updateViews() {
+    self.fileBrowserCheckbox.boolState = self.tools[.fileBrowser] ?? true
+    self.openedFilesListCheckbox.boolState = self.tools[.openedFilesList] ?? true
+    self.previewCheckbox.boolState = self.tools[.preview] ?? true
+    self.htmlCheckbox.boolState = self.tools[.htmlPreview] ?? true
   }
 
   fileprivate func addViews() {
     let paneTitle = self.paneTitleTextField(title: "Tools")
 
     let fileBrowser = self.fileBrowserCheckbox
+    fileBrowser.target = self
     self.configureCheckbox(button: fileBrowser,
                            title: "File Browser",
                            action: #selector(ToolsPref.fileBrowserAction(_:)))
     let openedFilesList = self.openedFilesListCheckbox
+    openedFilesList.target = self
     self.configureCheckbox(button: openedFilesList,
                            title: "Buffers",
                            action: #selector(ToolsPref.openedFilesListAction(_:)))
     let preview = self.previewCheckbox
+    preview.target = self
     self.configureCheckbox(button: preview,
                            title: "Markdown Preview",
                            action: #selector(ToolsPref.previewAction(_:)))
     let html = self.htmlCheckbox
+    html.target = self
     self.configureCheckbox(button: html,
                            title: "HTML Preview",
-                           action: #selector(ToolsPref.htmlAction(_:)))
+                           action: #selector(ToolsPref.htmlPreviewAction(_:)))
 
     let info = self.infoTextField(
       markdown: "You can turn off tools you don't need. The effect takes place when new windows are opened."
@@ -113,18 +126,22 @@ class ToolsPref: PrefPane, UiComponent {
 extension ToolsPref {
 
   @IBAction func fileBrowserAction(_ sender: Any?) {
-    
+    self.tools[.fileBrowser] = self.fileBrowserCheckbox.boolState
+    self.emit(.setActiveTools(self.tools))
   }
 
   @IBAction func openedFilesListAction(_ sender: Any?) {
-
+    self.tools[.openedFilesList] = self.openedFilesListCheckbox.boolState
+    self.emit(.setActiveTools(self.tools))
   }
 
   @IBAction func previewAction(_ sender: Any?) {
-
+    self.tools[.preview] = self.previewCheckbox.boolState
+    self.emit(.setActiveTools(self.tools))
   }
 
-  @IBAction func htmlAction(_ sender: Any?) {
-
+  @IBAction func htmlPreviewAction(_ sender: Any?) {
+    self.tools[.htmlPreview] = self.htmlCheckbox.boolState
+    self.emit(.setActiveTools(self.tools))
   }
 }
