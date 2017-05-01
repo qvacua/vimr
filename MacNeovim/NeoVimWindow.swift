@@ -59,27 +59,6 @@ class NeoVimWindow: NSObject, NSWindowDelegate, NeoVimViewDelegate {
   }
 }
 
-// MARK: - IBActions
-extension NeoVimWindow {
-
-  // FIXME: the following three actions should be implemented by NeoVimView...
-  @IBAction func resetFontSize(_ sender: Any?) {
-    self.neoVimView.font = self.defaultFont
-  }
-
-  @IBAction func makeFontBigger(_ sender: Any?) {
-    let curFont = self.neoVimView.font
-    let font = self.fontManager.convert(curFont, toSize: min(curFont.pointSize + 1, NeoVimView.maxFontSize))
-    self.neoVimView.font = font
-  }
-
-  @IBAction func makeFontSmaller(_ sender: Any?) {
-    let curFont = self.neoVimView.font
-    let font = self.fontManager.convert(curFont, toSize: max(curFont.pointSize - 1, NeoVimView.minFontSize))
-    self.neoVimView.font = font
-  }
-}
-
 // MARK: - NSWindowDelegate
 extension NeoVimWindow {
 

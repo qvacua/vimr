@@ -502,27 +502,6 @@ extension MainWindow {
   }
 }
 
-// MARK: - Font Menu Item Actions
-
-extension MainWindow {
-
-  @IBAction func resetFontSize(_ sender: Any?) {
-    self.neoVimView.font = self.defaultFont
-  }
-
-  @IBAction func makeFontBigger(_ sender: Any?) {
-    let curFont = self.neoVimView.font
-    let font = self.fontManager.convert(curFont, toSize: min(curFont.pointSize + 1, NeoVimView.maxFontSize))
-    self.neoVimView.font = font
-  }
-
-  @IBAction func makeFontSmaller(_ sender: Any?) {
-    let curFont = self.neoVimView.font
-    let font = self.fontManager.convert(curFont, toSize: max(curFont.pointSize - 1, NeoVimView.minFontSize))
-    self.neoVimView.font = font
-  }
-}
-
 // MARK: - Tools Menu Item Actions
 
 extension MainWindow {
