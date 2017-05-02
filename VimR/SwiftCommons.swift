@@ -5,9 +5,6 @@
 
 import Foundation
 
-func call(_ closure: @autoclosure () -> Void, when condition: Bool) { if condition { closure() } }
-func call(_ closure: @autoclosure () -> Void, whenNot condition: Bool) { if !condition { closure() } }
-
 extension String {
 
   func without(prefix: String) -> String {
