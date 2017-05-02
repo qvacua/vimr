@@ -1,3 +1,8 @@
+# next
+
+* Dependencies updates:
+    - RxSwift: 3.4.1
+
 # 0.14.1-182
 
 * Make app launch time much faster.
