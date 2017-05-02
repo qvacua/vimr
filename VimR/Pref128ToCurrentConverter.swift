@@ -498,7 +498,7 @@ fileprivate class PreviewComponent {
           return (identifier, data)
         }
 
-      self.init(rendererDatas: toDict([storedRendererDatas, missingRendererDatas].flatMap { $0 }))
+      self.init(rendererDatas: tuplesToDict([storedRendererDatas, missingRendererDatas].flatMap { $0 }))
     }
 
     func dict() -> [String: Any] {

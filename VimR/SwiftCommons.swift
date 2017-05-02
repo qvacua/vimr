@@ -28,8 +28,9 @@ extension Array {
   /// - returns: Transformed array of `self`.
   func concurrentChunkMap<R>(
     _ chunk: Int = 100,
-    queue: DispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated),
-    transform: (Element) -> R) -> [R] {
+    queue: DispatchQueue = .global(qos: .userInitiated),
+    transform: (Element) -> R
+  ) -> [R] {
     let count = self.count
 
     let chunkedCount = Int(ceil(Float(count) / Float(chunk)))
@@ -65,42 +66,6 @@ extension Array where Element: Equatable {
 
     return result
   }
-}
-
-extension Array where Element: Hashable {
-
-  func toDict<V>(by mapper: @escaping (Element) -> V) -> Dictionary<Element, V> {
-    var result = Dictionary<Element, V>(minimumCapacity: self.count)
-    self.forEach { result[$0] = mapper($0) }
-
-    return result
-  }
-}
-
-func toDict<K: Hashable, V, S: Sequence>(_ sequence: S) -> Dictionary<K, V> where S.Iterator.Element == (K, V) {
-  var result = Dictionary<K, V>(minimumCapacity: sequence.underestimatedCount)
-
-  for (key, value) in sequence {
-    result[key] = value
-  }
-
-  return result
-}
-
-extension Dictionary {
-
-  func mapToDict<K, T>(_ transform: ((key: Key, value: Value)) throws -> (K, T)) rethrows -> Dictionary<K, T> {
-    let array = try self.map(transform)
-    return toDict(array)
-  }
-
-  func flatMapToDict<K, T>(_ transform: ((key: Key, value: Value)) throws -> (K, T)?) rethrows -> Dictionary<K, T> {
-    let array = try self.flatMap(transform)
-    return toDict(array)
-  }
-}
-
-extension Array where Element: Equatable {
 
   /**
    Returns an array where elements of `elements` contained in the array are substituted by elements of `elements`.
@@ -116,5 +81,38 @@ extension Array where Element: Equatable {
     indices.enumerated().forEach { result[$0.1] = elementsInArray[$0.0] }
 
     return result
+  }
+}
+
+extension Array where Element: Hashable {
+
+  func toDict<V>(by mapper: @escaping (Element) -> V) -> Dictionary<Element, V> {
+    var result = Dictionary<Element, V>(minimumCapacity: self.count)
+    self.forEach { result[$0] = mapper($0) }
+
+    return result
+  }
+}
+
+func tuplesToDict<K:Hashable, V, S:Sequence>(_ sequence: S) -> Dictionary<K, V> where S.Iterator.Element == (K, V) {
+  var result = Dictionary<K, V>(minimumCapacity: sequence.underestimatedCount)
+
+  for (key, value) in sequence {
+    result[key] = value
+  }
+
+  return result
+}
+
+extension Dictionary {
+
+  func mapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)) rethrows -> Dictionary<K, V> {
+    let array = try self.map(transform)
+    return tuplesToDict(array)
+  }
+
+  func flatMapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows -> Dictionary<K, V> {
+    let array = try self.flatMap(transform)
+    return tuplesToDict(array)
   }
 }

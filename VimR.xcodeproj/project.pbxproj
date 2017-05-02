@@ -46,10 +46,12 @@
 		1929B71610FF1DC6E459BA49 /* PreviewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8EF9A9F5ACC175452BD /* PreviewUtils.swift */; };
 		1929B728262BAA14FC93F6AC /* NeoVimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF00B466B40629C2AABE /* NeoVimView.swift */; };
 		1929B7A2F2B423AA9740FD45 /* FileUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5D977261F1EBFA9E8F1 /* FileUtilsTest.swift */; };
+		1929B87BEB0B00619DEC2A7F /* StringCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE20FFBB2D828DB30D81 /* StringCommonsTest.swift */; };
 		1929B8EE07CA6D47855E7332 /* ImageAndTextTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B015804B46789F719C01 /* ImageAndTextTableCell.swift */; };
 		1929B8FB248D71BF88A35761 /* PreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6C6C7792B05164B0216 /* PreviewTool.swift */; };
 		1929B94083273D4B321AD848 /* FileItemUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B56C8ED31834BA9D8543 /* FileItemUtils.swift */; };
 		1929B990A143763A56CFCED0 /* PrefService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B364460D86F17E80943C /* PrefService.swift */; };
+		1929B9FDD1FFCC81C83EFA69 /* DictionaryCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB6EB0EC313E228EBC9C /* DictionaryCommonsTest.swift */; };
 		1929BA120290D6A2A61A4468 /* ArrayCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B477E1E62433BC48E10B /* ArrayCommonsTest.swift */; };
 		1929BA715337FE26155B2071 /* OpenedFileList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA43449BA41666CD55ED /* OpenedFileList.swift */; };
 		1929BA76A1D97D8226F7CFB1 /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6AD3396160AA2C46919 /* Debouncer.swift */; };
@@ -379,6 +381,7 @@
 		1929BB55946DAEBF55D24048 /* GeneralPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralPref.swift; sourceTree = "<group>"; };
 		1929BB6608B4F0E037CA0F4C /* States.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = States.swift; sourceTree = "<group>"; };
 		1929BB6CFF4CC0B5E8B00C62 /* DataWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataWrapper.m; sourceTree = "<group>"; };
+		1929BB6EB0EC313E228EBC9C /* DictionaryCommonsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryCommonsTest.swift; sourceTree = "<group>"; };
 		1929BBC84557C8351EC6183E /* FileItemIgnorePatternTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemIgnorePatternTest.swift; sourceTree = "<group>"; };
 		1929BBE0A534F2F6009D31BE /* AdvencedPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvencedPref.swift; sourceTree = "<group>"; };
 		1929BC19C1BC19246AFF1621 /* MatcherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatcherTests.swift; sourceTree = "<group>"; };
@@ -389,6 +392,7 @@
 		1929BDC8F5D48578A90236E9 /* FileBrowserReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBrowserReducer.swift; sourceTree = "<group>"; };
 		1929BDF9EBAF1D9D44399045 /* ScoredFileItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoredFileItem.swift; sourceTree = "<group>"; };
 		1929BE168F31344B69E61B62 /* PrefWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefWindow.swift; sourceTree = "<group>"; };
+		1929BE20FFBB2D828DB30D81 /* StringCommonsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringCommonsTest.swift; sourceTree = "<group>"; };
 		1929BE37AA2843779CAFA76F /* PreviewReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewReducer.swift; sourceTree = "<group>"; };
 		1929BE5AEA3D0980860EED50 /* HtmlPreviewToolReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HtmlPreviewToolReducer.swift; sourceTree = "<group>"; };
 		1929BE69CF9AB1A10D0DD4F2 /* CocoaCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaCategories.h; sourceTree = "<group>"; };
@@ -948,6 +952,8 @@
 				4BF8EEDA1D85903000CAC08A /* PrefUtilsTest.swift */,
 				1929B41F745CDCDFE09ACDCF /* resources */,
 				1929B477E1E62433BC48E10B /* ArrayCommonsTest.swift */,
+				1929BB6EB0EC313E228EBC9C /* DictionaryCommonsTest.swift */,
+				1929BE20FFBB2D828DB30D81 /* StringCommonsTest.swift */,
 			);
 			path = VimRTests;
 			sourceTree = "<group>";
@@ -1504,6 +1510,8 @@
 				1929B7A2F2B423AA9740FD45 /* FileUtilsTest.swift in Sources */,
 				1929BD4CA2204E061A86A140 /* MatcherTests.swift in Sources */,
 				1929BA120290D6A2A61A4468 /* ArrayCommonsTest.swift in Sources */,
+				1929B9FDD1FFCC81C83EFA69 /* DictionaryCommonsTest.swift in Sources */,
+				1929B87BEB0B00619DEC2A7F /* StringCommonsTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
