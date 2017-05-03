@@ -6,12 +6,12 @@
 import Cocoa
 import PureLayout
 
-enum WorkspaceBarLocation {
+enum WorkspaceBarLocation: String {
 
-  case top
-  case right
-  case bottom
-  case left
+  case top = "top"
+  case right = "right"
+  case bottom = "bottom"
+  case left = "left"
 
   static let all = [ top, right, bottom, left ]
 }

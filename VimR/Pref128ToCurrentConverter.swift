@@ -408,7 +408,7 @@ fileprivate struct ToolPrefData: StandardPrefData {
   func dict() -> [String: Any] {
     return [
       ToolPrefData.identifier: self.identifier.rawValue,
-      ToolPrefData.location: PrefUtils.locationAsString(for: self.location),
+      ToolPrefData.location: self.location.rawValue,
       ToolPrefData.isVisible: self.isVisible,
       ToolPrefData.dimension: Float(self.dimension),
       ToolPrefData.toolData: self.toolData.dict()
@@ -426,7 +426,7 @@ fileprivate struct ToolPrefData: StandardPrefData {
     }
 
     guard let identifier = ToolIdentifier(rawValue: identifierRawValue),
-          let location = PrefUtils.location(from: locationRawValue)
+          let location = WorkspaceBarLocation(rawValue: locationRawValue)
       else {
       return nil
     }
