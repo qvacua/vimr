@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1929B0032058D7A00000234A /* UrlCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB6C37013C2F120279B6 /* UrlCommonsTest.swift */; };
 		1929B00BA624DA8DC75F7E02 /* SerializableStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA42AB6F1BF631B57399 /* SerializableStates.swift */; };
 		1929B05B9D664052EC2D23EF /* FileOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCE3E156C06EDF1F2806 /* FileOutlineView.swift */; };
 		1929B08C6230B9C5AB72DAF1 /* Pref128ToCurrentConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5046239709E33516F5C /* Pref128ToCurrentConverter.swift */; };
@@ -106,6 +107,7 @@
 		4B4192181D0C52D700A0BEB2 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4192171D0C52D700A0BEB2 /* Grid.swift */; };
 		4B5011F81EBA67EB00F76C46 /* RxTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B5011F71EBA67EB00F76C46 /* RxTest.framework */; };
 		4B5011F91EBA69E200F76C46 /* RxTest.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B5011F71EBA67EB00F76C46 /* RxTest.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B5011FB1EBA6FD700F76C46 /* UrlCommonsTest in Resources */ = {isa = PBXBuildFile; fileRef = 4B5011FA1EBA6FD700F76C46 /* UrlCommonsTest */; };
 		4B56F2931D29903F00C1F92E /* SwiftNeoVimTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B56F2921D29903F00C1F92E /* SwiftNeoVimTests.swift */; };
 		4B56F2951D29903F00C1F92E /* SwiftNeoVim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; };
 		4B56F29D1D29926600C1F92E /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; };
@@ -384,6 +386,7 @@
 		1929BB2AD21A10A0ECA66A5E /* ToolsPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolsPref.swift; sourceTree = "<group>"; };
 		1929BB55946DAEBF55D24048 /* GeneralPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralPref.swift; sourceTree = "<group>"; };
 		1929BB6608B4F0E037CA0F4C /* States.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = States.swift; sourceTree = "<group>"; };
+		1929BB6C37013C2F120279B6 /* UrlCommonsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrlCommonsTest.swift; sourceTree = "<group>"; };
 		1929BB6CFF4CC0B5E8B00C62 /* DataWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataWrapper.m; sourceTree = "<group>"; };
 		1929BB6EB0EC313E228EBC9C /* DictionaryCommonsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryCommonsTest.swift; sourceTree = "<group>"; };
 		1929BBC84557C8351EC6183E /* FileItemIgnorePatternTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemIgnorePatternTest.swift; sourceTree = "<group>"; };
@@ -431,6 +434,7 @@
 		4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimViewDelegate.swift; sourceTree = "<group>"; };
 		4B4192171D0C52D700A0BEB2 /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
 		4B5011F71EBA67EB00F76C46 /* RxTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxTest.framework; path = Carthage/Build/Mac/RxTest.framework; sourceTree = SOURCE_ROOT; };
+		4B5011FA1EBA6FD700F76C46 /* UrlCommonsTest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = UrlCommonsTest; sourceTree = "<group>"; };
 		4B56F2901D29903F00C1F92E /* SwiftNeoVimTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftNeoVimTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B56F2921D29903F00C1F92E /* SwiftNeoVimTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftNeoVimTests.swift; sourceTree = "<group>"; };
 		4B56F2941D29903F00C1F92E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -623,6 +627,7 @@
 		1929B41F745CDCDFE09ACDCF /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				4B5011FA1EBA6FD700F76C46 /* UrlCommonsTest */,
 				4BDF500B1D760A3500D8FBC3 /* FileUtilsTest */,
 			);
 			path = resources;
@@ -963,6 +968,7 @@
 				1929BB6EB0EC313E228EBC9C /* DictionaryCommonsTest.swift */,
 				1929BE20FFBB2D828DB30D81 /* StringCommonsTest.swift */,
 				1929BCB25C82D93EA66C5FA5 /* RxSwiftCommonsTest.swift */,
+				1929BB6C37013C2F120279B6 /* UrlCommonsTest.swift */,
 			);
 			path = VimRTests;
 			sourceTree = "<group>";
@@ -1311,6 +1317,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BDF500C1D760A3500D8FBC3 /* FileUtilsTest in Resources */,
+				4B5011FB1EBA6FD700F76C46 /* UrlCommonsTest in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1522,6 +1529,7 @@
 				1929B9FDD1FFCC81C83EFA69 /* DictionaryCommonsTest.swift in Sources */,
 				1929B87BEB0B00619DEC2A7F /* StringCommonsTest.swift in Sources */,
 				1929B7BDD88EEE171D452595 /* RxSwiftCommonsTest.swift in Sources */,
+				1929B0032058D7A00000234A /* UrlCommonsTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
