@@ -46,6 +46,7 @@
 		1929B71610FF1DC6E459BA49 /* PreviewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8EF9A9F5ACC175452BD /* PreviewUtils.swift */; };
 		1929B728262BAA14FC93F6AC /* NeoVimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF00B466B40629C2AABE /* NeoVimView.swift */; };
 		1929B7A2F2B423AA9740FD45 /* FileUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5D977261F1EBFA9E8F1 /* FileUtilsTest.swift */; };
+		1929B7BDD88EEE171D452595 /* RxSwiftCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCB25C82D93EA66C5FA5 /* RxSwiftCommonsTest.swift */; };
 		1929B87BEB0B00619DEC2A7F /* StringCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE20FFBB2D828DB30D81 /* StringCommonsTest.swift */; };
 		1929B8EE07CA6D47855E7332 /* ImageAndTextTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B015804B46789F719C01 /* ImageAndTextTableCell.swift */; };
 		1929B8FB248D71BF88A35761 /* PreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6C6C7792B05164B0216 /* PreviewTool.swift */; };
@@ -103,6 +104,8 @@
 		4B401B1A1D046E0600D99EDC /* NeoVimViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */; };
 		4B4147A31D97361400DD4A2C /* WorkspaceToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */; };
 		4B4192181D0C52D700A0BEB2 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4192171D0C52D700A0BEB2 /* Grid.swift */; };
+		4B5011F81EBA67EB00F76C46 /* RxTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B5011F71EBA67EB00F76C46 /* RxTest.framework */; };
+		4B5011F91EBA69E200F76C46 /* RxTest.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B5011F71EBA67EB00F76C46 /* RxTest.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B56F2931D29903F00C1F92E /* SwiftNeoVimTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B56F2921D29903F00C1F92E /* SwiftNeoVimTests.swift */; };
 		4B56F2951D29903F00C1F92E /* SwiftNeoVim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; };
 		4B56F29D1D29926600C1F92E /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; };
@@ -271,6 +274,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4B5011F91EBA69E200F76C46 /* RxTest.framework in CopyFiles */,
 				4B6A709C1D6507A000E12030 /* Nimble.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -385,6 +389,7 @@
 		1929BBC84557C8351EC6183E /* FileItemIgnorePatternTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemIgnorePatternTest.swift; sourceTree = "<group>"; };
 		1929BBE0A534F2F6009D31BE /* AdvencedPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvencedPref.swift; sourceTree = "<group>"; };
 		1929BC19C1BC19246AFF1621 /* MatcherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatcherTests.swift; sourceTree = "<group>"; };
+		1929BCB25C82D93EA66C5FA5 /* RxSwiftCommonsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommonsTest.swift; sourceTree = "<group>"; };
 		1929BCE3E156C06EDF1F2806 /* FileOutlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileOutlineView.swift; sourceTree = "<group>"; };
 		1929BD4149D5A25C82064DD8 /* UiRoot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiRoot.swift; sourceTree = "<group>"; };
 		1929BD83A13BF133741766CC /* MainWindowReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowReducer.swift; sourceTree = "<group>"; };
@@ -425,6 +430,7 @@
 		4B401B131D0454DC00D99EDC /* PureLayout.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureLayout.framework; path = Carthage/Build/Mac/PureLayout.framework; sourceTree = SOURCE_ROOT; };
 		4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimViewDelegate.swift; sourceTree = "<group>"; };
 		4B4192171D0C52D700A0BEB2 /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
+		4B5011F71EBA67EB00F76C46 /* RxTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxTest.framework; path = Carthage/Build/Mac/RxTest.framework; sourceTree = SOURCE_ROOT; };
 		4B56F2901D29903F00C1F92E /* SwiftNeoVimTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftNeoVimTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B56F2921D29903F00C1F92E /* SwiftNeoVimTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftNeoVimTests.swift; sourceTree = "<group>"; };
 		4B56F2941D29903F00C1F92E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -582,6 +588,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B6A70991D65058A00E12030 /* Nimble.framework in Frameworks */,
+				4B5011F81EBA67EB00F76C46 /* RxTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -715,6 +722,7 @@
 		4B2A2BE61D0225840074CE9A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4B5011F71EBA67EB00F76C46 /* RxTest.framework */,
 				4BBFF8611E280E31008A3C1A /* Swifter.framework */,
 				4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */,
 				4B337FBA1DEB76F20020ADD2 /* CocoaFontAwesome.framework */,
@@ -954,6 +962,7 @@
 				1929B477E1E62433BC48E10B /* ArrayCommonsTest.swift */,
 				1929BB6EB0EC313E228EBC9C /* DictionaryCommonsTest.swift */,
 				1929BE20FFBB2D828DB30D81 /* StringCommonsTest.swift */,
+				1929BCB25C82D93EA66C5FA5 /* RxSwiftCommonsTest.swift */,
 			);
 			path = VimRTests;
 			sourceTree = "<group>";
@@ -1512,6 +1521,7 @@
 				1929BA120290D6A2A61A4468 /* ArrayCommonsTest.swift in Sources */,
 				1929B9FDD1FFCC81C83EFA69 /* DictionaryCommonsTest.swift in Sources */,
 				1929B87BEB0B00619DEC2A7F /* StringCommonsTest.swift in Sources */,
+				1929B7BDD88EEE171D452595 /* RxSwiftCommonsTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
