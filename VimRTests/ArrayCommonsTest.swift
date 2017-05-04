@@ -5,7 +5,6 @@
 
 import XCTest
 import Nimble
-@testable import VimR
 
 fileprivate class DummyToken: Comparable {
 

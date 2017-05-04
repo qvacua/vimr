@@ -6,6 +6,4 @@ before_install:
     - brew update
     - brew install libtool automake gettext ninja
 script:
-    - ./bin/build_vimr.sh false
-    - xcodebuild test -scheme SwiftNeoVim
-    - xcodebuild test -scheme VimR
+    - ./bin/build_travis.sh

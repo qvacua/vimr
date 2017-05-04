@@ -3,7 +3,7 @@
  * See LICENSE
  */
 
-import Foundation
+import Cocoa
 
 fileprivate let workspace = NSWorkspace.shared()
 fileprivate let iconsCache = NSCache<NSURL, NSImage>()

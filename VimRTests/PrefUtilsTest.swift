@@ -5,7 +5,6 @@
 
 import XCTest
 import Nimble
-@testable import VimR
 
 class PrefUtilsTest: XCTestCase {
 
