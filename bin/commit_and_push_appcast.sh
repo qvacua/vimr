@@ -15,5 +15,5 @@ fi
 
 echo "### Commiting and pushing appcast"
 
-git commit -am "Bump appcast to ${COMPOUND_VERSION}"
+git commit -S -am "Bump appcast to ${COMPOUND_VERSION}"
 git push origin HEAD:"${BRANCH}"
