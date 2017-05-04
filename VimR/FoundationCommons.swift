@@ -64,6 +64,18 @@ extension URL {
     return self.deletingLastPathComponent()
   }
 
+  var isDir: Bool {
+    return self.resourceValue(URLResourceKey.isDirectoryKey.rawValue)
+  }
+
+  var isHidden: Bool {
+    return self.resourceValue(URLResourceKey.isHiddenKey.rawValue)
+  }
+
+  var isPackage: Bool {
+    return self.resourceValue(URLResourceKey.isPackageKey.rawValue)
+  }
+
   /// Wrapper function for NSURL.getResourceValue for Bool values.
   /// Returns also `false` when
   /// - there is no value for the given `key` or
@@ -71,7 +83,7 @@ extension URL {
   ///
   /// - parameters:
   ///   - key: The `key`-parameter of `NSURL.getResourceValue`.
-  func resourceValue(_ key: String) -> Bool {
+  fileprivate func resourceValue(_ key: String) -> Bool {
     var rsrc: AnyObject?
 
     do {
@@ -87,17 +99,5 @@ extension URL {
     }
 
     return false
-  }
-
-  var isDir: Bool {
-    return self.resourceValue(URLResourceKey.isDirectoryKey.rawValue)
-  }
-
-  var isHidden: Bool {
-    return self.resourceValue(URLResourceKey.isHiddenKey.rawValue)
-  }
-
-  var isPackage: Bool {
-    return self.resourceValue(URLResourceKey.isPackageKey.rawValue)
   }
 }

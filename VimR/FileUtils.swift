@@ -10,16 +10,16 @@ fileprivate let iconsCache = NSCache<NSURL, NSImage>()
 
 class FileUtils {
   
-  fileprivate static let keysToGet = [
-    URLResourceKey.isDirectoryKey,
-    URLResourceKey.isHiddenKey,
-    URLResourceKey.isAliasFileKey,
-    URLResourceKey.isSymbolicLinkKey
+  fileprivate static let keysToGet: [URLResourceKey] = [
+    .isDirectoryKey,
+    .isHiddenKey,
+    .isAliasFileKey,
+    .isSymbolicLinkKey
   ]
   
   fileprivate static let scanOptions: FileManager.DirectoryEnumerationOptions = [
-    FileManager.DirectoryEnumerationOptions.skipsSubdirectoryDescendants,
-    FileManager.DirectoryEnumerationOptions.skipsPackageDescendants
+    .skipsSubdirectoryDescendants,
+    .skipsPackageDescendants
   ]
   
   fileprivate static let fileManager = FileManager.default

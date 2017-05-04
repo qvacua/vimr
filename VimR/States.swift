@@ -336,7 +336,7 @@ struct WorkspaceToolState: SerializableState {
       return nil
     }
 
-    guard let location = PrefUtils.location(from: locationRawValue) else {
+    guard let location = WorkspaceBarLocation(rawValue: locationRawValue) else {
       return nil
     }
 
@@ -347,7 +347,7 @@ struct WorkspaceToolState: SerializableState {
 
   func dict() -> [String: Any] {
     return [
-      Keys.WorkspaceTool.location: PrefUtils.locationAsString(for: self.location),
+      Keys.WorkspaceTool.location: self.location.rawValue,
       Keys.WorkspaceTool.open: self.open,
       Keys.WorkspaceTool.dimension: Float(self.dimension),
     ]
