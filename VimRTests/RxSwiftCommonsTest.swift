@@ -7,7 +7,6 @@ import XCTest
 import Nimble
 import RxSwift
 import RxTest
-@testable import VimR
 
 class RxSwiftCommonsTest: XCTestCase {
 
