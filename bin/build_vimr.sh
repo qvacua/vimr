@@ -17,9 +17,10 @@ pushd neovim
 ln -f -s ../local.mk .
 
 rm -rf build
-make clean
+make distclean
 
 echo "### Building nvim to get the runtime folder"
+rm -rf /tmp/nvim
 make CMAKE_FLAGS="-DCUSTOM_UI=0 -DCMAKE_INSTALL_PREFIX=/tmp/nvim" install
 cp -r /tmp/nvim/share/nvim/runtime .
 
