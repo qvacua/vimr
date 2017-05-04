@@ -3,6 +3,10 @@
 * Dependencies updates:
     - RxSwift: 3.4.1
 
+# 0.14.2-183
+
+* GH-438: Bugfix: `:help` does not work.
+
 # 0.14.1-182
 
 * Make app launch time much faster.
