@@ -101,6 +101,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     // This takes approx. 0.8s - 1s on my machine... -_-
     DispatchQueue.global(qos: .background).async {
       fontPopup.addItems(withTitles: self.fontManager.availableFontNames(with: .fixedPitchFontMask)!)
+      self.updateViews()
     }
 
     let sizeCombo = self.sizeCombo
