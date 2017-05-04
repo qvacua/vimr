@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.14.1-182</title>
+      <title>v0.14.2-184</title>
       <description><![CDATA[
     <ul>
-<li>Make app launch time much faster: now just one bounce in the Dock on my machine 😆</li>
+<li>GH-438: Bugfix: <code>:help</code> does not work.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.14.1-182
+        https://github.com/qvacua/vimr/releases/tag/v0.14.2-184
       </releaseNotesLink>
-      <pubDate>2017-05-01T11:02:53.057696</pubDate>
+      <pubDate>2017-05-04T22:05:42.932030</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.14.1-182/VimR-v0.14.1-182.tar.bz2"
-                 sparkle:version="182"
-                 sparkle:shortVersionString="0.14.1"
-                 sparkle:dsaSignature="MC0CFQCn/FY33VnX7Wkr9bMp+RdWFD8tygIUXZnAsmGsnKE2XKbpuys+2ZLn4eQ="
-                 length="12175315"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.14.2-184/VimR-v0.14.2-184.tar.bz2"
+                 sparkle:version="184"
+                 sparkle:shortVersionString="0.14.2"
+                 sparkle:dsaSignature="MC4CFQDBWoYcmlW33sAUJUMhL9BETl21CwIVALa6F0cLuFqAJU5chVW03B6pYoh0"
+                 length="12193126"
                  type="application/octet-stream"/>
     </item>
   </channel>
