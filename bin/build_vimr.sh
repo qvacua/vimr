@@ -22,13 +22,16 @@ make distclean
 echo "### Building nvim to get the runtime folder"
 rm -rf /tmp/nvim
 make CMAKE_FLAGS="-DCUSTOM_UI=0 -DCMAKE_INSTALL_PREFIX=/tmp/nvim" install
-cp -r /tmp/nvim/share/nvim/runtime .
 
 rm -rf build
 make clean
 
 echo "### Building libnvim"
 make libnvim
+
+echo "### Copying runtime"
+rm -rf runtime
+cp -r /tmp/nvim/share/nvim/runtime .
 
 popd
 
