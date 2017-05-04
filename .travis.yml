@@ -1,9 +1,17 @@
 language: objective-c
 osx_image: xcode8.3
+
 git:
     depth: 1
+
+cache:
+    directories:
+        - Carthage
+
 before_install:
     - brew update
+    - brew upgrade carthage
     - brew install libtool automake gettext ninja
+
 script:
     - ./bin/build_travis.sh

@@ -18,7 +18,7 @@ make libnvim
 popd
 
 echo "### Updating carthage"
-carthage update --platform osx
+carthage update --platform osx --cache-builds
 
 echo "### Executing tests"
 xcodebuild test -scheme SwiftNeoVim
