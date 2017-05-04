@@ -148,6 +148,18 @@
 		4B8AC0441DBCB3A2007CCC9B /* NeoVimObjectsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8AC0431DBCB3A1007CCC9B /* NeoVimObjectsExtensions.swift */; };
 		4B91FFF41DEB772200447068 /* CocoaFontAwesome.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B337FBA1DEB76F20020ADD2 /* CocoaFontAwesome.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B91FFF61DEB772B00447068 /* CocoaFontAwesome.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B337FBA1DEB76F20020ADD2 /* CocoaFontAwesome.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B96FB3B1EBBC56F00E4E164 /* FileItemIgnorePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B69499B2569793350CEC /* FileItemIgnorePattern.swift */; };
+		4B96FB3C1EBBC56F00E4E164 /* FileUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA8AC40B901B20F20B71 /* FileUtils.swift */; };
+		4B96FB3D1EBBC56F00E4E164 /* Matcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEEB33113B0E33C3830F /* Matcher.swift */; };
+		4B96FB3E1EBBC56F00E4E164 /* Scorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D510177918080BE39B /* Scorer.swift */; };
+		4B96FB3F1EBBC56F00E4E164 /* PrefUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8241CDE58F7AAF89AE4 /* PrefUtils.swift */; };
+		4B96FB401EBBC56F00E4E164 /* FoundationCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */; };
+		4B96FB411EBBC56F00E4E164 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */; };
+		4B96FB421EBBC56F00E4E164 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70951D6100E300E12030 /* SwiftCommons.swift */; };
+		4B96FB431EBBC5C300E4E164 /* SwiftNeoVim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; };
+		4B96FB441EBBC5E300E4E164 /* SwiftNeoVim.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B96FB451EBBC6EA00E4E164 /* RxSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B2A2BE31D0225800074CE9A /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B96FB461EBBC6EE00E4E164 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2A2BE31D0225800074CE9A /* RxSwift.framework */; };
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
 		4B9A15241D2993DA009F9F67 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B9A15261D2993DF009F9F67 /* SwiftNeoVim.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -277,6 +289,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4B96FB451EBBC6EA00E4E164 /* RxSwift.framework in CopyFiles */,
+				4B96FB441EBBC5E300E4E164 /* SwiftNeoVim.framework in CopyFiles */,
 				4B5011F91EBA69E200F76C46 /* RxTest.framework in CopyFiles */,
 				4B6A709C1D6507A000E12030 /* Nimble.framework in CopyFiles */,
 			);
@@ -593,6 +607,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B96FB431EBBC5C300E4E164 /* SwiftNeoVim.framework in Frameworks */,
+				4B96FB461EBBC6EE00E4E164 /* RxSwift.framework in Frameworks */,
 				4B6A70991D65058A00E12030 /* Nimble.framework in Frameworks */,
 				4B5011F81EBA67EB00F76C46 /* RxTest.framework in Frameworks */,
 			);
@@ -1239,7 +1255,6 @@
 					4BEBA5131CFF374B00673FDF = {
 						CreatedOnToolsVersion = 7.3.1;
 						LastSwiftMigration = 0800;
-						TestTargetID = 4BEBA5041CFF374B00673FDF;
 					};
 				};
 			};
@@ -1539,6 +1554,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B96FB3B1EBBC56F00E4E164 /* FileItemIgnorePattern.swift in Sources */,
+				4B96FB3C1EBBC56F00E4E164 /* FileUtils.swift in Sources */,
+				4B96FB3D1EBBC56F00E4E164 /* Matcher.swift in Sources */,
+				4B96FB3E1EBBC56F00E4E164 /* Scorer.swift in Sources */,
+				4B96FB3F1EBBC56F00E4E164 /* PrefUtils.swift in Sources */,
+				4B96FB401EBBC56F00E4E164 /* FoundationCommons.swift in Sources */,
+				4B96FB411EBBC56F00E4E164 /* RxSwiftCommons.swift in Sources */,
+				4B96FB421EBBC56F00E4E164 /* SwiftCommons.swift in Sources */,
 				1929BEFEABA0448306CDB6D4 /* FileItemIgnorePatternTest.swift in Sources */,
 				1929B66F795867B8C07FAAD4 /* DictionaryCommonsTest.swift in Sources */,
 				1929B98F94536E3912AD9F3B /* ArrayCommonsTest.swift in Sources */,
@@ -2046,7 +2069,6 @@
 		4BEBA5211CFF374B00673FDF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2056,14 +2078,12 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimRTests;
 				PRODUCT_NAME = VimRTests;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VimR.app/Contents/MacOS/VimR";
 			};
 			name = Debug;
 		};
 		4BEBA5221CFF374B00673FDF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2073,7 +2093,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimRTests;
 				PRODUCT_NAME = VimRTests;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VimR.app/Contents/MacOS/VimR";
 			};
 			name = Release;
 		};
