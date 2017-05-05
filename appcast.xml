@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.14.2-184</title>
+      <title>v0.14.3-185</title>
       <description><![CDATA[
     <ul>
-<li>GH-438: Bugfix: <code>:help</code> does not work.</li>
+<li>GH-440: Bugfix: "User interactive mode for zsh" does not work.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.14.2-184
+        https://github.com/qvacua/vimr/releases/tag/v0.14.3-185
       </releaseNotesLink>
-      <pubDate>2017-05-04T22:05:42.932030</pubDate>
+      <pubDate>2017-05-05T17:58:41.818335</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.14.2-184/VimR-v0.14.2-184.tar.bz2"
-                 sparkle:version="184"
-                 sparkle:shortVersionString="0.14.2"
-                 sparkle:dsaSignature="MC4CFQDBWoYcmlW33sAUJUMhL9BETl21CwIVALa6F0cLuFqAJU5chVW03B6pYoh0"
-                 length="12193126"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.14.3-185/VimR-v0.14.3-185.tar.bz2"
+                 sparkle:version="185"
+                 sparkle:shortVersionString="0.14.3"
+                 sparkle:dsaSignature="MC4CFQCB/DtZ5exkIgeSKdN9nMZu86MzkgIVAKA3Pu7FcyS0Glv88CM1ruaCkF5m"
+                 length="12194529"
                  type="application/octet-stream"/>
     </item>
   </channel>
