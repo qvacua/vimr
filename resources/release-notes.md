@@ -1,3 +1,7 @@
+# 0.14.3-184
+
+* GH-440: Bugfix: "User interactive mode for zsh" does not work.
+
 # 0.14.2-183
 
 * GH-438: Bugfix: `:help` does not work.
