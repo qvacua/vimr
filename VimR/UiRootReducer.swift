@@ -38,7 +38,7 @@ class UiRootReducer {
 
     return StateActionPair(state: appState, action: pair.action)
   }
-  
+
   fileprivate func mainWindowTemplate(from old: MainWindow.State, new: MainWindow.State) -> MainWindow.State {
     var result = old
 

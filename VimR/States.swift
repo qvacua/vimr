@@ -242,6 +242,9 @@ extension MainWindow {
         return nil
       }
 
+      // Stay compatible with 168
+      self.useInteractiveZsh = PrefUtils.bool(from: dict, for: Keys.MainWindow.useInteractiveZsh, default: false)
+
       self.isAllToolsVisible = isAllToolsVisible
       self.isToolButtonsVisible = isToolButtonsVisible
 
@@ -297,6 +300,7 @@ extension MainWindow {
         Keys.PreviewTool.key: self.previewTool.dict(),
 
         Keys.MainWindow.isShowHidden: self.fileBrowserShowHidden,
+        Keys.MainWindow.useInteractiveZsh: self.useInteractiveZsh,
       ]
     }
   }
