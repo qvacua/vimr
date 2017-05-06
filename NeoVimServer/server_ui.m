@@ -69,6 +69,8 @@ static int _put_column = -1;
 
 static NSString *_backspace = nil;
 
+static bool _dirty = false;
+
 #pragma mark Helper functions
 static inline int screen_cursor_row() {
   return curwin->w_winrow + curwin->w_wrow;
@@ -94,6 +96,20 @@ static bool has_dirty_docs() {
   }
 
   return false;
+}
+
+static void send_dirty_status() {
+  bool new_dirty_status = has_dirty_docs();
+  DLOG("dirty status: %d vs. %d", _dirty, new_dirty_status);
+  if (_dirty == new_dirty_status) {
+    return;
+  }
+
+  _dirty = new_dirty_status;
+  DLOG("sending dirty status: %d", _dirty);
+  NSData *data = [[NSData alloc] initWithBytes:&_dirty length:sizeof(bool)];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdDirtyStatusChanged data:data];
+  [data release];
 }
 
 static void insert_marked_text(NSString *markedText) {
@@ -442,13 +458,13 @@ void custom_ui_autocmds_groups(
   @autoreleasepool {
     DLOG("got event %d for file %s in group %d.", event, fname, group);
 
-//    if (event == EVENT_TEXTCHANGED
-//      || event == EVENT_TEXTCHANGEDI
-//      || event == EVENT_BUFWRITEPOST
-//      || event == EVENT_BUFLEAVE)
-//    {
-//      send_dirty_status();
-//    }
+    if (event == EVENT_TEXTCHANGED
+      || event == EVENT_TEXTCHANGEDI
+      || event == EVENT_BUFWRITEPOST
+      || event == EVENT_BUFLEAVE)
+    {
+      send_dirty_status();
+    }
 
     NSUInteger eventCode = event;
 

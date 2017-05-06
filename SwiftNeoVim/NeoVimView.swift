@@ -1495,9 +1495,9 @@ extension NeoVimView {
     DispatchQueue.main.async {
 //    NSLog("\(event.rawValue) with buffer \(bufferHandle)")
 
-      if (event == .TEXTCHANGED || event == .TEXTCHANGEDI || event == .BUFWRITEPOST || event == .BUFLEAVE) {
-        self.delegate?.set(dirtyStatus: self.hasDirtyDocs())
-      }
+//      if (event == .TEXTCHANGED || event == .TEXTCHANGEDI || event == .BUFWRITEPOST || event == .BUFLEAVE) {
+//        self.delegate?.set(dirtyStatus: self.hasDirtyDocs())
+//      }
 
       if event == .BUFWINENTER || event == .BUFWINLEAVE {
         self.bufferListChanged()
