@@ -18,15 +18,15 @@ ln -f -s ../local.mk .
 rm -rf build
 make distclean
 
-echo "### Building nvim to get the runtime folder"
+echo "### Building nvim to get the complete runtime folder"
 rm -rf /tmp/nvim
-make LibIntl_INCLUDE_DIRS=../third-party/libintl CMAKE_FLAGS="-DCUSTOM_UI=0 -DCMAKE_INSTALL_PREFIX=/tmp/nvim" install
+make CMAKE_FLAGS="-DCUSTOM_UI=0 -DCMAKE_INSTALL_PREFIX=/tmp/nvim" install
 
 rm -rf build
 make clean
 
 echo "### Building libnvim"
-CFLAGS='-mmacosx-version-min=10.10' MACOSX_DEPLOYMENT_TARGET=10.10 LibIntl_INCLUDE_DIRS=../third-party/libintl make libnvim
+make CFLAGS='-mmacosx-version-min=10.10' MACOSX_DEPLOYMENT_TARGET=10.10 libnvim
 
 echo "### Copying runtime"
 rm -rf runtime

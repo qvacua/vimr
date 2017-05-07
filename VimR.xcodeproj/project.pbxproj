@@ -1906,7 +1906,7 @@
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib",
 				);
 				OTHER_LDFLAGS = (
-					"$(PROJECT_DIR)/third-party/libintl/libintl.a",
+					"$(PROJECT_DIR)/third-party/libintl/lib/libintl.a",
 					"-liconv",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1929,7 +1929,7 @@
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib",
 				);
 				OTHER_LDFLAGS = (
-					"$(PROJECT_DIR)/third-party/libintl/libintl.a",
+					"$(PROJECT_DIR)/third-party/libintl/lib/libintl.a",
 					"-liconv",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
