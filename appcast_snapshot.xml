@@ -7,20 +7,20 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-183</title>
+      <title>SNAPSHOT-186</title>
       <description><![CDATA[
-    <p>GH-426: Make it possible to turn off some or all tools, e.g. the file browser, Markdown preview, etc..</p>
+    <p>GH-442: Changed the way to get the dirty status from neovim.</p>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/183
+        https://github.com/qvacua/vimr/releases/tag/snapshot/186
       </releaseNotesLink>
-      <pubDate>2017-05-01T22:15:22.663484</pubDate>
+      <pubDate>2017-05-06T09:59:01.192039</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/183/VimR-SNAPSHOT-183.tar.bz2"
-                 sparkle:version="183"
-                 sparkle:shortVersionString="SNAPSHOT-183"
-                 sparkle:dsaSignature="MC4CFQC8xBNbmWBq56WRWJnrD+YDMzPg6gIVANLPSMyjYZ+dwf0punogEL6q/ZiX"
-                 length="12274181"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/186/VimR-SNAPSHOT-186.tar.bz2"
+                 sparkle:version="186"
+                 sparkle:shortVersionString="SNAPSHOT-186"
+                 sparkle:dsaSignature="MC0CFQCqC8zFtgiVy4sx0z+pFyDRCtdqjAIUDGVpje3jRXKDgXIyOAumsZ/zm64="
+                 length="12262347"
                  type="application/octet-stream"/>
     </item>
   </channel>
