@@ -1899,7 +1899,7 @@
 					"$(PROJECT_DIR)/neovim/src",
 					"$(PROJECT_DIR)/neovim/.deps/usr/include",
 					"$(PROJECT_DIR)/neovim/build/config",
-					/usr/local/opt/gettext/include,
+					"$(PROJECT_DIR)/third-party/libintl/include",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/neovim/build/lib",
@@ -1922,7 +1922,7 @@
 					"$(PROJECT_DIR)/neovim/src",
 					"$(PROJECT_DIR)/neovim/.deps/usr/include",
 					"$(PROJECT_DIR)/neovim/build/config",
-					/usr/local/opt/gettext/include,
+					"$(PROJECT_DIR)/third-party/libintl/include",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/neovim/build/lib",
