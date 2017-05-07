@@ -1381,7 +1381,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "pushd neovim\nmake libnvim\npopd";
+			shellScript = "pushd neovim\nCFLAGS='-mmacosx-version-min=10.10' MACOSX_DEPLOYMENT_TARGET=10.10 LibIntl_INCLUDE_DIRS=${PROJECT_DIR}/third-party/libintl make libnvim\npopd";
 		};
 		4BDFAC751E59BAC30056122C /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1906,7 +1906,7 @@
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib",
 				);
 				OTHER_LDFLAGS = (
-					/usr/local/opt/gettext/lib/libintl.a,
+					"$(PROJECT_DIR)/third-party/libintl/libintl.a",
 					"-liconv",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1929,7 +1929,7 @@
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib",
 				);
 				OTHER_LDFLAGS = (
-					/usr/local/opt/gettext/lib/libintl.a,
+					"$(PROJECT_DIR)/third-party/libintl/libintl.a",
 					"-liconv",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";

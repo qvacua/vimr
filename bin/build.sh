@@ -3,7 +3,6 @@
 # For jenkins
 
 set -e
-set -x
 
 # for utf-8 for python script
 export LC_CTYPE=en_US.UTF-8

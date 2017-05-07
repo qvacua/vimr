@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -e
-set -x
 
 echo "### Building libnvim"
 
@@ -13,7 +12,7 @@ rm -rf build
 make distclean
 
 echo "### Building libnvim"
-make libnvim
+CFLAGS='-mmacosx-version-min=10.10' MACOSX_DEPLOYMENT_TARGET=10.10 LibIntl_INCLUDE_DIRS=../third-party/libintl make libnvim
 
 popd
 

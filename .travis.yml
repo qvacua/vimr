@@ -11,7 +11,7 @@ cache:
 before_install:
     - brew update
     - brew upgrade carthage
-    - brew install libtool automake gettext ninja
+    - brew install libtool automake ninja
 
 script:
     - ./bin/build_travis.sh
