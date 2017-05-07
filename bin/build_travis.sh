@@ -12,7 +12,7 @@ rm -rf build
 make distclean
 
 echo "### Building libnvim"
-CFLAGS='-mmacosx-version-min=10.10' MACOSX_DEPLOYMENT_TARGET=10.10 LibIntl_INCLUDE_DIRS=../third-party/libintl make libnvim
+make CFLAGS='-mmacosx-version-min=10.10' MACOSX_DEPLOYMENT_TARGET=10.10 CMAKE_EXTRA_FLAGS="-DGETTEXT_SOURCE=CUSTOM" libnvim
 
 popd
 
