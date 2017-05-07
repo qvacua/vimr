@@ -26,7 +26,7 @@ rm -rf build
 make clean
 
 echo "### Building libnvim"
-make CFLAGS='-mmacosx-version-min=10.10' MACOSX_DEPLOYMENT_TARGET=10.10 libnvim
+make CFLAGS='-mmacosx-version-min=10.10' MACOSX_DEPLOYMENT_TARGET=10.10 CMAKE_EXTRA_FLAGS="-DGETTEXT_SOURCE=CUSTOM" libnvim
 
 echo "### Copying runtime"
 rm -rf runtime

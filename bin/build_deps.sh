@@ -21,7 +21,7 @@ pushd gettext
             --disable-dependency-tracking \
             --disable-silent-rules \
             --disable-debug \
-            --prefix=/tmp/gettext \
+            --prefix=$(pwd)/../../third-party/libintl \
             --with-included-gettext \
             --with-included-glib \
             --with-included-libcroco \
