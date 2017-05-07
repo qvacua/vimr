@@ -38,9 +38,14 @@ popd # .deps
 
 popd # $PROJECT_ROOT
 
-echo "### Copy libs to third-party"
+echo "### Copy header/libs to third-party"
 mkdir -p third-party/libintl
-cp .deps/gettext/gettext-runtime/intl/.libs/libintl.a third-party/libintl/libintl.a
-cp .deps/gettext/gettext-runtime/intl/.libs/libintl.8.dylib third-party/libintl/libintl.dylib
+cp .deps/gettext/gettext-runtime/intl/libintl.h third-party/libintl/include/
+cp .deps/gettext/gettext-runtime/intl/.libs/libintl.a third-party/libintl/lib/
+cp .deps/gettext/gettext-runtime/intl/.libs/libintl.8.dylib third-party/libintl/lib/
+
+pushd third-party/libintl/lib
+ln -f -s libintl.8.dylib libintl.dylib
+popd
 
 echo "### Built deps"
