@@ -11,8 +11,7 @@ ln -f -s ../local.mk .
 rm -rf build
 make distclean
 
-echo "### Building libnvim"
-make CFLAGS='-mmacosx-version-min=10.10' MACOSX_DEPLOYMENT_TARGET=10.10 CMAKE_EXTRA_FLAGS="-DGETTEXT_SOURCE=CUSTOM" libnvim
+../bin/build_libnvim.sh
 
 popd
 

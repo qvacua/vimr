@@ -70,16 +70,3 @@ class HttpServerService {
   fileprivate let server = HttpServer()
   fileprivate let githubCssUrl: URL
 }
-
-fileprivate func shareFile(_ path: String) -> ((HttpRequest) -> HttpResponse) {
-  return { r in
-    guard let file = try? path.openForReading() else {
-      return .notFound
-    }
-
-    return .raw(200, "OK", [:], { writer in
-      try? writer.write(file)
-      file.close()
-    })
-  }
-}
