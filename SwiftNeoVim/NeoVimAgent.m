@@ -199,6 +199,25 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   return !_isInitErrorPresent;
 }
 
+- (NSURL *)pwd {
+  NSData *data = [self sendMessageWithId:NeoVimAgentMsgIdGetPwd data:nil expectsReply:YES];
+  if (data == nil) {
+    return [NSURL URLWithString:NSHomeDirectory()];
+  }
+  
+  NSString *path = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+  if (path == nil) {
+    return [NSURL URLWithString:NSHomeDirectory()];
+  }
+
+  NSURL *pwd = [NSURL URLWithString:path];
+  if (pwd == nil) {
+    return [NSURL URLWithString:NSHomeDirectory()];
+  }
+
+  return pwd;
+}
+
 - (void)vimCommand:(NSString *)string {
   NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
   [self sendMessageWithId:NeoVimAgentMsgIdCommand data:data expectsReply:NO];

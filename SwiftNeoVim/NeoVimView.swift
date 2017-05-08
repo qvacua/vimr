@@ -88,12 +88,7 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
 
   public var cwd: URL {
     get {
-      guard let output = self.agent.vimCommandOutput("silent pwd") else {
-        self.ipcBecameInvalid("Reason: 'silent pwd' failed")
-        return URL(fileURLWithPath: NSHomeDirectory())
-      }
-
-      return URL(fileURLWithPath: output)
+      return self.agent.pwd()
     }
 
     set {
@@ -1495,10 +1490,6 @@ extension NeoVimView {
     DispatchQueue.main.async {
 //    NSLog("\(event.rawValue) with buffer \(bufferHandle)")
 
-//      if (event == .TEXTCHANGED || event == .TEXTCHANGEDI || event == .BUFWRITEPOST || event == .BUFLEAVE) {
-//        self.delegate?.set(dirtyStatus: self.hasDirtyDocs())
-//      }
-
       if event == .BUFWINENTER || event == .BUFWINLEAVE {
         self.bufferListChanged()
       }
@@ -1507,7 +1498,7 @@ extension NeoVimView {
         self.tabChanged()
       }
 
-      if event == .CWDCHANGED {
+      if event == .DIRCHANGED {
         self.cwdChanged()
       }
 

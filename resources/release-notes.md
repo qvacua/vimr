@@ -1,7 +1,11 @@
 # next
 
+* We now compile `gettext` ourselves and do not use the pre-built version from homebrew: The library from homebrew is built for 10.12 and VimR's deployment target it 10.10. This mismatch produced many warnings during compilation time...
+* GH-426: You can now turn off some or all tools, e.g. file browser.
+* GH-434: Bugfix: `autochdir` does not work.
 * Dependencies updates:
-    - RxSwift: 3.4.1
+    - neovim/neovim@v0.2.0
+    - ReactiveX/RxSwift@3.4.1
 
 # 0.14.3-185
 

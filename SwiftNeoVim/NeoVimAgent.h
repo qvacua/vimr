@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (bool)runLocalServerAndNeoVim;
 
+- (NSURL *)pwd;
 - (void)vimCommand:(NSString *)string;
 
 - (void)vimInput:(NSString *)string;
