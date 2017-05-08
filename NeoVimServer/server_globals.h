@@ -29,4 +29,6 @@ extern void neovim_vim_input(void **argv);
 extern void neovim_vim_input_marked_text(void **argv);
 extern void neovim_delete(void **argv);
 
+extern void neovim_pwd(void **argv);
+
 extern void neovim_cursor_goto(void **argv);

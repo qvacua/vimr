@@ -70,7 +70,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
       case NeoVimAgentMsgIdCommandOutput: return data_sync(data, outputCondition, neovim_vim_command_output);
 
-      case NeoVimAgentMsgIdSelectWindow: return data_sync (data, outputCondition, neovim_select_window);
+      case NeoVimAgentMsgIdSelectWindow: return data_sync(data, outputCondition, neovim_select_window);
 
       case NeoVimAgentMsgIdGetTabs: return data_sync(data, outputCondition, neovim_tabs);
       
@@ -84,17 +84,19 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
       case NeoVimAgentMsgIdGetDirtyDocs: return data_sync(data, outputCondition, neovim_has_dirty_docs);
 
-      case NeoVimAgentMsgIdResize: return data_sync (data, outputCondition, neovim_resize);
+      case NeoVimAgentMsgIdResize: return data_sync(data, outputCondition, neovim_resize);
 
-      case NeoVimAgentMsgIdCommand: return data_sync (data, outputCondition, neovim_vim_command);
+      case NeoVimAgentMsgIdCommand: return data_sync(data, outputCondition, neovim_vim_command);
 
-      case NeoVimAgentMsgIdInput: return data_sync (data, outputCondition, neovim_vim_input);
+      case NeoVimAgentMsgIdInput: return data_sync(data, outputCondition, neovim_vim_input);
 
-      case NeoVimAgentMsgIdInputMarked: return data_sync (data, outputCondition, neovim_vim_input_marked_text);
+      case NeoVimAgentMsgIdInputMarked: return data_sync(data, outputCondition, neovim_vim_input_marked_text);
 
-      case NeoVimAgentMsgIdDelete: return data_sync (data, outputCondition, neovim_delete);
+      case NeoVimAgentMsgIdDelete: return data_sync(data, outputCondition, neovim_delete);
+      
+      case NeoVimAgentMsgIdGetPwd: return data_sync(data, outputCondition, neovim_pwd);
 
-      case NeoVimAgentMsgIdCursorGoto: return data_sync (data, outputCondition, neovim_cursor_goto);
+      case NeoVimAgentMsgIdCursorGoto: return data_sync(data, outputCondition, neovim_cursor_goto);
 
       default: return NULL;
 
