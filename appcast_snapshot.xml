@@ -7,28 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-187</title>
+      <title>SNAPSHOT-188</title>
       <description><![CDATA[
     <ul>
-<li>GH-426: You can now turn off some or all tools, e.g. file browser.</li>
-<li>We now compile <code>gettext</code> ourselves and do not use the pre-built version from homebrew: The library from homebrew is built for 10.12 and VimR's deployment target it 10.10. This mismatch produced many warning during compilation time...</li>
-<li>Dependencies updates:<ul>
-<li>neovim/neovim@v0.2.0</li>
-<li>ReactiveX/RxSwift@3.4.1</li>
-</ul>
-</li>
+<li>GH-434: Bugfix: <code>autochdir</code> does not work.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/187
+        https://github.com/qvacua/vimr/releases/tag/snapshot/188
       </releaseNotesLink>
-      <pubDate>2017-05-07T17:49:31.460251</pubDate>
+      <pubDate>2017-05-08T20:41:39.954392</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/187/VimR-SNAPSHOT-187.tar.bz2"
-                 sparkle:version="187"
-                 sparkle:shortVersionString="SNAPSHOT-187"
-                 sparkle:dsaSignature="MC4CFQCD8t3Jz8Yt4SW4zlKWEkubpyldCwIVAOKvXah1zght9WpzqUFMzgJ8NI62"
-                 length="12266174"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/188/VimR-SNAPSHOT-188.tar.bz2"
+                 sparkle:version="188"
+                 sparkle:shortVersionString="SNAPSHOT-188"
+                 sparkle:dsaSignature="MCwCFH5ZM//gIFJNoe/rlACv2GZ04ygUAhR5SzL5fIf6FfK1PUIRryLC8OXz3Q=="
+                 length="12265153"
                  type="application/octet-stream"/>
     </item>
   </channel>
