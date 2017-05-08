@@ -202,17 +202,17 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 - (NSURL *)pwd {
   NSData *data = [self sendMessageWithId:NeoVimAgentMsgIdGetPwd data:nil expectsReply:YES];
   if (data == nil) {
-    return [NSURL URLWithString:NSHomeDirectory()];
+    return [NSURL fileURLWithPath:NSHomeDirectory()];
   }
   
   NSString *path = [NSKeyedUnarchiver unarchiveObjectWithData:data];
   if (path == nil) {
-    return [NSURL URLWithString:NSHomeDirectory()];
+    return [NSURL fileURLWithPath:NSHomeDirectory()];
   }
 
-  NSURL *pwd = [NSURL URLWithString:path];
+  NSURL *pwd = [NSURL fileURLWithPath:path];
   if (pwd == nil) {
-    return [NSURL URLWithString:NSHomeDirectory()];
+    return [NSURL fileURLWithPath:NSHomeDirectory()];
   }
 
   return pwd;
