@@ -7,22 +7,25 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-188</title>
+      <title>SNAPSHOT-189</title>
       <description><![CDATA[
     <ul>
-<li>GH-434: Bugfix: <code>autochdir</code> does not work.</li>
+<li>GH-434: Bugfix: <code>autochdir</code> does not work.<ul>
+<li>In the last snapshot we used the wrong URL init method such that many things did not work...</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/188
+        https://github.com/qvacua/vimr/releases/tag/snapshot/189
       </releaseNotesLink>
-      <pubDate>2017-05-08T20:41:39.954392</pubDate>
+      <pubDate>2017-05-08T21:29:22.050853</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/188/VimR-SNAPSHOT-188.tar.bz2"
-                 sparkle:version="188"
-                 sparkle:shortVersionString="SNAPSHOT-188"
-                 sparkle:dsaSignature="MCwCFH5ZM//gIFJNoe/rlACv2GZ04ygUAhR5SzL5fIf6FfK1PUIRryLC8OXz3Q=="
-                 length="12265153"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/189/VimR-SNAPSHOT-189.tar.bz2"
+                 sparkle:version="189"
+                 sparkle:shortVersionString="SNAPSHOT-189"
+                 sparkle:dsaSignature="MC0CFE3Rbl8NyKQSySGhem/g4pJ7ogy7AhUAvXuBW1nRNJOTGno4qp4hqmbjIuA="
+                 length="12267214"
                  type="application/octet-stream"/>
     </item>
   </channel>

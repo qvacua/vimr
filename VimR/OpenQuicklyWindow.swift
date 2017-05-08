@@ -65,7 +65,7 @@ class OpenQuicklyWindow: NSObject,
             self.pattern = pattern
             self.resetAndAddFilterOperation()
           })
-          .addDisposableTo(self.perSessionDisposeBag)
+          .disposed(by: self.perSessionDisposeBag)
 
         self.flatFileItemsSource
           .subscribeOn(self.scheduler)
@@ -85,7 +85,7 @@ class OpenQuicklyWindow: NSObject,
             self.count += items.count
             self.countField.stringValue = "\(self.count) items"
           })
-          .addDisposableTo(self.perSessionDisposeBag)
+          .disposed(by: self.perSessionDisposeBag)
 
         self.windowController.showWindow(self)
       })
