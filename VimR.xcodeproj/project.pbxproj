@@ -246,7 +246,7 @@
 			containerPortal = 4BEBA4FD1CFF374B00673FDF /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 4BEBA5041CFF374B00673FDF;
-			remoteInfo = nvox;
+			remoteInfo = VimR;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1190,7 +1190,7 @@
 				4B2A2BFD1D0351810074CE9A /* PBXTargetDependency */,
 			);
 			name = VimR;
-			productName = nvox;
+			productName = VimR;
 			productReference = 4BEBA5051CFF374B00673FDF /* VimR.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -1209,7 +1209,7 @@
 				4BEBA5161CFF374B00673FDF /* PBXTargetDependency */,
 			);
 			name = VimRTests;
-			productName = nvoxTests;
+			productName = VimRTests;
 			productReference = 4BEBA5141CFF374B00673FDF /* VimRTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
