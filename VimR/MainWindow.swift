@@ -149,6 +149,10 @@ class MainWindow: NSObject,
       }
     }
 
+    if !state.isAllToolsVisible {
+      self.workspace.toggleAllTools()
+    }
+
     self.workspace.delegate = self
 
     Observable

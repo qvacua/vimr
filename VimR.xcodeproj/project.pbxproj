@@ -246,7 +246,7 @@
 			containerPortal = 4BEBA4FD1CFF374B00673FDF /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 4BEBA5041CFF374B00673FDF;
-			remoteInfo = nvox;
+			remoteInfo = VimR;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1190,7 +1190,7 @@
 				4B2A2BFD1D0351810074CE9A /* PBXTargetDependency */,
 			);
 			name = VimR;
-			productName = nvox;
+			productName = VimR;
 			productReference = 4BEBA5051CFF374B00673FDF /* VimR.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -1209,7 +1209,7 @@
 				4BEBA5161CFF374B00673FDF /* PBXTargetDependency */,
 			);
 			name = VimRTests;
-			productName = nvoxTests;
+			productName = VimRTests;
 			productReference = 4BEBA5141CFF374B00673FDF /* VimRTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -1697,7 +1697,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 189;
+				DYLIB_CURRENT_VERSION = 190;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1722,7 +1722,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 189;
+				DYLIB_CURRENT_VERSION = 190;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1957,7 +1957,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 189;
+				CURRENT_PROJECT_VERSION = 190;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -2007,7 +2007,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 189;
+				CURRENT_PROJECT_VERSION = 190;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
