@@ -186,6 +186,7 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
 
     // Neovim is ready now: resize neovim to bounds.
     DispatchQueue.main.async {
+      self.agent.vimCommand("set mouse=a")
       self.agent.setBoolOption("title", to: true)
       self.agent.setBoolOption("termguicolors", to: true)
 
