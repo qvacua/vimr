@@ -4,6 +4,7 @@
 * GH-426: You can now turn off some or all tools, e.g. file browser.
 * GH-434: Bugfix: `autochdir` does not work.
 * Bugfix: When you hide all tools, the state does not get stored in the user defaults.
+* `set mouse=a` when launching the neovim process.
 * Dependencies updates:
     - neovim/neovim@v0.2.0
     - ReactiveX/RxSwift@3.4.1
