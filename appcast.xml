@@ -7,22 +7,31 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.14.3-185</title>
+      <title>v0.15.0-191</title>
       <description><![CDATA[
     <ul>
-<li>GH-440: Bugfix: "User interactive mode for zsh" does not work.</li>
+<li>We now compile <code>gettext</code> ourselves and do not use the pre-built version from homebrew: The library from homebrew is built for 10.12 and VimR's deployment target it 10.10. This mismatch produced many warnings during compilation time...</li>
+<li>GH-426: You can now turn off some or all tools, e.g. file browser.</li>
+<li>GH-434: Bugfix: <code>autochdir</code> does not work.</li>
+<li>Bugfix: When you hide all tools, the state does not get stored in the user defaults.</li>
+<li><code>set mouse=a</code> when launching the neovim process.</li>
+<li>Dependencies updates:<ul>
+<li>neovim/neovim@v0.2.0</li>
+<li>ReactiveX/RxSwift@3.4.1</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.14.3-185
+        https://github.com/qvacua/vimr/releases/tag/v0.15.0-191
       </releaseNotesLink>
-      <pubDate>2017-05-05T17:58:41.818335</pubDate>
+      <pubDate>2017-05-10T22:49:32.340699</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.14.3-185/VimR-v0.14.3-185.tar.bz2"
-                 sparkle:version="185"
-                 sparkle:shortVersionString="0.14.3"
-                 sparkle:dsaSignature="MC4CFQCB/DtZ5exkIgeSKdN9nMZu86MzkgIVAKA3Pu7FcyS0Glv88CM1ruaCkF5m"
-                 length="12194529"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.15.0-191/VimR-v0.15.0-191.tar.bz2"
+                 sparkle:version="191"
+                 sparkle:shortVersionString="0.15.0"
+                 sparkle:dsaSignature="MC4CFQDDPsnlMWRIUVRBoypcsVxM5vr+bQIVAI65Lwb5ysea6UFEtca2UYzM1Zcn"
+                 length="12370777"
                  type="application/octet-stream"/>
     </item>
   </channel>

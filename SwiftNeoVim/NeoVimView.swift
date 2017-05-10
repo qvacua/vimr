@@ -185,21 +185,17 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
     let noErrorDuringInitialization = self.agent.runLocalServerAndNeoVim()
 
     // Neovim is ready now: resize neovim to bounds.
-    DispatchQueue.main.async {
-      self.agent.vimCommand("set mouse=a")
-      self.agent.setBoolOption("title", to: true)
-      self.agent.setBoolOption("termguicolors", to: true)
+    self.agent.vimCommand("set mouse=a")
+    self.agent.setBoolOption("title", to: true)
+    self.agent.setBoolOption("termguicolors", to: true)
 
-      if noErrorDuringInitialization == false {
-        let alert = NSAlert()
-        alert.alertStyle = .warning
-        alert.messageText = "Error during initialization"
-        alert.informativeText = "There was an error during the initialization of NeoVim. "
-                                + "Use :messages to view the error messages."
-        alert.runModal()
-      }
-
-      self.resizeNeoVimUiTo(size: self.bounds.size)
+    if noErrorDuringInitialization == false {
+      let alert = NSAlert()
+      alert.alertStyle = .warning
+      alert.messageText = "Error during initialization"
+      alert.informativeText = "There was an error during the initialization of NeoVim. "
+                              + "Use :messages to view the error messages."
+      alert.runModal()
     }
   }
 
@@ -228,12 +224,16 @@ public class NeoVimView: NSView, NeoVimUiBridgeProtocol, NSUserInterfaceValidati
     self.descent = self.drawer.descent
     self.leading = self.drawer.leading
 
-    self.resizeNeoVimUiTo(size: self.bounds.size)
+    self.resizeNeoVimUi(to: self.bounds.size)
   }
 }
 
 // MARK: - API
 extension NeoVimView {
+
+  public func syncNeoVimWithBounds() {
+    self.resizeNeoVimUi(to: self.bounds.size)
+  }
 
   public func enterResizeMode() {
     self.currentlyResizing = true
@@ -243,7 +243,7 @@ extension NeoVimView {
   public func exitResizeMode() {
     self.currentlyResizing = false
     self.needsDisplay = true
-    self.resizeNeoVimUiTo(size: self.bounds.size)
+    self.resizeNeoVimUi(to: self.bounds.size)
   }
 
   /**
@@ -397,21 +397,21 @@ extension NeoVimView {
 
     if self.inLiveResize || self.currentlyResizing {
       // TODO: Turn off live resizing for now.
-      // self.resizeNeoVimUiTo(size: newSize)
+      // self.resizeNeoVimUi(to: newSize)
       return
     }
 
     // There can be cases where the frame is resized not by live resizing, eg when the window is resized by window
     // management tools. Thus, we make sure that the resize call is made when this happens.
-    self.resizeNeoVimUiTo(size: newSize)
+    self.resizeNeoVimUi(to: newSize)
   }
 
   override public func viewDidEndLiveResize() {
     super.viewDidEndLiveResize()
-    self.resizeNeoVimUiTo(size: self.bounds.size)
+    self.resizeNeoVimUi(to: self.bounds.size)
   }
 
-  fileprivate func resizeNeoVimUiTo(size: CGSize) {
+  fileprivate func resizeNeoVimUi(to size: CGSize) {
     self.currentEmoji = self.randomEmoji()
 
 //    NSLog("\(#function): \(size)")
