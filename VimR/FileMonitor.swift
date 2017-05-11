@@ -18,7 +18,7 @@ class FileMonitor: UiComponent {
     case change(in : URL)
   }
 
-  static let fileSystemEventsLatency = 2.0
+  static let fileSystemEventsLatency = 1.0
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()

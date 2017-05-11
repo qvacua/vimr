@@ -40,9 +40,20 @@ class FileOutlineView: NSOutlineView,
     self.doubleAction = #selector(FileOutlineView.doubleClickAction)
 
     source
+      .filter { state in
+        return state.lastFileSystemUpdate.mark != self.lastFileSystemUpdateMark
+      }
       .throttle(2 * FileMonitor.fileSystemEventsLatency + 1,
                 latest: true,
                 scheduler: SerialDispatchQueueScheduler(qos: .background))
+      .observeOn(MainScheduler.instance)
+      .subscribe(onNext: { [unowned self] state in
+        self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
+        self.update(state.lastFileSystemUpdate.payload)
+      })
+      .disposed(by: self.disposeBag)
+
+    source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
         if state.viewToBeFocused != nil, case .fileBrowser = state.viewToBeFocused! {
@@ -68,13 +79,6 @@ class FileOutlineView: NSOutlineView,
           self.reloadData()
           return
         }
-
-        if state.lastFileSystemUpdate.mark == self.lastFileSystemUpdateMark {
-          return
-        }
-
-        self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
-        self.update(state.lastFileSystemUpdate.payload)
       })
       .disposed(by: self.disposeBag)
   }
@@ -187,6 +191,7 @@ class FileOutlineView: NSOutlineView,
 
   fileprivate func update(_ fileBrowserItem: FileBrowserItem) {
     let url = fileBrowserItem.fileItem.url
+    NSLog("\(#function) updating \(url.lastPathComponent)")
 
     // Sort the array to keep the order.
     let newChildren = FileItemUtils.sortedChildren(for: url, root: self.fileSystemRoot).map(FileBrowserItem.init)

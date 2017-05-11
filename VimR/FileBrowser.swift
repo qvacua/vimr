@@ -17,6 +17,7 @@ class FileBrowser: NSView,
     case open(url: URL, mode: MainWindow.OpenMode)
     case setAsWorkingDirectory(URL)
     case setShowHidden(Bool)
+    case refresh
   }
 
   let innerCustomToolbar = InnerCustomToolbar()
@@ -96,11 +97,13 @@ extension FileBrowser {
       didSet {
         self.goToParentButton.target = self.fileBrowser
         self.scrollToSourceButton.target = self.fileBrowser
+        self.refreshButton.target = self.fileBrowser
       }
     }
 
     let goToParentButton = NSButton(forAutoLayout:())
     let scrollToSourceButton = NSButton(forAutoLayout:())
+    let refreshButton = NSButton(forAutoLayout:())
 
     init() {
       super.init(frame: .zero)
@@ -120,11 +123,19 @@ extension FileBrowser {
       scrollToSource.toolTip = "Navigate to the current buffer"
       scrollToSource.action = #selector(FileBrowser.scrollToSourceAction)
 
+      let refresh = self.refreshButton
+      InnerToolBar.configureToStandardIconButton(button: refresh, iconName: .refresh)
+      refresh.toolTip = "Refresh"
+      refresh.action = #selector(FileBrowser.refreshAction)
+
       self.addSubview(goToParent)
       self.addSubview(scrollToSource)
+      self.addSubview(refresh)
 
+      refresh.autoPinEdge(toSuperviewEdge: .top)
+      refresh.autoPinEdge(toSuperviewEdge: .right)
       goToParent.autoPinEdge(toSuperviewEdge: .top)
-      goToParent.autoPinEdge(toSuperviewEdge: .right)
+      goToParent.autoPinEdge(.right, to: .left, of: refresh)
       scrollToSource.autoPinEdge(toSuperviewEdge: .top)
       scrollToSource.autoPinEdge(.right, to: .left, of: goToParent)
     }
@@ -156,5 +167,9 @@ extension FileBrowser {
     }
 
     self.fileView.select(url)
+  }
+
+  func refreshAction(_ sender: Any?) {
+    self.emit(UuidAction(uuid: self.uuid, action: .refresh))
   }
 }
