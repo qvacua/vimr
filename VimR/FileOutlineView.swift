@@ -40,6 +40,9 @@ class FileOutlineView: NSOutlineView,
     self.doubleAction = #selector(FileOutlineView.doubleClickAction)
 
     source
+      .throttle(2 * FileMonitor.fileSystemEventsLatency + 1,
+                latest: true,
+                scheduler: SerialDispatchQueueScheduler(qos: .background))
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
         if state.viewToBeFocused != nil, case .fileBrowser = state.viewToBeFocused! {
