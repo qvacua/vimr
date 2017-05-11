@@ -7,7 +7,6 @@ import Cocoa
 import RxSwift
 import EonilFileSystemEvents
 
-fileprivate let fileSystemEventsLatency = 2.0
 fileprivate let monitorDispatchQueue = DispatchQueue.global(qos: .userInitiated)
 
 class FileMonitor: UiComponent {
@@ -18,6 +17,8 @@ class FileMonitor: UiComponent {
 
     case change(in : URL)
   }
+
+  static let fileSystemEventsLatency = 1.0
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
@@ -36,7 +37,7 @@ class FileMonitor: UiComponent {
           let path = url.path
           // FIXME: Handle EonilFileSystemEventFlag.RootChanged, ie watchRoot: true
           let monitor = FileSystemEventMonitor(pathsToWatch: [path],
-                                               latency: fileSystemEventsLatency,
+                                               latency: FileMonitor.fileSystemEventsLatency,
                                                watchRoot: false,
                                                queue: monitorDispatchQueue)
           { [unowned self] events in
