@@ -578,7 +578,7 @@ extension NeoVimView {
     self.draw(rowRun: rowRun, context: context)
   }
 
-  fileprivate func drawBackground(positions: [CGPoint], background: UInt32) {
+  fileprivate func drawBackground(positions: [CGPoint], background: Int) {
     ColorUtils.colorIgnoringAlpha(background).set()
 //    NSColor(calibratedRed: CGFloat(drand48()), green: CGFloat(drand48()), blue: CGFloat(drand48()), alpha: 1.0).set()
     let backgroundRect = CGRect(
@@ -1271,10 +1271,10 @@ extension NeoVimView {
 // MARK: - NeoVimUiBridgeProtocol
 extension NeoVimView {
 
-  public func resize(toWidth width: Int32, height: Int32) {
+  public func resize(toWidth width: Int, height: Int) {
     DispatchQueue.main.async {
 //      NSLog("\(#function): \(width):\(height)")
-      self.grid.resize(Size(width: Int(width), height: Int(height)))
+      self.grid.resize(Size(width: width, height: height))
       self.markForRenderWholeView()
     }
   }
@@ -1355,16 +1355,16 @@ extension NeoVimView {
     self.mode = mode
   }
 
-  public func setScrollRegionToTop(_ top: Int32, bottom: Int32, left: Int32, right: Int32) {
+  public func setScrollRegionToTop(_ top: Int, bottom: Int, left: Int, right: Int) {
     DispatchQueue.main.async {
-      let region = Region(top: Int(top), bottom: Int(bottom), left: Int(left), right: Int(right))
+      let region = Region(top: top, bottom: bottom, left: left, right: right)
       self.grid.setScrollRegion(region)
     }
   }
 
-  public func scroll(_ count: Int32) {
+  public func scroll(_ count: Int) {
     DispatchQueue.main.async {
-      self.grid.scroll(Int(count))
+      self.grid.scroll(count)
       self.markForRender(region: self.grid.region)
       // Do not send msgs to agent -> neovim in the delegate method. It causes spinning when you're opening a file with
       // existing swap file.
@@ -1416,9 +1416,9 @@ extension NeoVimView {
     }
   }
 
-  public func unmarkRow(_ row: Int32, column: Int32) {
+  public func unmarkRow(_ row: Int, column: Int) {
     DispatchQueue.main.async {
-      let position = Position(row: Int(row), column: Int(column))
+      let position = Position(row: row, column: column)
 
 //      NSLog("\(#function): \(position)")
 
@@ -1441,24 +1441,24 @@ extension NeoVimView {
   public func flush() {
   }
 
-  public func updateForeground(_ fg: Int32) {
+  public func updateForeground(_ fg: Int) {
     DispatchQueue.main.async {
-      self.grid.foreground = UInt32(bitPattern: fg)
+      self.grid.foreground = fg
 //      NSLog("\(ColorUtils.colorIgnoringAlpha(UInt32(fg)))")
     }
   }
 
-  public func updateBackground(_ bg: Int32) {
+  public func updateBackground(_ bg: Int) {
     DispatchQueue.main.async {
-      self.grid.background = UInt32(bitPattern: bg)
+      self.grid.background = bg
       self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).cgColor
 //      NSLog("\(ColorUtils.colorIgnoringAlpha(UInt32(bg)))")
     }
   }
 
-  public func updateSpecial(_ sp: Int32) {
+  public func updateSpecial(_ sp: Int) {
     DispatchQueue.main.async {
-      self.grid.special = UInt32(bitPattern: sp)
+      self.grid.special = sp
     }
   }
 

@@ -5,6 +5,10 @@
 
 import Cocoa
 
+fileprivate let defaultForeground: Int = 0xFF000000
+fileprivate let defaultBackground: Int = 0xFFFFFFFF
+fileprivate let defaultSpecial: Int = 0xFFFF0000
+
 struct Cell: CustomStringConvertible {
 
   fileprivate let attributes: CellAttributes
@@ -90,13 +94,13 @@ class Grid: CustomStringConvertible {
   fileprivate(set) var putPosition = Position.zero
   fileprivate(set) var screenCursor = Position.zero
   
-  var foreground = qDefaultForeground
-  var background = qDefaultBackground
-  var special = qDefaultSpecial
+  var foreground = defaultForeground
+  var background = defaultBackground
+  var special = defaultSpecial
   
   var attrs: CellAttributes = CellAttributes(
     fontTrait: .none,
-    foreground: qDefaultForeground, background: qDefaultBackground, special: qDefaultSpecial
+    foreground: defaultForeground, background: defaultBackground, special: defaultSpecial
   )
   
   fileprivate(set) var cells: [[Cell]] = []

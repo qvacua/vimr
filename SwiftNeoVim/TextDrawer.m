@@ -15,14 +15,16 @@
 #define BLUE(color_code)     (((color_code      ) & 0xff) / 255.0f)
 
 static dispatch_once_t token;
-static NSMutableDictionary *colorCache;
+static NSMutableDictionary<NSNumber *, NSColor *> *colorCache;
 
-static CGColorRef color_for(unsigned int value) {
+static CGColorRef color_for(NSInteger value) {
   NSColor *color = colorCache[@(value)];
-  if (color == nil) {
-    color = [NSColor colorWithSRGBRed:RED(value) green:GREEN(value) blue:BLUE(value) alpha:1];
-    colorCache[@(value)] = color;
+  if (color != nil) {
+    return color.CGColor;
   }
+
+  color = [NSColor colorWithSRGBRed:RED(value) green:GREEN(value) blue:BLUE(value) alpha:1];
+  colorCache[@(value)] = color;
 
   return color.CGColor;
 }
@@ -125,7 +127,7 @@ static CGColorRef color_for(unsigned int value) {
 
 - (void)drawUnderline:(const CGPoint *_Nonnull)positions
                 count:(NSInteger)count
-                color:(unsigned int)color
+                color:(NSInteger)color
               context:(CGContextRef _Nonnull)context
 {
   CGContextSetFillColorWithColor(context, color_for(color));
@@ -139,7 +141,7 @@ static CGColorRef color_for(unsigned int value) {
 - (void)drawString:(NSString *_Nonnull)nsstring
          positions:(CGPoint *_Nonnull)positions
          fontTrait:(FontTrait)fontTrait
-        foreground:(unsigned int)foreground
+        foreground:(NSInteger)foreground
            context:(CGContextRef _Nonnull)context
 {
   CFStringRef string = (CFStringRef) nsstring;

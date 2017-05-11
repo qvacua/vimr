@@ -5,11 +5,11 @@
 
 import Cocoa
 
-fileprivate var colorCache = [UInt32: NSColor]()
+fileprivate var colorCache = [Int: NSColor]()
 
 class ColorUtils {
 
-  static func colorIgnoringAlpha(_ rgb: UInt32) -> NSColor {
+  static func colorIgnoringAlpha(_ rgb: Int) -> NSColor {
     if let color = colorCache[rgb] {
       return color
     }

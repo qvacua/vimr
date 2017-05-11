@@ -42,9 +42,9 @@ typedef NS_ENUM(NSUInteger, FontTrait) {
 typedef struct {
     FontTrait fontTrait;
 
-    unsigned int foreground;
-    unsigned int background;
-    unsigned int special;
+    NSInteger foreground;
+    NSInteger background;
+    NSInteger special;
 } CellAttributes;
 
 typedef struct {
@@ -63,7 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * NeoVim has set the size of its screen to rows X columns. The view must be resized accordingly.
  */
-- (void)resizeToWidth:(int)width height:(int)height;
+- (void)resizeToWidth:(NSInteger)width height:(NSInteger)height;
 
 /**
  * Clear the view completely. In subsequent callbacks, eg by put, NeoVim will tell us what to do to completely redraw
@@ -95,8 +95,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)modeChange:(CursorModeShape)mode;
 
-- (void)setScrollRegionToTop:(int)top bottom:(int)bottom left:(int)left right:(int)right;
-- (void)scroll:(int)count;
+- (void)setScrollRegionToTop:(NSInteger)top bottom:(NSInteger)bottom left:(NSInteger)left right:(NSInteger)right;
+- (void)scroll:(NSInteger)count;
 - (void)highlightSet:(CellAttributes)attrs;
 
 /**
@@ -105,7 +105,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)put:(NSString *)string screenCursor:(Position)screenCursor;
 
 - (void)putMarkedText:(NSString *)markedText screenCursor:(Position)screenCursor;
-- (void)unmarkRow:(int)row column:(int)column;
+- (void)unmarkRow:(NSInteger)row column:(NSInteger)column;
 
 - (void)bell;
 - (void)visualBell;
@@ -114,17 +114,17 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Set the default foreground color.
  */
-- (void)updateForeground:(int)fg;
+- (void)updateForeground:(NSInteger)fg;
 
 /**
  * Set the default background color.
  */
-- (void)updateBackground:(int)bg;
+- (void)updateBackground:(NSInteger)bg;
 
 /**
  * Set the default special color, eg curly underline for spelling errors.
  */
-- (void)updateSpecial:(int)sp;
+- (void)updateSpecial:(NSInteger)sp;
 
 - (void)suspend;
 - (void)setTitle:(NSString *)title;

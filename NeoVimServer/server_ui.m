@@ -42,9 +42,9 @@ typedef struct {
 // We declare nvim_main because it's not declared in any header files of neovim
 extern int nvim_main(int argc, char **argv);
 
-static unsigned int _default_foreground = qDefaultForeground;
-static unsigned int _default_background = qDefaultBackground;
-static unsigned int _default_special = qDefaultSpecial;
+static NSInteger _default_foreground = qDefaultForeground;
+static NSInteger _default_background = qDefaultBackground;
+static NSInteger _default_special = qDefaultSpecial;
 
 // The thread in which neovim's main runs
 static uv_thread_t _nvim_thread;
@@ -58,25 +58,25 @@ static ServerUiData *_server_ui_data;
 
 static NSString *_marked_text = nil;
 
-static int _marked_row = 0;
-static int _marked_column = 0;
+static NSInteger _marked_row = 0;
+static NSInteger _marked_column = 0;
 
 // for 하 -> hanja popup, Cocoa first inserts 하, then sets marked text, cf docs/notes-on-cocoa-text-input.md
-static int _marked_delta = 0;
+static NSInteger _marked_delta = 0;
 
-static int _put_row = -1;
-static int _put_column = -1;
+static NSInteger _put_row = -1;
+static NSInteger _put_column = -1;
 
 static NSString *_backspace = nil;
 
 static bool _dirty = false;
 
 #pragma mark Helper functions
-static inline int screen_cursor_row() {
+static inline Integer screen_cursor_row() {
   return curwin->w_winrow + curwin->w_wrow;
 }
 
-static inline int screen_cursor_column() {
+static inline Integer screen_cursor_column() {
   return curwin->w_wincol + curwin->w_wcol;
 }
 
@@ -181,9 +181,9 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
 
 #pragma mark NeoVim's UI callbacks
 
-static void server_ui_resize(UI *ui __unused, int width, int height) {
-  int values[] = {width, height};
-  NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
+static void server_ui_resize(UI *ui __unused, Integer width, Integer height) {
+  NSInteger values[] = {width, height};
+  NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(NSInteger))];
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdResize data:data];
   [data release];
 }
@@ -196,19 +196,19 @@ static void server_ui_eol_clear(UI *ui __unused) {
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdEolClear];
 }
 
-static void server_ui_cursor_goto(UI *ui __unused, int row, int col) {
+static void server_ui_cursor_goto(UI *ui __unused, Integer row, Integer col) {
   _put_row = row;
   _put_column = col;
 
-  int values[] = {
+  NSInteger values[] = {
     row, col,
     screen_cursor_row(), screen_cursor_column(),
-    (int) curwin->w_cursor.lnum, curwin->w_cursor.col + 1
+    (NSInteger) curwin->w_cursor.lnum, curwin->w_cursor.col + 1
   };
 
   DLOG("%d:%d - %d:%d - %d:%d", values[0], values[1], values[2], values[3], values[4], values[5]);
 
-  NSData *data = [[NSData alloc] initWithBytes:values length:(6 * sizeof(int))];
+  NSData *data = [[NSData alloc] initWithBytes:values length:(6 * sizeof(NSInteger))];
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetPosition data:data];
   [data release];
 }
@@ -233,27 +233,27 @@ static void server_ui_mouse_off(UI *ui __unused) {
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdMouseOff];
 }
 
-static void server_ui_mode_info_set(UI *ui __unused, bool enabled __unused, Array cursor_styles __unused) {
+static void server_ui_mode_info_set(UI *ui __unused, Boolean enabled __unused, Array cursor_styles __unused) {
   // yet noop
 }
 
-static void server_ui_mode_change(UI *ui __unused, int mode) {
-  int value = mode;
-  NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
+static void server_ui_mode_change(UI *ui __unused, String mode_str __unused, Integer mode) {
+  NSInteger value = mode;
+  NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(NSInteger))];
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdModeChange data:data];
   [data release];
 }
 
-static void server_ui_set_scroll_region(UI *ui __unused, int top, int bot, int left, int right) {
-  int values[] = {top, bot, left, right};
-  NSData *data = [[NSData alloc] initWithBytes:values length:(4 * sizeof(int))];
+static void server_ui_set_scroll_region(UI *ui __unused, Integer top, Integer bot, Integer left, Integer right) {
+  NSInteger values[] = {top, bot, left, right};
+  NSData *data = [[NSData alloc] initWithBytes:values length:(4 * sizeof(NSInteger))];
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetScrollRegion data:data];
   [data release];
 }
 
-static void server_ui_scroll(UI *ui __unused, int count) {
-  int value = count;
-  NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
+static void server_ui_scroll(UI *ui __unused, Integer count) {
+  NSInteger value = count;
+  NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(NSInteger))];
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdScroll data:data];
   [data release];
 }
@@ -275,8 +275,8 @@ static void server_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
   CellAttributes cellAttrs;
   cellAttrs.fontTrait = trait;
 
-  unsigned int fg = attrs.foreground == -1 ? _default_foreground : pun_type(unsigned int, attrs.foreground);
-  unsigned int bg = attrs.background == -1 ? _default_background : pun_type(unsigned int, attrs.background);
+  NSInteger fg = attrs.foreground == -1 ? _default_foreground : attrs.foreground;
+  NSInteger bg = attrs.background == -1 ? _default_background : attrs.background;
 
   cellAttrs.foreground = attrs.reverse ? bg : fg;
   cellAttrs.background = attrs.reverse ? fg : bg;
@@ -287,19 +287,19 @@ static void server_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
   [data release];
 }
 
-static void server_ui_put(UI *ui __unused, uint8_t *str, size_t len) {
-  NSString *string = [[NSString alloc] initWithBytes:str length:len encoding:NSUTF8StringEncoding];
-  int cursor[] = {screen_cursor_row(), screen_cursor_column()};
+static void server_ui_put(UI *ui __unused, String str) {
+  NSString *string = [[NSString alloc] initWithBytes:str.data length:str.size encoding:NSUTF8StringEncoding];
+  NSInteger cursor[] = {screen_cursor_row(), screen_cursor_column()};
 
   NSMutableData *data = [[NSMutableData alloc]
-    initWithCapacity:2 * sizeof(int) + [string lengthOfBytesUsingEncoding:NSUTF8StringEncoding]];
-  [data appendBytes:cursor length:2 * sizeof(int)];
+    initWithCapacity:2 * sizeof(NSInteger) + [string lengthOfBytesUsingEncoding:NSUTF8StringEncoding]];
+  [data appendBytes:cursor length:2 * sizeof(NSInteger)];
   [data appendData:[string dataUsingEncoding:NSUTF8StringEncoding]];
 
   if (_marked_text != nil && _marked_row == _put_row && _marked_column == _put_column) {
     DLOG("putting marked text: '%s'", string.cstr);
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdPutMarked data:data];
-  } else if (_marked_text != nil && len == 0 && _marked_row == _put_row && _marked_column == _put_column - 1) {
+  } else if (_marked_text != nil && str.size == 0 && _marked_row == _put_row && _marked_column == _put_column - 1) {
     DLOG("putting marked text cuz zero");
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdPutMarked data:data];
   } else {
@@ -325,80 +325,80 @@ static void server_ui_flush(UI *ui __unused) {
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdFlush];
 }
 
-static void server_ui_update_fg(UI *ui __unused, int fg) {
-  int value[1];
+static void server_ui_update_fg(UI *ui __unused, Integer fg) {
+  NSInteger value[1];
 
   if (fg == -1) {
     value[0] = _default_foreground;
-    NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
+    NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(NSInteger))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetForeground data:data];
     [data release];
 
     return;
   }
 
-  _default_foreground = pun_type(unsigned int, fg);
+  _default_foreground = fg;
 
   value[0] = fg;
-  NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
+  NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(NSInteger))];
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetForeground data:data];
   [data release];
 }
 
-static void server_ui_update_bg(UI *ui __unused, int bg) {
-  int value[1];
+static void server_ui_update_bg(UI *ui __unused, Integer bg) {
+  NSInteger value[1];
 
   if (bg == -1) {
     value[0] = _default_background;
-    NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
+    NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(NSInteger))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetBackground data:data];
     [data release];
 
     return;
   }
 
-  _default_background = pun_type(unsigned int, bg);
+  _default_background = bg;
   value[0] = bg;
-  NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(int))];
+  NSData *data = [[NSData alloc] initWithBytes:value length:(1 * sizeof(NSInteger))];
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetBackground data:data];
   [data release];
 }
 
-static void server_ui_update_sp(UI *ui __unused, int sp) {
-  int value[2];
+static void server_ui_update_sp(UI *ui __unused, Integer sp) {
+  NSInteger value[2];
 
   if (sp == -1) {
     value[0] = _default_special;
-    NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
+    NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(NSInteger))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetSpecial data:data];
     [data release];
 
     return;
   }
 
-  _default_special = pun_type(unsigned int, sp);
+  _default_special = sp;
   value[0] = sp;
-  NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(int))];
+  NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(NSInteger))];
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetSpecial data:data];
   [data release];
 }
 
-static void server_ui_set_title(UI *ui __unused, char *title) {
-  if (title == NULL) {
+static void server_ui_set_title(UI *ui __unused, String title) {
+  if (title.size == 0) {
     return;
   }
 
-  NSString *string = [[NSString alloc] initWithCString:title encoding:NSUTF8StringEncoding];
+  NSString *string = [[NSString alloc] initWithCString:title.data encoding:NSUTF8StringEncoding];
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetTitle data:[string dataUsingEncoding:NSUTF8StringEncoding]];
   [string release];
 }
 
-static void server_ui_set_icon(UI *ui __unused, char *icon) {
-  if (icon == NULL) {
+static void server_ui_set_icon(UI *ui __unused, String icon) {
+  if (icon.size == 0) {
     return;
   }
 
-  NSString *string = [[NSString alloc] initWithCString:icon encoding:NSUTF8StringEncoding];
+  NSString *string = [[NSString alloc] initWithCString:icon.data encoding:NSUTF8StringEncoding];
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetIcon data:[string dataUsingEncoding:NSUTF8StringEncoding]];
   [string release];
 }
@@ -447,7 +447,13 @@ void custom_ui_start(void) {
 }
 
 void custom_ui_autocmds_groups(
-    event_T event, char_u *fname, char_u *fname_io, int group, bool force, buf_T *buf, exarg_T *eap
+    event_T event,
+    char_u *fname __unused,
+    char_u *fname_io __unused,
+    int group __unused,
+    bool force __unused,
+    buf_T *buf,
+    exarg_T *eap __unused
 ) {
   // We don't need these events in the UI (yet) and they slow down scrolling: Enable them, if necessary, only after
   // optimizing the scrolling.
@@ -807,9 +813,9 @@ void neovim_vim_input(void **argv) {
 
       for (int i = 1; i <= cellCount; i++) {
         DLOG("unmarking at %d:%d", _put_row, _put_column - i);
-        int values[] = {_put_row, MAX(_put_column - i, 0)};
+        NSInteger values[] = {_put_row, MAX(_put_column - i, 0)};
 
-        NSData *unmarkData = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
+        NSData *unmarkData = [[NSData alloc] initWithBytes:values length:(2 * sizeof(NSInteger))];
         [_neovim_server sendMessageWithId:NeoVimServerMsgIdUnmark data:unmarkData];
         [unmarkData release];
       }

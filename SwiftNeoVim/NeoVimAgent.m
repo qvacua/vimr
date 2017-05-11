@@ -22,8 +22,8 @@ static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
   return ( type *) data.bytes;                                            \
 }
 
-data_to_array(int)
 data_to_array(NSUInteger)
+data_to_array(NSInteger)
 data_to_array(bool)
 data_to_array(CellAttributes)
 
@@ -459,7 +459,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     }
 
     case NeoVimServerMsgIdResize: {
-      int *values = data_to_int_array(data, 2);
+      NSInteger *values = data_to_NSInteger_array(data, 2);
       if (values == nil) {
         return;
       }
@@ -476,7 +476,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return;
 
     case NeoVimServerMsgIdSetPosition: {
-      int *values = data_to_int_array(data, 6);
+      NSInteger *values = data_to_NSInteger_array(data, 6);
       [_bridge gotoPosition:(Position) { .row = values[0], .column = values[1] }
                screenCursor:(Position) { .row = values[2], .column = values[3] }
             currentPosition:(Position) { .row = values[4], .column = values[5] }];
@@ -504,19 +504,19 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return;
 
     case NeoVimServerMsgIdModeChange: {
-      int *values = data_to_int_array(data, 1);
+      NSInteger *values = data_to_NSInteger_array(data, 1);
       [_bridge modeChange:(CursorModeShape) values[0]];
       return;
     }
 
     case NeoVimServerMsgIdSetScrollRegion: {
-      int *values = data_to_int_array(data, 4);
+      NSInteger *values = data_to_NSInteger_array(data, 4);
       [_bridge setScrollRegionToTop:values[0] bottom:values[1] left:values[2] right:values[3]];
       return;
     }
 
     case NeoVimServerMsgIdScroll: {
-      int *values = data_to_int_array(data, 1);
+      NSInteger *values = data_to_NSInteger_array(data, 1);
       [_bridge scroll:values[0]];
       return;
     }
@@ -529,12 +529,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
     case NeoVimServerMsgIdPut:
     case NeoVimServerMsgIdPutMarked: {
-      int *values = (int *) data.bytes;
-      int row = values[0];
-      int column = values[1];
+      NSInteger *values = (NSInteger *) data.bytes;
+      NSInteger row = values[0];
+      NSInteger column = values[1];
 
       NSString *string = [[NSString alloc] initWithBytes:(values + 2)
-                                                  length:data.length - 2 * sizeof(int)
+                                                  length:data.length - 2 * sizeof(NSInteger)
                                                 encoding:NSUTF8StringEncoding];
 
       if (msgid == NeoVimServerMsgIdPut) {
@@ -547,7 +547,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     }
 
     case NeoVimServerMsgIdUnmark: {
-      int *values = data_to_int_array(data, 2);
+      NSInteger *values = data_to_NSInteger_array(data, 2);
       [_bridge unmarkRow:values[0] column:values[1]];
       return;
     }
@@ -565,19 +565,19 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return;
 
     case NeoVimServerMsgIdSetForeground: {
-      int *values = data_to_int_array(data, 1);
+      NSInteger *values = data_to_NSInteger_array(data, 1);
       [_bridge updateForeground:values[0]];
       return;
     }
 
     case NeoVimServerMsgIdSetBackground: {
-      int *values = data_to_int_array(data, 1);
+      NSInteger *values = data_to_NSInteger_array(data, 1);
       [_bridge updateBackground:values[0]];
       return;
     }
 
     case NeoVimServerMsgIdSetSpecial: {
-      int *values = data_to_int_array(data, 1);
+      NSInteger *values = data_to_NSInteger_array(data, 1);
       [_bridge updateSpecial:values[0]];
       return;
     }

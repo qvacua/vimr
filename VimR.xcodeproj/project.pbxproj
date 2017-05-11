@@ -1900,6 +1900,7 @@
 					"$(PROJECT_DIR)/neovim/.deps/usr/include",
 					"$(PROJECT_DIR)/neovim/build/config",
 					"$(PROJECT_DIR)/third-party/libintl/include",
+					"$(PROJECT_DIR)/neovim/build/src/nvim/auto",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/neovim/build/lib",
@@ -1923,6 +1924,7 @@
 					"$(PROJECT_DIR)/neovim/.deps/usr/include",
 					"$(PROJECT_DIR)/neovim/build/config",
 					"$(PROJECT_DIR)/third-party/libintl/include",
+					"$(PROJECT_DIR)/neovim/build/src/nvim/auto",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/neovim/build/lib",
