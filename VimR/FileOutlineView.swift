@@ -86,7 +86,7 @@ class FileOutlineView: NSOutlineView,
     while let item = stack.popLast() {
       if item.isChildrenScanned == false {
         item.children = FileItemUtils.sortedChildren(for: item.fileItem.url, root: self.fileSystemRoot)
-                                     .map(FileBrowserItem.init)
+          .map(FileBrowserItem.init)
         item.isChildrenScanned = true
       }
 
@@ -233,7 +233,7 @@ extension FileOutlineView {
       self.root = FileBrowserItem(fileItem: rootFileItem)
       if self.root.isChildrenScanned == false {
         self.root.children = FileItemUtils.sortedChildren(for: self.cwd, root: self.fileSystemRoot)
-                                          .map(FileBrowserItem.init)
+          .map(FileBrowserItem.init)
         self.root.isChildrenScanned = true
       }
 
@@ -300,14 +300,13 @@ extension FileOutlineView {
     }
 
     let cellWidth = rows.concurrentChunkMap(20) {
-                          guard let fileBrowserItem = $0.item else {
-                            return 0
-                          }
+      guard let fileBrowserItem = $0.item else {
+        return 0
+      }
 
-                          return ImageAndTextTableCell.width(with: fileBrowserItem.fileItem.url.lastPathComponent)
-                                 + (CGFloat($0.level + 2) * (self.indentationPerLevel + 2)) // + 2 just to have a buffer... -_-
-                        }
-                        .max() ?? column.width
+      return ImageAndTextTableCell.width(with: fileBrowserItem.fileItem.url.lastPathComponent)
+             + (CGFloat($0.level + 2) * (self.indentationPerLevel + 2)) // + 2 just to have a buffer... -_-
+    }.max() ?? column.width
 
     guard column.minWidth != cellWidth else {
       return
@@ -322,10 +321,9 @@ extension FileOutlineView {
 
     // It seems like that caching the widths is slower due to thread-safeness of NSCache...
     let cellWidth = items.concurrentChunkMap(20) {
-                           let result = ImageAndTextTableCell.width(with: $0.fileItem.url.lastPathComponent)
-                           return result
-                         }
-                         .max() ?? column.width
+      let result = ImageAndTextTableCell.width(with: $0.fileItem.url.lastPathComponent)
+      return result
+    }.max() ?? column.width
 
     let width = cellWidth + (CGFloat(level + 2) * (self.indentationPerLevel + 2)) // + 2 just to have a buffer... -_-
 
