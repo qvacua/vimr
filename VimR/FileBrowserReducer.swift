@@ -24,6 +24,13 @@ class FileBrowserReducer {
     case let .setShowHidden(show):
       state.fileBrowserShowHidden = show
 
+    case .refresh:
+      guard let fileItem = FileItemUtils.item(for: state.cwd, root: state.root, create: false) else {
+        return pair
+      }
+
+      state.lastFileSystemUpdate = Marked(fileItem)
+
     }
 
     return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
