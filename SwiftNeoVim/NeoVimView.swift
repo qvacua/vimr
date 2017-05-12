@@ -770,7 +770,9 @@ extension NeoVimView {
       return
     }
 
-    if self.mode == .cmdline || self.mode == .replace || self.mode == .termFocus {
+    if self.mode == .cmdline || self.mode == .cmdlineInsert || self.mode == .cmdlineReplace
+       || self.mode == .replace
+       || self.mode == .termFocus {
       self.agent.vimInput(self.vimPlainString(content))
       return
     }
