@@ -535,8 +535,14 @@ extension NeoVimView {
   }
 
   fileprivate func cursorRegion() -> Region {
-    let cursorPosition = self.mode == .cmdline ? self.grid.putPosition : self.grid.screenCursor
-//    NSLog("\(#function): \(cursorPosition)")
+    let cursorPosition: Position
+    if self.mode == .cmdline
+       || self.mode == .cmdlineInsert
+       || self.mode == .cmdlineReplace {
+      cursorPosition = self.grid.putPosition
+    } else {
+      cursorPosition = self.grid.screenCursor
+    }
 
     let saneRow = max(0, min(cursorPosition.row, self.grid.size.height - 1))
     let saneColumn = max(0, min(cursorPosition.column, self.grid.size.width - 1))
@@ -764,7 +770,9 @@ extension NeoVimView {
       return
     }
 
-    if self.mode == .cmdline || self.mode == .replace || self.mode == .termFocus {
+    if self.mode == .cmdline || self.mode == .cmdlineInsert || self.mode == .cmdlineReplace
+       || self.mode == .replace
+       || self.mode == .termFocus {
       self.agent.vimInput(self.vimPlainString(content))
       return
     }

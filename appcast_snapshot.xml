@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-192</title>
+      <title>SNAPSHOT-193</title>
       <description><![CDATA[
     <ul>
-<li>GH-395: Bugfix: massive file system changes in the working directory causes VimR to freeze.</li>
+<li>GH-430: Bugfix: The cursor disappears when using arrow keys in the command mode.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/192
+        https://github.com/qvacua/vimr/releases/tag/snapshot/193
       </releaseNotesLink>
-      <pubDate>2017-05-12T08:49:21.484851</pubDate>
+      <pubDate>2017-05-12T23:20:22.770207</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/192/VimR-SNAPSHOT-192.tar.bz2"
-                 sparkle:version="192"
-                 sparkle:shortVersionString="SNAPSHOT-192"
-                 sparkle:dsaSignature="MC4CFQCRcYM2SaP00BrRdnP1bkrKBxBp4gIVALPxwuPl4dlibeGh4mRcYDr/vgkX"
-                 length="12372392"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/193/VimR-SNAPSHOT-193.tar.bz2"
+                 sparkle:version="193"
+                 sparkle:shortVersionString="SNAPSHOT-193"
+                 sparkle:dsaSignature="MC4CFQC1aDJi3Q89AC6a+d/EBdDNdpPQOQIVAIJ8w231RvNEZ25jXIeOAUuddkWK"
+                 length="12372402"
                  type="application/octet-stream"/>
     </item>
   </channel>
