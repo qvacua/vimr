@@ -71,29 +71,4 @@ class FileItem : CustomStringConvertible, Hashable, Comparable, Copyable {
 
     return self.children[idx]
   }
-
-  func deepChild(with url: URL) -> FileItem? {
-    let pathComps = self.url.pathComponents
-    let childPathComps = url.pathComponents
-
-    guard childPathComps.count > pathComps.count else {
-      return nil
-    }
-
-    return childPathComps[pathComps.count..<childPathComps.count].reduce(self) { (result, pathComp) -> FileItem? in
-      guard let parent = result else {
-        return nil
-      }
-
-      return parent.child(with: parent.url.appendingPathComponent(pathComp))
-    }
-  }
-
-  func remove(childWith url: URL) {
-    guard let idx = self.children.index(where: { $0.url == url }) else {
-      return
-    }
-
-    self.children.remove(at: idx)
-  }
 }
