@@ -18,9 +18,18 @@ class FileItem : CustomStringConvertible, Hashable, Comparable, Copyable {
   }
 
   let url: URL
-  let isDir: Bool
-  let isHidden: Bool
-  let isPackage: Bool
+
+  var isDir: Bool {
+    return self.url.isDir
+  }
+
+  var isHidden: Bool {
+    return self.url.isHidden
+  }
+
+  var isPackage: Bool {
+    return self.isPackage
+  }
 
   var hashValue: Int {
     return url.hashValue
@@ -44,20 +53,10 @@ class FileItem : CustomStringConvertible, Hashable, Comparable, Copyable {
 
   init(_ url: URL) {
     self.url = url
-    self.isDir = url.isDir
-    self.isHidden = url.isHidden
-    self.isPackage = url.isPackage
-  }
-
-  fileprivate init(url: URL, dir: Bool, hidden: Bool, package: Bool) {
-    self.url = url
-    self.isDir = dir
-    self.isHidden = hidden
-    self.isPackage = package
   }
 
   func copy() -> FileItem {
-    let item = FileItem(url: self.url, dir: self.isDir, hidden: self.isHidden, package: self.isPackage)
+    let item = FileItem(self.url)
     item.needsScanChildren = self.needsScanChildren
     item.childrenScanned = self.childrenScanned
     item.children = self.children
