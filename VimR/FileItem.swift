@@ -5,9 +5,7 @@
 
 import Foundation
 
-class FileItem : CustomStringConvertible, Hashable, Comparable, Copyable {
-
-  typealias InstanceType = FileItem
+class FileItem : CustomStringConvertible, Hashable, Comparable {
 
   static func ==(left: FileItem, right: FileItem) -> Bool {
     return left.url == right.url
@@ -55,20 +53,7 @@ class FileItem : CustomStringConvertible, Hashable, Comparable, Copyable {
     self.url = url
   }
 
-  func copy() -> FileItem {
-    let item = FileItem(self.url)
-    item.needsScanChildren = self.needsScanChildren
-    item.childrenScanned = self.childrenScanned
-    item.children = self.children
-
-    return item
-  }
-
   func child(with url: URL) -> FileItem? {
-    guard let idx = self.children.index(where: { $0.url == url }) else {
-      return nil
-    }
-
-    return self.children[idx]
+    return self.children.first { $0.url == url }
   }
 }
