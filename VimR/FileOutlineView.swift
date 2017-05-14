@@ -48,7 +48,7 @@ class FileOutlineView: NSOutlineView,
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
         self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
-        self.update(state.lastFileSystemUpdate.payload.url)
+        self.update(state.lastFileSystemUpdate.payload)
       })
       .disposed(by: self.disposeBag)
 

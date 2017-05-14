@@ -26,7 +26,7 @@ class FileItem : CustomStringConvertible, Hashable, Comparable {
   }
 
   var isPackage: Bool {
-    return self.isPackage
+    return self.url.isPackage
   }
 
   var hashValue: Int {

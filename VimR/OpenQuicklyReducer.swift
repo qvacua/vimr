@@ -55,7 +55,7 @@ class OpenQuicklyReducer {
         of: cwd,
         ignorePatterns: appState.openQuickly.ignorePatterns,
         ignoreToken: appState.openQuickly.ignoreToken,
-        root: appState.root
+        root: appState.openQuickly.root
       )
 
       return StateActionPair(state: appState, action: pair.action)

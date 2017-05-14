@@ -52,7 +52,6 @@ class AppDelegateReducer {
   fileprivate func newMainWindow(with state: AppState, urls: [URL], cwd: URL) -> MainWindow.State {
     var mainWindow = state.mainWindowTemplate
     mainWindow.uuid = UUID().uuidString
-    mainWindow.root = state.root
     mainWindow.isDirty = false
     mainWindow.htmlPreview = HtmlPreviewState(
       htmlFile: nil,
