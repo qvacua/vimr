@@ -111,24 +111,24 @@ class FileItemUtils {
 /// When at least this much of non-directory and visible files are scanned, they are emitted.
 fileprivate let emitChunkSize = 1000
 fileprivate let scanDispatchQueue = DispatchQueue.global(qos: .userInitiated)
-fileprivate var spinLock = OS_SPINLOCK_INIT
+fileprivate let lock = NSRecursiveLock()
 
-fileprivate func syncAddChildren(_ fn: () -> Void) {
-  OSSpinLockLock(&spinLock)
-  fn()
-  OSSpinLockUnlock(&spinLock)
+fileprivate func synced<T>(_ fn: () -> T) -> T {
+  lock.lock()
+  defer { lock.unlock() }
+  return fn()
 }
 
 fileprivate func fileItem(for pathComponents: [String], root: FileItem, create: Bool = true) -> FileItem? {
-  let result = pathComponents.dropFirst().reduce(root) { (resultItem, childName) -> FileItem? in
-    guard let parent = resultItem else {
-      return nil
+  return synced {
+    pathComponents.dropFirst().reduce(root) { (resultItem, childName) -> FileItem? in
+      guard let parent = resultItem else {
+        return nil
+      }
+
+      return child(withName: childName, ofParent: parent, create: true)
     }
-
-    return child(withName: childName, ofParent: parent, create: true)
   }
-
-  return result
 }
 
 fileprivate func fileItem(for url: URL, root: FileItem, create: Bool = true) -> FileItem? {
@@ -155,7 +155,7 @@ fileprivate func child(withName name: String, ofParent parent: FileItem, create:
     }
 
     let child = FileItem(childUrl)
-    syncAddChildren { parent.children.append(child) }
+    synced { parent.children.append(child) }
 
     return child
   }
@@ -165,14 +165,14 @@ fileprivate func child(withName name: String, ofParent parent: FileItem, create:
 
 fileprivate func scanChildren(_ item: FileItem, sorted: Bool = false) {
   let children = FileUtils.directDescendants(of: item.url).map(FileItem.init)
-  syncAddChildren {
+  synced {
     if sorted {
       item.children = children.sorted()
     } else {
       item.children = children
     }
-  }
 
-  item.childrenScanned = true
-  item.needsScanChildren = false
+    item.childrenScanned = true
+    item.needsScanChildren = false
+  }
 }
