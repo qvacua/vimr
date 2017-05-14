@@ -23,12 +23,10 @@ struct AppState: SerializableState {
   var mainWindows: [String: MainWindow.State] = [:]
   var quitWhenNoMainWindow = false
 
-  let root = FileItem(URL(fileURLWithPath: "/", isDirectory: true))
-
   var openQuickly = OpenQuicklyWindow.State.default
 
   init() {
-    self.mainWindowTemplate.root = self.root
+
   }
 
   init?(dict: [String: Any]) {
@@ -68,6 +66,8 @@ extension OpenQuicklyWindow {
   struct State: SerializableState {
 
     static let `default` = State()
+
+    let root = FileItem(URL(fileURLWithPath: "/", isDirectory: true))
 
     var flatFileItems = Observable<[FileItem]>.empty()
     var cwd = FileUtils.userHomeUrl
@@ -195,10 +195,7 @@ extension MainWindow {
     ]
 
     ////// transient
-
-    // must be replaced
-    var root = FileItem(URL(fileURLWithPath: "/", isDirectory: true))
-    var lastFileSystemUpdate = Marked(FileItem(URL(fileURLWithPath: "/", isDirectory: true)))
+    var lastFileSystemUpdate = Marked(FileUtils.userHomeUrl)
 
     var tools = WorkspaceToolState.default
     var orderedTools = WorkspaceToolState.orderedDefault

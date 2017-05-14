@@ -15,17 +15,15 @@ class FileMonitorReducer {
     switch pair.action {
 
     case let .change(in: url):
-      guard let fileItem = FileItemUtils.item(for: url, root: state.root, create: false) else {
-        return pair
+      if let fileItem = FileItemUtils.item(for: url, root: state.openQuickly.root, create: false) {
+        fileItem.needsScanChildren = true
       }
-
-      fileItem.needsScanChildren = true
 
       state.mainWindows
         .filter { (uuid, mainWindow) in url == mainWindow.cwd || url.isContained(in: mainWindow.cwd) }
         .map { $0.0 }
         .forEach { uuid in
-          state.mainWindows[uuid]?.lastFileSystemUpdate = Marked(fileItem)
+          state.mainWindows[uuid]?.lastFileSystemUpdate = Marked(url)
         }
 
     }

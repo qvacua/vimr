@@ -58,7 +58,13 @@ class OpenQuicklyWindow: NSObject,
         self.cwd = state.openQuickly.cwd
         self.cwdPathCompsCount = self.cwd.pathComponents.count
         self.cwdControl.url = self.cwd
-        self.flatFileItemsSource = state.openQuickly.flatFileItems
+
+        self.flatFileItemsSource = FileItemUtils.flatFileItems(
+          of: state.openQuickly.cwd,
+          ignorePatterns: state.openQuickly.ignorePatterns,
+          ignoreToken: state.openQuickly.ignoreToken,
+          root: state.openQuickly.root
+        )
 
         self.searchStream
           .subscribe(onNext: { [unowned self] pattern in

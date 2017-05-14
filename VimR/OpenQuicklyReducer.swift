@@ -51,12 +51,6 @@ class OpenQuicklyReducer {
 
       appState.openQuickly.open = true
       appState.openQuickly.cwd = cwd
-      appState.openQuickly.flatFileItems = FileItemUtils.flatFileItems(
-        of: cwd,
-        ignorePatterns: appState.openQuickly.ignorePatterns,
-        ignoreToken: appState.openQuickly.ignoreToken,
-        root: appState.root
-      )
 
       return StateActionPair(state: appState, action: pair.action)
 

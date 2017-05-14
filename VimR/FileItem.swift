@@ -5,9 +5,7 @@
 
 import Foundation
 
-class FileItem : CustomStringConvertible, Hashable, Comparable, Copyable {
-
-  typealias InstanceType = FileItem
+class FileItem : CustomStringConvertible, Hashable, Comparable {
 
   static func ==(left: FileItem, right: FileItem) -> Bool {
     return left.url == right.url
@@ -18,9 +16,18 @@ class FileItem : CustomStringConvertible, Hashable, Comparable, Copyable {
   }
 
   let url: URL
-  let isDir: Bool
-  let isHidden: Bool
-  let isPackage: Bool
+
+  var isDir: Bool {
+    return self.url.isDir
+  }
+
+  var isHidden: Bool {
+    return self.url.isHidden
+  }
+
+  var isPackage: Bool {
+    return self.url.isPackage
+  }
 
   var hashValue: Int {
     return url.hashValue
@@ -44,57 +51,9 @@ class FileItem : CustomStringConvertible, Hashable, Comparable, Copyable {
 
   init(_ url: URL) {
     self.url = url
-    self.isDir = url.isDir
-    self.isHidden = url.isHidden
-    self.isPackage = url.isPackage
-  }
-
-  fileprivate init(url: URL, dir: Bool, hidden: Bool, package: Bool) {
-    self.url = url
-    self.isDir = dir
-    self.isHidden = hidden
-    self.isPackage = package
-  }
-
-  func copy() -> FileItem {
-    let item = FileItem(url: self.url, dir: self.isDir, hidden: self.isHidden, package: self.isPackage)
-    item.needsScanChildren = self.needsScanChildren
-    item.childrenScanned = self.childrenScanned
-    item.children = self.children
-
-    return item
   }
 
   func child(with url: URL) -> FileItem? {
-    guard let idx = self.children.index(where: { $0.url == url }) else {
-      return nil
-    }
-
-    return self.children[idx]
-  }
-
-  func deepChild(with url: URL) -> FileItem? {
-    let pathComps = self.url.pathComponents
-    let childPathComps = url.pathComponents
-
-    guard childPathComps.count > pathComps.count else {
-      return nil
-    }
-
-    return childPathComps[pathComps.count..<childPathComps.count].reduce(self) { (result, pathComp) -> FileItem? in
-      guard let parent = result else {
-        return nil
-      }
-
-      return parent.child(with: parent.url.appendingPathComponent(pathComp))
-    }
-  }
-
-  func remove(childWith url: URL) {
-    guard let idx = self.children.index(where: { $0.url == url }) else {
-      return
-    }
-
-    self.children.remove(at: idx)
+    return self.children.first { $0.url == url }
   }
 }
