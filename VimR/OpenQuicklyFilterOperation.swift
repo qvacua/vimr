@@ -57,10 +57,10 @@ class OpenQuicklyFilterOperation: Operation {
 
       var result = [ScoredFileItem]()
       var spinLock = OS_SPINLOCK_INIT
-      
+
       let cleanedPattern = useFullPath ? self.pattern.replacingOccurrences(of: "/", with: "")
                                        : self.pattern
-      
+
       DispatchQueue.concurrentPerform(iterations: chunksCount) { [unowned self] idx in
         if self.isCancelled {
           return
@@ -76,14 +76,14 @@ class OpenQuicklyFilterOperation: Operation {
           }
 
           let url = $0.url
-          
+
           if useFullPath {
             let target = url.path.replacingOccurrences(of: cwdPath, with: "")
                                  .replacingOccurrences(of: "/", with: "")
-            
+
             return ScoredFileItem(score: Scorer.score(target, pattern: cleanedPattern), url: url)
           }
-          
+
           return ScoredFileItem(score: Scorer.score(url.lastPathComponent, pattern: cleanedPattern), url: url)
         }
 
