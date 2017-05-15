@@ -80,7 +80,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
     source
       .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { [unowned self] state in
+      .subscribe(onNext: { state in
         if state.viewToBeFocused != nil, case .preview = state.viewToBeFocused! {
           self.beFirstResponder()
         }
@@ -107,7 +107,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
         self.lastUpdateDate = state.preview.updateDate
         self.webview.load(URLRequest(url: serverUrl))
-      }, onCompleted: { [unowned self] in
+      }, onCompleted: {
         // We have to do the following to avoid a crash... Dunno why... -_-
         self.webviewMessageHandler.subject.onCompleted()
         self.webview.navigationDelegate = nil
