@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-193</title>
+      <title>SNAPSHOT-194</title>
       <description><![CDATA[
     <ul>
-<li>GH-430: Bugfix: The cursor disappears when using arrow keys in the command mode.</li>
+<li>GH-450: Mild file browser refactoring</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/193
+        https://github.com/qvacua/vimr/releases/tag/snapshot/194
       </releaseNotesLink>
-      <pubDate>2017-05-12T23:20:22.770207</pubDate>
+      <pubDate>2017-05-15T22:29:37.978411</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/193/VimR-SNAPSHOT-193.tar.bz2"
-                 sparkle:version="193"
-                 sparkle:shortVersionString="SNAPSHOT-193"
-                 sparkle:dsaSignature="MC4CFQC1aDJi3Q89AC6a+d/EBdDNdpPQOQIVAIJ8w231RvNEZ25jXIeOAUuddkWK"
-                 length="12372402"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/194/VimR-SNAPSHOT-194.tar.bz2"
+                 sparkle:version="194"
+                 sparkle:shortVersionString="SNAPSHOT-194"
+                 sparkle:dsaSignature="MC0CFQCGCGSv31ZFlUpPCoLJLZwnHGBo3AIUJJgqdudQYXTZzTIlWVQQamvOq1o="
+                 length="12367838"
                  type="application/octet-stream"/>
     </item>
   </channel>
