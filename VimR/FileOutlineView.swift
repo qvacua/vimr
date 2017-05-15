@@ -46,7 +46,7 @@ class FileOutlineView: NSOutlineView,
                 latest: true,
                 scheduler: SerialDispatchQueueScheduler(qos: .background))
       .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { [unowned self] state in
+      .subscribe(onNext: { state in
         self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
         self.update(state.lastFileSystemUpdate.payload)
       })
@@ -54,7 +54,7 @@ class FileOutlineView: NSOutlineView,
 
     source
       .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { [unowned self] state in
+      .subscribe(onNext: { state in
         if state.viewToBeFocused != nil, case .fileBrowser = state.viewToBeFocused! {
           self.beFirstResponder()
         }

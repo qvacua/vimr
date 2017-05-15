@@ -170,7 +170,7 @@ class MainWindow: NSObject,
     source
       .observeOn(MainScheduler.instance)
       .subscribe(
-        onNext: { [unowned self] state in
+        onNext: { state in
           if self.isClosing {
             return
           }

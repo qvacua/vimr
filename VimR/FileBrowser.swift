@@ -51,7 +51,7 @@ class FileBrowser: NSView,
 
     source
       .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { [unowned self] state in
+      .subscribe(onNext: { state in
         if self.cwd != state.cwd {
           self.cwd = state.cwd
           self.innerCustomToolbar.goToParentButton.isEnabled = state.cwd.path != "/"
