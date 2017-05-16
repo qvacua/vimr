@@ -39,9 +39,8 @@ class FileOutlineView: NSOutlineView,
     self.doubleAction = #selector(FileOutlineView.doubleClickAction)
 
     source
-      .filter { state in
-        return state.lastFileSystemUpdate.mark != self.lastFileSystemUpdateMark
-      }
+      .filter { !self.reloadData(for: $0) }
+      .filter { $0.lastFileSystemUpdate.mark != self.lastFileSystemUpdateMark }
       .throttle(2 * FileMonitor.fileSystemEventsLatency + 1,
                 latest: true,
                 scheduler: SerialDispatchQueueScheduler(qos: .background))
@@ -59,25 +58,14 @@ class FileOutlineView: NSOutlineView,
           self.beFirstResponder()
         }
 
-        var reloadData = false
-
-        if self.isShowHidden != state.fileBrowserShowHidden {
-          self.isShowHidden = state.fileBrowserShowHidden
-          reloadData = true
-        }
-
-        if state.cwd != self.cwd {
-          self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
-          self.root = FileBrowserItem(state.cwd)
-
-          reloadData = true
-        }
-
-        if reloadData {
-          self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
-          self.reloadData()
+        guard self.reloadData(for: state) else {
           return
         }
+
+        self.isShowHidden = state.fileBrowserShowHidden
+        self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
+        self.root = FileBrowserItem(state.cwd)
+        self.reloadData()
       })
       .disposed(by: self.disposeBag)
   }
@@ -126,6 +114,18 @@ class FileOutlineView: NSOutlineView,
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+
+  fileprivate func reloadData(for state: StateType) -> Bool {
+    if self.isShowHidden != state.fileBrowserShowHidden {
+      return true
+    }
+
+    if state.cwd != self.cwd {
+      return true
+    }
+
+    return false
   }
 
   fileprivate func update(_ url: URL) {
