@@ -56,6 +56,7 @@ class KeyUtils {
     NSF33FunctionKey: "F33",
     NSF34FunctionKey: "F34",
     NSF35FunctionKey: "F35",
+    0x19: "Tab",
   ]
 
   static func isSpecial(key: String) -> Bool {
