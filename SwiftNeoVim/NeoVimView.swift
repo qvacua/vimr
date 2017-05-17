@@ -1036,6 +1036,7 @@ extension NeoVimView: NSTextInputClient {
     let control = modifierFlags.contains(.control)
     let option = modifierFlags.contains(.option)
     let command = modifierFlags.contains(.command)
+    let shift = modifierFlags.contains(.shift)
 
     if control {
       result += "C-"
@@ -1047,6 +1048,10 @@ extension NeoVimView: NSTextInputClient {
 
     if command {
       result += "D-"
+    }
+
+    if shift {
+      result += "S-"
     }
 
     if result.characters.count > 0 {
