@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-194</title>
+      <title>SNAPSHOT-195</title>
       <description><![CDATA[
     <ul>
-<li>GH-450: Mild file browser refactoring</li>
+<li>GH-403, GH-447: <code>Shift-Tab</code> works (thanks to @mkhl)</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/194
+        https://github.com/qvacua/vimr/releases/tag/snapshot/195
       </releaseNotesLink>
-      <pubDate>2017-05-15T22:29:37.978411</pubDate>
+      <pubDate>2017-05-17T19:40:40.275108</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/194/VimR-SNAPSHOT-194.tar.bz2"
-                 sparkle:version="194"
-                 sparkle:shortVersionString="SNAPSHOT-194"
-                 sparkle:dsaSignature="MC0CFQCGCGSv31ZFlUpPCoLJLZwnHGBo3AIUJJgqdudQYXTZzTIlWVQQamvOq1o="
-                 length="12367838"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/195/VimR-SNAPSHOT-195.tar.bz2"
+                 sparkle:version="195"
+                 sparkle:shortVersionString="SNAPSHOT-195"
+                 sparkle:dsaSignature="MC4CFQCwD/Vg2FqkoYzR1xmBgij6V9MuHgIVAKXOZ5TFeYY/yyCRm+0p5ymLVVE4"
+                 length="12366293"
                  type="application/octet-stream"/>
     </item>
   </channel>
