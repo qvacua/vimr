@@ -17,7 +17,7 @@ Builds a new snapshot of VimR and pushes the tag:<br>
 '''
 
   logRotator {
-    numToKeep(30)
+    numToKeep(10)
   }
 
   parameters {
