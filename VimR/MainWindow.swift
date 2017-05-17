@@ -241,10 +241,6 @@ class MainWindow: NSObject,
     self.windowController.showWindow(self)
   }
 
-  func closeAllNeoVimWindowsWithoutSaving() {
-    self.neoVimView.closeAllWindowsWithoutSaving()
-  }
-
   fileprivate let emit: (UuidAction<Action>) -> Void
   fileprivate let disposeBag = DisposeBag()
 
@@ -283,6 +279,10 @@ class MainWindow: NSObject,
   fileprivate let cursorDebouncer = Debouncer<Action>(interval: 0.75)
 
   fileprivate var isClosing = false
+
+  fileprivate func closeAllNeoVimWindowsWithoutSaving() {
+    self.neoVimView.closeAllWindowsWithoutSaving()
+  }
 
   fileprivate func updateNeoVimAppearance() {
     self.neoVimView.font = self.defaultFont

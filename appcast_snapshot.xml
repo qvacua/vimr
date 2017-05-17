@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-193</title>
+      <title>SNAPSHOT-195</title>
       <description><![CDATA[
     <ul>
-<li>GH-430: Bugfix: The cursor disappears when using arrow keys in the command mode.</li>
+<li>GH-403, GH-447: <code>Shift-Tab</code> works (thanks to @mkhl)</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/193
+        https://github.com/qvacua/vimr/releases/tag/snapshot/195
       </releaseNotesLink>
-      <pubDate>2017-05-12T23:20:22.770207</pubDate>
+      <pubDate>2017-05-17T19:40:40.275108</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/193/VimR-SNAPSHOT-193.tar.bz2"
-                 sparkle:version="193"
-                 sparkle:shortVersionString="SNAPSHOT-193"
-                 sparkle:dsaSignature="MC4CFQC1aDJi3Q89AC6a+d/EBdDNdpPQOQIVAIJ8w231RvNEZ25jXIeOAUuddkWK"
-                 length="12372402"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/195/VimR-SNAPSHOT-195.tar.bz2"
+                 sparkle:version="195"
+                 sparkle:shortVersionString="SNAPSHOT-195"
+                 sparkle:dsaSignature="MC4CFQCwD/Vg2FqkoYzR1xmBgij6V9MuHgIVAKXOZ5TFeYY/yyCRm+0p5ymLVVE4"
+                 length="12366293"
                  type="application/octet-stream"/>
     </item>
   </channel>
