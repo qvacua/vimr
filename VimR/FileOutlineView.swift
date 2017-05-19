@@ -144,7 +144,7 @@ class FileOutlineView: NSOutlineView,
     let curPreparedChildren = self.prepare(curChildren)
     let newPreparedChildren = self.prepare(newChildren)
 
-    let childrenToRemoveIndices = curPreparedChildren
+    let indicesToRemove = curPreparedChildren
       .enumerated()
       .filter { (_, fileBrowserItem) in newPreparedChildren.contains(fileBrowserItem) == false }
       .map { (idx, _) in idx }
@@ -152,7 +152,7 @@ class FileOutlineView: NSOutlineView,
     fileBrowserItem.children = curChildren.filter { newChildren.contains($0) }
 
     let parent = fileBrowserItem == self.root ? nil : fileBrowserItem
-    self.removeItems(at: IndexSet(childrenToRemoveIndices), inParent: parent)
+    self.removeItems(at: IndexSet(indicesToRemove), inParent: parent)
   }
 
   fileprivate func handleAdditions(for fileBrowserItem: FileBrowserItem, new newChildren: [FileBrowserItem]) {
@@ -167,8 +167,8 @@ class FileOutlineView: NSOutlineView,
 
     let indicesToInsert = newPreparedChildren
       .enumerated()
-      .filter { curPreparedChildren.contains($0.1) == false }
-      .map { $0.0 }
+      .filter { (_, fileBrowserItem) in curPreparedChildren.contains(fileBrowserItem) == false }
+      .map { (idx, _) in idx }
 
     let parent = fileBrowserItem == self.root ? nil : fileBrowserItem
     self.insertItems(at: IndexSet(indicesToInsert), inParent: parent)
