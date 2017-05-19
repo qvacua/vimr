@@ -75,11 +75,7 @@ class FileOutlineView: NSOutlineView,
     var stack = [self.root]
 
     while let item = stack.popLast() {
-      if item.isChildrenScanned == false {
-        item.children = FileUtils.directDescendants(of: item.url).map(FileBrowserItem.init)
-        item.isChildrenScanned = true
-      }
-
+      self.scanChildrenIfNecessary(item)
       itemsToExpand.append(item)
 
       if item.url.isDirectParent(of: url) {
@@ -186,6 +182,8 @@ class FileOutlineView: NSOutlineView,
 
     self.handleRemovals(for: fileBrowserItem, new: newChildren)
     self.handleAdditions(for: fileBrowserItem, new: newChildren)
+    fileBrowserItem.isChildrenScanned = true
+
     fileBrowserItem.children.filter { self.isItemExpanded($0) }.forEach(self.update)
   }
 
@@ -215,16 +213,22 @@ class FileOutlineView: NSOutlineView,
 // MARK: - NSOutlineViewDataSource
 extension FileOutlineView {
 
+  fileprivate func scanChildrenIfNecessary(_ fileBrowserItem: FileBroswerItem) {
+    guard fileBrowserItem.isChildrenScanned == false else {
+      return
+    }
+
+    fileBrowserItem.children = self.sortedChildren(of: fileBrowserItem.url)
+    fileBrowserItem.isChildrenScanned = true
+  }
+
   fileprivate func prepare(_ children: [FileBrowserItem]) -> [FileBrowserItem] {
     return self.isShowHidden ? children : children.filter { !$0.url.isHidden }
   }
 
   func outlineView(_: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
     if item == nil {
-      if self.root.isChildrenScanned == false {
-        self.root.children = self.sortedChildren(of: self.cwd)
-        self.root.isChildrenScanned = true
-      }
+      self.scanChildrenIfNecessary(self.root)
 
       return self.prepare(self.root.children).count
     }
@@ -234,11 +238,7 @@ extension FileOutlineView {
     }
 
     if fileBrowserItem.url.isDir {
-      if fileBrowserItem.isChildrenScanned == false {
-        fileBrowserItem.children = self.sortedChildren(of: fileBrowserItem.url)
-        fileBrowserItem.isChildrenScanned = true
-      }
-
+      self.scanChildrenIfNecessary(fileBrowserItem)
       return self.prepare(fileBrowserItem.children).count
     }
 
