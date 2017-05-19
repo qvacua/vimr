@@ -72,28 +72,23 @@ class FileOutlineView: NSOutlineView,
   }
 
   func select(_ url: URL) {
-    var itemsToExpand: [FileBrowserItem] = []
     var stack = [self.root]
 
     while let item = stack.popLast() {
-      self.scanChildrenIfNecessary(item)
-      itemsToExpand.append(item)
+      self.expandItem(item)
 
       if item.url.isDirectParent(of: url) {
         if let targetItem = item.children.first(where: { $0.url == url }) {
-          itemsToExpand.append(targetItem)
+          let targetRow = self.row(forItem: targetItem)
+          self.selectRowIndexes(IndexSet(integer: targetRow), byExtendingSelection: false)
+          self.scrollRowToVisible(targetRow)
         }
+
         break
       }
 
       stack.append(contentsOf: item.children.filter { $0.url.isParent(of: url) })
     }
-
-    itemsToExpand.forEach { self.expandItem($0) }
-
-    let targetRow = self.row(forItem: itemsToExpand.last)
-    self.selectRowIndexes(IndexSet(integer: targetRow), byExtendingSelection: false)
-    self.scrollRowToVisible(targetRow)
   }
 
   fileprivate let emit: (UuidAction<FileBrowser.Action>) -> Void
@@ -216,7 +211,7 @@ class FileOutlineView: NSOutlineView,
 // MARK: - NSOutlineViewDataSource
 extension FileOutlineView {
 
-  fileprivate func scanChildrenIfNecessary(_ fileBrowserItem: FileBroswerItem) {
+  fileprivate func scanChildrenIfNecessary(_ fileBrowserItem: FileBrowserItem) {
     guard fileBrowserItem.isChildrenScanned == false else {
       return
     }
