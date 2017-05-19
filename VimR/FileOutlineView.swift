@@ -32,8 +32,9 @@ class FileOutlineView: NSOutlineView,
       return
     }
 
-    // If the target of the menu items is set to the first responder, the actions are not invoked at all when the file
-    // monitor fires in the background... Dunno why it worked before the redesign... -_-
+    // If the target of the menu items is set to the first responder, the actions are not invoked
+    // at all when the file monitor fires in the background...
+    // Dunno why it worked before the redesign... -_-
     self.menu?.items.forEach { $0.target = self }
 
     self.doubleAction = #selector(FileOutlineView.doubleClickAction)
@@ -134,7 +135,8 @@ class FileOutlineView: NSOutlineView,
     self.endUpdates()
   }
 
-  fileprivate func handleRemovals(for fileBrowserItem: FileBrowserItem, new newChildren: [FileBrowserItem]) {
+  fileprivate func handleRemovals(for fileBrowserItem: FileBrowserItem,
+                                  new newChildren: [FileBrowserItem]) {
     let curChildren = fileBrowserItem.children
 
     let curPreparedChildren = self.prepare(curChildren)
@@ -151,11 +153,12 @@ class FileOutlineView: NSOutlineView,
     self.removeItems(at: IndexSet(indicesToRemove), inParent: parent)
   }
 
-  fileprivate func handleAdditions(for fileBrowserItem: FileBrowserItem, new newChildren: [FileBrowserItem]) {
+  fileprivate func handleAdditions(for fileBrowserItem: FileBrowserItem,
+                                   new newChildren: [FileBrowserItem]) {
     let curChildren = fileBrowserItem.children
 
-    // We don't just take newChildren because NSOutlineView look at the pointer equality for preserving the expanded
-    // states...
+    // We don't just take newChildren because NSOutlineView look at the pointer equality for
+    // preserving the expanded states...
     fileBrowserItem.children = newChildren.substituting(elements: curChildren)
 
     let curPreparedChildren = self.prepare(curChildren)
@@ -290,8 +293,9 @@ extension FileOutlineView {
         return 0
       }
 
+      // + 2 just to have a buffer... -_-
       return ImageAndTextTableCell.width(with: fileBrowserItem.url.lastPathComponent)
-             + (CGFloat($0.level + 2) * (self.indentationPerLevel + 2)) // + 2 just to have a buffer... -_-
+             + (CGFloat($0.level + 2) * (self.indentationPerLevel + 2))
     }.max() ?? column.width
 
     guard column.minWidth != cellWidth else {
@@ -311,7 +315,8 @@ extension FileOutlineView {
       return result
     }.max() ?? column.width
 
-    let width = cellWidth + (CGFloat(level + 2) * (self.indentationPerLevel + 2)) // + 2 just to have a buffer... -_-
+    // + 2 just to have a buffer... -_-
+    let width = cellWidth + (CGFloat(level + 2) * (self.indentationPerLevel + 2))
 
     guard column.minWidth < width else {
       return
@@ -331,12 +336,15 @@ extension FileOutlineView {
       return nil
     }
 
-    let cachedCell = (self.make(withIdentifier: "file-view-row", owner: self) as? ImageAndTextTableCell)?.reset()
+    let cachedCell =
+      (self.make(withIdentifier: "file-view-row", owner: self) as? ImageAndTextTableCell)?.reset()
     let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
     cell.text = fileBrowserItem.url.lastPathComponent
     let icon = FileUtils.icon(forUrl: fileBrowserItem.url)
-    cell.image = fileBrowserItem.url.isHidden ? icon?.tinting(with: NSColor.white.withAlphaComponent(0.4)) : icon
+    cell.image = fileBrowserItem.url.isHidden
+      ? icon?.tinting(with: NSColor.white.withAlphaComponent(0.4))
+      : icon
 
     return cell
   }
