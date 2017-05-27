@@ -8,7 +8,7 @@ import Cocoa
 extension NeoVimView {
 
   override public func viewDidMoveToWindow() {
-    self.window?.colorSpace = self.colorSpace
+    self.window?.colorSpace = colorSpace
   }
 
   override public func draw(_ dirtyUnionRect: NSRect) {
@@ -309,3 +309,4 @@ fileprivate let resizeTextAttrs = [
   NSFontAttributeName: NSFont.systemFont(ofSize: 18),
   NSForegroundColorAttributeName: NSColor.darkGray
 ]
+fileprivate let colorSpace = NSColorSpace.sRGB

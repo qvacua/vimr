@@ -47,10 +47,8 @@ extension NeoVimView {
 
     // The absolute delta values can get very very big when you use two finger scrolling
     // on the trackpad: Cap them using heuristic values...
-    let numX = deltaX != 0 ?
-      max(1, min(Int(absDeltaX / self.scrollLimiterX), self.maxScrollDeltaX)) : 0
-    let numY = deltaY != 0 ?
-      max(1, min(Int(absDeltaY / self.scrollLimiterY), self.maxScrollDeltaY)) : 0
+    let numX = deltaX != 0 ? max(1, min(Int(absDeltaX / scrollLimiterX), maxScrollDeltaX)) : 0
+    let numY = deltaY != 0 ? max(1, min(Int(absDeltaY / scrollLimiterY), maxScrollDeltaY)) : 0
 
     for i in 0..<max(numX, numY) {
       if i < numX {
@@ -82,7 +80,7 @@ extension NeoVimView {
 
     case NSEventPhase.ended, NSEventPhase.cancelled:
       self.isCurrentlyPinching = false
-      self.updateFontMetaData(self.fontManager.convert(self.font, toSize: resultingFontSize))
+      self.updateFontMetaData(NSFontManager.shared().convert(self.font, toSize: resultingFontSize))
       self.pinchTargetScale = 1
 
     default:
@@ -122,8 +120,10 @@ extension NeoVimView {
 
   fileprivate func shouldFireVimInputFor(event: NSEvent, newCellPosition: Position) -> Bool {
     let type = event.type
-    guard type == .leftMouseDragged || type == .rightMouseDragged
+    guard type == .leftMouseDragged
+          || type == .rightMouseDragged
           || type == .otherMouseDragged else {
+
       self.lastClickedCellPosition = newCellPosition
       return true
     }
@@ -172,6 +172,7 @@ extension NeoVimView {
   fileprivate func vimScrollInputFor(deltaX: CGFloat, deltaY: CGFloat,
                                      modifierFlags: NSEventModifierFlags,
                                      cellPosition: Position) -> (String, String) {
+
     let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.row),\(cellPosition.column)")
 
     let (typeX, typeY) = self.vimScrollEventNamesFor(deltaX: deltaX, deltaY: deltaY)
@@ -190,10 +191,10 @@ extension NeoVimView {
 
   fileprivate func throttleScrollX(absDelta absDeltaX: CGFloat, vimInput: String) {
     if absDeltaX == 0 {
-      self.scrollGuardCounterX = self.scrollGuardYield - 1
+      self.scrollGuardCounterX = scrollGuardYield - 1
     } else if absDeltaX <= 2 {
       // Poor man's throttle for scroll value = 1 or 2
-      if self.scrollGuardCounterX % self.scrollGuardYield == 0 {
+      if self.scrollGuardCounterX % scrollGuardYield == 0 {
         self.agent.vimInput(vimInput)
         self.scrollGuardCounterX = 1
       } else {
@@ -206,10 +207,10 @@ extension NeoVimView {
 
   fileprivate func throttleScrollY(absDelta absDeltaY: CGFloat, vimInput: String) {
     if absDeltaY == 0 {
-      self.scrollGuardCounterY = self.scrollGuardYield - 1
+      self.scrollGuardCounterY = scrollGuardYield - 1
     } else if absDeltaY <= 2 {
       // Poor man's throttle for scroll value = 1 or 2
-      if self.scrollGuardCounterY % self.scrollGuardYield == 0 {
+      if self.scrollGuardCounterY % scrollGuardYield == 0 {
         self.agent.vimInput(vimInput)
         self.scrollGuardCounterY = 1
       } else {
@@ -220,3 +221,9 @@ extension NeoVimView {
     }
   }
 }
+
+fileprivate let maxScrollDeltaX = 30
+fileprivate let maxScrollDeltaY = 30
+fileprivate let scrollLimiterX = CGFloat(20)
+fileprivate let scrollLimiterY = CGFloat(20)
+fileprivate let scrollGuardYield = 5
