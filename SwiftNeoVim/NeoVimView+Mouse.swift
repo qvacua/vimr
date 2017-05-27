@@ -68,7 +68,7 @@ extension NeoVimView {
 
     case NSEventPhase.ended, NSEventPhase.cancelled:
       self.isCurrentlyPinching = false
-      self.updateFontMetaData(self.fontManager.convert(self.font, toSize: resultingFontSize))
+      self.updateFontMetaData(NSFontManager.shared().convert(self.font, toSize: resultingFontSize))
       self.pinchTargetScale = 1
 
     default:
@@ -108,8 +108,10 @@ extension NeoVimView {
 
   fileprivate func shouldFireVimInputFor(event: NSEvent, newCellPosition: Position) -> Bool {
     let type = event.type
-    guard type == .leftMouseDragged || type == .rightMouseDragged
+    guard type == .leftMouseDragged
+          || type == .rightMouseDragged
           || type == .otherMouseDragged else {
+
       self.lastClickedCellPosition = newCellPosition
       return true
     }
@@ -158,6 +160,7 @@ extension NeoVimView {
   fileprivate func vimScrollInputFor(deltaX: CGFloat, deltaY: CGFloat,
                                      modifierFlags: NSEventModifierFlags,
                                      cellPosition: Position) -> (String, String) {
+
     let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.row),\(cellPosition.column)")
 
     let (typeX, typeY) = self.vimScrollEventNamesFor(deltaX: deltaX, deltaY: deltaY)
@@ -174,3 +177,9 @@ extension NeoVimView {
     return (resultX, resultY)
   }
 }
+
+fileprivate let maxScrollDeltaX = 30
+fileprivate let maxScrollDeltaY = 30
+fileprivate let scrollLimiterX = CGFloat(20)
+fileprivate let scrollLimiterY = CGFloat(20)
+fileprivate let scrollGuardYield = 5
