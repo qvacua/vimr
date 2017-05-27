@@ -7,19 +7,27 @@ import Foundation
 
 class FileLogger {
 
-  enum Level {
+  enum Level: String {
 
-    case `default`
-    case info
-    case debug
-    case error
-    case fault
+    case `default` = "DEFAULT"
+    case info = "INFO"
+    case debug = "DEBUG"
+    case error = "ERROR"
+    case fault = "FAULT"
   }
 
   let uuid = UUID().uuidString
   let name: String
 
+  let shouldLogDebug: Bool
+
   init<T>(as name: T, with fileUrl: URL) {
+    #if DEBUG
+    self.shouldLogDebug = true
+    #else
+    self.shouldLogDebug = false
+    #endif
+
     switch name {
     case let str as String: self.name = str
     default: self.name = String(describing: name)
@@ -57,58 +65,57 @@ class FileLogger {
   }
 
   func mark(file: String = #file, line: Int = #line, function: String = #function) {
+    guard self.shouldLogDebug else {
+      return
+    }
+
     self.log("", level: .debug, file: file, line: line, function: function)
   }
 
-  func `default`<T>(_ message: T,
+  func `default`<T>(_ message: @escaping @autoclosure () -> T,
                     file: String = #file, line: Int = #line, function: String = #function) {
 
     self.log(message, level: .default, file: file, line: line, function: function)
   }
 
-  func info<T>(_ message: T,
+  func info<T>(_ message: @escaping @autoclosure () -> T,
                file: String = #file, line: Int = #line, function: String = #function) {
 
     self.log(message, level: .info, file: file, line: line, function: function)
   }
 
-  func debug<T>(_ message: T,
+  func debug<T>(_ message: @escaping @autoclosure () -> T,
                 file: String = #file, line: Int = #line, function: String = #function) {
+
+    guard self.shouldLogDebug else {
+      return
+    }
 
     self.log(message, level: .debug, file: file, line: line, function: function)
   }
 
-  func error<T>(_ message: T,
+  func error<T>(_ message: @escaping @autoclosure () -> T,
                 file: String = #file, line: Int = #line, function: String = #function) {
 
     self.log(message, level: .error, file: file, line: line, function: function)
   }
 
-  func fault<T>(_ message: T,
+  func fault<T>(_ message: @escaping @autoclosure () -> T,
                 file: String = #file, line: Int = #line, function: String = #function) {
 
     self.log(message, level: .fault, file: file, line: line, function: function)
   }
 
-  func log<T>(_ message: T, level: Level = .default,
+  func log<T>(_ message: @escaping @autoclosure () -> T, level: Level = .default,
               file: String = #file, line: Int = #line, function: String = #function) {
 
     self.queue.async {
       let timestamp = self.logDateFormatter.string(from: Date())
-//      let fileName = URL(fileURLWithPath: file).lastPathComponent
-      let strMsg = self.string(from: message)
+      let strMsg = self.string(from: message())
 
-//      let logMsg = "\(timestamp) \(self.name) \(fileName).\(function) - \(strMsg)\n"
-      let logMsg = "\(timestamp) \(self.name) \(function) - \(strMsg)\n"
+      let logMsg = "\(timestamp) \(self.name) \(function) - \(strMsg)"
+      let data = "[\(level.rawValue)] \(logMsg)\n".data(using: .utf8) ?? conversionError
 
-      let data: Data
-      switch level {
-      case .default: data = "[DEFAULT] \(logMsg)".data(using: .utf8) ?? conversionErrorLogMsg
-      case .info: data = "[INFO   ] \(logMsg)".data(using: .utf8) ?? conversionErrorLogMsg
-      case .debug: data = "[DEBUG  ] \(logMsg)".data(using: .utf8) ?? conversionErrorLogMsg
-      case .error: data = "[ERROR  ] \(logMsg)".data(using: .utf8) ?? conversionErrorLogMsg
-      case .fault: data = "[FAULT  ] \(logMsg)".data(using: .utf8) ?? conversionErrorLogMsg
-      }
       self.fileHandle.write(data)
 
       if self.fileHandle.offsetInFile >= maxFileSize {
@@ -151,7 +158,6 @@ class FileLogger {
   fileprivate let queue: DispatchQueue
 }
 
-fileprivate let conversionErrorLogMsg = "[ERROR  ] Could not convert log msg to Data!"
-  .data(using: .utf8)!
+fileprivate let conversionError = "[ERROR] Could not convert log msg to Data!".data(using: .utf8)!
 fileprivate let fileManager = FileManager.default
 fileprivate let maxFileSize: UInt64 = 1 * 1024 * 1024
