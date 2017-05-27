@@ -16,9 +16,13 @@ extension NeoVimView {
       return
     }
 
+    let context = NSGraphicsContext.current()!.cgContext
+    context.saveGState()
+    defer { context.restoreGState() }
+
     if self.inLiveResize || self.currentlyResizing {
-      NSColor.windowBackgroundColor.set()
-      dirtyUnionRect.fill()
+      context.setFillColor(NSColor.windowBackgroundColor.cgColor)
+      context.fill(dirtyUnionRect)
 
       let boundsSize = self.bounds.size
 
@@ -39,11 +43,7 @@ extension NeoVimView {
       return
     }
 
-//    self.logger.debug("\(#function): \(dirtyUnionRect)")
-    let context = NSGraphicsContext.current()!.cgContext
-
     if self.isCurrentlyPinching {
-      let interpolationQuality = context.interpolationQuality
       context.interpolationQuality = .none
 
       let boundsSize = self.bounds.size
@@ -56,8 +56,6 @@ extension NeoVimView {
                              respectFlipped: true,
                              hints: nil)
 
-      context.interpolationQuality = interpolationQuality
-
       return
     }
 
@@ -69,9 +67,11 @@ extension NeoVimView {
     context.setTextDrawingMode(.fill);
 
     let dirtyRects = self.rectsBeingDrawn()
-//    self.logger.debug("\(dirtyRects)")
 
-    self.rowRunIntersecting(rects: dirtyRects).forEach { self.draw(rowRun: $0, context: context) }
+    self.logger.debug(dirtyUnionRect)
+    self.logger.debug(dirtyRects)
+
+    self.rowRunIntersecting(rects: dirtyRects).forEach { self.draw(rowRun: $0, in: context) }
     self.drawCursor(context: context)
   }
 
@@ -84,14 +84,18 @@ extension NeoVimView {
     return String(scalar)
   }
 
-  fileprivate func draw(rowRun rowFrag: RowRun, context: CGContext) {
+  fileprivate func draw(rowRun rowFrag: RowRun, in context: CGContext) {
+    context.saveGState()
+    defer { context.restoreGState() }
+
     // For background drawing we don't filter out the put(0, 0)s:
     // in some cases only the put(0, 0)-cells should be redrawn.
     // => FIXME: probably we have to consider this also when drawing further down,
     // ie when the range starts with '0'...
     self.drawBackground(
       positions: rowFrag.range.map { self.pointInViewFor(row: rowFrag.row, column: $0) },
-      background: rowFrag.attrs.background
+      background: rowFrag.attrs.background,
+      in: context
     )
 
     let positions = rowFrag.range
@@ -141,15 +145,18 @@ extension NeoVimView {
   }
 
   fileprivate func drawCursor(context: CGContext) {
+    context.saveGState()
+    defer { context.restoreGState() }
+
     let cursorRegion = self.cursorRegion()
     let cursorRow = cursorRegion.top
     let cursorColumnStart = cursorRegion.left
 
     if self.mode == .insert {
-      ColorUtils.colorIgnoringAlpha(self.grid.foreground).withAlphaComponent(0.75).set()
+      context.setFillColor(ColorUtils.colorIgnoringAlpha(self.grid.foreground).withAlphaComponent(0.75).cgColor)
       var cursorRect = self.cellRectFor(row: cursorRow, column: cursorColumnStart)
       cursorRect.size.width = 2
-      cursorRect.fill()
+      context.fill(cursorRect)
       return
     }
 
@@ -162,12 +169,14 @@ extension NeoVimView {
 
     // FIXME: take ligatures into account (is it a good idea to do this?)
     let rowRun = RowRun(row: cursorRegion.top, range: cursorRegion.columnRange, attrs: attrs)
-    self.draw(rowRun: rowRun, context: context)
+    self.draw(rowRun: rowRun, in: context)
   }
 
-  fileprivate func drawBackground(positions: [CGPoint], background: Int) {
-    ColorUtils.colorIgnoringAlpha(background).set()
+  fileprivate func drawBackground(positions: [CGPoint], background: Int, in context: CGContext) {
+    context.saveGState()
+    defer { context.restoreGState() }
 
+    context.setFillColor(ColorUtils.colorIgnoringAlpha(background).cgColor)
     // To use random color use the following
 //    NSColor(calibratedRed: CGFloat(drand48()),
 //            green: CGFloat(drand48()),
@@ -178,7 +187,7 @@ extension NeoVimView {
       x: positions[0].x, y: positions[0].y,
       width: CGFloat(positions.count) * self.cellSize.width, height: self.cellSize.height
     )
-    backgroundRect.fill()
+    context.fill(backgroundRect)
   }
 
   fileprivate func rowRunIntersecting(rects: [CGRect]) -> [RowRun] {

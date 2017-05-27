@@ -7,10 +7,6 @@ import Cocoa
 
 extension CGRect: Hashable {
 
-  func fill() {
-    NSRectFill(self)
-  }
-
   public var hashValue: Int {
     return Int(self.origin.x) << 10 ^ Int(self.origin.y) +
            Int(self.size.width) << 10 ^ Int(self.size.height);
