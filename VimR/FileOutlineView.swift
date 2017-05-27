@@ -174,18 +174,6 @@ class FileOutlineView: NSOutlineView,
     self.insertItems(at: IndexSet(indicesToInsert), inParent: parent)
   }
 
-  fileprivate func handleChildren(for fileBrowserItem: FileBrowserItem, new newChildren: [FileBrowserItem]) {
-    let curChildren = fileBrowserItem.children
-
-    let curPreparedChildren = self.prepare(curChildren)
-    let newPreparedChildren = self.prepare(newChildren)
-
-    let keptChildren = curPreparedChildren.filter { newPreparedChildren.contains($0) }
-    let childrenToRecurse = keptChildren.filter { self.isItemExpanded($0) }
-
-    childrenToRecurse.forEach(self.update)
-  }
-
   fileprivate func sortedChildren(of url: URL) -> [FileBrowserItem] {
     return FileUtils.directDescendants(of: url).map(FileBrowserItem.init).sorted()
   }
@@ -198,7 +186,7 @@ class FileOutlineView: NSOutlineView,
 
     self.handleRemovals(for: fileBrowserItem, new: newChildren)
     self.handleAdditions(for: fileBrowserItem, new: newChildren)
-    self.handleChildren(for: fileBrowserItem, new: newChildren)
+    fileBrowserItem.children.filter { self.isItemExpanded($0) }.forEach(self.update)
   }
 
   fileprivate func fileBrowserItem(with url: URL) -> FileBrowserItem? {
@@ -234,7 +222,7 @@ extension FileOutlineView {
   func outlineView(_: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
     if item == nil {
       if self.root.isChildrenScanned == false {
-        self.root.children = sortedChildren(of: self.cwd)
+        self.root.children = self.sortedChildren(of: self.cwd)
         self.root.isChildrenScanned = true
       }
 

@@ -31,6 +31,8 @@ typedef NS_ENUM(NSUInteger, CursorModeShape) {
   CursorModeShapeCount = 18,
 };
 
+extern NSString * __nonnull cursorModeShapeName(CursorModeShape mode);
+
 typedef NS_ENUM(NSUInteger, FontTrait) {
     FontTraitNone      = 0,
     FontTraitItalic    = (1 << 0),

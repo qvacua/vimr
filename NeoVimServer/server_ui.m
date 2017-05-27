@@ -8,7 +8,6 @@
 #import "Logging.h"
 #import "server_globals.h"
 #import "NeoVimServer.h"
-#import "NeoVimUiBridgeProtocol.h"
 #import "NeoVimBuffer.h"
 #import "NeoVimWindow.h"
 #import "NeoVimTab.h"
@@ -32,6 +31,28 @@
 
 #define pun_type(t, x) (*((t *) (&(x))))
 
+// From NeoVimUiBridgeProtocol.h
+typedef NS_ENUM(NSUInteger, FontTrait) {
+  FontTraitNone      = 0,
+  FontTraitItalic    = (1 << 0),
+  FontTraitBold      = (1 << 1),
+  FontTraitUnderline = (1 << 2),
+  FontTraitUndercurl = (1 << 3)
+};
+
+typedef struct {
+  FontTrait fontTrait;
+
+  unsigned int foreground;
+  unsigned int background;
+  unsigned int special;
+} CellAttributes;
+
+static NSInteger _default_foreground = 0xFF000000;
+static NSInteger _default_background = 0xFFFFFFFF;
+static NSInteger _default_special = 0xFFFF0000;
+// ---
+
 typedef struct {
     UIBridgeData *bridge;
     Loop *loop;
@@ -42,9 +63,6 @@ typedef struct {
 // We declare nvim_main because it's not declared in any header files of neovim
 extern int nvim_main(int argc, char **argv);
 
-static NSInteger _default_foreground = qDefaultForeground;
-static NSInteger _default_background = qDefaultBackground;
-static NSInteger _default_special = qDefaultSpecial;
 
 // The thread in which neovim's main runs
 static uv_thread_t _nvim_thread;
