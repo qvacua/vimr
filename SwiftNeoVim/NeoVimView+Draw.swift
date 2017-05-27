@@ -21,41 +21,12 @@ extension NeoVimView {
     defer { context.restoreGState() }
 
     if self.inLiveResize || self.currentlyResizing {
-      context.setFillColor(NSColor.windowBackgroundColor.cgColor)
-      context.fill(dirtyUnionRect)
-
-      let boundsSize = self.bounds.size
-
-      let emojiSize = self.currentEmoji.size(withAttributes: self.emojiAttrs)
-      let emojiX = (boundsSize.width - emojiSize.width) / 2
-      let emojiY = (boundsSize.height - emojiSize.height) / 2
-
-      let discreteSize = self.discreteSize(size: boundsSize)
-      let displayStr = "\(discreteSize.width) × \(discreteSize.height)"
-
-      let size = displayStr.size(withAttributes: self.resizeTextAttrs)
-      let x = (boundsSize.width - size.width) / 2
-      let y = emojiY - size.height
-
-      self.currentEmoji.draw(at: CGPoint(x: emojiX, y: emojiY), withAttributes: self.emojiAttrs)
-      displayStr.draw(at: CGPoint(x: x, y: y), withAttributes: self.resizeTextAttrs)
-
+      self.drawResizeInfo(in: context, with: dirtyUnionRect)
       return
     }
 
     if self.isCurrentlyPinching {
-      context.interpolationQuality = .none
-
-      let boundsSize = self.bounds.size
-      let targetSize = CGSize(width: boundsSize.width * self.pinchTargetScale,
-                              height: boundsSize.height * self.pinchTargetScale)
-      self.pinchBitmap?.draw(in: CGRect(origin: self.bounds.origin, size: targetSize),
-                             from: CGRect.zero,
-                             operation: .sourceOver,
-                             fraction: 1,
-                             respectFlipped: true,
-                             hints: nil)
-
+      self.drawPinchImage(in: context)
       return
     }
 
@@ -73,15 +44,6 @@ extension NeoVimView {
 
     self.rowRunIntersecting(rects: dirtyRects).forEach { self.draw(rowRun: $0, in: context) }
     self.drawCursor(context: context)
-  }
-
-  func randomEmoji() -> String {
-    let idx = Int(arc4random_uniform(UInt32(NeoVimView.emojis.count)))
-    guard let scalar = UnicodeScalar(NeoVimView.emojis[idx]) else {
-      return "😎"
-    }
-
-    return String(scalar)
   }
 
   fileprivate func draw(rowRun rowFrag: RowRun, in context: CGContext) {
@@ -188,6 +150,41 @@ extension NeoVimView {
       width: CGFloat(positions.count) * self.cellSize.width, height: self.cellSize.height
     )
     context.fill(backgroundRect)
+  }
+
+  fileprivate func drawResizeInfo(in context: CGContext, with dirtyUnionRect: CGRect) {
+    context.setFillColor(NSColor.windowBackgroundColor.cgColor)
+    context.fill(dirtyUnionRect)
+
+    let boundsSize = self.bounds.size
+
+    let emojiSize = self.currentEmoji.size(withAttributes: emojiAttrs)
+    let emojiX = (boundsSize.width - emojiSize.width) / 2
+    let emojiY = (boundsSize.height - emojiSize.height) / 2
+
+    let discreteSize = self.discreteSize(size: boundsSize)
+    let displayStr = "\(discreteSize.width) × \(discreteSize.height)"
+
+    let size = displayStr.size(withAttributes: resizeTextAttrs)
+    let x = (boundsSize.width - size.width) / 2
+    let y = emojiY - size.height
+
+    self.currentEmoji.draw(at: CGPoint(x: emojiX, y: emojiY), withAttributes: emojiAttrs)
+    displayStr.draw(at: CGPoint(x: x, y: y), withAttributes: resizeTextAttrs)
+  }
+
+  fileprivate func drawPinchImage(in context: CGContext) {
+    context.interpolationQuality = .none
+
+    let boundsSize = self.bounds.size
+    let targetSize = CGSize(width: boundsSize.width * self.pinchTargetScale,
+                            height: boundsSize.height * self.pinchTargetScale)
+    self.pinchBitmap?.draw(in: CGRect(origin: self.bounds.origin, size: targetSize),
+                           from: CGRect.zero,
+                           operation: .sourceOver,
+                           fraction: 1,
+                           respectFlipped: true,
+                           hints: nil)
   }
 
   fileprivate func rowRunIntersecting(rects: [CGRect]) -> [RowRun] {
@@ -306,3 +303,9 @@ extension NeoVimView {
     self.resizeNeoVimUi(to: self.bounds.size)
   }
 }
+
+fileprivate let emojiAttrs = [ NSFontAttributeName: NSFont(name: "AppleColorEmoji", size: 72)! ]
+fileprivate let resizeTextAttrs = [
+  NSFontAttributeName: NSFont.systemFont(ofSize: 18),
+  NSForegroundColorAttributeName: NSColor.darkGray
+]

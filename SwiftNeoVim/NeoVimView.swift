@@ -195,11 +195,6 @@ public class NeoVimView: NSView,
 
   var currentlyResizing = false
   var currentEmoji = "😎"
-  let emojiAttrs = [ NSFontAttributeName: NSFont(name: "AppleColorEmoji", size: 72)! ]
-  let resizeTextAttrs = [
-    NSFontAttributeName: NSFont.systemFont(ofSize: 18),
-    NSForegroundColorAttributeName: NSColor.darkGray
-  ]
 
   let colorSpace = NSColorSpace.sRGB
 
