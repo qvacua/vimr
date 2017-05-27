@@ -20,19 +20,6 @@ extension CGSize {
   }
 }
 
-extension NSRange: CustomStringConvertible {
-
-  public var description: String {
-    var location = ""
-    if self.location == NSNotFound {
-      location = "NotFound"
-    } else {
-      location = String(self.location)
-    }
-    return "NSRange<\(location), \(self.length)>"
-  }
-}
-
 extension NSView {
 
   /// - Returns: Rects currently being drawn
