@@ -147,6 +147,7 @@
 		4B8AC0441DBCB3A2007CCC9B /* NeoVimObjectsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8AC0431DBCB3A1007CCC9B /* NeoVimObjectsExtensions.swift */; };
 		4B91FFF41DEB772200447068 /* CocoaFontAwesome.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B337FBA1DEB76F20020ADD2 /* CocoaFontAwesome.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B91FFF61DEB772B00447068 /* CocoaFontAwesome.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B337FBA1DEB76F20020ADD2 /* CocoaFontAwesome.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B96384C1ED9793B001C556F /* NeoVimAutoCommandEvent.generated.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B96384B1ED9793B001C556F /* NeoVimAutoCommandEvent.generated.m */; };
 		4B96FB3B1EBBC56F00E4E164 /* FileItemIgnorePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B69499B2569793350CEC /* FileItemIgnorePattern.swift */; };
 		4B96FB3C1EBBC56F00E4E164 /* FileUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA8AC40B901B20F20B71 /* FileUtils.swift */; };
 		4B96FB3D1EBBC56F00E4E164 /* Matcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEEB33113B0E33C3830F /* Matcher.swift */; };
@@ -480,6 +481,7 @@
 		4B854A1A1D31447C00E08DE1 /* NeoVimServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NeoVimServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B854A1C1D31447C00E08DE1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4B8AC0431DBCB3A1007CCC9B /* NeoVimObjectsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimObjectsExtensions.swift; sourceTree = "<group>"; };
+		4B96384B1ED9793B001C556F /* NeoVimAutoCommandEvent.generated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimAutoCommandEvent.generated.m; sourceTree = "<group>"; };
 		4B97E2CD1D33F53D00FC0660 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
 		4BB409E61DD68CCC005F39A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/FileBrowserMenu.xib; sourceTree = "<group>"; };
@@ -1012,6 +1014,7 @@
 				4B570DC01D303CAF006EDC21 /* NeoVimAgent.h */,
 				4B570DC11D303CAF006EDC21 /* NeoVimAgent.m */,
 				4B183E1A1E08748B0079E8A8 /* NeoVimAutoCommandEvent.generated.h */,
+				4B96384B1ED9793B001C556F /* NeoVimAutoCommandEvent.generated.m */,
 				4B2A2C061D0352CB0074CE9A /* NeoVimUiBridgeProtocol.h */,
 			);
 			name = NeoVimView;
@@ -1391,7 +1394,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"${CONFIGURATION}\" = \"Debug\" ]; then\nif [ -f \"SwiftNeoVim/NeoVimAutoCommandEvent.generated.h\" ]; then\nexit 0\nfi\nfi\n\nsed 's/^typedef enum auto_event/typedef NS_ENUM(NSUInteger, NeoVimAutoCommandEvent)/' <./neovim/build/include/auevents_enum.generated.h | sed 's/ event_T//' | sed 's/EVENT_/NeoVimAutoCommandEvent/' | sed 's/NUM_EVENTS/NumberOfAutoCommandEvents/' | sed -e '1s/^/@import Foundation;\\'$'\\n/' > SwiftNeoVim/NeoVimAutoCommandEvent.generated.h\n";
+			shellScript = ./bin/generate_source.py;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1400,6 +1403,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B96384C1ED9793B001C556F /* NeoVimAutoCommandEvent.generated.m in Sources */,
 				4BDD05891DBBC50000D1B405 /* NeoVimTab.m in Sources */,
 				4BEE79171D16D3800012EDAA /* CellAttributes.swift in Sources */,
 				4BDD05861DBBC50000D1B405 /* NeoVimBuffer.m in Sources */,

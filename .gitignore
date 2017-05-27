@@ -179,5 +179,6 @@ Temporary Items
 
 # -------------------------------------------
 *.generated.h
+*.generated.m
 
 .deps
