@@ -157,6 +157,30 @@ public class NeoVimView: NSView,
   let agent: NeoVimAgent
   let grid = Grid()
 
+  var cglayer: CGLayer? {
+    if self._cglayer == nil && self.lockFocusIfCanDraw(),
+       let current = NSGraphicsContext.current()?.cgContext {
+
+      self._cglayer = CGLayer(current, size: self.frame.size.scaling(self.scaleFactor),
+                              auxiliaryInfo: nil)
+      self.unlockFocus()
+    }
+
+    return self._cglayer
+  }
+  var cgcontext: CGContext? {
+    if self._cgcontext == nil {
+      self._cgcontext = self.cglayer?.context
+    }
+
+    return self._cgcontext
+  }
+  var scaleFactor: CGFloat {
+    return self.window?.screen?.backingScaleFactor ?? 1
+  }
+
+  var rectsToUpdate: Set<CGRect> = []
+
   let drawer: TextDrawer
   let fontManager = NSFontManager.shared()
   let pasteboard = NSPasteboard.general()
@@ -204,6 +228,8 @@ public class NeoVimView: NSView,
   var _font = NeoVimView.defaultFont
 
   // MARK: - Private
+  fileprivate var _cglayer: CGLayer?
+  fileprivate var _cgcontext: CGContext?
   fileprivate var _linespacing = NeoVimView.defaultLinespacing
 
   fileprivate func launchNeoVim() {

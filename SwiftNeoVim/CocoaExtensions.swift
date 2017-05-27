@@ -5,10 +5,22 @@
 
 import Cocoa
 
-extension CGRect {
+extension CGRect: Hashable {
 
   func fill() {
     NSRectFill(self)
+  }
+
+  public var hashValue: Int {
+    return Int(self.origin.x) << 10 ^ Int(self.origin.y) +
+           Int(self.size.width) << 10 ^ Int(self.size.height);
+  }
+}
+
+extension CGSize {
+
+  func scaling(_ factor: CGFloat) -> CGSize {
+    return CGSize(width: self.width * factor, height: self.height * factor)
   }
 }
 
