@@ -270,7 +270,7 @@ extension NeoVimView {
     self.exec(command: "tabe")
   }
 
-  public func open(urls: [URL]) {
+  public func `open`(urls: [URL]) {
     let tabs = self.agent.tabs()
     let buffers = self.allBuffers()
     let currentBufferIsTransient = buffers.first { $0.isCurrent }?.isTransient ?? false
@@ -373,7 +373,7 @@ extension NeoVimView {
     }
   }
 
-  fileprivate func open(_ url: URL, cmd: String) {
+  fileprivate func `open`(_ url: URL, cmd: String) {
     let path = url.path
     guard let escapedFileName = self.agent.escapedFileName(path) else {
       NSLog("WARN \(#function): escaped file name returned nil")
