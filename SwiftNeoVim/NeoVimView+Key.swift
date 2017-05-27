@@ -16,7 +16,7 @@ extension NeoVimView {
       return
     }
 
-//    NSLog("\(#function): \(event)")
+//    self.logger.debug("\(#function): \(event)")
 
     let modifierFlags = event.modifierFlags
     let capslock = modifierFlags.contains(.capsLock)
@@ -44,7 +44,7 @@ extension NeoVimView {
   }
 
   public func insertText(_ aString: Any, replacementRange: NSRange) {
-//    NSLog("\(#function): \(replacementRange): '\(aString)'")
+//    self.logger.debug("\(#function): \(replacementRange): '\(aString)'")
 
     switch aString {
     case let string as String:
@@ -63,7 +63,7 @@ extension NeoVimView {
   }
 
   public override func doCommand(by aSelector: Selector) {
-//    NSLog("\(#function): \(aSelector)");
+//    self.logger.debug("\(#function): \(aSelector)");
 
     // FIXME: handle when ㅎ -> delete
 
@@ -74,7 +74,7 @@ extension NeoVimView {
       return
     }
 
-//    NSLog("\(#function): "\(aSelector) not implemented, forwarding input to vim")
+//    self.logger.debug("\(#function): "\(aSelector) not implemented, forwarding input to vim")
     self.keyDownDone = false
   }
 
@@ -97,14 +97,14 @@ extension NeoVimView {
       self.markedText = String(describing: aString) // should not occur
     }
 
-//    NSLog("\(#function): \(self.markedText), \(selectedRange), \(replacementRange)")
+//    self.logger.debug("\(#function): \(self.markedText), \(selectedRange), \(replacementRange)")
 
     self.agent.vimInputMarkedText(self.markedText!)
     self.keyDownDone = true
   }
 
   public func unmarkText() {
-//    NSLog("\(#function): ")
+//    self.logger.debug("\(#function): ")
     self.markedText = nil
     self.markedPosition = Position.null
     self.keyDownDone = true
@@ -119,12 +119,12 @@ extension NeoVimView {
   public func selectedRange() -> NSRange {
     // When the app starts and the Hangul input method is selected, this method gets called very early...
     guard self.grid.hasData else {
-//      NSLog("\(#function): not found")
+//      self.logger.debug("\(#function): not found")
       return NSRange(location: NSNotFound, length: 0)
     }
 
     let result = NSRange(location: self.grid.singleIndexFrom(self.grid.putPosition), length: 0)
-//    NSLog("\(#function): \(result)")
+//    self.logger.debug("\(#function): \(result)")
     return result
   }
 
@@ -133,30 +133,30 @@ extension NeoVimView {
     if let markedText = self.markedText {
       let result = NSRange(location: self.grid.singleIndexFrom(self.markedPosition),
                            length: markedText.characters.count)
-//      NSLog("\(#function): \(result)")
+//      self.logger.debug("\(#function): \(result)")
       return result
     }
 
-    NSLog("\(#function): returning empty range")
+    self.logger.debug("\(#function): returning empty range")
     return NSRange(location: NSNotFound, length: 0)
   }
 
   public func hasMarkedText() -> Bool {
-//    NSLog("\(#function)")
+//    self.logger.debug("\(#function)")
     return self.markedText != nil
   }
 
   // FIXME: take into account the "return nil"-case
   // FIXME: just fix me, PLEASE...
   public func attributedSubstring(forProposedRange aRange: NSRange, actualRange: NSRangePointer?) -> NSAttributedString? {
-//    NSLog("\(#function): \(aRange), \(actualRange[0])")
+//    self.logger.debug("\(#function): \(aRange), \(actualRange[0])")
     if aRange.location == NSNotFound {
-//      NSLog("\(#function): range not found: returning nil")
+//      self.logger.debug("\(#function): range not found: returning nil")
       return nil
     }
 
     guard let lastMarkedText = self.lastMarkedText else {
-//      NSLog("\(#function): no last marked text: returning nil")
+//      self.logger.debug("\(#function): no last marked text: returning nil")
       return nil
     }
 
@@ -168,7 +168,7 @@ extension NeoVimView {
 
     let fillChars = Array(0..<fillCount).reduce("") { (result, _) in return result + " " }
 
-//    NSLog("\(#function): \(aRange), \(actualRange[0]): \(fillChars + lastMarkedText)")
+//    self.logger.debug("\(#function): \(aRange), \(actualRange[0]): \(fillChars + lastMarkedText)")
     return NSAttributedString(string: fillChars + lastMarkedText)
   }
 
@@ -179,7 +179,7 @@ extension NeoVimView {
   public func firstRect(forCharacterRange aRange: NSRange, actualRange: NSRangePointer?) -> NSRect {
     let position = self.grid.positionFromSingleIndex(aRange.location)
 
-//    NSLog("\(#function): \(aRange),\(actualRange[0]) -> \(position.row):\(position.column)")
+//    self.logger.debug("\(#function): \(aRange),\(actualRange[0]) -> \(position.row):\(position.column)")
 
     let resultInSelf = self.cellRectFor(row: position.row, column: position.column)
     let result = self.window?.convertToScreen(self.convert(resultInSelf, to: nil))
@@ -188,7 +188,7 @@ extension NeoVimView {
   }
 
   public func characterIndex(for aPoint: NSPoint) -> Int {
-//    NSLog("\(#function): \(aPoint)")
+//    self.logger.debug("\(#function): \(aPoint)")
     return 1
   }
 

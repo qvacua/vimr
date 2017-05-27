@@ -114,7 +114,7 @@ extension NeoVimView {
       result = self.wrapNamedKeys("\(vimClickCount)\(vimName)") + vimMouseLocation
     }
 
-//    NSLog("\(#function): \(result)")
+//    self.logger.debug("\(#function): \(result)")
     self.agent.vimInput(result)
   }
 

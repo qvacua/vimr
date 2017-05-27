@@ -39,7 +39,7 @@ extension NeoVimView {
       return
     }
 
-//    NSLog("\(#function): \(dirtyUnionRect)")
+//    self.logger.debug("\(#function): \(dirtyUnionRect)")
     let context = NSGraphicsContext.current()!.cgContext
 
     if self.isCurrentlyPinching {
@@ -68,7 +68,7 @@ extension NeoVimView {
     context.setTextDrawingMode(.fill);
 
     let dirtyRects = self.rectsBeingDrawn()
-//    NSLog("\(dirtyRects)")
+//    self.logger.debug("\(dirtyRects)")
 
     self.rowRunIntersecting(rects: dirtyRects).forEach { self.draw(rowRun: $0, context: context) }
     self.drawCursor(context: context)

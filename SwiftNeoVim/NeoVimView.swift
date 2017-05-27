@@ -87,7 +87,7 @@ public class NeoVimView: NSView,
       let path = newValue.path
       guard let escapedCwd = self.agent.escapedFileName(path) else {
         // this happens when VimR is quitting with some main windows open...
-        NSLog("WARN \(#function): escaped file name returned nil")
+        self.logger.fault("Escaped file name returned nil.")
         return
       }
 
@@ -128,9 +128,9 @@ public class NeoVimView: NSView,
   }
 
   @IBAction public func debug1(_ sender: Any?) {
-    NSLog("DEBUG 1 - Start")
+    self.logger.debug("DEBUG 1 - Start")
     self.agent.cursorGo(toRow: 10, column: 5)
-    NSLog("DEBUG 1 - End")
+    self.logger.debug("DEBUG 1 - End")
   }
 
   // MARK: - Internal
@@ -153,6 +153,7 @@ public class NeoVimView: NSView,
     0x1F9C0...0x1F9C0
   ].flatMap { $0 }
 
+  let logger = FileLogger(as: NeoVimView.self, with: URL(fileURLWithPath: "/tmp/nvv.log"))
   let agent: NeoVimAgent
   let grid = Grid()
 

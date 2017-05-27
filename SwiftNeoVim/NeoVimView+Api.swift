@@ -105,7 +105,7 @@ extension NeoVimView {
   public func saveCurrentTab(url: URL) {
     let path = url.path
     guard let escapedFileName = self.agent.escapedFileName(path) else {
-      NSLog("WARN \(#function): escaped file name returned nil")
+      self.logger.fault("Escaped file name returned nil.")
       return
     }
 
@@ -152,7 +152,7 @@ extension NeoVimView {
   fileprivate func `open`(_ url: URL, cmd: String) {
     let path = url.path
     guard let escapedFileName = self.agent.escapedFileName(path) else {
-      NSLog("WARN \(#function): escaped file name returned nil")
+      self.logger.fault("Escaped file name returned nil.")
       return
     }
 

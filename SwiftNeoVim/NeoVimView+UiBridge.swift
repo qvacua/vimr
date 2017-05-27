@@ -9,7 +9,7 @@ extension NeoVimView {
 
   public func resize(toWidth width: Int32, height: Int32) {
     DispatchQueue.main.async {
-//      NSLog("\(#function): \(width):\(height)")
+//      self.logger.debug("\(#function): \(width):\(height)")
       self.grid.resize(Size(width: Int(width), height: Int(height)))
       self.markForRenderWholeView()
     }
@@ -38,7 +38,7 @@ extension NeoVimView {
   public func gotoPosition(_ position: Position, screenCursor: Position, currentPosition: Position) {
     DispatchQueue.main.async {
       self.currentPosition = currentPosition
-//      NSLog("\(#function): \(position), \(screenCursor)")
+//      self.logger.debug("\(#function): \(position), \(screenCursor)")
 
       let curScreenCursor = self.grid.screenCursor
 
@@ -87,7 +87,7 @@ extension NeoVimView {
   }
 
   public func modeChange(_ mode: CursorModeShape) {
-//    NSLog("mode changed to: %02x", mode.rawValue)
+//    self.logger.debug("mode changed to: %02x", mode.rawValue)
     self.mode = mode
   }
 
@@ -117,7 +117,7 @@ extension NeoVimView {
   public func put(_ string: String, screenCursor: Position) {
     DispatchQueue.main.async {
       let curPos = self.grid.putPosition
-//      NSLog("\(#function): \(curPos) -> \(string)")
+//      self.logger.debug("\(#function): \(curPos) -> \(string)")
       self.grid.put(string)
 
       if self.usesLigatures {
@@ -136,7 +136,7 @@ extension NeoVimView {
 
   public func putMarkedText(_ markedText: String, screenCursor: Position) {
     DispatchQueue.main.async {
-      NSLog("\(#function): '\(markedText)' -> \(screenCursor)")
+      self.logger.debug("'\(markedText)' -> \(screenCursor)")
 
       let curPos = self.grid.putPosition
       self.grid.putMarkedText(markedText)
@@ -156,7 +156,7 @@ extension NeoVimView {
     DispatchQueue.main.async {
       let position = Position(row: Int(row), column: Int(column))
 
-//      NSLog("\(#function): \(position)")
+//      self.logger.debug("\(#function): \(position)")
 
       self.grid.unmarkCell(position)
       self.markForRender(position: position)
@@ -180,7 +180,7 @@ extension NeoVimView {
   public func updateForeground(_ fg: Int32) {
     DispatchQueue.main.async {
       self.grid.foreground = UInt32(bitPattern: fg)
-//      NSLog("\(ColorUtils.colorIgnoringAlpha(UInt32(fg)))")
+//      self.logger.debug("\(ColorUtils.colorIgnoringAlpha(UInt32(fg)))")
     }
   }
 
@@ -188,7 +188,7 @@ extension NeoVimView {
     DispatchQueue.main.async {
       self.grid.background = UInt32(bitPattern: bg)
       self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).cgColor
-//      NSLog("\(ColorUtils.colorIgnoringAlpha(UInt32(bg)))")
+//      self.logger.debug("\(ColorUtils.colorIgnoringAlpha(UInt32(bg)))")
     }
   }
 
@@ -225,7 +225,7 @@ extension NeoVimView {
 
   public func autoCommandEvent(_ event: NeoVimAutoCommandEvent, bufferHandle: Int) {
     DispatchQueue.main.async {
-//    NSLog("\(event.rawValue) with buffer \(bufferHandle)")
+//    self.logger.debug("\(event.rawValue) with buffer \(bufferHandle)")
 
       if event == .BUFWINENTER || event == .BUFWINLEAVE {
         self.bufferListChanged()
@@ -253,7 +253,7 @@ extension NeoVimView {
 
       self.delegate?.ipcBecameInvalid(reason: reason)
 
-      NSLog("ERROR \(#function): force-quitting")
+      self.logger.fault("force-quitting")
       self.agent.quit()
     }
   }
