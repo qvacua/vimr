@@ -77,36 +77,6 @@ extension NeoVimView {
     }
   }
 
-  public func updateMenu() {
-    gui.async {
-      self.logger.mark()
-    }
-  }
-
-  public func busyStart() {
-    gui.async {
-      self.logger.mark()
-    }
-  }
-
-  public func busyStop() {
-    gui.async {
-      self.logger.mark()
-    }
-  }
-
-  public func mouseOn() {
-    gui.async {
-      self.logger.mark()
-    }
-  }
-
-  public func mouseOff() {
-    gui.async {
-      self.logger.mark()
-    }
-  }
-
   public func modeChange(_ mode: CursorModeShape) {
     gui.async {
       self.logger.debug(cursorModeShapeName(mode))
@@ -196,20 +166,6 @@ extension NeoVimView {
     }
   }
 
-  public func bell() {
-    gui.async {
-      self.logger.mark()
-
-      NSBeep()
-    }
-  }
-
-  public func visualBell() {
-    gui.async {
-      self.logger.mark()
-    }
-  }
-
   public func flush() {
     gui.async {
       self.logger.debug("-----------------------------")
@@ -218,7 +174,7 @@ extension NeoVimView {
 
   public func updateForeground(_ fg: Int32) {
     gui.async {
-      self.logger.debug(ColorUtils.colorIgnoringAlpha(UInt32(fg)))
+      self.logger.debug(ColorUtils.colorIgnoringAlpha(UInt32(bitPattern: fg)))
 
       self.grid.foreground = UInt32(bitPattern: fg)
     }
@@ -226,7 +182,7 @@ extension NeoVimView {
 
   public func updateBackground(_ bg: Int32) {
     gui.async {
-      self.logger.debug(ColorUtils.colorIgnoringAlpha(UInt32(bg)))
+      self.logger.debug(ColorUtils.colorIgnoringAlpha(UInt32(bitPattern: bg)))
 
       self.grid.background = UInt32(bitPattern: bg)
       self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).cgColor
@@ -235,15 +191,9 @@ extension NeoVimView {
 
   public func updateSpecial(_ sp: Int32) {
     gui.async {
-      self.logger.debug(sp)
+      self.logger.debug(ColorUtils.colorIgnoringAlpha(UInt32(bitPattern: sp)))
 
       self.grid.special = UInt32(bitPattern: sp)
-    }
-  }
-
-  public func suspend() {
-    gui.async {
-      self.logger.mark()
     }
   }
 
@@ -255,12 +205,6 @@ extension NeoVimView {
     }
   }
 
-  public func setIcon(_ icon: String) {
-    gui.async {
-      self.logger.debug(icon)
-    }
-  }
-
   public func stop() {
     gui.async {
       self.logger.mark()
@@ -268,14 +212,6 @@ extension NeoVimView {
       self.delegate?.neoVimStopped()
     }
     self.agent.quit()
-  }
-
-  public func setDirtyStatus(_ dirty: Bool) {
-    gui.async {
-      self.logger.debug(dirty)
-
-      self.delegate?.set(dirtyStatus: dirty)
-    }
   }
 
   public func autoCommandEvent(_ event: NeoVimAutoCommandEvent, bufferHandle: Int) {
@@ -314,42 +250,73 @@ extension NeoVimView {
       self.agent.quit()
     }
   }
+}
 
-  fileprivate func currentBufferChanged(_ handle: Int) {
-    guard let currentBuffer = self.currentBuffer() else {
-      return
+// MARK: - Simple
+extension NeoVimView {
+
+  public func bell() {
+    gui.async {
+      self.logger.mark()
+
+      NSBeep()
     }
+  }
 
-    guard currentBuffer.handle == handle else {
-      return
+  public func setDirtyStatus(_ dirty: Bool) {
+    gui.async {
+      self.logger.debug(dirty)
+
+      self.delegate?.set(dirtyStatus: dirty)
     }
-
-    self.delegate?.currentBufferChanged(currentBuffer)
   }
 
-  fileprivate func tabChanged() {
-    self.delegate?.tabChanged()
-  }
-
-  fileprivate func cwdChanged() {
-    self.delegate?.cwdChanged()
-  }
-
-  fileprivate func bufferListChanged() {
-    self.delegate?.bufferListChanged()
-  }
-
-  fileprivate func updateCursorWhenPutting(currentPosition curPos: Position, screenCursor: Position) {
-    if self.mode == .cmdline {
-      // When the cursor is in the command line, then we need this...
-      self.markForRender(cellPosition: self.grid.previousCellPosition(curPos))
-      self.markForRender(cellPosition: self.grid.nextCellPosition(curPos))
-      self.markForRender(screenCursor: self.grid.screenCursor)
+  public func updateMenu() {
+    gui.async {
+      self.logger.mark()
     }
+  }
 
-    self.markForRender(screenCursor: screenCursor)
-    self.markForRender(cellPosition: self.grid.screenCursor)
-    self.grid.moveCursor(screenCursor)
+  public func busyStart() {
+    gui.async {
+      self.logger.mark()
+    }
+  }
+
+  public func busyStop() {
+    gui.async {
+      self.logger.mark()
+    }
+  }
+
+  public func mouseOn() {
+    gui.async {
+      self.logger.mark()
+    }
+  }
+
+  public func mouseOff() {
+    gui.async {
+      self.logger.mark()
+    }
+  }
+
+  public func visualBell() {
+    gui.async {
+      self.logger.mark()
+    }
+  }
+
+  public func suspend() {
+    gui.async {
+      self.logger.mark()
+    }
+  }
+
+  public func setIcon(_ icon: String) {
+    gui.async {
+      self.logger.debug(icon)
+    }
   }
 }
 
@@ -388,6 +355,46 @@ extension NeoVimView {
 
   func markForRender(row: Int, column: Int) {
     self.setNeedsDisplay(self.cellRectFor(row: row, column: column))
+  }
+}
+
+extension NeoVimView {
+
+  fileprivate func currentBufferChanged(_ handle: Int) {
+    guard let currentBuffer = self.currentBuffer() else {
+      return
+    }
+
+    guard currentBuffer.handle == handle else {
+      return
+    }
+
+    self.delegate?.currentBufferChanged(currentBuffer)
+  }
+
+  fileprivate func tabChanged() {
+    self.delegate?.tabChanged()
+  }
+
+  fileprivate func cwdChanged() {
+    self.delegate?.cwdChanged()
+  }
+
+  fileprivate func bufferListChanged() {
+    self.delegate?.bufferListChanged()
+  }
+
+  fileprivate func updateCursorWhenPutting(currentPosition curPos: Position, screenCursor: Position) {
+    if self.mode == .cmdline {
+      // When the cursor is in the command line, then we need this...
+      self.markForRender(cellPosition: self.grid.previousCellPosition(curPos))
+      self.markForRender(cellPosition: self.grid.nextCellPosition(curPos))
+      self.markForRender(screenCursor: self.grid.screenCursor)
+    }
+
+    self.markForRender(screenCursor: screenCursor)
+    self.markForRender(cellPosition: self.grid.screenCursor)
+    self.grid.moveCursor(screenCursor)
   }
 }
 

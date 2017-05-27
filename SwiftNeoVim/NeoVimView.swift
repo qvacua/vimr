@@ -207,6 +207,7 @@ public class NeoVimView: NSView,
   fileprivate var _linespacing = NeoVimView.defaultLinespacing
 
   fileprivate func launchNeoVim() {
+    self.logger.info("=== Starting neovim...")
     let noErrorDuringInitialization = self.agent.runLocalServerAndNeoVim()
 
     // Neovim is ready now: resize neovim to bounds.
@@ -215,6 +216,8 @@ public class NeoVimView: NSView,
     self.agent.setBoolOption("termguicolors", to: true)
 
     if noErrorDuringInitialization == false {
+      self.logger.fault("There was an error launching neovim.")
+
       let alert = NSAlert()
       alert.alertStyle = .warning
       alert.messageText = "Error during initialization"
