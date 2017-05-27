@@ -22,7 +22,7 @@ public class NeoVimView: NSView,
 
   public static let minFontSize = CGFloat(4)
   public static let maxFontSize = CGFloat(128)
-  public static let defaultFont = NSFont.userFixedPitchFont(ofSize: 13)!
+  public static let defaultFont = NSFont.userFixedPitchFont(ofSize: 12)!
   public static let defaultLinespacing = CGFloat(1)
 
   public static let minLinespacing = CGFloat(0.5)
