@@ -1387,7 +1387,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "pushd neovim\nmake CFLAGS='-mmacosx-version-min=10.10' MACOSX_DEPLOYMENT_TARGET=10.10 CMAKE_EXTRA_FLAGS=\"-DGETTEXT_SOURCE=CUSTOM\" libnvim\npopd";
+			shellScript = "pushd neovim\n../bin/build_libnvim.sh\npopd";
 		};
 		4BDFAC751E59BAC30056122C /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
