@@ -149,6 +149,7 @@
 		4B91FFF61DEB772B00447068 /* CocoaFontAwesome.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B337FBA1DEB76F20020ADD2 /* CocoaFontAwesome.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B96384C1ED9793B001C556F /* NeoVimAutoCommandEvent.generated.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B96384B1ED9793B001C556F /* NeoVimAutoCommandEvent.generated.m */; };
 		4B96384E1ED9797F001C556F /* NeoVimUiBridgeProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B96384D1ED9797F001C556F /* NeoVimUiBridgeProtocol.m */; };
+		4B9638501ED979BD001C556F /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B96384F1ED979BD001C556F /* Logger.swift */; };
 		4B96FB3B1EBBC56F00E4E164 /* FileItemIgnorePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B69499B2569793350CEC /* FileItemIgnorePattern.swift */; };
 		4B96FB3C1EBBC56F00E4E164 /* FileUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA8AC40B901B20F20B71 /* FileUtils.swift */; };
 		4B96FB3D1EBBC56F00E4E164 /* Matcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEEB33113B0E33C3830F /* Matcher.swift */; };
@@ -484,6 +485,7 @@
 		4B8AC0431DBCB3A1007CCC9B /* NeoVimObjectsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimObjectsExtensions.swift; sourceTree = "<group>"; };
 		4B96384B1ED9793B001C556F /* NeoVimAutoCommandEvent.generated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimAutoCommandEvent.generated.m; sourceTree = "<group>"; };
 		4B96384D1ED9797F001C556F /* NeoVimUiBridgeProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimUiBridgeProtocol.m; sourceTree = "<group>"; };
+		4B96384F1ED979BD001C556F /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		4B97E2CD1D33F53D00FC0660 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
 		4BB409E61DD68CCC005F39A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/FileBrowserMenu.xib; sourceTree = "<group>"; };
@@ -779,6 +781,7 @@
 				4BDF641B1D0887C100D47E1D /* TextDrawer.m */,
 				4BDF64221D08CAB000D47E1D /* MMCoreTextView.h */,
 				4BDF64231D08CAB000D47E1D /* MMCoreTextView.m */,
+				4B96384F1ED979BD001C556F /* Logger.swift */,
 				4B4192171D0C52D700A0BEB2 /* Grid.swift */,
 				4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */,
 				4B1BB3521D16C5E500CA4FEF /* InputTestView.swift */,
@@ -1414,6 +1417,7 @@
 				4BCADE081D11ED12004DAD0F /* CocoaExtensions.swift in Sources */,
 				4B401B1A1D046E0600D99EDC /* NeoVimViewDelegate.swift in Sources */,
 				1929B728262BAA14FC93F6AC /* NeoVimView.swift in Sources */,
+				4B9638501ED979BD001C556F /* Logger.swift in Sources */,
 				4B570DC31D303CAF006EDC21 /* NeoVimAgent.m in Sources */,
 				4BDF641D1D0887C100D47E1D /* TextDrawer.m in Sources */,
 				4BDF64251D08CAB000D47E1D /* MMCoreTextView.m in Sources */,
