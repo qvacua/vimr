@@ -43,9 +43,9 @@ typedef NS_ENUM(NSUInteger, FontTrait) {
 typedef struct {
   FontTrait fontTrait;
 
-  unsigned int foreground;
-  unsigned int background;
-  unsigned int special;
+  NSInteger foreground;
+  NSInteger background;
+  NSInteger special;
 } CellAttributes;
 
 static NSInteger _default_foreground = 0xFF000000;
