@@ -32,8 +32,8 @@ extension NeoVimView {
                                                         modifierFlags: event.modifierFlags,
                                                         cellPosition: cellPosition)
 
-    // We patched neovim such that it scrolls only 1 line for each scroll input. The default is 3 and for mouse
-    // scrolling we restore the original behavior.
+    // We patched neovim such that it scrolls only 1 line for each scroll input.
+    // The default is 3 and for mouse scrolling we restore the original behavior.
     if isTrackpad == false {
       (0..<3).forEach { _ in
         self.agent.vimInput(vimInputX)
@@ -45,10 +45,12 @@ extension NeoVimView {
 
     let (absDeltaX, absDeltaY) = (abs(deltaX), abs(deltaY))
 
-    // The absolute delta values can get very very big when you use two finger scrolling on the trackpad:
-    // Cap them using heuristic values...
-    let numX = deltaX != 0 ? max(1, min(Int(absDeltaX / self.scrollLimiterX), self.maxScrollDeltaX)) : 0
-    let numY = deltaY != 0 ? max(1, min(Int(absDeltaY / self.scrollLimiterY), self.maxScrollDeltaY)) : 0
+    // The absolute delta values can get very very big when you use two finger scrolling
+    // on the trackpad: Cap them using heuristic values...
+    let numX = deltaX != 0 ?
+      max(1, min(Int(absDeltaX / self.scrollLimiterX), self.maxScrollDeltaX)) : 0
+    let numY = deltaY != 0 ?
+      max(1, min(Int(absDeltaY / self.scrollLimiterY), self.maxScrollDeltaY)) : 0
 
     for i in 0..<max(numX, numY) {
       if i < numX {
@@ -120,7 +122,8 @@ extension NeoVimView {
 
   fileprivate func shouldFireVimInputFor(event: NSEvent, newCellPosition: Position) -> Bool {
     let type = event.type
-    guard type == .leftMouseDragged || type == .rightMouseDragged || type == .otherMouseDragged else {
+    guard type == .leftMouseDragged || type == .rightMouseDragged
+          || type == .otherMouseDragged else {
       self.lastClickedCellPosition = newCellPosition
       return true
     }

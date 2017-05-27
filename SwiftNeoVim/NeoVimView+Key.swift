@@ -28,7 +28,9 @@ extension NeoVimView {
 
     if KeyUtils.isSpecial(key: charsIgnoringModifiers) {
       if let vimModifiers = self.vimModifierFlags(modifierFlags) {
-        self.agent.vimInput(self.wrapNamedKeys(vimModifiers + KeyUtils.namedKeyFrom(key: charsIgnoringModifiers)))
+        self.agent.vimInput(
+          self.wrapNamedKeys(vimModifiers + KeyUtils.namedKeyFrom(key: charsIgnoringModifiers))
+        )
       } else {
         self.agent.vimInput(self.wrapNamedKeys(KeyUtils.namedKeyFrom(key: charsIgnoringModifiers)))
       }
@@ -113,11 +115,12 @@ extension NeoVimView {
     self.markForRender(row: self.grid.putPosition.row, column: self.grid.putPosition.column)
   }
 
-  /// Return the current selection (or the position of the cursor with empty-length range). For example when you enter
-  /// "Cmd-Ctrl-Return" you'll get the Emoji-popup at the rect by firstRectForCharacterRange(actualRange:) where the
-  /// first range is the result of this method.
+  /// Return the current selection (or the position of the cursor with empty-length range).
+  /// For example when you enter "Cmd-Ctrl-Return" you'll get the Emoji-popup at the rect
+  /// by firstRectForCharacterRange(actualRange:) where the first range is the result of this method
   public func selectedRange() -> NSRange {
-    // When the app starts and the Hangul input method is selected, this method gets called very early...
+    // When the app starts and the Hangul input method is selected,
+    // this method gets called very early...
     guard self.grid.hasData else {
 //      self.logger.debug("\(#function): not found")
       return NSRange(location: NSNotFound, length: 0)
@@ -148,7 +151,9 @@ extension NeoVimView {
 
   // FIXME: take into account the "return nil"-case
   // FIXME: just fix me, PLEASE...
-  public func attributedSubstring(forProposedRange aRange: NSRange, actualRange: NSRangePointer?) -> NSAttributedString? {
+  public func attributedSubstring(forProposedRange aRange: NSRange,
+                                  actualRange: NSRangePointer?) -> NSAttributedString? {
+
 //    self.logger.debug("\(#function): \(aRange), \(actualRange[0])")
     if aRange.location == NSNotFound {
 //      self.logger.debug("\(#function): range not found: returning nil")
@@ -160,7 +165,8 @@ extension NeoVimView {
       return nil
     }
 
-    // we only support last marked text, thus fill dummy characters when Cocoa asks for more characters than marked...
+    // we only support last marked text, thus fill dummy characters when Cocoa asks for more
+    // characters than marked...
     let fillCount = aRange.length - lastMarkedText.characters.count
     guard fillCount >= 0 else {
       return nil
@@ -179,7 +185,8 @@ extension NeoVimView {
   public func firstRect(forCharacterRange aRange: NSRange, actualRange: NSRangePointer?) -> NSRect {
     let position = self.grid.positionFromSingleIndex(aRange.location)
 
-//    self.logger.debug("\(#function): \(aRange),\(actualRange[0]) -> \(position.row):\(position.column)")
+//    self.logger.debug("\(#function): \(aRange),\(actualRange[0]) -> " +
+//                      "\(position.row):\(position.column)")
 
     let resultInSelf = self.cellRectFor(row: position.row, column: position.column)
     let result = self.window?.convertToScreen(self.convert(resultInSelf, to: nil))

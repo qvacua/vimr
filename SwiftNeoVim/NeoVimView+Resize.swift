@@ -21,8 +21,9 @@ extension NeoVimView {
       return
     }
 
-    // There can be cases where the frame is resized not by live resizing, eg when the window is resized by window
-    // management tools. Thus, we make sure that the resize call is made when this happens.
+    // There can be cases where the frame is resized not by live resizing,
+    // eg when the window is resized by window management tools.
+    // Thus, we make sure that the resize call is made when this happens.
     self.resizeNeoVimUi(to: newSize)
   }
 

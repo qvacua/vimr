@@ -40,7 +40,10 @@ extension NeoVimView {
     }
   }
 
-  public func gotoPosition(_ position: Position, screenCursor: Position, currentPosition: Position) {
+  public func gotoPosition(_ position: Position,
+                           screenCursor: Position,
+                           currentPosition: Position) {
+
     gui.async {
       self.logger.debug("pos: \(position), screen: \(screenCursor), " +
                         "current-pos: \(currentPosition)")
@@ -48,8 +51,8 @@ extension NeoVimView {
       self.currentPosition = currentPosition
       let curScreenCursor = self.grid.screenCursor
 
-      // Because neovim fills blank space with "Space" and when we enter "Space" we don't get the puts, thus we have to
-      // redraw the put position.
+      // Because neovim fills blank space with "Space" and when we enter "Space"
+      // we don't get the puts, thus we have to redraw the put position.
       if self.usesLigatures {
         self.markForRender(region: self.grid.regionOfWord(at: self.grid.putPosition))
         self.markForRender(region: self.grid.regionOfWord(at: curScreenCursor))
@@ -99,8 +102,8 @@ extension NeoVimView {
 
       self.grid.scroll(Int(count))
       self.markForRender(region: self.grid.region)
-      // Do not send msgs to agent -> neovim in the delegate method. It causes spinning when you're opening a file with
-      // existing swap file.
+      // Do not send msgs to agent -> neovim in the delegate method. It causes spinning
+      // when you're opening a file with existing swap file.
       self.delegate?.scroll()
     }
   }
@@ -384,7 +387,9 @@ extension NeoVimView {
     self.delegate?.bufferListChanged()
   }
 
-  fileprivate func updateCursorWhenPutting(currentPosition curPos: Position, screenCursor: Position) {
+  fileprivate func updateCursorWhenPutting(currentPosition curPos: Position,
+                                           screenCursor: Position) {
+
     if self.mode == .cmdline {
       // When the cursor is in the command line, then we need this...
       self.markForRender(cellPosition: self.grid.previousCellPosition(curPos))

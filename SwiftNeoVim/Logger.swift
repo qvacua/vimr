@@ -113,7 +113,7 @@ class FileLogger {
       let timestamp = self.logDateFormatter.string(from: Date())
       let strMsg = self.string(from: message())
 
-      let logMsg = "\(timestamp) \(self.name) \(function) - \(strMsg)"
+      let logMsg = "\(timestamp) \(self.name) \(function) \(strMsg)"
       let data = "[\(level.rawValue)] \(logMsg)\n".data(using: .utf8) ?? conversionError
 
       self.fileHandle.write(data)

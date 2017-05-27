@@ -137,8 +137,8 @@ extension NeoVimView {
    - normal mode: `:command<CR>`
    - else: `:<Esc>:command<CR>`
 
-   We don't use NeoVimAgent.vimCommand because if we do for example "e /some/file" and its swap file already exists,
-   then NeoVimServer spins and become unresponsive.
+   We don't use NeoVimAgent.vimCommand because if we do for example "e /some/file"
+   and its swap file already exists, then NeoVimServer spins and become unresponsive.
   */
   fileprivate func exec(command cmd: String) {
     switch self.mode {

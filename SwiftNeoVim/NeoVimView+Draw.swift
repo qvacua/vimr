@@ -61,8 +61,9 @@ extension NeoVimView {
       return
     }
 
-    // When both anti-aliasing and font smoothing is turned on, then the "Use LCD font smoothing when available" setting
-    // is used to render texts, cf. chapter 11 from "Programming with Quartz".
+    // When both anti-aliasing and font smoothing is turned on, then the "Use LCD font smoothing
+    // when available" setting is used to render texts,
+    // cf. chapter 11 from "Programming with Quartz".
     context.setShouldSmoothFonts(true);
     context.textMatrix = CGAffineTransform.identity;
     context.setTextDrawingMode(.fill);
@@ -84,11 +85,14 @@ extension NeoVimView {
   }
 
   fileprivate func draw(rowRun rowFrag: RowRun, context: CGContext) {
-    // For background drawing we don't filter out the put(0, 0)s: in some cases only the put(0, 0)-cells should be
-    // redrawn. => FIXME: probably we have to consider this also when drawing further down, ie when the range starts
-    // with '0'...
-    self.drawBackground(positions: rowFrag.range.map { self.pointInViewFor(row: rowFrag.row, column: $0) },
-                        background: rowFrag.attrs.background)
+    // For background drawing we don't filter out the put(0, 0)s:
+    // in some cases only the put(0, 0)-cells should be redrawn.
+    // => FIXME: probably we have to consider this also when drawing further down,
+    // ie when the range starts with '0'...
+    self.drawBackground(
+      positions: rowFrag.range.map { self.pointInViewFor(row: rowFrag.row, column: $0) },
+      background: rowFrag.attrs.background
+    )
 
     let positions = rowFrag.range
       // filter out the put(0, 0)s (after a wide character)
@@ -103,10 +107,12 @@ extension NeoVimView {
     let offset = self.drawer.baselineOffset
     let glyphPositions = positions.map { CGPoint(x: $0.x, y: $0.y + offset) }
 
-    self.drawer.draw(string,
-                     positions: UnsafeMutablePointer(mutating: glyphPositions), positionsCount: positions.count,
-                     highlightAttrs: rowFrag.attrs,
-                     context: context)
+    self.drawer.draw(
+      string,
+      positions: UnsafeMutablePointer(mutating: glyphPositions), positionsCount: positions.count,
+      highlightAttrs: rowFrag.attrs,
+      context: context
+    )
   }
 
   fileprivate func cursorRegion() -> Region {
@@ -161,7 +167,13 @@ extension NeoVimView {
 
   fileprivate func drawBackground(positions: [CGPoint], background: UInt32) {
     ColorUtils.colorIgnoringAlpha(background).set()
-//    NSColor(calibratedRed: CGFloat(drand48()), green: CGFloat(drand48()), blue: CGFloat(drand48()), alpha: 1.0).set()
+
+    // To use random color use the following
+//    NSColor(calibratedRed: CGFloat(drand48()),
+//            green: CGFloat(drand48()),
+//            blue: CGFloat(drand48()),
+//            alpha: 1.0).set()
+
     let backgroundRect = CGRect(
       x: positions[0].x, y: positions[0].y,
       width: CGFloat(positions.count) * self.cellSize.width, height: self.cellSize.height
@@ -172,16 +184,21 @@ extension NeoVimView {
   fileprivate func rowRunIntersecting(rects: [CGRect]) -> [RowRun] {
     return rects
       .map { rect -> (CountableClosedRange<Int>, CountableClosedRange<Int>) in
-        // Get all Regions that intersects with the given rects. There can be overlaps between the Regions, but for the
-        // time being we ignore them; probably not necessary to optimize them away.
+        // Get all Regions that intersects with the given rects.
+        // There can be overlaps between the Regions, but for the time being we ignore them;
+        // probably not necessary to optimize them away.
         let region = self.regionFor(rect: rect)
         return (region.rowRange, region.columnRange)
       }
-      .map { self.rowRunsFor(rowRange: $0, columnRange: $1) } // All RowRuns for all Regions grouped by their row range.
-      .flatMap { $0 }                                         // Flattened RowRuns for all Regions.
+      // All RowRuns for all Regions grouped by their row range.
+      .map { self.rowRunsFor(rowRange: $0, columnRange: $1) }
+      // Flattened RowRuns for all Regions.
+      .flatMap { $0 }
   }
 
-  fileprivate func rowRunsFor(rowRange: CountableClosedRange<Int>, columnRange: CountableClosedRange<Int>) -> [RowRun] {
+  fileprivate func rowRunsFor(rowRange: CountableClosedRange<Int>,
+                              columnRange: CountableClosedRange<Int>) -> [RowRun] {
+
     return rowRange
       .map { (row) -> [RowRun] in
         let rowCells = self.grid.cells[row]
@@ -207,16 +224,20 @@ extension NeoVimView {
     let cellHeight = self.cellSize.height
 
     let rowStart = max(
-      Int(floor((self.bounds.height - self.yOffset - (rect.origin.y + rect.size.height)) / cellHeight)), 0
+      Int(floor(
+        (self.bounds.height - self.yOffset - (rect.origin.y + rect.size.height)) / cellHeight)
+      ), 0
     )
     let rowEnd = min(
-      Int(ceil((self.bounds.height - self.yOffset - rect.origin.y) / cellHeight)) - 1, self.grid.size.height - 1
+      Int(ceil((self.bounds.height - self.yOffset - rect.origin.y) / cellHeight)) - 1,
+      self.grid.size.height - 1
     )
     let columnStart = max(
       Int(floor((rect.origin.x - self.xOffset) / cellWidth)), 0
     )
     let columnEnd = min(
-      Int(ceil((rect.origin.x - self.xOffset + rect.size.width) / cellWidth)) - 1, self.grid.size.width - 1
+      Int(ceil((rect.origin.x - self.xOffset + rect.size.width) / cellWidth)) - 1,
+      self.grid.size.width - 1
     )
 
     return Region(top: rowStart, bottom: rowEnd, left: columnStart, right: columnEnd)
@@ -229,7 +250,8 @@ extension NeoVimView {
   fileprivate func pointInViewFor(row: Int, column: Int) -> CGPoint {
     return CGPoint(
       x: self.xOffset + CGFloat(column) * self.cellSize.width,
-      y: self.bounds.size.height - self.yOffset - CGFloat(row) * self.cellSize.height - self.cellSize.height
+      y: self.bounds.size.height - self.yOffset - CGFloat(row) * self.cellSize.height
+         - self.cellSize.height
     )
   }
 
