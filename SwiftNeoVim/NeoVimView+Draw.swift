@@ -16,39 +16,71 @@ extension NeoVimView {
       return
     }
 
-    let context = NSGraphicsContext.current()!.cgContext
-    context.saveGState()
-    defer { context.restoreGState() }
+    guard let viewCtx = NSGraphicsContext.current()?.cgContext else {
+      self.logger.error("Could not get the current CGContext of the view.")
+      return
+    }
+
+    guard let bufferLayer = self.bufferLayer else {
+      self.logger.error("Could not get the buffer CGLayer.")
+      return
+    }
+
+    guard let bufferCtx = self.bufferContext else {
+      self.logger.error("Could not get the buffer CGContext (of the buffer CGLayer).")
+      return
+    }
+
+    viewCtx.saveGState()
+    defer { viewCtx.restoreGState() }
+
+    bufferCtx.saveGState()
+    defer { bufferCtx.restoreGState() }
 
     if self.inLiveResize || self.currentlyResizing {
-      self.drawResizeInfo(in: context, with: dirtyUnionRect)
+      self.drawResizeInfo(in: viewCtx, with: dirtyUnionRect)
       return
     }
 
     if self.isCurrentlyPinching {
-      self.drawPinchImage(in: context)
+      self.drawPinchImage(in: viewCtx)
       return
     }
-
-    // When both anti-aliasing and font smoothing is turned on, then the "Use LCD font smoothing
-    // when available" setting is used to render texts,
-    // cf. chapter 11 from "Programming with Quartz".
-    context.setShouldSmoothFonts(true);
-    context.textMatrix = CGAffineTransform.identity;
-    context.setTextDrawingMode(.fill);
 
     let dirtyRects = self.rectsBeingDrawn()
 
     self.logger.debug("dirty union rect: \(dirtyUnionRect)")
     self.logger.debug("rects being drawn: \(dirtyRects)")
 
-    self.rowRunIntersecting(rects: dirtyRects).forEach { self.draw(rowRun: $0, in: context) }
-    self.drawCursor(context: context)
+    let scale = self.scaleFactor
+    let boundsSize = self.bounds.size
+    let layerSize = bufferLayer.size.scaling(1 / scale)
+
+    let drawRect = CGRect(x: 0,
+                          y: boundsSize.height - layerSize.height,
+                          width: layerSize.width,
+                          height: layerSize.height)
+
+    bufferCtx.scaleBy(x: scale, y: scale)
+    dirtyRects.forEach {
+      viewCtx.saveGState()
+      viewCtx.clip(to: $0)
+      viewCtx.setBlendMode(.copy)
+      viewCtx.draw(bufferLayer, in: drawRect)
+      viewCtx.restoreGState()
+    }
   }
 
-  fileprivate func draw(rowRun rowFrag: RowRun, in context: CGContext) {
+  func draw(rowRun rowFrag: RowRun, in context: CGContext) {
     context.saveGState()
     defer { context.restoreGState() }
+
+    // When both anti-aliasing and font smoothing is turned on, then the "Use LCD font smoothing
+    // when available" setting is used to render texts,
+    // cf. chapter 11 from "Programming with Quartz".
+    context.setShouldSmoothFonts(true);
+    context.textMatrix = .identity;
+    context.setTextDrawingMode(.fill);
 
     // For background drawing we don't filter out the put(0, 0)s:
     // in some cases only the put(0, 0)-cells should be redrawn.
@@ -187,7 +219,7 @@ extension NeoVimView {
                            hints: nil)
   }
 
-  fileprivate func rowRunIntersecting(rects: [CGRect]) -> [RowRun] {
+  func rowRunIntersecting(rects: [CGRect]) -> [RowRun] {
     return rects
       .map { rect -> (CountableClosedRange<Int>, CountableClosedRange<Int>) in
         // Get all Regions that intersects with the given rects.
@@ -245,6 +277,11 @@ extension NeoVimView {
       Int(ceil((rect.origin.x - self.xOffset + rect.size.width) / cellWidth)) - 1,
       self.grid.size.width - 1
     )
+
+    if rowStart > rowEnd || columnStart > columnEnd {
+      self.bridgeLogger.debug("\(rowStart):\(rowEnd)_\(columnStart):\(columnEnd) Out of range")
+      return .zero
+    }
 
     return Region(top: rowStart, bottom: rowEnd, left: columnStart, right: columnEnd)
   }

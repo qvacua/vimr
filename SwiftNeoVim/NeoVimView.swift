@@ -142,7 +142,7 @@ public class NeoVimView: NSView,
     var attrs: CellAttributes
 
     var description: String {
-      return "RowRun<\(row): \(range)\n\(attrs)>"
+      return "RowRun<\(row): \(range) <- \(attrs)>"
     }
   }
 
@@ -152,7 +152,7 @@ public class NeoVimView: NSView,
   let agent: NeoVimAgent
   let grid = Grid()
 
-  var cglayer: CGLayer? {
+  var bufferLayer: CGLayer? {
     if self._cglayer == nil && self.lockFocusIfCanDraw(),
        let current = NSGraphicsContext.current()?.cgContext {
 
@@ -163,9 +163,9 @@ public class NeoVimView: NSView,
 
     return self._cglayer
   }
-  var cgcontext: CGContext? {
+  var bufferContext: CGContext? {
     if self._cgcontext == nil {
-      self._cgcontext = self.cglayer?.context
+      self._cgcontext = self.bufferLayer?.context
     }
 
     return self._cgcontext
@@ -174,7 +174,7 @@ public class NeoVimView: NSView,
     return self.window?.screen?.backingScaleFactor ?? 1
   }
 
-  var rectsToUpdate: Set<CGRect> = []
+  var rectsToUpdate = Set<CGRect>()
 
   let drawer: TextDrawer
 
@@ -215,6 +215,7 @@ public class NeoVimView: NSView,
 
   fileprivate func launchNeoVim() {
     self.logger.info("=== Starting neovim...")
+    self.bridgeLogger.info("=== Starting neovim...")
     let noErrorDuringInitialization = self.agent.runLocalServerAndNeoVim()
 
     // Neovim is ready now: resize neovim to bounds.

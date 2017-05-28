@@ -83,11 +83,11 @@ class FileLogger {
   let shouldLogDebug: Bool
 
   init<T>(as name: T, with fileUrl: URL) {
-    #if DEBUG
+#if DEBUG
     self.shouldLogDebug = true
-    #else
+#else
     self.shouldLogDebug = false
-    #endif
+#endif
 
     switch name {
     case let str as String: self.name = str
@@ -137,19 +137,19 @@ class FileLogger {
     self.log("", level: .debug, file: file, line: line, function: function)
   }
 
-  func `default`<T>(_ message: @escaping @autoclosure () -> T,
+  func `default`<T>(_ message: T,
                     file: String = #file, line: Int = #line, function: String = #function) {
 
     self.log(message, level: .default, file: file, line: line, function: function)
   }
 
-  func info<T>(_ message: @escaping @autoclosure () -> T,
+  func info<T>(_ message: T,
                file: String = #file, line: Int = #line, function: String = #function) {
 
     self.log(message, level: .info, file: file, line: line, function: function)
   }
 
-  func debug<T>(_ message: @escaping @autoclosure () -> T,
+  func debug<T>(_ message: T,
                 file: String = #file, line: Int = #line, function: String = #function) {
 
     guard self.shouldLogDebug else {
@@ -159,24 +159,24 @@ class FileLogger {
     self.log(message, level: .debug, file: file, line: line, function: function)
   }
 
-  func error<T>(_ message: @escaping @autoclosure () -> T,
+  func error<T>(_ message: T,
                 file: String = #file, line: Int = #line, function: String = #function) {
 
     self.log(message, level: .error, file: file, line: line, function: function)
   }
 
-  func fault<T>(_ message: @escaping @autoclosure () -> T,
+  func fault<T>(_ message: T,
                 file: String = #file, line: Int = #line, function: String = #function) {
 
     self.log(message, level: .fault, file: file, line: line, function: function)
   }
 
-  func log<T>(_ message: @escaping @autoclosure () -> T, level: Level = .default,
+  func log<T>(_ message: T, level: Level = .default,
               file: String = #file, line: Int = #line, function: String = #function) {
 
     queue.async {
       let timestamp = self.logDateFormatter.string(from: Date())
-      let strMsg = self.string(from: message())
+      let strMsg = self.string(from: message)
 
       let logMsg = "\(timestamp) \(self.name) \(function) \(strMsg)"
       let data = "[\(level.rawValue)] \(logMsg)\n".data(using: .utf8) ?? conversionError

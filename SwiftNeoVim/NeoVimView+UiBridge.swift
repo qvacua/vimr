@@ -46,7 +46,7 @@ extension NeoVimView {
 
     gui.async {
       self.bridgeLogger.debug("pos: \(position), screen: \(screenCursor), " +
-                        "current-pos: \(currentPosition)")
+                              "current-pos: \(currentPosition)")
 
       self.currentPosition = currentPosition
       let curScreenCursor = self.grid.screenCursor
@@ -55,7 +55,7 @@ extension NeoVimView {
       // we don't get the puts, thus we have to redraw the put position.
       if self.usesLigatures {
         self.markForRender(region: self.grid.regionOfWord(at: self.grid.putPosition))
-        self.markForRender(region: self.grid.regionOfWord(at: curScreenCursor))
+
         self.markForRender(region: self.grid.regionOfWord(at: position))
         self.markForRender(region: self.grid.regionOfWord(at: screenCursor))
       } else {
@@ -119,7 +119,7 @@ extension NeoVimView {
   public func put(_ string: String, screenCursor: Position) {
     gui.async {
       let curPos = self.grid.putPosition
-      self.bridgeLogger.debug("\(curPos) -> \(string) <- screen: \(screenCursor)")
+      self.bridgeLogger.debug("\(curPos) -> '\(string)' <- screen: \(screenCursor)")
 
       self.grid.put(string)
 
@@ -170,7 +170,43 @@ extension NeoVimView {
 
   public func flush() {
     gui.async {
+      if self.rectsToUpdate.isEmpty {
+        self.bridgeLogger.debug("No rects to update.")
+        return
+      }
+
+      if self.bounds.size == .zero {
+        self.bridgeLogger.debug("Removing all rects to update due to zero bounds.")
+        self.rectsToUpdate.removeAll(keepingCapacity: true)
+        return
+      }
+
       self.bridgeLogger.debug("-----------------------------")
+      self.bridgeLogger.debug(self.rectsToUpdate.count)
+
+      guard let bufferCtx = self.bufferContext else {
+        self.logger.error("Could not get the buffer context.")
+        return
+      }
+
+      bufferCtx.saveGState()
+      defer { bufferCtx.restoreGState() }
+
+      let scale = self.scaleFactor
+      bufferCtx.scaleBy(x: scale, y: scale)
+
+      self.rowRunIntersecting(rects: Array(self.rectsToUpdate)).forEach {
+        self.draw(rowRun: $0, in: bufferCtx)
+      }
+//    self.drawCursor(context: context)
+
+      if self.rectsToUpdate.count < 10 {
+        self.logger.debug(self.rectsToUpdate)
+      } else {
+        self.logger.debug("\(self.rectsToUpdate.count) rects to update.")
+      }
+      self.rectsToUpdate.forEach(self.setNeedsDisplay)
+      self.rectsToUpdate.removeAll(keepingCapacity: true)
     }
   }
 
@@ -248,7 +284,7 @@ extension NeoVimView {
 
       self.delegate?.ipcBecameInvalid(reason: reason)
 
-      self.bridgeLogger.fault("force-quitting")
+      self.bridgeLogger.fault("Lost the neovim background process! Force-quitting...")
       self.agent.quit()
     }
   }
@@ -322,6 +358,7 @@ extension NeoVimView {
   }
 }
 
+// MARK: - Marking rects to update
 extension NeoVimView {
 
   func markForRender(cellPosition position: Position) {
@@ -348,15 +385,31 @@ extension NeoVimView {
   }
 
   func markForRenderWholeView() {
-    self.needsDisplay = true
+    self.bridgeLogger.mark()
+    self.rectsToUpdate.removeAll(keepingCapacity: true)
+    self.rectsToUpdate.insert(self.bounds)
   }
 
   func markForRender(region: Region) {
-    self.setNeedsDisplay(self.rect(for: region))
+    // position could be out of range when the last put position of the grid is out of range
+    if region.left < 0 || region.right >= self.grid.size.width
+       || region.top < 0 || region.bottom >= self.grid.size.height {
+
+      self.bridgeLogger.debug("\(region) out of range, doing nothing")
+      return
+    }
+
+    self.rectsToUpdate.insert(self.rect(for: region))
   }
 
   func markForRender(row: Int, column: Int) {
-    self.setNeedsDisplay(self.rect(forRow: row, column: column))
+    // position could be out of range when the last put position of the grid is out of range
+    if column >= self.grid.size.width || row >= self.grid.size.height {
+      self.bridgeLogger.debug("\(row):\(column) out of range, doing nothing")
+      return
+    }
+
+    self.rectsToUpdate.insert(self.rect(forRow: row, column: column))
   }
 }
 
