@@ -211,9 +211,9 @@ extension NeoVimView {
     gui.async {
       self.bridgeLogger.mark()
 
+      self.agent.quit()
       self.delegate?.neoVimStopped()
     }
-    self.agent.quit()
   }
 
   public func autoCommandEvent(_ event: NeoVimAutoCommandEvent, bufferHandle: Int) {
