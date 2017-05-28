@@ -188,7 +188,7 @@ extension NeoVimView {
 //    self.logger.debug("\(#function): \(aRange),\(actualRange[0]) -> " +
 //                      "\(position.row):\(position.column)")
 
-    let resultInSelf = self.cellRectFor(row: position.row, column: position.column)
+    let resultInSelf = self.rect(forRow: position.row, column: position.column)
     let result = self.window?.convertToScreen(self.convert(resultInSelf, to: nil))
 
     return result!
