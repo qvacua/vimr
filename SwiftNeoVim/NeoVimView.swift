@@ -208,6 +208,11 @@ public class NeoVimView: NSView,
 
   var _font = NeoVimView.defaultFont
 
+  func resetBufferContext() {
+    self._cglayer = nil
+    self._cgcontext = nil
+  }
+
   // MARK: - Private
   fileprivate var _cglayer: CGLayer?
   fileprivate var _cgcontext: CGContext?

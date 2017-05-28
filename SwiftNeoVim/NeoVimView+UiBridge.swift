@@ -90,9 +90,7 @@ extension NeoVimView {
   public func setScrollRegionToTop(_ top: Int, bottom: Int, left: Int, right: Int) {
     gui.async {
       self.bridgeLogger.debug("\(top):\(bottom):\(left):\(right)")
-
-      let region = Region(top: top, bottom: bottom, left: left, right: right)
-      self.grid.setScrollRegion(region)
+      self.grid.setScrollRegion(Region(top: top, bottom: bottom, left: left, right: right))
     }
   }
 
@@ -100,8 +98,36 @@ extension NeoVimView {
     gui.async {
       self.bridgeLogger.debug(count)
 
+      self.flushToBufferContext()
       self.grid.scroll(count)
-      self.markForRender(region: self.grid.region)
+//      self.markForRender(region: self.grid.region)
+
+      guard let bufferLayer = self.bufferLayer, let bufferCtx = self.bufferContext else {
+        self.bridgeLogger.error("Coult not get the buffer CGLayer or the buffer CGContext")
+        return
+      }
+
+      let offset = CGFloat(count) * self.cellSize.height
+      let rectToScroll = self.rect(for: self.grid.region)
+      let clipRect = rectToScroll.translating(x: 0, y: offset)
+      let scaledClipRect = rectToScroll
+        .translating(x: 0, y: offset)
+        .scaling(self.scaleFactor)
+      let drawOrigin = CGPoint(x: 0, y: offset).scaling(self.scaleFactor)
+
+      self.bridgeLogger.debug("bounds: \(self.bounds)")
+      self.bridgeLogger.debug("offset: \(offset), rectToScroll: \(rectToScroll), " +
+                              "clipRect: \(scaledClipRect), draw-at: \(drawOrigin)")
+
+      bufferCtx.saveGState()
+      defer { bufferCtx.restoreGState() }
+
+      bufferCtx.clip(to: scaledClipRect)
+      bufferCtx.setBlendMode(.copy)
+      bufferCtx.draw(bufferLayer, at: drawOrigin)
+
+      self.setNeedsDisplay(clipRect)
+
       // Do not send msgs to agent -> neovim in the delegate method. It causes spinning
       // when you're opening a file with existing swap file.
       self.delegate?.scroll()
@@ -111,7 +137,6 @@ extension NeoVimView {
   public func highlightSet(_ attrs: CellAttributes) {
     gui.async {
       self.bridgeLogger.debug(attrs)
-
       self.grid.attrs = attrs
     }
   }
@@ -168,45 +193,47 @@ extension NeoVimView {
     }
   }
 
-  public func flush() {
-    gui.async {
-      if self.rectsToUpdate.isEmpty {
-        self.bridgeLogger.debug("No rects to update.")
-        return
-      }
+  fileprivate func flushToBufferContext() {
+    if self.rectsToUpdate.isEmpty {
+      self.bridgeLogger.debug("No rects to update.")
+      return
+    }
 
-      if self.bounds.size == .zero {
-        self.bridgeLogger.debug("Removing all rects to update due to zero bounds.")
-        self.rectsToUpdate.removeAll(keepingCapacity: true)
-        return
-      }
+    if self.bounds.size == .zero {
+      self.bridgeLogger.debug("Removing all rects to update due to zero bounds.")
+      self.rectsToUpdate.removeAll(keepingCapacity: true)
+      return
+    }
 
-      self.bridgeLogger.debug("-----------------------------")
-      self.bridgeLogger.debug(self.rectsToUpdate.count)
+    guard let bufferCtx = self.bufferContext else {
+      self.logger.error("Could not get the buffer context.")
+      return
+    }
 
-      guard let bufferCtx = self.bufferContext else {
-        self.logger.error("Could not get the buffer context.")
-        return
-      }
+    bufferCtx.saveGState()
+    defer { bufferCtx.restoreGState() }
 
-      bufferCtx.saveGState()
-      defer { bufferCtx.restoreGState() }
+    let scale = self.scaleFactor
+    bufferCtx.scaleBy(x: scale, y: scale)
 
-      let scale = self.scaleFactor
-      bufferCtx.scaleBy(x: scale, y: scale)
-
-      self.rowRunIntersecting(rects: Array(self.rectsToUpdate)).forEach {
-        self.draw(rowRun: $0, in: bufferCtx)
-      }
+    self.rowRunIntersecting(rects: Array(self.rectsToUpdate)).forEach {
+      self.draw(rowRun: $0, in: bufferCtx)
+    }
 //    self.drawCursor(context: context)
 
-      if self.rectsToUpdate.count < 10 {
-        self.logger.debug(self.rectsToUpdate)
-      } else {
-        self.logger.debug("\(self.rectsToUpdate.count) rects to update.")
-      }
-      self.rectsToUpdate.forEach(self.setNeedsDisplay)
-      self.rectsToUpdate.removeAll(keepingCapacity: true)
+    if self.rectsToUpdate.count < 10 {
+      self.bridgeLogger.debug(self.rectsToUpdate)
+    } else {
+      self.bridgeLogger.debug("\(self.rectsToUpdate.count) rects to update.")
+    }
+    self.rectsToUpdate.forEach(self.setNeedsDisplay)
+    self.rectsToUpdate.removeAll(keepingCapacity: true)
+  }
+
+  public func flush() {
+    gui.async {
+      self.bridgeLogger.hr()
+      self.flushToBufferContext()
     }
   }
 

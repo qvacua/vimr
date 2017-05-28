@@ -129,11 +129,11 @@ class FileLogger {
     fileAppenderRefs[self.fileUrl] = ref - 1
   }
 
-  func mark(file: String = #file, line: Int = #line, function: String = #function) {
-    guard self.shouldLogDebug else {
-      return
-    }
+  func hr(file: String = #file, line: Int = #line, function: String = #function) {
+    self.log("----------", level: .debug, file: file, line: line, function: function)
+  }
 
+  func mark(file: String = #file, line: Int = #line, function: String = #function) {
     self.log("", level: .debug, file: file, line: line, function: function)
   }
 
