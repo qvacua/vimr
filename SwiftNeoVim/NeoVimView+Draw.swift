@@ -39,8 +39,8 @@ extension NeoVimView {
 
     let dirtyRects = self.rectsBeingDrawn()
 
-    self.logger.debug(dirtyUnionRect)
-    self.logger.debug(dirtyRects)
+    self.logger.debug("dirty union rect: \(dirtyUnionRect)")
+    self.logger.debug("rects being drawn: \(dirtyRects)")
 
     self.rowRunIntersecting(rects: dirtyRects).forEach { self.draw(rowRun: $0, in: context) }
     self.drawCursor(context: context)
@@ -55,7 +55,7 @@ extension NeoVimView {
     // => FIXME: probably we have to consider this also when drawing further down,
     // ie when the range starts with '0'...
     self.drawBackground(
-      positions: rowFrag.range.map { self.pointInViewFor(row: rowFrag.row, column: $0) },
+      positions: rowFrag.range.map { self.pointInView(forRow: rowFrag.row, column: $0) },
       background: rowFrag.attrs.background,
       in: context
     )
@@ -63,7 +63,7 @@ extension NeoVimView {
     let positions = rowFrag.range
       // filter out the put(0, 0)s (after a wide character)
       .filter { self.grid.cells[rowFrag.row][$0].string.characters.count > 0 }
-      .map { self.pointInViewFor(row: rowFrag.row, column: $0) }
+      .map { self.pointInView(forRow: rowFrag.row, column: $0) }
 
     if positions.isEmpty {
       return
@@ -116,7 +116,7 @@ extension NeoVimView {
 
     if self.mode == .insert {
       context.setFillColor(ColorUtils.colorIgnoringAlpha(self.grid.foreground).withAlphaComponent(0.75).cgColor)
-      var cursorRect = self.cellRectFor(row: cursorRow, column: cursorColumnStart)
+      var cursorRect = self.rect(forRow: cursorRow, column: cursorColumnStart)
       cursorRect.size.width = 2
       context.fill(cursorRect)
       return
@@ -250,10 +250,10 @@ extension NeoVimView {
   }
 
   fileprivate func pointInViewFor(position: Position) -> CGPoint {
-    return self.pointInViewFor(row: position.row, column: position.column)
+    return self.pointInView(forRow: position.row, column: position.column)
   }
 
-  fileprivate func pointInViewFor(row: Int, column: Int) -> CGPoint {
+  fileprivate func pointInView(forRow row: Int, column: Int) -> CGPoint {
     return CGPoint(
       x: self.xOffset + CGFloat(column) * self.cellSize.width,
       y: self.bounds.size.height - self.yOffset - CGFloat(row) * self.cellSize.height
@@ -261,11 +261,11 @@ extension NeoVimView {
     )
   }
 
-  func cellRectFor(row: Int, column: Int) -> CGRect {
-    return CGRect(origin: self.pointInViewFor(row: row, column: column), size: self.cellSize)
+  func rect(forRow row: Int, column: Int) -> CGRect {
+    return CGRect(origin: self.pointInView(forRow: row, column: column), size: self.cellSize)
   }
 
-  func regionRectFor(region: Region) -> CGRect {
+  func rect(for region: Region) -> CGRect {
     let top = CGFloat(region.top)
     let bottom = CGFloat(region.bottom)
     let left = CGFloat(region.left)
