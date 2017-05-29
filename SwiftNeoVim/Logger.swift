@@ -80,14 +80,18 @@ class FileLogger {
   let uuid = UUID().uuidString
   let name: String
 
-  let shouldLogDebug: Bool
+  var shouldLogDebug: Bool
 
-  init<T>(as name: T, with fileUrl: URL) {
+  init<T>(as name: T, with fileUrl: URL, shouldLogDebug: Bool? = nil) {
+    if let debug = shouldLogDebug {
+      self.shouldLogDebug = debug
+    } else {
 #if DEBUG
-    self.shouldLogDebug = true
+      self.shouldLogDebug = true
 #else
-    self.shouldLogDebug = false
+      self.shouldLogDebug = false
 #endif
+    }
 
     switch name {
     case let str as String: self.name = str
@@ -152,10 +156,6 @@ class FileLogger {
   func debug<T>(_ message: T,
                 file: String = #file, line: Int = #line, function: String = #function) {
 
-    guard self.shouldLogDebug else {
-      return
-    }
-
     self.log(message, level: .debug, file: file, line: line, function: function)
   }
 
@@ -173,6 +173,10 @@ class FileLogger {
 
   func log<T>(_ message: T, level: Level = .default,
               file: String = #file, line: Int = #line, function: String = #function) {
+
+    guard self.shouldLogDebug else {
+      return
+    }
 
     queue.async {
       let timestamp = self.logDateFormatter.string(from: Date())

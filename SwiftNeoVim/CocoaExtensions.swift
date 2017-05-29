@@ -12,6 +12,11 @@ extension CGRect: Hashable {
            Int(self.size.width) << 10 ^ Int(self.size.height);
   }
 
+  public func resizing(dw: CGFloat, dh: CGFloat) -> CGRect {
+    return CGRect(origin: self.origin,
+                  size: CGSize(width: self.size.width + dw, height: self.size.height + dh))
+  }
+
   public func translating(x: CGFloat, y: CGFloat) -> CGRect {
     return CGRect(origin: CGPoint(x: self.origin.x + x, y: self.origin.y + y), size: self.size)
   }

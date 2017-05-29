@@ -107,13 +107,18 @@ extension NeoVimView {
         return
       }
 
+      let scale = self.scaleFactor
       let offset = CGFloat(count) * self.cellSize.height
       let rectToScroll = self.rect(for: self.grid.region)
-      let clipRect = rectToScroll.translating(x: 0, y: offset)
-      let scaledClipRect = rectToScroll
-        .translating(x: 0, y: offset)
-        .scaling(self.scaleFactor)
-      let drawOrigin = CGPoint(x: 0, y: offset).scaling(self.scaleFactor)
+      let clipRect: CGRect
+      if count > 0 {
+        clipRect = rectToScroll.translating(x: 0, y: offset).resizing(dw: 0, dh: -offset)
+      } else {
+        clipRect = rectToScroll.resizing(dw: 0, dh: offset)
+      }
+
+      let scaledClipRect = clipRect.scaling(scale)
+      let drawOrigin = CGPoint(x: 0, y: offset).scaling(scale)
 
       self.bridgeLogger.debug("bounds: \(self.bounds)")
       self.bridgeLogger.debug("offset: \(offset), rectToScroll: \(rectToScroll), " +
