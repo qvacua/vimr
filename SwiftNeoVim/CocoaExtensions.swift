@@ -17,10 +17,6 @@ extension CGRect: Hashable {
                   size: CGSize(width: self.size.width + dw, height: self.size.height + dh))
   }
 
-  public func translating(x: CGFloat, y: CGFloat) -> CGRect {
-    return CGRect(origin: CGPoint(x: self.origin.x + x, y: self.origin.y + y), size: self.size)
-  }
-
   func scaling(_ factor: CGFloat) -> CGRect {
     return CGRect(origin: self.origin.scaling(factor), size: self.size.scaling(factor))
   }

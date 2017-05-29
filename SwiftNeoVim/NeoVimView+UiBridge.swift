@@ -112,7 +112,7 @@ extension NeoVimView {
       let rectToScroll = self.rect(for: self.grid.region)
       let clipRect: CGRect
       if count > 0 {
-        clipRect = rectToScroll.translating(x: 0, y: offset).resizing(dw: 0, dh: -offset)
+        clipRect = rectToScroll.offsetBy(dx: 0, dy: offset).resizing(dw: 0, dh: -offset)
       } else {
         clipRect = rectToScroll.resizing(dw: 0, dh: offset)
       }
@@ -149,7 +149,7 @@ extension NeoVimView {
   public func put(_ string: String, screenCursor: Position) {
     gui.async {
       let curPos = self.grid.putPosition
-      self.bridgeLogger.debug("\(curPos) -> '\(string)' <- screen: \(screenCursor)")
+//      self.bridgeLogger.debug("\(curPos) -> '\(string)' <- screen: \(screenCursor)")
 
       self.grid.put(string)
 
@@ -286,7 +286,7 @@ extension NeoVimView {
 
   public func autoCommandEvent(_ event: NeoVimAutoCommandEvent, bufferHandle: Int) {
     gui.async {
-      self.bridgeLogger.debug("\(neoVimAutoCommandEventName(event)) -> \(bufferHandle)")
+//      self.bridgeLogger.debug("\(neoVimAutoCommandEventName(event)) -> \(bufferHandle)")
 
       if event == .BUFWINENTER || event == .BUFWINLEAVE {
         self.bufferListChanged()
