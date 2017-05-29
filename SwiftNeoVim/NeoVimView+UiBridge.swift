@@ -120,10 +120,6 @@ extension NeoVimView {
       let scaledClipRect = clipRect.scaling(scale)
       let drawOrigin = CGPoint(x: 0, y: offset).scaling(scale)
 
-      self.bridgeLogger.debug("bounds: \(self.bounds)")
-      self.bridgeLogger.debug("offset: \(offset), rectToScroll: \(rectToScroll), " +
-                              "clipRect: \(scaledClipRect), draw-at: \(drawOrigin)")
-
       bufferCtx.saveGState()
       defer { bufferCtx.restoreGState() }
 
@@ -132,6 +128,18 @@ extension NeoVimView {
       bufferCtx.draw(bufferLayer, at: drawOrigin)
 
       self.setNeedsDisplay(clipRect)
+
+      let rectToUpdate: CGRect
+      if count > 0 {
+        rectToUpdate = rectToScroll.divided(atDistance: offset, from: .minYEdge).slice
+      } else {
+        rectToUpdate = rectToScroll.divided(atDistance: abs(offset), from: .maxYEdge).slice
+      }
+      self.markForRender(rect: rectToUpdate)
+
+      self.bridgeLogger.debug("offset: \(offset), rectToScroll: \(rectToScroll), " +
+                              "clipRect: \(scaledClipRect), draw-at: \(drawOrigin), " +
+                              "rect-to-update: \(rectToUpdate)")
 
       // Do not send msgs to agent -> neovim in the delegate method. It causes spinning
       // when you're opening a file with existing swap file.
@@ -420,6 +428,10 @@ extension NeoVimView {
     self.bridgeLogger.mark()
     self.rectsToUpdate.removeAll(keepingCapacity: true)
     self.rectsToUpdate.insert(self.bounds)
+  }
+
+  func markForRender(rect: CGRect) {
+    self.rectsToUpdate.insert(rect)
   }
 
   func markForRender(region: Region) {
