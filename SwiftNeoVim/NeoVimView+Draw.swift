@@ -39,9 +39,6 @@ extension NeoVimView {
 
     let dirtyRects = self.rectsBeingDrawn()
 
-    self.logger.debug("dirty union rect: \(dirtyUnionRect)")
-    self.logger.debug("rects being drawn: \(dirtyRects)")
-
     self.rowRunIntersecting(rects: dirtyRects).forEach { self.draw(rowRun: $0, in: context) }
     self.drawCursor(context: context)
   }
