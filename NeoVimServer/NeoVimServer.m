@@ -72,6 +72,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
       case NeoVimAgentMsgIdSelectWindow: return data_sync(data, outputCondition, neovim_select_window);
 
+      case NeoVimAgentMsgIdScroll: return data_sync(data, outputCondition, neovim_scroll);
+
       case NeoVimAgentMsgIdGetTabs: return data_sync(data, outputCondition, neovim_tabs);
       
       case NeoVimAgentMsgIdGetBuffers: return data_sync(data, outputCondition, neovim_buffers);
