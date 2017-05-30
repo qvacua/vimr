@@ -153,7 +153,9 @@ public class NeoVimView: NSView,
     0x1F9C0...0x1F9C0
   ].flatMap { $0 }
 
-  let logger = FileLogger(as: NeoVimView.self, with: URL(fileURLWithPath: "/tmp/nvv.log"))
+  let logger = FileLogger(as: NeoVimView.self,
+                          with: URL(fileURLWithPath: "/tmp/nvv.log"),
+                          shouldLogDebug: false)
   let agent: NeoVimAgent
   let grid = Grid()
 
