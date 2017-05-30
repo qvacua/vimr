@@ -55,7 +55,7 @@ extension NeoVimView {
       // we don't get the puts, thus we have to redraw the put position.
       if self.usesLigatures {
         self.markForRender(region: self.grid.regionOfWord(at: self.grid.putPosition))
-
+        self.markForRender(region: self.grid.regionOfWord(at: curScreenCursor))
         self.markForRender(region: self.grid.regionOfWord(at: position))
         self.markForRender(region: self.grid.regionOfWord(at: screenCursor))
       } else {
@@ -90,7 +90,9 @@ extension NeoVimView {
   public func setScrollRegionToTop(_ top: Int, bottom: Int, left: Int, right: Int) {
     gui.async {
       self.bridgeLogger.debug("\(top):\(bottom):\(left):\(right)")
-      self.grid.setScrollRegion(Region(top: top, bottom: bottom, left: left, right: right))
+
+      let region = Region(top: top, bottom: bottom, left: left, right: right)
+      self.grid.setScrollRegion(region)
     }
   }
 

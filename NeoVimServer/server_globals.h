@@ -15,6 +15,7 @@ extern void start_neovim();
 extern void quit_neovim();
 
 extern void neovim_select_window(void **argv);
+extern void neovim_scroll(void **argv);
 extern void neovim_tabs(void **argv);
 extern void neovim_buffers(void **argv);
 extern void neovim_vim_command_output(void **argv);
