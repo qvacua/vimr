@@ -27,6 +27,7 @@
 #import <nvim/fileio.h>
 #import <nvim/undo.h>
 #import <nvim/mouse.h>
+#import <nvim/screen.h>
 #import <nvim/edit.h>
 #import <nvim/api/window.h>
 
@@ -637,7 +638,7 @@ void neovim_scroll(void **argv) {
       custom_ui_scroll(vertDir, (int) ABS(vert));
     }
 
-    ui_refresh();
+    update_screen(VALID);
 
     return nil;
   });
