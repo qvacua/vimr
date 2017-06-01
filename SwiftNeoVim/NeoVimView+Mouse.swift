@@ -178,8 +178,5 @@ extension NeoVimView {
   }
 }
 
-fileprivate let maxScrollDeltaX = 30
-fileprivate let maxScrollDeltaY = 30
-fileprivate let scrollLimiterX = CGFloat(20)
-fileprivate let scrollLimiterY = CGFloat(20)
-fileprivate let scrollGuardYield = 5
+fileprivate let maxScrollDeltaX = 15
+fileprivate let maxScrollDeltaY = 15
