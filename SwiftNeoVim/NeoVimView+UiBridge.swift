@@ -84,6 +84,7 @@ extension NeoVimView {
     gui.async {
       self.bridgeLogger.debug(cursorModeShapeName(mode))
       self.mode = mode
+      self.updateCursorWhenPutting(currentPosition: .zero, screenCursor: .zero)
     }
   }
 
@@ -218,7 +219,7 @@ extension NeoVimView {
 
   public func autoCommandEvent(_ event: NeoVimAutoCommandEvent, bufferHandle: Int) {
     gui.async {
-      self.bridgeLogger.debug("\(neoVimAutoCommandEventName(event)) -> \(bufferHandle)")
+//      self.bridgeLogger.debug("\(neoVimAutoCommandEventName(event)) -> \(bufferHandle)")
 
       if event == .BUFWINENTER || event == .BUFWINLEAVE {
         self.bufferListChanged()
@@ -393,7 +394,7 @@ extension NeoVimView {
       // When the cursor is in the command line, then we need this...
       self.markForRender(cellPosition: self.grid.previousCellPosition(curPos))
       self.markForRender(cellPosition: self.grid.nextCellPosition(curPos))
-      self.markForRender(screenCursor: self.grid.screenCursor)
+      self.markForRender(screenCursor: self.grid.putPosition)
     }
 
     self.markForRender(screenCursor: screenCursor)
