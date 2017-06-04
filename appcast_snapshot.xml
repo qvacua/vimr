@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-195</title>
+      <title>SNAPSHOT-196</title>
       <description><![CDATA[
     <ul>
-<li>GH-403, GH-447: <code>Shift-Tab</code> works (thanks to @mkhl)</li>
+<li>Improved scroll performance</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/195
+        https://github.com/qvacua/vimr/releases/tag/snapshot/196
       </releaseNotesLink>
-      <pubDate>2017-05-17T19:40:40.275108</pubDate>
+      <pubDate>2017-06-04T16:49:52.522240</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/195/VimR-SNAPSHOT-195.tar.bz2"
-                 sparkle:version="195"
-                 sparkle:shortVersionString="SNAPSHOT-195"
-                 sparkle:dsaSignature="MC4CFQCwD/Vg2FqkoYzR1xmBgij6V9MuHgIVAKXOZ5TFeYY/yyCRm+0p5ymLVVE4"
-                 length="12366293"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/196/VimR-SNAPSHOT-196.tar.bz2"
+                 sparkle:version="196"
+                 sparkle:shortVersionString="SNAPSHOT-196"
+                 sparkle:dsaSignature="MCwCFFh8ehQWqUtj30LL/bE7GpluNAx2AhRA8qAtSbYVzLaQCxEZz1o5BBeN+A=="
+                 length="12607217"
                  type="application/octet-stream"/>
     </item>
   </channel>
