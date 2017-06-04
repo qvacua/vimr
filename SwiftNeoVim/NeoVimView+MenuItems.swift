@@ -9,13 +9,17 @@ import Cocoa
 extension NeoVimView {
 
   public func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
-    let canUndoOrRedo = self.mode == .insert || self.mode == .replace
-                        || self.mode == .normal || self.mode == .visual
+    let canUndoOrRedo = self.mode == .insert
+                        || self.mode == .replace
+                        || self.mode == .normal
+                        || self.mode == .visual
     let canCopyOrCut = self.mode == .normal || self.mode == .visual
-    let canPaste = self.pasteboard.string(forType: NSPasteboardTypeString) != nil
+    let canPaste = NSPasteboard.general().string(forType: NSPasteboardTypeString) != nil
     let canDelete = self.mode == .visual || self.mode == .normal
-    let canSelectAll = self.mode == .insert || self.mode == .replace
-                       || self.mode == .normal || self.mode == .visual
+    let canSelectAll = self.mode == .insert
+                       || self.mode == .replace
+                       || self.mode == .normal
+                       || self.mode == .visual
 
     guard let action = item.action else {
       return true
@@ -82,7 +86,7 @@ extension NeoVimView {
   }
 
   @IBAction func paste(_ sender: AnyObject?) {
-    guard let content = self.pasteboard.string(forType: NSPasteboardTypeString) else {
+    guard let content = NSPasteboard.general().string(forType: NSPasteboardTypeString) else {
       return
     }
 
@@ -147,15 +151,15 @@ extension NeoVimView {
 
   @IBAction func makeFontBigger(_ sender: Any?) {
     let curFont = self.drawer.font
-    let font = self.fontManager.convert(curFont,
-                                        toSize: min(curFont.pointSize + 1, NeoVimView.maxFontSize))
+    let font = NSFontManager.shared()
+      .convert(curFont, toSize: min(curFont.pointSize + 1, NeoVimView.maxFontSize))
     self.updateFontMetaData(font)
   }
 
   @IBAction func makeFontSmaller(_ sender: Any?) {
     let curFont = self.drawer.font
-    let font = self.fontManager.convert(curFont,
-                                        toSize: max(curFont.pointSize - 1, NeoVimView.minFontSize))
+    let font = NSFontManager.shared()
+      .convert(curFont, toSize: max(curFont.pointSize - 1, NeoVimView.minFontSize))
     self.updateFontMetaData(font)
   }
 }

@@ -26,6 +26,9 @@
 #import <nvim/ex_getln.h>
 #import <nvim/fileio.h>
 #import <nvim/undo.h>
+#import <nvim/mouse.h>
+#import <nvim/screen.h>
+#import <nvim/edit.h>
 #import <nvim/api/window.h>
 
 
@@ -611,6 +614,34 @@ static NeoVimBuffer *buffer_for(buf_T *buf) {
                                                       current:current];
 
   return [buffer autorelease];
+}
+
+void neovim_scroll(void **argv) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
+    NSInteger *values = (NSInteger *) data.bytes;
+    NSInteger horiz = values[0];
+    NSInteger vert = values[1];
+
+    if (horiz == 0 && vert == 0) {
+      return nil;
+    }
+
+    // value > 0 => down or right
+    int horizDir;
+    int vertDir;
+    if (horiz != 0) {
+      horizDir = horiz > 0 ? MSCR_RIGHT: MSCR_LEFT;
+      custom_ui_scroll(horizDir, (int) ABS(horiz));
+    }
+    if (vert != 0) {
+      vertDir = vert > 0 ? MSCR_DOWN: MSCR_UP;
+      custom_ui_scroll(vertDir, (int) ABS(vert));
+    }
+
+    update_screen(VALID);
+
+    return nil;
+  });
 }
 
 void neovim_select_window(void **argv) {

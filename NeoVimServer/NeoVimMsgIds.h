@@ -52,6 +52,7 @@ typedef NS_ENUM(NSUInteger, NeoVimAgentMsgId) {
     NeoVimAgentMsgIdDelete,
     NeoVimAgentMsgIdResize,
     NeoVimAgentMsgIdSelectWindow,
+    NeoVimAgentMsgIdScroll,
     NeoVimAgentMsgIdCursorGoto,
     NeoVimAgentMsgIdQuit,
 

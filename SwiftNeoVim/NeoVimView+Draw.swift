@@ -8,7 +8,7 @@ import Cocoa
 extension NeoVimView {
 
   override public func viewDidMoveToWindow() {
-    self.window?.colorSpace = self.colorSpace
+    self.window?.colorSpace = colorSpace
   }
 
   override public func draw(_ dirtyUnionRect: NSRect) {
@@ -16,48 +16,17 @@ extension NeoVimView {
       return
     }
 
+    let context = NSGraphicsContext.current()!.cgContext
+    context.saveGState()
+    defer { context.restoreGState() }
+
     if self.inLiveResize || self.currentlyResizing {
-      NSColor.windowBackgroundColor.set()
-      dirtyUnionRect.fill()
-
-      let boundsSize = self.bounds.size
-
-      let emojiSize = self.currentEmoji.size(withAttributes: self.emojiAttrs)
-      let emojiX = (boundsSize.width - emojiSize.width) / 2
-      let emojiY = (boundsSize.height - emojiSize.height) / 2
-
-      let discreteSize = self.discreteSize(size: boundsSize)
-      let displayStr = "\(discreteSize.width) × \(discreteSize.height)"
-
-      let size = displayStr.size(withAttributes: self.resizeTextAttrs)
-      let x = (boundsSize.width - size.width) / 2
-      let y = emojiY - size.height
-
-      self.currentEmoji.draw(at: CGPoint(x: emojiX, y: emojiY), withAttributes: self.emojiAttrs)
-      displayStr.draw(at: CGPoint(x: x, y: y), withAttributes: self.resizeTextAttrs)
-
+      self.drawResizeInfo(in: context, with: dirtyUnionRect)
       return
     }
 
-//    self.logger.debug("\(#function): \(dirtyUnionRect)")
-    let context = NSGraphicsContext.current()!.cgContext
-
     if self.isCurrentlyPinching {
-      let interpolationQuality = context.interpolationQuality
-      context.interpolationQuality = .none
-
-      let boundsSize = self.bounds.size
-      let targetSize = CGSize(width: boundsSize.width * self.pinchTargetScale,
-                              height: boundsSize.height * self.pinchTargetScale)
-      self.pinchBitmap?.draw(in: CGRect(origin: self.bounds.origin, size: targetSize),
-                             from: CGRect.zero,
-                             operation: .sourceOver,
-                             fraction: 1,
-                             respectFlipped: true,
-                             hints: nil)
-
-      context.interpolationQuality = interpolationQuality
-
+      self.drawPinchImage(in: context)
       return
     }
 
@@ -69,35 +38,29 @@ extension NeoVimView {
     context.setTextDrawingMode(.fill);
 
     let dirtyRects = self.rectsBeingDrawn()
-//    self.logger.debug("\(dirtyRects)")
 
-    self.rowRunIntersecting(rects: dirtyRects).forEach { self.draw(rowRun: $0, context: context) }
+    self.rowRunIntersecting(rects: dirtyRects).forEach { self.draw(rowRun: $0, in: context) }
     self.drawCursor(context: context)
   }
 
-  func randomEmoji() -> String {
-    let idx = Int(arc4random_uniform(UInt32(NeoVimView.emojis.count)))
-    guard let scalar = UnicodeScalar(NeoVimView.emojis[idx]) else {
-      return "😎"
-    }
+  fileprivate func draw(rowRun rowFrag: RowRun, in context: CGContext) {
+    context.saveGState()
+    defer { context.restoreGState() }
 
-    return String(scalar)
-  }
-
-  fileprivate func draw(rowRun rowFrag: RowRun, context: CGContext) {
     // For background drawing we don't filter out the put(0, 0)s:
     // in some cases only the put(0, 0)-cells should be redrawn.
     // => FIXME: probably we have to consider this also when drawing further down,
     // ie when the range starts with '0'...
     self.drawBackground(
-      positions: rowFrag.range.map { self.pointInViewFor(row: rowFrag.row, column: $0) },
-      background: rowFrag.attrs.background
+      positions: rowFrag.range.map { self.pointInView(forRow: rowFrag.row, column: $0) },
+      background: rowFrag.attrs.background,
+      in: context
     )
 
     let positions = rowFrag.range
       // filter out the put(0, 0)s (after a wide character)
       .filter { self.grid.cells[rowFrag.row][$0].string.characters.count > 0 }
-      .map { self.pointInViewFor(row: rowFrag.row, column: $0) }
+      .map { self.pointInView(forRow: rowFrag.row, column: $0) }
 
     if positions.isEmpty {
       return
@@ -141,15 +104,18 @@ extension NeoVimView {
   }
 
   fileprivate func drawCursor(context: CGContext) {
+    context.saveGState()
+    defer { context.restoreGState() }
+
     let cursorRegion = self.cursorRegion()
     let cursorRow = cursorRegion.top
     let cursorColumnStart = cursorRegion.left
 
     if self.mode == .insert {
-      ColorUtils.colorIgnoringAlpha(self.grid.foreground).withAlphaComponent(0.75).set()
-      var cursorRect = self.cellRectFor(row: cursorRow, column: cursorColumnStart)
+      context.setFillColor(ColorUtils.colorIgnoringAlpha(self.grid.foreground).withAlphaComponent(0.75).cgColor)
+      var cursorRect = self.rect(forRow: cursorRow, column: cursorColumnStart)
       cursorRect.size.width = 2
-      cursorRect.fill()
+      context.fill(cursorRect)
       return
     }
 
@@ -162,12 +128,14 @@ extension NeoVimView {
 
     // FIXME: take ligatures into account (is it a good idea to do this?)
     let rowRun = RowRun(row: cursorRegion.top, range: cursorRegion.columnRange, attrs: attrs)
-    self.draw(rowRun: rowRun, context: context)
+    self.draw(rowRun: rowRun, in: context)
   }
 
-  fileprivate func drawBackground(positions: [CGPoint], background: Int) {
-    ColorUtils.colorIgnoringAlpha(background).set()
+  fileprivate func drawBackground(positions: [CGPoint], background: Int, in context: CGContext) {
+    context.saveGState()
+    defer { context.restoreGState() }
 
+    context.setFillColor(ColorUtils.colorIgnoringAlpha(background).cgColor)
     // To use random color use the following
 //    NSColor(calibratedRed: CGFloat(drand48()),
 //            green: CGFloat(drand48()),
@@ -178,7 +146,42 @@ extension NeoVimView {
       x: positions[0].x, y: positions[0].y,
       width: CGFloat(positions.count) * self.cellSize.width, height: self.cellSize.height
     )
-    backgroundRect.fill()
+    context.fill(backgroundRect)
+  }
+
+  fileprivate func drawResizeInfo(in context: CGContext, with dirtyUnionRect: CGRect) {
+    context.setFillColor(NSColor.windowBackgroundColor.cgColor)
+    context.fill(dirtyUnionRect)
+
+    let boundsSize = self.bounds.size
+
+    let emojiSize = self.currentEmoji.size(withAttributes: emojiAttrs)
+    let emojiX = (boundsSize.width - emojiSize.width) / 2
+    let emojiY = (boundsSize.height - emojiSize.height) / 2
+
+    let discreteSize = self.discreteSize(size: boundsSize)
+    let displayStr = "\(discreteSize.width) × \(discreteSize.height)"
+
+    let size = displayStr.size(withAttributes: resizeTextAttrs)
+    let x = (boundsSize.width - size.width) / 2
+    let y = emojiY - size.height
+
+    self.currentEmoji.draw(at: CGPoint(x: emojiX, y: emojiY), withAttributes: emojiAttrs)
+    displayStr.draw(at: CGPoint(x: x, y: y), withAttributes: resizeTextAttrs)
+  }
+
+  fileprivate func drawPinchImage(in context: CGContext) {
+    context.interpolationQuality = .none
+
+    let boundsSize = self.bounds.size
+    let targetSize = CGSize(width: boundsSize.width * self.pinchTargetScale,
+                            height: boundsSize.height * self.pinchTargetScale)
+    self.pinchBitmap?.draw(in: CGRect(origin: self.bounds.origin, size: targetSize),
+                           from: CGRect.zero,
+                           operation: .sourceOver,
+                           fraction: 1,
+                           respectFlipped: true,
+                           hints: nil)
   }
 
   fileprivate func rowRunIntersecting(rects: [CGRect]) -> [RowRun] {
@@ -244,10 +247,10 @@ extension NeoVimView {
   }
 
   fileprivate func pointInViewFor(position: Position) -> CGPoint {
-    return self.pointInViewFor(row: position.row, column: position.column)
+    return self.pointInView(forRow: position.row, column: position.column)
   }
 
-  fileprivate func pointInViewFor(row: Int, column: Int) -> CGPoint {
+  fileprivate func pointInView(forRow row: Int, column: Int) -> CGPoint {
     return CGPoint(
       x: self.xOffset + CGFloat(column) * self.cellSize.width,
       y: self.bounds.size.height - self.yOffset - CGFloat(row) * self.cellSize.height
@@ -255,11 +258,11 @@ extension NeoVimView {
     )
   }
 
-  func cellRectFor(row: Int, column: Int) -> CGRect {
-    return CGRect(origin: self.pointInViewFor(row: row, column: column), size: self.cellSize)
+  func rect(forRow row: Int, column: Int) -> CGRect {
+    return CGRect(origin: self.pointInView(forRow: row, column: column), size: self.cellSize)
   }
 
-  func regionRectFor(region: Region) -> CGRect {
+  func rect(for region: Region) -> CGRect {
     let top = CGFloat(region.top)
     let bottom = CGFloat(region.bottom)
     let left = CGFloat(region.left)
@@ -297,3 +300,10 @@ extension NeoVimView {
     self.resizeNeoVimUi(to: self.bounds.size)
   }
 }
+
+fileprivate let emojiAttrs = [ NSFontAttributeName: NSFont(name: "AppleColorEmoji", size: 72)! ]
+fileprivate let resizeTextAttrs = [
+  NSFontAttributeName: NSFont.systemFont(ofSize: 18),
+  NSForegroundColorAttributeName: NSColor.darkGray
+]
+fileprivate let colorSpace = NSColorSpace.sRGB

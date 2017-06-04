@@ -22,7 +22,7 @@ public class NeoVimView: NSView,
 
   public static let minFontSize = CGFloat(4)
   public static let maxFontSize = CGFloat(128)
-  public static let defaultFont = NSFont.userFixedPitchFont(ofSize: 13)!
+  public static let defaultFont = NSFont.userFixedPitchFont(ofSize: 12)!
   public static let defaultLinespacing = CGFloat(1)
 
   public static let minLinespacing = CGFloat(0.5)
@@ -146,20 +146,14 @@ public class NeoVimView: NSView,
     }
   }
 
-  static let emojis: [UInt32] = [
-    0x1F600...0x1F64F,
-    0x1F910...0x1F918,
-    0x1F980...0x1F984,
-    0x1F9C0...0x1F9C0
-  ].flatMap { $0 }
-
   let logger = FileLogger(as: NeoVimView.self, with: URL(fileURLWithPath: "/tmp/nvv.log"))
+  let bridgeLogger = FileLogger(as: NeoVimView.self,
+                                with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
+                                shouldLogDebug: nil)
   let agent: NeoVimAgent
   let grid = Grid()
 
   let drawer: TextDrawer
-  let fontManager = NSFontManager.shared()
-  let pasteboard = NSPasteboard.general()
 
   var markedText: String?
 
@@ -179,13 +173,8 @@ public class NeoVimView: NSView,
   var descent = CGFloat(0)
   var leading = CGFloat(0)
 
-  let maxScrollDeltaX = 30
-  let maxScrollDeltaY = 30
-  let scrollLimiterX = CGFloat(20)
-  let scrollLimiterY = CGFloat(20)
   var scrollGuardCounterX = 5
   var scrollGuardCounterY = 5
-  let scrollGuardYield = 5
 
   var isCurrentlyPinching = false
   var pinchTargetScale = CGFloat(1)
@@ -193,13 +182,6 @@ public class NeoVimView: NSView,
 
   var currentlyResizing = false
   var currentEmoji = "😎"
-  let emojiAttrs = [ NSFontAttributeName: NSFont(name: "AppleColorEmoji", size: 72)! ]
-  let resizeTextAttrs = [
-    NSFontAttributeName: NSFont.systemFont(ofSize: 18),
-    NSForegroundColorAttributeName: NSColor.darkGray
-  ]
-
-  let colorSpace = NSColorSpace.sRGB
 
   var _font = NeoVimView.defaultFont
 

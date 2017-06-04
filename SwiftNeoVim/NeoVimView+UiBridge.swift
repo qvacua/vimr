@@ -9,7 +9,7 @@ extension NeoVimView {
 
   public func resize(toWidth width: Int, height: Int) {
     gui.async {
-      self.logger.debug("\(width) x \(height)")
+      self.bridgeLogger.debug("\(width) x \(height)")
 
       self.grid.resize(Size(width: width, height: height))
       self.markForRenderWholeView()
@@ -18,7 +18,7 @@ extension NeoVimView {
 
   public func clear() {
     gui.async {
-      self.logger.mark()
+      self.bridgeLogger.mark()
 
       self.grid.clear()
       self.markForRenderWholeView()
@@ -27,7 +27,7 @@ extension NeoVimView {
 
   public func eolClear() {
     gui.async {
-      self.logger.mark()
+      self.bridgeLogger.mark()
 
       self.grid.eolClear()
 
@@ -45,7 +45,7 @@ extension NeoVimView {
                            currentPosition: Position) {
 
     gui.async {
-      self.logger.debug("pos: \(position), screen: \(screenCursor), " +
+      self.bridgeLogger.debug("pos: \(position), screen: \(screenCursor), " +
                         "current-pos: \(currentPosition)")
 
       self.currentPosition = currentPosition
@@ -82,14 +82,15 @@ extension NeoVimView {
 
   public func modeChange(_ mode: CursorModeShape) {
     gui.async {
-      self.logger.debug(cursorModeShapeName(mode))
+      self.bridgeLogger.debug(cursorModeShapeName(mode))
       self.mode = mode
+      self.updateCursorWhenPutting(currentPosition: .zero, screenCursor: .zero)
     }
   }
 
   public func setScrollRegionToTop(_ top: Int, bottom: Int, left: Int, right: Int) {
     gui.async {
-      self.logger.debug("\(top):\(bottom):\(left):\(right)")
+      self.bridgeLogger.debug("\(top):\(bottom):\(left):\(right)")
 
       let region = Region(top: top, bottom: bottom, left: left, right: right)
       self.grid.setScrollRegion(region)
@@ -98,7 +99,7 @@ extension NeoVimView {
 
   public func scroll(_ count: Int) {
     gui.async {
-      self.logger.debug(count)
+      self.bridgeLogger.debug(count)
 
       self.grid.scroll(count)
       self.markForRender(region: self.grid.region)
@@ -110,7 +111,7 @@ extension NeoVimView {
 
   public func highlightSet(_ attrs: CellAttributes) {
     gui.async {
-      self.logger.debug(attrs)
+      self.bridgeLogger.debug(attrs)
 
       self.grid.attrs = attrs
     }
@@ -118,10 +119,9 @@ extension NeoVimView {
 
   public func put(_ string: String, screenCursor: Position) {
     gui.async {
-      self.logger.debug("'\(string)' <- screen: \(screenCursor)")
-
       let curPos = self.grid.putPosition
-//      self.logger.debug("\(#function): \(curPos) -> \(string)")
+      self.bridgeLogger.debug("\(curPos) -> \(string) <- screen: \(screenCursor)")
+
       self.grid.put(string)
 
       if self.usesLigatures {
@@ -140,7 +140,7 @@ extension NeoVimView {
 
   public func putMarkedText(_ markedText: String, screenCursor: Position) {
     gui.async {
-      self.logger.debug("'\(markedText)' <- screen: \(screenCursor)")
+      self.bridgeLogger.debug("'\(markedText)' <- screen: \(screenCursor)")
 
       let curPos = self.grid.putPosition
       self.grid.putMarkedText(markedText)
@@ -158,7 +158,7 @@ extension NeoVimView {
 
   public func unmarkRow(_ row: Int, column: Int) {
     gui.async {
-      self.logger.debug("\(row):\(column)")
+      self.bridgeLogger.debug("\(row):\(column)")
 
       let position = Position(row: row, column: column)
 
@@ -171,13 +171,13 @@ extension NeoVimView {
 
   public func flush() {
     gui.async {
-      self.logger.debug("-----------------------------")
+      self.bridgeLogger.debug("-----------------------------")
     }
   }
 
   public func updateForeground(_ fg: Int) {
     gui.async {
-      self.logger.debug(ColorUtils.colorIgnoringAlpha(fg))
+      self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(fg))
 
       self.grid.foreground = fg
     }
@@ -185,7 +185,7 @@ extension NeoVimView {
 
   public func updateBackground(_ bg: Int) {
     gui.async {
-      self.logger.debug(ColorUtils.colorIgnoringAlpha(bg))
+      self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(bg))
 
       self.grid.background = bg
       self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).cgColor
@@ -194,7 +194,7 @@ extension NeoVimView {
 
   public func updateSpecial(_ sp: Int) {
     gui.async {
-      self.logger.debug(ColorUtils.colorIgnoringAlpha(sp))
+      self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(sp))
 
       self.grid.special = sp
     }
@@ -202,7 +202,7 @@ extension NeoVimView {
 
   public func setTitle(_ title: String) {
     gui.async {
-      self.logger.debug(title)
+      self.bridgeLogger.debug(title)
 
       self.delegate?.set(title: title)
     }
@@ -210,16 +210,16 @@ extension NeoVimView {
 
   public func stop() {
     gui.async {
-      self.logger.mark()
+      self.bridgeLogger.mark()
 
+      self.agent.quit()
       self.delegate?.neoVimStopped()
     }
-    self.agent.quit()
   }
 
   public func autoCommandEvent(_ event: NeoVimAutoCommandEvent, bufferHandle: Int) {
     gui.async {
-      self.logger.debug("\(neoVimAutoCommandEventName(event)) -> \(bufferHandle)")
+//      self.bridgeLogger.debug("\(neoVimAutoCommandEventName(event)) -> \(bufferHandle)")
 
       if event == .BUFWINENTER || event == .BUFWINLEAVE {
         self.bufferListChanged()
@@ -241,7 +241,7 @@ extension NeoVimView {
 
   public func ipcBecameInvalid(_ reason: String) {
     gui.async {
-      self.logger.debug(reason)
+      self.bridgeLogger.debug(reason)
 
       if self.agent.neoVimIsQuitting {
         return
@@ -249,7 +249,7 @@ extension NeoVimView {
 
       self.delegate?.ipcBecameInvalid(reason: reason)
 
-      self.logger.fault("force-quitting")
+      self.bridgeLogger.fault("force-quitting")
       self.agent.quit()
     }
   }
@@ -260,7 +260,7 @@ extension NeoVimView {
 
   public func bell() {
     gui.async {
-      self.logger.mark()
+      self.bridgeLogger.mark()
 
       NSBeep()
     }
@@ -268,7 +268,7 @@ extension NeoVimView {
 
   public func setDirtyStatus(_ dirty: Bool) {
     gui.async {
-      self.logger.debug(dirty)
+      self.bridgeLogger.debug(dirty)
 
       self.delegate?.set(dirtyStatus: dirty)
     }
@@ -276,49 +276,49 @@ extension NeoVimView {
 
   public func updateMenu() {
     gui.async {
-      self.logger.mark()
+      self.bridgeLogger.mark()
     }
   }
 
   public func busyStart() {
     gui.async {
-      self.logger.mark()
+      self.bridgeLogger.mark()
     }
   }
 
   public func busyStop() {
     gui.async {
-      self.logger.mark()
+      self.bridgeLogger.mark()
     }
   }
 
   public func mouseOn() {
     gui.async {
-      self.logger.mark()
+      self.bridgeLogger.mark()
     }
   }
 
   public func mouseOff() {
     gui.async {
-      self.logger.mark()
+      self.bridgeLogger.mark()
     }
   }
 
   public func visualBell() {
     gui.async {
-      self.logger.mark()
+      self.bridgeLogger.mark()
     }
   }
 
   public func suspend() {
     gui.async {
-      self.logger.mark()
+      self.bridgeLogger.mark()
     }
   }
 
   public func setIcon(_ icon: String) {
     gui.async {
-      self.logger.debug(icon)
+      self.bridgeLogger.debug(icon)
     }
   }
 }
@@ -353,11 +353,11 @@ extension NeoVimView {
   }
 
   func markForRender(region: Region) {
-    self.setNeedsDisplay(self.regionRectFor(region: region))
+    self.setNeedsDisplay(self.rect(for: region))
   }
 
   func markForRender(row: Int, column: Int) {
-    self.setNeedsDisplay(self.cellRectFor(row: row, column: column))
+    self.setNeedsDisplay(self.rect(forRow: row, column: column))
   }
 }
 
@@ -394,7 +394,7 @@ extension NeoVimView {
       // When the cursor is in the command line, then we need this...
       self.markForRender(cellPosition: self.grid.previousCellPosition(curPos))
       self.markForRender(cellPosition: self.grid.nextCellPosition(curPos))
-      self.markForRender(screenCursor: self.grid.screenCursor)
+      self.markForRender(screenCursor: self.grid.putPosition)
     }
 
     self.markForRender(screenCursor: screenCursor)

@@ -50,4 +50,20 @@ extension NeoVimView {
 
     self.agent.resize(toWidth: Int32(discreteSize.width), height: Int32(discreteSize.height))
   }
+
+  fileprivate func randomEmoji() -> String {
+    let idx = Int(arc4random_uniform(UInt32(emojis.count)))
+    guard let scalar = UnicodeScalar(emojis[idx]) else {
+      return "😎"
+    }
+
+    return String(scalar)
+  }
 }
+
+fileprivate let emojis: [UInt32] = [
+  0x1F600...0x1F64F,
+  0x1F910...0x1F918,
+  0x1F980...0x1F984,
+  0x1F9C0...0x1F9C0
+].flatMap { $0 }

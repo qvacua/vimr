@@ -29,6 +29,10 @@ class NeoVimWindow: NSObject, NSWindowDelegate, NeoVimViewDelegate {
     self.windowController = NSWindowController(windowNibName: "NeoVimWindow")
     self.neoVimView = NeoVimView(frame: .zero, config: NeoVimView.Config(useInteractiveZsh: false))
 
+    // The following setting make the scrolling really slow...
+    self.neoVimView.usesLigatures = true
+    self.neoVimView.font = NSFont(name: "FiraCode-Regular", size: 12)!
+
     super.init()
     self.addViews()
 
