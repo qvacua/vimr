@@ -639,6 +639,8 @@ void neovim_scroll(void **argv) {
     }
 
     update_screen(VALID);
+    setcursor();
+    ui_flush();
 
     return nil;
   });
