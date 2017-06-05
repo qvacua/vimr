@@ -206,13 +206,18 @@ extension NeoVimView {
         let rowCells = self.grid.cells[row]
         let startIdx = columnRange.lowerBound
 
-        var result = [RowRun(row: row, range: startIdx...startIdx, attrs: rowCells[startIdx].attrs)]
+        var result: [RowRun] = []
+        var last = RowRun(row: row, range: startIdx...startIdx, attrs: rowCells[startIdx].attrs)
         columnRange.forEach { idx in
-          if rowCells[idx].attrs == result.last!.attrs {
-            let last = result.popLast()!
-            result.append(RowRun(row: row, range: last.range.lowerBound...idx, attrs: last.attrs))
+          if last.attrs == rowCells[idx].attrs {
+            last.range = last.range.lowerBound...idx
           } else {
-            result.append(RowRun(row: row, range: idx...idx, attrs: rowCells[idx].attrs))
+            result.append(last)
+            last = RowRun(row: row, range: idx...idx, attrs: rowCells[idx].attrs)
+          }
+
+          if idx == columnRange.upperBound {
+            result.append(last)
           }
         }
 
