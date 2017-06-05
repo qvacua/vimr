@@ -1,5 +1,6 @@
 # next
 
+* Improved scroll performance.
 * GH-395: Bugfix: Massive file system changes in the working directory causes VimR to freeze.
 * GH-430: Bugfix: The cursor disappears when using arrow keys in the command mode.
 * GH-450: Mild file browser refactoring

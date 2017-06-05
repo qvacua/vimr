@@ -91,9 +91,8 @@ class Grid: CustomStringConvertible {
 
   fileprivate(set) var region = Region.zero
   fileprivate(set) var size = Size.zero
-  fileprivate(set) var putPosition = Position.zero
-  fileprivate(set) var screenCursor = Position.zero
-  
+  fileprivate(set) var position = Position.zero
+
   var foreground = defaultForeground
   var background = defaultBackground
   var special = defaultSpecial
@@ -116,7 +115,7 @@ class Grid: CustomStringConvertible {
   func resize(_ size: Size) {
     self.region = Region(top: 0, bottom: size.height - 1, left: 0, right: size.width - 1)
     self.size = size
-    self.putPosition = Position.zero
+    self.position = Position.zero
     
     let emptyCellAttrs = CellAttributes(fontTrait: .none,
                                         foreground: self.foreground, background: self.background, special: self.special)
@@ -131,8 +130,8 @@ class Grid: CustomStringConvertible {
   
   func eolClear() {
     self.clearRegion(
-      Region(top: self.putPosition.row, bottom: self.putPosition.row,
-             left: self.putPosition.column, right: self.region.right)
+      Region(top: self.position.row, bottom: self.position.row,
+             left: self.position.column, right: self.region.right)
     )
   }
   
@@ -171,30 +170,26 @@ class Grid: CustomStringConvertible {
   }
   
   func goto(_ position: Position) {
-    self.putPosition = position
+    self.position = position
   }
-  
-  func moveCursor(_ position: Position) {
-    self.screenCursor = position
-  }
-  
+
   func put(_ string: String) {
     // FIXME: handle the following situation:
     // |abcde | <- type ㅎ
     // =>
     // |abcde>| <- ">" at the end of the line is wrong -> the XPC could tell the main app whether the string occupies
     // |ㅎ    |        two cells using vim_strwidth()
-    self.cells[self.putPosition.row][self.putPosition.column] = Cell(string: string, attrs: self.attrs)
+    self.cells[self.position.row][self.position.column] = Cell(string: string, attrs: self.attrs)
     
     // Increment the column of the put position because neovim calls sets the position only once when drawing
     // consecutive cells in the same line
-    self.putPosition.column += 1
+    self.advancePosition()
   }
 
   func putMarkedText(_ string: String) {
     // NOTE: Maybe there's a better way to indicate marked text than inverting...
-    self.cells[self.putPosition.row][self.putPosition.column] = Cell(string: string, attrs: self.attrs, marked: true)
-    self.putPosition.column += 1
+    self.cells[self.position.row][self.position.column] = Cell(string: string, attrs: self.attrs, marked: true)
+    self.advancePosition()
   }
 
   func unmarkCell(_ position: Position) {
@@ -301,5 +296,12 @@ class Grid: CustomStringConvertible {
     }
 
     return true
+  }
+
+  fileprivate func advancePosition() {
+    self.position.column += 1
+    if self.position.column >= self.size.width {
+      self.position.column -= 1
+    }
   }
 }

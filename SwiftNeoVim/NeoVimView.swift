@@ -149,7 +149,7 @@ public class NeoVimView: NSView,
   let logger = FileLogger(as: NeoVimView.self, with: URL(fileURLWithPath: "/tmp/nvv.log"))
   let bridgeLogger = FileLogger(as: NeoVimView.self,
                                 with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
-                                shouldLogDebug: nil)
+                                shouldLogDebug: false)
   let agent: NeoVimAgent
   let grid = Grid()
 
@@ -184,6 +184,7 @@ public class NeoVimView: NSView,
   var currentEmoji = "😎"
 
   var _font = NeoVimView.defaultFont
+  var shouldDrawCursor = false
 
   // MARK: - Private
   fileprivate var _linespacing = NeoVimView.defaultLinespacing

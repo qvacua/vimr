@@ -31,7 +31,7 @@ extension NeoVimView {
 
       self.grid.eolClear()
 
-      let putPosition = self.grid.putPosition
+      let putPosition = self.grid.position
       let region = Region(top: putPosition.row,
                           bottom: putPosition.row,
                           left: putPosition.column,
@@ -40,43 +40,14 @@ extension NeoVimView {
     }
   }
 
-  public func gotoPosition(_ position: Position,
-                           screenCursor: Position,
-                           currentPosition: Position) {
-
+  public func gotoPosition(_ position: Position, textPosition: Position) {
     gui.async {
-      self.bridgeLogger.debug("pos: \(position), screen: \(screenCursor), " +
-                        "current-pos: \(currentPosition)")
+      self.bridgeLogger.debug(position)
 
-      self.currentPosition = currentPosition
-      let curScreenCursor = self.grid.screenCursor
-
-      // Because neovim fills blank space with "Space" and when we enter "Space"
-      // we don't get the puts, thus we have to redraw the put position.
-      if self.usesLigatures {
-        self.markForRender(region: self.grid.regionOfWord(at: self.grid.putPosition))
-        self.markForRender(region: self.grid.regionOfWord(at: curScreenCursor))
-        self.markForRender(region: self.grid.regionOfWord(at: position))
-        self.markForRender(region: self.grid.regionOfWord(at: screenCursor))
-      } else {
-        self.markForRender(cellPosition: self.grid.putPosition)
-        // Redraw where the cursor has been till now, ie remove the current cursor.
-        self.markForRender(cellPosition: curScreenCursor)
-        if self.grid.isPreviousCellEmpty(curScreenCursor) {
-          self.markForRender(cellPosition: self.grid.previousCellPosition(curScreenCursor))
-        }
-        if self.grid.isNextCellEmpty(curScreenCursor) {
-          self.markForRender(cellPosition: self.grid.nextCellPosition(curScreenCursor))
-        }
-        self.markForRender(cellPosition: position)
-        self.markForRender(cellPosition: screenCursor)
-      }
-
+      self.markForRender(cellPosition: self.grid.position)
       self.grid.goto(position)
-      self.grid.moveCursor(screenCursor)
-    }
-    gui.async {
-      self.delegate?.cursor(to: currentPosition)
+
+      self.delegate?.cursor(to: textPosition)
     }
   }
 
@@ -84,7 +55,6 @@ extension NeoVimView {
     gui.async {
       self.bridgeLogger.debug(cursorModeShapeName(mode))
       self.mode = mode
-      self.updateCursorWhenPutting(currentPosition: .zero, screenCursor: .zero)
     }
   }
 
@@ -117,10 +87,10 @@ extension NeoVimView {
     }
   }
 
-  public func put(_ string: String, screenCursor: Position) {
+  public func put(_ string: String) {
     gui.async {
-      let curPos = self.grid.putPosition
-      self.bridgeLogger.debug("\(curPos) -> \(string) <- screen: \(screenCursor)")
+      let curPos = self.grid.position
+//      self.bridgeLogger.debug("\(curPos) -> \(string)")
 
       self.grid.put(string)
 
@@ -133,16 +103,14 @@ extension NeoVimView {
       } else {
         self.markForRender(cellPosition: curPos)
       }
-
-      self.updateCursorWhenPutting(currentPosition: curPos, screenCursor: screenCursor)
     }
   }
 
-  public func putMarkedText(_ markedText: String, screenCursor: Position) {
+  public func putMarkedText(_ markedText: String) {
     gui.async {
-      self.bridgeLogger.debug("'\(markedText)' <- screen: \(screenCursor)")
+      let curPos = self.grid.position
+//      self.bridgeLogger.debug("\(curPos) -> '\(markedText)'")
 
-      let curPos = self.grid.putPosition
       self.grid.putMarkedText(markedText)
 
       self.markForRender(position: curPos)
@@ -151,8 +119,6 @@ extension NeoVimView {
       if markedText.characters.count == 0 {
         self.markForRender(position: self.grid.previousCellPosition(curPos))
       }
-
-      self.updateCursorWhenPutting(currentPosition: curPos, screenCursor: screenCursor)
     }
   }
 
@@ -164,14 +130,20 @@ extension NeoVimView {
 
       self.grid.unmarkCell(position)
       self.markForRender(position: position)
-
-      self.markForRender(screenCursor: self.grid.screenCursor)
     }
   }
 
   public func flush() {
     gui.async {
-      self.bridgeLogger.debug("-----------------------------")
+      self.bridgeLogger.hr()
+
+      self.shouldDrawCursor = true
+
+      if self.usesLigatures {
+        self.markForRender(region: self.grid.regionOfWord(at: self.grid.position))
+      } else {
+        self.markForRender(cellPosition: self.grid.position)
+      }
     }
   }
 
@@ -385,21 +357,6 @@ extension NeoVimView {
 
   fileprivate func bufferListChanged() {
     self.delegate?.bufferListChanged()
-  }
-
-  fileprivate func updateCursorWhenPutting(currentPosition curPos: Position,
-                                           screenCursor: Position) {
-
-    if self.mode == .cmdline {
-      // When the cursor is in the command line, then we need this...
-      self.markForRender(cellPosition: self.grid.previousCellPosition(curPos))
-      self.markForRender(cellPosition: self.grid.nextCellPosition(curPos))
-      self.markForRender(screenCursor: self.grid.putPosition)
-    }
-
-    self.markForRender(screenCursor: screenCursor)
-    self.markForRender(cellPosition: self.grid.screenCursor)
-    self.grid.moveCursor(screenCursor)
   }
 }
 

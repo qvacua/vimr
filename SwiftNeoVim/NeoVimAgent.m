@@ -482,10 +482,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return;
 
     case NeoVimServerMsgIdSetPosition: {
-      NSInteger *values = data_to_NSInteger_array(data, 6);
+      NSInteger *values = data_to_NSInteger_array(data, 4);
       [_bridge gotoPosition:(Position) { .row = values[0], .column = values[1] }
-               screenCursor:(Position) { .row = values[2], .column = values[3] }
-            currentPosition:(Position) { .row = values[4], .column = values[5] }];
+               textPosition:(Position) { .row = values[2], .column = values[3] }];
       return;
     }
 
@@ -535,18 +534,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
     case NeoVimServerMsgIdPut:
     case NeoVimServerMsgIdPutMarked: {
-      NSInteger *values = (NSInteger *) data.bytes;
-      NSInteger row = values[0];
-      NSInteger column = values[1];
-
-      NSString *string = [[NSString alloc] initWithBytes:(values + 2)
-                                                  length:data.length - 2 * sizeof(NSInteger)
-                                                encoding:NSUTF8StringEncoding];
+      NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
       if (msgid == NeoVimServerMsgIdPut) {
-        [_bridge put:string screenCursor:(Position) { .row=row, .column=column }];
+        [_bridge put:string];
       } else {
-        [_bridge putMarkedText:string screenCursor:(Position) { .row=row, .column=column }];
+        [_bridge putMarkedText:string];
       }
 
       return;
@@ -566,9 +559,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       [_bridge visualBell];
       return;
 
-    case NeoVimServerMsgIdFlush:
+    case NeoVimServerMsgIdFlush: {
       [_bridge flush];
       return;
+    }
 
     case NeoVimServerMsgIdSetForeground: {
       NSInteger *values = data_to_NSInteger_array(data, 1);

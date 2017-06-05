@@ -223,13 +223,12 @@ static void server_ui_cursor_goto(UI *ui __unused, Integer row, Integer col) {
 
   NSInteger values[] = {
     row, col,
-    screen_cursor_row(), screen_cursor_column(),
     (NSInteger) curwin->w_cursor.lnum, curwin->w_cursor.col + 1
   };
 
-  DLOG("%d:%d - %d:%d - %d:%d", values[0], values[1], values[2], values[3], values[4], values[5]);
+  DLOG("%d:%d - %d:%d - %d:%d", values[0], values[1], values[2], values[3]);
 
-  NSData *data = [[NSData alloc] initWithBytes:values length:(6 * sizeof(NSInteger))];
+  NSData *data = [[NSData alloc] initWithBytes:values length:(4 * sizeof(NSInteger))];
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetPosition data:data];
   [data release];
 }
@@ -309,28 +308,40 @@ static void server_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
 }
 
 static void server_ui_put(UI *ui __unused, String str) {
-  NSString *string = [[NSString alloc] initWithBytes:str.data length:str.size encoding:NSUTF8StringEncoding];
-  NSInteger cursor[] = {screen_cursor_row(), screen_cursor_column()};
+  NSString *string = [[NSString alloc] initWithBytes:str.data
+                                              length:str.size
+                                            encoding:NSUTF8StringEncoding];
+  NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
 
-  NSMutableData *data = [[NSMutableData alloc]
-    initWithCapacity:2 * sizeof(NSInteger) + [string lengthOfBytesUsingEncoding:NSUTF8StringEncoding]];
-  [data appendBytes:cursor length:2 * sizeof(NSInteger)];
-  [data appendData:[string dataUsingEncoding:NSUTF8StringEncoding]];
+//  NSInteger cursor[] = {screen_cursor_row(), screen_cursor_column()};
+
+//  NSMutableData *data = [[NSMutableData alloc]
+//    initWithCapacity:2 * sizeof(NSInteger) + [string lengthOfBytesUsingEncoding:NSUTF8StringEncoding]];
+//  [data appendBytes:cursor length:2 * sizeof(NSInteger)];
+//  [data appendData:[string dataUsingEncoding:NSUTF8StringEncoding]];
 
   if (_marked_text != nil && _marked_row == _put_row && _marked_column == _put_column) {
+
     DLOG("putting marked text: '%s'", string.cstr);
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdPutMarked data:data];
-  } else if (_marked_text != nil && str.size == 0 && _marked_row == _put_row && _marked_column == _put_column - 1) {
+
+  } else if (_marked_text != nil
+      && str.size == 0
+      && _marked_row == _put_row
+      && _marked_column == _put_column - 1) {
+
     DLOG("putting marked text cuz zero");
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdPutMarked data:data];
+
   } else {
+
     DLOG("putting non-marked text: '%s'", string.cstr);
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdPut data:data];
+
   }
 
   _put_column += 1;
 
-  [data release];
   [string release];
 }
 
@@ -639,6 +650,8 @@ void neovim_scroll(void **argv) {
     }
 
     update_screen(VALID);
+    setcursor();
+    ui_flush();
 
     return nil;
   });
