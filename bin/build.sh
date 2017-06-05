@@ -49,7 +49,13 @@ echo "### Building VimR"
 
 ./bin/prepare_repositories.sh
 ./bin/clean_old_builds.sh
-./bin/set_new_versions.sh ${IS_SNAPSHOT} "${MARKETING_VERSION}"
+
+if [ "${PUBLISH}" = true ] ; then
+    ./bin/set_new_versions.sh ${IS_SNAPSHOT} "${MARKETING_VERSION}"
+else
+    echo "Not publishing => not incrementing the version..."
+fi
+
 ./bin/build_vimr.sh true
 
 BUNDLE_VERSION=$(agvtool what-version | sed '2q;d' | sed -E 's/ +(.+)/\1/')
