@@ -49,10 +49,18 @@ extension NeoVimView {
 
     let dirtyRects = self.rectsBeingDrawn()
 
+    let scale = self.scaleFactor
+    bufferCtx.scaleBy(x: scale, y: scale)
+
+    self.rowRunIntersecting(rects: dirtyRects).forEach {
+      self.bridgeLogger.debug($0)
+      self.draw(rowRun: $0, in: bufferCtx)
+    }
+
     self.logger.debug("dirty union rect: \(dirtyUnionRect)")
     self.logger.debug("rects being drawn: \(dirtyRects)")
 
-    let scale = self.scaleFactor
+//    let scale = self.scaleFactor
     let boundsSize = self.bounds.size
     let layerSize = bufferLayer.size.scaling(1 / scale)
 
@@ -61,7 +69,7 @@ extension NeoVimView {
                           width: layerSize.width,
                           height: layerSize.height)
 
-    bufferCtx.scaleBy(x: scale, y: scale)
+//    bufferCtx.scaleBy(x: scale, y: scale)
     dirtyRects.forEach {
       viewCtx.saveGState()
       viewCtx.clip(to: $0)

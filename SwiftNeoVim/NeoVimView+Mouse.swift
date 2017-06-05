@@ -46,6 +46,7 @@ extension NeoVimView {
     let (absDeltaX, absDeltaY) = (min(Int(abs(deltaX)), maxScrollDeltaX),
                                   min(Int(abs(deltaY)), maxScrollDeltaY))
     let (horizSign, vertSign) = (deltaX > 0 ? 1 : -1, deltaY > 0 ? 1 : -1)
+    self.bridgeLogger.debug(absDeltaY)
     self.agent.scrollHorizontal(horizSign * absDeltaX, vertical: vertSign * absDeltaY)
   }
 

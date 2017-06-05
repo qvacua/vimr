@@ -35,6 +35,7 @@ public class NeoVimView: NSView,
 
   public var usesLigatures = false {
     didSet {
+      self.grid.usesLigatures = self.usesLigatures
       self.drawer.usesLigatures = self.usesLigatures
       self.needsDisplay = true
     }
@@ -149,7 +150,7 @@ public class NeoVimView: NSView,
   let logger = FileLogger(as: NeoVimView.self, with: URL(fileURLWithPath: "/tmp/nvv.log"))
   let bridgeLogger = FileLogger(as: NeoVimView.self,
                                 with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
-                                shouldLogDebug: false)
+                                shouldLogDebug: nil)
   let agent: NeoVimAgent
   let grid = Grid()
 
@@ -176,6 +177,7 @@ public class NeoVimView: NSView,
   }
 
   var rectsToUpdate = Set<CGRect>()
+  var rectsToDraw = Set<CGRect>()
 
   let drawer: TextDrawer
 

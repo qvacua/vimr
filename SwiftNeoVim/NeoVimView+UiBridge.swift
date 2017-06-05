@@ -45,34 +45,38 @@ extension NeoVimView {
                            currentPosition: Position) {
 
     gui.async {
-      self.bridgeLogger.debug("pos: \(position), screen: \(screenCursor), " +
-                              "current-pos: \(currentPosition)")
+//      self.bridgeLogger.debug("pos: \(position), screen: \(screenCursor), " +
+//                              "current-pos: \(currentPosition)")
 
-      self.currentPosition = currentPosition
-      let curScreenCursor = self.grid.screenCursor
+//      self.currentPosition = currentPosition
+//      let curScreenCursor = self.grid.screenCursor
+//
+//      // Because neovim fills blank space with "Space" and when we enter "Space"
+//      // we don't get the puts, thus we have to redraw the put position.
+//      if self.usesLigatures {
+//        self.markForRender(region: self.grid.regionOfWord(at: self.grid.putPosition))
+//        self.markForRender(region: self.grid.regionOfWord(at: curScreenCursor))
+//        self.markForRender(region: self.grid.regionOfWord(at: position))
+//        self.markForRender(region: self.grid.regionOfWord(at: screenCursor))
+//      } else {
+//        self.markForRender(cellPosition: self.grid.putPosition)
+//        // Redraw where the cursor has been till now, ie remove the current cursor.
+//        self.markForRender(cellPosition: curScreenCursor)
+//        if self.grid.isPreviousCellEmpty(curScreenCursor) {
+//          self.markForRender(cellPosition: self.grid.previousCellPosition(curScreenCursor))
+//        }
+//        if self.grid.isNextCellEmpty(curScreenCursor) {
+//          self.markForRender(cellPosition: self.grid.nextCellPosition(curScreenCursor))
+//        }
+//        self.markForRender(cellPosition: position)
+//        self.markForRender(cellPosition: screenCursor)
+//      }
 
-      // Because neovim fills blank space with "Space" and when we enter "Space"
-      // we don't get the puts, thus we have to redraw the put position.
-      if self.usesLigatures {
-        self.markForRender(region: self.grid.regionOfWord(at: self.grid.putPosition))
-        self.markForRender(region: self.grid.regionOfWord(at: curScreenCursor))
-        self.markForRender(region: self.grid.regionOfWord(at: position))
-        self.markForRender(region: self.grid.regionOfWord(at: screenCursor))
-      } else {
-        self.markForRender(cellPosition: self.grid.putPosition)
-        // Redraw where the cursor has been till now, ie remove the current cursor.
-        self.markForRender(cellPosition: curScreenCursor)
-        if self.grid.isPreviousCellEmpty(curScreenCursor) {
-          self.markForRender(cellPosition: self.grid.previousCellPosition(curScreenCursor))
-        }
-        if self.grid.isNextCellEmpty(curScreenCursor) {
-          self.markForRender(cellPosition: self.grid.nextCellPosition(curScreenCursor))
-        }
-        self.markForRender(cellPosition: position)
-        self.markForRender(cellPosition: screenCursor)
+      if self.grid.currentUpdateRegion != .null {
+        self.markForRender(region: self.grid.currentUpdateRegion)
       }
-
       self.grid.goto(position)
+//      self.bridgeLogger.debug(self.grid.lastUpdateRegion)
       self.grid.moveCursor(screenCursor)
     }
     gui.async {
@@ -89,7 +93,7 @@ extension NeoVimView {
 
   public func setScrollRegionToTop(_ top: Int, bottom: Int, left: Int, right: Int) {
     gui.async {
-      self.bridgeLogger.debug("\(top):\(bottom):\(left):\(right)")
+//      self.bridgeLogger.debug("\(top):\(bottom):\(left):\(right)")
 
       let region = Region(top: top, bottom: bottom, left: left, right: right)
       self.grid.setScrollRegion(region)
@@ -98,7 +102,7 @@ extension NeoVimView {
 
   public func scroll(_ count: Int) {
     gui.async {
-      self.bridgeLogger.debug(count)
+//      self.bridgeLogger.debug(count)
 
       self.flushToBufferContext()
       self.grid.scroll(count)
@@ -151,7 +155,7 @@ extension NeoVimView {
 
   public func highlightSet(_ attrs: CellAttributes) {
     gui.async {
-      self.bridgeLogger.debug(attrs)
+//      self.bridgeLogger.debug(attrs)
       self.grid.attrs = attrs
     }
   }
@@ -163,17 +167,17 @@ extension NeoVimView {
 
       self.grid.put(string)
 
-      if self.usesLigatures {
-        if string == " " {
-          self.markForRender(cellPosition: curPos)
-        } else {
-          self.markForRender(region: self.grid.regionOfWord(at: curPos))
-        }
-      } else {
-        self.markForRender(cellPosition: curPos)
-      }
+//      if self.usesLigatures {
+//        if string == " " {
+//          self.markForRender(cellPosition: curPos)
+//        } else {
+//          self.markForRender(region: self.grid.regionOfWord(at: curPos))
+//        }
+//      } else {
+//        self.markForRender(cellPosition: curPos)
+//      }
 
-      self.updateCursorWhenPutting(currentPosition: curPos, screenCursor: screenCursor)
+//      self.updateCursorWhenPutting(currentPosition: curPos, screenCursor: screenCursor)
     }
   }
 
@@ -209,16 +213,25 @@ extension NeoVimView {
   }
 
   fileprivate func flushToBufferContext() {
+    if self.grid.currentUpdateRegion != .null {
+      self.markForRender(region: self.grid.currentUpdateRegion)
+    }
+
     if self.rectsToUpdate.isEmpty {
-      self.bridgeLogger.debug("No rects to update.")
+//      self.bridgeLogger.debug("No rects to update.")
       return
     }
 
     if self.bounds.size == .zero {
-      self.bridgeLogger.debug("Removing all rects to update due to zero bounds.")
+//      self.bridgeLogger.debug("Removing all rects to update due to zero bounds.")
       self.rectsToUpdate.removeAll(keepingCapacity: true)
       return
     }
+
+    self.rectsToUpdate.forEach(self.setNeedsDisplay)
+    self.rectsToDraw = self.rectsToUpdate
+    self.rectsToUpdate = []
+    return
 
     guard let bufferCtx = self.bufferContext else {
       self.logger.error("Could not get the buffer context.")
@@ -232,22 +245,23 @@ extension NeoVimView {
     bufferCtx.scaleBy(x: scale, y: scale)
 
     self.rowRunIntersecting(rects: Array(self.rectsToUpdate)).forEach {
+      self.bridgeLogger.debug($0)
       self.draw(rowRun: $0, in: bufferCtx)
     }
 //    self.drawCursor(context: context)
 
-    if self.rectsToUpdate.count < 10 {
-      self.bridgeLogger.debug(self.rectsToUpdate)
-    } else {
-      self.bridgeLogger.debug("\(self.rectsToUpdate.count) rects to update.")
-    }
+//    if self.rectsToUpdate.count < 10 {
+//      self.bridgeLogger.debug(self.rectsToUpdate)
+//    } else {
+//      self.bridgeLogger.debug("\(self.rectsToUpdate.count) rects to update.")
+//    }
     self.rectsToUpdate.forEach(self.setNeedsDisplay)
     self.rectsToUpdate.removeAll(keepingCapacity: true)
   }
 
   public func flush() {
     gui.async {
-      self.bridgeLogger.hr()
+//      self.bridgeLogger.hr()
       self.flushToBufferContext()
     }
   }
@@ -445,6 +459,7 @@ extension NeoVimView {
       return
     }
 
+//    self.bridgeLogger.debug(self.rect(for: region))
     self.rectsToUpdate.insert(self.rect(for: region))
   }
 
@@ -455,6 +470,7 @@ extension NeoVimView {
       return
     }
 
+//    self.bridgeLogger.debug(self.rect(forRow: row, column: column))
     self.rectsToUpdate.insert(self.rect(forRow: row, column: column))
   }
 }
