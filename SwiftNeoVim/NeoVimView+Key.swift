@@ -82,7 +82,7 @@ extension NeoVimView {
 
   public func setMarkedText(_ aString: Any, selectedRange: NSRange, replacementRange: NSRange) {
     if self.markedText == nil {
-      self.markedPosition = self.grid.putPosition
+      self.markedPosition = self.grid.position
     }
 
     // eg 하 -> hanja popup, cf comment for self.lastMarkedText
@@ -112,7 +112,7 @@ extension NeoVimView {
     self.keyDownDone = true
 
     // TODO: necessary?
-    self.markForRender(row: self.grid.putPosition.row, column: self.grid.putPosition.column)
+    self.markForRender(row: self.grid.position.row, column: self.grid.position.column)
   }
 
   /// Return the current selection (or the position of the cursor with empty-length range).
@@ -126,7 +126,7 @@ extension NeoVimView {
       return NSRange(location: NSNotFound, length: 0)
     }
 
-    let result = NSRange(location: self.grid.singleIndexFrom(self.grid.putPosition), length: 0)
+    let result = NSRange(location: self.grid.singleIndexFrom(self.grid.position), length: 0)
 //    self.logger.debug("\(#function): \(result)")
     return result
   }

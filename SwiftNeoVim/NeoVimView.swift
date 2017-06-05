@@ -184,6 +184,7 @@ public class NeoVimView: NSView,
   var currentEmoji = "😎"
 
   var _font = NeoVimView.defaultFont
+  var shouldDrawCursor = false
 
   // MARK: - Private
   fileprivate var _linespacing = NeoVimView.defaultLinespacing

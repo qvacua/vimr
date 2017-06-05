@@ -79,14 +79,7 @@ extension NeoVimView {
   }
 
   fileprivate func cursorRegion() -> Region {
-    let cursorPosition: Position
-    if self.mode == .cmdline
-       || self.mode == .cmdlineInsert
-       || self.mode == .cmdlineReplace {
-      cursorPosition = self.grid.putPosition
-    } else {
-      cursorPosition = self.grid.screenCursor
-    }
+    let cursorPosition = self.grid.position
 
     let saneRow = max(0, min(cursorPosition.row, self.grid.size.height - 1))
     let saneColumn = max(0, min(cursorPosition.column, self.grid.size.width - 1))
@@ -104,6 +97,10 @@ extension NeoVimView {
   }
 
   fileprivate func drawCursor(context: CGContext) {
+    guard self.shouldDrawCursor else {
+      return
+    }
+
     context.saveGState()
     defer { context.restoreGState() }
 
@@ -129,6 +126,8 @@ extension NeoVimView {
     // FIXME: take ligatures into account (is it a good idea to do this?)
     let rowRun = RowRun(row: cursorRegion.top, range: cursorRegion.columnRange, attrs: attrs)
     self.draw(rowRun: rowRun, in: context)
+
+    self.shouldDrawCursor = false
   }
 
   fileprivate func drawBackground(positions: [CGPoint], background: Int, in context: CGContext) {
