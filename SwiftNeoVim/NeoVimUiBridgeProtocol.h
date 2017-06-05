@@ -54,10 +54,6 @@ typedef struct {
   NSInteger column;
 } Position;
 
-#define qDefaultForeground 0xFF000000
-#define qDefaultBackground 0xFFFFFFFF
-#define qDefaultSpecial    0xFFFF0000
-
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol NeoVimUiBridgeProtocol <NSObject>
@@ -84,7 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 2. NeoVim wants to put the cursor at (row, column).
  * In case of 1. NeoVim will put in subsequent call. In case of 2. NeoVim seems to flush twice in a row.
  */
-- (void)gotoPosition:(Position)position screenCursor:(Position)screenCursor currentPosition:(Position)currentPosition;
+- (void)gotoPosition:(Position)position textPosition:(Position)textPosition;
 
 - (void)updateMenu;
 - (void)busyStart;
@@ -104,9 +100,9 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Draw string at the current cursor which was set by a previous cursorGotoRow:column callback.
  */
-- (void)put:(NSString *)string screenCursor:(Position)screenCursor;
+- (void)put:(NSString *)string;
 
-- (void)putMarkedText:(NSString *)markedText screenCursor:(Position)screenCursor;
+- (void)putMarkedText:(NSString *)markedText;
 - (void)unmarkRow:(NSInteger)row column:(NSInteger)column;
 
 - (void)bell;

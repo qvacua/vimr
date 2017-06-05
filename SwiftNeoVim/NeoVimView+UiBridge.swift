@@ -40,19 +40,14 @@ extension NeoVimView {
     }
   }
 
-  public func gotoPosition(_ position: Position,
-                           screenCursor: Position,
-                           currentPosition: Position) {
-
+  public func gotoPosition(_ position: Position, textPosition: Position) {
     gui.async {
-      self.bridgeLogger.debug("pos: \(position), screen: \(screenCursor), " +
-                        "current-pos: \(currentPosition)")
+      self.bridgeLogger.debug(position)
 
       self.markForRender(cellPosition: self.grid.position)
       self.grid.goto(position)
-    }
-    gui.async {
-      self.delegate?.cursor(to: currentPosition)
+
+      self.delegate?.cursor(to: textPosition)
     }
   }
 
@@ -92,10 +87,10 @@ extension NeoVimView {
     }
   }
 
-  public func put(_ string: String, screenCursor: Position) {
+  public func put(_ string: String) {
     gui.async {
       let curPos = self.grid.position
-      self.bridgeLogger.debug("\(curPos) -> \(string) <- screen: \(screenCursor)")
+//      self.bridgeLogger.debug("\(curPos) -> \(string)")
 
       self.grid.put(string)
 
@@ -111,11 +106,11 @@ extension NeoVimView {
     }
   }
 
-  public func putMarkedText(_ markedText: String, screenCursor: Position) {
+  public func putMarkedText(_ markedText: String) {
     gui.async {
-      self.bridgeLogger.debug("'\(markedText)' <- screen: \(screenCursor)")
-
       let curPos = self.grid.position
+//      self.bridgeLogger.debug("\(curPos) -> '\(markedText)'")
+
       self.grid.putMarkedText(markedText)
 
       self.markForRender(position: curPos)
@@ -196,7 +191,7 @@ extension NeoVimView {
 
   public func autoCommandEvent(_ event: NeoVimAutoCommandEvent, bufferHandle: Int) {
     gui.async {
-      self.bridgeLogger.debug("\(neoVimAutoCommandEventName(event)) -> \(bufferHandle)")
+//      self.bridgeLogger.debug("\(neoVimAutoCommandEventName(event)) -> \(bufferHandle)")
 
       if event == .BUFWINENTER || event == .BUFWINLEAVE {
         self.bufferListChanged()
