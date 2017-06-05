@@ -51,11 +51,7 @@ extension NeoVimView {
     // in some cases only the put(0, 0)-cells should be redrawn.
     // => FIXME: probably we have to consider this also when drawing further down,
     // ie when the range starts with '0'...
-    self.drawBackground(
-      positions: rowFrag.range.map { self.pointInView(forRow: rowFrag.row, column: $0) },
-      background: rowFrag.attrs.background,
-      in: context
-    )
+    self.drawBackground(rowRun: rowFrag, in: context)
 
     let positions = rowFrag.range
       // filter out the put(0, 0)s (after a wide character)
@@ -130,20 +126,21 @@ extension NeoVimView {
     self.shouldDrawCursor = false
   }
 
-  fileprivate func drawBackground(positions: [CGPoint], background: Int, in context: CGContext) {
+  fileprivate func drawBackground(rowRun: RowRun, in context: CGContext) {
     context.saveGState()
     defer { context.restoreGState() }
 
-    context.setFillColor(ColorUtils.colorIgnoringAlpha(background).cgColor)
+    context.setFillColor(ColorUtils.colorIgnoringAlpha(rowRun.attrs.background).cgColor)
     // To use random color use the following
 //    NSColor(calibratedRed: CGFloat(drand48()),
 //            green: CGFloat(drand48()),
 //            blue: CGFloat(drand48()),
 //            alpha: 1.0).set()
 
+    let firstCellOrigin = self.pointInView(forRow: rowRun.row, column: rowRun.range.lowerBound)
     let backgroundRect = CGRect(
-      x: positions[0].x, y: positions[0].y,
-      width: CGFloat(positions.count) * self.cellSize.width, height: self.cellSize.height
+      x: firstCellOrigin.x, y: firstCellOrigin.y,
+      width: CGFloat(rowRun.range.count) * self.cellSize.width, height: self.cellSize.height
     )
     context.fill(backgroundRect)
   }
