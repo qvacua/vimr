@@ -5,6 +5,9 @@
 * GH-430: Bugfix: The cursor disappears when using arrow keys in the command mode.
 * GH-450: Mild file browser refactoring
 * GH-403, GH-447: `Shift-Tab` works (thanks to @mkhl)
+* Dependencies updates:
+    - neovim/neovim@1b2acb8d958c1c8e2f382c2de9c98586801fd9fe
+    - ReactiveX/RxSwift@3.5.0
 
 # 0.15.0-191
 
