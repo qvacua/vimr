@@ -7,22 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-196</title>
+      <title>SNAPSHOT-197</title>
       <description><![CDATA[
     <ul>
-<li>Improved scroll performance</li>
+<li>Further improve rendering performance</li>
+<li>Do not scroll too many lines when scrolling with the mouse wheel (cf. GH-237)</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/196
+        https://github.com/qvacua/vimr/releases/tag/snapshot/197
       </releaseNotesLink>
-      <pubDate>2017-06-04T16:49:52.522240</pubDate>
+      <pubDate>2017-06-06T07:17:40.181100</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/196/VimR-SNAPSHOT-196.tar.bz2"
-                 sparkle:version="196"
-                 sparkle:shortVersionString="SNAPSHOT-196"
-                 sparkle:dsaSignature="MCwCFFh8ehQWqUtj30LL/bE7GpluNAx2AhRA8qAtSbYVzLaQCxEZz1o5BBeN+A=="
-                 length="12607217"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/197/VimR-SNAPSHOT-197.tar.bz2"
+                 sparkle:version="197"
+                 sparkle:shortVersionString="SNAPSHOT-197"
+                 sparkle:dsaSignature="MC0CFQCpeuSSN+69MNUoKveStc6PZT5aXwIUBWrcLLc3RaaM1311sm1ybER+010="
+                 length="12600951"
                  type="application/octet-stream"/>
     </item>
   </channel>
