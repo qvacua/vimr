@@ -5,7 +5,7 @@
 
 import Foundation
 
-class FileAppender {
+fileprivate class FileAppender {
 
   init(with fileUrl: URL) {
     guard fileUrl.isFileURL else {
