@@ -93,14 +93,6 @@ static NSString *_backspace = nil;
 static bool _dirty = false;
 
 #pragma mark Helper functions
-static inline Integer screen_cursor_row() {
-  return curwin->w_winrow + curwin->w_wrow;
-}
-
-static inline Integer screen_cursor_column() {
-  return curwin->w_wincol + curwin->w_wcol;
-}
-
 static inline String vim_string_from(NSString *str) {
   return (String) { .data = (char *) str.cstr, .size = str.clength };
 }

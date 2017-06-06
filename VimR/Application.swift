@@ -5,6 +5,10 @@
 
 import Cocoa
 
+let logger = FileLogger(as: "VimR",
+                        with: URL(fileURLWithPath: "/tmp/vimr.log"),
+                        shouldLogDebug: nil)
+
 class Application: NSApplication {
 
   override init() {

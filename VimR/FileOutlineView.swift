@@ -32,8 +32,9 @@ class FileOutlineView: NSOutlineView,
       return
     }
 
-    // If the target of the menu items is set to the first responder, the actions are not invoked at all when the file
-    // monitor fires in the background... Dunno why it worked before the redesign... -_-
+    // If the target of the menu items is set to the first responder, the actions are not invoked
+    // at all when the file monitor fires in the background...
+    // Dunno why it worked before the redesign... -_-
     self.menu?.items.forEach { $0.target = self }
 
     self.doubleAction = #selector(FileOutlineView.doubleClickAction)
@@ -71,32 +72,23 @@ class FileOutlineView: NSOutlineView,
   }
 
   func select(_ url: URL) {
-    var itemsToExpand: [FileBrowserItem] = []
     var stack = [self.root]
 
     while let item = stack.popLast() {
-      if item.isChildrenScanned == false {
-        item.children = FileUtils.directDescendants(of: item.url).map(FileBrowserItem.init)
-        item.isChildrenScanned = true
-      }
-
-      itemsToExpand.append(item)
+      self.expandItem(item)
 
       if item.url.isDirectParent(of: url) {
         if let targetItem = item.children.first(where: { $0.url == url }) {
-          itemsToExpand.append(targetItem)
+          let targetRow = self.row(forItem: targetItem)
+          self.selectRowIndexes(IndexSet(integer: targetRow), byExtendingSelection: false)
+          self.scrollRowToVisible(targetRow)
         }
+
         break
       }
 
       stack.append(contentsOf: item.children.filter { $0.url.isParent(of: url) })
     }
-
-    itemsToExpand.forEach { self.expandItem($0) }
-
-    let targetRow = self.row(forItem: itemsToExpand.last)
-    self.selectRowIndexes(IndexSet(integer: targetRow), byExtendingSelection: false)
-    self.scrollRowToVisible(targetRow)
   }
 
   fileprivate let emit: (UuidAction<FileBrowser.Action>) -> Void
@@ -133,42 +125,46 @@ class FileOutlineView: NSOutlineView,
       return
     }
 
-    self.beginUpdates()
     self.update(fileBrowserItem)
-    self.endUpdates()
   }
 
-  fileprivate func handleRemovals(for fileBrowserItem: FileBrowserItem, new newChildren: [FileBrowserItem]) {
+  fileprivate func handleRemovals(for fileBrowserItem: FileBrowserItem,
+                                  new newChildren: [FileBrowserItem]) {
     let curChildren = fileBrowserItem.children
 
     let curPreparedChildren = self.prepare(curChildren)
     let newPreparedChildren = self.prepare(newChildren)
 
-    let childrenToRemoveIndices = curPreparedChildren
+    let indicesToRemove = curPreparedChildren
       .enumerated()
       .filter { (_, fileBrowserItem) in newPreparedChildren.contains(fileBrowserItem) == false }
       .map { (idx, _) in idx }
 
+    logger.debug("\(fileBrowserItem): \(curPreparedChildren) vs. \(indicesToRemove)")
+
     fileBrowserItem.children = curChildren.filter { newChildren.contains($0) }
 
     let parent = fileBrowserItem == self.root ? nil : fileBrowserItem
-    self.removeItems(at: IndexSet(childrenToRemoveIndices), inParent: parent)
+    self.removeItems(at: IndexSet(indicesToRemove), inParent: parent)
   }
 
-  fileprivate func handleAdditions(for fileBrowserItem: FileBrowserItem, new newChildren: [FileBrowserItem]) {
+  fileprivate func handleAdditions(for fileBrowserItem: FileBrowserItem,
+                                   new newChildren: [FileBrowserItem]) {
     let curChildren = fileBrowserItem.children
-
-    // We don't just take newChildren because NSOutlineView look at the pointer equality for preserving the expanded
-    // states...
-    fileBrowserItem.children = newChildren.substituting(elements: curChildren)
 
     let curPreparedChildren = self.prepare(curChildren)
     let newPreparedChildren = self.prepare(newChildren)
 
     let indicesToInsert = newPreparedChildren
       .enumerated()
-      .filter { curPreparedChildren.contains($0.1) == false }
-      .map { $0.0 }
+      .filter { (_, fileBrowserItem) in curPreparedChildren.contains(fileBrowserItem) == false }
+      .map { (idx, _) in idx }
+
+    logger.debug("\(fileBrowserItem): \(curPreparedChildren) vs. \(indicesToInsert)")
+
+    // We don't just take newChildren because NSOutlineView look at the pointer equality for
+    // preserving the expanded states...
+    fileBrowserItem.children = newChildren.substituting(elements: curChildren)
 
     let parent = fileBrowserItem == self.root ? nil : fileBrowserItem
     self.insertItems(at: IndexSet(indicesToInsert), inParent: parent)
@@ -184,8 +180,16 @@ class FileOutlineView: NSOutlineView,
     // Sort the array to keep the order.
     let newChildren = self.sortedChildren(of: url)
 
+    self.beginUpdates()
     self.handleRemovals(for: fileBrowserItem, new: newChildren)
+    self.endUpdates()
+
+    self.beginUpdates()
     self.handleAdditions(for: fileBrowserItem, new: newChildren)
+    self.endUpdates()
+
+    fileBrowserItem.isChildrenScanned = true
+
     fileBrowserItem.children.filter { self.isItemExpanded($0) }.forEach(self.update)
   }
 
@@ -215,16 +219,22 @@ class FileOutlineView: NSOutlineView,
 // MARK: - NSOutlineViewDataSource
 extension FileOutlineView {
 
+  fileprivate func scanChildrenIfNecessary(_ fileBrowserItem: FileBrowserItem) {
+    guard fileBrowserItem.isChildrenScanned == false else {
+      return
+    }
+
+    fileBrowserItem.children = self.sortedChildren(of: fileBrowserItem.url)
+    fileBrowserItem.isChildrenScanned = true
+  }
+
   fileprivate func prepare(_ children: [FileBrowserItem]) -> [FileBrowserItem] {
-    return self.isShowHidden ? children : children.filter { !$0.url.isHidden }
+    return self.isShowHidden ? children : children.filter { !$0.isHidden }
   }
 
   func outlineView(_: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
     if item == nil {
-      if self.root.isChildrenScanned == false {
-        self.root.children = self.sortedChildren(of: self.cwd)
-        self.root.isChildrenScanned = true
-      }
+      self.scanChildrenIfNecessary(self.root)
 
       return self.prepare(self.root.children).count
     }
@@ -234,11 +244,7 @@ extension FileOutlineView {
     }
 
     if fileBrowserItem.url.isDir {
-      if fileBrowserItem.isChildrenScanned == false {
-        fileBrowserItem.children = self.sortedChildren(of: fileBrowserItem.url)
-        fileBrowserItem.isChildrenScanned = true
-      }
-
+      self.scanChildrenIfNecessary(fileBrowserItem)
       return self.prepare(fileBrowserItem.children).count
     }
 
@@ -290,8 +296,9 @@ extension FileOutlineView {
         return 0
       }
 
+      // + 2 just to have a buffer... -_-
       return ImageAndTextTableCell.width(with: fileBrowserItem.url.lastPathComponent)
-             + (CGFloat($0.level + 2) * (self.indentationPerLevel + 2)) // + 2 just to have a buffer... -_-
+             + (CGFloat($0.level + 2) * (self.indentationPerLevel + 2))
     }.max() ?? column.width
 
     guard column.minWidth != cellWidth else {
@@ -311,7 +318,8 @@ extension FileOutlineView {
       return result
     }.max() ?? column.width
 
-    let width = cellWidth + (CGFloat(level + 2) * (self.indentationPerLevel + 2)) // + 2 just to have a buffer... -_-
+    // + 2 just to have a buffer... -_-
+    let width = cellWidth + (CGFloat(level + 2) * (self.indentationPerLevel + 2))
 
     guard column.minWidth < width else {
       return
@@ -331,12 +339,15 @@ extension FileOutlineView {
       return nil
     }
 
-    let cachedCell = (self.make(withIdentifier: "file-view-row", owner: self) as? ImageAndTextTableCell)?.reset()
+    let cachedCell =
+      (self.make(withIdentifier: "file-view-row", owner: self) as? ImageAndTextTableCell)?.reset()
     let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
     cell.text = fileBrowserItem.url.lastPathComponent
     let icon = FileUtils.icon(forUrl: fileBrowserItem.url)
-    cell.image = fileBrowserItem.url.isHidden ? icon?.tinting(with: NSColor.white.withAlphaComponent(0.4)) : icon
+    cell.image = fileBrowserItem.isHidden
+      ? icon?.tinting(with: NSColor.white.withAlphaComponent(0.4))
+      : icon
 
     return cell
   }
@@ -487,11 +498,16 @@ fileprivate class FileBrowserItem: Hashable, Comparable, CustomStringConvertible
   }
 
   let url: URL
+  let isHidden: Bool
   var children: [FileBrowserItem] = []
   var isChildrenScanned = false
 
   init(_ url: URL) {
     self.url = url
+
+    // We cache the value here since we often get the value when the file is not there, eg when
+    // updating because the file gets deleted (in self.prepare() function)
+    self.isHidden = url.isHidden
   }
 
   func child(with url: URL) -> FileBrowserItem? {

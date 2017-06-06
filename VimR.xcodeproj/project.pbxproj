@@ -66,6 +66,7 @@
 		1929BB38525ECCEE8E39288A /* NeoVimView+Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDF3167E15E7F3349798 /* NeoVimView+Key.swift */; };
 		1929BB4A9B2FA42A64CCCC76 /* MainWindowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD83A13BF133741766CC /* MainWindowReducer.swift */; };
 		1929BC9EF45463113EBF3BCB /* NeoVimView+UiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B2AD3F9375F57F21AD58 /* NeoVimView+UiBridge.swift */; };
+		1929BCA03A420A83174FD7E7 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B96384F1ED979BD001C556F /* Logger.swift */; };
 		1929BCC7908DD899999B70BE /* AppearancePrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BED01F5D94BFCA4CF80F /* AppearancePrefReducer.swift */; };
 		1929BCC9D3604933DFF07E2E /* FileBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA5C7099CDEB04B76BA4 /* FileBrowser.swift */; };
 		1929BCF7F7B9CC5499A3F506 /* AdvancedPrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7039C5689CE45F53888 /* AdvancedPrefReducer.swift */; };
@@ -76,6 +77,7 @@
 		1929BDD4BFA4175D0A1B0BC3 /* NeoVimView+Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD8F08E21E3ECE9F84AB /* NeoVimView+Api.swift */; };
 		1929BDFDBDA7180D02ACB37E /* RxSwiftCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6C215ACCBE12672A8D7 /* RxSwiftCommonsTest.swift */; };
 		1929BE0DAEE9664C5BCFA211 /* States.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB6608B4F0E037CA0F4C /* States.swift */; };
+		1929BE407A667356E29386EF /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B96384F1ED979BD001C556F /* Logger.swift */; };
 		1929BEAE0592096BC1191B67 /* PrefPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B07A4A9209C88380E015 /* PrefPane.swift */; };
 		1929BEB90DCDAF7A2B68C886 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA6128BFDD54CA92F46E /* ColorUtils.swift */; };
 		1929BEDE1BE950EDA9497363 /* GeneralPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB55946DAEBF55D24048 /* GeneralPref.swift */; };
@@ -1583,6 +1585,7 @@
 				1929BF03FD6465F289AA80B2 /* ToolsPref.swift in Sources */,
 				1929B6C0393DE40E34F4A49A /* ToolsPrefReducer.swift in Sources */,
 				1929B542A071BD03C846F6EF /* PrefUtils.swift in Sources */,
+				1929BE407A667356E29386EF /* Logger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1608,6 +1611,7 @@
 				1929BFC70581084B5CE04A5B /* MatcherTests.swift in Sources */,
 				1929BAAD7336FDFF1F78E749 /* ScorerTest.swift in Sources */,
 				1929B8E90A1378E494D481E7 /* PrefUtilsTest.swift in Sources */,
+				1929BCA03A420A83174FD7E7 /* Logger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1733,7 +1737,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 196;
+				DYLIB_CURRENT_VERSION = 197;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1758,7 +1762,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 196;
+				DYLIB_CURRENT_VERSION = 197;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1995,7 +1999,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 196;
+				CURRENT_PROJECT_VERSION = 197;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -2045,7 +2049,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 196;
+				CURRENT_PROJECT_VERSION = 197;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

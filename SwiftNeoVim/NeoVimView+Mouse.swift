@@ -32,14 +32,9 @@ extension NeoVimView {
                                                         modifierFlags: event.modifierFlags,
                                                         cellPosition: cellPosition)
 
-    // We patched neovim such that it scrolls only 1 line for each scroll input.
-    // The default is 3 and for mouse scrolling we restore the original behavior.
     if isTrackpad == false {
-      (0..<3).forEach { _ in
-        self.agent.vimInput(vimInputX)
-        self.agent.vimInput(vimInputY)
-      }
-
+      self.agent.vimInput(vimInputX)
+      self.agent.vimInput(vimInputY)
       return
     }
 
