@@ -1,10 +1,9 @@
-# next
+# 0.15.1-199
 
 * Improved scroll performance.
 * GH-450: Bugfix: Crashes when a hidden file gets deleted in the `cwd`.
 * GH-395: Bugfix: Massive file system changes in the working directory causes VimR to freeze.
 * GH-430: Bugfix: The cursor disappears when using arrow keys in the command mode.
-* GH-450: Mild file browser refactoring
 * GH-403, GH-447: `Shift-Tab` works (thanks to @mkhl)
 * Dependencies updates:
     - neovim/neovim@1b2acb8d958c1c8e2f382c2de9c98586801fd9fe
