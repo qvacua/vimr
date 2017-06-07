@@ -7,31 +7,31 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.15.0-191</title>
+      <title>v0.15.1-199</title>
       <description><![CDATA[
     <ul>
-<li>We now compile <code>gettext</code> ourselves and do not use the pre-built version from homebrew: The library from homebrew is built for 10.12 and VimR's deployment target it 10.10. This mismatch produced many warnings during compilation time...</li>
-<li>GH-426: You can now turn off some or all tools, e.g. file browser.</li>
-<li>GH-434: Bugfix: <code>autochdir</code> does not work.</li>
-<li>Bugfix: When you hide all tools, the state does not get stored in the user defaults.</li>
-<li><code>set mouse=a</code> when launching the neovim process.</li>
+<li>Improved scroll performance.</li>
+<li>GH-450: Bugfix: Crashes when a hidden file gets deleted in the <code>cwd</code>.</li>
+<li>GH-395: Bugfix: Massive file system changes in the working directory causes VimR to freeze.</li>
+<li>GH-430: Bugfix: The cursor disappears when using arrow keys in the command mode.</li>
+<li>GH-403, GH-447: <code>Shift-Tab</code> works (thanks to @mkhl)</li>
 <li>Dependencies updates:<ul>
-<li>neovim/neovim@v0.2.0</li>
-<li>ReactiveX/RxSwift@3.4.1</li>
+<li>neovim/neovim@1b2acb8d958c1c8e2f382c2de9c98586801fd9fe</li>
+<li>ReactiveX/RxSwift@3.5.0</li>
 </ul>
 </li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.15.0-191
+        https://github.com/qvacua/vimr/releases/tag/v0.15.1-199
       </releaseNotesLink>
-      <pubDate>2017-05-10T22:49:32.340699</pubDate>
+      <pubDate>2017-06-07T21:24:52.138274</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.15.0-191/VimR-v0.15.0-191.tar.bz2"
-                 sparkle:version="191"
-                 sparkle:shortVersionString="0.15.0"
-                 sparkle:dsaSignature="MC4CFQDDPsnlMWRIUVRBoypcsVxM5vr+bQIVAI65Lwb5ysea6UFEtca2UYzM1Zcn"
-                 length="12370777"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.15.1-199/VimR-v0.15.1-199.tar.bz2"
+                 sparkle:version="199"
+                 sparkle:shortVersionString="0.15.1"
+                 sparkle:dsaSignature="MC0CFD0r2CZSJ0ey6wbnbOJUhrbDWPigAhUAuIZWeqf5OktjzXX4p1Ffucl9gR0="
+                 length="12666129"
                  type="application/octet-stream"/>
     </item>
   </channel>
