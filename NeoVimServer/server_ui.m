@@ -128,6 +128,20 @@ static void send_dirty_status() {
   [data release];
 }
 
+static void send_cwd() {
+  char_u *temp = xmalloc(MAXPATHL);
+  if (os_dirname(temp, MAXPATHL) == FAIL) {
+    xfree(temp);
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdCwdChanged];
+  }
+
+  NSString *pwd = [NSString stringWithCString:(const char *) temp encoding:NSUTF8StringEncoding];
+  xfree(temp);
+
+  NSData *resultData = [pwd dataUsingEncoding:NSUTF8StringEncoding];
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdCwdChanged data:resultData];
+}
+
 static void insert_marked_text(NSString *markedText) {
   _marked_text = [markedText retain]; // release when the final text is input in -vimInput
 
@@ -489,6 +503,11 @@ void custom_ui_autocmds_groups(
 
   @autoreleasepool {
     DLOG("got event %d for file %s in group %d.", event, fname, group);
+
+    if (event == EVENT_DIRCHANGED) {
+      send_cwd();
+      return;
+    }
 
     if (event == EVENT_TEXTCHANGED
       || event == EVENT_TEXTCHANGEDI

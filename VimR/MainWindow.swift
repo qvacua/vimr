@@ -187,9 +187,9 @@ class MainWindow: NSObject,
 
           self.windowController.setDocumentEdited(state.isDirty)
 
-          if self.neoVimView.cwd != state.cwd {
-            self.neoVimView.cwd = state.cwd
-          }
+//          if self.neoVimView.cwd != state.cwd {
+//            self.neoVimView.cwd = state.cwd
+//          }
 
           if state.previewTool.isReverseSearchAutomatically
              && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition)
@@ -227,9 +227,9 @@ class MainWindow: NSObject,
 
     self.updateNeoVimAppearance()
     self.neoVimView.delegate = self
-    if self.neoVimView.cwd != state.cwd {
-      self.neoVimView.cwd = state.cwd
-    }
+//    if self.neoVimView.cwd != state.cwd {
+//      self.neoVimView.cwd = state.cwd
+//    }
 
     self.open(urls: state.urlsToOpen)
 
@@ -444,9 +444,9 @@ extension MainWindow {
       let urls = panel.urls
       if self.neoVimView.allBuffers().count == 1 {
         let isTransient = self.neoVimView.allBuffers().first?.isTransient ?? false
-        if isTransient {
-          self.neoVimView.cwd = FileUtils.commonParent(of: urls)
-        }
+//        if isTransient {
+//          self.neoVimView.cwd = FileUtils.commonParent(of: urls)
+//        }
       }
       self.neoVimView.open(urls: urls)
     }

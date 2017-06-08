@@ -201,10 +201,6 @@ extension NeoVimView {
         self.tabChanged()
       }
 
-      if event == .DIRCHANGED {
-        self.cwdChanged()
-      }
-
       if event == .BUFREADPOST || event == .BUFWRITEPOST {
         self.currentBufferChanged(bufferHandle)
       }
@@ -235,6 +231,15 @@ extension NeoVimView {
       self.bridgeLogger.mark()
 
       NSBeep()
+    }
+  }
+
+  public func cwdChanged(_ cwd: String) {
+    gui.async {
+      self.bridgeLogger.debug(cwd)
+
+      self._cwd = URL(fileURLWithPath: cwd)
+      self.cwdChanged()
     }
   }
 

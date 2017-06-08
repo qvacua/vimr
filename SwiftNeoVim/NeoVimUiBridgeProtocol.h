@@ -128,6 +128,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setTitle:(NSString *)title;
 - (void)setIcon:(NSString *)icon;
 - (void)setDirtyStatus:(bool)dirty;
+- (void)cwdChanged:(NSString *)cwd;
 - (void)autoCommandEvent:(NeoVimAutoCommandEvent)event bufferHandle:(NSInteger)bufferHandle;
 
 /**
