@@ -234,7 +234,6 @@ class MainWindow: NSObject,
     self.open(urls: state.urlsToOpen)
 
     self.window.makeFirstResponder(self.neoVimView)
-    self.neoVimView.syncNeoVimWithBounds()
   }
 
   func show() {
