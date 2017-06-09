@@ -1,6 +1,6 @@
 # next
 
-* ...
+* GH-423: Bugfix: `lcd` and `tcd` does not work correctly when switching tabs.
 
 # 0.15.1-199
 
