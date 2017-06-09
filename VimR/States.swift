@@ -223,6 +223,8 @@ extension MainWindow {
 
     // to be cleaned
     var urlsToOpen = [URL: OpenMode]()
+    var currentBufferToSet: NeoVimBuffer?
+    var cwdToSet: URL?
     var viewToBeFocused: FocusableView? = FocusableView.neoVimView
 
     init(isAllToolsVisible: Bool, isToolButtonsVisible: Bool) {

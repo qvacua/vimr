@@ -91,7 +91,7 @@ class Context {
       .disposed(by: self.disposeBag)
 
 #if DEBUG
-//    actionSource.debug().subscribe().disposed(by: self.disposeBag)
+//    self.actionEmitter.observable.debug().subscribe().disposed(by: self.disposeBag)
 //    stateSource.debug().subscribe().disposed(by: self.disposeBag)
 #endif
   }
@@ -122,6 +122,8 @@ class Context {
 
   fileprivate func cleanUpAppState() {
     self.appState.mainWindows.keys.forEach { uuid in
+      self.appState.mainWindows[uuid]?.cwdToSet = nil
+      self.appState.mainWindows[uuid]?.currentBufferToSet = nil
       self.appState.mainWindows[uuid]?.viewToBeFocused = nil
       self.appState.mainWindows[uuid]?.urlsToOpen.removeAll()
     }

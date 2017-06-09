@@ -187,9 +187,9 @@ class MainWindow: NSObject,
 
           self.windowController.setDocumentEdited(state.isDirty)
 
-//          if self.neoVimView.cwd != state.cwd {
-//            self.neoVimView.cwd = state.cwd
-//          }
+          if let cwd = state.cwdToSet {
+            self.neoVimView.cwd = cwd
+          }
 
           if state.previewTool.isReverseSearchAutomatically
              && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition)
@@ -203,11 +203,8 @@ class MainWindow: NSObject,
 
           self.open(urls: state.urlsToOpen)
 
-          if self.currentBuffer != state.currentBuffer {
-            self.currentBuffer = state.currentBuffer
-            if let currentBuffer = self.currentBuffer {
-              self.neoVimView.select(buffer: currentBuffer)
-            }
+          if let currentBuffer = state.currentBufferToSet {
+            self.neoVimView.select(buffer: currentBuffer)
           }
 
           if self.defaultFont != state.appearance.font
@@ -248,7 +245,9 @@ class MainWindow: NSObject,
   fileprivate var currentBuffer: NeoVimBuffer?
 
   fileprivate let windowController: NSWindowController
-  fileprivate var window: NSWindow { return self.windowController.window! }
+  fileprivate var window: NSWindow {
+    return self.windowController.window!
+  }
 
   fileprivate var defaultFont: NSFont
   fileprivate var linespacing: CGFloat
@@ -444,9 +443,10 @@ extension MainWindow {
       let urls = panel.urls
       if self.neoVimView.allBuffers().count == 1 {
         let isTransient = self.neoVimView.allBuffers().first?.isTransient ?? false
-//        if isTransient {
-//          self.neoVimView.cwd = FileUtils.commonParent(of: urls)
-//        }
+
+        if isTransient {
+          self.neoVimView.cwd = FileUtils.commonParent(of: urls)
+        }
       }
       self.neoVimView.open(urls: urls)
     }

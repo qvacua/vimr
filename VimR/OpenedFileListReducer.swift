@@ -15,7 +15,7 @@ class OpenedFileListReducer {
     switch pair.action {
 
     case let .open(buffer):
-      state.currentBuffer = buffer
+      state.currentBufferToSet = buffer
 
     }
 
