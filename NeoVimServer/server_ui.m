@@ -100,6 +100,12 @@ static inline String vim_string_from(NSString *str) {
   return (String) { .data = (char *) str.cstr, .size = str.clength };
 }
 
+static void refresh_ui_screen(int type) {
+  update_screen(type);
+  setcursor();
+  ui_flush();
+}
+
 static bool has_dirty_docs() {
   FOR_ALL_BUFFERS(buffer) {
     if (buffer->b_p_bl == 0) {
@@ -665,9 +671,7 @@ void neovim_scroll(void **argv) {
       custom_ui_scroll(vertDir, (int) ABS(vert));
     }
 
-    update_screen(VALID);
-    setcursor();
-    ui_flush();
+    refresh_ui_screen(VALID);
 
     return nil;
   });
@@ -688,7 +692,7 @@ void neovim_select_window(void **argv) {
           }
 
           // nvim_set_current_win() does not seem to trigger a redraw.
-          ui_schedule_refresh();
+          refresh_ui_screen(0);
 
           return nil;
         }
