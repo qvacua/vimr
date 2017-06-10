@@ -7,17 +7,12 @@ VimR — Neovim Refined
 
 [![Bountysource](https://www.bountysource.com/badge/team?team_id=933&style=raised)](https://www.bountysource.com/teams/vimr?utm_source=VimR%20%E2%80%94%20Vim%20Refined&utm_medium=shield&utm_campaign=raised) [![Chat at https://gitter.im/vimr/vimr](https://badges.gitter.im/vimr/vimr.svg)](https://gitter.im/vimr/vimr?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Travis builds](https://travis-ci.org/qvacua/vimr.svg?branch=develop)](https://travis-ci.org/qvacua/vimr) [![Stories in Ready](https://badge.waffle.io/qvacua/vimr.svg?label=ready&title=Ready)](http://waffle.io/qvacua/vimr)
 
-![Screenshot 0](https://raw.githubusercontent.com/qvacua/vimr/develop/resources/screenshot0.png)
 ![Screenshot 1](https://raw.githubusercontent.com/qvacua/vimr/develop/resources/screenshot1.png)
-![Screenshot 2](https://raw.githubusercontent.com/qvacua/vimr/develop/resources/screenshot2.png)
-
-## UPDATE
-
-We recently, June 2016, started to migrate the MacVim backend (VimR-MacVim) to a Neovim backend. It's a complete rewrite in Swift for which we use Objective-C when appropriate.
+![Screenshot 0](https://raw.githubusercontent.com/qvacua/vimr/develop/resources/screenshot0.png)
 
 ## About
 
-Project VimR is an attempt to refine the Neovim experience (or it is just YA Neovim GUI for mac OS). The goal is to build an editor that uses Neovim inside with many of the convenience GUI features similar to those present in modern editors. We mainly use Swift, but also use Objective-C when its C-nature helps
+Project VimR is an attempt to refine the Neovim experience (or just YA Neovim GUI for mac OS). The goal is to build an editor that uses Neovim inside with many of the convenience GUI features similar to those present in modern editors. We mainly use Swift, but also use Objective-C when its C-nature helps.
 
 There are other working Neovim GUIs for OS X, e.g. [NyaoVim](https://github.com/rhysd/NyaoVim), [neovim-dot-app](https://github.com/rogual/neovim-dot-app), etc., why another?
 
@@ -52,21 +47,7 @@ Pre-built binaries can be found under [Releases](https://github.com/qvacua/vimr/
 * (Simple) File browser
 * Flexible workspace model a la JetBrain's IDEs
 
-## Planned Features
-
-The following are features we _plan_ to implement (some of which are already present in VimR-MacVim). Bear in mind that we only recently started to completely rewrite VimR, which means it will take some time to have them all implemented. In no particular order:
-
-* Some more standard OSX menu items.
-* Improved rendering and input handling, especially Hangul/Hanja (Why is Korean so important? 🤔): The current implementation is really ugly and messy...
-* ...
-
-We will gradually create [issues](https://github.com/qvacua/vimr/issues) with more details. For the current status see the [project board](https://waffle.io/qvacua/vimr).
-
-### Stuff with Question Marks
-
-* Minimap
-* Some kind of plugin system which utilizes the preview and the workspace model (does NSBundle-loading work in Swift, too? If yes, how does it go with code signing?)
-* ...
+We will gradually create feature [issues](https://github.com/qvacua/vimr/issues) with more details. For the current status see the [project board](https://waffle.io/qvacua/vimr).
 
 ## How to Build
 
