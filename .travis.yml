@@ -10,7 +10,7 @@ cache:
 
 before_install:
     - brew update
-    - brew upgrade carthage
+      #- brew upgrade carthage
     - brew install libtool automake ninja
 
 script:
