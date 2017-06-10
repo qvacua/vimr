@@ -19,7 +19,7 @@ class FileBrowserReducer {
       state.viewToBeFocused = .neoVimView
 
     case let .setAsWorkingDirectory(url):
-      state.cwd = url
+      state.cwdToSet = url
 
     case let .setShowHidden(show):
       state.fileBrowserShowHidden = show

@@ -7,23 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-197</title>
+      <title>SNAPSHOT-200</title>
       <description><![CDATA[
     <ul>
-<li>Further improve rendering performance</li>
-<li>Do not scroll too many lines when scrolling with the mouse wheel (cf. GH-237)</li>
+<li>GH-423: Bugfix: <code>lcd</code> and <code>tcd</code> does not work correctly when switching tabs.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/197
+        https://github.com/qvacua/vimr/releases/tag/snapshot/200
       </releaseNotesLink>
-      <pubDate>2017-06-06T07:17:40.181100</pubDate>
+      <pubDate>2017-06-10T08:25:25.985603</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/197/VimR-SNAPSHOT-197.tar.bz2"
-                 sparkle:version="197"
-                 sparkle:shortVersionString="SNAPSHOT-197"
-                 sparkle:dsaSignature="MC0CFQCpeuSSN+69MNUoKveStc6PZT5aXwIUBWrcLLc3RaaM1311sm1ybER+010="
-                 length="12600951"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/200/VimR-SNAPSHOT-200.tar.bz2"
+                 sparkle:version="200"
+                 sparkle:shortVersionString="SNAPSHOT-200"
+                 sparkle:dsaSignature="MC0CFQC8oeibQfdPpyJl52L3iNtl65qDuAIUSjVoXKWrErapY1KOYvsd+oaS2e8="
+                 length="12684077"
                  type="application/octet-stream"/>
     </item>
   </channel>

@@ -80,7 +80,7 @@ public class NeoVimView: NSView,
 
   public var cwd: URL {
     get {
-      return self.agent.pwd()
+      return self._cwd
     }
 
     set {
@@ -184,6 +184,7 @@ public class NeoVimView: NSView,
   var currentEmoji = "😎"
 
   var _font = NeoVimView.defaultFont
+  var _cwd = URL(fileURLWithPath: NSHomeDirectory())
   var shouldDrawCursor = false
 
   // MARK: - Private

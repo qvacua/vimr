@@ -10,11 +10,6 @@ extension NeoVimView {
   override public func setFrameSize(_ newSize: NSSize) {
     super.setFrameSize(newSize)
 
-    // initial resizing is done when grid has data
-    guard self.grid.hasData else {
-      return
-    }
-
     if self.inLiveResize || self.currentlyResizing {
       // TODO: Turn off live resizing for now.
       // self.resizeNeoVimUi(to: newSize)

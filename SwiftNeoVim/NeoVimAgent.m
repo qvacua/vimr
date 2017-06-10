@@ -604,6 +604,15 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return;
     }
 
+    case NeoVimServerMsgIdCwdChanged: {
+      if (data == nil) {
+        return;
+      }
+
+      [_bridge cwdChanged:[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]];
+      return;
+    }
+
     case NeoVimServerMsgIdAutoCommandEvent: {
       if (data.length == sizeof(NSUInteger) + sizeof(NSInteger)) {
         NSUInteger *values = (NSUInteger *) data.bytes;

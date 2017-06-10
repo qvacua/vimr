@@ -7,10 +7,6 @@ import Cocoa
 
 extension NeoVimView {
 
-  public func syncNeoVimWithBounds() {
-    self.resizeNeoVimUi(to: self.bounds.size)
-  }
-
   public func enterResizeMode() {
     self.currentlyResizing = true
     self.needsDisplay = true
