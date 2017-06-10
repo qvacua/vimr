@@ -224,9 +224,6 @@ class MainWindow: NSObject,
 
     self.updateNeoVimAppearance()
     self.neoVimView.delegate = self
-//    if self.neoVimView.cwd != state.cwd {
-//      self.neoVimView.cwd = state.cwd
-//    }
 
     self.open(urls: state.urlsToOpen)
 
