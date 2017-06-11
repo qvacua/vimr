@@ -46,9 +46,6 @@ class NeoVimWindow: NSObject, NSWindowDelegate, NeoVimViewDelegate {
 
   fileprivate let windowController: NSWindowController
   fileprivate let neoVimView: NeoVimView
-  fileprivate var defaultFont: NSFont = NeoVimView.defaultFont
-
-  fileprivate let fontManager = NSFontManager.shared()
 
   fileprivate func addViews() {
     self.neoVimView.configureForAutoLayout()
