@@ -7,31 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.15.1-199</title>
+      <title>v0.15.2-201</title>
       <description><![CDATA[
     <ul>
-<li>Improved scroll performance.</li>
-<li>GH-450: Bugfix: Crashes when a hidden file gets deleted in the <code>cwd</code>.</li>
-<li>GH-395: Bugfix: Massive file system changes in the working directory causes VimR to freeze.</li>
-<li>GH-430: Bugfix: The cursor disappears when using arrow keys in the command mode.</li>
-<li>GH-403, GH-447: <code>Shift-Tab</code> works (thanks to @mkhl)</li>
-<li>Dependencies updates:<ul>
-<li>neovim/neovim@1b2acb8d958c1c8e2f382c2de9c98586801fd9fe</li>
-<li>ReactiveX/RxSwift@3.5.0</li>
-</ul>
-</li>
+<li>Bugfix: The state of the tools of a new window is not the same as the last active window.</li>
+<li>GH-423: Bugfix: <code>lcd</code> and <code>tcd</code> does not work correctly when switching tabs.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.15.1-199
+        https://github.com/qvacua/vimr/releases/tag/v0.15.2-201
       </releaseNotesLink>
-      <pubDate>2017-06-07T21:24:52.138274</pubDate>
+      <pubDate>2017-06-11T14:15:36.817409</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.15.1-199/VimR-v0.15.1-199.tar.bz2"
-                 sparkle:version="199"
-                 sparkle:shortVersionString="0.15.1"
-                 sparkle:dsaSignature="MC0CFD0r2CZSJ0ey6wbnbOJUhrbDWPigAhUAuIZWeqf5OktjzXX4p1Ffucl9gR0="
-                 length="12666129"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.15.2-201/VimR-v0.15.2-201.tar.bz2"
+                 sparkle:version="201"
+                 sparkle:shortVersionString="0.15.2"
+                 sparkle:dsaSignature="MCwCFGEoVfLxtGHy898pMLPCXC92Ey7PAhREBWys7CkJlx+TZ1hcVReS16pbBw=="
+                 length="12687525"
                  type="application/octet-stream"/>
     </item>
   </channel>
