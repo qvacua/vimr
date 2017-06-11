@@ -18,8 +18,14 @@ class AppDelegateReducer {
 
     switch pair.action {
 
-    case let .newMainWindow(urls, cwd):
-      let mainWindow = self.newMainWindow(with: state, urls: urls, cwd: cwd)
+    case let .newMainWindow(urls, cwd, nvimArgs):
+      let mainWindow: MainWindow.State
+      if let args = nvimArgs {
+        mainWindow = self.newMainWindow(with: state, urls: [], cwd: cwd, nvimArgs: args)
+      } else {
+        mainWindow = self.newMainWindow(with: state, urls: urls, cwd: cwd)
+      }
+
       state.mainWindows[mainWindow.uuid] = mainWindow
 
     case let .openInKeyWindow(urls, cwd):
@@ -42,7 +48,11 @@ class AppDelegateReducer {
 
   fileprivate let baseServerUrl: URL
 
-  fileprivate func newMainWindow(with state: AppState, urls: [URL], cwd: URL) -> MainWindow.State {
+  fileprivate func newMainWindow(with state: AppState,
+                                 urls: [URL],
+                                 cwd: URL,
+                                 nvimArgs: [String]? = nil) -> MainWindow.State {
+
     var mainWindow = state.mainWindowTemplate
     mainWindow.uuid = UUID().uuidString
     mainWindow.isDirty = false
@@ -50,6 +60,7 @@ class AppDelegateReducer {
       htmlFile: nil,
       server: Marked(self.baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath))
     )
+    mainWindow.nvimArgs = nvimArgs
 
     mainWindow.urlsToOpen = urls.toDict { url in MainWindow.OpenMode.default }
 

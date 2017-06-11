@@ -216,6 +216,7 @@ extension MainWindow {
 
     var appearance = AppearanceState.default
     var useInteractiveZsh = false
+    var nvimArgs: [String]?
 
     // to be cleaned
     var urlsToOpen = [URL: OpenMode]()

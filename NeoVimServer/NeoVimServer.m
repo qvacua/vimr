@@ -29,6 +29,7 @@ static const double qTimeout = 10;
 
 @interface NeoVimServer ()
 
+- (NSArray<NSString *> *)nvimArgs;
 - (NSCondition *)outputCondition;
 - (void)handleQuitMsg;
 
@@ -61,7 +62,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     switch (msgid) {
 
       case NeoVimAgentMsgIdAgentReady:
-        start_neovim();
+        start_neovim(neoVimServer.nvimArgs);
         return NULL;
 
       case NeoVimAgentMsgIdQuit:
@@ -110,6 +111,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 @implementation NeoVimServer {
   NSString *_localServerName;
   NSString *_remoteServerName;
+  NSArray<NSString *> *_nvimArgs;
 
   CFMessagePortRef _remoteServerPort;
 
@@ -120,11 +122,18 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   NSCondition *_outputCondition;
 }
 
+- (NSArray<NSString *> *)nvimArgs {
+  return _nvimArgs;
+}
+
 - (NSCondition *)outputCondition {
   return _outputCondition;
 }
 
-- (instancetype)initWithLocalServerName:(NSString *)localServerName remoteServerName:(NSString *)remoteServerName {
+- (instancetype)initWithLocalServerName:(NSString *)localServerName
+                       remoteServerName:(NSString *)remoteServerName
+                               nvimArgs:(NSArray<NSString*> *)nvimArgs {
+
   self = [super init];
   if (self == nil) {
     return nil;
@@ -134,6 +143,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
   _localServerName = localServerName;
   _remoteServerName = remoteServerName;
+  _nvimArgs = nvimArgs;
 
   _localServerThread = [[NSThread alloc] initWithTarget:self selector:@selector(runLocalServer) object:nil];
   _localServerThread.name = localServerName;

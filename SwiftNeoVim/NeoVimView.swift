@@ -14,9 +14,16 @@ public class NeoVimView: NSView,
   public struct Config {
 
     var useInteractiveZsh: Bool
+    var cwd: URL
+    var nvimArgs: [String]?
 
-    public init(useInteractiveZsh: Bool) {
+    public init(useInteractiveZsh: Bool,
+                cwd: URL = URL(fileURLWithPath: NSHomeDirectory()),
+                nvimArgs: [String]? = nil) {
+
       self.useInteractiveZsh = useInteractiveZsh
+      self.cwd = cwd
+      self.nvimArgs = nvimArgs
     }
   }
 
@@ -115,6 +122,8 @@ public class NeoVimView: NSView,
     // We cannot set bridge in init since self is not available before super.init()...
     self.agent.bridge = self
     self.agent.useInteractiveZsh = config.useInteractiveZsh
+    self.agent.cwd = config.cwd
+    self.agent.nvimArgs = config.nvimArgs
 
     self.launchNeoVim()
   }

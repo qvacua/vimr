@@ -166,10 +166,27 @@ static void delete_marked_text() {
 }
 
 static void run_neovim(void *arg __unused) {
-  char *argv[1];
-  argv[0] = "nvim";
+  int argc = 1;
+  char **argv;
 
-  nvim_main(1, argv);
+  @autoreleasepool {
+    NSArray<NSString *> *nvimArgs = (NSArray *) arg;
+    NSLog(@"%@", nvimArgs);
+
+    argc = (int) nvimArgs.count + 1;
+    argv = (char **) malloc((argc + 1) * sizeof(char *));
+
+    argv[0] = "nvim";
+    for (int i = 0; i < nvimArgs.count; i++) {
+      argv[i + 1] = (char *) nvimArgs[(NSUInteger) i].cstr;
+    }
+
+    [nvimArgs release]; // retained in start_neovim()
+  }
+
+  nvim_main(argc, argv);
+
+  free(argv);
 }
 
 static void set_ui_size(UIBridgeData *bridge, int width, int height) {
@@ -543,7 +560,7 @@ void custom_ui_autocmds_groups(
 }
 
 #pragma mark Other help functions
-void start_neovim() {
+void start_neovim(NSArray<NSString *> *args) {
   // set $VIMRUNTIME to ${RESOURCE_PATH_OF_XPC_BUNDLE}/runtime
   NSString *bundlePath = [NSBundle bundleForClass:[NeoVimServer class]].bundlePath;
   NSString *resourcesPath = [bundlePath.stringByDeletingLastPathComponent
@@ -557,7 +574,7 @@ void start_neovim() {
   uv_mutex_init(&_mutex);
   uv_cond_init(&_condition);
 
-  uv_thread_create(&_nvim_thread, run_neovim, NULL);
+  uv_thread_create(&_nvim_thread, run_neovim, [args retain]); // released in run_neovim()
   DLOG("NeoVim started");
 
   // continue only after our UI main code for neovim has been fully initialized

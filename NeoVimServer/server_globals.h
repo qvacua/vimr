@@ -11,7 +11,7 @@
 extern NeoVimServer *_neovim_server;
 extern CFRunLoopRef _mainRunLoop;
 
-extern void start_neovim();
+extern void start_neovim(NSArray<NSString *> *args);
 extern void quit_neovim();
 
 extern void neovim_select_window(void **argv);

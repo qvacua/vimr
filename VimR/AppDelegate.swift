@@ -8,23 +8,12 @@ import RxSwift
 import PureLayout
 import Sparkle
 
-/// Keep the rawValues in sync with Action in the `vimr` Python script.
-fileprivate enum VimRUrlAction: String {
-  case activate = "activate"
-  case open = "open"
-  case newWindow = "open-in-new-window"
-  case separateWindows = "open-in-separate-windows"
-}
-
-fileprivate let filePrefix = "file="
-fileprivate let cwdPrefix = "cwd="
-
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
   enum Action {
 
-    case newMainWindow(urls: [URL], cwd: URL)
+    case newMainWindow(urls: [URL], cwd: URL, nvimArgs: [String]?)
     case openInKeyWindow(urls: [URL], cwd: URL)
 
     case preferences
@@ -47,7 +36,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       }
     }
     initialAppState.mainWindowTemplate.htmlPreview.server
-      = Marked(baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath))
+    = Marked(baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath))
 
     self.stateContext = Context(baseServerUrl: baseServerUrl, state: initialAppState)
     self.emit = self.stateContext.actionEmitter.typedEmit()
@@ -172,7 +161,7 @@ extension AppDelegate {
   // For drag & dropping files on the App icon.
   func application(_ sender: NSApplication, openFiles filenames: [String]) {
     let urls = filenames.map { URL(fileURLWithPath: $0) }
-    self.emit(.newMainWindow(urls: urls, cwd: FileUtils.userHomeUrl))
+    self.emit(.newMainWindow(urls: urls, cwd: FileUtils.userHomeUrl, nvimArgs: nil))
 
     sender.reply(toOpenOrPrint: .success)
   }
@@ -216,13 +205,24 @@ extension AppDelegate {
     switch action {
 
     case .activate, .newWindow:
-      self.emit(.newMainWindow(urls: urls, cwd: cwd))
+      self.emit(.newMainWindow(urls: urls, cwd: cwd, nvimArgs: nil))
 
     case .open:
       self.emit(.openInKeyWindow(urls: urls, cwd: cwd))
 
     case .separateWindows:
-      urls.forEach { self.emit(.newMainWindow(urls: [$0], cwd: cwd)) }
+      urls.forEach { self.emit(.newMainWindow(urls: [$0], cwd: cwd, nvimArgs: nil)) }
+
+    case .nvim:
+      guard let nvimArgs = queryParams?
+        .filter({ $0.hasPrefix(nvimArgsPrefix) })
+        .flatMap({ $0.without(prefix: nvimArgsPrefix).removingPercentEncoding }) else {
+
+        break
+      }
+
+      NSLog("app delegate: \(nvimArgs)")
+      self.emit(.newMainWindow(urls: [], cwd: cwd, nvimArgs: nvimArgs))
 
     }
   }
@@ -232,7 +232,7 @@ extension AppDelegate {
 extension AppDelegate {
 
   @IBAction func newDocument(_ sender: Any?) {
-    self.emit(.newMainWindow(urls: [], cwd: FileUtils.userHomeUrl))
+    self.emit(.newMainWindow(urls: [], cwd: FileUtils.userHomeUrl, nvimArgs: nil))
   }
 
   @IBAction func openInNewWindow(_ sender: Any?) {
@@ -256,7 +256,21 @@ extension AppDelegate {
       let urls = panel.urls
       let commonParentUrl = FileUtils.commonParent(of: urls)
 
-      self.emit(.newMainWindow(urls: urls, cwd: commonParentUrl))
+      self.emit(.newMainWindow(urls: urls, cwd: commonParentUrl, nvimArgs: nil))
     }
   }
 }
+
+/// Keep the rawValues in sync with Action in the `vimr` Python script.
+fileprivate enum VimRUrlAction: String {
+  case activate = "activate"
+  case open = "open"
+  case newWindow = "open-in-new-window"
+  case separateWindows = "open-in-separate-windows"
+  case nvim = "nvim"
+}
+
+
+fileprivate let filePrefix = "file="
+fileprivate let cwdPrefix = "cwd="
+fileprivate let nvimArgsPrefix = "nvim-args="
