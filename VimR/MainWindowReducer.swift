@@ -67,7 +67,6 @@ class MainWindowReducer {
                                                  dimension: tool.dimension,
                                                  open: tool.isSelected)
 
-
         if tool.isSelected {
           state.tools
             .filter { $0 != toolId && $1.location == tool.location }
