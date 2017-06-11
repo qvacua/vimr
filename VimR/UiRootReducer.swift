@@ -21,6 +21,15 @@ class UiRootReducer {
         from: appState.mainWindowTemplate, new: appState.mainWindows[uuid] ?? appState.mainWindowTemplate
       )
 
+    case let .setToolsState(tools):
+      appState.mainWindowTemplate.orderedTools = tools.map { $0.0 }
+
+    case let .toggleAllTools(value):
+      appState.mainWindowTemplate.isAllToolsVisible = value
+
+    case let .toggleToolButtons(value):
+      appState.mainWindowTemplate.isToolButtonsVisible = value
+
     case .close:
       if appState.currentMainWindowUuid == uuid, let mainWindowToClose = appState.mainWindows[uuid] {
         appState.mainWindowTemplate = self.mainWindowTemplate(from: appState.mainWindowTemplate,
@@ -45,6 +54,7 @@ class UiRootReducer {
     result.isAllToolsVisible = new.isAllToolsVisible
     result.isToolButtonsVisible = new.isToolButtonsVisible
     result.tools = new.tools
+    result.orderedTools = new.orderedTools
     result.previewTool = new.previewTool
     result.fileBrowserShowHidden = new.fileBrowserShowHidden
     result.htmlPreview = .default
