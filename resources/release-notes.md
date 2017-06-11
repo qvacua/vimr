@@ -1,5 +1,6 @@
-# next
+# 0.15.2-201
 
+* Bugfix: The state of the tools of a new window is not the same as the last active window.
 * GH-423: Bugfix: `lcd` and `tcd` does not work correctly when switching tabs.
 
 # 0.15.1-199
