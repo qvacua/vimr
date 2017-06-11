@@ -175,12 +175,6 @@ class MainWindow: NSObject,
             return
           }
 
-          if state.close && !self.isClosing {
-            self.closeAllNeoVimWindowsWithoutSaving()
-            self.isClosing = true
-            return
-          }
-
           if state.viewToBeFocused != nil, case .neoVimView = state.viewToBeFocused! {
             self.window.makeFirstResponder(self.neoVimView)
           }
@@ -216,10 +210,11 @@ class MainWindow: NSObject,
 
             self.updateNeoVimAppearance()
           }
-        },
+        }/*,
         onCompleted: {
-          self.windowController.close()
-        })
+          NSLog("Completed!!!!")
+//          self.windowController.close()
+        }*/)
       .disposed(by: self.disposeBag)
 
     self.updateNeoVimAppearance()
@@ -232,6 +227,12 @@ class MainWindow: NSObject,
 
   func show() {
     self.windowController.showWindow(self)
+  }
+
+  // The following should only be used when Cmd-Q'ing
+  func quitNeoVimWithoutSaving() {
+    self.isClosing = true
+    self.neoVimView.quitNeoVimWithoutSaving()
   }
 
   fileprivate let emit: (UuidAction<Action>) -> Void
@@ -274,10 +275,6 @@ class MainWindow: NSObject,
   fileprivate let cursorDebouncer = Debouncer<Action>(interval: 0.75)
 
   fileprivate var isClosing = false
-
-  fileprivate func closeAllNeoVimWindowsWithoutSaving() {
-    self.neoVimView.quitNeoVimWithoutSaving()
-  }
 
   fileprivate func updateNeoVimAppearance() {
     self.neoVimView.font = self.defaultFont
@@ -331,6 +328,7 @@ extension MainWindow {
 
   func neoVimStopped() {
     self.isClosing = true
+    self.windowController.close()
     self.emit(self.uuidAction(for: .close))
   }
 

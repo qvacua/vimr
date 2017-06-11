@@ -28,10 +28,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     case openInKeyWindow(urls: [URL], cwd: URL)
 
     case preferences
-
-    case cancelQuit
-    case quitWithoutSaving
-    case quit
   }
 
   @IBOutlet var debugMenu: NSMenuItem?
@@ -157,18 +153,16 @@ extension AppDelegate {
       alert.alertStyle = .warning
 
       if alert.runModal() == NSAlertSecondButtonReturn {
-        self.emit(.quitWithoutSaving)
-      } else {
-        self.emit(.cancelQuit)
+        self.uiRoot.prepareQuit()
+        return .terminateNow
       }
 
       return .terminateCancel
     }
 
     if self.uiRoot.hasMainWindows {
-      self.emit(.quit)
-
-      return .terminateCancel
+      self.uiRoot.prepareQuit()
+      return .terminateNow
     }
 
     // There are no open main window, then just quit.

@@ -21,7 +21,6 @@ struct AppState: SerializableState {
   var currentMainWindowUuid: String?
 
   var mainWindows: [String: MainWindow.State] = [:]
-  var quitWhenNoMainWindow = false
 
   var openQuickly = OpenQuicklyWindow.State.default
 
@@ -217,9 +216,6 @@ extension MainWindow {
 
     var appearance = AppearanceState.default
     var useInteractiveZsh = false
-
-    // transient^2
-    var close = false
 
     // to be cleaned
     var urlsToOpen = [URL: OpenMode]()
