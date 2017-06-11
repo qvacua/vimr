@@ -41,7 +41,9 @@ class NeoVimWindow: NSObject, NSWindowDelegate, NeoVimViewDelegate {
   }
 
   func closeNeoVimWithoutSaving() {
-    self.neoVimView.closeAllWindowsWithoutSaving()
+    self.neoVimView.quitNeoVimWithoutSaving()
+    self.delegate?.neoVimWindowDidClose(neoVimWindow: self)
+    self.windowController.close()
   }
 
   fileprivate let windowController: NSWindowController

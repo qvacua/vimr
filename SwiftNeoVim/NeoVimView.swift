@@ -186,6 +186,8 @@ public class NeoVimView: NSView,
   var _font = NeoVimView.defaultFont
   var _cwd = URL(fileURLWithPath: NSHomeDirectory())
   var shouldDrawCursor = false
+  let quitNeoVimCondition = NSCondition()
+  var isNeoVimQuitSuccessful = false
 
   // MARK: - Private
   fileprivate var _linespacing = NeoVimView.defaultLinespacing

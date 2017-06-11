@@ -276,7 +276,7 @@ class MainWindow: NSObject,
   fileprivate var isClosing = false
 
   fileprivate func closeAllNeoVimWindowsWithoutSaving() {
-    self.neoVimView.closeAllWindowsWithoutSaving()
+    self.neoVimView.quitNeoVimWithoutSaving()
   }
 
   fileprivate func updateNeoVimAppearance() {

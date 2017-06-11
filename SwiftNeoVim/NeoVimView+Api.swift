@@ -116,8 +116,13 @@ extension NeoVimView {
     self.exec(command: "qa")
   }
 
-  public func closeAllWindowsWithoutSaving() {
+  public func quitNeoVimWithoutSaving() {
     self.exec(command: "qa!")
+
+    self.quitNeoVimCondition.lock()
+    defer { self.quitNeoVimCondition.unlock() }
+    while self.isNeoVimQuitSuccessful == false
+          && self.quitNeoVimCondition.wait(until: Date(timeIntervalSinceNow: 10)) {}
   }
 
   public func vimOutput(of command: String) -> String {

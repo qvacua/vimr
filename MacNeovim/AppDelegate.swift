@@ -9,7 +9,6 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate, NeoVimWindowDelegate {
 
   fileprivate var neoVimWindows = Set<NeoVimWindow>()
-  fileprivate var quit = false
 }
 
 // MARK: - NSApplicationDelegate
@@ -28,8 +27,7 @@ extension AppDelegate {
     let isDirty = self.neoVimWindows.reduce(false) { $0 ? true : $1.window.isDocumentEdited }
     guard isDirty else {
       self.neoVimWindows.forEach { $0.closeNeoVimWithoutSaving() }
-      self.quit = true
-      return .terminateCancel
+      return .terminateNow
     }
 
     let alert = NSAlert()
@@ -40,8 +38,7 @@ extension AppDelegate {
 
     if alert.runModal() == NSAlertSecondButtonReturn {
       self.neoVimWindows.forEach { $0.closeNeoVimWithoutSaving() }
-      self.quit = true
-      return .terminateCancel
+      return .terminateNow
     }
 
     return .terminateCancel
@@ -53,10 +50,6 @@ extension AppDelegate {
 
   func neoVimWindowDidClose(neoVimWindow: NeoVimWindow) {
     self.neoVimWindows.remove(neoVimWindow)
-
-    if self.quit {
-      NSApp.terminate(self)
-    }
   }
 }
 
