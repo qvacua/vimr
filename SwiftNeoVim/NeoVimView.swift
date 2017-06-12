@@ -124,8 +124,6 @@ public class NeoVimView: NSView,
     self.agent.useInteractiveZsh = config.useInteractiveZsh
     self.agent.cwd = config.cwd
     self.agent.nvimArgs = config.nvimArgs
-
-    self.launchNeoVim()
   }
 
   convenience override public init(frame rect: NSRect) {
@@ -197,28 +195,9 @@ public class NeoVimView: NSView,
   var shouldDrawCursor = false
   let quitNeoVimCondition = NSCondition()
   var isNeoVimQuitSuccessful = false
+  var isInitialResize = true
 
   // MARK: - Private
   fileprivate var _linespacing = NeoVimView.defaultLinespacing
 
-  fileprivate func launchNeoVim() {
-    self.logger.info("=== Starting neovim...")
-    let noErrorDuringInitialization = self.agent.runLocalServerAndNeoVim()
-
-    // Neovim is ready now: resize neovim to bounds.
-    self.agent.vimCommand("set mouse=a")
-    self.agent.setBoolOption("title", to: true)
-    self.agent.setBoolOption("termguicolors", to: true)
-
-    if noErrorDuringInitialization == false {
-      self.logger.fault("There was an error launching neovim.")
-
-      let alert = NSAlert()
-      alert.alertStyle = .warning
-      alert.messageText = "Error during initialization"
-      alert.informativeText = "There was an error during the initialization of NeoVim. " +
-                              "Use :messages to view the error messages."
-      alert.runModal()
-    }
-  }
 }

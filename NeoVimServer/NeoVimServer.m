@@ -61,9 +61,11 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
     switch (msgid) {
 
-      case NeoVimAgentMsgIdAgentReady:
-        start_neovim(neoVimServer.nvimArgs);
+      case NeoVimAgentMsgIdAgentReady: {
+        NSInteger *values = (NSInteger *) CFDataGetBytePtr(data);
+        start_neovim(values[0], values[1], neoVimServer.nvimArgs);
         return NULL;
+      }
 
       case NeoVimAgentMsgIdQuit:
         [neoVimServer handleQuitMsg];

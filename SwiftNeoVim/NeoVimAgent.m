@@ -87,6 +87,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   NSCondition *_neoVimReadyCondition;
   bool _isInitErrorPresent;
 
+  NSInteger _initialWidth;
+  NSInteger _initialHeight;
+
   volatile uint32_t _neoVimIsQuitting;
 }
 
@@ -101,6 +104,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   _neoVimIsReady = NO;
   _neoVimReadyCondition = [NSCondition new];
   _isInitErrorPresent = NO;
+
+  _initialWidth = 30;
+  _initialHeight = 15;
 
   _neoVimIsQuitting = 0;
 
@@ -193,7 +199,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   [writeHandle closeFile];
 }
 
-- (bool)runLocalServerAndNeoVim {
+- (bool)runLocalServerAndNeoVimWithWidth:(NSInteger)width height:(NSInteger)height {
+  _initialWidth = width;
+  _initialHeight = height;
+
   _localServerThread = [[NSThread alloc] initWithTarget:self selector:@selector(runLocalServer) object:nil];
   [_localServerThread start];
 
@@ -393,7 +402,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       (__bridge CFStringRef) [self remoteServerName]
   );
 
-  [self sendMessageWithId:NeoVimAgentMsgIdAgentReady data:nil expectsReply:NO];
+  NSInteger values[] = { _initialWidth, _initialHeight };
+  NSData *data = [NSData dataWithBytes:values length:2 * sizeof(NSInteger)];
+
+  [self sendMessageWithId:NeoVimAgentMsgIdAgentReady data:data expectsReply:NO];
 }
 
 - (NSData *)sendMessageWithId:(NeoVimAgentMsgId)msgid data:(NSData *)data expectsReply:(bool)expectsReply {

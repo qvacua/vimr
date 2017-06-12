@@ -95,6 +95,9 @@ static NSString *_backspace = nil;
 
 static bool _dirty = false;
 
+static NSInteger _initialWidth = 30;
+static NSInteger _initialHeight = 15;
+
 #pragma mark Helper functions
 static inline String vim_string_from(NSString *str) {
   return (String) { .data = (char *) str.cstr, .size = str.clength };
@@ -210,7 +213,7 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   _server_ui_data->bridge = bridge;
   _server_ui_data->loop = &loop;
 
-  set_ui_size(bridge, 30, 15);
+  set_ui_size(bridge, (int) _initialWidth, (int) _initialHeight);
 
   _server_ui_data->stop = false;
   CONTINUE(bridge);
@@ -559,7 +562,10 @@ void custom_ui_autocmds_groups(
 }
 
 #pragma mark Other help functions
-void start_neovim(NSArray<NSString *> *args) {
+void start_neovim(NSInteger width, NSInteger height, NSArray<NSString *> *args) {
+  _initialWidth = width;
+  _initialHeight = height;
+
   // set $VIMRUNTIME to ${RESOURCE_PATH_OF_XPC_BUNDLE}/runtime
   NSString *bundlePath = [NSBundle bundleForClass:[NeoVimServer class]].bundlePath;
   NSString *resourcesPath = [bundlePath.stringByDeletingLastPathComponent
