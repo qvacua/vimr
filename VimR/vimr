@@ -7,26 +7,20 @@ import os
 import uuid
 
 
+class Action:
+    ACTIVATE = "activate"
+    OPEN = "open"
+    NEW_WINDOW = "open-in-new-window"
+    SEPARATE_WINDOWS = "open-in-separate-windows"
+    NVIM = "nvim"
+
+
 class QueryParamKey:
     PIPE_PATH = "pipe-path"
     CWD = "cwd"
     FILE = "file"
     NVIM_ARGS = "nvim-args"
     WAIT = "wait"
-
-
-pipe_path = "/tmp/com_qvacua_vimr_cli_pipe_{0}".format(str(uuid.uuid4()))
-
-if os.path.exists(pipe_path):
-    os.remove(pipe_path)
-
-try:
-    os.mkfifo(pipe_path, 0600)
-except OSError as error:
-    print("ERROR: {0}\n"
-          "{1} could not be mkfifo'ed.\n"
-          "Please go to https://github.com/qvacua/vimr and create an issue.".format(error, pipe_path))
-    raise
 
 
 def wait_for_ui_to_close():
@@ -80,13 +74,18 @@ def vimr(action, args):
     call_open(action, query_params, args)
 
 
-class Action:
-    ACTIVATE = "activate"
-    OPEN = "open"
-    NEW_WINDOW = "open-in-new-window"
-    SEPARATE_WINDOWS = "open-in-separate-windows"
-    NVIM = "nvim"
+pipe_path = "/tmp/com_qvacua_vimr_cli_pipe_{0}".format(str(uuid.uuid4()))
 
+if os.path.exists(pipe_path):
+    os.remove(pipe_path)
+
+try:
+    os.mkfifo(pipe_path, 0600)
+except OSError as error:
+    print("ERROR: {0}\n"
+          "{1} could not be mkfifo'ed.\n"
+          "Please go to https://github.com/qvacua/vimr and create an issue.".format(error, pipe_path))
+    raise
 
 description = """
 Open files in VimR: By default all files are open in tabs in the front most window or in a new window if there is none.
