@@ -4,14 +4,17 @@ import urllib
 import subprocess
 import argparse
 import os
-import errno
 import uuid
 
-from pprint import pprint
 
-temp_dir = "/tmp"
-pipe_uuid = str(uuid.uuid4())
-pipe_path = "{0}/{1}".format(temp_dir, pipe_uuid)
+class QueryParamKey:
+    PIPE_PATH = "pipe-path"
+    CWD = "cwd"
+    FILE = "file"
+    NVIM_ARGS = "nvim-args"
+
+
+pipe_path = "/tmp/{0}".format(str(uuid.uuid4()))
 
 
 def wait_for_ui_to_close():
@@ -21,7 +24,9 @@ def wait_for_ui_to_close():
     try:
         os.mkfifo(pipe_path)
     except OSError as error:
-        print("ERROR: {0}, please go to https://github.com/qvacua/vimr and create an issue.".format(error))
+        print("ERROR: {0}\n"
+              "{1} could not be mkfifo'ed.\n"
+              "Please go to https://github.com/qvacua/vimr and create an issue.".format(error, pipe_path))
         raise
 
     with open(pipe_path, 'r') as fifo:
@@ -32,11 +37,13 @@ def wait_for_ui_to_close():
     os.remove(pipe_path)
 
 
-def call_open(arg, dry_run=False):
+def call_open(action, query_params, dry_run=False):
+    url = "vimr://{0}?{1}".format(action, urllib.urlencode(query_params, True).replace('+', '%20'))
+
     if dry_run:
-        print("/usr/bin/open {0}".format(arg))
+        print("/usr/bin/open {0}".format(url))
     else:
-        subprocess.call(["/usr/bin/open", arg])
+        subprocess.call(["/usr/bin/open", url])
 
 
 def abspath(path):
@@ -44,18 +51,15 @@ def abspath(path):
 
 
 def vimr_nvim(args=None, dry_run=False):
-    cwd = os.getcwd()
-
     query_params = {
-        "pipe-path": pipe_path,
-        "cwd": cwd
+        QueryParamKey.PIPE_PATH: pipe_path,
+        QueryParamKey.CWD: os.getcwd()
     }
 
     if args:
-        query_params["nvim-args"] = args
+        query_params[QueryParamKey.NVIM_ARGS] = args
 
-    url = "vimr://{0}?{1}".format(action, urllib.urlencode(query_params, True).replace('+', '%20'))
-    call_open(url, dry_run)
+    call_open(Action.NVIM, query_params, dry_run)
 
 
 def vimr(action, args=None, dry_run=False):
@@ -64,16 +68,15 @@ def vimr(action, args=None, dry_run=False):
         cwd = abspath(args.cwd)
 
     query_params = {
-        "pipe-path": pipe_path,
-        "cwd": cwd
+        QueryParamKey.PIPE_PATH: pipe_path,
+        QueryParamKey.CWD: cwd
     }
 
     files = args.file
     if files:
-        query_params["file"] = [abspath(f) for f in files]
+        query_params[QueryParamKey.FILE] = [abspath(f) for f in files]
 
-    url = "vimr://{0}?{1}".format(action, urllib.urlencode(query_params, True).replace('+', '%20'))
-    call_open(url, dry_run)
+    call_open(action, query_params, dry_run)
 
 
 class Action:
@@ -82,6 +85,7 @@ class Action:
     NEW_WINDOW = "open-in-new-window"
     SEPARATE_WINDOWS = "open-in-separate-windows"
     NVIM = "nvim"
+
 
 description = """
 Open files in VimR: By default all files are open in tabs in the front most window or in a new window if there is none.
@@ -92,10 +96,12 @@ parser = argparse.ArgumentParser(description=description)
 
 parser.add_argument("--dry-run", action="store_true", dest="dry_run", help="Just print the 'open' command.")
 parser.add_argument("--cwd", action="store", help="Set the working directory.")
-parser.add_argument("--nvim", action="store_true", help="All other arguments will be passthrough to nvim.")
 parser.add_argument("--wait",
                     action="store_true",
                     help="This command line tool will exit when the corresponding UI window is closed.")
+parser.add_argument("--nvim",
+                        action="store_true",
+                        help="All other arguments (except --dry-run and --wait) will be passed over to nvim.")
 
 group = parser.add_mutually_exclusive_group()
 # no option => Open files in tabs in the front most window.
@@ -107,8 +113,7 @@ parser.add_argument("file", nargs="*")
 args, _ = parser.parse_known_args()
 dry_run = args.dry_run
 
-if args.nvim is not None:
-    action = Action.NVIM
+if args.nvim:
     nvim_parser = argparse.ArgumentParser()
     nvim_parser.add_argument("--nvim", action="store_true")
     nvim_parser.add_argument("--wait", action="store_true")
