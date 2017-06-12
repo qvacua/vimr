@@ -328,16 +328,20 @@ class MainWindow: NSObject,
 extension MainWindow {
 
   func neoVimStopped() {
-    if let cliPipePath = self.cliPipePath {
-      let fd = Darwin.open(cliPipePath, O_WRONLY)
-      let handle = FileHandle(fileDescriptor: fd)
-      handle.closeFile()
-      Darwin.close(fd)
-    }
-
     self.isClosing = true
     self.windowController.close()
     self.emit(self.uuidAction(for: .close))
+
+    if let cliPipePath = self.cliPipePath {
+      let fd = Darwin.open(cliPipePath, O_WRONLY)
+      guard fd != -1 else {
+        return
+      }
+
+      let handle = FileHandle(fileDescriptor: fd)
+      handle.closeFile()
+      _ = Darwin.close(fd)
+    }
   }
 
   func set(title: String) {
