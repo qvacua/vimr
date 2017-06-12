@@ -1,3 +1,13 @@
+# next
+
+* GH-302, GH-421: The `vimr` CLI tool has two new options:
+  - `--wait`: When present, the `vimr` CLI tool will access only after the corresponding VimR window has been closed. This is particularly useful when combined with the `--nvim` option as described below.
+  - `--nvim`: When present, all command line arguments except `--dry-run` and `--wait`, see above, will be passed over to the background `nvim` process. This means that you can now use for example `-d` option to activate the diffmode. For example to use VimR as `git difftool` add the following to your `~/.gitconfig` 
+    ```
+    [difftool "vimrdiff"]
+      cmd = vimr --wait --nvim -d $LOCAL $REMOTE
+    ```
+
 # 0.15.2-201
 
 * Bugfix: The state of the tools of a new window is not the same as the last active window.
