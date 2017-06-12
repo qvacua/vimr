@@ -12,35 +12,38 @@ class QueryParamKey:
     CWD = "cwd"
     FILE = "file"
     NVIM_ARGS = "nvim-args"
+    WAIT = "wait"
 
 
-pipe_path = "/tmp/{0}".format(str(uuid.uuid4()))
+pipe_path = "/tmp/com_qvacua_vimr_cli_pipe_{0}".format(str(uuid.uuid4()))
+
+if os.path.exists(pipe_path):
+    os.remove(pipe_path)
+
+try:
+    os.mkfifo(pipe_path, 0600)
+except OSError as error:
+    print("ERROR: {0}\n"
+          "{1} could not be mkfifo'ed.\n"
+          "Please go to https://github.com/qvacua/vimr and create an issue.".format(error, pipe_path))
+    raise
 
 
 def wait_for_ui_to_close():
-    if os.path.exists(pipe_path):
-        os.remove(pipe_path)
-
-    try:
-        os.mkfifo(pipe_path)
-    except OSError as error:
-        print("ERROR: {0}\n"
-              "{1} could not be mkfifo'ed.\n"
-              "Please go to https://github.com/qvacua/vimr and create an issue.".format(error, pipe_path))
-        raise
-
     with open(pipe_path, 'r') as fifo:
         while True:
             if len(fifo.read()) == 0:
                 break
 
-    os.remove(pipe_path)
 
+def call_open(action, query_params, args):
+    query_params[QueryParamKey.PIPE_PATH] = pipe_path
+    if args.wait:
+        query_params[QueryParamKey.WAIT] = "true"
 
-def call_open(action, query_params, dry_run=False):
     url = "vimr://{0}?{1}".format(action, urllib.urlencode(query_params, True).replace('+', '%20'))
 
-    if dry_run:
+    if args.dry_run:
         print("/usr/bin/open {0}".format(url))
     else:
         subprocess.call(["/usr/bin/open", url])
@@ -50,25 +53,23 @@ def abspath(path):
     return os.path.abspath(os.path.expanduser(path))
 
 
-def vimr_nvim(args=None, dry_run=False):
+def vimr_nvim(other_args, nvim_args):
     query_params = {
-        QueryParamKey.PIPE_PATH: pipe_path,
         QueryParamKey.CWD: os.getcwd()
     }
 
-    if args:
-        query_params[QueryParamKey.NVIM_ARGS] = args
+    if nvim_args:
+        query_params[QueryParamKey.NVIM_ARGS] = nvim_args
 
-    call_open(Action.NVIM, query_params, dry_run)
+    call_open(Action.NVIM, query_params, other_args)
 
 
-def vimr(action, args=None, dry_run=False):
+def vimr(action, args):
     cwd = os.getcwd()
     if args.cwd is not None:
         cwd = abspath(args.cwd)
 
     query_params = {
-        QueryParamKey.PIPE_PATH: pipe_path,
         QueryParamKey.CWD: cwd
     }
 
@@ -76,7 +77,7 @@ def vimr(action, args=None, dry_run=False):
     if files:
         query_params[QueryParamKey.FILE] = [abspath(f) for f in files]
 
-    call_open(action, query_params, dry_run)
+    call_open(action, query_params, args)
 
 
 class Action:
@@ -111,15 +112,14 @@ group.add_argument("-s", action="store_true", dest="separate_windows", help="Ope
 parser.add_argument("file", nargs="*")
 
 args, _ = parser.parse_known_args()
-dry_run = args.dry_run
 
 if args.nvim:
     nvim_parser = argparse.ArgumentParser()
     nvim_parser.add_argument("--nvim", action="store_true")
     nvim_parser.add_argument("--wait", action="store_true")
     nvim_parser.add_argument("--dry-run", action="store_true")
-    _, nvim_args = nvim_parser.parse_known_args()
-    vimr_nvim(nvim_args, dry_run)
+    other_args, nvim_args = nvim_parser.parse_known_args()
+    vimr_nvim(other_args, nvim_args)
 
 else:
     if not args.file:
@@ -131,7 +131,11 @@ else:
     else:
         action = Action.OPEN
 
-    vimr(action, args, dry_run)
+    vimr(action, args)
 
-if args.wait:
-    wait_for_ui_to_close()
+if args.dry_run:
+    exit(0)
+
+wait_for_ui_to_close()
+
+os.remove(pipe_path)

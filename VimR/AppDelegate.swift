@@ -192,6 +192,26 @@ extension AppDelegate {
     }
 
     let queryParams = url.query?.components(separatedBy: "&")
+
+    guard let pipePath = queryParams?
+      .filter({ $0.hasPrefix(pipePathPrefix) })
+      .flatMap({ $0.without(prefix: pipePathPrefix).removingPercentEncoding })
+      .first else {
+
+      return
+    }
+
+    guard FileManager.default.fileExists(atPath: pipePath) else {
+      // Use pipePath as a kind of nonce
+      return
+    }
+
+    let dict = try? FileManager.default.attributesOfItem(atPath: pipePath) as NSDictionary
+    guard dict?.filePosixPermissions() == 0o600 else {
+      // Use pipePath as a kind of nonce
+      return
+    }
+
     let urls = queryParams?
                  .filter { $0.hasPrefix(filePrefix) }
                  .flatMap { $0.without(prefix: filePrefix).removingPercentEncoding }
@@ -201,10 +221,15 @@ extension AppDelegate {
                 .flatMap { $0.without(prefix: cwdPrefix).removingPercentEncoding }
                 .map { URL(fileURLWithPath: $0) }
                 .first ?? FileUtils.userHomeUrl
-    let pipePath = queryParams?
-                     .filter { $0.hasPrefix(pipePathPrefix) }
-                     .flatMap { $0.without(prefix: pipePathPrefix).removingPercentEncoding }
-                     .first ?? nil
+    let wait = queryParams?
+                 .filter { $0.hasPrefix(waitPrefix) }
+                 .flatMap { $0.without(prefix: waitPrefix).removingPercentEncoding }
+                 .map { $0 == "true" ? true : false }
+                 .first ?? false
+
+    if wait == false {
+      _ = Darwin.close(Darwin.open(pipePath, O_WRONLY))
+    }
 
     switch action {
 
@@ -278,3 +303,4 @@ fileprivate let filePrefix = "file="
 fileprivate let cwdPrefix = "cwd="
 fileprivate let nvimArgsPrefix = "nvim-args="
 fileprivate let pipePathPrefix = "pipe-path="
+fileprivate let waitPrefix = "wait="
