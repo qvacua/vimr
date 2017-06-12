@@ -185,9 +185,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     for (NSString *arg in self.nvimArgs) {
       [args addObject:[NSString stringWithFormat:@"'%@'", arg]];
     }
-    NSLog(@"mapped %@", args);
     cmd = [cmd stringByAppendingFormat:@" %@", [args componentsJoinedByString:@" "]];
-    NSLog(@"%@", cmd);
   }
 
   NSFileHandle *writeHandle = inputPipe.fileHandleForWriting;

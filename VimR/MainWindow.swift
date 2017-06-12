@@ -72,6 +72,8 @@ class MainWindow: NSObject,
     self.emit = emitter.typedEmit()
     self.uuid = state.uuid
 
+    self.cliPipePath = state.cliPipePath
+
     self.defaultFont = state.appearance.font
     self.linespacing = state.appearance.linespacing
     self.usesLigatures = state.appearance.usesLigatures
@@ -212,11 +214,7 @@ class MainWindow: NSObject,
 
             self.updateNeoVimAppearance()
           }
-        }/*,
-        onCompleted: {
-          NSLog("Completed!!!!")
-//          self.windowController.close()
-        }*/)
+        })
       .disposed(by: self.disposeBag)
 
     self.updateNeoVimAppearance()
@@ -277,6 +275,7 @@ class MainWindow: NSObject,
   fileprivate let cursorDebouncer = Debouncer<Action>(interval: 0.75)
 
   fileprivate var isClosing = false
+  fileprivate let cliPipePath: String?
 
   fileprivate func updateNeoVimAppearance() {
     self.neoVimView.font = self.defaultFont
@@ -329,6 +328,13 @@ class MainWindow: NSObject,
 extension MainWindow {
 
   func neoVimStopped() {
+    if let cliPipePath = self.cliPipePath {
+      let fd = Darwin.open(cliPipePath, O_WRONLY)
+      let handle = FileHandle(fileDescriptor: fd)
+      handle.closeFile()
+      Darwin.close(fd)
+    }
+
     self.isClosing = true
     self.windowController.close()
     self.emit(self.uuidAction(for: .close))

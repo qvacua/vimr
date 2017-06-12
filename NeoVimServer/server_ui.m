@@ -171,7 +171,6 @@ static void run_neovim(void *arg __unused) {
 
   @autoreleasepool {
     NSArray<NSString *> *nvimArgs = (NSArray *) arg;
-    NSLog(@"%@", nvimArgs);
 
     argc = (int) nvimArgs.count + 1;
     argv = (char **) malloc((argc + 1) * sizeof(char *));

@@ -4,7 +4,32 @@ import urllib
 import subprocess
 import argparse
 import os
+import errno
+import uuid
+
 from pprint import pprint
+
+temp_dir = "/tmp"
+pipe_uuid = str(uuid.uuid4())
+pipe_path = "{0}/{1}".format(temp_dir, pipe_uuid)
+
+
+def wait_for_ui_to_close():
+    if os.path.exists(pipe_path):
+        os.remove(pipe_path)
+
+    try:
+        os.mkfifo(pipe_path)
+    except OSError as error:
+        print("ERROR: {0}, please go to https://github.com/qvacua/vimr and create an issue.".format(error))
+        raise
+
+    with open(pipe_path, 'r') as fifo:
+        while True:
+            if len(fifo.read()) == 0:
+                break
+
+    os.remove(pipe_path)
 
 
 def call_open(arg, dry_run=False):
@@ -22,6 +47,7 @@ def vimr_nvim(args=None, dry_run=False):
     cwd = os.getcwd()
 
     query_params = {
+        "pipe-path": pipe_path,
         "cwd": cwd
     }
 
@@ -38,6 +64,7 @@ def vimr(action, args=None, dry_run=False):
         cwd = abspath(args.cwd)
 
     query_params = {
+        "pipe-path": pipe_path,
         "cwd": cwd
     }
 
@@ -66,11 +93,17 @@ parser = argparse.ArgumentParser(description=description)
 parser.add_argument("--dry-run", action="store_true", dest="dry_run", help="Just print the 'open' command.")
 parser.add_argument("--cwd", action="store", help="Set the working directory.")
 parser.add_argument("--nvim", action="store_true", help="All other arguments will be passthrough to nvim.")
+parser.add_argument("--wait",
+                    action="store_true",
+                    help="This command line tool will exit when the corresponding UI window is closed.")
+
 group = parser.add_mutually_exclusive_group()
 # no option => Open files in tabs in the front most window.
 group.add_argument("-n", action="store_true", dest="new_window", help="Open files in tabs in a new window.")
 group.add_argument("-s", action="store_true", dest="separate_windows", help="Open files in separate windows.")
+
 parser.add_argument("file", nargs="*")
+
 args, _ = parser.parse_known_args()
 dry_run = args.dry_run
 
@@ -78,6 +111,7 @@ if args.nvim is not None:
     action = Action.NVIM
     nvim_parser = argparse.ArgumentParser()
     nvim_parser.add_argument("--nvim", action="store_true")
+    nvim_parser.add_argument("--wait", action="store_true")
     nvim_parser.add_argument("--dry-run", action="store_true")
     _, nvim_args = nvim_parser.parse_known_args()
     vimr_nvim(nvim_args, dry_run)
@@ -93,3 +127,6 @@ else:
         action = Action.OPEN
 
     vimr(action, args, dry_run)
+
+if args.wait:
+    wait_for_ui_to_close()

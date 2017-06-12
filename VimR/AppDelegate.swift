@@ -13,7 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   enum Action {
 
-    case newMainWindow(urls: [URL], cwd: URL, nvimArgs: [String]?)
+    case newMainWindow(urls: [URL], cwd: URL, nvimArgs: [String]?, cliPipePath: String?)
     case openInKeyWindow(urls: [URL], cwd: URL)
 
     case preferences
@@ -161,7 +161,7 @@ extension AppDelegate {
   // For drag & dropping files on the App icon.
   func application(_ sender: NSApplication, openFiles filenames: [String]) {
     let urls = filenames.map { URL(fileURLWithPath: $0) }
-    self.emit(.newMainWindow(urls: urls, cwd: FileUtils.userHomeUrl, nvimArgs: nil))
+    self.emit(.newMainWindow(urls: urls, cwd: FileUtils.userHomeUrl, nvimArgs: nil, cliPipePath: nil))
 
     sender.reply(toOpenOrPrint: .success)
   }
@@ -201,17 +201,21 @@ extension AppDelegate {
                 .flatMap { $0.without(prefix: cwdPrefix).removingPercentEncoding }
                 .map { URL(fileURLWithPath: $0) }
                 .first ?? FileUtils.userHomeUrl
+    let pipePath = queryParams?
+                     .filter { $0.hasPrefix(pipePathPrefix) }
+                     .flatMap { $0.without(prefix: pipePathPrefix).removingPercentEncoding }
+                     .first ?? nil
 
     switch action {
 
     case .activate, .newWindow:
-      self.emit(.newMainWindow(urls: urls, cwd: cwd, nvimArgs: nil))
+      self.emit(.newMainWindow(urls: urls, cwd: cwd, nvimArgs: nil, cliPipePath: pipePath))
 
     case .open:
       self.emit(.openInKeyWindow(urls: urls, cwd: cwd))
 
     case .separateWindows:
-      urls.forEach { self.emit(.newMainWindow(urls: [$0], cwd: cwd, nvimArgs: nil)) }
+      urls.forEach { self.emit(.newMainWindow(urls: [$0], cwd: cwd, nvimArgs: nil, cliPipePath: pipePath)) }
 
     case .nvim:
       guard let nvimArgs = queryParams?
@@ -221,8 +225,7 @@ extension AppDelegate {
         break
       }
 
-      NSLog("app delegate: \(nvimArgs)")
-      self.emit(.newMainWindow(urls: [], cwd: cwd, nvimArgs: nvimArgs))
+      self.emit(.newMainWindow(urls: [], cwd: cwd, nvimArgs: nvimArgs, cliPipePath: pipePath))
 
     }
   }
@@ -232,7 +235,7 @@ extension AppDelegate {
 extension AppDelegate {
 
   @IBAction func newDocument(_ sender: Any?) {
-    self.emit(.newMainWindow(urls: [], cwd: FileUtils.userHomeUrl, nvimArgs: nil))
+    self.emit(.newMainWindow(urls: [], cwd: FileUtils.userHomeUrl, nvimArgs: nil, cliPipePath: nil))
   }
 
   @IBAction func openInNewWindow(_ sender: Any?) {
@@ -256,7 +259,7 @@ extension AppDelegate {
       let urls = panel.urls
       let commonParentUrl = FileUtils.commonParent(of: urls)
 
-      self.emit(.newMainWindow(urls: urls, cwd: commonParentUrl, nvimArgs: nil))
+      self.emit(.newMainWindow(urls: urls, cwd: commonParentUrl, nvimArgs: nil, cliPipePath: nil))
     }
   }
 }
@@ -274,3 +277,4 @@ fileprivate enum VimRUrlAction: String {
 fileprivate let filePrefix = "file="
 fileprivate let cwdPrefix = "cwd="
 fileprivate let nvimArgsPrefix = "nvim-args="
+fileprivate let pipePathPrefix = "pipe-path="

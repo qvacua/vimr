@@ -217,6 +217,7 @@ extension MainWindow {
     var appearance = AppearanceState.default
     var useInteractiveZsh = false
     var nvimArgs: [String]?
+    var cliPipePath: String?
 
     // to be cleaned
     var urlsToOpen = [URL: OpenMode]()
