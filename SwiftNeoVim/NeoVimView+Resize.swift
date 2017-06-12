@@ -11,8 +11,8 @@ extension NeoVimView {
     super.setFrameSize(newSize)
 
     if self.isInitialResize {
-      self.launchNeoVim(self.discreteSize(size: newSize))
       self.isInitialResize = false
+      self.launchNeoVim(self.discreteSize(size: newSize))
       return
     }
 
@@ -56,10 +56,9 @@ extension NeoVimView {
     self.logger.info("=== Starting neovim...")
     let noErrorDuringInitialization = self.agent.runLocalServerAndNeoVim(withWidth: size.width, height: size.height)
 
-    // Neovim is ready now: resize neovim to bounds.
     self.agent.vimCommand("set mouse=a")
-    self.agent.setBoolOption("title", to: true)
-    self.agent.setBoolOption("termguicolors", to: true)
+    self.agent.vimCommand("set title")
+    self.agent.vimCommand("set termguicolors")
 
     if noErrorDuringInitialization == false {
       self.logger.fault("There was an error launching neovim.")

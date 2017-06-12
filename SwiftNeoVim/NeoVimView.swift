@@ -136,7 +136,7 @@ public class NeoVimView: NSView,
 
   @IBAction public func debug1(_ sender: Any?) {
     self.logger.debug("DEBUG 1 - Start")
-    self.agent.cursorGo(toRow: 10, column: 5)
+    NSApp.hide(self)
     self.logger.debug("DEBUG 1 - End")
   }
 
@@ -199,5 +199,4 @@ public class NeoVimView: NSView,
 
   // MARK: - Private
   fileprivate var _linespacing = NeoVimView.defaultLinespacing
-
 }
