@@ -4,7 +4,6 @@
  */
 
 import Foundation
-import Swifter
 
 fileprivate let defaults = UserDefaults.standard
 
