@@ -8,11 +8,11 @@ import RxSwift
 
 struct AppState: SerializableState {
 
-  enum AfterLastWindowAction {
+  enum AfterLastWindowAction: String {
 
-    case doNothing
-    case hide
-    case quit
+    case doNothing = "do-nothing"
+    case hide = "hide"
+    case quit = "quit"
   }
 
   static let `default` = AppState()
@@ -47,6 +47,11 @@ struct AppState: SerializableState {
 
     self.openNewMainWindowOnLaunch = openOnLaunch
     self.openNewMainWindowOnReactivation = openOnReactivation
+
+    let lastWindowActionString = PrefUtils.string(from: dict, for: Keys.afterLastWindowAction)
+                                 ?? AfterLastWindowAction.doNothing.rawValue
+    self.afterLastWindowAction = AfterLastWindowAction(rawValue: lastWindowActionString) ?? .doNothing
+
     self.useSnapshotUpdate = useSnapshot
 
     let openQuicklyDict = dict[Keys.OpenQuickly.key] as? [String: Any] ?? [:]
@@ -60,6 +65,7 @@ struct AppState: SerializableState {
     return [
       Keys.openNewOnLaunch: self.openNewMainWindowOnLaunch,
       Keys.openNewOnReactivation: self.openNewMainWindowOnReactivation,
+      Keys.afterLastWindowAction: self.afterLastWindowAction.rawValue,
       Keys.useSnapshotUpdateChannel: self.useSnapshotUpdate,
 
       Keys.OpenQuickly.key: self.openQuickly.dict(),

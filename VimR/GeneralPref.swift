@@ -40,6 +40,10 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     self.openWhenLaunchingCheckbox.boolState = state.openNewMainWindowOnLaunch
     self.openOnReactivationCheckbox.boolState = state.openNewMainWindowOnReactivation
+
+    self.lastWindowAction = state.afterLastWindowAction
+    self.afterLastWindowPopup.selectItem(at: indexToAfterLastWindowAction.index(of: state.afterLastWindowAction) ?? 0)
+
     self.ignorePatterns = state.openQuickly.ignorePatterns
     self.ignoreField.stringValue = FileItemIgnorePattern.toString(state.openQuickly.ignorePatterns)
 
@@ -54,13 +58,20 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
           self.openOnReactivationCheckbox.boolState = state.openNewMainWindowOnReactivation
         }
 
-
+        if self.lastWindowAction != state.afterLastWindowAction {
+          self.afterLastWindowPopup.selectItem(
+            at: indexToAfterLastWindowAction.index(of: state.afterLastWindowAction) ?? 0
+          )
+        }
+        self.lastWindowAction = state.afterLastWindowAction
       })
       .disposed(by: self.disposeBag)
   }
 
   fileprivate let emit: (Action) -> Void
   fileprivate let disposeBag = DisposeBag()
+
+  fileprivate var lastWindowAction = AppState.AfterLastWindowAction.doNothing
 
   fileprivate let openWhenLaunchingCheckbox = NSButton(forAutoLayout: ())
   fileprivate let openOnReactivationCheckbox = NSButton(forAutoLayout: ())
@@ -228,7 +239,6 @@ extension GeneralPref {
   }
 
   func openUntitledWindowOnReactivationAction(_ sender: NSButton) {
-    NSLog("\(self.openOnReactivationCheckbox.boolState)")
     self.emit(.setOpenOnReactivation(self.openOnReactivationCheckbox.boolState))
   }
 
@@ -239,7 +249,8 @@ extension GeneralPref {
       return
     }
 
-    self.emit(.setAfterLastWindowAction(indexToAfterLastWindowAction[index]))
+    self.lastWindowAction = indexToAfterLastWindowAction[index]
+    self.emit(.setAfterLastWindowAction(self.lastWindowAction))
   }
 
   fileprivate func ignorePatternsAction() {
