@@ -17,6 +17,9 @@ class GeneralPrefReducer {
     case let .setOpenOnLaunch(value):
       state.openNewMainWindowOnLaunch = value
 
+    case let .setAfterLastWindowAction(action):
+      state.afterLastWindowAction = action
+
     case let .setOpenOnReactivation(value):
       state.openNewMainWindowOnReactivation = value
 

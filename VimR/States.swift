@@ -8,10 +8,19 @@ import RxSwift
 
 struct AppState: SerializableState {
 
+  enum AfterLastWindowAction {
+
+    case doNothing
+    case hide
+    case quit
+  }
+
   static let `default` = AppState()
 
   var openNewMainWindowOnLaunch = true
   var openNewMainWindowOnReactivation = true
+
+  var afterLastWindowAction = AfterLastWindowAction.doNothing
 
   var useSnapshotUpdate = false
 

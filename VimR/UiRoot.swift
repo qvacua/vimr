@@ -35,6 +35,18 @@ class UiRoot: UiComponent {
         self.mainWindows.keys
           .filter { !uuidsInState.contains($0) }
           .forEach(self.removeMainWindow)
+
+        guard self.mainWindows.isEmpty else {
+          return
+        }
+
+        switch state.afterLastWindowAction {
+
+        case .doNothing: return
+        case .hide: NSApp.hide(self)
+        case .quit: NSApp.terminate(self)
+
+        }
       })
       .disposed(by: self.disposeBag)
   }

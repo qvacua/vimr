@@ -10,6 +10,7 @@
       tool = vimrdiff
     ```
   You have to re-install the `vimr` CLI tool in the Preferences window as described in the [wiki](https://github.com/qvacua/vimr/wiki#command-line-tool).
+* Bonus: The Neovim splash screen shows up!
 
 # 0.15.2-201
 
