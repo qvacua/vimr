@@ -1,3 +1,19 @@
+# next
+
+* GH-326, GH-460: Add an option to hide or quit VimR when the last window closes. This is for example useful when you want to use VimR as `git difftool` as described below.
+* GH-302, GH-421: The `vimr` CLI tool has two new options:
+  - `--wait`: When present, the `vimr` CLI tool will exit only after the corresponding VimR window has been closed. This is particularly useful when combined with the `--nvim` option as described below.
+  - `--nvim`: When present, all command line arguments except `--dry-run` and `--wait`, see above, will be passed over to the background `nvim` process when launching. This means that you can now use for example the `-d` option to activate the diffmode. To use VimR as `git difftool`, add the following to your `~/.gitconfig` 
+    ```
+    [difftool "vimrdiff"]
+      cmd = vimr --wait --nvim -d $LOCAL $REMOTE
+    [diff]
+      tool = vimrdiff
+    ```
+  You have to re-install the `vimr` CLI tool in the Preferences window as described in the [wiki](https://github.com/qvacua/vimr/wiki#command-line-tool).
+* Reduce the binary size by approx. 8 MB: We compile httpswift/swifter directly into VimR's binary...
+* Bonus: The Neovim splash screen shows up!
+
 # 0.15.2-201
 
 * Bugfix: The state of the tools of a new window is not the same as the last active window.

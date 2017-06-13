@@ -10,6 +10,12 @@ extension NeoVimView {
   override public func setFrameSize(_ newSize: NSSize) {
     super.setFrameSize(newSize)
 
+    if self.isInitialResize {
+      self.isInitialResize = false
+      self.launchNeoVim(self.discreteSize(size: newSize))
+      return
+    }
+
     if self.inLiveResize || self.currentlyResizing {
       // TODO: Turn off live resizing for now.
       // self.resizeNeoVimUi(to: newSize)
@@ -44,6 +50,26 @@ extension NeoVimView {
     self.yOffset = floor((size.height - self.cellSize.height * CGFloat(discreteSize.height)) / 2)
 
     self.agent.resize(toWidth: Int32(discreteSize.width), height: Int32(discreteSize.height))
+  }
+
+  fileprivate func launchNeoVim(_ size: Size) {
+    self.logger.info("=== Starting neovim...")
+    let noErrorDuringInitialization = self.agent.runLocalServerAndNeoVim(withWidth: size.width, height: size.height)
+
+    self.agent.vimCommand("set mouse=a")
+    self.agent.vimCommand("set title")
+    self.agent.vimCommand("set termguicolors")
+
+    if noErrorDuringInitialization == false {
+      self.logger.fault("There was an error launching neovim.")
+
+      let alert = NSAlert()
+      alert.alertStyle = .warning
+      alert.messageText = "Error during initialization"
+      alert.informativeText = "There was an error during the initialization of NeoVim. " +
+                              "Use :messages to view the error messages."
+      alert.runModal()
+    }
   }
 
   fileprivate func randomEmoji() -> String {

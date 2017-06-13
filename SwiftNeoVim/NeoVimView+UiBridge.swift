@@ -181,9 +181,14 @@ extension NeoVimView {
   }
 
   public func stop() {
-    gui.async {
-      self.bridgeLogger.mark()
+    self.bridgeLogger.hr()
 
+    self.quitNeoVimCondition.lock()
+    self.isNeoVimQuitSuccessful = true
+    self.quitNeoVimCondition.signal()
+    self.quitNeoVimCondition.unlock()
+
+    gui.async {
       self.agent.quit()
       self.delegate?.neoVimStopped()
     }

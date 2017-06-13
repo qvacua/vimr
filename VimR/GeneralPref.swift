@@ -14,6 +14,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
   enum Action {
 
     case setOpenOnLaunch(Bool)
+    case setAfterLastWindowAction(AppState.AfterLastWindowAction)
     case setOpenOnReactivation(Bool)
     case setIgnorePatterns(Set<FileItemIgnorePattern>)
   }
@@ -39,6 +40,10 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     self.openWhenLaunchingCheckbox.boolState = state.openNewMainWindowOnLaunch
     self.openOnReactivationCheckbox.boolState = state.openNewMainWindowOnReactivation
+
+    self.lastWindowAction = state.afterLastWindowAction
+    self.afterLastWindowPopup.selectItem(at: indexToAfterLastWindowAction.index(of: state.afterLastWindowAction) ?? 0)
+
     self.ignorePatterns = state.openQuickly.ignorePatterns
     self.ignoreField.stringValue = FileItemIgnorePattern.toString(state.openQuickly.ignorePatterns)
 
@@ -53,7 +58,12 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
           self.openOnReactivationCheckbox.boolState = state.openNewMainWindowOnReactivation
         }
 
-
+        if self.lastWindowAction != state.afterLastWindowAction {
+          self.afterLastWindowPopup.selectItem(
+            at: indexToAfterLastWindowAction.index(of: state.afterLastWindowAction) ?? 0
+          )
+        }
+        self.lastWindowAction = state.afterLastWindowAction
       })
       .disposed(by: self.disposeBag)
   }
@@ -61,8 +71,13 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
   fileprivate let emit: (Action) -> Void
   fileprivate let disposeBag = DisposeBag()
 
+  fileprivate var lastWindowAction = AppState.AfterLastWindowAction.doNothing
+
   fileprivate let openWhenLaunchingCheckbox = NSButton(forAutoLayout: ())
   fileprivate let openOnReactivationCheckbox = NSButton(forAutoLayout: ())
+
+  fileprivate let afterLastWindowPopup = NSPopUpButton(forAutoLayout: ())
+
   fileprivate let ignoreField = NSTextField(forAutoLayout: ())
 
   fileprivate var ignorePatterns = Set<FileItemIgnorePattern>()
@@ -84,6 +99,16 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     let whenLaunching = self.openWhenLaunchingCheckbox
     let onReactivation = self.openOnReactivationCheckbox
+
+    let afterLastWindowTitle = self.titleTextField(title: "After Last Window Closes:")
+    let lastWindow = self.afterLastWindowPopup
+    lastWindow.target = self
+    lastWindow.action = #selector(GeneralPref.afterLastWindowAction)
+    lastWindow.addItems(withTitles: [
+      "Do Nothing",
+      "Hide",
+      "Quit",
+    ])
 
     let ignoreListTitle = self.titleTextField(title: "Files To Ignore:")
     let ignoreField = self.ignoreField
@@ -121,6 +146,9 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.addSubview(ignoreField)
     self.addSubview(ignoreInfo)
 
+    self.addSubview(afterLastWindowTitle)
+    self.addSubview(lastWindow)
+
     self.addSubview(cliToolTitle)
     self.addSubview(cliToolButton)
     self.addSubview(cliToolInfo)
@@ -130,7 +158,8 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     paneTitle.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
 
     openUntitledWindowTitle.autoAlignAxis(.baseline, toSameAxisOf: whenLaunching, withOffset: 0)
-    openUntitledWindowTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
+    openUntitledWindowTitle.autoPinEdge(.right, to: .right, of: afterLastWindowTitle)
+    openUntitledWindowTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
 
     whenLaunching.autoPinEdge(.top, to: .bottom, of: paneTitle, withOffset: 18)
     whenLaunching.autoPinEdge(.left, to: .right, of: openUntitledWindowTitle, withOffset: 5)
@@ -140,11 +169,17 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     onReactivation.autoPinEdge(.left, to: .left, of: whenLaunching)
     onReactivation.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
 
+    afterLastWindowTitle.autoAlignAxis(.baseline, toSameAxisOf: lastWindow)
+    afterLastWindowTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
+
+    lastWindow.autoPinEdge(.top, to: .bottom, of: onReactivation, withOffset: 18)
+    lastWindow.autoPinEdge(.left, to: .right, of: afterLastWindowTitle, withOffset: 5)
+
     ignoreListTitle.autoAlignAxis(.baseline, toSameAxisOf: ignoreField)
     ignoreListTitle.autoPinEdge(.right, to: .right, of: openUntitledWindowTitle)
     ignoreListTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
 
-    ignoreField.autoPinEdge(.top, to: .bottom, of: onReactivation, withOffset: 18)
+    ignoreField.autoPinEdge(.top, to: .bottom, of: lastWindow, withOffset: 18)
     ignoreField.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
     ignoreField.autoPinEdge(.left, to: .right, of: ignoreListTitle, withOffset: 5)
 
@@ -204,8 +239,18 @@ extension GeneralPref {
   }
 
   func openUntitledWindowOnReactivationAction(_ sender: NSButton) {
-    NSLog("\(self.openOnReactivationCheckbox.boolState)")
     self.emit(.setOpenOnReactivation(self.openOnReactivationCheckbox.boolState))
+  }
+
+  func afterLastWindowAction(_ sender: NSPopUpButton) {
+    let index = sender.indexOfSelectedItem
+
+    guard index >= 0 && index <= 2 else {
+      return
+    }
+
+    self.lastWindowAction = indexToAfterLastWindowAction[index]
+    self.emit(.setAfterLastWindowAction(self.lastWindowAction))
   }
 
   fileprivate func ignorePatternsAction() {
@@ -226,3 +271,5 @@ extension GeneralPref {
     alert.runModal()
   }
 }
+
+fileprivate let indexToAfterLastWindowAction: [AppState.AfterLastWindowAction] = [.doNothing, .hide, .quit]

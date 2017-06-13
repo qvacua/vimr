@@ -7,7 +7,6 @@ import Cocoa
 import RxSwift
 import PureLayout
 import WebKit
-import Swifter
 import EonilFileSystemEvents
 
 fileprivate let fileSystemEventsLatency = 1.0

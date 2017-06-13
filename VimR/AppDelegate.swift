@@ -8,30 +8,15 @@ import RxSwift
 import PureLayout
 import Sparkle
 
-/// Keep the rawValues in sync with Action in the `vimr` Python script.
-fileprivate enum VimRUrlAction: String {
-  case activate = "activate"
-  case open = "open"
-  case newWindow = "open-in-new-window"
-  case separateWindows = "open-in-separate-windows"
-}
-
-fileprivate let filePrefix = "file="
-fileprivate let cwdPrefix = "cwd="
-
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
   enum Action {
 
-    case newMainWindow(urls: [URL], cwd: URL)
+    case newMainWindow(urls: [URL], cwd: URL, nvimArgs: [String]?, cliPipePath: String?)
     case openInKeyWindow(urls: [URL], cwd: URL)
 
     case preferences
-
-    case cancelQuit
-    case quitWithoutSaving
-    case quit
   }
 
   @IBOutlet var debugMenu: NSMenuItem?
@@ -51,7 +36,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       }
     }
     initialAppState.mainWindowTemplate.htmlPreview.server
-      = Marked(baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath))
+    = Marked(baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath))
 
     self.stateContext = Context(baseServerUrl: baseServerUrl, state: initialAppState)
     self.emit = self.stateContext.actionEmitter.typedEmit()
@@ -157,18 +142,16 @@ extension AppDelegate {
       alert.alertStyle = .warning
 
       if alert.runModal() == NSAlertSecondButtonReturn {
-        self.emit(.quitWithoutSaving)
-      } else {
-        self.emit(.cancelQuit)
+        self.uiRoot.prepareQuit()
+        return .terminateNow
       }
 
       return .terminateCancel
     }
 
     if self.uiRoot.hasMainWindows {
-      self.emit(.quit)
-
-      return .terminateCancel
+      self.uiRoot.prepareQuit()
+      return .terminateNow
     }
 
     // There are no open main window, then just quit.
@@ -178,7 +161,7 @@ extension AppDelegate {
   // For drag & dropping files on the App icon.
   func application(_ sender: NSApplication, openFiles filenames: [String]) {
     let urls = filenames.map { URL(fileURLWithPath: $0) }
-    self.emit(.newMainWindow(urls: urls, cwd: FileUtils.userHomeUrl))
+    self.emit(.newMainWindow(urls: urls, cwd: FileUtils.userHomeUrl, nvimArgs: nil, cliPipePath: nil))
 
     sender.reply(toOpenOrPrint: .success)
   }
@@ -209,6 +192,26 @@ extension AppDelegate {
     }
 
     let queryParams = url.query?.components(separatedBy: "&")
+
+    guard let pipePath = queryParams?
+      .filter({ $0.hasPrefix(pipePathPrefix) })
+      .flatMap({ $0.without(prefix: pipePathPrefix).removingPercentEncoding })
+      .first else {
+
+      return
+    }
+
+    guard FileManager.default.fileExists(atPath: pipePath) else {
+      // Use pipePath as a kind of nonce
+      return
+    }
+
+    let dict = try? FileManager.default.attributesOfItem(atPath: pipePath) as NSDictionary
+    guard dict?.filePosixPermissions() == 0o600 else {
+      // Use pipePath as a kind of nonce
+      return
+    }
+
     let urls = queryParams?
                  .filter { $0.hasPrefix(filePrefix) }
                  .flatMap { $0.without(prefix: filePrefix).removingPercentEncoding }
@@ -218,17 +221,36 @@ extension AppDelegate {
                 .flatMap { $0.without(prefix: cwdPrefix).removingPercentEncoding }
                 .map { URL(fileURLWithPath: $0) }
                 .first ?? FileUtils.userHomeUrl
+    let wait = queryParams?
+                 .filter { $0.hasPrefix(waitPrefix) }
+                 .flatMap { $0.without(prefix: waitPrefix).removingPercentEncoding }
+                 .map { $0 == "true" ? true : false }
+                 .first ?? false
+
+    if wait == false {
+      _ = Darwin.close(Darwin.open(pipePath, O_WRONLY))
+    }
 
     switch action {
 
     case .activate, .newWindow:
-      self.emit(.newMainWindow(urls: urls, cwd: cwd))
+      self.emit(.newMainWindow(urls: urls, cwd: cwd, nvimArgs: nil, cliPipePath: pipePath))
 
     case .open:
       self.emit(.openInKeyWindow(urls: urls, cwd: cwd))
 
     case .separateWindows:
-      urls.forEach { self.emit(.newMainWindow(urls: [$0], cwd: cwd)) }
+      urls.forEach { self.emit(.newMainWindow(urls: [$0], cwd: cwd, nvimArgs: nil, cliPipePath: pipePath)) }
+
+    case .nvim:
+      guard let nvimArgs = queryParams?
+        .filter({ $0.hasPrefix(nvimArgsPrefix) })
+        .flatMap({ $0.without(prefix: nvimArgsPrefix).removingPercentEncoding }) else {
+
+        break
+      }
+
+      self.emit(.newMainWindow(urls: [], cwd: cwd, nvimArgs: nvimArgs, cliPipePath: pipePath))
 
     }
   }
@@ -238,7 +260,7 @@ extension AppDelegate {
 extension AppDelegate {
 
   @IBAction func newDocument(_ sender: Any?) {
-    self.emit(.newMainWindow(urls: [], cwd: FileUtils.userHomeUrl))
+    self.emit(.newMainWindow(urls: [], cwd: FileUtils.userHomeUrl, nvimArgs: nil, cliPipePath: nil))
   }
 
   @IBAction func openInNewWindow(_ sender: Any?) {
@@ -262,7 +284,23 @@ extension AppDelegate {
       let urls = panel.urls
       let commonParentUrl = FileUtils.commonParent(of: urls)
 
-      self.emit(.newMainWindow(urls: urls, cwd: commonParentUrl))
+      self.emit(.newMainWindow(urls: urls, cwd: commonParentUrl, nvimArgs: nil, cliPipePath: nil))
     }
   }
 }
+
+/// Keep the rawValues in sync with Action in the `vimr` Python script.
+fileprivate enum VimRUrlAction: String {
+  case activate = "activate"
+  case open = "open"
+  case newWindow = "open-in-new-window"
+  case separateWindows = "open-in-separate-windows"
+  case nvim = "nvim"
+}
+
+
+fileprivate let filePrefix = "file="
+fileprivate let cwdPrefix = "cwd="
+fileprivate let nvimArgsPrefix = "nvim-args="
+fileprivate let pipePathPrefix = "pipe-path="
+fileprivate let waitPrefix = "wait="

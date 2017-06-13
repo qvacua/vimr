@@ -71,10 +71,10 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 
   fileprivate let sizes = [9, 10, 11, 12, 13, 14, 16, 18, 24, 36, 48, 64]
   fileprivate let sizeCombo = NSComboBox(forAutoLayout: ())
-  fileprivate let fontPopup = NSPopUpButton(frame: CGRect.zero, pullsDown: false)
+  fileprivate let fontPopup = NSPopUpButton(frame: .zero, pullsDown: false)
   fileprivate let linespacingField = NSTextField(forAutoLayout: ())
   fileprivate let ligatureCheckbox = NSButton(forAutoLayout: ())
-  fileprivate let previewArea = NSTextView(frame: CGRect.zero)
+  fileprivate let previewArea = NSTextView(frame: .zero)
 
   fileprivate let exampleText =
     "abcdefghijklmnopqrstuvwxyz\n" +
@@ -94,7 +94,6 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     let fontTitle = self.titleTextField(title: "Default Font:")
 
     let fontPopup = self.fontPopup
-    fontPopup.translatesAutoresizingMaskIntoConstraints = false
     fontPopup.target = self
     fontPopup.action = #selector(AppearancePref.fontPopupAction)
 

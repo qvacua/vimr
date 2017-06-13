@@ -23,8 +23,11 @@ static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
 }
 
 data_to_array(NSUInteger)
+
 data_to_array(NSInteger)
+
 data_to_array(bool)
+
 data_to_array(CellAttributes)
 
 static void log_cfmachport_error(SInt32 err, NeoVimAgentMsgId msgid, NSData *inputData) {
@@ -84,6 +87,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   NSCondition *_neoVimReadyCondition;
   bool _isInitErrorPresent;
 
+  NSInteger _initialWidth;
+  NSInteger _initialHeight;
+
   volatile uint32_t _neoVimIsQuitting;
 }
 
@@ -98,6 +104,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   _neoVimIsReady = NO;
   _neoVimReadyCondition = [NSCondition new];
   _isInitErrorPresent = NO;
+
+  _initialWidth = 30;
+  _initialHeight = 15;
 
   _neoVimIsQuitting = 0;
 
@@ -168,7 +177,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 #endif
 
   _neoVimServerTask.standardInput = inputPipe;
-  _neoVimServerTask.currentDirectoryPath = NSHomeDirectory();
+  _neoVimServerTask.currentDirectoryPath = self.cwd == nil ? NSHomeDirectory() : self.cwd.path;
   _neoVimServerTask.launchPath = shellPath;
   _neoVimServerTask.arguments = shellArgs;
   [_neoVimServerTask launch];
@@ -177,13 +186,23 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
                                              [self neoVimServerExecutablePath],
                                              [self localServerName],
                                              [self remoteServerName]];
+  if (self.nvimArgs != nil) {
+    NSMutableArray *args = [NSMutableArray new];
+    for (NSString *arg in self.nvimArgs) {
+      [args addObject:[NSString stringWithFormat:@"'%@'", arg]];
+    }
+    cmd = [cmd stringByAppendingFormat:@" %@", [args componentsJoinedByString:@" "]];
+  }
 
   NSFileHandle *writeHandle = inputPipe.fileHandleForWriting;
   [writeHandle writeData:[cmd dataUsingEncoding:NSUTF8StringEncoding]];
   [writeHandle closeFile];
 }
 
-- (bool)runLocalServerAndNeoVim {
+- (bool)runLocalServerAndNeoVimWithWidth:(NSInteger)width height:(NSInteger)height {
+  _initialWidth = width;
+  _initialHeight = height;
+
   _localServerThread = [[NSThread alloc] initWithTarget:self selector:@selector(runLocalServer) object:nil];
   [_localServerThread start];
 
@@ -204,7 +223,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   if (data == nil) {
     return [NSURL fileURLWithPath:NSHomeDirectory()];
   }
-  
+
   NSString *path = [NSKeyedUnarchiver unarchiveObjectWithData:data];
   if (path == nil) {
     return [NSURL fileURLWithPath:NSHomeDirectory()];
@@ -252,13 +271,13 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (void)resizeToWidth:(int)width height:(int)height {
-  int values[] = { width, height };
+  int values[] = {width, height};
   NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
   [self sendMessageWithId:NeoVimAgentMsgIdResize data:data expectsReply:NO];
 }
 
 - (void)cursorGoToRow:(int)row column:(int)column {
-  int values[] = { row, column };
+  int values[] = {row, column};
   NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
   [self sendMessageWithId:NeoVimAgentMsgIdCursorGoto data:data expectsReply:NO];
 }
@@ -275,7 +294,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (NSString *)escapedFileName:(NSString *)fileName {
-  NSArray<NSString *> *fileNames = [self escapedFileNames:@[ fileName ]];
+  NSArray<NSString *> *fileNames = [self escapedFileNames:@[fileName]];
   if (fileNames.count == 0) {
     return nil;
   }
@@ -296,7 +315,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 - (void)setBoolOption:(NSString *)option to:(bool)value {
   NSMutableData *data = [NSMutableData new];
 
-  bool values[] = { value };
+  bool values[] = {value};
   const char *cstr = [option cStringUsingEncoding:NSUTF8StringEncoding];
 
   [data appendBytes:values length:sizeof(bool)];
@@ -306,18 +325,18 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (void)scrollHorizontal:(NSInteger)horiz vertical:(NSInteger)vert {
-  NSInteger values[] = { horiz, vert };
+  NSInteger values[] = {horiz, vert};
   NSData *data = [[NSData alloc] initWithBytes:values length:2 * sizeof(NSInteger)];
   [self sendMessageWithId:NeoVimAgentMsgIdScroll data:data expectsReply:NO];
 }
 
 - (void)selectWindow:(NeoVimWindow *)window {
-  int values[] = { (int) window.handle };
+  int values[] = {(int) window.handle};
   NSData *data = [[NSData alloc] initWithBytes:values length:sizeof(int)];
   [self sendMessageWithId:NeoVimAgentMsgIdSelectWindow data:data expectsReply:NO];
 }
 
-- (NSArray <NSString *>*)escapedFileNames:(NSArray <NSString *>*)fileNames {
+- (NSArray <NSString *> *)escapedFileNames:(NSArray <NSString *> *)fileNames {
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:fileNames];
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetEscapeFileNames data:data expectsReply:YES];
   if (response == nil) {
@@ -383,7 +402,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       (__bridge CFStringRef) [self remoteServerName]
   );
 
-  [self sendMessageWithId:NeoVimAgentMsgIdAgentReady data:nil expectsReply:NO];
+  NSInteger values[] = { _initialWidth, _initialHeight };
+  NSData *data = [NSData dataWithBytes:values length:2 * sizeof(NSInteger)];
+
+  [self sendMessageWithId:NeoVimAgentMsgIdAgentReady data:data expectsReply:NO];
 }
 
 - (NSData *)sendMessageWithId:(NeoVimAgentMsgId)msgid data:(NSData *)data expectsReply:(bool)expectsReply {
@@ -416,9 +438,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
     if (_neoVimIsQuitting == 0) {
       [_bridge ipcBecameInvalid:
-        [NSString stringWithFormat:
-          @"Reason: sending msg to neovim failed for %lu with %d", (unsigned long) msgid, responseCode
-        ]
+          [NSString stringWithFormat:
+              @"Reason: sending msg to neovim failed for %lu with %d", (unsigned long) msgid, responseCode
+          ]
       ];
     }
 
@@ -483,8 +505,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
     case NeoVimServerMsgIdSetPosition: {
       NSInteger *values = data_to_NSInteger_array(data, 4);
-      [_bridge gotoPosition:(Position) { .row = values[0], .column = values[1] }
-               textPosition:(Position) { .row = values[2], .column = values[3] }];
+      [_bridge gotoPosition:(Position) {.row = values[0], .column = values[1]}
+               textPosition:(Position) {.row = values[2], .column = values[3]}];
       return;
     }
 
@@ -617,7 +639,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       if (data.length == sizeof(NSUInteger) + sizeof(NSInteger)) {
         NSUInteger *values = (NSUInteger *) data.bytes;
         NeoVimAutoCommandEvent event = (NeoVimAutoCommandEvent) values[0];
-        NSInteger bufferHandle = ((NSInteger *)(values + 1))[0];
+        NSInteger bufferHandle = ((NSInteger *) (values + 1))[0];
         [_bridge autoCommandEvent:event bufferHandle:bufferHandle];
       } else {
         NSUInteger *values = data_to_NSUInteger_array(data, 1);

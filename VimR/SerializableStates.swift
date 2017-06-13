@@ -16,6 +16,7 @@ class Keys {
 
   static let openNewOnLaunch = "open-new-window-when-launching"
   static let openNewOnReactivation = "open-new-window-on-reactivation"
+  static let afterLastWindowAction = "after-last-window-action"
   static let useSnapshotUpdateChannel = "use-snapshot-update-channel"
 
   class OpenQuickly {

@@ -18,8 +18,14 @@ class AppDelegateReducer {
 
     switch pair.action {
 
-    case let .newMainWindow(urls, cwd):
-      let mainWindow = self.newMainWindow(with: state, urls: urls, cwd: cwd)
+    case let .newMainWindow(urls, cwd, nvimArgs, cliPipePath):
+      let mainWindow: MainWindow.State
+      if let args = nvimArgs {
+        mainWindow = self.newMainWindow(with: state, urls: [], cwd: cwd, nvimArgs: args, cliPipePath: cliPipePath)
+      } else {
+        mainWindow = self.newMainWindow(with: state, urls: urls, cwd: cwd, cliPipePath: cliPipePath)
+      }
+
       state.mainWindows[mainWindow.uuid] = mainWindow
 
     case let .openInKeyWindow(urls, cwd):
@@ -35,13 +41,6 @@ class AppDelegateReducer {
     case .preferences:
       state.preferencesOpen = Marked(true)
 
-    case .cancelQuit:
-      state.quitWhenNoMainWindow = false
-
-    case .quitWithoutSaving, .quit:
-      state.mainWindows.keys.forEach { state.mainWindows[$0]?.close = true }
-      state.quitWhenNoMainWindow = true
-
     }
 
     return StateActionPair(state: state, action: pair.action)
@@ -49,7 +48,12 @@ class AppDelegateReducer {
 
   fileprivate let baseServerUrl: URL
 
-  fileprivate func newMainWindow(with state: AppState, urls: [URL], cwd: URL) -> MainWindow.State {
+  fileprivate func newMainWindow(with state: AppState,
+                                 urls: [URL],
+                                 cwd: URL,
+                                 nvimArgs: [String]? = nil,
+                                 cliPipePath: String? = nil) -> MainWindow.State {
+
     var mainWindow = state.mainWindowTemplate
     mainWindow.uuid = UUID().uuidString
     mainWindow.isDirty = false
@@ -57,6 +61,8 @@ class AppDelegateReducer {
       htmlFile: nil,
       server: Marked(self.baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath))
     )
+    mainWindow.nvimArgs = nvimArgs
+    mainWindow.cliPipePath = cliPipePath
 
     mainWindow.urlsToOpen = urls.toDict { url in MainWindow.OpenMode.default }
 

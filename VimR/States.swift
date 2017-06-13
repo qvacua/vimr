@@ -8,10 +8,19 @@ import RxSwift
 
 struct AppState: SerializableState {
 
+  enum AfterLastWindowAction: String {
+
+    case doNothing = "do-nothing"
+    case hide = "hide"
+    case quit = "quit"
+  }
+
   static let `default` = AppState()
 
   var openNewMainWindowOnLaunch = true
   var openNewMainWindowOnReactivation = true
+
+  var afterLastWindowAction = AfterLastWindowAction.doNothing
 
   var useSnapshotUpdate = false
 
@@ -21,7 +30,6 @@ struct AppState: SerializableState {
   var currentMainWindowUuid: String?
 
   var mainWindows: [String: MainWindow.State] = [:]
-  var quitWhenNoMainWindow = false
 
   var openQuickly = OpenQuicklyWindow.State.default
 
@@ -39,6 +47,11 @@ struct AppState: SerializableState {
 
     self.openNewMainWindowOnLaunch = openOnLaunch
     self.openNewMainWindowOnReactivation = openOnReactivation
+
+    let lastWindowActionString = PrefUtils.string(from: dict, for: Keys.afterLastWindowAction)
+                                 ?? AfterLastWindowAction.doNothing.rawValue
+    self.afterLastWindowAction = AfterLastWindowAction(rawValue: lastWindowActionString) ?? .doNothing
+
     self.useSnapshotUpdate = useSnapshot
 
     let openQuicklyDict = dict[Keys.OpenQuickly.key] as? [String: Any] ?? [:]
@@ -52,6 +65,7 @@ struct AppState: SerializableState {
     return [
       Keys.openNewOnLaunch: self.openNewMainWindowOnLaunch,
       Keys.openNewOnReactivation: self.openNewMainWindowOnReactivation,
+      Keys.afterLastWindowAction: self.afterLastWindowAction.rawValue,
       Keys.useSnapshotUpdateChannel: self.useSnapshotUpdate,
 
       Keys.OpenQuickly.key: self.openQuickly.dict(),
@@ -217,9 +231,8 @@ extension MainWindow {
 
     var appearance = AppearanceState.default
     var useInteractiveZsh = false
-
-    // transient^2
-    var close = false
+    var nvimArgs: [String]?
+    var cliPipePath: String?
 
     // to be cleaned
     var urlsToOpen = [URL: OpenMode]()

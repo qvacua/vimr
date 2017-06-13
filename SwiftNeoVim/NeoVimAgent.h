@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NeoVimAgent : NSObject
 
 @property (nonatomic) bool useInteractiveZsh;
+@property (nonatomic) NSURL *cwd;
+@property (nonatomic, nullable) NSArray<NSString *> *nvimArgs;
 @property (readonly, atomic) bool neoVimIsQuitting;
 @property (nonatomic, weak) id <NeoVimUiBridgeProtocol> bridge;
 
@@ -26,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)quit;
 
-- (bool)runLocalServerAndNeoVim;
+- (bool)runLocalServerAndNeoVimWithWidth:(NSInteger)width height:(NSInteger)height;
 
 - (NSURL *)pwd;
 - (void)vimCommand:(NSString *)string;

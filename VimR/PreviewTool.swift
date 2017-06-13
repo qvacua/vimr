@@ -7,7 +7,6 @@ import Cocoa
 import RxSwift
 import PureLayout
 import WebKit
-import Swifter
 
 class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
 

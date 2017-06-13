@@ -146,9 +146,6 @@
 		4B77809F1EAA265400CB4E10 /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B7780A21EAA2D3100CB4E10 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B7780A41EAA2D3100CB4E10 /* MainMenu.xib */; };
 		4B7780A71EAA2E3200CB4E10 /* NeoVimWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B7780A91EAA2E3200CB4E10 /* NeoVimWindow.xib */; };
-		4B81B3CB1DE8827600ED1672 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B81B3CA1DE8827600ED1672 /* AppDelegate.swift */; };
-		4B81B3CD1DE8827600ED1672 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B81B3CC1DE8827600ED1672 /* Assets.xcassets */; };
-		4B81B3D01DE8827600ED1672 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B81B3CE1DE8827600ED1672 /* MainMenu.xib */; };
 		4B81B3D51DE8827E00ED1672 /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; };
 		4B81B3D61DE8827E00ED1672 /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B81B3D91DE882D500ED1672 /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
@@ -181,8 +178,6 @@
 		4BB489431D952CF6005BB0E8 /* WorkspaceToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */; };
 		4BB727141E97A718001571C1 /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; };
 		4BB727151E97A718001571C1 /* CocoaMarkdown.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BBFF8621E280E31008A3C1A /* Swifter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BBFF8611E280E31008A3C1A /* Swifter.framework */; };
-		4BBFF8631E2810FE008A3C1A /* Swifter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BBFF8611E280E31008A3C1A /* Swifter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BCADE081D11ED12004DAD0F /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */; };
 		4BDCFACB1D31449700F62670 /* NeoVimServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BDCFACA1D31449700F62670 /* NeoVimServer.m */; };
 		4BDCFACD1D3145AC00F62670 /* libnvim.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFACC1D3145AC00F62670 /* libnvim.a */; };
@@ -215,6 +210,24 @@
 		4BDF641D1D0887C100D47E1D /* TextDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BDF641B1D0887C100D47E1D /* TextDrawer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4BDF64241D08CAB000D47E1D /* MMCoreTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDF64221D08CAB000D47E1D /* MMCoreTextView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		4BDF64251D08CAB000D47E1D /* MMCoreTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BDF64231D08CAB000D47E1D /* MMCoreTextView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		4BE149871EEF4792003DE5E2 /* Errno.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE149751EEF4792003DE5E2 /* Errno.swift */; };
+		4BE149881EEF4792003DE5E2 /* Files.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE149761EEF4792003DE5E2 /* Files.swift */; };
+		4BE149891EEF4792003DE5E2 /* HttpParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE149771EEF4792003DE5E2 /* HttpParser.swift */; };
+		4BE1498A1EEF4792003DE5E2 /* HttpRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE149781EEF4792003DE5E2 /* HttpRequest.swift */; };
+		4BE1498B1EEF4792003DE5E2 /* HttpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE149791EEF4792003DE5E2 /* HttpResponse.swift */; };
+		4BE1498C1EEF4792003DE5E2 /* HttpRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE1497A1EEF4792003DE5E2 /* HttpRouter.swift */; };
+		4BE1498D1EEF4792003DE5E2 /* HttpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE1497B1EEF4792003DE5E2 /* HttpServer.swift */; };
+		4BE1498E1EEF4792003DE5E2 /* HttpServerIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE1497C1EEF4792003DE5E2 /* HttpServerIO.swift */; };
+		4BE1498F1EEF4792003DE5E2 /* Process.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE1497D1EEF4792003DE5E2 /* Process.swift */; };
+		4BE149901EEF4792003DE5E2 /* Scopes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE1497E1EEF4792003DE5E2 /* Scopes.swift */; };
+		4BE149911EEF4792003DE5E2 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE1497F1EEF4792003DE5E2 /* Socket.swift */; };
+		4BE149921EEF4792003DE5E2 /* Socket+File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE149801EEF4792003DE5E2 /* Socket+File.swift */; };
+		4BE149931EEF4792003DE5E2 /* Socket+Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE149811EEF4792003DE5E2 /* Socket+Server.swift */; };
+		4BE149941EEF4792003DE5E2 /* String+BASE64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE149821EEF4792003DE5E2 /* String+BASE64.swift */; };
+		4BE149951EEF4792003DE5E2 /* String+File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE149831EEF4792003DE5E2 /* String+File.swift */; };
+		4BE149961EEF4792003DE5E2 /* String+Misc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE149841EEF4792003DE5E2 /* String+Misc.swift */; };
+		4BE149971EEF4792003DE5E2 /* String+SHA1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE149851EEF4792003DE5E2 /* String+SHA1.swift */; };
+		4BE149981EEF4792003DE5E2 /* WebSockets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE149861EEF4792003DE5E2 /* WebSockets.swift */; };
 		4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5081CFF374B00673FDF /* AppDelegate.swift */; };
 		4BEBA50B1CFF374B00673FDF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50A1CFF374B00673FDF /* Assets.xcassets */; };
 		4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50C1CFF374B00673FDF /* MainMenu.xib */; };
@@ -270,7 +283,6 @@
 			files = (
 				4BDD056B1DB0CACB00D1B405 /* Sparkle.framework in Embed Frameworks */,
 				4BDF50121D760B7200D8FBC3 /* EonilFileSystemEvents.framework in Embed Frameworks */,
-				4BBFF8631E2810FE008A3C1A /* Swifter.framework in Embed Frameworks */,
 				4B91FFF61DEB772B00447068 /* CocoaFontAwesome.framework in Embed Frameworks */,
 				4B183E101E06E29C0079E8A8 /* CocoaMarkdown.framework in Embed Frameworks */,
 				4B2A2BFF1D0351810074CE9A /* SwiftNeoVim.framework in Embed Frameworks */,
@@ -492,10 +504,6 @@
 		4B7780A31EAA2D3100CB4E10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		4B7780A81EAA2E3200CB4E10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/NeoVimWindow.xib; sourceTree = "<group>"; };
 		4B81B3C81DE8827600ED1672 /* OutlineViewTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OutlineViewTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B81B3CA1DE8827600ED1672 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4B81B3CC1DE8827600ED1672 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		4B81B3CF1DE8827600ED1672 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		4B81B3D11DE8827600ED1672 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B854A1A1D31447C00E08DE1 /* NeoVimServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NeoVimServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B854A1C1D31447C00E08DE1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4B8AC0431DBCB3A1007CCC9B /* NeoVimObjectsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimObjectsExtensions.swift; sourceTree = "<group>"; };
@@ -507,7 +515,6 @@
 		4BB409E61DD68CCC005F39A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/FileBrowserMenu.xib; sourceTree = "<group>"; };
 		4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProxyWorkspaceBar.swift; path = Workspace/ProxyWorkspaceBar.swift; sourceTree = "<group>"; };
 		4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WorkspaceToolButton.swift; path = Workspace/WorkspaceToolButton.swift; sourceTree = "<group>"; };
-		4BBFF8611E280E31008A3C1A /* Swifter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Swifter.framework; path = Carthage/Build/Mac/Swifter.framework; sourceTree = SOURCE_ROOT; };
 		4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaExtensions.swift; sourceTree = "<group>"; };
 		4BCF638F1D323CFD00F15CE4 /* nvim */ = {isa = PBXFileReference; lastKnownFileType = folder; name = nvim; path = neovim/src/nvim; sourceTree = SOURCE_ROOT; };
 		4BDCFAC91D31449700F62670 /* NeoVimServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimServer.h; sourceTree = "<group>"; };
@@ -535,6 +542,24 @@
 		4BDF641B1D0887C100D47E1D /* TextDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDrawer.m; sourceTree = "<group>"; };
 		4BDF64221D08CAB000D47E1D /* MMCoreTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCoreTextView.h; sourceTree = "<group>"; };
 		4BDF64231D08CAB000D47E1D /* MMCoreTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCoreTextView.m; sourceTree = "<group>"; };
+		4BE149751EEF4792003DE5E2 /* Errno.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Errno.swift; path = Carthage/Checkouts/swifter/Sources/Errno.swift; sourceTree = SOURCE_ROOT; };
+		4BE149761EEF4792003DE5E2 /* Files.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Files.swift; path = Carthage/Checkouts/swifter/Sources/Files.swift; sourceTree = SOURCE_ROOT; };
+		4BE149771EEF4792003DE5E2 /* HttpParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HttpParser.swift; path = Carthage/Checkouts/swifter/Sources/HttpParser.swift; sourceTree = SOURCE_ROOT; };
+		4BE149781EEF4792003DE5E2 /* HttpRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HttpRequest.swift; path = Carthage/Checkouts/swifter/Sources/HttpRequest.swift; sourceTree = SOURCE_ROOT; };
+		4BE149791EEF4792003DE5E2 /* HttpResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HttpResponse.swift; path = Carthage/Checkouts/swifter/Sources/HttpResponse.swift; sourceTree = SOURCE_ROOT; };
+		4BE1497A1EEF4792003DE5E2 /* HttpRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HttpRouter.swift; path = Carthage/Checkouts/swifter/Sources/HttpRouter.swift; sourceTree = SOURCE_ROOT; };
+		4BE1497B1EEF4792003DE5E2 /* HttpServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HttpServer.swift; path = Carthage/Checkouts/swifter/Sources/HttpServer.swift; sourceTree = SOURCE_ROOT; };
+		4BE1497C1EEF4792003DE5E2 /* HttpServerIO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HttpServerIO.swift; path = Carthage/Checkouts/swifter/Sources/HttpServerIO.swift; sourceTree = SOURCE_ROOT; };
+		4BE1497D1EEF4792003DE5E2 /* Process.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Process.swift; path = Carthage/Checkouts/swifter/Sources/Process.swift; sourceTree = SOURCE_ROOT; };
+		4BE1497E1EEF4792003DE5E2 /* Scopes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Scopes.swift; path = Carthage/Checkouts/swifter/Sources/Scopes.swift; sourceTree = SOURCE_ROOT; };
+		4BE1497F1EEF4792003DE5E2 /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Socket.swift; path = Carthage/Checkouts/swifter/Sources/Socket.swift; sourceTree = SOURCE_ROOT; };
+		4BE149801EEF4792003DE5E2 /* Socket+File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Socket+File.swift"; path = "Carthage/Checkouts/swifter/Sources/Socket+File.swift"; sourceTree = SOURCE_ROOT; };
+		4BE149811EEF4792003DE5E2 /* Socket+Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Socket+Server.swift"; path = "Carthage/Checkouts/swifter/Sources/Socket+Server.swift"; sourceTree = SOURCE_ROOT; };
+		4BE149821EEF4792003DE5E2 /* String+BASE64.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+BASE64.swift"; path = "Carthage/Checkouts/swifter/Sources/String+BASE64.swift"; sourceTree = SOURCE_ROOT; };
+		4BE149831EEF4792003DE5E2 /* String+File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+File.swift"; path = "Carthage/Checkouts/swifter/Sources/String+File.swift"; sourceTree = SOURCE_ROOT; };
+		4BE149841EEF4792003DE5E2 /* String+Misc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+Misc.swift"; path = "Carthage/Checkouts/swifter/Sources/String+Misc.swift"; sourceTree = SOURCE_ROOT; };
+		4BE149851EEF4792003DE5E2 /* String+SHA1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+SHA1.swift"; path = "Carthage/Checkouts/swifter/Sources/String+SHA1.swift"; sourceTree = SOURCE_ROOT; };
+		4BE149861EEF4792003DE5E2 /* WebSockets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebSockets.swift; path = Carthage/Checkouts/swifter/Sources/WebSockets.swift; sourceTree = SOURCE_ROOT; };
 		4BEBA5051CFF374B00673FDF /* VimR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VimR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BEBA5081CFF374B00673FDF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4BEBA50A1CFF374B00673FDF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -617,7 +642,6 @@
 				4B183E0E1E06E2940079E8A8 /* CocoaMarkdown.framework in Frameworks */,
 				4B2A2BEE1D02261F0074CE9A /* RxSwift.framework in Frameworks */,
 				4B401B141D0454DC00D99EDC /* PureLayout.framework in Frameworks */,
-				4BBFF8621E280E31008A3C1A /* Swifter.framework in Frameworks */,
 				4BDF50081D7607BF00D8FBC3 /* EonilFileSystemEvents.framework in Frameworks */,
 				4B2A2BEC1D02261F0074CE9A /* RxCocoa.framework in Frameworks */,
 			);
@@ -811,7 +835,6 @@
 			isa = PBXGroup;
 			children = (
 				4B5011F71EBA67EB00F76C46 /* RxTest.framework */,
-				4BBFF8611E280E31008A3C1A /* Swifter.framework */,
 				4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */,
 				4B337FBA1DEB76F20020ADD2 /* CocoaFontAwesome.framework */,
 				4BDD05691DB0CAB700D1B405 /* Sparkle.framework */,
@@ -869,17 +892,6 @@
 				4B7780A91EAA2E3200CB4E10 /* NeoVimWindow.xib */,
 			);
 			path = MacNeovim;
-			sourceTree = "<group>";
-		};
-		4B81B3C91DE8827600ED1672 /* OutlineViewTest */ = {
-			isa = PBXGroup;
-			children = (
-				4B81B3CA1DE8827600ED1672 /* AppDelegate.swift */,
-				4B81B3CC1DE8827600ED1672 /* Assets.xcassets */,
-				4B81B3CE1DE8827600ED1672 /* MainMenu.xib */,
-				4B81B3D11DE8827600ED1672 /* Info.plist */,
-			);
-			path = OutlineViewTest;
 			sourceTree = "<group>";
 		};
 		4B854A151D31444800E08DE1 /* resources */ = {
@@ -967,6 +979,31 @@
 			name = "File Items";
 			sourceTree = "<group>";
 		};
+		4BE149741EEF4771003DE5E2 /* Swifter */ = {
+			isa = PBXGroup;
+			children = (
+				4BE149751EEF4792003DE5E2 /* Errno.swift */,
+				4BE149761EEF4792003DE5E2 /* Files.swift */,
+				4BE149771EEF4792003DE5E2 /* HttpParser.swift */,
+				4BE149781EEF4792003DE5E2 /* HttpRequest.swift */,
+				4BE149791EEF4792003DE5E2 /* HttpResponse.swift */,
+				4BE1497A1EEF4792003DE5E2 /* HttpRouter.swift */,
+				4BE1497B1EEF4792003DE5E2 /* HttpServer.swift */,
+				4BE1497C1EEF4792003DE5E2 /* HttpServerIO.swift */,
+				4BE1497D1EEF4792003DE5E2 /* Process.swift */,
+				4BE1497E1EEF4792003DE5E2 /* Scopes.swift */,
+				4BE1497F1EEF4792003DE5E2 /* Socket.swift */,
+				4BE149801EEF4792003DE5E2 /* Socket+File.swift */,
+				4BE149811EEF4792003DE5E2 /* Socket+Server.swift */,
+				4BE149821EEF4792003DE5E2 /* String+BASE64.swift */,
+				4BE149831EEF4792003DE5E2 /* String+File.swift */,
+				4BE149841EEF4792003DE5E2 /* String+Misc.swift */,
+				4BE149851EEF4792003DE5E2 /* String+SHA1.swift */,
+				4BE149861EEF4792003DE5E2 /* WebSockets.swift */,
+			);
+			name = Swifter;
+			sourceTree = "<group>";
+		};
 		4BEBA4FC1CFF374B00673FDF = {
 			isa = PBXGroup;
 			children = (
@@ -976,7 +1013,6 @@
 				4B56F2911D29903F00C1F92E /* SwiftNeoVimTests */,
 				4B854A1B1D31447C00E08DE1 /* NeoVimServer */,
 				4B6423A01D8EFE7500FC78C8 /* VimR-Workspace-Demo */,
-				4B81B3C91DE8827600ED1672 /* OutlineViewTest */,
 				4B77808B1EAA25FF00CB4E10 /* MacNeovim */,
 				4B5012001EBA791000F76C46 /* Frameworks */,
 				4BEBA5061CFF374B00673FDF /* Products */,
@@ -1010,6 +1046,7 @@
 				4B6423941D8EFD6100FC78C8 /* Workspace */,
 				4B97E2CF1D33F92200FC0660 /* resources */,
 				1929BA652D3B88FC071531EC /* UI */,
+				4BE149741EEF4771003DE5E2 /* Swifter */,
 			);
 			path = VimR;
 			sourceTree = "<group>";
@@ -1351,8 +1388,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B81B3CD1DE8827600ED1672 /* Assets.xcassets in Resources */,
-				4B81B3D01DE8827600ED1672 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1497,7 +1532,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B81B3D91DE882D500ED1672 /* AppKitCommons.swift in Sources */,
-				4B81B3CB1DE8827600ED1672 /* AppDelegate.swift in Sources */,
 				1929B8EE07CA6D47855E7332 /* ImageAndTextTableCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1529,20 +1563,26 @@
 				4B6423981D8EFDE000FC78C8 /* WorkspaceBar.swift in Sources */,
 				4BB1BEA91D48773200463C29 /* RxSwiftCommons.swift in Sources */,
 				4B6A70961D6100E300E12030 /* SwiftCommons.swift in Sources */,
+				4BE149911EEF4792003DE5E2 /* Socket.swift in Sources */,
 				4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */,
 				4B64239A1D8EFE3000FC78C8 /* WorkspaceTool.swift in Sources */,
 				1929B462CD4935AFF6D69457 /* FileItem.swift in Sources */,
 				1929B6388EAF16C190B82955 /* FileItemIgnorePattern.swift in Sources */,
+				4BE1498E1EEF4792003DE5E2 /* HttpServerIO.swift in Sources */,
+				4BE149951EEF4792003DE5E2 /* String+File.swift in Sources */,
 				1929B67DA3EB21A631EF1DBB /* FileUtils.swift in Sources */,
 				1929B3F5743967125F357C9F /* Matcher.swift in Sources */,
 				1929B53876E6952D378C2B30 /* ScoredFileItem.swift in Sources */,
 				1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */,
+				4BE149871EEF4792003DE5E2 /* Errno.swift in Sources */,
 				4BB409EE1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */,
 				1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */,
 				1929BD2F41D93ADFF43C1C98 /* NetUtils.m in Sources */,
 				1929BE0DAEE9664C5BCFA211 /* States.swift in Sources */,
+				4BE149931EEF4792003DE5E2 /* Socket+Server.swift in Sources */,
 				1929B4FEE6EB56EF3F56B805 /* Context.swift in Sources */,
 				1929B0FF696312F754BC96E2 /* MainWindow.swift in Sources */,
+				4BE149901EEF4792003DE5E2 /* Scopes.swift in Sources */,
 				1929BD3878A3A47B8D685CD2 /* AppDelegateReducer.swift in Sources */,
 				1929BAFF1E011321D3186EE6 /* UiRoot.swift in Sources */,
 				1929B29B95AD176D57942E08 /* UiRootReducer.swift in Sources */,
@@ -1551,34 +1591,46 @@
 				1929B4B70926DE113E6BF990 /* PreviewReducer.swift in Sources */,
 				1929B5C1BABBC0D09D97C3EF /* PreviewService.swift in Sources */,
 				1929B0F599D1F62C7BE53D2C /* HttpServerService.swift in Sources */,
+				4BE149881EEF4792003DE5E2 /* Files.swift in Sources */,
 				1929B3AC66EFE35D68C020E3 /* PreviewToolReducer.swift in Sources */,
 				1929B59FA5C286E010F70BEE /* Types.swift in Sources */,
+				4BE149941EEF4792003DE5E2 /* String+BASE64.swift in Sources */,
 				1929B6D8F5FC723B7109031F /* OpenQuicklyReducer.swift in Sources */,
 				1929B5543B1E31A26096E656 /* FileMonitorReducer.swift in Sources */,
 				1929B5F016431A76292D1E84 /* FileMonitor.swift in Sources */,
 				1929B71381946860626E5224 /* FileBrowserReducer.swift in Sources */,
 				1929BA715337FE26155B2071 /* OpenedFileList.swift in Sources */,
 				1929B4E54E2F13A7F5F2B682 /* OpenedFileListReducer.swift in Sources */,
+				4BE1498B1EEF4792003DE5E2 /* HttpResponse.swift in Sources */,
 				1929BAE4900D72A7877741B1 /* PrefWindow.swift in Sources */,
 				1929BEAE0592096BC1191B67 /* PrefPane.swift in Sources */,
 				1929BEDE1BE950EDA9497363 /* GeneralPref.swift in Sources */,
 				1929B3217A7A3D79E28C80DB /* PrefWindowReducer.swift in Sources */,
+				4BE1498C1EEF4792003DE5E2 /* HttpRouter.swift in Sources */,
+				4BE1498F1EEF4792003DE5E2 /* Process.swift in Sources */,
 				1929B6BE1610892E6C4C0CE6 /* GeneralPrefReducer.swift in Sources */,
 				1929B05B9D664052EC2D23EF /* FileOutlineView.swift in Sources */,
 				1929BCC9D3604933DFF07E2E /* FileBrowser.swift in Sources */,
 				1929B4F0612224E594E89B92 /* AppearancePref.swift in Sources */,
+				4BE1498D1EEF4792003DE5E2 /* HttpServer.swift in Sources */,
 				1929B50D933A369A86A165DE /* AdvencedPref.swift in Sources */,
 				1929BCC7908DD899999B70BE /* AppearancePrefReducer.swift in Sources */,
 				1929B00BA624DA8DC75F7E02 /* SerializableStates.swift in Sources */,
+				4BE149961EEF4792003DE5E2 /* String+Misc.swift in Sources */,
 				1929B3557317755A43513B17 /* OpenQuicklyWindow.swift in Sources */,
+				4BE149981EEF4792003DE5E2 /* WebSockets.swift in Sources */,
+				4BE149971EEF4792003DE5E2 /* String+SHA1.swift in Sources */,
 				1929B13A458CB49BC44A92F5 /* ImageAndTextTableCell.swift in Sources */,
 				1929B333855A5406C400DA92 /* OpenQuicklyFilterOperation.swift in Sources */,
 				1929B1837C750CADB3A5BCB9 /* OpenQuicklyFileViewRow.swift in Sources */,
 				1929B990A143763A56CFCED0 /* PrefService.swift in Sources */,
+				4BE149921EEF4792003DE5E2 /* Socket+File.swift in Sources */,
 				1929BA76A1D97D8226F7CFB1 /* Debouncer.swift in Sources */,
 				1929B71610FF1DC6E459BA49 /* PreviewUtils.swift in Sources */,
 				1929B08C6230B9C5AB72DAF1 /* Pref128ToCurrentConverter.swift in Sources */,
+				4BE1498A1EEF4792003DE5E2 /* HttpRequest.swift in Sources */,
 				1929B94083273D4B321AD848 /* FileItemUtils.swift in Sources */,
+				4BE149891EEF4792003DE5E2 /* HttpParser.swift in Sources */,
 				1929BFDE22D155F7C4B19E96 /* HtmlPreviewTool.swift in Sources */,
 				1929B4B00D7BB191A9A6532D /* HtmlPreviewToolReducer.swift in Sources */,
 				1929BCF7F7B9CC5499A3F506 /* AdvancedPrefReducer.swift in Sources */,
@@ -1678,14 +1730,6 @@
 			name = NeoVimWindow.xib;
 			sourceTree = "<group>";
 		};
-		4B81B3CE1DE8827600ED1672 /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4B81B3CF1DE8827600ED1672 /* Base */,
-			);
-			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
 		4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1737,7 +1781,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 200;
+				DYLIB_CURRENT_VERSION = 202;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1762,7 +1806,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 200;
+				DYLIB_CURRENT_VERSION = 202;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1999,7 +2043,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 200;
+				CURRENT_PROJECT_VERSION = 202;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -2049,7 +2093,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 200;
+				CURRENT_PROJECT_VERSION = 202;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

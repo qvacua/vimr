@@ -36,11 +36,24 @@ class UiRoot: UiComponent {
           .filter { !uuidsInState.contains($0) }
           .forEach(self.removeMainWindow)
 
-        if state.quitWhenNoMainWindow && self.mainWindows.isEmpty {
-          NSApp.terminate(self)
+        guard self.mainWindows.isEmpty else {
+          return
+        }
+
+        switch state.afterLastWindowAction {
+
+        case .doNothing: return
+        case .hide: NSApp.hide(self)
+        case .quit: NSApp.terminate(self)
+
         }
       })
       .disposed(by: self.disposeBag)
+  }
+
+  // The following should only be used when Cmd-Q'ing
+  func prepareQuit() {
+    self.mainWindows.values.forEach { $0.quitNeoVimWithoutSaving() }
   }
 
   fileprivate let source: Observable<AppState>

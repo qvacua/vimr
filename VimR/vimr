@@ -4,35 +4,7 @@ import urllib
 import subprocess
 import argparse
 import os
-
-
-def call_open(arg, dry_run=False):
-    if dry_run:
-        print("/usr/bin/open {0}".format(arg))
-    else:
-        subprocess.call(["/usr/bin/open", arg])
-
-
-def abspath(path):
-    return os.path.abspath(os.path.expanduser(path))
-
-
-def vimr(action, args=None, dry_run=False):
-    files = args.file
-
-    cwd = os.getcwd()
-    if args.cwd is not None:
-        cwd = abspath(args.cwd)
-
-    query_params = {
-        "cwd": cwd
-    }
-
-    if files:
-        query_params["file"] = [abspath(f) for f in files]
-
-    url = "vimr://{0}?{1}".format(action, urllib.urlencode(query_params, True).replace('+', '%20'))
-    call_open(url, dry_run)
+import uuid
 
 
 class Action:
@@ -40,6 +12,80 @@ class Action:
     OPEN = "open"
     NEW_WINDOW = "open-in-new-window"
     SEPARATE_WINDOWS = "open-in-separate-windows"
+    NVIM = "nvim"
+
+
+class QueryParamKey:
+    PIPE_PATH = "pipe-path"
+    CWD = "cwd"
+    FILE = "file"
+    NVIM_ARGS = "nvim-args"
+    WAIT = "wait"
+
+
+def wait_for_ui_to_close():
+    with open(pipe_path, 'r') as fifo:
+        while True:
+            if len(fifo.read()) == 0:
+                break
+
+
+def call_open(action, query_params, args):
+    query_params[QueryParamKey.PIPE_PATH] = pipe_path
+    if args.wait:
+        query_params[QueryParamKey.WAIT] = "true"
+
+    url = "vimr://{0}?{1}".format(action, urllib.urlencode(query_params, True).replace('+', '%20'))
+
+    if args.dry_run:
+        print("/usr/bin/open {0}".format(url))
+    else:
+        subprocess.call(["/usr/bin/open", url])
+
+
+def abspath(path):
+    return os.path.abspath(os.path.expanduser(path))
+
+
+def vimr_nvim(other_args, nvim_args):
+    query_params = {
+        QueryParamKey.CWD: os.getcwd()
+    }
+
+    if nvim_args:
+        query_params[QueryParamKey.NVIM_ARGS] = nvim_args
+
+    call_open(Action.NVIM, query_params, other_args)
+
+
+def vimr(action, args):
+    cwd = os.getcwd()
+    if args.cwd is not None:
+        cwd = abspath(args.cwd)
+
+    query_params = {
+        QueryParamKey.CWD: cwd
+    }
+
+    files = args.file
+    if files:
+        query_params[QueryParamKey.FILE] = [abspath(f) for f in files]
+
+    call_open(action, query_params, args)
+
+
+pipe_path = "/tmp/com_qvacua_vimr_cli_pipe_{0}".format(str(uuid.uuid4()))
+
+if os.path.exists(pipe_path):
+    os.remove(pipe_path)
+
+try:
+    os.mkfifo(pipe_path, 0600)
+except OSError as error:
+    print("ERROR: {0}\n"
+          "{1} could not be mkfifo'ed.\n"
+          "Please go to https://github.com/qvacua/vimr and create an issue.".format(error, pipe_path))
+    raise
 
 description = """
 Open files in VimR: By default all files are open in tabs in the front most window or in a new window if there is none.
@@ -50,21 +96,45 @@ parser = argparse.ArgumentParser(description=description)
 
 parser.add_argument("--dry-run", action="store_true", dest="dry_run", help="Just print the 'open' command.")
 parser.add_argument("--cwd", action="store", help="Set the working directory.")
+parser.add_argument("--wait",
+                    action="store_true",
+                    help="This command line tool will exit when the corresponding UI window is closed.")
+parser.add_argument("--nvim",
+                        action="store_true",
+                        help="All other arguments (except --dry-run and --wait) will be passed over to nvim.")
+
 group = parser.add_mutually_exclusive_group()
 # no option => Open files in tabs in the front most window.
 group.add_argument("-n", action="store_true", dest="new_window", help="Open files in tabs in a new window.")
 group.add_argument("-s", action="store_true", dest="separate_windows", help="Open files in separate windows.")
+
 parser.add_argument("file", nargs="*")
-args = parser.parse_args()
-dry_run = args.dry_run
 
-if not args.file:
-    action = Action.ACTIVATE
-elif args.new_window:
-    action = Action.NEW_WINDOW
-elif args.separate_windows:
-    action = Action.SEPARATE_WINDOWS
+args, _ = parser.parse_known_args()
+
+if args.nvim:
+    nvim_parser = argparse.ArgumentParser()
+    nvim_parser.add_argument("--nvim", action="store_true")
+    nvim_parser.add_argument("--wait", action="store_true")
+    nvim_parser.add_argument("--dry-run", action="store_true")
+    other_args, nvim_args = nvim_parser.parse_known_args()
+    vimr_nvim(other_args, nvim_args)
+
 else:
-    action = Action.OPEN
+    if not args.file:
+        action = Action.ACTIVATE
+    elif args.new_window:
+        action = Action.NEW_WINDOW
+    elif args.separate_windows:
+        action = Action.SEPARATE_WINDOWS
+    else:
+        action = Action.OPEN
 
-vimr(action, args, dry_run)
+    vimr(action, args)
+
+if args.dry_run:
+    exit(0)
+
+wait_for_ui_to_close()
+
+os.remove(pipe_path)

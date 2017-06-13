@@ -72,6 +72,8 @@ class MainWindow: NSObject,
     self.emit = emitter.typedEmit()
     self.uuid = state.uuid
 
+    self.cliPipePath = state.cliPipePath
+
     self.defaultFont = state.appearance.font
     self.linespacing = state.appearance.linespacing
     self.usesLigatures = state.appearance.usesLigatures
@@ -79,8 +81,10 @@ class MainWindow: NSObject,
     self.editorPosition = state.preview.editorPosition
     self.previewPosition = state.preview.previewPosition
 
-    self.neoVimView = NeoVimView(frame: CGRect.zero,
-                                 config: NeoVimView.Config(useInteractiveZsh: state.useInteractiveZsh))
+    let neoVimViewConfig = NeoVimView.Config(useInteractiveZsh: state.useInteractiveZsh,
+                                             cwd: state.cwd,
+                                             nvimArgs: state.nvimArgs)
+    self.neoVimView = NeoVimView(frame: .zero, config: neoVimViewConfig)
     self.neoVimView.configureForAutoLayout()
 
     let workspace = Workspace(mainView: self.neoVimView)
@@ -175,12 +179,6 @@ class MainWindow: NSObject,
             return
           }
 
-          if state.close && !self.isClosing {
-            self.closeAllNeoVimWindowsWithoutSaving()
-            self.isClosing = true
-            return
-          }
-
           if state.viewToBeFocused != nil, case .neoVimView = state.viewToBeFocused! {
             self.window.makeFirstResponder(self.neoVimView)
           }
@@ -216,9 +214,6 @@ class MainWindow: NSObject,
 
             self.updateNeoVimAppearance()
           }
-        },
-        onCompleted: {
-          self.windowController.close()
         })
       .disposed(by: self.disposeBag)
 
@@ -232,6 +227,12 @@ class MainWindow: NSObject,
 
   func show() {
     self.windowController.showWindow(self)
+  }
+
+  // The following should only be used when Cmd-Q'ing
+  func quitNeoVimWithoutSaving() {
+    self.isClosing = true
+    self.neoVimView.quitNeoVimWithoutSaving()
   }
 
   fileprivate let emit: (UuidAction<Action>) -> Void
@@ -274,10 +275,7 @@ class MainWindow: NSObject,
   fileprivate let cursorDebouncer = Debouncer<Action>(interval: 0.75)
 
   fileprivate var isClosing = false
-
-  fileprivate func closeAllNeoVimWindowsWithoutSaving() {
-    self.neoVimView.closeAllWindowsWithoutSaving()
-  }
+  fileprivate let cliPipePath: String?
 
   fileprivate func updateNeoVimAppearance() {
     self.neoVimView.font = self.defaultFont
@@ -331,7 +329,19 @@ extension MainWindow {
 
   func neoVimStopped() {
     self.isClosing = true
+    self.windowController.close()
     self.emit(self.uuidAction(for: .close))
+
+    if let cliPipePath = self.cliPipePath {
+      let fd = Darwin.open(cliPipePath, O_WRONLY)
+      guard fd != -1 else {
+        return
+      }
+
+      let handle = FileHandle(fileDescriptor: fd)
+      handle.closeFile()
+      _ = Darwin.close(fd)
+    }
   }
 
   func set(title: String) {
