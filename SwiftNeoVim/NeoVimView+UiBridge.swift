@@ -181,7 +181,7 @@ extension NeoVimView {
   }
 
   public func stop() {
-    self.agent.quit()
+    self.bridgeLogger.hr()
 
     self.quitNeoVimCondition.lock()
     self.isNeoVimQuitSuccessful = true
@@ -189,7 +189,7 @@ extension NeoVimView {
     self.quitNeoVimCondition.unlock()
 
     gui.async {
-      self.bridgeLogger.mark()
+      self.agent.quit()
       self.delegate?.neoVimStopped()
     }
   }
