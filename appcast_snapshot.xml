@@ -7,31 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-202</title>
+      <title>SNAPSHOT-203</title>
       <description><![CDATA[
     <ul>
-<li>GH-326, GH-460: Add an option to hide or quit VimR when the last window closes. This is for example useful when you want to use VimR as <code>git difftool</code> as described below.</li>
-<li>GH-302, GH-421: The <code>vimr</code> CLI tool has two new options:</li>
-<li><code>--wait</code>: When present, the <code>vimr</code> CLI tool will exit only after the corresponding VimR window has been closed. This is particularly useful when combined with the <code>--nvim</code> option as described below.</li>
-<li><code>--nvim</code>: When present, all command line arguments except <code>--dry-run</code> and <code>--wait</code>, see above, will be passed over to the background <code>nvim</code> process when launching. This means that you can now use for example the <code>-d</code> option to activate the diffmode. To use VimR as <code>git difftool</code>, add the following to your <code>~/.gitconfig</code>
-    <code>[difftool "vimrdiff"]
-      cmd = vimr --wait --nvim -d $LOCAL $REMOTE
-    [diff]
-      tool = vimrdiff</code>
-  You have to re-install the <code>vimr</code> CLI tool in the Preferences window as described in the <a href="https://github.com/qvacua/vimr/wiki#command-line-tool">wiki</a>.</li>
-<li>Bonus: The Neovim splash screen shows up!</li>
+<li>Bring VimR to front when using <code>vimr</code> CLI tool. For details about the new options of <code>vimr</code> see the <a href="https://github.com/qvacua/vimr/releases/tag/snapshot%2F202">last release notes</a>.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/202
+        https://github.com/qvacua/vimr/releases/tag/snapshot/203
       </releaseNotesLink>
-      <pubDate>2017-06-13T23:32:34.285986</pubDate>
+      <pubDate>2017-06-14T18:34:27.141319</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/202/VimR-SNAPSHOT-202.tar.bz2"
-                 sparkle:version="202"
-                 sparkle:shortVersionString="SNAPSHOT-202"
-                 sparkle:dsaSignature="MC0CFQDDMqGPIoXWy5+rC2crlZ9Z43FcugIUaCKJI163VYVGUW17FBOVBbxskRc="
-                 length="10635023"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/203/VimR-SNAPSHOT-203.tar.bz2"
+                 sparkle:version="203"
+                 sparkle:shortVersionString="SNAPSHOT-203"
+                 sparkle:dsaSignature="MC4CFQCmvmWPJcQW0nWQGr8qH7kkJnGGPAIVAPC+2XMUqr4K+DLHA/bn5HH50DMg"
+                 length="10631543"
                  type="application/octet-stream"/>
     </item>
   </channel>
