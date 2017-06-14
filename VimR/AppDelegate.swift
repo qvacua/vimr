@@ -231,6 +231,9 @@ extension AppDelegate {
       _ = Darwin.close(Darwin.open(pipePath, O_WRONLY))
     }
 
+    // If we don't do this, the window is active, but not in front.
+    NSApp.activate(ignoringOtherApps: true)
+
     switch action {
 
     case .activate, .newWindow:
