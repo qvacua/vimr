@@ -134,7 +134,7 @@ extension AppDelegate {
   }
 
   func applicationShouldTerminate(_ sender: NSApplication) -> NSApplicationTerminateReply {
-    if self.hasDirtyWindows && self.uiRoot.hasMainWindows {
+    if self.hasDirtyWindows && self.hasMainWindows {
       let alert = NSAlert()
       alert.addButton(withTitle: "Cancel")
       alert.addButton(withTitle: "Discard and Quit")
@@ -149,7 +149,7 @@ extension AppDelegate {
       return .terminateCancel
     }
 
-    if self.uiRoot.hasMainWindows {
+    if self.hasMainWindows {
       self.uiRoot.prepareQuit()
       return .terminateNow
     }
