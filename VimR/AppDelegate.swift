@@ -19,9 +19,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     case preferences
   }
 
-  @IBOutlet var debugMenu: NSMenuItem?
-  @IBOutlet var updater: SUUpdater?
-
   override init() {
     let baseServerUrl = URL(string: "http://localhost:\(NetUtils.openPort())")!
 
@@ -85,11 +82,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   fileprivate func setSparkleUrl(_ snapshot: Bool) {
     if snapshot {
-      self.updater?.feedURL = URL(
+      updater.feedURL = URL(
         string: "https://raw.githubusercontent.com/qvacua/vimr/develop/appcast_snapshot.xml"
       )
     } else {
-      self.updater?.feedURL = URL(
+      updater.feedURL = URL(
         string: "https://raw.githubusercontent.com/qvacua/vimr/master/appcast.xml"
       )
     }
@@ -113,7 +110,7 @@ extension AppDelegate {
     self.launching = false
 
 #if DEBUG
-    self.debugMenu?.isHidden = false
+    NSApp.mainMenu?.items.first { $0.identifier == "debug-menu-item" }?.isHidden = false
 #endif
   }
 
@@ -262,6 +259,10 @@ extension AppDelegate {
 // MARK: - IBActions
 extension AppDelegate {
 
+  @IBAction func checkForUpdates(_ sender: Any?) {
+    updater.checkForUpdates(sender)
+  }
+
   @IBAction func newDocument(_ sender: Any?) {
     self.emit(.newMainWindow(urls: [], cwd: FileUtils.userHomeUrl, nvimArgs: nil, cliPipePath: nil))
   }
@@ -301,6 +302,7 @@ fileprivate enum VimRUrlAction: String {
   case nvim = "nvim"
 }
 
+fileprivate let updater = SUUpdater()
 
 fileprivate let filePrefix = "file="
 fileprivate let cwdPrefix = "cwd="
