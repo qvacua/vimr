@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import Sparkle
 
 let logger = FileLogger(as: "VimR",
                         with: URL(fileURLWithPath: "/tmp/vimr.log"),
@@ -12,23 +13,25 @@ let logger = FileLogger(as: "VimR",
 class Application: NSApplication {
 
   override init() {
-    // Do very early initializtion here
-
-    // disable default press and hold behavior (copied from MacVim)
-    CFPreferencesSetAppValue(
-      "ApplePressAndHoldEnabled" as NSString,
-      "NO" as NSString,
-      kCFPreferencesCurrentApplication
-    )
-
+    setPressAndHoldSetting()
     super.init()
   }
 
   required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
+    setPressAndHoldSetting()
+    super.init(coder: coder)
   }
 
   @IBAction override func showHelp(_: Any?) {
     NSWorkspace.shared().open(URL(string: "https://github.com/qvacua/vimr/wiki")!)
   }
+}
+
+fileprivate func setPressAndHoldSetting() {
+  // disable default press and hold behavior (copied from MacVim)
+  CFPreferencesSetAppValue(
+    "ApplePressAndHoldEnabled" as NSString,
+    "NO" as NSString,
+    kCFPreferencesCurrentApplication
+  )
 }

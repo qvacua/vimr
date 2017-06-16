@@ -114,15 +114,40 @@ static CGColorRef color_for(NSInteger value) {
 {
   CGContextSaveGState(context);
 
-  if (attrs.fontTrait & FontTraitUnderline) {
-    [self drawUnderline:positions count:positionsCount color:attrs.foreground context:context];
-  }
-
   [self drawString:string positions:positions
          fontTrait:attrs.fontTrait foreground:attrs.foreground
            context:context];
 
+  if (attrs.fontTrait & FontTraitUnderline) {
+    [self drawUnderline:positions count:positionsCount color:attrs.foreground context:context];
+  }
+
+  if (attrs.fontTrait & FontTraitUndercurl) {
+    [self drawUntercurl:positions count:positionsCount color:attrs.special context:context];
+  }
+
   CGContextRestoreGState(context);
+}
+
+- (void)drawUntercurl:(const CGPoint *_Nonnull)positions
+                count:(NSInteger)count
+                color:(NSInteger)color
+              context:(CGContextRef _Nonnull)context
+{
+  CGFloat x0 = positions[0].x;
+  CGFloat y0 = positions[0].y - 0.1 * _cellSize.height;
+  CGFloat w = _cellSize.width;
+  CGFloat h = 0.5 * _descent;
+
+  CGContextMoveToPoint(context, x0, y0);
+  for (int k = 0; k < count; k++) {
+    CGContextAddCurveToPoint(context, x0 + 0.25 * w, y0, x0 + 0.25 * w, y0 + h, x0 + 0.5 * w, y0 + h);
+    CGContextAddCurveToPoint(context, x0 + 0.75 * w, y0 + h, x0 + 0.75 * w, y0, x0 + w, y0);
+    x0 += w;
+  }
+
+  CGContextSetStrokeColorWithColor(context, color_for(color));
+  CGContextStrokePath(context);
 }
 
 - (void)drawUnderline:(const CGPoint *_Nonnull)positions

@@ -1,5 +1,6 @@
 # next
 
+* GH-378: Draw curly underline, e.g. when the spelling is incorrect.
 * GH-326, GH-460: Add an option to hide or quit VimR when the last window closes. This is for example useful when you want to use VimR as `git difftool` as described below.
 * GH-302, GH-421: The `vimr` CLI tool has two new options:
   - `--wait`: When present, the `vimr` CLI tool will exit only after the corresponding VimR window has been closed. This is particularly useful when combined with the `--nvim` option as described below.

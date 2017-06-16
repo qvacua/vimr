@@ -8,19 +8,21 @@ import Cocoa
 class Application: NSApplication {
 
   override init() {
-    // Do very early initializtion here
-
-    // disable default press and hold behavior (copied from MacVim)
-    CFPreferencesSetAppValue(
-      "ApplePressAndHoldEnabled" as NSString,
-      "NO" as NSString,
-      kCFPreferencesCurrentApplication
-    )
-
+    setPressAndHoldSetting()
     super.init()
   }
 
   required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
+    setPressAndHoldSetting()
+    super.init(coder: coder)
   }
+}
+
+fileprivate func setPressAndHoldSetting() {
+  // disable default press and hold behavior (copied from MacVim)
+  CFPreferencesSetAppValue(
+    "ApplePressAndHoldEnabled" as NSString,
+    "NO" as NSString,
+    kCFPreferencesCurrentApplication
+  )
 }

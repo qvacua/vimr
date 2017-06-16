@@ -10,10 +10,6 @@ class UiRoot: UiComponent {
 
   typealias StateType = AppState
 
-  var hasMainWindows: Bool {
-    return !self.mainWindows.isEmpty
-  }
-
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.source = source
     self.emitter = emitter
