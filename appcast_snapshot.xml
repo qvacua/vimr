@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-203</title>
+      <title>SNAPSHOT-204</title>
       <description><![CDATA[
     <ul>
-<li>Bring VimR to front when using <code>vimr</code> CLI tool. For details about the new options of <code>vimr</code> see the <a href="https://github.com/qvacua/vimr/releases/tag/snapshot%2F202">last release notes</a>.</li>
+<li>GH-378: Draw curly underline, e.g. when the spelling is incorrect.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/203
+        https://github.com/qvacua/vimr/releases/tag/snapshot/204
       </releaseNotesLink>
-      <pubDate>2017-06-14T18:34:27.141319</pubDate>
+      <pubDate>2017-06-16T19:33:17.355821</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/203/VimR-SNAPSHOT-203.tar.bz2"
-                 sparkle:version="203"
-                 sparkle:shortVersionString="SNAPSHOT-203"
-                 sparkle:dsaSignature="MC4CFQCmvmWPJcQW0nWQGr8qH7kkJnGGPAIVAPC+2XMUqr4K+DLHA/bn5HH50DMg"
-                 length="10631543"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/204/VimR-SNAPSHOT-204.tar.bz2"
+                 sparkle:version="204"
+                 sparkle:shortVersionString="SNAPSHOT-204"
+                 sparkle:dsaSignature="MC4CFQDESITZZB7eepsrWBoR0Ro/7dH9RgIVAJiEVtE4rMVkyWC4/ujgS4nVtbHl"
+                 length="10631791"
                  type="application/octet-stream"/>
     </item>
   </channel>
