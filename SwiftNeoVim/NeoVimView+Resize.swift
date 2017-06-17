@@ -43,6 +43,7 @@ extension NeoVimView {
 
     let discreteSize = self.discreteSize(size: size)
     if discreteSize == self.grid.size {
+      self.markForRenderWholeView()
       return
     }
 
