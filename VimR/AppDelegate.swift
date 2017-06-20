@@ -32,8 +32,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         initialAppState = .default
       }
     }
-    initialAppState.mainWindowTemplate.htmlPreview.server
-    = Marked(baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath))
+    initialAppState.mainWindowTemplate.htmlPreview.server = Marked(
+      baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath)
+    )
 
     self.stateContext = Context(baseServerUrl: baseServerUrl, state: initialAppState)
     self.emit = self.stateContext.actionEmitter.typedEmit()
@@ -110,7 +111,7 @@ extension AppDelegate {
     self.launching = false
 
 #if DEBUG
-    NSApp.mainMenu?.items.first { $0.identifier == "debug-menu-item" }?.isHidden = false
+    NSApp.mainMenu?.items.first { $0.identifier == debugMenuItemIdentifier }?.isHidden = false
 #endif
   }
 
@@ -310,6 +311,8 @@ fileprivate enum VimRUrlAction: String {
 }
 
 fileprivate let updater = SUUpdater()
+
+fileprivate let debugMenuItemIdentifier = "debug-menu-item"
 
 fileprivate let filePrefix = "file="
 fileprivate let cwdPrefix = "cwd="
