@@ -195,6 +195,13 @@ extension AppDelegate {
       .flatMap({ $0.without(prefix: pipePathPrefix).removingPercentEncoding })
       .first else {
 
+      let alert = NSAlert()
+      alert.alertStyle = .informational
+      alert.messageText = "Outdated command line tool?"
+      alert.informativeText = "It seems that the installed vimr command line tool is outdated." +
+                              "Please re-install it from the General Preferences."
+      alert.runModal()
+
       return
     }
 
