@@ -198,7 +198,7 @@ extension AppDelegate {
 
       let alert = NSAlert()
       alert.alertStyle = .informational
-      alert.messageText = "Outdated command line tool?"
+      alert.messageText = "Outdated Command Line Tool?"
       alert.informativeText = "It seems that the installed vimr command line tool is outdated." +
                               "Please re-install it from the General Preferences."
       alert.runModal()
