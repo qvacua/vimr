@@ -1,4 +1,4 @@
-# next
+# 0.16.0-205
 
 * GH-378: Draw curly underline, e.g. when the spelling is incorrect.
 * GH-326, GH-460: Add an option to hide or quit VimR when the last window closes. This is for example useful when you want to use VimR as `git difftool` as described below.
