@@ -6,9 +6,7 @@
 import Cocoa
 import Sparkle
 
-let logger = FileLogger(as: "VimR",
-                        with: URL(fileURLWithPath: "/tmp/vimr.log"),
-                        shouldLogDebug: nil)
+let logger = FileLogger(as: "VimR", with: URL(fileURLWithPath: "/tmp/vimr.log"))
 
 class Application: NSApplication {
 
