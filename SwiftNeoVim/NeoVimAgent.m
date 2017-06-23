@@ -62,7 +62,7 @@ static void log_cfmachport_error(SInt32 err, NeoVimAgentMsgId msgid, NSData *inp
 @end
 
 
-static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFDataRef data, void *info) {
+static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 msgid, CFDataRef data, void *info) {
   @autoreleasepool {
     NeoVimAgent *agent = (__bridge NeoVimAgent *) info;
     [agent handleMessageWithId:msgid data:(__bridge NSData *) (data)];
