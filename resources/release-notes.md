@@ -2,7 +2,7 @@
 
 * ...
 
-# 0.16.1-206
+# 0.16.1-208
 
 * GH-472: Bugfix: mouse scrolling an out-of-focus split window scrolls the focused split window.
 
