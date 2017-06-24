@@ -25,14 +25,13 @@ extension NeoVimView {
       return
     }
 
-    let isTrackpad = event.hasPreciseScrollingDeltas
-
     let cellPosition = self.cellPositionFor(event: event)
-    let (vimInputX, vimInputY) = self.vimScrollInputFor(deltaX: deltaX, deltaY: deltaY,
-                                                        modifierFlags: event.modifierFlags,
-                                                        cellPosition: cellPosition)
 
+    let isTrackpad = event.hasPreciseScrollingDeltas
     if isTrackpad == false {
+      let (vimInputX, vimInputY) = self.vimScrollInputFor(deltaX: deltaX, deltaY: deltaY,
+                                                          modifierFlags: event.modifierFlags,
+                                                          cellPosition: cellPosition)
       self.agent.vimInput(vimInputX)
       self.agent.vimInput(vimInputY)
       return
@@ -41,7 +40,7 @@ extension NeoVimView {
     let (absDeltaX, absDeltaY) = (min(Int(ceil(abs(deltaX) / 5.0)), maxScrollDeltaX),
                                   min(Int(ceil(abs(deltaY) / 5.0)), maxScrollDeltaY))
     let (horizSign, vertSign) = (deltaX > 0 ? 1 : -1, deltaY > 0 ? 1 : -1)
-    self.agent.scrollHorizontal(horizSign * absDeltaX, vertical: vertSign * absDeltaY)
+    self.agent.scrollHorizontal(horizSign * absDeltaX, vertical: vertSign * absDeltaY, at: cellPosition)
   }
 
   override public func magnify(with event: NSEvent) {
@@ -73,11 +72,11 @@ extension NeoVimView {
 
   fileprivate func cellPositionFor(event: NSEvent) -> Position {
     let location = self.convert(event.locationInWindow, from: nil)
-    let row = Int((location.x - self.xOffset) / self.cellSize.width)
-    let column = Int((self.bounds.size.height - location.y - self.yOffset) / self.cellSize.height)
+    let row = Int((self.bounds.size.height - location.y - self.yOffset) / self.cellSize.height)
+    let column = Int((location.x - self.xOffset) / self.cellSize.width)
 
-    let cellPosition = Position(row: min(max(0, row), self.grid.size.width - 1),
-                                column: min(max(0, column), self.grid.size.height - 1))
+    let cellPosition = Position(row: min(max(0, row), self.grid.size.height - 1),
+                                column: min(max(0, column), self.grid.size.width - 1))
     return cellPosition
   }
 
@@ -87,7 +86,7 @@ extension NeoVimView {
       return
     }
 
-    let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.row),\(cellPosition.column)")
+    let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.column),\(cellPosition.row)")
     let vimClickCount = self.vimClickCountFrom(event: event)
 
     let result: String

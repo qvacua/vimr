@@ -16,3 +16,12 @@ echo "### Commiting and pushing appcast"
 
 git commit -S -am "Bump appcast to ${COMPOUND_VERSION}"
 git push origin HEAD:"${BRANCH}"
+
+if [ "${IS_SNAPSHOT}" = false ] ; then
+    git reset --hard @
+    git checkout develop
+    git merge master
+    cp appcast.xml appcast_snapshot.xml
+    git commit appcast_snapshot.xml -m "Update appcast_snapshot with version ${COMPOUND_VERSION}"
+    git push origin HEAD:develop
+fi

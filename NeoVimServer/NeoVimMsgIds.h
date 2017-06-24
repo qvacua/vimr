@@ -6,7 +6,7 @@
 @import Foundation;
 
 
-typedef NS_ENUM(NSUInteger, NeoVimServerMsgId) {
+typedef NS_ENUM(NSInteger, NeoVimServerMsgId) {
     NeoVimServerMsgIdServerReady = 0,
     NeoVimServerMsgIdNeoVimReady,
     NeoVimServerMsgIdResize,
@@ -44,7 +44,7 @@ typedef NS_ENUM(NSUInteger, NeoVimServerMsgId) {
 #endif
 };
 
-typedef NS_ENUM(NSUInteger, NeoVimAgentMsgId) {
+typedef NS_ENUM(NSInteger, NeoVimAgentMsgId) {
     NeoVimAgentMsgIdAgentReady = 0,
     NeoVimAgentMsgIdCommand,
     NeoVimAgentMsgIdCommandOutput,

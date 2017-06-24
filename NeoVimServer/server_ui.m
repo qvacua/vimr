@@ -546,12 +546,12 @@ void custom_ui_autocmds_groups(
 
     NSMutableData *data;
     if (buf == NULL) {
-      data = [[NSMutableData alloc] initWithBytes:&eventCode length:sizeof(NSUInteger)];
+      data = [[NSMutableData alloc] initWithBytes:&eventCode length:sizeof(NSInteger)];
     } else {
       NSInteger bufHandle = buf->handle;
 
-      data = [[NSMutableData alloc] initWithCapacity:(sizeof(NSUInteger) + sizeof(NSInteger))];
-      [data appendBytes:&eventCode length:sizeof(NSUInteger)];
+      data = [[NSMutableData alloc] initWithCapacity:(sizeof(NSInteger) + sizeof(NSInteger))];
+      [data appendBytes:&eventCode length:sizeof(NSInteger)];
       [data appendBytes:&bufHandle length:sizeof(NSInteger)];
     }
 
@@ -674,11 +674,18 @@ static NeoVimBuffer *buffer_for(buf_T *buf) {
 void neovim_scroll(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     NSInteger *values = (NSInteger *) data.bytes;
-    NSInteger horiz = values[0];
-    NSInteger vert = values[1];
+    int horiz = (int) values[0];
+    int vert = (int) values[1];
+    int row = (int) values[2];
+    int column = (int) values[3];
 
     if (horiz == 0 && vert == 0) {
       return nil;
+    }
+
+    if (row < 0 || column < 0) {
+      row = 0;
+      column = 0;
     }
 
     // value > 0 => down or right
@@ -686,11 +693,11 @@ void neovim_scroll(void **argv) {
     int vertDir;
     if (horiz != 0) {
       horizDir = horiz > 0 ? MSCR_RIGHT: MSCR_LEFT;
-      custom_ui_scroll(horizDir, (int) ABS(horiz));
+      custom_ui_scroll(horizDir, ABS(horiz), row, column);
     }
     if (vert != 0) {
       vertDir = vert > 0 ? MSCR_DOWN: MSCR_UP;
-      custom_ui_scroll(vertDir, (int) ABS(vert));
+      custom_ui_scroll(vertDir, ABS(vert), row, column);
     }
 
     refresh_ui_screen(VALID);

@@ -189,13 +189,9 @@ extension AppDelegate {
       return
     }
 
-    let queryParams = url.query?.components(separatedBy: "&")
+    let rawParams = url.query?.components(separatedBy: "&") ?? []
 
-    guard let pipePath = queryParams?
-      .filter({ $0.hasPrefix(pipePathPrefix) })
-      .flatMap({ $0.without(prefix: pipePathPrefix).removingPercentEncoding })
-      .first else {
-
+    guard let pipePath = queryParam(pipePathPrefix, from: rawParams, transforming: identity).first else {
       let alert = NSAlert()
       alert.alertStyle = .informational
       alert.messageText = "Outdated Command Line Tool?"
@@ -217,20 +213,11 @@ extension AppDelegate {
       return
     }
 
-    let urls = queryParams?
-                 .filter { $0.hasPrefix(filePrefix) }
-                 .flatMap { $0.without(prefix: filePrefix).removingPercentEncoding }
-                 .map { URL(fileURLWithPath: $0) } ?? []
-    let cwd = queryParams?
-                .filter { $0.hasPrefix(cwdPrefix) }
-                .flatMap { $0.without(prefix: cwdPrefix).removingPercentEncoding }
-                .map { URL(fileURLWithPath: $0) }
-                .first ?? FileUtils.userHomeUrl
-    let wait = queryParams?
-                 .filter { $0.hasPrefix(waitPrefix) }
-                 .flatMap { $0.without(prefix: waitPrefix).removingPercentEncoding }
-                 .map { $0 == "true" ? true : false }
-                 .first ?? false
+    let urls = queryParam(filePrefix, from: rawParams, transforming: { URL(fileURLWithPath: $0) })
+    let cwd = queryParam(cwdPrefix,
+                         from: rawParams,
+                         transforming: { URL(fileURLWithPath: $0) }).first ?? FileUtils.userHomeUrl
+    let wait = queryParam(waitPrefix, from: rawParams, transforming: { $0 == "true" ? true : false }).first ?? false
 
     if wait == false {
       _ = Darwin.close(Darwin.open(pipePath, O_WRONLY))
@@ -251,16 +238,22 @@ extension AppDelegate {
       urls.forEach { self.emit(.newMainWindow(urls: [$0], cwd: cwd, nvimArgs: nil, cliPipePath: pipePath)) }
 
     case .nvim:
-      guard let nvimArgs = queryParams?
-        .filter({ $0.hasPrefix(nvimArgsPrefix) })
-        .flatMap({ $0.without(prefix: nvimArgsPrefix).removingPercentEncoding }) else {
-
-        break
-      }
-
-      self.emit(.newMainWindow(urls: [], cwd: cwd, nvimArgs: nvimArgs, cliPipePath: pipePath))
+      self.emit(.newMainWindow(urls: [],
+                               cwd: cwd,
+                               nvimArgs: queryParam(nvimArgsPrefix, from: rawParams, transforming: identity),
+                               cliPipePath: pipePath))
 
     }
+  }
+
+  fileprivate func queryParam<T>(_ prefix: String,
+                                 from rawParams: [String],
+                                 transforming transform: (String) -> T) -> [T] {
+
+    return rawParams
+      .filter { $0.hasPrefix(prefix) }
+      .flatMap { $0.without(prefix: prefix).removingPercentEncoding }
+      .map(transform)
   }
 }
 

@@ -5,6 +5,10 @@
 
 import Foundation
 
+func identity<T>(_ input: T) -> T {
+  return input
+}
+
 extension String {
 
   func without(prefix: String) -> String {

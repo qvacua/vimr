@@ -6,7 +6,9 @@
 @import Cocoa;
 
 
-@protocol NeoVimUiBridgeProtocol;
+#import "NeoVimUiBridgeProtocol.h"
+
+
 @class NeoVimBuffer;
 @class NeoVimTab;
 @class NeoVimWindow;
@@ -46,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<NeoVimBuffer *> *)buffers;
 - (NSArray<NeoVimTab*> *)tabs;
 
-- (void)scrollHorizontal:(NSInteger)horiz vertical:(NSInteger)vert;
+- (void)scrollHorizontal:(NSInteger)horiz vertical:(NSInteger)vert at:(Position)position;
 - (void)selectWindow:(NeoVimWindow *)window;
 
 // WAITS
