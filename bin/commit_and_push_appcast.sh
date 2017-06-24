@@ -19,8 +19,8 @@ git push origin HEAD:"${BRANCH}"
 
 if [ "${IS_SNAPSHOT}" = false ] ; then
     git reset --hard @
-    git checkout develop
-    git merge master
+    git checkout -b for_appcast origin/develop
+    git merge --ff-only for_build
     cp appcast.xml appcast_snapshot.xml
     git commit appcast_snapshot.xml -m "Update appcast_snapshot with version ${COMPOUND_VERSION}"
     git push origin HEAD:develop
