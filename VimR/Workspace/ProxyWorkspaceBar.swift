@@ -11,7 +11,7 @@ import PureLayout
  */
 class ProxyWorkspaceBar: NSView {
 
-  var theme = WorkspaceTheme.default
+  var theme = Workspace.Theme.default
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")

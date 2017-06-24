@@ -141,7 +141,7 @@ extension HtmlPreviewTool {
       self.addViews()
     }
 
-    override func repaint(with: WorkspaceTheme) {
+    override func repaint(with: Workspace.Theme) {
 
     }
 

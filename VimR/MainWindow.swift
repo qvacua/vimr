@@ -236,7 +236,7 @@ class MainWindow: NSObject,
   }
 
   @IBAction func debug2(_: Any?) {
-    var theme = WorkspaceTheme()
+    var theme = Workspace.Theme()
     theme.foreground = .red
     theme.background = .yellow
 

@@ -113,7 +113,7 @@ extension FileBrowser {
       self.addViews()
     }
 
-    override func repaint(with theme: WorkspaceTheme) {
+    override func repaint(with theme: Workspace.Theme) {
       self.goToParentButton.image = NSImage.fontAwesomeIcon(name: .levelUp,
                                                             textColor: theme.toolbarForeground,
                                                             dimension: InnerToolBar.iconDimension)

@@ -76,8 +76,8 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
   }
   var dimensionConstraint = NSLayoutConstraint()
 
-  var theme: WorkspaceTheme {
-    return self.workspace?.theme ?? WorkspaceTheme.default
+  var theme: Workspace.Theme {
+    return self.workspace?.theme ?? Workspace.Theme.default
   }
 
   weak var delegate: WorkspaceBarDelegate?

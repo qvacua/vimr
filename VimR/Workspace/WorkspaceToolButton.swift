@@ -35,8 +35,8 @@ class WorkspaceToolButton: NSView, NSDraggingSource {
     return self.tool?.isSelected ?? false
   }
 
-  var theme: WorkspaceTheme {
-    return self.tool?.theme ?? WorkspaceTheme.default
+  var theme: Workspace.Theme {
+    return self.tool?.theme ?? Workspace.Theme.default
   }
 
   weak var tool: WorkspaceTool?

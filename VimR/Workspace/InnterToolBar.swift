@@ -9,7 +9,7 @@ import CocoaFontAwesome
 
 class CustomToolBar: NSView {
 
-  func repaint(with: WorkspaceTheme) {
+  func repaint(with: Workspace.Theme) {
     // please implement
   }
 }
@@ -21,11 +21,8 @@ class CustomToolBar: NSView {
  */
 class InnerToolBar: NSView, NSUserInterfaceValidations {
 
-  fileprivate static let separatorColor = NSColor.controlShadowColor
   fileprivate static let separatorThickness = CGFloat(1)
   fileprivate static let height = InnerToolBar.iconDimension + 2 + 2 + InnerToolBar.separatorThickness
-
-  static fileprivate let backgroundColor = NSColor(red: 0.899, green: 0.934, blue: 0.997, alpha: 1)
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -48,7 +45,7 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
 
   static func configureToStandardIconButton(button: NSButton,
                                             iconName: CocoaFontAwesome.FontAwesome,
-                                            color: NSColor = WorkspaceTheme.default.toolbarForeground) {
+                                            color: NSColor = Workspace.Theme.default.toolbarForeground) {
 
     let icon = NSImage.fontAwesomeIcon(name: iconName, textColor: color, dimension: InnerToolBar.iconDimension)
 
@@ -74,8 +71,8 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     }
   }
 
-  var theme: WorkspaceTheme {
-    return self.tool?.theme ?? WorkspaceTheme.default
+  var theme: Workspace.Theme {
+    return self.tool?.theme ?? Workspace.Theme.default
   }
 
   weak var tool: WorkspaceTool? {
