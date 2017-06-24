@@ -26,6 +26,11 @@ class ProxyWorkspaceBar: NSView {
     self.layer?.backgroundColor = self.theme.background.cgColor
   }
 
+  func repaint() {
+    self.layer?.backgroundColor = self.theme.background.cgColor
+    self.needsDisplay = true
+  }
+
   override func draw(_ dirtyRect: NSRect) {
     let path = NSBezierPath(rect: self.bounds)
     path.lineWidth = 4

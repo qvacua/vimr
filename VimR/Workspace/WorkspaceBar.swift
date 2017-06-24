@@ -90,7 +90,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
     self.configureForAutoLayout()
 
     self.wantsLayer = true
-    self.layer!.backgroundColor = NSColor.windowBackgroundColor.cgColor
+    self.layer!.backgroundColor = self.theme.barBackground.cgColor
 
     self.proxyBar.container = self
   }
@@ -118,6 +118,12 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
     case .left:
       return CGRect(x: 0, y: 0, width: dimension, height: size.height)
     }
+  }
+
+  func repaint() {
+    self.layer!.backgroundColor = self.theme.barBackground.cgColor
+    self.tools.forEach { $0.repaint() }
+    self.needsDisplay = true
   }
 
   func relayout() {

@@ -10,9 +10,11 @@ class WorkspaceToolButton: NSView, NSDraggingSource {
   static fileprivate let titlePadding = CGSize(width: 8, height: 2)
   static fileprivate let dummyButton = WorkspaceToolButton(title: "Dummy")
 
-  fileprivate let title: NSAttributedString
+  fileprivate var isHighlighted = false
+
+  fileprivate let title: NSMutableAttributedString
   fileprivate var trackingArea = NSTrackingArea()
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -54,21 +56,40 @@ class WorkspaceToolButton: NSView, NSDraggingSource {
   }
 
   init(title: String) {
-    self.title = NSAttributedString(string: title, attributes: [
-      NSFontAttributeName: NSFont.systemFont(ofSize: 11)
+    self.title = NSMutableAttributedString(string: title, attributes: [
+      NSFontAttributeName: NSFont.systemFont(ofSize: 11),
     ])
 
-    super.init(frame: CGRect.zero)
+    super.init(frame: .zero)
     self.configureForAutoLayout()
+
+    self.title.addAttribute(NSForegroundColorAttributeName,
+                            value: self.theme.foreground,
+                            range: NSRange(location: 0, length: self.title.length))
 
     self.wantsLayer = true
   }
 
+  func repaint() {
+    if self.isHighlighted {
+      self.highlight()
+    } else {
+      self.dehighlight()
+    }
+
+    self.title.setAttributes([NSForegroundColorAttributeName: self.theme.foreground],
+                             range: NSRange(location: 0, length: self.title.length))
+
+    self.needsDisplay = true
+  }
+
   func highlight() {
+    self.isHighlighted = true
     self.layer?.backgroundColor = self.theme.barButtonHighlight.cgColor
   }
 
   func dehighlight() {
+    self.isHighlighted = false
     self.layer?.backgroundColor = self.theme.barButtonBackground.cgColor
   }
 }
@@ -78,7 +99,7 @@ extension WorkspaceToolButton {
 
   override var intrinsicContentSize: NSSize {
     let titleSize = self.title.size()
-    
+
     let padding = WorkspaceToolButton.titlePadding
     switch self.location {
     case .top, .bottom:
@@ -90,7 +111,7 @@ extension WorkspaceToolButton {
 
   override func draw(_ dirtyRect: NSRect) {
     super.draw(dirtyRect)
-    
+
     let padding = WorkspaceToolButton.titlePadding
     switch self.location {
     case .top, .bottom:
@@ -130,7 +151,7 @@ extension WorkspaceToolButton {
       pasteboardItem.setString(self.tool!.uuid, forType: WorkspaceToolButton.toolUti)
 
       let draggingItem = NSDraggingItem(pasteboardWriter: pasteboardItem)
-      draggingItem.setDraggingFrame(self.bounds, contents:self.snapshot())
+      draggingItem.setDraggingFrame(self.bounds, contents: self.snapshot())
 
       self.beginDraggingSession(with: [draggingItem], event: event, source: self)
       return
@@ -181,12 +202,12 @@ extension WorkspaceToolButton {
 // MARK: - NSDraggingSource
 extension WorkspaceToolButton {
 
-  @objc(draggingSession:sourceOperationMaskForDraggingContext:)
+  @objc(draggingSession: sourceOperationMaskForDraggingContext:)
   func draggingSession(_ session: NSDraggingSession, sourceOperationMaskFor ctc: NSDraggingContext) -> NSDragOperation {
     return .move
   }
 
-  @objc(draggingSession:endedAtPoint:operation:)
+  @objc(draggingSession: endedAtPoint:operation:)
   func draggingSession(_ session: NSDraggingSession, endedAt screenPoint: NSPoint, operation: NSDragOperation) {
     guard let pointInWindow = self.window?.convertFromScreen(CGRect(origin: screenPoint, size: .zero)) else {
       return

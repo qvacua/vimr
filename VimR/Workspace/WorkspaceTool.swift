@@ -138,6 +138,13 @@ class WorkspaceTool: NSView {
     self.delegate?.toggle(self)
   }
 
+  func repaint() {
+    self.button.repaint()
+    self.innerToolbar?.repaint()
+
+    self.needsDisplay = true
+  }
+
   fileprivate func addViews() {
     let view = self.view
     self.addSubview(view)

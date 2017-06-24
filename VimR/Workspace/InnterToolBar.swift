@@ -104,6 +104,11 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     self.addViews()
   }
 
+  func repaint() {
+    self.layer!.backgroundColor = self.theme.toolbarBackground.cgColor
+    self.needsDisplay = true
+  }
+
   override func draw(_ dirtyRect: NSRect) {
     self.theme.separator.set()
     let bottomSeparatorRect = self.bottomSeparatorRect()
