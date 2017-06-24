@@ -2,6 +2,10 @@
 
 * ...
 
+# 0.16.1-206
+
+* GH-472: Bugfix: mouse scrolling an out-of-focus split window scrolls the focused split window.
+
 # 0.16.0-205
 
 * GH-378: Draw curly underline, e.g. when the spelling is incorrect.
