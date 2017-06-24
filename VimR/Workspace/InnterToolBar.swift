@@ -67,6 +67,10 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     }
   }
 
+  var theme: WorkspaceTheme {
+    return self.tool?.theme ?? WorkspaceTheme.default
+  }
+
   weak var tool: WorkspaceTool? {
     didSet {
       self.titleField.stringValue = self.tool?.title ?? ""
@@ -95,18 +99,19 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     // Because other views also want layer, this view also must want layer. Otherwise the z-index ordering is not set
     // correctly: views w/ wantsLayer = false are behind views w/ wantsLayer = true even when added later.
     self.wantsLayer = true
-    self.layer?.backgroundColor = InnerToolBar.backgroundColor.cgColor
+    self.layer?.backgroundColor = self.theme.toolbarBackground.cgColor
 
     self.addViews()
   }
 
   override func draw(_ dirtyRect: NSRect) {
-    InnerToolBar.separatorColor.set()
+    self.theme.separator.set()
     let bottomSeparatorRect = self.bottomSeparatorRect()
     if dirtyRect.intersects(bottomSeparatorRect) {
       NSRectFill(bottomSeparatorRect)
     }
 
+    self.theme.toolbarForeground.set()
     let innerSeparatorRect = self.innerSeparatorRect()
     if dirtyRect.intersects(innerSeparatorRect) {
       NSRectFill(innerSeparatorRect)

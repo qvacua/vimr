@@ -46,7 +46,6 @@ fileprivate class ProxyBar: NSView {
 
 class WorkspaceBar: NSView, WorkspaceToolDelegate {
 
-  static fileprivate let separatorColor = NSColor.controlShadowColor
   static fileprivate let separatorThickness = CGFloat(1)
 
   fileprivate(set) var tools = [WorkspaceTool]()
@@ -76,6 +75,10 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
     return self.selectedTool != nil
   }
   var dimensionConstraint = NSLayoutConstraint()
+
+  var theme: WorkspaceTheme {
+    return self.workspace?.theme ?? WorkspaceTheme.default
+  }
 
   weak var delegate: WorkspaceBarDelegate?
   weak var workspace: Workspace?
@@ -469,7 +472,7 @@ extension WorkspaceBar {
   }
 
   fileprivate func drawInnerSeparator(_ dirtyRect: NSRect) {
-    WorkspaceBar.separatorColor.set()
+    self.theme.separator.set()
 
     let innerLineRect = self.innerSeparatorRect()
     if dirtyRect.intersects(innerLineRect) {
@@ -478,7 +481,7 @@ extension WorkspaceBar {
   }
 
   fileprivate func drawOuterSeparator(_ dirtyRect: NSRect) {
-    WorkspaceBar.separatorColor.set()
+    self.theme.separator.set()
 
     let outerLineRect = self.outerSeparatorRect()
     if dirtyRect.intersects(outerLineRect) {

@@ -50,6 +50,10 @@ class WorkspaceTool: NSView {
     }
   }
 
+  var theme: WorkspaceTheme {
+    return self.bar?.theme ?? WorkspaceTheme.default
+  }
+
   weak var delegate: WorkspaceToolDelegate?
   weak var bar: WorkspaceBar?
 

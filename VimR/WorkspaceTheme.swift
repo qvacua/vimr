@@ -7,12 +7,17 @@ import Cocoa
 
 struct WorkspaceTheme {
 
+  static let `default` = WorkspaceTheme()
+
   var foreground = NSColor.black
   var background = NSColor.white
 
   var separator = NSColor.controlShadowColor
 
   var barBackground = NSColor.windowBackgroundColor
+  var barFocusRing = NSColor.selectedControlColor
+
+  var barButtonBackground = NSColor.clear
   var barButtonHighlight = NSColor.controlShadowColor
 
   var toolbarForeground = NSColor.darkGray

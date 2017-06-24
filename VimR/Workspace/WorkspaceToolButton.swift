@@ -33,6 +33,10 @@ class WorkspaceToolButton: NSView, NSDraggingSource {
     return self.tool?.isSelected ?? false
   }
 
+  var theme: WorkspaceTheme {
+    return self.tool?.theme ?? WorkspaceTheme.default
+  }
+
   weak var tool: WorkspaceTool?
 
   static func dimension() -> CGFloat {
@@ -61,11 +65,11 @@ class WorkspaceToolButton: NSView, NSDraggingSource {
   }
 
   func highlight() {
-    self.layer?.backgroundColor = NSColor.controlShadowColor.cgColor
+    self.layer?.backgroundColor = self.theme.barButtonHighlight.cgColor
   }
 
   func dehighlight() {
-    self.layer?.backgroundColor = NSColor.clear.cgColor
+    self.layer?.backgroundColor = self.theme.barButtonBackground.cgColor
   }
 }
 
@@ -165,7 +169,7 @@ extension WorkspaceToolButton {
     result.size = rect.size
 
     result.lockFocus()
-    NSColor.controlShadowColor.set()
+    self.theme.barButtonHighlight.set()
     NSRectFill(rect)
     image.draw(in: rect)
     result.unlockFocus()

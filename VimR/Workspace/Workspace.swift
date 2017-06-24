@@ -60,6 +60,7 @@ class Workspace: NSView, WorkspaceBarDelegate {
   let mainView: NSView
   let bars: [WorkspaceBarLocation: WorkspaceBar]
   let config: Config
+  var theme = WorkspaceTheme.default
 
   weak var delegate: WorkspaceDelegate?
 
