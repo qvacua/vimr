@@ -546,12 +546,12 @@ void custom_ui_autocmds_groups(
 
     NSMutableData *data;
     if (buf == NULL) {
-      data = [[NSMutableData alloc] initWithBytes:&eventCode length:sizeof(NSUInteger)];
+      data = [[NSMutableData alloc] initWithBytes:&eventCode length:sizeof(NSInteger)];
     } else {
       NSInteger bufHandle = buf->handle;
 
-      data = [[NSMutableData alloc] initWithCapacity:(sizeof(NSUInteger) + sizeof(NSInteger))];
-      [data appendBytes:&eventCode length:sizeof(NSUInteger)];
+      data = [[NSMutableData alloc] initWithCapacity:(sizeof(NSInteger) + sizeof(NSInteger))];
+      [data appendBytes:&eventCode length:sizeof(NSInteger)];
       [data appendBytes:&bufHandle length:sizeof(NSInteger)];
     }
 

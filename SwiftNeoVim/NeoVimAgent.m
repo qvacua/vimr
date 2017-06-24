@@ -33,20 +33,16 @@ data_to_array(CellAttributes)
 static void log_cfmachport_error(SInt32 err, NeoVimAgentMsgId msgid, NSData *inputData) {
   switch (err) {
     case kCFMessagePortSendTimeout:
-      log4Warn("Got response kCFMessagePortSendTimeout = %d for the msg %lu with data %@.",
-          err, (unsigned long) msgid, inputData);
+      log4Warn("Got response kCFMessagePortSendTimeout = %d for the msg %d with data %@.", err, msgid, inputData);
     case kCFMessagePortReceiveTimeout:
-      log4Warn("Got response kCFMessagePortReceiveTimeout = %d for the msg %lu with data %@.",
-          err, (unsigned long) msgid, inputData);
+      log4Warn("Got response kCFMessagePortReceiveTimeout = %d for the msg %d with data %@.", err, msgid, inputData);
     case kCFMessagePortIsInvalid:
-      log4Warn("Got response kCFMessagePortIsInvalid = %d for the msg %lu with data %@.",
-          err, (unsigned long) msgid, inputData);
+      log4Warn("Got response kCFMessagePortIsInvalid = %d for the msg %d with data %@.", err, msgid, inputData);
     case kCFMessagePortTransportError:
-      log4Warn("Got response kCFMessagePortTransportError = %d for the msg %lu with data %@.",
-          err, (unsigned long) msgid, inputData);
+      log4Warn("Got response kCFMessagePortTransportError = %d for the msg %d with data %@.", err, msgid, inputData);
     case kCFMessagePortBecameInvalidError:
-      log4Warn("Got response kCFMessagePortBecameInvalidError = %d for the msg %lu with data %@.",
-          err, (unsigned long) msgid, inputData);
+      log4Warn("Got response kCFMessagePortBecameInvalidError = %d for the msg %d with data %@.",
+          err, msgid, inputData);
       return;
 
     default:
@@ -285,7 +281,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 - (bool)hasDirtyDocs {
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetDirtyDocs data:nil expectsReply:YES];
   if (response == nil) {
-    log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetDirtyDocs);
+    log4Warn("The response for the msg %d was nil.", NeoVimAgentMsgIdGetDirtyDocs);
     return NO;
   }
 
@@ -340,7 +336,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:fileNames];
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetEscapeFileNames data:data expectsReply:YES];
   if (response == nil) {
-    log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetEscapeFileNames);
+    log4Warn("The response for the msg %d was nil.", NeoVimAgentMsgIdGetEscapeFileNames);
     return @[];
   }
 
@@ -350,7 +346,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 - (NSArray <NeoVimBuffer *> *)buffers {
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetBuffers data:nil expectsReply:YES];
   if (response == nil) {
-    log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetBuffers);
+    log4Warn("The response for the msg %d was nil.", NeoVimAgentMsgIdGetBuffers);
     return @[];
   }
 
@@ -360,7 +356,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 - (NSArray<NeoVimWindow *> *)tabs {
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetTabs data:nil expectsReply:YES];
   if (response == nil) {
-    log4Warn("The response for the msg %lu was nil.", NeoVimAgentMsgIdGetTabs);
+    log4Warn("The response for the msg %d was nil.", NeoVimAgentMsgIdGetTabs);
     return @[];
   }
 
@@ -636,13 +632,13 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
     }
 
     case NeoVimServerMsgIdAutoCommandEvent: {
-      if (data.length == sizeof(NSUInteger) + sizeof(NSInteger)) {
-        NSUInteger *values = (NSUInteger *) data.bytes;
+      if (data.length == 2 * sizeof(NSInteger)) {
+        NSInteger *values = (NSInteger *) data.bytes;
         NeoVimAutoCommandEvent event = (NeoVimAutoCommandEvent) values[0];
-        NSInteger bufferHandle = ((NSInteger *) (values + 1))[0];
+        NSInteger bufferHandle = (values + 1)[0];
         [_bridge autoCommandEvent:event bufferHandle:bufferHandle];
       } else {
-        NSUInteger *values = data_to_NSUInteger_array(data, 1);
+        NSInteger *values = data_to_NSInteger_array(data, 1);
         [_bridge autoCommandEvent:(NeoVimAutoCommandEvent) values[0] bufferHandle:-1];
       }
       return;
