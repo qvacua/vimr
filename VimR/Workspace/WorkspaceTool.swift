@@ -64,7 +64,7 @@ class WorkspaceTool: NSView {
   let minimumDimension: CGFloat
   var dimension: CGFloat
 
-  var customInnerToolbar: NSView? {
+  var customInnerToolbar: CustomToolBar? {
     get {
       return self.innerToolbar?.customToolbar
     }
@@ -93,14 +93,14 @@ class WorkspaceTool: NSView {
 
     let isWithInnerToolbar: Bool
 
-    let customToolbar: NSView?
+    let customToolbar: CustomToolBar?
     let customMenuItems: [NSMenuItem]
 
     init(title: String,
          view: NSView,
          minimumDimension: CGFloat = 50,
          withInnerToolbar: Bool = true,
-         customToolbar: NSView? = nil,
+         customToolbar: CustomToolBar? = nil,
          customMenuItems: [NSMenuItem] = []) {
       self.title = title
       self.view = view

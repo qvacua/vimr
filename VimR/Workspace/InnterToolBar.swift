@@ -7,6 +7,13 @@ import Cocoa
 import PureLayout
 import CocoaFontAwesome
 
+class CustomToolBar: NSView {
+
+  func repaint(with: WorkspaceTheme) {
+    // please implement
+  }
+}
+
 /**
  This class is the base class for inner toolbars for workspace tools. It's got two default buttons:
  - Close button
@@ -38,12 +45,12 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
   // MARK: - API
   static let toolbarHeight = InnerToolBar.iconDimension
   static let iconDimension = CGFloat(19)
-  static let iconColor = NSColor.darkGray
 
-  static func configureToStandardIconButton(button: NSButton, iconName: CocoaFontAwesome.FontAwesome) {
-    let icon = NSImage.fontAwesomeIcon(name: iconName,
-                                       textColor: InnerToolBar.iconColor,
-                                       dimension: InnerToolBar.iconDimension)
+  static func configureToStandardIconButton(button: NSButton,
+                                            iconName: CocoaFontAwesome.FontAwesome,
+                                            color: NSColor = WorkspaceTheme.default.toolbarForeground) {
+
+    let icon = NSImage.fontAwesomeIcon(name: iconName, textColor: color, dimension: InnerToolBar.iconDimension)
 
     button.imagePosition = .imageOnly
     button.image = icon
@@ -60,7 +67,7 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
       self.addViews()
     }
   }
-  var customToolbar: NSView? {
+  var customToolbar: CustomToolBar? {
     didSet {
       self.removeCustomUiElements()
       self.addViews()
@@ -89,7 +96,7 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     }
   }
 
-  init(customToolbar: NSView? = nil, customMenuItems: [NSMenuItem] = []) {
+  init(customToolbar: CustomToolBar? = nil, customMenuItems: [NSMenuItem] = []) {
     self.customMenuItems = customMenuItems
     self.customToolbar = customToolbar
 
@@ -106,6 +113,17 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
 
   func repaint() {
     self.layer!.backgroundColor = self.theme.toolbarBackground.cgColor
+
+    self.titleField.textColor = self.theme.toolbarForeground
+    self.cogButton.menu?.item(at: 0)?.image = NSImage.fontAwesomeIcon(name: .cog,
+                                                                      textColor: self.theme.toolbarForeground,
+                                                                      dimension: InnerToolBar.iconDimension)
+    self.closeButton.image = NSImage.fontAwesomeIcon(name: .timesCircle,
+                                                     textColor: self.theme.toolbarForeground,
+                                                     dimension: InnerToolBar.iconDimension)
+
+    self.customToolbar?.repaint(with: self.theme)
+
     self.needsDisplay = true
   }
 
@@ -124,7 +142,8 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
   }
 
   fileprivate func removeCustomUiElements() {
-    [self.titleField, self.customToolbar, self.closeButton, self.cogButton].forEach { $0?.removeFromSuperview() }
+    self.customToolbar?.removeFromSuperview()
+    [self.titleField, self.closeButton, self.cogButton].forEach { $0.removeFromSuperview() }
     self.cogButton.menu = nil
   }
 
@@ -139,12 +158,14 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     title.isSelectable = false
     title.controlSize = .small
 
-    InnerToolBar.configureToStandardIconButton(button: close, iconName: .timesCircle)
+    InnerToolBar.configureToStandardIconButton(button: close,
+                                               iconName: .timesCircle,
+                                               color: self.theme.toolbarForeground)
     close.target = self
     close.action = #selector(InnerToolBar.closeAction)
 
     let cogIcon = NSImage.fontAwesomeIcon(name: .cog,
-                                          textColor: InnerToolBar.iconColor,
+                                          textColor: self.theme.toolbarForeground,
                                           dimension: InnerToolBar.iconDimension)
     cog.configureForAutoLayout()
     cog.imagePosition = .imageOnly

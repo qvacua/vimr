@@ -60,7 +60,12 @@ class Workspace: NSView, WorkspaceBarDelegate {
   let mainView: NSView
   let bars: [WorkspaceBarLocation: WorkspaceBar]
   let config: Config
-  var theme = WorkspaceTheme.default
+
+  var theme = WorkspaceTheme.default {
+    didSet {
+      self.repaint()
+    }
+  }
 
   weak var delegate: WorkspaceDelegate?
 

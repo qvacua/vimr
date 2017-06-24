@@ -6,6 +6,7 @@
 import Cocoa
 import RxSwift
 import PureLayout
+import CocoaFontAwesome
 
 class FileBrowser: NSView,
                    UiComponent {
@@ -36,8 +37,8 @@ class FileBrowser: NSView,
     self.fileView = FileOutlineView(source: source, emitter: emitter, state: state)
 
     self.showHiddenMenuItem = NSMenuItem(title: "Show Hidden Files",
-                                        action: #selector(FileBrowser.showHiddenAction),
-                                        keyEquivalent: "")
+                                         action: #selector(FileBrowser.showHiddenAction),
+                                         keyEquivalent: "")
     showHiddenMenuItem.boolState = state.fileBrowserShowHidden
     self.menuItems = [
       showHiddenMenuItem,
@@ -91,7 +92,7 @@ class FileBrowser: NSView,
 
 extension FileBrowser {
 
-  class InnerCustomToolbar: NSView {
+  class InnerCustomToolbar: CustomToolBar {
 
     fileprivate weak var fileBrowser: FileBrowser? {
       didSet {
@@ -101,15 +102,29 @@ extension FileBrowser {
       }
     }
 
-    let goToParentButton = NSButton(forAutoLayout:())
-    let scrollToSourceButton = NSButton(forAutoLayout:())
-    let refreshButton = NSButton(forAutoLayout:())
+    let goToParentButton = NSButton(forAutoLayout: ())
+    let scrollToSourceButton = NSButton(forAutoLayout: ())
+    let refreshButton = NSButton(forAutoLayout: ())
 
     init() {
       super.init(frame: .zero)
       self.configureForAutoLayout()
 
       self.addViews()
+    }
+
+    override func repaint(with theme: WorkspaceTheme) {
+      self.goToParentButton.image = NSImage.fontAwesomeIcon(name: .levelUp,
+                                                            textColor: theme.toolbarForeground,
+                                                            dimension: InnerToolBar.iconDimension)
+
+      self.scrollToSourceButton.image = NSImage.fontAwesomeIcon(name: .bullseye,
+                                                                textColor: theme.toolbarForeground,
+                                                                dimension: InnerToolBar.iconDimension)
+
+      self.refreshButton.image = NSImage.fontAwesomeIcon(name: .refresh,
+                                                         textColor: theme.toolbarForeground,
+                                                         dimension: InnerToolBar.iconDimension)
     }
 
     fileprivate func addViews() {

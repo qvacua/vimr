@@ -235,6 +235,25 @@ class MainWindow: NSObject,
     self.neoVimView.quitNeoVimWithoutSaving()
   }
 
+  @IBAction func debug2(_: Any?) {
+    var theme = WorkspaceTheme()
+    theme.foreground = .red
+    theme.background = .yellow
+
+    theme.separator = .blue
+
+    theme.barBackground = .cyan
+    theme.barFocusRing = .black
+
+    theme.barButtonBackground = .brown
+    theme.barButtonHighlight = .magenta
+
+    theme.toolbarForeground = .green
+    theme.toolbarBackground = .orange
+
+    self.workspace.theme = theme
+  }
+
   fileprivate let emit: (UuidAction<Action>) -> Void
   fileprivate let disposeBag = DisposeBag()
 
