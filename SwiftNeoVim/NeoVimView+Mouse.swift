@@ -72,11 +72,11 @@ extension NeoVimView {
 
   fileprivate func cellPositionFor(event: NSEvent) -> Position {
     let location = self.convert(event.locationInWindow, from: nil)
-    let row = Int((location.x - self.xOffset) / self.cellSize.width)
-    let column = Int((self.bounds.size.height - location.y - self.yOffset) / self.cellSize.height)
+    let row = Int((self.bounds.size.height - location.y - self.yOffset) / self.cellSize.height)
+    let column = Int((location.x - self.xOffset) / self.cellSize.width)
 
-    let cellPosition = Position(row: min(max(0, row), self.grid.size.width - 1),
-                                column: min(max(0, column), self.grid.size.height - 1))
+    let cellPosition = Position(row: min(max(0, row), self.grid.size.height - 1),
+                                column: min(max(0, column), self.grid.size.width - 1))
     return cellPosition
   }
 
@@ -86,7 +86,7 @@ extension NeoVimView {
       return
     }
 
-    let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.row),\(cellPosition.column)")
+    let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.column),\(cellPosition.row)")
     let vimClickCount = self.vimClickCountFrom(event: event)
 
     let result: String
