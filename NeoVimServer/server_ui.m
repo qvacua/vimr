@@ -676,9 +676,16 @@ void neovim_scroll(void **argv) {
     NSInteger *values = (NSInteger *) data.bytes;
     NSInteger horiz = values[0];
     NSInteger vert = values[1];
+    NSInteger row = values[2];
+    NSInteger column = values[3];
 
     if (horiz == 0 && vert == 0) {
       return nil;
+    }
+
+    if (row < 0 || column < 0) {
+      row = 0;
+      column = 0;
     }
 
     // value > 0 => down or right
@@ -686,11 +693,11 @@ void neovim_scroll(void **argv) {
     int vertDir;
     if (horiz != 0) {
       horizDir = horiz > 0 ? MSCR_RIGHT: MSCR_LEFT;
-      custom_ui_scroll(horizDir, (int) ABS(horiz));
+      custom_ui_scroll(horizDir, (int) ABS(horiz), row, column);
     }
     if (vert != 0) {
       vertDir = vert > 0 ? MSCR_DOWN: MSCR_UP;
-      custom_ui_scroll(vertDir, (int) ABS(vert));
+      custom_ui_scroll(vertDir, (int) ABS(vert), row, column);
     }
 
     refresh_ui_screen(VALID);

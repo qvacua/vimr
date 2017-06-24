@@ -320,9 +320,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
   [self sendMessageWithId:NeoVimAgentMsgIdSetBoolOption data:data expectsReply:YES];
 }
 
-- (void)scrollHorizontal:(NSInteger)horiz vertical:(NSInteger)vert {
-  NSInteger values[] = {horiz, vert};
-  NSData *data = [[NSData alloc] initWithBytes:values length:2 * sizeof(NSInteger)];
+- (void)scrollHorizontal:(NSInteger)horiz vertical:(NSInteger)vert at:(Position)position {
+  NSInteger values[] = {horiz, vert, position.row, position.column};
+  NSData *data = [[NSData alloc] initWithBytes:values length:4 * sizeof(NSInteger)];
   [self sendMessageWithId:NeoVimAgentMsgIdScroll data:data expectsReply:NO];
 }
 

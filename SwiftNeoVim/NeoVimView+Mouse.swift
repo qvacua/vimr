@@ -25,14 +25,13 @@ extension NeoVimView {
       return
     }
 
-    let isTrackpad = event.hasPreciseScrollingDeltas
-
     let cellPosition = self.cellPositionFor(event: event)
-    let (vimInputX, vimInputY) = self.vimScrollInputFor(deltaX: deltaX, deltaY: deltaY,
-                                                        modifierFlags: event.modifierFlags,
-                                                        cellPosition: cellPosition)
 
+    let isTrackpad = event.hasPreciseScrollingDeltas
     if isTrackpad == false {
+      let (vimInputX, vimInputY) = self.vimScrollInputFor(deltaX: deltaX, deltaY: deltaY,
+                                                          modifierFlags: event.modifierFlags,
+                                                          cellPosition: cellPosition)
       self.agent.vimInput(vimInputX)
       self.agent.vimInput(vimInputY)
       return
@@ -41,7 +40,7 @@ extension NeoVimView {
     let (absDeltaX, absDeltaY) = (min(Int(ceil(abs(deltaX) / 5.0)), maxScrollDeltaX),
                                   min(Int(ceil(abs(deltaY) / 5.0)), maxScrollDeltaY))
     let (horizSign, vertSign) = (deltaX > 0 ? 1 : -1, deltaY > 0 ? 1 : -1)
-    self.agent.scrollHorizontal(horizSign * absDeltaX, vertical: vertSign * absDeltaY)
+    self.agent.scrollHorizontal(horizSign * absDeltaX, vertical: vertSign * absDeltaY, at: cellPosition)
   }
 
   override public func magnify(with event: NSEvent) {
