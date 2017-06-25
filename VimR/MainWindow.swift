@@ -405,6 +405,24 @@ extension MainWindow {
 
   func colorschemeChanged(to theme: NeoVimView.Theme) {
     self.emit(uuidAction(for: .setTheme(theme)))
+
+    DispatchQueue.main.async {
+      var workspaceTheme = Workspace.Theme()
+      workspaceTheme.foreground = theme.foreground
+      workspaceTheme.background = theme.background
+
+      workspaceTheme.separator = theme.background.darkening(by: 0.75)
+
+      workspaceTheme.barBackground = theme.background
+      workspaceTheme.barFocusRing = theme.foreground
+
+      workspaceTheme.barButtonHighlight = theme.background.darkening(by: 0.75)
+
+      workspaceTheme.toolbarForeground = theme.foreground
+      workspaceTheme.toolbarBackground = theme.background.darkening(by: 0.75)
+
+      self.workspace.theme = workspaceTheme
+    }
   }
 
   func ipcBecameInvalid(reason: String) {

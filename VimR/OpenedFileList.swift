@@ -32,6 +32,7 @@ class OpenedFileList: NSView,
     super.init(frame: .zero)
 
     self.bufferList.dataSource = self
+    self.bufferList.allowsEmptySelection = true
     self.bufferList.delegate = self
     self.bufferList.target = self
     self.bufferList.doubleAction = #selector(OpenedFileList.doubleClickAction)

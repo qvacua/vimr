@@ -165,9 +165,18 @@ static HlAttrs HlAttrsFromAttrCode(int attr_code) {
 
 static void send_colorscheme() {
   HlAttrs visualAttrs = HlAttrsFromAttrCode(highlight_attr[HLF_V]);
+  HlAttrs statusLineAttrs = HlAttrsFromAttrCode(highlight_attr[HLF_S]);
+  HlAttrs pmenuAttrs = HlAttrsFromAttrCode(highlight_attr[HLF_PSI]);
+  HlAttrs nonTextAtrrs = HlAttrsFromAttrCode(highlight_attr[HLF_8]);
 
-  NSInteger values[] = { normal_fg, normal_bg, visualAttrs.foreground, visualAttrs.background };
-  NSData *resultData = [NSData dataWithBytes:values length:4 * sizeof(NSInteger)];
+  NSInteger values[] = {
+      normal_fg, normal_bg,
+      visualAttrs.foreground, visualAttrs.background,
+      statusLineAttrs.foreground, statusLineAttrs.background,
+      pmenuAttrs.foreground, pmenuAttrs.background,
+      nonTextAtrrs.foreground
+  };
+  NSData *resultData = [NSData dataWithBytes:values length:9 * sizeof(NSInteger)];
 
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdColorSchemeChanged data:resultData];
 }
@@ -1078,7 +1087,6 @@ void neovim_cursor_goto(void **argv) {
 
 void neovim_debug1(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {
-
     NSLog(@"normal fg: %#08X", normal_fg);
     NSLog(@"normal bg: %#08X", normal_bg);
     NSLog(@"normal sp: %#08X", normal_sp);

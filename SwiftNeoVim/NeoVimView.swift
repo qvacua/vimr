@@ -33,21 +33,50 @@ public class NeoVimView: NSView,
 
     public var foreground = NSColor.textColor
     public var background = NSColor.textBackgroundColor
+
     public var visualForeground = NSColor.selectedMenuItemTextColor
     public var visualBackground = NSColor.selectedMenuItemColor
+
+    public var statusLineForeground = NSColor.textColor
+    public var statusLineBackground = NSColor.windowBackgroundColor
+
+    public var pmenuForeground = NSColor.darkGray
+    public var pmenuBackground = NSColor(red: 0.899, green: 0.934, blue: 0.997, alpha: 1)
+
+    public var nonTextForeground = NSColor.controlShadowColor
 
     public init() {}
 
     public init(_ values: [Int]) {
-      self.foreground = values[0] < 0 ? NSColor.black : ColorUtils.colorIgnoringAlpha(values[0])
-      self.background = values[1] < 0 ? NSColor.white : ColorUtils.colorIgnoringAlpha(values[1])
-      self.visualForeground = values[2] < 0 ? NSColor.white : ColorUtils.colorIgnoringAlpha(values[2])
-      self.visualBackground = values[3] < 0 ? NSColor.black : ColorUtils.colorIgnoringAlpha(values[3])
+      if values.count < 9 {
+        preconditionFailure("We need 9 colors!")
+      }
+
+      let color = ColorUtils.colorIgnoringAlpha
+
+      self.foreground = values[0] < 0 ? Theme.default.foreground : color(values[0])
+      self.background = values[1] < 0 ? Theme.default.background : color(values[1])
+
+      self.visualForeground = values[2] < 0 ? Theme.default.visualForeground : color(values[2])
+      self.visualBackground = values[3] < 0 ? Theme.default.visualBackground : color(values[3])
+
+      self.statusLineForeground = values[4] < 0 ? Theme.default.statusLineForeground : color(values[4])
+      self.statusLineBackground = values[5] < 0 ? Theme.default.statusLineForeground : color(values[5])
+
+      self.pmenuForeground = values[6] < 0 ? Theme.default.pmenuForeground : color(values[6])
+      self.pmenuBackground = values[7] < 0 ? Theme.default.pmenuBackground : color(values[7])
+
+      self.nonTextForeground = values[8] < 0 ? Theme.default.nonTextForeground : color(values[8])
     }
 
     public var description: String {
-      return "NVV.Theme<fg: \(self.foreground.hex), bg: \(self.background.hex), " +
-             "visual-fg: \(self.visualForeground.hex), visual-bg: \(self.visualBackground.hex)>"
+      return "NVV.Theme<" +
+             "fg: \(self.foreground.hex), bg: \(self.background.hex), " +
+             "visual-fg: \(self.visualForeground.hex), visual-bg: \(self.visualBackground.hex), " +
+             "status-fg: \(self.statusLineForeground.hex), status-bg: \(self.statusLineBackground.hex), " +
+             "pmenu-fg: \(self.pmenuForeground.hex), pmenu-bg: \(self.pmenuBackground.hex), " +
+             "nontext-fg: \(self.nonTextForeground.hex)" +
+             ">"
     }
   }
 

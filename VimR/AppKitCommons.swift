@@ -6,6 +6,18 @@
 import Cocoa
 import CocoaMarkdown
 
+extension NSColor {
+
+  func darkening(by factor: CGFloat) -> NSColor {
+    let h = self.hueComponent
+    let s = self.saturationComponent
+    let b = self.brightnessComponent
+    let a = self.alphaComponent
+
+    return NSColor(hue: h, saturation: s, brightness: b * factor, alpha: a)
+  }
+}
+
 extension NSImage {
 
   func tinting(with color: NSColor) -> NSImage {
