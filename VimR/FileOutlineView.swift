@@ -297,7 +297,7 @@ extension FileOutlineView {
       }
 
       // + 2 just to have a buffer... -_-
-      return ImageAndTextTableCell.width(with: fileBrowserItem.url.lastPathComponent)
+      return ThemedTableCell.width(with: fileBrowserItem.url.lastPathComponent)
              + (CGFloat($0.level + 2) * (self.indentationPerLevel + 2))
     }.max() ?? column.width
 
@@ -314,7 +314,7 @@ extension FileOutlineView {
 
     // It seems like that caching the widths is slower due to thread-safeness of NSCache...
     let cellWidth = items.concurrentChunkMap(20) {
-      let result = ImageAndTextTableCell.width(with: $0.url.lastPathComponent)
+      let result = ThemedTableCell.width(with: $0.url.lastPathComponent)
       return result
     }.max() ?? column.width
 
@@ -340,8 +340,8 @@ extension FileOutlineView {
     }
 
     let cachedCell =
-      (self.make(withIdentifier: "file-view-row", owner: self) as? ImageAndTextTableCell)?.reset()
-    let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
+      (self.make(withIdentifier: "file-view-row", owner: self) as? ThemedTableCell)?.reset()
+    let cell = cachedCell ?? ThemedTableCell(withIdentifier: "file-view-row")
 
     cell.text = fileBrowserItem.url.lastPathComponent
     let icon = FileUtils.icon(forUrl: fileBrowserItem.url)
