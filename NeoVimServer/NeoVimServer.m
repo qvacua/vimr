@@ -103,6 +103,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
       case NeoVimAgentMsgIdCursorGoto: return data_sync(data, outputCondition, neovim_cursor_goto);
 
+      case NeoVimAgentDebug1: return data_sync(data, outputCondition, neovim_debug1);
+
       default: return NULL;
 
     }

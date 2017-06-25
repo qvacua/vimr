@@ -39,7 +39,7 @@ class MainWindow: NSObject,
     case setState(for: Tools, with: WorkspaceTool)
     case setToolsState([(Tools, WorkspaceTool)])
 
-    case setTheme(Theme)
+    case setTheme(NeoVimView.Theme)
 
     case close
   }
@@ -68,14 +68,6 @@ class MainWindow: NSObject,
     case newTab
     case horizontalSplit
     case verticalSplit
-  }
-
-  struct Theme {
-
-    static let `default` = Theme()
-
-    var foreground = NSColor.black
-    var background = NSColor.white
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
@@ -280,8 +272,6 @@ class MainWindow: NSObject,
   fileprivate var linespacing: CGFloat
   fileprivate var usesLigatures: Bool
 
-  fileprivate var theme = Theme.default
-
   fileprivate let fontManager = NSFontManager.shared()
 
   fileprivate let workspace: Workspace
@@ -406,18 +396,8 @@ extension MainWindow {
     self.currentBufferChanged(currentBuffer)
   }
 
-  func foregroundChanged(to color: NSColor) {
-    self.theme.foreground = color
-    self.emit(uuidAction(for: .setTheme(self.theme)))
-  }
-
-  func backgroundChanged(to color: NSColor) {
-    self.theme.background = color
-    self.emit(uuidAction(for: .setTheme(self.theme)))
-  }
-
-  func specialChanged(to color: NSColor) {
-    // noop
+  func colorschemeChanged(to theme: NeoVimView.Theme) {
+    self.emit(uuidAction(for: .setTheme(theme)))
   }
 
   func ipcBecameInvalid(reason: String) {

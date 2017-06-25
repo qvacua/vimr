@@ -5,6 +5,17 @@
 
 import Cocoa
 
+extension NSColor {
+
+  var hex: String {
+    return "#" +
+           String(format: "%X", Int(self.redComponent * 255)) +
+           String(format: "%X", Int(self.greenComponent * 255)) +
+           String(format: "%X", Int(self.blueComponent * 255)) +
+           String(format: "%X", Int(self.alphaComponent * 255))
+  }
+}
+
 extension CGRect {
 
   public var hashValue: Int {

@@ -208,7 +208,7 @@ extension MainWindow {
       Tools.htmlPreview: true,
     ]
 
-    var theme = Marked(Theme.default)
+    var theme = Marked(NeoVimView.Theme.default)
 
     ////// transient
     var lastFileSystemUpdate = Marked(FileUtils.userHomeUrl)
