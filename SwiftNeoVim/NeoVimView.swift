@@ -39,15 +39,15 @@ public class NeoVimView: NSView,
     public init() {}
 
     public init(_ values: [Int]) {
-      self.foreground = ColorUtils.colorIgnoringAlpha(values[0])
-      self.background = ColorUtils.colorIgnoringAlpha(values[1])
-      self.visualForeground = ColorUtils.colorIgnoringAlpha(values[2])
-      self.visualBackground = ColorUtils.colorIgnoringAlpha(values[3])
+      self.foreground = values[0] < 0 ? NSColor.black : ColorUtils.colorIgnoringAlpha(values[0])
+      self.background = values[1] < 0 ? NSColor.white : ColorUtils.colorIgnoringAlpha(values[1])
+      self.visualForeground = values[2] < 0 ? NSColor.white : ColorUtils.colorIgnoringAlpha(values[2])
+      self.visualBackground = values[3] < 0 ? NSColor.black : ColorUtils.colorIgnoringAlpha(values[3])
     }
 
     public var description: String {
       return "NVV.Theme<fg: \(self.foreground.hex), bg: \(self.background.hex), " +
-             "v-fg: \(self.visualForeground.hex), v-bg: \(self.visualBackground.hex)>"
+             "visual-fg: \(self.visualForeground.hex), visual-bg: \(self.visualBackground.hex)>"
     }
   }
 
