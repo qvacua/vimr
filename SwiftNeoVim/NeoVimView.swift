@@ -31,10 +31,10 @@ public class NeoVimView: NSView,
 
     public static let `default` = Theme()
 
-    public var foreground = NSColor.black
-    public var background = NSColor.white
-    public var visualForeground = NSColor.white
-    public var visualBackground = NSColor.black
+    public var foreground = NSColor.textColor
+    public var background = NSColor.textBackgroundColor
+    public var visualForeground = NSColor.selectedMenuItemTextColor
+    public var visualBackground = NSColor.selectedMenuItemColor
 
     public init() {}
 

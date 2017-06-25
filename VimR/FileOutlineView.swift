@@ -4,15 +4,19 @@
  */
 
 import Cocoa
+import SwiftNeoVim
 import PureLayout
 import RxSwift
 
 class FileOutlineView: NSOutlineView,
                        UiComponent,
                        NSOutlineViewDataSource,
-                       NSOutlineViewDelegate {
+                       NSOutlineViewDelegate,
+                       ThemedView {
 
   typealias StateType = MainWindow.State
+
+  fileprivate(set) var theme = NeoVimView.Theme.default
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
@@ -40,7 +44,7 @@ class FileOutlineView: NSOutlineView,
     self.doubleAction = #selector(FileOutlineView.doubleClickAction)
 
     source
-      .filter { !self.reloadData(for: $0) }
+      .filter { !self.shouldReloadData(for: $0) }
       .filter { $0.lastFileSystemUpdate.mark != self.lastFileSystemUpdateMark }
       .throttle(2 * FileMonitor.fileSystemEventsLatency + 1,
                 latest: true,
@@ -59,10 +63,14 @@ class FileOutlineView: NSOutlineView,
           self.beFirstResponder()
         }
 
-        guard self.reloadData(for: state) else {
+        guard self.shouldReloadData(for: state) else {
           return
         }
 
+        self.lastThemeMark = state.appearance.theme.mark
+        self.theme = state.appearance.theme.payload
+        self.enclosingScrollView?.backgroundColor = self.theme.background
+        self.backgroundColor = self.theme.background
         self.isShowHidden = state.fileBrowserShowHidden
         self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
         self.root = FileBrowserItem(state.cwd)
@@ -96,6 +104,7 @@ class FileOutlineView: NSOutlineView,
 
   fileprivate let uuid: String
   fileprivate var lastFileSystemUpdateMark = Token()
+  fileprivate var lastThemeMark = Token()
 
   fileprivate var cwd: URL {
     return self.root.url
@@ -108,8 +117,12 @@ class FileOutlineView: NSOutlineView,
     fatalError("init(coder:) has not been implemented")
   }
 
-  fileprivate func reloadData(for state: StateType) -> Bool {
+  fileprivate func shouldReloadData(for state: StateType) -> Bool {
     if self.isShowHidden != state.fileBrowserShowHidden {
+      return true
+    }
+
+    if state.appearance.theme.mark != self.lastThemeMark {
       return true
     }
 
@@ -335,7 +348,7 @@ extension FileOutlineView {
 
   func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
     return self.make(withIdentifier: "file-row-view", owner: self) as? ThemedTableRow
-           ?? ThemedTableRow(withIdentifier: "file-row-view")
+           ?? ThemedTableRow(withIdentifier: "file-row-view", themedView: self)
   }
 
   func outlineView(_: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {

@@ -6,11 +6,13 @@
 import Cocoa
 import RxSwift
 import PureLayout
+import SwiftNeoVim
 
 class OpenedFileList: NSView,
                       UiComponent,
                       NSTableViewDataSource,
-                      NSTableViewDelegate {
+                      NSTableViewDelegate,
+                      ThemedView {
 
   typealias StateType = MainWindow.State
 
@@ -18,6 +20,8 @@ class OpenedFileList: NSView,
 
     case open(NeoVimBuffer)
   }
+
+  fileprivate(set) var theme = NeoVimView.Theme.default
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
@@ -38,21 +42,24 @@ class OpenedFileList: NSView,
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { state in
         let buffers = state.buffers.removingDuplicatesPreservingFromBeginning()
-        if self.buffers == buffers {
+        if self.buffers == buffers && self.lastThemeMark == state.appearance.theme.mark {
           return
         }
 
+        self.lastThemeMark = state.appearance.theme.mark
+        self.theme = state.appearance.theme.payload
         self.buffers = buffers
         self.bufferList.reloadData()
         self.adjustFileViewWidth()
       })
       .disposed(by: self.disposeBag)
   }
-  
+
   fileprivate let emit: (UuidAction<Action>) -> Void
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate let uuid: String
+  fileprivate var lastThemeMark = Token()
 
   fileprivate let bufferList = NSTableView.standardTableView()
   fileprivate let genericIcon: NSImage
@@ -71,14 +78,14 @@ class OpenedFileList: NSView,
     self.addSubview(scrollView)
     scrollView.autoPinEdgesToSuperviewEdges()
   }
-  
+
   fileprivate func adjustFileViewWidth() {
     let maxWidth = self.buffers.reduce(CGFloat(0)) { (curMaxWidth, buffer) in
       return max(self.text(for: buffer).size().width, curMaxWidth)
     }
 
     let column = self.bufferList.tableColumns[0]
-    column.minWidth = maxWidth + ImageAndTextTableCell.widthWithoutText
+    column.minWidth = maxWidth + ThemedTableCell.widthWithoutText
     column.maxWidth = column.minWidth
   }
 }
@@ -108,10 +115,14 @@ extension OpenedFileList {
 // MARK: - NSTableViewDelegate
 extension OpenedFileList {
 
-  @objc(tableView: viewForTableColumn:row:)
+  public func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+    return tableView.make(withIdentifier: "buffer-row-view", owner: self) as? ThemedTableRow
+           ?? ThemedTableRow(withIdentifier: "buffer-row-view", themedView: self)
+  }
+
   func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-    let cachedCell = (tableView.make(withIdentifier: "buffer-list-row", owner: self) as? ImageAndTextTableCell)?.reset()
-    let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "buffer-list-row")
+    let cachedCell = (tableView.make(withIdentifier: "buffer-cell-view", owner: self) as? ThemedTableCell)?.reset()
+    let cell = cachedCell ?? ThemedTableCell(withIdentifier: "buffer-cell-view")
 
     let buffer = self.buffers[row]
     cell.attributedText = self.text(for: buffer)

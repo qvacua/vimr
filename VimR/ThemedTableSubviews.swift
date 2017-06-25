@@ -4,22 +4,43 @@
  */
 
 import Cocoa
+import SwiftNeoVim
 import PureLayout
+
+protocol ThemedView: class {
+
+  var theme: NeoVimView.Theme { get }
+}
 
 class ThemedTableRow: NSTableRowView {
 
-  init(withIdentifier identifier: String) {
+  init(withIdentifier identifier: String, themedView: ThemedView) {
+    self.themedView = themedView
+
     super.init(frame: .zero)
 
     self.identifier = identifier
   }
 
-  override func drawSelection(in dirtyRect: NSRect) {
-    super.drawSelection(in: dirtyRect)
+  open override func drawBackground(in dirtyRect: NSRect) {
+    if let cell = self.view(atColumn: 0) as? ThemedTableCell {
+      cell.textField?.textColor = self.themedView?.theme.foreground ?? NeoVimView.Theme.default.foreground
+    }
 
-    NSColor.red.set()
+    self.themedView?.theme.background.set()
     NSRectFill(dirtyRect)
   }
+
+  override func drawSelection(in dirtyRect: NSRect) {
+    if let cell = self.view(atColumn: 0) as? ThemedTableCell {
+      cell.textField?.textColor = self.themedView?.theme.visualForeground ?? NeoVimView.Theme.default.visualForeground
+    }
+
+    self.themedView?.theme.visualBackground.set()
+    NSRectFill(dirtyRect)
+  }
+
+  fileprivate weak var themedView: ThemedView?
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -83,7 +104,6 @@ class ThemedTableCell: NSTableCellView {
 
     let textField = self._textField
     textField.font = ThemedTableCell.font
-    textField.textColor = NSColor.blue
     textField.isBordered = false
     textField.isBezeled = false
     textField.allowsEditingTextAttributes = false

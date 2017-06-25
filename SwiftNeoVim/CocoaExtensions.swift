@@ -8,11 +8,15 @@ import Cocoa
 extension NSColor {
 
   var hex: String {
-    return "#" +
-           String(format: "%X", Int(self.redComponent * 255)) +
-           String(format: "%X", Int(self.greenComponent * 255)) +
-           String(format: "%X", Int(self.blueComponent * 255)) +
-           String(format: "%X", Int(self.alphaComponent * 255))
+    if let color = self.usingColorSpace(.sRGB) {
+      return "#" +
+             String(format: "%X", Int(color.redComponent * 255)) +
+             String(format: "%X", Int(color.greenComponent * 255)) +
+             String(format: "%X", Int(color.blueComponent * 255)) +
+             String(format: "%X", Int(color.alphaComponent * 255))
+    } else {
+      return self.description
+    }
   }
 }
 

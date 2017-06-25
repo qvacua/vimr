@@ -238,22 +238,29 @@ class MainWindow: NSObject,
   }
 
   @IBAction func debug2(_: Any?) {
-    var theme = Workspace.Theme()
-    theme.foreground = .red
+//    var theme = Workspace.Theme()
+//    theme.foreground = .red
+//    theme.background = .yellow
+//
+//    theme.separator = .blue
+//
+//    theme.barBackground = .cyan
+//    theme.barFocusRing = .black
+//
+//    theme.barButtonBackground = .brown
+//    theme.barButtonHighlight = .magenta
+//
+//    theme.toolbarForeground = .green
+//    theme.toolbarBackground = .orange
+//
+//    self.workspace.theme = theme
+
+    var theme = NeoVimView.Theme.default
+    theme.foreground = .blue
     theme.background = .yellow
-
-    theme.separator = .blue
-
-    theme.barBackground = .cyan
-    theme.barFocusRing = .black
-
-    theme.barButtonBackground = .brown
-    theme.barButtonHighlight = .magenta
-
-    theme.toolbarForeground = .green
-    theme.toolbarBackground = .orange
-
-    self.workspace.theme = theme
+    theme.visualForeground = .orange
+    theme.visualBackground = .red
+    self.emit(uuidAction(for: .setTheme(theme)))
   }
 
   fileprivate let emit: (UuidAction<Action>) -> Void

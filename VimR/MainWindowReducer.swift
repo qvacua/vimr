@@ -83,7 +83,9 @@ class MainWindowReducer {
       state.isToolButtonsVisible = value
 
     case let .setTheme(theme):
-      state.appearance.theme = Marked(theme)
+      if state.appearance.usesNeoVimTheme {
+        state.appearance.theme = Marked(theme)
+      }
 
     default:
       return pair
