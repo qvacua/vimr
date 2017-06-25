@@ -6,6 +6,26 @@
 import Cocoa
 import PureLayout
 
+class ThemedTableRow: NSTableRowView {
+
+  init(withIdentifier identifier: String) {
+    super.init(frame: .zero)
+
+    self.identifier = identifier
+  }
+
+  override func drawSelection(in dirtyRect: NSRect) {
+    super.drawSelection(in: dirtyRect)
+
+    NSColor.red.set()
+    NSRectFill(dirtyRect)
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+}
+
 class ThemedTableCell: NSTableCellView {
 
   // MARK: - API
@@ -21,34 +41,6 @@ class ThemedTableCell: NSTableCellView {
   override var intrinsicContentSize: CGSize {
     return CGSize(width: ThemedTableCell.widthWithoutText + self._textField.intrinsicContentSize.width,
                   height: max(self._textField.intrinsicContentSize.height, 16))
-  }
-
-  override var backgroundStyle: NSBackgroundStyle {
-    didSet {
-      let attrStr = NSMutableAttributedString(attributedString: self.attributedText)
-
-      let wholeRange = NSRange(location: 0, length: attrStr.length)
-      var nameRange = NSRange(location: 0, length: 0)
-      let _ = attrStr.attributes(at: 0, longestEffectiveRange: &nameRange, in: wholeRange)
-
-      if nameRange.length == attrStr.length {
-        // If we only have one style, Cocoa automatically inverts the color of the text.
-        return
-      }
-
-      switch self.backgroundStyle {
-      case .light:
-        attrStr.addAttribute(NSForegroundColorAttributeName, value: NSColor.black, range: nameRange)
-
-      case .dark:
-        attrStr.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: nameRange)
-
-      default:
-        return
-      }
-
-      self.attributedText = attrStr
-    }
   }
 
   var attributedText: NSAttributedString {
@@ -91,6 +83,7 @@ class ThemedTableCell: NSTableCellView {
 
     let textField = self._textField
     textField.font = ThemedTableCell.font
+    textField.textColor = NSColor.blue
     textField.isBordered = false
     textField.isBezeled = false
     textField.allowsEditingTextAttributes = false

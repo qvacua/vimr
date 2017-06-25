@@ -333,15 +333,18 @@ extension FileOutlineView {
 // MARK: - NSOutlineViewDelegate
 extension FileOutlineView {
 
-  @objc(outlineView: viewForTableColumn:item:)
+  func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
+    return self.make(withIdentifier: "file-row-view", owner: self) as? ThemedTableRow
+           ?? ThemedTableRow(withIdentifier: "file-row-view")
+  }
+
   func outlineView(_: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
     guard let fileBrowserItem = item as? FileBrowserItem else {
       return nil
     }
 
-    let cachedCell =
-      (self.make(withIdentifier: "file-view-row", owner: self) as? ThemedTableCell)?.reset()
-    let cell = cachedCell ?? ThemedTableCell(withIdentifier: "file-view-row")
+    let cell = (self.make(withIdentifier: "file-cell-view", owner: self) as? ThemedTableCell)?.reset()
+               ?? ThemedTableCell(withIdentifier: "file-cell-view")
 
     cell.text = fileBrowserItem.url.lastPathComponent
     let icon = FileUtils.icon(forUrl: fileBrowserItem.url)
