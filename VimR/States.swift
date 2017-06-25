@@ -208,6 +208,8 @@ extension MainWindow {
       Tools.htmlPreview: true,
     ]
 
+    var theme = Marked(Theme.default)
+
     ////// transient
     var lastFileSystemUpdate = Marked(FileUtils.userHomeUrl)
 

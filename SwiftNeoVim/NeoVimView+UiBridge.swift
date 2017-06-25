@@ -152,6 +152,8 @@ extension NeoVimView {
       self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(fg))
 
       self.grid.foreground = fg
+
+      self.delegate?.foregroundChanged(to: ColorUtils.colorIgnoringAlpha(fg))
     }
   }
 
@@ -161,6 +163,8 @@ extension NeoVimView {
 
       self.grid.background = bg
       self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).cgColor
+
+      self.delegate?.backgroundChanged(to: ColorUtils.colorIgnoringAlpha(bg))
     }
   }
 
@@ -169,6 +173,8 @@ extension NeoVimView {
       self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(sp))
 
       self.grid.special = sp
+
+      self.delegate?.specialChanged(to: ColorUtils.colorIgnoringAlpha(sp))
     }
   }
 
@@ -198,6 +204,10 @@ extension NeoVimView {
     gui.async {
 //      self.bridgeLogger.debug("\(neoVimAutoCommandEventName(event)) -> \(bufferHandle)")
 
+      if event == .COLORSCHEME {
+        NSLog(self.agent.vimCommandOutput("hi")!)
+      }
+
       if event == .BUFWINENTER || event == .BUFWINLEAVE {
         self.bufferListChanged()
       }
@@ -205,6 +215,15 @@ extension NeoVimView {
       if event == .TABENTER {
         self.tabChanged()
       }
+
+      let output = "SpecialComment xxx links to Special\n" +
+                   "Debug          xxx links to Special\n" +
+                   "FoldColmun     xxx ctermfg=246 ctermbg=235 guifg=#909194 guibg=#44475a\n" +
+                   "Normal         xxx guifg=#f8f8f2 guibg=#282a36\n" +
+                   "rubyClass      xxx ctermfg=212 guifg=#ff79c6\n" +
+                   "rubyFunction   xxx ctermfg=84 guifg=#50fa7b\n" +
+                   "rubyInterpolationDelimiter xxx cleared\n" +
+                   "rubySymbol     xxx ctermfg=141 guifg=#bd93f9"
 
       if event == .BUFREADPOST || event == .BUFWRITEPOST {
         self.currentBufferChanged(bufferHandle)

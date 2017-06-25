@@ -16,6 +16,10 @@ public protocol NeoVimViewDelegate: class {
   func tabChanged()
   func currentBufferChanged(_ currentBuffer: NeoVimBuffer)
 
+  func foregroundChanged(to: NSColor)
+  func backgroundChanged(to: NSColor)
+  func specialChanged(to: NSColor)
+
   func ipcBecameInvalid(reason: String)
 
   func scroll()

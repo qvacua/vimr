@@ -136,7 +136,7 @@ public class NeoVimView: NSView,
 
   @IBAction public func debug1(_ sender: Any?) {
     self.logger.debug("DEBUG 1 - Start")
-    NSApp.hide(self)
+    NSLog(self.agent.vimCommandOutput("hi")!)
     self.logger.debug("DEBUG 1 - End")
   }
 
