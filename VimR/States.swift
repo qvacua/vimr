@@ -165,6 +165,10 @@ struct AppearanceState: SerializableState {
   var linespacing: CGFloat = 1
   var usesLigatures = false
 
+  // FIXME GH-436: set to false and make it an option
+  var usesNeoVimTheme = true
+  var theme = Marked(NeoVimView.Theme.default)
+
   init() {
 
   }
@@ -207,8 +211,6 @@ extension MainWindow {
       Tools.preview: true,
       Tools.htmlPreview: true,
     ]
-
-    var theme = Marked(NeoVimView.Theme.default)
 
     ////// transient
     var lastFileSystemUpdate = Marked(FileUtils.userHomeUrl)
