@@ -21,13 +21,15 @@ class OpenedFileList: NSView,
     case open(NeoVimBuffer)
   }
 
-  fileprivate(set) var theme = NeoVimView.Theme.default
+  fileprivate(set) var theme = Theme.default
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
     self.uuid = state.uuid
 
     self.genericIcon = FileUtils.icon(forType: "public.data")
+
+    self.usesTheme = state.appearance.usesTheme
 
     super.init(frame: .zero)
 
@@ -42,13 +44,30 @@ class OpenedFileList: NSView,
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { state in
+        let themeChanged = changeTheme(
+          themePrefChanged: state.appearance.usesTheme != self.usesTheme,
+          themeChanged: state.appearance.theme.mark != self.lastThemeMark,
+          usesTheme: state.appearance.usesTheme,
+          forTheme: {
+            self.theme = state.appearance.theme.payload
+            self.bufferList.enclosingScrollView?.backgroundColor = self.theme.background
+            self.bufferList.backgroundColor = self.theme.background
+            self.lastThemeMark = state.appearance.theme.mark
+          },
+          forDefaultTheme: {
+            self.theme = Theme.default
+            self.bufferList.enclosingScrollView?.backgroundColor = self.theme.background
+            self.bufferList.backgroundColor = self.theme.background
+            self.lastThemeMark = state.appearance.theme.mark
+          })
+
+        self.usesTheme = state.appearance.usesTheme
+
         let buffers = state.buffers.removingDuplicatesPreservingFromBeginning()
-        if self.buffers == buffers && self.lastThemeMark == state.appearance.theme.mark {
+        if self.buffers == buffers && !themeChanged {
           return
         }
 
-        self.lastThemeMark = state.appearance.theme.mark
-        self.theme = state.appearance.theme.payload
         self.buffers = buffers
         self.bufferList.reloadData()
         self.adjustFileViewWidth()
@@ -60,6 +79,7 @@ class OpenedFileList: NSView,
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate let uuid: String
+  fileprivate var usesTheme: Bool
   fileprivate var lastThemeMark = Token()
 
   fileprivate let bufferList = NSTableView.standardTableView()

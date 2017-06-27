@@ -8,11 +8,28 @@ import CocoaMarkdown
 
 extension NSColor {
 
+  var hex: String {
+    if let color = self.usingColorSpace(.sRGB) {
+      return "#" +
+             String(format: "%X", Int(color.redComponent * 255)) +
+             String(format: "%X", Int(color.greenComponent * 255)) +
+             String(format: "%X", Int(color.blueComponent * 255)) +
+             String(format: "%X", Int(color.alphaComponent * 255))
+    } else {
+      return self.description
+    }
+  }
+
   func darkening(by factor: CGFloat) -> NSColor {
-    let h = self.hueComponent
-    let s = self.saturationComponent
-    let b = self.brightnessComponent
-    let a = self.alphaComponent
+    guard let color = self.usingColorSpace(.sRGB) else {
+      // TODO: what to do?
+      return self
+    }
+
+    let h = color.hueComponent
+    let s = color.saturationComponent
+    let b = color.brightnessComponent
+    let a = color.alphaComponent
 
     return NSColor(hue: h, saturation: s, brightness: b * factor, alpha: a)
   }

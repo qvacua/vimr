@@ -9,7 +9,7 @@ import PureLayout
 
 protocol ThemedView: class {
 
-  var theme: NeoVimView.Theme { get }
+  var theme: Theme { get }
 }
 
 class ThemedTableRow: NSTableRowView {
@@ -24,7 +24,7 @@ class ThemedTableRow: NSTableRowView {
 
   open override func drawBackground(in dirtyRect: NSRect) {
     if let cell = self.view(atColumn: 0) as? ThemedTableCell {
-      cell.textField?.textColor = self.themedView?.theme.foreground ?? NeoVimView.Theme.default.foreground
+      cell.textField?.textColor = self.themedView?.theme.foreground ?? Theme.default.foreground
     }
 
     self.themedView?.theme.background.set()
@@ -33,10 +33,10 @@ class ThemedTableRow: NSTableRowView {
 
   override func drawSelection(in dirtyRect: NSRect) {
     if let cell = self.view(atColumn: 0) as? ThemedTableCell {
-      cell.textField?.textColor = self.themedView?.theme.visualForeground ?? NeoVimView.Theme.default.visualForeground
+      cell.textField?.textColor = self.themedView?.theme.highlightForeground ?? Theme.default.highlightForeground
     }
 
-    self.themedView?.theme.visualBackground.set()
+    self.themedView?.theme.highlightBackground.set()
     NSRectFill(dirtyRect)
   }
 

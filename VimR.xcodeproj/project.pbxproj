@@ -19,6 +19,7 @@
 		1929B1837C750CADB3A5BCB9 /* OpenQuicklyFileViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1558455B3A74D93EF2A /* OpenQuicklyFileViewRow.swift */; };
 		1929B18A0D7C7407C51DB642 /* DataWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB6CFF4CC0B5E8B00C62 /* DataWrapper.m */; };
 		1929B1E05C116514C1D3A384 /* CocoaCategories.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5C3F2F1CA4113DABFFD /* CocoaCategories.m */; };
+		1929B20CE35B43BB1CE023BA /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC2F05E9A5C0DB039739 /* Theme.swift */; };
 		1929B29B95AD176D57942E08 /* UiRootReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B457B9D0FA4D21F3751E /* UiRootReducer.swift */; };
 		1929B3217A7A3D79E28C80DB /* PrefWindowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B49E6924847AD085C8C9 /* PrefWindowReducer.swift */; };
 		1929B333855A5406C400DA92 /* OpenQuicklyFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEDE7F92BC7B49E802AF /* OpenQuicklyFilterOperation.swift */; };
@@ -66,6 +67,7 @@
 		1929BB0A840D93D1A13C25FD /* NeoVimView+MenuItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B4F65149D3C3E326DA65 /* NeoVimView+MenuItems.swift */; };
 		1929BB38525ECCEE8E39288A /* NeoVimView+Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDF3167E15E7F3349798 /* NeoVimView+Key.swift */; };
 		1929BB4A9B2FA42A64CCCC76 /* MainWindowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD83A13BF133741766CC /* MainWindowReducer.swift */; };
+		1929BBE28654E4307AF1E2FD /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC2F05E9A5C0DB039739 /* Theme.swift */; };
 		1929BC9EF45463113EBF3BCB /* NeoVimView+UiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B2AD3F9375F57F21AD58 /* NeoVimView+UiBridge.swift */; };
 		1929BCA03A420A83174FD7E7 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B96384F1ED979BD001C556F /* Logger.swift */; };
 		1929BCC7908DD899999B70BE /* AppearancePrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BED01F5D94BFCA4CF80F /* AppearancePrefReducer.swift */; };
@@ -437,6 +439,7 @@
 		1929BB6CFF4CC0B5E8B00C62 /* DataWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataWrapper.m; sourceTree = "<group>"; };
 		1929BBC84557C8351EC6183E /* FileItemIgnorePatternTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemIgnorePatternTest.swift; sourceTree = "<group>"; };
 		1929BBE0A534F2F6009D31BE /* AdvencedPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvencedPref.swift; sourceTree = "<group>"; };
+		1929BC2F05E9A5C0DB039739 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		1929BCE3E156C06EDF1F2806 /* FileOutlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileOutlineView.swift; sourceTree = "<group>"; };
 		1929BD05CA498FC3C229455E /* NeoVimView+Resize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NeoVimView+Resize.swift"; sourceTree = "<group>"; };
 		1929BD2CA8DD198A6BCDBCB7 /* ThemedTableSubviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedTableSubviews.swift; sourceTree = "<group>"; };
@@ -697,6 +700,7 @@
 				1929B1645977E0AEFE53193D /* File Browser */,
 				1929BD9EEC30C0A498877E5B /* Open Quickly */,
 				1929B85023B042C485409CE1 /* HtmlPreviewTool.swift */,
+				1929BC2F05E9A5C0DB039739 /* Theme.swift */,
 			);
 			name = Components;
 			sourceTree = "<group>";
@@ -1644,6 +1648,7 @@
 				1929BE407A667356E29386EF /* Logger.swift in Sources */,
 				1929BE2F3E0182CC51F2763A /* ThemedTableSubviews.swift in Sources */,
 				1929B6460862447A31B5B082 /* ImageAndTextTableCell.swift in Sources */,
+				1929BBE28654E4307AF1E2FD /* Theme.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1670,6 +1675,7 @@
 				1929BAAD7336FDFF1F78E749 /* ScorerTest.swift in Sources */,
 				1929B8E90A1378E494D481E7 /* PrefUtilsTest.swift in Sources */,
 				1929BCA03A420A83174FD7E7 /* Logger.swift in Sources */,
+				1929B20CE35B43BB1CE023BA /* Theme.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

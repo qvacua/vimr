@@ -16,7 +16,7 @@ class FileOutlineView: NSOutlineView,
 
   typealias StateType = MainWindow.State
 
-  fileprivate(set) var theme = NeoVimView.Theme.default
+  fileprivate(set) var theme = Theme.default
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
@@ -24,6 +24,8 @@ class FileOutlineView: NSOutlineView,
 
     self.root = FileBrowserItem(state.cwd)
     self.isShowHidden = state.fileBrowserShowHidden
+
+    self.usesTheme = state.appearance.usesTheme
 
     super.init(frame: .zero)
     NSOutlineView.configure(toStandard: self)
@@ -64,14 +66,29 @@ class FileOutlineView: NSOutlineView,
           self.beFirstResponder()
         }
 
-        guard self.shouldReloadData(for: state) else {
+        let themeChanged = changeTheme(
+          themePrefChanged: state.appearance.usesTheme != self.usesTheme,
+          themeChanged: state.appearance.theme.mark != self.lastThemeMark,
+          usesTheme: state.appearance.usesTheme,
+          forTheme: {
+            self.theme = state.appearance.theme.payload
+            self.enclosingScrollView?.backgroundColor = self.theme.background
+            self.backgroundColor = self.theme.background
+            self.lastThemeMark = state.appearance.theme.mark
+          },
+          forDefaultTheme: {
+            self.theme = Theme.default
+            self.enclosingScrollView?.backgroundColor = self.theme.background
+            self.backgroundColor = self.theme.background
+            self.lastThemeMark = state.appearance.theme.mark
+          })
+
+        self.usesTheme = state.appearance.usesTheme
+
+        guard self.shouldReloadData(for: state, themeChanged: themeChanged) else {
           return
         }
 
-        self.lastThemeMark = state.appearance.theme.mark
-        self.theme = state.appearance.theme.payload
-        self.enclosingScrollView?.backgroundColor = self.theme.background
-        self.backgroundColor = self.theme.background
         self.isShowHidden = state.fileBrowserShowHidden
         self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
         self.root = FileBrowserItem(state.cwd)
@@ -105,7 +122,9 @@ class FileOutlineView: NSOutlineView,
 
   fileprivate let uuid: String
   fileprivate var lastFileSystemUpdateMark = Token()
+  fileprivate var usesTheme: Bool
   fileprivate var lastThemeMark = Token()
+
 
   fileprivate var cwd: URL {
     return self.root.url
@@ -118,12 +137,12 @@ class FileOutlineView: NSOutlineView,
     fatalError("init(coder:) has not been implemented")
   }
 
-  fileprivate func shouldReloadData(for state: StateType) -> Bool {
+  fileprivate func shouldReloadData(for state: StateType, themeChanged: Bool = false) -> Bool {
     if self.isShowHidden != state.fileBrowserShowHidden {
       return true
     }
 
-    if state.appearance.theme.mark != self.lastThemeMark {
+    if themeChanged {
       return true
     }
 

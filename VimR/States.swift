@@ -166,8 +166,8 @@ struct AppearanceState: SerializableState {
   var usesLigatures = false
 
   // FIXME GH-436: set to false and make it an option
-  var usesNeoVimTheme = true
-  var theme = Marked(NeoVimView.Theme.default)
+  var usesTheme = true
+  var theme = Marked(Theme.default)
 
   init() {
 
