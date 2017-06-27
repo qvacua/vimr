@@ -164,6 +164,14 @@ static HlAttrs HlAttrsFromAttrCode(int attr_code) {
   return rgb_attrs;
 }
 
+static int foreground_for(HlAttrs attrs) {
+  return attrs.reverse ? attrs.background: attrs.foreground;
+}
+
+static int background_for(HlAttrs attrs) {
+  return attrs.reverse ? attrs.foreground: attrs.background;
+}
+
 static void send_colorscheme() {
   // It seems that the highlight groupt only gets updated when the screen is redrawn.
   // Since there's a guard var, probably it's safe to call it here...
@@ -172,15 +180,15 @@ static void send_colorscheme() {
   }
 
   HlAttrs visualAttrs = HlAttrsFromAttrCode(highlight_attr[HLF_V]);
+  HlAttrs dirAttrs = HlAttrsFromAttrCode(highlight_attr[HLF_D]);
 
-  int visualFg = visualAttrs.reverse ? visualAttrs.background: visualAttrs.foreground;
-  int visualBg = visualAttrs.reverse ? visualAttrs.foreground: visualAttrs.background;
 
   NSInteger values[] = {
       normal_fg, normal_bg,
-      visualFg, visualBg
+      foreground_for(visualAttrs), background_for(visualAttrs),
+      foreground_for(dirAttrs),
   };
-  NSData *resultData = [NSData dataWithBytes:values length:4 * sizeof(NSInteger)];
+  NSData *resultData = [NSData dataWithBytes:values length:5 * sizeof(NSInteger)];
 
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdColorSchemeChanged data:resultData];
 }

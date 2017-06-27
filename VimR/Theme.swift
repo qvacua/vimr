@@ -16,10 +16,13 @@ struct Theme: CustomStringConvertible {
   var highlightForeground = NSColor.selectedMenuItemTextColor
   var highlightBackground = NSColor.selectedMenuItemColor
 
+  var directoryForeground = NSColor.textColor
+
   public var description: String {
     return "Theme<" +
            "fg: \(self.foreground.hex), bg: \(self.background.hex), " +
            "hl-fg: \(self.highlightForeground.hex), hl-bg: \(self.highlightBackground.hex)" +
+           "dir-fg: \(self.directoryForeground.hex)" +
            ">"
   }
 
@@ -33,5 +36,7 @@ struct Theme: CustomStringConvertible {
 
     self.highlightForeground = neoVimTheme.visualForeground
     self.highlightBackground = neoVimTheme.visualBackground
+
+    self.directoryForeground = neoVimTheme.directoryForeground
   }
 }

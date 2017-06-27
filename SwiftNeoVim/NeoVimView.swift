@@ -37,11 +37,13 @@ public class NeoVimView: NSView,
     public var visualForeground = NSColor.selectedMenuItemTextColor
     public var visualBackground = NSColor.selectedMenuItemColor
 
+    public var directoryForeground = NSColor.textColor
+
     public init() {}
 
     public init(_ values: [Int]) {
-      if values.count < 4 {
-        preconditionFailure("We need 4 colors!")
+      if values.count < 5 {
+        preconditionFailure("We need 5 colors!")
       }
 
       let color = ColorUtils.colorIgnoringAlpha
@@ -51,6 +53,8 @@ public class NeoVimView: NSView,
 
       self.visualForeground = values[2] < 0 ? Theme.default.visualForeground : color(values[2])
       self.visualBackground = values[3] < 0 ? Theme.default.visualBackground : color(values[3])
+
+      self.directoryForeground = values[4] < 0 ? Theme.default.directoryForeground : color(values[4])
     }
 
     public var description: String {

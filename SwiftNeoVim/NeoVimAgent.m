@@ -634,7 +634,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
     case NeoVimServerMsgIdColorSchemeChanged: {
       NSInteger *values = (NSInteger *) data.bytes;
       NSMutableArray *array = [NSMutableArray new];
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < 5; i++) {
         [array addObject:@(values[i])];
       }
       [_bridge colorSchemeChanged:array];
