@@ -27,6 +27,40 @@ public class NeoVimView: NSView,
     }
   }
 
+  public struct Theme: CustomStringConvertible {
+
+    public static let `default` = Theme()
+
+    public var foreground = NSColor.textColor
+    public var background = NSColor.textBackgroundColor
+
+    public var visualForeground = NSColor.selectedMenuItemTextColor
+    public var visualBackground = NSColor.selectedMenuItemColor
+
+    public init() {}
+
+    public init(_ values: [Int]) {
+      if values.count < 4 {
+        preconditionFailure("We need 4 colors!")
+      }
+
+      let color = ColorUtils.colorIgnoringAlpha
+
+      self.foreground = values[0] < 0 ? Theme.default.foreground : color(values[0])
+      self.background = values[1] < 0 ? Theme.default.background : color(values[1])
+
+      self.visualForeground = values[2] < 0 ? Theme.default.visualForeground : color(values[2])
+      self.visualBackground = values[3] < 0 ? Theme.default.visualBackground : color(values[3])
+    }
+
+    public var description: String {
+      return "NVV.Theme<" +
+             "fg: \(self.foreground.hex), bg: \(self.background.hex), " +
+             "visual-fg: \(self.visualForeground.hex), visual-bg: \(self.visualBackground.hex)" +
+             ">"
+    }
+  }
+
   public static let minFontSize = CGFloat(4)
   public static let maxFontSize = CGFloat(128)
   public static let defaultFont = NSFont.userFixedPitchFont(ofSize: 12)!
@@ -39,6 +73,8 @@ public class NeoVimView: NSView,
   public weak var delegate: NeoVimViewDelegate?
 
   public internal(set) var mode = CursorModeShape.normal
+
+  public internal(set) var theme = Theme.default
 
   public var usesLigatures = false {
     didSet {
@@ -136,7 +172,7 @@ public class NeoVimView: NSView,
 
   @IBAction public func debug1(_ sender: Any?) {
     self.logger.debug("DEBUG 1 - Start")
-    NSApp.hide(self)
+    self.agent.debug()
     self.logger.debug("DEBUG 1 - End")
   }
 

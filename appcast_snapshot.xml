@@ -7,33 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.16.0-205</title>
+      <title>SNAPSHOT-209</title>
       <description><![CDATA[
     <ul>
-<li>GH-378: Draw curly underline, e.g. when the spelling is incorrect.</li>
-<li>GH-326, GH-460: Add an option to hide or quit VimR when the last window closes. This is for example useful when you want to use VimR as <code>git difftool</code> as described below.</li>
-<li>GH-302, GH-421: The <code>vimr</code> CLI tool has two new options:</li>
-<li><code>--wait</code>: When present, the <code>vimr</code> CLI tool will exit only after the corresponding VimR window has been closed. This is particularly useful when combined with the <code>--nvim</code> option as described below.</li>
-<li><code>--nvim</code>: When present, all command line arguments except <code>--dry-run</code> and <code>--wait</code>, see above, will be passed over to the background <code>nvim</code> process when launching. This means that you can now use for example the <code>-d</code> option to activate the diffmode. To use VimR as <code>git difftool</code>, add the following to your <code>~/.gitconfig</code> 
-    <code>[difftool "vimrdiff"]
-      cmd = vimr --wait --nvim -d $LOCAL $REMOTE
-    [diff]
-      tool = vimrdiff</code>
-  You have to re-install the <code>vimr</code> CLI tool in the Preferences window as described in the <a href="https://github.com/qvacua/vimr/wiki#command-line-tool">wiki</a>.</li>
-<li>Reduce the binary size by approx. 8 MB: We compile httpswift/swifter directly into VimR's binary...</li>
-<li>Bonus: The Neovim splash screen shows up!</li>
+<li>GH-436: Use colors from the selected <code>colorscheme</code> for tools, e.g. the file browser. Please report issues in <a href="https://github.com/qvacua/vimr/issues/436">#436</a></li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.16.0-205
+        https://github.com/qvacua/vimr/releases/tag/snapshot/209
       </releaseNotesLink>
-      <pubDate>2017-06-21T13:10:52.683028</pubDate>
+      <pubDate>2017-06-27T20:04:53.790811</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.16.0-205/VimR-v0.16.0-205.tar.bz2"
-                 sparkle:version="205"
-                 sparkle:shortVersionString="0.16.0"
-                 sparkle:dsaSignature="MC0CFQDyjY2BABl/4kj+z2jeBkGV5e+boQIUHQ4SVK5TBhia0k8E3ko2vdNwC4U="
-                 length="10634000"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/209/VimR-SNAPSHOT-209.tar.bz2"
+                 sparkle:version="209"
+                 sparkle:shortVersionString="SNAPSHOT-209"
+                 sparkle:dsaSignature="MC0CFEsk/4fYINo6Py7tO05kTChn575DAhUA5pMVsyWq1jD4xmnD7+r3fvah//0="
+                 length="10686723"
                  type="application/octet-stream"/>
     </item>
   </channel>

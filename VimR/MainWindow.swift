@@ -8,6 +8,27 @@ import RxSwift
 import SwiftNeoVim
 import PureLayout
 
+func changeTheme(themePrefChanged: Bool, themeChanged: Bool, usesTheme: Bool,
+                 forTheme: () -> Void, forDefaultTheme: () -> Void) -> Bool {
+
+  if themePrefChanged && usesTheme {
+    forTheme()
+    return true
+  }
+
+  if themePrefChanged && !usesTheme {
+    forDefaultTheme()
+    return true
+  }
+
+  if !themePrefChanged && themeChanged && usesTheme {
+    forTheme()
+    return true
+  }
+
+  return false
+}
+
 class MainWindow: NSObject,
                   UiComponent,
                   NeoVimViewDelegate,
@@ -38,6 +59,8 @@ class MainWindow: NSObject,
     case toggleToolButtons(Bool)
     case setState(for: Tools, with: WorkspaceTool)
     case setToolsState([(Tools, WorkspaceTool)])
+
+    case setTheme(Theme)
 
     case close
   }
@@ -145,6 +168,8 @@ class MainWindow: NSObject,
       workspace.append(tool: tool, location: state.tools[toolId]?.location ?? .left)
     }
 
+    self.usesTheme = state.appearance.usesTheme
+
     super.init()
 
     self.tools.forEach { (toolId, toolContainer) in
@@ -205,6 +230,22 @@ class MainWindow: NSObject,
             self.neoVimView.select(buffer: currentBuffer)
           }
 
+          let usesTheme = state.appearance.usesTheme
+          let themePrefChanged = state.appearance.usesTheme != self.usesTheme
+          let themeChanged = state.appearance.theme.mark != self.lastThemeMark
+
+          _ = changeTheme(
+            themePrefChanged: themePrefChanged, themeChanged: themeChanged, usesTheme: usesTheme,
+            forTheme: {
+              self.setWorkspaceTheme(with: state.appearance.theme.payload)
+              self.lastThemeMark = state.appearance.theme.mark
+            },
+            forDefaultTheme: {
+              self.workspace.theme = Workspace.Theme.default
+            })
+
+          self.usesTheme = state.appearance.usesTheme
+
           if self.defaultFont != state.appearance.font
              || self.linespacing != state.appearance.linespacing
              || self.usesLigatures != state.appearance.usesLigatures {
@@ -233,6 +274,15 @@ class MainWindow: NSObject,
   func quitNeoVimWithoutSaving() {
     self.isClosing = true
     self.neoVimView.quitNeoVimWithoutSaving()
+  }
+
+  @IBAction func debug2(_: Any?) {
+    var theme = Theme.default
+    theme.foreground = .blue
+    theme.background = .yellow
+    theme.highlightForeground = .orange
+    theme.highlightBackground = .red
+    self.emit(uuidAction(for: .setTheme(theme)))
   }
 
   fileprivate let emit: (UuidAction<Action>) -> Void
@@ -271,6 +321,9 @@ class MainWindow: NSObject,
 
   fileprivate let tools: [Tools: WorkspaceTool]
 
+  fileprivate var usesTheme: Bool
+  fileprivate var lastThemeMark = Token()
+
   fileprivate let scrollDebouncer = Debouncer<Action>(interval: 0.75)
   fileprivate let cursorDebouncer = Debouncer<Action>(interval: 0.75)
 
@@ -285,6 +338,24 @@ class MainWindow: NSObject,
 
   fileprivate func uuidAction(for action: Action) -> UuidAction<Action> {
     return UuidAction(uuid: self.uuid, action: action)
+  }
+
+  fileprivate func setWorkspaceTheme(with theme: Theme) {
+    var workspaceTheme = Workspace.Theme()
+    workspaceTheme.foreground = theme.foreground
+    workspaceTheme.background = theme.background
+
+    workspaceTheme.separator = theme.background.darkening(by: 0.75)
+
+    workspaceTheme.barBackground = theme.background
+    workspaceTheme.barFocusRing = theme.foreground
+
+    workspaceTheme.barButtonHighlight = theme.background.darkening(by: 0.75)
+
+    workspaceTheme.toolbarForeground = theme.foreground
+    workspaceTheme.toolbarBackground = theme.background.darkening(by: 0.75)
+
+    self.workspace.theme = workspaceTheme
   }
 
   fileprivate func open(urls: [URL: OpenMode]) {
@@ -373,6 +444,10 @@ extension MainWindow {
     }
 
     self.currentBufferChanged(currentBuffer)
+  }
+
+  func colorschemeChanged(to neoVimTheme: NeoVimView.Theme) {
+    self.emit(uuidAction(for: .setTheme(Theme(neoVimTheme))))
   }
 
   func ipcBecameInvalid(reason: String) {

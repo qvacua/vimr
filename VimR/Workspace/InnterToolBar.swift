@@ -7,6 +7,13 @@ import Cocoa
 import PureLayout
 import CocoaFontAwesome
 
+class CustomToolBar: NSView {
+
+  func repaint(with: Workspace.Theme) {
+    // please implement
+  }
+}
+
 /**
  This class is the base class for inner toolbars for workspace tools. It's got two default buttons:
  - Close button
@@ -14,11 +21,8 @@ import CocoaFontAwesome
  */
 class InnerToolBar: NSView, NSUserInterfaceValidations {
 
-  fileprivate static let separatorColor = NSColor.controlShadowColor
   fileprivate static let separatorThickness = CGFloat(1)
   fileprivate static let height = InnerToolBar.iconDimension + 2 + 2 + InnerToolBar.separatorThickness
-
-  static fileprivate let backgroundColor = NSColor(red: 0.899, green: 0.934, blue: 0.997, alpha: 1)
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -38,12 +42,12 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
   // MARK: - API
   static let toolbarHeight = InnerToolBar.iconDimension
   static let iconDimension = CGFloat(19)
-  static let iconColor = NSColor.darkGray
 
-  static func configureToStandardIconButton(button: NSButton, iconName: CocoaFontAwesome.FontAwesome) {
-    let icon = NSImage.fontAwesomeIcon(name: iconName,
-                                       textColor: InnerToolBar.iconColor,
-                                       dimension: InnerToolBar.iconDimension)
+  static func configureToStandardIconButton(button: NSButton,
+                                            iconName: CocoaFontAwesome.FontAwesome,
+                                            color: NSColor = Workspace.Theme.default.toolbarForeground) {
+
+    let icon = NSImage.fontAwesomeIcon(name: iconName, textColor: color, dimension: InnerToolBar.iconDimension)
 
     button.imagePosition = .imageOnly
     button.image = icon
@@ -60,11 +64,15 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
       self.addViews()
     }
   }
-  var customToolbar: NSView? {
+  var customToolbar: CustomToolBar? {
     didSet {
       self.removeCustomUiElements()
       self.addViews()
     }
+  }
+
+  var theme: Workspace.Theme {
+    return self.tool?.theme ?? Workspace.Theme.default
   }
 
   weak var tool: WorkspaceTool? {
@@ -85,7 +93,7 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     }
   }
 
-  init(customToolbar: NSView? = nil, customMenuItems: [NSMenuItem] = []) {
+  init(customToolbar: CustomToolBar? = nil, customMenuItems: [NSMenuItem] = []) {
     self.customMenuItems = customMenuItems
     self.customToolbar = customToolbar
 
@@ -95,18 +103,35 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     // Because other views also want layer, this view also must want layer. Otherwise the z-index ordering is not set
     // correctly: views w/ wantsLayer = false are behind views w/ wantsLayer = true even when added later.
     self.wantsLayer = true
-    self.layer?.backgroundColor = InnerToolBar.backgroundColor.cgColor
+    self.layer?.backgroundColor = self.theme.toolbarBackground.cgColor
 
     self.addViews()
   }
 
+  func repaint() {
+    self.layer!.backgroundColor = self.theme.toolbarBackground.cgColor
+
+    self.titleField.textColor = self.theme.toolbarForeground
+    self.cogButton.menu?.item(at: 0)?.image = NSImage.fontAwesomeIcon(name: .cog,
+                                                                      textColor: self.theme.toolbarForeground,
+                                                                      dimension: InnerToolBar.iconDimension)
+    self.closeButton.image = NSImage.fontAwesomeIcon(name: .timesCircle,
+                                                     textColor: self.theme.toolbarForeground,
+                                                     dimension: InnerToolBar.iconDimension)
+
+    self.customToolbar?.repaint(with: self.theme)
+
+    self.needsDisplay = true
+  }
+
   override func draw(_ dirtyRect: NSRect) {
-    InnerToolBar.separatorColor.set()
+    self.theme.separator.set()
     let bottomSeparatorRect = self.bottomSeparatorRect()
     if dirtyRect.intersects(bottomSeparatorRect) {
       NSRectFill(bottomSeparatorRect)
     }
 
+    self.theme.toolbarForeground.set()
     let innerSeparatorRect = self.innerSeparatorRect()
     if dirtyRect.intersects(innerSeparatorRect) {
       NSRectFill(innerSeparatorRect)
@@ -114,7 +139,8 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
   }
 
   fileprivate func removeCustomUiElements() {
-    [self.titleField, self.customToolbar, self.closeButton, self.cogButton].forEach { $0?.removeFromSuperview() }
+    self.customToolbar?.removeFromSuperview()
+    [self.titleField, self.closeButton, self.cogButton].forEach { $0.removeFromSuperview() }
     self.cogButton.menu = nil
   }
 
@@ -129,12 +155,14 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     title.isSelectable = false
     title.controlSize = .small
 
-    InnerToolBar.configureToStandardIconButton(button: close, iconName: .timesCircle)
+    InnerToolBar.configureToStandardIconButton(button: close,
+                                               iconName: .timesCircle,
+                                               color: self.theme.toolbarForeground)
     close.target = self
     close.action = #selector(InnerToolBar.closeAction)
 
     let cogIcon = NSImage.fontAwesomeIcon(name: .cog,
-                                          textColor: InnerToolBar.iconColor,
+                                          textColor: self.theme.toolbarForeground,
                                           dimension: InnerToolBar.iconDimension)
     cog.configureForAutoLayout()
     cog.imagePosition = .imageOnly

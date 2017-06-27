@@ -30,6 +30,7 @@
 #import <nvim/mouse.h>
 #import <nvim/screen.h>
 #import <nvim/edit.h>
+#import <nvim/syntax.h>
 #import <nvim/api/window.h>
 
 
@@ -149,6 +150,39 @@ static void send_cwd() {
 
   NSData *resultData = [pwd dataUsingEncoding:NSUTF8StringEncoding];
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdCwdChanged data:resultData];
+}
+
+static HlAttrs HlAttrsFromAttrCode(int attr_code) {
+  HlAttrs rgb_attrs = { false, false, false, false, false, -1, -1, -1 };
+  attrentry_T *aep = syn_cterm_attr2entry(attr_code);
+
+  rgb_attrs.foreground = aep->rgb_fg_color;
+  rgb_attrs.background = aep->rgb_bg_color;
+  rgb_attrs.special = aep->rgb_sp_color;
+  rgb_attrs.reverse = (bool) (aep->rgb_ae_attr & HL_INVERSE);
+
+  return rgb_attrs;
+}
+
+static void send_colorscheme() {
+  // It seems that the highlight groupt only gets updated when the screen is redrawn.
+  // Since there's a guard var, probably it's safe to call it here...
+  if (need_highlight_changed) {
+    highlight_changed();
+  }
+
+  HlAttrs visualAttrs = HlAttrsFromAttrCode(highlight_attr[HLF_V]);
+
+  int visualFg = visualAttrs.reverse ? visualAttrs.background: visualAttrs.foreground;
+  int visualBg = visualAttrs.reverse ? visualAttrs.foreground: visualAttrs.background;
+
+  NSInteger values[] = {
+      normal_fg, normal_bg,
+      visualFg, visualBg
+  };
+  NSData *resultData = [NSData dataWithBytes:values length:4 * sizeof(NSInteger)];
+
+  [_neovim_server sendMessageWithId:NeoVimServerMsgIdColorSchemeChanged data:resultData];
 }
 
 static void insert_marked_text(NSString *markedText) {
@@ -531,6 +565,11 @@ void custom_ui_autocmds_groups(
 
     if (event == EVENT_DIRCHANGED) {
       send_cwd();
+      return;
+    }
+
+    if (event == EVENT_COLORSCHEME) {
+      send_colorscheme();
       return;
     }
 
@@ -1045,6 +1084,20 @@ void neovim_cursor_goto(void **argv) {
     nvim_input((String) { .data="<ESC>", .size=5 });
 
     xfree(position.items);
+
+    return nil;
+  });
+}
+
+void neovim_debug1(void **argv) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
+    NSLog(@"normal fg: %#08X", normal_fg);
+    NSLog(@"normal bg: %#08X", normal_bg);
+    NSLog(@"normal sp: %#08X", normal_sp);
+
+    for (int i = 0; i < HLF_COUNT; i++) {
+      NSLog(@"%s: %#08X", hlf_names[i], HlAttrsFromAttrCode(highlight_attr[i]).foreground);
+    }
 
     return nil;
   });

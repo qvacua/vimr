@@ -18,6 +18,9 @@ class AppearancePrefReducer {
     case let .setUsesLigatures(value):
       appearance.usesLigatures = value
 
+    case let .setUsesColorscheme(value):
+      appearance.usesTheme = value
+
     case let .setFont(font):
       appearance.font = font
 

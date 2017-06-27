@@ -4,15 +4,19 @@
  */
 
 import Cocoa
+import SwiftNeoVim
 import PureLayout
 import RxSwift
 
 class FileOutlineView: NSOutlineView,
                        UiComponent,
                        NSOutlineViewDataSource,
-                       NSOutlineViewDelegate {
+                       NSOutlineViewDelegate,
+                       ThemedView {
 
   typealias StateType = MainWindow.State
+
+  fileprivate(set) var theme = Theme.default
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
@@ -21,11 +25,14 @@ class FileOutlineView: NSOutlineView,
     self.root = FileBrowserItem(state.cwd)
     self.isShowHidden = state.fileBrowserShowHidden
 
+    self.usesTheme = state.appearance.usesTheme
+
     super.init(frame: .zero)
     NSOutlineView.configure(toStandard: self)
 
     self.dataSource = self
     self.delegate = self
+    self.allowsEmptySelection = true
 
     guard Bundle.main.loadNibNamed("FileBrowserMenu", owner: self, topLevelObjects: nil) else {
       NSLog("WARN: FileBrowserMenu.xib could not be loaded")
@@ -40,7 +47,7 @@ class FileOutlineView: NSOutlineView,
     self.doubleAction = #selector(FileOutlineView.doubleClickAction)
 
     source
-      .filter { !self.reloadData(for: $0) }
+      .filter { !self.shouldReloadData(for: $0) }
       .filter { $0.lastFileSystemUpdate.mark != self.lastFileSystemUpdateMark }
       .throttle(2 * FileMonitor.fileSystemEventsLatency + 1,
                 latest: true,
@@ -59,7 +66,26 @@ class FileOutlineView: NSOutlineView,
           self.beFirstResponder()
         }
 
-        guard self.reloadData(for: state) else {
+        let themeChanged = changeTheme(
+          themePrefChanged: state.appearance.usesTheme != self.usesTheme,
+          themeChanged: state.appearance.theme.mark != self.lastThemeMark,
+          usesTheme: state.appearance.usesTheme,
+          forTheme: {
+            self.theme = state.appearance.theme.payload
+            self.enclosingScrollView?.backgroundColor = self.theme.background
+            self.backgroundColor = self.theme.background
+            self.lastThemeMark = state.appearance.theme.mark
+          },
+          forDefaultTheme: {
+            self.theme = Theme.default
+            self.enclosingScrollView?.backgroundColor = self.theme.background
+            self.backgroundColor = self.theme.background
+            self.lastThemeMark = state.appearance.theme.mark
+          })
+
+        self.usesTheme = state.appearance.usesTheme
+
+        guard self.shouldReloadData(for: state, themeChanged: themeChanged) else {
           return
         }
 
@@ -96,6 +122,9 @@ class FileOutlineView: NSOutlineView,
 
   fileprivate let uuid: String
   fileprivate var lastFileSystemUpdateMark = Token()
+  fileprivate var usesTheme: Bool
+  fileprivate var lastThemeMark = Token()
+
 
   fileprivate var cwd: URL {
     return self.root.url
@@ -108,8 +137,12 @@ class FileOutlineView: NSOutlineView,
     fatalError("init(coder:) has not been implemented")
   }
 
-  fileprivate func reloadData(for state: StateType) -> Bool {
+  fileprivate func shouldReloadData(for state: StateType, themeChanged: Bool = false) -> Bool {
     if self.isShowHidden != state.fileBrowserShowHidden {
+      return true
+    }
+
+    if themeChanged {
       return true
     }
 
@@ -297,7 +330,7 @@ extension FileOutlineView {
       }
 
       // + 2 just to have a buffer... -_-
-      return ImageAndTextTableCell.width(with: fileBrowserItem.url.lastPathComponent)
+      return ThemedTableCell.width(with: fileBrowserItem.url.lastPathComponent)
              + (CGFloat($0.level + 2) * (self.indentationPerLevel + 2))
     }.max() ?? column.width
 
@@ -314,7 +347,7 @@ extension FileOutlineView {
 
     // It seems like that caching the widths is slower due to thread-safeness of NSCache...
     let cellWidth = items.concurrentChunkMap(20) {
-      let result = ImageAndTextTableCell.width(with: $0.url.lastPathComponent)
+      let result = ThemedTableCell.width(with: $0.url.lastPathComponent)
       return result
     }.max() ?? column.width
 
@@ -333,15 +366,18 @@ extension FileOutlineView {
 // MARK: - NSOutlineViewDelegate
 extension FileOutlineView {
 
-  @objc(outlineView: viewForTableColumn:item:)
+  func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
+    return self.make(withIdentifier: "file-row-view", owner: self) as? ThemedTableRow
+           ?? ThemedTableRow(withIdentifier: "file-row-view", themedView: self)
+  }
+
   func outlineView(_: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
     guard let fileBrowserItem = item as? FileBrowserItem else {
       return nil
     }
 
-    let cachedCell =
-      (self.make(withIdentifier: "file-view-row", owner: self) as? ImageAndTextTableCell)?.reset()
-    let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
+    let cell = (self.make(withIdentifier: "file-cell-view", owner: self) as? ThemedTableCell)?.reset()
+               ?? ThemedTableCell(withIdentifier: "file-cell-view")
 
     cell.text = fileBrowserItem.url.lastPathComponent
     let icon = FileUtils.icon(forUrl: fileBrowserItem.url)

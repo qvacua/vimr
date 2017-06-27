@@ -82,6 +82,9 @@ class MainWindowReducer {
     case let .toggleToolButtons(value):
       state.isToolButtonsVisible = value
 
+    case let .setTheme(theme):
+      state.appearance.theme = Marked(theme)
+
     default:
       return pair
 

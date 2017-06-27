@@ -14,6 +14,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
   enum Action {
 
     case setUsesLigatures(Bool)
+    case setUsesColorscheme(Bool)
     case setFont(NSFont)
     case setLinespacing(CGFloat)
   }
@@ -36,6 +37,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     self.font = state.mainWindowTemplate.appearance.font
     self.linespacing = state.mainWindowTemplate.appearance.linespacing
     self.usesLigatures = state.mainWindowTemplate.appearance.usesLigatures
+    self.usesColorscheme = state.mainWindowTemplate.appearance.usesTheme
 
     super.init(frame: .zero)
 
@@ -53,6 +55,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
           self.font = appearance.font
           self.linespacing = appearance.linespacing
           self.usesLigatures = appearance.usesLigatures
+          self.usesColorscheme = appearance.usesTheme
 
           self.updateViews()
         }
@@ -68,6 +71,9 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
   fileprivate var font: NSFont
   fileprivate var linespacing: CGFloat
   fileprivate var usesLigatures: Bool
+  fileprivate var usesColorscheme: Bool
+
+  fileprivate let colorschemeCheckbox = NSButton(forAutoLayout: ())
 
   fileprivate let sizes = [9, 10, 11, 12, 13, 14, 16, 18, 24, 36, 48, 64]
   fileprivate let sizeCombo = NSComboBox(forAutoLayout: ())
@@ -90,6 +96,16 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 
   fileprivate func addViews() {
     let paneTitle = self.paneTitleTextField(title: "Appearance")
+
+    let useColorscheme = self.colorschemeCheckbox
+    self.configureCheckbox(button: useColorscheme,
+                           title: "Use Neovim's color scheme for tools.",
+                           action: #selector(AppearancePref.usesColorschemeAction(_:)))
+
+    let useColorschemeInfo = self.infoTextField(
+      markdown: "If checked, the colors of the selected `colorscheme` will be  \n" +
+                "used to render tools, e.g. the file browser."
+    )
 
     let fontTitle = self.titleTextField(title: "Default Font:")
 
@@ -141,6 +157,8 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 
     self.addSubview(paneTitle)
 
+    self.addSubview(useColorscheme)
+    self.addSubview(useColorschemeInfo)
     self.addSubview(fontTitle)
     self.addSubview(fontPopup)
     self.addSubview(sizeCombo)
@@ -152,10 +170,16 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     paneTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 18)
     paneTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
 
+    useColorscheme.autoPinEdge(.left, to: .right, of: fontTitle, withOffset: 5)
+    useColorscheme.autoPinEdge(.top, to: .bottom, of: paneTitle, withOffset: 18)
+
+    useColorschemeInfo.autoPinEdge(.top, to: .bottom, of: useColorscheme, withOffset: 5)
+    useColorschemeInfo.autoPinEdge(.left, to: .left, of: useColorscheme)
+
     fontTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
     fontTitle.autoAlignAxis(.baseline, toSameAxisOf: fontPopup)
 
-    fontPopup.autoPinEdge(.top, to: .bottom, of: paneTitle, withOffset: 18)
+    fontPopup.autoPinEdge(.top, to: .bottom, of: useColorschemeInfo, withOffset: 18)
     fontPopup.autoPinEdge(.left, to: .right, of: fontTitle, withOffset: 5)
     fontPopup.autoSetDimension(.width, toSize: 240)
 
@@ -193,6 +217,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     self.linespacingField.stringValue = String(format: "%.2f", self.linespacing)
     self.ligatureCheckbox.boolState = self.usesLigatures
     self.previewArea.font = self.font
+    self.colorschemeCheckbox.boolState = self.usesColorscheme
 
     if self.usesLigatures {
       self.previewArea.useAllLigatures(self)
@@ -204,6 +229,10 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 
 // MARK: - Actions
 extension AppearancePref {
+
+  func usesColorschemeAction(_ sender: NSButton) {
+    self.emit(.setUsesColorscheme(sender.boolState))
+  }
 
   func usesLigaturesAction(_ sender: NSButton) {
     self.emit(.setUsesLigatures(sender.boolState))

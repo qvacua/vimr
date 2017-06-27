@@ -124,7 +124,7 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
 extension HtmlPreviewTool {
 
-  class InnerCustomToolbar: NSView {
+  class InnerCustomToolbar: CustomToolBar {
 
     fileprivate weak var htmlPreviewTool: HtmlPreviewTool? {
       didSet {
@@ -139,6 +139,10 @@ extension HtmlPreviewTool {
       self.configureForAutoLayout()
 
       self.addViews()
+    }
+
+    override func repaint(with: Workspace.Theme) {
+
     }
 
     fileprivate func addViews() {

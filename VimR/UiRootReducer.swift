@@ -40,6 +40,9 @@ class UiRootReducer {
 
       appState.mainWindows.removeValue(forKey: uuid)
 
+    case let .setTheme(theme):
+      appState.mainWindowTemplate.appearance.theme = Marked(theme)
+
     default:
       return pair
 

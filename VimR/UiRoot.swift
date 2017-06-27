@@ -28,6 +28,12 @@ class UiRoot: UiComponent {
           .flatMap { state.mainWindows[$0] }
           .forEach(self.createNewMainWindow)
 
+        if self.mainWindows.isEmpty {
+          // We exit here if there are no main windows open. Otherwise, when hide/quit after last main window is active,
+          // you have to be really quick to open a new window when re-activating VimR w/o automatic new main window.
+          return
+        }
+
         self.mainWindows.keys
           .filter { !uuidsInState.contains($0) }
           .forEach(self.removeMainWindow)

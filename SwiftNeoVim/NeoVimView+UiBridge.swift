@@ -150,7 +150,6 @@ extension NeoVimView {
   public func updateForeground(_ fg: Int) {
     gui.async {
       self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(fg))
-
       self.grid.foreground = fg
     }
   }
@@ -167,7 +166,6 @@ extension NeoVimView {
   public func updateSpecial(_ sp: Int) {
     gui.async {
       self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(sp))
-
       self.grid.special = sp
     }
   }
@@ -245,6 +243,15 @@ extension NeoVimView {
 
       self._cwd = URL(fileURLWithPath: cwd)
       self.cwdChanged()
+    }
+  }
+  public func colorSchemeChanged(_ values: [NSNumber]) {
+    gui.async {
+      let theme = Theme(values.map { $0.intValue })
+      self.bridgeLogger.debug(theme)
+
+      self.theme = theme
+      self.delegate?.colorschemeChanged(to: theme)
     }
   }
 

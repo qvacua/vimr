@@ -32,6 +32,25 @@ class Workspace: NSView, WorkspaceBarDelegate {
     let mainViewMinimumSize: CGSize
   }
 
+  struct Theme {
+
+    static let `default` = Workspace.Theme()
+
+    var foreground = NSColor.black
+    var background = NSColor.white
+
+    var separator = NSColor.controlShadowColor
+
+    var barBackground = NSColor.windowBackgroundColor
+    var barFocusRing = NSColor.selectedControlColor
+
+    var barButtonBackground = NSColor.clear
+    var barButtonHighlight = NSColor.controlShadowColor
+
+    var toolbarForeground = NSColor.darkGray
+    var toolbarBackground = NSColor(red: 0.899, green: 0.934, blue: 0.997, alpha: 1)
+  }
+
   fileprivate(set) var isAllToolsVisible = true {
     didSet {
       self.relayout()
@@ -60,6 +79,12 @@ class Workspace: NSView, WorkspaceBarDelegate {
   let mainView: NSView
   let bars: [WorkspaceBarLocation: WorkspaceBar]
   let config: Config
+
+  var theme = Workspace.Theme.default {
+    didSet {
+      self.repaint()
+    }
+  }
 
   weak var delegate: WorkspaceDelegate?
 
@@ -215,6 +240,12 @@ extension Workspace {
 
 // MARK: - Layout
 extension Workspace {
+
+  fileprivate func repaint() {
+    self.bars.values.forEach { $0.repaint() }
+    self.proxyBar.repaint()
+    self.needsDisplay = true
+  }
 
   fileprivate func relayout() {
     // FIXME: I did not investigate why toggleButtons does not work correctly if we store all constraints in an array

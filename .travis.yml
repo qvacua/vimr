@@ -10,8 +10,10 @@ cache:
 
 before_install:
     - brew update
-      #- brew upgrade carthage
-    - brew install libtool automake ninja
+    - brew outdated carthage || brew upgrade carthage
+    - brew outdated libtool || brew upgrade libtool
+    - brew outdated automake || brew upgrade automake
+    - brew install ninja
 
 script:
     - ./bin/build_travis.sh

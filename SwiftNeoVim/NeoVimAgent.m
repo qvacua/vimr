@@ -5,7 +5,6 @@
 
 #import "NeoVimAgent.h"
 #import "NeoVimMsgIds.h"
-#import "NeoVimUiBridgeProtocol.h"
 #import "Logger.h"
 #import "NeoVimBuffer.h"
 #import "NeoVimWindow.h"
@@ -22,27 +21,28 @@ static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
   return ( type *) data.bytes;                                            \
 }
 
-data_to_array(NSUInteger)
 
 data_to_array(NSInteger)
-
 data_to_array(bool)
-
 data_to_array(CellAttributes)
 
 static void log_cfmachport_error(SInt32 err, NeoVimAgentMsgId msgid, NSData *inputData) {
   switch (err) {
     case kCFMessagePortSendTimeout:
-      log4Warn("Got response kCFMessagePortSendTimeout = %d for the msg %d with data %@.", err, msgid, inputData);
+      log4Warn("Got response kCFMessagePortSendTimeout = %d for the msg %ld with data %@.",
+          err, (long) msgid, inputData);
     case kCFMessagePortReceiveTimeout:
-      log4Warn("Got response kCFMessagePortReceiveTimeout = %d for the msg %d with data %@.", err, msgid, inputData);
+      log4Warn("Got response kCFMessagePortReceiveTimeout = %d for the msg %ld with data %@.",
+          err, (long) msgid, inputData);
     case kCFMessagePortIsInvalid:
-      log4Warn("Got response kCFMessagePortIsInvalid = %d for the msg %d with data %@.", err, msgid, inputData);
+      log4Warn("Got response kCFMessagePortIsInvalid = %d for the msg %ld with data %@.",
+          err, (long) msgid, inputData);
     case kCFMessagePortTransportError:
-      log4Warn("Got response kCFMessagePortTransportError = %d for the msg %d with data %@.", err, msgid, inputData);
+      log4Warn("Got response kCFMessagePortTransportError = %d for the msg %ld with data %@.",
+          err, (long) msgid, inputData);
     case kCFMessagePortBecameInvalidError:
-      log4Warn("Got response kCFMessagePortBecameInvalidError = %d for the msg %d with data %@.",
-          err, msgid, inputData);
+      log4Warn("Got response kCFMessagePortBecameInvalidError = %d for the msg %ld with data %@.",
+          err, (long) msgid, inputData);
       return;
 
     default:
@@ -281,7 +281,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 - (bool)hasDirtyDocs {
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetDirtyDocs data:nil expectsReply:YES];
   if (response == nil) {
-    log4Warn("The response for the msg %d was nil.", NeoVimAgentMsgIdGetDirtyDocs);
+    log4Warn("The response for the msg %ld was nil.", (long) NeoVimAgentMsgIdGetDirtyDocs);
     return NO;
   }
 
@@ -336,7 +336,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:fileNames];
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetEscapeFileNames data:data expectsReply:YES];
   if (response == nil) {
-    log4Warn("The response for the msg %d was nil.", NeoVimAgentMsgIdGetEscapeFileNames);
+    log4Warn("The response for the msg %ld was nil.", (long) NeoVimAgentMsgIdGetEscapeFileNames);
     return @[];
   }
 
@@ -346,7 +346,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 - (NSArray <NeoVimBuffer *> *)buffers {
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetBuffers data:nil expectsReply:YES];
   if (response == nil) {
-    log4Warn("The response for the msg %d was nil.", NeoVimAgentMsgIdGetBuffers);
+    log4Warn("The response for the msg %ld was nil.", (long) NeoVimAgentMsgIdGetBuffers);
     return @[];
   }
 
@@ -356,7 +356,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 - (NSArray<NeoVimWindow *> *)tabs {
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetTabs data:nil expectsReply:YES];
   if (response == nil) {
-    log4Warn("The response for the msg %d was nil.", NeoVimAgentMsgIdGetTabs);
+    log4Warn("The response for the msg %ld was nil.", (long) NeoVimAgentMsgIdGetTabs);
     return @[];
   }
 
@@ -628,6 +628,16 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
       }
 
       [_bridge cwdChanged:[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]];
+      return;
+    }
+
+    case NeoVimServerMsgIdColorSchemeChanged: {
+      NSInteger *values = (NSInteger *) data.bytes;
+      NSMutableArray *array = [NSMutableArray new];
+      for (int i = 0; i < 4; i++) {
+        [array addObject:@(values[i])];
+      }
+      [_bridge colorSchemeChanged:array];
       return;
     }
 
