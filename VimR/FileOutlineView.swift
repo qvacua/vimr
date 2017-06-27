@@ -381,9 +381,9 @@ extension FileOutlineView {
 
     cell.text = fileBrowserItem.url.lastPathComponent
     let icon = FileUtils.icon(forUrl: fileBrowserItem.url)
-    cell.image = fileBrowserItem.isHidden
-      ? icon?.tinting(with: NSColor.white.withAlphaComponent(0.4))
-      : icon
+    cell.image = fileBrowserItem.isHidden ? icon?.tinting(with: NSColor.white.withAlphaComponent(0.4)) : icon
+
+    cell.isDir = fileBrowserItem.isDir
 
     return cell
   }
@@ -534,6 +534,7 @@ fileprivate class FileBrowserItem: Hashable, Comparable, CustomStringConvertible
   }
 
   let url: URL
+  let isDir: Bool
   let isHidden: Bool
   var children: [FileBrowserItem] = []
   var isChildrenScanned = false
@@ -544,6 +545,7 @@ fileprivate class FileBrowserItem: Hashable, Comparable, CustomStringConvertible
     // We cache the value here since we often get the value when the file is not there, eg when
     // updating because the file gets deleted (in self.prepare() function)
     self.isHidden = url.isHidden
+    self.isDir = url.isDir
   }
 
   func child(with url: URL) -> FileBrowserItem? {

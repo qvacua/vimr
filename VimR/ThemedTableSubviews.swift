@@ -24,7 +24,11 @@ class ThemedTableRow: NSTableRowView {
 
   open override func drawBackground(in dirtyRect: NSRect) {
     if let cell = self.view(atColumn: 0) as? ThemedTableCell {
-      cell.textField?.textColor = self.themedView?.theme.foreground ?? Theme.default.foreground
+      if cell.isDir {
+        cell.textField?.textColor = self.themedView?.theme.directoryForeground ?? Theme.default.directoryForeground
+      } else {
+        cell.textField?.textColor = self.themedView?.theme.foreground ?? Theme.default.foreground
+      }
     }
 
     self.themedView?.theme.background.set()
@@ -63,6 +67,8 @@ class ThemedTableCell: NSTableCellView {
     return CGSize(width: ThemedTableCell.widthWithoutText + self._textField.intrinsicContentSize.width,
                   height: max(self._textField.intrinsicContentSize.height, 16))
   }
+
+  var isDir = false
 
   var attributedText: NSAttributedString {
     get {
@@ -130,6 +136,7 @@ class ThemedTableCell: NSTableCellView {
   func reset() -> ThemedTableCell {
     self.text = ""
     self.image = nil
+    self.isDir = false
 
     return self
   }
