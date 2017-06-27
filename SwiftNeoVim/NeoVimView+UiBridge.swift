@@ -247,8 +247,11 @@ extension NeoVimView {
   }
   public func colorSchemeChanged(_ values: [NSNumber]) {
     gui.async {
-      self.bridgeLogger.debug(Theme(values.map { $0.intValue }))
-      self.delegate?.colorschemeChanged(to: Theme(values.map { $0.intValue }))
+      let theme = Theme(values.map { $0.intValue })
+      self.bridgeLogger.debug(theme)
+
+      self.theme = theme
+      self.delegate?.colorschemeChanged(to: theme)
     }
   }
 

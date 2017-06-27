@@ -146,7 +146,7 @@ extension NeoVimView {
   }
 
   fileprivate func drawResizeInfo(in context: CGContext, with dirtyUnionRect: CGRect) {
-    context.setFillColor(NSColor.windowBackgroundColor.cgColor)
+    context.setFillColor(self.theme.background.cgColor)
     context.fill(dirtyUnionRect)
 
     let boundsSize = self.bounds.size
@@ -158,12 +158,15 @@ extension NeoVimView {
     let discreteSize = self.discreteSize(size: boundsSize)
     let displayStr = "\(discreteSize.width) × \(discreteSize.height)"
 
-    let size = displayStr.size(withAttributes: resizeTextAttrs)
+    var sizeAttrs = resizeTextAttrs
+    sizeAttrs[NSForegroundColorAttributeName] = self.theme.foreground
+
+    let size = displayStr.size(withAttributes: sizeAttrs)
     let x = (boundsSize.width - size.width) / 2
     let y = emojiY - size.height
 
     self.currentEmoji.draw(at: CGPoint(x: emojiX, y: emojiY), withAttributes: emojiAttrs)
-    displayStr.draw(at: CGPoint(x: x, y: y), withAttributes: resizeTextAttrs)
+    displayStr.draw(at: CGPoint(x: x, y: y), withAttributes: sizeAttrs)
   }
 
   fileprivate func drawPinchImage(in context: CGContext) {

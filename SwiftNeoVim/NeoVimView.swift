@@ -74,6 +74,8 @@ public class NeoVimView: NSView,
 
   public internal(set) var mode = CursorModeShape.normal
 
+  public internal(set) var theme = Theme.default
+
   public var usesLigatures = false {
     didSet {
       self.drawer.usesLigatures = self.usesLigatures
