@@ -159,16 +159,26 @@ static HlAttrs HlAttrsFromAttrCode(int attr_code) {
   rgb_attrs.foreground = aep->rgb_fg_color;
   rgb_attrs.background = aep->rgb_bg_color;
   rgb_attrs.special = aep->rgb_sp_color;
+  rgb_attrs.reverse = (bool) (aep->rgb_ae_attr & HL_INVERSE);
 
   return rgb_attrs;
 }
 
 static void send_colorscheme() {
+  // It seems that the highlight groupt only gets updated when the screen is redrawn.
+  // Since there's a guard var, probably it's safe to call it here...
+  if (need_highlight_changed) {
+    highlight_changed();
+  }
+
   HlAttrs visualAttrs = HlAttrsFromAttrCode(highlight_attr[HLF_V]);
+
+  int visualFg = visualAttrs.reverse ? visualAttrs.background: visualAttrs.foreground;
+  int visualBg = visualAttrs.reverse ? visualAttrs.foreground: visualAttrs.background;
 
   NSInteger values[] = {
       normal_fg, normal_bg,
-      visualAttrs.foreground, visualAttrs.background
+      visualFg, visualBg
   };
   NSData *resultData = [NSData dataWithBytes:values length:4 * sizeof(NSInteger)];
 
