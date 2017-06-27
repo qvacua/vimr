@@ -30,6 +30,7 @@ class Keys {
 
     static let key = "appearance"
 
+    static let usesTheme = "uses-theme"
     static let editorFontName = "editor-font-name"
     static let editorFontSize = "editor-font-size"
     static let editorLinespacing = "editor-linespacing"

@@ -165,7 +165,6 @@ struct AppearanceState: SerializableState {
   var linespacing: CGFloat = 1
   var usesLigatures = false
 
-  // FIXME GH-436: set to false and make it an option
   var usesTheme = true
   var theme = Marked(Theme.default)
 
@@ -182,6 +181,8 @@ struct AppearanceState: SerializableState {
       return nil
     }
 
+    self.usesTheme = PrefUtils.bool(from: dict, for: Keys.Appearance.usesTheme, default: true)
+
     self.font = PrefUtils.saneFont(editorFontName, fontSize: CGFloat(fEditorFontSize))
     self.linespacing = CGFloat(fEditorLinespacing)
     self.usesLigatures = editorUsesLigatures
@@ -189,6 +190,7 @@ struct AppearanceState: SerializableState {
 
   func dict() -> [String: Any] {
     return [
+      Keys.Appearance.usesTheme: self.usesTheme,
       Keys.Appearance.editorFontName: self.font.fontName,
       Keys.Appearance.editorFontSize: Float(self.font.pointSize),
       Keys.Appearance.editorLinespacing: Float(self.linespacing),
