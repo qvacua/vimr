@@ -10,7 +10,7 @@
       <title>SNAPSHOT-209</title>
       <description><![CDATA[
     <ul>
-<li>GH-436: Use colors from the selected <code>colorscheme</code> for tools, e.g. the file browser.</li>
+<li>GH-436: Use colors from the selected <code>colorscheme</code> for tools, e.g. the file browser. Please report issues in <a href="https://github.com/qvacua/vimr/issues/436">#436</a></li>
 </ul>
   ]]></description>
       <releaseNotesLink>
