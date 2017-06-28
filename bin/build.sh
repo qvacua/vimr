@@ -90,7 +90,7 @@ fi
 
 if [ "${UPDATE_APPCAST}" = true ] ; then
     ./bin/set_appcast.py "build/Release/${VIMR_FILE_NAME}" "${BUNDLE_VERSION}" "${MARKETING_VERSION}" "${TAG}" ${IS_SNAPSHOT}
-    ./bin/commit_and_push_appcast.sh "${BRANCH}" "${COMPOUND_VERSION}" ${IS_SNAPSHOT}
+    ./bin/commit_and_push_appcast.sh "${BRANCH}" "${COMPOUND_VERSION}" ${IS_SNAPSHOT} ${UPDATE_SNAPSHOT_APPCAST_FOR_RELEASE}
 fi
 
 echo "### Built VimR"

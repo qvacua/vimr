@@ -27,6 +27,7 @@ Builds a new snapshot of VimR and pushes the tag:<br>
     textParam('RELEASE_NOTES', null, 'Release notes')
     booleanParam('IS_SNAPSHOT', true)
     booleanParam('UPDATE_APPCAST', true)
+    booleanParam('UPDATE_SNAPSHOT_APPCAST_FOR_RELEASE', true)
   }
 
   scm {
