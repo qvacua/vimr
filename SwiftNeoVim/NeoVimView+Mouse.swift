@@ -155,7 +155,7 @@ extension NeoVimView {
                                      modifierFlags: NSEventModifierFlags,
                                      cellPosition: Position) -> (String, String) {
 
-    let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.row),\(cellPosition.column)")
+    let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.column),\(cellPosition.row)")
 
     let (typeX, typeY) = self.vimScrollEventNamesFor(deltaX: deltaX, deltaY: deltaY)
     let resultX: String
