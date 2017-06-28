@@ -3,6 +3,10 @@
 * GH-436: Use colors from the selected `colorscheme` for tools, e.g. the file browser.
 * ...
 
+# 0.16.2-210
+
+* GH-472: Bugfix: Mouse wheel scrolling in split window sometimes scrolls in the wrong split.
+
 # 0.16.1-208
 
 * GH-472: Bugfix: mouse scrolling an out-of-focus split window scrolls the focused split window.

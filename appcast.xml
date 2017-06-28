@@ -7,22 +7,20 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.16.1-208</title>
+      <title>v0.16.2-210</title>
       <description><![CDATA[
-    <ul>
-<li>GH-472: Bugfix: mouse scrolling an out-of-focus split window scrolls the focused split window.</li>
-</ul>
+    <p>GH-472: Bugfix: Mouse wheel scrolling in split window sometimes scrolls in the wrong split.</p>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.16.1-208
+        https://github.com/qvacua/vimr/releases/tag/v0.16.2-210
       </releaseNotesLink>
-      <pubDate>2017-06-24T14:54:52.841947</pubDate>
+      <pubDate>2017-06-28T17:32:57.613213</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.16.1-208/VimR-v0.16.1-208.tar.bz2"
-                 sparkle:version="208"
-                 sparkle:shortVersionString="0.16.1"
-                 sparkle:dsaSignature="MC0CFFZUQFAwYrxt7QFs85mCTKxD2U/YAhUAqO25Q4xlOZPVqaooY5mKJlaI2F8="
-                 length="10630903"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.16.2-210/VimR-v0.16.2-210.tar.bz2"
+                 sparkle:version="210"
+                 sparkle:shortVersionString="0.16.2"
+                 sparkle:dsaSignature="MCwCFBoq/JsW4co7/MxAg1jmd8gLhJhjAhQJvYBjgAel04nN0DTZFptRkr4eyg=="
+                 length="10631071"
                  type="application/octet-stream"/>
     </item>
   </channel>
