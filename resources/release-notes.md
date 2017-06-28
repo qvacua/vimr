@@ -1,6 +1,6 @@
-# next
+# 0.16.2-210
 
-* ...
+* GH-472: Bugfix: Mouse wheel scrolling in split window sometimes scrolls in the wrong split.
 
 # 0.16.1-206
 
