@@ -166,9 +166,8 @@ struct AppearanceState: SerializableState {
   var usesLigatures = false
 
   var usesTheme = true
-  var theme = Marked(Theme.default)
-
   var showsFileIcon = true
+  var theme = Marked(Theme.default)
 
   init() {
 
@@ -184,6 +183,7 @@ struct AppearanceState: SerializableState {
     }
 
     self.usesTheme = PrefUtils.bool(from: dict, for: Keys.Appearance.usesTheme, default: true)
+    self.showsFileIcon = PrefUtils.bool(from: dict, for: Keys.Appearance.showsFileIcon, default: true)
 
     self.font = PrefUtils.saneFont(editorFontName, fontSize: CGFloat(fEditorFontSize))
     self.linespacing = CGFloat(fEditorLinespacing)
@@ -193,6 +193,7 @@ struct AppearanceState: SerializableState {
   func dict() -> [String: Any] {
     return [
       Keys.Appearance.usesTheme: self.usesTheme,
+      Keys.Appearance.showsFileIcon: self.showsFileIcon,
       Keys.Appearance.editorFontName: self.font.fontName,
       Keys.Appearance.editorFontSize: Float(self.font.pointSize),
       Keys.Appearance.editorLinespacing: Float(self.linespacing),
