@@ -15,11 +15,14 @@ class AppearancePrefReducer {
 
     switch pair.action {
 
-    case let .setUsesLigatures(value):
-      appearance.usesLigatures = value
-
     case let .setUsesColorscheme(value):
       appearance.usesTheme = value
+
+    case let .setShowsFileIcon(value):
+      appearance.showsFileIcon = value
+
+    case let .setUsesLigatures(value):
+      appearance.usesLigatures = value
 
     case let .setFont(font):
       appearance.font = font

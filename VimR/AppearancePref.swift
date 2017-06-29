@@ -13,8 +13,9 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 
   enum Action {
 
-    case setUsesLigatures(Bool)
     case setUsesColorscheme(Bool)
+    case setShowsFileIcon(Bool)
+    case setUsesLigatures(Bool)
     case setFont(NSFont)
     case setLinespacing(CGFloat)
   }
@@ -38,6 +39,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     self.linespacing = state.mainWindowTemplate.appearance.linespacing
     self.usesLigatures = state.mainWindowTemplate.appearance.usesLigatures
     self.usesColorscheme = state.mainWindowTemplate.appearance.usesTheme
+    self.showsFileIcon = state.mainWindowTemplate.appearance.showsFileIcon
 
     super.init(frame: .zero)
 
@@ -49,16 +51,22 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
       .subscribe(onNext: { state in
         let appearance = state.mainWindowTemplate.appearance
 
-        if self.font != appearance.font
-           || self.linespacing != appearance.linespacing
-           || self.usesLigatures != appearance.usesLigatures {
-          self.font = appearance.font
-          self.linespacing = appearance.linespacing
-          self.usesLigatures = appearance.usesLigatures
-          self.usesColorscheme = appearance.usesTheme
+        guard self.font != appearance.font
+              || self.linespacing != appearance.linespacing
+              || self.usesLigatures != appearance.usesLigatures
+              || self.usesColorscheme != appearance.usesTheme
+              || self.showsFileIcon != appearance.showsFileIcon else {
 
-          self.updateViews()
+          return
         }
+
+        self.font = appearance.font
+        self.linespacing = appearance.linespacing
+        self.usesLigatures = appearance.usesLigatures
+        self.usesColorscheme = appearance.usesTheme
+        self.showsFileIcon = appearance.showsFileIcon
+
+        self.updateViews()
       })
       .disposed(by: self.disposeBag)
   }
@@ -72,8 +80,10 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
   fileprivate var linespacing: CGFloat
   fileprivate var usesLigatures: Bool
   fileprivate var usesColorscheme: Bool
+  fileprivate var showsFileIcon: Bool
 
   fileprivate let colorschemeCheckbox = NSButton(forAutoLayout: ())
+  fileprivate let fileIconCheckbox = NSButton(forAutoLayout: ())
 
   fileprivate let sizes = [9, 10, 11, 12, 13, 14, 16, 18, 24, 36, 48, 64]
   fileprivate let sizeCombo = NSComboBox(forAutoLayout: ())
@@ -105,6 +115,16 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     let useColorschemeInfo = self.infoTextField(
       markdown: "If checked, the colors of the selected `colorscheme` will be  \n" +
                 "used to render tools, e.g. the file browser."
+    )
+
+    let fileIcon = self.fileIconCheckbox
+    self.configureCheckbox(button: fileIcon,
+                           title: "Show file icons",
+                           action: #selector(AppearancePref.fileIconAction(_:)))
+
+    let fileIconInfo = self.infoTextField(
+      markdown: "In case the selected `colorscheme` does not play well with the file icons  \n" +
+                "in the file browser and the buffer list, you can turn them off."
     )
 
     let fontTitle = self.titleTextField(title: "Default Font:")
@@ -159,6 +179,8 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 
     self.addSubview(useColorscheme)
     self.addSubview(useColorschemeInfo)
+    self.addSubview(fileIcon)
+    self.addSubview(fileIconInfo)
     self.addSubview(fontTitle)
     self.addSubview(fontPopup)
     self.addSubview(sizeCombo)
@@ -176,10 +198,16 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     useColorschemeInfo.autoPinEdge(.top, to: .bottom, of: useColorscheme, withOffset: 5)
     useColorschemeInfo.autoPinEdge(.left, to: .left, of: useColorscheme)
 
+    fileIcon.autoPinEdge(.left, to: .right, of: fontTitle, withOffset: 5)
+    fileIcon.autoPinEdge(.top, to: .bottom, of: useColorschemeInfo, withOffset: 18)
+
+    fileIconInfo.autoPinEdge(.top, to: .bottom, of: fileIcon, withOffset: 5)
+    fileIconInfo.autoPinEdge(.left, to: .left, of: fileIcon)
+
     fontTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
     fontTitle.autoAlignAxis(.baseline, toSameAxisOf: fontPopup)
 
-    fontPopup.autoPinEdge(.top, to: .bottom, of: useColorschemeInfo, withOffset: 18)
+    fontPopup.autoPinEdge(.top, to: .bottom, of: fileIconInfo, withOffset: 18)
     fontPopup.autoPinEdge(.left, to: .right, of: fontTitle, withOffset: 5)
     fontPopup.autoSetDimension(.width, toSize: 240)
 
@@ -218,6 +246,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     self.ligatureCheckbox.boolState = self.usesLigatures
     self.previewArea.font = self.font
     self.colorschemeCheckbox.boolState = self.usesColorscheme
+    self.fileIconCheckbox.boolState = self.showsFileIcon
 
     if self.usesLigatures {
       self.previewArea.useAllLigatures(self)
@@ -232,6 +261,10 @@ extension AppearancePref {
 
   func usesColorschemeAction(_ sender: NSButton) {
     self.emit(.setUsesColorscheme(sender.boolState))
+  }
+
+  func fileIconAction(_ sender: NSButton) {
+    self.emit(.setShowsFileIcon(sender.boolState))
   }
 
   func usesLigaturesAction(_ sender: NSButton) {

@@ -168,6 +168,8 @@ struct AppearanceState: SerializableState {
   var usesTheme = true
   var theme = Marked(Theme.default)
 
+  var showsFileIcon = true
+
   init() {
 
   }
