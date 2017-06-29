@@ -59,7 +59,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, WorkspaceDelegate {
 
   fileprivate func dummyTool(title: String,
                              color: NSColor,
-                             customToolbar: NSView? = nil,
+                             customToolbar: CustomToolBar? = nil,
                              customMenu: [NSMenuItem] = []) -> WorkspaceTool
   {
     let config = WorkspaceTool.Config(title: title,
@@ -89,7 +89,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, WorkspaceDelegate {
   }
 }
 
-class DummyView: NSView {
+class DummyView: CustomToolBar {
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
