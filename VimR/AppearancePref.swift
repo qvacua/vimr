@@ -99,7 +99,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 
     let useColorscheme = self.colorschemeCheckbox
     self.configureCheckbox(button: useColorscheme,
-                           title: "Use Neovim's color scheme for tools.",
+                           title: "Use Neovim's color scheme for main window and tools.",
                            action: #selector(AppearancePref.usesColorschemeAction(_:)))
 
     let useColorschemeInfo = self.infoTextField(
