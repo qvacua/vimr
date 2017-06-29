@@ -48,18 +48,8 @@ class OpenedFileList: NSView,
           themePrefChanged: state.appearance.usesTheme != self.usesTheme,
           themeChanged: state.appearance.theme.mark != self.lastThemeMark,
           usesTheme: state.appearance.usesTheme,
-          forTheme: {
-            self.theme = state.appearance.theme.payload
-            self.bufferList.enclosingScrollView?.backgroundColor = self.theme.background
-            self.bufferList.backgroundColor = self.theme.background
-            self.lastThemeMark = state.appearance.theme.mark
-          },
-          forDefaultTheme: {
-            self.theme = Theme.default
-            self.bufferList.enclosingScrollView?.backgroundColor = self.theme.background
-            self.bufferList.backgroundColor = self.theme.background
-            self.lastThemeMark = state.appearance.theme.mark
-          })
+          forTheme: { self.updateTheme(state.appearance.theme) },
+          forDefaultTheme: { self.updateTheme(Marked(Theme.default)) })
 
         self.usesTheme = state.appearance.usesTheme
 
@@ -89,6 +79,13 @@ class OpenedFileList: NSView,
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+
+  fileprivate func updateTheme(_ theme: Marked<Theme>) {
+    self.theme = theme.payload
+    self.bufferList.enclosingScrollView?.backgroundColor = self.theme.background
+    self.bufferList.backgroundColor = self.theme.background
+    self.lastThemeMark = theme.mark
   }
 
   fileprivate func addViews() {
@@ -163,8 +160,13 @@ extension OpenedFileList {
 
     let pathInfo = url.pathComponents.dropFirst().dropLast().reversed().joined(separator: " / ") + " /"
     let rowText = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
+
     rowText.addAttribute(NSForegroundColorAttributeName,
-                         value: NSColor.lightGray,
+                         value: self.theme.foreground,
+                         range: NSRange(location: 0, length: name.characters.count))
+
+    rowText.addAttribute(NSForegroundColorAttributeName,
+                         value: self.theme.foreground.brightening(by: 1.15),
                          range: NSRange(location: name.characters.count, length: pathInfo.characters.count + 3))
 
     return rowText

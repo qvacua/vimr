@@ -77,8 +77,9 @@ class WorkspaceToolButton: NSView, NSDraggingSource {
       self.dehighlight()
     }
 
-    self.title.setAttributes([NSForegroundColorAttributeName: self.theme.foreground],
-                             range: NSRange(location: 0, length: self.title.length))
+    self.title.addAttribute(NSForegroundColorAttributeName,
+                            value: self.theme.foreground,
+                            range: NSRange(location: 0, length: self.title.length))
 
     self.needsDisplay = true
   }

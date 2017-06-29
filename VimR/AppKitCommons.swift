@@ -20,7 +20,7 @@ extension NSColor {
     }
   }
 
-  func darkening(by factor: CGFloat) -> NSColor {
+  func brightening(by factor: CGFloat) -> NSColor {
     guard let color = self.usingColorSpace(.sRGB) else {
       // TODO: what to do?
       return self
