@@ -238,7 +238,7 @@ class MainWindow: NSObject,
             themePrefChanged: themePrefChanged, themeChanged: themeChanged, usesTheme: usesTheme,
             forTheme: {
               self.window.titlebarAppearsTransparent = true
-              self.window.backgroundColor = state.appearance.theme.payload.background
+              self.window.backgroundColor = state.appearance.theme.payload.background.brightening(by: 0.9)
 
               self.setWorkspaceTheme(with: state.appearance.theme.payload)
               self.lastThemeMark = state.appearance.theme.mark
