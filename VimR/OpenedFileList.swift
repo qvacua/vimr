@@ -160,8 +160,13 @@ extension OpenedFileList {
 
     let pathInfo = url.pathComponents.dropFirst().dropLast().reversed().joined(separator: " / ") + " /"
     let rowText = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
+
     rowText.addAttribute(NSForegroundColorAttributeName,
-                         value: NSColor.lightGray,
+                         value: self.theme.foreground,
+                         range: NSRange(location: 0, length: name.characters.count))
+
+    rowText.addAttribute(NSForegroundColorAttributeName,
+                         value: self.theme.foreground.brightening(by: 1.15),
                          range: NSRange(location: name.characters.count, length: pathInfo.characters.count + 3))
 
     return rowText

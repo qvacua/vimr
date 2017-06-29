@@ -345,15 +345,15 @@ class MainWindow: NSObject,
     workspaceTheme.foreground = theme.foreground
     workspaceTheme.background = theme.background
 
-    workspaceTheme.separator = theme.background.darkening(by: 0.75)
+    workspaceTheme.separator = theme.background.brightening(by: 0.75)
 
     workspaceTheme.barBackground = theme.background
     workspaceTheme.barFocusRing = theme.foreground
 
-    workspaceTheme.barButtonHighlight = theme.background.darkening(by: 0.75)
+    workspaceTheme.barButtonHighlight = theme.background.brightening(by: 0.75)
 
     workspaceTheme.toolbarForeground = theme.foreground
-    workspaceTheme.toolbarBackground = theme.background.darkening(by: 0.75)
+    workspaceTheme.toolbarBackground = theme.background.brightening(by: 0.75)
 
     self.workspace.theme = workspaceTheme
   }
