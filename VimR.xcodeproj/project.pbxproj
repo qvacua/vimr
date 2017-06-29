@@ -54,6 +54,7 @@
 		1929B7993C8DB7F59447DF5F /* NeoVimView+Draw.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B19207FBC2EBDF1B88F3 /* NeoVimView+Draw.swift */; };
 		1929B8E90A1378E494D481E7 /* PrefUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7BB3E4B3DC96284B686 /* PrefUtilsTest.swift */; };
 		1929B8FB248D71BF88A35761 /* PreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6C6C7792B05164B0216 /* PreviewTool.swift */; };
+		1929B9318D32146D58BB38EC /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
 		1929B94083273D4B321AD848 /* FileItemUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B56C8ED31834BA9D8543 /* FileItemUtils.swift */; };
 		1929B98F94536E3912AD9F3B /* ArrayCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BAF13FAD5DA8D3762367 /* ArrayCommonsTest.swift */; };
 		1929B990A143763A56CFCED0 /* PrefService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B364460D86F17E80943C /* PrefService.swift */; };
@@ -117,6 +118,7 @@
 		4B401B141D0454DC00D99EDC /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; };
 		4B401B161D0454E900D99EDC /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B401B1A1D046E0600D99EDC /* NeoVimViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */; };
+		4B40C64F1F05A05B00040B1B /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; };
 		4B4147A31D97361400DD4A2C /* WorkspaceToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */; };
 		4B4192181D0C52D700A0BEB2 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4192171D0C52D700A0BEB2 /* Grid.swift */; };
 		4B5011F81EBA67EB00F76C46 /* RxTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B5011F71EBA67EB00F76C46 /* RxTest.framework */; };
@@ -155,6 +157,7 @@
 		4B81B3D91DE882D500ED1672 /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
 		4B854A1D1D31447C00E08DE1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B854A1C1D31447C00E08DE1 /* main.m */; };
 		4B8AC0441DBCB3A2007CCC9B /* NeoVimObjectsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8AC0431DBCB3A1007CCC9B /* NeoVimObjectsExtensions.swift */; };
+		4B8C7C761F05A04400F25BE8 /* CocoaMarkdown.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B91FFF41DEB772200447068 /* CocoaFontAwesome.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B337FBA1DEB76F20020ADD2 /* CocoaFontAwesome.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B91FFF61DEB772B00447068 /* CocoaFontAwesome.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B337FBA1DEB76F20020ADD2 /* CocoaFontAwesome.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B96384C1ED9793B001C556F /* NeoVimAutoCommandEvent.generated.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B96384B1ED9793B001C556F /* NeoVimAutoCommandEvent.generated.m */; };
@@ -316,6 +319,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4B8C7C761F05A04400F25BE8 /* CocoaMarkdown.framework in CopyFiles */,
 				4B96FB451EBBC6EA00E4E164 /* RxSwift.framework in CopyFiles */,
 				4B96FB441EBBC5E300E4E164 /* SwiftNeoVim.framework in CopyFiles */,
 				4B5011F91EBA69E200F76C46 /* RxTest.framework in CopyFiles */,
@@ -660,6 +664,7 @@
 				4B96FB431EBBC5C300E4E164 /* SwiftNeoVim.framework in Frameworks */,
 				4B96FB461EBBC6EE00E4E164 /* RxSwift.framework in Frameworks */,
 				4B6A70991D65058A00E12030 /* Nimble.framework in Frameworks */,
+				4B40C64F1F05A05B00040B1B /* CocoaMarkdown.framework in Frameworks */,
 				4B5011F81EBA67EB00F76C46 /* RxTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1676,6 +1681,7 @@
 				1929B8E90A1378E494D481E7 /* PrefUtilsTest.swift in Sources */,
 				1929BCA03A420A83174FD7E7 /* Logger.swift in Sources */,
 				1929B20CE35B43BB1CE023BA /* Theme.swift in Sources */,
+				1929B9318D32146D58BB38EC /* AppKitCommons.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
