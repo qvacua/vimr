@@ -7,20 +7,27 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.16.2-210</title>
+      <title>v0.17.0-213</title>
       <description><![CDATA[
-    <p>GH-472: Bugfix: Mouse wheel scrolling in split window sometimes scrolls in the wrong split.</p>
+    <ul>
+<li>GH-436: Use colors from the selected <code>colorscheme</code> for tools, e.g. the file browser:<ul>
+<li>Use the <code>directory</code> color for folders in the file browser.</li>
+<li>Use slightly darker version of the <code>background</code> color for the window title bar.</li>
+<li>Add an option to turn off file icons in the file browser and in the buffer list in case the <code>colorscheme</code> does not play well with them, cf. GH-479.</li>
+</ul>
+</li>
+</ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.16.2-210
+        https://github.com/qvacua/vimr/releases/tag/v0.17.0-213
       </releaseNotesLink>
-      <pubDate>2017-06-28T17:32:57.613213</pubDate>
+      <pubDate>2017-06-30T20:21:47.223329</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.16.2-210/VimR-v0.16.2-210.tar.bz2"
-                 sparkle:version="210"
-                 sparkle:shortVersionString="0.16.2"
-                 sparkle:dsaSignature="MCwCFBoq/JsW4co7/MxAg1jmd8gLhJhjAhQJvYBjgAel04nN0DTZFptRkr4eyg=="
-                 length="10631071"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.17.0-213/VimR-v0.17.0-213.tar.bz2"
+                 sparkle:version="213"
+                 sparkle:shortVersionString="0.17.0"
+                 sparkle:dsaSignature="MC4CFQDqNma3SXdeCptQiYm7Ll4YbSfjbQIVAMbpdfCwpKEUQAip/fTCThMRsVAx"
+                 length="10696081"
                  type="application/octet-stream"/>
     </item>
   </channel>
