@@ -674,6 +674,14 @@ extension MainWindow {
     self.emit(self.uuidAction(for: .setToolsState(tools)))
   }
 
+  func open(filePaths: [String]) {
+    var urls = [URL: OpenMode]()
+    for (path) in filePaths {
+      urls[URL(fileURLWithPath: path)] = .default
+    }
+    open(urls: urls)
+  }
+
   fileprivate func toolIdentifier(for tool: WorkspaceTool) -> Tools? {
     if tool == self.fileBrowserContainer {
       return .fileBrowser
