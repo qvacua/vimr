@@ -154,7 +154,7 @@ class ThemedTableCell: NSTableCellView {
     textField.removeFromSuperview()
     self.addSubview(textField)
 
-    textField.autoPinEdgesToSuperviewEdges(with: EdgeInsets(top: 2, left: 2, bottom: 2, right: 2))
+    textField.autoPinEdgesToSuperviewEdges(with: EdgeInsets(top: 2, left: 4, bottom: 2, right: 2))
   }
 
   fileprivate let _textField = NSTextField(forAutoLayout: ())
