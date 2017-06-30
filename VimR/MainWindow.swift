@@ -251,6 +251,9 @@ class MainWindow: NSObject,
 
           self.usesTheme = state.appearance.usesTheme
 
+          self.currentBuffer = state.currentBuffer
+          self.window.representedURL = state.appearance.showsFileIcon ? self.currentBuffer?.url : nil
+
           if self.defaultFont != state.appearance.font
              || self.linespacing != state.appearance.linespacing
              || self.usesLigatures != state.appearance.usesLigatures {
@@ -439,8 +442,6 @@ extension MainWindow {
 
   func currentBufferChanged(_ currentBuffer: NeoVimBuffer) {
     self.emit(self.uuidAction(for: .setCurrentBuffer(currentBuffer)))
-    self.currentBuffer = currentBuffer
-    self.window.representedURL = self.currentBuffer?.url
   }
 
   func tabChanged() {
