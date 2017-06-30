@@ -237,10 +237,15 @@ class MainWindow: NSObject,
           _ = changeTheme(
             themePrefChanged: themePrefChanged, themeChanged: themeChanged, usesTheme: usesTheme,
             forTheme: {
+              self.window.titlebarAppearsTransparent = true
+              self.window.backgroundColor = state.appearance.theme.payload.background.brightening(by: 0.9)
+
               self.setWorkspaceTheme(with: state.appearance.theme.payload)
               self.lastThemeMark = state.appearance.theme.mark
             },
             forDefaultTheme: {
+              self.window.titlebarAppearsTransparent = false
+              self.window.backgroundColor = NSColor.windowBackgroundColor
               self.workspace.theme = Workspace.Theme.default
             })
 

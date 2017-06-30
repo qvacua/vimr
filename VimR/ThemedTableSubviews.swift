@@ -77,6 +77,7 @@ class ThemedTableCell: NSTableCellView {
 
     set {
       self.textField?.attributedStringValue = newValue
+      self.addTextField()
     }
   }
 
@@ -87,6 +88,7 @@ class ThemedTableCell: NSTableCellView {
 
     set {
       self.textField?.stringValue = newValue
+      self.addTextField()
     }
   }
 
@@ -97,6 +99,24 @@ class ThemedTableCell: NSTableCellView {
 
     set {
       self.imageView?.image = newValue
+
+      self.removeAllSubviews()
+
+      let textField = self._textField
+      let imageView = self._imageView
+
+      self.addSubview(textField)
+      self.addSubview(imageView)
+
+      imageView.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
+      imageView.autoPinEdge(toSuperviewEdge: .left, withInset: 2)
+      imageView.autoSetDimension(.width, toSize: 16)
+      imageView.autoSetDimension(.height, toSize: 16)
+
+      textField.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
+      textField.autoPinEdge(toSuperviewEdge: .right, withInset: 2)
+      textField.autoPinEdge(toSuperviewEdge: .bottom, withInset: 2)
+      textField.autoPinEdge(.left, to: .right, of: imageView, withOffset: 4)
     }
   }
 
@@ -116,21 +136,6 @@ class ThemedTableCell: NSTableCellView {
     textField.isEditable = false
     textField.usesSingleLineMode = true
     textField.drawsBackground = false
-
-    let imageView = self._imageView
-
-    self.addSubview(textField)
-    self.addSubview(imageView)
-
-    imageView.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
-    imageView.autoPinEdge(toSuperviewEdge: .left, withInset: 2)
-    imageView.autoSetDimension(.width, toSize: 16)
-    imageView.autoSetDimension(.height, toSize: 16)
-
-    textField.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
-    textField.autoPinEdge(toSuperviewEdge: .right, withInset: 2)
-    textField.autoPinEdge(toSuperviewEdge: .bottom, withInset: 2)
-    textField.autoPinEdge(.left, to: .right, of: imageView, withOffset: 4)
   }
 
   func reset() -> ThemedTableCell {
@@ -138,7 +143,18 @@ class ThemedTableCell: NSTableCellView {
     self.image = nil
     self.isDir = false
 
+    self.removeAllSubviews()
+
     return self
+  }
+
+  fileprivate func addTextField() {
+    let textField = self._textField
+
+    textField.removeFromSuperview()
+    self.addSubview(textField)
+
+    textField.autoPinEdgesToSuperviewEdges(with: EdgeInsets(top: 2, left: 2, bottom: 2, right: 2))
   }
 
   fileprivate let _textField = NSTextField(forAutoLayout: ())

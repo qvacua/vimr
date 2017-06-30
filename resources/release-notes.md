@@ -1,7 +1,9 @@
 # next
 
-* GH-436: Use colors from the selected `colorscheme` for tools, e.g. the file browser.
-* ...
+* GH-436: Use colors from the selected `colorscheme` for tools, e.g. the file browser:
+    - Use the `directory` color for folders in the file browser.
+    - Use slightly darker version of the `background` color for the window title bar.
+    - Add an option to turn off file icons in the file browser and in the buffer list in case the `colorscheme` does not play well with them, cf. GH-479.
 
 # 0.16.2-210
 

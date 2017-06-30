@@ -30,6 +30,7 @@ class OpenedFileList: NSView,
     self.genericIcon = FileUtils.icon(forType: "public.data")
 
     self.usesTheme = state.appearance.usesTheme
+    self.showsFileIcon = state.appearance.showsFileIcon
 
     super.init(frame: .zero)
 
@@ -54,10 +55,11 @@ class OpenedFileList: NSView,
         self.usesTheme = state.appearance.usesTheme
 
         let buffers = state.buffers.removingDuplicatesPreservingFromBeginning()
-        if self.buffers == buffers && !themeChanged {
+        if self.buffers == buffers && !themeChanged && self.showsFileIcon == state.appearance.showsFileIcon {
           return
         }
 
+        self.showsFileIcon = state.appearance.showsFileIcon
         self.buffers = buffers
         self.bufferList.reloadData()
         self.adjustFileViewWidth()
@@ -71,6 +73,7 @@ class OpenedFileList: NSView,
   fileprivate let uuid: String
   fileprivate var usesTheme: Bool
   fileprivate var lastThemeMark = Token()
+  fileprivate var showsFileIcon: Bool
 
   fileprivate let bufferList = NSTableView.standardTableView()
   fileprivate let genericIcon: NSImage
@@ -144,6 +147,11 @@ extension OpenedFileList {
 
     let buffer = self.buffers[row]
     cell.attributedText = self.text(for: buffer)
+
+    guard self.showsFileIcon else {
+      return cell
+    }
+
     cell.image = self.icon(for: buffer)
 
     return cell

@@ -26,6 +26,7 @@ class FileOutlineView: NSOutlineView,
     self.isShowHidden = state.fileBrowserShowHidden
 
     self.usesTheme = state.appearance.usesTheme
+    self.showsFileIcon = state.appearance.showsFileIcon
 
     super.init(frame: .zero)
     NSOutlineView.configure(toStandard: self)
@@ -79,6 +80,7 @@ class FileOutlineView: NSOutlineView,
           return
         }
 
+        self.showsFileIcon = state.appearance.showsFileIcon
         self.isShowHidden = state.fileBrowserShowHidden
         self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
         self.root = FileBrowserItem(state.cwd)
@@ -114,7 +116,7 @@ class FileOutlineView: NSOutlineView,
   fileprivate var lastFileSystemUpdateMark = Token()
   fileprivate var usesTheme: Bool
   fileprivate var lastThemeMark = Token()
-
+  fileprivate var showsFileIcon: Bool
 
   fileprivate var cwd: URL {
     return self.root.url
@@ -140,6 +142,10 @@ class FileOutlineView: NSOutlineView,
     }
 
     if themeChanged {
+      return true
+    }
+
+    if self.showsFileIcon != state.appearance.showsFileIcon {
       return true
     }
 
@@ -376,11 +382,15 @@ extension FileOutlineView {
     let cell = (self.make(withIdentifier: "file-cell-view", owner: self) as? ThemedTableCell)?.reset()
                ?? ThemedTableCell(withIdentifier: "file-cell-view")
 
+    cell.isDir = fileBrowserItem.isDir
     cell.text = fileBrowserItem.url.lastPathComponent
+
+    guard self.showsFileIcon else {
+      return cell
+    }
+
     let icon = FileUtils.icon(forUrl: fileBrowserItem.url)
     cell.image = fileBrowserItem.isHidden ? icon?.tinting(with: NSColor.white.withAlphaComponent(0.4)) : icon
-
-    cell.isDir = fileBrowserItem.isDir
 
     return cell
   }
