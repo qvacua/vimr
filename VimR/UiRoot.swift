@@ -26,7 +26,11 @@ class UiRoot: UiComponent {
         uuidsInState
           .subtracting(self.mainWindows.keys)
           .flatMap { state.mainWindows[$0] }
-          .forEach(self.createNewMainWindow)
+          .map(self.newMainWindow)
+          .forEach {
+            self.mainWindows[$0.uuid] = $0
+            $0.show()
+          }
 
         if self.mainWindows.isEmpty {
           // We exit here if there are no main windows open. Otherwise, when hide/quit after last main window is active,
@@ -70,16 +74,15 @@ class UiRoot: UiComponent {
   fileprivate var subjectForMainWindows = [String: PublishSubject<MainWindow.State>]()
   fileprivate var disposables = [String: Disposable]()
 
-  fileprivate func createNewMainWindow(with state: MainWindow.State) {
+  fileprivate func newMainWindow(with state: MainWindow.State) -> MainWindow {
     let subject = PublishSubject<MainWindow.State>()
     let source = self.source.mapOmittingNil { $0.mainWindows[state.uuid] }
 
     self.subjectForMainWindows[state.uuid] = subject
     self.disposables[state.uuid] = source.subscribe(subject)
 
-    let mainWindow = MainWindow(source: subject.asObservable(), emitter: self.emitter, state: state)
-    self.mainWindows[state.uuid] = mainWindow
-    mainWindow.show()
+    return MainWindow(source: subject.asObservable(), emitter: self.emitter, state: state)
+  }
   }
 
   fileprivate func removeMainWindow(with uuid: String) {
