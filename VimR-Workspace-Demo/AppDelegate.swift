@@ -87,10 +87,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, WorkspaceDelegate {
   func moved(tool: WorkspaceTool) {
     NSLog("\(#function)")
   }
-
-  func open(filePaths: [String]) {
-    NSLog("\(#function)")
-  }
 }
 
 class DummyView: CustomToolBar {

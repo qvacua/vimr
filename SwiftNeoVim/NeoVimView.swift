@@ -153,6 +153,7 @@ public class NeoVimView: NSView,
     self.agent = NeoVimAgent(uuid: self.uuid)
 
     super.init(frame: .zero)
+    self.register(forDraggedTypes: [String(kUTTypeFileURL)])
 
     self.wantsLayer = true
     self.cellSize = self.drawer.cellSize

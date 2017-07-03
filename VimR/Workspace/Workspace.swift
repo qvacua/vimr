@@ -23,7 +23,6 @@ protocol WorkspaceDelegate: class {
 
   func toggled(tool: WorkspaceTool)
   func moved(tool: WorkspaceTool)
-  func open(filePaths: [String])
 }
 
 class Workspace: NSView, WorkspaceBarDelegate {
@@ -103,7 +102,7 @@ class Workspace: NSView, WorkspaceBarDelegate {
     super.init(frame: .zero)
     self.configureForAutoLayout()
 
-    self.register(forDraggedTypes: [WorkspaceToolButton.toolUti, String(kUTTypeFileURL)])
+    self.register(forDraggedTypes: [WorkspaceToolButton.toolUti])
     self.bars.values.forEach {
       $0.workspace = self
       $0.delegate = self
@@ -128,10 +127,6 @@ class Workspace: NSView, WorkspaceBarDelegate {
     self.delegate?.moved(tool: tool)
   }
 
-  func open(filePaths: [String]) {
-    self.delegate?.open(filePaths: filePaths)
-  }
-
   func toggleAllTools() {
     self.isAllToolsVisible = !self.isAllToolsVisible
   }
@@ -146,16 +141,10 @@ extension Workspace {
 
   override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
     self.isDragOngoing = true
-    if isFile(sender: sender) {
-        return .copy
-    }
     return .move
   }
 
   override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
-    if isFile(sender: sender) {
-        return .copy
-    }
     let loc = self.convert(sender.draggingLocation(), from: nil)
     let currentBarLoc = self.barLocation(inPoint: loc)
 
@@ -169,34 +158,20 @@ extension Workspace {
   }
 
   override func draggingExited(_ sender: NSDraggingInfo?) {
-    self.endDrag(sender: sender)
+    self.endDrag()
   }
 
   override func draggingEnded(_ sender: NSDraggingInfo?) {
-    self.endDrag(sender: sender)
+    self.endDrag()
   }
 
-  fileprivate func endDrag(sender: NSDraggingInfo?) {
+  fileprivate func endDrag() {
     self.isDragOngoing = false
-    if isFile(sender: sender) {
-        return
-    }
     self.draggedOnBarLocation = nil
     self.proxyBar.removeFromSuperview()
   }
 
-  fileprivate func isFile(sender: NSDraggingInfo?) -> Bool {
-    return (sender?.draggingPasteboard().types?.contains(String(kUTTypeFileURL))) ?? false
-  }
-  
   override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
-    if isFile(sender: sender) {
-      let paths = sender
-        .draggingPasteboard()
-        .propertyList(forType: NSFilenamesPboardType) as? [String]
-      self.open(filePaths: paths!)
-      return true;
-    }
     let loc = self.convert(sender.draggingLocation(), from: nil)
     guard let barLoc = self.barLocation(inPoint: loc) else {
       return false
