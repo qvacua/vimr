@@ -185,15 +185,15 @@ extension Workspace {
     self.proxyBar.removeFromSuperview()
   }
 
-  fileprivate func isFile(sender: NSDraggingInfo?) -> Bool! {
-    return (sender?.draggingPasteboard().types?.contains(String(kUTTypeFileURL)))!
+  fileprivate func isFile(sender: NSDraggingInfo?) -> Bool {
+    return (sender?.draggingPasteboard().types?.contains(String(kUTTypeFileURL))) ?? false
   }
   
   override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
     if isFile(sender: sender) {
       let paths = sender
         .draggingPasteboard()
-        .propertyList(forType: "NSFilenamesPboardType") as? [String]
+        .propertyList(forType: NSFilenamesPboardType) as? [String]
       self.open(filePaths: paths!)
       return true;
     }
