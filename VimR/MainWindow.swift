@@ -409,6 +409,7 @@ extension MainWindow {
   func neoVimStopped() {
     self.isClosing = true
     self.windowController.close()
+    self.set(dirtyStatus: false)
     self.emit(self.uuidAction(for: .close))
 
     if let cliPipePath = self.cliPipePath {
