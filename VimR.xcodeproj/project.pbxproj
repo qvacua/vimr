@@ -92,6 +92,7 @@
 		1929BF81A40B4154D3EA33CE /* server_ui.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B93013228985F509C8F6 /* server_ui.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1929BFC70581084B5CE04A5B /* MatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFE179BCA3C75A13D71B /* MatcherTests.swift */; };
 		1929BFDE22D155F7C4B19E96 /* HtmlPreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B85023B042C485409CE1 /* HtmlPreviewTool.swift */; };
+		1F1000F81F0ABC0000CA3195 /* NeoVimView+Dragging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1000F71F0ABC0000CA3195 /* NeoVimView+Dragging.swift */; };
 		4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */; };
 		4B0BCC941D70320C00D3CE65 /* Logger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0BCC931D70320C00D3CE65 /* Logger.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		4B183E0E1E06E2940079E8A8 /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; };
@@ -467,6 +468,7 @@
 		1929BFB0F294F3714D5E095F /* PreviewToolReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewToolReducer.swift; sourceTree = "<group>"; };
 		1929BFC0A5A9C6DB09BE1368 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		1929BFE179BCA3C75A13D71B /* MatcherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatcherTests.swift; sourceTree = "<group>"; };
+		1F1000F71F0ABC0000CA3195 /* NeoVimView+Dragging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NeoVimView+Dragging.swift"; sourceTree = "<group>"; };
 		4B029F1B1D45E349004EE0D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrefWindow.xib; sourceTree = "<group>"; };
 		4B0BCC931D70320C00D3CE65 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logger.h; path = VimR/Logger.h; sourceTree = SOURCE_ROOT; };
 		4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaMarkdown.framework; path = Carthage/Build/Mac/CocoaMarkdown.framework; sourceTree = SOURCE_ROOT; };
@@ -1095,6 +1097,7 @@
 				1929BD05CA498FC3C229455E /* NeoVimView+Resize.swift */,
 				1929BDF3167E15E7F3349798 /* NeoVimView+Key.swift */,
 				1929B4F65149D3C3E326DA65 /* NeoVimView+MenuItems.swift */,
+				1F1000F71F0ABC0000CA3195 /* NeoVimView+Dragging.swift */,
 			);
 			name = NeoVimView;
 			sourceTree = "<group>";
@@ -1503,6 +1506,7 @@
 				1929B7993C8DB7F59447DF5F /* NeoVimView+Draw.swift in Sources */,
 				1929BD294A33873BAE2804C0 /* NeoVimView+Resize.swift in Sources */,
 				1929BB38525ECCEE8E39288A /* NeoVimView+Key.swift in Sources */,
+				1F1000F81F0ABC0000CA3195 /* NeoVimView+Dragging.swift in Sources */,
 				1929BB0A840D93D1A13C25FD /* NeoVimView+MenuItems.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
