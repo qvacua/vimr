@@ -491,6 +491,14 @@ extension MainWindow {
     self.emit(self.uuidAction(for: .becomeKey))
   }
 
+  func windowDidBecomeMain(_ notification: Notification) {
+    self.neoVimView.didBecomeMain()
+  }
+
+  func windowDidResignMain(_ notification: Notification) {
+    self.neoVimView.didResignMain()
+  }
+
   func windowShouldClose(_: Any) -> Bool {
     guard self.neoVimView.isCurrentBufferDirty() else {
       self.neoVimView.closeCurrentTab()
