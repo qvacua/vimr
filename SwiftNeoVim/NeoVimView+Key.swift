@@ -80,6 +80,23 @@ extension NeoVimView {
     self.keyDownDone = false
   }
 
+  override public func performKeyEquivalent(with event: NSEvent) -> Bool {
+    let type = event.type
+    let flags = event.modifierFlags
+
+    /* <C-Tab> & <C-S-Tab> do not trigger keyDown events.
+       Catch the key event here and pass it to keyDown.
+       (By rogual in NeoVim dot app
+       https://github.com/rogual/neovim-dot-app/pull/248/files )
+       */
+    if .keyDown == type && flags.contains(.control) && 48 == event.keyCode {
+      self.keyDown(with: event)
+      return true
+    }
+
+    return false
+  }
+
   public func setMarkedText(_ aString: Any, selectedRange: NSRange, replacementRange: NSRange) {
     if self.markedText == nil {
       self.markedPosition = self.grid.position
