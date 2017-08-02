@@ -27,22 +27,19 @@ extension NeoVimView {
       ? event.charactersIgnoringModifiers!.lowercased()
       : event.charactersIgnoringModifiers!
 
-    if KeyUtils.isSpecial(key: charsIgnoringModifiers) {
-      if let vimModifiers = self.vimModifierFlags(modifierFlags) {
-        self.agent.vimInput(
-          self.wrapNamedKeys(vimModifiers + KeyUtils.namedKeyFrom(key: charsIgnoringModifiers))
-        )
-      } else {
-        self.agent.vimInput(self.wrapNamedKeys(KeyUtils.namedKeyFrom(key: charsIgnoringModifiers)))
-      }
-    } else {
-      if let vimModifiers = self.vimModifierFlags(modifierFlags) {
-        self.agent.vimInput(self.wrapNamedKeys(vimModifiers + charsIgnoringModifiers))
-      } else {
-        self.agent.vimInput(self.vimPlainString(chars))
-      }
-    }
+    let flags = self.vimModifierFlags(modifierFlags) ?? ""
+    let isNamedKey = KeyUtils.isSpecial(key: charsIgnoringModifiers)
+    let isPlain = flags.isEmpty && !isNamedKey
+    let isWrapNeeded = !isPlain
 
+    let namedChars = isNamedKey
+        ? KeyUtils.namedKeyFrom(key: charsIgnoringModifiers)
+        : charsIgnoringModifiers
+    let finalInput = isWrapNeeded
+        ? self.wrapNamedKeys(flags + namedChars)
+        : self.vimPlainString(chars)
+
+    self.agent.vimInput(finalInput)
     self.keyDownDone = true
   }
 
