@@ -29,8 +29,9 @@ extension NeoVimView {
 
     let flags = self.vimModifierFlags(modifierFlags) ?? ""
     let isNamedKey = KeyUtils.isSpecial(key: charsIgnoringModifiers)
+    let isControlCode = KeyUtils.isControlCode(key: chars)
     let isPlain = flags.isEmpty && !isNamedKey
-    let isWrapNeeded = !isPlain
+    let isWrapNeeded = !isControlCode && !isPlain
 
     let namedChars = KeyUtils.namedKeyFrom(key: charsIgnoringModifiers)
     let finalInput = isWrapNeeded
