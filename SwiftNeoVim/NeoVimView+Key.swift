@@ -9,6 +9,7 @@ extension NeoVimView {
 
   override public func keyDown(with event: NSEvent) {
     self.keyDownDone = false
+    NSCursor.setHiddenUntilMouseMoves(true)
 
     let context = NSTextInputContext.current()!
     let cocoaHandledEvent = context.handleEvent(event)
