@@ -1,7 +1,7 @@
 @import Cocoa;
 @import CoreText;
 
-void recurseDraw(
+size_t recurseDraw(
     const unichar *chars,
     CGGlyph *glyphs, CGPoint *positions, UniCharCount length,
     CGContextRef context,
