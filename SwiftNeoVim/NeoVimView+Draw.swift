@@ -67,7 +67,7 @@ extension NeoVimView {
     let glyphPositions = positions.map { CGPoint(x: $0.x, y: $0.y + offset) }
 
     self.drawer.draw(
-      string,
+      string.precomposedStringWithCanonicalMapping,
       positions: UnsafeMutablePointer(mutating: glyphPositions), positionsCount: positions.count,
       highlightAttrs: rowFrag.attrs,
       context: context
