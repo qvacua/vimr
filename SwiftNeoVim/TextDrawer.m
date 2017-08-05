@@ -197,9 +197,9 @@ static CGColorRef color_for(NSInteger value) {
     wide = CFStringIsSurrogateHighCharacter(*b) || CFStringIsSurrogateLowCharacter(*b);
     if ((b > unichars) && (wide != pWide)) {
       choppedLength = b - bStart;
-      NSString *logged = [NSString stringWithCharacters:bStart length:choppedLength];
+//      NSString *logged = [NSString stringWithCharacters:bStart length:choppedLength];
 //      NSLog(@"C(%d,%p..%p)[%@]", pWide, bStart, b, logged);
-//      recurseDraw(bStart, glyphs, p, choppedLength, context, fontWithTraits, _fontLookupCache, _usesLigatures);
+      recurseDraw(bStart, glyphs, p, choppedLength, context, fontWithTraits, _fontLookupCache, _usesLigatures);
       UniCharCount step = pWide ? choppedLength / 2 : choppedLength;
       p += step;
       g += step;
