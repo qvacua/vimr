@@ -100,11 +100,11 @@ fetchGlyphsAndAdvances(const CTLineRef line, CGGlyph *glyphs, CGSize *advances,
     return offset;
 }
 
-    static UniCharCount
+    static size_t
 gatherGlyphs(CGGlyph glyphs[], UniCharCount count)
 {
     // Gather scattered glyphs that was happended by Surrogate pair chars
-    UniCharCount glyphCount = 0;
+    size_t glyphCount = 0;
     NSUInteger pos = 0;
     NSUInteger i;
     for (i = 0; i < count; ++i) {
@@ -193,7 +193,7 @@ ligatureGlyphsForChars(const unichar *chars, CGGlyph *glyphs,
     return offset;
 }
 
-    void
+    size_t
 recurseDraw(const unichar *chars, CGGlyph *glyphs, CGPoint *positions,
             UniCharCount length, CGContextRef context, CTFontRef fontRef,
             NSMutableArray *fontCache, BOOL useLigatures)
@@ -209,11 +209,12 @@ recurseDraw(const unichar *chars, CGGlyph *glyphs, CGPoint *positions,
         }
 
         CTFontDrawGlyphs(fontRef, glyphs, positions, length, context);
-        return;
+        return length;
     }
 
+    CGPoint *positionsStart = positions;
     CGGlyph *glyphsEnd = glyphs+length, *g = glyphs;
-    CGPoint *p = positions;
+    CGPoint *p;
     const unichar *c = chars;
     while (glyphs < glyphsEnd) {
         if (*g) {
@@ -230,13 +231,12 @@ recurseDraw(const unichar *chars, CGGlyph *glyphs, CGPoint *positions,
                     ++g;
                     ++c;
                 }
-                ++p;
             }
-
-            int count = g-glyphs;
+            size_t count = g - glyphs;
             if (surrogatePair)
                 count = gatherGlyphs(glyphs, count);
             CTFontDrawGlyphs(fontRef, glyphs, positions, count, context);
+            p = positions + count;
         } else {
             // Skip past as many consecutive chars as possible which cannot be
             // drawn in the current font.
@@ -248,34 +248,51 @@ recurseDraw(const unichar *chars, CGGlyph *glyphs, CGPoint *positions,
                     ++g;
                     ++c;
                 }
-                ++p;
             }
 
             // Try to find a fallback font that can render the entire
             // invalid range. If that fails, repeatedly halve the attempted
             // range until a font is found.
-            UniCharCount count = c - chars;
-            UniCharCount attemptedCount = count;
+            size_t count = c - chars;
+            size_t attemptedCount = count;
             CTFontRef fallback = nil;
+            bool endsWithSurrogate;
+            bool beginsWithSurrogate;
+            beginsWithSurrogate = count > 0
+                    ? CFStringIsSurrogateHighCharacter(chars[0])
+                    : false;
             while (fallback == nil && attemptedCount > 0) {
                 fallback = lookupFont(fontCache, chars, attemptedCount,
                                       fontRef);
-                if (!fallback)
-                    attemptedCount /= 2;
+                if (fallback) continue;
+                if (attemptedCount == 2 && beginsWithSurrogate) {
+                    attemptedCount = 0;
+                    continue;
+                }
+
+                attemptedCount /= 2;
+                if (attemptedCount <= 0) continue;
+
+                const unichar last = chars[attemptedCount - 1];
+                endsWithSurrogate = CFStringIsSurrogateHighCharacter(last);
+                if (!endsWithSurrogate) continue;
+
+                ++attemptedCount;
             }
 
             if (!fallback)
-                return;
+                return positionsStart - positions;
 
-            recurseDraw(chars, glyphs, positions, attemptedCount, context,
-                        fallback, fontCache, useLigatures);
+            size_t attemptedPcount =recurseDraw(chars,
+                    glyphs, positions, attemptedCount, context,
+                    fallback, fontCache, useLigatures);
 
             // If only a portion of the invalid range was rendered above,
             // the remaining range needs to be attempted by subsequent
             // iterations of the draw loop.
             c -= count - attemptedCount;
             g -= count - attemptedCount;
-            p -= count - attemptedCount;
+            p = positions + attemptedPcount;
 
             CFRelease(fallback);
         }
@@ -290,6 +307,7 @@ recurseDraw(const unichar *chars, CGGlyph *glyphs, CGPoint *positions,
         glyphs = g;
         positions = p;
     }
+    return positionsStart - positions;
 }
 
 #pragma clang diagnostic pop
