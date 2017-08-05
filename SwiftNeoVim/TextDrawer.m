@@ -184,7 +184,38 @@ static CGColorRef color_for(NSInteger value) {
   CTFontRef fontWithTraits = [self fontWithTrait:fontTrait];
 
   CGContextSetFillColorWithColor(context, color_for(foreground));
-  recurseDraw(unichars, glyphs, positions, unilength, context, fontWithTraits, _fontLookupCache, _usesLigatures);
+  CGGlyph *g = glyphs;
+  CGPoint *p = positions;
+  const UniChar *b = unichars;
+  const UniChar *bStart = unichars;
+  const UniChar *bEnd = unichars + unilength;
+  UniCharCount choppedLength;
+  bool wide;
+  bool pWide = NO;
+
+  while (b < bEnd) {
+    wide = CFStringIsSurrogateHighCharacter(*b) || CFStringIsSurrogateLowCharacter(*b);
+    if ((b > unichars) && (wide != pWide)) {
+      choppedLength = b - bStart;
+      NSString *logged = [NSString stringWithCharacters:bStart length:choppedLength];
+//      NSLog(@"C(%d,%p..%p)[%@]", pWide, bStart, b, logged);
+//      recurseDraw(bStart, glyphs, p, choppedLength, context, fontWithTraits, _fontLookupCache, _usesLigatures);
+      UniCharCount step = pWide ? choppedLength / 2 : choppedLength;
+      p += step;
+      g += step;
+      bStart = b;
+    }
+
+    pWide = wide;
+    b++;
+  }
+  if (bStart < bEnd) {
+    choppedLength = b - bStart;
+//    NSString *logged = [NSString stringWithCharacters:bStart length:choppedLength];
+//    NSLog(@"T(%d,%p..%p)[%@]", pWide, bStart, b, logged);
+    recurseDraw(bStart, glyphs, p, choppedLength, context, fontWithTraits, _fontLookupCache, _usesLigatures);
+  }
+//  NSLog(@"S(-,%p..%p)[%@]", unichars, unichars + unilength, string);
 
   CFRelease(fontWithTraits);
   free(glyphs);
