@@ -10,8 +10,8 @@ extension NeoVimView {
   override public func keyDown(with event: NSEvent) {
     self.keyDownDone = false
 
-    let context = NSTextInputContext.current()!
-    let cocoaHandledEvent = context.handleEvent(event)
+    let context = NSTextInputContext.current()
+    let cocoaHandledEvent = context?.handleEvent(event) ?? false
     if self.keyDownDone && cocoaHandledEvent {
       return
     }
