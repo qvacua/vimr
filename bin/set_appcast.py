@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python2
 
-# pip install requests
-# pip install Markdown
+# pip2 install requests
+# pip2 install Markdown
 
 import os
 import io
