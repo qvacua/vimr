@@ -1,5 +1,10 @@
 # next
 
+* GH-481: Bugfix: Quiting with `:qa!` warns about buffers that are already gone. (thanks @nhtzr for the PR)
+* GH-458: Drag & Drop of files onto the main window works. (thanks @nhtzr for the PR)
+
+# 0.17.0-213
+
 * GH-436: Use colors from the selected `colorscheme` for tools, e.g. the file browser:
     - Use the `directory` color for folders in the file browser.
     - Use slightly darker version of the `background` color for the window title bar.
