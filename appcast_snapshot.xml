@@ -7,27 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.17.0-213</title>
+      <title>SNAPSHOT-214</title>
       <description><![CDATA[
     <ul>
-<li>GH-436: Use colors from the selected <code>colorscheme</code> for tools, e.g. the file browser:<ul>
-<li>Use the <code>directory</code> color for folders in the file browser.</li>
-<li>Use slightly darker version of the <code>background</code> color for the window title bar.</li>
-<li>Add an option to turn off file icons in the file browser and in the buffer list in case the <code>colorscheme</code> does not play well with them, cf. GH-479.</li>
-</ul>
-</li>
+<li>GH-481: Bugfix: Quiting with <code>:qa!</code> warns about buffers that are already gone. (thanks @nhtzr for the PR)</li>
+<li>GH-458: Drag &amp; Drop of files onto the main window works. (thanks @nhtzr for the PR)</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.17.0-213
+        https://github.com/qvacua/vimr/releases/tag/snapshot/214
       </releaseNotesLink>
-      <pubDate>2017-06-30T20:21:47.223329</pubDate>
+      <pubDate>2017-08-08T12:51:52.662820</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.17.0-213/VimR-v0.17.0-213.tar.bz2"
-                 sparkle:version="213"
-                 sparkle:shortVersionString="0.17.0"
-                 sparkle:dsaSignature="MC4CFQDqNma3SXdeCptQiYm7Ll4YbSfjbQIVAMbpdfCwpKEUQAip/fTCThMRsVAx"
-                 length="10696081"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/214/VimR-SNAPSHOT-214.tar.bz2"
+                 sparkle:version="214"
+                 sparkle:shortVersionString="SNAPSHOT-214"
+                 sparkle:dsaSignature="MC4CFQC8nkkTGxrg+w3fTr8R8Ldc47dI+gIVAINKDA0VfCSFn8cAjkPLH+a1lEJs"
+                 length="10702601"
                  type="application/octet-stream"/>
     </item>
   </channel>
