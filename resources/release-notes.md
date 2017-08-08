@@ -3,6 +3,7 @@
 * GH-481: Bugfix: Quiting with `:qa!` warns about buffers that are already gone. (thanks @nhtzr for the PR)
 * GH-458: Drag & Drop of files onto the main window works. (thanks @nhtzr for the PR)
 * GH-487: Hide the mouse cursor when typing. (thanks @nhtzr for the PR)
+* GH-315: Enable mapping of `<C-Tab>` and `<C-S-Tab>`. (thanks @nhtzr for the PR)
 
 # 0.17.0-213
 
