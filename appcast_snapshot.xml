@@ -7,23 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-214</title>
+      <title>SNAPSHOT-215</title>
       <description><![CDATA[
     <ul>
-<li>GH-481: Bugfix: Quiting with <code>:qa!</code> warns about buffers that are already gone. (thanks @nhtzr for the PR)</li>
-<li>GH-458: Drag &amp; Drop of files onto the main window works. (thanks @nhtzr for the PR)</li>
+<li>GH-487: Hide the mouse cursor when typing. (thanks @nhtzr for the PR)</li>
+<li>GH-315: Enable mapping of <code>&lt;C-Tab&gt;</code> and <code>&lt;C-S-Tab&gt;</code>. (thanks @nhtzr for the PR)</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/214
+        https://github.com/qvacua/vimr/releases/tag/snapshot/215
       </releaseNotesLink>
-      <pubDate>2017-08-08T12:51:52.662820</pubDate>
+      <pubDate>2017-08-10T13:55:41.461588</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/214/VimR-SNAPSHOT-214.tar.bz2"
-                 sparkle:version="214"
-                 sparkle:shortVersionString="SNAPSHOT-214"
-                 sparkle:dsaSignature="MC4CFQC8nkkTGxrg+w3fTr8R8Ldc47dI+gIVAINKDA0VfCSFn8cAjkPLH+a1lEJs"
-                 length="10702601"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/215/VimR-SNAPSHOT-215.tar.bz2"
+                 sparkle:version="215"
+                 sparkle:shortVersionString="SNAPSHOT-215"
+                 sparkle:dsaSignature="MC0CFB6navSvkGOVkLQ3UFlANAZ9kcIhAhUAmSTOQ5HAyWmlzFO8fTikSyAvMGU="
+                 length="10701720"
                  type="application/octet-stream"/>
     </item>
   </channel>
