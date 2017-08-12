@@ -1,4 +1,4 @@
-#!/usr/local/bin/python2
+#!/usr/bin/env python
 
 import os
 import io
