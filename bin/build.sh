@@ -93,4 +93,13 @@ if [ "${UPDATE_APPCAST}" = true ] ; then
     ./bin/commit_and_push_appcast.sh "${BRANCH}" "${COMPOUND_VERSION}" ${IS_SNAPSHOT} ${UPDATE_SNAPSHOT_APPCAST_FOR_RELEASE}
 fi
 
+if [ "${IS_SNAPSHOT}" = false ] ; then
+    echo "### Merging ${BRANCH} back to develop"
+    git reset --hard @
+    git fetch origin
+    git checkout -b for_master_to_develop origin/develop
+    git merge --ff-only for_build
+    git push origin HEAD:develop
+fi
+
 echo "### Built VimR"
