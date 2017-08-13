@@ -9,9 +9,10 @@ extension NeoVimView {
 
   override public func keyDown(with event: NSEvent) {
     self.keyDownDone = false
+    NSCursor.setHiddenUntilMouseMoves(true)
 
-    let context = NSTextInputContext.current()!
-    let cocoaHandledEvent = context.handleEvent(event)
+    let context = NSTextInputContext.current()
+    let cocoaHandledEvent = context?.handleEvent(event) ?? false
     if self.keyDownDone && cocoaHandledEvent {
       return
     }
@@ -78,6 +79,23 @@ extension NeoVimView {
 
 //    self.logger.debug("\(#function): "\(aSelector) not implemented, forwarding input to vim")
     self.keyDownDone = false
+  }
+
+  override public func performKeyEquivalent(with event: NSEvent) -> Bool {
+    let type = event.type
+    let flags = event.modifierFlags
+
+    /* <C-Tab> & <C-S-Tab> do not trigger keyDown events.
+       Catch the key event here and pass it to keyDown.
+       (By rogual in NeoVim dot app
+       https://github.com/rogual/neovim-dot-app/pull/248/files )
+       */
+    if .keyDown == type && flags.contains(.control) && 48 == event.keyCode {
+      self.keyDown(with: event)
+      return true
+    }
+
+    return false
   }
 
   public func setMarkedText(_ aString: Any, selectedRange: NSRange, replacementRange: NSRange) {
@@ -228,5 +246,13 @@ extension NeoVimView {
     }
 
     return nil
+  }
+
+  public func didBecomeMain() {
+    self.agent.vimInput("<FocusGained>")
+  }
+
+  public func didResignMain() {
+    self.agent.vimInput("<FocusLost>")
   }
 }

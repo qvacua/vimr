@@ -42,8 +42,8 @@ fi
 
 echo "### Installing some python packages"
 
-pip install requests
-pip install Markdown
+pip2 install requests
+pip2 install Markdown
 
 echo "### Building VimR"
 

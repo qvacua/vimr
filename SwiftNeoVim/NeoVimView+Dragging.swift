@@ -16,22 +16,20 @@ extension NeoVimView {
   }
 
   override public func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
-    if !isFile(sender: sender) {
-      return false;
+    guard isFile(sender: sender) else {
+      return false
     }
-    let paths = sender
-      .draggingPasteboard()
-      .propertyList(forType: NSFilenamesPboardType)
-      as? [String]
-    let urls = paths?
-      .map { URL(fileURLWithPath: $0) }
-      ?? []
-    self.open(urls: urls)
-    return true;
-  }
 
+    guard let paths = sender.draggingPasteboard().propertyList(forType: NSFilenamesPboardType) as? [String] else {
+      return false
+    }
+
+    self.open(urls: paths.map { URL(fileURLWithPath: $0) })
+
+    return true
+  }
 }
 
-fileprivate func isFile(sender: NSDraggingInfo?) -> Bool {
-  return (sender?.draggingPasteboard().types?.contains(String(kUTTypeFileURL))) ?? false
+fileprivate func isFile(sender: NSDraggingInfo) -> Bool {
+  return (sender.draggingPasteboard().types?.contains(String(kUTTypeFileURL))) ?? false
 }
