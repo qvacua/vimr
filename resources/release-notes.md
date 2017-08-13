@@ -1,5 +1,9 @@
 # next
 
+* ...
+
+# 0.18.0-217
+
 * GH-481: Bugfix: Quiting with `:qa!` warns about buffers that are already gone. (thanks @nhtzr for the PR)
 * GH-458: Drag & Drop of files onto the main window works. (thanks @nhtzr for the PR)
 * GH-487: Hide the mouse cursor when typing. (thanks @nhtzr for the PR)
