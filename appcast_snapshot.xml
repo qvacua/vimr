@@ -7,22 +7,26 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-216</title>
+      <title>v0.18.0-217</title>
       <description><![CDATA[
     <ul>
+<li>GH-481: Bugfix: Quiting with <code>:qa!</code> warns about buffers that are already gone. (thanks @nhtzr for the PR)</li>
+<li>GH-458: Drag &amp; Drop of files onto the main window works. (thanks @nhtzr for the PR)</li>
+<li>GH-487: Hide the mouse cursor when typing. (thanks @nhtzr for the PR)</li>
+<li>GH-315: Enable mapping of <code>&lt;C-Tab&gt;</code> and <code>&lt;C-S-Tab&gt;</code>. (thanks @nhtzr for the PR)</li>
 <li>GH-368: Send <code>FocusGained</code> and <code>FocusLost</code> event to neovim backend. (thanks @nhtzr for the PR)</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/216
+        https://github.com/qvacua/vimr/releases/tag/v0.18.0-217
       </releaseNotesLink>
-      <pubDate>2017-08-11T15:01:40.023172</pubDate>
+      <pubDate>2017-08-13T07:46:01.861985</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/216/VimR-SNAPSHOT-216.tar.bz2"
-                 sparkle:version="216"
-                 sparkle:shortVersionString="SNAPSHOT-216"
-                 sparkle:dsaSignature="MC0CFGglStYKby5TAzzrM8C9Eks+IojLAhUAlT7Yehp5jEuMJaqCsdQNA7QtIOE="
-                 length="10700168"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.18.0-217/VimR-v0.18.0-217.tar.bz2"
+                 sparkle:version="217"
+                 sparkle:shortVersionString="0.18.0"
+                 sparkle:dsaSignature="MC0CFQCxuuyXimvYXATNukOdPtHOE1TV/wIUL5MchH/pqdc/WnZaDekiaverBGA="
+                 length="10703208"
                  type="application/octet-stream"/>
     </item>
   </channel>
