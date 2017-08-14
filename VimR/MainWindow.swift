@@ -487,11 +487,8 @@ extension MainWindow {
 
 extension MainWindow {
 
-  func windowDidBecomeKey(_: Notification) {
-    self.emit(self.uuidAction(for: .becomeKey))
-  }
-
   func windowDidBecomeMain(_ notification: Notification) {
+    self.emit(self.uuidAction(for: .becomeKey))
     self.neoVimView.didBecomeMain()
   }
 
