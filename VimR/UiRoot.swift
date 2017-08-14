@@ -83,7 +83,6 @@ class UiRoot: UiComponent {
 
     return MainWindow(source: subject.asObservable(), emitter: self.emitter, state: state)
   }
-  }
 
   fileprivate func removeMainWindow(with uuid: String) {
     self.subjectForMainWindows[uuid]?.onCompleted()
