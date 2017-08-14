@@ -47,6 +47,7 @@ class MainWindow: NSObject,
     case setDirtyStatus(Bool)
 
     case becomeKey
+    case frameChanged(to: CGRect)
 
     case scroll(to: Marked<Position>)
     case setCursor(to: Marked<Position>)
@@ -494,6 +495,10 @@ extension MainWindow {
 
   func windowDidResignMain(_ notification: Notification) {
     self.neoVimView.didResignMain()
+  }
+
+  func windowDidMove(_ notification: Notification) {
+    self.emit(self.uuidAction(for: .frameChanged(to: self.window.frame)))
   }
 
   func windowShouldClose(_: Any) -> Bool {
