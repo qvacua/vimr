@@ -64,7 +64,7 @@ class AppDelegateReducer {
     mainWindow.nvimArgs = nvimArgs
     mainWindow.cliPipePath = cliPipePath
 
-    mainWindow.urlsToOpen = urls.toDict { url in MainWindow.OpenMode.default }
+    mainWindow.urlsToOpen = urls.toDict { _ in MainWindow.OpenMode.default }
 
     mainWindow.cwd = cwd
 
