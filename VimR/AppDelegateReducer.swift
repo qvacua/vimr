@@ -55,20 +55,21 @@ class AppDelegateReducer {
                                  cliPipePath: String? = nil) -> MainWindow.State {
 
     var mainWindow = state.mainWindowTemplate
+
     mainWindow.uuid = UUID().uuidString
+    mainWindow.cwd = cwd
     mainWindow.isDirty = false
+
     mainWindow.htmlPreview = HtmlPreviewState(
       htmlFile: nil,
       server: Marked(self.baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath))
     )
+    mainWindow.preview.server = self.baseServerUrl.appendingPathComponent(MarkdownReducer.nonePath)
+
     mainWindow.nvimArgs = nvimArgs
     mainWindow.cliPipePath = cliPipePath
 
     mainWindow.urlsToOpen = urls.toDict { _ in MainWindow.OpenMode.default }
-
-    mainWindow.cwd = cwd
-
-    mainWindow.preview.server = self.baseServerUrl.appendingPathComponent(MarkdownReducer.nonePath)
 
     return mainWindow
   }
