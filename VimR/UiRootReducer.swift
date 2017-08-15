@@ -21,6 +21,11 @@ class UiRootReducer {
         from: appState.mainWindowTemplate, new: appState.mainWindows[uuid] ?? appState.mainWindowTemplate
       )
 
+    case let .frameChanged(to: frame):
+      if uuid == appState.currentMainWindowUuid {
+        appState.mainWindowTemplate.frame = frame
+      }
+
     case let .setToolsState(tools):
       appState.mainWindowTemplate.orderedTools = tools.map { $0.0 }
 
@@ -53,6 +58,8 @@ class UiRootReducer {
 
   fileprivate func mainWindowTemplate(from old: MainWindow.State, new: MainWindow.State) -> MainWindow.State {
     var result = old
+
+    result.frame = new.frame
 
     result.isAllToolsVisible = new.isAllToolsVisible
     result.isToolButtonsVisible = new.isToolButtonsVisible

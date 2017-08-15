@@ -71,6 +71,23 @@ class AppDelegateReducer {
 
     mainWindow.urlsToOpen = urls.toDict { _ in MainWindow.OpenMode.default }
 
+    if state.mainWindows.isEmpty {
+      return mainWindow
+    }
+
+    let refFrame = state.mainWindowTemplate.frame
+    let frame = refFrame.offsetBy(dx: cascadeX, dy: -cascadeY)
+
+    mainWindow.frame = frame
+
     return mainWindow
   }
+
+  fileprivate func screen(containing point: CGPoint) -> NSScreen? {
+    return NSScreen.screens()?
+      .reduce(nil) { (result, screen) -> NSScreen? in screen.frame.contains(point) ? screen : result }
+  }
 }
+
+fileprivate let cascadeX: CGFloat = 24.0
+fileprivate let cascadeY: CGFloat = 24.0

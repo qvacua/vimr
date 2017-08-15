@@ -27,9 +27,9 @@ class UiRoot: UiComponent {
           .subtracting(self.mainWindows.keys)
           .flatMap { state.mainWindows[$0] }
           .map(self.newMainWindow)
-          .forEach {
-            self.mainWindows[$0.uuid] = $0
-            $0.show()
+          .forEach { mainWindow in
+            self.mainWindows[mainWindow.uuid] = mainWindow
+            mainWindow.show()
           }
 
         if self.mainWindows.isEmpty {

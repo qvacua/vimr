@@ -141,6 +141,7 @@ extension AppDelegate {
 
       if alert.runModal() == NSAlertSecondButtonReturn {
         self.uiRoot.prepareQuit()
+        self.stateContext.savePrefs()
         return .terminateNow
       }
 
@@ -149,10 +150,12 @@ extension AppDelegate {
 
     if self.hasMainWindows {
       self.uiRoot.prepareQuit()
+      self.stateContext.savePrefs()
       return .terminateNow
     }
 
     // There are no open main window, then just quit.
+    self.stateContext.savePrefs()
     return .terminateNow
   }
 

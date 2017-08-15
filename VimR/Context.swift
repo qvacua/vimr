@@ -11,6 +11,11 @@ class Context {
   let stateSource: Observable<AppState>
   let actionEmitter = ActionEmitter()
 
+  // The following should only be used when Cmd-Q'ing
+  func savePrefs() {
+    self.prefService.applyPref(from: self.appState)
+  }
+
   init(baseServerUrl: URL, state: AppState) {
     self.appState = state
     self.stateSource = self.stateSubject.asObservable()
@@ -18,7 +23,6 @@ class Context {
     let openQuicklyReducer = OpenQuicklyReducer()
     let markdownReducer = MarkdownReducer(baseServerUrl: baseServerUrl)
 
-    let prefService = PrefService()
     let previewService = PreviewService()
     let httpService: HttpServerService = HttpServerService(port: baseServerUrl.port!)
 
@@ -32,7 +36,7 @@ class Context {
           .reduce(by: UiRootReducer().reduce)
           .reduce(by: openQuicklyReducer.reduceMainWindow)
           .filter { $0.modified }
-          .apply(prefService.applyMainWindow)
+          .apply(self.prefService.applyMainWindow)
           .map { $0.state },
         self.actionSourceForAppState()
           .reduce(by: FileMonitorReducer().reduce)
@@ -106,6 +110,8 @@ class Context {
 
   fileprivate var appState: AppState
 
+  fileprivate let prefService = PrefService()
+
   fileprivate func emitAppState(_ mainWindow: UuidState<MainWindow.State>) {
     self.appState.mainWindows[mainWindow.uuid] = mainWindow.payload
     self.stateSubject.onNext(self.appState)
@@ -149,7 +155,7 @@ class Context {
     return self.actionSourceForAppState()
       .reduce(by: reduce)
       .filter { $0.modified }
-      .apply(prefService.applyPref)
+      .apply(self.prefService.applyPref)
       .map { $0.state }
   }
 

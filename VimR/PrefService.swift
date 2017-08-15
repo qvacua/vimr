@@ -14,6 +14,11 @@ class PrefService {
   static let compatibleVersion = "168"
   static let lastCompatibleVersion = "128"
 
+  // The following should only be used when Cmd-Q'ing
+  func applyPref(from appState: AppState) {
+    defaults.setValue(appState.dict(), forKey: PrefService.compatibleVersion)
+  }
+
   func applyPref<ActionType>(_ pair: StateActionPair<AppState, ActionType>) {
     defaults.setValue(pair.state.dict(), forKey: PrefService.compatibleVersion)
   }

@@ -274,6 +274,7 @@ class MainWindow: NSObject,
 
     self.open(urls: state.urlsToOpen)
 
+    self.window.setFrame(state.frame, display: true)
     self.window.makeFirstResponder(self.neoVimView)
   }
 
@@ -498,6 +499,10 @@ extension MainWindow {
   }
 
   func windowDidMove(_ notification: Notification) {
+    self.emit(self.uuidAction(for: .frameChanged(to: self.window.frame)))
+  }
+
+  func windowDidResize(_ notification: Notification) {
     self.emit(self.uuidAction(for: .frameChanged(to: self.window.frame)))
   }
 
