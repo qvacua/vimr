@@ -106,7 +106,7 @@ extension NeoVimView {
     // See special cases in vim/os_win32.c from vim sources
     // Also mentioned in MacVim's KeyBindings.plist
     if .control == flags && chars == "6" {
-      self.agent.vimInput("\u{1e}")
+      self.agent.vimInput("\u{1e}") // AKA ^^
       return true
     }
     if .control == flags && chars == "2" {
@@ -114,6 +114,7 @@ extension NeoVimView {
       self.agent.vimInput(self.wrapNamedKeys("Nul"))
       return true
     }
+    // NsEvent already sets \u{1f} for <C--> && <C-_>
 
     return false
   }
