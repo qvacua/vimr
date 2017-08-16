@@ -27,22 +27,18 @@ extension NeoVimView {
       ? event.charactersIgnoringModifiers!.lowercased()
       : event.charactersIgnoringModifiers!
 
-    if KeyUtils.isSpecial(key: charsIgnoringModifiers) {
-      if let vimModifiers = self.vimModifierFlags(modifierFlags) {
-        self.agent.vimInput(
-          self.wrapNamedKeys(vimModifiers + KeyUtils.namedKeyFrom(key: charsIgnoringModifiers))
-        )
-      } else {
-        self.agent.vimInput(self.wrapNamedKeys(KeyUtils.namedKeyFrom(key: charsIgnoringModifiers)))
-      }
-    } else {
-      if let vimModifiers = self.vimModifierFlags(modifierFlags) {
-        self.agent.vimInput(self.wrapNamedKeys(vimModifiers + charsIgnoringModifiers))
-      } else {
-        self.agent.vimInput(self.vimPlainString(chars))
-      }
-    }
+    let flags = self.vimModifierFlags(modifierFlags) ?? ""
+    let isNamedKey = KeyUtils.isSpecial(key: charsIgnoringModifiers)
+    let isControlCode = KeyUtils.isControlCode(key: chars) && !isNamedKey
+    let isPlain = flags.isEmpty && !isNamedKey
+    let isWrapNeeded = !isControlCode && !isPlain
 
+    let namedChars = KeyUtils.namedKeyFrom(key: charsIgnoringModifiers)
+    let finalInput = isWrapNeeded
+        ? self.wrapNamedKeys(flags + namedChars)
+        : self.vimPlainString(chars)
+
+    self.agent.vimInput(finalInput)
     self.keyDownDone = true
   }
 
@@ -82,18 +78,43 @@ extension NeoVimView {
   }
 
   override public func performKeyEquivalent(with event: NSEvent) -> Bool {
-    let type = event.type
-    let flags = event.modifierFlags
+    if .keyDown != event.type { return false }
+    let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
 
     /* <C-Tab> & <C-S-Tab> do not trigger keyDown events.
        Catch the key event here and pass it to keyDown.
        (By rogual in NeoVim dot app
        https://github.com/rogual/neovim-dot-app/pull/248/files )
        */
-    if .keyDown == type && flags.contains(.control) && 48 == event.keyCode {
+    if flags.contains(.control) && 48 == event.keyCode {
       self.keyDown(with: event)
       return true
     }
+
+    guard let chars = event.characters else {
+      return false;
+    }
+
+    // Control code \0 causes rpc parsing problems.
+    // So we escape as early as possible
+    if chars == "\0" {
+      self.agent.vimInput(self.wrapNamedKeys("Nul"))
+      return true
+    }
+
+    // For the following two conditions:
+    // See special cases in vim/os_win32.c from vim sources
+    // Also mentioned in MacVim's KeyBindings.plist
+    if .control == flags && chars == "6" {
+      self.agent.vimInput("\u{1e}") // AKA ^^
+      return true
+    }
+    if .control == flags && chars == "2" {
+      // <C-2> should generate \0, escaping as above
+      self.agent.vimInput(self.wrapNamedKeys("Nul"))
+      return true
+    }
+    // NsEvent already sets \u{1f} for <C--> && <C-_>
 
     return false
   }
