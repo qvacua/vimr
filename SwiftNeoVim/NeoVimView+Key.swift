@@ -102,6 +102,19 @@ extension NeoVimView {
       return true
     }
 
+    // For the following two conditions:
+    // See special cases in vim/os_win32.c from vim sources
+    // Also mentioned in MacVim's KeyBindings.plist
+    if .control == flags && chars == "6" {
+      self.agent.vimInput("\u{1e}")
+      return true
+    }
+    if .control == flags && chars == "2" {
+      // <C-2> should generate \0, escaping as above
+      self.agent.vimInput(self.wrapNamedKeys("Nul"))
+      return true
+    }
+
     return false
   }
 
