@@ -1,5 +1,6 @@
 # next
 
+* GH-492: Improve `Control` key handling: e.g. `Ctrl-6` works now. (thanks @nhtzr for the PR)
 * ...
 
 # 0.18.0-217
