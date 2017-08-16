@@ -7,6 +7,18 @@ import Cocoa
 
 class KeyUtils {
 
+  static func isControlCode(key: String) -> Bool {
+    guard key.characters.count == 1 else {
+      return false
+    }
+
+    guard let firstChar = key.utf16.first else {
+      return false
+    }
+
+    return firstChar < 32 && firstChar > 0
+  }
+
   static func isSpecial(key: String) -> Bool {
     guard key.characters.count == 1 else {
       return false
