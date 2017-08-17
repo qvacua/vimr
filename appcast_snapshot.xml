@@ -7,22 +7,30 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-218</title>
+      <title>SNAPSHOT-219</title>
       <description><![CDATA[
     <ul>
 <li>GH-492: Improve <code>Control</code> key handling: e.g. <code>Ctrl-6</code> works now. (thanks @nhtzr for the PR)</li>
+<li>GH-482, GH-283 Improve Emoji + CJK + Greek text rendering. (thanks @nhtzr for the PR)</li>
+<li>Dependencies updates:<ul>
+<li>ReactiveX/RxSwift@3.6.1</li>
+<li>sparkle-project/Sparkle@1.18.1</li>
+<li>sindresorhus/github-markdown-css@2.8.0</li>
+<li>Quick/Nimble@7.0.1</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/218
+        https://github.com/qvacua/vimr/releases/tag/snapshot/219
       </releaseNotesLink>
-      <pubDate>2017-08-16T17:50:59.561679</pubDate>
+      <pubDate>2017-08-17T08:59:02.471009</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/218/VimR-SNAPSHOT-218.tar.bz2"
-                 sparkle:version="218"
-                 sparkle:shortVersionString="SNAPSHOT-218"
-                 sparkle:dsaSignature="MC4CFQDe/hsRbcyet99lbrWnixj3UtYilwIVAIghLm6PmfF/jwnepWgzch3HwSPf"
-                 length="10703484"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/219/VimR-SNAPSHOT-219.tar.bz2"
+                 sparkle:version="219"
+                 sparkle:shortVersionString="SNAPSHOT-219"
+                 sparkle:dsaSignature="MC4CFQCMZ5FoxgdwmGJ5tQlv5D10kOcBXAIVAN7+bZB4LHB/wd0K2WAp14zWjqVz"
+                 length="10709960"
                  type="application/octet-stream"/>
     </item>
   </channel>
