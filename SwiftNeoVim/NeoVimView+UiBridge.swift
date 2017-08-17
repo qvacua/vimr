@@ -92,7 +92,7 @@ extension NeoVimView {
       let curPos = self.grid.position
 //      self.bridgeLogger.debug("\(curPos) -> \(string)")
 
-      self.grid.put(string)
+      self.grid.put(string.precomposedStringWithCanonicalMapping)
 
       if self.usesLigatures {
         if string == " " {
