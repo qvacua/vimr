@@ -75,12 +75,13 @@ class AppDelegateReducer {
       return mainWindow
     }
 
-    let refFrame = state.mainWindowTemplate.frame
-    let frame = refFrame.offsetBy(dx: cascadeX, dy: -cascadeY)
-
-    mainWindow.frame = frame
+    mainWindow.frame = self.frame(relativeTo: state.mainWindowTemplate.frame)
 
     return mainWindow
+  }
+
+  fileprivate func frame(relativeTo refFrame: CGRect) -> CGRect {
+    return refFrame.offsetBy(dx: cascadeX, dy: -cascadeY)
   }
 
   fileprivate func screen(containing point: CGPoint) -> NSScreen? {
