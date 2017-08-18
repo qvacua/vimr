@@ -83,11 +83,6 @@ class AppDelegateReducer {
   fileprivate func frame(relativeTo refFrame: CGRect) -> CGRect {
     return refFrame.offsetBy(dx: cascadeX, dy: -cascadeY)
   }
-
-  fileprivate func screen(containing point: CGPoint) -> NSScreen? {
-    return NSScreen.screens()?
-      .reduce(nil) { (result, screen) -> NSScreen? in screen.frame.contains(point) ? screen : result }
-  }
 }
 
 fileprivate let cascadeX: CGFloat = 24.0
