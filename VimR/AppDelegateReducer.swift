@@ -68,14 +68,9 @@ class AppDelegateReducer {
 
     mainWindow.nvimArgs = nvimArgs
     mainWindow.cliPipePath = cliPipePath
-
     mainWindow.urlsToOpen = urls.toDict { _ in MainWindow.OpenMode.default }
-
-    if state.mainWindows.isEmpty {
-      return mainWindow
-    }
-
-    mainWindow.frame = self.frame(relativeTo: state.mainWindowTemplate.frame)
+    mainWindow.frame = state.mainWindows.isEmpty ? state.mainWindowTemplate.frame
+                                                 : self.frame(relativeTo: state.mainWindowTemplate.frame)
 
     return mainWindow
   }

@@ -269,7 +269,7 @@ extension MainWindow {
       self.useInteractiveZsh = PrefUtils.bool(from: dict, for: Keys.MainWindow.useInteractiveZsh, default: false)
       let frameString = PrefUtils.string(from: dict,
                                          for: Keys.MainWindow.frame,
-                                         default: NSStringFromRect(CGRect(x: 100, y: 100, width: 600, height: 400)))
+                                         default: NSStringFromRect(self.frame))
       self.frame = NSRectFromString(frameString)
 
       self.isAllToolsVisible = isAllToolsVisible
