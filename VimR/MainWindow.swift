@@ -47,6 +47,7 @@ class MainWindow: NSObject,
     case setDirtyStatus(Bool)
 
     case becomeKey
+    case frameChanged(to: CGRect)
 
     case scroll(to: Marked<Position>)
     case setCursor(to: Marked<Position>)
@@ -91,18 +92,13 @@ class MainWindow: NSObject,
     case verticalSplit
   }
 
+  let uuid: String
+
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
     self.uuid = state.uuid
 
     self.cliPipePath = state.cliPipePath
-
-    self.defaultFont = state.appearance.font
-    self.linespacing = state.appearance.linespacing
-    self.usesLigatures = state.appearance.usesLigatures
-
-    self.editorPosition = state.preview.editorPosition
-    self.previewPosition = state.preview.previewPosition
 
     let neoVimViewConfig = NeoVimView.Config(useInteractiveZsh: state.useInteractiveZsh,
                                              cwd: state.cwd,
@@ -168,9 +164,16 @@ class MainWindow: NSObject,
       workspace.append(tool: tool, location: state.tools[toolId]?.location ?? .left)
     }
 
-    self.usesTheme = state.appearance.usesTheme
-
     super.init()
+
+    self.defaultFont = state.appearance.font
+    self.linespacing = state.appearance.linespacing
+    self.usesLigatures = state.appearance.usesLigatures
+
+    self.editorPosition = state.preview.editorPosition
+    self.previewPosition = state.preview.previewPosition
+
+    self.usesTheme = state.appearance.usesTheme
 
     self.tools.forEach { (toolId, toolContainer) in
       if state.tools[toolId]?.open == true {
@@ -271,6 +274,7 @@ class MainWindow: NSObject,
 
     self.open(urls: state.urlsToOpen)
 
+    self.window.setFrame(state.frame, display: true)
     self.window.makeFirstResponder(self.neoVimView)
   }
 
@@ -296,8 +300,6 @@ class MainWindow: NSObject,
   fileprivate let emit: (UuidAction<Action>) -> Void
   fileprivate let disposeBag = DisposeBag()
 
-  fileprivate let uuid: String
-
   fileprivate var currentBuffer: NeoVimBuffer?
 
   fileprivate let windowController: NSWindowController
@@ -305,9 +307,9 @@ class MainWindow: NSObject,
     return self.windowController.window!
   }
 
-  fileprivate var defaultFont: NSFont
-  fileprivate var linespacing: CGFloat
-  fileprivate var usesLigatures: Bool
+  fileprivate var defaultFont = NeoVimView.defaultFont
+  fileprivate var linespacing = NeoVimView.defaultLinespacing
+  fileprivate var usesLigatures = false
 
   fileprivate let fontManager = NSFontManager.shared()
 
@@ -319,8 +321,8 @@ class MainWindow: NSObject,
   fileprivate var openedFileListContainer: WorkspaceTool?
   fileprivate var htmlPreviewContainer: WorkspaceTool?
 
-  fileprivate var editorPosition: Marked<Position>
-  fileprivate var previewPosition: Marked<Position>
+  fileprivate var editorPosition = Marked(Position.beginning)
+  fileprivate var previewPosition = Marked(Position.beginning)
 
   fileprivate var preview: PreviewTool?
   fileprivate var htmlPreview: HtmlPreviewTool?
@@ -329,7 +331,7 @@ class MainWindow: NSObject,
 
   fileprivate let tools: [Tools: WorkspaceTool]
 
-  fileprivate var usesTheme: Bool
+  fileprivate var usesTheme = true
   fileprivate var lastThemeMark = Token()
 
   fileprivate let scrollDebouncer = Debouncer<Action>(interval: 0.75)
@@ -487,16 +489,21 @@ extension MainWindow {
 
 extension MainWindow {
 
-  func windowDidBecomeKey(_: Notification) {
-    self.emit(self.uuidAction(for: .becomeKey))
-  }
-
   func windowDidBecomeMain(_ notification: Notification) {
+    self.emit(self.uuidAction(for: .becomeKey))
     self.neoVimView.didBecomeMain()
   }
 
   func windowDidResignMain(_ notification: Notification) {
     self.neoVimView.didResignMain()
+  }
+
+  func windowDidMove(_ notification: Notification) {
+    self.emit(self.uuidAction(for: .frameChanged(to: self.window.frame)))
+  }
+
+  func windowDidResize(_ notification: Notification) {
+    self.emit(self.uuidAction(for: .frameChanged(to: self.window.frame)))
   }
 
   func windowShouldClose(_: Any) -> Bool {

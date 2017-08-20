@@ -55,21 +55,30 @@ class AppDelegateReducer {
                                  cliPipePath: String? = nil) -> MainWindow.State {
 
     var mainWindow = state.mainWindowTemplate
+
     mainWindow.uuid = UUID().uuidString
+    mainWindow.cwd = cwd
     mainWindow.isDirty = false
+
     mainWindow.htmlPreview = HtmlPreviewState(
       htmlFile: nil,
       server: Marked(self.baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath))
     )
+    mainWindow.preview.server = self.baseServerUrl.appendingPathComponent(MarkdownReducer.nonePath)
+
     mainWindow.nvimArgs = nvimArgs
     mainWindow.cliPipePath = cliPipePath
-
-    mainWindow.urlsToOpen = urls.toDict { url in MainWindow.OpenMode.default }
-
-    mainWindow.cwd = cwd
-
-    mainWindow.preview.server = self.baseServerUrl.appendingPathComponent(MarkdownReducer.nonePath)
+    mainWindow.urlsToOpen = urls.toDict { _ in MainWindow.OpenMode.default }
+    mainWindow.frame = state.mainWindows.isEmpty ? state.mainWindowTemplate.frame
+                                                 : self.frame(relativeTo: state.mainWindowTemplate.frame)
 
     return mainWindow
   }
+
+  fileprivate func frame(relativeTo refFrame: CGRect) -> CGRect {
+    return refFrame.offsetBy(dx: cascadeX, dy: -cascadeY)
+  }
 }
+
+fileprivate let cascadeX: CGFloat = 24.0
+fileprivate let cascadeY: CGFloat = 24.0

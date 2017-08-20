@@ -46,6 +46,7 @@ class Keys {
     static let toolButtonsVisible = "is-tool-buttons-visible"
     static let orderedTools = "ordered-tools"
     static let activeTools = "active-tools"
+    static let frame = "frame"
 
     static let useInteractiveZsh = "use-interactive-zsh"
     static let isShowHidden = "is-show-hidden"

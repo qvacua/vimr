@@ -2,6 +2,7 @@
 
 * GH-492: Improve `Control` key handling: e.g. `Ctrl-6` works now. (thanks @nhtzr for the PR)
 * GH-482, GH-283 Improve Emoji + CJK + Greek text rendering. (thanks @nhtzr for the PR)
+* GH-325: Improve how the window position and size are stored.
 * Dependencies updates:
     - ReactiveX/RxSwift@3.6.1
     - sparkle-project/Sparkle@1.18.1

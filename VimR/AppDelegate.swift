@@ -132,6 +132,8 @@ extension AppDelegate {
   }
 
   func applicationShouldTerminate(_ sender: NSApplication) -> NSApplicationTerminateReply {
+    self.stateContext.savePrefs()
+
     if self.hasDirtyWindows && self.hasMainWindows {
       let alert = NSAlert()
       alert.addButton(withTitle: "Cancel")

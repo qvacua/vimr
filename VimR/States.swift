@@ -217,6 +217,8 @@ extension MainWindow {
       Tools.htmlPreview: true,
     ]
 
+    var frame = CGRect(x: 100, y: 100, width: 600, height: 400)
+
     ////// transient
     var lastFileSystemUpdate = Marked(FileUtils.userHomeUrl)
 
@@ -265,6 +267,10 @@ extension MainWindow {
 
       // Stay compatible with 168
       self.useInteractiveZsh = PrefUtils.bool(from: dict, for: Keys.MainWindow.useInteractiveZsh, default: false)
+      let frameString = PrefUtils.string(from: dict,
+                                         for: Keys.MainWindow.frame,
+                                         default: NSStringFromRect(self.frame))
+      self.frame = NSRectFromString(frameString)
 
       self.isAllToolsVisible = isAllToolsVisible
       self.isToolButtonsVisible = isToolButtonsVisible
@@ -311,6 +317,8 @@ extension MainWindow {
       return [
         Keys.MainWindow.allToolsVisible: self.isAllToolsVisible,
         Keys.MainWindow.toolButtonsVisible: self.isToolButtonsVisible,
+
+        Keys.MainWindow.frame: NSStringFromRect(self.frame),
 
         Keys.Appearance.key: self.appearance.dict(),
         Keys.WorkspaceTool.key: self.tools.mapToDict { ($0.rawValue, $1.dict()) },
