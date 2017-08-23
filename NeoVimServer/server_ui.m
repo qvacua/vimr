@@ -647,11 +647,6 @@ void start_neovim(NSInteger width, NSInteger height, NSArray<NSString *> *args) 
   [data release];
 }
 
-void quit_neovim() {
-  DLOG("NeoVimServer exiting...");
-  CFRunLoopStop(_mainRunLoop);
-}
-
 #pragma mark Functions for neovim's main loop
 
 typedef NSData *(^work_block)(NSData *);
