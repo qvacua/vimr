@@ -7,31 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-220</title>
+      <title>SNAPSHOT-221</title>
       <description><![CDATA[
     <ul>
-<li>GH-492: Improve <code>Control</code> key handling: e.g. <code>Ctrl-6</code> works now. (thanks @nhtzr for the PR)</li>
-<li>GH-482, GH-283 Improve Emoji + CJK + Greek text rendering. (thanks @nhtzr for the PR)</li>
-<li>GH-325: Improve how the window position and size are stored.</li>
-<li>Dependencies updates:<ul>
-<li>ReactiveX/RxSwift@3.6.1</li>
-<li>sparkle-project/Sparkle@1.18.1</li>
-<li>sindresorhus/github-markdown-css@2.8.0</li>
-<li>Quick/Nimble@7.0.1</li>
-</ul>
-</li>
+<li>GH-491: Bugfix: Closing the window in full screen mode crashes the app.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/220
+        https://github.com/qvacua/vimr/releases/tag/snapshot/221
       </releaseNotesLink>
-      <pubDate>2017-08-20T15:20:42.627160</pubDate>
+      <pubDate>2017-08-23T21:57:40.039506</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/220/VimR-SNAPSHOT-220.tar.bz2"
-                 sparkle:version="220"
-                 sparkle:shortVersionString="SNAPSHOT-220"
-                 sparkle:dsaSignature="MC0CFHlxwkxZJ+OD0C7F8GxrOT/azu0kAhUAtZPEgXtOKpGUKoGksuPCvLNMrxI="
-                 length="10703304"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/221/VimR-SNAPSHOT-221.tar.bz2"
+                 sparkle:version="221"
+                 sparkle:shortVersionString="SNAPSHOT-221"
+                 sparkle:dsaSignature="MC0CFQDfM/oUN1kyYNhSzcHIL+mC+IUcIwIUEPAnLcWlNVk3kc7LOj0p4fgnRTM="
+                 length="10699418"
                  type="application/octet-stream"/>
     </item>
   </channel>
