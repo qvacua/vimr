@@ -410,6 +410,13 @@ extension MainWindow {
 
   func neoVimStopped() {
     self.isClosing = true
+
+    // If we close the window in the full screen mode, either by clicking the close button or by invoking :q
+    // the main thread crashes. We exit the full screen mode here as a quick and dirty hack.
+    if self.window.styleMask.contains(.fullScreen) {
+      self.window.toggleFullScreen(nil)
+    }
+
     self.windowController.close()
     self.set(dirtyStatus: false)
     self.emit(self.uuidAction(for: .close))
