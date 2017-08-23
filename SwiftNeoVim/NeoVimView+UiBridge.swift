@@ -187,14 +187,13 @@ extension NeoVimView {
     self.quitNeoVimCondition.unlock()
 
     gui.async {
-      self.agent.quit()
       self.delegate?.neoVimStopped()
     }
   }
 
   public func autoCommandEvent(_ event: NeoVimAutoCommandEvent, bufferHandle: Int) {
     gui.async {
-//      self.bridgeLogger.debug("\(neoVimAutoCommandEventName(event)) -> \(bufferHandle)")
+      self.bridgeLogger.debug("\(neoVimAutoCommandEventName(event)) -> \(bufferHandle)")
 
       if event == .BUFWINENTER || event == .BUFWINLEAVE {
         self.bufferListChanged()
@@ -206,6 +205,10 @@ extension NeoVimView {
 
       if event == .BUFREADPOST || event == .BUFWRITEPOST {
         self.currentBufferChanged(bufferHandle)
+      }
+
+      if event == .VIMLEAVE {
+        self.agent.quit()
       }
     }
   }
