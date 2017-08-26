@@ -33,7 +33,7 @@ extension NeoVimView {
     let isPlain = flags.isEmpty && !isNamedKey
     let isWrapNeeded = !isControlCode && !isPlain
 
-    let namedChars = KeyUtils.namedKeyFrom(key: charsIgnoringModifiers)
+    let namedChars = KeyUtils.namedKey(from: charsIgnoringModifiers)
     let finalInput = isWrapNeeded
         ? self.wrapNamedKeys(flags + namedChars)
         : self.vimPlainString(chars)

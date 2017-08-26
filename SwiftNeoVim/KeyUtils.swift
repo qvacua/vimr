@@ -31,9 +31,9 @@ class KeyUtils {
     return false
   }
 
-  static func namedKeyFrom(key: String) -> String {
-    if let firstChar = key.utf16.first, specialKeys.keys.contains(Int(firstChar)) {
-      return specialKeys[Int(firstChar)]!
+  static func namedKey(from key: String) -> String {
+    if let firstChar = key.utf16.first, let special = specialKeys[Int(firstChar)] {
+      return special
     }
 
     return key
