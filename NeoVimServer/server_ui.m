@@ -210,7 +210,7 @@ static void delete_marked_text() {
   }
 }
 
-static void run_neovim(void *arg __unused) {
+static void run_neovim(void *arg) {
   int argc = 1;
   char **argv;
 
