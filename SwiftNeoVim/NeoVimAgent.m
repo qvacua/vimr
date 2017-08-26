@@ -11,6 +11,7 @@
 
 
 static const double qTimeout = 10;
+static const double qForceExitDelay = 5;
 
 #define data_to_array(type)                                               \
 static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
@@ -137,6 +138,17 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 
   CFRunLoopStop(_localServerRunLoop);
   [_localServerThread cancel];
+
+  // Make sure that the backend neovim process exits.
+  [self performSelector:@selector(forceExitNeoVimServer) withObject:nil afterDelay:qForceExitDelay];
+  [_neoVimServerTask waitUntilExit];
+  [NSObject cancelPreviousPerformRequestsWithTarget:self];
+}
+
+-(void)forceExitNeoVimServer {
+  log4Warn("Forcing backend neovim process to terminate after %d seconds.", qForceExitDelay);
+  [_neoVimServerTask interrupt];
+  [_neoVimServerTask terminate];
 }
 
 - (void)launchNeoVimUsingLoginShell {

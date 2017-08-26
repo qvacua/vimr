@@ -186,9 +186,9 @@ extension NeoVimView {
     self.quitNeoVimCondition.signal()
     self.quitNeoVimCondition.unlock()
 
-    self.agent.quit()
-
     gui.async {
+      // Dispose of this view–most probably in the delegate's neoVimmStopped()–only after exiting the backend neovim
+      self.agent.quit()
       self.delegate?.neoVimStopped()
     }
   }
