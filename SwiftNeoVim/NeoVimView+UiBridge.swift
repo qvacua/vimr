@@ -186,6 +186,8 @@ extension NeoVimView {
     self.quitNeoVimCondition.signal()
     self.quitNeoVimCondition.unlock()
 
+    self.agent.quit()
+
     gui.async {
       self.delegate?.neoVimStopped()
     }
@@ -205,10 +207,6 @@ extension NeoVimView {
 
       if event == .BUFREADPOST || event == .BUFWRITEPOST {
         self.currentBufferChanged(bufferHandle)
-      }
-
-      if event == .VIMLEAVE {
-        self.agent.quit()
       }
     }
   }
