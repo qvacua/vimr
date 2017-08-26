@@ -123,10 +123,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 - (void)quit {
   OSAtomicOr32Barrier(1, &_neoVimIsQuitting);
 
-  // Wait till we get the response from the server.
-  // If we don't wait here, then the NSTask.terminate msg below could get caught by neovim which causes a warning log.
-  [self sendMessageWithId:NeoVimAgentMsgIdQuit data:nil expectsReply:YES];
-
   if (CFMessagePortIsValid(_remoteServerPort)) {
     CFMessagePortInvalidate(_remoteServerPort);
   }
@@ -141,10 +137,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 
   CFRunLoopStop(_localServerRunLoop);
   [_localServerThread cancel];
-
-  // Just to be sure...
-  [_neoVimServerTask interrupt];
-  [_neoVimServerTask terminate];
 }
 
 - (void)launchNeoVimUsingLoginShell {
@@ -405,7 +397,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 }
 
 - (NSData *)sendMessageWithId:(NeoVimAgentMsgId)msgid data:(NSData *)data expectsReply:(bool)expectsReply {
-  if (_neoVimIsQuitting == 1 && msgid != NeoVimAgentMsgIdQuit) {
+  if (_neoVimIsQuitting == 1) {
     // This happens often, e.g. when exiting full screen by closing all buffers. We try to resize the window after
     // the message port has been closed. This is a quick-and-dirty fix.
     // TODO: Fix for real...
@@ -425,7 +417,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
       _remoteServerPort, msgid, (__bridge CFDataRef) data, qTimeout, qTimeout, replyMode, &responseData
   );
 
-  if (msgid == NeoVimAgentMsgIdQuit || _neoVimIsQuitting == 1) {
+  if (_neoVimIsQuitting == 1) {
     return nil;
   }
 

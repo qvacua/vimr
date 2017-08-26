@@ -31,7 +31,6 @@ static const double qTimeout = 10;
 
 - (NSArray<NSString *> *)nvimArgs;
 - (NSCondition *)outputCondition;
-- (void)handleQuitMsg;
 
 @end
 
@@ -67,10 +66,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
         return NULL;
       }
 
-      case NeoVimAgentMsgIdQuit:
-        [neoVimServer handleQuitMsg];
-        return NULL;
-
       case NeoVimAgentMsgIdCommandOutput: return data_sync(data, outputCondition, neovim_vim_command_output);
 
       case NeoVimAgentMsgIdSelectWindow: return data_sync(data, outputCondition, neovim_select_window);
@@ -78,7 +73,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       case NeoVimAgentMsgIdScroll: return data_sync(data, outputCondition, neovim_scroll);
 
       case NeoVimAgentMsgIdGetTabs: return data_sync(data, outputCondition, neovim_tabs);
-      
+
       case NeoVimAgentMsgIdGetBuffers: return data_sync(data, outputCondition, neovim_buffers);
 
       case NeoVimAgentMsgIdGetBoolOption: return data_sync(data, outputCondition, neovim_get_bool_option);
@@ -98,7 +93,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       case NeoVimAgentMsgIdInputMarked: return data_sync(data, outputCondition, neovim_vim_input_marked_text);
 
       case NeoVimAgentMsgIdDelete: return data_sync(data, outputCondition, neovim_delete);
-      
+
       case NeoVimAgentMsgIdGetPwd: return data_sync(data, outputCondition, neovim_pwd);
 
       case NeoVimAgentMsgIdCursorGoto: return data_sync(data, outputCondition, neovim_cursor_goto);
@@ -240,15 +235,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 #ifndef DEBUG_NEOVIM_SERVER_STANDALONE
   [self sendMessageWithId:NeoVimServerMsgIdServerReady data:nil];
 #endif
-}
-
-- (void)quit {
-  quit_neovim();
-}
-
-- (void)handleQuitMsg {
-  // exit() after returning the response such that the agent can get the response and so does not log a warning.
-  [self performSelector:@selector(quit) onThread:_localServerThread withObject:nil waitUntilDone:NO];
 }
 
 @end

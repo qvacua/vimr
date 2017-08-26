@@ -14,7 +14,7 @@
 NeoVimServer *_neovim_server;
 CFRunLoopRef _mainRunLoop;
 
-void observe_parent_termination() {
+static void observe_parent_termination() {
   pid_t parentPID = getppid();
 
   dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -29,7 +29,7 @@ void observe_parent_termination() {
 
   dispatch_source_set_event_handler(source, ^{
     WLOG("Exiting neovim server due to parent termination.");
-    quit_neovim();
+    CFRunLoopStop(_mainRunLoop);
     dispatch_source_cancel(source);
   });
 

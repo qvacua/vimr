@@ -7,22 +7,20 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-221</title>
+      <title>SNAPSHOT-222</title>
       <description><![CDATA[
-    <ul>
-<li>GH-491: Bugfix: Closing the window in full screen mode crashes the app.</li>
-</ul>
+    <p>GH-512: Bugfix: (Hopefully) Fixes intermittent crashes on quit.</p>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/221
+        https://github.com/qvacua/vimr/releases/tag/snapshot/222
       </releaseNotesLink>
-      <pubDate>2017-08-23T21:57:40.039506</pubDate>
+      <pubDate>2017-08-24T18:42:19.336077</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/221/VimR-SNAPSHOT-221.tar.bz2"
-                 sparkle:version="221"
-                 sparkle:shortVersionString="SNAPSHOT-221"
-                 sparkle:dsaSignature="MC0CFQDfM/oUN1kyYNhSzcHIL+mC+IUcIwIUEPAnLcWlNVk3kc7LOj0p4fgnRTM="
-                 length="10699418"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/222/VimR-SNAPSHOT-222.tar.bz2"
+                 sparkle:version="222"
+                 sparkle:shortVersionString="SNAPSHOT-222"
+                 sparkle:dsaSignature="MC0CFBNHg5x2u2H7q1ZNdd+gSq1cyfTSAhUA27d6RuKGgB5XOml8yvwZuKJ4/vI="
+                 length="10700380"
                  type="application/octet-stream"/>
     </item>
   </channel>
