@@ -146,7 +146,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 }
 
 -(void)forceExitNeoVimServer {
-  log4Warn("Forcing backend neovim process to terminate after %d seconds.", qForceExitDelay);
+  log4Warn("Forcing backend neovim process to terminate after %lf seconds.", qForceExitDelay);
   [_neoVimServerTask interrupt];
   [_neoVimServerTask terminate];
 }
