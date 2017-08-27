@@ -187,6 +187,8 @@ extension NeoVimView {
     self.quitNeoVimCondition.unlock()
 
     gui.async {
+      // Dispose of this view–most probably in the delegate's neoVimmStopped()–only after exiting the backend neovim
+      self.agent.quit()
       self.delegate?.neoVimStopped()
     }
   }
@@ -205,10 +207,6 @@ extension NeoVimView {
 
       if event == .BUFREADPOST || event == .BUFWRITEPOST {
         self.currentBufferChanged(bufferHandle)
-      }
-
-      if event == .VIMLEAVE {
-        self.agent.quit()
       }
     }
   }
