@@ -91,6 +91,7 @@ extension NeoVimView {
   }
 
   public func closeCurrentTab() {
+    // We don't have to wait here even when neovim quits since we wait in gui.async() block in neoVimStopped().
     self.exec(command: "q")
   }
 
@@ -112,17 +113,10 @@ extension NeoVimView {
     self.exec(command: "q!")
   }
 
-  public func closeAllWindows() {
-    self.exec(command: "qa")
-  }
-
   public func quitNeoVimWithoutSaving() {
     self.exec(command: "qa!")
-
-    self.quitNeoVimCondition.lock()
-    defer { self.quitNeoVimCondition.unlock() }
-    while self.isNeoVimQuitSuccessful == false
-          && self.quitNeoVimCondition.wait(until: Date(timeIntervalSinceNow: 10)) {}
+    self.delegate?.neoVimStopped()
+    self.waitForNeoVimToQuit()
   }
 
   public func vimOutput(of command: String) -> String {
@@ -131,6 +125,13 @@ extension NeoVimView {
 
   public func cursorGo(to position: Position) {
     self.agent.cursorGo(toRow: Int32(position.row), column: Int32(position.column))
+  }
+
+  func waitForNeoVimToQuit() {
+    self.agent.neoVimQuitCondition.lock()
+    defer { self.agent.neoVimQuitCondition.unlock() }
+    while self.agent.neoVimHasQuit == false
+          && self.agent.neoVimQuitCondition.wait(until: Date(timeIntervalSinceNow: neoVimQuitTimeout)) { }
   }
 
   /**
@@ -160,3 +161,5 @@ extension NeoVimView {
     self.exec(command: "\(cmd) \(escapedFileName)")
   }
 }
+
+fileprivate let neoVimQuitTimeout = TimeInterval(5)

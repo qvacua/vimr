@@ -284,7 +284,6 @@ class MainWindow: NSObject,
 
   // The following should only be used when Cmd-Q'ing
   func quitNeoVimWithoutSaving() {
-    self.isClosing = true
     self.neoVimView.quitNeoVimWithoutSaving()
   }
 
@@ -409,6 +408,10 @@ class MainWindow: NSObject,
 extension MainWindow {
 
   func neoVimStopped() {
+    if self.isClosing {
+      return
+    }
+
     self.isClosing = true
 
     // If we close the window in the full screen mode, either by clicking the close button or by invoking :q
