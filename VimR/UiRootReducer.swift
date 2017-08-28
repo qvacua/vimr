@@ -15,10 +15,12 @@ class UiRootReducer {
 
     switch pair.action.payload {
 
-    case .becomeKey:
+    case let .becomeKey(isFullScreen):
       appState.currentMainWindowUuid = uuid
       appState.mainWindowTemplate = self.mainWindowTemplate(
-        from: appState.mainWindowTemplate, new: appState.mainWindows[uuid] ?? appState.mainWindowTemplate
+        from: appState.mainWindowTemplate,
+        new: appState.mainWindows[uuid] ?? appState.mainWindowTemplate,
+        isFullScreen: isFullScreen
       )
 
     case let .frameChanged(to: frame):
@@ -38,7 +40,8 @@ class UiRootReducer {
     case .close:
       if appState.currentMainWindowUuid == uuid, let mainWindowToClose = appState.mainWindows[uuid] {
         appState.mainWindowTemplate = self.mainWindowTemplate(from: appState.mainWindowTemplate,
-                                                              new: mainWindowToClose)
+                                                              new: mainWindowToClose,
+                                                              isFullScreen: false)
 
         appState.currentMainWindowUuid = nil
       }
@@ -56,10 +59,15 @@ class UiRootReducer {
     return StateActionPair(state: appState, action: pair.action)
   }
 
-  fileprivate func mainWindowTemplate(from old: MainWindow.State, new: MainWindow.State) -> MainWindow.State {
+  fileprivate func mainWindowTemplate(from old: MainWindow.State,
+                                      new: MainWindow.State,
+                                      isFullScreen: Bool) -> MainWindow.State {
+
     var result = old
 
-    result.frame = new.frame
+    if !isFullScreen {
+      result.frame = new.frame
+    }
 
     result.isAllToolsVisible = new.isAllToolsVisible
     result.isToolButtonsVisible = new.isToolButtonsVisible

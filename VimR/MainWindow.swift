@@ -46,7 +46,7 @@ class MainWindow: NSObject,
     case setCurrentBuffer(NeoVimBuffer)
     case setDirtyStatus(Bool)
 
-    case becomeKey
+    case becomeKey(isFullScreen: Bool)
     case frameChanged(to: CGRect)
 
     case scroll(to: Marked<Position>)
@@ -500,7 +500,7 @@ extension MainWindow {
 extension MainWindow {
 
   func windowDidBecomeMain(_ notification: Notification) {
-    self.emit(self.uuidAction(for: .becomeKey))
+    self.emit(self.uuidAction(for: .becomeKey(isFullScreen: self.window.styleMask.contains(.fullScreen))))
     self.neoVimView.didBecomeMain()
   }
 
@@ -513,6 +513,10 @@ extension MainWindow {
   }
 
   func windowDidResize(_ notification: Notification) {
+    if self.window.styleMask.contains(.fullScreen) {
+      return
+    }
+
     self.emit(self.uuidAction(for: .frameChanged(to: self.window.frame)))
   }
 
