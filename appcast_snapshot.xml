@@ -7,25 +7,33 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-225</title>
+      <title>v0.19.0-226</title>
       <description><![CDATA[
     <ul>
-<li>GH-512: Bugfix: Fixes intermittent crashes on quit.<ul>
-<li>Fix: Some swap files do not get deleted.</li>
+<li>GH-492: Improve <code>Control</code> key handling: e.g. <code>Ctrl-6</code> works now. (thanks @nhtzr for the PR)</li>
+<li>GH-482, GH-283 Improve Emoji + CJK + Greek text rendering. (thanks @nhtzr for the PR)</li>
+<li>GH-325: Improve how the window position and size are stored.</li>
+<li>GH-491: Bugfix: Closing the window in full screen mode crashes the app.</li>
+<li>GH-512: Bugfix: Intermittent crashes when closing windows or quitting the app.</li>
+<li>Dependencies updates:<ul>
+<li>ReactiveX/RxSwift@3.6.1</li>
+<li>sparkle-project/Sparkle@1.18.1</li>
+<li>sindresorhus/github-markdown-css@2.8.0</li>
+<li>Quick/Nimble@7.0.1</li>
 </ul>
 </li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/225
+        https://github.com/qvacua/vimr/releases/tag/v0.19.0-226
       </releaseNotesLink>
-      <pubDate>2017-08-28T19:28:25.245259</pubDate>
+      <pubDate>2017-08-28T22:50:54.878165</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/225/VimR-SNAPSHOT-225.tar.bz2"
-                 sparkle:version="225"
-                 sparkle:shortVersionString="SNAPSHOT-225"
-                 sparkle:dsaSignature="MCwCFG+aQnQndYo14EwSjcEXklqATot7AhROG44L81MfFqIwj/EbJkrOHfhjbQ=="
-                 length="10700663"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.19.0-226/VimR-v0.19.0-226.tar.bz2"
+                 sparkle:version="226"
+                 sparkle:shortVersionString="0.19.0"
+                 sparkle:dsaSignature="MC4CFQDODeVmBCznOUkKu7H2Aze86qIOogIVANAvHvTPQ1UPW5SmtpHNkhq7ZQ5n"
+                 length="10700454"
                  type="application/octet-stream"/>
     </item>
   </channel>
