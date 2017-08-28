@@ -7,20 +7,25 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-224</title>
+      <title>SNAPSHOT-225</title>
       <description><![CDATA[
-    <p>GH-512: Bugfix: (Hopefully) Fixes intermittent crashes on quit. (again II)</p>
+    <ul>
+<li>GH-512: Bugfix: Fixes intermittent crashes on quit.<ul>
+<li>Fix: Some swap files do not get deleted.</li>
+</ul>
+</li>
+</ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/224
+        https://github.com/qvacua/vimr/releases/tag/snapshot/225
       </releaseNotesLink>
-      <pubDate>2017-08-27T07:57:08.763917</pubDate>
+      <pubDate>2017-08-28T19:28:25.245259</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/224/VimR-SNAPSHOT-224.tar.bz2"
-                 sparkle:version="224"
-                 sparkle:shortVersionString="SNAPSHOT-224"
-                 sparkle:dsaSignature="MC0CFQDEvajqBOKKp2ZzH41j1nk3Sp0twAIUQ1wfjyVhXXpIjtagIMBChjW3dFg="
-                 length="10699018"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/225/VimR-SNAPSHOT-225.tar.bz2"
+                 sparkle:version="225"
+                 sparkle:shortVersionString="SNAPSHOT-225"
+                 sparkle:dsaSignature="MCwCFG+aQnQndYo14EwSjcEXklqATot7AhROG44L81MfFqIwj/EbJkrOHfhjbQ=="
+                 length="10700663"
                  type="application/octet-stream"/>
     </item>
   </channel>
