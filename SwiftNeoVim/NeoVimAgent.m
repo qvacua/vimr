@@ -146,10 +146,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 
   [self closeMachPorts];
 
-  // Make sure that the backend neovim process exits.
-  [self performSelector:@selector(forceExitNeoVimServer) withObject:nil afterDelay:qForceExitDelay];
   [_neoVimServerTask waitUntilExit];
-  [NSObject cancelPreviousPerformRequestsWithTarget:self];
 
   [_neoVimQuitCondition lock];
   _neoVimHasQuit = true;
