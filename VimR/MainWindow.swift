@@ -46,7 +46,7 @@ class MainWindow: NSObject,
     case setCurrentBuffer(NeoVimBuffer)
     case setDirtyStatus(Bool)
 
-    case becomeKey
+    case becomeKey(isFullScreen: Bool)
     case frameChanged(to: CGRect)
 
     case scroll(to: Marked<Position>)
@@ -284,7 +284,6 @@ class MainWindow: NSObject,
 
   // The following should only be used when Cmd-Q'ing
   func quitNeoVimWithoutSaving() {
-    self.isClosing = true
     self.neoVimView.quitNeoVimWithoutSaving()
   }
 
@@ -409,6 +408,10 @@ class MainWindow: NSObject,
 extension MainWindow {
 
   func neoVimStopped() {
+    if self.isClosing {
+      return
+    }
+
     self.isClosing = true
 
     // If we close the window in the full screen mode, either by clicking the close button or by invoking :q
@@ -497,7 +500,7 @@ extension MainWindow {
 extension MainWindow {
 
   func windowDidBecomeMain(_ notification: Notification) {
-    self.emit(self.uuidAction(for: .becomeKey))
+    self.emit(self.uuidAction(for: .becomeKey(isFullScreen: self.window.styleMask.contains(.fullScreen))))
     self.neoVimView.didBecomeMain()
   }
 
@@ -510,6 +513,10 @@ extension MainWindow {
   }
 
   func windowDidResize(_ notification: Notification) {
+    if self.window.styleMask.contains(.fullScreen) {
+      return
+    }
+
     self.emit(self.uuidAction(for: .frameChanged(to: self.window.frame)))
   }
 

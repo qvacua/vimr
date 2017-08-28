@@ -180,15 +180,10 @@ extension NeoVimView {
 
   public func stop() {
     self.bridgeLogger.hr()
-
-    self.quitNeoVimCondition.lock()
-    self.isNeoVimQuitSuccessful = true
-    self.quitNeoVimCondition.signal()
-    self.quitNeoVimCondition.unlock()
+    self.agent.quit()
 
     gui.async {
-      // Dispose of this view–most probably in the delegate's neoVimmStopped()–only after exiting the backend neovim
-      self.agent.quit()
+      self.waitForNeoVimToQuit()
       self.delegate?.neoVimStopped()
     }
   }
@@ -215,14 +210,14 @@ extension NeoVimView {
     gui.async {
       self.bridgeLogger.debug(reason)
 
-      if self.agent.neoVimIsQuitting {
+      if self.agent.neoVimIsQuitting || self.agent.neoVimHasQuit {
         return
       }
 
       self.delegate?.ipcBecameInvalid(reason: reason)
 
-      self.bridgeLogger.fault("force-quitting")
-      self.agent.quit()
+      self.bridgeLogger.error("Force-closing due to IPC error.")
+      self.agent.forceQuit()
     }
   }
 }

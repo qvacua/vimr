@@ -107,6 +107,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 
   _neoVimIsQuitting = 0;
 
+  _neoVimHasQuit = false;
+  _neoVimQuitCondition = [NSCondition new];
+
   return self;
 }
 
@@ -120,10 +123,40 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 #endif
 }
 
+- (void)forceQuit {
+  log4Error("Force-quitting NeoVimServer %@", _uuid);
+
+  OSAtomicOr32Barrier(1, &_neoVimIsQuitting);
+
+  [self closeMachPorts];
+  [self forceExitNeoVimServer];
+
+  [_neoVimQuitCondition lock];
+  _neoVimHasQuit = true;
+  [_neoVimQuitCondition signal];
+  [_neoVimQuitCondition unlock];
+
+  log4Error("Force-quit NeoVimServer %@", _uuid);
+
+}
+
 // We cannot use -dealloc for this since -dealloc is not called until the run loop in the thread stops.
 - (void)quit {
   OSAtomicOr32Barrier(1, &_neoVimIsQuitting);
 
+  [self closeMachPorts];
+
+  [_neoVimServerTask waitUntilExit];
+
+  [_neoVimQuitCondition lock];
+  _neoVimHasQuit = true;
+  [_neoVimQuitCondition signal];
+  [_neoVimQuitCondition unlock];
+
+  log4Info("NeoVimServer %@ exited successfully", _uuid);
+}
+
+- (void)closeMachPorts {
   if (CFMessagePortIsValid(_remoteServerPort)) {
     CFMessagePortInvalidate(_remoteServerPort);
   }
@@ -138,15 +171,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 
   CFRunLoopStop(_localServerRunLoop);
   [_localServerThread cancel];
-
-  // Make sure that the backend neovim process exits.
-  [self performSelector:@selector(forceExitNeoVimServer) withObject:nil afterDelay:qForceExitDelay];
-  [_neoVimServerTask waitUntilExit];
-  [NSObject cancelPreviousPerformRequestsWithTarget:self];
 }
 
 -(void)forceExitNeoVimServer {
-  log4Warn("Forcing backend neovim process to terminate after %d seconds.", qForceExitDelay);
+  log4Warn("Forcing backend neovim process to terminate after %lf seconds.", qForceExitDelay);
   [_neoVimServerTask interrupt];
   [_neoVimServerTask terminate];
 }
