@@ -176,7 +176,7 @@ class FileOutlineView: NSOutlineView,
       .filter { (_, fileBrowserItem) in newPreparedChildren.contains(fileBrowserItem) == false }
       .map { (idx, _) in idx }
 
-    logger.debug("\(fileBrowserItem): \(curPreparedChildren) vs. \(indicesToRemove)")
+    fileLog.debug("\(fileBrowserItem): \(curPreparedChildren) vs. \(indicesToRemove)")
 
     fileBrowserItem.children = curChildren.filter { newChildren.contains($0) }
 
@@ -196,7 +196,7 @@ class FileOutlineView: NSOutlineView,
       .filter { (_, fileBrowserItem) in curPreparedChildren.contains(fileBrowserItem) == false }
       .map { (idx, _) in idx }
 
-    logger.debug("\(fileBrowserItem): \(curPreparedChildren) vs. \(indicesToInsert)")
+    fileLog.debug("\(fileBrowserItem): \(curPreparedChildren) vs. \(indicesToInsert)")
 
     // We don't just take newChildren because NSOutlineView look at the pointer equality for
     // preserving the expanded states...
