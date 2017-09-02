@@ -248,8 +248,8 @@ class MainWindow: NSObject,
             },
             forDefaultTheme: {
               self.window.titlebarAppearsTransparent = false
-              self.window.backgroundColor = NSColor.windowBackgroundColor
-              self.workspace.theme = Workspace.Theme.default
+              self.window.backgroundColor = .windowBackgroundColor
+              self.workspace.theme = .default
             })
 
           self.usesTheme = state.appearance.usesTheme
