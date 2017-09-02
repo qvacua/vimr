@@ -95,6 +95,13 @@
 		1F1000F81F0ABC0000CA3195 /* NeoVimView+Dragging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1000F71F0ABC0000CA3195 /* NeoVimView+Dragging.swift */; };
 		4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */; };
 		4B0BCC941D70320C00D3CE65 /* Logger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0BCC931D70320C00D3CE65 /* Logger.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		4B12CD891F5A985600167D59 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B12CD881F5A985600167D59 /* AppDelegate.swift */; };
+		4B12CD8B1F5A985600167D59 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B12CD8A1F5A985600167D59 /* ViewController.swift */; };
+		4B12CD8D1F5A985600167D59 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B12CD8C1F5A985600167D59 /* Assets.xcassets */; };
+		4B12CD901F5A985700167D59 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B12CD8E1F5A985700167D59 /* Main.storyboard */; };
+		4B12CD961F5A988000167D59 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B12CD951F5A988000167D59 /* WindowController.swift */; };
+		4B12CD971F5A98D500167D59 /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; };
+		4B12CD981F5A98D500167D59 /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B401B131D0454DC00D99EDC /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B183E0E1E06E2940079E8A8 /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; };
 		4B183E101E06E29C0079E8A8 /* CocoaMarkdown.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B183E1B1E08748B0079E8A8 /* NeoVimAutoCommandEvent.generated.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B183E1A1E08748B0079E8A8 /* NeoVimAutoCommandEvent.generated.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -283,6 +290,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		4B12CD991F5A98D500167D59 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4B12CD981F5A98D500167D59 /* PureLayout.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4B2A2BF01D02261F0074CE9A /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -471,6 +489,13 @@
 		1F1000F71F0ABC0000CA3195 /* NeoVimView+Dragging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NeoVimView+Dragging.swift"; sourceTree = "<group>"; };
 		4B029F1B1D45E349004EE0D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrefWindow.xib; sourceTree = "<group>"; };
 		4B0BCC931D70320C00D3CE65 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logger.h; path = VimR/Logger.h; sourceTree = SOURCE_ROOT; };
+		4B12CD861F5A985600167D59 /* ThemedWindow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ThemedWindow.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B12CD881F5A985600167D59 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4B12CD8A1F5A985600167D59 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		4B12CD8C1F5A985600167D59 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4B12CD8F1F5A985700167D59 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		4B12CD911F5A985700167D59 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4B12CD951F5A988000167D59 /* WindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 		4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaMarkdown.framework; path = Carthage/Build/Mac/CocoaMarkdown.framework; sourceTree = SOURCE_ROOT; };
 		4B183E1A1E08748B0079E8A8 /* NeoVimAutoCommandEvent.generated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimAutoCommandEvent.generated.h; sourceTree = "<group>"; };
 		4B19BEFA1E110183007E823C /* markdown */ = {isa = PBXFileReference; lastKnownFileType = folder; path = markdown; sourceTree = "<group>"; };
@@ -485,9 +510,9 @@
 		4B2A2C061D0352CB0074CE9A /* NeoVimUiBridgeProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimUiBridgeProtocol.h; sourceTree = "<group>"; };
 		4B2A2C0D1D0353750074CE9A /* Bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bridge.h; sourceTree = "<group>"; };
 		4B337FBA1DEB76F20020ADD2 /* CocoaFontAwesome.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaFontAwesome.framework; path = Carthage/Build/Mac/CocoaFontAwesome.framework; sourceTree = SOURCE_ROOT; };
-		4B37ADB81D6E471B00970D55 /* vimr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = vimr; sourceTree = "<group>"; };
+		4B37ADB81D6E471B00970D55 /* vimr */ = {isa = PBXFileReference; fileEncoding = 1; lastKnownFileType = text.script.python; path = vimr; sourceTree = "<group>"; };
 		4B3965351DEB21300082D3C1 /* InnterToolBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InnterToolBar.swift; path = Workspace/InnterToolBar.swift; sourceTree = "<group>"; };
-		4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sparkle_pub.pem; sourceTree = "<group>"; };
+		4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */ = {isa = PBXFileReference; fileEncoding = 1; lastKnownFileType = text; path = sparkle_pub.pem; sourceTree = "<group>"; };
 		4B401B131D0454DC00D99EDC /* PureLayout.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureLayout.framework; path = Carthage/Build/Mac/PureLayout.framework; sourceTree = SOURCE_ROOT; };
 		4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimViewDelegate.swift; sourceTree = "<group>"; };
 		4B4192171D0C52D700A0BEB2 /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
@@ -586,6 +611,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4B12CD831F5A985600167D59 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B12CD971F5A98D500167D59 /* PureLayout.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4B2A2BF31D0351810074CE9A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -824,6 +857,19 @@
 			path = "NeoVim Objects";
 			sourceTree = "<group>";
 		};
+		4B12CD871F5A985600167D59 /* ThemedWindow */ = {
+			isa = PBXGroup;
+			children = (
+				4B12CD881F5A985600167D59 /* AppDelegate.swift */,
+				4B12CD8A1F5A985600167D59 /* ViewController.swift */,
+				4B12CD8C1F5A985600167D59 /* Assets.xcassets */,
+				4B12CD8E1F5A985700167D59 /* Main.storyboard */,
+				4B12CD911F5A985700167D59 /* Info.plist */,
+				4B12CD951F5A988000167D59 /* WindowController.swift */,
+			);
+			path = ThemedWindow;
+			sourceTree = "<group>";
+		};
 		4B2A2BF81D0351810074CE9A /* SwiftNeoVim */ = {
 			isa = PBXGroup;
 			children = (
@@ -1029,6 +1075,7 @@
 				4B854A1B1D31447C00E08DE1 /* NeoVimServer */,
 				4B6423A01D8EFE7500FC78C8 /* VimR-Workspace-Demo */,
 				4B77808B1EAA25FF00CB4E10 /* MacNeovim */,
+				4B12CD871F5A985600167D59 /* ThemedWindow */,
 				4B5012001EBA791000F76C46 /* Frameworks */,
 				4BEBA5061CFF374B00673FDF /* Products */,
 			);
@@ -1045,6 +1092,7 @@
 				4B64239F1D8EFE7500FC78C8 /* VimR-Workspace-Demo.app */,
 				4B81B3C81DE8827600ED1672 /* OutlineViewTest.app */,
 				4B77808A1EAA25FF00CB4E10 /* MacNeovim.app */,
+				4B12CD861F5A985600167D59 /* ThemedWindow.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1143,6 +1191,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		4B12CD851F5A985600167D59 /* ThemedWindow */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4B12CD941F5A985700167D59 /* Build configuration list for PBXNativeTarget "ThemedWindow" */;
+			buildPhases = (
+				4B12CD821F5A985600167D59 /* Sources */,
+				4B12CD831F5A985600167D59 /* Frameworks */,
+				4B12CD841F5A985600167D59 /* Resources */,
+				4B12CD991F5A98D500167D59 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ThemedWindow;
+			productName = ThemedWindow;
+			productReference = 4B12CD861F5A985600167D59 /* ThemedWindow.app */;
+			productType = "com.apple.product-type.application";
+		};
 		4B2A2BF61D0351810074CE9A /* SwiftNeoVim */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4B2A2C021D0351810074CE9A /* Build configuration list for PBXNativeTarget "SwiftNeoVim" */;
@@ -1305,6 +1371,10 @@
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Tae Won Ha";
 				TargetAttributes = {
+					4B12CD851F5A985600167D59 = {
+						CreatedOnToolsVersion = 8.3.3;
+						ProvisioningStyle = Automatic;
+					};
 					4B2A2BF61D0351810074CE9A = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = H96Q2NKTQH;
@@ -1361,11 +1431,21 @@
 				4B64239E1D8EFE7500FC78C8 /* VimR-Workspace-Demo */,
 				4B81B3C71DE8827600ED1672 /* OutlineViewTest */,
 				4B7780891EAA25FF00CB4E10 /* MacNeovim */,
+				4B12CD851F5A985600167D59 /* ThemedWindow */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		4B12CD841F5A985600167D59 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B12CD8D1F5A985600167D59 /* Assets.xcassets in Resources */,
+				4B12CD901F5A985700167D59 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4B2A2BF51D0351810074CE9A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1479,6 +1559,16 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4B12CD821F5A985600167D59 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B12CD8B1F5A985600167D59 /* ViewController.swift in Sources */,
+				4B12CD961F5A988000167D59 /* WindowController.swift in Sources */,
+				4B12CD891F5A985600167D59 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4B2A2BF21D0351810074CE9A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1728,6 +1818,14 @@
 			name = PrefWindow.xib;
 			sourceTree = "<group>";
 		};
+		4B12CD8E1F5A985700167D59 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4B12CD8F1F5A985700167D59 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
 		4B6423A51D8EFE7500FC78C8 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1795,6 +1893,49 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		4B12CD921F5A985700167D59 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				INFOPLIST_FILE = ThemedWindow/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.ThemedWindow;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		4B12CD931F5A985700167D59 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				INFOPLIST_FILE = ThemedWindow/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.ThemedWindow;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
 		4B2A2C001D0351810074CE9A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2207,6 +2348,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4B12CD941F5A985700167D59 /* Build configuration list for PBXNativeTarget "ThemedWindow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B12CD921F5A985700167D59 /* Debug */,
+				4B12CD931F5A985700167D59 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		4B2A2C021D0351810074CE9A /* Build configuration list for PBXNativeTarget "SwiftNeoVim" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
