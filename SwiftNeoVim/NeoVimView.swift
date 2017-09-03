@@ -194,10 +194,10 @@ public class NeoVimView: NSView,
     }
   }
 
-  let logger = FileLogger(as: NeoVimView.self, with: URL(fileURLWithPath: "/tmp/nvv.log"))
-  let bridgeLogger = FileLogger(as: NeoVimView.self,
-                                with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
-                                shouldLogDebug: nil)
+  let logger = LogContext.fileLogger(as: NeoVimView.self, with: URL(fileURLWithPath: "/tmp/nvv.log"))
+  let bridgeLogger = LogContext.fileLogger(as: NeoVimView.self,
+                                           with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
+                                           shouldLogDebug: nil)
   let agent: NeoVimAgent
   let grid = Grid()
 

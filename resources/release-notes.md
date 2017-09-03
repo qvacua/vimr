@@ -1,9 +1,10 @@
-# next
+# 0.19.0-226
 
 * GH-492: Improve `Control` key handling: e.g. `Ctrl-6` works now. (thanks @nhtzr for the PR)
 * GH-482, GH-283 Improve Emoji + CJK + Greek text rendering. (thanks @nhtzr for the PR)
 * GH-325: Improve how the window position and size are stored.
 * GH-491: Bugfix: Closing the window in full screen mode crashes the app.
+* GH-512: Bugfix: Intermittent crashes when closing windows or quitting the app.
 * Dependencies updates:
     - ReactiveX/RxSwift@3.6.1
     - sparkle-project/Sparkle@1.18.1

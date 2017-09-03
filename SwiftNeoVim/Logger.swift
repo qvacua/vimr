@@ -5,68 +5,7 @@
 
 import Foundation
 
-fileprivate class FileAppender {
-
-  init(with fileUrl: URL) {
-    guard fileUrl.isFileURL else {
-      preconditionFailure("\(fileUrl) must be a file URL!")
-    }
-
-    self.fileUrl = fileUrl
-    self.fileDateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-SSS"
-    self.setupFileHandle(at: fileUrl)
-  }
-
-  func write(_ data: Data) {
-    self.fileHandle.write(data)
-
-    if self.fileHandle.offsetInFile >= maxFileSize {
-      self.archiveLogFile()
-    }
-  }
-
-  deinit {
-    self.fileHandle.closeFile()
-  }
-
-  fileprivate let fileUrl: URL
-  fileprivate var fileHandle = FileHandle.standardOutput
-  fileprivate let fileDateFormatter = DateFormatter()
-
-  fileprivate func setupFileHandle(at fileUrl: URL) {
-    if !fileManager.fileExists(atPath: fileUrl.path) {
-      fileManager.createFile(atPath: fileUrl.path, contents: nil)
-    }
-
-    if let fileHandle = try? FileHandle(forWritingTo: fileUrl) {
-      self.fileHandle = fileHandle
-      self.fileHandle.seekToEndOfFile()
-    } else {
-      NSLog("[ERROR] Could not get handle for \(fileUrl), defaulting to STDOUT")
-      self.fileHandle = FileHandle.standardOutput
-    }
-  }
-
-  fileprivate func archiveLogFile() {
-    self.fileHandle.closeFile()
-
-    do {
-      let fileTimestamp = self.fileDateFormatter.string(from: Date())
-      let fileName = self.fileUrl.deletingPathExtension().lastPathComponent
-      let archiveFileName = "\(fileName)-\(fileTimestamp).\(self.fileUrl.pathExtension)"
-      let archiveFileUrl = self.fileUrl
-        .deletingLastPathComponent().appendingPathComponent(archiveFileName)
-
-      try fileManager.moveItem(at: self.fileUrl, to: archiveFileUrl)
-    } catch let error as NSError {
-      NSLog("[ERROR] Could not archive log file: \(error)")
-    }
-
-    self.setupFileHandle(at: self.fileUrl)
-  }
-}
-
-class FileLogger {
+class LogContext {
 
   enum Level: String {
 
@@ -77,12 +16,55 @@ class FileLogger {
     case fault = "FAULT"
   }
 
+  static func stdoutLogger<T>(as name: T, shouldLogDebug: Bool? = nil) -> Logger {
+    return Logger(as: name, with: self.stdoutAppender, shouldLogDebug: shouldLogDebug)
+  }
+
+  static func fileLogger<T>(as name: T, with url: URL, shouldLogDebug: Bool? = nil) -> Logger {
+    let appender = self.appenderManager.requestFileAppender(for: url)
+    return Logger(as: name, with: appender, shouldLogDebug: shouldLogDebug)
+  }
+
+  fileprivate static let stdoutAppender = StdoutAppender()
+  fileprivate static let appenderManager = FileAppenderManager()
+}
+
+fileprivate class FileAppenderManager {
+
+  fileprivate func requestFileAppender(`for` url: URL) -> FileAppender {
+    self.lock.lock()
+    defer { self.lock.unlock() }
+
+    if let fileAppender = self.fileAppenders[url] {
+      return fileAppender
+    }
+
+    let fileAppender = FileAppender(with: url, manager: self)
+    self.fileAppenders[url] = fileAppender
+
+    return fileAppender
+  }
+
+  fileprivate func deregisterFileAppender(`for` url: URL) {
+    self.lock.lock()
+    defer { self.lock.unlock() }
+
+    self.fileAppenders.removeValue(forKey: url)
+  }
+
+  fileprivate let lock = NSRecursiveLock()
+
+  fileprivate var fileAppenders: [URL: FileAppender] = [:]
+}
+
+class Logger {
+
   let uuid = UUID().uuidString
   let name: String
 
   var shouldLogDebug: Bool
 
-  init<T>(as name: T, with fileUrl: URL, shouldLogDebug: Bool? = nil) {
+  init<T>(as name: T, with appender: Appender, shouldLogDebug: Bool? = nil) {
     if let debug = shouldLogDebug {
       self.shouldLogDebug = debug
     } else {
@@ -98,39 +80,8 @@ class FileLogger {
     default: self.name = String(describing: name)
     }
 
-    guard fileUrl.isFileURL else {
-      preconditionFailure("\(fileUrl) must be a file URL!")
-    }
-
-    self.fileUrl = fileUrl
     self.logDateFormatter.dateFormat = "dd HH:mm:SSS"
-
-    fileAppendersAccess.lock()
-    defer { fileAppendersAccess.unlock() }
-    if let fileAppender = fileAppenders[fileUrl], let ref = fileAppenderRefs[fileUrl] {
-      self.fileAppender = fileAppender
-      fileAppenderRefs[fileUrl] = ref + 1
-    } else {
-      self.fileAppender = FileAppender(with: fileUrl)
-      fileAppenders[fileUrl] = self.fileAppender
-      fileAppenderRefs[fileUrl] = 1
-    }
-  }
-
-  deinit {
-    fileAppendersAccess.lock()
-    defer { fileAppendersAccess.unlock() }
-
-    guard let ref = fileAppenderRefs[self.fileUrl] else {
-      return
-    }
-
-    guard ref > 1 else {
-      fileAppenderRefs.removeValue(forKey: self.fileUrl)
-      return
-    }
-
-    fileAppenderRefs[self.fileUrl] = ref - 1
+    self.appender = appender
   }
 
   func hr(file: String = #file, line: Int = #line, function: String = #function) {
@@ -171,21 +122,19 @@ class FileLogger {
     self.log(message, level: .fault, file: file, line: line, function: function)
   }
 
-  func log<T>(_ message: T, level: Level = .default,
+  func log<T>(_ message: T, level: LogContext.Level = .default,
               file: String = #file, line: Int = #line, function: String = #function) {
 
     guard self.shouldLogDebug else {
       return
     }
 
-    queue.async {
-      let timestamp = self.logDateFormatter.string(from: Date())
-      let strMsg = self.string(from: message)
+    let timestamp = self.logDateFormatter.string(from: Date())
+    let strMsg = self.string(from: message)
 
-      let logMsg = "\(timestamp) \(self.name) \(function) \(strMsg)"
-      let data = "[\(level.rawValue)] \(logMsg)\n".data(using: .utf8) ?? conversionError
-      self.fileAppender.write(data)
-    }
+    let logMsg = "\(timestamp) \(self.name) \(function) \(strMsg)"
+    let data = "[\(level.rawValue)] \(logMsg)\n".data(using: .utf8) ?? conversionErrorMsg
+    self.appender.write(data)
   }
 
   fileprivate func string<T>(from obj: T) -> String {
@@ -197,15 +146,107 @@ class FileLogger {
     }
   }
 
-  fileprivate let fileUrl: URL
-  fileprivate let fileAppender: FileAppender
+  fileprivate let appender: Appender
   fileprivate let logDateFormatter = DateFormatter()
 }
 
-fileprivate let conversionError = "[ERROR] Could not convert log msg to Data!".data(using: .utf8)!
+protocol Appender {
+
+  func write(_ data: Data)
+}
+
+fileprivate class StdoutAppender: Appender {
+
+  init() {
+    self.handle = .standardOutput
+  }
+
+  deinit {
+    self.handle.closeFile()
+  }
+
+  func write(_ data: Data) {
+    self.queue.async {
+      self.handle.write(data)
+    }
+  }
+
+  fileprivate let handle: FileHandle
+
+  fileprivate let queue = DispatchQueue(label: String(describing: StdoutAppender.self), qos: .background)
+}
+
+fileprivate class FileAppender: Appender {
+
+  init(with fileUrl: URL, manager: FileAppenderManager) {
+    guard fileUrl.isFileURL else {
+      preconditionFailure("\(fileUrl) must be a file URL!")
+    }
+
+    self.queue = DispatchQueue(label: self.uuid, qos: .background)
+    self.fileUrl = fileUrl
+    self.manager = manager
+    self.fileDateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-SSS"
+    self.setupFileHandle(at: fileUrl)
+  }
+
+  deinit {
+    self.fileHandle.closeFile()
+    self.manager?.deregisterFileAppender(for: self.fileUrl)
+  }
+
+  func write(_ data: Data) {
+    queue.async {
+      self.fileHandle.write(data)
+
+      if self.fileHandle.offsetInFile >= maxFileSize {
+        self.archiveLogFile()
+      }
+    }
+  }
+
+  fileprivate let uuid = UUID().uuidString
+
+  fileprivate let fileUrl: URL
+  fileprivate weak var manager: FileAppenderManager?
+  fileprivate var fileHandle = FileHandle.standardOutput
+  fileprivate let fileDateFormatter = DateFormatter()
+
+  fileprivate let queue: DispatchQueue
+
+  fileprivate func setupFileHandle(at fileUrl: URL) {
+    if !fileManager.fileExists(atPath: fileUrl.path) {
+      fileManager.createFile(atPath: fileUrl.path, contents: nil)
+    }
+
+    if let fileHandle = try? FileHandle(forWritingTo: fileUrl) {
+      self.fileHandle = fileHandle
+      self.fileHandle.seekToEndOfFile()
+    } else {
+      NSLog("[ERROR] Could not get handle for \(fileUrl), defaulting to STDOUT")
+      self.fileHandle = FileHandle.standardOutput
+    }
+  }
+
+  fileprivate func archiveLogFile() {
+    self.fileHandle.closeFile()
+
+    do {
+      let fileTimestamp = self.fileDateFormatter.string(from: Date())
+      let fileName = self.fileUrl.deletingPathExtension().lastPathComponent
+      let archiveFileName = "\(fileName)-\(fileTimestamp).\(self.fileUrl.pathExtension)"
+      let archiveFileUrl = self.fileUrl
+        .deletingLastPathComponent().appendingPathComponent(archiveFileName)
+
+      try fileManager.moveItem(at: self.fileUrl, to: archiveFileUrl)
+    } catch let error as NSError {
+      NSLog("[ERROR] Could not archive log file: \(error)")
+    }
+
+    self.setupFileHandle(at: self.fileUrl)
+  }
+}
+
+fileprivate let conversionErrorMsg = "[ERROR] Could not convert log msg to Data!".data(using: .utf8)!
 fileprivate let fileManager = FileManager.default
 fileprivate let maxFileSize: UInt64 = 4 * 1024 * 1024
-fileprivate let queue = DispatchQueue(label: "logger", qos: .background)
-fileprivate let fileAppendersAccess = NSRecursiveLock()
-fileprivate var fileAppenders: [URL: FileAppender] = [:]
-fileprivate var fileAppenderRefs: [URL: Int] = [:]

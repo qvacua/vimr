@@ -485,9 +485,9 @@
 		4B2A2C061D0352CB0074CE9A /* NeoVimUiBridgeProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimUiBridgeProtocol.h; sourceTree = "<group>"; };
 		4B2A2C0D1D0353750074CE9A /* Bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bridge.h; sourceTree = "<group>"; };
 		4B337FBA1DEB76F20020ADD2 /* CocoaFontAwesome.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaFontAwesome.framework; path = Carthage/Build/Mac/CocoaFontAwesome.framework; sourceTree = SOURCE_ROOT; };
-		4B37ADB81D6E471B00970D55 /* vimr */ = {isa = PBXFileReference; fileEncoding = 1; lastKnownFileType = text.script.python; path = vimr; sourceTree = "<group>"; };
+		4B37ADB81D6E471B00970D55 /* vimr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = vimr; sourceTree = "<group>"; };
 		4B3965351DEB21300082D3C1 /* InnterToolBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InnterToolBar.swift; path = Workspace/InnterToolBar.swift; sourceTree = "<group>"; };
-		4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */ = {isa = PBXFileReference; fileEncoding = 1; lastKnownFileType = text; path = sparkle_pub.pem; sourceTree = "<group>"; };
+		4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sparkle_pub.pem; sourceTree = "<group>"; };
 		4B401B131D0454DC00D99EDC /* PureLayout.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureLayout.framework; path = Carthage/Build/Mac/PureLayout.framework; sourceTree = SOURCE_ROOT; };
 		4B401B191D046E0600D99EDC /* NeoVimViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimViewDelegate.swift; sourceTree = "<group>"; };
 		4B4192171D0C52D700A0BEB2 /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
@@ -1803,7 +1803,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 225;
+				DYLIB_CURRENT_VERSION = 226;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1828,7 +1828,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 225;
+				DYLIB_CURRENT_VERSION = 226;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2065,7 +2065,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 225;
+				CURRENT_PROJECT_VERSION = 226;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -2115,7 +2115,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 225;
+				CURRENT_PROJECT_VERSION = 226;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
