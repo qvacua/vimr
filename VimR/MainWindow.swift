@@ -93,6 +93,35 @@ class MainWindow: NSObject,
   }
 
   let uuid: String
+  let emit: (UuidAction<Action>) -> Void
+
+  let windowController: NSWindowController
+  var window: NSWindow {
+    return self.windowController.window!
+  }
+
+  let workspace: Workspace
+  let neoVimView: NeoVimView
+
+  let scrollDebouncer = Debouncer<Action>(interval: 0.75)
+  let cursorDebouncer = Debouncer<Action>(interval: 0.75)
+  var editorPosition = Marked(Position.beginning)
+
+  let tools: [Tools: WorkspaceTool]
+
+  var previewContainer: WorkspaceTool?
+  var fileBrowserContainer: WorkspaceTool?
+  var openedFileListContainer: WorkspaceTool?
+  var htmlPreviewContainer: WorkspaceTool?
+
+  var theme = Theme.default
+
+  var titlebarThemed = false
+  var repIcon: NSButton?
+  var titleView: NSTextField?
+
+  var isClosing = false
+  let cliPipePath: String?
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
@@ -286,6 +315,10 @@ class MainWindow: NSObject,
     self.window.makeFirstResponder(self.neoVimView)
   }
 
+  func uuidAction(for action: Action) -> UuidAction<Action> {
+    return UuidAction(uuid: self.uuid, action: action)
+  }
+
   func show() {
     self.windowController.showWindow(self)
   }
@@ -304,15 +337,9 @@ class MainWindow: NSObject,
     self.emit(uuidAction(for: .setTheme(theme)))
   }
 
-  fileprivate let emit: (UuidAction<Action>) -> Void
   fileprivate let disposeBag = DisposeBag()
 
   fileprivate var currentBuffer: NeoVimBuffer?
-
-  fileprivate let windowController: NSWindowController
-  fileprivate var window: NSWindow {
-    return self.windowController.window!
-  }
 
   fileprivate var defaultFont = NeoVimView.defaultFont
   fileprivate var linespacing = NeoVimView.defaultLinespacing
@@ -320,15 +347,6 @@ class MainWindow: NSObject,
 
   fileprivate let fontManager = NSFontManager.shared()
 
-  fileprivate let workspace: Workspace
-  fileprivate let neoVimView: NeoVimView
-
-  fileprivate var previewContainer: WorkspaceTool?
-  fileprivate var fileBrowserContainer: WorkspaceTool?
-  fileprivate var openedFileListContainer: WorkspaceTool?
-  fileprivate var htmlPreviewContainer: WorkspaceTool?
-
-  fileprivate var editorPosition = Marked(Position.beginning)
   fileprivate var previewPosition = Marked(Position.beginning)
 
   fileprivate var preview: PreviewTool?
@@ -336,31 +354,13 @@ class MainWindow: NSObject,
   fileprivate var fileBrowser: FileBrowser?
   fileprivate var openedFileList: OpenedFileList?
 
-  fileprivate let tools: [Tools: WorkspaceTool]
-
   fileprivate var usesTheme = true
   fileprivate var lastThemeMark = Token()
-
-  fileprivate let scrollDebouncer = Debouncer<Action>(interval: 0.75)
-  fileprivate let cursorDebouncer = Debouncer<Action>(interval: 0.75)
-
-  fileprivate var isClosing = false
-  fileprivate let cliPipePath: String?
-
-  fileprivate var theme = Theme.default
-
-  fileprivate var titlebarThemed = false
-  fileprivate var repIcon: NSButton?
-  fileprivate var titleView: NSTextField?
 
   fileprivate func updateNeoVimAppearance() {
     self.neoVimView.font = self.defaultFont
     self.neoVimView.linespacing = self.linespacing
     self.neoVimView.usesLigatures = self.usesLigatures
-  }
-
-  fileprivate func uuidAction(for action: Action) -> UuidAction<Action> {
-    return UuidAction(uuid: self.uuid, action: action)
   }
 
   fileprivate func setWorkspaceTheme(with theme: Theme) {
@@ -416,523 +416,3 @@ class MainWindow: NSObject,
     self.workspace.autoPinEdgesToSuperviewEdges()
   }
 }
-
-// MARK: - Custom title
-extension MainWindow {
-
-  fileprivate func themeTitlebar(grow: Bool) {
-    if self.window.styleMask.contains(.fullScreen) {
-      return
-    }
-
-    let prevFirstResponder = self.window.firstResponder
-
-    self.window.titlebarAppearsTransparent = true
-
-    self.workspace.removeFromSuperview()
-
-    self.set(repUrl: self.window.representedURL, themed: true)
-
-    self.window.contentView?.addSubview(self.workspace)
-    self.workspace.autoPinEdge(toSuperviewEdge: .top, withInset: 22)
-    self.workspace.autoPinEdge(toSuperviewEdge: .right)
-    self.workspace.autoPinEdge(toSuperviewEdge: .bottom)
-    self.workspace.autoPinEdge(toSuperviewEdge: .left)
-
-    self.titlebarThemed = true
-
-    self.window.makeFirstResponder(prevFirstResponder)
-  }
-
-  fileprivate func unthemeTitlebar(dueFullScreen: Bool) {
-    self.clearCustomTitle()
-
-    guard let contentView = self.window.contentView else {
-      return
-    }
-
-    let prevFrame = window.frame
-
-    window.titlebarAppearsTransparent = false
-
-    self.workspace.removeFromSuperview()
-
-    self.window.titleVisibility = .visible
-    self.window.styleMask.remove(.fullSizeContentView)
-
-    self.set(repUrl: self.window.representedURL, themed: false)
-
-    contentView.addSubview(self.workspace)
-    self.workspace.autoPinEdgesToSuperviewEdges()
-
-    if !dueFullScreen {
-      self.window.setFrame(prevFrame, display: true, animate: false)
-      self.titlebarThemed = false
-    }
-  }
-
-  fileprivate func clearCustomTitle() {
-    self.titleView?.removeFromSuperview()
-    self.repIcon?.removeFromSuperview()
-
-    self.titleView = nil
-    self.repIcon = nil
-  }
-
-  fileprivate func internalSetRepUrl(_ url: URL?) {
-    self.window.representedURL = nil
-    self.window.representedURL = url
-  }
-
-  fileprivate func set(repUrl url: URL?, themed: Bool) {
-    if self.window.styleMask.contains(.fullScreen) || themed == false {
-      self.internalSetRepUrl(url)
-      return
-    }
-
-    let prevFirstResponder = self.window.firstResponder
-    let prevFrame = self.window.frame
-
-    self.clearCustomTitle()
-
-    self.window.titleVisibility = .visible
-    self.internalSetRepUrl(url)
-
-    guard let contentView = self.window.contentView else {
-      return
-    }
-
-    self.window.titleVisibility = .hidden
-    self.window.styleMask.insert(.fullSizeContentView)
-
-    let title = NSTextField(forAutoLayout: ())
-    title.isEditable = false
-    title.isSelectable = false
-    title.isBordered = false
-    title.isBezeled = false
-    title.backgroundColor = .clear
-    title.textColor = self.theme.foreground
-    title.stringValue = self.window.title
-    contentView.addSubview(title)
-    title.autoPinEdge(toSuperviewEdge: .top, withInset: 3)
-
-    self.titleView = title
-
-    if let button = self.window.standardWindowButton(.documentIconButton) {
-      button.removeFromSuperview() // remove the rep icon from the original superview and add it to content view
-      contentView.addSubview(button)
-      button.autoSetDimension(.width, toSize: 16)
-      button.autoSetDimension(.height, toSize: 16)
-      button.autoPinEdge(toSuperviewEdge: .top, withInset: 3)
-
-      // Center the rep icon and the title side by side in the content view:
-      // rightView.left = leftView.right + gap
-      // rightView.right = parentView.centerX + (leftView.width + gap + rightView.width) / 2 - 4
-      // The (-4) at the end is an empirical value...
-      contentView.addConstraint(NSLayoutConstraint(item: title, attribute: .left,
-                                                   relatedBy: .equal,
-                                                   toItem: button, attribute: .right,
-                                                   multiplier: 1,
-                                                   constant: repIconToTitleGap))
-      contentView.addConstraint(
-        // Here we use title.intrinsicContentSize instead of title.frame because title.frame is still zero.
-        NSLayoutConstraint(
-          item: title, attribute: .right,
-          relatedBy: .equal,
-          toItem: contentView, attribute: .centerX,
-          multiplier: 1,
-          constant: -4 + (button.frame.width + repIconToTitleGap + title.intrinsicContentSize.width) / 2
-        )
-      )
-
-      self.repIcon = button
-    } else {
-      title.autoAlignAxis(toSuperviewAxis: .vertical)
-    }
-
-    self.window.setFrame(prevFrame, display: true, animate: false)
-    self.window.makeFirstResponder(prevFirstResponder)
-  }
-}
-
-// MARK: - NeoVimViewDelegate
-
-extension MainWindow {
-
-  func neoVimStopped() {
-    if self.isClosing {
-      return
-    }
-
-    self.isClosing = true
-
-    // If we close the window in the full screen mode, either by clicking the close button or by invoking :q
-    // the main thread crashes. We exit the full screen mode here as a quick and dirty hack.
-    if self.window.styleMask.contains(.fullScreen) {
-      self.window.toggleFullScreen(nil)
-    }
-
-    self.windowController.close()
-    self.set(dirtyStatus: false)
-    self.emit(self.uuidAction(for: .close))
-
-    if let cliPipePath = self.cliPipePath {
-      let fd = Darwin.open(cliPipePath, O_WRONLY)
-      guard fd != -1 else {
-        return
-      }
-
-      let handle = FileHandle(fileDescriptor: fd)
-      handle.closeFile()
-      _ = Darwin.close(fd)
-    }
-  }
-
-  func set(title: String) {
-    self.window.title = title
-    self.set(repUrl: self.window.representedURL, themed: self.titlebarThemed)
-  }
-
-  func set(dirtyStatus: Bool) {
-    self.emit(self.uuidAction(for: .setDirtyStatus(dirtyStatus)))
-  }
-
-  func cwdChanged() {
-    self.emit(self.uuidAction(for: .cd(to: self.neoVimView.cwd)))
-  }
-
-  func bufferListChanged() {
-    let buffers = self.neoVimView.allBuffers()
-    self.emit(self.uuidAction(for: .setBufferList(buffers)))
-  }
-
-  func currentBufferChanged(_ currentBuffer: NeoVimBuffer) {
-    self.emit(self.uuidAction(for: .setCurrentBuffer(currentBuffer)))
-  }
-
-  func tabChanged() {
-    guard let currentBuffer = self.neoVimView.currentBuffer() else {
-      return
-    }
-
-    self.currentBufferChanged(currentBuffer)
-  }
-
-  func colorschemeChanged(to neoVimTheme: NeoVimView.Theme) {
-    self.emit(uuidAction(for: .setTheme(Theme(neoVimTheme))))
-  }
-
-  func ipcBecameInvalid(reason: String) {
-    let alert = NSAlert()
-    alert.addButton(withTitle: "Close")
-    alert.messageText = "Sorry, an error occurred."
-    alert.informativeText = "VimR encountered an error from which it cannot recover. This window will now close.\n"
-                            + reason
-    alert.alertStyle = .critical
-    alert.beginSheetModal(for: self.window) { response in
-      self.windowController.close()
-    }
-  }
-
-  func scroll() {
-    self.scrollDebouncer.call(.scroll(to: Marked(self.neoVimView.currentPosition)))
-  }
-
-  func cursor(to position: Position) {
-    if position == self.editorPosition.payload {
-      return
-    }
-
-    self.editorPosition = Marked(position)
-    self.cursorDebouncer.call(.setCursor(to: self.editorPosition))
-  }
-}
-
-// MARK: - NSWindowDelegate
-
-extension MainWindow {
-
-  func windowWillEnterFullScreen(_: Notification) {
-    self.unthemeTitlebar(dueFullScreen: true)
-  }
-
-  func windowDidExitFullScreen(_: Notification) {
-    if self.titlebarThemed {
-      self.themeTitlebar(grow: true)
-    }
-  }
-
-  func windowDidBecomeMain(_ notification: Notification) {
-    self.emit(self.uuidAction(for: .becomeKey(isFullScreen: self.window.styleMask.contains(.fullScreen))))
-    self.neoVimView.didBecomeMain()
-  }
-
-  func windowDidResignMain(_ notification: Notification) {
-    self.neoVimView.didResignMain()
-  }
-
-  func windowDidMove(_ notification: Notification) {
-    self.emit(self.uuidAction(for: .frameChanged(to: self.window.frame)))
-  }
-
-  func windowDidResize(_ notification: Notification) {
-    if self.window.styleMask.contains(.fullScreen) {
-      return
-    }
-
-    self.emit(self.uuidAction(for: .frameChanged(to: self.window.frame)))
-  }
-
-  func windowShouldClose(_: Any) -> Bool {
-    guard self.neoVimView.isCurrentBufferDirty() else {
-      self.neoVimView.closeCurrentTab()
-      return false
-    }
-
-    let alert = NSAlert()
-    alert.addButton(withTitle: "Cancel")
-    alert.addButton(withTitle: "Discard and Close")
-    alert.messageText = "The current buffer has unsaved changes!"
-    alert.alertStyle = .warning
-    alert.beginSheetModal(for: self.window, completionHandler: { response in
-      if response == NSAlertSecondButtonReturn {
-        self.neoVimView.closeCurrentTabWithoutSaving()
-      }
-    })
-
-    return false
-  }
-}
-
-// MARK: - File Menu Item Actions
-
-extension MainWindow {
-
-  @IBAction func newTab(_ sender: Any?) {
-    self.neoVimView.newTab()
-  }
-
-  @IBAction func openDocument(_ sender: Any?) {
-    let panel = NSOpenPanel()
-    panel.canChooseDirectories = true
-    panel.allowsMultipleSelection = true
-    panel.beginSheetModal(for: self.window) { result in
-      guard result == NSFileHandlingPanelOKButton else {
-        return
-      }
-
-      let urls = panel.urls
-      if self.neoVimView.allBuffers().count == 1 {
-        let isTransient = self.neoVimView.allBuffers().first?.isTransient ?? false
-
-        if isTransient {
-          self.neoVimView.cwd = FileUtils.commonParent(of: urls)
-        }
-      }
-      self.neoVimView.open(urls: urls)
-    }
-  }
-
-  @IBAction func openQuickly(_ sender: Any?) {
-    self.emit(self.uuidAction(for: .openQuickly))
-  }
-
-  @IBAction func saveDocument(_ sender: Any?) {
-    guard let curBuf = self.neoVimView.currentBuffer() else {
-      return
-    }
-
-    if curBuf.url == nil {
-      self.savePanelSheet { self.neoVimView.saveCurrentTab(url: $0) }
-      return
-    }
-
-    self.neoVimView.saveCurrentTab()
-  }
-
-  @IBAction func saveDocumentAs(_ sender: Any?) {
-    if self.neoVimView.currentBuffer() == nil {
-      return
-    }
-
-    self.savePanelSheet { url in
-      self.neoVimView.saveCurrentTab(url: url)
-
-      if self.neoVimView.isCurrentBufferDirty() {
-        self.neoVimView.openInNewTab(urls: [url])
-      } else {
-        self.neoVimView.openInCurrentTab(url: url)
-      }
-    }
-  }
-
-  fileprivate func savePanelSheet(action: @escaping (URL) -> Void) {
-    let panel = NSSavePanel()
-    panel.beginSheetModal(for: self.window) { result in
-      guard result == NSFileHandlingPanelOKButton else {
-        return
-      }
-
-      let showAlert: () -> Void = {
-        let alert = NSAlert()
-        alert.addButton(withTitle: "OK")
-        alert.messageText = "Invalid File Name"
-        alert.informativeText = "The file name you have entered cannot be used. Please use a different name."
-        alert.alertStyle = .warning
-
-        alert.runModal()
-      }
-
-      guard let url = panel.url else {
-        showAlert()
-        return
-      }
-
-      action(url)
-    }
-  }
-}
-
-// MARK: - Tools Menu Item Actions
-
-extension MainWindow {
-
-  @IBAction func toggleAllTools(_ sender: Any?) {
-    self.workspace.toggleAllTools()
-    self.focusNeoVimView(self)
-
-    self.emit(self.uuidAction(for: .toggleAllTools(self.workspace.isAllToolsVisible)))
-  }
-
-  @IBAction func toggleToolButtons(_ sender: Any?) {
-    self.workspace.toggleToolButtons()
-    self.emit(self.uuidAction(for: .toggleToolButtons(self.workspace.isToolButtonsVisible)))
-  }
-
-  @IBAction func toggleFileBrowser(_ sender: Any?) {
-    let fileBrowser = self.fileBrowserContainer
-
-    if fileBrowser?.isSelected == true {
-      if fileBrowser?.view.isFirstResponder == true {
-        fileBrowser?.toggle()
-        self.focusNeoVimView(self)
-      } else {
-        self.emit(self.uuidAction(for: .focus(.fileBrowser)))
-      }
-
-      return
-    }
-
-    fileBrowser?.toggle()
-    self.emit(self.uuidAction(for: .focus(.fileBrowser)))
-  }
-
-  @IBAction func focusNeoVimView(_: Any?) {
-//    self.window.makeFirstResponder(self.neoVimView)
-    self.emit(self.uuidAction(for: .focus(.neoVimView)))
-  }
-}
-
-// MARK: - WorkspaceDelegate
-
-extension MainWindow {
-
-  func resizeWillStart(workspace: Workspace, tool: WorkspaceTool?) {
-    self.neoVimView.enterResizeMode()
-  }
-
-  func resizeDidEnd(workspace: Workspace, tool: WorkspaceTool?) {
-    self.neoVimView.exitResizeMode()
-
-    if let workspaceTool = tool, let toolIdentifier = self.toolIdentifier(for: workspaceTool) {
-      self.emit(self.uuidAction(for: .setState(for: toolIdentifier, with: workspaceTool)))
-    }
-  }
-
-  func toggled(tool: WorkspaceTool) {
-    if let toolIdentifier = self.toolIdentifier(for: tool) {
-      self.emit(self.uuidAction(for: .setState(for: toolIdentifier, with: tool)))
-    }
-  }
-
-  func moved(tool: WorkspaceTool) {
-    let tools = self.workspace.orderedTools.flatMap { (tool: WorkspaceTool) -> (Tools, WorkspaceTool)? in
-      guard let toolId = self.toolIdentifier(for: tool) else {
-        return nil
-      }
-
-      return (toolId, tool)
-    }
-
-    self.emit(self.uuidAction(for: .setToolsState(tools)))
-  }
-
-  fileprivate func toolIdentifier(for tool: WorkspaceTool) -> Tools? {
-    if tool == self.fileBrowserContainer {
-      return .fileBrowser
-    }
-
-    if tool == self.openedFileListContainer {
-      return .openedFilesList
-    }
-
-    if tool == self.previewContainer {
-      return .preview
-    }
-
-    if tool == self.htmlPreviewContainer {
-      return .htmlPreview
-    }
-
-    return nil
-  }
-}
-
-// MARK: - NSUserInterfaceValidationsProtocol
-
-extension MainWindow {
-
-  func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
-    let canSave = self.neoVimView.currentBuffer() != nil
-    let canSaveAs = canSave
-    let canOpen = canSave
-    let canOpenQuickly = canSave
-    let canFocusNeoVimView = self.window.firstResponder != self.neoVimView
-    let canToggleFileBrowser = self.tools.keys.contains(.fileBrowser)
-    let canToggleTools = !self.tools.isEmpty
-
-    guard let action = item.action else {
-      return true
-    }
-
-    switch action {
-
-    case #selector(toggleAllTools(_:)), #selector(toggleToolButtons(_:)):
-      return canToggleTools
-
-    case #selector(toggleFileBrowser(_:)):
-      return canToggleFileBrowser
-
-    case #selector(focusNeoVimView(_:)):
-      return canFocusNeoVimView
-
-    case #selector(openDocument(_:)):
-      return canOpen
-
-    case #selector(openQuickly(_:)):
-      return canOpenQuickly
-
-    case #selector(saveDocument(_:)):
-      return canSave
-
-    case #selector(saveDocumentAs(_:)):
-      return canSaveAs
-
-    default:
-      return true
-
-    }
-  }
-}
-
-fileprivate let repIconToTitleGap = CGFloat(4.0)

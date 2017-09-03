@@ -14,7 +14,6 @@
 		1929B0BE6C984A25E8D2F128 /* ImageAndTextTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDC3F82CB4CB4FE56D1B /* ImageAndTextTableCell.swift */; };
 		1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */; };
 		1929B0F599D1F62C7BE53D2C /* HttpServerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1DC584C89C477E83FA2 /* HttpServerService.swift */; };
-		1929B0FF696312F754BC96E2 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD8CBADC191CF8C85309 /* MainWindow.swift */; };
 		1929B17F6D4F0DF4F86544C4 /* ThemedTableSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD2CA8DD198A6BCDBCB7 /* ThemedTableSubviews.swift */; };
 		1929B1837C750CADB3A5BCB9 /* OpenQuicklyFileViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1558455B3A74D93EF2A /* OpenQuicklyFileViewRow.swift */; };
 		1929B18A0D7C7407C51DB642 /* DataWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB6CFF4CC0B5E8B00C62 /* DataWrapper.m */; };
@@ -25,6 +24,7 @@
 		1929B333855A5406C400DA92 /* OpenQuicklyFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEDE7F92BC7B49E802AF /* OpenQuicklyFilterOperation.swift */; };
 		1929B3557317755A43513B17 /* OpenQuicklyWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B71A92C24FEFE79A851E /* OpenQuicklyWindow.swift */; };
 		1929B370A275F8C70AD5AA08 /* UrlCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B11D672134E52A256A7F /* UrlCommonsTest.swift */; };
+		1929B3A6C332FFAAEC7FD219 /* MainWindow+CustomTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B71B4BB6550F5BC6D4CF /* MainWindow+CustomTitle.swift */; };
 		1929B3AC66EFE35D68C020E3 /* PreviewToolReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFB0F294F3714D5E095F /* PreviewToolReducer.swift */; };
 		1929B3F5743967125F357C9F /* Matcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEEB33113B0E33C3830F /* Matcher.swift */; };
 		1929B462CD4935AFF6D69457 /* FileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7CB4863F80230C32D3C /* FileItem.swift */; };
@@ -34,6 +34,7 @@
 		1929B4F0612224E594E89B92 /* AppearancePref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0FBFB766042CF06E463 /* AppearancePref.swift */; };
 		1929B4FEE6EB56EF3F56B805 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B34FC23D805A8B29E8F7 /* Context.swift */; };
 		1929B50D933A369A86A165DE /* AdvencedPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBE0A534F2F6009D31BE /* AdvencedPref.swift */; };
+		1929B5257DB27F03C6663482 /* MainWindow+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B067B3247675BCD09218 /* MainWindow+Actions.swift */; };
 		1929B53876E6952D378C2B30 /* ScoredFileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDF9EBAF1D9D44399045 /* ScoredFileItem.swift */; };
 		1929B542A071BD03C846F6EF /* PrefUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8241CDE58F7AAF89AE4 /* PrefUtils.swift */; };
 		1929B5543B1E31A26096E656 /* FileMonitorReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B04EC69F616EEFAF5F96 /* FileMonitorReducer.swift */; };
@@ -52,6 +53,7 @@
 		1929B71610FF1DC6E459BA49 /* PreviewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8EF9A9F5ACC175452BD /* PreviewUtils.swift */; };
 		1929B728262BAA14FC93F6AC /* NeoVimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF00B466B40629C2AABE /* NeoVimView.swift */; };
 		1929B7993C8DB7F59447DF5F /* NeoVimView+Draw.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B19207FBC2EBDF1B88F3 /* NeoVimView+Draw.swift */; };
+		1929B8DDACEB28E6672AEC42 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6E01216D49BB9F3B6A3 /* MainWindow.swift */; };
 		1929B8E90A1378E494D481E7 /* PrefUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7BB3E4B3DC96284B686 /* PrefUtilsTest.swift */; };
 		1929B8FB248D71BF88A35761 /* PreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6C6C7792B05164B0216 /* PreviewTool.swift */; };
 		1929B9318D32146D58BB38EC /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
@@ -81,6 +83,7 @@
 		1929BDD4BFA4175D0A1B0BC3 /* NeoVimView+Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD8F08E21E3ECE9F84AB /* NeoVimView+Api.swift */; };
 		1929BDFDBDA7180D02ACB37E /* RxSwiftCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6C215ACCBE12672A8D7 /* RxSwiftCommonsTest.swift */; };
 		1929BE0DAEE9664C5BCFA211 /* States.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB6608B4F0E037CA0F4C /* States.swift */; };
+		1929BE0F64A6CE5BCE2A5092 /* MainWindow+Delegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B714EB137AE448CE8ABD /* MainWindow+Delegates.swift */; };
 		1929BE2F3E0182CC51F2763A /* ThemedTableSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD2CA8DD198A6BCDBCB7 /* ThemedTableSubviews.swift */; };
 		1929BE407A667356E29386EF /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B96384F1ED979BD001C556F /* Logger.swift */; };
 		1929BEAE0592096BC1191B67 /* PrefPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B07A4A9209C88380E015 /* PrefPane.swift */; };
@@ -404,6 +407,7 @@
 /* Begin PBXFileReference section */
 		1929B02440BC99C42F9EBD45 /* NetUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetUtils.m; sourceTree = "<group>"; };
 		1929B04EC69F616EEFAF5F96 /* FileMonitorReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileMonitorReducer.swift; sourceTree = "<group>"; };
+		1929B067B3247675BCD09218 /* MainWindow+Actions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainWindow+Actions.swift"; sourceTree = "<group>"; };
 		1929B07A4A9209C88380E015 /* PrefPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefPane.swift; sourceTree = "<group>"; };
 		1929B0EB3F49C42A57D083AF /* GeneralPrefReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralPrefReducer.swift; sourceTree = "<group>"; };
 		1929B0EEBE4A765934AF8335 /* DataWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataWrapper.h; sourceTree = "<group>"; };
@@ -435,8 +439,11 @@
 		1929B6AD3396160AA2C46919 /* Debouncer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
 		1929B6C215ACCBE12672A8D7 /* RxSwiftCommonsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommonsTest.swift; sourceTree = "<group>"; };
 		1929B6C6C7792B05164B0216 /* PreviewTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewTool.swift; sourceTree = "<group>"; };
+		1929B6E01216D49BB9F3B6A3 /* MainWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
 		1929B7039C5689CE45F53888 /* AdvancedPrefReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedPrefReducer.swift; sourceTree = "<group>"; };
+		1929B714EB137AE448CE8ABD /* MainWindow+Delegates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainWindow+Delegates.swift"; sourceTree = "<group>"; };
 		1929B71A92C24FEFE79A851E /* OpenQuicklyWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyWindow.swift; sourceTree = "<group>"; };
+		1929B71B4BB6550F5BC6D4CF /* MainWindow+CustomTitle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainWindow+CustomTitle.swift"; sourceTree = "<group>"; };
 		1929B7A68B7109CEFAF105E8 /* AppDelegateReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegateReducer.swift; sourceTree = "<group>"; };
 		1929B7BB3E4B3DC96284B686 /* PrefUtilsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefUtilsTest.swift; sourceTree = "<group>"; };
 		1929B7CB4863F80230C32D3C /* FileItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
@@ -468,7 +475,6 @@
 		1929BD2CA8DD198A6BCDBCB7 /* ThemedTableSubviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedTableSubviews.swift; sourceTree = "<group>"; };
 		1929BD4149D5A25C82064DD8 /* UiRoot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiRoot.swift; sourceTree = "<group>"; };
 		1929BD83A13BF133741766CC /* MainWindowReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowReducer.swift; sourceTree = "<group>"; };
-		1929BD8CBADC191CF8C85309 /* MainWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
 		1929BD8F08E21E3ECE9F84AB /* NeoVimView+Api.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NeoVimView+Api.swift"; sourceTree = "<group>"; };
 		1929BDC3F82CB4CB4FE56D1B /* ImageAndTextTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageAndTextTableCell.swift; sourceTree = "<group>"; };
 		1929BDC8F5D48578A90236E9 /* FileBrowserReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBrowserReducer.swift; sourceTree = "<group>"; };
@@ -731,7 +737,6 @@
 		1929B32401E8914DE9BF76CA /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				1929BD8CBADC191CF8C85309 /* MainWindow.swift */,
 				1929BD4149D5A25C82064DD8 /* UiRoot.swift */,
 				1929B6C6C7792B05164B0216 /* PreviewTool.swift */,
 				1929B365A6434354B568B04F /* FileMonitor.swift */,
@@ -741,6 +746,7 @@
 				1929BD9EEC30C0A498877E5B /* Open Quickly */,
 				1929B85023B042C485409CE1 /* HtmlPreviewTool.swift */,
 				1929BC2F05E9A5C0DB039739 /* Theme.swift */,
+				1929BBEE2FFA397A0691CC25 /* MainWindow */,
 			);
 			name = Components;
 			sourceTree = "<group>";
@@ -808,6 +814,17 @@
 				1929B694508FB5FDE607513A /* ToolsPrefReducer.swift */,
 			);
 			name = Preferences;
+			sourceTree = "<group>";
+		};
+		1929BBEE2FFA397A0691CC25 /* MainWindow */ = {
+			isa = PBXGroup;
+			children = (
+				1929B71B4BB6550F5BC6D4CF /* MainWindow+CustomTitle.swift */,
+				1929B6E01216D49BB9F3B6A3 /* MainWindow.swift */,
+				1929B067B3247675BCD09218 /* MainWindow+Actions.swift */,
+				1929B714EB137AE448CE8ABD /* MainWindow+Delegates.swift */,
+			);
+			name = MainWindow;
 			sourceTree = "<group>";
 		};
 		1929BC56ADBA3275E7A0A598 /* Preferences */ = {
@@ -1689,7 +1706,6 @@
 				1929BE0DAEE9664C5BCFA211 /* States.swift in Sources */,
 				4BE149931EEF4792003DE5E2 /* Socket+Server.swift in Sources */,
 				1929B4FEE6EB56EF3F56B805 /* Context.swift in Sources */,
-				1929B0FF696312F754BC96E2 /* MainWindow.swift in Sources */,
 				4BE149901EEF4792003DE5E2 /* Scopes.swift in Sources */,
 				1929BD3878A3A47B8D685CD2 /* AppDelegateReducer.swift in Sources */,
 				1929BAFF1E011321D3186EE6 /* UiRoot.swift in Sources */,
@@ -1748,6 +1764,10 @@
 				1929BE2F3E0182CC51F2763A /* ThemedTableSubviews.swift in Sources */,
 				1929B6460862447A31B5B082 /* ImageAndTextTableCell.swift in Sources */,
 				1929BBE28654E4307AF1E2FD /* Theme.swift in Sources */,
+				1929B3A6C332FFAAEC7FD219 /* MainWindow+CustomTitle.swift in Sources */,
+				1929B8DDACEB28E6672AEC42 /* MainWindow.swift in Sources */,
+				1929B5257DB27F03C6663482 /* MainWindow+Actions.swift in Sources */,
+				1929BE0F64A6CE5BCE2A5092 /* MainWindow+Delegates.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
