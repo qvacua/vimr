@@ -425,6 +425,8 @@ extension MainWindow {
       return
     }
 
+    let prevFirstResponder = self.window.firstResponder
+
     self.window.titlebarAppearsTransparent = true
 
     self.workspace.removeFromSuperview()
@@ -438,6 +440,8 @@ extension MainWindow {
     self.workspace.autoPinEdge(toSuperviewEdge: .left)
 
     self.titlebarThemed = true
+
+    self.window.makeFirstResponder(prevFirstResponder)
   }
 
   fileprivate func unthemeTitlebar(dueFullScreen: Bool) {
@@ -487,6 +491,7 @@ extension MainWindow {
       return
     }
 
+    let prevFirstResponder = self.window.firstResponder
     let prevFrame = self.window.frame
 
     self.clearCustomTitle()
@@ -505,6 +510,7 @@ extension MainWindow {
     title.isEditable = false
     title.isSelectable = false
     title.isBordered = false
+    title.isBezeled = false
     title.backgroundColor = .clear
     title.textColor = self.theme.foreground
     title.stringValue = self.window.title
@@ -546,6 +552,7 @@ extension MainWindow {
     }
 
     self.window.setFrame(prevFrame, display: true, animate: false)
+    self.window.makeFirstResponder(prevFirstResponder)
   }
 }
 
