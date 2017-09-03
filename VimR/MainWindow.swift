@@ -8,27 +8,6 @@ import RxSwift
 import SwiftNeoVim
 import PureLayout
 
-func changeTheme(themePrefChanged: Bool, themeChanged: Bool, usesTheme: Bool,
-                 forTheme: () -> Void, forDefaultTheme: () -> Void) -> Bool {
-
-  if themePrefChanged && usesTheme {
-    forTheme()
-    return true
-  }
-
-  if themePrefChanged && !usesTheme {
-    forDefaultTheme()
-    return true
-  }
-
-  if !themePrefChanged && themeChanged && usesTheme {
-    forTheme()
-    return true
-  }
-
-  return false
-}
-
 class MainWindow: NSObject,
                   UiComponent,
                   NeoVimViewDelegate,
