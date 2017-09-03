@@ -237,25 +237,33 @@ class MainWindow: NSObject,
           let themePrefChanged = state.appearance.usesTheme != self.usesTheme
           let themeChanged = state.appearance.theme.mark != self.lastThemeMark
 
+          if themeChanged {
+            self.theme = state.appearance.theme.payload
+          }
+
           _ = changeTheme(
             themePrefChanged: themePrefChanged, themeChanged: themeChanged, usesTheme: usesTheme,
             forTheme: {
-              self.window.titlebarAppearsTransparent = true
+              self.themeTitlebar(grow: !self.titlebarThemed)
               self.window.backgroundColor = state.appearance.theme.payload.background.brightening(by: 0.9)
 
               self.setWorkspaceTheme(with: state.appearance.theme.payload)
               self.lastThemeMark = state.appearance.theme.mark
             },
             forDefaultTheme: {
-              self.window.titlebarAppearsTransparent = false
+              self.unthemeTitlebar(dueFullScreen: false)
               self.window.backgroundColor = .windowBackgroundColor
               self.workspace.theme = .default
             })
 
           self.usesTheme = state.appearance.usesTheme
-
           self.currentBuffer = state.currentBuffer
-          self.window.representedURL = state.appearance.showsFileIcon ? self.currentBuffer?.url : nil
+
+          if state.appearance.showsFileIcon {
+            self.set(repUrl: self.currentBuffer?.url, themed: self.titlebarThemed)
+          } else {
+            self.set(repUrl: nil, themed: self.titlebarThemed)
+          }
 
           if self.defaultFont != state.appearance.font
              || self.linespacing != state.appearance.linespacing
@@ -339,6 +347,12 @@ class MainWindow: NSObject,
   fileprivate var isClosing = false
   fileprivate let cliPipePath: String?
 
+  fileprivate var theme = Theme.default
+
+  fileprivate var titlebarThemed = false
+  fileprivate var repIcon: NSButton?
+  fileprivate var titleView: NSTextField?
+
   fileprivate func updateNeoVimAppearance() {
     self.neoVimView.font = self.defaultFont
     self.neoVimView.linespacing = self.linespacing
@@ -403,6 +417,138 @@ class MainWindow: NSObject,
   }
 }
 
+// MARK: - Custom title
+extension MainWindow {
+
+  fileprivate func themeTitlebar(grow: Bool) {
+    if self.window.styleMask.contains(.fullScreen) {
+      return
+    }
+
+    self.window.titlebarAppearsTransparent = true
+
+    self.workspace.removeFromSuperview()
+
+    self.set(repUrl: self.window.representedURL, themed: true)
+
+    self.window.contentView?.addSubview(self.workspace)
+    self.workspace.autoPinEdge(toSuperviewEdge: .top, withInset: 22)
+    self.workspace.autoPinEdge(toSuperviewEdge: .right)
+    self.workspace.autoPinEdge(toSuperviewEdge: .bottom)
+    self.workspace.autoPinEdge(toSuperviewEdge: .left)
+
+    self.titlebarThemed = true
+  }
+
+  fileprivate func unthemeTitlebar(dueFullScreen: Bool) {
+    self.clearCustomTitle()
+
+    guard let contentView = self.window.contentView else {
+      return
+    }
+
+    let prevFrame = window.frame
+
+    window.titlebarAppearsTransparent = false
+
+    self.workspace.removeFromSuperview()
+
+    self.window.titleVisibility = .visible
+    self.window.styleMask.remove(.fullSizeContentView)
+
+    self.set(repUrl: self.window.representedURL, themed: false)
+
+    contentView.addSubview(self.workspace)
+    self.workspace.autoPinEdgesToSuperviewEdges()
+
+    if !dueFullScreen {
+      self.window.setFrame(prevFrame, display: true, animate: false)
+      self.titlebarThemed = false
+    }
+  }
+
+  fileprivate func clearCustomTitle() {
+    self.titleView?.removeFromSuperview()
+    self.repIcon?.removeFromSuperview()
+
+    self.titleView = nil
+    self.repIcon = nil
+  }
+
+  fileprivate func internalSetRepUrl(_ url: URL?) {
+    self.window.representedURL = nil
+    self.window.representedURL = url
+    self.window.title = url?.lastPathComponent ?? "Title"
+  }
+
+  fileprivate func set(repUrl url: URL?, themed: Bool) {
+    if self.window.styleMask.contains(.fullScreen) || themed == false {
+      self.internalSetRepUrl(url)
+      return
+    }
+
+    let prevFrame = self.window.frame
+
+    self.clearCustomTitle()
+
+    self.window.titleVisibility = .visible
+    self.internalSetRepUrl(url)
+
+    guard let contentView = self.window.contentView else {
+      return
+    }
+
+    self.window.titleVisibility = .hidden
+    self.window.styleMask.insert(.fullSizeContentView)
+
+    let title = NSTextField(forAutoLayout: ())
+    title.isEditable = false
+    title.isSelectable = false
+    title.isBordered = false
+    title.backgroundColor = .clear
+    title.textColor = self.theme.foreground
+    title.stringValue = self.window.title
+    contentView.addSubview(title)
+    title.autoPinEdge(toSuperviewEdge: .top, withInset: 3)
+
+    self.titleView = title
+
+    if let button = self.window.standardWindowButton(.documentIconButton) {
+      button.removeFromSuperview() // remove the rep icon from the original superview and add it to content view
+      contentView.addSubview(button)
+      button.autoSetDimension(.width, toSize: 16)
+      button.autoSetDimension(.height, toSize: 16)
+      button.autoPinEdge(toSuperviewEdge: .top, withInset: 3)
+
+      // Center the rep icon and the title side by side in the content view:
+      // rightView.left = leftView.right + gap
+      // rightView.right = parentView.centerX + (leftView.width + gap + rightView.width) / 2 - 4
+      // The (-4) at the end is an empirical value...
+      contentView.addConstraint(NSLayoutConstraint(item: title, attribute: .left,
+                                                   relatedBy: .equal,
+                                                   toItem: button, attribute: .right,
+                                                   multiplier: 1,
+                                                   constant: repIconToTitleGap))
+      contentView.addConstraint(
+        // Here we use title.intrinsicContentSize instead of title.frame because title.frame is still zero.
+        NSLayoutConstraint(
+          item: title, attribute: .right,
+          relatedBy: .equal,
+          toItem: contentView, attribute: .centerX,
+          multiplier: 1,
+          constant: -4 + (button.frame.width + repIconToTitleGap + title.intrinsicContentSize.width) / 2
+        )
+      )
+
+      self.repIcon = button
+    } else {
+      title.autoAlignAxis(toSuperviewAxis: .vertical)
+    }
+
+    self.window.setFrame(prevFrame, display: true, animate: false)
+  }
+}
+
 // MARK: - NeoVimViewDelegate
 
 extension MainWindow {
@@ -438,6 +584,7 @@ extension MainWindow {
 
   func set(title: String) {
     self.window.title = title
+    self.set(repUrl: self.window.representedURL, themed: self.titlebarThemed)
   }
 
   func set(dirtyStatus: Bool) {
@@ -498,6 +645,16 @@ extension MainWindow {
 // MARK: - NSWindowDelegate
 
 extension MainWindow {
+
+  func windowWillEnterFullScreen(_: Notification) {
+    self.unthemeTitlebar(dueFullScreen: true)
+  }
+
+  func windowDidExitFullScreen(_: Notification) {
+    if self.titlebarThemed {
+      self.themeTitlebar(grow: true)
+    }
+  }
 
   func windowDidBecomeMain(_ notification: Notification) {
     self.emit(self.uuidAction(for: .becomeKey(isFullScreen: self.window.styleMask.contains(.fullScreen))))
@@ -771,3 +928,5 @@ extension MainWindow {
     }
   }
 }
+
+fileprivate let repIconToTitleGap = CGFloat(4.0)
