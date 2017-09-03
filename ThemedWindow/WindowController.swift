@@ -1,13 +1,15 @@
 import Cocoa
 import PureLayout
 
+fileprivate let gap = CGFloat(4.0)
+
 class WindowController: NSWindowController, NSWindowDelegate {
 
   fileprivate var titlebarThemed = false
   fileprivate var repIcon: NSButton?
-  fileprivate let root = ColorView(bg: .green)
+  fileprivate var titleView: NSTextField?
 
-  @IBAction func themeTitlebar(_: Any?) {
+  fileprivate func themeTitlebar() {
     guard let window = self.window else {
       return
     }
@@ -16,22 +18,80 @@ class WindowController: NSWindowController, NSWindowDelegate {
       return
     }
 
-    self.repIcon?.removeFromSuperview()
     self.root.removeFromSuperview()
 
+    self.set(repUrl: window.representedURL, themed: true)
+
+    window.contentView?.addSubview(self.root)
+    self.root.autoPinEdge(toSuperviewEdge: .top, withInset: 22)
+    self.root.autoPinEdge(toSuperviewEdge: .right)
+    self.root.autoPinEdge(toSuperviewEdge: .bottom)
+    self.root.autoPinEdge(toSuperviewEdge: .left)
+
+    self.titlebarThemed = true
+  }
+
+  fileprivate func unthemeTitlebar(dueFullScreen: Bool) {
+    self.repIcon?.removeFromSuperview()
+    self.titleView?.removeFromSuperview()
+
+    self.repIcon = nil
+    self.titleView = nil
+
+    self.root.removeFromSuperview()
+
+    guard let window = self.window, let contentView = window.contentView else {
+      return
+    }
+
     window.titleVisibility = .visible
-    window.representedURL = URL(fileURLWithPath: "/Users/hat/greek.tex")
+    window.styleMask.remove(.fullSizeContentView)
 
-    guard let button = window.standardWindowButton(.documentIconButton) else {
-      NSLog("No button!")
+    self.set(repUrl: window.representedURL, themed: false)
+
+    contentView.addSubview(self.root)
+    self.root.autoPinEdgesToSuperviewEdges()
+
+    if !dueFullScreen {
+      self.titlebarThemed = false
+    }
+  }
+
+  func windowWillEnterFullScreen(_: Notification) {
+    self.unthemeTitlebar(dueFullScreen: true)
+  }
+
+  func windowDidExitFullScreen(_: Notification) {
+    if self.titlebarThemed {
+      self.themeTitlebar(nil)
+    }
+  }
+
+  fileprivate func set(repUrl url: URL?, themed: Bool) {
+    guard let window = self.window else {
       return
     }
 
-    guard let contentView = window.contentView else {
+    if window.styleMask.contains(.fullScreen) || themed == false {
+      window.representedURL = nil
+      window.representedURL = url
+
+      window.title = url?.lastPathComponent ?? "Title"
       return
     }
 
-    self.repIcon = button
+    self.titleView?.removeFromSuperview()
+    self.repIcon?.removeFromSuperview()
+
+    window.titleVisibility = .visible
+    window.representedURL = nil
+    window.representedURL = url
+    window.title = url?.lastPathComponent ?? "Title"
+
+    guard let button = window.standardWindowButton(.documentIconButton), let contentView = window.contentView else {
+      NSLog("No button or content view!")
+      return
+    }
 
     window.titleVisibility = .hidden
     window.styleMask.insert(.fullSizeContentView)
@@ -61,54 +121,13 @@ class WindowController: NSWindowController, NSWindowDelegate {
                                                  multiplier: 1,
                                                  constant: (button.frame.width + gap + title.frame.width) / 2))
 
-    contentView.addSubview(self.root)
-    self.root.autoPinEdge(toSuperviewEdge: .top, withInset: 22)
-    self.root.autoPinEdge(toSuperviewEdge: .right)
-    self.root.autoPinEdge(toSuperviewEdge: .bottom)
-    self.root.autoPinEdge(toSuperviewEdge: .left)
-
-    self.titlebarThemed = true
+    self.repIcon = button
+    self.titleView = title
   }
 
-  @IBAction func unthemeTitlebar(_: Any?) {
-    self.unthemeTitlebar(dueFullScreen: false)
-  }
+  // ====== >8 ======
 
-  fileprivate func unthemeTitlebar(dueFullScreen: Bool) {
-    self.repIcon?.removeFromSuperview()
-    self.repIcon = nil
-
-    self.root.removeFromSuperview()
-
-    guard let window = self.window else {
-      return
-    }
-
-    window.titleVisibility = .visible
-    window.styleMask.remove(.fullSizeContentView)
-    window.representedURL = URL(fileURLWithPath: "/Users/hat/big.txt")
-
-    guard let contentView = window.contentView else {
-      return
-    }
-
-    contentView.addSubview(self.root)
-    self.root.autoPinEdgesToSuperviewEdges()
-
-    if !dueFullScreen {
-      self.titlebarThemed = false
-    }
-  }
-
-  func windowWillEnterFullScreen(_: Notification) {
-    self.unthemeTitlebar(dueFullScreen: true)
-  }
-
-  func windowDidExitFullScreen(_: Notification) {
-    if self.titlebarThemed {
-      self.themeTitlebar(nil)
-    }
-  }
+  fileprivate let root = ColorView(bg: .green)
 
   override func windowDidLoad() {
     super.windowDidLoad()
@@ -127,6 +146,22 @@ class WindowController: NSWindowController, NSWindowDelegate {
 
     contentView.addSubview(self.root)
     self.root.autoPinEdgesToSuperviewEdges()
+  }
+
+  @IBAction func setRepUrl1(_: Any?) {
+    self.set(repUrl: URL(fileURLWithPath: "/Users/hat/big.txt"), themed: self.titlebarThemed)
+  }
+
+  @IBAction func setRepUrl2(_: Any?) {
+    self.set(repUrl: URL(fileURLWithPath: "/Users/hat/greek.tex"), themed: self.titlebarThemed)
+  }
+
+  @IBAction func themeTitlebar(_: Any?) {
+    self.themeTitlebar()
+  }
+
+  @IBAction func unthemeTitlebar(_: Any?) {
+    self.unthemeTitlebar(dueFullScreen: false)
   }
 }
 
@@ -153,4 +188,3 @@ class ColorView: NSView {
   }
 }
 
-fileprivate let gap = CGFloat(4.0)

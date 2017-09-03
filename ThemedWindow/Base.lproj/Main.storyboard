@@ -60,14 +60,24 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="File" id="bib-Uj-vzu">
                                     <items>
-                                        <menuItem title="Turn On Theme" keyEquivalent="1" id="Was-JA-tGl">
+                                        <menuItem title="Set URL 1" keyEquivalent="1" id="Was-JA-tGl">
                                             <connections>
-                                                <action selector="themeTitlebar" target="Ady-hI-5gd" id="OhW-A0-oRs"/>
+                                                <action selector="setRepUrl1:" target="Ady-hI-5gd" id="MCQ-wp-O7P"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Turn Off Theme" keyEquivalent="2" id="IAo-SY-fd9">
+                                        <menuItem title="Set URL 2" keyEquivalent="2" id="IAo-SY-fd9">
                                             <connections>
-                                                <action selector="unthemeTitlebar" target="Ady-hI-5gd" id="F4k-mP-A1A"/>
+                                                <action selector="setRepUrl2:" target="Ady-hI-5gd" id="5o0-8i-WME"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Turn On Theme" keyEquivalent="3" id="wW8-Lv-cK4">
+                                            <connections>
+                                                <action selector="themeTitlebar" target="Ady-hI-5gd" id="uau-he-2Ov"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Turn Off Theme" keyEquivalent="4" id="wKo-N6-gcC">
+                                            <connections>
+                                                <action selector="unthemeTitlebar" target="Ady-hI-5gd" id="PVY-ao-WPz"/>
                                             </connections>
                                         </menuItem>
                                     </items>
