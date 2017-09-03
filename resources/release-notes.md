@@ -1,3 +1,7 @@
+# next
+
+* GH-485: Bugfix: When using a dark theme the title is very difficult to read.
+
 # 0.19.0-226
 
 * GH-492: Improve `Control` key handling: e.g. `Ctrl-6` works now. (thanks @nhtzr for the PR)
