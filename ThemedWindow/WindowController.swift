@@ -32,7 +32,7 @@ class WindowController: NSWindowController, NSWindowDelegate {
 
     self.root.removeFromSuperview()
 
-    self.set(repUrl: window.representedURL, themed: true, grow: grow)
+    self.set(repUrl: window.representedURL, themed: true)
 
     window.contentView?.addSubview(self.root)
     self.root.autoPinEdge(toSuperviewEdge: .top, withInset: 22)
@@ -59,20 +59,13 @@ class WindowController: NSWindowController, NSWindowDelegate {
     window.titleVisibility = .visible
     window.styleMask.remove(.fullSizeContentView)
 
-    self.set(repUrl: window.representedURL, themed: false, grow: false)
+    self.set(repUrl: window.representedURL, themed: false)
 
     contentView.addSubview(self.root)
     self.root.autoPinEdgesToSuperviewEdges()
 
     if !dueFullScreen {
-      if self.titlebarThemed {
-        self.growWindow(by: -22)
-        let dy = prevFrame.origin.y - window.frame.origin.y
-        if dy != 0 {
-          window.setFrame(window.frame.offsetBy(dx: 0, dy: dy), display: true, animate: false)
-        }
-      }
-
+      window.setFrame(prevFrame, display: true, animate: false)
       self.titlebarThemed = false
     }
   }
@@ -92,7 +85,7 @@ class WindowController: NSWindowController, NSWindowDelegate {
     self.window?.title = url?.lastPathComponent ?? "Title"
   }
 
-  fileprivate func set(repUrl url: URL?, themed: Bool, grow: Bool) {
+  fileprivate func set(repUrl url: URL?, themed: Bool) {
     guard let window = self.window else {
       return
     }
@@ -101,6 +94,8 @@ class WindowController: NSWindowController, NSWindowDelegate {
       self.internalSetRepUrl(url)
       return
     }
+
+    let prevFrame = window.frame
 
     self.clearCustomTitle()
 
@@ -113,10 +108,6 @@ class WindowController: NSWindowController, NSWindowDelegate {
 
     window.titleVisibility = .hidden
     window.styleMask.insert(.fullSizeContentView)
-
-    if grow {
-      self.growWindow(by: 22)
-    }
 
     let title = NSTextField(labelWithString: window.title)
     title.configureForAutoLayout()
@@ -151,19 +142,8 @@ class WindowController: NSWindowController, NSWindowDelegate {
     } else {
       title.autoAlignAxis(toSuperviewAxis: .vertical)
     }
-  }
 
-  fileprivate func growWindow(by dy: CGFloat) {
-    guard let window = self.window else {
-      return
-    }
-
-    let frame = window.frame
-    window.setFrame(
-      CGRect(origin: frame.origin, size: CGSize(width: frame.width, height: frame.height + dy)),
-      display: true,
-      animate: false
-    )
+    window.setFrame(prevFrame, display: true, animate: false)
   }
 
   // ====== >8 ======
@@ -189,11 +169,11 @@ class WindowController: NSWindowController, NSWindowDelegate {
   }
 
   @IBAction func setRepUrl1(_: Any?) {
-    self.set(repUrl: URL(fileURLWithPath: "/Users/hat/big.txt"), themed: self.titlebarThemed, grow: !self.titlebarThemed)
+    self.set(repUrl: URL(fileURLWithPath: "/Users/hat/big.txt"), themed: self.titlebarThemed)
   }
 
   @IBAction func setRepUrl2(_: Any?) {
-    self.set(repUrl: URL(fileURLWithPath: "/Users/hat/greek.tex"), themed: self.titlebarThemed, grow: !self.titlebarThemed)
+    self.set(repUrl: URL(fileURLWithPath: "/Users/hat/greek.tex"), themed: self.titlebarThemed)
   }
 
   @IBAction func themeTitlebar(_: Any?) {
