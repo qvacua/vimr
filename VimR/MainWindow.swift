@@ -482,7 +482,6 @@ extension MainWindow {
   fileprivate func internalSetRepUrl(_ url: URL?) {
     self.window.representedURL = nil
     self.window.representedURL = url
-    self.window.title = url?.lastPathComponent ?? "Title"
   }
 
   fileprivate func set(repUrl url: URL?, themed: Bool) {
