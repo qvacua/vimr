@@ -11,7 +11,7 @@ class WindowController: NSWindowController, NSWindowDelegate {
 
   func windowDidExitFullScreen(_: Notification) {
     if self.titlebarThemed {
-      self.themeTitlebar(nil)
+      self.themeTitlebar(grow: true)
     }
   }
 
@@ -19,7 +19,7 @@ class WindowController: NSWindowController, NSWindowDelegate {
   fileprivate var repIcon: NSButton?
   fileprivate var titleView: NSTextField?
 
-  fileprivate func themeTitlebar() {
+  fileprivate func themeTitlebar(grow: Bool) {
     guard let window = self.window else {
       return
     }
@@ -28,9 +28,11 @@ class WindowController: NSWindowController, NSWindowDelegate {
       return
     }
 
+    window.titlebarAppearsTransparent = true
+
     self.root.removeFromSuperview()
 
-    self.set(repUrl: window.representedURL, themed: true)
+    self.set(repUrl: window.representedURL, themed: true, grow: grow)
 
     window.contentView?.addSubview(self.root)
     self.root.autoPinEdge(toSuperviewEdge: .top, withInset: 22)
@@ -41,6 +43,41 @@ class WindowController: NSWindowController, NSWindowDelegate {
     self.titlebarThemed = true
   }
 
+  fileprivate func unthemeTitlebar(dueFullScreen: Bool) {
+    self.clearCustomTitle()
+
+    guard let window = self.window, let contentView = window.contentView else {
+      return
+    }
+
+    let prevFrame = window.frame
+
+    window.titlebarAppearsTransparent = false
+
+    self.root.removeFromSuperview()
+
+    window.titleVisibility = .visible
+    window.styleMask.remove(.fullSizeContentView)
+
+    self.set(repUrl: window.representedURL, themed: false, grow: false)
+
+    contentView.addSubview(self.root)
+    self.root.autoPinEdgesToSuperviewEdges()
+
+    if !dueFullScreen {
+      if self.titlebarThemed {
+        self.growWindow(by: -22)
+        let dy = prevFrame.origin.y - window.frame.origin.y
+        if dy != 0 {
+          window.setFrame(window.frame.offsetBy(dx: 0, dy: dy), display: true, animate: false)
+        }
+      }
+
+      self.titlebarThemed = false
+    }
+  }
+
+
   fileprivate func clearCustomTitle() {
     self.titleView?.removeFromSuperview()
     self.repIcon?.removeFromSuperview()
@@ -49,35 +86,13 @@ class WindowController: NSWindowController, NSWindowDelegate {
     self.repIcon = nil
   }
 
-  fileprivate func unthemeTitlebar(dueFullScreen: Bool) {
-    self.clearCustomTitle()
-
-    self.root.removeFromSuperview()
-
-    guard let window = self.window, let contentView = window.contentView else {
-      return
-    }
-
-    window.titleVisibility = .visible
-    window.styleMask.remove(.fullSizeContentView)
-
-    self.set(repUrl: window.representedURL, themed: false)
-
-    contentView.addSubview(self.root)
-    self.root.autoPinEdgesToSuperviewEdges()
-
-    if !dueFullScreen {
-      self.titlebarThemed = false
-    }
-  }
-
   fileprivate func internalSetRepUrl(_ url: URL?) {
     self.window?.representedURL = nil
     self.window?.representedURL = url
     self.window?.title = url?.lastPathComponent ?? "Title"
   }
 
-  fileprivate func set(repUrl url: URL?, themed: Bool) {
+  fileprivate func set(repUrl url: URL?, themed: Bool, grow: Bool) {
     guard let window = self.window else {
       return
     }
@@ -99,6 +114,10 @@ class WindowController: NSWindowController, NSWindowDelegate {
     window.titleVisibility = .hidden
     window.styleMask.insert(.fullSizeContentView)
 
+    if grow {
+      self.growWindow(by: 22)
+    }
+
     let title = NSTextField(labelWithString: window.title)
     title.configureForAutoLayout()
     contentView.addSubview(title)
@@ -115,7 +134,8 @@ class WindowController: NSWindowController, NSWindowDelegate {
 
       // Center the rep icon and the title side by side in the content view:
       // rightView.left = leftView.right + gap
-      // rightView.right = parentView.centerX + (leftView.width + gap + rightView.width) / 2
+      // rightView.right = parentView.centerX + (leftView.width + gap + rightView.width) / 2 - 4
+      // The (-4) at the end is an empirical value...
       contentView.addConstraint(NSLayoutConstraint(item: title, attribute: .left,
                                                    relatedBy: .equal,
                                                    toItem: button, attribute: .right,
@@ -125,12 +145,25 @@ class WindowController: NSWindowController, NSWindowDelegate {
                                                    relatedBy: .equal,
                                                    toItem: contentView, attribute: .centerX,
                                                    multiplier: 1,
-                                                   constant: (button.frame.width + gap + title.frame.width) / 2))
+                                                   constant: -4 + (button.frame.width + gap + title.frame.width) / 2))
 
       self.repIcon = button
     } else {
       title.autoAlignAxis(toSuperviewAxis: .vertical)
     }
+  }
+
+  fileprivate func growWindow(by dy: CGFloat) {
+    guard let window = self.window else {
+      return
+    }
+
+    let frame = window.frame
+    window.setFrame(
+      CGRect(origin: frame.origin, size: CGSize(width: frame.width, height: frame.height + dy)),
+      display: true,
+      animate: false
+    )
   }
 
   // ====== >8 ======
@@ -146,7 +179,6 @@ class WindowController: NSWindowController, NSWindowDelegate {
 
     window.delegate = self
     window.backgroundColor = .yellow
-    window.titlebarAppearsTransparent = true
 
     guard let contentView = window.contentView else {
       return
@@ -157,15 +189,15 @@ class WindowController: NSWindowController, NSWindowDelegate {
   }
 
   @IBAction func setRepUrl1(_: Any?) {
-    self.set(repUrl: URL(fileURLWithPath: "/Users/hat/big.txt"), themed: self.titlebarThemed)
+    self.set(repUrl: URL(fileURLWithPath: "/Users/hat/big.txt"), themed: self.titlebarThemed, grow: !self.titlebarThemed)
   }
 
   @IBAction func setRepUrl2(_: Any?) {
-    self.set(repUrl: URL(fileURLWithPath: "/Users/hat/greek.tex"), themed: self.titlebarThemed)
+    self.set(repUrl: URL(fileURLWithPath: "/Users/hat/greek.tex"), themed: self.titlebarThemed, grow: !self.titlebarThemed)
   }
 
   @IBAction func themeTitlebar(_: Any?) {
-    self.themeTitlebar()
+    self.themeTitlebar(grow: !self.titlebarThemed)
   }
 
   @IBAction func unthemeTitlebar(_: Any?) {
