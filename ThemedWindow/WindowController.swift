@@ -5,6 +5,16 @@ fileprivate let gap = CGFloat(4.0)
 
 class WindowController: NSWindowController, NSWindowDelegate {
 
+  func windowWillEnterFullScreen(_: Notification) {
+    self.unthemeTitlebar(dueFullScreen: true)
+  }
+
+  func windowDidExitFullScreen(_: Notification) {
+    if self.titlebarThemed {
+      self.themeTitlebar(nil)
+    }
+  }
+
   fileprivate var titlebarThemed = false
   fileprivate var repIcon: NSButton?
   fileprivate var titleView: NSTextField?
@@ -31,12 +41,16 @@ class WindowController: NSWindowController, NSWindowDelegate {
     self.titlebarThemed = true
   }
 
-  fileprivate func unthemeTitlebar(dueFullScreen: Bool) {
-    self.repIcon?.removeFromSuperview()
+  fileprivate func clearCustomTitle() {
     self.titleView?.removeFromSuperview()
+    self.repIcon?.removeFromSuperview()
 
-    self.repIcon = nil
     self.titleView = nil
+    self.repIcon = nil
+  }
+
+  fileprivate func unthemeTitlebar(dueFullScreen: Bool) {
+    self.clearCustomTitle()
 
     self.root.removeFromSuperview()
 
@@ -57,14 +71,10 @@ class WindowController: NSWindowController, NSWindowDelegate {
     }
   }
 
-  func windowWillEnterFullScreen(_: Notification) {
-    self.unthemeTitlebar(dueFullScreen: true)
-  }
-
-  func windowDidExitFullScreen(_: Notification) {
-    if self.titlebarThemed {
-      self.themeTitlebar(nil)
-    }
+  fileprivate func internalSetRepUrl(_ url: URL?) {
+    self.window?.representedURL = nil
+    self.window?.representedURL = url
+    self.window?.title = url?.lastPathComponent ?? "Title"
   }
 
   fileprivate func set(repUrl url: URL?, themed: Bool) {
@@ -73,56 +83,54 @@ class WindowController: NSWindowController, NSWindowDelegate {
     }
 
     if window.styleMask.contains(.fullScreen) || themed == false {
-      window.representedURL = nil
-      window.representedURL = url
-
-      window.title = url?.lastPathComponent ?? "Title"
+      self.internalSetRepUrl(url)
       return
     }
 
-    self.titleView?.removeFromSuperview()
-    self.repIcon?.removeFromSuperview()
+    self.clearCustomTitle()
 
     window.titleVisibility = .visible
-    window.representedURL = nil
-    window.representedURL = url
-    window.title = url?.lastPathComponent ?? "Title"
+    self.internalSetRepUrl(url)
 
-    guard let button = window.standardWindowButton(.documentIconButton), let contentView = window.contentView else {
-      NSLog("No button or content view!")
+    guard let contentView = window.contentView else {
       return
     }
 
     window.titleVisibility = .hidden
     window.styleMask.insert(.fullSizeContentView)
 
-    button.removeFromSuperview() // remove the rep icon from the original superview and add it to content view
-    contentView.addSubview(button)
-    button.autoSetDimension(.width, toSize: 16)
-    button.autoSetDimension(.height, toSize: 16)
-    button.autoPinEdge(toSuperviewEdge: .top, withInset: 3)
-
     let title = NSTextField(labelWithString: window.title)
     title.configureForAutoLayout()
     contentView.addSubview(title)
     title.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
 
-    // Center the rep icon and the title side by side in the content view:
-    // rightView.left = leftView.right + gap
-    // rightView.right = parentView.centerX + (leftView.width + gap + rightView.width) / 2
-    contentView.addConstraint(NSLayoutConstraint(item: title, attribute: .left,
-                                                 relatedBy: .equal,
-                                                 toItem: button, attribute: .right,
-                                                 multiplier: 1,
-                                                 constant: gap))
-    contentView.addConstraint(NSLayoutConstraint(item: title, attribute: .right,
-                                                 relatedBy: .equal,
-                                                 toItem: contentView, attribute: .centerX,
-                                                 multiplier: 1,
-                                                 constant: (button.frame.width + gap + title.frame.width) / 2))
-
-    self.repIcon = button
     self.titleView = title
+
+    if let button = window.standardWindowButton(.documentIconButton) {
+      button.removeFromSuperview() // remove the rep icon from the original superview and add it to content view
+      contentView.addSubview(button)
+      button.autoSetDimension(.width, toSize: 16)
+      button.autoSetDimension(.height, toSize: 16)
+      button.autoPinEdge(toSuperviewEdge: .top, withInset: 3)
+
+      // Center the rep icon and the title side by side in the content view:
+      // rightView.left = leftView.right + gap
+      // rightView.right = parentView.centerX + (leftView.width + gap + rightView.width) / 2
+      contentView.addConstraint(NSLayoutConstraint(item: title, attribute: .left,
+                                                   relatedBy: .equal,
+                                                   toItem: button, attribute: .right,
+                                                   multiplier: 1,
+                                                   constant: gap))
+      contentView.addConstraint(NSLayoutConstraint(item: title, attribute: .right,
+                                                   relatedBy: .equal,
+                                                   toItem: contentView, attribute: .centerX,
+                                                   multiplier: 1,
+                                                   constant: (button.frame.width + gap + title.frame.width) / 2))
+
+      self.repIcon = button
+    } else {
+      title.autoAlignAxis(toSuperviewAxis: .vertical)
+    }
   }
 
   // ====== >8 ======
