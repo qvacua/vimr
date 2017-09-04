@@ -6,6 +6,27 @@
 import Cocoa
 import SwiftNeoVim
 
+func changeTheme(themePrefChanged: Bool, themeChanged: Bool, usesTheme: Bool,
+                 forTheme: () -> Void, forDefaultTheme: () -> Void) -> Bool {
+
+  if themePrefChanged && usesTheme {
+    forTheme()
+    return true
+  }
+
+  if themePrefChanged && !usesTheme {
+    forDefaultTheme()
+    return true
+  }
+
+  if !themePrefChanged && themeChanged && usesTheme {
+    forTheme()
+    return true
+  }
+
+  return false
+}
+
 struct Theme: CustomStringConvertible {
 
   static let `default` = Theme()

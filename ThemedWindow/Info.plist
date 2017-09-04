@@ -20,14 +20,12 @@
 	<string>SNAPSHOT-228</string>
 	<key>CFBundleVersion</key>
 	<string>228</string>
-	<key>LSApplicationCategoryType</key>
-	<string>public.app-category.productivity</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2017 Tae Won Ha. All rights reserved.</string>
-	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
+	<key>NSMainStoryboardFile</key>
+	<string>Main</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>
