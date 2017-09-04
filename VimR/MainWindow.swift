@@ -193,7 +193,18 @@ class MainWindow: NSObject,
       self.workspace.toggleAllTools()
     }
 
+    self.windowController.window?.delegate = self
     self.workspace.delegate = self
+
+    self.addViews()
+
+    self.updateNeoVimAppearance()
+    self.neoVimView.delegate = self
+
+    self.open(urls: state.urlsToOpen)
+
+    self.window.setFrame(state.frame, display: true)
+    self.window.makeFirstResponder(self.neoVimView)
 
     Observable
       .of(self.scrollDebouncer.observable, self.cursorDebouncer.observable)
@@ -202,10 +213,6 @@ class MainWindow: NSObject,
         self.emit(self.uuidAction(for: action))
       })
       .disposed(by: self.disposeBag)
-
-    self.addViews()
-
-    self.windowController.window?.delegate = self
 
     source
       .observeOn(MainScheduler.instance)
@@ -284,14 +291,6 @@ class MainWindow: NSObject,
           }
         })
       .disposed(by: self.disposeBag)
-
-    self.updateNeoVimAppearance()
-    self.neoVimView.delegate = self
-
-    self.open(urls: state.urlsToOpen)
-
-    self.window.setFrame(state.frame, display: true)
-    self.window.makeFirstResponder(self.neoVimView)
   }
 
   func uuidAction(for action: Action) -> UuidAction<Action> {
