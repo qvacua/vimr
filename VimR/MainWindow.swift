@@ -108,20 +108,15 @@ class MainWindow: NSObject,
 
     self.cliPipePath = state.cliPipePath
 
+    self.windowController = NSWindowController(windowNibName: "MainWindow")
+
     let neoVimViewConfig = NeoVimView.Config(useInteractiveZsh: state.useInteractiveZsh,
                                              cwd: state.cwd,
                                              nvimArgs: state.nvimArgs)
     self.neoVimView = NeoVimView(frame: .zero, config: neoVimViewConfig)
     self.neoVimView.configureForAutoLayout()
 
-    let workspace = Workspace(mainView: self.neoVimView)
-    self.workspace = workspace
-
-    if !state.isToolButtonsVisible {
-      self.workspace.toggleToolButtons()
-    }
-
-    self.windowController = NSWindowController(windowNibName: "MainWindow")
+    self.workspace = Workspace(mainView: self.neoVimView)
 
     var tools: [Tools: WorkspaceTool] = [:]
     if state.activeTools[.preview] == true {
@@ -164,13 +159,6 @@ class MainWindow: NSObject,
     }
 
     self.tools = tools
-    state.orderedTools.forEach { toolId in
-      guard let tool = tools[toolId] else {
-        return
-      }
-
-      workspace.append(tool: tool, location: state.tools[toolId]?.location ?? .left)
-    }
 
     super.init()
 
@@ -183,10 +171,22 @@ class MainWindow: NSObject,
 
     self.usesTheme = state.appearance.usesTheme
 
+    state.orderedTools.forEach { toolId in
+      guard let tool = tools[toolId] else {
+        return
+      }
+
+      self.workspace.append(tool: tool, location: state.tools[toolId]?.location ?? .left)
+    }
+
     self.tools.forEach { (toolId, toolContainer) in
       if state.tools[toolId]?.open == true {
         toolContainer.toggle()
       }
+    }
+
+    if !state.isToolButtonsVisible {
+      self.workspace.toggleToolButtons()
     }
 
     if !state.isAllToolsVisible {
