@@ -388,10 +388,7 @@ class MainWindow: NSObject,
   }
 
   fileprivate func addViews() {
-    let contentView = self.window.contentView!
-
-    contentView.addSubview(self.workspace)
-
+    self.window.contentView?.addSubview(self.workspace)
     self.workspace.autoPinEdgesToSuperviewEdges()
   }
 }
