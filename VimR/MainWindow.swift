@@ -262,7 +262,7 @@ class MainWindow: NSObject,
               self.themeTitlebar(grow: !self.titlebarThemed)
               self.window.backgroundColor = state.appearance.theme.payload.background.brightening(by: 0.9)
 
-              self.setWorkspaceTheme(with: state.appearance.theme.payload)
+              self.set(workspaceThemeWith: state.appearance.theme.payload)
               self.lastThemeMark = state.appearance.theme.mark
             },
             forDefaultTheme: {
@@ -341,7 +341,7 @@ class MainWindow: NSObject,
     self.neoVimView.usesLigatures = self.usesLigatures
   }
 
-  fileprivate func setWorkspaceTheme(with theme: Theme) {
+  fileprivate func set(workspaceThemeWith theme: Theme) {
     var workspaceTheme = Workspace.Theme()
     workspaceTheme.foreground = theme.foreground
     workspaceTheme.background = theme.background
