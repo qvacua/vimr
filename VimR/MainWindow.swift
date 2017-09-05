@@ -216,80 +216,79 @@ class MainWindow: NSObject,
 
     source
       .observeOn(MainScheduler.instance)
-      .subscribe(
-        onNext: { state in
-          if self.isClosing {
-            return
-          }
+      .subscribe(onNext: { state in
+        if self.isClosing {
+          return
+        }
 
-          if state.viewToBeFocused != nil, case .neoVimView = state.viewToBeFocused! {
-            self.window.makeFirstResponder(self.neoVimView)
-          }
+        if state.viewToBeFocused != nil, case .neoVimView = state.viewToBeFocused! {
+          self.window.makeFirstResponder(self.neoVimView)
+        }
 
-          self.windowController.setDocumentEdited(state.isDirty)
+        self.windowController.setDocumentEdited(state.isDirty)
 
-          if let cwd = state.cwdToSet {
-            self.neoVimView.cwd = cwd
-          }
+        if let cwd = state.cwdToSet {
+          self.neoVimView.cwd = cwd
+        }
 
-          if state.previewTool.isReverseSearchAutomatically
-             && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition)
-             && !state.preview.ignoreNextReverse {
-            self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
-          } else if state.preview.forceNextReverse {
-            self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
-          }
+        if state.previewTool.isReverseSearchAutomatically
+           && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition)
+           && !state.preview.ignoreNextReverse {
+          self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
+        } else if state.preview.forceNextReverse {
+          self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
+        }
 
-          self.previewPosition = state.preview.previewPosition
+        self.previewPosition = state.preview.previewPosition
 
-          self.open(urls: state.urlsToOpen)
+        self.open(urls: state.urlsToOpen)
 
-          if let currentBuffer = state.currentBufferToSet {
-            self.neoVimView.select(buffer: currentBuffer)
-          }
+        if let currentBuffer = state.currentBufferToSet {
+          self.neoVimView.select(buffer: currentBuffer)
+        }
 
-          let usesTheme = state.appearance.usesTheme
-          let themePrefChanged = state.appearance.usesTheme != self.usesTheme
-          let themeChanged = state.appearance.theme.mark != self.lastThemeMark
+        let usesTheme = state.appearance.usesTheme
+        let themePrefChanged = state.appearance.usesTheme != self.usesTheme
+        let themeChanged = state.appearance.theme.mark != self.lastThemeMark
 
-          if themeChanged {
-            self.theme = state.appearance.theme.payload
-          }
+        if themeChanged {
+          self.theme = state.appearance.theme.payload
+        }
 
-          _ = changeTheme(
-            themePrefChanged: themePrefChanged, themeChanged: themeChanged, usesTheme: usesTheme,
-            forTheme: {
-              self.themeTitlebar(grow: !self.titlebarThemed)
-              self.window.backgroundColor = state.appearance.theme.payload.background.brightening(by: 0.9)
+        _ = changeTheme(
+          themePrefChanged: themePrefChanged, themeChanged: themeChanged, usesTheme: usesTheme,
+          forTheme: {
+            self.themeTitlebar(grow: !self.titlebarThemed)
+            self.window.backgroundColor = state.appearance.theme.payload.background.brightening(by: 0.9)
 
-              self.set(workspaceThemeWith: state.appearance.theme.payload)
-              self.lastThemeMark = state.appearance.theme.mark
-            },
-            forDefaultTheme: {
-              self.unthemeTitlebar(dueFullScreen: false)
-              self.window.backgroundColor = .windowBackgroundColor
-              self.workspace.theme = .default
-            })
+            self.set(workspaceThemeWith: state.appearance.theme.payload)
+            self.lastThemeMark = state.appearance.theme.mark
+          },
+          forDefaultTheme: {
+            self.unthemeTitlebar(dueFullScreen: false)
+            self.window.backgroundColor = .windowBackgroundColor
+            self.workspace.theme = .default
+          })
 
-          self.usesTheme = state.appearance.usesTheme
-          self.currentBuffer = state.currentBuffer
+        self.usesTheme = state.appearance.usesTheme
+        self.currentBuffer = state.currentBuffer
 
-          if state.appearance.showsFileIcon {
-            self.set(repUrl: self.currentBuffer?.url, themed: self.titlebarThemed)
-          } else {
-            self.set(repUrl: nil, themed: self.titlebarThemed)
-          }
+        if state.appearance.showsFileIcon {
+          self.set(repUrl: self.currentBuffer?.url, themed: self.titlebarThemed)
+        } else {
+          self.set(repUrl: nil, themed: self.titlebarThemed)
+        }
 
-          if self.defaultFont != state.appearance.font
-             || self.linespacing != state.appearance.linespacing
-             || self.usesLigatures != state.appearance.usesLigatures {
-            self.defaultFont = state.appearance.font
-            self.linespacing = state.appearance.linespacing
-            self.usesLigatures = state.appearance.usesLigatures
+        if self.defaultFont != state.appearance.font
+           || self.linespacing != state.appearance.linespacing
+           || self.usesLigatures != state.appearance.usesLigatures {
+          self.defaultFont = state.appearance.font
+          self.linespacing = state.appearance.linespacing
+          self.usesLigatures = state.appearance.usesLigatures
 
-            self.updateNeoVimAppearance()
-          }
-        })
+          self.updateNeoVimAppearance()
+        }
+      })
       .disposed(by: self.disposeBag)
   }
 
