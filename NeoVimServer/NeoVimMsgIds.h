@@ -66,6 +66,8 @@ typedef NS_ENUM(NSInteger, NeoVimAgentMsgId) {
     NeoVimAgentMsgIdGetBoolOption,
     NeoVimAgentMsgIdSetBoolOption,
 
+    NeoVimAgentMsgIdFocusGained,
+
 #ifdef DEBUG
     NeoVimAgentDebug1,
 #endif

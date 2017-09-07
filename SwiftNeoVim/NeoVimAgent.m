@@ -352,6 +352,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
   [self sendMessageWithId:NeoVimAgentMsgIdSetBoolOption data:data expectsReply:YES];
 }
 
+- (void)focusGained:(bool)gained {
+  bool values[] = {gained};
+  NSData *data = [[NSData alloc] initWithBytes:values length:sizeof(bool)];
+  [self sendMessageWithId:NeoVimAgentMsgIdFocusGained data:data expectsReply:NO];
+}
+
 - (void)scrollHorizontal:(NSInteger)horiz vertical:(NSInteger)vert at:(Position)position {
   NSInteger values[] = {horiz, vert, position.row, position.column};
   NSData *data = [[NSData alloc] initWithBytes:values length:4 * sizeof(NSInteger)];

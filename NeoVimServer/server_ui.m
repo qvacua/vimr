@@ -32,6 +32,7 @@
 #import <nvim/edit.h>
 #import <nvim/syntax.h>
 #import <nvim/api/window.h>
+#import <nvim/aucmd.h>
 
 
 #define pun_type(t, x) (*((t *) (&(x))))
@@ -1087,6 +1088,16 @@ void neovim_cursor_goto(void **argv) {
     nvim_input((String) { .data="<ESC>", .size=5 });
 
     xfree(position.items);
+
+    return nil;
+  });
+}
+
+void neovim_focus_gained(void **argv) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
+    const bool *values = data.bytes;
+
+    aucmd_schedule_focusgained(values[0]);
 
     return nil;
   });

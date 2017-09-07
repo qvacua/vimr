@@ -60,6 +60,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSNumber * _Nullable)boolOption:(NSString *)option;
 - (void)setBoolOption:(NSString *)option to:(bool)value;
 
+- (void)focusGained:(bool)gained;
+
 @end
 
 NS_ASSUME_NONNULL_END
