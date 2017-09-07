@@ -1,4 +1,4 @@
-# next
+# 0.19.1-229
 
 * GH-485: Bugfix: When using a dark theme the title is very difficult to read.
 
