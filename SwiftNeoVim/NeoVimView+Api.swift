@@ -127,6 +127,14 @@ extension NeoVimView {
     self.agent.cursorGo(toRow: Int32(position.row), column: Int32(position.column))
   }
 
+  public func didBecomeMain() {
+    self.agent.focusGained(true)
+  }
+
+  public func didResignMain() {
+    self.agent.focusGained(false)
+  }
+
   func waitForNeoVimToQuit() {
     self.agent.neoVimQuitCondition.lock()
     defer { self.agent.neoVimQuitCondition.unlock() }

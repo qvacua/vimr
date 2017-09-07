@@ -268,12 +268,4 @@ extension NeoVimView {
 
     return nil
   }
-
-  public func didBecomeMain() {
-    self.agent.vimInput("<FocusGained>")
-  }
-
-  public func didResignMain() {
-    self.agent.vimInput("<FocusLost>")
-  }
 }
