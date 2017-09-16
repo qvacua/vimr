@@ -132,6 +132,8 @@ extension AppDelegate {
   }
 
   func applicationShouldTerminate(_ sender: NSApplication) -> NSApplicationTerminateReply {
+    return .terminateNow
+
     self.stateContext.savePrefs()
 
     if self.hasDirtyWindows && self.hasMainWindows {
