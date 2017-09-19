@@ -1096,7 +1096,9 @@
 				4B5012001EBA791000F76C46 /* Frameworks */,
 				4BEBA5061CFF374B00673FDF /* Products */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		4BEBA5061CFF374B00673FDF /* Products */ = {
 			isa = PBXGroup;
