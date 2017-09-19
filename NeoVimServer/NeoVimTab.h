@@ -15,8 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) NSInteger handle;
 @property (nonatomic, readonly) NSArray <NeoVimWindow *> *windows;
+@property (nonatomic, readonly) bool isCurrent;
 
-- (instancetype)initWithHandle:(NSInteger)handle windows:(NSArray <NeoVimWindow *> *)windows;
+- (instancetype)initWithHandle:(NSInteger)handle windows:(NSArray <NeoVimWindow *> *)windows current:(bool)current;
+
+/// @returns The most recently selected window in *this* tab.
+- (NeoVimWindow * _Nullable )currentWindow;
 
 - (NSString *)description;
 
