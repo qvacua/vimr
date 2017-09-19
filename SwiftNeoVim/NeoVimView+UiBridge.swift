@@ -200,7 +200,7 @@ extension NeoVimView {
         self.tabChanged()
       }
 
-      if event == .BUFREADPOST || event == .BUFWRITEPOST {
+      if event == .BUFREADPOST || event == .BUFWRITEPOST || event == .BUFENTER {
         self.currentBufferChanged(bufferHandle)
       }
     }
