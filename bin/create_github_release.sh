@@ -2,7 +2,7 @@
 
 set -e
 
-TOKEN=$(cat ~/.config/github.qvacua.release.token)
+TOKEN=$(cat ~/.local/secrets/github.qvacua.release.token)
 
 COMPOUND_VERSION=$1
 TAG=$2
