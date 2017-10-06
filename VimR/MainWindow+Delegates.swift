@@ -140,9 +140,11 @@ extension MainWindow {
 
     let alert = NSAlert()
     alert.addButton(withTitle: "Cancel")
-    alert.addButton(withTitle: "Discard and Close")
+    let discardAndCloseButton = alert.addButton(withTitle: "Discard and Close")
     alert.messageText = "The current buffer has unsaved changes!"
     alert.alertStyle = .warning
+    discardAndCloseButton.keyEquivalentModifierMask = .command
+    discardAndCloseButton.keyEquivalent = "d"
     alert.beginSheetModal(for: self.window, completionHandler: { response in
       if response == NSAlertSecondButtonReturn {
         self.neoVimView.closeCurrentTabWithoutSaving()
