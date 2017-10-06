@@ -1,3 +1,7 @@
+# next
+
+* GH-534: `Cmd-D` for "Discard and Close/Quit" buttons. (thanks @nclark for the PR)
+
 # 0.19.1-229
 
 * GH-485: Bugfix: When using a dark theme the title is very difficult to read.
