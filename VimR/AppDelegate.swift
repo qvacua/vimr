@@ -140,7 +140,7 @@ extension AppDelegate {
       let discardAndQuitButton = alert.addButton(withTitle: "Discard and Quit")
       alert.messageText = "There are windows with unsaved buffers!"
       alert.alertStyle = .warning
-      discardAndQuitButton.keyEquivalentModifierMask = NSCommandKeyMask
+      discardAndQuitButton.keyEquivalentModifierMask = .command
       discardAndQuitButton.keyEquivalent = "d"
 
       if alert.runModal() == NSAlertSecondButtonReturn {
