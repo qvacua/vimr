@@ -77,7 +77,7 @@ extension NeoVimView : NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDeleg
     let itemView = scrubber.makeItem(withIdentifier: type(of: self).touchBarTabSwitcherItem, owner: nil) as! NSScrubberTextItemView
     guard tabsCache.count > index else { return itemView }
     let tab = tabsCache[index]
-    itemView.textField.stringValue = tab.currentWindow()?.buffer.name ?? "[No Name]"
+    itemView.title = tab.currentWindow()?.buffer.name ?? "[No Name]"
     
     return itemView
   }
