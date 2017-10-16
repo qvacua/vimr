@@ -94,9 +94,8 @@ class FileOutlineView: NSOutlineView,
   }
 
   override func reloadData() {
-    stdoutLog.debug("---------------------- start")
+    self.widths.removeAll()
     super.reloadData()
-    stdoutLog.debug("---------------------- finish")
   }
 
   func select(_ url: URL) {
@@ -134,6 +133,8 @@ class FileOutlineView: NSOutlineView,
   fileprivate var isShowHidden: Bool
 
   fileprivate var root: FileBrowserItem
+
+  fileprivate var widths = [String: CGFloat]()
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -178,14 +179,14 @@ class FileOutlineView: NSOutlineView,
       .filter { (_, fileBrowserItem) in newPreparedChildren.contains(fileBrowserItem) == false }
       .map { (idx, _) in idx }
 
+    indicesToRemove.forEach { self.widths.removeValue(forKey: curPreparedChildren[$0].url.path) }
+
     fileLog.debug("\(fileBrowserItem): \(curPreparedChildren) vs. \(indicesToRemove)")
 
     fileBrowserItem.children = curChildren.filter { newChildren.contains($0) }
 
     let parent = fileBrowserItem == self.root ? nil : fileBrowserItem
     self.removeItems(at: IndexSet(indicesToRemove), inParent: parent)
-
-    stdoutLog.mark()
   }
 
   fileprivate func handleAdditions(for fileBrowserItem: FileBrowserItem,
@@ -208,8 +209,6 @@ class FileOutlineView: NSOutlineView,
 
     let parent = fileBrowserItem == self.root ? nil : fileBrowserItem
     self.insertItems(at: IndexSet(indicesToInsert), inParent: parent)
-
-    stdoutLog.mark()
   }
 
   fileprivate func sortedChildren(of url: URL) -> [FileBrowserItem] {
@@ -333,12 +332,8 @@ extension FileOutlineView {
       return
     }
 
-    let width = (0 ..< self.numberOfRows).map {
-      self.cellWidth(for: self.view(atColumn: 0, row: $0, makeIfNecessary: true), level: self.level(forRow: $0))
-    }.max() ?? CGFloat(100)
-
-    column.minWidth = width
-    column.maxWidth = width
+    column.minWidth = self.widths.values.max() ?? 100
+    column.maxWidth = self.widths.values.max() ?? 100
   }
 }
 
@@ -368,14 +363,14 @@ extension FileOutlineView {
     let icon = FileUtils.icon(forUrl: fileBrowserItem.url)
     cell.image = fileBrowserItem.isHidden ? icon?.tinting(with: NSColor.white.withAlphaComponent(0.4)) : icon
 
+    self.widths[fileBrowserItem.url.path] = self.cellWidth(for: cell, level: self.level(forItem: item))
+    self.adjustColumnWidths()
+
     return cell
   }
 
   func outlineView(_: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
     return 20
-  }
-
-  func outlineViewItemDidCollapse(_ notification: Notification) {
   }
 }
 

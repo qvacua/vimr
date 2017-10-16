@@ -116,9 +116,7 @@ class MainWindow: NSObject,
     self.neoVimView = NeoVimView(frame: .zero, config: neoVimViewConfig)
     self.neoVimView.configureForAutoLayout()
 
-    let dummy = NSView(frame: .zero)
-    dummy.configureForAutoLayout()
-    self.workspace = Workspace(mainView: dummy)
+    self.workspace = Workspace(mainView: self.neoVimView)
 
     var tools: [Tools: WorkspaceTool] = [:]
     if state.activeTools[.preview] == true {
