@@ -1,3 +1,8 @@
+# next
+
+* GH-534: `Cmd-D` for "Discard and Close/Quit" buttons. (thanks @nclark for the PR)
+* GH-521: Improve the performance of the file browser, especically for folders like `node_modules` which contains many many files.
+
 # 0.19.1-229
 
 * GH-485: Bugfix: When using a dark theme the title is very difficult to read.

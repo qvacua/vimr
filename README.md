@@ -23,7 +23,7 @@ There are other working Neovim GUIs for OS X, e.g. [NyaoVim](https://github.com/
 
 ### SwiftNeovim
 
-[SwiftNeovim](https://github.com/qvacua/vimr/tree/master/SwiftNeovim) is VimR's Cocoa Framework which bundles everything, e.g. Neovim's `runtime`-files, needed to embed Neovim in a Cocoa App. See the [wiki](https://github.com/qvacua/vimr/wiki/SwiftNeovim-Framework) for more details.
+[SwiftNeovim](https://github.com/qvacua/vimr/tree/master/SwiftNeoVim) is VimR's Cocoa Framework which bundles everything, e.g. Neovim's `runtime`-files, needed to embed Neovim in a Cocoa App. See the [wiki](https://github.com/qvacua/vimr/wiki/SwiftNeovim-Framework) for more details.
 
 ---
 

@@ -16,8 +16,8 @@ from datetime import datetime
 from string import Template
 
 SIGN_UPDATE = './bin/sign_update'
-PRIVATE_KEY_PATH = os.path.expanduser('~/.local/data/secrets/sparkle_priv.pem')
-GITHUB_TOKEN_PATH = os.path.expanduser('~/.local/data/secrets/github.qvacua.release.token')
+PRIVATE_KEY_PATH = os.path.expanduser('~/.local/secrets/sparkle_priv.pem')
+GITHUB_TOKEN_PATH = os.path.expanduser('~/.local/secrets/github.qvacua.release.token')
 
 file_path = sys.argv[1]
 bundle_version = sys.argv[2]

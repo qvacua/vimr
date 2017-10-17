@@ -56,7 +56,11 @@ class FileOutlineView: NSOutlineView,
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { state in
         self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
-        self.update(state.lastFileSystemUpdate.payload)
+        guard let fileBrowserItem = self.fileBrowserItem(with: state.lastFileSystemUpdate.payload) else {
+          return
+        }
+
+        self.update(fileBrowserItem)
       })
       .disposed(by: self.disposeBag)
 
@@ -87,6 +91,11 @@ class FileOutlineView: NSOutlineView,
         self.reloadData()
       })
       .disposed(by: self.disposeBag)
+  }
+
+  override func reloadData() {
+    self.widths.removeAll()
+    super.reloadData()
   }
 
   func select(_ url: URL) {
@@ -125,6 +134,8 @@ class FileOutlineView: NSOutlineView,
 
   fileprivate var root: FileBrowserItem
 
+  fileprivate var widths = [String: CGFloat]()
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -156,14 +167,6 @@ class FileOutlineView: NSOutlineView,
     return false
   }
 
-  fileprivate func update(_ url: URL) {
-    guard let fileBrowserItem = self.fileBrowserItem(with: url) else {
-      return
-    }
-
-    self.update(fileBrowserItem)
-  }
-
   fileprivate func handleRemovals(for fileBrowserItem: FileBrowserItem,
                                   new newChildren: [FileBrowserItem]) {
     let curChildren = fileBrowserItem.children
@@ -175,6 +178,8 @@ class FileOutlineView: NSOutlineView,
       .enumerated()
       .filter { (_, fileBrowserItem) in newPreparedChildren.contains(fileBrowserItem) == false }
       .map { (idx, _) in idx }
+
+    indicesToRemove.forEach { self.widths.removeValue(forKey: curPreparedChildren[$0].url.path) }
 
     fileLog.debug("\(fileBrowserItem): \(curPreparedChildren) vs. \(indicesToRemove)")
 
@@ -288,10 +293,7 @@ extension FileOutlineView {
   }
 
   func outlineView(_: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
-    let level = self.level(forItem: item)
-
     if item == nil {
-      self.adjustColumnWidth(for: self.root.children, outlineViewLevel: level)
       return self.prepare(self.root.children)[index]
     }
 
@@ -299,7 +301,6 @@ extension FileOutlineView {
       preconditionFailure("Should not happen")
     }
 
-    self.adjustColumnWidth(for: fileBrowserItem.children, outlineViewLevel: level)
     return self.prepare(fileBrowserItem.children)[index]
   }
 
@@ -320,49 +321,19 @@ extension FileOutlineView {
     return fileBrowserItem
   }
 
-  fileprivate func adjustColumnWidth() {
-    let column = self.outlineTableColumn!
-
-    let rows = (0..<self.numberOfRows).map {
-      (item: self.item(atRow: $0) as! FileBrowserItem?, level: self.level(forRow: $0))
-    }
-
-    let cellWidth = rows.concurrentChunkMap(20) {
-      guard let fileBrowserItem = $0.item else {
-        return 0
-      }
-
-      // + 2 just to have a buffer... -_-
-      return ThemedTableCell.width(with: fileBrowserItem.url.lastPathComponent)
-             + (CGFloat($0.level + 2) * (self.indentationPerLevel + 2))
-    }.max() ?? column.width
-
-    guard column.minWidth != cellWidth else {
-      return
-    }
-
-    column.minWidth = cellWidth
-    column.maxWidth = cellWidth
+  fileprivate func cellWidth(for cell: NSView?, level: Int) -> CGFloat {
+    let cellWidth = cell?.intrinsicContentSize.width ?? 0
+    let indentation = CGFloat(level + 1) * self.indentationPerLevel + 4
+    return cellWidth + indentation
   }
 
-  fileprivate func adjustColumnWidth(for items: [FileBrowserItem], outlineViewLevel level: Int) {
-    let column = self.outlineTableColumn!
-
-    // It seems like that caching the widths is slower due to thread-safeness of NSCache...
-    let cellWidth = items.concurrentChunkMap(20) {
-      let result = ThemedTableCell.width(with: $0.url.lastPathComponent)
-      return result
-    }.max() ?? column.width
-
-    // + 2 just to have a buffer... -_-
-    let width = cellWidth + (CGFloat(level + 2) * (self.indentationPerLevel + 2))
-
-    guard column.minWidth < width else {
+  fileprivate func adjustColumnWidths() {
+    guard let column = self.outlineTableColumn else {
       return
     }
 
-    column.minWidth = width
-    column.maxWidth = width
+    column.minWidth = self.widths.values.max() ?? 100
+    column.maxWidth = self.widths.values.max() ?? 100
   }
 }
 
@@ -392,15 +363,14 @@ extension FileOutlineView {
     let icon = FileUtils.icon(forUrl: fileBrowserItem.url)
     cell.image = fileBrowserItem.isHidden ? icon?.tinting(with: NSColor.white.withAlphaComponent(0.4)) : icon
 
+    self.widths[fileBrowserItem.url.path] = self.cellWidth(for: cell, level: self.level(forItem: item))
+    self.adjustColumnWidths()
+
     return cell
   }
 
   func outlineView(_: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
     return 20
-  }
-
-  func outlineViewItemDidCollapse(_ notification: Notification) {
-    self.adjustColumnWidth()
   }
 }
 
