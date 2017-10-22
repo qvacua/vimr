@@ -74,8 +74,6 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
   fileprivate let emit: (Action) -> Void
   fileprivate let disposeBag = DisposeBag()
 
-  fileprivate let fontManager = NSFontManager.shared()
-
   fileprivate var font: NSFont
   fileprivate var linespacing: CGFloat
   fileprivate var usesLigatures: Bool
@@ -135,7 +133,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 
     // This takes approx. 0.8s - 1s on my machine... -_-
     DispatchQueue.global(qos: .background).async {
-      fontPopup.addItems(withTitles: self.fontManager.availableFontNames(with: .fixedPitchFontMask)!)
+      fontPopup.addItems(withTitles: sharedFontManager.availableFontNames(with: .fixedPitchFontMask)!)
       self.updateViews()
     }
 
@@ -162,8 +160,9 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     previewArea.isHorizontallyResizable = true
     previewArea.textContainer?.heightTracksTextView = false
     previewArea.textContainer?.widthTracksTextView = false
-    previewArea.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
-    previewArea.textContainer?.containerSize = CGSize.init(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+    previewArea.autoresizingMask = [.width, .height]
+    previewArea.textContainer?.containerSize = CGSize(width: CGFloat.greatestFiniteMagnitude,
+                                                      height: CGFloat.greatestFiniteMagnitude)
     previewArea.layoutManager?.replaceTextStorage(NSTextStorage(string: self.exampleText))
     previewArea.isRichText = false
     previewArea.turnOffLigatures(self)
@@ -223,7 +222,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     linespacingField.autoPinEdge(.top, to: .bottom, of: sizeCombo, withOffset: 18)
     linespacingField.autoPinEdge(.left, to: .right, of: linespacingTitle, withOffset: 5)
     linespacingField.autoSetDimension(.width, toSize: 60)
-    NotificationCenter.default.addObserver(forName: NSNotification.Name.NSControlTextDidEndEditing,
+    NotificationCenter.default.addObserver(forName: NSControl.textDidEndEditingNotification,
                                            object: linespacingField,
                                            queue: nil) { [unowned self] _ in
       self.linespacingAction()
@@ -259,19 +258,19 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 // MARK: - Actions
 extension AppearancePref {
 
-  func usesColorschemeAction(_ sender: NSButton) {
+  @objc func usesColorschemeAction(_ sender: NSButton) {
     self.emit(.setUsesColorscheme(sender.boolState))
   }
 
-  func fileIconAction(_ sender: NSButton) {
+  @objc func fileIconAction(_ sender: NSButton) {
     self.emit(.setShowsFileIcon(sender.boolState))
   }
 
-  func usesLigaturesAction(_ sender: NSButton) {
+  @objc func usesLigaturesAction(_ sender: NSButton) {
     self.emit(.setUsesLigatures(sender.boolState))
   }
 
-  func fontPopupAction(_ sender: NSPopUpButton) {
+  @objc func fontPopupAction(_ sender: NSPopUpButton) {
     guard let selectedItem = self.fontPopup.selectedItem else {
       return
     }
@@ -293,14 +292,14 @@ extension AppearancePref {
     }
 
     let newFontSize = self.cappedFontSize(Int(self.sizes[self.sizeCombo.indexOfSelectedItem]))
-    let newFont = self.fontManager.convert(self.font, toSize: newFontSize)
+    let newFont = sharedFontManager.convert(self.font, toSize: newFontSize)
 
     self.emit(.setFont(newFont))
   }
 
-  func sizeComboBoxDidEnter(_ sender: AnyObject!) {
+  @objc func sizeComboBoxDidEnter(_ sender: AnyObject!) {
     let newFontSize = self.cappedFontSize(self.sizeCombo.integerValue)
-    let newFont = self.fontManager.convert(self.font, toSize: newFontSize)
+    let newFont = sharedFontManager.convert(self.font, toSize: newFontSize)
 
     self.emit(.setFont(newFont))
   }
@@ -338,3 +337,5 @@ extension AppearancePref {
     return cgfSize
   }
 }
+
+fileprivate let sharedFontManager = NSFontManager.shared

@@ -178,28 +178,28 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
 // MARK: - Actions
 extension PreviewTool {
 
-  func refreshNowAction(_: Any?) {
+  @objc func refreshNowAction(_: Any?) {
     self.emit(UuidAction(uuid: self.uuid, action: .refreshNow))
   }
 
-  func forwardSearchAction(_: Any?) {
+  @objc func forwardSearchAction(_: Any?) {
     self.forwardSearch(position: self.editorPosition.payload)
   }
 
-  func reverseSearchAction(_: Any?) {
+  @objc func reverseSearchAction(_: Any?) {
     self.previewPosition = Marked(self.previewPosition.payload) // set a new mark
     self.emit(UuidAction(uuid: self.uuid, action: .reverseSearch(to: self.previewPosition)))
   }
 
-  func automaticForwardSearchAction(_ sender: NSMenuItem) {
+  @objc func automaticForwardSearchAction(_ sender: NSMenuItem) {
     self.emit(UuidAction(uuid: self.uuid, action: .setAutomaticForwardSearch(to: !sender.boolState)))
   }
 
-  func automaticReverseSearchAction(_ sender: NSMenuItem) {
+  @objc func automaticReverseSearchAction(_ sender: NSMenuItem) {
     self.emit(UuidAction(uuid: self.uuid, action: .setAutomaticReverseSearch(to: !sender.boolState)))
   }
 
-  func refreshOnWriteAction(_ sender: NSMenuItem) {
+  @objc func refreshOnWriteAction(_ sender: NSMenuItem) {
     self.emit(UuidAction(uuid: self.uuid, action: .setRefreshOnWrite(to: !sender.boolState)))
   }
 }

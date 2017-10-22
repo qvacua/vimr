@@ -83,10 +83,10 @@ class PrefUtils {
   static func saneFont(_ fontName: String, fontSize: CGFloat) -> NSFont {
     var editorFont = NSFont(name: fontName, size: fontSize) ?? NeoVimView.defaultFont
     if !editorFont.isFixedPitch {
-      editorFont = NSFontManager.shared().convert(NeoVimView.defaultFont, toSize: editorFont.pointSize)
+      editorFont = NSFontManager.shared.convert(NeoVimView.defaultFont, toSize: editorFont.pointSize)
     }
     if editorFont.pointSize < NeoVimView.minFontSize || editorFont.pointSize > NeoVimView.maxFontSize {
-      editorFont = NSFontManager.shared().convert(editorFont, toSize: NeoVimView.defaultFont.pointSize)
+      editorFont = NSFontManager.shared.convert(editorFont, toSize: NeoVimView.defaultFont.pointSize)
     }
 
     return editorFont

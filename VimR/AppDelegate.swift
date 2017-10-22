@@ -131,7 +131,7 @@ extension AppDelegate {
     return false
   }
 
-  func applicationShouldTerminate(_ sender: NSApplication) -> NSApplicationTerminateReply {
+  func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
     self.stateContext.savePrefs()
 
     if self.hasDirtyWindows && self.hasMainWindows {
@@ -143,7 +143,7 @@ extension AppDelegate {
       discardAndQuitButton.keyEquivalentModifierMask = .command
       discardAndQuitButton.keyEquivalent = "d"
 
-      if alert.runModal() == NSAlertSecondButtonReturn {
+      if alert.runModal() == .alertSecondButtonReturn {
         self.uiRoot.prepareQuit()
         return .terminateNow
       }
@@ -172,7 +172,7 @@ extension AppDelegate {
 // MARK: - AppleScript
 extension AppDelegate {
 
-  func handle(getUrlEvent event: NSAppleEventDescriptor, replyEvent: NSAppleEventDescriptor) {
+  @objc func handle(getUrlEvent event: NSAppleEventDescriptor, replyEvent: NSAppleEventDescriptor) {
     guard let urlString = event.paramDescriptor(forKeyword: UInt32(keyDirectObject))?.stringValue else {
       return
     }
@@ -286,7 +286,7 @@ extension AppDelegate {
     panel.canChooseDirectories = true
     panel.allowsMultipleSelection = true
     panel.begin { result in
-      guard result == NSFileHandlingPanelOKButton else {
+      guard result == .OK else {
         return
       }
 
@@ -309,7 +309,7 @@ fileprivate enum VimRUrlAction: String {
 
 fileprivate let updater = SUUpdater()
 
-fileprivate let debugMenuItemIdentifier = "debug-menu-item"
+fileprivate let debugMenuItemIdentifier = NSUserInterfaceItemIdentifier("debug-menu-item")
 
 fileprivate let filePrefix = "file="
 fileprivate let cwdPrefix = "cwd="

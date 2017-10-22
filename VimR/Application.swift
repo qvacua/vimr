@@ -22,7 +22,7 @@ class Application: NSApplication {
   }
 
   @IBAction override func showHelp(_: Any?) {
-    NSWorkspace.shared().open(URL(string: "https://github.com/qvacua/vimr/wiki")!)
+    NSWorkspace.shared.open(URL(string: "https://github.com/qvacua/vimr/wiki")!)
   }
 }
 

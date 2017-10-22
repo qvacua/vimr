@@ -57,13 +57,13 @@ class WorkspaceToolButton: NSView, NSDraggingSource {
 
   init(title: String) {
     self.title = NSMutableAttributedString(string: title, attributes: [
-      NSFontAttributeName: NSFont.systemFont(ofSize: 11),
+      NSAttributedStringKey.font: NSFont.systemFont(ofSize: 11),
     ])
 
     super.init(frame: .zero)
     self.configureForAutoLayout()
 
-    self.title.addAttribute(NSForegroundColorAttributeName,
+    self.title.addAttribute(NSAttributedStringKey.foregroundColor,
                             value: self.theme.foreground,
                             range: NSRange(location: 0, length: self.title.length))
 
@@ -77,7 +77,7 @@ class WorkspaceToolButton: NSView, NSDraggingSource {
       self.dehighlight()
     }
 
-    self.title.addAttribute(NSForegroundColorAttributeName,
+    self.title.addAttribute(NSAttributedStringKey.foregroundColor,
                             value: self.theme.foreground,
                             range: NSRange(location: 0, length: self.title.length))
 
@@ -137,19 +137,19 @@ extension WorkspaceToolButton {
   }
 
   override func mouseDown(with event: NSEvent) {
-    guard let nextEvent = self.window!.nextEvent(matching: [NSLeftMouseUpMask, NSLeftMouseDraggedMask]) else {
+    guard let nextEvent = self.window!.nextEvent(matching: [.leftMouseUp, .leftMouseDragged]) else {
       return
     }
 
     switch nextEvent.type {
 
-    case NSLeftMouseUp:
+    case .leftMouseUp:
       self.tool?.toggle()
       return
 
-    case NSLeftMouseDragged:
+    case .leftMouseDragged:
       let pasteboardItem = NSPasteboardItem()
-      pasteboardItem.setString(self.tool!.uuid, forType: WorkspaceToolButton.toolUti)
+      pasteboardItem.setString(self.tool!.uuid, forType: NSPasteboard.PasteboardType(WorkspaceToolButton.toolUti))
 
       let draggingItem = NSDraggingItem(pasteboardWriter: pasteboardItem)
       draggingItem.setDraggingFrame(self.bounds, contents: self.snapshot())
@@ -192,7 +192,7 @@ extension WorkspaceToolButton {
 
     result.lockFocus()
     self.theme.barButtonHighlight.set()
-    NSRectFill(rect)
+    rect.fill()
     image.draw(in: rect)
     result.unlockFocus()
 

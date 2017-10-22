@@ -114,7 +114,7 @@ class OpenedFileList: NSView,
 // MARK: - Actions
 extension OpenedFileList {
 
-  func doubleClickAction(_ sender: Any?) {
+  @objc func doubleClickAction(_ sender: Any?) {
     let clickedRow = self.bufferList.clickedRow
     guard clickedRow >= 0 && clickedRow < self.buffers.count else {
       return
@@ -137,12 +137,12 @@ extension OpenedFileList {
 extension OpenedFileList {
 
   public func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
-    return tableView.make(withIdentifier: "buffer-row-view", owner: self) as? ThemedTableRow
+    return tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("buffer-row-view"), owner: self) as? ThemedTableRow
            ?? ThemedTableRow(withIdentifier: "buffer-row-view", themedView: self)
   }
 
   func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-    let cachedCell = (tableView.make(withIdentifier: "buffer-cell-view", owner: self) as? ThemedTableCell)?.reset()
+    let cachedCell = (tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("buffer-cell-view"), owner: self) as? ThemedTableCell)?.reset()
     let cell = cachedCell ?? ThemedTableCell(withIdentifier: "buffer-cell-view")
 
     let buffer = self.buffers[row]
@@ -169,11 +169,11 @@ extension OpenedFileList {
     let pathInfo = url.pathComponents.dropFirst().dropLast().reversed().joined(separator: " / ") + " /"
     let rowText = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
 
-    rowText.addAttribute(NSForegroundColorAttributeName,
+    rowText.addAttribute(NSAttributedStringKey.foregroundColor,
                          value: self.theme.foreground,
                          range: NSRange(location: 0, length: name.characters.count))
 
-    rowText.addAttribute(NSForegroundColorAttributeName,
+    rowText.addAttribute(NSAttributedStringKey.foregroundColor,
                          value: self.theme.foreground.brightening(by: 1.15),
                          range: NSRange(location: name.characters.count, length: pathInfo.characters.count + 3))
 

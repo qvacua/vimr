@@ -1371,11 +1371,11 @@
 					4BEBA5041CFF374B00673FDF = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = H96Q2NKTQH;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 					};
 					4BEBA5131CFF374B00673FDF = {
 						CreatedOnToolsVersion = 7.3.1;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 					};
 				};
 			};
@@ -2216,6 +2216,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR;
 				PRODUCT_NAME = VimR;
 				SWIFT_OBJC_BRIDGING_HEADER = VimR/Bridge.h;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -2235,6 +2237,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR;
 				PRODUCT_NAME = VimR;
 				SWIFT_OBJC_BRIDGING_HEADER = VimR/Bridge.h;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -2250,6 +2254,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimRTests;
 				PRODUCT_NAME = VimRTests;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -2265,6 +2271,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimRTests;
 				PRODUCT_NAME = VimRTests;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

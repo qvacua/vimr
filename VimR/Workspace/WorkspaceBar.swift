@@ -38,7 +38,7 @@ fileprivate class ProxyBar: NSView {
     super.init(frame: .zero)
     self.configureForAutoLayout()
 
-    self.register(forDraggedTypes: [WorkspaceToolButton.toolUti])
+    self.registerForDraggedTypes([NSPasteboard.PasteboardType(WorkspaceToolButton.toolUti)])
 
     self.wantsLayer = true
   }
@@ -249,7 +249,7 @@ extension ProxyBar {
   fileprivate func isTool(atIndex idx: Int, beingDragged info: NSDraggingInfo) -> Bool {
     let pasteboard = info.draggingPasteboard()
 
-    guard let uuid = pasteboard.string(forType: WorkspaceToolButton.toolUti) else {
+    guard let uuid = pasteboard.string(forType: NSPasteboard.PasteboardType(WorkspaceToolButton.toolUti)) else {
       return false
     }
 
@@ -295,7 +295,7 @@ extension ProxyBar {
     return .move
   }
 
-  override func draggingEnded(_ sender: NSDraggingInfo?) {
+  override func draggingEnded(_ sender: NSDraggingInfo) {
     self.endDrag()
   }
 
@@ -423,11 +423,11 @@ extension WorkspaceBar {
 
     self.isMouseDownOngoing = true
     self.delegate?.resizeWillStart(workspaceBar: self, tool: self.selectedTool)
-    self.dimensionConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow - 1
+    self.dimensionConstraint.priority = NSLayoutConstraint.Priority(NSLayoutConstraint.Priority.RawValue(Int(NSLayoutConstraint.Priority.dragThatCannotResizeWindow.rawValue) - 1))
 
     var dragged = false
     var curEvent = event
-    let nextEventMask: NSEventMask = [.leftMouseDragged, .leftMouseDown, .leftMouseUp]
+    let nextEventMask: NSEvent.EventTypeMask = [.leftMouseDragged, .leftMouseDown, .leftMouseUp]
 
     while curEvent.type != .leftMouseUp {
       let nextEvent = NSApp.nextEvent(matching: nextEventMask,
@@ -459,7 +459,7 @@ extension WorkspaceBar {
       dragged = true
     }
 
-    self.dimensionConstraint.priority = NSLayoutPriorityDragThatCannotResizeWindow
+    self.dimensionConstraint.priority = .dragThatCannotResizeWindow
     self.isMouseDownOngoing = false
     self.delegate?.resizeDidEnd(workspaceBar: self, tool: self.selectedTool)
   }
@@ -471,9 +471,9 @@ extension WorkspaceBar {
 
     switch self.location {
     case .top, .bottom:
-      self.addCursorRect(self.resizeRect(), cursor: NSCursor.resizeUpDown())
+      self.addCursorRect(self.resizeRect(), cursor: .resizeUpDown)
     case .right, .left:
-      self.addCursorRect(self.resizeRect(), cursor: NSCursor.resizeLeftRight())
+      self.addCursorRect(self.resizeRect(), cursor: .resizeLeftRight)
     }
   }
 
@@ -482,7 +482,7 @@ extension WorkspaceBar {
 
     let innerLineRect = self.innerSeparatorRect()
     if dirtyRect.intersects(innerLineRect) {
-      NSRectFill(innerLineRect)
+      innerLineRect.fill()
     }
   }
 
@@ -491,7 +491,7 @@ extension WorkspaceBar {
 
     let outerLineRect = self.outerSeparatorRect()
     if dirtyRect.intersects(outerLineRect) {
-      NSRectFill(outerLineRect)
+      outerLineRect.fill()
     }
   }
 

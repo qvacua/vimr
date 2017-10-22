@@ -5,7 +5,7 @@
 
 import Cocoa
 
-fileprivate let workspace = NSWorkspace.shared()
+fileprivate let workspace = NSWorkspace.shared
 fileprivate let iconsCache = NSCache<NSURL, NSImage>()
 
 class FileUtils {

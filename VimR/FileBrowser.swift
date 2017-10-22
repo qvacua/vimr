@@ -164,7 +164,7 @@ extension FileBrowser {
 // MARK: - Actions
 extension FileBrowser {
 
-  func showHiddenAction(_ sender: Any?) {
+  @objc func showHiddenAction(_ sender: Any?) {
     guard let menuItem = sender as? NSMenuItem else {
       return
     }
@@ -172,11 +172,11 @@ extension FileBrowser {
     self.emit(UuidAction(uuid: self.uuid, action: .setShowHidden(!menuItem.boolState)))
   }
 
-  func goToParentAction(_ sender: Any?) {
+  @objc func goToParentAction(_ sender: Any?) {
     self.emit(UuidAction(uuid: self.uuid, action: .setAsWorkingDirectory(self.cwd.parent)))
   }
 
-  func scrollToSourceAction(_ sender: Any?) {
+  @objc func scrollToSourceAction(_ sender: Any?) {
     guard let url = self.currentBufferUrl else {
       return
     }
@@ -184,7 +184,7 @@ extension FileBrowser {
     self.fileView.select(url)
   }
 
-  func refreshAction(_ sender: Any?) {
+  @objc func refreshAction(_ sender: Any?) {
     self.emit(UuidAction(uuid: self.uuid, action: .refresh))
   }
 }

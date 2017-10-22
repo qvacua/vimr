@@ -26,7 +26,7 @@ class OpenQuicklyWindow: NSObject,
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
-    self.windowController = NSWindowController(windowNibName: "OpenQuicklyWindow")
+    self.windowController = NSWindowController(windowNibName: NSNib.Name("OpenQuicklyWindow"))
 
     self.searchStream = self.searchField.rx
       .text.orEmpty
@@ -155,7 +155,7 @@ class OpenQuicklyWindow: NSObject,
     let progressIndicator = self.progressIndicator
     progressIndicator.isIndeterminate = true
     progressIndicator.isDisplayedWhenStopped = false
-    progressIndicator.style = .spinningStyle
+    progressIndicator.style = .spinning
     progressIndicator.controlSize = .small
 
     let fileView = self.fileView
@@ -172,8 +172,8 @@ class OpenQuicklyWindow: NSObject,
     cwdControl.backgroundColor = NSColor.clear
     cwdControl.refusesFirstResponder = true
     cwdControl.cell?.controlSize = .small
-    cwdControl.cell?.font = NSFont.systemFont(ofSize: NSFont.smallSystemFontSize())
-    cwdControl.setContentCompressionResistancePriority(NSLayoutPriorityDefaultLow, for: .horizontal)
+    cwdControl.cell?.font = NSFont.systemFont(ofSize: NSFont.smallSystemFontSize)
+    cwdControl.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
     let countField = self.countField
     countField.isEditable = false
@@ -231,7 +231,7 @@ extension OpenQuicklyWindow {
 
   @objc(tableView: viewForTableColumn:row:)
   func tableView(_ tableView: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
-    let cachedCell = (tableView.make(withIdentifier: "file-view-row", owner: self) as? ImageAndTextTableCell)?.reset()
+    let cachedCell = (tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("file-view-row"), owner: self) as? ImageAndTextTableCell)?.reset()
     let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
     let url = self.fileViewItems[row].url
@@ -257,7 +257,7 @@ extension OpenQuicklyWindow {
     let rowText: NSMutableAttributedString
     let pathInfo = truncatedPathComps.dropLast().reversed().joined(separator: " / ")
     rowText = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
-    rowText.addAttribute(NSForegroundColorAttributeName,
+    rowText.addAttribute(NSAttributedStringKey.foregroundColor,
                          value: NSColor.lightGray,
                          range: NSRange(location: name.characters.count, length: pathInfo.characters.count + 3))
 
@@ -315,7 +315,7 @@ extension OpenQuicklyWindow {
 // MARK: - NSWindowDelegate
 extension OpenQuicklyWindow {
 
-  func windowShouldClose(_: Any) -> Bool {
+  func windowShouldClose(_: NSWindow) -> Bool {
     self.emit(.close)
 
     return false
