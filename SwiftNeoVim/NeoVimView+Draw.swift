@@ -16,7 +16,7 @@ extension NeoVimView {
       return
     }
 
-    let context = NSGraphicsContext.current()!.cgContext
+    let context = NSGraphicsContext.current!.cgContext
     context.saveGState()
     defer { context.restoreGState() }
 
@@ -159,7 +159,7 @@ extension NeoVimView {
     let displayStr = "\(discreteSize.width) × \(discreteSize.height)"
 
     var sizeAttrs = resizeTextAttrs
-    sizeAttrs[NSForegroundColorAttributeName] = self.theme.foreground
+    sizeAttrs[NSAttributedStringKey.foregroundColor] = self.theme.foreground
 
     let size = displayStr.size(withAttributes: sizeAttrs)
     let x = (boundsSize.width - size.width) / 2
@@ -305,9 +305,9 @@ extension NeoVimView {
   }
 }
 
-fileprivate let emojiAttrs = [ NSFontAttributeName: NSFont(name: "AppleColorEmoji", size: 72)! ]
+fileprivate let emojiAttrs = [ NSAttributedStringKey.font: NSFont(name: "AppleColorEmoji", size: 72)! ]
 fileprivate let resizeTextAttrs = [
-  NSFontAttributeName: NSFont.systemFont(ofSize: 18),
-  NSForegroundColorAttributeName: NSColor.darkGray
+  NSAttributedStringKey.font: NSFont.systemFont(ofSize: 18),
+  NSAttributedStringKey.foregroundColor: NSColor.darkGray
 ]
 fileprivate let colorSpace = NSColorSpace.sRGB

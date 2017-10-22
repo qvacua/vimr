@@ -1351,7 +1351,7 @@
 					4B2A2BF61D0351810074CE9A = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = H96Q2NKTQH;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 					};
 					4B56F28F1D29903F00C1F92E = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -1912,6 +1912,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -1936,6 +1938,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR.SwiftNeoVim;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

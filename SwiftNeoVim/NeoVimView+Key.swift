@@ -11,7 +11,7 @@ extension NeoVimView {
     self.keyDownDone = false
     NSCursor.setHiddenUntilMouseMoves(true)
 
-    let context = NSTextInputContext.current()
+    let context = NSTextInputContext.current
     let cocoaHandledEvent = context?.handleEvent(event) ?? false
     if self.keyDownDone && cocoaHandledEvent {
       return
@@ -217,7 +217,7 @@ extension NeoVimView {
     return NSAttributedString(string: fillChars + lastMarkedText)
   }
 
-  public func validAttributesForMarkedText() -> [String] {
+  public func validAttributesForMarkedText() -> [NSAttributedStringKey] {
     return []
   }
 
@@ -238,7 +238,7 @@ extension NeoVimView {
     return 1
   }
 
-  func vimModifierFlags(_ modifierFlags: NSEventModifierFlags) -> String? {
+  func vimModifierFlags(_ modifierFlags: NSEvent.ModifierFlags) -> String? {
     var result = ""
 
     let control = modifierFlags.contains(.control)

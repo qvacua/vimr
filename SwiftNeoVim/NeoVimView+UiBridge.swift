@@ -229,7 +229,7 @@ extension NeoVimView {
     gui.async {
       self.bridgeLogger.mark()
 
-      NSBeep()
+      NSSound.beep()
     }
   }
 
