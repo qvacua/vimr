@@ -4,9 +4,9 @@ osx_image: xcode9
 git:
     depth: 1
 
-cache:
-    directories:
-        - Carthage
+    #cache:
+    #    directories:
+    #        - Carthage
 
 before_install:
     - brew update
