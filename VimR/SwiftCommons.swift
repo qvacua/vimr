@@ -16,7 +16,7 @@ extension String {
       return self
     }
 
-    let idx = self.characters.index(self.startIndex, offsetBy: prefix.characters.count)
+    let idx = self.index(self.startIndex, offsetBy: prefix.characters.count)
     return String(self[idx..<self.endIndex])
   }
 }

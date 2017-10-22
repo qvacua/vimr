@@ -259,7 +259,7 @@ extension OpenQuicklyWindow {
     rowText = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
     rowText.addAttribute(NSAttributedStringKey.foregroundColor,
                          value: NSColor.lightGray,
-                         range: NSRange(location: name.characters.count, length: pathInfo.characters.count + 3))
+                         range: NSRange(location: name.count, length: pathInfo.characters.count + 3))
 
     return rowText
   }

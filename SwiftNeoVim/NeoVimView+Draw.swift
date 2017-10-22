@@ -55,7 +55,7 @@ extension NeoVimView {
 
     let positions = rowFrag.range
       // filter out the put(0, 0)s (after a wide character)
-      .filter { self.grid.cells[rowFrag.row][$0].string.characters.count > 0 }
+      .filter { self.grid.cells[rowFrag.row][$0].string.count > 0 }
       .map { self.pointInView(forRow: rowFrag.row, column: $0) }
 
     if positions.isEmpty {

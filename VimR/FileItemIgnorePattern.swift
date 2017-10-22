@@ -14,7 +14,7 @@ class FileItemIgnorePattern: Hashable, CustomStringConvertible {
   }
 
   static func from(string str: String) -> Set<FileItemIgnorePattern> {
-    if str.trimmingCharacters(in: whitespaceCharSet).characters.count == 0 {
+    if str.trimmingCharacters(in: whitespaceCharSet).count == 0 {
       return Set()
     }
 
@@ -22,7 +22,7 @@ class FileItemIgnorePattern: Hashable, CustomStringConvertible {
       .components(separatedBy: ",")
       .flatMap {
         let trimmed = $0.trimmingCharacters(in: whitespaceCharSet)
-        if trimmed.characters.count == 0 {
+        if trimmed.count == 0 {
           return nil
         }
 
@@ -46,33 +46,33 @@ class FileItemIgnorePattern: Hashable, CustomStringConvertible {
   var description: String {
     return "<FileItemIgnorePattern: pattern=\(self.pattern), folderPattern=\(self.folderPattern)>"
   }
-  
+
   let folderPattern: Bool
   let pattern: String
-  
+
   fileprivate let patternAsFileSysRep: UnsafeMutablePointer<Int8>
-  
+
   init(pattern: String) {
     self.pattern = pattern
     self.folderPattern = pattern.hasPrefix("*/")
-    
+
     let fileSysRep = (pattern as NSString).fileSystemRepresentation
     let len = Int(strlen(fileSysRep))
-    
+
     self.patternAsFileSysRep = UnsafeMutablePointer<Int8>.allocate(capacity: len + 1)
     memcpy(self.patternAsFileSysRep, fileSysRep, len)
     self.patternAsFileSysRep[len] = 0
   }
-  
+
   deinit {
     let len = Int(strlen(self.patternAsFileSysRep))
     self.patternAsFileSysRep.deallocate(capacity: len + 1)
   }
-  
+
   func match(absolutePath path: String) -> Bool {
     let matches: Int32
     let absolutePath = path as NSString
-    
+
     if self.folderPattern {
       matches = fnmatch(self.patternAsFileSysRep,
                         absolutePath.fileSystemRepresentation,
@@ -82,7 +82,7 @@ class FileItemIgnorePattern: Hashable, CustomStringConvertible {
                         (absolutePath.lastPathComponent as NSString).fileSystemRepresentation,
                         FNM_NOESCAPE)
     }
-    
+
     return matches != FNM_NOMATCH
   }
 }

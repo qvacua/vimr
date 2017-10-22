@@ -11,7 +11,7 @@ class PrefUtils {
   fileprivate static let whitespaceCharSet = CharacterSet.whitespaces
 
   static func ignorePatterns(fromString str: String) -> Set<FileItemIgnorePattern> {
-    if str.trimmingCharacters(in: self.whitespaceCharSet).characters.count == 0 {
+    if str.trimmingCharacters(in: self.whitespaceCharSet).count == 0 {
       return Set()
     }
 
@@ -19,7 +19,7 @@ class PrefUtils {
       .components(separatedBy: ",")
       .flatMap {
         let trimmed = $0.trimmingCharacters(in: self.whitespaceCharSet)
-        if trimmed.characters.count == 0 {
+        if trimmed.count == 0 {
           return nil
         }
 

@@ -171,11 +171,11 @@ extension OpenedFileList {
 
     rowText.addAttribute(NSAttributedStringKey.foregroundColor,
                          value: self.theme.foreground,
-                         range: NSRange(location: 0, length: name.characters.count))
+                         range: NSRange(location: 0, length: name.count))
 
     rowText.addAttribute(NSAttributedStringKey.foregroundColor,
                          value: self.theme.foreground.brightening(by: 1.15),
-                         range: NSRange(location: name.characters.count, length: pathInfo.characters.count + 3))
+                         range: NSRange(location: name.count, length: pathInfo.characters.count + 3))
 
     return rowText
   }
