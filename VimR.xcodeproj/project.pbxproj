@@ -191,7 +191,6 @@
 		4BB489431D952CF6005BB0E8 /* WorkspaceToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */; };
 		4BB727141E97A718001571C1 /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; };
 		4BB727151E97A718001571C1 /* CocoaMarkdown.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BB7F3921F9D260C00624F61 /* Swifter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB7F3911F9D260B00624F61 /* Swifter.framework */; };
 		4BB7F3931F9D261500624F61 /* Swifter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB7F3911F9D260B00624F61 /* Swifter.framework */; };
 		4BB7F3941F9D261500624F61 /* Swifter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB7F3911F9D260B00624F61 /* Swifter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BCADE081D11ED12004DAD0F /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */; };
@@ -638,7 +637,6 @@
 				4B183E0E1E06E2940079E8A8 /* CocoaMarkdown.framework in Frameworks */,
 				4B2A2BEE1D02261F0074CE9A /* RxSwift.framework in Frameworks */,
 				4B401B141D0454DC00D99EDC /* PureLayout.framework in Frameworks */,
-				4BB7F3921F9D260C00624F61 /* Swifter.framework in Frameworks */,
 				4BDF50081D7607BF00D8FBC3 /* EonilFileSystemEvents.framework in Frameworks */,
 				4B2A2BEC1D02261F0074CE9A /* RxCocoa.framework in Frameworks */,
 			);
