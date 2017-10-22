@@ -1912,7 +1912,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -1937,7 +1936,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR.SwiftNeoVim;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -2149,7 +2147,7 @@
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2197,7 +2195,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -2218,7 +2216,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR;
 				PRODUCT_NAME = VimR;
 				SWIFT_OBJC_BRIDGING_HEADER = VimR/Bridge.h;
-				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -2238,7 +2235,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR;
 				PRODUCT_NAME = VimR;
 				SWIFT_OBJC_BRIDGING_HEADER = VimR/Bridge.h;
-				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -2254,7 +2250,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimRTests;
 				PRODUCT_NAME = VimRTests;
-				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -2270,7 +2265,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimRTests;
 				PRODUCT_NAME = VimRTests;
-				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
