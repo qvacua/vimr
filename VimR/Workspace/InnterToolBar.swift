@@ -87,7 +87,7 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
 
   override var intrinsicContentSize: CGSize {
     if #available(macOS 10.11, *) {
-      return CGSize(width: NSViewNoIntrinsicMetric, height: InnerToolBar.height)
+      return CGSize(width: NSView.noIntrinsicMetric, height: InnerToolBar.height)
     } else {
       return CGSize(width: -1, height: InnerToolBar.height)
     }
@@ -128,13 +128,13 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     self.theme.separator.set()
     let bottomSeparatorRect = self.bottomSeparatorRect()
     if dirtyRect.intersects(bottomSeparatorRect) {
-      NSRectFill(bottomSeparatorRect)
+      bottomSeparatorRect.fill()
     }
 
     self.theme.toolbarForeground.set()
     let innerSeparatorRect = self.innerSeparatorRect()
     if dirtyRect.intersects(innerSeparatorRect) {
-      NSRectFill(innerSeparatorRect)
+      innerSeparatorRect.fill()
     }
   }
 
@@ -258,23 +258,23 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
 // MARK: - Actions
 extension InnerToolBar {
 
-  func closeAction(_ sender: Any?) {
+  @objc func closeAction(_ sender: Any?) {
     self.tool?.toggle()
   }
 
-  func moveToTopAction(_ sender: Any?) {
+  @objc func moveToTopAction(_ sender: Any?) {
     self.move(to: .top)
   }
 
-  func moveToRightAction(_ sender: Any?) {
+  @objc func moveToRightAction(_ sender: Any?) {
     self.move(to: .right)
   }
 
-  func moveToBottomAction(_ sender: Any?) {
+  @objc func moveToBottomAction(_ sender: Any?) {
     self.move(to: .bottom)
   }
 
-  func moveToLeftAction(_ sender: Any?) {
+  @objc func moveToLeftAction(_ sender: Any?) {
     self.move(to: .left)
   }
 

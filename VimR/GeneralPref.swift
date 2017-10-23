@@ -112,7 +112,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     let ignoreListTitle = self.titleTextField(title: "Files To Ignore:")
     let ignoreField = self.ignoreField
-    NotificationCenter.default.addObserver(forName: NSNotification.Name.NSControlTextDidEndEditing,
+    NotificationCenter.default.addObserver(forName: NSControl.textDidEndEditingNotification,
                                            object: ignoreField,
                                            queue: nil) { [unowned self] _ in
       self.ignorePatternsAction()
@@ -204,13 +204,13 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 // MARK: - Actions
 extension GeneralPref {
 
-  func copyCliTool(_ sender: NSButton) {
+  @objc func copyCliTool(_ sender: NSButton) {
     let panel = NSOpenPanel()
     panel.canChooseFiles = false
     panel.canChooseDirectories = true
 
     panel.beginSheetModal(for: self.window!) { result in
-      guard result == NSFileHandlingPanelOKButton else {
+      guard result == .OK else {
         return
       }
 
@@ -234,15 +234,15 @@ extension GeneralPref {
     }
   }
 
-  func openUntitledWindowWhenLaunchingAction(_ sender: NSButton) {
+  @objc func openUntitledWindowWhenLaunchingAction(_ sender: NSButton) {
     self.emit(.setOpenOnLaunch(self.openWhenLaunchingCheckbox.boolState))
   }
 
-  func openUntitledWindowOnReactivationAction(_ sender: NSButton) {
+  @objc func openUntitledWindowOnReactivationAction(_ sender: NSButton) {
     self.emit(.setOpenOnReactivation(self.openOnReactivationCheckbox.boolState))
   }
 
-  func afterLastWindowAction(_ sender: NSPopUpButton) {
+  @objc func afterLastWindowAction(_ sender: NSPopUpButton) {
     let index = sender.indexOfSelectedItem
 
     guard index >= 0 && index <= 2 else {

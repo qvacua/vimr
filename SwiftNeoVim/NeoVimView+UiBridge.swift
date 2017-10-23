@@ -116,7 +116,7 @@ extension NeoVimView {
       self.markForRender(position: curPos)
       // When the cursor is in the command line, then we need this...
       self.markForRender(cellPosition: self.grid.nextCellPosition(curPos))
-      if markedText.characters.count == 0 {
+      if markedText.count == 0 {
         self.markForRender(position: self.grid.previousCellPosition(curPos))
       }
     }
@@ -229,7 +229,7 @@ extension NeoVimView {
     gui.async {
       self.bridgeLogger.mark()
 
-      NSBeep()
+      NSSound.beep()
     }
   }
 

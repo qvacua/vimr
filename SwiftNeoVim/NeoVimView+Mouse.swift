@@ -52,7 +52,7 @@ extension NeoVimView {
     }
 
     switch event.phase {
-    case NSEventPhase.began:
+    case .began:
       let pinchImageRep = self.bitmapImageRepForCachingDisplay(in: self.bounds)!
       self.cacheDisplay(in: self.bounds, to: pinchImageRep)
       self.pinchBitmap = pinchImageRep
@@ -60,9 +60,9 @@ extension NeoVimView {
       self.isCurrentlyPinching = true
       self.needsDisplay = true
 
-    case NSEventPhase.ended, NSEventPhase.cancelled:
+    case .ended, .cancelled:
       self.isCurrentlyPinching = false
-      self.updateFontMetaData(NSFontManager.shared().convert(self.font, toSize: resultingFontSize))
+      self.updateFontMetaData(NSFontManager.shared.convert(self.font, toSize: resultingFontSize))
       self.pinchTargetScale = 1
 
     default:
@@ -152,7 +152,7 @@ extension NeoVimView {
   }
 
   fileprivate func vimScrollInputFor(deltaX: CGFloat, deltaY: CGFloat,
-                                     modifierFlags: NSEventModifierFlags,
+                                     modifierFlags: NSEvent.ModifierFlags,
                                      cellPosition: Position) -> (String, String) {
 
     let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.column),\(cellPosition.row)")

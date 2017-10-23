@@ -11,7 +11,7 @@ extension NeoVimView {
     self.keyDownDone = false
     NSCursor.setHiddenUntilMouseMoves(true)
 
-    let context = NSTextInputContext.current()
+    let context = NSTextInputContext.current
     let cocoaHandledEvent = context?.handleEvent(event) ?? false
     if self.keyDownDone && cocoaHandledEvent {
       return
@@ -174,7 +174,7 @@ extension NeoVimView {
     // FIXME: do we have to handle positions at the column borders?
     if let markedText = self.markedText {
       let result = NSRange(location: self.grid.singleIndexFrom(self.markedPosition),
-                           length: markedText.characters.count)
+                           length: markedText.count)
 //      self.logger.debug("\(#function): \(result)")
       return result
     }
@@ -206,7 +206,7 @@ extension NeoVimView {
 
     // we only support last marked text, thus fill dummy characters when Cocoa asks for more
     // characters than marked...
-    let fillCount = aRange.length - lastMarkedText.characters.count
+    let fillCount = aRange.length - lastMarkedText.count
     guard fillCount >= 0 else {
       return nil
     }
@@ -217,7 +217,7 @@ extension NeoVimView {
     return NSAttributedString(string: fillChars + lastMarkedText)
   }
 
-  public func validAttributesForMarkedText() -> [String] {
+  public func validAttributesForMarkedText() -> [NSAttributedStringKey] {
     return []
   }
 
@@ -238,7 +238,7 @@ extension NeoVimView {
     return 1
   }
 
-  func vimModifierFlags(_ modifierFlags: NSEventModifierFlags) -> String? {
+  func vimModifierFlags(_ modifierFlags: NSEvent.ModifierFlags) -> String? {
     var result = ""
 
     let control = modifierFlags.contains(.control)
@@ -262,7 +262,7 @@ extension NeoVimView {
       result += "S-"
     }
 
-    if result.characters.count > 0 {
+    if result.count > 0 {
       return result
     }
 

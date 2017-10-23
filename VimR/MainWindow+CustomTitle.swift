@@ -61,7 +61,7 @@ extension MainWindow {
   }
 
   func set(repUrl url: URL?, themed: Bool) {
-    if self.window.styleMask.contains(.fullScreen) || themed == false {
+    if self.window.styleMask.contains(NSWindow.StyleMask.fullScreen) || themed == false {
       self.internalSetRepUrl(url)
       return
     }

@@ -99,12 +99,12 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
     fatalError("init(coder:) has not been implemented")
   }
 
-  func selectHtmlFile(sender: Any?) {
+  @objc func selectHtmlFile(sender: Any?) {
     let panel = NSOpenPanel()
     panel.canChooseDirectories = false
     panel.allowsMultipleSelection = false
     panel.beginSheetModal(for: self.window!) { result in
-      guard result == NSFileHandlingPanelOKButton else {
+      guard result == .OK else {
         return
       }
 

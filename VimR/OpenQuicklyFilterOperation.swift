@@ -34,7 +34,7 @@ class OpenQuicklyFilterOperation: Operation {
     }
 
     let sorted: [ScoredFileItem]
-    if pattern.characters.count == 0 {
+    if pattern.count == 0 {
       let truncatedItems = self.flatFileItems[0...min(maxResultCount, self.flatFileItems.count - 1)]
       sorted = truncatedItems.map { ScoredFileItem(score: 0, url: $0.url) }
     } else {

@@ -43,7 +43,7 @@ extension NSImage {
 
     result.lockFocus()
     color.set()
-    NSRectFillUsingOperation(CGRect(origin: .zero, size: self.size), .sourceAtop)
+    CGRect(origin: .zero, size: self.size).fill(using: .sourceAtop)
     result.unlockFocus()
 
     return result
@@ -54,11 +54,11 @@ extension NSButton {
 
   var boolState: Bool {
     get {
-      return self.state == NSOnState ? true : false
+      return self.state == .on ? true : false
     }
 
     set {
-      self.state = newValue ? NSOnState : NSOffState
+      self.state = newValue ? .on : .off
     }
   }
 }
@@ -67,11 +67,11 @@ extension NSMenuItem {
 
   var boolState: Bool {
     get {
-      return self.state == NSOnState ? true : false
+      return self.state == .on ? true : false
     }
 
     set {
-      self.state = newValue ? NSOnState : NSOffState
+      self.state = newValue ? .on : .off
     }
   }
 }
@@ -102,17 +102,17 @@ extension NSAttributedString {
   }
 
   static func infoLabel(markdown: String) -> NSAttributedString {
-    let size = NSFont.smallSystemFontSize()
+    let size = NSFont.smallSystemFontSize
     let document = CMDocument(data: markdown.data(using: .utf8), options: .normalize)
 
     let attrs = CMTextAttributes()
     attrs?.textAttributes = [
-      NSFontAttributeName: NSFont.systemFont(ofSize: size),
-      NSForegroundColorAttributeName: NSColor.gray,
+      NSAttributedStringKey.font: NSFont.systemFont(ofSize: size),
+      NSAttributedStringKey.foregroundColor: NSColor.gray,
     ]
     attrs?.inlineCodeAttributes = [
-      NSFontAttributeName: NSFont.userFixedPitchFont(ofSize: size)!,
-      NSForegroundColorAttributeName: NSColor.gray,
+      NSAttributedStringKey.font: NSFont.userFixedPitchFont(ofSize: size)!,
+      NSAttributedStringKey.foregroundColor: NSColor.gray,
     ]
 
     let renderer = CMAttributedStringRenderer(document: document, attributes: attrs)
@@ -138,7 +138,7 @@ extension NSView {
     self.removeConstraints(self.constraints)
   }
 
-  var isFirstResponder: Bool {
+  @objc var isFirstResponder: Bool {
     return self.window?.firstResponder == self
   }
 
@@ -152,7 +152,7 @@ extension NSTableView {
   static func standardTableView() -> NSTableView {
     let tableView = NSTableView(frame: CGRect.zero)
 
-    let column = NSTableColumn(identifier: "name")
+    let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("name"))
     column.isEditable = false
 
     tableView.addTableColumn(column)
@@ -183,7 +183,7 @@ extension NSOutlineView {
   }
 
   static func configure(toStandard outlineView: NSOutlineView) {
-    let column = NSTableColumn(identifier: "name")
+    let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("name"))
     column.resizingMask = .autoresizingMask
     column.isEditable = false
 

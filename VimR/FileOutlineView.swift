@@ -35,7 +35,7 @@ class FileOutlineView: NSOutlineView,
     self.delegate = self
     self.allowsEmptySelection = true
 
-    guard Bundle.main.loadNibNamed("FileBrowserMenu", owner: self, topLevelObjects: nil) else {
+    guard Bundle.main.loadNibNamed(NSNib.Name(rawValue: "FileBrowserMenu"), owner: self, topLevelObjects: nil) else {
       NSLog("WARN: FileBrowserMenu.xib could not be loaded")
       return
     }
@@ -341,7 +341,7 @@ extension FileOutlineView {
 extension FileOutlineView {
 
   func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
-    return self.make(withIdentifier: "file-row-view", owner: self) as? ThemedTableRow
+    return self.makeView(withIdentifier: NSUserInterfaceItemIdentifier("file-row-view"), owner: self) as? ThemedTableRow
            ?? ThemedTableRow(withIdentifier: "file-row-view", themedView: self)
   }
 
@@ -350,7 +350,7 @@ extension FileOutlineView {
       return nil
     }
 
-    let cell = (self.make(withIdentifier: "file-cell-view", owner: self) as? ThemedTableCell)?.reset()
+    let cell = (self.makeView(withIdentifier: NSUserInterfaceItemIdentifier("file-cell-view"), owner: self) as? ThemedTableCell)?.reset()
                ?? ThemedTableCell(withIdentifier: "file-cell-view")
 
     cell.isDir = fileBrowserItem.isDir

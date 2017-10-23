@@ -23,7 +23,7 @@ class PrefWindow: NSObject,
     self.emit = emitter.typedEmit()
     self.openStatusMark = state.preferencesOpen.mark
 
-    self.windowController = NSWindowController(windowNibName: "PrefWindow")
+    self.windowController = NSWindowController(windowNibName: NSNib.Name("PrefWindow"))
 
     self.panes = [
       GeneralPref(source: source, emitter: emitter, state: state),
@@ -122,7 +122,7 @@ class PrefWindow: NSObject,
 // MARK: - NSWindowDelegate
 extension PrefWindow {
 
-  func windowShouldClose(_: Any) -> Bool {
+  func windowShouldClose(_: NSWindow) -> Bool {
     self.emit(.close)
 
     return false

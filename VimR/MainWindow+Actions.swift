@@ -17,7 +17,7 @@ extension MainWindow {
     panel.canChooseDirectories = true
     panel.allowsMultipleSelection = true
     panel.beginSheetModal(for: self.window) { result in
-      guard result == NSFileHandlingPanelOKButton else {
+      guard result == .OK else {
         return
       }
 
@@ -69,7 +69,7 @@ extension MainWindow {
   fileprivate func savePanelSheet(action: @escaping (URL) -> Void) {
     let panel = NSSavePanel()
     panel.beginSheetModal(for: self.window) { result in
-      guard result == NSFileHandlingPanelOKButton else {
+      guard result == .OK else {
         return
       }
 

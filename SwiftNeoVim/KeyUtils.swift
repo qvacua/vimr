@@ -8,7 +8,7 @@ import Cocoa
 class KeyUtils {
 
   static func isControlCode(key: String) -> Bool {
-    guard key.characters.count == 1 else {
+    guard key.count == 1 else {
       return false
     }
 
@@ -20,7 +20,7 @@ class KeyUtils {
   }
 
   static func isSpecial(key: String) -> Bool {
-    guard key.characters.count == 1 else {
+    guard key.count == 1 else {
       return false
     }
 

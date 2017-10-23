@@ -14,7 +14,7 @@ class OpenQuicklyFileViewRow: NSTableRowView {
       NSColor.clear.set()
     }
 
-    self.rectsBeingDrawn().forEach { NSRectFillUsingOperation(NSIntersectionRect($0, dirtyRect), .sourceOver) }
+    self.rectsBeingDrawn().forEach { NSIntersectionRect($0, dirtyRect).fill(using: .sourceOver) }
   }
 
   fileprivate func rectsBeingDrawn() -> [CGRect] {
