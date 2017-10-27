@@ -121,11 +121,11 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
 // MARK: - Actions
 extension AdvancedPref {
 
-  func useInteractiveZshAction(_ sender: NSButton) {
+  @objc func useInteractiveZshAction(_ sender: NSButton) {
     self.emit(.setUseInteractiveZsh(sender.boolState))
   }
 
-  func useSnapshotUpdateChannelAction(_ sender: NSButton) {
+  @objc func useSnapshotUpdateChannelAction(_ sender: NSButton) {
     self.emit(.setUseSnapshotUpdate(sender.boolState))
   }
 }

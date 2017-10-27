@@ -4,6 +4,7 @@
  */
 
 import Foundation
+import Swifter
 
 class HttpServerService {
 

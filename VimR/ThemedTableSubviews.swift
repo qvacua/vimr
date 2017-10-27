@@ -19,7 +19,7 @@ class ThemedTableRow: NSTableRowView {
 
     super.init(frame: .zero)
 
-    self.identifier = identifier
+    self.identifier = NSUserInterfaceItemIdentifier(identifier)
   }
 
   open override func drawBackground(in dirtyRect: NSRect) {
@@ -32,7 +32,7 @@ class ThemedTableRow: NSTableRowView {
     }
 
     self.themedView?.theme.background.set()
-    NSRectFill(dirtyRect)
+    dirtyRect.fill()
   }
 
   override func drawSelection(in dirtyRect: NSRect) {
@@ -41,7 +41,7 @@ class ThemedTableRow: NSTableRowView {
     }
 
     self.themedView?.theme.highlightBackground.set()
-    NSRectFill(dirtyRect)
+    dirtyRect.fill()
   }
 
   fileprivate weak var themedView: ThemedView?
@@ -58,7 +58,7 @@ class ThemedTableCell: NSTableCellView {
   static let widthWithoutText = CGFloat(2 + 16 + 4 + 2)
 
   static func width(with text: String) -> CGFloat {
-    let attrStr = NSAttributedString(string: text, attributes: [NSFontAttributeName: ThemedTableCell.font])
+    let attrStr = NSAttributedString(string: text, attributes: [NSAttributedStringKey.font: ThemedTableCell.font])
 
     return self.widthWithoutText + attrStr.size().width
   }
@@ -123,7 +123,7 @@ class ThemedTableCell: NSTableCellView {
   init(withIdentifier identifier: String) {
     super.init(frame: .zero)
 
-    self.identifier = identifier
+    self.identifier = NSUserInterfaceItemIdentifier(identifier)
 
     self.textField = self._textField
     self.imageView = self._imageView
@@ -154,7 +154,7 @@ class ThemedTableCell: NSTableCellView {
     textField.removeFromSuperview()
     self.addSubview(textField)
 
-    textField.autoPinEdgesToSuperviewEdges(with: EdgeInsets(top: 2, left: 4, bottom: 2, right: 2))
+    textField.autoPinEdgesToSuperviewEdges(with: NSEdgeInsets(top: 2, left: 4, bottom: 2, right: 2))
   }
 
   fileprivate let _textField = NSTextField(forAutoLayout: ())

@@ -25,14 +25,14 @@ struct Cell: CustomStringConvertible {
     self.attributes = attrs
     self.marked = marked
   }
-  
+
   var description: String {
-    return self.string.characters.count > 0 ? self.string : "*"
+    return self.string.count > 0 ? self.string : "*"
   }
 }
 
 extension Position: CustomStringConvertible, Equatable {
-  
+
   static let zero = Position(row: 0, column: 0)
   static let null = Position(row: -1, column: -1)
 
@@ -42,20 +42,20 @@ extension Position: CustomStringConvertible, Equatable {
 
     return true
   }
-  
+
   public var description: String {
     return "Position<\(self.row):\(self.column)>"
   }
 }
 
 struct Size: CustomStringConvertible, Equatable {
-  
+
   static let zero = Size(width: 0, height: 0)
 
   static func ==(left: Size, right: Size) -> Bool {
     return left.width == right.width && left.height == right.height
   }
-  
+
   var width: Int
   var height: Int
 
@@ -65,9 +65,9 @@ struct Size: CustomStringConvertible, Equatable {
 }
 
 struct Region: CustomStringConvertible {
-  
+
   static let zero = Region(top: 0, bottom: 0, left: 0, right: 0)
-  
+
   var top: Int
   var bottom: Int
   var left: Int
@@ -96,49 +96,49 @@ class Grid: CustomStringConvertible {
   var foreground = defaultForeground
   var background = defaultBackground
   var special = defaultSpecial
-  
+
   var attrs: CellAttributes = CellAttributes(
     fontTrait: .none,
     foreground: defaultForeground, background: defaultBackground, special: defaultSpecial
   )
-  
+
   fileprivate(set) var cells: [[Cell]] = []
 
   var hasData: Bool {
     return !self.cells.isEmpty
   }
-  
+
   var description: String {
     return self.cells.reduce("<<< Grid\n") { $1.reduce($0) { $0 + $1.description } + "\n" } + ">>>"
   }
-  
+
   func resize(_ size: Size) {
     self.region = Region(top: 0, bottom: size.height - 1, left: 0, right: size.width - 1)
     self.size = size
     self.position = Position.zero
-    
+
     let emptyCellAttrs = CellAttributes(fontTrait: .none,
                                         foreground: self.foreground, background: self.background, special: self.special)
-    
+
     let emptyRow = Array(repeating: Cell(string: " ", attrs: emptyCellAttrs), count: size.width)
     self.cells = Array(repeating: emptyRow, count: size.height)
   }
-  
+
   func clear() {
     self.clearRegion(self.region)
   }
-  
+
   func eolClear() {
     self.clearRegion(
       Region(top: self.position.row, bottom: self.position.row,
              left: self.position.column, right: self.region.right)
     )
   }
-  
+
   func setScrollRegion(_ region: Region) {
     self.region = region
   }
-  
+
   func scroll(_ count: Int) {
     var start, stop, step : Int
     if count > 0 {
@@ -168,7 +168,7 @@ class Grid: CustomStringConvertible {
     }
     self.clearRegion(Region(top: clearTop, bottom: clearBottom, left: self.region.left, right: self.region.right))
   }
-  
+
   func goto(_ position: Position) {
     self.position = position
   }
@@ -180,7 +180,7 @@ class Grid: CustomStringConvertible {
     // |abcde>| <- ">" at the end of the line is wrong -> the XPC could tell the main app whether the string occupies
     // |ㅎ    |        two cells using vim_strwidth()
     self.cells[self.position.row][self.position.column] = Cell(string: string, attrs: self.attrs)
-    
+
     // Increment the column of the put position because neovim calls sets the position only once when drawing
     // consecutive cells in the same line
     self.advancePosition()
@@ -230,7 +230,7 @@ class Grid: CustomStringConvertible {
         break
       }
     }
-    
+
     return Region(top: row, bottom: row, left: left, right: right)
   }
 
@@ -246,7 +246,7 @@ class Grid: CustomStringConvertible {
       return false
     }
 
-    if self.cells[position.row][position.column].string.characters.count == 0 {
+    if self.cells[position.row][position.column].string.count == 0 {
       return true
     }
 
@@ -264,11 +264,11 @@ class Grid: CustomStringConvertible {
   func previousCellPosition(_ position: Position) -> Position {
     return Position(row: position.row, column: max(position.column - 1, 0))
   }
-  
+
   func nextCellPosition(_ position: Position) -> Position {
     return Position(row: position.row, column: min(position.column + 1, self.size.width - 1))
   }
-  
+
   func cellForSingleIndex(_ idx: Int) -> Cell {
     let position = self.positionFromSingleIndex(idx)
     return self.cells[position.row][position.column]
@@ -282,7 +282,7 @@ class Grid: CustomStringConvertible {
 
     let clearedAttrs = CellAttributes(fontTrait: .none,
                                       foreground: self.foreground, background: self.background, special: self.special)
-    
+
     let clearedCell = Cell(string: " ", attrs: clearedAttrs)
     let clearedRow = Array(repeating: clearedCell, count: region.right - region.left + 1)
     for i in region.top...region.bottom {

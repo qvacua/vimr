@@ -102,7 +102,7 @@ class Workspace: NSView, WorkspaceBarDelegate {
     super.init(frame: .zero)
     self.configureForAutoLayout()
 
-    self.register(forDraggedTypes: [WorkspaceToolButton.toolUti])
+    self.registerForDraggedTypes([NSPasteboard.PasteboardType(WorkspaceToolButton.toolUti)])
     self.bars.values.forEach {
       $0.workspace = self
       $0.delegate = self
@@ -161,7 +161,7 @@ extension Workspace {
     self.endDrag()
   }
 
-  override func draggingEnded(_ sender: NSDraggingInfo?) {
+  override func draggingEnded(_ sender: NSDraggingInfo) {
     self.endDrag()
   }
 
@@ -290,7 +290,7 @@ extension Workspace {
     leftBar.autoPinEdge(toSuperviewEdge: .left)
     leftBar.autoPinEdge(.bottom, to: .top, of: bottomBar)
 
-    NSLayoutConstraint.autoSetPriority(NSLayoutPriorityDragThatCannotResizeWindow) {
+    NSLayoutConstraint.autoSetPriority(.dragThatCannotResizeWindow) {
       topBar.dimensionConstraint = topBar.autoSetDimension(.height, toSize: 50)
       rightBar.dimensionConstraint = rightBar.autoSetDimension(.width, toSize: 50)
       bottomBar.dimensionConstraint = bottomBar.autoSetDimension(.height, toSize: 50)

@@ -108,7 +108,7 @@ class MainWindow: NSObject,
 
     self.cliPipePath = state.cliPipePath
 
-    self.windowController = NSWindowController(windowNibName: "MainWindow")
+    self.windowController = NSWindowController(windowNibName: NSNib.Name(rawValue: "MainWindow"))
 
     let neoVimViewConfig = NeoVimView.Config(useInteractiveZsh: state.useInteractiveZsh,
                                              cwd: state.cwd,
@@ -321,8 +321,6 @@ class MainWindow: NSObject,
   fileprivate var defaultFont = NeoVimView.defaultFont
   fileprivate var linespacing = NeoVimView.defaultLinespacing
   fileprivate var usesLigatures = false
-
-  fileprivate let fontManager = NSFontManager.shared()
 
   fileprivate var previewPosition = Marked(Position.beginning)
 

@@ -1,5 +1,5 @@
 language: objective-c
-osx_image: xcode8.3
+osx_image: xcode9
 
 git:
     depth: 1
@@ -8,12 +8,7 @@ cache:
     directories:
         - Carthage
 
-before_install:
-    - brew update
-    - brew outdated carthage || brew upgrade carthage
-    - brew outdated libtool || brew upgrade libtool
-    - brew outdated automake || brew upgrade automake
-    - brew install ninja
+before_install: brew update && brew bundle
 
 script:
     - ./bin/build_travis.sh

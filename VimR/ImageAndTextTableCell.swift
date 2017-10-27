@@ -20,7 +20,7 @@ class ImageAndTextTableCell: NSTableCellView {
   static let widthWithoutText = CGFloat(2 + 16 + 4 + 2)
 
   static func width(with text: String) -> CGFloat {
-    let attrStr = NSAttributedString(string: text, attributes: [NSFontAttributeName: ImageAndTextTableCell.font])
+    let attrStr = NSAttributedString(string: text, attributes: [NSAttributedStringKey.font: ImageAndTextTableCell.font])
 
     return self.widthWithoutText + attrStr.size().width
   }
@@ -30,7 +30,7 @@ class ImageAndTextTableCell: NSTableCellView {
                   height: max(self._textField.intrinsicContentSize.height, 16))
   }
 
-  override var backgroundStyle: NSBackgroundStyle {
+  override var backgroundStyle: NSView.BackgroundStyle {
     didSet {
       let attrStr = NSMutableAttributedString(attributedString: self.attributedText)
 
@@ -45,10 +45,10 @@ class ImageAndTextTableCell: NSTableCellView {
 
       switch self.backgroundStyle {
       case .light:
-        attrStr.addAttribute(NSForegroundColorAttributeName, value: NSColor.black, range: nameRange)
+        attrStr.addAttribute(NSAttributedStringKey.foregroundColor, value: NSColor.black, range: nameRange)
 
       case .dark:
-        attrStr.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: nameRange)
+        attrStr.addAttribute(NSAttributedStringKey.foregroundColor, value: NSColor.white, range: nameRange)
 
       default:
         return
@@ -91,7 +91,7 @@ class ImageAndTextTableCell: NSTableCellView {
   init(withIdentifier identifier: String) {
     super.init(frame: CGRect.zero)
 
-    self.identifier = identifier
+    self.identifier = NSUserInterfaceItemIdentifier(identifier)
 
     self.textField = self._textField
     self.imageView = self._imageView

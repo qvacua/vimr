@@ -7,23 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-231</title>
+      <title>SNAPSHOT-232</title>
       <description><![CDATA[
     <ul>
-<li>GH-534: <code>Cmd-D</code> for "Discard and Close/Quit" buttons. (thanks @nclark for the PR)</li>
-<li>GH-521: Improve the performance of the file browser, especically for folders like <code>node_modules</code> which contains many many files.</li>
+<li>GH-544: Migrate to Swift 4</li>
+<li><em>WARNING</em>: may be unstable...</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/231
+        https://github.com/qvacua/vimr/releases/tag/snapshot/232
       </releaseNotesLink>
-      <pubDate>2017-10-17T21:33:18.269185</pubDate>
+      <pubDate>2017-10-23T21:01:57.261080</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/231/VimR-SNAPSHOT-231.tar.bz2"
-                 sparkle:version="231"
-                 sparkle:shortVersionString="SNAPSHOT-231"
-                 sparkle:dsaSignature="MC0CFQCq9aEKom5rZKjcxdfWD19oNtBbvgIUd6MpwXeKgdklsl5AU0hYEZ+WjCg="
-                 length="11035006"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/232/VimR-SNAPSHOT-232.tar.bz2"
+                 sparkle:version="232"
+                 sparkle:shortVersionString="SNAPSHOT-232"
+                 sparkle:dsaSignature="MC0CFQCd+wwlExNDCFUOgJu7kL7FNZ4FoQIUV1YLEgH2N+zNxSvTRKIw4+z0sJg="
+                 length="13788312"
                  type="application/octet-stream"/>
     </item>
   </channel>

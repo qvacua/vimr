@@ -20,7 +20,9 @@ extension NeoVimView {
       return false
     }
 
-    guard let paths = sender.draggingPasteboard().propertyList(forType: NSFilenamesPboardType) as? [String] else {
+    guard let paths = sender.draggingPasteboard().propertyList(
+      forType: NSPasteboard.PasteboardType(String(kUTTypeFileURL))
+    ) as? [String] else {
       return false
     }
 
@@ -31,5 +33,5 @@ extension NeoVimView {
 }
 
 fileprivate func isFile(sender: NSDraggingInfo) -> Bool {
-  return (sender.draggingPasteboard().types?.contains(String(kUTTypeFileURL))) ?? false
+  return (sender.draggingPasteboard().types?.contains(NSPasteboard.PasteboardType(String(kUTTypeFileURL)))) ?? false
 }

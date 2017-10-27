@@ -11,7 +11,7 @@ class PrefUtils {
   fileprivate static let whitespaceCharSet = CharacterSet.whitespaces
 
   static func ignorePatterns(fromString str: String) -> Set<FileItemIgnorePattern> {
-    if str.trimmingCharacters(in: self.whitespaceCharSet).characters.count == 0 {
+    if str.trimmingCharacters(in: self.whitespaceCharSet).count == 0 {
       return Set()
     }
 
@@ -19,7 +19,7 @@ class PrefUtils {
       .components(separatedBy: ",")
       .flatMap {
         let trimmed = $0.trimmingCharacters(in: self.whitespaceCharSet)
-        if trimmed.characters.count == 0 {
+        if trimmed.count == 0 {
           return nil
         }
 
@@ -83,10 +83,10 @@ class PrefUtils {
   static func saneFont(_ fontName: String, fontSize: CGFloat) -> NSFont {
     var editorFont = NSFont(name: fontName, size: fontSize) ?? NeoVimView.defaultFont
     if !editorFont.isFixedPitch {
-      editorFont = NSFontManager.shared().convert(NeoVimView.defaultFont, toSize: editorFont.pointSize)
+      editorFont = NSFontManager.shared.convert(NeoVimView.defaultFont, toSize: editorFont.pointSize)
     }
     if editorFont.pointSize < NeoVimView.minFontSize || editorFont.pointSize > NeoVimView.maxFontSize {
-      editorFont = NSFontManager.shared().convert(editorFont, toSize: NeoVimView.defaultFont.pointSize)
+      editorFont = NSFontManager.shared.convert(editorFont, toSize: NeoVimView.defaultFont.pointSize)
     }
 
     return editorFont

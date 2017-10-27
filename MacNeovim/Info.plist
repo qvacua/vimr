@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>SNAPSHOT-231</string>
+	<string>SNAPSHOT-232</string>
 	<key>CFBundleVersion</key>
-	<string>231</string>
+	<string>232</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.productivity</string>
 	<key>LSMinimumSystemVersion</key>
