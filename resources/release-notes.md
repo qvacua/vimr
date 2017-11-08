@@ -3,6 +3,8 @@
 * GH-534: `Cmd-D` for "Discard and Close/Quit" buttons. (thanks @nclark for the PR)
 * GH-521: Improve the performance of the file browser, especically for folders like `node_modules` which contains many many files.
 * GH-544: Migrate to Swift 4
+* Dependencies updates:
+    - neovim/neovim@v0.2.1
 
 # 0.19.1-229
 
