@@ -7,25 +7,25 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-233</title>
+      <title>SNAPSHOT-234</title>
       <description><![CDATA[
     <ul>
 <li>Dependencies updates:<ul>
-<li>neovim/neovim@v0.2.1</li>
+<li>neovim/neovim@v0.2.1 (this time also without the <code>-dev</code>)</li>
 </ul>
 </li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/233
+        https://github.com/qvacua/vimr/releases/tag/snapshot/234
       </releaseNotesLink>
-      <pubDate>2017-11-08T08:17:44.591022</pubDate>
+      <pubDate>2017-11-08T17:32:57.938065</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/233/VimR-SNAPSHOT-233.tar.bz2"
-                 sparkle:version="233"
-                 sparkle:shortVersionString="SNAPSHOT-233"
-                 sparkle:dsaSignature="MC0CFQCHYJWMkn45VrTTPCYXtm6OpUwZSQIURVsSUS4bwu1JbIVrW9Y9b35sv3A="
-                 length="13829015"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/234/VimR-SNAPSHOT-234.tar.bz2"
+                 sparkle:version="234"
+                 sparkle:shortVersionString="SNAPSHOT-234"
+                 sparkle:dsaSignature="MC0CFE555CdNP2sxHJemimNIwXSGAzbFAhUAlDpnPSlGW1pbxGDygoEmSEypluk="
+                 length="13906017"
                  type="application/octet-stream"/>
     </item>
   </channel>
