@@ -64,6 +64,7 @@ You have to use Xcode 8. First install `homebrew`, then in the project root:
 
 ```bash
 xcode-select --install # install the Xcode command line tools
+brew install gnu-sed
 brew install carthage # install Carthage for dependency management
 brew install libtool automake cmake pkg-config gettext ninja # install libs and tools for neovim
 

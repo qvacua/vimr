@@ -184,6 +184,7 @@
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
 		4B9A15241D2993DA009F9F67 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B56F29B1D29926600C1F92E /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B9A15261D2993DF009F9F67 /* SwiftNeoVim.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B2A2BF71D0351810074CE9A /* SwiftNeoVim.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B9A1EBE1FB5A9E10072842B /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9A1EBD1FB5A9E10072842B /* liblua.a */; };
 		4BB1BEA91D48773200463C29 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */; };
 		4BB409E51DD68CCC005F39A2 /* FileBrowserMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BB409E71DD68CCC005F39A2 /* FileBrowserMenu.xib */; };
 		4BB409EE1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */; };
@@ -196,10 +197,7 @@
 		4BCADE081D11ED12004DAD0F /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCADE071D11ED12004DAD0F /* CocoaExtensions.swift */; };
 		4BDCFACB1D31449700F62670 /* NeoVimServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BDCFACA1D31449700F62670 /* NeoVimServer.m */; };
 		4BDCFACD1D3145AC00F62670 /* libnvim.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFACC1D3145AC00F62670 /* libnvim.a */; };
-		4BDCFAD51D3145E500F62670 /* libjemalloc_pic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFACE1D3145E500F62670 /* libjemalloc_pic.a */; };
 		4BDCFAD61D3145E500F62670 /* libjemalloc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFACF1D3145E500F62670 /* libjemalloc.a */; };
-		4BDCFAD71D3145E500F62670 /* libluajit-5.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD01D3145E500F62670 /* libluajit-5.1.a */; };
-		4BDCFAD81D3145E500F62670 /* libluv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD11D3145E500F62670 /* libluv.a */; };
 		4BDCFAD91D3145E500F62670 /* libmsgpackc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD21D3145E500F62670 /* libmsgpackc.a */; };
 		4BDCFADA1D3145E500F62670 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD31D3145E500F62670 /* libuv.a */; };
 		4BDCFADB1D3145E500F62670 /* libvterm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDCFAD41D3145E500F62670 /* libvterm.a */; };
@@ -522,6 +520,7 @@
 		4B96384D1ED9797F001C556F /* NeoVimUiBridgeProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimUiBridgeProtocol.m; sourceTree = "<group>"; };
 		4B96384F1ED979BD001C556F /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		4B97E2CD1D33F53D00FC0660 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		4B9A1EBD1FB5A9E10072842B /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = neovim/.deps/usr/lib/liblua.a; sourceTree = SOURCE_ROOT; };
 		4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
 		4BB409E61DD68CCC005F39A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/FileBrowserMenu.xib; sourceTree = "<group>"; };
 		4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProxyWorkspaceBar.swift; path = Workspace/ProxyWorkspaceBar.swift; sourceTree = "<group>"; };
@@ -532,10 +531,7 @@
 		4BDCFAC91D31449700F62670 /* NeoVimServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimServer.h; sourceTree = "<group>"; };
 		4BDCFACA1D31449700F62670 /* NeoVimServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimServer.m; sourceTree = "<group>"; };
 		4BDCFACC1D3145AC00F62670 /* libnvim.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnvim.a; path = neovim/build/lib/libnvim.a; sourceTree = SOURCE_ROOT; };
-		4BDCFACE1D3145E500F62670 /* libjemalloc_pic.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjemalloc_pic.a; path = neovim/.deps/usr/lib/libjemalloc_pic.a; sourceTree = SOURCE_ROOT; };
 		4BDCFACF1D3145E500F62670 /* libjemalloc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjemalloc.a; path = neovim/.deps/usr/lib/libjemalloc.a; sourceTree = SOURCE_ROOT; };
-		4BDCFAD01D3145E500F62670 /* libluajit-5.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libluajit-5.1.a"; path = "neovim/.deps/usr/lib/libluajit-5.1.a"; sourceTree = SOURCE_ROOT; };
-		4BDCFAD11D3145E500F62670 /* libluv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluv.a; path = neovim/.deps/usr/lib/libluv.a; sourceTree = SOURCE_ROOT; };
 		4BDCFAD21D3145E500F62670 /* libmsgpackc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmsgpackc.a; path = neovim/.deps/usr/lib/libmsgpackc.a; sourceTree = SOURCE_ROOT; };
 		4BDCFAD31D3145E500F62670 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv.a; path = neovim/.deps/usr/lib/libuv.a; sourceTree = SOURCE_ROOT; };
 		4BDCFAD41D3145E500F62670 /* libvterm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvterm.a; path = neovim/.deps/usr/lib/libvterm.a; sourceTree = SOURCE_ROOT; };
@@ -615,14 +611,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B9A1EBE1FB5A9E10072842B /* liblua.a in Frameworks */,
 				4BDCFACD1D3145AC00F62670 /* libnvim.a in Frameworks */,
-				4BDCFAD51D3145E500F62670 /* libjemalloc_pic.a in Frameworks */,
-				4BDCFAD81D3145E500F62670 /* libluv.a in Frameworks */,
 				4BDCFAD61D3145E500F62670 /* libjemalloc.a in Frameworks */,
 				4BDCFADA1D3145E500F62670 /* libuv.a in Frameworks */,
 				4BDCFAD91D3145E500F62670 /* libmsgpackc.a in Frameworks */,
 				4BDCFADB1D3145E500F62670 /* libvterm.a in Frameworks */,
-				4BDCFAD71D3145E500F62670 /* libluajit-5.1.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -969,10 +963,8 @@
 		4BDCFADC1D3145EA00F62670 /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				4BDCFACE1D3145E500F62670 /* libjemalloc_pic.a */,
 				4BDCFACF1D3145E500F62670 /* libjemalloc.a */,
-				4BDCFAD01D3145E500F62670 /* libluajit-5.1.a */,
-				4BDCFAD11D3145E500F62670 /* libluv.a */,
+				4B9A1EBD1FB5A9E10072842B /* liblua.a */,
 				4BDCFAD21D3145E500F62670 /* libmsgpackc.a */,
 				4BDCFAD31D3145E500F62670 /* libuv.a */,
 				4BDCFAD41D3145E500F62670 /* libvterm.a */,
@@ -1974,7 +1966,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
 					"$(inherited)",
 					"INCLUDE_GENERATED_DECLARATIONS=1",
 				);
@@ -1993,6 +1984,10 @@
 				OTHER_LDFLAGS = (
 					"$(PROJECT_DIR)/third-party/libintl/lib/libintl.a",
 					"-liconv",
+					"-lpthread",
+					"-ldl",
+					"-lm",
+					"-lutil",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -2017,6 +2012,10 @@
 				OTHER_LDFLAGS = (
 					"$(PROJECT_DIR)/third-party/libintl/lib/libintl.a",
 					"-liconv",
+					"-lpthread",
+					"-ldl",
+					"-lm",
+					"-lutil",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
