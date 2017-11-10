@@ -7,25 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-234</title>
+      <title>SNAPSHOT-235</title>
       <description><![CDATA[
     <ul>
-<li>Dependencies updates:<ul>
-<li>neovim/neovim@v0.2.1 (this time also without the <code>-dev</code>)</li>
-</ul>
-</li>
+<li>Fixes the Lua interpreter.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/234
+        https://github.com/qvacua/vimr/releases/tag/snapshot/235
       </releaseNotesLink>
-      <pubDate>2017-11-08T17:32:57.938065</pubDate>
+      <pubDate>2017-11-10T11:11:36.451336</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/234/VimR-SNAPSHOT-234.tar.bz2"
-                 sparkle:version="234"
-                 sparkle:shortVersionString="SNAPSHOT-234"
-                 sparkle:dsaSignature="MC0CFE555CdNP2sxHJemimNIwXSGAzbFAhUAlDpnPSlGW1pbxGDygoEmSEypluk="
-                 length="13906017"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/235/VimR-SNAPSHOT-235.tar.bz2"
+                 sparkle:version="235"
+                 sparkle:shortVersionString="SNAPSHOT-235"
+                 sparkle:dsaSignature="MC0CFQCdA90to8F9JOyddYlu7m4LS3pXqgIUKu54tiVnm7COilM3BMybAKp12jY="
+                 length="13792182"
                  type="application/octet-stream"/>
     </item>
   </channel>
