@@ -5,6 +5,8 @@
 * GH-544: Migrate to Swift 4
 * Dependencies updates:
     - neovim/neovim@v0.2.1
+    - ReactiveX/RxSwift@4.0.0
+    - sindresorhus/github-markdown-css@2.9.0
 
 # 0.19.1-229
 
