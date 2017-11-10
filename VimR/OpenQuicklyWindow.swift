@@ -11,6 +11,7 @@ import PureLayout
 class OpenQuicklyWindow: NSObject,
                          UiComponent,
                          NSWindowDelegate,
+                         NSTextFieldDelegate,
                          NSTableViewDelegate, NSTableViewDataSource {
 
   typealias StateType = AppState
@@ -231,7 +232,9 @@ extension OpenQuicklyWindow {
 
   @objc(tableView: viewForTableColumn:row:)
   func tableView(_ tableView: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
-    let cachedCell = (tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("file-view-row"), owner: self) as? ImageAndTextTableCell)?.reset()
+    let cachedCell = (tableView.makeView(
+      withIdentifier: NSUserInterfaceItemIdentifier("file-view-row"), owner: self) as? ImageAndTextTableCell
+    )?.reset()
     let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
     let url = self.fileViewItems[row].url
