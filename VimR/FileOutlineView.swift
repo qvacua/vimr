@@ -466,7 +466,7 @@ extension FileOutlineView {
 extension FileOutlineView {
 
   override func keyDown(with event: NSEvent) {
-    guard let char = event.charactersIgnoringModifiers?.characters.first else {
+    guard let char = event.charactersIgnoringModifiers?.first else {
       super.keyDown(with: event)
       return
     }
