@@ -8,8 +8,8 @@ import Cocoa
 @available(OSX 10.12.2, *)
 extension NeoVimView : NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate {
   
-  private static let touchBarIdentifier = NSTouchBarCustomizationIdentifier("com.qvacua.VimR.SwiftNeoVim.touchBar")
-  private static let touchBarTabSwitcherIdentifier = NSTouchBarItemIdentifier("com.qvacua.VimR.SwiftNeoVim.touchBar.tabSwitcher")
+  private static let touchBarIdentifier = NSTouchBar.CustomizationIdentifier("com.qvacua.VimR.SwiftNeoVim.touchBar")
+  private static let touchBarTabSwitcherIdentifier = NSTouchBarItem.Identifier("com.qvacua.VimR.SwiftNeoVim.touchBar.tabSwitcher")
   private static let touchBarTabSwitcherItem = "com.qvacua.VimR.SwiftNeoVim.touchBar.tabSwitcher.item"
   
   override public func makeTouchBar() -> NSTouchBar? {
@@ -21,13 +21,13 @@ extension NeoVimView : NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDeleg
     return bar
   }
   
-  public func touchBar(_ touchBar: NSTouchBar, makeItemForIdentifier identifier: NSTouchBarItemIdentifier) -> NSTouchBarItem? {
+  public func touchBar(_ touchBar: NSTouchBar, makeItemForIdentifier identifier: NSTouchBarItem.Identifier) -> NSTouchBarItem? {
     switch identifier {
     case NeoVimView.touchBarTabSwitcherIdentifier:
       let item = NSCustomTouchBarItem(identifier: identifier)
       item.customizationLabel = "Tab Switcher"
       let tabsControl = NSScrubber()
-      tabsControl.register(NSScrubberTextItemView.self, forItemIdentifier: NeoVimView.touchBarTabSwitcherItem)
+      tabsControl.register(NSScrubberTextItemView.self, forItemIdentifier: NSUserInterfaceItemIdentifier(rawValue: NeoVimView.touchBarTabSwitcherItem))
       tabsControl.mode = .fixed
       tabsControl.dataSource = self
       tabsControl.delegate = self
@@ -74,7 +74,7 @@ extension NeoVimView : NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDeleg
   }
   
   public func scrubber(_ scrubber: NSScrubber, viewForItemAt index: Int) -> NSScrubberItemView {
-    let itemView = scrubber.makeItem(withIdentifier: type(of: self).touchBarTabSwitcherItem, owner: nil) as! NSScrubberTextItemView
+    let itemView = scrubber.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: type(of: self).touchBarTabSwitcherItem), owner: nil) as! NSScrubberTextItemView
     guard tabsCache.count > index else { return itemView }
     let tab = tabsCache[index]
     itemView.title = tab.currentWindow()?.buffer.name ?? "[No Name]"
