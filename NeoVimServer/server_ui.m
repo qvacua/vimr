@@ -780,18 +780,24 @@ void neovim_tabs(void **argv) {
     FOR_ALL_TABS(t) {
       NSMutableArray *windows = [NSMutableArray new];
 
+      bool currentTab = curtab ? t->handle == curtab->handle : false;
+      
       FOR_ALL_WINDOWS_IN_TAB(win, t) {
         NeoVimBuffer *buffer = buffer_for(win->w_buffer);
         if (buffer == nil) {
           continue;
         }
 
-        NeoVimWindow *window = [[NeoVimWindow alloc] initWithHandle:win->handle buffer:buffer];
+        bool current = false;
+        // tp_curwin is only valid for tabs that aren't the current one
+        if (currentTab) current = curwin ? win->handle == curwin->handle : false;
+        else if (t->tp_curwin) current = win->handle == t->tp_curwin->handle;
+        NeoVimWindow *window = [[NeoVimWindow alloc] initWithHandle:win->handle buffer:buffer currentInTab:current];
         [windows addObject:window];
         [window release];
       }
 
-      NeoVimTab *tab = [[NeoVimTab alloc] initWithHandle:t->handle windows:windows];
+      NeoVimTab *tab = [[NeoVimTab alloc] initWithHandle:t->handle windows:windows current:currentTab];
       [windows release];
 
       [tabs addObject:tab];

@@ -200,7 +200,7 @@ extension NeoVimView {
         self.tabChanged()
       }
 
-      if event == .BUFREADPOST || event == .BUFWRITEPOST {
+      if event == .BUFREADPOST || event == .BUFWRITEPOST || event == .BUFENTER {
         self.currentBufferChanged(bufferHandle)
       }
     }
@@ -358,6 +358,9 @@ extension NeoVimView {
     }
 
     self.delegate?.currentBufferChanged(currentBuffer)
+    if #available(OSX 10.12.2, *) {
+      self.updateTouchBarTab()
+    }
   }
 
   fileprivate func tabChanged() {
@@ -370,6 +373,9 @@ extension NeoVimView {
 
   fileprivate func bufferListChanged() {
     self.delegate?.bufferListChanged()
+    if #available(OSX 10.12.2, *) {
+      self.updateTouchBarCurrentBuffer()
+    }
   }
 }
 

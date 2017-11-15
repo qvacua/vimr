@@ -90,6 +90,7 @@ extension NeoVimView {
     }
   }
 
+  /// Closes the current window.
   public func closeCurrentTab() {
     // We don't have to wait here even when neovim quits since we wait in gui.async() block in neoVimStopped().
     self.exec(command: "q")

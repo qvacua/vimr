@@ -14,6 +14,7 @@ public protocol NeoVimViewDelegate: class {
   func cwdChanged()
   func bufferListChanged()
   func tabChanged()
+  /// Called when the current buffer changes, including when a new one is selected.
   func currentBufferChanged(_ currentBuffer: NeoVimBuffer)
 
   func colorschemeChanged(to: NeoVimView.Theme)
