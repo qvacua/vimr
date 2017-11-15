@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-235</title>
+      <title>SNAPSHOT-236</title>
       <description><![CDATA[
     <ul>
-<li>Fixes the Lua interpreter.</li>
+<li>GH-528, GH-358: Add rudimentary support for Touch Bar. (thanks @greg for the PR)</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/235
+        https://github.com/qvacua/vimr/releases/tag/snapshot/236
       </releaseNotesLink>
-      <pubDate>2017-11-10T11:11:36.451336</pubDate>
+      <pubDate>2017-11-15T19:54:48.985794</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/235/VimR-SNAPSHOT-235.tar.bz2"
-                 sparkle:version="235"
-                 sparkle:shortVersionString="SNAPSHOT-235"
-                 sparkle:dsaSignature="MC0CFQCdA90to8F9JOyddYlu7m4LS3pXqgIUKu54tiVnm7COilM3BMybAKp12jY="
-                 length="13792182"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/236/VimR-SNAPSHOT-236.tar.bz2"
+                 sparkle:version="236"
+                 sparkle:shortVersionString="SNAPSHOT-236"
+                 sparkle:dsaSignature="MCwCFEPcutJ3iQh5/N45PzBWn36F23AFAhQRlLkNwbLk5lshQBMMZH/vZdQ5DQ=="
+                 length="13817249"
                  type="application/octet-stream"/>
     </item>
   </channel>
