@@ -5,7 +5,7 @@
 * GH-544: Migrate to Swift 4
 * GH-528, GH-358: Add rudimentary support for Touch Bar. (thanks @greg for the PR)
 * Dependencies updates:
-    - neovim/neovim@v0.2.1
+    - neovim/neovim@v0.2.2
     - ReactiveX/RxSwift@4.0.0
     - sindresorhus/github-markdown-css@2.9.0
 
