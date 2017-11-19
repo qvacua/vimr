@@ -7,22 +7,25 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-236</title>
+      <title>SNAPSHOT-237</title>
       <description><![CDATA[
     <ul>
-<li>GH-528, GH-358: Add rudimentary support for Touch Bar. (thanks @greg for the PR)</li>
+<li>Dependencies updates:<ul>
+<li>neovim/neovim@v0.2.2</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/236
+        https://github.com/qvacua/vimr/releases/tag/snapshot/237
       </releaseNotesLink>
-      <pubDate>2017-11-15T19:54:48.985794</pubDate>
+      <pubDate>2017-11-19T10:28:36.174007</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/236/VimR-SNAPSHOT-236.tar.bz2"
-                 sparkle:version="236"
-                 sparkle:shortVersionString="SNAPSHOT-236"
-                 sparkle:dsaSignature="MCwCFEPcutJ3iQh5/N45PzBWn36F23AFAhQRlLkNwbLk5lshQBMMZH/vZdQ5DQ=="
-                 length="13817249"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/237/VimR-SNAPSHOT-237.tar.bz2"
+                 sparkle:version="237"
+                 sparkle:shortVersionString="SNAPSHOT-237"
+                 sparkle:dsaSignature="MC0CFQCZEQRn9agz0H3/Deb0seWcjnjtVgIUKhXHATg1/wypD6zoV0fPjsNwF8I="
+                 length="13822998"
                  type="application/octet-stream"/>
     </item>
   </channel>
