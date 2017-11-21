@@ -1,4 +1,4 @@
-# next
+# 0.20.0-238
 
 * GH-534: `Cmd-D` for "Discard and Close/Quit" buttons. (thanks @nclark for the PR)
 * GH-521: Improve the performance of the file browser, especically for folders like `node_modules` which contains many many files.
