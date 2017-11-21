@@ -7,22 +7,31 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.19.1-229</title>
+      <title>v0.20.0-238</title>
       <description><![CDATA[
     <ul>
-<li>GH-485: Bugfix: When using a dark theme the title is very difficult to read.</li>
+<li>GH-534: <code>Cmd-D</code> for "Discard and Close/Quit" buttons. (thanks @nclark for the PR)</li>
+<li>GH-521: Improve the performance of the file browser, especically for folders like <code>node_modules</code> which contains many many files.</li>
+<li>GH-544: Migrate to Swift 4</li>
+<li>GH-528, GH-358: Add rudimentary support for Touch Bar. (thanks @greg for the PR)</li>
+<li>Dependencies updates:<ul>
+<li>neovim/neovim@v0.2.2</li>
+<li>ReactiveX/RxSwift@4.0.0</li>
+<li>sindresorhus/github-markdown-css@2.9.0</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.19.1-229
+        https://github.com/qvacua/vimr/releases/tag/v0.20.0-238
       </releaseNotesLink>
-      <pubDate>2017-09-07T18:39:36.518558</pubDate>
+      <pubDate>2017-11-21T19:21:09.907963</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.19.1-229/VimR-v0.19.1-229.tar.bz2"
-                 sparkle:version="229"
-                 sparkle:shortVersionString="0.19.1"
-                 sparkle:dsaSignature="MC4CFQDOAmzMAlemiRG9Eg0rr51LfsqqjgIVALrxpSIKkTILaI1ryxMDyyB2KW/3"
-                 length="10688762"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.20.0-238/VimR-v0.20.0-238.tar.bz2"
+                 sparkle:version="238"
+                 sparkle:shortVersionString="0.20.0"
+                 sparkle:dsaSignature="MC0CFQDWuf3+GVPtvGxuFFBNCjek0sy5ogIUbpcfIBf2/qHXZFo7Z+V+cOAOqA0="
+                 length="13820057"
                  type="application/octet-stream"/>
     </item>
   </channel>
