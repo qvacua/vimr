@@ -6,3 +6,5 @@ github "qvacua/CocoaFontAwesome" "master"
 github "qvacua/CocoaMarkdown" "master"
 github "sindresorhus/github-markdown-css" == 2.9.0
 github "httpswift/swifter" == 1.3.3
+github "a2/MessagePack.swift" == 3.0.0
+github "antitypical/Result" == 3.2.4
