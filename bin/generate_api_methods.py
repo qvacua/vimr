@@ -48,10 +48,20 @@ func_template = Template('''\
   }
 ''')
 
-extension_template = Template('''// Auto generated for nvim version ${version}.
+extension_template = Template('''\
+// Auto generated for nvim version ${version}.
 // See bin/generate_api_methods.py
 
-import MessagePack
+import MsgPackRpc
+
+extension Nvim.Error {
+
+  public enum ErrorType: Int {
+    
+    ${error_types}
+    case unknown
+  }
+}
 
 extension Nvim {
 
@@ -265,6 +275,10 @@ def parse_version(version):
     return '.'.join([str(v) for v in [version['major'], version['minor'], version['patch']]])
 
 
+def parse_error_types(error_types):
+    return textwrap.indent('\n'.join([f'case {t.lower()} = {v["id"]}' for t, v in error_types.items()]), '    ').lstrip()
+
+
 if __name__ == '__main__':
     nvim_path = os.environ['NVIM_PATH'] if 'NVIM_PATH' in os.environ else 'nvim'
 
@@ -278,6 +292,7 @@ if __name__ == '__main__':
     print(extension_template.substitute(
         body=body,
         version=version,
+        error_types=parse_error_types(api['error_types']),
         buffer_type=api['types']['Buffer']['id'],
         window_type=api['types']['Window']['id'],
         tabpage_type=api['types']['Tabpage']['id']

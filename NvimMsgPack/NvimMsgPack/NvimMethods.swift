@@ -3,6 +3,16 @@
 
 import MsgPackRpc
 
+extension Nvim.Error {
+
+  public enum ErrorType: Int {
+    
+    case exception = 0
+    case validation = 1
+    case unknown
+  }
+}
+
 extension Nvim {
 
   public func bufLineCount(

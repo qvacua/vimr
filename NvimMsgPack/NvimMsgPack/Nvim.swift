@@ -37,7 +37,7 @@ public class Nvim {
 
   public struct Error: Swift.Error, CustomStringConvertible {
 
-    public let type: Int
+    public let type: ErrorType
     public let message: String
 
     public var description: String {
@@ -45,13 +45,18 @@ public class Nvim {
     }
 
     init(_ message: String) {
-      self.type = -1
+      self.type = .unknown
       self.message = message
     }
 
     init(_ value: Nvim.Value?) {
-      self.type = Int(value?.arrayValue?[0].unsignedIntegerValue ?? 0)
-      self.message = value?.arrayValue?[1].stringValue ?? "ERROR: \(Error.self) could not be instantiated."
+      if let rawValue = value?.unsignedIntegerValue {
+        self.type = ErrorType(rawValue: Int(rawValue)) ?? .unknown
+      } else {
+        self.type = .unknown
+      }
+      self.message = value?.arrayValue?[1].stringValue
+                     ?? "ERROR: \(Error.self) could not be instantiated from \(String(describing: value))"
     }
   }
 
