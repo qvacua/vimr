@@ -3,7 +3,7 @@
 
 import MsgPackRpc
 
-extension Nvim.Error {
+public extension Nvim.Error {
 
   public enum ErrorType: Int {
     
@@ -13,7 +13,7 @@ extension Nvim.Error {
   }
 }
 
-extension Nvim {
+public extension Nvim {
 
   public func bufLineCount(
     buffer: Nvim.Buffer,

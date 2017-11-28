@@ -134,6 +134,10 @@ public class Nvim {
       self.connection = connection
     }
 
+    public func run() {
+      self.connection.run()
+    }
+
     public func rpc(method: String,
              params: [MsgPackRpc.Value],
              expectsReturnValue: Bool) -> Result<MsgPackRpc.Value, Nvim.Error> {
@@ -179,6 +183,10 @@ public class Nvim {
     }
 
     self.session = session
+  }
+
+  public func connect() {
+    self.session.run()
   }
 
   public func rpc(method: String,

@@ -57,6 +57,8 @@ extension NeoVimView {
     self.logger.info("=== Starting neovim...")
     let noErrorDuringInitialization = self.agent.runLocalServerAndNeoVim(withWidth: size.width, height: size.height)
 
+    self.nvim.connect()
+
     self.agent.vimCommand("set mouse=a")
     self.agent.vimCommand("set title")
     self.agent.vimCommand("set termguicolors")

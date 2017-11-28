@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import NvimMsgPack
 
 public class NeoVimView: NSView,
                          NeoVimUiBridgeProtocol,
@@ -151,6 +152,11 @@ public class NeoVimView: NSView,
   public init(frame rect: NSRect, config: Config) {
     self.drawer = TextDrawer(font: self._font)
     self.agent = NeoVimAgent(uuid: self.uuid)
+    guard let nvim = Nvim(at: "/tmp/vimr_\(self.uuid).sock") else {
+      preconditionFailure("Nvim could not be instantiated")
+    }
+
+    self.nvim = nvim
 
     super.init(frame: .zero)
     self.registerForDraggedTypes([NSPasteboard.PasteboardType(String(kUTTypeFileURL))])
@@ -199,6 +205,7 @@ public class NeoVimView: NSView,
                                            with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
                                            shouldLogDebug: nil)
   let agent: NeoVimAgent
+  let nvim: Nvim
   let grid = Grid()
 
   let drawer: TextDrawer
@@ -235,7 +242,7 @@ public class NeoVimView: NSView,
   var _cwd = URL(fileURLWithPath: NSHomeDirectory())
   var shouldDrawCursor = false
   var isInitialResize = true
-  
+
   // cache the tabs for Touch Bar use
   var tabsCache = [NeoVimTab]()
 

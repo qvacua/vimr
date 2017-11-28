@@ -12,6 +12,8 @@
 @property CFTimeInterval timeout;
 @property (nonatomic, copy, nullable) void (^dataCallback)(NSData * __nonnull);
 
+@property (readonly, getter=isRunning) bool running;
+
 - (void)run;
 - (CFSocketError)writeData:(NSData * __nonnull)data;
 

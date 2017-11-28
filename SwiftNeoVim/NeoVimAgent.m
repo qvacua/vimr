@@ -210,7 +210,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
   _neoVimServerTask.arguments = shellArgs;
   [_neoVimServerTask launch];
 
-  NSString *cmd = [NSString stringWithFormat:@"exec \"%@\" '%@' '%@'",
+  NSString *cmd = [NSString stringWithFormat:@"NVIM_LISTEN_ADDRESS=%@ exec \"%@\" '%@' '%@'",
+                                             [NSString stringWithFormat:@"/tmp/vimr_%@.sock", _uuid],
                                              [self neoVimServerExecutablePath],
                                              [self localServerName],
                                              [self remoteServerName]];

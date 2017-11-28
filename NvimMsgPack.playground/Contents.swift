@@ -12,3 +12,5 @@ guard let nvim = Nvim(at: "/tmp/nvim.sock") else {
 print(nvim.listRuntimePaths())
 let bufs = nvim.listBufs().value
 print(String(describing: bufs?.map({ nvim.bufGetName(buffer: $0) })))
+let buf = bufs![0]
+nvim.bufGetChangedtick(buffer: buf)

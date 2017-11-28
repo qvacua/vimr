@@ -54,7 +54,7 @@ extension_template = Template('''\
 
 import MsgPackRpc
 
-extension Nvim.Error {
+public extension Nvim.Error {
 
   public enum ErrorType: Int {
     
@@ -63,7 +63,7 @@ extension Nvim.Error {
   }
 }
 
-extension Nvim {
+public extension Nvim {
 
 $body
 }

@@ -165,6 +165,10 @@
 		4B854A1D1D31447C00E08DE1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B854A1C1D31447C00E08DE1 /* main.m */; };
 		4B8AC0441DBCB3A2007CCC9B /* NeoVimObjectsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8AC0431DBCB3A1007CCC9B /* NeoVimObjectsExtensions.swift */; };
 		4B8C7C761F05A04400F25BE8 /* CocoaMarkdown.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B90EFC91FCD6CE2008A39E0 /* MsgPackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90EFCA1FCD6CE2008A39E0 /* MsgPackRpc.framework */; };
+		4B90EFCB1FCD6CE5008A39E0 /* NvimMsgPack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90EFCC1FCD6CE5008A39E0 /* NvimMsgPack.framework */; };
+		4B90EFCD1FCD6CEB008A39E0 /* MsgPackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90EFCA1FCD6CE2008A39E0 /* MsgPackRpc.framework */; };
+		4B90EFCE1FCD6CEE008A39E0 /* NvimMsgPack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90EFCC1FCD6CE5008A39E0 /* NvimMsgPack.framework */; };
 		4B91FFF41DEB772200447068 /* CocoaFontAwesome.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B337FBA1DEB76F20020ADD2 /* CocoaFontAwesome.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B91FFF61DEB772B00447068 /* CocoaFontAwesome.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B337FBA1DEB76F20020ADD2 /* CocoaFontAwesome.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B96384C1ED9793B001C556F /* NeoVimAutoCommandEvent.generated.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B96384B1ED9793B001C556F /* NeoVimAutoCommandEvent.generated.m */; };
@@ -512,6 +516,8 @@
 		4B854A1A1D31447C00E08DE1 /* NeoVimServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NeoVimServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B854A1C1D31447C00E08DE1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4B8AC0431DBCB3A1007CCC9B /* NeoVimObjectsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimObjectsExtensions.swift; sourceTree = "<group>"; };
+		4B90EFCA1FCD6CE2008A39E0 /* MsgPackRpc.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MsgPackRpc.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B90EFCC1FCD6CE5008A39E0 /* NvimMsgPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NvimMsgPack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B96384B1ED9793B001C556F /* NeoVimAutoCommandEvent.generated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimAutoCommandEvent.generated.m; sourceTree = "<group>"; };
 		4B96384D1ED9797F001C556F /* NeoVimUiBridgeProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimUiBridgeProtocol.m; sourceTree = "<group>"; };
 		4B96384F1ED979BD001C556F /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -566,6 +572,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B90EFCE1FCD6CEE008A39E0 /* NvimMsgPack.framework in Frameworks */,
+				4B90EFCD1FCD6CEB008A39E0 /* MsgPackRpc.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -608,6 +616,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B90EFCB1FCD6CE5008A39E0 /* NvimMsgPack.framework in Frameworks */,
+				4B90EFC91FCD6CE2008A39E0 /* MsgPackRpc.framework in Frameworks */,
 				4B2A2BFE1D0351810074CE9A /* SwiftNeoVim.framework in Frameworks */,
 				4BDD056A1DB0CAB700D1B405 /* Sparkle.framework in Frameworks */,
 				4B337FBB1DEB76F20020ADD2 /* CocoaFontAwesome.framework in Frameworks */,
@@ -834,6 +844,8 @@
 		4B5012001EBA791000F76C46 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4B90EFCC1FCD6CE5008A39E0 /* NvimMsgPack.framework */,
+				4B90EFCA1FCD6CE2008A39E0 /* MsgPackRpc.framework */,
 				4BB7F3911F9D260B00624F61 /* Swifter.framework */,
 				4B5011F71EBA67EB00F76C46 /* RxTest.framework */,
 				4B183E0D1E06E2940079E8A8 /* CocoaMarkdown.framework */,

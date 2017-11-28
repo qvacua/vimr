@@ -14,9 +14,51 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4B9E333E1FCB457800E0C4BC"
+               BuildableName = "MsgPackRpc.framework"
+               BlueprintName = "MsgPackRpc"
+               ReferencedContainer = "container:MsgPackRpc/MsgPackRpc.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4B9E336B1FCB475600E0C4BC"
+               BuildableName = "NvimMsgPack.framework"
+               BlueprintName = "NvimMsgPack"
+               ReferencedContainer = "container:NvimMsgPack/NvimMsgPack.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "4B2A2BF61D0351810074CE9A"
                BuildableName = "SwiftNeoVim.framework"
                BlueprintName = "SwiftNeoVim"
+               ReferencedContainer = "container:VimR.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4B854A191D31447C00E08DE1"
+               BuildableName = "NeoVimServer"
+               BlueprintName = "NeoVimServer"
                ReferencedContainer = "container:VimR.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

@@ -32,7 +32,6 @@ public class Connection {
     self.session = session
 
     session.dataCallback = { data in (try? unpackAll(data))?.forEach(self.processResponse) }
-    session.run()
   }
 
   public convenience init?(unixDomainSocketPath path: String) {
@@ -41,6 +40,10 @@ public class Connection {
     }
 
     self.init(with: session)
+  }
+
+  public func run() {
+    self.session.run()
   }
 
   @discardableResult
