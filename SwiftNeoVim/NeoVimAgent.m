@@ -157,6 +157,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 }
 
 - (void)closeMachPorts {
+  CFRunLoopStop(_localServerRunLoop);
+  [_localServerThread cancel];
+
   if (CFMessagePortIsValid(_remoteServerPort)) {
     CFMessagePortInvalidate(_remoteServerPort);
   }
@@ -168,9 +171,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
   }
   CFRelease(_localServerPort);
   _localServerPort = NULL;
-
-  CFRunLoopStop(_localServerRunLoop);
-  [_localServerThread cancel];
 }
 
 -(void)forceExitNeoVimServer {

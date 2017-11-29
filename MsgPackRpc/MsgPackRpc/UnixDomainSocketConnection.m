@@ -85,7 +85,7 @@ static void socket_call_back(
   close(_native_socket);
 }
 
-- (void)run {
+- (void)connectAndRun {
   if ((_native_socket = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
     NSLog(@"Error: Unix domain socket NULL!");
     [NSException raise:@"UnixDomainSocketConnectionException" format:@"Unix domain socket NULL!"];
@@ -123,6 +123,14 @@ static void socket_call_back(
   _run_loop_source = CFSocketCreateRunLoopSource(NULL, _socket, 0);
   _thread = [[NSThread alloc] initWithTarget:self selector:@selector(threadMain) object:nil];
   [_thread start];
+}
+
+- (void)disconnectAndStop {
+  if (CFSocketIsValid(_socket)) {
+    CFRunLoopStop(_run_loop);
+    CFSocketInvalidate(_socket);
+    [_thread cancel];
+  }
 }
 
 - (void)threadMain {

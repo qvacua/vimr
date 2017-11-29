@@ -181,6 +181,7 @@ extension NeoVimView {
   public func stop() {
     self.bridgeLogger.hr()
     self.agent.quit()
+    self.nvim.disconnect()
 
     gui.async {
       self.waitForNeoVimToQuit()

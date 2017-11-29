@@ -169,6 +169,8 @@
 		4B90EFCB1FCD6CE5008A39E0 /* NvimMsgPack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90EFCC1FCD6CE5008A39E0 /* NvimMsgPack.framework */; };
 		4B90EFCD1FCD6CEB008A39E0 /* MsgPackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90EFCA1FCD6CE2008A39E0 /* MsgPackRpc.framework */; };
 		4B90EFCE1FCD6CEE008A39E0 /* NvimMsgPack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90EFCC1FCD6CE5008A39E0 /* NvimMsgPack.framework */; };
+		4B90EFE31FCF54D2008A39E0 /* NvimMsgPack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90EFCC1FCD6CE5008A39E0 /* NvimMsgPack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B90EFE41FCF54D2008A39E0 /* MsgPackRpc.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90EFCA1FCD6CE2008A39E0 /* MsgPackRpc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B91FFF41DEB772200447068 /* CocoaFontAwesome.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B337FBA1DEB76F20020ADD2 /* CocoaFontAwesome.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B91FFF61DEB772B00447068 /* CocoaFontAwesome.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B337FBA1DEB76F20020ADD2 /* CocoaFontAwesome.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B96384C1ED9793B001C556F /* NeoVimAutoCommandEvent.generated.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B96384B1ED9793B001C556F /* NeoVimAutoCommandEvent.generated.m */; };
@@ -286,6 +288,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4B90EFE31FCF54D2008A39E0 /* NvimMsgPack.framework in Embed Frameworks */,
+				4B90EFE41FCF54D2008A39E0 /* MsgPackRpc.framework in Embed Frameworks */,
 				4BDD056B1DB0CACB00D1B405 /* Sparkle.framework in Embed Frameworks */,
 				4BDF50121D760B7200D8FBC3 /* EonilFileSystemEvents.framework in Embed Frameworks */,
 				4B91FFF61DEB772B00447068 /* CocoaFontAwesome.framework in Embed Frameworks */,
@@ -2068,7 +2072,6 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
-				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2116,7 +2119,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";

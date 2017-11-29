@@ -43,7 +43,17 @@ public class Connection {
   }
 
   public func run() {
-    self.session.run()
+    self.session.connectAndRun()
+  }
+
+  public func stop() {
+    locked(with: self.conditionsLock) {
+      self.conditions.values.forEach { condition in
+        locked(with: condition) { condition.broadcast() }
+      }
+    }
+    self.stopped = true
+    self.session.disconnectAndStop()
   }
 
   @discardableResult
@@ -65,23 +75,28 @@ public class Connection {
 
     guard expectsReturnValue else {
       self.session.write(packed)
-      return MsgPackRpc.Response(type: .response, msgid: msgid, error: .nil, result: .nil)
+      return self.nilResponse(with: msgid)
     }
 
     let condition = NSCondition()
     locked(with: self.conditionsLock) { self.conditions[msgid] = condition }
 
+    if self.stopped {
+      return self.nilResponse(with: msgid)
+    }
+
     self.session.write(packed)
 
     locked(with: condition) {
-      while self.responses[msgid] == nil && condition.wait(until: Date(timeIntervalSinceNow: 5)) {}
+      while !self.stopped && self.responses[msgid] == nil && condition.wait(until: Date(timeIntervalSinceNow: 5)) {}
     }
     locked(with: self.conditionsLock) { self.conditions.removeValue(forKey: msgid) }
 
-    let result = self.responses[msgid] ?? MsgPackRpc.Response(type: .response,
-                                                              msgid: msgid,
-                                                              error: .nil,
-                                                              result: .nil)
+    if self.stopped {
+      return self.nilResponse(with: msgid)
+    }
+
+    let result = self.responses[msgid] ?? self.nilResponse(with: msgid)
     locked(with: self.responsesLock) { self.responses.removeValue(forKey: msgid) }
 
     return result
@@ -97,6 +112,12 @@ public class Connection {
 
   private var conditions: [UInt32: NSCondition] = [:]
   private let conditionsLock = NSRecursiveLock()
+
+  private var stopped = false
+
+  private func nilResponse(with msgid: UInt32) -> MsgPackRpc.Response {
+    return MsgPackRpc.Response(type: .response, msgid: msgid, error: .nil, result: .nil)
+  }
 
   private func processResponse(_ unpacked: Value) {
     guard let array = unpacked.arrayValue, let type = array[0].unsignedIntegerValue else {
@@ -122,12 +143,12 @@ public class Connection {
       let error = array[2]
       let result = array[3]
 
-      condition.lock()
-      locked(with: self.responsesLock) {
-        self.responses[msgid] = MsgPackRpc.Response(type: .response, msgid: msgid, error: error, result: result)
+      locked(with: condition) {
+        locked(with: self.responsesLock) {
+          self.responses[msgid] = MsgPackRpc.Response(type: .response, msgid: msgid, error: error, result: result)
+        }
+        condition.broadcast()
       }
-      condition.broadcast()
-      condition.unlock()
 
     case 2:
       // notification

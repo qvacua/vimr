@@ -142,6 +142,10 @@ public class Nvim {
       self.connection.run()
     }
 
+    public func stop() {
+      self.connection.stop()
+    }
+
     public func rpc(method: String,
              params: [MsgPackRpc.Value],
              expectsReturnValue: Bool) -> Result<MsgPackRpc.Value, Nvim.Error> {
@@ -193,6 +197,10 @@ public class Nvim {
     self.session.run()
   }
 
+  public func disconnect() {
+    self.session.stop()
+  }
+
   public func rpc(method: String,
                 params: [Nvim.Value],
                 expectsReturnValue: Bool = true) -> Nvim.Response<Nvim.Value> {
@@ -200,5 +208,5 @@ public class Nvim {
     return self.session.rpc(method: method, params: params, expectsReturnValue: expectsReturnValue)
   }
 
-  fileprivate let session: Session
+  private let session: Session
 }

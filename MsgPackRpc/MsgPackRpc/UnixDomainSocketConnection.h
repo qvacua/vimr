@@ -14,7 +14,8 @@
 
 @property (readonly, getter=isRunning) bool running;
 
-- (void)run;
+- (void)connectAndRun;
+- (void)disconnectAndStop;
 - (CFSocketError)writeData:(NSData * __nonnull)data;
 
 @end
@@ -27,7 +28,8 @@
 
 - (instancetype __nullable)initWithPath:(NSString * __nonnull)path;
 
-- (void)run;
+- (void)connectAndRun;
+- (void)disconnectAndStop;
 - (CFSocketError)writeData:(NSData * __nonnull)data;
 
 @end
