@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import NvimMsgPack
 
 extension NeoVimView {
 
@@ -18,15 +19,41 @@ extension NeoVimView {
     self.resizeNeoVimUi(to: self.bounds.size)
   }
 
+  private func neoVimBuffer(for buf: Nvim.Buffer, currentBuffer: Nvim.Buffer?) -> NeoVimBuffer? {
+    guard let path = self.nvim.bufGetName(buffer: buf).value else {
+      return nil
+    }
+
+    guard let dirty = self.nvim.bufGetOption(buffer: buf, name: "mod").value?.boolValue else {
+      return nil
+    }
+
+    guard let buftype = self.nvim.bufGetOption(buffer: buf, name: "buftype").value else {
+      return nil
+    }
+
+    let readonly = buftype != ""
+    let current = buf == currentBuffer
+
+    return NeoVimBuffer(handle: buf.handle, unescapedPath: path, dirty: dirty, readOnly: readonly, current: current)
+  }
+
   /**
    - returns: nil when for exampls a quickfix panel is open.
    */
   public func currentBuffer() -> NeoVimBuffer? {
     return self.agent.buffers().first { $0.isCurrent }
+//    guard let buf = self.nvim.getCurrentBuf().value else {
+//      return nil
+//    }
+//
+//    return self.neoVimBuffer(for: buf, currentBuffer: buf)
   }
 
   public func allBuffers() -> [NeoVimBuffer] {
     return self.agent.tabs().map { $0.allBuffers() }.flatMap { $0 }
+//    let curBuf = self.nvim.getCurrentBuf().value
+//    return self.nvim.listBufs().value?.flatMap { self.neoVimBuffer(for: $0, currentBuffer: curBuf) } ?? []
   }
 
   public func hasDirtyDocs() -> Bool {

@@ -13,4 +13,4 @@ print(nvim.listRuntimePaths())
 let bufs = nvim.listBufs().value
 print(String(describing: bufs?.map({ nvim.bufGetName(buffer: $0) })))
 let buf = bufs![0]
-nvim.bufGetChangedtick(buffer: buf)
+nvim.bufGetVar(buffer: buf, name: "mod")

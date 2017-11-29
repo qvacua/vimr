@@ -8,11 +8,15 @@ import MsgPackRpc
 
 public class Nvim {
 
-  public struct Buffer {
+  public struct Buffer: Equatable {
+
+    public static func ==(lhs: Buffer, rhs: Buffer) -> Bool {
+      return lhs.handle == rhs.handle
+    }
 
     public let handle: Int
 
-    init(_ handle: Int) {
+    public init(_ handle: Int) {
       self.handle = handle
     }
   }
@@ -21,7 +25,7 @@ public class Nvim {
 
     public let handle: Int
 
-    init(_ handle: Int) {
+    public init(_ handle: Int) {
       self.handle = handle
     }
   }
@@ -30,7 +34,7 @@ public class Nvim {
 
     public let handle: Int
 
-    init(_ handle: Int) {
+    public init(_ handle: Int) {
       self.handle = handle
     }
   }
