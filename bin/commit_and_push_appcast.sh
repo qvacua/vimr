@@ -8,9 +8,9 @@ IS_SNAPSHOT=$3
 UPDATE_SNAPSHOT_APPCAST_FOR_RELEASE=$4
 
 if [ "${IS_SNAPSHOT}" = true ] ; then
-    cp ./build/Release/appcast_snapshot.xml .
+    cp ./build/Build/Products/Release/appcast_snapshot.xml .
 else
-    cp ./build/Release/appcast.xml .
+    cp ./build/Build/Products/Release/appcast.xml .
 fi
 
 if [ "${IS_SNAPSHOT}" = false ] && [ "${UPDATE_SNAPSHOT_APPCAST_FOR_RELEASE}" = true ] ; then

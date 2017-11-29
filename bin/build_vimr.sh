@@ -39,9 +39,9 @@ carthage update --platform osx
 echo "### Xcodebuilding"
 
 if [ "${CODE_SIGN}" = true ] ; then
-    xcodebuild CODE_SIGN_IDENTITY="Developer ID Application: Tae Won Ha (H96Q2NKTQH)" -configuration Release -target VimR
+    xcodebuild CODE_SIGN_IDENTITY="Developer ID Application: Tae Won Ha (H96Q2NKTQH)" -configuration Release -scheme VimR -workspace VimR.xcworkspace -derivedDataPath build
 else
-    xcodebuild -configuration Release -target VimR
+    xcodebuild -configuration Release -scheme VimR -workspace VimR.xcworkspace -derivedDataPath build
 fi
 
 echo "### Built VimR target"

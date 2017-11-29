@@ -11,7 +11,7 @@ buildSnapshotJob.with {
 Builds a new snapshot of VimR and pushes the tag:<br>
 <ul>
   <li>
-    <a href="lastSuccessfulBuild/artifact/build/Release/">Last successful Release</a>
+    <a href="lastSuccessfulBuild/artifact/build/Build/Products/Release/">Last successful Release</a>
   </li>
 </ul>
 '''
@@ -49,7 +49,7 @@ Builds a new snapshot of VimR and pushes the tag:<br>
 
   publishers {
     archiveArtifacts {
-      pattern('build/Release/**')
+      pattern('build/Build/Products/Release/**')
       onlyIfSuccessful()
     }
   }

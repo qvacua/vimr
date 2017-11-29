@@ -59,5 +59,5 @@ appcast = appcast_template.substitute(
 
 appcast_file_name = 'appcast_snapshot.xml' if is_snapshot else 'appcast.xml'
 
-with io.open('build/Release/{0}'.format(appcast_file_name), 'w+') as appcast_file:
+with io.open('build/Build/Products/Release/{0}'.format(appcast_file_name), 'w+') as appcast_file:
     appcast_file.write(appcast)

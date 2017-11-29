@@ -16,7 +16,7 @@ echo "VIMR_FILE_NAME: ${VIMR_FILE_NAME}"
 echo "RELEASE_NOTES: ${RELEASE_NOTES}"
 echo "IS_SNAPSHOT: ${IS_SNAPSHOT}"
 
-pushd build/Release
+pushd build/Build/Products/Release
 
 echo "### Creating release"
 if [ "${IS_SNAPSHOT}" = true ] ; then

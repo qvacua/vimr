@@ -70,7 +70,7 @@ fi
 
 echo "### Compressing the app"
 VIMR_FILE_NAME="VimR-${COMPOUND_VERSION}.tar.bz2"
-pushd build/Release
+pushd build/Build/Products/Release
 tar cjf ${VIMR_FILE_NAME} VimR.app
 popd
 
@@ -89,7 +89,7 @@ fi
 ./bin/create_github_release.sh "${COMPOUND_VERSION}" "${TAG}" "${VIMR_FILE_NAME}" "${RELEASE_NOTES}" ${IS_SNAPSHOT}
 
 if [ "${UPDATE_APPCAST}" = true ] ; then
-    ./bin/set_appcast.py "build/Release/${VIMR_FILE_NAME}" "${BUNDLE_VERSION}" "${MARKETING_VERSION}" "${TAG}" ${IS_SNAPSHOT}
+    ./bin/set_appcast.py "build/Build/Products/Release/${VIMR_FILE_NAME}" "${BUNDLE_VERSION}" "${MARKETING_VERSION}" "${TAG}" ${IS_SNAPSHOT}
     ./bin/commit_and_push_appcast.sh "${BRANCH}" "${COMPOUND_VERSION}" ${IS_SNAPSHOT} ${UPDATE_SNAPSHOT_APPCAST_FOR_RELEASE}
 fi
 
