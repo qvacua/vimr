@@ -7,22 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-239</title>
+      <title>SNAPSHOT-240</title>
       <description><![CDATA[
     <ul>
 <li>GH-571: Bugfix: Read-only buffers are considered as modified. For example NERDTree buffers won't trigger the "Please save first" dialog anymore.</li>
+<li>Fixed the issue that VimR hangs for some seconds when an error is displayed.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/239
+        https://github.com/qvacua/vimr/releases/tag/snapshot/240
       </releaseNotesLink>
-      <pubDate>2017-11-30T07:28:49.416477</pubDate>
+      <pubDate>2017-11-30T18:18:04.240907</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/239/VimR-SNAPSHOT-239.tar.bz2"
-                 sparkle:version="239"
-                 sparkle:shortVersionString="SNAPSHOT-239"
-                 sparkle:dsaSignature="MCwCFE1EteMlGvMeWwDOMGw31+OIccBZAhRiqzTkPJGEwjoH0jNUi5zctSb9fA=="
-                 length="14016929"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/240/VimR-SNAPSHOT-240.tar.bz2"
+                 sparkle:version="240"
+                 sparkle:shortVersionString="SNAPSHOT-240"
+                 sparkle:dsaSignature="MCwCFDtZLnU7FjT8THfpz2dJMy8+6gjKAhQ1ykCkdxxZfek0E9v3BRL7/pNjRw=="
+                 length="14016300"
                  type="application/octet-stream"/>
     </item>
   </channel>
