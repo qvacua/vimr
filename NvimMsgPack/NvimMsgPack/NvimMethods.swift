@@ -9,6 +9,7 @@ public extension Nvim.Error {
     
     case exception = 0
     case validation = 1
+    case blocked
     case unknown
   }
 }

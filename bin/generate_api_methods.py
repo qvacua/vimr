@@ -59,6 +59,7 @@ public extension Nvim.Error {
   public enum ErrorType: Int {
     
     ${error_types}
+    case blocked
     case unknown
   }
 }

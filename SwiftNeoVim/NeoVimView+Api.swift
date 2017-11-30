@@ -38,22 +38,32 @@ extension NeoVimView {
     return NeoVimBuffer(handle: buf.handle, unescapedPath: path, dirty: dirty, readOnly: readonly, current: current)
   }
 
+  private func checkBlocked<T>(_ fn: () -> Nvim.Response<T>) -> Nvim.Response<T> {
+    if self.nvim.getMode().value?.dictionaryValue?[.string("blocked")] == .bool(true) {
+      return Nvim.Response.failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked."))
+    }
+
+    return fn()
+  }
+
   /**
    - returns: nil when for exampls a quickfix panel is open.
    */
   public func currentBuffer() -> NeoVimBuffer? {
-    return self.agent.buffers().first { $0.isCurrent }
-//    guard let buf = self.nvim.getCurrentBuf().value else {
-//      return nil
-//    }
-//
-//    return self.neoVimBuffer(for: buf, currentBuffer: buf)
+//    return self.agent.buffers().first { $0.isCurrent }
+    guard let buf = self.checkBlocked({ self.nvim.getCurrentBuf() }).value else {
+      return nil
+    }
+
+    return self.neoVimBuffer(for: buf, currentBuffer: buf)
   }
 
   public func allBuffers() -> [NeoVimBuffer] {
-    return self.agent.tabs().map { $0.allBuffers() }.flatMap { $0 }
-//    let curBuf = self.nvim.getCurrentBuf().value
-//    return self.nvim.listBufs().value?.flatMap { self.neoVimBuffer(for: $0, currentBuffer: curBuf) } ?? []
+//    return self.agent.tabs().map { $0.allBuffers() }.flatMap { $0 }
+    let curBuf = self.checkBlocked({ self.nvim.getCurrentBuf() }).value
+    return self.checkBlocked({ self.nvim.listBufs() })
+             .value?
+             .flatMap { self.neoVimBuffer(for: $0, currentBuffer: curBuf) } ?? []
   }
 
   public func hasDirtyDocs() -> Bool {

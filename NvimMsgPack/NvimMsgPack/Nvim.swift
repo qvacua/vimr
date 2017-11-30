@@ -53,6 +53,11 @@ public class Nvim {
       self.message = message
     }
 
+    public init(type: ErrorType, message: String) {
+      self.type = type
+      self.message = message
+    }
+
     init(_ value: Nvim.Value?) {
       if let rawValue = value?.unsignedIntegerValue {
         self.type = ErrorType(rawValue: Int(rawValue)) ?? .unknown
