@@ -42,18 +42,19 @@ extension NeoVimView {
    - returns: nil when for exampls a quickfix panel is open.
    */
   public func currentBuffer() -> NeoVimBuffer? {
-//    return self.agent.buffers().first { $0.isCurrent }
-    guard let buf = self.nvim.getCurrentBuf().value else {
-      return nil
-    }
-
-    return self.neoVimBuffer(for: buf, currentBuffer: buf)
+    let buffers: [NeoVimBuffer] = self.agent.buffers()
+    return buffers.first { $0.isCurrent }
+//    guard let buf = self.nvim.getCurrentBuf().value else {
+//      return nil
+//    }
+//
+//    return self.neoVimBuffer(for: buf, currentBuffer: buf)
   }
 
   public func allBuffers() -> [NeoVimBuffer] {
-//    return self.agent.tabs().map { $0.allBuffers() }.flatMap { $0 }
-    let curBuf = self.nvim.getCurrentBuf().value
-    return self.nvim.listBufs().value?.flatMap { self.neoVimBuffer(for: $0, currentBuffer: curBuf) } ?? []
+    return self.agent.tabs().map { $0.allBuffers() }.flatMap { $0 }
+//    let curBuf = self.nvim.getCurrentBuf().value
+//    return self.nvim.listBufs().value?.flatMap { self.neoVimBuffer(for: $0, currentBuffer: curBuf) } ?? []
   }
 
   public func hasDirtyDocs() -> Bool {
@@ -62,7 +63,7 @@ extension NeoVimView {
 
   public func isCurrentBufferDirty() -> Bool {
     let curBuf = self.currentBuffer()
-    return curBuf?.isDirty ?? true
+    return curBuf?.isDirty ?? false
   }
 
   public func newTab() {

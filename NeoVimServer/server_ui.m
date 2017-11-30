@@ -113,10 +113,6 @@ static void refresh_ui_screen(int type) {
 
 static bool has_dirty_docs() {
   FOR_ALL_BUFFERS(buffer) {
-    if (buffer->b_p_bl == 0) {
-      continue;
-    }
-
     if (bufIsChanged(buffer)) {
       return true;
     }
@@ -693,9 +689,7 @@ static NeoVimBuffer *buffer_for(buf_T *buf) {
     return nil;
   }
 
-  if (buf->b_p_bl == 0) {
-    return nil;
-  }
+  bool readonly = buf->b_p_bt != empty_option || buf->b_p_bt != NULL;
 
   NSString *fileName = nil;
   if (buf->b_ffname != NULL) {
@@ -704,11 +698,12 @@ static NeoVimBuffer *buffer_for(buf_T *buf) {
   }
 
   bool current = curbuf == buf;
+  bool dirty = readonly ? false : (bool) buf->b_changed;
 
   NeoVimBuffer *buffer = [[NeoVimBuffer alloc] initWithHandle:buf->handle
                                                 unescapedPath:fileName
-                                                        dirty:(bool) buf->b_changed
-                                                     readOnly:(bool) buf->b_p_ro
+                                                        dirty:dirty
+                                                     readOnly:readonly
                                                       current:current];
 
   return [buffer autorelease];
@@ -781,7 +776,7 @@ void neovim_tabs(void **argv) {
       NSMutableArray *windows = [NSMutableArray new];
 
       bool currentTab = curtab ? t->handle == curtab->handle : false;
-      
+
       FOR_ALL_WINDOWS_IN_TAB(win, t) {
         NeoVimBuffer *buffer = buffer_for(win->w_buffer);
         if (buffer == nil) {
