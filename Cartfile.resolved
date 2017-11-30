@@ -1,6 +1,8 @@
 github "PureLayout/PureLayout" "v3.0.2"
 github "Quick/Nimble" "v7.0.1"
 github "ReactiveX/RxSwift" "4.0.0"
+github "a2/MessagePack.swift" "3.0.0"
+github "antitypical/Result" "3.2.4"
 github "eonil/FileSystemEvents" "85a089104af37f04a6bf7f2d07d7a93cac0b4fe1"
 github "httpswift/swifter" "1.3.3"
 github "qvacua/CocoaFontAwesome" "71865fc2c0275ebc5c8601edc23290e85aca9979"
