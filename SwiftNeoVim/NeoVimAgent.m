@@ -223,6 +223,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
     cmd = [cmd stringByAppendingFormat:@" %@", [args componentsJoinedByString:@" "]];
   }
 
+  cmd = [cmd stringByAppendingString:@" --headless"];
+
   NSFileHandle *writeHandle = inputPipe.fileHandleForWriting;
   [writeHandle writeData:[cmd dataUsingEncoding:NSUTF8StringEncoding]];
   [writeHandle closeFile];
