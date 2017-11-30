@@ -33,6 +33,7 @@
 #import <nvim/syntax.h>
 #import <nvim/api/window.h>
 #import <nvim/aucmd.h>
+#import <nvim/quickfix.h>
 
 
 #define pun_type(t, x) (*((t *) (&(x))))
@@ -689,7 +690,7 @@ static NeoVimBuffer *buffer_for(buf_T *buf) {
     return nil;
   }
 
-  bool readonly = buf->b_p_bt != empty_option || buf->b_p_bt != NULL;
+  bool readonly = (bool) bt_nofile(buf);
 
   NSString *fileName = nil;
   if (buf->b_ffname != NULL) {

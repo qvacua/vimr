@@ -42,8 +42,7 @@ extension NeoVimView {
    - returns: nil when for exampls a quickfix panel is open.
    */
   public func currentBuffer() -> NeoVimBuffer? {
-    let buffers: [NeoVimBuffer] = self.agent.buffers()
-    return buffers.first { $0.isCurrent }
+    return self.agent.buffers().first { $0.isCurrent }
 //    guard let buf = self.nvim.getCurrentBuf().value else {
 //      return nil
 //    }
