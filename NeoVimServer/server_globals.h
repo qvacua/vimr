@@ -23,8 +23,6 @@ extern void neovim_delete(void **argv);
 
 extern void neovim_pwd(void **argv);
 
-extern void neovim_cursor_goto(void **argv);
-
 extern void neovim_focus_gained(void **argv);
 
 extern void neovim_debug1(void **argv);

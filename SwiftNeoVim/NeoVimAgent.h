@@ -43,7 +43,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)deleteCharacters:(NSInteger)count;
 
 - (void)resizeToWidth:(int)width height:(int)height;
-- (void)cursorGoToRow:(int)row column:(int)column;
 
 - (NSString * _Nullable)escapedFileName:(NSString *)fileName;
 - (NSArray<NSString *> *)escapedFileNames:(NSArray<NSString *> *)fileNames;

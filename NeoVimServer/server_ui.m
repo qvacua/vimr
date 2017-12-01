@@ -855,39 +855,6 @@ void neovim_pwd(void **argv) {
   });
 }
 
-void neovim_cursor_goto(void **argv) {
-  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
-    const int *values = data.bytes;
-
-    Array position = ARRAY_DICT_INIT;
-
-    position.size = 2;
-    position.capacity = 2;
-    position.items = xmalloc(2 * sizeof(Object));
-
-    Object row = OBJECT_INIT;
-    row.type = kObjectTypeInteger;
-    row.data.integer = values[0];
-
-    Object col = OBJECT_INIT;
-    col.type = kObjectTypeInteger;
-    col.data.integer = values[1];
-
-    position.items[0] = row;
-    position.items[1] = col;
-
-    Error err = ERROR_INIT;
-
-    nvim_win_set_cursor(nvim_get_current_win(), position, &err);
-    // The above call seems to be not enough...
-    nvim_input((String) { .data="<ESC>", .size=5 });
-
-    xfree(position.items);
-
-    return nil;
-  });
-}
-
 void neovim_focus_gained(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     const bool *values = data.bytes;

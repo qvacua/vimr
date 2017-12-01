@@ -289,12 +289,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
   [self sendMessageWithId:NeoVimAgentMsgIdResize data:data expectsReply:NO];
 }
 
-- (void)cursorGoToRow:(int)row column:(int)column {
-  int values[] = {row, column};
-  NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(int))];
-  [self sendMessageWithId:NeoVimAgentMsgIdCursorGoto data:data expectsReply:NO];
-}
-
 - (NSString *)escapedFileName:(NSString *)fileName {
   NSArray<NSString *> *fileNames = [self escapedFileNames:@[fileName]];
   if (fileNames.count == 0) {

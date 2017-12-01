@@ -141,7 +141,18 @@ extension NeoVimView {
   }
 
   public func cursorGo(to position: Position) {
-    self.agent.cursorGo(toRow: Int32(position.row), column: Int32(position.column))
+    self.nvim.checkBlocked { () -> Nvim.Response<Void> in
+      let curWin = self.nvim.getCurrentWin()
+      if let err = curWin.error {
+        return .failure(err)
+      }
+
+      guard let win = curWin.value else {
+        return .failure(Nvim.Error(type: .unknown, message: "Could not get current window."))
+      }
+
+      return self.nvim.winSetCursor(window: win, pos: [position.row, position.column])
+    }
   }
 
   public func didBecomeMain() {
