@@ -206,6 +206,14 @@ public class Nvim {
     self.session.stop()
   }
 
+  public func checkBlocked<T>(_ fn: () -> Nvim.Response<T>) -> Nvim.Response<T> {
+    if self.getMode().value?.dictionaryValue?[.string("blocked")] == .bool(true) {
+      return Nvim.Response.failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked."))
+    }
+
+    return fn()
+  }
+
   public func rpc(method: String,
                 params: [Nvim.Value],
                 expectsReturnValue: Bool = true) -> Nvim.Response<Nvim.Value> {

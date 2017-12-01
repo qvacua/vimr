@@ -19,39 +19,11 @@ extension NeoVimView {
     self.resizeNeoVimUi(to: self.bounds.size)
   }
 
-  private func neoVimBuffer(for buf: Nvim.Buffer, currentBuffer: Nvim.Buffer?) -> NeoVimBuffer? {
-    guard let path = self.nvim.bufGetName(buffer: buf).value else {
-      return nil
-    }
-
-    guard let dirty = self.nvim.bufGetOption(buffer: buf, name: "mod").value?.boolValue else {
-      return nil
-    }
-
-    guard let buftype = self.nvim.bufGetOption(buffer: buf, name: "buftype").value else {
-      return nil
-    }
-
-    let readonly = buftype != ""
-    let current = buf == currentBuffer
-
-    return NeoVimBuffer(handle: buf.handle, unescapedPath: path, dirty: dirty, readOnly: readonly, current: current)
-  }
-
-  private func checkBlocked<T>(_ fn: () -> Nvim.Response<T>) -> Nvim.Response<T> {
-    if self.nvim.getMode().value?.dictionaryValue?[.string("blocked")] == .bool(true) {
-      return Nvim.Response.failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked."))
-    }
-
-    return fn()
-  }
-
   /**
    - returns: nil when for exampls a quickfix panel is open.
    */
   public func currentBuffer() -> NeoVimBuffer? {
-//    return self.agent.buffers().first { $0.isCurrent }
-    guard let buf = self.checkBlocked({ self.nvim.getCurrentBuf() }).value else {
+    guard let buf = self.nvim.checkBlocked({ self.nvim.getCurrentBuf() }).value else {
       return nil
     }
 
@@ -59,20 +31,14 @@ extension NeoVimView {
   }
 
   public func allBuffers() -> [NeoVimBuffer] {
-//    return self.agent.tabs().map { $0.allBuffers() }.flatMap { $0 }
-    let curBuf = self.checkBlocked({ self.nvim.getCurrentBuf() }).value
-    return self.checkBlocked({ self.nvim.listBufs() })
+    let curBuf = self.nvim.checkBlocked { self.nvim.getCurrentBuf() }.value
+    return self.nvim.checkBlocked { self.nvim.listBufs() }
              .value?
              .flatMap { self.neoVimBuffer(for: $0, currentBuffer: curBuf) } ?? []
   }
 
-  public func hasDirtyDocs() -> Bool {
-    return self.agent.hasDirtyDocs()
-  }
-
   public func isCurrentBufferDirty() -> Bool {
-    let curBuf = self.currentBuffer()
-    return curBuf?.isDirty ?? false
+    return self.currentBuffer()?.isDirty ?? false
   }
 
   public func newTab() {
@@ -177,7 +143,7 @@ extension NeoVimView {
     self.agent.neoVimQuitCondition.lock()
     defer { self.agent.neoVimQuitCondition.unlock() }
     while self.agent.neoVimHasQuit == false
-          && self.agent.neoVimQuitCondition.wait(until: Date(timeIntervalSinceNow: neoVimQuitTimeout)) { }
+          && self.agent.neoVimQuitCondition.wait(until: Date(timeIntervalSinceNow: neoVimQuitTimeout)) {}
   }
 
   /**
@@ -188,7 +154,7 @@ extension NeoVimView {
    We don't use NeoVimAgent.vimCommand because if we do for example "e /some/file"
    and its swap file already exists, then NeoVimServer spins and become unresponsive.
   */
-  fileprivate func exec(command cmd: String) {
+  private func exec(command cmd: String) {
     switch self.mode {
     case .normal:
       self.agent.vimInput(":\(cmd)<CR>")
@@ -197,7 +163,7 @@ extension NeoVimView {
     }
   }
 
-  fileprivate func `open`(_ url: URL, cmd: String) {
+  private func `open`(_ url: URL, cmd: String) {
     let path = url.path
     guard let escapedFileName = self.agent.escapedFileName(path) else {
       self.logger.fault("Escaped file name returned nil.")
@@ -205,6 +171,25 @@ extension NeoVimView {
     }
 
     self.exec(command: "\(cmd) \(escapedFileName)")
+  }
+
+  private func neoVimBuffer(for buf: Nvim.Buffer, currentBuffer: Nvim.Buffer?) -> NeoVimBuffer? {
+    guard let path = self.nvim.bufGetName(buffer: buf).value else {
+      return nil
+    }
+
+    guard let dirty = self.nvim.bufGetOption(buffer: buf, name: "mod").value?.boolValue else {
+      return nil
+    }
+
+    guard let buftype = self.nvim.bufGetOption(buffer: buf, name: "buftype").value else {
+      return nil
+    }
+
+    let readonly = buftype != ""
+    let current = buf == currentBuffer
+
+    return NeoVimBuffer(handle: buf.handle, unescapedPath: path, dirty: dirty, readOnly: readonly, current: current)
   }
 }
 
