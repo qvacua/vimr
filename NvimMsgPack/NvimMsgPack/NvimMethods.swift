@@ -21,7 +21,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Int> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -49,7 +49,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<[String]> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -83,7 +83,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -109,7 +109,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Value> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -135,7 +135,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Int> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -161,7 +161,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<[Nvim.Value]> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -191,7 +191,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -217,7 +217,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -240,7 +240,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Value> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -270,7 +270,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -293,7 +293,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<String> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -321,7 +321,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -343,7 +343,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Bool> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -369,7 +369,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<[Int]> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -400,7 +400,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Int> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -435,7 +435,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -459,7 +459,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<[Nvim.Window]> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -485,7 +485,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Value> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -515,7 +515,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -541,7 +541,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -563,7 +563,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Window> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -588,7 +588,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Int> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -613,7 +613,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Bool> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -642,7 +642,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -666,7 +666,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -690,7 +690,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -715,7 +715,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -739,7 +739,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -761,7 +761,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Value> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -788,7 +788,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Value> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -818,7 +818,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -841,7 +841,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Int> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -869,7 +869,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<String> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -897,7 +897,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<String> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -922,7 +922,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Value> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -948,7 +948,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Value> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -975,7 +975,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Value> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1001,7 +1001,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Int> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1025,7 +1025,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<[String]> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1052,7 +1052,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -1072,7 +1072,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<String> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1099,7 +1099,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -1121,7 +1121,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -1142,7 +1142,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Value> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1170,7 +1170,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -1194,7 +1194,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -1215,7 +1215,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Value> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1240,7 +1240,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Value> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1268,7 +1268,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -1292,7 +1292,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -1315,7 +1315,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -1338,7 +1338,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -1358,7 +1358,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<[Nvim.Buffer]> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1382,7 +1382,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Buffer> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1409,7 +1409,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -1429,7 +1429,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<[Nvim.Window]> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1453,7 +1453,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Window> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1480,7 +1480,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -1500,7 +1500,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<[Nvim.Tabpage]> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1524,7 +1524,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Tabpage> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1551,7 +1551,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -1574,7 +1574,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -1597,7 +1597,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -1618,7 +1618,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Int> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1642,7 +1642,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Value> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1686,7 +1686,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<[Nvim.Value]> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1710,7 +1710,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Value> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1735,7 +1735,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Value> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1760,7 +1760,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Buffer> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1785,7 +1785,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<[Int]> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1813,7 +1813,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -1835,7 +1835,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Int> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1863,7 +1863,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -1885,7 +1885,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Int> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1913,7 +1913,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -1936,7 +1936,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Value> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -1966,7 +1966,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -1992,7 +1992,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -2015,7 +2015,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Value> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -2045,7 +2045,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -2068,7 +2068,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<[Int]> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -2093,7 +2093,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Nvim.Tabpage> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -2118,7 +2118,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Int> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
@@ -2143,7 +2143,7 @@ public extension Nvim {
     checkBlocked: Bool = true
   ) -> Nvim.Response<Bool> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     

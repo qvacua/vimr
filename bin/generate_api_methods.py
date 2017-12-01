@@ -15,7 +15,7 @@ void_func_template = Template('''\
     checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
@@ -58,7 +58,7 @@ func_template = Template('''\
     checkBlocked: Bool = true
   ) -> Nvim.Response<${result_type}> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
       return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     

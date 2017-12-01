@@ -11,4 +11,10 @@ guard let nvim = Nvim(at: "/tmp/nvim.sock") else {
 
 nvim.connect()
 
-print(nvim.getVar(name: "cwd"))
+if nvim.getMode().value?.dictionaryValue?[.string("blocked")]?.boolValue == true {
+  print("blocked!")
+} else {
+  print("not blocked!")
+}
+
+print(nvim.getMode())
