@@ -100,6 +100,8 @@ extension NeoVimView {
         return
       }
     }
+
+    self.nvim.command(command: "tab sb \(buffer.handle)")
   }
 
   /// Closes the current window.
