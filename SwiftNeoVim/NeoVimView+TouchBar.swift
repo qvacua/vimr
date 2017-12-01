@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import NvimMsgPack
 
 @available(OSX 10.12.2, *)
 extension NeoVimView : NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate {
@@ -81,8 +82,11 @@ extension NeoVimView : NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDeleg
 
   public func scrubber(_ scrubber: NSScrubber, didSelectItemAt selectedIndex: Int) {
     let tab = tabsCache[selectedIndex]
-    guard tab.windows.count > 0 else { return }
-    self.agent.select(tab.currentWindow() ?? tab.windows[0])
-  }
+    guard tab.windows.count > 0 else {
+      return
+    }
+
+    let window = tab.currentWindow() ?? tab.windows[0]
+    self.nvim.checkBlocked { self.nvim.setCurrentWin(window: Nvim.Window(window.handle), expectsReturnValue: false) } }
 
 }

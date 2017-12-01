@@ -63,7 +63,9 @@ extension NeoVimView {
       if buffers.filter({ $0.url == url }).first != nil {
         for window in tabs.map({ $0.windows }).flatMap({ $0 }) {
           if window.buffer.url == url {
-            self.agent.select(window)
+            self.nvim.checkBlocked {
+              self.nvim.setCurrentWin(window: Nvim.Window(window.handle), expectsReturnValue: false)
+            }
             return
           }
         }
@@ -96,7 +98,9 @@ extension NeoVimView {
   public func select(buffer: NeoVimBuffer) {
     for window in self.allTabs().map({ $0.windows }).flatMap({ $0 }) {
       if window.buffer.handle == buffer.handle {
-        self.agent.select(window)
+        self.nvim.checkBlocked {
+          self.nvim.setCurrentWin(window: Nvim.Window(window.handle), expectsReturnValue: false)
+        }
         return
       }
     }
@@ -224,9 +228,11 @@ extension NeoVimView {
 
     let windows: [NeoVimWindow] = self.nvim.checkBlocked { self.nvim.tabpageListWins(tabpage: tabpage) }
                                     .value?
-                                    .flatMap { self.neoVimWindow(for: $0,
-                                                                 currentWindow: curWinInTab,
-                                                                 currentBuffer: currentBuffer) } ?? []
+                                    .flatMap {
+      self.neoVimWindow(for: $0,
+                        currentWindow: curWinInTab,
+                        currentBuffer: currentBuffer)
+    } ?? []
 
     return NeoVimTab(handle: tabpage.handle, windows: windows, current: tabpage == currentTabpage)
   }

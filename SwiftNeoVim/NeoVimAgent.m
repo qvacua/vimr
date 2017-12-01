@@ -316,12 +316,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
   [self sendMessageWithId:NeoVimAgentMsgIdScroll data:data expectsReply:NO];
 }
 
-- (void)selectWindow:(NeoVimWindow *)window {
-  int values[] = {(int) window.handle};
-  NSData *data = [[NSData alloc] initWithBytes:values length:sizeof(int)];
-  [self sendMessageWithId:NeoVimAgentMsgIdSelectWindow data:data expectsReply:NO];
-}
-
 - (NSArray <NSString *> *)escapedFileNames:(NSArray <NSString *> *)fileNames {
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:fileNames];
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetEscapeFileNames data:data expectsReply:YES];

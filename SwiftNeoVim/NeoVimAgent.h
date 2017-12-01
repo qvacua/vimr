@@ -49,7 +49,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<NSString *> *)escapedFileNames:(NSArray<NSString *> *)fileNames;
 
 - (void)scrollHorizontal:(NSInteger)horiz vertical:(NSInteger)vert at:(Position)position;
-- (void)selectWindow:(NeoVimWindow *)window;
 
 - (void)focusGained:(bool)gained;
 

@@ -719,31 +719,6 @@ void neovim_scroll(void **argv) {
   });
 }
 
-void neovim_select_window(void **argv) {
-  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
-    int handle = ((int *) data.bytes)[0];
-
-    FOR_ALL_TAB_WINDOWS(tab, win) {
-        if (win->handle == handle) {
-          Error err = ERROR_INIT;
-          nvim_set_current_win(win->handle, &err);
-
-          if (ERROR_SET(&err)) {
-            WLOG("Error selecting window with handle %d: %s", win->handle, err.msg);
-            return nil;
-          }
-
-          // nvim_set_current_win() does not seem to trigger a redraw.
-          refresh_ui_screen(0);
-
-          return nil;
-        }
-      }
-
-    return nil;
-  });
-}
-
 void neovim_escaped_filenames(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     NSArray *fileNames = [NSKeyedUnarchiver unarchiveObjectWithData:data];
