@@ -41,13 +41,22 @@ extension NeoVimView {
     return self.currentBuffer()?.isDirty ?? false
   }
 
+  public func allTabs() -> [NeoVimTab] {
+    let curBuf = self.nvim.checkBlocked { self.nvim.getCurrentBuf() }.value
+    let curTab = self.nvim.checkBlocked { self.nvim.getCurrentTabpage() }.value
+
+    return self.nvim.checkBlocked({ nvim.listTabpages() })
+             .value?
+             .flatMap { self.neoVimTab(for: $0, currentTabpage: curTab, currentBuffer: curBuf) } ?? []
+  }
+
   public func newTab() {
     self.exec(command: "tabe")
   }
 
   public func `open`(urls: [URL]) {
-    let tabs = self.agent.tabs()
-    let buffers = self.allBuffers()
+    let tabs = self.allTabs()
+    let buffers = tabs.map { $0.windows }.flatMap { $0 }.map { $0.buffer }
     let currentBufferIsTransient = buffers.first { $0.isCurrent }?.isTransient ?? false
 
     urls.enumerated().forEach { (idx, url) in
@@ -85,7 +94,7 @@ extension NeoVimView {
   }
 
   public func select(buffer: NeoVimBuffer) {
-    for window in self.agent.tabs().map({ $0.windows }).flatMap({ $0 }) {
+    for window in self.allTabs().map({ $0.windows }).flatMap({ $0 }) {
       if window.buffer.handle == buffer.handle {
         self.agent.select(window)
         return
@@ -190,6 +199,36 @@ extension NeoVimView {
     let current = buf == currentBuffer
 
     return NeoVimBuffer(handle: buf.handle, unescapedPath: path, dirty: dirty, readOnly: readonly, current: current)
+  }
+
+  private func neoVimWindow(for window: Nvim.Window,
+                            currentWindow: Nvim.Window?,
+                            currentBuffer: Nvim.Buffer?) -> NeoVimWindow? {
+
+    guard let buf = self.nvim.checkBlocked({ self.nvim.winGetBuf(window: window) }).value else {
+      return nil
+    }
+
+    guard let buffer = self.neoVimBuffer(for: buf, currentBuffer: currentBuffer) else {
+      return nil
+    }
+
+    return NeoVimWindow(handle: window.handle, buffer: buffer, currentInTab: window == currentWindow)
+  }
+
+  private func neoVimTab(for tabpage: Nvim.Tabpage,
+                         currentTabpage: Nvim.Tabpage?,
+                         currentBuffer: Nvim.Buffer?) -> NeoVimTab? {
+
+    let curWinInTab = self.nvim.checkBlocked { self.nvim.tabpageGetWin(tabpage: tabpage) }.value
+
+    let windows: [NeoVimWindow] = self.nvim.checkBlocked { self.nvim.tabpageListWins(tabpage: tabpage) }
+                                    .value?
+                                    .flatMap { self.neoVimWindow(for: $0,
+                                                                 currentWindow: curWinInTab,
+                                                                 currentBuffer: currentBuffer) } ?? []
+
+    return NeoVimTab(handle: tabpage.handle, windows: windows, current: tabpage == currentTabpage)
   }
 }
 

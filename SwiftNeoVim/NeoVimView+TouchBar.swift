@@ -53,7 +53,7 @@ extension NeoVimView : NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDeleg
 
   func updateTouchBarCurrentBuffer() {
     guard let tabsControl = getTabsControl() else { return }
-    tabsCache = self.agent.tabs()
+    tabsCache = self.allTabs()
     tabsControl.reloadData()
     (tabsControl.scrubberLayout as! NSScrubberProportionalLayout).numberOfVisibleItems = tabsControl.numberOfItems > 0 ? tabsControl.numberOfItems : 1
     tabsControl.selectedIndex = selectedTabIndex()
@@ -61,7 +61,7 @@ extension NeoVimView : NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDeleg
 
   func updateTouchBarTab() {
     guard let tabsControl = getTabsControl() else { return }
-    tabsCache = self.agent.tabs()
+    tabsCache = self.allTabs()
     tabsControl.reloadData()
     tabsControl.selectedIndex = selectedTabIndex()
   }

@@ -684,32 +684,6 @@ static NSString *escaped_filename(NSString *filename) {
   return result;
 }
 
-static NeoVimBuffer *buffer_for(buf_T *buf) {
-  // To be sure...
-  if (buf == NULL) {
-    return nil;
-  }
-
-  bool readonly = (bool) bt_nofile(buf);
-
-  NSString *fileName = nil;
-  if (buf->b_ffname != NULL) {
-    fileName = [NSString stringWithCString:(const char *) buf->b_ffname
-                                  encoding:NSUTF8StringEncoding];
-  }
-
-  bool current = curbuf == buf;
-  bool dirty = readonly ? false : (bool) buf->b_changed;
-
-  NeoVimBuffer *buffer = [[NeoVimBuffer alloc] initWithHandle:buf->handle
-                                                unescapedPath:fileName
-                                                        dirty:dirty
-                                                     readOnly:readonly
-                                                      current:current];
-
-  return [buffer autorelease];
-}
-
 void neovim_scroll(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     NSInteger *values = (NSInteger *) data.bytes;
@@ -767,41 +741,6 @@ void neovim_select_window(void **argv) {
       }
 
     return nil;
-  });
-}
-
-void neovim_tabs(void **argv) {
-  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
-    NSMutableArray *tabs = [[NSMutableArray new] autorelease];
-    FOR_ALL_TABS(t) {
-      NSMutableArray *windows = [NSMutableArray new];
-
-      bool currentTab = curtab ? t->handle == curtab->handle : false;
-
-      FOR_ALL_WINDOWS_IN_TAB(win, t) {
-        NeoVimBuffer *buffer = buffer_for(win->w_buffer);
-        if (buffer == nil) {
-          continue;
-        }
-
-        bool current = false;
-        // tp_curwin is only valid for tabs that aren't the current one
-        if (currentTab) current = curwin ? win->handle == curwin->handle : false;
-        else if (t->tp_curwin) current = win->handle == t->tp_curwin->handle;
-        NeoVimWindow *window = [[NeoVimWindow alloc] initWithHandle:win->handle buffer:buffer currentInTab:current];
-        [windows addObject:window];
-        [window release];
-      }
-
-      NeoVimTab *tab = [[NeoVimTab alloc] initWithHandle:t->handle windows:windows current:currentTab];
-      [windows release];
-
-      [tabs addObject:tab];
-      [tab release];
-    }
-
-    DLOG("tabs: %s", tabs.description.cstr);
-    return [NSKeyedArchiver archivedDataWithRootObject:tabs];
   });
 }
 

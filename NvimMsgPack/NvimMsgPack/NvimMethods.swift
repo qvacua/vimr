@@ -64,6 +64,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func bufSetLines(
     buffer: Nvim.Buffer,
     start: Int,
@@ -156,6 +157,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func bufSetVar(
     buffer: Nvim.Buffer,
     name: String,
@@ -177,6 +179,7 @@ public extension Nvim {
     return .success(())
   }
 
+  @discardableResult
   public func bufDelVar(
     buffer: Nvim.Buffer,
     name: String,
@@ -219,6 +222,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func bufSetOption(
     buffer: Nvim.Buffer,
     name: String,
@@ -261,6 +265,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func bufSetName(
     buffer: Nvim.Buffer,
     name: String,
@@ -355,6 +360,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func bufClearHighlight(
     buffer: Nvim.Buffer,
     src_id: Int,
@@ -422,6 +428,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func tabpageSetVar(
     tabpage: Nvim.Tabpage,
     name: String,
@@ -443,6 +450,7 @@ public extension Nvim {
     return .success(())
   }
 
+  @discardableResult
   public func tabpageDelVar(
     tabpage: Nvim.Tabpage,
     name: String,
@@ -525,6 +533,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func uiAttach(
     width: Int,
     height: Int,
@@ -546,6 +555,7 @@ public extension Nvim {
     return .success(())
   }
 
+  @discardableResult
   public func uiDetach(
     expectsReturnValue: Bool = true
   ) -> Nvim.Response<Void> {
@@ -562,6 +572,7 @@ public extension Nvim {
     return .success(())
   }
 
+  @discardableResult
   public func uiTryResize(
     width: Int,
     height: Int,
@@ -581,6 +592,7 @@ public extension Nvim {
     return .success(())
   }
 
+  @discardableResult
   public func uiSetOption(
     name: String,
     value: Nvim.Value,
@@ -600,6 +612,7 @@ public extension Nvim {
     return .success(())
   }
 
+  @discardableResult
   public func command(
     command: String,
     expectsReturnValue: Bool = true
@@ -663,6 +676,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func feedkeys(
     keys: String,
     mode: String,
@@ -861,6 +875,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func setCurrentDir(
     dir: String,
     expectsReturnValue: Bool = true
@@ -898,6 +913,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func setCurrentLine(
     line: String,
     expectsReturnValue: Bool = true
@@ -915,6 +931,7 @@ public extension Nvim {
     return .success(())
   }
 
+  @discardableResult
   public func delCurrentLine(
     expectsReturnValue: Bool = true
   ) -> Nvim.Response<Void> {
@@ -952,6 +969,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func setVar(
     name: String,
     value: Nvim.Value,
@@ -971,6 +989,7 @@ public extension Nvim {
     return .success(())
   }
 
+  @discardableResult
   public func delVar(
     name: String,
     expectsReturnValue: Bool = true
@@ -1030,6 +1049,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func setOption(
     name: String,
     value: Nvim.Value,
@@ -1049,6 +1069,7 @@ public extension Nvim {
     return .success(())
   }
 
+  @discardableResult
   public func outWrite(
     str: String,
     expectsReturnValue: Bool = true
@@ -1066,6 +1087,7 @@ public extension Nvim {
     return .success(())
   }
 
+  @discardableResult
   public func errWrite(
     str: String,
     expectsReturnValue: Bool = true
@@ -1083,6 +1105,7 @@ public extension Nvim {
     return .success(())
   }
 
+  @discardableResult
   public func errWriteln(
     str: String,
     expectsReturnValue: Bool = true
@@ -1140,6 +1163,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func setCurrentBuf(
     buffer: Nvim.Buffer,
     expectsReturnValue: Bool = true
@@ -1197,6 +1221,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func setCurrentWin(
     window: Nvim.Window,
     expectsReturnValue: Bool = true
@@ -1254,6 +1279,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func setCurrentTabpage(
     tabpage: Nvim.Tabpage,
     expectsReturnValue: Bool = true
@@ -1271,6 +1297,7 @@ public extension Nvim {
     return .success(())
   }
 
+  @discardableResult
   public func subscribe(
     event: String,
     expectsReturnValue: Bool = true
@@ -1288,6 +1315,7 @@ public extension Nvim {
     return .success(())
   }
 
+  @discardableResult
   public func unsubscribe(
     event: String,
     expectsReturnValue: Bool = true
@@ -1470,6 +1498,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func winSetCursor(
     window: Nvim.Window,
     pos: [Int],
@@ -1510,6 +1539,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func winSetHeight(
     window: Nvim.Window,
     height: Int,
@@ -1550,6 +1580,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func winSetWidth(
     window: Nvim.Window,
     width: Int,
@@ -1592,6 +1623,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func winSetVar(
     window: Nvim.Window,
     name: String,
@@ -1613,6 +1645,7 @@ public extension Nvim {
     return .success(())
   }
 
+  @discardableResult
   public func winDelVar(
     window: Nvim.Window,
     name: String,
@@ -1655,6 +1688,7 @@ public extension Nvim {
     return .success(result)
   }
 
+  @discardableResult
   public func winSetOption(
     window: Nvim.Window,
     name: String,

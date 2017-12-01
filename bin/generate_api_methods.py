@@ -9,6 +9,7 @@ import os
 
 
 void_func_template = Template('''\
+  @discardableResult
   public func ${func_name}(${args}
     expectsReturnValue: Bool = true
   ) -> Nvim.Response<Void> {

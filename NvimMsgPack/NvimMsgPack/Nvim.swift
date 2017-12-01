@@ -21,7 +21,11 @@ public class Nvim {
     }
   }
 
-  public struct Window {
+  public struct Window: Equatable {
+
+    public static func ==(lhs: Window, rhs: Window) -> Bool {
+      return lhs.handle == rhs.handle
+    }
 
     public let handle: Int
 
@@ -30,7 +34,11 @@ public class Nvim {
     }
   }
 
-  public struct Tabpage {
+  public struct Tabpage: Equatable {
+
+    public static func ==(lhs: Tabpage, rhs: Tabpage) -> Bool {
+      return lhs.handle == rhs.handle
+    }
 
     public let handle: Int
 
@@ -206,6 +214,7 @@ public class Nvim {
     self.session.stop()
   }
 
+  @discardableResult
   public func checkBlocked<T>(_ fn: () -> Nvim.Response<T>) -> Nvim.Response<T> {
     if self.getMode().value?.dictionaryValue?[.string("blocked")] == .bool(true) {
       return Nvim.Response.failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked."))

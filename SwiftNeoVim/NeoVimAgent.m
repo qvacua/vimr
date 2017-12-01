@@ -373,26 +373,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
   return [NSKeyedUnarchiver unarchiveObjectWithData:response];
 }
 
-//- (NSArray <NeoVimBuffer *> *)buffers {
-//  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetBuffers data:nil expectsReply:YES];
-//  if (response == nil) {
-//    log4Warn("The response for the msg %ld was nil.", (long) NeoVimAgentMsgIdGetBuffers);
-//    return @[];
-//  }
-//
-//  return [NSKeyedUnarchiver unarchiveObjectWithData:response];
-//}
-
-- (NSArray<NeoVimWindow *> *)tabs {
-  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetTabs data:nil expectsReply:YES];
-  if (response == nil) {
-    log4Warn("The response for the msg %ld was nil.", (long) NeoVimAgentMsgIdGetTabs);
-    return @[];
-  }
-
-  return [NSKeyedUnarchiver unarchiveObjectWithData:response];
-}
-
 - (void)runLocalServer {
   @autoreleasepool {
     CFMessagePortContext localContext = {
