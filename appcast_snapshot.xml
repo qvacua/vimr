@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-241</title>
+      <title>SNAPSHOT-242</title>
       <description><![CDATA[
     <ul>
 <li>GH-387: Show all buffers (the same as <code>:buffers</code>) in the buffers list</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/241
+        https://github.com/qvacua/vimr/releases/tag/snapshot/242
       </releaseNotesLink>
-      <pubDate>2017-12-01T19:04:36.375610</pubDate>
+      <pubDate>2017-12-01T21:44:50.047443</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/241/VimR-SNAPSHOT-241.tar.bz2"
-                 sparkle:version="241"
-                 sparkle:shortVersionString="SNAPSHOT-241"
-                 sparkle:dsaSignature="MCwCFHgFp2UeB67/zlJyqo0hjP+jRMYLAhRyqcTUO5whQ7ykgsUq+u32PaaOBg=="
-                 length="14045608"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/242/VimR-SNAPSHOT-242.tar.bz2"
+                 sparkle:version="242"
+                 sparkle:shortVersionString="SNAPSHOT-242"
+                 sparkle:dsaSignature="MC4CFQDdh+9HYRHwqwOOY3206GMbq/4aoQIVALZ8dGCbM9UW1RUGd9Pq2CF0aL+j"
+                 length="14046334"
                  type="application/octet-stream"/>
     </item>
   </channel>
