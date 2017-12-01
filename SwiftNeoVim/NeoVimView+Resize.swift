@@ -50,7 +50,7 @@ extension NeoVimView {
     self.xOffset = floor((size.width - self.cellSize.width * CGFloat(discreteSize.width)) / 2)
     self.yOffset = floor((size.height - self.cellSize.height * CGFloat(discreteSize.height)) / 2)
 
-    self.nvim.uiTryResize(width: discreteSize.width, height: discreteSize.height)
+    self.agent.resize(toWidth: Int32(discreteSize.width), height: Int32(discreteSize.height))
   }
 
   fileprivate func launchNeoVim(_ size: Size) {
@@ -59,7 +59,6 @@ extension NeoVimView {
 
     self.nvim.connect()
 
-    // We probably should set the following in a .vim file. Otherwise the start screen doesn't get shown.
     self.nvim.setOption(name: "mouse", value: .string("a"))
     self.nvim.setOption(name: "title", value: .bool(true))
     self.nvim.setOption(name: "termguicolors", value: .bool(true))

@@ -42,6 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)vimInputMarkedText:(NSString *)markedText;
 - (void)deleteCharacters:(NSInteger)count;
 
+- (void)resizeToWidth:(int)width height:(int)height;
+
 - (NSString * _Nullable)escapedFileName:(NSString *)fileName;
 - (NSArray<NSString *> *)escapedFileNames:(NSArray<NSString *> *)fileNames;
 

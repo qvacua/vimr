@@ -729,6 +729,19 @@ void neovim_escaped_filenames(void **argv) {
   });
 }
 
+void neovim_resize(void **argv) {
+  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
+    const int *values = data.bytes;
+    int width = values[0];
+    int height = values[1];
+
+    set_ui_size(_server_ui_data->bridge, width, height);
+    ui_refresh();
+
+    return nil;
+  });
+}
+
 void neovim_vim_input(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     NSString *input = [[[NSString alloc] initWithData:data
