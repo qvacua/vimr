@@ -8,9 +8,6 @@
 #import "Logging.h"
 #import "server_globals.h"
 #import "NeoVimServer.h"
-#import "NeoVimBuffer.h"
-#import "NeoVimWindow.h"
-#import "NeoVimTab.h"
 #import "CocoaCategories.h"
 #import "DataWrapper.h"
 
