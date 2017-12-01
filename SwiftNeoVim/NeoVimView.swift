@@ -139,7 +139,7 @@ public class NeoVimView: NSView,
         return
       }
 
-      self.agent.vimCommandOutput("cd \(escapedCwd)")
+      self.nvim.command(command: "cd \(escapedCwd)")
     }
   }
 

@@ -744,34 +744,6 @@ void neovim_select_window(void **argv) {
   });
 }
 
-void neovim_vim_command_output(void **argv) {
-  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
-    NSString *input = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-
-    Error err = ERROR_INIT;
-    String commandOutput = nvim_command_output(vim_string_from(input), &err);
-    char_u *output = (char_u *) commandOutput.data;
-
-    // FIXME: handle err.set == true
-    NSString *result = nil;
-    if (output == NULL) {
-      WLOG("vim command output is null");
-    } else if (ERROR_SET(&err)) {
-      WLOG("vim command output for '%s' was not successful: %s", input.cstr, err.msg);
-    } else {
-      result = [[NSString alloc] initWithCString:(const char *) output
-                                        encoding:NSUTF8StringEncoding];
-    }
-
-    NSData *resultData = result == nil ? nil : [NSKeyedArchiver archivedDataWithRootObject:result];
-
-    [result release];
-    [input release];
-
-    return resultData;
-  });
-}
-
 void neovim_escaped_filenames(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     NSArray *fileNames = [NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -793,23 +765,6 @@ void neovim_resize(void **argv) {
 
     set_ui_size(_server_ui_data->bridge, width, height);
     ui_refresh();
-
-    return nil;
-  });
-}
-
-void neovim_vim_command(void **argv) {
-  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
-    NSString *input = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-
-    Error err = ERROR_INIT;
-    nvim_command(vim_string_from(input), &err);
-
-    if (ERROR_SET(&err)) {
-      WLOG("ERROR while executing command %s: %s", input.cstr, err.msg);
-    }
-
-    [input release];
 
     return nil;
   });

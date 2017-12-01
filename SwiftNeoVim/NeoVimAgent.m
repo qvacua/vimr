@@ -268,24 +268,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
   return pwd;
 }
 
-- (void)vimCommand:(NSString *)string {
-  NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
-  [self sendMessageWithId:NeoVimAgentMsgIdCommand data:data expectsReply:NO];
-}
-
-- (NSString *)vimCommandOutput:(NSString *)string {
-  NSData *data = [self sendMessageWithId:NeoVimAgentMsgIdCommandOutput
-                                    data:[string dataUsingEncoding:NSUTF8StringEncoding]
-                            expectsReply:YES];
-
-  if (data == nil) {
-    return nil;
-  }
-
-  NSString *result = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-  return [result stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-}
-
 - (void)vimInput:(NSString *)string {
   NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
   [self sendMessageWithId:NeoVimAgentMsgIdInput data:data expectsReply:NO];

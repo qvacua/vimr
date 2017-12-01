@@ -37,7 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (bool)runLocalServerAndNeoVimWithWidth:(NSInteger)width height:(NSInteger)height;
 
 - (NSURL *)pwd;
-- (void)vimCommand:(NSString *)string;
 
 - (void)vimInput:(NSString *)string;
 - (void)vimInputMarkedText:(NSString *)markedText;
@@ -51,9 +50,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)scrollHorizontal:(NSInteger)horiz vertical:(NSInteger)vert at:(Position)position;
 - (void)selectWindow:(NeoVimWindow *)window;
-
-// WAITS
-- (NSString * _Nullable)vimCommandOutput:(NSString *)string;
 
 - (void)focusGained:(bool)gained;
 

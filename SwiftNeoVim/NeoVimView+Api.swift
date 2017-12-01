@@ -133,7 +133,7 @@ extension NeoVimView {
   }
 
   public func vimOutput(of command: String) -> String {
-    return self.agent.vimCommandOutput(command) ?? ""
+    return self.nvim.commandOutput(str: command) ?? ""
   }
 
   public func cursorGo(to position: Position) {

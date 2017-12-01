@@ -59,9 +59,9 @@ extension NeoVimView {
 
     self.nvim.connect()
 
-    self.agent.vimCommand("set mouse=a")
-    self.agent.vimCommand("set title")
-    self.agent.vimCommand("set termguicolors")
+    self.nvim.setOption(name: "mouse", value: .string("a"))
+    self.nvim.setOption(name: "title", value: .bool(true))
+    self.nvim.setOption(name: "termguicolors", value: .bool(true))
 
     if noErrorDuringInitialization == false {
       self.logger.fault("There was an error launching neovim.")
