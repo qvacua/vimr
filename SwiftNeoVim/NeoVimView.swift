@@ -152,7 +152,9 @@ public class NeoVimView: NSView,
   public init(frame rect: NSRect, config: Config) {
     self.drawer = TextDrawer(font: self._font)
     self.agent = NeoVimAgent(uuid: self.uuid)
-    guard let nvim = Nvim(at: "/tmp/vimr_\(self.uuid).sock") else {
+
+    let sockPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock").path
+    guard let nvim = Nvim(at: sockPath) else {
       preconditionFailure("Nvim could not be instantiated")
     }
 
