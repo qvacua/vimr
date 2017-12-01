@@ -16,8 +16,6 @@ extern void start_neovim(NSInteger width, NSInteger height, NSArray<NSString *> 
 extern void neovim_select_window(void **argv);
 extern void neovim_scroll(void **argv);
 extern void neovim_vim_command_output(void **argv);
-extern void neovim_set_bool_option(void **argv);
-extern void neovim_get_bool_option(void **argv);
 extern void neovim_escaped_filenames(void **argv);
 extern void neovim_resize(void **argv);
 extern void neovim_vim_command(void **argv);

@@ -97,7 +97,7 @@ extension NeoVimView {
       return
     }
 
-    guard let curPasteMode = self.agent.boolOption("paste") else {
+    guard let curPasteMode = self.nvim.getOption(name: "paste").value?.boolValue else {
       self.ipcBecameInvalid("Reason: 'set paste' failed")
       return
     }
@@ -105,21 +105,23 @@ extension NeoVimView {
     let pasteModeSet: Bool
 
     if curPasteMode == false {
-      self.agent.setBoolOption("paste", to: true)
+      self.nvim.setOption(name: "paste", value: .bool(true))
       pasteModeSet = true
     } else {
       pasteModeSet = false
     }
 
-    let resetPasteModeCmd = pasteModeSet ? ":set nopaste<CR>" : ""
-
     switch self.mode {
     case .insert:
-      self.agent.vimInput("<ESC>\"+p\(resetPasteModeCmd)a")
+      self.agent.vimInput("<ESC>\"+pa")
     case .normal, .visual:
-      self.agent.vimInput("\"+p\(resetPasteModeCmd)")
+      self.agent.vimInput("\"+p")
     default:
       return
+    }
+
+    if pasteModeSet {
+      self.nvim.setOption(name: "paste", value: .bool(false))
     }
   }
 

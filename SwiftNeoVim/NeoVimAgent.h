@@ -54,8 +54,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 // WAITS
 - (NSString * _Nullable)vimCommandOutput:(NSString *)string;
-- (NSNumber * _Nullable)boolOption:(NSString *)option;
-- (void)setBoolOption:(NSString *)option to:(bool)value;
 
 - (void)focusGained:(bool)gained;
 

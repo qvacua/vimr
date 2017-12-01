@@ -772,59 +772,6 @@ void neovim_vim_command_output(void **argv) {
   });
 }
 
-void neovim_set_bool_option(void **argv) {
-  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
-    bool *optionValues = (bool *) data.bytes;
-    bool optionValue = optionValues[0];
-
-    const char *string = (const char *)(optionValues + 1);
-    NSString *optionName = [[NSString alloc] initWithCString:string encoding:NSUTF8StringEncoding];
-
-    Error err = ERROR_INIT;
-
-    Object object = OBJECT_INIT;
-    object.type = kObjectTypeBoolean;
-    object.data.boolean = optionValue;
-
-    DLOG("%s to set: %d", optionName.cstr, optionValue);
-
-    nvim_set_option(vim_string_from(optionName), object, &err);
-
-    if (ERROR_SET(&err)) {
-      WLOG("Error setting the option '%s' to %d: %s", optionName.cstr, optionValue, err.msg);
-    }
-
-    [optionName release];
-
-    return nil;
-  });
-}
-
-void neovim_get_bool_option(void **argv) {
-  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
-    NSString *option = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    bool result = false;
-
-    Error err = ERROR_INIT;
-    Object resultObj = nvim_get_option(vim_string_from(option), &err);
-
-    if (ERROR_SET(&err)) {
-      WLOG("Error getting the boolean option '%s': %s", option.cstr, err.msg);
-    }
-
-    if (resultObj.type == kObjectTypeBoolean) {
-      result = resultObj.data.boolean;
-    } else {
-      WLOG("Error got no boolean value, but %d, for option '%s': %s",
-           resultObj.type, option.cstr, err.msg);
-    }
-
-    [option release];
-
-    return [NSKeyedArchiver archivedDataWithRootObject:@(result)];
-  });
-}
-
 void neovim_escaped_filenames(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     NSArray *fileNames = [NSKeyedUnarchiver unarchiveObjectWithData:data];
