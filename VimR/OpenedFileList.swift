@@ -8,11 +8,11 @@ import RxSwift
 import PureLayout
 import SwiftNeoVim
 
-class OpenedFileList: NSView,
-                      UiComponent,
-                      NSTableViewDataSource,
-                      NSTableViewDelegate,
-                      ThemedView {
+class BuffersList: NSView,
+                   UiComponent,
+                   NSTableViewDataSource,
+                   NSTableViewDelegate,
+                   ThemedView {
 
   typealias StateType = MainWindow.State
 
@@ -38,7 +38,7 @@ class OpenedFileList: NSView,
     self.bufferList.allowsEmptySelection = true
     self.bufferList.delegate = self
     self.bufferList.target = self
-    self.bufferList.doubleAction = #selector(OpenedFileList.doubleClickAction)
+    self.bufferList.doubleAction = #selector(BuffersList.doubleClickAction)
 
     self.addViews()
 
@@ -112,7 +112,7 @@ class OpenedFileList: NSView,
 }
 
 // MARK: - Actions
-extension OpenedFileList {
+extension BuffersList {
 
   @objc func doubleClickAction(_ sender: Any?) {
     let clickedRow = self.bufferList.clickedRow
@@ -125,7 +125,7 @@ extension OpenedFileList {
 }
 
 // MARK: - NSTableViewDataSource
-extension OpenedFileList {
+extension BuffersList {
 
   @objc(numberOfRowsInTableView:)
   func numberOfRows(in tableView: NSTableView) -> Int {
@@ -134,7 +134,7 @@ extension OpenedFileList {
 }
 
 // MARK: - NSTableViewDelegate
-extension OpenedFileList {
+extension BuffersList {
 
   public func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
     return tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("buffer-row-view"), owner: self) as? ThemedTableRow

@@ -193,8 +193,8 @@ extension MainWindow {
       return .fileBrowser
     }
 
-    if tool == self.openedFileListContainer {
-      return .openedFilesList
+    if tool == self.buffersListContainer {
+      return .buffersList
     }
 
     if tool == self.previewContainer {

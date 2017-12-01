@@ -7,7 +7,7 @@ import Foundation
 
 class MarkdownReducer {
 
-  typealias Pair = StateActionPair<UuidState<MainWindow.State>, OpenedFileList.Action>
+  typealias Pair = StateActionPair<UuidState<MainWindow.State>, BuffersList.Action>
   typealias MainWindowPair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
   static let basePath = "/tools/markdown"

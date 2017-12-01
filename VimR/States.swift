@@ -212,7 +212,7 @@ extension MainWindow {
     var isToolButtonsVisible = true
     var activeTools = [
       Tools.fileBrowser: true,
-      Tools.openedFilesList: true,
+      Tools.buffersList: true,
       Tools.preview: true,
       Tools.htmlPreview: true,
     ]
@@ -339,14 +339,14 @@ struct WorkspaceToolState: SerializableState {
 
   static let `default` = [
     MainWindow.Tools.fileBrowser: WorkspaceToolState(location: .left, dimension: 200, open: true),
-    MainWindow.Tools.openedFilesList: WorkspaceToolState(location: .left, dimension: 200, open: false),
+    MainWindow.Tools.buffersList: WorkspaceToolState(location: .left, dimension: 200, open: false),
     MainWindow.Tools.preview: WorkspaceToolState(location: .right, dimension: 250, open: false),
     MainWindow.Tools.htmlPreview: WorkspaceToolState(location: .right, dimension: 500, open: false),
   ]
 
   static let `orderedDefault` = [
     MainWindow.Tools.fileBrowser,
-    MainWindow.Tools.openedFilesList,
+    MainWindow.Tools.buffersList,
     MainWindow.Tools.preview,
     MainWindow.Tools.htmlPreview,
   ]

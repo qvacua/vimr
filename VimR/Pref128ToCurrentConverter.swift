@@ -62,9 +62,9 @@ class Pref128ToCurrentConverter {
       return .default
     }
 
-    appState.mainWindowTemplate.tools[.openedFilesList] = WorkspaceToolState(location: openedFilesData.location,
-                                                                             dimension: openedFilesData.dimension,
-                                                                             open: openedFilesData.isVisible)
+    appState.mainWindowTemplate.tools[.buffersList] = WorkspaceToolState(location: openedFilesData.location,
+                                                                         dimension: openedFilesData.dimension,
+                                                                         open: openedFilesData.isVisible)
 
     return appState
   }

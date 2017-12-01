@@ -5,9 +5,9 @@
 
 import Foundation
 
-class OpenedFileListReducer {
+class BuffersListReducer {
 
-  typealias Pair = StateActionPair<UuidState<MainWindow.State>, OpenedFileList.Action>
+  typealias Pair = StateActionPair<UuidState<MainWindow.State>, BuffersList.Action>
 
   func reduce(_ pair: Pair) -> Pair {
     var state = pair.state.payload

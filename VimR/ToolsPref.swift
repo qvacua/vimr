@@ -59,7 +59,7 @@ class ToolsPref: PrefPane, UiComponent {
 
   fileprivate func updateViews() {
     self.fileBrowserCheckbox.boolState = self.tools[.fileBrowser] ?? true
-    self.openedFilesListCheckbox.boolState = self.tools[.openedFilesList] ?? true
+    self.openedFilesListCheckbox.boolState = self.tools[.buffersList] ?? true
     self.previewCheckbox.boolState = self.tools[.preview] ?? true
     self.htmlCheckbox.boolState = self.tools[.htmlPreview] ?? true
   }
@@ -131,7 +131,7 @@ extension ToolsPref {
   }
 
   @IBAction func openedFilesListAction(_ sender: Any?) {
-    self.tools[.openedFilesList] = self.openedFilesListCheckbox.boolState
+    self.tools[.buffersList] = self.openedFilesListCheckbox.boolState
     self.emit(.setActiveTools(self.tools))
   }
 

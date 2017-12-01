@@ -54,10 +54,10 @@ class MainWindow: NSObject,
 
   enum Tools: String {
 
-    static let all = Set([Tools.fileBrowser, Tools.openedFilesList, Tools.preview, Tools.htmlPreview])
+    static let all = Set([Tools.fileBrowser, Tools.buffersList, Tools.preview, Tools.htmlPreview])
 
     case fileBrowser = "com.qvacua.vimr.tools.file-browser"
-    case openedFilesList = "com.qvacua.vimr.tools.opened-files-list"
+    case buffersList = "com.qvacua.vimr.tools.opened-files-list"
     case preview = "com.qvacua.vimr.tools.preview"
     case htmlPreview = "com.qvacua.vimr.tools.html-preview"
   }
@@ -90,7 +90,7 @@ class MainWindow: NSObject,
 
   var previewContainer: WorkspaceTool?
   var fileBrowserContainer: WorkspaceTool?
-  var openedFileListContainer: WorkspaceTool?
+  var buffersListContainer: WorkspaceTool?
   var htmlPreviewContainer: WorkspaceTool?
 
   var theme = Theme.default
@@ -150,12 +150,12 @@ class MainWindow: NSObject,
       tools[.fileBrowser] = self.fileBrowserContainer
     }
 
-    if state.activeTools[.openedFilesList] == true {
-      self.openedFileList = OpenedFileList(source: source, emitter: emitter, state: state)
-      let openedFileListConfig = WorkspaceTool.Config(title: "Buffers", view: self.openedFileList!)
-      self.openedFileListContainer = WorkspaceTool(openedFileListConfig)
-      self.openedFileListContainer!.dimension = state.tools[.openedFilesList]?.dimension ?? 200
-      tools[.openedFilesList] = self.openedFileListContainer
+    if state.activeTools[.buffersList] == true {
+      self.buffersList = BuffersList(source: source, emitter: emitter, state: state)
+      let buffersListConfig = WorkspaceTool.Config(title: "Buffers", view: self.buffersList!)
+      self.buffersListContainer = WorkspaceTool(buffersListConfig)
+      self.buffersListContainer!.dimension = state.tools[.buffersList]?.dimension ?? 200
+      tools[.buffersList] = self.buffersListContainer
     }
 
     self.tools = tools
@@ -327,7 +327,7 @@ class MainWindow: NSObject,
   fileprivate var preview: PreviewTool?
   fileprivate var htmlPreview: HtmlPreviewTool?
   fileprivate var fileBrowser: FileBrowser?
-  fileprivate var openedFileList: OpenedFileList?
+  fileprivate var buffersList: BuffersList?
 
   fileprivate var usesTheme = true
   fileprivate var lastThemeMark = Token()

@@ -8,7 +8,7 @@ import CocoaMarkdown
 
 class PreviewService {
 
-  typealias OpenedFileListPair = StateActionPair<UuidState<MainWindow.State>, OpenedFileList.Action>
+  typealias OpenedFileListPair = StateActionPair<UuidState<MainWindow.State>, BuffersList.Action>
   typealias MainWindowPair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
   init() {

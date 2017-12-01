@@ -71,7 +71,7 @@ class Context {
           .reduce(by: FileBrowserReducer().reduce)
           .filterMapPair(),
         self.actionSourceForMainWindow()
-          .reduce(by: OpenedFileListReducer().reduce)
+          .reduce(by: BuffersListReducer().reduce)
           .reduce(by: markdownReducer.reduceOpenedFileList)
           .filter { $0.modified }
           .apply(previewService.applyOpenedFileList)
