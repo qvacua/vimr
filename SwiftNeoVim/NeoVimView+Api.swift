@@ -23,7 +23,7 @@ extension NeoVimView {
    - returns: nil when for exampls a quickfix panel is open.
    */
   public func currentBuffer() -> NeoVimBuffer? {
-    guard let buf = self.nvim.checkBlocked({ self.nvim.getCurrentBuf() }).value else {
+    guard let buf = self.nvim.getCurrentBuf().value else {
       return nil
     }
 
@@ -31,8 +31,8 @@ extension NeoVimView {
   }
 
   public func allBuffers() -> [NeoVimBuffer] {
-    let curBuf = self.nvim.checkBlocked { self.nvim.getCurrentBuf() }.value
-    return self.nvim.checkBlocked { self.nvim.listBufs() }
+    let curBuf = self.nvim.getCurrentBuf().value
+    return self.nvim.listBufs()
              .value?
              .flatMap { self.neoVimBuffer(for: $0, currentBuffer: curBuf) } ?? []
   }
@@ -42,10 +42,10 @@ extension NeoVimView {
   }
 
   public func allTabs() -> [NeoVimTab] {
-    let curBuf = self.nvim.checkBlocked { self.nvim.getCurrentBuf() }.value
-    let curTab = self.nvim.checkBlocked { self.nvim.getCurrentTabpage() }.value
+    let curBuf = self.nvim.getCurrentBuf().value
+    let curTab = self.nvim.getCurrentTabpage().value
 
-    return self.nvim.checkBlocked({ nvim.listTabpages() })
+    return self.nvim.listTabpages()
              .value?
              .flatMap { self.neoVimTab(for: $0, currentTabpage: curTab, currentBuffer: curBuf) } ?? []
   }
@@ -63,9 +63,7 @@ extension NeoVimView {
       if buffers.filter({ $0.url == url }).first != nil {
         for window in tabs.map({ $0.windows }).flatMap({ $0 }) {
           if window.buffer.url == url {
-            self.nvim.checkBlocked {
-              self.nvim.setCurrentWin(window: Nvim.Window(window.handle), expectsReturnValue: false)
-            }
+            self.nvim.setCurrentWin(window: Nvim.Window(window.handle), expectsReturnValue: false)
             return
           }
         }
@@ -98,9 +96,7 @@ extension NeoVimView {
   public func select(buffer: NeoVimBuffer) {
     for window in self.allTabs().map({ $0.windows }).flatMap({ $0 }) {
       if window.buffer.handle == buffer.handle {
-        self.nvim.checkBlocked {
-          self.nvim.setCurrentWin(window: Nvim.Window(window.handle), expectsReturnValue: false)
-        }
+        self.nvim.setCurrentWin(window: Nvim.Window(window.handle), expectsReturnValue: false)
         return
       }
     }
@@ -141,18 +137,11 @@ extension NeoVimView {
   }
 
   public func cursorGo(to position: Position) {
-    self.nvim.checkBlocked { () -> Nvim.Response<Void> in
-      let curWin = self.nvim.getCurrentWin()
-      if let err = curWin.error {
-        return .failure(err)
-      }
-
-      guard let win = curWin.value else {
-        return .failure(Nvim.Error(type: .unknown, message: "Could not get current window."))
-      }
-
-      return self.nvim.winSetCursor(window: win, pos: [position.row, position.column])
+    guard let curWin = self.nvim.getCurrentWin().value else {
+      return
     }
+
+    self.nvim.winSetCursor(window: curWin, pos: [position.row, position.column])
   }
 
   public func didBecomeMain() {
@@ -220,7 +209,7 @@ extension NeoVimView {
                             currentWindow: Nvim.Window?,
                             currentBuffer: Nvim.Buffer?) -> NeoVimWindow? {
 
-    guard let buf = self.nvim.checkBlocked({ self.nvim.winGetBuf(window: window) }).value else {
+    guard let buf = self.nvim.winGetBuf(window: window).value else {
       return nil
     }
 
@@ -235,9 +224,9 @@ extension NeoVimView {
                          currentTabpage: Nvim.Tabpage?,
                          currentBuffer: Nvim.Buffer?) -> NeoVimTab? {
 
-    let curWinInTab = self.nvim.checkBlocked { self.nvim.tabpageGetWin(tabpage: tabpage) }.value
+    let curWinInTab = self.nvim.tabpageGetWin(tabpage: tabpage).value
 
-    let windows: [NeoVimWindow] = self.nvim.checkBlocked { self.nvim.tabpageListWins(tabpage: tabpage) }
+    let windows: [NeoVimWindow] = self.nvim.tabpageListWins(tabpage: tabpage)
                                     .value?
                                     .flatMap {
       self.neoVimWindow(for: $0,

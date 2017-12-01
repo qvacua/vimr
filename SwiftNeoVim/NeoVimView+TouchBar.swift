@@ -87,6 +87,6 @@ extension NeoVimView : NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDeleg
     }
 
     let window = tab.currentWindow() ?? tab.windows[0]
-    self.nvim.checkBlocked { self.nvim.setCurrentWin(window: Nvim.Window(window.handle), expectsReturnValue: false) } }
-
+    self.nvim.setCurrentWin(window: Nvim.Window(window.handle), expectsReturnValue: false)
+  }
 }

@@ -11,8 +11,13 @@ import os
 void_func_template = Template('''\
   @discardableResult
   public func ${func_name}(${args}
-    expectsReturnValue: Bool = true
+    expectsReturnValue: Bool = true,
+    checkBlocked: Bool = true
   ) -> Nvim.Response<Void> {
+ 
+    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+      return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
+    } 
   
     let params: [Nvim.Value] = [
         ${params}
@@ -27,15 +32,40 @@ void_func_template = Template('''\
   }
 ''')
 
-func_template = Template('''\
+get_mode_func_template = Template('''\
   public func ${func_name}(${args}
-    expectsReturnValue: Bool = true
   ) -> Nvim.Response<${result_type}> {
-  
+ 
     let params: [Nvim.Value] = [
         ${params}
     ]
-    let response = self.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: expectsReturnValue)
+    let response = self.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: true)
+    
+    guard let value = response.value else {
+      return .failure(response.error!)
+    }
+    
+    guard let result = (${return_value}) else {
+      return .failure(Nvim.Error("Error converting result to \\(${result_type}.self)"))
+    }
+    
+    return .success(result)
+  }
+''')
+
+func_template = Template('''\
+  public func ${func_name}(${args}
+    checkBlocked: Bool = true
+  ) -> Nvim.Response<${result_type}> {
+ 
+    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocked")] == true {
+      return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
+    } 
+    
+    let params: [Nvim.Value] = [
+        ${params}
+    ]
+    let response = self.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: true)
     
     guard let value = response.value else {
       return .failure(response.error!)
@@ -261,6 +291,7 @@ def parse_params(raw_params):
 def parse_function(f):
     args = parse_args(f['parameters'])
     template = void_func_template if f['return_type'] == 'void' else func_template
+    template = get_mode_func_template if f['name'] == 'nvim_get_mode' else template
     result = template.substitute(
         func_name=snake_to_camel(f['name'][5:]),
         nvim_func_name=f['name'],
