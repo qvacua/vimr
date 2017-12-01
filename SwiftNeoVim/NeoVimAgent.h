@@ -46,10 +46,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)resizeToWidth:(int)width height:(int)height;
 - (void)cursorGoToRow:(int)row column:(int)column;
 
-- (bool)hasDirtyDocs;
 - (NSString * _Nullable)escapedFileName:(NSString *)fileName;
 - (NSArray<NSString *> *)escapedFileNames:(NSArray<NSString *> *)fileNames;
-- (NSArray<NeoVimBuffer *> *)buffers;
+//- (NSArray<NeoVimBuffer *> *)buffers;
 - (NSArray<NeoVimTab*> *)tabs;
 
 - (void)scrollHorizontal:(NSInteger)horiz vertical:(NSInteger)vert at:(Position)position;

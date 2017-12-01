@@ -805,23 +805,6 @@ void neovim_tabs(void **argv) {
   });
 }
 
-void neovim_buffers(void **argv) {
-  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
-    NSMutableArray *buffers = [[NSMutableArray new] autorelease];
-    FOR_ALL_BUFFERS(buf) {
-      NeoVimBuffer *buffer = buffer_for(buf);
-      if (buffer == nil) {
-        continue;
-      }
-
-      [buffers addObject:buffer];
-    }
-
-    DLOG("buffers: %s", buffers.description.cstr);
-    return [NSKeyedArchiver archivedDataWithRootObject:buffers];
-  });
-}
-
 void neovim_vim_command_output(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     NSString *input = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -913,12 +896,6 @@ void neovim_escaped_filenames(void **argv) {
     }];
 
     return [NSKeyedArchiver archivedDataWithRootObject:result];
-  });
-}
-
-void neovim_has_dirty_docs(void **argv) {
-  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
-    return [NSKeyedArchiver archivedDataWithRootObject:@(has_dirty_docs())];
   });
 }
 

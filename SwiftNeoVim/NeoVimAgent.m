@@ -313,17 +313,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
   [self sendMessageWithId:NeoVimAgentMsgIdCursorGoto data:data expectsReply:NO];
 }
 
-- (bool)hasDirtyDocs {
-  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetDirtyDocs data:nil expectsReply:YES];
-  if (response == nil) {
-    log4Warn("The response for the msg %ld was nil.", (long) NeoVimAgentMsgIdGetDirtyDocs);
-    return NO;
-  }
-
-  NSNumber *value = [NSKeyedUnarchiver unarchiveObjectWithData:response];
-  return (bool) value.boolValue;
-}
-
 - (NSString *)escapedFileName:(NSString *)fileName {
   NSArray<NSString *> *fileNames = [self escapedFileNames:@[fileName]];
   if (fileNames.count == 0) {
@@ -384,15 +373,15 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
   return [NSKeyedUnarchiver unarchiveObjectWithData:response];
 }
 
-- (NSArray <NeoVimBuffer *> *)buffers {
-  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetBuffers data:nil expectsReply:YES];
-  if (response == nil) {
-    log4Warn("The response for the msg %ld was nil.", (long) NeoVimAgentMsgIdGetBuffers);
-    return @[];
-  }
-
-  return [NSKeyedUnarchiver unarchiveObjectWithData:response];
-}
+//- (NSArray <NeoVimBuffer *> *)buffers {
+//  NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetBuffers data:nil expectsReply:YES];
+//  if (response == nil) {
+//    log4Warn("The response for the msg %ld was nil.", (long) NeoVimAgentMsgIdGetBuffers);
+//    return @[];
+//  }
+//
+//  return [NSKeyedUnarchiver unarchiveObjectWithData:response];
+//}
 
 - (NSArray<NeoVimWindow *> *)tabs {
   NSData *response = [self sendMessageWithId:NeoVimAgentMsgIdGetTabs data:nil expectsReply:YES];

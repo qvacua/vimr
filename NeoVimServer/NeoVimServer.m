@@ -74,15 +74,11 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
       case NeoVimAgentMsgIdGetTabs: return data_sync(data, outputCondition, neovim_tabs);
 
-      case NeoVimAgentMsgIdGetBuffers: return data_sync(data, outputCondition, neovim_buffers);
-
       case NeoVimAgentMsgIdGetBoolOption: return data_sync(data, outputCondition, neovim_get_bool_option);
 
       case NeoVimAgentMsgIdSetBoolOption: return data_sync(data, outputCondition, neovim_set_bool_option);
 
       case NeoVimAgentMsgIdGetEscapeFileNames: return data_sync(data, outputCondition, neovim_escaped_filenames);
-
-      case NeoVimAgentMsgIdGetDirtyDocs: return data_sync(data, outputCondition, neovim_has_dirty_docs);
 
       case NeoVimAgentMsgIdResize: return data_sync(data, outputCondition, neovim_resize);
 
