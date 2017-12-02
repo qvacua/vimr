@@ -68,7 +68,7 @@ brew install gnu-sed
 brew install carthage # install Carthage for dependency management
 brew install libtool automake cmake pkg-config gettext ninja # install libs and tools for neovim
 
-./bin/build_vimr.sh # VimR.app will be placed in build/Release
+./bin/build_vimr.sh # VimR.app will be placed in build/Build/Products/Release/
 ```
 
 If you encounter `/usr/local/Library/ENV/4.3/sed: No such file or directory`, then try the following:
@@ -98,8 +98,8 @@ VimR.app
 ### Libraries for Neovim
 
 * The library `libiconv` is linked by the linker flag `-liconv`. The version bundled with OSX will be linked.
-* The library `libintl` should be installed by `homebrew` and is statically linked by explicitly using the linker flag `/usr/local/opt/gettext/lib/libintl.a`.
-* Other libraries used by Neovim, which are automatically built by building `libnvim`, are linked by adding them to the Xcode project.
+* The library `libintl` is in `third-party/libintl/lib` and linked by "Other Linker Flags" of the NeoVimServer target.
+* Other libraries used by Neovim, which are automatically built by building `libnvim`, are linked by "Other Linker Flags" of the NeoVimServer target.
 
 ## License
 
