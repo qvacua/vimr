@@ -56,7 +56,7 @@ typedef struct {
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol NeoVimUiBridgeProtocol <NSObject>
+@protocol NvimUiBridgeProtocol <NSObject>
 
 /**
  * NeoVim has set the size of its screen to rows X columns. The view must be resized accordingly.

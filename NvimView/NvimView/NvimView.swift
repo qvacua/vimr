@@ -7,7 +7,7 @@ import Cocoa
 import NvimMsgPack
 
 public class NvimView: NSView,
-                       NeoVimUiBridgeProtocol,
+                       NvimUiBridgeProtocol,
                        NSUserInterfaceValidations,
                        NSTextInputClient {
 

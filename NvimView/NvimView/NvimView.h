@@ -16,7 +16,7 @@ FOUNDATION_EXPORT const unsigned char NvimViewVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <NvimView/PublicHeader.h>
 
-#import <NvimView/NeoVimUiBridgeProtocol.h>
+#import <NvimView/NvimUiBridgeProtocol.h>
 // TODO: this header should not be public, but we cannot use a bridging header in a framework.
 #import <NvimView/TextDrawer.h>
 #import <NvimView/NeoVimAgent.h>

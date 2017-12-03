@@ -1,5 +1,5 @@
 @import Foundation;
-#import "NeoVimUiBridgeProtocol.h"
+#import "NvimUiBridgeProtocol.h"
 
 extern NSString * __nonnull cursorModeShapeName(CursorModeShape mode) {
   switch (mode) {

@@ -6,7 +6,7 @@
 @import Cocoa;
 
 
-#import "NeoVimUiBridgeProtocol.h"
+#import "NvimUiBridgeProtocol.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) NSURL *cwd;
 @property (nonatomic, nullable) NSArray<NSString *> *nvimArgs;
 @property (readonly) bool neoVimIsQuitting;
-@property (nonatomic, weak) id <NeoVimUiBridgeProtocol> bridge;
+@property (nonatomic, weak) id <NvimUiBridgeProtocol> bridge;
 
 @property (readonly) bool neoVimHasQuit;
 @property (readonly) NSCondition *neoVimQuitCondition;
