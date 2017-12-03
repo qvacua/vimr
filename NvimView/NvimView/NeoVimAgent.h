@@ -9,11 +9,6 @@
 #import "NeoVimUiBridgeProtocol.h"
 
 
-@class NeoVimBuffer;
-@class NeoVimTab;
-@class NeoVimWindow;
-
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NeoVimAgent : NSObject

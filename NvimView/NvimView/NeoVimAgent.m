@@ -6,8 +6,6 @@
 #import "NeoVimAgent.h"
 #import "NeoVimMsgIds.h"
 #import "Logger.h"
-#import "NeoVimBuffer.h"
-#import "NeoVimWindow.h"
 
 
 static const double qTimeout = 10;
