@@ -151,7 +151,7 @@ public class NvimView: NSView,
 
   public init(frame rect: NSRect, config: Config) {
     self.drawer = TextDrawer(font: self._font)
-    self.agent = NeoVimAgent(uuid: self.uuid)
+    self.agent = NvimAgent(uuid: self.uuid)
 
     let sockPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock").path
     guard let nvim = NvimApi(at: sockPath) else {
@@ -206,7 +206,7 @@ public class NvimView: NSView,
   let bridgeLogger = LogContext.fileLogger(as: NvimView.self,
                                            with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
                                            shouldLogDebug: nil)
-  let agent: NeoVimAgent
+  let agent: NvimAgent
   let nvim: NvimApi
   let grid = Grid()
 

@@ -3,7 +3,7 @@
  * See LICENSE
  */
 
-#import "NeoVimAgent.h"
+#import "NvimAgent.h"
 #import "NeoVimMsgIds.h"
 #import "Logger.h"
 
@@ -50,7 +50,7 @@ static void log_cfmachport_error(SInt32 err, NeoVimAgentMsgId msgid, NSData *inp
 }
 
 
-@interface NeoVimAgent ()
+@interface NvimAgent ()
 
 - (void)handleMessageWithId:(SInt32)msgid data:(NSData *)data;
 
@@ -59,7 +59,7 @@ static void log_cfmachport_error(SInt32 err, NeoVimAgentMsgId msgid, NSData *inp
 
 static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 msgid, CFDataRef data, void *info) {
   @autoreleasepool {
-    NeoVimAgent *agent = (__bridge NeoVimAgent *) info;
+    NvimAgent *agent = (__bridge NvimAgent *) info;
     [agent handleMessageWithId:msgid data:(__bridge NSData *) (data)];
   }
 
@@ -67,7 +67,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 }
 
 
-@implementation NeoVimAgent {
+@implementation NvimAgent {
   NSString *_uuid;
 
   CFMessagePortRef _remoteServerPort;
