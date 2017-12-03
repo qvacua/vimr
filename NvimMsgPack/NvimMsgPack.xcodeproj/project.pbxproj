@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		4B9E33711FCB475600E0C4BC /* NvimMsgPack.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B9E336F1FCB475600E0C4BC /* NvimMsgPack.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B9E33781FCB476D00E0C4BC /* MsgPackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9E33791FCB476D00E0C4BC /* MsgPackRpc.framework */; };
-		4B9E337C1FCB47B300E0C4BC /* Nvim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9E337A1FCB47B300E0C4BC /* Nvim.swift */; };
-		4B9E337D1FCB47B300E0C4BC /* NvimMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9E337B1FCB47B300E0C4BC /* NvimMethods.swift */; };
+		4B9E337C1FCB47B300E0C4BC /* NvimApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9E337A1FCB47B300E0C4BC /* NvimApi.swift */; };
+		4B9E337D1FCB47B300E0C4BC /* NvimApiMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9E337B1FCB47B300E0C4BC /* NvimApiMethods.swift */; };
 		4B9E33831FCB47F900E0C4BC /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B9E337F1FCB47F900E0C4BC /* Info.plist */; };
 		4B9E33841FCB47F900E0C4BC /* Result.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B9E33801FCB47F900E0C4BC /* Result.h */; };
 		4B9E33851FCB47F900E0C4BC /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9E33811FCB47F900E0C4BC /* Result.swift */; };
@@ -22,8 +22,8 @@
 		4B9E336F1FCB475600E0C4BC /* NvimMsgPack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NvimMsgPack.h; sourceTree = "<group>"; };
 		4B9E33701FCB475600E0C4BC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B9E33791FCB476D00E0C4BC /* MsgPackRpc.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MsgPackRpc.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B9E337A1FCB47B300E0C4BC /* Nvim.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Nvim.swift; sourceTree = "<group>"; };
-		4B9E337B1FCB47B300E0C4BC /* NvimMethods.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimMethods.swift; sourceTree = "<group>"; };
+		4B9E337A1FCB47B300E0C4BC /* NvimApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimApi.swift; sourceTree = "<group>"; };
+		4B9E337B1FCB47B300E0C4BC /* NvimApiMethods.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimApiMethods.swift; sourceTree = "<group>"; };
 		4B9E337F1FCB47F900E0C4BC /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B9E33801FCB47F900E0C4BC /* Result.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Result.h; sourceTree = "<group>"; };
 		4B9E33811FCB47F900E0C4BC /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
@@ -63,8 +63,8 @@
 			isa = PBXGroup;
 			children = (
 				4B9E336F1FCB475600E0C4BC /* NvimMsgPack.h */,
-				4B9E337A1FCB47B300E0C4BC /* Nvim.swift */,
-				4B9E337B1FCB47B300E0C4BC /* NvimMethods.swift */,
+				4B9E337A1FCB47B300E0C4BC /* NvimApi.swift */,
+				4B9E337B1FCB47B300E0C4BC /* NvimApiMethods.swift */,
 				4B9E337E1FCB47F900E0C4BC /* Result */,
 				4B9E33701FCB475600E0C4BC /* Info.plist */,
 			);
@@ -177,8 +177,8 @@
 			files = (
 				4B9E33861FCB47F900E0C4BC /* ResultProtocol.swift in Sources */,
 				4B9E33851FCB47F900E0C4BC /* Result.swift in Sources */,
-				4B9E337D1FCB47B300E0C4BC /* NvimMethods.swift in Sources */,
-				4B9E337C1FCB47B300E0C4BC /* Nvim.swift in Sources */,
+				4B9E337D1FCB47B300E0C4BC /* NvimApiMethods.swift in Sources */,
+				4B9E337C1FCB47B300E0C4BC /* NvimApi.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

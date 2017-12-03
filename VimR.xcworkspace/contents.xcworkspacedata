@@ -2,6 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:VimR/VimR.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:NvimView/NvimView.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:MsgPackRpc/MsgPackRpc.xcodeproj">
    </FileRef>
    <FileRef
@@ -9,8 +15,5 @@
    </FileRef>
    <FileRef
       location = "group:NvimMsgPack/NvimMsgPack.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "container:VimR.xcodeproj">
    </FileRef>
 </Workspace>

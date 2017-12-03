@@ -7,6 +7,8 @@ MARKETING_VERSION=$2
 
 echo "### Setting versions of VimR"
 
+pushd VimR
+
 # bundle version
 agvtool bump -all
 
@@ -17,5 +19,14 @@ if [ "${IS_SNAPSHOT}" = true ] ; then
 fi
 
 agvtool new-marketing-version ${MARKETING_VERSION}
+
+popd
+
+for proj in 'MsgPackRpc' 'NvimMsgPack' 'NvimView'; do
+    pushd ${proj}
+    agvtool new-version -all ${BUNDLE_VERSION}
+    agvtool new-marketing-version ${MARKETING_VERSION}
+    popd
+done
 
 echo "### Set versions of VimR"

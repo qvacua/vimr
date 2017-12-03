@@ -58,8 +58,11 @@ fi
 
 ./bin/build_vimr.sh true
 
+pushd VimR
 BUNDLE_VERSION=$(agvtool what-version | sed '2q;d' | sed -E 's/ +(.+)/\1/')
 MARKETING_VERSION=$(agvtool what-marketing-version | tail -n 1 | sed -E 's/.*of "(.*)" in.*/\1/')
+popd
+
 COMPOUND_VERSION="v${MARKETING_VERSION}-${BUNDLE_VERSION}"
 TAG=${COMPOUND_VERSION}
 

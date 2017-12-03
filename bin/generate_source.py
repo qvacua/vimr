@@ -5,8 +5,9 @@ import io
 import re
 from string import Template
 
+print(os.getcwd())
 if 'CONFIGURATION' in os.environ and os.environ['CONFIGURATION'] == 'Debug':
-    if os.path.isfile('SwiftNeoVim/NeoVimAutoCommandEvent.generated.h') and os.path.isfile('SwiftNeoVim/NeoVimAutoCommandEvent.generated.m'):
+    if os.path.isfile('./NvimView/NeoVimAutoCommandEvent.generated.h') and os.path.isfile('./NvimView/NeoVimAutoCommandEvent.generated.m'):
         print("Files already there, exiting...")
         exit(0)
 
@@ -37,7 +38,7 @@ impl = auto_cmds_impl_template.substitute(
     event_cases='\n'.join(
         ['    case NeoVimAutoCommandEvent{}: return @"{}";'.format(event[0], event[0]) for event in auto_cmds])
 )
-with io.open('SwiftNeoVim/NeoVimAutoCommandEvent.generated.m', 'w') as auto_cmds_impl_file:
+with io.open('./NvimView/NeoVimAutoCommandEvent.generated.m', 'w') as auto_cmds_impl_file:
     auto_cmds_impl_file.write(unicode(impl))
 
 auto_cmds_header_template = Template(
@@ -58,5 +59,5 @@ header = auto_cmds_header_template.substitute(
     ),
     count=str(len(auto_cmds))
 )
-with io.open('SwiftNeoVim/NeoVimAutoCommandEvent.generated.h', 'w') as auto_cmds_header_file:
+with io.open('./NvimView/NeoVimAutoCommandEvent.generated.h', 'w') as auto_cmds_header_file:
     auto_cmds_header_file.write(unicode(header))

@@ -5,9 +5,9 @@ set -e
 echo "### Cleaning old builds"
 
 rm -rf build
-xcodebuild clean
+xcodebuild -workspace VimR.xcworkspace -scheme VimR clean -derivedDataPath build
 
-pushd neovim
+pushd NvimView/neovim
 rm -rf build
 make distclean
 popd

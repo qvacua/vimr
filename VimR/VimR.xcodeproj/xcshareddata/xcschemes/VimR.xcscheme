@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0910"
+   LastUpgradeVersion = "0900"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4B9E336B1FCB475600E0C4BC"
-               BuildableName = "NvimMsgPack.framework"
-               BlueprintName = "NvimMsgPack"
-               ReferencedContainer = "container:NvimMsgPack.xcodeproj">
+               BlueprintIdentifier = "4BEBA5041CFF374B00673FDF"
+               BuildableName = "VimR.app"
+               BlueprintName = "VimR"
+               ReferencedContainer = "container:VimR.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -29,14 +29,24 @@
       language = ""
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4BEBA5131CFF374B00673FDF"
+               BuildableName = "VimRTests.xctest"
+               BlueprintName = "VimRTests"
+               ReferencedContainer = "container:VimR.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4B9E336B1FCB475600E0C4BC"
-            BuildableName = "NvimMsgPack.framework"
-            BlueprintName = "NvimMsgPack"
-            ReferencedContainer = "container:NvimMsgPack.xcodeproj">
+            BlueprintIdentifier = "4BEBA5041CFF374B00673FDF"
+            BuildableName = "VimR.app"
+            BlueprintName = "VimR"
+            ReferencedContainer = "container:VimR.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -53,15 +63,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4B9E336B1FCB475600E0C4BC"
-            BuildableName = "NvimMsgPack.framework"
-            BlueprintName = "NvimMsgPack"
-            ReferencedContainer = "container:NvimMsgPack.xcodeproj">
+            BlueprintIdentifier = "4BEBA5041CFF374B00673FDF"
+            BuildableName = "VimR.app"
+            BlueprintName = "VimR"
+            ReferencedContainer = "container:VimR.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -71,15 +82,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4B9E336B1FCB475600E0C4BC"
-            BuildableName = "NvimMsgPack.framework"
-            BlueprintName = "NvimMsgPack"
-            ReferencedContainer = "container:NvimMsgPack.xcodeproj">
+            BlueprintIdentifier = "4BEBA5041CFF374B00673FDF"
+            BuildableName = "VimR.app"
+            BlueprintName = "VimR"
+            ReferencedContainer = "container:VimR.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

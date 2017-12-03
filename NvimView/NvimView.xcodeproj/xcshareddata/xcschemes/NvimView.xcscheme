@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4B9E336B1FCB475600E0C4BC"
-               BuildableName = "NvimMsgPack.framework"
-               BlueprintName = "NvimMsgPack"
-               ReferencedContainer = "container:NvimMsgPack.xcodeproj">
+               BlueprintIdentifier = "4B90F0031FD2AF59008A39E0"
+               BuildableName = "NvimView.framework"
+               BlueprintName = "NvimView"
+               ReferencedContainer = "container:NvimView.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -30,15 +30,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4B9E336B1FCB475600E0C4BC"
-            BuildableName = "NvimMsgPack.framework"
-            BlueprintName = "NvimMsgPack"
-            ReferencedContainer = "container:NvimMsgPack.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -56,10 +47,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4B9E336B1FCB475600E0C4BC"
-            BuildableName = "NvimMsgPack.framework"
-            BlueprintName = "NvimMsgPack"
-            ReferencedContainer = "container:NvimMsgPack.xcodeproj">
+            BlueprintIdentifier = "4B90F0031FD2AF59008A39E0"
+            BuildableName = "NvimView.framework"
+            BlueprintName = "NvimView"
+            ReferencedContainer = "container:NvimView.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -74,10 +65,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4B9E336B1FCB475600E0C4BC"
-            BuildableName = "NvimMsgPack.framework"
-            BlueprintName = "NvimMsgPack"
-            ReferencedContainer = "container:NvimMsgPack.xcodeproj">
+            BlueprintIdentifier = "4B90F0031FD2AF59008A39E0"
+            BuildableName = "NvimView.framework"
+            BlueprintName = "NvimView"
+            ReferencedContainer = "container:NvimView.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

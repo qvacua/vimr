@@ -6,6 +6,8 @@ GETTEXT_VERSION="0.19.8.1"
 
 echo "### Building deps"
 
+pushd NvimView
+
 rm -rf .deps
 mkdir .deps
 pushd .deps
@@ -47,5 +49,7 @@ cp .deps/gettext/gettext-runtime/intl/.libs/libintl.8.dylib third-party/libintl/
 pushd third-party/libintl/lib
 ln -f -s libintl.8.dylib libintl.dylib
 popd
+
+popd # $WORKSPACE_ROOT
 
 echo "### Built deps"

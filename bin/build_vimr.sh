@@ -11,7 +11,7 @@ echo "### Building VimR target"
 # 1. Build normally to get the full runtime folder and copy it to the neovim's project root
 # 2. Delete the build folder to re-configure
 # 3. Build libnvim
-pushd neovim
+pushd NvimView/neovim
 
 ln -f -s ../local.mk .
 
@@ -19,17 +19,17 @@ rm -rf build
 make distclean
 
 echo "### Building nvim to get the complete runtime folder"
-rm -rf /tmp/nvim
-make CFLAGS='-mmacosx-version-min=10.10' MACOSX_DEPLOYMENT_TARGET=10.10 CMAKE_FLAGS="-DCUSTOM_UI=0 -DCMAKE_INSTALL_PREFIX=/tmp/nvim" install
+rm -rf /tmp/nvim-runtime
+make CFLAGS='-mmacosx-version-min=10.10' MACOSX_DEPLOYMENT_TARGET=10.10 CMAKE_FLAGS="-DCUSTOM_UI=0 -DCMAKE_INSTALL_PREFIX=/tmp/nvim-runtime" install
 
 rm -rf build
 make clean
 
-../bin/build_libnvim.sh
+../../bin/build_libnvim.sh
 
 echo "### Copying runtime"
 rm -rf runtime
-cp -r /tmp/nvim/share/nvim/runtime .
+cp -r /tmp/nvim-runtime/share/nvim/runtime .
 
 popd
 

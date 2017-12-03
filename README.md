@@ -53,33 +53,20 @@ We will gradually create feature [issues](https://github.com/qvacua/vimr/issues)
 ## How to Build
 
 First after cloning the VimR source tree you need to initialize git submodules
-(right now the only one used is for neovim source tree):
 
 ```bash
 git submodule init
 git submodule update
 ```
 
-You have to use Xcode 8. First install `homebrew`, then in the project root:
+You have to use Xcode 9. First install `homebrew`, then in the project root:
 
 ```bash
-xcode-select --install # install the Xcode command line tools
-brew install gnu-sed
-brew install carthage # install Carthage for dependency management
-brew install libtool automake cmake pkg-config gettext ninja # install libs and tools for neovim
+xcode-select --install # install the Xcode command line tools, if you haven't already
+brew bundle
 
 ./bin/build_vimr.sh # VimR.app will be placed in build/Build/Products/Release/
 ```
-
-If you encounter `/usr/local/Library/ENV/4.3/sed: No such file or directory`, then try the following:
-
-```bash
-cd neovim
-make distclean
-brew reinstall -s libtool
-```
-
-Then `./bin/build_vimr.sh` again in the project root folder. (See [GH-263](https://github.com/qvacua/vimr/issues/263))
 
 ## Project Setup
 
@@ -87,19 +74,19 @@ Then `./bin/build_vimr.sh` again in the project root folder. (See [GH-263](https
 
 ```
 VimR.app
-+-- SwiftNeoVim.framework
++-- NvimView.framework
     +-- NeoVimView
     +-- runtime files for Neovim
-    +-- NeoVimServer
+    +-- NvimServer
         +-- libnvim
         +-- other libs for Neovim
 ```
 
 ### Libraries for Neovim
 
-* The library `libiconv` is linked by the linker flag `-liconv`. The version bundled with OSX will be linked.
-* The library `libintl` is in `third-party/libintl/lib` and linked by "Other Linker Flags" of the NeoVimServer target.
-* Other libraries used by Neovim, which are automatically built by building `libnvim`, are linked by "Other Linker Flags" of the NeoVimServer target.
+* The library `libiconv` is linked by the linker flag `-liconv`. The version bundled with macOS will be linked.
+* The library `libintl` is pre-built in `third-party/libintl/lib` and linked by "Other Linker Flags" of the NvimServer target.
+* Other libraries used by Neovim, which are automatically built by building `libnvim`, are linked by "Other Linker Flags" of the NvimServer target.
 
 ## License
 

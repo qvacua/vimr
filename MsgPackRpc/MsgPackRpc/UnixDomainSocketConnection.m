@@ -140,6 +140,11 @@ static void socket_call_back(
 }
 
 - (CFSocketError)writeData:(NSData *)data {
+  if (!CFSocketIsValid(_socket)) {
+    NSLog(@"Socket invalid, but trying to send %@", data);
+    return kCFSocketError;
+  }
+  
   return CFSocketSendData(_socket, NULL, (__bridge CFDataRef) data, _timeout);
 }
 
