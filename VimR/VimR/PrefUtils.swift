@@ -81,12 +81,12 @@ class PrefUtils {
   }
 
   static func saneFont(_ fontName: String, fontSize: CGFloat) -> NSFont {
-    var editorFont = NSFont(name: fontName, size: fontSize) ?? NeoVimView.defaultFont
+    var editorFont = NSFont(name: fontName, size: fontSize) ?? NvimView.defaultFont
     if !editorFont.isFixedPitch {
-      editorFont = NSFontManager.shared.convert(NeoVimView.defaultFont, toSize: editorFont.pointSize)
+      editorFont = NSFontManager.shared.convert(NvimView.defaultFont, toSize: editorFont.pointSize)
     }
-    if editorFont.pointSize < NeoVimView.minFontSize || editorFont.pointSize > NeoVimView.maxFontSize {
-      editorFont = NSFontManager.shared.convert(editorFont, toSize: NeoVimView.defaultFont.pointSize)
+    if editorFont.pointSize < NvimView.minFontSize || editorFont.pointSize > NvimView.maxFontSize {
+      editorFont = NSFontManager.shared.convert(editorFont, toSize: NvimView.defaultFont.pointSize)
     }
 
     return editorFont
@@ -94,8 +94,8 @@ class PrefUtils {
 
   static func saneLinespacing(_ fLinespacing: Float) -> CGFloat {
     let linespacing = CGFloat(fLinespacing)
-    guard linespacing >= NeoVimView.minLinespacing && linespacing <= NeoVimView.maxLinespacing else {
-      return NeoVimView.defaultLinespacing
+    guard linespacing >= NvimView.minLinespacing && linespacing <= NvimView.maxLinespacing else {
+      return NvimView.defaultLinespacing
     }
 
     return linespacing

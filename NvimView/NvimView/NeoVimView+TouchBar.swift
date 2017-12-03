@@ -7,7 +7,7 @@ import Cocoa
 import NvimMsgPack
 
 @available(OSX 10.12.2, *)
-extension NeoVimView : NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate {
+extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate {
 
   private static let touchBarIdentifier = NSTouchBar.CustomizationIdentifier("com.qvacua.VimR.SwiftNeoVim.touchBar")
   private static let touchBarTabSwitcherIdentifier = NSTouchBarItem.Identifier("com.qvacua.VimR.SwiftNeoVim.touchBar.tabSwitcher")
@@ -16,19 +16,19 @@ extension NeoVimView : NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDeleg
   override public func makeTouchBar() -> NSTouchBar? {
     let bar = NSTouchBar()
     bar.delegate = self
-    bar.customizationIdentifier = NeoVimView.touchBarIdentifier
-    bar.defaultItemIdentifiers = [NeoVimView.touchBarTabSwitcherIdentifier]
-    bar.customizationRequiredItemIdentifiers = [NeoVimView.touchBarTabSwitcherIdentifier]
+    bar.customizationIdentifier = NvimView.touchBarIdentifier
+    bar.defaultItemIdentifiers = [NvimView.touchBarTabSwitcherIdentifier]
+    bar.customizationRequiredItemIdentifiers = [NvimView.touchBarTabSwitcherIdentifier]
     return bar
   }
 
   public func touchBar(_ touchBar: NSTouchBar, makeItemForIdentifier identifier: NSTouchBarItem.Identifier) -> NSTouchBarItem? {
     switch identifier {
-    case NeoVimView.touchBarTabSwitcherIdentifier:
+    case NvimView.touchBarTabSwitcherIdentifier:
       let item = NSCustomTouchBarItem(identifier: identifier)
       item.customizationLabel = "Tab Switcher"
       let tabsControl = NSScrubber()
-      tabsControl.register(NSScrubberTextItemView.self, forItemIdentifier: NSUserInterfaceItemIdentifier(rawValue: NeoVimView.touchBarTabSwitcherItem))
+      tabsControl.register(NSScrubberTextItemView.self, forItemIdentifier: NSUserInterfaceItemIdentifier(rawValue: NvimView.touchBarTabSwitcherItem))
       tabsControl.mode = .fixed
       tabsControl.dataSource = self
       tabsControl.delegate = self
@@ -49,7 +49,7 @@ extension NeoVimView : NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDeleg
   }
 
   private func getTabsControl() -> NSScrubber? {
-    return (self.touchBar?.item(forIdentifier: NeoVimView.touchBarTabSwitcherIdentifier) as? NSCustomTouchBarItem)?.view as? NSScrubber
+    return (self.touchBar?.item(forIdentifier: NvimView.touchBarTabSwitcherIdentifier) as? NSCustomTouchBarItem)?.view as? NSScrubber
   }
 
   func updateTouchBarCurrentBuffer() {

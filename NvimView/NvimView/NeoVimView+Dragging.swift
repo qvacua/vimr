@@ -5,7 +5,7 @@
 
 import Cocoa
 
-extension NeoVimView {
+extension NvimView {
 
   override public func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
     return isFile(sender: sender) ? .copy : NSDragOperation()

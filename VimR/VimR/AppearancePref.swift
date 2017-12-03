@@ -318,12 +318,12 @@ extension AppearancePref {
   fileprivate func cappedLinespacing(_ linespacing: Float) -> CGFloat {
     let cgfLinespacing = CGFloat(linespacing)
 
-    guard cgfLinespacing >= NeoVimView.minLinespacing else {
-      return NeoVimView.defaultLinespacing
+    guard cgfLinespacing >= NvimView.minLinespacing else {
+      return NvimView.defaultLinespacing
     }
 
-    guard cgfLinespacing <= NeoVimView.maxLinespacing else {
-      return NeoVimView.maxLinespacing
+    guard cgfLinespacing <= NvimView.maxLinespacing else {
+      return NvimView.maxLinespacing
     }
 
     return cgfLinespacing
@@ -332,12 +332,12 @@ extension AppearancePref {
   fileprivate func cappedFontSize(_ size: Int) -> CGFloat {
     let cgfSize = CGFloat(size)
 
-    guard cgfSize >= NeoVimView.minFontSize else {
-      return NeoVimView.defaultFont.pointSize
+    guard cgfSize >= NvimView.minFontSize else {
+      return NvimView.defaultFont.pointSize
     }
 
-    guard cgfSize <= NeoVimView.maxFontSize else {
-      return NeoVimView.maxFontSize
+    guard cgfSize <= NvimView.maxFontSize else {
+      return NvimView.maxFontSize
     }
 
     return cgfSize

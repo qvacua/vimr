@@ -6,10 +6,10 @@
 import Cocoa
 import NvimMsgPack
 
-public class NeoVimView: NSView,
-                         NeoVimUiBridgeProtocol,
-                         NSUserInterfaceValidations,
-                         NSTextInputClient {
+public class NvimView: NSView,
+                       NeoVimUiBridgeProtocol,
+                       NSUserInterfaceValidations,
+                       NSTextInputClient {
 
   // MARK: - Public
   public struct Config {
@@ -75,7 +75,7 @@ public class NeoVimView: NSView,
   public static let maxLinespacing = CGFloat(8)
 
   public let uuid = UUID().uuidString
-  public weak var delegate: NeoVimViewDelegate?
+  public weak var delegate: NvimViewDelegate?
 
   public internal(set) var mode = CursorModeShape.normal
 
@@ -94,7 +94,7 @@ public class NeoVimView: NSView,
     }
 
     set {
-      guard newValue >= NeoVimView.minLinespacing && newValue <= NeoVimView.maxLinespacing else {
+      guard newValue >= NvimView.minLinespacing && newValue <= NvimView.maxLinespacing else {
         return
       }
 
@@ -116,7 +116,7 @@ public class NeoVimView: NSView,
       }
 
       let size = newValue.pointSize
-      guard size >= NeoVimView.minFontSize && size <= NeoVimView.maxFontSize else {
+      guard size >= NvimView.minFontSize && size <= NvimView.maxFontSize else {
         return
       }
 
@@ -202,8 +202,8 @@ public class NeoVimView: NSView,
     }
   }
 
-  let logger = LogContext.fileLogger(as: NeoVimView.self, with: URL(fileURLWithPath: "/tmp/nvv.log"))
-  let bridgeLogger = LogContext.fileLogger(as: NeoVimView.self,
+  let logger = LogContext.fileLogger(as: NvimView.self, with: URL(fileURLWithPath: "/tmp/nvv.log"))
+  let bridgeLogger = LogContext.fileLogger(as: NvimView.self,
                                            with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
                                            shouldLogDebug: nil)
   let agent: NeoVimAgent
@@ -240,7 +240,7 @@ public class NeoVimView: NSView,
   var currentlyResizing = false
   var currentEmoji = "😎"
 
-  var _font = NeoVimView.defaultFont
+  var _font = NvimView.defaultFont
   var _cwd = URL(fileURLWithPath: NSHomeDirectory())
   var shouldDrawCursor = false
   var isInitialResize = true
@@ -249,5 +249,5 @@ public class NeoVimView: NSView,
   var tabsCache = [NeoVimTab]()
 
   // MARK: - Private
-  fileprivate var _linespacing = NeoVimView.defaultLinespacing
+  fileprivate var _linespacing = NvimView.defaultLinespacing
 }

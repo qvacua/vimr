@@ -5,7 +5,7 @@
 
 import Cocoa
 
-extension NeoVimView {
+extension NvimView {
 
   public func resize(toWidth width: Int, height: Int) {
     gui.async {
@@ -224,7 +224,7 @@ extension NeoVimView {
 }
 
 // MARK: - Simple
-extension NeoVimView {
+extension NvimView {
 
   public func bell() {
     gui.async {
@@ -309,7 +309,7 @@ extension NeoVimView {
   }
 }
 
-extension NeoVimView {
+extension NvimView {
 
   func markForRender(cellPosition position: Position) {
     self.markForRender(position: position)
@@ -347,7 +347,7 @@ extension NeoVimView {
   }
 }
 
-extension NeoVimView {
+extension NvimView {
 
   fileprivate func currentBufferChanged(_ handle: Int) {
     guard let currentBuffer = self.currentBuffer() else {

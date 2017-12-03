@@ -5,7 +5,7 @@
 
 import Cocoa
 
-extension NeoVimView {
+extension NvimView {
 
   override public func mouseDown(with event: NSEvent) {
     self.mouse(event: event, vimName: "LeftMouse")
@@ -47,7 +47,7 @@ extension NeoVimView {
     let factor = 1 + event.magnification
     let pinchTargetScale = self.pinchTargetScale * factor
     let resultingFontSize = round(pinchTargetScale * self.font.pointSize)
-    if resultingFontSize >= NeoVimView.minFontSize && resultingFontSize <= NeoVimView.maxFontSize {
+    if resultingFontSize >= NvimView.minFontSize && resultingFontSize <= NvimView.maxFontSize {
       self.pinchTargetScale = pinchTargetScale
     }
 

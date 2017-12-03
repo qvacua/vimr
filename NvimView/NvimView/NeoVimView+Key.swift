@@ -5,7 +5,7 @@
 
 import Cocoa
 
-extension NeoVimView {
+extension NvimView {
 
   override public func keyDown(with event: NSEvent) {
     self.keyDownDone = false

@@ -6,7 +6,7 @@
 import Cocoa
 
 // MARK: - NSUserInterfaceValidationsProtocol
-extension NeoVimView {
+extension NvimView {
 
   public func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
     let canUndoOrRedo = self.mode == .insert
@@ -43,7 +43,7 @@ extension NeoVimView {
 }
 
 // MARK: - Edit Menu Items
-extension NeoVimView {
+extension NvimView {
 
   @IBAction func undo(_ sender: AnyObject?) {
     switch self.mode {
@@ -145,7 +145,7 @@ extension NeoVimView {
 }
 
 // MARK: - Font Menu Items
-extension NeoVimView {
+extension NvimView {
 
   @IBAction func resetFontSize(_ sender: Any?) {
     self.font = self._font
@@ -154,14 +154,14 @@ extension NeoVimView {
   @IBAction func makeFontBigger(_ sender: Any?) {
     let curFont = self.drawer.font
     let font = NSFontManager.shared
-      .convert(curFont, toSize: min(curFont.pointSize + 1, NeoVimView.maxFontSize))
+      .convert(curFont, toSize: min(curFont.pointSize + 1, NvimView.maxFontSize))
     self.updateFontMetaData(font)
   }
 
   @IBAction func makeFontSmaller(_ sender: Any?) {
     let curFont = self.drawer.font
     let font = NSFontManager.shared
-      .convert(curFont, toSize: max(curFont.pointSize - 1, NeoVimView.minFontSize))
+      .convert(curFont, toSize: max(curFont.pointSize - 1, NvimView.minFontSize))
     self.updateFontMetaData(font)
   }
 }

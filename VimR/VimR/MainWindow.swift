@@ -10,7 +10,7 @@ import PureLayout
 
 class MainWindow: NSObject,
                   UiComponent,
-                  NeoVimViewDelegate,
+                  NvimViewDelegate,
                   NSWindowDelegate,
                   NSUserInterfaceValidations,
                   WorkspaceDelegate {
@@ -80,7 +80,7 @@ class MainWindow: NSObject,
   }
 
   let workspace: Workspace
-  let neoVimView: NeoVimView
+  let neoVimView: NvimView
 
   let scrollDebouncer = Debouncer<Action>(interval: 0.75)
   let cursorDebouncer = Debouncer<Action>(interval: 0.75)
@@ -110,10 +110,10 @@ class MainWindow: NSObject,
 
     self.windowController = NSWindowController(windowNibName: NSNib.Name(rawValue: "MainWindow"))
 
-    let neoVimViewConfig = NeoVimView.Config(useInteractiveZsh: state.useInteractiveZsh,
-                                             cwd: state.cwd,
-                                             nvimArgs: state.nvimArgs)
-    self.neoVimView = NeoVimView(frame: .zero, config: neoVimViewConfig)
+    let neoVimViewConfig = NvimView.Config(useInteractiveZsh: state.useInteractiveZsh,
+                                           cwd: state.cwd,
+                                           nvimArgs: state.nvimArgs)
+    self.neoVimView = NvimView(frame: .zero, config: neoVimViewConfig)
     self.neoVimView.configureForAutoLayout()
 
     self.workspace = Workspace(mainView: self.neoVimView)
@@ -318,8 +318,8 @@ class MainWindow: NSObject,
 
   fileprivate var currentBuffer: NeoVimBuffer?
 
-  fileprivate var defaultFont = NeoVimView.defaultFont
-  fileprivate var linespacing = NeoVimView.defaultLinespacing
+  fileprivate var defaultFont = NvimView.defaultFont
+  fileprivate var linespacing = NvimView.defaultLinespacing
   fileprivate var usesLigatures = false
 
   fileprivate var previewPosition = Marked(Position.beginning)

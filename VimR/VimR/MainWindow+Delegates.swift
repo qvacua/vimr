@@ -5,7 +5,7 @@
 
 import Cocoa
 
-// MARK: - NeoVimViewDelegate
+// MARK: - NvimViewDelegate
 extension MainWindow {
 
   func neoVimStopped() {
@@ -67,7 +67,7 @@ extension MainWindow {
     self.currentBufferChanged(currentBuffer)
   }
 
-  func colorschemeChanged(to neoVimTheme: NeoVimView.Theme) {
+  func colorschemeChanged(to neoVimTheme: NvimView.Theme) {
     self.emit(uuidAction(for: .setTheme(Theme(neoVimTheme))))
   }
 

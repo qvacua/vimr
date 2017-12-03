@@ -51,7 +51,7 @@ struct Theme: CustomStringConvertible {
 
   }
 
-  init(_ neoVimTheme: NeoVimView.Theme) {
+  init(_ neoVimTheme: NvimView.Theme) {
     self.foreground = neoVimTheme.foreground
     self.background = neoVimTheme.background
 

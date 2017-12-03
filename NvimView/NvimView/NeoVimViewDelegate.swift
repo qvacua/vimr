@@ -6,7 +6,7 @@
 import Cocoa
 
 // See http://stackoverflow.com/a/24104371 for class
-public protocol NeoVimViewDelegate: class {
+public protocol NvimViewDelegate: class {
 
   func neoVimStopped()
   func set(title: String)
@@ -17,7 +17,7 @@ public protocol NeoVimViewDelegate: class {
   /// Called when the current buffer changes, including when a new one is selected.
   func currentBufferChanged(_ currentBuffer: NeoVimBuffer)
 
-  func colorschemeChanged(to: NeoVimView.Theme)
+  func colorschemeChanged(to: NvimView.Theme)
 
   func ipcBecameInvalid(reason: String)
 

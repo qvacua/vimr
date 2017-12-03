@@ -215,8 +215,8 @@ fileprivate struct AppearancePrefData: Equatable, StandardPrefData {
            && left.editorLinespacing == right.editorLinespacing
   }
 
-  static let `default` = AppearancePrefData(editorFont: NeoVimView.defaultFont,
-                                            editorLinespacing: NeoVimView.defaultLinespacing,
+  static let `default` = AppearancePrefData(editorFont: NvimView.defaultFont,
+                                            editorLinespacing: NvimView.defaultLinespacing,
                                             editorUsesLigatures: false)
 
   var editorFont: NSFont

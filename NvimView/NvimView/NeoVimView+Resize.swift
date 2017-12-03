@@ -5,7 +5,7 @@
 
 import Cocoa
 
-extension NeoVimView {
+extension NvimView {
 
   override public func setFrameSize(_ newSize: NSSize) {
     super.setFrameSize(newSize)

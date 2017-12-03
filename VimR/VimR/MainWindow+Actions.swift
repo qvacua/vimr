@@ -98,7 +98,7 @@ extension MainWindow {
 
   @IBAction func toggleAllTools(_ sender: Any?) {
     self.workspace.toggleAllTools()
-    self.focusNeoVimView(self)
+    self.focusNvimView(self)
 
     self.emit(self.uuidAction(for: .toggleAllTools(self.workspace.isAllToolsVisible)))
   }
@@ -114,7 +114,7 @@ extension MainWindow {
     if fileBrowser?.isSelected == true {
       if fileBrowser?.view.isFirstResponder == true {
         fileBrowser?.toggle()
-        self.focusNeoVimView(self)
+        self.focusNvimView(self)
       } else {
         self.emit(self.uuidAction(for: .focus(.fileBrowser)))
       }
@@ -126,7 +126,7 @@ extension MainWindow {
     self.emit(self.uuidAction(for: .focus(.fileBrowser)))
   }
 
-  @IBAction func focusNeoVimView(_: Any?) {
+  @IBAction func focusNvimView(_: Any?) {
 //    self.window.makeFirstResponder(self.neoVimView)
     self.emit(self.uuidAction(for: .focus(.neoVimView)))
   }
@@ -140,7 +140,7 @@ extension MainWindow {
     let canSaveAs = canSave
     let canOpen = canSave
     let canOpenQuickly = canSave
-    let canFocusNeoVimView = self.window.firstResponder != self.neoVimView
+    let canFocusNvimView = self.window.firstResponder != self.neoVimView
     let canToggleFileBrowser = self.tools.keys.contains(.fileBrowser)
     let canToggleTools = !self.tools.isEmpty
 
@@ -156,8 +156,8 @@ extension MainWindow {
     case #selector(toggleFileBrowser(_:)):
       return canToggleFileBrowser
 
-    case #selector(focusNeoVimView(_:)):
-      return canFocusNeoVimView
+    case #selector(focusNvimView(_:)):
+      return canFocusNvimView
 
     case #selector(openDocument(_:)):
       return canOpen

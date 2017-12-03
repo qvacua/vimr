@@ -6,7 +6,7 @@
 import Cocoa
 import NvimMsgPack
 
-extension NeoVimView {
+extension NvimView {
 
   public func enterResizeMode() {
     self.currentlyResizing = true
