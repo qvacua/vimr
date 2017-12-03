@@ -55,7 +55,7 @@ extension MainWindow {
     self.emit(self.uuidAction(for: .setBufferList(buffers)))
   }
 
-  func currentBufferChanged(_ currentBuffer: NeoVimBuffer) {
+  func currentBufferChanged(_ currentBuffer: NvimView.Buffer) {
     self.emit(self.uuidAction(for: .setCurrentBuffer(currentBuffer)))
   }
 

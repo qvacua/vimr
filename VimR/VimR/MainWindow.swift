@@ -20,9 +20,9 @@ class MainWindow: NSObject,
   enum Action {
 
     case cd(to: URL)
-    case setBufferList([NeoVimBuffer])
+    case setBufferList([NvimView.Buffer])
 
-    case setCurrentBuffer(NeoVimBuffer)
+    case setCurrentBuffer(NvimView.Buffer)
     case setDirtyStatus(Bool)
 
     case becomeKey(isFullScreen: Bool)
@@ -316,7 +316,7 @@ class MainWindow: NSObject,
 
   fileprivate let disposeBag = DisposeBag()
 
-  fileprivate var currentBuffer: NeoVimBuffer?
+  fileprivate var currentBuffer: NvimView.Buffer?
 
   fileprivate var defaultFont = NvimView.defaultFont
   fileprivate var linespacing = NvimView.defaultLinespacing

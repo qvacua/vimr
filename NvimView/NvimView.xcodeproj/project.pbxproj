@@ -47,12 +47,6 @@
 		4B90F07B1FD30650008A39E0 /* NeoVimMsgIds.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B90F0591FD2AFF7008A39E0 /* NeoVimMsgIds.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		4BE45C081FD2D4E3005C0A95 /* NvimServer in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B90F04F1FD2AFD3008A39E0 /* NvimServer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		4BE45C0C1FD2DA49005C0A95 /* runtime in Resources */ = {isa = PBXBuildFile; fileRef = 4BE45C0B1FD2DA49005C0A95 /* runtime */; };
-		4BE45C161FD2DB53005C0A95 /* NeoVimWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE45C101FD2DB52005C0A95 /* NeoVimWindow.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4BE45C171FD2DB53005C0A95 /* NeoVimWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE45C111FD2DB52005C0A95 /* NeoVimWindow.m */; };
-		4BE45C181FD2DB53005C0A95 /* NeoVimTab.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE45C121FD2DB52005C0A95 /* NeoVimTab.m */; };
-		4BE45C191FD2DB53005C0A95 /* NeoVimTab.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE45C131FD2DB52005C0A95 /* NeoVimTab.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4BE45C1A1FD2DB53005C0A95 /* NeoVimBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE45C141FD2DB53005C0A95 /* NeoVimBuffer.m */; };
-		4BE45C1B1FD2DB53005C0A95 /* NeoVimBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE45C151FD2DB53005C0A95 /* NeoVimBuffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BF18C5D1FD2EEE400DF95D1 /* NvimView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BF18C5C1FD2EEE400DF95D1 /* NvimView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
@@ -137,12 +131,6 @@
 		4B90F0731FD2B9F1008A39E0 /* NvimMsgPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NvimMsgPack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B90F0771FD2BA7B008A39E0 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logger.h; path = NvimView/Logger.h; sourceTree = SOURCE_ROOT; };
 		4BE45C0B1FD2DA49005C0A95 /* runtime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = runtime; path = neovim/runtime; sourceTree = "<group>"; };
-		4BE45C101FD2DB52005C0A95 /* NeoVimWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimWindow.h; sourceTree = "<group>"; };
-		4BE45C111FD2DB52005C0A95 /* NeoVimWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimWindow.m; sourceTree = "<group>"; };
-		4BE45C121FD2DB52005C0A95 /* NeoVimTab.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimTab.m; sourceTree = "<group>"; };
-		4BE45C131FD2DB52005C0A95 /* NeoVimTab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimTab.h; sourceTree = "<group>"; };
-		4BE45C141FD2DB53005C0A95 /* NeoVimBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimBuffer.m; sourceTree = "<group>"; };
-		4BE45C151FD2DB53005C0A95 /* NeoVimBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimBuffer.h; sourceTree = "<group>"; };
 		4BF18C5A1FD2E72D00DF95D1 /* nvim */ = {isa = PBXFileReference; lastKnownFileType = folder; name = nvim; path = neovim/src/nvim; sourceTree = "<group>"; };
 		4BF18C5B1FD2E74800DF95D1 /* auto */ = {isa = PBXFileReference; lastKnownFileType = folder; name = auto; path = neovim/build/src/nvim/auto; sourceTree = "<group>"; };
 		4BF18C5C1FD2EEE400DF95D1 /* NvimView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NvimView.h; sourceTree = "<group>"; };
@@ -226,12 +214,6 @@
 				4B90F0231FD2AFAD008A39E0 /* TextDrawer.h */,
 				4B90F0221FD2AFAD008A39E0 /* TextDrawer.m */,
 				4B90F0771FD2BA7B008A39E0 /* Logger.h */,
-				4BE45C151FD2DB53005C0A95 /* NeoVimBuffer.h */,
-				4BE45C141FD2DB53005C0A95 /* NeoVimBuffer.m */,
-				4BE45C131FD2DB52005C0A95 /* NeoVimTab.h */,
-				4BE45C121FD2DB52005C0A95 /* NeoVimTab.m */,
-				4BE45C101FD2DB52005C0A95 /* NeoVimWindow.h */,
-				4BE45C111FD2DB52005C0A95 /* NeoVimWindow.m */,
 				1929B22A0CAD417EC3790F02 /* NvimViewObjects.swift */,
 			);
 			path = NvimView;
@@ -274,10 +256,7 @@
 				4B90F0411FD2AFAE008A39E0 /* TextDrawer.h in Headers */,
 				4B90F0371FD2AFAE008A39E0 /* NeoVimAgent.h in Headers */,
 				4B90F02D1FD2AFAE008A39E0 /* NvimUiBridgeProtocol.h in Headers */,
-				4BE45C161FD2DB53005C0A95 /* NeoVimWindow.h in Headers */,
-				4BE45C1B1FD2DB53005C0A95 /* NeoVimBuffer.h in Headers */,
 				4B2016EF1FD45EED0038528A /* NvimAutoCommandEvent.generated.h in Headers */,
-				4BE45C191FD2DB53005C0A95 /* NeoVimTab.h in Headers */,
 				4B90F0441FD2AFAE008A39E0 /* MMCoreTextView.h in Headers */,
 				4B90F0781FD2BA7B008A39E0 /* Logger.h in Headers */,
 				4B90F07B1FD30650008A39E0 /* NeoVimMsgIds.h in Headers */,
@@ -414,14 +393,12 @@
 				4B90F02F1FD2AFAE008A39E0 /* NvimView+Resize.swift in Sources */,
 				4B90F0341FD2AFAE008A39E0 /* CocoaExtensions.swift in Sources */,
 				4B90F0461FD2AFAE008A39E0 /* Grid.swift in Sources */,
-				4BE45C171FD2DB53005C0A95 /* NeoVimWindow.m in Sources */,
 				4B90F0421FD2AFAE008A39E0 /* NvimView+UiBridge.swift in Sources */,
 				4B90F0401FD2AFAE008A39E0 /* TextDrawer.m in Sources */,
 				4B90F02E1FD2AFAE008A39E0 /* NvimView.swift in Sources */,
 				4B90F03C1FD2AFAE008A39E0 /* NvimView+TouchBar.swift in Sources */,
 				4B2016EE1FD45EED0038528A /* NvimAutoCommandEvent.generated.m in Sources */,
 				4B90F03B1FD2AFAE008A39E0 /* NvimObjectsExtensions.swift in Sources */,
-				4BE45C1A1FD2DB53005C0A95 /* NeoVimBuffer.m in Sources */,
 				4B90F04A1FD2AFAE008A39E0 /* NeoVimAgent.m in Sources */,
 				4B90F0351FD2AFAE008A39E0 /* NvimView+Mouse.swift in Sources */,
 				4B90F0431FD2AFAE008A39E0 /* NvimView+MenuItems.swift in Sources */,
@@ -432,7 +409,6 @@
 				4B90F0301FD2AFAE008A39E0 /* KeyUtils.swift in Sources */,
 				4B90F03A1FD2AFAE008A39E0 /* NvimView+Key.swift in Sources */,
 				4B90F0361FD2AFAE008A39E0 /* NvimViewDelegate.swift in Sources */,
-				4BE45C181FD2DB53005C0A95 /* NeoVimTab.m in Sources */,
 				1929B40A751BDA2882D4FC94 /* NvimViewObjects.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

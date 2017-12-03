@@ -20,7 +20,4 @@ FOUNDATION_EXPORT const unsigned char NvimViewVersionString[];
 // TODO: this header should not be public, but we cannot use a bridging header in a framework.
 #import <NvimView/TextDrawer.h>
 #import <NvimView/NeoVimAgent.h>
-#import <NvimView/NeoVimBuffer.h>
-#import <NvimView/NeoVimTab.h>
-#import <NvimView/NeoVimWindow.h>
 #import <NvimView/NvimAutoCommandEvent.generated.h>

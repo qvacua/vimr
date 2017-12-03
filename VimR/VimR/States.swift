@@ -234,8 +234,8 @@ extension MainWindow {
 
     // neovim
     var uuid = UUID().uuidString
-    var currentBuffer: NeoVimBuffer?
-    var buffers = [NeoVimBuffer]()
+    var currentBuffer: NvimView.Buffer?
+    var buffers = [NvimView.Buffer]()
     var cwd = FileUtils.userHomeUrl
 
     var isDirty = false
@@ -247,7 +247,7 @@ extension MainWindow {
 
     // to be cleaned
     var urlsToOpen = [URL: OpenMode]()
-    var currentBufferToSet: NeoVimBuffer?
+    var currentBufferToSet: NvimView.Buffer?
     var cwdToSet: URL?
     var viewToBeFocused: FocusableView? = FocusableView.neoVimView
 

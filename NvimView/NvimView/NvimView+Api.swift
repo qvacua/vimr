@@ -22,7 +22,7 @@ extension NvimView {
   /**
    - returns: nil when for exampls a quickfix panel is open.
    */
-  public func currentBuffer() -> NeoVimBuffer? {
+  public func currentBuffer() -> NvimView.Buffer? {
     guard let buf = self.nvim.getCurrentBuf().value else {
       return nil
     }
@@ -30,7 +30,7 @@ extension NvimView {
     return self.neoVimBuffer(for: buf, currentBuffer: buf)
   }
 
-  public func allBuffers() -> [NeoVimBuffer] {
+  public func allBuffers() -> [NvimView.Buffer] {
     let curBuf = self.nvim.getCurrentBuf().value
     return self.nvim.listBufs()
              .value?
@@ -41,7 +41,7 @@ extension NvimView {
     return self.currentBuffer()?.isDirty ?? false
   }
 
-  public func allTabs() -> [NeoVimTab] {
+  public func allTabs() -> [NvimView.Tabpage] {
     let curBuf = self.nvim.getCurrentBuf().value
     let curTab = self.nvim.getCurrentTabpage().value
 
@@ -93,7 +93,7 @@ extension NvimView {
     urls.forEach { self.open($0, cmd: "vsp") }
   }
 
-  public func select(buffer: NeoVimBuffer) {
+  public func select(buffer: NvimView.Buffer) {
     for window in self.allTabs().map({ $0.windows }).flatMap({ $0 }) {
       if window.buffer.handle == buffer.handle {
         self.nvim.setCurrentWin(window: NvimApi.Window(window.handle), expectsReturnValue: false)
@@ -188,7 +188,7 @@ extension NvimView {
     self.exec(command: "\(cmd) \(escapedFileName)")
   }
 
-  private func neoVimBuffer(for buf: NvimApi.Buffer, currentBuffer: NvimApi.Buffer?) -> NeoVimBuffer? {
+  private func neoVimBuffer(for buf: NvimApi.Buffer, currentBuffer: NvimApi.Buffer?) -> NvimView.Buffer? {
     guard let path = self.nvim.bufGetName(buffer: buf).value else {
       return nil
     }
@@ -204,12 +204,16 @@ extension NvimView {
     let readonly = buftype != ""
     let current = buf == currentBuffer
 
-    return NeoVimBuffer(handle: buf.handle, unescapedPath: path, dirty: dirty, readOnly: readonly, current: current)
+    return NvimView.Buffer(apiBuffer: buf,
+                           url: URL(fileURLWithPath: path),
+                           isReadOnly: readonly,
+                           isDirty: dirty,
+                           isCurrent: current)
   }
 
   private func neoVimWindow(for window: NvimApi.Window,
                             currentWindow: NvimApi.Window?,
-                            currentBuffer: NvimApi.Buffer?) -> NeoVimWindow? {
+                            currentBuffer: NvimApi.Buffer?) -> NvimView.Window? {
 
     guard let buf = self.nvim.winGetBuf(window: window).value else {
       return nil
@@ -219,16 +223,16 @@ extension NvimView {
       return nil
     }
 
-    return NeoVimWindow(handle: window.handle, buffer: buffer, currentInTab: window == currentWindow)
+    return NvimView.Window(apiWindow: window, buffer: buffer, isCurrentInTab: window == currentWindow)
   }
 
   private func neoVimTab(for tabpage: NvimApi.Tabpage,
                          currentTabpage: NvimApi.Tabpage?,
-                         currentBuffer: NvimApi.Buffer?) -> NeoVimTab? {
+                         currentBuffer: NvimApi.Buffer?) -> NvimView.Tabpage? {
 
     let curWinInTab = self.nvim.tabpageGetWin(tabpage: tabpage).value
 
-    let windows: [NeoVimWindow] = self.nvim.tabpageListWins(tabpage: tabpage)
+    let windows: [NvimView.Window] = self.nvim.tabpageListWins(tabpage: tabpage)
                                     .value?
                                     .flatMap {
       self.neoVimWindow(for: $0,
@@ -236,7 +240,7 @@ extension NvimView {
                         currentBuffer: currentBuffer)
     } ?? []
 
-    return NeoVimTab(handle: tabpage.handle, windows: windows, current: tabpage == currentTabpage)
+    return NvimView.Tabpage(apiTabpage: tabpage, windows: windows, isCurrent: tabpage == currentTabpage)
   }
 }
 

@@ -246,7 +246,7 @@ public class NvimView: NSView,
   var isInitialResize = true
 
   // cache the tabs for Touch Bar use
-  var tabsCache = [NeoVimTab]()
+  var tabsCache = [NvimView.Tabpage]()
 
   // MARK: - Private
   fileprivate var _linespacing = NvimView.defaultLinespacing

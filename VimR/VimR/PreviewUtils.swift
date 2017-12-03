@@ -30,7 +30,7 @@ class PreviewUtils {
     }
   }
 
-  static func state(for uuid: String, baseUrl: URL, buffer: NeoVimBuffer?) -> PreviewState {
+  static func state(for uuid: String, baseUrl: URL, buffer: NvimView.Buffer?) -> PreviewState {
     guard let url = buffer?.url else {
       return self.state(for: .notSaved, baseUrl: baseUrl)
     }

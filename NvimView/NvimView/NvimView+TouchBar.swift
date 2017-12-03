@@ -75,7 +75,7 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
     let itemView = scrubber.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: type(of: self).touchBarTabSwitcherItem), owner: nil) as! NSScrubberTextItemView
     guard tabsCache.count > index else { return itemView }
     let tab = tabsCache[index]
-    itemView.title = tab.currentWindow()?.buffer.name ?? "[No Name]"
+    itemView.title = tab.currentWindow?.buffer.name ?? "[No Name]"
 
     return itemView
   }
@@ -86,7 +86,7 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
       return
     }
 
-    let window = tab.currentWindow() ?? tab.windows[0]
+    let window = tab.currentWindow ?? tab.windows[0]
     self.nvim.setCurrentWin(window: NvimApi.Window(window.handle), expectsReturnValue: false)
   }
 }

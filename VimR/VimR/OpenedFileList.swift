@@ -18,7 +18,7 @@ class BuffersList: NSView,
 
   enum Action {
 
-    case open(NeoVimBuffer)
+    case open(NvimView.Buffer)
   }
 
   fileprivate(set) var theme = Theme.default
@@ -78,7 +78,7 @@ class BuffersList: NSView,
   fileprivate let bufferList = NSTableView.standardTableView()
   fileprivate let genericIcon: NSImage
 
-  fileprivate var buffers = [NeoVimBuffer]()
+  fileprivate var buffers = [NvimView.Buffer]()
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -157,7 +157,7 @@ extension BuffersList {
     return cell
   }
 
-  fileprivate func text(for buffer: NeoVimBuffer) -> NSAttributedString {
+  fileprivate func text(for buffer: NvimView.Buffer) -> NSAttributedString {
     guard let name = buffer.name else {
       return NSAttributedString(string: "No Name")
     }
@@ -180,7 +180,7 @@ extension BuffersList {
     return rowText
   }
 
-  fileprivate func icon(for buffer: NeoVimBuffer) -> NSImage? {
+  fileprivate func icon(for buffer: NvimView.Buffer) -> NSImage? {
     if let url = buffer.url {
       return FileUtils.icon(forUrl: url)
     }
