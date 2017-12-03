@@ -9,27 +9,27 @@
 /* Begin PBXBuildFile section */
 		1929B40A751BDA2882D4FC94 /* NvimViewObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B22A0CAD417EC3790F02 /* NvimViewObjects.swift */; };
 		4B90F02D1FD2AFAE008A39E0 /* NeoVimUiBridgeProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B90F00F1FD2AFAC008A39E0 /* NeoVimUiBridgeProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4B90F02E1FD2AFAE008A39E0 /* NeoVimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0101FD2AFAC008A39E0 /* NeoVimView.swift */; };
-		4B90F02F1FD2AFAE008A39E0 /* NeoVimView+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0111FD2AFAC008A39E0 /* NeoVimView+Resize.swift */; };
+		4B90F02E1FD2AFAE008A39E0 /* NvimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0101FD2AFAC008A39E0 /* NvimView.swift */; };
+		4B90F02F1FD2AFAE008A39E0 /* NvimView+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0111FD2AFAC008A39E0 /* NvimView+Resize.swift */; };
 		4B90F0301FD2AFAE008A39E0 /* KeyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0121FD2AFAC008A39E0 /* KeyUtils.swift */; };
 		4B90F0311FD2AFAE008A39E0 /* NeoVimAutoCommandEvent.generated.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0131FD2AFAC008A39E0 /* NeoVimAutoCommandEvent.generated.m */; };
-		4B90F0321FD2AFAE008A39E0 /* NeoVimView+Dragging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0141FD2AFAC008A39E0 /* NeoVimView+Dragging.swift */; };
+		4B90F0321FD2AFAE008A39E0 /* NvimView+Dragging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0141FD2AFAC008A39E0 /* NvimView+Dragging.swift */; };
 		4B90F0331FD2AFAE008A39E0 /* NeoVimAutoCommandEvent.generated.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B90F0151FD2AFAC008A39E0 /* NeoVimAutoCommandEvent.generated.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B90F0341FD2AFAE008A39E0 /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0161FD2AFAC008A39E0 /* CocoaExtensions.swift */; };
-		4B90F0351FD2AFAE008A39E0 /* NeoVimView+Mouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0171FD2AFAC008A39E0 /* NeoVimView+Mouse.swift */; };
-		4B90F0361FD2AFAE008A39E0 /* NeoVimViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0181FD2AFAC008A39E0 /* NeoVimViewDelegate.swift */; };
+		4B90F0351FD2AFAE008A39E0 /* NvimView+Mouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0171FD2AFAC008A39E0 /* NvimView+Mouse.swift */; };
+		4B90F0361FD2AFAE008A39E0 /* NvimViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0181FD2AFAC008A39E0 /* NvimViewDelegate.swift */; };
 		4B90F0371FD2AFAE008A39E0 /* NeoVimAgent.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B90F0191FD2AFAC008A39E0 /* NeoVimAgent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B90F0381FD2AFAE008A39E0 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F01A1FD2AFAC008A39E0 /* ColorUtils.swift */; };
-		4B90F0391FD2AFAE008A39E0 /* NeoVimView+Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F01B1FD2AFAC008A39E0 /* NeoVimView+Api.swift */; };
-		4B90F03A1FD2AFAE008A39E0 /* NeoVimView+Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F01C1FD2AFAC008A39E0 /* NeoVimView+Key.swift */; };
+		4B90F0391FD2AFAE008A39E0 /* NvimView+Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F01B1FD2AFAC008A39E0 /* NvimView+Api.swift */; };
+		4B90F03A1FD2AFAE008A39E0 /* NvimView+Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F01C1FD2AFAC008A39E0 /* NvimView+Key.swift */; };
 		4B90F03B1FD2AFAE008A39E0 /* NeoVimObjectsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F01D1FD2AFAC008A39E0 /* NeoVimObjectsExtensions.swift */; };
-		4B90F03C1FD2AFAE008A39E0 /* NeoVimView+TouchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F01E1FD2AFAC008A39E0 /* NeoVimView+TouchBar.swift */; };
+		4B90F03C1FD2AFAE008A39E0 /* NvimView+TouchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F01E1FD2AFAC008A39E0 /* NvimView+TouchBar.swift */; };
 		4B90F03E1FD2AFAE008A39E0 /* MMCoreTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0201FD2AFAD008A39E0 /* MMCoreTextView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		4B90F03F1FD2AFAE008A39E0 /* NeoVimView+Draw.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0211FD2AFAD008A39E0 /* NeoVimView+Draw.swift */; };
+		4B90F03F1FD2AFAE008A39E0 /* NvimView+Draw.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0211FD2AFAD008A39E0 /* NvimView+Draw.swift */; };
 		4B90F0401FD2AFAE008A39E0 /* TextDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0221FD2AFAD008A39E0 /* TextDrawer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4B90F0411FD2AFAE008A39E0 /* TextDrawer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B90F0231FD2AFAD008A39E0 /* TextDrawer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4B90F0421FD2AFAE008A39E0 /* NeoVimView+UiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0241FD2AFAD008A39E0 /* NeoVimView+UiBridge.swift */; };
-		4B90F0431FD2AFAE008A39E0 /* NeoVimView+MenuItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0251FD2AFAD008A39E0 /* NeoVimView+MenuItems.swift */; };
+		4B90F0421FD2AFAE008A39E0 /* NvimView+UiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0241FD2AFAD008A39E0 /* NvimView+UiBridge.swift */; };
+		4B90F0431FD2AFAE008A39E0 /* NvimView+MenuItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0251FD2AFAD008A39E0 /* NvimView+MenuItems.swift */; };
 		4B90F0441FD2AFAE008A39E0 /* MMCoreTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B90F0261FD2AFAD008A39E0 /* MMCoreTextView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		4B90F0451FD2AFAE008A39E0 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0271FD2AFAD008A39E0 /* Logger.swift */; };
 		4B90F0461FD2AFAE008A39E0 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0281FD2AFAD008A39E0 /* Grid.swift */; };
@@ -93,28 +93,28 @@
 		4B90F0041FD2AF59008A39E0 /* NvimView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NvimView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B90F0081FD2AF59008A39E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B90F00F1FD2AFAC008A39E0 /* NeoVimUiBridgeProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimUiBridgeProtocol.h; sourceTree = "<group>"; };
-		4B90F0101FD2AFAC008A39E0 /* NeoVimView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimView.swift; sourceTree = "<group>"; };
-		4B90F0111FD2AFAC008A39E0 /* NeoVimView+Resize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NeoVimView+Resize.swift"; sourceTree = "<group>"; };
+		4B90F0101FD2AFAC008A39E0 /* NvimView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimView.swift; sourceTree = "<group>"; };
+		4B90F0111FD2AFAC008A39E0 /* NvimView+Resize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Resize.swift"; sourceTree = "<group>"; };
 		4B90F0121FD2AFAC008A39E0 /* KeyUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyUtils.swift; sourceTree = "<group>"; };
 		4B90F0131FD2AFAC008A39E0 /* NeoVimAutoCommandEvent.generated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimAutoCommandEvent.generated.m; sourceTree = "<group>"; };
-		4B90F0141FD2AFAC008A39E0 /* NeoVimView+Dragging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NeoVimView+Dragging.swift"; sourceTree = "<group>"; };
+		4B90F0141FD2AFAC008A39E0 /* NvimView+Dragging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Dragging.swift"; sourceTree = "<group>"; };
 		4B90F0151FD2AFAC008A39E0 /* NeoVimAutoCommandEvent.generated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimAutoCommandEvent.generated.h; sourceTree = "<group>"; };
 		4B90F0161FD2AFAC008A39E0 /* CocoaExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaExtensions.swift; sourceTree = "<group>"; };
-		4B90F0171FD2AFAC008A39E0 /* NeoVimView+Mouse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NeoVimView+Mouse.swift"; sourceTree = "<group>"; };
-		4B90F0181FD2AFAC008A39E0 /* NeoVimViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimViewDelegate.swift; sourceTree = "<group>"; };
+		4B90F0171FD2AFAC008A39E0 /* NvimView+Mouse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Mouse.swift"; sourceTree = "<group>"; };
+		4B90F0181FD2AFAC008A39E0 /* NvimViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimViewDelegate.swift; sourceTree = "<group>"; };
 		4B90F0191FD2AFAC008A39E0 /* NeoVimAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimAgent.h; sourceTree = "<group>"; };
 		4B90F01A1FD2AFAC008A39E0 /* ColorUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorUtils.swift; sourceTree = "<group>"; };
-		4B90F01B1FD2AFAC008A39E0 /* NeoVimView+Api.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NeoVimView+Api.swift"; sourceTree = "<group>"; };
-		4B90F01C1FD2AFAC008A39E0 /* NeoVimView+Key.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NeoVimView+Key.swift"; sourceTree = "<group>"; };
+		4B90F01B1FD2AFAC008A39E0 /* NvimView+Api.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Api.swift"; sourceTree = "<group>"; };
+		4B90F01C1FD2AFAC008A39E0 /* NvimView+Key.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Key.swift"; sourceTree = "<group>"; };
 		4B90F01D1FD2AFAC008A39E0 /* NeoVimObjectsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeoVimObjectsExtensions.swift; sourceTree = "<group>"; };
-		4B90F01E1FD2AFAC008A39E0 /* NeoVimView+TouchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NeoVimView+TouchBar.swift"; sourceTree = "<group>"; };
+		4B90F01E1FD2AFAC008A39E0 /* NvimView+TouchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+TouchBar.swift"; sourceTree = "<group>"; };
 		4B90F01F1FD2AFAD008A39E0 /* InputTestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputTestView.swift; sourceTree = "<group>"; };
 		4B90F0201FD2AFAD008A39E0 /* MMCoreTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCoreTextView.m; sourceTree = "<group>"; };
-		4B90F0211FD2AFAD008A39E0 /* NeoVimView+Draw.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NeoVimView+Draw.swift"; sourceTree = "<group>"; };
+		4B90F0211FD2AFAD008A39E0 /* NvimView+Draw.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Draw.swift"; sourceTree = "<group>"; };
 		4B90F0221FD2AFAD008A39E0 /* TextDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDrawer.m; sourceTree = "<group>"; };
 		4B90F0231FD2AFAD008A39E0 /* TextDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextDrawer.h; sourceTree = "<group>"; };
-		4B90F0241FD2AFAD008A39E0 /* NeoVimView+UiBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NeoVimView+UiBridge.swift"; sourceTree = "<group>"; };
-		4B90F0251FD2AFAD008A39E0 /* NeoVimView+MenuItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NeoVimView+MenuItems.swift"; sourceTree = "<group>"; };
+		4B90F0241FD2AFAD008A39E0 /* NvimView+UiBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+UiBridge.swift"; sourceTree = "<group>"; };
+		4B90F0251FD2AFAD008A39E0 /* NvimView+MenuItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+MenuItems.swift"; sourceTree = "<group>"; };
 		4B90F0261FD2AFAD008A39E0 /* MMCoreTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCoreTextView.h; sourceTree = "<group>"; };
 		4B90F0271FD2AFAD008A39E0 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		4B90F0281FD2AFAD008A39E0 /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
@@ -212,17 +212,17 @@
 				4B90F01D1FD2AFAC008A39E0 /* NeoVimObjectsExtensions.swift */,
 				4B90F00F1FD2AFAC008A39E0 /* NeoVimUiBridgeProtocol.h */,
 				4B90F02A1FD2AFAD008A39E0 /* NeoVimUiBridgeProtocol.m */,
-				4B90F0101FD2AFAC008A39E0 /* NeoVimView.swift */,
-				4B90F01B1FD2AFAC008A39E0 /* NeoVimView+Api.swift */,
-				4B90F0141FD2AFAC008A39E0 /* NeoVimView+Dragging.swift */,
-				4B90F0211FD2AFAD008A39E0 /* NeoVimView+Draw.swift */,
-				4B90F01C1FD2AFAC008A39E0 /* NeoVimView+Key.swift */,
-				4B90F0251FD2AFAD008A39E0 /* NeoVimView+MenuItems.swift */,
-				4B90F0171FD2AFAC008A39E0 /* NeoVimView+Mouse.swift */,
-				4B90F0111FD2AFAC008A39E0 /* NeoVimView+Resize.swift */,
-				4B90F01E1FD2AFAC008A39E0 /* NeoVimView+TouchBar.swift */,
-				4B90F0241FD2AFAD008A39E0 /* NeoVimView+UiBridge.swift */,
-				4B90F0181FD2AFAC008A39E0 /* NeoVimViewDelegate.swift */,
+				4B90F0101FD2AFAC008A39E0 /* NvimView.swift */,
+				4B90F01B1FD2AFAC008A39E0 /* NvimView+Api.swift */,
+				4B90F0141FD2AFAC008A39E0 /* NvimView+Dragging.swift */,
+				4B90F0211FD2AFAD008A39E0 /* NvimView+Draw.swift */,
+				4B90F01C1FD2AFAC008A39E0 /* NvimView+Key.swift */,
+				4B90F0251FD2AFAD008A39E0 /* NvimView+MenuItems.swift */,
+				4B90F0171FD2AFAC008A39E0 /* NvimView+Mouse.swift */,
+				4B90F0111FD2AFAC008A39E0 /* NvimView+Resize.swift */,
+				4B90F01E1FD2AFAC008A39E0 /* NvimView+TouchBar.swift */,
+				4B90F0241FD2AFAD008A39E0 /* NvimView+UiBridge.swift */,
+				4B90F0181FD2AFAC008A39E0 /* NvimViewDelegate.swift */,
 				4B90F0231FD2AFAD008A39E0 /* TextDrawer.h */,
 				4B90F0221FD2AFAD008A39E0 /* TextDrawer.m */,
 				4B90F0771FD2BA7B008A39E0 /* Logger.h */,
@@ -410,28 +410,28 @@
 				4B90F0381FD2AFAE008A39E0 /* ColorUtils.swift in Sources */,
 				4B90F03E1FD2AFAE008A39E0 /* MMCoreTextView.m in Sources */,
 				4B90F0481FD2AFAE008A39E0 /* NeoVimUiBridgeProtocol.m in Sources */,
-				4B90F03F1FD2AFAE008A39E0 /* NeoVimView+Draw.swift in Sources */,
-				4B90F02F1FD2AFAE008A39E0 /* NeoVimView+Resize.swift in Sources */,
+				4B90F03F1FD2AFAE008A39E0 /* NvimView+Draw.swift in Sources */,
+				4B90F02F1FD2AFAE008A39E0 /* NvimView+Resize.swift in Sources */,
 				4B90F0341FD2AFAE008A39E0 /* CocoaExtensions.swift in Sources */,
 				4B90F0461FD2AFAE008A39E0 /* Grid.swift in Sources */,
 				4BE45C171FD2DB53005C0A95 /* NeoVimWindow.m in Sources */,
-				4B90F0421FD2AFAE008A39E0 /* NeoVimView+UiBridge.swift in Sources */,
+				4B90F0421FD2AFAE008A39E0 /* NvimView+UiBridge.swift in Sources */,
 				4B90F0401FD2AFAE008A39E0 /* TextDrawer.m in Sources */,
-				4B90F02E1FD2AFAE008A39E0 /* NeoVimView.swift in Sources */,
-				4B90F03C1FD2AFAE008A39E0 /* NeoVimView+TouchBar.swift in Sources */,
+				4B90F02E1FD2AFAE008A39E0 /* NvimView.swift in Sources */,
+				4B90F03C1FD2AFAE008A39E0 /* NvimView+TouchBar.swift in Sources */,
 				4B90F03B1FD2AFAE008A39E0 /* NeoVimObjectsExtensions.swift in Sources */,
 				4BE45C1A1FD2DB53005C0A95 /* NeoVimBuffer.m in Sources */,
 				4B90F04A1FD2AFAE008A39E0 /* NeoVimAgent.m in Sources */,
-				4B90F0351FD2AFAE008A39E0 /* NeoVimView+Mouse.swift in Sources */,
-				4B90F0431FD2AFAE008A39E0 /* NeoVimView+MenuItems.swift in Sources */,
-				4B90F0391FD2AFAE008A39E0 /* NeoVimView+Api.swift in Sources */,
+				4B90F0351FD2AFAE008A39E0 /* NvimView+Mouse.swift in Sources */,
+				4B90F0431FD2AFAE008A39E0 /* NvimView+MenuItems.swift in Sources */,
+				4B90F0391FD2AFAE008A39E0 /* NvimView+Api.swift in Sources */,
 				4B90F0311FD2AFAE008A39E0 /* NeoVimAutoCommandEvent.generated.m in Sources */,
 				4B90F0451FD2AFAE008A39E0 /* Logger.swift in Sources */,
-				4B90F0321FD2AFAE008A39E0 /* NeoVimView+Dragging.swift in Sources */,
+				4B90F0321FD2AFAE008A39E0 /* NvimView+Dragging.swift in Sources */,
 				4B90F0491FD2AFAE008A39E0 /* CellAttributes.swift in Sources */,
 				4B90F0301FD2AFAE008A39E0 /* KeyUtils.swift in Sources */,
-				4B90F03A1FD2AFAE008A39E0 /* NeoVimView+Key.swift in Sources */,
-				4B90F0361FD2AFAE008A39E0 /* NeoVimViewDelegate.swift in Sources */,
+				4B90F03A1FD2AFAE008A39E0 /* NvimView+Key.swift in Sources */,
+				4B90F0361FD2AFAE008A39E0 /* NvimViewDelegate.swift in Sources */,
 				4BE45C181FD2DB53005C0A95 /* NeoVimTab.m in Sources */,
 				1929B40A751BDA2882D4FC94 /* NvimViewObjects.swift in Sources */,
 			);
