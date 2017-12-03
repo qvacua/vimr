@@ -14,7 +14,7 @@ class MainWindowReducer {
 
     switch pair.action {
 
-   case let .frameChanged(to: frame):
+    case let .frameChanged(to:frame):
       state.frame = frame
 
     case let .cd(to:cwd):
