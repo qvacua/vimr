@@ -603,12 +603,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
     case NeoVimServerMsgIdAutoCommandEvent: {
       if (data.length == 2 * sizeof(NSInteger)) {
         NSInteger *values = (NSInteger *) data.bytes;
-        NeoVimAutoCommandEvent event = (NeoVimAutoCommandEvent) values[0];
+        NvimAutoCommandEvent event = (NvimAutoCommandEvent) values[0];
         NSInteger bufferHandle = (values + 1)[0];
         [_bridge autoCommandEvent:event bufferHandle:bufferHandle];
       } else {
         NSInteger *values = data_to_NSInteger_array(data, 1);
-        [_bridge autoCommandEvent:(NeoVimAutoCommandEvent) values[0] bufferHandle:-1];
+        [_bridge autoCommandEvent:(NvimAutoCommandEvent) values[0] bufferHandle:-1];
       }
       return;
     }

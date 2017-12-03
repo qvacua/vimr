@@ -5,7 +5,7 @@
 
 @import Foundation;
 
-#import "NeoVimAutoCommandEvent.generated.h"
+#import "NvimAutoCommandEvent.generated.h"
 
 
 // Keep in sync with ModeShape enum in cursor_shape.h.
@@ -130,7 +130,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setDirtyStatus:(bool)dirty;
 - (void)cwdChanged:(NSString *)cwd;
 - (void)colorSchemeChanged:(NSArray <NSNumber *> *)values;
-- (void)autoCommandEvent:(NeoVimAutoCommandEvent)event bufferHandle:(NSInteger)bufferHandle;
+- (void)autoCommandEvent:(NvimAutoCommandEvent)event bufferHandle:(NSInteger)bufferHandle;
 
 /**
  * NeoVim has been stopped.

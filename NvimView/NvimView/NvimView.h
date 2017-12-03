@@ -23,4 +23,4 @@ FOUNDATION_EXPORT const unsigned char NvimViewVersionString[];
 #import <NvimView/NeoVimBuffer.h>
 #import <NvimView/NeoVimTab.h>
 #import <NvimView/NeoVimWindow.h>
-#import <NvimView/NeoVimAutoCommandEvent.generated.h>
+#import <NvimView/NvimAutoCommandEvent.generated.h>

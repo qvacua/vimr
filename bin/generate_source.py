@@ -7,7 +7,7 @@ from string import Template
 
 print(os.getcwd())
 if 'CONFIGURATION' in os.environ and os.environ['CONFIGURATION'] == 'Debug':
-    if os.path.isfile('./NvimView/NeoVimAutoCommandEvent.generated.h') and os.path.isfile('./NvimView/NeoVimAutoCommandEvent.generated.m'):
+    if os.path.isfile('./NvimView/NvimAutoCommandEvent.generated.h') and os.path.isfile('./NvimView/NvimAutoCommandEvent.generated.m'):
         print("Files already there, exiting...")
         exit(0)
 
@@ -24,9 +24,9 @@ auto_cmds = [convert(line) for line in raw_auto_cmds]
 auto_cmds_impl_template = Template(
 '''
 @import Foundation;
-#import "NeoVimAutoCommandEvent.generated.h"
+#import "NvimAutoCommandEvent.generated.h"
 
-NSString *neoVimAutoCommandEventName(NeoVimAutoCommandEvent event) {
+NSString *nvimAutoCommandEventName(NvimAutoCommandEvent event) {
   switch (event) {
 ${event_cases}
     default: return @"NON_EXISTING_EVENT";
@@ -36,28 +36,28 @@ ${event_cases}
 
 impl = auto_cmds_impl_template.substitute(
     event_cases='\n'.join(
-        ['    case NeoVimAutoCommandEvent{}: return @"{}";'.format(event[0], event[0]) for event in auto_cmds])
+        ['    case NvimAutoCommandEvent{}: return @"{}";'.format(event[0], event[0]) for event in auto_cmds])
 )
-with io.open('./NvimView/NeoVimAutoCommandEvent.generated.m', 'w') as auto_cmds_impl_file:
+with io.open('./NvimView/NvimAutoCommandEvent.generated.m', 'w') as auto_cmds_impl_file:
     auto_cmds_impl_file.write(unicode(impl))
 
 auto_cmds_header_template = Template(
 '''
 @import Foundation;
 
-typedef NS_ENUM(NSUInteger, NeoVimAutoCommandEvent) {
+typedef NS_ENUM(NSUInteger, NvimAutoCommandEvent) {
 ${event_cases}
 };
 
 #define NumberOfAutoCommandEvents ${count}
-extern NSString * __nonnull neoVimAutoCommandEventName(NeoVimAutoCommandEvent event);
+extern NSString * __nonnull nvimAutoCommandEventName(NvimAutoCommandEvent event);
 ''')
 
 header = auto_cmds_header_template.substitute(
     event_cases='\n'.join(
-        ['  NeoVimAutoCommandEvent{} = {},'.format(event[0], event[1]) for event in auto_cmds]
+        ['  NvimAutoCommandEvent{} = {},'.format(event[0], event[1]) for event in auto_cmds]
     ),
     count=str(len(auto_cmds))
 )
-with io.open('./NvimView/NeoVimAutoCommandEvent.generated.h', 'w') as auto_cmds_header_file:
+with io.open('./NvimView/NvimAutoCommandEvent.generated.h', 'w') as auto_cmds_header_file:
     auto_cmds_header_file.write(unicode(header))

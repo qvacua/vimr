@@ -189,9 +189,9 @@ extension NvimView {
     }
   }
 
-  public func autoCommandEvent(_ event: NeoVimAutoCommandEvent, bufferHandle: Int) {
+  public func autoCommandEvent(_ event: NvimAutoCommandEvent, bufferHandle: Int) {
     gui.async {
-      self.bridgeLogger.debug("\(neoVimAutoCommandEventName(event)) -> \(bufferHandle)")
+      self.bridgeLogger.debug("\(nvimAutoCommandEventName(event)) -> \(bufferHandle)")
 
       if event == .BUFWINENTER || event == .BUFWINLEAVE {
         self.bufferListChanged()
