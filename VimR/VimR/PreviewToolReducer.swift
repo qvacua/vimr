@@ -22,6 +22,9 @@ class PreviewToolReducer {
       state.preview = PreviewUtils.state(for: pair.state.uuid,
                                          baseUrl: self.baseServerUrl,
                                          buffer: state.currentBuffer)
+      state.preview.ignoreNextReverse = true
+      state.preview.ignoreNextForward = true
+      state.preview.forceNextReverse = false
 
     case let .reverseSearch(to:position):
       state.preview.previewPosition = position
