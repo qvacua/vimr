@@ -411,7 +411,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 }
 
 - (NSString *)neoVimServerExecutablePath {
-  return [[[NSBundle bundleForClass:[self class]] builtInPlugInsPath] stringByAppendingPathComponent:@"NVimServer"];
+  return [[[NSBundle bundleForClass:[self class]] builtInPlugInsPath] stringByAppendingPathComponent:@"NvimServer"];
 }
 
 - (NSString *)localServerName {
