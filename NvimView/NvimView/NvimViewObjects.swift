@@ -17,7 +17,6 @@ extension NvimView {
     public let apiBuffer: NvimApi.Buffer
     public let url: URL?
 
-    public let isReadOnly: Bool
     public let isDirty: Bool
     public let isCurrent: Bool
 

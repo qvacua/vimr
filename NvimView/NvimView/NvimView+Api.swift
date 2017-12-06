@@ -197,16 +197,10 @@ extension NvimView {
       return nil
     }
 
-    guard let buftype = self.nvim.bufGetOption(buffer: buf, name: "buftype").value else {
-      return nil
-    }
-
-    let readonly = buftype != ""
     let current = buf == currentBuffer
 
     return NvimView.Buffer(apiBuffer: buf,
                            url: URL(fileURLWithPath: path),
-                           isReadOnly: readonly,
                            isDirty: dirty,
                            isCurrent: current)
   }
