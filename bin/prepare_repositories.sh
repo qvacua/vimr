@@ -7,7 +7,7 @@ echo "### Preparing repositories"
 # delete all (local) tags
 git tag | xargs git tag -d
 
-pushd neovim
+pushd NvimView/neovim
 git tag | xargs git tag -d
 popd
 
