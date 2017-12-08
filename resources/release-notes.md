@@ -1,3 +1,7 @@
+# 0.20.1-244
+
+* GH-580: Bugfix: Memory leak
+
 # 0.20.0-238
 
 * GH-534: `Cmd-D` for "Discard and Close/Quit" buttons. (thanks @nclark for the PR)
