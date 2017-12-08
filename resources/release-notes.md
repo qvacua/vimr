@@ -3,6 +3,10 @@
 * GH-571: Bugfix: Read-only buffers are considered as modified. For example NERDTree buffers won't trigger the "Please save first" dialog anymore.
 * GH-387: Show all buffers (the same as `:buffers`) in the buffers list
 
+# 0.20.1-244
+
+* GH-580: Bugfix: Memory leak
+
 # 0.20.0-238
 
 * GH-534: `Cmd-D` for "Discard and Close/Quit" buttons. (thanks @nclark for the PR)
