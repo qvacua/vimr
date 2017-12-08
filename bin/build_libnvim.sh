@@ -4,6 +4,8 @@ set -e
 
 echo "### Building libnvim"
 
+ln -sf ../local.mk .
+
 # We assume that we're already in the neovim project root.
 # Use custom gettext source only when building libnvim => not in local.mk which is also used to build the full nvim
 # to get the full runtime.
