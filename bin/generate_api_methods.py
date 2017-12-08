@@ -13,13 +13,13 @@ void_func_template = Template('''\
   public func ${func_name}(${args}
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Nvim.Response<Void> {
+  ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
-      return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
+    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
+      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
   
-    let params: [Nvim.Value] = [
+    let params: [NvimApi.Value] = [
         ${params}
     ]
     let response = self.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: expectsReturnValue)
@@ -34,9 +34,9 @@ void_func_template = Template('''\
 
 get_mode_func_template = Template('''\
   public func ${func_name}(${args}
-  ) -> Nvim.Response<${result_type}> {
+  ) -> NvimApi.Response<${result_type}> {
  
-    let params: [Nvim.Value] = [
+    let params: [NvimApi.Value] = [
         ${params}
     ]
     let response = self.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: true)
@@ -46,7 +46,7 @@ get_mode_func_template = Template('''\
     }
     
     guard let result = (${return_value}) else {
-      return .failure(Nvim.Error("Error converting result to \\(${result_type}.self)"))
+      return .failure(NvimApi.Error("Error converting result to \\(${result_type}.self)"))
     }
     
     return .success(result)
@@ -56,13 +56,13 @@ get_mode_func_template = Template('''\
 func_template = Template('''\
   public func ${func_name}(${args}
     checkBlocked: Bool = true
-  ) -> Nvim.Response<${result_type}> {
+  ) -> NvimApi.Response<${result_type}> {
  
-    if checkBlocked && self.getMode().value?.dictionaryValue?[.string("blocking")]?.boolValue == true {
-      return .failure(Nvim.Error(type: .blocked, message: "Nvim is currently blocked"))
+    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
+      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
     } 
     
-    let params: [Nvim.Value] = [
+    let params: [NvimApi.Value] = [
         ${params}
     ]
     let response = self.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: true)
@@ -72,7 +72,7 @@ func_template = Template('''\
     }
     
     guard let result = (${return_value}) else {
-      return .failure(Nvim.Error("Error converting result to \\(${result_type}.self)"))
+      return .failure(NvimApi.Error("Error converting result to \\(${result_type}.self)"))
     }
     
     return .success(result)
@@ -85,7 +85,7 @@ extension_template = Template('''\
 
 import MsgPackRpc
 
-public extension Nvim.Error {
+public extension NvimApi.Error {
 
   public enum ErrorType: Int {
     
@@ -95,14 +95,14 @@ public extension Nvim.Error {
   }
 }
 
-public extension Nvim {
+public extension NvimApi {
 
 $body
 }
 
-extension Nvim.Buffer {
+extension NvimApi.Buffer {
 
-  init?(_ value: Nvim.Value) {
+  init?(_ value: NvimApi.Value) {
     guard let (type, data) = value.extendedValue else {
       return nil
     }
@@ -119,9 +119,9 @@ extension Nvim.Buffer {
   }
 }
 
-extension Nvim.Window {
+extension NvimApi.Window {
 
-  init?(_ value: Nvim.Value) {
+  init?(_ value: NvimApi.Value) {
     guard let (type, data) = value.extendedValue else {
       return nil
     }
@@ -138,9 +138,9 @@ extension Nvim.Window {
   }
 }
 
-extension Nvim.Tabpage {
+extension NvimApi.Tabpage {
 
-  init?(_ value: Nvim.Value) {
+  init?(_ value: NvimApi.Value) {
     guard let (type, data) = value.extendedValue else {
       return nil
     }
@@ -155,7 +155,49 @@ extension Nvim.Tabpage {
 
     self.handle = Int(handle)
   }
-}''')
+}
+
+private func msgPackDictToSwift(_ dict: Dictionary<NvimApi.Value, NvimApi.Value>?) -> Dictionary<String, NvimApi.Value>? {
+  return dict?.flatMapToDict { k, v in
+    guard let strKey = k.stringValue else {
+      return nil
+    }
+
+    return (strKey, v)
+  }
+}
+
+private func msgPackArrayDictToSwift(_ array: [NvimApi.Value]?) -> [Dictionary<String, NvimApi.Value>]? {
+  return array?
+    .flatMap { v in v.dictionaryValue }
+    .flatMap { d in msgPackDictToSwift(d) }
+}
+  
+extension Dictionary {
+
+  func mapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)) rethrows -> Dictionary<K, V> {
+    let array = try self.map(transform)
+    return tuplesToDict(array)
+  }
+  
+  func flatMapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows -> Dictionary<K, V> {
+    let array = try self.flatMap(transform)
+    return tuplesToDict(array)
+  }
+
+  private func tuplesToDict<K:Hashable, V, S:Sequence>(_ sequence: S)
+      -> Dictionary<K, V> where S.Iterator.Element == (K, V) {
+  
+    var result = Dictionary<K, V>(minimumCapacity: sequence.underestimatedCount)
+  
+    for (key, value) in sequence {
+      result[key] = value
+    }
+
+    return result
+  }
+}
+''')
 
 
 def snake_to_camel(snake_str):
@@ -180,28 +222,28 @@ def nvim_type_to_swift(nvim_type):
         return 'String'
 
     if nvim_type == 'Array':
-        return 'Nvim.Value'
+        return 'NvimApi.Value'
 
     if nvim_type == 'Dictionary':
-        return 'Nvim.Value'
+        return 'Dictionary<String, NvimApi.Value>'
 
     if nvim_type == 'Buffer':
-        return 'Nvim.Buffer'
+        return 'NvimApi.Buffer'
 
     if nvim_type == 'Window':
-        return 'Nvim.Window'
+        return 'NvimApi.Window'
 
     if nvim_type == 'Tabpage':
-        return 'Nvim.Tabpage'
+        return 'NvimApi.Tabpage'
 
     if nvim_type == 'Object':
-        return 'Nvim.Value'
+        return 'NvimApi.Value'
 
     if nvim_type.startswith('ArrayOf('):
         match = re.match(r'ArrayOf\((.*?)(?:, \d+)*\)', nvim_type)
         return '[{}]'.format(nvim_type_to_swift(match.group(1)))
 
-    return 'Nvim.Value'
+    return 'NvimApi.Value'
 
 
 def msgpack_to_swift(msgpack_value_name, type):
@@ -220,23 +262,29 @@ def msgpack_to_swift(msgpack_value_name, type):
     if type == 'String':
         return f'{msgpack_value_name}.stringValue'
 
-    if type == 'Nvim.Value':
+    if type == 'NvimApi.Value':
         return f'Optional({msgpack_value_name})'
 
-    if type in 'Nvim.Buffer':
-        return f'Nvim.Buffer({msgpack_value_name})'
+    if type in 'NvimApi.Buffer':
+        return f'NvimApi.Buffer({msgpack_value_name})'
 
-    if type in 'Nvim.Window':
-        return f'Nvim.Window({msgpack_value_name})'
+    if type in 'NvimApi.Window':
+        return f'NvimApi.Window({msgpack_value_name})'
 
-    if type in 'Nvim.Tabpage':
-        return f'Nvim.Tabpage({msgpack_value_name})'
+    if type in 'NvimApi.Tabpage':
+        return f'NvimApi.Tabpage({msgpack_value_name})'
+
+    if type.startswith('Dictionary<'):
+        return f'msgPackDictToSwift({msgpack_value_name}.dictionaryValue)'
+
+    if type.startswith('[Dictionary<'):
+        return f'msgPackArrayDictToSwift({msgpack_value_name}.arrayValue)'
 
     if type.startswith('['):
         element_type = re.match(r'\[(.*)\]', type).group(1)
         return f'{msgpack_value_name}.arrayValue?.flatMap({{ v in {msgpack_to_swift("v", element_type)} }})'
 
-    return 'Nvim.Value'
+    return 'NvimApi.Value'
 
 
 def swift_to_msgpack_value(name, type):
@@ -255,10 +303,13 @@ def swift_to_msgpack_value(name, type):
     if type == 'String':
         return f'.string({name})'
 
-    if type == 'Nvim.Value':
+    if type == 'Dictionary<String, NvimApi.Value>':
+        return f'.map({name}.mapToDict({{ (Value.string($0), $1) }}))'
+
+    if type == 'NvimApi.Value':
         return name
 
-    if type in ['Nvim.Buffer', 'Nvim.Window', 'Nvim.Tabpage']:
+    if type in ['NvimApi.Buffer', 'NvimApi.Window', 'NvimApi.Tabpage']:
         return f'.int(Int64({name}.handle))'
 
     if type.startswith('['):

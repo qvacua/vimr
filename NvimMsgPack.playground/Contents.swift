@@ -18,3 +18,9 @@ if nvim.getMode().value?.dictionaryValue?[.string("blocked")]?.boolValue == true
 }
 
 print(nvim.getMode())
+
+nvim.listBufs().value?.forEach { buf in
+    print(nvim.bufGetOption(buffer: buf, name: "buflisted", checkBlocked: false))
+}
+let curBuf = nvim.getCurrentBuf().value!
+print(nvim.bufGetOption(buffer: curBuf, name: "buflisted", checkBlocked: false))

@@ -216,7 +216,7 @@ public class NvimApi {
 
   @discardableResult
   public func checkBlocked<T>(_ fn: () -> NvimApi.Response<T>) -> NvimApi.Response<T> {
-    if self.getMode().value?.dictionaryValue?[.string("blocked")] == .bool(true) {
+    if self.getMode().value?["blocking"] == .bool(true) {
       return NvimApi.Response.failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked."))
     }
 
