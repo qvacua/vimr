@@ -11,11 +11,17 @@ extension NvimView {
   public struct Buffer: Equatable {
 
     public static func ==(lhs: Buffer, rhs: Buffer) -> Bool {
-      return lhs.handle == rhs.handle
+      guard lhs.handle == rhs.handle else {
+        return false
+      }
+
+      // Transient buffer active -> open a file -> the resulting buffer has the same handle, but different URL
+      return lhs.url == rhs.url
     }
 
     public let apiBuffer: NvimApi.Buffer
     public let url: URL?
+    public let type: String
 
     public let isDirty: Bool
     public let isCurrent: Bool
@@ -33,6 +39,10 @@ extension NvimView {
     }
 
     public var name: String? {
+      if self.type == "quickfix" {
+        return "Quickfix"
+      }
+
       return self.url?.lastPathComponent
     }
 

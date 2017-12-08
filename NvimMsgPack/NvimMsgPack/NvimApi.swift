@@ -56,7 +56,7 @@ public class NvimApi {
       return "\(Swift.type(of: self))(type: \(self.type), message: \"\(self.message)\")"
     }
 
-    init(_ message: String) {
+    public init(_ message: String) {
       self.type = .unknown
       self.message = message
     }

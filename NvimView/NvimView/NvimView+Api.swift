@@ -189,18 +189,27 @@ extension NvimView {
   }
 
   private func neoVimBuffer(for buf: NvimApi.Buffer, currentBuffer: NvimApi.Buffer?) -> NvimView.Buffer? {
-    guard let path = self.nvim.bufGetName(buffer: buf).value else {
-      return nil
-    }
-
-    guard let dirty = self.nvim.bufGetOption(buffer: buf, name: "mod").value?.boolValue else {
+    guard let info = self.nvim.getBufGetInfo(buffer: buf).value else {
       return nil
     }
 
     let current = buf == currentBuffer
+    guard let path = info["filename"]?.stringValue,
+          let dirty = info["modified"]?.boolValue,
+          let buftype = info["buftype"]?.stringValue,
+          let listed = info["buflisted"]?.boolValue
+      else {
+      return nil
+    }
+
+    guard listed else {
+      return nil
+    }
+    let url = path == "" || buftype != "" ? nil : URL(fileURLWithPath: path)
 
     return NvimView.Buffer(apiBuffer: buf,
-                           url: URL(fileURLWithPath: path),
+                           url: url,
+                           type: buftype,
                            isDirty: dirty,
                            isCurrent: current)
   }

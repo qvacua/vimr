@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1929B40A751BDA2882D4FC94 /* NvimViewObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B22A0CAD417EC3790F02 /* NvimViewObjects.swift */; };
+		1929B86897DAEFDBABAB1C14 /* NvimApiExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBD7F88AE4F01E626691 /* NvimApiExtension.swift */; };
 		4B2016EE1FD45EED0038528A /* NvimAutoCommandEvent.generated.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B2016EC1FD45EED0038528A /* NvimAutoCommandEvent.generated.m */; };
 		4B2016EF1FD45EED0038528A /* NvimAutoCommandEvent.generated.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B2016ED1FD45EED0038528A /* NvimAutoCommandEvent.generated.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B90F02D1FD2AFAE008A39E0 /* NvimUiBridgeProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B90F00F1FD2AFAC008A39E0 /* NvimUiBridgeProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -84,6 +85,7 @@
 
 /* Begin PBXFileReference section */
 		1929B22A0CAD417EC3790F02 /* NvimViewObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimViewObjects.swift; sourceTree = "<group>"; };
+		1929BBD7F88AE4F01E626691 /* NvimApiExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimApiExtension.swift; sourceTree = "<group>"; };
 		4B2016EC1FD45EED0038528A /* NvimAutoCommandEvent.generated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NvimAutoCommandEvent.generated.m; sourceTree = "<group>"; };
 		4B2016ED1FD45EED0038528A /* NvimAutoCommandEvent.generated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NvimAutoCommandEvent.generated.h; sourceTree = "<group>"; };
 		4B90F0041FD2AF59008A39E0 /* NvimView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NvimView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -215,6 +217,7 @@
 				4B90F0221FD2AFAD008A39E0 /* TextDrawer.m */,
 				4B90F0771FD2BA7B008A39E0 /* Logger.h */,
 				1929B22A0CAD417EC3790F02 /* NvimViewObjects.swift */,
+				1929BBD7F88AE4F01E626691 /* NvimApiExtension.swift */,
 			);
 			path = NvimView;
 			sourceTree = "<group>";
@@ -410,6 +413,7 @@
 				4B90F03A1FD2AFAE008A39E0 /* NvimView+Key.swift in Sources */,
 				4B90F0361FD2AFAE008A39E0 /* NvimViewDelegate.swift in Sources */,
 				1929B40A751BDA2882D4FC94 /* NvimViewObjects.swift in Sources */,
+				1929B86897DAEFDBABAB1C14 /* NvimApiExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

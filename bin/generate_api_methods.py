@@ -157,7 +157,7 @@ extension NvimApi.Tabpage {
   }
 }
 
-private func msgPackDictToSwift(_ dict: Dictionary<NvimApi.Value, NvimApi.Value>?) -> Dictionary<String, NvimApi.Value>? {
+fileprivate func msgPackDictToSwift(_ dict: Dictionary<NvimApi.Value, NvimApi.Value>?) -> Dictionary<String, NvimApi.Value>? {
   return dict?.flatMapToDict { k, v in
     guard let strKey = k.stringValue else {
       return nil
@@ -167,29 +167,29 @@ private func msgPackDictToSwift(_ dict: Dictionary<NvimApi.Value, NvimApi.Value>
   }
 }
 
-private func msgPackArrayDictToSwift(_ array: [NvimApi.Value]?) -> [Dictionary<String, NvimApi.Value>]? {
+fileprivate func msgPackArrayDictToSwift(_ array: [NvimApi.Value]?) -> [Dictionary<String, NvimApi.Value>]? {
   return array?
     .flatMap { v in v.dictionaryValue }
     .flatMap { d in msgPackDictToSwift(d) }
 }
-  
+
 extension Dictionary {
 
-  func mapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)) rethrows -> Dictionary<K, V> {
+  fileprivate func mapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)) rethrows -> Dictionary<K, V> {
     let array = try self.map(transform)
     return tuplesToDict(array)
   }
-  
-  func flatMapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows -> Dictionary<K, V> {
+
+  fileprivate func flatMapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows -> Dictionary<K, V> {
     let array = try self.flatMap(transform)
     return tuplesToDict(array)
   }
 
-  private func tuplesToDict<K:Hashable, V, S:Sequence>(_ sequence: S)
+  fileprivate func tuplesToDict<K:Hashable, V, S:Sequence>(_ sequence: S)
       -> Dictionary<K, V> where S.Iterator.Element == (K, V) {
-  
+
     var result = Dictionary<K, V>(minimumCapacity: sequence.underestimatedCount)
-  
+
     for (key, value) in sequence {
       result[key] = value
     }

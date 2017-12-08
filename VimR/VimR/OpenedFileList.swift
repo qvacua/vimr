@@ -54,13 +54,12 @@ class BuffersList: NSView,
 
         self.usesTheme = state.appearance.usesTheme
 
-        let buffers = state.buffers.removingDuplicatesPreservingFromBeginning()
-        if self.buffers == buffers && !themeChanged && self.showsFileIcon == state.appearance.showsFileIcon {
+        if self.buffers == state.buffers && !themeChanged && self.showsFileIcon == state.appearance.showsFileIcon {
           return
         }
 
         self.showsFileIcon = state.appearance.showsFileIcon
-        self.buffers = buffers
+        self.buffers = state.buffers
         self.bufferList.reloadData()
         self.adjustFileViewWidth()
       })
