@@ -2,6 +2,9 @@
 
 * GH-571: Bugfix: Read-only buffers are considered as modified. For example NERDTree buffers won't trigger the "Please save first" dialog anymore.
 * GH-387: Show all buffers (the same as `:buffers`) in the buffers list
+* Some High Sierra related fixes
+    - Do not crash on launch
+    - Too narrow entries in the file browser and buffers list.
 
 # 0.20.1-244
 
