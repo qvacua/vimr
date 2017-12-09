@@ -52,8 +52,11 @@ public class Connection {
         locked(with: condition) { condition.broadcast() }
       }
     }
-    self.stopped = true
-    self.session.disconnectAndStop()
+
+    locked(with: self.sessionLock) {
+      self.stopped = true
+      self.session.disconnectAndStop()
+    }
   }
 
   @discardableResult
@@ -63,6 +66,8 @@ public class Connection {
                       params: [Value],
                       expectsReturnValue: Bool)
       -> MsgPackRpc.Response {
+
+
 
     let packed = pack(
       [
@@ -74,18 +79,25 @@ public class Connection {
     )
 
     guard expectsReturnValue else {
-      self.session.write(packed)
-      return self.nilResponse(with: msgid)
+      return locked(with: self.sessionLock) {
+        if !self.stopped {
+          self.session.write(packed)
+        }
+
+        return self.nilResponse(with: msgid)
+      }
     }
 
     let condition = NSCondition()
     locked(with: self.conditionsLock) { self.conditions[msgid] = condition }
 
-    if self.stopped {
-      return self.nilResponse(with: msgid)
-    }
+    locked(with: self.sessionLock) {
+      if self.stopped {
+        return
+      }
 
-    self.session.write(packed)
+      self.session.write(packed)
+    }
 
     locked(with: condition) {
       while !self.stopped && self.responses[msgid] == nil && condition.wait(until: Date(timeIntervalSinceNow: 5)) {}
@@ -113,6 +125,7 @@ public class Connection {
   private var conditions: [UInt32: NSCondition] = [:]
   private let conditionsLock = NSRecursiveLock()
 
+  private let sessionLock = NSRecursiveLock()
   private var stopped = false
 
   private func nilResponse(with msgid: UInt32) -> MsgPackRpc.Response {

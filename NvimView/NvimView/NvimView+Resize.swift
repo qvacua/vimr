@@ -59,10 +59,6 @@ extension NvimView {
 
     self.nvim.connect()
 
-    self.nvim.setOption(name: "mouse", value: .string("a"))
-    self.nvim.setOption(name: "title", value: .bool(true))
-    self.nvim.setOption(name: "termguicolors", value: .bool(true))
-
     if noErrorDuringInitialization == false {
       self.logger.fault("There was an error launching neovim.")
 

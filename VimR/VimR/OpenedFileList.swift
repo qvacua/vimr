@@ -100,13 +100,13 @@ class BuffersList: NSView,
   }
 
   fileprivate func adjustFileViewWidth() {
-    let maxWidth = self.buffers.reduce(CGFloat(0)) { (curMaxWidth, buffer) in
+    let maxWidth = self.buffers.reduce(CGFloat(100)) { (curMaxWidth, buffer) in
       return max(self.text(for: buffer).size().width, curMaxWidth)
     }
 
     let column = self.bufferList.tableColumns[0]
-    column.minWidth = maxWidth + ThemedTableCell.widthWithoutText
-    column.maxWidth = column.minWidth
+    // If we set the minWidth and maxWidth here, the column does not get resized... Dunno why.
+    column.width = maxWidth + ThemedTableCell.widthWithoutText
   }
 }
 
@@ -136,12 +136,14 @@ extension BuffersList {
 extension BuffersList {
 
   public func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
-    return tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("buffer-row-view"), owner: self) as? ThemedTableRow
-           ?? ThemedTableRow(withIdentifier: "buffer-row-view", themedView: self)
+    return tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("buffer-row-view"), owner: self)
+           as? ThemedTableRow ?? ThemedTableRow(withIdentifier: "buffer-row-view", themedView: self)
   }
 
   func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-    let cachedCell = (tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("buffer-cell-view"), owner: self) as? ThemedTableCell)?.reset()
+    let cachedCell = (tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("buffer-cell-view"), owner: self)
+                     as? ThemedTableCell)?.reset()
+
     let cell = cachedCell ?? ThemedTableCell(withIdentifier: "buffer-cell-view")
 
     let buffer = self.buffers[row]

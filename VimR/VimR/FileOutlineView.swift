@@ -94,6 +94,7 @@ class FileOutlineView: NSOutlineView,
   }
 
   override func reloadData() {
+    self.cells.removeAll()
     self.widths.removeAll()
     super.reloadData()
   }
@@ -135,6 +136,7 @@ class FileOutlineView: NSOutlineView,
   fileprivate var root: FileBrowserItem
 
   fileprivate var widths = [String: CGFloat]()
+  fileprivate var cells = [String: ThemedTableCell]()
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -179,7 +181,12 @@ class FileOutlineView: NSOutlineView,
       .filter { (_, fileBrowserItem) in newPreparedChildren.contains(fileBrowserItem) == false }
       .map { (idx, _) in idx }
 
-    indicesToRemove.forEach { self.widths.removeValue(forKey: curPreparedChildren[$0].url.path) }
+    indicesToRemove.forEach { index in
+      let path = curPreparedChildren[index].url.path
+
+      self.cells.removeValue(forKey: path)
+      self.widths.removeValue(forKey: path)
+    }
 
     fileLog.debug("\(fileBrowserItem): \(curPreparedChildren) vs. \(indicesToRemove)")
 
@@ -293,15 +300,48 @@ extension FileOutlineView {
   }
 
   func outlineView(_: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
+    let level = self.level(forItem: item) + 2
+    defer { self.adjustColumnWidths() }
+
     if item == nil {
-      return self.prepare(self.root.children)[index]
+      let child = self.prepare(self.root.children)[index]
+
+      let cell = self.cell(forItem: child)
+      self.cells[child.url.path] = cell
+      self.widths[child.url.path] = self.cellWidth(for: cell, level: level)
+
+      return child
     }
 
     guard let fileBrowserItem = item as? FileBrowserItem else {
       preconditionFailure("Should not happen")
     }
 
-    return self.prepare(fileBrowserItem.children)[index]
+    let child = self.prepare(fileBrowserItem.children)[index]
+
+    let cell = self.cell(forItem: child)
+    self.cells[child.url.path] = cell
+    self.widths[child.url.path] = self.cellWidth(for: cell, level: level)
+
+    return child
+  }
+
+  private func cell(forItem item: FileBrowserItem) -> ThemedTableCell {
+    if let existingCell = self.cells[item.url.path] {
+      return existingCell
+    }
+
+    let cell = ThemedTableCell(withIdentifier: "file-cell-view")
+
+    cell.isDir = item.isDir
+    cell.text = item.url.lastPathComponent
+
+    if self.showsFileIcon {
+      let icon = FileUtils.icon(forUrl: item.url)
+      cell.image = cell.isHidden ? icon?.tinting(with: NSColor.white.withAlphaComponent(0.4)) : icon
+    }
+
+    return cell
   }
 
   func outlineView(_: NSOutlineView, isItemExpandable item: Any) -> Bool {
@@ -350,23 +390,7 @@ extension FileOutlineView {
       return nil
     }
 
-    let cell = (self.makeView(withIdentifier: NSUserInterfaceItemIdentifier("file-cell-view"), owner: self) as? ThemedTableCell)?.reset()
-               ?? ThemedTableCell(withIdentifier: "file-cell-view")
-
-    cell.isDir = fileBrowserItem.isDir
-    cell.text = fileBrowserItem.url.lastPathComponent
-
-    guard self.showsFileIcon else {
-      return cell
-    }
-
-    let icon = FileUtils.icon(forUrl: fileBrowserItem.url)
-    cell.image = fileBrowserItem.isHidden ? icon?.tinting(with: NSColor.white.withAlphaComponent(0.4)) : icon
-
-    self.widths[fileBrowserItem.url.path] = self.cellWidth(for: cell, level: self.level(forItem: item))
-    self.adjustColumnWidths()
-
-    return cell
+    return self.cells[fileBrowserItem.url.path]
   }
 
   func outlineView(_: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
