@@ -104,29 +104,29 @@ class Context {
     self.stateSubject.onCompleted()
   }
 
-  fileprivate let stateSubject = PublishSubject<AppState>()
-  fileprivate let scheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
-  fileprivate let disposeBag = DisposeBag()
+  private let stateSubject = PublishSubject<AppState>()
+  private let scheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
+  private let disposeBag = DisposeBag()
 
-  fileprivate var appState: AppState
+  private var appState: AppState
 
-  fileprivate let prefService = PrefService()
+  private let prefService = PrefService()
 
-  fileprivate func emitAppState(_ mainWindow: UuidState<MainWindow.State>) {
+  private func emitAppState(_ mainWindow: UuidState<MainWindow.State>) {
     self.appState.mainWindows[mainWindow.uuid] = mainWindow.payload
     self.stateSubject.onNext(self.appState)
 
     self.cleanUpAppState()
   }
 
-  fileprivate func emitAppState(_ appState: AppState) {
+  private func emitAppState(_ appState: AppState) {
     self.appState = appState
     self.stateSubject.onNext(self.appState)
 
     self.cleanUpAppState()
   }
 
-  fileprivate func cleanUpAppState() {
+  private func cleanUpAppState() {
     self.appState.mainWindows.keys.forEach { uuid in
       self.appState.mainWindows[uuid]?.cwdToSet = nil
       self.appState.mainWindows[uuid]?.currentBufferToSet = nil
@@ -135,20 +135,20 @@ class Context {
     }
   }
 
-  fileprivate func actionSourceForAppState<ActionType>() -> Observable<StateActionPair<AppState, ActionType>> {
+  private func actionSourceForAppState<ActionType>() -> Observable<StateActionPair<AppState, ActionType>> {
     return self.actionEmitter.observable
       .mapOmittingNil { $0 as? ActionType }
       .map { self.appStateActionPair(for: $0) }
   }
 
-  fileprivate func actionSourceForMainWindow<ActionType>()
+  private func actionSourceForMainWindow<ActionType>()
       -> Observable<StateActionPair<UuidState<MainWindow.State>, ActionType>> {
     return self.actionEmitter.observable
       .mapOmittingNil { $0 as? UuidAction<ActionType> }
       .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
   }
 
-  fileprivate func prefStateSource<ActionType>(
+  private func prefStateSource<ActionType>(
     by reduce: @escaping (StateActionPair<AppState, ActionType>) -> StateActionPair<AppState, ActionType>,
     prefService: PrefService
   ) -> Observable<AppState> {
@@ -159,11 +159,11 @@ class Context {
       .map { $0.state }
   }
 
-  fileprivate func appStateActionPair<ActionType>(for action: ActionType) -> StateActionPair<AppState, ActionType> {
+  private func appStateActionPair<ActionType>(for action: ActionType) -> StateActionPair<AppState, ActionType> {
     return StateActionPair(state: self.appState, action: action, modified: false)
   }
 
-  fileprivate func mainWindowStateActionPair<ActionType>(for action: UuidAction<ActionType>)
+  private func mainWindowStateActionPair<ActionType>(for action: UuidAction<ActionType>)
       -> StateActionPair<UuidState<MainWindow.State>, ActionType>? {
     guard let mainWindowState = self.appState.mainWindows[action.uuid] else {
       return nil
