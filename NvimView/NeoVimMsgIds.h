@@ -53,7 +53,6 @@ typedef NS_ENUM(NSInteger, NeoVimAgentMsgId) {
     NeoVimAgentMsgIdResize,
     NeoVimAgentMsgIdScroll,
 
-    NeoVimAgentMsgIdGetPwd,
     NeoVimAgentMsgIdGetEscapeFileNames,
 
     NeoVimAgentMsgIdFocusGained,
