@@ -180,8 +180,8 @@ extension NvimView {
 
   public func stop() {
     self.bridgeLogger.hr()
-    self.agent.quit()
     self.nvim.disconnect()
+    self.agent.quit()
 
     gui.async {
       self.waitForNeoVimToQuit()
