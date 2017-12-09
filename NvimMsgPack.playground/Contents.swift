@@ -11,7 +11,7 @@ guard let nvim = NvimApi(at: "/tmp/nvim.sock") else {
 
 nvim.connect()
 
-if nvim.getMode().value?.dictionaryValue?[.string("blocked")]?.boolValue == true {
+if nvim.getMode().value?["blocking"]?.boolValue == true {
   print("blocked!")
 } else {
   print("not blocked!")
