@@ -35,7 +35,7 @@
 		4B90F0441FD2AFAE008A39E0 /* MMCoreTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B90F0261FD2AFAD008A39E0 /* MMCoreTextView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		4B90F0451FD2AFAE008A39E0 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0271FD2AFAD008A39E0 /* Logger.swift */; };
 		4B90F0461FD2AFAE008A39E0 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0281FD2AFAD008A39E0 /* Grid.swift */; };
-		4B90F0481FD2AFAE008A39E0 /* NeoVimUiBridgeProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F02A1FD2AFAD008A39E0 /* NeoVimUiBridgeProtocol.m */; };
+		4B90F0481FD2AFAE008A39E0 /* NvimUiBridgeProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F02A1FD2AFAD008A39E0 /* NvimUiBridgeProtocol.m */; };
 		4B90F0491FD2AFAE008A39E0 /* CellAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F02B1FD2AFAD008A39E0 /* CellAttributes.swift */; };
 		4B90F04A1FD2AFAE008A39E0 /* NvimAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F02C1FD2AFAE008A39E0 /* NvimAgent.m */; };
 		4B90F0521FD2AFD3008A39E0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0511FD2AFD3008A39E0 /* main.m */; };
@@ -126,7 +126,7 @@
 		4B90F0261FD2AFAD008A39E0 /* MMCoreTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCoreTextView.h; sourceTree = "<group>"; };
 		4B90F0271FD2AFAD008A39E0 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		4B90F0281FD2AFAD008A39E0 /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
-		4B90F02A1FD2AFAD008A39E0 /* NeoVimUiBridgeProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimUiBridgeProtocol.m; sourceTree = "<group>"; };
+		4B90F02A1FD2AFAD008A39E0 /* NvimUiBridgeProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NvimUiBridgeProtocol.m; sourceTree = "<group>"; };
 		4B90F02B1FD2AFAD008A39E0 /* CellAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellAttributes.swift; sourceTree = "<group>"; };
 		4B90F02C1FD2AFAE008A39E0 /* NvimAgent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NvimAgent.m; sourceTree = "<group>"; };
 		4B90F04F1FD2AFD3008A39E0 /* NvimServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NvimServer; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -214,7 +214,7 @@
 				4B2016EC1FD45EED0038528A /* NvimAutoCommandEvent.generated.m */,
 				4B90F01D1FD2AFAC008A39E0 /* NvimObjectsExtensions.swift */,
 				4B90F00F1FD2AFAC008A39E0 /* NvimUiBridgeProtocol.h */,
-				4B90F02A1FD2AFAD008A39E0 /* NeoVimUiBridgeProtocol.m */,
+				4B90F02A1FD2AFAD008A39E0 /* NvimUiBridgeProtocol.m */,
 				4B90F0101FD2AFAC008A39E0 /* NvimView.swift */,
 				4B90F01B1FD2AFAC008A39E0 /* NvimView+Api.swift */,
 				4B90F0141FD2AFAC008A39E0 /* NvimView+Dragging.swift */,
@@ -405,7 +405,7 @@
 			files = (
 				4B90F0381FD2AFAE008A39E0 /* ColorUtils.swift in Sources */,
 				4B90F03E1FD2AFAE008A39E0 /* MMCoreTextView.m in Sources */,
-				4B90F0481FD2AFAE008A39E0 /* NeoVimUiBridgeProtocol.m in Sources */,
+				4B90F0481FD2AFAE008A39E0 /* NvimUiBridgeProtocol.m in Sources */,
 				4B90F03F1FD2AFAE008A39E0 /* NvimView+Draw.swift in Sources */,
 				4B90F02F1FD2AFAE008A39E0 /* NvimView+Resize.swift in Sources */,
 				4B90F0341FD2AFAE008A39E0 /* CocoaExtensions.swift in Sources */,
