@@ -178,7 +178,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 }
 
 - (void)launchNeoVimUsingLoginShell {
-  NSString *shellPath = [NSProcessInfo processInfo].environment[@"SHELL"];
+  __auto_type *selfEnv = [NSProcessInfo processInfo].environment;
+
+  NSString *shellPath = selfEnv[@"SHELL"];
   if (shellPath == nil) {
     shellPath = @"/bin/bash";
   }
@@ -202,10 +204,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
   _neoVimServerTask.standardError = nullFileHandle;
 #endif
 
-  __auto_type socketName = [NSString stringWithFormat:@"vimr_%@.sock", _uuid];
-  __auto_type listenAddress = [NSTemporaryDirectory() stringByAppendingPathComponent:socketName];
+  __auto_type listenAddress = [NSTemporaryDirectory() stringByAppendingPathComponent:
+      [NSString stringWithFormat:@"vimr_%@.sock", _uuid]];
 
-  __auto_type env = [NSMutableDictionary dictionaryWithDictionary:NSProcessInfo.processInfo.environment];
+  __auto_type env = [NSMutableDictionary dictionaryWithDictionary:selfEnv];
   env[@"NVIM_LISTEN_ADDRESS"] = listenAddress;
 
   _neoVimServerTask.environment = env;
