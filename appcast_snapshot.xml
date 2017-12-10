@@ -7,22 +7,20 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-247</title>
+      <title>SNAPSHOT-248</title>
       <description><![CDATA[
-    <ul>
-<li>GH-553: Bugfix: Do not crash when there's an error in <code>init.vim</code>.</li>
-</ul>
+    <p>GH-583: Bugfix: The latest snapshots crash when <code>tcsh</code> or <code>fish</code> is used as default shell.</p>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/247
+        https://github.com/qvacua/vimr/releases/tag/snapshot/248
       </releaseNotesLink>
-      <pubDate>2017-12-10T13:39:21.178131</pubDate>
+      <pubDate>2017-12-10T18:03:46.923110</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/247/VimR-SNAPSHOT-247.tar.bz2"
-                 sparkle:version="247"
-                 sparkle:shortVersionString="SNAPSHOT-247"
-                 sparkle:dsaSignature="MC0CFQCvAQp3uJZ3YNzspqFWM3u23hHlTQIUPL/r8dRo+/G4ZFKV6VWQX0H0cAw="
-                 length="14731761"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/248/VimR-SNAPSHOT-248.tar.bz2"
+                 sparkle:version="248"
+                 sparkle:shortVersionString="SNAPSHOT-248"
+                 sparkle:dsaSignature="MC0CFGxx4Erl+k2MTnZbXg/mh3vAUH8IAhUA2Vaod7jeEjYBD8CfW1MB46i2Y7A="
+                 length="14729512"
                  type="application/octet-stream"/>
     </item>
   </channel>
