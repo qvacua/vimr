@@ -202,17 +202,20 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
   _neoVimServerTask.standardError = nullFileHandle;
 #endif
 
+  __auto_type socketName = [NSString stringWithFormat:@"vimr_%@.sock", _uuid];
+  __auto_type listenAddress = [NSTemporaryDirectory() stringByAppendingPathComponent:socketName];
+
+  __auto_type env = [NSMutableDictionary dictionaryWithDictionary:NSProcessInfo.processInfo.environment];
+  env[@"NVIM_LISTEN_ADDRESS"] = listenAddress;
+
+  _neoVimServerTask.environment = env;
   _neoVimServerTask.standardInput = inputPipe;
   _neoVimServerTask.currentDirectoryPath = self.cwd == nil ? NSHomeDirectory() : self.cwd.path;
   _neoVimServerTask.launchPath = shellPath;
   _neoVimServerTask.arguments = shellArgs;
   [_neoVimServerTask launch];
 
-  __auto_type socketName = [NSString stringWithFormat:@"vimr_%@.sock", _uuid];
-  __auto_type listenAddress = [[NSURL fileURLWithPath:NSTemporaryDirectory()] URLByAppendingPathComponent:socketName];
-
-  __auto_type *cmd = [NSString stringWithFormat:@"NVIM_LISTEN_ADDRESS=%@ exec \"%@\" '%@' '%@'",
-                                                listenAddress.path,
+  __auto_type *cmd = [NSString stringWithFormat:@"exec \"%@\" '%@' '%@'",
                                                 [self neoVimServerExecutablePath],
                                                 [self localServerName],
                                                 [self remoteServerName]];
