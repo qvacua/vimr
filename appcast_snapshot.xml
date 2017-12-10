@@ -7,24 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-246</title>
+      <title>SNAPSHOT-247</title>
       <description><![CDATA[
     <ul>
-<li>Some High Sierra related fixes</li>
-<li>Do not crash on launch</li>
-<li>Too narrow entries in the file browser and buffers list.</li>
+<li>GH-553: Bugfix: Do not crash when there's an error in <code>init.vim</code>.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/246
+        https://github.com/qvacua/vimr/releases/tag/snapshot/247
       </releaseNotesLink>
-      <pubDate>2017-12-09T17:57:47.512444</pubDate>
+      <pubDate>2017-12-10T13:39:21.178131</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/246/VimR-SNAPSHOT-246.tar.bz2"
-                 sparkle:version="246"
-                 sparkle:shortVersionString="SNAPSHOT-246"
-                 sparkle:dsaSignature="MC0CFQDzBKxwPeP9IlKVvTwZqbQTR6gFAwIUQN9zAHmttTpkoH/OCs+//tw12yk="
-                 length="14730787"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/247/VimR-SNAPSHOT-247.tar.bz2"
+                 sparkle:version="247"
+                 sparkle:shortVersionString="SNAPSHOT-247"
+                 sparkle:dsaSignature="MC0CFQCvAQp3uJZ3YNzspqFWM3u23hHlTQIUPL/r8dRo+/G4ZFKV6VWQX0H0cAw="
+                 length="14731761"
                  type="application/octet-stream"/>
     </item>
   </channel>

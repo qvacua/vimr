@@ -250,25 +250,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
   return !_isInitErrorPresent;
 }
 
-- (NSURL *)pwd {
-  NSData *data = [self sendMessageWithId:NeoVimAgentMsgIdGetPwd data:nil expectsReply:YES];
-  if (data == nil) {
-    return [NSURL fileURLWithPath:NSHomeDirectory()];
-  }
-
-  NSString *path = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-  if (path == nil) {
-    return [NSURL fileURLWithPath:NSHomeDirectory()];
-  }
-
-  NSURL *pwd = [NSURL fileURLWithPath:path];
-  if (pwd == nil) {
-    return [NSURL fileURLWithPath:NSHomeDirectory()];
-  }
-
-  return pwd;
-}
-
 - (void)vimInput:(NSString *)string {
   NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
   [self sendMessageWithId:NeoVimAgentMsgIdInput data:data expectsReply:NO];

@@ -67,8 +67,6 @@ public class Connection {
                       expectsReturnValue: Bool)
       -> MsgPackRpc.Response {
 
-
-
     let packed = pack(
       [
         .uint(UInt64(type)),

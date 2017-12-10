@@ -28,6 +28,7 @@
 		4B9E33801FCB47F900E0C4BC /* Result.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Result.h; sourceTree = "<group>"; };
 		4B9E33811FCB47F900E0C4BC /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		4B9E33821FCB47F900E0C4BC /* ResultProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultProtocol.swift; sourceTree = "<group>"; };
+		4BC8843F1FDC6A45000E95A2 /* NvimMsgPack.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = NvimMsgPack.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +46,7 @@
 		4B9E33621FCB475600E0C4BC = {
 			isa = PBXGroup;
 			children = (
+				4BC8843F1FDC6A45000E95A2 /* NvimMsgPack.playground */,
 				4B9E336E1FCB475600E0C4BC /* NvimMsgPack */,
 				4B9E336D1FCB475600E0C4BC /* Products */,
 				4B9E33771FCB476D00E0C4BC /* Frameworks */,
@@ -216,7 +218,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 246;
+				CURRENT_PROJECT_VERSION = 247;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -276,7 +278,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 246;
+				CURRENT_PROJECT_VERSION = 247;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -306,7 +308,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 246;
+				DYLIB_CURRENT_VERSION = 247;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = NvimMsgPack/Info.plist;
@@ -329,7 +331,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 246;
+				DYLIB_CURRENT_VERSION = 247;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = NvimMsgPack/Info.plist;

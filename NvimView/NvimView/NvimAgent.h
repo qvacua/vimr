@@ -31,8 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (bool)runLocalServerAndNeoVimWithWidth:(NSInteger)width height:(NSInteger)height;
 
-- (NSURL *)pwd;
-
 - (void)vimInput:(NSString *)string;
 - (void)vimInputMarkedText:(NSString *)markedText;
 - (void)deleteCharacters:(NSInteger)count;

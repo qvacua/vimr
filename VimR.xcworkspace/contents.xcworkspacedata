@@ -11,9 +11,6 @@
       location = "group:MsgPackRpc/MsgPackRpc.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:NvimMsgPack.playground">
-   </FileRef>
-   <FileRef
       location = "group:NvimMsgPack/NvimMsgPack.xcodeproj">
    </FileRef>
 </Workspace>

@@ -860,23 +860,6 @@ void neovim_delete(void **argv) {
   });
 }
 
-void neovim_pwd(void **argv) {
-  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
-    char_u *temp = xmalloc(MAXPATHL);
-    if (os_dirname(temp, MAXPATHL) == FAIL) {
-      xfree(temp);
-      return nil;
-    }
-
-    NSString *pwd = [NSString stringWithCString:(const char *) temp encoding:NSUTF8StringEncoding];
-    xfree(temp);
-
-    NSData *resultData = [NSKeyedArchiver archivedDataWithRootObject:pwd];
-
-    return resultData;
-  });
-}
-
 void neovim_focus_gained(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     const bool *values = data.bytes;
