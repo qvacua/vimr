@@ -57,7 +57,7 @@ extension NvimView {
     self.logger.info("=== Starting neovim...")
     let noErrorDuringInitialization = self.uiClient.runLocalServerAndNeoVim(withWidth: size.width, height: size.height)
 
-    self.nvim.connect()
+    try? self.nvim.connect()
 
     if noErrorDuringInitialization == false {
       self.logger.fault("There was an error launching neovim.")

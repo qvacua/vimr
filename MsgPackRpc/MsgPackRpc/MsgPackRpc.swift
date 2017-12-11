@@ -24,6 +24,11 @@ public struct Response {
 
 public class Connection {
 
+  public struct Error: Swift.Error {
+
+    let message: String
+  }
+
   public var notificationCallback: ((MessageType, String, [Value]) -> Void)?
   public var unknownMessageCallback: (([Value]) -> Void)?
   public var errorCallback: ((Value) -> Void)?
@@ -42,8 +47,12 @@ public class Connection {
     self.init(with: session)
   }
 
-  public func run() {
-    self.session.connectAndRun()
+  public func run() throws {
+    guard let error = self.session.connectAndRun() else {
+      return
+    }
+
+    throw Error(message: error.localizedDescription)
   }
 
   public func stop() {

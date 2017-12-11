@@ -151,8 +151,8 @@ public class NvimApi {
       self.connection = connection
     }
 
-    public func run() {
-      self.connection.run()
+    public func run() throws {
+      try self.connection.run()
     }
 
     public func stop() {
@@ -206,8 +206,8 @@ public class NvimApi {
     self.session = session
   }
 
-  public func connect() {
-    self.session.run()
+  public func connect() throws {
+    try self.session.run()
   }
 
   public func disconnect() {

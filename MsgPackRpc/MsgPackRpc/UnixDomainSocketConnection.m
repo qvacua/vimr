@@ -85,10 +85,12 @@ static void socket_call_back(
   close(_native_socket);
 }
 
-- (void)connectAndRun {
+- (NSError *)connectAndRun {
   if ((_native_socket = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
     NSLog(@"Error: Unix domain socket NULL!");
-    [NSException raise:@"UnixDomainSocketConnectionException" format:@"Unix domain socket NULL!"];
+    return [NSError errorWithDomain:NSPOSIXErrorDomain code:-1 userInfo:@{
+        NSLocalizedDescriptionKey: @"Unix domain socket is NULL.",
+    }];
   }
 
   _sockaddr.sun_family = AF_UNIX;
@@ -96,7 +98,9 @@ static void socket_call_back(
   if (connect(_native_socket, (struct sockaddr *) &_sockaddr, (socklen_t) SUN_LEN(&_sockaddr)) == -1) {
     NSLog(@"Error: Could not connect to the socket!");
     close(_native_socket);
-    [NSException raise:@"UnixDomainSocketConnectionException" format:@"Could not connect to socket!"];
+    return [NSError errorWithDomain:NSPOSIXErrorDomain code:-1 userInfo:@{
+        NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Could not connect to socket %s", _sockaddr.sun_path]
+    }];
   }
 
   CFSocketContext context;
@@ -117,12 +121,16 @@ static void socket_call_back(
   if (_socket == nil) {
     NSLog(@"Error: CFSocket is NULL!");
     close(_native_socket);
-    [NSException raise:@"UnixDomainSocketConnectionException" format:@"CFSocket is NULL!"];
+    return [NSError errorWithDomain:NSPOSIXErrorDomain code:-1 userInfo:@{
+        NSLocalizedDescriptionKey: [NSString stringWithFormat:@"CFSocket is NULL for %s", _sockaddr.sun_path]
+    }];
   }
 
   _run_loop_source = CFSocketCreateRunLoopSource(NULL, _socket, 0);
   _thread = [[NSThread alloc] initWithTarget:self selector:@selector(threadMain) object:nil];
   [_thread start];
+
+  return nil;
 }
 
 - (void)disconnectAndStop {
@@ -140,11 +148,11 @@ static void socket_call_back(
 }
 
 - (CFSocketError)writeData:(NSData *)data {
-  if (!CFSocketIsValid(_socket)) {
-    NSLog(@"Socket invalid, but trying to send %@", data);
+  if (_socket == NULL || !CFSocketIsValid(_socket)) {
+    NSLog(@"Socket NULL or invalid, but trying to send %@", data);
     return kCFSocketError;
   }
-  
+
   return CFSocketSendData(_socket, NULL, (__bridge CFDataRef) data, _timeout);
 }
 
