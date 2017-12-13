@@ -51,7 +51,7 @@ extension NvimView {
   }
 
   public func newTab() {
-    self.exec(command: "tabe")
+    self.nvim.command(command: "tabe", expectsReturnValue: false)
   }
 
   public func `open`(urls: [URL]) {
@@ -101,41 +101,35 @@ extension NvimView {
       }
     }
 
-    self.nvim.command(command: "tab sb \(buffer.handle)")
+    self.nvim.command(command: "tab sb \(buffer.handle)", expectsReturnValue: false)
   }
 
   /// Closes the current window.
   public func closeCurrentTab() {
     // We don't have to wait here even when neovim quits since we wait in gui.async() block in neoVimStopped().
-    self.exec(command: "q")
+    self.nvim.command(command: "q", expectsReturnValue: false)
   }
 
   public func saveCurrentTab() {
-    self.exec(command: "w")
+    self.nvim.command(command: "w", expectsReturnValue: false)
   }
 
   public func saveCurrentTab(url: URL) {
-    let path = url.path
-    guard let escapedFileName = self.uiClient.escapedFileName(path) else {
-      self.logger.fault("Escaped file name returned nil.")
-      return
-    }
-
-    self.exec(command: "w \(escapedFileName)")
+    self.nvim.command(command: "w \(url.path)", expectsReturnValue: false)
   }
 
   public func closeCurrentTabWithoutSaving() {
-    self.exec(command: "q!")
+    self.nvim.command(command: "q!", expectsReturnValue: false)
   }
 
   public func quitNeoVimWithoutSaving() {
-    self.exec(command: "qa!")
+    self.nvim.command(command: "qa!", expectsReturnValue: false)
     self.delegate?.neoVimStopped()
     self.waitForNeoVimToQuit()
   }
 
   public func vimOutput(of command: String) -> String {
-    return self.nvim.commandOutput(str: command) ?? ""
+    return self.nvim.commandOutput(str: command).value ?? ""
   }
 
   public func cursorGo(to position: Position) {
@@ -161,31 +155,8 @@ extension NvimView {
           && self.uiClient.neoVimQuitCondition.wait(until: Date(timeIntervalSinceNow: neoVimQuitTimeout)) {}
   }
 
-  /**
-   Does the following
-   - normal mode: `:command<CR>`
-   - else: `:<Esc>:command<CR>`
-
-   We don't use UiClient.vimCommand because if we do for example "e /some/file"
-   and its swap file already exists, then NeoVimServer spins and become unresponsive.
-  */
-  private func exec(command cmd: String) {
-    switch self.mode {
-    case .normal:
-      self.uiClient.vimInput(":\(cmd)<CR>")
-    default:
-      self.uiClient.vimInput("<Esc>:\(cmd)<CR>")
-    }
-  }
-
   private func `open`(_ url: URL, cmd: String) {
-    let path = url.path
-    guard let escapedFileName = self.uiClient.escapedFileName(path) else {
-      self.logger.fault("Escaped file name returned nil.")
-      return
-    }
-
-    self.exec(command: "\(cmd) \(escapedFileName)")
+    self.nvim.command(command: "\(cmd) \(url.path)", expectsReturnValue: false)
   }
 
   private func neoVimBuffer(for buf: NvimApi.Buffer, currentBuffer: NvimApi.Buffer?) -> NvimView.Buffer? {
