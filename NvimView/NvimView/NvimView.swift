@@ -133,7 +133,7 @@ public class NvimView: NSView,
 
     set {
       let path = newValue.path
-      guard let escapedCwd = self.agent.escapedFileName(path) else {
+      guard let escapedCwd = self.uiClient.escapedFileName(path) else {
         // this happens when VimR is quitting with some main windows open...
         self.logger.fault("Escaped file name returned nil.")
         return
@@ -151,7 +151,7 @@ public class NvimView: NSView,
 
   public init(frame rect: NSRect, config: Config) {
     self.drawer = TextDrawer(font: self._font)
-    self.agent = NvimAgent(uuid: self.uuid)
+    self.uiClient = NvimUiClient(uuid: self.uuid)
 
     let sockPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock").path
     guard let nvim = NvimApi(at: sockPath) else {
@@ -169,10 +169,10 @@ public class NvimView: NSView,
     self.leading = self.drawer.leading
 
     // We cannot set bridge in init since self is not available before super.init()...
-    self.agent.bridge = self
-    self.agent.useInteractiveZsh = config.useInteractiveZsh
-    self.agent.cwd = config.cwd
-    self.agent.nvimArgs = config.nvimArgs
+    self.uiClient.bridge = self
+    self.uiClient.useInteractiveZsh = config.useInteractiveZsh
+    self.uiClient.cwd = config.cwd
+    self.uiClient.nvimArgs = config.nvimArgs
   }
 
   convenience override public init(frame rect: NSRect) {
@@ -185,7 +185,7 @@ public class NvimView: NSView,
 
   @IBAction public func debug1(_ sender: Any?) {
     self.logger.debug("DEBUG 1 - Start")
-    self.agent.debug()
+    self.uiClient.debug()
     self.logger.debug("DEBUG 1 - End")
   }
 
@@ -206,7 +206,7 @@ public class NvimView: NSView,
   let bridgeLogger = LogContext.fileLogger(as: NvimView.self,
                                            with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
                                            shouldLogDebug: nil)
-  let agent: NvimAgent
+  let uiClient: NvimUiClient
   let nvim: NvimApi
   let grid = Grid()
 

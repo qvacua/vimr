@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NvimAgent : NSObject
+@interface NvimUiClient : NSObject
 
 @property (nonatomic) bool useInteractiveZsh;
 @property (nonatomic) NSURL *cwd;

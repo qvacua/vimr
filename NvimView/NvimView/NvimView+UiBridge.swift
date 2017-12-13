@@ -181,7 +181,7 @@ extension NvimView {
   public func stop() {
     self.bridgeLogger.hr()
     self.nvim.disconnect()
-    self.agent.quit()
+    self.uiClient.quit()
 
     gui.async {
       self.waitForNeoVimToQuit()
@@ -211,14 +211,14 @@ extension NvimView {
     gui.async {
       self.bridgeLogger.debug(reason)
 
-      if self.agent.neoVimIsQuitting || self.agent.neoVimHasQuit {
+      if self.uiClient.neoVimIsQuitting || self.uiClient.neoVimHasQuit {
         return
       }
 
       self.delegate?.ipcBecameInvalid(reason: reason)
 
       self.bridgeLogger.error("Force-closing due to IPC error.")
-      self.agent.forceQuit()
+      self.uiClient.forceQuit()
     }
   }
 }

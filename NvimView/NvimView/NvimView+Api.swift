@@ -116,7 +116,7 @@ extension NvimView {
 
   public func saveCurrentTab(url: URL) {
     let path = url.path
-    guard let escapedFileName = self.agent.escapedFileName(path) else {
+    guard let escapedFileName = self.uiClient.escapedFileName(path) else {
       self.logger.fault("Escaped file name returned nil.")
       return
     }
@@ -147,18 +147,18 @@ extension NvimView {
   }
 
   public func didBecomeMain() {
-    self.agent.focusGained(true)
+    self.uiClient.focusGained(true)
   }
 
   public func didResignMain() {
-    self.agent.focusGained(false)
+    self.uiClient.focusGained(false)
   }
 
   func waitForNeoVimToQuit() {
-    self.agent.neoVimQuitCondition.lock()
-    defer { self.agent.neoVimQuitCondition.unlock() }
-    while self.agent.neoVimHasQuit == false
-          && self.agent.neoVimQuitCondition.wait(until: Date(timeIntervalSinceNow: neoVimQuitTimeout)) {}
+    self.uiClient.neoVimQuitCondition.lock()
+    defer { self.uiClient.neoVimQuitCondition.unlock() }
+    while self.uiClient.neoVimHasQuit == false
+          && self.uiClient.neoVimQuitCondition.wait(until: Date(timeIntervalSinceNow: neoVimQuitTimeout)) {}
   }
 
   /**
@@ -166,21 +166,21 @@ extension NvimView {
    - normal mode: `:command<CR>`
    - else: `:<Esc>:command<CR>`
 
-   We don't use NvimAgent.vimCommand because if we do for example "e /some/file"
+   We don't use NvimUiClient.vimCommand because if we do for example "e /some/file"
    and its swap file already exists, then NeoVimServer spins and become unresponsive.
   */
   private func exec(command cmd: String) {
     switch self.mode {
     case .normal:
-      self.agent.vimInput(":\(cmd)<CR>")
+      self.uiClient.vimInput(":\(cmd)<CR>")
     default:
-      self.agent.vimInput("<Esc>:\(cmd)<CR>")
+      self.uiClient.vimInput("<Esc>:\(cmd)<CR>")
     }
   }
 
   private func `open`(_ url: URL, cmd: String) {
     let path = url.path
-    guard let escapedFileName = self.agent.escapedFileName(path) else {
+    guard let escapedFileName = self.uiClient.escapedFileName(path) else {
       self.logger.fault("Escaped file name returned nil.")
       return
     }
