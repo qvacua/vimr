@@ -530,6 +530,11 @@ static void server_ui_set_icon(UI *ui __unused, String icon) {
   }
 }
 
+static void server_ui_option_set(UI *ui __unused, String name, Object value) {
+  // yet noop
+  // FIXME: implement before nvim 0.2.3 is released...
+}
+
 static void server_ui_stop(UI *ui __unused) {
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdStop];
 
@@ -569,6 +574,7 @@ void custom_ui_start(void) {
   ui->suspend = NULL;
   ui->set_title = server_ui_set_title;
   ui->set_icon = server_ui_set_icon;
+  ui->option_set = server_ui_option_set;
 
   ui_bridge_attach(ui, server_ui_main, server_ui_scheduler);
 }
