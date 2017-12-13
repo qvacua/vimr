@@ -166,7 +166,7 @@ extension NvimView {
    - normal mode: `:command<CR>`
    - else: `:<Esc>:command<CR>`
 
-   We don't use NvimUiClient.vimCommand because if we do for example "e /some/file"
+   We don't use UiClient.vimCommand because if we do for example "e /some/file"
    and its swap file already exists, then NeoVimServer spins and become unresponsive.
   */
   private func exec(command cmd: String) {
