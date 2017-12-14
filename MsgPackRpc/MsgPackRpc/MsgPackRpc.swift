@@ -47,9 +47,9 @@ public class Connection {
   }
 
   public func stop() {
-    locked(with: self.sessionLock) {
-      self.stopped = true
+    self.stopped = true
 
+    locked(with: self.sessionLock) {
       locked(with: self.conditionsLock) {
         self.conditions.values.forEach { condition in
           locked(with: condition) { condition.broadcast() }
