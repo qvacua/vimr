@@ -218,6 +218,7 @@ extension NvimView {
       self.delegate?.ipcBecameInvalid(reason: reason)
 
       self.bridgeLogger.error("Force-closing due to IPC error.")
+      self.nvim.disconnect()
       self.uiClient.forceQuit()
     }
   }

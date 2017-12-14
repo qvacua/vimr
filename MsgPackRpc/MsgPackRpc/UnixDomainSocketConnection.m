@@ -89,7 +89,7 @@ static void socket_call_back(
   if ((_native_socket = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
     NSLog(@"Error: Unix domain socket NULL!");
     return [NSError errorWithDomain:NSPOSIXErrorDomain code:-1 userInfo:@{
-        NSLocalizedDescriptionKey: @"Unix domain socket is NULL.",
+        NSLocalizedDescriptionKey: @"Could not create unix domain socket.",
     }];
   }
 
@@ -134,7 +134,7 @@ static void socket_call_back(
 }
 
 - (void)disconnectAndStop {
-  if (CFSocketIsValid(_socket)) {
+  if (_socket != NULL && CFSocketIsValid(_socket)) {
     CFRunLoopStop(_run_loop);
     CFSocketInvalidate(_socket);
     [_thread cancel];

@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import NvimMsgPack
 
 extension NvimView {
 
@@ -57,7 +58,14 @@ extension NvimView {
     self.logger.info("=== Starting neovim...")
     let noErrorDuringInitialization = self.uiClient.runLocalServerAndNeoVim(withWidth: size.width, height: size.height)
 
-    try? self.nvim.connect()
+    do {
+      try self.nvim.connect()
+    } catch {
+      logger.fault("Could not connect to nvim: \(error)")
+      self.nvim.disconnect()
+      self.ipcBecameInvalid(String(describing: error))
+      return
+    }
 
     if noErrorDuringInitialization == false {
       self.logger.fault("There was an error launching neovim.")
