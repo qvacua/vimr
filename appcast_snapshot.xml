@@ -7,20 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-248</title>
+      <title>SNAPSHOT-249</title>
       <description><![CDATA[
-    <p>GH-583: Bugfix: The latest snapshots crash when <code>tcsh</code> or <code>fish</code> is used as default shell.</p>
+    <ul>
+<li>Few msgpack API related fixes.</li>
+</ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/248
+        https://github.com/qvacua/vimr/releases/tag/snapshot/249
       </releaseNotesLink>
-      <pubDate>2017-12-10T18:03:46.923110</pubDate>
+      <pubDate>2017-12-14T22:38:27.486667</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/248/VimR-SNAPSHOT-248.tar.bz2"
-                 sparkle:version="248"
-                 sparkle:shortVersionString="SNAPSHOT-248"
-                 sparkle:dsaSignature="MC0CFGxx4Erl+k2MTnZbXg/mh3vAUH8IAhUA2Vaod7jeEjYBD8CfW1MB46i2Y7A="
-                 length="14729512"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/249/VimR-SNAPSHOT-249.tar.bz2"
+                 sparkle:version="249"
+                 sparkle:shortVersionString="SNAPSHOT-249"
+                 sparkle:dsaSignature="MC4CFQCHkhA8jl2C6Da99GHJJUT5zqhFEAIVANGOLb3HakOMFgvz7mtiz02MryPP"
+                 length="12158994"
                  type="application/octet-stream"/>
     </item>
   </channel>
