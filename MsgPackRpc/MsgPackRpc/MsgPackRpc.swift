@@ -47,14 +47,15 @@ public class Connection {
   }
 
   public func stop() {
-    locked(with: self.conditionsLock) {
-      self.conditions.values.forEach { condition in
-        locked(with: condition) { condition.broadcast() }
-      }
-    }
-
     locked(with: self.sessionLock) {
       self.stopped = true
+
+      locked(with: self.conditionsLock) {
+        self.conditions.values.forEach { condition in
+          locked(with: condition) { condition.broadcast() }
+        }
+      }
+
       self.session.disconnectAndStop()
     }
   }
