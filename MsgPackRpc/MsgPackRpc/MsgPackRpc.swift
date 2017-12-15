@@ -24,6 +24,10 @@ public struct Response {
 
 public class Connection {
 
+  public typealias NotificationCallback = (MessageType, String, [Value]) -> Void
+  public typealias ErrorCallback = (Value, String?) -> Void
+  public typealias UnknownMessageCallback = ([Value]) -> Void
+
   public struct Error: Swift.Error {
 
     let message: String
@@ -34,9 +38,9 @@ public class Connection {
     set { self.session.timeout = newValue }
   }
 
-  public var notificationCallback: ((MessageType, String, [Value]) -> Void)?
-  public var unknownMessageCallback: (([Value]) -> Void)?
-  public var errorCallback: ((Value) -> Void)?
+  public var notificationCallback: NotificationCallback?
+  public var unknownMessageCallback: UnknownMessageCallback?
+  public var errorCallback: ErrorCallback?
 
   public init(with session: Session) {
     self.session = session
@@ -148,8 +152,7 @@ public class Connection {
 
   private func processResponse(_ unpacked: Value) {
     guard let array = unpacked.arrayValue, let type = array[0].unsignedIntegerValue else {
-      NSLog("Warning: could not get the array or type")
-      self.errorCallback?(unpacked)
+      self.errorCallback?(unpacked, "Warning: Could not get the array or type.")
       return
     }
 
@@ -158,7 +161,7 @@ public class Connection {
     case MessageType.response.rawValue:
       // response
       guard let msgid64 = array[1].unsignedIntegerValue else {
-        NSLog("Warning: could not get the request ID")
+        self.errorCallback?(unpacked, "Warning: Could not get the request ID.")
         return
       }
       let msgid = UInt32(msgid64)
@@ -179,11 +182,8 @@ public class Connection {
 
     case MessageType.notification.rawValue:
       // notification
-      guard let method = array[1].stringValue else {
-        return
-      }
-
-      guard let params = array[2].arrayValue else {
+      guard let method = array[1].stringValue, let params = array[2].arrayValue else {
+        self.errorCallback?(unpacked, "Warning: Could not get the method and params.")
         return
       }
 
