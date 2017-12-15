@@ -14,7 +14,7 @@ extension NvimApi {
   ) -> NvimApi.Response<Dictionary<String, NvimApi.Value>> {
 
     if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      return .failure(NvimApi.Error.blocked)
     }
 
     let params: [NvimApi.Value] = [
@@ -27,7 +27,7 @@ extension NvimApi {
     }
 
     guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-      return .failure(NvimApi.Error("Error converting result to \(Dictionary<String, NvimApi.Value>.self)"))
+      return .failure(NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self))
     }
 
     return .success(result)

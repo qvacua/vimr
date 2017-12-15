@@ -9,18 +9,7 @@ guard let nvim = NvimApi(at: "/tmp/nvim.sock") else {
   preconditionFailure("Could not connect to nvim")
 }
 
-nvim.connect()
+try? nvim.connect()
 
-if nvim.getMode().value?["blocking"]?.boolValue == true {
-  print("blocked!")
-} else {
-  print("not blocked!")
-}
-
-print(nvim.getMode())
-
-nvim.listBufs().value?.forEach { buf in
-    print(nvim.bufGetOption(buffer: buf, name: "buflisted", checkBlocked: false))
-}
-let curBuf = nvim.getCurrentBuf().value!
-print(nvim.bufGetOption(buffer: curBuf, name: "buflisted", checkBlocked: false))
+nvim.rpc(method: "nvim_buf_get_option", params: [], expectsReturnValue: true)
+nvim.listBufs()

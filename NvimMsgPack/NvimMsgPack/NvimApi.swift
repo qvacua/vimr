@@ -47,36 +47,6 @@ public class NvimApi {
     }
   }
 
-  public struct Error: Swift.Error, CustomStringConvertible {
-
-    public let type: ErrorType
-    public let message: String
-
-    public var description: String {
-      return "\(Swift.type(of: self))(type: \(self.type), message: \"\(self.message)\")"
-    }
-
-    public init(_ message: String) {
-      self.type = .unknown
-      self.message = message
-    }
-
-    public init(type: ErrorType, message: String) {
-      self.type = type
-      self.message = message
-    }
-
-    init(_ value: NvimApi.Value?) {
-      if let rawValue = value?.unsignedIntegerValue {
-        self.type = ErrorType(rawValue: Int(rawValue)) ?? .unknown
-      } else {
-        self.type = .unknown
-      }
-      self.message = value?.arrayValue?[1].stringValue
-                     ?? "ERROR: \(Error.self) could not be instantiated from \(String(describing: value))"
-    }
-  }
-
   public typealias Value = MsgPackRpc.Value
   public typealias Response<R> = Result<R, NvimApi.Error>
   public typealias NotificationCallback = Connection.NotificationCallback
@@ -132,11 +102,11 @@ public class NvimApi {
   @discardableResult
   public func checkBlocked<T>(_ fn: () -> NvimApi.Response<T>) -> NvimApi.Response<T> {
     guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
-      return NvimApi.Response.failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked."))
+      return NvimApi.Response.failure(NvimApi.Error.blocked)
     }
 
     if blocked {
-      return NvimApi.Response.failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked."))
+      return NvimApi.Response.failure(NvimApi.Error.blocked)
     }
 
     return fn()
@@ -159,6 +129,7 @@ public class NvimApi {
                                            expectsReturnValue: expectsReturnValue)
 
     guard response.error.isNil else {
+      print("\(response.error)")
       return .failure(NvimApi.Error(response.error))
     }
 

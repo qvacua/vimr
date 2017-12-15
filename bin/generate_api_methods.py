@@ -17,11 +17,11 @@ void_func_template = Template('''\
  
     if expectsReturnValue && checkBlocked {
       guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
-        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+        return .failure(NvimApi.Error.blocked)
       }
       
       if blocked {
-        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+        return .failure(NvimApi.Error.blocked)
       }
     }
   
@@ -52,7 +52,7 @@ get_mode_func_template = Template('''\
     }
     
     guard let result = (${return_value}) else {
-      return .failure(NvimApi.Error("Error converting result to \\(${result_type}.self)"))
+      return .failure(NvimApi.Error.conversion(type: ${result_type}.self))
     }
     
     return .success(result)
@@ -66,11 +66,11 @@ func_template = Template('''\
  
     if checkBlocked {
       guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
-        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+        return .failure(NvimApi.Error.blocked)
       }
 
       if blocked {
-        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+        return .failure(NvimApi.Error.blocked)
       }
     }
     
@@ -84,7 +84,7 @@ func_template = Template('''\
     }
     
     guard let result = (${return_value}) else {
-      return .failure(NvimApi.Error("Error converting result to \\(${result_type}.self)"))
+      return .failure(NvimApi.Error.conversion(type: ${result_type}.self))
     }
     
     return .success(result)
@@ -97,13 +97,36 @@ extension_template = Template('''\
 
 import MsgPackRpc
 
-public extension NvimApi.Error {
+extension NvimApi {
 
-  public enum ErrorType: Int {
-    
+  public enum Error: Swift.Error {
+
     ${error_types}
+
+    case exception(message: String)
+    case validation(message: String)
     case blocked
+    case conversion(type: Any.Type)
     case unknown
+
+    // array([uint(0), string(Wrong number of arguments: expecting 2 but got 0)])
+    init(_ value: NvimApi.Value?) {
+      let array = value?.arrayValue
+      guard array?.count == 2 else {
+        self = .unknown
+        return
+      }
+
+      guard let rawValue = array?[0].unsignedIntegerValue, let message = array?[1].stringValue else {
+        self = .unknown
+        return
+      }
+
+      switch rawValue {
+      ${error_cases}
+      default: self = .unknown
+      }
+    }
   }
 }
 
@@ -372,7 +395,11 @@ def parse_version(version):
 
 
 def parse_error_types(error_types):
-    return textwrap.indent('\n'.join([f'case {t.lower()} = {v["id"]}' for t, v in error_types.items()]), '    ').lstrip()
+    return textwrap.indent('\n'.join([f'private static let {t.lower()}RawValue = UInt64({v["id"]})' for t, v in error_types.items()]), '    ').lstrip()
+
+
+def parse_error_cases(error_types):
+    return textwrap.indent('\n'.join([f'case Error.{t.lower()}RawValue: self = .{t.lower()}(message: message)' for t, v in error_types.items()]), '    ').lstrip()
 
 
 if __name__ == '__main__':
@@ -389,6 +416,7 @@ if __name__ == '__main__':
         body=body,
         version=version,
         error_types=parse_error_types(api['error_types']),
+        error_cases=parse_error_cases(api['error_types']),
         buffer_type=api['types']['Buffer']['id'],
         window_type=api['types']['Window']['id'],
         tabpage_type=api['types']['Tabpage']['id']
