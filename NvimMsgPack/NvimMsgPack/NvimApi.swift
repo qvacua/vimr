@@ -78,81 +78,12 @@ public class NvimApi {
   }
 
   public typealias Value = MsgPackRpc.Value
-
   public typealias Response<R> = Result<R, NvimApi.Error>
-
   public typealias NotificationCallback = Connection.NotificationCallback
   public typealias UnknownCallback = Connection.UnknownMessageCallback
   public typealias ErrorCallback = Connection.ErrorCallback
 
   public var notificationCallback: NotificationCallback? {
-    get {
-      return self.session.notificationCallback
-    }
-
-    set {
-      self.session.notificationCallback = newValue
-    }
-  }
-
-  public var unknownMessageCallback: UnknownCallback? {
-    get {
-      return self.session.unknownMessageCallback
-    }
-
-    set {
-      self.session.unknownMessageCallback = newValue
-    }
-  }
-
-  public var errorCallback: ErrorCallback? {
-    get {
-      return self.session.errorCallback
-    }
-
-    set {
-      self.session.errorCallback = newValue
-    }
-  }
-
-  public init?(at path: String) {
-    guard let session = Session(at: path) else {
-      return nil
-    }
-
-    self.session = session
-  }
-
-  public func connect() throws {
-    try self.session.run()
-  }
-
-  public func disconnect() {
-    self.session.stop()
-  }
-
-  @discardableResult
-  public func checkBlocked<T>(_ fn: () -> NvimApi.Response<T>) -> NvimApi.Response<T> {
-    if self.getMode().value?["blocking"] == .bool(true) {
-      return NvimApi.Response.failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked."))
-    }
-
-    return fn()
-  }
-
-  public func rpc(method: String,
-                  params: [NvimApi.Value],
-                  expectsReturnValue: Bool = true) -> NvimApi.Response<NvimApi.Value> {
-
-    return self.session.rpc(method: method, params: params, expectsReturnValue: expectsReturnValue)
-  }
-
-  private let session: Session
-}
-
-class Session {
-
-  var notificationCallback: NvimApi.NotificationCallback? {
     get {
       return self.connection.notificationCallback
     }
@@ -162,7 +93,7 @@ class Session {
     }
   }
 
-  var unknownMessageCallback: NvimApi.UnknownCallback? {
+  public var unknownMessageCallback: UnknownCallback? {
     get {
       return self.connection.unknownMessageCallback
     }
@@ -172,7 +103,7 @@ class Session {
     }
   }
 
-  var errorCallback: NvimApi.ErrorCallback? {
+  public var errorCallback: ErrorCallback? {
     get {
       return self.connection.errorCallback
     }
@@ -182,7 +113,7 @@ class Session {
     }
   }
 
-  init?(at path: String) {
+  public init?(at path: String) {
     guard let connection = MsgPackRpc.Connection(unixDomainSocketPath: path) else {
       return nil
     }
@@ -190,17 +121,30 @@ class Session {
     self.connection = connection
   }
 
-  func run() throws {
+  public func connect() throws {
     try self.connection.run()
   }
 
-  func stop() {
+  public func disconnect() {
     self.connection.stop()
   }
 
-  func rpc(method: String,
-           params: [MsgPackRpc.Value],
-           expectsReturnValue: Bool) -> Result<MsgPackRpc.Value, NvimApi.Error> {
+  @discardableResult
+  public func checkBlocked<T>(_ fn: () -> NvimApi.Response<T>) -> NvimApi.Response<T> {
+    guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+      return NvimApi.Response.failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked."))
+    }
+
+    if blocked {
+      return NvimApi.Response.failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked."))
+    }
+
+    return fn()
+  }
+
+  public func rpc(method: String,
+                  params: [MsgPackRpc.Value],
+                  expectsReturnValue: Bool) -> NvimApi.Response<NvimApi.Value> {
 
     let msgid = locked(with: self.nextMsgidLock) { () -> UInt32 in
       let msgid = self.nextMsgid
@@ -208,7 +152,7 @@ class Session {
       return msgid
     }
 
-    let response = self.connection.request(type: 0,
+    let response = self.connection.request(type: MessageType.request.rawValue,
                                            msgid: msgid,
                                            method: method,
                                            params: params,
@@ -221,7 +165,7 @@ class Session {
     return .success(response.result)
   }
 
-  private let connection: MsgPackRpc.Connection
+  private let connection: Connection
 
   private var nextMsgid: UInt32 = 0
   private let nextMsgidLock = NSRecursiveLock()
