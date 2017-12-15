@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import NvimMsgPack
 
 extension NvimView {
 
@@ -50,14 +51,21 @@ extension NvimView {
     self.xOffset = floor((size.width - self.cellSize.width * CGFloat(discreteSize.width)) / 2)
     self.yOffset = floor((size.height - self.cellSize.height * CGFloat(discreteSize.height)) / 2)
 
-    self.agent.resize(toWidth: Int32(discreteSize.width), height: Int32(discreteSize.height))
+    self.uiClient.resize(toWidth: Int32(discreteSize.width), height: Int32(discreteSize.height))
   }
 
   fileprivate func launchNeoVim(_ size: Size) {
     self.logger.info("=== Starting neovim...")
-    let noErrorDuringInitialization = self.agent.runLocalServerAndNeoVim(withWidth: size.width, height: size.height)
+    let noErrorDuringInitialization = self.uiClient.runLocalServerAndNeoVim(withWidth: size.width, height: size.height)
 
-    self.nvim.connect()
+    do {
+      try self.nvim.connect()
+    } catch {
+      logger.fault("Could not connect to nvim: \(error)")
+      self.nvim.disconnect()
+      self.ipcBecameInvalid(String(describing: error))
+      return
+    }
 
     if noErrorDuringInitialization == false {
       self.logger.fault("There was an error launching neovim.")

@@ -5,7 +5,7 @@
 
 import Foundation
 
-public enum MessageType: Int {
+public enum MessageType: UInt64 {
 
   case request = 0
   case response = 1
@@ -23,6 +23,11 @@ public struct Response {
 }
 
 public class Connection {
+
+  public struct Error: Swift.Error {
+
+    let message: String
+  }
 
   public var notificationCallback: ((MessageType, String, [Value]) -> Void)?
   public var unknownMessageCallback: (([Value]) -> Void)?
@@ -42,30 +47,34 @@ public class Connection {
     self.init(with: session)
   }
 
-  public func run() {
-    self.session.connectAndRun()
+  public func run() throws {
+    guard let error = self.session.connectAndRun() else {
+      return
+    }
+
+    throw Error(message: error.localizedDescription)
   }
 
   public func stop() {
-    locked(with: self.conditionsLock) {
-      self.conditions.values.forEach { condition in
-        locked(with: condition) { condition.broadcast() }
-      }
-    }
+    self.stopped = true
 
     locked(with: self.sessionLock) {
-      self.stopped = true
+      locked(with: self.conditionsLock) {
+        self.conditions.values.forEach { condition in
+          locked(with: condition) { condition.broadcast() }
+        }
+      }
+
       self.session.disconnectAndStop()
     }
   }
 
   @discardableResult
-  public func request(type: Int = 0,
+  public func request(type: UInt64 = MessageType.request.rawValue,
                       msgid: UInt32,
                       method: String,
                       params: [Value],
-                      expectsReturnValue: Bool)
-      -> MsgPackRpc.Response {
+                      expectsReturnValue: Bool) -> MsgPackRpc.Response {
 
     let packed = pack(
       [
@@ -139,7 +148,7 @@ public class Connection {
 
     switch type {
 
-    case 1:
+    case MessageType.response.rawValue:
       // response
       guard let msgid64 = array[1].unsignedIntegerValue else {
         NSLog("Warning: could not get the request ID")
@@ -161,7 +170,7 @@ public class Connection {
         condition.broadcast()
       }
 
-    case 2:
+    case MessageType.notification.rawValue:
       // notification
       guard let method = array[1].stringValue else {
         return
