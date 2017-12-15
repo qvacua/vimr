@@ -29,6 +29,11 @@ public class Connection {
     let message: String
   }
 
+  public var timeout: Double {
+    get { return self.session.timeout }
+    set { self.session.timeout = newValue }
+  }
+
   public var notificationCallback: ((MessageType, String, [Value]) -> Void)?
   public var unknownMessageCallback: (([Value]) -> Void)?
   public var errorCallback: ((Value) -> Void)?
@@ -107,7 +112,9 @@ public class Connection {
     }
 
     locked(with: condition) {
-      while !self.stopped && self.responses[msgid] == nil && condition.wait(until: Date(timeIntervalSinceNow: 5)) {}
+      while !self.stopped
+            && self.responses[msgid] == nil
+            && condition.wait(until: Date(timeIntervalSinceNow: self.session.timeout)) {}
     }
     locked(with: self.conditionsLock) { self.conditions.removeValue(forKey: msgid) }
 
