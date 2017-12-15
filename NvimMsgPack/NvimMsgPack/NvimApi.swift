@@ -81,7 +81,11 @@ public class NvimApi {
 
   public typealias Response<R> = Result<R, NvimApi.Error>
 
-  public var notificationCallback: ((MsgPackRpc.MessageType, String, [NvimApi.Value]) -> Void)? {
+  public typealias NotificationCallback = Connection.NotificationCallback
+  public typealias UnknownCallback = Connection.UnknownMessageCallback
+  public typealias ErrorCallback = Connection.ErrorCallback
+
+  public var notificationCallback: NotificationCallback? {
     get {
       return self.session.notificationCallback
     }
@@ -91,7 +95,7 @@ public class NvimApi {
     }
   }
 
-  public var unknownMessageCallback: (([NvimApi.Value]) -> Void)? {
+  public var unknownMessageCallback: UnknownCallback? {
     get {
       return self.session.unknownMessageCallback
     }
@@ -101,7 +105,7 @@ public class NvimApi {
     }
   }
 
-  public var errorCallback: ((NvimApi.Value) -> Void)? {
+  public var errorCallback: ErrorCallback? {
     get {
       return self.session.errorCallback
     }
@@ -111,9 +115,9 @@ public class NvimApi {
     }
   }
 
-  public class Session {
+  class Session {
 
-    var notificationCallback: ((MsgPackRpc.MessageType, String, [NvimApi.Value]) -> Void)? {
+    var notificationCallback: NotificationCallback? {
       get {
         return self.connection.notificationCallback
       }
@@ -123,7 +127,7 @@ public class NvimApi {
       }
     }
 
-    var unknownMessageCallback: (([NvimApi.Value]) -> Void)? {
+    var unknownMessageCallback: UnknownCallback? {
       get {
         return self.connection.unknownMessageCallback
       }
@@ -133,7 +137,7 @@ public class NvimApi {
       }
     }
 
-    var errorCallback: ((NvimApi.Value) -> Void)? {
+    var errorCallback: ErrorCallback? {
       get {
         return self.connection.errorCallback
       }
