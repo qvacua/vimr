@@ -21,9 +21,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -49,9 +55,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[String]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -83,9 +95,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -109,9 +127,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -135,9 +159,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -161,9 +191,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[Dictionary<String, NvimApi.Value>]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -191,9 +227,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -217,9 +259,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -240,9 +288,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -270,9 +324,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -293,9 +353,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<String> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -321,9 +387,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -343,9 +415,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Bool> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -369,9 +447,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[Int]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -400,9 +484,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -435,9 +525,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -459,9 +555,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[NvimApi.Window]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -485,9 +587,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -515,9 +623,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -541,9 +655,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -563,9 +683,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Window> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -588,9 +714,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -613,9 +745,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Bool> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -642,9 +780,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(width)),
@@ -666,9 +810,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         
@@ -690,9 +840,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(width)),
@@ -715,9 +871,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(name),
@@ -739,9 +901,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(command),
@@ -761,9 +929,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Dictionary<String, NvimApi.Value>> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(name),
@@ -788,9 +962,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Dictionary<String, NvimApi.Value>> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(hl_id)),
@@ -818,9 +998,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(keys),
@@ -841,9 +1027,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(keys),
@@ -869,9 +1061,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<String> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(str),
@@ -897,9 +1095,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<String> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(str),
@@ -922,9 +1126,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(expr),
@@ -948,9 +1158,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(fname),
@@ -975,9 +1191,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(code),
@@ -1001,9 +1223,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(text),
@@ -1025,9 +1253,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[String]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1052,9 +1286,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(dir),
@@ -1072,9 +1312,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<String> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1099,9 +1345,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(line),
@@ -1121,9 +1373,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         
@@ -1142,9 +1400,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(name),
@@ -1170,9 +1434,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(name),
@@ -1194,9 +1464,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(name),
@@ -1215,9 +1491,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(name),
@@ -1240,9 +1522,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(name),
@@ -1268,9 +1556,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(name),
@@ -1292,9 +1586,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(str),
@@ -1315,9 +1615,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(str),
@@ -1338,9 +1644,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(str),
@@ -1358,9 +1670,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[NvimApi.Buffer]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1382,9 +1700,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Buffer> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1409,9 +1733,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -1429,9 +1759,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[NvimApi.Window]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1453,9 +1789,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Window> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1480,9 +1822,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1500,9 +1848,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[NvimApi.Tabpage]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1524,9 +1878,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Tabpage> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1551,9 +1911,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -1574,9 +1940,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(event),
@@ -1597,9 +1969,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(event),
@@ -1618,9 +1996,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(name),
@@ -1642,9 +2026,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Dictionary<String, NvimApi.Value>> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1686,9 +2076,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[Dictionary<String, NvimApi.Value>]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(mode),
@@ -1710,9 +2106,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1735,9 +2137,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         calls,
@@ -1760,9 +2168,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Buffer> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1785,9 +2199,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[Int]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1813,9 +2233,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1835,9 +2261,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1863,9 +2295,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1885,9 +2323,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1913,9 +2357,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1936,9 +2386,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1966,9 +2422,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1992,9 +2454,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2015,9 +2483,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2045,9 +2519,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2068,9 +2548,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[Int]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2093,9 +2579,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Tabpage> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2118,9 +2610,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2143,9 +2641,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Bool> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),

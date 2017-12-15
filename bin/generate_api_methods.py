@@ -15,9 +15,15 @@ void_func_template = Template('''\
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
   
     let params: [NvimApi.Value] = [
         ${params}
@@ -58,9 +64,15 @@ func_template = Template('''\
     checkBlocked: Bool = true
   ) -> NvimApi.Response<${result_type}> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      }
+    }
     
     let params: [NvimApi.Value] = [
         ${params}
