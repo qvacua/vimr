@@ -115,93 +115,6 @@ public class NvimApi {
     }
   }
 
-  class Session {
-
-    var notificationCallback: NotificationCallback? {
-      get {
-        return self.connection.notificationCallback
-      }
-
-      set {
-        self.connection.notificationCallback = newValue
-      }
-    }
-
-    var unknownMessageCallback: UnknownCallback? {
-      get {
-        return self.connection.unknownMessageCallback
-      }
-
-      set {
-        self.connection.unknownMessageCallback = newValue
-      }
-    }
-
-    var errorCallback: ErrorCallback? {
-      get {
-        return self.connection.errorCallback
-      }
-
-      set {
-        self.connection.errorCallback = newValue
-      }
-    }
-
-    public init?(at path: String) {
-      guard let connection = MsgPackRpc.Connection(unixDomainSocketPath: path) else {
-        return nil
-      }
-
-      self.connection = connection
-    }
-
-    public func run() throws {
-      try self.connection.run()
-    }
-
-    public func stop() {
-      self.connection.stop()
-    }
-
-    public func rpc(method: String,
-             params: [MsgPackRpc.Value],
-             expectsReturnValue: Bool) -> Result<MsgPackRpc.Value, NvimApi.Error> {
-
-      let msgid = locked(with: self.nextMsgidLock) { () -> UInt32 in
-        let msgid = self.nextMsgid
-        self.nextMsgid += 1
-        return msgid
-      }
-
-      let response = self.connection.request(type: 0,
-                                             msgid: msgid,
-                                             method: method,
-                                             params: params,
-                                             expectsReturnValue: expectsReturnValue)
-
-      guard response.error.isNil else {
-        return .failure(NvimApi.Error(response.error))
-      }
-
-      return .success(response.result)
-    }
-
-    private let connection: MsgPackRpc.Connection
-
-    private var nextMsgid: UInt32 = 0
-    private let nextMsgidLock = NSRecursiveLock()
-
-    private var conditions: [UInt32: NSCondition] = [:]
-    private let conditionsLock = NSRecursiveLock()
-
-    @discardableResult
-    private func locked<T>(with lock: NSLocking, fn: () -> T) -> T {
-      lock.lock()
-      defer { lock.unlock() }
-      return fn()
-    }
-  }
-
   public init?(at path: String) {
     guard let session = Session(at: path) else {
       return nil
@@ -228,11 +141,98 @@ public class NvimApi {
   }
 
   public func rpc(method: String,
-                params: [NvimApi.Value],
-                expectsReturnValue: Bool = true) -> NvimApi.Response<NvimApi.Value> {
+                  params: [NvimApi.Value],
+                  expectsReturnValue: Bool = true) -> NvimApi.Response<NvimApi.Value> {
 
     return self.session.rpc(method: method, params: params, expectsReturnValue: expectsReturnValue)
   }
 
   private let session: Session
+}
+
+class Session {
+
+  var notificationCallback: NvimApi.NotificationCallback? {
+    get {
+      return self.connection.notificationCallback
+    }
+
+    set {
+      self.connection.notificationCallback = newValue
+    }
+  }
+
+  var unknownMessageCallback: NvimApi.UnknownCallback? {
+    get {
+      return self.connection.unknownMessageCallback
+    }
+
+    set {
+      self.connection.unknownMessageCallback = newValue
+    }
+  }
+
+  var errorCallback: NvimApi.ErrorCallback? {
+    get {
+      return self.connection.errorCallback
+    }
+
+    set {
+      self.connection.errorCallback = newValue
+    }
+  }
+
+  init?(at path: String) {
+    guard let connection = MsgPackRpc.Connection(unixDomainSocketPath: path) else {
+      return nil
+    }
+
+    self.connection = connection
+  }
+
+  func run() throws {
+    try self.connection.run()
+  }
+
+  func stop() {
+    self.connection.stop()
+  }
+
+  func rpc(method: String,
+           params: [MsgPackRpc.Value],
+           expectsReturnValue: Bool) -> Result<MsgPackRpc.Value, NvimApi.Error> {
+
+    let msgid = locked(with: self.nextMsgidLock) { () -> UInt32 in
+      let msgid = self.nextMsgid
+      self.nextMsgid += 1
+      return msgid
+    }
+
+    let response = self.connection.request(type: 0,
+                                           msgid: msgid,
+                                           method: method,
+                                           params: params,
+                                           expectsReturnValue: expectsReturnValue)
+
+    guard response.error.isNil else {
+      return .failure(NvimApi.Error(response.error))
+    }
+
+    return .success(response.result)
+  }
+
+  private let connection: MsgPackRpc.Connection
+
+  private var nextMsgid: UInt32 = 0
+  private let nextMsgidLock = NSRecursiveLock()
+
+  private var conditions: [UInt32: NSCondition] = [:]
+  private let conditionsLock = NSRecursiveLock()
+
+  @discardableResult
+  private func locked<T>(with lock: NSLocking, fn: () -> T) -> T {
+    lock.lock()
+    defer { lock.unlock() }
+    return fn()
+  }
 }
