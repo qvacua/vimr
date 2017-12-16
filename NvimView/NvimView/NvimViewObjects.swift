@@ -25,6 +25,7 @@ extension NvimView {
 
     public let isDirty: Bool
     public let isCurrent: Bool
+    public let isListed: Bool
 
     public var isTransient: Bool {
       if self.isDirty {

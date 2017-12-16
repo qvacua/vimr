@@ -5,6 +5,7 @@
 
 import Cocoa
 import NvimMsgPack
+import RxSwift
 
 public class NvimView: NSView,
                        NvimUiBridgeProtocol,
@@ -64,6 +65,11 @@ public class NvimView: NSView,
              "visual-fg: \(self.visualForeground.hex), visual-bg: \(self.visualBackground.hex)" +
              ">"
     }
+  }
+
+  public enum Error: Swift.Error {
+
+    case api(String)
   }
 
   public static let minFontSize = CGFloat(4)
@@ -158,6 +164,7 @@ public class NvimView: NSView,
       preconditionFailure("Nvim could not be instantiated")
     }
 
+    nvim.stream.scheduler = self.nvimApiScheduler
     self.nvim = nvim
 
     super.init(frame: .zero)
@@ -247,6 +254,8 @@ public class NvimView: NSView,
 
   // cache the tabs for Touch Bar use
   var tabsCache = [NvimView.Tabpage]()
+
+  var nvimApiScheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
 
   // MARK: - Private
   fileprivate var _linespacing = NvimView.defaultLinespacing

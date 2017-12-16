@@ -2798,7 +2798,7 @@ extension StreamApi {
     buffer: NvimApi.Buffer
   ) -> Single<Int> {
   
-    return Single<Int>.create { single in
+    let single = Single<Int>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(buffer.handle)),
       ]
@@ -2818,6 +2818,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func bufGetLines(
@@ -2827,7 +2833,7 @@ extension StreamApi {
     strict_indexing: Bool
   ) -> Single<[String]> {
   
-    return Single<[String]>.create { single in
+    let single = Single<[String]>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(buffer.handle)),
         .int(Int64(start)),
@@ -2850,6 +2856,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func bufSetLines(
@@ -2861,7 +2873,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(buffer.handle)),
         .int(Int64(start)),
@@ -2880,6 +2892,12 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func bufGetVar(
@@ -2887,7 +2905,7 @@ extension StreamApi {
     name: String
   ) -> Single<NvimApi.Value> {
   
-    return Single<NvimApi.Value>.create { single in
+    let single = Single<NvimApi.Value>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(buffer.handle)),
         .string(name),
@@ -2908,13 +2926,19 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func bufGetChangedtick(
     buffer: NvimApi.Buffer
   ) -> Single<Int> {
   
-    return Single<Int>.create { single in
+    let single = Single<Int>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(buffer.handle)),
       ]
@@ -2934,6 +2958,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func bufGetKeymap(
@@ -2941,7 +2971,7 @@ extension StreamApi {
     mode: String
   ) -> Single<[Dictionary<String, NvimApi.Value>]> {
   
-    return Single<[Dictionary<String, NvimApi.Value>]>.create { single in
+    let single = Single<[Dictionary<String, NvimApi.Value>]>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(buffer.handle)),
         .string(mode),
@@ -2962,6 +2992,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func bufSetVar(
@@ -2971,7 +3007,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(buffer.handle)),
         .string(name),
@@ -2988,6 +3024,12 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func bufDelVar(
@@ -2996,7 +3038,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(buffer.handle)),
         .string(name),
@@ -3012,6 +3054,12 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func bufGetOption(
@@ -3019,7 +3067,7 @@ extension StreamApi {
     name: String
   ) -> Single<NvimApi.Value> {
   
-    return Single<NvimApi.Value>.create { single in
+    let single = Single<NvimApi.Value>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(buffer.handle)),
         .string(name),
@@ -3040,6 +3088,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func bufSetOption(
@@ -3049,7 +3103,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(buffer.handle)),
         .string(name),
@@ -3066,13 +3120,19 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func bufGetName(
     buffer: NvimApi.Buffer
   ) -> Single<String> {
   
-    return Single<String>.create { single in
+    let single = Single<String>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(buffer.handle)),
       ]
@@ -3092,6 +3152,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func bufSetName(
@@ -3100,7 +3166,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(buffer.handle)),
         .string(name),
@@ -3116,13 +3182,19 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func bufIsValid(
     buffer: NvimApi.Buffer
   ) -> Single<Bool> {
   
-    return Single<Bool>.create { single in
+    let single = Single<Bool>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(buffer.handle)),
       ]
@@ -3142,6 +3214,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func bufGetMark(
@@ -3149,7 +3227,7 @@ extension StreamApi {
     name: String
   ) -> Single<[Int]> {
   
-    return Single<[Int]>.create { single in
+    let single = Single<[Int]>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(buffer.handle)),
         .string(name),
@@ -3170,6 +3248,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func bufAddHighlight(
@@ -3181,7 +3265,7 @@ extension StreamApi {
     col_end: Int
   ) -> Single<Int> {
   
-    return Single<Int>.create { single in
+    let single = Single<Int>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(buffer.handle)),
         .int(Int64(src_id)),
@@ -3206,6 +3290,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func bufClearHighlight(
@@ -3216,7 +3306,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(buffer.handle)),
         .int(Int64(src_id)),
@@ -3234,13 +3324,19 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func tabpageListWins(
     tabpage: NvimApi.Tabpage
   ) -> Single<[NvimApi.Window]> {
   
-    return Single<[NvimApi.Window]>.create { single in
+    let single = Single<[NvimApi.Window]>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(tabpage.handle)),
       ]
@@ -3260,6 +3356,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func tabpageGetVar(
@@ -3267,7 +3369,7 @@ extension StreamApi {
     name: String
   ) -> Single<NvimApi.Value> {
   
-    return Single<NvimApi.Value>.create { single in
+    let single = Single<NvimApi.Value>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(tabpage.handle)),
         .string(name),
@@ -3288,6 +3390,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func tabpageSetVar(
@@ -3297,7 +3405,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(tabpage.handle)),
         .string(name),
@@ -3314,6 +3422,12 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func tabpageDelVar(
@@ -3322,7 +3436,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(tabpage.handle)),
         .string(name),
@@ -3338,13 +3452,19 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func tabpageGetWin(
     tabpage: NvimApi.Tabpage
   ) -> Single<NvimApi.Window> {
   
-    return Single<NvimApi.Window>.create { single in
+    let single = Single<NvimApi.Window>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(tabpage.handle)),
       ]
@@ -3364,13 +3484,19 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func tabpageGetNumber(
     tabpage: NvimApi.Tabpage
   ) -> Single<Int> {
   
-    return Single<Int>.create { single in
+    let single = Single<Int>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(tabpage.handle)),
       ]
@@ -3390,13 +3516,19 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func tabpageIsValid(
     tabpage: NvimApi.Tabpage
   ) -> Single<Bool> {
   
-    return Single<Bool>.create { single in
+    let single = Single<Bool>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(tabpage.handle)),
       ]
@@ -3416,6 +3548,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func uiAttach(
@@ -3425,7 +3563,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(width)),
         .int(Int64(height)),
@@ -3442,13 +3580,19 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func uiDetach(
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           
       ]
@@ -3463,6 +3607,12 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func uiTryResize(
@@ -3471,7 +3621,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(width)),
         .int(Int64(height)),
@@ -3487,6 +3637,12 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func uiSetOption(
@@ -3495,7 +3651,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .string(name),
         value,
@@ -3511,6 +3667,12 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func command(
@@ -3518,7 +3680,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .string(command),
       ]
@@ -3533,6 +3695,12 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func getHlByName(
@@ -3540,7 +3708,7 @@ extension StreamApi {
     rgb: Bool
   ) -> Single<Dictionary<String, NvimApi.Value>> {
   
-    return Single<Dictionary<String, NvimApi.Value>>.create { single in
+    let single = Single<Dictionary<String, NvimApi.Value>>.create { single in
       let params: [NvimApi.Value] = [
           .string(name),
         .bool(rgb),
@@ -3561,6 +3729,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func getHlById(
@@ -3568,7 +3742,7 @@ extension StreamApi {
     rgb: Bool
   ) -> Single<Dictionary<String, NvimApi.Value>> {
   
-    return Single<Dictionary<String, NvimApi.Value>>.create { single in
+    let single = Single<Dictionary<String, NvimApi.Value>>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(hl_id)),
         .bool(rgb),
@@ -3589,6 +3763,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func feedkeys(
@@ -3598,7 +3778,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .string(keys),
         .string(mode),
@@ -3615,13 +3795,19 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func input(
     keys: String
   ) -> Single<Int> {
   
-    return Single<Int>.create { single in
+    let single = Single<Int>.create { single in
       let params: [NvimApi.Value] = [
           .string(keys),
       ]
@@ -3641,6 +3827,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func replaceTermcodes(
@@ -3650,7 +3842,7 @@ extension StreamApi {
     special: Bool
   ) -> Single<String> {
   
-    return Single<String>.create { single in
+    let single = Single<String>.create { single in
       let params: [NvimApi.Value] = [
           .string(str),
         .bool(from_part),
@@ -3673,13 +3865,19 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func commandOutput(
     str: String
   ) -> Single<String> {
   
-    return Single<String>.create { single in
+    let single = Single<String>.create { single in
       let params: [NvimApi.Value] = [
           .string(str),
       ]
@@ -3699,13 +3897,19 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func eval(
     expr: String
   ) -> Single<NvimApi.Value> {
   
-    return Single<NvimApi.Value>.create { single in
+    let single = Single<NvimApi.Value>.create { single in
       let params: [NvimApi.Value] = [
           .string(expr),
       ]
@@ -3725,6 +3929,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func callFunction(
@@ -3732,7 +3942,7 @@ extension StreamApi {
     args: NvimApi.Value
   ) -> Single<NvimApi.Value> {
   
-    return Single<NvimApi.Value>.create { single in
+    let single = Single<NvimApi.Value>.create { single in
       let params: [NvimApi.Value] = [
           .string(fname),
         args,
@@ -3753,6 +3963,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func executeLua(
@@ -3760,7 +3976,7 @@ extension StreamApi {
     args: NvimApi.Value
   ) -> Single<NvimApi.Value> {
   
-    return Single<NvimApi.Value>.create { single in
+    let single = Single<NvimApi.Value>.create { single in
       let params: [NvimApi.Value] = [
           .string(code),
         args,
@@ -3781,13 +3997,19 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func strwidth(
     text: String
   ) -> Single<Int> {
   
-    return Single<Int>.create { single in
+    let single = Single<Int>.create { single in
       let params: [NvimApi.Value] = [
           .string(text),
       ]
@@ -3807,12 +4029,18 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func listRuntimePaths(
   ) -> Single<[String]> {
   
-    return Single<[String]>.create { single in
+    let single = Single<[String]>.create { single in
       let params: [NvimApi.Value] = [
           
       ]
@@ -3832,6 +4060,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func setCurrentDir(
@@ -3839,7 +4073,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .string(dir),
       ]
@@ -3854,12 +4088,18 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func getCurrentLine(
   ) -> Single<String> {
   
-    return Single<String>.create { single in
+    let single = Single<String>.create { single in
       let params: [NvimApi.Value] = [
           
       ]
@@ -3879,6 +4119,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func setCurrentLine(
@@ -3886,7 +4132,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .string(line),
       ]
@@ -3901,13 +4147,19 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func delCurrentLine(
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           
       ]
@@ -3922,13 +4174,19 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func getVar(
     name: String
   ) -> Single<NvimApi.Value> {
   
-    return Single<NvimApi.Value>.create { single in
+    let single = Single<NvimApi.Value>.create { single in
       let params: [NvimApi.Value] = [
           .string(name),
       ]
@@ -3948,6 +4206,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func setVar(
@@ -3956,7 +4220,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .string(name),
         value,
@@ -3972,6 +4236,12 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func delVar(
@@ -3979,7 +4249,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .string(name),
       ]
@@ -3994,13 +4264,19 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func getVvar(
     name: String
   ) -> Single<NvimApi.Value> {
   
-    return Single<NvimApi.Value>.create { single in
+    let single = Single<NvimApi.Value>.create { single in
       let params: [NvimApi.Value] = [
           .string(name),
       ]
@@ -4020,13 +4296,19 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func getOption(
     name: String
   ) -> Single<NvimApi.Value> {
   
-    return Single<NvimApi.Value>.create { single in
+    let single = Single<NvimApi.Value>.create { single in
       let params: [NvimApi.Value] = [
           .string(name),
       ]
@@ -4046,6 +4328,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func setOption(
@@ -4054,7 +4342,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .string(name),
         value,
@@ -4070,6 +4358,12 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func outWrite(
@@ -4077,7 +4371,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .string(str),
       ]
@@ -4092,6 +4386,12 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func errWrite(
@@ -4099,7 +4399,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .string(str),
       ]
@@ -4114,6 +4414,12 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func errWriteln(
@@ -4121,7 +4427,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .string(str),
       ]
@@ -4136,12 +4442,18 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func listBufs(
   ) -> Single<[NvimApi.Buffer]> {
   
-    return Single<[NvimApi.Buffer]>.create { single in
+    let single = Single<[NvimApi.Buffer]>.create { single in
       let params: [NvimApi.Value] = [
           
       ]
@@ -4161,12 +4473,18 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func getCurrentBuf(
   ) -> Single<NvimApi.Buffer> {
   
-    return Single<NvimApi.Buffer>.create { single in
+    let single = Single<NvimApi.Buffer>.create { single in
       let params: [NvimApi.Value] = [
           
       ]
@@ -4186,6 +4504,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func setCurrentBuf(
@@ -4193,7 +4517,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(buffer.handle)),
       ]
@@ -4208,12 +4532,18 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func listWins(
   ) -> Single<[NvimApi.Window]> {
   
-    return Single<[NvimApi.Window]>.create { single in
+    let single = Single<[NvimApi.Window]>.create { single in
       let params: [NvimApi.Value] = [
           
       ]
@@ -4233,12 +4563,18 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func getCurrentWin(
   ) -> Single<NvimApi.Window> {
   
-    return Single<NvimApi.Window>.create { single in
+    let single = Single<NvimApi.Window>.create { single in
       let params: [NvimApi.Value] = [
           
       ]
@@ -4258,6 +4594,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func setCurrentWin(
@@ -4265,7 +4607,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(window.handle)),
       ]
@@ -4280,12 +4622,18 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func listTabpages(
   ) -> Single<[NvimApi.Tabpage]> {
   
-    return Single<[NvimApi.Tabpage]>.create { single in
+    let single = Single<[NvimApi.Tabpage]>.create { single in
       let params: [NvimApi.Value] = [
           
       ]
@@ -4305,12 +4653,18 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func getCurrentTabpage(
   ) -> Single<NvimApi.Tabpage> {
   
-    return Single<NvimApi.Tabpage>.create { single in
+    let single = Single<NvimApi.Tabpage>.create { single in
       let params: [NvimApi.Value] = [
           
       ]
@@ -4330,6 +4684,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func setCurrentTabpage(
@@ -4337,7 +4697,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(tabpage.handle)),
       ]
@@ -4352,6 +4712,12 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func subscribe(
@@ -4359,7 +4725,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .string(event),
       ]
@@ -4374,6 +4740,12 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func unsubscribe(
@@ -4381,7 +4753,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .string(event),
       ]
@@ -4396,13 +4768,19 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func getColorByName(
     name: String
   ) -> Single<Int> {
   
-    return Single<Int>.create { single in
+    let single = Single<Int>.create { single in
       let params: [NvimApi.Value] = [
           .string(name),
       ]
@@ -4422,12 +4800,18 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func getColorMap(
   ) -> Single<Dictionary<String, NvimApi.Value>> {
   
-    return Single<Dictionary<String, NvimApi.Value>>.create { single in
+    let single = Single<Dictionary<String, NvimApi.Value>>.create { single in
       let params: [NvimApi.Value] = [
           
       ]
@@ -4447,12 +4831,18 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func getMode(
   ) -> Single<Dictionary<String, NvimApi.Value>> {
   
-    return Single<Dictionary<String, NvimApi.Value>>.create { single in
+    let single = Single<Dictionary<String, NvimApi.Value>>.create { single in
       let params: [NvimApi.Value] = [
           
       ]
@@ -4472,13 +4862,19 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func getKeymap(
     mode: String
   ) -> Single<[Dictionary<String, NvimApi.Value>]> {
   
-    return Single<[Dictionary<String, NvimApi.Value>]>.create { single in
+    let single = Single<[Dictionary<String, NvimApi.Value>]>.create { single in
       let params: [NvimApi.Value] = [
           .string(mode),
       ]
@@ -4498,12 +4894,18 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func getApiInfo(
   ) -> Single<NvimApi.Value> {
   
-    return Single<NvimApi.Value>.create { single in
+    let single = Single<NvimApi.Value>.create { single in
       let params: [NvimApi.Value] = [
           
       ]
@@ -4523,13 +4925,19 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func callAtomic(
     calls: NvimApi.Value
   ) -> Single<NvimApi.Value> {
   
-    return Single<NvimApi.Value>.create { single in
+    let single = Single<NvimApi.Value>.create { single in
       let params: [NvimApi.Value] = [
           calls,
       ]
@@ -4549,13 +4957,19 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func winGetBuf(
     window: NvimApi.Window
   ) -> Single<NvimApi.Buffer> {
   
-    return Single<NvimApi.Buffer>.create { single in
+    let single = Single<NvimApi.Buffer>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(window.handle)),
       ]
@@ -4575,13 +4989,19 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func winGetCursor(
     window: NvimApi.Window
   ) -> Single<[Int]> {
   
-    return Single<[Int]>.create { single in
+    let single = Single<[Int]>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(window.handle)),
       ]
@@ -4601,6 +5021,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func winSetCursor(
@@ -4609,7 +5035,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(window.handle)),
         .array(pos.map { .int(Int64($0)) }),
@@ -4625,13 +5051,19 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func winGetHeight(
     window: NvimApi.Window
   ) -> Single<Int> {
   
-    return Single<Int>.create { single in
+    let single = Single<Int>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(window.handle)),
       ]
@@ -4651,6 +5083,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func winSetHeight(
@@ -4659,7 +5097,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(window.handle)),
         .int(Int64(height)),
@@ -4675,13 +5113,19 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func winGetWidth(
     window: NvimApi.Window
   ) -> Single<Int> {
   
-    return Single<Int>.create { single in
+    let single = Single<Int>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(window.handle)),
       ]
@@ -4701,6 +5145,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func winSetWidth(
@@ -4709,7 +5159,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(window.handle)),
         .int(Int64(width)),
@@ -4725,6 +5175,12 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func winGetVar(
@@ -4732,7 +5188,7 @@ extension StreamApi {
     name: String
   ) -> Single<NvimApi.Value> {
   
-    return Single<NvimApi.Value>.create { single in
+    let single = Single<NvimApi.Value>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(window.handle)),
         .string(name),
@@ -4753,6 +5209,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func winSetVar(
@@ -4762,7 +5224,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(window.handle)),
         .string(name),
@@ -4779,6 +5241,12 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func winDelVar(
@@ -4787,7 +5255,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(window.handle)),
         .string(name),
@@ -4803,6 +5271,12 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func winGetOption(
@@ -4810,7 +5284,7 @@ extension StreamApi {
     name: String
   ) -> Single<NvimApi.Value> {
   
-    return Single<NvimApi.Value>.create { single in
+    let single = Single<NvimApi.Value>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(window.handle)),
         .string(name),
@@ -4831,6 +5305,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func winSetOption(
@@ -4840,7 +5320,7 @@ extension StreamApi {
     expectsReturnValue: Bool = true
   ) -> Single<Void> {
   
-    return Single<Void>.create { single in
+    let single = Single<Void>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(window.handle)),
         .string(name),
@@ -4857,13 +5337,19 @@ extension StreamApi {
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func winGetPosition(
     window: NvimApi.Window
   ) -> Single<[Int]> {
   
-    return Single<[Int]>.create { single in
+    let single = Single<[Int]>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(window.handle)),
       ]
@@ -4883,13 +5369,19 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func winGetTabpage(
     window: NvimApi.Window
   ) -> Single<NvimApi.Tabpage> {
   
-    return Single<NvimApi.Tabpage>.create { single in
+    let single = Single<NvimApi.Tabpage>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(window.handle)),
       ]
@@ -4909,13 +5401,19 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func winGetNumber(
     window: NvimApi.Window
   ) -> Single<Int> {
   
-    return Single<Int>.create { single in
+    let single = Single<Int>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(window.handle)),
       ]
@@ -4935,13 +5433,19 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   public func winIsValid(
     window: NvimApi.Window
   ) -> Single<Bool> {
   
-    return Single<Bool>.create { single in
+    let single = Single<Bool>.create { single in
       let params: [NvimApi.Value] = [
           .int(Int64(window.handle)),
       ]
@@ -4961,6 +5465,12 @@ extension StreamApi {
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
 }

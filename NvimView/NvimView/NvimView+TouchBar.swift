@@ -49,22 +49,40 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
   }
 
   private func getTabsControl() -> NSScrubber? {
-    return (self.touchBar?.item(forIdentifier: NvimView.touchBarTabSwitcherIdentifier) as? NSCustomTouchBarItem)?.view as? NSScrubber
+    return (self.touchBar?.item(forIdentifier: NvimView.touchBarTabSwitcherIdentifier) as? NSCustomTouchBarItem)?.view
+    as? NSScrubber
   }
 
   func updateTouchBarCurrentBuffer() {
-    guard let tabsControl = getTabsControl() else { return }
-    tabsCache = self.allTabs()
-    tabsControl.reloadData()
-    (tabsControl.scrubberLayout as! NSScrubberProportionalLayout).numberOfVisibleItems = tabsControl.numberOfItems > 0 ? tabsControl.numberOfItems : 1
-    tabsControl.selectedIndex = selectedTabIndex()
+    self
+      .allTabs()
+      .subscribe(onSuccess: {
+        self.tabsCache = $0
+
+        guard let tabsControl = self.getTabsControl() else {
+          return
+        }
+
+        tabsControl.reloadData()
+        let scrubberProportionalLayout = tabsControl.scrubberLayout as! NSScrubberProportionalLayout
+        scrubberProportionalLayout.numberOfVisibleItems = tabsControl.numberOfItems > 0 ? tabsControl.numberOfItems : 1
+        tabsControl.selectedIndex = self.selectedTabIndex()
+      })
   }
 
   func updateTouchBarTab() {
-    guard let tabsControl = getTabsControl() else { return }
-    tabsCache = self.allTabs()
-    tabsControl.reloadData()
-    tabsControl.selectedIndex = selectedTabIndex()
+    self
+      .allTabs()
+      .subscribe(onSuccess: {
+        self.tabsCache = $0
+
+        guard let tabsControl = self.getTabsControl() else {
+          return
+        }
+
+        tabsControl.reloadData()
+        tabsControl.selectedIndex = self.selectedTabIndex()
+      })
   }
 
   public func numberOfItems(for scrubber: NSScrubber) -> Int {

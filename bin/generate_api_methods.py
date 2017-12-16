@@ -96,7 +96,7 @@ func_stream_template = Template('''\
   public func ${func_name}(${args}
   ) -> Single<${result_type}> {
   
-    return Single<${result_type}>.create { single in
+    let single = Single<${result_type}>.create { single in
       let params: [NvimApi.Value] = [
           ${params}
       ]
@@ -116,6 +116,12 @@ func_stream_template = Template('''\
       single(.success(result))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 ''')
 
@@ -124,7 +130,7 @@ void_func_stream_template = Template('''\
     expectsReturnValue: Bool = true
   ) -> Single<${result_type}> {
   
-    return Single<${result_type}>.create { single in
+    let single = Single<${result_type}>.create { single in
       let params: [NvimApi.Value] = [
           ${params}
       ]
@@ -139,6 +145,12 @@ void_func_stream_template = Template('''\
       single(.success(()))
       return disposable
     }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 ''')
 

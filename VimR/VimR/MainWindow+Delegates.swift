@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import RxSwift
 
 // MARK: - NvimViewDelegate
 extension MainWindow {
@@ -51,8 +52,11 @@ extension MainWindow {
   }
 
   func bufferListChanged() {
-    let buffers = self.neoVimView.allBuffers()
-    self.emit(self.uuidAction(for: .setBufferList(buffers)))
+    self.neoVimView
+      .allBuffers()
+      .subscribe(onSuccess: { buffers in
+        self.emit(self.uuidAction(for: .setBufferList(buffers.filter { $0.isListed })))
+      })
   }
 
   func currentBufferChanged(_ currentBuffer: NvimView.Buffer) {
@@ -60,11 +64,11 @@ extension MainWindow {
   }
 
   func tabChanged() {
-    guard let currentBuffer = self.neoVimView.currentBuffer() else {
-      return
-    }
-
-    self.currentBufferChanged(currentBuffer)
+    self.neoVimView
+      .currentBuffer()
+      .subscribe(onSuccess: {
+        self.currentBufferChanged($0)
+      })
   }
 
   func colorschemeChanged(to neoVimTheme: NvimView.Theme) {
@@ -133,7 +137,7 @@ extension MainWindow {
   }
 
   func windowShouldClose(_: NSWindow) -> Bool {
-    guard self.neoVimView.isCurrentBufferDirty() else {
+    guard self.neoVimView.isCurrentBufferDirtySync() else {
       self.neoVimView.closeCurrentTab()
       return false
     }

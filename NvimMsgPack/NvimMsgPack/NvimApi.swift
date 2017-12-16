@@ -84,12 +84,15 @@ public class NvimApi {
     }
   }
 
+  public let stream: StreamApi
+
   public init?(at path: String) {
     guard let session = Session(at: path) else {
       return nil
     }
 
     self.session = session
+    self.stream = StreamApi(session: session)
   }
 
   public func connect() throws {
@@ -121,8 +124,10 @@ public class NvimApi {
 
 public class StreamApi {
 
+  public var scheduler: SchedulerType?
+
   public func rpc(method: String, params: [NvimApi.Value], expectsReturnValue: Bool = true) -> Single<NvimApi.Value> {
-    return Single<NvimApi.Value>.create { single in
+    let single = Single<NvimApi.Value>.create { single in
       let response = self.session.rpc(method: method, params: params, expectsReturnValue: expectsReturnValue)
       let disposable = Disposables.create()
 
@@ -134,6 +139,12 @@ public class StreamApi {
       single(.success(value))
       return disposable
     }
+
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 
   init(session: Session) {
