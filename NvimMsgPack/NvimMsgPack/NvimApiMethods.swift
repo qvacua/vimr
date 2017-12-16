@@ -2,15 +2,40 @@
 // See bin/generate_api_methods.py
 
 import MsgPackRpc
+import RxSwift
 
-public extension NvimApi.Error {
+extension NvimApi {
 
-  public enum ErrorType: Int {
-    
-    case exception = 0
-    case validation = 1
+  public enum Error: Swift.Error {
+
+    private static let exceptionRawValue = UInt64(0)
+    private static let validationRawValue = UInt64(1)
+
+    case exception(message: String)
+    case validation(message: String)
     case blocked
+    case conversion(type: Any.Type)
     case unknown
+
+    // array([uint(0), string(Wrong number of arguments: expecting 2 but got 0)])
+    init(_ value: NvimApi.Value?) {
+      let array = value?.arrayValue
+      guard array?.count == 2 else {
+        self = .unknown
+        return
+      }
+
+      guard let rawValue = array?[0].unsignedIntegerValue, let message = array?[1].stringValue else {
+        self = .unknown
+        return
+      }
+
+      switch rawValue {
+      case Error.exceptionRawValue: self = .exception(message: message)
+    case Error.validationRawValue: self = .validation(message: message)
+      default: self = .unknown
+      }
+    }
   }
 }
 
@@ -21,9 +46,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -35,7 +66,7 @@ public extension NvimApi {
     }
     
     guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
-      return .failure(NvimApi.Error("Error converting result to \(Int.self)"))
+      return .failure(NvimApi.Error.conversion(type: Int.self))
     }
     
     return .success(result)
@@ -49,9 +80,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[String]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -66,7 +103,7 @@ public extension NvimApi {
     }
     
     guard let result = (value.arrayValue?.flatMap({ v in v.stringValue })) else {
-      return .failure(NvimApi.Error("Error converting result to \([String].self)"))
+      return .failure(NvimApi.Error.conversion(type: [String].self))
     }
     
     return .success(result)
@@ -83,9 +120,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -109,9 +152,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -124,7 +173,7 @@ public extension NvimApi {
     }
     
     guard let result = (Optional(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Value.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Value.self))
     }
     
     return .success(result)
@@ -135,9 +184,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -149,7 +204,7 @@ public extension NvimApi {
     }
     
     guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
-      return .failure(NvimApi.Error("Error converting result to \(Int.self)"))
+      return .failure(NvimApi.Error.conversion(type: Int.self))
     }
     
     return .success(result)
@@ -161,9 +216,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[Dictionary<String, NvimApi.Value>]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -176,7 +237,7 @@ public extension NvimApi {
     }
     
     guard let result = (msgPackArrayDictToSwift(value.arrayValue)) else {
-      return .failure(NvimApi.Error("Error converting result to \([Dictionary<String, NvimApi.Value>].self)"))
+      return .failure(NvimApi.Error.conversion(type: [Dictionary<String, NvimApi.Value>].self))
     }
     
     return .success(result)
@@ -191,9 +252,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -217,9 +284,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -240,9 +313,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -255,7 +334,7 @@ public extension NvimApi {
     }
     
     guard let result = (Optional(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Value.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Value.self))
     }
     
     return .success(result)
@@ -270,9 +349,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -293,9 +378,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<String> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -307,7 +398,7 @@ public extension NvimApi {
     }
     
     guard let result = (value.stringValue) else {
-      return .failure(NvimApi.Error("Error converting result to \(String.self)"))
+      return .failure(NvimApi.Error.conversion(type: String.self))
     }
     
     return .success(result)
@@ -321,9 +412,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -343,9 +440,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Bool> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -357,7 +460,7 @@ public extension NvimApi {
     }
     
     guard let result = (value.boolValue) else {
-      return .failure(NvimApi.Error("Error converting result to \(Bool.self)"))
+      return .failure(NvimApi.Error.conversion(type: Bool.self))
     }
     
     return .success(result)
@@ -369,9 +472,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[Int]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -384,7 +493,7 @@ public extension NvimApi {
     }
     
     guard let result = (value.arrayValue?.flatMap({ v in (v.integerValue == nil ? nil : Int(v.integerValue!)) })) else {
-      return .failure(NvimApi.Error("Error converting result to \([Int].self)"))
+      return .failure(NvimApi.Error.conversion(type: [Int].self))
     }
     
     return .success(result)
@@ -400,9 +509,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -419,7 +534,7 @@ public extension NvimApi {
     }
     
     guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
-      return .failure(NvimApi.Error("Error converting result to \(Int.self)"))
+      return .failure(NvimApi.Error.conversion(type: Int.self))
     }
     
     return .success(result)
@@ -435,9 +550,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -459,9 +580,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[NvimApi.Window]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -473,7 +600,7 @@ public extension NvimApi {
     }
     
     guard let result = (value.arrayValue?.flatMap({ v in NvimApi.Window(v) })) else {
-      return .failure(NvimApi.Error("Error converting result to \([NvimApi.Window].self)"))
+      return .failure(NvimApi.Error.conversion(type: [NvimApi.Window].self))
     }
     
     return .success(result)
@@ -485,9 +612,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -500,7 +633,7 @@ public extension NvimApi {
     }
     
     guard let result = (Optional(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Value.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Value.self))
     }
     
     return .success(result)
@@ -515,9 +648,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -541,9 +680,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -563,9 +708,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Window> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -577,7 +728,7 @@ public extension NvimApi {
     }
     
     guard let result = (NvimApi.Window(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Window.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Window.self))
     }
     
     return .success(result)
@@ -588,9 +739,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -602,7 +759,7 @@ public extension NvimApi {
     }
     
     guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
-      return .failure(NvimApi.Error("Error converting result to \(Int.self)"))
+      return .failure(NvimApi.Error.conversion(type: Int.self))
     }
     
     return .success(result)
@@ -613,9 +770,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Bool> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -627,7 +790,7 @@ public extension NvimApi {
     }
     
     guard let result = (value.boolValue) else {
-      return .failure(NvimApi.Error("Error converting result to \(Bool.self)"))
+      return .failure(NvimApi.Error.conversion(type: Bool.self))
     }
     
     return .success(result)
@@ -642,9 +805,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(width)),
@@ -666,9 +835,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         
@@ -690,9 +865,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(width)),
@@ -715,9 +896,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(name),
@@ -739,9 +926,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(command),
@@ -761,9 +954,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Dictionary<String, NvimApi.Value>> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(name),
@@ -776,7 +975,7 @@ public extension NvimApi {
     }
     
     guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-      return .failure(NvimApi.Error("Error converting result to \(Dictionary<String, NvimApi.Value>.self)"))
+      return .failure(NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self))
     }
     
     return .success(result)
@@ -788,9 +987,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Dictionary<String, NvimApi.Value>> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(hl_id)),
@@ -803,7 +1008,7 @@ public extension NvimApi {
     }
     
     guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-      return .failure(NvimApi.Error("Error converting result to \(Dictionary<String, NvimApi.Value>.self)"))
+      return .failure(NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self))
     }
     
     return .success(result)
@@ -818,9 +1023,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(keys),
@@ -841,9 +1052,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(keys),
@@ -855,7 +1072,7 @@ public extension NvimApi {
     }
     
     guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
-      return .failure(NvimApi.Error("Error converting result to \(Int.self)"))
+      return .failure(NvimApi.Error.conversion(type: Int.self))
     }
     
     return .success(result)
@@ -869,9 +1086,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<String> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(str),
@@ -886,7 +1109,7 @@ public extension NvimApi {
     }
     
     guard let result = (value.stringValue) else {
-      return .failure(NvimApi.Error("Error converting result to \(String.self)"))
+      return .failure(NvimApi.Error.conversion(type: String.self))
     }
     
     return .success(result)
@@ -897,9 +1120,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<String> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(str),
@@ -911,7 +1140,7 @@ public extension NvimApi {
     }
     
     guard let result = (value.stringValue) else {
-      return .failure(NvimApi.Error("Error converting result to \(String.self)"))
+      return .failure(NvimApi.Error.conversion(type: String.self))
     }
     
     return .success(result)
@@ -922,9 +1151,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(expr),
@@ -936,7 +1171,7 @@ public extension NvimApi {
     }
     
     guard let result = (Optional(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Value.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Value.self))
     }
     
     return .success(result)
@@ -948,9 +1183,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(fname),
@@ -963,7 +1204,7 @@ public extension NvimApi {
     }
     
     guard let result = (Optional(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Value.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Value.self))
     }
     
     return .success(result)
@@ -975,9 +1216,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(code),
@@ -990,7 +1237,7 @@ public extension NvimApi {
     }
     
     guard let result = (Optional(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Value.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Value.self))
     }
     
     return .success(result)
@@ -1001,9 +1248,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(text),
@@ -1015,7 +1268,7 @@ public extension NvimApi {
     }
     
     guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
-      return .failure(NvimApi.Error("Error converting result to \(Int.self)"))
+      return .failure(NvimApi.Error.conversion(type: Int.self))
     }
     
     return .success(result)
@@ -1025,9 +1278,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[String]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1039,7 +1298,7 @@ public extension NvimApi {
     }
     
     guard let result = (value.arrayValue?.flatMap({ v in v.stringValue })) else {
-      return .failure(NvimApi.Error("Error converting result to \([String].self)"))
+      return .failure(NvimApi.Error.conversion(type: [String].self))
     }
     
     return .success(result)
@@ -1052,9 +1311,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(dir),
@@ -1072,9 +1337,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<String> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1086,7 +1357,7 @@ public extension NvimApi {
     }
     
     guard let result = (value.stringValue) else {
-      return .failure(NvimApi.Error("Error converting result to \(String.self)"))
+      return .failure(NvimApi.Error.conversion(type: String.self))
     }
     
     return .success(result)
@@ -1099,9 +1370,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(line),
@@ -1121,9 +1398,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         
@@ -1142,9 +1425,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(name),
@@ -1156,7 +1445,7 @@ public extension NvimApi {
     }
     
     guard let result = (Optional(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Value.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Value.self))
     }
     
     return .success(result)
@@ -1170,9 +1459,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(name),
@@ -1194,9 +1489,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(name),
@@ -1215,9 +1516,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(name),
@@ -1229,7 +1536,7 @@ public extension NvimApi {
     }
     
     guard let result = (Optional(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Value.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Value.self))
     }
     
     return .success(result)
@@ -1240,9 +1547,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(name),
@@ -1254,7 +1567,7 @@ public extension NvimApi {
     }
     
     guard let result = (Optional(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Value.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Value.self))
     }
     
     return .success(result)
@@ -1268,9 +1581,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(name),
@@ -1292,9 +1611,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(str),
@@ -1315,9 +1640,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(str),
@@ -1338,9 +1669,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(str),
@@ -1358,9 +1695,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[NvimApi.Buffer]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1372,7 +1715,7 @@ public extension NvimApi {
     }
     
     guard let result = (value.arrayValue?.flatMap({ v in NvimApi.Buffer(v) })) else {
-      return .failure(NvimApi.Error("Error converting result to \([NvimApi.Buffer].self)"))
+      return .failure(NvimApi.Error.conversion(type: [NvimApi.Buffer].self))
     }
     
     return .success(result)
@@ -1382,9 +1725,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Buffer> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1396,7 +1745,7 @@ public extension NvimApi {
     }
     
     guard let result = (NvimApi.Buffer(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Buffer.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Buffer.self))
     }
     
     return .success(result)
@@ -1409,9 +1758,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -1429,9 +1784,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[NvimApi.Window]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1443,7 +1804,7 @@ public extension NvimApi {
     }
     
     guard let result = (value.arrayValue?.flatMap({ v in NvimApi.Window(v) })) else {
-      return .failure(NvimApi.Error("Error converting result to \([NvimApi.Window].self)"))
+      return .failure(NvimApi.Error.conversion(type: [NvimApi.Window].self))
     }
     
     return .success(result)
@@ -1453,9 +1814,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Window> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1467,7 +1834,7 @@ public extension NvimApi {
     }
     
     guard let result = (NvimApi.Window(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Window.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Window.self))
     }
     
     return .success(result)
@@ -1480,9 +1847,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1500,9 +1873,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[NvimApi.Tabpage]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1514,7 +1893,7 @@ public extension NvimApi {
     }
     
     guard let result = (value.arrayValue?.flatMap({ v in NvimApi.Tabpage(v) })) else {
-      return .failure(NvimApi.Error("Error converting result to \([NvimApi.Tabpage].self)"))
+      return .failure(NvimApi.Error.conversion(type: [NvimApi.Tabpage].self))
     }
     
     return .success(result)
@@ -1524,9 +1903,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Tabpage> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1538,7 +1923,7 @@ public extension NvimApi {
     }
     
     guard let result = (NvimApi.Tabpage(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Tabpage.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Tabpage.self))
     }
     
     return .success(result)
@@ -1551,9 +1936,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -1574,9 +1965,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(event),
@@ -1597,9 +1994,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .string(event),
@@ -1618,9 +2021,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(name),
@@ -1632,7 +2041,7 @@ public extension NvimApi {
     }
     
     guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
-      return .failure(NvimApi.Error("Error converting result to \(Int.self)"))
+      return .failure(NvimApi.Error.conversion(type: Int.self))
     }
     
     return .success(result)
@@ -1642,9 +2051,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Dictionary<String, NvimApi.Value>> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1656,7 +2071,7 @@ public extension NvimApi {
     }
     
     guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-      return .failure(NvimApi.Error("Error converting result to \(Dictionary<String, NvimApi.Value>.self)"))
+      return .failure(NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self))
     }
     
     return .success(result)
@@ -1675,7 +2090,7 @@ public extension NvimApi {
     }
     
     guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-      return .failure(NvimApi.Error("Error converting result to \(Dictionary<String, NvimApi.Value>.self)"))
+      return .failure(NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self))
     }
     
     return .success(result)
@@ -1686,9 +2101,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[Dictionary<String, NvimApi.Value>]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .string(mode),
@@ -1700,7 +2121,7 @@ public extension NvimApi {
     }
     
     guard let result = (msgPackArrayDictToSwift(value.arrayValue)) else {
-      return .failure(NvimApi.Error("Error converting result to \([Dictionary<String, NvimApi.Value>].self)"))
+      return .failure(NvimApi.Error.conversion(type: [Dictionary<String, NvimApi.Value>].self))
     }
     
     return .success(result)
@@ -1710,9 +2131,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         
@@ -1724,7 +2151,7 @@ public extension NvimApi {
     }
     
     guard let result = (Optional(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Value.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Value.self))
     }
     
     return .success(result)
@@ -1735,9 +2162,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         calls,
@@ -1749,7 +2182,7 @@ public extension NvimApi {
     }
     
     guard let result = (Optional(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Value.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Value.self))
     }
     
     return .success(result)
@@ -1760,9 +2193,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Buffer> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1774,7 +2213,7 @@ public extension NvimApi {
     }
     
     guard let result = (NvimApi.Buffer(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Buffer.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Buffer.self))
     }
     
     return .success(result)
@@ -1785,9 +2224,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[Int]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1799,7 +2244,7 @@ public extension NvimApi {
     }
     
     guard let result = (value.arrayValue?.flatMap({ v in (v.integerValue == nil ? nil : Int(v.integerValue!)) })) else {
-      return .failure(NvimApi.Error("Error converting result to \([Int].self)"))
+      return .failure(NvimApi.Error.conversion(type: [Int].self))
     }
     
     return .success(result)
@@ -1813,9 +2258,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1835,9 +2286,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1849,7 +2306,7 @@ public extension NvimApi {
     }
     
     guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
-      return .failure(NvimApi.Error("Error converting result to \(Int.self)"))
+      return .failure(NvimApi.Error.conversion(type: Int.self))
     }
     
     return .success(result)
@@ -1863,9 +2320,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1885,9 +2348,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1899,7 +2368,7 @@ public extension NvimApi {
     }
     
     guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
-      return .failure(NvimApi.Error("Error converting result to \(Int.self)"))
+      return .failure(NvimApi.Error.conversion(type: Int.self))
     }
     
     return .success(result)
@@ -1913,9 +2382,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1936,9 +2411,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1951,7 +2432,7 @@ public extension NvimApi {
     }
     
     guard let result = (Optional(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Value.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Value.self))
     }
     
     return .success(result)
@@ -1966,9 +2447,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1992,9 +2479,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2015,9 +2508,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Value> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2030,7 +2529,7 @@ public extension NvimApi {
     }
     
     guard let result = (Optional(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Value.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Value.self))
     }
     
     return .success(result)
@@ -2045,9 +2544,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2068,9 +2573,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<[Int]> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2082,7 +2593,7 @@ public extension NvimApi {
     }
     
     guard let result = (value.arrayValue?.flatMap({ v in (v.integerValue == nil ? nil : Int(v.integerValue!)) })) else {
-      return .failure(NvimApi.Error("Error converting result to \([Int].self)"))
+      return .failure(NvimApi.Error.conversion(type: [Int].self))
     }
     
     return .success(result)
@@ -2093,9 +2604,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<NvimApi.Tabpage> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2107,7 +2624,7 @@ public extension NvimApi {
     }
     
     guard let result = (NvimApi.Tabpage(value)) else {
-      return .failure(NvimApi.Error("Error converting result to \(NvimApi.Tabpage.self)"))
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Tabpage.self))
     }
     
     return .success(result)
@@ -2118,9 +2635,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Int> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2132,7 +2655,7 @@ public extension NvimApi {
     }
     
     guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
-      return .failure(NvimApi.Error("Error converting result to \(Int.self)"))
+      return .failure(NvimApi.Error.conversion(type: Int.self))
     }
     
     return .success(result)
@@ -2143,9 +2666,15 @@ public extension NvimApi {
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Bool> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2157,7 +2686,7 @@ public extension NvimApi {
     }
     
     guard let result = (value.boolValue) else {
-      return .failure(NvimApi.Error("Error converting result to \(Bool.self)"))
+      return .failure(NvimApi.Error.conversion(type: Bool.self))
     }
     
     return .success(result)
@@ -2261,5 +2790,2688 @@ extension Dictionary {
 
     return result
   }
+}
+
+extension StreamApi {
+  
+    public func bufLineCount(
+    buffer: NvimApi.Buffer
+  ) -> Single<Int> {
+  
+    let single = Single<Int>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(buffer.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_buf_line_count", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func bufGetLines(
+    buffer: NvimApi.Buffer,
+    start: Int,
+    end: Int,
+    strict_indexing: Bool
+  ) -> Single<[String]> {
+  
+    let single = Single<[String]>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(buffer.handle)),
+        .int(Int64(start)),
+        .int(Int64(end)),
+        .bool(strict_indexing),
+      ]
+      let response = self.session.rpc(method: "nvim_buf_get_lines", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (value.arrayValue?.flatMap({ v in v.stringValue })) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func bufSetLines(
+    buffer: NvimApi.Buffer,
+    start: Int,
+    end: Int,
+    strict_indexing: Bool,
+    replacement: [String],
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(buffer.handle)),
+        .int(Int64(start)),
+        .int(Int64(end)),
+        .bool(strict_indexing),
+        .array(replacement.map { .string($0) }),
+      ]
+      let response = self.session.rpc(method: "nvim_buf_set_lines", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func bufGetVar(
+    buffer: NvimApi.Buffer,
+    name: String
+  ) -> Single<NvimApi.Value> {
+  
+    let single = Single<NvimApi.Value>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(buffer.handle)),
+        .string(name),
+      ]
+      let response = self.session.rpc(method: "nvim_buf_get_var", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (Optional(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func bufGetChangedtick(
+    buffer: NvimApi.Buffer
+  ) -> Single<Int> {
+  
+    let single = Single<Int>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(buffer.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_buf_get_changedtick", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func bufGetKeymap(
+    buffer: NvimApi.Buffer,
+    mode: String
+  ) -> Single<[Dictionary<String, NvimApi.Value>]> {
+  
+    let single = Single<[Dictionary<String, NvimApi.Value>]>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(buffer.handle)),
+        .string(mode),
+      ]
+      let response = self.session.rpc(method: "nvim_buf_get_keymap", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (msgPackArrayDictToSwift(value.arrayValue)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func bufSetVar(
+    buffer: NvimApi.Buffer,
+    name: String,
+    value: NvimApi.Value,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(buffer.handle)),
+        .string(name),
+        value,
+      ]
+      let response = self.session.rpc(method: "nvim_buf_set_var", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func bufDelVar(
+    buffer: NvimApi.Buffer,
+    name: String,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(buffer.handle)),
+        .string(name),
+      ]
+      let response = self.session.rpc(method: "nvim_buf_del_var", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func bufGetOption(
+    buffer: NvimApi.Buffer,
+    name: String
+  ) -> Single<NvimApi.Value> {
+  
+    let single = Single<NvimApi.Value>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(buffer.handle)),
+        .string(name),
+      ]
+      let response = self.session.rpc(method: "nvim_buf_get_option", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (Optional(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func bufSetOption(
+    buffer: NvimApi.Buffer,
+    name: String,
+    value: NvimApi.Value,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(buffer.handle)),
+        .string(name),
+        value,
+      ]
+      let response = self.session.rpc(method: "nvim_buf_set_option", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func bufGetName(
+    buffer: NvimApi.Buffer
+  ) -> Single<String> {
+  
+    let single = Single<String>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(buffer.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_buf_get_name", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (value.stringValue) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func bufSetName(
+    buffer: NvimApi.Buffer,
+    name: String,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(buffer.handle)),
+        .string(name),
+      ]
+      let response = self.session.rpc(method: "nvim_buf_set_name", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func bufIsValid(
+    buffer: NvimApi.Buffer
+  ) -> Single<Bool> {
+  
+    let single = Single<Bool>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(buffer.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_buf_is_valid", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (value.boolValue) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func bufGetMark(
+    buffer: NvimApi.Buffer,
+    name: String
+  ) -> Single<[Int]> {
+  
+    let single = Single<[Int]>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(buffer.handle)),
+        .string(name),
+      ]
+      let response = self.session.rpc(method: "nvim_buf_get_mark", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (value.arrayValue?.flatMap({ v in (v.integerValue == nil ? nil : Int(v.integerValue!)) })) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func bufAddHighlight(
+    buffer: NvimApi.Buffer,
+    src_id: Int,
+    hl_group: String,
+    line: Int,
+    col_start: Int,
+    col_end: Int
+  ) -> Single<Int> {
+  
+    let single = Single<Int>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(buffer.handle)),
+        .int(Int64(src_id)),
+        .string(hl_group),
+        .int(Int64(line)),
+        .int(Int64(col_start)),
+        .int(Int64(col_end)),
+      ]
+      let response = self.session.rpc(method: "nvim_buf_add_highlight", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func bufClearHighlight(
+    buffer: NvimApi.Buffer,
+    src_id: Int,
+    line_start: Int,
+    line_end: Int,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(buffer.handle)),
+        .int(Int64(src_id)),
+        .int(Int64(line_start)),
+        .int(Int64(line_end)),
+      ]
+      let response = self.session.rpc(method: "nvim_buf_clear_highlight", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func tabpageListWins(
+    tabpage: NvimApi.Tabpage
+  ) -> Single<[NvimApi.Window]> {
+  
+    let single = Single<[NvimApi.Window]>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(tabpage.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_tabpage_list_wins", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (value.arrayValue?.flatMap({ v in NvimApi.Window(v) })) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func tabpageGetVar(
+    tabpage: NvimApi.Tabpage,
+    name: String
+  ) -> Single<NvimApi.Value> {
+  
+    let single = Single<NvimApi.Value>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(tabpage.handle)),
+        .string(name),
+      ]
+      let response = self.session.rpc(method: "nvim_tabpage_get_var", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (Optional(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func tabpageSetVar(
+    tabpage: NvimApi.Tabpage,
+    name: String,
+    value: NvimApi.Value,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(tabpage.handle)),
+        .string(name),
+        value,
+      ]
+      let response = self.session.rpc(method: "nvim_tabpage_set_var", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func tabpageDelVar(
+    tabpage: NvimApi.Tabpage,
+    name: String,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(tabpage.handle)),
+        .string(name),
+      ]
+      let response = self.session.rpc(method: "nvim_tabpage_del_var", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func tabpageGetWin(
+    tabpage: NvimApi.Tabpage
+  ) -> Single<NvimApi.Window> {
+  
+    let single = Single<NvimApi.Window>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(tabpage.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_tabpage_get_win", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (NvimApi.Window(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func tabpageGetNumber(
+    tabpage: NvimApi.Tabpage
+  ) -> Single<Int> {
+  
+    let single = Single<Int>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(tabpage.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_tabpage_get_number", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func tabpageIsValid(
+    tabpage: NvimApi.Tabpage
+  ) -> Single<Bool> {
+  
+    let single = Single<Bool>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(tabpage.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_tabpage_is_valid", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (value.boolValue) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func uiAttach(
+    width: Int,
+    height: Int,
+    options: Dictionary<String, NvimApi.Value>,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(width)),
+        .int(Int64(height)),
+        .map(options.mapToDict({ (Value.string($0), $1) })),
+      ]
+      let response = self.session.rpc(method: "nvim_ui_attach", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func uiDetach(
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          
+      ]
+      let response = self.session.rpc(method: "nvim_ui_detach", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func uiTryResize(
+    width: Int,
+    height: Int,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(width)),
+        .int(Int64(height)),
+      ]
+      let response = self.session.rpc(method: "nvim_ui_try_resize", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func uiSetOption(
+    name: String,
+    value: NvimApi.Value,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(name),
+        value,
+      ]
+      let response = self.session.rpc(method: "nvim_ui_set_option", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func command(
+    command: String,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(command),
+      ]
+      let response = self.session.rpc(method: "nvim_command", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func getHlByName(
+    name: String,
+    rgb: Bool
+  ) -> Single<Dictionary<String, NvimApi.Value>> {
+  
+    let single = Single<Dictionary<String, NvimApi.Value>>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(name),
+        .bool(rgb),
+      ]
+      let response = self.session.rpc(method: "nvim_get_hl_by_name", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func getHlById(
+    hl_id: Int,
+    rgb: Bool
+  ) -> Single<Dictionary<String, NvimApi.Value>> {
+  
+    let single = Single<Dictionary<String, NvimApi.Value>>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(hl_id)),
+        .bool(rgb),
+      ]
+      let response = self.session.rpc(method: "nvim_get_hl_by_id", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func feedkeys(
+    keys: String,
+    mode: String,
+    escape_csi: Bool,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(keys),
+        .string(mode),
+        .bool(escape_csi),
+      ]
+      let response = self.session.rpc(method: "nvim_feedkeys", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func input(
+    keys: String
+  ) -> Single<Int> {
+  
+    let single = Single<Int>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(keys),
+      ]
+      let response = self.session.rpc(method: "nvim_input", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func replaceTermcodes(
+    str: String,
+    from_part: Bool,
+    do_lt: Bool,
+    special: Bool
+  ) -> Single<String> {
+  
+    let single = Single<String>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(str),
+        .bool(from_part),
+        .bool(do_lt),
+        .bool(special),
+      ]
+      let response = self.session.rpc(method: "nvim_replace_termcodes", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (value.stringValue) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func commandOutput(
+    str: String
+  ) -> Single<String> {
+  
+    let single = Single<String>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(str),
+      ]
+      let response = self.session.rpc(method: "nvim_command_output", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (value.stringValue) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func eval(
+    expr: String
+  ) -> Single<NvimApi.Value> {
+  
+    let single = Single<NvimApi.Value>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(expr),
+      ]
+      let response = self.session.rpc(method: "nvim_eval", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (Optional(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func callFunction(
+    fname: String,
+    args: NvimApi.Value
+  ) -> Single<NvimApi.Value> {
+  
+    let single = Single<NvimApi.Value>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(fname),
+        args,
+      ]
+      let response = self.session.rpc(method: "nvim_call_function", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (Optional(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func executeLua(
+    code: String,
+    args: NvimApi.Value
+  ) -> Single<NvimApi.Value> {
+  
+    let single = Single<NvimApi.Value>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(code),
+        args,
+      ]
+      let response = self.session.rpc(method: "nvim_execute_lua", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (Optional(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func strwidth(
+    text: String
+  ) -> Single<Int> {
+  
+    let single = Single<Int>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(text),
+      ]
+      let response = self.session.rpc(method: "nvim_strwidth", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func listRuntimePaths(
+  ) -> Single<[String]> {
+  
+    let single = Single<[String]>.create { single in
+      let params: [NvimApi.Value] = [
+          
+      ]
+      let response = self.session.rpc(method: "nvim_list_runtime_paths", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (value.arrayValue?.flatMap({ v in v.stringValue })) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func setCurrentDir(
+    dir: String,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(dir),
+      ]
+      let response = self.session.rpc(method: "nvim_set_current_dir", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func getCurrentLine(
+  ) -> Single<String> {
+  
+    let single = Single<String>.create { single in
+      let params: [NvimApi.Value] = [
+          
+      ]
+      let response = self.session.rpc(method: "nvim_get_current_line", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (value.stringValue) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func setCurrentLine(
+    line: String,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(line),
+      ]
+      let response = self.session.rpc(method: "nvim_set_current_line", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func delCurrentLine(
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          
+      ]
+      let response = self.session.rpc(method: "nvim_del_current_line", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func getVar(
+    name: String
+  ) -> Single<NvimApi.Value> {
+  
+    let single = Single<NvimApi.Value>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(name),
+      ]
+      let response = self.session.rpc(method: "nvim_get_var", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (Optional(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func setVar(
+    name: String,
+    value: NvimApi.Value,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(name),
+        value,
+      ]
+      let response = self.session.rpc(method: "nvim_set_var", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func delVar(
+    name: String,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(name),
+      ]
+      let response = self.session.rpc(method: "nvim_del_var", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func getVvar(
+    name: String
+  ) -> Single<NvimApi.Value> {
+  
+    let single = Single<NvimApi.Value>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(name),
+      ]
+      let response = self.session.rpc(method: "nvim_get_vvar", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (Optional(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func getOption(
+    name: String
+  ) -> Single<NvimApi.Value> {
+  
+    let single = Single<NvimApi.Value>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(name),
+      ]
+      let response = self.session.rpc(method: "nvim_get_option", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (Optional(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func setOption(
+    name: String,
+    value: NvimApi.Value,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(name),
+        value,
+      ]
+      let response = self.session.rpc(method: "nvim_set_option", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func outWrite(
+    str: String,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(str),
+      ]
+      let response = self.session.rpc(method: "nvim_out_write", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func errWrite(
+    str: String,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(str),
+      ]
+      let response = self.session.rpc(method: "nvim_err_write", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func errWriteln(
+    str: String,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(str),
+      ]
+      let response = self.session.rpc(method: "nvim_err_writeln", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func listBufs(
+  ) -> Single<[NvimApi.Buffer]> {
+  
+    let single = Single<[NvimApi.Buffer]>.create { single in
+      let params: [NvimApi.Value] = [
+          
+      ]
+      let response = self.session.rpc(method: "nvim_list_bufs", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (value.arrayValue?.flatMap({ v in NvimApi.Buffer(v) })) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func getCurrentBuf(
+  ) -> Single<NvimApi.Buffer> {
+  
+    let single = Single<NvimApi.Buffer>.create { single in
+      let params: [NvimApi.Value] = [
+          
+      ]
+      let response = self.session.rpc(method: "nvim_get_current_buf", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (NvimApi.Buffer(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func setCurrentBuf(
+    buffer: NvimApi.Buffer,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(buffer.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_set_current_buf", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func listWins(
+  ) -> Single<[NvimApi.Window]> {
+  
+    let single = Single<[NvimApi.Window]>.create { single in
+      let params: [NvimApi.Value] = [
+          
+      ]
+      let response = self.session.rpc(method: "nvim_list_wins", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (value.arrayValue?.flatMap({ v in NvimApi.Window(v) })) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func getCurrentWin(
+  ) -> Single<NvimApi.Window> {
+  
+    let single = Single<NvimApi.Window>.create { single in
+      let params: [NvimApi.Value] = [
+          
+      ]
+      let response = self.session.rpc(method: "nvim_get_current_win", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (NvimApi.Window(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func setCurrentWin(
+    window: NvimApi.Window,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(window.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_set_current_win", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func listTabpages(
+  ) -> Single<[NvimApi.Tabpage]> {
+  
+    let single = Single<[NvimApi.Tabpage]>.create { single in
+      let params: [NvimApi.Value] = [
+          
+      ]
+      let response = self.session.rpc(method: "nvim_list_tabpages", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (value.arrayValue?.flatMap({ v in NvimApi.Tabpage(v) })) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func getCurrentTabpage(
+  ) -> Single<NvimApi.Tabpage> {
+  
+    let single = Single<NvimApi.Tabpage>.create { single in
+      let params: [NvimApi.Value] = [
+          
+      ]
+      let response = self.session.rpc(method: "nvim_get_current_tabpage", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (NvimApi.Tabpage(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func setCurrentTabpage(
+    tabpage: NvimApi.Tabpage,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(tabpage.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_set_current_tabpage", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func subscribe(
+    event: String,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(event),
+      ]
+      let response = self.session.rpc(method: "nvim_subscribe", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func unsubscribe(
+    event: String,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(event),
+      ]
+      let response = self.session.rpc(method: "nvim_unsubscribe", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func getColorByName(
+    name: String
+  ) -> Single<Int> {
+  
+    let single = Single<Int>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(name),
+      ]
+      let response = self.session.rpc(method: "nvim_get_color_by_name", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func getColorMap(
+  ) -> Single<Dictionary<String, NvimApi.Value>> {
+  
+    let single = Single<Dictionary<String, NvimApi.Value>>.create { single in
+      let params: [NvimApi.Value] = [
+          
+      ]
+      let response = self.session.rpc(method: "nvim_get_color_map", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func getMode(
+  ) -> Single<Dictionary<String, NvimApi.Value>> {
+  
+    let single = Single<Dictionary<String, NvimApi.Value>>.create { single in
+      let params: [NvimApi.Value] = [
+          
+      ]
+      let response = self.session.rpc(method: "nvim_get_mode", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func getKeymap(
+    mode: String
+  ) -> Single<[Dictionary<String, NvimApi.Value>]> {
+  
+    let single = Single<[Dictionary<String, NvimApi.Value>]>.create { single in
+      let params: [NvimApi.Value] = [
+          .string(mode),
+      ]
+      let response = self.session.rpc(method: "nvim_get_keymap", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (msgPackArrayDictToSwift(value.arrayValue)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func getApiInfo(
+  ) -> Single<NvimApi.Value> {
+  
+    let single = Single<NvimApi.Value>.create { single in
+      let params: [NvimApi.Value] = [
+          
+      ]
+      let response = self.session.rpc(method: "nvim_get_api_info", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (Optional(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func callAtomic(
+    calls: NvimApi.Value
+  ) -> Single<NvimApi.Value> {
+  
+    let single = Single<NvimApi.Value>.create { single in
+      let params: [NvimApi.Value] = [
+          calls,
+      ]
+      let response = self.session.rpc(method: "nvim_call_atomic", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (Optional(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func winGetBuf(
+    window: NvimApi.Window
+  ) -> Single<NvimApi.Buffer> {
+  
+    let single = Single<NvimApi.Buffer>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(window.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_win_get_buf", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (NvimApi.Buffer(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func winGetCursor(
+    window: NvimApi.Window
+  ) -> Single<[Int]> {
+  
+    let single = Single<[Int]>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(window.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_win_get_cursor", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (value.arrayValue?.flatMap({ v in (v.integerValue == nil ? nil : Int(v.integerValue!)) })) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func winSetCursor(
+    window: NvimApi.Window,
+    pos: [Int],
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(window.handle)),
+        .array(pos.map { .int(Int64($0)) }),
+      ]
+      let response = self.session.rpc(method: "nvim_win_set_cursor", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func winGetHeight(
+    window: NvimApi.Window
+  ) -> Single<Int> {
+  
+    let single = Single<Int>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(window.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_win_get_height", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func winSetHeight(
+    window: NvimApi.Window,
+    height: Int,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(window.handle)),
+        .int(Int64(height)),
+      ]
+      let response = self.session.rpc(method: "nvim_win_set_height", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func winGetWidth(
+    window: NvimApi.Window
+  ) -> Single<Int> {
+  
+    let single = Single<Int>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(window.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_win_get_width", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func winSetWidth(
+    window: NvimApi.Window,
+    width: Int,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(window.handle)),
+        .int(Int64(width)),
+      ]
+      let response = self.session.rpc(method: "nvim_win_set_width", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func winGetVar(
+    window: NvimApi.Window,
+    name: String
+  ) -> Single<NvimApi.Value> {
+  
+    let single = Single<NvimApi.Value>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(window.handle)),
+        .string(name),
+      ]
+      let response = self.session.rpc(method: "nvim_win_get_var", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (Optional(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func winSetVar(
+    window: NvimApi.Window,
+    name: String,
+    value: NvimApi.Value,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(window.handle)),
+        .string(name),
+        value,
+      ]
+      let response = self.session.rpc(method: "nvim_win_set_var", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func winDelVar(
+    window: NvimApi.Window,
+    name: String,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(window.handle)),
+        .string(name),
+      ]
+      let response = self.session.rpc(method: "nvim_win_del_var", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func winGetOption(
+    window: NvimApi.Window,
+    name: String
+  ) -> Single<NvimApi.Value> {
+  
+    let single = Single<NvimApi.Value>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(window.handle)),
+        .string(name),
+      ]
+      let response = self.session.rpc(method: "nvim_win_get_option", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (Optional(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func winSetOption(
+    window: NvimApi.Window,
+    name: String,
+    value: NvimApi.Value,
+    expectsReturnValue: Bool = true
+  ) -> Single<Void> {
+  
+    let single = Single<Void>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(window.handle)),
+        .string(name),
+        value,
+      ]
+      let response = self.session.rpc(method: "nvim_win_set_option", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func winGetPosition(
+    window: NvimApi.Window
+  ) -> Single<[Int]> {
+  
+    let single = Single<[Int]>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(window.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_win_get_position", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (value.arrayValue?.flatMap({ v in (v.integerValue == nil ? nil : Int(v.integerValue!)) })) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func winGetTabpage(
+    window: NvimApi.Window
+  ) -> Single<NvimApi.Tabpage> {
+  
+    let single = Single<NvimApi.Tabpage>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(window.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_win_get_tabpage", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (NvimApi.Tabpage(value)) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func winGetNumber(
+    window: NvimApi.Window
+  ) -> Single<Int> {
+  
+    let single = Single<Int>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(window.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_win_get_number", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
+  public func winIsValid(
+    window: NvimApi.Window
+  ) -> Single<Bool> {
+  
+    let single = Single<Bool>.create { single in
+      let params: [NvimApi.Value] = [
+          .int(Int64(window.handle)),
+      ]
+      let response = self.session.rpc(method: "nvim_win_is_valid", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (value.boolValue) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+
 }
 

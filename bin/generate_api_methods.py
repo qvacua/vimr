@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import subprocess
+
 import msgpack
 from string import Template
 import re
@@ -15,9 +16,15 @@ void_func_template = Template('''\
     checkBlocked: Bool = true
   ) -> NvimApi.Response<Void> {
  
-    if expectsReturnValue && checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if expectsReturnValue && checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+      
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
   
     let params: [NvimApi.Value] = [
         ${params}
@@ -46,7 +53,7 @@ get_mode_func_template = Template('''\
     }
     
     guard let result = (${return_value}) else {
-      return .failure(NvimApi.Error("Error converting result to \\(${result_type}.self)"))
+      return .failure(NvimApi.Error.conversion(type: ${result_type}.self))
     }
     
     return .success(result)
@@ -58,9 +65,15 @@ func_template = Template('''\
     checkBlocked: Bool = true
   ) -> NvimApi.Response<${result_type}> {
  
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
-    } 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
     
     let params: [NvimApi.Value] = [
         ${params}
@@ -72,10 +85,72 @@ func_template = Template('''\
     }
     
     guard let result = (${return_value}) else {
-      return .failure(NvimApi.Error("Error converting result to \\(${result_type}.self)"))
+      return .failure(NvimApi.Error.conversion(type: ${result_type}.self))
     }
     
     return .success(result)
+  }
+''')
+
+func_stream_template = Template('''\
+  public func ${func_name}(${args}
+  ) -> Single<${result_type}> {
+  
+    let single = Single<${result_type}>.create { single in
+      let params: [NvimApi.Value] = [
+          ${params}
+      ]
+      let response = self.session.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: true)
+      let disposable = Disposables.create()
+      
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      guard let result = (${return_value}) else {
+        single(.error(response.error!))
+        return disposable
+      }
+      
+      single(.success(result))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
+  }
+''')
+
+void_func_stream_template = Template('''\
+  public func ${func_name}(${args}
+    expectsReturnValue: Bool = true
+  ) -> Single<${result_type}> {
+  
+    let single = Single<${result_type}>.create { single in
+      let params: [NvimApi.Value] = [
+          ${params}
+      ]
+      let response = self.session.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+      
+      if let error = response.error {
+        single(.error(error))
+        return disposable
+      }
+      
+      single(.success(()))
+      return disposable
+    }
+    
+    if let scheduler = self.scheduler {
+      return single.subscribeOn(scheduler)
+    }
+
+    return single
   }
 ''')
 
@@ -84,14 +159,38 @@ extension_template = Template('''\
 // See bin/generate_api_methods.py
 
 import MsgPackRpc
+import RxSwift
 
-public extension NvimApi.Error {
+extension NvimApi {
 
-  public enum ErrorType: Int {
-    
+  public enum Error: Swift.Error {
+
     ${error_types}
+
+    case exception(message: String)
+    case validation(message: String)
     case blocked
+    case conversion(type: Any.Type)
     case unknown
+
+    // array([uint(0), string(Wrong number of arguments: expecting 2 but got 0)])
+    init(_ value: NvimApi.Value?) {
+      let array = value?.arrayValue
+      guard array?.count == 2 else {
+        self = .unknown
+        return
+      }
+
+      guard let rawValue = array?[0].unsignedIntegerValue, let message = array?[1].stringValue else {
+        self = .unknown
+        return
+      }
+
+      switch rawValue {
+      ${error_cases}
+      default: self = .unknown
+      }
+    }
   }
 }
 
@@ -199,6 +298,13 @@ extension Dictionary {
 }
 ''')
 
+
+extension_stream_template = Template('''\
+extension StreamApi {
+  
+  $body
+}
+''')
 
 def snake_to_camel(snake_str):
     components = snake_str.split('_')
@@ -355,12 +461,31 @@ def parse_function(f):
     return result
 
 
+def parse_function_stream(f):
+    args = parse_args(f['parameters']) if f['return_type'] == 'void' else parse_args(f['parameters'])[:-1]
+    template = void_func_stream_template if f['return_type'] == 'void' else func_stream_template
+    result = template.substitute(
+        func_name=snake_to_camel(f['name'][5:]),
+        nvim_func_name=f['name'],
+        args=args,
+        params=parse_params(f['parameters']),
+        result_type=nvim_type_to_swift(f['return_type']),
+        return_value=msgpack_to_swift('value', nvim_type_to_swift(f['return_type']))
+    )
+
+    return result
+
+
 def parse_version(version):
     return '.'.join([str(v) for v in [version['major'], version['minor'], version['patch']]])
 
 
 def parse_error_types(error_types):
-    return textwrap.indent('\n'.join([f'case {t.lower()} = {v["id"]}' for t, v in error_types.items()]), '    ').lstrip()
+    return textwrap.indent('\n'.join([f'private static let {t.lower()}RawValue = UInt64({v["id"]})' for t, v in error_types.items()]), '    ').lstrip()
+
+
+def parse_error_cases(error_types):
+    return textwrap.indent('\n'.join([f'case Error.{t.lower()}RawValue: self = .{t.lower()}(message: message)' for t, v in error_types.items()]), '    ').lstrip()
 
 
 if __name__ == '__main__':
@@ -377,7 +502,12 @@ if __name__ == '__main__':
         body=body,
         version=version,
         error_types=parse_error_types(api['error_types']),
+        error_cases=parse_error_cases(api['error_types']),
         buffer_type=api['types']['Buffer']['id'],
         window_type=api['types']['Window']['id'],
         tabpage_type=api['types']['Tabpage']['id']
+    ))
+
+    print(extension_stream_template.substitute(
+        body='\n'.join([parse_function_stream(f) for f in functions])
     ))

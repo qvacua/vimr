@@ -351,18 +351,15 @@ extension NvimView {
 extension NvimView {
 
   fileprivate func currentBufferChanged(_ handle: Int) {
-    guard let currentBuffer = self.currentBuffer() else {
-      return
-    }
-
-    guard currentBuffer.handle == handle else {
-      return
-    }
-
-    self.delegate?.currentBufferChanged(currentBuffer)
-    if #available(OSX 10.12.2, *) {
-      self.updateTouchBarTab()
-    }
+    self
+      .currentBuffer()
+      .filter { $0.apiBuffer.handle == handle }
+      .subscribe(onSuccess: {
+        self.delegate?.currentBufferChanged($0)
+        if #available(OSX 10.12.2, *) {
+          self.updateTouchBarTab()
+        }
+      })
   }
 
   fileprivate func tabChanged() {

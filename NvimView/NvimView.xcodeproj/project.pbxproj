@@ -47,6 +47,7 @@
 		4B90F0711FD2B9F1008A39E0 /* NvimMsgPack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90F0731FD2B9F1008A39E0 /* NvimMsgPack.framework */; };
 		4B90F0781FD2BA7B008A39E0 /* Logger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B90F0771FD2BA7B008A39E0 /* Logger.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		4B90F07B1FD30650008A39E0 /* NeoVimMsgIds.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B90F0591FD2AFF7008A39E0 /* NeoVimMsgIds.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		4BC5B0431FE551DF0071D64F /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC5B0421FE551DF0071D64F /* RxSwift.framework */; };
 		4BE45C081FD2D4E3005C0A95 /* NvimServer in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B90F04F1FD2AFD3008A39E0 /* NvimServer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		4BE45C0C1FD2DA49005C0A95 /* runtime in Resources */ = {isa = PBXBuildFile; fileRef = 4BE45C0B1FD2DA49005C0A95 /* runtime */; };
 		4BF18C5D1FD2EEE400DF95D1 /* NvimView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BF18C5C1FD2EEE400DF95D1 /* NvimView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -144,6 +145,7 @@
 		4B90F0721FD2B9F1008A39E0 /* MsgPackRpc.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MsgPackRpc.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B90F0731FD2B9F1008A39E0 /* NvimMsgPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NvimMsgPack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B90F0771FD2BA7B008A39E0 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logger.h; path = NvimView/Logger.h; sourceTree = SOURCE_ROOT; };
+		4BC5B0421FE551DF0071D64F /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = ../Carthage/Build/Mac/RxSwift.framework; sourceTree = "<group>"; };
 		4BE45C0B1FD2DA49005C0A95 /* runtime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = runtime; path = neovim/runtime; sourceTree = "<group>"; };
 		4BF18C5A1FD2E72D00DF95D1 /* nvim */ = {isa = PBXFileReference; lastKnownFileType = folder; name = nvim; path = neovim/src/nvim; sourceTree = "<group>"; };
 		4BF18C5B1FD2E74800DF95D1 /* auto */ = {isa = PBXFileReference; lastKnownFileType = folder; name = auto; path = neovim/build/src/nvim/auto; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BC5B0431FE551DF0071D64F /* RxSwift.framework in Frameworks */,
 				4B90F0701FD2B9F1008A39E0 /* MsgPackRpc.framework in Frameworks */,
 				4B90F0711FD2B9F1008A39E0 /* NvimMsgPack.framework in Frameworks */,
 			);
@@ -255,6 +258,7 @@
 		4B90F06F1FD2B9F1008A39E0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4BC5B0421FE551DF0071D64F /* RxSwift.framework */,
 				4B90F0721FD2B9F1008A39E0 /* MsgPackRpc.framework */,
 				4B90F0731FD2B9F1008A39E0 /* NvimMsgPack.framework */,
 			);
@@ -484,7 +488,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 249;
+				CURRENT_PROJECT_VERSION = 250;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -542,7 +546,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 249;
+				CURRENT_PROJECT_VERSION = 250;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -569,7 +573,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 249;
+				DYLIB_CURRENT_VERSION = 250;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				FRAMEWORK_VERSION = A;
@@ -591,7 +595,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 249;
+				DYLIB_CURRENT_VERSION = 250;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				FRAMEWORK_VERSION = A;

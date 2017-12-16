@@ -31,7 +31,7 @@ class FileMonitor: UiComponent {
         let obsoleteUrls = self.monitoredUrls.subtracting(urlsToMonitor)
 
         newUrls.forEach { url in
-          NSLog("adding \(url) to monitoring")
+          fileLog.info("Adding \(url) to monitoring")
           self.monitoredUrls.insert(url)
 
           let path = url.path
@@ -51,7 +51,7 @@ class FileMonitor: UiComponent {
         }
 
         obsoleteUrls.forEach { url in
-          NSLog("removing \(url) from monitoring")
+          fileLog.info("Removing \(url) from monitoring")
           self.monitoredUrls.remove(url)
           self.monitors.removeValue(forKey: url)
         }

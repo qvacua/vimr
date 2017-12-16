@@ -5,6 +5,7 @@
 
 import Foundation
 import NvimMsgPack
+import RxSwift
 
 extension NvimApi {
 
@@ -14,7 +15,7 @@ extension NvimApi {
   ) -> NvimApi.Response<Dictionary<String, NvimApi.Value>> {
 
     if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error(type: .blocked, message: "Nvim is currently blocked"))
+      return .failure(NvimApi.Error.blocked)
     }
 
     let params: [NvimApi.Value] = [
@@ -27,10 +28,32 @@ extension NvimApi {
     }
 
     guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-      return .failure(NvimApi.Error("Error converting result to \(Dictionary<String, NvimApi.Value>.self)"))
+      return .failure(NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self))
     }
 
     return .success(result)
+  }
+}
+
+extension StreamApi {
+
+  public func getBufGetInfo(
+    buffer: NvimApi.Buffer
+  ) -> Single<Dictionary<String, NvimApi.Value>> {
+
+    let params: [NvimApi.Value] = [
+      .int(Int64(buffer.handle)),
+    ]
+
+    return self
+      .rpc(method: "nvim_buf_get_info", params: params, expectsReturnValue: true)
+      .map {
+        guard let result = (msgPackDictToSwift($0.dictionaryValue)) else {
+          throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        }
+
+        return result
+      }
   }
 }
 
@@ -57,7 +80,7 @@ extension Dictionary {
     return tuplesToDict(array)
   }
 
-  fileprivate func tuplesToDict<K:Hashable, V, S:Sequence>(_ sequence: S)
+  fileprivate func tuplesToDict<K: Hashable, V, S: Sequence>(_ sequence: S)
       -> Dictionary<K, V> where S.Iterator.Element == (K, V) {
 
     var result = Dictionary<K, V>(minimumCapacity: sequence.underestimatedCount)

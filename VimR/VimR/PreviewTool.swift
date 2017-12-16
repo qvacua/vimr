@@ -134,7 +134,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   }
 
   func webView(_: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-    NSLog("ERROR preview component's webview: \(error)")
+    fileLog.error("ERROR preview component's webview: \(error)")
   }
 
   func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {

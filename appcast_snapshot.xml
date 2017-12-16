@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-249</title>
+      <title>SNAPSHOT-250</title>
       <description><![CDATA[
     <ul>
-<li>Few msgpack API related fixes.</li>
+<li>GH-586: Bugfix: <code>Denite buffer</code> hangs.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/249
+        https://github.com/qvacua/vimr/releases/tag/snapshot/250
       </releaseNotesLink>
-      <pubDate>2017-12-14T22:38:27.486667</pubDate>
+      <pubDate>2017-12-16T21:48:33.285264</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/249/VimR-SNAPSHOT-249.tar.bz2"
-                 sparkle:version="249"
-                 sparkle:shortVersionString="SNAPSHOT-249"
-                 sparkle:dsaSignature="MC4CFQCHkhA8jl2C6Da99GHJJUT5zqhFEAIVANGOLb3HakOMFgvz7mtiz02MryPP"
-                 length="12158994"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/250/VimR-SNAPSHOT-250.tar.bz2"
+                 sparkle:version="250"
+                 sparkle:shortVersionString="SNAPSHOT-250"
+                 sparkle:dsaSignature="MC0CFQCCQeo2S7t13d4/nPUsFsUN/A4PxwIUbFALrk30f4E4xTul+6VuvTsocIk="
+                 length="11973084"
                  type="application/octet-stream"/>
     </item>
   </channel>

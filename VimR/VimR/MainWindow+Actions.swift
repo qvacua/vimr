@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import RxSwift
 
 // MARK: - File Menu Item Actions
 extension MainWindow {
@@ -22,14 +23,18 @@ extension MainWindow {
       }
 
       let urls = panel.urls
-      if self.neoVimView.allBuffers().count == 1 {
-        let isTransient = self.neoVimView.allBuffers().first?.isTransient ?? false
+      self.neoVimView
+        .allBuffers()
+        .subscribe(onSuccess: {
+          if $0.count == 1 {
+            let isTransient = $0.first?.isTransient ?? false
 
-        if isTransient {
-          self.neoVimView.cwd = FileUtils.commonParent(of: urls)
-        }
-      }
-      self.neoVimView.open(urls: urls)
+            if isTransient {
+              self.neoVimView.cwd = FileUtils.commonParent(of: urls)
+            }
+          }
+          self.neoVimView.open(urls: urls)
+        })
     }
   }
 
@@ -38,32 +43,34 @@ extension MainWindow {
   }
 
   @IBAction func saveDocument(_ sender: Any?) {
-    guard let curBuf = self.neoVimView.currentBuffer() else {
-      return
-    }
+    self.neoVimView
+      .currentBuffer()
+      .observeOn(MainScheduler.instance)
+      .subscribe(onSuccess: { curBuf in
+        if curBuf.url == nil {
+          self.savePanelSheet { self.neoVimView.saveCurrentTab(url: $0) }
+          return
+        }
 
-    if curBuf.url == nil {
-      self.savePanelSheet { self.neoVimView.saveCurrentTab(url: $0) }
-      return
-    }
-
-    self.neoVimView.saveCurrentTab()
+        self.neoVimView.saveCurrentTab()
+      })
   }
 
   @IBAction func saveDocumentAs(_ sender: Any?) {
-    if self.neoVimView.currentBuffer() == nil {
-      return
-    }
+    self.neoVimView
+      .currentBuffer()
+      .observeOn(MainScheduler.instance)
+      .subscribe(onSuccess: { curBuf in
+        self.savePanelSheet { url in
+          self.neoVimView.saveCurrentTab(url: url)
 
-    self.savePanelSheet { url in
-      self.neoVimView.saveCurrentTab(url: url)
-
-      if self.neoVimView.isCurrentBufferDirty() {
-        self.neoVimView.openInNewTab(urls: [url])
-      } else {
-        self.neoVimView.openInCurrentTab(url: url)
-      }
-    }
+          if curBuf.isDirty {
+            self.neoVimView.openInNewTab(urls: [url])
+          } else {
+            self.neoVimView.openInCurrentTab(url: url)
+          }
+        }
+      })
   }
 
   fileprivate func savePanelSheet(action: @escaping (URL) -> Void) {
@@ -136,7 +143,7 @@ extension MainWindow {
 extension MainWindow {
 
   func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
-    let canSave = self.neoVimView.currentBuffer() != nil
+    let canSave = self.neoVimView.currentBufferSync()?.type == ""
     let canSaveAs = canSave
     let canOpen = canSave
     let canOpenQuickly = canSave

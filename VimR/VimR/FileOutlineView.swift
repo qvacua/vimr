@@ -188,8 +188,6 @@ class FileOutlineView: NSOutlineView,
       self.widths.removeValue(forKey: path)
     }
 
-    fileLog.debug("\(fileBrowserItem): \(curPreparedChildren) vs. \(indicesToRemove)")
-
     fileBrowserItem.children = curChildren.filter { newChildren.contains($0) }
 
     let parent = fileBrowserItem == self.root ? nil : fileBrowserItem
@@ -207,8 +205,6 @@ class FileOutlineView: NSOutlineView,
       .enumerated()
       .filter { (_, fileBrowserItem) in curPreparedChildren.contains(fileBrowserItem) == false }
       .map { (idx, _) in idx }
-
-    fileLog.debug("\(fileBrowserItem): \(curPreparedChildren) vs. \(indicesToInsert)")
 
     // We don't just take newChildren because NSOutlineView look at the pointer equality for
     // preserving the expanded states...

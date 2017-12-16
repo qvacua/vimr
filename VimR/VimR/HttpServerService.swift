@@ -16,7 +16,7 @@ class HttpServerService {
 
     do {
       try self.server.start(in_port_t(port))
-      NSLog("server started on http://localhost:\(port)")
+      stdoutLog.info("VimR http server started on http://localhost:\(port)")
 
       let previewResourceUrl = resourceUrl.appendingPathComponent("preview")
 
