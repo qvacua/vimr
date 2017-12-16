@@ -5,6 +5,7 @@
 
 import Foundation
 import MsgPackRpc
+import RxSwift
 
 public class NvimApi {
 
@@ -116,6 +117,30 @@ public class NvimApi {
   }
 
   private let session: Session
+}
+
+public class StreamApi {
+
+  public func rpc(method: String, params: [NvimApi.Value], expectsReturnValue: Bool = true) -> Single<NvimApi.Value> {
+    return Single<NvimApi.Value>.create { single in
+      let response = self.session.rpc(method: method, params: params, expectsReturnValue: expectsReturnValue)
+      let disposable = Disposables.create()
+
+      guard let value = response.value else {
+        single(.error(response.error!))
+        return disposable
+      }
+
+      single(.success(value))
+      return disposable
+    }
+  }
+
+  init(session: Session) {
+    self.session = session
+  }
+
+  let session: Session
 }
 
 class Session {
