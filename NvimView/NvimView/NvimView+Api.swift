@@ -168,7 +168,7 @@ extension NvimView {
         return tabs.map { $0.windows }.flatMap { $0 }
       }
       .subscribe(onSuccess: { wins in
-        for win in wins {
+        if let win = wins.first(where: { $0.buffer == buffer }) {
           self.nvim.setCurrentWin(window: NvimApi.Window(win.handle), expectsReturnValue: false)
           return
         }
