@@ -233,13 +233,7 @@ class MainWindow: NSObject,
         case .ipcBecameInvalid(let reason): self.ipcBecameInvalid(reason: reason)
         case .scroll: self.scroll()
         case .cursor(let position): self.cursor(to: position)
-        case .initError:
-          let notification = NSUserNotification()
-          notification.title = "Error during initialization"
-          notification.informativeText = "There was an error during the initialization of NeoVim. " +
-                                         "Use :messages to view the error messages."
-
-          NSUserNotificationCenter.default.deliver(notification)
+        case .initError: self.showInitError()
 
         }
       })
@@ -414,5 +408,14 @@ class MainWindow: NSObject,
   private func addViews() {
     self.window.contentView?.addSubview(self.workspace)
     self.workspace.autoPinEdgesToSuperviewEdges()
+  }
+
+  private func showInitError() {
+    let notification = NSUserNotification()
+    notification.title = "Error during initialization"
+    notification.informativeText = "There was an error during the initialization of NeoVim. " +
+                                   "Use :messages to view the error messages."
+
+    NSUserNotificationCenter.default.deliver(notification)
   }
 }
