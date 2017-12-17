@@ -9,7 +9,7 @@ import CocoaMarkdown
 class PreviewService {
 
   typealias PreviewToolPair = StateActionPair<UuidState<MainWindow.State>, PreviewTool.Action>
-  typealias OpenedFileListPair = StateActionPair<UuidState<MainWindow.State>, BuffersList.Action>
+  typealias BufferListPair = StateActionPair<UuidState<MainWindow.State>, BuffersList.Action>
   typealias MainWindowPair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
   init() {
@@ -35,7 +35,7 @@ class PreviewService {
     self.apply(pair.state)
   }
 
-  func applyOpenedFileList(_ pair: OpenedFileListPair) {
+  func applyBufferList(_ pair: BufferListPair) {
     guard case .open = pair.action else {
       return
     }

@@ -56,7 +56,7 @@ class MarkdownReducer {
     return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
   }
 
-  func reduceOpenedFileList(_ pair: BufferListPair) -> BufferListPair {
+  func reduceBufferList(_ pair: BufferListPair) -> BufferListPair {
     var state = pair.state.payload
 
     switch pair.action {

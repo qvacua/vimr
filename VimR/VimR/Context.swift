@@ -75,9 +75,9 @@ class Context {
           .filterMapPair(),
         self.actionSourceForMainWindow()
           .reduce(by: BuffersListReducer().reduce)
-          .reduce(by: markdownReducer.reduceOpenedFileList)
+          .reduce(by: markdownReducer.reduceBufferList)
           .filter { $0.modified }
-          .apply(previewService.applyOpenedFileList)
+          .apply(previewService.applyBufferList)
           .map { $0.state }
       )
       .merge()
