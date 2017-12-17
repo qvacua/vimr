@@ -30,7 +30,12 @@ class PreviewUtils {
     }
   }
 
-  static func state(for uuid: String, baseUrl: URL, buffer: NvimView.Buffer?) -> PreviewState {
+  static func state(for uuid: String,
+                    baseUrl: URL,
+                    buffer: NvimView.Buffer?,
+                    editorPosition: Marked<Position>,
+                    previewPosition: Marked<Position>) -> PreviewState {
+
     guard let url = buffer?.url else {
       return self.state(for: .notSaved, baseUrl: baseUrl)
     }
@@ -43,10 +48,15 @@ class PreviewUtils {
       return self.state(for: .none, baseUrl: baseUrl)
     }
 
-    return PreviewState(status: .markdown,
+    var result =  PreviewState(status: .markdown,
                         buffer: url,
                         html: self.htmlUrl(with: uuid),
                         server: self.serverUrl(for: uuid, baseUrl: baseUrl, lastComponent: "index.html"))
+
+    result.editorPosition = editorPosition
+    result.previewPosition = previewPosition
+
+    return result
   }
 
   fileprivate static func serverUrl(for uuid: String, baseUrl: URL, lastComponent: String) -> URL {

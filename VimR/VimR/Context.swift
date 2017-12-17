@@ -60,6 +60,7 @@ class Context {
           .apply(httpService.applyMainWindow)
           .map { $0.state },
         self.actionSourceForMainWindow()
+          .reduce(by: markdownReducer.reducePreviewTool)
           .reduce(by: PreviewToolReducer(baseServerUrl: baseServerUrl).reduce)
           .filterMapPair(),
         self.actionSourceForMainWindow()

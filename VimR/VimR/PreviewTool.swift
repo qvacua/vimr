@@ -13,9 +13,9 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   enum Action {
 
     case refreshNow
-    case reverseSearch(to: Marked<Position>)
+    case reverseSearch(to: Position)
 
-    case scroll(to: Marked<Position>)
+    case scroll(to: Position)
 
     case setAutomaticReverseSearch(to: Bool)
     case setAutomaticForwardSearch(to: Bool)
@@ -101,7 +101,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
         if serverUrl != self.url {
           self.url = serverUrl
           self.scrollTop = 0
-          self.previewPosition = Marked(Position.beginning)
+          self.previewPosition = Position.beginning
         }
 
         self.lastUpdateDate = state.preview.updateDate
@@ -117,7 +117,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
     self.webviewMessageHandler.source
       .throttle(0.75, latest: true, scheduler: self.scheduler)
       .subscribe(onNext: { [unowned self] (position, scrollTop) in
-        self.previewPosition = Marked(position)
+        self.previewPosition = position
         self.scrollTop = scrollTop
         self.emit(UuidAction(uuid: self.uuid, action: .scroll(to: self.previewPosition)))
       })
@@ -152,7 +152,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   fileprivate var url: URL?
   fileprivate var lastUpdateDate = Date.distantPast
   fileprivate var editorPosition = Marked(Position.beginning)
-  fileprivate var previewPosition = Marked(Position.beginning)
+  fileprivate var previewPosition = Position.beginning
   fileprivate var scrollTop = 0
 
   fileprivate let userContentController = WKUserContentController()
@@ -187,7 +187,6 @@ extension PreviewTool {
   }
 
   @objc func reverseSearchAction(_: Any?) {
-    self.previewPosition = Marked(self.previewPosition.payload) // set a new mark
     self.emit(UuidAction(uuid: self.uuid, action: .reverseSearch(to: self.previewPosition)))
   }
 

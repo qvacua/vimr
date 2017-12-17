@@ -21,11 +21,11 @@
 #endif
 
 #ifndef log4Info
-#define log4Info(format, ...) printf("%s", [[NSString stringWithFormat:(@"[INFO ] %s %@ %s - %d: " format "\n"), __TIME__, [[NSString stringWithUTF8String: __FILE__] lastPathComponent], __func__, __LINE__, ##__VA_ARGS__] UTF8String])
+#define log4Info(format, ...) printf("%s", [[NSString stringWithFormat:(@"[INFO] %s %@ %s - %d: " format "\n"), __TIME__, [[NSString stringWithUTF8String: __FILE__] lastPathComponent], __func__, __LINE__, ##__VA_ARGS__] UTF8String])
 #endif
 
 #ifndef log4Warn
-#define log4Warn(format, ...) printf("%s", [[NSString stringWithFormat:(@"[WARN ] %s %@ %s - %d: " format "\n"), __TIME__, [[NSString stringWithUTF8String: __FILE__] lastPathComponent], __func__, __LINE__, ##__VA_ARGS__] UTF8String])
+#define log4Warn(format, ...) printf("%s", [[NSString stringWithFormat:(@"[WARN] %s %@ %s - %d: " format "\n"), __TIME__, [[NSString stringWithUTF8String: __FILE__] lastPathComponent], __func__, __LINE__, ##__VA_ARGS__] UTF8String])
 #endif
 
 #ifndef log4Error

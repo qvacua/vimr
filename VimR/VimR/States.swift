@@ -122,6 +122,14 @@ struct PreviewState {
     case markdown
   }
 
+  enum SearchAction {
+
+    case none
+    case forward
+    case reverse
+    case reload
+  }
+
   var status = Status.none
 
   var buffer: URL?
@@ -132,9 +140,13 @@ struct PreviewState {
 
   var editorPosition = Marked(Position.beginning)
   var previewPosition = Marked(Position.beginning)
-  var ignoreNextForward = false
-  var ignoreNextReverse = false
-  var forceNextReverse = false
+
+  // FIXME: delete the followin?
+//  var ignoreNextForward = false
+//  var ignoreNextReverse = false
+//  var forceNextReverse = false
+
+  var lastSearch = SearchAction.none
 
   init(status: Status = .none,
        buffer: URL? = nil,
