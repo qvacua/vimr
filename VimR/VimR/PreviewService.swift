@@ -8,6 +8,7 @@ import CocoaMarkdown
 
 class PreviewService {
 
+  typealias PreviewToolPair = StateActionPair<UuidState<MainWindow.State>, PreviewTool.Action>
   typealias OpenedFileListPair = StateActionPair<UuidState<MainWindow.State>, BuffersList.Action>
   typealias MainWindowPair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
 
@@ -26,6 +27,14 @@ class PreviewService {
     self.template = template
   }
 
+  func applyPreviewTool(_ pair: PreviewToolPair) {
+    guard case .refreshNow = pair.action else {
+      return
+    }
+
+    self.apply(pair.state)
+  }
+
   func applyOpenedFileList(_ pair: OpenedFileListPair) {
     guard case .open = pair.action else {
       return
@@ -35,11 +44,11 @@ class PreviewService {
   }
 
   func applyMainWindow(_ pair: MainWindowPair) {
-    guard case .newCurrentBuffer = pair.action else {
-      return
+    switch pair.action {
+      case .newCurrentBuffer: self.apply(pair.state)
+      case .bufferWritten: self.apply(pair.state)
+      default: return
     }
-
-    self.apply(pair.state)
   }
 
   fileprivate func filledTemplate(body: String, title: String) -> String {

@@ -60,7 +60,6 @@ extension MainWindow {
   }
 
   func bufferWritten(_ buffer: NvimView.Buffer) {
-    stdoutLog.debug(buffer)
     self.emit(self.uuidAction(for: .bufferWritten(buffer)))
   }
 
