@@ -312,31 +312,31 @@ class MainWindow: NSObject,
     self.emit(uuidAction(for: .setTheme(theme)))
   }
 
-  fileprivate let disposeBag = DisposeBag()
+  private let disposeBag = DisposeBag()
 
-  fileprivate var currentBuffer: NvimView.Buffer?
+  private var currentBuffer: NvimView.Buffer?
 
-  fileprivate var defaultFont = NvimView.defaultFont
-  fileprivate var linespacing = NvimView.defaultLinespacing
-  fileprivate var usesLigatures = false
+  private var defaultFont = NvimView.defaultFont
+  private var linespacing = NvimView.defaultLinespacing
+  private var usesLigatures = false
 
-  fileprivate var previewPosition = Marked(Position.beginning)
+  private var previewPosition = Marked(Position.beginning)
 
-  fileprivate var preview: PreviewTool?
-  fileprivate var htmlPreview: HtmlPreviewTool?
-  fileprivate var fileBrowser: FileBrowser?
-  fileprivate var buffersList: BuffersList?
+  private var preview: PreviewTool?
+  private var htmlPreview: HtmlPreviewTool?
+  private var fileBrowser: FileBrowser?
+  private var buffersList: BuffersList?
 
-  fileprivate var usesTheme = true
-  fileprivate var lastThemeMark = Token()
+  private var usesTheme = true
+  private var lastThemeMark = Token()
 
-  fileprivate func updateNeoVimAppearance() {
+  private func updateNeoVimAppearance() {
     self.neoVimView.font = self.defaultFont
     self.neoVimView.linespacing = self.linespacing
     self.neoVimView.usesLigatures = self.usesLigatures
   }
 
-  fileprivate func set(workspaceThemeWith theme: Theme) {
+  private func set(workspaceThemeWith theme: Theme) {
     var workspaceTheme = Workspace.Theme()
     workspaceTheme.foreground = theme.foreground
     workspaceTheme.background = theme.background
@@ -354,7 +354,7 @@ class MainWindow: NSObject,
     self.workspace.theme = workspaceTheme
   }
 
-  fileprivate func open(urls: [URL: OpenMode]) {
+  private func open(urls: [URL: OpenMode]) {
     // If we don't call the following in the next tick, only half of the existing swap file warning is displayed.
     // Dunno why...
     DispatchQueue.main.async {
@@ -381,7 +381,7 @@ class MainWindow: NSObject,
     }
   }
 
-  fileprivate func addViews() {
+  private func addViews() {
     self.window.contentView?.addSubview(self.workspace)
     self.workspace.autoPinEdgesToSuperviewEdges()
   }

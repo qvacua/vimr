@@ -196,7 +196,7 @@ extension MainWindow {
     self.emit(self.uuidAction(for: .setToolsState(tools)))
   }
 
-  fileprivate func toolIdentifier(for tool: WorkspaceTool) -> Tools? {
+  private func toolIdentifier(for tool: WorkspaceTool) -> Tools? {
     if tool == self.fileBrowserContainer {
       return .fileBrowser
     }
