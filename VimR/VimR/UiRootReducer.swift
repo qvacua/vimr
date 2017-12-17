@@ -23,7 +23,7 @@ class UiRootReducer {
         isFullScreen: isFullScreen
       )
 
-    case let .frameChanged(to: frame):
+    case let .frameChanged(to:frame):
       if uuid == appState.currentMainWindowUuid {
         appState.mainWindowTemplate.frame = frame
       }
@@ -59,9 +59,9 @@ class UiRootReducer {
     return StateActionPair(state: appState, action: pair.action)
   }
 
-  fileprivate func mainWindowTemplate(from old: MainWindow.State,
-                                      new: MainWindow.State,
-                                      isFullScreen: Bool) -> MainWindow.State {
+  private func mainWindowTemplate(from old: MainWindow.State,
+                                  new: MainWindow.State,
+                                  isFullScreen: Bool) -> MainWindow.State {
 
     var result = old
 

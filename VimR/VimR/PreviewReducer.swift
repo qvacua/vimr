@@ -126,5 +126,5 @@ class MarkdownReducer {
     self.baseServerUrl = baseServerUrl
   }
 
-  fileprivate let baseServerUrl: URL
+  private let baseServerUrl: URL
 }
