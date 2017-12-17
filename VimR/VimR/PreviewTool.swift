@@ -125,7 +125,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
       .disposed(by: self.disposeBag)
   }
 
-  fileprivate func addViews() {
+  private func addViews() {
     self.webview.navigationDelegate = self
     self.userContentController.add(webviewMessageHandler, name: "com_vimr_tools_preview_markdown")
     self.webview.configureForAutoLayout()
@@ -142,36 +142,36 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
     self.webview.evaluateJavaScript("document.body.scrollTop = \(self.scrollTop)")
   }
 
-  fileprivate let emit: (UuidAction<Action>) -> Void
-  fileprivate let uuid: String
+  private let emit: (UuidAction<Action>) -> Void
+  private let uuid: String
 
-  fileprivate let webview: WKWebView
-  fileprivate let disposeBag = DisposeBag()
-  fileprivate let scheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
-  fileprivate var isOpen = false
+  private let webview: WKWebView
+  private let disposeBag = DisposeBag()
+  private let scheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
+  private var isOpen = false
 
-  fileprivate var url: URL?
-  fileprivate var lastUpdateDate = Date.distantPast
-  fileprivate var editorPosition = Marked(Position.beginning)
-  fileprivate var previewPosition = Position.beginning
-  fileprivate var scrollTop = 0
+  private var url: URL?
+  private var lastUpdateDate = Date.distantPast
+  private var editorPosition = Marked(Position.beginning)
+  private var previewPosition = Position.beginning
+  private var scrollTop = 0
 
-  fileprivate let userContentController = WKUserContentController()
-  fileprivate let webviewMessageHandler = WebviewMessageHandler()
+  private let userContentController = WKUserContentController()
+  private let webviewMessageHandler = WebviewMessageHandler()
 
-  fileprivate let automaticForwardMenuItem = NSMenuItem(title: "Automatic Forward Search",
+  private let automaticForwardMenuItem = NSMenuItem(title: "Automatic Forward Search",
                                                         action: nil,
                                                         keyEquivalent: "")
-  fileprivate let automaticReverseMenuItem = NSMenuItem(title: "Automatic Reverse Search",
+  private let automaticReverseMenuItem = NSMenuItem(title: "Automatic Reverse Search",
                                                         action: nil,
                                                         keyEquivalent: "")
-  fileprivate let refreshOnWriteMenuItem = NSMenuItem(title: "Refresh on Write", action: nil, keyEquivalent: "")
+  private let refreshOnWriteMenuItem = NSMenuItem(title: "Refresh on Write", action: nil, keyEquivalent: "")
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  fileprivate func forwardSearch(position: Position) {
+  private func forwardSearch(position: Position) {
     self.webview.evaluateJavaScript("scrollToPosition(\(position.row), \(position.column));") { result, error in
       if let scrollTop = result as? Int {
         self.scrollTop = scrollTop
@@ -208,7 +208,7 @@ extension PreviewTool {
   }
 }
 
-fileprivate class WebviewMessageHandler: NSObject, WKScriptMessageHandler {
+private class WebviewMessageHandler: NSObject, WKScriptMessageHandler {
 
   var source: Observable<(Position, Int)> {
     return self.subject.asObservable()

@@ -7,7 +7,7 @@ import Cocoa
 import RxSwift
 import EonilFileSystemEvents
 
-fileprivate let monitorDispatchQueue = DispatchQueue.global(qos: .userInitiated)
+private let monitorDispatchQueue = DispatchQueue.global(qos: .userInitiated)
 
 class FileMonitor: UiComponent {
 
@@ -59,9 +59,9 @@ class FileMonitor: UiComponent {
       .disposed(by: self.disposeBag)
   }
 
-  fileprivate let emit: (Action) -> Void
-  fileprivate let disposeBag = DisposeBag()
+  private let emit: (Action) -> Void
+  private let disposeBag = DisposeBag()
 
-  fileprivate var monitoredUrls = Set<URL>()
-  fileprivate var monitors = [URL: FileSystemEventMonitor]()
+  private var monitoredUrls = Set<URL>()
+  private var monitors = [URL: FileSystemEventMonitor]()
 }

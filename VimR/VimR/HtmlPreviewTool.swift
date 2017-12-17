@@ -9,8 +9,8 @@ import PureLayout
 import WebKit
 import EonilFileSystemEvents
 
-fileprivate let fileSystemEventsLatency = 1.0
-fileprivate let monitorDispatchQueue = DispatchQueue.global(qos: .userInitiated)
+private let fileSystemEventsLatency = 1.0
+private let monitorDispatchQueue = DispatchQueue.global(qos: .userInitiated)
 
 class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
@@ -69,7 +69,7 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
       .disposed(by: self.disposeBag)
   }
 
-  fileprivate func reloadWebview(with url: URL) {
+  private func reloadWebview(with url: URL) {
     self.webview.evaluateJavaScript("document.body.scrollTop") { (result, error) in
       self.scrollTop = result as? Int ?? 0
 
@@ -77,23 +77,23 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
     }
   }
 
-  fileprivate func addViews() {
+  private func addViews() {
     self.webview.configureForAutoLayout()
 
     self.addSubview(self.webview)
     self.webview.autoPinEdgesToSuperviewEdges()
   }
 
-  fileprivate let emit: (UuidAction<Action>) -> Void
-  fileprivate let uuid: String
+  private let emit: (UuidAction<Action>) -> Void
+  private let uuid: String
 
-  fileprivate var mark = Token()
-  fileprivate var scrollTop = 0
+  private var mark = Token()
+  private var scrollTop = 0
 
-  fileprivate let webview: WKWebView
-  fileprivate var monitor: FileSystemEventMonitor?
+  private let webview: WKWebView
+  private var monitor: FileSystemEventMonitor?
 
-  fileprivate let disposeBag = DisposeBag()
+  private let disposeBag = DisposeBag()
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -145,7 +145,7 @@ extension HtmlPreviewTool {
 
     }
 
-    fileprivate func addViews() {
+    private func addViews() {
       let selectHtmlFile = self.selectHtmlFile
       InnerToolBar.configureToStandardIconButton(button: selectHtmlFile, iconName: .fileCodeO)
       selectHtmlFile.toolTip = "Select the HTML file"
