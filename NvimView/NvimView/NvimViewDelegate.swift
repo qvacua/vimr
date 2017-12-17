@@ -5,23 +5,22 @@
 
 import Cocoa
 
-// See http://stackoverflow.com/a/24104371 for class
-public protocol NvimViewDelegate: class {
+public enum NvimViewEvent {
 
-  func neoVimStopped()
-  func set(title: String)
-  func set(dirtyStatus: Bool)
-  func cwdChanged()
-  func bufferListChanged()
-  func tabChanged()
-  /// Called when the current buffer changes, including when a new one is selected.
-  func newCurrentBuffer(_ currentBuffer: NvimView.Buffer)
-  func bufferWritten(_ buffer: NvimView.Buffer)
+  case neoVimStopped
+  case setTitle(String)
+  case setDirtyStatus(Bool)
+  case cwdChanged
+  case bufferListChanged
+  case tabChanged
+  
+  case newCurrentBuffer(NvimView.Buffer)
+  case bufferWritten(NvimView.Buffer)
 
-  func colorschemeChanged(to: NvimView.Theme)
+  case colorschemeChanged(NvimView.Theme)
 
-  func ipcBecameInvalid(reason: String)
+  case ipcBecameInvalid(String)
 
-  func scroll()
-  func cursor(to: Position)
+  case scroll
+  case cursor(Position)
 }

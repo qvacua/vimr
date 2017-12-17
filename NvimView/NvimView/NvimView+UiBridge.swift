@@ -49,7 +49,7 @@ extension NvimView {
       self.markForRender(cellPosition: self.grid.position)
       self.grid.goto(position)
 
-      self.delegate?.cursor(to: textPosition)
+      self.eventsSubject.onNext(.cursor(textPosition))
     }
   }
 
@@ -77,7 +77,7 @@ extension NvimView {
       self.markForRender(region: self.grid.region)
       // Do not send msgs to agent -> neovim in the delegate method. It causes spinning
       // when you're opening a file with existing swap file.
-      self.delegate?.scroll()
+      self.eventsSubject.onNext(.scroll)
     }
   }
 
@@ -176,7 +176,7 @@ extension NvimView {
     gui.async {
       self.bridgeLogger.debug(title)
 
-      self.delegate?.set(title: title)
+      self.eventsSubject.onNext(.setTitle(title))
     }
   }
 
@@ -187,7 +187,7 @@ extension NvimView {
 
     gui.async {
       self.waitForNeoVimToQuit()
-      self.delegate?.neoVimStopped()
+      self.eventsSubject.onNext(.neoVimStopped)
     }
   }
 
@@ -200,7 +200,7 @@ extension NvimView {
       }
 
       if event == .TABENTER {
-        self.tabChanged()
+        self.eventsSubject.onNext(.tabChanged)
       }
 
       if event == .BUFWRITEPOST {
@@ -221,7 +221,7 @@ extension NvimView {
         return
       }
 
-      self.delegate?.ipcBecameInvalid(reason: reason)
+      self.eventsSubject.onNext(.ipcBecameInvalid(reason))
 
       self.bridgeLogger.error("Force-closing due to IPC error.")
       self.nvim.disconnect()
@@ -246,7 +246,7 @@ extension NvimView {
       self.bridgeLogger.debug(cwd)
 
       self._cwd = URL(fileURLWithPath: cwd)
-      self.cwdChanged()
+      self.eventsSubject.onNext(.cwdChanged)
     }
   }
   public func colorSchemeChanged(_ values: [NSNumber]) {
@@ -255,7 +255,7 @@ extension NvimView {
       self.bridgeLogger.debug(theme)
 
       self.theme = theme
-      self.delegate?.colorschemeChanged(to: theme)
+      self.eventsSubject.onNext(.colorschemeChanged(theme))
     }
   }
 
@@ -263,7 +263,7 @@ extension NvimView {
     gui.async {
       self.bridgeLogger.debug(dirty)
 
-      self.delegate?.set(dirtyStatus: dirty)
+      self.eventsSubject.onNext(.setDirtyStatus(dirty))
     }
   }
 
@@ -367,7 +367,7 @@ extension NvimView {
         return buffer
       }
       .subscribe(onSuccess: {
-        self.delegate?.bufferWritten($0)
+        self.eventsSubject.onNext(.bufferWritten($0))
         if #available(OSX 10.12.2, *) {
           self.updateTouchBarTab()
         }
@@ -379,23 +379,15 @@ extension NvimView {
       .currentBuffer()
       .filter { $0.apiBuffer.handle == handle }
       .subscribe(onSuccess: {
-        self.delegate?.newCurrentBuffer($0)
+        self.eventsSubject.onNext(.newCurrentBuffer($0))
         if #available(OSX 10.12.2, *) {
           self.updateTouchBarTab()
         }
       })
   }
 
-  fileprivate func tabChanged() {
-    self.delegate?.tabChanged()
-  }
-
-  fileprivate func cwdChanged() {
-    self.delegate?.cwdChanged()
-  }
-
   fileprivate func bufferListChanged() {
-    self.delegate?.bufferListChanged()
+    self.eventsSubject.onNext(.bufferListChanged)
     if #available(OSX 10.12.2, *) {
       self.updateTouchBarCurrentBuffer()
     }

@@ -81,7 +81,6 @@ public class NvimView: NSView,
   public static let maxLinespacing = CGFloat(8)
 
   public let uuid = UUID().uuidString
-  public weak var delegate: NvimViewDelegate?
 
   public internal(set) var mode = CursorModeShape.normal
 
@@ -154,6 +153,10 @@ public class NvimView: NSView,
   }
 
   public internal(set) var currentPosition = Position.beginning
+
+  public var events: Observable<NvimViewEvent> {
+    return self.eventsSubject.asObservable()
+  }
 
   public init(frame rect: NSRect, config: Config) {
     self.drawer = TextDrawer(font: self._font)
@@ -257,6 +260,8 @@ public class NvimView: NSView,
 
   var nvimApiScheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
 
+  let eventsSubject = PublishSubject<NvimViewEvent>()
+
   // MARK: - Private
-  fileprivate var _linespacing = NvimView.defaultLinespacing
+  private var _linespacing = NvimView.defaultLinespacing
 }
