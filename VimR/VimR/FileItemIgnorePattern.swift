@@ -5,7 +5,7 @@
 
 import Foundation
 
-fileprivate let whitespaceCharSet = CharacterSet.whitespaces
+private let whitespaceCharSet = CharacterSet.whitespaces
 
 class FileItemIgnorePattern: Hashable, CustomStringConvertible {
 
@@ -50,7 +50,7 @@ class FileItemIgnorePattern: Hashable, CustomStringConvertible {
   let folderPattern: Bool
   let pattern: String
 
-  fileprivate let patternAsFileSysRep: UnsafeMutablePointer<Int8>
+  private let patternAsFileSysRep: UnsafeMutablePointer<Int8>
 
   init(pattern: String) {
     self.pattern = pattern
