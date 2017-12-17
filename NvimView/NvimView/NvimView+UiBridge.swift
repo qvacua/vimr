@@ -173,11 +173,9 @@ extension NvimView {
   }
 
   public func setTitle(_ title: String) {
-    gui.async {
-      self.bridgeLogger.debug(title)
+    self.bridgeLogger.debug(title)
 
-      self.eventsSubject.onNext(.setTitle(title))
-    }
+    self.eventsSubject.onNext(.setTitle(title))
   }
 
   public func stop() {
@@ -192,24 +190,22 @@ extension NvimView {
   }
 
   public func autoCommandEvent(_ event: NvimAutoCommandEvent, bufferHandle: Int) {
-    gui.async {
-      self.bridgeLogger.debug("\(nvimAutoCommandEventName(event)) -> \(bufferHandle)")
+    self.bridgeLogger.debug("\(nvimAutoCommandEventName(event)) -> \(bufferHandle)")
 
-      if event == .BUFWINENTER || event == .BUFWINLEAVE {
-        self.bufferListChanged()
-      }
+    if event == .BUFWINENTER || event == .BUFWINLEAVE {
+      self.bufferListChanged()
+    }
 
-      if event == .TABENTER {
-        self.eventsSubject.onNext(.tabChanged)
-      }
+    if event == .TABENTER {
+      self.eventsSubject.onNext(.tabChanged)
+    }
 
-      if event == .BUFWRITEPOST {
-        self.bufferWritten(bufferHandle)
-      }
+    if event == .BUFWRITEPOST {
+      self.bufferWritten(bufferHandle)
+    }
 
-      if event == .BUFENTER {
-        self.newCurrentBuffer(bufferHandle)
-      }
+    if event == .BUFENTER {
+      self.newCurrentBuffer(bufferHandle)
     }
   }
 
@@ -234,20 +230,16 @@ extension NvimView {
 extension NvimView {
 
   public func bell() {
-    gui.async {
-      self.bridgeLogger.mark()
+    self.bridgeLogger.mark()
 
-      NSSound.beep()
-    }
+    NSSound.beep()
   }
 
   public func cwdChanged(_ cwd: String) {
-    gui.async {
-      self.bridgeLogger.debug(cwd)
+    self.bridgeLogger.debug(cwd)
 
-      self._cwd = URL(fileURLWithPath: cwd)
-      self.eventsSubject.onNext(.cwdChanged)
-    }
+    self._cwd = URL(fileURLWithPath: cwd)
+    self.eventsSubject.onNext(.cwdChanged)
   }
   public func colorSchemeChanged(_ values: [NSNumber]) {
     gui.async {
@@ -260,59 +252,41 @@ extension NvimView {
   }
 
   public func setDirtyStatus(_ dirty: Bool) {
-    gui.async {
-      self.bridgeLogger.debug(dirty)
+    self.bridgeLogger.debug(dirty)
 
-      self.eventsSubject.onNext(.setDirtyStatus(dirty))
-    }
+    self.eventsSubject.onNext(.setDirtyStatus(dirty))
   }
 
   public func updateMenu() {
-    gui.async {
-      self.bridgeLogger.mark()
-    }
+    self.bridgeLogger.mark()
   }
 
   public func busyStart() {
-    gui.async {
-      self.bridgeLogger.mark()
-    }
+    self.bridgeLogger.mark()
   }
 
   public func busyStop() {
-    gui.async {
-      self.bridgeLogger.mark()
-    }
+    self.bridgeLogger.mark()
   }
 
   public func mouseOn() {
-    gui.async {
-      self.bridgeLogger.mark()
-    }
+    self.bridgeLogger.mark()
   }
 
   public func mouseOff() {
-    gui.async {
-      self.bridgeLogger.mark()
-    }
+    self.bridgeLogger.mark()
   }
 
   public func visualBell() {
-    gui.async {
-      self.bridgeLogger.mark()
-    }
+    self.bridgeLogger.mark()
   }
 
   public func suspend() {
-    gui.async {
-      self.bridgeLogger.mark()
-    }
+    self.bridgeLogger.mark()
   }
 
   public func setIcon(_ icon: String) {
-    gui.async {
-      self.bridgeLogger.debug(icon)
-    }
+    self.bridgeLogger.debug(icon)
   }
 }
 
