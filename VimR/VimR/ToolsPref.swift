@@ -43,28 +43,28 @@ class ToolsPref: PrefPane, UiComponent {
       .disposed(by: self.disposeBag)
   }
 
-  fileprivate let emit: (Action) -> Void
-  fileprivate let disposeBag = DisposeBag()
+  private let emit: (Action) -> Void
+  private let disposeBag = DisposeBag()
 
-  fileprivate var tools: [MainWindow.Tools: Bool]
+  private var tools: [MainWindow.Tools: Bool]
 
-  fileprivate let fileBrowserCheckbox = NSButton(forAutoLayout: ())
-  fileprivate let openedFilesListCheckbox = NSButton(forAutoLayout: ())
-  fileprivate let previewCheckbox = NSButton(forAutoLayout: ())
-  fileprivate let htmlCheckbox = NSButton(forAutoLayout: ())
+  private let fileBrowserCheckbox = NSButton(forAutoLayout: ())
+  private let openedFilesListCheckbox = NSButton(forAutoLayout: ())
+  private let previewCheckbox = NSButton(forAutoLayout: ())
+  private let htmlCheckbox = NSButton(forAutoLayout: ())
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  fileprivate func updateViews() {
+  private func updateViews() {
     self.fileBrowserCheckbox.boolState = self.tools[.fileBrowser] ?? true
     self.openedFilesListCheckbox.boolState = self.tools[.buffersList] ?? true
     self.previewCheckbox.boolState = self.tools[.preview] ?? true
     self.htmlCheckbox.boolState = self.tools[.htmlPreview] ?? true
   }
 
-  fileprivate func addViews() {
+  private func addViews() {
     let paneTitle = self.paneTitleTextField(title: "Tools")
 
     let fileBrowser = self.fileBrowserCheckbox

@@ -57,20 +57,20 @@ class PrefWindow: NSObject,
       .disposed(by: self.disposeBag)
   }
 
-  fileprivate let emit: (Action) -> Void
-  fileprivate let disposeBag = DisposeBag()
+  private let emit: (Action) -> Void
+  private let disposeBag = DisposeBag()
 
-  fileprivate var openStatusMark: Token
+  private var openStatusMark: Token
 
-  fileprivate let windowController: NSWindowController
-  fileprivate var window: NSWindow { return self.windowController.window! }
+  private let windowController: NSWindowController
+  private var window: NSWindow { return self.windowController.window! }
 
-  fileprivate let categoryView = NSTableView.standardSourceListTableView()
-  fileprivate let categoryScrollView = NSScrollView.standardScrollView()
-  fileprivate let paneContainer = NSScrollView(forAutoLayout: ())
+  private let categoryView = NSTableView.standardSourceListTableView()
+  private let categoryScrollView = NSScrollView.standardScrollView()
+  private let paneContainer = NSScrollView(forAutoLayout: ())
 
-  fileprivate let panes: [PrefPane]
-  fileprivate var currentPane: PrefPane {
+  private let panes: [PrefPane]
+  private var currentPane: PrefPane {
     get {
       return self.paneContainer.documentView as! PrefPane
     }
@@ -85,7 +85,7 @@ class PrefWindow: NSObject,
     }
   }
 
-  fileprivate func addViews() {
+  private func addViews() {
     let categoryView = self.categoryView
     categoryView.dataSource = self
     categoryView.delegate = self
