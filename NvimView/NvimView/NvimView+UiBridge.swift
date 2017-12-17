@@ -186,6 +186,7 @@ extension NvimView {
     gui.async {
       self.waitForNeoVimToQuit()
       self.eventsSubject.onNext(.neoVimStopped)
+      self.eventsSubject.onCompleted()
     }
   }
 
@@ -218,6 +219,7 @@ extension NvimView {
       }
 
       self.eventsSubject.onNext(.ipcBecameInvalid(reason))
+      self.eventsSubject.onCompleted()
 
       self.bridgeLogger.error("Force-closing due to IPC error.")
       self.nvim.disconnect()

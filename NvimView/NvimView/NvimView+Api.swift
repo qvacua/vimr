@@ -198,6 +198,7 @@ extension NvimView {
   public func quitNeoVimWithoutSaving() {
     self.nvim.command(command: "qa!", expectsReturnValue: false)
     self.eventsSubject.onNext(.neoVimStopped)
+    self.eventsSubject.onCompleted()
     self.waitForNeoVimToQuit()
   }
 
