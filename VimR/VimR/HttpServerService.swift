@@ -44,7 +44,7 @@ class HttpServerService {
   }
 
   func applyMainWindow(_ pair: MainWindowPair) {
-    guard case .setCurrentBuffer = pair.action else {
+    guard case .newCurrentBuffer = pair.action else {
       return
     }
 

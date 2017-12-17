@@ -33,7 +33,7 @@ class MarkdownReducer {
 
     switch pair.action {
 
-    case let .setCurrentBuffer(buffer):
+    case let .newCurrentBuffer(buffer):
       guard state.previewTool.isRefreshOnWrite else {
         return pair
       }

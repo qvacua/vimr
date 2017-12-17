@@ -59,15 +59,20 @@ extension MainWindow {
       })
   }
 
-  func currentBufferChanged(_ currentBuffer: NvimView.Buffer) {
-    self.emit(self.uuidAction(for: .setCurrentBuffer(currentBuffer)))
+  func bufferWritten(_ buffer: NvimView.Buffer) {
+    stdoutLog.debug(buffer)
+    self.emit(self.uuidAction(for: .bufferWritten(buffer)))
+  }
+
+  func newCurrentBuffer(_ currentBuffer: NvimView.Buffer) {
+    self.emit(self.uuidAction(for: .newCurrentBuffer(currentBuffer)))
   }
 
   func tabChanged() {
     self.neoVimView
       .currentBuffer()
       .subscribe(onSuccess: {
-        self.currentBufferChanged($0)
+        self.newCurrentBuffer($0)
       })
   }
 

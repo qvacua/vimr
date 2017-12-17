@@ -232,7 +232,7 @@ extension NvimView {
     self.nvim.command(command: "\(cmd) \(url.path)", expectsReturnValue: false)
   }
 
-  private func neoVimBuffer(for buf: NvimApi.Buffer, currentBuffer: NvimApi.Buffer?) -> NvimView.Buffer? {
+  func neoVimBuffer(for buf: NvimApi.Buffer, currentBuffer: NvimApi.Buffer?) -> NvimView.Buffer? {
     guard let info = self.nvim.getBufGetInfo(buffer: buf).value else {
       return nil
     }

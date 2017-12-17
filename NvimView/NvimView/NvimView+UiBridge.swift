@@ -4,6 +4,8 @@
  */
 
 import Cocoa
+import NvimMsgPack
+import RxSwift
 
 extension NvimView {
 
@@ -201,8 +203,12 @@ extension NvimView {
         self.tabChanged()
       }
 
-      if event == .BUFREADPOST || event == .BUFWRITEPOST || event == .BUFENTER {
-        self.currentBufferChanged(bufferHandle)
+      if event == .BUFWRITEPOST {
+        self.bufferWritten(bufferHandle)
+      }
+
+      if event == .BUFENTER {
+        self.newCurrentBuffer(bufferHandle)
       }
     }
   }
@@ -350,12 +356,30 @@ extension NvimView {
 
 extension NvimView {
 
-  fileprivate func currentBufferChanged(_ handle: Int) {
+  fileprivate func bufferWritten(_ handle: Int) {
+    self
+      .currentBuffer()
+      .map { curBuf -> NvimView.Buffer in
+        guard let buffer = self.neoVimBuffer(for: NvimApi.Buffer(handle), currentBuffer: curBuf.apiBuffer) else {
+          throw NvimView.Error.api("Could not get buffer for buffer handle \(handle).")
+        }
+
+        return buffer
+      }
+      .subscribe(onSuccess: {
+        self.delegate?.bufferWritten($0)
+        if #available(OSX 10.12.2, *) {
+          self.updateTouchBarTab()
+        }
+      })
+  }
+
+  fileprivate func newCurrentBuffer(_ handle: Int) {
     self
       .currentBuffer()
       .filter { $0.apiBuffer.handle == handle }
       .subscribe(onSuccess: {
-        self.delegate?.currentBufferChanged($0)
+        self.delegate?.newCurrentBuffer($0)
         if #available(OSX 10.12.2, *) {
           self.updateTouchBarTab()
         }

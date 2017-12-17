@@ -22,7 +22,8 @@ class MainWindow: NSObject,
     case cd(to: URL)
     case setBufferList([NvimView.Buffer])
 
-    case setCurrentBuffer(NvimView.Buffer)
+    case newCurrentBuffer(NvimView.Buffer)
+    case bufferWritten(NvimView.Buffer)
     case setDirtyStatus(Bool)
 
     case becomeKey(isFullScreen: Bool)

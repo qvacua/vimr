@@ -25,7 +25,7 @@ class MainWindowReducer {
     case let .setBufferList(buffers):
       state.buffers = buffers
 
-    case let .setCurrentBuffer(buffer):
+    case let .newCurrentBuffer(buffer):
       state.currentBuffer = buffer
 
     case let .setDirtyStatus(status):
