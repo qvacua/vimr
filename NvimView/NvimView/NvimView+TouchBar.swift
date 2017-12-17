@@ -56,6 +56,7 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
   func updateTouchBarCurrentBuffer() {
     self
       .allTabs()
+      .observeOn(MainScheduler.instance)
       .subscribe(onSuccess: {
         self.tabsCache = $0
 
@@ -73,6 +74,7 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
   func updateTouchBarTab() {
     self
       .allTabs()
+      .observeOn(MainScheduler.instance)
       .subscribe(onSuccess: {
         self.tabsCache = $0
 
