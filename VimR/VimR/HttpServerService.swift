@@ -66,6 +66,6 @@ class HttpServerService {
     self.server.GET["\(htmlBasePath)/github-markdown.css"] = shareFile(self.githubCssUrl.path)
   }
 
-  fileprivate let server = HttpServer()
-  fileprivate let githubCssUrl: URL
+  private let server = HttpServer()
+  private let githubCssUrl: URL
 }

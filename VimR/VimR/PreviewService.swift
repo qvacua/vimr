@@ -51,13 +51,13 @@ class PreviewService {
     }
   }
 
-  fileprivate func filledTemplate(body: String, title: String) -> String {
+  private func filledTemplate(body: String, title: String) -> String {
     return self.template
       .replacingOccurrences(of: "{{ title }}", with: title)
       .replacingOccurrences(of: "{{ body }}", with: body)
   }
 
-  fileprivate func render(_ bufferUrl: URL, to htmlUrl: URL) throws {
+  private func render(_ bufferUrl: URL, to htmlUrl: URL) throws {
     let doc = CMDocument(contentsOfFile: bufferUrl.path, options: .sourcepos)
     let renderer = CMHTMLRenderer(document: doc)
 
@@ -72,7 +72,7 @@ class PreviewService {
     try html.write(toFile: htmlFilePath, atomically: true, encoding: .utf8)
   }
 
-  fileprivate func apply(_ state: UuidState<MainWindow.State>) {
+  private func apply(_ state: UuidState<MainWindow.State>) {
     let uuid = state.uuid
 
     let preview = state.payload.preview
@@ -98,7 +98,7 @@ class PreviewService {
     }
   }
 
-  fileprivate let template: String
-  fileprivate let tempDir = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-  fileprivate var previewFiles = [String: URL]()
+  private let template: String
+  private let tempDir = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+  private var previewFiles = [String: URL]()
 }
