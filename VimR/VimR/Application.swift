@@ -26,7 +26,7 @@ class Application: NSApplication {
   }
 }
 
-fileprivate func setPressAndHoldSetting() {
+private func setPressAndHoldSetting() {
   // disable default press and hold behavior (copied from MacVim)
   CFPreferencesSetAppValue(
     "ApplePressAndHoldEnabled" as NSString,
