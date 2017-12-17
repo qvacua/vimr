@@ -17,7 +17,7 @@ class OpenQuicklyFileViewRow: NSTableRowView {
     self.rectsBeingDrawn().forEach { NSIntersectionRect($0, dirtyRect).fill(using: .sourceOver) }
   }
 
-  fileprivate func rectsBeingDrawn() -> [CGRect] {
+  private func rectsBeingDrawn() -> [CGRect] {
     var rectsPtr: UnsafePointer<CGRect>? = nil
     var count: Int = 0
     self.getRectsBeingDrawn(&rectsPtr, count: &count)

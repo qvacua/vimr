@@ -8,8 +8,8 @@ import PureLayout
 
 class ImageAndTextTableCell: NSTableCellView {
 
-  fileprivate let _textField = NSTextField(forAutoLayout: ())
-  fileprivate let _imageView = NSImageView(forAutoLayout: ())
+  private let _textField = NSTextField(forAutoLayout: ())
+  private let _imageView = NSImageView(forAutoLayout: ())
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
