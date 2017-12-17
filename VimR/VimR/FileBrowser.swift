@@ -64,23 +64,23 @@ class FileBrowser: NSView,
       .disposed(by: self.disposeBag)
   }
 
-  fileprivate let emit: (UuidAction<Action>) -> Void
-  fileprivate let disposeBag = DisposeBag()
+  private let emit: (UuidAction<Action>) -> Void
+  private let disposeBag = DisposeBag()
 
-  fileprivate let uuid: String
+  private let uuid: String
 
-  fileprivate var currentBufferUrl: URL?
+  private var currentBufferUrl: URL?
 
-  fileprivate let fileView: FileOutlineView
-  fileprivate let showHiddenMenuItem: NSMenuItem
+  private let fileView: FileOutlineView
+  private let showHiddenMenuItem: NSMenuItem
 
-  fileprivate var cwd: URL
+  private var cwd: URL
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  fileprivate func addViews() {
+  private func addViews() {
     let scrollView = NSScrollView.standardScrollView()
     scrollView.borderType = .noBorder
     scrollView.documentView = self.fileView
@@ -93,14 +93,6 @@ class FileBrowser: NSView,
 extension FileBrowser {
 
   class InnerCustomToolbar: CustomToolBar {
-
-    fileprivate weak var fileBrowser: FileBrowser? {
-      didSet {
-        self.goToParentButton.target = self.fileBrowser
-        self.scrollToSourceButton.target = self.fileBrowser
-        self.refreshButton.target = self.fileBrowser
-      }
-    }
 
     let goToParentButton = NSButton(forAutoLayout: ())
     let scrollToSourceButton = NSButton(forAutoLayout: ())
@@ -127,7 +119,15 @@ extension FileBrowser {
                                                          dimension: InnerToolBar.iconDimension)
     }
 
-    fileprivate func addViews() {
+    fileprivate weak var fileBrowser: FileBrowser? {
+      didSet {
+        self.goToParentButton.target = self.fileBrowser
+        self.scrollToSourceButton.target = self.fileBrowser
+        self.refreshButton.target = self.fileBrowser
+      }
+    }
+
+    private func addViews() {
       let goToParent = self.goToParentButton
       InnerToolBar.configureToStandardIconButton(button: goToParent, iconName: .levelUp)
       goToParent.toolTip = "Set parent as working directory"

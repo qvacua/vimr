@@ -44,7 +44,7 @@ class ThemedTableRow: NSTableRowView {
     dirtyRect.fill()
   }
 
-  fileprivate weak var themedView: ThemedView?
+  private weak var themedView: ThemedView?
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -148,7 +148,7 @@ class ThemedTableCell: NSTableCellView {
     return self
   }
 
-  fileprivate func addTextField() {
+  private func addTextField() {
     let textField = self._textField
 
     textField.removeFromSuperview()
@@ -157,8 +157,8 @@ class ThemedTableCell: NSTableCellView {
     textField.autoPinEdgesToSuperviewEdges(with: NSEdgeInsets(top: 2, left: 4, bottom: 2, right: 2))
   }
 
-  fileprivate let _textField = NSTextField(forAutoLayout: ())
-  fileprivate let _imageView = NSImageView(forAutoLayout: ())
+  private let _textField = NSTextField(forAutoLayout: ())
+  private let _imageView = NSImageView(forAutoLayout: ())
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")

@@ -16,7 +16,7 @@ class FileOutlineView: NSOutlineView,
 
   typealias StateType = MainWindow.State
 
-  fileprivate(set) var theme = Theme.default
+  private(set) var theme = Theme.default
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
@@ -119,37 +119,37 @@ class FileOutlineView: NSOutlineView,
     }
   }
 
-  fileprivate let emit: (UuidAction<FileBrowser.Action>) -> Void
-  fileprivate let disposeBag = DisposeBag()
+  private let emit: (UuidAction<FileBrowser.Action>) -> Void
+  private let disposeBag = DisposeBag()
 
-  fileprivate let uuid: String
-  fileprivate var lastFileSystemUpdateMark = Token()
-  fileprivate var usesTheme: Bool
-  fileprivate var lastThemeMark = Token()
-  fileprivate var showsFileIcon: Bool
+  private let uuid: String
+  private var lastFileSystemUpdateMark = Token()
+  private var usesTheme: Bool
+  private var lastThemeMark = Token()
+  private var showsFileIcon: Bool
 
-  fileprivate var cwd: URL {
+  private var cwd: URL {
     return self.root.url
   }
-  fileprivate var isShowHidden: Bool
+  private var isShowHidden: Bool
 
-  fileprivate var root: FileBrowserItem
+  private var root: FileBrowserItem
 
-  fileprivate var widths = [String: CGFloat]()
-  fileprivate var cells = [String: ThemedTableCell]()
+  private var widths = [String: CGFloat]()
+  private var cells = [String: ThemedTableCell]()
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  fileprivate func updateTheme(_ theme: Marked<Theme>) {
+  private func updateTheme(_ theme: Marked<Theme>) {
     self.theme = theme.payload
     self.enclosingScrollView?.backgroundColor = self.theme.background
     self.backgroundColor = self.theme.background
     self.lastThemeMark = theme.mark
   }
 
-  fileprivate func shouldReloadData(for state: StateType, themeChanged: Bool = false) -> Bool {
+  private func shouldReloadData(for state: StateType, themeChanged: Bool = false) -> Bool {
     if self.isShowHidden != state.fileBrowserShowHidden {
       return true
     }
@@ -169,7 +169,7 @@ class FileOutlineView: NSOutlineView,
     return false
   }
 
-  fileprivate func handleRemovals(for fileBrowserItem: FileBrowserItem,
+  private func handleRemovals(for fileBrowserItem: FileBrowserItem,
                                   new newChildren: [FileBrowserItem]) {
     let curChildren = fileBrowserItem.children
 
@@ -194,7 +194,7 @@ class FileOutlineView: NSOutlineView,
     self.removeItems(at: IndexSet(indicesToRemove), inParent: parent)
   }
 
-  fileprivate func handleAdditions(for fileBrowserItem: FileBrowserItem,
+  private func handleAdditions(for fileBrowserItem: FileBrowserItem,
                                    new newChildren: [FileBrowserItem]) {
     let curChildren = fileBrowserItem.children
 
@@ -214,11 +214,11 @@ class FileOutlineView: NSOutlineView,
     self.insertItems(at: IndexSet(indicesToInsert), inParent: parent)
   }
 
-  fileprivate func sortedChildren(of url: URL) -> [FileBrowserItem] {
+  private func sortedChildren(of url: URL) -> [FileBrowserItem] {
     return FileUtils.directDescendants(of: url).map(FileBrowserItem.init).sorted()
   }
 
-  fileprivate func update(_ fileBrowserItem: FileBrowserItem) {
+  private func update(_ fileBrowserItem: FileBrowserItem) {
     let url = fileBrowserItem.url
 
     // Sort the array to keep the order.
@@ -237,7 +237,7 @@ class FileOutlineView: NSOutlineView,
     fileBrowserItem.children.filter { self.isItemExpanded($0) }.forEach(self.update)
   }
 
-  fileprivate func fileBrowserItem(with url: URL) -> FileBrowserItem? {
+  private func fileBrowserItem(with url: URL) -> FileBrowserItem? {
     if self.cwd == url {
       return self.root
     }
@@ -263,7 +263,7 @@ class FileOutlineView: NSOutlineView,
 // MARK: - NSOutlineViewDataSource
 extension FileOutlineView {
 
-  fileprivate func scanChildrenIfNecessary(_ fileBrowserItem: FileBrowserItem) {
+  private func scanChildrenIfNecessary(_ fileBrowserItem: FileBrowserItem) {
     guard fileBrowserItem.isChildrenScanned == false else {
       return
     }
@@ -272,7 +272,7 @@ extension FileOutlineView {
     fileBrowserItem.isChildrenScanned = true
   }
 
-  fileprivate func prepare(_ children: [FileBrowserItem]) -> [FileBrowserItem] {
+  private func prepare(_ children: [FileBrowserItem]) -> [FileBrowserItem] {
     return self.isShowHidden ? children : children.filter { !$0.isHidden }
   }
 
@@ -357,13 +357,13 @@ extension FileOutlineView {
     return fileBrowserItem
   }
 
-  fileprivate func cellWidth(for cell: NSView?, level: Int) -> CGFloat {
+  private func cellWidth(for cell: NSView?, level: Int) -> CGFloat {
     let cellWidth = cell?.intrinsicContentSize.width ?? 0
     let indentation = CGFloat(level + 1) * self.indentationPerLevel + 4
     return cellWidth + indentation
   }
 
-  fileprivate func adjustColumnWidths() {
+  private func adjustColumnWidths() {
     guard let column = self.outlineTableColumn else {
       return
     }
@@ -512,7 +512,7 @@ extension FileOutlineView {
   }
 }
 
-fileprivate class FileBrowserItem: Hashable, Comparable, CustomStringConvertible {
+private class FileBrowserItem: Hashable, Comparable, CustomStringConvertible {
 
   static func ==(left: FileBrowserItem, right: FileBrowserItem) -> Bool {
     return left.url == right.url
