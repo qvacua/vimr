@@ -57,7 +57,7 @@ class HttpServerService {
       return
     }
 
-    NSLog("Serving \(html) on \(server)")
+    fileLog.debug("Serving \(html) on \(server)")
 
     let htmlBasePath = server.deletingLastPathComponent().path
 
