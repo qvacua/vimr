@@ -83,7 +83,7 @@ extension URL {
   ///
   /// - parameters:
   ///   - key: The `key`-parameter of `NSURL.getResourceValue`.
-  fileprivate func resourceValue(_ key: String) -> Bool {
+  private func resourceValue(_ key: String) -> Bool {
     var rsrc: AnyObject?
 
     do {
