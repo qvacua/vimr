@@ -7,13 +7,13 @@ import Cocoa
 
 class WorkspaceToolButton: NSView, NSDraggingSource {
 
-  static fileprivate let titlePadding = CGSize(width: 8, height: 2)
-  static fileprivate let dummyButton = WorkspaceToolButton(title: "Dummy")
+  static private let titlePadding = CGSize(width: 8, height: 2)
+  static private let dummyButton = WorkspaceToolButton(title: "Dummy")
 
-  fileprivate var isHighlighted = false
+  private var isHighlighted = false
 
-  fileprivate let title: NSMutableAttributedString
-  fileprivate var trackingArea = NSTrackingArea()
+  private let title: NSMutableAttributedString
+  private var trackingArea = NSTrackingArea()
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -180,7 +180,7 @@ extension WorkspaceToolButton {
   }
 
   // Modified version of snapshot() from https://www.raywenderlich.com/136272/drag-and-drop-tutorial-for-macos
-  fileprivate func snapshot() -> NSImage {
+  private func snapshot() -> NSImage {
     let pdfData = self.dataWithPDF(inside: self.bounds)
     guard let image = NSImage(data: pdfData) else {
       return NSImage()

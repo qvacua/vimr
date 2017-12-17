@@ -13,7 +13,7 @@ protocol WorkspaceToolDelegate: class {
 
 class WorkspaceTool: NSView {
 
-  fileprivate var innerToolbar: InnerToolBar?
+  private var innerToolbar: InnerToolBar?
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -145,7 +145,7 @@ class WorkspaceTool: NSView {
     self.needsDisplay = true
   }
 
-  fileprivate func addViews() {
+  private func addViews() {
     let view = self.view
     self.addSubview(view)
 
