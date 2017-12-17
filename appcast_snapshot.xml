@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-250</title>
+      <title>SNAPSHOT-251</title>
       <description><![CDATA[
     <ul>
 <li>GH-586: Bugfix: <code>Denite buffer</code> hangs.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/250
+        https://github.com/qvacua/vimr/releases/tag/snapshot/251
       </releaseNotesLink>
-      <pubDate>2017-12-16T21:48:33.285264</pubDate>
+      <pubDate>2017-12-17T12:37:36.157995</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/250/VimR-SNAPSHOT-250.tar.bz2"
-                 sparkle:version="250"
-                 sparkle:shortVersionString="SNAPSHOT-250"
-                 sparkle:dsaSignature="MC0CFQCCQeo2S7t13d4/nPUsFsUN/A4PxwIUbFALrk30f4E4xTul+6VuvTsocIk="
-                 length="11973084"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/251/VimR-SNAPSHOT-251.tar.bz2"
+                 sparkle:version="251"
+                 sparkle:shortVersionString="SNAPSHOT-251"
+                 sparkle:dsaSignature="MC0CFQDnDJfx/EEF6YQhp8OCG//qymHGYQIUUUOW5RVG0OoUswGQ8591Iyk8whQ="
+                 length="11969387"
                  type="application/octet-stream"/>
     </item>
   </channel>
