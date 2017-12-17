@@ -88,7 +88,8 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
         self.automaticReverseMenuItem.boolState = state.previewTool.isReverseSearchAutomatically
         self.refreshOnWriteMenuItem.boolState = state.previewTool.isRefreshOnWrite
 
-        if state.previewTool.isForwardSearchAutomatically
+        if state.preview.status == .markdown
+           && state.previewTool.isForwardSearchAutomatically
            && state.preview.editorPosition.hasDifferentMark(as: self.editorPosition)
         {
           self.forwardSearch(position: state.preview.editorPosition.payload)

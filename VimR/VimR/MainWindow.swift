@@ -231,8 +231,8 @@ class MainWindow: NSObject,
         if let cwd = state.cwdToSet {
           self.neoVimView.cwd = cwd
         }
-
-        if state.previewTool.isReverseSearchAutomatically
+        if state.preview.status == .markdown
+           && state.previewTool.isReverseSearchAutomatically
            && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition) {
           self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
         }

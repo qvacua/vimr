@@ -109,7 +109,10 @@ class MarkdownReducer {
       state.preview.lastSearch = .none // .none because the forward search does not invoke .scroll above.
 
     case .close:
-      state.preview = PreviewUtils.state(for: .none, baseUrl: self.baseServerUrl)
+      state.preview = PreviewUtils.state(for: .none,
+                                         baseUrl: self.baseServerUrl,
+                                         editorPosition: state.preview.editorPosition,
+                                         previewPosition: state.preview.previewPosition)
       state.preview.lastSearch = .none
 
     default:

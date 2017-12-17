@@ -9,20 +9,30 @@ fileprivate let markdownPath = "tools/preview/markdown"
 
 class PreviewUtils {
 
-  static func state(for status: PreviewState.Status, baseUrl: URL) -> PreviewState {
+  static func state(for status: PreviewState.Status,
+                    baseUrl: URL,
+                    editorPosition: Marked<Position>,
+                    previewPosition: Marked<Position>) -> PreviewState {
+
     switch status {
 
     case .none:
       return PreviewState(status: .none,
-                          server: self.simpleServerUrl(with: MarkdownReducer.nonePath, baseUrl: baseUrl))
+                          server: self.simpleServerUrl(with: MarkdownReducer.nonePath, baseUrl: baseUrl),
+                          editorPosition: editorPosition,
+                          previewPosition: previewPosition)
 
     case .error:
       return PreviewState(status: .error,
-                          server: self.simpleServerUrl(with: MarkdownReducer.errorPath, baseUrl: baseUrl))
+                          server: self.simpleServerUrl(with: MarkdownReducer.errorPath, baseUrl: baseUrl),
+                          editorPosition: editorPosition,
+                          previewPosition: previewPosition)
 
     case .notSaved:
       return PreviewState(status: .notSaved,
-                          server: self.simpleServerUrl(with: MarkdownReducer.saveFirstPath, baseUrl: baseUrl))
+                          server: self.simpleServerUrl(with: MarkdownReducer.saveFirstPath, baseUrl: baseUrl),
+                          editorPosition: editorPosition,
+                          previewPosition: previewPosition)
 
     case .markdown:
       preconditionFailure("ERROR Use the other previewState()!")
@@ -37,15 +47,21 @@ class PreviewUtils {
                     previewPosition: Marked<Position>) -> PreviewState {
 
     guard let url = buffer?.url else {
-      return self.state(for: .notSaved, baseUrl: baseUrl)
+      return self.state(
+        for: .notSaved, baseUrl: baseUrl, editorPosition: editorPosition, previewPosition: previewPosition
+      )
     }
 
     guard FileUtils.fileExists(at: url) else {
-      return self.state(for: .error, baseUrl: baseUrl)
+      return self.state(
+        for: .error, baseUrl: baseUrl, editorPosition: editorPosition, previewPosition: previewPosition
+      )
     }
 
     guard self.extensions.contains(url.pathExtension) else {
-      return self.state(for: .none, baseUrl: baseUrl)
+      return self.state(
+        for: .none, baseUrl: baseUrl, editorPosition: editorPosition, previewPosition: previewPosition
+      )
     }
 
     return PreviewState(status: .markdown,
