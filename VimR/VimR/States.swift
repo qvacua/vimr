@@ -140,24 +140,23 @@ struct PreviewState {
 
   var editorPosition = Marked(Position.beginning)
   var previewPosition = Marked(Position.beginning)
-
-  // FIXME: delete the followin?
-//  var ignoreNextForward = false
-//  var ignoreNextReverse = false
-//  var forceNextReverse = false
-
   var lastSearch = SearchAction.none
 
   init(status: Status = .none,
        buffer: URL? = nil,
        html: URL? = nil,
        server: URL? = nil,
-       updateDate: Date = Date()) {
+       updateDate: Date = Date(),
+       editorPosition: Marked<Position> = Marked(.beginning),
+       previewPosition: Marked<Position> = Marked(.beginning)
+  ) {
     self.status = status
     self.buffer = buffer
     self.html = html
     self.server = server
     self.updateDate = updateDate
+    self.editorPosition = editorPosition
+    self.previewPosition = previewPosition
   }
 }
 

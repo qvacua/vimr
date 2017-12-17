@@ -48,15 +48,12 @@ class PreviewUtils {
       return self.state(for: .none, baseUrl: baseUrl)
     }
 
-    var result =  PreviewState(status: .markdown,
+    return PreviewState(status: .markdown,
                         buffer: url,
                         html: self.htmlUrl(with: uuid),
-                        server: self.serverUrl(for: uuid, baseUrl: baseUrl, lastComponent: "index.html"))
-
-    result.editorPosition = editorPosition
-    result.previewPosition = previewPosition
-
-    return result
+                        server: self.serverUrl(for: uuid, baseUrl: baseUrl, lastComponent: "index.html"),
+                        editorPosition: editorPosition,
+                        previewPosition: previewPosition)
   }
 
   fileprivate static func serverUrl(for uuid: String, baseUrl: URL, lastComponent: String) -> URL {
