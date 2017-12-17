@@ -30,18 +30,11 @@ class MarkdownReducer {
       state.preview.lastSearch = .reload
 
     case let .reverseSearch(to:position):
-      stdoutLog.debug(pair.action)
-      stdoutLog.info(state.preview)
       state.preview.previewPosition = Marked(position)
       state.preview.lastSearch = .reverse
-      stdoutLog.error(state.preview)
 
     case let .scroll(to:position):
-      stdoutLog.debug(pair.action)
-      stdoutLog.info(state.preview)
-
       if state.preview.lastSearch == .reload {
-        stdoutLog.error("Returning cause reload")
         state.preview.lastSearch = .none
         return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
       }
@@ -49,12 +42,10 @@ class MarkdownReducer {
       guard state.previewTool.isReverseSearchAutomatically && state.preview.lastSearch != .forward else {
         state.preview.lastSearch = .none
         state.preview.previewPosition = Marked(mark: state.preview.previewPosition.mark, payload: position)
-        stdoutLog.error(state.preview)
         return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
       }
       state.preview.previewPosition = Marked(position)
       state.preview.lastSearch = .reverse
-      stdoutLog.error(state.preview)
 
     default:
       return pair
@@ -70,13 +61,10 @@ class MarkdownReducer {
     switch pair.action {
 
     case let .open(buffer):
-      stdoutLog.debug(pair.action)
-      stdoutLog.info(state.preview)
       state.preview = PreviewUtils.state(for: pair.state.uuid, baseUrl: self.baseServerUrl, buffer: buffer,
                                          editorPosition: Marked(.beginning),
                                          previewPosition: Marked(.beginning))
       state.preview.lastSearch = .none
-      stdoutLog.error(state.preview)
 
     }
 
@@ -89,17 +77,12 @@ class MarkdownReducer {
     switch pair.action {
 
     case let .newCurrentBuffer(buffer):
-      stdoutLog.debug(pair.action)
-      stdoutLog.info(state.preview)
       state.preview = PreviewUtils.state(for: pair.state.uuid, baseUrl: self.baseServerUrl, buffer: buffer,
                                          editorPosition: state.preview.editorPosition,
                                          previewPosition: state.preview.previewPosition)
       state.preview.lastSearch = .none
-      stdoutLog.error(state.preview)
 
     case let .bufferWritten(buffer):
-      stdoutLog.debug(pair.action)
-      stdoutLog.info(state.preview)
       state.preview = PreviewUtils.state(for: pair.state.uuid,
                                          baseUrl: self.baseServerUrl,
                                          buffer: state.currentBuffer,
@@ -108,11 +91,7 @@ class MarkdownReducer {
       state.preview.lastSearch = .reload
 
     case let .setCursor(to:position):
-      stdoutLog.debug(pair.action)
-      stdoutLog.info(state.preview)
-
       if state.preview.lastSearch == .reload {
-        stdoutLog.error("Returning cause reload")
         state.preview.lastSearch = .none
         return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
       }
@@ -120,20 +99,15 @@ class MarkdownReducer {
       guard state.previewTool.isForwardSearchAutomatically && state.preview.lastSearch != .reverse else {
         state.preview.editorPosition = Marked(mark: state.preview.editorPosition.mark, payload: position.payload)
         state.preview.lastSearch = .none
-        stdoutLog.error(state.preview)
         return StateActionPair(state: UuidState(uuid: pair.state.uuid, state: state), action: pair.action)
       }
 
       state.preview.editorPosition = Marked(position.payload)
       state.preview.lastSearch = .none // .none because the forward search does not invoke .scroll above.
-      stdoutLog.error(state.preview)
 
     case .close:
-      stdoutLog.debug(pair.action)
-      stdoutLog.info(state.preview)
       state.preview = PreviewUtils.state(for: .none, baseUrl: self.baseServerUrl)
       state.preview.lastSearch = .none
-      stdoutLog.error(state.preview)
 
     default:
       return pair
