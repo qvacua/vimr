@@ -171,7 +171,11 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   }
 
   fileprivate func forwardSearch(position: Position) {
-    self.webview.evaluateJavaScript("scrollToPosition(\(position.row), \(position.column));")
+    self.webview.evaluateJavaScript("scrollToPosition(\(position.row), \(position.column));") { result, error in
+      if let scrollTop = result as? Int {
+        self.scrollTop = scrollTop
+      }
+    }
   }
 }
 

@@ -25,7 +25,7 @@ class MarkdownReducer {
       state.preview = PreviewUtils.state(for: pair.state.uuid,
                                          baseUrl: self.baseServerUrl,
                                          buffer: state.currentBuffer,
-                                         editorPosition: state.preview.editorPosition,
+                                         editorPosition: Marked(state.preview.editorPosition.payload),
                                          previewPosition: state.preview.previewPosition)
       state.preview.lastSearch = .reload
 
@@ -89,7 +89,7 @@ class MarkdownReducer {
       state.preview = PreviewUtils.state(for: pair.state.uuid,
                                          baseUrl: self.baseServerUrl,
                                          buffer: state.currentBuffer,
-                                         editorPosition: state.preview.editorPosition,
+                                         editorPosition: Marked(state.preview.editorPosition.payload),
                                          previewPosition: state.preview.previewPosition)
       state.preview.lastSearch = .reload
 
