@@ -5,7 +5,7 @@
 
 import Foundation
 
-fileprivate let markdownPath = "tools/preview/markdown"
+private let markdownPath = "tools/preview/markdown"
 
 class PreviewUtils {
 
@@ -72,18 +72,18 @@ class PreviewUtils {
                         previewPosition: previewPosition)
   }
 
-  fileprivate static func serverUrl(for uuid: String, baseUrl: URL, lastComponent: String) -> URL {
+  private static func serverUrl(for uuid: String, baseUrl: URL, lastComponent: String) -> URL {
     return baseUrl.appendingPathComponent("\(uuid)/\(markdownPath)/\(lastComponent)")
   }
 
-  fileprivate static func htmlUrl(with uuid: String) -> URL {
+  private static func htmlUrl(with uuid: String) -> URL {
     return self.tempDir.appendingPathComponent("\(uuid)-markdown-index.html")
   }
 
-  fileprivate static func simpleServerUrl(with path: String, baseUrl: URL) -> URL {
+  private static func simpleServerUrl(with path: String, baseUrl: URL) -> URL {
     return baseUrl.appendingPathComponent(path)
   }
 
-  fileprivate static let extensions = Set(["md", "markdown"])
-  fileprivate static let tempDir = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+  private static let extensions = Set(["md", "markdown"])
+  private static let tempDir = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
 }

@@ -22,7 +22,7 @@ class Debouncer<T> {
     self.subject.onNext(element)
   }
 
-  fileprivate let subject = PublishSubject<T>()
-  fileprivate let scheduler = SerialDispatchQueueScheduler(qos: .userInteractive)
-  fileprivate let disposeBag = DisposeBag()
+  private let subject = PublishSubject<T>()
+  private let scheduler = SerialDispatchQueueScheduler(qos: .userInteractive)
+  private let disposeBag = DisposeBag()
 }
