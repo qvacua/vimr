@@ -5,6 +5,7 @@
 
 import Cocoa
 import NvimMsgPack
+import RxSwift
 
 @available(OSX 10.12.2, *)
 extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate {
