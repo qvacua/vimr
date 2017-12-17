@@ -34,6 +34,12 @@ extension NvimView {
     self.resizeNeoVimUi(to: self.bounds.size)
   }
 
+  public func userNotificationCenter(_ center: NSUserNotificationCenter,
+                                     shouldPresent notification: NSUserNotification) -> Bool {
+
+    return true
+  }
+
   func discreteSize(size: CGSize) -> Size {
     return Size(width: Int(floor(size.width / self.cellSize.width)),
                 height: Int(floor(size.height / self.cellSize.height)))
@@ -71,12 +77,14 @@ extension NvimView {
       self.logger.fault("There was an error launching neovim.")
 
       DispatchQueue.main.async {
-        let alert = NSAlert()
-        alert.alertStyle = .warning
-        alert.messageText = "Error during initialization"
-        alert.informativeText = "There was an error during the initialization of NeoVim. " +
-                                "Use :messages to view the error messages."
-        alert.runModal()
+        let notification = NSUserNotification()
+        notification.identifier = self.uuid
+        notification.title = "Error during initialization"
+        notification.informativeText = "There was an error during the initialization of NeoVim. " +
+                                       "Use :messages to view the error messages."
+
+        NSUserNotificationCenter.default.delegate = self
+        NSUserNotificationCenter.default.deliver(notification)
       }
     }
   }

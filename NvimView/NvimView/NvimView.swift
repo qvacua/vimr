@@ -10,7 +10,8 @@ import RxSwift
 public class NvimView: NSView,
                        NvimUiBridgeProtocol,
                        NSUserInterfaceValidations,
-                       NSTextInputClient {
+                       NSTextInputClient,
+                       NSUserNotificationCenterDelegate {
 
   // MARK: - Public
   public struct Config {
