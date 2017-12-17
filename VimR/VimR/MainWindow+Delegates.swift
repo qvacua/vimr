@@ -216,3 +216,11 @@ extension MainWindow {
     return nil
   }
 }
+
+// MARK: - NSUserNotificationCenterDelegate
+extension MainWindow {
+
+  public func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent _: NSUserNotification) -> Bool {
+    return true
+  }
+}

@@ -68,15 +68,10 @@ extension NvimView {
     }
 
     if noErrorDuringInitialization == false {
-      self.logger.fault("There was an error launching neovim.")
+      self.logger.error("There was an error launching neovim.")
 
       DispatchQueue.main.async {
-        let alert = NSAlert()
-        alert.alertStyle = .warning
-        alert.messageText = "Error during initialization"
-        alert.informativeText = "There was an error during the initialization of NeoVim. " +
-                                "Use :messages to view the error messages."
-        alert.runModal()
+        self.eventsSubject.onNext(.initError)
       }
     }
   }

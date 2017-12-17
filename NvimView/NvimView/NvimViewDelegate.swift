@@ -23,4 +23,6 @@ public enum NvimViewEvent {
 
   case scroll
   case cursor(Position)
+
+  case initError
 }

@@ -12,6 +12,7 @@ class MainWindow: NSObject,
                   UiComponent,
                   NSWindowDelegate,
                   NSUserInterfaceValidations,
+                  NSUserNotificationCenterDelegate,
                   WorkspaceDelegate {
 
   typealias StateType = State
@@ -162,6 +163,8 @@ class MainWindow: NSObject,
 
     super.init()
 
+    NSUserNotificationCenter.default.delegate = self
+
     self.defaultFont = state.appearance.font
     self.linespacing = state.appearance.linespacing
     self.usesLigatures = state.appearance.usesLigatures
@@ -230,6 +233,13 @@ class MainWindow: NSObject,
         case .ipcBecameInvalid(let reason): self.ipcBecameInvalid(reason: reason)
         case .scroll: self.scroll()
         case .cursor(let position): self.cursor(to: position)
+        case .initError:
+          let notification = NSUserNotification()
+          notification.title = "Error during initialization"
+          notification.informativeText = "There was an error during the initialization of NeoVim. " +
+                                         "Use :messages to view the error messages."
+
+          NSUserNotificationCenter.default.deliver(notification)
 
         }
       })
