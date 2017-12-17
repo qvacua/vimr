@@ -36,14 +36,15 @@ class MarkdownReducer {
     case let .scroll(to:position):
       if state.preview.lastSearch == .reload {
         state.preview.lastSearch = .none
-        return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
+        break;
       }
 
       guard state.previewTool.isReverseSearchAutomatically && state.preview.lastSearch != .forward else {
         state.preview.lastSearch = .none
         state.preview.previewPosition = Marked(mark: state.preview.previewPosition.mark, payload: position)
-        return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
+        break;
       }
+
       state.preview.previewPosition = Marked(position)
       state.preview.lastSearch = .reverse
 
@@ -61,7 +62,9 @@ class MarkdownReducer {
     switch pair.action {
 
     case let .open(buffer):
-      state.preview = PreviewUtils.state(for: pair.state.uuid, baseUrl: self.baseServerUrl, buffer: buffer,
+      state.preview = PreviewUtils.state(for: pair.state.uuid,
+                                         baseUrl: self.baseServerUrl,
+                                         buffer: buffer,
                                          editorPosition: Marked(.beginning),
                                          previewPosition: Marked(.beginning))
       state.preview.lastSearch = .none
@@ -82,7 +85,7 @@ class MarkdownReducer {
                                          previewPosition: state.preview.previewPosition)
       state.preview.lastSearch = .none
 
-    case let .bufferWritten(buffer):
+    case .bufferWritten:
       state.preview = PreviewUtils.state(for: pair.state.uuid,
                                          baseUrl: self.baseServerUrl,
                                          buffer: state.currentBuffer,
@@ -93,13 +96,13 @@ class MarkdownReducer {
     case let .setCursor(to:position):
       if state.preview.lastSearch == .reload {
         state.preview.lastSearch = .none
-        return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
+        break
       }
 
       guard state.previewTool.isForwardSearchAutomatically && state.preview.lastSearch != .reverse else {
         state.preview.editorPosition = Marked(mark: state.preview.editorPosition.mark, payload: position.payload)
         state.preview.lastSearch = .none
-        return StateActionPair(state: UuidState(uuid: pair.state.uuid, state: state), action: pair.action)
+        break
       }
 
       state.preview.editorPosition = Marked(position.payload)
