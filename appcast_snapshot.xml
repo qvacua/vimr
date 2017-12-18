@@ -7,22 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-251</title>
+      <title>SNAPSHOT-252</title>
       <description><![CDATA[
     <ul>
-<li>GH-586: Bugfix: <code>Denite buffer</code> hangs.</li>
+<li>Improve forward- and reverse-search for Markdown previews.</li>
+<li>Probably the last snapshot before 0.20.2</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/251
+        https://github.com/qvacua/vimr/releases/tag/snapshot/252
       </releaseNotesLink>
-      <pubDate>2017-12-17T12:37:36.157995</pubDate>
+      <pubDate>2017-12-18T21:57:02.006104</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/251/VimR-SNAPSHOT-251.tar.bz2"
-                 sparkle:version="251"
-                 sparkle:shortVersionString="SNAPSHOT-251"
-                 sparkle:dsaSignature="MC0CFQDnDJfx/EEF6YQhp8OCG//qymHGYQIUUUOW5RVG0OoUswGQ8591Iyk8whQ="
-                 length="11969387"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/252/VimR-SNAPSHOT-252.tar.bz2"
+                 sparkle:version="252"
+                 sparkle:shortVersionString="SNAPSHOT-252"
+                 sparkle:dsaSignature="MCwCFHS7jiE8Ac7868kMGYOady6pHU3rAhQb2bipomB2zKAV/8SZrTSEag2n6g=="
+                 length="11975893"
                  type="application/octet-stream"/>
     </item>
   </channel>
