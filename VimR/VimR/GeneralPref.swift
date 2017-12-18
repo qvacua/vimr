@@ -68,25 +68,25 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
       .disposed(by: self.disposeBag)
   }
 
-  fileprivate let emit: (Action) -> Void
-  fileprivate let disposeBag = DisposeBag()
+  private let emit: (Action) -> Void
+  private let disposeBag = DisposeBag()
 
-  fileprivate var lastWindowAction = AppState.AfterLastWindowAction.doNothing
+  private var lastWindowAction = AppState.AfterLastWindowAction.doNothing
 
-  fileprivate let openWhenLaunchingCheckbox = NSButton(forAutoLayout: ())
-  fileprivate let openOnReactivationCheckbox = NSButton(forAutoLayout: ())
+  private let openWhenLaunchingCheckbox = NSButton(forAutoLayout: ())
+  private let openOnReactivationCheckbox = NSButton(forAutoLayout: ())
 
-  fileprivate let afterLastWindowPopup = NSPopUpButton(forAutoLayout: ())
+  private let afterLastWindowPopup = NSPopUpButton(forAutoLayout: ())
 
-  fileprivate let ignoreField = NSTextField(forAutoLayout: ())
+  private let ignoreField = NSTextField(forAutoLayout: ())
 
-  fileprivate var ignorePatterns = Set<FileItemIgnorePattern>()
+  private var ignorePatterns = Set<FileItemIgnorePattern>()
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  fileprivate func addViews() {
+  private func addViews() {
     let paneTitle = self.paneTitleTextField(title: "General")
 
     let openUntitledWindowTitle = self.titleTextField(title: "Open Untitled Window:")
@@ -253,7 +253,7 @@ extension GeneralPref {
     self.emit(.setAfterLastWindowAction(self.lastWindowAction))
   }
 
-  fileprivate func ignorePatternsAction() {
+  private func ignorePatternsAction() {
     let patterns = FileItemIgnorePattern.from(string: self.ignoreField.stringValue)
     if patterns == self.ignorePatterns {
       return
@@ -263,7 +263,7 @@ extension GeneralPref {
     self.emit(.setIgnorePatterns(ignorePatterns))
   }
 
-  fileprivate func alert(title: String, info: String) {
+  private func alert(title: String, info: String) {
     let alert = NSAlert()
     alert.alertStyle = .warning
     alert.messageText = title
@@ -272,4 +272,4 @@ extension GeneralPref {
   }
 }
 
-fileprivate let indexToAfterLastWindowAction: [AppState.AfterLastWindowAction] = [.doNothing, .hide, .quit]
+private let indexToAfterLastWindowAction: [AppState.AfterLastWindowAction] = [.doNothing, .hide, .quit]

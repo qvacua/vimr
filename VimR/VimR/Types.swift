@@ -31,8 +31,8 @@ class ActionEmitter {
     self.subject.onCompleted()
   }
 
-  fileprivate let scheduler = SerialDispatchQueueScheduler(qos: .userInteractive)
-  fileprivate let subject = PublishSubject<Any>()
+  private let scheduler = SerialDispatchQueueScheduler(qos: .userInteractive)
+  private let subject = PublishSubject<Any>()
 }
 
 class StateActionPair<S, A> {
@@ -170,8 +170,8 @@ class UiComponentTemplate: UiComponent {
     self.emit(.doSth)
   }
 
-  fileprivate let emit: (Action) -> Void
-  fileprivate let disposeBag = DisposeBag()
+  private let emit: (Action) -> Void
+  private let disposeBag = DisposeBag()
 
-  fileprivate let someField: String
+  private let someField: String
 }

@@ -59,15 +59,19 @@ extension MainWindow {
       })
   }
 
-  func currentBufferChanged(_ currentBuffer: NvimView.Buffer) {
-    self.emit(self.uuidAction(for: .setCurrentBuffer(currentBuffer)))
+  func bufferWritten(_ buffer: NvimView.Buffer) {
+    self.emit(self.uuidAction(for: .bufferWritten(buffer)))
+  }
+
+  func newCurrentBuffer(_ currentBuffer: NvimView.Buffer) {
+    self.emit(self.uuidAction(for: .newCurrentBuffer(currentBuffer)))
   }
 
   func tabChanged() {
     self.neoVimView
       .currentBuffer()
       .subscribe(onSuccess: {
-        self.currentBufferChanged($0)
+        self.newCurrentBuffer($0)
       })
   }
 
@@ -192,7 +196,7 @@ extension MainWindow {
     self.emit(self.uuidAction(for: .setToolsState(tools)))
   }
 
-  fileprivate func toolIdentifier(for tool: WorkspaceTool) -> Tools? {
+  private func toolIdentifier(for tool: WorkspaceTool) -> Tools? {
     if tool == self.fileBrowserContainer {
       return .fileBrowser
     }
@@ -210,5 +214,13 @@ extension MainWindow {
     }
 
     return nil
+  }
+}
+
+// MARK: - NSUserNotificationCenterDelegate
+extension MainWindow {
+
+  public func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent _: NSUserNotification) -> Bool {
+    return true
   }
 }

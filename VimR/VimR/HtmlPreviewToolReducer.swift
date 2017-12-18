@@ -33,5 +33,5 @@ class HtmlPreviewToolReducer {
     return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
   }
 
-  fileprivate let baseServerUrl: URL
+  private let baseServerUrl: URL
 }

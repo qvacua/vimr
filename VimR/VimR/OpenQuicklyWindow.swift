@@ -112,44 +112,44 @@ class OpenQuicklyWindow: NSObject,
     self.progressIndicator.stopAnimation(self)
   }
 
-  fileprivate let emit: (Action) -> Void
-  fileprivate let disposeBag = DisposeBag()
+  private let emit: (Action) -> Void
+  private let disposeBag = DisposeBag()
 
-  fileprivate var flatFileItemsSource = Observable<[FileItem]>.empty()
-  fileprivate(set) var cwd = FileUtils.userHomeUrl
-  fileprivate var cwdPathCompsCount = 0
+  private var flatFileItemsSource = Observable<[FileItem]>.empty()
+  private(set) var cwd = FileUtils.userHomeUrl
+  private var cwdPathCompsCount = 0
 
   // FIXME: migrate to State later...
-  fileprivate(set) var pattern = ""
-  fileprivate(set) var flatFileItems = [FileItem]()
-  fileprivate(set) var fileViewItems = [ScoredFileItem]()
-  fileprivate var count = 0
-  fileprivate var perSessionDisposeBag = DisposeBag()
-  fileprivate let filterOpQueue = OperationQueue()
+  private(set) var pattern = ""
+  private(set) var flatFileItems = [FileItem]()
+  private(set) var fileViewItems = [ScoredFileItem]()
+  private var count = 0
+  private var perSessionDisposeBag = DisposeBag()
+  private let filterOpQueue = OperationQueue()
 
-  fileprivate let scheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
+  private let scheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
 
-  fileprivate let windowController: NSWindowController
+  private let windowController: NSWindowController
 
-  fileprivate let searchField = NSTextField(forAutoLayout: ())
-  fileprivate let progressIndicator = NSProgressIndicator(forAutoLayout: ())
-  fileprivate let cwdControl = NSPathControl(forAutoLayout: ())
-  fileprivate let countField = NSTextField(forAutoLayout: ())
-  fileprivate let fileView = NSTableView.standardTableView()
+  private let searchField = NSTextField(forAutoLayout: ())
+  private let progressIndicator = NSProgressIndicator(forAutoLayout: ())
+  private let cwdControl = NSPathControl(forAutoLayout: ())
+  private let countField = NSTextField(forAutoLayout: ())
+  private let fileView = NSTableView.standardTableView()
 
-  fileprivate let searchStream: Observable<String>
+  private let searchStream: Observable<String>
 
-  fileprivate var window: NSWindow {
+  private var window: NSWindow {
     return self.windowController.window!
   }
 
-  fileprivate func resetAndAddFilterOperation() {
+  private func resetAndAddFilterOperation() {
     self.filterOpQueue.cancelAllOperations()
     let op = OpenQuicklyFilterOperation(forOpenQuickly: self)
     self.filterOpQueue.addOperation(op)
   }
 
-  fileprivate func addViews() {
+  private func addViews() {
     let searchField = self.searchField
     searchField.rx.delegate.setForwardToDelegate(self, retainDelegate: false)
 
@@ -248,7 +248,7 @@ extension OpenQuicklyWindow {
 //    NSLog("\(#function): selection changed")
   }
 
-  fileprivate func rowText(for url: URL) -> NSAttributedString {
+  private func rowText(for url: URL) -> NSAttributedString {
     let pathComps = url.pathComponents
     let truncatedPathComps = pathComps[self.cwdPathCompsCount..<pathComps.count]
     let name = truncatedPathComps.last!
@@ -297,7 +297,7 @@ extension OpenQuicklyWindow {
     }
   }
 
-  fileprivate func moveSelection(ofTableView tableView: NSTableView, byDelta delta: Int) {
+  private func moveSelection(ofTableView tableView: NSTableView, byDelta delta: Int) {
     let selectedRow = tableView.selectedRow
     let lastIdx = tableView.numberOfRows - 1
     let targetIdx: Int

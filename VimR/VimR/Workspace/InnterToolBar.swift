@@ -21,18 +21,18 @@ class CustomToolBar: NSView {
  */
 class InnerToolBar: NSView, NSUserInterfaceValidations {
 
-  fileprivate static let separatorThickness = CGFloat(1)
-  fileprivate static let height = InnerToolBar.iconDimension + 2 + 2 + InnerToolBar.separatorThickness
+  private static let separatorThickness = CGFloat(1)
+  private static let height = InnerToolBar.iconDimension + 2 + 2 + InnerToolBar.separatorThickness
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  fileprivate let titleField = NSTextField(forAutoLayout: ())
-  fileprivate let closeButton = NSButton(forAutoLayout: ())
-  fileprivate let cogButton = NSPopUpButton(forAutoLayout: ())
+  private let titleField = NSTextField(forAutoLayout: ())
+  private let closeButton = NSButton(forAutoLayout: ())
+  private let cogButton = NSPopUpButton(forAutoLayout: ())
 
-  fileprivate let locToSelector: [WorkspaceBarLocation: Selector] = [
+  private let locToSelector: [WorkspaceBarLocation: Selector] = [
     .top: #selector(InnerToolBar.moveToTopAction(_:)),
     .right: #selector(InnerToolBar.moveToRightAction(_:)),
     .bottom: #selector(InnerToolBar.moveToBottomAction(_:)),
@@ -138,13 +138,13 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     }
   }
 
-  fileprivate func removeCustomUiElements() {
+  private func removeCustomUiElements() {
     self.customToolbar?.removeFromSuperview()
     [self.titleField, self.closeButton, self.cogButton].forEach { $0.removeFromSuperview() }
     self.cogButton.menu = nil
   }
 
-  fileprivate func addViews() {
+  private func addViews() {
     let title = self.titleField
     let close = self.closeButton
     let cog = self.cogButton
@@ -243,12 +243,12 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     }
   }
 
-  fileprivate func bottomSeparatorRect() -> CGRect {
+  private func bottomSeparatorRect() -> CGRect {
     let bounds = self.bounds
     return CGRect(x: bounds.minX, y: bounds.minY, width: bounds.width, height: InnerToolBar.separatorThickness)
   }
 
-  fileprivate func innerSeparatorRect() -> CGRect {
+  private func innerSeparatorRect() -> CGRect {
     let cogBounds = self.cogButton.frame
     let bounds = self.bounds
     return CGRect(x: cogBounds.minX + 6, y: bounds.minY + 4, width: 1, height: bounds.height - 4 - 4)
@@ -278,7 +278,7 @@ extension InnerToolBar {
     self.move(to: .left)
   }
 
-  fileprivate func move(to location: WorkspaceBarLocation) {
+  private func move(to location: WorkspaceBarLocation) {
     guard let tool = self.tool else {
       return
     }

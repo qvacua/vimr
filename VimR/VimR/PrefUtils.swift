@@ -8,7 +8,7 @@ import NvimView
 
 class PrefUtils {
 
-  fileprivate static let whitespaceCharSet = CharacterSet.whitespaces
+  private static let whitespaceCharSet = CharacterSet.whitespaces
 
   static func ignorePatterns(fromString str: String) -> Set<FileItemIgnorePattern> {
     if str.trimmingCharacters(in: self.whitespaceCharSet).count == 0 {

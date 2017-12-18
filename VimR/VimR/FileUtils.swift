@@ -5,24 +5,24 @@
 
 import Cocoa
 
-fileprivate let workspace = NSWorkspace.shared
-fileprivate let iconsCache = NSCache<NSURL, NSImage>()
+private let workspace = NSWorkspace.shared
+private let iconsCache = NSCache<NSURL, NSImage>()
 
 class FileUtils {
   
-  fileprivate static let keysToGet: [URLResourceKey] = [
+  private static let keysToGet: [URLResourceKey] = [
     .isDirectoryKey,
     .isHiddenKey,
     .isAliasFileKey,
     .isSymbolicLinkKey
   ]
   
-  fileprivate static let scanOptions: FileManager.DirectoryEnumerationOptions = [
+  private static let scanOptions: FileManager.DirectoryEnumerationOptions = [
     .skipsSubdirectoryDescendants,
     .skipsPackageDescendants
   ]
   
-  fileprivate static let fileManager = FileManager.default
+  private static let fileManager = FileManager.default
 
   static let userHomeUrl = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
   

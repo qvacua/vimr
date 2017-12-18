@@ -29,6 +29,28 @@ public class NvimView: NSView,
     }
   }
 
+  public enum Event {
+
+    case neoVimStopped
+    case setTitle(String)
+    case setDirtyStatus(Bool)
+    case cwdChanged
+    case bufferListChanged
+    case tabChanged
+
+    case newCurrentBuffer(NvimView.Buffer)
+    case bufferWritten(NvimView.Buffer)
+
+    case colorschemeChanged(NvimView.Theme)
+
+    case ipcBecameInvalid(String)
+
+    case scroll
+    case cursor(Position)
+
+    case initError
+  }
+
   public struct Theme: CustomStringConvertible {
 
     public static let `default` = Theme()
@@ -81,7 +103,6 @@ public class NvimView: NSView,
   public static let maxLinespacing = CGFloat(8)
 
   public let uuid = UUID().uuidString
-  public weak var delegate: NvimViewDelegate?
 
   public internal(set) var mode = CursorModeShape.normal
 
@@ -154,6 +175,10 @@ public class NvimView: NSView,
   }
 
   public internal(set) var currentPosition = Position.beginning
+
+  public var events: Observable<Event> {
+    return self.eventsSubject.asObservable()
+  }
 
   public init(frame rect: NSRect, config: Config) {
     self.drawer = TextDrawer(font: self._font)
@@ -257,6 +282,8 @@ public class NvimView: NSView,
 
   var nvimApiScheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
 
+  let eventsSubject = PublishSubject<Event>()
+
   // MARK: - Private
-  fileprivate var _linespacing = NvimView.defaultLinespacing
+  private var _linespacing = NvimView.defaultLinespacing
 }

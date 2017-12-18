@@ -50,25 +50,25 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
       .disposed(by: self.disposeBag)
   }
 
-  fileprivate let emit: (Action) -> Void
-  fileprivate let disposeBag = DisposeBag()
+  private let emit: (Action) -> Void
+  private let disposeBag = DisposeBag()
 
-  fileprivate var useInteractiveZsh: Bool
-  fileprivate var useSnapshotUpdate: Bool
+  private var useInteractiveZsh: Bool
+  private var useSnapshotUpdate: Bool
 
-  fileprivate let useInteractiveZshCheckbox = NSButton(forAutoLayout: ())
-  fileprivate let useSnapshotUpdateCheckbox = NSButton(forAutoLayout: ())
+  private let useInteractiveZshCheckbox = NSButton(forAutoLayout: ())
+  private let useSnapshotUpdateCheckbox = NSButton(forAutoLayout: ())
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  fileprivate func updateViews() {
+  private func updateViews() {
     self.useSnapshotUpdateCheckbox.boolState = self.useSnapshotUpdate
     self.useInteractiveZshCheckbox.boolState = self.useInteractiveZsh
   }
 
-  fileprivate func addViews() {
+  private func addViews() {
     let paneTitle = self.paneTitleTextField(title: "Advanced")
 
     let useInteractiveZsh = self.useInteractiveZshCheckbox

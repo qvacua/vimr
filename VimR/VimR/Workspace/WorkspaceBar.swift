@@ -22,11 +22,12 @@ protocol WorkspaceBarDelegate: class {
  drop due to the drag & drop infrastructure of Cocoa.
  */
 
-fileprivate class ProxyBar: NSView {
+private class ProxyBar: NSView {
 
-  fileprivate var isDragOngoing = false
   fileprivate var draggedOnToolIdx: Int?
-  fileprivate var buttonFrames: [CGRect] = []
+  
+  private var isDragOngoing = false
+  private var buttonFrames: [CGRect] = []
 
   fileprivate weak var container: WorkspaceBar?
 
@@ -46,17 +47,18 @@ fileprivate class ProxyBar: NSView {
 
 class WorkspaceBar: NSView, WorkspaceToolDelegate {
 
-  static fileprivate let separatorThickness = CGFloat(1)
+  static private let separatorThickness = CGFloat(1)
 
   fileprivate(set) var tools = [WorkspaceTool]()
-  fileprivate weak var selectedTool: WorkspaceTool?
+  
+  private weak var selectedTool: WorkspaceTool?
 
-  fileprivate var isMouseDownOngoing = false
-  fileprivate var dragIncrement = CGFloat(1)
+  private var isMouseDownOngoing = false
+  private var dragIncrement = CGFloat(1)
 
-  fileprivate var layoutConstraints = [NSLayoutConstraint]()
+  private var layoutConstraints = [NSLayoutConstraint]()
 
-  fileprivate let proxyBar = ProxyBar()
+  private let proxyBar = ProxyBar()
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -246,7 +248,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 
 extension ProxyBar {
 
-  fileprivate func isTool(atIndex idx: Int, beingDragged info: NSDraggingInfo) -> Bool {
+  private func isTool(atIndex idx: Int, beingDragged info: NSDraggingInfo) -> Bool {
     let pasteboard = info.draggingPasteboard()
 
     guard let uuid = pasteboard.string(forType: NSPasteboard.PasteboardType(WorkspaceToolButton.toolUti)) else {
@@ -367,7 +369,7 @@ extension ProxyBar {
     return true
   }
 
-  fileprivate func endDrag() {
+  private func endDrag() {
     self.isDragOngoing = false
     self.draggedOnToolIdx = nil
     self.container!.relayout()
@@ -477,7 +479,7 @@ extension WorkspaceBar {
     }
   }
 
-  fileprivate func drawInnerSeparator(_ dirtyRect: NSRect) {
+  private func drawInnerSeparator(_ dirtyRect: NSRect) {
     self.theme.separator.set()
 
     let innerLineRect = self.innerSeparatorRect()
@@ -486,7 +488,7 @@ extension WorkspaceBar {
     }
   }
 
-  fileprivate func drawOuterSeparator(_ dirtyRect: NSRect) {
+  private func drawOuterSeparator(_ dirtyRect: NSRect) {
     self.theme.separator.set()
 
     let outerLineRect = self.outerSeparatorRect()
@@ -495,7 +497,7 @@ extension WorkspaceBar {
     }
   }
 
-  fileprivate func buttonSize() -> CGSize {
+  private func buttonSize() -> CGSize {
     if self.isEmpty() {
       return CGSize.zero
     }
@@ -503,7 +505,7 @@ extension WorkspaceBar {
     return WorkspaceToolButton.size(forLocation: self.location)
   }
 
-  fileprivate func innerSeparatorRect() -> CGRect {
+  private func innerSeparatorRect() -> CGRect {
     let bounds = self.bounds
     let thickness = WorkspaceBar.separatorThickness
     let bar = self.buttonSize()
@@ -520,12 +522,12 @@ extension WorkspaceBar {
     }
   }
 
-  fileprivate func newDimension(forLocationInSuperview locInSuperview: CGPoint) -> CGFloat {
+  private func newDimension(forLocationInSuperview locInSuperview: CGPoint) -> CGFloat {
     let dimension = self.dimension(forLocationInSuperview: locInSuperview)
     return self.dragIncrement * floor(dimension / self.dragIncrement)
   }
 
-  fileprivate func dimension(forLocationInSuperview locInSuperview: CGPoint) -> CGFloat {
+  private func dimension(forLocationInSuperview locInSuperview: CGPoint) -> CGFloat {
     let superviewBounds = self.superview!.bounds
 
     switch self.location {
@@ -540,11 +542,11 @@ extension WorkspaceBar {
     }
   }
 
-  fileprivate func sq(_ number: CGFloat) -> CGFloat {
+  private func sq(_ number: CGFloat) -> CGFloat {
     return number * number
   }
 
-  fileprivate func outerSeparatorRect() -> CGRect {
+  private func outerSeparatorRect() -> CGRect {
     let thickness = WorkspaceBar.separatorThickness
 
     switch self.location {
@@ -559,7 +561,7 @@ extension WorkspaceBar {
     }
   }
 
-  fileprivate func resizeRect() -> CGRect {
+  private func resizeRect() -> CGRect {
     let separatorRect = self.outerSeparatorRect()
     let clickDimension = CGFloat(4)
 
@@ -575,7 +577,7 @@ extension WorkspaceBar {
     }
   }
 
-  fileprivate func set(dimension: CGFloat) {
+  private func set(dimension: CGFloat) {
     let saneDimension = self.saneDimension(from: dimension)
 
     self.dimensionConstraint.constant = saneDimension
@@ -592,7 +594,7 @@ extension WorkspaceBar {
     self.needsDisplay = true
   }
 
-  fileprivate func saneDimension(from dimension: CGFloat) -> CGFloat {
+  private func saneDimension(from dimension: CGFloat) -> CGFloat {
     if dimension == 0 {
       return 0
     }
@@ -609,15 +611,15 @@ extension WorkspaceBar {
 
 extension WorkspaceBar {
 
-  fileprivate func isEmpty() -> Bool {
+  private func isEmpty() -> Bool {
     return self.tools.isEmpty
   }
 
-  fileprivate func hasTools() -> Bool {
+  private func hasTools() -> Bool {
     return !self.isEmpty()
   }
 
-  fileprivate func layoutWithoutButtons(_ tool: WorkspaceTool) {
+  private func layoutWithoutButtons(_ tool: WorkspaceTool) {
     let view = tool
     let thickness = WorkspaceBar.separatorThickness
 
@@ -662,7 +664,7 @@ extension WorkspaceBar {
     }
   }
 
-  fileprivate func layout(_ tool: WorkspaceTool) {
+  private func layout(_ tool: WorkspaceTool) {
     let view = tool
     let button = tool.button
     let thickness = WorkspaceBar.separatorThickness
@@ -709,7 +711,7 @@ extension WorkspaceBar {
     }
   }
 
-  fileprivate func draggedButtonDimension() -> CGFloat {
+  private func draggedButtonDimension() -> CGFloat {
     guard let idx = self.proxyBar.draggedOnToolIdx else {
       return 0
     }
@@ -734,7 +736,7 @@ extension WorkspaceBar {
     }
   }
 
-  fileprivate func layoutButtons() {
+  private func layoutButtons() {
     guard let firstTool = self.tools.first else {
       return
     }
@@ -808,7 +810,7 @@ extension WorkspaceBar {
       }
   }
 
-  fileprivate func barDimensionWithButtonsWithoutTool() -> CGFloat {
+  private func barDimensionWithButtonsWithoutTool() -> CGFloat {
     switch self.location {
     case .top, .bottom:
       return self.buttonSize().height + WorkspaceBar.separatorThickness
@@ -817,15 +819,15 @@ extension WorkspaceBar {
     }
   }
 
-  fileprivate func barDimensionWithoutButtons(withToolDimension toolDimension: CGFloat) -> CGFloat {
+  private func barDimensionWithoutButtons(withToolDimension toolDimension: CGFloat) -> CGFloat {
     return toolDimension + WorkspaceBar.separatorThickness
   }
 
-  fileprivate func barDimension(withToolDimension toolDimension: CGFloat) -> CGFloat {
+  private func barDimension(withToolDimension toolDimension: CGFloat) -> CGFloat {
     return self.barDimensionWithButtonsWithoutTool() + toolDimension + WorkspaceBar.separatorThickness
   }
 
-  fileprivate func toolDimension(fromBarDimension barDimension: CGFloat) -> CGFloat {
+  private func toolDimension(fromBarDimension barDimension: CGFloat) -> CGFloat {
     if self.isButtonVisible {
       return barDimension - WorkspaceBar.separatorThickness - barDimensionWithButtonsWithoutTool()
     }

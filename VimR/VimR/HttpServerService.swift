@@ -44,7 +44,7 @@ class HttpServerService {
   }
 
   func applyMainWindow(_ pair: MainWindowPair) {
-    guard case .setCurrentBuffer = pair.action else {
+    guard case .newCurrentBuffer = pair.action else {
       return
     }
 
@@ -57,7 +57,7 @@ class HttpServerService {
       return
     }
 
-    NSLog("Serving \(html) on \(server)")
+    fileLog.debug("Serving \(html) on \(server)")
 
     let htmlBasePath = server.deletingLastPathComponent().path
 
@@ -66,6 +66,6 @@ class HttpServerService {
     self.server.GET["\(htmlBasePath)/github-markdown.css"] = shareFile(self.githubCssUrl.path)
   }
 
-  fileprivate let server = HttpServer()
-  fileprivate let githubCssUrl: URL
+  private let server = HttpServer()
+  private let githubCssUrl: URL
 }

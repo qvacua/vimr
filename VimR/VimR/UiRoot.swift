@@ -62,19 +62,19 @@ class UiRoot: UiComponent {
     self.mainWindows.values.forEach { $0.quitNeoVimWithoutSaving() }
   }
 
-  fileprivate let source: Observable<AppState>
-  fileprivate let emitter: ActionEmitter
-  fileprivate let disposeBag = DisposeBag()
+  private let source: Observable<AppState>
+  private let emitter: ActionEmitter
+  private let disposeBag = DisposeBag()
 
-  fileprivate let fileMonitor: FileMonitor
-  fileprivate let openQuicklyWindow: OpenQuicklyWindow
-  fileprivate let prefWindow: PrefWindow
+  private let fileMonitor: FileMonitor
+  private let openQuicklyWindow: OpenQuicklyWindow
+  private let prefWindow: PrefWindow
 
-  fileprivate var mainWindows = [String: MainWindow]()
-  fileprivate var subjectForMainWindows = [String: PublishSubject<MainWindow.State>]()
-  fileprivate var disposables = [String: Disposable]()
+  private var mainWindows = [String: MainWindow]()
+  private var subjectForMainWindows = [String: PublishSubject<MainWindow.State>]()
+  private var disposables = [String: Disposable]()
 
-  fileprivate func newMainWindow(with state: MainWindow.State) -> MainWindow {
+  private func newMainWindow(with state: MainWindow.State) -> MainWindow {
     let subject = PublishSubject<MainWindow.State>()
     let source = self.source.mapOmittingNil { $0.mainWindows[state.uuid] }
 
@@ -84,7 +84,7 @@ class UiRoot: UiComponent {
     return MainWindow(source: subject.asObservable(), emitter: self.emitter, state: state)
   }
 
-  fileprivate func removeMainWindow(with uuid: String) {
+  private func removeMainWindow(with uuid: String) {
     self.subjectForMainWindows[uuid]?.onCompleted()
     self.disposables[uuid]?.dispose()
 

@@ -131,6 +131,8 @@
       suppressNextScrollEvent = true;
       window.scrollTo(x, y);
 //      console.log(`scrolled webview to ${x}:${y}`);
+
+      return document.body.scrollTop
     }
 
     function scrollPosition(element) {

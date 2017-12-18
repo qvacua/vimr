@@ -60,8 +60,11 @@ class Context {
           .apply(httpService.applyMainWindow)
           .map { $0.state },
         self.actionSourceForMainWindow()
+          .reduce(by: markdownReducer.reducePreviewTool)
           .reduce(by: PreviewToolReducer(baseServerUrl: baseServerUrl).reduce)
-          .filterMapPair(),
+          .filter { $0.modified }
+          .apply(previewService.applyPreviewTool)
+          .map { $0.state },
         self.actionSourceForMainWindow()
           .reduce(by: HtmlPreviewToolReducer(baseServerUrl: baseServerUrl).reduce)
           .filter { $0.modified }
@@ -72,9 +75,9 @@ class Context {
           .filterMapPair(),
         self.actionSourceForMainWindow()
           .reduce(by: BuffersListReducer().reduce)
-          .reduce(by: markdownReducer.reduceOpenedFileList)
+          .reduce(by: markdownReducer.reduceBufferList)
           .filter { $0.modified }
-          .apply(previewService.applyOpenedFileList)
+          .apply(previewService.applyBufferList)
           .map { $0.state }
       )
       .merge()

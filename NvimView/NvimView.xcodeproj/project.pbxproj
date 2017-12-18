@@ -19,7 +19,6 @@
 		4B90F0321FD2AFAE008A39E0 /* NvimView+Dragging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0141FD2AFAC008A39E0 /* NvimView+Dragging.swift */; };
 		4B90F0341FD2AFAE008A39E0 /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0161FD2AFAC008A39E0 /* CocoaExtensions.swift */; };
 		4B90F0351FD2AFAE008A39E0 /* NvimView+Mouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0171FD2AFAC008A39E0 /* NvimView+Mouse.swift */; };
-		4B90F0361FD2AFAE008A39E0 /* NvimViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0181FD2AFAC008A39E0 /* NvimViewDelegate.swift */; };
 		4B90F0371FD2AFAE008A39E0 /* UiClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B90F0191FD2AFAC008A39E0 /* UiClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B90F0381FD2AFAE008A39E0 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F01A1FD2AFAC008A39E0 /* ColorUtils.swift */; };
 		4B90F0391FD2AFAE008A39E0 /* NvimView+Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F01B1FD2AFAC008A39E0 /* NvimView+Api.swift */; };
@@ -110,7 +109,6 @@
 		4B90F0141FD2AFAC008A39E0 /* NvimView+Dragging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Dragging.swift"; sourceTree = "<group>"; };
 		4B90F0161FD2AFAC008A39E0 /* CocoaExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaExtensions.swift; sourceTree = "<group>"; };
 		4B90F0171FD2AFAC008A39E0 /* NvimView+Mouse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Mouse.swift"; sourceTree = "<group>"; };
-		4B90F0181FD2AFAC008A39E0 /* NvimViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimViewDelegate.swift; sourceTree = "<group>"; };
 		4B90F0191FD2AFAC008A39E0 /* UiClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UiClient.h; sourceTree = "<group>"; };
 		4B90F01A1FD2AFAC008A39E0 /* ColorUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorUtils.swift; sourceTree = "<group>"; };
 		4B90F01B1FD2AFAC008A39E0 /* NvimView+Api.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Api.swift"; sourceTree = "<group>"; };
@@ -228,7 +226,6 @@
 				4B90F0111FD2AFAC008A39E0 /* NvimView+Resize.swift */,
 				4B90F01E1FD2AFAC008A39E0 /* NvimView+TouchBar.swift */,
 				4B90F0241FD2AFAD008A39E0 /* NvimView+UiBridge.swift */,
-				4B90F0181FD2AFAC008A39E0 /* NvimViewDelegate.swift */,
 				4B90F0231FD2AFAD008A39E0 /* TextDrawer.h */,
 				4B90F0221FD2AFAD008A39E0 /* TextDrawer.m */,
 				4B90F0771FD2BA7B008A39E0 /* Logger.h */,
@@ -429,7 +426,6 @@
 				4B90F0491FD2AFAE008A39E0 /* CellAttributes.swift in Sources */,
 				4B90F0301FD2AFAE008A39E0 /* KeyUtils.swift in Sources */,
 				4B90F03A1FD2AFAE008A39E0 /* NvimView+Key.swift in Sources */,
-				4B90F0361FD2AFAE008A39E0 /* NvimViewDelegate.swift in Sources */,
 				1929B40A751BDA2882D4FC94 /* NvimViewObjects.swift in Sources */,
 				1929B86897DAEFDBABAB1C14 /* NvimApiExtension.swift in Sources */,
 			);
@@ -488,7 +484,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 250;
+				CURRENT_PROJECT_VERSION = 252;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -546,7 +542,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 250;
+				CURRENT_PROJECT_VERSION = 252;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -573,7 +569,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 250;
+				DYLIB_CURRENT_VERSION = 252;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				FRAMEWORK_VERSION = A;
@@ -595,7 +591,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 250;
+				DYLIB_CURRENT_VERSION = 252;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				FRAMEWORK_VERSION = A;

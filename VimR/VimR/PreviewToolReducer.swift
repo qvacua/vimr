@@ -18,26 +18,6 @@ class PreviewToolReducer {
 
     switch pair.action {
 
-    case .refreshNow:
-      state.preview = PreviewUtils.state(for: pair.state.uuid,
-                                         baseUrl: self.baseServerUrl,
-                                         buffer: state.currentBuffer)
-      state.preview.ignoreNextReverse = true
-      state.preview.ignoreNextForward = true
-      state.preview.forceNextReverse = false
-
-    case let .reverseSearch(to:position):
-      state.preview.previewPosition = position
-      state.preview.ignoreNextReverse = false
-      state.preview.ignoreNextForward = true
-      state.preview.forceNextReverse = true
-
-    case let .scroll(to:position):
-      state.preview.previewPosition = position
-      state.preview.ignoreNextReverse = false
-      state.preview.ignoreNextForward = true
-      state.preview.forceNextReverse = false
-
     case let .setAutomaticReverseSearch(to:value):
       state.previewTool.isReverseSearchAutomatically = value
 
@@ -47,10 +27,13 @@ class PreviewToolReducer {
     case let .setRefreshOnWrite(to:value):
       state.previewTool.isRefreshOnWrite = value
 
+    default:
+      return pair
+
     }
 
     return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
   }
 
-  fileprivate let baseServerUrl: URL
+  private let baseServerUrl: URL
 }

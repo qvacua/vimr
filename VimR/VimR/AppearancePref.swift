@@ -71,26 +71,26 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
       .disposed(by: self.disposeBag)
   }
 
-  fileprivate let emit: (Action) -> Void
-  fileprivate let disposeBag = DisposeBag()
+  private let emit: (Action) -> Void
+  private let disposeBag = DisposeBag()
 
-  fileprivate var font: NSFont
-  fileprivate var linespacing: CGFloat
-  fileprivate var usesLigatures: Bool
-  fileprivate var usesColorscheme: Bool
-  fileprivate var showsFileIcon: Bool
+  private var font: NSFont
+  private var linespacing: CGFloat
+  private var usesLigatures: Bool
+  private var usesColorscheme: Bool
+  private var showsFileIcon: Bool
 
-  fileprivate let colorschemeCheckbox = NSButton(forAutoLayout: ())
-  fileprivate let fileIconCheckbox = NSButton(forAutoLayout: ())
+  private let colorschemeCheckbox = NSButton(forAutoLayout: ())
+  private let fileIconCheckbox = NSButton(forAutoLayout: ())
 
-  fileprivate let sizes = [9, 10, 11, 12, 13, 14, 16, 18, 24, 36, 48, 64]
-  fileprivate let sizeCombo = NSComboBox(forAutoLayout: ())
-  fileprivate let fontPopup = NSPopUpButton(frame: .zero, pullsDown: false)
-  fileprivate let linespacingField = NSTextField(forAutoLayout: ())
-  fileprivate let ligatureCheckbox = NSButton(forAutoLayout: ())
-  fileprivate let previewArea = NSTextView(frame: .zero)
+  private let sizes = [9, 10, 11, 12, 13, 14, 16, 18, 24, 36, 48, 64]
+  private let sizeCombo = NSComboBox(forAutoLayout: ())
+  private let fontPopup = NSPopUpButton(frame: .zero, pullsDown: false)
+  private let linespacingField = NSTextField(forAutoLayout: ())
+  private let ligatureCheckbox = NSButton(forAutoLayout: ())
+  private let previewArea = NSTextView(frame: .zero)
 
-  fileprivate let exampleText =
+  private let exampleText =
     "abcdefghijklmnopqrstuvwxyz\n" +
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ\n" +
     "0123456789\n" +
@@ -102,7 +102,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     fatalError("init(coder:) has not been implemented")
   }
 
-  fileprivate func addViews() {
+  private func addViews() {
     let paneTitle = self.paneTitleTextField(title: "Appearance")
 
     let useColorscheme = self.colorschemeCheckbox
@@ -244,7 +244,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     previewScrollView.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
   }
 
-  fileprivate func updateViews() {
+  private func updateViews() {
     self.fontPopup.selectItem(withTitle: self.font.fontName)
     self.sizeCombo.stringValue = String(Int(self.font.pointSize))
     self.linespacingField.stringValue = String(format: "%.2f", self.linespacing)
@@ -315,7 +315,7 @@ extension AppearancePref {
     self.emit(.setLinespacing(newLinespacing))
   }
 
-  fileprivate func cappedLinespacing(_ linespacing: Float) -> CGFloat {
+  private func cappedLinespacing(_ linespacing: Float) -> CGFloat {
     let cgfLinespacing = CGFloat(linespacing)
 
     guard cgfLinespacing >= NvimView.minLinespacing else {
@@ -329,7 +329,7 @@ extension AppearancePref {
     return cgfLinespacing
   }
 
-  fileprivate func cappedFontSize(_ size: Int) -> CGFloat {
+  private func cappedFontSize(_ size: Int) -> CGFloat {
     let cgfSize = CGFloat(size)
 
     guard cgfSize >= NvimView.minFontSize else {
@@ -344,4 +344,4 @@ extension AppearancePref {
   }
 }
 
-fileprivate let sharedFontManager = NSFontManager.shared
+private let sharedFontManager = NSFontManager.shared

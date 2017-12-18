@@ -130,7 +130,7 @@ extension MainWindow {
     self.window.makeFirstResponder(prevFirstResponder)
   }
 
-  fileprivate func clearCustomTitle() {
+  private func clearCustomTitle() {
     self.titleView?.removeFromSuperview()
     self.repIcon?.removeFromSuperview()
 
@@ -138,10 +138,10 @@ extension MainWindow {
     self.repIcon = nil
   }
 
-  fileprivate func internalSetRepUrl(_ url: URL?) {
+  private func internalSetRepUrl(_ url: URL?) {
     self.window.representedURL = nil
     self.window.representedURL = url
   }
 }
 
-fileprivate let repIconToTitleGap = CGFloat(4.0)
+private let repIconToTitleGap = CGFloat(4.0)

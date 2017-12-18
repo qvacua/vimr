@@ -65,23 +65,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       .disposed(by: self.disposeBag)
   }
 
-  fileprivate let stateContext: Context
-  fileprivate let emit: (Action) -> Void
+  private let stateContext: Context
+  private let emit: (Action) -> Void
 
-  fileprivate let uiRoot: UiRoot
+  private let uiRoot: UiRoot
 
-  fileprivate var hasDirtyWindows = false
-  fileprivate var hasMainWindows = false
+  private var hasDirtyWindows = false
+  private var hasMainWindows = false
 
-  fileprivate var openNewMainWindowOnLaunch: Bool
-  fileprivate var openNewMainWindowOnReactivation: Bool
-  fileprivate var useSnapshot: Bool
+  private var openNewMainWindowOnLaunch: Bool
+  private var openNewMainWindowOnReactivation: Bool
+  private var useSnapshot: Bool
 
-  fileprivate let disposeBag = DisposeBag()
+  private let disposeBag = DisposeBag()
 
-  fileprivate var launching = true
+  private var launching = true
 
-  fileprivate func setSparkleUrl(_ snapshot: Bool) {
+  private func setSparkleUrl(_ snapshot: Bool) {
     if snapshot {
       updater.feedURL = URL(
         string: "https://raw.githubusercontent.com/qvacua/vimr/develop/appcast_snapshot.xml"
@@ -250,7 +250,7 @@ extension AppDelegate {
     }
   }
 
-  fileprivate func queryParam<T>(_ prefix: String,
+  private func queryParam<T>(_ prefix: String,
                                  from rawParams: [String],
                                  transforming transform: (String) -> T) -> [T] {
 
@@ -299,7 +299,7 @@ extension AppDelegate {
 }
 
 /// Keep the rawValues in sync with Action in the `vimr` Python script.
-fileprivate enum VimRUrlAction: String {
+private enum VimRUrlAction: String {
   case activate = "activate"
   case open = "open"
   case newWindow = "open-in-new-window"
@@ -307,12 +307,12 @@ fileprivate enum VimRUrlAction: String {
   case nvim = "nvim"
 }
 
-fileprivate let updater = SUUpdater()
+private let updater = SUUpdater()
 
-fileprivate let debugMenuItemIdentifier = NSUserInterfaceItemIdentifier("debug-menu-item")
+private let debugMenuItemIdentifier = NSUserInterfaceItemIdentifier("debug-menu-item")
 
-fileprivate let filePrefix = "file="
-fileprivate let cwdPrefix = "cwd="
-fileprivate let nvimArgsPrefix = "nvim-args="
-fileprivate let pipePathPrefix = "pipe-path="
-fileprivate let waitPrefix = "wait="
+private let filePrefix = "file="
+private let cwdPrefix = "cwd="
+private let nvimArgsPrefix = "nvim-args="
+private let pipePathPrefix = "pipe-path="
+private let waitPrefix = "wait="

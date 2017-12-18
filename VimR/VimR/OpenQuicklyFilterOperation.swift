@@ -104,12 +104,12 @@ class OpenQuicklyFilterOperation: Operation {
     }
   }
 
-  fileprivate let pattern: String
-  fileprivate let flatFileItems: [FileItem]
-  fileprivate let cwd: URL
+  private let pattern: String
+  private let flatFileItems: [FileItem]
+  private let cwd: URL
 
-  fileprivate unowned let openQuickly: OpenQuicklyWindow
+  private unowned let openQuickly: OpenQuicklyWindow
 }
 
-fileprivate let chunkSize = 100
-fileprivate let maxResultCount = 500
+private let chunkSize = 100
+private let maxResultCount = 500

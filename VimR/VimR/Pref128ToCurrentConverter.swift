@@ -70,14 +70,14 @@ class Pref128ToCurrentConverter {
   }
 }
 
-fileprivate protocol StandardPrefData {
+private protocol StandardPrefData {
 
   init?(dict: [String: Any])
 
   func dict() -> [String: Any]
 }
 
-fileprivate struct EmptyPrefData: StandardPrefData {
+private struct EmptyPrefData: StandardPrefData {
 
   static let `default` = EmptyPrefData()
 
@@ -92,12 +92,12 @@ fileprivate struct EmptyPrefData: StandardPrefData {
   }
 }
 
-fileprivate struct PrefData: StandardPrefData {
+private struct PrefData: StandardPrefData {
 
-  fileprivate static let general = "general"
-  fileprivate static let appearance = "appearance"
-  fileprivate static let advanced = "advanced"
-  fileprivate static let mainWindow = "mainWindow"
+  private static let general = "general"
+  private static let appearance = "appearance"
+  private static let advanced = "advanced"
+  private static let mainWindow = "mainWindow"
 
   static let `default` = PrefData(general: .default, appearance: .default, advanced: .default, mainWindow: .default)
 
@@ -147,13 +147,13 @@ fileprivate struct PrefData: StandardPrefData {
   }
 }
 
-fileprivate struct GeneralPrefData: Equatable, StandardPrefData {
+private struct GeneralPrefData: Equatable, StandardPrefData {
 
-  fileprivate static let openNewWindowWhenLaunching = "open-new-window-when-launching"
-  fileprivate static let openNewWindowOnReactivation = "open-new-window-on-reactivation"
-  fileprivate static let ignorePatterns = "ignore-patterns"
+  private static let openNewWindowWhenLaunching = "open-new-window-when-launching"
+  private static let openNewWindowOnReactivation = "open-new-window-on-reactivation"
+  private static let ignorePatterns = "ignore-patterns"
 
-  fileprivate static let defaultIgnorePatterns = Set(
+  private static let defaultIgnorePatterns = Set(
     [ "*/.git", "*.o", "*.d", "*.dia" ].map(FileItemIgnorePattern.init)
   )
 
@@ -202,12 +202,12 @@ fileprivate struct GeneralPrefData: Equatable, StandardPrefData {
   }
 }
 
-fileprivate struct AppearancePrefData: Equatable, StandardPrefData {
+private struct AppearancePrefData: Equatable, StandardPrefData {
 
-  fileprivate static let editorFontName = "editor-font-name"
-  fileprivate static let editorFontSize = "editor-font-size"
-  fileprivate static let editorLinespacing = "editor-linespacing"
-  fileprivate static let editorUsesLigatures = "editor-uses-ligatures"
+  private static let editorFontName = "editor-font-name"
+  private static let editorFontSize = "editor-font-size"
+  private static let editorLinespacing = "editor-linespacing"
+  private static let editorUsesLigatures = "editor-uses-ligatures"
 
   static func ==(left: AppearancePrefData, right: AppearancePrefData) -> Bool {
     return left.editorUsesLigatures == right.editorUsesLigatures
@@ -253,10 +253,10 @@ fileprivate struct AppearancePrefData: Equatable, StandardPrefData {
   }
 }
 
-fileprivate struct AdvancedPrefData: Equatable, StandardPrefData {
+private struct AdvancedPrefData: Equatable, StandardPrefData {
 
-  fileprivate static let useSnapshotUpdateChannel = "use-snapshot-update-channel"
-  fileprivate static let useInteractiveZsh = "use-interactive-zsh"
+  private static let useSnapshotUpdateChannel = "use-snapshot-update-channel"
+  private static let useInteractiveZsh = "use-interactive-zsh"
 
   static func ==(left: AdvancedPrefData, right: AdvancedPrefData) -> Bool {
     return left.useSnapshotUpdateChannel == right.useSnapshotUpdateChannel
@@ -291,7 +291,7 @@ fileprivate struct AdvancedPrefData: Equatable, StandardPrefData {
   }
 }
 
-fileprivate enum ToolIdentifier: String {
+private enum ToolIdentifier: String {
 
   case fileBrowser = "com.qvacua.vimr.tool.file-browser"
   case bufferList = "com.qvacua.vimr.tool.buffer-list"
@@ -300,11 +300,11 @@ fileprivate enum ToolIdentifier: String {
   static let all = [ fileBrowser, bufferList, preview ]
 }
 
-fileprivate struct MainWindowPrefData: StandardPrefData {
+private struct MainWindowPrefData: StandardPrefData {
 
-  fileprivate static let isAllToolsVisible = "is-all-tools-visible"
-  fileprivate static let isToolButtonsVisible = "is-tool-buttons-visible"
-  fileprivate static let toolPrefDatas = "tool-pref-datas"
+  private static let isAllToolsVisible = "is-all-tools-visible"
+  private static let isToolButtonsVisible = "is-tool-buttons-visible"
+  private static let toolPrefDatas = "tool-pref-datas"
 
   static let `default` = MainWindowPrefData(isAllToolsVisible: true,
                                             isToolButtonsVisible: true,
@@ -361,13 +361,13 @@ fileprivate struct MainWindowPrefData: StandardPrefData {
   }
 }
 
-fileprivate struct ToolPrefData: StandardPrefData {
+private struct ToolPrefData: StandardPrefData {
 
-  fileprivate static let identifier = "identifier"
-  fileprivate static let location = "location"
-  fileprivate static let isVisible = "is-visible"
-  fileprivate static let dimension = "dimension"
-  fileprivate static let toolData = "tool-data"
+  private static let identifier = "identifier"
+  private static let location = "location"
+  private static let isVisible = "is-visible"
+  private static let dimension = "dimension"
+  private static let toolData = "tool-data"
 
   static let defaults: [ToolIdentifier: ToolPrefData] = [
     .fileBrowser: ToolPrefData(identifier: .fileBrowser,
@@ -449,17 +449,17 @@ fileprivate struct ToolPrefData: StandardPrefData {
   }
 }
 
-fileprivate class PreviewComponent {
+private class PreviewComponent {
 
   struct PrefData: StandardPrefData {
 
-    fileprivate static let rendererDatas = "renderer-datas"
+    private static let rendererDatas = "renderer-datas"
 
-    fileprivate static let rendererPrefDataFns = [
+    private static let rendererPrefDataFns = [
       MarkdownRenderer.identifier: MarkdownRenderer.prefData,
     ]
 
-    fileprivate static let rendererDefaultPrefDatas = [
+    private static let rendererDefaultPrefDatas = [
       MarkdownRenderer.identifier: MarkdownRenderer.PrefData.default,
     ]
 
@@ -509,7 +509,7 @@ fileprivate class PreviewComponent {
   }
 }
 
-fileprivate class MarkdownRenderer {
+private class MarkdownRenderer {
 
   static let identifier = "com.qvacua.vimr.tool.preview.markdown"
 
@@ -519,10 +519,10 @@ fileprivate class MarkdownRenderer {
 
   struct PrefData: StandardPrefData {
 
-    fileprivate static let identifier = "identifier"
-    fileprivate static let isForwardSearchAutomatically = "is-forward-search-automatically"
-    fileprivate static let isReverseSearchAutomatically = "is-reverse-search-automatically"
-    fileprivate static let isRefreshOnWrite = "is-refresh-on-write"
+    private static let identifier = "identifier"
+    private static let isForwardSearchAutomatically = "is-forward-search-automatically"
+    private static let isReverseSearchAutomatically = "is-reverse-search-automatically"
+    private static let isRefreshOnWrite = "is-refresh-on-write"
 
     static let `default` = PrefData(isForwardSearchAutomatically: false,
                                     isReverseSearchAutomatically: false,
@@ -571,9 +571,9 @@ fileprivate class MarkdownRenderer {
   }
 }
 
-fileprivate struct FileBrowserData: StandardPrefData {
+private struct FileBrowserData: StandardPrefData {
 
-  fileprivate static let isShowHidden = "is-show-hidden"
+  private static let isShowHidden = "is-show-hidden"
 
   static let `default` = FileBrowserData(isShowHidden: false)
 

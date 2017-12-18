@@ -168,7 +168,7 @@ extension NvimView {
         return tabs.map { $0.windows }.flatMap { $0 }
       }
       .subscribe(onSuccess: { wins in
-        for win in wins {
+        if let win = wins.first(where: { $0.buffer == buffer }) {
           self.nvim.setCurrentWin(window: NvimApi.Window(win.handle), expectsReturnValue: false)
           return
         }
@@ -197,7 +197,8 @@ extension NvimView {
 
   public func quitNeoVimWithoutSaving() {
     self.nvim.command(command: "qa!", expectsReturnValue: false)
-    self.delegate?.neoVimStopped()
+    self.eventsSubject.onNext(.neoVimStopped)
+    self.eventsSubject.onCompleted()
     self.waitForNeoVimToQuit()
   }
 
@@ -232,7 +233,7 @@ extension NvimView {
     self.nvim.command(command: "\(cmd) \(url.path)", expectsReturnValue: false)
   }
 
-  private func neoVimBuffer(for buf: NvimApi.Buffer, currentBuffer: NvimApi.Buffer?) -> NvimView.Buffer? {
+  func neoVimBuffer(for buf: NvimApi.Buffer, currentBuffer: NvimApi.Buffer?) -> NvimView.Buffer? {
     guard let info = self.nvim.getBufGetInfo(buffer: buf).value else {
       return nil
     }
@@ -289,4 +290,4 @@ extension NvimView {
   }
 }
 
-fileprivate let neoVimQuitTimeout = TimeInterval(5)
+private let neoVimQuitTimeout = TimeInterval(5)

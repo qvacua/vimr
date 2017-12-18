@@ -109,17 +109,17 @@ class FileItemUtils {
 }
 
 /// When at least this much of non-directory and visible files are scanned, they are emitted.
-fileprivate let emitChunkSize = 1000
-fileprivate let scanDispatchQueue = DispatchQueue.global(qos: .userInitiated)
-fileprivate let lock = NSRecursiveLock()
+private let emitChunkSize = 1000
+private let scanDispatchQueue = DispatchQueue.global(qos: .userInitiated)
+private let lock = NSRecursiveLock()
 
-fileprivate func synced<T>(_ fn: () -> T) -> T {
+private func synced<T>(_ fn: () -> T) -> T {
   lock.lock()
   defer { lock.unlock() }
   return fn()
 }
 
-fileprivate func fileItem(for pathComponents: [String], root: FileItem, create: Bool = true) -> FileItem? {
+private func fileItem(for pathComponents: [String], root: FileItem, create: Bool = true) -> FileItem? {
   return synced {
     pathComponents.dropFirst().reduce(root) { (resultItem, childName) -> FileItem? in
       guard let parent = resultItem else {
@@ -131,7 +131,7 @@ fileprivate func fileItem(for pathComponents: [String], root: FileItem, create: 
   }
 }
 
-fileprivate func fileItem(for url: URL, root: FileItem, create: Bool = true) -> FileItem? {
+private func fileItem(for url: URL, root: FileItem, create: Bool = true) -> FileItem? {
   return fileItem(for: url.pathComponents, root: root, create: create)
 }
 
@@ -144,7 +144,7 @@ fileprivate func fileItem(for url: URL, root: FileItem, create: Bool = true) -> 
 ///   - parent: parent of the child.
 ///   - create: whether to create the child `FileItem` if it's not scanned yet.
 /// - returns: child `FileItem` or nil.
-fileprivate func child(withName name: String, ofParent parent: FileItem, create: Bool = false) -> FileItem? {
+private func child(withName name: String, ofParent parent: FileItem, create: Bool = false) -> FileItem? {
   let filteredChildren = parent.children.filter { $0.url.lastPathComponent == name }
 
   if filteredChildren.isEmpty && create {
@@ -163,7 +163,7 @@ fileprivate func child(withName name: String, ofParent parent: FileItem, create:
   return filteredChildren.first
 }
 
-fileprivate func scanChildren(_ item: FileItem, sorted: Bool = false) {
+private func scanChildren(_ item: FileItem, sorted: Bool = false) {
   let children = FileUtils.directDescendants(of: item.url).map(FileItem.init)
   synced {
     if sorted {

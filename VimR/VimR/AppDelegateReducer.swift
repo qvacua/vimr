@@ -46,9 +46,9 @@ class AppDelegateReducer {
     return StateActionPair(state: state, action: pair.action)
   }
 
-  fileprivate let baseServerUrl: URL
+  private let baseServerUrl: URL
 
-  fileprivate func newMainWindow(with state: AppState,
+  private func newMainWindow(with state: AppState,
                                  urls: [URL],
                                  cwd: URL,
                                  nvimArgs: [String]? = nil,
@@ -75,10 +75,10 @@ class AppDelegateReducer {
     return mainWindow
   }
 
-  fileprivate func frame(relativeTo refFrame: CGRect) -> CGRect {
+  private func frame(relativeTo refFrame: CGRect) -> CGRect {
     return refFrame.offsetBy(dx: cascadeX, dy: -cascadeY)
   }
 }
 
-fileprivate let cascadeX: CGFloat = 24.0
-fileprivate let cascadeY: CGFloat = 24.0
+private let cascadeX: CGFloat = 24.0
+private let cascadeY: CGFloat = 24.0

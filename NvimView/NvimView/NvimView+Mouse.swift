@@ -70,7 +70,7 @@ extension NvimView {
     }
   }
 
-  fileprivate func cellPositionFor(event: NSEvent) -> Position {
+  private func cellPositionFor(event: NSEvent) -> Position {
     let location = self.convert(event.locationInWindow, from: nil)
     let row = Int((self.bounds.size.height - location.y - self.yOffset) / self.cellSize.height)
     let column = Int((location.x - self.xOffset) / self.cellSize.width)
@@ -80,7 +80,7 @@ extension NvimView {
     return cellPosition
   }
 
-  fileprivate func mouse(event: NSEvent, vimName: String) {
+  private func mouse(event: NSEvent, vimName: String) {
     let cellPosition = self.cellPositionFor(event: event)
     guard self.shouldFireVimInputFor(event: event, newCellPosition: cellPosition) else {
       return
@@ -100,7 +100,7 @@ extension NvimView {
     self.uiClient.vimInput(result)
   }
 
-  fileprivate func shouldFireVimInputFor(event: NSEvent, newCellPosition: Position) -> Bool {
+  private func shouldFireVimInputFor(event: NSEvent, newCellPosition: Position) -> Bool {
     let type = event.type
     guard type == .leftMouseDragged
           || type == .rightMouseDragged
@@ -118,7 +118,7 @@ extension NvimView {
     return true
   }
 
-  fileprivate func vimClickCountFrom(event: NSEvent) -> String {
+  private func vimClickCountFrom(event: NSEvent) -> String {
     let clickCount = event.clickCount
 
     guard 2 <= clickCount && clickCount <= 4 else {
@@ -133,7 +133,7 @@ extension NvimView {
     }
   }
 
-  fileprivate func vimScrollEventNamesFor(deltaX: CGFloat, deltaY: CGFloat) -> (String, String) {
+  private func vimScrollEventNamesFor(deltaX: CGFloat, deltaY: CGFloat) -> (String, String) {
     let typeY: String
     if deltaY > 0 {
       typeY = "ScrollWheelUp"
@@ -151,7 +151,7 @@ extension NvimView {
     return (typeX, typeY)
   }
 
-  fileprivate func vimScrollInputFor(deltaX: CGFloat, deltaY: CGFloat,
+  private func vimScrollInputFor(deltaX: CGFloat, deltaY: CGFloat,
                                      modifierFlags: NSEvent.ModifierFlags,
                                      cellPosition: Position) -> (String, String) {
 
@@ -172,5 +172,5 @@ extension NvimView {
   }
 }
 
-fileprivate let maxScrollDeltaX = 15
-fileprivate let maxScrollDeltaY = 15
+private let maxScrollDeltaX = 15
+private let maxScrollDeltaY = 15

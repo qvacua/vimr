@@ -5,7 +5,7 @@
 
 import Foundation
 
-fileprivate let defaults = UserDefaults.standard
+private let defaults = UserDefaults.standard
 
 class PrefService {
 

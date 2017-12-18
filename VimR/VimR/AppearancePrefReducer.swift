@@ -37,7 +37,7 @@ class AppearancePrefReducer {
     return StateActionPair(state: state, action: pair.action)
   }
 
-  fileprivate func modify(state: inout AppState, with appearance: AppearanceState) {
+  private func modify(state: inout AppState, with appearance: AppearanceState) {
     state.mainWindowTemplate.appearance = appearance
     state.mainWindows.keys.forEach { state.mainWindows[$0]?.appearance = appearance }
   }

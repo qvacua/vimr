@@ -4,6 +4,8 @@
  */
 
 import Cocoa
+import NvimMsgPack
+import RxSwift
 
 extension NvimView {
 
@@ -47,7 +49,7 @@ extension NvimView {
       self.markForRender(cellPosition: self.grid.position)
       self.grid.goto(position)
 
-      self.delegate?.cursor(to: textPosition)
+      self.eventsSubject.onNext(.cursor(textPosition))
     }
   }
 
@@ -75,7 +77,7 @@ extension NvimView {
       self.markForRender(region: self.grid.region)
       // Do not send msgs to agent -> neovim in the delegate method. It causes spinning
       // when you're opening a file with existing swap file.
-      self.delegate?.scroll()
+      self.eventsSubject.onNext(.scroll)
     }
   }
 
@@ -171,11 +173,9 @@ extension NvimView {
   }
 
   public func setTitle(_ title: String) {
-    gui.async {
-      self.bridgeLogger.debug(title)
+    self.bridgeLogger.debug(title)
 
-      self.delegate?.set(title: title)
-    }
+    self.eventsSubject.onNext(.setTitle(title))
   }
 
   public func stop() {
@@ -185,25 +185,28 @@ extension NvimView {
 
     gui.async {
       self.waitForNeoVimToQuit()
-      self.delegate?.neoVimStopped()
+      self.eventsSubject.onNext(.neoVimStopped)
+      self.eventsSubject.onCompleted()
     }
   }
 
   public func autoCommandEvent(_ event: NvimAutoCommandEvent, bufferHandle: Int) {
-    gui.async {
-      self.bridgeLogger.debug("\(nvimAutoCommandEventName(event)) -> \(bufferHandle)")
+    self.bridgeLogger.debug("\(nvimAutoCommandEventName(event)) -> \(bufferHandle)")
 
-      if event == .BUFWINENTER || event == .BUFWINLEAVE {
-        self.bufferListChanged()
-      }
+    if event == .BUFWINENTER || event == .BUFWINLEAVE {
+      self.bufferListChanged()
+    }
 
-      if event == .TABENTER {
-        self.tabChanged()
-      }
+    if event == .TABENTER {
+      self.eventsSubject.onNext(.tabChanged)
+    }
 
-      if event == .BUFREADPOST || event == .BUFWRITEPOST || event == .BUFENTER {
-        self.currentBufferChanged(bufferHandle)
-      }
+    if event == .BUFWRITEPOST {
+      self.bufferWritten(bufferHandle)
+    }
+
+    if event == .BUFENTER {
+      self.newCurrentBuffer(bufferHandle)
     }
   }
 
@@ -215,7 +218,8 @@ extension NvimView {
         return
       }
 
-      self.delegate?.ipcBecameInvalid(reason: reason)
+      self.eventsSubject.onNext(.ipcBecameInvalid(reason))
+      self.eventsSubject.onCompleted()
 
       self.bridgeLogger.error("Force-closing due to IPC error.")
       self.nvim.disconnect()
@@ -228,20 +232,16 @@ extension NvimView {
 extension NvimView {
 
   public func bell() {
-    gui.async {
-      self.bridgeLogger.mark()
+    self.bridgeLogger.mark()
 
-      NSSound.beep()
-    }
+    NSSound.beep()
   }
 
   public func cwdChanged(_ cwd: String) {
-    gui.async {
-      self.bridgeLogger.debug(cwd)
+    self.bridgeLogger.debug(cwd)
 
-      self._cwd = URL(fileURLWithPath: cwd)
-      self.cwdChanged()
-    }
+    self._cwd = URL(fileURLWithPath: cwd)
+    self.eventsSubject.onNext(.cwdChanged)
   }
   public func colorSchemeChanged(_ values: [NSNumber]) {
     gui.async {
@@ -249,64 +249,46 @@ extension NvimView {
       self.bridgeLogger.debug(theme)
 
       self.theme = theme
-      self.delegate?.colorschemeChanged(to: theme)
+      self.eventsSubject.onNext(.colorschemeChanged(theme))
     }
   }
 
   public func setDirtyStatus(_ dirty: Bool) {
-    gui.async {
-      self.bridgeLogger.debug(dirty)
+    self.bridgeLogger.debug(dirty)
 
-      self.delegate?.set(dirtyStatus: dirty)
-    }
+    self.eventsSubject.onNext(.setDirtyStatus(dirty))
   }
 
   public func updateMenu() {
-    gui.async {
-      self.bridgeLogger.mark()
-    }
+    self.bridgeLogger.mark()
   }
 
   public func busyStart() {
-    gui.async {
-      self.bridgeLogger.mark()
-    }
+    self.bridgeLogger.mark()
   }
 
   public func busyStop() {
-    gui.async {
-      self.bridgeLogger.mark()
-    }
+    self.bridgeLogger.mark()
   }
 
   public func mouseOn() {
-    gui.async {
-      self.bridgeLogger.mark()
-    }
+    self.bridgeLogger.mark()
   }
 
   public func mouseOff() {
-    gui.async {
-      self.bridgeLogger.mark()
-    }
+    self.bridgeLogger.mark()
   }
 
   public func visualBell() {
-    gui.async {
-      self.bridgeLogger.mark()
-    }
+    self.bridgeLogger.mark()
   }
 
   public func suspend() {
-    gui.async {
-      self.bridgeLogger.mark()
-    }
+    self.bridgeLogger.mark()
   }
 
   public func setIcon(_ icon: String) {
-    gui.async {
-      self.bridgeLogger.debug(icon)
-    }
+    self.bridgeLogger.debug(icon)
   }
 }
 
@@ -350,32 +332,42 @@ extension NvimView {
 
 extension NvimView {
 
-  fileprivate func currentBufferChanged(_ handle: Int) {
+  private func bufferWritten(_ handle: Int) {
     self
       .currentBuffer()
-      .filter { $0.apiBuffer.handle == handle }
+      .map { curBuf -> NvimView.Buffer in
+        guard let buffer = self.neoVimBuffer(for: NvimApi.Buffer(handle), currentBuffer: curBuf.apiBuffer) else {
+          throw NvimView.Error.api("Could not get buffer for buffer handle \(handle).")
+        }
+
+        return buffer
+      }
       .subscribe(onSuccess: {
-        self.delegate?.currentBufferChanged($0)
+        self.eventsSubject.onNext(.bufferWritten($0))
         if #available(OSX 10.12.2, *) {
           self.updateTouchBarTab()
         }
       })
   }
 
-  fileprivate func tabChanged() {
-    self.delegate?.tabChanged()
+  private func newCurrentBuffer(_ handle: Int) {
+    self
+      .currentBuffer()
+      .filter { $0.apiBuffer.handle == handle }
+      .subscribe(onSuccess: {
+        self.eventsSubject.onNext(.newCurrentBuffer($0))
+        if #available(OSX 10.12.2, *) {
+          self.updateTouchBarTab()
+        }
+      })
   }
 
-  fileprivate func cwdChanged() {
-    self.delegate?.cwdChanged()
-  }
-
-  fileprivate func bufferListChanged() {
-    self.delegate?.bufferListChanged()
+  private func bufferListChanged() {
+    self.eventsSubject.onNext(.bufferListChanged)
     if #available(OSX 10.12.2, *) {
       self.updateTouchBarCurrentBuffer()
     }
   }
 }
 
-fileprivate let gui = DispatchQueue.main
+private let gui = DispatchQueue.main

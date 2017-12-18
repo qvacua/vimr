@@ -51,25 +51,25 @@ class Workspace: NSView, WorkspaceBarDelegate {
     var toolbarBackground = NSColor(red: 0.899, green: 0.934, blue: 0.997, alpha: 1)
   }
 
-  fileprivate(set) var isAllToolsVisible = true {
+  private(set) var isAllToolsVisible = true {
     didSet {
       self.relayout()
     }
   }
-  fileprivate(set) var isToolButtonsVisible = true {
+  private(set) var isToolButtonsVisible = true {
     didSet {
       self.bars.values.forEach { $0.isButtonVisible = !$0.isButtonVisible }
     }
   }
 
-  fileprivate var tools = [WorkspaceTool]()
+  private var tools = [WorkspaceTool]()
   var orderedTools: [WorkspaceTool] {
     return self.bars.values.reduce([]) { [$0, $1.tools].flatMap { $0 } }
   }
 
-  fileprivate var isDragOngoing = false
-  fileprivate var draggedOnBarLocation: WorkspaceBarLocation?
-  fileprivate let proxyBar = ProxyWorkspaceBar(forAutoLayout: ())
+  private var isDragOngoing = false
+  private var draggedOnBarLocation: WorkspaceBarLocation?
+  private let proxyBar = ProxyWorkspaceBar(forAutoLayout: ())
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -165,7 +165,7 @@ extension Workspace {
     self.endDrag()
   }
 
-  fileprivate func endDrag() {
+  private func endDrag() {
     self.isDragOngoing = false
     self.draggedOnBarLocation = nil
     self.proxyBar.removeFromSuperview()
@@ -190,7 +190,7 @@ extension Workspace {
     return true
   }
 
-  fileprivate func barLocation(inPoint loc: CGPoint) -> WorkspaceBarLocation? {
+  private func barLocation(inPoint loc: CGPoint) -> WorkspaceBarLocation? {
     for barLoc in WorkspaceBarLocation.all {
       if rect(forBar: barLoc).contains(loc) {
         return barLoc
@@ -201,7 +201,7 @@ extension Workspace {
   }
 
   // We copy and pasted WorkspaceBar.barFrame() since we need the rect for the proxy bars.
-  fileprivate func rect(forBar location: WorkspaceBarLocation) -> CGRect {
+  private func rect(forBar location: WorkspaceBarLocation) -> CGRect {
     let size = self.bounds.size
     let dimension = self.bars[location]!.dimensionWithoutTool()
 
@@ -241,13 +241,13 @@ extension Workspace {
 // MARK: - Layout
 extension Workspace {
 
-  fileprivate func repaint() {
+  private func repaint() {
     self.bars.values.forEach { $0.repaint() }
     self.proxyBar.repaint()
     self.needsDisplay = true
   }
 
-  fileprivate func relayout() {
+  private func relayout() {
     // FIXME: I did not investigate why toggleButtons does not work correctly if we store all constraints in an array
     // and remove them here by self.removeConstraints(${all constraints). The following seems to work...
     self.subviews.forEach { $0.removeAllConstraints() }

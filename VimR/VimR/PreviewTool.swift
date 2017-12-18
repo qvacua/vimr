@@ -13,9 +13,9 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   enum Action {
 
     case refreshNow
-    case reverseSearch(to: Marked<Position>)
+    case reverseSearch(to: Position)
 
-    case scroll(to: Marked<Position>)
+    case scroll(to: Position)
 
     case setAutomaticReverseSearch(to: Bool)
     case setAutomaticForwardSearch(to: Bool)
@@ -88,7 +88,8 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
         self.automaticReverseMenuItem.boolState = state.previewTool.isReverseSearchAutomatically
         self.refreshOnWriteMenuItem.boolState = state.previewTool.isRefreshOnWrite
 
-        if state.previewTool.isForwardSearchAutomatically
+        if state.preview.status == .markdown
+           && state.previewTool.isForwardSearchAutomatically
            && state.preview.editorPosition.hasDifferentMark(as: self.editorPosition)
         {
           self.forwardSearch(position: state.preview.editorPosition.payload)
@@ -101,7 +102,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
         if serverUrl != self.url {
           self.url = serverUrl
           self.scrollTop = 0
-          self.previewPosition = Marked(Position.beginning)
+          self.previewPosition = Position.beginning
         }
 
         self.lastUpdateDate = state.preview.updateDate
@@ -117,14 +118,14 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
     self.webviewMessageHandler.source
       .throttle(0.75, latest: true, scheduler: self.scheduler)
       .subscribe(onNext: { [unowned self] (position, scrollTop) in
-        self.previewPosition = Marked(position)
+        self.previewPosition = position
         self.scrollTop = scrollTop
         self.emit(UuidAction(uuid: self.uuid, action: .scroll(to: self.previewPosition)))
       })
       .disposed(by: self.disposeBag)
   }
 
-  fileprivate func addViews() {
+  private func addViews() {
     self.webview.navigationDelegate = self
     self.userContentController.add(webviewMessageHandler, name: "com_vimr_tools_preview_markdown")
     self.webview.configureForAutoLayout()
@@ -141,37 +142,41 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
     self.webview.evaluateJavaScript("document.body.scrollTop = \(self.scrollTop)")
   }
 
-  fileprivate let emit: (UuidAction<Action>) -> Void
-  fileprivate let uuid: String
+  private let emit: (UuidAction<Action>) -> Void
+  private let uuid: String
 
-  fileprivate let webview: WKWebView
-  fileprivate let disposeBag = DisposeBag()
-  fileprivate let scheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
-  fileprivate var isOpen = false
+  private let webview: WKWebView
+  private let disposeBag = DisposeBag()
+  private let scheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
+  private var isOpen = false
 
-  fileprivate var url: URL?
-  fileprivate var lastUpdateDate = Date.distantPast
-  fileprivate var editorPosition = Marked(Position.beginning)
-  fileprivate var previewPosition = Marked(Position.beginning)
-  fileprivate var scrollTop = 0
+  private var url: URL?
+  private var lastUpdateDate = Date.distantPast
+  private var editorPosition = Marked(Position.beginning)
+  private var previewPosition = Position.beginning
+  private var scrollTop = 0
 
-  fileprivate let userContentController = WKUserContentController()
-  fileprivate let webviewMessageHandler = WebviewMessageHandler()
+  private let userContentController = WKUserContentController()
+  private let webviewMessageHandler = WebviewMessageHandler()
 
-  fileprivate let automaticForwardMenuItem = NSMenuItem(title: "Automatic Forward Search",
+  private let automaticForwardMenuItem = NSMenuItem(title: "Automatic Forward Search",
                                                         action: nil,
                                                         keyEquivalent: "")
-  fileprivate let automaticReverseMenuItem = NSMenuItem(title: "Automatic Reverse Search",
+  private let automaticReverseMenuItem = NSMenuItem(title: "Automatic Reverse Search",
                                                         action: nil,
                                                         keyEquivalent: "")
-  fileprivate let refreshOnWriteMenuItem = NSMenuItem(title: "Refresh on Write", action: nil, keyEquivalent: "")
+  private let refreshOnWriteMenuItem = NSMenuItem(title: "Refresh on Write", action: nil, keyEquivalent: "")
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  fileprivate func forwardSearch(position: Position) {
-    self.webview.evaluateJavaScript("scrollToPosition(\(position.row), \(position.column));")
+  private func forwardSearch(position: Position) {
+    self.webview.evaluateJavaScript("scrollToPosition(\(position.row), \(position.column));") { result, error in
+      if let scrollTop = result as? Int {
+        self.scrollTop = scrollTop
+      }
+    }
   }
 }
 
@@ -187,7 +192,6 @@ extension PreviewTool {
   }
 
   @objc func reverseSearchAction(_: Any?) {
-    self.previewPosition = Marked(self.previewPosition.payload) // set a new mark
     self.emit(UuidAction(uuid: self.uuid, action: .reverseSearch(to: self.previewPosition)))
   }
 
@@ -204,7 +208,7 @@ extension PreviewTool {
   }
 }
 
-fileprivate class WebviewMessageHandler: NSObject, WKScriptMessageHandler {
+private class WebviewMessageHandler: NSObject, WKScriptMessageHandler {
 
   var source: Observable<(Position, Int)> {
     return self.subject.asObservable()

@@ -10,9 +10,9 @@ import PureLayout
 
 class MainWindow: NSObject,
                   UiComponent,
-                  NvimViewDelegate,
                   NSWindowDelegate,
                   NSUserInterfaceValidations,
+                  NSUserNotificationCenterDelegate,
                   WorkspaceDelegate {
 
   typealias StateType = State
@@ -22,7 +22,8 @@ class MainWindow: NSObject,
     case cd(to: URL)
     case setBufferList([NvimView.Buffer])
 
-    case setCurrentBuffer(NvimView.Buffer)
+    case newCurrentBuffer(NvimView.Buffer)
+    case bufferWritten(NvimView.Buffer)
     case setDirtyStatus(Bool)
 
     case becomeKey(isFullScreen: Bool)
@@ -162,6 +163,8 @@ class MainWindow: NSObject,
 
     super.init()
 
+    NSUserNotificationCenter.default.delegate = self
+
     self.defaultFont = state.appearance.font
     self.linespacing = state.appearance.linespacing
     self.usesLigatures = state.appearance.usesLigatures
@@ -199,7 +202,6 @@ class MainWindow: NSObject,
     self.addViews()
 
     self.updateNeoVimAppearance()
-    self.neoVimView.delegate = self
 
     self.open(urls: state.urlsToOpen)
 
@@ -211,6 +213,29 @@ class MainWindow: NSObject,
       .merge()
       .subscribe(onNext: { [unowned self] action in
         self.emit(self.uuidAction(for: action))
+      })
+      .disposed(by: self.disposeBag)
+
+    self.neoVimView.events
+      .observeOn(MainScheduler.instance)
+      .subscribe(onNext: { event in
+        switch event {
+
+        case .neoVimStopped: self.neoVimStopped()
+        case .setTitle(let title): self.set(title: title)
+        case .setDirtyStatus(let dirty): self.set(dirtyStatus: dirty)
+        case .cwdChanged: self.cwdChanged()
+        case .bufferListChanged: self.bufferListChanged()
+        case .tabChanged: self.tabChanged()
+        case .newCurrentBuffer(let curBuf): self.newCurrentBuffer(curBuf)
+        case .bufferWritten(let buf): self.bufferWritten(buf)
+        case .colorschemeChanged(let theme): self.colorschemeChanged(to: theme)
+        case .ipcBecameInvalid(let reason): self.ipcBecameInvalid(reason: reason)
+        case .scroll: self.scroll()
+        case .cursor(let position): self.cursor(to: position)
+        case .initError: self.showInitError()
+
+        }
       })
       .disposed(by: self.disposeBag)
 
@@ -230,12 +255,9 @@ class MainWindow: NSObject,
         if let cwd = state.cwdToSet {
           self.neoVimView.cwd = cwd
         }
-
-        if state.previewTool.isReverseSearchAutomatically
-           && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition)
-           && !state.preview.ignoreNextReverse {
-          self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
-        } else if state.preview.forceNextReverse {
+        if state.preview.status == .markdown
+           && state.previewTool.isReverseSearchAutomatically
+           && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition) {
           self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
         }
 
@@ -314,31 +336,31 @@ class MainWindow: NSObject,
     self.emit(uuidAction(for: .setTheme(theme)))
   }
 
-  fileprivate let disposeBag = DisposeBag()
+  private let disposeBag = DisposeBag()
 
-  fileprivate var currentBuffer: NvimView.Buffer?
+  private var currentBuffer: NvimView.Buffer?
 
-  fileprivate var defaultFont = NvimView.defaultFont
-  fileprivate var linespacing = NvimView.defaultLinespacing
-  fileprivate var usesLigatures = false
+  private var defaultFont = NvimView.defaultFont
+  private var linespacing = NvimView.defaultLinespacing
+  private var usesLigatures = false
 
-  fileprivate var previewPosition = Marked(Position.beginning)
+  private var previewPosition = Marked(Position.beginning)
 
-  fileprivate var preview: PreviewTool?
-  fileprivate var htmlPreview: HtmlPreviewTool?
-  fileprivate var fileBrowser: FileBrowser?
-  fileprivate var buffersList: BuffersList?
+  private var preview: PreviewTool?
+  private var htmlPreview: HtmlPreviewTool?
+  private var fileBrowser: FileBrowser?
+  private var buffersList: BuffersList?
 
-  fileprivate var usesTheme = true
-  fileprivate var lastThemeMark = Token()
+  private var usesTheme = true
+  private var lastThemeMark = Token()
 
-  fileprivate func updateNeoVimAppearance() {
+  private func updateNeoVimAppearance() {
     self.neoVimView.font = self.defaultFont
     self.neoVimView.linespacing = self.linespacing
     self.neoVimView.usesLigatures = self.usesLigatures
   }
 
-  fileprivate func set(workspaceThemeWith theme: Theme) {
+  private func set(workspaceThemeWith theme: Theme) {
     var workspaceTheme = Workspace.Theme()
     workspaceTheme.foreground = theme.foreground
     workspaceTheme.background = theme.background
@@ -356,7 +378,7 @@ class MainWindow: NSObject,
     self.workspace.theme = workspaceTheme
   }
 
-  fileprivate func open(urls: [URL: OpenMode]) {
+  private func open(urls: [URL: OpenMode]) {
     // If we don't call the following in the next tick, only half of the existing swap file warning is displayed.
     // Dunno why...
     DispatchQueue.main.async {
@@ -383,8 +405,17 @@ class MainWindow: NSObject,
     }
   }
 
-  fileprivate func addViews() {
+  private func addViews() {
     self.window.contentView?.addSubview(self.workspace)
     self.workspace.autoPinEdgesToSuperviewEdges()
+  }
+
+  private func showInitError() {
+    let notification = NSUserNotification()
+    notification.title = "Error during initialization"
+    notification.informativeText = "There was an error during the initialization of NeoVim. " +
+                                   "Use :messages to view the error messages."
+
+    NSUserNotificationCenter.default.deliver(notification)
   }
 }

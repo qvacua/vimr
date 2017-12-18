@@ -66,7 +66,7 @@ extension PrefPane {
     button.action = action
   }
 
-  fileprivate func defaultTitleTextField() -> NSTextField {
+  private func defaultTitleTextField() -> NSTextField {
     let field = NSTextField(forAutoLayout: ())
     field.backgroundColor = NSColor.clear;
     field.isEditable = false;

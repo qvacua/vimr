@@ -21,7 +21,7 @@ class BuffersList: NSView,
     case open(NvimView.Buffer)
   }
 
-  fileprivate(set) var theme = Theme.default
+  private(set) var theme = Theme.default
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
@@ -66,31 +66,31 @@ class BuffersList: NSView,
       .disposed(by: self.disposeBag)
   }
 
-  fileprivate let emit: (UuidAction<Action>) -> Void
-  fileprivate let disposeBag = DisposeBag()
+  private let emit: (UuidAction<Action>) -> Void
+  private let disposeBag = DisposeBag()
 
-  fileprivate let uuid: String
-  fileprivate var usesTheme: Bool
-  fileprivate var lastThemeMark = Token()
-  fileprivate var showsFileIcon: Bool
+  private let uuid: String
+  private var usesTheme: Bool
+  private var lastThemeMark = Token()
+  private var showsFileIcon: Bool
 
-  fileprivate let bufferList = NSTableView.standardTableView()
-  fileprivate let genericIcon: NSImage
+  private let bufferList = NSTableView.standardTableView()
+  private let genericIcon: NSImage
 
-  fileprivate var buffers = [NvimView.Buffer]()
+  private var buffers = [NvimView.Buffer]()
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  fileprivate func updateTheme(_ theme: Marked<Theme>) {
+  private func updateTheme(_ theme: Marked<Theme>) {
     self.theme = theme.payload
     self.bufferList.enclosingScrollView?.backgroundColor = self.theme.background
     self.bufferList.backgroundColor = self.theme.background
     self.lastThemeMark = theme.mark
   }
 
-  fileprivate func addViews() {
+  private func addViews() {
     let scrollView = NSScrollView.standardScrollView()
     scrollView.borderType = .noBorder
     scrollView.documentView = self.bufferList
@@ -99,7 +99,7 @@ class BuffersList: NSView,
     scrollView.autoPinEdgesToSuperviewEdges()
   }
 
-  fileprivate func adjustFileViewWidth() {
+  private func adjustFileViewWidth() {
     let maxWidth = self.buffers.reduce(CGFloat(100)) { (curMaxWidth, buffer) in
       return max(self.text(for: buffer).size().width, curMaxWidth)
     }
@@ -158,7 +158,7 @@ extension BuffersList {
     return cell
   }
 
-  fileprivate func text(for buffer: NvimView.Buffer) -> NSAttributedString {
+  private func text(for buffer: NvimView.Buffer) -> NSAttributedString {
     guard let name = buffer.name else {
       return NSAttributedString(string: "No Name")
     }
@@ -181,7 +181,7 @@ extension BuffersList {
     return rowText
   }
 
-  fileprivate func icon(for buffer: NvimView.Buffer) -> NSImage? {
+  private func icon(for buffer: NvimView.Buffer) -> NSImage? {
     if let url = buffer.url {
       return FileUtils.icon(forUrl: url)
     }

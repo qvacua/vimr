@@ -25,7 +25,7 @@ class MainWindowReducer {
     case let .setBufferList(buffers):
       state.buffers = buffers
 
-    case let .setCurrentBuffer(buffer):
+    case let .newCurrentBuffer(buffer):
       state.currentBuffer = buffer
 
     case let .setDirtyStatus(status):
@@ -35,17 +35,6 @@ class MainWindowReducer {
       }
 
       state.isDirty = status
-
-      // if we scroll for reverse search we get scroll and set cursor event
-    case let .setCursor(to:position):
-      state.preview.forceNextReverse = false
-
-      if state.preview.ignoreNextForward {
-        state.preview.editorPosition = Marked(mark: state.preview.editorPosition.mark, payload: position.payload)
-        state.preview.ignoreNextForward = false
-      } else {
-        state.preview.editorPosition = position
-      }
 
     case let .focus(view):
       state.viewToBeFocused = view
