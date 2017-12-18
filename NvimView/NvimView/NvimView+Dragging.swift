@@ -32,6 +32,6 @@ extension NvimView {
   }
 }
 
-fileprivate func isFile(sender: NSDraggingInfo) -> Bool {
+private func isFile(sender: NSDraggingInfo) -> Bool {
   return (sender.draggingPasteboard().types?.contains(NSPasteboard.PasteboardType(String(kUTTypeFileURL)))) ?? false
 }

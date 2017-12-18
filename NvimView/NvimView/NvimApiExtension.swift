@@ -67,7 +67,7 @@ func msgPackDictToSwift(_ dict: Dictionary<NvimApi.Value, NvimApi.Value>?) -> Di
   }
 }
 
-fileprivate func msgPackArrayDictToSwift(_ array: [NvimApi.Value]?) -> [Dictionary<String, NvimApi.Value>]? {
+private func msgPackArrayDictToSwift(_ array: [NvimApi.Value]?) -> [Dictionary<String, NvimApi.Value>]? {
   return array?
     .flatMap { v in v.dictionaryValue }
     .flatMap { d in msgPackDictToSwift(d) }

@@ -5,7 +5,7 @@
 
 import Cocoa
 
-fileprivate var colorCache = [Int: NSColor]()
+private var colorCache = [Int: NSColor]()
 
 class ColorUtils {
 

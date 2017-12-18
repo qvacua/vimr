@@ -40,7 +40,7 @@ class KeyUtils {
   }
 }
 
-fileprivate let specialKeys = [
+private let specialKeys = [
   NSUpArrowFunctionKey: "Up",
   NSDownArrowFunctionKey: "Down",
   NSLeftArrowFunctionKey: "Left",

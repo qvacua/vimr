@@ -43,7 +43,7 @@ extension NvimView {
     self.drawCursor(context: context)
   }
 
-  fileprivate func draw(rowRun rowFrag: RowRun, in context: CGContext) {
+  private func draw(rowRun rowFrag: RowRun, in context: CGContext) {
     context.saveGState()
     defer { context.restoreGState() }
 
@@ -74,7 +74,7 @@ extension NvimView {
     )
   }
 
-  fileprivate func cursorRegion() -> Region {
+  private func cursorRegion() -> Region {
     let cursorPosition = self.grid.position
 
     let saneRow = max(0, min(cursorPosition.row, self.grid.size.height - 1))
@@ -92,7 +92,7 @@ extension NvimView {
     return cursorRegion
   }
 
-  fileprivate func drawCursor(context: CGContext) {
+  private func drawCursor(context: CGContext) {
     guard self.shouldDrawCursor else {
       return
     }
@@ -126,7 +126,7 @@ extension NvimView {
     self.shouldDrawCursor = false
   }
 
-  fileprivate func drawBackground(rowRun: RowRun, in context: CGContext) {
+  private func drawBackground(rowRun: RowRun, in context: CGContext) {
     context.saveGState()
     defer { context.restoreGState() }
 
@@ -145,7 +145,7 @@ extension NvimView {
     context.fill(backgroundRect)
   }
 
-  fileprivate func drawResizeInfo(in context: CGContext, with dirtyUnionRect: CGRect) {
+  private func drawResizeInfo(in context: CGContext, with dirtyUnionRect: CGRect) {
     context.setFillColor(self.theme.background.cgColor)
     context.fill(dirtyUnionRect)
 
@@ -169,7 +169,7 @@ extension NvimView {
     displayStr.draw(at: CGPoint(x: x, y: y), withAttributes: sizeAttrs)
   }
 
-  fileprivate func drawPinchImage(in context: CGContext) {
+  private func drawPinchImage(in context: CGContext) {
     context.interpolationQuality = .none
 
     let boundsSize = self.bounds.size
@@ -183,7 +183,7 @@ extension NvimView {
                            hints: nil)
   }
 
-  fileprivate func rowRunIntersecting(rects: [CGRect]) -> [RowRun] {
+  private func rowRunIntersecting(rects: [CGRect]) -> [RowRun] {
     return rects
       .map { rect -> (CountableClosedRange<Int>, CountableClosedRange<Int>) in
         // Get all Regions that intersects with the given rects.
@@ -198,7 +198,7 @@ extension NvimView {
       .flatMap { $0 }
   }
 
-  fileprivate func rowRunsFor(rowRange: CountableClosedRange<Int>,
+  private func rowRunsFor(rowRange: CountableClosedRange<Int>,
                               columnRange: CountableClosedRange<Int>) -> [RowRun] {
 
     return rowRange
@@ -226,7 +226,7 @@ extension NvimView {
       .flatMap { $0 } // Flattened RowRuns for a Region.
   }
 
-  fileprivate func regionFor(rect: CGRect) -> Region {
+  private func regionFor(rect: CGRect) -> Region {
     let cellWidth = self.cellSize.width
     let cellHeight = self.cellSize.height
 
@@ -250,11 +250,11 @@ extension NvimView {
     return Region(top: rowStart, bottom: rowEnd, left: columnStart, right: columnEnd)
   }
 
-  fileprivate func pointInViewFor(position: Position) -> CGPoint {
+  private func pointInViewFor(position: Position) -> CGPoint {
     return self.pointInView(forRow: position.row, column: position.column)
   }
 
-  fileprivate func pointInView(forRow row: Int, column: Int) -> CGPoint {
+  private func pointInView(forRow row: Int, column: Int) -> CGPoint {
     return CGPoint(
       x: self.xOffset + CGFloat(column) * self.cellSize.width,
       y: self.bounds.size.height - self.yOffset - CGFloat(row) * self.cellSize.height
@@ -305,9 +305,9 @@ extension NvimView {
   }
 }
 
-fileprivate let emojiAttrs = [ NSAttributedStringKey.font: NSFont(name: "AppleColorEmoji", size: 72)! ]
-fileprivate let resizeTextAttrs = [
+private let emojiAttrs = [ NSAttributedStringKey.font: NSFont(name: "AppleColorEmoji", size: 72)! ]
+private let resizeTextAttrs = [
   NSAttributedStringKey.font: NSFont.systemFont(ofSize: 18),
   NSAttributedStringKey.foregroundColor: NSColor.darkGray
 ]
-fileprivate let colorSpace = NSColorSpace.sRGB
+private let colorSpace = NSColorSpace.sRGB

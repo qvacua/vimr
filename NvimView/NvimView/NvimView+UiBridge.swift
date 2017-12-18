@@ -332,7 +332,7 @@ extension NvimView {
 
 extension NvimView {
 
-  fileprivate func bufferWritten(_ handle: Int) {
+  private func bufferWritten(_ handle: Int) {
     self
       .currentBuffer()
       .map { curBuf -> NvimView.Buffer in
@@ -350,7 +350,7 @@ extension NvimView {
       })
   }
 
-  fileprivate func newCurrentBuffer(_ handle: Int) {
+  private func newCurrentBuffer(_ handle: Int) {
     self
       .currentBuffer()
       .filter { $0.apiBuffer.handle == handle }
@@ -362,7 +362,7 @@ extension NvimView {
       })
   }
 
-  fileprivate func bufferListChanged() {
+  private func bufferListChanged() {
     self.eventsSubject.onNext(.bufferListChanged)
     if #available(OSX 10.12.2, *) {
       self.updateTouchBarCurrentBuffer()
@@ -370,4 +370,4 @@ extension NvimView {
   }
 }
 
-fileprivate let gui = DispatchQueue.main
+private let gui = DispatchQueue.main

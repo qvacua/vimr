@@ -290,4 +290,4 @@ extension NvimView {
   }
 }
 
-fileprivate let neoVimQuitTimeout = TimeInterval(5)
+private let neoVimQuitTimeout = TimeInterval(5)

@@ -25,11 +25,11 @@ class LogContext {
     return Logger(as: name, with: appender, shouldLogDebug: shouldLogDebug)
   }
 
-  fileprivate static let stdoutAppender = StdoutAppender()
-  fileprivate static let appenderManager = FileAppenderManager()
+  private static let stdoutAppender = StdoutAppender()
+  private static let appenderManager = FileAppenderManager()
 }
 
-fileprivate class FileAppenderManager {
+private class FileAppenderManager {
 
   fileprivate func requestFileAppender(`for` url: URL) -> FileAppender {
     self.lock.lock()
@@ -52,9 +52,9 @@ fileprivate class FileAppenderManager {
     self.fileAppenders.removeValue(forKey: url)
   }
 
-  fileprivate let lock = NSRecursiveLock()
+  private let lock = NSRecursiveLock()
 
-  fileprivate var fileAppenders: [URL: FileAppender] = [:]
+  private var fileAppenders: [URL: FileAppender] = [:]
 }
 
 class Logger {
@@ -137,7 +137,7 @@ class Logger {
     self.appender.write(data)
   }
 
-  fileprivate func string<T>(from obj: T) -> String {
+  private func string<T>(from obj: T) -> String {
     switch obj {
     case let str as String: return str
     case let convertible as CustomStringConvertible: return convertible.description
@@ -146,8 +146,8 @@ class Logger {
     }
   }
 
-  fileprivate let appender: Appender
-  fileprivate let logDateFormatter = DateFormatter()
+  private let appender: Appender
+  private let logDateFormatter = DateFormatter()
 }
 
 protocol Appender {
@@ -155,7 +155,7 @@ protocol Appender {
   func write(_ data: Data)
 }
 
-fileprivate class StdoutAppender: Appender {
+private class StdoutAppender: Appender {
 
   init() {
     self.handle = .standardOutput
@@ -171,12 +171,12 @@ fileprivate class StdoutAppender: Appender {
     }
   }
 
-  fileprivate let handle: FileHandle
+  private let handle: FileHandle
 
-  fileprivate let queue = DispatchQueue(label: String(describing: StdoutAppender.self), qos: .background)
+  private let queue = DispatchQueue(label: String(describing: StdoutAppender.self), qos: .background)
 }
 
-fileprivate class FileAppender: Appender {
+private class FileAppender: Appender {
 
   init(with fileUrl: URL, manager: FileAppenderManager) {
     guard fileUrl.isFileURL else {
@@ -205,16 +205,16 @@ fileprivate class FileAppender: Appender {
     }
   }
 
-  fileprivate let uuid = UUID().uuidString
+  private let uuid = UUID().uuidString
 
-  fileprivate let fileUrl: URL
-  fileprivate weak var manager: FileAppenderManager?
-  fileprivate var fileHandle = FileHandle.standardOutput
-  fileprivate let fileDateFormatter = DateFormatter()
+  private let fileUrl: URL
+  private weak var manager: FileAppenderManager?
+  private var fileHandle = FileHandle.standardOutput
+  private let fileDateFormatter = DateFormatter()
 
-  fileprivate let queue: DispatchQueue
+  private let queue: DispatchQueue
 
-  fileprivate func setupFileHandle(at fileUrl: URL) {
+  private func setupFileHandle(at fileUrl: URL) {
     if !fileManager.fileExists(atPath: fileUrl.path) {
       fileManager.createFile(atPath: fileUrl.path, contents: nil)
     }
@@ -228,7 +228,7 @@ fileprivate class FileAppender: Appender {
     }
   }
 
-  fileprivate func archiveLogFile() {
+  private func archiveLogFile() {
     self.fileHandle.closeFile()
 
     do {
@@ -247,6 +247,6 @@ fileprivate class FileAppender: Appender {
   }
 }
 
-fileprivate let conversionErrorMsg = "[ERROR] Could not convert log msg to Data!".data(using: .utf8)!
-fileprivate let fileManager = FileManager.default
-fileprivate let maxFileSize: UInt64 = 4 * 1024 * 1024
+private let conversionErrorMsg = "[ERROR] Could not convert log msg to Data!".data(using: .utf8)!
+private let fileManager = FileManager.default
+private let maxFileSize: UInt64 = 4 * 1024 * 1024

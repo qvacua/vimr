@@ -5,13 +5,13 @@
 
 import Cocoa
 
-fileprivate let defaultForeground: Int = 0xFF000000
-fileprivate let defaultBackground: Int = 0xFFFFFFFF
-fileprivate let defaultSpecial: Int = 0xFFFF0000
+private let defaultForeground: Int = 0xFF000000
+private let defaultBackground: Int = 0xFFFFFFFF
+private let defaultSpecial: Int = 0xFFFF0000
 
 struct Cell: CustomStringConvertible {
 
-  fileprivate let attributes: CellAttributes
+  private let attributes: CellAttributes
 
   var string: String
   var marked: Bool
@@ -89,9 +89,9 @@ struct Region: CustomStringConvertible {
 /// Almost a verbatim copy of ugrid.c of NeoVim
 class Grid: CustomStringConvertible {
 
-  fileprivate(set) var region = Region.zero
-  fileprivate(set) var size = Size.zero
-  fileprivate(set) var position = Position.zero
+  private(set) var region = Region.zero
+  private(set) var size = Size.zero
+  private(set) var position = Position.zero
 
   var foreground = defaultForeground
   var background = defaultBackground
@@ -102,7 +102,7 @@ class Grid: CustomStringConvertible {
     foreground: defaultForeground, background: defaultBackground, special: defaultSpecial
   )
 
-  fileprivate(set) var cells: [[Cell]] = []
+  private(set) var cells: [[Cell]] = []
 
   var hasData: Bool {
     return !self.cells.isEmpty
@@ -274,7 +274,7 @@ class Grid: CustomStringConvertible {
     return self.cells[position.row][position.column]
   }
 
-  fileprivate func clearRegion(_ region: Region) {
+  private func clearRegion(_ region: Region) {
     // FIXME: sometimes clearRegion gets called without first resizing the Grid. Should we handle this?
     guard self.hasData else {
       return
@@ -290,7 +290,7 @@ class Grid: CustomStringConvertible {
     }
   }
 
-  fileprivate func isSane(position: Position) -> Bool {
+  private func isSane(position: Position) -> Bool {
     guard position.row < self.size.height && position.column < self.size.width else {
       return false
     }
@@ -298,7 +298,7 @@ class Grid: CustomStringConvertible {
     return true
   }
 
-  fileprivate func advancePosition() {
+  private func advancePosition() {
     self.position.column += 1
     if self.position.column >= self.size.width {
       self.position.column -= 1

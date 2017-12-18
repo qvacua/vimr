@@ -54,7 +54,7 @@ extension NvimView {
     self.uiClient.resize(toWidth: Int32(discreteSize.width), height: Int32(discreteSize.height))
   }
 
-  fileprivate func launchNeoVim(_ size: Size) {
+  private func launchNeoVim(_ size: Size) {
     self.logger.info("=== Starting neovim...")
     let noErrorDuringInitialization = self.uiClient.runLocalServerAndNeoVim(withWidth: size.width, height: size.height)
 
@@ -76,7 +76,7 @@ extension NvimView {
     }
   }
 
-  fileprivate func randomEmoji() -> String {
+  private func randomEmoji() -> String {
     let idx = Int(arc4random_uniform(UInt32(emojis.count)))
     guard let scalar = UnicodeScalar(emojis[idx]) else {
       return "😎"
@@ -86,7 +86,7 @@ extension NvimView {
   }
 }
 
-fileprivate let emojis: [UInt32] = [
+private let emojis: [UInt32] = [
   0x1F600...0x1F64F,
   0x1F910...0x1F918,
   0x1F980...0x1F984,
