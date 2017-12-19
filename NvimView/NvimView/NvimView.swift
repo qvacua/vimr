@@ -159,14 +159,7 @@ public class NvimView: NSView,
     }
 
     set {
-      let path = newValue.path
-      guard let escapedCwd = self.uiClient.escapedFileName(path) else {
-        // this happens when VimR is quitting with some main windows open...
-        self.logger.fault("Escaped file name returned nil.")
-        return
-      }
-
-      self.nvim.command(command: "cd \(escapedCwd)")
+      self.nvim.setCurrentDir(dir: newValue.path, expectsReturnValue: false, checkBlocked: false)
     }
   }
 
