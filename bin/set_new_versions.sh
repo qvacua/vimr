@@ -11,10 +11,10 @@ pushd VimR
 
 # bundle version
 agvtool bump -all
+BUNDLE_VERSION=$(agvtool what-version | sed '2q;d' | sed -E 's/ +(.+)/\1/')
 
 # marketing version
 if [ "${IS_SNAPSHOT}" = true ] ; then
-    BUNDLE_VERSION=$(agvtool what-version | sed '2q;d' | sed -E 's/ +(.+)/\1/')
     MARKETING_VERSION="SNAPSHOT-${BUNDLE_VERSION}"
 fi
 
