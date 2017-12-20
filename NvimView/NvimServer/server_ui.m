@@ -7,7 +7,7 @@
 
 #import "Logging.h"
 #import "server_globals.h"
-#import "NeoVimServer.h"
+#import "NvimServer.h"
 #import "CocoaCategories.h"
 #import "DataWrapper.h"
 
@@ -634,7 +634,7 @@ void start_neovim(NSInteger width, NSInteger height, NSArray<NSString *> *args) 
   _initialHeight = height;
 
   // set $VIMRUNTIME to ${RESOURCE_PATH_OF_XPC_BUNDLE}/runtime
-  NSString *bundlePath = [NSBundle bundleForClass:[NeoVimServer class]].bundlePath;
+  NSString *bundlePath = [NSBundle bundleForClass:[NvimServer class]].bundlePath;
   NSString *resourcesPath = [bundlePath.stringByDeletingLastPathComponent
       stringByAppendingPathComponent:@"Resources"];
   NSString *runtimePath = [resourcesPath stringByAppendingPathComponent:@"runtime"];

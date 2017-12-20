@@ -6,9 +6,9 @@
 @import Foundation;
 
 
-@class NeoVimServer;
+@class NvimServer;
 
-extern NeoVimServer *_neovim_server;
+extern NvimServer *_neovim_server;
 extern CFRunLoopRef _mainRunLoop;
 
 extern void start_neovim(NSInteger width, NSInteger height, NSArray<NSString *> *args);

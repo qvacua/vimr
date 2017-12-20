@@ -5,13 +5,13 @@
 
 @import Foundation;
 
-#import "NeoVimServer.h"
+#import "NvimServer.h"
 #import "server_globals.h"
 #import "Logging.h"
 #import "CocoaCategories.h"
 
 
-NeoVimServer *_neovim_server;
+NvimServer *_neovim_server;
 CFRunLoopRef _mainRunLoop;
 
 static void observe_parent_termination() {
@@ -47,7 +47,7 @@ int main(int argc, const char *argv[]) {
     NSArray<NSString *> *nvimArgs = argc > 3 ? [arguments subarrayWithRange:NSMakeRange(3, (NSUInteger) (argc - 3))]
                                              : nil;
 
-    _neovim_server = [[NeoVimServer alloc] initWithLocalServerName:localServerName
+    _neovim_server = [[NvimServer alloc] initWithLocalServerName:localServerName
                                                   remoteServerName:remoteServerName
                                                           nvimArgs:nvimArgs];
     DLOG("Started neovim server '%s' with args '%@' and connected it with the remote agent '%s'.",
@@ -58,6 +58,6 @@ int main(int argc, const char *argv[]) {
 
   CFRunLoopRun();
 
-  DLOG("NeoVimServer returning.");
+  DLOG("NvimServer returning.");
   return 0;
 }

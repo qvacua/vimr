@@ -3,7 +3,7 @@
  * See LICENSE
  */
 
-#import "NeoVimServer.h"
+#import "NvimServer.h"
 #import "server_globals.h"
 #import "Logging.h"
 #import "CocoaCategories.h"
@@ -18,8 +18,8 @@
 #import <nvim/main.h>
 
 
-// When #define'd you can execute the NeoVimServer binary and neovim will be started:
-// $ ./NeoVimServer local remote
+// When #define'd you can execute the NvimServer binary and neovim will be started:
+// $ ./NvimServer local remote
 #undef DEBUG_NEOVIM_SERVER_STANDALONE
 //#define DEBUG_NEOVIM_SERVER_STANDALONE
 
@@ -27,7 +27,7 @@
 static const double qTimeout = 10;
 
 
-@interface NeoVimServer ()
+@interface NvimServer ()
 
 - (NSArray<NSString *> *)nvimArgs;
 - (NSCondition *)outputCondition;
@@ -54,7 +54,7 @@ static CFDataRef data_sync(CFDataRef data, NSCondition *condition, argv_callback
 
 static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFDataRef data, void *info) {
   @autoreleasepool {
-    NeoVimServer *neoVimServer = (__bridge NeoVimServer *) info;
+    NvimServer *neoVimServer = (__bridge NvimServer *) info;
     NSCondition *outputCondition = neoVimServer.outputCondition;
     CFRetain(data); // release in the loop callbacks!
 
@@ -91,7 +91,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 
-@implementation NeoVimServer {
+@implementation NvimServer {
   NSString *_localServerName;
   NSString *_remoteServerName;
   NSArray<NSString *> *_nvimArgs;
