@@ -27,8 +27,6 @@ class BuffersList: NSView,
     self.emit = emitter.typedEmit()
     self.uuid = state.uuid
 
-    self.genericIcon = FileUtils.icon(forType: "public.data")
-
     self.usesTheme = state.appearance.usesTheme
     self.showsFileIcon = state.appearance.showsFileIcon
 
@@ -75,7 +73,6 @@ class BuffersList: NSView,
   private var showsFileIcon: Bool
 
   private let bufferList = NSTableView.standardTableView()
-  private let genericIcon: NSImage
 
   private var buffers = [NvimView.Buffer]()
 
@@ -186,6 +183,8 @@ extension BuffersList {
       return FileUtils.icon(forUrl: url)
     }
 
-    return self.genericIcon
+    return genericIcon
   }
 }
+
+private let genericIcon = FileUtils.icon(forType: "public.data")
