@@ -35,28 +35,6 @@ extension NvimApi {
   }
 }
 
-extension StreamApi {
-
-  public func getBufGetInfo(
-    buffer: NvimApi.Buffer
-  ) -> Single<Dictionary<String, NvimApi.Value>> {
-
-    let params: [NvimApi.Value] = [
-      .int(Int64(buffer.handle)),
-    ]
-
-    return self
-      .rpc(method: "nvim_buf_get_info", params: params, expectsReturnValue: true)
-      .map {
-        guard let result = (msgPackDictToSwift($0.dictionaryValue)) else {
-          throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
-        }
-
-        return result
-      }
-  }
-}
-
 func msgPackDictToSwift(_ dict: Dictionary<NvimApi.Value, NvimApi.Value>?) -> Dictionary<String, NvimApi.Value>? {
   return dict?.flatMapToDict { k, v in
     guard let strKey = k.stringValue else {

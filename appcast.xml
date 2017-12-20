@@ -7,22 +7,30 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.20.1-245</title>
+      <title>v0.20.2-254</title>
       <description><![CDATA[
     <ul>
-<li>GH-580: Bugfix: Memory leak</li>
+<li>GH-571: Bugfix: Read-only buffers are considered as modified. For example NERDTree buffers won't trigger the "Please save first" dialog anymore.</li>
+<li>GH-387: Show all buffers (the same as <code>:buffers</code>) in the buffers list</li>
+<li>GH-553: Bugfix: Do not crash when there's an error in <code>init.vim</code>.</li>
+<li>Improve forward- and reverse-search for Markdown previews.</li>
+<li>High Sierra related fixes<ul>
+<li>Do not crash on launch</li>
+<li>Too narrow entries in the file browser and buffers list.</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.20.1-245
+        https://github.com/qvacua/vimr/releases/tag/v0.20.2-254
       </releaseNotesLink>
-      <pubDate>2017-12-08T12:07:29.346478</pubDate>
+      <pubDate>2017-12-20T20:35:07.385735</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.20.1-245/VimR-v0.20.1-245.tar.bz2"
-                 sparkle:version="245"
-                 sparkle:shortVersionString="0.20.1"
-                 sparkle:dsaSignature="MC0CFQDKlIbLoMqrNmh43vf8lEQnk7MdpwIUFIpMfgGVLzG9dGXGMIp6jf46k2g="
-                 length="14397686"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.20.2-254/VimR-v0.20.2-254.tar.bz2"
+                 sparkle:version="254"
+                 sparkle:shortVersionString="0.20.2"
+                 sparkle:dsaSignature="MCwCFHB+5VLSUcHRUGqWfI8tg8oRQHXoAhQV0OrZlxLjiA8KUGfHG2VkeGYskg=="
+                 length="11904069"
                  type="application/octet-stream"/>
     </item>
   </channel>

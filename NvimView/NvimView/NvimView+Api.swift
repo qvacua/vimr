@@ -32,7 +32,7 @@ extension NvimView {
     return Single<NvimView.Buffer>.create { single in
         let disposable = Disposables.create()
 
-        guard let buf = self.nvim.getCurrentBuf(checkBlocked: false).value else {
+        guard let buf = self.nvim.getCurrentBuf().value else {
           single(.error(NvimView.Error.api("Could not get the current buffer.")))
           return disposable
         }
