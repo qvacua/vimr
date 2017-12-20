@@ -159,7 +159,7 @@ public class NvimView: NSView,
     }
 
     set {
-      self.nvim.setCurrentDir(dir: newValue.path, expectsReturnValue: false, checkBlocked: false)
+      self.nvim.setCurrentDir(dir: newValue.path, expectsReturnValue: false)
     }
   }
 
