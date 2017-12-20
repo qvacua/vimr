@@ -92,74 +92,11 @@ func_template = Template('''\
   }
 ''')
 
-func_stream_template = Template('''\
-  public func ${func_name}(${args}
-  ) -> Single<${result_type}> {
-  
-    let single = Single<${result_type}>.create { single in
-      let params: [NvimApi.Value] = [
-          ${params}
-      ]
-      let response = self.session.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: true)
-      let disposable = Disposables.create()
-      
-      guard let value = response.value else {
-        single(.error(response.error!))
-        return disposable
-      }
-      
-      guard let result = (${return_value}) else {
-        single(.error(response.error!))
-        return disposable
-      }
-      
-      single(.success(result))
-      return disposable
-    }
-    
-    if let scheduler = self.scheduler {
-      return single.subscribeOn(scheduler)
-    }
-
-    return single
-  }
-''')
-
-void_func_stream_template = Template('''\
-  public func ${func_name}(${args}
-    expectsReturnValue: Bool = true
-  ) -> Single<${result_type}> {
-  
-    let single = Single<${result_type}>.create { single in
-      let params: [NvimApi.Value] = [
-          ${params}
-      ]
-      let response = self.session.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: expectsReturnValue)
-      let disposable = Disposables.create()
-      
-      if let error = response.error {
-        single(.error(error))
-        return disposable
-      }
-      
-      single(.success(()))
-      return disposable
-    }
-    
-    if let scheduler = self.scheduler {
-      return single.subscribeOn(scheduler)
-    }
-
-    return single
-  }
-''')
-
 extension_template = Template('''\
 // Auto generated for nvim version ${version}.
 // See bin/generate_api_methods.py
 
 import MsgPackRpc
-import RxSwift
 
 extension NvimApi {
 
@@ -298,13 +235,6 @@ extension Dictionary {
 }
 ''')
 
-
-extension_stream_template = Template('''\
-extension StreamApi {
-  
-  $body
-}
-''')
 
 def snake_to_camel(snake_str):
     components = snake_str.split('_')
@@ -461,21 +391,6 @@ def parse_function(f):
     return result
 
 
-def parse_function_stream(f):
-    args = parse_args(f['parameters']) if f['return_type'] == 'void' else parse_args(f['parameters'])[:-1]
-    template = void_func_stream_template if f['return_type'] == 'void' else func_stream_template
-    result = template.substitute(
-        func_name=snake_to_camel(f['name'][5:]),
-        nvim_func_name=f['name'],
-        args=args,
-        params=parse_params(f['parameters']),
-        result_type=nvim_type_to_swift(f['return_type']),
-        return_value=msgpack_to_swift('value', nvim_type_to_swift(f['return_type']))
-    )
-
-    return result
-
-
 def parse_version(version):
     return '.'.join([str(v) for v in [version['major'], version['minor'], version['patch']]])
 
@@ -506,8 +421,4 @@ if __name__ == '__main__':
         buffer_type=api['types']['Buffer']['id'],
         window_type=api['types']['Window']['id'],
         tabpage_type=api['types']['Tabpage']['id']
-    ))
-
-    print(extension_stream_template.substitute(
-        body='\n'.join([parse_function_stream(f) for f in functions])
     ))

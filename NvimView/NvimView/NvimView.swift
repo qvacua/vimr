@@ -182,7 +182,6 @@ public class NvimView: NSView,
       preconditionFailure("Nvim could not be instantiated")
     }
 
-    nvim.stream.scheduler = self.nvimApiScheduler
     self.nvim = nvim
 
     super.init(frame: .zero)
