@@ -122,7 +122,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
 }
 
 - (void)forceQuit {
-  log4Error("Force-quitting NeoVimServer %@", _uuid);
+  log4Error("Force-quitting NvimServer %@", _uuid);
 
   OSAtomicOr32Barrier(1, &_neoVimIsQuitting);
 
@@ -134,7 +134,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
   [_neoVimQuitCondition signal];
   [_neoVimQuitCondition unlock];
 
-  log4Error("Force-quit NeoVimServer %@", _uuid);
+  log4Error("Force-quit NvimServer %@", _uuid);
 
 }
 
@@ -151,7 +151,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
   [_neoVimQuitCondition signal];
   [_neoVimQuitCondition unlock];
 
-  log4Info("NeoVimServer %@ exited successfully", _uuid);
+  log4Info("NvimServer %@ exited successfully", _uuid);
 }
 
 - (void)closeMachPorts {

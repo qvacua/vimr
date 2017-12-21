@@ -8,7 +8,7 @@
 #import "NeoVimMsgIds.h"
 
 
-@interface NeoVimServer : NSObject
+@interface NvimServer : NSObject
 
 - (instancetype)initWithLocalServerName:(NSString *)localServerName
                        remoteServerName:(NSString *)remoteServerName

@@ -41,7 +41,7 @@
 		4B90F0661FD2AFF7008A39E0 /* server_ui.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0561FD2AFF7008A39E0 /* server_ui.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4B90F0681FD2AFF7008A39E0 /* CocoaCategories.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F05A1FD2AFF7008A39E0 /* CocoaCategories.m */; };
 		4B90F06A1FD2AFF7008A39E0 /* DataWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0611FD2AFF7008A39E0 /* DataWrapper.m */; };
-		4B90F06B1FD2AFF7008A39E0 /* NeoVimServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0641FD2AFF7008A39E0 /* NeoVimServer.m */; };
+		4B90F06B1FD2AFF7008A39E0 /* NvimServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0641FD2AFF7008A39E0 /* NvimServer.m */; };
 		4B90F0701FD2B9F1008A39E0 /* MsgPackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90F0721FD2B9F1008A39E0 /* MsgPackRpc.framework */; };
 		4B90F0711FD2B9F1008A39E0 /* NvimMsgPack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90F0731FD2B9F1008A39E0 /* NvimMsgPack.framework */; };
 		4B90F0781FD2BA7B008A39E0 /* Logger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B90F0771FD2BA7B008A39E0 /* Logger.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -137,9 +137,9 @@
 		4B90F05B1FD2AFF7008A39E0 /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
 		4B90F05C1FD2AFF7008A39E0 /* DataWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataWrapper.h; sourceTree = "<group>"; };
 		4B90F0611FD2AFF7008A39E0 /* DataWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataWrapper.m; sourceTree = "<group>"; };
-		4B90F0621FD2AFF7008A39E0 /* NeoVimServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoVimServer.h; sourceTree = "<group>"; };
+		4B90F0621FD2AFF7008A39E0 /* NvimServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NvimServer.h; sourceTree = "<group>"; };
 		4B90F0631FD2AFF7008A39E0 /* server_globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_globals.h; sourceTree = "<group>"; };
-		4B90F0641FD2AFF7008A39E0 /* NeoVimServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeoVimServer.m; sourceTree = "<group>"; };
+		4B90F0641FD2AFF7008A39E0 /* NvimServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NvimServer.m; sourceTree = "<group>"; };
 		4B90F0721FD2B9F1008A39E0 /* MsgPackRpc.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MsgPackRpc.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B90F0731FD2B9F1008A39E0 /* NvimMsgPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NvimMsgPack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B90F0771FD2BA7B008A39E0 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logger.h; path = NvimView/Logger.h; sourceTree = SOURCE_ROOT; };
@@ -244,8 +244,8 @@
 				4B90F05C1FD2AFF7008A39E0 /* DataWrapper.h */,
 				4B90F0611FD2AFF7008A39E0 /* DataWrapper.m */,
 				4B90F05B1FD2AFF7008A39E0 /* Logging.h */,
-				4B90F0621FD2AFF7008A39E0 /* NeoVimServer.h */,
-				4B90F0641FD2AFF7008A39E0 /* NeoVimServer.m */,
+				4B90F0621FD2AFF7008A39E0 /* NvimServer.h */,
+				4B90F0641FD2AFF7008A39E0 /* NvimServer.m */,
 				4B90F0631FD2AFF7008A39E0 /* server_globals.h */,
 				4B90F0561FD2AFF7008A39E0 /* server_ui.m */,
 			);
@@ -435,7 +435,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B90F06B1FD2AFF7008A39E0 /* NeoVimServer.m in Sources */,
+				4B90F06B1FD2AFF7008A39E0 /* NvimServer.m in Sources */,
 				4B90F0661FD2AFF7008A39E0 /* server_ui.m in Sources */,
 				4B90F0521FD2AFD3008A39E0 /* main.m in Sources */,
 				4B90F0681FD2AFF7008A39E0 /* CocoaCategories.m in Sources */,
@@ -484,7 +484,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 254;
+				CURRENT_PROJECT_VERSION = 255;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -542,7 +542,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 254;
+				CURRENT_PROJECT_VERSION = 255;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -569,7 +569,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 254;
+				DYLIB_CURRENT_VERSION = 255;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				FRAMEWORK_VERSION = A;
@@ -591,7 +591,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 254;
+				DYLIB_CURRENT_VERSION = 255;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				FRAMEWORK_VERSION = A;

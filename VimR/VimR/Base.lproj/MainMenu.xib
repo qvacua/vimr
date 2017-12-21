@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12121" systemVersion="16F2073" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="Application" customModule="VimR" customModuleProvider="target">
@@ -220,9 +221,9 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="XHW-5e-Vad"/>
-                            <menuItem title="Focus NeoVim View" keyEquivalent="." id="TtL-Gg-pCj">
+                            <menuItem title="Focus Neovim View" keyEquivalent="." id="TtL-Gg-pCj">
                                 <connections>
-                                    <action selector="focusNeoVimView:" target="-1" id="zsS-Ax-dPe"/>
+                                    <action selector="focusNvimView:" target="-1" id="obY-Kb-RxK"/>
                                 </connections>
                             </menuItem>
                         </items>
