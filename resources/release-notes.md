@@ -1,6 +1,6 @@
-# next
+# 0.20.3-255
 
-* ...
+* Bugfix: "Focus Neovim View" does not work.
 
 # 0.20.2-254
 
