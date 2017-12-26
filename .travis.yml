@@ -11,4 +11,4 @@ cache:
 before_install: brew update && brew bundle
 
 script:
-    - ./bin/build_travis.sh
+    - brew bundle exec ./bin/build_travis.sh
