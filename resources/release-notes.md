@@ -1,3 +1,8 @@
+# next
+
+* GH-579: Bugfix: In certain cases closing window crashes in fullscreen.
+* GH-545: Bugfix: Focus is lost when entering/exiting fullscreen.
+
 # 0.20.3-255
 
 * Bugfix: "Focus Neovim View" does not work.

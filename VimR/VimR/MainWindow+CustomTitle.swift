@@ -34,6 +34,9 @@ extension MainWindow {
   }
 
   func unthemeTitlebar(dueFullScreen: Bool) {
+    // NSWindow becomes the first responder at the end of this method.
+    let firstResponder = self.window.firstResponder
+
     self.clearCustomTitle()
 
     guard let contentView = self.window.contentView else {
@@ -42,7 +45,7 @@ extension MainWindow {
 
     let prevFrame = window.frame
 
-    window.titlebarAppearsTransparent = false
+    self.window.titlebarAppearsTransparent = false
 
     self.workspace.removeFromSuperview()
 
@@ -58,6 +61,8 @@ extension MainWindow {
       self.window.setFrame(prevFrame, display: true, animate: false)
       self.titlebarThemed = false
     }
+
+    self.window.makeFirstResponder(firstResponder)
   }
 
   func set(repUrl url: URL?, themed: Bool) {
