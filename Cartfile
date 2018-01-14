@@ -1,12 +1,12 @@
-github "ReactiveX/RxSwift" "4.0.0"
+github "ReactiveX/RxSwift" "4.1.1"
 github "PureLayout/PureLayout" == 3.0.2
 github "eonil/FileSystemEvents" "master"
 github "sparkle-project/Sparkle" == 1.18.1
 github "qvacua/CocoaFontAwesome" "master"
 github "qvacua/CocoaMarkdown" "master"
-github "sindresorhus/github-markdown-css" == 2.9.0
+github "sindresorhus/github-markdown-css" == 2.10.0
 github "httpswift/swifter" "stable"
 github "a2/MessagePack.swift" == 3.0.0
 github "antitypical/Result" == 3.2.4
 
-github "Quick/Nimble" == 7.0.1
+github "Quick/Nimble" == 7.0.3
