@@ -1,3 +1,7 @@
+# next
+
+* GH-579 Bugfix: Deactivate Cocoa tabs.
+
 # 0.20.3-255
 
 * Bugfix: "Focus Neovim View" does not work.
