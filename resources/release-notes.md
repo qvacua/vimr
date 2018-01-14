@@ -1,6 +1,7 @@
 # next
 
-* GH-579 Bugfix: Deactivate Cocoa tabs.
+* GH-579: Bugfix: Deactivate Cocoa tabs.
+* GH-545: Bugfix: Focus is lost when entering/exiting fullscreen.
 
 # 0.20.3-255
 
