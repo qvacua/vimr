@@ -163,6 +163,10 @@ class MainWindow: NSObject,
 
     super.init()
 
+    if #available(OSX 10.12.0, *) {
+      self.window.tabbingMode = .disallowed
+    }
+
     NSUserNotificationCenter.default.delegate = self
 
     self.defaultFont = state.appearance.font
