@@ -14,7 +14,6 @@
 #define FileInfo CarbonFileInfo
 #define Boolean CarbonBoolean
 
-#import <nvim/vim.h>
 #import <nvim/main.h>
 
 

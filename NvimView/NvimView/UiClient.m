@@ -23,7 +23,6 @@ static type *data_to_ ## type ## _array(NSData *data, NSUInteger count) { \
 
 data_to_array(NSInteger)
 data_to_array(bool)
-data_to_array(CellAttributes)
 
 static void log_cfmachport_error(SInt32 err, NeoVimAgentMsgId msgid, NSData *inputData) {
   switch (err) {
@@ -444,13 +443,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
       [_bridge eolClear];
       return;
 
-    case NeoVimServerMsgIdSetPosition: {
-      NSInteger *values = data_to_NSInteger_array(data, 4);
-      [_bridge gotoPosition:(Position) {.row = values[0], .column = values[1]}
-               textPosition:(Position) {.row = values[2], .column = values[3]}];
-      return;
-    }
-
     case NeoVimServerMsgIdSetMenu:
       [_bridge updateMenu];
       return;
@@ -489,25 +481,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
       return;
     }
 
-    case NeoVimServerMsgIdSetHighlightAttributes: {
-      CellAttributes *values = data_to_CellAttributes_array(data, 1);
-      [_bridge highlightSet:values[0]];
-      return;
-    }
-
-    case NeoVimServerMsgIdPut:
-    case NeoVimServerMsgIdPutMarked: {
-      NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-
-      if (msgid == NeoVimServerMsgIdPut) {
-        [_bridge put:string];
-      } else {
-        [_bridge putMarkedText:string];
-      }
-
-      return;
-    }
-
     case NeoVimServerMsgIdUnmark: {
       NSInteger *values = data_to_NSInteger_array(data, 2);
       [_bridge unmarkRow:values[0] column:values[1]];
@@ -523,7 +496,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local __unused, SInt32 m
       return;
 
     case NeoVimServerMsgIdFlush: {
-      [_bridge flush];
+      NSArray <NSData *> *renderData = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+
+      [_bridge flush:renderData];
       return;
     }
 

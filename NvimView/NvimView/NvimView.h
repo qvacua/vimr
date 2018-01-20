@@ -21,3 +21,4 @@ FOUNDATION_EXPORT const unsigned char NvimViewVersionString[];
 #import <NvimView/TextDrawer.h>
 #import <NvimView/UiClient.h>
 #import <NvimView/NvimAutoCommandEvent.generated.h>
+#import <NvimView/SharedTypes.h>

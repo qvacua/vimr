@@ -42,20 +42,9 @@ extension NvimView {
     }
   }
 
-  public func gotoPosition(_ position: Position, textPosition: Position) {
-    gui.async {
-      self.bridgeLogger.debug(position)
-
-      self.markForRender(cellPosition: self.grid.position)
-      self.grid.goto(position)
-
-      self.eventsSubject.onNext(.cursor(textPosition))
-    }
-  }
-
   public func modeChange(_ mode: CursorModeShape) {
     gui.async {
-      self.bridgeLogger.debug(cursorModeShapeName(mode))
+      self.bridgeLogger.debug(self.cursorModeShapeName(mode))
       self.mode = mode
     }
   }
@@ -81,49 +70,6 @@ extension NvimView {
     }
   }
 
-  public func highlightSet(_ attrs: CellAttributes) {
-    gui.async {
-      self.bridgeLogger.debug(attrs)
-
-      self.grid.attrs = attrs
-    }
-  }
-
-  public func put(_ string: String) {
-    gui.async {
-      let curPos = self.grid.position
-//      self.bridgeLogger.debug("\(curPos) -> \(string)")
-
-      self.grid.put(string.precomposedStringWithCanonicalMapping)
-
-      if self.usesLigatures {
-        if string == " " {
-          self.markForRender(cellPosition: curPos)
-        } else {
-          self.markForRender(region: self.grid.regionOfWord(at: curPos))
-        }
-      } else {
-        self.markForRender(cellPosition: curPos)
-      }
-    }
-  }
-
-  public func putMarkedText(_ markedText: String) {
-    gui.async {
-      let curPos = self.grid.position
-//      self.bridgeLogger.debug("\(curPos) -> '\(markedText)'")
-
-      self.grid.putMarkedText(markedText)
-
-      self.markForRender(position: curPos)
-      // When the cursor is in the command line, then we need this...
-      self.markForRender(cellPosition: self.grid.nextCellPosition(curPos))
-      if markedText.count == 0 {
-        self.markForRender(position: self.grid.previousCellPosition(curPos))
-      }
-    }
-  }
-
   public func unmarkRow(_ row: Int, column: Int) {
     gui.async {
       self.bridgeLogger.debug("\(row):\(column)")
@@ -135,9 +81,48 @@ extension NvimView {
     }
   }
 
-  public func flush() {
+  public func flush(_ renderData: [Data]) {
     gui.async {
       self.bridgeLogger.hr()
+
+      renderData.forEach { data in
+        data.withUnsafeBytes { (pointer: UnsafePointer<RenderDataType>) in
+          let sizeOfType = MemoryLayout<RenderDataType>.size
+          let rawPointer = UnsafeRawPointer(pointer).advanced(by: sizeOfType);
+          let renderType = pointer[0]
+
+          switch renderType {
+
+          case .put:
+            guard let str = String(data: Data(bytes: rawPointer, count: data.count - sizeOfType),
+                                   encoding: .utf8)
+              else {
+              break
+            }
+
+            self.doPut(string: str)
+
+          case .putMarked:
+            guard let str = String(data: Data(bytes: rawPointer, count: data.count - sizeOfType),
+                                   encoding: .utf8)
+              else {
+              break
+            }
+
+            self.doPutMarked(markedText: str)
+
+          case .highlight:
+            let attr = rawPointer.load(as: CellAttributes.self)
+            self.doHighlightSet(attr)
+
+          case .goto:
+            let values = rawPointer.bindMemory(to: Int.self, capacity: 4)
+            self.doGotoPosition(Position(row: values[0], column: values[1]),
+                                textPosition: Position(row: values[2], column: values[3]))
+
+          }
+        }
+      }
 
       self.shouldDrawCursor = true
 
@@ -225,6 +210,51 @@ extension NvimView {
       self.nvim.disconnect()
       self.uiClient.forceQuit()
     }
+  }
+
+  private func doPut(string: String) {
+    let curPos = self.grid.position
+//      self.bridgeLogger.debug("\(curPos) -> \(string)")
+
+    self.grid.put(string.precomposedStringWithCanonicalMapping)
+
+    if self.usesLigatures {
+      if string == " " {
+        self.markForRender(cellPosition: curPos)
+      } else {
+        self.markForRender(region: self.grid.regionOfWord(at: curPos))
+      }
+    } else {
+      self.markForRender(cellPosition: curPos)
+    }
+  }
+
+  private func doPutMarked(markedText: String) {
+    let curPos = self.grid.position
+//      self.bridgeLogger.debug("\(curPos) -> '\(markedText)'")
+
+    self.grid.putMarkedText(markedText)
+
+    self.markForRender(position: curPos)
+    // When the cursor is in the command line, then we need this...
+    self.markForRender(cellPosition: self.grid.nextCellPosition(curPos))
+    if markedText.count == 0 {
+      self.markForRender(position: self.grid.previousCellPosition(curPos))
+    }
+  }
+
+  private func doHighlightSet(_ attrs: CellAttributes) {
+    self.bridgeLogger.debug(attrs)
+    self.grid.attrs = attrs
+  }
+
+  private func doGotoPosition(_ position: Position, textPosition: Position) {
+    self.bridgeLogger.debug(position)
+
+    self.markForRender(cellPosition: self.grid.position)
+    self.grid.goto(position)
+
+    self.eventsSubject.onNext(.cursor(textPosition))
   }
 }
 
@@ -368,6 +398,30 @@ extension NvimView {
       self.updateTouchBarCurrentBuffer()
     }
   }
+
+  private func cursorModeShapeName(_ mode: CursorModeShape) -> String {
+    switch mode {
+    case .normal: return "Normal"
+    case .visual: return "Visual"
+    case .insert: return "Insert"
+    case .replace: return "Replace"
+    case .cmdline: return "Cmdline"
+    case .cmdlineInsert: return "CmdlineInsert"
+    case .cmdlineReplace: return "CmdlineReplace"
+    case .operatorPending: return "OperatorPending"
+    case .visualExclusive: return "VisualExclusive"
+    case .onCmdline: return "OnCmdline"
+    case .onStatusLine: return "OnStatusLine"
+    case .draggingStatusLine: return "DraggingStatusLine"
+    case .onVerticalSepLine: return "OnVerticalSepLine"
+    case .draggingVerticalSepLine: return "DraggingVerticalSepLine"
+    case .more: return "More"
+    case .moreLastLine: return "MoreLastLine"
+    case .showingMatchingParen: return "ShowingMatchingParen"
+    case .termFocus: return "TermFocus"
+    case .count: return "Count"
+    }
+  } 
 }
 
 private let gui = DispatchQueue.main
