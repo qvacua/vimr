@@ -39,6 +39,7 @@ extension NvimView {
 
     let dirtyRects = self.rectsBeingDrawn()
 
+    self.drawBaseBackground(rects: dirtyRects, in: context)
     self.rowRunIntersecting(rects: dirtyRects).forEach { self.draw(rowRun: $0, in: context) }
     self.drawCursor(context: context)
   }
@@ -126,11 +127,23 @@ extension NvimView {
     self.shouldDrawCursor = false
   }
 
-  private func drawBackground(rowRun: RowRun, in context: CGContext) {
+  private func drawBaseBackground(rects: [CGRect], in context: CGContext) {
     context.saveGState()
     defer { context.restoreGState() }
 
-    context.setFillColor(ColorUtils.colorIgnoringAlpha(rowRun.attrs.background).cgColor)
+    context.setFillColor(ColorUtils.cgColorIgnoringAlpha(self.grid.background))
+    context.fill(rects)
+  }
+
+  private func drawBackground(rowRun: RowRun, in context: CGContext) {
+    if rowRun.attrs.background == self.grid.background {
+      return
+    }
+
+    context.saveGState()
+    defer { context.restoreGState() }
+
+    context.setFillColor(ColorUtils.cgColorIgnoringAlpha(rowRun.attrs.background))
     // To use random color use the following
 //    NSColor(calibratedRed: CGFloat(drand48()),
 //            green: CGFloat(drand48()),

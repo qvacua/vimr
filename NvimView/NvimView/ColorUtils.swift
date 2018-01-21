@@ -6,9 +6,21 @@
 import Cocoa
 
 private var colorCache = [Int: NSColor]()
+private var cgColorCache = [Int: CGColor]()
 
 class ColorUtils {
 
+  static func cgColorIgnoringAlpha(_ rgb: Int) -> CGColor {
+    if let color = cgColorCache[rgb] {
+      return color
+    }
+    
+    let color = self.colorIgnoringAlpha(rgb).cgColor
+    cgColorCache[rgb] = color
+
+    return color
+  }
+  
   static func colorIgnoringAlpha(_ rgb: Int) -> NSColor {
     if let color = colorCache[rgb] {
       return color
