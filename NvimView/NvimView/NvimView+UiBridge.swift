@@ -109,7 +109,7 @@ extension NvimView {
               break
             }
 
-            self.doPutMarked(markedText: str)
+            self.doPut(markedText: str)
 
           case .highlight:
             let attr = rawPointer.load(as: CellAttributes.self)
@@ -117,8 +117,8 @@ extension NvimView {
 
           case .goto:
             let values = rawPointer.bindMemory(to: Int.self, capacity: 4)
-            self.doGotoPosition(Position(row: values[0], column: values[1]),
-                                textPosition: Position(row: values[2], column: values[3]))
+            self.doGoto(position: Position(row: values[0], column: values[1]),
+                        textPosition: Position(row: values[2], column: values[3]))
 
           }
         }
@@ -229,7 +229,7 @@ extension NvimView {
     }
   }
 
-  private func doPutMarked(markedText: String) {
+  private func doPut(markedText: String) {
     let curPos = self.grid.position
 //      self.bridgeLogger.debug("\(curPos) -> '\(markedText)'")
 
@@ -248,7 +248,7 @@ extension NvimView {
     self.grid.attrs = attrs
   }
 
-  private func doGotoPosition(_ position: Position, textPosition: Position) {
+  private func doGoto(position: Position, textPosition: Position) {
 //    self.bridgeLogger.debug(position)
 
     self.markForRender(cellPosition: self.grid.position)
