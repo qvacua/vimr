@@ -215,18 +215,18 @@ extension NvimView {
   }
 
   public func didBecomeMain() {
-    self.uiClient.focusGained(true)
+    self.uiBridge.focusGained(true)
   }
 
   public func didResignMain() {
-    self.uiClient.focusGained(false)
+    self.uiBridge.focusGained(false)
   }
 
   func waitForNeoVimToQuit() {
-    self.uiClient.neoVimQuitCondition.lock()
-    defer { self.uiClient.neoVimQuitCondition.unlock() }
-    while self.uiClient.neoVimHasQuit == false
-          && self.uiClient.neoVimQuitCondition.wait(until: Date(timeIntervalSinceNow: neoVimQuitTimeout)) {}
+    self.uiBridge.nvimQuitCondition.lock()
+    defer { self.uiBridge.nvimQuitCondition.unlock() }
+    while self.uiBridge.isNvimQuit == false
+          && self.uiBridge.nvimQuitCondition.wait(until: Date(timeIntervalSinceNow: neoVimQuitTimeout)) {}
   }
 
   private func `open`(_ url: URL, cmd: String) {

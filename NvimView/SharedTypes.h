@@ -55,3 +55,51 @@ typedef NS_ENUM(NSInteger, RenderDataType) {
   RenderDataTypeGoto,
   RenderDataTypeHighlight
 };
+
+typedef NS_ENUM(NSInteger, NeoVimServerMsgId) {
+  NeoVimServerMsgIdServerReady = 0,
+  NeoVimServerMsgIdNeoVimReady,
+  NeoVimServerMsgIdResize,
+  NeoVimServerMsgIdClear,
+  NeoVimServerMsgIdEolClear,
+  NeoVimServerMsgIdSetMenu,
+  NeoVimServerMsgIdBusyStart,
+  NeoVimServerMsgIdBusyStop,
+  NeoVimServerMsgIdMouseOn,
+  NeoVimServerMsgIdMouseOff,
+  NeoVimServerMsgIdModeChange,
+  NeoVimServerMsgIdSetScrollRegion,
+  NeoVimServerMsgIdScroll,
+  NeoVimServerMsgIdUnmark,
+  NeoVimServerMsgIdBell,
+  NeoVimServerMsgIdVisualBell,
+  NeoVimServerMsgIdFlush,
+  NeoVimServerMsgIdSetForeground,
+  NeoVimServerMsgIdSetBackground,
+  NeoVimServerMsgIdSetSpecial,
+  NeoVimServerMsgIdSetTitle,
+  NeoVimServerMsgIdSetIcon,
+  NeoVimServerMsgIdStop,
+  
+  NeoVimServerMsgIdDirtyStatusChanged,
+  NeoVimServerMsgIdCwdChanged,
+  NeoVimServerMsgIdColorSchemeChanged,
+  NeoVimServerMsgIdAutoCommandEvent,
+  
+  NeoVimServerMsgIdDebug1,
+};
+
+typedef NS_ENUM(NSInteger, NeoVimAgentMsgId) {
+  NeoVimAgentMsgIdAgentReady = 0,
+  NeoVimAgentMsgIdInput,
+  NeoVimAgentMsgIdInputMarked,
+  NeoVimAgentMsgIdDelete,
+  NeoVimAgentMsgIdResize,
+  NeoVimAgentMsgIdScroll,
+  
+  NeoVimAgentMsgIdGetEscapeFileNames,
+  
+  NeoVimAgentMsgIdFocusGained,
+  
+  NeoVimAgentMsgIdDebug1,
+};

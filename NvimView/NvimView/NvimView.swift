@@ -8,7 +8,6 @@ import NvimMsgPack
 import RxSwift
 
 public class NvimView: NSView,
-                       NvimUiBridgeProtocol,
                        NSUserInterfaceValidations,
                        NSTextInputClient {
 
@@ -175,7 +174,7 @@ public class NvimView: NSView,
 
   public init(frame rect: NSRect, config: Config) {
     self.drawer = TextDrawer(font: self._font)
-    self.uiClient = UiClient(uuid: self.uuid)
+    self.uiBridge = UiBridge(uuid: self.uuid)
 
     let sockPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock").path
     guard let nvim = NvimApi(at: sockPath) else {
@@ -193,10 +192,10 @@ public class NvimView: NSView,
     self.leading = self.drawer.leading
 
     // We cannot set bridge in init since self is not available before super.init()...
-    self.uiClient.bridge = self
-    self.uiClient.useInteractiveZsh = config.useInteractiveZsh
-    self.uiClient.cwd = config.cwd
-    self.uiClient.nvimArgs = config.nvimArgs
+    self.uiBridge.nvimView = self
+    self.uiBridge.useInteractiveZsh = config.useInteractiveZsh
+    self.uiBridge.cwd = config.cwd
+    self.uiBridge.nvimArgs = config.nvimArgs ?? []
   }
 
   convenience override public init(frame rect: NSRect) {
@@ -209,7 +208,7 @@ public class NvimView: NSView,
 
   @IBAction public func debug1(_ sender: Any?) {
     self.logger.debug("DEBUG 1 - Start")
-    self.uiClient.debug()
+    self.uiBridge.debug()
     self.logger.debug("DEBUG 1 - End")
   }
 
@@ -230,7 +229,7 @@ public class NvimView: NSView,
   let bridgeLogger = LogContext.fileLogger(as: NvimView.self,
                                            with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
                                            shouldLogDebug: nil)
-  let uiClient: UiClient
+  let uiBridge: UiBridge
   let nvim: NvimApi
   let grid = Grid()
 

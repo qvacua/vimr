@@ -630,7 +630,7 @@ void custom_ui_autocmds_groups(
       send_dirty_status();
     }
 
-    NSUInteger eventCode = event;
+    NSInteger eventCode = (NSInteger) event;
 
     NSMutableData *data;
     if (buf == NULL) {
@@ -777,11 +777,11 @@ void neovim_escaped_filenames(void **argv) {
 
 void neovim_resize(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {
-    const int *values = data.bytes;
-    int width = values[0];
-    int height = values[1];
+    const NSInteger *values = data.bytes;
+    NSInteger width = values[0];
+    NSInteger height = values[1];
 
-    set_ui_size(_server_ui_data->bridge, width, height);
+    set_ui_size(_server_ui_data->bridge, (int) width, (int) height);
     ui_refresh();
 
     return nil;

@@ -9,7 +9,7 @@ import RxSwift
 
 extension NvimView {
 
-  public func resize(toWidth width: Int, height: Int) {
+  func resize(toWidth width: Int, height: Int) {
     gui.async {
       self.bridgeLogger.debug("\(width) x \(height)")
 
@@ -18,7 +18,7 @@ extension NvimView {
     }
   }
 
-  public func clear() {
+  func clear() {
     gui.async {
       self.bridgeLogger.mark()
 
@@ -27,7 +27,7 @@ extension NvimView {
     }
   }
 
-  public func eolClear() {
+  func eolClear() {
     gui.async {
       self.bridgeLogger.mark()
 
@@ -42,14 +42,14 @@ extension NvimView {
     }
   }
 
-  public func modeChange(_ mode: CursorModeShape) {
+  func modeChange(_ mode: CursorModeShape) {
     gui.async {
-      self.bridgeLogger.debug(self.cursorModeShapeName(mode))
+      self.bridgeLogger.debug(name(of: mode))
       self.mode = mode
     }
   }
 
-  public func setScrollRegionToTop(_ top: Int, bottom: Int, left: Int, right: Int) {
+  func setScrollRegionToTop(_ top: Int, bottom: Int, left: Int, right: Int) {
     gui.async {
       self.bridgeLogger.debug("\(top):\(bottom):\(left):\(right)")
 
@@ -58,7 +58,7 @@ extension NvimView {
     }
   }
 
-  public func scroll(_ count: Int) {
+  func scroll(_ count: Int) {
     gui.async {
       self.bridgeLogger.debug(count)
 
@@ -70,7 +70,7 @@ extension NvimView {
     }
   }
 
-  public func unmarkRow(_ row: Int, column: Int) {
+  func unmarkRow(_ row: Int, column: Int) {
     gui.async {
       self.bridgeLogger.debug("\(row):\(column)")
 
@@ -81,7 +81,7 @@ extension NvimView {
     }
   }
 
-  public func flush(_ renderData: [Data]) {
+  func flush(_ renderData: [Data]) {
     gui.async {
       self.bridgeLogger.hr()
 
@@ -134,14 +134,14 @@ extension NvimView {
     }
   }
 
-  public func updateForeground(_ fg: Int) {
+  func updateForeground(_ fg: Int) {
     gui.async {
       self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(fg))
       self.grid.foreground = fg
     }
   }
 
-  public func updateBackground(_ bg: Int) {
+  func updateBackground(_ bg: Int) {
     gui.async {
       self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(bg))
 
@@ -150,23 +150,23 @@ extension NvimView {
     }
   }
 
-  public func updateSpecial(_ sp: Int) {
+  func updateSpecial(_ sp: Int) {
     gui.async {
       self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(sp))
       self.grid.special = sp
     }
   }
 
-  public func setTitle(_ title: String) {
+  func setTitle(_ title: String) {
     self.bridgeLogger.debug(title)
 
     self.eventsSubject.onNext(.setTitle(title))
   }
 
-  public func stop() {
+  func stop() {
     self.bridgeLogger.hr()
     self.nvim.disconnect()
-    self.uiClient.quit()
+    self.uiBridge.quit()
 
     gui.async {
       self.waitForNeoVimToQuit()
@@ -175,31 +175,31 @@ extension NvimView {
     }
   }
 
-  public func autoCommandEvent(_ event: NvimAutoCommandEvent, bufferHandle: Int) {
-    self.bridgeLogger.debug("\(nvimAutoCommandEventName(event)) -> \(bufferHandle)")
+  func autoCommandEvent(_ event: NvimAutoCommandEvent, bufferHandle: Int) {
+    self.bridgeLogger.debug("\(event) -> \(bufferHandle)")
 
-    if event == .BUFWINENTER || event == .BUFWINLEAVE {
+    if event == .bufwinenter || event == .bufwinleave {
       self.bufferListChanged()
     }
 
-    if event == .TABENTER {
+    if event == .tabenter {
       self.eventsSubject.onNext(.tabChanged)
     }
 
-    if event == .BUFWRITEPOST {
+    if event == .bufwritepost {
       self.bufferWritten(bufferHandle)
     }
 
-    if event == .BUFENTER {
+    if event == .bufenter {
       self.newCurrentBuffer(bufferHandle)
     }
   }
 
-  public func ipcBecameInvalid(_ reason: String) {
+  func ipcBecameInvalid(_ reason: String) {
     gui.async {
       self.bridgeLogger.debug(reason)
 
-      if self.uiClient.neoVimIsQuitting || self.uiClient.neoVimHasQuit {
+      if self.uiBridge.isNvimQuitting == 1 || self.uiBridge.isNvimQuit {
         return
       }
 
@@ -208,7 +208,7 @@ extension NvimView {
 
       self.bridgeLogger.error("Force-closing due to IPC error.")
       self.nvim.disconnect()
-      self.uiClient.forceQuit()
+      self.uiBridge.forceQuit()
     }
   }
 
@@ -244,12 +244,12 @@ extension NvimView {
   }
 
   private func doHighlightSet(_ attrs: CellAttributes) {
-    self.bridgeLogger.debug(attrs)
+//    self.bridgeLogger.debug(attrs)
     self.grid.attrs = attrs
   }
 
   private func doGotoPosition(_ position: Position, textPosition: Position) {
-    self.bridgeLogger.debug(position)
+//    self.bridgeLogger.debug(position)
 
     self.markForRender(cellPosition: self.grid.position)
     self.grid.goto(position)
@@ -261,21 +261,21 @@ extension NvimView {
 // MARK: - Simple
 extension NvimView {
 
-  public func bell() {
+  func bell() {
     self.bridgeLogger.mark()
 
     NSSound.beep()
   }
 
-  public func cwdChanged(_ cwd: String) {
+  func cwdChanged(_ cwd: String) {
     self.bridgeLogger.debug(cwd)
 
     self._cwd = URL(fileURLWithPath: cwd)
     self.eventsSubject.onNext(.cwdChanged)
   }
-  public func colorSchemeChanged(_ values: [NSNumber]) {
+  func colorSchemeChanged(_ values: [Int]) {
     gui.async {
-      let theme = Theme(values.map { $0.intValue })
+      let theme = Theme(values)
       self.bridgeLogger.debug(theme)
 
       self.theme = theme
@@ -283,41 +283,41 @@ extension NvimView {
     }
   }
 
-  public func setDirtyStatus(_ dirty: Bool) {
+  func setDirtyStatus(_ dirty: Bool) {
     self.bridgeLogger.debug(dirty)
 
     self.eventsSubject.onNext(.setDirtyStatus(dirty))
   }
 
-  public func updateMenu() {
+  func updateMenu() {
     self.bridgeLogger.mark()
   }
 
-  public func busyStart() {
+  func busyStart() {
     self.bridgeLogger.mark()
   }
 
-  public func busyStop() {
+  func busyStop() {
     self.bridgeLogger.mark()
   }
 
-  public func mouseOn() {
+  func mouseOn() {
     self.bridgeLogger.mark()
   }
 
-  public func mouseOff() {
+  func mouseOff() {
     self.bridgeLogger.mark()
   }
 
-  public func visualBell() {
+  func visualBell() {
     self.bridgeLogger.mark()
   }
 
-  public func suspend() {
+  func suspend() {
     self.bridgeLogger.mark()
   }
 
-  public func setIcon(_ icon: String) {
+  func setIcon(_ icon: String) {
     self.bridgeLogger.debug(icon)
   }
 }
@@ -398,30 +398,32 @@ extension NvimView {
       self.updateTouchBarCurrentBuffer()
     }
   }
-
-  private func cursorModeShapeName(_ mode: CursorModeShape) -> String {
-    switch mode {
-    case .normal: return "Normal"
-    case .visual: return "Visual"
-    case .insert: return "Insert"
-    case .replace: return "Replace"
-    case .cmdline: return "Cmdline"
-    case .cmdlineInsert: return "CmdlineInsert"
-    case .cmdlineReplace: return "CmdlineReplace"
-    case .operatorPending: return "OperatorPending"
-    case .visualExclusive: return "VisualExclusive"
-    case .onCmdline: return "OnCmdline"
-    case .onStatusLine: return "OnStatusLine"
-    case .draggingStatusLine: return "DraggingStatusLine"
-    case .onVerticalSepLine: return "OnVerticalSepLine"
-    case .draggingVerticalSepLine: return "DraggingVerticalSepLine"
-    case .more: return "More"
-    case .moreLastLine: return "MoreLastLine"
-    case .showingMatchingParen: return "ShowingMatchingParen"
-    case .termFocus: return "TermFocus"
-    case .count: return "Count"
-    }
-  } 
 }
 
 private let gui = DispatchQueue.main
+
+private func name(of mode: CursorModeShape) -> String {
+  switch mode {
+    // @formatter:off
+    case .normal:                  return "Normal"
+    case .visual:                  return "Visual"
+    case .insert:                  return "Insert"
+    case .replace:                 return "Replace"
+    case .cmdline:                 return "Cmdline"
+    case .cmdlineInsert:           return "CmdlineInsert"
+    case .cmdlineReplace:          return "CmdlineReplace"
+    case .operatorPending:         return "OperatorPending"
+    case .visualExclusive:         return "VisualExclusive"
+    case .onCmdline:               return "OnCmdline"
+    case .onStatusLine:            return "OnStatusLine"
+    case .draggingStatusLine:      return "DraggingStatusLine"
+    case .onVerticalSepLine:       return "OnVerticalSepLine"
+    case .draggingVerticalSepLine: return "DraggingVerticalSepLine"
+    case .more:                    return "More"
+    case .moreLastLine:            return "MoreLastLine"
+    case .showingMatchingParen:    return "ShowingMatchingParen"
+    case .termFocus:               return "TermFocus"
+    case .count:                   return "Count"
+    // @formatter:on
+  }
+}

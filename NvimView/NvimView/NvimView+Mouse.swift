@@ -32,15 +32,15 @@ extension NvimView {
       let (vimInputX, vimInputY) = self.vimScrollInputFor(deltaX: deltaX, deltaY: deltaY,
                                                           modifierFlags: event.modifierFlags,
                                                           cellPosition: cellPosition)
-      self.uiClient.vimInput(vimInputX)
-      self.uiClient.vimInput(vimInputY)
+      self.uiBridge.vimInput(vimInputX)
+      self.uiBridge.vimInput(vimInputY)
       return
     }
 
     let (absDeltaX, absDeltaY) = (min(Int(ceil(abs(deltaX) / 5.0)), maxScrollDeltaX),
                                   min(Int(ceil(abs(deltaY) / 5.0)), maxScrollDeltaY))
     let (horizSign, vertSign) = (deltaX > 0 ? 1 : -1, deltaY > 0 ? 1 : -1)
-    self.uiClient.scrollHorizontal(horizSign * absDeltaX, vertical: vertSign * absDeltaY, at: cellPosition)
+    self.uiBridge.scroll(horizontal: horizSign * absDeltaX, vertical: vertSign * absDeltaY, at: cellPosition)
   }
 
   override public func magnify(with event: NSEvent) {
@@ -97,7 +97,7 @@ extension NvimView {
     }
 
 //    self.logger.debug("\(#function): \(result)")
-    self.uiClient.vimInput(result)
+    self.uiBridge.vimInput(result)
   }
 
   private func shouldFireVimInputFor(event: NSEvent, newCellPosition: Position) -> Bool {
