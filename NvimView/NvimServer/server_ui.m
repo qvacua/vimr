@@ -378,6 +378,8 @@ static void server_ui_set_scroll_region(UI *ui __unused, Integer top, Integer bo
 
 static void server_ui_scroll(UI *ui __unused, Integer count) {
   @autoreleasepool {
+    server_ui_flush(NULL);
+
     NSInteger value = count;
     NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(NSInteger))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdScroll data:data];
