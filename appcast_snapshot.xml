@@ -7,23 +7,30 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.20.4-256-256</title>
+      <title>SNAPSHOT-257</title>
       <description><![CDATA[
     <ul>
-<li>GH-579: Bugfix: In certain cases closing window crashes in fullscreen.</li>
-<li>GH-545: Bugfix: Focus is lost when entering/exiting fullscreen.</li>
+<li><em>WARNING</em>: This snapshot may be unstable.</li>
+<li>Migrate one of the few Objective-C parts to Swift.</li>
+<li>GH-605: Slightly improve scroll performance.</li>
+<li>Dependencies updates:<ul>
+<li>ReactiveX/RxSwift@4.1.1</li>
+<li>sindresorhus/github-markdown-css@2.10.0</li>
+<li>Quick/Nimble@7.0.3</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.20.4-256-256
+        https://github.com/qvacua/vimr/releases/tag/snapshot/257
       </releaseNotesLink>
-      <pubDate>2018-01-14T13:52:11.952630</pubDate>
+      <pubDate>2018-01-22T19:35:09.975390</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.20.4-256-256/VimR-v0.20.4-256-256.tar.bz2"
-                 sparkle:version="256"
-                 sparkle:shortVersionString="0.20.4-256"
-                 sparkle:dsaSignature="MC4CFQDnhKRgXxK1qG9jUIjOotP0iAr60gIVAIB19PareTTX2pyUbZRFxgJbTLzh"
-                 length="11913110"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/257/VimR-SNAPSHOT-257.tar.bz2"
+                 sparkle:version="257"
+                 sparkle:shortVersionString="SNAPSHOT-257"
+                 sparkle:dsaSignature="MC4CFQDU5plbXXSLDfjxHdaa8BVIDSczLAIVAOSMo+hC92C07HMViUu9iOMjlBVN"
+                 length="11921363"
                  type="application/octet-stream"/>
     </item>
   </channel>
