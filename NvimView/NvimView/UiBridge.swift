@@ -9,9 +9,10 @@ class UiBridge {
 
   weak var nvimView: NvimView?
 
-  var isNvimQuitting = UInt32(0)
-  var isNvimQuit = false
   let nvimQuitCondition = NSCondition()
+
+  private(set) var isNvimQuitting = UInt32(0)
+  private(set) var isNvimQuit = false
 
   init(uuid: String, config: NvimView.Config) {
     self.uuid = uuid
