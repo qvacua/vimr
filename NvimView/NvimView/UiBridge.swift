@@ -129,7 +129,7 @@ class UiBridge {
         return
       }
 
-      self.nvimView?.resize(toWidth: values[0], height: values[1])
+      self.nvimView?.resize(width: values[0], height: values[1])
 
 
     case .clear:
@@ -165,7 +165,7 @@ class UiBridge {
         return
       }
 
-      self.nvimView?.setScrollRegionToTop(values[0], bottom: values[1], left: values[2], right: values[3])
+      self.nvimView?.setScrollRegion(top: values[0], bottom: values[1], left: values[2], right: values[3])
 
     case .scroll:
       guard let values = data?.asArray(ofType: Int.self, count: 1) else {
@@ -179,7 +179,7 @@ class UiBridge {
         return
       }
 
-      self.nvimView?.unmarkRow(values[0], column: values[1])
+      self.nvimView?.unmark(row: values[0], column: values[1])
 
     case .bell:
       self.nvimView?.bell()
@@ -199,35 +199,35 @@ class UiBridge {
         return
       }
 
-      self.nvimView?.updateForeground(values[0])
+      self.nvimView?.update(foreground: values[0])
 
     case .setBackground:
       guard let values = data?.asArray(ofType: Int.self, count: 1) else {
         return
       }
 
-      self.nvimView?.updateBackground(values[0])
+      self.nvimView?.update(background: values[0])
 
     case .setSpecial:
       guard let values = data?.asArray(ofType: Int.self, count: 1) else {
         return
       }
 
-      self.nvimView?.updateSpecial(values[0])
+      self.nvimView?.update(special: values[0])
 
     case .setTitle:
       guard let d = data, let title = String(data: d, encoding: .utf8) else {
         return
       }
 
-      self.nvimView?.setTitle(title)
+      self.nvimView?.set(title: title)
 
     case .setIcon:
       guard let d = data, let icon = String(data: d, encoding: .utf8) else {
         return
       }
 
-      self.nvimView?.setTitle(icon)
+      self.nvimView?.set(icon: icon)
 
     case .stop:
       self.nvimView?.stop()
@@ -237,7 +237,7 @@ class UiBridge {
         return
       }
 
-      self.nvimView?.setDirtyStatus(values[0])
+      self.nvimView?.set(dirty: values[0])
 
     case .cwdChanged:
       guard let d = data, let cwd = String(data: d, encoding: .utf8) else {

@@ -9,7 +9,7 @@ import RxSwift
 
 extension NvimView {
 
-  func resize(toWidth width: Int, height: Int) {
+  func resize(width width: Int, height: Int) {
     gui.async {
       self.bridgeLogger.debug("\(width) x \(height)")
 
@@ -49,7 +49,7 @@ extension NvimView {
     }
   }
 
-  func setScrollRegionToTop(_ top: Int, bottom: Int, left: Int, right: Int) {
+  func setScrollRegion(top: Int, bottom: Int, left: Int, right: Int) {
     gui.async {
       self.bridgeLogger.debug("\(top):\(bottom):\(left):\(right)")
 
@@ -70,7 +70,7 @@ extension NvimView {
     }
   }
 
-  func unmarkRow(_ row: Int, column: Int) {
+  func unmark(row: Int, column: Int) {
     gui.async {
       self.bridgeLogger.debug("\(row):\(column)")
 
@@ -134,14 +134,14 @@ extension NvimView {
     }
   }
 
-  func updateForeground(_ fg: Int) {
+  func update(foreground fg: Int) {
     gui.async {
       self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(fg))
       self.grid.foreground = fg
     }
   }
 
-  func updateBackground(_ bg: Int) {
+  func update(background bg: Int) {
     gui.async {
       self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(bg))
 
@@ -150,14 +150,14 @@ extension NvimView {
     }
   }
 
-  func updateSpecial(_ sp: Int) {
+  func update(special sp: Int) {
     gui.async {
       self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(sp))
       self.grid.special = sp
     }
   }
 
-  func setTitle(_ title: String) {
+  func set(title: String) {
     self.bridgeLogger.debug(title)
 
     self.eventsSubject.onNext(.setTitle(title))
@@ -283,7 +283,7 @@ extension NvimView {
     }
   }
 
-  func setDirtyStatus(_ dirty: Bool) {
+  func set(dirty: Bool) {
     self.bridgeLogger.debug(dirty)
 
     self.eventsSubject.onNext(.setDirtyStatus(dirty))
@@ -317,7 +317,7 @@ extension NvimView {
     self.bridgeLogger.mark()
   }
 
-  func setIcon(_ icon: String) {
+  func set(icon: String) {
     self.bridgeLogger.debug(icon)
   }
 }
