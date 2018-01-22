@@ -14,7 +14,6 @@
 #define FileInfo CarbonFileInfo
 #define Boolean CarbonBoolean
 
-#import <nvim/vim.h>
 #import <nvim/main.h>
 
 
@@ -79,10 +78,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       case NeoVimAgentMsgIdDelete: return data_sync(data, outputCondition, neovim_delete);
 
       case NeoVimAgentMsgIdFocusGained: return data_sync(data, outputCondition, neovim_focus_gained);
-
-#ifdef DEBUG
-      case NeoVimAgentDebug1: return data_sync(data, outputCondition, neovim_debug1);
-#endif
 
       default: return NULL;
 

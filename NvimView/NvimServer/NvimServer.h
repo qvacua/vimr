@@ -5,7 +5,7 @@
 
 @import Foundation;
 
-#import "NeoVimMsgIds.h"
+#import "SharedTypes.h"
 
 
 @interface NvimServer : NSObject

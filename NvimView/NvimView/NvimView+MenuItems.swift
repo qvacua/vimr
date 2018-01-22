@@ -48,9 +48,9 @@ extension NvimView {
   @IBAction func undo(_ sender: AnyObject?) {
     switch self.mode {
     case .insert, .replace:
-      self.uiClient.vimInput("<Esc>ui")
+      self.uiBridge.vimInput("<Esc>ui")
     case .normal, .visual:
-      self.uiClient.vimInput("u")
+      self.uiBridge.vimInput("u")
     default:
       return
     }
@@ -59,9 +59,9 @@ extension NvimView {
   @IBAction func redo(_ sender: AnyObject?) {
     switch self.mode {
     case .insert, .replace:
-      self.uiClient.vimInput("<Esc><C-r>i")
+      self.uiBridge.vimInput("<Esc><C-r>i")
     case .normal, .visual:
-      self.uiClient.vimInput("<C-r>")
+      self.uiBridge.vimInput("<C-r>")
     default:
       return
     }
@@ -70,7 +70,7 @@ extension NvimView {
   @IBAction func cut(_ sender: AnyObject?) {
     switch self.mode {
     case .visual, .normal:
-      self.uiClient.vimInput("\"+d")
+      self.uiBridge.vimInput("\"+d")
     default:
       return
     }
@@ -79,7 +79,7 @@ extension NvimView {
   @IBAction func copy(_ sender: AnyObject?) {
     switch self.mode {
     case .visual, .normal:
-      self.uiClient.vimInput("\"+y")
+      self.uiBridge.vimInput("\"+y")
     default:
       return
     }
@@ -93,7 +93,7 @@ extension NvimView {
     if self.mode == .cmdline || self.mode == .cmdlineInsert || self.mode == .cmdlineReplace
        || self.mode == .replace
        || self.mode == .termFocus {
-      self.uiClient.vimInput(self.vimPlainString(content))
+      self.uiBridge.vimInput(self.vimPlainString(content))
       return
     }
 
@@ -113,9 +113,9 @@ extension NvimView {
 
     switch self.mode {
     case .insert:
-      self.uiClient.vimInput("<ESC>\"+pa")
+      self.uiBridge.vimInput("<ESC>\"+pa")
     case .normal, .visual:
-      self.uiClient.vimInput("\"+p")
+      self.uiBridge.vimInput("\"+p")
     default:
       return
     }
@@ -128,7 +128,7 @@ extension NvimView {
   @IBAction func delete(_ sender: AnyObject?) {
     switch self.mode {
     case .normal, .visual:
-      self.uiClient.vimInput("x")
+      self.uiBridge.vimInput("x")
     default:
       return
     }
@@ -137,9 +137,9 @@ extension NvimView {
   @IBAction public override func selectAll(_ sender: Any?) {
     switch self.mode {
     case .insert, .visual:
-      self.uiClient.vimInput("<Esc>ggVG")
+      self.uiBridge.vimInput("<Esc>ggVG")
     default:
-      self.uiClient.vimInput("ggVG")
+      self.uiBridge.vimInput("ggVG")
     }
   }
 }

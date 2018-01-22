@@ -38,7 +38,7 @@ extension NvimView {
         ? self.wrapNamedKeys(flags + namedChars)
         : self.vimPlainString(chars)
 
-    self.uiClient.vimInput(finalInput)
+    self.uiBridge.vimInput(finalInput)
     self.keyDownDone = true
   }
 
@@ -47,9 +47,9 @@ extension NvimView {
 
     switch aString {
     case let string as String:
-      self.uiClient.vimInput(self.vimPlainString(string))
+      self.uiBridge.vimInput(self.vimPlainString(string))
     case let attributedString as NSAttributedString:
-      self.uiClient.vimInput(self.vimPlainString(attributedString.string))
+      self.uiBridge.vimInput(self.vimPlainString(attributedString.string))
     default:
       break;
     }
@@ -98,7 +98,7 @@ extension NvimView {
     // Control code \0 causes rpc parsing problems.
     // So we escape as early as possible
     if chars == "\0" {
-      self.uiClient.vimInput(self.wrapNamedKeys("Nul"))
+      self.uiBridge.vimInput(self.wrapNamedKeys("Nul"))
       return true
     }
 
@@ -106,12 +106,12 @@ extension NvimView {
     // See special cases in vim/os_win32.c from vim sources
     // Also mentioned in MacVim's KeyBindings.plist
     if .control == flags && chars == "6" {
-      self.uiClient.vimInput("\u{1e}") // AKA ^^
+      self.uiBridge.vimInput("\u{1e}") // AKA ^^
       return true
     }
     if .control == flags && chars == "2" {
       // <C-2> should generate \0, escaping as above
-      self.uiClient.vimInput(self.wrapNamedKeys("Nul"))
+      self.uiBridge.vimInput(self.wrapNamedKeys("Nul"))
       return true
     }
     // NsEvent already sets \u{1f} for <C--> && <C-_>
@@ -126,7 +126,7 @@ extension NvimView {
 
     // eg 하 -> hanja popup, cf comment for self.lastMarkedText
     if replacementRange.length > 0 {
-      self.uiClient.deleteCharacters(replacementRange.length)
+      self.uiBridge.deleteCharacters(replacementRange.length)
     }
 
     switch aString {
@@ -140,7 +140,7 @@ extension NvimView {
 
 //    self.logger.debug("\(#function): \(self.markedText), \(selectedRange), \(replacementRange)")
 
-    self.uiClient.vimInputMarkedText(self.markedText!)
+    self.uiBridge.vimInputMarkedText(self.markedText!)
     self.keyDownDone = true
   }
 

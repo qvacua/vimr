@@ -10,6 +10,7 @@
 #import "NvimServer.h"
 #import "CocoaCategories.h"
 #import "DataWrapper.h"
+#import "SharedTypes.h"
 
 // FileInfo and Boolean are #defined by Carbon and NeoVim:
 // Since we don't need the Carbon versions of them, we rename
@@ -28,29 +29,11 @@
 #import <nvim/screen.h>
 #import <nvim/edit.h>
 #import <nvim/syntax.h>
-#import <nvim/api/window.h>
 #import <nvim/aucmd.h>
-#import <nvim/quickfix.h>
 
 
 #define pun_type(t, x) (*((t *) (&(x))))
 
-// From NeoVimUiBridgeProtocol.h
-typedef NS_ENUM(NSUInteger, FontTrait) {
-  FontTraitNone      = 0,
-  FontTraitItalic    = (1 << 0),
-  FontTraitBold      = (1 << 1),
-  FontTraitUnderline = (1 << 2),
-  FontTraitUndercurl = (1 << 3)
-};
-
-typedef struct {
-  FontTrait fontTrait;
-
-  NSInteger foreground;
-  NSInteger background;
-  NSInteger special;
-} CellAttributes;
 
 static NSInteger _default_foreground = 0xFF000000;
 static NSInteger _default_background = 0xFFFFFFFF;
@@ -97,6 +80,8 @@ static bool _dirty = false;
 
 static NSInteger _initialWidth = 30;
 static NSInteger _initialHeight = 15;
+
+static NSMutableArray <NSData *> *render_data;
 
 #pragma mark Helper functions
 static inline String vim_string_from(NSString *str) {
@@ -157,6 +142,16 @@ static HlAttrs HlAttrsFromAttrCode(int attr_code) {
   rgb_attrs.reverse = (bool) (aep->rgb_ae_attr & HL_INVERSE);
 
   return rgb_attrs;
+}
+
+static void add_to_render_data(RenderDataType type, NSData *data) {
+  NSMutableData *rData = [NSMutableData new];
+
+  [rData appendBytes:&type length:sizeof(RenderDataType)];
+  [rData appendData:data];
+
+  [render_data addObject:rData];
+  [rData release];
 }
 
 static int foreground_for(HlAttrs attrs) {
@@ -242,6 +237,8 @@ static void server_ui_scheduler(Event event, void *d) {
 }
 
 static void server_ui_main(UIBridgeData *bridge, UI *ui) {
+  render_data = [NSMutableArray new];
+
   Loop loop;
   loop_init(&loop, NULL);
 
@@ -269,12 +266,28 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
 
   xfree(_server_ui_data);
   xfree(ui);
+
+  [render_data release];
 }
 
 #pragma mark NeoVim's UI callbacks
 
+static void server_ui_flush(UI *ui __unused) {
+  @autoreleasepool {
+    if (render_data.count == 0) {
+      return;
+    }
+
+    [_neovim_server sendMessageWithId:NeoVimServerMsgIdFlush
+                                 data:[NSKeyedArchiver archivedDataWithRootObject:render_data]];
+    [render_data removeAllObjects];
+  }
+}
+
 static void server_ui_resize(UI *ui __unused, Integer width, Integer height) {
   @autoreleasepool {
+    server_ui_flush(NULL);
+
     NSInteger values[] = {width, height};
     NSData *data = [[NSData alloc] initWithBytes:values length:(2 * sizeof(NSInteger))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdResize data:data];
@@ -283,10 +296,18 @@ static void server_ui_resize(UI *ui __unused, Integer width, Integer height) {
 }
 
 static void server_ui_clear(UI *ui __unused) {
+  @autoreleasepool {
+    server_ui_flush(NULL);
+  }
+
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdClear];
 }
 
 static void server_ui_eol_clear(UI *ui __unused) {
+  @autoreleasepool {
+    server_ui_flush(NULL);
+  }
+
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdEolClear];
 }
 
@@ -303,7 +324,7 @@ static void server_ui_cursor_goto(UI *ui __unused, Integer row, Integer col) {
     DLOG("%d:%d - %d:%d - %d:%d", values[0], values[1], values[2], values[3]);
 
     NSData *data = [[NSData alloc] initWithBytes:values length:(4 * sizeof(NSInteger))];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetPosition data:data];
+    add_to_render_data(RenderDataTypeGoto, data);
     [data release];
   }
 }
@@ -346,6 +367,8 @@ static void server_ui_set_scroll_region(UI *ui __unused, Integer top, Integer bo
                                         Integer left, Integer right) {
 
   @autoreleasepool {
+    server_ui_flush(NULL);
+
     NSInteger values[] = {top, bot, left, right};
     NSData *data = [[NSData alloc] initWithBytes:values length:(4 * sizeof(NSInteger))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetScrollRegion data:data];
@@ -355,6 +378,8 @@ static void server_ui_set_scroll_region(UI *ui __unused, Integer top, Integer bo
 
 static void server_ui_scroll(UI *ui __unused, Integer count) {
   @autoreleasepool {
+    server_ui_flush(NULL);
+
     NSInteger value = count;
     NSData *data = [[NSData alloc] initWithBytes:&value length:(1 * sizeof(NSInteger))];
     [_neovim_server sendMessageWithId:NeoVimServerMsgIdScroll data:data];
@@ -389,7 +414,7 @@ static void server_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
 
   @autoreleasepool {
     NSData *data = [[NSData alloc] initWithBytes:&cellAttrs length:sizeof(CellAttributes)];
-    [_neovim_server sendMessageWithId:NeoVimServerMsgIdSetHighlightAttributes data:data];
+    add_to_render_data(RenderDataTypeHighlight, data);
     [data release];
   }
 }
@@ -405,7 +430,7 @@ static void server_ui_put(UI *ui __unused, String str) {
     if (_marked_text != nil && _marked_row == _put_row && _marked_column == _put_column) {
 
       DLOG("putting marked text: '%s'", string.cstr);
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdPutMarked data:data];
+      add_to_render_data(RenderDataTypePutMarked, data);
 
     } else if (_marked_text != nil
         && str.size == 0
@@ -413,12 +438,12 @@ static void server_ui_put(UI *ui __unused, String str) {
         && _marked_column == _put_column - 1) {
 
       DLOG("putting marked text cuz zero");
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdPutMarked data:data];
+      add_to_render_data(RenderDataTypePutMarked, data);
 
     } else {
 
       DLOG("putting non-marked text: '%s'", string.cstr);
-      [_neovim_server sendMessageWithId:NeoVimServerMsgIdPut data:data];
+      add_to_render_data(RenderDataTypePut, data);
 
     }
 
@@ -434,10 +459,6 @@ static void server_ui_bell(UI *ui __unused) {
 
 static void server_ui_visual_bell(UI *ui __unused) {
   [_neovim_server sendMessageWithId:NeoVimServerMsgIdVisualBell];
-}
-
-static void server_ui_flush(UI *ui __unused) {
-  [_neovim_server sendMessageWithId:NeoVimServerMsgIdFlush];
 }
 
 static void server_ui_update_fg(UI *ui __unused, Integer fg) {
@@ -615,7 +636,7 @@ void custom_ui_autocmds_groups(
       send_dirty_status();
     }
 
-    NSUInteger eventCode = event;
+    NSInteger eventCode = (NSInteger) event;
 
     NSMutableData *data;
     if (buf == NULL) {
@@ -762,11 +783,11 @@ void neovim_escaped_filenames(void **argv) {
 
 void neovim_resize(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {
-    const int *values = data.bytes;
-    int width = values[0];
-    int height = values[1];
+    const NSInteger *values = data.bytes;
+    NSInteger width = values[0];
+    NSInteger height = values[1];
 
-    set_ui_size(_server_ui_data->bridge, width, height);
+    set_ui_size(_server_ui_data->bridge, (int) width, (int) height);
     ui_refresh();
 
     return nil;

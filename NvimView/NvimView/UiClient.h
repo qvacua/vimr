@@ -14,8 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UiClient : NSObject
 
 @property (nonatomic) bool useInteractiveZsh;
-@property (nonatomic) NSURL *cwd;
-@property (nonatomic, nullable) NSArray<NSString *> *nvimArgs;
+@property (nonatomic, copy) NSURL *cwd;
+@property (nonatomic, nullable, retain) NSArray<NSString *> *nvimArgs;
 @property (readonly) bool neoVimIsQuitting;
 @property (nonatomic, weak) id <NvimUiBridgeProtocol> bridge;
 

@@ -1,5 +1,14 @@
 # next
 
+* GH-605: Slightly improve scroll performance.
+* Migrate one of the few Objective-C parts to Swift.
+* Dependencies updates:
+    - ReactiveX/RxSwift@4.1.1
+    - sindresorhus/github-markdown-css@2.10.0
+    - Quick/Nimble@7.0.3
+
+# 0.20.4-256
+
 * GH-579: Bugfix: In certain cases closing window crashes in fullscreen.
 * GH-545: Bugfix: Focus is lost when entering/exiting fullscreen.
 

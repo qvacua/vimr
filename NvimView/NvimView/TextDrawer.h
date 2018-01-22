@@ -6,7 +6,9 @@
 @import Cocoa;
 @import CoreText;
 
-#import "NvimUiBridgeProtocol.h"
+
+#import "SharedTypes.h"
+
 
 @interface TextDrawer : NSObject
 
