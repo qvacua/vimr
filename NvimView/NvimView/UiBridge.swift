@@ -296,7 +296,7 @@ class UiBridge {
   }
 
   private func establishNvimConnection() {
-    self.remoteServerPort = CFMessagePortCreateRemote(kCFAllocatorDefault, self.remoteServerName.CFStr)
+    self.remoteServerPort = CFMessagePortCreateRemote(kCFAllocatorDefault, self.remoteServerName.cfStr)
     self.sendMessage(msgId: .agentReady, data: [self.initialWidth, self.initialHeight].data())
   }
 
@@ -396,7 +396,7 @@ class UiBridge {
 
     self.localServerPort = CFMessagePortCreateLocal(
       kCFAllocatorDefault,
-      self.localServerName.CFStr,
+      self.localServerName.cfStr,
       { _, msgid, data, info in
         return info?
           .load(as: MessageHandler.self)
@@ -463,7 +463,7 @@ private extension CFData {
 
 private extension String {
 
-  var CFStr: CFString {
+  var cfStr: CFString {
     return self as NSString
   }
 }
