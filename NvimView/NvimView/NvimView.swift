@@ -174,7 +174,7 @@ public class NvimView: NSView,
 
   public init(frame rect: NSRect, config: Config) {
     self.drawer = TextDrawer(font: self._font)
-    self.uiBridge = UiBridge(uuid: self.uuid)
+    self.uiBridge = UiBridge(uuid: self.uuid, config: config)
 
     let sockPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock").path
     guard let nvim = NvimApi(at: sockPath) else {
@@ -193,9 +193,6 @@ public class NvimView: NSView,
 
     // We cannot set bridge in init since self is not available before super.init()...
     self.uiBridge.nvimView = self
-    self.uiBridge.useInteractiveZsh = config.useInteractiveZsh
-    self.uiBridge.cwd = config.cwd
-    self.uiBridge.nvimArgs = config.nvimArgs ?? []
   }
 
   convenience override public init(frame rect: NSRect) {

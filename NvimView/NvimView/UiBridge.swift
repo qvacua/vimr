@@ -13,14 +13,13 @@ class UiBridge {
   var isNvimQuit = false
   let nvimQuitCondition = NSCondition()
 
-  var useInteractiveZsh = false
-
-  var cwd = URL(fileURLWithPath: NSHomeDirectory())
-  var nvimArgs = [String]()
-
-  init(uuid: String) {
+  init(uuid: String, config: NvimView.Config) {
     self.uuid = uuid
     self.messageHandler = MessageHandler()
+
+    self.useInteractiveZsh = config.useInteractiveZsh
+    self.nvimArgs = config.nvimArgs ?? []
+    self.cwd = config.cwd
 
     self.messageHandler.bridge = self
   }
@@ -415,6 +414,10 @@ class UiBridge {
   private let logger = LogContext.fileLogger(as: UiBridge.self, with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"))
 
   private let uuid: String
+
+  private let useInteractiveZsh: Bool
+  private let cwd: URL
+  private var nvimArgs: [String]
 
   private var remoteServerPort: CFMessagePort?
 
