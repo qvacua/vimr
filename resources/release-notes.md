@@ -1,5 +1,7 @@
 # next
 
+* GH-605: Slightly improve scroll performance.
+* Migrate one of the few Objective-C parts to Swift.
 * Dependencies updates:
     - ReactiveX/RxSwift@4.1.1
     - sindresorhus/github-markdown-css@2.10.0
