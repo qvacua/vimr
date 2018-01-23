@@ -9,7 +9,7 @@ import RxSwift
 
 extension NvimView {
 
-  func resize(width width: Int, height: Int) {
+  func resize(width: Int, height: Int) {
     self.bridgeLogger.debug("\(width) x \(height)")
 
     gui.async {

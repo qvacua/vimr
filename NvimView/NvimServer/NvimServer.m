@@ -59,25 +59,25 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
     switch (msgid) {
 
-      case NeoVimAgentMsgIdAgentReady: {
+      case NvimBridgeMsgIdAgentReady: {
         NSInteger *values = (NSInteger *) CFDataGetBytePtr(data);
         start_neovim(values[0], values[1], neoVimServer.nvimArgs);
         return NULL;
       }
 
-      case NeoVimAgentMsgIdScroll: return data_sync(data, outputCondition, neovim_scroll);
+      case NvimBridgeMsgIdScroll: return data_sync(data, outputCondition, neovim_scroll);
 
-      case NeoVimAgentMsgIdGetEscapeFileNames: return data_sync(data, outputCondition, neovim_escaped_filenames);
+      case NvimBridgeMsgIdGetEscapeFileNames: return data_sync(data, outputCondition, neovim_escaped_filenames);
 
-      case NeoVimAgentMsgIdResize: return data_sync(data, outputCondition, neovim_resize);
+      case NvimBridgeMsgIdResize: return data_sync(data, outputCondition, neovim_resize);
 
-      case NeoVimAgentMsgIdInput: return data_sync(data, outputCondition, neovim_vim_input);
+      case NvimBridgeMsgIdInput: return data_sync(data, outputCondition, neovim_vim_input);
 
-      case NeoVimAgentMsgIdInputMarked: return data_sync(data, outputCondition, neovim_vim_input_marked_text);
+      case NvimBridgeMsgIdInputMarked: return data_sync(data, outputCondition, neovim_vim_input_marked_text);
 
-      case NeoVimAgentMsgIdDelete: return data_sync(data, outputCondition, neovim_delete);
+      case NvimBridgeMsgIdDelete: return data_sync(data, outputCondition, neovim_delete);
 
-      case NeoVimAgentMsgIdFocusGained: return data_sync(data, outputCondition, neovim_focus_gained);
+      case NvimBridgeMsgIdFocusGained: return data_sync(data, outputCondition, neovim_focus_gained);
 
       default: return NULL;
 
@@ -183,11 +183,11 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   CFRunLoopRun();
 }
 
-- (void)sendMessageWithId:(NeoVimServerMsgId)msgid {
+- (void)sendMessageWithId:(NvimServerMsgId)msgid {
   [self sendMessageWithId:msgid data:nil];
 }
 
-- (void)sendMessageWithId:(NeoVimServerMsgId)msgid data:(NSData *)data {
+- (void)sendMessageWithId:(NvimServerMsgId)msgid data:(NSData *)data {
 #ifdef DEBUG_NEOVIM_SERVER_STANDALONE
   return;
 #endif
@@ -210,7 +210,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
 - (void)notifyReadiness {
 #ifndef DEBUG_NEOVIM_SERVER_STANDALONE
-  [self sendMessageWithId:NeoVimServerMsgIdServerReady data:nil];
+  [self sendMessageWithId:NvimServerMsgIdServerReady data:nil];
 #endif
 }
 

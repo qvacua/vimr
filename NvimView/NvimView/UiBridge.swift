@@ -106,7 +106,7 @@ class UiBridge {
   }
 
   fileprivate func handleMessage(msgId: Int32, data: Data?) {
-    guard let msg = NeoVimServerMsgId(rawValue: Int(msgId)) else {
+    guard let msg = NvimServerMsgId(rawValue: Int(msgId)) else {
       return
     }
 
@@ -115,7 +115,7 @@ class UiBridge {
     case .serverReady:
       self.establishNvimConnection()
 
-    case .neoVimReady:
+    case .nvimReady:
       self.isInitErrorPresent = data?.asArray(ofType: Bool.self, count: 1)?[0] ?? false
       self.nvimReadyCondition.lock()
       self.isNvimReady = true
@@ -301,7 +301,7 @@ class UiBridge {
   }
 
   /// Does not wait for reply.
-  private func sendMessage(msgId: NeoVimAgentMsgId, data: Data?) {
+  private func sendMessage(msgId: NvimBridgeMsgId, data: Data?) {
     if self.isNvimQuitting {
       self.logger.info("NvimServer is quitting, but trying to send msg: \(msgId).")
       return
