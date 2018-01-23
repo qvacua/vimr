@@ -353,19 +353,20 @@ class UiBridge {
       shellArgs.append("-i")
     }
 
-    let inputPipe = Pipe()
-    self.nvimServerProc = Process()
-
     let listenAddress = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock")
     var env = selfEnv
     env["NVIM_LISTEN_ADDRESS"] = listenAddress.path
 
-    self.nvimServerProc?.environment = env
-    self.nvimServerProc?.standardInput = inputPipe
-    self.nvimServerProc?.currentDirectoryPath = self.cwd.path
-    self.nvimServerProc?.launchPath = shellPath.path
-    self.nvimServerProc?.arguments = shellArgs
-    self.nvimServerProc?.launch()
+    let inputPipe = Pipe()
+    let process = Process()
+    process.environment = env
+    process.standardInput = inputPipe
+    process.currentDirectoryPath = self.cwd.path
+    process.launchPath = shellPath.path
+    process.arguments = shellArgs
+    process.launch()
+
+    self.nvimServerProc = process
 
     nvimArgs.append("--headless")
     let cmd = "exec '\(self.nvimServerExecutablePath())' '\(self.localServerName)' '\(self.remoteServerName)' "
