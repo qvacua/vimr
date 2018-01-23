@@ -212,7 +212,7 @@ extension NvimView {
   }
 
   private func rowRunsFor(rowRange: CountableClosedRange<Int>,
-                              columnRange: CountableClosedRange<Int>) -> [RowRun] {
+                          columnRange: CountableClosedRange<Int>) -> [RowRun] {
 
     return rowRange
       .map { (row) -> [RowRun] in
@@ -318,7 +318,8 @@ extension NvimView {
   }
 }
 
-private let emojiAttrs = [ NSAttributedStringKey.font: NSFont(name: "AppleColorEmoji", size: 72)! ]
+private let emojiAttrs = [NSAttributedStringKey.font: NSFont(name: "AppleColorEmoji", size: 72)!]
+
 private let resizeTextAttrs = [
   NSAttributedStringKey.font: NSFont.systemFont(ofSize: 18),
   NSAttributedStringKey.foregroundColor: NSColor.darkGray
