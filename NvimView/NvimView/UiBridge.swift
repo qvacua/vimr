@@ -131,7 +131,6 @@ class UiBridge {
 
       self.nvimView?.resize(width: values[0], height: values[1])
 
-
     case .clear:
       self.nvimView?.clear()
 
