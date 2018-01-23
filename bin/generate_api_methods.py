@@ -7,6 +7,7 @@ from string import Template
 import re
 import textwrap
 import os
+import io
 
 
 void_func_template = Template('''\
@@ -396,14 +397,31 @@ def parse_version(version):
 
 
 def parse_error_types(error_types):
-    return textwrap.indent('\n'.join([f'private static let {t.lower()}RawValue = UInt64({v["id"]})' for t, v in error_types.items()]), '    ').lstrip()
+    return textwrap.indent(
+        '\n'.join(
+            [f'private static let {t.lower()}RawValue = UInt64({v["id"]})' for t, v in error_types.items()]
+        ),
+        '    '
+    ).lstrip()
 
 
 def parse_error_cases(error_types):
-    return textwrap.indent('\n'.join([f'case Error.{t.lower()}RawValue: self = .{t.lower()}(message: message)' for t, v in error_types.items()]), '    ').lstrip()
+    return textwrap.indent(
+        '\n'.join(
+            [f'case Error.{t.lower()}RawValue: self = .{t.lower()}(message: message)' for t, v in error_types.items()]
+        ),
+        '    '
+    ).lstrip()
 
 
 if __name__ == '__main__':
+    result_file_path = './NvimMsgPack/NvimApiMethods.generated.swift'
+
+    if 'CONFIGURATION' in os.environ and os.environ['CONFIGURATION'] == 'Debug':
+        if os.path.isfile(result_file_path):
+            print("Files already there and DEBUG, exiting...")
+            exit(0)
+
     nvim_path = os.environ['NVIM_PATH'] if 'NVIM_PATH' in os.environ else 'nvim'
 
     nvim_output = subprocess.run([nvim_path, '--api-info'], stdout=subprocess.PIPE)
@@ -413,7 +431,7 @@ if __name__ == '__main__':
     functions = [f for f in api['functions'] if 'deprecated_since' not in f]
     body = '\n'.join([parse_function(f) for f in functions])
 
-    print(extension_template.substitute(
+    result = extension_template.substitute(
         body=body,
         version=version,
         error_types=parse_error_types(api['error_types']),
@@ -421,4 +439,7 @@ if __name__ == '__main__':
         buffer_type=api['types']['Buffer']['id'],
         window_type=api['types']['Window']['id'],
         tabpage_type=api['types']['Tabpage']['id']
-    ))
+    )
+
+    with io.open(result_file_path, 'w') as api_methods_file:
+        api_methods_file.write(result)
