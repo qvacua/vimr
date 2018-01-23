@@ -199,7 +199,7 @@ extension NvimView {
     gui.async {
       self.bridgeLogger.debug(reason)
 
-      if self.uiBridge.isNvimQuitting == 1 || self.uiBridge.isNvimQuit {
+      if self.uiBridge.isNvimQuitting || self.uiBridge.isNvimQuit {
         return
       }
 

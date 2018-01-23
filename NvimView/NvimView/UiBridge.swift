@@ -11,7 +11,7 @@ class UiBridge {
 
   let nvimQuitCondition = NSCondition()
 
-  private(set) var isNvimQuitting = UInt32(0)
+  private(set) var isNvimQuitting = false
   private(set) var isNvimQuit = false
 
   init(uuid: String, config: NvimView.Config) {
@@ -67,7 +67,7 @@ class UiBridge {
   }
 
   func quit() {
-    OSAtomicOr32Barrier(1, &self.isNvimQuitting)
+    self.isNvimQuitting = true
 
     self.closePorts()
 
@@ -86,7 +86,7 @@ class UiBridge {
   func forceQuit() {
     self.logger.info("Force-exiting NvimServer \(self.uuid).")
 
-    OSAtomicOr32Barrier(1, &self.isNvimQuitting)
+    self.isNvimQuitting = true
 
     self.closePorts()
     self.forceExitNvimServer()
@@ -302,7 +302,7 @@ class UiBridge {
 
   /// Does not wait for reply.
   private func sendMessage(msgId: NeoVimAgentMsgId, data: Data?) {
-    if self.isNvimQuitting == 1 {
+    if self.isNvimQuitting {
       self.logger.info("NvimServer is quitting, but trying to send msg: \(msgId).")
       return
     }
@@ -320,7 +320,7 @@ class UiBridge {
                                                 nil,
                                                 nil)
 
-    if self.isNvimQuitting == 1 {
+    if self.isNvimQuitting {
       return
     }
 
@@ -328,7 +328,7 @@ class UiBridge {
       let msg = "Remote server responded with \(name(of: responseCode)) for msg \(msgId)."
 
       self.logger.error(msg)
-      if self.isNvimQuitting == 0 {
+      if !self.isNvimQuitting {
         self.nvimView?.ipcBecameInvalid(msg)
       }
     }
