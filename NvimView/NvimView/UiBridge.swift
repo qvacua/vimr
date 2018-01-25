@@ -368,7 +368,9 @@ class UiBridge {
 
     nvimArgs.append("--headless")
     let cmd = "exec '\(self.nvimServerExecutablePath())' '\(self.localServerName)' '\(self.remoteServerName)' "
-      .appending(self.nvimArgs.map { "\($0)" }.joined(separator: " "))
+      .appending(self.nvimArgs.map { "'\($0)'" }.joined(separator: " "))
+
+    self.logger.debug(cmd)
 
     let writeHandle = inputPipe.fileHandleForWriting
     guard let cmdData = cmd.data(using: .utf8) else {
