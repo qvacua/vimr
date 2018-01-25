@@ -39,7 +39,6 @@ extension NvimView {
 
     let dirtyRects = self.rectsBeingDrawn()
 
-    self.drawBaseBackground(rects: dirtyRects, in: context)
     self.rowRunIntersecting(rects: dirtyRects).forEach { self.draw(rowRun: $0, in: context) }
     self.drawCursor(context: context)
   }
@@ -125,14 +124,6 @@ extension NvimView {
     self.draw(rowRun: rowRun, in: context)
 
     self.shouldDrawCursor = false
-  }
-
-  private func drawBaseBackground(rects: [CGRect], in context: CGContext) {
-    context.saveGState()
-    defer { context.restoreGState() }
-
-    context.setFillColor(ColorUtils.cgColorIgnoringAlpha(self.grid.background))
-    context.fill(rects)
   }
 
   private func drawBackground(rowRun: RowRun, in context: CGContext) {
