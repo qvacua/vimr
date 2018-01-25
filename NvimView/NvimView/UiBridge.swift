@@ -9,18 +9,18 @@ class UiBridge {
 
   weak var nvimView: NvimView?
 
-  var isNvimQuitting = UInt32(0)
-  var isNvimQuit = false
   let nvimQuitCondition = NSCondition()
 
-  var useInteractiveZsh = false
+  private(set) var isNvimQuitting = false
+  private(set) var isNvimQuit = false
 
-  var cwd = URL(fileURLWithPath: NSHomeDirectory())
-  var nvimArgs = [String]()
-
-  init(uuid: String) {
+  init(uuid: String, config: NvimView.Config) {
     self.uuid = uuid
     self.messageHandler = MessageHandler()
+
+    self.useInteractiveZsh = config.useInteractiveZsh
+    self.nvimArgs = config.nvimArgs ?? []
+    self.cwd = config.cwd
 
     self.messageHandler.bridge = self
   }
@@ -67,7 +67,7 @@ class UiBridge {
   }
 
   func quit() {
-    OSAtomicOr32Barrier(1, &self.isNvimQuitting)
+    self.isNvimQuitting = true
 
     self.closePorts()
 
@@ -86,7 +86,7 @@ class UiBridge {
   func forceQuit() {
     self.logger.info("Force-exiting NvimServer \(self.uuid).")
 
-    OSAtomicOr32Barrier(1, &self.isNvimQuitting)
+    self.isNvimQuitting = true
 
     self.closePorts()
     self.forceExitNvimServer()
@@ -106,7 +106,7 @@ class UiBridge {
   }
 
   fileprivate func handleMessage(msgId: Int32, data: Data?) {
-    guard let msg = NeoVimServerMsgId(rawValue: Int(msgId)) else {
+    guard let msg = NvimServerMsgId(rawValue: Int(msgId)) else {
       return
     }
 
@@ -115,7 +115,7 @@ class UiBridge {
     case .serverReady:
       self.establishNvimConnection()
 
-    case .neoVimReady:
+    case .nvimReady:
       self.isInitErrorPresent = data?.asArray(ofType: Bool.self, count: 1)?[0] ?? false
       self.nvimReadyCondition.lock()
       self.isNvimReady = true
@@ -130,7 +130,6 @@ class UiBridge {
       }
 
       self.nvimView?.resize(width: values[0], height: values[1])
-
 
     case .clear:
       self.nvimView?.clear()
@@ -296,13 +295,13 @@ class UiBridge {
   }
 
   private func establishNvimConnection() {
-    self.remoteServerPort = CFMessagePortCreateRemote(kCFAllocatorDefault, self.remoteServerName.CFStr)
+    self.remoteServerPort = CFMessagePortCreateRemote(kCFAllocatorDefault, self.remoteServerName.cfStr)
     self.sendMessage(msgId: .agentReady, data: [self.initialWidth, self.initialHeight].data())
   }
 
   /// Does not wait for reply.
-  private func sendMessage(msgId: NeoVimAgentMsgId, data: Data?) {
-    if self.isNvimQuitting == 1 {
+  private func sendMessage(msgId: NvimBridgeMsgId, data: Data?) {
+    if self.isNvimQuitting {
       self.logger.info("NvimServer is quitting, but trying to send msg: \(msgId).")
       return
     }
@@ -320,7 +319,7 @@ class UiBridge {
                                                 nil,
                                                 nil)
 
-    if self.isNvimQuitting == 1 {
+    if self.isNvimQuitting {
       return
     }
 
@@ -328,7 +327,7 @@ class UiBridge {
       let msg = "Remote server responded with \(name(of: responseCode)) for msg \(msgId)."
 
       self.logger.error(msg)
-      if self.isNvimQuitting == 0 {
+      if !self.isNvimQuitting {
         self.nvimView?.ipcBecameInvalid(msg)
       }
     }
@@ -353,23 +352,26 @@ class UiBridge {
       shellArgs.append("-i")
     }
 
-    let inputPipe = Pipe()
-    self.nvimServerProc = Process()
-
     let listenAddress = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock")
     var env = selfEnv
     env["NVIM_LISTEN_ADDRESS"] = listenAddress.path
 
-    self.nvimServerProc?.environment = env
-    self.nvimServerProc?.standardInput = inputPipe
-    self.nvimServerProc?.currentDirectoryPath = self.cwd.path
-    self.nvimServerProc?.launchPath = shellPath.path
-    self.nvimServerProc?.arguments = shellArgs
-    self.nvimServerProc?.launch()
+    let inputPipe = Pipe()
+    let process = Process()
+    process.environment = env
+    process.standardInput = inputPipe
+    process.currentDirectoryPath = self.cwd.path
+    process.launchPath = shellPath.path
+    process.arguments = shellArgs
+    process.launch()
+
+    self.nvimServerProc = process
 
     nvimArgs.append("--headless")
     let cmd = "exec '\(self.nvimServerExecutablePath())' '\(self.localServerName)' '\(self.remoteServerName)' "
-      .appending(self.nvimArgs.map { "\($0)" }.joined(separator: " "))
+      .appending(self.nvimArgs.map { "'\($0)'" }.joined(separator: " "))
+
+    self.logger.debug(cmd)
 
     let writeHandle = inputPipe.fileHandleForWriting
     guard let cmdData = cmd.data(using: .utf8) else {
@@ -396,7 +398,7 @@ class UiBridge {
 
     self.localServerPort = CFMessagePortCreateLocal(
       kCFAllocatorDefault,
-      self.localServerName.CFStr,
+      self.localServerName.cfStr,
       { _, msgid, data, info in
         return info?
           .load(as: MessageHandler.self)
@@ -415,6 +417,10 @@ class UiBridge {
   private let logger = LogContext.fileLogger(as: UiBridge.self, with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"))
 
   private let uuid: String
+
+  private let useInteractiveZsh: Bool
+  private let cwd: URL
+  private var nvimArgs: [String]
 
   private var remoteServerPort: CFMessagePort?
 
@@ -463,7 +469,7 @@ private extension CFData {
 
 private extension String {
 
-  var CFStr: CFString {
+  var cfStr: CFString {
     return self as NSString
   }
 }

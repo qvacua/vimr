@@ -179,27 +179,24 @@ extension NvimView {
 
   /// Closes the current window.
   public func closeCurrentTab() {
-    // We don't have to wait here even when neovim quits since we wait in gui.async() block in neoVimStopped().
-    self.nvim.command(command: "q", expectsReturnValue: false)
+    self.nvim.command(command: "q", expectsReturnValue: true)
   }
 
   public func saveCurrentTab() {
-    self.nvim.command(command: "w", expectsReturnValue: false)
+    self.nvim.command(command: "w", expectsReturnValue: true)
   }
 
   public func saveCurrentTab(url: URL) {
-    self.nvim.command(command: "w \(url.path)", expectsReturnValue: false)
+    self.nvim.command(command: "w \(url.path)", expectsReturnValue: true)
   }
 
   public func closeCurrentTabWithoutSaving() {
-    self.nvim.command(command: "q!", expectsReturnValue: false)
+    self.nvim.command(command: "q!", expectsReturnValue: true)
   }
 
   public func quitNeoVimWithoutSaving() {
-    self.nvim.command(command: "qa!", expectsReturnValue: false)
-    self.eventsSubject.onNext(.neoVimStopped)
-    self.eventsSubject.onCompleted()
-    self.waitForNeoVimToQuit()
+    self.bridgeLogger.mark()
+    self.nvim.command(command: "qa!", expectsReturnValue: true)
   }
 
   public func vimOutput(of command: String) -> String {

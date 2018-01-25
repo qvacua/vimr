@@ -14,8 +14,8 @@
                        remoteServerName:(NSString *)remoteServerName
                                nvimArgs:(NSArray<NSString *> *)nvimArgs;
 
-- (void)sendMessageWithId:(NeoVimServerMsgId)msgid;
-- (void)sendMessageWithId:(NeoVimServerMsgId)msgid data:(NSData *)data;
+- (void)sendMessageWithId:(NvimServerMsgId)msgid;
+- (void)sendMessageWithId:(NvimServerMsgId)msgid data:(NSData *)data;
 - (void)notifyReadiness;
 
 @end

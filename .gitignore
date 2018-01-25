@@ -177,8 +177,4 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# -------------------------------------------
-*.generated.h
-*.generated.m
-
 .deps

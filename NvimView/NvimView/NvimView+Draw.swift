@@ -39,7 +39,6 @@ extension NvimView {
 
     let dirtyRects = self.rectsBeingDrawn()
 
-    self.drawBaseBackground(rects: dirtyRects, in: context)
     self.rowRunIntersecting(rects: dirtyRects).forEach { self.draw(rowRun: $0, in: context) }
     self.drawCursor(context: context)
   }
@@ -127,14 +126,6 @@ extension NvimView {
     self.shouldDrawCursor = false
   }
 
-  private func drawBaseBackground(rects: [CGRect], in context: CGContext) {
-    context.saveGState()
-    defer { context.restoreGState() }
-
-    context.setFillColor(ColorUtils.cgColorIgnoringAlpha(self.grid.background))
-    context.fill(rects)
-  }
-
   private func drawBackground(rowRun: RowRun, in context: CGContext) {
     if rowRun.attrs.background == self.grid.background {
       return
@@ -212,7 +203,7 @@ extension NvimView {
   }
 
   private func rowRunsFor(rowRange: CountableClosedRange<Int>,
-                              columnRange: CountableClosedRange<Int>) -> [RowRun] {
+                          columnRange: CountableClosedRange<Int>) -> [RowRun] {
 
     return rowRange
       .map { (row) -> [RowRun] in
@@ -318,7 +309,8 @@ extension NvimView {
   }
 }
 
-private let emojiAttrs = [ NSAttributedStringKey.font: NSFont(name: "AppleColorEmoji", size: 72)! ]
+private let emojiAttrs = [NSAttributedStringKey.font: NSFont(name: "AppleColorEmoji", size: 72)!]
+
 private let resizeTextAttrs = [
   NSAttributedStringKey.font: NSFont.systemFont(ofSize: 18),
   NSAttributedStringKey.foregroundColor: NSColor.darkGray

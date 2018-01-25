@@ -9,28 +9,28 @@ import RxSwift
 
 extension NvimView {
 
-  func resize(width width: Int, height: Int) {
-    gui.async {
-      self.bridgeLogger.debug("\(width) x \(height)")
+  func resize(width: Int, height: Int) {
+    self.bridgeLogger.debug("\(width) x \(height)")
 
+    gui.async {
       self.grid.resize(Size(width: width, height: height))
       self.markForRenderWholeView()
     }
   }
 
   func clear() {
-    gui.async {
-      self.bridgeLogger.mark()
+    self.bridgeLogger.mark()
 
+    gui.async {
       self.grid.clear()
       self.markForRenderWholeView()
     }
   }
 
   func eolClear() {
-    gui.async {
-      self.bridgeLogger.mark()
+    self.bridgeLogger.mark()
 
+    gui.async {
       self.grid.eolClear()
 
       let putPosition = self.grid.position
@@ -43,25 +43,26 @@ extension NvimView {
   }
 
   func modeChange(_ mode: CursorModeShape) {
+    self.bridgeLogger.debug(name(of: mode))
+
     gui.async {
-      self.bridgeLogger.debug(name(of: mode))
       self.mode = mode
     }
   }
 
   func setScrollRegion(top: Int, bottom: Int, left: Int, right: Int) {
-    gui.async {
-      self.bridgeLogger.debug("\(top):\(bottom):\(left):\(right)")
+    self.bridgeLogger.debug("\(top):\(bottom):\(left):\(right)")
 
+    gui.async {
       let region = Region(top: top, bottom: bottom, left: left, right: right)
       self.grid.setScrollRegion(region)
     }
   }
 
   func scroll(_ count: Int) {
-    gui.async {
-      self.bridgeLogger.debug(count)
+    self.bridgeLogger.debug(count)
 
+    gui.async {
       self.grid.scroll(count)
       self.markForRender(region: self.grid.region)
       // Do not send msgs to agent -> neovim in the delegate method. It causes spinning
@@ -71,9 +72,9 @@ extension NvimView {
   }
 
   func unmark(row: Int, column: Int) {
-    gui.async {
-      self.bridgeLogger.debug("\(row):\(column)")
+    self.bridgeLogger.debug("\(row):\(column)")
 
+    gui.async {
       let position = Position(row: row, column: column)
 
       self.grid.unmarkCell(position)
@@ -82,9 +83,9 @@ extension NvimView {
   }
 
   func flush(_ renderData: [Data]) {
-    gui.async {
-      self.bridgeLogger.hr()
+    self.bridgeLogger.hr()
 
+    gui.async {
       renderData.forEach { data in
         data.withUnsafeBytes { (pointer: UnsafePointer<RenderDataType>) in
           let sizeOfType = MemoryLayout<RenderDataType>.size
@@ -135,24 +136,26 @@ extension NvimView {
   }
 
   func update(foreground fg: Int) {
+    self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(fg))
+
     gui.async {
-      self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(fg))
       self.grid.foreground = fg
     }
   }
 
   func update(background bg: Int) {
-    gui.async {
-      self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(bg))
+    self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(bg))
 
+    gui.async {
       self.grid.background = bg
       self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).cgColor
     }
   }
 
   func update(special sp: Int) {
+    self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(sp))
+
     gui.async {
-      self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(sp))
       self.grid.special = sp
     }
   }
@@ -196,10 +199,10 @@ extension NvimView {
   }
 
   func ipcBecameInvalid(_ reason: String) {
-    gui.async {
-      self.bridgeLogger.debug(reason)
+    self.bridgeLogger.debug(reason)
 
-      if self.uiBridge.isNvimQuitting == 1 || self.uiBridge.isNvimQuit {
+    gui.async {
+      if self.uiBridge.isNvimQuitting || self.uiBridge.isNvimQuit {
         return
       }
 
@@ -274,10 +277,10 @@ extension NvimView {
     self.eventsSubject.onNext(.cwdChanged)
   }
   func colorSchemeChanged(_ values: [Int]) {
-    gui.async {
-      let theme = Theme(values)
-      self.bridgeLogger.debug(theme)
+    let theme = Theme(values)
+    self.bridgeLogger.debug(theme)
 
+    gui.async {
       self.theme = theme
       self.eventsSubject.onNext(.colorschemeChanged(theme))
     }
