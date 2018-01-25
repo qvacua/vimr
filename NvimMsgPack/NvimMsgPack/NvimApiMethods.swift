@@ -1,4 +1,4 @@
-// Auto generated for nvim version 0.2.2.
+// Auto generated for nvim version 0.2.3.
 // See bin/generate_api_methods.py
 
 import MsgPackRpc
@@ -1115,7 +1115,7 @@ public extension NvimApi {
   }
 
   public func commandOutput(
-    str: String,
+    command: String,
     checkBlocked: Bool = true
   ) -> NvimApi.Response<String> {
  
@@ -1130,7 +1130,7 @@ public extension NvimApi {
     }
     
     let params: [NvimApi.Value] = [
-        .string(str),
+        .string(command),
     ]
     let response = self.rpc(method: "nvim_command_output", params: params, expectsReturnValue: true)
     
@@ -2182,6 +2182,41 @@ public extension NvimApi {
     
     guard let result = (Optional(value)) else {
       return .failure(NvimApi.Error.conversion(type: NvimApi.Value.self))
+    }
+    
+    return .success(result)
+  }
+
+  public func parseExpression(
+    expr: String,
+    flags: String,
+    highlight: Bool,
+    checkBlocked: Bool = true
+  ) -> NvimApi.Response<Dictionary<String, NvimApi.Value>> {
+ 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
+    
+    let params: [NvimApi.Value] = [
+        .string(expr),
+        .string(flags),
+        .bool(highlight),
+    ]
+    let response = self.rpc(method: "nvim_parse_expression", params: params, expectsReturnValue: true)
+    
+    guard let value = response.value else {
+      return .failure(response.error!)
+    }
+    
+    guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
+      return .failure(NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self))
     }
     
     return .success(result)
