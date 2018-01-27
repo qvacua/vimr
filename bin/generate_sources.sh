@@ -22,7 +22,7 @@ NVIM_PATH="../${nvim_bin_path}" ../bin/generate_api_methods.py
 popd
 
 pushd NvimView
-VERSION=${nvim_version} generate_autocmds.py
+VERSION=${nvim_version} ../bin/generate_autocmds.py
 
 pushd neovim
 rm -rf build
