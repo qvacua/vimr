@@ -200,7 +200,7 @@ extension NvimView {
   }
 
   public func vimOutput(of command: String) -> String {
-    return self.nvim.commandOutput(str: command).value ?? ""
+    return self.nvim.commandOutput(command: command).value ?? ""
   }
 
   public func cursorGo(to position: Position) {
