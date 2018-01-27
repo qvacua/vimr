@@ -275,7 +275,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4B90F00C1FD2AF59008A39E0 /* Build configuration list for PBXNativeTarget "NvimView" */;
 			buildPhases = (
-				4BA60C2120172AB8002DBFB7 /* ShellScript */,
 				4B90EFFF1FD2AF59008A39E0 /* Sources */,
 				4B90F0001FD2AF59008A39E0 /* Frameworks */,
 				4B90F0011FD2AF59008A39E0 /* Headers */,
@@ -359,19 +358,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4BA60C2120172AB8002DBFB7 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = ../bin/generate_source.py;
-		};
 		4BE45C091FD2D92D005C0A95 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
