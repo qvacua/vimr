@@ -1,4 +1,8 @@
-# next
+# 0.20.5-259
+
+* GH-597: Bugfix: vim-fugitive sometimes causes crashes.
+
+# 0.20.4-256
 
 * GH-605: Slightly improve scroll performance.
 * Migrate one of the few Objective-C parts to Swift (the UI bridge).
