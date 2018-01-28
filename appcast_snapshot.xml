@@ -7,24 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-258</title>
+      <title>SNAPSHOT-260</title>
       <description><![CDATA[
     <ul>
 <li><em>WARNING</em>: This snapshot may be unstable.</li>
-<li>GH-605: Further (slightly) improved scrolling. </li>
-<li>Bugfix: Quote <code>--nvim</code> arguments correctly (this was introduced in the last snapshot).</li>
+<li>GH-597: Bugfix: vim-fugitive sometimes causes crashes. (fixed in <a href="https://github.com/qvacua/vimr/releases/tag/v0.20.5-259">0.20.5</a>)</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/258
+        https://github.com/qvacua/vimr/releases/tag/snapshot/260
       </releaseNotesLink>
-      <pubDate>2018-01-25T23:12:29.260007</pubDate>
+      <pubDate>2018-01-28T18:40:02.605047</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/258/VimR-SNAPSHOT-258.tar.bz2"
-                 sparkle:version="258"
-                 sparkle:shortVersionString="SNAPSHOT-258"
-                 sparkle:dsaSignature="MC4CFQDrjPqwMEh8UK9jjMNs2G1AUgxdhgIVAMdfOHH+FUcBdsYepmZGvVFhl/O5"
-                 length="11919728"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/260/VimR-SNAPSHOT-260.tar.bz2"
+                 sparkle:version="260"
+                 sparkle:shortVersionString="SNAPSHOT-260"
+                 sparkle:dsaSignature="MC0CFQDCcRuPY2txojVC+TK1fxYpV18VpwIUGYmME+oGUnuOfmJV/butkKD7N8Y="
+                 length="11920273"
                  type="application/octet-stream"/>
     </item>
   </channel>

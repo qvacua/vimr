@@ -7,6 +7,10 @@
     - sindresorhus/github-markdown-css@2.10.0
     - Quick/Nimble@7.0.3
 
+# 0.20.5-259
+
+* GH-597: Bugfix: vim-fugitive sometimes causes crashes.
+
 # 0.20.4-256
 
 * GH-579: Bugfix: In certain cases closing window crashes in fullscreen.
