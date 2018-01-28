@@ -1,8 +1,4 @@
-# 0.20.5-259
-
-* GH-597: Bugfix: vim-fugitive sometimes causes crashes.
-
-# 0.20.4-256
+# next
 
 * GH-605: Slightly improve scroll performance.
 * Migrate one of the few Objective-C parts to Swift (the UI bridge).
@@ -10,6 +6,10 @@
     - ReactiveX/RxSwift@4.1.1
     - sindresorhus/github-markdown-css@2.10.0
     - Quick/Nimble@7.0.3
+
+# 0.20.5-259
+
+* GH-597: Bugfix: vim-fugitive sometimes causes crashes.
 
 # 0.20.4-256
 
