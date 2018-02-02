@@ -1,5 +1,5 @@
-@import Cocoa;
-@import CoreText;
+#import <Cocoa/Cocoa.h>
+#import <CoreText/CoreText.h>
 
 void recurseDraw(
     const unichar *chars,

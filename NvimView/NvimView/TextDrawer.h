@@ -3,8 +3,8 @@
  * See LICENSE
  */
 
-@import Cocoa;
-@import CoreText;
+#import <Cocoa/Cocoa.h>
+#import <CoreText/CoreText.h>
 
 
 #import "SharedTypes.h"

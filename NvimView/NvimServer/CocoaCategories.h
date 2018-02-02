@@ -3,7 +3,7 @@
  * See LICENSE
  */
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 
 
 @interface NSObject (NeoVimServer)
