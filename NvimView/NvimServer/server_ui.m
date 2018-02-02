@@ -761,19 +761,6 @@ void neovim_scroll(void **argv) {
   });
 }
 
-void neovim_escaped_filenames(void **argv) {
-  work_and_write_data_sync(argv, ^NSData *(NSData *data) {
-    NSArray *fileNames = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    NSMutableArray *result = [NSMutableArray new];
-
-    [fileNames enumerateObjectsUsingBlock:^(NSString* fileName, NSUInteger idx, BOOL *stop) {
-      [result addObject:escaped_filename(fileName)];
-    }];
-
-    return [NSKeyedArchiver archivedDataWithRootObject:result];
-  });
-}
-
 void neovim_resize(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {
     const NSInteger *values = data.bytes;

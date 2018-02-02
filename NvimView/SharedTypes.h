@@ -97,8 +97,6 @@ typedef NS_ENUM(NSInteger, NvimBridgeMsgId) {
   NvimBridgeMsgIdResize,
   NvimBridgeMsgIdScroll,
   
-  NvimBridgeMsgIdGetEscapeFileNames,
-  
   NvimBridgeMsgIdFocusGained,
   
   NvimBridgeMsgIdDebug1,
