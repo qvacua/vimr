@@ -67,8 +67,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
       case NvimBridgeMsgIdScroll: return data_sync(data, outputCondition, neovim_scroll);
 
-      case NvimBridgeMsgIdGetEscapeFileNames: return data_sync(data, outputCondition, neovim_escaped_filenames);
-
       case NvimBridgeMsgIdResize: return data_sync(data, outputCondition, neovim_resize);
 
       case NvimBridgeMsgIdInput: return data_sync(data, outputCondition, neovim_vim_input);
