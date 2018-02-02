@@ -38,7 +38,6 @@
 static NSInteger _default_foreground = 0xFF000000;
 static NSInteger _default_background = 0xFFFFFFFF;
 static NSInteger _default_special = 0xFFFF0000;
-// ---
 
 typedef struct {
     UIBridgeData *bridge;
@@ -81,7 +80,7 @@ static bool _dirty = false;
 static NSInteger _initialWidth = 30;
 static NSInteger _initialHeight = 15;
 
-static NSMutableArray <NSData *> *render_data;
+static NSMutableArray <NSData *> *_render_data;
 
 #pragma mark Helper functions
 static inline String vim_string_from(NSString *str) {
@@ -144,7 +143,7 @@ static void add_to_render_data(RenderDataType type, NSData *data) {
   [rData appendBytes:&type length:sizeof(RenderDataType)];
   [rData appendData:data];
 
-  [render_data addObject:rData];
+  [_render_data addObject:rData];
   [rData release];
 }
 
@@ -232,7 +231,7 @@ static void server_ui_scheduler(Event event, void *d) {
 }
 
 static void server_ui_main(UIBridgeData *bridge, UI *ui) {
-  render_data = [NSMutableArray new];
+  _render_data = [NSMutableArray new];
 
   Loop loop;
   loop_init(&loop, NULL);
@@ -262,20 +261,20 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   xfree(_server_ui_data);
   xfree(ui);
 
-  [render_data release];
+  [_render_data release];
 }
 
 #pragma mark NeoVim's UI callbacks
 
 static void server_ui_flush(UI *ui __unused) {
   @autoreleasepool {
-    if (render_data.count == 0) {
+    if (_render_data.count == 0) {
       return;
     }
 
     [_neovim_server sendMessageWithId:NvimServerMsgIdFlush
-                                 data:[NSKeyedArchiver archivedDataWithRootObject:render_data]];
-    [render_data removeAllObjects];
+                                 data:[NSKeyedArchiver archivedDataWithRootObject:_render_data]];
+    [_render_data removeAllObjects];
   }
 }
 
