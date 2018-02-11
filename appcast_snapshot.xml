@@ -7,23 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-260</title>
+      <title>SNAPSHOT-262</title>
       <description><![CDATA[
     <ul>
 <li><em>WARNING</em>: This snapshot may be unstable.</li>
-<li>GH-597: Bugfix: vim-fugitive sometimes causes crashes. (fixed in <a href="https://github.com/qvacua/vimr/releases/tag/v0.20.5-259">0.20.5</a>)</li>
+<li>GH-609: Bugfix: HTML preview crashes when reloading. (from the latest release)</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/260
+        https://github.com/qvacua/vimr/releases/tag/snapshot/262
       </releaseNotesLink>
-      <pubDate>2018-01-28T18:40:02.605047</pubDate>
+      <pubDate>2018-02-11T15:31:44.962873</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/260/VimR-SNAPSHOT-260.tar.bz2"
-                 sparkle:version="260"
-                 sparkle:shortVersionString="SNAPSHOT-260"
-                 sparkle:dsaSignature="MC0CFQDCcRuPY2txojVC+TK1fxYpV18VpwIUGYmME+oGUnuOfmJV/butkKD7N8Y="
-                 length="11920273"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/262/VimR-SNAPSHOT-262.tar.bz2"
+                 sparkle:version="262"
+                 sparkle:shortVersionString="SNAPSHOT-262"
+                 sparkle:dsaSignature="MCwCFB3TYV1oL++69tA1Y/owX+fGr/C2AhQWa4evwTuii/rZN6MujxpTkUQSWg=="
+                 length="11921544"
                  type="application/octet-stream"/>
     </item>
   </channel>
