@@ -133,14 +133,8 @@ static void send_cwd() {
 }
 
 static HlAttrs HlAttrsFromAttrCode(int attr_code) {
-  HlAttrs rgb_attrs = { false, false, false, false, false, -1, -1, -1 };
-  attrentry_T *aep = syn_cterm_attr2entry(attr_code);
-
-  rgb_attrs.foreground = aep->rgb_fg_color;
-  rgb_attrs.background = aep->rgb_bg_color;
-  rgb_attrs.special = aep->rgb_sp_color;
-  rgb_attrs.reverse = (bool) (aep->rgb_ae_attr & HL_INVERSE);
-
+  HlAttrs *aep = syn_cterm_attr2entry(attr_code);
+  HlAttrs rgb_attrs = *aep;
   return rgb_attrs;
 }
 
@@ -155,11 +149,13 @@ static void add_to_render_data(RenderDataType type, NSData *data) {
 }
 
 static int foreground_for(HlAttrs attrs) {
-  return attrs.reverse ? attrs.background: attrs.foreground;
+  int mask  = attrs.rgb_ae_attr;
+  return mask & HL_INVERSE ? attrs.rgb_bg_color: attrs.rgb_fg_color;
 }
 
 static int background_for(HlAttrs attrs) {
-  return attrs.reverse ? attrs.foreground: attrs.background;
+  int mask  = attrs.rgb_ae_attr;
+  return mask & HL_INVERSE ? attrs.rgb_fg_color: attrs.rgb_bg_color;
 }
 
 static void send_colorscheme() {
@@ -171,7 +167,6 @@ static void send_colorscheme() {
 
   HlAttrs visualAttrs = HlAttrsFromAttrCode(highlight_attr[HLF_V]);
   HlAttrs dirAttrs = HlAttrsFromAttrCode(highlight_attr[HLF_D]);
-
 
   NSInteger values[] = {
       normal_fg, normal_bg,
@@ -389,28 +384,27 @@ static void server_ui_scroll(UI *ui __unused, Integer count) {
 
 static void server_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
   FontTrait trait = FontTraitNone;
-  if (attrs.italic) {
+  if (attrs.rgb_ae_attr & HL_ITALIC) {
     trait |= FontTraitItalic;
   }
-  if (attrs.bold) {
+  if (attrs.rgb_ae_attr & HL_BOLD) {
     trait |= FontTraitBold;
   }
-  if (attrs.underline) {
+  if (attrs.rgb_ae_attr & HL_UNDERLINE) {
     trait |= FontTraitUnderline;
   }
-  if (attrs.undercurl) {
+  if (attrs.rgb_ae_attr & HL_UNDERCURL) {
     trait |= FontTraitUndercurl;
   }
   CellAttributes cellAttrs;
   cellAttrs.fontTrait = trait;
 
-  NSInteger fg = attrs.foreground == -1 ? _default_foreground : attrs.foreground;
-  NSInteger bg = attrs.background == -1 ? _default_background : attrs.background;
+  NSInteger fg = attrs.rgb_fg_color == -1 ? _default_foreground : attrs.rgb_fg_color;
+  NSInteger bg = attrs.rgb_bg_color == -1 ? _default_background : attrs.rgb_bg_color;
 
-  cellAttrs.foreground = attrs.reverse ? bg : fg;
-  cellAttrs.background = attrs.reverse ? fg : bg;
-  cellAttrs.special = attrs.special == -1 ? _default_special
-                                          : pun_type(unsigned int, attrs.special);
+  cellAttrs.foreground = attrs.rgb_ae_attr & HL_INVERSE ? bg : fg;
+  cellAttrs.background = attrs.rgb_ae_attr & HL_INVERSE ? fg : bg;
+  cellAttrs.special = attrs.rgb_sp_color == -1 ? _default_special : pun_type(unsigned int, attrs.rgb_sp_color);
 
   @autoreleasepool {
     NSData *data = [[NSData alloc] initWithBytes:&cellAttrs length:sizeof(CellAttributes)];
@@ -525,6 +519,28 @@ static void server_ui_update_sp(UI *ui __unused, Integer sp) {
   }
 }
 
+static void server_ui_default_colors_set(
+    UI *ui __unused, Integer rgb_fg, Integer rgb_bg, Integer rgb_sp, Integer cterm_fg, Integer cterm_bg
+) {
+
+  if (rgb_fg != -1) {
+    _default_foreground = rgb_fg;
+  }
+
+  if (rgb_bg != -1) {
+    _default_background = rgb_bg;
+  }
+
+  if (rgb_sp != -1) {
+    _default_special = rgb_sp;
+  }
+
+  NSInteger values[] = { rgb_fg, rgb_bg, rgb_sp };
+  NSData *resultData = [NSData dataWithBytes:values length:3 * sizeof(NSInteger)];
+  
+  [_neovim_server sendMessageWithId:NvimServerMsgIdDefaultColorsChanged data:resultData];
+}
+
 static void server_ui_set_title(UI *ui __unused, String title) {
   @autoreleasepool {
     if (title.size == 0) {
@@ -585,6 +601,7 @@ void custom_ui_start(void) {
   ui->set_scroll_region = server_ui_set_scroll_region;
   ui->scroll = server_ui_scroll;
   ui->highlight_set = server_ui_highlight_set;
+  ui->default_colors_set = server_ui_default_colors_set;
   ui->put = server_ui_put;
   ui->bell = server_ui_bell;
   ui->visual_bell = server_ui_visual_bell;
@@ -904,7 +921,7 @@ void neovim_debug1(void **argv) {
     NSLog(@"normal sp: %#08X", normal_sp);
 
     for (int i = 0; i < HLF_COUNT; i++) {
-      NSLog(@"%s: %#08X", hlf_names[i], HlAttrsFromAttrCode(highlight_attr[i]).foreground);
+      NSLog(@"%s: %#08X", hlf_names[i], HlAttrsFromAttrCode(highlight_attr[i]).rgb_fg_color);
     }
 
     return nil;

@@ -245,6 +245,12 @@ class UiBridge {
 
       self.nvimView?.cwdChanged(cwd)
 
+    case .defaultColorsChanged:
+      guard let values = data?.asArray(ofType: Int.self, count: 3) else {
+        return
+      }
+
+      self.nvimView?.defaultColorsChanged(values)
 
     case .colorSchemeChanged:
       guard let values = data?.asArray(ofType: Int.self, count: 5) else {

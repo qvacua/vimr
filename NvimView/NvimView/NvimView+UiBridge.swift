@@ -276,6 +276,7 @@ extension NvimView {
     self._cwd = URL(fileURLWithPath: cwd)
     self.eventsSubject.onNext(.cwdChanged)
   }
+
   func colorSchemeChanged(_ values: [Int]) {
     let theme = Theme(values)
     self.bridgeLogger.debug(theme)
@@ -283,6 +284,18 @@ extension NvimView {
     gui.async {
       self.theme = theme
       self.eventsSubject.onNext(.colorschemeChanged(theme))
+    }
+  }
+
+  func defaultColorsChanged(_ values: [Int]) {
+    self.bridgeLogger.debug(values.map(ColorUtils.colorIgnoringAlpha).map { $0.hex })
+
+    gui.async {
+      self.grid.foreground = values[0]
+      self.grid.background = values[1]
+      self.grid.special = values[2]
+
+      self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).cgColor
     }
   }
 
