@@ -7,23 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.20.4-256-256</title>
+      <title>v0.20.6-261-261</title>
       <description><![CDATA[
     <ul>
-<li>GH-579: Bugfix: In certain cases closing window crashes in fullscreen.</li>
-<li>GH-545: Bugfix: Focus is lost when entering/exiting fullscreen.</li>
+<li>GH-609: Bugfix: HTML preview crashes when reloading.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.20.4-256-256
+        https://github.com/qvacua/vimr/releases/tag/v0.20.6-261-261
       </releaseNotesLink>
-      <pubDate>2018-01-14T13:52:11.952630</pubDate>
+      <pubDate>2018-02-11T15:13:24.696482</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.20.4-256-256/VimR-v0.20.4-256-256.tar.bz2"
-                 sparkle:version="256"
-                 sparkle:shortVersionString="0.20.4-256"
-                 sparkle:dsaSignature="MC4CFQDnhKRgXxK1qG9jUIjOotP0iAr60gIVAIB19PareTTX2pyUbZRFxgJbTLzh"
-                 length="11913110"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.20.6-261-261/VimR-v0.20.6-261-261.tar.bz2"
+                 sparkle:version="261"
+                 sparkle:shortVersionString="0.20.6-261"
+                 sparkle:dsaSignature="MCwCFECwC5/Q/4PngWm1rRcljQBjmX9HAhQDjuUHgVHfnZ+pJdcFg3hJEdi9KA=="
+                 length="11912683"
                  type="application/octet-stream"/>
     </item>
   </channel>
