@@ -70,11 +70,13 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
   }
 
   private func reloadWebview(with url: URL) {
-    self.webview.evaluateJavaScript("document.body.scrollTop") { (result, error) in
-      self.scrollTop = result as? Int ?? 0
-
-      self.webview.load(URLRequest(url: url))
+    DispatchQueue.main.async {
+      self.webview.evaluateJavaScript("document.body.scrollTop") { (result, error) in
+        self.scrollTop = result as? Int ?? 0
+      }
     }
+
+    self.webview.load(URLRequest(url: url))
   }
 
   private func addViews() {
