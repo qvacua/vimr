@@ -10,16 +10,22 @@ extension NvimView {
   override public func keyDown(with event: NSEvent) {
     self.keyDownDone = false
     NSCursor.setHiddenUntilMouseMoves(true)
+    let modifierFlags = event.modifierFlags
+    let option = modifierFlags.contains(.option)
 
-    let context = NSTextInputContext.current
-    let cocoaHandledEvent = context?.handleEvent(event) ?? false
-    if self.keyDownDone && cocoaHandledEvent {
-      return
+    if !option {
+      // with option key, M-j makes ∆ handleEvent is true.
+      // we should ignore this case. make M-j put <M-j>
+      // this would break all shortcut contaion option key
+      let context = NSTextInputContext.current
+      let cocoaHandledEvent = context?.handleEvent(event) ?? false
+      if self.keyDownDone && cocoaHandledEvent {
+        return
+      }
     }
 
 //    self.logger.debug("\(#function): \(event)")
 
-    let modifierFlags = event.modifierFlags
     let capslock = modifierFlags.contains(.capsLock)
     let shift = modifierFlags.contains(.shift)
     let chars = event.characters!
