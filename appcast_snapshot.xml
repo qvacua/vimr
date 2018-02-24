@@ -7,23 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-262</title>
+      <title>SNAPSHOT-263</title>
       <description><![CDATA[
     <ul>
-<li><em>WARNING</em>: This snapshot may be unstable.</li>
-<li>GH-609: Bugfix: HTML preview crashes when reloading. (from the latest release)</li>
+<li>GH-572: Add a slider (in the Advanced preferences) to change the trackpad scroll sensitivity.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/262
+        https://github.com/qvacua/vimr/releases/tag/snapshot/263
       </releaseNotesLink>
-      <pubDate>2018-02-11T15:31:44.962873</pubDate>
+      <pubDate>2018-02-24T20:44:02.043792</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/262/VimR-SNAPSHOT-262.tar.bz2"
-                 sparkle:version="262"
-                 sparkle:shortVersionString="SNAPSHOT-262"
-                 sparkle:dsaSignature="MCwCFB3TYV1oL++69tA1Y/owX+fGr/C2AhQWa4evwTuii/rZN6MujxpTkUQSWg=="
-                 length="11921544"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/263/VimR-SNAPSHOT-263.tar.bz2"
+                 sparkle:version="263"
+                 sparkle:shortVersionString="SNAPSHOT-263"
+                 sparkle:dsaSignature="MCwCFEM//iJDyIglOs8/5dCnl4NkEsNRAhRgYXlIuWVaoaOvVqH9IvZiHgdCwQ=="
+                 length="11932455"
                  type="application/octet-stream"/>
     </item>
   </channel>
