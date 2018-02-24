@@ -37,8 +37,8 @@ extension NvimView {
       return
     }
 
-    let (absDeltaX, absDeltaY) = (min(Int(ceil(abs(deltaX) / 5.0)), maxScrollDeltaX),
-                                  min(Int(ceil(abs(deltaY) / 5.0)), maxScrollDeltaY))
+    let (absDeltaX, absDeltaY) = (min(Int(ceil(abs(deltaX) / self.trackpadScrollResistance)), maxScrollDeltaX),
+                                  min(Int(ceil(abs(deltaY) / self.trackpadScrollResistance)), maxScrollDeltaY))
     let (horizSign, vertSign) = (deltaX > 0 ? 1 : -1, deltaY > 0 ? 1 : -1)
     self.uiBridge.scroll(horizontal: horizSign * absDeltaX, vertical: vertSign * absDeltaY, at: cellPosition)
   }
