@@ -1,6 +1,7 @@
 # next
 
 * GH-605: Slightly improve scroll performance.
+* GH-572: Add a slider (in the Advanced preferences) to change the trackpad scroll sensitivity.
 * Migrate one of the few Objective-C parts to Swift (the UI bridge).
 * Dependencies updates:
     - ReactiveX/RxSwift@4.1.1
