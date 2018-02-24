@@ -205,6 +205,7 @@ class MainWindow: NSObject,
 
     self.addViews()
 
+    self.neoVimView.trackpadScrollResistance = CGFloat(state.trackpadScrollResistance)
     self.updateNeoVimAppearance()
 
     self.open(urls: state.urlsToOpen)
@@ -303,6 +304,10 @@ class MainWindow: NSObject,
           self.set(repUrl: self.currentBuffer?.url, themed: self.titlebarThemed)
         } else {
           self.set(repUrl: nil, themed: self.titlebarThemed)
+        }
+
+        if self.neoVimView.trackpadScrollResistance != CGFloat(state.trackpadScrollResistance) {
+          self.neoVimView.trackpadScrollResistance = CGFloat(state.trackpadScrollResistance)
         }
 
         if self.defaultFont != state.appearance.font

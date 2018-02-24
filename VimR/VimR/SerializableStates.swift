@@ -48,6 +48,7 @@ class Keys {
     static let activeTools = "active-tools"
     static let frame = "frame"
 
+    static let trackpadScrollResistance = "trackpad-scroll-resistance"
     static let useInteractiveZsh = "use-interactive-zsh"
     static let isShowHidden = "is-show-hidden"
   }

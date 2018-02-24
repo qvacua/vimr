@@ -14,6 +14,10 @@ class AdvancedPrefReducer {
 
     switch pair.action {
 
+    case let .setTrackpadScrollResistance(value):
+      state.mainWindowTemplate.trackpadScrollResistance = value
+      state.mainWindows.keys.forEach { state.mainWindows[$0]?.trackpadScrollResistance = value }
+
     case let .setUseInteractiveZsh(value):
       state.mainWindowTemplate.useInteractiveZsh = value
 

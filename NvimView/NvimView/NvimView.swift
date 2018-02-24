@@ -107,6 +107,8 @@ public class NvimView: NSView,
 
   public internal(set) var theme = Theme.default
 
+  public var trackpadScrollResistance = CGFloat(5)
+
   public var usesLigatures = false {
     didSet {
       self.drawer.usesLigatures = self.usesLigatures

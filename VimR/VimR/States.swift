@@ -243,6 +243,8 @@ extension MainWindow {
 
     var fileBrowserShowHidden = false
 
+    var trackpadScrollResistance = 5.0
+
     // neovim
     var uuid = UUID().uuidString
     var currentBuffer: NvimView.Buffer?
@@ -278,6 +280,9 @@ extension MainWindow {
 
       // Stay compatible with 168
       self.useInteractiveZsh = PrefUtils.bool(from: dict, for: Keys.MainWindow.useInteractiveZsh, default: false)
+      self.trackpadScrollResistance = PrefUtils.value(from: dict,
+                                                      for: Keys.MainWindow.trackpadScrollResistance,
+                                                      default: 5.0)
       let frameString = PrefUtils.string(from: dict,
                                          for: Keys.MainWindow.frame,
                                          default: NSStringFromRect(self.frame))
@@ -330,6 +335,8 @@ extension MainWindow {
         Keys.MainWindow.toolButtonsVisible: self.isToolButtonsVisible,
 
         Keys.MainWindow.frame: NSStringFromRect(self.frame),
+
+        Keys.MainWindow.trackpadScrollResistance: self.trackpadScrollResistance,
 
         Keys.Appearance.key: self.appearance.dict(),
         Keys.WorkspaceTool.key: self.tools.mapToDict { ($0.rawValue, $1.dict()) },
