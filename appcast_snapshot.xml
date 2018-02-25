@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-263</title>
+      <title>SNAPSHOT-264</title>
       <description><![CDATA[
     <ul>
-<li>GH-572: Add a slider (in the Advanced preferences) to change the trackpad scroll sensitivity.</li>
+<li>GH-614: Add a checkbox for live resizing in the Advanced preferences.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/263
+        https://github.com/qvacua/vimr/releases/tag/snapshot/264
       </releaseNotesLink>
-      <pubDate>2018-02-24T20:44:02.043792</pubDate>
+      <pubDate>2018-02-25T13:58:06.985049</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/263/VimR-SNAPSHOT-263.tar.bz2"
-                 sparkle:version="263"
-                 sparkle:shortVersionString="SNAPSHOT-263"
-                 sparkle:dsaSignature="MCwCFEM//iJDyIglOs8/5dCnl4NkEsNRAhRgYXlIuWVaoaOvVqH9IvZiHgdCwQ=="
-                 length="11932455"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/264/VimR-SNAPSHOT-264.tar.bz2"
+                 sparkle:version="264"
+                 sparkle:shortVersionString="SNAPSHOT-264"
+                 sparkle:dsaSignature="MC4CFQCOrf67dRx3X/hkpHDK4bgYpCtZDAIVAMPE7C7TX43ZcWTzzvvH+RNZPGqF"
+                 length="11944148"
                  type="application/octet-stream"/>
     </item>
   </channel>
