@@ -135,11 +135,6 @@ extension NvimView {
     defer { context.restoreGState() }
 
     context.setFillColor(ColorUtils.cgColorIgnoringAlpha(rowRun.attrs.background))
-    // To use random color use the following
-//    NSColor(calibratedRed: CGFloat(drand48()),
-//            green: CGFloat(drand48()),
-//            blue: CGFloat(drand48()),
-//            alpha: 1.0).set()
 
     let firstCellOrigin = self.pointInView(forRow: rowRun.row, column: rowRun.range.lowerBound)
     let backgroundRect = CGRect(
