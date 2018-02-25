@@ -244,6 +244,7 @@ extension MainWindow {
     var fileBrowserShowHidden = false
 
     var trackpadScrollResistance = 5.0
+    var useLiveResize = false
 
     // neovim
     var uuid = UUID().uuidString
@@ -283,6 +284,7 @@ extension MainWindow {
       self.trackpadScrollResistance = PrefUtils.value(from: dict,
                                                       for: Keys.MainWindow.trackpadScrollResistance,
                                                       default: 5.0)
+      self.useLiveResize = PrefUtils.bool(from: dict, for: Keys.MainWindow.useLiveResize, default: false)
       let frameString = PrefUtils.string(from: dict,
                                          for: Keys.MainWindow.frame,
                                          default: NSStringFromRect(self.frame))
