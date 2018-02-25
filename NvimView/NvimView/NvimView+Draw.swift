@@ -20,7 +20,7 @@ extension NvimView {
     context.saveGState()
     defer { context.restoreGState() }
 
-    if self.inLiveResize || self.currentlyResizing {
+    if (self.inLiveResize || self.currentlyResizing) && !self.usesLiveResize {
       self.drawResizeInfo(in: context, with: dirtyUnionRect)
       return
     }
@@ -135,11 +135,6 @@ extension NvimView {
     defer { context.restoreGState() }
 
     context.setFillColor(ColorUtils.cgColorIgnoringAlpha(rowRun.attrs.background))
-    // To use random color use the following
-//    NSColor(calibratedRed: CGFloat(drand48()),
-//            green: CGFloat(drand48()),
-//            blue: CGFloat(drand48()),
-//            alpha: 1.0).set()
 
     let firstCellOrigin = self.pointInView(forRow: rowRun.row, column: rowRun.range.lowerBound)
     let backgroundRect = CGRect(
@@ -161,16 +156,21 @@ extension NvimView {
 
     let discreteSize = self.discreteSize(size: boundsSize)
     let displayStr = "\(discreteSize.width) × \(discreteSize.height)"
+    let infoStr = "(You can turn on the experimental live resizing feature in the Advanced preferences)"
 
-    var sizeAttrs = resizeTextAttrs
-    sizeAttrs[NSAttributedStringKey.foregroundColor] = self.theme.foreground
+    var (sizeAttrs, infoAttrs) = (resizeTextAttrs, infoTextAttrs)
+    sizeAttrs[.foregroundColor] = self.theme.foreground
+    infoAttrs[.foregroundColor] = self.theme.foreground
 
     let size = displayStr.size(withAttributes: sizeAttrs)
-    let x = (boundsSize.width - size.width) / 2
-    let y = emojiY - size.height
+    let (x, y) = ((boundsSize.width - size.width) / 2, emojiY - size.height)
+
+    let infoSize = infoStr.size(withAttributes: infoAttrs)
+    let (infoX, infoY) = ((boundsSize.width - infoSize.width) / 2, y - size.height - 5)
 
     self.currentEmoji.draw(at: CGPoint(x: emojiX, y: emojiY), withAttributes: emojiAttrs)
     displayStr.draw(at: CGPoint(x: x, y: y), withAttributes: sizeAttrs)
+    infoStr.draw(at: CGPoint(x: infoX, y: infoY), withAttributes: infoAttrs)
   }
 
   private func drawPinchImage(in context: CGContext) {
@@ -315,4 +315,10 @@ private let resizeTextAttrs = [
   NSAttributedStringKey.font: NSFont.systemFont(ofSize: 18),
   NSAttributedStringKey.foregroundColor: NSColor.darkGray
 ]
+
+private let infoTextAttrs = [
+  NSAttributedStringKey.font: NSFont.systemFont(ofSize: 16),
+  NSAttributedStringKey.foregroundColor: NSColor.darkGray
+]
+
 private let colorSpace = NSColorSpace.sRGB

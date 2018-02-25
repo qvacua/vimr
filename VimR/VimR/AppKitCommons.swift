@@ -8,6 +8,10 @@ import CocoaMarkdown
 
 extension NSColor {
 
+  static var random: NSColor {
+    return NSColor(calibratedRed: CGFloat(drand48()), green: CGFloat(drand48()), blue: CGFloat(drand48()), alpha: 1.0)
+  }
+
   var hex: String {
     if let color = self.usingColorSpace(.sRGB) {
       return "#" +
@@ -156,7 +160,7 @@ extension NSTableView {
     column.isEditable = false
 
     tableView.addTableColumn(column)
-    tableView.rowSizeStyle	=	.default
+    tableView.rowSizeStyle = .default
     tableView.sizeLastColumnToFit()
     tableView.allowsEmptySelection = false
     tableView.allowsMultipleSelection = false

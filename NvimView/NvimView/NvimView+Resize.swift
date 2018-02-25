@@ -17,9 +17,12 @@ extension NvimView {
       return
     }
 
+    if self.usesLiveResize {
+      self.resizeNeoVimUi(to: newSize)
+      return
+    }
+
     if self.inLiveResize || self.currentlyResizing {
-      // TODO: Turn off live resizing for now.
-      // self.resizeNeoVimUi(to: newSize)
       return
     }
 

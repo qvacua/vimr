@@ -50,6 +50,7 @@ class Keys {
 
     static let trackpadScrollResistance = "trackpad-scroll-resistance"
     static let useInteractiveZsh = "use-interactive-zsh"
+    static let useLiveResize = "use-live-resize"
     static let isShowHidden = "is-show-hidden"
   }
 

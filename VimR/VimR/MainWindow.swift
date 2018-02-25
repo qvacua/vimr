@@ -206,6 +206,7 @@ class MainWindow: NSObject,
     self.addViews()
 
     self.neoVimView.trackpadScrollResistance = CGFloat(state.trackpadScrollResistance)
+    self.neoVimView.usesLiveResize = state.useLiveResize
     self.updateNeoVimAppearance()
 
     self.open(urls: state.urlsToOpen)
@@ -308,6 +309,10 @@ class MainWindow: NSObject,
 
         if self.neoVimView.trackpadScrollResistance != CGFloat(state.trackpadScrollResistance) {
           self.neoVimView.trackpadScrollResistance = CGFloat(state.trackpadScrollResistance)
+        }
+
+        if self.neoVimView.usesLiveResize != state.useLiveResize {
+          self.neoVimView.usesLiveResize = state.useLiveResize
         }
 
         if self.defaultFont != state.appearance.font

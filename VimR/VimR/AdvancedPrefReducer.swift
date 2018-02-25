@@ -14,6 +14,10 @@ class AdvancedPrefReducer {
 
     switch pair.action {
 
+    case let .setUseLiveResize(value):
+      state.mainWindowTemplate.useLiveResize = value
+      state.mainWindows.keys.forEach { state.mainWindows[$0]?.useLiveResize = value  }
+
     case let .setTrackpadScrollResistance(value):
       state.mainWindowTemplate.trackpadScrollResistance = value
       state.mainWindows.keys.forEach { state.mainWindows[$0]?.trackpadScrollResistance = value }
