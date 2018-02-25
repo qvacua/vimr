@@ -109,6 +109,8 @@ public class NvimView: NSView,
 
   public var trackpadScrollResistance = CGFloat(5)
 
+  public var usesLiveResize = false
+
   public var usesLigatures = false {
     didSet {
       self.drawer.usesLigatures = self.usesLigatures

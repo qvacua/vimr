@@ -339,6 +339,7 @@ extension MainWindow {
         Keys.MainWindow.frame: NSStringFromRect(self.frame),
 
         Keys.MainWindow.trackpadScrollResistance: self.trackpadScrollResistance,
+        Keys.MainWindow.useLiveResize: self.useLiveResize,
 
         Keys.Appearance.key: self.appearance.dict(),
         Keys.WorkspaceTool.key: self.tools.mapToDict { ($0.rawValue, $1.dict()) },
