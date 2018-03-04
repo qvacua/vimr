@@ -708,6 +708,9 @@ void start_neovim(NSInteger width, NSInteger height, NSArray<NSString *> *args) 
   NSData *data = [[NSData alloc] initWithBytes:&value length:sizeof(bool)];
   [_neovim_server sendMessageWithId:NvimServerMsgIdNvimReady data:data];
   [data release];
+
+  // We have to manually trigger this to initially get the colorscheme.
+  send_colorscheme();
 }
 
 #pragma mark Functions for neovim's main loop
