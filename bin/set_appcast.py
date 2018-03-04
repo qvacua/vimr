@@ -1,9 +1,9 @@
-#!/usr/local/bin/python2
+#!/usr/local/bin/python3
 
-# pip2 install requests
-# pip2 install Markdown
+# pip3 install requests
+# pip3 install Markdown
 
-# We use python2 of brew due to some pip packages.
+# We use python of brew due to some pip packages.
 
 import os
 import io
