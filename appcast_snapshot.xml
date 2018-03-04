@@ -22,7 +22,7 @@
       <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/266/VimR-SNAPSHOT-266.tar.bz2"
                  sparkle:version="266"
                  sparkle:shortVersionString="SNAPSHOT-266"
-                 sparkle:dsaSignature="b'MCwCFFKBjz+ax2jjUhaN6d8MDDpCAQdGAhQnGW6HXEIJvn+78DMAAsMOPYv3Pw=='"
+                 sparkle:dsaSignature="MCwCFFKBjz+ax2jjUhaN6d8MDDpCAQdGAhQnGW6HXEIJvn+78DMAAsMOPYv3Pw=="
                  length="11945548"
                  type="application/octet-stream"/>
     </item>
