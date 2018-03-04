@@ -3,6 +3,8 @@
 * GH-605: Slightly improve scroll performance.
 * GH-572: Add a slider to change the trackpad scroll sensitivity in the Advanced preferences.
 * GH-614: Add a checkbox for live resizing in the Advanced preferences.
+* GH-611: Prevent crashing for some users when loading the FontAwesom font for icons used for example in the file browser:
+  * We still don't know why the font cannot be loaded for some users. This fix will prevent the crashes, but, then, the icons will be replaced by `?`.
 * Migrate one of the few Objective-C parts to Swift (the UI bridge).
 * Dependencies updates:
     - ReactiveX/RxSwift@4.1.1

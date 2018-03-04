@@ -7,9 +7,10 @@ import Cocoa
 import RxSwift
 import PureLayout
 import Sparkle
+import CocoaFontAwesome
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate {
 
   enum Action {
 
@@ -48,6 +49,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     super.init()
 
+    NSUserNotificationCenter.default.delegate = self
+
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { appState in
@@ -63,6 +66,48 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
       })
       .disposed(by: self.disposeBag)
+
+    // FIXME: GH-611: https://github.com/qvacua/vimr/issues/611
+    // Check whether FontAwesome can be loaded. If not, show a warning.
+    // We don't know yet why this happens to some users.
+    DispatchQueue.main.async {
+      guard NSFont.fontAwesome(ofSize: 13) == nil else {
+        return
+      }
+
+      let alert = NSAlert()
+      alert.alertStyle = .warning
+      alert.messageText = "FontAwesome could not be loaded."
+      let accessoryView = NSTextField(frame: CGRect(x: 0, y: 0, width: 300, height: 40))
+      accessoryView.isEditable = false
+      accessoryView.drawsBackground = false
+      accessoryView.isBordered = false
+      accessoryView.usesSingleLineMode = false
+
+      // both are needed, otherwise hyperlink won't accept mousedown
+      accessoryView.isSelectable = true
+      accessoryView.allowsEditingTextAttributes = true
+      accessoryView.attributedStringValue = NSAttributedString.infoLabel(markdown: """
+        Unfortunately we don't know yet what is causing this. This seems to happen only to some users.
+        We use the FontAwesome font for icons in the tools, e.g. the file browser. Those icons are now
+        shown as `?`.
+        
+        You can track the progress on this issue at [GitHub](https://github.com/qvacua/vimr/issues/611).
+      """)
+
+      alert.accessoryView = accessoryView
+
+//      alert.runModal()
+
+      let notification = NSUserNotification()
+      notification.title = "FontAwesome could not be loaded."
+      notification.subtitle = "Unfortunately we don't know yet what is causing this."
+      notification.informativeText = """
+        We use the FontAwesome font for icons in the tools, e.g. the file browser. Those icons are now shown as ?.
+        You can track the progress on this issue at GitHub issue 611.
+      """
+      NSUserNotificationCenter.default.deliver(notification)
+    }
   }
 
   private let stateContext: Context
@@ -295,6 +340,14 @@ extension AppDelegate {
 
       self.emit(.newMainWindow(urls: urls, cwd: commonParentUrl, nvimArgs: nil, cliPipePath: nil))
     }
+  }
+}
+
+// MARK: - NSUserNotificationCenterDelegate
+extension AppDelegate {
+
+  public func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent _: NSUserNotification) -> Bool {
+    return true
   }
 }
 
