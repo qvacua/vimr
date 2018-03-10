@@ -7,23 +7,35 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-266</title>
+      <title>v0.21.0-267</title>
       <description><![CDATA[
     <ul>
-<li>GH-611: Prevent crashing for some users when loading the FontAwesome font for icons used for example in the file browser:</li>
-<li>We still don't know why the font cannot be loaded for some users. This fix will prevent the crashes, but, then, the icons will be shown as <code>?</code>.</li>
+<li>GH-605: Slightly improve scroll performance.</li>
+<li>GH-572: Add a slider to change the trackpad scroll sensitivity in the Advanced preferences.</li>
+<li>GH-614: Add a checkbox for live resizing in the Advanced preferences.</li>
+<li>GH-611: Prevent crashing for some users when loading the FontAwesom font for icons used for example in the file browser:<ul>
+<li>We still don't know why the font cannot be loaded for some users. This fix will prevent the crashes, but, then, the icons will be replaced by <code>?</code>.</li>
+</ul>
+</li>
+<li>Migrate one of the few Objective-C parts to Swift (the UI bridge).</li>
+<li>Dependencies updates:<ul>
+<li>ReactiveX/RxSwift@4.1.1</li>
+<li>sindresorhus/github-markdown-css@2.10.0</li>
+<li>Quick/Nimble@7.0.3</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/266
+        https://github.com/qvacua/vimr/releases/tag/v0.21.0-267
       </releaseNotesLink>
-      <pubDate>2018-03-04T11:46:48.602518</pubDate>
+      <pubDate>2018-03-10T16:45:29.848523</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/266/VimR-SNAPSHOT-266.tar.bz2"
-                 sparkle:version="266"
-                 sparkle:shortVersionString="SNAPSHOT-266"
-                 sparkle:dsaSignature="MCwCFFKBjz+ax2jjUhaN6d8MDDpCAQdGAhQnGW6HXEIJvn+78DMAAsMOPYv3Pw=="
-                 length="11945548"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.21.0-267/VimR-v0.21.0-267.tar.bz2"
+                 sparkle:version="267"
+                 sparkle:shortVersionString="0.21.0"
+                 sparkle:dsaSignature="MC0CFQCw1LprgUBdevN9Mhi2jNO4xMhKUAIUa2CVIAiNPGskELip8nYr8fLK2LU="
+                 length="11948709"
                  type="application/octet-stream"/>
     </item>
   </channel>
