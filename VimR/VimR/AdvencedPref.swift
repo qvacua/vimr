@@ -123,6 +123,10 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     sensitivity.minValue = 1 / 500
     sensitivity.target = self
     sensitivity.action = #selector(sensitivitySliderAction)
+    let sensitivityInfo = self.infoTextField(markdown: """
+      Trackpad scroll sensitivity is yet experimental. You may experience some issues.
+      If you do, please report them at [GitHub issue #572](https://github.com/qvacua/vimr/issues/572).
+    """)
 
     // We set the value of the NSSlider only at the beginning.
     self.sensitivitySlider.doubleValue = self.sensitivity
@@ -135,6 +139,7 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.addSubview(useInteractiveZshInfo)
     self.addSubview(sensitivityTitle)
     self.addSubview(sensitivitySlider)
+    self.addSubview(sensitivityInfo)
     self.addSubview(useLiveResize)
     self.addSubview(useLiveResizeInfo)
 
@@ -149,7 +154,11 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     sensitivity.autoAlignAxis(.baseline, toSameAxisOf: sensitivityTitle)
     sensitivity.autoPinEdge(.left, to: .right, of: sensitivityTitle, withOffset: 5)
 
-    useLiveResize.autoPinEdge(.top, to: .bottom, of: sensitivity, withOffset: 18)
+    sensitivityInfo.autoPinEdge(.top, to: .bottom, of: sensitivitySlider, withOffset: 5)
+    sensitivityInfo.autoPinEdge(.left, to: .right, of: sensitivityTitle, withOffset: 5)
+    sensitivityInfo.autoSetDimension(.width, toSize: 300)
+
+    useLiveResize.autoPinEdge(.top, to: .bottom, of: sensitivityInfo, withOffset: 18)
     useLiveResize.autoPinEdge(.left, to: .right, of: sensitivityTitle, withOffset: 5)
 
     useLiveResizeInfo.autoPinEdge(.top, to: .bottom, of: useLiveResize, withOffset: 5)
