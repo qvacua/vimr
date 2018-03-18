@@ -1,5 +1,6 @@
 # next
 
+* GH-548: Bugfix: When using certain plugings, writing beyond the right border crashes.
 * ...
 
 # 0.21.0-267
