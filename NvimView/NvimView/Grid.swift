@@ -174,6 +174,11 @@ class Grid: CustomStringConvertible {
   }
 
   func put(_ string: String) {
+    // GH-548: Some plugins seem to cause self.position.width >= self.size.width.
+    guard self.isSane(position: self.position) else {
+      return
+    }
+
     // FIXME: handle the following situation:
     // |abcde | <- type ㅎ
     // =>
@@ -187,13 +192,22 @@ class Grid: CustomStringConvertible {
   }
 
   func putMarkedText(_ string: String) {
+    // GH-548: Some plugins seem to cause self.position.width >= self.size.width.
+    guard self.isSane(position: self.position) else {
+      return
+    }
+
     // NOTE: Maybe there's a better way to indicate marked text than inverting...
     self.cells[self.position.row][self.position.column] = Cell(string: string, attrs: self.attrs, marked: true)
     self.advancePosition()
   }
 
   func unmarkCell(_ position: Position) {
-//    NSLog("\(#function): \(position)")
+    // GH-548: Some plugins seem to cause self.position.width >= self.size.width.
+    guard self.isSane(position: self.position) else {
+      return
+    }
+
     self.cells[position.row][position.column].marked = false
   }
 
@@ -206,11 +220,11 @@ class Grid: CustomStringConvertible {
     let column = position.column
 
     guard row < self.size.height else {
-      return Region.zero
+      return .zero
     }
 
     guard column < self.size.width else {
-      return Region.zero
+      return .zero
     }
 
     var left = 0
