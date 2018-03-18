@@ -2222,6 +2222,36 @@ public extension NvimApi {
     return .success(result)
   }
 
+  public func listUis(
+    checkBlocked: Bool = true
+  ) -> NvimApi.Response<NvimApi.Value> {
+ 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
+    
+    let params: [NvimApi.Value] = [
+        
+    ]
+    let response = self.rpc(method: "nvim_list_uis", params: params, expectsReturnValue: true)
+    
+    guard let value = response.value else {
+      return .failure(response.error!)
+    }
+    
+    guard let result = (Optional(value)) else {
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Value.self))
+    }
+    
+    return .success(result)
+  }
+
   public func winGetBuf(
     window: NvimApi.Window,
     checkBlocked: Bool = true
