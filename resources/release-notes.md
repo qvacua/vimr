@@ -1,7 +1,8 @@
 # next
 
 * GH-548: Bugfix: When using certain plugings, writing beyond the right border crashes.
-* ...
+* Dependencies updates:
+    - httpswift/swifter@1.4.0
 
 # 0.21.0-267
 
