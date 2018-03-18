@@ -4,6 +4,7 @@
  */
 
 import Foundation
+import MsgPackRpc
 
 class UiBridge {
 
@@ -258,6 +259,19 @@ class UiBridge {
       }
 
       self.nvimView?.colorSchemeChanged(values)
+
+    case .optionSet:
+      guard let d = data,
+            let dict = NSKeyedUnarchiver.unarchiveObject(with: d) as? Dictionary<String, Data>,
+            let key = dict.keys.first,
+            let valueData = dict[key],
+            let values = try? unpackAll(valueData),
+            let value = values.first
+          else {
+        return
+      }
+
+      self.logger.debug("\(key) -> \(value)")
 
     case .autoCommandEvent:
       if data?.count == 2 * MemoryLayout<Int>.stride {

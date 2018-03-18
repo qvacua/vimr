@@ -30,6 +30,8 @@
 #import <nvim/edit.h>
 #import <nvim/syntax.h>
 #import <nvim/aucmd.h>
+#import <nvim/msgpack_rpc/helpers.h>
+#import <msgpack.h>
 
 
 #define pun_type(t, x) (*((t *) (&(x))))
@@ -567,8 +569,24 @@ static void server_ui_set_icon(UI *ui __unused, String icon) {
 }
 
 static void server_ui_option_set(UI *ui __unused, String name, Object value) {
-  // yet noop
-  // FIXME: implement before nvim 0.2.3 is released...
+  @autoreleasepool {
+    // We use msgpack here since we don't know what value contains.
+    // At some point we should completely migrate to msgpack...
+    msgpack_sbuffer sbuf;
+    msgpack_sbuffer_init(&sbuf);
+    msgpack_packer pk;
+    msgpack_packer_init(&pk, &sbuf, msgpack_sbuffer_write);
+    msgpack_rpc_from_object(value, &pk);
+
+    __auto_type valueData = [[NSData alloc] initWithBytes:sbuf.data length:sbuf.size];
+    __auto_type dict = @{ [NSString stringWithCString:name.data encoding:NSUTF8StringEncoding]: valueData, };
+    __auto_type data = [NSKeyedArchiver archivedDataWithRootObject:dict];
+
+    [_neovim_server sendMessageWithId:NvimServerMsgIdOptionSet data:data];
+
+    [valueData release];
+    msgpack_sbuffer_clear(&sbuf);
+  }
 }
 
 static void server_ui_stop(UI *ui __unused) {

@@ -80,6 +80,7 @@ typedef NS_ENUM(NSInteger, NvimServerMsgId) {
   NvimServerMsgIdSetTitle,
   NvimServerMsgIdSetIcon,
   NvimServerMsgIdStop,
+  NvimServerMsgIdOptionSet,
   
   NvimServerMsgIdDirtyStatusChanged,
   NvimServerMsgIdCwdChanged,
