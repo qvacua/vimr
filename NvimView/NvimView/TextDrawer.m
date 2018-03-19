@@ -158,7 +158,7 @@ static CGColorRef color_for(NSInteger value) {
   CGContextSetFillColorWithColor(context, color_for(color));
   CGRect rect = {
       {positions[0].x, positions[0].y + _underlinePosition},
-      {positions[0].x + positions[count - 1].x + _cellSize.width, _underlineThickness}
+      {count * _cellSize.width, _underlineThickness}
   };
   CGContextFillRect(context, rect);
 }
