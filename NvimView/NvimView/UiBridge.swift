@@ -135,9 +135,6 @@ class UiBridge {
     case .clear:
       self.nvimView?.clear()
 
-    case .eolClear:
-      self.nvimView?.eolClear()
-
     case .setMenu:
       self.nvimView?.updateMenu()
 

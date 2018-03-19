@@ -53,7 +53,8 @@ typedef NS_ENUM(NSInteger, RenderDataType) {
   RenderDataTypePut,
   RenderDataTypePutMarked,
   RenderDataTypeGoto,
-  RenderDataTypeHighlight
+  RenderDataTypeHighlight,
+  RenderDataTypeEolClear,
 };
 
 typedef NS_ENUM(NSInteger, NvimServerMsgId) {
@@ -61,7 +62,6 @@ typedef NS_ENUM(NSInteger, NvimServerMsgId) {
   NvimServerMsgIdNvimReady,
   NvimServerMsgIdResize,
   NvimServerMsgIdClear,
-  NvimServerMsgIdEolClear,
   NvimServerMsgIdSetMenu,
   NvimServerMsgIdBusyStart,
   NvimServerMsgIdBusyStop,
