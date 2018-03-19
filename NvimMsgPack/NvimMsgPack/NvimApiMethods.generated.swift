@@ -2252,6 +2252,68 @@ public extension NvimApi {
     return .success(result)
   }
 
+  public func getProcChildren(
+    pid: Int,
+    checkBlocked: Bool = true
+  ) -> NvimApi.Response<NvimApi.Value> {
+ 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
+    
+    let params: [NvimApi.Value] = [
+        .int(Int64(pid)),
+    ]
+    let response = self.rpc(method: "nvim_get_proc_children", params: params, expectsReturnValue: true)
+    
+    guard let value = response.value else {
+      return .failure(response.error!)
+    }
+    
+    guard let result = (Optional(value)) else {
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Value.self))
+    }
+    
+    return .success(result)
+  }
+
+  public func getProc(
+    pid: Int,
+    checkBlocked: Bool = true
+  ) -> NvimApi.Response<NvimApi.Value> {
+ 
+    if checkBlocked {
+      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
+        return .failure(NvimApi.Error.blocked)
+      }
+
+      if blocked {
+        return .failure(NvimApi.Error.blocked)
+      }
+    }
+    
+    let params: [NvimApi.Value] = [
+        .int(Int64(pid)),
+    ]
+    let response = self.rpc(method: "nvim_get_proc", params: params, expectsReturnValue: true)
+    
+    guard let value = response.value else {
+      return .failure(response.error!)
+    }
+    
+    guard let result = (Optional(value)) else {
+      return .failure(NvimApi.Error.conversion(type: NvimApi.Value.self))
+    }
+    
+    return .success(result)
+  }
+
   public func winGetBuf(
     window: NvimApi.Window,
     checkBlocked: Bool = true
