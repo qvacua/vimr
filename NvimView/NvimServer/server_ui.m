@@ -147,7 +147,9 @@ static void add_to_render_data(RenderDataType type, NSData *data) {
   NSMutableData *rData = [NSMutableData new];
 
   [rData appendBytes:&type length:sizeof(RenderDataType)];
-  [rData appendData:data];
+  if (data != nil) {
+    [rData appendData:data];
+  }
 
   [_render_data addObject:rData];
   [rData release];
@@ -304,10 +306,8 @@ static void server_ui_clear(UI *ui __unused) {
 
 static void server_ui_eol_clear(UI *ui __unused) {
   @autoreleasepool {
-    server_ui_flush(NULL);
+    add_to_render_data(RenderDataTypeEolClear, nil);
   }
-
-  [_neovim_server sendMessageWithId:NvimServerMsgIdEolClear];
 }
 
 static void server_ui_cursor_goto(UI *ui __unused, Integer row, Integer col) {
