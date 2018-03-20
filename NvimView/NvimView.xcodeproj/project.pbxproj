@@ -132,7 +132,7 @@
 		4B90F05C1FD2AFF7008A39E0 /* DataWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataWrapper.h; sourceTree = "<group>"; };
 		4B90F0611FD2AFF7008A39E0 /* DataWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataWrapper.m; sourceTree = "<group>"; };
 		4B90F0621FD2AFF7008A39E0 /* NvimServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NvimServer.h; sourceTree = "<group>"; };
-		4B90F0631FD2AFF7008A39E0 /* server_globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_globals.h; sourceTree = "<group>"; };
+		4B90F0631FD2AFF7008A39E0 /* server_ui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_ui.h; sourceTree = "<group>"; };
 		4B90F0641FD2AFF7008A39E0 /* NvimServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NvimServer.m; sourceTree = "<group>"; };
 		4B90F0721FD2B9F1008A39E0 /* MsgPackRpc.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MsgPackRpc.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B90F0731FD2B9F1008A39E0 /* NvimMsgPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NvimMsgPack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -237,7 +237,7 @@
 				4B90F05B1FD2AFF7008A39E0 /* Logging.h */,
 				4B90F0621FD2AFF7008A39E0 /* NvimServer.h */,
 				4B90F0641FD2AFF7008A39E0 /* NvimServer.m */,
-				4B90F0631FD2AFF7008A39E0 /* server_globals.h */,
+				4B90F0631FD2AFF7008A39E0 /* server_ui.h */,
 				4B90F0561FD2AFF7008A39E0 /* server_ui.m */,
 			);
 			path = NvimServer;

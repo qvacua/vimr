@@ -6,7 +6,7 @@
 #import <Foundation/Foundation.h>
 
 #import "Logging.h"
-#import "server_globals.h"
+#import "server_ui.h"
 #import "NvimServer.h"
 #import "CocoaCategories.h"
 #import "DataWrapper.h"
