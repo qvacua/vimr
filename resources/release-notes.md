@@ -1,4 +1,4 @@
-# next
+# 0.21.1-269
 
 * GH-548: Bugfix: When using certain plugings, writing beyond the right border crashes.
 * GH-620: Bugfix: Wrong underline rendering.
