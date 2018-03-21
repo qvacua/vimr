@@ -6,7 +6,7 @@
 #import <Foundation/Foundation.h>
 
 #import "Logging.h"
-#import "server_globals.h"
+#import "server_ui.h"
 #import "NvimServer.h"
 #import "CocoaCategories.h"
 #import "DataWrapper.h"
@@ -199,7 +199,7 @@ static void delete_marked_text() {
 }
 
 static void run_neovim(void *arg) {
-  int argc = 1;
+  int argc;
   char **argv;
 
   @autoreleasepool {
@@ -758,17 +758,6 @@ static void work_and_write_data_sync(void **argv, work_block block) {
 //    [data release]; // retained in local_server_callback
 //  }
 //}
-
-static NSString *escaped_filename(NSString *filename) {
-  const char *file_system_rep = filename.fileSystemRepresentation;
-
-  char *escaped_filename = vim_strsave_fnameescape(file_system_rep, 0);
-  NSString *result = [NSString stringWithCString:(const char *) escaped_filename
-                                        encoding:NSUTF8StringEncoding];
-  xfree(escaped_filename);
-
-  return result;
-}
 
 void neovim_scroll(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {

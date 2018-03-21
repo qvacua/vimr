@@ -15,16 +15,16 @@
 #define BLUE(color_code)     (((color_code      ) & 0xff) / 255.0f)
 
 static dispatch_once_t token;
-static NSMutableDictionary<NSNumber *, NSColor *> *colorCache;
+static NSCache *colorCache;
 
 static CGColorRef color_for(NSInteger value) {
-  NSColor *color = colorCache[@(value)];
+  NSColor *color = [colorCache objectForKey:@(value)];
   if (color != nil) {
     return color.CGColor;
   }
 
   color = [NSColor colorWithSRGBRed:RED(value) green:GREEN(value) blue:BLUE(value) alpha:1];
-  colorCache[@(value)] = color;
+  [colorCache setObject:color forKey:@(value)];
 
   return color.CGColor;
 }
@@ -71,7 +71,8 @@ static CGColorRef color_for(NSInteger value) {
 
 - (instancetype _Nonnull)initWithFont:(NSFont *_Nonnull)font {
   dispatch_once (&token, ^{
-    colorCache = [[NSMutableDictionary alloc] init];
+    colorCache = [NSCache new];
+    colorCache.countLimit = 1000;
   });
 
   self = [super init];
