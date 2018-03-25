@@ -1,3 +1,7 @@
+# next
+
+* GH-626: Bugfix: Emoji menu (`Cmd-Ctrl-Space`) does not work.
+
 # 0.21.1-269
 
 * GH-548: Bugfix: When using certain plugings, writing beyond the right border crashes.
