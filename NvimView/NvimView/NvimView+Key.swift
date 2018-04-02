@@ -87,14 +87,17 @@ extension NvimView {
     if .keyDown != event.type { return false }
     let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
 
-    /* <C-Tab> & <C-S-Tab> do not trigger keyDown events.
-       Catch the key event here and pass it to keyDown.
-       (By rogual in NeoVim dot app
-       https://github.com/rogual/neovim-dot-app/pull/248/files )
-       */
+    // <C-Tab> & <C-S-Tab> do not trigger keyDown events.
+    // Catch the key event here and pass it to keyDown.
+    // (By rogual in NeoVim dot app: https://github.com/rogual/neovim-dot-app/pull/248/files)
     if flags.contains(.control) && 48 == event.keyCode {
       self.keyDown(with: event)
       return true
+    }
+
+    // Emoji menu: Cmd-Ctrl-Space
+    if flags.contains([.command, .control]) && 49 == event.keyCode {
+      return false
     }
 
     guard let chars = event.characters else {
@@ -120,7 +123,7 @@ extension NvimView {
       self.uiBridge.vimInput(self.wrapNamedKeys("Nul"))
       return true
     }
-    // NsEvent already sets \u{1f} for <C--> && <C-_>
+    // NSEvent already sets \u{1f} for <C--> && <C-_>
 
     return false
   }

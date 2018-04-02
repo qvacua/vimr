@@ -6,7 +6,7 @@
 #import <Foundation/Foundation.h>
 
 #import "Logging.h"
-#import "server_globals.h"
+#import "server_ui.h"
 #import "NvimServer.h"
 #import "CocoaCategories.h"
 #import "DataWrapper.h"
@@ -147,7 +147,9 @@ static void add_to_render_data(RenderDataType type, NSData *data) {
   NSMutableData *rData = [NSMutableData new];
 
   [rData appendBytes:&type length:sizeof(RenderDataType)];
-  [rData appendData:data];
+  if (data != nil) {
+    [rData appendData:data];
+  }
 
   [_render_data addObject:rData];
   [rData release];
@@ -200,7 +202,7 @@ static void delete_marked_text() {
 }
 
 static void run_neovim(void *arg) {
-  int argc = 1;
+  int argc;
   char **argv;
 
   @autoreleasepool {
@@ -304,10 +306,8 @@ static void server_ui_clear(UI *ui __unused) {
 
 static void server_ui_eol_clear(UI *ui __unused) {
   @autoreleasepool {
-    server_ui_flush(NULL);
+    add_to_render_data(RenderDataTypeEolClear, nil);
   }
-
-  [_neovim_server sendMessageWithId:NvimServerMsgIdEolClear];
 }
 
 static void server_ui_cursor_goto(UI *ui __unused, Integer row, Integer col) {
@@ -714,17 +714,6 @@ static void work_and_write_data_sync(void **argv, work_block block) {
 //    [data release]; // retained in local_server_callback
 //  }
 //}
-
-static NSString *escaped_filename(NSString *filename) {
-  const char *file_system_rep = filename.fileSystemRepresentation;
-
-  char *escaped_filename = vim_strsave_fnameescape(file_system_rep, 0);
-  NSString *result = [NSString stringWithCString:(const char *) escaped_filename
-                                        encoding:NSUTF8StringEncoding];
-  xfree(escaped_filename);
-
-  return result;
-}
 
 void neovim_scroll(void **argv) {
   work_and_write_data_sync(argv, ^NSData *(NSData *data) {

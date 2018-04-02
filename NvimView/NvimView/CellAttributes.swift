@@ -20,8 +20,12 @@ extension CellAttributes: CustomStringConvertible, Equatable {
   }
 
   public var description: String {
-    return "CellAttributes<fg: \(String(self.foreground, radix: 16)), " +
-           "bg: \(String(self.background, radix: 16)))>"
+    return "CellAttributes<" +
+           "trait: \(String(self.fontTrait.rawValue, radix: 2)), " +
+           "fg: \(String(self.foreground, radix: 16)), " +
+           "bg: \(String(self.background, radix: 16)), " +
+           "sp: \(String(self.special, radix: 16))" +
+           ")>"
   }
 
   public var inverted: CellAttributes {

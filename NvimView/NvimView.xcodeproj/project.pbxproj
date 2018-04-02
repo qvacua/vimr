@@ -132,7 +132,7 @@
 		4B90F05C1FD2AFF7008A39E0 /* DataWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataWrapper.h; sourceTree = "<group>"; };
 		4B90F0611FD2AFF7008A39E0 /* DataWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataWrapper.m; sourceTree = "<group>"; };
 		4B90F0621FD2AFF7008A39E0 /* NvimServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NvimServer.h; sourceTree = "<group>"; };
-		4B90F0631FD2AFF7008A39E0 /* server_globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_globals.h; sourceTree = "<group>"; };
+		4B90F0631FD2AFF7008A39E0 /* server_ui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_ui.h; sourceTree = "<group>"; };
 		4B90F0641FD2AFF7008A39E0 /* NvimServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NvimServer.m; sourceTree = "<group>"; };
 		4B90F0721FD2B9F1008A39E0 /* MsgPackRpc.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MsgPackRpc.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B90F0731FD2B9F1008A39E0 /* NvimMsgPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NvimMsgPack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -237,7 +237,7 @@
 				4B90F05B1FD2AFF7008A39E0 /* Logging.h */,
 				4B90F0621FD2AFF7008A39E0 /* NvimServer.h */,
 				4B90F0641FD2AFF7008A39E0 /* NvimServer.m */,
-				4B90F0631FD2AFF7008A39E0 /* server_globals.h */,
+				4B90F0631FD2AFF7008A39E0 /* server_ui.h */,
 				4B90F0561FD2AFF7008A39E0 /* server_ui.m */,
 			);
 			path = NvimServer;
@@ -458,7 +458,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 267;
+				CURRENT_PROJECT_VERSION = 270;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -516,7 +516,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 267;
+				CURRENT_PROJECT_VERSION = 270;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -543,7 +543,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 267;
+				DYLIB_CURRENT_VERSION = 270;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				FRAMEWORK_VERSION = A;
@@ -565,7 +565,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 267;
+				DYLIB_CURRENT_VERSION = 270;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				FRAMEWORK_VERSION = A;

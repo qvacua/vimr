@@ -27,21 +27,6 @@ extension NvimView {
     }
   }
 
-  func eolClear() {
-    self.bridgeLogger.mark()
-
-    gui.async {
-      self.grid.eolClear()
-
-      let putPosition = self.grid.position
-      let region = Region(top: putPosition.row,
-                          bottom: putPosition.row,
-                          left: putPosition.column,
-                          right: self.grid.region.right)
-      self.markForRender(region: region)
-    }
-  }
-
   func modeChange(_ mode: CursorModeShape) {
     self.bridgeLogger.debug(name(of: mode))
 
@@ -120,6 +105,9 @@ extension NvimView {
             let values = rawPointer.bindMemory(to: Int.self, capacity: 4)
             self.doGoto(position: Position(row: values[0], column: values[1]),
                         textPosition: Position(row: values[2], column: values[3]))
+
+          case .eolClear:
+            self.doEolClear()
 
           }
         }
@@ -217,7 +205,7 @@ extension NvimView {
 
   private func doPut(string: String) {
     let curPos = self.grid.position
-//      self.bridgeLogger.debug("\(curPos) -> \(string)")
+//    self.bridgeLogger.debug("\(curPos) -> '\(string)'")
 
     self.grid.put(string.precomposedStringWithCanonicalMapping)
 
@@ -234,7 +222,7 @@ extension NvimView {
 
   private func doPut(markedText: String) {
     let curPos = self.grid.position
-//      self.bridgeLogger.debug("\(curPos) -> '\(markedText)'")
+//    self.bridgeLogger.debug("\(curPos) -> '\(markedText)'")
 
     self.grid.putMarkedText(markedText)
 
@@ -247,7 +235,7 @@ extension NvimView {
   }
 
   private func doHighlightSet(_ attrs: CellAttributes) {
-//    self.bridgeLogger.debug(attrs)
+//    self.bridgeLogger.debug("\(self.grid.position) -> \(attrs)")
     self.grid.attrs = attrs
   }
 
@@ -258,6 +246,19 @@ extension NvimView {
     self.grid.goto(position)
 
     self.eventsSubject.onNext(.cursor(textPosition))
+  }
+
+  func doEolClear() {
+    self.bridgeLogger.mark()
+
+    self.grid.eolClear()
+
+    let putPosition = self.grid.position
+    let region = Region(top: putPosition.row,
+                        bottom: putPosition.row,
+                        left: putPosition.column,
+                        right: self.grid.region.right)
+    self.markForRender(region: region)
   }
 }
 

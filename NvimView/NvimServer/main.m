@@ -3,10 +3,10 @@
  * See LICENSE
  */
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 
 #import "NvimServer.h"
-#import "server_globals.h"
+#import "server_ui.h"
 #import "Logging.h"
 #import "CocoaCategories.h"
 
