@@ -127,9 +127,12 @@ extension NvimView {
   }
 
   private func drawBackground(rowRun: RowRun, in context: CGContext) {
-    if rowRun.attrs.background == self.grid.background {
-      return
-    }
+    // TODO: GH-612
+    // The following seems to break the anti-aliasing...
+    // Find another way to avoid double rendering of the background
+//    if rowRun.attrs.background == self.grid.background {
+//      return
+//    }
 
     context.saveGState()
     defer { context.restoreGState() }
