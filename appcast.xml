@@ -7,27 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.21.1-269</title>
+      <title>v0.21.2-271</title>
       <description><![CDATA[
     <ul>
-<li>GH-548: Bugfix: When using certain plugings, writing beyond the right border crashes.</li>
-<li>GH-620: Bugfix: Wrong underline rendering.</li>
-<li>Dependencies updates:<ul>
-<li>httpswift/swifter@1.4.0</li>
-</ul>
-</li>
+<li>GH-626: Bugfix: Emoji menu (<code>Cmd-Ctrl-Space</code>) does not work.</li>
+<li>GH-162: Bugfix: Anti-aliasing on non-Retina display is broken.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.21.1-269
+        https://github.com/qvacua/vimr/releases/tag/v0.21.2-271
       </releaseNotesLink>
-      <pubDate>2018-03-21T18:25:33.483368</pubDate>
+      <pubDate>2018-04-03T08:25:05.984139</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.21.1-269/VimR-v0.21.1-269.tar.bz2"
-                 sparkle:version="269"
-                 sparkle:shortVersionString="0.21.1"
-                 sparkle:dsaSignature="MCwCFHrSPNSN+/4uYMd8SGHGztHkSzoPAhRg/u1nCl+R929EboHvVYaKoYYSqA=="
-                 length="11997830"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.21.2-271/VimR-v0.21.2-271.tar.bz2"
+                 sparkle:version="271"
+                 sparkle:shortVersionString="0.21.2"
+                 sparkle:dsaSignature="MC0CFDc438YW/yPNrlly4f6BSNT3e2exAhUA0LqdN9TxVItiWspS2IFyHkVRIzI="
+                 length="12097684"
                  type="application/octet-stream"/>
     </item>
   </channel>
