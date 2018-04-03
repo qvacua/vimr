@@ -1,6 +1,7 @@
-# next
+# 0.21.2-271
 
 * GH-626: Bugfix: Emoji menu (`Cmd-Ctrl-Space`) does not work.
+* GH-162: Bugfix: Anti-aliasing on non-Retina display is broken.
 
 # 0.21.1-269
 
