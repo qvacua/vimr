@@ -66,8 +66,14 @@ extension NSEvent {
     static let rightControl = Modifier(rawValue: 0x042000)
     static let leftControl  = Modifier(rawValue: 0x040001)
 
+    static let shift   = Modifier(rawValue: NSEvent.ModifierFlags.shift.rawValue)
+    static let command = Modifier(rawValue: NSEvent.ModifierFlags.command.rawValue)
+    static let option  = Modifier(rawValue: NSEvent.ModifierFlags.option.rawValue)
+    static let control = Modifier(rawValue: NSEvent.ModifierFlags.control.rawValue)
+
     static let all: Array<Modifier> = Array(arrayLiteral:
-      .rightShift, .leftShift, .rightCommand, .leftCommand, .rightOption, .leftOption, .rightControl, .leftControl
+      .rightShift, .leftShift, .rightCommand, .leftCommand, .rightOption, .leftOption, .rightControl, .leftControl,
+      .shift, .command, .option, .control
     )
     // @formatter:on
   }
