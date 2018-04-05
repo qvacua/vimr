@@ -91,7 +91,8 @@ class Context {
         self.prefStateSource(by: GeneralPrefReducer().reduce, prefService: prefService),
         self.prefStateSource(by: ToolsPrefReducer().reduce, prefService: prefService),
         self.prefStateSource(by: AppearancePrefReducer().reduce, prefService: prefService),
-        self.prefStateSource(by: AdvancedPrefReducer().reduce, prefService: prefService)
+        self.prefStateSource(by: AdvancedPrefReducer().reduce, prefService: prefService),
+        self.prefStateSource(by: KeysPrefReducer().reduce, prefService: prefService)
       )
       .merge()
       .subscribe(onNext: self.emitAppState)
