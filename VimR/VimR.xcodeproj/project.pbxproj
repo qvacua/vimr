@@ -66,6 +66,7 @@
 		1929BD2F41D93ADFF43C1C98 /* NetUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B02440BC99C42F9EBD45 /* NetUtils.m */; };
 		1929BD3878A3A47B8D685CD2 /* AppDelegateReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7A68B7109CEFAF105E8 /* AppDelegateReducer.swift */; };
 		1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D510177918080BE39B /* Scorer.swift */; };
+		1929BD9AEB34F95438D97FE7 /* KeysPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B461EB3DE08C58DD9ED9 /* KeysPref.swift */; };
 		1929BDFDBDA7180D02ACB37E /* RxSwiftCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6C215ACCBE12672A8D7 /* RxSwiftCommonsTest.swift */; };
 		1929BE0DAEE9664C5BCFA211 /* States.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB6608B4F0E037CA0F4C /* States.swift */; };
 		1929BE0F64A6CE5BCE2A5092 /* MainWindow+Delegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B714EB137AE448CE8ABD /* MainWindow+Delegates.swift */; };
@@ -228,6 +229,7 @@
 		1929B364460D86F17E80943C /* PrefService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefService.swift; sourceTree = "<group>"; };
 		1929B365A6434354B568B04F /* FileMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileMonitor.swift; sourceTree = "<group>"; };
 		1929B457B9D0FA4D21F3751E /* UiRootReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiRootReducer.swift; sourceTree = "<group>"; };
+		1929B461EB3DE08C58DD9ED9 /* KeysPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeysPref.swift; sourceTree = "<group>"; };
 		1929B49E6924847AD085C8C9 /* PrefWindowReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefWindowReducer.swift; sourceTree = "<group>"; };
 		1929B5046239709E33516F5C /* Pref128ToCurrentConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pref128ToCurrentConverter.swift; sourceTree = "<group>"; };
 		1929B56C8ED31834BA9D8543 /* FileItemUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemUtils.swift; sourceTree = "<group>"; };
@@ -386,6 +388,7 @@
 				1929BCE3E156C06EDF1F2806 /* FileOutlineView.swift */,
 				1929BA5C7099CDEB04B76BA4 /* FileBrowser.swift */,
 				1929BD2CA8DD198A6BCDBCB7 /* ThemedTableSubviews.swift */,
+				1929B461EB3DE08C58DD9ED9 /* KeysPref.swift */,
 			);
 			name = "File Browser";
 			sourceTree = "<group>";
@@ -913,6 +916,7 @@
 				1929B8DDACEB28E6672AEC42 /* MainWindow.swift in Sources */,
 				1929B5257DB27F03C6663482 /* MainWindow+Actions.swift in Sources */,
 				1929BE0F64A6CE5BCE2A5092 /* MainWindow+Delegates.swift in Sources */,
+				1929BD9AEB34F95438D97FE7 /* KeysPref.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
