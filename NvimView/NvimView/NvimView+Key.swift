@@ -68,18 +68,16 @@ extension NvimView {
   }
 
   public override func doCommand(by aSelector: Selector) {
-//    self.logger.debug("\(#function): \(aSelector)");
-
     // FIXME: handle when ㅎ -> delete
 
     if self.responds(to: aSelector) {
-      Swift.print("\(#function): calling \(aSelector)")
+      self.logger.debug("calling \(aSelector)")
       self.perform(aSelector, with: self)
       self.keyDownDone = true
       return
     }
 
-//    self.logger.debug("\(#function): "\(aSelector) not implemented, forwarding input to vim")
+    self.logger.debug("\(aSelector) not implemented, forwarding input to neovim")
     self.keyDownDone = false
   }
 
