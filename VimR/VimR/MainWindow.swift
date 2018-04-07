@@ -304,6 +304,9 @@ class MainWindow: NSObject,
           self.set(repUrl: nil, themed: self.titlebarThemed)
         }
 
+        self.neoVimView.isLeftOptionMeta = state.isLeftOptionMeta
+        self.neoVimView.isRightOptionMeta = state.isRightOptionMeta
+
         if self.neoVimView.trackpadScrollResistance != CGFloat(state.trackpadScrollResistance) {
           self.neoVimView.trackpadScrollResistance = CGFloat(state.trackpadScrollResistance)
         }

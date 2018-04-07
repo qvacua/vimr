@@ -29,6 +29,7 @@ class PrefWindow: NSObject,
       GeneralPref(source: source, emitter: emitter, state: state),
       ToolsPref(source: source, emitter: emitter, state: state),
       AppearancePref(source: source, emitter: emitter, state: state),
+      KeysPref(source: source, emitter: emitter, state: state),
       AdvancedPref(source: source, emitter: emitter, state: state),
     ]
 
@@ -63,7 +64,9 @@ class PrefWindow: NSObject,
   private var openStatusMark: Token
 
   private let windowController: NSWindowController
-  private var window: NSWindow { return self.windowController.window! }
+  private var window: NSWindow {
+    return self.windowController.window!
+  }
 
   private let categoryView = NSTableView.standardSourceListTableView()
   private let categoryScrollView = NSScrollView.standardScrollView()
@@ -140,7 +143,7 @@ extension PrefWindow {
     return self.panes.count
   }
 
-  @objc(tableView:objectValueForTableColumn:row:) func tableView(_: NSTableView, objectValueFor _: NSTableColumn?, row: Int) -> Any? {
+  @objc(tableView: objectValueForTableColumn:row:) func tableView(_: NSTableView, objectValueFor _: NSTableColumn?, row: Int) -> Any? {
     return self.panes[row].displayName
   }
 }

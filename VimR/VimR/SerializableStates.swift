@@ -48,6 +48,9 @@ class Keys {
     static let activeTools = "active-tools"
     static let frame = "frame"
 
+    static let isLeftOptionMeta = "is-left-option-meta"
+    static let isRightOptionMeta = "is-right-option-meta"
+
     static let trackpadScrollResistance = "trackpad-scroll-resistance"
     static let useInteractiveZsh = "use-interactive-zsh"
     static let useLiveResize = "use-live-resize"

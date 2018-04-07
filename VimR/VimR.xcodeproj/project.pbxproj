@@ -35,6 +35,7 @@
 		1929B542A071BD03C846F6EF /* PrefUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8241CDE58F7AAF89AE4 /* PrefUtils.swift */; };
 		1929B5543B1E31A26096E656 /* FileMonitorReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B04EC69F616EEFAF5F96 /* FileMonitorReducer.swift */; };
 		1929B59FA5C286E010F70BEE /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFC0A5A9C6DB09BE1368 /* Types.swift */; };
+		1929B5A2EE366F79ED32744C /* KeysPrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B88B5FA08E897A3C2168 /* KeysPrefReducer.swift */; };
 		1929B5C1BABBC0D09D97C3EF /* PreviewService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B617C229B19DB3E987B8 /* PreviewService.swift */; };
 		1929B5F016431A76292D1E84 /* FileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B365A6434354B568B04F /* FileMonitor.swift */; };
 		1929B6388EAF16C190B82955 /* FileItemIgnorePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B69499B2569793350CEC /* FileItemIgnorePattern.swift */; };
@@ -48,6 +49,7 @@
 		1929B71610FF1DC6E459BA49 /* PreviewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8EF9A9F5ACC175452BD /* PreviewUtils.swift */; };
 		1929B8DDACEB28E6672AEC42 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6E01216D49BB9F3B6A3 /* MainWindow.swift */; };
 		1929B8E90A1378E494D481E7 /* PrefUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7BB3E4B3DC96284B686 /* PrefUtilsTest.swift */; };
+		1929B8F498D1E7C53F572CE2 /* KeysPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B14A5949FB64C4B2646F /* KeysPref.swift */; };
 		1929B8FB248D71BF88A35761 /* PreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6C6C7792B05164B0216 /* PreviewTool.swift */; };
 		1929B9318D32146D58BB38EC /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
 		1929B94083273D4B321AD848 /* FileItemUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B56C8ED31834BA9D8543 /* FileItemUtils.swift */; };
@@ -222,6 +224,7 @@
 		1929B0FBFB766042CF06E463 /* AppearancePref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearancePref.swift; sourceTree = "<group>"; };
 		1929B11D672134E52A256A7F /* UrlCommonsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrlCommonsTest.swift; sourceTree = "<group>"; };
 		1929B12CE56A9B36980288A4 /* OpenQuicklyReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyReducer.swift; sourceTree = "<group>"; };
+		1929B14A5949FB64C4B2646F /* KeysPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeysPref.swift; sourceTree = "<group>"; };
 		1929B1558455B3A74D93EF2A /* OpenQuicklyFileViewRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyFileViewRow.swift; sourceTree = "<group>"; };
 		1929B1DC584C89C477E83FA2 /* HttpServerService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServerService.swift; sourceTree = "<group>"; };
 		1929B34FC23D805A8B29E8F7 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
@@ -250,6 +253,7 @@
 		1929B8042AC566CDF6C998A3 /* FileUtilsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileUtilsTest.swift; sourceTree = "<group>"; };
 		1929B8241CDE58F7AAF89AE4 /* PrefUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefUtils.swift; sourceTree = "<group>"; };
 		1929B85023B042C485409CE1 /* HtmlPreviewTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HtmlPreviewTool.swift; sourceTree = "<group>"; };
+		1929B88B5FA08E897A3C2168 /* KeysPrefReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeysPrefReducer.swift; sourceTree = "<group>"; };
 		1929B8EF9A9F5ACC175452BD /* PreviewUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewUtils.swift; sourceTree = "<group>"; };
 		1929B9355C892BEBA7496C71 /* DictionaryCommonsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryCommonsTest.swift; sourceTree = "<group>"; };
 		1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationCommons.swift; sourceTree = "<group>"; };
@@ -479,6 +483,7 @@
 				1929BED01F5D94BFCA4CF80F /* AppearancePrefReducer.swift */,
 				1929B7039C5689CE45F53888 /* AdvancedPrefReducer.swift */,
 				1929B694508FB5FDE607513A /* ToolsPrefReducer.swift */,
+				1929B88B5FA08E897A3C2168 /* KeysPrefReducer.swift */,
 			);
 			name = Preferences;
 			sourceTree = "<group>";
@@ -503,6 +508,7 @@
 				1929B0FBFB766042CF06E463 /* AppearancePref.swift */,
 				1929BBE0A534F2F6009D31BE /* AdvencedPref.swift */,
 				1929BB2AD21A10A0ECA66A5E /* ToolsPref.swift */,
+				1929B14A5949FB64C4B2646F /* KeysPref.swift */,
 			);
 			name = Preferences;
 			sourceTree = "<group>";
@@ -913,6 +919,8 @@
 				1929B8DDACEB28E6672AEC42 /* MainWindow.swift in Sources */,
 				1929B5257DB27F03C6663482 /* MainWindow+Actions.swift in Sources */,
 				1929BE0F64A6CE5BCE2A5092 /* MainWindow+Delegates.swift in Sources */,
+				1929B8F498D1E7C53F572CE2 /* KeysPref.swift in Sources */,
+				1929B5A2EE366F79ED32744C /* KeysPrefReducer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1032,7 +1040,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 271;
+				CURRENT_PROJECT_VERSION = 272;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1087,7 +1095,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 271;
+				CURRENT_PROJECT_VERSION = 272;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

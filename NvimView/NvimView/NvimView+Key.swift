@@ -9,17 +9,20 @@ extension NvimView {
 
   override public func keyDown(with event: NSEvent) {
     self.keyDownDone = false
+
     NSCursor.setHiddenUntilMouseMoves(true)
 
-    let context = NSTextInputContext.current
-    let cocoaHandledEvent = context?.handleEvent(event) ?? false
-    if self.keyDownDone && cocoaHandledEvent {
-      return
+    let modifierFlags = event.modifierFlags
+    let isMeta = (self.isLeftOptionMeta && modifierFlags.contains(.leftOption))
+                 || (self.isRightOptionMeta && modifierFlags.contains(.rightOption))
+
+    if !isMeta {
+      let cocoaHandledEvent = NSTextInputContext.current?.handleEvent(event) ?? false
+      if self.keyDownDone && cocoaHandledEvent {
+        return
+      }
     }
 
-//    self.logger.debug("\(#function): \(event)")
-
-    let modifierFlags = event.modifierFlags
     let capslock = modifierFlags.contains(.capsLock)
     let shift = modifierFlags.contains(.shift)
     let chars = event.characters!
@@ -62,18 +65,16 @@ extension NvimView {
   }
 
   public override func doCommand(by aSelector: Selector) {
-//    self.logger.debug("\(#function): \(aSelector)");
-
     // FIXME: handle when ㅎ -> delete
 
     if self.responds(to: aSelector) {
-      Swift.print("\(#function): calling \(aSelector)")
+      self.logger.debug("calling \(aSelector)")
       self.perform(aSelector, with: self)
       self.keyDownDone = true
       return
     }
 
-//    self.logger.debug("\(#function): "\(aSelector) not implemented, forwarding input to vim")
+    self.logger.debug("\(aSelector) not implemented, forwarding input to neovim")
     self.keyDownDone = false
   }
 

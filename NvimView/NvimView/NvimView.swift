@@ -101,6 +101,9 @@ public class NvimView: NSView,
   public static let minLinespacing = CGFloat(0.5)
   public static let maxLinespacing = CGFloat(8)
 
+  public var isLeftOptionMeta = false
+  public var isRightOptionMeta = false
+
   public let uuid = UUID().uuidString
 
   public internal(set) var mode = CursorModeShape.normal

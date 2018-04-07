@@ -1,3 +1,7 @@
+# next
+
+* GH-543: Add an option in the Keys preferences to use left or/and right Option key as Meta key.
+
 # 0.21.2-271
 
 * GH-626: Bugfix: Emoji menu (`Cmd-Ctrl-Space`) does not work.

@@ -259,6 +259,9 @@ extension MainWindow {
     var nvimArgs: [String]?
     var cliPipePath: String?
 
+    var isLeftOptionMeta = false
+    var isRightOptionMeta = false
+
     // to be cleaned
     var urlsToOpen = [URL: OpenMode]()
     var currentBufferToSet: NvimView.Buffer?
@@ -280,6 +283,9 @@ extension MainWindow {
       }
 
       // Stay compatible with 168
+      self.isLeftOptionMeta = PrefUtils.bool(from: dict, for: Keys.MainWindow.isLeftOptionMeta, default: false)
+      self.isRightOptionMeta = PrefUtils.bool(from: dict, for: Keys.MainWindow.isRightOptionMeta, default: false)
+
       self.useInteractiveZsh = PrefUtils.bool(from: dict, for: Keys.MainWindow.useInteractiveZsh, default: false)
       self.trackpadScrollResistance = PrefUtils.value(from: dict,
                                                       for: Keys.MainWindow.trackpadScrollResistance,
@@ -343,6 +349,9 @@ extension MainWindow {
 
         Keys.Appearance.key: self.appearance.dict(),
         Keys.WorkspaceTool.key: self.tools.mapToDict { ($0.rawValue, $1.dict()) },
+
+        Keys.MainWindow.isLeftOptionMeta: self.isLeftOptionMeta,
+        Keys.MainWindow.isRightOptionMeta: self.isRightOptionMeta,
 
         Keys.MainWindow.orderedTools: self.orderedTools.map { $0.rawValue },
         Keys.MainWindow.activeTools: self.activeTools.mapToDict { ($0.rawValue, $1) },
