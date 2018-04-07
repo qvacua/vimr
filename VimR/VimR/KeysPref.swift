@@ -85,7 +85,8 @@ class KeysPref: PrefPane, UiComponent, NSTextFieldDelegate {
     let metaInfo = self.infoTextField(markdown: """
       When an Option key is set to Meta, then every input containing the corresponding Option key will be passed
       through to Neovim. This means that you can use mappings like `<M-1>` in Neovim, but cannot use the corresponding
-      Option key to enter special characters like `µ` which is entered by `Option-M`.
+      Option key for keyboard shortcuts containing `Option` or to enter special characters like `µ`
+      which is entered by `Option-M` (on the ABC keyboard layout).
      """)
 
     self.addSubview(paneTitle)
