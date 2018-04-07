@@ -82,10 +82,17 @@ class KeysPref: PrefPane, UiComponent, NSTextFieldDelegate {
                            title: "Use Right Option as Meta",
                            action: #selector(KeysPref.isRightOptionMetaAction(_:)))
 
+    let metaInfo = self.infoTextField(markdown: """
+      When an Option key is set to Meta, then every input containing the corresponding Option key will be passed
+      through to Neovim. This means that you can use mappings like `<M-1>` in Neovim, but cannot use the corresponding
+      Option key to enter special characters like `µ` which is entered by `Option-M`.
+     """)
+
     self.addSubview(paneTitle)
 
     self.addSubview(isLeftOptionMeta)
     self.addSubview(isRightOptionMeta)
+    self.addSubview(metaInfo)
 
     paneTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 18)
     paneTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
@@ -96,6 +103,10 @@ class KeysPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     isRightOptionMeta.autoPinEdge(.top, to: .bottom, of: isLeftOptionMeta, withOffset: 5)
     isRightOptionMeta.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
+
+    metaInfo.autoPinEdge(.top, to: .bottom, of: isRightOptionMeta, withOffset: 5)
+    metaInfo.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
+    metaInfo.autoSetDimension(.width, toSize: 300)
   }
 }
 
