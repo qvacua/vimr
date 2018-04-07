@@ -1,6 +1,6 @@
 # next
 
-* GH-543: Add an option in the Keys preferences to use left or/and right Option key as Meta key.
+* GH-543: Add an option in the Keys preferences to use left or/and right Option key as Meta key. (Thanks @xiehuc for the PR)
 
 # 0.21.2-271
 
