@@ -94,17 +94,8 @@ class FileOutlineView: NSOutlineView,
   }
 
   override func reloadData() {
-    let newCells = self.cells.sorted{
-      let i = $0
-      let j = $1
-      
-      return true
-    }
-    
-    
     self.cells.removeAll()
     self.widths.removeAll()
-
     
     super.reloadData()
   }
