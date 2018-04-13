@@ -96,7 +96,6 @@ class FileOutlineView: NSOutlineView,
   override func reloadData() {
     self.cells.removeAll()
     self.widths.removeAll()
-    
     super.reloadData()
   }
 
@@ -351,7 +350,6 @@ extension FileOutlineView {
     guard let fileBrowserItem = item as? FileBrowserItem else {
       return false
     }
-    
     return fileBrowserItem.url.isDir
   }
 
