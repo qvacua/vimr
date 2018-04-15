@@ -1,4 +1,4 @@
-// Auto generated for nvim version 0.2.3.
+// Auto generated for nvim version 0.3.0.
 // See bin/generate_api_methods.py
 
 import MsgPackRpc
