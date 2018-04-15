@@ -1,6 +1,9 @@
-# next
+# 0.22.0-273
 
-* GH-543: Add an option in the Keys preferences to use left or/and right Option key as Meta key.
+* GH-543: Add an option in the Keys preferences to use left or/and right Option key as Meta key. (Thanks @xiehuc for the PR)
+* Bugfix: Eliminate a memory leak.
+* Dependencies updates:
+    - ReactiveX/RxSwift@4.1.2
 
 # 0.21.2-271
 

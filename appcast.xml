@@ -7,23 +7,27 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.21.2-271</title>
+      <title>v0.22.0-273</title>
       <description><![CDATA[
     <ul>
-<li>GH-626: Bugfix: Emoji menu (<code>Cmd-Ctrl-Space</code>) does not work.</li>
-<li>GH-162: Bugfix: Anti-aliasing on non-Retina display is broken.</li>
+<li>GH-543: Add an option in the Keys preferences to use left or/and right Option key as Meta key. (Thanks @xiehuc for the PR)</li>
+<li>Bugfix: Eliminate a memory leak.</li>
+<li>Dependencies updates:<ul>
+<li>ReactiveX/RxSwift@4.1.2</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.21.2-271
+        https://github.com/qvacua/vimr/releases/tag/v0.22.0-273
       </releaseNotesLink>
-      <pubDate>2018-04-03T08:25:05.984139</pubDate>
+      <pubDate>2018-04-15T09:38:37.871617</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.21.2-271/VimR-v0.21.2-271.tar.bz2"
-                 sparkle:version="271"
-                 sparkle:shortVersionString="0.21.2"
-                 sparkle:dsaSignature="MC0CFDc438YW/yPNrlly4f6BSNT3e2exAhUA0LqdN9TxVItiWspS2IFyHkVRIzI="
-                 length="12097684"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.22.0-273/VimR-v0.22.0-273.tar.bz2"
+                 sparkle:version="273"
+                 sparkle:shortVersionString="0.22.0"
+                 sparkle:dsaSignature="MC0CFCz304i1TV4xO5A5kem8zWkiE/ouAhUAsHn6oelsw2QWx8mhChtGDmOvTSE="
+                 length="12153869"
                  type="application/octet-stream"/>
     </item>
   </channel>

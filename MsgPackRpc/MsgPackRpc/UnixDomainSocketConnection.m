@@ -134,6 +134,9 @@ static void socket_call_back(
 }
 
 - (void)disconnectAndStop {
+  // Otherwise we'll live forever. (MsgPackRpc is retained in dataCallbak)
+  self.dataCallback = nil;
+
   if (_socket != NULL && CFSocketIsValid(_socket)) {
     CFRunLoopStop(_run_loop);
     CFSocketInvalidate(_socket);
