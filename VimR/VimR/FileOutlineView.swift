@@ -215,7 +215,13 @@ class FileOutlineView: NSOutlineView,
   }
 
   private func sortedChildren(of url: URL) -> [FileBrowserItem] {
-    return FileUtils.directDescendants(of: url).map(FileBrowserItem.init).sorted()
+    return FileUtils.directDescendants(of: url).map(FileBrowserItem.init).sorted{
+      if ($0.isDir == $1.isDir) {
+        return $0.url.absoluteString < $1.url.absoluteString
+      }
+      
+      return $0.isDir
+    }
   }
 
   private func update(_ fileBrowserItem: FileBrowserItem) {
@@ -344,7 +350,6 @@ extension FileOutlineView {
     guard let fileBrowserItem = item as? FileBrowserItem else {
       return false
     }
-
     return fileBrowserItem.url.isDir
   }
 
