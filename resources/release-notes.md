@@ -1,3 +1,8 @@
+# next
+
+* GH-419: File browser sorts folders on the top. (Thanks @laibulle for the PR)
+* ...
+
 # 0.22.0-273
 
 * GH-543: Add an option in the Keys preferences to use left or/and right Option key as Meta key. (Thanks @xiehuc for the PR)
