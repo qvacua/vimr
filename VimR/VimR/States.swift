@@ -302,7 +302,7 @@ extension MainWindow {
       let appearanceDict = dict[Keys.Appearance.key] as? [String: Any] ?? [:]
       self.appearance = AppearanceState(dict: appearanceDict) ?? AppearanceState.default
 
-      self.orderedTools = orderedToolsAsString.flatMap { MainWindow.Tools(rawValue: $0) }
+      self.orderedTools = orderedToolsAsString.compactMap { MainWindow.Tools(rawValue: $0) }
       let missingOrderedTools = MainWindow.Tools.all.subtracting(self.orderedTools)
       self.orderedTools.append(contentsOf: missingOrderedTools)
 
@@ -319,7 +319,7 @@ extension MainWindow {
       missingActiveTools.forEach { self.activeTools[$0] = true }
 
       let workspaceToolsDict = dict[Keys.WorkspaceTool.key] as? [String: [String: Any]] ?? [:]
-      let toolKeys = workspaceToolsDict.keys.flatMap { MainWindow.Tools(rawValue: $0) }
+      let toolKeys = workspaceToolsDict.keys.compactMap { MainWindow.Tools(rawValue: $0) }
       let missingToolKeys = MainWindow.Tools.all.subtracting(toolKeys)
 
       var tools = Array(toolKeys).toDict { tool in

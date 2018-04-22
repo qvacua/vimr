@@ -17,7 +17,7 @@ class PrefUtils {
 
     let patterns: [FileItemIgnorePattern] = str
       .components(separatedBy: ",")
-      .flatMap {
+      .compactMap {
         let trimmed = $0.trimmingCharacters(in: self.whitespaceCharSet)
         if trimmed.count == 0 {
           return nil

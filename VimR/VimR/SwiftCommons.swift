@@ -79,7 +79,7 @@ extension Array where Element: Equatable {
    */
   func substituting(elements: [Element]) -> [Element] {
     let elementsInArray = elements.filter { self.contains($0) }
-    let indices = elementsInArray.flatMap { self.index(of: $0) }
+    let indices = elementsInArray.compactMap { self.index(of: $0) }
 
     var result = self
     indices.enumerated().forEach { result[$0.1] = elementsInArray[$0.0] }
@@ -116,7 +116,7 @@ extension Dictionary {
   }
 
   func flatMapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows -> Dictionary<K, V> {
-    let array = try self.flatMap(transform)
+    let array = try self.compactMap(transform)
     return tuplesToDict(array)
   }
 }

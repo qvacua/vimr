@@ -25,7 +25,7 @@ class UiRoot: UiComponent {
 
         uuidsInState
           .subtracting(self.mainWindows.keys)
-          .flatMap { state.mainWindows[$0] }
+          .compactMap { state.mainWindows[$0] }
           .map(self.newMainWindow)
           .forEach { mainWindow in
             self.mainWindows[mainWindow.uuid] = mainWindow
