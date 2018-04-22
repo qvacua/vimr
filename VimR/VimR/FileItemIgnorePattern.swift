@@ -65,8 +65,7 @@ class FileItemIgnorePattern: Hashable, CustomStringConvertible {
   }
 
   deinit {
-    let len = Int(strlen(self.patternAsFileSysRep))
-    self.patternAsFileSysRep.deallocate(capacity: len + 1)
+    self.patternAsFileSysRep.deallocate()
   }
 
   func match(absolutePath path: String) -> Bool {
