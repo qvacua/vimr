@@ -334,10 +334,10 @@ private struct MainWindowPrefData: StandardPrefData {
     }
 
     // Add default tool pref data for missing identifiers.
-    let toolDatas = toolDataDicts.flatMap { ToolPrefData(dict: $0) }
+    let toolDatas = toolDataDicts.compactMap { ToolPrefData(dict: $0) }
     let missingToolDatas = Set(ToolIdentifier.all)
       .subtracting(toolDatas.map { $0.identifier })
-      .flatMap { ToolPrefData.defaults[$0] }
+      .compactMap { ToolPrefData.defaults[$0] }
 
     self.init(isAllToolsVisible: isAllToolsVisible,
               isToolButtonsVisible: isToolButtonsVisible,
@@ -476,7 +476,7 @@ private class PreviewComponent {
         return nil
       }
 
-      let storedRendererDatas: [(String, StandardPrefData)] = rendererDataDict.flatMap { (identifier, dict) in
+      let storedRendererDatas: [(String, StandardPrefData)] = rendererDataDict.compactMap { (identifier, dict) in
         guard let prefDataFn = PrefData.rendererPrefDataFns[identifier] else {
           return nil
         }
@@ -490,7 +490,7 @@ private class PreviewComponent {
 
       let missingRendererDatas: [(String, StandardPrefData)] = Set(PrefData.rendererDefaultPrefDatas.keys)
         .subtracting(storedRendererDatas.map { $0.0 })
-        .flatMap { identifier in
+        .compactMap { identifier in
           guard let data = PrefData.rendererDefaultPrefDatas[identifier] else {
             return nil
           }

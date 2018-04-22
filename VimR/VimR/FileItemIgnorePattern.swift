@@ -20,7 +20,7 @@ class FileItemIgnorePattern: Hashable, CustomStringConvertible {
 
     let patterns: [FileItemIgnorePattern] = str
       .components(separatedBy: ",")
-      .flatMap {
+      .compactMap {
         let trimmed = $0.trimmingCharacters(in: whitespaceCharSet)
         if trimmed.count == 0 {
           return nil

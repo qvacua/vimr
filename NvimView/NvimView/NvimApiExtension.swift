@@ -47,14 +47,14 @@ func msgPackDictToSwift(_ dict: Dictionary<NvimApi.Value, NvimApi.Value>?) -> Di
 
 private func msgPackArrayDictToSwift(_ array: [NvimApi.Value]?) -> [Dictionary<String, NvimApi.Value>]? {
   return array?
-    .flatMap { v in v.dictionaryValue }
-    .flatMap { d in msgPackDictToSwift(d) }
+    .compactMap { v in v.dictionaryValue }
+    .compactMap { d in msgPackDictToSwift(d) }
 }
 
 extension Dictionary {
 
   fileprivate func flatMapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows -> Dictionary<K, V> {
-    let array = try self.flatMap(transform)
+    let array = try self.compactMap(transform)
     return tuplesToDict(array)
   }
 

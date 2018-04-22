@@ -62,7 +62,7 @@ extension NvimView {
           return disposable
         }
 
-        let buffers = bufs.flatMap { self.neoVimBuffer(for: $0, currentBuffer: curBuf) }
+      let buffers = bufs.compactMap { self.neoVimBuffer(for: $0, currentBuffer: curBuf) }
         single(.success(buffers))
 
         return disposable
@@ -107,7 +107,7 @@ extension NvimView {
           return disposable
         }
 
-        let tabpages = tabs.flatMap { self.neoVimTab(for: $0, currentTabpage: curTab, currentBuffer: curBuf) }
+      let tabpages = tabs.compactMap { self.neoVimTab(for: $0, currentTabpage: curTab, currentBuffer: curBuf) }
         single(.success(tabpages))
 
         return disposable
@@ -277,7 +277,7 @@ extension NvimView {
 
     let windows: [NvimView.Window] = self.nvim.tabpageListWins(tabpage: tabpage)
                                        .value?
-                                       .flatMap {
+      .compactMap {
       self.neoVimWindow(for: $0,
                         currentWindow: curWinInTab,
                         currentBuffer: currentBuffer)

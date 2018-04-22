@@ -61,7 +61,7 @@ class OpenQuicklyFilterOperation: Operation {
         let endIndex = min(startIndex + chunkSize, count)
 
         let chunkedItems = self.flatFileItems[startIndex..<endIndex]
-        let chunkedResult: [ScoredFileItem] = chunkedItems.flatMap {
+        let chunkedResult: [ScoredFileItem] = chunkedItems.compactMap {
           if self.isCancelled {
             return nil
           }

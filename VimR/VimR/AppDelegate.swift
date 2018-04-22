@@ -301,7 +301,7 @@ extension AppDelegate {
 
     return rawParams
       .filter { $0.hasPrefix(prefix) }
-      .flatMap { $0.without(prefix: prefix).removingPercentEncoding }
+      .compactMap { $0.without(prefix: prefix).removingPercentEncoding }
       .map(transform)
   }
 }

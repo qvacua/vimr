@@ -185,7 +185,7 @@ extension MainWindow {
   }
 
   func moved(tool: WorkspaceTool) {
-    let tools = self.workspace.orderedTools.flatMap { (tool: WorkspaceTool) -> (Tools, WorkspaceTool)? in
+    let tools = self.workspace.orderedTools.compactMap { (tool: WorkspaceTool) -> (Tools, WorkspaceTool)? in
       guard let toolId = self.toolIdentifier(for: tool) else {
         return nil
       }
