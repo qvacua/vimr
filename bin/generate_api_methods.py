@@ -195,7 +195,7 @@ extension NvimApi.Tabpage {
 }
 
 fileprivate func msgPackDictToSwift(_ dict: Dictionary<NvimApi.Value, NvimApi.Value>?) -> Dictionary<String, NvimApi.Value>? {
-  return dict?.flatMapToDict { k, v in
+  return dict?.compactMapToDict { k, v in
     guard let strKey = k.stringValue else {
       return nil
     }
@@ -206,8 +206,8 @@ fileprivate func msgPackDictToSwift(_ dict: Dictionary<NvimApi.Value, NvimApi.Va
 
 fileprivate func msgPackArrayDictToSwift(_ array: [NvimApi.Value]?) -> [Dictionary<String, NvimApi.Value>]? {
   return array?
-    .flatMap { v in v.dictionaryValue }
-    .flatMap { d in msgPackDictToSwift(d) }
+    .compactMap { v in v.dictionaryValue }
+    .compactMap { d in msgPackDictToSwift(d) }
 }
 
 extension Dictionary {
@@ -217,8 +217,8 @@ extension Dictionary {
     return tuplesToDict(array)
   }
 
-  fileprivate func flatMapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows -> Dictionary<K, V> {
-    let array = try self.flatMap(transform)
+  fileprivate func compactMapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows -> Dictionary<K, V> {
+    let array = try self.compactMap(transform)
     return tuplesToDict(array)
   }
 
@@ -319,7 +319,7 @@ def msgpack_to_swift(msgpack_value_name, type):
 
     if type.startswith('['):
         element_type = re.match(r'\[(.*)\]', type).group(1)
-        return f'{msgpack_value_name}.arrayValue?.flatMap({{ v in {msgpack_to_swift("v", element_type)} }})'
+        return f'{msgpack_value_name}.arrayValue?.compactMap({{ v in {msgpack_to_swift("v", element_type)} }})'
 
     return 'NvimApi.Value'
 

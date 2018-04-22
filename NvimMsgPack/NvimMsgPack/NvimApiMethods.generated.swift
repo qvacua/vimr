@@ -101,7 +101,7 @@ public extension NvimApi {
       return .failure(response.error!)
     }
     
-    guard let result = (value.arrayValue?.flatMap({ v in v.stringValue })) else {
+    guard let result = (value.arrayValue?.compactMap({ v in v.stringValue })) else {
       return .failure(NvimApi.Error.conversion(type: [String].self))
     }
     
@@ -491,7 +491,7 @@ public extension NvimApi {
       return .failure(response.error!)
     }
     
-    guard let result = (value.arrayValue?.flatMap({ v in (v.integerValue == nil ? nil : Int(v.integerValue!)) })) else {
+    guard let result = (value.arrayValue?.compactMap({ v in (v.integerValue == nil ? nil : Int(v.integerValue!)) })) else {
       return .failure(NvimApi.Error.conversion(type: [Int].self))
     }
     
@@ -598,7 +598,7 @@ public extension NvimApi {
       return .failure(response.error!)
     }
     
-    guard let result = (value.arrayValue?.flatMap({ v in NvimApi.Window(v) })) else {
+    guard let result = (value.arrayValue?.compactMap({ v in NvimApi.Window(v) })) else {
       return .failure(NvimApi.Error.conversion(type: [NvimApi.Window].self))
     }
     
@@ -1296,7 +1296,7 @@ public extension NvimApi {
       return .failure(response.error!)
     }
     
-    guard let result = (value.arrayValue?.flatMap({ v in v.stringValue })) else {
+    guard let result = (value.arrayValue?.compactMap({ v in v.stringValue })) else {
       return .failure(NvimApi.Error.conversion(type: [String].self))
     }
     
@@ -1713,7 +1713,7 @@ public extension NvimApi {
       return .failure(response.error!)
     }
     
-    guard let result = (value.arrayValue?.flatMap({ v in NvimApi.Buffer(v) })) else {
+    guard let result = (value.arrayValue?.compactMap({ v in NvimApi.Buffer(v) })) else {
       return .failure(NvimApi.Error.conversion(type: [NvimApi.Buffer].self))
     }
     
@@ -1802,7 +1802,7 @@ public extension NvimApi {
       return .failure(response.error!)
     }
     
-    guard let result = (value.arrayValue?.flatMap({ v in NvimApi.Window(v) })) else {
+    guard let result = (value.arrayValue?.compactMap({ v in NvimApi.Window(v) })) else {
       return .failure(NvimApi.Error.conversion(type: [NvimApi.Window].self))
     }
     
@@ -1891,7 +1891,7 @@ public extension NvimApi {
       return .failure(response.error!)
     }
     
-    guard let result = (value.arrayValue?.flatMap({ v in NvimApi.Tabpage(v) })) else {
+    guard let result = (value.arrayValue?.compactMap({ v in NvimApi.Tabpage(v) })) else {
       return .failure(NvimApi.Error.conversion(type: [NvimApi.Tabpage].self))
     }
     
@@ -2369,7 +2369,7 @@ public extension NvimApi {
       return .failure(response.error!)
     }
     
-    guard let result = (value.arrayValue?.flatMap({ v in (v.integerValue == nil ? nil : Int(v.integerValue!)) })) else {
+    guard let result = (value.arrayValue?.compactMap({ v in (v.integerValue == nil ? nil : Int(v.integerValue!)) })) else {
       return .failure(NvimApi.Error.conversion(type: [Int].self))
     }
     
@@ -2718,7 +2718,7 @@ public extension NvimApi {
       return .failure(response.error!)
     }
     
-    guard let result = (value.arrayValue?.flatMap({ v in (v.integerValue == nil ? nil : Int(v.integerValue!)) })) else {
+    guard let result = (value.arrayValue?.compactMap({ v in (v.integerValue == nil ? nil : Int(v.integerValue!)) })) else {
       return .failure(NvimApi.Error.conversion(type: [Int].self))
     }
     
@@ -2878,7 +2878,7 @@ extension NvimApi.Tabpage {
 }
 
 fileprivate func msgPackDictToSwift(_ dict: Dictionary<NvimApi.Value, NvimApi.Value>?) -> Dictionary<String, NvimApi.Value>? {
-  return dict?.flatMapToDict { k, v in
+  return dict?.compactMapToDict { k, v in
     guard let strKey = k.stringValue else {
       return nil
     }
@@ -2889,8 +2889,8 @@ fileprivate func msgPackDictToSwift(_ dict: Dictionary<NvimApi.Value, NvimApi.Va
 
 fileprivate func msgPackArrayDictToSwift(_ array: [NvimApi.Value]?) -> [Dictionary<String, NvimApi.Value>]? {
   return array?
-    .flatMap { v in v.dictionaryValue }
-    .flatMap { d in msgPackDictToSwift(d) }
+    .compactMap { v in v.dictionaryValue }
+    .compactMap { d in msgPackDictToSwift(d) }
 }
 
 extension Dictionary {
@@ -2900,8 +2900,8 @@ extension Dictionary {
     return tuplesToDict(array)
   }
 
-  fileprivate func flatMapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows -> Dictionary<K, V> {
-    let array = try self.flatMap(transform)
+  fileprivate func compactMapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows -> Dictionary<K, V> {
+    let array = try self.compactMap(transform)
     return tuplesToDict(array)
   }
 
