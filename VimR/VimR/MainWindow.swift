@@ -237,6 +237,8 @@ class MainWindow: NSObject,
         case .scroll: self.scroll()
         case .cursor(let position): self.cursor(to: position)
         case .initError: self.showInitError()
+        case .apiError(let error, let msg):
+          break
 
         }
       })
@@ -261,7 +263,9 @@ class MainWindow: NSObject,
         if state.preview.status == .markdown
            && state.previewTool.isReverseSearchAutomatically
            && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition) {
-          self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
+          self.neoVimView
+            .cursorGo(to: state.preview.previewPosition.payload)
+            .subscribe()
         }
 
         self.previewPosition = state.preview.previewPosition
@@ -269,7 +273,9 @@ class MainWindow: NSObject,
         self.open(urls: state.urlsToOpen)
 
         if let currentBuffer = state.currentBufferToSet {
-          self.neoVimView.select(buffer: currentBuffer)
+          self.neoVimView
+            .select(buffer: currentBuffer)
+            .subscribe()
         }
 
         let usesTheme = state.appearance.usesTheme
@@ -338,7 +344,10 @@ class MainWindow: NSObject,
 
   // The following should only be used when Cmd-Q'ing
   func quitNeoVimWithoutSaving() {
-    self.neoVimView.quitNeoVimWithoutSaving()
+    self.neoVimView
+      .quitNeoVimWithoutSaving()
+      .observeOn(MainScheduler.instance)
+      .subscribe()
   }
 
   @IBAction func debug2(_: Any?) {
@@ -400,19 +409,29 @@ class MainWindow: NSObject,
         switch openMode {
 
         case .default:
-          self.neoVimView.open(urls: [url])
+          self.neoVimView
+            .open(urls: [url])
+            .subscribe()
 
         case .currentTab:
-          self.neoVimView.openInCurrentTab(url: url)
+          self.neoVimView
+            .openInCurrentTab(url: url)
+            .subscribe()
 
         case .newTab:
-          self.neoVimView.openInNewTab(urls: [url])
+          self.neoVimView
+            .openInNewTab(urls: [url])
+            .subscribe()
 
         case .horizontalSplit:
-          self.neoVimView.openInHorizontalSplit(urls: [url])
+          self.neoVimView
+            .openInHorizontalSplit(urls: [url])
+            .subscribe()
 
         case .verticalSplit:
-          self.neoVimView.openInVerticalSplit(urls: [url])
+          self.neoVimView
+            .openInVerticalSplit(urls: [url])
+            .subscribe()
 
         }
       }

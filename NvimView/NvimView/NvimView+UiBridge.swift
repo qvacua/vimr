@@ -369,18 +369,16 @@ extension NvimView {
   private func bufferWritten(_ handle: Int) {
     self
       .currentBuffer()
-      .map { curBuf -> NvimView.Buffer in
-        guard let buffer = self.neoVimBuffer(for: NvimApi.Buffer(handle), currentBuffer: curBuf.apiBuffer) else {
-          throw NvimView.Error.api("Could not get buffer for buffer handle \(handle).")
-        }
-
-        return buffer
+      .flatMap { curBuf -> Single<NvimView.Buffer> in
+        self.neoVimBuffer(for: NvimApi.Buffer(handle), currentBuffer: curBuf.apiBuffer)
       }
       .subscribe(onSuccess: {
         self.eventsSubject.onNext(.bufferWritten($0))
         if #available(OSX 10.12.2, *) {
           self.updateTouchBarTab()
         }
+      }, onError: { error in
+        self.eventsSubject.onNext(.apiError(error: error, msg: "Could not get the buffer \(handle)."))
       })
   }
 
@@ -393,6 +391,8 @@ extension NvimView {
         if #available(OSX 10.12.2, *) {
           self.updateTouchBarTab()
         }
+      }, onError: { error in
+        self.eventsSubject.onNext(.apiError(error: error, msg: "Could not get the current buffer."))
       })
   }
 

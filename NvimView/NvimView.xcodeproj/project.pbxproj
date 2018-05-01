@@ -12,6 +12,7 @@
 		1929B86897DAEFDBABAB1C14 /* NvimApiExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBD7F88AE4F01E626691 /* NvimApiExtension.swift */; };
 		1929BA62EF7586682CF68E8C /* ThreadWithBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B4A84091D5BAA0493B44 /* ThreadWithBlock.m */; };
 		1929BA70C221E3C199833B8C /* UiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B52174EC68D2974B5BAE /* UiBridge.swift */; };
+		1929BA93BDEA029011F034FF /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6F4B70B90F7CFB7B523 /* RxSwiftCommons.swift */; };
 		4B177886201220F300E32FF0 /* SharedTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1929B4F32708E99C40A57020 /* SharedTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B8662E81FDC3F9F007F490D /* vimr.vim in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B8662E41FDC3D4F007F490D /* vimr.vim */; };
 		4B90F02E1FD2AFAE008A39E0 /* NvimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0101FD2AFAC008A39E0 /* NvimView.swift */; };
@@ -40,8 +41,9 @@
 		4B90F0681FD2AFF7008A39E0 /* CocoaCategories.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F05A1FD2AFF7008A39E0 /* CocoaCategories.m */; };
 		4B90F06A1FD2AFF7008A39E0 /* DataWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0611FD2AFF7008A39E0 /* DataWrapper.m */; };
 		4B90F06B1FD2AFF7008A39E0 /* NvimServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0641FD2AFF7008A39E0 /* NvimServer.m */; };
-		4B90F0701FD2B9F1008A39E0 /* MsgPackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90F0721FD2B9F1008A39E0 /* MsgPackRpc.framework */; };
 		4B90F0711FD2B9F1008A39E0 /* NvimMsgPack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90F0731FD2B9F1008A39E0 /* NvimMsgPack.framework */; };
+		4BB1F5C9209740E400EC394A /* RxMsgpackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5C8209740E400EC394A /* RxMsgpackRpc.framework */; };
+		4BB1F5CB209740E900EC394A /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CA209740E900EC394A /* MessagePack.framework */; };
 		4BC5B0431FE551DF0071D64F /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC5B0421FE551DF0071D64F /* RxSwift.framework */; };
 		4BD874302014C2600039888E /* NvimAutoCommandEvent.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD8742F2014C25F0039888E /* NvimAutoCommandEvent.generated.swift */; };
 		4BE45C081FD2D4E3005C0A95 /* NvimServer in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B90F04F1FD2AFD3008A39E0 /* NvimServer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -96,6 +98,7 @@
 		1929B4A84091D5BAA0493B44 /* ThreadWithBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThreadWithBlock.m; sourceTree = "<group>"; };
 		1929B4F32708E99C40A57020 /* SharedTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedTypes.h; sourceTree = "<group>"; };
 		1929B52174EC68D2974B5BAE /* UiBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiBridge.swift; sourceTree = "<group>"; };
+		1929B6F4B70B90F7CFB7B523 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
 		1929BBD7F88AE4F01E626691 /* NvimApiExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimApiExtension.swift; sourceTree = "<group>"; };
 		1929BC4314B428D5011D100A /* ThreadWithBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadWithBlock.h; sourceTree = "<group>"; };
 		4B8662E41FDC3D4F007F490D /* vimr.vim */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = vimr.vim; sourceTree = "<group>"; };
@@ -136,6 +139,8 @@
 		4B90F0641FD2AFF7008A39E0 /* NvimServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NvimServer.m; sourceTree = "<group>"; };
 		4B90F0721FD2B9F1008A39E0 /* MsgPackRpc.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MsgPackRpc.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B90F0731FD2B9F1008A39E0 /* NvimMsgPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NvimMsgPack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BB1F5C8209740E400EC394A /* RxMsgpackRpc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMsgpackRpc.framework; path = ../Carthage/Build/Mac/RxMsgpackRpc.framework; sourceTree = "<group>"; };
+		4BB1F5CA209740E900EC394A /* MessagePack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessagePack.framework; path = ../Carthage/Build/Mac/MessagePack.framework; sourceTree = "<group>"; };
 		4BC5B0421FE551DF0071D64F /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = ../Carthage/Build/Mac/RxSwift.framework; sourceTree = "<group>"; };
 		4BD8742F2014C25F0039888E /* NvimAutoCommandEvent.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimAutoCommandEvent.generated.swift; sourceTree = "<group>"; };
 		4BE45C0B1FD2DA49005C0A95 /* runtime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = runtime; path = neovim/runtime; sourceTree = "<group>"; };
@@ -150,7 +155,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BC5B0431FE551DF0071D64F /* RxSwift.framework in Frameworks */,
-				4B90F0701FD2B9F1008A39E0 /* MsgPackRpc.framework in Frameworks */,
+				4BB1F5CB209740E900EC394A /* MessagePack.framework in Frameworks */,
+				4BB1F5C9209740E400EC394A /* RxMsgpackRpc.framework in Frameworks */,
 				4B90F0711FD2B9F1008A39E0 /* NvimMsgPack.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -222,6 +228,7 @@
 				1929B52174EC68D2974B5BAE /* UiBridge.swift */,
 				1929B4A84091D5BAA0493B44 /* ThreadWithBlock.m */,
 				1929BC4314B428D5011D100A /* ThreadWithBlock.h */,
+				1929B6F4B70B90F7CFB7B523 /* RxSwiftCommons.swift */,
 			);
 			path = NvimView;
 			sourceTree = "<group>";
@@ -246,6 +253,8 @@
 		4B90F06F1FD2B9F1008A39E0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4BB1F5CA209740E900EC394A /* MessagePack.framework */,
+				4BB1F5C8209740E400EC394A /* RxMsgpackRpc.framework */,
 				4BC5B0421FE551DF0071D64F /* RxSwift.framework */,
 				4B90F0721FD2B9F1008A39E0 /* MsgPackRpc.framework */,
 				4B90F0731FD2B9F1008A39E0 /* NvimMsgPack.framework */,
@@ -402,6 +411,7 @@
 				1929B86897DAEFDBABAB1C14 /* NvimApiExtension.swift in Sources */,
 				1929BA70C221E3C199833B8C /* UiBridge.swift in Sources */,
 				1929BA62EF7586682CF68E8C /* ThreadWithBlock.m in Sources */,
+				1929BA93BDEA029011F034FF /* RxSwiftCommons.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

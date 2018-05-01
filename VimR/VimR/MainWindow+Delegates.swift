@@ -142,7 +142,7 @@ extension MainWindow {
 
   func windowShouldClose(_: NSWindow) -> Bool {
     guard self.neoVimView.isCurrentBufferDirtySync() else {
-      self.neoVimView.closeCurrentTab()
+      self.neoVimView.closeCurrentTab().subscribe()
       return false
     }
 
@@ -155,7 +155,7 @@ extension MainWindow {
     discardAndCloseButton.keyEquivalent = "d"
     alert.beginSheetModal(for: self.window, completionHandler: { response in
       if response == .alertSecondButtonReturn {
-        self.neoVimView.closeCurrentTabWithoutSaving()
+        self.neoVimView.closeCurrentTabWithoutSaving().subscribe()
       }
     })
 

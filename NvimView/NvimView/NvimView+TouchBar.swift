@@ -76,6 +76,8 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
         let scrubberProportionalLayout = tabsControl.scrubberLayout as! NSScrubberProportionalLayout
         scrubberProportionalLayout.numberOfVisibleItems = tabsControl.numberOfItems > 0 ? tabsControl.numberOfItems : 1
         tabsControl.selectedIndex = self.selectedTabIndex()
+      }, onError: { error in
+        self.eventsSubject.onNext(.apiError(error: error, msg: "Could not get all tabpages."))
       })
   }
 
@@ -92,6 +94,8 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
 
         tabsControl.reloadData()
         tabsControl.selectedIndex = self.selectedTabIndex()
+      }, onError: { error in
+        self.eventsSubject.onNext(.apiError(error: error, msg: "Could not get all tabpages."))
       })
   }
 
@@ -122,7 +126,12 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
     }
 
     let window = tab.currentWindow ?? tab.windows[0]
-    self.nvim.setCurrentWin(window: NvimApi.Window(window.handle), expectsReturnValue: false)
+    self.nvim
+      .setCurrentWin(window: NvimApi.Window(window.handle), expectsReturnValue: false)
+      .subscribeOn(self.nvimApiScheduler)
+      .subscribe(onError: { error in
+        self.eventsSubject.onNext(.apiError(error: error, msg: "Could not set current window to \(window.handle)."))
+      })
   }
 }
 

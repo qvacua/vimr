@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import RxSwift
 
 // MARK: - NSUserInterfaceValidationsProtocol
 extension NvimView {
@@ -97,32 +98,37 @@ extension NvimView {
       return
     }
 
-    guard let curPasteMode = self.nvim.getOption(name: "paste").value?.boolValue else {
-      self.ipcBecameInvalid("Reason: 'set paste' failed")
-      return
-    }
+    self.nvim
+      .getOption(name: "paste")
+      .flatMap { curPasteMode -> Single<Bool> in
+        if curPasteMode == false {
+          return self
+            .nvim.setOption(name: "paste", value: .bool(true))
+            .map { _ in true }
+        } else {
+          return Single.just(false)
+        }
+      }
+      .do(onSuccess: { pasteModeSet in
+        switch self.mode {
+        case .insert:
+          self.uiBridge.vimInput("<ESC>\"+pa")
+        case .normal, .visual:
+          self.uiBridge.vimInput("\"+p")
+        default:
+          return
+        }
+      })
+      .flatMap { pasteModeSet -> Single<Void> in
+        if pasteModeSet {
+          return self.nvim.setOption(name: "paste", value: .bool(false))
+        }
 
-    let pasteModeSet: Bool
-
-    if curPasteMode == false {
-      self.nvim.setOption(name: "paste", value: .bool(true))
-      pasteModeSet = true
-    } else {
-      pasteModeSet = false
-    }
-
-    switch self.mode {
-    case .insert:
-      self.uiBridge.vimInput("<ESC>\"+pa")
-    case .normal, .visual:
-      self.uiBridge.vimInput("\"+p")
-    default:
-      return
-    }
-
-    if pasteModeSet {
-      self.nvim.setOption(name: "paste", value: .bool(false))
-    }
+        return Single.just(())
+      }
+      .subscribe(onError: { error in
+        self.eventsSubject.onNext(.apiError(error: error, msg: "There was an pasting."))
+      })
   }
 
   @IBAction func delete(_ sender: AnyObject?) {

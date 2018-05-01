@@ -12,26 +12,31 @@ extension NvimApi {
   public func getBufGetInfo(
     buffer: NvimApi.Buffer,
     checkBlocked: Bool = true
-  ) -> NvimApi.Response<Dictionary<String, NvimApi.Value>> {
-
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error.blocked)
-    }
-
+  ) -> Single<Dictionary<String, NvimApi.Value>> {
+    
     let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
     ]
-    let response = self.rpc(method: "nvim_buf_get_info", params: params, expectsReturnValue: true)
-
-    guard let value = response.value else {
-      return .failure(response.error!)
+    
+    func transform(_ value: Value) throws -> Dictionary<String, NvimApi.Value> {
+      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
+        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+      }
+      
+      return result
     }
 
-    guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-      return .failure(NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self))
+    if checkBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_buf_get_info", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
     }
 
-    return .success(result)
+    return self
+      .rpc(method: "nvim_buf_get_info", params: params, expectsReturnValue: true)
+      .map(transform)
   }
 }
 

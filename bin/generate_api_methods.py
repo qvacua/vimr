@@ -11,85 +11,76 @@ import io
 
 
 void_func_template = Template('''\
-  @discardableResult
   public func ${func_name}(${args}
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> NvimApi.Response<Void> {
+  ) -> Single<Void> {
  
-    if expectsReturnValue && checkBlocked {
-      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
-        return .failure(NvimApi.Error.blocked)
-      }
-      
-      if blocked {
-        return .failure(NvimApi.Error.blocked)
-      }
-    }
-  
     let params: [NvimApi.Value] = [
         ${params}
     ]
-    let response = self.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: expectsReturnValue)
     
-    if let error = response.error {
-      return .failure(error)
-    }
+    if expectsReturnValue && checkBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: expectsReturnValue)
+        )
+        .map { _ in () }
+    } 
     
-    return .success(())
+    return self
+      .rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: expectsReturnValue)
+      .map { _ in () }
   }
 ''')
 
 get_mode_func_template = Template('''\
   public func ${func_name}(${args}
-  ) -> NvimApi.Response<${result_type}> {
+  ) -> Single<${result_type}> {
  
     let params: [NvimApi.Value] = [
         ${params}
     ]
-    let response = self.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: true)
-    
-    guard let value = response.value else {
-      return .failure(response.error!)
-    }
-    
-    guard let result = (${return_value}) else {
-      return .failure(NvimApi.Error.conversion(type: ${result_type}.self))
-    }
-    
-    return .success(result)
+    return self
+      .rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: true)
+      .map { value in
+        guard let result = (${return_value}) else {
+          throw NvimApi.Error.conversion(type: ${result_type}.self)
+        }
+
+        return result
+      }
   }
 ''')
 
 func_template = Template('''\
   public func ${func_name}(${args}
     checkBlocked: Bool = true
-  ) -> NvimApi.Response<${result_type}> {
+  ) -> Single<${result_type}> {
  
-    if checkBlocked {
-      guard let blocked = self.getMode().value?["blocking"]?.boolValue else {
-        return .failure(NvimApi.Error.blocked)
-      }
-
-      if blocked {
-        return .failure(NvimApi.Error.blocked)
-      }
-    }
-    
     let params: [NvimApi.Value] = [
         ${params}
     ]
-    let response = self.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: true)
     
-    guard let value = response.value else {
-      return .failure(response.error!)
+    func transform(_ value: Value) throws -> ${result_type} {
+      guard let result = (${return_value}) else {
+        throw NvimApi.Error.conversion(type: ${result_type}.self)
+      }
+
+      return result
     }
     
-    guard let result = (${return_value}) else {
-      return .failure(NvimApi.Error.conversion(type: ${result_type}.self))
+    if checkBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
     }
     
-    return .success(result)
+    return self
+      .rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: true)
+      .map(transform)
   }
 ''')
 
@@ -97,7 +88,10 @@ extension_template = Template('''\
 // Auto generated for nvim version ${version}.
 // See bin/generate_api_methods.py
 
-import MsgPackRpc
+import Foundation
+import RxMsgpackRpc
+import MessagePack
+import RxSwift
 
 extension NvimApi {
 
@@ -111,7 +105,6 @@ extension NvimApi {
     case conversion(type: Any.Type)
     case unknown
 
-    // array([uint(0), string(Wrong number of arguments: expecting 2 but got 0)])
     init(_ value: NvimApi.Value?) {
       let array = value?.arrayValue
       guard array?.count == 2 else {
@@ -195,7 +188,7 @@ extension NvimApi.Tabpage {
 }
 
 fileprivate func msgPackDictToSwift(_ dict: Dictionary<NvimApi.Value, NvimApi.Value>?) -> Dictionary<String, NvimApi.Value>? {
-  return dict?.flatMapToDict { k, v in
+  return dict?.compactMapToDict { k, v in
     guard let strKey = k.stringValue else {
       return nil
     }
@@ -206,8 +199,8 @@ fileprivate func msgPackDictToSwift(_ dict: Dictionary<NvimApi.Value, NvimApi.Va
 
 fileprivate func msgPackArrayDictToSwift(_ array: [NvimApi.Value]?) -> [Dictionary<String, NvimApi.Value>]? {
   return array?
-    .flatMap { v in v.dictionaryValue }
-    .flatMap { d in msgPackDictToSwift(d) }
+    .compactMap { v in v.dictionaryValue }
+    .compactMap { d in msgPackDictToSwift(d) }
 }
 
 extension Dictionary {
@@ -217,8 +210,8 @@ extension Dictionary {
     return tuplesToDict(array)
   }
 
-  fileprivate func flatMapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows -> Dictionary<K, V> {
-    let array = try self.flatMap(transform)
+  fileprivate func compactMapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows -> Dictionary<K, V> {
+    let array = try self.compactMap(transform)
     return tuplesToDict(array)
   }
 
@@ -319,7 +312,7 @@ def msgpack_to_swift(msgpack_value_name, type):
 
     if type.startswith('['):
         element_type = re.match(r'\[(.*)\]', type).group(1)
-        return f'{msgpack_value_name}.arrayValue?.flatMap({{ v in {msgpack_to_swift("v", element_type)} }})'
+        return f'{msgpack_value_name}.arrayValue?.compactMap({{ v in {msgpack_to_swift("v", element_type)} }})'
 
     return 'NvimApi.Value'
 

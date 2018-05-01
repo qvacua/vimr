@@ -4,9 +4,15 @@
  */
 
 import Foundation
-import MsgPackRpc
+import RxMsgpackRpc
+import RxSwift
 
 public class NvimApi {
+
+  public enum Event {
+
+    case error(msg: String)
+  }
 
   public struct Buffer: Equatable {
 
@@ -47,160 +53,81 @@ public class NvimApi {
     }
   }
 
-  public typealias Value = MsgPackRpc.Value
-  public typealias Response<R> = Result<R, NvimApi.Error>
-  public typealias NotificationCallback = Connection.NotificationCallback
-  public typealias UnknownCallback = Connection.UnknownMessageCallback
-  public typealias ErrorCallback = Connection.ErrorCallback
+  public typealias Value = RxMsgpackRpc.Value
 
-  public var notificationCallback: NotificationCallback? {
+  public var streamResponses: Bool {
     get {
-      return self.session.notificationCallback
+      return self.connection.streamResponses
     }
-
     set {
-      self.session.notificationCallback = newValue
+      self.connection.streamResponses = newValue
     }
   }
 
-  public var unknownMessageCallback: UnknownCallback? {
+  public var streamRawResponses: Bool {
     get {
-      return self.session.unknownMessageCallback
+      return self.connection.streamResponses
     }
-
     set {
-      self.session.unknownMessageCallback = newValue
+      self.connection.streamResponses = newValue
     }
   }
 
-  public var errorCallback: ErrorCallback? {
-    get {
-      return self.session.errorCallback
-    }
-
-    set {
-      self.session.errorCallback = newValue
-    }
+  public var msgpackRawStream: Observable<RxMsgpackRpc.Message> {
+    return self.connection.stream
   }
 
   public init?(at path: String) {
-    guard let session = Session(at: path) else {
-      return nil
-    }
-
-    self.session = session
-  }
-
-  public func connect() throws {
-    try self.session.run()
-  }
-
-  public func disconnect() {
-    self.session.stop()
-  }
-
-  @discardableResult
-  public func checkBlocked<T>(_ fn: () -> NvimApi.Response<T>) -> NvimApi.Response<T> {
-    if self.getMode().value?["blocking"] == .bool(true) {
-      return NvimApi.Response.failure(NvimApi.Error.blocked)
-    }
-
-    return fn()
-  }
-
-  public func rpc(method: String,
-                  params: [NvimApi.Value],
-                  expectsReturnValue: Bool = true) -> NvimApi.Response<NvimApi.Value> {
-
-    return self.session.rpc(method: method, params: params, expectsReturnValue: expectsReturnValue)
-  }
-
-  private let session: Session
-}
-
-class Session {
-
-  var notificationCallback: NvimApi.NotificationCallback? {
-    get {
-      return self.connection.notificationCallback
-    }
-
-    set {
-      self.connection.notificationCallback = newValue
-    }
-  }
-
-  var unknownMessageCallback: NvimApi.UnknownCallback? {
-    get {
-      return self.connection.unknownMessageCallback
-    }
-
-    set {
-      self.connection.unknownMessageCallback = newValue
-    }
-  }
-
-  var errorCallback: NvimApi.ErrorCallback? {
-    get {
-      return self.connection.errorCallback
-    }
-
-    set {
-      self.connection.errorCallback = newValue
-    }
-  }
-
-  init?(at path: String) {
-    guard let connection = MsgPackRpc.Connection(unixDomainSocketPath: path) else {
+    guard let connection = RxMsgpackRpc.Connection(unixDomainSocketPath: path) else {
       return nil
     }
 
     self.connection = connection
   }
 
-  func run() throws {
+  public func connect() throws {
     try self.connection.run()
   }
 
-  func stop() {
+  public func disconnect() {
     self.connection.stop()
   }
 
-  func rpc(method: String,
-           params: [MsgPackRpc.Value],
-           expectsReturnValue: Bool) -> Result<MsgPackRpc.Value, NvimApi.Error> {
+  public func checkBlocked<T>(_ single: Single<T>) -> Single<T> {
+    return self
+      .getMode()
+      .flatMap { dict -> Single<T> in
+        guard (dict["blocking"]?.boolValue ?? false) == false else {
+          throw NvimApi.Error.blocked
+        }
 
-    let msgid = locked(with: self.nextMsgidLock) { () -> UInt32 in
-      let msgid = self.nextMsgid
-      self.nextMsgid += 1
-      return msgid
-    }
-
-    let response = self.connection.request(type: 0,
-                                           msgid: msgid,
-                                           method: method,
-                                           params: params,
-                                           expectsReturnValue: expectsReturnValue)
-
-    guard response.error.isNil else {
-      return .failure(NvimApi.Error(response.error))
-    }
-
-    return .success(response.result)
+        return single
+      }
   }
 
-  private let connection: MsgPackRpc.Connection
+  public func rpc(method: String,
+                  params: [NvimApi.Value],
+                  expectsReturnValue: Bool = true) -> Single<NvimApi.Value> {
+    return self.connection
+      .request(method: method, params: params, expectsReturnValue: expectsReturnValue)
+      .map { response -> RxMsgpackRpc.Value in
+        guard response.error.isNil else {
+          throw NvimApi.Error(response.error)
+        }
 
-  private var nextMsgid: UInt32 = 0
-  private let nextMsgidLock = NSRecursiveLock()
+        return response.result
+      }
+  }
 
-  private var conditions: [UInt32: NSCondition] = [:]
-  private let conditionsLock = NSRecursiveLock()
+  private let connection: RxMsgpackRpc.Connection
+}
+
+fileprivate extension NSLocking {
 
   @discardableResult
-  private func locked<T>(with lock: NSLocking, fn: () -> T) -> T {
-    lock.lock()
-    defer { lock.unlock() }
-    return fn()
+  fileprivate func withLock<T>(_ body: () -> T) -> T {
+    self.lock()
+    defer { self.unlock() }
+    return body()
   }
 }

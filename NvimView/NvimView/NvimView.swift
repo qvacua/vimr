@@ -48,6 +48,7 @@ public class NvimView: NSView,
     case cursor(Position)
 
     case initError
+    case apiError(error: Swift.Error, msg: String)
   }
 
   public struct Theme: CustomStringConvertible {
@@ -86,11 +87,6 @@ public class NvimView: NSView,
              "visual-fg: \(self.visualForeground.hex), visual-bg: \(self.visualBackground.hex)" +
              ">"
     }
-  }
-
-  public enum Error: Swift.Error {
-
-    case api(String)
   }
 
   public static let minFontSize = CGFloat(4)
@@ -165,7 +161,12 @@ public class NvimView: NSView,
     }
 
     set {
-      self.nvim.setCurrentDir(dir: newValue.path, expectsReturnValue: false)
+      self.nvim
+        .setCurrentDir(dir: newValue.path, expectsReturnValue: false)
+        .subscribeOn(self.nvimApiScheduler)
+        .subscribe(onError: { error in
+          self.eventsSubject.onNext(.apiError(error: error, msg: "Could not set cwd to \(newValue)."))
+        })
     }
   }
 
