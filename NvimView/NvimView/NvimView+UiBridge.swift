@@ -156,8 +156,10 @@ extension NvimView {
 
   func stop() {
     self.bridgeLogger.hr()
-    self.nvim.disconnect()
-    self.uiBridge.quit()
+    try? self.nvim
+      .stop()
+      .andThen(self.uiBridge.quit())
+      .wait()
 
     gui.async {
       self.waitForNeoVimToQuit()
@@ -198,8 +200,10 @@ extension NvimView {
       self.eventsSubject.onCompleted()
 
       self.bridgeLogger.error("Force-closing due to IPC error.")
-      self.nvim.disconnect()
-      self.uiBridge.forceQuit()
+      try? self.nvim
+        .stop()
+        .andThen(self.uiBridge.forceQuit())
+        .wait()
     }
   }
 
@@ -378,7 +382,7 @@ extension NvimView {
           self.updateTouchBarTab()
         }
       }, onError: { error in
-        self.eventsSubject.onNext(.apiError(error: error, msg: "Could not get the buffer \(handle)."))
+        self.eventsSubject.onNext(.apiError(msg: "Could not get the buffer \(handle).", cause: error))
       })
   }
 
@@ -392,7 +396,7 @@ extension NvimView {
           self.updateTouchBarTab()
         }
       }, onError: { error in
-        self.eventsSubject.onNext(.apiError(error: error, msg: "Could not get the current buffer."))
+        self.eventsSubject.onNext(.apiError(msg: "Could not get the current buffer.", cause: error))
       })
   }
 

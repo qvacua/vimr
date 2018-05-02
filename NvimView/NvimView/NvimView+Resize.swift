@@ -5,6 +5,7 @@
 
 import Cocoa
 import NvimMsgPack
+import RxSwift
 
 extension NvimView {
 
@@ -54,29 +55,22 @@ extension NvimView {
     self.xOffset = floor((size.width - self.cellSize.width * CGFloat(discreteSize.width)) / 2)
     self.yOffset = floor((size.height - self.cellSize.height * CGFloat(discreteSize.height)) / 2)
 
-    self.uiBridge.resize(width: discreteSize.width, height: discreteSize.height)
+    try? self.uiBridge
+      .resize(width: discreteSize.width, height: discreteSize.height)
+      .wait()
   }
 
   private func launchNeoVim(_ size: Size) {
     self.logger.info("=== Starting neovim...")
-    let noErrorDuringInitialization = self.uiBridge.runLocalServerAndNvim(width: size.width, height: size.height)
+    let sockPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock").path
 
-    do {
-      try self.nvim.connect()
-    } catch {
-      logger.fault("Could not connect to nvim: \(error)")
-      self.nvim.disconnect()
-      self.ipcBecameInvalid(String(describing: error))
-      return
-    }
-
-    if noErrorDuringInitialization == false {
-      self.logger.error("There was an error launching neovim.")
-
-      DispatchQueue.main.async {
-        self.eventsSubject.onNext(.initError)
-      }
-    }
+    self.uiBridge
+      .runLocalServerAndNvim(width: size.width, height: size.height)
+      .andThen(self.nvim.run(at: sockPath))
+      .subscribe(onError: { error in
+        self.eventsSubject.onError(Error.nvimLaunch(msg: "Could not launch nvim", cause: error))
+      })
+      .disposed(by: self.disposeBag)
   }
 
   private func randomEmoji() -> String {

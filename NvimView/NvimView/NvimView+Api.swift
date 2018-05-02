@@ -6,6 +6,7 @@
 import Cocoa
 import NvimMsgPack
 import RxSwift
+import MessagePack
 
 extension NvimView {
 
@@ -21,13 +22,10 @@ extension NvimView {
   }
 
   public func currentBufferSync() -> NvimView.Buffer? {
-    guard let buf = self.nvim.getCurrentBuf().subscribeOn(self.nvimApiScheduler).syncValue() else {
-      return nil
-    }
-
-    return self
-      .neoVimBuffer(for: buf, currentBuffer: buf)
-      .subscribeOn(self.nvimApiScheduler)
+    return self.nvim
+      .getCurrentBuf()
+      .flatMap { self.neoVimBuffer(for: $0, currentBuffer: $0) }
+      .observeOn(self.nvimApiScheduler)
       .syncValue()
   }
 
@@ -62,16 +60,12 @@ extension NvimView {
   }
 
   public func isCurrentBufferDirtySync() -> Bool {
-    guard let buf = self.nvim.getCurrentBuf().subscribeOn(self.nvimApiScheduler).syncValue() else {
-      return false
-    }
-
-    let mod = self.nvim.bufGetOption(buffer: buf, name: "modified").subscribeOn(self.nvimApiScheduler).syncValue()
-    guard let modified = mod?.boolValue else {
-      return false
-    }
-
-    return modified
+    return self.nvim
+             .getCurrentBuf()
+             .flatMap { self.nvim.bufGetOption(buffer: $0, name: "modified") }
+             .observeOn(self.nvimApiScheduler)
+             .syncValue()?
+             .boolValue ?? false
   }
 
   public func allTabs() -> Single<[NvimView.Tabpage]> {
@@ -217,12 +211,12 @@ extension NvimView {
       .subscribeOn(self.nvimApiScheduler)
   }
 
-  public func didBecomeMain() {
-    self.uiBridge.focusGained(true)
+  public func didBecomeMain() -> Completable {
+    return self.uiBridge.focusGained(true)
   }
 
-  public func didResignMain() {
-    self.uiBridge.focusGained(false)
+  public func didResignMain() -> Completable {
+    return self.uiBridge.focusGained(false)
   }
 
   func waitForNeoVimToQuit() {
@@ -286,7 +280,9 @@ extension NvimView {
           .asObservable()
           .flatMap { wins -> Observable<[NvimView.Window]> in
             Observable.combineLatest(
-              wins.map { self.neoVimWindow(for: $0, currentWindow: curWinInTab, currentBuffer: currentBuffer).asObservable() }
+              wins.map {
+                self.neoVimWindow(for: $0, currentWindow: curWinInTab, currentBuffer: currentBuffer).asObservable()
+              }
             )
           }
           .asSingle()

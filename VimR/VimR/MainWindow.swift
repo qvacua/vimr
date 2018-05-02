@@ -236,11 +236,15 @@ class MainWindow: NSObject,
         case .ipcBecameInvalid(let reason): self.ipcBecameInvalid(reason: reason)
         case .scroll: self.scroll()
         case .cursor(let position): self.cursor(to: position)
-        case .initError: self.showInitError()
+        case .initVimError: self.showInitError()
         case .apiError(let error, let msg):
+          fileLog.error("Got api error with msg '\(msg)' and error: \(error)")
           break
 
         }
+      }, onError: { error in
+        // FIXME call onError
+        fileLog.error(error)
       })
       .disposed(by: self.disposeBag)
 

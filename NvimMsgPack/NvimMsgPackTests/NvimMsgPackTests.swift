@@ -14,7 +14,7 @@ import MessagePack
 
 class NvimMsgPackTests: XCTestCase {
 
-  var nvim: NvimApi!
+  var nvim = NvimApi()
   var stream: Observable<RxMsgpackRpc.Message>!
   let scheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
   let disposeBag = DisposeBag()
@@ -23,17 +23,12 @@ class NvimMsgPackTests: XCTestCase {
     super.setUp()
 
     // $ NVIM_LISTEN_ADDRESS=/tmp/nvim.sock nvim $SOME_FILES
-    guard let nvim = NvimApi(at: "/tmp/nvim.sock") else {
-      preconditionFailure("Could not connect to nvim")
-    }
-
-    self.nvim = nvim
-    try? nvim.connect()
+    try? nvim.run(at: "/tmp/nvim.sock").wait()
   }
 
   override func tearDown() {
     super.tearDown()
-    self.nvim.disconnect()
+    try? self.nvim.stop().wait()
   }
 
   func testBufs() {

@@ -47,8 +47,16 @@ public class NvimView: NSView,
     case scroll
     case cursor(Position)
 
-    case initError
-    case apiError(error: Swift.Error, msg: String)
+    case initVimError
+
+    // FIXME: maybe do onError()?
+    case apiError(msg: String, cause: Swift.Error)
+  }
+
+  public enum Error: Swift.Error {
+
+    case nvimLaunch(msg: String, cause: Swift.Error)
+    case ipc(msg: String, cause: Swift.Error)
   }
 
   public struct Theme: CustomStringConvertible {
@@ -63,7 +71,8 @@ public class NvimView: NSView,
 
     public var directoryForeground = NSColor.textColor
 
-    public init() {}
+    public init() {
+    }
 
     public init(_ values: [Int]) {
       if values.count < 5 {
@@ -165,7 +174,7 @@ public class NvimView: NSView,
         .setCurrentDir(dir: newValue.path, expectsReturnValue: false)
         .subscribeOn(self.nvimApiScheduler)
         .subscribe(onError: { error in
-          self.eventsSubject.onNext(.apiError(error: error, msg: "Could not set cwd to \(newValue)."))
+          self.eventsSubject.onError(Error.ipc(msg: "Could not set cwd to \(newValue)", cause: error))
         })
     }
   }
@@ -184,13 +193,6 @@ public class NvimView: NSView,
     self.drawer = TextDrawer(font: self._font)
     self.uiBridge = UiBridge(uuid: self.uuid, config: config)
 
-    let sockPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock").path
-    guard let nvim = NvimApi(at: sockPath) else {
-      preconditionFailure("Nvim could not be instantiated")
-    }
-
-    self.nvim = nvim
-
     super.init(frame: .zero)
     self.registerForDraggedTypes([NSPasteboard.PasteboardType(String(kUTTypeFileURL))])
 
@@ -199,8 +201,100 @@ public class NvimView: NSView,
     self.descent = self.drawer.descent
     self.leading = self.drawer.leading
 
-    // We cannot set bridge in init since self is not available before super.init()...
-    self.uiBridge.nvimView = self
+    self.uiBridge.stream
+      .subscribe(onNext: { [unowned self] msg in
+        switch msg {
+
+        case .ready:
+          self.logger.info("Nvim is ready")
+          break
+
+        case .initVimError:
+          self.eventsSubject.onNext(.initVimError)
+
+        case .unknown:
+          break
+
+        case let .resize(width, height):
+          self.resize(width: width, height: height)
+
+        case .clear:
+          self.clear()
+
+        case .setMenu:
+          self.updateMenu()
+
+        case .busyStart:
+          self.busyStart()
+
+        case .busyStop:
+          self.busyStop()
+
+        case .mouseOn:
+          self.mouseOn()
+
+        case .mouseOff:
+          self.mouseOff()
+
+        case let .modeChange(mode):
+          self.modeChange(mode)
+
+        case let .setScrollRegion(top, bottom, left, right):
+          self.setScrollRegion(top: top, bottom: bottom, left: left, right: right)
+
+        case let .scroll(amount):
+          self.scroll(amount)
+
+        case let .unmark(row, column):
+          self.unmark(row: row, column: column)
+
+        case .bell:
+          self.bell()
+
+        case .visualBell:
+          self.visualBell()
+
+        case let .flush(data):
+          self.flush(data)
+
+        case let .setForeground(value):
+          self.update(foreground: value)
+
+        case let .setBackground(value):
+          self.update(background: value)
+
+        case let .setSpecial(value):
+          self.update(special: value)
+
+        case let .setTitle(title):
+          self.set(title: title)
+
+        case let .setIcon(icon):
+          self.set(icon: icon)
+
+        case .stop:
+          self.stop()
+
+        case let .dirtyStatusChanged(value):
+          self.set(dirty: value)
+
+        case let .cwdChanged(path):
+          self.cwdChanged(path)
+
+        case let .colorSchemeChanged(values):
+          self.colorSchemeChanged(values)
+
+        case let .autoCommandEvent(autocmd, bufferHandle):
+          self.autoCommandEvent(autocmd, bufferHandle: bufferHandle)
+
+        case .debug1:
+          self.debug1(self)
+
+        }
+      }, onError: { error in
+        // FIXME
+      })
+      .disposed(by: self.disposeBag)
   }
 
   convenience override public init(frame rect: NSRect) {
@@ -213,7 +307,9 @@ public class NvimView: NSView,
 
   @IBAction public func debug1(_ sender: Any?) {
     self.logger.debug("DEBUG 1 - Start")
-    self.uiBridge.debug()
+    self.uiBridge
+      .debug()
+      .subscribe()
     self.logger.debug("DEBUG 1 - End")
   }
 
@@ -235,7 +331,7 @@ public class NvimView: NSView,
                                            with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
                                            shouldLogDebug: nil)
   let uiBridge: UiBridge
-  let nvim: NvimApi
+  let nvim = NvimApi()
   let grid = Grid()
 
   let drawer: TextDrawer
@@ -279,6 +375,7 @@ public class NvimView: NSView,
   var nvimApiScheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
 
   let eventsSubject = PublishSubject<Event>()
+  let disposeBag = DisposeBag()
 
   // MARK: - Private
   private var _linespacing = NvimView.defaultLinespacing

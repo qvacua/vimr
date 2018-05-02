@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import RxSwift
 
 extension NvimView {
 
@@ -37,11 +38,12 @@ extension NvimView {
     let isWrapNeeded = !isControlCode && !isPlain
 
     let namedChars = KeyUtils.namedKey(from: charsIgnoringModifiers)
-    let finalInput = isWrapNeeded
-        ? self.wrapNamedKeys(flags + namedChars)
-        : self.vimPlainString(chars)
+    let finalInput = isWrapNeeded ? self.wrapNamedKeys(flags + namedChars) : self.vimPlainString(chars)
 
-    self.uiBridge.vimInput(finalInput)
+    self.uiBridge
+      .vimInput(finalInput)
+      .subscribe()
+
     self.keyDownDone = true
   }
 
@@ -49,12 +51,20 @@ extension NvimView {
 //    self.logger.debug("\(#function): \(replacementRange): '\(aString)'")
 
     switch aString {
+
     case let string as String:
-      self.uiBridge.vimInput(self.vimPlainString(string))
+      self.uiBridge
+        .vimInput(self.vimPlainString(string))
+        .subscribe()
+
     case let attributedString as NSAttributedString:
-      self.uiBridge.vimInput(self.vimPlainString(attributedString.string))
+      self.uiBridge
+        .vimInput(self.vimPlainString(attributedString.string))
+        .subscribe()
+
     default:
       break;
+
     }
 
     // unmarkText()
@@ -102,7 +112,9 @@ extension NvimView {
     // Control code \0 causes rpc parsing problems.
     // So we escape as early as possible
     if chars == "\0" {
-      self.uiBridge.vimInput(self.wrapNamedKeys("Nul"))
+      self.uiBridge
+        .vimInput(self.wrapNamedKeys("Nul"))
+        .subscribe()
       return true
     }
 
@@ -110,12 +122,16 @@ extension NvimView {
     // See special cases in vim/os_win32.c from vim sources
     // Also mentioned in MacVim's KeyBindings.plist
     if .control == flags && chars == "6" {
-      self.uiBridge.vimInput("\u{1e}") // AKA ^^
+      self.uiBridge
+        .vimInput("\u{1e}") // AKA ^^
+        .subscribe()
       return true
     }
     if .control == flags && chars == "2" {
       // <C-2> should generate \0, escaping as above
-      self.uiBridge.vimInput(self.wrapNamedKeys("Nul"))
+      self.uiBridge
+        .vimInput(self.wrapNamedKeys("Nul"))
+        .subscribe()
       return true
     }
     // NSEvent already sets \u{1f} for <C--> && <C-_>
@@ -128,23 +144,45 @@ extension NvimView {
       self.markedPosition = self.grid.position
     }
 
-    // eg 하 -> hanja popup, cf comment for self.lastMarkedText
-    if replacementRange.length > 0 {
-      self.uiBridge.deleteCharacters(replacementRange.length)
+    func setMarked(_ str: Any) {
+      switch str {
+      case let string as String: self.markedText = string
+      case let attributedString as NSAttributedString: self.markedText = attributedString.string
+      default: self.markedText = String(describing: aString) // should not occur
+      }
     }
 
-    switch aString {
-    case let string as String:
-      self.markedText = string
-    case let attributedString as NSAttributedString:
-      self.markedText = attributedString.string
-    default:
-      self.markedText = String(describing: aString) // should not occur
-    }
+    Observable
+      .just(replacementRange.length)
+      .flatMap { length -> Observable<Never> in
+        // eg 하 -> hanja popup, cf comment for self.lastMarkedText
+        if length > 0 {
+          return self.uiBridge.deleteCharacters(length).asObservable()
+        }
 
-//    self.logger.debug("\(#function): \(self.markedText), \(selectedRange), \(replacementRange)")
+        return Completable.empty().asObservable()
+      }
+      .ignoreElements()
+      .andThen(
+        Completable.create { completable in
+          switch aString {
+          case let string as String:
+            self.markedText = string
+          case let attributedString as NSAttributedString:
+            self.markedText = attributedString.string
+          default:
+            self.markedText = String(describing: aString) // should not occur
+          }
 
-    self.uiBridge.vimInputMarkedText(self.markedText!)
+          // self.logger.debug("\(#function): \(self.markedText), \(selectedRange), \(replacementRange)")
+
+          completable(.completed)
+          return Disposables.create()
+        }
+      )
+      .andThen(self.uiBridge.vimInputMarkedText(self.markedText!))
+      .subscribe()
+
     self.keyDownDone = true
   }
 

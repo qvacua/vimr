@@ -57,40 +57,35 @@ public class NvimApi {
 
   public var streamResponses: Bool {
     get {
-      return self.connection.streamResponses
+      return self.msgpackRpc.streamResponses
     }
     set {
-      self.connection.streamResponses = newValue
+      self.msgpackRpc.streamResponses = newValue
     }
   }
 
   public var streamRawResponses: Bool {
     get {
-      return self.connection.streamResponses
+      return self.msgpackRpc.streamResponses
     }
     set {
-      self.connection.streamResponses = newValue
+      self.msgpackRpc.streamResponses = newValue
     }
   }
 
   public var msgpackRawStream: Observable<RxMsgpackRpc.Message> {
-    return self.connection.stream
+    return self.msgpackRpc.stream
   }
 
-  public init?(at path: String) {
-    guard let connection = RxMsgpackRpc.Connection(unixDomainSocketPath: path) else {
-      return nil
-    }
-
-    self.connection = connection
+  public init() {
   }
 
-  public func connect() throws {
-    try self.connection.run()
+  public func run(at path: String) -> Completable {
+    return self.msgpackRpc.run(at: path)
   }
 
-  public func disconnect() {
-    self.connection.stop()
+  public func stop() -> Completable {
+    return self.msgpackRpc.stop()
   }
 
   public func checkBlocked<T>(_ single: Single<T>) -> Single<T> {
@@ -108,7 +103,8 @@ public class NvimApi {
   public func rpc(method: String,
                   params: [NvimApi.Value],
                   expectsReturnValue: Bool = true) -> Single<NvimApi.Value> {
-    return self.connection
+
+    return self.msgpackRpc
       .request(method: method, params: params, expectsReturnValue: expectsReturnValue)
       .map { response -> RxMsgpackRpc.Value in
         guard response.error.isNil else {
@@ -119,7 +115,7 @@ public class NvimApi {
       }
   }
 
-  private let connection: RxMsgpackRpc.Connection
+  private let msgpackRpc = MsgpackRpc()
 }
 
 fileprivate extension NSLocking {
