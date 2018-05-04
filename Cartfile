@@ -7,7 +7,7 @@ github "qvacua/CocoaMarkdown" "master"
 github "qvacua/RxMsgpackRpc" "master"
 github "qvacua/RxMessagePort" "master"
 github "sindresorhus/github-markdown-css" == 2.10.0
-github "httpswift/swifter" == 1.4.0
+github "qvacua/swifter" "stable"
 github "a2/MessagePack.swift" == 3.0.0
 
 github "Quick/Nimble" == 7.0.3
