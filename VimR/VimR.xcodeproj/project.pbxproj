@@ -543,6 +543,7 @@
 		4B5012001EBA791000F76C46 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */,
 				4BB1F5D02097705E00EC394A /* MessagePack.framework */,
 				4BB1F5CC20976F8900EC394A /* RxMsgpackRpc.framework */,
 				4BF18C501FD2E4F200DF95D1 /* RxTest.framework */,
@@ -641,7 +642,6 @@
 		4BEBA4FC1CFF374B00673FDF = {
 			isa = PBXGroup;
 			children = (
-				4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */,
 				4BEBA5071CFF374B00673FDF /* VimR */,
 				4BEBA5171CFF374B00673FDF /* VimRTests */,
 				4BC23BFB1FE3C80E00F22FE8 /* swifter */,
