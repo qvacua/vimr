@@ -121,11 +121,11 @@ extension MainWindow {
 
   func windowDidBecomeMain(_ notification: Notification) {
     self.emit(self.uuidAction(for: .becomeKey(isFullScreen: self.window.styleMask.contains(.fullScreen))))
-    self.neoVimView.didBecomeMain()
+    self.neoVimView.didBecomeMain().subscribe()
   }
 
   func windowDidResignMain(_ notification: Notification) {
-    self.neoVimView.didResignMain()
+    self.neoVimView.didResignMain().subscribe()
   }
 
   func windowDidMove(_ notification: Notification) {
@@ -141,7 +141,7 @@ extension MainWindow {
   }
 
   func windowShouldClose(_: NSWindow) -> Bool {
-    guard self.neoVimView.isCurrentBufferDirtySync() else {
+    guard (self.neoVimView.isCurrentBufferDirty().syncValue() ?? false) else {
       self.neoVimView.closeCurrentTab().subscribe()
       return false
     }

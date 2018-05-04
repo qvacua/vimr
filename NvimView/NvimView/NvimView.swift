@@ -183,6 +183,8 @@ public class NvimView: NSView,
     return true
   }
 
+  public let nvimApiScheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
+
   public internal(set) var currentPosition = Position.beginning
 
   public var events: Observable<Event> {
@@ -371,8 +373,6 @@ public class NvimView: NSView,
 
   // cache the tabs for Touch Bar use
   var tabsCache = [NvimView.Tabpage]()
-
-  var nvimApiScheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
 
   let eventsSubject = PublishSubject<Event>()
   let disposeBag = DisposeBag()

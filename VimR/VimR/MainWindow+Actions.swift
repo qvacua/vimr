@@ -27,7 +27,7 @@ extension MainWindow {
       let urls = panel.urls
       self.neoVimView
         .allBuffers()
-        .flatMap { bufs -> Single<Void> in
+        .flatMapCompletable { bufs -> Completable in
           if bufs.count == 1 {
             let isTransient = bufs.first?.isTransient ?? false
 
@@ -49,14 +49,14 @@ extension MainWindow {
     self.neoVimView
       .currentBuffer()
       .observeOn(MainScheduler.instance)
-      .flatMap { curBuf -> Single<Void> in
+      .flatMapCompletable { curBuf -> Completable in
         if curBuf.url == nil {
           self.savePanelSheet {
             self.neoVimView
               .saveCurrentTab(url: $0)
               .subscribe()
           }
-          return Single.just(())
+          return Completable.empty()
         }
 
         return self.neoVimView.saveCurrentTab()
@@ -72,9 +72,9 @@ extension MainWindow {
         self.savePanelSheet { url in
           self.neoVimView
             .saveCurrentTab(url: url)
-            .flatMap { Void -> Single<Void> in
+            .andThen(
               curBuf.isDirty ? self.neoVimView.openInNewTab(urls: [url]) : self.neoVimView.openInCurrentTab(url: url)
-          }
+            )
             .subscribe()
         }
       })
@@ -150,7 +150,7 @@ extension MainWindow {
 extension MainWindow {
 
   func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
-    let canSave = self.neoVimView.currentBufferSync()?.type == ""
+    let canSave = self.neoVimView.currentBuffer().syncValue()?.type == ""
     let canSaveAs = canSave
     let canOpen = canSave
     let canOpenQuickly = canSave

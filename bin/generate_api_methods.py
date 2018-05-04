@@ -14,7 +14,7 @@ void_func_template = Template('''\
   public func ${func_name}(${args}
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         ${params}
@@ -25,12 +25,12 @@ void_func_template = Template('''\
         .checkBlocked(
           self.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 ''')
 

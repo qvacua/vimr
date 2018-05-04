@@ -116,7 +116,7 @@ public extension NvimApi {
     replacement: [String],
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -131,12 +131,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_buf_set_lines", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_buf_set_lines", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func bufGetVar(
@@ -239,7 +239,7 @@ public extension NvimApi {
     value: NvimApi.Value,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -252,12 +252,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_buf_set_var", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_buf_set_var", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func bufDelVar(
@@ -265,7 +265,7 @@ public extension NvimApi {
     name: String,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -277,12 +277,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_buf_del_var", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_buf_del_var", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func bufGetOption(
@@ -323,7 +323,7 @@ public extension NvimApi {
     value: NvimApi.Value,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -336,12 +336,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_buf_set_option", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_buf_set_option", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func bufGetName(
@@ -379,7 +379,7 @@ public extension NvimApi {
     name: String,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -391,12 +391,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_buf_set_name", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_buf_set_name", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func bufIsValid(
@@ -508,7 +508,7 @@ public extension NvimApi {
     line_end: Int,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -522,12 +522,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_buf_clear_highlight", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_buf_clear_highlight", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func tabpageListWins(
@@ -598,7 +598,7 @@ public extension NvimApi {
     value: NvimApi.Value,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -611,12 +611,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_tabpage_set_var", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_tabpage_set_var", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func tabpageDelVar(
@@ -624,7 +624,7 @@ public extension NvimApi {
     name: String,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -636,12 +636,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_tabpage_del_var", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_tabpage_del_var", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func tabpageGetWin(
@@ -740,7 +740,7 @@ public extension NvimApi {
     options: Dictionary<String, NvimApi.Value>,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(width)),
@@ -753,18 +753,18 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_ui_attach", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_ui_attach", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func uiDetach(
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         
@@ -775,12 +775,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_ui_detach", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_ui_detach", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func uiTryResize(
@@ -788,7 +788,7 @@ public extension NvimApi {
     height: Int,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(width)),
@@ -800,12 +800,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_ui_try_resize", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_ui_try_resize", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func uiSetOption(
@@ -813,7 +813,7 @@ public extension NvimApi {
     value: NvimApi.Value,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .string(name),
@@ -825,19 +825,19 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_ui_set_option", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_ui_set_option", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func command(
     command: String,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .string(command),
@@ -848,12 +848,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_command", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_command", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func getHlByName(
@@ -926,7 +926,7 @@ public extension NvimApi {
     escape_csi: Bool,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .string(keys),
@@ -939,12 +939,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_feedkeys", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_feedkeys", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func input(
@@ -1200,7 +1200,7 @@ public extension NvimApi {
     dir: String,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .string(dir),
@@ -1211,12 +1211,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_set_current_dir", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_set_current_dir", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func getCurrentLine(
@@ -1252,7 +1252,7 @@ public extension NvimApi {
     line: String,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .string(line),
@@ -1263,18 +1263,18 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_set_current_line", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_set_current_line", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func delCurrentLine(
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         
@@ -1285,12 +1285,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_del_current_line", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_del_current_line", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func getVar(
@@ -1328,7 +1328,7 @@ public extension NvimApi {
     value: NvimApi.Value,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .string(name),
@@ -1340,19 +1340,19 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_set_var", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_set_var", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func delVar(
     name: String,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .string(name),
@@ -1363,12 +1363,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_del_var", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_del_var", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func getVvar(
@@ -1436,7 +1436,7 @@ public extension NvimApi {
     value: NvimApi.Value,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .string(name),
@@ -1448,19 +1448,19 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_set_option", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_set_option", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func outWrite(
     str: String,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .string(str),
@@ -1471,19 +1471,19 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_out_write", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_out_write", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func errWrite(
     str: String,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .string(str),
@@ -1494,19 +1494,19 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_err_write", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_err_write", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func errWriteln(
     str: String,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .string(str),
@@ -1517,12 +1517,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_err_writeln", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_err_writeln", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func listBufs(
@@ -1587,7 +1587,7 @@ public extension NvimApi {
     buffer: NvimApi.Buffer,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(buffer.handle)),
@@ -1598,12 +1598,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_set_current_buf", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_set_current_buf", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func listWins(
@@ -1668,7 +1668,7 @@ public extension NvimApi {
     window: NvimApi.Window,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -1679,12 +1679,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_set_current_win", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_set_current_win", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func listTabpages(
@@ -1749,7 +1749,7 @@ public extension NvimApi {
     tabpage: NvimApi.Tabpage,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(tabpage.handle)),
@@ -1760,19 +1760,19 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_set_current_tabpage", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_set_current_tabpage", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func subscribe(
     event: String,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .string(event),
@@ -1783,19 +1783,19 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_subscribe", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_subscribe", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func unsubscribe(
     event: String,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .string(event),
@@ -1806,12 +1806,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_unsubscribe", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_unsubscribe", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func getColorByName(
@@ -2044,7 +2044,7 @@ public extension NvimApi {
     pos: [Int],
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2056,12 +2056,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_win_set_cursor", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_win_set_cursor", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func winGetHeight(
@@ -2099,7 +2099,7 @@ public extension NvimApi {
     height: Int,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2111,12 +2111,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_win_set_height", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_win_set_height", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func winGetWidth(
@@ -2154,7 +2154,7 @@ public extension NvimApi {
     width: Int,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2166,12 +2166,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_win_set_width", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_win_set_width", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func winGetVar(
@@ -2212,7 +2212,7 @@ public extension NvimApi {
     value: NvimApi.Value,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2225,12 +2225,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_win_set_var", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_win_set_var", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func winDelVar(
@@ -2238,7 +2238,7 @@ public extension NvimApi {
     name: String,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2250,12 +2250,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_win_del_var", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_win_del_var", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func winGetOption(
@@ -2296,7 +2296,7 @@ public extension NvimApi {
     value: NvimApi.Value,
     expectsReturnValue: Bool = true,
     checkBlocked: Bool = true
-  ) -> Single<Void> {
+  ) -> Completable {
  
     let params: [NvimApi.Value] = [
         .int(Int64(window.handle)),
@@ -2309,12 +2309,12 @@ public extension NvimApi {
         .checkBlocked(
           self.rpc(method: "nvim_win_set_option", params: params, expectsReturnValue: expectsReturnValue)
         )
-        .map { _ in () }
+        .asCompletable()
     } 
     
     return self
       .rpc(method: "nvim_win_set_option", params: params, expectsReturnValue: expectsReturnValue)
-      .map { _ in () }
+      .asCompletable()
   }
 
   public func winGetPosition(

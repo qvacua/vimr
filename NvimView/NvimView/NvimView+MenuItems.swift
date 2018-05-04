@@ -132,7 +132,7 @@ extension NvimView {
         if curPasteMode == false {
           return self.nvim
             .setOption(name: "paste", value: .bool(true))
-            .map { _ in true }
+            .andThen(Single.just(true))
         } else {
           return Single.just(false)
         }
@@ -155,12 +155,12 @@ extension NvimView {
 
         }
       }
-      .flatMap { pasteModeSet -> Single<Void> in
+      .flatMapCompletable { pasteModeSet -> Completable in
         if pasteModeSet {
           return self.nvim.setOption(name: "paste", value: .bool(false))
         }
 
-        return Single.just(())
+        return Completable.empty()
       }
       .subscribe(onError: { error in
         self.eventsSubject.onNext(.apiError(msg: "There was an pasting.", cause: error))

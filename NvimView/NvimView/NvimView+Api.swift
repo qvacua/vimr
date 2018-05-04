@@ -21,14 +21,6 @@ extension NvimView {
     self.resizeNeoVimUi(to: self.bounds.size)
   }
 
-  public func currentBufferSync() -> NvimView.Buffer? {
-    return self.nvim
-      .getCurrentBuf()
-      .flatMap { self.neoVimBuffer(for: $0, currentBuffer: $0) }
-      .observeOn(self.nvimApiScheduler)
-      .syncValue()
-  }
-
   public func currentBuffer() -> Single<NvimView.Buffer> {
     return self.nvim
       .getCurrentBuf()
@@ -37,19 +29,10 @@ extension NvimView {
   }
 
   public func allBuffers() -> Single<[NvimView.Buffer]> {
-    return self.nvim
-      .getCurrentBuf()
-      .flatMap { curBuf in
-        self.nvim
-          .listBufs()
-          .asObservable()
-          .flatMap { bufs -> Observable<[NvimView.Buffer]> in
-            Observable.combineLatest(
-              bufs.map { self.neoVimBuffer(for: $0, currentBuffer: curBuf).asObservable() }
-            )
-          }
-          .asSingle()
-      }
+    return Single
+      .zip(self.nvim.getCurrentBuf(), self.nvim.listBufs()) { (curBuf: $0, bufs: $1) }
+      .map { tuple in tuple.bufs.map { buf in self.neoVimBuffer(for: buf, currentBuffer: tuple.curBuf) } }
+      .flatMap(Single.fromSinglesToSingleOfArray)
       .subscribeOn(self.nvimApiScheduler)
   }
 
@@ -57,104 +40,77 @@ extension NvimView {
     return self
       .currentBuffer()
       .map { $0.isDirty }
-  }
-
-  public func isCurrentBufferDirtySync() -> Bool {
-    return self.nvim
-             .getCurrentBuf()
-             .flatMap { self.nvim.bufGetOption(buffer: $0, name: "modified") }
-             .observeOn(self.nvimApiScheduler)
-             .syncValue()?
-             .boolValue ?? false
+      .subscribeOn(self.nvimApiScheduler)
   }
 
   public func allTabs() -> Single<[NvimView.Tabpage]> {
-    return Observable.zip(
-        self.nvim.getCurrentBuf().asObservable(),
-        self.nvim.getCurrentTabpage().asObservable()
-      ) { (curBuf: $0, curTab: $1) }
-      .flatMap { tuple in
-        self.nvim
-          .listTabpages()
-          .asObservable()
-          .flatMap { tabs -> Observable<[NvimView.Tabpage]> in
-            Observable.combineLatest(
-              tabs.map { tab in
-                self.neoVimTab(for: tab, currentTabpage: tuple.curTab, currentBuffer: tuple.curBuf).asObservable()
-              }
-            )
-          }
+    return Single.zip(self.nvim.getCurrentBuf(),
+                      self.nvim.getCurrentTabpage(),
+                      self.nvim.listTabpages()) { (curBuf: $0, curTab: $1, tabs: $2) }
+      .map { tuple in
+        return tuple.tabs.map { tab in
+          return self.neoVimTab(for: tab, currentTabpage: tuple.curTab, currentBuffer: tuple.curBuf)
+        }
       }
+      .flatMap(Single.fromSinglesToSingleOfArray)
       .subscribeOn(self.nvimApiScheduler)
-      .asSingle()
   }
 
-  public func newTab() -> Single<Void> {
+  public func newTab() -> Completable {
     return self.nvim
       .command(command: "tabe", expectsReturnValue: false)
       .subscribeOn(self.nvimApiScheduler)
   }
 
-  public func `open`(urls: [URL]) -> Single<Void> {
+  public func `open`(urls: [URL]) -> Completable {
     return self
       .allTabs()
-      .asObservable()
-      .flatMap { tabs -> Observable<[Void]> in
+      .flatMapCompletable { tabs -> Completable in
         let buffers = tabs.map { $0.windows }.flatMap { $0 }.map { $0.buffer }
         let currentBufferIsTransient = buffers.first { $0.isCurrent }?.isTransient ?? false
 
-        return Observable.combineLatest(
-          urls.map { url -> Observable<Void> in
+        return Completable.concat(
+          urls.map { url -> Completable in
             let bufExists = buffers.contains { $0.url == url }
             let wins = tabs.map({ $0.windows }).flatMap({ $0 })
             if let win = bufExists ? wins.first(where: { win in win.buffer.url == url }) : nil {
-              return self.nvim
-                .setCurrentWin(window: NvimApi.Window(win.handle), expectsReturnValue: false)
-                .asObservable()
+              return self.nvim.setCurrentWin(window: NvimApi.Window(win.handle), expectsReturnValue: false)
             }
 
-            return currentBufferIsTransient ? self.open(url, cmd: "e").asObservable()
-              : self.open(url, cmd: "tabe").asObservable()
+            return currentBufferIsTransient ? self.open(url, cmd: "e") : self.open(url, cmd: "tabe")
           }
         )
       }
-      .map { _ in () }
       .subscribeOn(self.nvimApiScheduler)
-      .asSingle()
   }
 
-  public func openInNewTab(urls: [URL]) -> Single<Void> {
-    return Observable.combineLatest(urls.map { url in self.open(url, cmd: "tabe").asObservable() })
-      .map { _ in () }
+  public func openInNewTab(urls: [URL]) -> Completable {
+    return Completable
+      .concat(urls.map { url in self.open(url, cmd: "tabe") })
       .subscribeOn(self.nvimApiScheduler)
-      .asSingle()
   }
 
-  public func openInCurrentTab(url: URL) -> Single<Void> {
+  public func openInCurrentTab(url: URL) -> Completable {
     return self.open(url, cmd: "e")
   }
 
-  public func openInHorizontalSplit(urls: [URL]) -> Single<Void> {
-    return Observable.combineLatest(urls.map { url in self.open(url, cmd: "sp").asObservable() })
-      .map { _ in () }
+  public func openInHorizontalSplit(urls: [URL]) -> Completable {
+    return Completable
+      .concat(urls.map { url in self.open(url, cmd: "sp") })
       .subscribeOn(self.nvimApiScheduler)
-      .asSingle()
   }
 
-  public func openInVerticalSplit(urls: [URL]) -> Single<Void> {
-    return Observable.combineLatest(urls.map { url in self.open(url, cmd: "vsp").asObservable() })
-      .map { _ in () }
+  public func openInVerticalSplit(urls: [URL]) -> Completable {
+    return Completable
+      .concat(urls.map { url in self.open(url, cmd: "vsp") })
       .subscribeOn(self.nvimApiScheduler)
-      .asSingle()
   }
 
-  public func select(buffer: NvimView.Buffer) -> Single<Void> {
+  public func select(buffer: NvimView.Buffer) -> Completable {
     return self
       .allTabs()
-      .map { tabs in
-        return tabs.map { $0.windows }.flatMap { $0 }
-      }
-      .flatMap { wins -> Single<Void> in
+      .map { tabs in tabs.map { $0.windows }.flatMap { $0 } }
+      .flatMapCompletable { wins -> Completable in
         if let win = wins.first(where: { $0.buffer == buffer }) {
           return self.nvim.setCurrentWin(window: NvimApi.Window(win.handle), expectsReturnValue: false)
         }
@@ -165,31 +121,31 @@ extension NvimView {
   }
 
 /// Closes the current window.
-  public func closeCurrentTab() -> Single<Void> {
+  public func closeCurrentTab() -> Completable {
     return self.nvim
       .command(command: "q", expectsReturnValue: true)
       .subscribeOn(self.nvimApiScheduler)
   }
 
-  public func saveCurrentTab() -> Single<Void> {
+  public func saveCurrentTab() -> Completable {
     return self.nvim
       .command(command: "w", expectsReturnValue: true)
       .subscribeOn(self.nvimApiScheduler)
   }
 
-  public func saveCurrentTab(url: URL) -> Single<Void> {
+  public func saveCurrentTab(url: URL) -> Completable {
     return self.nvim
       .command(command: "w \(url.path)", expectsReturnValue: true)
       .subscribeOn(self.nvimApiScheduler)
   }
 
-  public func closeCurrentTabWithoutSaving() -> Single<Void> {
+  public func closeCurrentTabWithoutSaving() -> Completable {
     return self.nvim
       .command(command: "q!", expectsReturnValue: true)
       .subscribeOn(self.nvimApiScheduler)
   }
 
-  public func quitNeoVimWithoutSaving() -> Single<Void> {
+  public func quitNeoVimWithoutSaving() -> Completable {
     self.bridgeLogger.mark()
     return self.nvim
       .command(command: "qa!", expectsReturnValue: true)
@@ -202,12 +158,10 @@ extension NvimView {
       .subscribeOn(self.nvimApiScheduler)
   }
 
-  public func cursorGo(to position: Position) -> Single<Void> {
+  public func cursorGo(to position: Position) -> Completable {
     return self.nvim
       .getCurrentWin()
-      .flatMap { curWin in
-        self.nvim.winSetCursor(window: curWin, pos: [position.row, position.column])
-      }
+      .flatMapCompletable { curWin in self.nvim.winSetCursor(window: curWin, pos: [position.row, position.column]) }
       .subscribeOn(self.nvimApiScheduler)
   }
 
@@ -217,19 +171,6 @@ extension NvimView {
 
   public func didResignMain() -> Completable {
     return self.uiBridge.focusGained(false)
-  }
-
-  func waitForNeoVimToQuit() {
-    self.uiBridge.nvimQuitCondition.lock()
-    defer { self.uiBridge.nvimQuitCondition.unlock() }
-    while self.uiBridge.isNvimQuit == false
-          && self.uiBridge.nvimQuitCondition.wait(until: Date(timeIntervalSinceNow: neoVimQuitTimeout)) {}
-  }
-
-  private func `open`(_ url: URL, cmd: String) -> Single<Void> {
-    return self.nvim
-      .command(command: "\(cmd) \(url.path)", expectsReturnValue: false)
-      .subscribeOn(self.nvimApiScheduler)
   }
 
   func neoVimBuffer(for buf: NvimApi.Buffer, currentBuffer: NvimApi.Buffer?) -> Single<NvimView.Buffer> {
@@ -254,6 +195,20 @@ extension NvimView {
                                isCurrent: current,
                                isListed: listed)
       }
+      .subscribeOn(self.nvimApiScheduler)
+  }
+
+  func waitForNeoVimToQuit() {
+    self.uiBridge.nvimQuitCondition.lock()
+    defer { self.uiBridge.nvimQuitCondition.unlock() }
+    while self.uiBridge.isNvimQuit == false
+          && self.uiBridge.nvimQuitCondition.wait(until: Date(timeIntervalSinceNow: neoVimQuitTimeout)) {}
+  }
+
+  private func `open`(_ url: URL, cmd: String) -> Completable {
+    return self.nvim
+      .command(command: "\(cmd) \(url.path)", expectsReturnValue: false)
+      .subscribeOn(self.nvimApiScheduler)
   }
 
   private func neoVimWindow(for window: NvimApi.Window,
@@ -262,9 +217,7 @@ extension NvimView {
 
     return self.nvim
       .winGetBuf(window: window)
-      .flatMap { buf in
-        self.neoVimBuffer(for: buf, currentBuffer: currentBuffer)
-      }
+      .flatMap { buf in self.neoVimBuffer(for: buf, currentBuffer: currentBuffer) }
       .map { buffer in NvimView.Window(apiWindow: window, buffer: buffer, isCurrentInTab: window == currentWindow) }
   }
 
@@ -272,21 +225,15 @@ extension NvimView {
                          currentTabpage: NvimApi.Tabpage?,
                          currentBuffer: NvimApi.Buffer?) -> Single<NvimView.Tabpage> {
 
-    return self.nvim
-      .tabpageGetWin(tabpage: tabpage)
-      .flatMap { curWinInTab in
-        self.nvim
-          .tabpageListWins(tabpage: tabpage)
-          .asObservable()
-          .flatMap { wins -> Observable<[NvimView.Window]> in
-            Observable.combineLatest(
-              wins.map {
-                self.neoVimWindow(for: $0, currentWindow: curWinInTab, currentBuffer: currentBuffer).asObservable()
-              }
-            )
-          }
-          .asSingle()
+    return Single.zip(
+        self.nvim.tabpageGetWin(tabpage: tabpage),
+        self.nvim.tabpageListWins(tabpage: tabpage)) { (curWin: $0, wins: $1) }
+      .map { tuple in
+        tuple.wins.map { win in
+          return self.neoVimWindow(for: win, currentWindow: tuple.curWin, currentBuffer: currentBuffer)
+        }
       }
+      .flatMap(Single.fromSinglesToSingleOfArray)
       .map { wins in NvimView.Tabpage(apiTabpage: tabpage, windows: wins, isCurrent: tabpage == currentTabpage) }
   }
 }

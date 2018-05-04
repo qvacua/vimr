@@ -8,8 +8,9 @@ import RxSwift
 
 extension PrimitiveSequence where Element == Never, TraitType == CompletableTrait {
 
-  func wait() {
+  func wait() throws {
     var trigger = false
+    var err: Swift.Error?
     let condition = NSCondition()
 
     condition.lock()
@@ -18,11 +19,16 @@ extension PrimitiveSequence where Element == Never, TraitType == CompletableTrai
     let disposable = self.subscribe(onCompleted: {
       trigger = broadcast(condition)
     }, onError: { error in
+      err = error
       trigger = broadcast(condition)
     })
 
     while !trigger && condition.wait(until: Date(timeIntervalSinceNow: 5)) {}
     disposable.dispose()
+
+    if let error = err {
+      throw error
+    }
   }
 }
 
@@ -49,6 +55,13 @@ extension PrimitiveSequence where TraitType == SingleTrait {
     disposable.dispose()
 
     return value
+  }
+
+  func flatMapCompletable(_ selector: @escaping (Element) throws -> Completable) -> Completable {
+    return self
+      .asObservable()
+      .flatMap { try selector($0).asObservable() }
+      .ignoreElements()
   }
 
   func asCompletable() -> Completable {

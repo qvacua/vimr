@@ -57,6 +57,11 @@ class NvimMsgPackTests: XCTestCase {
     }
   }
 
+  func testSomething() {
+    Single.toSingleOfArray([Single.just("1"), Single.just("2")]).debug().subscribe()
+    sleep(1)
+  }
+
   func testExample() {
 //    print(nvim.bufLineCount(buffer: NvimMsgPack.NvimApi.Buffer(0)).syncValue())
 //    print(nvim.command(command: "pwd", expectsReturnValue: true, checkBlocked: true).syncValue())
@@ -69,9 +74,16 @@ class NvimMsgPackTests: XCTestCase {
     for i in 0...5 {
       nvim
         .command(command: "echo '\(formatter.string(from: now)) \(i)'", expectsReturnValue: true, checkBlocked: true)
-        .subscribe(onSuccess: { _ in
-          print("\(i) handled")
-        })
+//        .subscribe(onCompleted: { _ in
+//          print("\(i) handled")
+//        })
     }
+  }
+}
+
+extension PrimitiveSequence where TraitType == SingleTrait {
+
+  static func toSingleOfArray(_ singles: [Single<Element>]) -> Single<[Element]> {
+    return Observable.merge(singles.map { $0.asObservable() }).toArray().asSingle()
   }
 }
