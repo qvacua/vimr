@@ -90,6 +90,7 @@ class UiBridge {
         self.runLocalServerAndNvimCompletable = completable
         self.launchNvimUsingLoginShell()
 
+        // This will be completed in .nvimReady branch of handleMessage()
         return Disposables.create()
       })
       .timeout(timeout, scheduler: self.scheduler)
