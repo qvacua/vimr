@@ -54,29 +54,20 @@ class UiBridge {
     return self.streamSubject.asObservable()
   }
 
-  var scheduler: SerialDispatchQueueScheduler
-  var queue = DispatchQueue(label: "com.qvacua.NvimView.UiBridge", qos: .userInitiated) {
-    didSet {
-      self.scheduler = SerialDispatchQueueScheduler(queue: self.queue,
-                                                    internalSerialQueueName: "com.qvacua.NvimView.UiBridge")
-    }
-  }
-
   let nvimQuitCondition = NSCondition()
 
   private(set) var isNvimQuitting = false
   private(set) var isNvimQuit = false
 
-  init(uuid: String, config: NvimView.Config) {
+  init(uuid: String, queue: DispatchQueue, config: NvimView.Config) {
     self.uuid = uuid
 
     self.useInteractiveZsh = config.useInteractiveZsh
     self.nvimArgs = config.nvimArgs ?? []
     self.cwd = config.cwd
 
-    self.scheduler = SerialDispatchQueueScheduler(queue: self.queue,
-                                                  internalSerialQueueName: "com.qvacua.NvimView.UiBridge")
-
+    self.queue = queue
+    self.scheduler = SerialDispatchQueueScheduler(queue: queue, internalSerialQueueName: "com.qvacua.NvimView.UiBridge")
     self.client.queue = self.queue
     self.server.queue = self.queue
 
@@ -453,6 +444,9 @@ class UiBridge {
   private var initialHeight = 20
 
   private var runLocalServerAndNvimCompletable: Completable.CompletableObserver?
+
+  private let scheduler: SerialDispatchQueueScheduler
+  private let queue: DispatchQueue
 
   private let streamSubject = PublishSubject<Message>()
   private let disposeBag = DisposeBag()

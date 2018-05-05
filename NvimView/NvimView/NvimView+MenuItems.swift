@@ -49,13 +49,13 @@ extension NvimView {
   @IBAction func undo(_ sender: AnyObject?) {
     switch self.mode {
     case .insert, .replace:
-      self.uiBridge
+      self.bridge
         .vimInput("<Esc>ui")
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not undo", cause: error))
         })
     case .normal, .visual:
-      self.uiBridge
+      self.bridge
         .vimInput("u")
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not undo", cause: error))
@@ -68,13 +68,13 @@ extension NvimView {
   @IBAction func redo(_ sender: AnyObject?) {
     switch self.mode {
     case .insert, .replace:
-      self.uiBridge
+      self.bridge
         .vimInput("<Esc><C-r>i")
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not redo", cause: error))
         })
     case .normal, .visual:
-      self.uiBridge
+      self.bridge
         .vimInput("<C-r>")
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not redo", cause: error))
@@ -87,7 +87,7 @@ extension NvimView {
   @IBAction func cut(_ sender: AnyObject?) {
     switch self.mode {
     case .visual, .normal:
-      self.uiBridge
+      self.bridge
         .vimInput("\"+d")
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not cut", cause: error))
@@ -100,7 +100,7 @@ extension NvimView {
   @IBAction func copy(_ sender: AnyObject?) {
     switch self.mode {
     case .visual, .normal:
-      self.uiBridge
+      self.bridge
         .vimInput("\"+y")
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not copy", cause: error))
@@ -118,7 +118,7 @@ extension NvimView {
     if self.mode == .cmdline || self.mode == .cmdlineInsert || self.mode == .cmdlineReplace
        || self.mode == .replace
        || self.mode == .termFocus {
-      self.uiBridge
+      self.bridge
         .vimInput(self.vimPlainString(content))
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not paste \(content)", cause: error))
@@ -126,11 +126,11 @@ extension NvimView {
       return
     }
 
-    self.nvim
+    self.api
       .getOption(name: "paste")
       .flatMap { curPasteMode -> Single<Bool> in
         if curPasteMode == false {
-          return self.nvim
+          return self.api
             .setOption(name: "paste", value: .bool(true))
             .andThen(Single.just(true))
         } else {
@@ -141,12 +141,12 @@ extension NvimView {
         switch self.mode {
 
         case .insert:
-          return self.uiBridge
+          return self.bridge
             .vimInput("<ESC>\"+pa")
             .andThen(Single.just(pasteModeSet))
 
         case .normal, .visual:
-          return self.uiBridge
+          return self.bridge
             .vimInput("\"+p")
             .andThen(Single.just(pasteModeSet))
 
@@ -157,7 +157,7 @@ extension NvimView {
       }
       .flatMapCompletable { pasteModeSet -> Completable in
         if pasteModeSet {
-          return self.nvim.setOption(name: "paste", value: .bool(false))
+          return self.api.setOption(name: "paste", value: .bool(false))
         }
 
         return Completable.empty()
@@ -170,7 +170,7 @@ extension NvimView {
   @IBAction func delete(_ sender: AnyObject?) {
     switch self.mode {
     case .normal, .visual:
-      self.uiBridge
+      self.bridge
         .vimInput("x")
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not delete", cause: error))
@@ -183,13 +183,13 @@ extension NvimView {
   @IBAction public override func selectAll(_ sender: Any?) {
     switch self.mode {
     case .insert, .visual:
-      self.uiBridge
+      self.bridge
         .vimInput("<Esc>ggVG")
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not select all", cause: error))
         })
     default:
-      self.uiBridge
+      self.bridge
         .vimInput("ggVG")
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not select all", cause: error))

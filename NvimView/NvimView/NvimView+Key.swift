@@ -40,7 +40,7 @@ extension NvimView {
     let namedChars = KeyUtils.namedKey(from: charsIgnoringModifiers)
     let finalInput = isWrapNeeded ? self.wrapNamedKeys(flags + namedChars) : self.vimPlainString(chars)
 
-    self.uiBridge
+    self.bridge
       .vimInput(finalInput)
       .subscribe()
 
@@ -53,12 +53,12 @@ extension NvimView {
     switch aString {
 
     case let string as String:
-      self.uiBridge
+      self.bridge
         .vimInput(self.vimPlainString(string))
         .subscribe()
 
     case let attributedString as NSAttributedString:
-      self.uiBridge
+      self.bridge
         .vimInput(self.vimPlainString(attributedString.string))
         .subscribe()
 
@@ -112,7 +112,7 @@ extension NvimView {
     // Control code \0 causes rpc parsing problems.
     // So we escape as early as possible
     if chars == "\0" {
-      self.uiBridge
+      self.bridge
         .vimInput(self.wrapNamedKeys("Nul"))
         .subscribe()
       return true
@@ -122,14 +122,14 @@ extension NvimView {
     // See special cases in vim/os_win32.c from vim sources
     // Also mentioned in MacVim's KeyBindings.plist
     if .control == flags && chars == "6" {
-      self.uiBridge
+      self.bridge
         .vimInput("\u{1e}") // AKA ^^
         .subscribe()
       return true
     }
     if .control == flags && chars == "2" {
       // <C-2> should generate \0, escaping as above
-      self.uiBridge
+      self.bridge
         .vimInput(self.wrapNamedKeys("Nul"))
         .subscribe()
       return true
@@ -157,7 +157,7 @@ extension NvimView {
       .flatMap { length -> Observable<Never> in
         // eg 하 -> hanja popup, cf comment for self.lastMarkedText
         if length > 0 {
-          return self.uiBridge.deleteCharacters(length).asObservable()
+          return self.bridge.deleteCharacters(length).asObservable()
         }
 
         return Completable.empty().asObservable()
@@ -180,7 +180,7 @@ extension NvimView {
           return Disposables.create()
         }
       )
-      .andThen(self.uiBridge.vimInputMarkedText(self.markedText!))
+      .andThen(self.bridge.vimInputMarkedText(self.markedText!))
       .subscribe()
 
     self.keyDownDone = true

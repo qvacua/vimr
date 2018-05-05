@@ -77,7 +77,11 @@ public class NvimApi {
     return self.msgpackRpc.stream
   }
 
-  public var queue = DispatchQueue(label: "com.qvacua.NvimMsgpack.NvimApi", qos: .userInitiated)
+  public var queue = DispatchQueue(label: "com.qvacua.NvimMsgpack.NvimApi", qos: .userInitiated) {
+    didSet {
+      self.msgpackRpc.queue = self.queue
+    }
+  }
 
   public init() {
     self.msgpackRpc.queue = self.queue

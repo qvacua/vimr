@@ -126,9 +126,9 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
     }
 
     let window = tab.currentWindow ?? tab.windows[0]
-    self.nvim
+    self.api
       .setCurrentWin(window: NvimApi.Window(window.handle), expectsReturnValue: false)
-      .subscribeOn(self.nvimApiScheduler)
+      .subscribeOn(self.scheduler)
       .subscribe(onError: { error in
         self.eventsSubject.onNext(.apiError(msg: "Could not set current window to \(window.handle).", cause: error))
       })

@@ -156,9 +156,9 @@ extension NvimView {
 
   func stop() {
     self.bridgeLogger.hr()
-    try? self.nvim
+    try? self.api
       .stop()
-      .andThen(self.uiBridge.quit())
+      .andThen(self.bridge.quit())
       .wait()
 
     gui.async {
@@ -192,7 +192,7 @@ extension NvimView {
     self.bridgeLogger.debug(reason)
 
     gui.async {
-      if self.uiBridge.isNvimQuitting || self.uiBridge.isNvimQuit {
+      if self.bridge.isNvimQuitting || self.bridge.isNvimQuit {
         return
       }
 
@@ -200,9 +200,9 @@ extension NvimView {
       self.eventsSubject.onCompleted()
 
       self.bridgeLogger.error("Force-closing due to IPC error.")
-      try? self.nvim
+      try? self.api
         .stop()
-        .andThen(self.uiBridge.forceQuit())
+        .andThen(self.bridge.forceQuit())
         .wait()
     }
   }

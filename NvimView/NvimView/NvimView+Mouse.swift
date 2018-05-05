@@ -33,9 +33,9 @@ extension NvimView {
       let (vimInputX, vimInputY) = self.vimScrollInputFor(deltaX: deltaX, deltaY: deltaY,
                                                           modifierFlags: event.modifierFlags,
                                                           cellPosition: cellPosition)
-      self.uiBridge
+      self.bridge
         .vimInput(vimInputX)
-        .andThen(self.uiBridge.vimInput(vimInputY))
+        .andThen(self.bridge.vimInput(vimInputY))
         .subscribe()
 
       return
@@ -46,7 +46,7 @@ extension NvimView {
       min(Int(ceil(abs(deltaY) / self.trackpadScrollResistance)), maxScrollDeltaY)
     )
     let (horizSign, vertSign) = (deltaX > 0 ? 1 : -1, deltaY > 0 ? 1 : -1)
-    self.uiBridge
+    self.bridge
       .scroll(horizontal: horizSign * absDeltaX, vertical: vertSign * absDeltaY, at: cellPosition)
       .subscribe()
   }
@@ -105,7 +105,7 @@ extension NvimView {
     }
 
 //    self.logger.debug("\(#function): \(result)")
-    self.uiBridge
+    self.bridge
       .vimInput(result)
       .subscribe()
   }

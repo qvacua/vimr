@@ -55,7 +55,7 @@ extension NvimView {
     self.xOffset = floor((size.width - self.cellSize.width * CGFloat(discreteSize.width)) / 2)
     self.yOffset = floor((size.height - self.cellSize.height * CGFloat(discreteSize.height)) / 2)
 
-    try? self.uiBridge
+    try? self.bridge
       .resize(width: discreteSize.width, height: discreteSize.height)
       .wait()
   }
@@ -64,9 +64,9 @@ extension NvimView {
     self.logger.info("=== Starting neovim...")
     let sockPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock").path
 
-    self.uiBridge
+    self.bridge
       .runLocalServerAndNvim(width: size.width, height: size.height)
-      .andThen(self.nvim.run(at: sockPath))
+      .andThen(self.api.run(at: sockPath))
       .subscribe(onError: { error in
         self.eventsSubject.onError(Error.nvimLaunch(msg: "Could not launch nvim", cause: error))
       })

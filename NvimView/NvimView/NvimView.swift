@@ -170,9 +170,9 @@ public class NvimView: NSView,
     }
 
     set {
-      self.nvim
+      self.api
         .setCurrentDir(dir: newValue.path, expectsReturnValue: false)
-        .subscribeOn(self.nvimApiScheduler)
+        .subscribeOn(self.scheduler)
         .subscribe(onError: { error in
           self.eventsSubject.onError(Error.ipc(msg: "Could not set cwd to \(newValue)", cause: error))
         })
@@ -183,7 +183,8 @@ public class NvimView: NSView,
     return true
   }
 
-  public let nvimApiScheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
+  public let queue = DispatchQueue(label: "com.qvacua.NvimView.NvimView", qos: .userInitiated)
+  public let scheduler: SerialDispatchQueueScheduler
 
   public internal(set) var currentPosition = Position.beginning
 
@@ -193,7 +194,9 @@ public class NvimView: NSView,
 
   public init(frame rect: NSRect, config: Config) {
     self.drawer = TextDrawer(font: self._font)
-    self.uiBridge = UiBridge(uuid: self.uuid, config: config)
+    self.bridge = UiBridge(uuid: self.uuid, queue: self.queue, config: config)
+    self.scheduler = SerialDispatchQueueScheduler(queue: self.queue,
+                                                  internalSerialQueueName: "com.qvacua.NvimView.NvimView")
 
     super.init(frame: .zero)
     self.registerForDraggedTypes([NSPasteboard.PasteboardType(String(kUTTypeFileURL))])
@@ -203,7 +206,8 @@ public class NvimView: NSView,
     self.descent = self.drawer.descent
     self.leading = self.drawer.leading
 
-    self.uiBridge.stream
+    self.api.queue = self.queue
+    self.bridge.stream
       .subscribe(onNext: { [unowned self] msg in
         switch msg {
 
@@ -309,7 +313,7 @@ public class NvimView: NSView,
 
   @IBAction public func debug1(_ sender: Any?) {
     self.logger.debug("DEBUG 1 - Start")
-    self.uiBridge
+    self.bridge
       .debug()
       .subscribe()
     self.logger.debug("DEBUG 1 - End")
@@ -332,8 +336,8 @@ public class NvimView: NSView,
   let bridgeLogger = LogContext.fileLogger(as: NvimView.self,
                                            with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
                                            shouldLogDebug: nil)
-  let uiBridge: UiBridge
-  let nvim = NvimApi()
+  let bridge: UiBridge
+  let api = NvimApi()
   let grid = Grid()
 
   let drawer: TextDrawer
