@@ -54,8 +54,6 @@ class UiBridge {
     return self.streamSubject.asObservable()
   }
 
-  let nvimQuitCondition = NSCondition()
-
   private(set) var isNvimQuitting = false
   private(set) var isNvimQuit = false
 
@@ -121,40 +119,19 @@ class UiBridge {
   }
 
   func quit() -> Completable {
-    self.isNvimQuitting = true
-
-    let completable = self.closePorts()
-
-    self.nvimServerProc?.waitUntilExit()
-
-    self.nvimQuitCondition.lock()
-    defer {
-      self.nvimQuitCondition.signal()
-      self.nvimQuitCondition.unlock()
+    return self.quit {
+      self.nvimServerProc?.waitUntilExit()
+      self.logger.info("NvimServer \(self.uuid) exited successfully.")
     }
-    self.isNvimQuit = true
-
-    self.logger.info("NvimServer \(self.uuid) exited successfully.")
-    return completable
   }
 
   func forceQuit() -> Completable {
     self.logger.info("Force-exiting NvimServer \(self.uuid).")
 
-    self.isNvimQuitting = true
-
-    let completable = self.closePorts()
-    self.forceExitNvimServer()
-
-    self.nvimQuitCondition.lock()
-    defer {
-      self.nvimQuitCondition.signal()
-      self.nvimQuitCondition.unlock()
+    return self.quit {
+      self.forceExitNvimServer()
+      self.logger.info("NvimServer \(self.uuid) was forcefully exited.")
     }
-    self.isNvimQuit = true
-
-    self.logger.info("NvimServer \(self.uuid) was forcefully exited.")
-    return completable
   }
 
   func debug() -> Completable {
@@ -344,6 +321,20 @@ class UiBridge {
     return self.client
       .stop()
       .andThen(self.server.stop())
+  }
+
+  private func quit(using body: @escaping () -> Void) -> Completable {
+    self.isNvimQuitting = true
+
+    return self
+      .closePorts()
+      .andThen(Completable.create { completable in
+        body()
+        self.isNvimQuit = true
+
+        completable(.completed)
+        return Disposables.create()
+      })
   }
 
   private func establishNvimConnection() -> Completable {

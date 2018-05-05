@@ -159,13 +159,15 @@ extension NvimView {
     try? self.api
       .stop()
       .andThen(self.bridge.quit())
-      .wait()
+      .andThen(Completable.create { completable in
+        self.eventsSubject.onNext(.neoVimStopped)
+        self.eventsSubject.onCompleted()
 
-    gui.async {
-      self.waitForNeoVimToQuit()
-      self.eventsSubject.onNext(.neoVimStopped)
-      self.eventsSubject.onCompleted()
-    }
+        completable(.completed)
+        return Disposables.create()
+      })
+      .observeOn(MainScheduler.instance)
+      .wait()
   }
 
   func autoCommandEvent(_ event: NvimAutoCommandEvent, bufferHandle: Int) {
@@ -191,20 +193,19 @@ extension NvimView {
   func ipcBecameInvalid(_ reason: String) {
     self.bridgeLogger.debug(reason)
 
-    gui.async {
-      if self.bridge.isNvimQuitting || self.bridge.isNvimQuit {
-        return
-      }
-
-      self.eventsSubject.onNext(.ipcBecameInvalid(reason))
-      self.eventsSubject.onCompleted()
-
-      self.bridgeLogger.error("Force-closing due to IPC error.")
-      try? self.api
-        .stop()
-        .andThen(self.bridge.forceQuit())
-        .wait()
+    if self.bridge.isNvimQuitting || self.bridge.isNvimQuit {
+      return
     }
+
+    self.eventsSubject.onNext(.ipcBecameInvalid(reason))
+    self.eventsSubject.onCompleted()
+
+    self.bridgeLogger.error("Force-closing due to IPC error.")
+    try? self.api
+      .stop()
+      .andThen(self.bridge.forceQuit())
+      .observeOn(MainScheduler.instance)
+      .wait()
   }
 
   private func doPut(string: String) {

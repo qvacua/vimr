@@ -198,13 +198,6 @@ extension NvimView {
       .subscribeOn(self.scheduler)
   }
 
-  func waitForNeoVimToQuit() {
-    self.bridge.nvimQuitCondition.lock()
-    defer { self.bridge.nvimQuitCondition.unlock() }
-    while self.bridge.isNvimQuit == false
-          && self.bridge.nvimQuitCondition.wait(until: Date(timeIntervalSinceNow: neoVimQuitTimeout)) {}
-  }
-
   private func `open`(_ url: URL, cmd: String) -> Completable {
     return self.api
       .command(command: "\(cmd) \(url.path)", expectsReturnValue: false)
