@@ -7,27 +7,20 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.22.0-273</title>
+      <title>v0.23.0-275</title>
       <description><![CDATA[
-    <ul>
-<li>GH-543: Add an option in the Keys preferences to use left or/and right Option key as Meta key. (Thanks @xiehuc for the PR)</li>
-<li>Bugfix: Eliminate a memory leak.</li>
-<li>Dependencies updates:<ul>
-<li>ReactiveX/RxSwift@4.1.2</li>
-</ul>
-</li>
-</ul>
+    <p>GH-419: File browser sorts folders on the top. (Thanks @laibulle for the PR)</p>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.22.0-273
+        https://github.com/qvacua/vimr/releases/tag/v0.23.0-275
       </releaseNotesLink>
-      <pubDate>2018-04-15T09:38:37.871617</pubDate>
+      <pubDate>2018-05-05T10:32:16.520757</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.22.0-273/VimR-v0.22.0-273.tar.bz2"
-                 sparkle:version="273"
-                 sparkle:shortVersionString="0.22.0"
-                 sparkle:dsaSignature="MC0CFCz304i1TV4xO5A5kem8zWkiE/ouAhUAsHn6oelsw2QWx8mhChtGDmOvTSE="
-                 length="12153869"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.23.0-275/VimR-v0.23.0-275.tar.bz2"
+                 sparkle:version="275"
+                 sparkle:shortVersionString="0.23.0"
+                 sparkle:dsaSignature="MC0CFQCi65UeKDlPEFa1PBiBAFae2TssJAIUaM4zcNPIxFzlE2cCQPCNwUQX3PM="
+                 length="12162223"
                  type="application/octet-stream"/>
     </item>
   </channel>
