@@ -55,9 +55,9 @@ extension NvimView {
     self.xOffset = floor((size.width - self.cellSize.width * CGFloat(discreteSize.width)) / 2)
     self.yOffset = floor((size.height - self.cellSize.height * CGFloat(discreteSize.height)) / 2)
 
-    try? self.bridge
+    self.bridge
       .resize(width: discreteSize.width, height: discreteSize.height)
-      .wait()
+      .subscribe()
   }
 
   private func launchNeoVim(_ size: Size) {
