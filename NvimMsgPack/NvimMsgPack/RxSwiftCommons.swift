@@ -57,13 +57,6 @@ extension PrimitiveSequence where TraitType == SingleTrait {
     return value
   }
 
-  func flatMapCompletable(_ selector: @escaping (Element) throws -> Completable) -> Completable {
-    return self
-      .asObservable()
-      .flatMap { try selector($0).asObservable() }
-      .ignoreElements()
-  }
-
   func asCompletable() -> Completable {
     return self.asObservable().ignoreElements()
   }
