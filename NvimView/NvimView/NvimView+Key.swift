@@ -152,19 +152,18 @@ extension NvimView {
       }
     }
 
-    Observable
+    Single
       .just(replacementRange.length)
-      .flatMap { length -> Observable<Never> in
+      .flatMapCompletable { length -> Completable in
         // eg 하 -> hanja popup, cf comment for self.lastMarkedText
         if length > 0 {
-          return self.bridge.deleteCharacters(length).asObservable()
+          return self.bridge.deleteCharacters(length)
         }
 
-        return Completable.empty().asObservable()
+        return Completable.empty()
       }
-      .ignoreElements()
       .andThen(
-        Completable.create { completable in
+        Single.create { single in
           switch aString {
           case let string as String:
             self.markedText = string
@@ -176,11 +175,11 @@ extension NvimView {
 
           // self.logger.debug("\(#function): \(self.markedText), \(selectedRange), \(replacementRange)")
 
-          completable(.completed)
+          single(.success(self.markedText!))
           return Disposables.create()
         }
       )
-      .andThen(self.bridge.vimInputMarkedText(self.markedText!))
+      .flatMapCompletable { self.bridge.vimInputMarkedText($0) }
       .subscribe()
 
     self.keyDownDone = true
