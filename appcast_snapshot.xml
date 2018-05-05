@@ -7,22 +7,20 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-274</title>
+      <title>v0.23.0-275</title>
       <description><![CDATA[
-    <ul>
-<li>GH-419: File browser sorts folders on the top. (Thanks @laibulle for the PR)</li>
-</ul>
+    <p>GH-419: File browser sorts folders on the top. (Thanks @laibulle for the PR)</p>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/274
+        https://github.com/qvacua/vimr/releases/tag/v0.23.0-275
       </releaseNotesLink>
-      <pubDate>2018-04-15T10:18:51.397376</pubDate>
+      <pubDate>2018-05-05T10:32:16.520757</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/274/VimR-SNAPSHOT-274.tar.bz2"
-                 sparkle:version="274"
-                 sparkle:shortVersionString="SNAPSHOT-274"
-                 sparkle:dsaSignature="MC0CFQCcRqdpD1YDx0dXW+mi3O7WiKsq8AIUSYwDKr766PA5QnlbBj3fn8HSxB4="
-                 length="12153370"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.23.0-275/VimR-v0.23.0-275.tar.bz2"
+                 sparkle:version="275"
+                 sparkle:shortVersionString="0.23.0"
+                 sparkle:dsaSignature="MC0CFQCi65UeKDlPEFa1PBiBAFae2TssJAIUaM4zcNPIxFzlE2cCQPCNwUQX3PM="
+                 length="12162223"
                  type="application/octet-stream"/>
     </item>
   </channel>
