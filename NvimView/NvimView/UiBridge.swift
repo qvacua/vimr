@@ -154,8 +154,6 @@ class UiBridge {
         .disposed(by: self.disposeBag)
 
     case .nvimReady:
-      self.isNvimReady = true
-
       self.runLocalServerAndNvimCompletable?(.completed)
       self.runLocalServerAndNvimCompletable = nil
 
@@ -413,8 +411,6 @@ class UiBridge {
   private let client = RxMessagePortClient()
 
   private var nvimServerProc: Process?
-
-  private var isNvimReady = false
 
   private var initialWidth = 40
   private var initialHeight = 20
