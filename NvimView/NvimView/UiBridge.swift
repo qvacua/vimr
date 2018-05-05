@@ -54,6 +54,14 @@ class UiBridge {
     return self.streamSubject.asObservable()
   }
 
+  var scheduler: SerialDispatchQueueScheduler
+  var queue = DispatchQueue(label: "com.qvacua.NvimView.UiBridge", qos: .userInitiated) {
+    didSet {
+      self.scheduler = SerialDispatchQueueScheduler(queue: self.queue,
+                                                    internalSerialQueueName: "com.qvacua.NvimView.UiBridge")
+    }
+  }
+
   let nvimQuitCondition = NSCondition()
 
   private(set) var isNvimQuitting = false
@@ -66,11 +74,17 @@ class UiBridge {
     self.nvimArgs = config.nvimArgs ?? []
     self.cwd = config.cwd
 
+    self.scheduler = SerialDispatchQueueScheduler(queue: self.queue,
+                                                  internalSerialQueueName: "com.qvacua.NvimView.UiBridge")
+
+    self.client.queue = self.queue
+    self.server.queue = self.queue
+
     self.server.stream
       .subscribe(onNext: { message in
         self.handleMessage(msgId: message.msgid, data: message.data)
       }, onError: { error in
-        self.logger.error("There wsa an error on the local message port server: \(error)")
+        self.logger.error("There was an error on the local message port server: \(error)")
         self.streamSubject.onError(Error.ipc(error))
       })
       .disposed(by: self.disposeBag)
@@ -83,26 +97,12 @@ class UiBridge {
     return self.server
       .run(as: self.localServerName)
       .andThen(Completable.create { completable in
+        self.runLocalServerAndNvimCompletable = completable
         self.launchNvimUsingLoginShell()
-
-        let deadline = Date().addingTimeInterval(timeout)
-        self.nvimReadyCondition.lock()
-        defer { self.nvimReadyCondition.unlock() }
-        while !self.isNvimReady && self.nvimReadyCondition.wait(until: deadline) {}
-
-        if self.isNvimReady {
-          self.streamSubject.onNext(.ready)
-          if self.isInitErrorPresent {
-            self.streamSubject.onNext(.initVimError)
-          }
-          completable(.completed)
-        } else {
-          self.streamSubject.onError(Error.launchNvim)
-          completable(.error(Error.launchNvim))
-        }
 
         return Disposables.create()
       })
+      .timeout(timeout, scheduler: self.scheduler)
   }
 
   func vimInput(_ str: String) -> Completable {
@@ -187,12 +187,16 @@ class UiBridge {
         .disposed(by: self.disposeBag)
 
     case .nvimReady:
-      self.isInitErrorPresent = data?.asArray(ofType: Bool.self, count: 1)?[0] ?? false
       self.isNvimReady = true
-      self.nvimReadyCondition.lock()
-      defer {
-        self.nvimReadyCondition.signal()
-        self.nvimReadyCondition.unlock()
+
+      self.runLocalServerAndNvimCompletable?(.completed)
+      self.runLocalServerAndNvimCompletable = nil
+
+      self.streamSubject.onNext(.ready)
+
+      let isInitErrorPresent = data?.asArray(ofType: Bool.self, count: 1)?[0] ?? false
+      if isInitErrorPresent {
+        self.streamSubject.onNext(.initVimError)
       }
 
     case .resize:
@@ -444,11 +448,11 @@ class UiBridge {
   private var nvimServerProc: Process?
 
   private var isNvimReady = false
-  private let nvimReadyCondition = NSCondition()
-  private var isInitErrorPresent = false
 
   private var initialWidth = 40
   private var initialHeight = 20
+
+  private var runLocalServerAndNvimCompletable: Completable.CompletableObserver?
 
   private let streamSubject = PublishSubject<Message>()
   private let disposeBag = DisposeBag()
