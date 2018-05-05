@@ -54,9 +54,6 @@ class UiBridge {
     return self.streamSubject.asObservable()
   }
 
-  private(set) var isNvimQuitting = false
-  private(set) var isNvimQuit = false
-
   init(uuid: String, queue: DispatchQueue, config: NvimView.Config) {
     self.uuid = uuid
 
@@ -326,13 +323,10 @@ class UiBridge {
   }
 
   private func quit(using body: @escaping () -> Void) -> Completable {
-    self.isNvimQuitting = true
-
     return self
       .closePorts()
       .andThen(Completable.create { completable in
         body()
-        self.isNvimQuit = true
 
         completable(.completed)
         return Disposables.create()
@@ -346,17 +340,6 @@ class UiBridge {
   }
 
   private func sendMessage(msgId: NvimBridgeMsgId, data: Data?) -> Completable {
-    // .agentReady is needed to set isNvimReady
-    guard self.isNvimReady || msgId == .agentReady else {
-      self.logger.info("NvimServer is not ready, but trying to send msg: \(msgId.rawValue).")
-      return Completable.error(Error.nvimNotReady)
-    }
-
-    if self.isNvimQuitting {
-      self.logger.info("NvimServer is quitting, but trying to send msg: \(msgId.rawValue).")
-      return Completable.error(Error.nvimQuitting)
-    }
-
     return self.client
       .send(msgid: Int32(msgId.rawValue), data: data, expectsReply: false)
       .asCompletable()

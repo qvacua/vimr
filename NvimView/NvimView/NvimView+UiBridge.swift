@@ -193,10 +193,6 @@ extension NvimView {
   func ipcBecameInvalid(_ reason: String) {
     self.bridgeLogger.debug(reason)
 
-    if self.bridge.isNvimQuitting || self.bridge.isNvimQuit {
-      return
-    }
-
     self.eventsSubject.onNext(.ipcBecameInvalid(reason))
     self.eventsSubject.onCompleted()
 
