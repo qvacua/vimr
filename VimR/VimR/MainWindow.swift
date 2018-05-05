@@ -409,36 +409,21 @@ class MainWindow: NSObject,
     // If we don't call the following in the next tick, only half of the existing swap file warning is displayed.
     // Dunno why...
     DispatchQueue.main.async {
-      urls.forEach { (url: URL, openMode: OpenMode) in
-        switch openMode {
+      Completable.concat(
+          urls.map { entry -> Completable in
+            let url = entry.key
+            let mode = entry.value
 
-        case .default:
-          self.neoVimView
-            .open(urls: [url])
-            .subscribe()
-
-        case .currentTab:
-          self.neoVimView
-            .openInCurrentTab(url: url)
-            .subscribe()
-
-        case .newTab:
-          self.neoVimView
-            .openInNewTab(urls: [url])
-            .subscribe()
-
-        case .horizontalSplit:
-          self.neoVimView
-            .openInHorizontalSplit(urls: [url])
-            .subscribe()
-
-        case .verticalSplit:
-          self.neoVimView
-            .openInVerticalSplit(urls: [url])
-            .subscribe()
-
-        }
-      }
+            switch mode {
+            case .default: return self.neoVimView.open(urls: [url])
+            case .currentTab: return self.neoVimView.openInCurrentTab(url: url)
+            case .newTab: return self.neoVimView.openInNewTab(urls: [url])
+            case .horizontalSplit: return self.neoVimView.openInHorizontalSplit(urls: [url])
+            case .verticalSplit: return self.neoVimView.openInVerticalSplit(urls: [url])
+            }
+          }
+        )
+        .subscribe()
     }
   }
 
