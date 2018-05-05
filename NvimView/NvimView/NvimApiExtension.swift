@@ -9,7 +9,7 @@ import RxSwift
 
 extension Api {
 
-  public func getBufGetInfo(
+  public func bufGetInfo(
     buffer: Api.Buffer,
     checkBlocked: Bool = true
   ) -> Single<Dictionary<String, Api.Value>> {

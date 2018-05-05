@@ -175,7 +175,7 @@ extension NvimView {
 
   func neoVimBuffer(for buf: Api.Buffer, currentBuffer: Api.Buffer?) -> Single<NvimView.Buffer> {
     return self.api
-      .getBufGetInfo(buffer: buf)
+      .bufGetInfo(buffer: buf)
       .map { info -> NvimView.Buffer in
         let current = buf == currentBuffer
         guard let path = info["filename"]?.stringValue,
