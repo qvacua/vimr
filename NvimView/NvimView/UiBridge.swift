@@ -65,7 +65,8 @@ class UiBridge {
     self.cwd = config.cwd
 
     self.queue = queue
-    self.scheduler = SerialDispatchQueueScheduler(queue: queue, internalSerialQueueName: "com.qvacua.NvimView.UiBridge")
+    self.scheduler = SerialDispatchQueueScheduler(queue: queue,
+                                                  internalSerialQueueName: String(reflecting: UiBridge.self))
     self.client.queue = self.queue
     self.server.queue = self.queue
 
