@@ -4,7 +4,7 @@
  */
 
 import Cocoa
-import NvimMsgPack
+import RxNeovimApi
 import RxSwift
 
 extension NvimView {
@@ -375,7 +375,7 @@ extension NvimView {
     self
       .currentBuffer()
       .flatMap { curBuf -> Single<NvimView.Buffer> in
-        self.neoVimBuffer(for: NvimApi.Buffer(handle), currentBuffer: curBuf.apiBuffer)
+        self.neoVimBuffer(for: Api.Buffer(handle), currentBuffer: curBuf.apiBuffer)
       }
       .subscribe(onSuccess: {
         self.eventsSubject.onNext(.bufferWritten($0))

@@ -5,7 +5,7 @@
  */
 
 import Cocoa
-import NvimMsgPack
+import RxNeovimApi
 import RxSwift
 
 @available(OSX 10.12.2, *)
@@ -127,7 +127,7 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
 
     let window = tab.currentWindow ?? tab.windows[0]
     self.api
-      .setCurrentWin(window: NvimApi.Window(window.handle), expectsReturnValue: false)
+      .setCurrentWin(window: Api.Window(window.handle), expectsReturnValue: false)
       .subscribeOn(self.scheduler)
       .subscribe(onError: { error in
         self.eventsSubject.onNext(.apiError(msg: "Could not set current window to \(window.handle).", cause: error))

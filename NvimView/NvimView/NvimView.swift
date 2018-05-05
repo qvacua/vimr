@@ -4,7 +4,7 @@
  */
 
 import Cocoa
-import NvimMsgPack
+import RxNeovimApi
 import RxSwift
 
 public class NvimView: NSView,
@@ -337,7 +337,7 @@ public class NvimView: NSView,
                                            with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
                                            shouldLogDebug: nil)
   let bridge: UiBridge
-  let api = NvimApi()
+  let api = RxNeovimApi.Api()
   let grid = Grid()
 
   let drawer: TextDrawer
