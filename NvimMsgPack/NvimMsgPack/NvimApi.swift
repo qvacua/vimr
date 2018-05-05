@@ -77,7 +77,10 @@ public class NvimApi {
     return self.msgpackRpc.stream
   }
 
+  public var queue = DispatchQueue(label: "com.qvacua.NvimMsgpack.NvimApi", qos: .userInitiated)
+
   public init() {
+    self.msgpackRpc.queue = self.queue
   }
 
   public func run(at path: String) -> Completable {
