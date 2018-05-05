@@ -304,7 +304,6 @@
 		4BB409E61DD68CCC005F39A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/FileBrowserMenu.xib; sourceTree = "<group>"; };
 		4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProxyWorkspaceBar.swift; path = Workspace/ProxyWorkspaceBar.swift; sourceTree = "<group>"; };
 		4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WorkspaceToolButton.swift; path = Workspace/WorkspaceToolButton.swift; sourceTree = "<group>"; };
-		4BC1642A1FD2DEE1001903BE /* NvimMsgPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NvimMsgPack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BC1642B1FD2DEE1001903BE /* NvimView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NvimView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BDF500B1D760A3500D8FBC3 /* FileUtilsTest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FileUtilsTest; sourceTree = "<group>"; };
 		4BDF50181D77540900D8FBC3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OpenQuicklyWindow.xib; sourceTree = "<group>"; };
@@ -531,7 +530,6 @@
 				4BF18C381FD2E2AB00DF95D1 /* RxCocoa.framework */,
 				4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */,
 				4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */,
-				4BC1642A1FD2DEE1001903BE /* NvimMsgPack.framework */,
 				4BC1642B1FD2DEE1001903BE /* NvimView.framework */,
 			);
 			name = Frameworks;

@@ -135,7 +135,6 @@
 		4B90F0621FD2AFF7008A39E0 /* NvimServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NvimServer.h; sourceTree = "<group>"; };
 		4B90F0631FD2AFF7008A39E0 /* server_ui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_ui.h; sourceTree = "<group>"; };
 		4B90F0641FD2AFF7008A39E0 /* NvimServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NvimServer.m; sourceTree = "<group>"; };
-		4B90F0731FD2B9F1008A39E0 /* NvimMsgPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NvimMsgPack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B9E5E1B20990DF1006455C3 /* RxMessagePort.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMessagePort.framework; path = ../Carthage/Build/Mac/RxMessagePort.framework; sourceTree = "<group>"; };
 		4BB1F5C8209740E400EC394A /* RxMsgpackRpc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMsgpackRpc.framework; path = ../Carthage/Build/Mac/RxMsgpackRpc.framework; sourceTree = "<group>"; };
 		4BB1F5CA209740E900EC394A /* MessagePack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessagePack.framework; path = ../Carthage/Build/Mac/MessagePack.framework; sourceTree = "<group>"; };
@@ -255,7 +254,6 @@
 				4BB1F5CA209740E900EC394A /* MessagePack.framework */,
 				4BB1F5C8209740E400EC394A /* RxMsgpackRpc.framework */,
 				4BC5B0421FE551DF0071D64F /* RxSwift.framework */,
-				4B90F0731FD2B9F1008A39E0 /* NvimMsgPack.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

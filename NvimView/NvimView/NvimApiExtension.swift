@@ -1,7 +1,7 @@
-//
-// Created by Tae Won Ha on 08.12.17.
-// Copyright (c) 2017 Tae Won Ha. All rights reserved.
-//
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 import Foundation
 import RxNeovimApi
