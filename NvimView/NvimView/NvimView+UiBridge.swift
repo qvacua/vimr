@@ -250,8 +250,6 @@ extension NvimView {
 
     self.markForRender(cellPosition: self.grid.position)
     self.grid.goto(position)
-
-    self.eventsSubject.onNext(.cursor(textPosition))
   }
 
   func doEolClear() {
