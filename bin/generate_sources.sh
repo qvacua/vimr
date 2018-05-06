@@ -17,10 +17,6 @@ popd
 nvim_bin_path="./NvimView/neovim/build/bin/nvim"
 nvim_version=$(${nvim_bin_path} --version | head -1 | cut -d' ' -f2)
 
-pushd NvimMsgPack
-NVIM_PATH="../${nvim_bin_path}" ../bin/generate_api_methods.py
-popd
-
 pushd NvimView
 VERSION=${nvim_version} ../bin/generate_autocmds.py
 

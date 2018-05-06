@@ -206,10 +206,10 @@ class MainWindow: NSObject,
     self.neoVimView.usesLiveResize = state.useLiveResize
     self.updateNeoVimAppearance()
 
-    self.open(urls: state.urlsToOpen)
-
     self.window.setFrame(state.frame, display: true)
     self.window.makeFirstResponder(self.neoVimView)
+
+    self.open(urls: state.urlsToOpen)
 
     Observable
       .of(self.scrollDebouncer.observable, self.cursorDebouncer.observable)
@@ -236,9 +236,15 @@ class MainWindow: NSObject,
         case .ipcBecameInvalid(let reason): self.ipcBecameInvalid(reason: reason)
         case .scroll: self.scroll()
         case .cursor(let position): self.cursor(to: position)
-        case .initError: self.showInitError()
+        case .initVimError: self.showInitError()
+        case .apiError(let error, let msg):
+          fileLog.error("Got api error with msg '\(msg)' and error: \(error)")
+          break
 
         }
+      }, onError: { error in
+        // FIXME call onError
+        fileLog.error(error)
       })
       .disposed(by: self.disposeBag)
 
@@ -261,7 +267,9 @@ class MainWindow: NSObject,
         if state.preview.status == .markdown
            && state.previewTool.isReverseSearchAutomatically
            && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition) {
-          self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
+          self.neoVimView
+            .cursorGo(to: state.preview.previewPosition.payload)
+            .subscribe()
         }
 
         self.previewPosition = state.preview.previewPosition
@@ -269,7 +277,9 @@ class MainWindow: NSObject,
         self.open(urls: state.urlsToOpen)
 
         if let currentBuffer = state.currentBufferToSet {
-          self.neoVimView.select(buffer: currentBuffer)
+          self.neoVimView
+            .select(buffer: currentBuffer)
+            .subscribe()
         }
 
         let usesTheme = state.appearance.usesTheme
@@ -337,8 +347,8 @@ class MainWindow: NSObject,
   }
 
   // The following should only be used when Cmd-Q'ing
-  func quitNeoVimWithoutSaving() {
-    self.neoVimView.quitNeoVimWithoutSaving()
+  func quitNeoVimWithoutSaving() -> Completable {
+    return self.neoVimView.quitNeoVimWithoutSaving()
   }
 
   @IBAction func debug2(_: Any?) {
@@ -396,26 +406,21 @@ class MainWindow: NSObject,
     // If we don't call the following in the next tick, only half of the existing swap file warning is displayed.
     // Dunno why...
     DispatchQueue.main.async {
-      urls.forEach { (url: URL, openMode: OpenMode) in
-        switch openMode {
+      Completable.concat(
+          urls.map { entry -> Completable in
+            let url = entry.key
+            let mode = entry.value
 
-        case .default:
-          self.neoVimView.open(urls: [url])
-
-        case .currentTab:
-          self.neoVimView.openInCurrentTab(url: url)
-
-        case .newTab:
-          self.neoVimView.openInNewTab(urls: [url])
-
-        case .horizontalSplit:
-          self.neoVimView.openInHorizontalSplit(urls: [url])
-
-        case .verticalSplit:
-          self.neoVimView.openInVerticalSplit(urls: [url])
-
-        }
-      }
+            switch mode {
+            case .default: return self.neoVimView.open(urls: [url])
+            case .currentTab: return self.neoVimView.openInCurrentTab(url: url)
+            case .newTab: return self.neoVimView.openInNewTab(urls: [url])
+            case .horizontalSplit: return self.neoVimView.openInHorizontalSplit(urls: [url])
+            case .verticalSplit: return self.neoVimView.openInVerticalSplit(urls: [url])
+            }
+          }
+        )
+        .subscribe()
     }
   }
 

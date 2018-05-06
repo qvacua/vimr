@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import RxSwift
 
 extension NvimView {
 
@@ -32,15 +33,22 @@ extension NvimView {
       let (vimInputX, vimInputY) = self.vimScrollInputFor(deltaX: deltaX, deltaY: deltaY,
                                                           modifierFlags: event.modifierFlags,
                                                           cellPosition: cellPosition)
-      self.uiBridge.vimInput(vimInputX)
-      self.uiBridge.vimInput(vimInputY)
+      self.bridge
+        .vimInput(vimInputX)
+        .andThen(self.bridge.vimInput(vimInputY))
+        .subscribe()
+
       return
     }
 
-    let (absDeltaX, absDeltaY) = (min(Int(ceil(abs(deltaX) / self.trackpadScrollResistance)), maxScrollDeltaX),
-                                  min(Int(ceil(abs(deltaY) / self.trackpadScrollResistance)), maxScrollDeltaY))
+    let (absDeltaX, absDeltaY) = (
+      min(Int(ceil(abs(deltaX) / self.trackpadScrollResistance)), maxScrollDeltaX),
+      min(Int(ceil(abs(deltaY) / self.trackpadScrollResistance)), maxScrollDeltaY)
+    )
     let (horizSign, vertSign) = (deltaX > 0 ? 1 : -1, deltaY > 0 ? 1 : -1)
-    self.uiBridge.scroll(horizontal: horizSign * absDeltaX, vertical: vertSign * absDeltaY, at: cellPosition)
+    self.bridge
+      .scroll(horizontal: horizSign * absDeltaX, vertical: vertSign * absDeltaY, at: cellPosition)
+      .subscribe()
   }
 
   override public func magnify(with event: NSEvent) {
@@ -97,7 +105,9 @@ extension NvimView {
     }
 
 //    self.logger.debug("\(#function): \(result)")
-    self.uiBridge.vimInput(result)
+    self.bridge
+      .vimInput(result)
+      .subscribe()
   }
 
   private func shouldFireVimInputFor(event: NSEvent, newCellPosition: Position) -> Bool {
@@ -152,8 +162,8 @@ extension NvimView {
   }
 
   private func vimScrollInputFor(deltaX: CGFloat, deltaY: CGFloat,
-                                     modifierFlags: NSEvent.ModifierFlags,
-                                     cellPosition: Position) -> (String, String) {
+                                 modifierFlags: NSEvent.ModifierFlags,
+                                 cellPosition: Position) -> (String, String) {
 
     let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.column),\(cellPosition.row)")
 

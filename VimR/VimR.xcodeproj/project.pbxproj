@@ -80,6 +80,9 @@
 		1929BFC70581084B5CE04A5B /* MatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFE179BCA3C75A13D71B /* MatcherTests.swift */; };
 		1929BFDE22D155F7C4B19E96 /* HtmlPreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B85023B042C485409CE1 /* HtmlPreviewTool.swift */; };
 		4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */; };
+		4B17E54D209E3EA400265C1D /* RxNeovimApi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B17E54E209E3EFA00265C1D /* RxNeovimApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */; };
+		4B17E54F209E3EFD00265C1D /* RxNeovimApi.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B19BEFC1E110183007E823C /* markdown in Resources */ = {isa = PBXBuildFile; fileRef = 4B19BEFA1E110183007E823C /* markdown */; };
 		4B19BEFD1E110183007E823C /* preview in Resources */ = {isa = PBXBuildFile; fileRef = 4B19BEFB1E110183007E823C /* preview */; };
 		4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BE01D3BF24200CBDD98 /* Application.swift */; };
@@ -104,14 +107,19 @@
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
 		4B9DF286209C8A8B00DF2AAD /* Swifter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9DF285209C8A8B00DF2AAD /* Swifter.framework */; };
 		4B9DF287209C8A8B00DF2AAD /* Swifter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9DF285209C8A8B00DF2AAD /* Swifter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B9DF288209C8DA000DF2AAD /* MessagePack.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B9DF289209C8DAD00DF2AAD /* RxMsgpackRpc.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB1F5CC20976F8900EC394A /* RxMsgpackRpc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B9DF28A209C8DBB00DF2AAD /* RxMessagePort.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B9E5E1E20990E09006455C3 /* RxMessagePort.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */; };
+		4B9E5E1F20990E09006455C3 /* RxMessagePort.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BB1BEA91D48773200463C29 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */; };
+		4BB1F5CD20976F8900EC394A /* RxMsgpackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CC20976F8900EC394A /* RxMsgpackRpc.framework */; };
+		4BB1F5CF2097704D00EC394A /* RxMsgpackRpc.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CC20976F8900EC394A /* RxMsgpackRpc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BB1F5D12097705E00EC394A /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; };
+		4BB1F5D22097706700EC394A /* MessagePack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BB409E51DD68CCC005F39A2 /* FileBrowserMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BB409E71DD68CCC005F39A2 /* FileBrowserMenu.xib */; };
 		4BB409EE1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */; };
-		4BC164261FD2DEE1001903BE /* MsgPackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC164291FD2DEE1001903BE /* MsgPackRpc.framework */; };
-		4BC164271FD2DEE1001903BE /* NvimMsgPack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC1642A1FD2DEE1001903BE /* NvimMsgPack.framework */; };
 		4BC164281FD2DEE1001903BE /* NvimView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC1642B1FD2DEE1001903BE /* NvimView.framework */; };
-		4BC1642C1FD2DEEA001903BE /* MsgPackRpc.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC164291FD2DEE1001903BE /* MsgPackRpc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BC1642D1FD2DEEA001903BE /* NvimMsgPack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC1642A1FD2DEE1001903BE /* NvimMsgPack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BC1642E1FD2DEEA001903BE /* NvimView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC1642B1FD2DEE1001903BE /* NvimView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BDF500C1D760A3500D8FBC3 /* FileUtilsTest in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF500B1D760A3500D8FBC3 /* FileUtilsTest */; };
 		4BDF50171D77540900D8FBC3 /* OpenQuicklyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF50191D77540900D8FBC3 /* OpenQuicklyWindow.xib */; };
@@ -136,15 +144,11 @@
 		4BF18C471FD2E2C900DF95D1 /* Sparkle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF18C4A1FD2E2DE00DF95D1 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C491FD2E2DE00DF95D1 /* Nimble.framework */; };
 		4BF18C4C1FD2E4CE00DF95D1 /* NvimView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC1642B1FD2DEE1001903BE /* NvimView.framework */; };
-		4BF18C4D1FD2E4D200DF95D1 /* MsgPackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC164291FD2DEE1001903BE /* MsgPackRpc.framework */; };
-		4BF18C4E1FD2E4D200DF95D1 /* NvimMsgPack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC1642A1FD2DEE1001903BE /* NvimMsgPack.framework */; };
 		4BF18C4F1FD2E4F100DF95D1 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */; };
 		4BF18C511FD2E4F200DF95D1 /* RxTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C501FD2E4F200DF95D1 /* RxTest.framework */; };
 		4BF18C521FD2E52300DF95D1 /* RxTest.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BF18C501FD2E4F200DF95D1 /* RxTest.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF18C531FD2E52300DF95D1 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BF18C491FD2E2DE00DF95D1 /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF18C541FD2E52300DF95D1 /* RxSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BF18C551FD2E52300DF95D1 /* MsgPackRpc.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BC164291FD2DEE1001903BE /* MsgPackRpc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BF18C561FD2E52300DF95D1 /* NvimMsgPack.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BC1642A1FD2DEE1001903BE /* NvimMsgPack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF18C571FD2E52300DF95D1 /* NvimView.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BC1642B1FD2DEE1001903BE /* NvimView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF18C581FD2E53400DF95D1 /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */; };
 		4BF18C591FD2E53B00DF95D1 /* CocoaMarkdown.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -167,16 +171,18 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4BB1F5D22097706700EC394A /* MessagePack.framework in Embed Frameworks */,
+				4BB1F5CF2097704D00EC394A /* RxMsgpackRpc.framework in Embed Frameworks */,
 				4BF18C411FD2E2C900DF95D1 /* CocoaFontAwesome.framework in Embed Frameworks */,
 				4BF18C421FD2E2C900DF95D1 /* CocoaMarkdown.framework in Embed Frameworks */,
 				4BF18C431FD2E2C900DF95D1 /* EonilFileSystemEvents.framework in Embed Frameworks */,
 				4BF18C441FD2E2C900DF95D1 /* PureLayout.framework in Embed Frameworks */,
 				4BF18C451FD2E2C900DF95D1 /* RxCocoa.framework in Embed Frameworks */,
+				4B9E5E1F20990E09006455C3 /* RxMessagePort.framework in Embed Frameworks */,
+				4B17E54D209E3EA400265C1D /* RxNeovimApi.framework in Embed Frameworks */,
 				4BF18C461FD2E2C900DF95D1 /* RxSwift.framework in Embed Frameworks */,
 				4B9DF287209C8A8B00DF2AAD /* Swifter.framework in Embed Frameworks */,
 				4BF18C471FD2E2C900DF95D1 /* Sparkle.framework in Embed Frameworks */,
-				4BC1642C1FD2DEEA001903BE /* MsgPackRpc.framework in Embed Frameworks */,
-				4BC1642D1FD2DEEA001903BE /* NvimMsgPack.framework in Embed Frameworks */,
 				4BC1642E1FD2DEEA001903BE /* NvimView.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -188,12 +194,14 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4B9DF28A209C8DBB00DF2AAD /* RxMessagePort.framework in CopyFiles */,
+				4B9DF289209C8DAD00DF2AAD /* RxMsgpackRpc.framework in CopyFiles */,
+				4B17E54F209E3EFD00265C1D /* RxNeovimApi.framework in CopyFiles */,
+				4B9DF288209C8DA000DF2AAD /* MessagePack.framework in CopyFiles */,
 				4BF18C591FD2E53B00DF95D1 /* CocoaMarkdown.framework in CopyFiles */,
 				4BF18C521FD2E52300DF95D1 /* RxTest.framework in CopyFiles */,
 				4BF18C531FD2E52300DF95D1 /* Nimble.framework in CopyFiles */,
 				4BF18C541FD2E52300DF95D1 /* RxSwift.framework in CopyFiles */,
-				4BF18C551FD2E52300DF95D1 /* MsgPackRpc.framework in CopyFiles */,
-				4BF18C561FD2E52300DF95D1 /* NvimMsgPack.framework in CopyFiles */,
 				4BF18C571FD2E52300DF95D1 /* NvimView.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -273,6 +281,7 @@
 		1929BFC0A5A9C6DB09BE1368 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		1929BFE179BCA3C75A13D71B /* MatcherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatcherTests.swift; sourceTree = "<group>"; };
 		4B029F1B1D45E349004EE0D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrefWindow.xib; sourceTree = "<group>"; };
+		4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxNeovimApi.framework; path = ../Carthage/Build/Mac/RxNeovimApi.framework; sourceTree = "<group>"; };
 		4B19BEFA1E110183007E823C /* markdown */ = {isa = PBXFileReference; lastKnownFileType = folder; path = markdown; sourceTree = "<group>"; };
 		4B19BEFB1E110183007E823C /* preview */ = {isa = PBXFileReference; lastKnownFileType = folder; path = preview; sourceTree = "<group>"; };
 		4B238BE01D3BF24200CBDD98 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
@@ -288,12 +297,13 @@
 		4B6A70951D6100E300E12030 /* SwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftCommons.swift; sourceTree = "<group>"; };
 		4B97E2CD1D33F53D00FC0660 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		4B9DF285209C8A8B00DF2AAD /* Swifter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Swifter.framework; path = ../Carthage/Build/Mac/Swifter.framework; sourceTree = "<group>"; };
+		4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMessagePort.framework; path = ../Carthage/Build/Mac/RxMessagePort.framework; sourceTree = "<group>"; };
 		4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
+		4BB1F5CC20976F8900EC394A /* RxMsgpackRpc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMsgpackRpc.framework; path = ../Carthage/Build/Mac/RxMsgpackRpc.framework; sourceTree = "<group>"; };
+		4BB1F5D02097705E00EC394A /* MessagePack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessagePack.framework; path = ../Carthage/Build/Mac/MessagePack.framework; sourceTree = "<group>"; };
 		4BB409E61DD68CCC005F39A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/FileBrowserMenu.xib; sourceTree = "<group>"; };
 		4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProxyWorkspaceBar.swift; path = Workspace/ProxyWorkspaceBar.swift; sourceTree = "<group>"; };
 		4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WorkspaceToolButton.swift; path = Workspace/WorkspaceToolButton.swift; sourceTree = "<group>"; };
-		4BC164291FD2DEE1001903BE /* MsgPackRpc.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MsgPackRpc.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BC1642A1FD2DEE1001903BE /* NvimMsgPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NvimMsgPack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BC1642B1FD2DEE1001903BE /* NvimView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NvimView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BDF500B1D760A3500D8FBC3 /* FileUtilsTest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FileUtilsTest; sourceTree = "<group>"; };
 		4BDF50181D77540900D8FBC3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OpenQuicklyWindow.xib; sourceTree = "<group>"; };
@@ -322,16 +332,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BB1F5D12097705E00EC394A /* MessagePack.framework in Frameworks */,
+				4BB1F5CD20976F8900EC394A /* RxMsgpackRpc.framework in Frameworks */,
 				4BF18C391FD2E2AB00DF95D1 /* EonilFileSystemEvents.framework in Frameworks */,
 				4BF18C3A1FD2E2AB00DF95D1 /* PureLayout.framework in Frameworks */,
 				4BF18C3B1FD2E2AB00DF95D1 /* CocoaMarkdown.framework in Frameworks */,
 				4BF18C3C1FD2E2AB00DF95D1 /* CocoaFontAwesome.framework in Frameworks */,
 				4BF18C3E1FD2E2AB00DF95D1 /* RxSwift.framework in Frameworks */,
+				4B9E5E1E20990E09006455C3 /* RxMessagePort.framework in Frameworks */,
 				4BF18C3F1FD2E2AB00DF95D1 /* Sparkle.framework in Frameworks */,
 				4B9DF286209C8A8B00DF2AAD /* Swifter.framework in Frameworks */,
 				4BF18C401FD2E2AB00DF95D1 /* RxCocoa.framework in Frameworks */,
-				4BC164261FD2DEE1001903BE /* MsgPackRpc.framework in Frameworks */,
-				4BC164271FD2DEE1001903BE /* NvimMsgPack.framework in Frameworks */,
 				4BC164281FD2DEE1001903BE /* NvimView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -343,8 +354,7 @@
 				4BF18C581FD2E53400DF95D1 /* CocoaMarkdown.framework in Frameworks */,
 				4BF18C511FD2E4F200DF95D1 /* RxTest.framework in Frameworks */,
 				4BF18C4F1FD2E4F100DF95D1 /* RxSwift.framework in Frameworks */,
-				4BF18C4D1FD2E4D200DF95D1 /* MsgPackRpc.framework in Frameworks */,
-				4BF18C4E1FD2E4D200DF95D1 /* NvimMsgPack.framework in Frameworks */,
+				4B17E54E209E3EFA00265C1D /* RxNeovimApi.framework in Frameworks */,
 				4BF18C4C1FD2E4CE00DF95D1 /* NvimView.framework in Frameworks */,
 				4BF18C4A1FD2E2DE00DF95D1 /* Nimble.framework in Frameworks */,
 			);
@@ -506,6 +516,10 @@
 		4B5012001EBA791000F76C46 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */,
+				4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */,
+				4BB1F5D02097705E00EC394A /* MessagePack.framework */,
+				4BB1F5CC20976F8900EC394A /* RxMsgpackRpc.framework */,
 				4B9DF285209C8A8B00DF2AAD /* Swifter.framework */,
 				4BF18C501FD2E4F200DF95D1 /* RxTest.framework */,
 				4BF18C491FD2E2DE00DF95D1 /* Nimble.framework */,
@@ -516,8 +530,6 @@
 				4BF18C381FD2E2AB00DF95D1 /* RxCocoa.framework */,
 				4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */,
 				4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */,
-				4BC164291FD2DEE1001903BE /* MsgPackRpc.framework */,
-				4BC1642A1FD2DEE1001903BE /* NvimMsgPack.framework */,
 				4BC1642B1FD2DEE1001903BE /* NvimView.framework */,
 			);
 			name = Frameworks;
