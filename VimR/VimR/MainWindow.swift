@@ -347,11 +347,8 @@ class MainWindow: NSObject,
   }
 
   // The following should only be used when Cmd-Q'ing
-  func quitNeoVimWithoutSaving() {
-    self.neoVimView
-      .quitNeoVimWithoutSaving()
-      .observeOn(MainScheduler.instance)
-      .subscribe()
+  func quitNeoVimWithoutSaving() -> Completable {
+    return self.neoVimView.quitNeoVimWithoutSaving()
   }
 
   @IBAction func debug2(_: Any?) {
