@@ -230,5 +230,3 @@ extension NvimView {
       .map { wins in NvimView.Tabpage(apiTabpage: tabpage, windows: wins, isCurrent: tabpage == currentTabpage) }
   }
 }
-
-private let neoVimQuitTimeout = TimeInterval(5)
