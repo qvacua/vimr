@@ -69,52 +69,57 @@ extension NvimView {
 
   func flush(_ renderData: [Data]) {
     self.bridgeLogger.hr()
-
+    
     gui.async {
+      var goto: Position? = nil
       renderData.forEach { data in
         data.withUnsafeBytes { (pointer: UnsafePointer<RenderDataType>) in
           let sizeOfType = MemoryLayout<RenderDataType>.size
           let rawPointer = UnsafeRawPointer(pointer).advanced(by: sizeOfType);
           let renderType = pointer[0]
-
+          
           switch renderType {
-
+            
           case .put:
             guard let str = String(data: Data(bytes: rawPointer, count: data.count - sizeOfType),
                                    encoding: .utf8)
               else {
-              break
+                break
             }
-
+            
             self.doPut(string: str)
-
+            
           case .putMarked:
             guard let str = String(data: Data(bytes: rawPointer, count: data.count - sizeOfType),
                                    encoding: .utf8)
               else {
-              break
+                break
             }
-
+            
             self.doPut(markedText: str)
-
+            
           case .highlight:
             let attr = rawPointer.load(as: CellAttributes.self)
             self.doHighlightSet(attr)
-
+            
           case .goto:
             let values = rawPointer.bindMemory(to: Int.self, capacity: 4)
-            self.doGoto(position: Position(row: values[0], column: values[1]),
-                        textPosition: Position(row: values[2], column: values[3]))
-
+            goto = Position(row: values[2], column: values[3])
+            self.doGoto(position: Position(row: values[0], column: values[1]), textPosition: goto!)
+            
           case .eolClear:
             self.doEolClear()
-
+            
           }
         }
       }
-
+      
+      if let pos = goto {
+        self.eventsSubject.onNext(.cursor(pos))
+      }
+      
       self.shouldDrawCursor = true
-
+      
       if self.usesLigatures {
         self.markForRender(region: self.grid.regionOfWord(at: self.grid.position))
       } else {
