@@ -1,41 +1,46 @@
-//
-// Created by Tae Won Ha on 08.12.17.
-// Copyright (c) 2017 Tae Won Ha. All rights reserved.
-//
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 import Foundation
-import NvimMsgPack
+import RxNeovimApi
 import RxSwift
 
-extension NvimApi {
+extension Api {
 
-  public func getBufGetInfo(
-    buffer: NvimApi.Buffer,
+  public func bufGetInfo(
+    buffer: Api.Buffer,
     checkBlocked: Bool = true
-  ) -> NvimApi.Response<Dictionary<String, NvimApi.Value>> {
+  ) -> Single<Dictionary<String, Api.Value>> {
 
-    if checkBlocked && self.getMode().value?["blocking"]?.boolValue == true {
-      return .failure(NvimApi.Error.blocked)
-    }
-
-    let params: [NvimApi.Value] = [
+    let params: [Api.Value] = [
       .int(Int64(buffer.handle)),
     ]
-    let response = self.rpc(method: "nvim_buf_get_info", params: params, expectsReturnValue: true)
 
-    guard let value = response.value else {
-      return .failure(response.error!)
+    func transform(_ value: Value) throws -> Dictionary<String, Api.Value> {
+      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
+        throw Api.Error.conversion(type: Dictionary<String, Api.Value>.self)
+      }
+
+      return result
     }
 
-    guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-      return .failure(NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self))
+    if checkBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_buf_get_info", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
     }
 
-    return .success(result)
+    return self
+      .rpc(method: "nvim_buf_get_info", params: params, expectsReturnValue: true)
+      .map(transform)
   }
 }
 
-func msgPackDictToSwift(_ dict: Dictionary<NvimApi.Value, NvimApi.Value>?) -> Dictionary<String, NvimApi.Value>? {
+func msgPackDictToSwift(_ dict: Dictionary<Api.Value, Api.Value>?) -> Dictionary<String, Api.Value>? {
   return dict?.flatMapToDict { k, v in
     guard let strKey = k.stringValue else {
       return nil
@@ -45,7 +50,7 @@ func msgPackDictToSwift(_ dict: Dictionary<NvimApi.Value, NvimApi.Value>?) -> Di
   }
 }
 
-private func msgPackArrayDictToSwift(_ array: [NvimApi.Value]?) -> [Dictionary<String, NvimApi.Value>]? {
+private func msgPackArrayDictToSwift(_ array: [Api.Value]?) -> [Dictionary<String, Api.Value>]? {
   return array?
     .compactMap { v in v.dictionaryValue }
     .compactMap { d in msgPackDictToSwift(d) }

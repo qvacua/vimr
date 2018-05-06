@@ -3,18 +3,8 @@
  * See LICENSE
  */
 
-import Cocoa
+import Foundation
 import RxSwift
-
-extension ObservableType {
-
-  func mapOmittingNil<R>(_ transform: @escaping (E) throws -> R?) -> RxSwift.Observable<R> {
-    return self
-      .map(transform)
-      .filter { $0 != nil }
-      .map { $0! }
-  }
-}
 
 extension PrimitiveSequence where Element == Never, TraitType == CompletableTrait {
 
@@ -51,17 +41,6 @@ extension PrimitiveSequence where TraitType == SingleTrait {
     return Observable.merge(singles.map { $0.asObservable() }).toArray().asSingle()
   }
 
-  func flatMapCompletable(_ selector: @escaping (Element) throws -> Completable) -> Completable {
-    return self
-      .asObservable()
-      .flatMap { try selector($0).asObservable() }
-      .ignoreElements()
-  }
-
-  func asCompletable() -> Completable {
-    return self.asObservable().ignoreElements()
-  }
-
   func syncValue() -> Element? {
     var trigger = false
     var value: Element?
@@ -84,6 +63,17 @@ extension PrimitiveSequence where TraitType == SingleTrait {
     disposable.dispose()
 
     return value
+  }
+
+  func flatMapCompletable(_ selector: @escaping (Element) throws -> Completable) -> Completable {
+    return self
+      .asObservable()
+      .flatMap { try selector($0).asObservable() }
+      .ignoreElements()
+  }
+
+  func asCompletable() -> Completable {
+    return self.asObservable().ignoreElements()
   }
 }
 

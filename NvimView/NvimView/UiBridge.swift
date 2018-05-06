@@ -4,124 +4,164 @@
  */
 
 import Foundation
+import RxMessagePort
+import RxSwift
 
 class UiBridge {
 
-  weak var nvimView: NvimView?
+  enum Message {
 
-  let nvimQuitCondition = NSCondition()
+    case ready
 
-  private(set) var isNvimQuitting = false
-  private(set) var isNvimQuit = false
+    case initVimError
+    case resize(width: Int, height: Int)
+    case clear
+    case setMenu
+    case busyStart
+    case busyStop
+    case mouseOn
+    case mouseOff
+    case modeChange(CursorModeShape)
+    case setScrollRegion(top: Int, bottom: Int, left: Int, right: Int)
+    case scroll(Int)
+    case unmark(row: Int, column: Int)
+    case bell
+    case visualBell
+    case flush([Data])
+    case setForeground(Int)
+    case setBackground(Int)
+    case setSpecial(Int)
+    case setTitle(String)
+    case setIcon(String)
+    case stop
+    case dirtyStatusChanged(Bool)
+    case cwdChanged(String)
+    case colorSchemeChanged([Int])
+    case autoCommandEvent(autocmd: NvimAutoCommandEvent, bufferHandle: Int)
+    case debug1
+    case unknown
+  }
 
-  init(uuid: String, config: NvimView.Config) {
+  enum Error: Swift.Error {
+
+    case launchNvim
+    case nvimNotReady
+    case nvimQuitting
+    case ipc(Swift.Error)
+  }
+
+  var stream: Observable<Message> {
+    return self.streamSubject.asObservable()
+  }
+
+  init(uuid: String, queue: DispatchQueue, config: NvimView.Config) {
     self.uuid = uuid
-    self.messageHandler = MessageHandler()
 
     self.useInteractiveZsh = config.useInteractiveZsh
     self.nvimArgs = config.nvimArgs ?? []
     self.cwd = config.cwd
 
-    self.messageHandler.bridge = self
+    self.queue = queue
+    self.scheduler = SerialDispatchQueueScheduler(queue: queue,
+                                                  internalSerialQueueName: String(reflecting: UiBridge.self))
+    self.client.queue = self.queue
+    self.server.queue = self.queue
+
+    self.server.stream
+      .subscribe(onNext: { message in
+        self.handleMessage(msgId: message.msgid, data: message.data)
+      }, onError: { error in
+        self.logger.error("There was an error on the local message port server: \(error)")
+        self.streamSubject.onError(Error.ipc(error))
+      })
+      .disposed(by: self.disposeBag)
   }
 
-  func runLocalServerAndNvim(width: Int, height: Int) -> Bool {
+  func runLocalServerAndNvim(width: Int, height: Int) -> Completable {
     self.initialWidth = width
     self.initialHeight = height
 
-    self.localServerThread = ThreadWithBlock(threadInitBlock: { _ in self.runLocalServer() })
-    self.localServerThread?.start()
+    return self.server
+      .run(as: self.localServerName)
+      .andThen(Completable.create { completable in
+        self.runLocalServerAndNvimCompletable = completable
+        self.launchNvimUsingLoginShell()
 
-    self.launchNvimUsingLoginShell()
-
-    let deadline = Date().addingTimeInterval(timeout)
-    self.nvimReadyCondition.lock()
-    defer { self.nvimReadyCondition.unlock() }
-    while (!self.isNvimReady && self.nvimReadyCondition.wait(until: deadline)) {}
-
-    return !self.isInitErrorPresent
+        // This will be completed in .nvimReady branch of handleMessage()
+        return Disposables.create()
+      })
+      .timeout(timeout, scheduler: self.scheduler)
   }
 
-  func vimInput(_ str: String) {
-    self.sendMessage(msgId: .input, data: str.data(using: .utf8))
+  func vimInput(_ str: String) -> Completable {
+    return self.sendMessage(msgId: .input, data: str.data(using: .utf8))
   }
 
-  func vimInputMarkedText(_ markedText: String) {
-    self.sendMessage(msgId: .inputMarked, data: markedText.data(using: .utf8))
+  func vimInputMarkedText(_ markedText: String) -> Completable {
+    return self.sendMessage(msgId: .inputMarked, data: markedText.data(using: .utf8))
   }
 
-  func deleteCharacters(_ count: Int) {
-    self.sendMessage(msgId: .delete, data: [count].data())
+  func deleteCharacters(_ count: Int) -> Completable {
+    return self.sendMessage(msgId: .delete, data: [count].data())
   }
 
-  func resize(width: Int, height: Int) {
-    self.sendMessage(msgId: .resize, data: [width, height].data())
+  func resize(width: Int, height: Int) -> Completable {
+    return self.sendMessage(msgId: .resize, data: [width, height].data())
   }
 
-  func focusGained(_ gained: Bool) {
-    self.sendMessage(msgId: .focusGained, data: [gained].data())
+  func focusGained(_ gained: Bool) -> Completable {
+    return self.sendMessage(msgId: .focusGained, data: [gained].data())
   }
 
-  func scroll(horizontal: Int, vertical: Int, at position: Position) {
-    self.sendMessage(msgId: .scroll, data: [horizontal, vertical, position.row, position.column].data())
+  func scroll(horizontal: Int, vertical: Int, at position: Position) -> Completable {
+    return self.sendMessage(msgId: .scroll, data: [horizontal, vertical, position.row, position.column].data())
   }
 
-  func quit() {
-    self.isNvimQuitting = true
-
-    self.closePorts()
-
-    self.nvimServerProc?.waitUntilExit()
-
-    self.nvimQuitCondition.lock()
-    defer {
-      self.nvimQuitCondition.signal()
-      self.nvimQuitCondition.unlock()
+  func quit() -> Completable {
+    return self.quit {
+      self.nvimServerProc?.waitUntilExit()
+      self.logger.info("NvimServer \(self.uuid) exited successfully.")
     }
-    self.isNvimQuit = true
-
-    self.logger.info("NvimServer \(self.uuid) exited successfully.")
   }
 
-  func forceQuit() {
+  func forceQuit() -> Completable {
     self.logger.info("Force-exiting NvimServer \(self.uuid).")
 
-    self.isNvimQuitting = true
-
-    self.closePorts()
-    self.forceExitNvimServer()
-
-    self.nvimQuitCondition.lock()
-    defer {
-      self.nvimQuitCondition.signal()
-      self.nvimQuitCondition.unlock()
+    return self.quit {
+      self.forceExitNvimServer()
+      self.logger.info("NvimServer \(self.uuid) was forcefully exited.")
     }
-    self.isNvimQuit = true
-
-    self.logger.info("NvimServer \(self.uuid) was forcefully exited.")
   }
 
-  func debug() {
-    self.sendMessage(msgId: .debug1, data: nil)
+  func debug() -> Completable {
+    return self.sendMessage(msgId: .debug1, data: nil)
   }
 
-  fileprivate func handleMessage(msgId: Int32, data: Data?) {
+  private func handleMessage(msgId: Int32, data: Data?) {
     guard let msg = NvimServerMsgId(rawValue: Int(msgId)) else {
+      self.streamSubject.onNext(.unknown)
       return
     }
 
     switch msg {
 
     case .serverReady:
-      self.establishNvimConnection()
+      self
+        .establishNvimConnection()
+        .subscribe(onError: { error in
+          self.streamSubject.onError(Error.ipc(error))
+        })
+        .disposed(by: self.disposeBag)
 
     case .nvimReady:
-      self.isInitErrorPresent = data?.asArray(ofType: Bool.self, count: 1)?[0] ?? false
-      self.nvimReadyCondition.lock()
-      self.isNvimReady = true
-      defer {
-        self.nvimReadyCondition.signal()
-        self.nvimReadyCondition.unlock()
+      self.runLocalServerAndNvimCompletable?(.completed)
+      self.runLocalServerAndNvimCompletable = nil
+
+      self.streamSubject.onNext(.ready)
+
+      let isInitErrorPresent = data?.asArray(ofType: Bool.self, count: 1)?[0] ?? false
+      if isInitErrorPresent {
+        self.streamSubject.onNext(.initVimError)
       }
 
     case .resize:
@@ -129,118 +169,118 @@ class UiBridge {
         return
       }
 
-      self.nvimView?.resize(width: values[0], height: values[1])
+      self.streamSubject.onNext(.resize(width: values[0], height: values[1]))
 
     case .clear:
-      self.nvimView?.clear()
+      self.streamSubject.onNext(.clear)
 
     case .setMenu:
-      self.nvimView?.updateMenu()
+      self.streamSubject.onNext(.setMenu)
 
     case .busyStart:
-      self.nvimView?.busyStart()
+      self.streamSubject.onNext(.busyStart)
 
     case .busyStop:
-      self.nvimView?.busyStop()
+      self.streamSubject.onNext(.busyStop)
 
     case .mouseOn:
-      self.nvimView?.mouseOn()
+      self.streamSubject.onNext(.mouseOn)
 
     case .mouseOff:
-      self.nvimView?.mouseOff()
+      self.streamSubject.onNext(.mouseOff)
 
     case .modeChange:
       guard let values = data?.asArray(ofType: CursorModeShape.self, count: 1) else {
         return
       }
 
-      self.nvimView?.modeChange(values[0])
+      self.streamSubject.onNext(.modeChange(values[0]))
 
     case .setScrollRegion:
       guard let values = data?.asArray(ofType: Int.self, count: 4) else {
         return
       }
 
-      self.nvimView?.setScrollRegion(top: values[0], bottom: values[1], left: values[2], right: values[3])
+      self.streamSubject.onNext(.setScrollRegion(top: values[0], bottom: values[1], left: values[2], right: values[3]))
 
     case .scroll:
       guard let values = data?.asArray(ofType: Int.self, count: 1) else {
         return
       }
 
-      self.nvimView?.scroll(values[0])
+      self.streamSubject.onNext(.scroll(values[0]))
 
     case .unmark:
       guard let values = data?.asArray(ofType: Int.self, count: 2) else {
         return
       }
 
-      self.nvimView?.unmark(row: values[0], column: values[1])
+      self.streamSubject.onNext(.unmark(row: values[0], column: values[1]))
 
     case .bell:
-      self.nvimView?.bell()
+      self.streamSubject.onNext(.bell)
 
     case .visualBell:
-      self.nvimView?.visualBell()
+      self.streamSubject.onNext(.visualBell)
 
     case .flush:
       guard let d = data, let renderData = NSKeyedUnarchiver.unarchiveObject(with: d) as? [Data] else {
         return
       }
 
-      self.nvimView?.flush(renderData)
+      self.streamSubject.onNext(.flush(renderData))
 
     case .setForeground:
       guard let values = data?.asArray(ofType: Int.self, count: 1) else {
         return
       }
 
-      self.nvimView?.update(foreground: values[0])
+      self.streamSubject.onNext(.setForeground(values[0]))
 
     case .setBackground:
       guard let values = data?.asArray(ofType: Int.self, count: 1) else {
         return
       }
 
-      self.nvimView?.update(background: values[0])
+      self.streamSubject.onNext(.setBackground(values[0]))
 
     case .setSpecial:
       guard let values = data?.asArray(ofType: Int.self, count: 1) else {
         return
       }
 
-      self.nvimView?.update(special: values[0])
+      self.streamSubject.onNext(.setSpecial(values[0]))
 
     case .setTitle:
       guard let d = data, let title = String(data: d, encoding: .utf8) else {
         return
       }
 
-      self.nvimView?.set(title: title)
+      self.streamSubject.onNext(.setTitle(title))
 
     case .setIcon:
       guard let d = data, let icon = String(data: d, encoding: .utf8) else {
         return
       }
 
-      self.nvimView?.set(icon: icon)
+      self.streamSubject.onNext(.setIcon(icon))
 
     case .stop:
-      self.nvimView?.stop()
+      self.streamSubject.onNext(.stop)
 
     case .dirtyStatusChanged:
       guard let values = data?.asArray(ofType: Bool.self, count: 1) else {
         return
       }
 
-      self.nvimView?.set(dirty: values[0])
+      self.streamSubject.onNext(.dirtyStatusChanged(values[0]))
 
     case .cwdChanged:
       guard let d = data, let cwd = String(data: d, encoding: .utf8) else {
         return
       }
 
-      self.nvimView?.cwdChanged(cwd)
+      self.streamSubject.onNext(.cwdChanged(cwd))
 
 
     case .colorSchemeChanged:
@@ -248,7 +288,7 @@ class UiBridge {
         return
       }
 
-      self.nvimView?.colorSchemeChanged(values)
+      self.streamSubject.onNext(.colorSchemeChanged(values))
 
     case .autoCommandEvent:
       if data?.count == 2 * MemoryLayout<Int>.stride {
@@ -258,76 +298,49 @@ class UiBridge {
           return
         }
 
-        self.nvimView?.autoCommandEvent(cmd, bufferHandle: values[1])
+        self.streamSubject.onNext(.autoCommandEvent(autocmd: cmd, bufferHandle: values[1]))
 
       } else {
         guard let values = data?.asArray(ofType: NvimAutoCommandEvent.self, count: 1) else {
           return
         }
 
-        self.nvimView?.autoCommandEvent(values[0], bufferHandle: -1)
+        self.streamSubject.onNext(.autoCommandEvent(autocmd: values[0], bufferHandle: -1))
       }
 
     case .debug1:
-      break
+      self.streamSubject.onNext(.debug1)
 
     }
-
-    return
   }
 
-  private func closePorts() {
-    CFRunLoopStop(self.localServerRunLoop)
-    self.localServerThread?.cancel()
-
-    if CFMessagePortIsValid(self.remoteServerPort) {
-      CFMessagePortInvalidate(self.remoteServerPort)
-    }
-    self.remoteServerPort = nil
-
-    if CFMessagePortIsValid(self.localServerPort) {
-      CFMessagePortInvalidate(self.localServerPort)
-    }
-    self.localServerPort = nil
+  private func closePorts() -> Completable {
+    return self.client
+      .stop()
+      .andThen(self.server.stop())
   }
 
-  private func establishNvimConnection() {
-    self.remoteServerPort = CFMessagePortCreateRemote(kCFAllocatorDefault, self.remoteServerName.cfStr)
-    self.sendMessage(msgId: .agentReady, data: [self.initialWidth, self.initialHeight].data())
+  private func quit(using body: @escaping () -> Void) -> Completable {
+    return self
+      .closePorts()
+      .andThen(Completable.create { completable in
+        body()
+
+        completable(.completed)
+        return Disposables.create()
+      })
   }
 
-  /// Does not wait for reply.
-  private func sendMessage(msgId: NvimBridgeMsgId, data: Data?) {
-    if self.isNvimQuitting {
-      self.logger.info("NvimServer is quitting, but trying to send msg: \(msgId).")
-      return
-    }
+  private func establishNvimConnection() -> Completable {
+    return self.client
+      .connect(to: self.remoteServerName)
+      .andThen(self.sendMessage(msgId: .agentReady, data: [self.initialWidth, self.initialHeight].data()))
+  }
 
-    if self.remoteServerPort == nil {
-      self.logger.info("Remote server port is nil, but trying to send msg: \(msgId).")
-      return
-    }
-
-    let responseCode = CFMessagePortSendRequest(self.remoteServerPort,
-                                                Int32(msgId.rawValue),
-                                                data as NSData?,
-                                                timeout,
-                                                timeout,
-                                                nil,
-                                                nil)
-
-    if self.isNvimQuitting {
-      return
-    }
-
-    if responseCode != kCFMessagePortSuccess {
-      let msg = "Remote server responded with \(name(of: responseCode)) for msg \(msgId)."
-
-      self.logger.error(msg)
-      if !self.isNvimQuitting {
-        self.nvimView?.ipcBecameInvalid(msg)
-      }
-    }
+  private func sendMessage(msgId: NvimBridgeMsgId, data: Data?) -> Completable {
+    return self.client
+      .send(msgid: Int32(msgId.rawValue), data: data, expectsReply: false)
+      .asCompletable()
   }
 
   private func forceExitNvimServer() {
@@ -386,31 +399,6 @@ class UiBridge {
     return URL(fileURLWithPath: plugInsPath).appendingPathComponent("NvimServer").path
   }
 
-  private func runLocalServer() {
-    var localCtx = CFMessagePortContext(version: 0,
-                                        info: &self.messageHandler,
-                                        retain: nil,
-                                        release: nil,
-                                        copyDescription: nil)
-
-    self.localServerPort = CFMessagePortCreateLocal(
-      kCFAllocatorDefault,
-      self.localServerName.cfStr,
-      { _, msgid, data, info in
-        return info?
-          .load(as: MessageHandler.self)
-          .handleMessage(msgId: msgid, data: data)
-      },
-      &localCtx,
-      nil // FIXME
-    )
-
-    self.localServerRunLoop = CFRunLoopGetCurrent()
-    let runLoopSrc = CFMessagePortCreateRunLoopSource(kCFAllocatorDefault, self.localServerPort, 0)
-    CFRunLoopAddSource(self.localServerRunLoop, runLoopSrc, .defaultMode)
-    CFRunLoopRun()
-  }
-
   private let logger = LogContext.fileLogger(as: UiBridge.self, with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"))
 
   private let uuid: String
@@ -419,22 +407,21 @@ class UiBridge {
   private let cwd: URL
   private var nvimArgs: [String]
 
-  private var remoteServerPort: CFMessagePort?
-
-  private var localServerPort: CFMessagePort?
-  private var localServerThread: Thread?
-  private var localServerRunLoop: CFRunLoop?
+  private let server = RxMessagePortServer()
+  private let client = RxMessagePortClient()
 
   private var nvimServerProc: Process?
-
-  private var isNvimReady = false
-  private let nvimReadyCondition = NSCondition()
-  private var isInitErrorPresent = false
 
   private var initialWidth = 40
   private var initialHeight = 20
 
-  private var messageHandler: MessageHandler
+  private var runLocalServerAndNvimCompletable: Completable.CompletableObserver?
+
+  private let scheduler: SerialDispatchQueueScheduler
+  private let queue: DispatchQueue
+
+  private let streamSubject = PublishSubject<Message>()
+  private let disposeBag = DisposeBag()
 
   private var localServerName: String {
     return "com.qvacua.vimr.\(self.uuid)"
@@ -445,31 +432,7 @@ class UiBridge {
   }
 }
 
-private class MessageHandler {
-
-  fileprivate weak var bridge: UiBridge?
-
-  fileprivate func handleMessage(msgId: Int32, data: CFData?) -> Unmanaged<CFData>? {
-    self.bridge?.handleMessage(msgId: msgId, data: data?.data)
-    return nil
-  }
-}
-
 private let timeout = CFTimeInterval(5)
-
-private extension CFData {
-
-  var data: Data {
-    return self as NSData as Data
-  }
-}
-
-private extension String {
-
-  var cfStr: CFString {
-    return self as NSString
-  }
-}
 
 private extension Data {
 
@@ -496,18 +459,5 @@ private extension Array {
       }
       return Data(bytesNoCopy: newPointer, count: self.count, deallocator: .free)
     }
-  }
-}
-
-private func name(of errorCode: Int32) -> String {
-  switch errorCode {
-  // @formatter:off
-  case kCFMessagePortSendTimeout:        return "kCFMessagePortSendTimeout"
-  case kCFMessagePortReceiveTimeout:     return "kCFMessagePortReceiveTimeout"
-  case kCFMessagePortIsInvalid:          return "kCFMessagePortIsInvalid"
-  case kCFMessagePortTransportError:     return "kCFMessagePortTransportError"
-  case kCFMessagePortBecameInvalidError: return "kCFMessagePortBecameInvalidError"
-  default:                               return "unknown error"
-  // @formatter:on
   }
 }

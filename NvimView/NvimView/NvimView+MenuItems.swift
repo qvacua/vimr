@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import RxSwift
 
 // MARK: - NSUserInterfaceValidationsProtocol
 extension NvimView {
@@ -48,9 +49,17 @@ extension NvimView {
   @IBAction func undo(_ sender: AnyObject?) {
     switch self.mode {
     case .insert, .replace:
-      self.uiBridge.vimInput("<Esc>ui")
+      self.bridge
+        .vimInput("<Esc>ui")
+        .subscribe(onError: { error in
+          self.eventsSubject.onNext(.apiError(msg: "Could not undo", cause: error))
+        })
     case .normal, .visual:
-      self.uiBridge.vimInput("u")
+      self.bridge
+        .vimInput("u")
+        .subscribe(onError: { error in
+          self.eventsSubject.onNext(.apiError(msg: "Could not undo", cause: error))
+        })
     default:
       return
     }
@@ -59,9 +68,17 @@ extension NvimView {
   @IBAction func redo(_ sender: AnyObject?) {
     switch self.mode {
     case .insert, .replace:
-      self.uiBridge.vimInput("<Esc><C-r>i")
+      self.bridge
+        .vimInput("<Esc><C-r>i")
+        .subscribe(onError: { error in
+          self.eventsSubject.onNext(.apiError(msg: "Could not redo", cause: error))
+        })
     case .normal, .visual:
-      self.uiBridge.vimInput("<C-r>")
+      self.bridge
+        .vimInput("<C-r>")
+        .subscribe(onError: { error in
+          self.eventsSubject.onNext(.apiError(msg: "Could not redo", cause: error))
+        })
     default:
       return
     }
@@ -70,7 +87,11 @@ extension NvimView {
   @IBAction func cut(_ sender: AnyObject?) {
     switch self.mode {
     case .visual, .normal:
-      self.uiBridge.vimInput("\"+d")
+      self.bridge
+        .vimInput("\"+d")
+        .subscribe(onError: { error in
+          self.eventsSubject.onNext(.apiError(msg: "Could not cut", cause: error))
+        })
     default:
       return
     }
@@ -79,7 +100,11 @@ extension NvimView {
   @IBAction func copy(_ sender: AnyObject?) {
     switch self.mode {
     case .visual, .normal:
-      self.uiBridge.vimInput("\"+y")
+      self.bridge
+        .vimInput("\"+y")
+        .subscribe(onError: { error in
+          self.eventsSubject.onNext(.apiError(msg: "Could not copy", cause: error))
+        })
     default:
       return
     }
@@ -93,42 +118,63 @@ extension NvimView {
     if self.mode == .cmdline || self.mode == .cmdlineInsert || self.mode == .cmdlineReplace
        || self.mode == .replace
        || self.mode == .termFocus {
-      self.uiBridge.vimInput(self.vimPlainString(content))
+      self.bridge
+        .vimInput(self.vimPlainString(content))
+        .subscribe(onError: { error in
+          self.eventsSubject.onNext(.apiError(msg: "Could not paste \(content)", cause: error))
+        })
       return
     }
 
-    guard let curPasteMode = self.nvim.getOption(name: "paste").value?.boolValue else {
-      self.ipcBecameInvalid("Reason: 'set paste' failed")
-      return
-    }
+    self.api
+      .getOption(name: "paste")
+      .flatMap { curPasteMode -> Single<Bool> in
+        if curPasteMode == false {
+          return self.api
+            .setOption(name: "paste", value: .bool(true))
+            .andThen(Single.just(true))
+        } else {
+          return Single.just(false)
+        }
+      }
+      .flatMap { pasteModeSet -> Single<Bool> in
+        switch self.mode {
 
-    let pasteModeSet: Bool
+        case .insert:
+          return self.bridge
+            .vimInput("<ESC>\"+pa")
+            .andThen(Single.just(pasteModeSet))
 
-    if curPasteMode == false {
-      self.nvim.setOption(name: "paste", value: .bool(true))
-      pasteModeSet = true
-    } else {
-      pasteModeSet = false
-    }
+        case .normal, .visual:
+          return self.bridge
+            .vimInput("\"+p")
+            .andThen(Single.just(pasteModeSet))
 
-    switch self.mode {
-    case .insert:
-      self.uiBridge.vimInput("<ESC>\"+pa")
-    case .normal, .visual:
-      self.uiBridge.vimInput("\"+p")
-    default:
-      return
-    }
+        default:
+          return Single.just(pasteModeSet)
 
-    if pasteModeSet {
-      self.nvim.setOption(name: "paste", value: .bool(false))
-    }
+        }
+      }
+      .flatMapCompletable { pasteModeSet -> Completable in
+        if pasteModeSet {
+          return self.api.setOption(name: "paste", value: .bool(false))
+        }
+
+        return Completable.empty()
+      }
+      .subscribe(onError: { error in
+        self.eventsSubject.onNext(.apiError(msg: "There was an pasting.", cause: error))
+      })
   }
 
   @IBAction func delete(_ sender: AnyObject?) {
     switch self.mode {
     case .normal, .visual:
-      self.uiBridge.vimInput("x")
+      self.bridge
+        .vimInput("x")
+        .subscribe(onError: { error in
+          self.eventsSubject.onNext(.apiError(msg: "Could not delete", cause: error))
+        })
     default:
       return
     }
@@ -137,9 +183,17 @@ extension NvimView {
   @IBAction public override func selectAll(_ sender: Any?) {
     switch self.mode {
     case .insert, .visual:
-      self.uiBridge.vimInput("<Esc>ggVG")
+      self.bridge
+        .vimInput("<Esc>ggVG")
+        .subscribe(onError: { error in
+          self.eventsSubject.onNext(.apiError(msg: "Could not select all", cause: error))
+        })
     default:
-      self.uiBridge.vimInput("ggVG")
+      self.bridge
+        .vimInput("ggVG")
+        .subscribe(onError: { error in
+          self.eventsSubject.onNext(.apiError(msg: "Could not select all", cause: error))
+        })
     }
   }
 }

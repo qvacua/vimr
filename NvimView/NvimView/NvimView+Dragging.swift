@@ -27,6 +27,10 @@ extension NvimView {
     }
 
     self.open(urls: paths.map { URL(fileURLWithPath: $0) })
+      .subscribeOn(self.scheduler)
+      .subscribe(onError: { error in
+        self.eventsSubject.onNext(.apiError(msg: "\(paths) could not be opened.", cause: error))
+      })
 
     return true
   }

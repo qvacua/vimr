@@ -4,7 +4,7 @@
  */
 
 import Cocoa
-import NvimMsgPack
+import RxNeovimApi
 import RxSwift
 
 extension NvimView {
@@ -161,14 +161,18 @@ extension NvimView {
 
   func stop() {
     self.bridgeLogger.hr()
-    self.nvim.disconnect()
-    self.uiBridge.quit()
+    try? self.api
+      .stop()
+      .andThen(self.bridge.quit())
+      .andThen(Completable.create { completable in
+        self.eventsSubject.onNext(.neoVimStopped)
+        self.eventsSubject.onCompleted()
 
-    gui.async {
-      self.waitForNeoVimToQuit()
-      self.eventsSubject.onNext(.neoVimStopped)
-      self.eventsSubject.onCompleted()
-    }
+        completable(.completed)
+        return Disposables.create()
+      })
+      .observeOn(MainScheduler.instance)
+      .wait()
   }
 
   func autoCommandEvent(_ event: NvimAutoCommandEvent, bufferHandle: Int) {
@@ -194,18 +198,15 @@ extension NvimView {
   func ipcBecameInvalid(_ reason: String) {
     self.bridgeLogger.debug(reason)
 
-    gui.async {
-      if self.uiBridge.isNvimQuitting || self.uiBridge.isNvimQuit {
-        return
-      }
+    self.eventsSubject.onNext(.ipcBecameInvalid(reason))
+    self.eventsSubject.onCompleted()
 
-      self.eventsSubject.onNext(.ipcBecameInvalid(reason))
-      self.eventsSubject.onCompleted()
-
-      self.bridgeLogger.error("Force-closing due to IPC error.")
-      self.nvim.disconnect()
-      self.uiBridge.forceQuit()
-    }
+    self.bridgeLogger.error("Force-closing due to IPC error.")
+    try? self.api
+      .stop()
+      .andThen(self.bridge.forceQuit())
+      .observeOn(MainScheduler.instance)
+      .wait()
   }
 
   private func doPut(string: String) {
@@ -374,18 +375,16 @@ extension NvimView {
   private func bufferWritten(_ handle: Int) {
     self
       .currentBuffer()
-      .map { curBuf -> NvimView.Buffer in
-        guard let buffer = self.neoVimBuffer(for: NvimApi.Buffer(handle), currentBuffer: curBuf.apiBuffer) else {
-          throw NvimView.Error.api("Could not get buffer for buffer handle \(handle).")
-        }
-
-        return buffer
+      .flatMap { curBuf -> Single<NvimView.Buffer> in
+        self.neoVimBuffer(for: Api.Buffer(handle), currentBuffer: curBuf.apiBuffer)
       }
       .subscribe(onSuccess: {
         self.eventsSubject.onNext(.bufferWritten($0))
         if #available(OSX 10.12.2, *) {
           self.updateTouchBarTab()
         }
+      }, onError: { error in
+        self.eventsSubject.onNext(.apiError(msg: "Could not get the buffer \(handle).", cause: error))
       })
   }
 
@@ -398,6 +397,8 @@ extension NvimView {
         if #available(OSX 10.12.2, *) {
           self.updateTouchBarTab()
         }
+      }, onError: { error in
+        self.eventsSubject.onNext(.apiError(msg: "Could not get the current buffer.", cause: error))
       })
   }
 

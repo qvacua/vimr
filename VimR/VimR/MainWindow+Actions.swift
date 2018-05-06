@@ -10,7 +10,9 @@ import RxSwift
 extension MainWindow {
 
   @IBAction func newTab(_ sender: Any?) {
-    self.neoVimView.newTab()
+    self.neoVimView
+      .newTab()
+      .subscribe()
   }
 
   @IBAction func openDocument(_ sender: Any?) {
@@ -25,16 +27,17 @@ extension MainWindow {
       let urls = panel.urls
       self.neoVimView
         .allBuffers()
-        .subscribe(onSuccess: {
-          if $0.count == 1 {
-            let isTransient = $0.first?.isTransient ?? false
+        .flatMapCompletable { bufs -> Completable in
+          if bufs.count == 1 {
+            let isTransient = bufs.first?.isTransient ?? false
 
             if isTransient {
               self.neoVimView.cwd = FileUtils.commonParent(of: urls)
             }
           }
-          self.neoVimView.open(urls: urls)
-        })
+          return self.neoVimView.open(urls: urls)
+        }
+        .subscribe()
     }
   }
 
@@ -46,14 +49,19 @@ extension MainWindow {
     self.neoVimView
       .currentBuffer()
       .observeOn(MainScheduler.instance)
-      .subscribe(onSuccess: { curBuf in
+      .flatMapCompletable { curBuf -> Completable in
         if curBuf.url == nil {
-          self.savePanelSheet { self.neoVimView.saveCurrentTab(url: $0) }
-          return
+          self.savePanelSheet {
+            self.neoVimView
+              .saveCurrentTab(url: $0)
+              .subscribe()
+          }
+          return Completable.empty()
         }
 
-        self.neoVimView.saveCurrentTab()
-      })
+        return self.neoVimView.saveCurrentTab()
+      }
+      .subscribe()
   }
 
   @IBAction func saveDocumentAs(_ sender: Any?) {
@@ -62,13 +70,12 @@ extension MainWindow {
       .observeOn(MainScheduler.instance)
       .subscribe(onSuccess: { curBuf in
         self.savePanelSheet { url in
-          self.neoVimView.saveCurrentTab(url: url)
-
-          if curBuf.isDirty {
-            self.neoVimView.openInNewTab(urls: [url])
-          } else {
-            self.neoVimView.openInCurrentTab(url: url)
-          }
+          self.neoVimView
+            .saveCurrentTab(url: url)
+            .andThen(
+              curBuf.isDirty ? self.neoVimView.openInNewTab(urls: [url]) : self.neoVimView.openInCurrentTab(url: url)
+            )
+            .subscribe()
         }
       })
   }
@@ -143,7 +150,7 @@ extension MainWindow {
 extension MainWindow {
 
   func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
-    let canSave = self.neoVimView.currentBufferSync()?.type == ""
+    let canSave = self.neoVimView.currentBuffer().syncValue()?.type == ""
     let canSaveAs = canSave
     let canOpen = canSave
     let canOpenQuickly = canSave
