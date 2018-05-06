@@ -64,13 +64,12 @@ extension NvimView {
     self.logger.info("=== Starting neovim...")
     let sockPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock").path
 
-    self.bridge
+    // We wait here, since the user of NvimView cannot subscribe on the Completable. We could demand that the user
+    // call launchNeoVim() by themselves, but...
+    try? self.bridge
       .runLocalServerAndNvim(width: size.width, height: size.height)
       .andThen(self.api.run(at: sockPath))
-      .subscribe(onError: { error in
-        self.eventsSubject.onError(Error.nvimLaunch(msg: "Could not launch nvim", cause: error))
-      })
-      .disposed(by: self.disposeBag)
+      .wait()
   }
 
   private func randomEmoji() -> String {

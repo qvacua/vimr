@@ -206,10 +206,10 @@ class MainWindow: NSObject,
     self.neoVimView.usesLiveResize = state.useLiveResize
     self.updateNeoVimAppearance()
 
-    self.open(urls: state.urlsToOpen)
-
     self.window.setFrame(state.frame, display: true)
     self.window.makeFirstResponder(self.neoVimView)
+
+    self.open(urls: state.urlsToOpen)
 
     Observable
       .of(self.scrollDebouncer.observable, self.cursorDebouncer.observable)
