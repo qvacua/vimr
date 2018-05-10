@@ -206,11 +206,6 @@ class MainWindow: NSObject,
     self.neoVimView.usesLiveResize = state.useLiveResize
     self.updateNeoVimAppearance()
 
-    self.window.setFrame(state.frame, display: true)
-    self.window.makeFirstResponder(self.neoVimView)
-
-    self.open(urls: state.urlsToOpen)
-
     Observable
       .of(self.scrollDebouncer.observable, self.cursorDebouncer.observable)
       .merge()
@@ -221,7 +216,7 @@ class MainWindow: NSObject,
 
     self.neoVimView.events
       .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { event in
+      .subscribe(onNext: { [unowned self] event in
         switch event {
 
         case .neoVimStopped: self.neoVimStopped()
@@ -336,6 +331,11 @@ class MainWindow: NSObject,
         }
       })
       .disposed(by: self.disposeBag)
+
+    self.window.setFrame(state.frame, display: true)
+    self.window.makeFirstResponder(self.neoVimView)
+
+    self.open(urls: state.urlsToOpen)
   }
 
   func uuidAction(for action: Action) -> UuidAction<Action> {
@@ -432,8 +432,10 @@ class MainWindow: NSObject,
   private func showInitError() {
     let notification = NSUserNotification()
     notification.title = "Error during initialization"
-    notification.informativeText = "There was an error during the initialization of NeoVim. " +
-                                   "Use :messages to view the error messages."
+    notification.informativeText = """
+      There was an error during the initialization of NeoVim.
+      Use :messages to view the error messages.
+    """
 
     NSUserNotificationCenter.default.deliver(notification)
   }

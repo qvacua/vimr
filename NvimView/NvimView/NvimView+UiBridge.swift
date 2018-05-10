@@ -6,6 +6,7 @@
 import Cocoa
 import RxNeovimApi
 import RxSwift
+import MessagePack
 
 extension NvimView {
 
@@ -67,59 +68,51 @@ extension NvimView {
     }
   }
 
-  func flush(_ renderData: [Data]) {
+  func flush(_ renderData: [MessagePackValue]) {
     self.bridgeLogger.hr()
-    
+
     gui.async {
       var goto: Position? = nil
-      renderData.forEach { data in
-        data.withUnsafeBytes { (pointer: UnsafePointer<RenderDataType>) in
-          let sizeOfType = MemoryLayout<RenderDataType>.size
-          let rawPointer = UnsafeRawPointer(pointer).advanced(by: sizeOfType);
-          let renderType = pointer[0]
-          
-          switch renderType {
-            
-          case .put:
-            guard let str = String(data: Data(bytes: rawPointer, count: data.count - sizeOfType),
-                                   encoding: .utf8)
-              else {
-                break
-            }
-            
-            self.doPut(string: str)
-            
-          case .putMarked:
-            guard let str = String(data: Data(bytes: rawPointer, count: data.count - sizeOfType),
-                                   encoding: .utf8)
-              else {
-                break
-            }
-            
-            self.doPut(markedText: str)
-            
-          case .highlight:
-            let attr = rawPointer.load(as: CellAttributes.self)
-            self.doHighlightSet(attr)
-            
-          case .goto:
-            let values = rawPointer.bindMemory(to: Int.self, capacity: 4)
-            goto = Position(row: values[2], column: values[3])
-            self.doGoto(position: Position(row: values[0], column: values[1]), textPosition: goto!)
-            
-          case .eolClear:
-            self.doEolClear()
-            
-          }
+      renderData.forEach { value in
+        guard let renderEntry = value.arrayValue,
+              renderEntry.count == 2,
+              let rawType = renderEntry[0].intValue,
+              let type = RenderDataType(rawValue: rawType) else { return }
+
+        switch type {
+
+        case .put:
+          guard let str = renderEntry[1].stringValue else { return }
+          self.doPut(string: str)
+
+        case .putMarked:
+          guard let str = renderEntry[1].stringValue else { return }
+          self.doPut(markedText: str)
+
+        case .highlight:
+          guard let data = renderEntry[1].dataValue else { return }
+          let attr = data.withUnsafeBytes { (pointer: UnsafePointer<CellAttributes>) in pointer.pointee }
+          self.doHighlightSet(attr)
+
+        case .goto:
+          guard let rawValues = renderEntry[1].arrayValue else { return }
+          let values = rawValues.compactMap { $0.intValue }
+          guard values.count == 4 else { return }
+          goto = Position(row: values[2], column: values[3])
+          self.doGoto(position: Position(row: values[0], column: values[1]), textPosition: goto!)
+
+        case .eolClear:
+          self.doEolClear()
+
         }
       }
-      
+
       if let pos = goto {
         self.eventsSubject.onNext(.cursor(pos))
       }
-      
+
       self.shouldDrawCursor = true
-      
+
       if self.usesLigatures {
         self.markForRender(region: self.grid.regionOfWord(at: self.grid.position))
       } else {

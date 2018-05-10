@@ -7,7 +7,6 @@
 #import "server_ui.h"
 #import "Logging.h"
 #import "CocoaCategories.h"
-#import "DataWrapper.h"
 
 // FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
 // them.
@@ -23,38 +22,23 @@
 //#define DEBUG_NEOVIM_SERVER_STANDALONE
 
 
-static const double qTimeout = 10;
+static const double qTimeout = 5;
 
 
 @interface NvimServer ()
 
 - (NSArray<NSString *> *)nvimArgs;
-- (NSCondition *)outputCondition;
 
 @end
 
-static CFDataRef data_sync(CFDataRef data, NSCondition *condition, argv_callback cb) {
-  DataWrapper *wrapper = [[DataWrapper alloc] init];
-  NSDate *deadline = [[NSDate date] dateByAddingTimeInterval:qTimeout];
-
-  [condition lock];
-
-  loop_schedule(&main_loop, event_create(cb, 3, data, condition, wrapper));
-
-  while (wrapper.isDataReady == false && [condition waitUntilDate:deadline]);
-  [condition unlock];
-
-  if (wrapper.data == nil) {
-    return NULL;
-  }
-
-  return CFDataCreateCopy(kCFAllocatorDefault, (__bridge CFDataRef) wrapper.data);
+static CFDataRef data_async(CFDataRef data, argv_callback cb) {
+  loop_schedule(&main_loop, event_create(cb, 3, data));
+  return NULL;
 }
 
 static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFDataRef data, void *info) {
   @autoreleasepool {
     NvimServer *neoVimServer = (__bridge NvimServer *) info;
-    NSCondition *outputCondition = neoVimServer.outputCondition;
     CFRetain(data); // release in the loop callbacks!
 
     switch (msgid) {
@@ -65,17 +49,23 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
         return NULL;
       }
 
-      case NvimBridgeMsgIdScroll: return data_sync(data, outputCondition, neovim_scroll);
+      case NvimBridgeMsgIdScroll:
+        return data_async(data, neovim_scroll);
 
-      case NvimBridgeMsgIdResize: return data_sync(data, outputCondition, neovim_resize);
+      case NvimBridgeMsgIdResize:
+        return data_async(data, neovim_resize);
 
-      case NvimBridgeMsgIdInput: return data_sync(data, outputCondition, neovim_vim_input);
+      case NvimBridgeMsgIdInput:
+        return data_async(data, neovim_vim_input);
 
-      case NvimBridgeMsgIdInputMarked: return data_sync(data, outputCondition, neovim_vim_input_marked_text);
+      case NvimBridgeMsgIdInputMarked:
+        return data_async(data, neovim_vim_input_marked_text);
 
-      case NvimBridgeMsgIdDelete: return data_sync(data, outputCondition, neovim_delete);
+      case NvimBridgeMsgIdDelete:
+        return data_async(data, neovim_delete);
 
-      case NvimBridgeMsgIdFocusGained: return data_sync(data, outputCondition, neovim_focus_gained);
+      case NvimBridgeMsgIdFocusGained:
+        return data_async(data, neovim_focus_gained);
 
       default: return NULL;
 
