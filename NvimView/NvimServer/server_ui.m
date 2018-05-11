@@ -116,9 +116,11 @@ static void send_msg_packing(NvimServerMsgId msgid, pack_block body) {
 
   body(&packer);
 
-  var data = [[NSData alloc] initWithBytesNoCopy:msg_sbuffer.data length:msg_sbuffer.size freeWhenDone:false];
+  let data = CFDataCreateWithBytesNoCopy(
+      kCFAllocatorDefault, (const UInt8 *) msg_sbuffer.data, msg_sbuffer.size, kCFAllocatorNull
+  );
   [_neovim_server sendMessageWithId:msgid data:data];
-  [data release];
+  CFRelease(data);
 
   msgpack_sbuffer_clear(&msg_sbuffer);
 }
