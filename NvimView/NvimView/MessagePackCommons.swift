@@ -1,7 +1,7 @@
-//
-// Created by Tae Won Ha on 10.05.18.
-// Copyright (c) 2018 Tae Won Ha. All rights reserved.
-//
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 import Foundation
 import MessagePack
