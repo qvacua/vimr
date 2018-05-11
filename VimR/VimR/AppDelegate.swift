@@ -75,30 +75,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         return
       }
 
-      let alert = NSAlert()
-      alert.alertStyle = .warning
-      alert.messageText = "FontAwesome could not be loaded."
-      let accessoryView = NSTextField(frame: CGRect(x: 0, y: 0, width: 300, height: 40))
-      accessoryView.isEditable = false
-      accessoryView.drawsBackground = false
-      accessoryView.isBordered = false
-      accessoryView.usesSingleLineMode = false
-
-      // both are needed, otherwise hyperlink won't accept mousedown
-      accessoryView.isSelectable = true
-      accessoryView.allowsEditingTextAttributes = true
-      accessoryView.attributedStringValue = NSAttributedString.infoLabel(markdown: """
-        Unfortunately we don't know yet what is causing this. This seems to happen only to some users.
-        We use the FontAwesome font for icons in the tools, e.g. the file browser. Those icons are now
-        shown as `?`.
-        
-        You can track the progress on this issue at [GitHub](https://github.com/qvacua/vimr/issues/611).
-      """)
-
-      alert.accessoryView = accessoryView
-
-//      alert.runModal()
-
       let notification = NSUserNotification()
       notification.title = "FontAwesome could not be loaded."
       notification.subtitle = "Unfortunately we don't know yet what is causing this."
