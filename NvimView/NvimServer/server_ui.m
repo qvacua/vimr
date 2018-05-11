@@ -82,8 +82,9 @@ static bool _dirty = false;
 static NSInteger _initialWidth = 30;
 static NSInteger _initialHeight = 15;
 
+static msgpack_sbuffer msg_sbuffer;
+static msgpack_sbuffer flush_sbuffer;
 static msgpack_packer *flush_packer;
-static msgpack_sbuffer *flush_sbuffer;
 
 #pragma mark Helper functions
 
@@ -110,16 +111,16 @@ static bool has_dirty_docs() {
 typedef void (^pack_block)(msgpack_packer *packer);
 
 static void send_msg_packing(NvimServerMsgId msgid, pack_block body) {
-  msgpack_sbuffer sbuf;
-  msgpack_sbuffer_init(&sbuf);
   msgpack_packer packer;
-  msgpack_packer_init(&packer, &sbuf, msgpack_sbuffer_write);
+  msgpack_packer_init(&packer, &msg_sbuffer, msgpack_sbuffer_write);
 
   body(&packer);
 
-  var data = [[NSData alloc] initWithBytesNoCopy:sbuf.data length:sbuf.size freeWhenDone:false];
+  var data = [[NSData alloc] initWithBytesNoCopy:msg_sbuffer.data length:msg_sbuffer.size freeWhenDone:false];
   [_neovim_server sendMessageWithId:msgid data:data];
   [data release];
+
+  msgpack_sbuffer_clear(&msg_sbuffer);
 }
 
 static void pack_flush_data(RenderDataType type, pack_block body) {
@@ -256,8 +257,9 @@ static void server_ui_scheduler(Event event, void *d) {
 }
 
 static void server_ui_main(UIBridgeData *bridge, UI *ui) {
-  flush_sbuffer = msgpack_sbuffer_new();
-  flush_packer = msgpack_packer_new(flush_sbuffer, msgpack_sbuffer_write);
+  msgpack_sbuffer_init(&msg_sbuffer);
+  msgpack_sbuffer_init(&flush_sbuffer);
+  flush_packer = msgpack_packer_new(&flush_sbuffer, msgpack_sbuffer_write);
 
   Loop loop;
   loop_init(&loop, NULL);
@@ -287,7 +289,7 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   xfree(_server_ui_data);
   xfree(ui);
 
-  msgpack_sbuffer_free(flush_sbuffer);
+  msgpack_sbuffer_clear(&flush_sbuffer);
   msgpack_packer_free(flush_packer);
 }
 
@@ -295,18 +297,17 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
 
 static void server_ui_flush(UI *ui __unused) {
   @autoreleasepool {
-    if (flush_sbuffer->size == 0) {
+    if (flush_sbuffer.size == 0) {
       return;
     }
 
-    let data = [[NSData alloc] initWithBytesNoCopy:flush_sbuffer->data length:flush_sbuffer->size freeWhenDone:false];
+    let data = [[NSData alloc] initWithBytesNoCopy:flush_sbuffer.data length:flush_sbuffer.size freeWhenDone:false];
     [_neovim_server sendMessageWithId:NvimServerMsgIdFlush data:data];
     [data release];
 
-    msgpack_sbuffer_free(flush_sbuffer);
+    msgpack_sbuffer_clear(&flush_sbuffer);
     msgpack_packer_free(flush_packer);
-    flush_sbuffer = msgpack_sbuffer_new();
-    flush_packer = msgpack_packer_new(flush_sbuffer, msgpack_sbuffer_write);
+    flush_packer = msgpack_packer_new(&flush_sbuffer, msgpack_sbuffer_write);
   }
 }
 
@@ -631,6 +632,7 @@ void custom_ui_autocmds_groups(
 #pragma mark Other help functions
 
 void start_neovim(NSInteger width, NSInteger height, NSArray<NSString *> *args) {
+  // The caller has an @autoreleasepool.
   _initialWidth = width;
   _initialHeight = height;
 

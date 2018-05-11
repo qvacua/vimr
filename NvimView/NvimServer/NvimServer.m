@@ -37,39 +37,43 @@ static CFDataRef data_async(CFDataRef data, argv_callback cb) {
 }
 
 static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFDataRef data, void *info) {
-  @autoreleasepool {
-    NvimServer *neoVimServer = (__bridge NvimServer *) info;
-    CFRetain(data); // release in the loop callbacks!
+  CFRetain(data); // release in the loop callbacks! (or in the case clause when not passed to the callback)
 
-    switch (msgid) {
+  switch (msgid) {
 
-      case NvimBridgeMsgIdAgentReady: {
+    case NvimBridgeMsgIdAgentReady: {
+      @autoreleasepool {
         NSInteger *values = (NSInteger *) CFDataGetBytePtr(data);
-        start_neovim(values[0], values[1], neoVimServer.nvimArgs);
-        return NULL;
+        NvimServer *nvimServer = (__bridge NvimServer *) info;
+
+        start_neovim(values[0], values[1], nvimServer.nvimArgs);
+
+        CFRelease(data);
       }
-
-      case NvimBridgeMsgIdScroll:
-        return data_async(data, neovim_scroll);
-
-      case NvimBridgeMsgIdResize:
-        return data_async(data, neovim_resize);
-
-      case NvimBridgeMsgIdInput:
-        return data_async(data, neovim_vim_input);
-
-      case NvimBridgeMsgIdInputMarked:
-        return data_async(data, neovim_vim_input_marked_text);
-
-      case NvimBridgeMsgIdDelete:
-        return data_async(data, neovim_delete);
-
-      case NvimBridgeMsgIdFocusGained:
-        return data_async(data, neovim_focus_gained);
-
-      default: return NULL;
-
+      return NULL;
     }
+
+    case NvimBridgeMsgIdScroll:
+      return data_async(data, neovim_scroll);
+
+    case NvimBridgeMsgIdResize:
+      return data_async(data, neovim_resize);
+
+    case NvimBridgeMsgIdInput:
+      return data_async(data, neovim_vim_input);
+
+    case NvimBridgeMsgIdInputMarked:
+      return data_async(data, neovim_vim_input_marked_text);
+
+    case NvimBridgeMsgIdDelete:
+      return data_async(data, neovim_delete);
+
+    case NvimBridgeMsgIdFocusGained:
+      return data_async(data, neovim_focus_gained);
+
+    default:
+      return NULL;
+
   }
 }
 
@@ -98,7 +102,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
 - (instancetype)initWithLocalServerName:(NSString *)localServerName
                        remoteServerName:(NSString *)remoteServerName
-                               nvimArgs:(NSArray<NSString*> *)nvimArgs {
+                               nvimArgs:(NSArray<NSString *> *)nvimArgs {
 
   self = [super init];
   if (self == nil) {
