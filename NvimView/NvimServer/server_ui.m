@@ -108,6 +108,14 @@ static bool has_dirty_docs() {
   return false;
 }
 
+static void msgpack_pack_bool(msgpack_packer *packer, bool value) {
+  if (value) {
+    msgpack_pack_true(packer);
+  } else {
+    msgpack_pack_false(packer);
+  }
+}
+
 typedef void (^pack_block)(msgpack_packer *packer);
 
 static void send_msg_packing(NvimServerMsgId msgid, pack_block body) {
@@ -142,11 +150,7 @@ static void send_dirty_status() {
   DLOG("sending dirty status: %d", _dirty);
 
   send_msg_packing(NvimServerMsgIdDirtyStatusChanged, ^(msgpack_packer *packer) {
-    if (_dirty) {
-      msgpack_pack_true(packer);
-    } else {
-      msgpack_pack_false(packer);
-    }
+    msgpack_pack_bool(packer, _dirty);
   });
 }
 
@@ -666,11 +670,7 @@ void start_neovim(NSInteger width, NSInteger height, NSArray<NSString *> *args) 
   _backspace = [[NSString alloc] initWithString:@"<BS>"];
 
   send_msg_packing(NvimServerMsgIdNvimReady, ^(msgpack_packer *packer) {
-    if (msg_didany > 0) {
-      msgpack_pack_true(packer);
-    } else {
-      msgpack_pack_false(packer);
-    }
+    msgpack_pack_bool(packer, msg_didany > 0);
   });
 }
 
