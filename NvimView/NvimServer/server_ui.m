@@ -318,21 +318,17 @@ static void server_ui_flush(UI *ui __unused) {
 }
 
 static void server_ui_resize(UI *ui __unused, Integer width, Integer height) {
-  @autoreleasepool {
-    server_ui_flush(NULL);
+  server_ui_flush(NULL);
 
-    send_msg_packing(NvimServerMsgIdResize, ^(msgpack_packer *packer) {
-      msgpack_pack_array(packer, 2);
-      msgpack_pack_int64(packer, width);
-      msgpack_pack_int64(packer, height);
-    });
-  }
+  send_msg_packing(NvimServerMsgIdResize, ^(msgpack_packer *packer) {
+    msgpack_pack_array(packer, 2);
+    msgpack_pack_int64(packer, width);
+    msgpack_pack_int64(packer, height);
+  });
 }
 
 static void server_ui_clear(UI *ui __unused) {
-  @autoreleasepool {
-    server_ui_flush(NULL);
-  }
+  server_ui_flush(NULL);
 
   [_neovim_server sendMessageWithId:NvimServerMsgIdClear];
 }
@@ -391,27 +387,23 @@ static void server_ui_mode_change(UI *ui __unused, String mode_str __unused, Int
 }
 
 static void server_ui_set_scroll_region(UI *ui __unused, Integer top, Integer bot, Integer left, Integer right) {
-  @autoreleasepool {
-    server_ui_flush(NULL);
+  server_ui_flush(NULL);
 
-    send_msg_packing(NvimServerMsgIdSetScrollRegion, ^(msgpack_packer *packer) {
-      msgpack_pack_array(packer, 4);
-      msgpack_pack_int64(packer, top);
-      msgpack_pack_int64(packer, bot);
-      msgpack_pack_int64(packer, left);
-      msgpack_pack_int64(packer, right);
-    });
-  }
+  send_msg_packing(NvimServerMsgIdSetScrollRegion, ^(msgpack_packer *packer) {
+    msgpack_pack_array(packer, 4);
+    msgpack_pack_int64(packer, top);
+    msgpack_pack_int64(packer, bot);
+    msgpack_pack_int64(packer, left);
+    msgpack_pack_int64(packer, right);
+  });
 }
 
 static void server_ui_scroll(UI *ui __unused, Integer count) {
-  @autoreleasepool {
-    server_ui_flush(NULL);
+  server_ui_flush(NULL);
 
-    send_msg_packing(NvimServerMsgIdScroll, ^(msgpack_packer *packer) {
-      msgpack_pack_int64(packer, count);
-    });
-  }
+  send_msg_packing(NvimServerMsgIdScroll, ^(msgpack_packer *packer) {
+    msgpack_pack_int64(packer, count);
+  });
 }
 
 static void server_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
