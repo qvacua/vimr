@@ -71,13 +71,13 @@ class UiBridge {
     self.server.queue = self.queue
 
     self.server.stream
-      .subscribe(onNext: { message in
-        self.handleMessage(msgId: message.msgid, data: message.data)
-      }, onError: { error in
-        self.logger.error("There was an error on the local message port server: \(error)")
-        self.streamSubject.onError(Error.ipc(error))
-      })
-      .disposed(by: self.disposeBag)
+        .subscribe(onNext: { message in
+          self.handleMessage(msgId: message.msgid, data: message.data)
+        }, onError: { error in
+          self.logger.error("There was an error on the local message port server: \(error)")
+          self.streamSubject.onError(Error.ipc(error))
+        })
+        .disposed(by: self.disposeBag)
   }
 
   func runLocalServerAndNvim(width: Int, height: Int) -> Completable {
@@ -85,15 +85,15 @@ class UiBridge {
     self.initialHeight = height
 
     return self.server
-      .run(as: self.localServerName)
-      .andThen(Completable.create { completable in
-        self.runLocalServerAndNvimCompletable = completable
-        self.launchNvimUsingLoginShell()
+        .run(as: self.localServerName)
+        .andThen(Completable.create { completable in
+          self.runLocalServerAndNvimCompletable = completable
+          self.launchNvimUsingLoginShell()
 
-        // This will be completed in .nvimReady branch of handleMessage()
-        return Disposables.create()
-      })
-      .timeout(timeout, scheduler: self.scheduler)
+          // This will be completed in .nvimReady branch of handleMessage()
+          return Disposables.create()
+        })
+        .timeout(timeout, scheduler: self.scheduler)
   }
 
   func vimInput(_ str: String) -> Completable {
@@ -150,11 +150,11 @@ class UiBridge {
 
     case .serverReady:
       self
-        .establishNvimConnection()
-        .subscribe(onError: { error in
-          self.streamSubject.onError(Error.ipc(error))
-        })
-        .disposed(by: self.disposeBag)
+          .establishNvimConnection()
+          .subscribe(onError: { error in
+            self.streamSubject.onError(Error.ipc(error))
+          })
+          .disposed(by: self.disposeBag)
 
     case .nvimReady:
       self.runLocalServerAndNvimCompletable?(.completed)
@@ -307,16 +307,14 @@ class UiBridge {
 
     case .optionSet:
       guard let d = data,
-            let dict = NSKeyedUnarchiver.unarchiveObject(with: d) as? Dictionary<String, Data>,
-            let key = dict.keys.first,
-            let valueData = dict[key],
-            let values = try? unpackAll(valueData),
-            let value = values.first
+            let dict = (try? unpack(d))?.value.dictionaryValue,
+            let key = dict.keys.first?.stringValue,
+            let value = dict.values.first
           else {
         return
       }
 
-      self.logger.debug("\(key) -> \(value)")
+      self.logger.debug("option set: \(key) -> \(value)")
       self.streamSubject.onNext(.optionSet(key: key, value: value))
 
     case .autoCommandEvent:
@@ -333,31 +331,31 @@ class UiBridge {
 
   private func closePorts() -> Completable {
     return self.client
-      .stop()
-      .andThen(self.server.stop())
+        .stop()
+        .andThen(self.server.stop())
   }
 
   private func quit(using body: @escaping () -> Void) -> Completable {
     return self
-      .closePorts()
-      .andThen(Completable.create { completable in
-        body()
+        .closePorts()
+        .andThen(Completable.create { completable in
+          body()
 
-        completable(.completed)
-        return Disposables.create()
-      })
+          completable(.completed)
+          return Disposables.create()
+        })
   }
 
   private func establishNvimConnection() -> Completable {
     return self.client
-      .connect(to: self.remoteServerName)
-      .andThen(self.sendMessage(msgId: .agentReady, data: [self.initialWidth, self.initialHeight].data()))
+        .connect(to: self.remoteServerName)
+        .andThen(self.sendMessage(msgId: .agentReady, data: [self.initialWidth, self.initialHeight].data()))
   }
 
   private func sendMessage(msgId: NvimBridgeMsgId, data: Data?) -> Completable {
     return self.client
-      .send(msgid: Int32(msgId.rawValue), data: data, expectsReply: false)
-      .asCompletable()
+        .send(msgid: Int32(msgId.rawValue), data: data, expectsReply: false)
+        .asCompletable()
   }
 
   private func forceExitNvimServer() {
@@ -396,7 +394,7 @@ class UiBridge {
 
     nvimArgs.append("--headless")
     let cmd = "exec '\(self.nvimServerExecutablePath())' '\(self.localServerName)' '\(self.remoteServerName)' "
-      .appending(self.nvimArgs.map { "'\($0)'" }.joined(separator: " "))
+        .appending(self.nvimArgs.map { "'\($0)'" }.joined(separator: " "))
 
     self.logger.debug(cmd)
 

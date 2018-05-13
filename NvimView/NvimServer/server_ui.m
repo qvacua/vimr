@@ -42,10 +42,10 @@ static NSInteger _default_background = 0xFFFFFFFF;
 static NSInteger _default_special = 0xFFFF0000;
 
 typedef struct {
-  UIBridgeData *bridge;
-  Loop *loop;
+    UIBridgeData *bridge;
+    Loop *loop;
 
-  bool stop;
+    bool stop;
 } ServerUiData;
 
 // We declare nvim_main because it's not declared in any header files of neovim
@@ -176,13 +176,13 @@ static HlAttrs HlAttrsFromAttrCode(int attr_code) {
 }
 
 static int foreground_for(HlAttrs attrs) {
-  int mask  = attrs.rgb_ae_attr;
-  return mask & HL_INVERSE ? attrs.rgb_bg_color: attrs.rgb_fg_color;
+  int mask = attrs.rgb_ae_attr;
+  return mask & HL_INVERSE ? attrs.rgb_bg_color : attrs.rgb_fg_color;
 }
 
 static int background_for(HlAttrs attrs) {
-  int mask  = attrs.rgb_ae_attr;
-  return mask & HL_INVERSE ? attrs.rgb_fg_color: attrs.rgb_bg_color;
+  int mask = attrs.rgb_ae_attr;
+  return mask & HL_INVERSE ? attrs.rgb_fg_color : attrs.rgb_bg_color;
 }
 
 static void send_colorscheme() {
@@ -557,24 +557,11 @@ static void server_ui_set_icon(UI *ui __unused, String icon) {
 }
 
 static void server_ui_option_set(UI *ui __unused, String name, Object value) {
-  @autoreleasepool {
-    // We use msgpack here since we don't know what value contains.
-    // At some point we should completely migrate to msgpack...
-    msgpack_sbuffer sbuf;
-    msgpack_sbuffer_init(&sbuf);
-    msgpack_packer pk;
-    msgpack_packer_init(&pk, &sbuf, msgpack_sbuffer_write);
-    msgpack_rpc_from_object(value, &pk);
-
-    __auto_type valueData = [[NSData alloc] initWithBytes:sbuf.data length:sbuf.size];
-    __auto_type dict = @{ [NSString stringWithCString:name.data encoding:NSUTF8StringEncoding]: valueData, };
-    __auto_type data = [NSKeyedArchiver archivedDataWithRootObject:dict];
-
-    [_neovim_server sendMessageWithId:NvimServerMsgIdOptionSet data:data];
-
-    [valueData release];
-    msgpack_sbuffer_clear(&sbuf);
-  }
+  send_msg_packing(NvimServerMsgIdOptionSet, ^(msgpack_packer *packer) {
+    msgpack_pack_map(packer, 1);
+    msgpack_rpc_from_string(name, packer);
+    msgpack_rpc_from_object(value, packer);
+  });
 }
 
 static void server_ui_stop(UI *ui __unused) {
