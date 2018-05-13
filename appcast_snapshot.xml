@@ -7,23 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-276</title>
+      <title>SNAPSHOT-277</title>
       <description><![CDATA[
     <p><em>WARNING</em>: This snapshot may very well be instable!</p>
 <ul>
-<li>Some refactorings in the communication layer between the UI and the backend Neovim process.</li>
+<li>Some <em>more</em> refactorings in the communication layer between the UI and the backend Neovim process. (Scrolling got a bit faster, I think 🙂)</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/276
+        https://github.com/qvacua/vimr/releases/tag/snapshot/277
       </releaseNotesLink>
-      <pubDate>2018-05-07T19:26:19.355335</pubDate>
+      <pubDate>2018-05-13T17:19:23.286126</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/276/VimR-SNAPSHOT-276.tar.bz2"
-                 sparkle:version="276"
-                 sparkle:shortVersionString="SNAPSHOT-276"
-                 sparkle:dsaSignature="MCwCFBOaLOTTp4dbtLfy7vipO1FpGhYVAhR+CoREO7NLFjfp5m7nKg57L7W/sw=="
-                 length="12532512"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/277/VimR-SNAPSHOT-277.tar.bz2"
+                 sparkle:version="277"
+                 sparkle:shortVersionString="SNAPSHOT-277"
+                 sparkle:dsaSignature="MC0CFGdf4V1p+6xmrgx9QcRF9zeppeF0AhUAw+Uh6O+1/jyMin2h/ytnfWDFqm4="
+                 length="12541702"
                  type="application/octet-stream"/>
     </item>
   </channel>
