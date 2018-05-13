@@ -526,6 +526,7 @@ static void server_ui_default_colors_set(
   }
 
   send_msg_packing(NvimServerMsgIdDefaultColorsChanged, ^(msgpack_packer *packer) {
+    msgpack_pack_array(packer, 3);
     msgpack_pack_int64(packer, _default_foreground);
     msgpack_pack_int64(packer, _default_background);
     msgpack_pack_int64(packer, _default_special);

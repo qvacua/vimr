@@ -293,7 +293,7 @@ extension NvimView {
       self.grid.background = values[1]
       self.grid.special = values[2]
 
-      self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).cgColor
+      self.layer?.backgroundColor = ColorUtils.cgColorIgnoringAlpha(self.grid.background)
     }
   }
 
