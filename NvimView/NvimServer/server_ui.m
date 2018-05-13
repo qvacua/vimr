@@ -298,19 +298,19 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
 #pragma mark NeoVim's UI callbacks
 
 static void server_ui_flush(UI *ui __unused) {
-  @autoreleasepool {
-    if (flush_sbuffer.size == 0) {
-      return;
-    }
-
-    let data = [[NSData alloc] initWithBytesNoCopy:flush_sbuffer.data length:flush_sbuffer.size freeWhenDone:false];
-    [_neovim_server sendMessageWithId:NvimServerMsgIdFlush data:data];
-    [data release];
-
-    msgpack_sbuffer_clear(&flush_sbuffer);
-    msgpack_packer_free(flush_packer);
-    flush_packer = msgpack_packer_new(&flush_sbuffer, msgpack_sbuffer_write);
+  if (flush_sbuffer.size == 0) {
+    return;
   }
+
+  let data = CFDataCreateWithBytesNoCopy(
+      kCFAllocatorDefault, (const UInt8 *) flush_sbuffer.data, flush_sbuffer.size, kCFAllocatorNull
+  );
+  [_neovim_server sendMessageWithId:NvimServerMsgIdFlush data:data];
+  CFRelease(data);
+
+  msgpack_sbuffer_clear(&flush_sbuffer);
+  msgpack_packer_free(flush_packer);
+  flush_packer = msgpack_packer_new(&flush_sbuffer, msgpack_sbuffer_write);
 }
 
 static void server_ui_resize(UI *ui __unused, Integer width, Integer height) {

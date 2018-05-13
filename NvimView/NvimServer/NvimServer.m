@@ -176,33 +176,31 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (void)sendMessageWithId:(NvimServerMsgId)msgid {
-  [self sendMessageWithId:msgid data:nil];
+  [self sendMessageWithId:msgid data:NULL];
 }
 
-- (void)sendMessageWithId:(NvimServerMsgId)msgid data:(NSData *)data {
+- (void)sendMessageWithId:(NvimServerMsgId)msgid data:(CFDataRef)data {
 #ifdef DEBUG_NEOVIM_SERVER_STANDALONE
   return;
 #endif
 
   if (_remoteServerPort == NULL) {
-    WLOG("Remote server is null: The msg (%lu:%s) could not be sent.", (unsigned long) msgid, data.cdesc);
+    WLOG("Remote server is null: The msg (%lu) could not be sent.", (unsigned long) msgid);
     return;
   }
 
-  SInt32 responseCode = CFMessagePortSendRequest(
-      _remoteServerPort, msgid, (__bridge CFDataRef) data, qTimeout, qTimeout, NULL, NULL
-  );
+  SInt32 responseCode = CFMessagePortSendRequest(_remoteServerPort, msgid, data, qTimeout, qTimeout, NULL, NULL);
 
   if (responseCode == kCFMessagePortSuccess) {
     return;
   }
 
-  WLOG("The msg (%lu:%s) could not be sent: %d", (unsigned long) msgid, data.cdesc, responseCode);
+  WLOG("The msg (%lu) could not be sent: %d", (unsigned long) msgid, responseCode);
 }
 
 - (void)notifyReadiness {
 #ifndef DEBUG_NEOVIM_SERVER_STANDALONE
-  [self sendMessageWithId:NvimServerMsgIdServerReady data:nil];
+  [self sendMessageWithId:NvimServerMsgIdServerReady data:NULL];
 #endif
 }
 

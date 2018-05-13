@@ -15,7 +15,8 @@
                                nvimArgs:(NSArray<NSString *> *)nvimArgs;
 
 - (void)sendMessageWithId:(NvimServerMsgId)msgid;
-- (void)sendMessageWithId:(NvimServerMsgId)msgid data:(NSData *)data;
+
+- (void)sendMessageWithId:(NvimServerMsgId)msgid data:(CFDataRef)data;
 - (void)notifyReadiness;
 
 @end
