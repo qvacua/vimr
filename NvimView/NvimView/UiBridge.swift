@@ -429,17 +429,6 @@ class UiBridge {
 
 private let timeout = CFTimeInterval(5)
 
-private extension Data {
-
-  func asArray<T>(ofType: T.Type, count: Int) -> [T]? {
-    guard (self.count / MemoryLayout<T>.stride) <= count else {
-      return nil
-    }
-
-    return self.withUnsafeBytes { (p: UnsafePointer<T>) in Array(UnsafeBufferPointer(start: p, count: count)) }
-  }
-}
-
 private extension Array {
 
   func data() -> Data {
