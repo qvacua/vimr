@@ -72,6 +72,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
       return data_async(data, neovim_focus_gained);
 
     default:
+      CFRelease(data);
       return NULL;
 
   }
