@@ -7,7 +7,6 @@
 #import "server_ui.h"
 #import "Logging.h"
 #import "CocoaCategories.h"
-#import "DataWrapper.h"
 
 // FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
 // them.
@@ -23,63 +22,59 @@
 //#define DEBUG_NEOVIM_SERVER_STANDALONE
 
 
-static const double qTimeout = 10;
+static const double qTimeout = 5;
 
 
 @interface NvimServer ()
 
 - (NSArray<NSString *> *)nvimArgs;
-- (NSCondition *)outputCondition;
 
 @end
 
-static CFDataRef data_sync(CFDataRef data, NSCondition *condition, argv_callback cb) {
-  DataWrapper *wrapper = [[DataWrapper alloc] init];
-  NSDate *deadline = [[NSDate date] dateByAddingTimeInterval:qTimeout];
-
-  [condition lock];
-
-  loop_schedule(&main_loop, event_create(cb, 3, data, condition, wrapper));
-
-  while (wrapper.isDataReady == false && [condition waitUntilDate:deadline]);
-  [condition unlock];
-
-  if (wrapper.data == nil) {
-    return NULL;
-  }
-
-  return CFDataCreateCopy(kCFAllocatorDefault, (__bridge CFDataRef) wrapper.data);
+static CFDataRef data_async(CFDataRef data, argv_callback cb) {
+  loop_schedule(&main_loop, event_create(cb, 3, data));
+  return NULL;
 }
 
 static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFDataRef data, void *info) {
-  @autoreleasepool {
-    NvimServer *neoVimServer = (__bridge NvimServer *) info;
-    NSCondition *outputCondition = neoVimServer.outputCondition;
-    CFRetain(data); // release in the loop callbacks!
+  CFRetain(data); // release in the loop callbacks! (or in the case clause when not passed to the callback)
 
-    switch (msgid) {
+  switch (msgid) {
 
-      case NvimBridgeMsgIdAgentReady: {
+    case NvimBridgeMsgIdAgentReady: {
+      @autoreleasepool {
         NSInteger *values = (NSInteger *) CFDataGetBytePtr(data);
-        start_neovim(values[0], values[1], neoVimServer.nvimArgs);
-        return NULL;
+        NvimServer *nvimServer = (__bridge NvimServer *) info;
+
+        start_neovim(values[0], values[1], nvimServer.nvimArgs);
+
+        CFRelease(data);
       }
-
-      case NvimBridgeMsgIdScroll: return data_sync(data, outputCondition, neovim_scroll);
-
-      case NvimBridgeMsgIdResize: return data_sync(data, outputCondition, neovim_resize);
-
-      case NvimBridgeMsgIdInput: return data_sync(data, outputCondition, neovim_vim_input);
-
-      case NvimBridgeMsgIdInputMarked: return data_sync(data, outputCondition, neovim_vim_input_marked_text);
-
-      case NvimBridgeMsgIdDelete: return data_sync(data, outputCondition, neovim_delete);
-
-      case NvimBridgeMsgIdFocusGained: return data_sync(data, outputCondition, neovim_focus_gained);
-
-      default: return NULL;
-
+      return NULL;
     }
+
+    case NvimBridgeMsgIdScroll:
+      return data_async(data, neovim_scroll);
+
+    case NvimBridgeMsgIdResize:
+      return data_async(data, neovim_resize);
+
+    case NvimBridgeMsgIdInput:
+      return data_async(data, neovim_vim_input);
+
+    case NvimBridgeMsgIdInputMarked:
+      return data_async(data, neovim_vim_input_marked_text);
+
+    case NvimBridgeMsgIdDelete:
+      return data_async(data, neovim_delete);
+
+    case NvimBridgeMsgIdFocusGained:
+      return data_async(data, neovim_focus_gained);
+
+    default:
+      CFRelease(data);
+      return NULL;
+
   }
 }
 
@@ -108,7 +103,7 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 
 - (instancetype)initWithLocalServerName:(NSString *)localServerName
                        remoteServerName:(NSString *)remoteServerName
-                               nvimArgs:(NSArray<NSString*> *)nvimArgs {
+                               nvimArgs:(NSArray<NSString *> *)nvimArgs {
 
   self = [super init];
   if (self == nil) {
@@ -182,33 +177,31 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 }
 
 - (void)sendMessageWithId:(NvimServerMsgId)msgid {
-  [self sendMessageWithId:msgid data:nil];
+  [self sendMessageWithId:msgid data:NULL];
 }
 
-- (void)sendMessageWithId:(NvimServerMsgId)msgid data:(NSData *)data {
+- (void)sendMessageWithId:(NvimServerMsgId)msgid data:(CFDataRef)data {
 #ifdef DEBUG_NEOVIM_SERVER_STANDALONE
   return;
 #endif
 
   if (_remoteServerPort == NULL) {
-    WLOG("Remote server is null: The msg (%lu:%s) could not be sent.", (unsigned long) msgid, data.cdesc);
+    WLOG("Remote server is null: The msg (%lu) could not be sent.", (unsigned long) msgid);
     return;
   }
 
-  SInt32 responseCode = CFMessagePortSendRequest(
-      _remoteServerPort, msgid, (__bridge CFDataRef) data, qTimeout, qTimeout, NULL, NULL
-  );
+  SInt32 responseCode = CFMessagePortSendRequest(_remoteServerPort, msgid, data, qTimeout, qTimeout, NULL, NULL);
 
   if (responseCode == kCFMessagePortSuccess) {
     return;
   }
 
-  WLOG("The msg (%lu:%s) could not be sent: %d", (unsigned long) msgid, data.cdesc, responseCode);
+  WLOG("The msg (%lu) could not be sent: %d", (unsigned long) msgid, responseCode);
 }
 
 - (void)notifyReadiness {
 #ifndef DEBUG_NEOVIM_SERVER_STANDALONE
-  [self sendMessageWithId:NvimServerMsgIdServerReady data:nil];
+  [self sendMessageWithId:NvimServerMsgIdServerReady data:NULL];
 #endif
 }
 

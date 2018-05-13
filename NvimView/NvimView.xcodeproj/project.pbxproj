@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1929B30D6C4175835D1F5B21 /* MessagePackCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B44323D6611E2927EC3B /* MessagePackCommons.swift */; };
 		1929B40A751BDA2882D4FC94 /* NvimViewObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B22A0CAD417EC3790F02 /* NvimViewObjects.swift */; };
 		1929B86897DAEFDBABAB1C14 /* NvimApiExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBD7F88AE4F01E626691 /* NvimApiExtension.swift */; };
 		1929BA70C221E3C199833B8C /* UiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B52174EC68D2974B5BAE /* UiBridge.swift */; };
@@ -38,7 +39,6 @@
 		4B90F0521FD2AFD3008A39E0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0511FD2AFD3008A39E0 /* main.m */; };
 		4B90F0661FD2AFF7008A39E0 /* server_ui.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0561FD2AFF7008A39E0 /* server_ui.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4B90F0681FD2AFF7008A39E0 /* CocoaCategories.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F05A1FD2AFF7008A39E0 /* CocoaCategories.m */; };
-		4B90F06A1FD2AFF7008A39E0 /* DataWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0611FD2AFF7008A39E0 /* DataWrapper.m */; };
 		4B90F06B1FD2AFF7008A39E0 /* NvimServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0641FD2AFF7008A39E0 /* NvimServer.m */; };
 		4B9E5E1C20990DF2006455C3 /* RxMessagePort.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9E5E1B20990DF1006455C3 /* RxMessagePort.framework */; };
 		4BB1F5C9209740E400EC394A /* RxMsgpackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5C8209740E400EC394A /* RxMsgpackRpc.framework */; };
@@ -94,6 +94,7 @@
 
 /* Begin PBXFileReference section */
 		1929B22A0CAD417EC3790F02 /* NvimViewObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimViewObjects.swift; sourceTree = "<group>"; };
+		1929B44323D6611E2927EC3B /* MessagePackCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagePackCommons.swift; sourceTree = "<group>"; };
 		1929B4F32708E99C40A57020 /* SharedTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedTypes.h; sourceTree = "<group>"; };
 		1929B52174EC68D2974B5BAE /* UiBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiBridge.swift; sourceTree = "<group>"; };
 		1929B6F4B70B90F7CFB7B523 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
@@ -130,8 +131,6 @@
 		4B90F0571FD2AFF7008A39E0 /* CocoaCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaCategories.h; sourceTree = "<group>"; };
 		4B90F05A1FD2AFF7008A39E0 /* CocoaCategories.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaCategories.m; sourceTree = "<group>"; };
 		4B90F05B1FD2AFF7008A39E0 /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
-		4B90F05C1FD2AFF7008A39E0 /* DataWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataWrapper.h; sourceTree = "<group>"; };
-		4B90F0611FD2AFF7008A39E0 /* DataWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataWrapper.m; sourceTree = "<group>"; };
 		4B90F0621FD2AFF7008A39E0 /* NvimServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NvimServer.h; sourceTree = "<group>"; };
 		4B90F0631FD2AFF7008A39E0 /* server_ui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_ui.h; sourceTree = "<group>"; };
 		4B90F0641FD2AFF7008A39E0 /* NvimServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NvimServer.m; sourceTree = "<group>"; };
@@ -225,6 +224,7 @@
 				1929BBD7F88AE4F01E626691 /* NvimApiExtension.swift */,
 				1929B52174EC68D2974B5BAE /* UiBridge.swift */,
 				1929B6F4B70B90F7CFB7B523 /* RxSwiftCommons.swift */,
+				1929B44323D6611E2927EC3B /* MessagePackCommons.swift */,
 			);
 			path = NvimView;
 			sourceTree = "<group>";
@@ -235,8 +235,6 @@
 				4B90F0511FD2AFD3008A39E0 /* main.m */,
 				4B90F0571FD2AFF7008A39E0 /* CocoaCategories.h */,
 				4B90F05A1FD2AFF7008A39E0 /* CocoaCategories.m */,
-				4B90F05C1FD2AFF7008A39E0 /* DataWrapper.h */,
-				4B90F0611FD2AFF7008A39E0 /* DataWrapper.m */,
 				4B90F05B1FD2AFF7008A39E0 /* Logging.h */,
 				4B90F0621FD2AFF7008A39E0 /* NvimServer.h */,
 				4B90F0641FD2AFF7008A39E0 /* NvimServer.m */,
@@ -406,6 +404,7 @@
 				1929B86897DAEFDBABAB1C14 /* NvimApiExtension.swift in Sources */,
 				1929BA70C221E3C199833B8C /* UiBridge.swift in Sources */,
 				1929BA93BDEA029011F034FF /* RxSwiftCommons.swift in Sources */,
+				1929B30D6C4175835D1F5B21 /* MessagePackCommons.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,7 +416,6 @@
 				4B90F0661FD2AFF7008A39E0 /* server_ui.m in Sources */,
 				4B90F0521FD2AFD3008A39E0 /* main.m in Sources */,
 				4B90F0681FD2AFF7008A39E0 /* CocoaCategories.m in Sources */,
-				4B90F06A1FD2AFF7008A39E0 /* DataWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -464,7 +462,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 275;
+				CURRENT_PROJECT_VERSION = 277;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -524,7 +522,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 275;
+				CURRENT_PROJECT_VERSION = 277;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -551,7 +549,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 275;
+				DYLIB_CURRENT_VERSION = 277;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				FRAMEWORK_VERSION = A;
@@ -573,7 +571,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 275;
+				DYLIB_CURRENT_VERSION = 277;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				FRAMEWORK_VERSION = A;

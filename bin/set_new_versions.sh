@@ -22,7 +22,7 @@ agvtool new-marketing-version ${MARKETING_VERSION}
 
 popd
 
-for proj in 'MsgPackRpc' 'NvimMsgPack' 'NvimView'; do
+for proj in 'NvimView'; do
     pushd ${proj}
     agvtool new-version -all ${BUNDLE_VERSION}
     agvtool new-marketing-version ${MARKETING_VERSION}

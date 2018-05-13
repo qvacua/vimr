@@ -48,8 +48,8 @@ int main(int argc, const char *argv[]) {
                                              : nil;
 
     _neovim_server = [[NvimServer alloc] initWithLocalServerName:localServerName
-                                                  remoteServerName:remoteServerName
-                                                          nvimArgs:nvimArgs];
+                                                remoteServerName:remoteServerName
+                                                        nvimArgs:nvimArgs];
     DLOG("Started neovim server '%s' with args '%@' and connected it with the remote agent '%s'.",
         localServerName.cstr, nvimArgs, remoteServerName.cstr);
 

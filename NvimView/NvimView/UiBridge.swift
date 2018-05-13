@@ -28,7 +28,7 @@ class UiBridge {
     case unmark(row: Int, column: Int)
     case bell
     case visualBell
-    case flush([Data])
+    case flush([MessagePackValue])
     case setForeground(Int)
     case setBackground(Int)
     case setSpecial(Int)
@@ -162,16 +162,18 @@ class UiBridge {
 
       self.streamSubject.onNext(.ready)
 
-      let isInitErrorPresent = data?.asArray(ofType: Bool.self, count: 1)?[0] ?? false
+      let isInitErrorPresent = value(from: data, conversion: { $0.boolValue }) ?? false
       if isInitErrorPresent {
         self.streamSubject.onNext(.initVimError)
       }
 
     case .resize:
-      guard let values = data?.asArray(ofType: Int.self, count: 2) else {
+      guard let values = array(from: data, ofSize: 2, conversion: { v -> Int? in
+        guard let i64 = v.integerValue else { return nil }
+        return Int(i64)
+      }) else {
         return
       }
-
       self.streamSubject.onNext(.resize(width: values[0], height: values[1]))
 
     case .clear:
@@ -193,28 +195,31 @@ class UiBridge {
       self.streamSubject.onNext(.mouseOff)
 
     case .modeChange:
-      guard let values = data?.asArray(ofType: CursorModeShape.self, count: 1) else {
+      guard let value = value(from: data, conversion: { v -> CursorModeShape? in
+        guard let i64 = v.integerValue else { return nil }
+        return CursorModeShape(rawValue: UInt(i64))
+      }) else {
         return
       }
 
-      self.streamSubject.onNext(.modeChange(values[0]))
+      self.streamSubject.onNext(.modeChange(value))
 
     case .setScrollRegion:
-      guard let values = data?.asArray(ofType: Int.self, count: 4) else {
+      guard let values = array(from: data, ofSize: 4, conversion: { $0.intValue }) else {
         return
       }
 
       self.streamSubject.onNext(.setScrollRegion(top: values[0], bottom: values[1], left: values[2], right: values[3]))
 
     case .scroll:
-      guard let values = data?.asArray(ofType: Int.self, count: 1) else {
+      guard let value = value(from: data, conversion: { $0.intValue }) else {
         return
       }
 
-      self.streamSubject.onNext(.scroll(values[0]))
+      self.streamSubject.onNext(.scroll(value))
 
     case .unmark:
-      guard let values = data?.asArray(ofType: Int.self, count: 2) else {
+      guard let values = array(from: data, ofSize: 2, conversion: { $0.intValue }) else {
         return
       }
 
@@ -227,42 +232,42 @@ class UiBridge {
       self.streamSubject.onNext(.visualBell)
 
     case .flush:
-      guard let d = data, let renderData = NSKeyedUnarchiver.unarchiveObject(with: d) as? [Data] else {
+      guard let d = data, let renderData = try? unpackAll(d) else {
         return
       }
 
       self.streamSubject.onNext(.flush(renderData))
 
     case .setForeground:
-      guard let values = data?.asArray(ofType: Int.self, count: 1) else {
+      guard let value = value(from: data, conversion: { $0.intValue }) else {
         return
       }
 
-      self.streamSubject.onNext(.setForeground(values[0]))
+      self.streamSubject.onNext(.setForeground(value))
 
     case .setBackground:
-      guard let values = data?.asArray(ofType: Int.self, count: 1) else {
+      guard let value = value(from: data, conversion: { $0.intValue }) else {
         return
       }
 
-      self.streamSubject.onNext(.setBackground(values[0]))
+      self.streamSubject.onNext(.setBackground(value))
 
     case .setSpecial:
-      guard let values = data?.asArray(ofType: Int.self, count: 1) else {
+      guard let value = value(from: data, conversion: { $0.intValue }) else {
         return
       }
 
-      self.streamSubject.onNext(.setSpecial(values[0]))
+      self.streamSubject.onNext(.setSpecial(value))
 
     case .setTitle:
-      guard let d = data, let title = String(data: d, encoding: .utf8) else {
+      guard let title = value(from: data, conversion: { $0.stringValue }) else {
         return
       }
 
       self.streamSubject.onNext(.setTitle(title))
 
     case .setIcon:
-      guard let d = data, let icon = String(data: d, encoding: .utf8) else {
+      guard let icon = value(from: data, conversion: { $0.stringValue }) else {
         return
       }
 
@@ -272,31 +277,32 @@ class UiBridge {
       self.streamSubject.onNext(.stop)
 
     case .dirtyStatusChanged:
-      guard let values = data?.asArray(ofType: Bool.self, count: 1) else {
+      guard let value = value(from: data, conversion: { $0.boolValue }) else {
         return
       }
 
-      self.streamSubject.onNext(.dirtyStatusChanged(values[0]))
+      self.streamSubject.onNext(.dirtyStatusChanged(value))
 
     case .cwdChanged:
-      guard let d = data, let cwd = String(data: d, encoding: .utf8) else {
+      guard let cwd = value(from: data, conversion: { $0.stringValue }) else {
         return
       }
 
       self.streamSubject.onNext(.cwdChanged(cwd))
 
     case .defaultColorsChanged:
-      guard let values = data?.asArray(ofType: Int.self, count: 3) else {
+      guard let values = array(from: data, ofSize: 3, conversion: { $0.intValue }) else {
         return
       }
 
       self.streamSubject.onNext(.defaultColorsChanged(values))
 
     case .colorSchemeChanged:
-      guard let values = data?.asArray(ofType: Int.self, count: 5) else {
+      guard let d = data, let rawValues = (try? unpack(d))?.value.arrayValue else {
         return
       }
 
+      let values = rawValues.compactMap { $0.integerValue }.map { Int($0) }
       self.streamSubject.onNext(.colorSchemeChanged(values))
 
     case .optionSet:
@@ -314,22 +320,10 @@ class UiBridge {
       self.streamSubject.onNext(.optionSet(key: key, value: value))
 
     case .autoCommandEvent:
-      if data?.count == 2 * MemoryLayout<Int>.stride {
-        guard let values = data?.asArray(ofType: Int.self, count: 2),
-              let cmd = NvimAutoCommandEvent(rawValue: values[0])
-          else {
-          return
-        }
+      guard let values = array(from: data, ofSize: 2, conversion: { $0.intValue }),
+            let cmd = NvimAutoCommandEvent(rawValue: values[0]) else { return }
 
-        self.streamSubject.onNext(.autoCommandEvent(autocmd: cmd, bufferHandle: values[1]))
-
-      } else {
-        guard let values = data?.asArray(ofType: NvimAutoCommandEvent.self, count: 1) else {
-          return
-        }
-
-        self.streamSubject.onNext(.autoCommandEvent(autocmd: values[0], bufferHandle: -1))
-      }
+      self.streamSubject.onNext(.autoCommandEvent(autocmd: cmd, bufferHandle: values[1]))
 
     case .debug1:
       self.streamSubject.onNext(.debug1)
@@ -457,17 +451,6 @@ class UiBridge {
 
 private let timeout = CFTimeInterval(5)
 
-private extension Data {
-
-  func asArray<T>(ofType: T.Type, count: Int) -> [T]? {
-    guard (self.count / MemoryLayout<T>.stride) <= count else {
-      return nil
-    }
-
-    return self.withUnsafeBytes { (p: UnsafePointer<T>) in Array(UnsafeBufferPointer(start: p, count: count)) }
-  }
-}
-
 private extension Array {
 
   func data() -> Data {
@@ -483,4 +466,24 @@ private extension Array {
       return Data(bytesNoCopy: newPointer, count: self.count, deallocator: .free)
     }
   }
+}
+
+private func value<T>(from data: Data?, conversion: (MessagePackValue) -> T?) -> T? {
+  guard let d = data, let value = (try? unpack(d))?.value else {
+    return nil
+  }
+
+  return conversion(value)
+}
+
+private func array<T>(from data: Data?, ofSize size: Int, conversion: (MessagePackValue) -> T?) -> [T]? {
+  guard let d = data, let array = (try? unpack(d))?.value.arrayValue else {
+    return nil
+  }
+
+  guard array.count == size else {
+    return nil
+  }
+
+  return array.compactMap(conversion)
 }
