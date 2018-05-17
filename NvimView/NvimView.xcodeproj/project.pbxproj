@@ -612,11 +612,15 @@
 					"-lutil",
 					"$(PROJECT_DIR)/third-party/libintl/lib/libintl.a",
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib/libjemalloc.a",
-					"$(PROJECT_DIR)/neovim/.deps/usr/lib/liblua.a",
+					"$(PROJECT_DIR)/neovim/.deps/usr/lib/libluajit-5.1.a",
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib/libvterm.a",
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib/libuv.a",
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib/libmsgpackc.a",
 					"$(PROJECT_DIR)/neovim/build/lib/libnvim.a",
+					"-image_base",
+					100000000,
+					"-pagezero_size",
+					10000,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -646,11 +650,15 @@
 					"-lutil",
 					"$(PROJECT_DIR)/third-party/libintl/lib/libintl.a",
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib/libjemalloc.a",
-					"$(PROJECT_DIR)/neovim/.deps/usr/lib/liblua.a",
+					"$(PROJECT_DIR)/neovim/.deps/usr/lib/libluajit-5.1.a",
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib/libvterm.a",
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib/libuv.a",
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib/libmsgpackc.a",
 					"$(PROJECT_DIR)/neovim/build/lib/libnvim.a",
+					"-image_base",
+					100000000,
+					"-pagezero_size",
+					10000,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

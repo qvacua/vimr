@@ -11,7 +11,7 @@ ln -sf ../local.mk .
 # to get the full runtime.
 make CFLAGS='-mmacosx-version-min=10.10' \
      MACOSX_DEPLOYMENT_TARGET=10.10 \
-     CMAKE_EXTRA_FLAGS="-DGETTEXT_SOURCE=CUSTOM -DPREFER_LUA=ON" \
+     CMAKE_EXTRA_FLAGS="-DGETTEXT_SOURCE=CUSTOM" \
      libnvim
 
 echo "### Built libnvim"

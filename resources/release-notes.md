@@ -1,3 +1,8 @@
+# next
+
+* Some refactorings for the Neovim and the UI interface.
+* Use LuaJIT again.
+
 # 0.23.0-275
 
 * GH-419: File browser sorts folders on the top. (Thanks @laibulle for the PR)
