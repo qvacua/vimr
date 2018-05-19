@@ -111,7 +111,11 @@ extension NvimView {
         self.eventsSubject.onNext(.cursor(pos))
       }
 
-      self.shouldDrawCursor = true
+      // The position stays at the first cell when we enter the terminal mode and the cursor seems to be drawn by
+      // changing the background color of the corresponding cell...
+      if self.mode != .termFocus {
+        self.shouldDrawCursor = true
+      }
 
       if self.usesLigatures {
         self.markForRender(region: self.grid.regionOfWord(at: self.grid.position))
