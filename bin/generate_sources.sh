@@ -2,32 +2,21 @@
 
 set -e
 
-current_neovim_branch=$1
-
 git submodule update
 
 pushd NvimView/neovim
-git fetch
-make distclean
-mv local.mk local.mk.bak || true
-git checkout "origin/last-merge-${current_neovim_branch}"
-make
-popd
+major=$(grep -e "set(NVIM_VERSION_MAJOR" CMakeLists.txt | gsed -E "s/.*([0-9]+).*/\1/")
+minor=$(grep -e "set(NVIM_VERSION_MINOR" CMakeLists.txt | gsed -E "s/.*([0-9]+).*/\1/")
+patch=$(grep -e "set(NVIM_VERSION_PATCH" CMakeLists.txt | gsed -E "s/.*([0-9]+).*/\1/")
+prerelease=$(grep -e "set(NVIM_VERSION_PRERELEASE" CMakeLists.txt | gsed -E "s/.*\(.*\"(.*)\"\).*/\1/")
+nvim_version="v$major.$minor.$patch$prerelease"
+echo $nvim_version
 
-nvim_bin_path="./NvimView/neovim/build/bin/nvim"
-nvim_version=$(${nvim_bin_path} --version | head -1 | cut -d' ' -f2)
+../../bin/build_libnvim.sh
+popd
 
 pushd NvimView
 VERSION=${nvim_version} ../bin/generate_autocmds.py
-
-pushd neovim
-rm -rf build
-make clean
-git reset --hard HEAD
-git checkout ${current_neovim_branch}
-mv local.mk.bak local.mk || true
-popd
-
 popd
 
 echo "############## Successfully generated sources."

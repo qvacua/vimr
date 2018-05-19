@@ -1,5 +1,5 @@
 // Auto generated for nvim v0.2.2.
-// See bin/generate_source.py
+// See bin/generate_autocmds.py
 
 enum NvimAutoCommandEvent: Int {
   case bufadd = 0
