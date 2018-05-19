@@ -2,6 +2,7 @@
 
 * Some refactorings for the Neovim and the UI interface.
 * Use LuaJIT again.
+* GH-636: Bugfix: double cursor when entering terminal
 
 # 0.23.0-275
 

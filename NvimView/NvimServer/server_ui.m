@@ -82,7 +82,6 @@ static bool _dirty = false;
 static NSInteger _initialWidth = 30;
 static NSInteger _initialHeight = 15;
 
-static msgpack_sbuffer msg_sbuffer;
 static msgpack_sbuffer flush_sbuffer;
 static msgpack_packer *flush_packer;
 
@@ -119,18 +118,21 @@ static void msgpack_pack_bool(msgpack_packer *packer, bool value) {
 typedef void (^pack_block)(msgpack_packer *packer);
 
 static void send_msg_packing(NvimServerMsgId msgid, pack_block body) {
+  msgpack_sbuffer sbuf;
+  msgpack_sbuffer_init(&sbuf);
+
   msgpack_packer packer;
-  msgpack_packer_init(&packer, &msg_sbuffer, msgpack_sbuffer_write);
+  msgpack_packer_init(&packer, &sbuf, msgpack_sbuffer_write);
 
   body(&packer);
 
   let data = CFDataCreateWithBytesNoCopy(
-      kCFAllocatorDefault, (const UInt8 *) msg_sbuffer.data, msg_sbuffer.size, kCFAllocatorNull
+      kCFAllocatorDefault, (const UInt8 *) sbuf.data, sbuf.size, kCFAllocatorNull
   );
   [_neovim_server sendMessageWithId:msgid data:data];
   CFRelease(data);
 
-  msgpack_sbuffer_clear(&msg_sbuffer);
+  msgpack_sbuffer_destroy(&sbuf);
 }
 
 static void pack_flush_data(RenderDataType type, pack_block body) {
@@ -259,7 +261,6 @@ static void server_ui_scheduler(Event event, void *d) {
 }
 
 static void server_ui_main(UIBridgeData *bridge, UI *ui) {
-  msgpack_sbuffer_init(&msg_sbuffer);
   msgpack_sbuffer_init(&flush_sbuffer);
   flush_packer = msgpack_packer_new(&flush_sbuffer, msgpack_sbuffer_write);
 
@@ -375,11 +376,9 @@ static void server_ui_mode_info_set(UI *ui __unused, Boolean enabled __unused, A
 }
 
 static void server_ui_mode_change(UI *ui __unused, String mode_str __unused, Integer mode) {
-  @autoreleasepool {
-    send_msg_packing(NvimServerMsgIdModeChange, ^(msgpack_packer *packer) {
-      msgpack_pack_int64(packer, mode);
-    });
-  }
+  send_msg_packing(NvimServerMsgIdModeChange, ^(msgpack_packer *packer) {
+    msgpack_pack_int64(packer, mode);
+  });
 }
 
 static void server_ui_set_scroll_region(UI *ui __unused, Integer top, Integer bot, Integer left, Integer right) {
