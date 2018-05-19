@@ -88,15 +88,16 @@ enum NvimAutoCommandEvent: Int {
   case termresponse = 83
   case textchanged = 84
   case textchangedi = 85
-  case textyankpost = 86
-  case user = 87
-  case vimenter = 88
-  case vimleave = 89
-  case vimleavepre = 90
-  case vimresized = 91
-  case vimresume = 92
-  case vimsuspend = 93
-  case winnew = 94
-  case winenter = 95
-  case winleave = 96
+  case textchangedp = 86
+  case textyankpost = 87
+  case user = 88
+  case vimenter = 89
+  case vimleave = 90
+  case vimleavepre = 91
+  case vimresized = 92
+  case vimresume = 93
+  case vimsuspend = 94
+  case winnew = 95
+  case winenter = 96
+  case winleave = 97
 }
