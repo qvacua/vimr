@@ -96,6 +96,65 @@
 		4B64239A1D8EFE3000FC78C8 /* WorkspaceTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423991D8EFE3000FC78C8 /* WorkspaceTool.swift */; };
 		4B6A70941D60E04200E12030 /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
 		4B6A70961D6100E300E12030 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70951D6100E300E12030 /* SwiftCommons.swift */; };
+		4B9433DC20B95EC6005807BA /* MacVim-bsh.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A120B95EC1005807BA /* MacVim-bsh.icns */; };
+		4B9433DD20B95EC6005807BA /* MacVim-generic.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A220B95EC1005807BA /* MacVim-generic.icns */; };
+		4B9433DE20B95EC6005807BA /* MacVim-dylan.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A320B95EC1005807BA /* MacVim-dylan.icns */; };
+		4B9433DF20B95EC6005807BA /* MacVim-lisp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A420B95EC1005807BA /* MacVim-lisp.icns */; };
+		4B9433E020B95EC6005807BA /* MacVim-plist.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A520B95EC1005807BA /* MacVim-plist.icns */; };
+		4B9433E120B95EC6005807BA /* MacVim-csfg.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A620B95EC1005807BA /* MacVim-csfg.icns */; };
+		4B9433E220B95EC6005807BA /* MacVim-yaml.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A720B95EC1005807BA /* MacVim-yaml.icns */; };
+		4B9433E320B95EC6005807BA /* MacVim-tex.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A820B95EC1005807BA /* MacVim-tex.icns */; };
+		4B9433E420B95EC6005807BA /* MacVim-sql.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A920B95EC2005807BA /* MacVim-sql.icns */; };
+		4B9433E520B95EC6005807BA /* MacVim-applescript.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433AA20B95EC2005807BA /* MacVim-applescript.icns */; };
+		4B9433E620B95EC6005807BA /* MacVim-log.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433AB20B95EC2005807BA /* MacVim-log.icns */; };
+		4B9433E720B95EC6005807BA /* MacVim-cgi.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433AC20B95EC2005807BA /* MacVim-cgi.icns */; };
+		4B9433E820B95EC7005807BA /* MacVim-csv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433AD20B95EC2005807BA /* MacVim-csv.icns */; };
+		4B9433E920B95EC7005807BA /* MacVim-bash.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433AE20B95EC2005807BA /* MacVim-bash.icns */; };
+		4B9433EA20B95EC7005807BA /* MacVim-vcf.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433AF20B95EC2005807BA /* MacVim-vcf.icns */; };
+		4B9433EB20B95EC7005807BA /* MacVim-cpp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B020B95EC2005807BA /* MacVim-cpp.icns */; };
+		4B9433EC20B95EC7005807BA /* MacVim-js.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B120B95EC2005807BA /* MacVim-js.icns */; };
+		4B9433ED20B95EC7005807BA /* MacVim-f.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B220B95EC2005807BA /* MacVim-f.icns */; };
+		4B9433EE20B95EC7005807BA /* MacVim-vim.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B320B95EC2005807BA /* MacVim-vim.icns */; };
+		4B9433EF20B95EC7005807BA /* MacVim-tsv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B420B95EC2005807BA /* MacVim-tsv.icns */; };
+		4B9433F020B95EC7005807BA /* MacVim-py.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B520B95EC3005807BA /* MacVim-py.icns */; };
+		4B9433F120B95EC7005807BA /* MacVim-html.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B620B95EC3005807BA /* MacVim-html.icns */; };
+		4B9433F220B95EC7005807BA /* MacVim-hs.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B720B95EC3005807BA /* MacVim-hs.icns */; };
+		4B9433F320B95EC7005807BA /* MacVim-cs.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B820B95EC3005807BA /* MacVim-cs.icns */; };
+		4B9433F420B95EC7005807BA /* MacVim-vb.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B920B95EC3005807BA /* MacVim-vb.icns */; };
+		4B9433F520B95EC7005807BA /* MacVim-asp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433BA20B95EC3005807BA /* MacVim-asp.icns */; };
+		4B9433F620B95EC7005807BA /* MacVim-as.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433BB20B95EC3005807BA /* MacVim-as.icns */; };
+		4B9433F720B95EC7005807BA /* MacVim-mm.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433BC20B95EC3005807BA /* MacVim-mm.icns */; };
+		4B9433F820B95EC7005807BA /* MacVim-properties.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433BD20B95EC3005807BA /* MacVim-properties.icns */; };
+		4B9433F920B95EC7005807BA /* MacVim-gtd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433BE20B95EC3005807BA /* MacVim-gtd.icns */; };
+		4B9433FA20B95EC7005807BA /* MacVim-tcl.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433BF20B95EC4005807BA /* MacVim-tcl.icns */; };
+		4B9433FB20B95EC7005807BA /* MacVim-markdown.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C020B95EC4005807BA /* MacVim-markdown.icns */; };
+		4B9433FC20B95EC7005807BA /* MacVim-vba.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C120B95EC4005807BA /* MacVim-vba.icns */; };
+		4B9433FD20B95EC7005807BA /* MacVim-patch.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C220B95EC4005807BA /* MacVim-patch.icns */; };
+		4B9433FE20B95EC7005807BA /* MacVim-txt.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C320B95EC4005807BA /* MacVim-txt.icns */; };
+		4B9433FF20B95EC7005807BA /* MacVim-rb.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C420B95EC4005807BA /* MacVim-rb.icns */; };
+		4B94340020B95EC7005807BA /* MacVim-fscript.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C520B95EC4005807BA /* MacVim-fscript.icns */; };
+		4B94340120B95EC7005807BA /* MacVim-m.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C620B95EC4005807BA /* MacVim-m.icns */; };
+		4B94340220B95EC7005807BA /* MacVim-io.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C720B95EC4005807BA /* MacVim-io.icns */; };
+		4B94340320B95EC7005807BA /* MacVim-h.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C820B95EC4005807BA /* MacVim-h.icns */; };
+		4B94340420B95EC7005807BA /* MacVim-inc.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C920B95EC5005807BA /* MacVim-inc.icns */; };
+		4B94340520B95EC7005807BA /* MacVim-c.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433CA20B95EC5005807BA /* MacVim-c.icns */; };
+		4B94340620B95EC7005807BA /* MacVim-ini.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433CB20B95EC5005807BA /* MacVim-ini.icns */; };
+		4B94340720B95EC7005807BA /* MacVim-jsp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433CC20B95EC5005807BA /* MacVim-jsp.icns */; };
+		4B94340820B95EC7005807BA /* MacVim-php.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433CD20B95EC5005807BA /* MacVim-php.icns */; };
+		4B94340920B95EC7005807BA /* MacVim-xml.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433CE20B95EC5005807BA /* MacVim-xml.icns */; };
+		4B94340A20B95EC7005807BA /* MacVim-bib.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433CF20B95EC5005807BA /* MacVim-bib.icns */; };
+		4B94340B20B95EC7005807BA /* MacVim-cfg.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D020B95EC5005807BA /* MacVim-cfg.icns */; };
+		4B94340C20B95EC7005807BA /* MacVim-erl.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D120B95EC5005807BA /* MacVim-erl.icns */; };
+		4B94340D20B95EC7005807BA /* MacVim-dtd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D220B95EC5005807BA /* MacVim-dtd.icns */; };
+		4B94340E20B95EC7005807BA /* MacVim-wiki.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D320B95EC6005807BA /* MacVim-wiki.icns */; };
+		4B94340F20B95EC7005807BA /* MacVim-java.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D420B95EC6005807BA /* MacVim-java.icns */; };
+		4B94341020B95EC7005807BA /* MacVim-perl.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D520B95EC6005807BA /* MacVim-perl.icns */; };
+		4B94341120B95EC7005807BA /* MacVim-ics.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D620B95EC6005807BA /* MacVim-ics.icns */; };
+		4B94341220B95EC7005807BA /* MacVim-rst.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D720B95EC6005807BA /* MacVim-rst.icns */; };
+		4B94341320B95EC7005807BA /* MacVim-xsl.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D820B95EC6005807BA /* MacVim-xsl.icns */; };
+		4B94341420B95EC7005807BA /* MacVim-sch.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D920B95EC6005807BA /* MacVim-sch.icns */; };
+		4B94341520B95EC7005807BA /* MacVim-ps.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433DA20B95EC6005807BA /* MacVim-ps.icns */; };
+		4B94341620B95EC7005807BA /* MacVim-css.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433DB20B95EC6005807BA /* MacVim-css.icns */; };
 		4B96FB3B1EBBC56F00E4E164 /* FileItemIgnorePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B69499B2569793350CEC /* FileItemIgnorePattern.swift */; };
 		4B96FB3C1EBBC56F00E4E164 /* FileUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA8AC40B901B20F20B71 /* FileUtils.swift */; };
 		4B96FB3D1EBBC56F00E4E164 /* Matcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEEB33113B0E33C3830F /* Matcher.swift */; };
@@ -295,6 +354,65 @@
 		4B6423991D8EFE3000FC78C8 /* WorkspaceTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WorkspaceTool.swift; path = Workspace/WorkspaceTool.swift; sourceTree = "<group>"; };
 		4B6A70931D60E04200E12030 /* AppKitCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppKitCommons.swift; sourceTree = "<group>"; };
 		4B6A70951D6100E300E12030 /* SwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftCommons.swift; sourceTree = "<group>"; };
+		4B9433A120B95EC1005807BA /* MacVim-bsh.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-bsh.icns"; path = "macvim-file-icons/MacVim-bsh.icns"; sourceTree = "<group>"; };
+		4B9433A220B95EC1005807BA /* MacVim-generic.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-generic.icns"; path = "macvim-file-icons/MacVim-generic.icns"; sourceTree = "<group>"; };
+		4B9433A320B95EC1005807BA /* MacVim-dylan.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-dylan.icns"; path = "macvim-file-icons/MacVim-dylan.icns"; sourceTree = "<group>"; };
+		4B9433A420B95EC1005807BA /* MacVim-lisp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-lisp.icns"; path = "macvim-file-icons/MacVim-lisp.icns"; sourceTree = "<group>"; };
+		4B9433A520B95EC1005807BA /* MacVim-plist.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-plist.icns"; path = "macvim-file-icons/MacVim-plist.icns"; sourceTree = "<group>"; };
+		4B9433A620B95EC1005807BA /* MacVim-csfg.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-csfg.icns"; path = "macvim-file-icons/MacVim-csfg.icns"; sourceTree = "<group>"; };
+		4B9433A720B95EC1005807BA /* MacVim-yaml.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-yaml.icns"; path = "macvim-file-icons/MacVim-yaml.icns"; sourceTree = "<group>"; };
+		4B9433A820B95EC1005807BA /* MacVim-tex.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-tex.icns"; path = "macvim-file-icons/MacVim-tex.icns"; sourceTree = "<group>"; };
+		4B9433A920B95EC2005807BA /* MacVim-sql.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-sql.icns"; path = "macvim-file-icons/MacVim-sql.icns"; sourceTree = "<group>"; };
+		4B9433AA20B95EC2005807BA /* MacVim-applescript.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-applescript.icns"; path = "macvim-file-icons/MacVim-applescript.icns"; sourceTree = "<group>"; };
+		4B9433AB20B95EC2005807BA /* MacVim-log.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-log.icns"; path = "macvim-file-icons/MacVim-log.icns"; sourceTree = "<group>"; };
+		4B9433AC20B95EC2005807BA /* MacVim-cgi.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-cgi.icns"; path = "macvim-file-icons/MacVim-cgi.icns"; sourceTree = "<group>"; };
+		4B9433AD20B95EC2005807BA /* MacVim-csv.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-csv.icns"; path = "macvim-file-icons/MacVim-csv.icns"; sourceTree = "<group>"; };
+		4B9433AE20B95EC2005807BA /* MacVim-bash.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-bash.icns"; path = "macvim-file-icons/MacVim-bash.icns"; sourceTree = "<group>"; };
+		4B9433AF20B95EC2005807BA /* MacVim-vcf.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-vcf.icns"; path = "macvim-file-icons/MacVim-vcf.icns"; sourceTree = "<group>"; };
+		4B9433B020B95EC2005807BA /* MacVim-cpp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-cpp.icns"; path = "macvim-file-icons/MacVim-cpp.icns"; sourceTree = "<group>"; };
+		4B9433B120B95EC2005807BA /* MacVim-js.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-js.icns"; path = "macvim-file-icons/MacVim-js.icns"; sourceTree = "<group>"; };
+		4B9433B220B95EC2005807BA /* MacVim-f.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-f.icns"; path = "macvim-file-icons/MacVim-f.icns"; sourceTree = "<group>"; };
+		4B9433B320B95EC2005807BA /* MacVim-vim.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-vim.icns"; path = "macvim-file-icons/MacVim-vim.icns"; sourceTree = "<group>"; };
+		4B9433B420B95EC2005807BA /* MacVim-tsv.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-tsv.icns"; path = "macvim-file-icons/MacVim-tsv.icns"; sourceTree = "<group>"; };
+		4B9433B520B95EC3005807BA /* MacVim-py.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-py.icns"; path = "macvim-file-icons/MacVim-py.icns"; sourceTree = "<group>"; };
+		4B9433B620B95EC3005807BA /* MacVim-html.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-html.icns"; path = "macvim-file-icons/MacVim-html.icns"; sourceTree = "<group>"; };
+		4B9433B720B95EC3005807BA /* MacVim-hs.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-hs.icns"; path = "macvim-file-icons/MacVim-hs.icns"; sourceTree = "<group>"; };
+		4B9433B820B95EC3005807BA /* MacVim-cs.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-cs.icns"; path = "macvim-file-icons/MacVim-cs.icns"; sourceTree = "<group>"; };
+		4B9433B920B95EC3005807BA /* MacVim-vb.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-vb.icns"; path = "macvim-file-icons/MacVim-vb.icns"; sourceTree = "<group>"; };
+		4B9433BA20B95EC3005807BA /* MacVim-asp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-asp.icns"; path = "macvim-file-icons/MacVim-asp.icns"; sourceTree = "<group>"; };
+		4B9433BB20B95EC3005807BA /* MacVim-as.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-as.icns"; path = "macvim-file-icons/MacVim-as.icns"; sourceTree = "<group>"; };
+		4B9433BC20B95EC3005807BA /* MacVim-mm.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-mm.icns"; path = "macvim-file-icons/MacVim-mm.icns"; sourceTree = "<group>"; };
+		4B9433BD20B95EC3005807BA /* MacVim-properties.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-properties.icns"; path = "macvim-file-icons/MacVim-properties.icns"; sourceTree = "<group>"; };
+		4B9433BE20B95EC3005807BA /* MacVim-gtd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-gtd.icns"; path = "macvim-file-icons/MacVim-gtd.icns"; sourceTree = "<group>"; };
+		4B9433BF20B95EC4005807BA /* MacVim-tcl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-tcl.icns"; path = "macvim-file-icons/MacVim-tcl.icns"; sourceTree = "<group>"; };
+		4B9433C020B95EC4005807BA /* MacVim-markdown.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-markdown.icns"; path = "macvim-file-icons/MacVim-markdown.icns"; sourceTree = "<group>"; };
+		4B9433C120B95EC4005807BA /* MacVim-vba.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-vba.icns"; path = "macvim-file-icons/MacVim-vba.icns"; sourceTree = "<group>"; };
+		4B9433C220B95EC4005807BA /* MacVim-patch.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-patch.icns"; path = "macvim-file-icons/MacVim-patch.icns"; sourceTree = "<group>"; };
+		4B9433C320B95EC4005807BA /* MacVim-txt.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-txt.icns"; path = "macvim-file-icons/MacVim-txt.icns"; sourceTree = "<group>"; };
+		4B9433C420B95EC4005807BA /* MacVim-rb.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-rb.icns"; path = "macvim-file-icons/MacVim-rb.icns"; sourceTree = "<group>"; };
+		4B9433C520B95EC4005807BA /* MacVim-fscript.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-fscript.icns"; path = "macvim-file-icons/MacVim-fscript.icns"; sourceTree = "<group>"; };
+		4B9433C620B95EC4005807BA /* MacVim-m.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-m.icns"; path = "macvim-file-icons/MacVim-m.icns"; sourceTree = "<group>"; };
+		4B9433C720B95EC4005807BA /* MacVim-io.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-io.icns"; path = "macvim-file-icons/MacVim-io.icns"; sourceTree = "<group>"; };
+		4B9433C820B95EC4005807BA /* MacVim-h.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-h.icns"; path = "macvim-file-icons/MacVim-h.icns"; sourceTree = "<group>"; };
+		4B9433C920B95EC5005807BA /* MacVim-inc.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-inc.icns"; path = "macvim-file-icons/MacVim-inc.icns"; sourceTree = "<group>"; };
+		4B9433CA20B95EC5005807BA /* MacVim-c.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-c.icns"; path = "macvim-file-icons/MacVim-c.icns"; sourceTree = "<group>"; };
+		4B9433CB20B95EC5005807BA /* MacVim-ini.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-ini.icns"; path = "macvim-file-icons/MacVim-ini.icns"; sourceTree = "<group>"; };
+		4B9433CC20B95EC5005807BA /* MacVim-jsp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-jsp.icns"; path = "macvim-file-icons/MacVim-jsp.icns"; sourceTree = "<group>"; };
+		4B9433CD20B95EC5005807BA /* MacVim-php.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-php.icns"; path = "macvim-file-icons/MacVim-php.icns"; sourceTree = "<group>"; };
+		4B9433CE20B95EC5005807BA /* MacVim-xml.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-xml.icns"; path = "macvim-file-icons/MacVim-xml.icns"; sourceTree = "<group>"; };
+		4B9433CF20B95EC5005807BA /* MacVim-bib.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-bib.icns"; path = "macvim-file-icons/MacVim-bib.icns"; sourceTree = "<group>"; };
+		4B9433D020B95EC5005807BA /* MacVim-cfg.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-cfg.icns"; path = "macvim-file-icons/MacVim-cfg.icns"; sourceTree = "<group>"; };
+		4B9433D120B95EC5005807BA /* MacVim-erl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-erl.icns"; path = "macvim-file-icons/MacVim-erl.icns"; sourceTree = "<group>"; };
+		4B9433D220B95EC5005807BA /* MacVim-dtd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-dtd.icns"; path = "macvim-file-icons/MacVim-dtd.icns"; sourceTree = "<group>"; };
+		4B9433D320B95EC6005807BA /* MacVim-wiki.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-wiki.icns"; path = "macvim-file-icons/MacVim-wiki.icns"; sourceTree = "<group>"; };
+		4B9433D420B95EC6005807BA /* MacVim-java.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-java.icns"; path = "macvim-file-icons/MacVim-java.icns"; sourceTree = "<group>"; };
+		4B9433D520B95EC6005807BA /* MacVim-perl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-perl.icns"; path = "macvim-file-icons/MacVim-perl.icns"; sourceTree = "<group>"; };
+		4B9433D620B95EC6005807BA /* MacVim-ics.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-ics.icns"; path = "macvim-file-icons/MacVim-ics.icns"; sourceTree = "<group>"; };
+		4B9433D720B95EC6005807BA /* MacVim-rst.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-rst.icns"; path = "macvim-file-icons/MacVim-rst.icns"; sourceTree = "<group>"; };
+		4B9433D820B95EC6005807BA /* MacVim-xsl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-xsl.icns"; path = "macvim-file-icons/MacVim-xsl.icns"; sourceTree = "<group>"; };
+		4B9433D920B95EC6005807BA /* MacVim-sch.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-sch.icns"; path = "macvim-file-icons/MacVim-sch.icns"; sourceTree = "<group>"; };
+		4B9433DA20B95EC6005807BA /* MacVim-ps.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-ps.icns"; path = "macvim-file-icons/MacVim-ps.icns"; sourceTree = "<group>"; };
+		4B9433DB20B95EC6005807BA /* MacVim-css.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-css.icns"; path = "macvim-file-icons/MacVim-css.icns"; sourceTree = "<group>"; };
 		4B97E2CD1D33F53D00FC0660 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		4B9DF285209C8A8B00DF2AAD /* Swifter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Swifter.framework; path = ../Carthage/Build/Mac/Swifter.framework; sourceTree = "<group>"; };
 		4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMessagePort.framework; path = ../Carthage/Build/Mac/RxMessagePort.framework; sourceTree = "<group>"; };
@@ -548,9 +666,76 @@
 			name = Workspace;
 			sourceTree = "<group>";
 		};
+		4B9433A020B95EA7005807BA /* MacVim file icons */ = {
+			isa = PBXGroup;
+			children = (
+				4B9433AA20B95EC2005807BA /* MacVim-applescript.icns */,
+				4B9433BB20B95EC3005807BA /* MacVim-as.icns */,
+				4B9433BA20B95EC3005807BA /* MacVim-asp.icns */,
+				4B9433AE20B95EC2005807BA /* MacVim-bash.icns */,
+				4B9433CF20B95EC5005807BA /* MacVim-bib.icns */,
+				4B9433A120B95EC1005807BA /* MacVim-bsh.icns */,
+				4B9433CA20B95EC5005807BA /* MacVim-c.icns */,
+				4B9433D020B95EC5005807BA /* MacVim-cfg.icns */,
+				4B9433AC20B95EC2005807BA /* MacVim-cgi.icns */,
+				4B9433B020B95EC2005807BA /* MacVim-cpp.icns */,
+				4B9433B820B95EC3005807BA /* MacVim-cs.icns */,
+				4B9433A620B95EC1005807BA /* MacVim-csfg.icns */,
+				4B9433DB20B95EC6005807BA /* MacVim-css.icns */,
+				4B9433AD20B95EC2005807BA /* MacVim-csv.icns */,
+				4B9433D220B95EC5005807BA /* MacVim-dtd.icns */,
+				4B9433A320B95EC1005807BA /* MacVim-dylan.icns */,
+				4B9433D120B95EC5005807BA /* MacVim-erl.icns */,
+				4B9433B220B95EC2005807BA /* MacVim-f.icns */,
+				4B9433C520B95EC4005807BA /* MacVim-fscript.icns */,
+				4B9433A220B95EC1005807BA /* MacVim-generic.icns */,
+				4B9433BE20B95EC3005807BA /* MacVim-gtd.icns */,
+				4B9433C820B95EC4005807BA /* MacVim-h.icns */,
+				4B9433B720B95EC3005807BA /* MacVim-hs.icns */,
+				4B9433B620B95EC3005807BA /* MacVim-html.icns */,
+				4B9433D620B95EC6005807BA /* MacVim-ics.icns */,
+				4B9433C920B95EC5005807BA /* MacVim-inc.icns */,
+				4B9433CB20B95EC5005807BA /* MacVim-ini.icns */,
+				4B9433C720B95EC4005807BA /* MacVim-io.icns */,
+				4B9433D420B95EC6005807BA /* MacVim-java.icns */,
+				4B9433B120B95EC2005807BA /* MacVim-js.icns */,
+				4B9433CC20B95EC5005807BA /* MacVim-jsp.icns */,
+				4B9433A420B95EC1005807BA /* MacVim-lisp.icns */,
+				4B9433AB20B95EC2005807BA /* MacVim-log.icns */,
+				4B9433C620B95EC4005807BA /* MacVim-m.icns */,
+				4B9433C020B95EC4005807BA /* MacVim-markdown.icns */,
+				4B9433BC20B95EC3005807BA /* MacVim-mm.icns */,
+				4B9433C220B95EC4005807BA /* MacVim-patch.icns */,
+				4B9433D520B95EC6005807BA /* MacVim-perl.icns */,
+				4B9433CD20B95EC5005807BA /* MacVim-php.icns */,
+				4B9433A520B95EC1005807BA /* MacVim-plist.icns */,
+				4B9433BD20B95EC3005807BA /* MacVim-properties.icns */,
+				4B9433DA20B95EC6005807BA /* MacVim-ps.icns */,
+				4B9433B520B95EC3005807BA /* MacVim-py.icns */,
+				4B9433C420B95EC4005807BA /* MacVim-rb.icns */,
+				4B9433D720B95EC6005807BA /* MacVim-rst.icns */,
+				4B9433D920B95EC6005807BA /* MacVim-sch.icns */,
+				4B9433A920B95EC2005807BA /* MacVim-sql.icns */,
+				4B9433BF20B95EC4005807BA /* MacVim-tcl.icns */,
+				4B9433A820B95EC1005807BA /* MacVim-tex.icns */,
+				4B9433B420B95EC2005807BA /* MacVim-tsv.icns */,
+				4B9433C320B95EC4005807BA /* MacVim-txt.icns */,
+				4B9433B920B95EC3005807BA /* MacVim-vb.icns */,
+				4B9433C120B95EC4005807BA /* MacVim-vba.icns */,
+				4B9433AF20B95EC2005807BA /* MacVim-vcf.icns */,
+				4B9433B320B95EC2005807BA /* MacVim-vim.icns */,
+				4B9433D320B95EC6005807BA /* MacVim-wiki.icns */,
+				4B9433CE20B95EC5005807BA /* MacVim-xml.icns */,
+				4B9433D820B95EC6005807BA /* MacVim-xsl.icns */,
+				4B9433A720B95EC1005807BA /* MacVim-yaml.icns */,
+			);
+			name = "MacVim file icons";
+			sourceTree = "<group>";
+		};
 		4B97E2CF1D33F92200FC0660 /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				4B9433A020B95EA7005807BA /* MacVim file icons */,
 				4B19BEFA1E110183007E823C /* markdown */,
 				4B19BEFB1E110183007E823C /* preview */,
 				4BEBA50C1CFF374B00673FDF /* MainMenu.xib */,
@@ -742,16 +927,75 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BF07EE41D51326A009BECEB /* Credits.rtf in Resources */,
+				4B94340920B95EC7005807BA /* MacVim-xml.icns in Resources */,
+				4B9433E520B95EC6005807BA /* MacVim-applescript.icns in Resources */,
+				4B94340E20B95EC7005807BA /* MacVim-wiki.icns in Resources */,
+				4B94340F20B95EC7005807BA /* MacVim-java.icns in Resources */,
+				4B94341220B95EC7005807BA /* MacVim-rst.icns in Resources */,
+				4B94340B20B95EC7005807BA /* MacVim-cfg.icns in Resources */,
+				4B94340420B95EC7005807BA /* MacVim-inc.icns in Resources */,
+				4B9433DC20B95EC6005807BA /* MacVim-bsh.icns in Resources */,
+				4B94341020B95EC7005807BA /* MacVim-perl.icns in Resources */,
+				4B9433EA20B95EC7005807BA /* MacVim-vcf.icns in Resources */,
+				4B9433FB20B95EC7005807BA /* MacVim-markdown.icns in Resources */,
+				4B9433FC20B95EC7005807BA /* MacVim-vba.icns in Resources */,
+				4B9433F320B95EC7005807BA /* MacVim-cs.icns in Resources */,
+				4B9433F920B95EC7005807BA /* MacVim-gtd.icns in Resources */,
+				4B9433EC20B95EC7005807BA /* MacVim-js.icns in Resources */,
+				4B9433E320B95EC6005807BA /* MacVim-tex.icns in Resources */,
+				4B94341620B95EC7005807BA /* MacVim-css.icns in Resources */,
+				4B9433EF20B95EC7005807BA /* MacVim-tsv.icns in Resources */,
+				4B9433F520B95EC7005807BA /* MacVim-asp.icns in Resources */,
+				4B9433E020B95EC6005807BA /* MacVim-plist.icns in Resources */,
 				4BEBA50B1CFF374B00673FDF /* Assets.xcassets in Resources */,
+				4B9433FF20B95EC7005807BA /* MacVim-rb.icns in Resources */,
+				4B94340620B95EC7005807BA /* MacVim-ini.icns in Resources */,
+				4B9433E220B95EC6005807BA /* MacVim-yaml.icns in Resources */,
+				4B9433F420B95EC7005807BA /* MacVim-vb.icns in Resources */,
+				4B94340720B95EC7005807BA /* MacVim-jsp.icns in Resources */,
+				4B9433F120B95EC7005807BA /* MacVim-html.icns in Resources */,
+				4B9433FA20B95EC7005807BA /* MacVim-tcl.icns in Resources */,
+				4B94340220B95EC7005807BA /* MacVim-io.icns in Resources */,
 				4BDF50171D77540900D8FBC3 /* OpenQuicklyWindow.xib in Resources */,
+				4B9433E820B95EC7005807BA /* MacVim-csv.icns in Resources */,
+				4B9433F720B95EC7005807BA /* MacVim-mm.icns in Resources */,
+				4B94340A20B95EC7005807BA /* MacVim-bib.icns in Resources */,
+				4B9433EB20B95EC7005807BA /* MacVim-cpp.icns in Resources */,
+				4B94341520B95EC7005807BA /* MacVim-ps.icns in Resources */,
+				4B94341420B95EC7005807BA /* MacVim-sch.icns in Resources */,
+				4B9433DE20B95EC6005807BA /* MacVim-dylan.icns in Resources */,
+				4B9433E420B95EC6005807BA /* MacVim-sql.icns in Resources */,
+				4B94340120B95EC7005807BA /* MacVim-m.icns in Resources */,
+				4B9433F220B95EC7005807BA /* MacVim-hs.icns in Resources */,
 				4B37ADB91D6E471B00970D55 /* vimr in Resources */,
+				4B94340520B95EC7005807BA /* MacVim-c.icns in Resources */,
+				4B9433E720B95EC6005807BA /* MacVim-cgi.icns in Resources */,
+				4B9433DD20B95EC6005807BA /* MacVim-generic.icns in Resources */,
+				4B9433F820B95EC7005807BA /* MacVim-properties.icns in Resources */,
+				4B94341120B95EC7005807BA /* MacVim-ics.icns in Resources */,
+				4B94340820B95EC7005807BA /* MacVim-php.icns in Resources */,
+				4B94340320B95EC7005807BA /* MacVim-h.icns in Resources */,
+				4B9433F620B95EC7005807BA /* MacVim-as.icns in Resources */,
 				4BB409E51DD68CCC005F39A2 /* FileBrowserMenu.xib in Resources */,
 				4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */,
+				4B9433FE20B95EC7005807BA /* MacVim-txt.icns in Resources */,
+				4B9433E120B95EC6005807BA /* MacVim-csfg.icns in Resources */,
+				4B94340020B95EC7005807BA /* MacVim-fscript.icns in Resources */,
+				4B94340C20B95EC7005807BA /* MacVim-erl.icns in Resources */,
 				4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */,
 				4B19BEFC1E110183007E823C /* markdown in Resources */,
+				4B9433FD20B95EC7005807BA /* MacVim-patch.icns in Resources */,
+				4B94341320B95EC7005807BA /* MacVim-xsl.icns in Resources */,
+				4B9433ED20B95EC7005807BA /* MacVim-f.icns in Resources */,
+				4B9433E920B95EC7005807BA /* MacVim-bash.icns in Resources */,
 				4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */,
 				4B19BEFD1E110183007E823C /* preview in Resources */,
+				4B9433EE20B95EC7005807BA /* MacVim-vim.icns in Resources */,
+				4B9433F020B95EC7005807BA /* MacVim-py.icns in Resources */,
 				4B3AC8941DB031C600AC5823 /* sparkle_pub.pem in Resources */,
+				4B9433E620B95EC6005807BA /* MacVim-log.icns in Resources */,
+				4B94340D20B95EC7005807BA /* MacVim-dtd.icns in Resources */,
+				4B9433DF20B95EC6005807BA /* MacVim-lisp.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
