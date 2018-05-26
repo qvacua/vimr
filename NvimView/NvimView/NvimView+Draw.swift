@@ -196,7 +196,7 @@ extension NvimView {
         // Get all Regions that intersects with the given rects.
         // There can be overlaps between the Regions, but for the time being we ignore them;
         // probably not necessary to optimize them away.
-        let region = self.regionFor(rect: rect)
+        let region = self.region(for: rect)
         return (region.rowRange, region.columnRange)
       }
       // All RowRuns for all Regions grouped by their row range.
@@ -233,7 +233,7 @@ extension NvimView {
       .flatMap { $0 } // Flattened RowRuns for a Region.
   }
 
-  private func regionFor(rect: CGRect) -> Region {
+  private func region(for rect: CGRect) -> Region {
     let cellWidth = self.cellSize.width
     let cellHeight = self.cellSize.height
 
@@ -255,10 +255,6 @@ extension NvimView {
     )
 
     return Region(top: rowStart, bottom: rowEnd, left: columnStart, right: columnEnd)
-  }
-
-  private func pointInViewFor(position: Position) -> CGPoint {
-    return self.pointInView(forRow: position.row, column: position.column)
   }
 
   private func pointInView(forRow row: Int, column: Int) -> CGPoint {

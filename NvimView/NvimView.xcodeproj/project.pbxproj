@@ -10,6 +10,7 @@
 		1929B30D6C4175835D1F5B21 /* MessagePackCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B44323D6611E2927EC3B /* MessagePackCommons.swift */; };
 		1929B40A751BDA2882D4FC94 /* NvimViewObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B22A0CAD417EC3790F02 /* NvimViewObjects.swift */; };
 		1929B86897DAEFDBABAB1C14 /* NvimApiExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBD7F88AE4F01E626691 /* NvimApiExtension.swift */; };
+		1929B8CA73D3702364903BB7 /* SimpleCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD86668017F804408E3A /* SimpleCache.swift */; };
 		1929BA70C221E3C199833B8C /* UiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B52174EC68D2974B5BAE /* UiBridge.swift */; };
 		1929BA93BDEA029011F034FF /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6F4B70B90F7CFB7B523 /* RxSwiftCommons.swift */; };
 		4B177886201220F300E32FF0 /* SharedTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1929B4F32708E99C40A57020 /* SharedTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -99,6 +100,7 @@
 		1929B52174EC68D2974B5BAE /* UiBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiBridge.swift; sourceTree = "<group>"; };
 		1929B6F4B70B90F7CFB7B523 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
 		1929BBD7F88AE4F01E626691 /* NvimApiExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimApiExtension.swift; sourceTree = "<group>"; };
+		1929BD86668017F804408E3A /* SimpleCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleCache.swift; sourceTree = "<group>"; };
 		4B17E548209E3E4100265C1D /* RxNeovimApi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxNeovimApi.framework; path = ../Carthage/Build/Mac/RxNeovimApi.framework; sourceTree = "<group>"; };
 		4B8662E41FDC3D4F007F490D /* vimr.vim */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = vimr.vim; sourceTree = "<group>"; };
 		4B90F0041FD2AF59008A39E0 /* NvimView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NvimView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -225,6 +227,7 @@
 				1929B52174EC68D2974B5BAE /* UiBridge.swift */,
 				1929B6F4B70B90F7CFB7B523 /* RxSwiftCommons.swift */,
 				1929B44323D6611E2927EC3B /* MessagePackCommons.swift */,
+				1929BD86668017F804408E3A /* SimpleCache.swift */,
 			);
 			path = NvimView;
 			sourceTree = "<group>";
@@ -405,6 +408,7 @@
 				1929BA70C221E3C199833B8C /* UiBridge.swift in Sources */,
 				1929BA93BDEA029011F034FF /* RxSwiftCommons.swift in Sources */,
 				1929B30D6C4175835D1F5B21 /* MessagePackCommons.swift in Sources */,
+				1929B8CA73D3702364903BB7 /* SimpleCache.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
