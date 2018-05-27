@@ -7,24 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-278</title>
+      <title>SNAPSHOT-279</title>
       <description><![CDATA[
-    <p><em>WARNING</em>: This snapshot may very well be instable!</p>
-<ul>
-<li>GH-636: Bugfix: double cursor when entering terminal</li>
-<li>Use LuaJIT (again)</li>
+    <ul>
+<li>GH-402: Add file associations; using definitions and icons from <a href="http://macvim.org/">MacVim</a></li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/278
+        https://github.com/qvacua/vimr/releases/tag/snapshot/279
       </releaseNotesLink>
-      <pubDate>2018-05-19T21:44:14.338561</pubDate>
+      <pubDate>2018-05-26T14:43:53.668073</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/278/VimR-SNAPSHOT-278.tar.bz2"
-                 sparkle:version="278"
-                 sparkle:shortVersionString="SNAPSHOT-278"
-                 sparkle:dsaSignature="MCwCFH0Xdd5hnDmwy7FXGcA0GBWSFm4/AhQOVZTrgAPATbTyScR3+d3oRNN6FQ=="
-                 length="12703917"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/279/VimR-SNAPSHOT-279.tar.bz2"
+                 sparkle:version="279"
+                 sparkle:shortVersionString="SNAPSHOT-279"
+                 sparkle:dsaSignature="MC0CFQD05hS5OO3p+1qBS44M6PegElonLAIUQW52XWZQNGkeRp5lhCy/HPylgy4="
+                 length="13812619"
                  type="application/octet-stream"/>
     </item>
   </channel>

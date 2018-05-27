@@ -1,8 +1,9 @@
 # next
 
+* GH-636: Bugfix: double cursor when entering terminal
+* GH-402: Add file associations; using definitions and icons from [MacVim](http://macvim.org/)
 * Some refactorings for the Neovim and the UI interface.
 * Use LuaJIT again.
-* GH-636: Bugfix: double cursor when entering terminal
 * Dependencies updates:
     - sparkle-project/Sparkle@1.19.0
     - Quick/nimble@7.1.1
