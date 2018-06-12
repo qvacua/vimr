@@ -6,7 +6,7 @@ github "qvacua/CocoaFontAwesome" "master"
 github "qvacua/CocoaMarkdown" "master"
 github "qvacua/RxMsgpackRpc" == 0.0.1
 github "qvacua/RxMessagePort" == 0.0.1
-github "qvacua/RxNeovimApi" "develop"
+github "qvacua/RxNeovimApi" == 0.3.0
 github "sindresorhus/github-markdown-css" == 2.10.0
 github "httpswift/swifter" == 1.4.1
 github "a2/MessagePack.swift" == 3.0.0
