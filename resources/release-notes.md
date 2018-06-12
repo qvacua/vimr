@@ -1,12 +1,14 @@
-# next
+# 0.24.0-???
 
+* Neovim 0.3.0
+* Some refactorings for the Neovim and the UI interface.
 * GH-636: Bugfix: double cursor when entering terminal
 * GH-402: Add file associations; using definitions and icons from [MacVim](http://macvim.org/)
-* Some refactorings for the Neovim and the UI interface.
 * Use LuaJIT again.
 * Dependencies updates:
     - sparkle-project/Sparkle@1.19.0
-    - Quick/nimble@7.1.1
+    - Quick/nimble@7.1.2
+    - eonil/FileSystemEvents@1.0.0
 
 # 0.23.0-275
 
