@@ -825,8 +825,8 @@ void neovim_delete(void **argv) {
 
       // TODO: -1 because we assume that the cursor is one cell ahead,
       // probably not always correct...
-      schar_T character = ScreenLines[_put_row * screen_Rows + _put_column - i - emptyCounter - 1];
-      if (character == 0x00 || character == ' ') {
+      char_u *character = (char_u *) ScreenLines[_put_row * screen_Rows + _put_column - i - emptyCounter - 1];
+      if (*character == 0x00 || *character == ' ') {
         // FIXME: dunno yet, why we have to also match ' '...
         _marked_delta -= 1;
         emptyCounter += 1;
