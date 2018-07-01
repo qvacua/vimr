@@ -15,7 +15,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
   enum Action {
 
     case newMainWindow(urls: [URL], cwd: URL, nvimArgs: [String]?, cliPipePath: String?)
-    case openInKeyWindow(urls: [URL], cwd: URL)
+    case openInKeyWindow(urls: [URL], cwd: URL, cliPipePath: String?)
 
     case preferences
   }
@@ -261,7 +261,7 @@ extension AppDelegate {
       self.emit(.newMainWindow(urls: urls, cwd: cwd, nvimArgs: nil, cliPipePath: pipePath))
 
     case .open:
-      self.emit(.openInKeyWindow(urls: urls, cwd: cwd))
+      self.emit(.openInKeyWindow(urls: urls, cwd: cwd, cliPipePath: pipePath))
 
     case .separateWindows:
       urls.forEach { self.emit(.newMainWindow(urls: [$0], cwd: cwd, nvimArgs: nil, cliPipePath: pipePath)) }

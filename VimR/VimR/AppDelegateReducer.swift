@@ -28,9 +28,9 @@ class AppDelegateReducer {
 
       state.mainWindows[mainWindow.uuid] = mainWindow
 
-    case let .openInKeyWindow(urls, cwd):
+    case let .openInKeyWindow(urls, cwd, cliPipePath):
       guard let uuid = state.currentMainWindowUuid, state.mainWindows[uuid] != nil else {
-        let mainWindow = self.newMainWindow(with: state, urls: urls, cwd: cwd)
+        let mainWindow = self.newMainWindow(with: state, urls: urls, cwd: cwd, cliPipePath: cliPipePath)
         state.mainWindows[mainWindow.uuid] = mainWindow
         break
       }
