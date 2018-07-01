@@ -5,6 +5,7 @@
 * GH-402: Add file associations; using definitions and icons from [MacVim](http://macvim.org/)
 * GH-636: Bugfix: double cursor when entering terminal
 * GH-653: Bugfix: Crashes when closing the last window with "Quit after last window closes"-option turned on.
+* Bugfix: Crashes when `vimr --wait` is used, but is `Ctlr-C`'ed before closing the UI window.
 * Use LuaJIT again.
 * Dependencies updates:
     - sparkle-project/Sparkle@1.19.0
