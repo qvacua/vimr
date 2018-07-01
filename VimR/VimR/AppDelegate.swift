@@ -64,6 +64,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
           self.useSnapshot = appState.useSnapshotUpdate
           self.setSparkleUrl(self.useSnapshot)
         }
+
+        if appState.quit {
+          NSApp.terminate(self)
+        }
       })
       .disposed(by: self.disposeBag)
 

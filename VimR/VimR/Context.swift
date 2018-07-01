@@ -25,6 +25,7 @@ class Context {
 
     let previewService = PreviewService()
     let httpService: HttpServerService = HttpServerService(port: baseServerUrl.port!)
+    let uiRootReducer = UiRootReducer()
 
     // AppState
     Observable
@@ -33,7 +34,7 @@ class Context {
           .reduce(by: AppDelegateReducer(baseServerUrl: baseServerUrl).reduce)
           .filterMapPair(),
         self.actionSourceForAppState()
-          .reduce(by: UiRootReducer().reduce)
+          .reduce(by: uiRootReducer.reduceMainWindow)
           .reduce(by: openQuicklyReducer.reduceMainWindow)
           .filter { $0.modified }
           .apply(self.prefService.applyMainWindow)
@@ -43,6 +44,9 @@ class Context {
           .filterMapPair(),
         self.actionSourceForAppState()
           .reduce(by: openQuicklyReducer.reduceOpenQuicklyWindow)
+          .filterMapPair(),
+        self.actionSourceForAppState()
+          .reduce(by: uiRootReducer.reduceUiRoot)
           .filterMapPair()
       )
       .merge()
