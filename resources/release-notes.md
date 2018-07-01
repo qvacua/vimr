@@ -2,8 +2,9 @@
 
 * Neovim 0.3.0
 * Some refactorings for the Neovim and the UI interface.
-* GH-636: Bugfix: double cursor when entering terminal
 * GH-402: Add file associations; using definitions and icons from [MacVim](http://macvim.org/)
+* GH-636: Bugfix: double cursor when entering terminal
+* GH-653: Bugfix: Crashes when closing the last window with "Quit after last window closes"-option turned on.
 * Use LuaJIT again.
 * Dependencies updates:
     - sparkle-project/Sparkle@1.19.0
