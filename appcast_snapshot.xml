@@ -7,27 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-280</title>
+      <title>SNAPSHOT-281</title>
       <description><![CDATA[
     <ul>
-<li>Neovim 0.3.0 🙂</li>
-<li>Dependencies updates:<ul>
-<li>Quick/nimble@7.1.2</li>
-<li>eonil/FileSystemEvents@1.0.0</li>
-</ul>
-</li>
+<li>GH-653: Bugfix: Crashes when closing the last window with "Quit after last window closes"-option turned on.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/280
+        https://github.com/qvacua/vimr/releases/tag/snapshot/281
       </releaseNotesLink>
-      <pubDate>2018-06-12T21:19:48.303228</pubDate>
+      <pubDate>2018-07-01T11:18:57.837523</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/280/VimR-SNAPSHOT-280.tar.bz2"
-                 sparkle:version="280"
-                 sparkle:shortVersionString="SNAPSHOT-280"
-                 sparkle:dsaSignature="MC0CFQDRV8Yf6kGBtHQDMCh9/c17S1rGCwIUXKtRCLVPhEG3SEiukv1ymWCyOzg="
-                 length="14133809"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/281/VimR-SNAPSHOT-281.tar.bz2"
+                 sparkle:version="281"
+                 sparkle:shortVersionString="SNAPSHOT-281"
+                 sparkle:dsaSignature="MCwCFAPe1lg0kJpok5FgsPBcbeT5RaTNAhQ2yKVtuRwwwPtVG9lBDQD7A8gl7A=="
+                 length="14117888"
                  type="application/octet-stream"/>
     </item>
   </channel>
