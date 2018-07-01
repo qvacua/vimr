@@ -33,6 +33,8 @@ struct AppState: SerializableState {
 
   var openQuickly = OpenQuicklyWindow.State.default
 
+  var quit = false
+
   init() {
 
   }

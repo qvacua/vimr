@@ -10,9 +10,15 @@ class UiRoot: UiComponent {
 
   typealias StateType = AppState
 
+  enum Action {
+
+    case quit
+  }
+
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.source = source
     self.emitter = emitter
+    self.emit = emitter.typedEmit()
 
     self.fileMonitor = FileMonitor(source: source, emitter: emitter, state: state)
     self.openQuicklyWindow = OpenQuicklyWindow(source: source, emitter: emitter, state: state)
@@ -50,7 +56,7 @@ class UiRoot: UiComponent {
 
         case .doNothing: return
         case .hide: NSApp.hide(self)
-        case .quit: NSApp.terminate(self)
+        case .quit: self.emit(.quit)
 
         }
       })
@@ -66,6 +72,7 @@ class UiRoot: UiComponent {
 
   private let source: Observable<AppState>
   private let emitter: ActionEmitter
+  private let emit: (Action) -> Void
   private let disposeBag = DisposeBag()
 
   private let fileMonitor: FileMonitor

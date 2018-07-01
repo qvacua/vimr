@@ -7,9 +7,23 @@ import Foundation
 
 class UiRootReducer {
 
-  typealias Pair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
+  typealias UiRootPair = StateActionPair<AppState, UiRoot.Action>
+  typealias MainWindowPair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
 
-  func reduce(_ pair: Pair) -> Pair {
+  func reduceUiRoot(_ pair: UiRootPair) -> UiRootPair {
+    var appState = pair.state
+
+    switch pair.action {
+
+    case .quit:
+      appState.quit = true
+
+    }
+
+    return StateActionPair(state: appState, action: pair.action)
+  }
+
+  func reduceMainWindow(_ pair: MainWindowPair) -> MainWindowPair {
     var appState = pair.state
     let uuid = pair.action.uuid
 
