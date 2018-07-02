@@ -26,16 +26,18 @@ extension MainWindow {
     self.set(dirtyStatus: false)
     self.emit(self.uuidAction(for: .close))
 
-    if let cliPipePath = self.cliPipePath {
-      let fd = Darwin.open(cliPipePath, O_WRONLY)
-      guard fd != -1 else {
-        return
-      }
-
-      let handle = FileHandle(fileDescriptor: fd)
-      handle.closeFile()
-      _ = Darwin.close(fd)
+    guard let cliPipePath = self.cliPipePath, FileManager.default.fileExists(atPath: cliPipePath) else {
+      return
     }
+
+    let fd = Darwin.open(cliPipePath, O_RDWR)
+    guard fd != -1 else {
+      return
+    }
+
+    let handle = FileHandle(fileDescriptor: fd)
+    handle.closeFile()
+    _ = Darwin.close(fd)
   }
 
   func set(title: String) {
