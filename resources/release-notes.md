@@ -1,4 +1,4 @@
-# 0.24.0-???
+# 0.24.0-282
 
 * Neovim 0.3.0
 * Some refactorings for the Neovim and the UI interface.
