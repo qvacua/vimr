@@ -112,7 +112,8 @@ class MainWindow: NSObject,
 
     let neoVimViewConfig = NvimView.Config(useInteractiveZsh: state.useInteractiveZsh,
                                            cwd: state.cwd,
-                                           nvimArgs: state.nvimArgs)
+                                           nvimArgs: state.nvimArgs,
+                                           envDict: state.envDict)
     self.neoVimView = NvimView(frame: .zero, config: neoVimViewConfig)
     self.neoVimView.configureForAutoLayout()
 

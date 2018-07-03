@@ -17,14 +17,17 @@ public class NvimView: NSView,
     var useInteractiveZsh: Bool
     var cwd: URL
     var nvimArgs: [String]?
+    var envDict: [String: String]?
 
     public init(useInteractiveZsh: Bool,
-                cwd: URL = URL(fileURLWithPath: NSHomeDirectory()),
-                nvimArgs: [String]? = nil) {
+                cwd: URL,
+                nvimArgs: [String]?,
+                envDict: [String: String]?) {
 
       self.useInteractiveZsh = useInteractiveZsh
       self.cwd = cwd
       self.nvimArgs = nvimArgs
+      self.envDict = envDict
     }
   }
 
@@ -310,7 +313,10 @@ public class NvimView: NSView,
   }
 
   convenience override public init(frame rect: NSRect) {
-    self.init(frame: rect, config: Config(useInteractiveZsh: false))
+    self.init(frame: rect, config: Config(useInteractiveZsh: false,
+                                          cwd: URL(fileURLWithPath: NSHomeDirectory()),
+                                          nvimArgs: nil,
+                                          envDict: nil))
   }
 
   required public init?(coder: NSCoder) {

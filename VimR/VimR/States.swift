@@ -260,6 +260,7 @@ extension MainWindow {
     var useInteractiveZsh = false
     var nvimArgs: [String]?
     var cliPipePath: String?
+    var envDict: [String: String]?
 
     var isLeftOptionMeta = false
     var isRightOptionMeta = false

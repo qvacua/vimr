@@ -18,19 +18,25 @@ class AppDelegateReducer {
 
     switch pair.action {
 
-    case let .newMainWindow(urls, cwd, nvimArgs, cliPipePath):
+    case let .newMainWindow(urls, cwd, nvimArgs, cliPipePath, envDict):
       let mainWindow: MainWindow.State
       if let args = nvimArgs {
-        mainWindow = self.newMainWindow(with: state, urls: [], cwd: cwd, nvimArgs: args, cliPipePath: cliPipePath)
+        mainWindow = self.newMainWindow(
+          with: state, urls: [], cwd: cwd, nvimArgs: args, cliPipePath: cliPipePath, envDict: envDict
+        )
       } else {
-        mainWindow = self.newMainWindow(with: state, urls: urls, cwd: cwd, cliPipePath: cliPipePath)
+        mainWindow = self.newMainWindow(
+          with: state, urls: urls, cwd: cwd, nvimArgs: nil, cliPipePath: cliPipePath, envDict: envDict
+        )
       }
 
       state.mainWindows[mainWindow.uuid] = mainWindow
 
     case let .openInKeyWindow(urls, cwd, cliPipePath):
       guard let uuid = state.currentMainWindowUuid, state.mainWindows[uuid] != nil else {
-        let mainWindow = self.newMainWindow(with: state, urls: urls, cwd: cwd, cliPipePath: cliPipePath)
+        let mainWindow = self.newMainWindow(
+          with: state, urls: urls, cwd: cwd, nvimArgs: nil, cliPipePath: cliPipePath, envDict: nil
+        )
         state.mainWindows[mainWindow.uuid] = mainWindow
         break
       }
@@ -49,10 +55,11 @@ class AppDelegateReducer {
   private let baseServerUrl: URL
 
   private func newMainWindow(with state: AppState,
-                                 urls: [URL],
-                                 cwd: URL,
-                                 nvimArgs: [String]? = nil,
-                                 cliPipePath: String? = nil) -> MainWindow.State {
+                             urls: [URL],
+                             cwd: URL,
+                             nvimArgs: [String]?,
+                             cliPipePath: String?,
+                             envDict: [String: String]?) -> MainWindow.State {
 
     var mainWindow = state.mainWindowTemplate
 
@@ -68,9 +75,10 @@ class AppDelegateReducer {
 
     mainWindow.nvimArgs = nvimArgs
     mainWindow.cliPipePath = cliPipePath
+    mainWindow.envDict = envDict
     mainWindow.urlsToOpen = urls.toDict { _ in MainWindow.OpenMode.default }
     mainWindow.frame = state.mainWindows.isEmpty ? state.mainWindowTemplate.frame
-                                                 : self.frame(relativeTo: state.mainWindowTemplate.frame)
+      : self.frame(relativeTo: state.mainWindowTemplate.frame)
 
     return mainWindow
   }

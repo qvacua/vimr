@@ -64,6 +64,17 @@ class UiBridge {
     self.nvimArgs = config.nvimArgs ?? []
     self.cwd = config.cwd
 
+    if let envDict = config.envDict {
+      self.envDict = envDict
+      logger.debug("using envs from vimr: \(envDict)")
+    } else {
+      let selfEnv = ProcessInfo.processInfo.environment
+      let shellUrl = URL(fileURLWithPath: selfEnv["SHELL"] ?? "/bin/bash")
+      let interactiveMode = shellUrl.lastPathComponent == "zsh" && !config.useInteractiveZsh ? false : true
+      self.envDict = ProcessUtils.envVars(of: shellUrl, usingInteractiveMode: interactiveMode)
+      logger.debug("using envs from login shell: \(self.envDict)")
+    }
+
     self.queue = queue
     self.scheduler = SerialDispatchQueueScheduler(queue: queue,
                                                   internalSerialQueueName: String(reflecting: UiBridge.self))
@@ -364,13 +375,8 @@ class UiBridge {
   }
 
   private func launchNvimUsingLoginShellEnv() {
-    let selfEnv = ProcessInfo.processInfo.environment
-    let shellUrl = URL(fileURLWithPath: selfEnv["SHELL"] ?? "/bin/bash")
-
-    let interactiveMode = shellUrl.lastPathComponent == "zsh" && !self.useInteractiveZsh ? false : true
-    var env = ProcessUtils.envVars(of: shellUrl, usingInteractiveMode: interactiveMode)
-
     let listenAddress = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock")
+    var env = self.envDict
     env["NVIM_LISTEN_ADDRESS"] = listenAddress.path
 
     let outPipe = Pipe()
@@ -401,7 +407,8 @@ class UiBridge {
 
   private let useInteractiveZsh: Bool
   private let cwd: URL
-  private var nvimArgs: [String]
+  private let nvimArgs: [String]
+  private let envDict: [String: String]
 
   private let server = RxMessagePortServer()
   private let client = RxMessagePortClient()
