@@ -71,13 +71,13 @@ class UiBridge {
     self.server.queue = self.queue
 
     self.server.stream
-        .subscribe(onNext: { message in
-          self.handleMessage(msgId: message.msgid, data: message.data)
-        }, onError: { error in
-          self.logger.error("There was an error on the local message port server: \(error)")
-          self.streamSubject.onError(Error.ipc(error))
-        })
-        .disposed(by: self.disposeBag)
+      .subscribe(onNext: { message in
+        self.handleMessage(msgId: message.msgid, data: message.data)
+      }, onError: { error in
+        self.logger.error("There was an error on the local message port server: \(error)")
+        self.streamSubject.onError(Error.ipc(error))
+      })
+      .disposed(by: self.disposeBag)
   }
 
   func runLocalServerAndNvim(width: Int, height: Int) -> Completable {
@@ -85,15 +85,15 @@ class UiBridge {
     self.initialHeight = height
 
     return self.server
-        .run(as: self.localServerName)
-        .andThen(Completable.create { completable in
-          self.runLocalServerAndNvimCompletable = completable
-          self.launchNvimUsingLoginShell()
+      .run(as: self.localServerName)
+      .andThen(Completable.create { completable in
+        self.runLocalServerAndNvimCompletable = completable
+        self.launchNvimUsingLoginShellEnv()
 
-          // This will be completed in .nvimReady branch of handleMessage()
-          return Disposables.create()
-        })
-        .timeout(timeout, scheduler: self.scheduler)
+        // This will be completed in .nvimReady branch of handleMessage()
+        return Disposables.create()
+      })
+      .timeout(timeout, scheduler: self.scheduler)
   }
 
   func vimInput(_ str: String) -> Completable {
@@ -150,11 +150,11 @@ class UiBridge {
 
     case .serverReady:
       self
-          .establishNvimConnection()
-          .subscribe(onError: { error in
-            self.streamSubject.onError(Error.ipc(error))
-          })
-          .disposed(by: self.disposeBag)
+        .establishNvimConnection()
+        .subscribe(onError: { error in
+          self.streamSubject.onError(Error.ipc(error))
+        })
+        .disposed(by: self.disposeBag)
 
     case .nvimReady:
       self.runLocalServerAndNvimCompletable?(.completed)
@@ -310,7 +310,7 @@ class UiBridge {
             let dict = (try? unpack(d))?.value.dictionaryValue,
             let key = dict.keys.first?.stringValue,
             let value = dict.values.first
-          else {
+        else {
         return
       }
 
@@ -331,31 +331,31 @@ class UiBridge {
 
   private func closePorts() -> Completable {
     return self.client
-        .stop()
-        .andThen(self.server.stop())
+      .stop()
+      .andThen(self.server.stop())
   }
 
   private func quit(using body: @escaping () -> Void) -> Completable {
     return self
-        .closePorts()
-        .andThen(Completable.create { completable in
-          body()
+      .closePorts()
+      .andThen(Completable.create { completable in
+        body()
 
-          completable(.completed)
-          return Disposables.create()
-        })
+        completable(.completed)
+        return Disposables.create()
+      })
   }
 
   private func establishNvimConnection() -> Completable {
     return self.client
-        .connect(to: self.remoteServerName)
-        .andThen(self.sendMessage(msgId: .agentReady, data: [self.initialWidth, self.initialHeight].data()))
+      .connect(to: self.remoteServerName)
+      .andThen(self.sendMessage(msgId: .agentReady, data: [self.initialWidth, self.initialHeight].data()))
   }
 
   private func sendMessage(msgId: NvimBridgeMsgId, data: Data?) -> Completable {
     return self.client
-        .send(msgid: Int32(msgId.rawValue), data: data, expectsReply: false)
-        .asCompletable()
+      .send(msgid: Int32(msgId.rawValue), data: data, expectsReply: false)
+      .asCompletable()
   }
 
   private func forceExitNvimServer() {
@@ -363,47 +363,28 @@ class UiBridge {
     self.nvimServerProc?.terminate()
   }
 
-  private func launchNvimUsingLoginShell() {
+  private func launchNvimUsingLoginShellEnv() {
     let selfEnv = ProcessInfo.processInfo.environment
+    let shellUrl = URL(fileURLWithPath: selfEnv["SHELL"] ?? "/bin/bash")
 
-    let shellPath = URL(fileURLWithPath: selfEnv["SHELL"] ?? "/bin/bash")
-    let shellName = shellPath.lastPathComponent
-    var shellArgs = [String]()
-    if shellName != "tcsh" {
-      // tcsh does not like the -l option
-      shellArgs.append("-l")
-    }
-    if self.useInteractiveZsh && shellName == "zsh" {
-      shellArgs.append("-i")
-    }
+    let interactiveMode = shellUrl.lastPathComponent == "zsh" && !self.useInteractiveZsh ? false : true
+    var env = ProcessUtils.envVars(of: shellUrl, usingInteractiveMode: interactiveMode)
 
     let listenAddress = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock")
-    var env = selfEnv
     env["NVIM_LISTEN_ADDRESS"] = listenAddress.path
 
-    let inputPipe = Pipe()
+    let outPipe = Pipe()
+    let errorPipe = Pipe()
     let process = Process()
     process.environment = env
-    process.standardInput = inputPipe
+    process.standardError = errorPipe
+    process.standardOutput = outPipe
     process.currentDirectoryPath = self.cwd.path
-    process.launchPath = shellPath.path
-    process.arguments = shellArgs
+    process.launchPath = self.nvimServerExecutablePath()
+    process.arguments = [self.localServerName, self.remoteServerName] + self.nvimArgs + ["--headless"]
     process.launch()
 
     self.nvimServerProc = process
-
-    nvimArgs.append("--headless")
-    let cmd = "exec '\(self.nvimServerExecutablePath())' '\(self.localServerName)' '\(self.remoteServerName)' "
-        .appending(self.nvimArgs.map { "'\($0)'" }.joined(separator: " "))
-
-    self.logger.debug(cmd)
-
-    let writeHandle = inputPipe.fileHandleForWriting
-    guard let cmdData = cmd.data(using: .utf8) else {
-      preconditionFailure("Could not get Data from the string '\(cmd)'")
-    }
-    writeHandle.write(cmdData)
-    writeHandle.closeFile()
   }
 
   private func nvimServerExecutablePath() -> String {
