@@ -1,3 +1,7 @@
+# 0.25.0-???
+
+* GH-625: `vimr --cur-env` will pass the current environment variables to the new neovim process. This will result in `virtualenv` support.
+
 # 0.24.0-282
 
 * Neovim 0.3.0
