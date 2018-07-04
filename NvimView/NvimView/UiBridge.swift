@@ -387,7 +387,7 @@ class UiBridge {
     process.standardOutput = outPipe
     process.currentDirectoryPath = self.cwd.path
     process.launchPath = self.nvimServerExecutablePath()
-    process.arguments = [self.localServerName, self.remoteServerName] + self.nvimArgs + ["--headless"]
+    process.arguments = [self.localServerName, self.remoteServerName] + ["--headless"] + self.nvimArgs
     process.launch()
 
     self.nvimServerProc = process

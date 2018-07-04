@@ -100,6 +100,7 @@ def main(args):
         nvim_parser = argparse.ArgumentParser()
         nvim_parser.add_argument("--nvim", action="store_true")
         nvim_parser.add_argument("--wait", action="store_true")
+        nvim_parser.add_argument("--cur-env", action="store_true")
         nvim_parser.add_argument("--dry-run", action="store_true")
         other_args, nvim_args = nvim_parser.parse_known_args()
         vimr_nvim(other_args, nvim_args, query_params)
