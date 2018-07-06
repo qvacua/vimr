@@ -140,7 +140,8 @@ The working directory will be set to the current directory.
                         help="This command line tool will exit when the corresponding UI window is closed.")
     parser.add_argument("--nvim",
                         action="store_true",
-                        help="All other arguments (except --dry-run and --wait) will be passed over to nvim.")
+                        help="All other arguments (except --cur-env, --dry-run and --wait) will be passed "
+                             "over to nvim.")
 
     group = parser.add_mutually_exclusive_group()
     # no option => Open files in tabs in the front most window.
