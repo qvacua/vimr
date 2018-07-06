@@ -29,13 +29,13 @@ extension Api {
     if checkBlocked {
       return self
         .checkBlocked(
-          self.rpc(method: "nvim_buf_get_info", params: params, expectsReturnValue: true)
+          self.rpc(method: "nvim_buf_get_info", params: params)
         )
         .map(transform)
     }
 
     return self
-      .rpc(method: "nvim_buf_get_info", params: params, expectsReturnValue: true)
+      .rpc(method: "nvim_buf_get_info", params: params)
       .map(transform)
   }
 }
