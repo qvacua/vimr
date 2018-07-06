@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-283</title>
+      <title>SNAPSHOT-284</title>
       <description><![CDATA[
     <ul>
-<li>GH-625: <code>vimr --cur-env</code> will pass the current environment variables to the new neovim process. This will result in <code>virtualenv</code> support. Please note that you have to re-install <code>vimr</code>.</li>
+<li>GH-443: <code>vimr --line ${LINE_NUMBER} ${SOME_FILE}</code> will open the file and go to the given line. If the file is already open in a UI window, then that window will be selected and the cursor will be moved to the given line. This can be used e.g. to reverse-search LaTeX. Note that you have to re-install the <code>vimr</code> tool.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/283
+        https://github.com/qvacua/vimr/releases/tag/snapshot/284
       </releaseNotesLink>
-      <pubDate>2018-07-04T22:31:33.240721</pubDate>
+      <pubDate>2018-07-06T21:01:36.974431</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/283/VimR-SNAPSHOT-283.tar.bz2"
-                 sparkle:version="283"
-                 sparkle:shortVersionString="SNAPSHOT-283"
-                 sparkle:dsaSignature="MCwCFHCoTBZoTC+yLgzVw/fWBwHj9wc6AhR5xWFnXUEDCY9a0Im1Ob+e2GTWSw=="
-                 length="14119188"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/284/VimR-SNAPSHOT-284.tar.bz2"
+                 sparkle:version="284"
+                 sparkle:shortVersionString="SNAPSHOT-284"
+                 sparkle:dsaSignature="MC4CFQC85W5DOK+chBghYPusLQGPdfrXWAIVAOKVRd3YSnGyXJ3w5S3F7LU4vJTM"
+                 length="14182159"
                  type="application/octet-stream"/>
     </item>
   </channel>
