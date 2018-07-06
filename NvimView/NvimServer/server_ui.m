@@ -28,7 +28,6 @@
 #import <nvim/syntax.h>
 #import <nvim/aucmd.h>
 #import <nvim/msgpack_rpc/helpers.h>
-#import <msgpack.h>
 #import <nvim/api/private/helpers.h>
 
 
