@@ -18,31 +18,22 @@ class AppDelegateReducer {
 
     switch pair.action {
 
-    case let .newMainWindow(urls, cwd, nvimArgs, cliPipePath, envDict):
-      let mainWindow: MainWindow.State
-      if let args = nvimArgs {
-        mainWindow = self.newMainWindow(
-          with: state, urls: [], cwd: cwd, nvimArgs: args, cliPipePath: cliPipePath, envDict: envDict
-        )
-      } else {
-        mainWindow = self.newMainWindow(
-          with: state, urls: urls, cwd: cwd, nvimArgs: nil, cliPipePath: cliPipePath, envDict: envDict
-        )
-      }
-
+    case let .newMainWindow(config):
+      let mainWindow = self.newMainWindow(with: state, config: config)
       state.mainWindows[mainWindow.uuid] = mainWindow
 
-    case let .openInKeyWindow(urls, cwd, cliPipePath):
+    case let .openInKeyWindow(config):
       guard let uuid = state.currentMainWindowUuid, state.mainWindows[uuid] != nil else {
-        let mainWindow = self.newMainWindow(
-          with: state, urls: urls, cwd: cwd, nvimArgs: nil, cliPipePath: cliPipePath, envDict: nil
-        )
+        let mainWindow = self.newMainWindow(with: state, config: config)
         state.mainWindows[mainWindow.uuid] = mainWindow
         break
       }
 
-      state.mainWindows[uuid]?.urlsToOpen = urls.toDict { url in MainWindow.OpenMode.default }
-      state.mainWindows[uuid]?.cwd = cwd
+      state.mainWindows[uuid]?.urlsToOpen = config.urls.toDict { url in MainWindow.OpenMode.default }
+      state.mainWindows[uuid]?.cwd = config.cwd
+      if let line = config.line {
+        state.mainWindows[uuid]?.goToLineFromCli = Marked(line)
+      }
 
     case .preferences:
       state.preferencesOpen = Marked(true)
@@ -54,17 +45,12 @@ class AppDelegateReducer {
 
   private let baseServerUrl: URL
 
-  private func newMainWindow(with state: AppState,
-                             urls: [URL],
-                             cwd: URL,
-                             nvimArgs: [String]?,
-                             cliPipePath: String?,
-                             envDict: [String: String]?) -> MainWindow.State {
+  private func newMainWindow(with state: AppState, config: AppDelegate.OpenConfig) -> MainWindow.State {
 
     var mainWindow = state.mainWindowTemplate
 
     mainWindow.uuid = UUID().uuidString
-    mainWindow.cwd = cwd
+    mainWindow.cwd = config.cwd
     mainWindow.isDirty = false
 
     mainWindow.htmlPreview = HtmlPreviewState(
@@ -73,12 +59,15 @@ class AppDelegateReducer {
     )
     mainWindow.preview.server = self.baseServerUrl.appendingPathComponent(MarkdownReducer.nonePath)
 
-    mainWindow.nvimArgs = nvimArgs
-    mainWindow.cliPipePath = cliPipePath
-    mainWindow.envDict = envDict
-    mainWindow.urlsToOpen = urls.toDict { _ in MainWindow.OpenMode.default }
+    mainWindow.nvimArgs = config.nvimArgs
+    mainWindow.cliPipePath = config.cliPipePath
+    mainWindow.envDict = config.envDict
+    mainWindow.urlsToOpen = config.urls.toDict { _ in MainWindow.OpenMode.default }
     mainWindow.frame = state.mainWindows.isEmpty ? state.mainWindowTemplate.frame
       : self.frame(relativeTo: state.mainWindowTemplate.frame)
+    if let line = config.line {
+      mainWindow.goToLineFromCli = Marked(line)
+    }
 
     return mainWindow
   }

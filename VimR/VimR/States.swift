@@ -233,6 +233,7 @@ extension MainWindow {
     var frame = CGRect(x: 100, y: 100, width: 600, height: 400)
 
     ////// transient
+    var goToLineFromCli: Marked<Int>?
     var lastFileSystemUpdate = Marked(FileUtils.userHomeUrl)
 
     var tools = WorkspaceToolState.default

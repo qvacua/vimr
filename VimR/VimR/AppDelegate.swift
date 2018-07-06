@@ -12,10 +12,21 @@ import CocoaFontAwesome
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate {
 
+  struct OpenConfig {
+
+    var urls: [URL]
+    var cwd: URL
+
+    var cliPipePath: String?
+    var nvimArgs: [String]?
+    var envDict: [String: String]?
+    var line: Int?
+  }
+
   enum Action {
 
-    case newMainWindow(urls: [URL], cwd: URL, nvimArgs: [String]?, cliPipePath: String?, envDict: [String: String]?)
-    case openInKeyWindow(urls: [URL], cwd: URL, cliPipePath: String?)
+    case newMainWindow(config: OpenConfig)
+    case openInKeyWindow(config: OpenConfig)
 
     case preferences
   }
@@ -188,7 +199,10 @@ extension AppDelegate {
   // For drag & dropping files on the App icon.
   func application(_ sender: NSApplication, openFiles filenames: [String]) {
     let urls = filenames.map { URL(fileURLWithPath: $0) }
-    self.emit(.newMainWindow(urls: urls, cwd: FileUtils.userHomeUrl, nvimArgs: nil, cliPipePath: nil, envDict: nil))
+    let config = OpenConfig(
+      urls: urls, cwd: FileUtils.userHomeUrl, cliPipePath: nil, nvimArgs: nil, envDict: nil, line: nil
+    )
+    self.emit(.newMainWindow(config: config))
 
     sender.reply(toOpenOrPrint: .success)
   }
@@ -256,6 +270,7 @@ extension AppDelegate {
       envDict = nil
     }
 
+    let line = queryParam(linePrefix, from: rawParams, transforming: { Int($0) }).compactMap { $0 }.first
     let urls = queryParam(filePrefix, from: rawParams, transforming: { URL(fileURLWithPath: $0) })
     let cwd = queryParam(cwdPrefix,
                          from: rawParams,
@@ -272,22 +287,27 @@ extension AppDelegate {
     switch action {
 
     case .activate, .newWindow:
-      self.emit(.newMainWindow(urls: urls, cwd: cwd, nvimArgs: nil, cliPipePath: pipePath, envDict: envDict))
+      let config = OpenConfig(urls: urls, cwd: cwd, cliPipePath: pipePath, nvimArgs: nil, envDict: envDict, line: line)
+      self.emit(.newMainWindow(config: config))
 
     case .open:
-      self.emit(.openInKeyWindow(urls: urls, cwd: cwd, cliPipePath: pipePath))
+      let config = OpenConfig(urls: urls, cwd: cwd, cliPipePath: pipePath, nvimArgs: nil, envDict: envDict, line: line)
+      self.emit(.openInKeyWindow(config: config))
 
     case .separateWindows:
       urls.forEach {
-        self.emit(.newMainWindow(urls: [$0], cwd: cwd, nvimArgs: nil, cliPipePath: pipePath, envDict: nil))
+        let config = OpenConfig(urls: [$0], cwd: cwd, cliPipePath: pipePath, nvimArgs: nil, envDict: nil, line: line)
+        self.emit(.newMainWindow(config: config))
       }
 
     case .nvim:
-      self.emit(.newMainWindow(urls: [],
-                               cwd: cwd,
-                               nvimArgs: queryParam(nvimArgsPrefix, from: rawParams, transforming: identity),
-                               cliPipePath: pipePath,
-                               envDict: envDict))
+      let config = OpenConfig(urls: urls,
+                              cwd: cwd,
+                              cliPipePath: pipePath,
+                              nvimArgs: queryParam(nvimArgsPrefix, from: rawParams, transforming: identity),
+                              envDict: envDict,
+                              line: line)
+      self.emit(.newMainWindow(config: config))
 
     }
   }
@@ -325,7 +345,10 @@ extension AppDelegate {
   }
 
   @IBAction func newDocument(_ sender: Any?) {
-    self.emit(.newMainWindow(urls: [], cwd: FileUtils.userHomeUrl, nvimArgs: nil, cliPipePath: nil, envDict: nil))
+    let config = OpenConfig(
+      urls: [], cwd: FileUtils.userHomeUrl, cliPipePath: nil, nvimArgs: nil, envDict: nil, line: nil
+    )
+    self.emit(.newMainWindow(config: config))
   }
 
   @IBAction func openInNewWindow(_ sender: Any?) {
@@ -349,7 +372,10 @@ extension AppDelegate {
       let urls = panel.urls
       let commonParentUrl = FileUtils.commonParent(of: urls)
 
-      self.emit(.newMainWindow(urls: urls, cwd: commonParentUrl, nvimArgs: nil, cliPipePath: nil, envDict: nil))
+      let config = OpenConfig(
+        urls: urls, cwd: commonParentUrl, cliPipePath: nil, nvimArgs: nil, envDict: nil, line: nil
+      )
+      self.emit(.newMainWindow(config: config))
     }
   }
 }
@@ -382,3 +408,4 @@ private let nvimArgsPrefix = "nvim-args="
 private let pipePathPrefix = "pipe-path="
 private let waitPrefix = "wait="
 private let envPathPrefix = "env-path="
+private let linePrefix = "line="

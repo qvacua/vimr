@@ -120,6 +120,10 @@ extension NvimView {
       .subscribeOn(self.scheduler)
   }
 
+  public func goTo(line: Int) -> Completable {
+    return self.api.command(command: "\(line)")
+  }
+
 /// Closes the current window.
   public func closeCurrentTab() -> Completable {
     return self.api

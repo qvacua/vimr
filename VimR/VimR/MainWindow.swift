@@ -260,23 +260,39 @@ class MainWindow: NSObject,
         if let cwd = state.cwdToSet {
           self.neoVimView.cwd = cwd
         }
-        if state.preview.status == .markdown
-           && state.previewTool.isReverseSearchAutomatically
-           && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition) {
-          self.neoVimView
-            .cursorGo(to: state.preview.previewPosition.payload)
-            .subscribe()
-        }
 
-        self.previewPosition = state.preview.previewPosition
+        Completable
+          .empty()
+          .andThen {
+            if state.preview.status == .markdown
+               && state.previewTool.isReverseSearchAutomatically
+               && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition) {
 
-        self.open(urls: state.urlsToOpen)
+              self.previewPosition = state.preview.previewPosition
+              return self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
+            }
 
-        if let currentBuffer = state.currentBufferToSet {
-          self.neoVimView
-            .select(buffer: currentBuffer)
-            .subscribe()
-        }
+            return .empty()
+          }
+          .andThen(self.open(urls: state.urlsToOpen))
+          .andThen {
+            if let currentBuffer = state.currentBufferToSet {
+              return self.neoVimView.select(buffer: currentBuffer)
+            }
+
+            return .empty()
+          }
+          .andThen {
+            if self.goToLineFromCli?.mark != state.goToLineFromCli?.mark {
+              self.goToLineFromCli = state.goToLineFromCli
+              if let goToLine = self.goToLineFromCli {
+                return self.neoVimView.goTo(line: goToLine.payload)
+              }
+            }
+
+            return .empty()
+          }
+          .subscribe()
 
         let usesTheme = state.appearance.usesTheme
         let themePrefChanged = state.appearance.usesTheme != self.usesTheme
@@ -336,7 +352,17 @@ class MainWindow: NSObject,
     self.window.setFrame(state.frame, display: true)
     self.window.makeFirstResponder(self.neoVimView)
 
-    self.open(urls: state.urlsToOpen)
+    self.goToLineFromCli = state.goToLineFromCli
+    self
+      .open(urls: state.urlsToOpen)
+      .andThen {
+        if let goToLine = self.goToLineFromCli {
+          return self.neoVimView.goTo(line: goToLine.payload)
+        }
+
+        return .empty()
+      }
+      .subscribe()
   }
 
   func uuidAction(for action: Action) -> UuidAction<Action> {
@@ -364,6 +390,8 @@ class MainWindow: NSObject,
   private let disposeBag = DisposeBag()
 
   private var currentBuffer: NvimView.Buffer?
+
+  private var goToLineFromCli: Marked<Int>?
 
   private var defaultFont = NvimView.defaultFont
   private var linespacing = NvimView.defaultLinespacing
@@ -403,26 +431,25 @@ class MainWindow: NSObject,
     self.workspace.theme = workspaceTheme
   }
 
-  private func open(urls: [URL: OpenMode]) {
-    // If we don't call the following in the next tick, only half of the existing swap file warning is displayed.
-    // Dunno why...
-    DispatchQueue.main.async {
-      Completable.concat(
-          urls.map { entry -> Completable in
-            let url = entry.key
-            let mode = entry.value
-
-            switch mode {
-            case .default: return self.neoVimView.open(urls: [url])
-            case .currentTab: return self.neoVimView.openInCurrentTab(url: url)
-            case .newTab: return self.neoVimView.openInNewTab(urls: [url])
-            case .horizontalSplit: return self.neoVimView.openInHorizontalSplit(urls: [url])
-            case .verticalSplit: return self.neoVimView.openInVerticalSplit(urls: [url])
-            }
-          }
-        )
-        .subscribe()
+  private func open(urls: [URL: OpenMode]) -> Completable {
+    if urls.isEmpty {
+      return .empty()
     }
+
+    return .concat(
+      urls.map { entry -> Completable in
+        let url = entry.key
+        let mode = entry.value
+
+        switch mode {
+        case .default: return self.neoVimView.open(urls: [url])
+        case .currentTab: return self.neoVimView.openInCurrentTab(url: url)
+        case .newTab: return self.neoVimView.openInNewTab(urls: [url])
+        case .horizontalSplit: return self.neoVimView.openInHorizontalSplit(urls: [url])
+        case .verticalSplit: return self.neoVimView.openInVerticalSplit(urls: [url])
+        }
+      }
+    )
   }
 
   private func addViews() {

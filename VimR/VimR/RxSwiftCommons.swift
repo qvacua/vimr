@@ -16,6 +16,13 @@ extension ObservableType {
   }
 }
 
+extension PrimitiveSequenceType where TraitType == CompletableTrait, ElementType == Never {
+
+  func andThen(using body: () -> Completable) -> Completable {
+    return self.andThen(body())
+  }
+}
+
 extension PrimitiveSequence where Element == Never, TraitType == CompletableTrait {
 
   func wait() throws {
