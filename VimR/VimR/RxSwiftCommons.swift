@@ -90,10 +90,6 @@ extension PrimitiveSequence where TraitType == SingleTrait {
       .ignoreElements()
   }
 
-  func asCompletable() -> Completable {
-    return self.asObservable().ignoreElements()
-  }
-
   func syncValue() -> Element? {
     var trigger = false
     var value: Element?
