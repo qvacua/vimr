@@ -6,7 +6,7 @@
 import Cocoa
 import RxSwift
 
-extension ObservableType {
+extension Observable {
 
   func mapOmittingNil<R>(_ transform: @escaping (E) throws -> R?) -> RxSwift.Observable<R> {
     return self
@@ -14,6 +14,31 @@ extension ObservableType {
       .filter { $0 != nil }
       .map { $0! }
   }
+
+  func completableSubject() -> CompletableSubject<Element> {
+    return CompletableSubject(source: self)
+  }
+}
+
+class CompletableSubject<T> {
+
+  func asObservable() -> Observable<T> {
+    return self.subject.asObservable()
+  }
+
+  init(source: Observable<T>) {
+    let subject = PublishSubject<T>()
+    self.subscription = source.subscribe(subject)
+    self.subject = subject
+  }
+
+  func onCompleted() {
+    self.subject.onCompleted()
+    self.subscription.dispose()
+  }
+
+  private let subject: PublishSubject<T>
+  private let subscription: Disposable
 }
 
 extension PrimitiveSequenceType where TraitType == CompletableTrait, ElementType == Never {
