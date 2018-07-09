@@ -5,11 +5,12 @@
 
 import Foundation
 
-class PrefWindowReducer {
+class PrefWindowReducer: ReducerType {
 
-  typealias Pair = StateActionPair<AppState, PrefWindow.Action>
+  typealias StateType = AppState
+  typealias ActionType = PrefWindow.Action
 
-  func reduce(_ pair: Pair) -> Pair {
+  func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
     var state = pair.state
 
     switch pair.action {
@@ -19,6 +20,6 @@ class PrefWindowReducer {
 
     }
 
-    return StateActionPair(state: state, action: pair.action)
+    return (state, pair.action, true)
   }
 }

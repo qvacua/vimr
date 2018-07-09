@@ -28,7 +28,6 @@
 #import <nvim/syntax.h>
 #import <nvim/aucmd.h>
 #import <nvim/msgpack_rpc/helpers.h>
-#import <msgpack.h>
 #import <nvim/api/private/helpers.h>
 
 
@@ -236,7 +235,9 @@ static void run_neovim(void *arg) {
 
     argv[0] = "nvim";
     for (var i = 0; i < nvimArgs.count; i++) {
-      argv[i + 1] = (char *) nvimArgs[(NSUInteger) i].cstr;
+      char *str = (char *) nvimArgs[(NSUInteger) i].cstr;
+      argv[i + 1] = malloc(strlen(str) + 1);
+      strcpy(argv[i + 1], str);
     }
 
     [nvimArgs release]; // retained in start_neovim()
@@ -244,6 +245,9 @@ static void run_neovim(void *arg) {
 
   nvim_main(argc, argv);
 
+  for (var i = 0; i < argc - 1; i++) {
+    free(argv[i + 1]);
+  }
   free(argv);
 }
 

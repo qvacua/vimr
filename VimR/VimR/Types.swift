@@ -6,49 +6,19 @@
 import Foundation
 import RxSwift
 
-protocol UiComponent {
+struct StateActionPair<S, A> {
 
-  associatedtype StateType
-
-  init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType)
+  var state: S
+  var action: A
+  var modified: Bool
 }
 
-class ActionEmitter {
+protocol UuidTagged {
 
-  let observable: Observable<Any>
-
-  init() {
-    self.observable = self.subject.asObservable().observeOn(scheduler)
-  }
-
-  func typedEmit<T>() -> ((T) -> Void) {
-    return { (action: T) in
-      self.subject.onNext(action)
-    }
-  }
-
-  deinit {
-    self.subject.onCompleted()
-  }
-
-  private let scheduler = SerialDispatchQueueScheduler(qos: .userInteractive)
-  private let subject = PublishSubject<Any>()
+  var uuid: String { get }
 }
 
-class StateActionPair<S, A> {
-
-  let modified: Bool
-  let state: S
-  let action: A
-
-  init(state: S, action: A, modified: Bool = true) {
-    self.modified = modified
-    self.state = state
-    self.action = action
-  }
-}
-
-class UuidAction<A>: CustomStringConvertible {
+class UuidAction<A>: UuidTagged, CustomStringConvertible {
 
   let uuid: String
   let payload: A
@@ -63,7 +33,7 @@ class UuidAction<A>: CustomStringConvertible {
   }
 }
 
-class UuidState<S>: CustomStringConvertible {
+class UuidState<S>: UuidTagged, CustomStringConvertible {
 
   let uuid: String
   let payload: S
@@ -113,23 +83,6 @@ class Marked<T>: CustomStringConvertible {
 
   func hasDifferentMark(as other: Marked<T>) -> Bool {
     return self.mark != other.mark
-  }
-}
-
-extension Observable {
-
-  func reduce(by reduce: @escaping (Element) -> Element) -> Observable<Element> {
-    return self.map(reduce)
-  }
-
-  func apply(_ apply: @escaping (Element) -> Void) -> Observable<Element> {
-    return self.do(onNext: apply)
-  }
-
-  func filterMapPair<S, A>() -> Observable<S> where Element == StateActionPair<S, A> {
-    return self
-      .filter { $0.modified }
-      .map { $0.state }
   }
 }
 

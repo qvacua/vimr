@@ -5,18 +5,19 @@
 
 import Foundation
 
-class PreviewToolReducer {
+class PreviewToolReducer: ReducerType {
 
-  typealias Pair = StateActionPair<UuidState<MainWindow.State>, PreviewTool.Action>
+  typealias StateType = MainWindow.State
+  typealias ActionType = UuidAction<PreviewTool.Action>
 
   init(baseServerUrl: URL) {
     self.baseServerUrl = baseServerUrl
   }
 
-  func reduce(_ pair: Pair) -> Pair {
-    var state = pair.state.payload
+  func typedReduce(_ tuple: ReduceTuple) -> ReduceTuple {
+    var state = tuple.state
 
-    switch pair.action {
+    switch tuple.action.payload {
 
     case let .setAutomaticReverseSearch(to:value):
       state.previewTool.isReverseSearchAutomatically = value
@@ -28,11 +29,11 @@ class PreviewToolReducer {
       state.previewTool.isRefreshOnWrite = value
 
     default:
-      return pair
+      return tuple
 
     }
 
-    return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
+    return (state, tuple.action, true)
   }
 
   private let baseServerUrl: URL

@@ -12,10 +12,21 @@ import CocoaFontAwesome
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate {
 
+  struct OpenConfig {
+
+    var urls: [URL]
+    var cwd: URL
+
+    var cliPipePath: String?
+    var nvimArgs: [String]?
+    var envDict: [String: String]?
+    var line: Int?
+  }
+
   enum Action {
 
-    case newMainWindow(urls: [URL], cwd: URL, nvimArgs: [String]?, cliPipePath: String?)
-    case openInKeyWindow(urls: [URL], cwd: URL, cliPipePath: String?)
+    case newMainWindow(config: OpenConfig)
+    case openInKeyWindow(config: OpenConfig)
 
     case preferences
   }
@@ -24,10 +35,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     let baseServerUrl = URL(string: "http://localhost:\(NetUtils.openPort())")!
 
     var initialAppState: AppState
-    if let stateDict = UserDefaults.standard.value(forKey: PrefService.compatibleVersion) as? [String: Any] {
+    if let stateDict = UserDefaults.standard.value(forKey: PrefMiddleware.compatibleVersion) as? [String: Any] {
       initialAppState = AppState(dict: stateDict) ?? .default
     } else {
-      if let oldDict = UserDefaults.standard.value(forKey: PrefService.lastCompatibleVersion) as? [String: Any] {
+      if let oldDict = UserDefaults.standard.value(forKey: PrefMiddleware.lastCompatibleVersion) as? [String: Any] {
         initialAppState = Pref128ToCurrentConverter.appState(from: oldDict)
       } else {
         initialAppState = .default
@@ -37,15 +48,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
       baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath)
     )
 
-    self.stateContext = Context(baseServerUrl: baseServerUrl, state: initialAppState)
-    self.emit = self.stateContext.actionEmitter.typedEmit()
+    self.context = Context(baseServerUrl: baseServerUrl, state: initialAppState)
+    self.emit = self.context.actionEmitter.typedEmit()
 
     self.openNewMainWindowOnLaunch = initialAppState.openNewMainWindowOnLaunch
     self.openNewMainWindowOnReactivation = initialAppState.openNewMainWindowOnReactivation
     self.useSnapshot = initialAppState.useSnapshotUpdate
 
-    let source = self.stateContext.stateSource
-    self.uiRoot = UiRoot(source: source, emitter: self.stateContext.actionEmitter, state: initialAppState)
+    let source = self.context.stateSource
+    self.uiRoot = UiRoot(source: source, emitter: self.context.actionEmitter, state: initialAppState)
 
     super.init()
 
@@ -90,7 +101,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     }
   }
 
-  private let stateContext: Context
+  private let context: Context
   private let emit: (Action) -> Void
 
   private let uiRoot: UiRoot
@@ -157,7 +168,7 @@ extension AppDelegate {
   }
 
   func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-    self.stateContext.savePrefs()
+    self.context.savePrefs()
 
     if self.hasDirtyWindows && self.hasMainWindows {
       let alert = NSAlert()
@@ -188,7 +199,10 @@ extension AppDelegate {
   // For drag & dropping files on the App icon.
   func application(_ sender: NSApplication, openFiles filenames: [String]) {
     let urls = filenames.map { URL(fileURLWithPath: $0) }
-    self.emit(.newMainWindow(urls: urls, cwd: FileUtils.userHomeUrl, nvimArgs: nil, cliPipePath: nil))
+    let config = OpenConfig(
+      urls: urls, cwd: FileUtils.userHomeUrl, cliPipePath: nil, nvimArgs: nil, envDict: nil, line: nil
+    )
+    self.emit(.newMainWindow(config: config))
 
     sender.reply(toOpenOrPrint: .success)
   }
@@ -242,6 +256,21 @@ extension AppDelegate {
       return
     }
 
+    let envDict: [String: String]?
+    if let envPath = queryParam(envPathPrefix, from: rawParams, transforming: identity).first {
+      envDict = stringDict(from: URL(fileURLWithPath: envPath))
+      if FileManager.default.fileExists(atPath: envPath) {
+        do {
+          try FileManager.default.removeItem(atPath: envPath)
+        } catch {
+          fileLog.error(error.localizedDescription)
+        }
+      }
+    } else {
+      envDict = nil
+    }
+
+    let line = queryParam(linePrefix, from: rawParams, transforming: { Int($0) }).compactMap { $0 }.first
     let urls = queryParam(filePrefix, from: rawParams, transforming: { URL(fileURLWithPath: $0) })
     let cwd = queryParam(cwdPrefix,
                          from: rawParams,
@@ -258,26 +287,48 @@ extension AppDelegate {
     switch action {
 
     case .activate, .newWindow:
-      self.emit(.newMainWindow(urls: urls, cwd: cwd, nvimArgs: nil, cliPipePath: pipePath))
+      let config = OpenConfig(urls: urls, cwd: cwd, cliPipePath: pipePath, nvimArgs: nil, envDict: envDict, line: line)
+      self.emit(.newMainWindow(config: config))
 
     case .open:
-      self.emit(.openInKeyWindow(urls: urls, cwd: cwd, cliPipePath: pipePath))
+      let config = OpenConfig(urls: urls, cwd: cwd, cliPipePath: pipePath, nvimArgs: nil, envDict: envDict, line: line)
+      self.emit(.openInKeyWindow(config: config))
 
     case .separateWindows:
-      urls.forEach { self.emit(.newMainWindow(urls: [$0], cwd: cwd, nvimArgs: nil, cliPipePath: pipePath)) }
+      urls.forEach {
+        let config = OpenConfig(urls: [$0], cwd: cwd, cliPipePath: pipePath, nvimArgs: nil, envDict: nil, line: line)
+        self.emit(.newMainWindow(config: config))
+      }
 
     case .nvim:
-      self.emit(.newMainWindow(urls: [],
-                               cwd: cwd,
-                               nvimArgs: queryParam(nvimArgsPrefix, from: rawParams, transforming: identity),
-                               cliPipePath: pipePath))
+      let config = OpenConfig(urls: urls,
+                              cwd: cwd,
+                              cliPipePath: pipePath,
+                              nvimArgs: queryParam(nvimArgsPrefix, from: rawParams, transforming: identity),
+                              envDict: envDict,
+                              line: line)
+      self.emit(.newMainWindow(config: config))
 
     }
   }
 
+  private func stringDict(from jsonUrl: URL) -> [String: String]? {
+    guard let data = try? Data(contentsOf: jsonUrl) else {
+      return nil
+    }
+
+    do {
+      return try JSONSerialization.jsonObject(with: data) as? [String: String]
+    } catch {
+      fileLog.error(error.localizedDescription)
+    }
+
+    return nil
+  }
+
   private func queryParam<T>(_ prefix: String,
-                                 from rawParams: [String],
-                                 transforming transform: (String) -> T) -> [T] {
+                             from rawParams: [String],
+                             transforming transform: (String) -> T) -> [T] {
 
     return rawParams
       .filter { $0.hasPrefix(prefix) }
@@ -294,7 +345,10 @@ extension AppDelegate {
   }
 
   @IBAction func newDocument(_ sender: Any?) {
-    self.emit(.newMainWindow(urls: [], cwd: FileUtils.userHomeUrl, nvimArgs: nil, cliPipePath: nil))
+    let config = OpenConfig(
+      urls: [], cwd: FileUtils.userHomeUrl, cliPipePath: nil, nvimArgs: nil, envDict: nil, line: nil
+    )
+    self.emit(.newMainWindow(config: config))
   }
 
   @IBAction func openInNewWindow(_ sender: Any?) {
@@ -318,7 +372,10 @@ extension AppDelegate {
       let urls = panel.urls
       let commonParentUrl = FileUtils.commonParent(of: urls)
 
-      self.emit(.newMainWindow(urls: urls, cwd: commonParentUrl, nvimArgs: nil, cliPipePath: nil))
+      let config = OpenConfig(
+        urls: urls, cwd: commonParentUrl, cliPipePath: nil, nvimArgs: nil, envDict: nil, line: nil
+      )
+      self.emit(.newMainWindow(config: config))
     }
   }
 }
@@ -331,7 +388,7 @@ extension AppDelegate {
   }
 }
 
-/// Keep the rawValues in sync with Action in the `vimr` Python script.
+// Keep the rawValues in sync with Action in the `vimr` Python script.
 private enum VimRUrlAction: String {
   case activate = "activate"
   case open = "open"
@@ -344,8 +401,11 @@ private let updater = SUUpdater()
 
 private let debugMenuItemIdentifier = NSUserInterfaceItemIdentifier("debug-menu-item")
 
+// Keep in sync with QueryParamKey in the `vimr` Python script.
 private let filePrefix = "file="
 private let cwdPrefix = "cwd="
 private let nvimArgsPrefix = "nvim-args="
 private let pipePathPrefix = "pipe-path="
 private let waitPrefix = "wait="
+private let envPathPrefix = "env-path="
+private let linePrefix = "line="

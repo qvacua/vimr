@@ -5,11 +5,12 @@
 
 import Foundation
 
-class ToolsPrefReducer {
+class ToolsPrefReducer: ReducerType {
 
-  typealias Pair = StateActionPair<AppState, ToolsPref.Action>
+  typealias StateType = AppState
+  typealias ActionType = ToolsPref.Action
 
-  func reduce(_ pair: Pair) -> Pair {
+  func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
     var state = pair.state
 
     switch pair.action {
@@ -19,6 +20,6 @@ class ToolsPrefReducer {
 
     }
 
-    return StateActionPair(state: state, action: pair.action)
+    return (state, pair.action, true)
   }
 }

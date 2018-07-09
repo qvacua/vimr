@@ -80,25 +80,19 @@ class UiRoot: UiComponent {
   private let prefWindow: PrefWindow
 
   private var mainWindows = [String: MainWindow]()
-  private var subjectForMainWindows = [String: PublishSubject<MainWindow.State>]()
-  private var disposables = [String: Disposable]()
+  private var subjectForMainWindows = [String: CompletableSubject<MainWindow.State>]()
 
   private func newMainWindow(with state: MainWindow.State) -> MainWindow {
-    let subject = PublishSubject<MainWindow.State>()
-    let source = self.source.mapOmittingNil { $0.mainWindows[state.uuid] }
+    let subject = self.source.mapOmittingNil { $0.mainWindows[state.uuid] }.completableSubject()
 
     self.subjectForMainWindows[state.uuid] = subject
-    self.disposables[state.uuid] = source.subscribe(subject)
-
     return MainWindow(source: subject.asObservable(), emitter: self.emitter, state: state)
   }
 
   private func removeMainWindow(with uuid: String) {
     self.subjectForMainWindows[uuid]?.onCompleted()
-    self.disposables[uuid]?.dispose()
 
     self.subjectForMainWindows.removeValue(forKey: uuid)
-    self.disposables.removeValue(forKey: uuid)
     self.mainWindows.removeValue(forKey: uuid)
   }
 }

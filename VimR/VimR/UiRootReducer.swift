@@ -5,92 +5,100 @@
 
 import Foundation
 
-class UiRootReducer {
+class UiRootReducer: ReducerType {
 
-  typealias UiRootPair = StateActionPair<AppState, UiRoot.Action>
-  typealias MainWindowPair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
+  typealias StateType = AppState
+  typealias ActionType = UiRoot.Action
 
-  func reduceUiRoot(_ pair: UiRootPair) -> UiRootPair {
-    var appState = pair.state
+  let mainWindow = MainWindowReducer()
 
-    switch pair.action {
+  func typedReduce(_ tuple: ReduceTuple) -> ReduceTuple {
+    var appState = tuple.state
+
+    switch tuple.action {
 
     case .quit:
       appState.quit = true
 
     }
 
-    return StateActionPair(state: appState, action: pair.action)
+    return (appState, tuple.action, true)
   }
 
-  func reduceMainWindow(_ pair: MainWindowPair) -> MainWindowPair {
-    var appState = pair.state
-    let uuid = pair.action.uuid
+  class MainWindowReducer: ReducerType {
 
-    switch pair.action.payload {
+    typealias StateType = AppState
+    typealias ActionType = UuidAction<MainWindow.Action>
 
-    case let .becomeKey(isFullScreen):
-      appState.currentMainWindowUuid = uuid
-      appState.mainWindowTemplate = self.mainWindowTemplate(
-        from: appState.mainWindowTemplate,
-        new: appState.mainWindows[uuid] ?? appState.mainWindowTemplate,
-        isFullScreen: isFullScreen
-      )
+    func typedReduce(_ tuple: ReduceTuple) -> ReduceTuple {
+      var appState = tuple.state
+      let uuid = tuple.action.uuid
 
-    case let .frameChanged(to:frame):
-      if uuid == appState.currentMainWindowUuid {
-        appState.mainWindowTemplate.frame = frame
+      switch tuple.action.payload {
+
+      case let .becomeKey(isFullScreen):
+        appState.currentMainWindowUuid = uuid
+        appState.mainWindowTemplate = self.mainWindowTemplate(
+          from: appState.mainWindowTemplate,
+          new: appState.mainWindows[uuid] ?? appState.mainWindowTemplate,
+          isFullScreen: isFullScreen
+        )
+
+      case let .frameChanged(to:frame):
+        if uuid == appState.currentMainWindowUuid {
+          appState.mainWindowTemplate.frame = frame
+        }
+
+      case let .setToolsState(tools):
+        appState.mainWindowTemplate.orderedTools = tools.map { $0.0 }
+
+      case let .toggleAllTools(value):
+        appState.mainWindowTemplate.isAllToolsVisible = value
+
+      case let .toggleToolButtons(value):
+        appState.mainWindowTemplate.isToolButtonsVisible = value
+
+      case .close:
+        if appState.currentMainWindowUuid == uuid, let mainWindowToClose = appState.mainWindows[uuid] {
+          appState.mainWindowTemplate = self.mainWindowTemplate(from: appState.mainWindowTemplate,
+                                                                new: mainWindowToClose,
+                                                                isFullScreen: false)
+
+          appState.currentMainWindowUuid = nil
+        }
+
+        appState.mainWindows.removeValue(forKey: uuid)
+
+      case let .setTheme(theme):
+        appState.mainWindowTemplate.appearance.theme = Marked(theme)
+
+      default:
+        return tuple
+
       }
 
-    case let .setToolsState(tools):
-      appState.mainWindowTemplate.orderedTools = tools.map { $0.0 }
+      return (appState, tuple.action, true)
+    }
 
-    case let .toggleAllTools(value):
-      appState.mainWindowTemplate.isAllToolsVisible = value
+    private func mainWindowTemplate(from old: MainWindow.State,
+                                    new: MainWindow.State,
+                                    isFullScreen: Bool) -> MainWindow.State {
 
-    case let .toggleToolButtons(value):
-      appState.mainWindowTemplate.isToolButtonsVisible = value
+      var result = old
 
-    case .close:
-      if appState.currentMainWindowUuid == uuid, let mainWindowToClose = appState.mainWindows[uuid] {
-        appState.mainWindowTemplate = self.mainWindowTemplate(from: appState.mainWindowTemplate,
-                                                              new: mainWindowToClose,
-                                                              isFullScreen: false)
-
-        appState.currentMainWindowUuid = nil
+      if !isFullScreen {
+        result.frame = new.frame
       }
 
-      appState.mainWindows.removeValue(forKey: uuid)
+      result.isAllToolsVisible = new.isAllToolsVisible
+      result.isToolButtonsVisible = new.isToolButtonsVisible
+      result.tools = new.tools
+      result.orderedTools = new.orderedTools
+      result.previewTool = new.previewTool
+      result.fileBrowserShowHidden = new.fileBrowserShowHidden
+      result.htmlPreview = .default
 
-    case let .setTheme(theme):
-      appState.mainWindowTemplate.appearance.theme = Marked(theme)
-
-    default:
-      return pair
-
+      return result
     }
-
-    return StateActionPair(state: appState, action: pair.action)
-  }
-
-  private func mainWindowTemplate(from old: MainWindow.State,
-                                  new: MainWindow.State,
-                                  isFullScreen: Bool) -> MainWindow.State {
-
-    var result = old
-
-    if !isFullScreen {
-      result.frame = new.frame
-    }
-
-    result.isAllToolsVisible = new.isAllToolsVisible
-    result.isToolButtonsVisible = new.isToolButtonsVisible
-    result.tools = new.tools
-    result.orderedTools = new.orderedTools
-    result.previewTool = new.previewTool
-    result.fileBrowserShowHidden = new.fileBrowserShowHidden
-    result.htmlPreview = .default
-
-    return result
   }
 }

@@ -6,13 +6,20 @@
 import Cocoa
 import RxSwift
 
-extension ObservableType {
+extension Observable {
 
   func mapOmittingNil<R>(_ transform: @escaping (E) throws -> R?) -> RxSwift.Observable<R> {
     return self
       .map(transform)
       .filter { $0 != nil }
       .map { $0! }
+  }
+}
+
+extension PrimitiveSequenceType where TraitType == CompletableTrait, ElementType == Never {
+
+  func andThen(using body: () -> Completable) -> Completable {
+    return self.andThen(body())
   }
 }
 
@@ -56,10 +63,6 @@ extension PrimitiveSequence where TraitType == SingleTrait {
       .asObservable()
       .flatMap { try selector($0).asObservable() }
       .ignoreElements()
-  }
-
-  func asCompletable() -> Completable {
-    return self.asObservable().ignoreElements()
   }
 
   func syncValue() -> Element? {

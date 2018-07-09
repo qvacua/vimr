@@ -58,7 +58,7 @@ extension NvimView {
 
   public func newTab() -> Completable {
     return self.api
-      .command(command: "tabe", expectsReturnValue: false)
+      .command(command: "tabe")
       .subscribeOn(self.scheduler)
   }
 
@@ -74,7 +74,7 @@ extension NvimView {
             let bufExists = buffers.contains { $0.url == url }
             let wins = tabs.map({ $0.windows }).flatMap({ $0 })
             if let win = bufExists ? wins.first(where: { win in win.buffer.url == url }) : nil {
-              return self.api.setCurrentWin(window: Api.Window(win.handle), expectsReturnValue: false)
+              return self.api.setCurrentWin(window: Api.Window(win.handle))
             }
 
             return currentBufferIsTransient ? self.open(url, cmd: "e") : self.open(url, cmd: "tabe")
@@ -112,43 +112,47 @@ extension NvimView {
       .map { tabs in tabs.map { $0.windows }.flatMap { $0 } }
       .flatMapCompletable { wins -> Completable in
         if let win = wins.first(where: { $0.buffer == buffer }) {
-          return self.api.setCurrentWin(window: Api.Window(win.handle), expectsReturnValue: false)
+          return self.api.setCurrentWin(window: Api.Window(win.handle))
         }
 
-        return self.api.command(command: "tab sb \(buffer.handle)", expectsReturnValue: false)
+        return self.api.command(command: "tab sb \(buffer.handle)")
       }
       .subscribeOn(self.scheduler)
+  }
+
+  public func goTo(line: Int) -> Completable {
+    return self.api.command(command: "\(line)")
   }
 
 /// Closes the current window.
   public func closeCurrentTab() -> Completable {
     return self.api
-      .command(command: "q", expectsReturnValue: true)
+      .command(command: "q")
       .subscribeOn(self.scheduler)
   }
 
   public func saveCurrentTab() -> Completable {
     return self.api
-      .command(command: "w", expectsReturnValue: true)
+      .command(command: "w")
       .subscribeOn(self.scheduler)
   }
 
   public func saveCurrentTab(url: URL) -> Completable {
     return self.api
-      .command(command: "w \(url.path)", expectsReturnValue: true)
+      .command(command: "w \(url.path)")
       .subscribeOn(self.scheduler)
   }
 
   public func closeCurrentTabWithoutSaving() -> Completable {
     return self.api
-      .command(command: "q!", expectsReturnValue: true)
+      .command(command: "q!")
       .subscribeOn(self.scheduler)
   }
 
   public func quitNeoVimWithoutSaving() -> Completable {
     self.bridgeLogger.mark()
     return self.api
-      .command(command: "qa!", expectsReturnValue: true)
+      .command(command: "qa!")
       .subscribeOn(self.scheduler)
   }
 
@@ -200,7 +204,7 @@ extension NvimView {
 
   private func `open`(_ url: URL, cmd: String) -> Completable {
     return self.api
-      .command(command: "\(cmd) \(url.path)", expectsReturnValue: false)
+      .command(command: "\(cmd) \(url.path)")
       .subscribeOn(self.scheduler)
   }
 

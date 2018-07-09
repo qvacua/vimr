@@ -7,35 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.24.0-282</title>
+      <title>SNAPSHOT-284</title>
       <description><![CDATA[
     <ul>
-<li>Neovim 0.3.0</li>
-<li>Some refactorings for the Neovim and the UI interface.</li>
-<li>GH-402: Add file associations; using definitions and icons from <a href="http://macvim.org/">MacVim</a></li>
-<li>GH-636: Bugfix: double cursor when entering terminal</li>
-<li>GH-653: Bugfix: Crashes when closing the last window with "Quit after last window closes"-option turned on.</li>
-<li>Bugfix: Crashes when <code>vimr --wait</code> is used, but is <code>Ctlr-C</code>'ed before closing the UI window.</li>
-<li>Bugfix: <code>vimr --wait SOME_FILE</code> does not exit.</li>
-<li>Use LuaJIT again.</li>
-<li>Dependencies updates:<ul>
-<li>sparkle-project/Sparkle@1.19.0</li>
-<li>Quick/nimble@7.1.2</li>
-<li>eonil/FileSystemEvents@1.0.0</li>
-</ul>
-</li>
+<li>GH-443: <code>vimr --line ${LINE_NUMBER} ${SOME_FILE}</code> will open the file and go to the given line. If the file is already open in a UI window, then that window will be selected and the cursor will be moved to the given line. This can be used e.g. to reverse-search LaTeX. Note that you have to re-install the <code>vimr</code> tool.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.24.0-282
+        https://github.com/qvacua/vimr/releases/tag/snapshot/284
       </releaseNotesLink>
-      <pubDate>2018-07-02T19:16:46.907124</pubDate>
+      <pubDate>2018-07-06T21:01:36.974431</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.24.0-282/VimR-v0.24.0-282.tar.bz2"
-                 sparkle:version="282"
-                 sparkle:shortVersionString="0.24.0"
-                 sparkle:dsaSignature="MCwCFDolgerESMrUpxwmcdVot47aoPiHAhQ0qFQcMrpyTZ23onJ/zv8XaaHHSA=="
-                 length="14119123"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/284/VimR-SNAPSHOT-284.tar.bz2"
+                 sparkle:version="284"
+                 sparkle:shortVersionString="SNAPSHOT-284"
+                 sparkle:dsaSignature="MC4CFQC85W5DOK+chBghYPusLQGPdfrXWAIVAOKVRd3YSnGyXJ3w5S3F7LU4vJTM"
+                 length="14182159"
                  type="application/octet-stream"/>
     </item>
   </channel>
