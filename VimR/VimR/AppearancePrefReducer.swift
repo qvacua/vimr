@@ -5,11 +5,12 @@
 
 import Foundation
 
-class AppearancePrefReducer {
+class AppearancePrefReducer: ReducerType {
 
-  typealias Pair = StateActionPair<AppState, AppearancePref.Action>
+  typealias StateType = AppState
+  typealias ActionType = AppearancePref.Action
 
-  func reduce(_ pair: Pair) -> Pair {
+  func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
     var state = pair.state
     var appearance = state.mainWindowTemplate.appearance
 
@@ -34,7 +35,7 @@ class AppearancePrefReducer {
 
     self.modify(state: &state, with: appearance)
 
-    return StateActionPair(state: state, action: pair.action)
+    return (state, pair.action, true)
   }
 
   private func modify(state: inout AppState, with appearance: AppearanceState) {

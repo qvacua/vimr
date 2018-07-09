@@ -5,14 +5,15 @@
 
 import Foundation
 
-class FileMonitorReducer {
+class FileMonitorReducer: ReducerType {
 
-  typealias Pair = StateActionPair<AppState, FileMonitor.Action>
+  typealias StateType = AppState
+  typealias ActionType = FileMonitor.Action
 
-  func reduce(_ pair: Pair) -> Pair {
-    var state = pair.state
+  func typedReduce(_ tuple: ReduceTuple) -> ReduceTuple {
+    var state = tuple.state
 
-    switch pair.action {
+    switch tuple.action {
 
     case let .change(in: url):
       if let fileItem = FileItemUtils.item(for: url, root: state.openQuickly.root, create: false) {
@@ -28,6 +29,6 @@ class FileMonitorReducer {
 
     }
 
-    return StateActionPair(state: state, action: pair.action)
+    return (state, tuple.action, true)
   }
 }

@@ -5,14 +5,15 @@
 
 import Foundation
 
-class MainWindowReducer {
+class MainWindowReducer: ReducerType {
 
-  typealias Pair = StateActionPair<UuidState<MainWindow.State>, MainWindow.Action>
+  typealias StateType = MainWindow.State
+  typealias ActionType = UuidAction<MainWindow.Action>
 
-  func reduce(_ pair: Pair) -> Pair {
-    var state = pair.state.payload
+  func typedReduce(_ tuple: ReduceTuple) -> ReduceTuple {
+    var state = tuple.state
 
-    switch pair.action {
+    switch tuple.action.payload {
 
     case let .frameChanged(to:frame):
       state.frame = frame
@@ -30,8 +31,8 @@ class MainWindowReducer {
 
     case let .setDirtyStatus(status):
       // When I gt or w around, we change tab somehow... Dunno why...
-      if status == pair.state.payload.isDirty {
-        return pair
+      if status == tuple.state.isDirty {
+        return tuple
       }
 
       state.isDirty = status
@@ -78,10 +79,10 @@ class MainWindowReducer {
       state.appearance.theme = Marked(theme)
 
     default:
-      return pair
+      return tuple
 
     }
 
-    return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
+    return (state, tuple.action, true)
   }
 }

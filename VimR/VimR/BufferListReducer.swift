@@ -5,20 +5,21 @@
 
 import Foundation
 
-class BuffersListReducer {
+class BuffersListReducer: ReducerType {
 
-  typealias Pair = StateActionPair<UuidState<MainWindow.State>, BuffersList.Action>
+  typealias StateType = MainWindow.State
+  typealias ActionType = UuidAction<BuffersList.Action>
 
-  func reduce(_ pair: Pair) -> Pair {
-    var state = pair.state.payload
+  func typedReduce(_ tuple: ReduceTuple) -> ReduceTuple {
+    var state = tuple.state
 
-    switch pair.action {
+    switch tuple.action.payload {
 
     case let .open(buffer):
       state.currentBufferToSet = buffer
 
     }
 
-    return StateActionPair(state: UuidState(uuid: pair.state.uuid, state: state), action: pair.action)
+    return (state, tuple.action, true)
   }
 }

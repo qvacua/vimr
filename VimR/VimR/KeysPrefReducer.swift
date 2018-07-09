@@ -5,11 +5,12 @@
 
 import Foundation
 
-class KeysPrefReducer {
+class KeysPrefReducer: ReducerType {
 
-  typealias Pair = StateActionPair<AppState, KeysPref.Action>
+  typealias StateType = AppState
+  typealias ActionType = KeysPref.Action
 
-  func reduce(_ pair: Pair) -> Pair {
+  func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
     var state = pair.state
 
     switch pair.action {
@@ -24,6 +25,6 @@ class KeysPrefReducer {
 
     }
 
-    return StateActionPair(state: state, action: pair.action)
+    return (state, pair.action, true)
   }
 }

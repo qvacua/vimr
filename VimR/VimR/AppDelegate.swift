@@ -35,10 +35,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     let baseServerUrl = URL(string: "http://localhost:\(NetUtils.openPort())")!
 
     var initialAppState: AppState
-    if let stateDict = UserDefaults.standard.value(forKey: PrefService.compatibleVersion) as? [String: Any] {
+    if let stateDict = UserDefaults.standard.value(forKey: PrefMiddleware.compatibleVersion) as? [String: Any] {
       initialAppState = AppState(dict: stateDict) ?? .default
     } else {
-      if let oldDict = UserDefaults.standard.value(forKey: PrefService.lastCompatibleVersion) as? [String: Any] {
+      if let oldDict = UserDefaults.standard.value(forKey: PrefMiddleware.lastCompatibleVersion) as? [String: Any] {
         initialAppState = Pref128ToCurrentConverter.appState(from: oldDict)
       } else {
         initialAppState = .default
@@ -48,15 +48,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
       baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath)
     )
 
-    self.stateContext = Context(baseServerUrl: baseServerUrl, state: initialAppState)
-    self.emit = self.stateContext.actionEmitter.typedEmit()
+    self.context = Context(baseServerUrl: baseServerUrl, state: initialAppState)
+    self.emit = self.context.actionEmitter.typedEmit()
 
     self.openNewMainWindowOnLaunch = initialAppState.openNewMainWindowOnLaunch
     self.openNewMainWindowOnReactivation = initialAppState.openNewMainWindowOnReactivation
     self.useSnapshot = initialAppState.useSnapshotUpdate
 
-    let source = self.stateContext.stateSource
-    self.uiRoot = UiRoot(source: source, emitter: self.stateContext.actionEmitter, state: initialAppState)
+    let source = self.context.stateSource
+    self.uiRoot = UiRoot(source: source, emitter: self.context.actionEmitter, state: initialAppState)
 
     super.init()
 
@@ -101,7 +101,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     }
   }
 
-  private let stateContext: Context
+  private let context: Context
   private let emit: (Action) -> Void
 
   private let uiRoot: UiRoot
@@ -168,7 +168,7 @@ extension AppDelegate {
   }
 
   func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-    self.stateContext.savePrefs()
+    self.context.savePrefs()
 
     if self.hasDirtyWindows && self.hasMainWindows {
       let alert = NSAlert()

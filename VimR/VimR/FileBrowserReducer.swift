@@ -5,14 +5,15 @@
 
 import Foundation
 
-class FileBrowserReducer {
+class FileBrowserReducer: ReducerType {
 
-  typealias Pair = StateActionPair<UuidState<MainWindow.State>, FileBrowser.Action>
+  typealias StateType = MainWindow.State
+  typealias ActionType = UuidAction<FileBrowser.Action>
 
-  func reduce(_ pair: Pair) -> Pair {
-    var state = pair.state.payload
+  func typedReduce(_ tuple: ReduceTuple) -> ReduceTuple {
+    var state = tuple.state
 
-    switch pair.action {
+    switch tuple.action.payload {
 
     case let .open(url, mode):
       state.urlsToOpen[url] = mode
@@ -29,6 +30,6 @@ class FileBrowserReducer {
 
     }
 
-    return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
+    return (state, tuple.action, true)
   }
 }

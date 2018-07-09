@@ -6,179 +6,120 @@
 import Foundation
 import RxSwift
 
-class Context {
+typealias AnyAction = Any
+extension ReduxTypes {
 
-  let stateSource: Observable<AppState>
-  let actionEmitter = ActionEmitter()
+  typealias StateType = AppState
+  typealias ActionType = AnyAction
+}
+
+class Context: ReduxContext {
 
   // The following should only be used when Cmd-Q'ing
   func savePrefs() {
-    self.prefService.applyPref(from: self.appState)
+    self.prefMiddleware.applyPref(from: self.state)
   }
 
   init(baseServerUrl: URL, state: AppState) {
-    self.appState = state
-    self.stateSource = self.stateSubject.asObservable()
+    super.init(initialState: state)
 
-    let openQuicklyReducer = OpenQuicklyReducer()
+    let previewMiddleware = PreviewMiddleware()
     let markdownReducer = MarkdownReducer(baseServerUrl: baseServerUrl)
-
-    let previewService = PreviewService()
-    let httpService: HttpServerService = HttpServerService(port: baseServerUrl.port!)
+    let httpMiddleware: HttpServerMiddleware = HttpServerMiddleware(port: baseServerUrl.port!)
     let uiRootReducer = UiRootReducer()
+    let openQuicklyReducer = OpenQuicklyReducer()
 
     // AppState
-    Observable
-      .of(
-        self.actionSourceForAppState()
-          .reduce(by: AppDelegateReducer(baseServerUrl: baseServerUrl).reduce)
-          .filterMapPair(),
-        self.actionSourceForAppState()
-          .reduce(by: uiRootReducer.reduceMainWindow)
-          .reduce(by: openQuicklyReducer.reduceMainWindow)
-          .filter { $0.modified }
-          .apply(self.prefService.applyMainWindow)
-          .map { $0.state },
-        self.actionSourceForAppState()
-          .reduce(by: FileMonitorReducer().reduce)
-          .filterMapPair(),
-        self.actionSourceForAppState()
-          .reduce(by: openQuicklyReducer.reduceOpenQuicklyWindow)
-          .filterMapPair(),
-        self.actionSourceForAppState()
-          .reduce(by: uiRootReducer.reduceUiRoot)
-          .filterMapPair()
-      )
-      .merge()
+    self.actionEmitter.observable
+      .map { (state: self.state, action: $0, modified: false) }
+      .reduce(
+        by: [
+          AppDelegateReducer(baseServerUrl: baseServerUrl).reduce,
+          uiRootReducer.mainWindow.reduce,
+          openQuicklyReducer.mainWindow.reduce,
+          FileMonitorReducer().reduce,
+          openQuicklyReducer.reduce,
+          uiRootReducer.reduce,
+
+          // Preferences
+          PrefWindowReducer().reduce,
+          GeneralPrefReducer().reduce,
+          ToolsPrefReducer().reduce,
+          AppearancePrefReducer().reduce,
+          AdvancedPrefReducer().reduce,
+          KeysPrefReducer().reduce,
+        ],
+        middlewares: [
+          self.prefMiddleware.mainWindow.apply,
+          self.prefMiddleware.apply,
+        ])
+      .filter { $0.modified }
       .subscribe(onNext: self.emitAppState)
       .disposed(by: self.disposeBag)
 
     // MainWindow.State
-    Observable
-      .of(
-        self.actionSourceForMainWindow()
-          .reduce(by: MainWindowReducer().reduce)
-          .reduce(by: markdownReducer.reduceMainWindow)
-          .filter { $0.modified }
-          .apply(previewService.applyMainWindow)
-          .apply(httpService.applyMainWindow)
-          .map { $0.state },
-        self.actionSourceForMainWindow()
-          .reduce(by: markdownReducer.reducePreviewTool)
-          .reduce(by: PreviewToolReducer(baseServerUrl: baseServerUrl).reduce)
-          .filter { $0.modified }
-          .apply(previewService.applyPreviewTool)
-          .map { $0.state },
-        self.actionSourceForMainWindow()
-          .reduce(by: HtmlPreviewToolReducer(baseServerUrl: baseServerUrl).reduce)
-          .filter { $0.modified }
-          .apply(httpService.applyHtmlPreview)
-          .map { $0.state },
-        self.actionSourceForMainWindow()
-          .reduce(by: FileBrowserReducer().reduce)
-          .filterMapPair(),
-        self.actionSourceForMainWindow()
-          .reduce(by: BuffersListReducer().reduce)
-          .reduce(by: markdownReducer.reduceBufferList)
-          .filter { $0.modified }
-          .apply(previewService.applyBufferList)
-          .map { $0.state }
+    self.actionEmitter.observable
+      .mapOmittingNil { action in
+        guard let uuidAction = action as? UuidTagged else {
+          return nil
+        }
+
+        guard let mainWindowState = self.state.mainWindows[uuidAction.uuid] else {
+          return nil
+        }
+
+        return (mainWindowState, action, false)
+      }
+      .reduce(
+        by: [
+          MainWindowReducer().reduce,
+          markdownReducer.mainWindow.reduce,
+          markdownReducer.previewTool.reduce,
+          PreviewToolReducer(baseServerUrl: baseServerUrl).reduce,
+          HtmlPreviewToolReducer(baseServerUrl: baseServerUrl).reduce,
+          FileBrowserReducer().reduce,
+          BuffersListReducer().reduce,
+          markdownReducer.buffersList.reduce,
+        ],
+        middlewares: [
+          previewMiddleware.mainWindow.apply,
+          httpMiddleware.mainWindow.apply,
+          previewMiddleware.previewTool.apply,
+          httpMiddleware.htmlPreview.apply,
+          previewMiddleware.buffersList.apply,
+        ]
       )
-      .merge()
+      .filter { $0.modified }
       .subscribe(onNext: self.emitAppState)
       .disposed(by: self.disposeBag)
-
-    // Preferences
-    Observable
-      .of(
-        self.prefStateSource(by: PrefWindowReducer().reduce, prefService: prefService),
-        self.prefStateSource(by: GeneralPrefReducer().reduce, prefService: prefService),
-        self.prefStateSource(by: ToolsPrefReducer().reduce, prefService: prefService),
-        self.prefStateSource(by: AppearancePrefReducer().reduce, prefService: prefService),
-        self.prefStateSource(by: AdvancedPrefReducer().reduce, prefService: prefService),
-        self.prefStateSource(by: KeysPrefReducer().reduce, prefService: prefService)
-      )
-      .merge()
-      .subscribe(onNext: self.emitAppState)
-      .disposed(by: self.disposeBag)
-
-#if DEBUG
-//    self.actionEmitter.observable.debug().subscribe().disposed(by: self.disposeBag)
-//    stateSource.debug().subscribe().disposed(by: self.disposeBag)
-#endif
   }
 
-  deinit {
-    self.stateSubject.onCompleted()
-  }
+  private let prefMiddleware = PrefMiddleware()
 
-  private let stateSubject = PublishSubject<AppState>()
-  private let scheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
-  private let disposeBag = DisposeBag()
+  private func emitAppState(_ tuple: (state: MainWindow.State, action: AnyAction, modified: Bool)) {
+    guard let uuidAction = tuple.action as? UuidTagged else {
+      return
+    }
 
-  private var appState: AppState
-
-  private let prefService = PrefService()
-
-  private func emitAppState(_ mainWindow: UuidState<MainWindow.State>) {
-    self.appState.mainWindows[mainWindow.uuid] = mainWindow.payload
-    self.stateSubject.onNext(self.appState)
+    self.state.mainWindows[uuidAction.uuid] = tuple.state
+    self.stateSubject.onNext(self.state)
 
     self.cleanUpAppState()
   }
 
-  private func emitAppState(_ appState: AppState) {
-    self.appState = appState
-    self.stateSubject.onNext(self.appState)
+  private func emitAppState(_ tuple: ReduxTypes.ReduceTuple) {
+    self.state = tuple.state
+    self.stateSubject.onNext(self.state)
 
     self.cleanUpAppState()
   }
 
   private func cleanUpAppState() {
-    self.appState.mainWindows.keys.forEach { uuid in
-      self.appState.mainWindows[uuid]?.cwdToSet = nil
-      self.appState.mainWindows[uuid]?.currentBufferToSet = nil
-      self.appState.mainWindows[uuid]?.viewToBeFocused = nil
-      self.appState.mainWindows[uuid]?.urlsToOpen.removeAll()
+    self.state.mainWindows.keys.forEach { uuid in
+      self.state.mainWindows[uuid]?.cwdToSet = nil
+      self.state.mainWindows[uuid]?.currentBufferToSet = nil
+      self.state.mainWindows[uuid]?.viewToBeFocused = nil
+      self.state.mainWindows[uuid]?.urlsToOpen.removeAll()
     }
-  }
-
-  private func actionSourceForAppState<ActionType>() -> Observable<StateActionPair<AppState, ActionType>> {
-    return self.actionEmitter.observable
-      .mapOmittingNil { $0 as? ActionType }
-      .map { self.appStateActionPair(for: $0) }
-  }
-
-  private func actionSourceForMainWindow<ActionType>()
-      -> Observable<StateActionPair<UuidState<MainWindow.State>, ActionType>> {
-    return self.actionEmitter.observable
-      .mapOmittingNil { $0 as? UuidAction<ActionType> }
-      .mapOmittingNil { self.mainWindowStateActionPair(for: $0) }
-  }
-
-  private func prefStateSource<ActionType>(
-    by reduce: @escaping (StateActionPair<AppState, ActionType>) -> StateActionPair<AppState, ActionType>,
-    prefService: PrefService
-  ) -> Observable<AppState> {
-    return self.actionSourceForAppState()
-      .reduce(by: reduce)
-      .filter { $0.modified }
-      .apply(self.prefService.applyPref)
-      .map { $0.state }
-  }
-
-  private func appStateActionPair<ActionType>(for action: ActionType) -> StateActionPair<AppState, ActionType> {
-    return StateActionPair(state: self.appState, action: action, modified: false)
-  }
-
-  private func mainWindowStateActionPair<ActionType>(for action: UuidAction<ActionType>)
-      -> StateActionPair<UuidState<MainWindow.State>, ActionType>? {
-    guard let mainWindowState = self.appState.mainWindows[action.uuid] else {
-      return nil
-    }
-
-    return StateActionPair(state: UuidState(uuid: action.uuid, state: mainWindowState),
-                           action: action.payload,
-                           modified: false)
   }
 }

@@ -6,12 +6,14 @@
 import Foundation
 import RxSwift
 
-class OpenQuicklyReducer {
+class OpenQuicklyReducer: ReducerType {
 
-  typealias OpenQuicklyWindowPair = StateActionPair<AppState, OpenQuicklyWindow.Action>
-  typealias MainWindowPair = StateActionPair<AppState, UuidAction<MainWindow.Action>>
+  typealias StateType = AppState
+  typealias ActionType = OpenQuicklyWindow.Action
 
-  func reduceOpenQuicklyWindow(_ pair: OpenQuicklyWindowPair) -> OpenQuicklyWindowPair {
+  let mainWindow = MainWindowReducer()
+
+  func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
     var appState = pair.state
 
     appState.openQuickly.open = false
@@ -32,31 +34,37 @@ class OpenQuicklyReducer {
 
     }
 
-    return StateActionPair(state: appState, action: pair.action)
+    return (appState, pair.action, true)
   }
 
-  func reduceMainWindow(_ pair: MainWindowPair) -> MainWindowPair {
-    switch pair.action.payload {
+  class MainWindowReducer: ReducerType {
 
-    case .openQuickly:
-      var appState = pair.state
+    typealias StateType = AppState
+    typealias ActionType = UuidAction<MainWindow.Action>
 
-      guard let uuid = appState.currentMainWindowUuid else {
+    func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
+      switch pair.action.payload {
+
+      case .openQuickly:
+        var appState = pair.state
+
+        guard let uuid = appState.currentMainWindowUuid else {
+          return pair
+        }
+
+        guard let cwd = appState.mainWindows[uuid]?.cwd else {
+          return pair
+        }
+
+        appState.openQuickly.open = true
+        appState.openQuickly.cwd = cwd
+
+        return (appState, pair.action, true)
+
+      default:
         return pair
+
       }
-
-      guard let cwd = appState.mainWindows[uuid]?.cwd else {
-        return pair
-      }
-
-      appState.openQuickly.open = true
-      appState.openQuickly.cwd = cwd
-
-      return StateActionPair(state: appState, action: pair.action)
-
-    default:
-      return pair
-
     }
   }
 }

@@ -5,9 +5,10 @@
 
 import Foundation
 
-class HtmlPreviewToolReducer {
+class HtmlPreviewToolReducer: ReducerType {
 
-  typealias Pair = StateActionPair<UuidState<MainWindow.State>, HtmlPreviewTool.Action>
+  typealias StateType = MainWindow.State
+  typealias ActionType = UuidAction<HtmlPreviewTool.Action>
 
   static let basePath = "/tools/html-preview"
   static let selectFirstPath = "/tools/html-preview/select-first.html"
@@ -16,11 +17,11 @@ class HtmlPreviewToolReducer {
     self.baseServerUrl = baseServerUrl
   }
 
-  func reduce(_ pair: Pair) -> Pair {
-    var state = pair.state.payload
-    let uuid = pair.state.uuid
+  func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
+    var state = pair.state
+    let uuid = pair.action.uuid
 
-    switch pair.action {
+    switch pair.action.payload {
 
     case let .selectHtmlFile(url):
       state.htmlPreview.htmlFile = url
@@ -30,7 +31,7 @@ class HtmlPreviewToolReducer {
 
     }
 
-    return StateActionPair(state: UuidState(uuid: state.uuid, state: state), action: pair.action)
+    return (state, pair.action, true)
   }
 
   private let baseServerUrl: URL

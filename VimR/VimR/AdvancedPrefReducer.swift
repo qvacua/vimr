@@ -5,11 +5,12 @@
 
 import Foundation
 
-class AdvancedPrefReducer {
+class AdvancedPrefReducer: ReducerType {
 
-  typealias Pair = StateActionPair<AppState, AdvancedPref.Action>
+  typealias StateType = AppState
+  typealias ActionType = AdvancedPref.Action
 
-  func reduce(_ pair: Pair) -> Pair {
+  func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
     var state = pair.state
 
     switch pair.action {
@@ -29,6 +30,6 @@ class AdvancedPrefReducer {
       state.useSnapshotUpdate = value
     }
 
-    return StateActionPair(state: state, action: pair.action)
+    return (state, pair.action, true)
   }
 }

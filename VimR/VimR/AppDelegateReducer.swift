@@ -5,15 +5,16 @@
 
 import Foundation
 
-class AppDelegateReducer {
+class AppDelegateReducer: ReducerType {
 
-  typealias Pair = StateActionPair<AppState, AppDelegate.Action>
+  typealias StateType = AppState
+  typealias ActionType = AppDelegate.Action
 
   init(baseServerUrl: URL) {
     self.baseServerUrl = baseServerUrl
   }
 
-  func reduce(_ pair: Pair) -> Pair {
+  func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
     var state = pair.state
 
     switch pair.action {
@@ -40,7 +41,7 @@ class AppDelegateReducer {
 
     }
 
-    return StateActionPair(state: state, action: pair.action)
+    return (state, pair.action, true)
   }
 
   private let baseServerUrl: URL
