@@ -4,6 +4,7 @@
  */
 
 import Foundation
+import DictionaryCoding
 
 class PrefMiddleware: MiddlewareType {
 
@@ -17,7 +18,12 @@ class PrefMiddleware: MiddlewareType {
 
   // The following should only be used when Cmd-Q'ing
   func applyPref(from appState: AppState) {
-    defaults.set(appState.dict(), forKey: PrefMiddleware.compatibleVersion)
+    do {
+      let dictionary: [String: Any] = try dictEncoder.encode(appState)
+      defaults.set(dictionary, forKey: PrefMiddleware.compatibleVersion)
+    } catch {
+      fileLog.error("AppState could not converted to Dictionary: \(error)")
+    }
   }
 
   func typedApply(_ reduce: @escaping TypedActionReduceFunction) -> TypedActionReduceFunction {
@@ -28,7 +34,12 @@ class PrefMiddleware: MiddlewareType {
         return result
       }
 
-      defaults.set(result.state.dict(), forKey: PrefMiddleware.compatibleVersion)
+      do {
+        let dictionary: [String: Any] = try dictEncoder.encode(result.state)
+        defaults.set(dictionary, forKey: PrefMiddleware.compatibleVersion)
+      } catch {
+        fileLog.error("AppState could not converted to Dictionary: \(error)")
+      }
 
       return result
     }
@@ -52,7 +63,13 @@ class PrefMiddleware: MiddlewareType {
           return result
         }
 
-        defaults.set(result.state.dict(), forKey: PrefMiddleware.compatibleVersion)
+        do {
+          let dictionary: [String: Any] = try dictEncoder.encode(result.state)
+          defaults.set(dictionary, forKey: PrefMiddleware.compatibleVersion)
+        } catch {
+          fileLog.error("AppState could not converted to Dictionary: \(error)")
+        }
+
         return result
       }
     }
@@ -60,3 +77,4 @@ class PrefMiddleware: MiddlewareType {
 }
 
 private let defaults = UserDefaults.standard
+private let dictEncoder = DictionaryEncoder()

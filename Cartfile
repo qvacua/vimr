@@ -10,5 +10,6 @@ github "qvacua/RxNeovimApi" == 0.3.0-1
 github "sindresorhus/github-markdown-css" == 2.10.0
 github "httpswift/swifter" == 1.4.2
 github "a2/MessagePack.swift" == 3.0.0
+github "elegantchaos/DictionaryCoding" == 1.0.3
 
 github "Quick/Nimble" == 7.1.2
