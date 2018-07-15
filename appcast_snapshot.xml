@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-284</title>
+      <title>SNAPSHOT-285</title>
       <description><![CDATA[
     <ul>
-<li>GH-443: <code>vimr --line ${LINE_NUMBER} ${SOME_FILE}</code> will open the file and go to the given line. If the file is already open in a UI window, then that window will be selected and the cursor will be moved to the given line. This can be used e.g. to reverse-search LaTeX. Note that you have to re-install the <code>vimr</code> tool.</li>
+<li>GH-603: Bugfix: <code>Cmd-V</code> pastes at the wrong location in the insert mode.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/284
+        https://github.com/qvacua/vimr/releases/tag/snapshot/285
       </releaseNotesLink>
-      <pubDate>2018-07-06T21:01:36.974431</pubDate>
+      <pubDate>2018-07-15T22:07:13.166982</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/284/VimR-SNAPSHOT-284.tar.bz2"
-                 sparkle:version="284"
-                 sparkle:shortVersionString="SNAPSHOT-284"
-                 sparkle:dsaSignature="MC4CFQC85W5DOK+chBghYPusLQGPdfrXWAIVAOKVRd3YSnGyXJ3w5S3F7LU4vJTM"
-                 length="14182159"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/285/VimR-SNAPSHOT-285.tar.bz2"
+                 sparkle:version="285"
+                 sparkle:shortVersionString="SNAPSHOT-285"
+                 sparkle:dsaSignature="MC0CFHyBjevzdZbw+AXyogsP2oPp4qCuAhUApBfhVtzcySv3hMPmKo0oaWTBDuo="
+                 length="14797431"
                  type="application/octet-stream"/>
     </item>
   </channel>
