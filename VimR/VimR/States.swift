@@ -426,7 +426,7 @@ extension MainWindow {
   }
 }
 
-struct WorkspaceToolState: SerializableState {
+struct WorkspaceToolState: Codable, SerializableState {
 
   static let `default` = [
     MainWindow.Tools.fileBrowser: WorkspaceToolState(location: .left, dimension: 200, open: true),
@@ -442,9 +442,32 @@ struct WorkspaceToolState: SerializableState {
     MainWindow.Tools.htmlPreview,
   ]
 
+  enum CodingKeys: String, CodingKey {
+
+    case location = "location"
+    case `open` = "is-visible"
+    case dimension = "dimension"
+  }
+
   var location = WorkspaceBarLocation.left
   var dimension = CGFloat(200)
   var open = false
+
+  init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+
+    self.location = try container.decodeIfPresent(WorkspaceBarLocation.self, forKey: .location) ?? .left
+    self.dimension = CGFloat(try container.decodeIfPresent(Float.self, forKey: .dimension) ?? 200.0)
+    self.open = try container.decodeIfPresent(Bool.self, forKey: .open) ?? false
+  }
+
+  func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+
+    try container.encode(self.location, forKey: .location)
+    try container.encode(self.dimension, forKey: .dimension)
+    try container.encode(self.open, forKey: .open)
+  }
 
   init(location: WorkspaceBarLocation, dimension: CGFloat, open: Bool) {
     self.location = location
