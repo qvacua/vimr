@@ -227,6 +227,20 @@ extension MainWindow {
 
     static let `default` = State(isAllToolsVisible: true, isToolButtonsVisible: true)
 
+    static let defaultTools = [
+      MainWindow.Tools.fileBrowser: WorkspaceToolState(location: .left, dimension: 200, open: true),
+      MainWindow.Tools.buffersList: WorkspaceToolState(location: .left, dimension: 200, open: false),
+      MainWindow.Tools.preview: WorkspaceToolState(location: .right, dimension: 250, open: false),
+      MainWindow.Tools.htmlPreview: WorkspaceToolState(location: .right, dimension: 500, open: false),
+    ]
+
+    static let orderedDefault = [
+      MainWindow.Tools.fileBrowser,
+      MainWindow.Tools.buffersList,
+      MainWindow.Tools.preview,
+      MainWindow.Tools.htmlPreview,
+    ]
+
     var isAllToolsVisible = true
     var isToolButtonsVisible = true
     var activeTools = [
@@ -242,8 +256,8 @@ extension MainWindow {
     var goToLineFromCli: Marked<Int>?
     var lastFileSystemUpdate = Marked(FileUtils.userHomeUrl)
 
-    var tools = WorkspaceToolState.defaultTools
-    var orderedTools = WorkspaceToolState.orderedDefault
+    var tools = MainWindow.State.defaultTools
+    var orderedTools = MainWindow.State.orderedDefault
 
     var preview = PreviewState.default
     var htmlPreview = HtmlPreviewState.default
@@ -353,7 +367,7 @@ extension MainWindow {
       }
       let missingTools = MainWindow.Tools.all.subtracting(self.tools.keys)
       missingTools.forEach { missingTool in
-        self.tools[missingTool] = WorkspaceToolState.defaultTools[missingTool]!
+        self.tools[missingTool] = MainWindow.State.defaultTools[missingTool]!
       }
 
       self.previewTool = try container.decode(forKey: .previewTool, default: State.default.previewTool)
@@ -390,20 +404,6 @@ extension MainWindow {
 struct WorkspaceToolState: Codable {
 
   static let `default` = WorkspaceToolState()
-
-  static let defaultTools = [
-    MainWindow.Tools.fileBrowser: WorkspaceToolState(location: .left, dimension: 200, open: true),
-    MainWindow.Tools.buffersList: WorkspaceToolState(location: .left, dimension: 200, open: false),
-    MainWindow.Tools.preview: WorkspaceToolState(location: .right, dimension: 250, open: false),
-    MainWindow.Tools.htmlPreview: WorkspaceToolState(location: .right, dimension: 500, open: false),
-  ]
-
-  static let orderedDefault = [
-    MainWindow.Tools.fileBrowser,
-    MainWindow.Tools.buffersList,
-    MainWindow.Tools.preview,
-    MainWindow.Tools.htmlPreview,
-  ]
 
   enum CodingKeys: String, CodingKey {
 
