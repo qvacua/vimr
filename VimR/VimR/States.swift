@@ -227,19 +227,14 @@ extension MainWindow {
 
     static let `default` = State(isAllToolsVisible: true, isToolButtonsVisible: true)
 
-    static let defaultTools = [
-      MainWindow.Tools.fileBrowser: WorkspaceToolState(location: .left, dimension: 200, open: true),
-      MainWindow.Tools.buffersList: WorkspaceToolState(location: .left, dimension: 200, open: false),
-      MainWindow.Tools.preview: WorkspaceToolState(location: .right, dimension: 250, open: false),
-      MainWindow.Tools.htmlPreview: WorkspaceToolState(location: .right, dimension: 500, open: false),
+    static let defaultTools: [MainWindow.Tools: WorkspaceToolState] = [
+      .fileBrowser: WorkspaceToolState(location: .left, dimension: 200, open: true),
+      .buffersList: WorkspaceToolState(location: .left, dimension: 200, open: false),
+      .preview: WorkspaceToolState(location: .right, dimension: 250, open: false),
+      .htmlPreview: WorkspaceToolState(location: .right, dimension: 500, open: false),
     ]
 
-    static let orderedDefault = [
-      MainWindow.Tools.fileBrowser,
-      MainWindow.Tools.buffersList,
-      MainWindow.Tools.preview,
-      MainWindow.Tools.htmlPreview,
-    ]
+    static let orderedDefault: [MainWindow.Tools] = [.fileBrowser, .buffersList, .preview, .htmlPreview]
 
     var isAllToolsVisible = true
     var isToolButtonsVisible = true
