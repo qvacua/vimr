@@ -189,9 +189,48 @@ struct HtmlPreviewState {
   var server: Marked<URL>?
 }
 
-struct AppearanceState: SerializableState {
+struct AppearanceState: Codable, SerializableState {
 
   static let `default` = AppearanceState()
+
+  enum CodingKeys: String, CodingKey {
+
+    case usesTheme = "uses-theme"
+    case showsFileIcon = "shows-file-icon"
+    case editorFontName = "editor-font-name"
+    case editorFontSize = "editor-font-size"
+    case editorLinespacing = "editor-linespacing"
+    case editorUsesLigatures = "editor-uses-ligatures"
+  }
+
+  init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+
+    if let fontName = try container.decodeIfPresent(String.self, forKey: .editorFontName),
+       let fontSize = try container.decodeIfPresent(Float.self, forKey: .editorFontSize),
+       let font = NSFont(name: fontName, size: CGFloat(fontSize)) {
+      self.font = font
+    } else {
+      self.font = NvimView.defaultFont
+    }
+
+    self.linespacing = CGFloat(try container.decodeIfPresent(Float.self, forKey: .editorLinespacing) ?? 1.0)
+    self.usesLigatures = try container.decodeIfPresent(Bool.self, forKey: .editorUsesLigatures) ?? true
+
+    self.usesTheme = try container.decodeIfPresent(Bool.self, forKey: .usesTheme) ?? true
+    self.showsFileIcon = try container.decodeIfPresent(Bool.self, forKey: .showsFileIcon) ?? true
+  }
+
+  func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+
+    try container.encode(self.usesTheme, forKey: .usesTheme)
+    try container.encode(self.showsFileIcon, forKey: .showsFileIcon)
+    try container.encode(self.font.fontName, forKey: .editorFontName)
+    try container.encode(self.font.pointSize, forKey: .editorFontSize)
+    try container.encode(self.linespacing, forKey: .editorLinespacing)
+    try container.encode(self.usesLigatures, forKey: .editorUsesLigatures)
+  }
 
   var font = NSFont.userFixedPitchFont(ofSize: 13)!
   var linespacing: CGFloat = 1
@@ -202,7 +241,6 @@ struct AppearanceState: SerializableState {
   var theme = Marked(Theme.default)
 
   init() {
-
   }
 
   init?(dict: [String: Any]) {
