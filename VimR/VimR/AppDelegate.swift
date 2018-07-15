@@ -8,6 +8,7 @@ import RxSwift
 import PureLayout
 import Sparkle
 import CocoaFontAwesome
+import DictionaryCoding
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate {
@@ -35,8 +36,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     let baseServerUrl = URL(string: "http://localhost:\(NetUtils.openPort())")!
 
     var initialAppState: AppState
-    if let stateDict = UserDefaults.standard.value(forKey: PrefMiddleware.compatibleVersion) as? [String: Any] {
-      initialAppState = AppState(dict: stateDict) ?? .default
+
+    let dictDecoder = DictionaryDecoder()
+    if let stateDict = UserDefaults.standard.value(forKey: PrefMiddleware.compatibleVersion) as? [String: Any],
+       let state = try? dictDecoder.decode(AppState.self, from: stateDict) {
+
+      initialAppState = state
     } else {
       if let oldDict = UserDefaults.standard.value(forKey: PrefMiddleware.lastCompatibleVersion) as? [String: Any] {
         initialAppState = Pref128ToCurrentConverter.appState(from: oldDict)

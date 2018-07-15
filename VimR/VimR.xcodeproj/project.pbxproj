@@ -80,6 +80,8 @@
 		1929BF4FF30D9A9DE82C3052 /* FileUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8042AC566CDF6C998A3 /* FileUtilsTest.swift */; };
 		1929BFC70581084B5CE04A5B /* MatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFE179BCA3C75A13D71B /* MatcherTests.swift */; };
 		1929BFDE22D155F7C4B19E96 /* HtmlPreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B85023B042C485409CE1 /* HtmlPreviewTool.swift */; };
+		4B004BAA20FBA6700043A396 /* DictionaryCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B004BA920FBA6700043A396 /* DictionaryCoding.framework */; };
+		4B004BAB20FBA6700043A396 /* DictionaryCoding.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B004BA920FBA6700043A396 /* DictionaryCoding.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */; };
 		4B17E54D209E3EA400265C1D /* RxNeovimApi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B17E54E209E3EFA00265C1D /* RxNeovimApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */; };
@@ -233,6 +235,7 @@
 			files = (
 				4BB1F5D22097706700EC394A /* MessagePack.framework in Embed Frameworks */,
 				4BB1F5CF2097704D00EC394A /* RxMsgpackRpc.framework in Embed Frameworks */,
+				4B004BAB20FBA6700043A396 /* DictionaryCoding.framework in Embed Frameworks */,
 				4BF18C411FD2E2C900DF95D1 /* CocoaFontAwesome.framework in Embed Frameworks */,
 				4BF18C421FD2E2C900DF95D1 /* CocoaMarkdown.framework in Embed Frameworks */,
 				4BF18C431FD2E2C900DF95D1 /* EonilFileSystemEvents.framework in Embed Frameworks */,
@@ -341,6 +344,7 @@
 		1929BFB0F294F3714D5E095F /* PreviewToolReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewToolReducer.swift; sourceTree = "<group>"; };
 		1929BFC0A5A9C6DB09BE1368 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		1929BFE179BCA3C75A13D71B /* MatcherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatcherTests.swift; sourceTree = "<group>"; };
+		4B004BA920FBA6700043A396 /* DictionaryCoding.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DictionaryCoding.framework; path = ../Carthage/Build/Mac/DictionaryCoding.framework; sourceTree = "<group>"; };
 		4B029F1B1D45E349004EE0D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrefWindow.xib; sourceTree = "<group>"; };
 		4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxNeovimApi.framework; path = ../Carthage/Build/Mac/RxNeovimApi.framework; sourceTree = "<group>"; };
 		4B19BEFA1E110183007E823C /* markdown */ = {isa = PBXFileReference; lastKnownFileType = folder; path = markdown; sourceTree = "<group>"; };
@@ -454,6 +458,7 @@
 			files = (
 				4BB1F5D12097705E00EC394A /* MessagePack.framework in Frameworks */,
 				4BB1F5CD20976F8900EC394A /* RxMsgpackRpc.framework in Frameworks */,
+				4B004BAA20FBA6700043A396 /* DictionaryCoding.framework in Frameworks */,
 				4BF18C391FD2E2AB00DF95D1 /* EonilFileSystemEvents.framework in Frameworks */,
 				4BF18C3A1FD2E2AB00DF95D1 /* PureLayout.framework in Frameworks */,
 				4BF18C3B1FD2E2AB00DF95D1 /* CocoaMarkdown.framework in Frameworks */,
@@ -778,6 +783,7 @@
 		4BEBA4FC1CFF374B00673FDF = {
 			isa = PBXGroup;
 			children = (
+				4B004BA920FBA6700043A396 /* DictionaryCoding.framework */,
 				4BEBA5071CFF374B00673FDF /* VimR */,
 				4BEBA5171CFF374B00673FDF /* VimRTests */,
 				4B5012001EBA791000F76C46 /* Frameworks */,
