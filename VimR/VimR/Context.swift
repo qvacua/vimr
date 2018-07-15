@@ -86,7 +86,6 @@ class Context: ReduxContext {
           httpMiddleware.mainWindow.apply,
           previewMiddleware.previewTool.apply,
           httpMiddleware.htmlPreview.apply,
-          previewMiddleware.buffersList.apply,
         ]
       )
       .filter { $0.modified }

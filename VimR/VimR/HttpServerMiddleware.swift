@@ -49,7 +49,7 @@ class HttpServerMiddleware {
       return { tuple in
         let result = reduce(tuple)
 
-        guard tuple.modified else {
+        guard case .selectHtmlFile = tuple.action.payload else {
           return result
         }
 
@@ -58,6 +58,7 @@ class HttpServerMiddleware {
           return result
         }
 
+        fileLog.debug("Serving \(htmlFileUrl) on \(serverUrl)")
         let basePath = serverUrl.payload.deletingLastPathComponent().path
 
         self.server.GET[serverUrl.payload.path] = shareFile(htmlFileUrl.path)
@@ -85,10 +86,6 @@ class HttpServerMiddleware {
       return { tuple in
         let result = reduce(tuple)
 
-        guard tuple.modified else {
-          return result
-        }
-
         let uuidAction = tuple.action
         guard case .newCurrentBuffer = uuidAction.payload else {
           return result
@@ -104,7 +101,6 @@ class HttpServerMiddleware {
         }
 
         fileLog.debug("Serving \(html) on \(server)")
-
         let htmlBasePath = server.deletingLastPathComponent().path
 
         self.server["\(htmlBasePath)/:path"] = shareFilesFromDirectory(buffer.deletingLastPathComponent().path)
