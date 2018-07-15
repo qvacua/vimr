@@ -6,9 +6,9 @@
 import Foundation
 import RxSwift
 
-struct AppState: SerializableState {
+struct AppState: Codable, SerializableState {
 
-  enum AfterLastWindowAction: String {
+  enum AfterLastWindowAction: String, Codable {
 
     case doNothing = "do-nothing"
     case hide = "hide"
@@ -16,6 +16,17 @@ struct AppState: SerializableState {
   }
 
   static let `default` = AppState()
+
+  enum CodingKeys: String, CodingKey {
+
+    case openNewMainWindowOnLaunch = "open-new-window-when-launching"
+    case openNewMainWindowOnReactivation = "open-new-window-on-reactivation"
+    case afterLastWindowAction = "after-last-window-action"
+    case useSnapshotUpdate = "use-snapshot-update-channel"
+
+    case openQuickly = "open-quickly"
+    case mainWindowTemplate = "main-window"
+  }
 
   var openNewMainWindowOnLaunch = true
   var openNewMainWindowOnReactivation = true
@@ -35,8 +46,25 @@ struct AppState: SerializableState {
 
   var quit = false
 
-  init() {
+  init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
 
+    self.openNewMainWindowOnLaunch = try container.decode(forKey: .openNewMainWindowOnLaunch,
+                                                          default: AppState.default.openNewMainWindowOnLaunch)
+    self.openNewMainWindowOnReactivation = try container.decode(
+      forKey: .openNewMainWindowOnReactivation, default: AppState.default.openNewMainWindowOnReactivation
+    )
+    self.afterLastWindowAction = try container.decode(forKey: .afterLastWindowAction, default: .doNothing)
+    self.useSnapshotUpdate = try container.decode(forKey: .useSnapshotUpdate,
+                                                  default: AppState.default.useSnapshotUpdate)
+
+    self.openQuickly = try container.decode(forKey: .openQuickly, default: OpenQuicklyWindow.State.default)
+    self.mainWindowTemplate = try container.decode(forKey: .mainWindowTemplate, default: MainWindow.State.default)
+  }
+
+  // Use generated encode(to:)
+
+  private init() {
   }
 
   init?(dict: [String: Any]) {
@@ -61,6 +89,18 @@ struct AppState: SerializableState {
 
     let mainWindowDict = dict[Keys.MainWindow.key] as? [String: Any] ?? [:]
     self.mainWindowTemplate = MainWindow.State(dict: mainWindowDict) ?? MainWindow.State.default
+
+    let jsonEncoder = JSONEncoder()
+    let data = try? jsonEncoder.encode(self)
+
+    let jsonDecoder = JSONDecoder()
+    do {
+      let test = try jsonDecoder.decode(AppState.self, from: data!)
+      try data?.write(to: URL(fileURLWithPath: "/tmp/vimr.codable1.json"))
+      try? jsonEncoder.encode(test).write(to: URL(fileURLWithPath: "/tmp/vimr.codable2.json"))
+    } catch {
+      stdoutLog.debug(error)
+    }
   }
 
   func dict() -> [String: Any] {
@@ -112,7 +152,7 @@ extension OpenQuicklyWindow {
       try container.encode(FileItemIgnorePattern.toString(self.ignorePatterns), forKey: .ignorePatterns)
     }
 
-    init() {
+    private init() {
     }
 
     init?(dict: [String: Any]) {
@@ -240,7 +280,7 @@ struct AppearanceState: Codable, SerializableState {
     try container.encode(self.usesLigatures, forKey: .editorUsesLigatures)
   }
 
-  init() {
+  private init() {
   }
 
   init?(dict: [String: Any]) {
@@ -274,7 +314,7 @@ struct AppearanceState: Codable, SerializableState {
 
 extension MainWindow {
 
-  struct State: SerializableState {
+  struct State: Codable, SerializableState {
 
     static let `default` = State(isAllToolsVisible: true, isToolButtonsVisible: true)
 
@@ -293,7 +333,7 @@ extension MainWindow {
     var goToLineFromCli: Marked<Int>?
     var lastFileSystemUpdate = Marked(FileUtils.userHomeUrl)
 
-    var tools = WorkspaceToolState.default
+    var tools = WorkspaceToolState.defaultTools
     var orderedTools = WorkspaceToolState.orderedDefault
 
     var preview = PreviewState.default
@@ -332,6 +372,106 @@ extension MainWindow {
     init(isAllToolsVisible: Bool, isToolButtonsVisible: Bool) {
       self.isAllToolsVisible = isAllToolsVisible
       self.isToolButtonsVisible = isToolButtonsVisible
+    }
+
+    enum CodingKeys: String, CodingKey {
+
+      case allToolsVisible = "is-all-tools-visible"
+      case toolButtonsVisible = "is-tool-buttons-visible"
+      case orderedTools = "ordered-tools"
+      case activeTools = "active-tools"
+      case frame = "frame"
+
+      case isLeftOptionMeta = "is-left-option-meta"
+      case isRightOptionMeta = "is-right-option-meta"
+
+      case trackpadScrollResistance = "trackpad-scroll-resistance"
+      case useInteractiveZsh = "use-interactive-zsh"
+      case useLiveResize = "use-live-resize"
+      case isShowHidden = "is-show-hidden"
+
+      case appearance = "appearance"
+      case workspaceTools = "workspace-tool"
+      case previewTool = "preview-tool"
+    }
+
+    init(from decoder: Decoder) throws {
+      let container = try decoder.container(keyedBy: CodingKeys.self)
+
+      self.isLeftOptionMeta = try container.decode(forKey: .isLeftOptionMeta, default: State.default.isLeftOptionMeta)
+      self.isRightOptionMeta = try container.decode(forKey: .isRightOptionMeta,
+                                                    default: State.default.isRightOptionMeta)
+      self.useInteractiveZsh = try container.decode(forKey: .useInteractiveZsh,
+                                                    default: State.default.useInteractiveZsh)
+      self.trackpadScrollResistance = try container.decode(forKey: .trackpadScrollResistance,
+                                                           default: State.default.trackpadScrollResistance)
+      self.useLiveResize = try container.decode(forKey: .useLiveResize, default: State.default.useLiveResize)
+      if let frameRawValue = try container.decodeIfPresent(String.self, forKey: .frame) {
+        self.frame = NSRectFromString(frameRawValue)
+      } else {
+        self.frame = CGRect(x: 100, y: 100, width: 600, height: 400)
+      }
+
+      self.isAllToolsVisible = try container.decode(forKey: .allToolsVisible, default: State.default.isAllToolsVisible)
+      self.isToolButtonsVisible = try container.decode(forKey: .toolButtonsVisible,
+                                                       default: State.default.isToolButtonsVisible)
+
+      self.appearance = try container.decode(forKey: .appearance, default: State.default.appearance)
+
+      self.orderedTools = try container.decode(forKey: .orderedTools, default: State.default.orderedTools)
+      let missingOrderedTools = MainWindow.Tools.all.subtracting(self.orderedTools)
+      self.orderedTools.append(contentsOf: missingOrderedTools)
+
+      // See [1]
+      let rawActiveTools: [String: Bool] = try container.decode(forKey: .activeTools, default: [:])
+      self.activeTools = rawActiveTools.flatMapToDict { (key, value) in
+        guard let toolId = MainWindow.Tools(rawValue: key) else {
+          return nil
+        }
+
+        return (toolId, value)
+      }
+      let missingActiveTools = MainWindow.Tools.all.subtracting(self.activeTools.keys)
+      missingActiveTools.forEach { self.activeTools[$0] = true }
+
+      let rawTools: [String: WorkspaceToolState] = try container.decode(forKey: .workspaceTools, default: [:])
+      self.tools = rawTools.flatMapToDict { (key, value) in
+        guard let tool = MainWindow.Tools(rawValue: key) else {
+          return nil
+        }
+
+        return (tool, value)
+      }
+      let missingTools = MainWindow.Tools.all.subtracting(self.tools.keys)
+      missingTools.forEach { missingTool in
+        self.tools[missingTool] = WorkspaceToolState.defaultTools[missingTool]!
+      }
+
+      self.previewTool = try container.decode(forKey: .previewTool, default: State.default.previewTool)
+      self.fileBrowserShowHidden = try container.decode(forKey: .isShowHidden,
+                                                        default: State.default.fileBrowserShowHidden)
+    }
+
+    func encode(to encoder: Encoder) throws {
+      var container = encoder.container(keyedBy: CodingKeys.self)
+
+      try container.encode(self.isAllToolsVisible, forKey: .allToolsVisible)
+      try container.encode(self.isToolButtonsVisible, forKey: .toolButtonsVisible)
+      try container.encode(NSStringFromRect(self.frame), forKey: .frame)
+      try container.encode(self.trackpadScrollResistance, forKey: .trackpadScrollResistance)
+      try container.encode(self.useLiveResize, forKey: .useLiveResize)
+      try container.encode(self.isLeftOptionMeta, forKey: .isLeftOptionMeta)
+      try container.encode(self.isRightOptionMeta, forKey: .isRightOptionMeta)
+
+      // See [1]
+      try container.encode(Dictionary(uniqueKeysWithValues: self.tools.map { k, v in (k.rawValue, v) }),
+                           forKey: .workspaceTools)
+      try container.encode(Dictionary(uniqueKeysWithValues: self.activeTools.map { k, v in (k.rawValue, v) }),
+                           forKey: .activeTools)
+
+      try container.encode(self.appearance, forKey: .appearance)
+      try container.encode(self.orderedTools, forKey: .orderedTools)
+      try container.encode(self.previewTool, forKey: .previewTool)
     }
 
     init?(dict: [String: Any]) {
@@ -384,10 +524,10 @@ extension MainWindow {
       let missingToolKeys = MainWindow.Tools.all.subtracting(toolKeys)
 
       var tools = Array(toolKeys).toDict { tool in
-        return WorkspaceToolState(dict: workspaceToolsDict[tool.rawValue]!) ?? WorkspaceToolState.default[tool]!
+        return WorkspaceToolState(dict: workspaceToolsDict[tool.rawValue]!) ?? WorkspaceToolState.defaultTools[tool]!
       }
       missingToolKeys.forEach { missingTool in
-        tools[missingTool] = WorkspaceToolState.default[missingTool]!
+        tools[missingTool] = WorkspaceToolState.defaultTools[missingTool]!
       }
 
       self.tools = tools
@@ -428,14 +568,16 @@ extension MainWindow {
 
 struct WorkspaceToolState: Codable, SerializableState {
 
-  static let `default` = [
+  static let `default` = WorkspaceToolState()
+
+  static let defaultTools = [
     MainWindow.Tools.fileBrowser: WorkspaceToolState(location: .left, dimension: 200, open: true),
     MainWindow.Tools.buffersList: WorkspaceToolState(location: .left, dimension: 200, open: false),
     MainWindow.Tools.preview: WorkspaceToolState(location: .right, dimension: 250, open: false),
     MainWindow.Tools.htmlPreview: WorkspaceToolState(location: .right, dimension: 500, open: false),
   ]
 
-  static let `orderedDefault` = [
+  static let orderedDefault = [
     MainWindow.Tools.fileBrowser,
     MainWindow.Tools.buffersList,
     MainWindow.Tools.preview,
@@ -452,6 +594,19 @@ struct WorkspaceToolState: Codable, SerializableState {
   var location = WorkspaceBarLocation.left
   var dimension = CGFloat(200)
   var open = false
+
+  init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+
+    self.location = try container.decode(forKey: .location, default: WorkspaceToolState.default.location)
+    self.dimension = CGFloat(try container.decode(forKey: .dimension, default: WorkspaceToolState.default.dimension))
+    self.open = try container.decode(forKey: .open, default: WorkspaceToolState.default.open)
+  }
+
+  // Use generated encode(to:)
+
+  private init() {
+  }
 
   init(location: WorkspaceBarLocation, dimension: CGFloat, open: Bool) {
     self.location = location
@@ -502,17 +657,17 @@ extension PreviewTool {
     var isReverseSearchAutomatically = false
     var isRefreshOnWrite = true
 
-    init() {
+    private init() {
     }
 
     init(from decoder: Decoder) throws {
       let container = try decoder.container(keyedBy: CodingKeys.self)
 
-      self.isForwardSearchAutomatically = try container.decodeIfPresent(Bool.self,
-                                                                        forKey: .forwardSearchAutomatically) ?? true
-      self.isReverseSearchAutomatically = try container.decodeIfPresent(Bool.self,
-                                                                        forKey: .reverseSearchAutomatically) ?? true
-      self.isRefreshOnWrite = try container.decodeIfPresent(Bool.self, forKey: .refreshOnWrite) ?? true
+      self.isForwardSearchAutomatically = try container.decode(forKey: .forwardSearchAutomatically,
+                                                               default: State.default.isForwardSearchAutomatically)
+      self.isReverseSearchAutomatically = try container.decode(forKey: .reverseSearchAutomatically,
+                                                               default: State.default.isReverseSearchAutomatically)
+      self.isRefreshOnWrite = try container.decode(forKey: .refreshOnWrite, default: State.default.isRefreshOnWrite)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -545,3 +700,17 @@ extension PreviewTool {
     }
   }
 }
+
+fileprivate extension KeyedDecodingContainer where K: CodingKey {
+
+  fileprivate func decode<T: Decodable>(forKey key: K, `default`: T) throws -> T {
+    return try self.decodeIfPresent(T.self, forKey: key) ?? `default`
+  }
+}
+
+/**
+ [1] Swift 4.2 has a bug: Only when a `Dictionary` has `String` or `Int` keys, it is encoded to dictionary.
+     This means that `Dictionary`s with `enum SomeEnum: String, Codable` keys are encoded as `Array`s.
+     The same problem persists also for decoding.
+     <https://forums.swift.org/t/json-encoding-decoding-weird-encoding-of-dictionary-with-enum-values/12995>
+ */

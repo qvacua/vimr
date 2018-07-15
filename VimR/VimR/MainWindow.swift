@@ -52,7 +52,7 @@ class MainWindow: NSObject,
     case preview
   }
 
-  enum Tools: String {
+  enum Tools: String, Codable {
 
     static let all = Set([Tools.fileBrowser, Tools.buffersList, Tools.preview, Tools.htmlPreview])
 
