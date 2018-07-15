@@ -6,7 +6,7 @@
 import Cocoa
 import PureLayout
 
-enum WorkspaceBarLocation: String {
+enum WorkspaceBarLocation: String, Codable {
 
   case top = "top"
   case right = "right"

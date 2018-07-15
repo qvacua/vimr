@@ -9,13 +9,11 @@ import CocoaMarkdown
 class PreviewMiddleware {
 
   let previewTool: PreviewToolMiddleware
-  let buffersList: BuffersListMiddleware
   let mainWindow: MainWindowMiddleware
 
   init() {
     let generator = PreviewGenerator()
     self.previewTool = PreviewToolMiddleware(generator: generator)
-    self.buffersList = BuffersListMiddleware(generator: generator)
     self.mainWindow = MainWindowMiddleware(generator: generator)
   }
 
@@ -49,7 +47,7 @@ class PreviewMiddleware {
         return
       }
 
-      fileLog.debug("\(buffer) -> \(html)")
+      stdoutLog.debug("\(buffer) -> \(html)")
       do {
         try self.render(buffer, to: html)
         self.previewFiles[uuid] = html
@@ -98,47 +96,12 @@ class PreviewMiddleware {
       return { tuple in
         let result = reduce(tuple)
 
-        guard tuple.modified else {
-          return result
-        }
-
         let uuidAction = tuple.action
         guard case .refreshNow = uuidAction.payload else {
           return result
         }
 
         self.generator.apply(result.state, uuid: uuidAction.uuid)
-        return result
-      }
-    }
-
-    private let generator: PreviewGenerator
-  }
-
-  class BuffersListMiddleware: MiddlewareType {
-
-    typealias StateType = MainWindow.State
-    typealias ActionType = UuidAction<BuffersList.Action>
-
-    init(generator: PreviewGenerator) {
-      self.generator = generator
-    }
-
-    func typedApply(_ reduce: @escaping TypedActionReduceFunction) -> TypedActionReduceFunction {
-      return { tuple in
-        let result = reduce(tuple)
-
-        guard tuple.modified else {
-          return result
-        }
-
-        let uuidAction = tuple.action
-        guard case .open = uuidAction.payload else {
-          return result
-        }
-
-        self.generator.apply(result.state, uuid: uuidAction.uuid)
-
         return result
       }
     }
@@ -158,10 +121,6 @@ class PreviewMiddleware {
     func typedApply(_ reduce: @escaping TypedActionReduceFunction) -> TypedActionReduceFunction {
       return { tuple in
         let result = reduce(tuple)
-
-        guard tuple.modified else {
-          return result
-        }
 
         let uuidAction = tuple.action
         switch uuidAction.payload {

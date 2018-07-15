@@ -6,7 +6,7 @@
 import Cocoa
 import RxSwift
 
-extension Observable {
+extension ObservableType {
 
   func mapOmittingNil<R>(_ transform: @escaping (E) throws -> R?) -> RxSwift.Observable<R> {
     return self
