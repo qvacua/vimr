@@ -86,8 +86,17 @@ extension OpenQuicklyWindow {
 
     enum CodingKeys: String, CodingKey {
 
-      case ignorePatterns
+      case ignorePatterns = "ignore-patterns"
     }
+
+    let root = FileItem(URL(fileURLWithPath: "/", isDirectory: true))
+
+    var flatFileItems = Observable<[FileItem]>.empty()
+    var cwd = FileUtils.userHomeUrl
+    var ignorePatterns = State.defaultIgnorePatterns
+    var ignoreToken = Token()
+
+    var open = false
 
     init(from decoder: Decoder) throws {
       let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -102,15 +111,6 @@ extension OpenQuicklyWindow {
       var container = encoder.container(keyedBy: CodingKeys.self)
       try container.encode(FileItemIgnorePattern.toString(self.ignorePatterns), forKey: .ignorePatterns)
     }
-
-    let root = FileItem(URL(fileURLWithPath: "/", isDirectory: true))
-
-    var flatFileItems = Observable<[FileItem]>.empty()
-    var cwd = FileUtils.userHomeUrl
-    var ignorePatterns = State.defaultIgnorePatterns
-    var ignoreToken = Token()
-
-    var open = false
 
     init() {
     }
@@ -203,6 +203,14 @@ struct AppearanceState: Codable, SerializableState {
     case editorUsesLigatures = "editor-uses-ligatures"
   }
 
+  var font = NSFont.userFixedPitchFont(ofSize: 13)!
+  var linespacing: CGFloat = 1
+  var usesLigatures = false
+
+  var usesTheme = true
+  var showsFileIcon = true
+  var theme = Marked(Theme.default)
+
   init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
 
@@ -231,14 +239,6 @@ struct AppearanceState: Codable, SerializableState {
     try container.encode(self.linespacing, forKey: .editorLinespacing)
     try container.encode(self.usesLigatures, forKey: .editorUsesLigatures)
   }
-
-  var font = NSFont.userFixedPitchFont(ofSize: 13)!
-  var linespacing: CGFloat = 1
-  var usesLigatures = false
-
-  var usesTheme = true
-  var showsFileIcon = true
-  var theme = Marked(Theme.default)
 
   init() {
   }
@@ -452,22 +452,6 @@ struct WorkspaceToolState: Codable, SerializableState {
   var location = WorkspaceBarLocation.left
   var dimension = CGFloat(200)
   var open = false
-
-  init(from decoder: Decoder) throws {
-    let container = try decoder.container(keyedBy: CodingKeys.self)
-
-    self.location = try container.decodeIfPresent(WorkspaceBarLocation.self, forKey: .location) ?? .left
-    self.dimension = CGFloat(try container.decodeIfPresent(Float.self, forKey: .dimension) ?? 200.0)
-    self.open = try container.decodeIfPresent(Bool.self, forKey: .open) ?? false
-  }
-
-  func encode(to encoder: Encoder) throws {
-    var container = encoder.container(keyedBy: CodingKeys.self)
-
-    try container.encode(self.location, forKey: .location)
-    try container.encode(self.dimension, forKey: .dimension)
-    try container.encode(self.open, forKey: .open)
-  }
 
   init(location: WorkspaceBarLocation, dimension: CGFloat, open: Bool) {
     self.location = location
