@@ -371,6 +371,8 @@ extension MainWindow {
       try container.encode(self.useLiveResize, forKey: .useLiveResize)
       try container.encode(self.isLeftOptionMeta, forKey: .isLeftOptionMeta)
       try container.encode(self.isRightOptionMeta, forKey: .isRightOptionMeta)
+      try container.encode(self.useInteractiveZsh, forKey: .useInteractiveZsh)
+      try container.encode(self.fileBrowserShowHidden, forKey: .isShowHidden)
 
       // See [1]
       try container.encode(Dictionary(uniqueKeysWithValues: self.tools.map { k, v in (k.rawValue, v) }),
