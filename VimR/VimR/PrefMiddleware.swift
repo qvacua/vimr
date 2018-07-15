@@ -17,7 +17,7 @@ class PrefMiddleware: MiddlewareType {
 
   // The following should only be used when Cmd-Q'ing
   func applyPref(from appState: AppState) {
-    defaults.setValue(appState.dict(), forKey: PrefMiddleware.compatibleVersion)
+    defaults.set(appState.dict(), forKey: PrefMiddleware.compatibleVersion)
   }
 
   func typedApply(_ reduce: @escaping TypedActionReduceFunction) -> TypedActionReduceFunction {
@@ -28,7 +28,7 @@ class PrefMiddleware: MiddlewareType {
         return result
       }
 
-      defaults.setValue(result.state.dict(), forKey: PrefMiddleware.compatibleVersion)
+      defaults.set(result.state.dict(), forKey: PrefMiddleware.compatibleVersion)
 
       return result
     }
@@ -52,7 +52,7 @@ class PrefMiddleware: MiddlewareType {
           return result
         }
 
-        defaults.setValue(result.state.dict(), forKey: PrefMiddleware.compatibleVersion)
+        defaults.set(result.state.dict(), forKey: PrefMiddleware.compatibleVersion)
         return result
       }
     }
