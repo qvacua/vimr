@@ -503,16 +503,40 @@ struct WorkspaceToolState: Codable, SerializableState {
 
 extension PreviewTool {
 
-  struct State: SerializableState {
+  struct State: Codable, SerializableState {
 
     static let `default` = State()
+
+    enum CodingKeys: String, CodingKey {
+
+      case forwardSearchAutomatically = "is-forward-search-automatically"
+      case reverseSearchAutomatically = "is-reverse-search-automatically"
+      case refreshOnWrite = "is-refresh-on-write"
+    }
 
     var isForwardSearchAutomatically = false
     var isReverseSearchAutomatically = false
     var isRefreshOnWrite = true
 
     init() {
+    }
 
+    init(from decoder: Decoder) throws {
+      let container = try decoder.container(keyedBy: CodingKeys.self)
+
+      self.isForwardSearchAutomatically = try container.decodeIfPresent(Bool.self,
+                                                                        forKey: .forwardSearchAutomatically) ?? true
+      self.isReverseSearchAutomatically = try container.decodeIfPresent(Bool.self,
+                                                                        forKey: .reverseSearchAutomatically) ?? true
+      self.isRefreshOnWrite = try container.decodeIfPresent(Bool.self, forKey: .refreshOnWrite) ?? true
+    }
+
+    func encode(to encoder: Encoder) throws {
+      var container = encoder.container(keyedBy: CodingKeys.self)
+
+      try container.encode(self.isForwardSearchAutomatically, forKey: .forwardSearchAutomatically)
+      try container.encode(self.isReverseSearchAutomatically, forKey: .reverseSearchAutomatically)
+      try container.encode(self.isRefreshOnWrite, forKey: .refreshOnWrite)
     }
 
     init?(dict: [String: Any]) {
