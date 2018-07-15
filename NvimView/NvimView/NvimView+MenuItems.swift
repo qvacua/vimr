@@ -142,7 +142,7 @@ extension NvimView {
 
         case .insert:
           return self.bridge
-            .vimInput("<ESC>\"+pa")
+            .vimInput("<ESC>\"+Pa")
             .andThen(Single.just(pasteModeSet))
 
         case .normal, .visual:
