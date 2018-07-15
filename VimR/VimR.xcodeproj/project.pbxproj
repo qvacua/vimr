@@ -82,6 +82,7 @@
 		4B004BAA20FBA6700043A396 /* DictionaryCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B004BA920FBA6700043A396 /* DictionaryCoding.framework */; };
 		4B004BAB20FBA6700043A396 /* DictionaryCoding.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B004BA920FBA6700043A396 /* DictionaryCoding.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B004BAC20FBB4F10043A396 /* DictionaryCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B004BA920FBA6700043A396 /* DictionaryCoding.framework */; };
+		4B004BAD20FBBE1E0043A396 /* DictionaryCoding.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B004BA920FBA6700043A396 /* DictionaryCoding.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */; };
 		4B17E54D209E3EA400265C1D /* RxNeovimApi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B17E54E209E3EFA00265C1D /* RxNeovimApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */; };
@@ -257,6 +258,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4B004BAD20FBBE1E0043A396 /* DictionaryCoding.framework in CopyFiles */,
 				4B9DF28A209C8DBB00DF2AAD /* RxMessagePort.framework in CopyFiles */,
 				4B9DF289209C8DAD00DF2AAD /* RxMsgpackRpc.framework in CopyFiles */,
 				4B17E54F209E3EFD00265C1D /* RxNeovimApi.framework in CopyFiles */,
