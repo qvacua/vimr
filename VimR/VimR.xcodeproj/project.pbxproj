@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1929B00BA624DA8DC75F7E02 /* SerializableStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA42AB6F1BF631B57399 /* SerializableStates.swift */; };
 		1929B04CE8ECBD75CBBB0991 /* StringCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5D45C9792BBE76B8AFF /* StringCommonsTest.swift */; };
 		1929B05B9D664052EC2D23EF /* FileOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCE3E156C06EDF1F2806 /* FileOutlineView.swift */; };
 		1929B08C6230B9C5AB72DAF1 /* Pref128ToCurrentConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5046239709E33516F5C /* Pref128ToCurrentConverter.swift */; };
@@ -315,7 +314,6 @@
 		1929B9355C892BEBA7496C71 /* DictionaryCommonsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryCommonsTest.swift; sourceTree = "<group>"; };
 		1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationCommons.swift; sourceTree = "<group>"; };
 		1929B9D510177918080BE39B /* Scorer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scorer.swift; sourceTree = "<group>"; };
-		1929BA42AB6F1BF631B57399 /* SerializableStates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SerializableStates.swift; sourceTree = "<group>"; };
 		1929BA43449BA41666CD55ED /* BufferList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BufferList.swift; sourceTree = "<group>"; };
 		1929BA5C7099CDEB04B76BA4 /* FileBrowser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBrowser.swift; sourceTree = "<group>"; };
 		1929BA8AC40B901B20F20B71 /* FileUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileUtils.swift; sourceTree = "<group>"; };
@@ -574,7 +572,6 @@
 				1929B5E773BDB3B4EE9D00C1 /* Reducers */,
 				1929BFA93DC859DD76C46192 /* Middlewares */,
 				1929BFC0A5A9C6DB09BE1368 /* Types.swift */,
-				1929BA42AB6F1BF631B57399 /* SerializableStates.swift */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -1088,7 +1085,6 @@
 				1929B4F0612224E594E89B92 /* AppearancePref.swift in Sources */,
 				1929B50D933A369A86A165DE /* AdvencedPref.swift in Sources */,
 				1929BCC7908DD899999B70BE /* AppearancePrefReducer.swift in Sources */,
-				1929B00BA624DA8DC75F7E02 /* SerializableStates.swift in Sources */,
 				1929B3557317755A43513B17 /* OpenQuicklyWindow.swift in Sources */,
 				1929B333855A5406C400DA92 /* OpenQuicklyFilterOperation.swift in Sources */,
 				1929B1837C750CADB3A5BCB9 /* OpenQuicklyFileViewRow.swift in Sources */,

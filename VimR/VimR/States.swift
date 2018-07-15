@@ -6,7 +6,7 @@
 import Foundation
 import RxSwift
 
-struct AppState: Codable, SerializableState {
+struct AppState: Codable {
 
   enum AfterLastWindowAction: String, Codable {
 
@@ -66,60 +66,11 @@ struct AppState: Codable, SerializableState {
 
   private init() {
   }
-
-  init?(dict: [String: Any]) {
-    guard let openOnLaunch = PrefUtils.bool(from: dict, for: Keys.openNewOnLaunch),
-          let openOnReactivation = PrefUtils.bool(from: dict, for: Keys.openNewOnReactivation),
-          let useSnapshot = PrefUtils.bool(from: dict, for: Keys.useSnapshotUpdateChannel)
-      else {
-      return nil
-    }
-
-    self.openNewMainWindowOnLaunch = openOnLaunch
-    self.openNewMainWindowOnReactivation = openOnReactivation
-
-    let lastWindowActionString = PrefUtils.string(from: dict, for: Keys.afterLastWindowAction)
-                                 ?? AfterLastWindowAction.doNothing.rawValue
-    self.afterLastWindowAction = AfterLastWindowAction(rawValue: lastWindowActionString) ?? .doNothing
-
-    self.useSnapshotUpdate = useSnapshot
-
-    let openQuicklyDict = dict[Keys.OpenQuickly.key] as? [String: Any] ?? [:]
-    self.openQuickly = OpenQuicklyWindow.State(dict: openQuicklyDict) ?? OpenQuicklyWindow.State.default
-
-    let mainWindowDict = dict[Keys.MainWindow.key] as? [String: Any] ?? [:]
-    self.mainWindowTemplate = MainWindow.State(dict: mainWindowDict) ?? MainWindow.State.default
-
-    let jsonEncoder = JSONEncoder()
-    let data = try? jsonEncoder.encode(self)
-
-    let jsonDecoder = JSONDecoder()
-    do {
-      let test = try jsonDecoder.decode(AppState.self, from: data!)
-      try data?.write(to: URL(fileURLWithPath: "/tmp/vimr.codable1.json"))
-      try? jsonEncoder.encode(test).write(to: URL(fileURLWithPath: "/tmp/vimr.codable2.json"))
-    } catch {
-      stdoutLog.debug(error)
-    }
-  }
-
-  func dict() -> [String: Any] {
-    return [
-      Keys.openNewOnLaunch: self.openNewMainWindowOnLaunch,
-      Keys.openNewOnReactivation: self.openNewMainWindowOnReactivation,
-      Keys.afterLastWindowAction: self.afterLastWindowAction.rawValue,
-      Keys.useSnapshotUpdateChannel: self.useSnapshotUpdate,
-
-      Keys.OpenQuickly.key: self.openQuickly.dict(),
-
-      Keys.MainWindow.key: self.mainWindowTemplate.dict(),
-    ]
-  }
 }
 
 extension OpenQuicklyWindow {
 
-  struct State: Codable, SerializableState {
+  struct State: Codable {
 
     static let `default` = State()
     static let defaultIgnorePatterns = Set(["*/.git", "*.o", "*.d", "*.dia"].map(FileItemIgnorePattern.init))
@@ -153,20 +104,6 @@ extension OpenQuicklyWindow {
     }
 
     private init() {
-    }
-
-    init?(dict: [String: Any]) {
-      guard let patternsString = PrefUtils.string(from: dict, for: Keys.OpenQuickly.ignorePatterns) else {
-        return nil
-      }
-
-      self.ignorePatterns = FileItemIgnorePattern.from(string: patternsString)
-    }
-
-    func dict() -> [String: Any] {
-      return [
-        Keys.OpenQuickly.ignorePatterns: FileItemIgnorePattern.toString(self.ignorePatterns)
-      ]
     }
   }
 }
@@ -229,7 +166,7 @@ struct HtmlPreviewState {
   var server: Marked<URL>?
 }
 
-struct AppearanceState: Codable, SerializableState {
+struct AppearanceState: Codable {
 
   static let `default` = AppearanceState()
 
@@ -282,39 +219,11 @@ struct AppearanceState: Codable, SerializableState {
 
   private init() {
   }
-
-  init?(dict: [String: Any]) {
-    guard let editorFontName = dict[Keys.Appearance.editorFontName] as? String,
-          let fEditorFontSize = PrefUtils.float(from: dict, for: Keys.Appearance.editorFontSize),
-          let fEditorLinespacing = PrefUtils.float(from: dict, for: Keys.Appearance.editorLinespacing),
-          let editorUsesLigatures = PrefUtils.bool(from: dict, for: Keys.Appearance.editorUsesLigatures)
-      else {
-      return nil
-    }
-
-    self.usesTheme = PrefUtils.bool(from: dict, for: Keys.Appearance.usesTheme, default: true)
-    self.showsFileIcon = PrefUtils.bool(from: dict, for: Keys.Appearance.showsFileIcon, default: true)
-
-    self.font = PrefUtils.saneFont(editorFontName, fontSize: CGFloat(fEditorFontSize))
-    self.linespacing = CGFloat(fEditorLinespacing)
-    self.usesLigatures = editorUsesLigatures
-  }
-
-  func dict() -> [String: Any] {
-    return [
-      Keys.Appearance.usesTheme: self.usesTheme,
-      Keys.Appearance.showsFileIcon: self.showsFileIcon,
-      Keys.Appearance.editorFontName: self.font.fontName,
-      Keys.Appearance.editorFontSize: Float(self.font.pointSize),
-      Keys.Appearance.editorLinespacing: Float(self.linespacing),
-      Keys.Appearance.editorUsesLigatures: self.usesLigatures,
-    ]
-  }
 }
 
 extension MainWindow {
 
-  struct State: Codable, SerializableState {
+  struct State: Codable {
 
     static let `default` = State(isAllToolsVisible: true, isToolButtonsVisible: true)
 
@@ -473,100 +382,10 @@ extension MainWindow {
       try container.encode(self.orderedTools, forKey: .orderedTools)
       try container.encode(self.previewTool, forKey: .previewTool)
     }
-
-    init?(dict: [String: Any]) {
-      guard let isAllToolsVisible = PrefUtils.bool(from: dict, for: Keys.MainWindow.allToolsVisible),
-            let isToolButtonsVisible = PrefUtils.bool(from: dict, for: Keys.MainWindow.toolButtonsVisible),
-            let orderedToolsAsString = dict[Keys.MainWindow.orderedTools] as? [String],
-            let isShowHidden = PrefUtils.bool(from: dict, for: Keys.MainWindow.isShowHidden)
-        else {
-        return nil
-      }
-
-      // Stay compatible with 168
-      self.isLeftOptionMeta = PrefUtils.bool(from: dict, for: Keys.MainWindow.isLeftOptionMeta, default: false)
-      self.isRightOptionMeta = PrefUtils.bool(from: dict, for: Keys.MainWindow.isRightOptionMeta, default: false)
-
-      self.useInteractiveZsh = PrefUtils.bool(from: dict, for: Keys.MainWindow.useInteractiveZsh, default: false)
-      self.trackpadScrollResistance = PrefUtils.value(from: dict,
-                                                      for: Keys.MainWindow.trackpadScrollResistance,
-                                                      default: 5.0)
-      self.useLiveResize = PrefUtils.bool(from: dict, for: Keys.MainWindow.useLiveResize, default: false)
-      let frameString = PrefUtils.string(from: dict,
-                                         for: Keys.MainWindow.frame,
-                                         default: NSStringFromRect(self.frame))
-      self.frame = NSRectFromString(frameString)
-
-      self.isAllToolsVisible = isAllToolsVisible
-      self.isToolButtonsVisible = isToolButtonsVisible
-
-      let appearanceDict = dict[Keys.Appearance.key] as? [String: Any] ?? [:]
-      self.appearance = AppearanceState(dict: appearanceDict) ?? AppearanceState.default
-
-      self.orderedTools = orderedToolsAsString.compactMap { MainWindow.Tools(rawValue: $0) }
-      let missingOrderedTools = MainWindow.Tools.all.subtracting(self.orderedTools)
-      self.orderedTools.append(contentsOf: missingOrderedTools)
-
-      // To stay compatible with 168 we do not guard against nil activeToolsAsString.
-      let activeToolsAsString = dict[Keys.MainWindow.activeTools] as? [String: Bool] ?? [:]
-      self.activeTools = activeToolsAsString.flatMapToDict { (key, value) in
-        guard let toolId = MainWindow.Tools(rawValue: key) else {
-          return nil
-        }
-
-        return (toolId, value)
-      }
-      let missingActiveTools = MainWindow.Tools.all.subtracting(self.activeTools.keys)
-      missingActiveTools.forEach { self.activeTools[$0] = true }
-
-      let workspaceToolsDict = dict[Keys.WorkspaceTool.key] as? [String: [String: Any]] ?? [:]
-      let toolKeys = workspaceToolsDict.keys.compactMap { MainWindow.Tools(rawValue: $0) }
-      let missingToolKeys = MainWindow.Tools.all.subtracting(toolKeys)
-
-      var tools = Array(toolKeys).toDict { tool in
-        return WorkspaceToolState(dict: workspaceToolsDict[tool.rawValue]!) ?? WorkspaceToolState.defaultTools[tool]!
-      }
-      missingToolKeys.forEach { missingTool in
-        tools[missingTool] = WorkspaceToolState.defaultTools[missingTool]!
-      }
-
-      self.tools = tools
-
-      let previewToolDict = dict[Keys.PreviewTool.key] as? [String: Any] ?? [:]
-      self.previewTool = PreviewTool.State(dict: previewToolDict) ?? PreviewTool.State.default
-
-      self.fileBrowserShowHidden = isShowHidden
-    }
-
-    func dict() -> [String: Any] {
-      return [
-        Keys.MainWindow.allToolsVisible: self.isAllToolsVisible,
-        Keys.MainWindow.toolButtonsVisible: self.isToolButtonsVisible,
-
-        Keys.MainWindow.frame: NSStringFromRect(self.frame),
-
-        Keys.MainWindow.trackpadScrollResistance: self.trackpadScrollResistance,
-        Keys.MainWindow.useLiveResize: self.useLiveResize,
-
-        Keys.Appearance.key: self.appearance.dict(),
-        Keys.WorkspaceTool.key: self.tools.mapToDict { ($0.rawValue, $1.dict()) },
-
-        Keys.MainWindow.isLeftOptionMeta: self.isLeftOptionMeta,
-        Keys.MainWindow.isRightOptionMeta: self.isRightOptionMeta,
-
-        Keys.MainWindow.orderedTools: self.orderedTools.map { $0.rawValue },
-        Keys.MainWindow.activeTools: self.activeTools.mapToDict { ($0.rawValue, $1) },
-
-        Keys.PreviewTool.key: self.previewTool.dict(),
-
-        Keys.MainWindow.isShowHidden: self.fileBrowserShowHidden,
-        Keys.MainWindow.useInteractiveZsh: self.useInteractiveZsh,
-      ]
-    }
   }
 }
 
-struct WorkspaceToolState: Codable, SerializableState {
+struct WorkspaceToolState: Codable {
 
   static let `default` = WorkspaceToolState()
 
@@ -613,36 +432,11 @@ struct WorkspaceToolState: Codable, SerializableState {
     self.dimension = dimension
     self.open = open
   }
-
-  init?(dict: [String: Any]) {
-    guard let locationRawValue = dict[Keys.WorkspaceTool.location] as? String,
-          let isOpen = PrefUtils.bool(from: dict, for: Keys.WorkspaceTool.open),
-          let fDimension = PrefUtils.float(from: dict, for: Keys.WorkspaceTool.dimension)
-      else {
-      return nil
-    }
-
-    guard let location = WorkspaceBarLocation(rawValue: locationRawValue) else {
-      return nil
-    }
-
-    self.location = location
-    self.dimension = CGFloat(fDimension)
-    self.open = isOpen
-  }
-
-  func dict() -> [String: Any] {
-    return [
-      Keys.WorkspaceTool.location: self.location.rawValue,
-      Keys.WorkspaceTool.open: self.open,
-      Keys.WorkspaceTool.dimension: Float(self.dimension),
-    ]
-  }
 }
 
 extension PreviewTool {
 
-  struct State: Codable, SerializableState {
+  struct State: Codable {
 
     static let `default` = State()
 
@@ -676,27 +470,6 @@ extension PreviewTool {
       try container.encode(self.isForwardSearchAutomatically, forKey: .forwardSearchAutomatically)
       try container.encode(self.isReverseSearchAutomatically, forKey: .reverseSearchAutomatically)
       try container.encode(self.isRefreshOnWrite, forKey: .refreshOnWrite)
-    }
-
-    init?(dict: [String: Any]) {
-      guard let isForward = PrefUtils.bool(from: dict, for: Keys.PreviewTool.forwardSearchAutomatically),
-            let isReverse = PrefUtils.bool(from: dict, for: Keys.PreviewTool.reverseSearchAutomatically),
-            let isRefreshOnWrite = PrefUtils.bool(from: dict, for: Keys.PreviewTool.refreshOnWrite)
-        else {
-        return nil
-      }
-
-      self.isRefreshOnWrite = isRefreshOnWrite
-      self.isForwardSearchAutomatically = isForward
-      self.isReverseSearchAutomatically = isReverse
-    }
-
-    func dict() -> [String: Any] {
-      return [
-        Keys.PreviewTool.forwardSearchAutomatically: self.isForwardSearchAutomatically,
-        Keys.PreviewTool.reverseSearchAutomatically: self.isReverseSearchAutomatically,
-        Keys.PreviewTool.refreshOnWrite: self.isRefreshOnWrite,
-      ]
     }
   }
 }

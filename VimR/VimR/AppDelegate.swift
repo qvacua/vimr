@@ -49,6 +49,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         initialAppState = .default
       }
     }
+
     initialAppState.mainWindowTemplate.htmlPreview.server = Marked(
       baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath)
     )
