@@ -5,6 +5,7 @@
 
 import Cocoa
 import RxSwift
+import RxNeovimApi
 
 // MARK: - NSUserInterfaceValidationsProtocol
 extension NvimView {
@@ -126,32 +127,39 @@ extension NvimView {
       return
     }
 
-    self.api
-      .getOption(name: "paste")
-      .flatMap { curPasteMode -> Single<Bool> in
-        if curPasteMode == false {
-          return self.api
-            .setOption(name: "paste", value: .bool(true))
-            .andThen(Single.just(true))
-        } else {
-          return Single.just(false)
-        }
-      }
-      .flatMap { pasteModeSet -> Single<Bool> in
+    Single.zip(
+        self.api
+          .getCurrentWin()
+          .flatMap { win in self.api.winGetCursor(window: win) },
+        self.api
+          .getOption(name: "paste")
+          .flatMap { curPasteMode -> Single<Bool> in
+            if curPasteMode == false {
+              return self.api
+                .setOption(name: "paste", value: .bool(true))
+                .andThen(Single.just(true))
+            } else {
+              return Single.just(false)
+            }
+          }
+      )
+      .map { result in (column: result.0[1], pasteModeSet: result.1) }
+      .flatMap { element -> Single<Bool> in
         switch self.mode {
 
         case .insert:
+          let cmd = element.column == 0 ? "<ESC>\"+Pa" : "<ESC>\"+pa"
           return self.bridge
-            .vimInput("<ESC>\"+Pa")
-            .andThen(Single.just(pasteModeSet))
+            .vimInput(cmd)
+            .andThen(Single.just(element.pasteModeSet))
 
         case .normal, .visual:
           return self.bridge
             .vimInput("\"+p")
-            .andThen(Single.just(pasteModeSet))
+            .andThen(Single.just(element.pasteModeSet))
 
         default:
-          return Single.just(pasteModeSet)
+          return Single.just(element.pasteModeSet)
 
         }
       }
