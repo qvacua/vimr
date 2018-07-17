@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-286</title>
+      <title>SNAPSHOT-287</title>
       <description><![CDATA[
     <ul>
-<li>GH-603: Bugfix: The previous fix broke pasting at column &gt; 0.</li>
+<li>GH-659: Bugfix (introduced in a snapshot): Turning off ligatures does not really turn off ligatures.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/286
+        https://github.com/qvacua/vimr/releases/tag/snapshot/287
       </releaseNotesLink>
-      <pubDate>2018-07-16T18:37:53.249357</pubDate>
+      <pubDate>2018-07-17T21:47:39.216538</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/286/VimR-SNAPSHOT-286.tar.bz2"
-                 sparkle:version="286"
-                 sparkle:shortVersionString="SNAPSHOT-286"
-                 sparkle:dsaSignature="MCwCFB/P00P8nOQ8cN9RqrvyXFBd42T1AhRkSQ/kFWJTiNDlxhN6xIfeJ9BUbA=="
-                 length="14798042"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/287/VimR-SNAPSHOT-287.tar.bz2"
+                 sparkle:version="287"
+                 sparkle:shortVersionString="SNAPSHOT-287"
+                 sparkle:dsaSignature="MC0CFGi/fu6NGA0bTq01XuJ+GPpxsXMRAhUAsXwgPZMd+W5+SQJi3JjpozhsTGg="
+                 length="14807057"
                  type="application/octet-stream"/>
     </item>
   </channel>
