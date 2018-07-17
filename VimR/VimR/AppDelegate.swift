@@ -186,6 +186,7 @@ extension AppDelegate {
       discardAndQuitButton.keyEquivalent = "d"
 
       if alert.runModal() == .alertSecondButtonReturn {
+        self.updateMainWindowTemplateBeforeQuitting()
         self.uiRoot.prepareQuit()
         return .terminateNow
       }
@@ -194,6 +195,7 @@ extension AppDelegate {
     }
 
     if self.hasMainWindows {
+      self.updateMainWindowTemplateBeforeQuitting()
       self.uiRoot.prepareQuit()
       return .terminateNow
     }
@@ -211,6 +213,14 @@ extension AppDelegate {
     self.emit(.newMainWindow(config: config))
 
     sender.reply(toOpenOrPrint: .success)
+  }
+
+  private func updateMainWindowTemplateBeforeQuitting() {
+    guard let uuid = self.context.state.currentMainWindowUuid,
+          let curMainWindow = self.context.state.mainWindows[uuid] else { return }
+
+    self.context.state.mainWindowTemplate = curMainWindow
+    self.context.savePrefs()
   }
 }
 

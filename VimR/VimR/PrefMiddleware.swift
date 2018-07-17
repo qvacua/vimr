@@ -54,12 +54,7 @@ class PrefMiddleware: MiddlewareType {
       return { tuple in
         let result = reduce(tuple)
 
-        guard tuple.modified else {
-          return result
-        }
-
-        let uuidAction = tuple.action
-        guard case .close = uuidAction.payload else {
+        guard case .close = tuple.action.payload else {
           return result
         }
 
