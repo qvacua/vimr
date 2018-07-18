@@ -192,7 +192,7 @@ static CGColorRef color_for(NSInteger value) {
   const UniChar *bEnd = unichars + unilength;
   UniCharCount choppedLength;
   bool wide;
-  bool pWide = false;
+  bool pWide = NO;
 
   while (b < bEnd) {
     wide = CFStringIsSurrogateHighCharacter(*b) || CFStringIsSurrogateLowCharacter(*b);
@@ -200,8 +200,7 @@ static CGColorRef color_for(NSInteger value) {
       choppedLength = b - bStart;
 //      NSString *logged = [NSString stringWithCharacters:bStart length:choppedLength];
 //      NSLog(@"C(%d,%p..%p)[%@]", pWide, bStart, b, logged);
-      // We use isComposing = false to retain the old behavior of Macvim's recurseDraw
-      recurseDraw(bStart, glyphs, p, choppedLength, context, fontWithTraits, _fontLookupCache, false, _usesLigatures);
+      recurseDraw(bStart, glyphs, p, choppedLength, context, fontWithTraits, _fontLookupCache, _usesLigatures);
       UniCharCount step = pWide ? choppedLength / 2 : choppedLength;
       p += step;
       g += step;
@@ -215,8 +214,7 @@ static CGColorRef color_for(NSInteger value) {
     choppedLength = b - bStart;
 //    NSString *logged = [NSString stringWithCharacters:bStart length:choppedLength];
 //    NSLog(@"T(%d,%p..%p)[%@]", pWide, bStart, b, logged);
-    // We use isComposing = false to retain the old behavior of Macvim's recurseDraw
-    recurseDraw(bStart, glyphs, p, choppedLength, context, fontWithTraits, _fontLookupCache, false, _usesLigatures);
+    recurseDraw(bStart, glyphs, p, choppedLength, context, fontWithTraits, _fontLookupCache, _usesLigatures);
   }
 //  NSLog(@"S(-,%p..%p)[%@]", unichars, unichars + unilength, string);
 
