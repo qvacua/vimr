@@ -7,7 +7,6 @@
 * Dependencies updates:
     - ReactiveX/RxSwift@4.2.0
     - httpswift/swifter@1.4.2
-    - `MMCoreTextView` of MacVim: macvim-dev/macvim@351faf929e4abe32ea4cc31078d1a625fc86a69f
 
 # 0.24.0-282
 
