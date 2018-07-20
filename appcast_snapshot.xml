@@ -7,22 +7,25 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-287</title>
+      <title>SNAPSHOT-288</title>
       <description><![CDATA[
     <ul>
-<li>GH-659: Bugfix (introduced in a snapshot): Turning off ligatures does not really turn off ligatures.</li>
+<li>GH-659: Bugfix (introduced in a snapshot): Turning off ligatures does not really turn off ligatures.<ul>
+<li>Reverts the update on <code>MMCoreTextView</code>.</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/287
+        https://github.com/qvacua/vimr/releases/tag/snapshot/288
       </releaseNotesLink>
-      <pubDate>2018-07-17T21:47:39.216538</pubDate>
+      <pubDate>2018-07-18T17:04:18.666713</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/287/VimR-SNAPSHOT-287.tar.bz2"
-                 sparkle:version="287"
-                 sparkle:shortVersionString="SNAPSHOT-287"
-                 sparkle:dsaSignature="MC0CFGi/fu6NGA0bTq01XuJ+GPpxsXMRAhUAsXwgPZMd+W5+SQJi3JjpozhsTGg="
-                 length="14807057"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/288/VimR-SNAPSHOT-288.tar.bz2"
+                 sparkle:version="288"
+                 sparkle:shortVersionString="SNAPSHOT-288"
+                 sparkle:dsaSignature="MC0CFQCguDVWFXfF+veCN6Jy3yBHG4mWcAIUfVWgbmGW/18UxNaFRerRjukfsKE="
+                 length="14806420"
                  type="application/octet-stream"/>
     </item>
   </channel>
