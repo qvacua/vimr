@@ -1,5 +1,6 @@
 # 0.25.0-???
 
+* Neovim 0.3.1
 * GH-625: `vimr --cur-env` will pass the current environment variables to the new neovim process. This will result in `virtualenv` support.
 * GH-443: `vimr --line ${LINE_NUMBER} ${SOME_FILE}` will open the file and go to the given line. If the file is already open in a UI window, then that window will be selected and the cursor will be moved to the given line. This can be used e.g. to reverse-search LaTeX.
 * GH-603: Bugfix: `Cmd-V` pastes at the wrong location in the insert mode.
