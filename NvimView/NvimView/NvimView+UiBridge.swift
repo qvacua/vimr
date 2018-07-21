@@ -173,6 +173,7 @@ extension NvimView {
   }
 
   func autoCommandEvent(_ event: NvimAutoCommandEvent, bufferHandle: Int) {
+    // white-list used AUs in custom_ui_autocmds_groups() in server_ui.m
     self.bridgeLogger.debug("\(event) -> \(bufferHandle)")
 
     if event == .bufwinenter || event == .bufwinleave {
