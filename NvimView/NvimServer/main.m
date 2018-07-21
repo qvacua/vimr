@@ -11,8 +11,9 @@
 #import "CocoaCategories.h"
 
 
+static CFRunLoopRef _mainRunLoop;
+
 NvimServer *_neovim_server;
-CFRunLoopRef _mainRunLoop;
 
 static void observe_parent_termination() {
   pid_t parentPID = getppid();

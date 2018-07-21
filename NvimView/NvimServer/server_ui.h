@@ -9,7 +9,6 @@
 @class NvimServer;
 
 extern NvimServer *_neovim_server;
-extern CFRunLoopRef _mainRunLoop;
 
 extern void start_neovim(NSInteger width, NSInteger height, NSArray<NSString *> *args);
 
