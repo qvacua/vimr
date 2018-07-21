@@ -89,16 +89,10 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   NSThread *_localServerThread;
   CFMessagePortRef _localServerPort;
   CFRunLoopRef _localServerRunLoop;
-
-  NSCondition *_outputCondition;
 }
 
 - (NSArray<NSString *> *)nvimArgs {
   return _nvimArgs;
-}
-
-- (NSCondition *)outputCondition {
-  return _outputCondition;
 }
 
 - (instancetype)initWithLocalServerName:(NSString *)localServerName
@@ -109,8 +103,6 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   if (self == nil) {
     return nil;
   }
-
-  _outputCondition = [[NSCondition alloc] init];
 
   _localServerName = localServerName;
   _remoteServerName = remoteServerName;
