@@ -102,7 +102,7 @@ class Grid: CustomStringConvertible {
     foreground: defaultForeground, background: defaultBackground, special: defaultSpecial
   )
 
-  private(set) var cells: [[Cell]] = []
+  private(set) var cells: ContiguousArray<ContiguousArray<Cell>> = []
 
   var hasData: Bool {
     return !self.cells.isEmpty
@@ -120,8 +120,8 @@ class Grid: CustomStringConvertible {
     let emptyCellAttrs = CellAttributes(fontTrait: .none,
                                         foreground: self.foreground, background: self.background, special: self.special)
 
-    let emptyRow = Array(repeating: Cell(string: " ", attrs: emptyCellAttrs), count: size.width)
-    self.cells = Array(repeating: emptyRow, count: size.height)
+    let emptyRow = ContiguousArray(repeating: Cell(string: " ", attrs: emptyCellAttrs), count: size.width)
+    self.cells = ContiguousArray(repeating: emptyRow, count: size.height)
   }
 
   func clear() {
