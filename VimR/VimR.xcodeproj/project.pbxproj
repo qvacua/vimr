@@ -79,10 +79,16 @@
 		1929BF4FF30D9A9DE82C3052 /* FileUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8042AC566CDF6C998A3 /* FileUtilsTest.swift */; };
 		1929BFC70581084B5CE04A5B /* MatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFE179BCA3C75A13D71B /* MatcherTests.swift */; };
 		1929BFDE22D155F7C4B19E96 /* HtmlPreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B85023B042C485409CE1 /* HtmlPreviewTool.swift */; };
-		4B004BAA20FBA6700043A396 /* DictionaryCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B004BA920FBA6700043A396 /* DictionaryCoding.framework */; };
-		4B004BAB20FBA6700043A396 /* DictionaryCoding.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B004BA920FBA6700043A396 /* DictionaryCoding.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B004BAC20FBB4F10043A396 /* DictionaryCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B004BA920FBA6700043A396 /* DictionaryCoding.framework */; };
 		4B004BAD20FBBE1E0043A396 /* DictionaryCoding.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B004BA920FBA6700043A396 /* DictionaryCoding.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B004BCF21063B600043A396 /* DictionaryDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCB21063B600043A396 /* DictionaryDecoder.swift */; };
+		4B004BD021063B600043A396 /* DictionaryDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCB21063B600043A396 /* DictionaryDecoder.swift */; };
+		4B004BD121063B600043A396 /* DictionaryCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCC21063B600043A396 /* DictionaryCodingKey.swift */; };
+		4B004BD221063B600043A396 /* DictionaryCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCC21063B600043A396 /* DictionaryCodingKey.swift */; };
+		4B004BD321063B600043A396 /* DictionaryEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCD21063B600043A396 /* DictionaryEncoder.swift */; };
+		4B004BD421063B600043A396 /* DictionaryEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCD21063B600043A396 /* DictionaryEncoder.swift */; };
+		4B004BD521063B600043A396 /* DictionaryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCE21063B600043A396 /* DictionaryErrors.swift */; };
+		4B004BD621063B600043A396 /* DictionaryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCE21063B600043A396 /* DictionaryErrors.swift */; };
 		4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */; };
 		4B17E54D209E3EA400265C1D /* RxNeovimApi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B17E54E209E3EFA00265C1D /* RxNeovimApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */; };
@@ -236,7 +242,6 @@
 			files = (
 				4BB1F5D22097706700EC394A /* MessagePack.framework in Embed Frameworks */,
 				4BB1F5CF2097704D00EC394A /* RxMsgpackRpc.framework in Embed Frameworks */,
-				4B004BAB20FBA6700043A396 /* DictionaryCoding.framework in Embed Frameworks */,
 				4BF18C411FD2E2C900DF95D1 /* CocoaFontAwesome.framework in Embed Frameworks */,
 				4BF18C421FD2E2C900DF95D1 /* CocoaMarkdown.framework in Embed Frameworks */,
 				4BF18C431FD2E2C900DF95D1 /* EonilFileSystemEvents.framework in Embed Frameworks */,
@@ -346,6 +351,10 @@
 		1929BFC0A5A9C6DB09BE1368 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		1929BFE179BCA3C75A13D71B /* MatcherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatcherTests.swift; sourceTree = "<group>"; };
 		4B004BA920FBA6700043A396 /* DictionaryCoding.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DictionaryCoding.framework; path = ../Carthage/Build/Mac/DictionaryCoding.framework; sourceTree = "<group>"; };
+		4B004BCB21063B600043A396 /* DictionaryDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DictionaryDecoder.swift; path = ../../Carthage/Checkouts/DictionaryCoding/Sources/DictionaryCoding/DictionaryDecoder.swift; sourceTree = "<group>"; };
+		4B004BCC21063B600043A396 /* DictionaryCodingKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DictionaryCodingKey.swift; path = ../../Carthage/Checkouts/DictionaryCoding/Sources/DictionaryCoding/DictionaryCodingKey.swift; sourceTree = "<group>"; };
+		4B004BCD21063B600043A396 /* DictionaryEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DictionaryEncoder.swift; path = ../../Carthage/Checkouts/DictionaryCoding/Sources/DictionaryCoding/DictionaryEncoder.swift; sourceTree = "<group>"; };
+		4B004BCE21063B600043A396 /* DictionaryErrors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DictionaryErrors.swift; path = ../../Carthage/Checkouts/DictionaryCoding/Sources/DictionaryCoding/DictionaryErrors.swift; sourceTree = "<group>"; };
 		4B029F1B1D45E349004EE0D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrefWindow.xib; sourceTree = "<group>"; };
 		4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxNeovimApi.framework; path = ../Carthage/Build/Mac/RxNeovimApi.framework; sourceTree = "<group>"; };
 		4B19BEFA1E110183007E823C /* markdown */ = {isa = PBXFileReference; lastKnownFileType = folder; path = markdown; sourceTree = "<group>"; };
@@ -459,7 +468,6 @@
 			files = (
 				4BB1F5D12097705E00EC394A /* MessagePack.framework in Frameworks */,
 				4BB1F5CD20976F8900EC394A /* RxMsgpackRpc.framework in Frameworks */,
-				4B004BAA20FBA6700043A396 /* DictionaryCoding.framework in Frameworks */,
 				4BF18C391FD2E2AB00DF95D1 /* EonilFileSystemEvents.framework in Frameworks */,
 				4BF18C3A1FD2E2AB00DF95D1 /* PureLayout.framework in Frameworks */,
 				4BF18C3B1FD2E2AB00DF95D1 /* CocoaMarkdown.framework in Frameworks */,
@@ -639,6 +647,17 @@
 			name = Middlewares;
 			sourceTree = "<group>";
 		};
+		4B004BCA21063B4D0043A396 /* DictionaryCoding */ = {
+			isa = PBXGroup;
+			children = (
+				4B004BCC21063B600043A396 /* DictionaryCodingKey.swift */,
+				4B004BCB21063B600043A396 /* DictionaryDecoder.swift */,
+				4B004BCD21063B600043A396 /* DictionaryEncoder.swift */,
+				4B004BCE21063B600043A396 /* DictionaryErrors.swift */,
+			);
+			name = DictionaryCoding;
+			sourceTree = "<group>";
+		};
 		4B5012001EBA791000F76C46 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -806,6 +825,7 @@
 		4BEBA5071CFF374B00673FDF /* VimR */ = {
 			isa = PBXGroup;
 			children = (
+				4B004BCA21063B4D0043A396 /* DictionaryCoding */,
 				4B2A2C0D1D0353750074CE9A /* Bridge.h */,
 				4BE45C1C1FD2DBD2005C0A95 /* Logger.swift */,
 				4B238BE01D3BF24200CBDD98 /* Application.swift */,
@@ -1053,6 +1073,7 @@
 				4B64239A1D8EFE3000FC78C8 /* WorkspaceTool.swift in Sources */,
 				1929B462CD4935AFF6D69457 /* FileItem.swift in Sources */,
 				1929B6388EAF16C190B82955 /* FileItemIgnorePattern.swift in Sources */,
+				4B004BD521063B600043A396 /* DictionaryErrors.swift in Sources */,
 				1929B67DA3EB21A631EF1DBB /* FileUtils.swift in Sources */,
 				1929B3F5743967125F357C9F /* Matcher.swift in Sources */,
 				1929B53876E6952D378C2B30 /* ScoredFileItem.swift in Sources */,
@@ -1071,6 +1092,7 @@
 				1929B4B70926DE113E6BF990 /* PreviewReducer.swift in Sources */,
 				1929B5C1BABBC0D09D97C3EF /* PreviewMiddleware.swift in Sources */,
 				1929B0F599D1F62C7BE53D2C /* HttpServerMiddleware.swift in Sources */,
+				4B004BD321063B600043A396 /* DictionaryEncoder.swift in Sources */,
 				1929B3AC66EFE35D68C020E3 /* PreviewToolReducer.swift in Sources */,
 				1929B59FA5C286E010F70BEE /* Types.swift in Sources */,
 				1929B6D8F5FC723B7109031F /* OpenQuicklyReducer.swift in Sources */,
@@ -1106,8 +1128,10 @@
 				1929BE2F3E0182CC51F2763A /* ThemedTableSubviews.swift in Sources */,
 				1929B6460862447A31B5B082 /* ImageAndTextTableCell.swift in Sources */,
 				1929BBE28654E4307AF1E2FD /* Theme.swift in Sources */,
+				4B004BD121063B600043A396 /* DictionaryCodingKey.swift in Sources */,
 				1929B3A6C332FFAAEC7FD219 /* MainWindow+CustomTitle.swift in Sources */,
 				1929B8DDACEB28E6672AEC42 /* MainWindow.swift in Sources */,
+				4B004BCF21063B600043A396 /* DictionaryDecoder.swift in Sources */,
 				1929B5257DB27F03C6663482 /* MainWindow+Actions.swift in Sources */,
 				1929BE0F64A6CE5BCE2A5092 /* MainWindow+Delegates.swift in Sources */,
 				1929B8F498D1E7C53F572CE2 /* KeysPref.swift in Sources */,
@@ -1124,12 +1148,15 @@
 				4B96FB3C1EBBC56F00E4E164 /* FileUtils.swift in Sources */,
 				4B96FB3D1EBBC56F00E4E164 /* Matcher.swift in Sources */,
 				4B96FB3E1EBBC56F00E4E164 /* Scorer.swift in Sources */,
+				4B004BD621063B600043A396 /* DictionaryErrors.swift in Sources */,
 				4B96FB3F1EBBC56F00E4E164 /* PrefUtils.swift in Sources */,
 				4B96FB401EBBC56F00E4E164 /* FoundationCommons.swift in Sources */,
 				4B96FB411EBBC56F00E4E164 /* RxSwiftCommons.swift in Sources */,
+				4B004BD021063B600043A396 /* DictionaryDecoder.swift in Sources */,
 				4B96FB421EBBC56F00E4E164 /* SwiftCommons.swift in Sources */,
 				1929BEFEABA0448306CDB6D4 /* FileItemIgnorePatternTest.swift in Sources */,
 				1929B66F795867B8C07FAAD4 /* DictionaryCommonsTest.swift in Sources */,
+				4B004BD221063B600043A396 /* DictionaryCodingKey.swift in Sources */,
 				1929B98F94536E3912AD9F3B /* ArrayCommonsTest.swift in Sources */,
 				1929BDFDBDA7180D02ACB37E /* RxSwiftCommonsTest.swift in Sources */,
 				1929B04CE8ECBD75CBBB0991 /* StringCommonsTest.swift in Sources */,
@@ -1137,6 +1164,7 @@
 				1929BF4FF30D9A9DE82C3052 /* FileUtilsTest.swift in Sources */,
 				1929BFC70581084B5CE04A5B /* MatcherTests.swift in Sources */,
 				1929BAAD7336FDFF1F78E749 /* ScorerTest.swift in Sources */,
+				4B004BD421063B600043A396 /* DictionaryEncoder.swift in Sources */,
 				1929B8E90A1378E494D481E7 /* PrefUtilsTest.swift in Sources */,
 				1929B20CE35B43BB1CE023BA /* Theme.swift in Sources */,
 				1929B9318D32146D58BB38EC /* AppKitCommons.swift in Sources */,
