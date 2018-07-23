@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-290</title>
+      <title>SNAPSHOT-291</title>
       <description><![CDATA[
     <ul>
-<li>Fix code-signing problem. VimR is from an identified developer again... 😶</li>
+<li>Messed up with git submodules and reverted neovim from 0.3.1 to 0.3.0.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/290
+        https://github.com/qvacua/vimr/releases/tag/snapshot/291
       </releaseNotesLink>
-      <pubDate>2018-07-23T19:02:06.037625</pubDate>
+      <pubDate>2018-07-23T22:33:21.509687</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/290/VimR-SNAPSHOT-290.tar.bz2"
-                 sparkle:version="290"
-                 sparkle:shortVersionString="SNAPSHOT-290"
-                 sparkle:dsaSignature="MCwCFDE8GedLm2u5533C6gLP5TF3Ev7bAhQkrp9J9AxWVmbLVYsNHquRnn2ozw=="
-                 length="14418515"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/291/VimR-SNAPSHOT-291.tar.bz2"
+                 sparkle:version="291"
+                 sparkle:shortVersionString="SNAPSHOT-291"
+                 sparkle:dsaSignature="MC0CFQC9fX73wXd2mZ7bClLXifi2GpCRTwIUfsoYWuR+9PG/Y2LthF02dcChwd4="
+                 length="14415383"
                  type="application/octet-stream"/>
     </item>
   </channel>
