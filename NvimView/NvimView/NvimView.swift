@@ -278,9 +278,6 @@ public class NvimView: NSView,
         case let .setTitle(title):
           self.set(title: title)
 
-        case let .setIcon(icon):
-          self.set(icon: icon)
-
         case .stop:
           self.stop()
 

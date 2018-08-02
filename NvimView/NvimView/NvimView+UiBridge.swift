@@ -334,10 +334,6 @@ extension NvimView {
   func suspend() {
     self.bridgeLogger.mark()
   }
-
-  func set(icon: String) {
-    self.bridgeLogger.debug(icon)
-  }
 }
 
 extension NvimView {

@@ -33,7 +33,6 @@ class UiBridge {
     case setBackground(Int)
     case setSpecial(Int)
     case setTitle(String)
-    case setIcon(String)
     case stop
     case dirtyStatusChanged(Bool)
     case cwdChanged(String)
@@ -276,13 +275,6 @@ class UiBridge {
       }
 
       self.streamSubject.onNext(.setTitle(title))
-
-    case .setIcon:
-      guard let icon = value(from: data, conversion: { $0.stringValue }) else {
-        return
-      }
-
-      self.streamSubject.onNext(.setIcon(icon))
 
     case .stop:
       self.streamSubject.onNext(.stop)
