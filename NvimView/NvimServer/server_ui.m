@@ -405,7 +405,9 @@ static void server_ui_scroll(UI *ui __unused, Integer count) {
   });
 }
 
-static void server_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
+static void server_ui_hl_attr_define(
+    UI *ui __unused, Integer id, HlAttrs attrs, HlAttrs cterm_attrs __unused, Array info __unused
+) {
   var trait = FontTraitNone;
   if (attrs.rgb_ae_attr & HL_ITALIC) {
     trait |= FontTraitItalic;
@@ -419,19 +421,15 @@ static void server_ui_highlight_set(UI *ui __unused, HlAttrs attrs) {
   if (attrs.rgb_ae_attr & HL_UNDERCURL) {
     trait |= FontTraitUndercurl;
   }
-  CellAttributes cellAttrs;
-  cellAttrs.fontTrait = trait;
 
-  let fg = attrs.rgb_fg_color == -1 ? _default_foreground : attrs.rgb_fg_color;
-  let bg = attrs.rgb_bg_color == -1 ? _default_background : attrs.rgb_bg_color;
-
-  cellAttrs.foreground = attrs.rgb_ae_attr & HL_INVERSE ? bg : fg;
-  cellAttrs.background = attrs.rgb_ae_attr & HL_INVERSE ? fg : bg;
-  cellAttrs.special = attrs.rgb_sp_color == -1 ? _default_special : pun_type(unsigned int, attrs.rgb_sp_color);
-
-  pack_flush_data(RenderDataTypeHighlight, ^(msgpack_packer *packer) {
-    msgpack_pack_bin(packer, sizeof(cellAttrs));
-    msgpack_pack_bin_body(packer, &cellAttrs, sizeof(cellAttrs));
+  send_msg_packing(NvimServerMsgIdHighlightAttrs, ^(msgpack_packer *packer) {
+    msgpack_pack_array(packer, 6);
+    msgpack_pack_int64(packer, id);
+    msgpack_pack_uint64(packer, trait);
+    msgpack_pack_int32(packer, attrs.rgb_fg_color);
+    msgpack_pack_int32(packer, attrs.rgb_bg_color);
+    msgpack_pack_int32(packer, attrs.rgb_sp_color);
+    msgpack_pack_bool(packer, (bool) (attrs.rgb_ae_attr & HL_INVERSE));
   });
 }
 
@@ -473,43 +471,6 @@ static void server_ui_bell(UI *ui __unused) {
 
 static void server_ui_visual_bell(UI *ui __unused) {
   [_neovim_server sendMessageWithId:NvimServerMsgIdVisualBell];
-}
-
-static void server_ui_update_fg(UI *ui __unused, Integer fg) {
-  @autoreleasepool {
-    if (fg != -1) {
-      _default_foreground = fg;
-    }
-
-    send_msg_packing(NvimServerMsgIdSetForeground, ^(msgpack_packer *packer) {
-      msgpack_pack_int64(packer, _default_foreground);
-    });
-  }
-}
-
-static void server_ui_update_bg(UI *ui __unused, Integer bg) {
-  @autoreleasepool {
-    if (bg != -1) {
-      _default_background = bg;
-    }
-
-    send_msg_packing(NvimServerMsgIdSetBackground, ^(msgpack_packer *packer) {
-      msgpack_pack_int64(packer, _default_background);
-    });
-  }
-}
-
-static void server_ui_update_sp(UI *ui __unused, Integer sp) {
-  @autoreleasepool {
-    if (sp != -1) {
-      _default_special = sp;
-    }
-
-
-    send_msg_packing(NvimServerMsgIdSetSpecial, ^(msgpack_packer *packer) {
-      msgpack_pack_int64(packer, _default_special);
-    });
-  }
 }
 
 static void server_ui_default_colors_set(
@@ -581,6 +542,9 @@ static void server_ui_stop(UI *ui __unused) {
 void custom_ui_start(void) {
   UI *ui = xcalloc(1, sizeof(UI));
 
+  memset(ui->ui_ext, 0, sizeof(ui->ui_ext));
+  ui->ui_ext[kUINewgrid] = true;
+
   ui->rgb = true;
   ui->stop = server_ui_stop;
   ui->resize = server_ui_resize;
@@ -596,14 +560,11 @@ void custom_ui_start(void) {
   ui->mode_change = server_ui_mode_change;
   ui->set_scroll_region = server_ui_set_scroll_region;
   ui->scroll = server_ui_scroll;
-  ui->highlight_set = server_ui_highlight_set;
+  ui->hl_attr_define = server_ui_hl_attr_define;
   ui->default_colors_set = server_ui_default_colors_set;
   ui->put = server_ui_put;
   ui->bell = server_ui_bell;
   ui->visual_bell = server_ui_visual_bell;
-  ui->update_fg = server_ui_update_fg;
-  ui->update_bg = server_ui_update_bg;
-  ui->update_sp = server_ui_update_sp;
   ui->flush = server_ui_flush;
   ui->suspend = NULL;
   ui->set_title = server_ui_set_title;

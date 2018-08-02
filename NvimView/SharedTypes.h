@@ -16,9 +16,10 @@ typedef NS_ENUM(NSUInteger, FontTrait) {
 typedef struct {
   FontTrait fontTrait;
 
-  NSInteger foreground;
-  NSInteger background;
-  NSInteger special;
+  int32_t foreground;
+  int32_t background;
+  int32_t special;
+  bool reverse;
 } CellAttributes;
 
 // Keep in sync with ModeShape enum in cursor_shape.h.
@@ -74,9 +75,7 @@ typedef NS_ENUM(NSInteger, NvimServerMsgId) {
   NvimServerMsgIdBell,
   NvimServerMsgIdVisualBell,
   NvimServerMsgIdFlush,
-  NvimServerMsgIdSetForeground,
-  NvimServerMsgIdSetBackground,
-  NvimServerMsgIdSetSpecial,
+  NvimServerMsgIdHighlightAttrs,
   NvimServerMsgIdSetTitle,
   NvimServerMsgIdStop,
   NvimServerMsgIdOptionSet,
