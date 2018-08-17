@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-291</title>
+      <title>SNAPSHOT-292</title>
       <description><![CDATA[
     <ul>
-<li>Messed up with git submodules and reverted neovim from 0.3.1 to 0.3.0.</li>
+<li>GH-664: Bugfix: VimR crashes for some shell configurations.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/291
+        https://github.com/qvacua/vimr/releases/tag/snapshot/292
       </releaseNotesLink>
-      <pubDate>2018-07-23T22:33:21.509687</pubDate>
+      <pubDate>2018-08-17T17:46:27.300718</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/291/VimR-SNAPSHOT-291.tar.bz2"
-                 sparkle:version="291"
-                 sparkle:shortVersionString="SNAPSHOT-291"
-                 sparkle:dsaSignature="MC0CFQC9fX73wXd2mZ7bClLXifi2GpCRTwIUfsoYWuR+9PG/Y2LthF02dcChwd4="
-                 length="14415383"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/292/VimR-SNAPSHOT-292.tar.bz2"
+                 sparkle:version="292"
+                 sparkle:shortVersionString="SNAPSHOT-292"
+                 sparkle:dsaSignature="MC4CFQCWQGo2vLI7JpRbeG8cPEuJ0WRu+gIVAIGXbBqZhHQFrG3eaLO5P4SpRBZ0"
+                 length="14419516"
                  type="application/octet-stream"/>
     </item>
   </channel>
