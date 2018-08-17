@@ -5,6 +5,7 @@
 * GH-443: `vimr --line ${LINE_NUMBER} ${SOME_FILE}` will open the file and go to the given line. If the file is already open in a UI window, then that window will be selected and the cursor will be moved to the given line. This can be used e.g. to reverse-search LaTeX.
 * GH-603: Bugfix: `Cmd-V` pastes at the wrong location in the insert mode.
 * GH-659: Bugfix (introduced in a snapshot): Turning off ligatures does not really turn off ligatures.
+* GH-664: Bugfix: VimR crashes for some shell configurations.
 * Dependencies updates:
     - ReactiveX/RxSwift@4.2.0
     - httpswift/swifter@1.4.2
