@@ -51,6 +51,7 @@ class ProcessUtils {
       .split(separator: "\n")
       .reduce(into: [:]) { result, entry in
         let split = entry.split(separator: "=", maxSplits: 1, omittingEmptySubsequences: false).map { String($0) }
+        guard split.count > 1 else { return }
         result[split[0]] = split[1]
       }
   }
