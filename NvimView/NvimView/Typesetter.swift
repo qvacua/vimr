@@ -29,92 +29,6 @@ struct Utf16IndexedGlyph {
 
 class Typesetter {
 
-  func groupUtf16CellsAndGlyphs(
-    positionedCells: [PositionedUtf16Cell],
-    cellIndexedUtf16Chars: [CellIndexedUtf16Char],
-    utf16IndexedGlyphs: [Utf16IndexedGlyph]
-  ) -> [([PositionedUtf16Cell], [Utf16IndexedGlyph])] {
-
-    let utf16IndicesOfGlyphs = utf16IndexedGlyphs.map { $0.index }.uniqued()
-    let extendedUtf16Indices
-      = utf16IndicesOfGlyphs + [cellIndexedUtf16Chars.count]
-
-    let utf16RangesOfGlyphs = (0..<utf16IndicesOfGlyphs.count).map { i in
-      extendedUtf16Indices[i]..<extendedUtf16Indices[i + 1]
-    }
-
-    let nonUniqueGroupedUtf16CellIndices = utf16RangesOfGlyphs.map { range in
-      cellIndexedUtf16Chars[range]
-        .map { $0.index }
-        .uniqued()
-    }
-
-    var groupedUtf16CellIndices = [[Int]]()
-    groupedUtf16CellIndices.reserveCapacity(
-      nonUniqueGroupedUtf16CellIndices.count
-    )
-    var lastIndex = -1
-    nonUniqueGroupedUtf16CellIndices.forEach { element in
-      guard let first = element.first, let last = element.last else {
-        preconditionFailure("There are no first and last element in " +
-                              "a grouped UTF16 cell indices " +
-                              "non-unique collection!")
-      }
-
-      guard first > lastIndex else { return }
-      groupedUtf16CellIndices.append(element)
-      lastIndex = last
-    }
-
-    let groupedUtf16CellRanges = groupedUtf16CellIndices
-      .map { ind -> CountableClosedRange<Int> in
-
-      guard let first = ind.first, let last = ind.last else {
-        preconditionFailure("There are no first and last element in " +
-                              "a grouped UTF16 cell indices!")
-      }
-
-      return first...last
-    }
-
-    let partitionedUtf16Cells = groupedUtf16CellRanges.map { range in
-      Array(positionedCells[range])
-    }
-
-    let partitionedGlyphs = utf16IndexedGlyphs
-      .map { cellIndexedUtf16Chars[$0.index].index }
-      .groupedRanges { _, cellIndexOfUtf16Index, _ in cellIndexOfUtf16Index }
-      .map { Array(utf16IndexedGlyphs[$0]) }
-
-    return Array(zip(partitionedUtf16Cells, partitionedGlyphs))
-  }
-
-  func groupByStringRanges(
-    stringRanges: [CountableRange<Int>],
-    groupedCellsAndGlyphs: [([PositionedUtf16Cell], [Utf16IndexedGlyph])]
-  ) -> Array<CountableClosedRange<Int>> {
-    var lastLength = 0
-    var lastIndex = 0
-
-    var result = Array<CountableClosedRange<Int>>()
-    result.reserveCapacity(stringRanges.count)
-
-    for range in stringRanges {
-      for i in (lastIndex..<groupedCellsAndGlyphs.count) {
-        lastLength += groupedCellsAndGlyphs[i].0.reduce(0) { result, element in
-          result + element.utf16.count
-        }
-        if lastLength == range.upperBound {
-          result.append(lastIndex...i)
-          lastIndex = i + 1
-          break
-        }
-      }
-    }
-
-    return result
-  }
-
   func fontGlyphRunsWithLigatures(
     nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]],
     startColumn: Int,
@@ -270,6 +184,94 @@ class Typesetter {
     }
 
     return runs.flatMap { $0 }
+  }
+
+  // For testing internal
+  func groupUtf16CellsAndGlyphs(
+    positionedCells: [PositionedUtf16Cell],
+    cellIndexedUtf16Chars: [CellIndexedUtf16Char],
+    utf16IndexedGlyphs: [Utf16IndexedGlyph]
+  ) -> [([PositionedUtf16Cell], [Utf16IndexedGlyph])] {
+
+    let utf16IndicesOfGlyphs = utf16IndexedGlyphs.map { $0.index }.uniqued()
+    let extendedUtf16Indices
+      = utf16IndicesOfGlyphs + [cellIndexedUtf16Chars.count]
+
+    let utf16RangesOfGlyphs = (0..<utf16IndicesOfGlyphs.count).map { i in
+      extendedUtf16Indices[i]..<extendedUtf16Indices[i + 1]
+    }
+
+    let nonUniqueGroupedUtf16CellIndices = utf16RangesOfGlyphs.map { range in
+      cellIndexedUtf16Chars[range]
+        .map { $0.index }
+        .uniqued()
+    }
+
+    var groupedUtf16CellIndices = [[Int]]()
+    groupedUtf16CellIndices.reserveCapacity(
+      nonUniqueGroupedUtf16CellIndices.count
+    )
+    var lastIndex = -1
+    nonUniqueGroupedUtf16CellIndices.forEach { element in
+      guard let first = element.first, let last = element.last else {
+        preconditionFailure("There are no first and last element in " +
+                              "a grouped UTF16 cell indices " +
+                              "non-unique collection!")
+      }
+
+      guard first > lastIndex else { return }
+      groupedUtf16CellIndices.append(element)
+      lastIndex = last
+    }
+
+    let groupedUtf16CellRanges = groupedUtf16CellIndices
+      .map { ind -> CountableClosedRange<Int> in
+
+      guard let first = ind.first, let last = ind.last else {
+        preconditionFailure("There are no first and last element in " +
+                              "a grouped UTF16 cell indices!")
+      }
+
+      return first...last
+    }
+
+    let partitionedUtf16Cells = groupedUtf16CellRanges.map { range in
+      Array(positionedCells[range])
+    }
+
+    let partitionedGlyphs = utf16IndexedGlyphs
+      .map { cellIndexedUtf16Chars[$0.index].index }
+      .groupedRanges { _, cellIndexOfUtf16Index, _ in cellIndexOfUtf16Index }
+      .map { Array(utf16IndexedGlyphs[$0]) }
+
+    return Array(zip(partitionedUtf16Cells, partitionedGlyphs))
+  }
+
+  // For testing internal
+  func groupByStringRanges(
+    stringRanges: [CountableRange<Int>],
+    groupedCellsAndGlyphs: [([PositionedUtf16Cell], [Utf16IndexedGlyph])]
+  ) -> Array<CountableClosedRange<Int>> {
+    var lastLength = 0
+    var lastIndex = 0
+
+    var result = Array<CountableClosedRange<Int>>()
+    result.reserveCapacity(stringRanges.count)
+
+    for range in stringRanges {
+      for i in (lastIndex..<groupedCellsAndGlyphs.count) {
+        lastLength += groupedCellsAndGlyphs[i].0.reduce(0) { result, element in
+          result + element.utf16.count
+        }
+        if lastLength == range.upperBound {
+          result.append(lastIndex...i)
+          lastIndex = i + 1
+          break
+        }
+      }
+    }
+
+    return result
   }
 
   private func fontGlyphRuns(
