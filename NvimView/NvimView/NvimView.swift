@@ -213,7 +213,6 @@ public class NvimView: NSView,
 
     self.wantsLayer = true
     self.cellSize = self.drawer.cellSize
-    Swift.print("\(self.cellSize) vs. \(self.runDrawer.cellSize)")
     self.descent = self.drawer.descent
     self.leading = self.drawer.leading
 

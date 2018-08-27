@@ -313,7 +313,6 @@ class Typesetter {
         font: font, glyphs: glyphs, positions: positions
       )
     }
-    fontGlyphRuns.forEach { print($0) }
 
     return fontGlyphRuns
   }
