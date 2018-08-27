@@ -12,7 +12,7 @@ import Nimble
 class TypesetterWithoutLigaturesTest: XCTestCase {
 
   func testSimpleAsciiChars() {
-    let runs = typesetter.runsWithoutLigatures(
+    let runs = typesetter.fontGlyphRunsWithoutLigatures(
       nvimCells: emojiMarked(["a", "b", "c"]),
       startColumn: 10,
       yPosition: yPosition,
@@ -33,7 +33,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
   }
 
   func testAccentedChars() {
-    let runs = typesetter.runsWithoutLigatures(
+    let runs = typesetter.fontGlyphRunsWithoutLigatures(
       nvimCells: emojiMarked(["ü", "î", "ñ"]),
       startColumn: 20,
       yPosition: yPosition,
@@ -54,7 +54,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
   }
 
   func testCombiningChars() {
-    let runs = typesetter.runsWithoutLigatures(
+    let runs = typesetter.fontGlyphRunsWithoutLigatures(
       nvimCells: emojiMarked(
         ["a", "a\u{1DC1}", "a\u{032A}", "a\u{034B}", "b", "c"]
       ),
@@ -116,7 +116,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
   }
 
   func testSimpleEmojis() {
-    let runs = typesetter.runsWithoutLigatures(
+    let runs = typesetter.fontGlyphRunsWithoutLigatures(
       nvimCells: asciiMarked(["a", "b", "\u{1F600}", "", "\u{1F377}", ""]),
       startColumn: 1,
       yPosition: yPosition,
@@ -150,7 +150,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
   }
 
   func testEmojisWithFitzpatrickModifier() {
-    let runs = typesetter.runsWithoutLigatures(
+    let runs = typesetter.fontGlyphRunsWithoutLigatures(
       nvimCells: asciiMarked(["a", "\u{1F476}", "", "\u{1F3FD}", ""]),
       startColumn: 1,
       yPosition: yPosition,
@@ -182,7 +182,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
   }
 
   func testHangul() {
-    let runs = typesetter.runsWithoutLigatures(
+    let runs = typesetter.fontGlyphRunsWithoutLigatures(
       nvimCells: asciiMarked(["a", "b", "하", "", "태", "", "원", ""]),
       startColumn: 1,
       yPosition: yPosition,
@@ -216,7 +216,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
   }
 
   func testHanja() {
-    let runs = typesetter.runsWithoutLigatures(
+    let runs = typesetter.fontGlyphRunsWithoutLigatures(
       nvimCells: asciiMarked(["a", "b", "河", "", "泰", "", "元", ""]),
       startColumn: 1,
       yPosition: yPosition,
@@ -250,7 +250,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
   }
 
   func testOthers() {
-    let runs = typesetter.runsWithoutLigatures(
+    let runs = typesetter.fontGlyphRunsWithoutLigatures(
       nvimCells: emojiMarked(["a", "\u{10437}", "\u{1F14}"]),
       startColumn: 1,
       yPosition: yPosition,
@@ -290,7 +290,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
   }
 
   func testSimpleLigatureChars() {
-    let runs = typesetter.runsWithoutLigatures(
+    let runs = typesetter.fontGlyphRunsWithoutLigatures(
       nvimCells: emojiMarked(["a", "-", "-", ">", "a"]),
       startColumn: 1,
       yPosition: yPosition,

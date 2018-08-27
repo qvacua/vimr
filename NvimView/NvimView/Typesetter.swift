@@ -192,7 +192,7 @@ class Typesetter {
     return fontGlyphRuns
   }
 
-  func runsWithoutLigatures(
+  func fontGlyphRunsWithoutLigatures(
     nvimCells: [String],
     startColumn: Int,
     yPosition: CGFloat,

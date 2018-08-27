@@ -56,7 +56,7 @@ class RunDrawer {
         )
         .forEach { $0.draw(in: context) }
     } else {
-      self.typesetter.runsWithoutLigatures(
+      self.typesetter.fontGlyphRunsWithoutLigatures(
           nvimCells: run.cells.map { $0.string },
           startColumn: run.cells.startIndex,
           yPosition: run.location.y + self.baselineOffset,
