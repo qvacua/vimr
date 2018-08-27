@@ -120,6 +120,15 @@ class MyView: NSView {
       attrIds: Array(repeating: 0, count: 10)
     )
     self.ugrid.update(
+      row: 1,
+      startCol: 0,
+      endCol: 10,
+      clearCol: 10,
+      clearAttr: 0,
+      chunk: [ "ἐ", "τ" ,"έ", "ἔ", "-", ">", " ", "<", "=", ">"],
+      attrIds: Array(repeating: 0, count: 10)
+    )
+    self.ugrid.update(
       row: 2,
       startCol: 0,
       endCol: 10,
