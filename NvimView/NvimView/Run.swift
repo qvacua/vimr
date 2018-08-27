@@ -5,16 +5,12 @@
 
 import Cocoa
 
-protocol DrawableRun {
+protocol CustomFontDrawableRun {
 
+  var font: NSFont { get }
   var location: CGPoint { get }
 
   func draw(`in` context: CGContext)
-}
-
-protocol CustomFontDrawableRun: DrawableRun {
-
-  var font: NSFont { get }
 }
 
 extension CFRange {
@@ -107,8 +103,10 @@ enum Run {
     func draw(`in` context: CGContext) {
       let ctRun = self.ctRun
 
-      context.textMatrix = CGAffineTransform(translationX: self.location.x - self.xPosition(of: ctRun),
-                                             y: self.location.y)
+      context.textMatrix = CGAffineTransform(
+        translationX: self.location.x - self.xPosition(of: ctRun),
+        y: self.location.y
+      )
       CTRunDraw(ctRun, context, CFRange(location: 0, length: 0))
       context.textMatrix = CGAffineTransform.identity
     }
@@ -126,17 +124,25 @@ enum Run {
 
   struct Glyphs: CustomFontDrawableRun {
 
-    var location: CGPoint
-    var glyphs: [CGGlyph]
     var font: NSFont
-    var cellWidth: CGFloat
+    var glyphs: [CGGlyph]
+    var positions: [CGPoint]
+
+    var location: CGPoint {
+      return self.positions[0]
+    }
 
     func draw(`in` context: CGContext) {
-      let positions = (0...self.glyphs.count).map {
-        CGPoint(x: CGFloat($0) * self.cellWidth + self.location.x, y: self.location.y)
-      }
-
-      CTFontDrawGlyphs(self.font, self.glyphs, positions, self.glyphs.count, context)
+//      let positions = (0...self.glyphs.count).map {
+//        CGPoint(
+//          x: CGFloat($0) * self.cellWidth + self.location.x,
+//          y: self.location.y
+//        )
+//      }
+//
+//      CTFontDrawGlyphs(
+//        self.font, self.glyphs, positions, self.glyphs.count, context
+//      )
     }
   }
 }

@@ -199,15 +199,15 @@ class Typesetter {
     foreground: Int,
     font: NSFont,
     cellWidth: CGFloat
-  ) -> [CustomFontDrawableRun] {
+  ) -> [FontGlyphRun] {
 
     let nvimUtf16CellsRuns = self.groupSimpleAndNonSimpleChars(
       nvimCells: nvimCells, font: font
     )
 
-    let runs: [[CustomFontDrawableRun]] = nvimUtf16CellsRuns.map { run in
+    let runs: [[FontGlyphRun]] = nvimUtf16CellsRuns.map { run in
       guard run.isSimple else {
-        return self.runsWithLigatures(
+        return self.fontGlyphRunsWithLigatures(
           nvimUtf16Cells: run.nvimUtf16Cells,
           startColumn: startColumn + run.startColumn,
           yPosition: yPosition,
@@ -224,26 +224,26 @@ class Typesetter {
         font, unichars, &glyphs, unichars.count
       )
       if gotAllGlyphs {
-        return [
-          Run.Glyphs(
-            location: CGPoint(
-              x: CGFloat(startColumn + run.startColumn) * cellWidth,
-              y: yPosition
-            ),
-            glyphs: glyphs,
-            font: font,
-            cellWidth: cellWidth
+        let startColumnForPositions = startColumn + run.startColumn
+        let endColumn = startColumnForPositions + glyphs.count
+        let positions = (startColumnForPositions..<endColumn).map { i in
+          CGPoint(
+            x: CGFloat(i) * cellWidth,
+            y: yPosition
           )
+        }
+        return [
+          FontGlyphRun(font: font, glyphs: glyphs, positions: positions)
         ]
       }
 
       // TODO: GH-666: Do we ever come here?
-      print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+      print("Could not get all glyphs for single-width singe UTF16 character!")
       let groupRanges = glyphs.groupedRanges { _, element, _ in element == 0 }
-      let groupRuns: [[CustomFontDrawableRun]] = groupRanges.map { range in
+      let groupRuns: [[FontGlyphRun]] = groupRanges.map { range in
         if unichars[range.lowerBound] == 0 {
           let nvimUtf16Cells = unichars[range].map { [$0] }
-          return self.runsWithLigatures(
+          return self.fontGlyphRunsWithLigatures(
             nvimUtf16Cells: nvimUtf16Cells,
             startColumn: startColumn + range.lowerBound,
             yPosition: yPosition,
@@ -252,16 +252,16 @@ class Typesetter {
             cellWidth: cellWidth
           )
         } else {
-          return [
-            Run.Glyphs(
-              location: CGPoint(
-                x: CGFloat(startColumn + range.lowerBound) * cellWidth,
-                y: yPosition
-              ),
-              glyphs: glyphs,
-              font: font,
-              cellWidth: cellWidth
+          let startColumnForPositions = startColumn + range.lowerBound
+          let endColumn = startColumnForPositions + glyphs.count
+          let positions = (startColumnForPositions..<endColumn).map { i in
+            CGPoint(
+              x: CGFloat(i + startColumn + range.lowerBound) * cellWidth,
+              y: yPosition
             )
+          }
+          return [
+            FontGlyphRun(font: font, glyphs: glyphs, positions: positions)
           ]
         }
       }
