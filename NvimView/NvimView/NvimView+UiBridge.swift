@@ -10,11 +10,14 @@ import MessagePack
 
 extension NvimView {
 
-  func resize(width: Int, height: Int) {
-    self.bridgeLogger.debug("\(width) x \(height)")
+  func resize(_ value: MessagePackValue) {
+    guard let array = MessagePackUtils.array(from: value, ofSize: 2, conversion: { $0.intValue }) else {
+      return
+    }
 
+    self.bridgeLogger.debug("\(array[0]) x \(array[1])")
     gui.async {
-      self.grid.resize(Size(width: width, height: height))
+      self.ugrid.resize(Size(width: array[0], height: array[1]))
       self.markForRenderWholeView()
     }
   }
@@ -28,87 +31,65 @@ extension NvimView {
     }
   }
 
-  func modeChange(_ mode: CursorModeShape) {
-    self.bridgeLogger.debug(name(of: mode))
+  func modeChange(_ value: MessagePackValue) {
+    guard let mode = MessagePackUtils.value(from: value, conversion: { v -> CursorModeShape? in
+      guard let rawValue = v.intValue else { return nil }
+      return CursorModeShape(rawValue: UInt(rawValue))
+    }) else { return }
 
+    self.bridgeLogger.debug(name(of: mode))
     gui.async {
       self.mode = mode
     }
   }
 
-  func setScrollRegion(top: Int, bottom: Int, left: Int, right: Int) {
-    self.bridgeLogger.debug("\(top):\(bottom):\(left):\(right)")
-
-    gui.async {
-      let region = Region(top: top, bottom: bottom, left: left, right: right)
-      self.grid.setScrollRegion(region)
-    }
+  func scroll(_ value: MessagePackValue) {
+//    self.bridgeLogger.debug(count)
+//
+//    gui.async {
+//      self.grid.scroll(count)
+//      self.markForRender(region: self.grid.region)
+//      // Do not send msgs to agent -> neovim in the delegate method. It causes spinning
+//      // when you're opening a file with existing swap file.
+//      self.eventsSubject.onNext(.scroll)
+//    }
   }
 
-  func scroll(_ count: Int) {
-    self.bridgeLogger.debug(count)
-
-    gui.async {
-      self.grid.scroll(count)
-      self.markForRender(region: self.grid.region)
-      // Do not send msgs to agent -> neovim in the delegate method. It causes spinning
-      // when you're opening a file with existing swap file.
-      self.eventsSubject.onNext(.scroll)
-    }
-  }
-
-  func unmark(row: Int, column: Int) {
-    self.bridgeLogger.debug("\(row):\(column)")
-
-    gui.async {
-      let position = Position(row: row, column: column)
-
-      self.grid.unmarkCell(position)
-      self.markForRender(position: position)
-    }
+  func unmark(_ value: MessagePackValue) {
+//    self.bridgeLogger.debug("\(row):\(column)")
+//
+//    gui.async {
+//      let position = Position(row: row, column: column)
+//
+//      self.grid.unmarkCell(position)
+//      self.markForRender(position: position)
+//    }
   }
 
   func flush(_ renderData: [MessagePackValue]) {
     self.bridgeLogger.hr()
 
     gui.async {
-      var goto: Position? = nil
       renderData.forEach { value in
-        guard let renderEntry = value.arrayValue,
-              renderEntry.count == 2,
-              let rawType = renderEntry[0].intValue,
+        guard let renderEntry = value.arrayValue else { return }
+        guard renderEntry.count == 2 else { return }
+
+        guard let rawType = renderEntry[0].intValue,
+              let innerArray = renderEntry[1].arrayValue,
               let type = RenderDataType(rawValue: rawType) else { return }
 
         switch type {
 
-        case .put:
-          guard let str = renderEntry[1].stringValue else { return }
-          self.doPut(string: str)
-
-        case .putMarked:
-          guard let str = renderEntry[1].stringValue else { return }
-          self.doPut(markedText: str)
-
-        case .highlight:
-          guard let data = renderEntry[1].dataValue else { return }
-          let attr = data.withUnsafeBytes { (pointer: UnsafePointer<CellAttributes>) in pointer.pointee }
-          self.doHighlightSet(attr)
+        case .rawLine:
+          self.doRawLine(data: innerArray)
 
         case .goto:
-          guard let rawValues = renderEntry[1].arrayValue else { return }
-          let values = rawValues.compactMap { $0.intValue }
-          guard values.count == 4 else { return }
-          goto = Position(row: values[2], column: values[3])
-          self.doGoto(position: Position(row: values[0], column: values[1]), textPosition: goto!)
+          guard let row = innerArray[0].unsignedIntegerValue,
+                let col = innerArray[1].unsignedIntegerValue else { return }
 
-        case .eolClear:
-          self.doEolClear()
+          self.doGoto(position: Position(row: Int(row), column: Int(col)))
 
         }
-      }
-
-      if let pos = goto {
-        self.eventsSubject.onNext(.cursor(pos))
       }
 
       // The position stays at the first cell when we enter the terminal mode and the cursor seems to be drawn by
@@ -116,43 +97,13 @@ extension NvimView {
       if self.mode != .termFocus {
         self.shouldDrawCursor = true
       }
-
-      if self.usesLigatures {
-        self.markForRender(region: self.grid.regionOfWord(at: self.grid.position))
-      } else {
-        self.markForRender(cellPosition: self.grid.position)
-      }
     }
   }
 
-  func update(foreground fg: Int) {
-    self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(fg))
+  func setTitle(with value: MessagePackValue) {
+    guard let title = value.stringValue else { return }
 
-    gui.async {
-      self.grid.foreground = fg
-    }
-  }
-
-  func update(background bg: Int) {
-    self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(bg))
-
-    gui.async {
-      self.grid.background = bg
-      self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).cgColor
-    }
-  }
-
-  func update(special sp: Int) {
-    self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(sp))
-
-    gui.async {
-      self.grid.special = sp
-    }
-  }
-
-  func set(title: String) {
     self.bridgeLogger.debug(title)
-
     self.eventsSubject.onNext(.setTitle(title))
   }
 
@@ -172,7 +123,11 @@ extension NvimView {
       .wait()
   }
 
-  func autoCommandEvent(_ event: NvimAutoCommandEvent, bufferHandle: Int) {
+  func autoCommandEvent(_ value: MessagePackValue) {
+    guard let array = MessagePackUtils.array(from: value, ofSize: 2, conversion: { $0.intValue }),
+          let event = NvimAutoCommandEvent(rawValue: array[0]) else { return }
+    let bufferHandle = array[1]
+
     self.bridgeLogger.debug("\(event) -> \(bufferHandle)")
 
     if event == .bufwinenter || event == .bufwinleave {
@@ -206,60 +161,71 @@ extension NvimView {
       .wait()
   }
 
-  private func doPut(string: String) {
-    let curPos = self.grid.position
-//    self.bridgeLogger.debug("\(curPos) -> '\(string)'")
+  private func doRawLine(data: [MessagePackValue]) {
+    guard data.count == 7 else {
+      self.stdoutLogger.error(
+        "Data has wrong number of elements: \(data.count) instead of 7"
+      )
+      return
+    }
 
-    self.grid.put(string.precomposedStringWithCanonicalMapping)
+    guard let row = data[0].intValue,
+          let startCol = data[1].intValue,
+          let endCol = data[2].intValue, // past last index, but can be 0
+          let clearCol = data[3].intValue, // past last index (can be 0?)
+          let clearAttr = data[4].intValue,
+          let chunk = data[5].arrayValue?.compactMap({ $0.stringValue }),
+          let attrIds = data[6].arrayValue?.compactMap({ $0.intValue })
+      else {
+
+      self.stdoutLogger.error("Values could not be read from: \(data)")
+      return
+    }
+
+    self.bridgeLogger.trace(
+      "row: \(row), startCol: \(startCol), endCol: \(endCol), " +
+        "clearCol: \(clearCol), clearAttr: \(clearAttr), " +
+        "chunk: \(chunk), attrIds: \(attrIds)"
+    )
+
+    let count = endCol - startCol
+    guard chunk.count == count && attrIds.count == count else { return }
+    self.ugrid.update(row: row,
+                      startCol: startCol,
+                      endCol: endCol,
+                      clearCol: clearCol,
+                      clearAttr: clearAttr,
+                      chunk: chunk,
+                      attrIds: attrIds)
 
     if self.usesLigatures {
-      if string == " " {
-        self.markForRender(cellPosition: curPos)
-      } else {
-        self.markForRender(region: self.grid.regionOfWord(at: curPos))
-      }
+      let leftBoundary = self.ugrid.leftBoundaryOfWord(
+        at: Position(row: row, column: startCol)
+      )
+      let rightBoundary = self.ugrid.rightBoundaryOfWord(
+        at: Position(row: row, column: max(0, endCol - 1))
+      )
+      self.markForRender(region: Region(
+        top: row, bottom: row, left: leftBoundary, right: rightBoundary
+      ))
     } else {
-      self.markForRender(cellPosition: curPos)
+      self.markForRender(region: Region(
+        top: row, bottom: row, left: startCol, right: max(0, endCol - 1)
+      ))
+    }
+
+    if clearCol > endCol {
+      self.markForRender(region: Region(
+        top: row, bottom: row, left: endCol, right: max(endCol, clearCol - 1)
+      ))
     }
   }
 
-  private func doPut(markedText: String) {
-    let curPos = self.grid.position
-//    self.bridgeLogger.debug("\(curPos) -> '\(markedText)'")
-
-    self.grid.putMarkedText(markedText)
-
-    self.markForRender(position: curPos)
-    // When the cursor is in the command line, then we need this...
-    self.markForRender(cellPosition: self.grid.nextCellPosition(curPos))
-    if markedText.count == 0 {
-      self.markForRender(position: self.grid.previousCellPosition(curPos))
-    }
-  }
-
-  private func doHighlightSet(_ attrs: CellAttributes) {
-//    self.bridgeLogger.debug("\(self.grid.position) -> \(attrs)")
-    self.grid.attrs = attrs
-  }
-
-  private func doGoto(position: Position, textPosition: Position) {
+  private func doGoto(position: Position) {
 //    self.bridgeLogger.debug(position)
 
     self.markForRender(cellPosition: self.grid.position)
     self.grid.goto(position)
-  }
-
-  func doEolClear() {
-    self.bridgeLogger.mark()
-
-    self.grid.eolClear()
-
-    let putPosition = self.grid.position
-    let region = Region(top: putPosition.row,
-                        bottom: putPosition.row,
-                        left: putPosition.column,
-                        right: self.grid.region.right)
-    self.markForRender(region: region)
   }
 }
 
@@ -272,14 +238,17 @@ extension NvimView {
     NSSound.beep()
   }
 
-  func cwdChanged(_ cwd: String) {
-    self.bridgeLogger.debug(cwd)
+  func cwdChanged(_ value: MessagePackValue) {
+    guard let cwd = value.stringValue else { return }
 
+    self.bridgeLogger.debug(cwd)
     self._cwd = URL(fileURLWithPath: cwd)
     self.eventsSubject.onNext(.cwdChanged)
   }
 
-  func colorSchemeChanged(_ values: [Int]) {
+  func colorSchemeChanged(_ value: MessagePackValue) {
+    guard let values = MessagePackUtils.array(from: value, ofSize: 5, conversion: { $0.intValue }) else { return }
+
     let theme = Theme(values)
     self.bridgeLogger.debug(theme)
 
@@ -289,22 +258,68 @@ extension NvimView {
     }
   }
 
-  func defaultColorsChanged(_ values: [Int]) {
-    self.bridgeLogger.debug(values.map(ColorUtils.colorIgnoringAlpha).map { $0.hex })
+  func defaultColorsChanged(_ value: MessagePackValue) {
+    guard let values = MessagePackUtils.array(
+      from: value, ofSize: 3, conversion: { $0.intValue }
+    ) else {
+      return
+    }
 
+    self.bridgeLogger.trace(values)
+
+    let attrs = CellAttributes(
+      fontTrait: [],
+      foreground: values[0],
+      background: values[1],
+      special: values[2],
+      reverse: false
+    )
     gui.async {
-      self.grid.foreground = values[0]
-      self.grid.background = values[1]
-      self.grid.special = values[2]
-
-      self.layer?.backgroundColor = ColorUtils.cgColorIgnoringAlpha(self.grid.background)
+      self.ugrid.set(attrs: attrs, for: 0)
+      self.layer?.backgroundColor = ColorUtils.cgColorIgnoringAlpha(
+        attrs.background
+      )
     }
   }
 
-  func set(dirty: Bool) {
-    self.bridgeLogger.debug(dirty)
+  func setDirty(with value: MessagePackValue) {
+    guard let dirty = value.boolValue else { return }
 
+    self.bridgeLogger.debug(dirty)
     self.eventsSubject.onNext(.setDirtyStatus(dirty))
+  }
+
+  func setAttr(with value: MessagePackValue) {
+    guard let array = value.arrayValue else { return }
+    guard array.count == 6 else { return }
+
+    guard let id = array[0].intValue,
+          let rawTrait = array[1].unsignedIntegerValue,
+          let fg = array[2].intValue,
+          let bg = array[3].intValue,
+          let sp = array[4].intValue,
+          let reverse = array[5].boolValue
+      else {
+
+      self.bridgeLogger.error("Could not get highlight attributes from " +
+                                "\(value)")
+      return
+    }
+    let trait = FontTrait(rawValue: UInt(rawTrait))
+
+    let attrs = CellAttributes(
+      fontTrait: trait,
+      foreground: fg,
+      background: bg,
+      special: sp,
+      reverse: reverse
+    )
+
+    self.bridgeLogger.trace("\(id) -> \(attrs)")
+
+    gui.async {
+      self.ugrid.set(attrs: attrs, for: id)
+    }
   }
 
   func updateMenu() {

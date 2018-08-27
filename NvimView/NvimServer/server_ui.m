@@ -27,6 +27,7 @@
 #import <nvim/edit.h>
 #import <nvim/syntax.h>
 #import <nvim/aucmd.h>
+#import <nvim/highlight.h>
 #import <nvim/msgpack_rpc/helpers.h>
 #import <nvim/api/private/helpers.h>
 
@@ -171,8 +172,8 @@ static void send_cwd() {
 }
 
 static HlAttrs HlAttrsFromAttrCode(int attr_code) {
-  HlAttrs *aep = syn_cterm_attr2entry(attr_code);
-  HlAttrs rgb_attrs = *aep;
+  HlAttrs aep = syn_attr2entry(attr_code);
+  HlAttrs rgb_attrs = aep;
   return rgb_attrs;
 }
 
@@ -304,6 +305,7 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
 
 static void server_ui_flush(UI *ui __unused) {
   if (flush_sbuffer.size == 0) {
+    ELOG("not sending flush msg, since no data");
     return;
   }
 
@@ -311,6 +313,7 @@ static void server_ui_flush(UI *ui __unused) {
       kCFAllocatorDefault, (const UInt8 *) flush_sbuffer.data, flush_sbuffer.size, kCFAllocatorNull
   );
   [_neovim_server sendMessageWithId:NvimServerMsgIdFlush data:data];
+  ELOG("flushed %lu bytes", CFDataGetLength(data));
   CFRelease(data);
 
   msgpack_sbuffer_clear(&flush_sbuffer);
@@ -318,7 +321,9 @@ static void server_ui_flush(UI *ui __unused) {
   flush_packer = msgpack_packer_new(&flush_sbuffer, msgpack_sbuffer_write);
 }
 
-static void server_ui_resize(UI *ui __unused, Integer width, Integer height) {
+static void server_ui_grid_resize(UI *ui __unused, Integer grid __unused, Integer width, Integer height) {
+  ELOG("grid resize");
+
   server_ui_flush(NULL);
 
   send_msg_packing(NvimServerMsgIdResize, ^(msgpack_packer *packer) {
@@ -328,30 +333,18 @@ static void server_ui_resize(UI *ui __unused, Integer width, Integer height) {
   });
 }
 
-static void server_ui_clear(UI *ui __unused) {
-  server_ui_flush(NULL);
-
+static void server_ui_grid_clear(UI *ui __unused, Integer grid __unused) {
+  ELOG("grid clear");
   [_neovim_server sendMessageWithId:NvimServerMsgIdClear];
 }
 
-static void server_ui_eol_clear(UI *ui __unused) {
-  pack_flush_data(RenderDataTypeEolClear, ^(msgpack_packer *packer) {
-    msgpack_pack_nil(packer);
-  });
-}
-
-static void server_ui_cursor_goto(UI *ui __unused, Integer row, Integer col) {
-  _put_row = row;
-  _put_column = col;
-
-  DLOG("%d:%d - %d:%d - %d:%d", row, col, curwin->w_cursor.lnum, curwin->w_cursor.col + 1);
+static void server_ui_cursor_goto(UI *ui __unused, Integer grid __unused, Integer row, Integer col) {
+  ELOG("grid cursor goto: %lu:%lu", row, col);
 
   pack_flush_data(RenderDataTypeGoto, ^(msgpack_packer *packer) {
-    msgpack_pack_array(packer, 4);
+    msgpack_pack_array(packer, 2);
     msgpack_pack_int64(packer, row);
     msgpack_pack_int64(packer, col);
-    msgpack_pack_int64(packer, curwin->w_cursor.lnum);
-    msgpack_pack_int64(packer, curwin->w_cursor.col + 1);
   });
 }
 
@@ -367,14 +360,6 @@ static void server_ui_busy_stop(UI *ui __unused) {
   [_neovim_server sendMessageWithId:NvimServerMsgIdBusyStop];
 }
 
-static void server_ui_mouse_on(UI *ui __unused) {
-  [_neovim_server sendMessageWithId:NvimServerMsgIdMouseOn];
-}
-
-static void server_ui_mouse_off(UI *ui __unused) {
-  [_neovim_server sendMessageWithId:NvimServerMsgIdMouseOff];
-}
-
 static void server_ui_mode_info_set(UI *ui __unused, Boolean enabled __unused, Array cursor_styles __unused) {
   // yet noop
 }
@@ -385,29 +370,34 @@ static void server_ui_mode_change(UI *ui __unused, String mode_str __unused, Int
   });
 }
 
-static void server_ui_set_scroll_region(UI *ui __unused, Integer top, Integer bot, Integer left, Integer right) {
-  server_ui_flush(NULL);
+static void server_ui_grid_scroll(
+    UI *ui __unused,
+    Integer grid __unused,
+    Integer top,
+    Integer bot,
+    Integer left,
+    Integer right,
+    Integer rows,
+    Integer cols
+) {
+  ELOG("grid scroll");
 
-  send_msg_packing(NvimServerMsgIdSetScrollRegion, ^(msgpack_packer *packer) {
-    msgpack_pack_array(packer, 4);
+  send_msg_packing(NvimServerMsgIdScroll, ^(msgpack_packer *packer) {
+    msgpack_pack_array(packer, 6);
     msgpack_pack_int64(packer, top);
     msgpack_pack_int64(packer, bot);
     msgpack_pack_int64(packer, left);
     msgpack_pack_int64(packer, right);
-  });
-}
-
-static void server_ui_scroll(UI *ui __unused, Integer count) {
-  server_ui_flush(NULL);
-
-  send_msg_packing(NvimServerMsgIdScroll, ^(msgpack_packer *packer) {
-    msgpack_pack_int64(packer, count);
+    msgpack_pack_int64(packer, rows);
+    msgpack_pack_int64(packer, cols);
   });
 }
 
 static void server_ui_hl_attr_define(
     UI *ui __unused, Integer id, HlAttrs attrs, HlAttrs cterm_attrs __unused, Array info __unused
 ) {
+  ELOG("hl attr define");
+
   var trait = FontTraitNone;
   if (attrs.rgb_ae_attr & HL_ITALIC) {
     trait |= FontTraitItalic;
@@ -433,36 +423,47 @@ static void server_ui_hl_attr_define(
   });
 }
 
-static void server_ui_put(UI *ui __unused, String str) {
-  if (_marked_text != nil
-      && _marked_row == _put_row
-      && _marked_column == _put_column) {
+static void server_ui_raw_line(
+    UI *ui __unused,
+    Integer grid __unused,
+    Integer row,
+    Integer startcol,
+    Integer endcol,
+    Integer clearcol,
+    Integer clearattr,
+    const schar_T *chunk,
+    const sattr_T *attrs
+) {
+  Integer count = endcol - startcol;
+  ELOG("raw line: %d: %d", row, count);
 
-    DLOG("putting marked text: '%s'", str.data);
-    pack_flush_data(RenderDataTypePutMarked, ^(msgpack_packer *packer) {
-      msgpack_rpc_from_string(str, packer);
-    });
-
-  } else if (_marked_text != nil
-      && str.size == 0
-      && _marked_row == _put_row
-      && _marked_column == _put_column - 1) {
-
-    DLOG("putting marked text cuz zero");
-    pack_flush_data(RenderDataTypePutMarked, ^(msgpack_packer *packer) {
-      msgpack_rpc_from_string(str, packer);
-    });
-
-  } else {
-
-    DLOG("putting non-marked text: '%s'", str.data);
-    pack_flush_data(RenderDataTypePut, ^(msgpack_packer *packer) {
-      msgpack_rpc_from_string(str, packer);
-    });
-
+  if (row == 0) {
+    let data = [NSMutableData dataWithCapacity:1000];
+    for (int i = 0; i < count; i++) {
+      [data appendBytes:chunk[i] length:strlen((const char *) chunk[i])];
+      ELOG("%d-th chunk: %s", i, data.description.cstr);
+      [data setLength:0];
+    }
   }
 
-  _put_column += 1;
+  pack_flush_data(RenderDataTypeRawLine, ^(msgpack_packer *packer) {
+    msgpack_pack_array(packer, 7);
+
+    msgpack_pack_int64(packer, row);
+    msgpack_pack_int64(packer, startcol);
+    msgpack_pack_int64(packer, endcol);
+    msgpack_pack_int64(packer, clearcol);
+    msgpack_pack_int64(packer, clearattr);
+
+    msgpack_pack_array(packer, (size_t) count);
+    for (Integer i = 0; i < count; i++) {
+      msgpack_rpc_from_string(cstr_to_string((const char *) chunk[i]), packer);
+    }
+    msgpack_pack_array(packer, (size_t) count);
+    for (Integer i = 0; i < count; i++) {
+      msgpack_pack_int16(packer, attrs[i]);
+    }
+  });
 }
 
 static void server_ui_bell(UI *ui __unused) {
@@ -476,6 +477,7 @@ static void server_ui_visual_bell(UI *ui __unused) {
 static void server_ui_default_colors_set(
     UI *ui __unused, Integer rgb_fg, Integer rgb_bg, Integer rgb_sp, Integer cterm_fg, Integer cterm_bg
 ) {
+  ELOG("default colors set");
 
   if (rgb_fg != -1) {
     _default_foreground = rgb_fg;
@@ -509,18 +511,6 @@ static void server_ui_set_title(UI *ui __unused, String title) {
   }
 }
 
-static void server_ui_set_icon(UI *ui __unused, String icon) {
-  @autoreleasepool {
-    if (icon.size == 0) {
-      return;
-    }
-
-    send_msg_packing(NvimServerMsgIdSetTitle, ^(msgpack_packer *packer) {
-      msgpack_rpc_from_string(icon, packer);
-    });
-  }
-}
-
 static void server_ui_option_set(UI *ui __unused, String name, Object value) {
   send_msg_packing(NvimServerMsgIdOptionSet, ^(msgpack_packer *packer) {
     msgpack_pack_map(packer, 1);
@@ -536,6 +526,14 @@ static void server_ui_stop(UI *ui __unused) {
   data->stop = true;
 }
 
+static void dummy(UI *ui __unused) {
+
+}
+
+static void dummy2(UI *ui __unused, String icon) {
+
+}
+
 #pragma mark Public
 // called by neovim
 
@@ -547,28 +545,26 @@ void custom_ui_start(void) {
 
   ui->rgb = true;
   ui->stop = server_ui_stop;
-  ui->resize = server_ui_resize;
-  ui->clear = server_ui_clear;
-  ui->eol_clear = server_ui_eol_clear;
-  ui->cursor_goto = server_ui_cursor_goto;
+  ui->grid_resize = server_ui_grid_resize;
+  ui->grid_clear = server_ui_grid_clear;
+  ui->grid_cursor_goto = server_ui_cursor_goto;
   ui->update_menu = server_ui_update_menu;
   ui->busy_start = server_ui_busy_start;
   ui->busy_stop = server_ui_busy_stop;
-  ui->mouse_on = server_ui_mouse_on;
-  ui->mouse_off = server_ui_mouse_off;
+  ui->mouse_on = dummy;
+  ui->mouse_off = dummy;
   ui->mode_info_set = server_ui_mode_info_set;
   ui->mode_change = server_ui_mode_change;
-  ui->set_scroll_region = server_ui_set_scroll_region;
-  ui->scroll = server_ui_scroll;
+  ui->grid_scroll = server_ui_grid_scroll;
   ui->hl_attr_define = server_ui_hl_attr_define;
   ui->default_colors_set = server_ui_default_colors_set;
-  ui->put = server_ui_put;
+  ui->raw_line = server_ui_raw_line;
   ui->bell = server_ui_bell;
   ui->visual_bell = server_ui_visual_bell;
   ui->flush = server_ui_flush;
-  ui->suspend = NULL;
+  ui->suspend = dummy;
   ui->set_title = server_ui_set_title;
-  ui->set_icon = server_ui_set_icon;
+  ui->set_icon = dummy2;
   ui->option_set = server_ui_option_set;
 
   ui_bridge_attach(ui, server_ui_main, server_ui_scheduler);

@@ -1,15 +1,17 @@
-/**
- * Tae Won Ha - http://taewon.de - @hataewon
- * See LICENSE
- */
+//
+// Created by Tae Won Ha on 25.08.18.
+// Copyright (c) 2018 Tae Won Ha. All rights reserved.
+//
 
 import Cocoa
 
-// The definition can be found in NeoVimUiBridgeProtocol.h
+extension OldCellAttributes: CustomStringConvertible, Equatable {
 
-struct CellAttributes: CustomStringConvertible, Equatable {
+  public static var debug: OldCellAttributes {
+    return OldCellAttributes(fontTrait: [], foreground: 0, background: 0, special: 0, reverse: false)
+  }
 
-  public static func ==(left: CellAttributes, right: CellAttributes) -> Bool {
+  public static func ==(left: OldCellAttributes, right: OldCellAttributes) -> Bool {
     if left.foreground != right.foreground { return false }
     if left.background != right.background { return false }
     if left.special != right.special { return false }
@@ -19,13 +21,6 @@ struct CellAttributes: CustomStringConvertible, Equatable {
 
     return true
   }
-
-  var fontTrait: FontTrait
-
-  var foreground: Int
-  var background: Int
-  var special: Int
-  var reverse: Bool
 
   public var effectiveForeground: Int {
     return self.reverse ? self.background : self.foreground
@@ -45,7 +40,7 @@ struct CellAttributes: CustomStringConvertible, Equatable {
       ">"
   }
 
-  public var inverted: CellAttributes {
+  public var inverted: OldCellAttributes {
     var result = self
 
     result.background = self.foreground

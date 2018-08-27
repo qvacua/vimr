@@ -7,13 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1929B2DB631E6EB5C3452B68 /* MyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BAF033A398BFBC2A7890 /* MyView.swift */; };
+		1929B2E640BF063F5AA7A1CD /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8054B3E839FD5C8B6EA /* SwiftCommons.swift */; };
 		1929B30D6C4175835D1F5B21 /* MessagePackCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B44323D6611E2927EC3B /* MessagePackCommons.swift */; };
 		1929B40A751BDA2882D4FC94 /* NvimViewObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B22A0CAD417EC3790F02 /* NvimViewObjects.swift */; };
+		1929B40C9C30B46C0E0B9DE2 /* CellAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE45756C88F8B43804D2 /* CellAttributes.swift */; };
+		1929B434DB094D61B3977390 /* TypesetterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFCCDE5C7145BE5A7387 /* TypesetterTest.swift */; };
+		1929B4632DE08273F990806F /* Run.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B06A73BE6DAA2679AAA2 /* Run.swift */; };
+		1929B6776A1D11409335FAAB /* SimpleCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B60D1775A75D7C0F6721 /* SimpleCache.swift */; };
+		1929B74691D92B9F369787E5 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDE2C6003A6EDC02129C /* ColorUtils.swift */; };
+		1929B7D2EB80FEA7BFBC3D2C /* Typesetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B47330DAD129520A2273 /* Typesetter.swift */; };
 		1929B86897DAEFDBABAB1C14 /* NvimApiExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBD7F88AE4F01E626691 /* NvimApiExtension.swift */; };
-		1929B8CA73D3702364903BB7 /* SimpleCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD86668017F804408E3A /* SimpleCache.swift */; };
+		1929B9485C40C954CAC586E5 /* OldCellAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD4C55D5EA933BFFB16B /* OldCellAttributes.swift */; };
+		1929B953E76914DA984697DC /* FontUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B96A876229DA394F906E /* FontUtils.swift */; };
+		1929B9A949EE85C27FF66367 /* UGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D83D7E150F518D49FE /* UGrid.swift */; };
 		1929BA70C221E3C199833B8C /* UiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B52174EC68D2974B5BAE /* UiBridge.swift */; };
 		1929BA93BDEA029011F034FF /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6F4B70B90F7CFB7B523 /* RxSwiftCommons.swift */; };
+		1929BC8495028D66F0A7D618 /* RunDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB7E3430BD3FD88A7698 /* RunDrawer.swift */; };
 		1929BCA615324C58582BFC3C /* ProcessUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD167BE7C6BB788DAE2A /* ProcessUtils.swift */; };
+		1929BDA1464DFE027A5248CA /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8054B3E839FD5C8B6EA /* SwiftCommons.swift */; };
+		1929BDD254F59FC0F5B800E7 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B73455764E42DACF6BB8 /* Geometry.swift */; };
+		1929BE2483C6B5A2D2C35B3F /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B73455764E42DACF6BB8 /* Geometry.swift */; };
+		1929BF6E40C70A4157A5C755 /* UGridTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBA08E4195666290EC6A /* UGridTest.swift */; };
+		1929BF95400085EE3F0FFAD5 /* FontTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D7F040B8B9E2F038DF /* FontTrait.swift */; };
+		4B0A1B142129F49500F1E02F /* SwiftCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0A1B132129F49500F1E02F /* SwiftCommonsTest.swift */; };
+		4B0A1B39212B332800F1E02F /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0A1B38212B332800F1E02F /* Nimble.framework */; };
+		4B0A1B3B212B333700F1E02F /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B0A1B38212B332800F1E02F /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B177886201220F300E32FF0 /* SharedTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1929B4F32708E99C40A57020 /* SharedTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B17E549209E3E4100265C1D /* RxNeovimApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E548209E3E4100265C1D /* RxNeovimApi.framework */; };
 		4B8662E81FDC3F9F007F490D /* vimr.vim in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B8662E41FDC3D4F007F490D /* vimr.vim */; };
@@ -23,7 +42,6 @@
 		4B90F0321FD2AFAE008A39E0 /* NvimView+Dragging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0141FD2AFAC008A39E0 /* NvimView+Dragging.swift */; };
 		4B90F0341FD2AFAE008A39E0 /* CocoaExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0161FD2AFAC008A39E0 /* CocoaExtensions.swift */; };
 		4B90F0351FD2AFAE008A39E0 /* NvimView+Mouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0171FD2AFAC008A39E0 /* NvimView+Mouse.swift */; };
-		4B90F0381FD2AFAE008A39E0 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F01A1FD2AFAC008A39E0 /* ColorUtils.swift */; };
 		4B90F0391FD2AFAE008A39E0 /* NvimView+Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F01B1FD2AFAC008A39E0 /* NvimView+Api.swift */; };
 		4B90F03A1FD2AFAE008A39E0 /* NvimView+Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F01C1FD2AFAC008A39E0 /* NvimView+Key.swift */; };
 		4B90F03B1FD2AFAE008A39E0 /* NvimObjectsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F01D1FD2AFAC008A39E0 /* NvimObjectsExtensions.swift */; };
@@ -37,7 +55,6 @@
 		4B90F0441FD2AFAE008A39E0 /* MMCoreTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B90F0261FD2AFAD008A39E0 /* MMCoreTextView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		4B90F0451FD2AFAE008A39E0 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0271FD2AFAD008A39E0 /* Logger.swift */; };
 		4B90F0461FD2AFAE008A39E0 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0281FD2AFAD008A39E0 /* Grid.swift */; };
-		4B90F0491FD2AFAE008A39E0 /* CellAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F02B1FD2AFAD008A39E0 /* CellAttributes.swift */; };
 		4B90F0521FD2AFD3008A39E0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0511FD2AFD3008A39E0 /* main.m */; };
 		4B90F0661FD2AFF7008A39E0 /* server_ui.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0561FD2AFF7008A39E0 /* server_ui.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4B90F0681FD2AFF7008A39E0 /* CocoaCategories.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F05A1FD2AFF7008A39E0 /* CocoaCategories.m */; };
@@ -49,10 +66,41 @@
 		4BD874302014C2600039888E /* NvimAutoCommandEvent.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD8742F2014C25F0039888E /* NvimAutoCommandEvent.generated.swift */; };
 		4BE45C081FD2D4E3005C0A95 /* NvimServer in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B90F04F1FD2AFD3008A39E0 /* NvimServer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		4BE45C0C1FD2DA49005C0A95 /* runtime in Resources */ = {isa = PBXBuildFile; fileRef = 4BE45C0B1FD2DA49005C0A95 /* runtime */; };
+		4BF18510212DCCEA00954FE7 /* NvimView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90F0041FD2AF59008A39E0 /* NvimView.framework */; };
+		4BF18511212DCCF600954FE7 /* NvimView.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B90F0041FD2AF59008A39E0 /* NvimView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF18512212DCD6E00954FE7 /* RxNeovimApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E548209E3E4100265C1D /* RxNeovimApi.framework */; };
+		4BF18513212DCD6E00954FE7 /* RxMessagePort.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9E5E1B20990DF1006455C3 /* RxMessagePort.framework */; };
+		4BF18514212DCD6E00954FE7 /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CA209740E900EC394A /* MessagePack.framework */; };
+		4BF18515212DCD6E00954FE7 /* RxMsgpackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5C8209740E400EC394A /* RxMsgpackRpc.framework */; };
+		4BF18516212DCD6E00954FE7 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC5B0421FE551DF0071D64F /* RxSwift.framework */; };
+		4BF18517212DCD7900954FE7 /* RxNeovimApi.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B17E548209E3E4100265C1D /* RxNeovimApi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF18518212DCD7900954FE7 /* RxMessagePort.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B9E5E1B20990DF1006455C3 /* RxMessagePort.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF18519212DCD7900954FE7 /* MessagePack.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB1F5CA209740E900EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF1851A212DCD7900954FE7 /* RxMsgpackRpc.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB1F5C8209740E400EC394A /* RxMsgpackRpc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF1851B212DCD7900954FE7 /* RxSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BC5B0421FE551DF0071D64F /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF1852321313EE400954FE7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF1852221313EE400954FE7 /* AppDelegate.swift */; };
+		4BF1852521313EE500954FE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BF1852421313EE500954FE7 /* Assets.xcassets */; };
+		4BF1852821313EE500954FE7 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BF1852621313EE500954FE7 /* MainMenu.xib */; };
+		4BF18531213142F900954FE7 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDE2C6003A6EDC02129C /* ColorUtils.swift */; };
+		4BF18532213142F900954FE7 /* FontUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B96A876229DA394F906E /* FontUtils.swift */; };
+		4BF18533213142FA00954FE7 /* CellAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE45756C88F8B43804D2 /* CellAttributes.swift */; };
+		4BF18534213142FA00954FE7 /* UGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D83D7E150F518D49FE /* UGrid.swift */; };
+		4BF18535213142FA00954FE7 /* RunDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB7E3430BD3FD88A7698 /* RunDrawer.swift */; };
+		4BF18536213142FA00954FE7 /* SimpleCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B60D1775A75D7C0F6721 /* SimpleCache.swift */; };
+		4BF18537213142FA00954FE7 /* Run.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B06A73BE6DAA2679AAA2 /* Run.swift */; };
+		4BF18538213142FA00954FE7 /* Typesetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B47330DAD129520A2273 /* Typesetter.swift */; };
+		4BF185392131432100954FE7 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0271FD2AFAD008A39E0 /* Logger.swift */; };
 		4BF18C5D1FD2EEE400DF95D1 /* NvimView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BF18C5C1FD2EEE400DF95D1 /* NvimView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		4B0A1B172129F49500F1E02F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4B90EFFB1FD2AF59008A39E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4B90F0031FD2AF59008A39E0;
+			remoteInfo = NvimView;
+		};
 		4B90F06D1FD2B9E3008A39E0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4B90EFFB1FD2AF59008A39E0 /* Project object */;
@@ -63,6 +111,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		4B0A1B3A212B332E00F1E02F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4BF18517212DCD7900954FE7 /* RxNeovimApi.framework in CopyFiles */,
+				4BF18518212DCD7900954FE7 /* RxMessagePort.framework in CopyFiles */,
+				4BF18519212DCD7900954FE7 /* MessagePack.framework in CopyFiles */,
+				4BF1851A212DCD7900954FE7 /* RxMsgpackRpc.framework in CopyFiles */,
+				4BF1851B212DCD7900954FE7 /* RxSwift.framework in CopyFiles */,
+				4BF18511212DCCF600954FE7 /* NvimView.framework in CopyFiles */,
+				4B0A1B3B212B333700F1E02F /* Nimble.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4B8662E71FDC3F70007F490D /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -95,14 +159,32 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1929B06A73BE6DAA2679AAA2 /* Run.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Run.swift; sourceTree = "<group>"; };
 		1929B22A0CAD417EC3790F02 /* NvimViewObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimViewObjects.swift; sourceTree = "<group>"; };
 		1929B44323D6611E2927EC3B /* MessagePackCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagePackCommons.swift; sourceTree = "<group>"; };
+		1929B47330DAD129520A2273 /* Typesetter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Typesetter.swift; sourceTree = "<group>"; };
 		1929B4F32708E99C40A57020 /* SharedTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedTypes.h; sourceTree = "<group>"; };
 		1929B52174EC68D2974B5BAE /* UiBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiBridge.swift; sourceTree = "<group>"; };
+		1929B60D1775A75D7C0F6721 /* SimpleCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleCache.swift; sourceTree = "<group>"; };
 		1929B6F4B70B90F7CFB7B523 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
+		1929B73455764E42DACF6BB8 /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
+		1929B8054B3E839FD5C8B6EA /* SwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftCommons.swift; sourceTree = "<group>"; };
+		1929B96A876229DA394F906E /* FontUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontUtils.swift; sourceTree = "<group>"; };
+		1929B9D7F040B8B9E2F038DF /* FontTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontTrait.swift; sourceTree = "<group>"; };
+		1929B9D83D7E150F518D49FE /* UGrid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UGrid.swift; sourceTree = "<group>"; };
+		1929BAF033A398BFBC2A7890 /* MyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyView.swift; sourceTree = "<group>"; };
+		1929BB7E3430BD3FD88A7698 /* RunDrawer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RunDrawer.swift; sourceTree = "<group>"; };
+		1929BBA08E4195666290EC6A /* UGridTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UGridTest.swift; sourceTree = "<group>"; };
 		1929BBD7F88AE4F01E626691 /* NvimApiExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimApiExtension.swift; sourceTree = "<group>"; };
 		1929BD167BE7C6BB788DAE2A /* ProcessUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcessUtils.swift; sourceTree = "<group>"; };
-		1929BD86668017F804408E3A /* SimpleCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleCache.swift; sourceTree = "<group>"; };
+		1929BD4C55D5EA933BFFB16B /* OldCellAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OldCellAttributes.swift; sourceTree = "<group>"; };
+		1929BDE2C6003A6EDC02129C /* ColorUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorUtils.swift; sourceTree = "<group>"; };
+		1929BE45756C88F8B43804D2 /* CellAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellAttributes.swift; sourceTree = "<group>"; };
+		1929BFCCDE5C7145BE5A7387 /* TypesetterTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypesetterTest.swift; sourceTree = "<group>"; };
+		4B0A1B112129F49500F1E02F /* NvimViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NvimViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B0A1B132129F49500F1E02F /* SwiftCommonsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftCommonsTest.swift; sourceTree = "<group>"; };
+		4B0A1B152129F49500F1E02F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4B0A1B38212B332800F1E02F /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = ../Carthage/Build/Mac/Nimble.framework; sourceTree = "<group>"; };
 		4B17E548209E3E4100265C1D /* RxNeovimApi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxNeovimApi.framework; path = ../Carthage/Build/Mac/RxNeovimApi.framework; sourceTree = "<group>"; };
 		4B8662E41FDC3D4F007F490D /* vimr.vim */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = vimr.vim; sourceTree = "<group>"; };
 		4B90F0041FD2AF59008A39E0 /* NvimView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NvimView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -113,7 +195,6 @@
 		4B90F0141FD2AFAC008A39E0 /* NvimView+Dragging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Dragging.swift"; sourceTree = "<group>"; };
 		4B90F0161FD2AFAC008A39E0 /* CocoaExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaExtensions.swift; sourceTree = "<group>"; };
 		4B90F0171FD2AFAC008A39E0 /* NvimView+Mouse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Mouse.swift"; sourceTree = "<group>"; };
-		4B90F01A1FD2AFAC008A39E0 /* ColorUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorUtils.swift; sourceTree = "<group>"; };
 		4B90F01B1FD2AFAC008A39E0 /* NvimView+Api.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Api.swift"; sourceTree = "<group>"; };
 		4B90F01C1FD2AFAC008A39E0 /* NvimView+Key.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Key.swift"; sourceTree = "<group>"; };
 		4B90F01D1FD2AFAC008A39E0 /* NvimObjectsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimObjectsExtensions.swift; sourceTree = "<group>"; };
@@ -128,7 +209,6 @@
 		4B90F0261FD2AFAD008A39E0 /* MMCoreTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCoreTextView.h; sourceTree = "<group>"; };
 		4B90F0271FD2AFAD008A39E0 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		4B90F0281FD2AFAD008A39E0 /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
-		4B90F02B1FD2AFAD008A39E0 /* CellAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellAttributes.swift; sourceTree = "<group>"; };
 		4B90F04F1FD2AFD3008A39E0 /* NvimServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NvimServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B90F0511FD2AFD3008A39E0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4B90F0561FD2AFF7008A39E0 /* server_ui.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = server_ui.m; sourceTree = "<group>"; };
@@ -144,12 +224,31 @@
 		4BC5B0421FE551DF0071D64F /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = ../Carthage/Build/Mac/RxSwift.framework; sourceTree = "<group>"; };
 		4BD8742F2014C25F0039888E /* NvimAutoCommandEvent.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimAutoCommandEvent.generated.swift; sourceTree = "<group>"; };
 		4BE45C0B1FD2DA49005C0A95 /* runtime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = runtime; path = neovim/runtime; sourceTree = "<group>"; };
+		4BF1852021313EE300954FE7 /* DrawerDev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DrawerDev.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BF1852221313EE400954FE7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4BF1852421313EE500954FE7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4BF1852721313EE500954FE7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		4BF1852921313EE500954FE7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BF18C5A1FD2E72D00DF95D1 /* nvim */ = {isa = PBXFileReference; lastKnownFileType = folder; name = nvim; path = neovim/src/nvim; sourceTree = "<group>"; };
 		4BF18C5B1FD2E74800DF95D1 /* auto */ = {isa = PBXFileReference; lastKnownFileType = folder; name = auto; path = neovim/build/src/nvim/auto; sourceTree = "<group>"; };
 		4BF18C5C1FD2EEE400DF95D1 /* NvimView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NvimView.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4B0A1B0E2129F49500F1E02F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BF18510212DCCEA00954FE7 /* NvimView.framework in Frameworks */,
+				4B0A1B39212B332800F1E02F /* Nimble.framework in Frameworks */,
+				4BF18512212DCD6E00954FE7 /* RxNeovimApi.framework in Frameworks */,
+				4BF18513212DCD6E00954FE7 /* RxMessagePort.framework in Frameworks */,
+				4BF18514212DCD6E00954FE7 /* MessagePack.framework in Frameworks */,
+				4BF18515212DCD6E00954FE7 /* RxMsgpackRpc.framework in Frameworks */,
+				4BF18516212DCD6E00954FE7 /* RxSwift.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4B90F0001FD2AF59008A39E0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -169,9 +268,43 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4BF1851D21313EE300954FE7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1929B4355610D4E5607EAA40 /* Drawing */ = {
+			isa = PBXGroup;
+			children = (
+				1929BDE2C6003A6EDC02129C /* ColorUtils.swift */,
+				1929B96A876229DA394F906E /* FontUtils.swift */,
+				1929BE45756C88F8B43804D2 /* CellAttributes.swift */,
+				1929B9D83D7E150F518D49FE /* UGrid.swift */,
+				1929BB7E3430BD3FD88A7698 /* RunDrawer.swift */,
+				1929B60D1775A75D7C0F6721 /* SimpleCache.swift */,
+				1929B06A73BE6DAA2679AAA2 /* Run.swift */,
+				1929B47330DAD129520A2273 /* Typesetter.swift */,
+				1929B73455764E42DACF6BB8 /* Geometry.swift */,
+			);
+			name = Drawing;
+			sourceTree = "<group>";
+		};
+		4B0A1B122129F49500F1E02F /* NvimViewTests */ = {
+			isa = PBXGroup;
+			children = (
+				4B0A1B132129F49500F1E02F /* SwiftCommonsTest.swift */,
+				4B0A1B152129F49500F1E02F /* Info.plist */,
+				1929BFCCDE5C7145BE5A7387 /* TypesetterTest.swift */,
+				1929BBA08E4195666290EC6A /* UGridTest.swift */,
+			);
+			path = NvimViewTests;
+			sourceTree = "<group>";
+		};
 		4B90EFFA1FD2AF59008A39E0 = {
 			isa = PBXGroup;
 			children = (
@@ -180,6 +313,8 @@
 				4BE45C0B1FD2DA49005C0A95 /* runtime */,
 				4B90F0061FD2AF59008A39E0 /* NvimView */,
 				4B90F0501FD2AFD3008A39E0 /* NvimServer */,
+				4B0A1B122129F49500F1E02F /* NvimViewTests */,
+				4BF1852121313EE400954FE7 /* DrawerDev */,
 				4B90F0051FD2AF59008A39E0 /* Products */,
 				4B90F06F1FD2B9F1008A39E0 /* Frameworks */,
 				1929B4F32708E99C40A57020 /* SharedTypes.h */,
@@ -191,6 +326,8 @@
 			children = (
 				4B90F0041FD2AF59008A39E0 /* NvimView.framework */,
 				4B90F04F1FD2AFD3008A39E0 /* NvimServer */,
+				4B0A1B112129F49500F1E02F /* NvimViewTests.xctest */,
+				4BF1852021313EE300954FE7 /* DrawerDev.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -201,9 +338,7 @@
 				4B90F0081FD2AF59008A39E0 /* Info.plist */,
 				4B8662E41FDC3D4F007F490D /* vimr.vim */,
 				4BF18C5C1FD2EEE400DF95D1 /* NvimView.h */,
-				4B90F02B1FD2AFAD008A39E0 /* CellAttributes.swift */,
 				4B90F0161FD2AFAC008A39E0 /* CocoaExtensions.swift */,
-				4B90F01A1FD2AFAC008A39E0 /* ColorUtils.swift */,
 				4B90F0281FD2AFAD008A39E0 /* Grid.swift */,
 				4B90F01F1FD2AFAD008A39E0 /* InputTestView.swift */,
 				4B90F0121FD2AFAC008A39E0 /* KeyUtils.swift */,
@@ -229,8 +364,10 @@
 				1929B52174EC68D2974B5BAE /* UiBridge.swift */,
 				1929B6F4B70B90F7CFB7B523 /* RxSwiftCommons.swift */,
 				1929B44323D6611E2927EC3B /* MessagePackCommons.swift */,
-				1929BD86668017F804408E3A /* SimpleCache.swift */,
 				1929BD167BE7C6BB788DAE2A /* ProcessUtils.swift */,
+				1929B8054B3E839FD5C8B6EA /* SwiftCommons.swift */,
+				1929BD4C55D5EA933BFFB16B /* OldCellAttributes.swift */,
+				1929B4355610D4E5607EAA40 /* Drawing */,
 			);
 			path = NvimView;
 			sourceTree = "<group>";
@@ -253,6 +390,7 @@
 		4B90F06F1FD2B9F1008A39E0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4B0A1B38212B332800F1E02F /* Nimble.framework */,
 				4B17E548209E3E4100265C1D /* RxNeovimApi.framework */,
 				4B9E5E1B20990DF1006455C3 /* RxMessagePort.framework */,
 				4BB1F5CA209740E900EC394A /* MessagePack.framework */,
@@ -260,6 +398,19 @@
 				4BC5B0421FE551DF0071D64F /* RxSwift.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4BF1852121313EE400954FE7 /* DrawerDev */ = {
+			isa = PBXGroup;
+			children = (
+				4BF1852221313EE400954FE7 /* AppDelegate.swift */,
+				4BF1852421313EE500954FE7 /* Assets.xcassets */,
+				4BF1852621313EE500954FE7 /* MainMenu.xib */,
+				4BF1852921313EE500954FE7 /* Info.plist */,
+				1929B9D7F040B8B9E2F038DF /* FontTrait.swift */,
+				1929BAF033A398BFBC2A7890 /* MyView.swift */,
+			);
+			path = DrawerDev;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -279,6 +430,25 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		4B0A1B102129F49500F1E02F /* NvimViewTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4B0A1B1B2129F49F00F1E02F /* Build configuration list for PBXNativeTarget "NvimViewTests" */;
+			buildPhases = (
+				4B0A1B0D2129F49500F1E02F /* Sources */,
+				4B0A1B0E2129F49500F1E02F /* Frameworks */,
+				4B0A1B0F2129F49500F1E02F /* Resources */,
+				4B0A1B3A212B332E00F1E02F /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4B0A1B182129F49500F1E02F /* PBXTargetDependency */,
+			);
+			name = NvimViewTests;
+			productName = NvimViewTests;
+			productReference = 4B0A1B112129F49500F1E02F /* NvimViewTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		4B90F0031FD2AF59008A39E0 /* NvimView */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4B90F00C1FD2AF59008A39E0 /* Build configuration list for PBXNativeTarget "NvimView" */;
@@ -318,21 +488,46 @@
 			productReference = 4B90F04F1FD2AFD3008A39E0 /* NvimServer */;
 			productType = "com.apple.product-type.tool";
 		};
+		4BF1851F21313EE300954FE7 /* DrawerDev */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4BF1852D21313EE500954FE7 /* Build configuration list for PBXNativeTarget "DrawerDev" */;
+			buildPhases = (
+				4BF1851C21313EE300954FE7 /* Sources */,
+				4BF1851D21313EE300954FE7 /* Frameworks */,
+				4BF1851E21313EE300954FE7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DrawerDev;
+			productName = DrawerDev;
+			productReference = 4BF1852021313EE300954FE7 /* DrawerDev.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		4B90EFFB1FD2AF59008A39E0 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0940;
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Tae Won Ha";
 				TargetAttributes = {
+					4B0A1B102129F49500F1E02F = {
+						CreatedOnToolsVersion = 9.4.1;
+						ProvisioningStyle = Automatic;
+					};
 					4B90F0031FD2AF59008A39E0 = {
 						CreatedOnToolsVersion = 9.1;
 						LastSwiftMigration = 0910;
 					};
 					4B90F04E1FD2AFD3008A39E0 = {
 						CreatedOnToolsVersion = 9.1;
+					};
+					4BF1851F21313EE300954FE7 = {
+						CreatedOnToolsVersion = 9.4.1;
 					};
 				};
 			};
@@ -342,6 +537,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 4B90EFFA1FD2AF59008A39E0;
 			productRefGroup = 4B90F0051FD2AF59008A39E0 /* Products */;
@@ -350,16 +546,34 @@
 			targets = (
 				4B90F0031FD2AF59008A39E0 /* NvimView */,
 				4B90F04E1FD2AFD3008A39E0 /* NvimServer */,
+				4B0A1B102129F49500F1E02F /* NvimViewTests */,
+				4BF1851F21313EE300954FE7 /* DrawerDev */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		4B0A1B0F2129F49500F1E02F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4B90F0021FD2AF59008A39E0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				4BE45C0C1FD2DA49005C0A95 /* runtime in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BF1851E21313EE300954FE7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BF1852521313EE500954FE7 /* Assets.xcassets in Resources */,
+				4BF1852821313EE500954FE7 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,11 +596,20 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4B0A1B0D2129F49500F1E02F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B0A1B142129F49500F1E02F /* SwiftCommonsTest.swift in Sources */,
+				1929B434DB094D61B3977390 /* TypesetterTest.swift in Sources */,
+				1929BF6E40C70A4157A5C755 /* UGridTest.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4B90EFFF1FD2AF59008A39E0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B90F0381FD2AFAE008A39E0 /* ColorUtils.swift in Sources */,
 				4B90F03E1FD2AFAE008A39E0 /* MMCoreTextView.m in Sources */,
 				4B90F03F1FD2AFAE008A39E0 /* NvimView+Draw.swift in Sources */,
 				4B90F02F1FD2AFAE008A39E0 /* NvimView+Resize.swift in Sources */,
@@ -403,7 +626,6 @@
 				4B90F0391FD2AFAE008A39E0 /* NvimView+Api.swift in Sources */,
 				4B90F0451FD2AFAE008A39E0 /* Logger.swift in Sources */,
 				4B90F0321FD2AFAE008A39E0 /* NvimView+Dragging.swift in Sources */,
-				4B90F0491FD2AFAE008A39E0 /* CellAttributes.swift in Sources */,
 				4B90F0301FD2AFAE008A39E0 /* KeyUtils.swift in Sources */,
 				4B90F03A1FD2AFAE008A39E0 /* NvimView+Key.swift in Sources */,
 				1929B40A751BDA2882D4FC94 /* NvimViewObjects.swift in Sources */,
@@ -411,8 +633,18 @@
 				1929BA70C221E3C199833B8C /* UiBridge.swift in Sources */,
 				1929BA93BDEA029011F034FF /* RxSwiftCommons.swift in Sources */,
 				1929B30D6C4175835D1F5B21 /* MessagePackCommons.swift in Sources */,
-				1929B8CA73D3702364903BB7 /* SimpleCache.swift in Sources */,
 				1929BCA615324C58582BFC3C /* ProcessUtils.swift in Sources */,
+				1929B2E640BF063F5AA7A1CD /* SwiftCommons.swift in Sources */,
+				1929B9485C40C954CAC586E5 /* OldCellAttributes.swift in Sources */,
+				1929B74691D92B9F369787E5 /* ColorUtils.swift in Sources */,
+				1929B953E76914DA984697DC /* FontUtils.swift in Sources */,
+				1929B40C9C30B46C0E0B9DE2 /* CellAttributes.swift in Sources */,
+				1929B9A949EE85C27FF66367 /* UGrid.swift in Sources */,
+				1929BC8495028D66F0A7D618 /* RunDrawer.swift in Sources */,
+				1929B6776A1D11409335FAAB /* SimpleCache.swift in Sources */,
+				1929B4632DE08273F990806F /* Run.swift in Sources */,
+				1929B7D2EB80FEA7BFBC3D2C /* Typesetter.swift in Sources */,
+				1929BDD254F59FC0F5B800E7 /* Geometry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -427,9 +659,35 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4BF1851C21313EE300954FE7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BF185392131432100954FE7 /* Logger.swift in Sources */,
+				4BF18531213142F900954FE7 /* ColorUtils.swift in Sources */,
+				4BF18532213142F900954FE7 /* FontUtils.swift in Sources */,
+				4BF18533213142FA00954FE7 /* CellAttributes.swift in Sources */,
+				4BF18534213142FA00954FE7 /* UGrid.swift in Sources */,
+				4BF18535213142FA00954FE7 /* RunDrawer.swift in Sources */,
+				4BF18536213142FA00954FE7 /* SimpleCache.swift in Sources */,
+				4BF18537213142FA00954FE7 /* Run.swift in Sources */,
+				4BF18538213142FA00954FE7 /* Typesetter.swift in Sources */,
+				4BF1852321313EE400954FE7 /* AppDelegate.swift in Sources */,
+				1929BF95400085EE3F0FFAD5 /* FontTrait.swift in Sources */,
+				1929BE2483C6B5A2D2C35B3F /* Geometry.swift in Sources */,
+				1929BDA1464DFE027A5248CA /* SwiftCommons.swift in Sources */,
+				1929B2DB631E6EB5C3452B68 /* MyView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		4B0A1B182129F49500F1E02F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4B90F0031FD2AF59008A39E0 /* NvimView */;
+			targetProxy = 4B0A1B172129F49500F1E02F /* PBXContainerItemProxy */;
+		};
 		4B90F06E1FD2B9E3008A39E0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4B90F04E1FD2AFD3008A39E0 /* NvimServer */;
@@ -437,7 +695,44 @@
 		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		4BF1852621313EE500954FE7 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4BF1852721313EE500954FE7 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		4B0A1B192129F49600F1E02F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
+				INFOPLIST_FILE = NvimViewTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.NvimViewTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		4B0A1B1A2129F49600F1E02F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
+				INFOPLIST_FILE = NvimViewTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.NvimViewTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		4B90F00A1FD2AF59008A39E0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -488,11 +783,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -542,9 +838,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -567,8 +864,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.NvimView;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG LOG_TRACE";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -589,7 +886,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.NvimView;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -672,9 +968,48 @@
 			};
 			name = Release;
 		};
+		4BF1852B21313EE500954FE7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
+				INFOPLIST_FILE = DrawerDev/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.DrawerDev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		4BF1852C21313EE500954FE7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
+				INFOPLIST_FILE = DrawerDev/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.DrawerDev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4B0A1B1B2129F49F00F1E02F /* Build configuration list for PBXNativeTarget "NvimViewTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B0A1B192129F49600F1E02F /* Debug */,
+				4B0A1B1A2129F49600F1E02F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		4B90EFFE1FD2AF59008A39E0 /* Build configuration list for PBXProject "NvimView" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -698,6 +1033,15 @@
 			buildConfigurations = (
 				4B90F0541FD2AFD3008A39E0 /* Debug */,
 				4B90F0551FD2AFD3008A39E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4BF1852D21313EE500954FE7 /* Build configuration list for PBXNativeTarget "DrawerDev" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4BF1852B21313EE500954FE7 /* Debug */,
+				4BF1852C21313EE500954FE7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

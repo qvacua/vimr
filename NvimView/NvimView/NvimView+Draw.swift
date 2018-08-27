@@ -12,7 +12,7 @@ extension NvimView {
   }
 
   override public func draw(_ dirtyUnionRect: NSRect) {
-    guard self.grid.hasData else {
+    guard self.ugrid.hasData else {
       return
     }
 
@@ -34,13 +34,21 @@ extension NvimView {
     // when available" setting is used to render texts,
     // cf. chapter 11 from "Programming with Quartz".
     context.setShouldSmoothFonts(true);
-    context.textMatrix = CGAffineTransform.identity;
     context.setTextDrawingMode(.fill);
 
     let dirtyRects = self.rectsBeingDrawn()
 
-    self.rowRunIntersecting(rects: dirtyRects).forEach { self.draw(rowRun: $0, in: context) }
-    self.drawCursor(context: context)
+    self.rowRun2(intersecting: dirtyRects).forEach { row in
+      self.draw2(rowRun: row, in: context)
+    }
+//    self.drawCursor(context: context)
+  }
+
+  private func draw2(rowRun rowFrag: Run.Attributes, in context: CGContext) {
+    context.saveGState()
+    defer { context.restoreGState() }
+
+    self.runDrawer.draw(rowFrag, in: context)
   }
 
   private func draw(rowRun rowFrag: RowRun, in context: CGContext) {
@@ -51,7 +59,7 @@ extension NvimView {
     // in some cases only the put(0, 0)-cells should be redrawn.
     // => FIXME: probably we have to consider this also when drawing further down,
     // ie when the range starts with '0'...
-    self.drawBackground(rowRun: rowFrag, in: context)
+//    self.drawBackground(rowRun: rowFrag, in: context)
 
     let positions = rowFrag.range
       // filter out the put(0, 0)s (after a wide character)
@@ -69,7 +77,7 @@ extension NvimView {
     self.drawer.draw(
       string,
       positions: UnsafeMutablePointer(mutating: glyphPositions), positionsCount: positions.count,
-      highlightAttrs: rowFrag.attrs,
+      highlightAttrs: .debug,
       context: context
     )
   }
@@ -113,38 +121,17 @@ extension NvimView {
     }
 
     // FIXME: for now do some rudimentary cursor drawing
-    let attrsAtCursor = self.grid.cells[cursorRow][cursorColumnStart].attrs
-    let attrs = CellAttributes(fontTrait: attrsAtCursor.fontTrait,
-                               foreground: self.grid.background,
-                               background: self.grid.foreground,
-                               special: self.grid.special)
+//    let attrsAtCursor = self.grid.cells[cursorRow][cursorColumnStart].attrs
+//    let attrs = CellAttributes(fontTrait: attrsAtCursor.fontTrait,
+//                               foreground: self.grid.background,
+//                               background: self.grid.foreground,
+//                               special: self.grid.special)
 
     // FIXME: take ligatures into account (is it a good idea to do this?)
-    let rowRun = RowRun(row: cursorRegion.top, range: cursorRegion.columnRange, attrs: attrs)
-    self.draw(rowRun: rowRun, in: context)
+//    let rowRun = RowRun(row: cursorRegion.top, range: cursorRegion.columnRange, attrs: attrs)
+//    self.draw(rowRun: rowRun, in: context)
 
     self.shouldDrawCursor = false
-  }
-
-  private func drawBackground(rowRun: RowRun, in context: CGContext) {
-    // TODO: GH-612
-    // The following seems to break the anti-aliasing...
-    // Find another way to avoid double rendering of the background
-//    if rowRun.attrs.background == self.grid.background {
-//      return
-//    }
-
-    context.saveGState()
-    defer { context.restoreGState() }
-
-    context.setFillColor(ColorUtils.cgColorIgnoringAlpha(rowRun.attrs.background))
-
-    let firstCellOrigin = self.pointInView(forRow: rowRun.row, column: rowRun.range.lowerBound)
-    let backgroundRect = CGRect(
-      x: firstCellOrigin.x, y: firstCellOrigin.y,
-      width: CGFloat(rowRun.range.count) * self.cellSize.width, height: self.cellSize.height
-    )
-    context.fill(backgroundRect)
   }
 
   private func drawResizeInfo(in context: CGContext, with dirtyUnionRect: CGRect) {
@@ -190,9 +177,9 @@ extension NvimView {
                            hints: nil)
   }
 
-  private func rowRunIntersecting(rects: [CGRect]) -> [RowRun] {
+  private func rowRun(intersecting rects: [CGRect]) -> [RowRun] {
     return rects
-      .map { rect -> (CountableClosedRange<Int>, CountableClosedRange<Int>) in
+      .map { rect in
         // Get all Regions that intersects with the given rects.
         // There can be overlaps between the Regions, but for the time being we ignore them;
         // probably not necessary to optimize them away.
@@ -200,16 +187,63 @@ extension NvimView {
         return (region.rowRange, region.columnRange)
       }
       // All RowRuns for all Regions grouped by their row range.
-      .map { self.rowRunsFor(rowRange: $0, columnRange: $1) }
+      .map { self.rowRuns(forRowRange: $0, columnRange: $1) }
       // Flattened RowRuns for all Regions.
       .flatMap { $0 }
   }
 
-  private func rowRunsFor(rowRange: CountableClosedRange<Int>,
-                          columnRange: CountableClosedRange<Int>) -> [RowRun] {
+  private func rowRun2(intersecting rects: [CGRect]) -> [Run.Attributes] {
+    return rects
+      .map { rect in
+        // Get all Regions that intersects with the given rects.
+        // There can be overlaps between the Regions,
+        // but for the time being we ignore them;
+        // probably not necessary to optimize them away.
+        let region = self.region(for: rect)
+        return (region.rowRange, region.columnRange)
+      }
+      // All RowRuns for all Regions grouped by their row range.
+      .map { self.rowRuns2(forRowRange: $0, columnRange: $1) }
+      // Flattened RowRuns for all Regions.
+      .flatMap { $0 }
+  }
+
+  private func rowRuns2(
+    forRowRange rowRange: CountableClosedRange<Int>,
+    columnRange: CountableClosedRange<Int>
+  ) -> [Run.Attributes] {
+
+    return rowRange.map { row in
+        self.ugrid.cells[row]
+          .groupedRanges(with: { _, cell, _ in cell.attrId })
+          .compactMap { range in
+            let cells = self.ugrid.cells[row][range]
+
+            guard let firstCell = cells.first,
+                  let attrs = self.ugrid.attributes[firstCell.attrId]
+              else {
+              // GH-666: FIXME: correct error handling
+              self.logger.error("row: \(row), range: \(range): " +
+                                  "Could not get CellAttributes with ID " +
+                                  "\(cells.first?.attrId)")
+              return nil
+            }
+
+            return Run.Attributes(
+              location: self.pointInView(forRow: row, column: range.lowerBound),
+              cells: self.ugrid.cells[row][range],
+              attrs: attrs
+            )
+          }
+      }
+      .flatMap { $0 }
+  }
+
+  private func rowRuns(forRowRange rowRange: CountableClosedRange<Int>,
+                       columnRange: CountableClosedRange<Int>) -> [RowRun] {
 
     return rowRange
-      .map { (row) -> [RowRun] in
+      .map { row -> [RowRun] in
         let rowCells = self.grid.cells[row]
         let startIdx = columnRange.lowerBound
 
@@ -238,30 +272,39 @@ extension NvimView {
     let cellHeight = self.cellSize.height
 
     let rowStart = max(
+      0,
       Int(floor(
-        (self.bounds.height - self.yOffset - (rect.origin.y + rect.size.height)) / cellHeight)
-      ), 0
+        (self.bounds.height - self.yOffset
+          - (rect.origin.y + rect.size.height)) / cellHeight
+      ))
     )
     let rowEnd = min(
-      Int(ceil((self.bounds.height - self.yOffset - rect.origin.y) / cellHeight)) - 1,
-      self.grid.size.height - 1
+      self.ugrid.size.height - 1,
+      Int(ceil(
+        (self.bounds.height - self.yOffset - rect.origin.y) / cellHeight
+      )) - 1
     )
     let columnStart = max(
-      Int(floor((rect.origin.x - self.xOffset) / cellWidth)), 0
+      0,
+      Int(floor((rect.origin.x - self.xOffset) / cellWidth))
     )
     let columnEnd = min(
-      Int(ceil((rect.origin.x - self.xOffset + rect.size.width) / cellWidth)) - 1,
-      self.grid.size.width - 1
+      self.ugrid.size.width - 1,
+      Int(ceil(
+        (rect.origin.x - self.xOffset + rect.size.width) / cellWidth
+      )) - 1
     )
 
-    return Region(top: rowStart, bottom: rowEnd, left: columnStart, right: columnEnd)
+    return Region(
+      top: rowStart, bottom: rowEnd, left: columnStart, right: columnEnd
+    )
   }
 
   private func pointInView(forRow row: Int, column: Int) -> CGPoint {
     return CGPoint(
       x: self.xOffset + CGFloat(column) * self.cellSize.width,
-      y: self.bounds.size.height - self.yOffset - CGFloat(row) * self.cellSize.height
-         - self.cellSize.height
+      y: self.bounds.size.height - self.yOffset
+        - CGFloat(row) * self.cellSize.height - self.cellSize.height
     )
   }
 
@@ -299,6 +342,7 @@ extension NvimView {
 
   func updateFontMetaData(_ newFont: NSFont) {
     self.drawer.font = newFont
+    self.runDrawer.baseFont = newFont
 
     self.cellSize = self.drawer.cellSize
     self.descent = self.drawer.descent

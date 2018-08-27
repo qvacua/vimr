@@ -110,7 +110,7 @@ static CGColorRef color_for(NSInteger value) {
 - (void)drawString:(NSString *_Nonnull)string
          positions:(CGPoint *_Nonnull)positions
     positionsCount:(NSInteger)positionsCount
-    highlightAttrs:(CellAttributes)attrs
+    highlightAttrs:(OldCellAttributes)attrs
            context:(CGContextRef _Nonnull)context
 {
   CGContextSaveGState(context);

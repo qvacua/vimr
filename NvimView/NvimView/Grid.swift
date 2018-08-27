@@ -11,16 +11,16 @@ private let defaultSpecial: Int = 0xFFFF0000
 
 struct Cell: CustomStringConvertible {
 
-  private let attributes: CellAttributes
+  private let attributes: OldCellAttributes
 
   var string: String
   var marked: Bool
 
-  var attrs: CellAttributes {
+  var attrs: OldCellAttributes {
     return self.marked ? self.attributes.inverted : self.attributes
   }
 
-  init(string: String, attrs: CellAttributes, marked: Bool = false) {
+  init(string: String, attrs: OldCellAttributes, marked: Bool = false) {
     self.string = string
     self.attributes = attrs
     self.marked = marked
@@ -28,61 +28,6 @@ struct Cell: CustomStringConvertible {
 
   var description: String {
     return self.string.count > 0 ? self.string : "*"
-  }
-}
-
-extension Position: CustomStringConvertible, Equatable {
-
-  static let zero = Position(row: 0, column: 0)
-  static let null = Position(row: -1, column: -1)
-
-  public static func ==(left: Position, right: Position) -> Bool {
-    if left.row != right.row { return false }
-    if left.column != right.column { return false }
-
-    return true
-  }
-
-  public var description: String {
-    return "Position<\(self.row):\(self.column)>"
-  }
-}
-
-struct Size: CustomStringConvertible, Equatable {
-
-  static let zero = Size(width: 0, height: 0)
-
-  static func ==(left: Size, right: Size) -> Bool {
-    return left.width == right.width && left.height == right.height
-  }
-
-  var width: Int
-  var height: Int
-
-  var description: String {
-    return "Size<\(self.width):\(self.height)>"
-  }
-}
-
-struct Region: CustomStringConvertible {
-
-  static let zero = Region(top: 0, bottom: 0, left: 0, right: 0)
-
-  var top: Int
-  var bottom: Int
-  var left: Int
-  var right: Int
-
-  var description: String {
-    return "Region<\(self.top)...\(self.bottom):\(self.left)...\(self.right)>"
-  }
-
-  var rowRange: CountableClosedRange<Int> {
-    return self.top...self.bottom
-  }
-
-  var columnRange: CountableClosedRange<Int> {
-    return self.left...self.right
   }
 }
 
@@ -97,10 +42,11 @@ class Grid: CustomStringConvertible {
   var background = defaultBackground
   var special = defaultSpecial
 
-  var attrs: CellAttributes = CellAttributes(
-    fontTrait: .none,
-    foreground: defaultForeground, background: defaultBackground, special: defaultSpecial
-  )
+  var attrs = OldCellAttributes.debug
+//  var attrs: OldCellAttributes = OldCellAttributes(
+//    fontTrait: .none,
+//    foreground: defaultForeground, background: defaultBackground, special: defaultSpecial
+//  )
 
   private(set) var cells: [[Cell]] = []
 
@@ -117,8 +63,8 @@ class Grid: CustomStringConvertible {
     self.size = size
     self.position = Position.zero
 
-    let emptyCellAttrs = CellAttributes(fontTrait: .none,
-                                        foreground: self.foreground, background: self.background, special: self.special)
+    let emptyCellAttrs = OldCellAttributes.debug//CellAttributes(fontTrait: .none,
+                          //              foreground: self.foreground, background: self.background, special: self.special)
 
     let emptyRow = Array(repeating: Cell(string: " ", attrs: emptyCellAttrs), count: size.width)
     self.cells = Array(repeating: emptyRow, count: size.height)
@@ -294,8 +240,8 @@ class Grid: CustomStringConvertible {
       return
     }
 
-    let clearedAttrs = CellAttributes(fontTrait: .none,
-                                      foreground: self.foreground, background: self.background, special: self.special)
+    let clearedAttrs = OldCellAttributes.debug//CellAttributes(fontTrait: .none,
+                       //               foreground: self.foreground, background: self.background, special: self.special)
 
     let clearedCell = Cell(string: " ", attrs: clearedAttrs)
     let clearedRow = Array(repeating: clearedCell, count: region.right - region.left + 1)

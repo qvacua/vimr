@@ -5,22 +5,13 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSUInteger, FontTrait) {
+typedef NS_OPTIONS(NSUInteger, FontTrait) {
   FontTraitNone = 0,
   FontTraitItalic = (1 << 0),
   FontTraitBold = (1 << 1),
   FontTraitUnderline = (1 << 2),
   FontTraitUndercurl = (1 << 3)
 };
-
-typedef struct {
-  FontTrait fontTrait;
-
-  int32_t foreground;
-  int32_t background;
-  int32_t special;
-  bool reverse;
-} CellAttributes;
 
 // Keep in sync with ModeShape enum in cursor_shape.h.
 typedef NS_ENUM(NSUInteger, CursorModeShape) {
@@ -45,17 +36,9 @@ typedef NS_ENUM(NSUInteger, CursorModeShape) {
   CursorModeShapeCount = 18,
 };
 
-typedef struct {
-  NSInteger row;
-  NSInteger column;
-} Position;
-
 typedef NS_ENUM(NSInteger, RenderDataType) {
-  RenderDataTypePut,
-  RenderDataTypePutMarked,
+  RenderDataTypeRawLine,
   RenderDataTypeGoto,
-  RenderDataTypeHighlight,
-  RenderDataTypeEolClear,
 };
 
 typedef NS_ENUM(NSInteger, NvimServerMsgId) {
@@ -66,10 +49,7 @@ typedef NS_ENUM(NSInteger, NvimServerMsgId) {
   NvimServerMsgIdSetMenu,
   NvimServerMsgIdBusyStart,
   NvimServerMsgIdBusyStop,
-  NvimServerMsgIdMouseOn,
-  NvimServerMsgIdMouseOff,
   NvimServerMsgIdModeChange,
-  NvimServerMsgIdSetScrollRegion,
   NvimServerMsgIdScroll,
   NvimServerMsgIdUnmark,
   NvimServerMsgIdBell,

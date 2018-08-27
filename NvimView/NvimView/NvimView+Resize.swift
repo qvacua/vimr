@@ -64,6 +64,20 @@ extension NvimView {
     self.logger.info("=== Starting neovim...")
     let sockPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock").path
 
+    self.api.msgpackRawStream
+        .subscribe(onNext: { msg in
+          switch msg {
+          case let .notification(method, params):
+            print("NOTIFICATION: \(method) with \(params.count) elements")
+          case let .error(value, msg):
+            print("MSG ERROR: \(msg)")
+          default:
+            print("???")
+            break
+          }
+        }, onError: { print("ERROR: \($0)" )})
+        .disposed(by: self.disposeBag)
+
     // We wait here, since the user of NvimView cannot subscribe on the Completable. We could demand that the user
     // call launchNeoVim() by themselves, but...
     try? self.bridge

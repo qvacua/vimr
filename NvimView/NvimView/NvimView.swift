@@ -8,8 +8,8 @@ import RxNeovimApi
 import RxSwift
 
 public class NvimView: NSView,
-                       NSUserInterfaceValidations,
-                       NSTextInputClient {
+  NSUserInterfaceValidations,
+  NSTextInputClient {
 
   // MARK: - Public
   public struct Config {
@@ -95,9 +95,9 @@ public class NvimView: NSView,
 
     public var description: String {
       return "NVV.Theme<" +
-             "fg: \(self.foreground.hex), bg: \(self.background.hex), " +
-             "visual-fg: \(self.visualForeground.hex), visual-bg: \(self.visualBackground.hex)" +
-             ">"
+        "fg: \(self.foreground.hex), bg: \(self.background.hex), " +
+        "visual-fg: \(self.visualForeground.hex), visual-bg: \(self.visualBackground.hex)" +
+        ">"
     }
   }
 
@@ -125,6 +125,7 @@ public class NvimView: NSView,
   public var usesLigatures = false {
     didSet {
       self.drawer.usesLigatures = self.usesLigatures
+      self.runDrawer.usesLigatures = self.usesLigatures
       self.needsDisplay = true
     }
   }
@@ -141,6 +142,7 @@ public class NvimView: NSView,
 
       self._linespacing = newValue
       self.drawer.linespacing = self.linespacing
+      self.runDrawer.linespacing = self.linespacing
 
       self.updateFontMetaData(self._font)
     }
@@ -197,6 +199,11 @@ public class NvimView: NSView,
 
   public init(frame rect: NSRect, config: Config) {
     self.drawer = TextDrawer(font: self._font)
+    self.runDrawer = RunDrawer(
+      baseFont: self._font,
+      linespacing: self._linespacing,
+      usesLigatures: self.usesLigatures
+    )
     self.bridge = UiBridge(uuid: self.uuid, queue: self.queue, config: config)
     self.scheduler = SerialDispatchQueueScheduler(queue: self.queue,
                                                   internalSerialQueueName: "com.qvacua.NvimView.NvimView")
@@ -206,6 +213,7 @@ public class NvimView: NSView,
 
     self.wantsLayer = true
     self.cellSize = self.drawer.cellSize
+    Swift.print("\(self.cellSize) vs. \(self.runDrawer.cellSize)")
     self.descent = self.drawer.descent
     self.leading = self.drawer.leading
 
@@ -216,16 +224,15 @@ public class NvimView: NSView,
 
         case .ready:
           self.logger.info("Nvim is ready")
-          break
 
         case .initVimError:
           self.eventsSubject.onNext(.initVimError)
 
         case .unknown:
-          break
+          self.logger.error("Unknown message from NvimServer")
 
-        case let .resize(width, height):
-          self.resize(width: width, height: height)
+        case let .resize(value):
+          self.resize(value)
 
         case .clear:
           self.clear()
@@ -245,17 +252,14 @@ public class NvimView: NSView,
         case .mouseOff:
           self.mouseOff()
 
-        case let .modeChange(mode):
-          self.modeChange(mode)
+        case let .modeChange(value):
+          self.modeChange(value)
 
-        case let .setScrollRegion(top, bottom, left, right):
-          self.setScrollRegion(top: top, bottom: bottom, left: left, right: right)
+        case let .scroll(value):
+          self.scroll(value)
 
-        case let .scroll(amount):
-          self.scroll(amount)
-
-        case let .unmark(row, column):
-          self.unmark(row: row, column: column)
+        case let .unmark(value):
+          self.unmark(value)
 
         case .bell:
           self.bell()
@@ -263,41 +267,35 @@ public class NvimView: NSView,
         case .visualBell:
           self.visualBell()
 
-        case let .flush(data):
-          self.flush(data)
+        case let .flush(value):
+          self.flush(value)
 
-        case let .setForeground(value):
-          self.update(foreground: value)
-
-        case let .setBackground(value):
-          self.update(background: value)
-
-        case let .setSpecial(value):
-          self.update(special: value)
-
-        case let .setTitle(title):
-          self.set(title: title)
+        case let .setTitle(value):
+          self.setTitle(with: value)
 
         case .stop:
           self.stop()
 
         case let .dirtyStatusChanged(value):
-          self.set(dirty: value)
+          self.setDirty(with: value)
 
-        case let .cwdChanged(path):
-          self.cwdChanged(path)
+        case let .cwdChanged(value):
+          self.cwdChanged(value)
 
-        case let .colorSchemeChanged(values):
-          self.colorSchemeChanged(values)
+        case let .colorSchemeChanged(value):
+          self.colorSchemeChanged(value)
 
-        case let .defaultColorsChanged(values):
-          self.defaultColorsChanged(values)
+        case let .defaultColorsChanged(value):
+          self.defaultColorsChanged(value)
 
-        case let .optionSet(key, value):
+        case let .optionSet(value):
           break
 
-        case let .autoCommandEvent(autocmd, bufferHandle):
-          self.autoCommandEvent(autocmd, bufferHandle: bufferHandle)
+        case let .autoCommandEvent(value):
+          self.autoCommandEvent(value)
+
+        case let .highlightAttrs(value):
+          self.setAttr(with: value)
 
         case .debug1:
           self.debug1(self)
@@ -322,9 +320,9 @@ public class NvimView: NSView,
 
   @IBAction public func debug1(_ sender: Any?) {
     self.logger.debug("DEBUG 1 - Start")
-    self.bridge
-      .debug()
-      .subscribe()
+    self.ugrid.attributes.forEach { (key, value) in
+      Swift.print("\(key): \(value)")
+    }
     self.logger.debug("DEBUG 1 - End")
   }
 
@@ -334,13 +332,14 @@ public class NvimView: NSView,
 
     var row: Int
     var range: CountableClosedRange<Int>
-    var attrs: CellAttributes
+    var attrs: OldCellAttributes
 
     var description: String {
       return "RowRun<\(row): \(range)\n\(attrs)>"
     }
   }
 
+  let stdoutLogger = LogContext.stdoutLogger(as: NvimView.self)
   let logger = LogContext.fileLogger(as: NvimView.self, with: URL(fileURLWithPath: "/tmp/nvv.log"))
   let bridgeLogger = LogContext.fileLogger(as: NvimView.self,
                                            with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
@@ -348,8 +347,10 @@ public class NvimView: NSView,
   let bridge: UiBridge
   let api = RxNeovimApi.Api()
   let grid = Grid()
+  let ugrid = UGrid()
 
   let drawer: TextDrawer
+  let runDrawer: RunDrawer
 
   var markedText: String?
 

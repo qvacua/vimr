@@ -10,6 +10,7 @@ private let cgColorCache = SimpleCache<Int, CGColor>(countLimit: 200)
 
 class ColorUtils {
 
+  /// ARGB
   static func cgColorIgnoringAlpha(_ rgb: Int) -> CGColor {
     if let color = cgColorCache.object(forKey: rgb) {
       return color
@@ -21,6 +22,18 @@ class ColorUtils {
     return color
   }
 
+  static func cgColorIgnoringAlpha(_ rgb: Int32) -> CGColor {
+    if let color = cgColorCache.object(forKey: Int(rgb)) {
+      return color
+    }
+
+    let color = self.colorIgnoringAlpha(Int(rgb)).cgColor
+    cgColorCache.set(object: color, forKey: Int(rgb))
+
+    return color
+  }
+
+  /// ARGB
   static func colorIgnoringAlpha(_ rgb: Int) -> NSColor {
     if let color = colorCache.object(forKey: rgb) {
       return color

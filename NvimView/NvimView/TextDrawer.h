@@ -10,6 +10,15 @@
 #import "SharedTypes.h"
 
 
+typedef struct {
+    FontTrait fontTrait;
+
+    NSInteger foreground;
+    NSInteger background;
+    NSInteger special;
+    bool reverse;
+} OldCellAttributes;
+
 @interface TextDrawer : NSObject
 
 @property (nonatomic, nonnull, retain) NSFont *font;
@@ -24,7 +33,7 @@
 
 - (void)drawString:(NSString *_Nonnull)string
          positions:(CGPoint *_Nonnull)positions positionsCount:(NSInteger)positionsCount
-    highlightAttrs:(CellAttributes)attrs
+    highlightAttrs:(OldCellAttributes)attrs
            context:(CGContextRef _Nonnull)context;
 
 @end

@@ -347,6 +347,7 @@
 		1929BFE179BCA3C75A13D71B /* MatcherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatcherTests.swift; sourceTree = "<group>"; };
 		4B004BA920FBA6700043A396 /* DictionaryCoding.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DictionaryCoding.framework; path = ../Carthage/Build/Mac/DictionaryCoding.framework; sourceTree = "<group>"; };
 		4B029F1B1D45E349004EE0D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrefWindow.xib; sourceTree = "<group>"; };
+		4B0A1AA72120C35100F1E02F /* Socket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Socket.framework; path = ../Carthage/Build/Mac/Socket.framework; sourceTree = "<group>"; };
 		4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxNeovimApi.framework; path = ../Carthage/Build/Mac/RxNeovimApi.framework; sourceTree = "<group>"; };
 		4B19BEFA1E110183007E823C /* markdown */ = {isa = PBXFileReference; lastKnownFileType = folder; path = markdown; sourceTree = "<group>"; };
 		4B19BEFB1E110183007E823C /* preview */ = {isa = PBXFileReference; lastKnownFileType = folder; path = preview; sourceTree = "<group>"; };
@@ -642,6 +643,7 @@
 		4B5012001EBA791000F76C46 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4B0A1AA72120C35100F1E02F /* Socket.framework */,
 				4B004BA920FBA6700043A396 /* DictionaryCoding.framework */,
 				4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */,
 				4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */,
@@ -898,7 +900,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = "Tae Won Ha";
 				TargetAttributes = {
 					4BEBA5041CFF374B00673FDF = {
@@ -1252,7 +1254,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
@@ -1303,7 +1305,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 4.0;
