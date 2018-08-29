@@ -124,7 +124,6 @@ public class NvimView: NSView,
 
   public var usesLigatures = false {
     didSet {
-      self.drawer.usesLigatures = self.usesLigatures
       self.runDrawer.usesLigatures = self.usesLigatures
       self.needsDisplay = true
     }
@@ -141,7 +140,6 @@ public class NvimView: NSView,
       }
 
       self._linespacing = newValue
-      self.drawer.linespacing = self.linespacing
       self.runDrawer.linespacing = self.linespacing
 
       self.updateFontMetaData(self._font)
@@ -198,7 +196,6 @@ public class NvimView: NSView,
   }
 
   public init(frame rect: NSRect, config: Config) {
-    self.drawer = TextDrawer(font: self._font)
     self.runDrawer = AttributesRunDrawer(
       baseFont: self._font,
       linespacing: self._linespacing,
@@ -347,7 +344,6 @@ public class NvimView: NSView,
   let ugrid = UGrid()
 
   let cellAttributesCollection = CellAttributesCollection()
-  let drawer: TextDrawer
   let runDrawer: AttributesRunDrawer
 
   var markedText: String?

@@ -52,13 +52,9 @@
 		4B90F03A1FD2AFAE008A39E0 /* NvimView+Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F01C1FD2AFAC008A39E0 /* NvimView+Key.swift */; };
 		4B90F03B1FD2AFAE008A39E0 /* NvimObjectsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F01D1FD2AFAC008A39E0 /* NvimObjectsExtensions.swift */; };
 		4B90F03C1FD2AFAE008A39E0 /* NvimView+TouchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F01E1FD2AFAC008A39E0 /* NvimView+TouchBar.swift */; };
-		4B90F03E1FD2AFAE008A39E0 /* MMCoreTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0201FD2AFAD008A39E0 /* MMCoreTextView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4B90F03F1FD2AFAE008A39E0 /* NvimView+Draw.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0211FD2AFAD008A39E0 /* NvimView+Draw.swift */; };
-		4B90F0401FD2AFAE008A39E0 /* TextDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0221FD2AFAD008A39E0 /* TextDrawer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		4B90F0411FD2AFAE008A39E0 /* TextDrawer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B90F0231FD2AFAD008A39E0 /* TextDrawer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B90F0421FD2AFAE008A39E0 /* NvimView+UiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0241FD2AFAD008A39E0 /* NvimView+UiBridge.swift */; };
 		4B90F0431FD2AFAE008A39E0 /* NvimView+MenuItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0251FD2AFAD008A39E0 /* NvimView+MenuItems.swift */; };
-		4B90F0441FD2AFAE008A39E0 /* MMCoreTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B90F0261FD2AFAD008A39E0 /* MMCoreTextView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		4B90F0451FD2AFAE008A39E0 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0271FD2AFAD008A39E0 /* Logger.swift */; };
 		4B90F0461FD2AFAE008A39E0 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0281FD2AFAD008A39E0 /* Grid.swift */; };
 		4B90F0521FD2AFD3008A39E0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0511FD2AFD3008A39E0 /* main.m */; };
@@ -210,13 +206,9 @@
 		4B90F01D1FD2AFAC008A39E0 /* NvimObjectsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimObjectsExtensions.swift; sourceTree = "<group>"; };
 		4B90F01E1FD2AFAC008A39E0 /* NvimView+TouchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+TouchBar.swift"; sourceTree = "<group>"; };
 		4B90F01F1FD2AFAD008A39E0 /* InputTestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputTestView.swift; sourceTree = "<group>"; };
-		4B90F0201FD2AFAD008A39E0 /* MMCoreTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCoreTextView.m; sourceTree = "<group>"; };
 		4B90F0211FD2AFAD008A39E0 /* NvimView+Draw.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Draw.swift"; sourceTree = "<group>"; };
-		4B90F0221FD2AFAD008A39E0 /* TextDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDrawer.m; sourceTree = "<group>"; };
-		4B90F0231FD2AFAD008A39E0 /* TextDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextDrawer.h; sourceTree = "<group>"; };
 		4B90F0241FD2AFAD008A39E0 /* NvimView+UiBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+UiBridge.swift"; sourceTree = "<group>"; };
 		4B90F0251FD2AFAD008A39E0 /* NvimView+MenuItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+MenuItems.swift"; sourceTree = "<group>"; };
-		4B90F0261FD2AFAD008A39E0 /* MMCoreTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCoreTextView.h; sourceTree = "<group>"; };
 		4B90F0271FD2AFAD008A39E0 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		4B90F0281FD2AFAD008A39E0 /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
 		4B90F04F1FD2AFD3008A39E0 /* NvimServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NvimServer; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -365,8 +357,6 @@
 				4B90F01F1FD2AFAD008A39E0 /* InputTestView.swift */,
 				4B90F0121FD2AFAC008A39E0 /* KeyUtils.swift */,
 				4B90F0271FD2AFAD008A39E0 /* Logger.swift */,
-				4B90F0261FD2AFAD008A39E0 /* MMCoreTextView.h */,
-				4B90F0201FD2AFAD008A39E0 /* MMCoreTextView.m */,
 				4BD8742F2014C25F0039888E /* NvimAutoCommandEvent.generated.swift */,
 				4B90F01D1FD2AFAC008A39E0 /* NvimObjectsExtensions.swift */,
 				4B90F0101FD2AFAC008A39E0 /* NvimView.swift */,
@@ -379,8 +369,6 @@
 				4B90F0111FD2AFAC008A39E0 /* NvimView+Resize.swift */,
 				4B90F01E1FD2AFAC008A39E0 /* NvimView+TouchBar.swift */,
 				4B90F0241FD2AFAD008A39E0 /* NvimView+UiBridge.swift */,
-				4B90F0231FD2AFAD008A39E0 /* TextDrawer.h */,
-				4B90F0221FD2AFAD008A39E0 /* TextDrawer.m */,
 				1929B22A0CAD417EC3790F02 /* NvimViewObjects.swift */,
 				1929BBD7F88AE4F01E626691 /* NvimApiExtension.swift */,
 				1929B52174EC68D2974B5BAE /* UiBridge.swift */,
@@ -443,9 +431,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BF18C5D1FD2EEE400DF95D1 /* NvimView.h in Headers */,
-				4B90F0411FD2AFAE008A39E0 /* TextDrawer.h in Headers */,
 				4B177886201220F300E32FF0 /* SharedTypes.h in Headers */,
-				4B90F0441FD2AFAE008A39E0 /* MMCoreTextView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -633,12 +619,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B90F03E1FD2AFAE008A39E0 /* MMCoreTextView.m in Sources */,
 				4B90F03F1FD2AFAE008A39E0 /* NvimView+Draw.swift in Sources */,
 				4B90F02F1FD2AFAE008A39E0 /* NvimView+Resize.swift in Sources */,
 				4B90F0461FD2AFAE008A39E0 /* Grid.swift in Sources */,
 				4B90F0421FD2AFAE008A39E0 /* NvimView+UiBridge.swift in Sources */,
-				4B90F0401FD2AFAE008A39E0 /* TextDrawer.m in Sources */,
 				4BD874302014C2600039888E /* NvimAutoCommandEvent.generated.swift in Sources */,
 				4B90F02E1FD2AFAE008A39E0 /* NvimView.swift in Sources */,
 				4B90F03C1FD2AFAE008A39E0 /* NvimView+TouchBar.swift in Sources */,

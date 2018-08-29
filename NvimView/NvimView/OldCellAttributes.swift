@@ -5,7 +5,13 @@
 
 import Cocoa
 
-extension OldCellAttributes: CustomStringConvertible, Equatable {
+struct OldCellAttributes: CustomStringConvertible, Equatable {
+
+  var fontTrait: FontTrait
+  var foreground: Int
+  var background: Int
+  var special: Int
+  var reverse: Bool
 
   public static var debug: OldCellAttributes {
     return OldCellAttributes(fontTrait: [], foreground: 0, background: 0, special: 0, reverse: false)

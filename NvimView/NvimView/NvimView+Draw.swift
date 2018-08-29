@@ -272,7 +272,6 @@ extension NvimView {
   }
 
   func updateFontMetaData(_ newFont: NSFont) {
-    self.drawer.font = newFont
     self.runDrawer.baseFont = newFont
 
     self.cellSize = FontUtils.cellSize(
