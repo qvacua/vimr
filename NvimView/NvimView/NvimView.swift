@@ -219,13 +219,13 @@ public class NvimView: NSView,
         switch msg {
 
         case .ready:
-          self.logger.info("Nvim is ready")
+          logger.info("Nvim is ready")
 
         case .initVimError:
           self.eventsSubject.onNext(.initVimError)
 
         case .unknown:
-          self.logger.error("Unknown message from NvimServer")
+          logger.error("Unknown message from NvimServer")
 
         case let .resize(value):
           self.resize(value)
@@ -315,9 +315,9 @@ public class NvimView: NSView,
   }
 
   @IBAction public func debug1(_ sender: Any?) {
-    self.logger.debug("DEBUG 1 - Start")
+    logger.debug("DEBUG 1 - Start")
     // noop
-    self.logger.debug("DEBUG 1 - End")
+    logger.debug("DEBUG 1 - End")
   }
 
   // MARK: - Internal
@@ -333,11 +333,6 @@ public class NvimView: NSView,
     }
   }
 
-  let stdoutLogger = LogContext.stdoutLogger(as: NvimView.self)
-  let logger = LogContext.fileLogger(as: NvimView.self, with: URL(fileURLWithPath: "/tmp/nvv.log"))
-  let bridgeLogger = LogContext.fileLogger(as: NvimView.self,
-                                           with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
-                                           shouldLogDebug: nil)
   let bridge: UiBridge
   let api = RxNeovimApi.Api()
   let grid = Grid()

@@ -61,7 +61,7 @@ extension NvimView {
   }
 
   private func launchNeoVim(_ size: Size) {
-    self.logger.info("=== Starting neovim...")
+    logger.info("=== Starting neovim...")
     let sockPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock").path
 
     self.api.msgpackRawStream

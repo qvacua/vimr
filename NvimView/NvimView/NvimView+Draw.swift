@@ -190,9 +190,9 @@ extension NvimView {
                   )
               else {
               // GH-666: FIXME: correct error handling
-              self.logger.error("row: \(row), range: \(range): " +
-                                  "Could not get CellAttributes with ID " +
-                                  "\(cells.first?.attrId)")
+              logger.error("row: \(row), range: \(range): " +
+                           "Could not get CellAttributes with ID " +
+                           "\(cells.first?.attrId)")
               return nil
             }
 

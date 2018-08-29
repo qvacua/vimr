@@ -78,13 +78,13 @@ extension NvimView {
     // FIXME: handle when ㅎ -> delete
 
     if self.responds(to: aSelector) {
-      self.logger.debug("calling \(aSelector)")
+      logger.debug("calling \(aSelector)")
       self.perform(aSelector, with: self)
       self.keyDownDone = true
       return
     }
 
-    self.logger.debug("\(aSelector) not implemented, forwarding input to neovim")
+    logger.debug("\(aSelector) not implemented, forwarding input to neovim")
     self.keyDownDone = false
   }
 
@@ -220,7 +220,7 @@ extension NvimView {
       return result
     }
 
-    self.logger.debug("\(#function): returning empty range")
+    logger.debug("\(#function): returning empty range")
     return NSRange(location: NSNotFound, length: 0)
   }
 

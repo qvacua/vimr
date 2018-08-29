@@ -13,10 +13,6 @@ struct UCell {
 
 class UGrid {
 
-  private let logger = LogContext.stdoutLogger(
-    as: String(reflecting: UGrid.self)
-  )
-
   private(set) var size = Size.zero
   private(set) var posision = Position.zero
 
@@ -65,7 +61,7 @@ class UGrid {
   }
 
   func resize(_ size: Size) {
-    self.logger.debug(size)
+    logger.debug(size)
 
     self.size = size
     self.posision = .zero

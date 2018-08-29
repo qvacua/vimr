@@ -5,8 +5,6 @@
 
 import Cocoa
 
-// The definition can be found in NeoVimUiBridgeProtocol.h
-
 struct CellAttributes: CustomStringConvertible, Equatable {
 
   public static func ==(left: CellAttributes, right: CellAttributes) -> Bool {

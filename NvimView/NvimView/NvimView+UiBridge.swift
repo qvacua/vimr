@@ -15,7 +15,7 @@ extension NvimView {
       return
     }
 
-    self.bridgeLogger.debug("\(array[0]) x \(array[1])")
+    bridgeLogger.debug("\(array[0]) x \(array[1])")
     gui.async {
       self.ugrid.resize(Size(width: array[0], height: array[1]))
       self.markForRenderWholeView()
@@ -23,7 +23,7 @@ extension NvimView {
   }
 
   func clear() {
-    self.bridgeLogger.mark()
+    bridgeLogger.mark()
 
     gui.async {
       self.grid.clear()
@@ -37,14 +37,14 @@ extension NvimView {
       return CursorModeShape(rawValue: UInt(rawValue))
     }) else { return }
 
-    self.bridgeLogger.debug(name(of: mode))
+    bridgeLogger.debug(name(of: mode))
     gui.async {
       self.mode = mode
     }
   }
 
   func scroll(_ value: MessagePackValue) {
-//    self.bridgeLogger.debug(count)
+//    bridgeLogger.debug(count)
 //
 //    gui.async {
 //      self.grid.scroll(count)
@@ -56,7 +56,7 @@ extension NvimView {
   }
 
   func unmark(_ value: MessagePackValue) {
-//    self.bridgeLogger.debug("\(row):\(column)")
+//    bridgeLogger.debug("\(row):\(column)")
 //
 //    gui.async {
 //      let position = Position(row: row, column: column)
@@ -67,7 +67,7 @@ extension NvimView {
   }
 
   func flush(_ renderData: [MessagePackValue]) {
-    self.bridgeLogger.hr()
+    bridgeLogger.hr()
 
     gui.async {
       renderData.forEach { value in
@@ -103,12 +103,12 @@ extension NvimView {
   func setTitle(with value: MessagePackValue) {
     guard let title = value.stringValue else { return }
 
-    self.bridgeLogger.debug(title)
+    bridgeLogger.debug(title)
     self.eventsSubject.onNext(.setTitle(title))
   }
 
   func stop() {
-    self.bridgeLogger.hr()
+    bridgeLogger.hr()
     try? self.api
       .stop()
       .andThen(self.bridge.quit())
@@ -128,7 +128,7 @@ extension NvimView {
           let event = NvimAutoCommandEvent(rawValue: array[0]) else { return }
     let bufferHandle = array[1]
 
-    self.bridgeLogger.debug("\(event) -> \(bufferHandle)")
+    bridgeLogger.debug("\(event) -> \(bufferHandle)")
 
     if event == .bufwinenter || event == .bufwinleave {
       self.bufferListChanged()
@@ -148,12 +148,12 @@ extension NvimView {
   }
 
   func ipcBecameInvalid(_ reason: String) {
-    self.bridgeLogger.debug(reason)
+    bridgeLogger.debug(reason)
 
     self.eventsSubject.onNext(.ipcBecameInvalid(reason))
     self.eventsSubject.onCompleted()
 
-    self.bridgeLogger.error("Force-closing due to IPC error.")
+    bridgeLogger.error("Force-closing due to IPC error.")
     try? self.api
       .stop()
       .andThen(self.bridge.forceQuit())
@@ -163,7 +163,7 @@ extension NvimView {
 
   private func doRawLine(data: [MessagePackValue]) {
     guard data.count == 7 else {
-      self.stdoutLogger.error(
+      stdoutLogger.error(
         "Data has wrong number of elements: \(data.count) instead of 7"
       )
       return
@@ -178,11 +178,11 @@ extension NvimView {
           let attrIds = data[6].arrayValue?.compactMap({ $0.intValue })
       else {
 
-      self.stdoutLogger.error("Values could not be read from: \(data)")
+      stdoutLogger.error("Values could not be read from: \(data)")
       return
     }
 
-    self.bridgeLogger.trace(
+    bridgeLogger.trace(
       "row: \(row), startCol: \(startCol), endCol: \(endCol), " +
         "clearCol: \(clearCol), clearAttr: \(clearAttr), " +
         "chunk: \(chunk), attrIds: \(attrIds)"
@@ -222,7 +222,7 @@ extension NvimView {
   }
 
   private func doGoto(position: Position) {
-//    self.bridgeLogger.debug(position)
+//    bridgeLogger.debug(position)
 
     self.markForRender(cellPosition: self.grid.position)
     self.grid.goto(position)
@@ -233,7 +233,7 @@ extension NvimView {
 extension NvimView {
 
   func bell() {
-    self.bridgeLogger.mark()
+    bridgeLogger.mark()
 
     NSSound.beep()
   }
@@ -241,7 +241,7 @@ extension NvimView {
   func cwdChanged(_ value: MessagePackValue) {
     guard let cwd = value.stringValue else { return }
 
-    self.bridgeLogger.debug(cwd)
+    bridgeLogger.debug(cwd)
     self._cwd = URL(fileURLWithPath: cwd)
     self.eventsSubject.onNext(.cwdChanged)
   }
@@ -250,7 +250,7 @@ extension NvimView {
     guard let values = MessagePackUtils.array(from: value, ofSize: 5, conversion: { $0.intValue }) else { return }
 
     let theme = Theme(values)
-    self.bridgeLogger.debug(theme)
+    bridgeLogger.debug(theme)
 
     gui.async {
       self.theme = theme
@@ -265,7 +265,7 @@ extension NvimView {
       return
     }
 
-    self.bridgeLogger.trace(values)
+    bridgeLogger.trace(values)
 
     let attrs = CellAttributes(
       fontTrait: [],
@@ -288,7 +288,7 @@ extension NvimView {
   func setDirty(with value: MessagePackValue) {
     guard let dirty = value.boolValue else { return }
 
-    self.bridgeLogger.debug(dirty)
+    bridgeLogger.debug(dirty)
     self.eventsSubject.onNext(.setDirtyStatus(dirty))
   }
 
@@ -304,7 +304,7 @@ extension NvimView {
           let reverse = array[5].boolValue
       else {
 
-      self.bridgeLogger.error("Could not get highlight attributes from " +
+      bridgeLogger.error("Could not get highlight attributes from " +
                                 "\(value)")
       return
     }
@@ -318,7 +318,7 @@ extension NvimView {
       reverse: reverse
     )
 
-    self.bridgeLogger.trace("\(id) -> \(attrs)")
+    bridgeLogger.trace("\(id) -> \(attrs)")
 
     gui.async {
       self.cellAttributesCollection.set(attributes: attrs, for: id)
@@ -326,31 +326,31 @@ extension NvimView {
   }
 
   func updateMenu() {
-    self.bridgeLogger.mark()
+    bridgeLogger.mark()
   }
 
   func busyStart() {
-    self.bridgeLogger.mark()
+    bridgeLogger.mark()
   }
 
   func busyStop() {
-    self.bridgeLogger.mark()
+    bridgeLogger.mark()
   }
 
   func mouseOn() {
-    self.bridgeLogger.mark()
+    bridgeLogger.mark()
   }
 
   func mouseOff() {
-    self.bridgeLogger.mark()
+    bridgeLogger.mark()
   }
 
   func visualBell() {
-    self.bridgeLogger.mark()
+    bridgeLogger.mark()
   }
 
   func suspend() {
-    self.bridgeLogger.mark()
+    bridgeLogger.mark()
   }
 }
 
