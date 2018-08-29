@@ -66,7 +66,10 @@ class UGrid {
     self.size = size
     self.posision = .zero
 
-    let emptyRow = Array(repeating: UCell(string: clearString, attrId: defaultAttrId), count: size.width)
+    let emptyRow = Array(
+      repeating: UCell(string: clearString, attrId: defaultAttrId),
+      count: size.width
+    )
     self.cells = Array(repeating: emptyRow, count: size.height)
   }
 
