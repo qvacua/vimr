@@ -309,4 +309,12 @@ extension NvimView {
 
     return nil
   }
+
+  func wrapNamedKeys(_ string: String) -> String {
+    return "<\(string)>"
+  }
+
+  func vimPlainString(_ string: String) -> String {
+    return string.replacingOccurrences(of: "<", with: self.wrapNamedKeys("lt"))
+  }
 }

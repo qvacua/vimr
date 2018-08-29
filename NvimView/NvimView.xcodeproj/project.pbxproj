@@ -11,6 +11,7 @@
 		1929B2DB631E6EB5C3452B68 /* MyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BAF033A398BFBC2A7890 /* MyView.swift */; };
 		1929B30D6C4175835D1F5B21 /* MessagePackCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B44323D6611E2927EC3B /* MessagePackCommons.swift */; };
 		1929B36C51BCDFCCEE974EA2 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9C55A79D97272894F5D /* SwiftCommons.swift */; };
+		1929B3B70C96A78FD63DE737 /* NvimView+Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDC8F32F4A0D2299B5C5 /* NvimView+Debug.swift */; };
 		1929B40A751BDA2882D4FC94 /* NvimViewObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B22A0CAD417EC3790F02 /* NvimViewObjects.swift */; };
 		1929B40C9C30B46C0E0B9DE2 /* CellAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE45756C88F8B43804D2 /* CellAttributes.swift */; };
 		1929B434DB094D61B3977390 /* TypesetterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFCCDE5C7145BE5A7387 /* TypesetterTest.swift */; };
@@ -187,6 +188,7 @@
 		1929BBD7F88AE4F01E626691 /* NvimApiExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimApiExtension.swift; sourceTree = "<group>"; };
 		1929BD167BE7C6BB788DAE2A /* ProcessUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcessUtils.swift; sourceTree = "<group>"; };
 		1929BD4C55D5EA933BFFB16B /* OldCellAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OldCellAttributes.swift; sourceTree = "<group>"; };
+		1929BDC8F32F4A0D2299B5C5 /* NvimView+Debug.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Debug.swift"; sourceTree = "<group>"; };
 		1929BDE2C6003A6EDC02129C /* ColorUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorUtils.swift; sourceTree = "<group>"; };
 		1929BE45756C88F8B43804D2 /* CellAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellAttributes.swift; sourceTree = "<group>"; };
 		1929BFCCDE5C7145BE5A7387 /* TypesetterTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypesetterTest.swift; sourceTree = "<group>"; };
@@ -387,6 +389,7 @@
 				1929BD4C55D5EA933BFFB16B /* OldCellAttributes.swift */,
 				1929B4355610D4E5607EAA40 /* Drawing */,
 				1929B2BA05AC3E1A11D6EBFC /* Commons */,
+				1929BDC8F32F4A0D2299B5C5 /* NvimView+Debug.swift */,
 			);
 			path = NvimView;
 			sourceTree = "<group>";
@@ -667,6 +670,7 @@
 				1929BC8B14CA31C283455CF5 /* RxSwiftCommons.swift in Sources */,
 				1929B83EAD32DC419FEC68DB /* CocoaCommons.swift in Sources */,
 				1929BAB9A0399206FB7EBC76 /* CellAttributesCollection.swift in Sources */,
+				1929B3B70C96A78FD63DE737 /* NvimView+Debug.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

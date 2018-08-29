@@ -12,11 +12,9 @@ extension NvimView {
   }
 
   override public func draw(_ dirtyUnionRect: NSRect) {
-    guard self.ugrid.hasData else {
-      return
-    }
+    guard self.ugrid.hasData else { return }
 
-    let context = NSGraphicsContext.current!.cgContext
+    guard let context = NSGraphicsContext.current?.cgContext else { return }
     context.saveGState()
     defer { context.restoreGState() }
 
@@ -30,9 +28,9 @@ extension NvimView {
       return
     }
 
-    // When both anti-aliasing and font smoothing is turned on, then the "Use LCD font smoothing
-    // when available" setting is used to render texts,
-    // cf. chapter 11 from "Programming with Quartz".
+    // When both anti-aliasing and font smoothing is turned on,
+    // then the "Use LCD font smoothing when available" setting is used
+    // to render texts, cf. chapter 11 from "Programming with Quartz".
     context.setShouldSmoothFonts(true);
     context.setTextDrawingMode(.fill);
 
@@ -47,61 +45,9 @@ extension NvimView {
     }
 //    self.drawCursor(context: context)
 
-//    self.draw(cellGridIn: context)
-  }
-
-  private func draw(cellGridIn context: CGContext) {
-    context.saveGState()
-    defer { context.restoreGState() }
-
-    let color = NSColor.magenta.cgColor
-    context.setFillColor(color)
-
-    let discreteSize = self.discreteSize(size: self.bounds.size)
-    var lines = [
-      CGRect(x: 0 + self.xOffset, y: 0, width: 1, height: self.bounds.height),
-      CGRect(
-        x: self.bounds.width - 1 + self.xOffset,
-        y: 0,
-        width: 1,
-        height: self.bounds.height
-      ),
-      CGRect(
-        x: 0,
-        y: self.bounds.height - 1 - self.yOffset,
-        width: self.bounds.width,
-        height: 1
-      ),
-      CGRect(
-        x: 0,
-        y: self.bounds.height - 1 - self.yOffset
-          - CGFloat(discreteSize.height) * self.self.cellSize.height,
-        width: self.bounds.width,
-        height: 1
-      ),
-    ]
-
-    for row in 0...discreteSize.height {
-      for col in 0...discreteSize.width {
-        lines.append(contentsOf: [
-          CGRect(
-            x: CGFloat(col) * self.cellSize.width + self.xOffset - 1,
-            y: 0,
-            width: 1,
-            height: self.bounds.height
-          ),
-          CGRect(
-            x: 0,
-            y: self.bounds.height - 1
-              - self.yOffset - CGFloat(row) * self.self.cellSize.height,
-            width: self.bounds.width,
-            height: 1
-          ),
-        ])
-      }
-    }
-
-    lines.forEach { $0.fill() }
+#if DEBUG
+    // self.draw(cellGridIn: context)
+#endif
   }
 
   private func draw(_ run: AttributesRun, in context: CGContext) {
@@ -325,14 +271,6 @@ extension NvimView {
     )
   }
 
-  func wrapNamedKeys(_ string: String) -> String {
-    return "<\(string)>"
-  }
-
-  func vimPlainString(_ string: String) -> String {
-    return string.replacingOccurrences(of: "<", with: self.wrapNamedKeys("lt"))
-  }
-
   func updateFontMetaData(_ newFont: NSFont) {
     self.drawer.font = newFont
     self.runDrawer.baseFont = newFont
@@ -340,8 +278,6 @@ extension NvimView {
     self.cellSize = FontUtils.cellSize(
       of: newFont, linespacing: self.linespacing
     )
-    self.descent = self.drawer.descent
-    self.leading = self.drawer.leading
 
     self.resizeNeoVimUi(to: self.bounds.size)
   }

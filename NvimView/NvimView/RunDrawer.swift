@@ -80,7 +80,7 @@ class AttributesRunDrawer {
 
   private let typesetter = Typesetter()
 
-  var cellSize: CGSize = .zero
+  private var cellSize: CGSize = .zero
   private var baselineOffset: CGFloat = 0
   private var underlinePosition: CGFloat = 0
   private var underlineThickness: CGFloat = 0

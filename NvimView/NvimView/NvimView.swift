@@ -215,8 +215,6 @@ public class NvimView: NSView,
     self.cellSize = FontUtils.cellSize(
       of: self.font, linespacing: self.linespacing
     )
-    self.descent = self.drawer.descent
-    self.leading = self.drawer.leading
 
     self.api.queue = self.queue
     self.bridge.stream
@@ -367,8 +365,6 @@ public class NvimView: NSView,
   var xOffset = CGFloat(0)
   var yOffset = CGFloat(0)
   var cellSize = CGSize.zero
-  var descent = CGFloat(0)
-  var leading = CGFloat(0)
 
   var scrollGuardCounterX = 5
   var scrollGuardCounterY = 5
