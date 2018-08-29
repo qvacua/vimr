@@ -275,7 +275,10 @@ extension NvimView {
       reverse: false
     )
     gui.async {
-      self.ugrid.set(attrs: attrs, for: 0)
+      self.cellAttributesCollection.set(
+        attributes: attrs,
+        for: CellAttributesCollection.defaultAttributesId
+      )
       self.layer?.backgroundColor = ColorUtils.cgColorIgnoringAlpha(
         attrs.background
       )
@@ -318,7 +321,7 @@ extension NvimView {
     self.bridgeLogger.trace("\(id) -> \(attrs)")
 
     gui.async {
-      self.ugrid.set(attrs: attrs, for: id)
+      self.cellAttributesCollection.set(attributes: attrs, for: id)
     }
   }
 

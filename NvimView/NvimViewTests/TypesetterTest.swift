@@ -15,7 +15,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
       nvimCells: emojiMarked(["a", "b", "c"]),
       startColumn: 10,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
@@ -26,17 +26,20 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.font).to(equal(defaultFont))
     expect(run.glyphs).to(haveCount(3))
     expect(run.positions).to(equal(
-      (10..<13).map { CGPoint(x: CGFloat($0) * defaultWidth, y: yPosition) }
+      (10..<13).map {
+        CGPoint(x: offset.x + CGFloat($0) * defaultWidth, y: offset.y)
+      }
     ))
 
-    self.assertEmojiMarker(run: runs[1], xPosition: 13 * defaultWidth)
+    self.assertEmojiMarker(run: runs[1],
+                           xPosition: offset.x + 13 * defaultWidth)
   }
 
   func testAccentedChars() {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
       nvimCells: emojiMarked(["ü", "î", "ñ"]),
       startColumn: 20,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
@@ -47,10 +50,13 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.font).to(equal(defaultFont))
     expect(run.glyphs).to(haveCount(3))
     expect(run.positions).to(equal(
-      (20..<23).map { CGPoint(x: CGFloat($0) * defaultWidth, y: yPosition) }
+      (20..<23).map {
+        CGPoint(x: offset.x + CGFloat($0) * defaultWidth, y: offset.y)
+      }
     ))
 
-    self.assertEmojiMarker(run: runs[1], xPosition: 23 * defaultWidth)
+    self.assertEmojiMarker(run: runs[1],
+                           xPosition: offset.x + 23 * defaultWidth)
   }
 
   func testCombiningChars() {
@@ -59,67 +65,68 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
         ["a", "a\u{1DC1}", "a\u{032A}", "a\u{034B}", "b", "c"]
       ),
       startColumn: 10,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
     )
     expect(runs).to(haveCount(6))
 
-    var glyphRun = runs[0]
-    expect(glyphRun.font).to(equal(defaultFont))
-    expect(glyphRun.glyphs).to(haveCount(1))
-    expect(glyphRun.positions).to(equal(
+    var run = runs[0]
+    expect(run.font).to(equal(defaultFont))
+    expect(run.glyphs).to(haveCount(1))
+    expect(run.positions).to(equal(
       [
-        CGPoint(x: 10 * defaultWidth, y: yPosition)
+        CGPoint(x: offset.x + 10 * defaultWidth, y: offset.y)
       ]
     ))
 
-    var run = runs[1]
+    run = runs[1]
     expect(run.font).to(equal(courierNew))
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions[0])
-      .to(equal(CGPoint(x: 11 * defaultWidth, y: yPosition)))
+      .to(equal(CGPoint(x: offset.x + 11 * defaultWidth, y: offset.y)))
     expect(run.positions[1].x)
-      .to(beCloseTo(11 * defaultWidth + 0.003, within: 0.001))
-    expect(run.positions[1].y).to(equal(yPosition))
+      .to(beCloseTo(offset.x + 11 * defaultWidth + 0.003, within: 0.001))
+    expect(run.positions[1].y).to(equal(offset.y))
 
     run = runs[2]
     expect(run.font).to(equal(defaultFont))
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions[0])
-      .to(equal(CGPoint(x: 12 * defaultWidth, y: yPosition)))
+      .to(equal(CGPoint(x: offset.x + 12 * defaultWidth, y: offset.y)))
     expect(run.positions[1].x)
-      .to(beCloseTo(12 * defaultWidth, within: 0.001))
-    expect(run.positions[1].y).to(equal(yPosition))
+      .to(beCloseTo(offset.x + 12 * defaultWidth, within: 0.001))
+    expect(run.positions[1].y).to(equal(offset.y))
 
     run = runs[3]
     expect(run.font).to(equal(monaco))
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions[0])
-      .to(equal(CGPoint(x: 13 * defaultWidth, y: yPosition)))
+      .to(equal(CGPoint(x: offset.x + 13 * defaultWidth, y: offset.y)))
     expect(run.positions[1].x)
-      .to(beCloseTo(13 * defaultWidth + 7.804, within: 0.001))
-    expect(run.positions[1].y).to(equal(yPosition))
+      .to(beCloseTo(offset.x + 13 * defaultWidth + 7.804, within: 0.001))
+    expect(run.positions[1].y).to(equal(offset.y))
 
     run = runs[4]
     expect(run.font).to(equal(defaultFont))
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 14 * defaultWidth, y: yPosition),
-        CGPoint(x: 15 * defaultWidth, y: yPosition),
+        CGPoint(x: offset.x + 14 * defaultWidth, y: offset.y),
+        CGPoint(x: offset.x + 15 * defaultWidth, y: offset.y),
       ]
     ))
 
-    self.assertEmojiMarker(run: runs[5], xPosition: 16 * defaultWidth)
+    self.assertEmojiMarker(run: runs[5],
+                           xPosition: offset.x + 16 * defaultWidth)
   }
 
   func testSimpleEmojis() {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
       nvimCells: asciiMarked(["a", "b", "\u{1F600}", "", "\u{1F377}", ""]),
       startColumn: 1,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
@@ -131,8 +138,8 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 1 * defaultWidth, y: yPosition),
-        CGPoint(x: 2 * defaultWidth, y: yPosition),
+        CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y),
+        CGPoint(x: offset.x + 2 * defaultWidth, y: offset.y),
       ]
     ))
 
@@ -141,19 +148,19 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 3 * defaultWidth, y: yPosition),
-        CGPoint(x: 5 * defaultWidth, y: yPosition),
+        CGPoint(x: offset.x + 3 * defaultWidth, y: offset.y),
+        CGPoint(x: offset.x + 5 * defaultWidth, y: offset.y),
       ]
     ))
 
-    self.assertAsciiMarker(run: runs[2], xPosition: 7 * defaultWidth)
+    self.assertAsciiMarker(run: runs[2], xPosition: offset.x + 7 * defaultWidth)
   }
 
   func testEmojisWithFitzpatrickModifier() {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
       nvimCells: asciiMarked(["a", "\u{1F476}", "", "\u{1F3FD}", ""]),
       startColumn: 1,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
@@ -166,7 +173,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.glyphs).to(haveCount(1))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 1 * defaultWidth, y: yPosition),
+        CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y),
       ]
     ))
 
@@ -174,18 +181,18 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.font).to(equal(emoji))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 2 * defaultWidth, y: yPosition),
+        CGPoint(x: offset.x + 2 * defaultWidth, y: offset.y),
       ]
     ))
 
-    self.assertAsciiMarker(run: runs[2], xPosition: 6 * defaultWidth)
+    self.assertAsciiMarker(run: runs[2], xPosition: offset.x + 6 * defaultWidth)
   }
 
   func testHangul() {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
       nvimCells: asciiMarked(["a", "b", "하", "", "태", "", "원", ""]),
       startColumn: 1,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
@@ -197,8 +204,8 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 1 * defaultWidth, y: yPosition),
-        CGPoint(x: 2 * defaultWidth, y: yPosition),
+        CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y),
+        CGPoint(x: offset.x + 2 * defaultWidth, y: offset.y),
       ]
     ))
 
@@ -206,20 +213,20 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.font).to(equal(gothic))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 3 * defaultWidth, y: yPosition),
-        CGPoint(x: 5 * defaultWidth, y: yPosition),
-        CGPoint(x: 7 * defaultWidth, y: yPosition),
+        CGPoint(x: offset.x + 3 * defaultWidth, y: offset.y),
+        CGPoint(x: offset.x + 5 * defaultWidth, y: offset.y),
+        CGPoint(x: offset.x + 7 * defaultWidth, y: offset.y),
       ]
     ))
 
-    self.assertAsciiMarker(run: runs[2], xPosition: 9 * defaultWidth)
+    self.assertAsciiMarker(run: runs[2], xPosition: offset.x + 9 * defaultWidth)
   }
 
   func testHanja() {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
       nvimCells: asciiMarked(["a", "b", "河", "", "泰", "", "元", ""]),
       startColumn: 1,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
@@ -231,8 +238,8 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 1 * defaultWidth, y: yPosition),
-        CGPoint(x: 2 * defaultWidth, y: yPosition),
+        CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y),
+        CGPoint(x: offset.x + 2 * defaultWidth, y: offset.y),
       ]
     ))
 
@@ -240,20 +247,20 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.font).to(equal(gothic))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 3 * defaultWidth, y: yPosition),
-        CGPoint(x: 5 * defaultWidth, y: yPosition),
-        CGPoint(x: 7 * defaultWidth, y: yPosition),
+        CGPoint(x: offset.x + 3 * defaultWidth, y: offset.y),
+        CGPoint(x: offset.x + 5 * defaultWidth, y: offset.y),
+        CGPoint(x: offset.x + 7 * defaultWidth, y: offset.y),
       ]
     ))
 
-    self.assertAsciiMarker(run: runs[2], xPosition: 9 * defaultWidth)
+    self.assertAsciiMarker(run: runs[2], xPosition: offset.x + 9 * defaultWidth)
   }
 
   func testOthers() {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
       nvimCells: emojiMarked(["a", "\u{10437}", "\u{1F14}"]),
       startColumn: 1,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
@@ -265,7 +272,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.glyphs).to(haveCount(1))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 1 * defaultWidth, y: yPosition)
+        CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y)
       ]
     ))
 
@@ -273,7 +280,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.font).to(equal(baskerville))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 2 * defaultWidth, y: yPosition),
+        CGPoint(x: offset.x + 2 * defaultWidth, y: offset.y),
       ]
     ))
 
@@ -282,18 +289,18 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.glyphs).to(haveCount(1))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 3 * defaultWidth, y: yPosition),
+        CGPoint(x: offset.x + 3 * defaultWidth, y: offset.y),
       ]
     ))
 
-    self.assertEmojiMarker(run: runs[3], xPosition: 4 * defaultWidth)
+    self.assertEmojiMarker(run: runs[3], xPosition: offset.x + 4 * defaultWidth)
   }
 
   func testSimpleLigatureChars() {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
       nvimCells: emojiMarked(["a", "-", "-", ">", "a"]),
       startColumn: 1,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: fira,
       cellWidth: firaWidth
@@ -305,24 +312,26 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.font).to(equal(fira))
     expect(run.glyphs).to(equal([133, 1023, 1023, 1148, 133]))
     expect(run.positions).to(equal(
-      (1..<6).map { CGPoint(x: CGFloat($0) * firaWidth, y: yPosition) }
+      (1..<6).map {
+        CGPoint(x: offset.x + CGFloat($0) * firaWidth, y: offset.y)
+      }
     ))
 
-    self.assertEmojiMarker(run: runs[1], xPosition: 6 * firaWidth)
+    self.assertEmojiMarker(run: runs[1], xPosition: offset.x + 6 * firaWidth)
   }
 
   private func assertAsciiMarker(run: FontGlyphRun, xPosition: CGFloat) {
     expect(run.font).to(equal(defaultFont))
-    expect(run.positions).to(equal([CGPoint(x: xPosition, y: yPosition)]))
+    expect(run.positions).to(equal([CGPoint(x: xPosition, y: offset.y)]))
   }
 
   private func assertEmojiMarker(run: FontGlyphRun, xPosition: CGFloat) {
     expect(run.font).to(equal(emoji))
-    expect(run.positions).to(equal([CGPoint(x: xPosition, y: yPosition)]))
+    expect(run.positions).to(equal([CGPoint(x: xPosition, y: offset.y)]))
   }
 }
 
-class NewTypesetterWithLigaturesTest: XCTestCase {
+class TypesetterWithLigaturesTest: XCTestCase {
 
   func testGroupGlyphsAndUtf16Cells() {
     let cells = typesetter.groupUtf16CellsAndGlyphs(
@@ -362,8 +371,8 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     expect(cells).to(haveCount(3))
 
     var cell = cells[0]
-    var utf16Cells = cell.0
-    var glyphs = cell.1
+    var utf16Cells = cell.positionedUtf16Cells
+    var glyphs = cell.utf16IndexedGlyphs
     expect(utf16Cells).to(haveCount(1))
     expect(utf16Cells[0].utf16).to(equal([0, 1, 2]))
     expect(utf16Cells[0].column).to(equal(1))
@@ -373,8 +382,8 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     expect(glyphs[2].glyph).to(equal(2))
 
     cell = cells[1]
-    utf16Cells = cell.0
-    glyphs = cell.1
+    utf16Cells = cell.positionedUtf16Cells
+    glyphs = cell.utf16IndexedGlyphs
     expect(utf16Cells).to(haveCount(2))
     expect(utf16Cells[0].utf16).to(equal([3, 4]))
     expect(utf16Cells[0].column).to(equal(3))
@@ -384,8 +393,8 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     expect(glyphs[0].glyph).to(equal(3))
 
     cell = cells[2]
-    utf16Cells = cell.0
-    glyphs = cell.1
+    utf16Cells = cell.positionedUtf16Cells
+    glyphs = cell.utf16IndexedGlyphs
     expect(utf16Cells).to(haveCount(1))
     expect(utf16Cells[0].utf16).to(equal([7]))
     expect(utf16Cells[0].column).to(equal(6))
@@ -444,8 +453,8 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     expect(cells).to(haveCount(5))
 
     var cell = cells[0]
-    var utf16Cells = cell.0
-    var glyphs = cell.1
+    var utf16Cells = cell.positionedUtf16Cells
+    var glyphs = cell.utf16IndexedGlyphs
     expect(utf16Cells).to(haveCount(1))
     expect(utf16Cells[0].utf16).to(equal([0, 1, 2]))
     expect(utf16Cells[0].column).to(equal(1))
@@ -454,8 +463,8 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     expect(glyphs[1].glyph).to(equal(1))
 
     cell = cells[1]
-    utf16Cells = cell.0
-    glyphs = cell.1
+    utf16Cells = cell.positionedUtf16Cells
+    glyphs = cell.utf16IndexedGlyphs
     expect(utf16Cells).to(haveCount(2))
     expect(utf16Cells[0].utf16).to(equal([3, 4]))
     expect(utf16Cells[0].column).to(equal(3))
@@ -465,8 +474,8 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     expect(glyphs[0].glyph).to(equal(2))
 
     cell = cells[2]
-    utf16Cells = cell.0
-    glyphs = cell.1
+    utf16Cells = cell.positionedUtf16Cells
+    glyphs = cell.utf16IndexedGlyphs
     expect(utf16Cells).to(haveCount(1))
     expect(utf16Cells[0].utf16).to(equal([7]))
     expect(utf16Cells[0].column).to(equal(6))
@@ -474,8 +483,8 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     expect(glyphs[0].glyph).to(equal(3))
 
     cell = cells[3]
-    utf16Cells = cell.0
-    glyphs = cell.1
+    utf16Cells = cell.positionedUtf16Cells
+    glyphs = cell.utf16IndexedGlyphs
     expect(utf16Cells).to(haveCount(1))
     expect(utf16Cells[0].utf16).to(equal([8]))
     expect(utf16Cells[0].column).to(equal(7))
@@ -485,8 +494,8 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     expect(glyphs[2].glyph).to(equal(6))
 
     cell = cells[4]
-    utf16Cells = cell.0
-    glyphs = cell.1
+    utf16Cells = cell.positionedUtf16Cells
+    glyphs = cell.utf16IndexedGlyphs
     expect(utf16Cells).to(haveCount(1))
     expect(utf16Cells[0].utf16).to(equal([9]))
     expect(utf16Cells[0].column).to(equal(8))
@@ -501,12 +510,12 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
         5..<9,
       ],
       groupedCellsAndGlyphs: [
-        (
-          [
+        CellGlyphUnion(
+          positionedUtf16Cells: [
             PositionedUtf16Cell(utf16: [0, 1, 2], column: 1),
             PositionedUtf16Cell(utf16: [3, 4], column: 2)
           ],
-          [
+          utf16IndexedGlyphs: [
             Utf16IndexedGlyph(
               glyph: 0, index: 0, position: .zero, advance: .zero
             ),
@@ -515,12 +524,12 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
             ),
           ]
         ),
-        (
-          [
+        CellGlyphUnion(
+          positionedUtf16Cells: [
             PositionedUtf16Cell(utf16: [5], column: 3),
             PositionedUtf16Cell(utf16: [6], column: 4),
           ],
-          [
+          utf16IndexedGlyphs: [
             Utf16IndexedGlyph(
               glyph: 2, index: 5, position: .zero, advance: .zero
             ),
@@ -529,12 +538,12 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
             ),
           ]
         ),
-        (
-          [
+        CellGlyphUnion(
+          positionedUtf16Cells: [
             PositionedUtf16Cell(utf16: [7], column: 5),
             PositionedUtf16Cell(utf16: [8], column: 6),
           ],
-          [
+          utf16IndexedGlyphs: [
             Utf16IndexedGlyph(
               glyph: 4, index: 7, position: .zero, advance: .zero
             ),
@@ -557,11 +566,11 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
         7..<8,
       ],
       groupedCellsAndGlyphs: [
-        (
-          [
+        CellGlyphUnion(
+          positionedUtf16Cells: [
             PositionedUtf16Cell(utf16: [0], column: 1),
           ],
-          [
+          utf16IndexedGlyphs: [
             Utf16IndexedGlyph(
               glyph: 0, index: 0, position: .zero, advance: .zero
             ),
@@ -570,14 +579,14 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
             ),
           ]
         ),
-        (
-          [
+        CellGlyphUnion(
+          positionedUtf16Cells: [
             PositionedUtf16Cell(utf16: [1], column: 2),
             PositionedUtf16Cell(utf16: [2], column: 3),
             PositionedUtf16Cell(utf16: [3], column: 4),
             PositionedUtf16Cell(utf16: [4], column: 5),
           ],
-          [
+          utf16IndexedGlyphs: [
             Utf16IndexedGlyph(
               glyph: 2, index: 1, position: .zero, advance: .zero
             ),
@@ -586,12 +595,12 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
             ),
           ]
         ),
-        (
-          [
+        CellGlyphUnion(
+          positionedUtf16Cells: [
             PositionedUtf16Cell(utf16: [5], column: 6),
             PositionedUtf16Cell(utf16: [6], column: 7),
           ],
-          [
+          utf16IndexedGlyphs: [
             Utf16IndexedGlyph(
               glyph: 4, index: 5, position: .zero, advance: .zero
             ),
@@ -600,11 +609,11 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
             ),
           ]
         ),
-        (
-          [
+        CellGlyphUnion(
+          positionedUtf16Cells: [
             PositionedUtf16Cell(utf16: [7], column: 6),
           ],
-          [
+          utf16IndexedGlyphs: [
             Utf16IndexedGlyph(
               glyph: 6, index: 7, position: .zero, advance: .zero
             ),
@@ -619,9 +628,11 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
 
   func testSimpleAsciiChars() {
     let runs = typesetter.fontGlyphRunsWithLigatures(
-      nvimUtf16Cells: utf16Chars(emojiMarked(["a", "b", "c"])),
+      nvimUtf16Cells: utf16Chars(emojiMarked(
+        Array(repeating: "a", count: 20)
+      )),
       startColumn: 1,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
@@ -630,23 +641,22 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
 
     let run = runs[0]
     expect(run.font).to(equal(defaultFont))
-    expect(run.glyphs).to(haveCount(3))
+    expect(run.glyphs).to(haveCount(20))
     expect(run.positions).to(equal(
-      [
-        CGPoint(x: 1 * defaultWidth, y: yPosition),
-        CGPoint(x: 2 * defaultWidth, y: yPosition),
-        CGPoint(x: 3 * defaultWidth, y: yPosition),
-      ]
+      (1..<21).map {
+        CGPoint(x: offset.x + CGFloat($0) * defaultWidth, y: offset.y)
+      }
     ))
 
-    self.assertEmojiMarker(run: runs[1], xPosition: 4 * defaultWidth)
+    self.assertEmojiMarker(run: runs[1],
+                           xPosition: offset.x + 21 * defaultWidth)
   }
 
   func testAccentedChars() {
     let runs = typesetter.fontGlyphRunsWithLigatures(
       nvimUtf16Cells: utf16Chars(emojiMarked(["ü", "î", "ñ"])),
       startColumn: 10,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
@@ -659,13 +669,13 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     expect(run.glyphs).to(haveCount(3))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 10 * defaultWidth, y: yPosition),
-        CGPoint(x: 11 * defaultWidth, y: yPosition),
-        CGPoint(x: 12 * defaultWidth, y: yPosition),
+        CGPoint(x: offset.x + 10 * defaultWidth, y: offset.y),
+        CGPoint(x: offset.x + 11 * defaultWidth, y: offset.y),
+        CGPoint(x: offset.x + 12 * defaultWidth, y: offset.y),
       ]
     ))
 
-    self.assertEmojiMarker(run: runs[1], xPosition: 13 * defaultWidth)
+    self.assertEmojiMarker(run: runs[1], xPosition: offset.x + 13 * defaultWidth)
   }
 
   func testCombiningChars() {
@@ -674,7 +684,7 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
         emojiMarked(["a\u{1DC1}", "a\u{032A}", "a\u{034B}"])
       ),
       startColumn: 1,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
@@ -687,30 +697,30 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     expect(run.font).to(equal(courierNew))
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions[0])
-      .to(equal(CGPoint(x: 1 * defaultWidth, y: yPosition)))
+      .to(equal(CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y)))
     expect(run.positions[1].x)
-      .to(beCloseTo(1 * defaultWidth + 0.003, within: 0.001))
-    expect(run.positions[1].y).to(equal(yPosition))
+      .to(beCloseTo(offset.x + 1 * defaultWidth + 0.003, within: 0.001))
+    expect(run.positions[1].y).to(equal(offset.y))
 
     run = runs[1]
     expect(run.font).to(equal(defaultFont))
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions[0])
-      .to(equal(CGPoint(x: 2 * defaultWidth, y: yPosition)))
+      .to(equal(CGPoint(x: offset.x + 2 * defaultWidth, y: offset.y)))
     expect(run.positions[1].x)
-      .to(beCloseTo(2 * defaultWidth, within: 0.001))
-    expect(run.positions[1].y).to(equal(yPosition))
+      .to(beCloseTo(offset.x + 2 * defaultWidth, within: 0.001))
+    expect(run.positions[1].y).to(equal(offset.y))
 
     run = runs[2]
     expect(run.font).to(equal(monaco))
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions[0])
-      .to(equal(CGPoint(x: 3 * defaultWidth, y: yPosition)))
+      .to(equal(CGPoint(x: offset.x + 3 * defaultWidth, y: offset.y)))
     expect(run.positions[1].x)
-      .to(beCloseTo(3 * defaultWidth + 7.804, within: 0.001))
-    expect(run.positions[1].y).to(equal(yPosition))
+      .to(beCloseTo(offset.x + 3 * defaultWidth + 7.804, within: 0.001))
+    expect(run.positions[1].y).to(equal(offset.y))
 
-    self.assertEmojiMarker(run: runs[3], xPosition: 4 * defaultWidth)
+    self.assertEmojiMarker(run: runs[3], xPosition: offset.x + 4 * defaultWidth)
   }
 
   func testSimpleEmojis() {
@@ -719,7 +729,7 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
         asciiMarked(["\u{1F600}", "", "\u{1F377}", ""])
       ),
       startColumn: 0,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
@@ -730,12 +740,12 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     expect(run.font).to(equal(emoji))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 0, y: yPosition),
-        CGPoint(x: 2 * defaultWidth, y: yPosition),
+        CGPoint(x: offset.x + 0, y: offset.y),
+        CGPoint(x: offset.x + 2 * defaultWidth, y: offset.y),
       ]
     ))
 
-    self.assertAsciiMarker(run: runs[1], xPosition: 4 * defaultWidth)
+    self.assertAsciiMarker(run: runs[1], xPosition: offset.x + 4 * defaultWidth)
   }
 
   func testEmojisWithFitzpatrickModifier() {
@@ -747,7 +757,7 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
         asciiMarked(["\u{1F476}", "", "\u{1F3FD}", ""])
       ),
       startColumn: 0,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
@@ -758,11 +768,11 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     expect(run.font).to(equal(emoji))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 0, y: yPosition),
+        CGPoint(x: offset.x + 0, y: offset.y),
       ]
     ))
 
-    self.assertAsciiMarker(run: runs[1], xPosition: 4 * defaultWidth)
+    self.assertAsciiMarker(run: runs[1], xPosition: offset.x + 4 * defaultWidth)
   }
 
   func testEmojisWithZeroWidthJoiner() {
@@ -775,7 +785,7 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
         ]
       )),
       startColumn: 1,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
@@ -787,11 +797,11 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     expect(run.glyphs).to(haveCount(1))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 1 * defaultWidth, y: yPosition),
+        CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y),
       ]
     ))
 
-    self.assertAsciiMarker(run: runs[1], xPosition: 3 * defaultWidth)
+    self.assertAsciiMarker(run: runs[1], xPosition: offset.x + 3 * defaultWidth)
   }
 
   func testHangul() {
@@ -800,7 +810,7 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
         asciiMarked(["하", "", "태", "", "원", ""])
       ),
       startColumn: 1,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
@@ -811,13 +821,13 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     expect(run.font).to(equal(gothic))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 1 * defaultWidth, y: yPosition),
-        CGPoint(x: 3 * defaultWidth, y: yPosition),
-        CGPoint(x: 5 * defaultWidth, y: yPosition),
+        CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y),
+        CGPoint(x: offset.x + 3 * defaultWidth, y: offset.y),
+        CGPoint(x: offset.x + 5 * defaultWidth, y: offset.y),
       ]
     ))
 
-    self.assertAsciiMarker(run: runs[1], xPosition: 7 * defaultWidth)
+    self.assertAsciiMarker(run: runs[1], xPosition: offset.x + 7 * defaultWidth)
   }
 
   func testHanja() {
@@ -826,7 +836,7 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
         asciiMarked(["河", "", "泰", "", "元", ""])
       ),
       startColumn: 1,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
@@ -837,13 +847,13 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     expect(run.font).to(equal(gothic))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 1 * defaultWidth, y: yPosition),
-        CGPoint(x: 3 * defaultWidth, y: yPosition),
-        CGPoint(x: 5 * defaultWidth, y: yPosition),
+        CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y),
+        CGPoint(x: offset.x + 3 * defaultWidth, y: offset.y),
+        CGPoint(x: offset.x + 5 * defaultWidth, y: offset.y),
       ]
     ))
 
-    self.assertAsciiMarker(run: runs[1], xPosition: 7 * defaultWidth)
+    self.assertAsciiMarker(run: runs[1], xPosition: offset.x + 7 * defaultWidth)
   }
 
   func testOthers() {
@@ -852,7 +862,7 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
         emojiMarked(["\u{10437}", "\u{1F14}"])
       ),
       startColumn: 0,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
@@ -863,7 +873,7 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     expect(run.font).to(equal(baskerville))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 0, y: yPosition),
+        CGPoint(x: offset.x + 0, y: offset.y),
       ]
     ))
 
@@ -871,11 +881,11 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     expect(run.font).to(equal(defaultFont))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: 1 * defaultWidth, y: yPosition),
+        CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y),
       ]
     ))
 
-    self.assertEmojiMarker(run: runs[2], xPosition: 2 * defaultWidth)
+    self.assertEmojiMarker(run: runs[2], xPosition: offset.x + 2 * defaultWidth)
   }
 
   func testSimpleLigatureChars() {
@@ -884,7 +894,7 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
         emojiMarked(["-", "-", ">", "a"])
       ),
       startColumn: 0,
-      yPosition: yPosition,
+      offset: offset,
       foreground: 0,
       font: fira,
       cellWidth: firaWidth
@@ -897,22 +907,19 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     // of multiple characters with the same advance as other normal characters.
     expect(run.glyphs).to(equal([1614, 1614, 1063, 133]))
     expect(run.positions).to(equal(
-      [
-        CGPoint(x: 0, y: yPosition),
-        CGPoint(x: 1 * firaWidth, y: yPosition),
-        CGPoint(x: 2 * firaWidth, y: yPosition),
-        CGPoint(x: 3 * firaWidth, y: yPosition),
-      ]
+      (0..<4).map {
+        CGPoint(x: offset.x + CGFloat($0) * firaWidth, y: offset.y)
+      }
     ))
 
-    self.assertEmojiMarker(run: runs[1], xPosition: 4 * firaWidth)
+    self.assertEmojiMarker(run: runs[1], xPosition: offset.x + 4 * firaWidth)
   }
 
   private func assertAsciiMarker(run: FontGlyphRun, xPosition: CGFloat) {
     expect(run.font).to(equal(defaultFont))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: xPosition, y: yPosition),
+        CGPoint(x: xPosition, y: offset.y),
       ]
     ))
   }
@@ -921,7 +928,7 @@ class NewTypesetterWithLigaturesTest: XCTestCase {
     expect(run.font).to(equal(emoji))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: xPosition, y: yPosition),
+        CGPoint(x: xPosition, y: offset.y),
       ]
     ))
   }
@@ -939,7 +946,7 @@ private let defaultWidth = FontUtils
   .cellSize(of: defaultFont, linespacing: 1).width
 private let firaWidth = FontUtils.cellSize(of: fira, linespacing: 1).width
 
-private let yPosition = CGFloat(8)
+private let offset = CGPoint(x: 7, y: 8)
 
 private let typesetter = Typesetter()
 

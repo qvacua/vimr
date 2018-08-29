@@ -22,17 +22,8 @@ class UGrid {
 
   private(set) var cells: [[UCell]] = []
 
-  private(set) var defaultAttr = CellAttributes(
-    fontTrait: [], foreground: 0, background: 0xFFFFFF, special: 0xFF0000, reverse: false
-  )
-  private(set) var attributes: [Int: CellAttributes] = [:]
-
   var hasData: Bool {
     return !self.cells.isEmpty
-  }
-
-  init() {
-    self.attributes[defaultAttrId] = self.defaultAttr
   }
 
   func leftBoundaryOfWord(at position: Position) -> Int {
@@ -81,10 +72,6 @@ class UGrid {
 
     let emptyRow = Array(repeating: UCell(string: clearString, attrId: defaultAttrId), count: size.width)
     self.cells = Array(repeating: emptyRow, count: size.height)
-  }
-
-  func set(attrs: CellAttributes, for id: Int) {
-    self.attributes[id] = attrs
   }
 
   // endCol and clearCol are past last index

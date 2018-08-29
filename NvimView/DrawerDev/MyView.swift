@@ -39,7 +39,7 @@ class MyView: NSView {
     */
 
     let runs = (0..<3).map { row in
-      Run.Attributes(
+      AttributesRun(
         location: CGPoint(x: 0, y: CGFloat(row) * cellSize.height),
         cells: self.ugrid.cells[row][0..<10],
         attrs: CellAttributes(
@@ -51,13 +51,21 @@ class MyView: NSView {
         )
       )
     }
-    runs.forEach { run in self.runDrawer.draw(run, in: context) }
+    let defaultAttrs = CellAttributes(
+      fontTrait: [],
+      foreground: 0,
+      background: 0xFFFFFF,
+      special: 0xFF0000,
+      reverse: false
+    )
+    runs.forEach { run in
+      self.runDrawer.draw(run, with: defaultAttrs, xOffset: 0, in: context) }
 
     self.draw(cellGridIn: context, cellSize: cellSize)
   }
 
   private let ugrid = UGrid()
-  private let runDrawer = RunDrawer(
+  private let runDrawer = AttributesRunDrawer(
     baseFont: fira, linespacing: 1, usesLigatures: true
   )
 

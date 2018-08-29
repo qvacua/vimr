@@ -27,12 +27,18 @@ struct Utf16IndexedGlyph {
   var advance: CGSize
 }
 
+struct CellGlyphUnion {
+
+  var positionedUtf16Cells: [PositionedUtf16Cell]
+  var utf16IndexedGlyphs: [Utf16IndexedGlyph]
+}
+
 class Typesetter {
 
   func fontGlyphRunsWithLigatures(
     nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]],
     startColumn: Int,
-    yPosition: CGFloat,
+    offset: CGPoint,
     foreground: Int,
     font: NSFont,
     cellWidth: CGFloat
@@ -100,7 +106,7 @@ class Typesetter {
       cellsAndGlyphsGroupedByFont: cellsAndGlyphsGroupedByFont,
       estimatedGlyphsCount: utf16Chars.count,
       cellWidth: cellWidth,
-      yPosition: yPosition
+      offset: offset
     )
 
     return fontGlyphRuns
@@ -109,7 +115,7 @@ class Typesetter {
   func fontGlyphRunsWithoutLigatures(
     nvimCells: [String],
     startColumn: Int,
-    yPosition: CGFloat,
+    offset: CGPoint,
     foreground: Int,
     font: NSFont,
     cellWidth: CGFloat
@@ -124,7 +130,7 @@ class Typesetter {
         return self.fontGlyphRunsWithLigatures(
           nvimUtf16Cells: run.nvimUtf16Cells,
           startColumn: startColumn + run.startColumn,
-          yPosition: yPosition,
+          offset: offset,
           foreground: foreground,
           font: font,
           cellWidth: cellWidth
@@ -142,8 +148,8 @@ class Typesetter {
         let endColumn = startColumnForPositions + glyphs.count
         let positions = (startColumnForPositions..<endColumn).map { i in
           CGPoint(
-            x: CGFloat(i) * cellWidth,
-            y: yPosition
+            x: offset.x + CGFloat(i) * cellWidth,
+            y: offset.y
           )
         }
         return [
@@ -160,7 +166,7 @@ class Typesetter {
           return self.fontGlyphRunsWithLigatures(
             nvimUtf16Cells: nvimUtf16Cells,
             startColumn: startColumn + range.lowerBound,
-            yPosition: yPosition,
+            offset: offset,
             foreground: foreground,
             font: font,
             cellWidth: cellWidth
@@ -170,8 +176,9 @@ class Typesetter {
           let endColumn = startColumnForPositions + glyphs.count
           let positions = (startColumnForPositions..<endColumn).map { i in
             CGPoint(
-              x: CGFloat(i + startColumn + range.lowerBound) * cellWidth,
-              y: yPosition
+              x: offset.x
+                + CGFloat(i + startColumn + range.lowerBound) * cellWidth,
+              y: offset.y
             )
           }
           return [
@@ -191,7 +198,7 @@ class Typesetter {
     positionedCells: [PositionedUtf16Cell],
     cellIndexedUtf16Chars: [CellIndexedUtf16Char],
     utf16IndexedGlyphs: [Utf16IndexedGlyph]
-  ) -> [([PositionedUtf16Cell], [Utf16IndexedGlyph])] {
+  ) -> [CellGlyphUnion] {
 
     let utf16IndicesOfGlyphs = utf16IndexedGlyphs.map { $0.index }.uniqued()
     let extendedUtf16Indices
@@ -244,14 +251,20 @@ class Typesetter {
       .groupedRanges { _, cellIndexOfUtf16Index, _ in cellIndexOfUtf16Index }
       .map { Array(utf16IndexedGlyphs[$0]) }
 
-    return Array(zip(partitionedUtf16Cells, partitionedGlyphs))
+    return zip(partitionedUtf16Cells, partitionedGlyphs)
+      .map { zip in
+        CellGlyphUnion(
+          positionedUtf16Cells: zip.0,
+          utf16IndexedGlyphs: zip.1
+        )
+      }
   }
 
   // For testing internal
   func groupByStringRanges(
     stringRanges: [CountableRange<Int>],
-    groupedCellsAndGlyphs: [([PositionedUtf16Cell], [Utf16IndexedGlyph])]
-  ) -> Array<CountableClosedRange<Int>> {
+    groupedCellsAndGlyphs: [CellGlyphUnion]
+  ) -> [CountableClosedRange<Int>] {
     var lastLength = 0
     var lastIndex = 0
 
@@ -260,7 +273,9 @@ class Typesetter {
 
     for range in stringRanges {
       for i in (lastIndex..<groupedCellsAndGlyphs.count) {
-        lastLength += groupedCellsAndGlyphs[i].0.reduce(0) { result, element in
+        lastLength += groupedCellsAndGlyphs[i]
+          .positionedUtf16Cells
+          .reduce(0) { result, element in
           result + element.utf16.count
         }
         if lastLength == range.upperBound {
@@ -276,10 +291,10 @@ class Typesetter {
 
   private func fontGlyphRuns(
     fonts: [NSFont],
-    cellsAndGlyphsGroupedByFont: [[([PositionedUtf16Cell], [Utf16IndexedGlyph])]],
+    cellsAndGlyphsGroupedByFont: [[CellGlyphUnion]],
     estimatedGlyphsCount: Int,
     cellWidth: CGFloat,
-    yPosition: CGFloat
+    offset: CGPoint
   ) -> [FontGlyphRun] {
     let zipped = zip(fonts, cellsAndGlyphsGroupedByFont)
     let fontGlyphRuns = zipped.map { zip -> FontGlyphRun in
@@ -292,15 +307,16 @@ class Typesetter {
       positions.reserveCapacity(estimatedGlyphsCount)
 
       for element in cellsAndGlyphs {
-        let cells = element.0
-        let indexedGlyphs = element.1
+        let cells = element.positionedUtf16Cells
+        let indexedGlyphs = element.utf16IndexedGlyphs
 
-        let startColumnPosition = CGFloat(cells[0].column) * cellWidth
+        let startColumnPosition
+          = offset.x + CGFloat(cells[0].column) * cellWidth
         let deltaX = startColumnPosition - indexedGlyphs[0].position.x
 
         glyphs.append(contentsOf: indexedGlyphs.map { $0.glyph })
         positions.append(contentsOf: indexedGlyphs.map { indexedGlyph in
-          CGPoint(x: indexedGlyph.position.x + deltaX, y: yPosition)
+          CGPoint(x: indexedGlyph.position.x + deltaX, y: offset.y)
         })
       }
 

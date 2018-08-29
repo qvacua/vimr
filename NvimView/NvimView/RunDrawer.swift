@@ -5,10 +5,10 @@
 
 import Cocoa
 
-class RunDrawer {
+class AttributesRunDrawer {
 
   private let logger = LogContext.stdoutLogger(
-    as: String(reflecting: RunDrawer.self)
+    as: String(reflecting: AttributesRunDrawer.self)
   )
 
   var baseFont: NSFont {
@@ -33,11 +33,19 @@ class RunDrawer {
     self.updateFontMetrics()
   }
 
-  func draw(_ run: Run.Attributes, `in` context: CGContext) {
+  func draw(
+    _ run: AttributesRun,
+    with defaultAttributes: CellAttributes,
+    xOffset: CGFloat,
+    `in` context: CGContext) {
     context.saveGState()
     defer { context.restoreGState() }
 
-    self.draw(backgroundFor: run, in: context)
+    self.draw(
+      backgroundFor: run,
+      with: defaultAttributes,
+      in: context
+    )
 
     let font = FontUtils.font(adding: run.attrs.fontTrait, to: self.baseFont)
 
@@ -49,7 +57,7 @@ class RunDrawer {
       self.typesetter.fontGlyphRunsWithLigatures(
           nvimUtf16Cells: run.cells.map { Array($0.string.utf16) },
           startColumn: run.cells.startIndex,
-          yPosition: run.location.y + self.baselineOffset,
+          offset: CGPoint(x: xOffset, y: run.location.y + self.baselineOffset),
           foreground: run.attrs.effectiveForeground,
           font: font,
           cellWidth: self.cellSize.width
@@ -59,7 +67,7 @@ class RunDrawer {
       self.typesetter.fontGlyphRunsWithoutLigatures(
           nvimCells: run.cells.map { $0.string },
           startColumn: run.cells.startIndex,
-          yPosition: run.location.y + self.baselineOffset,
+          offset: CGPoint(x: xOffset, y: run.location.y + self.baselineOffset),
           foreground: run.attrs.effectiveForeground,
           font: font,
           cellWidth: self.cellSize.width
@@ -78,8 +86,13 @@ class RunDrawer {
   private var underlineThickness: CGFloat = 0
 
   private func draw(
-    backgroundFor run: Run.Attributes, `in` context: CGContext
+    backgroundFor run: AttributesRun,
+    with defaultAttributes: CellAttributes,
+    `in` context: CGContext
   ) {
+
+    if run.attrs.background == defaultAttributes.background { return }
+
     context.saveGState()
     defer { context.restoreGState() }
 

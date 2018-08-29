@@ -199,7 +199,7 @@ public class NvimView: NSView,
 
   public init(frame rect: NSRect, config: Config) {
     self.drawer = TextDrawer(font: self._font)
-    self.runDrawer = RunDrawer(
+    self.runDrawer = AttributesRunDrawer(
       baseFont: self._font,
       linespacing: self._linespacing,
       usesLigatures: self.usesLigatures
@@ -212,7 +212,9 @@ public class NvimView: NSView,
     self.registerForDraggedTypes([NSPasteboard.PasteboardType(String(kUTTypeFileURL))])
 
     self.wantsLayer = true
-    self.cellSize = self.drawer.cellSize
+    self.cellSize = FontUtils.cellSize(
+      of: self.font, linespacing: self.linespacing
+    )
     self.descent = self.drawer.descent
     self.leading = self.drawer.leading
 
@@ -319,9 +321,7 @@ public class NvimView: NSView,
 
   @IBAction public func debug1(_ sender: Any?) {
     self.logger.debug("DEBUG 1 - Start")
-    self.ugrid.attributes.forEach { (key, value) in
-      Swift.print("\(key): \(value)")
-    }
+    // noop
     self.logger.debug("DEBUG 1 - End")
   }
 
@@ -348,8 +348,9 @@ public class NvimView: NSView,
   let grid = Grid()
   let ugrid = UGrid()
 
+  let cellAttributesCollection = CellAttributesCollection()
   let drawer: TextDrawer
-  let runDrawer: RunDrawer
+  let runDrawer: AttributesRunDrawer
 
   var markedText: String?
 

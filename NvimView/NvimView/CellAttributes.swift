@@ -53,4 +53,23 @@ struct CellAttributes: CustomStringConvertible, Equatable {
 
     return result
   }
+
+  func replacingDefaults(
+    with defaultAttributes: CellAttributes
+  ) -> CellAttributes {
+    var result = self
+    if self.foreground == -1 {
+      result.foreground = defaultAttributes.foreground
+    }
+
+    if self.background == -1 {
+      result.background = defaultAttributes.background
+    }
+
+    if self.special == -1 {
+      result.special = defaultAttributes.special
+    }
+
+    return result
+  }
 }
