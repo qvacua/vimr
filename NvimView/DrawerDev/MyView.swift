@@ -24,6 +24,34 @@ class MyView: NSView {
     let cellSize = FontUtils.cellSize(of: fira, linespacing: 1)
 
     /*
+    let string = "a\u{034B}"
+    let attrStr = NSAttributedString(string: string, attributes: [.font: fira])
+    let ctLine = CTLineCreateWithAttributedString(attrStr)
+    let ctRun = (CTLineGetGlyphRuns(ctLine) as! Array<CTRun>)[0]
+    let glyphCount = CTRunGetGlyphCount(ctRun)
+    var glyphs = Array(repeating: CGGlyph(), count: glyphCount)
+    var positions = Array(repeating: CGPoint(), count: glyphCount)
+    var advances = Array(repeating: CGSize(), count: glyphCount)
+    CTRunGetGlyphs(ctRun, .zero, &glyphs)
+    CTRunGetPositions(ctRun, .zero, &positions)
+    CTRunGetAdvances(ctRun, .zero, &advances)
+
+    let attrs = CTRunGetAttributes(ctRun) as! [NSAttributedStringKey: Any]
+    let font = attrs[NSAttributedStringKey.font] as! NSFont
+
+    for i in (0..<positions.count) {
+      positions[i].x += 20
+      positions[i].y += 10
+    }
+
+    print(glyphs)
+    print(positions)
+    print(advances)
+
+    CTFontDrawGlyphs(font, glyphs, positions, glyphCount, context)
+    */
+
+    /*
 //    let glyphs: [CGGlyph] = [1614, 1494, 1104, 133]
     let glyphs: [CGGlyph] = [1614, 1614, 1063]
     let positions = (0..<3).compactMap {
@@ -38,7 +66,7 @@ class MyView: NSView {
     )
     */
 
-    let runs = (0..<3).map { row in
+    let runs = (0..<4).map { row in
       AttributesRun(
         location: CGPoint(x: 0, y: CGFloat(row) * cellSize.height),
         cells: self.ugrid.cells[row][0..<10],
@@ -59,7 +87,8 @@ class MyView: NSView {
       reverse: false
     )
     runs.forEach { run in
-      self.runDrawer.draw(run, with: defaultAttrs, xOffset: 0, in: context) }
+      self.runDrawer.draw(run, with: defaultAttrs, xOffset: 0, in: context)
+    }
 
     self.draw(cellGridIn: context, cellSize: cellSize)
   }
@@ -119,7 +148,7 @@ class MyView: NSView {
       attrIds: Array(repeating: 0, count: 10)
     )
     self.ugrid.update(
-      row: 1,
+      row: 2,
       startCol: 0,
       endCol: 10,
       clearCol: 10,
@@ -137,7 +166,7 @@ class MyView: NSView {
       attrIds: Array(repeating: 0, count: 10)
     )
     self.ugrid.update(
-      row: 2,
+      row: 3,
       startCol: 0,
       endCol: 10,
       clearCol: 10,

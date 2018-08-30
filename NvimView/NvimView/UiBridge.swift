@@ -302,7 +302,7 @@ class UiBridge {
     process.currentDirectoryPath = self.cwd.path
     process.launchPath = self.nvimServerExecutablePath()
     // GH-666: FIXME
-    process.arguments = [self.localServerName, self.remoteServerName] + ["--headless", "/Users/hat/unicode.txt"] + self.nvimArgs
+    process.arguments = [self.localServerName, self.remoteServerName] + ["--headless", "/Users/hat/php.php"] + self.nvimArgs
     process.launch()
 
     self.nvimServerProc = process

@@ -44,15 +44,24 @@ extension NvimView {
   }
 
   func scroll(_ value: MessagePackValue) {
-//    bridgeLogger.debug(count)
-//
-//    gui.async {
-//      self.grid.scroll(count)
-//      self.markForRender(region: self.grid.region)
-//      // Do not send msgs to agent -> neovim in the delegate method. It causes spinning
-//      // when you're opening a file with existing swap file.
-//      self.eventsSubject.onNext(.scroll)
-//    }
+    guard let array = MessagePackUtils.array(
+      from: value, ofSize: 6, conversion: { $0.intValue }
+    ) else {
+      bridgeLogger.error("The data did not have required 6 Int's!")
+      return
+    }
+
+    bridgeLogger.debug("[top, bot, left, right, rows, cols] = \(array)")
+
+    gui.async {
+      let scrollRegion = Region(
+        top: array[0], bottom: array[1] - 1,
+        left: array[2], right: array[3] - 1
+      )
+      self.ugrid.scroll(region: scrollRegion, rows: array[4], cols: array[5])
+      self.markForRender(region: scrollRegion)
+      self.eventsSubject.onNext(.scroll)
+    }
   }
 
   func unmark(_ value: MessagePackValue) {
@@ -305,7 +314,7 @@ extension NvimView {
       else {
 
       bridgeLogger.error("Could not get highlight attributes from " +
-                                "\(value)")
+                           "\(value)")
       return
     }
     let trait = FontTrait(rawValue: UInt(rawTrait))

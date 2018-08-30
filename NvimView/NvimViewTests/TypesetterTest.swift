@@ -88,7 +88,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
       .to(equal(CGPoint(x: offset.x + 11 * defaultWidth, y: offset.y)))
     expect(run.positions[1].x)
       .to(beCloseTo(offset.x + 11 * defaultWidth + 0.003, within: 0.001))
-    expect(run.positions[1].y).to(equal(offset.y))
+    expect(run.positions[1].y).to(beCloseTo(offset.y + 0.305, within: 0.001))
 
     run = runs[2]
     expect(run.font).to(equal(defaultFont))
@@ -97,7 +97,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
       .to(equal(CGPoint(x: offset.x + 12 * defaultWidth, y: offset.y)))
     expect(run.positions[1].x)
       .to(beCloseTo(offset.x + 12 * defaultWidth, within: 0.001))
-    expect(run.positions[1].y).to(equal(offset.y))
+    expect(run.positions[1].y).to(beCloseTo(offset.y - 0.279, within: 0.001))
 
     run = runs[3]
     expect(run.font).to(equal(monaco))
@@ -106,7 +106,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
       .to(equal(CGPoint(x: offset.x + 13 * defaultWidth, y: offset.y)))
     expect(run.positions[1].x)
       .to(beCloseTo(offset.x + 13 * defaultWidth + 7.804, within: 0.001))
-    expect(run.positions[1].y).to(equal(offset.y))
+    expect(run.positions[1].y).to(beCloseTo(offset.y + 2.446, within: 0.001))
 
     run = runs[4]
     expect(run.font).to(equal(defaultFont))
@@ -700,7 +700,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
       .to(equal(CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y)))
     expect(run.positions[1].x)
       .to(beCloseTo(offset.x + 1 * defaultWidth + 0.003, within: 0.001))
-    expect(run.positions[1].y).to(equal(offset.y))
+    expect(run.positions[1].y).to(beCloseTo(offset.y + 0.305, within: 0.001))
 
     run = runs[1]
     expect(run.font).to(equal(defaultFont))
@@ -709,7 +709,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
       .to(equal(CGPoint(x: offset.x + 2 * defaultWidth, y: offset.y)))
     expect(run.positions[1].x)
       .to(beCloseTo(offset.x + 2 * defaultWidth, within: 0.001))
-    expect(run.positions[1].y).to(equal(offset.y))
+    expect(run.positions[1].y).to(beCloseTo(offset.y - 0.279, within: 0.001))
 
     run = runs[2]
     expect(run.font).to(equal(monaco))
@@ -718,7 +718,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
       .to(equal(CGPoint(x: offset.x + 3 * defaultWidth, y: offset.y)))
     expect(run.positions[1].x)
       .to(beCloseTo(offset.x + 3 * defaultWidth + 7.804, within: 0.001))
-    expect(run.positions[1].y).to(equal(offset.y))
+    expect(run.positions[1].y).to(beCloseTo(offset.y + 2.446, within: 0.001))
 
     self.assertEmojiMarker(run: runs[3], xPosition: offset.x + 4 * defaultWidth)
   }

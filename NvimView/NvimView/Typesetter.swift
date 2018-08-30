@@ -35,7 +35,108 @@ struct CellGlyphUnion {
 
 class Typesetter {
 
-  func fontGlyphRunsWithLigatures(
+  final func fontGlyphRunsWithLigatures(
+    nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]],
+    startColumn: Int,
+    offset: CGPoint,
+    foreground: Int,
+    font: NSFont,
+    cellWidth: CGFloat
+  ) -> [FontGlyphRun] {
+
+    let utf16Chars = self.utf16Chars(from: nvimUtf16Cells)
+    let cellIndices = self.cellIndices(
+      from: nvimUtf16Cells,
+      utf16CharsCount: utf16Chars.count
+    )
+    let ctRuns = self.ctRuns(
+      from: utf16Chars, font: font, foreground: foreground
+    )
+
+    var result = Array<FontGlyphRun>()
+    result.reserveCapacity(ctRuns.count)
+    for run in ctRuns {
+      let glyphCount = CTRunGetGlyphCount(run)
+
+      var glyphs = Array(repeating: CGGlyph(), count: glyphCount)
+      CTRunGetGlyphs(run, .zero, &glyphs)
+
+      var positions = Array(repeating: CGPoint.zero, count: glyphCount)
+      CTRunGetPositions(run, .zero, &positions)
+
+      var indices = Array(repeating: CFIndex(), count: glyphCount)
+      CTRunGetStringIndices(run, .zero, &indices)
+
+      var advances = Array(repeating: CGSize.zero, count: glyphCount)
+      CTRunGetAdvances(run, .zero, &advances)
+
+      var column = -1
+      var columnPosition = CGFloat(0)
+      var deltaX = CGFloat(0)
+      for i in 0..<positions.count {
+        let newColumn = cellIndices[indices[i]] + startColumn
+        if newColumn != column {
+          columnPosition = offset.x + CGFloat(newColumn) * cellWidth
+          deltaX = columnPosition - positions[i].x
+          column = newColumn
+        }
+        positions[i].x += deltaX
+        positions[i].y += offset.y
+      }
+
+      guard
+        let attrs = CTRunGetAttributes(run) as? [NSAttributedStringKey: Any],
+        let font = attrs[NSAttributedStringKey.font] as? NSFont
+        else {
+        // FIXME: GH-666: Return the default font
+        preconditionFailure("Could not get font from CTRun!")
+      }
+
+      let fontGlyphRun = FontGlyphRun(
+        font: font, glyphs: glyphs, positions: positions
+      )
+
+      result.append(fontGlyphRun)
+    }
+
+    return result
+  }
+
+  private func cellIndices(
+    from nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]],
+    utf16CharsCount: Int
+  ) -> Array<Int> {
+    var cellIndices = Array(repeating: 0, count: utf16CharsCount)
+    var cellIndex = 0
+    var i = 0
+    repeat {
+      defer { cellIndex += 1}
+
+      if nvimUtf16Cells[cellIndex].isEmpty {
+        continue
+      }
+
+      for _ in (0..<nvimUtf16Cells[cellIndex].count) {
+        cellIndices[i] = cellIndex
+        i += 1
+      }
+    } while cellIndex < nvimUtf16Cells.count
+
+    return cellIndices
+  }
+
+  private func utf16Chars(from nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]]) -> Array<UInt16> {
+    var utf16Chars = Array<Unicode.UTF16.CodeUnit>()
+    utf16Chars.reserveCapacity(Int(Double(nvimUtf16Cells.count) * 1.5))
+
+    for i in 0..<nvimUtf16Cells.count {
+      utf16Chars.append(contentsOf: nvimUtf16Cells[i])
+    }
+
+    return utf16Chars
+  }
+
+  final func fontGlyphRunsWithLigatures_old(
     nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]],
     startColumn: Int,
     offset: CGPoint,
@@ -112,7 +213,7 @@ class Typesetter {
     return fontGlyphRuns
   }
 
-  func fontGlyphRunsWithoutLigatures(
+  final func fontGlyphRunsWithoutLigatures(
     nvimCells: [String],
     startColumn: Int,
     offset: CGPoint,
@@ -137,7 +238,7 @@ class Typesetter {
         )
       }
 
-      let unichars = run.nvimUtf16Cells.flatMap { $0 }
+      let unichars = self.utf16Chars(from: run.nvimUtf16Cells)
       var glyphs = Array<CGGlyph>(repeating: CGGlyph(), count: unichars.count)
 
       let gotAllGlyphs = CTFontGetGlyphsForCharacters(

@@ -60,6 +60,69 @@ class UGrid {
     return self.size.width - 1
   }
 
+  func scroll(
+    region: Region,
+    rows: Int,
+    cols: Int
+  ) {
+    var start, stop, step: Int
+    if rows > 0 {
+      start = region.top;
+      stop = region.bottom - rows + 1;
+      step = 1;
+    } else {
+      start = region.bottom;
+      stop = region.top - rows - 1;
+      step = -1;
+    }
+
+    // copy cell data
+    let rangeWithinRow = region.left...region.right
+    for i in stride(from: start, to: stop, by: step) {
+      self.cells[i].replaceSubrange(
+        rangeWithinRow, with: self.cells[i + rows][rangeWithinRow]
+      )
+    }
+
+    // clear cells in the emptied region,
+    var clearTop, clearBottom: Int
+    if rows > 0 {
+      clearTop = stop
+      clearBottom = stop + rows - 1
+    } else {
+      clearBottom = stop
+      clearTop = stop + rows + 1
+    }
+
+    self.clear(region: Region(
+      top: clearTop,
+      bottom: clearBottom,
+      left: region.left,
+      right: region.right
+    ))
+  }
+
+  func clear(region: Region) {
+    // FIXME: sometimes clearRegion gets called without first resizing the Grid.
+    // Should we handle this?
+    guard self.hasData else {
+      return
+    }
+
+    let clearedCell = UCell(
+      string: " ",
+      attrId: CellAttributesCollection.defaultAttributesId
+    )
+    let clearedRow = Array(
+      repeating: clearedCell, count: region.right - region.left + 1
+    )
+    for i in region.top...region.bottom {
+      self.cells[i].replaceSubrange(
+        region.left...region.right, with: clearedRow
+      )
+    }
+  }
+
   func resize(_ size: Size) {
     logger.debug(size)
 
