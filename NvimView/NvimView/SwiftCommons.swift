@@ -13,6 +13,44 @@ extension Array where Element: Hashable {
   }
 }
 
+extension ArraySlice {
+
+  func groupedRanges<T: Equatable>(with marker: (Int, Element, ArraySlice<Element>) -> T) -> [CountableClosedRange<Int>] {
+    if self.isEmpty {
+      return []
+    }
+
+    var result = [CountableClosedRange<Int>]()
+    result.reserveCapacity(self.count / 2)
+
+    let inclusiveEndIndex = self.endIndex - 1
+    var lastStartIndex = 0
+    var lastEndIndex = 0
+    var lastMarker = marker(0, self.first!, self) // self is not empty!
+    for (i, element) in self.enumerated() {
+      defer { lastEndIndex = i }
+
+      let currentMarker = marker(i, element, self)
+
+      if lastMarker == currentMarker {
+        if i == inclusiveEndIndex {
+          result.append(lastStartIndex...i)
+        }
+      } else {
+        result.append(lastStartIndex...lastEndIndex)
+        lastMarker = currentMarker
+        lastStartIndex = i
+
+        if i == inclusiveEndIndex {
+          result.append(i...i)
+        }
+      }
+    }
+
+    return result
+  }
+}
+
 extension Array {
 
   func groupedRanges<T: Equatable>(with marker: (Int, Element, [Element]) -> T) -> [CountableClosedRange<Int>] {
@@ -26,7 +64,7 @@ extension Array {
     let inclusiveEndIndex = self.endIndex - 1
     var lastStartIndex = 0
     var lastEndIndex = 0
-    var lastMarker = marker(0, self[0], self)
+    var lastMarker = marker(0, self.first!, self) // self is not empty!
     for (i, element) in self.enumerated() {
       defer { lastEndIndex = i }
 

@@ -39,9 +39,6 @@ class Typesetter {
       var indices = Array(repeating: CFIndex(), count: glyphCount)
       CTRunGetStringIndices(run, .zero, &indices)
 
-      var advances = Array(repeating: CGSize.zero, count: glyphCount)
-      CTRunGetAdvances(run, .zero, &advances)
-
       var column = -1
       var columnPosition = CGFloat(0)
       var deltaX = CGFloat(0)
@@ -82,9 +79,8 @@ class Typesetter {
     var cellIndex = 0
     var i = 0
     repeat {
-      defer { cellIndex += 1 }
-
       if nvimUtf16Cells[cellIndex].isEmpty {
+        cellIndex += 1
         continue
       }
 
@@ -92,6 +88,7 @@ class Typesetter {
         cellIndices[i] = cellIndex
         i += 1
       }
+      cellIndex += 1
     } while cellIndex < nvimUtf16Cells.count
 
     return cellIndices
