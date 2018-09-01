@@ -59,7 +59,7 @@ extension NvimView {
       }
     }
 
-    lines.forEach { $0.fill() }
+    context.fill(lines)
   }
 }
 #endif

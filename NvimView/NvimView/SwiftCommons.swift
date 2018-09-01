@@ -43,13 +43,13 @@ extension ArraySlice {
     result.reserveCapacity(self.count / 2)
 
     let inclusiveEndIndex = self.endIndex - 1
-    var lastStartIndex = 0
-    var lastEndIndex = 0
+    var lastStartIndex = self.startIndex
+    var lastEndIndex = self.startIndex
     var lastMarker = marker(0, self.first!, self) // self is not empty!
-    for (i, element) in self.enumerated() {
+    for i in self.startIndex..<self.endIndex {
       defer { lastEndIndex = i }
 
-      let currentMarker = marker(i, element, self)
+      let currentMarker = marker(i, self[i], self)
 
       if lastMarker == currentMarker {
         if i == inclusiveEndIndex {

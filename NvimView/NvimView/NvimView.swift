@@ -382,4 +382,9 @@ public class NvimView: NSView,
   private var _linespacing = NvimView.defaultLinespacing
   let typesetter = Typesetter()
   var baselineOffset = CGFloat(0)
+
+  var _bufferLayer: CGLayer?
+  var _bufferContext: CGContext?
+  var scaleFactor = CGFloat(1)
+  var scaleMatrix = CGAffineTransform.identity
 }

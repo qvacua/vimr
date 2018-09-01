@@ -11,6 +11,7 @@ extension NvimView {
 
   override public func setFrameSize(_ newSize: NSSize) {
     super.setFrameSize(newSize)
+    self.resetBuffer()
 
     if self.isInitialResize {
       self.isInitialResize = false

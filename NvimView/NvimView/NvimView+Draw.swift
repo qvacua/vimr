@@ -14,60 +14,18 @@ extension NvimView {
   override public func draw(_ dirtyUnionRect: NSRect) {
     guard self.ugrid.hasData else { return }
 
-    guard let context = NSGraphicsContext.current?.cgContext else { return }
-    context.saveGState()
-    defer { context.restoreGState() }
+    guard let viewContext = NSGraphicsContext.current?.cgContext else { return }
+    viewContext.saveGState()
+    defer { viewContext.restoreGState() }
 
     if (self.inLiveResize || self.currentlyResizing) && !self.usesLiveResize {
-      self.drawResizeInfo(in: context, with: dirtyUnionRect)
+      self.drawResizeInfo(in: viewContext, with: dirtyUnionRect)
       return
     }
 
     if self.isCurrentlyPinching {
-      self.drawPinchImage(in: context)
+      self.drawPinchImage(in: viewContext)
       return
-    }
-
-    // When both anti-aliasing and font smoothing is turned on,
-    // then the "Use LCD font smoothing when available" setting is used
-    // to render texts, cf. chapter 11 from "Programming with Quartz".
-    context.setShouldSmoothFonts(true);
-    context.setTextDrawingMode(.fill);
-
-    let dirtyRects = self.rectsBeingDrawn()
-    ColorUtils.colorIgnoringAlpha(
-      self.cellAttributesCollection.defaultAttributes.background
-    ).set()
-    dirtyRects.fill()
-
-    let attrsRuns = self.runs(intersecting: dirtyRects)
-    let runs = attrsRuns.parallelMap {
-//    let runs = attrsRuns.map {
-      run -> (attrsRun: AttributesRun, fontGlyphRuns: [FontGlyphRun]) in
-
-      let font = FontUtils.font(adding: run.attrs.fontTrait, to: self.font)
-
-      let fontGlyphRuns = self.typesetter.fontGlyphRunsWithLigatures(
-        nvimUtf16Cells: run.cells.map { Array($0.string.utf16) },
-        startColumn: run.cells.startIndex,
-        offset: CGPoint(
-          x: self.xOffset, y: run.location.y + self.baselineOffset
-        ),
-        font: font,
-        cellWidth: self.cellSize.width
-      )
-
-      return (attrsRun: run, fontGlyphRuns: fontGlyphRuns)
-    }
-
-    let defaultAttrs = self.cellAttributesCollection.defaultAttributes
-    runs.forEach { (attrsRun, fontGlyphRuns) in
-      self.runDrawer.draw(
-        attrsRun,
-        fontGlyphRuns: fontGlyphRuns,
-        defaultAttributes: defaultAttrs,
-        in: context
-      )
     }
 
 //    self.drawCursor(context: context)
@@ -75,18 +33,15 @@ extension NvimView {
 #if DEBUG
     // self.draw(cellGridIn: context)
 #endif
-  }
 
-  private func draw(_ run: AttributesRun, in context: CGContext) {
-    context.saveGState()
-    defer { context.restoreGState() }
-
-    self.runDrawer.draw(
-      run,
-      with: self.cellAttributesCollection.defaultAttributes,
-      xOffset: self.xOffset,
-      in: context
-    )
+    guard let bufferLayer = self.bufferLayer else { return }
+    self.rectsBeingDrawn().forEach { rect in
+      viewContext.saveGState()
+      viewContext.clip(to: rect)
+      viewContext.setBlendMode(.copy)
+      viewContext.draw(bufferLayer, in: self.bounds)
+      viewContext.restoreGState()
+    }
   }
 
   private func cursorRegion() -> Region {
@@ -184,7 +139,7 @@ extension NvimView {
                            hints: nil)
   }
 
-  private func runs(intersecting rects: [CGRect]) -> [AttributesRun] {
+  func runs(intersecting rects: [CGRect]) -> [AttributesRun] {
     return rects
       .map { rect in
         // Get all Regions that intersects with the given rects.
@@ -200,7 +155,7 @@ extension NvimView {
       .flatMap { $0 }
   }
 
-  private func runs(
+  func runs(
     forRowRange rowRange: CountableClosedRange<Int>,
     columnRange: CountableClosedRange<Int>
   ) -> [AttributesRun] {

@@ -18,7 +18,7 @@ extension NvimView {
     bridgeLogger.debug("\(array[0]) x \(array[1])")
     gui.async {
       self.ugrid.resize(Size(width: array[0], height: array[1]))
-      self.markForRenderWholeView()
+//      self.markForRenderWholeView()
     }
   }
 
@@ -26,7 +26,7 @@ extension NvimView {
     bridgeLogger.mark()
 
     gui.async {
-//      self.ugrid.clear()
+      self.ugrid.clear()
       self.markForRenderWholeView()
     }
   }
@@ -51,15 +51,47 @@ extension NvimView {
       return
     }
 
-    bridgeLogger.debug("[top, bot, left, right, rows, cols] = \(array)")
+    stdoutLogger.debug("[top, bot, left, right, rows, cols] = \(array)")
+
+    let (top, bottom, left, right, row, column)
+      = (array[0], array[1] - 1, array[2], array[3] - 1, array[4], array[5])
+    let scrollRegion = Region(
+      top: top, bottom: bottom,
+      left: left, right: right
+    )
+    let scrollRect = self.rect(for: scrollRegion)
+    let maxBottom = self.ugrid.size.height - 1
+    let regionToRender = Region(
+      top: min(max(0, top - row), maxBottom),
+      bottom: max(0, min(bottom - row, maxBottom)),
+      left: left, right: right
+    )
+    let rectToRender = self.rect(for: regionToRender)
+    stdoutLogger.debug("region to render: \(regionToRender)")
 
     gui.async {
-      let scrollRegion = Region(
-        top: array[0], bottom: array[1] - 1,
-        left: array[2], right: array[3] - 1
+      self.ugrid.scroll(region: scrollRegion, rows: row, cols: column)
+
+      guard let bufferContext = self.bufferContext,
+            let bufferLayer = self.bufferLayer
+        else {
+        stdoutLogger.error("No context!")
+        return
+      }
+
+      let scrollTargetRect = CGRect(
+        x: 0,
+        y: self.yOffset + self.cellSize.height * CGFloat(row),
+        width: self.bounds.width,
+        height: self.bounds.height
       )
-      self.ugrid.scroll(region: scrollRegion, rows: array[4], cols: array[5])
-      self.markForRender(region: scrollRegion)
+      bufferContext.clip(to: rectToRender)
+      bufferContext.draw(bufferLayer, in: scrollTargetRect)
+      bufferContext.resetClip()
+
+      // We want to re-use the already-drawn content of the buffer.
+      self.markForRenderWithoutClearingBuffer(rect: scrollRect)
+
       self.eventsSubject.onNext(.scroll)
     }
   }
@@ -77,7 +109,7 @@ extension NvimView {
 
   final func flush(_ renderData: [MessagePackValue]) {
 //    bridgeLogger.hr()
-    bridgeLogger.debug(renderData.count)
+    stdoutLogger.debug(renderData.count)
 
     gui.async {
       renderData.forEach { value in
@@ -192,14 +224,16 @@ extension NvimView {
       return
     }
 
-//    bridgeLogger.trace(
+//    bridgeLogger.debug(
 //      "row: \(row), startCol: \(startCol), endCol: \(endCol), " +
-//        "clearCol: \(clearCol), clearAttr: \(clearAttr), " +
-//        "chunk: \(chunk), attrIds: \(attrIds)"
+//        "chunk: \(chunk.reduce("") { $0 + $1 }.trimmingCharacters(in: .whitespacesAndNewlines))"
 //    )
 
     let count = endCol - startCol
-    guard chunk.count == count && attrIds.count == count else { return }
+    guard chunk.count == count && attrIds.count == count else {
+      stdoutLogger.error("The counts of chunk and attrIds do not match!")
+      return
+    }
     self.ugrid.update(row: row,
                       startCol: startCol,
                       endCol: endCol,
@@ -208,34 +242,102 @@ extension NvimView {
                       chunk: chunk,
                       attrIds: attrIds)
 
-    if self.usesLigatures {
-      let leftBoundary = self.ugrid.leftBoundaryOfWord(
-        at: Position(row: row, column: startCol)
-      )
-      let rightBoundary = self.ugrid.rightBoundaryOfWord(
-        at: Position(row: row, column: max(0, endCol - 1))
-      )
-      self.markForRender(region: Region(
-        top: row, bottom: row, left: leftBoundary, right: rightBoundary
-      ))
-    } else {
-      self.markForRender(region: Region(
-        top: row, bottom: row, left: startCol, right: max(0, endCol - 1)
-      ))
+    var dirtyRects = Array<CGRect>()
+    dirtyRects.reserveCapacity(2)
+    var dirtyRegion = Array<Region>()
+    dirtyRegion.reserveCapacity(2)
+
+    if endCol > startCol {
+      if self.usesLigatures {
+
+        let leftBoundary = self.ugrid.leftBoundaryOfWord(
+          at: Position(row: row, column: startCol)
+        )
+        let rightBoundary = self.ugrid.rightBoundaryOfWord(
+          at: Position(row: row, column: max(0, endCol - 1))
+        )
+
+        let region = Region(
+          top: row, bottom: row, left: leftBoundary, right: rightBoundary
+        )
+        let rect = self.rect(for: region)
+
+        dirtyRects.append(rect)
+        dirtyRegion.append(region)
+        self.markForRender(rect: rect)
+
+      } else {
+
+        let region = Region(
+          top: row, bottom: row, left: startCol, right: max(0, endCol - 1)
+        )
+        let rect = self.rect(for: region)
+
+        dirtyRects.append(rect)
+        dirtyRegion.append(region)
+        self.markForRender(rect: rect)
+
+      }
     }
 
     if clearCol > endCol {
-      self.markForRender(region: Region(
+      let region = Region(
         top: row, bottom: row, left: endCol, right: max(endCol, clearCol - 1)
-      ))
+      )
+      let rect = self.rect(for: region)
+
+      dirtyRects.append(rect)
+      dirtyRegion.append(region)
+      self.markForRender(rect: rect)
+    }
+
+    let attrsRuns = self.runs(intersecting: dirtyRects)
+
+    let runs = attrsRuns.parallelMap {
+      run -> (attrsRun: AttributesRun, fontGlyphRuns: [FontGlyphRun]) in
+
+      let font = FontUtils.font(adding: run.attrs.fontTrait, to: self.font)
+
+      let fontGlyphRuns = self.typesetter.fontGlyphRunsWithLigatures(
+        nvimUtf16Cells: run.cells.map { Array($0.string.utf16) },
+        startColumn: run.cells.startIndex,
+        offset: CGPoint(
+          x: self.xOffset, y: run.location.y + self.baselineOffset
+        ),
+        font: font,
+        cellWidth: self.cellSize.width
+      )
+
+      return (attrsRun: run, fontGlyphRuns: fontGlyphRuns)
+    }
+
+    guard let context = self.bufferContext else {
+      stdoutLogger.error("No context!")
+      return
+    }
+
+    let defaultAttrs = self.cellAttributesCollection.defaultAttributes
+
+    context.setFillColor(
+      ColorUtils.cgColorIgnoringAlpha(defaultAttrs.background)
+    )
+    context.fill(dirtyRects)
+
+    runs.forEach { (attrsRun, fontGlyphRuns) in
+      self.runDrawer.draw(
+        attrsRun,
+        fontGlyphRuns: fontGlyphRuns,
+        defaultAttributes: defaultAttrs,
+        in: context
+      )
     }
   }
 
   private func doGoto(position: Position) {
 //    bridgeLogger.debug(position)
 
-    self.markForRender(cellPosition: self.grid.position)
-    self.grid.goto(position)
+//    self.markForRender(cellPosition: self.grid.position)
+//    self.grid.goto(position)
   }
 }
 
@@ -389,16 +491,26 @@ extension NvimView {
     }
   }
 
-  final func markForRenderWholeView() {
-    self.needsDisplay = true
-  }
-
   final func markForRender(region: Region) {
-    self.setNeedsDisplay(self.rect(for: region))
+    self.markForRender(rect: self.rect(for: region))
   }
 
   final func markForRender(row: Int, column: Int) {
-    self.setNeedsDisplay(self.rect(forRow: row, column: column))
+    self.markForRender(rect: self.rect(forRow: row, column: column))
+  }
+
+  final func markForRenderWholeView() {
+    self.needsDisplay = true
+    self.bufferContext?.clear(CGRect(origin: .zero, size: self.bounds.size))
+  }
+
+  private func markForRender(rect: CGRect) {
+    self.setNeedsDisplay(rect)
+    self.bufferContext?.clear(rect)
+  }
+
+  private func markForRenderWithoutClearingBuffer(rect: CGRect) {
+    self.setNeedsDisplay(rect)
   }
 }
 
