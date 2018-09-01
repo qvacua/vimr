@@ -10,7 +10,7 @@ import MessagePack
 
 extension NvimView {
 
-  func resize(_ value: MessagePackValue) {
+  final func resize(_ value: MessagePackValue) {
     guard let array = MessagePackUtils.array(from: value, ofSize: 2, conversion: { $0.intValue }) else {
       return
     }
@@ -22,16 +22,16 @@ extension NvimView {
     }
   }
 
-  func clear() {
+  final func clear() {
     bridgeLogger.mark()
 
     gui.async {
-      self.grid.clear()
+//      self.ugrid.clear()
       self.markForRenderWholeView()
     }
   }
 
-  func modeChange(_ value: MessagePackValue) {
+  final func modeChange(_ value: MessagePackValue) {
     guard let mode = MessagePackUtils.value(from: value, conversion: { v -> CursorModeShape? in
       guard let rawValue = v.intValue else { return nil }
       return CursorModeShape(rawValue: UInt(rawValue))
@@ -43,7 +43,7 @@ extension NvimView {
     }
   }
 
-  func scroll(_ value: MessagePackValue) {
+  final func scroll(_ value: MessagePackValue) {
     guard let array = MessagePackUtils.array(
       from: value, ofSize: 6, conversion: { $0.intValue }
     ) else {
@@ -64,7 +64,7 @@ extension NvimView {
     }
   }
 
-  func unmark(_ value: MessagePackValue) {
+  final func unmark(_ value: MessagePackValue) {
 //    bridgeLogger.debug("\(row):\(column)")
 //
 //    gui.async {
@@ -75,8 +75,9 @@ extension NvimView {
 //    }
   }
 
-  func flush(_ renderData: [MessagePackValue]) {
-    bridgeLogger.hr()
+  final func flush(_ renderData: [MessagePackValue]) {
+//    bridgeLogger.hr()
+    bridgeLogger.debug(renderData.count)
 
     gui.async {
       renderData.forEach { value in
@@ -109,14 +110,14 @@ extension NvimView {
     }
   }
 
-  func setTitle(with value: MessagePackValue) {
+  final func setTitle(with value: MessagePackValue) {
     guard let title = value.stringValue else { return }
 
     bridgeLogger.debug(title)
     self.eventsSubject.onNext(.setTitle(title))
   }
 
-  func stop() {
+  final func stop() {
     bridgeLogger.hr()
     try? self.api
       .stop()
@@ -132,7 +133,7 @@ extension NvimView {
       .wait()
   }
 
-  func autoCommandEvent(_ value: MessagePackValue) {
+  final func autoCommandEvent(_ value: MessagePackValue) {
     guard let array = MessagePackUtils.array(from: value, ofSize: 2, conversion: { $0.intValue }),
           let event = NvimAutoCommandEvent(rawValue: array[0]) else { return }
     let bufferHandle = array[1]
@@ -156,7 +157,7 @@ extension NvimView {
     }
   }
 
-  func ipcBecameInvalid(_ reason: String) {
+  final func ipcBecameInvalid(_ reason: String) {
     bridgeLogger.debug(reason)
 
     self.eventsSubject.onNext(.ipcBecameInvalid(reason))
@@ -191,11 +192,11 @@ extension NvimView {
       return
     }
 
-    bridgeLogger.trace(
-      "row: \(row), startCol: \(startCol), endCol: \(endCol), " +
-        "clearCol: \(clearCol), clearAttr: \(clearAttr), " +
-        "chunk: \(chunk), attrIds: \(attrIds)"
-    )
+//    bridgeLogger.trace(
+//      "row: \(row), startCol: \(startCol), endCol: \(endCol), " +
+//        "clearCol: \(clearCol), clearAttr: \(clearAttr), " +
+//        "chunk: \(chunk), attrIds: \(attrIds)"
+//    )
 
     let count = endCol - startCol
     guard chunk.count == count && attrIds.count == count else { return }
@@ -241,13 +242,13 @@ extension NvimView {
 // MARK: - Simple
 extension NvimView {
 
-  func bell() {
+  final func bell() {
     bridgeLogger.mark()
 
     NSSound.beep()
   }
 
-  func cwdChanged(_ value: MessagePackValue) {
+  final func cwdChanged(_ value: MessagePackValue) {
     guard let cwd = value.stringValue else { return }
 
     bridgeLogger.debug(cwd)
@@ -255,7 +256,7 @@ extension NvimView {
     self.eventsSubject.onNext(.cwdChanged)
   }
 
-  func colorSchemeChanged(_ value: MessagePackValue) {
+  final func colorSchemeChanged(_ value: MessagePackValue) {
     guard let values = MessagePackUtils.array(from: value, ofSize: 5, conversion: { $0.intValue }) else { return }
 
     let theme = Theme(values)
@@ -267,7 +268,7 @@ extension NvimView {
     }
   }
 
-  func defaultColorsChanged(_ value: MessagePackValue) {
+  final func defaultColorsChanged(_ value: MessagePackValue) {
     guard let values = MessagePackUtils.array(
       from: value, ofSize: 3, conversion: { $0.intValue }
     ) else {
@@ -294,14 +295,14 @@ extension NvimView {
     }
   }
 
-  func setDirty(with value: MessagePackValue) {
+  final func setDirty(with value: MessagePackValue) {
     guard let dirty = value.boolValue else { return }
 
     bridgeLogger.debug(dirty)
     self.eventsSubject.onNext(.setDirtyStatus(dirty))
   }
 
-  func setAttr(with value: MessagePackValue) {
+  final func setAttr(with value: MessagePackValue) {
     guard let array = value.arrayValue else { return }
     guard array.count == 6 else { return }
 
@@ -334,38 +335,38 @@ extension NvimView {
     }
   }
 
-  func updateMenu() {
+  final func updateMenu() {
     bridgeLogger.mark()
   }
 
-  func busyStart() {
+  final func busyStart() {
     bridgeLogger.mark()
   }
 
-  func busyStop() {
+  final func busyStop() {
     bridgeLogger.mark()
   }
 
-  func mouseOn() {
+  final func mouseOn() {
     bridgeLogger.mark()
   }
 
-  func mouseOff() {
+  final func mouseOff() {
     bridgeLogger.mark()
   }
 
-  func visualBell() {
+  final func visualBell() {
     bridgeLogger.mark()
   }
 
-  func suspend() {
+  final func suspend() {
     bridgeLogger.mark()
   }
 }
 
 extension NvimView {
 
-  func markForRender(cellPosition position: Position) {
+  final func markForRender(cellPosition position: Position) {
     self.markForRender(position: position)
 
     if self.grid.isCellEmpty(position) {
@@ -377,26 +378,26 @@ extension NvimView {
     }
   }
 
-  func markForRender(position: Position) {
+  final func markForRender(position: Position) {
     self.markForRender(row: position.row, column: position.column)
   }
 
-  func markForRender(screenCursor position: Position) {
+  final func markForRender(screenCursor position: Position) {
     self.markForRender(position: position)
     if self.grid.isNextCellEmpty(position) {
       self.markForRender(position: self.grid.nextCellPosition(position))
     }
   }
 
-  func markForRenderWholeView() {
+  final func markForRenderWholeView() {
     self.needsDisplay = true
   }
 
-  func markForRender(region: Region) {
+  final func markForRender(region: Region) {
     self.setNeedsDisplay(self.rect(for: region))
   }
 
-  func markForRender(row: Int, column: Int) {
+  final func markForRender(row: Int, column: Int) {
     self.setNeedsDisplay(self.rect(forRow: row, column: column))
   }
 }

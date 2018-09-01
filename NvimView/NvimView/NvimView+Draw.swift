@@ -40,9 +40,36 @@ extension NvimView {
     ).set()
     dirtyRects.fill()
 
-    self.runs(intersecting: dirtyRects).forEach { row in
-      self.draw(row, in: context)
+    let attrsRuns = self.runs(intersecting: dirtyRects)
+    let runs = attrsRuns.parallelMap {
+//    let runs = attrsRuns.map {
+      run -> (attrsRun: AttributesRun, fontGlyphRuns: [FontGlyphRun]) in
+
+      let font = FontUtils.font(adding: run.attrs.fontTrait, to: self.font)
+
+      let fontGlyphRuns = self.typesetter.fontGlyphRunsWithLigatures(
+        nvimUtf16Cells: run.cells.map { Array($0.string.utf16) },
+        startColumn: run.cells.startIndex,
+        offset: CGPoint(
+          x: self.xOffset, y: run.location.y + self.baselineOffset
+        ),
+        font: font,
+        cellWidth: self.cellSize.width
+      )
+
+      return (attrsRun: run, fontGlyphRuns: fontGlyphRuns)
     }
+
+    let defaultAttrs = self.cellAttributesCollection.defaultAttributes
+    runs.forEach { (attrsRun, fontGlyphRuns) in
+      self.runDrawer.draw(
+        attrsRun,
+        fontGlyphRuns: fontGlyphRuns,
+        defaultAttributes: defaultAttrs,
+        in: context
+      )
+    }
+
 //    self.drawCursor(context: context)
 
 #if DEBUG
@@ -191,8 +218,8 @@ extension NvimView {
               else {
               // GH-666: FIXME: correct error handling
               logger.error("row: \(row), range: \(range): " +
-                           "Could not get CellAttributes with ID " +
-                           "\(cells.first?.attrId)")
+                             "Could not get CellAttributes with ID " +
+                             "\(cells.first?.attrId)")
               return nil
             }
 
@@ -278,6 +305,7 @@ extension NvimView {
       of: newFont, linespacing: self.linespacing
     )
 
+    self.baselineOffset = self.cellSize.height - CTFontGetAscent(newFont)
     self.resizeNeoVimUi(to: self.bounds.size)
   }
 }

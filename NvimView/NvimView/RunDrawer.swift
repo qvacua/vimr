@@ -5,11 +5,7 @@
 
 import Cocoa
 
-class AttributesRunDrawer {
-
-  private let logger = LogContext.stdoutLogger(
-    as: String(reflecting: AttributesRunDrawer.self)
-  )
+final class AttributesRunDrawer {
 
   var baseFont: NSFont {
     didSet {
@@ -31,6 +27,38 @@ class AttributesRunDrawer {
     self.usesLigatures = usesLigatures
 
     self.updateFontMetrics()
+  }
+
+  func draw(
+    _ run: AttributesRun,
+    fontGlyphRuns: [FontGlyphRun],
+    defaultAttributes: CellAttributes,
+    `in` context: CGContext
+  ) {
+    context.saveGState()
+    defer { context.restoreGState() }
+
+    self.draw(
+      backgroundFor: run,
+      with: defaultAttributes,
+      in: context
+    )
+
+    context.setFillColor(
+      ColorUtils.cgColorIgnoringAlpha(run.attrs.effectiveForeground)
+    )
+
+    fontGlyphRuns.forEach { run in
+      CTFontDrawGlyphs(
+        run.font,
+        run.glyphs,
+        run.positions,
+        run.glyphs.count,
+        context
+      )
+    }
+
+    // TODO: GH-666: Draw underline/curl
   }
 
   func draw(
@@ -58,7 +86,6 @@ class AttributesRunDrawer {
           nvimUtf16Cells: run.cells.map { Array($0.string.utf16) },
           startColumn: run.cells.startIndex,
           offset: CGPoint(x: xOffset, y: run.location.y + self.baselineOffset),
-          foreground: run.attrs.effectiveForeground,
           font: font,
           cellWidth: self.cellSize.width
         )
@@ -68,7 +95,6 @@ class AttributesRunDrawer {
           nvimCells: run.cells.map { $0.string },
           startColumn: run.cells.startIndex,
           offset: CGPoint(x: xOffset, y: run.location.y + self.baselineOffset),
-          foreground: run.attrs.effectiveForeground,
           font: font,
           cellWidth: self.cellSize.width
         )

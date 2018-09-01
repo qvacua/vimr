@@ -11,7 +11,7 @@ struct UCell {
   var attrId: Int
 }
 
-class UGrid {
+final class UGrid {
 
   private(set) var size = Size.zero
   private(set) var posision = Position.zero
@@ -100,6 +100,10 @@ class UGrid {
       left: region.left,
       right: region.right
     ))
+  }
+
+  func clear() {
+//    self.clear(region: self.region)
   }
 
   func clear(region: Region) {

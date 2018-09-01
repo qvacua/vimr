@@ -13,6 +13,25 @@ extension Array where Element: Hashable {
   }
 }
 
+extension Array {
+
+  /// Does not retain the order of elements.
+  func parallelMap<T>(_ transform: @escaping (Element) -> T) -> [T] {
+    var result = Array<T>()
+    result.reserveCapacity(self.count)
+
+    var lock = OS_SPINLOCK_INIT
+    DispatchQueue.concurrentPerform(iterations: self.count) { i in
+      let mapped = transform(self[i])
+      OSSpinLockLock(&lock)
+      result.append(mapped)
+      OSSpinLockUnlock(&lock)
+    }
+
+    return result
+  }
+}
+
 extension ArraySlice {
 
   func groupedRanges<T: Equatable>(with marker: (Int, Element, ArraySlice<Element>) -> T) -> [CountableClosedRange<Int>] {

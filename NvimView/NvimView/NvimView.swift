@@ -380,4 +380,6 @@ public class NvimView: NSView,
 
   // MARK: - Private
   private var _linespacing = NvimView.defaultLinespacing
+  let typesetter = Typesetter()
+  var baselineOffset = CGFloat(0)
 }

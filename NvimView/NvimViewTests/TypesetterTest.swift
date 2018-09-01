@@ -16,7 +16,6 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
       nvimCells: emojiMarked(["a", "b", "c"]),
       startColumn: 10,
       offset: offset,
-      foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
     )
@@ -40,7 +39,6 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
       nvimCells: emojiMarked(["ü", "î", "ñ"]),
       startColumn: 20,
       offset: offset,
-      foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
     )
@@ -66,7 +64,6 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
       ),
       startColumn: 10,
       offset: offset,
-      foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
     )
@@ -127,7 +124,6 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
       nvimCells: asciiMarked(["a", "b", "\u{1F600}", "", "\u{1F377}", ""]),
       startColumn: 1,
       offset: offset,
-      foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
     )
@@ -161,7 +157,6 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
       nvimCells: asciiMarked(["a", "\u{1F476}", "", "\u{1F3FD}", ""]),
       startColumn: 1,
       offset: offset,
-      foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
     )
@@ -193,7 +188,6 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
       nvimCells: asciiMarked(["a", "b", "하", "", "태", "", "원", ""]),
       startColumn: 1,
       offset: offset,
-      foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
     )
@@ -227,7 +221,6 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
       nvimCells: asciiMarked(["a", "b", "河", "", "泰", "", "元", ""]),
       startColumn: 1,
       offset: offset,
-      foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
     )
@@ -261,7 +254,6 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
       nvimCells: emojiMarked(["a", "\u{10437}", "\u{1F14}"]),
       startColumn: 1,
       offset: offset,
-      foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
     )
@@ -301,7 +293,6 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
       nvimCells: emojiMarked(["a", "-", "-", ">", "a"]),
       startColumn: 1,
       offset: offset,
-      foreground: 0,
       font: fira,
       cellWidth: firaWidth
     )
@@ -340,7 +331,6 @@ class TypesetterWithLigaturesTest: XCTestCase {
       )),
       startColumn: 1,
       offset: offset,
-      foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
     )
@@ -364,7 +354,6 @@ class TypesetterWithLigaturesTest: XCTestCase {
       nvimUtf16Cells: utf16Chars(emojiMarked(["ü", "î", "ñ"])),
       startColumn: 10,
       offset: offset,
-      foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
     )
@@ -392,7 +381,6 @@ class TypesetterWithLigaturesTest: XCTestCase {
       ),
       startColumn: 1,
       offset: offset,
-      foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
     )
@@ -437,7 +425,6 @@ class TypesetterWithLigaturesTest: XCTestCase {
       ),
       startColumn: 0,
       offset: offset,
-      foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
     )
@@ -465,7 +452,6 @@ class TypesetterWithLigaturesTest: XCTestCase {
       ),
       startColumn: 0,
       offset: offset,
-      foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
     )
@@ -493,7 +479,6 @@ class TypesetterWithLigaturesTest: XCTestCase {
       )),
       startColumn: 1,
       offset: offset,
-      foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
     )
@@ -518,7 +503,6 @@ class TypesetterWithLigaturesTest: XCTestCase {
       ),
       startColumn: 1,
       offset: offset,
-      foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
     )
@@ -544,7 +528,6 @@ class TypesetterWithLigaturesTest: XCTestCase {
       ),
       startColumn: 1,
       offset: offset,
-      foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
     )
@@ -570,7 +553,6 @@ class TypesetterWithLigaturesTest: XCTestCase {
       ),
       startColumn: 0,
       offset: offset,
-      foreground: 0,
       font: defaultFont,
       cellWidth: defaultWidth
     )
@@ -602,7 +584,6 @@ class TypesetterWithLigaturesTest: XCTestCase {
       ),
       startColumn: 0,
       offset: offset,
-      foreground: 0,
       font: fira,
       cellWidth: firaWidth
     )
