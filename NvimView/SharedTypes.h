@@ -39,6 +39,7 @@ typedef NS_ENUM(NSUInteger, CursorModeShape) {
 typedef NS_ENUM(NSInteger, RenderDataType) {
   RenderDataTypeRawLine,
   RenderDataTypeGoto,
+  RenderDataTypeScroll,
 };
 
 typedef NS_ENUM(NSInteger, NvimServerMsgId) {
@@ -50,7 +51,6 @@ typedef NS_ENUM(NSInteger, NvimServerMsgId) {
   NvimServerMsgIdBusyStart,
   NvimServerMsgIdBusyStop,
   NvimServerMsgIdModeChange,
-  NvimServerMsgIdScroll,
   NvimServerMsgIdUnmark,
   NvimServerMsgIdBell,
   NvimServerMsgIdVisualBell,

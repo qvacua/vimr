@@ -23,7 +23,6 @@ class UiBridge {
     case mouseOn
     case mouseOff
     case modeChange(MessagePackValue)
-    case scroll(MessagePackValue)
     case unmark(MessagePackValue)
     case bell
     case visualBell
@@ -194,10 +193,6 @@ class UiBridge {
     case .modeChange:
       guard let v = MessagePackUtils.value(from: data) else { return }
       self.streamSubject.onNext(.modeChange(v))
-
-    case .scroll:
-      guard let v = MessagePackUtils.value(from: data) else { return }
-      self.streamSubject.onNext(.scroll(v))
 
     case .unmark:
       guard let v = MessagePackUtils.value(from: data) else { return }

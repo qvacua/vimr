@@ -43,25 +43,26 @@ extension NvimView {
     }
   }
 
-  final func scroll(_ value: MessagePackValue) {
-    guard let array = MessagePackUtils.array(
-      from: value, ofSize: 6, conversion: { $0.intValue }
-    ) else {
-      bridgeLogger.error("The data did not have required 6 Int's!")
-      return
-    }
-
+  final func scroll(_ array: [Int]) {
     bridgeLogger.debug("[top, bot, left, right, rows, cols] = \(array)")
 
-    gui.async {
-      let scrollRegion = Region(
-        top: array[0], bottom: array[1] - 1,
-        left: array[2], right: array[3] - 1
-      )
-      self.ugrid.scroll(region: scrollRegion, rows: array[4], cols: array[5])
-      self.markForRender(region: scrollRegion)
-      self.eventsSubject.onNext(.scroll)
-    }
+    let (top, bottom, left, right, rows, cols)
+      = (array[0], array[1] - 1, array[2], array[3] - 1, array[4], array[5])
+
+    let scrollRegion = Region(
+      top: top, bottom: bottom,
+      left: left, right: right
+    )
+    let maxBottom = self.ugrid.size.height - 1
+    let regionToRender = Region(
+      top: min(max(0, top - rows), maxBottom),
+      bottom: max(0, min(bottom - rows, maxBottom)),
+      left: left, right: right
+    )
+
+    self.ugrid.scroll(region: scrollRegion, rows: rows, cols: cols)
+    self.markForRender(region: scrollRegion)
+    self.eventsSubject.onNext(.scroll)
   }
 
   final func unmark(_ value: MessagePackValue) {
@@ -98,6 +99,9 @@ extension NvimView {
                 let col = innerArray[1].unsignedIntegerValue else { return }
 
           self.doGoto(position: Position(row: Int(row), column: Int(col)))
+
+        case .scroll:
+          self.scroll(innerArray.compactMap { $0.intValue })
 
         }
       }
@@ -208,20 +212,22 @@ extension NvimView {
                       chunk: chunk,
                       attrIds: attrIds)
 
-    if self.usesLigatures {
-      let leftBoundary = self.ugrid.leftBoundaryOfWord(
-        at: Position(row: row, column: startCol)
-      )
-      let rightBoundary = self.ugrid.rightBoundaryOfWord(
-        at: Position(row: row, column: max(0, endCol - 1))
-      )
-      self.markForRender(region: Region(
-        top: row, bottom: row, left: leftBoundary, right: rightBoundary
-      ))
-    } else {
-      self.markForRender(region: Region(
-        top: row, bottom: row, left: startCol, right: max(0, endCol - 1)
-      ))
+    if count > 0 {
+      if self.usesLigatures {
+        let leftBoundary = self.ugrid.leftBoundaryOfWord(
+          at: Position(row: row, column: startCol)
+        )
+        let rightBoundary = self.ugrid.rightBoundaryOfWord(
+          at: Position(row: row, column: max(0, endCol - 1))
+        )
+        self.markForRender(region: Region(
+          top: row, bottom: row, left: leftBoundary, right: rightBoundary
+        ))
+      } else {
+        self.markForRender(region: Region(
+          top: row, bottom: row, left: startCol, right: max(0, endCol - 1)
+        ))
+      }
     }
 
     if clearCol > endCol {

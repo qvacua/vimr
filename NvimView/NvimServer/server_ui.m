@@ -382,7 +382,7 @@ static void server_ui_grid_scroll(
 ) {
   ELOG("grid scroll");
 
-  send_msg_packing(NvimServerMsgIdScroll, ^(msgpack_packer *packer) {
+  pack_flush_data(RenderDataTypeScroll, ^(msgpack_packer *packer) {
     msgpack_pack_array(packer, 6);
     msgpack_pack_int64(packer, top);
     msgpack_pack_int64(packer, bot);

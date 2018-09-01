@@ -97,11 +97,17 @@ final class Typesetter {
 
     // Using append(contentsOf:) seems to be slower than the following:
     var result = Array(repeating: Unicode.UTF16.CodeUnit(), count: count)
-    for i in 0..<nvimUtf16Cells.count {
-      let cell = nvimUtf16Cells[i]
-      for j in 0..<cell.count {
-        result[i + j] = cell[j]
+    var i = 0
+    for cell in nvimUtf16Cells {
+      if cell.isEmpty {
+        continue
       }
+
+      for j in 0..<cell.count {
+        result[i &+ j] = cell[j]
+      }
+
+      i = i &+ cell.count
     }
 
     return result

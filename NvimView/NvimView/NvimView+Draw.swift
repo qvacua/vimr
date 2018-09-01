@@ -35,14 +35,20 @@ extension NvimView {
     context.setTextDrawingMode(.fill);
 
     let dirtyRects = self.rectsBeingDrawn()
-    ColorUtils.colorIgnoringAlpha(
-      self.cellAttributesCollection.defaultAttributes.background
-    ).set()
-    dirtyRects.fill()
+    self.draw(contentIn: dirtyRects, in: context)
+//    self.drawByParallelComputation(contentIn: dirtyRects, in: context)
+  }
+
+  private func drawByParallelComputation(contentIn dirtyRects: [CGRect], `in` context: CGContext) {
+    context.setFillColor(
+      ColorUtils.cgColorIgnoringAlpha(
+        self.cellAttributesCollection.defaultAttributes.background
+      )
+    )
+    context.fill(dirtyRects)
 
     let attrsRuns = self.runs(intersecting: dirtyRects)
     let runs = attrsRuns.parallelMap {
-//    let runs = attrsRuns.map {
       run -> (attrsRun: AttributesRun, fontGlyphRuns: [FontGlyphRun]) in
 
       let font = FontUtils.font(adding: run.attrs.fontTrait, to: self.font)
@@ -77,16 +83,46 @@ extension NvimView {
 #endif
   }
 
-  private func draw(_ run: AttributesRun, in context: CGContext) {
-    context.saveGState()
-    defer { context.restoreGState() }
-
-    self.runDrawer.draw(
-      run,
-      with: self.cellAttributesCollection.defaultAttributes,
-      xOffset: self.xOffset,
-      in: context
+  private func draw(contentIn dirtyRects: [CGRect], `in` context: CGContext) {
+    context.setFillColor(
+      ColorUtils.cgColorIgnoringAlpha(
+        self.cellAttributesCollection.defaultAttributes.background
+      )
     )
+    context.fill(dirtyRects)
+
+    let attrsRuns = self.runs(intersecting: dirtyRects)
+    let runs = attrsRuns.map { run -> [FontGlyphRun] in
+      let font = FontUtils.font(adding: run.attrs.fontTrait, to: self.font)
+
+      let fontGlyphRuns = self.typesetter.fontGlyphRunsWithLigatures(
+        nvimUtf16Cells: run.cells.map { Array($0.string.utf16) },
+        startColumn: run.cells.startIndex,
+        offset: CGPoint(
+          x: self.xOffset, y: run.location.y + self.baselineOffset
+        ),
+        font: font,
+        cellWidth: self.cellSize.width
+      )
+
+      return fontGlyphRuns
+    }
+
+    let defaultAttrs = self.cellAttributesCollection.defaultAttributes
+    for i in 0..<attrsRuns.count {
+      self.runDrawer.draw(
+        attrsRuns[i],
+        fontGlyphRuns: runs[i],
+        defaultAttributes: defaultAttrs,
+        in: context
+      )
+    }
+
+//    self.drawCursor(context: context)
+
+#if DEBUG
+    // self.draw(cellGridIn: context)
+#endif
   }
 
   private func cursorRegion() -> Region {

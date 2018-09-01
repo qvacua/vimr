@@ -251,9 +251,6 @@ public class NvimView: NSView,
         case let .modeChange(value):
           self.modeChange(value)
 
-        case let .scroll(value):
-          self.scroll(value)
-
         case let .unmark(value):
           self.unmark(value)
 
