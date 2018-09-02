@@ -11,7 +11,9 @@ import MessagePack
 extension NvimView {
 
   final func resize(_ value: MessagePackValue) {
-    guard let array = MessagePackUtils.array(from: value, ofSize: 2, conversion: { $0.intValue }) else {
+    guard let array = MessagePackUtils.array(
+      from: value, ofSize: 2, conversion: { $0.intValue }
+    ) else {
       return
     }
 
@@ -26,16 +28,22 @@ extension NvimView {
     bridgeLogger.mark()
 
     gui.async {
-//      self.ugrid.clear()
+      self.ugrid.clear()
       self.markForRenderWholeView()
     }
   }
 
   final func modeChange(_ value: MessagePackValue) {
-    guard let mode = MessagePackUtils.value(from: value, conversion: { v -> CursorModeShape? in
+    guard let mode = MessagePackUtils.value(
+      from: value, conversion: { v -> CursorModeShape? in
+
       guard let rawValue = v.intValue else { return nil }
+
       return CursorModeShape(rawValue: UInt(rawValue))
-    }) else { return }
+
+    }) else {
+      return
+    }
 
     bridgeLogger.debug(name(of: mode))
     gui.async {

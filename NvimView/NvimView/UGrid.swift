@@ -103,7 +103,11 @@ final class UGrid {
   }
 
   func clear() {
-//    self.clear(region: self.region)
+    let emptyRow = Array(
+      repeating: UCell(string: clearString, attrId: defaultAttrId),
+      count: size.width
+    )
+    self.cells = Array(repeating: emptyRow, count: size.height)
   }
 
   func clear(region: Region) {
@@ -133,11 +137,7 @@ final class UGrid {
     self.size = size
     self.posision = .zero
 
-    let emptyRow = Array(
-      repeating: UCell(string: clearString, attrId: defaultAttrId),
-      count: size.width
-    )
-    self.cells = Array(repeating: emptyRow, count: size.height)
+    self.clear()
   }
 
   // endCol and clearCol are past last index
