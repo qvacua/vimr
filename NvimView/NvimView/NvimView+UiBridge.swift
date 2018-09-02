@@ -85,8 +85,7 @@ extension NvimView {
   }
 
   final func flush(_ renderData: [MessagePackValue]) {
-//    bridgeLogger.hr()
-    bridgeLogger.debug(renderData.count)
+    bridgeLogger.debug("# of render data: \(renderData.count)")
 
     gui.async {
       renderData.forEach { value in
@@ -109,13 +108,20 @@ extension NvimView {
           self.doGoto(position: Position(row: Int(row), column: Int(col)))
 
         case .scroll:
-          self.scroll(innerArray.compactMap { $0.intValue })
+          let values = innerArray.compactMap { $0.intValue }
+          guard values.count == 6 else {
+            bridgeLogger.error("Scroll msg does not have 6 Int's!")
+            return
+          }
+
+          self.scroll(values)
 
         }
       }
 
-      // The position stays at the first cell when we enter the terminal mode and the cursor seems to be drawn by
-      // changing the background color of the corresponding cell...
+      // The position stays at the first cell when we enter the terminal mode
+      // and the cursor seems to be drawn by changing the background color of
+      // the corresponding cell...
       if self.mode != .termFocus {
         self.shouldDrawCursor = true
       }
