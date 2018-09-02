@@ -1,12 +1,13 @@
-//
-// Created by Tae Won Ha on 19.08.18.
-// Copyright (c) 2018 Tae Won Ha. All rights reserved.
-//
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 import Foundation
 
 extension Array where Element: Hashable {
 
+  // From https://stackoverflow.com/a/46354989/9850227
   func uniqued() -> [Element] {
     var seen = Set<Element>()
     return self.filter { seen.insert($0).inserted }
