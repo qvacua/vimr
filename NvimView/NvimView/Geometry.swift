@@ -10,6 +10,9 @@ public struct Position: CustomStringConvertible, Equatable {
   public static let zero = Position(row: 0, column: 0)
   public static let null = Position(row: -1, column: -1)
 
+  // FIXME: GH-666: Delete
+  public static let beginning = Position(row: 1, column: 1)
+
   public static func ==(left: Position, right: Position) -> Bool {
     if left.row != right.row { return false }
     if left.column != right.column { return false }

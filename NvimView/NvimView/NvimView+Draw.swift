@@ -129,21 +129,6 @@ extension NvimView {
     return fontGlyphRuns
   }
 
-  func cursorRegion(for cursorPosition: Position) -> Region {
-    var cursorRegion = Region(
-      top: cursorPosition.row,
-      bottom: cursorPosition.row,
-      left: cursorPosition.column,
-      right: cursorPosition.column
-    )
-
-    if self.ugrid.isNextCellEmpty(cursorPosition) {
-      cursorRegion.right += 1
-    }
-
-    return cursorRegion
-  }
-
   private func drawCursor(`in` context: CGContext) {
     guard self.shouldDrawCursor else {
       return
@@ -168,9 +153,6 @@ extension NvimView {
     }
 
     let cursorRegion = self.cursorRegion(for: self.ugrid.cursorPosition)
-    let cursorRow = cursorRegion.top
-    let cursorColumnStart = cursorRegion.left
-
     guard let cursorAttrs = self.cellAttributesCollection.attributes(
       of: self.ugrid.cells[cursorPosition.row][cursorPosition.column].attrId
     )?.reversed else {
@@ -197,7 +179,9 @@ extension NvimView {
     self.shouldDrawCursor = false
   }
 
-  private func drawResizeInfo(in context: CGContext, with dirtyUnionRect: CGRect) {
+  private func drawResizeInfo(
+    in context: CGContext, with dirtyUnionRect: CGRect
+  ) {
     context.setFillColor(self.theme.background.cgColor)
     context.fill(dirtyUnionRect)
 
@@ -209,7 +193,8 @@ extension NvimView {
 
     let discreteSize = self.discreteSize(size: boundsSize)
     let displayStr = "\(discreteSize.width) × \(discreteSize.height)"
-    let infoStr = "(You can turn on the experimental live resizing feature in the Advanced preferences)"
+    let infoStr = "(You can turn on the experimental live resizing feature" +
+      " in the Advanced preferences)"
 
     var (sizeAttrs, infoAttrs) = (resizeTextAttrs, infoTextAttrs)
     sizeAttrs[.foregroundColor] = self.theme.foreground
@@ -219,9 +204,13 @@ extension NvimView {
     let (x, y) = ((boundsSize.width - size.width) / 2, emojiY - size.height)
 
     let infoSize = infoStr.size(withAttributes: infoAttrs)
-    let (infoX, infoY) = ((boundsSize.width - infoSize.width) / 2, y - size.height - 5)
+    let (infoX, infoY) = (
+      (boundsSize.width - infoSize.width) / 2, y - size.height - 5
+    )
 
-    self.currentEmoji.draw(at: CGPoint(x: emojiX, y: emojiY), withAttributes: emojiAttrs)
+    self.currentEmoji.draw(
+      at: CGPoint(x: emojiX, y: emojiY), withAttributes: emojiAttrs
+    )
     displayStr.draw(at: CGPoint(x: x, y: y), withAttributes: sizeAttrs)
     infoStr.draw(at: CGPoint(x: infoX, y: infoY), withAttributes: infoAttrs)
   }
@@ -232,12 +221,14 @@ extension NvimView {
     let boundsSize = self.bounds.size
     let targetSize = CGSize(width: boundsSize.width * self.pinchTargetScale,
                             height: boundsSize.height * self.pinchTargetScale)
-    self.pinchBitmap?.draw(in: CGRect(origin: self.bounds.origin, size: targetSize),
-                           from: CGRect.zero,
-                           operation: .sourceOver,
-                           fraction: 1,
-                           respectFlipped: true,
-                           hints: nil)
+    self.pinchBitmap?.draw(
+      in: CGRect(origin: self.bounds.origin, size: targetSize),
+      from: CGRect.zero,
+      operation: .sourceOver,
+      fraction: 1,
+      respectFlipped: true,
+      hints: nil
+    )
   }
 
   private func runs(intersecting rects: [CGRect]) -> [AttributesRun] {
@@ -289,51 +280,6 @@ extension NvimView {
       .flatMap { $0 }
   }
 
-  private func region(for rect: CGRect) -> Region {
-    let cellWidth = self.cellSize.width
-    let cellHeight = self.cellSize.height
-
-    let rowStart = max(
-      0,
-      Int(floor(
-        (self.bounds.height - self.yOffset
-          - (rect.origin.y + rect.size.height)) / cellHeight
-      ))
-    )
-    let rowEnd = min(
-      self.ugrid.size.height - 1,
-      Int(ceil(
-        (self.bounds.height - self.yOffset - rect.origin.y) / cellHeight
-      )) - 1
-    )
-    let columnStart = max(
-      0,
-      Int(floor((rect.origin.x - self.xOffset) / cellWidth))
-    )
-    let columnEnd = min(
-      self.ugrid.size.width - 1,
-      Int(ceil(
-        (rect.origin.x - self.xOffset + rect.size.width) / cellWidth
-      )) - 1
-    )
-
-    return Region(
-      top: rowStart, bottom: rowEnd, left: columnStart, right: columnEnd
-    )
-  }
-
-  private func pointInView(forRow row: Int, column: Int) -> CGPoint {
-    return CGPoint(
-      x: self.xOffset + CGFloat(column) * self.cellSize.width,
-      y: self.bounds.size.height - self.yOffset
-        - CGFloat(row) * self.cellSize.height - self.cellSize.height
-    )
-  }
-
-  func rect(forRow row: Int, column: Int) -> CGRect {
-    return CGRect(origin: self.pointInView(forRow: row, column: column), size: self.cellSize)
-  }
-
   func updateFontMetaData(_ newFont: NSFont) {
     self.runDrawer.baseFont = newFont
 
@@ -346,7 +292,9 @@ extension NvimView {
   }
 }
 
-private let emojiAttrs = [NSAttributedStringKey.font: NSFont(name: "AppleColorEmoji", size: 72)!]
+private let emojiAttrs = [
+  NSAttributedStringKey.font: NSFont(name: "AppleColorEmoji", size: 72)!
+]
 
 private let resizeTextAttrs = [
   NSAttributedStringKey.font: NSFont.systemFont(ofSize: 18),

@@ -5,6 +5,7 @@
 
 import Cocoa
 
+// FIXME: GH-666: Delete
 struct OldCellAttributes: CustomStringConvertible, Equatable {
 
   var fontTrait: FontTrait
