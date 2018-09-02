@@ -197,4 +197,4 @@ final class UGrid {
 
 private let clearString = " "
 private let wordSeparator = " "
-private let defaultAttrId = -1
+private let defaultAttrId = 0

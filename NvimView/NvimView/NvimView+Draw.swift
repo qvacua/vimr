@@ -161,7 +161,6 @@ extension NvimView {
       return
     }
 
-    // FIXME: take ligatures into account (is it a good idea to do this?)
     let attrsRun = AttributesRun(
       location: self.pointInView(
         forRow: cursorPosition.row, column: cursorPosition.column
