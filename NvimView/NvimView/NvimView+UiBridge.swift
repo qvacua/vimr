@@ -51,28 +51,6 @@ extension NvimView {
     }
   }
 
-  final func scroll(_ array: [Int]) {
-    bridgeLogger.debug("[top, bot, left, right, rows, cols] = \(array)")
-
-    let (top, bottom, left, right, rows, cols)
-      = (array[0], array[1] - 1, array[2], array[3] - 1, array[4], array[5])
-
-    let scrollRegion = Region(
-      top: top, bottom: bottom,
-      left: left, right: right
-    )
-    let maxBottom = self.ugrid.size.height - 1
-    let regionToRender = Region(
-      top: min(max(0, top - rows), maxBottom),
-      bottom: max(0, min(bottom - rows, maxBottom)),
-      left: left, right: right
-    )
-
-    self.ugrid.scroll(region: scrollRegion, rows: rows, cols: cols)
-    self.markForRender(region: scrollRegion)
-    self.eventsSubject.onNext(.scroll)
-  }
-
   final func unmark(_ value: MessagePackValue) {
 //    bridgeLogger.debug("\(row):\(column)")
 //
@@ -114,7 +92,7 @@ extension NvimView {
             return
           }
 
-          self.scroll(values)
+          self.doScroll(values)
 
         }
       }
@@ -261,6 +239,28 @@ extension NvimView {
 
     self.ugrid.goto(position)
     self.markForRender(cellPosition: self.ugrid.cursorPosition)
+  }
+
+  private func doScroll(_ array: [Int]) {
+    bridgeLogger.debug("[top, bot, left, right, rows, cols] = \(array)")
+
+    let (top, bottom, left, right, rows, cols)
+      = (array[0], array[1] - 1, array[2], array[3] - 1, array[4], array[5])
+
+    let scrollRegion = Region(
+      top: top, bottom: bottom,
+      left: left, right: right
+    )
+    let maxBottom = self.ugrid.size.height - 1
+    let regionToRender = Region(
+      top: min(max(0, top - rows), maxBottom),
+      bottom: max(0, min(bottom - rows, maxBottom)),
+      left: left, right: right
+    )
+
+    self.ugrid.scroll(region: scrollRegion, rows: rows, cols: cols)
+    self.markForRender(region: scrollRegion)
+    self.eventsSubject.onNext(.scroll)
   }
 }
 
