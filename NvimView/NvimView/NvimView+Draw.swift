@@ -35,8 +35,12 @@ extension NvimView {
     context.setTextDrawingMode(.fill);
 
     let dirtyRects = self.rectsBeingDrawn()
+
+#if DEBUG
+    self.drawByParallelComputation(contentIn: dirtyRects, in: context)
+#else
     self.draw(contentIn: dirtyRects, in: context)
-//    self.drawByParallelComputation(contentIn: dirtyRects, in: context)
+#endif
   }
 
   private func drawByParallelComputation(contentIn dirtyRects: [CGRect], `in` context: CGContext) {
