@@ -321,26 +321,6 @@ extension NvimView {
     return CGRect(origin: self.pointInView(forRow: row, column: column), size: self.cellSize)
   }
 
-  func rect(for region: Region) -> CGRect {
-    let top = CGFloat(region.top)
-    let bottom = CGFloat(region.bottom)
-    let left = CGFloat(region.left)
-    let right = CGFloat(region.right)
-
-    let width = right - left + 1
-    let height = bottom - top + 1
-
-    let cellWidth = self.cellSize.width
-    let cellHeight = self.cellSize.height
-
-    return CGRect(
-      x: self.xOffset + left * cellWidth,
-      y: self.bounds.size.height - self.yOffset - top * cellHeight - height * cellHeight,
-      width: width * cellWidth,
-      height: height * cellHeight
-    )
-  }
-
   func updateFontMetaData(_ newFont: NSFont) {
     self.runDrawer.baseFont = newFont
 
