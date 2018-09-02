@@ -43,13 +43,21 @@ extension NvimView {
 #endif
   }
 
-  private func drawByParallelComputation(contentIn dirtyRects: [CGRect], `in` context: CGContext) {
+  private func draw(
+    defaultBackgroundIn dirtyRects: [CGRect], `in` context: CGContext
+  ) {
     context.setFillColor(
       ColorUtils.cgColorIgnoringAlpha(
         self.cellAttributesCollection.defaultAttributes.background
       )
     )
     context.fill(dirtyRects)
+  }
+
+  private func drawByParallelComputation(
+    contentIn dirtyRects: [CGRect], `in` context: CGContext
+  ) {
+    self.draw(defaultBackgroundIn: dirtyRects, in: context)
 
     let attrsRuns = self.runs(intersecting: dirtyRects)
     let runs = attrsRuns.parallelMap {
@@ -88,12 +96,7 @@ extension NvimView {
   }
 
   private func draw(contentIn dirtyRects: [CGRect], `in` context: CGContext) {
-    context.setFillColor(
-      ColorUtils.cgColorIgnoringAlpha(
-        self.cellAttributesCollection.defaultAttributes.background
-      )
-    )
-    context.fill(dirtyRects)
+    self.draw(defaultBackgroundIn: dirtyRects, in: context)
 
     let attrsRuns = self.runs(intersecting: dirtyRects)
     let runs = attrsRuns.map { run -> [FontGlyphRun] in
