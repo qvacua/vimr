@@ -36,10 +36,18 @@ extension NvimView {
 
     let dirtyRects = self.rectsBeingDrawn()
 
+    self.draw(defaultBackgroundIn: dirtyRects, in: context)
+
 #if DEBUG
-    self.drawByParallelComputation(contentIn: dirtyRects, in: context)
+    self.draw(textByParallelComputationIntersecting: dirtyRects, in: context)
 #else
-    self.draw(contentIn: dirtyRects, in: context)
+    self.draw(intersecting: dirtyRects, in: context)
+#endif
+
+    self.drawCursor(in: context)
+
+#if DEBUG
+    // self.draw(cellGridIn: context)
 #endif
   }
 
@@ -54,11 +62,10 @@ extension NvimView {
     context.fill(dirtyRects)
   }
 
-  private func drawByParallelComputation(
-    contentIn dirtyRects: [CGRect], `in` context: CGContext
+  private func draw(
+    textByParallelComputationIntersecting dirtyRects: [CGRect],
+    `in` context: CGContext
   ) {
-    self.draw(defaultBackgroundIn: dirtyRects, in: context)
-
     let attrsRuns = self.runs(intersecting: dirtyRects)
     let runs = attrsRuns.parallelMap {
       run -> (attrsRun: AttributesRun, fontGlyphRuns: [FontGlyphRun]) in
@@ -87,33 +94,13 @@ extension NvimView {
         in: context
       )
     }
-
-//    self.drawCursor(context: context)
-
-#if DEBUG
-    // self.draw(cellGridIn: context)
-#endif
   }
 
-  private func draw(contentIn dirtyRects: [CGRect], `in` context: CGContext) {
-    self.draw(defaultBackgroundIn: dirtyRects, in: context)
-
+  private func draw(
+    intersecting dirtyRects: [CGRect], `in` context: CGContext
+  ) {
     let attrsRuns = self.runs(intersecting: dirtyRects)
-    let runs = attrsRuns.map { run -> [FontGlyphRun] in
-      let font = FontUtils.font(adding: run.attrs.fontTrait, to: self.font)
-
-      let fontGlyphRuns = self.typesetter.fontGlyphRunsWithLigatures(
-        nvimUtf16Cells: run.cells.map { Array($0.string.utf16) },
-        startColumn: run.cells.startIndex,
-        offset: CGPoint(
-          x: self.xOffset, y: run.location.y + self.baselineOffset
-        ),
-        font: font,
-        cellWidth: self.cellSize.width
-      )
-
-      return fontGlyphRuns
-    }
+    let runs = attrsRuns.map(self.fontGlyphRuns)
 
     let defaultAttrs = self.cellAttributesCollection.defaultAttributes
     for i in 0..<attrsRuns.count {
@@ -124,33 +111,40 @@ extension NvimView {
         in: context
       )
     }
-
-//    self.drawCursor(context: context)
-
-#if DEBUG
-    // self.draw(cellGridIn: context)
-#endif
   }
 
-  private func cursorRegion() -> Region {
-    let cursorPosition = self.grid.position
+  private func fontGlyphRuns(from attrsRun: AttributesRun) -> [FontGlyphRun] {
+    let font = FontUtils.font(adding: attrsRun.attrs.fontTrait, to: self.font)
 
-    let saneRow = max(0, min(cursorPosition.row, self.grid.size.height - 1))
-    let saneColumn = max(0, min(cursorPosition.column, self.grid.size.width - 1))
+    let fontGlyphRuns = self.typesetter.fontGlyphRunsWithLigatures(
+      nvimUtf16Cells: attrsRun.cells.map { Array($0.string.utf16) },
+      startColumn: attrsRun.cells.startIndex,
+      offset: CGPoint(
+        x: self.xOffset, y: attrsRun.location.y + self.baselineOffset
+      ),
+      font: font,
+      cellWidth: self.cellSize.width
+    )
 
-    var cursorRegion = Region(top: saneRow, bottom: saneRow, left: saneColumn, right: saneColumn)
+    return fontGlyphRuns
+  }
 
-    if self.grid.isNextCellEmpty(cursorPosition) {
-      cursorRegion = Region(top: cursorPosition.row,
-                            bottom: cursorPosition.row,
-                            left: cursorPosition.column,
-                            right: min(self.grid.size.width - 1, cursorPosition.column + 1))
+  func cursorRegion(for cursorPosition: Position) -> Region {
+    var cursorRegion = Region(
+      top: cursorPosition.row,
+      bottom: cursorPosition.row,
+      left: cursorPosition.column,
+      right: cursorPosition.column
+    )
+
+    if self.ugrid.isNextCellEmpty(cursorPosition) {
+      cursorRegion.right += 1
     }
 
     return cursorRegion
   }
 
-  private func drawCursor(context: CGContext) {
+  private func drawCursor(`in` context: CGContext) {
     guard self.shouldDrawCursor else {
       return
     }
@@ -158,28 +152,47 @@ extension NvimView {
     context.saveGState()
     defer { context.restoreGState() }
 
-    let cursorRegion = self.cursorRegion()
-    let cursorRow = cursorRegion.top
-    let cursorColumnStart = cursorRegion.left
+    let cursorPosition = self.ugrid.cursorPosition
+    let defaultAttrs = self.cellAttributesCollection.defaultAttributes
 
     if self.mode == .insert {
-      context.setFillColor(ColorUtils.colorIgnoringAlpha(self.grid.foreground).withAlphaComponent(0.75).cgColor)
-      var cursorRect = self.rect(forRow: cursorRow, column: cursorColumnStart)
+      context.setFillColor(
+        ColorUtils.cgColorIgnoringAlpha(defaultAttrs.foreground)
+      )
+      var cursorRect = self.rect(
+        forRow: cursorPosition.row, column: cursorPosition.column
+      )
       cursorRect.size.width = 2
       context.fill(cursorRect)
       return
     }
 
-    // FIXME: for now do some rudimentary cursor drawing
-//    let attrsAtCursor = self.grid.cells[cursorRow][cursorColumnStart].attrs
-//    let attrs = CellAttributes(fontTrait: attrsAtCursor.fontTrait,
-//                               foreground: self.grid.background,
-//                               background: self.grid.foreground,
-//                               special: self.grid.special)
+    let cursorRegion = self.cursorRegion(for: self.ugrid.cursorPosition)
+    let cursorRow = cursorRegion.top
+    let cursorColumnStart = cursorRegion.left
+
+    guard let cursorAttrs = self.cellAttributesCollection.attributes(
+      of: self.ugrid.cells[cursorPosition.row][cursorPosition.column].attrId
+    )?.reversed else {
+      stdoutLogger.error("Could not get the attributes" +
+                           " at cursor: \(cursorPosition)")
+      return
+    }
 
     // FIXME: take ligatures into account (is it a good idea to do this?)
-//    let rowRun = RowRun(row: cursorRegion.top, range: cursorRegion.columnRange, attrs: attrs)
-//    self.draw(rowRun: rowRun, in: context)
+    let attrsRun = AttributesRun(
+      location: self.pointInView(
+        forRow: cursorPosition.row, column: cursorPosition.column
+      ),
+      cells: self.ugrid.cells[cursorPosition.row][cursorRegion.columnRange],
+      attrs: cursorAttrs
+    )
+    self.runDrawer.draw(
+      attrsRun,
+      fontGlyphRuns: self.fontGlyphRuns(from: attrsRun),
+      defaultAttributes: defaultAttrs,
+      in: context
+    )
 
     self.shouldDrawCursor = false
   }

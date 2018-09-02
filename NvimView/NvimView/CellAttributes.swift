@@ -43,11 +43,9 @@ struct CellAttributes: CustomStringConvertible, Equatable {
       ">"
   }
 
-  public var inverted: CellAttributes {
+  public var reversed: CellAttributes {
     var result = self
-
-    result.background = self.foreground
-    result.foreground = self.background
+    result.reverse = !self.reverse
 
     return result
   }

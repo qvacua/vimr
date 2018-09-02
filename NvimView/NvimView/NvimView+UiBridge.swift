@@ -252,10 +252,15 @@ extension NvimView {
   }
 
   private func doGoto(position: Position) {
-//    bridgeLogger.debug(position)
+    bridgeLogger.debug(position)
 
-    self.markForRender(cellPosition: self.grid.position)
-    self.grid.goto(position)
+    // Re-render the old cursor position.
+    self.markForRender(
+      region: self.cursorRegion(for: self.ugrid.cursorPosition)
+    )
+
+    self.ugrid.goto(position)
+    self.markForRender(cellPosition: self.ugrid.cursorPosition)
   }
 }
 

@@ -13,8 +13,9 @@ struct UCell {
 
 final class UGrid {
 
+  private(set) var cursorPosition = Position.zero
+
   private(set) var size = Size.zero
-  private(set) var posision = Position.zero
 
   private(set) var cells: [[UCell]] = []
 
@@ -60,6 +61,10 @@ final class UGrid {
     return self.size.width - 1
   }
 
+  func goto(_ position: Position) {
+    self.cursorPosition = position
+  }
+
   func scroll(
     region: Region,
     rows: Int,
@@ -102,6 +107,31 @@ final class UGrid {
     ))
   }
 
+  func isNextCellEmpty(_ position: Position) -> Bool {
+    guard self.isSane(position) else { return false }
+    guard position.column + 1 < self.size.width else { return false }
+    guard !self.cells[position.row][position.column].string.isEmpty else {
+      return false
+    }
+
+    if self.cells[position.row][position.column + 1].string.isEmpty {
+      return true
+    }
+
+    return false
+  }
+
+  func isSane(_ position: Position) -> Bool {
+    if position.column < 0
+         || position.column >= self.size.width
+         || position.row < 0
+         || position.row >= self.size.height {
+      return false
+    }
+
+    return true
+  }
+
   func clear() {
     let emptyRow = Array(
       repeating: UCell(string: clearString, attrId: defaultAttrId),
@@ -135,7 +165,7 @@ final class UGrid {
     logger.debug(size)
 
     self.size = size
-    self.posision = .zero
+    self.cursorPosition = .zero
 
     self.clear()
   }
