@@ -160,7 +160,7 @@ final class Typesetter {
 
       // TODO: GH-666: Do we ever come here?
       print("Could not get all glyphs for single-width singe UTF16 character!")
-      let groupRanges = glyphs.groupedRanges { _, element, _ in element == 0 }
+      let groupRanges = glyphs.groupedRanges { _, element in element == 0 }
       let groupRuns: [[FontGlyphRun]] = groupRanges.map { range in
         if unichars[range.lowerBound] == 0 {
           let nvimUtf16Cells = unichars[range].map { [$0] }
