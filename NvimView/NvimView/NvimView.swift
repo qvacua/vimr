@@ -333,6 +333,8 @@ public class NvimView: NSView,
   let bridge: UiBridge
   let api = RxNeovimApi.Api()
 
+  let grid = Grid()
+
   let ugrid = UGrid()
   let cellAttributesCollection = CellAttributesCollection()
   let runDrawer: AttributesRunDrawer
