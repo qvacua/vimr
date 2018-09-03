@@ -57,7 +57,7 @@ extension NvimView {
 
     self.bridge
       .resize(width: discreteSize.width, height: discreteSize.height)
-      .subscribe()
+      .trigger()
   }
 
   private func launchNeoVim(_ size: Size) {
@@ -69,7 +69,7 @@ extension NvimView {
           switch msg {
           case let .notification(method, params):
             print("NOTIFICATION: \(method) with \(params.count) elements")
-          case let .error(value, msg):
+          case let .error(_, msg):
             print("MSG ERROR: \(msg)")
           default:
             print("???")

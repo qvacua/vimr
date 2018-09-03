@@ -265,7 +265,7 @@ extension NvimView {
               // GH-666: FIXME: correct error handling
               logger.error("row: \(row), range: \(range): " +
                              "Could not get CellAttributes with ID " +
-                             "\(cells.first?.attrId)")
+                "\(String(describing: cells.first?.attrId))")
               return nil
             }
 

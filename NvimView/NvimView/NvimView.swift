@@ -176,7 +176,7 @@ public class NvimView: NSView,
       self.api
         .setCurrentDir(dir: newValue.path)
         .subscribeOn(self.scheduler)
-        .subscribe(onError: { error in
+        .trigger(onError: { error in
           self.eventsSubject.onError(Error.ipc(msg: "Could not set cwd to \(newValue)", cause: error))
         })
     }
@@ -282,6 +282,7 @@ public class NvimView: NSView,
           self.defaultColorsChanged(value)
 
         case let .optionSet(value):
+          stdoutLogger.debug(value)
           break
 
         case let .autoCommandEvent(value):

@@ -42,7 +42,7 @@ extension NvimView {
 
     self.bridge
       .vimInput(finalInput)
-      .subscribe()
+      .trigger()
 
     self.keyDownDone = true
   }
@@ -55,12 +55,12 @@ extension NvimView {
     case let string as String:
       self.bridge
         .vimInput(self.vimPlainString(string))
-        .subscribe()
+        .trigger()
 
     case let attributedString as NSAttributedString:
       self.bridge
         .vimInput(self.vimPlainString(attributedString.string))
-        .subscribe()
+        .trigger()
 
     default:
       break;
@@ -114,7 +114,7 @@ extension NvimView {
     if chars == "\0" {
       self.bridge
         .vimInput(self.wrapNamedKeys("Nul"))
-        .subscribe()
+        .trigger()
       return true
     }
 
@@ -124,14 +124,14 @@ extension NvimView {
     if .control == flags && chars == "6" {
       self.bridge
         .vimInput("\u{1e}") // AKA ^^
-        .subscribe()
+        .trigger()
       return true
     }
     if .control == flags && chars == "2" {
       // <C-2> should generate \0, escaping as above
       self.bridge
         .vimInput(self.wrapNamedKeys("Nul"))
-        .subscribe()
+        .trigger()
       return true
     }
     // NSEvent already sets \u{1f} for <C--> && <C-_>
@@ -180,7 +180,7 @@ extension NvimView {
         }
       )
       .flatMapCompletable { self.bridge.vimInputMarkedText($0) }
-      .subscribe()
+      .trigger()
 
     self.keyDownDone = true
   }

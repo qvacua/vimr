@@ -253,12 +253,12 @@ extension NvimView {
       top: top, bottom: bottom,
       left: left, right: right
     )
-    let maxBottom = self.ugrid.size.height - 1
-    let regionToRender = Region(
-      top: min(max(0, top - rows), maxBottom),
-      bottom: max(0, min(bottom - rows, maxBottom)),
-      left: left, right: right
-    )
+//    let maxBottom = self.ugrid.size.height - 1
+//    let regionToRender = Region(
+//      top: min(max(0, top - rows), maxBottom),
+//      bottom: max(0, min(bottom - rows, maxBottom)),
+//      left: left, right: right
+//    )
 
     self.ugrid.scroll(region: scrollRegion, rows: rows, cols: cols)
     self.markForRender(region: scrollRegion)
@@ -430,7 +430,7 @@ extension NvimView {
       .flatMap { curBuf -> Single<NvimView.Buffer> in
         self.neoVimBuffer(for: Api.Buffer(handle), currentBuffer: curBuf.apiBuffer)
       }
-      .subscribe(onSuccess: {
+      .value(onSuccess: {
         self.eventsSubject.onNext(.bufferWritten($0))
         if #available(OSX 10.12.2, *) {
           self.updateTouchBarTab()
@@ -444,7 +444,7 @@ extension NvimView {
     self
       .currentBuffer()
       .filter { $0.apiBuffer.handle == handle }
-      .subscribe(onSuccess: {
+      .value(onSuccess: {
         self.eventsSubject.onNext(.newCurrentBuffer($0))
         if #available(OSX 10.12.2, *) {
           self.updateTouchBarTab()
