@@ -5,7 +5,7 @@
 
 import Foundation
 
-class CellAttributesCollection {
+final class CellAttributesCollection {
 
   static let defaultAttributesId = 0
 

@@ -5,10 +5,10 @@
 
 import Cocoa
 
-private let colorCache = SimpleCache<Int, NSColor>(countLimit: 200)
-private let cgColorCache = SimpleCache<Int, CGColor>(countLimit: 200)
+private let colorCache = SimpleCache<Int, NSColor>(countLimit: 500)
+private let cgColorCache = SimpleCache<Int, CGColor>(countLimit: 500)
 
-class ColorUtils {
+final class ColorUtils {
 
   /// ARGB
   static func cgColorIgnoringAlpha(_ rgb: Int) -> CGColor {

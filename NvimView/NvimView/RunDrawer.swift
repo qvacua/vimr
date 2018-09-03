@@ -20,6 +20,10 @@ final class AttributesRunDrawer {
   }
 
   var usesLigatures: Bool
+  private(set) var cellSize: CGSize = .zero
+  private(set) var baselineOffset: CGFloat = 0
+  private(set) var underlinePosition: CGFloat = 0
+  private(set) var underlineThickness: CGFloat = 0
 
   init(baseFont: NSFont, linespacing: CGFloat, usesLigatures: Bool) {
     self.baseFont = baseFont
@@ -30,6 +34,33 @@ final class AttributesRunDrawer {
   }
 
   func draw(
+    _ attrsRuns: [AttributesRun],
+    defaultAttributes: CellAttributes,
+    offset: CGPoint,
+    `in` context: CGContext
+  ) {
+#if DEBUG
+    self.drawByParallelComputation(
+      attrsRuns,
+      defaultAttributes: defaultAttributes,
+      offset: offset,
+      in: context
+    )
+#else
+    let runs = attrsRuns.map { self.fontGlyphRuns(from: $0, offset: offset) }
+
+    for i in 0..<attrsRuns.count {
+      self.draw(
+        attrsRuns[i],
+        fontGlyphRuns: runs[i],
+        defaultAttributes: defaultAttributes,
+        in: context
+      )
+    }
+#endif
+  }
+
+  private func draw(
     _ run: AttributesRun,
     fontGlyphRuns: [FontGlyphRun],
     defaultAttributes: CellAttributes,
@@ -61,55 +92,7 @@ final class AttributesRunDrawer {
     // TODO: GH-666: Draw underline/curl
   }
 
-  func draw(
-    _ run: AttributesRun,
-    with defaultAttributes: CellAttributes,
-    xOffset: CGFloat,
-    `in` context: CGContext) {
-    context.saveGState()
-    defer { context.restoreGState() }
-
-    self.draw(
-      backgroundFor: run,
-      with: defaultAttributes,
-      in: context
-    )
-
-    let font = FontUtils.font(adding: run.attrs.fontTrait, to: self.baseFont)
-
-    context.setFillColor(
-      ColorUtils.cgColorIgnoringAlpha(run.attrs.effectiveForeground)
-    )
-
-    if usesLigatures {
-      self.typesetter.fontGlyphRunsWithLigatures(
-          nvimUtf16Cells: run.cells.map { Array($0.string.utf16) },
-          startColumn: run.cells.startIndex,
-          offset: CGPoint(x: xOffset, y: run.location.y + self.baselineOffset),
-          font: font,
-          cellWidth: self.cellSize.width
-        )
-        .forEach { $0.draw(in: context) }
-    } else {
-      self.typesetter.fontGlyphRunsWithoutLigatures(
-          nvimCells: run.cells.map { $0.string },
-          startColumn: run.cells.startIndex,
-          offset: CGPoint(x: xOffset, y: run.location.y + self.baselineOffset),
-          font: font,
-          cellWidth: self.cellSize.width
-        )
-        .forEach { $0.draw(in: context) }
-    }
-
-    // TODO: GH-666: Draw underline/curl
-  }
-
   private let typesetter = Typesetter()
-
-  private var cellSize: CGSize = .zero
-  private var baselineOffset: CGFloat = 0
-  private var underlinePosition: CGFloat = 0
-  private var underlineThickness: CGFloat = 0
 
   private func draw(
     backgroundFor run: AttributesRun,
@@ -134,6 +117,55 @@ final class AttributesRunDrawer {
       ColorUtils.cgColorIgnoringAlpha(run.attrs.effectiveBackground)
     )
     context.fill(backgroundRect)
+  }
+
+  private func fontGlyphRuns(
+    from attrsRun: AttributesRun,
+    offset: CGPoint
+  ) -> [FontGlyphRun] {
+    let font = FontUtils.font(
+      adding: attrsRun.attrs.fontTrait, to: self.baseFont
+    )
+
+    let typesetFunction = self.usesLigatures
+      ? self.typesetter.fontGlyphRunsWithLigatures
+      : self.typesetter.fontGlyphRunsWithoutLigatures
+
+    let fontGlyphRuns = typesetFunction(
+      attrsRun.cells.map { Array($0.string.utf16) },
+      attrsRun.cells.startIndex,
+      CGPoint(
+        x: offset.x, y: attrsRun.location.y + self.baselineOffset
+      ),
+      font,
+      self.cellSize.width
+    )
+
+    return fontGlyphRuns
+  }
+
+  private func drawByParallelComputation(
+    _ attrsRuns: [AttributesRun],
+    defaultAttributes: CellAttributes,
+    offset: CGPoint,
+    `in` context: CGContext
+  ) {
+    let runs = attrsRuns.parallelMap {
+      attrsRun -> (attrsRun: AttributesRun, fontGlyphRuns: [FontGlyphRun]) in
+
+      let fontGlyphRuns = self.fontGlyphRuns(from: attrsRun, offset: offset)
+
+      return (attrsRun: attrsRun, fontGlyphRuns: fontGlyphRuns)
+    }
+
+    runs.forEach { (attrsRun, glyphRuns) in
+      self.draw(
+        attrsRun,
+        fontGlyphRuns: glyphRuns,
+        defaultAttributes: defaultAttributes,
+        in: context
+      )
+    }
   }
 
   private func updateFontMetrics() {

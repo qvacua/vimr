@@ -12,10 +12,7 @@ extension FontTrait: Hashable {
   }
 }
 
-private let fontCache = SimpleCache<FontTrait, NSFont>(countLimit: 25)
-private let cellSizeCache = SimpleCache<NSFont, CGSize>(countLimit: 25)
-
-class FontUtils {
+final class FontUtils {
 
   static func cellSize(of font: NSFont, linespacing: CGFloat) -> CGSize {
     if let cached = cellSizeCache.object(forKey: font) {
@@ -67,3 +64,6 @@ class FontUtils {
     return ctFont
   }
 }
+
+private let fontCache = SimpleCache<FontTrait, NSFont>(countLimit: 100)
+private let cellSizeCache = SimpleCache<NSFont, CGSize>(countLimit: 100)

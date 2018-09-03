@@ -63,58 +63,8 @@ final class Typesetter {
     return result
   }
 
-  private func cellIndices(
-    from nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]],
-    utf16CharsCount: Int
-  ) -> Array<Int> {
-    var cellIndices = Array(repeating: 0, count: utf16CharsCount)
-    var cellIndex = 0
-    var i = 0
-    repeat {
-      if nvimUtf16Cells[cellIndex].isEmpty {
-        cellIndex = cellIndex &+ 1
-        continue
-      }
-
-      for _ in (0..<nvimUtf16Cells[cellIndex].count) {
-        cellIndices[i] = cellIndex
-        i = i &+ 1
-      }
-      cellIndex = cellIndex &+ 1
-    } while cellIndex < nvimUtf16Cells.count
-
-    return cellIndices
-  }
-
-  private func utf16Chars(
-    from nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]]
-  ) -> Array<UInt16> {
-    // Using reduce seems to be slower than the following:
-    var count = 0
-    for i in 0..<nvimUtf16Cells.count {
-      count = count &+ nvimUtf16Cells[i].count
-    }
-
-    // Using append(contentsOf:) seems to be slower than the following:
-    var result = Array(repeating: Unicode.UTF16.CodeUnit(), count: count)
-    var i = 0
-    for cell in nvimUtf16Cells {
-      if cell.isEmpty {
-        continue
-      }
-
-      for j in 0..<cell.count {
-        result[i &+ j] = cell[j]
-      }
-
-      i = i &+ cell.count
-    }
-
-    return result
-  }
-
   func fontGlyphRunsWithoutLigatures(
-    nvimCells: [String],
+    nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]],
     startColumn: Int,
     offset: CGPoint,
     font: NSFont,
@@ -122,7 +72,7 @@ final class Typesetter {
   ) -> [FontGlyphRun] {
 
     let nvimUtf16CellsRuns = self.groupSimpleAndNonSimpleChars(
-      nvimCells: nvimCells, font: font
+      nvimUtf16Cells: nvimUtf16Cells, font: font
     )
 
     let runs: [[FontGlyphRun]] = nvimUtf16CellsRuns.map { run in
@@ -221,13 +171,13 @@ final class Typesetter {
   }
 
   private func groupSimpleAndNonSimpleChars(
-    nvimCells: [String], font: NSFont
+    nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]],
+    font: NSFont
   ) -> [NvimUtf16CellsRun] {
-    if nvimCells.isEmpty {
+    if nvimUtf16Cells.isEmpty {
       return []
     }
 
-    let nvimUtf16Cells = nvimCells.map { Array($0.utf16) }
     let utf16Chars = self.utf16Chars(from: nvimUtf16Cells)
 
     let hasMoreThanTwoCells = nvimUtf16Cells.count >= 2
@@ -290,6 +240,56 @@ final class Typesetter {
           ))
         }
       }
+    }
+
+    return result
+  }
+
+  private func cellIndices(
+    from nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]],
+    utf16CharsCount: Int
+  ) -> Array<Int> {
+    var cellIndices = Array(repeating: 0, count: utf16CharsCount)
+    var cellIndex = 0
+    var i = 0
+    repeat {
+      if nvimUtf16Cells[cellIndex].isEmpty {
+        cellIndex = cellIndex &+ 1
+        continue
+      }
+
+      for _ in (0..<nvimUtf16Cells[cellIndex].count) {
+        cellIndices[i] = cellIndex
+        i = i &+ 1
+      }
+      cellIndex = cellIndex &+ 1
+    } while cellIndex < nvimUtf16Cells.count
+
+    return cellIndices
+  }
+
+  private func utf16Chars(
+    from nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]]
+  ) -> Array<UInt16> {
+    // Using reduce seems to be slower than the following:
+    var count = 0
+    for i in 0..<nvimUtf16Cells.count {
+      count = count &+ nvimUtf16Cells[i].count
+    }
+
+    // Using append(contentsOf:) seems to be slower than the following:
+    var result = Array(repeating: Unicode.UTF16.CodeUnit(), count: count)
+    var i = 0
+    for cell in nvimUtf16Cells {
+      if cell.isEmpty {
+        continue
+      }
+
+      for j in 0..<cell.count {
+        result[i &+ j] = cell[j]
+      }
+
+      i = i &+ cell.count
     }
 
     return result

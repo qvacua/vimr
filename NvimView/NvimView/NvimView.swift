@@ -162,6 +162,7 @@ public class NvimView: NSView,
       }
 
       self._font = newValue
+      self.runDrawer.baseFont = newValue
 
       self.updateFontMetaData(newValue)
     }
@@ -282,7 +283,7 @@ public class NvimView: NSView,
           self.defaultColorsChanged(value)
 
         case let .optionSet(value):
-          stdoutLogger.debug(value)
+          bridgeLogger.debug(value)
           break
 
         case let .autoCommandEvent(value):

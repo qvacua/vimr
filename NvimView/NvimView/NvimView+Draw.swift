@@ -38,11 +38,12 @@ extension NvimView {
 
     self.draw(defaultBackgroundIn: dirtyRects, in: context)
 
-#if DEBUG
-    self.draw(textByParallelComputationIntersecting: dirtyRects, in: context)
-#else
-    self.draw(intersecting: dirtyRects, in: context)
-#endif
+    self.runDrawer.draw(
+      self.runs(intersecting: dirtyRects),
+      defaultAttributes: self.cellAttributesCollection.defaultAttributes,
+      offset: self.offset,
+      in: context
+    )
 
     self.drawCursor(in: context)
 
@@ -60,73 +61,6 @@ extension NvimView {
       )
     )
     context.fill(dirtyRects)
-  }
-
-  private func draw(
-    textByParallelComputationIntersecting dirtyRects: [CGRect],
-    `in` context: CGContext
-  ) {
-    let attrsRuns = self.runs(intersecting: dirtyRects)
-    let runs = attrsRuns.parallelMap {
-      run -> (attrsRun: AttributesRun, fontGlyphRuns: [FontGlyphRun]) in
-
-      let font = FontUtils.font(adding: run.attrs.fontTrait, to: self.font)
-
-      let fontGlyphRuns = self.typesetter.fontGlyphRunsWithLigatures(
-        nvimUtf16Cells: run.cells.map { Array($0.string.utf16) },
-        startColumn: run.cells.startIndex,
-        offset: CGPoint(
-          x: self.offset.x, y: run.location.y + self.baselineOffset
-        ),
-        font: font,
-        cellWidth: self.cellSize.width
-      )
-
-      return (attrsRun: run, fontGlyphRuns: fontGlyphRuns)
-    }
-
-    let defaultAttrs = self.cellAttributesCollection.defaultAttributes
-    runs.forEach { (attrsRun, fontGlyphRuns) in
-      self.runDrawer.draw(
-        attrsRun,
-        fontGlyphRuns: fontGlyphRuns,
-        defaultAttributes: defaultAttrs,
-        in: context
-      )
-    }
-  }
-
-  private func draw(
-    intersecting dirtyRects: [CGRect], `in` context: CGContext
-  ) {
-    let attrsRuns = self.runs(intersecting: dirtyRects)
-    let runs = attrsRuns.map(self.fontGlyphRuns)
-
-    let defaultAttrs = self.cellAttributesCollection.defaultAttributes
-    for i in 0..<attrsRuns.count {
-      self.runDrawer.draw(
-        attrsRuns[i],
-        fontGlyphRuns: runs[i],
-        defaultAttributes: defaultAttrs,
-        in: context
-      )
-    }
-  }
-
-  private func fontGlyphRuns(from attrsRun: AttributesRun) -> [FontGlyphRun] {
-    let font = FontUtils.font(adding: attrsRun.attrs.fontTrait, to: self.font)
-
-    let fontGlyphRuns = self.typesetter.fontGlyphRunsWithLigatures(
-      nvimUtf16Cells: attrsRun.cells.map { Array($0.string.utf16) },
-      startColumn: attrsRun.cells.startIndex,
-      offset: CGPoint(
-        x: self.offset.x, y: attrsRun.location.y + self.baselineOffset
-      ),
-      font: font,
-      cellWidth: self.cellSize.width
-    )
-
-    return fontGlyphRuns
   }
 
   private func drawCursor(`in` context: CGContext) {
@@ -169,9 +103,9 @@ extension NvimView {
       attrs: cursorAttrs
     )
     self.runDrawer.draw(
-      attrsRun,
-      fontGlyphRuns: self.fontGlyphRuns(from: attrsRun),
+      [attrsRun],
       defaultAttributes: defaultAttrs,
+      offset: self.offset,
       in: context
     )
 
@@ -280,13 +214,9 @@ extension NvimView {
   }
 
   func updateFontMetaData(_ newFont: NSFont) {
-    self.runDrawer.baseFont = newFont
+    self.cellSize = self.runDrawer.cellSize
+    self.baselineOffset = self.runDrawer.baselineOffset
 
-    self.cellSize = FontUtils.cellSize(
-      of: newFont, linespacing: self.linespacing
-    )
-
-    self.baselineOffset = self.cellSize.height - CTFontGetAscent(newFont)
     self.resizeNeoVimUi(to: self.bounds.size)
   }
 }
