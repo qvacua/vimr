@@ -136,7 +136,7 @@ extension NvimView {
           let event = NvimAutoCommandEvent(rawValue: array[0]) else { return }
     let bufferHandle = array[1]
 
-    bridgeLogger.debug("\(event) -> \(bufferHandle)")
+//    bridgeLogger.debug("\(event) -> \(bufferHandle)")
 
     if event == .bufwinenter || event == .bufwinleave {
       self.bufferListChanged()

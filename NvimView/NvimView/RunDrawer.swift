@@ -117,7 +117,7 @@ final class AttributesRunDrawer {
     `in` context: CGContext
   ) {
 
-    if run.attrs.background == defaultAttributes.background { return }
+    if run.attrs.effectiveBackground == defaultAttributes.background { return }
 
     context.saveGState()
     defer { context.restoreGState() }
