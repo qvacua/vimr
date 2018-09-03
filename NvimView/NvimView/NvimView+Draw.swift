@@ -37,19 +37,23 @@ extension NvimView {
     let dirtyRects = self.rectsBeingDrawn()
 
     self.draw(defaultBackgroundIn: dirtyRects, in: context)
+    self.draw(cellsIntersectingRects: dirtyRects, in: context)
+    self.draw(cursorIn: context)
 
-    self.runDrawer.draw(
+#if DEBUG
+//    self.draw(cellGridIn: context)
+#endif
+  }
+
+  private func draw(
+    cellsIntersectingRects dirtyRects: [CGRect], in context: CGContext
+  ) {
+    self.drawer.draw(
       self.runs(intersecting: dirtyRects),
       defaultAttributes: self.cellAttributesCollection.defaultAttributes,
       offset: self.offset,
       in: context
     )
-
-    self.drawCursor(in: context)
-
-#if DEBUG
-//    self.draw(cellGridIn: context)
-#endif
   }
 
   private func draw(
@@ -63,13 +67,10 @@ extension NvimView {
     context.fill(dirtyRects)
   }
 
-  private func drawCursor(`in` context: CGContext) {
+  private func draw(cursorIn context: CGContext) {
     guard self.shouldDrawCursor else {
       return
     }
-
-    context.saveGState()
-    defer { context.restoreGState() }
 
     let cursorPosition = self.ugrid.cursorPosition
     let defaultAttrs = self.cellAttributesCollection.defaultAttributes
@@ -102,7 +103,7 @@ extension NvimView {
       cells: self.ugrid.cells[cursorPosition.row][cursorRegion.columnRange],
       attrs: cursorAttrs
     )
-    self.runDrawer.draw(
+    self.drawer.draw(
       [attrsRun],
       defaultAttributes: defaultAttrs,
       offset: self.offset,
@@ -214,11 +215,11 @@ extension NvimView {
   }
 
   func updateFontMetaData(_ newFont: NSFont) {
-    self.runDrawer.baseFont = newFont
-    self.runDrawer.linespacing = self.linespacing
+    self.drawer.font = newFont
+    self.drawer.linespacing = self.linespacing
 
-    self.cellSize = self.runDrawer.cellSize
-    self.baselineOffset = self.runDrawer.baselineOffset
+    self.cellSize = self.drawer.cellSize
+    self.baselineOffset = self.drawer.baselineOffset
 
     self.resizeNeoVimUi(to: self.bounds.size)
   }

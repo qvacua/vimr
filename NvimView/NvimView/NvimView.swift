@@ -124,7 +124,7 @@ public class NvimView: NSView,
 
   public var usesLigatures = false {
     didSet {
-      self.runDrawer.usesLigatures = self.usesLigatures
+      self.drawer.usesLigatures = self.usesLigatures
       self.markForRenderWholeView()
     }
   }
@@ -193,7 +193,7 @@ public class NvimView: NSView,
   }
 
   public init(frame rect: NSRect, config: Config) {
-    self.runDrawer = AttributesRunDrawer(
+    self.drawer = AttributesRunDrawer(
       baseFont: self._font,
       linespacing: self._linespacing,
       usesLigatures: self.usesLigatures
@@ -335,7 +335,7 @@ public class NvimView: NSView,
 
   let ugrid = UGrid()
   let cellAttributesCollection = CellAttributesCollection()
-  let runDrawer: AttributesRunDrawer
+  let drawer: AttributesRunDrawer
   let typesetter = Typesetter()
   var baselineOffset = CGFloat(0)
 

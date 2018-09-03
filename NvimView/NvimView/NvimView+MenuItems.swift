@@ -214,14 +214,14 @@ extension NvimView {
   }
 
   @IBAction func makeFontBigger(_ sender: Any?) {
-    let curFont = self.runDrawer.baseFont
+    let curFont = self.drawer.font
     let font = NSFontManager.shared
       .convert(curFont, toSize: min(curFont.pointSize + 1, NvimView.maxFontSize))
     self.updateFontMetaData(font)
   }
 
   @IBAction func makeFontSmaller(_ sender: Any?) {
-    let curFont = self.runDrawer.baseFont
+    let curFont = self.drawer.font
     let font = NSFontManager.shared
       .convert(curFont, toSize: max(curFont.pointSize - 1, NvimView.minFontSize))
     self.updateFontMetaData(font)

@@ -7,7 +7,7 @@ import Cocoa
 
 final class AttributesRunDrawer {
 
-  var baseFont: NSFont {
+  var font: NSFont {
     didSet {
       self.updateFontMetrics()
     }
@@ -26,7 +26,7 @@ final class AttributesRunDrawer {
   private(set) var underlineThickness: CGFloat = 0
 
   init(baseFont: NSFont, linespacing: CGFloat, usesLigatures: Bool) {
-    self.baseFont = baseFont
+    self.font = baseFont
     self.linespacing = linespacing
     self.usesLigatures = usesLigatures
 
@@ -124,7 +124,7 @@ final class AttributesRunDrawer {
     offset: CGPoint
   ) -> [FontGlyphRun] {
     let font = FontUtils.font(
-      adding: attrsRun.attrs.fontTrait, to: self.baseFont
+      adding: attrsRun.attrs.fontTrait, to: self.font
     )
 
     let typesetFunction = self.usesLigatures
@@ -170,10 +170,10 @@ final class AttributesRunDrawer {
 
   private func updateFontMetrics() {
     self.cellSize = FontUtils.cellSize(
-      of: self.baseFont, linespacing: linespacing
+      of: self.font, linespacing: linespacing
     )
-    self.baselineOffset = self.cellSize.height - CTFontGetAscent(self.baseFont)
-    self.underlinePosition = CTFontGetUnderlinePosition(baseFont)
-    self.underlineThickness = CTFontGetUnderlineThickness(baseFont)
+    self.baselineOffset = self.cellSize.height - CTFontGetAscent(self.font)
+    self.underlinePosition = CTFontGetUnderlinePosition(font)
+    self.underlineThickness = CTFontGetUnderlineThickness(font)
   }
 }
