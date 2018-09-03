@@ -26,7 +26,7 @@ extension NvimView {
       return
     }
 
-    let cellPosition = self.cellPositionFor(event: event)
+    let cellPosition = self.cellPosition(forEvent: event)
 
     let isTrackpad = event.hasPreciseScrollingDeltas
     if isTrackpad == false {
@@ -78,18 +78,23 @@ extension NvimView {
     }
   }
 
-  private func cellPositionFor(event: NSEvent) -> Position {
+  private func cellPosition(forEvent event: NSEvent) -> Position {
     let location = self.convert(event.locationInWindow, from: nil)
-    let row = Int((self.bounds.size.height - location.y - self.yOffset) / self.cellSize.height)
+    let row = Int(
+      (self.bounds.size.height - location.y - self.yOffset)
+        / self.cellSize.height
+    )
     let column = Int((location.x - self.xOffset) / self.cellSize.width)
 
-    let cellPosition = Position(row: min(max(0, row), self.grid.size.height - 1),
-                                column: min(max(0, column), self.grid.size.width - 1))
+    let cellPosition = Position(
+      row: min(max(0, row), self.ugrid.size.height - 1),
+      column: min(max(0, column), self.ugrid.size.width - 1)
+    )
     return cellPosition
   }
 
   private func mouse(event: NSEvent, vimName: String) {
-    let cellPosition = self.cellPositionFor(event: event)
+    let cellPosition = self.cellPosition(forEvent: event)
     guard self.shouldFireVimInputFor(event: event, newCellPosition: cellPosition) else {
       return
     }
@@ -113,8 +118,8 @@ extension NvimView {
   private func shouldFireVimInputFor(event: NSEvent, newCellPosition: Position) -> Bool {
     let type = event.type
     guard type == .leftMouseDragged
-          || type == .rightMouseDragged
-          || type == .otherMouseDragged else {
+            || type == .rightMouseDragged
+            || type == .otherMouseDragged else {
 
       self.lastClickedCellPosition = newCellPosition
       return true
