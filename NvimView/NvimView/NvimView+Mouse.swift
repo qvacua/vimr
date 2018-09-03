@@ -66,7 +66,6 @@ extension NvimView {
       self.pinchBitmap = pinchImageRep
 
       self.isCurrentlyPinching = true
-      self.markForRenderWholeView()
 
     case .ended, .cancelled:
       self.isCurrentlyPinching = false
@@ -74,8 +73,11 @@ extension NvimView {
       self.pinchTargetScale = 1
 
     default:
-      self.markForRenderWholeView()
+      break
+
     }
+
+    self.markForRenderWholeView()
   }
 
   private func cellPosition(forEvent event: NSEvent) -> Position {

@@ -140,8 +140,6 @@ public class NvimView: NSView,
       }
 
       self._linespacing = newValue
-      self.runDrawer.linespacing = self.linespacing
-
       self.updateFontMetaData(self._font)
     }
   }
@@ -162,8 +160,6 @@ public class NvimView: NSView,
       }
 
       self._font = newValue
-      self.runDrawer.baseFont = newValue
-
       self.updateFontMetaData(newValue)
     }
   }

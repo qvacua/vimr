@@ -5,6 +5,23 @@
 
 import Cocoa
 
+private struct SizedFontTrait: Hashable {
+
+  static func ==(lhs: SizedFontTrait, rhs: SizedFontTrait) -> Bool {
+    if lhs.trait != rhs.trait { return false }
+    if lhs.size != rhs.size { return false }
+
+    return true
+  }
+
+  var hashValue: Int {
+    return self.trait.hashValue ^ self.size.hashValue
+  }
+
+  fileprivate var trait: FontTrait
+  fileprivate var size: CGFloat
+}
+
 extension FontTrait: Hashable {
 
   public var hashValue: Int {
@@ -43,7 +60,9 @@ final class FontUtils {
       return font
     }
 
-    if let cachedFont = fontCache.object(forKey: trait) {
+    let sizedFontTrait = SizedFontTrait(trait: trait, size: font.pointSize)
+
+    if let cachedFont = fontCache.object(forKey: sizedFontTrait) {
       return cachedFont
     }
 
@@ -60,10 +79,10 @@ final class FontUtils {
       return font
     }
 
-    fontCache.set(object: ctFont, forKey: trait)
+    fontCache.set(object: ctFont, forKey: sizedFontTrait)
     return ctFont
   }
 }
 
-private let fontCache = SimpleCache<FontTrait, NSFont>(countLimit: 100)
+private let fontCache = SimpleCache<SizedFontTrait, NSFont>(countLimit: 100)
 private let cellSizeCache = SimpleCache<NSFont, CGSize>(countLimit: 100)

@@ -214,6 +214,9 @@ extension NvimView {
   }
 
   func updateFontMetaData(_ newFont: NSFont) {
+    self.runDrawer.baseFont = newFont
+    self.runDrawer.linespacing = self.linespacing
+
     self.cellSize = self.runDrawer.cellSize
     self.baselineOffset = self.runDrawer.baselineOffset
 

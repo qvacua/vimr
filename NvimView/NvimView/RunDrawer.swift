@@ -169,7 +169,9 @@ final class AttributesRunDrawer {
   }
 
   private func updateFontMetrics() {
-    self.cellSize = FontUtils.cellSize(of: baseFont, linespacing: linespacing)
+    self.cellSize = FontUtils.cellSize(
+      of: self.baseFont, linespacing: linespacing
+    )
     self.baselineOffset = self.cellSize.height - CTFontGetAscent(self.baseFont)
     self.underlinePosition = CTFontGetUnderlinePosition(baseFont)
     self.underlineThickness = CTFontGetUnderlineThickness(baseFont)
