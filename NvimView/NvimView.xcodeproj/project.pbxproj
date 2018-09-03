@@ -29,7 +29,7 @@
 		1929BA70C221E3C199833B8C /* UiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B52174EC68D2974B5BAE /* UiBridge.swift */; };
 		1929BAB9A0399206FB7EBC76 /* CellAttributesCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB19DD03ECD6ECC35F94 /* CellAttributesCollection.swift */; };
 		1929BB552C9D99E9ED938759 /* CellAttributesCollectionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0B60CCAA00B08ACAB15 /* CellAttributesCollectionTest.swift */; };
-		1929BC8495028D66F0A7D618 /* RunDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB7E3430BD3FD88A7698 /* RunDrawer.swift */; };
+		1929BC8495028D66F0A7D618 /* AttributesRunDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB7E3430BD3FD88A7698 /* AttributesRunDrawer.swift */; };
 		1929BC8B14CA31C283455CF5 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8E176C11DD61A8DCE95 /* RxSwiftCommons.swift */; };
 		1929BCA615324C58582BFC3C /* ProcessUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD167BE7C6BB788DAE2A /* ProcessUtils.swift */; };
 		1929BDB2462E19B852EA1B47 /* CoreCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BAB9FFE8345228B559EC /* CoreCommons.swift */; };
@@ -87,7 +87,7 @@
 		4BF18532213142F900954FE7 /* FontUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B96A876229DA394F906E /* FontUtils.swift */; };
 		4BF18533213142FA00954FE7 /* CellAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE45756C88F8B43804D2 /* CellAttributes.swift */; };
 		4BF18534213142FA00954FE7 /* UGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D83D7E150F518D49FE /* UGrid.swift */; };
-		4BF18535213142FA00954FE7 /* RunDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB7E3430BD3FD88A7698 /* RunDrawer.swift */; };
+		4BF18535213142FA00954FE7 /* AttributesRunDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB7E3430BD3FD88A7698 /* AttributesRunDrawer.swift */; };
 		4BF18536213142FA00954FE7 /* SimpleCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B60D1775A75D7C0F6721 /* SimpleCache.swift */; };
 		4BF18537213142FA00954FE7 /* Runs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B06A73BE6DAA2679AAA2 /* Runs.swift */; };
 		4BF18538213142FA00954FE7 /* Typesetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B47330DAD129520A2273 /* Typesetter.swift */; };
@@ -180,7 +180,7 @@
 		1929BAB9FFE8345228B559EC /* CoreCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreCommons.swift; sourceTree = "<group>"; };
 		1929BAF033A398BFBC2A7890 /* MyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyView.swift; sourceTree = "<group>"; };
 		1929BB19DD03ECD6ECC35F94 /* CellAttributesCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellAttributesCollection.swift; sourceTree = "<group>"; };
-		1929BB7E3430BD3FD88A7698 /* RunDrawer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RunDrawer.swift; sourceTree = "<group>"; };
+		1929BB7E3430BD3FD88A7698 /* AttributesRunDrawer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributesRunDrawer.swift; sourceTree = "<group>"; };
 		1929BBA08E4195666290EC6A /* UGridTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UGridTest.swift; sourceTree = "<group>"; };
 		1929BD167BE7C6BB788DAE2A /* ProcessUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcessUtils.swift; sourceTree = "<group>"; };
 		1929BD4C55D5EA933BFFB16B /* OldCellAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OldCellAttributes.swift; sourceTree = "<group>"; };
@@ -300,7 +300,7 @@
 				1929B96A876229DA394F906E /* FontUtils.swift */,
 				1929BE45756C88F8B43804D2 /* CellAttributes.swift */,
 				1929B9D83D7E150F518D49FE /* UGrid.swift */,
-				1929BB7E3430BD3FD88A7698 /* RunDrawer.swift */,
+				1929BB7E3430BD3FD88A7698 /* AttributesRunDrawer.swift */,
 				1929B60D1775A75D7C0F6721 /* SimpleCache.swift */,
 				1929B06A73BE6DAA2679AAA2 /* Runs.swift */,
 				1929B47330DAD129520A2273 /* Typesetter.swift */,
@@ -641,7 +641,7 @@
 				1929B953E76914DA984697DC /* FontUtils.swift in Sources */,
 				1929B40C9C30B46C0E0B9DE2 /* CellAttributes.swift in Sources */,
 				1929B9A949EE85C27FF66367 /* UGrid.swift in Sources */,
-				1929BC8495028D66F0A7D618 /* RunDrawer.swift in Sources */,
+				1929BC8495028D66F0A7D618 /* AttributesRunDrawer.swift in Sources */,
 				1929B6776A1D11409335FAAB /* SimpleCache.swift in Sources */,
 				1929B4632DE08273F990806F /* Runs.swift in Sources */,
 				1929B7D2EB80FEA7BFBC3D2C /* Typesetter.swift in Sources */,
@@ -678,7 +678,7 @@
 				4BF18532213142F900954FE7 /* FontUtils.swift in Sources */,
 				4BF18533213142FA00954FE7 /* CellAttributes.swift in Sources */,
 				4BF18534213142FA00954FE7 /* UGrid.swift in Sources */,
-				4BF18535213142FA00954FE7 /* RunDrawer.swift in Sources */,
+				4BF18535213142FA00954FE7 /* AttributesRunDrawer.swift in Sources */,
 				4BF18536213142FA00954FE7 /* SimpleCache.swift in Sources */,
 				4BF18537213142FA00954FE7 /* Runs.swift in Sources */,
 				4BF18538213142FA00954FE7 /* Typesetter.swift in Sources */,

@@ -75,7 +75,9 @@ final class FontUtils {
       ctFontTrait.insert(.italicTrait)
     }
 
-    guard let ctFont = CTFontCreateCopyWithSymbolicTraits(font, 0.0, nil, ctFontTrait, ctFontTrait) else {
+    guard let ctFont = CTFontCreateCopyWithSymbolicTraits(
+      font, 0.0, nil, ctFontTrait, ctFontTrait
+    ) else {
       return font
     }
 

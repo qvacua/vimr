@@ -48,7 +48,7 @@ extension NvimView {
     self.drawCursor(in: context)
 
 #if DEBUG
-    // self.draw(cellGridIn: context)
+//    self.draw(cellGridIn: context)
 #endif
   }
 
