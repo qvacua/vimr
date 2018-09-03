@@ -38,7 +38,6 @@ extension NvimView {
       from: value, conversion: { v -> CursorModeShape? in
 
       guard let rawValue = v.intValue else { return nil }
-
       return CursorModeShape(rawValue: UInt(rawValue))
 
     }) else {
@@ -48,6 +47,9 @@ extension NvimView {
     bridgeLogger.debug(name(of: mode))
     gui.async {
       self.mode = mode
+      self.markForRender(
+        region: self.cursorRegion(for: self.ugrid.cursorPosition)
+      )
     }
   }
 
@@ -405,13 +407,6 @@ extension NvimView {
 
   final func markForRender(position: Position) {
     self.markForRender(row: position.row, column: position.column)
-  }
-
-  final func markForRender(screenCursor position: Position) {
-    self.markForRender(position: position)
-    if self.grid.isNextCellEmpty(position) {
-      self.markForRender(position: self.grid.nextCellPosition(position))
-    }
   }
 
   final func markForRenderWholeView() {
