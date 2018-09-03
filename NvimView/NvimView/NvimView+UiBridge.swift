@@ -44,7 +44,7 @@ extension NvimView {
       return
     }
 
-    bridgeLogger.debug(name(of: mode))
+    bridgeLogger.debug(self.name(ofCursorMode: mode))
     gui.async {
       self.mode = mode
       self.markForRender(
@@ -463,29 +463,3 @@ extension NvimView {
 }
 
 private let gui = DispatchQueue.main
-
-private func name(of mode: CursorModeShape) -> String {
-  switch mode {
-    // @formatter:off
-    case .normal:                  return "Normal"
-    case .visual:                  return "Visual"
-    case .insert:                  return "Insert"
-    case .replace:                 return "Replace"
-    case .cmdline:                 return "Cmdline"
-    case .cmdlineInsert:           return "CmdlineInsert"
-    case .cmdlineReplace:          return "CmdlineReplace"
-    case .operatorPending:         return "OperatorPending"
-    case .visualExclusive:         return "VisualExclusive"
-    case .onCmdline:               return "OnCmdline"
-    case .onStatusLine:            return "OnStatusLine"
-    case .draggingStatusLine:      return "DraggingStatusLine"
-    case .onVerticalSepLine:       return "OnVerticalSepLine"
-    case .draggingVerticalSepLine: return "DraggingVerticalSepLine"
-    case .more:                    return "More"
-    case .moreLastLine:            return "MoreLastLine"
-    case .showingMatchingParen:    return "ShowingMatchingParen"
-    case .termFocus:               return "TermFocus"
-    case .count:                   return "Count"
-    // @formatter:on
-  }
-}
