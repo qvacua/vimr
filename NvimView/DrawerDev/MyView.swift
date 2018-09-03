@@ -79,6 +79,7 @@ class MyView: NSView {
         )
       )
     }
+
     let defaultAttrs = CellAttributes(
       fontTrait: [],
       foreground: 0,
@@ -86,8 +87,14 @@ class MyView: NSView {
       special: 0xFF0000,
       reverse: false
     )
+
     runs.forEach { run in
-      self.runDrawer.draw(run, with: defaultAttrs, xOffset: 0, in: context)
+      self.runDrawer.draw(
+        runs,
+        defaultAttributes: defaultAttrs,
+        offset: .zero,
+        in: context
+      )
     }
 
     self.draw(cellGridIn: context, cellSize: cellSize)

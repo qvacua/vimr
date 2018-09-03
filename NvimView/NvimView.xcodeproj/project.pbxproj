@@ -43,6 +43,7 @@
 		4B0A1B3B212B333700F1E02F /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B0A1B38212B332800F1E02F /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B177886201220F300E32FF0 /* SharedTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1929B4F32708E99C40A57020 /* SharedTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B17E549209E3E4100265C1D /* RxNeovimApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E548209E3E4100265C1D /* RxNeovimApi.framework */; };
+		4B21ED53213D4AEC009FD017 /* CocoaCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0C89838D8402BB80BFC /* CocoaCommons.swift */; };
 		4B8662E81FDC3F9F007F490D /* vimr.vim in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B8662E41FDC3D4F007F490D /* vimr.vim */; };
 		4B90F02E1FD2AFAE008A39E0 /* NvimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0101FD2AFAC008A39E0 /* NvimView.swift */; };
 		4B90F02F1FD2AFAE008A39E0 /* NvimView+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0111FD2AFAC008A39E0 /* NvimView+Resize.swift */; };
@@ -673,6 +674,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B21ED53213D4AEC009FD017 /* CocoaCommons.swift in Sources */,
 				4BF185392131432100954FE7 /* Logger.swift in Sources */,
 				4BF18531213142F900954FE7 /* ColorUtils.swift in Sources */,
 				4BF18532213142F900954FE7 /* FontUtils.swift in Sources */,
