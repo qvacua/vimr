@@ -316,18 +316,6 @@ public class NvimView: NSView,
   }
 
   // MARK: - Internal
-  /// Contiguous piece of cells of a row that has the same attributes.
-  struct RowRun: CustomStringConvertible {
-
-    var row: Int
-    var range: CountableClosedRange<Int>
-    var attrs: OldCellAttributes
-
-    var description: String {
-      return "RowRun<\(row): \(range)\n\(attrs)>"
-    }
-  }
-
   let bridge: UiBridge
   let api = RxNeovimApi.Api()
 
