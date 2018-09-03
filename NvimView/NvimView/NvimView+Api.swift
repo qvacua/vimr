@@ -12,12 +12,12 @@ extension NvimView {
 
   public func enterResizeMode() {
     self.currentlyResizing = true
-    self.needsDisplay = true
+    self.markForRenderWholeView()
   }
 
   public func exitResizeMode() {
     self.currentlyResizing = false
-    self.needsDisplay = true
+    self.markForRenderWholeView()
     self.resizeNeoVimUi(to: self.bounds.size)
   }
 

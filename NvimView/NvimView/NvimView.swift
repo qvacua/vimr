@@ -125,7 +125,7 @@ public class NvimView: NSView,
   public var usesLigatures = false {
     didSet {
       self.runDrawer.usesLigatures = self.usesLigatures
-      self.needsDisplay = true
+      self.markForRenderWholeView()
     }
   }
 

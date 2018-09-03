@@ -66,7 +66,7 @@ extension NvimView {
       self.pinchBitmap = pinchImageRep
 
       self.isCurrentlyPinching = true
-      self.needsDisplay = true
+      self.markForRenderWholeView()
 
     case .ended, .cancelled:
       self.isCurrentlyPinching = false
@@ -74,7 +74,7 @@ extension NvimView {
       self.pinchTargetScale = 1
 
     default:
-      self.needsDisplay = true
+      self.markForRenderWholeView()
     }
   }
 

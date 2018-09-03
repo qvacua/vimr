@@ -240,7 +240,9 @@ extension NvimView {
     )
 
     self.ugrid.goto(position)
-    self.markForRender(cellPosition: self.ugrid.cursorPosition)
+    self.markForRender(
+      region: self.cursorRegion(for: self.ugrid.cursorPosition)
+    )
   }
 
   private func doScroll(_ array: [Int]) {
@@ -392,22 +394,6 @@ extension NvimView {
 }
 
 extension NvimView {
-
-  final func markForRender(cellPosition position: Position) {
-    self.markForRender(position: position)
-
-    if self.grid.isCellEmpty(position) {
-      self.markForRender(position: self.grid.previousCellPosition(position))
-    }
-
-    if self.grid.isNextCellEmpty(position) {
-      self.markForRender(position: self.grid.nextCellPosition(position))
-    }
-  }
-
-  final func markForRender(position: Position) {
-    self.markForRender(row: position.row, column: position.column)
-  }
 
   final func markForRenderWholeView() {
     self.needsDisplay = true
