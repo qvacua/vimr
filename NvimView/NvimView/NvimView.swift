@@ -332,11 +332,12 @@ public class NvimView: NSView,
 
   let bridge: UiBridge
   let api = RxNeovimApi.Api()
-  let grid = Grid()
-  let ugrid = UGrid()
 
+  let ugrid = UGrid()
   let cellAttributesCollection = CellAttributesCollection()
   let runDrawer: AttributesRunDrawer
+  let typesetter = Typesetter()
+  var baselineOffset = CGFloat(0)
 
   var markedText: String?
 
@@ -377,6 +378,4 @@ public class NvimView: NSView,
 
   // MARK: - Private
   private var _linespacing = NvimView.defaultLinespacing
-  let typesetter = Typesetter()
-  var baselineOffset = CGFloat(0)
 }

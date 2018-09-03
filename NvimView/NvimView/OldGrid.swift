@@ -31,6 +31,7 @@ struct Cell: CustomStringConvertible {
   }
 }
 
+// FIXME: GH-666: Delete
 /// Almost a verbatim copy of ugrid.c of NeoVim
 class Grid: CustomStringConvertible {
 
