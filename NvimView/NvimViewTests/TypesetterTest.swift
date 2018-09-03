@@ -13,7 +13,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
 
   func testSimpleAsciiChars() {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
-      nvimCells: emojiMarked(["a", "b", "c"]),
+      nvimUtf16Cells: emojiMarked(["a", "b", "c"]),
       startColumn: 10,
       offset: offset,
       font: defaultFont,
@@ -36,7 +36,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
 
   func testAccentedChars() {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
-      nvimCells: emojiMarked(["ü", "î", "ñ"]),
+      nvimUtf16Cells: emojiMarked(["ü", "î", "ñ"]),
       startColumn: 20,
       offset: offset,
       font: defaultFont,
@@ -59,7 +59,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
 
   func testCombiningChars() {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
-      nvimCells: emojiMarked(
+      nvimUtf16Cells: emojiMarked(
         ["a", "a\u{1DC1}", "a\u{032A}", "a\u{034B}", "b", "c"]
       ),
       startColumn: 10,
@@ -121,7 +121,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
 
   func testSimpleEmojis() {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
-      nvimCells: asciiMarked(["a", "b", "\u{1F600}", "", "\u{1F377}", ""]),
+      nvimUtf16Cells: asciiMarked(["a", "b", "\u{1F600}", "", "\u{1F377}", ""]),
       startColumn: 1,
       offset: offset,
       font: defaultFont,
@@ -154,7 +154,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
 
   func testEmojisWithFitzpatrickModifier() {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
-      nvimCells: asciiMarked(["a", "\u{1F476}", "", "\u{1F3FD}", ""]),
+      nvimUtf16Cells: asciiMarked(["a", "\u{1F476}", "", "\u{1F3FD}", ""]),
       startColumn: 1,
       offset: offset,
       font: defaultFont,
@@ -185,7 +185,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
 
   func testHangul() {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
-      nvimCells: asciiMarked(["a", "b", "하", "", "태", "", "원", ""]),
+      nvimUtf16Cells: asciiMarked(["a", "b", "하", "", "태", "", "원", ""]),
       startColumn: 1,
       offset: offset,
       font: defaultFont,
@@ -218,7 +218,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
 
   func testHanja() {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
-      nvimCells: asciiMarked(["a", "b", "河", "", "泰", "", "元", ""]),
+      nvimUtf16Cells: asciiMarked(["a", "b", "河", "", "泰", "", "元", ""]),
       startColumn: 1,
       offset: offset,
       font: defaultFont,
@@ -251,7 +251,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
 
   func testOthers() {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
-      nvimCells: emojiMarked(["a", "\u{10437}", "\u{1F14}"]),
+      nvimUtf16Cells: emojiMarked(["a", "\u{10437}", "\u{1F14}"]),
       startColumn: 1,
       offset: offset,
       font: defaultFont,
@@ -290,7 +290,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
 
   func testSimpleLigatureChars() {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
-      nvimCells: emojiMarked(["a", "-", "-", ">", "a"]),
+      nvimUtf16Cells: emojiMarked(["a", "-", "-", ">", "a"]),
       startColumn: 1,
       offset: offset,
       font: fira,
@@ -326,9 +326,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
 
   func testSimpleAsciiChars() {
     let runs = typesetter.fontGlyphRunsWithLigatures(
-      nvimUtf16Cells: utf16Chars(emojiMarked(
-        Array(repeating: "a", count: 20)
-      )),
+      nvimUtf16Cells: emojiMarked(Array(repeating: "a", count: 20)),
       startColumn: 1,
       offset: offset,
       font: defaultFont,
@@ -351,7 +349,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
 
   func testAccentedChars() {
     let runs = typesetter.fontGlyphRunsWithLigatures(
-      nvimUtf16Cells: utf16Chars(emojiMarked(["ü", "î", "ñ"])),
+      nvimUtf16Cells: emojiMarked(["ü", "î", "ñ"]),
       startColumn: 10,
       offset: offset,
       font: defaultFont,
@@ -376,9 +374,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
 
   func testCombiningChars() {
     let runs = typesetter.fontGlyphRunsWithLigatures(
-      nvimUtf16Cells: utf16Chars(
-        emojiMarked(["a\u{1DC1}", "a\u{032A}", "a\u{034B}"])
-      ),
+      nvimUtf16Cells: emojiMarked(["a\u{1DC1}", "a\u{032A}", "a\u{034B}"]),
       startColumn: 1,
       offset: offset,
       font: defaultFont,
@@ -420,9 +416,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
 
   func testSimpleEmojis() {
     let runs = typesetter.fontGlyphRunsWithLigatures(
-      nvimUtf16Cells: utf16Chars(
-        asciiMarked(["\u{1F600}", "", "\u{1F377}", ""])
-      ),
+      nvimUtf16Cells: asciiMarked(["\u{1F600}", "", "\u{1F377}", ""]),
       startColumn: 0,
       offset: offset,
       font: defaultFont,
@@ -447,9 +441,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
       // Neovim does not yet seem to support the Fitzpatrick modifiers:
       // It sends the following instead of ["\u{1F476}\u{1F3FD}", ""].
       // We render it together anyway and treat it as a 4-cell character.
-      nvimUtf16Cells: utf16Chars(
-        asciiMarked(["\u{1F476}", "", "\u{1F3FD}", ""])
-      ),
+      nvimUtf16Cells: asciiMarked(["\u{1F476}", "", "\u{1F3FD}", ""]),
       startColumn: 0,
       offset: offset,
       font: defaultFont,
@@ -472,11 +464,11 @@ class TypesetterWithLigaturesTest: XCTestCase {
     // Neovim does not yet seem to support Emojis composed by zero-width-joiner:
     // If it did, we'd render it correctly.
     let runs = typesetter.fontGlyphRunsWithLigatures(
-      nvimUtf16Cells: utf16Chars(asciiMarked(
+      nvimUtf16Cells: asciiMarked(
         [
           "\u{1F468}\u{200D}\u{1F468}\u{200D}\u{1F467}\u{200D}\u{1F467}", "",
         ]
-      )),
+      ),
       startColumn: 1,
       offset: offset,
       font: defaultFont,
@@ -498,9 +490,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
 
   func testHangul() {
     let runs = typesetter.fontGlyphRunsWithLigatures(
-      nvimUtf16Cells: utf16Chars(
-        asciiMarked(["하", "", "태", "", "원", ""])
-      ),
+      nvimUtf16Cells: asciiMarked(["하", "", "태", "", "원", ""]),
       startColumn: 1,
       offset: offset,
       font: defaultFont,
@@ -523,9 +513,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
 
   func testHanja() {
     let runs = typesetter.fontGlyphRunsWithLigatures(
-      nvimUtf16Cells: utf16Chars(
-        asciiMarked(["河", "", "泰", "", "元", ""])
-      ),
+      nvimUtf16Cells: asciiMarked(["河", "", "泰", "", "元", ""]),
       startColumn: 1,
       offset: offset,
       font: defaultFont,
@@ -548,9 +536,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
 
   func testOthers() {
     let runs = typesetter.fontGlyphRunsWithLigatures(
-      nvimUtf16Cells: utf16Chars(
-        emojiMarked(["\u{10437}", "\u{1F14}"])
-      ),
+      nvimUtf16Cells: emojiMarked(["\u{10437}", "\u{1F14}"]),
       startColumn: 0,
       offset: offset,
       font: defaultFont,
@@ -579,9 +565,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
 
   func testSimpleLigatureChars() {
     let runs = typesetter.fontGlyphRunsWithLigatures(
-      nvimUtf16Cells: utf16Chars(
-        emojiMarked(["-", "-", ">", "a"])
-      ),
+      nvimUtf16Cells: emojiMarked(["-", "-", ">", "a"]),
       startColumn: 0,
       offset: offset,
       font: fira,
@@ -638,12 +622,12 @@ private let offset = CGPoint(x: 7, y: 8)
 
 private let typesetter = Typesetter()
 
-private func asciiMarked(_ strings: [String]) -> [String] {
-  return strings + ["a"]
+private func asciiMarked(_ strings: [String]) -> [[Unicode.UTF16.CodeUnit]] {
+  return utf16Chars(strings + ["a"])
 }
 
-private func emojiMarked(_ strings: [String]) -> [String] {
-  return strings + ["\u{1F600}"]
+private func emojiMarked(_ strings: [String]) -> [[Unicode.UTF16.CodeUnit]] {
+  return utf16Chars(strings + ["\u{1F600}"])
 }
 
 private func utf16Chars(_ array: [String]) -> [[Unicode.UTF16.CodeUnit]] {
