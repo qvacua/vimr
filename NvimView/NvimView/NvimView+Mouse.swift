@@ -81,10 +81,10 @@ extension NvimView {
   private func cellPosition(forEvent event: NSEvent) -> Position {
     let location = self.convert(event.locationInWindow, from: nil)
     let row = Int(
-      (self.bounds.size.height - location.y - self.yOffset)
+      (self.bounds.size.height - location.y - self.offset.y)
         / self.cellSize.height
     )
-    let column = Int((location.x - self.xOffset) / self.cellSize.width)
+    let column = Int((location.x - self.offset.x) / self.cellSize.width)
 
     let cellPosition = Position(
       row: min(max(0, row), self.ugrid.size.height - 1),

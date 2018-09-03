@@ -16,22 +16,22 @@ extension NvimView {
 
     let discreteSize = self.discreteSize(size: self.bounds.size)
     var lines = [
-      CGRect(x: 0 + self.xOffset, y: 0, width: 1, height: self.bounds.height),
+      CGRect(x: 0 + self.offset.x, y: 0, width: 1, height: self.bounds.height),
       CGRect(
-        x: self.bounds.width - 1 + self.xOffset,
+        x: self.bounds.width - 1 + self.offset.x,
         y: 0,
         width: 1,
         height: self.bounds.height
       ),
       CGRect(
         x: 0,
-        y: self.bounds.height - 1 - self.yOffset,
+        y: self.bounds.height - 1 - self.offset.y,
         width: self.bounds.width,
         height: 1
       ),
       CGRect(
         x: 0,
-        y: self.bounds.height - 1 - self.yOffset
+        y: self.bounds.height - 1 - self.offset.y
           - CGFloat(discreteSize.height) * self.self.cellSize.height,
         width: self.bounds.width,
         height: 1
@@ -42,7 +42,7 @@ extension NvimView {
       for col in 0...discreteSize.width {
         lines.append(contentsOf: [
           CGRect(
-            x: CGFloat(col) * self.cellSize.width + self.xOffset - 1,
+            x: CGFloat(col) * self.cellSize.width + self.offset.x - 1,
             y: 0,
             width: 1,
             height: self.bounds.height
@@ -50,7 +50,7 @@ extension NvimView {
           CGRect(
             x: 0,
             y: self.bounds.height - 1
-              - self.yOffset - CGFloat(row) * self.self.cellSize.height,
+              - self.offset.y - CGFloat(row) * self.self.cellSize.height,
             width: self.bounds.width,
             height: 1
           ),

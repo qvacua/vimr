@@ -52,8 +52,8 @@ extension NvimView {
       return
     }
 
-    self.xOffset = floor((size.width - self.cellSize.width * CGFloat(discreteSize.width)) / 2)
-    self.yOffset = floor((size.height - self.cellSize.height * CGFloat(discreteSize.height)) / 2)
+    self.offset.x = floor((size.width - self.cellSize.width * CGFloat(discreteSize.width)) / 2)
+    self.offset.y = floor((size.height - self.cellSize.height * CGFloat(discreteSize.height)) / 2)
 
     self.bridge
       .resize(width: discreteSize.width, height: discreteSize.height)

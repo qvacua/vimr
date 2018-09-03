@@ -29,24 +29,24 @@ extension NvimView {
     let rowStart = max(
       0,
       Int(floor(
-        (self.bounds.height - self.yOffset
+        (self.bounds.height - self.offset.y
           - (rect.origin.y + rect.size.height)) / cellHeight
       ))
     )
     let rowEnd = min(
       self.ugrid.size.height - 1,
       Int(ceil(
-        (self.bounds.height - self.yOffset - rect.origin.y) / cellHeight
+        (self.bounds.height - self.offset.y - rect.origin.y) / cellHeight
       )) - 1
     )
     let columnStart = max(
       0,
-      Int(floor((rect.origin.x - self.xOffset) / cellWidth))
+      Int(floor((rect.origin.x - self.offset.x) / cellWidth))
     )
     let columnEnd = min(
       self.ugrid.size.width - 1,
       Int(ceil(
-        (rect.origin.x - self.xOffset + rect.size.width) / cellWidth
+        (rect.origin.x - self.offset.x + rect.size.width) / cellWidth
       )) - 1
     )
 
@@ -57,8 +57,8 @@ extension NvimView {
 
   func pointInView(forRow row: Int, column: Int) -> CGPoint {
     return CGPoint(
-      x: self.xOffset + CGFloat(column) * self.cellSize.width,
-      y: self.bounds.size.height - self.yOffset
+      x: self.offset.x + CGFloat(column) * self.cellSize.width,
+      y: self.bounds.size.height - self.offset.y
         - CGFloat(row) * self.cellSize.height - self.cellSize.height
     )
   }
@@ -82,8 +82,8 @@ extension NvimView {
     let cellHeight = self.cellSize.height
 
     return CGRect(
-      x: self.xOffset + left * cellWidth,
-      y: self.bounds.size.height - self.yOffset
+      x: self.offset.x + left * cellWidth,
+      y: self.bounds.size.height - self.offset.y
         - top * cellHeight - height * cellHeight,
       width: width * cellWidth,
       height: height * cellHeight

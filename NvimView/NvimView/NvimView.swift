@@ -354,8 +354,7 @@ public class NvimView: NSView,
 
   var lastClickedCellPosition = Position.null
 
-  var xOffset = CGFloat(0)
-  var yOffset = CGFloat(0)
+  var offset = CGPoint.zero
   var cellSize = CGSize.zero
 
   var scrollGuardCounterX = 5

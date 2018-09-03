@@ -76,7 +76,7 @@ extension NvimView {
         nvimUtf16Cells: run.cells.map { Array($0.string.utf16) },
         startColumn: run.cells.startIndex,
         offset: CGPoint(
-          x: self.xOffset, y: run.location.y + self.baselineOffset
+          x: self.offset.x, y: run.location.y + self.baselineOffset
         ),
         font: font,
         cellWidth: self.cellSize.width
@@ -120,7 +120,7 @@ extension NvimView {
       nvimUtf16Cells: attrsRun.cells.map { Array($0.string.utf16) },
       startColumn: attrsRun.cells.startIndex,
       offset: CGPoint(
-        x: self.xOffset, y: attrsRun.location.y + self.baselineOffset
+        x: self.offset.x, y: attrsRun.location.y + self.baselineOffset
       ),
       font: font,
       cellWidth: self.cellSize.width
@@ -265,7 +265,7 @@ extension NvimView {
               // GH-666: FIXME: correct error handling
               logger.error("row: \(row), range: \(range): " +
                              "Could not get CellAttributes with ID " +
-                "\(String(describing: cells.first?.attrId))")
+                             "\(String(describing: cells.first?.attrId))")
               return nil
             }
 
