@@ -132,8 +132,13 @@ extension NvimView {
   }
 
   final func autoCommandEvent(_ value: MessagePackValue) {
-    guard let array = MessagePackUtils.array(from: value, ofSize: 2, conversion: { $0.intValue }),
-          let event = NvimAutoCommandEvent(rawValue: array[0]) else { return }
+    guard let array = MessagePackUtils.array(
+      from: value, ofSize: 2, conversion: { $0.intValue }
+    ),
+          let event = NvimAutoCommandEvent(rawValue: array[0])
+      else {
+      return
+    }
     let bufferHandle = array[1]
 
 //    bridgeLogger.debug("\(event) -> \(bufferHandle)")
@@ -286,7 +291,11 @@ extension NvimView {
   }
 
   final func colorSchemeChanged(_ value: MessagePackValue) {
-    guard let values = MessagePackUtils.array(from: value, ofSize: 5, conversion: { $0.intValue }) else { return }
+    guard let values = MessagePackUtils.array(
+      from: value, ofSize: 5, conversion: { $0.intValue }
+    ) else {
+      return
+    }
 
     let theme = Theme(values)
     bridgeLogger.debug(theme)
@@ -414,7 +423,9 @@ extension NvimView {
     self
       .currentBuffer()
       .flatMap { curBuf -> Single<NvimView.Buffer> in
-        self.neoVimBuffer(for: Api.Buffer(handle), currentBuffer: curBuf.apiBuffer)
+        self.neoVimBuffer(
+          for: Api.Buffer(handle), currentBuffer: curBuf.apiBuffer
+        )
       }
       .value(onSuccess: {
         self.eventsSubject.onNext(.bufferWritten($0))
@@ -422,7 +433,9 @@ extension NvimView {
           self.updateTouchBarTab()
         }
       }, onError: { error in
-        self.eventsSubject.onNext(.apiError(msg: "Could not get the buffer \(handle).", cause: error))
+        self.eventsSubject.onNext(
+          .apiError(msg: "Could not get the buffer \(handle).", cause: error)
+        )
       })
   }
 
@@ -436,7 +449,9 @@ extension NvimView {
           self.updateTouchBarTab()
         }
       }, onError: { error in
-        self.eventsSubject.onNext(.apiError(msg: "Could not get the current buffer.", cause: error))
+        self.eventsSubject.onNext(
+          .apiError(msg: "Could not get the current buffer.", cause: error)
+        )
       })
   }
 

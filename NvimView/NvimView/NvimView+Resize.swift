@@ -47,7 +47,7 @@ extension NvimView {
     self.currentEmoji = self.randomEmoji()
 
     let discreteSize = self.discreteSize(size: size)
-    if discreteSize == self.grid.size {
+    if discreteSize == self.ugrid.size {
       self.markForRenderWholeView()
       return
     }
