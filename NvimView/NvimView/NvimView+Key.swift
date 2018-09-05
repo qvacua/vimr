@@ -139,17 +139,16 @@ extension NvimView {
     return false
   }
 
-  public func setMarkedText(_ aString: Any, selectedRange: NSRange, replacementRange: NSRange) {
-    if self.markedText == nil {
-      self.markedPosition = self.grid.position
-    }
+  public func setMarkedText(
+    _ object: Any,
+    selectedRange: NSRange,
+    replacementRange: NSRange
+  ) {
+    stdoutLogger.debug("object: \(object), selectedRange: \(selectedRange), " +
+                         "replacementRange: \(replacementRange)")
 
-    func setMarked(_ str: Any) {
-      switch str {
-      case let string as String: self.markedText = string
-      case let attributedString as NSAttributedString: self.markedText = attributedString.string
-      default: self.markedText = String(describing: aString) // should not occur
-      }
+    if self.markedText == nil {
+      self.markedPosition = self.ugrid.cursorPosition
     }
 
     Single
@@ -164,22 +163,20 @@ extension NvimView {
       }
       .andThen(
         Single.create { single in
-          switch aString {
+          switch object {
           case let string as String:
             self.markedText = string
           case let attributedString as NSAttributedString:
             self.markedText = attributedString.string
           default:
-            self.markedText = String(describing: aString) // should not occur
+            self.markedText = String(describing: object) // should not occur
           }
-
-          // self.logger.debug("\(#function): \(self.markedText), \(selectedRange), \(replacementRange)")
 
           single(.success(self.markedText!))
           return Disposables.create()
         }
       )
-      .flatMapCompletable { self.bridge.vimInputMarkedText($0) }
+      .flatMapCompletable(self.bridge.vimInputMarkedText)
       .trigger()
 
     self.keyDownDone = true
@@ -210,7 +207,9 @@ extension NvimView {
     }
 
     let result = NSRange(
-      location: self.grid.singleIndexFrom(self.grid.position),
+      location: self.ugrid.flattenedCellIndex(
+        forPosition: self.ugrid.cursorPosition
+      ),
       length: 0
     )
     stdoutLogger.debug("Returning \(result)")
@@ -231,7 +230,7 @@ extension NvimView {
   }
 
   public func hasMarkedText() -> Bool {
-//    self.logger.debug("\(#function)")
+    stdoutLogger.debug("Marked text: \(String(describing: self.markedText))")
     return self.markedText != nil
   }
 

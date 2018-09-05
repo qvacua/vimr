@@ -23,6 +23,10 @@ final class UGrid {
     return !self.cells.isEmpty
   }
 
+  func flattenedCellIndex(forPosition position: Position) -> Int {
+    return position.row * self.size.width + position.column
+  }
+
   func leftBoundaryOfWord(at position: Position) -> Int {
     let column = position.column
     let row = self.cells[position.row]
