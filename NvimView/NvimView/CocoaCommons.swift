@@ -5,6 +5,11 @@
 
 import Cocoa
 
+extension NSRange {
+
+  static let notFound = NSRange(location: NSNotFound, length: 0)
+}
+
 extension NSColor {
 
   var hex: String {

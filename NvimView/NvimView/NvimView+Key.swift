@@ -195,19 +195,25 @@ extension NvimView {
     self.markForRender(row: self.grid.position.row, column: self.grid.position.column)
   }
 
-  /// Return the current selection (or the position of the cursor with empty-length range).
-  /// For example when you enter "Cmd-Ctrl-Return" you'll get the Emoji-popup at the rect
-  /// by firstRectForCharacterRange(actualRange:) where the first range is the result of this method
+  /**
+   Return the current selection or the position of the cursor with empty-length
+   range. For example when you enter "Cmd-Ctrl-Return" you'll get the
+   Emoji-popup at the rect by firstRectForCharacterRange(actualRange:) where
+   the first range is the result of this method.
+   */
   public func selectedRange() -> NSRange {
     // When the app starts and the Hangul input method is selected,
     // this method gets called very early...
-    guard self.grid.hasData else {
-//      self.logger.debug("\(#function): not found")
-      return NSRange(location: NSNotFound, length: 0)
+    guard self.ugrid.hasData else {
+      stdoutLogger.debug("No data in UGrid!")
+      return .notFound
     }
 
-    let result = NSRange(location: self.grid.singleIndexFrom(self.grid.position), length: 0)
-//    self.logger.debug("\(#function): \(result)")
+    let result = NSRange(
+      location: self.grid.singleIndexFrom(self.grid.position),
+      length: 0
+    )
+    stdoutLogger.debug("Returning \(result)")
     return result
   }
 
