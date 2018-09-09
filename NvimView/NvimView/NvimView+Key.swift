@@ -187,7 +187,7 @@ extension NvimView {
   public func unmarkText() {
 //    self.logger.debug("\(#function): ")
     self.markedText = nil
-    self.markedPosition = Position.null
+    self.markedPosition = .null
     self.keyDownDone = true
 
     // TODO: necessary?
@@ -223,12 +223,12 @@ extension NvimView {
     if let markedText = self.markedText {
       let result = NSRange(location: self.grid.singleIndexFrom(self.markedPosition),
                            length: markedText.count)
-//      self.logger.debug("\(#function): \(result)")
+      stdoutLogger.debug("Returning \(result)")
       return result
     }
 
-    logger.debug("\(#function): returning empty range")
-    return NSRange(location: NSNotFound, length: 0)
+    stdoutLogger.debug("No marked text, returning not found")
+    return .notFound
   }
 
   public func hasMarkedText() -> Bool {
