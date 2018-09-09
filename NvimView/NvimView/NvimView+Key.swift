@@ -47,10 +47,10 @@ extension NvimView {
     self.keyDownDone = true
   }
 
-  public func insertText(_ aString: Any, replacementRange: NSRange) {
-//    self.logger.debug("\(#function): \(replacementRange): '\(aString)'")
+  public func insertText(_ object: Any, replacementRange: NSRange) {
+    stdoutLogger.debug("\(object) with \(replacementRange)")
 
-    switch aString {
+    switch object {
 
     case let string as String:
       self.bridge
@@ -70,7 +70,7 @@ extension NvimView {
     // unmarkText()
     self.lastMarkedText = self.markedText
     self.markedText = nil
-    self.markedPosition = Position.null
+    self.markedPosition = .null
     self.keyDownDone = true
   }
 
@@ -78,13 +78,14 @@ extension NvimView {
     // FIXME: handle when ㅎ -> delete
 
     if self.responds(to: aSelector) {
-      logger.debug("calling \(aSelector)")
+      stdoutLogger.debug("calling \(aSelector)")
       self.perform(aSelector, with: self)
       self.keyDownDone = true
       return
     }
 
-    logger.debug("\(aSelector) not implemented, forwarding input to neovim")
+    stdoutLogger.debug("\(aSelector) not implemented, " +
+                         "forwarding input to neovim")
     self.keyDownDone = false
   }
 
@@ -127,6 +128,7 @@ extension NvimView {
         .trigger()
       return true
     }
+
     if .control == flags && chars == "2" {
       // <C-2> should generate \0, escaping as above
       self.bridge
