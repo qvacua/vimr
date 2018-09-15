@@ -431,6 +431,7 @@ static void server_ui_raw_line(
     Integer endcol,
     Integer clearcol,
     Integer clearattr,
+    Boolean wrap,
     const schar_T *chunk,
     const sattr_T *attrs
 ) {
