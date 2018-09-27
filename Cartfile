@@ -8,7 +8,7 @@ github "qvacua/RxMsgpackRpc" == 0.0.2
 github "qvacua/RxMessagePort" == 0.0.2
 github "qvacua/RxNeovimApi" == 0.3.1
 github "sindresorhus/github-markdown-css" == 2.10.0
-github "httpswift/swifter" "stable"
+github "httpswift/swifter" == 1.4.3
 github "a2/MessagePack.swift" == 3.0.0
 github "elegantchaos/DictionaryCoding" == 1.0.3
 
