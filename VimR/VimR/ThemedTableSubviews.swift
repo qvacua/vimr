@@ -58,7 +58,7 @@ class ThemedTableCell: NSTableCellView {
   static let widthWithoutText = CGFloat(2 + 16 + 4 + 2)
 
   static func width(with text: String) -> CGFloat {
-    let attrStr = NSAttributedString(string: text, attributes: [NSAttributedStringKey.font: ThemedTableCell.font])
+    let attrStr = NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: ThemedTableCell.font])
 
     return self.widthWithoutText + attrStr.size().width
   }

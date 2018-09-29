@@ -226,17 +226,17 @@ extension NvimView {
 }
 
 private let emojiAttrs = [
-  NSAttributedStringKey.font: NSFont(name: "AppleColorEmoji", size: 72)!
+  NSAttributedString.Key.font: NSFont(name: "AppleColorEmoji", size: 72)!
 ]
 
 private let resizeTextAttrs = [
-  NSAttributedStringKey.font: NSFont.systemFont(ofSize: 18),
-  NSAttributedStringKey.foregroundColor: NSColor.darkGray
+  NSAttributedString.Key.font: NSFont.systemFont(ofSize: 18),
+  NSAttributedString.Key.foregroundColor: NSColor.darkGray
 ]
 
 private let infoTextAttrs = [
-  NSAttributedStringKey.font: NSFont.systemFont(ofSize: 16),
-  NSAttributedStringKey.foregroundColor: NSColor.darkGray
+  NSAttributedString.Key.font: NSFont.systemFont(ofSize: 16),
+  NSAttributedString.Key.foregroundColor: NSColor.darkGray
 ]
 
 private let colorSpace = NSColorSpace.sRGB

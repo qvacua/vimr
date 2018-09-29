@@ -260,7 +260,7 @@ extension OpenQuicklyWindow {
     let rowText: NSMutableAttributedString
     let pathInfo = truncatedPathComps.dropLast().reversed().joined(separator: " / ")
     rowText = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
-    rowText.addAttribute(NSAttributedStringKey.foregroundColor,
+    rowText.addAttribute(NSAttributedString.Key.foregroundColor,
                          value: NSColor.lightGray,
                          range: NSRange(location: name.count, length: pathInfo.count + 3))
 

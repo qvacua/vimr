@@ -108,7 +108,7 @@ class MainWindow: NSObject,
 
     self.cliPipePath = state.cliPipePath
 
-    self.windowController = NSWindowController(windowNibName: NSNib.Name(rawValue: "MainWindow"))
+    self.windowController = NSWindowController(windowNibName: NSNib.Name("MainWindow"))
 
     let neoVimViewConfig = NvimView.Config(useInteractiveZsh: state.useInteractiveZsh,
                                            cwd: state.cwd,

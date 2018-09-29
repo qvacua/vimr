@@ -35,7 +35,7 @@ class FileOutlineView: NSOutlineView,
     self.delegate = self
     self.allowsEmptySelection = true
 
-    guard Bundle.main.loadNibNamed(NSNib.Name(rawValue: "FileBrowserMenu"), owner: self, topLevelObjects: nil) else {
+    guard Bundle.main.loadNibNamed(NSNib.Name("FileBrowserMenu"), owner: self, topLevelObjects: nil) else {
       NSLog("WARN: FileBrowserMenu.xib could not be loaded")
       return
     }

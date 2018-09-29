@@ -249,7 +249,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 extension ProxyBar {
 
   private func isTool(atIndex idx: Int, beingDragged info: NSDraggingInfo) -> Bool {
-    let pasteboard = info.draggingPasteboard()
+    let pasteboard = info.draggingPasteboard
 
     guard let uuid = pasteboard.string(forType: NSPasteboard.PasteboardType(WorkspaceToolButton.toolUti)) else {
       return false
@@ -268,7 +268,7 @@ extension ProxyBar {
   }
 
   override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
-    let locInProxy = self.convert(sender.draggingLocation(), from: nil)
+    let locInProxy = self.convert(sender.draggingLocation, from: nil)
     let locInBar = self.convert(locInProxy, to: self.container)
 
     let currentDraggedOnToolIdx = self.buttonFrames.enumerated()
@@ -306,7 +306,7 @@ extension ProxyBar {
   }
 
   override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
-    guard let toolButton = sender.draggingSource() as? WorkspaceToolButton else {
+    guard let toolButton = sender.draggingSource as? WorkspaceToolButton else {
       return false
     }
 
@@ -329,7 +329,7 @@ extension ProxyBar {
       }
 
       // 2.
-      let locInProxy = self.convert(sender.draggingLocation(), from: nil)
+      let locInProxy = self.convert(sender.draggingLocation, from: nil)
       let locInBar = self.convert(locInProxy, to: self.container)
 
       if self.buttonFrames.filter({ $0.contains(locInBar) }).isEmpty
@@ -434,7 +434,7 @@ extension WorkspaceBar {
     while curEvent.type != .leftMouseUp {
       let nextEvent = NSApp.nextEvent(matching: nextEventMask,
                                       until: .distantFuture,
-                                      inMode: .eventTrackingRunLoopMode,
+                                      inMode: .eventTracking,
                                       dequeue: true)
       guard nextEvent != nil else {
         break

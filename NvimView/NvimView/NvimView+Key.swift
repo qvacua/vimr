@@ -265,7 +265,7 @@ extension NvimView {
     return NSAttributedString(string: fillChars + lastMarkedText)
   }
 
-  public func validAttributesForMarkedText() -> [NSAttributedStringKey] {
+  public func validAttributesForMarkedText() -> [NSAttributedString.Key] {
     return []
   }
 
