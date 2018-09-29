@@ -13,29 +13,6 @@ typedef NS_OPTIONS(NSUInteger, FontTrait) {
   FontTraitUndercurl = (1 << 3)
 };
 
-// Keep in sync with ModeShape enum in cursor_shape.h.
-typedef NS_ENUM(NSUInteger, CursorModeShape) {
-  CursorModeShapeNormal = 0,
-  CursorModeShapeVisual = 1,
-  CursorModeShapeInsert = 2,
-  CursorModeShapeReplace = 3,
-  CursorModeShapeCmdline = 4,
-  CursorModeShapeCmdlineInsert = 5,
-  CursorModeShapeCmdlineReplace = 6,
-  CursorModeShapeOperatorPending = 7,
-  CursorModeShapeVisualExclusive = 8,
-  CursorModeShapeOnCmdline = 9,
-  CursorModeShapeOnStatusLine = 10,
-  CursorModeShapeDraggingStatusLine = 11,
-  CursorModeShapeOnVerticalSepLine = 12,
-  CursorModeShapeDraggingVerticalSepLine = 13,
-  CursorModeShapeMore = 14,
-  CursorModeShapeMoreLastLine = 15,
-  CursorModeShapeShowingMatchingParen = 16,
-  CursorModeShapeTermFocus = 17,
-  CursorModeShapeCount = 18,
-};
-
 typedef NS_ENUM(NSInteger, RenderDataType) {
   RenderDataTypeRawLine,
   RenderDataTypeGoto,
