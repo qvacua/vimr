@@ -8,6 +8,7 @@ import Foundation
 final class CellAttributesCollection {
 
   static let defaultAttributesId = 0
+  static let reversedDefaultAttributesId = Int.max
 
   private(set) var defaultAttributes = CellAttributes(
     fontTrait: [],
@@ -23,8 +24,18 @@ final class CellAttributesCollection {
   }
 
   func attributes(of id: Int) -> CellAttributes? {
-    guard let attrs = self.attributes[id] else {
+    if id == Int.max {
+      return self.defaultAttributes.reversed
+    }
+
+    let absId = abs(id)
+
+    guard let attrs = self.attributes[absId] else {
       return nil
+    }
+
+    if id < 0 {
+      return attrs.replacingDefaults(with: self.defaultAttributes).reversed
     }
 
     return attrs.replacingDefaults(with: self.defaultAttributes)

@@ -234,6 +234,13 @@ extension NvimView {
         top: row, bottom: row, left: endCol, right: max(endCol, clearCol - 1)
       ))
     }
+
+    if row == self.markedPosition.row
+         && startCol <= self.markedPosition.column
+         && self.markedPosition.column <= endCol
+    {
+      self.ugrid.markCell(at: self.markedPosition)
+    }
   }
 
   private func doGoto(position: Position) {
@@ -353,7 +360,7 @@ extension NvimView {
       else {
 
       self.bridgeLogger.error("Could not get highlight attributes from " +
-                           "\(value)")
+                                "\(value)")
       return
     }
     let trait = FontTrait(rawValue: UInt(rawTrait))
