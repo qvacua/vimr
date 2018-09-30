@@ -292,7 +292,7 @@ class MainWindow: NSObject,
 
             return .empty()
           }
-          .subscribe()
+          .trigger()
 
         let usesTheme = state.appearance.usesTheme
         let themePrefChanged = state.appearance.usesTheme != self.usesTheme
@@ -362,7 +362,7 @@ class MainWindow: NSObject,
 
         return .empty()
       }
-      .subscribe()
+      .trigger()
   }
 
   func uuidAction(for action: Action) -> UuidAction<Action> {

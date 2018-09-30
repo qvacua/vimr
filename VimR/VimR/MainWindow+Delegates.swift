@@ -56,7 +56,7 @@ extension MainWindow {
   func bufferListChanged() {
     self.neoVimView
       .allBuffers()
-      .subscribe(onSuccess: { buffers in
+      .value(onSuccess: { buffers in
         self.emit(self.uuidAction(for: .setBufferList(buffers.filter { $0.isListed })))
       })
   }
@@ -72,7 +72,7 @@ extension MainWindow {
   func tabChanged() {
     self.neoVimView
       .currentBuffer()
-      .subscribe(onSuccess: {
+      .value(onSuccess: {
         self.newCurrentBuffer($0)
       })
   }
@@ -123,11 +123,11 @@ extension MainWindow {
 
   func windowDidBecomeMain(_ notification: Notification) {
     self.emit(self.uuidAction(for: .becomeKey(isFullScreen: self.window.styleMask.contains(.fullScreen))))
-    self.neoVimView.didBecomeMain().subscribe()
+    self.neoVimView.didBecomeMain().trigger()
   }
 
   func windowDidResignMain(_ notification: Notification) {
-    self.neoVimView.didResignMain().subscribe()
+    self.neoVimView.didResignMain().trigger()
   }
 
   func windowDidMove(_ notification: Notification) {
@@ -144,7 +144,7 @@ extension MainWindow {
 
   func windowShouldClose(_: NSWindow) -> Bool {
     guard (self.neoVimView.isCurrentBufferDirty().syncValue() ?? false) else {
-      self.neoVimView.closeCurrentTab().subscribe()
+      self.neoVimView.closeCurrentTab().trigger()
       return false
     }
 
@@ -157,7 +157,7 @@ extension MainWindow {
     discardAndCloseButton.keyEquivalent = "d"
     alert.beginSheetModal(for: self.window, completionHandler: { response in
       if response == .alertSecondButtonReturn {
-        self.neoVimView.closeCurrentTabWithoutSaving().subscribe()
+        self.neoVimView.closeCurrentTabWithoutSaving().trigger()
       }
     })
 
