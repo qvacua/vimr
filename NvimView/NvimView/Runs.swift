@@ -9,7 +9,7 @@ struct AttributesRun {
 
   var location: CGPoint
   var cells: ArraySlice<UCell>
-  let attrs: CellAttributes
+  var attrs: CellAttributes
 }
 
 struct FontGlyphRun {

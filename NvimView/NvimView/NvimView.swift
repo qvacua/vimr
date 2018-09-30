@@ -279,7 +279,7 @@ public class NvimView: NSView,
           self.defaultColorsChanged(value)
 
         case let .optionSet(value):
-          bridgeLogger.debug(value)
+          self.bridgeLogger.debug(value)
           break
 
         case let .autoCommandEvent(value):
@@ -363,6 +363,12 @@ public class NvimView: NSView,
   var markedText: String?
   var markedPosition = Position.null
   var markedRangeOnScreen: NSRange?
+
+  let bridgeLogger = LogContext.fileLogger(
+    as: "NvimView-Bridge",
+    with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
+    shouldLogDebug: nil
+  )
 
   // MARK: - Private
   private var _linespacing = NvimView.defaultLinespacing

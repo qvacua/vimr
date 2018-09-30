@@ -15,7 +15,7 @@ extension NvimView {
 
     let modifierFlags = event.modifierFlags
     let isMeta = (self.isLeftOptionMeta && modifierFlags.contains(.leftOption))
-                 || (self.isRightOptionMeta && modifierFlags.contains(.rightOption))
+      || (self.isRightOptionMeta && modifierFlags.contains(.rightOption))
 
     if !isMeta {
       let cocoaHandledEvent = NSTextInputContext.current?.handleEvent(event) ?? false
@@ -40,44 +40,41 @@ extension NvimView {
     let namedChars = KeyUtils.namedKey(from: charsIgnoringModifiers)
     let finalInput = isWrapNeeded ? self.wrapNamedKeys(flags + namedChars) : self.vimPlainString(chars)
 
-    self.bridge
-      .vimInput(finalInput)
-      .trigger()
-
+    try? self.bridge.vimInput(finalInput).wait()
     self.keyDownDone = true
   }
 
   public func insertText(_ object: Any, replacementRange: NSRange) {
     stdoutLogger.debug("\(object) with \(replacementRange)")
 
-    let deleteMarkedText: Completable
-    if let marked = self.markedText {
-      let delSeq = Array(repeating: "<BS>", count: marked.count).joined()
-      deleteMarkedText = Single
-        .just(delSeq)
-        .flatMapCompletable { self.bridge.vimInput($0) }
-    } else {
-      deleteMarkedText = Completable.empty()
-    }
-
+    let text: String
     switch object {
 
     case let string as String:
-      self.bridge
-        .vimInput(self.vimPlainString(string))
-        .trigger()
+      text = string
 
     case let attributedString as NSAttributedString:
-      self.bridge
-        .vimInput(self.vimPlainString(attributedString.string))
-        .trigger()
+      text = attributedString.string
 
     default:
-      break;
+      return
 
     }
 
-    // unmarkText()
+    try? Single
+      .just((self.markedText, text))
+      .flatMap { element -> Single<String> in
+        if let marked = element.0 {
+          return self.bridge
+            .deleteCharacters(marked.count)
+            .andThen(Single.just(element.1))
+        } else {
+          return Single.just(element.1)
+        }
+      }
+      .flatMapCompletable { self.bridge.vimInput(self.vimPlainString($0)) }
+      .wait()
+
     self.lastMarkedText = self.markedText
     self.markedText = nil
     self.markedPosition = .null
