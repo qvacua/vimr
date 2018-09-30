@@ -23,6 +23,19 @@ final class UGrid {
     return !self.cells.isEmpty
   }
 
+  func position(from flattenedIndex: Int) -> Position {
+    let row = min(
+      self.size.height - 1,
+      max(0, Int(floor(Double(flattenedIndex) / Double(self.size.width))))
+    )
+    let col = min(
+      self.size.width - 1,
+      max(0, flattenedIndex % self.size.width)
+    )
+
+    return Position(row: row, column: col)
+  }
+
   func flattenedCellIndex(forPosition position: Position) -> Int {
     return position.row * self.size.width + position.column
   }

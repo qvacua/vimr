@@ -13,11 +13,50 @@ class UGridTest: XCTestCase {
 
   private let ugrid = UGrid()
 
-  override func setUp() {
-    self.ugrid.resize(Size(width: 10, height: 2))
+  func testFlattenedIndex() {
+    self.ugrid.resize(Size(width: 20, height: 10))
+    expect(
+      self.ugrid.flattenedCellIndex(forPosition: Position(row: 0, column: 0))
+    ).to(equal(0))
+    expect(
+      self.ugrid.flattenedCellIndex(forPosition: Position(row: 0, column: 5))
+    ).to(equal(5))
+    expect(
+      self.ugrid.flattenedCellIndex(forPosition: Position(row: 1, column: 0))
+    ).to(equal(20))
+    expect(
+      self.ugrid.flattenedCellIndex(forPosition: Position(row: 1, column: 5))
+    ).to(equal(25))
+    expect(
+      self.ugrid.flattenedCellIndex(forPosition: Position(row: 9, column: 0))
+    ).to(equal(180))
+    expect(
+      self.ugrid.flattenedCellIndex(forPosition: Position(row: 9, column: 19))
+    ).to(equal(199))
+  }
+
+  func testPositionFromFlattenedIndex() {
+    self.ugrid.resize(Size(width: 20, height: 10))
+    expect(self.ugrid.position(from: 0))
+      .to(equal(Position(row: 0, column: 0)))
+    expect(self.ugrid.position(from: 5))
+      .to(equal(Position(row: 0, column: 5)))
+    expect(self.ugrid.position(from: 20))
+      .to(equal(Position(row: 1, column: 0)))
+    expect(self.ugrid.position(from: 25))
+      .to(equal(Position(row: 1, column: 5)))
+    expect(self.ugrid.position(from: 180))
+      .to(equal(Position(row: 9, column: 0)))
+    expect(self.ugrid.position(from: 199))
+      .to(equal(Position(row: 9, column: 19)))
+    expect(self.ugrid.position(from: 418))
+      .to(equal(Position(row: 9, column: 18)))
+    expect(self.ugrid.position(from: 419))
+      .to(equal(Position(row: 9, column: 19)))
   }
 
   func testLeftBoundaryOfWord() {
+    self.ugrid.resize(Size(width: 10, height: 2))
     self.ugrid.update(row: 0,
                       startCol: 0,
                       endCol: 10,
@@ -50,6 +89,7 @@ class UGridTest: XCTestCase {
   }
 
   func testRightBoundaryOfWord() {
+    self.ugrid.resize(Size(width: 10, height: 2))
     self.ugrid.update(row: 0,
                       startCol: 0,
                       endCol: 10,
