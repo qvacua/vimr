@@ -69,6 +69,8 @@
 		4BB1F5CB209740E900EC394A /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CA209740E900EC394A /* MessagePack.framework */; };
 		4BC5B0431FE551DF0071D64F /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC5B0421FE551DF0071D64F /* RxSwift.framework */; };
 		4BD874302014C2600039888E /* NvimAutoCommandEvent.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD8742F2014C25F0039888E /* NvimAutoCommandEvent.generated.swift */; };
+		4BDA50B22160BE1B004D10A9 /* Socket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BEBC239215FD19C007113C4 /* Socket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BDA50B32160BE2C004D10A9 /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBC239215FD19C007113C4 /* Socket.framework */; };
 		4BE45C081FD2D4E3005C0A95 /* NvimServer in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B90F04F1FD2AFD3008A39E0 /* NvimServer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		4BE45C0C1FD2DA49005C0A95 /* runtime in Resources */ = {isa = PBXBuildFile; fileRef = 4BE45C0B1FD2DA49005C0A95 /* runtime */; };
 		4BEBC23A215FD19C007113C4 /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBC239215FD19C007113C4 /* Socket.framework */; };
@@ -123,6 +125,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4BDA50B22160BE1B004D10A9 /* Socket.framework in CopyFiles */,
 				4BF18517212DCD7900954FE7 /* RxNeovimApi.framework in CopyFiles */,
 				4BF18518212DCD7900954FE7 /* RxMessagePort.framework in CopyFiles */,
 				4BF18519212DCD7900954FE7 /* MessagePack.framework in CopyFiles */,
@@ -253,6 +256,7 @@
 				4BF18513212DCD6E00954FE7 /* RxMessagePort.framework in Frameworks */,
 				4BF18514212DCD6E00954FE7 /* MessagePack.framework in Frameworks */,
 				4BF18515212DCD6E00954FE7 /* RxMsgpackRpc.framework in Frameworks */,
+				4BDA50B32160BE2C004D10A9 /* Socket.framework in Frameworks */,
 				4BF18516212DCD6E00954FE7 /* RxSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
