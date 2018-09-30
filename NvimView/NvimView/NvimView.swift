@@ -327,14 +327,11 @@ public class NvimView: NSView,
   let typesetter = Typesetter()
   var baselineOffset = CGFloat(0)
 
-  var markedText: String?
-
   /// We store the last marked text because Cocoa's text input system does the following:
   /// 하 -> hanja popup -> insertText(하) -> attributedSubstring...() -> setMarkedText(下) -> ...
   /// We want to return "하" in attributedSubstring...()
   var lastMarkedText: String?
 
-  var markedPosition = Position.null
   var keyDownDone = true
 
   var lastClickedCellPosition = Position.null
@@ -362,6 +359,10 @@ public class NvimView: NSView,
 
   let eventsSubject = PublishSubject<Event>()
   let disposeBag = DisposeBag()
+
+  var markedText: String?
+  var markedPosition = Position.null
+  var markedRangeOnScreen: NSRange?
 
   // MARK: - Private
   private var _linespacing = NvimView.defaultLinespacing

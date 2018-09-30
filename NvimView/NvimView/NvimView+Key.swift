@@ -50,6 +50,16 @@ extension NvimView {
   public func insertText(_ object: Any, replacementRange: NSRange) {
     stdoutLogger.debug("\(object) with \(replacementRange)")
 
+    let deleteMarkedText: Completable
+    if let marked = self.markedText {
+      let delSeq = Array(repeating: "<BS>", count: marked.count).joined()
+      deleteMarkedText = Single
+        .just(delSeq)
+        .flatMapCompletable { self.bridge.vimInput($0) }
+    } else {
+      deleteMarkedText = Completable.empty()
+    }
+
     switch object {
 
     case let string as String:
@@ -149,9 +159,7 @@ extension NvimView {
     stdoutLogger.debug("object: \(object), selectedRange: \(selectedRange), " +
                          "replacementRange: \(replacementRange)")
 
-    if self.markedText == nil {
-      self.markedPosition = self.ugrid.cursorPosition
-    }
+    self.markedPosition = self.ugrid.cursorPosition
 
     Single
       .just(replacementRange.length)
@@ -178,7 +186,7 @@ extension NvimView {
           return Disposables.create()
         }
       )
-      .flatMapCompletable(self.bridge.vimInputMarkedText)
+      .flatMapCompletable(self.bridge.vimInput)
       .trigger()
 
     self.keyDownDone = true
