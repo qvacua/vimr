@@ -12,7 +12,7 @@ extension MainWindow {
   @IBAction func newTab(_ sender: Any?) {
     self.neoVimView
       .newTab()
-      .subscribe()
+      .trigger()
   }
 
   @IBAction func openDocument(_ sender: Any?) {
@@ -37,7 +37,7 @@ extension MainWindow {
           }
           return self.neoVimView.open(urls: urls)
         }
-        .subscribe()
+        .trigger()
     }
   }
 
@@ -54,28 +54,28 @@ extension MainWindow {
           self.savePanelSheet {
             self.neoVimView
               .saveCurrentTab(url: $0)
-              .subscribe()
+              .trigger()
           }
           return Completable.empty()
         }
 
         return self.neoVimView.saveCurrentTab()
       }
-      .subscribe()
+      .trigger()
   }
 
   @IBAction func saveDocumentAs(_ sender: Any?) {
     self.neoVimView
       .currentBuffer()
       .observeOn(MainScheduler.instance)
-      .subscribe(onSuccess: { curBuf in
+      .value(onSuccess: { curBuf in
         self.savePanelSheet { url in
           self.neoVimView
             .saveCurrentTab(url: url)
             .andThen(
               curBuf.isDirty ? self.neoVimView.openInNewTab(urls: [url]) : self.neoVimView.openInCurrentTab(url: url)
             )
-            .subscribe()
+            .trigger()
         }
       })
   }
