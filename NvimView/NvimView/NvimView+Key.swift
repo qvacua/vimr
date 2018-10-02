@@ -5,6 +5,7 @@
 
 import Cocoa
 import RxSwift
+import MessagePack
 
 extension NvimView {
 
@@ -20,6 +21,7 @@ extension NvimView {
     if !isMeta {
       let cocoaHandledEvent = NSTextInputContext.current?.handleEvent(event) ?? false
       if self.keyDownDone && cocoaHandledEvent {
+        stdoutLogger.debug("returning since key down done and cocoa handled event")
         return
       }
     }
@@ -40,7 +42,10 @@ extension NvimView {
     let namedChars = KeyUtils.namedKey(from: charsIgnoringModifiers)
     let finalInput = isWrapNeeded ? self.wrapNamedKeys(flags + namedChars) : self.vimPlainString(chars)
 
-    try? self.bridge.vimInput(finalInput).wait()
+    try? self.bridge
+      .vimInput(finalInput)
+      .wait()
+
     self.keyDownDone = true
   }
 
@@ -61,19 +66,22 @@ extension NvimView {
 
     }
 
-    try? Single
-      .just((self.markedText, text))
-      .flatMap { element -> Single<String> in
-        if let marked = element.0 {
-          return self.bridge
-            .deleteCharacters(marked.count)
-            .andThen(Single.just(element.1))
-        } else {
-          return Single.just(element.1)
-        }
+    let length = self.markedText?.count ?? 0
+    let rawResult = self
+      .atomicallyDelete(charactersOfLength: length, andInput: text)
+      .syncValue()
+    if let result = rawResult?.arrayValue {
+      if result[1] != .nil {
+        stdoutLogger.error("Error while inserting text '\(text)': \(result)")
       }
-      .flatMapCompletable { self.bridge.vimInput(self.vimPlainString($0)) }
-      .wait()
+    }
+
+    if length > 0 {
+      self.markForRender(row: self.markedPosition.row, column: self.markedPosition.column)
+      if self.ugrid.isNextCellEmpty(self.markedPosition) {
+        self.markForRender(row: self.markedPosition.row, column: self.markedPosition.column + 1)
+      }
+    }
 
     self.lastMarkedText = self.markedText
     self.markedText = nil
@@ -156,47 +164,47 @@ extension NvimView {
     stdoutLogger.debug("object: \(object), selectedRange: \(selectedRange), " +
                          "replacementRange: \(replacementRange)")
 
-    self.markedPosition = self.ugrid.cursorPosition
+    if self.markedText == nil {
+      self.markedPosition = self.ugrid.cursorPosition
+    }
 
-    Single
-      .just(replacementRange.length)
-      .flatMapCompletable { length -> Completable in
-        // eg 하 -> hanja popup, cf comment for self.lastMarkedText
-        if length > 0 {
-          return self.bridge.deleteCharacters(length)
-        }
+    stdoutLogger.debug("new marked position: \(self.markedPosition)")
 
-        return Completable.empty()
+    let length = self.markedText?.count ?? 0
+    switch object {
+    case let string as String:
+      self.markedText = string
+    case let attributedString as NSAttributedString:
+      self.markedText = attributedString.string
+    default:
+      self.markedText = String(describing: object) // should not occur
+    }
+
+    let rawResult = self
+      .atomicallyDelete(charactersOfLength: length, andInput: self.markedText!)
+      .syncValue()
+    if let result = rawResult?.arrayValue {
+      if result[1] != .nil {
+        stdoutLogger.error("Error while setting marked text " +
+                             "'\(self.markedText!)': \(result)")
       }
-      .andThen(
-        Single.create { single in
-          switch object {
-          case let string as String:
-            self.markedText = string
-          case let attributedString as NSAttributedString:
-            self.markedText = attributedString.string
-          default:
-            self.markedText = String(describing: object) // should not occur
-          }
-
-          single(.success(self.markedText!))
-          return Disposables.create()
-        }
-      )
-      .flatMapCompletable(self.bridge.vimInput)
-      .trigger()
+    }
 
     self.keyDownDone = true
   }
 
   public func unmarkText() {
-//    self.logger.debug("\(#function): ")
+    stdoutLogger.mark()
+
+    let position = self.markedPosition
+    self.markForRender(row: position.row, column: position.column)
+    if self.ugrid.isNextCellEmpty(position) {
+      self.markForRender(row: position.row, column: position.column + 1)
+    }
+
     self.markedText = nil
     self.markedPosition = .null
     self.keyDownDone = true
-
-    // TODO: necessary?
-    self.markForRender(row: self.grid.position.row, column: self.grid.position.column)
   }
 
   /**
@@ -213,12 +221,17 @@ extension NvimView {
       return .notFound
     }
 
-    let result = NSRange(
+    var result = NSRange(
       location: self.ugrid.flattenedCellIndex(
         forPosition: self.ugrid.cursorPosition
       ),
       length: 0
     )
+
+    if self.markedPosition != .null {
+      result.location = self.ugrid.flattenedCellIndex(forPosition: self.markedPosition)
+    }
+
     stdoutLogger.debug("Returning \(result)")
     return result
   }
@@ -328,5 +341,28 @@ extension NvimView {
 
   func vimPlainString(_ string: String) -> String {
     return string.replacingOccurrences(of: "<", with: self.wrapNamedKeys("lt"))
+  }
+
+  private func atomicallyDelete(
+    charactersOfLength length: Int, andInput text: String
+  ) -> Single<MessagePackValue> {
+    var calls = [MessagePackValue]()
+    if length > 0 {
+      calls.append(
+        contentsOf: Array(
+          repeating: .array(
+            [.string("nvim_input"), .array([.string("<BS>")])]
+          ),
+          count: length
+        )
+      )
+    }
+    calls.append(
+      .array(
+        [.string("nvim_input"), .array([.string(text)])]
+      )
+    )
+
+    return self.api.callAtomic(calls: .array(calls))
   }
 }

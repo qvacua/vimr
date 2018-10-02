@@ -111,7 +111,11 @@ class UiBridge {
   }
 
   func deleteCharacters(_ count: Int) -> Completable {
-    return self.sendMessage(msgId: .delete, data: [count].data())
+    return Completable.concat(
+      Array(repeating: self.sendMessage(msgId: .input,
+                                        data: "<BS>".data(using: .utf8)),
+            count: count)
+    )
   }
 
   func resize(width: Int, height: Int) -> Completable {
