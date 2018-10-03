@@ -19,9 +19,10 @@ extension NvimView {
       || (self.isRightOptionMeta && modifierFlags.contains(.rightOption))
 
     if !isMeta {
-      let cocoaHandledEvent = NSTextInputContext.current?.handleEvent(event) ?? false
+      let cocoaHandledEvent
+        = NSTextInputContext.current?.handleEvent(event) ?? false
       if self.keyDownDone && cocoaHandledEvent {
-        stdoutLogger.debug("returning since key down done and cocoa handled event")
+        stdoutLogger.debug("returning: key down done and cocoa handled event")
         return
       }
     }
@@ -40,7 +41,8 @@ extension NvimView {
     let isWrapNeeded = !isControlCode && !isPlain
 
     let namedChars = KeyUtils.namedKey(from: charsIgnoringModifiers)
-    let finalInput = isWrapNeeded ? self.wrapNamedKeys(flags + namedChars) : self.vimPlainString(chars)
+    let finalInput = isWrapNeeded ? self.wrapNamedKeys(flags + namedChars)
+                                  : self.vimPlainString(chars)
 
     try? self.bridge
       .vimInput(finalInput)
@@ -67,14 +69,7 @@ extension NvimView {
     }
 
     let length = self.markedText?.count ?? 0
-    let rawResult = self
-      .atomicallyDelete(charactersOfLength: length, andInput: text)
-      .syncValue()
-    if let result = rawResult?.arrayValue {
-      if result[1] != .nil {
-        stdoutLogger.error("Error while inserting text '\(text)': \(result)")
-      }
-    }
+    try? self.bridge.deleteCharacters(length, input: text).wait()
 
     if length > 0 {
       self.ugrid.unmarkCell(at: self.markedPosition)
@@ -96,11 +91,10 @@ extension NvimView {
   }
 
   public override func doCommand(by aSelector: Selector) {
-    // FIXME: handle when ㅎ -> delete
-
     if self.responds(to: aSelector) {
       stdoutLogger.debug("calling \(aSelector)")
       self.perform(aSelector, with: self)
+
       self.keyDownDone = true
       return
     }
@@ -116,7 +110,8 @@ extension NvimView {
 
     // <C-Tab> & <C-S-Tab> do not trigger keyDown events.
     // Catch the key event here and pass it to keyDown.
-    // (By rogual in NeoVim dot app: https://github.com/rogual/neovim-dot-app/pull/248/files)
+    // By rogual in NeoVim dot app:
+    // https://github.com/rogual/neovim-dot-app/pull/248/files
     if flags.contains(.control) && 48 == event.keyCode {
       self.keyDown(with: event)
       return true
@@ -157,6 +152,7 @@ extension NvimView {
         .trigger()
       return true
     }
+
     // NSEvent already sets \u{1f} for <C--> && <C-_>
 
     return false
@@ -170,13 +166,14 @@ extension NvimView {
     stdoutLogger.debug("object: \(object), selectedRange: \(selectedRange), " +
                          "replacementRange: \(replacementRange)")
 
+    defer { self.keyDownDone = true }
+
     if self.markedText == nil {
       self.markedPosition = self.ugrid.cursorPosition
     }
 
-    stdoutLogger.debug("new marked position: \(self.markedPosition)")
+    let oldMarkedTextLength = self.markedText?.count ?? 0
 
-    let length = self.markedText?.count ?? 0
     switch object {
     case let string as String:
       self.markedText = string
@@ -186,14 +183,24 @@ extension NvimView {
       self.markedText = String(describing: object) // should not occur
     }
 
-    let rawResult = self
-      .atomicallyDelete(charactersOfLength: length, andInput: self.markedText!)
-      .syncValue()
-    if let result = rawResult?.arrayValue {
-      if result[1] != .nil {
-        stdoutLogger.error("Error while setting marked text " +
-                             "'\(self.markedText!)': \(result)")
+    if replacementRange != .notFound {
+      guard let newMarkedPosition = self.ugrid.position(
+        fromFlatCharIndex: replacementRange.location
+      ) else {
+        return
       }
+
+      self.markedPosition = newMarkedPosition
+
+      stdoutLogger.debug("Deleting \(replacementRange.length) " +
+                           "and inputting \(self.markedText!)")
+      try? self.bridge.deleteCharacters(replacementRange.length,
+                                        input: self.markedText!).wait()
+    } else {
+      stdoutLogger.debug("Deleting \(oldMarkedTextLength) " +
+                           "and inputting \(self.markedText!)")
+      try? self.bridge.deleteCharacters(oldMarkedTextLength,
+                                        input: self.markedText!).wait()
     }
 
     self.keyDownDone = true
@@ -229,87 +236,109 @@ extension NvimView {
       return .notFound
     }
 
-    var result = NSRange(
-      location: self.ugrid.flattenedCellIndex(
+    let result: NSRange
+    result = NSRange(
+      location: self.ugrid.flatCharIndex(
         forPosition: self.ugrid.cursorPosition
       ),
       length: 0
     )
-
-    if self.markedPosition != .null {
-      result.location = self.ugrid.flattenedCellIndex(forPosition: self.markedPosition)
-    }
 
     stdoutLogger.debug("Returning \(result)")
     return result
   }
 
   public func markedRange() -> NSRange {
-    // FIXME: do we have to handle positions at the column borders?
-    if let markedText = self.markedText {
-      let result = NSRange(location: self.grid.singleIndexFrom(self.markedPosition),
-                           length: markedText.count)
-      stdoutLogger.debug("Returning \(result)")
-      return result
+    guard let marked = self.markedText else {
+      stdoutLogger.debug("No marked text, returning not found")
+      return .notFound
     }
 
-    stdoutLogger.debug("No marked text, returning not found")
-    return .notFound
+    let result = NSRange(
+      location: self.ugrid.flatCharIndex(forPosition: self.markedPosition),
+      length: marked.count
+    )
+
+    stdoutLogger.debug("Returning \(result)")
+    return result
   }
 
   public func hasMarkedText() -> Bool {
-    stdoutLogger.debug("Marked text: \(String(describing: self.markedText))")
     return self.markedText != nil
   }
 
-  // FIXME: take into account the "return nil"-case
-  // FIXME: just fix me, PLEASE...
-  public func attributedSubstring(forProposedRange aRange: NSRange,
-                                  actualRange: NSRangePointer?) -> NSAttributedString? {
+  public func attributedSubstring(
+    forProposedRange aRange: NSRange,
+    actualRange: NSRangePointer?
+  ) -> NSAttributedString? {
 
-//    self.logger.debug("\(#function): \(aRange), \(actualRange[0])")
+    stdoutLogger.debug("\(aRange)")
     if aRange.location == NSNotFound {
-//      self.logger.debug("\(#function): range not found: returning nil")
       return nil
     }
 
-    guard let lastMarkedText = self.lastMarkedText else {
-//      self.logger.debug("\(#function): no last marked text: returning nil")
+    guard
+      let position = self.ugrid.position(
+        fromFlatCharIndex: aRange.location
+      ),
+      let inclusiveEndPosition = self.ugrid.lastPosition(
+        fromFlatCharIndex: aRange.location + aRange.length - 1
+      )
+      else {
       return nil
     }
 
-    // we only support last marked text, thus fill dummy characters when Cocoa asks for more
-    // characters than marked...
-    let fillCount = aRange.length - lastMarkedText.count
-    guard fillCount >= 0 else {
-      return nil
+    stdoutLogger.debug("\(position) ... \(inclusiveEndPosition)")
+    let string = self.ugrid.cells[position.row...inclusiveEndPosition.row]
+      .map { row in
+        row.filter { cell in
+          return aRange.location <= cell.flatCharIndex
+            && cell.flatCharIndex <= aRange.inclusiveEndIndex
+        }
+      }
+      .flatMap { $0 }
+      .map { $0.string }
+      .joined()
+
+    let delta = aRange.length - string.utf16.count
+    if delta != 0 {
+      stdoutLogger.debug("delta = \(delta)!")
     }
 
-    let fillChars = Array(0..<fillCount).reduce("") { (result, _) in return result + " " }
-
-//    self.logger.debug("\(#function): \(aRange), \(actualRange[0]): \(fillChars + lastMarkedText)")
-    return NSAttributedString(string: fillChars + lastMarkedText)
+    stdoutLogger.debug("returning '\(string)'")
+    return NSAttributedString(string: string)
   }
 
   public func validAttributesForMarkedText() -> [NSAttributedString.Key] {
     return []
   }
 
-  public func firstRect(forCharacterRange aRange: NSRange, actualRange: NSRangePointer?) -> NSRect {
-    let position = self.grid.positionFromSingleIndex(aRange.location)
+  public func firstRect(
+    forCharacterRange aRange: NSRange, actualRange: NSRangePointer?
+  ) -> NSRect {
+    guard let position = self.ugrid.position(
+      fromFlatCharIndex: aRange.location
+    ) else {
+      return CGRect.zero
+    }
 
-//    self.logger.debug("\(#function): \(aRange),\(actualRange[0]) -> " +
-//                      "\(position.row):\(position.column)")
+    stdoutLogger.debug("\(aRange)-> \(position.row):\(position.column)")
 
     let resultInSelf = self.rect(forRow: position.row, column: position.column)
-    let result = self.window?.convertToScreen(self.convert(resultInSelf, to: nil))
+    let result = self.window?.convertToScreen(
+      self.convert(resultInSelf, to: nil)
+    )
 
     return result!
   }
 
   public func characterIndex(for aPoint: NSPoint) -> Int {
-//    self.logger.debug("\(#function): \(aPoint)")
-    return 1
+    let position = self.position(at: aPoint)
+    let result = self.ugrid.flatCharIndex(forPosition: position)
+
+    stdoutLogger.debug("\(aPoint) -> \(position) -> \(result)")
+
+    return result
   }
 
   func vimModifierFlags(_ modifierFlags: NSEvent.ModifierFlags) -> String? {
@@ -349,28 +378,5 @@ extension NvimView {
 
   func vimPlainString(_ string: String) -> String {
     return string.replacingOccurrences(of: "<", with: self.wrapNamedKeys("lt"))
-  }
-
-  private func atomicallyDelete(
-    charactersOfLength length: Int, andInput text: String
-  ) -> Single<MessagePackValue> {
-    var calls = [MessagePackValue]()
-    if length > 0 {
-      calls.append(
-        contentsOf: Array(
-          repeating: .array(
-            [.string("nvim_input"), .array([.string("<BS>")])]
-          ),
-          count: length
-        )
-      )
-    }
-    calls.append(
-      .array(
-        [.string("nvim_input"), .array([.string(text)])]
-      )
-    )
-
-    return self.api.callAtomic(calls: .array(calls))
   }
 }

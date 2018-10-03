@@ -319,8 +319,6 @@ public class NvimView: NSView,
   let bridge: UiBridge
   let api = RxNeovimApi.Api()
 
-  let grid = Grid()
-
   let ugrid = UGrid()
   let cellAttributesCollection = CellAttributesCollection()
   let drawer: AttributesRunDrawer
@@ -362,7 +360,6 @@ public class NvimView: NSView,
 
   var markedText: String?
   var markedPosition = Position.null
-  var markedRangeOnScreen: NSRange?
 
   let bridgeLogger = LogContext.fileLogger(
     as: "NvimView-Bridge",

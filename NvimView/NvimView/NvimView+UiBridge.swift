@@ -68,6 +68,7 @@ extension NvimView {
     self.bridgeLogger.debug("# of render data: \(renderData.count)")
 
     gui.async {
+      var (recompute, rowStart) = (false, Int.max)
       renderData.forEach { value in
         guard let renderEntry = value.arrayValue else { return }
         guard renderEntry.count == 2 else { return }
@@ -79,7 +80,9 @@ extension NvimView {
         switch type {
 
         case .rawLine:
-          self.doRawLine(data: innerArray)
+          let (r, s) = self.doRawLine(data: innerArray)
+          recompute = recompute ? true : r
+          rowStart = r ? min(rowStart, s) : rowStart
 
         case .goto:
           guard let row = innerArray[0].unsignedIntegerValue,
@@ -94,9 +97,18 @@ extension NvimView {
             return
           }
 
-          self.doScroll(values)
+          recompute = true
+          rowStart = min(self.doScroll(values), rowStart)
 
         }
+      }
+
+      if recompute {
+        self.ugrid.recomputeFlatIndices(
+          rowStart: rowStart,
+          rowEndInclusive: self.ugrid.size.height - 1
+        )
+        stdoutLogger.debug(self.ugrid)
       }
 
       // The position stays at the first cell when we enter the terminal mode
@@ -174,12 +186,12 @@ extension NvimView {
       .wait()
   }
 
-  private func doRawLine(data: [MessagePackValue]) {
+  private func doRawLine(data: [MessagePackValue]) -> (Bool, Int) {
     guard data.count == 7 else {
       stdoutLogger.error(
         "Data has wrong number of elements: \(data.count) instead of 7"
       )
-      return
+      return (false, Int.max)
     }
 
     guard let row = data[0].intValue,
@@ -192,7 +204,7 @@ extension NvimView {
       else {
 
       stdoutLogger.error("Values could not be read from: \(data)")
-      return
+      return (false, Int.max)
     }
 
 //    self.bridgeLogger.trace(
@@ -202,7 +214,9 @@ extension NvimView {
 //    )
 
     let count = endCol - startCol
-    guard chunk.count == count && attrIds.count == count else { return }
+    guard chunk.count == count && attrIds.count == count else {
+      return (false, Int.max)
+    }
     self.ugrid.update(row: row,
                       startCol: startCol,
                       endCol: endCol,
@@ -237,10 +251,19 @@ extension NvimView {
 
     if row == self.markedPosition.row
          && startCol <= self.markedPosition.column
-         && self.markedPosition.column <= endCol
-    {
+         && self.markedPosition.column <= endCol {
       self.ugrid.markCell(at: self.markedPosition)
     }
+
+    let oldRowContainsWideChar = self.ugrid.cells[row][startCol..<endCol]
+      .first(where: { $0.string.isEmpty }) != nil
+    let newRowContainsWideChar = chunk.first(where: { $0.isEmpty }) != nil
+
+    if !oldRowContainsWideChar && !newRowContainsWideChar {
+      return (false, row)
+    }
+
+    return (newRowContainsWideChar, row)
   }
 
   private func doGoto(position: Position) {
@@ -257,7 +280,7 @@ extension NvimView {
     )
   }
 
-  private func doScroll(_ array: [Int]) {
+  private func doScroll(_ array: [Int]) -> Int {
     self.bridgeLogger.debug("[top, bot, left, right, rows, cols] = \(array)")
 
     let (top, bottom, left, right, rows, cols)
@@ -277,6 +300,8 @@ extension NvimView {
     self.ugrid.scroll(region: scrollRegion, rows: rows, cols: cols)
     self.markForRender(region: scrollRegion)
     self.eventsSubject.onNext(.scroll)
+
+    return min(0, top)
   }
 }
 

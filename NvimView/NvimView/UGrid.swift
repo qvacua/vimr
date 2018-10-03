@@ -9,9 +9,17 @@ struct UCell {
 
   var string: String
   var attrId: Int
+
+  var flatCharIndex: Int
+
+  init(string: String, attrId: Int, flatCharIndex: Int = 0) {
+    self.string = string
+    self.attrId = attrId
+    self.flatCharIndex = flatCharIndex
+  }
 }
 
-final class UGrid {
+final class UGrid: CustomStringConvertible {
 
   private(set) var cursorPosition = Position.zero
 
@@ -19,6 +27,13 @@ final class UGrid {
 
   private(set) var cells: [[UCell]] = []
 
+  var description: String {
+    let result = "UGrid.flatCharIndex:\n" + self.cells.reduce("") { result, row in
+      return result + "(\(row[0].flatCharIndex ... row[self.size.width - 1].flatCharIndex)), "
+    }
+
+    return result
+  }
   var hasData: Bool {
     return !self.cells.isEmpty
   }
@@ -80,8 +95,36 @@ final class UGrid {
     return Position(row: row, column: col)
   }
 
+  func flattenedCellIndex(forRow row: Int, column: Int) -> Int {
+    return row * self.size.width + column
+  }
+
   func flattenedCellIndex(forPosition position: Position) -> Int {
     return position.row * self.size.width + position.column
+  }
+
+  func flatCharIndex(forPosition position: Position) -> Int {
+    return self.cells[position.row][position.column].flatCharIndex
+  }
+
+  func position(fromFlatCharIndex index: Int) -> Position? {
+    for (rowIndex, row) in self.cells.enumerated() {
+      if let column = row.firstIndex(where: { $0.flatCharIndex == index }) {
+        return Position(row: rowIndex, column: column)
+      }
+    }
+
+    return nil
+  }
+
+  func lastPosition(fromFlatCharIndex index: Int) -> Position? {
+    for (rowIndex, row) in self.cells.enumerated() {
+      if let column = row.lastIndex(where: { $0.flatCharIndex == index }) {
+        return Position(row: rowIndex, column: column)
+      }
+    }
+
+    return nil
   }
 
   func leftBoundaryOfWord(at position: Position) -> Int {
@@ -195,7 +238,8 @@ final class UGrid {
 
   func clear() {
     let emptyRow = Array(
-      repeating: UCell(string: clearString, attrId: defaultAttrId),
+      repeating: UCell(string: clearString,
+                       attrId: CellAttributesCollection.defaultAttributesId),
       count: size.width
     )
     self.cells = Array(repeating: emptyRow, count: size.height)
@@ -231,7 +275,9 @@ final class UGrid {
     self.clear()
   }
 
-  // endCol and clearCol are past last index
+  /// endCol and clearCol are past last index
+  /// This does not recompute the flat char indices. For performance it's done
+  /// in NvimView.flush()
   func update(
     row: Int,
     startCol: Int,
@@ -244,7 +290,11 @@ final class UGrid {
     let newCells = zip(chunk, attrIds).map { element in
       UCell(string: element.0, attrId: element.1)
     }
-    self.cells[row].replaceSubrange(startCol..<endCol, with: newCells)
+//    self.cells[row].replaceSubrange(startCol..<endCol, with: newCells)
+    for column in startCol..<endCol {
+      self.cells[row][column].string = newCells[column - startCol].string
+      self.cells[row][column].attrId = newCells[column - startCol].attrId
+    }
 
     if clearCol > endCol {
       cells[row].replaceSubrange(
@@ -254,8 +304,28 @@ final class UGrid {
       )
     }
   }
+
+  func recomputeFlatIndices(rowStart: Int, rowEndInclusive: Int) {
+    stdoutLogger.debug("Recomputing flat indices from row \(rowStart)")
+
+    var delta = 0
+    if rowStart > 0 {
+      delta = self.cells[rowStart - 1][self.size.width - 1].flatCharIndex
+        - self.flattenedCellIndex(forRow: rowStart - 1,
+                                  column: self.size.width - 1)
+    }
+
+    for row in rowStart...rowEndInclusive {
+      for column in 0..<self.size.width {
+        if self.cells[row][column].string.isEmpty {
+          delta -= 1
+        }
+        self.cells[row][column].flatCharIndex
+          = self.flattenedCellIndex(forRow: row, column: column) + delta
+      }
+    }
+  }
 }
 
 private let clearString = " "
 private let wordSeparator = " "
-private let defaultAttrId = 0

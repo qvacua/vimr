@@ -13,6 +13,68 @@ class UGridTest: XCTestCase {
 
   private let ugrid = UGrid()
 
+  func testFlatCharIndex() {
+    self.ugrid.resize(Size(width: 10, height: 3))
+
+    self.ugrid.update(
+      row: 0,
+      startCol: 0, endCol: 10,
+      clearCol: 0, clearAttr: 0,
+      chunk: ["0", "하", "", "3", "4", "태", "", "7", "8", "9"],
+      attrIds: Array(repeating: 0, count: 10)
+    )
+
+    expect(self.ugrid.cells.reduce(into: []) { result, row in
+      return result.append(contentsOf: row.reduce(into: []) { rowResult, cell in
+        rowResult.append(cell.flatCharIndex)
+      })
+    }).to(equal(
+      [
+        0, 1, 1, 2, 3, 4, 4, 5, 6, 7,
+        8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+        18, 19, 20, 21, 22, 23, 24, 25, 26, 27
+      ]
+    ))
+
+    self.ugrid.update(
+      row: 1,
+      startCol: 5, endCol: 7,
+      clearCol: 0, clearAttr: 0,
+      chunk: ["하", ""],
+      attrIds: Array(repeating: 0, count: 2)
+    )
+    expect(self.ugrid.cells.reduce(into: []) { result, row in
+      return result.append(contentsOf: row.reduce(into: []) { rowResult, cell in
+        rowResult.append(cell.flatCharIndex)
+      })
+    }).to(equal(
+      [
+        0, 1, 1, 2, 3, 4, 4, 5, 6, 7,
+        8, 9, 10, 11, 12, 13, 13, 14, 15, 16,
+        17, 18, 19, 20, 21, 22, 23, 24, 25, 26
+      ]
+    ))
+
+    self.ugrid.update(
+      row: 2,
+      startCol: 8, endCol: 10,
+      clearCol: 0, clearAttr: 0,
+      chunk: ["하", ""],
+      attrIds: Array(repeating: 0, count: 2)
+    )
+    expect(self.ugrid.cells.reduce(into: []) { result, row in
+      return result.append(contentsOf: row.reduce(into: []) { rowResult, cell in
+        rowResult.append(cell.flatCharIndex)
+      })
+    }).to(equal(
+      [
+        0, 1, 1, 2, 3, 4, 4, 5, 6, 7,
+        8, 9, 10, 11, 12, 13, 13, 14, 15, 16,
+        17, 18, 19, 20, 21, 22, 23, 24, 25, 25
+      ]
+    ))
+  }
+
   func testUnmarkPosition() {
     self.ugrid.resize(Size(width: 20, height: 10))
     self.ugrid.update(

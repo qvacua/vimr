@@ -80,19 +80,23 @@ extension NvimView {
     self.markForRenderWholeView()
   }
 
-  private func cellPosition(forEvent event: NSEvent) -> Position {
-    let location = self.convert(event.locationInWindow, from: nil)
+  func position(at location: CGPoint) -> Position {
     let row = Int(
       (self.bounds.size.height - location.y - self.offset.y)
         / self.cellSize.height
     )
     let column = Int((location.x - self.offset.x) / self.cellSize.width)
 
-    let cellPosition = Position(
+    let position = Position(
       row: min(max(0, row), self.ugrid.size.height - 1),
       column: min(max(0, column), self.ugrid.size.width - 1)
     )
-    return cellPosition
+    return position
+  }
+
+  private func cellPosition(forEvent event: NSEvent) -> Position {
+    let location = self.convert(event.locationInWindow, from: nil)
+    return position(at: location)
   }
 
   private func mouse(event: NSEvent, vimName: String) {

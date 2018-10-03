@@ -49,8 +49,7 @@ typedef NS_ENUM(NSInteger, NvimServerMsgId) {
 typedef NS_ENUM(NSInteger, NvimBridgeMsgId) {
   NvimBridgeMsgIdAgentReady = 0,
   NvimBridgeMsgIdInput,
-  NvimBridgeMsgIdInputMarked,
-  NvimBridgeMsgIdDelete,
+  NvimBridgeMsgIdDeleteInput,
   NvimBridgeMsgIdResize,
   NvimBridgeMsgIdScroll,
   

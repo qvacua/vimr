@@ -106,16 +106,18 @@ class UiBridge {
     return self.sendMessage(msgId: .input, data: str.data(using: .utf8))
   }
 
-  func vimInputMarkedText(_ markedText: String) -> Completable {
-    return self.sendMessage(msgId: .inputMarked, data: markedText.data(using: .utf8))
-  }
+  func deleteCharacters(_ count: Int, input string: String) -> Completable {
+    guard let strData = string.data(using: .utf8) else {
+      return .empty()
+    }
 
-  func deleteCharacters(_ count: Int) -> Completable {
-    return Completable.concat(
-      Array(repeating: self.sendMessage(msgId: .input,
-                                        data: "<BS>".data(using: .utf8)),
-            count: count)
-    )
+    var data = Data(capacity: MemoryLayout<Int>.size + strData.count)
+
+    var c = count
+    data.append(UnsafeBufferPointer(start: &c, count: 1))
+    data.append(strData)
+
+    return self.sendMessage(msgId: .deleteInput, data: data)
   }
 
   func resize(width: Int, height: Int) -> Completable {
@@ -291,6 +293,8 @@ class UiBridge {
     let listenAddress = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock")
     var env = self.envDict
     env["NVIM_LISTEN_ADDRESS"] = listenAddress.path
+
+    stdoutLogger.debug("listen addr: \(listenAddress.path)")
 
     let outPipe = Pipe()
     let errorPipe = Pipe()

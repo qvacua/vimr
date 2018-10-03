@@ -8,6 +8,10 @@ import Cocoa
 extension NSRange {
 
   static let notFound = NSRange(location: NSNotFound, length: 0)
+
+  var inclusiveEndIndex: Int {
+    return self.location + self.length - 1
+  }
 }
 
 extension NSColor {

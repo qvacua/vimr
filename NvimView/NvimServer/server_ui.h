@@ -17,8 +17,7 @@ extern void neovim_scroll(void **argv);
 extern void neovim_resize(void **argv);
 
 extern void neovim_vim_input(void **argv);
-extern void neovim_vim_input_marked_text(void **argv);
-extern void neovim_delete(void **argv);
+extern void neovim_delete_and_input(void **argv);
 
 extern void neovim_focus_gained(void **argv);
 

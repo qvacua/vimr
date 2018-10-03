@@ -63,18 +63,6 @@ static uv_cond_t _condition;
 
 static ServerUiData *_server_ui_data;
 
-static NSString *_marked_text = nil;
-
-static NSInteger _marked_row = 0;
-static NSInteger _marked_column = 0;
-
-// for 하 -> hanja popup, Cocoa first inserts 하, then sets marked text,
-// cf docs/notes-on-cocoa-text-input.md
-static NSInteger _marked_delta = 0;
-
-static NSInteger _put_row = -1;
-static NSInteger _put_column = -1;
-
 static NSString *_backspace = nil;
 
 static bool _dirty = false;
@@ -205,23 +193,6 @@ static void send_colorscheme() {
     msgpack_pack_int64(packer, background_for(visualAttrs));
     msgpack_pack_int64(packer, foreground_for(dirAttrs));
   });
-}
-
-static void insert_marked_text(NSString *markedText) {
-  _marked_text = [markedText retain]; // release when the final text is input in -vimInput
-
-  nvim_input(vim_string_from(markedText));
-}
-
-static void delete_marked_text() {
-  let length = [_marked_text lengthOfBytesUsingEncoding:NSUTF32StringEncoding] / 4;
-
-  [_marked_text release];
-  _marked_text = nil;
-
-  for (int i = 0; i < length; i++) {
-    nvim_input(vim_string_from(_backspace));
-  }
 }
 
 static void run_neovim(void *arg) {
@@ -718,88 +689,28 @@ void neovim_resize(void **argv) {
 
 void neovim_vim_input(void **argv) {
   work_async(argv, ^(NSData *data) {
-    let input = [[[NSString alloc] initWithData:data
-                                       encoding:NSUTF8StringEncoding] autorelease];
+    let input = [[NSString alloc] initWithData:data
+                                      encoding:NSUTF8StringEncoding];
 
-    if (_marked_text == nil) {
-      nvim_input(vim_string_from(input));
-      return;
-    }
-
-    // Handle cases like ㅎ -> arrow key: The previously marked text is the same as the finalized
-    // text which should inserted. Neovim's drawing code is optimized such that it does not call
-    // put in this case again, thus, we have to manually unmark the cells in the main app.
-    if ([_marked_text isEqualToString:input]) {
-      DLOG("unmarking text: '%s'\t now at %d:%d", input.cstr, _put_row, _put_column);
-      const char *str = _marked_text.cstr;
-      size_t cellCount = mb_string2cells((const char_u *) str);
-
-      for (int i = 1; i <= cellCount; i++) {
-        DLOG("unmarking at %d:%d", _put_row, _put_column - i);
-        send_msg_packing(NvimServerMsgIdUnmark, ^(msgpack_packer *packer) {
-          msgpack_pack_array(packer, 2);
-          msgpack_pack_int64(packer, _put_row);
-          msgpack_pack_int64(packer, MAX(_put_column - i, 0));
-        });
-      }
-    }
-
-    delete_marked_text();
     nvim_input(vim_string_from(input));
+    [input release];
   });
 }
 
-void neovim_vim_input_marked_text(void **argv) {
-  work_async(argv, ^(NSData *data) {
-    let markedText = [[[NSString alloc] initWithData:data
-                                            encoding:NSUTF8StringEncoding] autorelease];
-
-    if (_marked_text == nil) {
-      _marked_row = _put_row;
-      _marked_column = _put_column + _marked_delta;
-      DLOG(
-          "marking position: %d:%d(%d + %d)", _put_row, _marked_column, _put_column, _marked_delta
-      );
-      _marked_delta = 0;
-    } else {
-      delete_marked_text();
-    }
-
-    DLOG("inserting marked text '%s' at %d:%d", markedText.cstr, _put_row, _put_column);
-    insert_marked_text(markedText);
-  });
-}
-
-void neovim_delete(void **argv) {
+void neovim_delete_and_input(void **argv) {
   work_async(argv, ^(NSData *data) {
     const NSInteger *values = data.bytes;
     NSInteger count = values[0];
-
-    _marked_delta = 0;
-
-    // Very ugly: When we want to have the Hanja for 하, Cocoa first finalizes 하, then sets
-    // the Hanja as marked text. The main app will call this method when this happens,
-    // thus compute how many cell we have to go backward to correctly
-    // mark the will-be-soon-inserted Hanja... See also docs/notes-on-cocoa-text-input.md
-    int emptyCounter = 0;
-    for (int i = 0; i < count; i++) {
-      _marked_delta -= 1;
-
-      // TODO: -1 because we assume that the cursor is one cell ahead,
-      // probably not always correct...
-      char_u *character = (char_u *) ScreenLines[_put_row * screen_Rows + _put_column - i - emptyCounter - 1];
-      if (*character == 0x00 || *character == ' ') {
-        // FIXME: dunno yet, why we have to also match ' '...
-        _marked_delta -= 1;
-        emptyCounter += 1;
-      }
-    }
-
-    DLOG("put cursor: %d:%d, count: %li, delta: %d", _put_row, _put_column, count, _marked_delta);
-
     for (int i = 0; i < count; i++) {
       nvim_input(vim_string_from(_backspace));
     }
+
+    void *stringPtr = (void *) (values + 1);
+    let string = [[NSString alloc] initWithBytes:stringPtr
+                                          length:data.length - sizeof(NSInteger)
+                                        encoding:NSUTF8StringEncoding];
+    nvim_input(vim_string_from(string));
+    [string release];
   });
 }
 
