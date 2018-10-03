@@ -77,9 +77,15 @@ extension NvimView {
     }
 
     if length > 0 {
-      self.markForRender(row: self.markedPosition.row, column: self.markedPosition.column)
+      self.ugrid.unmarkCell(at: self.markedPosition)
+      self.markForRender(position: self.markedPosition)
       if self.ugrid.isNextCellEmpty(self.markedPosition) {
-        self.markForRender(row: self.markedPosition.row, column: self.markedPosition.column + 1)
+        self.ugrid.unmarkCell(
+          at: self.markedPosition.advancing(row: 0, column: 1)
+        )
+        self.markForRender(
+          position: self.markedPosition.advancing(row: 0, column: 1)
+        )
       }
     }
 
@@ -197,9 +203,11 @@ extension NvimView {
     stdoutLogger.mark()
 
     let position = self.markedPosition
-    self.markForRender(row: position.row, column: position.column)
+    self.ugrid.unmarkCell(at: position)
+    self.markForRender(position: position)
     if self.ugrid.isNextCellEmpty(position) {
-      self.markForRender(row: position.row, column: position.column + 1)
+      self.ugrid.unmarkCell(at: position.advancing(row: 0, column: 1))
+      self.markForRender(position: position.advancing(row: 0, column: 1))
     }
 
     self.markedText = nil

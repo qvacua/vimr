@@ -13,6 +13,31 @@ class UGridTest: XCTestCase {
 
   private let ugrid = UGrid()
 
+  func testUnmarkPosition() {
+    self.ugrid.resize(Size(width: 20, height: 10))
+    self.ugrid.update(
+      row: 9,
+      startCol: 0,
+      endCol: 9,
+      clearCol: 0,
+      clearAttr: 0,
+      chunk: Array("0123456789".compactMap { String($0) }),
+      attrIds: [
+        0, -1, 2, 3, 4, 5, 6, 7, 8,
+        CellAttributesCollection.reversedDefaultAttributesId
+      ]
+    )
+    self.ugrid.unmarkCell(at: Position(row: 9, column: 0))
+    expect(self.ugrid.cells[9][0].attrId).to(equal(0))
+    self.ugrid.unmarkCell(at: Position(row: 9, column: 1))
+    expect(self.ugrid.cells[9][1].attrId).to(equal(1))
+    self.ugrid.unmarkCell(at: Position(row: 9, column: 2))
+    expect(self.ugrid.cells[9][2].attrId).to(equal(2))
+    self.ugrid.unmarkCell(at: Position(row: 9, column: 9))
+    expect(self.ugrid.cells[9][9].attrId)
+      .to(equal(CellAttributesCollection.defaultAttributesId))
+  }
+
   func testMarkPosition() {
     self.ugrid.resize(Size(width: 20, height: 10))
     self.ugrid.update(
@@ -22,10 +47,18 @@ class UGridTest: XCTestCase {
       clearCol: 0,
       clearAttr: 0,
       chunk: Array("0123456789".compactMap { String($0) }),
-      attrIds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+      attrIds: [
+        0, -1, 2, 3, 4, 5, 6, 7, 8,
+        CellAttributesCollection.reversedDefaultAttributesId
+      ]
     )
     self.ugrid.markCell(at: Position(row: 9, column: 4))
     expect(self.ugrid.cells[9][4].attrId).to(equal(-4))
+    self.ugrid.markCell(at: Position(row: 9, column: 1))
+    expect(self.ugrid.cells[9][1].attrId).to(equal(-1))
+    self.ugrid.markCell(at: Position(row: 9, column: 9))
+    expect(self.ugrid.cells[9][9].attrId)
+      .to(equal(CellAttributesCollection.reversedDefaultAttributesId))
 
     self.ugrid.update(
       row: 7,

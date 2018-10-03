@@ -31,6 +31,10 @@ public struct Position: CustomStringConvertible, Equatable {
   public var description: String {
     return "Position<\(self.row):\(self.column)>"
   }
+
+  public func advancing(row dy: Int, column dx: Int) -> Position {
+    return Position(row: self.row + dy, column: self.column + dx)
+  }
 }
 
 struct Size: CustomStringConvertible, Equatable {

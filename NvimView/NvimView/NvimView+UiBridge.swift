@@ -422,6 +422,12 @@ extension NvimView {
   final func markForRender(row: Int, column: Int) {
     self.setNeedsDisplay(self.rect(forRow: row, column: column))
   }
+
+  final func markForRender(position: Position) {
+    self.setNeedsDisplay(
+      self.rect(forRow: position.row, column: position.column)
+    )
+  }
 }
 
 extension NvimView {

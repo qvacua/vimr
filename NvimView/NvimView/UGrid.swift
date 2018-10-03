@@ -23,18 +23,47 @@ final class UGrid {
     return !self.cells.isEmpty
   }
 
-  func markCell(at position: Position) {
+  func unmarkCell(at position: Position) {
     let attrId = self.cells[position.row][position.column].attrId
-    let markedAttrId: Int
-    if attrId == CellAttributesCollection.defaultAttributesId {
-      markedAttrId = CellAttributesCollection.reversedDefaultAttributesId
-    } else {
-      markedAttrId = (-1) * attrId
+
+    guard attrId < CellAttributesCollection.defaultAttributesId
+            || attrId == CellAttributesCollection.reversedDefaultAttributesId
+      else {
+      return
     }
-    self.cells[position.row][position.column].attrId = markedAttrId
+
+    let newAttrsId: Int
+    if attrId == CellAttributesCollection.reversedDefaultAttributesId {
+      newAttrsId = CellAttributesCollection.defaultAttributesId
+    } else {
+      newAttrsId = abs(attrId)
+    }
+    self.cells[position.row][position.column].attrId = newAttrsId
 
     if self.isNextCellEmpty(position) {
-      self.cells[position.row][position.column + 1].attrId = markedAttrId
+      self.cells[position.row][position.column + 1].attrId = newAttrsId
+    }
+  }
+
+  func markCell(at position: Position) {
+    let attrId = self.cells[position.row][position.column].attrId
+
+    guard attrId >= CellAttributesCollection.defaultAttributesId
+            && attrId != CellAttributesCollection.reversedDefaultAttributesId
+      else {
+      return
+    }
+
+    let newAttrsId: Int
+    if attrId == CellAttributesCollection.defaultAttributesId {
+      newAttrsId = CellAttributesCollection.reversedDefaultAttributesId
+    } else {
+      newAttrsId = (-1) * attrId
+    }
+    self.cells[position.row][position.column].attrId = newAttrsId
+
+    if self.isNextCellEmpty(position) {
+      self.cells[position.row][position.column + 1].attrId = newAttrsId
     }
   }
 
