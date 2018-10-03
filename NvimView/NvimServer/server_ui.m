@@ -542,7 +542,7 @@ void custom_ui_start(void) {
   UI *ui = xcalloc(1, sizeof(UI));
 
   memset(ui->ui_ext, 0, sizeof(ui->ui_ext));
-  ui->ui_ext[kUINewgrid] = true;
+  ui->ui_ext[kUILinegrid] = true;
 
   ui->rgb = true;
   ui->stop = server_ui_stop;
