@@ -24,7 +24,6 @@
 		1929B7D2EB80FEA7BFBC3D2C /* Typesetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B47330DAD129520A2273 /* Typesetter.swift */; };
 		1929B83EAD32DC419FEC68DB /* CocoaCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0C89838D8402BB80BFC /* CocoaCommons.swift */; };
 		1929B90E2CFEAADE0CEE1562 /* CursorModeShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA4C89E9FE90065C32F6 /* CursorModeShape.swift */; };
-		1929B9485C40C954CAC586E5 /* OldCellAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD4C55D5EA933BFFB16B /* OldCellAttributes.swift */; };
 		1929B953E76914DA984697DC /* FontUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B96A876229DA394F906E /* FontUtils.swift */; };
 		1929B9A949EE85C27FF66367 /* UGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D83D7E150F518D49FE /* UGrid.swift */; };
 		1929BA70C221E3C199833B8C /* UiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B52174EC68D2974B5BAE /* UiBridge.swift */; };
@@ -59,7 +58,6 @@
 		4B90F0421FD2AFAE008A39E0 /* NvimView+UiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0241FD2AFAD008A39E0 /* NvimView+UiBridge.swift */; };
 		4B90F0431FD2AFAE008A39E0 /* NvimView+MenuItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0251FD2AFAD008A39E0 /* NvimView+MenuItems.swift */; };
 		4B90F0451FD2AFAE008A39E0 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0271FD2AFAD008A39E0 /* Logger.swift */; };
-		4B90F0461FD2AFAE008A39E0 /* OldGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0281FD2AFAD008A39E0 /* OldGrid.swift */; };
 		4B90F0521FD2AFD3008A39E0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0511FD2AFD3008A39E0 /* main.m */; };
 		4B90F0661FD2AFF7008A39E0 /* server_ui.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0561FD2AFF7008A39E0 /* server_ui.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4B90F0681FD2AFF7008A39E0 /* CocoaCategories.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F05A1FD2AFF7008A39E0 /* CocoaCategories.m */; };
@@ -191,7 +189,6 @@
 		1929BB7E3430BD3FD88A7698 /* AttributesRunDrawer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributesRunDrawer.swift; sourceTree = "<group>"; };
 		1929BBA08E4195666290EC6A /* UGridTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UGridTest.swift; sourceTree = "<group>"; };
 		1929BD167BE7C6BB788DAE2A /* ProcessUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcessUtils.swift; sourceTree = "<group>"; };
-		1929BD4C55D5EA933BFFB16B /* OldCellAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OldCellAttributes.swift; sourceTree = "<group>"; };
 		1929BD896D408673954F4AA2 /* NvimView+Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Geometry.swift"; sourceTree = "<group>"; };
 		1929BDC8F32F4A0D2299B5C5 /* NvimView+Debug.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Debug.swift"; sourceTree = "<group>"; };
 		1929BDE2C6003A6EDC02129C /* ColorUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorUtils.swift; sourceTree = "<group>"; };
@@ -218,7 +215,6 @@
 		4B90F0241FD2AFAD008A39E0 /* NvimView+UiBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+UiBridge.swift"; sourceTree = "<group>"; };
 		4B90F0251FD2AFAD008A39E0 /* NvimView+MenuItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+MenuItems.swift"; sourceTree = "<group>"; };
 		4B90F0271FD2AFAD008A39E0 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
-		4B90F0281FD2AFAD008A39E0 /* OldGrid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OldGrid.swift; sourceTree = "<group>"; };
 		4B90F04F1FD2AFD3008A39E0 /* NvimServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NvimServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B90F0511FD2AFD3008A39E0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4B90F0561FD2AFF7008A39E0 /* server_ui.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = server_ui.m; sourceTree = "<group>"; };
@@ -366,7 +362,6 @@
 				4B90F0081FD2AF59008A39E0 /* Info.plist */,
 				4B8662E41FDC3D4F007F490D /* vimr.vim */,
 				4BF18C5C1FD2EEE400DF95D1 /* NvimView.h */,
-				4B90F0281FD2AFAD008A39E0 /* OldGrid.swift */,
 				4B90F01F1FD2AFAD008A39E0 /* InputTestView.swift */,
 				4B90F0121FD2AFAC008A39E0 /* KeyUtils.swift */,
 				4B90F0271FD2AFAD008A39E0 /* Logger.swift */,
@@ -384,7 +379,6 @@
 				1929B22A0CAD417EC3790F02 /* NvimView+Objects.swift */,
 				1929B52174EC68D2974B5BAE /* UiBridge.swift */,
 				1929BD167BE7C6BB788DAE2A /* ProcessUtils.swift */,
-				1929BD4C55D5EA933BFFB16B /* OldCellAttributes.swift */,
 				1929B4355610D4E5607EAA40 /* Drawing */,
 				1929B2BA05AC3E1A11D6EBFC /* Commons */,
 				1929BDC8F32F4A0D2299B5C5 /* NvimView+Debug.swift */,
@@ -635,7 +629,6 @@
 			files = (
 				4B90F03F1FD2AFAE008A39E0 /* NvimView+Draw.swift in Sources */,
 				4B90F02F1FD2AFAE008A39E0 /* NvimView+Resize.swift in Sources */,
-				4B90F0461FD2AFAE008A39E0 /* OldGrid.swift in Sources */,
 				4B90F0421FD2AFAE008A39E0 /* NvimView+UiBridge.swift in Sources */,
 				4BD874302014C2600039888E /* NvimAutoCommandEvent.generated.swift in Sources */,
 				4B90F02E1FD2AFAE008A39E0 /* NvimView.swift in Sources */,
@@ -650,7 +643,6 @@
 				1929B40A751BDA2882D4FC94 /* NvimView+Objects.swift in Sources */,
 				1929BA70C221E3C199833B8C /* UiBridge.swift in Sources */,
 				1929BCA615324C58582BFC3C /* ProcessUtils.swift in Sources */,
-				1929B9485C40C954CAC586E5 /* OldCellAttributes.swift in Sources */,
 				1929B74691D92B9F369787E5 /* ColorUtils.swift in Sources */,
 				1929B953E76914DA984697DC /* FontUtils.swift in Sources */,
 				1929B40C9C30B46C0E0B9DE2 /* CellAttributes.swift in Sources */,
