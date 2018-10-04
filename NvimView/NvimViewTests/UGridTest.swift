@@ -156,42 +156,42 @@ class UGridTest: XCTestCase {
   func testFlattenedIndex() {
     self.ugrid.resize(Size(width: 20, height: 10))
     expect(
-      self.ugrid.flattenedCellIndex(forPosition: Position(row: 0, column: 0))
+      self.ugrid.oneDimCellIndex(forPosition: Position(row: 0, column: 0))
     ).to(equal(0))
     expect(
-      self.ugrid.flattenedCellIndex(forPosition: Position(row: 0, column: 5))
+      self.ugrid.oneDimCellIndex(forPosition: Position(row: 0, column: 5))
     ).to(equal(5))
     expect(
-      self.ugrid.flattenedCellIndex(forPosition: Position(row: 1, column: 0))
+      self.ugrid.oneDimCellIndex(forPosition: Position(row: 1, column: 0))
     ).to(equal(20))
     expect(
-      self.ugrid.flattenedCellIndex(forPosition: Position(row: 1, column: 5))
+      self.ugrid.oneDimCellIndex(forPosition: Position(row: 1, column: 5))
     ).to(equal(25))
     expect(
-      self.ugrid.flattenedCellIndex(forPosition: Position(row: 9, column: 0))
+      self.ugrid.oneDimCellIndex(forPosition: Position(row: 9, column: 0))
     ).to(equal(180))
     expect(
-      self.ugrid.flattenedCellIndex(forPosition: Position(row: 9, column: 19))
+      self.ugrid.oneDimCellIndex(forPosition: Position(row: 9, column: 19))
     ).to(equal(199))
   }
 
   func testPositionFromFlattenedIndex() {
     self.ugrid.resize(Size(width: 20, height: 10))
-    expect(self.ugrid.position(from: 0))
+    expect(self.ugrid.position(fromOneDimCellIndex: 0))
       .to(equal(Position(row: 0, column: 0)))
-    expect(self.ugrid.position(from: 5))
+    expect(self.ugrid.position(fromOneDimCellIndex: 5))
       .to(equal(Position(row: 0, column: 5)))
-    expect(self.ugrid.position(from: 20))
+    expect(self.ugrid.position(fromOneDimCellIndex: 20))
       .to(equal(Position(row: 1, column: 0)))
-    expect(self.ugrid.position(from: 25))
+    expect(self.ugrid.position(fromOneDimCellIndex: 25))
       .to(equal(Position(row: 1, column: 5)))
-    expect(self.ugrid.position(from: 180))
+    expect(self.ugrid.position(fromOneDimCellIndex: 180))
       .to(equal(Position(row: 9, column: 0)))
-    expect(self.ugrid.position(from: 199))
+    expect(self.ugrid.position(fromOneDimCellIndex: 199))
       .to(equal(Position(row: 9, column: 19)))
-    expect(self.ugrid.position(from: 418))
+    expect(self.ugrid.position(fromOneDimCellIndex: 418))
       .to(equal(Position(row: 9, column: 18)))
-    expect(self.ugrid.position(from: 419))
+    expect(self.ugrid.position(fromOneDimCellIndex: 419))
       .to(equal(Position(row: 9, column: 19)))
   }
 

@@ -184,7 +184,7 @@ extension NvimView {
     }
 
     if replacementRange != .notFound {
-      guard let newMarkedPosition = self.ugrid.position(
+      guard let newMarkedPosition = self.ugrid.firstPosition(
         fromFlatCharIndex: replacementRange.location
       ) else {
         return
@@ -278,7 +278,7 @@ extension NvimView {
     }
 
     guard
-      let position = self.ugrid.position(
+      let position = self.ugrid.firstPosition(
         fromFlatCharIndex: aRange.location
       ),
       let inclusiveEndPosition = self.ugrid.lastPosition(
@@ -316,7 +316,7 @@ extension NvimView {
   public func firstRect(
     forCharacterRange aRange: NSRange, actualRange: NSRangePointer?
   ) -> NSRect {
-    guard let position = self.ugrid.position(
+    guard let position = self.ugrid.firstPosition(
       fromFlatCharIndex: aRange.location
     ) else {
       return CGRect.zero

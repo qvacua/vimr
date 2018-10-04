@@ -82,7 +82,7 @@ final class UGrid: CustomStringConvertible {
     }
   }
 
-  func position(from flattenedIndex: Int) -> Position {
+  func position(fromOneDimCellIndex flattenedIndex: Int) -> Position {
     let row = min(
       self.size.height - 1,
       max(0, Int(floor(Double(flattenedIndex) / Double(self.size.width))))
@@ -95,11 +95,11 @@ final class UGrid: CustomStringConvertible {
     return Position(row: row, column: col)
   }
 
-  func flattenedCellIndex(forRow row: Int, column: Int) -> Int {
+  func oneDimCellIndex(forRow row: Int, column: Int) -> Int {
     return row * self.size.width + column
   }
 
-  func flattenedCellIndex(forPosition position: Position) -> Int {
+  func oneDimCellIndex(forPosition position: Position) -> Int {
     return position.row * self.size.width + position.column
   }
 
@@ -107,7 +107,7 @@ final class UGrid: CustomStringConvertible {
     return self.cells[position.row][position.column].flatCharIndex
   }
 
-  func position(fromFlatCharIndex index: Int) -> Position? {
+  func firstPosition(fromFlatCharIndex index: Int) -> Position? {
     for (rowIndex, row) in self.cells.enumerated() {
       if let column = row.firstIndex(where: { $0.flatCharIndex == index }) {
         return Position(row: rowIndex, column: column)
@@ -311,7 +311,7 @@ final class UGrid: CustomStringConvertible {
     var delta = 0
     if rowStart > 0 {
       delta = self.cells[rowStart - 1][self.size.width - 1].flatCharIndex
-        - self.flattenedCellIndex(forRow: rowStart - 1,
+        - self.oneDimCellIndex(forRow: rowStart - 1,
                                   column: self.size.width - 1)
     }
 
@@ -321,7 +321,7 @@ final class UGrid: CustomStringConvertible {
           delta -= 1
         }
         self.cells[row][column].flatCharIndex
-          = self.flattenedCellIndex(forRow: row, column: column) + delta
+          = self.oneDimCellIndex(forRow: row, column: column) + delta
       }
     }
   }
