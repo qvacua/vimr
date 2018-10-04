@@ -53,17 +53,6 @@ extension NvimView {
     }
   }
 
-  final func unmark(_ value: MessagePackValue) {
-//    self.bridgeLogger.debug("\(row):\(column)")
-//
-//    gui.async {
-//      let position = Position(row: row, column: column)
-//
-//      self.grid.unmarkCell(position)
-//      self.markForRender(position: position)
-//    }
-  }
-
   final func flush(_ renderData: [MessagePackValue]) {
     self.bridgeLogger.debug("# of render data: \(renderData.count)")
 
@@ -153,7 +142,9 @@ extension NvimView {
     }
     let bufferHandle = array[1]
 
-//    self.bridgeLogger.debug("\(event) -> \(bufferHandle)")
+    #if TRACE
+    self.bridgeLogger.trace("\(event) -> \(bufferHandle)")
+    #endif
 
     if event == .bufwinenter || event == .bufwinleave {
       self.bufferListChanged()
@@ -207,11 +198,13 @@ extension NvimView {
       return (false, Int.max)
     }
 
-//    self.bridgeLogger.trace(
-//      "row: \(row), startCol: \(startCol), endCol: \(endCol), " +
-//        "clearCol: \(clearCol), clearAttr: \(clearAttr), " +
-//        "chunk: \(chunk), attrIds: \(attrIds)"
-//    )
+    #if TRACE
+    self.bridgeLogger.trace(
+      "row: \(row), startCol: \(startCol), endCol: \(endCol), " +
+        "clearCol: \(clearCol), clearAttr: \(clearAttr), " +
+        "chunk: \(chunk), attrIds: \(attrIds)"
+    )
+    #endif
 
     let count = endCol - startCol
     guard chunk.count == count && attrIds.count == count else {

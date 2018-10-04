@@ -55,8 +55,8 @@ extern int nvim_main(int argc, char **argv);
 // The thread in which neovim's main runs
 static uv_thread_t _nvim_thread;
 
-// Condition variable used by the XPC's init to wait till our custom UI initialization
-// is finished inside neovim
+// Condition variable used by the XPC's init to wait till our custom UI
+// initialization is finished inside neovim
 static bool _is_ui_launched = false;
 static uv_mutex_t _mutex;
 static uv_cond_t _condition;
@@ -115,7 +115,10 @@ static void send_msg_packing(NvimServerMsgId msgid, pack_block body) {
   body(&packer);
 
   let data = CFDataCreateWithBytesNoCopy(
-      kCFAllocatorDefault, (const UInt8 *) sbuf.data, sbuf.size, kCFAllocatorNull
+      kCFAllocatorDefault,
+      (const UInt8 *) sbuf.data,
+      sbuf.size,
+      kCFAllocatorNull
   );
   [_neovim_server sendMessageWithId:msgid data:data];
   CFRelease(data);
@@ -139,9 +142,11 @@ static void send_dirty_status() {
   _dirty = new_dirty_status;
   DLOG("sending dirty status: %d", _dirty);
 
-  send_msg_packing(NvimServerMsgIdDirtyStatusChanged, ^(msgpack_packer *packer) {
-    msgpack_pack_bool(packer, _dirty);
-  });
+  send_msg_packing(
+      NvimServerMsgIdDirtyStatusChanged,
+      ^(msgpack_packer *packer) {
+        msgpack_pack_bool(packer, _dirty);
+      });
 }
 
 static void send_cwd() {
@@ -176,8 +181,8 @@ static int background_for(HlAttrs attrs) {
 }
 
 static void send_colorscheme() {
-  // It seems that the highlight groupt only gets updated when the screen is redrawn.
-  // Since there's a guard var, probably it's safe to call it here...
+  // It seems that the highlight groupt only gets updated when the screen is
+  // redrawn. Since there's a guard var, probably it's safe to call it here...
   if (need_highlight_changed) {
     highlight_changed();
   }
@@ -185,14 +190,16 @@ static void send_colorscheme() {
   HlAttrs visualAttrs = HlAttrsFromAttrCode(highlight_attr[HLF_V]);
   HlAttrs dirAttrs = HlAttrsFromAttrCode(highlight_attr[HLF_D]);
 
-  send_msg_packing(NvimServerMsgIdColorSchemeChanged, ^(msgpack_packer *packer) {
-    msgpack_pack_array(packer, 5);
-    msgpack_pack_int64(packer, normal_fg);
-    msgpack_pack_int64(packer, normal_bg);
-    msgpack_pack_int64(packer, foreground_for(visualAttrs));
-    msgpack_pack_int64(packer, background_for(visualAttrs));
-    msgpack_pack_int64(packer, foreground_for(dirAttrs));
-  });
+  send_msg_packing(
+      NvimServerMsgIdColorSchemeChanged,
+      ^(msgpack_packer *packer) {
+        msgpack_pack_array(packer, 5);
+        msgpack_pack_int64(packer, normal_fg);
+        msgpack_pack_int64(packer, normal_bg);
+        msgpack_pack_int64(packer, foreground_for(visualAttrs));
+        msgpack_pack_int64(packer, background_for(visualAttrs));
+        msgpack_pack_int64(packer, foreground_for(dirAttrs));
+      });
 }
 
 static void run_neovim(void *arg) {
@@ -281,7 +288,10 @@ static void server_ui_flush(UI *ui __unused) {
   }
 
   let data = CFDataCreateWithBytesNoCopy(
-      kCFAllocatorDefault, (const UInt8 *) flush_sbuffer.data, flush_sbuffer.size, kCFAllocatorNull
+      kCFAllocatorDefault,
+      (const UInt8 *) flush_sbuffer.data,
+      flush_sbuffer.size,
+      kCFAllocatorNull
   );
   [_neovim_server sendMessageWithId:NvimServerMsgIdFlush data:data];
   ELOG("flushed %lu bytes", CFDataGetLength(data));
@@ -292,7 +302,9 @@ static void server_ui_flush(UI *ui __unused) {
   flush_packer = msgpack_packer_new(&flush_sbuffer, msgpack_sbuffer_write);
 }
 
-static void server_ui_grid_resize(UI *ui __unused, Integer grid __unused, Integer width, Integer height) {
+static void server_ui_grid_resize(
+    UI *ui __unused, Integer grid __unused, Integer width, Integer height
+) {
   ELOG("grid resize");
 
   server_ui_flush(NULL);
@@ -309,7 +321,9 @@ static void server_ui_grid_clear(UI *ui __unused, Integer grid __unused) {
   [_neovim_server sendMessageWithId:NvimServerMsgIdClear];
 }
 
-static void server_ui_cursor_goto(UI *ui __unused, Integer grid __unused, Integer row, Integer col) {
+static void server_ui_cursor_goto(
+    UI *ui __unused, Integer grid __unused, Integer row, Integer col
+) {
   ELOG("grid cursor goto: %lu:%lu", row, col);
 
   pack_flush_data(RenderDataTypeGoto, ^(msgpack_packer *packer) {
@@ -331,11 +345,15 @@ static void server_ui_busy_stop(UI *ui __unused) {
   [_neovim_server sendMessageWithId:NvimServerMsgIdBusyStop];
 }
 
-static void server_ui_mode_info_set(UI *ui __unused, Boolean enabled __unused, Array cursor_styles __unused) {
+static void server_ui_mode_info_set(
+    UI *ui __unused, Boolean enabled __unused, Array cursor_styles __unused
+) {
   // yet noop
 }
 
-static void server_ui_mode_change(UI *ui __unused, String mode_str __unused, Integer mode) {
+static void server_ui_mode_change(
+    UI *ui __unused, String mode_str __unused, Integer mode
+) {
   send_msg_packing(NvimServerMsgIdModeChange, ^(msgpack_packer *packer) {
     msgpack_pack_int64(packer, mode);
   });
@@ -365,7 +383,10 @@ static void server_ui_grid_scroll(
 }
 
 static void server_ui_hl_attr_define(
-    UI *ui __unused, Integer id, HlAttrs attrs, HlAttrs cterm_attrs __unused, Array info __unused
+    UI *ui __unused,
+    Integer id, HlAttrs attrs,
+    HlAttrs cterm_attrs __unused,
+    Array info __unused
 ) {
   ELOG("hl attr define");
 
@@ -447,7 +468,12 @@ static void server_ui_visual_bell(UI *ui __unused) {
 }
 
 static void server_ui_default_colors_set(
-    UI *ui __unused, Integer rgb_fg, Integer rgb_bg, Integer rgb_sp, Integer cterm_fg, Integer cterm_bg
+    UI *ui __unused,
+    Integer rgb_fg,
+    Integer rgb_bg,
+    Integer rgb_sp,
+    Integer cterm_fg __unused,
+    Integer cterm_bg __unused
 ) {
   ELOG("default colors set");
 
@@ -463,12 +489,14 @@ static void server_ui_default_colors_set(
     _default_special = rgb_sp;
   }
 
-  send_msg_packing(NvimServerMsgIdDefaultColorsChanged, ^(msgpack_packer *packer) {
-    msgpack_pack_array(packer, 3);
-    msgpack_pack_int64(packer, _default_foreground);
-    msgpack_pack_int64(packer, _default_background);
-    msgpack_pack_int64(packer, _default_special);
-  });
+  send_msg_packing(
+      NvimServerMsgIdDefaultColorsChanged,
+      ^(msgpack_packer *packer) {
+        msgpack_pack_array(packer, 3);
+        msgpack_pack_int64(packer, _default_foreground);
+        msgpack_pack_int64(packer, _default_background);
+        msgpack_pack_int64(packer, _default_special);
+      });
 }
 
 static void server_ui_set_title(UI *ui __unused, String title) {
@@ -551,8 +579,8 @@ void custom_ui_autocmds_groups(
     buf_T *buf,
     exarg_T *eap __unused
 ) {
-  // We don't need these events in the UI (yet) and they slow down scrolling: Enable them,
-  // if necessary, only after optimizing the scrolling.
+  // We don't need these events in the UI (yet) and they slow down scrolling:
+  // Enable them, if necessary, only after optimizing the scrolling.
   if (event == EVENT_CURSORMOVED || event == EVENT_CURSORMOVEDI) {
     return;
   }
@@ -577,21 +605,25 @@ void custom_ui_autocmds_groups(
       send_dirty_status();
     }
 
-    send_msg_packing(NvimServerMsgIdAutoCommandEvent, ^(msgpack_packer *packer) {
-      msgpack_pack_array(packer, 2);
-      msgpack_pack_int64(packer, (NSInteger) event);
-      if (buf == NULL) {
-        msgpack_pack_int64(packer, -1);
-      } else {
-        msgpack_pack_int64(packer, (NSInteger) buf->handle);
-      }
-    });
+    send_msg_packing(
+        NvimServerMsgIdAutoCommandEvent,
+        ^(msgpack_packer *packer) {
+          msgpack_pack_array(packer, 2);
+          msgpack_pack_int64(packer, (NSInteger) event);
+          if (buf == NULL) {
+            msgpack_pack_int64(packer, -1);
+          } else {
+            msgpack_pack_int64(packer, (NSInteger) buf->handle);
+          }
+        });
   }
 }
 
 #pragma mark Other help functions
 
-void start_neovim(NSInteger width, NSInteger height, NSArray<NSString *> *args) {
+void start_neovim(
+    NSInteger width, NSInteger height, NSArray<NSString *> *args
+) {
   // The caller has an @autoreleasepool.
   _initialWidth = width;
   _initialHeight = height;
@@ -602,13 +634,15 @@ void start_neovim(NSInteger width, NSInteger height, NSArray<NSString *> *args) 
   let runtimePath = [resourcesPath stringByAppendingPathComponent:@"runtime"];
   setenv("VIMRUNTIME", runtimePath.fileSystemRepresentation, true);
 
-  // Set $LANG to en_US.UTF-8 such that the copied text to the system clipboard is not garbled.
+  // Set $LANG to en_US.UTF-8 such that the copied text to the system clipboard
+  // is not garbled.
   setenv("LANG", "en_US.UTF-8", true);
 
   uv_mutex_init(&_mutex);
   uv_cond_init(&_condition);
 
-  uv_thread_create(&_nvim_thread, run_neovim, [args retain]); // released in run_neovim()
+  // released in run_neovim()
+  uv_thread_create(&_nvim_thread, run_neovim, [args retain]);
   DLOG("NeoVim started");
 
   // continue only after our UI main code for neovim has been fully initialized
@@ -729,7 +763,11 @@ void neovim_debug1(void **argv) {
     NSLog(@"normal sp: %#08X", normal_sp);
 
     for (int i = 0; i < HLF_COUNT; i++) {
-      NSLog(@"%s: %#08X", hlf_names[i], HlAttrsFromAttrCode(highlight_attr[i]).rgb_fg_color);
+      NSLog(
+          @"%s: %#08X",
+          hlf_names[i],
+          HlAttrsFromAttrCode(highlight_attr[i]).rgb_fg_color
+      );
     }
   });
 }

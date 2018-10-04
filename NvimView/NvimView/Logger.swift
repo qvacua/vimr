@@ -119,7 +119,7 @@ class Logger {
   func trace<T>(_ message: T,
                 file: String = #file, line: Int = #line, function: String = #function) {
 
-#if LOG_TRACE
+#if TRACE
     self.log(message, level: .trace, file: file, line: line, function: function)
 #endif
   }
