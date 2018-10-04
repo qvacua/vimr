@@ -134,13 +134,11 @@ static void pack_flush_data(RenderDataType type, pack_block body) {
 
 static void send_dirty_status() {
   var new_dirty_status = has_dirty_docs();
-  DLOG("dirty status: %d vs. %d", _dirty, new_dirty_status);
   if (_dirty == new_dirty_status) {
     return;
   }
 
   _dirty = new_dirty_status;
-  DLOG("sending dirty status: %d", _dirty);
 
   send_msg_packing(
       NvimServerMsgIdDirtyStatusChanged,
@@ -283,7 +281,6 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
 
 static void server_ui_flush(UI *ui __unused) {
   if (flush_sbuffer.size == 0) {
-    ELOG("not sending flush msg, since no data");
     return;
   }
 
@@ -294,7 +291,6 @@ static void server_ui_flush(UI *ui __unused) {
       kCFAllocatorNull
   );
   [_neovim_server sendMessageWithId:NvimServerMsgIdFlush data:data];
-  ELOG("flushed %lu bytes", CFDataGetLength(data));
   CFRelease(data);
 
   msgpack_sbuffer_clear(&flush_sbuffer);
@@ -305,8 +301,6 @@ static void server_ui_flush(UI *ui __unused) {
 static void server_ui_grid_resize(
     UI *ui __unused, Integer grid __unused, Integer width, Integer height
 ) {
-  ELOG("grid resize");
-
   server_ui_flush(NULL);
 
   send_msg_packing(NvimServerMsgIdResize, ^(msgpack_packer *packer) {
@@ -317,15 +311,12 @@ static void server_ui_grid_resize(
 }
 
 static void server_ui_grid_clear(UI *ui __unused, Integer grid __unused) {
-  ELOG("grid clear");
   [_neovim_server sendMessageWithId:NvimServerMsgIdClear];
 }
 
 static void server_ui_cursor_goto(
     UI *ui __unused, Integer grid __unused, Integer row, Integer col
 ) {
-  ELOG("grid cursor goto: %lu:%lu", row, col);
-
   pack_flush_data(RenderDataTypeGoto, ^(msgpack_packer *packer) {
     msgpack_pack_array(packer, 2);
     msgpack_pack_int64(packer, row);
@@ -369,8 +360,6 @@ static void server_ui_grid_scroll(
     Integer rows,
     Integer cols
 ) {
-  ELOG("grid scroll");
-
   pack_flush_data(RenderDataTypeScroll, ^(msgpack_packer *packer) {
     msgpack_pack_array(packer, 6);
     msgpack_pack_int64(packer, top);
@@ -388,8 +377,6 @@ static void server_ui_hl_attr_define(
     HlAttrs cterm_attrs __unused,
     Array info __unused
 ) {
-  ELOG("hl attr define");
-
   var trait = FontTraitNone;
   if (attrs.rgb_ae_attr & HL_ITALIC) {
     trait |= FontTraitItalic;
@@ -428,13 +415,11 @@ static void server_ui_raw_line(
     const sattr_T *attrs
 ) {
   Integer count = endcol - startcol;
-  ELOG("raw line: %d: %d", row, count);
 
   if (row == 0) {
     let data = [NSMutableData dataWithCapacity:1000];
     for (int i = 0; i < count; i++) {
       [data appendBytes:chunk[i] length:strlen((const char *) chunk[i])];
-      ELOG("%d-th chunk: %s", i, data.description.cstr);
       [data setLength:0];
     }
   }
@@ -475,8 +460,6 @@ static void server_ui_default_colors_set(
     Integer cterm_fg __unused,
     Integer cterm_bg __unused
 ) {
-  ELOG("default colors set");
-
   if (rgb_fg != -1) {
     _default_foreground = rgb_fg;
   }
@@ -586,8 +569,6 @@ void custom_ui_autocmds_groups(
   }
 
   @autoreleasepool {
-    DLOG("got event %d for file %s in group %d.", event, fname, group);
-
     if (event == EVENT_DIRCHANGED) {
       send_cwd();
       return;
@@ -643,7 +624,6 @@ void start_neovim(
 
   // released in run_neovim()
   uv_thread_create(&_nvim_thread, run_neovim, [args retain]);
-  DLOG("NeoVim started");
 
   // continue only after our UI main code for neovim has been fully initialized
   uv_mutex_lock(&_mutex);
