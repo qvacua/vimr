@@ -306,7 +306,7 @@ final class UGrid: CustomStringConvertible {
   }
 
   func recomputeFlatIndices(rowStart: Int, rowEndInclusive: Int) {
-    stdoutLogger.debug("Recomputing flat indices from row \(rowStart)")
+    logger.debug("Recomputing flat indices from row \(rowStart)")
 
     var delta = 0
     if rowStart > 0 {

@@ -97,7 +97,6 @@ extension NvimView {
           rowStart: rowStart,
           rowEndInclusive: self.ugrid.size.height - 1
         )
-        stdoutLogger.debug(self.ugrid)
       }
 
       // The position stays at the first cell when we enter the terminal mode
