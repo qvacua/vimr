@@ -248,9 +248,6 @@ public class NvimView: NSView,
         case let .modeChange(value):
           self.modeChange(value)
 
-        case let .unmark(value):
-          self.unmark(value)
-
         case .bell:
           self.bell()
 

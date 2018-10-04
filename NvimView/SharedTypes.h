@@ -28,7 +28,6 @@ typedef NS_ENUM(NSInteger, NvimServerMsgId) {
   NvimServerMsgIdBusyStart,
   NvimServerMsgIdBusyStop,
   NvimServerMsgIdModeChange,
-  NvimServerMsgIdUnmark,
   NvimServerMsgIdBell,
   NvimServerMsgIdVisualBell,
   NvimServerMsgIdFlush,
