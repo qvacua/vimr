@@ -8,7 +8,6 @@ import RxSwift
 import PureLayout
 import Sparkle
 import CocoaFontAwesome
-import DictionaryCoding
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate {

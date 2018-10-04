@@ -4,7 +4,6 @@
  */
 
 import Foundation
-import DictionaryCoding
 
 class PrefMiddleware: MiddlewareType {
 

@@ -562,10 +562,21 @@ void custom_ui_autocmds_groups(
     buf_T *buf,
     exarg_T *eap __unused
 ) {
-  // We don't need these events in the UI (yet) and they slow down scrolling:
-  // Enable them, if necessary, only after optimizing the scrolling.
-  if (event == EVENT_CURSORMOVED || event == EVENT_CURSORMOVEDI) {
-    return;
+  switch (event) {
+    case EVENT_BUFENTER:
+    case EVENT_BUFLEAVE:
+    case EVENT_BUFWINENTER:
+    case EVENT_BUFWINLEAVE:
+    case EVENT_BUFWRITEPOST:
+    case EVENT_COLORSCHEME:
+    case EVENT_DIRCHANGED:
+    case EVENT_TABENTER:
+    case EVENT_TEXTCHANGED:
+    case EVENT_TEXTCHANGEDI:
+      break;
+
+    default:
+      return;
   }
 
   @autoreleasepool {

@@ -21,7 +21,8 @@ class ProcessUtils {
       shellArgs.append("-i")
     }
 
-    shellArgs.append(contentsOf: ["-c", "env"])
+    let marker = UUID().uuidString
+    shellArgs.append(contentsOf: ["-c", "echo \(marker) && env"])
 
     let outputPipe = Pipe()
     let errorPipe = Pipe()
@@ -45,12 +46,16 @@ class ProcessUtils {
     process.terminate()
     process.waitUntilExit()
 
-    return output
+    guard let range = output.range(of: marker) else {
+      return [:]
+    }
+
+    return output[range.upperBound...]
+      .trimmingCharacters(in: .whitespacesAndNewlines)
       .split(separator: "\n")
       .reduce(into: [:]) { result, entry in
-        let split = entry
-          .split(separator: "=", maxSplits: 1, omittingEmptySubsequences: false)
-          .map { String($0) }
+        let split = entry.split(separator: "=", maxSplits: 1, omittingEmptySubsequences: false).map { String($0) }
+        guard split.count > 1 else { return }
         result[split[0]] = split[1]
       }
   }

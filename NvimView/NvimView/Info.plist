@@ -15,9 +15,9 @@
 	<key>CFBundlePackageType</key>
 	<string>FMWK</string>
 	<key>CFBundleShortVersionString</key>
-	<string>SNAPSHOT-289</string>
+	<string>SNAPSHOT-293</string>
 	<key>CFBundleVersion</key>
-	<string>289</string>
+	<string>293</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2017 Tae Won Ha. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
