@@ -3,6 +3,7 @@
 set -e
 
 GETTEXT_VERSION="0.19.8.1"
+DEPLOYMENT_TARGET="10.11"
 
 echo "### Building deps"
 
@@ -18,8 +19,8 @@ mv gettext-${GETTEXT_VERSION} gettext
 
 pushd gettext
 # Configure from https://github.com/Homebrew/homebrew-core/blob/8d1ae1b8967a6b77cc1f6f1af6bb348b3268553e/Formula/gettext.rb
-# Set the deployment target to 10.10
-./configure CFLAGS='-mmacosx-version-min=10.10' MACOSX_DEPLOYMENT_TARGET=10.10 \
+# Set the deployment target to $DEPLOYMENT_TARGET
+./configure CFLAGS="-mmacosx-version-min=${DEPLOYMENT_TARGET}" MACOSX_DEPLOYMENT_TARGET=${DEPLOYMENT_TARGET} \
             --disable-dependency-tracking \
             --disable-silent-rules \
             --disable-debug \
