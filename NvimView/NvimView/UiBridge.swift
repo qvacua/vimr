@@ -105,7 +105,9 @@ class UiBridge {
     return self.sendMessage(msgId: .input, data: str.data(using: .utf8))
   }
 
-  func deleteCharacters(_ count: Int, input string: String) -> Completable {
+  func deleteCharacters(_ count: Int, andInputEscapedString string: String)
+      -> Completable
+  {
     guard let strData = string.data(using: .utf8) else {
       return .empty()
     }

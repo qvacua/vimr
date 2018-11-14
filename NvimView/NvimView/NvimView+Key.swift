@@ -42,7 +42,7 @@ extension NvimView {
 
     let namedChars = KeyUtils.namedKey(from: charsIgnoringModifiers)
     let finalInput = isWrapNeeded ? self.wrapNamedKeys(flags + namedChars)
-                                  : self.vimPlainString(chars)
+      : self.vimPlainString(chars)
 
     try? self.bridge
       .vimInput(finalInput)
@@ -69,7 +69,12 @@ extension NvimView {
     }
 
     let length = self.markedText?.count ?? 0
-    try? self.bridge.deleteCharacters(length, input: text).wait()
+    try? self.bridge
+      .deleteCharacters(
+        length,
+        andInputEscapedString: self.vimPlainString(text)
+      )
+      .wait()
 
     if length > 0 {
       self.ugrid.unmarkCell(at: self.markedPosition)
@@ -100,7 +105,7 @@ extension NvimView {
     }
 
     logger.debug("\(aSelector) not implemented, " +
-                         "forwarding input to neovim")
+                   "forwarding input to neovim")
     self.keyDownDone = false
   }
 
@@ -164,7 +169,7 @@ extension NvimView {
     replacementRange: NSRange
   ) {
     logger.debug("object: \(object), selectedRange: \(selectedRange), " +
-                         "replacementRange: \(replacementRange)")
+                   "replacementRange: \(replacementRange)")
 
     defer { self.keyDownDone = true }
 
@@ -193,14 +198,18 @@ extension NvimView {
       self.markedPosition = newMarkedPosition
 
       logger.debug("Deleting \(replacementRange.length) " +
-                           "and inputting \(self.markedText!)")
-      try? self.bridge.deleteCharacters(replacementRange.length,
-                                        input: self.markedText!).wait()
+                     "and inputting \(self.markedText!)")
+      try? self.bridge.deleteCharacters(
+        replacementRange.length,
+        andInputEscapedString: self.vimPlainString(self.markedText!)
+      ).wait()
     } else {
       logger.debug("Deleting \(oldMarkedTextLength) " +
-                           "and inputting \(self.markedText!)")
-      try? self.bridge.deleteCharacters(oldMarkedTextLength,
-                                        input: self.markedText!).wait()
+                     "and inputting \(self.markedText!)")
+      try? self.bridge.deleteCharacters(
+        oldMarkedTextLength,
+        andInputEscapedString: self.vimPlainString(self.markedText!)
+      ).wait()
     }
 
     self.keyDownDone = true
