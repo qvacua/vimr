@@ -8,8 +8,8 @@ import RxNeovimApi
 import RxSwift
 
 public class NvimView: NSView,
-                       NSUserInterfaceValidations,
-                       NSTextInputClient {
+  NSUserInterfaceValidations,
+  NSTextInputClient {
 
   // MARK: - Public
   public struct Config {
@@ -95,9 +95,9 @@ public class NvimView: NSView,
 
     public var description: String {
       return "NVV.Theme<" +
-             "fg: \(self.foreground.hex), bg: \(self.background.hex), " +
-             "visual-fg: \(self.visualForeground.hex), visual-bg: \(self.visualBackground.hex)" +
-             ">"
+        "fg: \(self.foreground.hex), bg: \(self.background.hex), " +
+        "visual-fg: \(self.visualForeground.hex), visual-bg: \(self.visualBackground.hex)" +
+        ">"
     }
   }
 
@@ -125,7 +125,7 @@ public class NvimView: NSView,
   public var usesLigatures = false {
     didSet {
       self.drawer.usesLigatures = self.usesLigatures
-      self.needsDisplay = true
+      self.markForRenderWholeView()
     }
   }
 
@@ -140,8 +140,6 @@ public class NvimView: NSView,
       }
 
       self._linespacing = newValue
-      self.drawer.linespacing = self.linespacing
-
       self.updateFontMetaData(self._font)
     }
   }
@@ -162,7 +160,6 @@ public class NvimView: NSView,
       }
 
       self._font = newValue
-
       self.updateFontMetaData(newValue)
     }
   }
@@ -176,7 +173,7 @@ public class NvimView: NSView,
       self.api
         .setCurrentDir(dir: newValue.path)
         .subscribeOn(self.scheduler)
-        .subscribe(onError: { error in
+        .trigger(onError: { error in
           self.eventsSubject.onError(Error.ipc(msg: "Could not set cwd to \(newValue)", cause: error))
         })
     }
@@ -196,7 +193,11 @@ public class NvimView: NSView,
   }
 
   public init(frame rect: NSRect, config: Config) {
-    self.drawer = TextDrawer(font: self._font)
+    self.drawer = AttributesRunDrawer(
+      baseFont: self._font,
+      linespacing: self._linespacing,
+      usesLigatures: self.usesLigatures
+    )
     self.bridge = UiBridge(uuid: self.uuid, queue: self.queue, config: config)
     self.scheduler = SerialDispatchQueueScheduler(queue: self.queue,
                                                   internalSerialQueueName: "com.qvacua.NvimView.NvimView")
@@ -205,9 +206,9 @@ public class NvimView: NSView,
     self.registerForDraggedTypes([NSPasteboard.PasteboardType(String(kUTTypeFileURL))])
 
     self.wantsLayer = true
-    self.cellSize = self.drawer.cellSize
-    self.descent = self.drawer.descent
-    self.leading = self.drawer.leading
+    self.cellSize = FontUtils.cellSize(
+      of: self.font, linespacing: self.linespacing
+    )
 
     self.api.queue = self.queue
     self.bridge.stream
@@ -215,17 +216,16 @@ public class NvimView: NSView,
         switch msg {
 
         case .ready:
-          self.logger.info("Nvim is ready")
-          break
+          logger.info("Nvim is ready")
 
         case .initVimError:
           self.eventsSubject.onNext(.initVimError)
 
         case .unknown:
-          break
+          logger.error("Unknown message from NvimServer")
 
-        case let .resize(width, height):
-          self.resize(width: width, height: height)
+        case let .resize(value):
+          self.resize(value)
 
         case .clear:
           self.clear()
@@ -245,17 +245,8 @@ public class NvimView: NSView,
         case .mouseOff:
           self.mouseOff()
 
-        case let .modeChange(mode):
-          self.modeChange(mode)
-
-        case let .setScrollRegion(top, bottom, left, right):
-          self.setScrollRegion(top: top, bottom: bottom, left: left, right: right)
-
-        case let .scroll(amount):
-          self.scroll(amount)
-
-        case let .unmark(row, column):
-          self.unmark(row: row, column: column)
+        case let .modeChange(value):
+          self.modeChange(value)
 
         case .bell:
           self.bell()
@@ -263,44 +254,36 @@ public class NvimView: NSView,
         case .visualBell:
           self.visualBell()
 
-        case let .flush(data):
-          self.flush(data)
+        case let .flush(value):
+          self.flush(value)
 
-        case let .setForeground(value):
-          self.update(foreground: value)
-
-        case let .setBackground(value):
-          self.update(background: value)
-
-        case let .setSpecial(value):
-          self.update(special: value)
-
-        case let .setTitle(title):
-          self.set(title: title)
-
-        case let .setIcon(icon):
-          self.set(icon: icon)
+        case let .setTitle(value):
+          self.setTitle(with: value)
 
         case .stop:
           self.stop()
 
         case let .dirtyStatusChanged(value):
-          self.set(dirty: value)
+          self.setDirty(with: value)
 
-        case let .cwdChanged(path):
-          self.cwdChanged(path)
+        case let .cwdChanged(value):
+          self.cwdChanged(value)
 
-        case let .colorSchemeChanged(values):
-          self.colorSchemeChanged(values)
+        case let .colorSchemeChanged(value):
+          self.colorSchemeChanged(value)
 
-        case let .defaultColorsChanged(values):
-          self.defaultColorsChanged(values)
+        case let .defaultColorsChanged(value):
+          self.defaultColorsChanged(value)
 
-        case let .optionSet(key, value):
+        case let .optionSet(value):
+          self.bridgeLogger.debug(value)
           break
 
-        case let .autoCommandEvent(autocmd, bufferHandle):
-          self.autoCommandEvent(autocmd, bufferHandle: bufferHandle)
+        case let .autoCommandEvent(value):
+          self.autoCommandEvent(value)
+
+        case let .highlightAttrs(value):
+          self.setAttr(with: value)
 
         case .debug1:
           self.debug1(self)
@@ -324,53 +307,32 @@ public class NvimView: NSView,
   }
 
   @IBAction public func debug1(_ sender: Any?) {
-    self.logger.debug("DEBUG 1 - Start")
-    self.bridge
-      .debug()
-      .subscribe()
-    self.logger.debug("DEBUG 1 - End")
+    logger.debug("DEBUG 1 - Start")
+    // noop
+    logger.debug("DEBUG 1 - End")
   }
 
   // MARK: - Internal
-  /// Contiguous piece of cells of a row that has the same attributes.
-  struct RowRun: CustomStringConvertible {
-
-    var row: Int
-    var range: CountableClosedRange<Int>
-    var attrs: CellAttributes
-
-    var description: String {
-      return "RowRun<\(row): \(range)\n\(attrs)>"
-    }
-  }
-
-  let logger = LogContext.fileLogger(as: NvimView.self, with: URL(fileURLWithPath: "/tmp/nvv.log"))
-  let bridgeLogger = LogContext.fileLogger(as: NvimView.self,
-                                           with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
-                                           shouldLogDebug: nil)
   let bridge: UiBridge
   let api = RxNeovimApi.Api()
-  let grid = Grid()
 
-  let drawer: TextDrawer
-
-  var markedText: String?
+  let ugrid = UGrid()
+  let cellAttributesCollection = CellAttributesCollection()
+  let drawer: AttributesRunDrawer
+  let typesetter = Typesetter()
+  var baselineOffset = CGFloat(0)
 
   /// We store the last marked text because Cocoa's text input system does the following:
   /// 하 -> hanja popup -> insertText(하) -> attributedSubstring...() -> setMarkedText(下) -> ...
   /// We want to return "하" in attributedSubstring...()
   var lastMarkedText: String?
 
-  var markedPosition = Position.null
   var keyDownDone = true
 
   var lastClickedCellPosition = Position.null
 
-  var xOffset = CGFloat(0)
-  var yOffset = CGFloat(0)
+  var offset = CGPoint.zero
   var cellSize = CGSize.zero
-  var descent = CGFloat(0)
-  var leading = CGFloat(0)
 
   var scrollGuardCounterX = 5
   var scrollGuardCounterY = 5
@@ -392,6 +354,15 @@ public class NvimView: NSView,
 
   let eventsSubject = PublishSubject<Event>()
   let disposeBag = DisposeBag()
+
+  var markedText: String?
+  var markedPosition = Position.null
+
+  let bridgeLogger = LogContext.fileLogger(
+    as: "NvimView-Bridge",
+    with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
+    shouldLogDebug: nil
+  )
 
   // MARK: - Private
   private var _linespacing = NvimView.defaultLinespacing

@@ -15,32 +15,26 @@ class UiBridge {
     case ready
 
     case initVimError
-    case resize(width: Int, height: Int)
+    case resize(MessagePackValue)
     case clear
     case setMenu
     case busyStart
     case busyStop
     case mouseOn
     case mouseOff
-    case modeChange(CursorModeShape)
-    case setScrollRegion(top: Int, bottom: Int, left: Int, right: Int)
-    case scroll(Int)
-    case unmark(row: Int, column: Int)
+    case modeChange(MessagePackValue)
     case bell
     case visualBell
     case flush([MessagePackValue])
-    case setForeground(Int)
-    case setBackground(Int)
-    case setSpecial(Int)
-    case setTitle(String)
-    case setIcon(String)
+    case setTitle(MessagePackValue)
     case stop
-    case dirtyStatusChanged(Bool)
-    case cwdChanged(String)
-    case colorSchemeChanged([Int])
-    case optionSet(key: String, value: MessagePackValue)
-    case defaultColorsChanged([Int])
-    case autoCommandEvent(autocmd: NvimAutoCommandEvent, bufferHandle: Int)
+    case dirtyStatusChanged(MessagePackValue)
+    case cwdChanged(MessagePackValue)
+    case colorSchemeChanged(MessagePackValue)
+    case optionSet(MessagePackValue)
+    case defaultColorsChanged(MessagePackValue)
+    case autoCommandEvent(MessagePackValue)
+    case highlightAttrs(MessagePackValue)
     case debug1
     case unknown
   }
@@ -111,12 +105,20 @@ class UiBridge {
     return self.sendMessage(msgId: .input, data: str.data(using: .utf8))
   }
 
-  func vimInputMarkedText(_ markedText: String) -> Completable {
-    return self.sendMessage(msgId: .inputMarked, data: markedText.data(using: .utf8))
-  }
+  func deleteCharacters(_ count: Int, andInputEscapedString string: String)
+      -> Completable
+  {
+    guard let strData = string.data(using: .utf8) else {
+      return .empty()
+    }
 
-  func deleteCharacters(_ count: Int) -> Completable {
-    return self.sendMessage(msgId: .delete, data: [count].data())
+    var data = Data(capacity: MemoryLayout<Int>.size + strData.count)
+
+    var c = count
+    data.append(UnsafeBufferPointer(start: &c, count: 1))
+    data.append(strData)
+
+    return self.sendMessage(msgId: .deleteInput, data: data)
   }
 
   func resize(width: Int, height: Int) -> Completable {
@@ -173,19 +175,15 @@ class UiBridge {
 
       self.streamSubject.onNext(.ready)
 
-      let isInitErrorPresent = value(from: data, conversion: { $0.boolValue }) ?? false
+      let isInitErrorPresent = MessagePackUtils.value(from: data, conversion: { $0.boolValue }) ?? false
       if isInitErrorPresent {
         self.streamSubject.onNext(.initVimError)
       }
 
     case .resize:
-      guard let values = array(from: data, ofSize: 2, conversion: { v -> Int? in
-        guard let i64 = v.integerValue else { return nil }
-        return Int(i64)
-      }) else {
-        return
-      }
-      self.streamSubject.onNext(.resize(width: values[0], height: values[1]))
+      guard let v = MessagePackUtils.value(from: data) else { return }
+      self.streamSubject.onNext(.resize(v))
+      break
 
     case .clear:
       self.streamSubject.onNext(.clear)
@@ -199,42 +197,9 @@ class UiBridge {
     case .busyStop:
       self.streamSubject.onNext(.busyStop)
 
-    case .mouseOn:
-      self.streamSubject.onNext(.mouseOn)
-
-    case .mouseOff:
-      self.streamSubject.onNext(.mouseOff)
-
     case .modeChange:
-      guard let value = value(from: data, conversion: { v -> CursorModeShape? in
-        guard let i64 = v.integerValue else { return nil }
-        return CursorModeShape(rawValue: UInt(i64))
-      }) else {
-        return
-      }
-
-      self.streamSubject.onNext(.modeChange(value))
-
-    case .setScrollRegion:
-      guard let values = array(from: data, ofSize: 4, conversion: { $0.intValue }) else {
-        return
-      }
-
-      self.streamSubject.onNext(.setScrollRegion(top: values[0], bottom: values[1], left: values[2], right: values[3]))
-
-    case .scroll:
-      guard let value = value(from: data, conversion: { $0.intValue }) else {
-        return
-      }
-
-      self.streamSubject.onNext(.scroll(value))
-
-    case .unmark:
-      guard let values = array(from: data, ofSize: 2, conversion: { $0.intValue }) else {
-        return
-      }
-
-      self.streamSubject.onNext(.unmark(row: values[0], column: values[1]))
+      guard let v = MessagePackUtils.value(from: data) else { return }
+      self.streamSubject.onNext(.modeChange(v))
 
     case .bell:
       self.streamSubject.onNext(.bell)
@@ -243,99 +208,46 @@ class UiBridge {
       self.streamSubject.onNext(.visualBell)
 
     case .flush:
-      guard let d = data, let renderData = try? unpackAll(d) else {
-        return
-      }
-
-      self.streamSubject.onNext(.flush(renderData))
-
-    case .setForeground:
-      guard let value = value(from: data, conversion: { $0.intValue }) else {
-        return
-      }
-
-      self.streamSubject.onNext(.setForeground(value))
-
-    case .setBackground:
-      guard let value = value(from: data, conversion: { $0.intValue }) else {
-        return
-      }
-
-      self.streamSubject.onNext(.setBackground(value))
-
-    case .setSpecial:
-      guard let value = value(from: data, conversion: { $0.intValue }) else {
-        return
-      }
-
-      self.streamSubject.onNext(.setSpecial(value))
+      guard let d = data, let v = (try? unpackAll(d)) else { return }
+      self.streamSubject.onNext(.flush(v))
 
     case .setTitle:
-      guard let title = value(from: data, conversion: { $0.stringValue }) else {
-        return
-      }
-
-      self.streamSubject.onNext(.setTitle(title))
-
-    case .setIcon:
-      guard let icon = value(from: data, conversion: { $0.stringValue }) else {
-        return
-      }
-
-      self.streamSubject.onNext(.setIcon(icon))
+      guard let v = MessagePackUtils.value(from: data) else { return }
+      self.streamSubject.onNext(.setTitle(v))
 
     case .stop:
       self.streamSubject.onNext(.stop)
 
     case .dirtyStatusChanged:
-      guard let value = value(from: data, conversion: { $0.boolValue }) else {
-        return
-      }
-
-      self.streamSubject.onNext(.dirtyStatusChanged(value))
+      guard let v = MessagePackUtils.value(from: data) else { return }
+      self.streamSubject.onNext(.dirtyStatusChanged(v))
 
     case .cwdChanged:
-      guard let cwd = value(from: data, conversion: { $0.stringValue }) else {
-        return
-      }
-
-      self.streamSubject.onNext(.cwdChanged(cwd))
+      guard let v = MessagePackUtils.value(from: data) else { return }
+      self.streamSubject.onNext(.cwdChanged(v))
 
     case .defaultColorsChanged:
-      guard let values = array(from: data, ofSize: 3, conversion: { $0.intValue }) else {
-        return
-      }
-
-      self.streamSubject.onNext(.defaultColorsChanged(values))
+      guard let v = MessagePackUtils.value(from: data) else { return }
+      self.streamSubject.onNext(.defaultColorsChanged(v))
 
     case .colorSchemeChanged:
-      guard let d = data, let rawValues = (try? unpack(d))?.value.arrayValue else {
-        return
-      }
-
-      let values = rawValues.compactMap { $0.integerValue }.map { Int($0) }
-      self.streamSubject.onNext(.colorSchemeChanged(values))
+      guard let v = MessagePackUtils.value(from: data) else { return }
+      self.streamSubject.onNext(.colorSchemeChanged(v))
 
     case .optionSet:
-      guard let d = data,
-            let dict = (try? unpack(d))?.value.dictionaryValue,
-            let key = dict.keys.first?.stringValue,
-            let value = dict.values.first
-        else {
-        return
-      }
-
-      self.logger.debug("option set: \(key) -> \(value)")
-      self.streamSubject.onNext(.optionSet(key: key, value: value))
+      guard let v = MessagePackUtils.value(from: data) else { return }
+      self.streamSubject.onNext(.optionSet(v))
 
     case .autoCommandEvent:
-      guard let values = array(from: data, ofSize: 2, conversion: { $0.intValue }),
-            let cmd = NvimAutoCommandEvent(rawValue: values[0]) else { return }
-
-      self.streamSubject.onNext(.autoCommandEvent(autocmd: cmd, bufferHandle: values[1]))
+      guard let v = MessagePackUtils.value(from: data) else { return }
+      self.streamSubject.onNext(.autoCommandEvent(v))
 
     case .debug1:
       self.streamSubject.onNext(.debug1)
+
+    case .highlightAttrs:
+      guard let v = MessagePackUtils.value(from: data) else { return }
+      self.streamSubject.onNext(.highlightAttrs(v))
 
     }
   }
@@ -379,6 +291,8 @@ class UiBridge {
     var env = self.envDict
     env["NVIM_LISTEN_ADDRESS"] = listenAddress.path
 
+    stdoutLogger.debug("listen addr: \(listenAddress.path)")
+
     let outPipe = Pipe()
     let errorPipe = Pipe()
     let process = Process()
@@ -387,6 +301,8 @@ class UiBridge {
     process.standardOutput = outPipe
     process.currentDirectoryPath = self.cwd.path
     process.launchPath = self.nvimServerExecutablePath()
+    // GH-666: FIXME
+//    process.arguments = [self.localServerName, self.remoteServerName] + ["--headless", "/Users/hat/php.php"] + self.nvimArgs
     process.arguments = [self.localServerName, self.remoteServerName] + ["--headless"] + self.nvimArgs
     process.launch()
 
@@ -452,24 +368,4 @@ private extension Array {
       return Data(bytesNoCopy: newPointer, count: self.count, deallocator: .free)
     }
   }
-}
-
-private func value<T>(from data: Data?, conversion: (MessagePackValue) -> T?) -> T? {
-  guard let d = data, let value = (try? unpack(d))?.value else {
-    return nil
-  }
-
-  return conversion(value)
-}
-
-private func array<T>(from data: Data?, ofSize size: Int, conversion: (MessagePackValue) -> T?) -> [T]? {
-  guard let d = data, let array = (try? unpack(d))?.value.arrayValue else {
-    return nil
-  }
-
-  guard array.count == size else {
-    return nil
-  }
-
-  return array.compactMap(conversion)
 }

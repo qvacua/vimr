@@ -5,34 +5,66 @@
 
 import Cocoa
 
-// The definition can be found in NeoVimUiBridgeProtocol.h
-
-extension CellAttributes: CustomStringConvertible, Equatable {
+struct CellAttributes: CustomStringConvertible, Equatable {
 
   public static func ==(left: CellAttributes, right: CellAttributes) -> Bool {
     if left.foreground != right.foreground { return false }
-    if left.fontTrait != right.fontTrait { return false }
-
     if left.background != right.background { return false }
     if left.special != right.special { return false }
+
+    if left.fontTrait != right.fontTrait { return false }
+    if left.reverse != right.reverse { return false }
 
     return true
   }
 
-  public var description: String {
-    return "CellAttributes<" +
-           "trait: \(String(self.fontTrait.rawValue, radix: 2)), " +
-           "fg: \(String(self.foreground, radix: 16)), " +
-           "bg: \(String(self.background, radix: 16)), " +
-           "sp: \(String(self.special, radix: 16))" +
-           ")>"
+  var fontTrait: FontTrait
+
+  var foreground: Int
+  var background: Int
+  var special: Int
+  var reverse: Bool
+
+  public var effectiveForeground: Int {
+    return self.reverse ? self.background : self.foreground
   }
 
-  public var inverted: CellAttributes {
-    var result = self
+  public var effectiveBackground: Int {
+    return self.reverse ? self.foreground : self.background
+  }
 
-    result.background = self.foreground
-    result.foreground = self.background
+  public var description: String {
+    return "CellAttributes<" +
+      "trait: \(String(self.fontTrait.rawValue, radix: 2)), " +
+      "fg: \(ColorUtils.colorIgnoringAlpha(self.foreground).hex), " +
+      "bg: \(ColorUtils.colorIgnoringAlpha(self.background).hex), " +
+      "sp: \(ColorUtils.colorIgnoringAlpha(self.special).hex), " +
+      "reverse: \(self.reverse)" +
+      ">"
+  }
+
+  public var reversed: CellAttributes {
+    var result = self
+    result.reverse = !self.reverse
+
+    return result
+  }
+
+  func replacingDefaults(
+    with defaultAttributes: CellAttributes
+  ) -> CellAttributes {
+    var result = self
+    if self.foreground == -1 {
+      result.foreground = defaultAttributes.foreground
+    }
+
+    if self.background == -1 {
+      result.background = defaultAttributes.background
+    }
+
+    if self.special == -1 {
+      result.special = defaultAttributes.special
+    }
 
     return result
   }

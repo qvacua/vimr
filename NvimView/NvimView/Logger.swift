@@ -5,12 +5,18 @@
 
 import Foundation
 
+let stdoutLogger = LogContext.stdoutLogger(as: "NvimView")
+let logger = LogContext.fileLogger(
+  as: "NvimView", with: URL(fileURLWithPath: "/tmp/nvv.log")
+)
+
 class LogContext {
 
   enum Level: String {
 
     case `default` = "DEFAULT"
     case info = "INFO"
+    case trace = "TRACE"
     case debug = "DEBUG"
     case error = "ERROR"
     case fault = "FAULT"
@@ -108,6 +114,14 @@ class Logger {
                 file: String = #file, line: Int = #line, function: String = #function) {
 
     self.log(message, level: .debug, file: file, line: line, function: function)
+  }
+
+  func trace<T>(_ message: T,
+                file: String = #file, line: Int = #line, function: String = #function) {
+
+#if TRACE
+    self.log(message, level: .trace, file: file, line: line, function: function)
+#endif
   }
 
   func error<T>(_ message: T,

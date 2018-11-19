@@ -24,7 +24,7 @@ class WorkspaceTool: NSView {
   }
 
   // MARK: - API
-  override var hashValue: Int {
+  override var hash: Int {
     return self.uuid.hashValue
   }
   /**

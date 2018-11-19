@@ -62,11 +62,8 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     case NvimBridgeMsgIdInput:
       return data_async(data, neovim_vim_input);
 
-    case NvimBridgeMsgIdInputMarked:
-      return data_async(data, neovim_vim_input_marked_text);
-
-    case NvimBridgeMsgIdDelete:
-      return data_async(data, neovim_delete);
+    case NvimBridgeMsgIdDeleteInput:
+      return data_async(data, neovim_delete_and_input);
 
     case NvimBridgeMsgIdFocusGained:
       return data_async(data, neovim_focus_gained);

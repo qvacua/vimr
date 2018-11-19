@@ -52,13 +52,13 @@ extension NvimView {
     case .insert, .replace:
       self.bridge
         .vimInput("<Esc>ui")
-        .subscribe(onError: { error in
+        .trigger(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not undo", cause: error))
         })
     case .normal, .visual:
       self.bridge
         .vimInput("u")
-        .subscribe(onError: { error in
+        .trigger(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not undo", cause: error))
         })
     default:
@@ -71,13 +71,13 @@ extension NvimView {
     case .insert, .replace:
       self.bridge
         .vimInput("<Esc><C-r>i")
-        .subscribe(onError: { error in
+        .trigger(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not redo", cause: error))
         })
     case .normal, .visual:
       self.bridge
         .vimInput("<C-r>")
-        .subscribe(onError: { error in
+        .trigger(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not redo", cause: error))
         })
     default:
@@ -90,7 +90,7 @@ extension NvimView {
     case .visual, .normal:
       self.bridge
         .vimInput("\"+d")
-        .subscribe(onError: { error in
+        .trigger(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not cut", cause: error))
         })
     default:
@@ -103,7 +103,7 @@ extension NvimView {
     case .visual, .normal:
       self.bridge
         .vimInput("\"+y")
-        .subscribe(onError: { error in
+        .trigger(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not copy", cause: error))
         })
     default:
@@ -121,7 +121,7 @@ extension NvimView {
        || self.mode == .termFocus {
       self.bridge
         .vimInput(self.vimPlainString(content))
-        .subscribe(onError: { error in
+        .trigger(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not paste \(content)", cause: error))
         })
       return
@@ -170,7 +170,7 @@ extension NvimView {
 
         return Completable.empty()
       }
-      .subscribe(onError: { error in
+      .trigger(onError: { error in
         self.eventsSubject.onNext(.apiError(msg: "There was an pasting.", cause: error))
       })
   }
@@ -180,7 +180,7 @@ extension NvimView {
     case .normal, .visual:
       self.bridge
         .vimInput("x")
-        .subscribe(onError: { error in
+        .trigger(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not delete", cause: error))
         })
     default:
@@ -193,13 +193,13 @@ extension NvimView {
     case .insert, .visual:
       self.bridge
         .vimInput("<Esc>ggVG")
-        .subscribe(onError: { error in
+        .trigger(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not select all", cause: error))
         })
     default:
       self.bridge
         .vimInput("ggVG")
-        .subscribe(onError: { error in
+        .trigger(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not select all", cause: error))
         })
     }

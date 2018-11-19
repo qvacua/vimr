@@ -167,11 +167,11 @@ extension BuffersList {
     let pathInfo = url.pathComponents.dropFirst().dropLast().reversed().joined(separator: " / ") + " /"
     let rowText = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
 
-    rowText.addAttribute(NSAttributedStringKey.foregroundColor,
+    rowText.addAttribute(NSAttributedString.Key.foregroundColor,
                          value: self.theme.foreground,
                          range: NSRange(location: 0, length: name.count))
 
-    rowText.addAttribute(NSAttributedStringKey.foregroundColor,
+    rowText.addAttribute(NSAttributedString.Key.foregroundColor,
                          value: self.theme.foreground.brightening(by: 1.15),
                          range: NSRange(location: name.count, length: pathInfo.count + 3))
 

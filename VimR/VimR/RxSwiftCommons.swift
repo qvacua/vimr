@@ -50,6 +50,13 @@ extension PrimitiveSequence where Element == Never, TraitType == CompletableTrai
       throw e
     }
   }
+
+  func trigger(
+    onCompleted: (() -> Void)? = nil,
+    onError: ((Error) -> Void)? = nil
+  ) {
+    self.subscribe(onCompleted: onCompleted, onError: onError)
+  }
 }
 
 extension PrimitiveSequence where TraitType == SingleTrait {
@@ -63,6 +70,13 @@ extension PrimitiveSequence where TraitType == SingleTrait {
       .asObservable()
       .flatMap { try selector($0).asObservable() }
       .ignoreElements()
+  }
+
+  func value(
+    onSuccess: ((Element) -> Void)? = nil,
+    onError: ((Error) -> Void)? = nil
+  ) {
+    self.subscribe(onSuccess: onSuccess, onError: onError)
   }
 
   func syncValue() -> Element? {

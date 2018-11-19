@@ -20,7 +20,7 @@ extension NvimView {
       return false
     }
 
-    guard let paths = sender.draggingPasteboard().propertyList(
+    guard let paths = sender.draggingPasteboard.propertyList(
       forType: NSPasteboard.PasteboardType(String(kUTTypeFileURL))
     ) as? [String] else {
       return false
@@ -28,7 +28,7 @@ extension NvimView {
 
     self.open(urls: paths.map { URL(fileURLWithPath: $0) })
       .subscribeOn(self.scheduler)
-      .subscribe(onError: { error in
+      .trigger(onError: { error in
         self.eventsSubject.onNext(.apiError(msg: "\(paths) could not be opened.", cause: error))
       })
 
@@ -37,5 +37,5 @@ extension NvimView {
 }
 
 private func isFile(sender: NSDraggingInfo) -> Bool {
-  return (sender.draggingPasteboard().types?.contains(NSPasteboard.PasteboardType(String(kUTTypeFileURL)))) ?? false
+  return (sender.draggingPasteboard.types?.contains(NSPasteboard.PasteboardType(String(kUTTypeFileURL)))) ?? false
 }

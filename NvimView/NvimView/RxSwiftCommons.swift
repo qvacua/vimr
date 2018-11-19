@@ -33,12 +33,36 @@ extension PrimitiveSequence where Element == Never, TraitType == CompletableTrai
       throw e
     }
   }
+
+  func trigger(
+    onCompleted: (() -> Void)? = nil,
+    onError: ((Error) -> Void)? = nil
+  ) {
+    self.subscribe(onCompleted: onCompleted, onError: onError)
+  }
+}
+
+extension PrimitiveSequence where TraitType == MaybeTrait {
+
+  func value(
+    onSuccess: ((Element) -> Void)? = nil,
+    onError: ((Error) -> Void)? = nil
+  ) {
+    self.subscribe(onSuccess: onSuccess, onError: onError)
+  }
 }
 
 extension PrimitiveSequence where TraitType == SingleTrait {
 
   static func fromSinglesToSingleOfArray(_ singles: [Single<Element>]) -> Single<[Element]> {
     return Observable.merge(singles.map { $0.asObservable() }).toArray().asSingle()
+  }
+
+  func value(
+    onSuccess: ((Element) -> Void)? = nil,
+    onError: ((Error) -> Void)? = nil
+  ) {
+    self.subscribe(onSuccess: onSuccess, onError: onError)
   }
 
   func syncValue() -> Element? {

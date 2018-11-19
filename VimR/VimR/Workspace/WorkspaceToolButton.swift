@@ -57,13 +57,13 @@ class WorkspaceToolButton: NSView, NSDraggingSource {
 
   init(title: String) {
     self.title = NSMutableAttributedString(string: title, attributes: [
-      NSAttributedStringKey.font: NSFont.systemFont(ofSize: 11),
+      NSAttributedString.Key.font: NSFont.systemFont(ofSize: 11),
     ])
 
     super.init(frame: .zero)
     self.configureForAutoLayout()
 
-    self.title.addAttribute(NSAttributedStringKey.foregroundColor,
+    self.title.addAttribute(NSAttributedString.Key.foregroundColor,
                             value: self.theme.foreground,
                             range: NSRange(location: 0, length: self.title.length))
 
@@ -77,7 +77,7 @@ class WorkspaceToolButton: NSView, NSDraggingSource {
       self.dehighlight()
     }
 
-    self.title.addAttribute(NSAttributedStringKey.foregroundColor,
+    self.title.addAttribute(NSAttributedString.Key.foregroundColor,
                             value: self.theme.foreground,
                             range: NSRange(location: 0, length: self.title.length))
 

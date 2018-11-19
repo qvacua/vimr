@@ -10,153 +10,112 @@ import MessagePack
 
 extension NvimView {
 
-  func resize(width: Int, height: Int) {
-    self.bridgeLogger.debug("\(width) x \(height)")
+  final func resize(_ value: MessagePackValue) {
+    guard let array = MessagePackUtils.array(
+      from: value, ofSize: 2, conversion: { $0.intValue }
+    ) else {
+      return
+    }
 
+    self.bridgeLogger.debug("\(array[0]) x \(array[1])")
     gui.async {
-      self.grid.resize(Size(width: width, height: height))
+      self.ugrid.resize(Size(width: array[0], height: array[1]))
       self.markForRenderWholeView()
     }
   }
 
-  func clear() {
+  final func clear() {
     self.bridgeLogger.mark()
 
     gui.async {
-      self.grid.clear()
+      self.ugrid.clear()
       self.markForRenderWholeView()
     }
   }
 
-  func modeChange(_ mode: CursorModeShape) {
-    self.bridgeLogger.debug(name(of: mode))
+  final func modeChange(_ value: MessagePackValue) {
+    guard let mode = MessagePackUtils.value(
+      from: value, conversion: { v -> CursorModeShape? in
 
+      guard let rawValue = v.intValue else { return nil }
+      return CursorModeShape(rawValue: UInt(rawValue))
+
+    }) else {
+      return
+    }
+
+    self.bridgeLogger.debug(self.name(ofCursorMode: mode))
     gui.async {
       self.mode = mode
+      self.markForRender(
+        region: self.cursorRegion(for: self.ugrid.cursorPosition)
+      )
     }
   }
 
-  func setScrollRegion(top: Int, bottom: Int, left: Int, right: Int) {
-    self.bridgeLogger.debug("\(top):\(bottom):\(left):\(right)")
+  final func flush(_ renderData: [MessagePackValue]) {
+    self.bridgeLogger.debug("# of render data: \(renderData.count)")
 
     gui.async {
-      let region = Region(top: top, bottom: bottom, left: left, right: right)
-      self.grid.setScrollRegion(region)
-    }
-  }
-
-  func scroll(_ count: Int) {
-    self.bridgeLogger.debug(count)
-
-    gui.async {
-      self.grid.scroll(count)
-      self.markForRender(region: self.grid.region)
-      // Do not send msgs to agent -> neovim in the delegate method. It causes spinning
-      // when you're opening a file with existing swap file.
-      self.eventsSubject.onNext(.scroll)
-    }
-  }
-
-  func unmark(row: Int, column: Int) {
-    self.bridgeLogger.debug("\(row):\(column)")
-
-    gui.async {
-      let position = Position(row: row, column: column)
-
-      self.grid.unmarkCell(position)
-      self.markForRender(position: position)
-    }
-  }
-
-  func flush(_ renderData: [MessagePackValue]) {
-    self.bridgeLogger.hr()
-
-    gui.async {
-      var goto: Position? = nil
+      var (recompute, rowStart) = (false, Int.max)
       renderData.forEach { value in
-        guard let renderEntry = value.arrayValue,
-              renderEntry.count == 2,
-              let rawType = renderEntry[0].intValue,
+        guard let renderEntry = value.arrayValue else { return }
+        guard renderEntry.count == 2 else { return }
+
+        guard let rawType = renderEntry[0].intValue,
+              let innerArray = renderEntry[1].arrayValue,
               let type = RenderDataType(rawValue: rawType) else { return }
 
         switch type {
 
-        case .put:
-          guard let str = renderEntry[1].stringValue else { return }
-          self.doPut(string: str)
-
-        case .putMarked:
-          guard let str = renderEntry[1].stringValue else { return }
-          self.doPut(markedText: str)
-
-        case .highlight:
-          guard let data = renderEntry[1].dataValue else { return }
-          let attr = data.withUnsafeBytes { (pointer: UnsafePointer<CellAttributes>) in pointer.pointee }
-          self.doHighlightSet(attr)
+        case .rawLine:
+          let (r, s) = self.doRawLine(data: innerArray)
+          recompute = recompute ? true : r
+          rowStart = r ? min(rowStart, s) : rowStart
 
         case .goto:
-          guard let rawValues = renderEntry[1].arrayValue else { return }
-          let values = rawValues.compactMap { $0.intValue }
-          guard values.count == 4 else { return }
-          goto = Position(row: values[2], column: values[3])
-          self.doGoto(position: Position(row: values[0], column: values[1]), textPosition: goto!)
+          guard let row = innerArray[0].unsignedIntegerValue,
+                let col = innerArray[1].unsignedIntegerValue else { return }
 
-        case .eolClear:
-          self.doEolClear()
+          self.doGoto(position: Position(row: Int(row), column: Int(col)))
+
+        case .scroll:
+          let values = innerArray.compactMap { $0.intValue }
+          guard values.count == 6 else {
+            self.bridgeLogger.error("Scroll msg does not have 6 Int's!")
+            return
+          }
+
+          recompute = true
+          rowStart = min(self.doScroll(values), rowStart)
 
         }
       }
 
-      if let pos = goto {
-        self.eventsSubject.onNext(.cursor(pos))
+      if recompute {
+        self.ugrid.recomputeFlatIndices(
+          rowStart: rowStart,
+          rowEndInclusive: self.ugrid.size.height - 1
+        )
       }
 
-      // The position stays at the first cell when we enter the terminal mode and the cursor seems to be drawn by
-      // changing the background color of the corresponding cell...
+      // The position stays at the first cell when we enter the terminal mode
+      // and the cursor seems to be drawn by changing the background color of
+      // the corresponding cell...
       if self.mode != .termFocus {
         self.shouldDrawCursor = true
       }
-
-      if self.usesLigatures {
-        self.markForRender(region: self.grid.regionOfWord(at: self.grid.position))
-      } else {
-        self.markForRender(cellPosition: self.grid.position)
-      }
     }
   }
 
-  func update(foreground fg: Int) {
-    self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(fg))
+  final func setTitle(with value: MessagePackValue) {
+    guard let title = value.stringValue else { return }
 
-    gui.async {
-      self.grid.foreground = fg
-    }
-  }
-
-  func update(background bg: Int) {
-    self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(bg))
-
-    gui.async {
-      self.grid.background = bg
-      self.layer?.backgroundColor = ColorUtils.colorIgnoringAlpha(self.grid.background).cgColor
-    }
-  }
-
-  func update(special sp: Int) {
-    self.bridgeLogger.debug(ColorUtils.colorIgnoringAlpha(sp))
-
-    gui.async {
-      self.grid.special = sp
-    }
-  }
-
-  func set(title: String) {
     self.bridgeLogger.debug(title)
-
     self.eventsSubject.onNext(.setTitle(title))
   }
 
-  func stop() {
+  final func stop() {
     self.bridgeLogger.hr()
     try? self.api
       .stop()
@@ -172,9 +131,19 @@ extension NvimView {
       .wait()
   }
 
-  func autoCommandEvent(_ event: NvimAutoCommandEvent, bufferHandle: Int) {
-    // white-list used AUs in custom_ui_autocmds_groups() in server_ui.m
-    self.bridgeLogger.debug("\(event) -> \(bufferHandle)")
+  final func autoCommandEvent(_ value: MessagePackValue) {
+    guard let array = MessagePackUtils.array(
+      from: value, ofSize: 2, conversion: { $0.intValue }
+    ),
+          let event = NvimAutoCommandEvent(rawValue: array[0])
+      else {
+      return
+    }
+    let bufferHandle = array[1]
+
+    #if TRACE
+    self.bridgeLogger.trace("\(event) -> \(bufferHandle)")
+    #endif
 
     if event == .bufwinenter || event == .bufwinleave {
       self.bufferListChanged()
@@ -193,7 +162,7 @@ extension NvimView {
     }
   }
 
-  func ipcBecameInvalid(_ reason: String) {
+  final func ipcBecameInvalid(_ reason: String) {
     self.bridgeLogger.debug(reason)
 
     self.eventsSubject.onNext(.ipcBecameInvalid(reason))
@@ -207,80 +176,151 @@ extension NvimView {
       .wait()
   }
 
-  private func doPut(string: String) {
-    let curPos = self.grid.position
-//    self.bridgeLogger.debug("\(curPos) -> '\(string)'")
+  private func doRawLine(data: [MessagePackValue]) -> (Bool, Int) {
+    guard data.count == 7 else {
+      stdoutLogger.error(
+        "Data has wrong number of elements: \(data.count) instead of 7"
+      )
+      return (false, Int.max)
+    }
 
-    self.grid.put(string.precomposedStringWithCanonicalMapping)
+    guard let row = data[0].intValue,
+          let startCol = data[1].intValue,
+          let endCol = data[2].intValue, // past last index, but can be 0
+          let clearCol = data[3].intValue, // past last index (can be 0?)
+          let clearAttr = data[4].intValue,
+          let chunk = data[5].arrayValue?.compactMap({ $0.stringValue }),
+          let attrIds = data[6].arrayValue?.compactMap({ $0.intValue })
+      else {
 
-    if self.usesLigatures {
-      if string == " " {
-        self.markForRender(cellPosition: curPos)
+      stdoutLogger.error("Values could not be read from: \(data)")
+      return (false, Int.max)
+    }
+
+    #if TRACE
+    self.bridgeLogger.trace(
+      "row: \(row), startCol: \(startCol), endCol: \(endCol), " +
+        "clearCol: \(clearCol), clearAttr: \(clearAttr), " +
+        "chunk: \(chunk), attrIds: \(attrIds)"
+    )
+    #endif
+
+    let count = endCol - startCol
+    guard chunk.count == count && attrIds.count == count else {
+      return (false, Int.max)
+    }
+    self.ugrid.update(row: row,
+                      startCol: startCol,
+                      endCol: endCol,
+                      clearCol: clearCol,
+                      clearAttr: clearAttr,
+                      chunk: chunk,
+                      attrIds: attrIds)
+
+    if count > 0 {
+      if self.usesLigatures {
+        let leftBoundary = self.ugrid.leftBoundaryOfWord(
+          at: Position(row: row, column: startCol)
+        )
+        let rightBoundary = self.ugrid.rightBoundaryOfWord(
+          at: Position(row: row, column: max(0, endCol - 1))
+        )
+        self.markForRender(region: Region(
+          top: row, bottom: row, left: leftBoundary, right: rightBoundary
+        ))
       } else {
-        self.markForRender(region: self.grid.regionOfWord(at: curPos))
+        self.markForRender(region: Region(
+          top: row, bottom: row, left: startCol, right: max(0, endCol - 1)
+        ))
       }
-    } else {
-      self.markForRender(cellPosition: curPos)
     }
-  }
 
-  private func doPut(markedText: String) {
-    let curPos = self.grid.position
-//    self.bridgeLogger.debug("\(curPos) -> '\(markedText)'")
-
-    self.grid.putMarkedText(markedText)
-
-    self.markForRender(position: curPos)
-    // When the cursor is in the command line, then we need this...
-    self.markForRender(cellPosition: self.grid.nextCellPosition(curPos))
-    if markedText.count == 0 {
-      self.markForRender(position: self.grid.previousCellPosition(curPos))
+    if clearCol > endCol {
+      self.markForRender(region: Region(
+        top: row, bottom: row, left: endCol, right: max(endCol, clearCol - 1)
+      ))
     }
+
+    if row == self.markedPosition.row
+         && startCol <= self.markedPosition.column
+         && self.markedPosition.column <= endCol {
+      self.ugrid.markCell(at: self.markedPosition)
+    }
+
+    let oldRowContainsWideChar = self.ugrid.cells[row][startCol..<endCol]
+      .first(where: { $0.string.isEmpty }) != nil
+    let newRowContainsWideChar = chunk.first(where: { $0.isEmpty }) != nil
+
+    if !oldRowContainsWideChar && !newRowContainsWideChar {
+      return (false, row)
+    }
+
+    return (newRowContainsWideChar, row)
   }
 
-  private func doHighlightSet(_ attrs: CellAttributes) {
-//    self.bridgeLogger.debug("\(self.grid.position) -> \(attrs)")
-    self.grid.attrs = attrs
+  private func doGoto(position: Position) {
+    self.bridgeLogger.debug(position)
+
+    // Re-render the old cursor position.
+    self.markForRender(
+      region: self.cursorRegion(for: self.ugrid.cursorPosition)
+    )
+
+    self.ugrid.goto(position)
+    self.markForRender(
+      region: self.cursorRegion(for: self.ugrid.cursorPosition)
+    )
   }
 
-  private func doGoto(position: Position, textPosition: Position) {
-//    self.bridgeLogger.debug(position)
+  private func doScroll(_ array: [Int]) -> Int {
+    self.bridgeLogger.debug("[top, bot, left, right, rows, cols] = \(array)")
 
-    self.markForRender(cellPosition: self.grid.position)
-    self.grid.goto(position)
-  }
+    let (top, bottom, left, right, rows, cols)
+      = (array[0], array[1] - 1, array[2], array[3] - 1, array[4], array[5])
 
-  func doEolClear() {
-    self.bridgeLogger.mark()
+    let scrollRegion = Region(
+      top: top, bottom: bottom,
+      left: left, right: right
+    )
+//    let maxBottom = self.ugrid.size.height - 1
+//    let regionToRender = Region(
+//      top: min(max(0, top - rows), maxBottom),
+//      bottom: max(0, min(bottom - rows, maxBottom)),
+//      left: left, right: right
+//    )
 
-    self.grid.eolClear()
+    self.ugrid.scroll(region: scrollRegion, rows: rows, cols: cols)
+    self.markForRender(region: scrollRegion)
+    self.eventsSubject.onNext(.scroll)
 
-    let putPosition = self.grid.position
-    let region = Region(top: putPosition.row,
-                        bottom: putPosition.row,
-                        left: putPosition.column,
-                        right: self.grid.region.right)
-    self.markForRender(region: region)
+    return min(0, top)
   }
 }
 
 // MARK: - Simple
 extension NvimView {
 
-  func bell() {
+  final func bell() {
     self.bridgeLogger.mark()
 
     NSSound.beep()
   }
 
-  func cwdChanged(_ cwd: String) {
-    self.bridgeLogger.debug(cwd)
+  final func cwdChanged(_ value: MessagePackValue) {
+    guard let cwd = value.stringValue else { return }
 
+    self.bridgeLogger.debug(cwd)
     self._cwd = URL(fileURLWithPath: cwd)
     self.eventsSubject.onNext(.cwdChanged)
   }
 
-  func colorSchemeChanged(_ values: [Int]) {
+  final func colorSchemeChanged(_ value: MessagePackValue) {
+    guard let values = MessagePackUtils.array(
+      from: value, ofSize: 5, conversion: { $0.intValue }
+    ) else {
+      return
+    }
+
     let theme = Theme(values)
     self.bridgeLogger.debug(theme)
 
@@ -290,92 +330,120 @@ extension NvimView {
     }
   }
 
-  func defaultColorsChanged(_ values: [Int]) {
-    self.bridgeLogger.debug(values.map(ColorUtils.colorIgnoringAlpha).map { $0.hex })
+  final func defaultColorsChanged(_ value: MessagePackValue) {
+    guard let values = MessagePackUtils.array(
+      from: value, ofSize: 3, conversion: { $0.intValue }
+    ) else {
+      return
+    }
 
+    self.bridgeLogger.trace(values)
+
+    let attrs = CellAttributes(
+      fontTrait: [],
+      foreground: values[0],
+      background: values[1],
+      special: values[2],
+      reverse: false
+    )
     gui.async {
-      self.grid.foreground = values[0]
-      self.grid.background = values[1]
-      self.grid.special = values[2]
-
-      self.layer?.backgroundColor = ColorUtils.cgColorIgnoringAlpha(self.grid.background)
+      self.cellAttributesCollection.set(
+        attributes: attrs,
+        for: CellAttributesCollection.defaultAttributesId
+      )
+      self.layer?.backgroundColor = ColorUtils.cgColorIgnoringAlpha(
+        attrs.background
+      )
     }
   }
 
-  func set(dirty: Bool) {
-    self.bridgeLogger.debug(dirty)
+  final func setDirty(with value: MessagePackValue) {
+    guard let dirty = value.boolValue else { return }
 
+    self.bridgeLogger.debug(dirty)
     self.eventsSubject.onNext(.setDirtyStatus(dirty))
   }
 
-  func updateMenu() {
+  final func setAttr(with value: MessagePackValue) {
+    guard let array = value.arrayValue else { return }
+    guard array.count == 6 else { return }
+
+    guard let id = array[0].intValue,
+          let rawTrait = array[1].unsignedIntegerValue,
+          let fg = array[2].intValue,
+          let bg = array[3].intValue,
+          let sp = array[4].intValue,
+          let reverse = array[5].boolValue
+      else {
+
+      self.bridgeLogger.error("Could not get highlight attributes from " +
+                                "\(value)")
+      return
+    }
+    let trait = FontTrait(rawValue: UInt(rawTrait))
+
+    let attrs = CellAttributes(
+      fontTrait: trait,
+      foreground: fg,
+      background: bg,
+      special: sp,
+      reverse: reverse
+    )
+
+    self.bridgeLogger.trace("\(id) -> \(attrs)")
+
+    gui.async {
+      self.cellAttributesCollection.set(attributes: attrs, for: id)
+    }
+  }
+
+  final func updateMenu() {
     self.bridgeLogger.mark()
   }
 
-  func busyStart() {
+  final func busyStart() {
     self.bridgeLogger.mark()
   }
 
-  func busyStop() {
+  final func busyStop() {
     self.bridgeLogger.mark()
   }
 
-  func mouseOn() {
+  final func mouseOn() {
     self.bridgeLogger.mark()
   }
 
-  func mouseOff() {
+  final func mouseOff() {
     self.bridgeLogger.mark()
   }
 
-  func visualBell() {
+  final func visualBell() {
     self.bridgeLogger.mark()
   }
 
-  func suspend() {
+  final func suspend() {
     self.bridgeLogger.mark()
-  }
-
-  func set(icon: String) {
-    self.bridgeLogger.debug(icon)
   }
 }
 
 extension NvimView {
 
-  func markForRender(cellPosition position: Position) {
-    self.markForRender(position: position)
-
-    if self.grid.isCellEmpty(position) {
-      self.markForRender(position: self.grid.previousCellPosition(position))
-    }
-
-    if self.grid.isNextCellEmpty(position) {
-      self.markForRender(position: self.grid.nextCellPosition(position))
-    }
-  }
-
-  func markForRender(position: Position) {
-    self.markForRender(row: position.row, column: position.column)
-  }
-
-  func markForRender(screenCursor position: Position) {
-    self.markForRender(position: position)
-    if self.grid.isNextCellEmpty(position) {
-      self.markForRender(position: self.grid.nextCellPosition(position))
-    }
-  }
-
-  func markForRenderWholeView() {
+  final func markForRenderWholeView() {
     self.needsDisplay = true
   }
 
-  func markForRender(region: Region) {
+  final func markForRender(region: Region) {
     self.setNeedsDisplay(self.rect(for: region))
   }
 
-  func markForRender(row: Int, column: Int) {
+  final func markForRender(row: Int, column: Int) {
     self.setNeedsDisplay(self.rect(forRow: row, column: column))
+  }
+
+  final func markForRender(position: Position) {
+    self.setNeedsDisplay(
+      self.rect(forRow: position.row, column: position.column)
+    )
   }
 }
 
@@ -385,15 +453,19 @@ extension NvimView {
     self
       .currentBuffer()
       .flatMap { curBuf -> Single<NvimView.Buffer> in
-        self.neoVimBuffer(for: Api.Buffer(handle), currentBuffer: curBuf.apiBuffer)
+        self.neoVimBuffer(
+          for: Api.Buffer(handle), currentBuffer: curBuf.apiBuffer
+        )
       }
-      .subscribe(onSuccess: {
+      .value(onSuccess: {
         self.eventsSubject.onNext(.bufferWritten($0))
         if #available(OSX 10.12.2, *) {
           self.updateTouchBarTab()
         }
       }, onError: { error in
-        self.eventsSubject.onNext(.apiError(msg: "Could not get the buffer \(handle).", cause: error))
+        self.eventsSubject.onNext(
+          .apiError(msg: "Could not get the buffer \(handle).", cause: error)
+        )
       })
   }
 
@@ -401,13 +473,15 @@ extension NvimView {
     self
       .currentBuffer()
       .filter { $0.apiBuffer.handle == handle }
-      .subscribe(onSuccess: {
+      .value(onSuccess: {
         self.eventsSubject.onNext(.newCurrentBuffer($0))
         if #available(OSX 10.12.2, *) {
           self.updateTouchBarTab()
         }
       }, onError: { error in
-        self.eventsSubject.onNext(.apiError(msg: "Could not get the current buffer.", cause: error))
+        self.eventsSubject.onNext(
+          .apiError(msg: "Could not get the current buffer.", cause: error)
+        )
       })
   }
 
@@ -420,29 +494,3 @@ extension NvimView {
 }
 
 private let gui = DispatchQueue.main
-
-private func name(of mode: CursorModeShape) -> String {
-  switch mode {
-    // @formatter:off
-    case .normal:                  return "Normal"
-    case .visual:                  return "Visual"
-    case .insert:                  return "Insert"
-    case .replace:                 return "Replace"
-    case .cmdline:                 return "Cmdline"
-    case .cmdlineInsert:           return "CmdlineInsert"
-    case .cmdlineReplace:          return "CmdlineReplace"
-    case .operatorPending:         return "OperatorPending"
-    case .visualExclusive:         return "VisualExclusive"
-    case .onCmdline:               return "OnCmdline"
-    case .onStatusLine:            return "OnStatusLine"
-    case .draggingStatusLine:      return "DraggingStatusLine"
-    case .onVerticalSepLine:       return "OnVerticalSepLine"
-    case .draggingVerticalSepLine: return "DraggingVerticalSepLine"
-    case .more:                    return "More"
-    case .moreLastLine:            return "MoreLastLine"
-    case .showingMatchingParen:    return "ShowingMatchingParen"
-    case .termFocus:               return "TermFocus"
-    case .count:                   return "Count"
-    // @formatter:on
-  }
-}

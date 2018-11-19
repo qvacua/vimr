@@ -26,7 +26,7 @@ extension NvimView {
       return
     }
 
-    let cellPosition = self.cellPositionFor(event: event)
+    let cellPosition = self.cellPosition(forEvent: event)
 
     let isTrackpad = event.hasPreciseScrollingDeltas
     if isTrackpad == false {
@@ -36,7 +36,7 @@ extension NvimView {
       self.bridge
         .vimInput(vimInputX)
         .andThen(self.bridge.vimInput(vimInputY))
-        .subscribe()
+        .trigger()
 
       return
     }
@@ -48,7 +48,7 @@ extension NvimView {
     let (horizSign, vertSign) = (deltaX > 0 ? 1 : -1, deltaY > 0 ? 1 : -1)
     self.bridge
       .scroll(horizontal: horizSign * absDeltaX, vertical: vertSign * absDeltaY, at: cellPosition)
-      .subscribe()
+      .trigger()
   }
 
   override public func magnify(with event: NSEvent) {
@@ -66,7 +66,6 @@ extension NvimView {
       self.pinchBitmap = pinchImageRep
 
       self.isCurrentlyPinching = true
-      self.needsDisplay = true
 
     case .ended, .cancelled:
       self.isCurrentlyPinching = false
@@ -74,22 +73,34 @@ extension NvimView {
       self.pinchTargetScale = 1
 
     default:
-      self.needsDisplay = true
+      break
+
     }
+
+    self.markForRenderWholeView()
   }
 
-  private func cellPositionFor(event: NSEvent) -> Position {
-    let location = self.convert(event.locationInWindow, from: nil)
-    let row = Int((self.bounds.size.height - location.y - self.yOffset) / self.cellSize.height)
-    let column = Int((location.x - self.xOffset) / self.cellSize.width)
+  func position(at location: CGPoint) -> Position {
+    let row = Int(
+      (self.bounds.size.height - location.y - self.offset.y)
+        / self.cellSize.height
+    )
+    let column = Int((location.x - self.offset.x) / self.cellSize.width)
 
-    let cellPosition = Position(row: min(max(0, row), self.grid.size.height - 1),
-                                column: min(max(0, column), self.grid.size.width - 1))
-    return cellPosition
+    let position = Position(
+      row: min(max(0, row), self.ugrid.size.height - 1),
+      column: min(max(0, column), self.ugrid.size.width - 1)
+    )
+    return position
+  }
+
+  private func cellPosition(forEvent event: NSEvent) -> Position {
+    let location = self.convert(event.locationInWindow, from: nil)
+    return position(at: location)
   }
 
   private func mouse(event: NSEvent, vimName: String) {
-    let cellPosition = self.cellPositionFor(event: event)
+    let cellPosition = self.cellPosition(forEvent: event)
     guard self.shouldFireVimInputFor(event: event, newCellPosition: cellPosition) else {
       return
     }
@@ -107,14 +118,14 @@ extension NvimView {
 //    self.logger.debug("\(#function): \(result)")
     self.bridge
       .vimInput(result)
-      .subscribe()
+      .trigger()
   }
 
   private func shouldFireVimInputFor(event: NSEvent, newCellPosition: Position) -> Bool {
     let type = event.type
     guard type == .leftMouseDragged
-          || type == .rightMouseDragged
-          || type == .otherMouseDragged else {
+            || type == .rightMouseDragged
+            || type == .otherMouseDragged else {
 
       self.lastClickedCellPosition = newCellPosition
       return true

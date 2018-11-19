@@ -12,11 +12,9 @@ extension NvimView {
   }
 
   override public func draw(_ dirtyUnionRect: NSRect) {
-    guard self.grid.hasData else {
-      return
-    }
+    guard self.ugrid.hasData else { return }
 
-    let context = NSGraphicsContext.current!.cgContext
+    guard let context = NSGraphicsContext.current?.cgContext else { return }
     context.saveGState()
     defer { context.restoreGState() }
 
@@ -30,124 +28,94 @@ extension NvimView {
       return
     }
 
-    // When both anti-aliasing and font smoothing is turned on, then the "Use LCD font smoothing
-    // when available" setting is used to render texts,
-    // cf. chapter 11 from "Programming with Quartz".
+    // When both anti-aliasing and font smoothing is turned on,
+    // then the "Use LCD font smoothing when available" setting is used
+    // to render texts, cf. chapter 11 from "Programming with Quartz".
     context.setShouldSmoothFonts(true);
-    context.textMatrix = CGAffineTransform.identity;
     context.setTextDrawingMode(.fill);
 
     let dirtyRects = self.rectsBeingDrawn()
 
-    self.rowRunIntersecting(rects: dirtyRects).forEach { self.draw(rowRun: $0, in: context) }
-    self.drawCursor(context: context)
+    self.draw(defaultBackgroundIn: dirtyRects, in: context)
+    self.draw(cellsIntersectingRects: dirtyRects, in: context)
+    self.draw(cursorIn: context)
+
+#if DEBUG
+//    self.draw(cellGridIn: context)
+#endif
   }
 
-  private func draw(rowRun rowFrag: RowRun, in context: CGContext) {
-    context.saveGState()
-    defer { context.restoreGState() }
-
-    // For background drawing we don't filter out the put(0, 0)s:
-    // in some cases only the put(0, 0)-cells should be redrawn.
-    // => FIXME: probably we have to consider this also when drawing further down,
-    // ie when the range starts with '0'...
-    self.drawBackground(rowRun: rowFrag, in: context)
-
-    let positions = rowFrag.range
-      // filter out the put(0, 0)s (after a wide character)
-      .filter { self.grid.cells[rowFrag.row][$0].string.count > 0 }
-      .map { self.pointInView(forRow: rowFrag.row, column: $0) }
-
-    if positions.isEmpty {
-      return
-    }
-
-    let string = self.grid.cells[rowFrag.row][rowFrag.range].reduce("") { $0 + $1.string }
-    let offset = self.drawer.baselineOffset
-    let glyphPositions = positions.map { CGPoint(x: $0.x, y: $0.y + offset) }
-
+  private func draw(
+    cellsIntersectingRects dirtyRects: [CGRect], in context: CGContext
+  ) {
     self.drawer.draw(
-      string,
-      positions: UnsafeMutablePointer(mutating: glyphPositions), positionsCount: positions.count,
-      highlightAttrs: rowFrag.attrs,
-      context: context
+      self.runs(intersecting: dirtyRects),
+      defaultAttributes: self.cellAttributesCollection.defaultAttributes,
+      offset: self.offset,
+      in: context
     )
   }
 
-  private func cursorRegion() -> Region {
-    let cursorPosition = self.grid.position
-
-    let saneRow = max(0, min(cursorPosition.row, self.grid.size.height - 1))
-    let saneColumn = max(0, min(cursorPosition.column, self.grid.size.width - 1))
-
-    var cursorRegion = Region(top: saneRow, bottom: saneRow, left: saneColumn, right: saneColumn)
-
-    if self.grid.isNextCellEmpty(cursorPosition) {
-      cursorRegion = Region(top: cursorPosition.row,
-                            bottom: cursorPosition.row,
-                            left: cursorPosition.column,
-                            right: min(self.grid.size.width - 1, cursorPosition.column + 1))
-    }
-
-    return cursorRegion
+  private func draw(
+    defaultBackgroundIn dirtyRects: [CGRect], `in` context: CGContext
+  ) {
+    context.setFillColor(
+      ColorUtils.cgColorIgnoringAlpha(
+        self.cellAttributesCollection.defaultAttributes.background
+      )
+    )
+    context.fill(dirtyRects)
   }
 
-  private func drawCursor(context: CGContext) {
+  private func draw(cursorIn context: CGContext) {
     guard self.shouldDrawCursor else {
       return
     }
 
-    context.saveGState()
-    defer { context.restoreGState() }
-
-    let cursorRegion = self.cursorRegion()
-    let cursorRow = cursorRegion.top
-    let cursorColumnStart = cursorRegion.left
+    let cursorPosition = self.ugrid.cursorPosition
+    let defaultAttrs = self.cellAttributesCollection.defaultAttributes
 
     if self.mode == .insert {
-      context.setFillColor(ColorUtils.colorIgnoringAlpha(self.grid.foreground).withAlphaComponent(0.75).cgColor)
-      var cursorRect = self.rect(forRow: cursorRow, column: cursorColumnStart)
+      context.setFillColor(
+        ColorUtils.cgColorIgnoringAlpha(defaultAttrs.foreground)
+      )
+      var cursorRect = self.rect(
+        forRow: cursorPosition.row, column: cursorPosition.column
+      )
       cursorRect.size.width = 2
       context.fill(cursorRect)
       return
     }
 
-    // FIXME: for now do some rudimentary cursor drawing
-    let attrsAtCursor = self.grid.cells[cursorRow][cursorColumnStart].attrs
-    let attrs = CellAttributes(fontTrait: attrsAtCursor.fontTrait,
-                               foreground: self.grid.background,
-                               background: self.grid.foreground,
-                               special: self.grid.special)
+    let cursorRegion = self.cursorRegion(for: self.ugrid.cursorPosition)
+    guard let cursorAttrs = self.cellAttributesCollection.attributes(
+      of: self.ugrid.cells[cursorPosition.row][cursorPosition.column].attrId
+    )?.reversed else {
+      stdoutLogger.error("Could not get the attributes" +
+                           " at cursor: \(cursorPosition)")
+      return
+    }
 
-    // FIXME: take ligatures into account (is it a good idea to do this?)
-    let rowRun = RowRun(row: cursorRegion.top, range: cursorRegion.columnRange, attrs: attrs)
-    self.draw(rowRun: rowRun, in: context)
+    let attrsRun = AttributesRun(
+      location: self.pointInView(
+        forRow: cursorPosition.row, column: cursorPosition.column
+      ),
+      cells: self.ugrid.cells[cursorPosition.row][cursorRegion.columnRange],
+      attrs: cursorAttrs
+    )
+    self.drawer.draw(
+      [attrsRun],
+      defaultAttributes: defaultAttrs,
+      offset: self.offset,
+      in: context
+    )
 
     self.shouldDrawCursor = false
   }
 
-  private func drawBackground(rowRun: RowRun, in context: CGContext) {
-    // TODO: GH-612
-    // The following seems to break the anti-aliasing...
-    // Find another way to avoid double rendering of the background
-//    if rowRun.attrs.background == self.grid.background {
-//      return
-//    }
-
-    context.saveGState()
-    defer { context.restoreGState() }
-
-    context.setFillColor(ColorUtils.cgColorIgnoringAlpha(rowRun.attrs.background))
-
-    let firstCellOrigin = self.pointInView(forRow: rowRun.row, column: rowRun.range.lowerBound)
-    let backgroundRect = CGRect(
-      x: firstCellOrigin.x, y: firstCellOrigin.y,
-      width: CGFloat(rowRun.range.count) * self.cellSize.width, height: self.cellSize.height
-    )
-    context.fill(backgroundRect)
-  }
-
-  private func drawResizeInfo(in context: CGContext, with dirtyUnionRect: CGRect) {
+  private func drawResizeInfo(
+    in context: CGContext, with dirtyUnionRect: CGRect
+  ) {
     context.setFillColor(self.theme.background.cgColor)
     context.fill(dirtyUnionRect)
 
@@ -159,7 +127,8 @@ extension NvimView {
 
     let discreteSize = self.discreteSize(size: boundsSize)
     let displayStr = "\(discreteSize.width) × \(discreteSize.height)"
-    let infoStr = "(You can turn on the experimental live resizing feature in the Advanced preferences)"
+    let infoStr = "(You can turn on the experimental live resizing feature" +
+      " in the Advanced preferences)"
 
     var (sizeAttrs, infoAttrs) = (resizeTextAttrs, infoTextAttrs)
     sizeAttrs[.foregroundColor] = self.theme.foreground
@@ -169,9 +138,13 @@ extension NvimView {
     let (x, y) = ((boundsSize.width - size.width) / 2, emojiY - size.height)
 
     let infoSize = infoStr.size(withAttributes: infoAttrs)
-    let (infoX, infoY) = ((boundsSize.width - infoSize.width) / 2, y - size.height - 5)
+    let (infoX, infoY) = (
+      (boundsSize.width - infoSize.width) / 2, y - size.height - 5
+    )
 
-    self.currentEmoji.draw(at: CGPoint(x: emojiX, y: emojiY), withAttributes: emojiAttrs)
+    self.currentEmoji.draw(
+      at: CGPoint(x: emojiX, y: emojiY), withAttributes: emojiAttrs
+    )
     displayStr.draw(at: CGPoint(x: x, y: y), withAttributes: sizeAttrs)
     infoStr.draw(at: CGPoint(x: infoX, y: infoY), withAttributes: infoAttrs)
   }
@@ -182,142 +155,88 @@ extension NvimView {
     let boundsSize = self.bounds.size
     let targetSize = CGSize(width: boundsSize.width * self.pinchTargetScale,
                             height: boundsSize.height * self.pinchTargetScale)
-    self.pinchBitmap?.draw(in: CGRect(origin: self.bounds.origin, size: targetSize),
-                           from: CGRect.zero,
-                           operation: .sourceOver,
-                           fraction: 1,
-                           respectFlipped: true,
-                           hints: nil)
+    self.pinchBitmap?.draw(
+      in: CGRect(origin: self.bounds.origin, size: targetSize),
+      from: CGRect.zero,
+      operation: .sourceOver,
+      fraction: 1,
+      respectFlipped: true,
+      hints: nil
+    )
   }
 
-  private func rowRunIntersecting(rects: [CGRect]) -> [RowRun] {
+  private func runs(intersecting rects: [CGRect]) -> [AttributesRun] {
     return rects
-      .map { rect -> (CountableClosedRange<Int>, CountableClosedRange<Int>) in
+      .map { rect in
         // Get all Regions that intersects with the given rects.
-        // There can be overlaps between the Regions, but for the time being we ignore them;
+        // There can be overlaps between the Regions,
+        // but for the time being we ignore them;
         // probably not necessary to optimize them away.
         let region = self.region(for: rect)
         return (region.rowRange, region.columnRange)
       }
       // All RowRuns for all Regions grouped by their row range.
-      .map { self.rowRunsFor(rowRange: $0, columnRange: $1) }
+      .map { self.runs(forRowRange: $0, columnRange: $1) }
       // Flattened RowRuns for all Regions.
       .flatMap { $0 }
   }
 
-  private func rowRunsFor(rowRange: CountableClosedRange<Int>,
-                          columnRange: CountableClosedRange<Int>) -> [RowRun] {
+  private func runs(
+    forRowRange rowRange: CountableClosedRange<Int>,
+    columnRange: CountableClosedRange<Int>
+  ) -> [AttributesRun] {
 
-    return rowRange
-      .map { (row) -> [RowRun] in
-        let rowCells = self.grid.cells[row]
-        let startIdx = columnRange.lowerBound
+    return rowRange.map { row in
+        self.ugrid.cells[row][columnRange]
+          .groupedRanges(with: { _, cell in cell.attrId })
+          .compactMap { range in
+            let cells = self.ugrid.cells[row][range]
 
-        var result: [RowRun] = []
-        var last = RowRun(row: row, range: startIdx...startIdx, attrs: rowCells[startIdx].attrs)
-        columnRange.forEach { idx in
-          if last.attrs == rowCells[idx].attrs {
-            last.range = last.range.lowerBound...idx
-          } else {
-            result.append(last)
-            last = RowRun(row: row, range: idx...idx, attrs: rowCells[idx].attrs)
+            guard let firstCell = cells.first,
+                  let attrs = self.cellAttributesCollection.attributes(
+                    of: firstCell.attrId
+                  )
+              else {
+              // GH-666: FIXME: correct error handling
+              logger.error("row: \(row), range: \(range): " +
+                             "Could not get CellAttributes with ID " +
+                             "\(String(describing: cells.first?.attrId))")
+              return nil
+            }
+
+            return AttributesRun(
+              location: self.pointInView(forRow: row, column: range.lowerBound),
+              cells: self.ugrid.cells[row][range],
+              attrs: attrs
+            )
           }
-
-          if idx == columnRange.upperBound {
-            result.append(last)
-          }
-        }
-
-        return result // All RowRuns for a row in a Region.
-      }               // All RowRuns for all rows in a Region grouped by row.
-      .flatMap { $0 } // Flattened RowRuns for a Region.
-  }
-
-  private func region(for rect: CGRect) -> Region {
-    let cellWidth = self.cellSize.width
-    let cellHeight = self.cellSize.height
-
-    let rowStart = max(
-      Int(floor(
-        (self.bounds.height - self.yOffset - (rect.origin.y + rect.size.height)) / cellHeight)
-      ), 0
-    )
-    let rowEnd = min(
-      Int(ceil((self.bounds.height - self.yOffset - rect.origin.y) / cellHeight)) - 1,
-      self.grid.size.height - 1
-    )
-    let columnStart = max(
-      Int(floor((rect.origin.x - self.xOffset) / cellWidth)), 0
-    )
-    let columnEnd = min(
-      Int(ceil((rect.origin.x - self.xOffset + rect.size.width) / cellWidth)) - 1,
-      self.grid.size.width - 1
-    )
-
-    return Region(top: rowStart, bottom: rowEnd, left: columnStart, right: columnEnd)
-  }
-
-  private func pointInView(forRow row: Int, column: Int) -> CGPoint {
-    return CGPoint(
-      x: self.xOffset + CGFloat(column) * self.cellSize.width,
-      y: self.bounds.size.height - self.yOffset - CGFloat(row) * self.cellSize.height
-         - self.cellSize.height
-    )
-  }
-
-  func rect(forRow row: Int, column: Int) -> CGRect {
-    return CGRect(origin: self.pointInView(forRow: row, column: column), size: self.cellSize)
-  }
-
-  func rect(for region: Region) -> CGRect {
-    let top = CGFloat(region.top)
-    let bottom = CGFloat(region.bottom)
-    let left = CGFloat(region.left)
-    let right = CGFloat(region.right)
-
-    let width = right - left + 1
-    let height = bottom - top + 1
-
-    let cellWidth = self.cellSize.width
-    let cellHeight = self.cellSize.height
-
-    return CGRect(
-      x: self.xOffset + left * cellWidth,
-      y: self.bounds.size.height - self.yOffset - top * cellHeight - height * cellHeight,
-      width: width * cellWidth,
-      height: height * cellHeight
-    )
-  }
-
-  func wrapNamedKeys(_ string: String) -> String {
-    return "<\(string)>"
-  }
-
-  func vimPlainString(_ string: String) -> String {
-    return string.replacingOccurrences(of: "<", with: self.wrapNamedKeys("lt"))
+      }
+      .flatMap { $0 }
   }
 
   func updateFontMetaData(_ newFont: NSFont) {
     self.drawer.font = newFont
+    self.drawer.linespacing = self.linespacing
 
     self.cellSize = self.drawer.cellSize
-    self.descent = self.drawer.descent
-    self.leading = self.drawer.leading
+    self.baselineOffset = self.drawer.baselineOffset
 
     self.resizeNeoVimUi(to: self.bounds.size)
   }
 }
 
-private let emojiAttrs = [NSAttributedStringKey.font: NSFont(name: "AppleColorEmoji", size: 72)!]
+private let emojiAttrs = [
+  NSAttributedString.Key.font: NSFont(name: "AppleColorEmoji", size: 72)!
+]
 
 private let resizeTextAttrs = [
-  NSAttributedStringKey.font: NSFont.systemFont(ofSize: 18),
-  NSAttributedStringKey.foregroundColor: NSColor.darkGray
+  NSAttributedString.Key.font: NSFont.systemFont(ofSize: 18),
+  NSAttributedString.Key.foregroundColor: NSColor.darkGray
 ]
 
 private let infoTextAttrs = [
-  NSAttributedStringKey.font: NSFont.systemFont(ofSize: 16),
-  NSAttributedStringKey.foregroundColor: NSColor.darkGray
+  NSAttributedString.Key.font: NSFont.systemFont(ofSize: 16),
+  NSAttributedString.Key.foregroundColor: NSColor.darkGray
 ]
 
 private let colorSpace = NSColorSpace.sRGB

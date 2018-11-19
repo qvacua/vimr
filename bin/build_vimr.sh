@@ -3,6 +3,7 @@
 set -e
 
 CODE_SIGN=$1
+DEPLOYMENT_TARGET="10.11"
 
 echo "### Building VimR target"
 
@@ -20,7 +21,7 @@ make distclean
 
 echo "### Building nvim to get the complete runtime folder"
 rm -rf /tmp/nvim-runtime
-make CFLAGS='-mmacosx-version-min=10.10' MACOSX_DEPLOYMENT_TARGET=10.10 CMAKE_FLAGS="-DCUSTOM_UI=0 -DCMAKE_INSTALL_PREFIX=/tmp/nvim-runtime" install
+make CFLAGS="-mmacosx-version-min=${DEPLOYMENT_TARGET}" MACOSX_DEPLOYMENT_TARGET=${DEPLOYMENT_TARGET} CMAKE_FLAGS="-DCUSTOM_UI=0 -DCMAKE_INSTALL_PREFIX=/tmp/nvim-runtime" install
 
 rm -rf build
 make clean

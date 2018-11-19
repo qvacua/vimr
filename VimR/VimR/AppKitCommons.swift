@@ -111,12 +111,12 @@ extension NSAttributedString {
 
     let attrs = CMTextAttributes()
     attrs?.textAttributes = [
-      NSAttributedStringKey.font: NSFont.systemFont(ofSize: size),
-      NSAttributedStringKey.foregroundColor: NSColor.gray,
+      NSAttributedString.Key.font: NSFont.systemFont(ofSize: size),
+      NSAttributedString.Key.foregroundColor: NSColor.gray,
     ]
     attrs?.inlineCodeAttributes = [
-      NSAttributedStringKey.font: NSFont.userFixedPitchFont(ofSize: size)!,
-      NSAttributedStringKey.foregroundColor: NSColor.gray,
+      NSAttributedString.Key.font: NSFont.userFixedPitchFont(ofSize: size)!,
+      NSAttributedString.Key.foregroundColor: NSColor.gray,
     ]
 
     let renderer = CMAttributedStringRenderer(document: document, attributes: attrs)

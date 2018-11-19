@@ -5,6 +5,15 @@
 
 import Cocoa
 
+extension NSRange {
+
+  static let notFound = NSRange(location: NSNotFound, length: 0)
+
+  var inclusiveEndIndex: Int {
+    return self.location + self.length - 1
+  }
+}
+
 extension NSColor {
 
   var hex: String {
@@ -17,22 +26,6 @@ extension NSColor {
     } else {
       return self.description
     }
-  }
-}
-
-extension CGRect {
-
-  public var hashValue: Int {
-    let o = Int(self.origin.x) << 10 ^ Int(self.origin.y)
-    let s = Int(self.size.width) << 10 ^ Int(self.size.height)
-    return o + s
-  }
-}
-
-extension CGSize {
-
-  func scaling(_ factor: CGFloat) -> CGSize {
-    return CGSize(width: self.width * factor, height: self.height * factor)
   }
 }
 

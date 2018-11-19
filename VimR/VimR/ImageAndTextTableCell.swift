@@ -20,7 +20,7 @@ class ImageAndTextTableCell: NSTableCellView {
   static let widthWithoutText = CGFloat(2 + 16 + 4 + 2)
 
   static func width(with text: String) -> CGFloat {
-    let attrStr = NSAttributedString(string: text, attributes: [NSAttributedStringKey.font: ImageAndTextTableCell.font])
+    let attrStr = NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: ImageAndTextTableCell.font])
 
     return self.widthWithoutText + attrStr.size().width
   }
@@ -45,10 +45,10 @@ class ImageAndTextTableCell: NSTableCellView {
 
       switch self.backgroundStyle {
       case .light:
-        attrStr.addAttribute(NSAttributedStringKey.foregroundColor, value: NSColor.black, range: nameRange)
+        attrStr.addAttribute(NSAttributedString.Key.foregroundColor, value: NSColor.black, range: nameRange)
 
       case .dark:
-        attrStr.addAttribute(NSAttributedStringKey.foregroundColor, value: NSColor.white, range: nameRange)
+        attrStr.addAttribute(NSAttributedString.Key.foregroundColor, value: NSColor.white, range: nameRange)
 
       default:
         return

@@ -47,22 +47,36 @@ extension NvimView {
     self.currentEmoji = self.randomEmoji()
 
     let discreteSize = self.discreteSize(size: size)
-    if discreteSize == self.grid.size {
+    if discreteSize == self.ugrid.size {
       self.markForRenderWholeView()
       return
     }
 
-    self.xOffset = floor((size.width - self.cellSize.width * CGFloat(discreteSize.width)) / 2)
-    self.yOffset = floor((size.height - self.cellSize.height * CGFloat(discreteSize.height)) / 2)
+    self.offset.x = floor((size.width - self.cellSize.width * CGFloat(discreteSize.width)) / 2)
+    self.offset.y = floor((size.height - self.cellSize.height * CGFloat(discreteSize.height)) / 2)
 
     self.bridge
       .resize(width: discreteSize.width, height: discreteSize.height)
-      .subscribe()
+      .trigger()
   }
 
   private func launchNeoVim(_ size: Size) {
-    self.logger.info("=== Starting neovim...")
+    logger.info("=== Starting neovim...")
     let sockPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock").path
+
+    self.api.msgpackRawStream
+        .subscribe(onNext: { msg in
+          switch msg {
+          case let .notification(method, params):
+            print("NOTIFICATION: \(method) with \(params.count) elements")
+          case let .error(_, msg):
+            print("MSG ERROR: \(msg)")
+          default:
+            print("???")
+            break
+          }
+        }, onError: { print("ERROR: \($0)" )})
+        .disposed(by: self.disposeBag)
 
     // We wait here, since the user of NvimView cannot subscribe on the Completable. We could demand that the user
     // call launchNeoVim() by themselves, but...

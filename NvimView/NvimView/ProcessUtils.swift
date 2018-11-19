@@ -7,7 +7,9 @@ import Foundation
 
 class ProcessUtils {
 
-  static func envVars(of shellPath: URL, usingInteractiveMode: Bool) -> [String: String] {
+  static func envVars(
+    of shellPath: URL, usingInteractiveMode: Bool
+  ) -> [String: String] {
     let shellName = shellPath.lastPathComponent
     var shellArgs = [String]()
 
@@ -34,7 +36,9 @@ class ProcessUtils {
     process.launch()
 
     let readHandle = outputPipe.fileHandleForReading
-    guard let output = String(data: readHandle.readDataToEndOfFile(), encoding: .utf8) else {
+    guard let output = String(
+      data: readHandle.readDataToEndOfFile(), encoding: .utf8
+    ) else {
       return [:]
     }
     readHandle.closeFile()

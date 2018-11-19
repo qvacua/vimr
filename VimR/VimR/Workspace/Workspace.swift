@@ -145,7 +145,7 @@ extension Workspace {
   }
 
   override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
-    let loc = self.convert(sender.draggingLocation(), from: nil)
+    let loc = self.convert(sender.draggingLocation, from: nil)
     let currentBarLoc = self.barLocation(inPoint: loc)
 
     if currentBarLoc == self.draggedOnBarLocation {
@@ -172,12 +172,12 @@ extension Workspace {
   }
 
   override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
-    let loc = self.convert(sender.draggingLocation(), from: nil)
+    let loc = self.convert(sender.draggingLocation, from: nil)
     guard let barLoc = self.barLocation(inPoint: loc) else {
       return false
     }
 
-    guard let toolButton = sender.draggingSource() as? WorkspaceToolButton else {
+    guard let toolButton = sender.draggingSource as? WorkspaceToolButton else {
       return false
     }
 
