@@ -1,4 +1,4 @@
-github "IBM-Swift/BlueSocket" "1.0.24"
+github "IBM-Swift/BlueSocket" "1.0.25"
 github "PureLayout/PureLayout" "v3.0.2"
 github "Quick/Nimble" "v7.1.2"
 github "ReactiveX/RxSwift" "4.4.0"
