@@ -150,18 +150,15 @@ final class AttributesRunDrawer {
     offset: CGPoint,
     `in` context: CGContext
   ) {
-    let runs = attrsRuns.parallelMap {
-      attrsRun -> (attrsRun: AttributesRun, fontGlyphRuns: [FontGlyphRun]) in
-
-      let fontGlyphRuns = self.fontGlyphRuns(from: attrsRun, offset: offset)
-
-      return (attrsRun: attrsRun, fontGlyphRuns: fontGlyphRuns)
+    var result = Array(repeating: [FontGlyphRun](), count: attrsRuns.count)
+    DispatchQueue.concurrentPerform(iterations: attrsRuns.count) { i in
+      result[i] = self.fontGlyphRuns(from: attrsRuns[i], offset: offset)
     }
 
-    runs.forEach { (attrsRun, glyphRuns) in
+    attrsRuns.enumerated().forEach { (i, attrsRun) in
       self.draw(
         attrsRun,
-        fontGlyphRuns: glyphRuns,
+        fontGlyphRuns: result[i],
         defaultAttributes: defaultAttributes,
         in: context
       )

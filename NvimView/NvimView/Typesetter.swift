@@ -22,45 +22,55 @@ final class Typesetter {
     )
     let ctRuns = self.ctRuns(from: utf16Chars, font: font)
 
-    let result = ctRuns.map { run -> FontGlyphRun in
-      let glyphCount = CTRunGetGlyphCount(run)
+    return ctRuns.withUnsafeBufferPointer { pointer -> [FontGlyphRun] in
+      var result: [FontGlyphRun] = []
+      result.reserveCapacity(pointer.count)
 
-      var glyphs = Array(repeating: CGGlyph(), count: glyphCount)
-      CTRunGetGlyphs(run, .zero, &glyphs)
+      for k in 0..<pointer.count {
+        let run = pointer[k]
 
-      var positions = Array(repeating: CGPoint.zero, count: glyphCount)
-      CTRunGetPositions(run, .zero, &positions)
+        let glyphCount = CTRunGetGlyphCount(run)
 
-      var indices = Array(repeating: CFIndex(), count: glyphCount)
-      CTRunGetStringIndices(run, .zero, &indices)
+        var glyphs = Array(repeating: CGGlyph(), count: glyphCount)
+        CTRunGetGlyphs(run, .zero, &glyphs)
 
-      var column = -1
-      var columnPosition = CGFloat(0)
-      var deltaX = CGFloat(0)
-      for i in 0..<positions.count {
-        let newColumn = cellIndices[indices[i]] + startColumn
-        if newColumn != column {
-          columnPosition = offset.x + CGFloat(newColumn) * cellWidth
-          deltaX = columnPosition - positions[i].x
-          column = newColumn
+        var positions = Array(repeating: CGPoint.zero, count: glyphCount)
+        CTRunGetPositions(run, .zero, &positions)
+
+        var indices = Array(repeating: CFIndex(), count: glyphCount)
+        CTRunGetStringIndices(run, .zero, &indices)
+
+        var column = -1
+        var columnPosition = CGFloat(0)
+        var deltaX = CGFloat(0)
+
+        _ = positions.withUnsafeMutableBufferPointer { positionsPtr -> Void in
+          for i in 0..<positionsPtr.count {
+            let newColumn = cellIndices[indices[i]] + startColumn
+            if newColumn != column {
+              columnPosition = offset.x + CGFloat(newColumn) * cellWidth
+              deltaX = columnPosition - positionsPtr[i].x
+              column = newColumn
+            }
+            positionsPtr[i].x += deltaX
+            positionsPtr[i].y += offset.y
+          }
         }
-        positions[i].x += deltaX
-        positions[i].y += offset.y
+
+        let attrs = CTRunGetAttributes(run)
+        let font = Unmanaged<NSFont>.fromOpaque(
+          CFDictionaryGetValue(
+            attrs, Unmanaged.passUnretained(kCTFontAttributeName).toOpaque()
+          )
+        ).takeUnretainedValue()
+
+        result.append(FontGlyphRun(
+          font: font, glyphs: glyphs, positions: positions
+        ))
       }
 
-      let attrs = CTRunGetAttributes(run)
-      let font = Unmanaged<NSFont>.fromOpaque(
-        CFDictionaryGetValue(
-          attrs, Unmanaged.passUnretained(kCTFontAttributeName).toOpaque()
-        )
-      ).takeUnretainedValue()
-
-      return FontGlyphRun(
-        font: font, glyphs: glyphs, positions: positions
-      )
+      return result
     }
-
-    return result
   }
 
   func fontGlyphRunsWithoutLigatures(
@@ -127,7 +137,7 @@ final class Typesetter {
           let positions = (startColumnForPositions..<endColumn).map { i in
             CGPoint(
               x: offset.x
-                + CGFloat(i + startColumn + range.lowerBound) * cellWidth,
+                 + CGFloat(i + startColumn + range.lowerBound) * cellWidth,
               y: offset.y
             )
           }
@@ -211,7 +221,7 @@ final class Typesetter {
 
       let hasSingleUnichar = utf16Cell.count == 1
       let hasDoubleWidth = i + 1 < nvimUtf16Cells.count
-        && nvimUtf16Cells[i + 1].isEmpty
+                           && nvimUtf16Cells[i + 1].isEmpty
       let isSimple = hasSingleUnichar && !hasDoubleWidth
 
       if previousWasSimple == isSimple {
@@ -249,49 +259,53 @@ final class Typesetter {
     from nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]],
     utf16CharsCount: Int
   ) -> Array<Int> {
-    var cellIndices = Array(repeating: 0, count: utf16CharsCount)
-    var cellIndex = 0
-    var i = 0
-    repeat {
-      if nvimUtf16Cells[cellIndex].isEmpty {
+    return nvimUtf16Cells.withUnsafeBufferPointer { pointer -> [Int] in
+      var cellIndices = Array(repeating: 0, count: utf16CharsCount)
+      var cellIndex = 0
+      var i = 0
+
+      repeat {
+        if pointer[cellIndex].isEmpty {
+          cellIndex = cellIndex &+ 1
+          continue
+        }
+
+        for _ in (0..<pointer[cellIndex].count) {
+          cellIndices[i] = cellIndex
+          i = i &+ 1
+        }
         cellIndex = cellIndex &+ 1
-        continue
-      }
+      } while cellIndex < pointer.count
 
-      for _ in (0..<nvimUtf16Cells[cellIndex].count) {
-        cellIndices[i] = cellIndex
-        i = i &+ 1
-      }
-      cellIndex = cellIndex &+ 1
-    } while cellIndex < nvimUtf16Cells.count
-
-    return cellIndices
+      return cellIndices
+    }
   }
 
   private func utf16Chars(
     from nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]]
   ) -> Array<UInt16> {
-    // Using reduce seems to be slower than the following:
-    var count = 0
-    for i in 0..<nvimUtf16Cells.count {
-      count = count &+ nvimUtf16Cells[i].count
-    }
-
-    // Using append(contentsOf:) seems to be slower than the following:
-    var result = Array(repeating: Unicode.UTF16.CodeUnit(), count: count)
-    var i = 0
-    for cell in nvimUtf16Cells {
-      if cell.isEmpty {
-        continue
+    return nvimUtf16Cells.withUnsafeBufferPointer { pointer -> [UInt16] in
+      var count = 0
+      for i in 0..<pointer.count {
+        count = count &+ pointer[i].count
       }
 
-      for j in 0..<cell.count {
-        result[i &+ j] = cell[j]
+      var result = Array(repeating: Unicode.UTF16.CodeUnit(), count: count)
+      var i = 0
+      for k in 0..<pointer.count {
+        let element = pointer[k]
+        if element.isEmpty {
+          continue
+        }
+
+        for j in 0..<element.count {
+          result[i &+ j] = element[j]
+        }
+
+        i = i &+ element.count
       }
 
-      i = i &+ cell.count
+      return result
     }
-
-    return result
   }
 }
