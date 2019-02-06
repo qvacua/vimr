@@ -7,26 +7,27 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-294</title>
+      <title>SNAPSHOT-295</title>
       <description><![CDATA[
     <ul>
-<li><em>WARNING</em>: This build may be very instable due to many changes described below. Use at your own risk 😶</li>
-<li>Adapt to the new UI interface of Neovim 0.3.2</li>
-<li>New rendering code: It's currently slower, but can hopefully render characters more correctly. Needs optimization.</li>
+<li><em>WARNING</em>: This build may be very instable due to new rendering code. Use at your own risk 😶<ul>
+<li>For example underline and undercurl are not yet implemented (TBH I forgot to implement them).</li>
+</ul>
+</li>
+<li>Neovim 0.3.4</li>
 <li>Update dependencies</li>
-<li>Bugfix: GH-694: Reports crashes under Mojave when closing a window.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/294
+        https://github.com/qvacua/vimr/releases/tag/snapshot/295
       </releaseNotesLink>
-      <pubDate>2018-11-19T17:05:31.186813</pubDate>
+      <pubDate>2019-02-06T23:02:30.652511</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/294/VimR-SNAPSHOT-294.tar.bz2"
-                 sparkle:version="294"
-                 sparkle:shortVersionString="SNAPSHOT-294"
-                 sparkle:dsaSignature="MC4CFQDtKvyzeQjegz9f2dq2NyhSjjKFhgIVAJTWzs4j4Jy2o2jqEa5nwOndErRY"
-                 length="14800135"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/295/VimR-SNAPSHOT-295.tar.bz2"
+                 sparkle:version="295"
+                 sparkle:shortVersionString="SNAPSHOT-295"
+                 sparkle:dsaSignature="MC0CFEIZVxEbaGg1MARsTqm4ynUi1wmkAhUA5QchFudb9CVcNjVOJ1Fo6fAyrb8="
+                 length="14928568"
                  type="application/octet-stream"/>
     </item>
   </channel>
