@@ -89,6 +89,18 @@ final class AttributesRunDrawer {
       )
     }
 
+    if run.attrs.fontTrait.contains(.underline) {
+      guard let lastPosition = fontGlyphRuns.last?.positions.last?.x else {
+        return
+      }
+
+      let x1 = lastPosition + self.cellSize.width
+      let x0 = fontGlyphRuns[0].positions[0].x
+      let y0 = fontGlyphRuns[0].positions[0].y
+      CGRect(x: x0, y: y0 + self.underlinePosition,
+             width: x1, height: self.underlineThickness).fill()
+    }
+
     // TODO: GH-666: Draw underline/curl
   }
 
