@@ -7,27 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-295</title>
+      <title>SNAPSHOT-296</title>
       <description><![CDATA[
     <ul>
-<li><em>WARNING</em>: This build may be very instable due to new rendering code. Use at your own risk 😶<ul>
-<li>For example underline and undercurl are not yet implemented (TBH I forgot to implement them).</li>
-</ul>
-</li>
-<li>Neovim 0.3.4</li>
-<li>Update dependencies</li>
+<li><em>WARNING</em>: This build may be very instable due to new rendering code. Use at your own risk 😶</li>
+<li>Re-implemented underline and undercurl</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/295
+        https://github.com/qvacua/vimr/releases/tag/snapshot/296
       </releaseNotesLink>
-      <pubDate>2019-02-06T23:02:30.652511</pubDate>
+      <pubDate>2019-02-21T22:46:19.104580</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/295/VimR-SNAPSHOT-295.tar.bz2"
-                 sparkle:version="295"
-                 sparkle:shortVersionString="SNAPSHOT-295"
-                 sparkle:dsaSignature="MC0CFEIZVxEbaGg1MARsTqm4ynUi1wmkAhUA5QchFudb9CVcNjVOJ1Fo6fAyrb8="
-                 length="14928568"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/296/VimR-SNAPSHOT-296.tar.bz2"
+                 sparkle:version="296"
+                 sparkle:shortVersionString="SNAPSHOT-296"
+                 sparkle:dsaSignature="MCwCFBy6QbfsbPB/VE5mvr5j3R+ZHf8WAhQHsm2CwWulnhQgbqUSXw0Ml58DJQ=="
+                 length="14933043"
                  type="application/octet-stream"/>
     </item>
   </channel>
