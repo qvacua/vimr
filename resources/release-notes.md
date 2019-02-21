@@ -7,10 +7,11 @@
 * GH-659: Bugfix (introduced in a snapshot): Turning off ligatures does not really turn off ligatures.
 * GH-664: Bugfix: VimR crashes for some shell configurations.
 * Dependencies updates:
-    - ReactiveX/RxSwift@4.4.0
-    - httpswift/swifter@1.4.2
-    - sindresorhus/github-markdown-css@3.0.0
-    - sparkle-project/Sparkle@1.21.1
+    - ReactiveX/RxSwift@4.4.1
+    - httpswift/swifter@1.4.5
+    - PureLayout/PureLayout@3.1.4
+    - sindresorhus/github-markdown-css@3.0.1
+    - sparkle-project/Sparkle@1.21.3
 
 # 0.24.0-282
 
