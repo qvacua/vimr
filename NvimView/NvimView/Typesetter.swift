@@ -272,7 +272,7 @@ final class Typesetter {
 
         for _ in (0..<pointer[cellIndex].count) {
           cellIndices[i] = cellIndex
-          i = i &+ 1
+          i = i + 1
         }
         cellIndex = cellIndex &+ 1
       } while cellIndex < pointer.count
@@ -287,7 +287,7 @@ final class Typesetter {
     return nvimUtf16Cells.withUnsafeBufferPointer { pointer -> [UInt16] in
       var count = 0
       for i in 0..<pointer.count {
-        count = count &+ pointer[i].count
+        count = count + pointer[i].count
       }
 
       var result = Array(repeating: Unicode.UTF16.CodeUnit(), count: count)
@@ -299,10 +299,10 @@ final class Typesetter {
         }
 
         for j in 0..<element.count {
-          result[i &+ j] = element[j]
+          result[i + j] = element[j]
         }
 
-        i = i &+ element.count
+        i = i + element.count
       }
 
       return result
