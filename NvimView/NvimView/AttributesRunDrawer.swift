@@ -132,12 +132,12 @@ final class AttributesRunDrawer {
 
     context.move(to: CGPoint(x: x0, y: y0))
     for _ in (0..<count) {
-      context.addCurve(to: CGPoint(x: x0 + 0.25 * w, y: y0),
-                       control1: CGPoint(x: x0 + 0.25 * w, y: y0 + h),
-                       control2: CGPoint(x: x0 + 0.5 * w, y: y0 + h))
-      context.addCurve(to: CGPoint(x: x0 + 0.75 * w, y: y0 + h),
-                       control1: CGPoint(x: x0 + 0.75 * w, y: y0),
-                       control2: CGPoint(x: x0 + w, y: y0))
+      context.addCurve(to: CGPoint(x: x0 + 0.5 * w, y: y0 + h),
+                       control1: CGPoint(x: x0 + 0.25 * w, y: y0),
+                       control2: CGPoint(x: x0 + 0.25 * w, y: y0 + h))
+      context.addCurve(to: CGPoint(x: x0 + w, y: y0),
+                       control1: CGPoint(x: x0 + 0.75 * w, y: y0 + h),
+                       control2: CGPoint(x: x0 + 0.75 * w, y: y0))
       x0 += w
     }
     context.setStrokeColor(color)
