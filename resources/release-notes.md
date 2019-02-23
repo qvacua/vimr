@@ -2,15 +2,17 @@
 
 * Neovim 0.3.4
 * GH-625: `vimr --cur-env` will pass the current environment variables to the new neovim process. This will result in `virtualenv` support.
-* GH-443: `vimr --line ${LINE_NUMBER} ${SOME_FILE}` will open the file and go to the given line. If the file is already open in a UI window, then that window will be selected and the cursor will be moved to the given line. This can be used e.g. to reverse-search LaTeX.
+* GH-443: `vimr --line ${LINE_NUMBER} ${SOME_FILE}` will open the file and go to the given line. If the file is already open in a UI window, then that window will be selected and the cursor will be moved to the given line. This can be used for example to reverse-search LaTeX.
 * GH-603: Bugfix: `Cmd-V` pastes at the wrong location in the insert mode.
 * GH-659: Bugfix (introduced in a snapshot): Turning off ligatures does not really turn off ligatures.
 * GH-664: Bugfix: VimR crashes for some shell configurations.
+* GH-666: Adapt to the new UI-API of Neovim
 * Dependencies updates:
-    - ReactiveX/RxSwift@4.4.0
-    - httpswift/swifter@1.4.2
-    - sindresorhus/github-markdown-css@3.0.0
-    - sparkle-project/Sparkle@1.21.1
+    - ReactiveX/RxSwift@4.4.1
+    - httpswift/swifter@1.4.5
+    - PureLayout/PureLayout@3.1.4
+    - sindresorhus/github-markdown-css@3.0.1
+    - sparkle-project/Sparkle@1.21.3
 
 # 0.24.0-282
 

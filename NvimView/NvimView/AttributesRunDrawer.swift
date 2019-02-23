@@ -22,6 +22,7 @@ final class AttributesRunDrawer {
   var usesLigatures: Bool
   private(set) var cellSize: CGSize = .zero
   private(set) var baselineOffset: CGFloat = 0
+  private(set) var descent: CGFloat = 0
   private(set) var underlinePosition: CGFloat = 0
   private(set) var underlineThickness: CGFloat = 0
 
@@ -39,14 +40,14 @@ final class AttributesRunDrawer {
     offset: CGPoint,
     `in` context: CGContext
   ) {
-#if DEBUG
+    #if DEBUG
     self.drawByParallelComputation(
       attrsRuns,
       defaultAttributes: defaultAttributes,
       offset: offset,
       in: context
     )
-#else
+    #else
     let runs = attrsRuns.map { self.fontGlyphRuns(from: $0, offset: offset) }
 
     for i in 0..<attrsRuns.count {
@@ -57,7 +58,7 @@ final class AttributesRunDrawer {
         in: context
       )
     }
-#endif
+    #endif
   }
 
   private func draw(
@@ -89,7 +90,58 @@ final class AttributesRunDrawer {
       )
     }
 
-    // TODO: GH-666: Draw underline/curl
+    if run.attrs.fontTrait.contains(.underline) {
+      self.drawUnderline(in: context, fontGlyphRuns: fontGlyphRuns)
+    }
+
+    if run.attrs.fontTrait.contains(.undercurl) {
+      self.drawUndercurl(
+        in: context,
+        fontGlyphRuns: fontGlyphRuns,
+        color: ColorUtils.cgColorIgnoringAlpha(run.attrs.special)
+      )
+    }
+  }
+
+  private func drawUnderline(in context: CGContext,
+                             fontGlyphRuns: [FontGlyphRun]) {
+    guard let lastPosition = fontGlyphRuns.last?.positions.last?.x else {
+      return
+    }
+
+    let x1 = lastPosition + self.cellSize.width
+    let x0 = fontGlyphRuns[0].positions[0].x
+    let y0 = fontGlyphRuns[0].positions[0].y
+    CGRect(x: x0, y: y0 + self.underlinePosition,
+           width: x1 - x0, height: self.underlineThickness).fill()
+  }
+
+  private func drawUndercurl(in context: CGContext,
+                             fontGlyphRuns: [FontGlyphRun],
+                             color: CGColor) {
+    guard let lastPosition = fontGlyphRuns.last?.positions.last?.x else {
+      return
+    }
+
+    let x1 = lastPosition + self.cellSize.width
+    var x0 = fontGlyphRuns[0].positions[0].x
+    let count = Int(floor((x1 - x0) / self.cellSize.width))
+    let y0 = fontGlyphRuns[0].positions[0].y - 0.1 * self.cellSize.height
+    let w = self.cellSize.width
+    let h = 0.5 * self.descent
+
+    context.move(to: CGPoint(x: x0, y: y0))
+    for _ in (0..<count) {
+      context.addCurve(to: CGPoint(x: x0 + 0.5 * w, y: y0 + h),
+                       control1: CGPoint(x: x0 + 0.25 * w, y: y0),
+                       control2: CGPoint(x: x0 + 0.25 * w, y: y0 + h))
+      context.addCurve(to: CGPoint(x: x0 + w, y: y0),
+                       control1: CGPoint(x: x0 + 0.75 * w, y: y0 + h),
+                       control2: CGPoint(x: x0 + 0.75 * w, y: y0))
+      x0 += w
+    }
+    context.setStrokeColor(color)
+    context.strokePath()
   }
 
   private let typesetter = Typesetter()
@@ -170,6 +222,7 @@ final class AttributesRunDrawer {
       of: self.font, linespacing: linespacing
     )
     self.baselineOffset = self.cellSize.height - CTFontGetAscent(self.font)
+    self.descent = CTFontGetDescent(font)
     self.underlinePosition = CTFontGetUnderlinePosition(font)
     self.underlineThickness = CTFontGetUnderlineThickness(font)
   }
