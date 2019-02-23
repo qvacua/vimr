@@ -113,7 +113,7 @@ final class AttributesRunDrawer {
     let x0 = fontGlyphRuns[0].positions[0].x
     let y0 = fontGlyphRuns[0].positions[0].y
     CGRect(x: x0, y: y0 + self.underlinePosition,
-           width: x1, height: self.underlineThickness).fill()
+           width: x1 - x0, height: self.underlineThickness).fill()
   }
 
   private func drawUndercurl(in context: CGContext,
