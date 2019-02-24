@@ -46,7 +46,7 @@ class FileOutlineView: NSOutlineView,
       return
     }
     self.menu?.items.forEach { $0.target = self }
-    self.doubleAction = #selector(FileOutlineViewOld.doubleClickAction)
+    self.doubleAction = #selector(FileOutlineView.doubleClickAction)
 
     source
       .observeOn(MainScheduler.instance)
@@ -352,6 +352,37 @@ extension FileOutlineView {
   }
 }
 
+// MARK: - NSView
+extension FileOutlineView {
+
+  override func keyDown(with event: NSEvent) {
+    guard let char = event.charactersIgnoringModifiers?.first else {
+      super.keyDown(with: event)
+      return
+    }
+
+    guard let node = self.node(from: self.selectedItem) else {
+      super.keyDown(with: event)
+      return
+    }
+
+    switch char {
+    case " ", "\r": // Why "\r" and not "\n"?
+      if node.url.isDir || node.url.isPackage {
+        self.toggle(item: node)
+      } else {
+        self.emit(
+          UuidAction(uuid: self.uuid,
+                     action: .open(url: node.url, mode: .newTab))
+        )
+      }
+
+    default:
+      super.keyDown(with: event)
+    }
+  }
+}
+
 class Node: NSObject {
 
   @objc dynamic var url: URL
@@ -428,7 +459,7 @@ class FileOutlineViewOld: NSOutlineView,
     // in the background... Dunno why it worked before the redesign... -_-
     self.menu?.items.forEach { $0.target = self }
 
-    self.doubleAction = #selector(FileOutlineViewOld.doubleClickAction)
+//    self.doubleAction = #selector(FileOutlineViewOld.doubleClickAction)
 
     source
       .filter { !self.shouldReloadData(for: $0) }
