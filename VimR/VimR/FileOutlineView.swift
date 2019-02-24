@@ -71,6 +71,8 @@ class FileOutlineView: NSOutlineView,
   private var root: Node
   private let treeController = NSTreeController()
 
+  private var cachedColumnWidth = CGFloat(20)
+
   private func childNodes(for node: Node) -> [Node] {
     if node.isChildrenScanned {
       return node.children ?? []
@@ -84,26 +86,6 @@ class FileOutlineView: NSOutlineView,
 
     self.root.children = children
     self.content.append(contentsOf: children)
-
-    self.adjustColumnWidth()
-  }
-
-  private func adjustColumnWidth() {
-    let indent = self.indentationPerLevel
-    var maxRow = (0, CGFloat(20.0))
-    for i in (0..<self.numberOfRows) {
-      guard let width = (self.view(
-        atColumn: 0, row: i, makeIfNecessary: true
-      ) as? ThemedTableCell)?.fittingSize.width else {
-        stdoutLog.error("Could not convert to ThemedTableCell!")
-        return
-      }
-
-      let level = CGFloat(self.level(forRow: i))
-      maxRow = (i, max(maxRow.1, level * indent + width))
-    }
-
-    self.tableColumns[0].width = maxRow.1 + CGFloat(30)
   }
 }
 
@@ -149,6 +131,45 @@ extension FileOutlineView {
 
   func outlineView(_: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
     return 20
+  }
+
+  func outlineView(
+    _ outlineView: NSOutlineView,
+    shouldExpandItem item: Any
+  ) -> Bool {
+    guard let treeNode = item as? NSTreeNode,
+          let node = treeNode.representedObject as? Node
+      else {
+      return false
+    }
+
+    if node.isChildrenScanned {
+      return true
+    }
+
+    node.children = FileUtils.directDescendants(of: node.url).map { url in
+      return Node(url: url)
+    }
+
+    return true
+  }
+
+  func outlineView(
+    _ outlineView: NSOutlineView,
+    didAdd rowView: NSTableRowView,
+    forRow row: Int
+  ) {
+    guard let cellWidth = (rowView.view(atColumn: 0) as? NSTableCellView)?
+      .fittingSize.width
+      else {
+      return
+    }
+
+    let level = CGFloat(self.level(forRow: row))
+    let width = level * self.indentationPerLevel + cellWidth
+                + columnWidthRightPadding
+    self.cachedColumnWidth = max(self.cachedColumnWidth, width)
+    self.tableColumns[0].width = cachedColumnWidth
   }
 }
 
@@ -777,3 +798,5 @@ private class FileBrowserItem: Hashable, Comparable, CustomStringConvertible {
     return self.children.first { $0.url == url }
   }
 }
+
+private let columnWidthRightPadding = CGFloat(40)
