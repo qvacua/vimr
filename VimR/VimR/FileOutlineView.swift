@@ -26,6 +26,9 @@ class FileOutlineView: NSOutlineView,
     self.emit = emitter.typedEmit()
     self.uuid = state.uuid
     self.root = Node(url: state.cwd)
+    self.usesTheme = state.appearance.usesTheme
+    self.showsFileIcon = state.appearance.showsFileIcon
+    self.isShowHidden = state.fileBrowserShowHidden
 
     super.init(frame: .zero)
 
@@ -40,6 +43,37 @@ class FileOutlineView: NSOutlineView,
       NSLog("WARN: FileBrowserMenu.xib could not be loaded")
       return
     }
+
+    source
+      .observeOn(MainScheduler.instance)
+      .subscribe(onNext: { state in
+        if state.viewToBeFocused != nil,
+           case .fileBrowser = state.viewToBeFocused! {
+          self.beFirstResponder()
+        }
+
+        let themeChanged = changeTheme(
+          themePrefChanged: state.appearance.usesTheme != self.usesTheme,
+          themeChanged: state.appearance.theme.mark != self.lastThemeMark,
+          usesTheme: state.appearance.usesTheme,
+          forTheme: { self.updateTheme(state.appearance.theme) },
+          forDefaultTheme: { self.updateTheme(Marked(Theme.default)) })
+
+        self.usesTheme = state.appearance.usesTheme
+
+        guard self.shouldReloadData(
+          for: state, themeChanged: themeChanged
+        ) else {
+          return
+        }
+
+        self.showsFileIcon = state.appearance.showsFileIcon
+        self.isShowHidden = state.fileBrowserShowHidden
+        self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
+        self.root = Node(url: state.cwd)
+        self.reloadRoot()
+      })
+      .disposed(by: self.disposeBag)
 
     self.treeController.childrenKeyPath = "children"
     self.treeController.leafKeyPath = "isLeaf"
@@ -69,23 +103,69 @@ class FileOutlineView: NSOutlineView,
   private let uuid: String
 
   private var root: Node
+  private var cwd: URL {
+    return self.root.url
+  }
   private let treeController = NSTreeController()
 
   private var cachedColumnWidth = CGFloat(20)
+  private var usesTheme: Bool
+  private var lastThemeMark = Token()
+  private var lastFileSystemUpdateMark = Token()
+  private var showsFileIcon: Bool
+  private var isShowHidden: Bool
 
   private func childNodes(for node: Node) -> [Node] {
     if node.isChildrenScanned {
       return node.children ?? []
     }
 
-    return FileUtils.directDescendants(of: node.url).map { Node(url: $0) }
+    let nodes = FileUtils
+      .directDescendants(of: node.url)
+      .map { Node(url: $0) }
+
+    if self.isShowHidden {
+      return nodes
+    }
+
+    return nodes.filter { !$0.isHidden }
   }
 
   private func reloadRoot() {
     let children = self.childNodes(for: self.root)
 
     self.root.children = children
+    self.content.removeAll()
     self.content.append(contentsOf: children)
+  }
+
+  private func updateTheme(_ theme: Marked<Theme>) {
+    self.theme = theme.payload
+    self.enclosingScrollView?.backgroundColor = self.theme.background
+    self.backgroundColor = self.theme.background
+    self.lastThemeMark = theme.mark
+  }
+
+  private func shouldReloadData(
+    for state: StateType, themeChanged: Bool = false
+  ) -> Bool {
+    if self.isShowHidden != state.fileBrowserShowHidden {
+      return true
+    }
+
+    if themeChanged {
+      return true
+    }
+
+    if self.showsFileIcon != state.appearance.showsFileIcon {
+      return true
+    }
+
+    if state.cwd != self.cwd {
+      return true
+    }
+
+    return false
   }
 }
 
