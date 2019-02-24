@@ -10,9 +10,183 @@ import RxSwift
 
 class FileOutlineView: NSOutlineView,
                        UiComponent,
-                       NSOutlineViewDataSource,
                        NSOutlineViewDelegate,
                        ThemedView {
+
+  typealias StateType = MainWindow.State
+
+  @objc dynamic var content = [Node]()
+  private(set) var theme = Theme.default
+
+  required init(
+    source: Observable<StateType>,
+    emitter: ActionEmitter,
+    state: StateType
+  ) {
+    self.emit = emitter.typedEmit()
+    self.uuid = state.uuid
+    self.root = Node(url: state.cwd)
+
+    super.init(frame: .zero)
+
+    NSOutlineView.configure(toStandard: self)
+    self.delegate = self
+
+    guard Bundle.main.loadNibNamed(
+      NSNib.Name("FileBrowserMenu"),
+      owner: self,
+      topLevelObjects: nil
+    ) else {
+      NSLog("WARN: FileBrowserMenu.xib could not be loaded")
+      return
+    }
+
+    self.treeController.childrenKeyPath = "children"
+    self.treeController.leafKeyPath = "isLeaf"
+    self.treeController.countKeyPath = "childrenCount"
+    self.treeController.objectClass = Node.self
+    self.treeController.avoidsEmptySelection = false
+    self.treeController.sortDescriptors = [
+      NSSortDescriptor(key: "isLeaf", ascending: true), // Folders first,
+      NSSortDescriptor(key: "displayName", ascending: true) // then, name
+    ]
+    self.treeController.bind(.contentArray, to: self, withKeyPath: "content")
+    self.bind(.content, to: self.treeController, withKeyPath: "arrangedObjects")
+    self.bind(.selectionIndexPaths,
+              to: self.treeController,
+              withKeyPath: "selectionIndexPaths")
+
+    self.reloadRoot()
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  private let emit: (UuidAction<FileBrowser.Action>) -> Void
+  private let disposeBag = DisposeBag()
+
+  private let uuid: String
+
+  private var root: Node
+  private let treeController = NSTreeController()
+
+  private func childNodes(for node: Node) -> [Node] {
+    if node.isChildrenScanned {
+      return node.children ?? []
+    }
+
+    return FileUtils.directDescendants(of: node.url).map { Node(url: $0) }
+  }
+
+  private func reloadRoot() {
+    let children = self.childNodes(for: self.root)
+
+    self.root.children = children
+    self.content.append(contentsOf: children)
+
+    self.adjustColumnWidth()
+  }
+
+  private func adjustColumnWidth() {
+    let indent = self.indentationPerLevel
+    var maxRow = (0, CGFloat(20.0))
+    for i in (0..<self.numberOfRows) {
+      guard let width = (self.view(
+        atColumn: 0, row: i, makeIfNecessary: true
+      ) as? ThemedTableCell)?.fittingSize.width else {
+        stdoutLog.error("Could not convert to ThemedTableCell!")
+        return
+      }
+
+      let level = CGFloat(self.level(forRow: i))
+      maxRow = (i, max(maxRow.1, level * indent + width))
+    }
+
+    self.tableColumns[0].width = maxRow.1 + CGFloat(30)
+  }
+}
+
+// MARK: - NSOutlineViewDelegate
+extension FileOutlineView {
+
+  func outlineView(
+    _ outlineView: NSOutlineView,
+    rowViewForItem item: Any
+  ) -> NSTableRowView? {
+    return self.makeView(
+      withIdentifier: NSUserInterfaceItemIdentifier("file-row-view"),
+      owner: self
+    ) as? ThemedTableRow ?? ThemedTableRow(withIdentifier: "file-row-view",
+                                           themedView: self)
+  }
+
+  func outlineView(
+    _: NSOutlineView,
+    viewFor tableColumn: NSTableColumn?,
+    item: Any
+  ) -> NSView? {
+    guard let treeNode = item as? NSTreeNode,
+          let node = treeNode.representedObject as? Node else {
+      return nil
+    }
+
+    let cellView = self.makeView(
+      withIdentifier: NSUserInterfaceItemIdentifier("file-cell-view"),
+      owner: self
+    ) as? ThemedTableCell ?? ThemedTableCell(withIdentifier: "file-cell-view")
+
+    cellView.isDir = node.isDir
+    cellView.text = node.displayName
+
+    let icon = FileUtils.icon(forUrl: node.url)
+    cellView.image = node.isHidden
+      ? icon?.tinting(with: NSColor.white.withAlphaComponent(0.4))
+      : icon
+
+    return cellView
+  }
+
+  func outlineView(_: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
+    return 20
+  }
+}
+
+class Node: NSObject {
+
+  @objc dynamic var url: URL
+  @objc dynamic var isLeaf: Bool
+  @objc dynamic var isHidden: Bool
+  @objc dynamic var children: [Node]?
+
+  @objc dynamic var childrenCount: Int {
+    return self.children?.count ?? -1
+  }
+  @objc dynamic var displayName: String {
+    return self.url.lastPathComponent
+  }
+
+  var isDir: Bool {
+    return !self.isLeaf
+  }
+  var isChildrenScanned = false
+
+  override var hash: Int {
+    return self.url.hashValue
+  }
+
+  init(url: URL) {
+    self.url = url
+    self.isLeaf = !url.isDir
+    self.isHidden = url.isHidden
+  }
+}
+
+class FileOutlineViewOld: NSOutlineView,
+                          UiComponent,
+                          NSOutlineViewDataSource,
+                          NSOutlineViewDelegate,
+                          ThemedView {
 
   typealias StateType = MainWindow.State
 
@@ -53,7 +227,7 @@ class FileOutlineView: NSOutlineView,
     // in the background... Dunno why it worked before the redesign... -_-
     self.menu?.items.forEach { $0.target = self }
 
-    self.doubleAction = #selector(FileOutlineView.doubleClickAction)
+    self.doubleAction = #selector(FileOutlineViewOld.doubleClickAction)
 
     source
       .filter { !self.shouldReloadData(for: $0) }
@@ -294,7 +468,7 @@ class FileOutlineView: NSOutlineView,
 }
 
 // MARK: - NSOutlineViewDataSource
-extension FileOutlineView {
+extension FileOutlineViewOld {
 
   private func scanChildrenIfNecessary(_ fileBrowserItem: FileBrowserItem) {
     guard fileBrowserItem.isChildrenScanned == false else {
@@ -413,7 +587,7 @@ extension FileOutlineView {
 }
 
 // MARK: - NSOutlineViewDelegate
-extension FileOutlineView {
+extension FileOutlineViewOld {
 
   func outlineView(
     _ outlineView: NSOutlineView, rowViewForItem item: Any
@@ -441,7 +615,7 @@ extension FileOutlineView {
 }
 
 // MARK: - Actions
-extension FileOutlineView {
+extension FileOutlineViewOld {
 
   @IBAction func doubleClickAction(_: Any?) {
     guard let item = self.clickedItem as? FileBrowserItem else {
@@ -517,7 +691,7 @@ extension FileOutlineView {
 }
 
 // MARK: - NSUserInterfaceValidations
-extension FileOutlineView {
+extension FileOutlineViewOld {
 
   override func validateUserInterfaceItem(
     _ item: NSValidatedUserInterfaceItem
@@ -535,7 +709,7 @@ extension FileOutlineView {
 }
 
 // MARK: - NSView
-extension FileOutlineView {
+extension FileOutlineViewOld {
 
   override func keyDown(with event: NSEvent) {
     guard let char = event.charactersIgnoringModifiers?.first else {
