@@ -818,37 +818,6 @@ extension FileOutlineViewOld {
   }
 }
 
-// MARK: - NSView
-extension FileOutlineViewOld {
-
-  override func keyDown(with event: NSEvent) {
-    guard let char = event.charactersIgnoringModifiers?.first else {
-      super.keyDown(with: event)
-      return
-    }
-
-    guard let item = self.selectedItem as? FileBrowserItem else {
-      super.keyDown(with: event)
-      return
-    }
-
-    switch char {
-    case " ", "\r": // Why "\r" and not "\n"?
-      if item.url.isDir || item.url.isPackage {
-        self.toggle(item: item)
-      } else {
-        self.emit(
-          UuidAction(uuid: self.uuid,
-                     action: .open(url: item.url, mode: .newTab))
-        )
-      }
-
-    default:
-      super.keyDown(with: event)
-    }
-  }
-}
-
 private class FileBrowserItem: Hashable, Comparable, CustomStringConvertible {
 
   static func ==(left: FileBrowserItem, right: FileBrowserItem) -> Bool {
