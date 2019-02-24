@@ -334,6 +334,24 @@ extension FileOutlineView {
   }
 }
 
+// MARK: - NSUserInterfaceValidations
+extension FileOutlineView {
+
+  override func validateUserInterfaceItem(
+    _ item: NSValidatedUserInterfaceItem
+  ) -> Bool {
+    guard let clickedNode = self.node(from: self.clickedItem) else {
+      return true
+    }
+
+    if item.action == #selector(setAsWorkingDirectory(_:)) {
+      return clickedNode.url.isDir
+    }
+
+    return true
+  }
+}
+
 class Node: NSObject {
 
   @objc dynamic var url: URL
@@ -364,6 +382,7 @@ class Node: NSObject {
   }
 }
 
+// MARK: - OLD
 class FileOutlineViewOld: NSOutlineView,
                           UiComponent,
                           NSOutlineViewDataSource,
