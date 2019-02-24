@@ -18,7 +18,11 @@ class FileOutlineView: NSOutlineView,
 
   private(set) var theme = Theme.default
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+  required init(
+    source: Observable<StateType>,
+    emitter: ActionEmitter,
+    state: StateType) {
+
     self.emit = emitter.typedEmit()
     self.uuid = state.uuid
 
@@ -35,14 +39,18 @@ class FileOutlineView: NSOutlineView,
     self.delegate = self
     self.allowsEmptySelection = true
 
-    guard Bundle.main.loadNibNamed(NSNib.Name("FileBrowserMenu"), owner: self, topLevelObjects: nil) else {
+    guard Bundle.main.loadNibNamed(
+      NSNib.Name("FileBrowserMenu"),
+      owner: self,
+      topLevelObjects: nil
+    ) else {
       NSLog("WARN: FileBrowserMenu.xib could not be loaded")
       return
     }
 
-    // If the target of the menu items is set to the first responder, the actions are not invoked
-    // at all when the file monitor fires in the background...
-    // Dunno why it worked before the redesign... -_-
+    // If the target of the menu items is set to the first responder,
+    // the actions are not invoked at all when the file monitor fires
+    // in the background... Dunno why it worked before the redesign... -_-
     self.menu?.items.forEach { $0.target = self }
 
     self.doubleAction = #selector(FileOutlineView.doubleClickAction)
@@ -56,7 +64,9 @@ class FileOutlineView: NSOutlineView,
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { state in
         self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
-        guard let fileBrowserItem = self.fileBrowserItem(with: state.lastFileSystemUpdate.payload) else {
+        guard let fileBrowserItem = self.fileBrowserItem(
+          with: state.lastFileSystemUpdate.payload
+        ) else {
           return
         }
 
@@ -67,7 +77,8 @@ class FileOutlineView: NSOutlineView,
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { state in
-        if state.viewToBeFocused != nil, case .fileBrowser = state.viewToBeFocused! {
+        if state.viewToBeFocused != nil,
+           case .fileBrowser = state.viewToBeFocused! {
           self.beFirstResponder()
         }
 
@@ -80,7 +91,9 @@ class FileOutlineView: NSOutlineView,
 
         self.usesTheme = state.appearance.usesTheme
 
-        guard self.shouldReloadData(for: state, themeChanged: themeChanged) else {
+        guard self.shouldReloadData(
+          for: state, themeChanged: themeChanged
+        ) else {
           return
         }
 
@@ -108,14 +121,18 @@ class FileOutlineView: NSOutlineView,
       if item.url.isDirectParent(of: url) {
         if let targetItem = item.children.first(where: { $0.url == url }) {
           let targetRow = self.row(forItem: targetItem)
-          self.selectRowIndexes(IndexSet(integer: targetRow), byExtendingSelection: false)
+          self.selectRowIndexes(
+            IndexSet(integer: targetRow), byExtendingSelection: false
+          )
           self.scrollRowToVisible(targetRow)
         }
 
         break
       }
 
-      stack.append(contentsOf: item.children.filter { $0.url.isParent(of: url) })
+      stack.append(contentsOf: item.children.filter {
+        $0.url.isParent(of: url)
+      })
     }
   }
 
@@ -149,7 +166,9 @@ class FileOutlineView: NSOutlineView,
     self.lastThemeMark = theme.mark
   }
 
-  private func shouldReloadData(for state: StateType, themeChanged: Bool = false) -> Bool {
+  private func shouldReloadData(
+    for state: StateType, themeChanged: Bool = false
+  ) -> Bool {
     if self.isShowHidden != state.fileBrowserShowHidden {
       return true
     }
@@ -170,7 +189,7 @@ class FileOutlineView: NSOutlineView,
   }
 
   private func handleRemovals(for fileBrowserItem: FileBrowserItem,
-                                  new newChildren: [FileBrowserItem]) {
+                              new newChildren: [FileBrowserItem]) {
     let curChildren = fileBrowserItem.children
 
     let curPreparedChildren = self.prepare(curChildren)
@@ -178,7 +197,9 @@ class FileOutlineView: NSOutlineView,
 
     let indicesToRemove = curPreparedChildren
       .enumerated()
-      .filter { (_, fileBrowserItem) in newPreparedChildren.contains(fileBrowserItem) == false }
+      .filter { (_, fileBrowserItem) in
+        newPreparedChildren.contains(fileBrowserItem) == false
+      }
       .map { (idx, _) in idx }
 
     indicesToRemove.forEach { index in
@@ -195,7 +216,7 @@ class FileOutlineView: NSOutlineView,
   }
 
   private func handleAdditions(for fileBrowserItem: FileBrowserItem,
-                                   new newChildren: [FileBrowserItem]) {
+                               new newChildren: [FileBrowserItem]) {
     let curChildren = fileBrowserItem.children
 
     let curPreparedChildren = self.prepare(curChildren)
@@ -203,11 +224,13 @@ class FileOutlineView: NSOutlineView,
 
     let indicesToInsert = newPreparedChildren
       .enumerated()
-      .filter { (_, fileBrowserItem) in curPreparedChildren.contains(fileBrowserItem) == false }
+      .filter { (_, fileBrowserItem) in
+        curPreparedChildren.contains(fileBrowserItem) == false
+      }
       .map { (idx, _) in idx }
 
-    // We don't just take newChildren because NSOutlineView look at the pointer equality for
-    // preserving the expanded states...
+    // We don't just take newChildren because NSOutlineView look
+    // at the pointer equality for preserving the expanded states...
     fileBrowserItem.children = newChildren.substituting(elements: curChildren)
 
     let parent = fileBrowserItem == self.root ? nil : fileBrowserItem
@@ -215,13 +238,14 @@ class FileOutlineView: NSOutlineView,
   }
 
   private func sortedChildren(of url: URL) -> [FileBrowserItem] {
-    return FileUtils.directDescendants(of: url).map(FileBrowserItem.init).sorted{
-      if ($0.isDir == $1.isDir) {
-        return $0.url.absoluteString < $1.url.absoluteString
+    return FileUtils.directDescendants(of: url)
+      .map(FileBrowserItem.init).sorted {
+        if ($0.isDir == $1.isDir) {
+          return $0.url.absoluteString < $1.url.absoluteString
+        }
+
+        return $0.isDir
       }
-      
-      return $0.isDir
-    }
   }
 
   private func update(_ fileBrowserItem: FileBrowserItem) {
@@ -240,7 +264,9 @@ class FileOutlineView: NSOutlineView,
 
     fileBrowserItem.isChildrenScanned = true
 
-    fileBrowserItem.children.filter { self.isItemExpanded($0) }.forEach(self.update)
+    fileBrowserItem.children
+      .filter { self.isItemExpanded($0) }
+      .forEach(self.update)
   }
 
   private func fileBrowserItem(with url: URL) -> FileBrowserItem? {
@@ -256,7 +282,8 @@ class FileOutlineView: NSOutlineView,
     let pathComps = url.pathComponents
     let childPart = pathComps[rootPathComps.count..<pathComps.count]
 
-    return childPart.reduce(self.root) { (resultItem, childName) -> FileBrowserItem? in
+    return childPart
+      .reduce(self.root) { (resultItem, childName) -> FileBrowserItem? in
       guard let parent = resultItem else {
         return nil
       }
@@ -301,7 +328,9 @@ extension FileOutlineView {
     return 0
   }
 
-  func outlineView(_: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
+  func outlineView(
+    _: NSOutlineView, child index: Int, ofItem item: Any?
+  ) -> Any {
     let level = self.level(forItem: item) + 2
     defer { self.adjustColumnWidths() }
 
@@ -340,7 +369,9 @@ extension FileOutlineView {
 
     if self.showsFileIcon {
       let icon = FileUtils.icon(forUrl: item.url)
-      cell.image = cell.isHidden ? icon?.tinting(with: NSColor.white.withAlphaComponent(0.4)) : icon
+      cell.image = cell.isHidden
+        ? icon?.tinting(with: NSColor.white.withAlphaComponent(0.4))
+        : icon
     }
 
     return cell
@@ -353,8 +384,11 @@ extension FileOutlineView {
     return fileBrowserItem.url.isDir
   }
 
-  @objc(outlineView: objectValueForTableColumn:byItem:)
-  func outlineView(_: NSOutlineView, objectValueFor: NSTableColumn?, byItem item: Any?) -> Any? {
+  @objc(outlineView:objectValueForTableColumn:byItem:)
+  func outlineView(_: NSOutlineView,
+                   objectValueFor: NSTableColumn?,
+                   byItem item: Any?) -> Any? {
+
     guard let fileBrowserItem = item as? FileBrowserItem else {
       return nil
     }
@@ -381,12 +415,19 @@ extension FileOutlineView {
 // MARK: - NSOutlineViewDelegate
 extension FileOutlineView {
 
-  func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
-    return self.makeView(withIdentifier: NSUserInterfaceItemIdentifier("file-row-view"), owner: self) as? ThemedTableRow
-           ?? ThemedTableRow(withIdentifier: "file-row-view", themedView: self)
+  func outlineView(
+    _ outlineView: NSOutlineView, rowViewForItem item: Any
+  ) -> NSTableRowView? {
+    return self.makeView(
+      withIdentifier: NSUserInterfaceItemIdentifier("file-row-view"),
+      owner: self
+    ) as? ThemedTableRow ?? ThemedTableRow(withIdentifier: "file-row-view",
+                                           themedView: self)
   }
 
-  func outlineView(_: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
+  func outlineView(
+    _: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any
+  ) -> NSView? {
     guard let fileBrowserItem = item as? FileBrowserItem else {
       return nil
     }
@@ -411,7 +452,8 @@ extension FileOutlineView {
       self.toggle(item: item)
     } else {
       self.emit(
-        UuidAction(uuid: self.uuid, action: .open(url: item.url, mode: .default))
+        UuidAction(uuid: self.uuid,
+                   action: .open(url: item.url, mode: .default))
       )
     }
   }
@@ -432,7 +474,8 @@ extension FileOutlineView {
     }
 
     self.emit(
-      UuidAction(uuid: self.uuid, action: .open(url: item.url, mode: .currentTab))
+      UuidAction(uuid: self.uuid,
+                 action: .open(url: item.url, mode: .currentTab))
     )
   }
 
@@ -442,7 +485,8 @@ extension FileOutlineView {
     }
 
     self.emit(
-      UuidAction(uuid: self.uuid, action: .open(url: item.url, mode: .horizontalSplit))
+      UuidAction(uuid: self.uuid,
+                 action: .open(url: item.url, mode: .horizontalSplit))
     )
   }
 
@@ -452,7 +496,8 @@ extension FileOutlineView {
     }
 
     self.emit(
-      UuidAction(uuid: self.uuid, action: .open(url: item.url, mode: .verticalSplit))
+      UuidAction(uuid: self.uuid,
+                 action: .open(url: item.url, mode: .verticalSplit))
     )
   }
 
@@ -474,7 +519,9 @@ extension FileOutlineView {
 // MARK: - NSUserInterfaceValidations
 extension FileOutlineView {
 
-  override func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
+  override func validateUserInterfaceItem(
+    _ item: NSValidatedUserInterfaceItem
+  ) -> Bool {
     guard let clickedItem = self.clickedItem as? FileBrowserItem else {
       return true
     }
@@ -507,7 +554,8 @@ extension FileOutlineView {
         self.toggle(item: item)
       } else {
         self.emit(
-          UuidAction(uuid: self.uuid, action: .open(url: item.url, mode: .newTab))
+          UuidAction(uuid: self.uuid,
+                     action: .open(url: item.url, mode: .newTab))
         )
       }
 
@@ -544,8 +592,9 @@ private class FileBrowserItem: Hashable, Comparable, CustomStringConvertible {
   init(_ url: URL) {
     self.url = url
 
-    // We cache the value here since we often get the value when the file is not there, eg when
-    // updating because the file gets deleted (in self.prepare() function)
+    // We cache the value here since we often get the value when the file is
+    // not there, eg when updating because the file gets deleted
+    // (in self.prepare() function)
     self.isHidden = url.isHidden
     self.isDir = url.isDir
   }
