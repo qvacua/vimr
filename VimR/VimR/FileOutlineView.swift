@@ -171,92 +171,84 @@ class FileOutlineView: NSOutlineView,
 
     return false
   }
+
+  private func node(from item: Any?) -> Node? {
+    return (item as? NSTreeNode)?.representedObject as? Node
+  }
 }
 
 // MARK: - Actions
 extension FileOutlineView {
 
   @IBAction func doubleClickAction(_: Any?) {
-    guard let treeNode = self.clickedItem as? NSTreeNode,
-          let item = treeNode.representedObject as? Node
-      else {
+    guard let node = self.node(from: self.clickedItem) else {
       return
     }
 
-    if item.url.isDir {
-      self.toggle(item: item)
+    if node.url.isDir {
+      self.toggle(item: node)
     } else {
       self.emit(
         UuidAction(uuid: self.uuid,
-                   action: .open(url: item.url, mode: .default))
+                   action: .open(url: node.url, mode: .default))
       )
     }
   }
 
   @IBAction func openInNewTab(_: Any?) {
-    guard let treeNode = self.clickedItem as? NSTreeNode,
-          let item = treeNode.representedObject as? Node
-      else {
+    guard let node = self.node(from: self.clickedItem) else {
       return
     }
 
     self.emit(
-      UuidAction(uuid: self.uuid, action: .open(url: item.url, mode: .newTab))
+      UuidAction(uuid: self.uuid, action: .open(url: node.url, mode: .newTab))
     )
   }
 
   @IBAction func openInCurrentTab(_: Any?) {
-    guard let treeNode = self.clickedItem as? NSTreeNode,
-          let item = treeNode.representedObject as? Node
-      else {
+    guard let node = self.node(from: self.clickedItem) else {
       return
     }
 
     self.emit(
       UuidAction(uuid: self.uuid,
-                 action: .open(url: item.url, mode: .currentTab))
+                 action: .open(url: node.url, mode: .currentTab))
     )
   }
 
   @IBAction func openInHorizontalSplit(_: Any?) {
-    guard let treeNode = self.clickedItem as? NSTreeNode,
-          let item = treeNode.representedObject as? Node
-      else {
+    guard let node = self.node(from: self.clickedItem) else {
       return
     }
 
     self.emit(
       UuidAction(uuid: self.uuid,
-                 action: .open(url: item.url, mode: .horizontalSplit))
+                 action: .open(url: node.url, mode: .horizontalSplit))
     )
   }
 
   @IBAction func openInVerticalSplit(_: Any?) {
-    guard let treeNode = self.clickedItem as? NSTreeNode,
-          let item = treeNode.representedObject as? Node
-      else {
+    guard let node = self.node(from: self.clickedItem) else {
       return
     }
 
     self.emit(
       UuidAction(uuid: self.uuid,
-                 action: .open(url: item.url, mode: .verticalSplit))
+                 action: .open(url: node.url, mode: .verticalSplit))
     )
   }
 
   @IBAction func setAsWorkingDirectory(_: Any?) {
-    guard let treeNode = self.clickedItem as? NSTreeNode,
-          let item = treeNode.representedObject as? Node
-      else {
+    guard let node = self.node(from: self.clickedItem) else {
       return
     }
 
-    guard item.url.isDir else {
+    guard node.url.isDir else {
       return
     }
 
     self.emit(
-      UuidAction(uuid: self.uuid, action: .setAsWorkingDirectory(item.url))
+      UuidAction(uuid: self.uuid, action: .setAsWorkingDirectory(node.url))
     )
   }
 }
@@ -280,8 +272,7 @@ extension FileOutlineView {
     viewFor tableColumn: NSTableColumn?,
     item: Any
   ) -> NSView? {
-    guard let treeNode = item as? NSTreeNode,
-          let node = treeNode.representedObject as? Node else {
+    guard let node = self.node(from: item) else {
       return nil
     }
 
@@ -309,9 +300,7 @@ extension FileOutlineView {
     _ outlineView: NSOutlineView,
     shouldExpandItem item: Any
   ) -> Bool {
-    guard let treeNode = item as? NSTreeNode,
-          let node = treeNode.representedObject as? Node
-      else {
+    guard let node = self.node(from: item) else {
       return false
     }
 
