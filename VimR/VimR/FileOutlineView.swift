@@ -35,6 +35,8 @@ class FileOutlineView: NSOutlineView,
     NSOutlineView.configure(toStandard: self)
     self.delegate = self
 
+    // Load context menu.
+    // This will set self.menu.
     guard Bundle.main.loadNibNamed(
       NSNib.Name("FileBrowserMenu"),
       owner: self,
@@ -43,6 +45,8 @@ class FileOutlineView: NSOutlineView,
       NSLog("WARN: FileBrowserMenu.xib could not be loaded")
       return
     }
+    self.menu?.items.forEach { $0.target = self }
+    self.doubleAction = #selector(FileOutlineViewOld.doubleClickAction)
 
     source
       .observeOn(MainScheduler.instance)
@@ -166,6 +170,94 @@ class FileOutlineView: NSOutlineView,
     }
 
     return false
+  }
+}
+
+// MARK: - Actions
+extension FileOutlineView {
+
+  @IBAction func doubleClickAction(_: Any?) {
+    guard let treeNode = self.clickedItem as? NSTreeNode,
+          let item = treeNode.representedObject as? Node
+      else {
+      return
+    }
+
+    if item.url.isDir {
+      self.toggle(item: item)
+    } else {
+      self.emit(
+        UuidAction(uuid: self.uuid,
+                   action: .open(url: item.url, mode: .default))
+      )
+    }
+  }
+
+  @IBAction func openInNewTab(_: Any?) {
+    guard let treeNode = self.clickedItem as? NSTreeNode,
+          let item = treeNode.representedObject as? Node
+      else {
+      return
+    }
+
+    self.emit(
+      UuidAction(uuid: self.uuid, action: .open(url: item.url, mode: .newTab))
+    )
+  }
+
+  @IBAction func openInCurrentTab(_: Any?) {
+    guard let treeNode = self.clickedItem as? NSTreeNode,
+          let item = treeNode.representedObject as? Node
+      else {
+      return
+    }
+
+    self.emit(
+      UuidAction(uuid: self.uuid,
+                 action: .open(url: item.url, mode: .currentTab))
+    )
+  }
+
+  @IBAction func openInHorizontalSplit(_: Any?) {
+    guard let treeNode = self.clickedItem as? NSTreeNode,
+          let item = treeNode.representedObject as? Node
+      else {
+      return
+    }
+
+    self.emit(
+      UuidAction(uuid: self.uuid,
+                 action: .open(url: item.url, mode: .horizontalSplit))
+    )
+  }
+
+  @IBAction func openInVerticalSplit(_: Any?) {
+    guard let treeNode = self.clickedItem as? NSTreeNode,
+          let item = treeNode.representedObject as? Node
+      else {
+      return
+    }
+
+    self.emit(
+      UuidAction(uuid: self.uuid,
+                 action: .open(url: item.url, mode: .verticalSplit))
+    )
+  }
+
+  @IBAction func setAsWorkingDirectory(_: Any?) {
+    guard let treeNode = self.clickedItem as? NSTreeNode,
+          let item = treeNode.representedObject as? Node
+      else {
+      return
+    }
+
+    guard item.url.isDir else {
+      return
+    }
+
+    self.emit(
+      UuidAction(uuid: self.uuid, action: .setAsWorkingDirectory(item.url))
+    )
   }
 }
 
