@@ -7,6 +7,7 @@ import Cocoa
 import NvimView
 import PureLayout
 import RxSwift
+import CocoaFontAwesome
 
 class FileOutlineView: NSOutlineView,
                        UiComponent,
@@ -16,6 +17,8 @@ class FileOutlineView: NSOutlineView,
   typealias StateType = MainWindow.State
 
   @objc dynamic var content = [Node]()
+
+  private(set) var lastThemeMark = Token()
   private(set) var theme = Theme.default
 
   required init(
@@ -29,6 +32,16 @@ class FileOutlineView: NSOutlineView,
     self.usesTheme = state.appearance.usesTheme
     self.showsFileIcon = state.appearance.showsFileIcon
     self.isShowHidden = state.fileBrowserShowHidden
+    self.triangleClosed = NSImage.fontAwesomeIcon(
+      name: .caretRight,
+      textColor: self.theme.directoryForeground,
+      dimension: 18
+    )
+    self.triangleOpen = NSImage.fontAwesomeIcon(
+      name: .caretDown,
+      textColor: self.theme.directoryForeground,
+      dimension: 18
+    )
 
     super.init(frame: .zero)
 
@@ -42,7 +55,7 @@ class FileOutlineView: NSOutlineView,
       owner: self,
       topLevelObjects: nil
     ) else {
-      NSLog("WARN: FileBrowserMenu.xib could not be loaded")
+      fileLog.error("FileBrowserMenu.xib could not be loaded")
       return
     }
     self.menu?.items.forEach { $0.target = self }
@@ -101,6 +114,24 @@ class FileOutlineView: NSOutlineView,
     fatalError("init(coder:) has not been implemented")
   }
 
+  // We cannot use outlineView(_:willDisplayOutlineCell:for:item:) delegate
+  // method to customize the disclosure triangle in a view-based
+  // NSOutlineView.
+  // See https://stackoverflow.com/a/20454413/9850227
+  override func makeView(
+    withIdentifier identifier: NSUserInterfaceItemIdentifier, owner: Any?
+  ) -> NSView? {
+    let result = super.makeView(withIdentifier: identifier, owner: owner)
+
+    if identifier == NSOutlineView.disclosureButtonIdentifier {
+      let triangleButton = result as? NSButton
+      triangleButton?.image = self.triangleClosed
+      triangleButton?.alternateImage = self.triangleOpen
+    }
+
+    return result
+  }
+
   private let emit: (UuidAction<FileBrowser.Action>) -> Void
   private let disposeBag = DisposeBag()
 
@@ -114,10 +145,12 @@ class FileOutlineView: NSOutlineView,
 
   private var cachedColumnWidth = CGFloat(20)
   private var usesTheme: Bool
-  private var lastThemeMark = Token()
   private var lastFileSystemUpdateMark = Token()
   private var showsFileIcon: Bool
   private var isShowHidden: Bool
+
+  private var triangleClosed: NSImage
+  private var triangleOpen: NSImage
 
   private func childNodes(for node: Node) -> [Node] {
     if node.isChildrenScanned {
@@ -147,6 +180,17 @@ class FileOutlineView: NSOutlineView,
     self.theme = theme.payload
     self.enclosingScrollView?.backgroundColor = self.theme.background
     self.backgroundColor = self.theme.background
+    self.triangleClosed = NSImage.fontAwesomeIcon(
+      name: .caretRight,
+      textColor: self.theme.directoryForeground,
+      dimension: 18
+    )
+    self.triangleOpen = NSImage.fontAwesomeIcon(
+      name: .caretDown,
+      textColor: self.theme.directoryForeground,
+      dimension: 18
+    )
+
     self.lastThemeMark = theme.mark
   }
 
@@ -181,12 +225,13 @@ class FileOutlineView: NSOutlineView,
 extension FileOutlineView {
 
   @IBAction func doubleClickAction(_: Any?) {
-    guard let node = self.node(from: self.clickedItem) else {
+    let clickedTreeNode = self.clickedItem
+    guard let node = self.node(from: clickedTreeNode) else {
       return
     }
 
-    if node.url.isDir {
-      self.toggle(item: node)
+    if node.isDir {
+      self.toggle(item: clickedTreeNode)
     } else {
       self.emit(
         UuidAction(uuid: self.uuid,
@@ -260,11 +305,13 @@ extension FileOutlineView {
     _ outlineView: NSOutlineView,
     rowViewForItem item: Any
   ) -> NSTableRowView? {
-    return self.makeView(
+    let view = self.makeView(
       withIdentifier: NSUserInterfaceItemIdentifier("file-row-view"),
       owner: self
     ) as? ThemedTableRow ?? ThemedTableRow(withIdentifier: "file-row-view",
                                            themedView: self)
+
+    return view
   }
 
   func outlineView(
@@ -331,6 +378,16 @@ extension FileOutlineView {
                 + columnWidthRightPadding
     self.cachedColumnWidth = max(self.cachedColumnWidth, width)
     self.tableColumns[0].width = cachedColumnWidth
+
+    let rv = rowView as? ThemedTableRow
+    guard rv?.themeToken != self.lastThemeMark else {
+      return
+    }
+
+    let triangleView = rv?.triangleView
+    triangleView?.image = self.triangleClosed
+    triangleView?.alternateImage = self.triangleOpen
+    rv?.themeToken = self.lastThemeMark
   }
 }
 
@@ -548,7 +605,7 @@ class FileOutlineViewOld: NSOutlineView,
   private let uuid: String
   private var lastFileSystemUpdateMark = Token()
   private var usesTheme: Bool
-  private var lastThemeMark = Token()
+  private(set) var lastThemeMark = Token()
   private var showsFileIcon: Bool
 
   private var cwd: URL {

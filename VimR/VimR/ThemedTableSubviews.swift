@@ -10,16 +10,28 @@ import PureLayout
 protocol ThemedView: class {
 
   var theme: Theme { get }
+  var lastThemeMark: Token { get }
 }
 
 class ThemedTableRow: NSTableRowView {
 
+  weak var triangleView: NSButton?
+  var themeToken: Token
+
   init(withIdentifier identifier: String, themedView: ThemedView) {
     self.themedView = themedView
+    self.themeToken = themedView.lastThemeMark
 
     super.init(frame: .zero)
 
     self.identifier = NSUserInterfaceItemIdentifier(identifier)
+  }
+
+  override func didAddSubview(_ subview: NSView) {
+    super.didAddSubview(subview)
+    if subview.identifier == NSOutlineView.disclosureButtonIdentifier {
+      self.triangleView = subview as? NSButton
+    }
   }
 
   open override func drawBackground(in dirtyRect: NSRect) {

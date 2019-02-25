@@ -21,6 +21,7 @@ class BuffersList: NSView,
     case open(NvimView.Buffer)
   }
 
+  private(set) var lastThemeMark = Token()
   private(set) var theme = Theme.default
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
@@ -69,7 +70,6 @@ class BuffersList: NSView,
 
   private let uuid: String
   private var usesTheme: Bool
-  private var lastThemeMark = Token()
   private var showsFileIcon: Bool
 
   private let bufferList = NSTableView.standardTableView()
