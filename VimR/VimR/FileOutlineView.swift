@@ -184,9 +184,9 @@ class FileOutlineView: NSOutlineView,
       return self.treeController.arrangedObjects
     }
 
-    let comps = url.pathComponents.suffix(
-      from: self.cwd.pathComponents.count
-    )
+    let cwdCompsCount = self.cwd.pathComponents.count
+    guard cwdCompsCount <= url.pathComponents.count else { return nil }
+    let comps = url.pathComponents.suffix(cwdCompsCount)
 
     let rootTreeNode = self.treeController.arrangedObjects
     let changeTreeNode = comps.reduce(rootTreeNode) { (prev, comp) in
