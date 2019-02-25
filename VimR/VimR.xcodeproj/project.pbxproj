@@ -13,7 +13,6 @@
 		1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */; };
 		1929B0F599D1F62C7BE53D2C /* HttpServerMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1DC584C89C477E83FA2 /* HttpServerMiddleware.swift */; };
 		1929B1837C750CADB3A5BCB9 /* OpenQuicklyFileViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1558455B3A74D93EF2A /* OpenQuicklyFileViewRow.swift */; };
-		1929B1A39CC79D00DC4E04B6 /* FileOutlineViewOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B28110A57C0C1089B782 /* FileOutlineViewOld.swift */; };
 		1929B20CE35B43BB1CE023BA /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC2F05E9A5C0DB039739 /* Theme.swift */; };
 		1929B29B95AD176D57942E08 /* UiRootReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B457B9D0FA4D21F3751E /* UiRootReducer.swift */; };
 		1929B3217A7A3D79E28C80DB /* PrefWindowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B49E6924847AD085C8C9 /* PrefWindowReducer.swift */; };
@@ -297,7 +296,6 @@
 		1929B14A5949FB64C4B2646F /* KeysPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeysPref.swift; sourceTree = "<group>"; };
 		1929B1558455B3A74D93EF2A /* OpenQuicklyFileViewRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyFileViewRow.swift; sourceTree = "<group>"; };
 		1929B1DC584C89C477E83FA2 /* HttpServerMiddleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServerMiddleware.swift; sourceTree = "<group>"; };
-		1929B28110A57C0C1089B782 /* FileOutlineViewOld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileOutlineViewOld.swift; sourceTree = "<group>"; };
 		1929B34FC23D805A8B29E8F7 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		1929B364460D86F17E80943C /* PrefMiddleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefMiddleware.swift; sourceTree = "<group>"; };
 		1929B365A6434354B568B04F /* FileMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileMonitor.swift; sourceTree = "<group>"; };
@@ -515,7 +513,6 @@
 				1929BCE3E156C06EDF1F2806 /* FileOutlineView.swift */,
 				1929BA5C7099CDEB04B76BA4 /* FileBrowser.swift */,
 				1929BD2CA8DD198A6BCDBCB7 /* ThemedTableSubviews.swift */,
-				1929B28110A57C0C1089B782 /* FileOutlineViewOld.swift */,
 			);
 			name = "File Browser";
 			sourceTree = "<group>";
@@ -1150,7 +1147,6 @@
 				1929B8F498D1E7C53F572CE2 /* KeysPref.swift in Sources */,
 				1929B5A2EE366F79ED32744C /* KeysPrefReducer.swift in Sources */,
 				1929BB67CAAD4F6CBD38DF0A /* RxRedux.swift in Sources */,
-				1929B1A39CC79D00DC4E04B6 /* FileOutlineViewOld.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
