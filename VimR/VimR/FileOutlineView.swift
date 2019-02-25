@@ -35,31 +35,18 @@ class FileOutlineView: NSOutlineView,
     self.triangleClosed = NSImage.fontAwesomeIcon(
       name: .caretRight,
       textColor: self.theme.directoryForeground,
-      dimension: 18
+      dimension: triangleImageSize
     )
     self.triangleOpen = NSImage.fontAwesomeIcon(
       name: .caretDown,
       textColor: self.theme.directoryForeground,
-      dimension: 18
+      dimension: triangleImageSize
     )
 
     super.init(frame: .zero)
 
     NSOutlineView.configure(toStandard: self)
     self.delegate = self
-
-    // Load context menu.
-    // This will set self.menu.
-    guard Bundle.main.loadNibNamed(
-      NSNib.Name("FileBrowserMenu"),
-      owner: self,
-      topLevelObjects: nil
-    ) else {
-      fileLog.error("FileBrowserMenu.xib could not be loaded")
-      return
-    }
-    self.menu?.items.forEach { $0.target = self }
-    self.doubleAction = #selector(FileOutlineView.doubleClickAction)
 
     source
       .observeOn(MainScheduler.instance)
@@ -113,6 +100,68 @@ class FileOutlineView: NSOutlineView,
       })
       .disposed(by: self.disposeBag)
 
+    self.initContextMenu()
+    self.initBindings()
+    self.reloadRoot()
+  }
+
+  // We cannot use outlineView(_:willDisplayOutlineCell:for:item:) delegate
+  // method to customize the disclosure triangle in a view-based
+  // NSOutlineView.
+  // See https://stackoverflow.com/a/20454413/9850227
+  override func makeView(
+    withIdentifier identifier: NSUserInterfaceItemIdentifier, owner: Any?
+  ) -> NSView? {
+    let result = super.makeView(withIdentifier: identifier, owner: owner)
+
+    if identifier == NSOutlineView.disclosureButtonIdentifier {
+      let triangleButton = result as? NSButton
+      triangleButton?.image = self.triangleClosed
+      triangleButton?.alternateImage = self.triangleOpen
+    }
+
+    return result
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  private let emit: (UuidAction<FileBrowser.Action>) -> Void
+  private let disposeBag = DisposeBag()
+
+  private let uuid: String
+
+  private var root: Node
+  private var cwd: URL {
+    return self.root.url
+  }
+  private let treeController = NSTreeController()
+
+  private var cachedColumnWidth = CGFloat(20)
+  private var usesTheme: Bool
+  private var lastFileSystemUpdateMark = Token()
+  private var showsFileIcon: Bool
+  private var isShowHidden: Bool
+
+  private var triangleClosed: NSImage
+  private var triangleOpen: NSImage
+
+  private func initContextMenu() {
+    // Loading the nib file will set self.menu.
+    guard Bundle.main.loadNibNamed(
+      NSNib.Name("FileBrowserMenu"),
+      owner: self,
+      topLevelObjects: nil
+    ) else {
+      fileLog.error("FileBrowserMenu.xib could not be loaded")
+      return
+    }
+    self.menu?.items.forEach { $0.target = self }
+    self.doubleAction = #selector(FileOutlineView.doubleClickAction)
+  }
+
+  private func initBindings() {
     self.treeController.childrenKeyPath = "children"
     self.treeController.leafKeyPath = "isLeaf"
     self.treeController.countKeyPath = "childrenCount"
@@ -128,8 +177,6 @@ class FileOutlineView: NSOutlineView,
     self.bind(.selectionIndexPaths,
               to: self.treeController,
               withKeyPath: "selectionIndexPaths")
-
-    self.reloadRoot()
   }
 
   private func changeRootTreeNode(`for` url: URL) -> NSTreeNode? {
@@ -190,48 +237,6 @@ class FileOutlineView: NSOutlineView,
     )
   }
 
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-
-  // We cannot use outlineView(_:willDisplayOutlineCell:for:item:) delegate
-  // method to customize the disclosure triangle in a view-based
-  // NSOutlineView.
-  // See https://stackoverflow.com/a/20454413/9850227
-  override func makeView(
-    withIdentifier identifier: NSUserInterfaceItemIdentifier, owner: Any?
-  ) -> NSView? {
-    let result = super.makeView(withIdentifier: identifier, owner: owner)
-
-    if identifier == NSOutlineView.disclosureButtonIdentifier {
-      let triangleButton = result as? NSButton
-      triangleButton?.image = self.triangleClosed
-      triangleButton?.alternateImage = self.triangleOpen
-    }
-
-    return result
-  }
-
-  private let emit: (UuidAction<FileBrowser.Action>) -> Void
-  private let disposeBag = DisposeBag()
-
-  private let uuid: String
-
-  private var root: Node
-  private var cwd: URL {
-    return self.root.url
-  }
-  private let treeController = NSTreeController()
-
-  private var cachedColumnWidth = CGFloat(20)
-  private var usesTheme: Bool
-  private var lastFileSystemUpdateMark = Token()
-  private var showsFileIcon: Bool
-  private var isShowHidden: Bool
-
-  private var triangleClosed: NSImage
-  private var triangleOpen: NSImage
-
   private func childUrls(for url: URL) -> [URL] {
     let urls = FileUtils.directDescendants(of: url).sorted { lhs, rhs in
       return lhs.lastPathComponent < rhs.lastPathComponent
@@ -275,12 +280,12 @@ class FileOutlineView: NSOutlineView,
     self.triangleClosed = NSImage.fontAwesomeIcon(
       name: .caretRight,
       textColor: self.theme.directoryForeground,
-      dimension: 18
+      dimension: triangleImageSize
     )
     self.triangleOpen = NSImage.fontAwesomeIcon(
       name: .caretDown,
       textColor: self.theme.directoryForeground,
-      dimension: 18
+      dimension: triangleImageSize
     )
 
     self.lastThemeMark = theme.mark
@@ -534,10 +539,6 @@ extension FileOutlineView {
 
 class Node: NSObject, Comparable {
 
-//  static func ==(left: Node, right: Node) -> Bool {
-//    return left.url == right.url
-//  }
-
   static func <(lhs: Node, rhs: Node) -> Bool {
     return lhs.displayName < rhs.displayName
   }
@@ -574,7 +575,7 @@ class Node: NSObject, Comparable {
   }
 }
 
-fileprivate extension NSTreeNode {
+private extension NSTreeNode {
 
   var node: Node? {
     return self.representedObject as? Node
@@ -582,3 +583,4 @@ fileprivate extension NSTreeNode {
 }
 
 private let columnWidthRightPadding = CGFloat(40)
+private let triangleImageSize = CGFloat(18)
