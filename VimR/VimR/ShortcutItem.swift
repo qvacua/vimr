@@ -18,13 +18,17 @@ class ShortcutItem: NSObject, Comparable {
     return self.children?.count ?? -1
   }
 
+  var identifier: String? {
+    return self.item?.identifier?.rawValue
+  }
+
   var isContainer: Bool {
     return !self.isLeaf
   }
 
   override var description: String {
     return "<ShortcutItem: \(title), " +
-           "id: '\(self.item?.identifier?.rawValue ?? "")', " +
+           "id: '\(self.identifier ?? "")', " +
            "isLeaf: \(self.isLeaf), " +
            "childrenCount: \(self.children?.count ?? -1)" +
            ">"

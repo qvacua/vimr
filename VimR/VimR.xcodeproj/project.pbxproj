@@ -7,17 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1929B02DAC94F0E47CFC8EA2 /* ShortcutsTableSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCF66D08CC02A9233A88 /* ShortcutsTableSubviews.swift */; };
+		1929B0244BD7111E168726CF /* DefaultShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B93256AF7F9137223E36 /* DefaultShortcuts.swift */; };
 		1929B04CE8ECBD75CBBB0991 /* StringCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5D45C9792BBE76B8AFF /* StringCommonsTest.swift */; };
 		1929B05B9D664052EC2D23EF /* FileOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCE3E156C06EDF1F2806 /* FileOutlineView.swift */; };
-		1929B083D2176A9C615B8807 /* ShortcutsPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD256AA54518D37D6CBB /* ShortcutsPref.swift */; };
 		1929B08C6230B9C5AB72DAF1 /* Pref128ToCurrentConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5046239709E33516F5C /* Pref128ToCurrentConverter.swift */; };
+		1929B0C7150100A84FBDB8BF /* ShortcutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF230875DED6CD7AB3EB /* ShortcutItem.swift */; };
 		1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */; };
 		1929B0F599D1F62C7BE53D2C /* HttpServerMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1DC584C89C477E83FA2 /* HttpServerMiddleware.swift */; };
-		1929B148AA06340F22533377 /* ShortcutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1E4B11A92D8DD171D93 /* ShortcutItem.swift */; };
 		1929B1837C750CADB3A5BCB9 /* OpenQuicklyFileViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1558455B3A74D93EF2A /* OpenQuicklyFileViewRow.swift */; };
 		1929B20CE35B43BB1CE023BA /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC2F05E9A5C0DB039739 /* Theme.swift */; };
 		1929B29B95AD176D57942E08 /* UiRootReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B457B9D0FA4D21F3751E /* UiRootReducer.swift */; };
+		1929B2D56C4652E251C23AD4 /* DefaultShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B93256AF7F9137223E36 /* DefaultShortcuts.swift */; };
 		1929B3217A7A3D79E28C80DB /* PrefWindowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B49E6924847AD085C8C9 /* PrefWindowReducer.swift */; };
 		1929B333855A5406C400DA92 /* OpenQuicklyFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEDE7F92BC7B49E802AF /* OpenQuicklyFilterOperation.swift */; };
 		1929B3557317755A43513B17 /* OpenQuicklyWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B71A92C24FEFE79A851E /* OpenQuicklyWindow.swift */; };
@@ -28,7 +28,6 @@
 		1929B462CD4935AFF6D69457 /* FileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7CB4863F80230C32D3C /* FileItem.swift */; };
 		1929B4B00D7BB191A9A6532D /* HtmlPreviewToolReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE5AEA3D0980860EED50 /* HtmlPreviewToolReducer.swift */; };
 		1929B4B70926DE113E6BF990 /* PreviewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE37AA2843779CAFA76F /* PreviewReducer.swift */; };
-		1929B4DD667E1E57EFA2AA57 /* ShortcutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1E4B11A92D8DD171D93 /* ShortcutItem.swift */; };
 		1929B4E54E2F13A7F5F2B682 /* BufferListReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B67A10E6BB2986B2416E /* BufferListReducer.swift */; };
 		1929B4F0612224E594E89B92 /* AppearancePref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0FBFB766042CF06E463 /* AppearancePref.swift */; };
 		1929B4FEE6EB56EF3F56B805 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B34FC23D805A8B29E8F7 /* Context.swift */; };
@@ -58,21 +57,24 @@
 		1929B94083273D4B321AD848 /* FileItemUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B56C8ED31834BA9D8543 /* FileItemUtils.swift */; };
 		1929B98F94536E3912AD9F3B /* ArrayCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BAF13FAD5DA8D3762367 /* ArrayCommonsTest.swift */; };
 		1929B990A143763A56CFCED0 /* PrefMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B364460D86F17E80943C /* PrefMiddleware.swift */; };
+		1929BA269EBD68251410A08E /* ShortcutsTableSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B07F0085B7AE10413346 /* ShortcutsTableSubviews.swift */; };
 		1929BA715337FE26155B2071 /* BufferList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA43449BA41666CD55ED /* BufferList.swift */; };
 		1929BA76A1D97D8226F7CFB1 /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6AD3396160AA2C46919 /* Debouncer.swift */; };
-		1929BA8E1A7C425E0E03EB40 /* ShortcutsTableSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCF66D08CC02A9233A88 /* ShortcutsTableSubviews.swift */; };
 		1929BAAD7336FDFF1F78E749 /* ScorerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF69B01107F358CF7EAD /* ScorerTest.swift */; };
 		1929BAE4900D72A7877741B1 /* PrefWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE168F31344B69E61B62 /* PrefWindow.swift */; };
 		1929BAFF1E011321D3186EE6 /* UiRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD4149D5A25C82064DD8 /* UiRoot.swift */; };
 		1929BB4A9B2FA42A64CCCC76 /* MainWindowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD83A13BF133741766CC /* MainWindowReducer.swift */; };
 		1929BB67CAAD4F6CBD38DF0A /* RxRedux.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B66A5E2D00EA143AFD86 /* RxRedux.swift */; };
+		1929BB85B2D30E548A32663D /* ShortcutsPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0E9B2F018D3E31D4B0B /* ShortcutsPref.swift */; };
 		1929BBE28654E4307AF1E2FD /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC2F05E9A5C0DB039739 /* Theme.swift */; };
+		1929BC682EA78BF50D1E0890 /* ShortcutsTableSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B07F0085B7AE10413346 /* ShortcutsTableSubviews.swift */; };
 		1929BCC7908DD899999B70BE /* AppearancePrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BED01F5D94BFCA4CF80F /* AppearancePrefReducer.swift */; };
 		1929BCC9D3604933DFF07E2E /* FileBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA5C7099CDEB04B76BA4 /* FileBrowser.swift */; };
 		1929BCF7F7B9CC5499A3F506 /* AdvancedPrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7039C5689CE45F53888 /* AdvancedPrefReducer.swift */; };
 		1929BD2F41D93ADFF43C1C98 /* NetUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B02440BC99C42F9EBD45 /* NetUtils.m */; };
 		1929BD3878A3A47B8D685CD2 /* AppDelegateReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7A68B7109CEFAF105E8 /* AppDelegateReducer.swift */; };
 		1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D510177918080BE39B /* Scorer.swift */; };
+		1929BDC69A5F9D1661423488 /* ShortcutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF230875DED6CD7AB3EB /* ShortcutItem.swift */; };
 		1929BDFDBDA7180D02ACB37E /* RxSwiftCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6C215ACCBE12672A8D7 /* RxSwiftCommonsTest.swift */; };
 		1929BE0DAEE9664C5BCFA211 /* States.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB6608B4F0E037CA0F4C /* States.swift */; };
 		1929BE0F64A6CE5BCE2A5092 /* MainWindow+Delegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B714EB137AE448CE8ABD /* MainWindow+Delegates.swift */; };
@@ -199,6 +201,9 @@
 		4BDA50B52160BE76004D10A9 /* Socket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B0A1AA72120C35100F1E02F /* Socket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BDF500C1D760A3500D8FBC3 /* FileUtilsTest in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF500B1D760A3500D8FBC3 /* FileUtilsTest */; };
 		4BDF50171D77540900D8FBC3 /* OpenQuicklyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF50191D77540900D8FBC3 /* OpenQuicklyWindow.xib */; };
+		4BE34B832225BAC7002F57D3 /* ShortcutRecorder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE34B822225BAC7002F57D3 /* ShortcutRecorder.framework */; };
+		4BE34B842225BAD2002F57D3 /* ShortcutRecorder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE34B822225BAC7002F57D3 /* ShortcutRecorder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BE34B852225BB56002F57D3 /* RxNeovimApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */; };
 		4BE45C1D1FD2DBD2005C0A95 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE45C1C1FD2DBD2005C0A95 /* Logger.swift */; };
 		4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5081CFF374B00673FDF /* AppDelegate.swift */; };
 		4BEBA50B1CFF374B00673FDF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50A1CFF374B00673FDF /* Assets.xcassets */; };
@@ -249,6 +254,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4BE34B842225BAD2002F57D3 /* ShortcutRecorder.framework in Embed Frameworks */,
 				4BB1F5D22097706700EC394A /* MessagePack.framework in Embed Frameworks */,
 				4BB1F5CF2097704D00EC394A /* RxMsgpackRpc.framework in Embed Frameworks */,
 				4BF18C411FD2E2C900DF95D1 /* CocoaFontAwesome.framework in Embed Frameworks */,
@@ -294,6 +300,8 @@
 		1929B04EC69F616EEFAF5F96 /* FileMonitorReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileMonitorReducer.swift; sourceTree = "<group>"; };
 		1929B067B3247675BCD09218 /* MainWindow+Actions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainWindow+Actions.swift"; sourceTree = "<group>"; };
 		1929B07A4A9209C88380E015 /* PrefPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefPane.swift; sourceTree = "<group>"; };
+		1929B07F0085B7AE10413346 /* ShortcutsTableSubviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShortcutsTableSubviews.swift; sourceTree = "<group>"; };
+		1929B0E9B2F018D3E31D4B0B /* ShortcutsPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShortcutsPref.swift; sourceTree = "<group>"; };
 		1929B0EB3F49C42A57D083AF /* GeneralPrefReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralPrefReducer.swift; sourceTree = "<group>"; };
 		1929B0FBFB766042CF06E463 /* AppearancePref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearancePref.swift; sourceTree = "<group>"; };
 		1929B11D672134E52A256A7F /* UrlCommonsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrlCommonsTest.swift; sourceTree = "<group>"; };
@@ -301,7 +309,6 @@
 		1929B14A5949FB64C4B2646F /* KeysPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeysPref.swift; sourceTree = "<group>"; };
 		1929B1558455B3A74D93EF2A /* OpenQuicklyFileViewRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyFileViewRow.swift; sourceTree = "<group>"; };
 		1929B1DC584C89C477E83FA2 /* HttpServerMiddleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServerMiddleware.swift; sourceTree = "<group>"; };
-		1929B1E4B11A92D8DD171D93 /* ShortcutItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShortcutItem.swift; sourceTree = "<group>"; };
 		1929B34FC23D805A8B29E8F7 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		1929B364460D86F17E80943C /* PrefMiddleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefMiddleware.swift; sourceTree = "<group>"; };
 		1929B365A6434354B568B04F /* FileMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileMonitor.swift; sourceTree = "<group>"; };
@@ -331,6 +338,7 @@
 		1929B85023B042C485409CE1 /* HtmlPreviewTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HtmlPreviewTool.swift; sourceTree = "<group>"; };
 		1929B88B5FA08E897A3C2168 /* KeysPrefReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeysPrefReducer.swift; sourceTree = "<group>"; };
 		1929B8EF9A9F5ACC175452BD /* PreviewUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewUtils.swift; sourceTree = "<group>"; };
+		1929B93256AF7F9137223E36 /* DefaultShortcuts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultShortcuts.swift; sourceTree = "<group>"; };
 		1929B9355C892BEBA7496C71 /* DictionaryCommonsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryCommonsTest.swift; sourceTree = "<group>"; };
 		1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationCommons.swift; sourceTree = "<group>"; };
 		1929B9D510177918080BE39B /* Scorer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scorer.swift; sourceTree = "<group>"; };
@@ -346,8 +354,6 @@
 		1929BBE0A534F2F6009D31BE /* AdvencedPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvencedPref.swift; sourceTree = "<group>"; };
 		1929BC2F05E9A5C0DB039739 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		1929BCE3E156C06EDF1F2806 /* FileOutlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileOutlineView.swift; sourceTree = "<group>"; };
-		1929BCF66D08CC02A9233A88 /* ShortcutsTableSubviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShortcutsTableSubviews.swift; sourceTree = "<group>"; };
-		1929BD256AA54518D37D6CBB /* ShortcutsPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShortcutsPref.swift; sourceTree = "<group>"; };
 		1929BD2CA8DD198A6BCDBCB7 /* ThemedTableSubviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedTableSubviews.swift; sourceTree = "<group>"; };
 		1929BD4149D5A25C82064DD8 /* UiRoot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiRoot.swift; sourceTree = "<group>"; };
 		1929BD83A13BF133741766CC /* MainWindowReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowReducer.swift; sourceTree = "<group>"; };
@@ -360,6 +366,7 @@
 		1929BED01F5D94BFCA4CF80F /* AppearancePrefReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearancePrefReducer.swift; sourceTree = "<group>"; };
 		1929BEDE7F92BC7B49E802AF /* OpenQuicklyFilterOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyFilterOperation.swift; sourceTree = "<group>"; };
 		1929BEEB33113B0E33C3830F /* Matcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Matcher.swift; sourceTree = "<group>"; };
+		1929BF230875DED6CD7AB3EB /* ShortcutItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShortcutItem.swift; sourceTree = "<group>"; };
 		1929BF69B01107F358CF7EAD /* ScorerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScorerTest.swift; sourceTree = "<group>"; };
 		1929BFB0F294F3714D5E095F /* PreviewToolReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewToolReducer.swift; sourceTree = "<group>"; };
 		1929BFC0A5A9C6DB09BE1368 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
@@ -456,6 +463,7 @@
 		4BC1642B1FD2DEE1001903BE /* NvimView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NvimView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BDF500B1D760A3500D8FBC3 /* FileUtilsTest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FileUtilsTest; sourceTree = "<group>"; };
 		4BDF50181D77540900D8FBC3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OpenQuicklyWindow.xib; sourceTree = "<group>"; };
+		4BE34B822225BAC7002F57D3 /* ShortcutRecorder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ShortcutRecorder.framework; path = ../Carthage/Build/Mac/ShortcutRecorder.framework; sourceTree = "<group>"; };
 		4BE45C1C1FD2DBD2005C0A95 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		4BEBA5051CFF374B00673FDF /* VimR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VimR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BEBA5081CFF374B00673FDF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -491,8 +499,10 @@
 				4BF18C3E1FD2E2AB00DF95D1 /* RxSwift.framework in Frameworks */,
 				4B9E5E1E20990E09006455C3 /* RxMessagePort.framework in Frameworks */,
 				4BF18C3F1FD2E2AB00DF95D1 /* Sparkle.framework in Frameworks */,
+				4BE34B852225BB56002F57D3 /* RxNeovimApi.framework in Frameworks */,
 				4B9DF286209C8A8B00DF2AAD /* Swifter.framework in Frameworks */,
 				4BF18C401FD2E2AB00DF95D1 /* RxCocoa.framework in Frameworks */,
+				4BE34B832225BAC7002F57D3 /* ShortcutRecorder.framework in Frameworks */,
 				4BC164281FD2DEE1001903BE /* NvimView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -534,6 +544,17 @@
 				1929B7BB3E4B3DC96284B686 /* PrefUtilsTest.swift */,
 			);
 			name = Utils;
+			sourceTree = "<group>";
+		};
+		1929B2C6D0242153758A138A /* Shortcuts */ = {
+			isa = PBXGroup;
+			children = (
+				1929B0E9B2F018D3E31D4B0B /* ShortcutsPref.swift */,
+				1929B07F0085B7AE10413346 /* ShortcutsTableSubviews.swift */,
+				1929B93256AF7F9137223E36 /* DefaultShortcuts.swift */,
+				1929BF230875DED6CD7AB3EB /* ShortcutItem.swift */,
+			);
+			name = Shortcuts;
 			sourceTree = "<group>";
 		};
 		1929B32401E8914DE9BF76CA /* Components */ = {
@@ -601,7 +622,6 @@
 				1929B5E773BDB3B4EE9D00C1 /* Reducers */,
 				1929BFA93DC859DD76C46192 /* Middlewares */,
 				1929BFC0A5A9C6DB09BE1368 /* Types.swift */,
-				1929B1E4B11A92D8DD171D93 /* ShortcutItem.swift */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -640,8 +660,7 @@
 				1929BBE0A534F2F6009D31BE /* AdvencedPref.swift */,
 				1929BB2AD21A10A0ECA66A5E /* ToolsPref.swift */,
 				1929B14A5949FB64C4B2646F /* KeysPref.swift */,
-				1929BD256AA54518D37D6CBB /* ShortcutsPref.swift */,
-				1929BCF66D08CC02A9233A88 /* ShortcutsTableSubviews.swift */,
+				1929B2C6D0242153758A138A /* Shortcuts */,
 			);
 			name = Preferences;
 			sourceTree = "<group>";
@@ -681,6 +700,7 @@
 		4B5012001EBA791000F76C46 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4BE34B822225BAC7002F57D3 /* ShortcutRecorder.framework */,
 				4B0A1AA72120C35100F1E02F /* Socket.framework */,
 				4B004BA920FBA6700043A396 /* DictionaryCoding.framework */,
 				4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */,
@@ -1158,9 +1178,10 @@
 				1929B8F498D1E7C53F572CE2 /* KeysPref.swift in Sources */,
 				1929B5A2EE366F79ED32744C /* KeysPrefReducer.swift in Sources */,
 				1929BB67CAAD4F6CBD38DF0A /* RxRedux.swift in Sources */,
-				1929B083D2176A9C615B8807 /* ShortcutsPref.swift in Sources */,
-				1929B4DD667E1E57EFA2AA57 /* ShortcutItem.swift in Sources */,
-				1929B02DAC94F0E47CFC8EA2 /* ShortcutsTableSubviews.swift in Sources */,
+				1929BB85B2D30E548A32663D /* ShortcutsPref.swift in Sources */,
+				1929BA269EBD68251410A08E /* ShortcutsTableSubviews.swift in Sources */,
+				1929B2D56C4652E251C23AD4 /* DefaultShortcuts.swift in Sources */,
+				1929B0C7150100A84FBDB8BF /* ShortcutItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1192,8 +1213,9 @@
 				1929B8E90A1378E494D481E7 /* PrefUtilsTest.swift in Sources */,
 				1929B20CE35B43BB1CE023BA /* Theme.swift in Sources */,
 				1929B9318D32146D58BB38EC /* AppKitCommons.swift in Sources */,
-				1929B148AA06340F22533377 /* ShortcutItem.swift in Sources */,
-				1929BA8E1A7C425E0E03EB40 /* ShortcutsTableSubviews.swift in Sources */,
+				1929BC682EA78BF50D1E0890 /* ShortcutsTableSubviews.swift in Sources */,
+				1929B0244BD7111E168726CF /* DefaultShortcuts.swift in Sources */,
+				1929BDC69A5F9D1661423488 /* ShortcutItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

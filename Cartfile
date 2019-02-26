@@ -10,6 +10,6 @@ github "sindresorhus/github-markdown-css" == 3.0.1
 github "httpswift/swifter" == 1.4.5
 github "a2/MessagePack.swift" == 3.0.0
 github "elegantchaos/DictionaryCoding" == 1.0.6
-github "qvacua/ShortcutRecorder" "master"
+github "qvacua/ShortcutRecorder" "develop"
 
 github "Quick/Nimble" == 7.3.4

@@ -6,6 +6,7 @@
 import Cocoa
 import PureLayout
 import RxSwift
+import ShortcutRecorder
 
 class DummyItem {
 
@@ -71,10 +72,19 @@ class ShortcutsPref: PrefPane,
 
   private let shortcutList = NSOutlineView.standardOutlineView()
   private let shortcutScrollView = NSScrollView.standardScrollView()
+  private let resetButton = NSButton(forAutoLayout: ())
 
   private let treeController = NSTreeController()
   private let shortcutItemsRoot = ShortcutItem(
     title: "root", isLeaf: false, item: nil
+  )
+
+  private let keyEqTransformer = SRKeyEquivalentTransformer()
+  private let keyEqModTransformer = SRKeyEquivalentModifierMaskTransformer()
+
+  let shortcutsDefaultsController = NSUserDefaultsController(
+    defaults: UserDefaults(suiteName: "com.qvacua.VimR.menuitems"),
+    initialValues: defaultShortcuts
   )
 
   required init?(coder: NSCoder) {
@@ -100,6 +110,34 @@ class ShortcutsPref: PrefPane,
                            withKeyPath: "selectionIndexPaths")
   }
 
+  private func initMenuItemsBindings() {
+    var queue = self.shortcutItemsRoot.children ?? []
+    while (!queue.isEmpty) {
+      guard let item = queue.popLast() else { break }
+      if item.isContainer, let children = item.children {
+        queue.append(contentsOf: children)
+        continue
+      }
+
+      guard let menuItem = item.item, let identifier = item.identifier else {
+        continue
+      }
+
+      menuItem.bind(
+        NSBindingName("keyEquivalent"),
+        to: self.shortcutsDefaultsController,
+        withKeyPath: "values.\(identifier)",
+        options: [.valueTransformer: self.keyEqTransformer]
+      )
+      menuItem.bind(
+        NSBindingName("keyEquivalentModifierMask"),
+        to: self.shortcutsDefaultsController,
+        withKeyPath: "values.\(identifier)",
+        options: [.valueTransformer: self.keyEqModTransformer]
+      )
+    }
+  }
+
   private func initShortcutItems() {
     guard let mainMenu = NSApplication.shared.mainMenu else { return }
     let firstLevel = mainMenu.items
@@ -116,9 +154,8 @@ class ShortcutsPref: PrefPane,
       guard let entry = queue.popLast() else { break }
 
       if !entry.shortcutItem.isLeaf
-         || entry.shortcutItem.item?
+         || entry.shortcutItem
               .identifier?
-              .rawValue
               .hasPrefix("com.qvacua.vimr.menuitems.") == true {
 
         entry.parent.children?.append(entry.shortcutItem)
@@ -154,8 +191,17 @@ class ShortcutsPref: PrefPane,
     let shortcutScrollView = self.shortcutScrollView
     shortcutScrollView.documentView = shortcutList
 
+    let reset = self.resetButton
+    reset.title = "Reset All to Default"
+    reset.bezelStyle = .rounded
+    reset.isBordered = true
+    reset.setButtonType(.momentaryPushIn)
+    reset.target = self
+    reset.action = #selector(ShortcutsPref.resetToDefault)
+
     self.addSubview(paneTitle)
     self.addSubview(shortcutScrollView)
+    self.addSubview(reset)
 
     paneTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 18)
     paneTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
@@ -168,20 +214,33 @@ class ShortcutsPref: PrefPane,
     )
     shortcutScrollView.autoPinEdge(.left, to: .left, of: paneTitle)
     shortcutScrollView.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
-    shortcutScrollView.autoPinEdge(toSuperviewEdge: .bottom, withInset: 18)
+
+    reset.autoPinEdge(.left, to: .left, of: paneTitle)
+    reset.autoPinEdge(.top, to: .bottom, of: shortcutScrollView, withOffset: 18)
+    reset.autoPinEdge(toSuperviewEdge: .bottom, withInset: 18)
   }
 }
 
 // MARK: - Actions
 extension ShortcutsPref {
 
-  @objc func isLeftOptionMetaAction(_ sender: NSButton) {
-    self.emit(.dummy)
+  @objc func resetToDefault(_ sender: NSButton) {
+    stdoutLog.debug("Reset to default!")
   }
 }
 
 // MARK: - NSOutlineViewDelegate
 extension ShortcutsPref {
+
+  private func isUppercase(_ str: String) -> Bool {
+    for c in str.unicodeScalars {
+      if !CharacterSet.uppercaseLetters.contains(c) {
+        return false
+      }
+    }
+
+    return true
+  }
 
   func outlineView(
     _ outlineView: NSOutlineView,
@@ -212,13 +271,17 @@ extension ShortcutsPref {
       return nil
     }
 
-    cellView.text = item.title
     cellView.isDir = !item.isLeaf
+    cellView.text = item.title
+
+    guard let identifier = item.identifier else { return cellView }
+    cellView.bindRecorder(toKeyPath: "values.\(identifier)",
+                          to: self.shortcutsDefaultsController)
 
     return cellView
   }
 
   func outlineView(_: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
-    return 24
+    return 28
   }
 }
