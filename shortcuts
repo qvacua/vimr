@@ -1,0 +1,41 @@
+VimR
+Command-, Preferences...
+Command-H Hide VimR
+Command-Option-H Hide Others
+Command-Q QuitVimR
+
+File
+Command-N New
+Command-T New Tab
+Command-O Open
+Command-Opt-O Open In New Window...
+Command-Shift-O Open Quickly...
+Command-W Close
+Command-S Save...
+Command-Shift-S Save As...
+
+Edit
+Command-Z Undo
+Command-Shift-Z Redo
+Command-X Cut
+Command-C Copy
+Command-V Paste
+Command-A Select All
+
+View
+Command-0 Font-Reset To Default Size
+Command-+ Font-Bigger
+Command-- Font-Smaller
+Command-Control-F Enter Full Screen
+
+Tools
+Command-\ Toggle All Tools
+Command-Shift-\ Toggle Tool Buttons
+Command-1 Toggle File Browser
+Command-. Focus Neovim View
+
+Window
+Command-M Minimize
+
+Help
+Command-? VimR Help
