@@ -1,4 +1,5 @@
 github "IBM-Swift/BlueSocket" "1.0.44"
+github "Kentzo/ShortcutRecorder" "2.17.2"
 github "PureLayout/PureLayout" "v3.1.4"
 github "Quick/Nimble" "v7.3.4"
 github "ReactiveX/RxSwift" "4.4.1"
