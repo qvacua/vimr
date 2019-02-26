@@ -30,6 +30,7 @@ class PrefWindow: NSObject,
       ToolsPref(source: source, emitter: emitter, state: state),
       AppearancePref(source: source, emitter: emitter, state: state),
       KeysPref(source: source, emitter: emitter, state: state),
+      ShortcutsPref(source: source, emitter: emitter, state: state),
       AdvancedPref(source: source, emitter: emitter, state: state),
     ]
 
@@ -119,6 +120,11 @@ class PrefWindow: NSObject,
     paneContainer.autoPinEdge(.left, to: .right, of: categoryScrollView)
 
     self.currentPane = self.panes[0]
+
+    // GH-314 FIXME: Remove when finished.
+    #if DEBUG
+    self.categoryView.selectRowIndexes(IndexSet(integer: 4), byExtendingSelection: false)
+    #endif
   }
 }
 

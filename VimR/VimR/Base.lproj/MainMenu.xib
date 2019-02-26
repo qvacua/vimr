@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="Application" customModule="VimR" customModuleProvider="target">
@@ -73,45 +73,45 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="File" id="bib-Uj-vzu">
                         <items>
-                            <menuItem title="New" keyEquivalent="n" id="Was-JA-tGl">
+                            <menuItem title="New" keyEquivalent="n" identifier="com.qvacua.vimr.menuitems.file.new" id="Was-JA-tGl">
                                 <connections>
                                     <action selector="newDocument:" target="-1" id="4Si-XN-c54"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="New Tab" keyEquivalent="t" id="TX9-92-Oe2">
+                            <menuItem title="New Tab" keyEquivalent="t" identifier="com.qvacua.vimr.menuitems.file.new-tab" id="TX9-92-Oe2">
                                 <connections>
                                     <action selector="newTab:" target="-1" id="RfK-C0-Bu9"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="t9v-Ee-SaA"/>
-                            <menuItem title="Open…" keyEquivalent="o" id="IAo-SY-fd9">
+                            <menuItem title="Open…" keyEquivalent="o" identifier="com.qvacua.vimr.menuitems.file.open" id="IAo-SY-fd9">
                                 <connections>
                                     <action selector="openDocument:" target="-1" id="zbe-h0-oBM"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Open In New Window…" keyEquivalent="o" id="c6W-bD-wRy">
+                            <menuItem title="Open In New Window…" keyEquivalent="o" identifier="com.qvacua.vimr.menuitems.file.open-in-new-window" id="c6W-bD-wRy">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="openInNewWindow:" target="-1" id="2ZC-Rl-rjR"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Open Quickly…" keyEquivalent="O" id="0V2-yi-P2z">
+                            <menuItem title="Open Quickly…" keyEquivalent="O" identifier="com.qvacua.vimr.menuitems.file.open-quickly" id="0V2-yi-P2z">
                                 <connections>
                                     <action selector="openQuickly:" target="-1" id="FSA-7W-F0m"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="Lje-kE-tCa"/>
-                            <menuItem title="Close" keyEquivalent="w" id="DVo-aG-piG">
+                            <menuItem title="Close" keyEquivalent="w" identifier="com.qvacua.vimr.menuitems.file.close" id="DVo-aG-piG">
                                 <connections>
                                     <action selector="performClose:" target="-1" id="HmO-Ls-i7Q"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Save..." keyEquivalent="s" id="Pgi-pt-dWC">
+                            <menuItem title="Save..." keyEquivalent="s" identifier="com.qvacua.vimr.menuitems.file.save" id="Pgi-pt-dWC">
                                 <connections>
                                     <action selector="saveDocument:" target="-1" id="Qhz-Mg-Anr"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Save As…" keyEquivalent="S" id="01H-3e-ZCV">
+                            <menuItem title="Save As…" keyEquivalent="S" identifier="com.qvacua.vimr.menuitems.file.save-as" id="01H-3e-ZCV">
                                 <connections>
                                     <action selector="saveDocumentAs:" target="-1" id="2iM-rb-3fJ"/>
                                 </connections>
@@ -123,39 +123,39 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Edit" id="W48-6f-4Dl">
                         <items>
-                            <menuItem title="Undo" keyEquivalent="z" id="dRJ-4n-Yzg">
+                            <menuItem title="Undo" keyEquivalent="z" identifier="com.qvacua.vimr.menuitems.edit.undo" id="dRJ-4n-Yzg">
                                 <connections>
                                     <action selector="undo:" target="-1" id="M6e-cu-g7V"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Redo" keyEquivalent="Z" id="6dh-zS-Vam">
+                            <menuItem title="Redo" keyEquivalent="Z" identifier="com.qvacua.vimr.menuitems.edit.redo" id="6dh-zS-Vam">
                                 <connections>
                                     <action selector="redo:" target="-1" id="oIA-Rs-6OD"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="WRV-NI-Exz"/>
-                            <menuItem title="Cut" keyEquivalent="x" id="uRl-iY-unG">
+                            <menuItem title="Cut" keyEquivalent="x" identifier="com.qvacua.vimr.menuitems.edit.cut" id="uRl-iY-unG">
                                 <connections>
                                     <action selector="cut:" target="-1" id="YJe-68-I9s"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Copy" keyEquivalent="c" id="x3v-GG-iWU">
+                            <menuItem title="Copy" keyEquivalent="c" identifier="com.qvacua.vimr.menuitems.edit.copy" id="x3v-GG-iWU">
                                 <connections>
                                     <action selector="copy:" target="-1" id="G1f-GL-Joy"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Paste" keyEquivalent="v" id="gVA-U4-sdL">
+                            <menuItem title="Paste" keyEquivalent="v" identifier="com.qvacua.vimr.menuitems.edit.paste" id="gVA-U4-sdL">
                                 <connections>
                                     <action selector="paste:" target="-1" id="UvS-8e-Qdg"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Delete" id="pa3-QI-u2k">
+                            <menuItem title="Delete" identifier="com.qvacua.vimr.menuitems.edit.delete" id="pa3-QI-u2k">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="delete:" target="-1" id="0Mk-Ml-PaM"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Select All" keyEquivalent="a" id="Ruw-6m-B2m">
+                            <menuItem title="Select All" keyEquivalent="a" identifier="com.qvacua.vimr.menuitems.edit.select-all" id="Ruw-6m-B2m">
                                 <connections>
                                     <action selector="selectAll:" target="-1" id="VNm-Mi-diN"/>
                                 </connections>
@@ -171,17 +171,17 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Font" systemMenu="font" id="Wj0-kR-IJp">
                                     <items>
-                                        <menuItem title="Reset To Default Size" keyEquivalent="0" id="dmv-1c-kFU">
+                                        <menuItem title="Reset To Default Size" keyEquivalent="0" identifier="com.qvacua.vimr.menuitems.view.font.reset-to-default-size" id="dmv-1c-kFU">
                                             <connections>
                                                 <action selector="resetFontSize:" target="-1" id="8Rb-Wd-iZH"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Bigger" tag="3" keyEquivalent="+" id="FIs-h6-uga">
+                                        <menuItem title="Bigger" tag="3" keyEquivalent="+" identifier="com.qvacua.vimr.menuitems.view.font.bigger" id="FIs-h6-uga">
                                             <connections>
                                                 <action selector="makeFontBigger:" target="-1" id="FVE-Cp-LhT"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Smaller" tag="4" keyEquivalent="-" id="BHh-O4-8m0">
+                                        <menuItem title="Smaller" tag="4" keyEquivalent="-" identifier="com.qvacua.vimr.menuitems.view.font.smaller" id="BHh-O4-8m0">
                                             <connections>
                                                 <action selector="makeFontSmaller:" target="-1" id="nqo-sN-9tq"/>
                                             </connections>
@@ -190,7 +190,7 @@
                                 </menu>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="NXP-NG-aHV"/>
-                            <menuItem title="Enter Full Screen" keyEquivalent="f" id="Co5-Y0-sqo">
+                            <menuItem title="Enter Full Screen" keyEquivalent="f" identifier="com.qvacua.vimr.menuitems.view.enter-full-screen" id="Co5-Y0-sqo">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <connections>
                                     <action selector="toggleFullScreen:" target="-1" id="b4d-vv-b5h"/>
@@ -203,25 +203,25 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Tools" id="7MO-P5-uU3">
                         <items>
-                            <menuItem title="Toggle All Tools" keyEquivalent="\" id="Lb6-TZ-LgL">
+                            <menuItem title="Toggle All Tools" keyEquivalent="\" identifier="com.qvacua.vimr.menuitems.tools.toggle-all-tools" id="Lb6-TZ-LgL">
                                 <connections>
                                     <action selector="toggleAllTools:" target="-1" id="V97-0e-bES"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Toggle Tool Buttons" keyEquivalent="\" id="oK0-ZG-w1f">
+                            <menuItem title="Toggle Tool Buttons" keyEquivalent="\" identifier="com.qvacua.vimr.menuitems.tools.toggle-tool-buttons" id="oK0-ZG-w1f">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <connections>
                                     <action selector="toggleToolButtons:" target="-1" id="bxj-O1-Vo9"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="UAq-9D-Jex"/>
-                            <menuItem title="Toggle File Browser" keyEquivalent="1" id="PWx-V8-0cQ">
+                            <menuItem title="Toggle File Browser" keyEquivalent="1" identifier="com.qvacua.vimr.menuitems.tools.toggle-file-browser" id="PWx-V8-0cQ">
                                 <connections>
                                     <action selector="toggleFileBrowser:" target="-1" id="Ggq-4w-iN7"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="XHW-5e-Vad"/>
-                            <menuItem title="Focus Neovim View" keyEquivalent="." id="TtL-Gg-pCj">
+                            <menuItem title="Focus Neovim View" keyEquivalent="." identifier="com.qvacua.vimr.menuitems.tools.focus-neovim-view" id="TtL-Gg-pCj">
                                 <connections>
                                     <action selector="focusNvimView:" target="-1" id="obY-Kb-RxK"/>
                                 </connections>
@@ -233,19 +233,19 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Window" systemMenu="window" id="Td7-aD-5lo">
                         <items>
-                            <menuItem title="Minimize" keyEquivalent="m" id="OY7-WF-poV">
+                            <menuItem title="Minimize" keyEquivalent="m" identifier="com.qvacua.vimr.menuitems.window.minimize" id="OY7-WF-poV">
                                 <connections>
                                     <action selector="performMiniaturize:" target="-1" id="VwT-WD-YPe"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Zoom" id="R4o-n2-Eq4">
+                            <menuItem title="Zoom" identifier="com.qvacua.vimr.menuitems.window.zoom" id="R4o-n2-Eq4">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="performZoom:" target="-1" id="DIl-cC-cCs"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="eu3-7i-yIM"/>
-                            <menuItem title="Bring All to Front" id="LE2-aR-0XJ">
+                            <menuItem title="Bring All to Front" identifier="com.qvacua.vimr.menuitems.window.bring-all-to-front" id="LE2-aR-0XJ">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="arrangeInFront:" target="-1" id="DRN-fu-gQh"/>
@@ -276,7 +276,7 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Help" systemMenu="help" id="F2S-fz-NVQ">
                         <items>
-                            <menuItem title="VimR Help" keyEquivalent="?" id="FKE-Sm-Kum">
+                            <menuItem title="VimR Help" keyEquivalent="?" identifier="com.qvacua.vimr.menuitems.help.vimr-help" id="FKE-Sm-Kum">
                                 <connections>
                                     <action selector="showHelp:" target="-1" id="y7X-2Q-9no"/>
                                 </connections>
