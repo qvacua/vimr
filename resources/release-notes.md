@@ -1,4 +1,9 @@
-# 0.25.0-???
+# 0.26.0-???
+
+* Draw the disclosure triangle in appropriate color of the current color scheme (and improve handling of changes of `cwd` in the file browser).
+* ...
+
+# 0.25.0-297
 
 * Neovim 0.3.4
 * GH-625: `vimr --cur-env` will pass the current environment variables to the new neovim process. This will result in `virtualenv` support.

@@ -21,9 +21,14 @@ class BuffersList: NSView,
     case open(NvimView.Buffer)
   }
 
+  private(set) var lastThemeMark = Token()
   private(set) var theme = Theme.default
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+  required init(
+    source: Observable<StateType>,
+    emitter: ActionEmitter,
+    state: StateType
+  ) {
     self.emit = emitter.typedEmit()
     self.uuid = state.uuid
 
@@ -52,14 +57,15 @@ class BuffersList: NSView,
 
         self.usesTheme = state.appearance.usesTheme
 
-        if self.buffers == state.buffers && !themeChanged && self.showsFileIcon == state.appearance.showsFileIcon {
+        if self.buffers == state.buffers
+           && !themeChanged
+           && self.showsFileIcon == state.appearance.showsFileIcon {
           return
         }
 
         self.showsFileIcon = state.appearance.showsFileIcon
         self.buffers = state.buffers
         self.bufferList.reloadData()
-        self.adjustFileViewWidth()
       })
       .disposed(by: self.disposeBag)
   }
@@ -69,7 +75,6 @@ class BuffersList: NSView,
 
   private let uuid: String
   private var usesTheme: Bool
-  private var lastThemeMark = Token()
   private var showsFileIcon: Bool
 
   private let bufferList = NSTableView.standardTableView()
@@ -94,16 +99,6 @@ class BuffersList: NSView,
 
     self.addSubview(scrollView)
     scrollView.autoPinEdgesToSuperviewEdges()
-  }
-
-  private func adjustFileViewWidth() {
-    let maxWidth = self.buffers.reduce(CGFloat(100)) { (curMaxWidth, buffer) in
-      return max(self.text(for: buffer).size().width, curMaxWidth)
-    }
-
-    let column = self.bufferList.tableColumns[0]
-    // If we set the minWidth and maxWidth here, the column does not get resized... Dunno why.
-    column.width = maxWidth + ThemedTableCell.widthWithoutText
   }
 }
 
@@ -132,14 +127,26 @@ extension BuffersList {
 // MARK: - NSTableViewDelegate
 extension BuffersList {
 
-  public func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
-    return tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("buffer-row-view"), owner: self)
-           as? ThemedTableRow ?? ThemedTableRow(withIdentifier: "buffer-row-view", themedView: self)
+  public func tableView(
+    _ tableView: NSTableView,
+    rowViewForRow row: Int
+  ) -> NSTableRowView? {
+    return tableView.makeView(
+      withIdentifier: NSUserInterfaceItemIdentifier("buffer-row-view"),
+      owner: self
+    ) as? ThemedTableRow ?? ThemedTableRow(withIdentifier: "buffer-row-view",
+                                           themedView: self)
   }
 
-  func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-    let cachedCell = (tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("buffer-cell-view"), owner: self)
-                     as? ThemedTableCell)?.reset()
+  func tableView(
+    _ tableView: NSTableView,
+    viewFor tableColumn: NSTableColumn?,
+    row: Int
+  ) -> NSView? {
+    let cachedCell = (tableView.makeView(
+      withIdentifier: NSUserInterfaceItemIdentifier("buffer-cell-view"),
+      owner: self
+    ) as? ThemedTableCell)?.reset()
 
     let cell = cachedCell ?? ThemedTableCell(withIdentifier: "buffer-cell-view")
 
@@ -155,6 +162,22 @@ extension BuffersList {
     return cell
   }
 
+  func tableView(
+    _ tableView: NSTableView,
+    didAdd rowView: NSTableRowView,
+    forRow row: Int
+  ) {
+    guard let cellWidth = (rowView.view(atColumn: 0) as? NSTableCellView)?
+      .fittingSize.width
+      else {
+      return
+    }
+
+    self.bufferList.tableColumns[0].width = max(
+      self.bufferList.tableColumns[0].width, cellWidth + CGFloat(10)
+    )
+  }
+
   private func text(for buffer: NvimView.Buffer) -> NSAttributedString {
     guard let name = buffer.name else {
       return NSAttributedString(string: "No Name")
@@ -164,16 +187,22 @@ extension BuffersList {
       return NSAttributedString(string: name)
     }
 
-    let pathInfo = url.pathComponents.dropFirst().dropLast().reversed().joined(separator: " / ") + " /"
+    let pathInfo = url.pathComponents
+                     .dropFirst()
+                     .dropLast()
+                     .reversed()
+                     .joined(separator: " / ") + " /"
     let rowText = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
 
     rowText.addAttribute(NSAttributedString.Key.foregroundColor,
                          value: self.theme.foreground,
                          range: NSRange(location: 0, length: name.count))
 
-    rowText.addAttribute(NSAttributedString.Key.foregroundColor,
-                         value: self.theme.foreground.brightening(by: 1.15),
-                         range: NSRange(location: name.count, length: pathInfo.count + 3))
+    rowText.addAttribute(
+      NSAttributedString.Key.foregroundColor,
+      value: self.theme.foreground.brightening(by: 1.15),
+      range: NSRange(location: name.count, length: pathInfo.count + 3)
+    )
 
     return rowText
   }

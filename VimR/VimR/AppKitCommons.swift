@@ -219,7 +219,7 @@ extension NSOutlineView {
     return self.item(atRow: self.clickedRow)
   }
 
-  func toggle(item: Any) {
+  func toggle(item: Any?) {
     if self.isItemExpanded(item) {
       self.collapseItem(item)
     } else {
