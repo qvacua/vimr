@@ -1,5 +1,6 @@
 # 0.26.0-???
 
+* Improved handling of changes of `cwd` in the file browser.
 * ...
 
 # 0.25.0-297
