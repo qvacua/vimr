@@ -213,6 +213,7 @@ extension ShortcutsPref {
     }
 
     cellView.text = item.title
+    cellView.isDir = !item.isLeaf
 
     return cellView
   }

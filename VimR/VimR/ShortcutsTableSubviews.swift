@@ -20,8 +20,17 @@ class ShortcutTableRow: NSTableRowView {
 class ShortcutTableCell: NSTableCellView {
 
   static let font = NSFont.systemFont(ofSize: 13)
+  static let boldFont = NSFont.boldSystemFont(ofSize: 13)
 
-  var isDir = false
+  var isDir = false {
+    didSet {
+      if self.isDir {
+        self.textField?.font = ShortcutTableCell.boldFont
+      } else {
+        self.textField?.font = ShortcutTableCell.font
+      }
+    }
+  }
 
   var attributedText: NSAttributedString {
     get {
@@ -40,6 +49,11 @@ class ShortcutTableCell: NSTableCellView {
     }
 
     set {
+      if self.isDir {
+        self.textField?.font = ShortcutTableCell.boldFont
+      } else {
+        self.textField?.font = ShortcutTableCell.font
+      }
       self.textField?.stringValue = newValue
       self.addTextField()
     }
