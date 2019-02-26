@@ -1,6 +1,6 @@
 # 0.26.0-???
 
-* Improved handling of changes of `cwd` in the file browser.
+* Draw the disclosure triangle in appropriate color of the current color scheme (and improve handling of changes of `cwd` in the file browser).
 * ...
 
 # 0.25.0-297
