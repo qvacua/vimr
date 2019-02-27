@@ -8,17 +8,6 @@ import PureLayout
 import RxSwift
 import ShortcutRecorder
 
-class DummyItem {
-
-  let isGroup: Bool
-  let text: String
-
-  init(_ text: String, _ isGroup: Bool) {
-    self.isGroup = isGroup
-    self.text = text
-  }
-}
-
 class ShortcutsPref: PrefPane,
                      UiComponent,
                      NSOutlineViewDelegate {
@@ -56,6 +45,7 @@ class ShortcutsPref: PrefPane,
     if let children = self.shortcutItemsRoot.children {
       self.content.append(contentsOf: children)
     }
+    self.initMenuItemsBindings()
 
     source
       .observeOn(MainScheduler.instance)
@@ -63,8 +53,12 @@ class ShortcutsPref: PrefPane,
       })
       .disposed(by: self.disposeBag)
 
-    initBindings()
+    self.initOutlineViewBindings()
     self.shortcutList.expandItem(nil, expandChildren: true)
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
   }
 
   private let emit: (Action) -> Void
@@ -82,16 +76,12 @@ class ShortcutsPref: PrefPane,
   private let keyEqTransformer = SRKeyEquivalentTransformer()
   private let keyEqModTransformer = SRKeyEquivalentModifierMaskTransformer()
 
-  let shortcutsDefaultsController = NSUserDefaultsController(
+  private let shortcutsDefaultsController = NSUserDefaultsController(
     defaults: UserDefaults(suiteName: "com.qvacua.VimR.menuitems"),
     initialValues: defaultShortcuts
   )
 
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-
-  private func initBindings() {
+  private func initOutlineViewBindings() {
     self.treeController.childrenKeyPath = "children"
     self.treeController.leafKeyPath = "isLeaf"
     self.treeController.countKeyPath = "childrenCount"
@@ -226,6 +216,10 @@ extension ShortcutsPref {
 
   @objc func resetToDefault(_ sender: NSButton) {
     stdoutLog.debug("Reset to default!")
+    stdoutLog.debug(
+      self.shortcutsDefaultsController.defaults
+        .dictionaryRepresentation()["com.qvacua.vimr.menuitems.edit.copy"]
+    )
   }
 }
 
