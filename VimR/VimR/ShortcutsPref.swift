@@ -84,7 +84,7 @@ class ShortcutsPref: PrefPane,
                            withKeyPath: "selectionIndexPaths")
   }
 
-  private func initMenuItemsBindings() {
+  private func traverseMenuItems(with fn: (String, NSMenuItem) -> Void) {
     var queue = self.shortcutItemsRoot.children ?? []
     while (!queue.isEmpty) {
       guard let item = queue.popLast() else { break }
@@ -97,6 +97,12 @@ class ShortcutsPref: PrefPane,
         continue
       }
 
+      fn(identifier, menuItem)
+    }
+  }
+
+  private func initMenuItemsBindings() {
+    self.traverseMenuItems { identifier, menuItem in
       menuItem.bind(
         NSBindingName("keyEquivalent"),
         to: self.shortcutsDefaultsController,
@@ -196,11 +202,23 @@ class ShortcutsPref: PrefPane,
 extension ShortcutsPref {
 
   @objc func resetToDefault(_ sender: NSButton) {
-    stdoutLog.debug("Reset to default!")
-    stdoutLog.debug(
-      self.shortcutsDefaultsController.defaults
-        .dictionaryRepresentation()["com.qvacua.vimr.menuitems.edit.copy"]
-    )
+    guard let window = self.window else { return }
+
+    let alert = NSAlert()
+    alert.addButton(withTitle: "Cancel")
+    alert.addButton(withTitle: "Reset")
+
+    alert.messageText = "Do you want to reset all shortcuts to their default values?"
+    alert.alertStyle = .warning
+    alert.beginSheetModal(for: window, completionHandler: { response in
+      guard response == .alertSecondButtonReturn else { return }
+      self.traverseMenuItems { identifier, _ in
+        self.shortcutsDefaultsController.setValue(
+          defaultShortcuts[identifier],
+          forKeyPath: "values.\(identifier)"
+        )
+      }
+    })
   }
 }
 
