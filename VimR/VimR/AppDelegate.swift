@@ -166,9 +166,6 @@ extension AppDelegate {
 
     #if DEBUG
     NSApp.mainMenu?.items.first { $0.identifier == debugMenuItemIdentifier }?.isHidden = false
-
-    // GH-314 FIXME: Remove when finished.
-    self.showPrefWindow(self)
     #endif
   }
 

@@ -120,11 +120,6 @@ class PrefWindow: NSObject,
     paneContainer.autoPinEdge(.left, to: .right, of: categoryScrollView)
 
     self.currentPane = self.panes[0]
-
-    // GH-314 FIXME: Remove when finished.
-    #if DEBUG
-    self.categoryView.selectRowIndexes(IndexSet(integer: 4), byExtendingSelection: false)
-    #endif
   }
 }
 
