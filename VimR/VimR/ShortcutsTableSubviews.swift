@@ -97,14 +97,14 @@ class ShortcutTableCell: NSTableCellView {
     self.addSubview(textField)
     guard !self.isDir else {
       textField.autoPinEdgesToSuperviewEdges(
-        with: NSEdgeInsets(top: 3, left: 4, bottom: 3, right: 4)
+        with: NSEdgeInsets(top: 3, left: 4, bottom: 3, right: 12)
       )
       return
     }
 
     self.addSubview(recorder)
 
-    recorder.autoPinEdge(toSuperviewEdge: .right, withInset: 4)
+    recorder.autoPinEdge(toSuperviewEdge: .right, withInset: 12)
     recorder.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
     recorder.autoSetDimension(.width, toSize: 180)
     textField.autoPinEdge(toSuperviewEdge: .left, withInset: 4)
