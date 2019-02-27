@@ -14,11 +14,6 @@ class ShortcutsPref: PrefPane,
 
   typealias StateType = AppState
 
-  enum Action {
-
-    case dummy
-  }
-
   @objc dynamic var content = [ShortcutItem]()
 
   override var displayName: String {
@@ -34,35 +29,24 @@ class ShortcutsPref: PrefPane,
     emitter: ActionEmitter,
     state: StateType
   ) {
-    self.emit = emitter.typedEmit()
-
     super.init(frame: .zero)
 
     self.addViews()
-    self.updateViews()
 
     self.initShortcutItems()
     if let children = self.shortcutItemsRoot.children {
       self.content.append(contentsOf: children)
     }
+
     self.initMenuItemsBindings()
-
-    source
-      .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { state in
-      })
-      .disposed(by: self.disposeBag)
-
     self.initOutlineViewBindings()
+
     self.shortcutList.expandItem(nil, expandChildren: true)
   }
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-
-  private let emit: (Action) -> Void
-  private let disposeBag = DisposeBag()
 
   private let shortcutList = NSOutlineView.standardOutlineView()
   private let shortcutScrollView = NSScrollView.standardScrollView()
@@ -167,9 +151,6 @@ class ShortcutsPref: PrefPane,
         queue.append(contentsOf: shortcutChildItems)
       }
     }
-  }
-
-  private func updateViews() {
   }
 
   private func addViews() {
