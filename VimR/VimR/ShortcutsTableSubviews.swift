@@ -23,16 +23,8 @@ class ShortcutTableCell: NSTableCellView {
   static let font = NSFont.systemFont(ofSize: 13)
   static let boldFont = NSFont.boldSystemFont(ofSize: 13)
 
-  var isDir = false {
-    didSet {
-      if self.isDir {
-        self.textField?.font = ShortcutTableCell.boldFont
-      } else {
-        self.textField?.font = ShortcutTableCell.font
-      }
-      self.layoutViews()
-    }
-  }
+  var customized = false
+  var isDir = false
 
   var text: String {
     get {
@@ -40,14 +32,12 @@ class ShortcutTableCell: NSTableCellView {
     }
 
     set {
-      if self.isDir {
-        self.textField?.font = ShortcutTableCell.boldFont
-      } else {
-        self.textField?.font = ShortcutTableCell.font
-      }
       self.textField?.stringValue = newValue
-      self.layoutViews()
     }
+  }
+
+  func setDelegateOfRecorder(_ delegate: SRRecorderControlDelegate) {
+    self.shortcutRecorder.delegate = delegate
   }
 
   func bindRecorder(toKeyPath keypath: String, to content: Any) {
@@ -74,11 +64,15 @@ class ShortcutTableCell: NSTableCellView {
     textField.drawsBackground = false
 
     let recorder = self.shortcutRecorder
+    recorder.allowsEscapeToCancelRecording = true
+    recorder.allowsDeleteToClearShortcutAndEndRecording = true
+    recorder.storesEmptyValueForNoShortcut = true
     recorder.setAllowedModifierFlags(
       [.command, .shift, .option, .control],
       requiredModifierFlags: [],
       allowsEmptyModifierFlags: false
     )
+    recorder.allowsDeleteToClearShortcutAndEndRecording = true
   }
 
   func reset() -> ShortcutTableCell {
@@ -93,6 +87,17 @@ class ShortcutTableCell: NSTableCellView {
 
     textField.removeFromSuperview()
     recorder.removeFromSuperview()
+
+    if self.isDir {
+      textField.font = ShortcutTableCell.boldFont
+    } else {
+      textField.font = ShortcutTableCell.font
+    }
+    if self.customized {
+      textField.textColor = .blue
+    } else {
+      textField.textColor = .textColor
+    }
 
     self.addSubview(textField)
     guard !self.isDir else {

@@ -10,7 +10,8 @@ import ShortcutRecorder
 
 class ShortcutsPref: PrefPane,
                      UiComponent,
-                     NSOutlineViewDelegate {
+                     NSOutlineViewDelegate,
+                     SRRecorderControlDelegate {
 
   typealias StateType = AppState
 
@@ -29,7 +30,14 @@ class ShortcutsPref: PrefPane,
     emitter: ActionEmitter,
     state: StateType
   ) {
+    self.shortcutsDefaultsController = NSUserDefaultsController(
+      defaults: self.shortcutsUserDefaults,
+      initialValues: nil
+    )
+
     super.init(frame: .zero)
+
+    initShortcutUserDefaults()
 
     self.addViews()
 
@@ -60,10 +68,18 @@ class ShortcutsPref: PrefPane,
   private let keyEqTransformer = SRKeyEquivalentTransformer()
   private let keyEqModTransformer = SRKeyEquivalentModifierMaskTransformer()
 
-  private let shortcutsDefaultsController = NSUserDefaultsController(
-    defaults: UserDefaults(suiteName: "com.qvacua.VimR.menuitems"),
-    initialValues: defaultShortcuts
+  private let shortcutsUserDefaults = UserDefaults(
+    suiteName: "com.qvacua.VimR.menuitems"
   )
+  private let shortcutsDefaultsController: NSUserDefaultsController
+
+  private func initShortcutUserDefaults() {
+    defaultShortcuts.forEach { identifier, shortcutData in
+      if self.shortcutsUserDefaults?.value(forKey: identifier) == nil {
+        self.shortcutsUserDefaults?.set(shortcutData, forKey: identifier)
+      }
+    }
+  }
 
   private func initOutlineViewBindings() {
     self.treeController.childrenKeyPath = "children"
@@ -260,21 +276,80 @@ extension ShortcutsPref {
                    ?? ShortcutTableCell(withIdentifier: "shortcut-cell-view")
 
     let repObj = (item as? NSTreeNode)?.representedObject
-    guard let item = repObj as? ShortcutItem else {
-      return nil
-    }
+    guard let item = repObj as? ShortcutItem else { return nil }
+    guard let identifier = item.identifier else { return cellView }
 
     cellView.isDir = !item.isLeaf
     cellView.text = item.title
 
-    guard let identifier = item.identifier else { return cellView }
-    cellView.bindRecorder(toKeyPath: "values.\(identifier)",
-                          to: self.shortcutsDefaultsController)
+    if item.isContainer {
+      cellView.customized = false
+      cellView.layoutViews()
+      return cellView
+    }
+
+    cellView.customized = !self.shortcutsAreEqual(
+      self.shortcutsDefaultsController
+        .value(forKeyPath: "values.\(identifier)"),
+      defaultShortcuts[identifier]
+    )
+    cellView.layoutViews()
+    cellView.setDelegateOfRecorder(self)
+    cellView.bindRecorder(
+      toKeyPath: "values.\(identifier)",
+      to: self.shortcutsDefaultsController
+    )
 
     return cellView
   }
 
   func outlineView(_: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
     return 28
+  }
+
+  private func shortcutsAreEqual(_ lhs: Any?, _ rhs: Any?) -> Bool {
+    if lhs == nil && rhs == nil {
+      return true
+    }
+
+    guard let lhsShortcut = lhs as? [String: Any],
+          let rhsShortcut = rhs as? [String: Any]
+      else {
+      return false
+    }
+
+    if lhsShortcut.isEmpty && rhsShortcut.isEmpty {
+      return true
+    }
+
+    if lhsShortcut[SRShortcutCharacters] as? String
+       != rhsShortcut[SRShortcutCharacters] as? String {
+      return false
+    }
+
+    if lhsShortcut[SRShortcutCharactersIgnoringModifiers] as? String
+       != rhsShortcut[SRShortcutCharactersIgnoringModifiers] as? String {
+      return false
+    }
+
+    if lhsShortcut[SRShortcutKeyCode] as? Int
+       != rhsShortcut[SRShortcutKeyCode] as? Int {
+      return false
+    }
+
+    if lhsShortcut[SRShortcutModifierFlagsKey] as? Int
+       != rhsShortcut[SRShortcutModifierFlagsKey] as? Int {
+      return false
+    }
+
+    return true
+  }
+}
+
+// MARK: - SRRecorderControlDelegate
+extension ShortcutsPref {
+
+  func shortcutRecorderDidEndRecording(_ sender: SRRecorderControl!) {
+    self.treeController.rearrangeObjects()
   }
 }
