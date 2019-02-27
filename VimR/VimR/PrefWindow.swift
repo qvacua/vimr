@@ -30,6 +30,7 @@ class PrefWindow: NSObject,
       ToolsPref(source: source, emitter: emitter, state: state),
       AppearancePref(source: source, emitter: emitter, state: state),
       KeysPref(source: source, emitter: emitter, state: state),
+      ShortcutsPref(source: source, emitter: emitter, state: state),
       AdvancedPref(source: source, emitter: emitter, state: state),
     ]
 

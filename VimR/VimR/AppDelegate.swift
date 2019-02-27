@@ -9,6 +9,8 @@ import PureLayout
 import Sparkle
 import CocoaFontAwesome
 
+let debugMenuItemIdentifier = NSUserInterfaceItemIdentifier("debug-menu-item")
+
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate {
 
@@ -60,12 +62,41 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     self.openNewMainWindowOnReactivation = initialAppState.openNewMainWindowOnReactivation
     self.useSnapshot = initialAppState.useSnapshotUpdate
 
-    let source = self.context.stateSource
-    self.uiRoot = UiRoot(source: source, emitter: self.context.actionEmitter, state: initialAppState)
-
     super.init()
 
     NSUserNotificationCenter.default.delegate = self
+    // FIXME: GH-611: https://github.com/qvacua/vimr/issues/611
+    // Check whether FontAwesome can be loaded. If not, show a warning.
+    // We don't know yet why this happens to some users.
+    DispatchQueue.main.async {
+      guard NSFont.fontAwesome(ofSize: 13) == nil else {
+        return
+      }
+
+      let notification = NSUserNotification()
+      notification.title = "FontAwesome could not be loaded."
+      notification.subtitle = "Unfortunately we don't know yet what is causing this."
+      notification.informativeText = """
+        We use the FontAwesome font for icons in the tools, e.g. the file browser. Those icons are now shown as ?.
+        You can track the progress on this issue at GitHub issue 611.
+      """
+      NSUserNotificationCenter.default.deliver(notification)
+    }
+  }
+
+  override func awakeFromNib() {
+    super.awakeFromNib()
+
+    let source = self.context.stateSource
+
+    // We want to build the menu items tree at some point, eg in the init() of
+    // ShortcutsPref. We have to do that *after* the MainMenu.xib is loaded.
+    // Therefore, we use optional var for the self.uiRoot. Ugly, but, well...
+    self.uiRoot = UiRoot(
+      source: source,
+      emitter: self.context.actionEmitter,
+      state: self.context.state
+    )
 
     source
       .observeOn(MainScheduler.instance)
@@ -86,30 +117,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         }
       })
       .disposed(by: self.disposeBag)
-
-    // FIXME: GH-611: https://github.com/qvacua/vimr/issues/611
-    // Check whether FontAwesome can be loaded. If not, show a warning.
-    // We don't know yet why this happens to some users.
-    DispatchQueue.main.async {
-      guard NSFont.fontAwesome(ofSize: 13) == nil else {
-        return
-      }
-
-      let notification = NSUserNotification()
-      notification.title = "FontAwesome could not be loaded."
-      notification.subtitle = "Unfortunately we don't know yet what is causing this."
-      notification.informativeText = """
-        We use the FontAwesome font for icons in the tools, e.g. the file browser. Those icons are now shown as ?.
-        You can track the progress on this issue at GitHub issue 611.
-      """
-      NSUserNotificationCenter.default.deliver(notification)
-    }
   }
 
   private let context: Context
   private let emit: (Action) -> Void
 
-  private let uiRoot: UiRoot
+  private var uiRoot: UiRoot?
 
   private var hasDirtyWindows = false
   private var hasMainWindows = false
@@ -151,9 +164,9 @@ extension AppDelegate {
   func applicationDidFinishLaunching(_: Notification) {
     self.launching = false
 
-#if DEBUG
+    #if DEBUG
     NSApp.mainMenu?.items.first { $0.identifier == debugMenuItemIdentifier }?.isHidden = false
-#endif
+    #endif
   }
 
   func applicationOpenUntitledFile(_ sender: NSApplication) -> Bool {
@@ -186,7 +199,7 @@ extension AppDelegate {
 
       if alert.runModal() == .alertSecondButtonReturn {
         self.updateMainWindowTemplateBeforeQuitting()
-        self.uiRoot.prepareQuit()
+        self.uiRoot?.prepareQuit()
         return .terminateNow
       }
 
@@ -195,7 +208,7 @@ extension AppDelegate {
 
     if self.hasMainWindows {
       self.updateMainWindowTemplateBeforeQuitting()
-      self.uiRoot.prepareQuit()
+      self.uiRoot?.prepareQuit()
       return .terminateNow
     }
 
@@ -413,8 +426,6 @@ private enum VimRUrlAction: String {
 }
 
 private let updater = SUUpdater()
-
-private let debugMenuItemIdentifier = NSUserInterfaceItemIdentifier("debug-menu-item")
 
 // Keep in sync with QueryParamKey in the `vimr` Python script.
 private let filePrefix = "file="

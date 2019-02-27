@@ -1,5 +1,6 @@
 # 0.26.0-???
 
+* GH-314: You can customize the key shortcut for all menu items in the *Shortcut* preferences pane.
 * Draw the disclosure triangle in appropriate color of the current color scheme (and improve handling of changes of `cwd` in the file browser).
 * ...
 
