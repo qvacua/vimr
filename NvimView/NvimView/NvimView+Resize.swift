@@ -52,8 +52,12 @@ extension NvimView {
       return
     }
 
-    self.offset.x = floor((size.width - self.cellSize.width * CGFloat(discreteSize.width)) / 2)
-    self.offset.y = floor((size.height - self.cellSize.height * CGFloat(discreteSize.height)) / 2)
+    self.offset.x = floor(
+      (size.width - self.cellSize.width * CGFloat(discreteSize.width)) / 2
+    )
+    self.offset.y = floor(
+      (size.height - self.cellSize.height * CGFloat(discreteSize.height)) / 2
+    )
 
     self.bridge
       .resize(width: discreteSize.width, height: discreteSize.height)
@@ -62,24 +66,27 @@ extension NvimView {
 
   private func launchNeoVim(_ size: Size) {
     logger.info("=== Starting neovim...")
-    let sockPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock").path
+    let sockPath = URL(
+      fileURLWithPath: NSTemporaryDirectory()
+    ).appendingPathComponent("vimr_\(self.uuid).sock").path
 
     self.api.msgpackRawStream
-        .subscribe(onNext: { msg in
-          switch msg {
-          case let .notification(method, params):
-            logger.debug("NOTIFICATION: \(method) with \(params.count) elements")
-          case let .error(_, msg):
-            logger.debug("MSG ERROR: \(msg)")
-          default:
-            logger.debug("???: This should not happen")
-            break
-          }
-        }, onError: { print("ERROR: \($0)" )})
-        .disposed(by: self.disposeBag)
+      .subscribe(onNext: { msg in
+        switch msg {
+        case let .notification(method, params):
+          logger.debug("NOTIFICATION: \(method) with \(params.count) elements")
+        case let .error(_, msg):
+          logger.debug("MSG ERROR: \(msg)")
+        default:
+          logger.debug("???: This should not happen")
+          break
+        }
+      }, onError: { print("ERROR: \($0)") })
+      .disposed(by: self.disposeBag)
 
-    // We wait here, since the user of NvimView cannot subscribe on the Completable. We could demand that the user
-    // call launchNeoVim() by themselves, but...
+    // We wait here, since the user of NvimView cannot subscribe
+    // on the Completable. We could demand that the user call launchNeoVim()
+    // by themselves, but...
     try? self.bridge
       .runLocalServerAndNvim(width: size.width, height: size.height)
       .andThen(self.api.run(at: sockPath))
