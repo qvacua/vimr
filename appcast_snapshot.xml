@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-298</title>
+      <title>SNAPSHOT-300</title>
       <description><![CDATA[
     <ul>
-<li>Improved handling of changes of <code>cwd</code> in the file browser.</li>
+<li>GH-314: You can customize the key shortcut for all menu items in the <em>Shortcut</em> preferences pane.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/298
+        https://github.com/qvacua/vimr/releases/tag/snapshot/300
       </releaseNotesLink>
-      <pubDate>2019-02-26T07:24:18.032526</pubDate>
+      <pubDate>2019-02-28T01:35:36.184805</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/298/VimR-SNAPSHOT-298.tar.bz2"
-                 sparkle:version="298"
-                 sparkle:shortVersionString="SNAPSHOT-298"
-                 sparkle:dsaSignature="MC0CFQCvFlIJAyiqFN5B1OqsorK6OV1IJwIUJPVNVeWDXCpCSj76EWCYPnNxD4A="
-                 length="14969397"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/300/VimR-SNAPSHOT-300.tar.bz2"
+                 sparkle:version="300"
+                 sparkle:shortVersionString="SNAPSHOT-300"
+                 sparkle:dsaSignature="MC0CFQDSCAZCOCs8Gdg/gdESlyjqXMdOagIUGuj2Qduyt10abGSs5wRuY4hj8a4="
+                 length="14887427"
                  type="application/octet-stream"/>
     </item>
   </channel>
