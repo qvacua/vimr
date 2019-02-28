@@ -220,6 +220,21 @@
                                     <action selector="toggleFileBrowser:" target="-1" id="Ggq-4w-iN7"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Toggle Buffer List" keyEquivalent="2" identifier="com.qvacua.vimr.menuitems.tools.toggle-file-browser" id="OF4-kp-cNF">
+                                <connections>
+                                    <action selector="toggleBufferList:" target="-1" id="bpT-lI-lYu"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Toggle Markdown Preview" keyEquivalent="3" identifier="com.qvacua.vimr.menuitems.tools.toggle-file-browser" id="rUg-f6-aPa">
+                                <connections>
+                                    <action selector="toggleMarkdownPreview:" target="-1" id="buC-mL-NpJ"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Toggle HTML Preview" keyEquivalent="4" identifier="com.qvacua.vimr.menuitems.tools.toggle-file-browser" id="RB0-mE-Gdd">
+                                <connections>
+                                    <action selector="toggleHtmlPreview:" target="-1" id="KTN-ib-Iv6"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="XHW-5e-Vad"/>
                             <menuItem title="Focus Neovim View" keyEquivalent="." identifier="com.qvacua.vimr.menuitems.tools.focus-neovim-view" id="TtL-Gg-pCj">
                                 <connections>

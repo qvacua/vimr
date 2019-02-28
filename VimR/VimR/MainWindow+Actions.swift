@@ -140,6 +140,18 @@ extension MainWindow {
     self.emit(self.uuidAction(for: .focus(.fileBrowser)))
   }
 
+  @IBAction func toggleBufferList(_ sender: Any?) {
+
+  }
+
+  @IBAction func toggleMarkdownPreview(_ sender: Any?) {
+
+  }
+
+  @IBAction func toggleHtmlPreview(_ sender: Any?) {
+
+  }
+
   @IBAction func focusNvimView(_: Any?) {
 //    self.window.makeFirstResponder(self.neoVimView)
     self.emit(self.uuidAction(for: .focus(.neoVimView)))

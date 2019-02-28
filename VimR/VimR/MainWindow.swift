@@ -49,7 +49,9 @@ class MainWindow: NSObject,
 
     case neoVimView
     case fileBrowser
-    case preview
+    case bufferList
+    case markdownPreview
+    case htmlPreview
   }
 
   enum Tools: String, Codable {
