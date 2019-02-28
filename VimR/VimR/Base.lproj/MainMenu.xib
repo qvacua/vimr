@@ -220,17 +220,17 @@
                                     <action selector="toggleFileBrowser:" target="-1" id="Ggq-4w-iN7"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Toggle Buffer List" keyEquivalent="2" identifier="com.qvacua.vimr.menuitems.tools.toggle-file-browser" id="OF4-kp-cNF">
+                            <menuItem title="Toggle Buffer List" keyEquivalent="2" identifier="com.qvacua.vimr.menuitems.tools.toggle-buffer-list" id="OF4-kp-cNF">
                                 <connections>
                                     <action selector="toggleBufferList:" target="-1" id="bpT-lI-lYu"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Toggle Markdown Preview" keyEquivalent="3" identifier="com.qvacua.vimr.menuitems.tools.toggle-file-browser" id="rUg-f6-aPa">
+                            <menuItem title="Toggle Markdown Preview" keyEquivalent="3" identifier="com.qvacua.vimr.menuitems.tools.toggle-markdown-preview" id="rUg-f6-aPa">
                                 <connections>
                                     <action selector="toggleMarkdownPreview:" target="-1" id="buC-mL-NpJ"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Toggle HTML Preview" keyEquivalent="4" identifier="com.qvacua.vimr.menuitems.tools.toggle-file-browser" id="RB0-mE-Gdd">
+                            <menuItem title="Toggle HTML Preview" keyEquivalent="4" identifier="com.qvacua.vimr.menuitems.tools.toggle-html-preview" id="RB0-mE-Gdd">
                                 <connections>
                                     <action selector="toggleHtmlPreview:" target="-1" id="KTN-ib-Iv6"/>
                                 </connections>
@@ -279,7 +279,8 @@
                                     <action selector="debug1:" target="-1" id="OSW-j0-HVo"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Debug 2" keyEquivalent="2" id="tWe-ll-a9P">
+                            <menuItem title="Debug 2" id="tWe-ll-a9P">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="debug2:" target="-1" id="r0m-FW-POU"/>
                                 </connections>

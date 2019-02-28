@@ -123,38 +123,43 @@ extension MainWindow {
   }
 
   @IBAction func toggleFileBrowser(_ sender: Any?) {
-    let fileBrowser = self.fileBrowserContainer
+    guard let fileBrowser = self.fileBrowserContainer else { return }
+    self.toggle(tool: fileBrowser, toolType: .fileBrowser)
+  }
 
-    if fileBrowser?.isSelected == true {
-      if fileBrowser?.view.isFirstResponder == true {
-        fileBrowser?.toggle()
+  @IBAction func toggleBufferList(_ sender: Any?) {
+    guard let bufferList = self.buffersListContainer else { return }
+    self.toggle(tool: bufferList, toolType: .bufferList)
+  }
+
+  @IBAction func toggleMarkdownPreview(_ sender: Any?) {
+    guard let markdownPreview = self.previewContainer else { return }
+    self.toggle(tool: markdownPreview, toolType: .markdownPreview)
+  }
+
+  @IBAction func toggleHtmlPreview(_ sender: Any?) {
+    guard let htmlPreview = self.htmlPreviewContainer else { return }
+    self.toggle(tool: htmlPreview, toolType: .htmlPreview)
+  }
+
+  @IBAction func focusNvimView(_: Any?) {
+    self.emit(self.uuidAction(for: .focus(.neoVimView)))
+  }
+
+  private func toggle(tool: WorkspaceTool, toolType: FocusableView) {
+    if tool.isSelected == true {
+      if tool.view.isFirstResponder == true {
+        tool.toggle()
         self.focusNvimView(self)
       } else {
-        self.emit(self.uuidAction(for: .focus(.fileBrowser)))
+        self.emit(self.uuidAction(for: .focus(toolType)))
       }
 
       return
     }
 
-    fileBrowser?.toggle()
-    self.emit(self.uuidAction(for: .focus(.fileBrowser)))
-  }
-
-  @IBAction func toggleBufferList(_ sender: Any?) {
-
-  }
-
-  @IBAction func toggleMarkdownPreview(_ sender: Any?) {
-
-  }
-
-  @IBAction func toggleHtmlPreview(_ sender: Any?) {
-
-  }
-
-  @IBAction func focusNvimView(_: Any?) {
-//    self.window.makeFirstResponder(self.neoVimView)
-    self.emit(self.uuidAction(for: .focus(.neoVimView)))
+    tool.toggle()
+    self.emit(self.uuidAction(for: .focus(toolType)))
   }
 }
 
