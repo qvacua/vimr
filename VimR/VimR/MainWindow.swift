@@ -56,7 +56,14 @@ class MainWindow: NSObject,
 
   enum Tools: String, Codable {
 
-    static let all = Set([Tools.fileBrowser, Tools.buffersList, Tools.preview, Tools.htmlPreview])
+    static let all = Set(
+      [
+        Tools.fileBrowser,
+        Tools.buffersList,
+        Tools.preview,
+        Tools.htmlPreview
+      ]
+    )
 
     case fileBrowser = "com.qvacua.vimr.tools.file-browser"
     case buffersList = "com.qvacua.vimr.tools.opened-files-list"
@@ -104,18 +111,26 @@ class MainWindow: NSObject,
   var isClosing = false
   let cliPipePath: String?
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+  required init(
+    source: Observable<StateType>,
+    emitter: ActionEmitter,
+    state: StateType
+  ) {
     self.emit = emitter.typedEmit()
     self.uuid = state.uuid
 
     self.cliPipePath = state.cliPipePath
 
-    self.windowController = NSWindowController(windowNibName: NSNib.Name("MainWindow"))
+    self.windowController = NSWindowController(
+      windowNibName: NSNib.Name("MainWindow")
+    )
 
-    let neoVimViewConfig = NvimView.Config(useInteractiveZsh: state.useInteractiveZsh,
-                                           cwd: state.cwd,
-                                           nvimArgs: state.nvimArgs,
-                                           envDict: state.envDict)
+    let neoVimViewConfig = NvimView.Config(
+      useInteractiveZsh: state.useInteractiveZsh,
+      cwd: state.cwd,
+      nvimArgs: state.nvimArgs,
+      envDict: state.envDict
+    )
     self.neoVimView = NvimView(frame: .zero, config: neoVimViewConfig)
     self.neoVimView.configureForAutoLayout()
 
@@ -124,9 +139,11 @@ class MainWindow: NSObject,
     var tools: [Tools: WorkspaceTool] = [:]
     if state.activeTools[.preview] == true {
       self.preview = PreviewTool(source: source, emitter: emitter, state: state)
-      let previewConfig = WorkspaceTool.Config(title: "Markdown",
-                                               view: self.preview!,
-                                               customMenuItems: self.preview!.menuItems)
+      let previewConfig = WorkspaceTool.Config(
+        title: "Markdown",
+        view: self.preview!,
+        customMenuItems: self.preview!.menuItems
+      )
       self.previewContainer = WorkspaceTool(previewConfig)
       self.previewContainer!.dimension = state.tools[.preview]?.dimension ?? 250
       tools[.preview] = self.previewContainer
@@ -134,30 +151,43 @@ class MainWindow: NSObject,
 
     if state.activeTools[.htmlPreview] == true {
       self.htmlPreview = HtmlPreviewTool(source: source, emitter: emitter, state: state)
-      let htmlPreviewConfig = WorkspaceTool.Config(title: "HTML",
-                                                   view: self.htmlPreview!,
-                                                   customToolbar: self.htmlPreview!.innerCustomToolbar)
+      let htmlPreviewConfig = WorkspaceTool.Config(
+        title: "HTML",
+        view: self.htmlPreview!,
+        customToolbar: self.htmlPreview!.innerCustomToolbar
+      )
       self.htmlPreviewContainer = WorkspaceTool(htmlPreviewConfig)
       self.htmlPreviewContainer!.dimension = state.tools[.htmlPreview]?.dimension ?? 250
       tools[.htmlPreview] = self.htmlPreviewContainer
     }
 
     if state.activeTools[.fileBrowser] == true {
-      self.fileBrowser = FileBrowser(source: source, emitter: emitter, state: state)
-      let fileBrowserConfig = WorkspaceTool.Config(title: "Files",
-                                                   view: self.fileBrowser!,
-                                                   customToolbar: self.fileBrowser!.innerCustomToolbar,
-                                                   customMenuItems: self.fileBrowser!.menuItems)
+      self.fileBrowser = FileBrowser(
+        source: source, emitter: emitter, state: state
+      )
+      let fileBrowserConfig = WorkspaceTool.Config(
+        title: "Files",
+        view: self.fileBrowser!,
+        customToolbar: self.fileBrowser!.innerCustomToolbar,
+        customMenuItems: self.fileBrowser!.menuItems
+      )
       self.fileBrowserContainer = WorkspaceTool(fileBrowserConfig)
-      self.fileBrowserContainer!.dimension = state.tools[.fileBrowser]?.dimension ?? 200
+      self.fileBrowserContainer!.dimension = state
+                                               .tools[.fileBrowser]?
+                                               .dimension ?? 200
       tools[.fileBrowser] = self.fileBrowserContainer
     }
 
     if state.activeTools[.buffersList] == true {
-      self.buffersList = BuffersList(source: source, emitter: emitter, state: state)
-      let buffersListConfig = WorkspaceTool.Config(title: "Buffers", view: self.buffersList!)
+      self.buffersList = BuffersList(
+        source: source, emitter: emitter, state: state
+      )
+      let buffersListConfig = WorkspaceTool.Config(title: "Buffers",
+                                                   view: self.buffersList!)
       self.buffersListContainer = WorkspaceTool(buffersListConfig)
-      self.buffersListContainer!.dimension = state.tools[.buffersList]?.dimension ?? 200
+      self.buffersListContainer!.dimension = state
+                                               .tools[.buffersList]?
+                                               .dimension ?? 200
       tools[.buffersList] = self.buffersListContainer
     }
 
@@ -183,7 +213,8 @@ class MainWindow: NSObject,
         return
       }
 
-      self.workspace.append(tool: tool, location: state.tools[toolId]?.location ?? .left)
+      self.workspace.append(tool: tool,
+                            location: state.tools[toolId]?.location ?? .left)
     }
 
     self.tools.forEach { (toolId, toolContainer) in
@@ -205,7 +236,9 @@ class MainWindow: NSObject,
 
     self.addViews()
 
-    self.neoVimView.trackpadScrollResistance = CGFloat(state.trackpadScrollResistance)
+    self.neoVimView.trackpadScrollResistance = CGFloat(
+      state.trackpadScrollResistance
+    )
     self.neoVimView.usesLiveResize = state.useLiveResize
     self.updateNeoVimAppearance()
 
@@ -231,7 +264,8 @@ class MainWindow: NSObject,
         case .newCurrentBuffer(let curBuf): self.newCurrentBuffer(curBuf)
         case .bufferWritten(let buf): self.bufferWritten(buf)
         case .colorschemeChanged(let theme): self.colorschemeChanged(to: theme)
-        case .ipcBecameInvalid(let reason): self.ipcBecameInvalid(reason: reason)
+        case .ipcBecameInvalid(let reason):
+          self.ipcBecameInvalid(reason: reason)
         case .scroll: self.scroll()
         case .cursor(let position): self.cursor(to: position)
         case .initVimError: self.showInitError()
@@ -253,7 +287,8 @@ class MainWindow: NSObject,
           return
         }
 
-        if state.viewToBeFocused != nil, case .neoVimView = state.viewToBeFocused! {
+        if state.viewToBeFocused != nil,
+           case .neoVimView = state.viewToBeFocused! {
           self.window.makeFirstResponder(self.neoVimView)
         }
 
@@ -271,7 +306,9 @@ class MainWindow: NSObject,
                && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition) {
 
               self.previewPosition = state.preview.previewPosition
-              return self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
+              return self.neoVimView.cursorGo(
+                to: state.preview.previewPosition.payload
+              )
             }
 
             return .empty()
@@ -305,10 +342,13 @@ class MainWindow: NSObject,
         }
 
         _ = changeTheme(
-          themePrefChanged: themePrefChanged, themeChanged: themeChanged, usesTheme: usesTheme,
+          themePrefChanged: themePrefChanged,
+          themeChanged: themeChanged,
+          usesTheme: usesTheme,
           forTheme: {
             self.themeTitlebar(grow: !self.titlebarThemed)
-            self.window.backgroundColor = state.appearance.theme.payload.background.brightening(by: 0.9)
+            self.window.backgroundColor = state.appearance
+              .theme.payload.background.brightening(by: 0.9)
 
             self.set(workspaceThemeWith: state.appearance.theme.payload)
             self.lastThemeMark = state.appearance.theme.mark
@@ -447,8 +487,10 @@ class MainWindow: NSObject,
         case .default: return self.neoVimView.open(urls: [url])
         case .currentTab: return self.neoVimView.openInCurrentTab(url: url)
         case .newTab: return self.neoVimView.openInNewTab(urls: [url])
-        case .horizontalSplit: return self.neoVimView.openInHorizontalSplit(urls: [url])
-        case .verticalSplit: return self.neoVimView.openInVerticalSplit(urls: [url])
+        case .horizontalSplit:
+          return self.neoVimView.openInHorizontalSplit(urls: [url])
+        case .verticalSplit:
+          return self.neoVimView.openInVerticalSplit(urls: [url])
         }
       }
     )
@@ -462,10 +504,11 @@ class MainWindow: NSObject,
   private func showInitError() {
     let notification = NSUserNotification()
     notification.title = "Error during initialization"
-    notification.informativeText = """
-      There was an error during the initialization of NeoVim.
-      Use :messages to view the error messages.
-    """
+    notification
+      .informativeText = """
+                           There was an error during the initialization of NeoVim.
+                           Use :messages to view the error messages.
+                         """
 
     NSUserNotificationCenter.default.deliver(notification)
   }
