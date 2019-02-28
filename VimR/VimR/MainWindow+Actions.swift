@@ -5,6 +5,54 @@
 
 import Cocoa
 import RxSwift
+import MessagePack
+
+// MARK: - RpcEvent Actions
+extension MainWindow {
+
+  func rpcEventAction(for event: RpcEvent, params: [MessagePackValue]) {
+    switch event {
+    case .makeSessionTemporary:
+      stdoutLog.debug("\(event): \(params)")
+
+    case .maximizeWindow:
+      guard let screen = self.window.screen else { return }
+      self.window.setFrame(screen.frame, display: true)
+
+    case .toggleTools:
+      stdoutLog.debug("\(event): \(params)")
+      if params.isEmpty {
+        self.toggleAllTools(self)
+        return
+      }
+
+      guard let param = params[0].integerValue else { return }
+      if param == -1 {
+
+      } else if param == 1 {
+
+      }
+
+    case .toggleToolButtons:
+      stdoutLog.debug("\(event): \(params)")
+      if params.isEmpty {
+        self.workspace.toggleToolButtons()
+        return
+      }
+
+      guard let param = params[0].integerValue else { return }
+      if param == -1 {
+
+      } else if param == 1 {
+
+      }
+
+    case .toggleFullScreen:
+      self.window.toggleFullScreen(self)
+
+    }
+  }
+}
 
 // MARK: - File Menu Item Actions
 extension MainWindow {

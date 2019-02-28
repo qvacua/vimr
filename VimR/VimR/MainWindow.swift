@@ -129,7 +129,8 @@ class MainWindow: NSObject,
       useInteractiveZsh: state.useInteractiveZsh,
       cwd: state.cwd,
       nvimArgs: state.nvimArgs,
-      envDict: state.envDict
+      envDict: state.envDict,
+      rpcEvents: RpcEvent.allCases.map { $0.rawValue }
     )
     self.neoVimView = NvimView(frame: .zero, config: neoVimViewConfig)
     self.neoVimView.configureForAutoLayout()
@@ -264,14 +265,22 @@ class MainWindow: NSObject,
         case .newCurrentBuffer(let curBuf): self.newCurrentBuffer(curBuf)
         case .bufferWritten(let buf): self.bufferWritten(buf)
         case .colorschemeChanged(let theme): self.colorschemeChanged(to: theme)
+
         case .ipcBecameInvalid(let reason):
           self.ipcBecameInvalid(reason: reason)
+
         case .scroll: self.scroll()
         case .cursor(let position): self.cursor(to: position)
         case .initVimError: self.showInitError()
+
         case .apiError(let error, let msg):
           fileLog.error("Got api error with msg '\(msg)' and error: \(error)")
           break
+
+        case .rpcEvent(let method, let params):
+          guard let event = RpcEvent(rawValue: method) else { break }
+          stdoutLog.debug(event)
+          self.rpcEventAction(for: event, params: params)
 
         }
       }, onError: { error in

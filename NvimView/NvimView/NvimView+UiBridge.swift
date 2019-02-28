@@ -132,6 +132,7 @@ extension NvimView {
   }
 
   final func autoCommandEvent(_ value: MessagePackValue) {
+    logger.debug(value)
     guard let array = MessagePackUtils.array(
       from: value, ofSize: 2, conversion: { $0.intValue }
     ),

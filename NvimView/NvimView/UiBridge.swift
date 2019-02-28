@@ -125,6 +125,10 @@ class UiBridge {
     return self.sendMessage(msgId: .resize, data: [width, height].data())
   }
 
+  func notifyReadinessForRpcEvents() -> Completable {
+    return self.sendMessage(msgId: .readyForRpcEvents, data: nil)
+  }
+
   func focusGained(_ gained: Bool) -> Completable {
     return self.sendMessage(msgId: .focusGained, data: [gained].data())
   }

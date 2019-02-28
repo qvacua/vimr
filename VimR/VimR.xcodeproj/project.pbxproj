@@ -16,6 +16,7 @@
 		1929B0F599D1F62C7BE53D2C /* HttpServerMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1DC584C89C477E83FA2 /* HttpServerMiddleware.swift */; };
 		1929B1837C750CADB3A5BCB9 /* OpenQuicklyFileViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1558455B3A74D93EF2A /* OpenQuicklyFileViewRow.swift */; };
 		1929B20CE35B43BB1CE023BA /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC2F05E9A5C0DB039739 /* Theme.swift */; };
+		1929B250DB3FB395A700FE8C /* RpcEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBF0944940845485A512 /* RpcEvents.swift */; };
 		1929B29B95AD176D57942E08 /* UiRootReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B457B9D0FA4D21F3751E /* UiRootReducer.swift */; };
 		1929B2D56C4652E251C23AD4 /* DefaultShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B93256AF7F9137223E36 /* DefaultShortcuts.swift */; };
 		1929B3217A7A3D79E28C80DB /* PrefWindowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B49E6924847AD085C8C9 /* PrefWindowReducer.swift */; };
@@ -26,6 +27,7 @@
 		1929B3AC66EFE35D68C020E3 /* PreviewToolReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFB0F294F3714D5E095F /* PreviewToolReducer.swift */; };
 		1929B3F5743967125F357C9F /* Matcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEEB33113B0E33C3830F /* Matcher.swift */; };
 		1929B462CD4935AFF6D69457 /* FileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7CB4863F80230C32D3C /* FileItem.swift */; };
+		1929B489A51FD5B13888A00C /* RpcEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBF0944940845485A512 /* RpcEvents.swift */; };
 		1929B4B00D7BB191A9A6532D /* HtmlPreviewToolReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE5AEA3D0980860EED50 /* HtmlPreviewToolReducer.swift */; };
 		1929B4B70926DE113E6BF990 /* PreviewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE37AA2843779CAFA76F /* PreviewReducer.swift */; };
 		1929B4E54E2F13A7F5F2B682 /* BufferListReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B67A10E6BB2986B2416E /* BufferListReducer.swift */; };
@@ -36,6 +38,7 @@
 		1929B53876E6952D378C2B30 /* ScoredFileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDF9EBAF1D9D44399045 /* ScoredFileItem.swift */; };
 		1929B542A071BD03C846F6EF /* PrefUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8241CDE58F7AAF89AE4 /* PrefUtils.swift */; };
 		1929B5543B1E31A26096E656 /* FileMonitorReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B04EC69F616EEFAF5F96 /* FileMonitorReducer.swift */; };
+		1929B560C6CE264FD1E1F5A3 /* com.qvacua.VimR.vim in Resources */ = {isa = PBXBuildFile; fileRef = 1929BC6D45B7E14D4D75D4E6 /* com.qvacua.VimR.vim */; };
 		1929B59FA5C286E010F70BEE /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFC0A5A9C6DB09BE1368 /* Types.swift */; };
 		1929B5A2EE366F79ED32744C /* KeysPrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B88B5FA08E897A3C2168 /* KeysPrefReducer.swift */; };
 		1929B5C1BABBC0D09D97C3EF /* PreviewMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B617C229B19DB3E987B8 /* PreviewMiddleware.swift */; };
@@ -352,7 +355,9 @@
 		1929BB6608B4F0E037CA0F4C /* States.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = States.swift; sourceTree = "<group>"; };
 		1929BBC84557C8351EC6183E /* FileItemIgnorePatternTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemIgnorePatternTest.swift; sourceTree = "<group>"; };
 		1929BBE0A534F2F6009D31BE /* AdvencedPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvencedPref.swift; sourceTree = "<group>"; };
+		1929BBF0944940845485A512 /* RpcEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RpcEvents.swift; sourceTree = "<group>"; };
 		1929BC2F05E9A5C0DB039739 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		1929BC6D45B7E14D4D75D4E6 /* com.qvacua.VimR.vim */ = {isa = PBXFileReference; lastKnownFileType = file.vim; path = com.qvacua.VimR.vim; sourceTree = "<group>"; };
 		1929BCE3E156C06EDF1F2806 /* FileOutlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileOutlineView.swift; sourceTree = "<group>"; };
 		1929BD2CA8DD198A6BCDBCB7 /* ThemedTableSubviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedTableSubviews.swift; sourceTree = "<group>"; };
 		1929BD4149D5A25C82064DD8 /* UiRoot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiRoot.swift; sourceTree = "<group>"; };
@@ -817,6 +822,7 @@
 				4BEBA50F1CFF374B00673FDF /* Info.plist */,
 				4B37ADB81D6E471B00970D55 /* vimr */,
 				4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */,
+				1929BC6D45B7E14D4D75D4E6 /* com.qvacua.VimR.vim */,
 			);
 			name = resources;
 			sourceTree = "<group>";
@@ -878,6 +884,7 @@
 				4B97E2CF1D33F92200FC0660 /* resources */,
 				1929BA652D3B88FC071531EC /* UI */,
 				1929B66A5E2D00EA143AFD86 /* RxRedux.swift */,
+				1929BBF0944940845485A512 /* RpcEvents.swift */,
 			);
 			path = VimR;
 			sourceTree = "<group>";
@@ -1067,6 +1074,7 @@
 				4B9433E620B95EC6005807BA /* MacVim-log.icns in Resources */,
 				4B94340D20B95EC7005807BA /* MacVim-dtd.icns in Resources */,
 				4B9433DF20B95EC6005807BA /* MacVim-lisp.icns in Resources */,
+				1929B560C6CE264FD1E1F5A3 /* com.qvacua.VimR.vim in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1182,6 +1190,7 @@
 				1929BA269EBD68251410A08E /* ShortcutsTableSubviews.swift in Sources */,
 				1929B2D56C4652E251C23AD4 /* DefaultShortcuts.swift in Sources */,
 				1929B0C7150100A84FBDB8BF /* ShortcutItem.swift in Sources */,
+				1929B250DB3FB395A700FE8C /* RpcEvents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1216,6 +1225,7 @@
 				1929BC682EA78BF50D1E0890 /* ShortcutsTableSubviews.swift in Sources */,
 				1929B0244BD7111E168726CF /* DefaultShortcuts.swift in Sources */,
 				1929BDC69A5F9D1661423488 /* ShortcutItem.swift in Sources */,
+				1929B489A51FD5B13888A00C /* RpcEvents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

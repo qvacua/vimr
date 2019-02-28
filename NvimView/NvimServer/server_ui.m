@@ -747,6 +747,12 @@ void neovim_focus_gained(void **argv) {
   });
 }
 
+void neovim_ready_for_rpcevents(void **argv) {
+  work_async(argv, ^(NSData *data) {
+    apply_autocmds(EVENT_GUIENTER, NULL, NULL, false, NULL);
+  });
+}
+
 void neovim_debug1(void **argv) {
   work_async(argv, ^(NSData *data) {
     NSLog(@"normal fg: %#08X", normal_fg);

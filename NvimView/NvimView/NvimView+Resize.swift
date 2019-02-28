@@ -74,7 +74,9 @@ extension NvimView {
       .subscribe(onNext: { msg in
         switch msg {
         case let .notification(method, params):
-          logger.debug("NOTIFICATION: \(method) with \(params.count) elements")
+          logger.debug("NOTIFICATION: \(method): \(params)")
+          guard self.subscribedEvents.contains(method) else { return }
+          self.eventsSubject.onNext(.rpcEvent(method, params))
         case let .error(_, msg):
           logger.debug("MSG ERROR: \(msg)")
         default:
@@ -90,6 +92,12 @@ extension NvimView {
     try? self.bridge
       .runLocalServerAndNvim(width: size.width, height: size.height)
       .andThen(self.api.run(at: sockPath))
+      .andThen(
+        self.subscribedEvents.reduce(Completable.empty()) { prev, event in
+          prev.andThen(self.api.subscribe(event: event))
+        }
+      )
+      .andThen(self.bridge.notifyReadinessForRpcEvents())
       .wait()
   }
 
