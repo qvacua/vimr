@@ -45,6 +45,11 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
+        if state.viewToBeFocused != nil,
+           case .htmlPreview = state.viewToBeFocused! {
+          self.beFirstResponder()
+        }
+
         guard let serverUrl = state.htmlPreview.server, let htmlFileUrl = state.htmlPreview.htmlFile else {
           self.monitor = nil
           return

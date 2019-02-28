@@ -111,6 +111,24 @@ let defaultShortcuts: [String: [String: Any]] = [
     SRShortcutKeyCode: 18,
     SRShortcutModifierFlagsKey: 1048840,
   ],
+  "com.qvacua.vimr.menuitems.tools.toggle-buffer-list": [
+    SRShortcutCharacters: "1",
+    SRShortcutCharactersIgnoringModifiers: "2",
+    SRShortcutKeyCode: 19,
+    SRShortcutModifierFlagsKey: 1048840,
+  ],
+  "com.qvacua.vimr.menuitems.tools.toggle-markdown-preview": [
+    SRShortcutCharacters: "1",
+    SRShortcutCharactersIgnoringModifiers: "3",
+    SRShortcutKeyCode: 20,
+    SRShortcutModifierFlagsKey: 1048840,
+  ],
+  "com.qvacua.vimr.menuitems.tools.toggle-html-preview": [
+    SRShortcutCharacters: "1",
+    SRShortcutCharactersIgnoringModifiers: "4",
+    SRShortcutKeyCode: 21,
+    SRShortcutModifierFlagsKey: 1048840,
+  ],
   "com.qvacua.vimr.menuitems.tools.toggle-tool-buttons": [
     SRShortcutCharacters: "\\",
     SRShortcutCharactersIgnoringModifiers: "|",
