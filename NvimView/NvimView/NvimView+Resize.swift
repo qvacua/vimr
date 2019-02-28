@@ -68,11 +68,11 @@ extension NvimView {
         .subscribe(onNext: { msg in
           switch msg {
           case let .notification(method, params):
-            print("NOTIFICATION: \(method) with \(params.count) elements")
+            logger.debug("NOTIFICATION: \(method) with \(params.count) elements")
           case let .error(_, msg):
-            print("MSG ERROR: \(msg)")
+            logger.debug("MSG ERROR: \(msg)")
           default:
-            print("???")
+            logger.debug("???: This should not happen")
             break
           }
         }, onError: { print("ERROR: \($0)" )})
