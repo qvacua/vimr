@@ -40,6 +40,8 @@ class MainWindow: NSObject,
     case setState(for: Tools, with: WorkspaceTool)
     case setToolsState([(Tools, WorkspaceTool)])
 
+    case makeSessionTemporary
+
     case setTheme(Theme)
 
     case close
@@ -279,7 +281,6 @@ class MainWindow: NSObject,
 
         case .rpcEvent(let method, let params):
           guard let event = RpcEvent(rawValue: method) else { break }
-          stdoutLog.debug(event)
           self.rpcEventAction(for: event, params: params)
 
         }

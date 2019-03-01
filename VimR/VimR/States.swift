@@ -264,6 +264,8 @@ extension MainWindow {
     var trackpadScrollResistance = 5.0
     var useLiveResize = false
 
+    var isTemporarySession = false
+
     // neovim
     var uuid = UUID().uuidString
     var currentBuffer: NvimView.Buffer?

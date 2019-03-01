@@ -38,6 +38,11 @@ class UiRootReducer: ReducerType {
 
       case let .becomeKey(isFullScreen):
         appState.currentMainWindowUuid = uuid
+
+        if appState.mainWindows[uuid]?.isTemporarySession == true {
+          break
+        }
+
         appState.mainWindowTemplate = self.mainWindowTemplate(
           from: appState.mainWindowTemplate,
           new: appState.mainWindows[uuid] ?? appState.mainWindowTemplate,
@@ -45,20 +50,40 @@ class UiRootReducer: ReducerType {
         )
 
       case let .frameChanged(to:frame):
+        if appState.mainWindows[uuid]?.isTemporarySession == true {
+          break
+        }
+
         if uuid == appState.currentMainWindowUuid {
           appState.mainWindowTemplate.frame = frame
         }
 
       case let .setToolsState(tools):
+        if appState.mainWindows[uuid]?.isTemporarySession == true {
+          break
+        }
+
         appState.mainWindowTemplate.orderedTools = tools.map { $0.0 }
 
       case let .toggleAllTools(value):
+        if appState.mainWindows[uuid]?.isTemporarySession == true {
+          break
+        }
+
         appState.mainWindowTemplate.isAllToolsVisible = value
 
       case let .toggleToolButtons(value):
+        if appState.mainWindows[uuid]?.isTemporarySession == true {
+          break
+        }
+
         appState.mainWindowTemplate.isToolButtonsVisible = value
 
       case .close:
+        if appState.mainWindows[uuid]?.isTemporarySession == true {
+          break
+        }
+
         if appState.currentMainWindowUuid == uuid, let mainWindowToClose = appState.mainWindows[uuid] {
           appState.mainWindowTemplate = self.mainWindowTemplate(from: appState.mainWindowTemplate,
                                                                 new: mainWindowToClose,
