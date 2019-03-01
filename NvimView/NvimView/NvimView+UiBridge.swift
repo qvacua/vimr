@@ -119,7 +119,6 @@ extension NvimView {
     self.bridgeLogger.hr()
     try? self.api
       .stop()
-      .andThen(self.bridge.quit())
       .andThen(Completable.create { completable in
         self.eventsSubject.onNext(.neoVimStopped)
         self.eventsSubject.onCompleted()
@@ -127,6 +126,7 @@ extension NvimView {
         completable(.completed)
         return Disposables.create()
       })
+      .andThen(self.bridge.quit())
       .observeOn(MainScheduler.instance)
       .wait()
   }
