@@ -127,12 +127,21 @@ class MainWindow: NSObject,
       windowNibName: NSNib.Name("MainWindow")
     )
 
+    let sourceFileUrls: [URL]
+    if let sourceFileUrl = Bundle(for: MainWindow.self)
+      .url(forResource: "com.qvacua.VimR", withExtension: "vim") {
+      sourceFileUrls = [sourceFileUrl]
+    } else {
+      sourceFileUrls = []
+    }
+
     let neoVimViewConfig = NvimView.Config(
       useInteractiveZsh: state.useInteractiveZsh,
       cwd: state.cwd,
       nvimArgs: state.nvimArgs,
       envDict: state.envDict,
-      rpcEvents: RpcEvent.allCases.map { $0.rawValue }
+      rpcEvents: RpcEvent.allCases.map { $0.rawValue },
+      sourceFiles: sourceFileUrls
     )
     self.neoVimView = NvimView(frame: .zero, config: neoVimViewConfig)
     self.neoVimView.configureForAutoLayout()

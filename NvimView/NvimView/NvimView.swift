@@ -20,19 +20,22 @@ public class NvimView: NSView,
     var nvimArgs: [String]?
     var envDict: [String: String]?
     var rpcEvents: [String]
+    var sourceFiles: [URL]
 
     public init(
       useInteractiveZsh: Bool,
       cwd: URL,
       nvimArgs: [String]?,
       envDict: [String: String]?,
-      rpcEvents: [String]
+      rpcEvents: [String],
+      sourceFiles: [URL]
     ) {
       self.useInteractiveZsh = useInteractiveZsh
       self.cwd = cwd
       self.nvimArgs = nvimArgs
       self.envDict = envDict
       self.rpcEvents = rpcEvents
+      self.sourceFiles = sourceFiles
     }
   }
 
@@ -210,6 +213,7 @@ public class NvimView: NSView,
                                                   internalSerialQueueName: "com.qvacua.NvimView.NvimView")
 
     self.subscribedEvents.formUnion(config.rpcEvents)
+    self.sourceFileUrls = config.sourceFiles
 
     super.init(frame: .zero)
     self.registerForDraggedTypes([NSPasteboard.PasteboardType(String(kUTTypeFileURL))])
@@ -324,7 +328,8 @@ public class NvimView: NSView,
         cwd: URL(fileURLWithPath: NSHomeDirectory()),
         nvimArgs: nil,
         envDict: nil,
-        rpcEvents: []
+        rpcEvents: [],
+        sourceFiles: []
       )
     )
   }
@@ -392,6 +397,7 @@ public class NvimView: NSView,
   )
 
   var subscribedEvents = Set<String>()
+  let sourceFileUrls: [URL]
 
   // MARK: - Private
   private var _linespacing = NvimView.defaultLinespacing

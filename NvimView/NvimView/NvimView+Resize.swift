@@ -97,6 +97,11 @@ extension NvimView {
           prev.andThen(self.api.subscribe(event: event))
         }
       )
+      .andThen(
+        self.sourceFileUrls.reduce(Completable.empty()) { prev, url in
+          prev.andThen(self.api.command(command: "source \(url.path)"))
+        }
+      )
       .andThen(self.bridge.notifyReadinessForRpcEvents())
       .wait()
   }
