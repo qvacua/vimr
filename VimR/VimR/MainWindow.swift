@@ -80,7 +80,7 @@ class MainWindow: NSObject,
     case verticalSplit
   }
 
-  let uuid: String
+  let uuid: UUID
   let emit: (UuidAction<Action>) -> Void
 
   let windowController: NSWindowController

@@ -144,7 +144,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   }
 
   private let emit: (UuidAction<Action>) -> Void
-  private let uuid: String
+  private let uuid: UUID
 
   private let webview: WKWebView
   private let disposeBag = DisposeBag()

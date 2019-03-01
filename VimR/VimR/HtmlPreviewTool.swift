@@ -92,7 +92,7 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
   }
 
   private let emit: (UuidAction<Action>) -> Void
-  private let uuid: String
+  private let uuid: UUID
 
   private var mark = Token()
   private var scrollTop = 0

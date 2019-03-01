@@ -50,7 +50,7 @@ class AppDelegateReducer: ReducerType {
 
     var mainWindow = state.mainWindowTemplate
 
-    mainWindow.uuid = UUID().uuidString
+    mainWindow.uuid = UUID()
     mainWindow.cwd = config.cwd
     mainWindow.isDirty = false
 

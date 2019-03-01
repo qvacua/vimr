@@ -51,7 +51,7 @@ class UiBridge {
     return self.streamSubject.asObservable()
   }
 
-  init(uuid: String, queue: DispatchQueue, config: NvimView.Config) {
+  init(uuid: UUID, queue: DispatchQueue, config: NvimView.Config) {
     self.uuid = uuid
 
     self.useInteractiveZsh = config.useInteractiveZsh
@@ -319,7 +319,7 @@ class UiBridge {
 
   private let logger = LogContext.fileLogger(as: UiBridge.self, with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"))
 
-  private let uuid: String
+  private let uuid: UUID
 
   private let useInteractiveZsh: Bool
   private let cwd: URL

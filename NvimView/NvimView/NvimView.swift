@@ -112,7 +112,7 @@ public class NvimView: NSView,
   public var isLeftOptionMeta = false
   public var isRightOptionMeta = false
 
-  public let uuid = UUID().uuidString
+  public let uuid = UUID()
 
   public internal(set) var mode = CursorModeShape.normal
 
