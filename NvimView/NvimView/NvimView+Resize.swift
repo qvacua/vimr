@@ -107,7 +107,7 @@ extension NvimView {
   }
 
   private func randomEmoji() -> String {
-    let idx = Int(arc4random_uniform(UInt32(emojis.count)))
+    let idx = Int.random(in: 0..<emojis.count)
     guard let scalar = UnicodeScalar(emojis[idx]) else {
       return "😎"
     }
