@@ -127,12 +127,17 @@ class MainWindow: NSObject,
       windowNibName: NSNib.Name("MainWindow")
     )
 
-    let sourceFileUrls: [URL]
+    var sourceFileUrls = [URL]()
     if let sourceFileUrl = Bundle(for: MainWindow.self)
       .url(forResource: "com.qvacua.VimR", withExtension: "vim") {
-      sourceFileUrls = [sourceFileUrl]
-    } else {
-      sourceFileUrls = []
+      sourceFileUrls.append(sourceFileUrl)
+    }
+
+    let ginitUrl = URL(fileURLWithPath: NSHomeDirectory())
+      .appendingPathComponent(".config/nvim/ginit.vim")
+    let loadGinit = FileManager.default.fileExists(atPath: ginitUrl.path)
+    if loadGinit {
+      sourceFileUrls.append(ginitUrl)
     }
 
     let neoVimViewConfig = NvimView.Config(
@@ -291,6 +296,9 @@ class MainWindow: NSObject,
         case .rpcEvent(let method, let params):
           guard let event = RpcEvent(rawValue: method) else { break }
           self.rpcEventAction(for: event, params: params)
+
+        case .rpcEventSubscribed:
+          break
 
         }
       }, onError: { error in

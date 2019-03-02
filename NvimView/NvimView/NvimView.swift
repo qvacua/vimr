@@ -59,6 +59,7 @@ public class NvimView: NSView,
     case cursor(Position)
 
     case rpcEvent(String, [MessagePack.MessagePackValue])
+    case rpcEventSubscribed
 
     case initVimError
 
@@ -298,6 +299,10 @@ public class NvimView: NSView,
         case let .highlightAttrs(value):
           self.setAttr(with: value)
 
+        case .rpcEventSubscribed:
+          self.rpcEventSubscribed()
+
+
         case .debug1:
           self.debug1(self)
 
@@ -396,8 +401,12 @@ public class NvimView: NSView,
     shouldLogDebug: nil
   )
 
-  var subscribedEvents = Set<String>()
   let sourceFileUrls: [URL]
+
+  var subscribedEvents = Set<String>()
+  var subscribedEventCount = 0
+  let rpcSubscribedCondition = NSCondition()
+  var rpcEventsSubscribed = false
 
   // MARK: - Private
   private var _linespacing = NvimView.defaultLinespacing

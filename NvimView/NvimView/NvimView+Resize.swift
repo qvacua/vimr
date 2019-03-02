@@ -93,16 +93,17 @@ extension NvimView {
       .runLocalServerAndNvim(width: size.width, height: size.height)
       .andThen(self.api.run(at: sockPath))
       .andThen(
+        self.sourceFileUrls.reduce(Completable.empty()) { prev, url in
+          prev.andThen(self.api
+                         .commandOutput(str: "source \(url.path)")
+                         .asCompletable())
+        }
+      )
+      .andThen(
         self.subscribedEvents.reduce(Completable.empty()) { prev, event in
           prev.andThen(self.api.subscribe(event: event))
         }
       )
-      .andThen(
-        self.sourceFileUrls.reduce(Completable.empty()) { prev, url in
-          prev.andThen(self.api.command(command: "source \(url.path)"))
-        }
-      )
-      .andThen(self.bridge.notifyReadinessForRpcEvents())
       .wait()
   }
 

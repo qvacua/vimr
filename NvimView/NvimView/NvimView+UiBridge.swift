@@ -132,7 +132,6 @@ extension NvimView {
   }
 
   final func autoCommandEvent(_ value: MessagePackValue) {
-    logger.debug(value)
     guard let array = MessagePackUtils.array(
       from: value, ofSize: 2, conversion: { $0.intValue }
     ),
@@ -141,6 +140,32 @@ extension NvimView {
       return
     }
     let bufferHandle = array[1]
+
+
+    logger.debug("aucmd: \(event)")
+    if event == .vimenter {
+      Completable
+        .empty()
+        .observeOn(SerialDispatchQueueScheduler(qos: .userInitiated))
+        .andThen(
+          Completable.create { completable in
+            self.rpcSubscribedCondition.lock()
+            defer { self.rpcSubscribedCondition.unlock() }
+
+            while !self.rpcEventsSubscribed
+                  && self.rpcSubscribedCondition
+                    .wait(until: Date(timeIntervalSinceNow: 5)) {}
+
+            completable(.completed)
+            return Disposables.create()
+          }
+        )
+        .andThen(self.bridge.notifyReadinessForRpcEvents())
+        .subscribe(onCompleted: {})
+        .disposed(by: self.disposeBag)
+
+      return
+    }
 
     #if TRACE
     self.bridgeLogger.trace("\(event) -> \(bufferHandle)")
@@ -363,6 +388,18 @@ extension NvimView {
 
     self.bridgeLogger.debug(dirty)
     self.eventsSubject.onNext(.setDirtyStatus(dirty))
+  }
+
+  final func rpcEventSubscribed() {
+    self.subscribedEventCount += 1
+    if self.subscribedEvents.count == self.subscribedEventCount {
+      self.rpcSubscribedCondition.lock()
+      defer { self.rpcSubscribedCondition.unlock() }
+      self.rpcEventsSubscribed = true
+      self.rpcSubscribedCondition.broadcast()
+
+      self.eventsSubject.onNext(.rpcEventSubscribed)
+    }
   }
 
   final func setAttr(with value: MessagePackValue) {

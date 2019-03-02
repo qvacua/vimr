@@ -41,7 +41,8 @@ typedef NS_ENUM(NSInteger, NvimServerMsgId) {
   NvimServerMsgIdColorSchemeChanged,
   NvimServerMsgIdDefaultColorsChanged,
   NvimServerMsgIdAutoCommandEvent,
-  
+  NvimServerMsgIdRpcEventSubscribed,
+
   NvimServerMsgIdDebug1,
 };
 

@@ -11,6 +11,7 @@ import MessagePack
 extension MainWindow {
 
   func rpcEventAction(for event: RpcEvent, params: [MessagePackValue]) {
+    stdoutLog.debug("\(event)")
     switch event {
     case .makeSessionTemporary:
       self.emit(self.uuidAction(for: .makeSessionTemporary))
