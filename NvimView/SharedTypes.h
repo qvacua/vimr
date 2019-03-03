@@ -41,12 +41,14 @@ typedef NS_ENUM(NSInteger, NvimServerMsgId) {
   NvimServerMsgIdColorSchemeChanged,
   NvimServerMsgIdDefaultColorsChanged,
   NvimServerMsgIdAutoCommandEvent,
-  
+  NvimServerMsgIdRpcEventSubscribed,
+
   NvimServerMsgIdDebug1,
 };
 
 typedef NS_ENUM(NSInteger, NvimBridgeMsgId) {
   NvimBridgeMsgIdAgentReady = 0,
+  NvimBridgeMsgIdReadyForRpcEvents,
   NvimBridgeMsgIdInput,
   NvimBridgeMsgIdDeleteInput,
   NvimBridgeMsgIdResize,

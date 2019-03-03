@@ -80,7 +80,8 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { state in
-        if state.viewToBeFocused != nil, case .preview = state.viewToBeFocused! {
+        if state.viewToBeFocused != nil,
+           case .markdownPreview = state.viewToBeFocused! {
           self.beFirstResponder()
         }
 
@@ -143,7 +144,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   }
 
   private let emit: (UuidAction<Action>) -> Void
-  private let uuid: String
+  private let uuid: UUID
 
   private let webview: WKWebView
   private let disposeBag = DisposeBag()

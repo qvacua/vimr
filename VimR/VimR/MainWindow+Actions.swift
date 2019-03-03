@@ -5,6 +5,95 @@
 
 import Cocoa
 import RxSwift
+import MessagePack
+
+// MARK: - RpcEvent Actions
+extension MainWindow {
+
+  func rpcEventAction(params rawParams: [MessagePackValue]) {
+    guard rawParams.count > 0 else { return }
+
+    guard let strEvent = rawParams[0].stringValue,
+          let event = RpcEvent(rawValue: "\(RpcEvent.prefix).\(strEvent)")
+      else {
+      return
+    }
+    let params = Array(rawParams.suffix(from: 1))
+
+    stdoutLog.debug("\(event): \(params)")
+
+    switch event {
+    case .makeSessionTemporary:
+      self.emit(self.uuidAction(for: .makeSessionTemporary))
+
+    case .maximizeWindow:
+      guard let screen = self.window.screen else { return }
+      self.window.setFrame(screen.frame, display: true)
+
+    case .toggleTools:
+      if params.count == 0 { return }
+
+      let param = params[0].integerValue
+
+      if params.isEmpty || param == 0 {
+        self.toggleAllTools(self)
+      } else if param == -1 {
+        self.hideAllTools()
+      } else if param == 1 {
+        self.showAllTools()
+      }
+
+    case .toggleToolButtons:
+      if params.count == 0 { return }
+
+      let param = params[0].integerValue
+
+      if params.isEmpty || param == 0 {
+        self.toggleToolButtons(self)
+      } else if param == -1 {
+        self.hideToolButtons()
+      } else if param == 1 {
+        self.showToolButtons()
+      }
+
+    case .toggleFullScreen:
+      self.window.toggleFullScreen(self)
+
+    }
+  }
+
+  private func hideToolButtons() {
+    self.workspace.hideToolButtons()
+    self.focusNvimView(self)
+    self.emit(self.uuidAction(
+      for: .toggleToolButtons(self.workspace.isToolButtonsVisible)
+    ))
+  }
+
+  private func showToolButtons() {
+    self.workspace.showToolButtons()
+    self.focusNvimView(self)
+    self.emit(self.uuidAction(
+      for: .toggleToolButtons(self.workspace.isToolButtonsVisible)
+    ))
+  }
+
+  private func hideAllTools() {
+    self.workspace.hideAllTools()
+    self.focusNvimView(self)
+    self.emit(self.uuidAction(
+      for: .toggleAllTools(self.workspace.isAllToolsVisible)
+    ))
+  }
+
+  private func showAllTools() {
+    self.workspace.showAllTools()
+    self.focusNvimView(self)
+    self.emit(self.uuidAction(
+      for: .toggleAllTools(self.workspace.isAllToolsVisible)
+    ))
+  }
+}
 
 // MARK: - File Menu Item Actions
 extension MainWindow {
@@ -123,26 +212,43 @@ extension MainWindow {
   }
 
   @IBAction func toggleFileBrowser(_ sender: Any?) {
-    let fileBrowser = self.fileBrowserContainer
+    guard let fileBrowser = self.fileBrowserContainer else { return }
+    self.toggle(tool: fileBrowser, toolType: .fileBrowser)
+  }
 
-    if fileBrowser?.isSelected == true {
-      if fileBrowser?.view.isFirstResponder == true {
-        fileBrowser?.toggle()
+  @IBAction func toggleBufferList(_ sender: Any?) {
+    guard let bufferList = self.buffersListContainer else { return }
+    self.toggle(tool: bufferList, toolType: .bufferList)
+  }
+
+  @IBAction func toggleMarkdownPreview(_ sender: Any?) {
+    guard let markdownPreview = self.previewContainer else { return }
+    self.toggle(tool: markdownPreview, toolType: .markdownPreview)
+  }
+
+  @IBAction func toggleHtmlPreview(_ sender: Any?) {
+    guard let htmlPreview = self.htmlPreviewContainer else { return }
+    self.toggle(tool: htmlPreview, toolType: .htmlPreview)
+  }
+
+  @IBAction func focusNvimView(_: Any?) {
+    self.emit(self.uuidAction(for: .focus(.neoVimView)))
+  }
+
+  private func toggle(tool: WorkspaceTool, toolType: FocusableView) {
+    if tool.isSelected == true {
+      if tool.view.isFirstResponder == true {
+        tool.toggle()
         self.focusNvimView(self)
       } else {
-        self.emit(self.uuidAction(for: .focus(.fileBrowser)))
+        self.emit(self.uuidAction(for: .focus(toolType)))
       }
 
       return
     }
 
-    fileBrowser?.toggle()
-    self.emit(self.uuidAction(for: .focus(.fileBrowser)))
-  }
-
-  @IBAction func focusNvimView(_: Any?) {
-//    self.window.makeFirstResponder(self.neoVimView)
-    self.emit(self.uuidAction(for: .focus(.neoVimView)))
+    tool.toggle()
+    self.emit(self.uuidAction(for: .focus(toolType)))
   }
 }
 

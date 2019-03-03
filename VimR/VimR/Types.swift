@@ -15,19 +15,19 @@ struct StateActionPair<S, A> {
 
 protocol UuidTagged {
 
-  var uuid: String { get }
+  var uuid: UUID { get }
 }
 
 class UuidAction<A>: UuidTagged, CustomStringConvertible {
 
-  let uuid: String
+  let uuid: UUID
   let payload: A
 
   var description: String {
     return "UuidAction(uuid: \(uuid), payload: \(String(reflecting: payload)))"
   }
 
-  init(uuid: String, action: A) {
+  init(uuid: UUID, action: A) {
     self.uuid = uuid
     self.payload = action
   }
@@ -35,14 +35,14 @@ class UuidAction<A>: UuidTagged, CustomStringConvertible {
 
 class UuidState<S>: UuidTagged, CustomStringConvertible {
 
-  let uuid: String
+  let uuid: UUID
   let payload: S
 
   var description: String {
     return "UuidState(uuid: \(uuid), payload: \(String(reflecting: payload)))"
   }
 
-  init(uuid: String, state: S) {
+  init(uuid: UUID, state: S) {
     self.uuid = uuid
     self.payload = state
   }

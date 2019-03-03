@@ -130,7 +130,7 @@ class FileOutlineView: NSOutlineView,
   private let emit: (UuidAction<FileBrowser.Action>) -> Void
   private let disposeBag = DisposeBag()
 
-  private let uuid: String
+  private let uuid: UUID
 
   private var root: Node
   private var cwd: URL {

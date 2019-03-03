@@ -34,7 +34,7 @@ class PreviewMiddleware {
       self.template = template
     }
 
-    func apply(_ state: MainWindow.State, uuid: String) {
+    func apply(_ state: MainWindow.State, uuid: UUID) {
       let preview = state.preview
       guard let buffer = preview.buffer, let html = preview.html else {
         guard let previewUrl = self.previewFiles[uuid] else {
@@ -80,7 +80,7 @@ class PreviewMiddleware {
     }
 
     private let template: String
-    private var previewFiles = [String: URL]()
+    private var previewFiles = [UUID: URL]()
   }
 
   class PreviewToolMiddleware: MiddlewareType {

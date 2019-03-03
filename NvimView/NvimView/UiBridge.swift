@@ -35,6 +35,7 @@ class UiBridge {
     case defaultColorsChanged(MessagePackValue)
     case autoCommandEvent(MessagePackValue)
     case highlightAttrs(MessagePackValue)
+    case rpcEventSubscribed
     case debug1
     case unknown
   }
@@ -51,7 +52,7 @@ class UiBridge {
     return self.streamSubject.asObservable()
   }
 
-  init(uuid: String, queue: DispatchQueue, config: NvimView.Config) {
+  init(uuid: UUID, queue: DispatchQueue, config: NvimView.Config) {
     self.uuid = uuid
 
     self.useInteractiveZsh = config.useInteractiveZsh
@@ -123,6 +124,10 @@ class UiBridge {
 
   func resize(width: Int, height: Int) -> Completable {
     return self.sendMessage(msgId: .resize, data: [width, height].data())
+  }
+
+  func notifyReadinessForRpcEvents() -> Completable {
+    return self.sendMessage(msgId: .readyForRpcEvents, data: nil)
   }
 
   func focusGained(_ gained: Bool) -> Completable {
@@ -249,6 +254,9 @@ class UiBridge {
       guard let v = MessagePackUtils.value(from: data) else { return }
       self.streamSubject.onNext(.highlightAttrs(v))
 
+    case .rpcEventSubscribed:
+      self.streamSubject.onNext(.rpcEventSubscribed)
+
     }
   }
 
@@ -319,7 +327,7 @@ class UiBridge {
 
   private let logger = LogContext.fileLogger(as: UiBridge.self, with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"))
 
-  private let uuid: String
+  private let uuid: UUID
 
   private let useInteractiveZsh: Bool
   private let cwd: URL

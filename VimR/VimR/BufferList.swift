@@ -48,6 +48,11 @@ class BuffersList: NSView,
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { state in
+        if state.viewToBeFocused != nil,
+           case .bufferList = state.viewToBeFocused! {
+          self.beFirstResponder()
+        }
+
         let themeChanged = changeTheme(
           themePrefChanged: state.appearance.usesTheme != self.usesTheme,
           themeChanged: state.appearance.theme.mark != self.lastThemeMark,
@@ -73,7 +78,7 @@ class BuffersList: NSView,
   private let emit: (UuidAction<Action>) -> Void
   private let disposeBag = DisposeBag()
 
-  private let uuid: String
+  private let uuid: UUID
   private var usesTheme: Bool
   private var showsFileIcon: Bool
 
