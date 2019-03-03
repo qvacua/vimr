@@ -10,8 +10,18 @@ import MessagePack
 // MARK: - RpcEvent Actions
 extension MainWindow {
 
-  func rpcEventAction(for event: RpcEvent, params: [MessagePackValue]) {
-    stdoutLog.debug("\(event)")
+  func rpcEventAction(params rawParams: [MessagePackValue]) {
+    guard rawParams.count > 0 else { return }
+
+    guard let strEvent = rawParams[0].stringValue,
+          let event = RpcEvent(rawValue: "\(RpcEvent.prefix).\(strEvent)")
+      else {
+      return
+    }
+    let params = Array(rawParams.suffix(from: 1))
+
+    stdoutLog.debug("\(event): \(params)")
+
     switch event {
     case .makeSessionTemporary:
       self.emit(self.uuidAction(for: .makeSessionTemporary))
@@ -21,6 +31,8 @@ extension MainWindow {
       self.window.setFrame(screen.frame, display: true)
 
     case .toggleTools:
+      if params.count == 0 { return }
+
       let param = params[0].integerValue
 
       if params.isEmpty || param == 0 {
@@ -32,6 +44,8 @@ extension MainWindow {
       }
 
     case .toggleToolButtons:
+      if params.count == 0 { return }
+
       let param = params[0].integerValue
 
       if params.isEmpty || param == 0 {

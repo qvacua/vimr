@@ -138,7 +138,6 @@ class MainWindow: NSObject,
       cwd: state.cwd,
       nvimArgs: state.nvimArgs,
       envDict: state.envDict,
-      rpcEvents: RpcEvent.allCases.map { $0.rawValue },
       sourceFiles: sourceFileUrls
     )
     self.neoVimView = NvimView(frame: .zero, config: neoVimViewConfig)
@@ -287,8 +286,7 @@ class MainWindow: NSObject,
           break
 
         case .rpcEvent(let method, let params):
-          guard let event = RpcEvent(rawValue: method) else { break }
-          self.rpcEventAction(for: event, params: params)
+          self.rpcEventAction(params: params)
 
         case .rpcEventSubscribed:
           break

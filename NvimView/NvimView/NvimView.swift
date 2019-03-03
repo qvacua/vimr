@@ -19,7 +19,6 @@ public class NvimView: NSView,
     var cwd: URL
     var nvimArgs: [String]?
     var envDict: [String: String]?
-    var rpcEvents: [String]
     var sourceFiles: [URL]
 
     public init(
@@ -27,14 +26,12 @@ public class NvimView: NSView,
       cwd: URL,
       nvimArgs: [String]?,
       envDict: [String: String]?,
-      rpcEvents: [String],
       sourceFiles: [URL]
     ) {
       self.useInteractiveZsh = useInteractiveZsh
       self.cwd = cwd
       self.nvimArgs = nvimArgs
       self.envDict = envDict
-      self.rpcEvents = rpcEvents
       self.sourceFiles = sourceFiles
     }
   }
@@ -111,6 +108,8 @@ public class NvimView: NSView,
              ">"
     }
   }
+
+  public static let rpcEventName = "com.qvacua.NvimView"
 
   public static let minFontSize = CGFloat(4)
   public static let maxFontSize = CGFloat(128)
@@ -213,7 +212,6 @@ public class NvimView: NSView,
     self.scheduler = SerialDispatchQueueScheduler(queue: self.queue,
                                                   internalSerialQueueName: "com.qvacua.NvimView.NvimView")
 
-    self.subscribedEvents.formUnion(config.rpcEvents)
     self.sourceFileUrls = config.sourceFiles
 
     super.init(frame: .zero)
@@ -313,18 +311,6 @@ public class NvimView: NSView,
       .disposed(by: self.disposeBag)
   }
 
-  public func subscribe(to events: [String]) -> Completable {
-    let result = Set(events)
-      .subtracting(self.subscribedEvents)
-      .reduce(Completable.empty()) { prev, event in
-        prev.andThen(self.api.subscribe(event: event))
-      }
-
-    self.subscribedEvents.formUnion(events)
-
-    return result
-  }
-
   convenience override public init(frame rect: NSRect) {
     self.init(
       frame: rect,
@@ -333,7 +319,6 @@ public class NvimView: NSView,
         cwd: URL(fileURLWithPath: NSHomeDirectory()),
         nvimArgs: nil,
         envDict: nil,
-        rpcEvents: [],
         sourceFiles: []
       )
     )
@@ -403,10 +388,8 @@ public class NvimView: NSView,
 
   let sourceFileUrls: [URL]
 
-  var subscribedEvents = Set<String>()
-  var subscribedEventCount = 0
-  let rpcSubscribedCondition = NSCondition()
-  var rpcEventsSubscribed = false
+  let rpcEventSubscribedCondition = NSCondition()
+  var rpcEventSubscribedFlag = false
 
   // MARK: - Private
   private var _linespacing = NvimView.defaultLinespacing

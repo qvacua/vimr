@@ -73,15 +73,20 @@ extension NvimView {
     self.api.msgpackRawStream
       .subscribe(onNext: { msg in
         switch msg {
+
         case let .notification(method, params):
           logger.debug("NOTIFICATION: \(method): \(params)")
-          guard self.subscribedEvents.contains(method) else { return }
+
+          guard method == NvimView.rpcEventName else { return }
           self.eventsSubject.onNext(.rpcEvent(method, params))
+
         case let .error(_, msg):
           logger.debug("MSG ERROR: \(msg)")
+
         default:
           logger.debug("???: This should not happen")
           break
+
         }
       }, onError: { print("ERROR: \($0)") })
       .disposed(by: self.disposeBag)
@@ -99,11 +104,7 @@ extension NvimView {
                          .asCompletable())
         }
       )
-      .andThen(
-        self.subscribedEvents.reduce(Completable.empty()) { prev, event in
-          prev.andThen(self.api.subscribe(event: event))
-        }
-      )
+      .andThen(self.api.subscribe(event: NvimView.rpcEventName))
       .wait()
   }
 

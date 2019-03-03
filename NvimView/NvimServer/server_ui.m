@@ -558,18 +558,10 @@ void custom_ui_start(void) {
   ui_bridge_attach(ui, server_ui_main, server_ui_scheduler);
 }
 
-static int rpc_event_counter = 0;
-
 void custom_ui_rpcevent_subscribed() {
   dispatch_async(rpc_queue, ^{
-    rpc_event_counter++;
-
-    ELOG("counter: %d", rpc_event_counter);
-    send_msg_packing(
-        NvimServerMsgIdRpcEventSubscribed,
-        ^(msgpack_packer *packer) {
-          msgpack_pack_int(packer, rpc_event_counter);
-        });
+    [_neovim_server sendMessageWithId:NvimServerMsgIdRpcEventSubscribed
+                                 data:NULL];
   });
 }
 

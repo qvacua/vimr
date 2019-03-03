@@ -7,6 +7,8 @@ import Foundation
 
 enum RpcEvent: String, CaseIterable {
 
+  static let prefix = "com.qvacua.vimr.rpc-events"
+
   case makeSessionTemporary = "com.qvacua.vimr.rpc-events.make-session-temporary"
   case maximizeWindow = "com.qvacua.vimr.rpc-events.maximize-window"
   case toggleTools = "com.qvacua.vimr.rpc-events.toggle-tools"
