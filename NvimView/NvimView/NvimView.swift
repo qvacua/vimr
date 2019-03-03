@@ -228,13 +228,13 @@ public class NvimView: NSView,
         switch msg {
 
         case .ready:
-          logger.info("Nvim is ready")
+          self.logger.info("Nvim is ready")
 
         case .initVimError:
           self.eventsSubject.onNext(.initVimError)
 
         case .unknown:
-          logger.error("Unknown message from NvimServer")
+          self.logger.error("Unknown message from NvimServer")
 
         case let .resize(value):
           self.resize(value)
@@ -329,9 +329,9 @@ public class NvimView: NSView,
   }
 
   @IBAction public func debug1(_ sender: Any?) {
-    logger.debug("DEBUG 1 - Start")
+    self.logger.debug("DEBUG 1 - Start")
     // noop
-    logger.debug("DEBUG 1 - End")
+    self.logger.debug("DEBUG 1 - End")
   }
 
   // MARK: - Internal
@@ -385,6 +385,12 @@ public class NvimView: NSView,
     with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
     shouldLogDebug: nil
   )
+
+  let logger = LogContext.fileLogger(
+    as: NvimView.self, with: URL(fileURLWithPath: "/tmp/nvv.log")
+  )
+
+  let stdoutLogger = LogContext.stdoutLogger(as: NvimView.self)
 
   let sourceFileUrls: [URL]
 

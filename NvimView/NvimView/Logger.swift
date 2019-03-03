@@ -5,11 +5,6 @@
 
 import Foundation
 
-let stdoutLogger = LogContext.stdoutLogger(as: "NvimView")
-let logger = LogContext.fileLogger(
-  as: "NvimView", with: URL(fileURLWithPath: "/tmp/nvv.log")
-)
-
 class LogContext {
 
   enum Level: String {

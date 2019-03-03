@@ -267,7 +267,7 @@ final class UGrid: CustomStringConvertible {
   }
 
   func resize(_ size: Size) {
-    logger.debug(size)
+    self.logger.debug(size)
 
     self.size = size
     self.cursorPosition = .zero
@@ -306,7 +306,7 @@ final class UGrid: CustomStringConvertible {
   }
 
   func recomputeFlatIndices(rowStart: Int, rowEndInclusive: Int) {
-    logger.debug("Recomputing flat indices from row \(rowStart)")
+    self.logger.debug("Recomputing flat indices from row \(rowStart)")
 
     var delta = 0
     if rowStart > 0 {
@@ -325,6 +325,10 @@ final class UGrid: CustomStringConvertible {
       }
     }
   }
+
+  private let logger = LogContext.fileLogger(
+    as: NvimView.self, with: URL(fileURLWithPath: "/tmp/nvv.log")
+  )
 }
 
 private let clearString = " "
