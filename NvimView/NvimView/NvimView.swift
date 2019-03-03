@@ -55,7 +55,7 @@ public class NvimView: NSView,
     case scroll
     case cursor(Position)
 
-    case rpcEvent(String, [MessagePack.MessagePackValue])
+    case rpcEvent([MessagePack.MessagePackValue])
     case rpcEventSubscribed
 
     case initVimError

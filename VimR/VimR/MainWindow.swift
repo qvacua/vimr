@@ -285,7 +285,7 @@ class MainWindow: NSObject,
           fileLog.error("Got api error with msg '\(msg)' and error: \(error)")
           break
 
-        case .rpcEvent(let method, let params):
+        case .rpcEvent(let params):
           self.rpcEventAction(params: params)
 
         case .rpcEventSubscribed:

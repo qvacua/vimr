@@ -78,7 +78,7 @@ extension NvimView {
           self.logger.debug("NOTIFICATION: \(method): \(params)")
 
           guard method == NvimView.rpcEventName else { return }
-          self.eventsSubject.onNext(.rpcEvent(method, params))
+          self.eventsSubject.onNext(.rpcEvent(params))
 
         case let .error(_, msg):
           self.logger.debug("MSG ERROR: \(msg)")
