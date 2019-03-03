@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>SNAPSHOT-300</string>
+	<string>SNAPSHOT-301</string>
 	<key>CFBundleVersion</key>
-	<string>300</string>
+	<string>301</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSHumanReadableCopyright</key>
