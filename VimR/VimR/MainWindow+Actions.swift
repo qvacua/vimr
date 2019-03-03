@@ -5,6 +5,95 @@
 
 import Cocoa
 import RxSwift
+import MessagePack
+
+// MARK: - RpcEvent Actions
+extension MainWindow {
+
+  func rpcEventAction(params rawParams: [MessagePackValue]) {
+    guard rawParams.count > 0 else { return }
+
+    guard let strEvent = rawParams[0].stringValue,
+          let event = RpcEvent(rawValue: "\(RpcEvent.prefix).\(strEvent)")
+      else {
+      return
+    }
+    let params = Array(rawParams.suffix(from: 1))
+
+    stdoutLog.debug("\(event): \(params)")
+
+    switch event {
+    case .makeSessionTemporary:
+      self.emit(self.uuidAction(for: .makeSessionTemporary))
+
+    case .maximizeWindow:
+      guard let screen = self.window.screen else { return }
+      self.window.setFrame(screen.frame, display: true)
+
+    case .toggleTools:
+      if params.count == 0 { return }
+
+      let param = params[0].integerValue
+
+      if params.isEmpty || param == 0 {
+        self.toggleAllTools(self)
+      } else if param == -1 {
+        self.hideAllTools()
+      } else if param == 1 {
+        self.showAllTools()
+      }
+
+    case .toggleToolButtons:
+      if params.count == 0 { return }
+
+      let param = params[0].integerValue
+
+      if params.isEmpty || param == 0 {
+        self.toggleToolButtons(self)
+      } else if param == -1 {
+        self.hideToolButtons()
+      } else if param == 1 {
+        self.showToolButtons()
+      }
+
+    case .toggleFullScreen:
+      self.window.toggleFullScreen(self)
+
+    }
+  }
+
+  private func hideToolButtons() {
+    self.workspace.hideToolButtons()
+    self.focusNvimView(self)
+    self.emit(self.uuidAction(
+      for: .toggleToolButtons(self.workspace.isToolButtonsVisible)
+    ))
+  }
+
+  private func showToolButtons() {
+    self.workspace.showToolButtons()
+    self.focusNvimView(self)
+    self.emit(self.uuidAction(
+      for: .toggleToolButtons(self.workspace.isToolButtonsVisible)
+    ))
+  }
+
+  private func hideAllTools() {
+    self.workspace.hideAllTools()
+    self.focusNvimView(self)
+    self.emit(self.uuidAction(
+      for: .toggleAllTools(self.workspace.isAllToolsVisible)
+    ))
+  }
+
+  private func showAllTools() {
+    self.workspace.showAllTools()
+    self.focusNvimView(self)
+    self.emit(self.uuidAction(
+      for: .toggleAllTools(self.workspace.isAllToolsVisible)
+    ))
+  }
+}
 
 // MARK: - File Menu Item Actions
 extension MainWindow {

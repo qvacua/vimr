@@ -88,6 +88,13 @@ extension NvimView {
     }
 
     let cursorRegion = self.cursorRegion(for: self.ugrid.cursorPosition)
+    if cursorRegion.top < 0
+       || cursorRegion.bottom > self.ugrid.size.height - 1
+       || cursorRegion.left < 0
+       || cursorRegion.right > self.ugrid.size.width - 1 {
+      logger.error("\(cursorRegion) vs. \(self.ugrid.size)")
+      return
+    }
     guard let cursorAttrs = self.cellAttributesCollection.attributes(
       of: self.ugrid.cells[cursorPosition.row][cursorPosition.column].attrId
     )?.reversed else {

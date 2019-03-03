@@ -35,6 +35,7 @@ class UiBridge {
     case defaultColorsChanged(MessagePackValue)
     case autoCommandEvent(MessagePackValue)
     case highlightAttrs(MessagePackValue)
+    case rpcEventSubscribed
     case debug1
     case unknown
   }
@@ -123,6 +124,10 @@ class UiBridge {
 
   func resize(width: Int, height: Int) -> Completable {
     return self.sendMessage(msgId: .resize, data: [width, height].data())
+  }
+
+  func notifyReadinessForRpcEvents() -> Completable {
+    return self.sendMessage(msgId: .readyForRpcEvents, data: nil)
   }
 
   func focusGained(_ gained: Bool) -> Completable {
@@ -248,6 +253,9 @@ class UiBridge {
     case .highlightAttrs:
       guard let v = MessagePackUtils.value(from: data) else { return }
       self.streamSubject.onNext(.highlightAttrs(v))
+
+    case .rpcEventSubscribed:
+      self.streamSubject.onNext(.rpcEventSubscribed)
 
     }
   }

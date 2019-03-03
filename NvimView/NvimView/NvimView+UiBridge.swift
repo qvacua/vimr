@@ -119,7 +119,6 @@ extension NvimView {
     self.bridgeLogger.hr()
     try? self.api
       .stop()
-      .andThen(self.bridge.quit())
       .andThen(Completable.create { completable in
         self.eventsSubject.onNext(.neoVimStopped)
         self.eventsSubject.onCompleted()
@@ -127,6 +126,7 @@ extension NvimView {
         completable(.completed)
         return Disposables.create()
       })
+      .andThen(self.bridge.quit())
       .observeOn(MainScheduler.instance)
       .wait()
   }
@@ -140,6 +140,44 @@ extension NvimView {
       return
     }
     let bufferHandle = array[1]
+
+    if event == .vimenter {
+      Completable
+        .empty()
+        .observeOn(SerialDispatchQueueScheduler(qos: .userInitiated))
+        .andThen(
+          Completable.create { completable in
+            self.rpcEventSubscribedCondition.lock()
+            defer { self.rpcEventSubscribedCondition.unlock() }
+
+            while !self.rpcEventSubscribedFlag
+                  && self.rpcEventSubscribedCondition
+                    .wait(until: Date(timeIntervalSinceNow: 5)) {}
+
+            completable(.completed)
+            return Disposables.create()
+          }
+        )
+        .andThen(
+          {
+            let ginitPath = URL(fileURLWithPath: NSHomeDirectory())
+              .appendingPathComponent(".config/nvim/ginit.vim").path
+            let loadGinit = FileManager.default.fileExists(atPath: ginitPath)
+            if loadGinit {
+              return self.api.command(command: "source \(ginitPath)")
+            } else {
+              return .empty()
+            }
+          }()
+        )
+        .andThen(self.bridge.notifyReadinessForRpcEvents())
+        .subscribe(onCompleted: {
+          logger.debug("GUIEnter aucmd fired")
+        })
+        .disposed(by: self.disposeBag)
+
+      return
+    }
 
     #if TRACE
     self.bridgeLogger.trace("\(event) -> \(bufferHandle)")
@@ -200,8 +238,8 @@ extension NvimView {
     #if TRACE
     self.bridgeLogger.trace(
       "row: \(row), startCol: \(startCol), endCol: \(endCol), " +
-        "clearCol: \(clearCol), clearAttr: \(clearAttr), " +
-        "chunk: \(chunk), attrIds: \(attrIds)"
+      "clearCol: \(clearCol), clearAttr: \(clearAttr), " +
+      "chunk: \(chunk), attrIds: \(attrIds)"
     )
     #endif
 
@@ -242,13 +280,13 @@ extension NvimView {
     }
 
     if row == self.markedPosition.row
-         && startCol <= self.markedPosition.column
-         && self.markedPosition.column <= endCol {
+       && startCol <= self.markedPosition.column
+       && self.markedPosition.column <= endCol {
       self.ugrid.markCell(at: self.markedPosition)
     }
 
     let oldRowContainsWideChar = self.ugrid.cells[row][startCol..<endCol]
-      .first(where: { $0.string.isEmpty }) != nil
+                                   .first(where: { $0.string.isEmpty }) != nil
     let newRowContainsWideChar = chunk.first(where: { $0.isEmpty }) != nil
 
     if !oldRowContainsWideChar && !newRowContainsWideChar {
@@ -364,6 +402,15 @@ extension NvimView {
     self.eventsSubject.onNext(.setDirtyStatus(dirty))
   }
 
+  final func rpcEventSubscribed() {
+    self.rpcEventSubscribedCondition.lock()
+    defer { self.rpcEventSubscribedCondition.unlock() }
+    self.rpcEventSubscribedFlag = true
+    self.rpcEventSubscribedCondition.broadcast()
+
+    self.eventsSubject.onNext(.rpcEventSubscribed)
+  }
+
   final func setAttr(with value: MessagePackValue) {
     guard let array = value.arrayValue else { return }
     guard array.count == 6 else { return }
@@ -377,7 +424,7 @@ extension NvimView {
       else {
 
       self.bridgeLogger.error("Could not get highlight attributes from " +
-                                "\(value)")
+                              "\(value)")
       return
     }
     let trait = FontTrait(rawValue: UInt(rawTrait))

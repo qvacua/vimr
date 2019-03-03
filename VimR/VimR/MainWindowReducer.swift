@@ -78,6 +78,9 @@ class MainWindowReducer: ReducerType {
     case let .setTheme(theme):
       state.appearance.theme = Marked(theme)
 
+    case .makeSessionTemporary:
+      state.isTemporarySession = true
+
     default:
       return tuple
 

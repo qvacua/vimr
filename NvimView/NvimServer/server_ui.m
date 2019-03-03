@@ -16,6 +16,7 @@
 #define FileInfo CarbonFileInfo
 #define Boolean CarbonBoolean
 
+#import <nvim/main.h>
 #import <nvim/vim.h>
 #import <nvim/api/vim.h>
 #import <nvim/ui.h>
@@ -72,6 +73,8 @@ static NSInteger _initialHeight = 15;
 
 static msgpack_sbuffer flush_sbuffer;
 static msgpack_packer *flush_packer;
+
+static dispatch_queue_t rpc_queue;
 
 #pragma mark Helper functions
 
@@ -244,6 +247,8 @@ static void server_ui_scheduler(Event event, void *d) {
 static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   msgpack_sbuffer_init(&flush_sbuffer);
   flush_packer = msgpack_packer_new(&flush_sbuffer, msgpack_sbuffer_write);
+
+  rpc_queue = dispatch_queue_create("rpc_queu", NULL);
 
   Loop loop;
   loop_init(&loop, NULL);
@@ -553,6 +558,13 @@ void custom_ui_start(void) {
   ui_bridge_attach(ui, server_ui_main, server_ui_scheduler);
 }
 
+void custom_ui_rpcevent_subscribed() {
+  dispatch_async(rpc_queue, ^{
+    [_neovim_server sendMessageWithId:NvimServerMsgIdRpcEventSubscribed
+                                 data:NULL];
+  });
+}
+
 void custom_ui_autocmds_groups(
     event_T event,
     char_u *fname __unused,
@@ -573,6 +585,8 @@ void custom_ui_autocmds_groups(
     case EVENT_TABENTER:
     case EVENT_TEXTCHANGED:
     case EVENT_TEXTCHANGEDI:
+    case EVENT_VIMENTER:
+    case EVENT_GUIENTER:
       break;
 
     default:
@@ -739,11 +753,36 @@ void neovim_delete_and_input(void **argv) {
   });
 }
 
+static void do_autocmd_guienter() {
+  static bool recursive = false;
+
+  if (recursive) {
+    return;  // disallow recursion
+  }
+  recursive = true;
+  apply_autocmds(EVENT_GUIENTER, NULL, NULL, false, curbuf);
+  recursive = false;
+}
+
+static void guienter_event(void **argv __unused) {
+  do_autocmd_guienter();
+}
+
+static void aucmd_schedule_guienter() {
+  loop_schedule_deferred(&main_loop, event_create(guienter_event, 0));
+}
+
 void neovim_focus_gained(void **argv) {
   work_async(argv, ^(NSData *data) {
     const bool *values = data.bytes;
 
     aucmd_schedule_focusgained(values[0]);
+  });
+}
+
+void neovim_ready_for_rpcevents(void **argv) {
+  work_async(argv, ^(NSData *data) {
+    aucmd_schedule_guienter();
   });
 }
 

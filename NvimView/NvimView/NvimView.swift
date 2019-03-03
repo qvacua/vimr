@@ -6,10 +6,11 @@
 import Cocoa
 import RxNeovimApi
 import RxSwift
+import MessagePack
 
 public class NvimView: NSView,
-  NSUserInterfaceValidations,
-  NSTextInputClient {
+                       NSUserInterfaceValidations,
+                       NSTextInputClient {
 
   // MARK: - Public
   public struct Config {
@@ -18,16 +19,20 @@ public class NvimView: NSView,
     var cwd: URL
     var nvimArgs: [String]?
     var envDict: [String: String]?
+    var sourceFiles: [URL]
 
-    public init(useInteractiveZsh: Bool,
-                cwd: URL,
-                nvimArgs: [String]?,
-                envDict: [String: String]?) {
-
+    public init(
+      useInteractiveZsh: Bool,
+      cwd: URL,
+      nvimArgs: [String]?,
+      envDict: [String: String]?,
+      sourceFiles: [URL]
+    ) {
       self.useInteractiveZsh = useInteractiveZsh
       self.cwd = cwd
       self.nvimArgs = nvimArgs
       self.envDict = envDict
+      self.sourceFiles = sourceFiles
     }
   }
 
@@ -49,6 +54,9 @@ public class NvimView: NSView,
 
     case scroll
     case cursor(Position)
+
+    case rpcEvent(String, [MessagePack.MessagePackValue])
+    case rpcEventSubscribed
 
     case initVimError
 
@@ -95,11 +103,13 @@ public class NvimView: NSView,
 
     public var description: String {
       return "NVV.Theme<" +
-        "fg: \(self.foreground.hex), bg: \(self.background.hex), " +
-        "visual-fg: \(self.visualForeground.hex), visual-bg: \(self.visualBackground.hex)" +
-        ">"
+             "fg: \(self.foreground.hex), bg: \(self.background.hex), " +
+             "visual-fg: \(self.visualForeground.hex), visual-bg: \(self.visualBackground.hex)" +
+             ">"
     }
   }
+
+  public static let rpcEventName = "com.qvacua.NvimView"
 
   public static let minFontSize = CGFloat(4)
   public static let maxFontSize = CGFloat(128)
@@ -202,6 +212,8 @@ public class NvimView: NSView,
     self.scheduler = SerialDispatchQueueScheduler(queue: self.queue,
                                                   internalSerialQueueName: "com.qvacua.NvimView.NvimView")
 
+    self.sourceFileUrls = config.sourceFiles
+
     super.init(frame: .zero)
     self.registerForDraggedTypes([NSPasteboard.PasteboardType(String(kUTTypeFileURL))])
 
@@ -285,6 +297,10 @@ public class NvimView: NSView,
         case let .highlightAttrs(value):
           self.setAttr(with: value)
 
+        case .rpcEventSubscribed:
+          self.rpcEventSubscribed()
+
+
         case .debug1:
           self.debug1(self)
 
@@ -296,10 +312,16 @@ public class NvimView: NSView,
   }
 
   convenience override public init(frame rect: NSRect) {
-    self.init(frame: rect, config: Config(useInteractiveZsh: false,
-                                          cwd: URL(fileURLWithPath: NSHomeDirectory()),
-                                          nvimArgs: nil,
-                                          envDict: nil))
+    self.init(
+      frame: rect,
+      config: Config(
+        useInteractiveZsh: false,
+        cwd: URL(fileURLWithPath: NSHomeDirectory()),
+        nvimArgs: nil,
+        envDict: nil,
+        sourceFiles: []
+      )
+    )
   }
 
   required public init?(coder: NSCoder) {
@@ -363,6 +385,11 @@ public class NvimView: NSView,
     with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
     shouldLogDebug: nil
   )
+
+  let sourceFileUrls: [URL]
+
+  let rpcEventSubscribedCondition = NSCondition()
+  var rpcEventSubscribedFlag = false
 
   // MARK: - Private
   private var _linespacing = NvimView.defaultLinespacing

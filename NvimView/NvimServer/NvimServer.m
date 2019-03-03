@@ -68,6 +68,9 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
     case NvimBridgeMsgIdFocusGained:
       return data_async(data, neovim_focus_gained);
 
+    case NvimBridgeMsgIdReadyForRpcEvents:
+      return data_async(data, neovim_ready_for_rpcevents);
+
     default:
       CFRelease(data);
       return NULL;

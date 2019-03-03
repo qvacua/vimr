@@ -80,7 +80,7 @@ class Logger {
     default: self.name = String(describing: name)
     }
 
-    self.logDateFormatter.dateFormat = "dd HH:mm:SSS"
+    self.logDateFormatter.dateFormat = "dd HH:mm:ss.SSS"
     self.appender = appender
   }
 

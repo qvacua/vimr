@@ -127,8 +127,32 @@ class Workspace: NSView, WorkspaceBarDelegate {
     self.delegate?.moved(tool: tool)
   }
 
+  func hideAllTools() {
+    if self.isAllToolsVisible {
+      self.isAllToolsVisible = false
+    }
+  }
+
+  func showAllTools() {
+    if !self.isAllToolsVisible {
+      self.isAllToolsVisible = true
+    }
+  }
+
   func toggleAllTools() {
     self.isAllToolsVisible = !self.isAllToolsVisible
+  }
+
+  func hideToolButtons() {
+    if self.isToolButtonsVisible {
+      self.isToolButtonsVisible = false
+    }
+  }
+
+  func showToolButtons() {
+    if !self.isToolButtonsVisible {
+      self.isToolButtonsVisible = true
+    }
   }
 
   func toggleToolButtons() {
