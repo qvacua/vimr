@@ -327,7 +327,7 @@ final class UGrid: CustomStringConvertible {
   }
 
   private let logger = LogContext.fileLogger(
-    as: NvimView.self, with: URL(fileURLWithPath: "/tmp/nvv.log")
+    as: UGrid.self, with: URL(fileURLWithPath: "/tmp/nvv.log")
   )
 }
 
