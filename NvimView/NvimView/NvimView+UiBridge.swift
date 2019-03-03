@@ -160,6 +160,18 @@ extension NvimView {
             return Disposables.create()
           }
         )
+        .andThen(
+          {
+            let ginitPath = URL(fileURLWithPath: NSHomeDirectory())
+              .appendingPathComponent(".config/nvim/ginit.vim").path
+            let loadGinit = FileManager.default.fileExists(atPath: ginitPath)
+            if loadGinit {
+              return self.api.command(command: "source \(ginitPath)")
+            } else {
+              return .empty()
+            }
+          }()
+        )
         .andThen(self.bridge.notifyReadinessForRpcEvents())
         .subscribe(onCompleted: {})
         .disposed(by: self.disposeBag)
@@ -226,8 +238,8 @@ extension NvimView {
     #if TRACE
     self.bridgeLogger.trace(
       "row: \(row), startCol: \(startCol), endCol: \(endCol), " +
-        "clearCol: \(clearCol), clearAttr: \(clearAttr), " +
-        "chunk: \(chunk), attrIds: \(attrIds)"
+      "clearCol: \(clearCol), clearAttr: \(clearAttr), " +
+      "chunk: \(chunk), attrIds: \(attrIds)"
     )
     #endif
 
@@ -268,13 +280,13 @@ extension NvimView {
     }
 
     if row == self.markedPosition.row
-         && startCol <= self.markedPosition.column
-         && self.markedPosition.column <= endCol {
+       && startCol <= self.markedPosition.column
+       && self.markedPosition.column <= endCol {
       self.ugrid.markCell(at: self.markedPosition)
     }
 
     let oldRowContainsWideChar = self.ugrid.cells[row][startCol..<endCol]
-      .first(where: { $0.string.isEmpty }) != nil
+                                   .first(where: { $0.string.isEmpty }) != nil
     let newRowContainsWideChar = chunk.first(where: { $0.isEmpty }) != nil
 
     if !oldRowContainsWideChar && !newRowContainsWideChar {
@@ -415,7 +427,7 @@ extension NvimView {
       else {
 
       self.bridgeLogger.error("Could not get highlight attributes from " +
-                                "\(value)")
+                              "\(value)")
       return
     }
     let trait = FontTrait(rawValue: UInt(rawTrait))

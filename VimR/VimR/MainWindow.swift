@@ -133,13 +133,6 @@ class MainWindow: NSObject,
       sourceFileUrls.append(sourceFileUrl)
     }
 
-    let ginitUrl = URL(fileURLWithPath: NSHomeDirectory())
-      .appendingPathComponent(".config/nvim/ginit.vim")
-    let loadGinit = FileManager.default.fileExists(atPath: ginitUrl.path)
-    if loadGinit {
-      sourceFileUrls.append(ginitUrl)
-    }
-
     let neoVimViewConfig = NvimView.Config(
       useInteractiveZsh: state.useInteractiveZsh,
       cwd: state.cwd,
