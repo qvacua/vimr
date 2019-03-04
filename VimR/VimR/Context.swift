@@ -28,6 +28,7 @@ class Context: ReduxContext {
     let httpMiddleware: HttpServerMiddleware = HttpServerMiddleware(port: baseServerUrl.port!)
     let uiRootReducer = UiRootReducer()
     let openQuicklyReducer = OpenQuicklyReducer()
+    let rpcEpic = RpcAppearanceEpic(emitter: self.actionEmitter)
 
     // AppState
     self.actionEmitter.observable
@@ -52,6 +53,7 @@ class Context: ReduxContext {
         middlewares: [
           self.prefMiddleware.mainWindow.apply,
           self.prefMiddleware.apply,
+          rpcEpic.apply,
         ])
       .filter { $0.modified }
       .subscribe(onNext: self.emitAppState)
