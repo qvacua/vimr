@@ -21,11 +21,18 @@ class RpcAppearanceEpic: EpicType {
     return { tuple in
       let result = reduce(tuple)
 
-      guard case .setFont(let font) = tuple.action.payload else {
-        return result
-      }
+      switch tuple.action.payload {
 
-      self.emit(.setFont(font))
+      case .setFont(let font):
+        self.emit(.setFont(font))
+
+      case .setLinespacing(let linespacing):
+        self.emit(.setLinespacing(linespacing))
+
+      default:
+        break
+
+      }
 
       return result
     }

@@ -48,6 +48,7 @@ class MainWindow: NSObject,
 
     // RPC actions
     case setFont(NSFont)
+    case setLinespacing(CGFloat)
   }
 
   enum FocusableView {

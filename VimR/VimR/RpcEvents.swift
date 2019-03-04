@@ -16,4 +16,5 @@ enum RpcEvent: String, CaseIterable {
   case toggleFullScreen = "com.qvacua.vimr.rpc-events.toggle-fullscreen"
 
   case setFont = "com.qvacua.vimr.rpc-events.set-font"
+  case setLinespacing = "com.qvacua.vimr.rpc-events.set-linespacing"
 }

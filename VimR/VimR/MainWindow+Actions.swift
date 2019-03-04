@@ -70,6 +70,12 @@ extension MainWindow {
 
       self.emit(self.uuidAction(for: .setFont(font)))
 
+    case .setLinespacing:
+      guard params.count == 1 else { return }
+      guard let linespacing = params[0].floatValue else { return }
+
+      self.emit(self.uuidAction(for: .setLinespacing(CGFloat(linespacing))))
+
     }
   }
 
