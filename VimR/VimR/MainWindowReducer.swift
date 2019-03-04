@@ -81,6 +81,10 @@ class MainWindowReducer: ReducerType {
     case .makeSessionTemporary:
       state.isTemporarySession = true
 
+      // RPC actions
+    case .setFont(let font):
+      stdoutLog.debug(font)
+
     default:
       return tuple
 
