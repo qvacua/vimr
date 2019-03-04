@@ -14,4 +14,6 @@ enum RpcEvent: String, CaseIterable {
   case toggleTools = "com.qvacua.vimr.rpc-events.toggle-tools"
   case toggleToolButtons = "com.qvacua.vimr.rpc-events.toggle-tool-buttons"
   case toggleFullScreen = "com.qvacua.vimr.rpc-events.toggle-fullscreen"
+
+  case setFont = "com.qvacua.vimr.rpc-events.set-font"
 }

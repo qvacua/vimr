@@ -31,7 +31,7 @@ extension MainWindow {
       self.window.setFrame(screen.frame, display: true)
 
     case .toggleTools:
-      if params.count == 0 { return }
+      guard params.count == 1 else { return }
 
       let param = params[0].integerValue
 
@@ -44,7 +44,7 @@ extension MainWindow {
       }
 
     case .toggleToolButtons:
-      if params.count == 0 { return }
+      guard params.count == 1 else { return }
 
       let param = params[0].integerValue
 
@@ -58,6 +58,17 @@ extension MainWindow {
 
     case .toggleFullScreen:
       self.window.toggleFullScreen(self)
+
+    case .setFont:
+      guard params.count == 2 else { return }
+      guard let fontName = params[0].stringValue,
+            let fontSize = params[1].integerValue,
+            let font = NSFont(name: fontName, size: CGFloat(fontSize))
+        else {
+        return
+      }
+
+      self.emit(self.uuidAction(for: .setFont(font)))
 
     }
   }

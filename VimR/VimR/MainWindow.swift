@@ -45,6 +45,9 @@ class MainWindow: NSObject,
     case setTheme(Theme)
 
     case close
+
+    // RPC actions
+    case setFont(NSFont)
   }
 
   enum FocusableView {
