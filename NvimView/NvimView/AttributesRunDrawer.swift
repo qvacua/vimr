@@ -219,7 +219,7 @@ final class AttributesRunDrawer {
 
   private func updateFontMetrics() {
     self.cellSize = FontUtils.cellSize(
-      of: self.font, linespacing: linespacing
+      of: self.font, linespacing: self.linespacing
     )
     self.baselineOffset = self.cellSize.height - CTFontGetAscent(self.font)
     self.descent = CTFontGetDescent(font)

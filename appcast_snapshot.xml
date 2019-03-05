@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-300</title>
+      <title>SNAPSHOT-302</title>
       <description><![CDATA[
     <ul>
-<li>GH-314: You can customize the key shortcut for all menu items in the <em>Shortcut</em> preferences pane.</li>
+<li>GH-506: Set font, size and linespacing via <code>~/.config/nvim/ginit.vim</code>.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/300
+        https://github.com/qvacua/vimr/releases/tag/snapshot/302
       </releaseNotesLink>
-      <pubDate>2019-02-28T01:35:36.184805</pubDate>
+      <pubDate>2019-03-05T09:14:18.762884</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/300/VimR-SNAPSHOT-300.tar.bz2"
-                 sparkle:version="300"
-                 sparkle:shortVersionString="SNAPSHOT-300"
-                 sparkle:dsaSignature="MC0CFQDSCAZCOCs8Gdg/gdESlyjqXMdOagIUGuj2Qduyt10abGSs5wRuY4hj8a4="
-                 length="14887427"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/302/VimR-SNAPSHOT-302.tar.bz2"
+                 sparkle:version="302"
+                 sparkle:shortVersionString="SNAPSHOT-302"
+                 sparkle:dsaSignature="MC0CFQC2CIhh9s/ypv/buT4NeP2+Un5IYAIUQXfPdSh2dbROxYJyZ4zx808ylV0="
+                 length="15102917"
                  type="application/octet-stream"/>
     </item>
   </channel>

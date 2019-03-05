@@ -8,15 +8,16 @@
 #import "Logging.h"
 #import "CocoaCategories.h"
 
-// FileInfo and Boolean are #defined by Carbon and NeoVim: Since we don't need the Carbon versions of them, we rename
-// them.
+// FileInfo and Boolean are #defined by Carbon and NeoVim.
+// Since we don't need the Carbon versions of them, we rename them.
 #define FileInfo CarbonFileInfo
 #define Boolean CarbonBoolean
 
 #import <nvim/main.h>
 
 
-// When #define'd you can execute the NvimServer binary and neovim will be started:
+// When #define'd you can execute the NvimServer binary
+// and neovim will be started:
 // $ ./NvimServer local remote
 #undef DEBUG_NEOVIM_SERVER_STANDALONE
 //#define DEBUG_NEOVIM_SERVER_STANDALONE
@@ -36,8 +37,12 @@ static CFDataRef data_async(CFDataRef data, argv_callback cb) {
   return NULL;
 }
 
-static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFDataRef data, void *info) {
-  CFRetain(data); // release in the loop callbacks! (or in the case clause when not passed to the callback)
+static CFDataRef local_server_callback(
+    CFMessagePortRef local, SInt32 msgid, CFDataRef data, void *info
+) {
+  // release in the loop callbacks!
+  // (or in the case clause when not passed to the callback)
+  CFRetain(data);
 
   switch (msgid) {
 
@@ -108,12 +113,19 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   _remoteServerName = remoteServerName;
   _nvimArgs = nvimArgs;
 
-  _localServerThread = [[NSThread alloc] initWithTarget:self selector:@selector(runLocalServer) object:nil];
+  _localServerThread = [
+      [NSThread alloc] initWithTarget:self
+                             selector:@selector(runLocalServer)
+                               object:nil
+  ];
   _localServerThread.name = localServerName;
   [_localServerThread start];
 
 #ifndef DEBUG_NEOVIM_SERVER_STANDALONE
-  _remoteServerPort = CFMessagePortCreateRemote(kCFAllocatorDefault, (__bridge CFStringRef) _remoteServerName);
+  _remoteServerPort = CFMessagePortCreateRemote(
+      kCFAllocatorDefault,
+      (__bridge CFStringRef) _remoteServerName
+  );
 #endif
 
   return self;
@@ -157,7 +169,12 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
   }
 
   _localServerRunLoop = CFRunLoopGetCurrent();
-  CFRunLoopSourceRef runLoopSrc = CFMessagePortCreateRunLoopSource(kCFAllocatorDefault, _localServerPort, 0);
+  CFRunLoopSourceRef runLoopSrc
+      = CFMessagePortCreateRunLoopSource(
+          kCFAllocatorDefault,
+          _localServerPort,
+          0
+      );
   CFRunLoopAddSource(_localServerRunLoop, runLoopSrc, kCFRunLoopCommonModes);
   CFRelease(runLoopSrc);
 
@@ -178,17 +195,21 @@ static CFDataRef local_server_callback(CFMessagePortRef local, SInt32 msgid, CFD
 #endif
 
   if (_remoteServerPort == NULL) {
-    WLOG("Remote server is null: The msg (%lu) could not be sent.", (unsigned long) msgid);
+    WLOG("Remote server is null: The msg (%lu) could not be sent.",
+        (unsigned long) msgid);
     return;
   }
 
-  SInt32 responseCode = CFMessagePortSendRequest(_remoteServerPort, msgid, data, qTimeout, qTimeout, NULL, NULL);
+  SInt32 responseCode = CFMessagePortSendRequest(
+      _remoteServerPort, msgid, data, qTimeout, qTimeout, NULL, NULL
+  );
 
   if (responseCode == kCFMessagePortSuccess) {
     return;
   }
 
-  WLOG("The msg (%lu) could not be sent: %d", (unsigned long) msgid, responseCode);
+  WLOG("The msg (%lu) could not be sent: %d",
+      (unsigned long) msgid, responseCode);
 }
 
 - (void)notifyReadiness {

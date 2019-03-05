@@ -92,14 +92,14 @@ extension NvimView {
        || cursorRegion.bottom > self.ugrid.size.height - 1
        || cursorRegion.left < 0
        || cursorRegion.right > self.ugrid.size.width - 1 {
-      logger.error("\(cursorRegion) vs. \(self.ugrid.size)")
+      self.logger.error("\(cursorRegion) vs. \(self.ugrid.size)")
       return
     }
     guard let cursorAttrs = self.cellAttributesCollection.attributes(
       of: self.ugrid.cells[cursorPosition.row][cursorPosition.column].attrId
     )?.reversed else {
-      stdoutLogger.error("Could not get the attributes" +
-                           " at cursor: \(cursorPosition)")
+      self.stdoutLogger.error("Could not get the attributes" +
+                              " at cursor: \(cursorPosition)")
       return
     }
 
@@ -205,9 +205,9 @@ extension NvimView {
                   )
               else {
               // GH-666: FIXME: correct error handling
-              logger.error("row: \(row), range: \(range): " +
-                             "Could not get CellAttributes with ID " +
-                             "\(String(describing: cells.first?.attrId))")
+              self.logger.error("row: \(row), range: \(range): " +
+                                "Could not get CellAttributes with ID " +
+                                "\(String(describing: cells.first?.attrId))")
               return nil
             }
 

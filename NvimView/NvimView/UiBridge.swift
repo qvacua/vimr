@@ -61,13 +61,13 @@ class UiBridge {
 
     if let envDict = config.envDict {
       self.envDict = envDict
-      logger.debug("using envs from vimr: \(envDict)")
+      self.logger.debug("using envs from vimr: \(envDict)")
     } else {
       let selfEnv = ProcessInfo.processInfo.environment
       let shellUrl = URL(fileURLWithPath: selfEnv["SHELL"] ?? "/bin/bash")
       let interactiveMode = shellUrl.lastPathComponent == "zsh" && !config.useInteractiveZsh ? false : true
       self.envDict = ProcessUtils.envVars(of: shellUrl, usingInteractiveMode: interactiveMode)
-      logger.debug("using envs from login shell: \(self.envDict)")
+      self.logger.debug("using envs from login shell: \(self.envDict)")
     }
 
     self.queue = queue
@@ -299,7 +299,7 @@ class UiBridge {
     var env = self.envDict
     env["NVIM_LISTEN_ADDRESS"] = listenAddress.path
 
-    stdoutLogger.debug("listen addr: \(listenAddress.path)")
+    self.stdoutLogger.debug("listen addr: \(listenAddress.path)")
 
     let outPipe = Pipe()
     let errorPipe = Pipe()
@@ -326,6 +326,7 @@ class UiBridge {
   }
 
   private let logger = LogContext.fileLogger(as: UiBridge.self, with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"))
+  private let stdoutLogger = LogContext.stdoutLogger(as: UiBridge.self)
 
   private let uuid: UUID
 

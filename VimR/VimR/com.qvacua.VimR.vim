@@ -28,3 +28,13 @@ function! s:VimRToggleFullscreen() abort
 	call rpcnotify(0, 'com.qvacua.NvimView', 'toggle-fullscreen')
 endfunction
 command! -nargs=0 VimRToggleFullscreen call s:VimRToggleFullscreen(<args>)
+
+function! s:VimRSetFontAndSize(font, size) abort
+	call rpcnotify(0, 'com.qvacua.NvimView', 'set-font', a:font, a:size)
+endfunction
+command! -nargs=* VimRSetFontAndSize call s:VimRSetFontAndSize(<args>)
+
+function! s:VimRSetLinespacing(linespacing) abort
+	call rpcnotify(0, 'com.qvacua.NvimView', 'set-linespacing', a:linespacing)
+endfunction
+command! -nargs=1 VimRSetLinespacing call s:VimRSetLinespacing(<args>)

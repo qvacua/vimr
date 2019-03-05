@@ -80,12 +80,14 @@
 		1929BDC69A5F9D1661423488 /* ShortcutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF230875DED6CD7AB3EB /* ShortcutItem.swift */; };
 		1929BDFDBDA7180D02ACB37E /* RxSwiftCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6C215ACCBE12672A8D7 /* RxSwiftCommonsTest.swift */; };
 		1929BE0DAEE9664C5BCFA211 /* States.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB6608B4F0E037CA0F4C /* States.swift */; };
+		1929BE0EB11D6BBC46D448D2 /* RpcAppearanceEpic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B230EE8F1428980988F0 /* RpcAppearanceEpic.swift */; };
 		1929BE0F64A6CE5BCE2A5092 /* MainWindow+Delegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B714EB137AE448CE8ABD /* MainWindow+Delegates.swift */; };
 		1929BE2F3E0182CC51F2763A /* ThemedTableSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD2CA8DD198A6BCDBCB7 /* ThemedTableSubviews.swift */; };
 		1929BEAE0592096BC1191B67 /* PrefPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B07A4A9209C88380E015 /* PrefPane.swift */; };
 		1929BEDE1BE950EDA9497363 /* GeneralPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB55946DAEBF55D24048 /* GeneralPref.swift */; };
 		1929BEFEABA0448306CDB6D4 /* FileItemIgnorePatternTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBC84557C8351EC6183E /* FileItemIgnorePatternTest.swift */; };
 		1929BF03FD6465F289AA80B2 /* ToolsPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB2AD21A10A0ECA66A5E /* ToolsPref.swift */; };
+		1929BF3253594E5B1908C6CE /* RpcAppearanceEpic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B230EE8F1428980988F0 /* RpcAppearanceEpic.swift */; };
 		1929BF4FF30D9A9DE82C3052 /* FileUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8042AC566CDF6C998A3 /* FileUtilsTest.swift */; };
 		1929BFC70581084B5CE04A5B /* MatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFE179BCA3C75A13D71B /* MatcherTests.swift */; };
 		1929BFDE22D155F7C4B19E96 /* HtmlPreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B85023B042C485409CE1 /* HtmlPreviewTool.swift */; };
@@ -312,6 +314,7 @@
 		1929B14A5949FB64C4B2646F /* KeysPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeysPref.swift; sourceTree = "<group>"; };
 		1929B1558455B3A74D93EF2A /* OpenQuicklyFileViewRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyFileViewRow.swift; sourceTree = "<group>"; };
 		1929B1DC584C89C477E83FA2 /* HttpServerMiddleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServerMiddleware.swift; sourceTree = "<group>"; };
+		1929B230EE8F1428980988F0 /* RpcAppearanceEpic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RpcAppearanceEpic.swift; sourceTree = "<group>"; };
 		1929B34FC23D805A8B29E8F7 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		1929B364460D86F17E80943C /* PrefMiddleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefMiddleware.swift; sourceTree = "<group>"; };
 		1929B365A6434354B568B04F /* FileMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileMonitor.swift; sourceTree = "<group>"; };
@@ -627,6 +630,7 @@
 				1929B5E773BDB3B4EE9D00C1 /* Reducers */,
 				1929BFA93DC859DD76C46192 /* Middlewares */,
 				1929BFC0A5A9C6DB09BE1368 /* Types.swift */,
+				1929BE4A67D96BD8BD8168C3 /* Epics */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -679,6 +683,14 @@
 				1929BDC3F82CB4CB4FE56D1B /* ImageAndTextTableCell.swift */,
 			);
 			name = "Open Quickly";
+			sourceTree = "<group>";
+		};
+		1929BE4A67D96BD8BD8168C3 /* Epics */ = {
+			isa = PBXGroup;
+			children = (
+				1929B230EE8F1428980988F0 /* RpcAppearanceEpic.swift */,
+			);
+			name = Epics;
 			sourceTree = "<group>";
 		};
 		1929BFA93DC859DD76C46192 /* Middlewares */ = {
@@ -1191,6 +1203,7 @@
 				1929B2D56C4652E251C23AD4 /* DefaultShortcuts.swift in Sources */,
 				1929B0C7150100A84FBDB8BF /* ShortcutItem.swift in Sources */,
 				1929B250DB3FB395A700FE8C /* RpcEvents.swift in Sources */,
+				1929BF3253594E5B1908C6CE /* RpcAppearanceEpic.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1226,6 +1239,7 @@
 				1929B0244BD7111E168726CF /* DefaultShortcuts.swift in Sources */,
 				1929BDC69A5F9D1661423488 /* ShortcutItem.swift in Sources */,
 				1929B489A51FD5B13888A00C /* RpcEvents.swift in Sources */,
+				1929BE0EB11D6BBC46D448D2 /* RpcAppearanceEpic.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1320,7 +1334,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 301;
+				CURRENT_PROJECT_VERSION = 302;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1378,7 +1392,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 301;
+				CURRENT_PROJECT_VERSION = 302;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

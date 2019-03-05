@@ -45,6 +45,10 @@ class MainWindow: NSObject,
     case setTheme(Theme)
 
     case close
+
+    // RPC actions
+    case setFont(NSFont)
+    case setLinespacing(CGFloat)
   }
 
   enum FocusableView {
@@ -285,7 +289,7 @@ class MainWindow: NSObject,
           fileLog.error("Got api error with msg '\(msg)' and error: \(error)")
           break
 
-        case .rpcEvent(let method, let params):
+        case .rpcEvent(let params):
           self.rpcEventAction(params: params)
 
         case .rpcEventSubscribed:

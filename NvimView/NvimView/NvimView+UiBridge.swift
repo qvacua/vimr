@@ -172,7 +172,7 @@ extension NvimView {
         )
         .andThen(self.bridge.notifyReadinessForRpcEvents())
         .subscribe(onCompleted: {
-          logger.debug("GUIEnter aucmd fired")
+          self.logger.debug("GUIEnter aucmd fired")
         })
         .disposed(by: self.disposeBag)
 
@@ -216,7 +216,7 @@ extension NvimView {
 
   private func doRawLine(data: [MessagePackValue]) -> (Bool, Int) {
     guard data.count == 7 else {
-      stdoutLogger.error(
+      self.stdoutLogger.error(
         "Data has wrong number of elements: \(data.count) instead of 7"
       )
       return (false, Int.max)
@@ -231,7 +231,7 @@ extension NvimView {
           let attrIds = data[6].arrayValue?.compactMap({ $0.intValue })
       else {
 
-      stdoutLogger.error("Values could not be read from: \(data)")
+      self.stdoutLogger.error("Values could not be read from: \(data)")
       return (false, Int.max)
     }
 
