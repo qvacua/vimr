@@ -263,6 +263,7 @@ extension MainWindow {
 
     var trackpadScrollResistance = 5.0
     var useLiveResize = false
+    var drawsParallel = false
 
     var isTemporarySession = false
 
@@ -308,6 +309,7 @@ extension MainWindow {
       case trackpadScrollResistance = "trackpad-scroll-resistance"
       case useInteractiveZsh = "use-interactive-zsh"
       case useLiveResize = "use-live-resize"
+      case drawsParallel = "draws-parallel"
       case isShowHidden = "is-show-hidden"
 
       case appearance = "appearance"
@@ -326,6 +328,7 @@ extension MainWindow {
       self.trackpadScrollResistance = try container.decode(forKey: .trackpadScrollResistance,
                                                            default: State.default.trackpadScrollResistance)
       self.useLiveResize = try container.decode(forKey: .useLiveResize, default: State.default.useLiveResize)
+      self.drawsParallel = try container.decode(forKey: .drawsParallel, default: State.default.drawsParallel)
       if let frameRawValue = try container.decodeIfPresent(String.self, forKey: .frame) {
         self.frame = NSRectFromString(frameRawValue)
       } else {
@@ -380,6 +383,7 @@ extension MainWindow {
       try container.encode(NSStringFromRect(self.frame), forKey: .frame)
       try container.encode(self.trackpadScrollResistance, forKey: .trackpadScrollResistance)
       try container.encode(self.useLiveResize, forKey: .useLiveResize)
+      try container.encode(self.drawsParallel, forKey: .drawsParallel)
       try container.encode(self.isLeftOptionMeta, forKey: .isLeftOptionMeta)
       try container.encode(self.isRightOptionMeta, forKey: .isRightOptionMeta)
       try container.encode(self.useInteractiveZsh, forKey: .useInteractiveZsh)

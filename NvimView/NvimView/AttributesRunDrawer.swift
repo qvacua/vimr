@@ -20,6 +20,8 @@ final class AttributesRunDrawer {
   }
 
   var usesLigatures: Bool
+  var drawsParallel = false
+
   private(set) var cellSize: CGSize = .zero
   private(set) var baselineOffset: CGFloat = 0
   private(set) var descent: CGFloat = 0
@@ -40,15 +42,11 @@ final class AttributesRunDrawer {
     offset: CGPoint,
     `in` context: CGContext
   ) {
-    #if DEBUG
-    self.drawByParallelComputation(
-      attrsRuns,
-      defaultAttributes: defaultAttributes,
-      offset: offset,
-      in: context
-    )
-    #else
-    let runs = attrsRuns.map { self.fontGlyphRuns(from: $0, offset: offset) }
+    let runs = self.drawsParallel ?
+      attrsRuns.parallelMap(chunkSize: 50) { run in
+        self.fontGlyphRuns(from: run, offset: offset)
+      }
+      : attrsRuns.map { self.fontGlyphRuns(from: $0, offset: offset) }
 
     for i in 0..<attrsRuns.count {
       self.draw(
@@ -58,8 +56,9 @@ final class AttributesRunDrawer {
         in: context
       )
     }
-    #endif
   }
+
+  private let typesetter = Typesetter()
 
   private func draw(
     _ run: AttributesRun,
@@ -144,8 +143,6 @@ final class AttributesRunDrawer {
     context.strokePath()
   }
 
-  private let typesetter = Typesetter()
-
   private func draw(
     backgroundFor run: AttributesRun,
     with defaultAttributes: CellAttributes,
@@ -194,27 +191,6 @@ final class AttributesRunDrawer {
     )
 
     return fontGlyphRuns
-  }
-
-  private func drawByParallelComputation(
-    _ attrsRuns: [AttributesRun],
-    defaultAttributes: CellAttributes,
-    offset: CGPoint,
-    `in` context: CGContext
-  ) {
-    var result = Array(repeating: [FontGlyphRun](), count: attrsRuns.count)
-    DispatchQueue.concurrentPerform(iterations: attrsRuns.count) { i in
-      result[i] = self.fontGlyphRuns(from: attrsRuns[i], offset: offset)
-    }
-
-    attrsRuns.enumerated().forEach { (i, attrsRun) in
-      self.draw(
-        attrsRun,
-        fontGlyphRuns: result[i],
-        defaultAttributes: defaultAttributes,
-        in: context
-      )
-    }
   }
 
   private func updateFontMetrics() {

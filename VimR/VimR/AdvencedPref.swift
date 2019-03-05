@@ -17,6 +17,7 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     case setUseSnapshotUpdate(Bool)
     case setTrackpadScrollResistance(Double)
     case setUseLiveResize(Bool)
+    case setDrawsParallel(Bool)
   }
 
   override var displayName: String {
@@ -34,6 +35,7 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.useSnapshotUpdate = state.useSnapshotUpdate
     self.sensitivity = 1 / state.mainWindowTemplate.trackpadScrollResistance
     self.useLiveResize = state.mainWindowTemplate.useLiveResize
+    self.drawsParallel = state.mainWindowTemplate.drawsParallel
 
     super.init(frame: .zero)
 
@@ -63,11 +65,13 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
   private var useInteractiveZsh: Bool
   private var useSnapshotUpdate: Bool
   private var useLiveResize: Bool
+  private var drawsParallel: Bool
   private var sensitivity: Double
 
   private let useInteractiveZshCheckbox = NSButton(forAutoLayout: ())
   private let useSnapshotUpdateCheckbox = NSButton(forAutoLayout: ())
   private let useLiveResizeCheckbox = NSButton(forAutoLayout: ())
+  private let drawsParallelCheckbox = NSButton(forAutoLayout: ())
   private let sensitivitySlider = NSSlider(forAutoLayout: ())
 
   required init?(coder: NSCoder) {
@@ -78,6 +82,7 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.useSnapshotUpdateCheckbox.boolState = self.useSnapshotUpdate
     self.useInteractiveZshCheckbox.boolState = self.useInteractiveZsh
     self.useLiveResizeCheckbox.boolState = self.useLiveResize
+    self.drawsParallelCheckbox.boolState = self.drawsParallel
 
     // We don't update the value of the NSSlider since we don't know when events are fired.
   }
@@ -108,7 +113,7 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     """)
 
     let useLiveResize = self.useLiveResizeCheckbox
-    self.configureCheckbox(button: self.useLiveResizeCheckbox,
+    self.configureCheckbox(button: useLiveResize,
                            title: "Use Live Window Resizing",
                            action: #selector(AdvancedPref.useLiveResizeAction(_:)))
 
@@ -116,6 +121,18 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
       The Live Resizing is yet experimental. You may experience some issues.
       If you do, please report them at [GitHub](https://github.com/qvacua/vimr/issues).
     """)
+
+    let drawsParallelBox = self.drawsParallelCheckbox
+    self.configureCheckbox(button: drawsParallelBox,
+                           title: "Use Concurrent Rendering",
+                           action: #selector(AdvancedPref.drawParallelAction(_:)))
+
+    let drawsParallelInfo = self.infoTextField(
+      markdown: """
+                VimR can compute the glyphs concurrently. This will result in faster rendering,
+                but also in higher CPU usage when scrolling very fast.
+                """
+    )
 
     let sensitivityTitle = self.titleTextField(title: "Scroll Sensitivity:")
     let sensitivity = self.sensitivitySlider
@@ -142,6 +159,8 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.addSubview(sensitivityInfo)
     self.addSubview(useLiveResize)
     self.addSubview(useLiveResizeInfo)
+    self.addSubview(drawsParallelBox)
+    self.addSubview(drawsParallelInfo)
 
     paneTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 18)
     paneTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
@@ -165,7 +184,14 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     useLiveResizeInfo.autoPinEdge(.left, to: .left, of: useLiveResize)
     useLiveResizeInfo.autoSetDimension(.width, toSize: 300)
 
-    useSnapshotUpdate.autoPinEdge(.top, to: .bottom, of: useLiveResizeInfo, withOffset: 18)
+    drawsParallelBox.autoPinEdge(.top, to: .bottom, of: useLiveResizeInfo, withOffset: 18)
+    drawsParallelBox.autoPinEdge(.left, to: .right, of: sensitivityTitle, withOffset: 5)
+
+    drawsParallelInfo.autoPinEdge(.top, to: .bottom, of: drawsParallelBox, withOffset: 5)
+    drawsParallelInfo.autoPinEdge(.left, to: .left, of: drawsParallelBox)
+    drawsParallelInfo.autoSetDimension(.width, toSize: 300)
+
+    useSnapshotUpdate.autoPinEdge(.top, to: .bottom, of: drawsParallelInfo, withOffset: 18)
     useSnapshotUpdate.autoPinEdge(.left, to: .right, of: sensitivityTitle, withOffset: 5)
 
     useSnapshotUpdateInfo.autoPinEdge(.top, to: .bottom, of: useSnapshotUpdate, withOffset: 5)
@@ -186,6 +212,10 @@ extension AdvancedPref {
 
   @objc func useLiveResizeAction(_ sender: NSButton) {
     self.emit(.setUseLiveResize(sender.boolState))
+  }
+
+  @objc func drawParallelAction(_ sender: NSButton) {
+    self.emit(.setDrawsParallel(sender.boolState))
   }
 
   @objc func sensitivitySliderAction(_ sender: NSSlider) {
