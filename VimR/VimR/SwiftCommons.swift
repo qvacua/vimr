@@ -21,42 +21,6 @@ extension String {
   }
 }
 
-extension Array {
-
-  /// Concurrent and chunked version of `Array.map`.
-  ///
-  /// - parameters:
-  ///   - chunk: Batch size; defaults to `100`.
-  ///   - queue: Defaults to `dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)`.
-  ///   - transform: The transform function.
-  /// - returns: Transformed array of `self`.
-  func concurrentChunkMap<R>(
-    _ chunk: Int = 100,
-    queue: DispatchQueue = .global(qos: .userInitiated),
-    transform: (Element) -> R
-  ) -> [R] {
-    let count = self.count
-
-    let chunkedCount = Int(ceil(Float(count) / Float(chunk)))
-    var result: [[R]] = []
-
-    var spinLock = OS_SPINLOCK_INIT
-
-    DispatchQueue.concurrentPerform(iterations: chunkedCount) { idx in
-      let startIndex = Swift.min(idx * chunk, count)
-      let endIndex = Swift.min(startIndex + chunk, count)
-
-      let mappedChunk = self[startIndex..<endIndex].map(transform)
-
-      OSSpinLockLock(&spinLock)
-      result.append(mappedChunk)
-      OSSpinLockUnlock(&spinLock)
-    }
-
-    return result.flatMap { $0 }
-  }
-}
-
 extension Array where Element: Equatable {
 
   func removingDuplicatesPreservingFromBeginning() -> [Element] {

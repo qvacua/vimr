@@ -16,22 +16,6 @@ extension Array where Element: Hashable {
 
 extension RandomAccessCollection where Index == Int {
 
-  /// Does not retain the order of elements.
-  func parallelMap<T>(_ transform: @escaping (Element) -> T) -> [T] {
-    var result = Array<T>()
-    result.reserveCapacity(self.count)
-
-    var lock = OS_SPINLOCK_INIT
-    DispatchQueue.concurrentPerform(iterations: self.count) { i in
-      let mapped = transform(self[self.startIndex + i])
-      OSSpinLockLock(&lock)
-      result.append(mapped)
-      OSSpinLockUnlock(&lock)
-    }
-
-    return result
-  }
-
   func groupedRanges<T: Equatable>(
     with marker: (Index, Element) -> T
   ) -> [CountableClosedRange<Index>] {
