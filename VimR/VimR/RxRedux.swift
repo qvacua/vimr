@@ -95,6 +95,13 @@ extension MiddlewareType {
   }
 }
 
+protocol EpicType: MiddlewareType {
+
+  associatedtype EmitActionType
+
+  init(emitter: ActionEmitter)
+}
+
 protocol UiComponent {
 
   associatedtype StateType

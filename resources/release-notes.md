@@ -1,4 +1,13 @@
-# 0.25.0-???
+# 0.26.0-???
+
+* GH-314: You can customize the key shortcut for all menu items in the *Shortcut* preferences pane.
+* GH-501: Add key shortcuts to toggle the Buffer List, Markdown Preview, and HTML Preview tools.
+* GH-649: Add commands that can control some of GUI elements.
+* GH-506: Set font, size and linespacing via `~/.config/nvim/ginit.vim`.
+* Draw the disclosure triangle in appropriate color of the current color scheme (and improve handling of changes of `cwd` in the file browser).
+* ...
+
+# 0.25.0-297
 
 * Neovim 0.3.4
 * GH-625: `vimr --cur-env` will pass the current environment variables to the new neovim process. This will result in `virtualenv` support.

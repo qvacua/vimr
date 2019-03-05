@@ -38,9 +38,9 @@ struct AppState: Codable {
   var preferencesOpen = Marked(false)
 
   var mainWindowTemplate = MainWindow.State.default
-  var currentMainWindowUuid: String?
+  var currentMainWindowUuid: UUID?
 
-  var mainWindows: [String: MainWindow.State] = [:]
+  var mainWindows: [UUID: MainWindow.State] = [:]
 
   var openQuickly = OpenQuicklyWindow.State.default
 
@@ -264,8 +264,10 @@ extension MainWindow {
     var trackpadScrollResistance = 5.0
     var useLiveResize = false
 
+    var isTemporarySession = false
+
     // neovim
-    var uuid = UUID().uuidString
+    var uuid = UUID()
     var currentBuffer: NvimView.Buffer?
     var buffers = [NvimView.Buffer]()
     var cwd = FileUtils.userHomeUrl

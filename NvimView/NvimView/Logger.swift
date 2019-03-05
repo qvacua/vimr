@@ -5,11 +5,6 @@
 
 import Foundation
 
-let stdoutLogger = LogContext.stdoutLogger(as: "NvimView")
-let logger = LogContext.fileLogger(
-  as: "NvimView", with: URL(fileURLWithPath: "/tmp/nvv.log")
-)
-
 class LogContext {
 
   enum Level: String {
@@ -86,7 +81,7 @@ class Logger {
     default: self.name = String(describing: name)
     }
 
-    self.logDateFormatter.dateFormat = "dd HH:mm:SSS"
+    self.logDateFormatter.dateFormat = "dd HH:mm:ss.SSS"
     self.appender = appender
   }
 

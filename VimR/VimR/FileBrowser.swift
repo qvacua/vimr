@@ -67,7 +67,7 @@ class FileBrowser: NSView,
   private let emit: (UuidAction<Action>) -> Void
   private let disposeBag = DisposeBag()
 
-  private let uuid: String
+  private let uuid: UUID
 
   private var currentBufferUrl: URL?
 
@@ -181,7 +181,9 @@ extension FileBrowser {
       return
     }
 
+    #if NOPE
     self.fileView.select(url)
+    #endif
   }
 
   @objc func refreshAction(_ sender: Any?) {

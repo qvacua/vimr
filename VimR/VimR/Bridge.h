@@ -3,5 +3,5 @@
  * See LICENSE
  */
 
-#import <NvimView/NvimView.h>
+#import <NvimView/SharedTypes.h>
 #import "NetUtils.h"

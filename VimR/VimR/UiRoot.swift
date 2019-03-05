@@ -79,8 +79,8 @@ class UiRoot: UiComponent {
   private let openQuicklyWindow: OpenQuicklyWindow
   private let prefWindow: PrefWindow
 
-  private var mainWindows = [String: MainWindow]()
-  private var subjectForMainWindows = [String: CompletableSubject<MainWindow.State>]()
+  private var mainWindows = [UUID: MainWindow]()
+  private var subjectForMainWindows = [UUID: CompletableSubject<MainWindow.State>]()
 
   private func newMainWindow(with state: MainWindow.State) -> MainWindow {
     let subject = self.source.mapOmittingNil { $0.mainWindows[state.uuid] }.completableSubject()
@@ -89,7 +89,7 @@ class UiRoot: UiComponent {
     return MainWindow(source: subject.asObservable(), emitter: self.emitter, state: state)
   }
 
-  private func removeMainWindow(with uuid: String) {
+  private func removeMainWindow(with uuid: UUID) {
     self.subjectForMainWindows[uuid]?.onCompleted()
 
     self.subjectForMainWindows.removeValue(forKey: uuid)

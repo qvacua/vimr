@@ -18,9 +18,14 @@ NvimServer *_neovim_server;
 static void observe_parent_termination() {
   pid_t parentPID = getppid();
 
-  dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+  dispatch_queue_t queue = dispatch_get_global_queue(
+      DISPATCH_QUEUE_PRIORITY_DEFAULT, 0
+  );
   dispatch_source_t source = dispatch_source_create(
-      DISPATCH_SOURCE_TYPE_PROC, (uintptr_t) parentPID, DISPATCH_PROC_EXIT, queue
+      DISPATCH_SOURCE_TYPE_PROC,
+      (uintptr_t) parentPID,
+      DISPATCH_PROC_EXIT,
+      queue
   );
 
   if (source == NULL) {
@@ -45,13 +50,17 @@ int main(int argc, const char *argv[]) {
     NSArray<NSString *> *arguments = [NSProcessInfo processInfo].arguments;
     NSString *remoteServerName = arguments[1];
     NSString *localServerName = arguments[2];
-    NSArray<NSString *> *nvimArgs = argc > 3 ? [arguments subarrayWithRange:NSMakeRange(3, (NSUInteger) (argc - 3))]
-                                             : nil;
+    NSArray<NSString *> *nvimArgs = argc > 3
+        ? [arguments subarrayWithRange:NSMakeRange(3, (NSUInteger) (argc - 3))]
+        : nil;
 
-    _neovim_server = [[NvimServer alloc] initWithLocalServerName:localServerName
-                                                remoteServerName:remoteServerName
-                                                        nvimArgs:nvimArgs];
-    DLOG("Started neovim server '%s' with args '%@' and connected it with the remote agent '%s'.",
+    _neovim_server = [
+        [NvimServer alloc] initWithLocalServerName:localServerName
+                                  remoteServerName:remoteServerName
+                                          nvimArgs:nvimArgs
+    ];
+    DLOG("Started neovim server '%s' with args '%@'"
+         " and connected it with the remote agent '%s'.",
         localServerName.cstr, nvimArgs, remoteServerName.cstr);
 
     [_neovim_server notifyReadiness];

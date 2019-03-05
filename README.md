@@ -5,7 +5,7 @@ VimR — Neovim Refined
 
 [Download](https://github.com/qvacua/vimr/releases) • <http://vimr.org>
 
-[![Bountysource](https://www.bountysource.com/badge/team?team_id=933&style=raised)](https://www.bountysource.com/teams/vimr?utm_source=VimR%20%E2%80%94%20Vim%20Refined&utm_medium=shield&utm_campaign=raised) [![Chat at https://gitter.im/vimr/vimr](https://badges.gitter.im/vimr/vimr.svg)](https://gitter.im/vimr/vimr?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Travis builds](https://travis-ci.org/qvacua/vimr.svg?branch=develop)](https://travis-ci.org/qvacua/vimr) [![Stories in Ready](https://badge.waffle.io/qvacua/vimr.svg?label=ready&title=Ready)](http://waffle.io/qvacua/vimr)
+[![Bountysource](https://www.bountysource.com/badge/team?team_id=933&style=raised)](https://www.bountysource.com/teams/vimr?utm_source=VimR%20%E2%80%94%20Vim%20Refined&utm_medium=shield&utm_campaign=raised) [![Chat at https://gitter.im/vimr/vimr](https://badges.gitter.im/vimr/vimr.svg)](https://gitter.im/vimr/vimr?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Stories in Ready](https://badge.waffle.io/qvacua/vimr.svg?label=ready&title=Ready)](http://waffle.io/qvacua/vimr)
 
 ![Screenshot 1](https://raw.githubusercontent.com/qvacua/vimr/develop/resources/screenshot1.png)
 ![Screenshot 0](https://raw.githubusercontent.com/qvacua/vimr/develop/resources/screenshot0.png)
@@ -13,9 +13,9 @@ VimR — Neovim Refined
 
 ## About
 
-Project VimR is an attempt to refine the Neovim experience (or just YA Neovim GUI for mac OS). The goal is to build an editor that uses Neovim inside with many of the convenience GUI features similar to those present in modern editors. We mainly use Swift, but also use Objective-C when its C-nature helps.
+Project VimR is an attempt to refine the Neovim experience (or just YA Neovim GUI for macOS). The goal is to build an editor that uses Neovim inside with many of the convenience GUI features similar to those present in modern editors. We mainly use Swift, but also use Objective-C when its C-nature helps.
 
-There are other working Neovim GUIs for OS X, e.g. [NyaoVim](https://github.com/rhysd/NyaoVim), [neovim-dot-app](https://github.com/rogual/neovim-dot-app), etc., why another?
+There are other working Neovim GUIs for macOS, e.g. [NyaoVim](https://github.com/rhysd/NyaoVim), [neovim-dot-app](https://github.com/rogual/neovim-dot-app), [Oni](https://onivim.io), etc., why another?
 
 - play around (obviously) with [Neovim](https://github.com/qvacua/neovim),
 - play around with Swift (and especially with [RxSwift](https://github.com/ReactiveX/RxSwift)) and
@@ -33,17 +33,14 @@ If you want to support VimR financially, you can use [Bountysource](https://www.
 
 Pre-built binaries can be found under [Releases](https://github.com/qvacua/vimr/releases).
 
-## Implemented Features
+## Some Features
 
-* Multiple windows.
 * Basic input including Emojis and Hangul (+Hanja): We don't know whether other input systems work...
 * Markdown preview
 * Generic HTML preview (retains the scroll position when reloading)
-* Basic mouse support: Left button actions and scrolling.
 * Fuzzy file finder a la Xcode's "Open Quickly..."
-* Basic trackpad support: Pinching for zooming and two-finger scrolling.
+* Trackpad support: Pinching for zooming and two-finger scrolling.
 * Ligatures: Turned off by default. Turn it on in the Preferences.
-* Basic File and Edit menu items.
 * Command line tool.
 * (Simple) File browser
 * Flexible workspace model a la JetBrain's IDEs
@@ -59,7 +56,7 @@ git submodule init
 git submodule update
 ```
 
-You have to use Xcode 9. First install `homebrew`, then in the project root:
+You have to use Xcode 10.1. First install `homebrew`, then in the project root:
 
 ```bash
 xcode-select --install # install the Xcode command line tools, if you haven't already
@@ -75,7 +72,7 @@ brew bundle
 ```
 VimR.app
 +-- NvimView.framework
-    +-- NeoVimView
+    +-- NVimView
     +-- runtime files for Neovim
     +-- NvimServer
         +-- libnvim

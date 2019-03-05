@@ -19,5 +19,6 @@ extern void neovim_vim_input(void **argv);
 extern void neovim_delete_and_input(void **argv);
 
 extern void neovim_focus_gained(void **argv);
+extern void neovim_ready_for_rpcevents(void **argv);
 
 extern void neovim_debug1(void **argv);

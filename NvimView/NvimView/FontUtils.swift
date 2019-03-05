@@ -32,8 +32,11 @@ extension FontTrait: Hashable {
 final class FontUtils {
 
   static func cellSize(of font: NSFont, linespacing: CGFloat) -> CGSize {
-    if let cached = cellSizeCache.object(forKey: font) {
-      return cached
+    if let cached = cellSizeWithDefaultLinespacingCache.object(forKey: font) {
+      return CGSize(
+        width: cached.width,
+        height: ceil(linespacing * cached.height)
+      )
     }
 
     let capitalM = [UniChar(0x004D)]
@@ -46,11 +49,18 @@ final class FontUtils {
     let descent = CTFontGetDescent(font)
     let leading = CTFontGetLeading(font)
 
+    let cellSizeToCache = CGSize(
+      width: advancement.width,
+      height: ceil(ascent + descent + leading)
+    )
+    cellSizeWithDefaultLinespacingCache.set(
+      object: cellSizeToCache, forKey: font
+    )
+
     let cellSize = CGSize(
       width: advancement.width,
-      height: ceil(linespacing * (ascent + descent + leading))
+      height: ceil(linespacing * cellSizeToCache.height)
     )
-    cellSizeCache.set(object: cellSize, forKey: font)
 
     return cellSize
   }
@@ -87,4 +97,4 @@ final class FontUtils {
 }
 
 private let fontCache = SimpleCache<SizedFontTrait, NSFont>(countLimit: 100)
-private let cellSizeCache = SimpleCache<NSFont, CGSize>(countLimit: 100)
+private let cellSizeWithDefaultLinespacingCache = SimpleCache<NSFont, CGSize>(countLimit: 100)

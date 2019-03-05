@@ -10,16 +10,28 @@ import PureLayout
 protocol ThemedView: class {
 
   var theme: Theme { get }
+  var lastThemeMark: Token { get }
 }
 
 class ThemedTableRow: NSTableRowView {
 
+  weak var triangleView: NSButton?
+  var themeToken: Token
+
   init(withIdentifier identifier: String, themedView: ThemedView) {
     self.themedView = themedView
+    self.themeToken = themedView.lastThemeMark
 
     super.init(frame: .zero)
 
     self.identifier = NSUserInterfaceItemIdentifier(identifier)
+  }
+
+  override func didAddSubview(_ subview: NSView) {
+    super.didAddSubview(subview)
+    if subview.identifier == NSOutlineView.disclosureButtonIdentifier {
+      self.triangleView = subview as? NSButton
+    }
   }
 
   open override func drawBackground(in dirtyRect: NSRect) {
@@ -57,16 +69,16 @@ class ThemedTableCell: NSTableCellView {
   static let font = NSFont.systemFont(ofSize: 12)
   static let widthWithoutText = CGFloat(2 + 16 + 4 + 2)
 
-  static func width(with text: String) -> CGFloat {
-    let attrStr = NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: ThemedTableCell.font])
-
-    return self.widthWithoutText + attrStr.size().width
-  }
-
-  override var intrinsicContentSize: CGSize {
-    return CGSize(width: ThemedTableCell.widthWithoutText + self._textField.intrinsicContentSize.width,
-                  height: max(self._textField.intrinsicContentSize.height, 16))
-  }
+//  static func width(with text: String) -> CGFloat {
+//    let attrStr = NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: ThemedTableCell.font])
+//
+//    return self.widthWithoutText + attrStr.size().width
+//  }
+//
+//  override var intrinsicContentSize: CGSize {
+//    return CGSize(width: ThemedTableCell.widthWithoutText + self._textField.intrinsicContentSize.width,
+//                  height: max(self._textField.intrinsicContentSize.height, 16))
+//  }
 
   var isDir = false
 

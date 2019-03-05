@@ -45,6 +45,11 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] state in
+        if state.viewToBeFocused != nil,
+           case .htmlPreview = state.viewToBeFocused! {
+          self.beFirstResponder()
+        }
+
         guard let serverUrl = state.htmlPreview.server, let htmlFileUrl = state.htmlPreview.htmlFile else {
           self.monitor = nil
           return
@@ -87,7 +92,7 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
   }
 
   private let emit: (UuidAction<Action>) -> Void
-  private let uuid: String
+  private let uuid: UUID
 
   private var mark = Token()
   private var scrollTop = 0

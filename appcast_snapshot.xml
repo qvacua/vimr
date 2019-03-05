@@ -7,36 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.25.0-297</title>
+      <title>SNAPSHOT-302</title>
       <description><![CDATA[
     <ul>
-<li>Neovim 0.3.4</li>
-<li>GH-625: <code>vimr --cur-env</code> will pass the current environment variables to the new neovim process. This will result in <code>virtualenv</code> support.</li>
-<li>GH-443: <code>vimr --line ${LINE_NUMBER} ${SOME_FILE}</code> will open the file and go to the given line. If the file is already open in a UI window, then that window will be selected and the cursor will be moved to the given line. This can be used for example to reverse-search LaTeX.</li>
-<li>GH-603: Bugfix: <code>Cmd-V</code> pastes at the wrong location in the insert mode.</li>
-<li>GH-659: Bugfix (introduced in a snapshot): Turning off ligatures does not really turn off ligatures.</li>
-<li>GH-664: Bugfix: VimR crashes for some shell configurations.</li>
-<li>GH-666: Adapt to the new UI-API of Neovim</li>
-<li>Dependencies updates:<ul>
-<li>ReactiveX/RxSwift@4.4.1</li>
-<li>httpswift/swifter@1.4.5</li>
-<li>PureLayout/PureLayout@3.1.4</li>
-<li>sindresorhus/github-markdown-css@3.0.1</li>
-<li>sparkle-project/Sparkle@1.21.3</li>
-</ul>
-</li>
+<li>GH-506: Set font, size and linespacing via <code>~/.config/nvim/ginit.vim</code>.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.25.0-297
+        https://github.com/qvacua/vimr/releases/tag/snapshot/302
       </releaseNotesLink>
-      <pubDate>2019-02-23T17:55:14.811734</pubDate>
+      <pubDate>2019-03-05T09:14:18.762884</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.25.0-297/VimR-v0.25.0-297.tar.bz2"
-                 sparkle:version="297"
-                 sparkle:shortVersionString="0.25.0"
-                 sparkle:dsaSignature="MC4CFQC7d60NkbkgZndkDtFrmfJ2Um1yBAIVAKwxaxYy+9FpNNJXOFhAhVUTdxfK"
-                 length="14935040"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/302/VimR-SNAPSHOT-302.tar.bz2"
+                 sparkle:version="302"
+                 sparkle:shortVersionString="SNAPSHOT-302"
+                 sparkle:dsaSignature="MC0CFQC2CIhh9s/ypv/buT4NeP2+Un5IYAIUQXfPdSh2dbROxYJyZ4zx808ylV0="
+                 length="15102917"
                  type="application/octet-stream"/>
     </item>
   </channel>

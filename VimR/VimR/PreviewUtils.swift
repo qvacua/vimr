@@ -40,7 +40,7 @@ class PreviewUtils {
     }
   }
 
-  static func state(for uuid: String,
+  static func state(for uuid: UUID,
                     baseUrl: URL,
                     buffer: NvimView.Buffer?,
                     editorPosition: Marked<Position>,
@@ -72,11 +72,11 @@ class PreviewUtils {
                         previewPosition: previewPosition)
   }
 
-  private static func serverUrl(for uuid: String, baseUrl: URL, lastComponent: String) -> URL {
+  private static func serverUrl(for uuid: UUID, baseUrl: URL, lastComponent: String) -> URL {
     return baseUrl.appendingPathComponent("\(uuid)/\(markdownPath)/\(lastComponent)")
   }
 
-  private static func htmlUrl(with uuid: String) -> URL {
+  private static func htmlUrl(with uuid: UUID) -> URL {
     return self.tempDir.appendingPathComponent("\(uuid)-markdown-index.html")
   }
 
