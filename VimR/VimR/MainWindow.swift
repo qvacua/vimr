@@ -215,6 +215,7 @@ class MainWindow: NSObject,
     self.defaultFont = state.appearance.font
     self.linespacing = state.appearance.linespacing
     self.usesLigatures = state.appearance.usesLigatures
+    self.usesLigatures = state.drawsParallel
 
     self.editorPosition = state.preview.editorPosition
     self.previewPosition = state.preview.previewPosition
@@ -253,6 +254,7 @@ class MainWindow: NSObject,
       state.trackpadScrollResistance
     )
     self.neoVimView.usesLiveResize = state.useLiveResize
+    self.neoVimView.drawsParallel = self.drawsParallel
     self.updateNeoVimAppearance()
 
     Observable
@@ -401,6 +403,11 @@ class MainWindow: NSObject,
           self.neoVimView.usesLiveResize = state.useLiveResize
         }
 
+        if self.drawsParallel != state.drawsParallel {
+          self.drawsParallel = state.drawsParallel
+          self.neoVimView.drawsParallel = self.drawsParallel
+        }
+
         if self.defaultFont != state.appearance.font
            || self.linespacing != state.appearance.linespacing
            || self.usesLigatures != state.appearance.usesLigatures {
@@ -460,6 +467,7 @@ class MainWindow: NSObject,
   private var defaultFont = NvimView.defaultFont
   private var linespacing = NvimView.defaultLinespacing
   private var usesLigatures = false
+  private var drawsParallel = false
 
   private var previewPosition = Marked(Position.beginning)
 
