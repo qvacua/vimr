@@ -1,4 +1,8 @@
-# 0.26.0-???
+# 0.27.0-???
+
+* ...
+
+# 0.26.0-303
 
 * Minimum macOS requirement is now 10.12 Sierra.
 * Optional parallel computation of glyphs. This may result in faster rendering depending on the situation.
