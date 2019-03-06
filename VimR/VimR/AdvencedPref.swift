@@ -129,8 +129,9 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     let drawsParallelInfo = self.infoTextField(
       markdown: """
-                VimR can compute the glyphs concurrently. This will result in faster rendering,
-                but also in higher CPU usage when scrolling very fast.
+                VimR can compute the glyphs concurrently. This may result in faster rendering,
+                depending on the situation. It will definitely result in higher CPU usage, e.g.
+                when scrolling very fast.
                 """
     )
 
