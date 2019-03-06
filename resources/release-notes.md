@@ -1,3 +1,7 @@
+# 0.27.0-???
+
+* Optional parallel computation of glyphs. This may result in faster rendering depending on the situation.
+
 # 0.26.0-???
 
 * GH-314: You can customize the key shortcut for all menu items in the *Shortcut* preferences pane.
