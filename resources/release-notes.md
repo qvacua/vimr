@@ -1,9 +1,6 @@
-# 0.27.0-???
-
-* Optional parallel computation of glyphs. This may result in faster rendering depending on the situation.
-
 # 0.26.0-???
 
+* Optional parallel computation of glyphs. This may result in faster rendering depending on the situation.
 * GH-314: You can customize the key shortcut for all menu items in the *Shortcut* preferences pane.
 * GH-501: Add key shortcuts to toggle the Buffer List, Markdown Preview, and HTML Preview tools.
 * GH-649: Add commands that can control some of GUI elements.
