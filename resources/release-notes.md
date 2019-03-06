@@ -1,12 +1,12 @@
 # 0.26.0-???
 
+* Minimum macOS requirement is now 10.12 Sierra.
 * Optional parallel computation of glyphs. This may result in faster rendering depending on the situation.
 * GH-314: You can customize the key shortcut for all menu items in the *Shortcut* preferences pane.
 * GH-501: Add key shortcuts to toggle the Buffer List, Markdown Preview, and HTML Preview tools.
 * GH-649: Add commands that can control some of GUI elements.
 * GH-506: Set font, size and linespacing via `~/.config/nvim/ginit.vim`.
 * Draw the disclosure triangle in appropriate color of the current color scheme (and improve handling of changes of `cwd` in the file browser).
-* ...
 
 # 0.25.0-297
 
