@@ -2,7 +2,7 @@
 
 set -e
 
-DEPLOYMENT_TARGET="10.11"
+DEPLOYMENT_TARGET="10.12"
 
 echo "### Building libnvim"
 

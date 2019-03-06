@@ -139,6 +139,12 @@ public class NvimView: NSView,
     }
   }
 
+  public var drawsParallel = false {
+    didSet {
+      self.drawer.drawsParallel = self.drawsParallel
+    }
+  }
+
   public var linespacing: CGFloat {
     get {
       return self._linespacing

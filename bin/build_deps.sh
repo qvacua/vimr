@@ -3,7 +3,7 @@
 set -e
 
 GETTEXT_VERSION="0.19.8.1"
-DEPLOYMENT_TARGET="10.11"
+DEPLOYMENT_TARGET="10.12"
 
 echo "### Building deps"
 

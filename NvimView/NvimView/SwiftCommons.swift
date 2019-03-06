@@ -16,20 +16,34 @@ extension Array where Element: Hashable {
 
 extension RandomAccessCollection where Index == Int {
 
-  /// Does not retain the order of elements.
-  func parallelMap<T>(_ transform: @escaping (Element) -> T) -> [T] {
-    var result = Array<T>()
-    result.reserveCapacity(self.count)
+  func parallelMap<T>(
+    chunkSize: Int = 1,
+    _ transform: @escaping (Element) -> T
+  ) -> [T] {
+    let count = self.count
+    guard count > chunkSize else { return self.map(transform) }
 
-    var lock = OS_SPINLOCK_INIT
-    DispatchQueue.concurrentPerform(iterations: self.count) { i in
-      let mapped = transform(self[self.startIndex + i])
-      OSSpinLockLock(&lock)
-      result.append(mapped)
-      OSSpinLockUnlock(&lock)
+    var result = Array<T?>(repeating: nil, count: count)
+
+    // If we don't use Array.withUnsafeMutableBufferPointer,
+    // then we get crashes.
+    result.withUnsafeMutableBufferPointer { pointer in
+      if chunkSize == 1 {
+        DispatchQueue.concurrentPerform(iterations: count) { i in
+          pointer[i] = transform(self[i])
+        }
+      } else {
+        let chunkCount = Int(ceil(Double(self.count) / Double(chunkSize)))
+        DispatchQueue.concurrentPerform(iterations: chunkCount) { chunkIndex in
+          let start = Swift.min(chunkIndex * chunkSize, count)
+          let end = Swift.min(start + chunkSize, count)
+
+          (start..<end).forEach { i in pointer[i] = transform(self[i]) }
+        }
+      }
     }
 
-    return result
+    return result.map { $0! }
   }
 
   func groupedRanges<T: Equatable>(
