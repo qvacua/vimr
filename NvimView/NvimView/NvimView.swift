@@ -7,6 +7,7 @@ import Cocoa
 import RxNeovimApi
 import RxSwift
 import MessagePack
+import os
 
 public class NvimView: NSView,
                        NSUserInterfaceValidations,
@@ -234,13 +235,13 @@ public class NvimView: NSView,
         switch msg {
 
         case .ready:
-          self.logger.info("Nvim is ready")
+          self.log.info("Nvim is ready")
 
         case .initVimError:
           self.eventsSubject.onNext(.initVimError)
 
         case .unknown:
-          self.logger.error("Unknown message from NvimServer")
+          self.bridgeLogger.error("Unknown message from NvimServer")
 
         case let .resize(value):
           self.resize(value)
@@ -312,7 +313,7 @@ public class NvimView: NSView,
 
         }
       }, onError: { error in
-        // FIXME
+        self.bridgeLogger.fault("Error in the bridge stream: \(error)")
       })
       .disposed(by: self.disposeBag)
   }
@@ -335,9 +336,9 @@ public class NvimView: NSView,
   }
 
   @IBAction public func debug1(_ sender: Any?) {
-    self.logger.debug("DEBUG 1 - Start")
+    self.log.debug("DEBUG 1 - Start")
     // noop
-    self.logger.debug("DEBUG 1 - End")
+    self.log.debug("DEBUG 1 - End")
   }
 
   // MARK: - Internal
@@ -386,17 +387,10 @@ public class NvimView: NSView,
   var markedText: String?
   var markedPosition = Position.null
 
-  let bridgeLogger = LogContext.fileLogger(
-    as: "NvimView-Bridge",
-    with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"),
-    shouldLogDebug: nil
-  )
-
-  let logger = LogContext.fileLogger(
-    as: NvimView.self, with: URL(fileURLWithPath: "/tmp/nvv.log")
-  )
-
-  let stdoutLogger = LogContext.stdoutLogger(as: NvimView.self)
+  let bridgeLogger = OSLog(subsystem: Defs.loggerSubsystem,
+                           category: Defs.LoggerCategory.bridge)
+  let log = OSLog(subsystem: Defs.loggerSubsystem,
+                  category: Defs.LoggerCategory.view)
 
   let sourceFileUrls: [URL]
 

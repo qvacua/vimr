@@ -65,7 +65,7 @@ extension NvimView {
   }
 
   private func launchNeoVim(_ size: Size) {
-    self.logger.info("=== Starting neovim...")
+    self.log.info("=== Starting neovim...")
     let sockPath = URL(
       fileURLWithPath: NSTemporaryDirectory()
     ).appendingPathComponent("vimr_\(self.uuid).sock").path
@@ -75,16 +75,16 @@ extension NvimView {
         switch msg {
 
         case let .notification(method, params):
-          self.logger.debug("NOTIFICATION: \(method): \(params)")
+          self.log.debug("NOTIFICATION: \(method): \(params)")
 
           guard method == NvimView.rpcEventName else { return }
           self.eventsSubject.onNext(.rpcEvent(params))
 
         case let .error(_, msg):
-          self.logger.debug("MSG ERROR: \(msg)")
+          self.log.debug("MSG ERROR: \(msg)")
 
         default:
-          self.logger.debug("???: This should not happen")
+          self.log.debug("???: This should not happen")
           break
 
         }

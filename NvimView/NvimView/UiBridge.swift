@@ -7,6 +7,7 @@ import Foundation
 import RxMessagePort
 import RxSwift
 import MessagePack
+import os
 
 class UiBridge {
 
@@ -61,13 +62,14 @@ class UiBridge {
 
     if let envDict = config.envDict {
       self.envDict = envDict
-      self.logger.debug("using envs from vimr: \(envDict)")
+      self.log.debug("Using ENVs from vimr: \(envDict)")
     } else {
       let selfEnv = ProcessInfo.processInfo.environment
       let shellUrl = URL(fileURLWithPath: selfEnv["SHELL"] ?? "/bin/bash")
+      self.log.debug("Using SHELL: \(shellUrl)")
       let interactiveMode = shellUrl.lastPathComponent == "zsh" && !config.useInteractiveZsh ? false : true
       self.envDict = ProcessUtils.envVars(of: shellUrl, usingInteractiveMode: interactiveMode)
-      self.logger.debug("using envs from login shell: \(self.envDict)")
+      self.log.debug("Using ENVs from login shell: \(self.envDict)")
     }
 
     self.queue = queue
@@ -80,7 +82,7 @@ class UiBridge {
       .subscribe(onNext: { message in
         self.handleMessage(msgId: message.msgid, data: message.data)
       }, onError: { error in
-        self.logger.error("There was an error on the local message port server: \(error)")
+        self.log.error("There was an error on the local message port server: \(error)")
         self.streamSubject.onError(Error.ipc(error))
       })
       .disposed(by: self.disposeBag)
@@ -141,16 +143,16 @@ class UiBridge {
   func quit() -> Completable {
     return self.quit {
       self.nvimServerProc?.waitUntilExit()
-      self.logger.info("NvimServer \(self.uuid) exited successfully.")
+      self.log.info("NvimServer \(self.uuid) exited successfully.")
     }
   }
 
   func forceQuit() -> Completable {
-    self.logger.info("Force-exiting NvimServer \(self.uuid).")
+    self.log.fault("Force-exiting NvimServer \(self.uuid).")
 
     return self.quit {
       self.forceExitNvimServer()
-      self.logger.info("NvimServer \(self.uuid) was forcefully exited.")
+      self.log.fault("NvimServer \(self.uuid) was forcefully exited.")
     }
   }
 
@@ -299,7 +301,7 @@ class UiBridge {
     var env = self.envDict
     env["NVIM_LISTEN_ADDRESS"] = listenAddress.path
 
-    self.stdoutLogger.debug("listen addr: \(listenAddress.path)")
+    self.log.debug("Socket: \(listenAddress.path)")
 
     let outPipe = Pipe()
     let errorPipe = Pipe()
@@ -309,9 +311,10 @@ class UiBridge {
     process.standardOutput = outPipe
     process.currentDirectoryPath = self.cwd.path
     process.launchPath = self.nvimServerExecutablePath()
-    // GH-666: FIXME
-//    process.arguments = [self.localServerName, self.remoteServerName] + ["--headless", "/Users/hat/php.php"] + self.nvimArgs
     process.arguments = [self.localServerName, self.remoteServerName] + ["--headless"] + self.nvimArgs
+    self.log.debug(
+      "Launching NvimServer with args: \(String(describing: process.arguments))"
+    )
     process.launch()
 
     self.nvimServerProc = process
@@ -325,8 +328,8 @@ class UiBridge {
     return URL(fileURLWithPath: plugInsPath).appendingPathComponent("NvimServer").path
   }
 
-  private let logger = LogContext.fileLogger(as: UiBridge.self, with: URL(fileURLWithPath: "/tmp/nvv-bridge.log"))
-  private let stdoutLogger = LogContext.stdoutLogger(as: UiBridge.self)
+  private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                          category: Defs.LoggerCategory.bridge)
 
   private let uuid: UUID
 
@@ -352,11 +355,11 @@ class UiBridge {
   private let disposeBag = DisposeBag()
 
   private var localServerName: String {
-    return "com.qvacua.vimr.\(self.uuid)"
+    return "com.qvacua.NvimView.\(self.uuid)"
   }
 
   private var remoteServerName: String {
-    return "com.qvacua.vimr.neovim-server.\(self.uuid)"
+    return "com.qvacua.NvimView.NvimServer.\(self.uuid)"
   }
 }
 

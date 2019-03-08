@@ -8,7 +8,10 @@ import RxSwift
 
 extension PrimitiveSequence where Element == Never, TraitType == CompletableTrait {
 
-  func wait() throws {
+  func wait(
+    onCompleted: (() -> Void)? = nil,
+    onError: ((Error) -> Void)? = nil
+  ) throws {
     var trigger = false
     var err: Error? = nil
 
@@ -18,9 +21,11 @@ extension PrimitiveSequence where Element == Never, TraitType == CompletableTrai
     defer { condition.unlock() }
 
     let disposable = self.subscribe(onCompleted: {
+      onCompleted?()
       trigger = true
       broadcast(condition)
     }, onError: { error in
+      onError?(error)
       trigger = true
       err = error
       broadcast(condition)

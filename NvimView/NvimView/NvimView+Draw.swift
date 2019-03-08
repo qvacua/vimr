@@ -40,9 +40,9 @@ extension NvimView {
     self.draw(cellsIntersectingRects: dirtyRects, in: context)
     self.draw(cursorIn: context)
 
-#if DEBUG
+    #if DEBUG
 //    self.draw(cellGridIn: context)
-#endif
+    #endif
   }
 
   private func draw(
@@ -92,14 +92,14 @@ extension NvimView {
        || cursorRegion.bottom > self.ugrid.size.height - 1
        || cursorRegion.left < 0
        || cursorRegion.right > self.ugrid.size.width - 1 {
-      self.logger.error("\(cursorRegion) vs. \(self.ugrid.size)")
+      self.log.error("\(cursorRegion) vs. \(self.ugrid.size)")
       return
     }
     guard let cursorAttrs = self.cellAttributesCollection.attributes(
       of: self.ugrid.cells[cursorPosition.row][cursorPosition.column].attrId
     )?.reversed else {
-      self.stdoutLogger.error("Could not get the attributes" +
-                              " at cursor: \(cursorPosition)")
+      self.log.error("Could not get the attributes" +
+                     " at cursor: \(cursorPosition)")
       return
     }
 
@@ -135,7 +135,7 @@ extension NvimView {
     let discreteSize = self.discreteSize(size: boundsSize)
     let displayStr = "\(discreteSize.width) × \(discreteSize.height)"
     let infoStr = "(You can turn on the experimental live resizing feature" +
-      " in the Advanced preferences)"
+                  " in the Advanced preferences)"
 
     var (sizeAttrs, infoAttrs) = (resizeTextAttrs, infoTextAttrs)
     sizeAttrs[.foregroundColor] = self.theme.foreground
@@ -205,9 +205,9 @@ extension NvimView {
                   )
               else {
               // GH-666: FIXME: correct error handling
-              self.logger.error("row: \(row), range: \(range): " +
-                                "Could not get CellAttributes with ID " +
-                                "\(String(describing: cells.first?.attrId))")
+              self.log.error("row: \(row), range: \(range): " +
+                             "Could not get CellAttributes with ID " +
+                             "\(String(describing: cells.first?.attrId))")
               return nil
             }
 

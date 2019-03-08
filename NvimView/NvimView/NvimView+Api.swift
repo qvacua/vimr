@@ -150,7 +150,6 @@ extension NvimView {
   }
 
   public func quitNeoVimWithoutSaving() -> Completable {
-    self.bridgeLogger.mark()
     return self.api
       .command(command: "qa!")
       .subscribeOn(self.scheduler)
