@@ -1,7 +1,8 @@
-//
-// Created by Tae Won Ha on 1/13/17.
-// Copyright (c) 2017 Tae Won Ha. All rights reserved.
-//
+/**
+ * Greg Omelaenko - http://omelaen.co
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 #import <Foundation/Foundation.h>
 
