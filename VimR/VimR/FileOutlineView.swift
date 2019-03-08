@@ -34,11 +34,13 @@ class FileOutlineView: NSOutlineView,
     self.isShowHidden = state.fileBrowserShowHidden
     self.triangleClosed = NSImage.fontAwesomeIcon(
       name: .caretRight,
+      style: .solid,
       textColor: self.theme.directoryForeground,
       dimension: triangleImageSize
     )
     self.triangleOpen = NSImage.fontAwesomeIcon(
       name: .caretDown,
+      style: .solid,
       textColor: self.theme.directoryForeground,
       dimension: triangleImageSize
     )
@@ -279,11 +281,13 @@ class FileOutlineView: NSOutlineView,
     self.backgroundColor = self.theme.background
     self.triangleClosed = NSImage.fontAwesomeIcon(
       name: .caretRight,
+      style: .solid,
       textColor: self.theme.directoryForeground,
       dimension: triangleImageSize
     )
     self.triangleOpen = NSImage.fontAwesomeIcon(
       name: .caretDown,
+      style: .solid,
       textColor: self.theme.directoryForeground,
       dimension: triangleImageSize
     )

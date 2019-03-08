@@ -106,15 +106,18 @@ extension FileBrowser {
     }
 
     override func repaint(with theme: Workspace.Theme) {
-      self.goToParentButton.image = NSImage.fontAwesomeIcon(name: .levelUp,
+      self.goToParentButton.image = NSImage.fontAwesomeIcon(name: .levelUpAlt,
+                                                            style: .solid,
                                                             textColor: theme.toolbarForeground,
                                                             dimension: InnerToolBar.iconDimension)
 
       self.scrollToSourceButton.image = NSImage.fontAwesomeIcon(name: .bullseye,
+                                                                style: .solid,
                                                                 textColor: theme.toolbarForeground,
                                                                 dimension: InnerToolBar.iconDimension)
 
-      self.refreshButton.image = NSImage.fontAwesomeIcon(name: .refresh,
+      self.refreshButton.image = NSImage.fontAwesomeIcon(name: .sync,
+                                                         style: .solid,
                                                          textColor: theme.toolbarForeground,
                                                          dimension: InnerToolBar.iconDimension)
     }
@@ -129,17 +132,17 @@ extension FileBrowser {
 
     private func addViews() {
       let goToParent = self.goToParentButton
-      InnerToolBar.configureToStandardIconButton(button: goToParent, iconName: .levelUp)
+      InnerToolBar.configureToStandardIconButton(button: goToParent, iconName: .levelUpAlt, style: .solid)
       goToParent.toolTip = "Set parent as working directory"
       goToParent.action = #selector(FileBrowser.goToParentAction)
 
       let scrollToSource = self.scrollToSourceButton
-      InnerToolBar.configureToStandardIconButton(button: scrollToSource, iconName: .bullseye)
+      InnerToolBar.configureToStandardIconButton(button: scrollToSource, iconName: .bullseye, style: .solid)
       scrollToSource.toolTip = "Navigate to the current buffer"
       scrollToSource.action = #selector(FileBrowser.scrollToSourceAction)
 
       let refresh = self.refreshButton
-      InnerToolBar.configureToStandardIconButton(button: refresh, iconName: .refresh)
+      InnerToolBar.configureToStandardIconButton(button: refresh, iconName: .sync, style: .solid)
       refresh.toolTip = "Refresh"
       refresh.action = #selector(FileBrowser.refreshAction)
 
@@ -148,11 +151,22 @@ extension FileBrowser {
       self.addSubview(refresh)
 
       refresh.autoPinEdge(toSuperviewEdge: .top)
-      refresh.autoPinEdge(toSuperviewEdge: .right)
+      refresh.autoPinEdge(toSuperviewEdge: .right,
+                          withInset: InnerToolBar.itemPadding)
       goToParent.autoPinEdge(toSuperviewEdge: .top)
-      goToParent.autoPinEdge(.right, to: .left, of: refresh)
+      goToParent.autoPinEdge(
+        .right,
+        to: .left,
+        of: refresh,
+        withOffset: -InnerToolBar.itemPadding
+      )
       scrollToSource.autoPinEdge(toSuperviewEdge: .top)
-      scrollToSource.autoPinEdge(.right, to: .left, of: goToParent)
+      scrollToSource.autoPinEdge(
+        .right,
+        to: .left,
+        of: goToParent,
+        withOffset: -InnerToolBar.itemPadding
+      )
     }
 
     required init?(coder: NSCoder) {

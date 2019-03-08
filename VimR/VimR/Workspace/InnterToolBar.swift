@@ -21,33 +21,23 @@ class CustomToolBar: NSView {
  */
 class InnerToolBar: NSView, NSUserInterfaceValidations {
 
-  private static let separatorThickness = CGFloat(1)
-  private static let height = InnerToolBar.iconDimension + 2 + 2 + InnerToolBar.separatorThickness
-
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-
-  private let titleField = NSTextField(forAutoLayout: ())
-  private let closeButton = NSButton(forAutoLayout: ())
-  private let cogButton = NSPopUpButton(forAutoLayout: ())
-
-  private let locToSelector: [WorkspaceBarLocation: Selector] = [
-    .top: #selector(InnerToolBar.moveToTopAction(_:)),
-    .right: #selector(InnerToolBar.moveToRightAction(_:)),
-    .bottom: #selector(InnerToolBar.moveToBottomAction(_:)),
-    .left: #selector(InnerToolBar.moveToLeftAction(_:)),
-  ]
-
   // MARK: - API
   static let toolbarHeight = InnerToolBar.iconDimension
-  static let iconDimension = CGFloat(19)
+  static let iconDimension = CGFloat(18)
+  static let itemPadding = CGFloat(4)
 
-  static func configureToStandardIconButton(button: NSButton,
-                                            iconName: CocoaFontAwesome.FontAwesome,
-                                            color: NSColor = Workspace.Theme.default.toolbarForeground) {
-
-    let icon = NSImage.fontAwesomeIcon(name: iconName, textColor: color, dimension: InnerToolBar.iconDimension)
+  static func configureToStandardIconButton(
+    button: NSButton,
+    iconName: FontAwesome,
+    style: FontAwesomeStyle,
+    color: NSColor = Workspace.Theme.default.toolbarForeground
+  ) {
+    let icon = NSImage.fontAwesomeIcon(
+      name: iconName,
+      style: .solid,
+      textColor: color,
+      dimension: InnerToolBar.iconDimension
+    )
 
     button.imagePosition = .imageOnly
     button.image = icon
@@ -112,12 +102,18 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     self.layer!.backgroundColor = self.theme.toolbarBackground.cgColor
 
     self.titleField.textColor = self.theme.toolbarForeground
-    self.cogButton.menu?.item(at: 0)?.image = NSImage.fontAwesomeIcon(name: .cog,
-                                                                      textColor: self.theme.toolbarForeground,
-                                                                      dimension: InnerToolBar.iconDimension)
-    self.closeButton.image = NSImage.fontAwesomeIcon(name: .timesCircle,
-                                                     textColor: self.theme.toolbarForeground,
-                                                     dimension: InnerToolBar.iconDimension)
+    self.cogButton.image = NSImage.fontAwesomeIcon(
+      name: .cog,
+      style: .solid,
+      textColor: self.theme.toolbarForeground,
+      dimension: InnerToolBar.iconDimension
+    )
+    self.closeButton.image = NSImage.fontAwesomeIcon(
+      name: .timesCircle,
+      style: .regular,
+      textColor: self.theme.toolbarForeground,
+      dimension: InnerToolBar.iconDimension
+    )
 
     self.customToolbar?.repaint(with: self.theme)
 
@@ -138,6 +134,25 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     }
   }
 
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  private static let separatorThickness = CGFloat(1)
+  private static let height = InnerToolBar.iconDimension + 2 + 2 + InnerToolBar.separatorThickness
+
+  private let titleField = NSTextField(forAutoLayout: ())
+  private let closeButton = NSButton(forAutoLayout: ())
+  private let cogButton = NSButton(forAutoLayout: ())
+  private let cogMenu = NSMenu()
+
+  private let locToSelector: [WorkspaceBarLocation: Selector] = [
+    .top: #selector(InnerToolBar.moveToTopAction(_:)),
+    .right: #selector(InnerToolBar.moveToRightAction(_:)),
+    .bottom: #selector(InnerToolBar.moveToBottomAction(_:)),
+    .left: #selector(InnerToolBar.moveToLeftAction(_:)),
+  ]
+
   private func removeCustomUiElements() {
     self.customToolbar?.removeFromSuperview()
     [self.titleField, self.closeButton, self.cogButton].forEach { $0.removeFromSuperview() }
@@ -155,27 +170,23 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     title.isSelectable = false
     title.controlSize = .small
 
-    InnerToolBar.configureToStandardIconButton(button: close,
-                                               iconName: .timesCircle,
-                                               color: self.theme.toolbarForeground)
+    InnerToolBar.configureToStandardIconButton(
+      button: close,
+      iconName: .timesCircle,
+      style: .regular,
+      color: self.theme.toolbarForeground
+    )
     close.target = self
     close.action = #selector(InnerToolBar.closeAction)
 
-    let cogIcon = NSImage.fontAwesomeIcon(name: .cog,
-                                          textColor: self.theme.toolbarForeground,
-                                          dimension: InnerToolBar.iconDimension)
-    cog.configureForAutoLayout()
-    cog.imagePosition = .imageOnly
-    cog.pullsDown = true
-    cog.isBordered = false
-
-    let cogCell = cog.cell as? NSPopUpButtonCell
-    cogCell?.arrowPosition = .noArrow
-
-    let cogMenu = NSMenu()
-
-    let cogMenuItem = NSMenuItem(title: "Cog", action: nil, keyEquivalent: "")
-    cogMenuItem.image = cogIcon
+    InnerToolBar.configureToStandardIconButton(
+      button: cog,
+      iconName: .cog,
+      style: .solid,
+      color: self.theme.toolbarForeground
+    )
+    cog.action = #selector(InnerToolBar.cogAction)
+    cog.target = self
 
     let moveToMenu = NSMenu()
     let topMenuItem = NSMenuItem(title: "Top",
@@ -207,16 +218,12 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     )
     moveToMenuItem.submenu = moveToMenu
 
-    cogMenu.addItem(cogMenuItem)
-
     if self.customMenuItems?.isEmpty == false {
       self.customMenuItems?.forEach(cogMenu.addItem)
       cogMenu.addItem(NSMenuItem.separator())
     }
 
     cogMenu.addItem(moveToMenuItem)
-
-    cog.menu = cogMenu
 
     if let customToolbar = self.customToolbar {
       customToolbar.configureForAutoLayout()
@@ -232,14 +239,32 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     close.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
     close.autoPinEdge(toSuperviewEdge: .right, withInset: 2)
 
-    cog.autoPinEdge(.right, to: .left, of: close, withOffset: 5)
-    cog.autoPinEdge(toSuperviewEdge: .top, withInset: -1)
+    cog.autoPinEdge(
+      .right,
+      to: .left,
+      of: close,
+      withOffset: -InnerToolBar.itemPadding
+    )
+    cog.autoPinEdge(.top, to: .top, of: close)
 
     if let customToolbar = self.customToolbar {
       customToolbar.autoPinEdge(toSuperviewEdge: .top, withInset: 2)
-      customToolbar.autoPinEdge(.right, to: .left, of: cog, withOffset: 5 - InnerToolBar.separatorThickness)
-      customToolbar.autoPinEdge(toSuperviewEdge: .bottom, withInset: 2 + InnerToolBar.separatorThickness)
-      customToolbar.autoPinEdge(.left, to: .right, of: title, withOffset: 2)
+      customToolbar.autoPinEdge(
+        .right,
+        to: .left,
+        of: cog,
+        withOffset: -InnerToolBar.itemPadding - InnerToolBar.separatorThickness
+      )
+      customToolbar.autoPinEdge(
+        toSuperviewEdge: .bottom,
+        withInset: 2 + InnerToolBar.separatorThickness
+      )
+      customToolbar.autoPinEdge(
+        .left,
+        to: .right,
+        of: title,
+        withOffset: -InnerToolBar.itemPadding
+      )
     }
   }
 
@@ -251,7 +276,10 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
   private func innerSeparatorRect() -> CGRect {
     let cogBounds = self.cogButton.frame
     let bounds = self.bounds
-    return CGRect(x: cogBounds.minX + 6, y: bounds.minY + 4, width: 1, height: bounds.height - 4 - 4)
+    return CGRect(x: cogBounds.minX - InnerToolBar.itemPadding,
+                  y: bounds.minY + 4,
+                  width: 1,
+                  height: bounds.height - 4 - 4)
   }
 }
 
@@ -260,6 +288,12 @@ extension InnerToolBar {
 
   @objc func closeAction(_ sender: Any?) {
     self.tool?.toggle()
+  }
+
+  @objc func cogAction(_ sender: NSButton) {
+    guard let event = NSApp.currentEvent else { return }
+
+    NSMenu.popUpContextMenu(self.cogMenu, with: event, for: sender)
   }
 
   @objc func moveToTopAction(_ sender: Any?) {

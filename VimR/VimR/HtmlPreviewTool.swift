@@ -154,14 +154,15 @@ extension HtmlPreviewTool {
 
     private func addViews() {
       let selectHtmlFile = self.selectHtmlFile
-      InnerToolBar.configureToStandardIconButton(button: selectHtmlFile, iconName: .fileCodeO)
+      InnerToolBar.configureToStandardIconButton(button: selectHtmlFile, iconName: .fileCode, style: .regular)
       selectHtmlFile.toolTip = "Select the HTML file"
       selectHtmlFile.action = #selector(HtmlPreviewTool.selectHtmlFile)
 
       self.addSubview(selectHtmlFile)
 
       selectHtmlFile.autoPinEdge(toSuperviewEdge: .top)
-      selectHtmlFile.autoPinEdge(toSuperviewEdge: .right)
+      selectHtmlFile.autoPinEdge(toSuperviewEdge: .right,
+                                 withInset: InnerToolBar.itemPadding)
     }
 
     required init?(coder: NSCoder) {

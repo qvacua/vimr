@@ -69,7 +69,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     // Check whether FontAwesome can be loaded. If not, show a warning.
     // We don't know yet why this happens to some users.
     DispatchQueue.main.async {
-      guard NSFont.fontAwesome(ofSize: 13) == nil else {
+      guard NSFont.fontAwesome(ofSize: 13, style: .regular) == nil else {
         return
       }
 
