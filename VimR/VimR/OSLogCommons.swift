@@ -28,11 +28,13 @@ extension OSLog {
     function: String = #function,
     line: Int = #line
   ) {
+    #if DEBUG
     self.log(
       type: .debug,
       msg: "%{public}@",
       "[\((file as NSString).lastPathComponent) - \(function):\(line)]"
     )
+    #endif
   }
 
   func debug<T>(
