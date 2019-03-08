@@ -7,28 +7,26 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.26.0-303</title>
+      <title>v0.26.1-304</title>
       <description><![CDATA[
     <ul>
-<li>Minimum macOS requirement is now 10.12 Sierra.</li>
-<li>Optional parallel computation of glyphs. This may result in faster rendering depending on the situation.</li>
-<li>GH-314: You can customize the key shortcut for all menu items in the <em>Shortcut</em> preferences pane.</li>
-<li>GH-501: Add key shortcuts to toggle the Buffer List, Markdown Preview, and HTML Preview tools.</li>
-<li>GH-649: Add commands that can control some of GUI elements.</li>
-<li>GH-506: Set font, size and linespacing via <code>~/.config/nvim/ginit.vim</code>.</li>
-<li>Draw the disclosure triangle in appropriate color of the current color scheme (and improve handling of changes of <code>cwd</code> in the file browser).</li>
+<li>Fix broken "Navigate to the current buffer" of the file browser</li>
+<li>Dependencies updates:<ul>
+<li>Use FontAwesome 5 (thanks for the PR, @chriszielinski!)</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.26.0-303
+        https://github.com/qvacua/vimr/releases/tag/v0.26.1-304
       </releaseNotesLink>
-      <pubDate>2019-03-06T16:41:54.852561</pubDate>
+      <pubDate>2019-03-08T10:19:56.833987</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.26.0-303/VimR-v0.26.0-303.tar.bz2"
-                 sparkle:version="303"
-                 sparkle:shortVersionString="0.26.0"
-                 sparkle:dsaSignature="MCwCFHaP11nsWF1cpjdrkDzT+lgmYkzIAhQn7eyPAKIRr3ej1ZOpBwub3NXYRw=="
-                 length="15025572"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.26.1-304/VimR-v0.26.1-304.tar.bz2"
+                 sparkle:version="304"
+                 sparkle:shortVersionString="0.26.1"
+                 sparkle:dsaSignature="MC0CFD+wxEcpX1oSqMBdwq6pa3bspqs0AhUAyrwVnPz99VB13tbzXvNd5NjNqJI="
+                 length="15266980"
                  type="application/octet-stream"/>
     </item>
   </channel>

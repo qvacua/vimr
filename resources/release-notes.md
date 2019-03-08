@@ -2,6 +2,12 @@
 
 * ...
 
+# 0.26.1-???
+
+* Fix broken "Navigate to the current buffer" of the file browser
+* Dependencies updates:
+    - Use FontAwesome 5 (thanks for the PR, @chriszielinski!)
+
 # 0.26.0-303
 
 * Minimum macOS requirement is now 10.12 Sierra.

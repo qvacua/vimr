@@ -34,11 +34,13 @@ class FileOutlineView: NSOutlineView,
     self.isShowHidden = state.fileBrowserShowHidden
     self.triangleClosed = NSImage.fontAwesomeIcon(
       name: .caretRight,
+      style: .solid,
       textColor: self.theme.directoryForeground,
       dimension: triangleImageSize
     )
     self.triangleOpen = NSImage.fontAwesomeIcon(
       name: .caretDown,
+      style: .solid,
       textColor: self.theme.directoryForeground,
       dimension: triangleImageSize
     )
@@ -121,6 +123,50 @@ class FileOutlineView: NSOutlineView,
     }
 
     return result
+  }
+
+  private func select(treeNode: NSTreeNode) {
+    let targetRow = self.row(forItem: treeNode)
+    self.selectRowIndexes(IndexSet(integer: targetRow), byExtendingSelection: false)
+    self.scrollRowToVisible(targetRow)
+  }
+
+  func select(_ url: URL) {
+    guard let childrenOfRoot = self.treeController.arrangedObjects.children
+      else { return }
+
+    var stack = [NSTreeNode]()
+
+    // NSTreeController.arrangedObjects has no Node.
+    for childOfRoot in childrenOfRoot {
+      guard let node = childOfRoot.node else { continue }
+
+      stdoutLog.debug(node)
+      if node.url == url {
+        self.select(treeNode: childOfRoot)
+        return
+      }
+
+      if node.url.isParent(of: url) {
+        self.expandItem(childOfRoot)
+        stack.append(contentsOf: childOfRoot.children ?? [])
+        break
+      }
+    }
+
+    while let item = stack.popLast() {
+      self.expandItem(item)
+
+      guard let node = item.node else { continue }
+      if node.url == url {
+        self.select(treeNode: item)
+        return
+      }
+
+      if node.url.isParent(of: url) {
+        stack.append(contentsOf: item.children ?? [])
+      }
+    }
   }
 
   required init?(coder: NSCoder) {
@@ -279,11 +325,13 @@ class FileOutlineView: NSOutlineView,
     self.backgroundColor = self.theme.background
     self.triangleClosed = NSImage.fontAwesomeIcon(
       name: .caretRight,
+      style: .solid,
       textColor: self.theme.directoryForeground,
       dimension: triangleImageSize
     )
     self.triangleOpen = NSImage.fontAwesomeIcon(
       name: .caretDown,
+      style: .solid,
       textColor: self.theme.directoryForeground,
       dimension: triangleImageSize
     )
