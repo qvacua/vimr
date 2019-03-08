@@ -63,25 +63,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     self.useSnapshot = initialAppState.useSnapshotUpdate
 
     super.init()
-
-    NSUserNotificationCenter.default.delegate = self
-    // FIXME: GH-611: https://github.com/qvacua/vimr/issues/611
-    // Check whether FontAwesome can be loaded. If not, show a warning.
-    // We don't know yet why this happens to some users.
-    DispatchQueue.main.async {
-      guard NSFont.fontAwesome(ofSize: 13, style: .regular) == nil else {
-        return
-      }
-
-      let notification = NSUserNotification()
-      notification.title = "FontAwesome could not be loaded."
-      notification.subtitle = "Unfortunately we don't know yet what is causing this."
-      notification.informativeText = """
-        We use the FontAwesome font for icons in the tools, e.g. the file browser. Those icons are now shown as ?.
-        You can track the progress on this issue at GitHub issue 611.
-      """
-      NSUserNotificationCenter.default.deliver(notification)
-    }
   }
 
   override func awakeFromNib() {
