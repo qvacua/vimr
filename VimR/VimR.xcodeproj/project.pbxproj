@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1929B0244BD7111E168726CF /* DefaultShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B93256AF7F9137223E36 /* DefaultShortcuts.swift */; };
 		1929B04CE8ECBD75CBBB0991 /* StringCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5D45C9792BBE76B8AFF /* StringCommonsTest.swift */; };
 		1929B05B9D664052EC2D23EF /* FileOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCE3E156C06EDF1F2806 /* FileOutlineView.swift */; };
 		1929B08C6230B9C5AB72DAF1 /* Pref128ToCurrentConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5046239709E33516F5C /* Pref128ToCurrentConverter.swift */; };
@@ -27,7 +26,6 @@
 		1929B3AC66EFE35D68C020E3 /* PreviewToolReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFB0F294F3714D5E095F /* PreviewToolReducer.swift */; };
 		1929B3F5743967125F357C9F /* Matcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEEB33113B0E33C3830F /* Matcher.swift */; };
 		1929B462CD4935AFF6D69457 /* FileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7CB4863F80230C32D3C /* FileItem.swift */; };
-		1929B489A51FD5B13888A00C /* RpcEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBF0944940845485A512 /* RpcEvents.swift */; };
 		1929B4B00D7BB191A9A6532D /* HtmlPreviewToolReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE5AEA3D0980860EED50 /* HtmlPreviewToolReducer.swift */; };
 		1929B4B70926DE113E6BF990 /* PreviewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE37AA2843779CAFA76F /* PreviewReducer.swift */; };
 		1929B4E54E2F13A7F5F2B682 /* BufferListReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B67A10E6BB2986B2416E /* BufferListReducer.swift */; };
@@ -70,17 +68,14 @@
 		1929BB67CAAD4F6CBD38DF0A /* RxRedux.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B66A5E2D00EA143AFD86 /* RxRedux.swift */; };
 		1929BB85B2D30E548A32663D /* ShortcutsPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0E9B2F018D3E31D4B0B /* ShortcutsPref.swift */; };
 		1929BBE28654E4307AF1E2FD /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC2F05E9A5C0DB039739 /* Theme.swift */; };
-		1929BC682EA78BF50D1E0890 /* ShortcutsTableSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B07F0085B7AE10413346 /* ShortcutsTableSubviews.swift */; };
 		1929BCC7908DD899999B70BE /* AppearancePrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BED01F5D94BFCA4CF80F /* AppearancePrefReducer.swift */; };
 		1929BCC9D3604933DFF07E2E /* FileBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA5C7099CDEB04B76BA4 /* FileBrowser.swift */; };
 		1929BCF7F7B9CC5499A3F506 /* AdvancedPrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7039C5689CE45F53888 /* AdvancedPrefReducer.swift */; };
 		1929BD2F41D93ADFF43C1C98 /* NetUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B02440BC99C42F9EBD45 /* NetUtils.m */; };
 		1929BD3878A3A47B8D685CD2 /* AppDelegateReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7A68B7109CEFAF105E8 /* AppDelegateReducer.swift */; };
 		1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D510177918080BE39B /* Scorer.swift */; };
-		1929BDC69A5F9D1661423488 /* ShortcutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF230875DED6CD7AB3EB /* ShortcutItem.swift */; };
 		1929BDFDBDA7180D02ACB37E /* RxSwiftCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6C215ACCBE12672A8D7 /* RxSwiftCommonsTest.swift */; };
 		1929BE0DAEE9664C5BCFA211 /* States.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB6608B4F0E037CA0F4C /* States.swift */; };
-		1929BE0EB11D6BBC46D448D2 /* RpcAppearanceEpic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B230EE8F1428980988F0 /* RpcAppearanceEpic.swift */; };
 		1929BE0F64A6CE5BCE2A5092 /* MainWindow+Delegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B714EB137AE448CE8ABD /* MainWindow+Delegates.swift */; };
 		1929BE2F3E0182CC51F2763A /* ThemedTableSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD2CA8DD198A6BCDBCB7 /* ThemedTableSubviews.swift */; };
 		1929BEAE0592096BC1191B67 /* PrefPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B07A4A9209C88380E015 /* PrefPane.swift */; };
@@ -1235,11 +1230,6 @@
 				1929B8E90A1378E494D481E7 /* PrefUtilsTest.swift in Sources */,
 				1929B20CE35B43BB1CE023BA /* Theme.swift in Sources */,
 				1929B9318D32146D58BB38EC /* AppKitCommons.swift in Sources */,
-				1929BC682EA78BF50D1E0890 /* ShortcutsTableSubviews.swift in Sources */,
-				1929B0244BD7111E168726CF /* DefaultShortcuts.swift in Sources */,
-				1929BDC69A5F9D1661423488 /* ShortcutItem.swift in Sources */,
-				1929B489A51FD5B13888A00C /* RpcEvents.swift in Sources */,
-				1929BE0EB11D6BBC46D448D2 /* RpcAppearanceEpic.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

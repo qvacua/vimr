@@ -25,12 +25,6 @@ fileprivate class DummyToken: Comparable {
 
 class ArrayCommonsTest: XCTestCase {
 
-  func testConcurrentChunkMap() {
-    let array = Array(0...1000)
-    let result = array.concurrentChunkMap(100, queue: .global(qos: .userInitiated)) { "\($0)" }
-    expect(Set(result)).to(equal(Set(array.map { "\($0)" })))
-  }
-
   func testTuplesToDict() {
     let tuples = [
       (1, "1"),

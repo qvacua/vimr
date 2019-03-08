@@ -195,9 +195,7 @@ extension FileBrowser {
       return
     }
 
-    #if NOPE
     self.fileView.select(url)
-    #endif
   }
 
   @objc func refreshAction(_ sender: Any?) {
