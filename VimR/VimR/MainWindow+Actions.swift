@@ -20,8 +20,6 @@ extension MainWindow {
     }
     let params = Array(rawParams.suffix(from: 1))
 
-    stdoutLog.debug("\(event): \(params)")
-
     switch event {
     case .makeSessionTemporary:
       self.emit(self.uuidAction(for: .makeSessionTemporary))

@@ -7,6 +7,7 @@ import Cocoa
 import RxSwift
 import PureLayout
 import WebKit
+import os
 
 class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
@@ -136,7 +137,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   }
 
   func webView(_: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-    fileLog.error("ERROR preview component's webview: \(error)")
+    self.log.error("ERROR preview component's webview: \(error)")
   }
 
   func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -167,6 +168,9 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
                                                         action: nil,
                                                         keyEquivalent: "")
   private let refreshOnWriteMenuItem = NSMenuItem(title: "Refresh on Write", action: nil, keyEquivalent: "")
+
+  private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                          category: Defs.LoggerCategory.uiComponents)
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")

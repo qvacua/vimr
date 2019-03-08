@@ -5,6 +5,7 @@
 
 import Foundation
 import Swifter
+import os
 
 class HttpServerMiddleware {
 
@@ -21,7 +22,7 @@ class HttpServerMiddleware {
 
     do {
       try server.start(in_port_t(port))
-      stdoutLog.info("VimR http server started on http://localhost:\(port)")
+      self.log.info("VimR http server started on http://localhost:\(port)")
 
       let previewResourceUrl = resourceUrl.appendingPathComponent("preview")
 
@@ -31,9 +32,12 @@ class HttpServerMiddleware {
       server["\(HtmlPreviewToolReducer.basePath)/:path"] = shareFilesFromDirectory(previewResourceUrl.path)
       server.GET["\(HtmlPreviewToolReducer.basePath)/github-markdown.css"] = shareFile(githubCssUrl.path)
     } catch {
-      stdoutLog.error("Server could not be started on port \(port): \(error)")
+      self.log.error("Server could not be started on port \(port): \(error)")
     }
   }
+
+  private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                          category: Defs.LoggerCategory.middleware)
 
   class HtmlPreviewMiddleware: MiddlewareType {
 
@@ -58,7 +62,7 @@ class HttpServerMiddleware {
           return result
         }
 
-        fileLog.debug("Serving \(htmlFileUrl) on \(serverUrl)")
+        self.log.debug("Serving \(htmlFileUrl) on \(serverUrl)")
         let basePath = serverUrl.payload.deletingLastPathComponent().path
 
         self.server.GET[serverUrl.payload.path] = shareFile(htmlFileUrl.path)
@@ -70,6 +74,9 @@ class HttpServerMiddleware {
 
     private let server: HttpServer
     private let githubCssUrl: URL
+
+    private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                            category: Defs.LoggerCategory.middleware)
   }
 
   class MainWindowMiddleware: MiddlewareType {
@@ -100,7 +107,7 @@ class HttpServerMiddleware {
           return result
         }
 
-        fileLog.debug("Serving \(html) on \(server)")
+        self.log.debug("Serving \(html) on \(server)")
         let htmlBasePath = server.deletingLastPathComponent().path
 
         self.server["\(htmlBasePath)/:path"] = shareFilesFromDirectory(buffer.deletingLastPathComponent().path)
@@ -113,5 +120,8 @@ class HttpServerMiddleware {
 
     private let server: HttpServer
     private let githubCssUrl: URL
+
+    private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                            category: Defs.LoggerCategory.middleware)
   }
 }

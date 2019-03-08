@@ -5,6 +5,7 @@
 
 import Foundation
 import CocoaMarkdown
+import os
 
 class PreviewMiddleware {
 
@@ -47,16 +48,18 @@ class PreviewMiddleware {
         return
       }
 
-      stdoutLog.debug("\(buffer) -> \(html)")
       do {
         try self.render(buffer, to: html)
         self.previewFiles[uuid] = html
       } catch let error as NSError {
         // FIXME: error handling!
-        NSLog("ERROR rendering \(buffer) to \(html): \(error)")
+        self.log.error("error whilte rendering \(buffer) to \(html): \(error)")
         return
       }
     }
+
+    private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                            category: Defs.LoggerCategory.middleware)
 
     private func render(_ bufferUrl: URL, to htmlUrl: URL) throws {
       let doc = CMDocument(contentsOfFile: bufferUrl.path, options: .sourcepos)

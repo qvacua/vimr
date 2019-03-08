@@ -5,6 +5,7 @@
 
 import Cocoa
 import PureLayout
+import os
 
 protocol WorkspaceBarDelegate: class {
 
@@ -43,6 +44,9 @@ private class ProxyBar: NSView {
 
     self.wantsLayer = true
   }
+
+  private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                          category: Defs.LoggerCategory.middleware)
 }
 
 class WorkspaceBar: NSView, WorkspaceToolDelegate {
@@ -341,7 +345,7 @@ extension ProxyBar {
       }
 
       // 1.
-      NSLog("same spot: \(self.container!.barFrame().contains(locInBar))")
+      self.log.debug("same spot: \(self.container!.barFrame().contains(locInBar))")
       return false
     }
 

@@ -6,9 +6,6 @@
 import Cocoa
 import Sparkle
 
-let fileLog = LogContext.fileLogger(as: "VimR-file", with: URL(fileURLWithPath: "/tmp/vimr.log"))
-let stdoutLog = LogContext.stdoutLogger(as: "VimR-stdout")
-
 class Application: NSApplication {
 
   override init() {
