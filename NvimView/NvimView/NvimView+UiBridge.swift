@@ -56,9 +56,7 @@ extension NvimView {
   }
 
   final func flush(_ renderData: [MessagePackValue]) {
-    #if TRACE
-    self.bridgeLogger.debug("# of render data: \(renderData.count)")
-    #endif
+    self.bridgeLogger.trace("# of render data: \(renderData.count)")
 
     gui.async {
       var (recompute, rowStart) = (false, Int.max)
@@ -332,9 +330,7 @@ extension NvimView {
   }
 
   private func doScroll(_ array: [Int]) -> Int {
-    #if TRACE
-    self.bridgeLogger.debug("[top, bot, left, right, rows, cols] = \(array)")
-    #endif
+    self.bridgeLogger.trace("[top, bot, left, right, rows, cols] = \(array)")
 
     let (top, bottom, left, right, rows, cols)
       = (array[0], array[1] - 1, array[2], array[3] - 1, array[4], array[5])
@@ -511,23 +507,17 @@ extension NvimView {
   }
 
   final func markForRender(region: Region) {
-    #if TRACE
-    self.bridgeLogger.debug(region)
-    #endif
+    self.bridgeLogger.trace(region)
     self.setNeedsDisplay(self.rect(for: region))
   }
 
   final func markForRender(row: Int, column: Int) {
-    #if TRACE
-    self.bridgeLogger.debug("\(row):\(column)")
-    #endif
+    self.bridgeLogger.trace("\(row):\(column)")
     self.setNeedsDisplay(self.rect(forRow: row, column: column))
   }
 
   final func markForRender(position: Position) {
-    #if TRACE
-    self.bridgeLogger.debug(position)
-    #endif
+    self.bridgeLogger.trace(position)
     self.setNeedsDisplay(
       self.rect(forRow: position.row, column: position.column)
     )
