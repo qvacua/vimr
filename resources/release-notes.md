@@ -4,7 +4,7 @@
 
 # 0.26.2-???
 
-* Bind http server to localhost
+* GH-425: Bind http server to localhost
 
 # 0.26.1-???
 
