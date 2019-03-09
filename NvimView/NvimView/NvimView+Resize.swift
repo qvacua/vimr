@@ -61,7 +61,8 @@ extension NvimView {
 
     self.bridge
       .resize(width: discreteSize.width, height: discreteSize.height)
-      .trigger()
+      .subscribe()
+      .disposed(by: self.disposeBag)
   }
 
   private func launchNeoVim(_ size: Size) {

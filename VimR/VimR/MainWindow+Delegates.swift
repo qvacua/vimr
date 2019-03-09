@@ -56,9 +56,10 @@ extension MainWindow {
   func bufferListChanged() {
     self.neoVimView
       .allBuffers()
-      .value(onSuccess: { buffers in
+      .subscribe(onSuccess: { buffers in
         self.emit(self.uuidAction(for: .setBufferList(buffers.filter { $0.isListed })))
       })
+      .disposed(by: self.disposeBag)
   }
 
   func bufferWritten(_ buffer: NvimView.Buffer) {
@@ -72,9 +73,10 @@ extension MainWindow {
   func tabChanged() {
     self.neoVimView
       .currentBuffer()
-      .value(onSuccess: {
+      .subscribe(onSuccess: {
         self.newCurrentBuffer($0)
       })
+      .disposed(by: self.disposeBag)
   }
 
   func colorschemeChanged(to neoVimTheme: NvimView.Theme) {
@@ -123,11 +125,11 @@ extension MainWindow {
 
   func windowDidBecomeMain(_ notification: Notification) {
     self.emit(self.uuidAction(for: .becomeKey(isFullScreen: self.window.styleMask.contains(.fullScreen))))
-    self.neoVimView.didBecomeMain().trigger()
+    self.neoVimView.didBecomeMain().subscribe().disposed(by: self.disposeBag)
   }
 
   func windowDidResignMain(_ notification: Notification) {
-    self.neoVimView.didResignMain().trigger()
+    self.neoVimView.didResignMain().subscribe().disposed(by: self.disposeBag)
   }
 
   func windowDidMove(_ notification: Notification) {

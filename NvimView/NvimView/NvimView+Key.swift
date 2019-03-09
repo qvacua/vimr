@@ -133,7 +133,8 @@ extension NvimView {
     if chars == "\0" {
       self.bridge
         .vimInput(self.wrapNamedKeys("Nul"))
-        .trigger()
+        .subscribe()
+        .disposed(by: self.disposeBag)
       return true
     }
 
@@ -143,7 +144,8 @@ extension NvimView {
     if .control == flags && chars == "6" {
       self.bridge
         .vimInput("\u{1e}") // AKA ^^
-        .trigger()
+        .subscribe()
+        .disposed(by: self.disposeBag)
       return true
     }
 
@@ -151,7 +153,8 @@ extension NvimView {
       // <C-2> should generate \0, escaping as above
       self.bridge
         .vimInput(self.wrapNamedKeys("Nul"))
-        .trigger()
+        .subscribe()
+        .disposed(by: self.disposeBag)
       return true
     }
 

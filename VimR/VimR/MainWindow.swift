@@ -87,6 +87,8 @@ class MainWindow: NSObject,
     case verticalSplit
   }
 
+  let disposeBag = DisposeBag()
+
   let uuid: UUID
   let emit: (UuidAction<Action>) -> Void
 
@@ -356,7 +358,8 @@ class MainWindow: NSObject,
 
             return .empty()
           }
-          .trigger()
+          .subscribe()
+          .disposed(by: self.disposeBag)
 
         let usesTheme = state.appearance.usesTheme
         let themePrefChanged = state.appearance.usesTheme != self.usesTheme
@@ -434,7 +437,8 @@ class MainWindow: NSObject,
 
         return .empty()
       }
-      .trigger()
+      .subscribe()
+      .disposed(by: self.disposeBag)
   }
 
   func uuidAction(for action: Action) -> UuidAction<Action> {
@@ -458,8 +462,6 @@ class MainWindow: NSObject,
     theme.highlightBackground = .red
     self.emit(uuidAction(for: .setTheme(theme)))
   }
-
-  private let disposeBag = DisposeBag()
 
   private var currentBuffer: NvimView.Buffer?
 

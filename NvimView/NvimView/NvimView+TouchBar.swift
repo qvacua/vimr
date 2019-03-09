@@ -64,7 +64,7 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
     self
       .allTabs()
       .observeOn(MainScheduler.instance)
-      .value(onSuccess: {
+      .subscribe(onSuccess: {
         self.tabsCache = $0
 
         guard let tabsControl = self.getTabsControl() else {
@@ -79,13 +79,14 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
       }, onError: { error in
         self.eventsSubject.onNext(.apiError(msg: "Could not get all tabpages.", cause: error))
       })
+      .disposed(by: self.disposeBag)
   }
 
   func updateTouchBarTab() {
     self
       .allTabs()
       .observeOn(MainScheduler.instance)
-      .value(onSuccess: {
+      .subscribe(onSuccess: {
         self.tabsCache = $0
 
         guard let tabsControl = self.getTabsControl() else {
@@ -97,6 +98,7 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
       }, onError: { error in
         self.eventsSubject.onNext(.apiError(msg: "Could not get all tabpages.", cause: error))
       })
+      .disposed(by: self.disposeBag)
   }
 
   public func numberOfItems(for scrubber: NSScrubber) -> Int {
@@ -129,9 +131,10 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
     self.api
       .setCurrentWin(window: Api.Window(window.handle))
       .subscribeOn(self.scheduler)
-      .trigger(onError: { error in
+      .subscribe(onError: { error in
         self.eventsSubject.onNext(.apiError(msg: "Could not set current window to \(window.handle).", cause: error))
       })
+      .disposed(by: self.disposeBag)
   }
 }
 

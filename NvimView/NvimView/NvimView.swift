@@ -190,9 +190,10 @@ public class NvimView: NSView,
       self.api
         .setCurrentDir(dir: newValue.path)
         .subscribeOn(self.scheduler)
-        .trigger(onError: { error in
+        .subscribe(onError: { error in
           self.eventsSubject.onError(Error.ipc(msg: "Could not set cwd to \(newValue)", cause: error))
         })
+        .disposed(by: self.disposeBag)
     }
   }
 

@@ -116,7 +116,8 @@ extension MainWindow {
   @IBAction func newTab(_ sender: Any?) {
     self.neoVimView
       .newTab()
-      .trigger()
+      .subscribe()
+      .disposed(by: self.disposeBag)
   }
 
   @IBAction func openDocument(_ sender: Any?) {
@@ -141,7 +142,8 @@ extension MainWindow {
           }
           return self.neoVimView.open(urls: urls)
         }
-        .trigger()
+        .subscribe()
+        .disposed(by: self.disposeBag)
     }
   }
 
@@ -158,30 +160,34 @@ extension MainWindow {
           self.savePanelSheet {
             self.neoVimView
               .saveCurrentTab(url: $0)
-              .trigger()
+              .subscribe()
+              .disposed(by: self.disposeBag)
           }
           return Completable.empty()
         }
 
         return self.neoVimView.saveCurrentTab()
       }
-      .trigger()
+      .subscribe()
+      .disposed(by: self.disposeBag)
   }
 
   @IBAction func saveDocumentAs(_ sender: Any?) {
     self.neoVimView
       .currentBuffer()
       .observeOn(MainScheduler.instance)
-      .value(onSuccess: { curBuf in
+      .subscribe(onSuccess: { curBuf in
         self.savePanelSheet { url in
           self.neoVimView
             .saveCurrentTab(url: url)
             .andThen(
               curBuf.isDirty ? self.neoVimView.openInNewTab(urls: [url]) : self.neoVimView.openInCurrentTab(url: url)
             )
-            .trigger()
+            .subscribe()
+            .disposed(by: self.disposeBag)
         }
       })
+      .disposed(by: self.disposeBag)
   }
 
   fileprivate func savePanelSheet(action: @escaping (URL) -> Void) {

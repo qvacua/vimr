@@ -534,7 +534,7 @@ extension NvimView {
           for: Api.Buffer(handle), currentBuffer: curBuf.apiBuffer
         )
       }
-      .value(onSuccess: {
+      .subscribe(onSuccess: {
         self.eventsSubject.onNext(.bufferWritten($0))
         if #available(OSX 10.12.2, *) {
           self.updateTouchBarTab()
@@ -545,13 +545,14 @@ extension NvimView {
           .apiError(msg: "Could not get the buffer \(handle).", cause: error)
         )
       })
+      .disposed(by: self.disposeBag)
   }
 
   private func newCurrentBuffer(_ handle: Int) {
     self
       .currentBuffer()
       .filter { $0.apiBuffer.handle == handle }
-      .value(onSuccess: {
+      .subscribe(onSuccess: {
         self.eventsSubject.onNext(.newCurrentBuffer($0))
         if #available(OSX 10.12.2, *) {
           self.updateTouchBarTab()
@@ -562,6 +563,7 @@ extension NvimView {
           .apiError(msg: "Could not get the current buffer.", cause: error)
         )
       })
+      .disposed(by: self.disposeBag)
   }
 
   private func bufferListChanged() {
