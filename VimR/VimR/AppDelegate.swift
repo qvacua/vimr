@@ -8,6 +8,7 @@ import RxSwift
 import PureLayout
 import Sparkle
 import CocoaFontAwesome
+import os
 
 let debugMenuItemIdentifier = NSUserInterfaceItemIdentifier("debug-menu-item")
 
@@ -115,6 +116,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
   private let disposeBag = DisposeBag()
 
   private var launching = true
+
+  private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                          category: Defs.LoggerCategory.general)
 
   private func setSparkleUrl(_ snapshot: Bool) {
     if snapshot {
@@ -272,7 +276,7 @@ extension AppDelegate {
         do {
           try FileManager.default.removeItem(atPath: envPath)
         } catch {
-          fileLog.error(error.localizedDescription)
+          self.log.error(error.localizedDescription)
         }
       }
     } else {
@@ -329,7 +333,7 @@ extension AppDelegate {
     do {
       return try JSONSerialization.jsonObject(with: data) as? [String: String]
     } catch {
-      fileLog.error(error.localizedDescription)
+      self.log.error(error.localizedDescription)
     }
 
     return nil

@@ -52,15 +52,17 @@ extension NvimView {
     case .insert, .replace:
       self.bridge
         .vimInput("<Esc>ui")
-        .trigger(onError: { error in
+        .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not undo", cause: error))
         })
+        .disposed(by: self.disposeBag)
     case .normal, .visual:
       self.bridge
         .vimInput("u")
-        .trigger(onError: { error in
+        .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not undo", cause: error))
         })
+        .disposed(by: self.disposeBag)
     default:
       return
     }
@@ -71,15 +73,17 @@ extension NvimView {
     case .insert, .replace:
       self.bridge
         .vimInput("<Esc><C-r>i")
-        .trigger(onError: { error in
+        .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not redo", cause: error))
         })
+        .disposed(by: self.disposeBag)
     case .normal, .visual:
       self.bridge
         .vimInput("<C-r>")
-        .trigger(onError: { error in
+        .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not redo", cause: error))
         })
+        .disposed(by: self.disposeBag)
     default:
       return
     }
@@ -90,9 +94,10 @@ extension NvimView {
     case .visual, .normal:
       self.bridge
         .vimInput("\"+d")
-        .trigger(onError: { error in
+        .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not cut", cause: error))
         })
+        .disposed(by: self.disposeBag)
     default:
       return
     }
@@ -103,9 +108,10 @@ extension NvimView {
     case .visual, .normal:
       self.bridge
         .vimInput("\"+y")
-        .trigger(onError: { error in
+        .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not copy", cause: error))
         })
+        .disposed(by: self.disposeBag)
     default:
       return
     }
@@ -121,9 +127,10 @@ extension NvimView {
        || self.mode == .termFocus {
       self.bridge
         .vimInput(self.vimPlainString(content))
-        .trigger(onError: { error in
+        .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not paste \(content)", cause: error))
         })
+        .disposed(by: self.disposeBag)
       return
     }
 
@@ -170,9 +177,10 @@ extension NvimView {
 
         return Completable.empty()
       }
-      .trigger(onError: { error in
+      .subscribe(onError: { error in
         self.eventsSubject.onNext(.apiError(msg: "There was an pasting.", cause: error))
       })
+      .disposed(by: self.disposeBag)
   }
 
   @IBAction func delete(_ sender: AnyObject?) {
@@ -180,9 +188,10 @@ extension NvimView {
     case .normal, .visual:
       self.bridge
         .vimInput("x")
-        .trigger(onError: { error in
+        .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not delete", cause: error))
         })
+        .disposed(by: self.disposeBag)
     default:
       return
     }
@@ -193,15 +202,17 @@ extension NvimView {
     case .insert, .visual:
       self.bridge
         .vimInput("<Esc>ggVG")
-        .trigger(onError: { error in
+        .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not select all", cause: error))
         })
+        .disposed(by: self.disposeBag)
     default:
       self.bridge
         .vimInput("ggVG")
-        .trigger(onError: { error in
+        .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not select all", cause: error))
         })
+        .disposed(by: self.disposeBag)
     }
   }
 }

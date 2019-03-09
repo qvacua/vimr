@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import os
 
 final class Typesetter {
 
@@ -118,8 +119,9 @@ final class Typesetter {
         ]
       }
 
-      // TODO: GH-666: Do we ever come here?
-      print("Could not get all glyphs for single-width singe UTF16 character!")
+      self.logger.info(
+        "Could not get all glyphs for single-width singe UTF16 character!"
+      )
       let groupRanges = glyphs.groupedRanges { _, element in element == 0 }
       let groupRuns: [[FontGlyphRun]] = groupRanges.map { range in
         if unichars[range.lowerBound] == 0 {
@@ -152,6 +154,9 @@ final class Typesetter {
 
     return runs.flatMap { $0 }
   }
+
+  private let logger = OSLog(subsystem: Defs.loggerSubsystem,
+                             category: Defs.LoggerCategory.view)
 
   private func ctRuns(
     from utf16Chars: Array<Unicode.UTF16.CodeUnit>,

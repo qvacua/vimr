@@ -4,6 +4,7 @@
  */
 
 import Foundation
+import os
 
 struct UCell {
 
@@ -267,7 +268,7 @@ final class UGrid: CustomStringConvertible {
   }
 
   func resize(_ size: Size) {
-    self.logger.debug(size)
+    self.log.debug(size)
 
     self.size = size
     self.cursorPosition = .zero
@@ -306,7 +307,7 @@ final class UGrid: CustomStringConvertible {
   }
 
   func recomputeFlatIndices(rowStart: Int, rowEndInclusive: Int) {
-    self.logger.debug("Recomputing flat indices from row \(rowStart)")
+    self.log.debug("Recomputing flat indices from row \(rowStart)")
 
     var delta = 0
     if rowStart > 0 {
@@ -326,9 +327,8 @@ final class UGrid: CustomStringConvertible {
     }
   }
 
-  private let logger = LogContext.fileLogger(
-    as: UGrid.self, with: URL(fileURLWithPath: "/tmp/nvv.log")
-  )
+  private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                          category: Defs.LoggerCategory.view)
 }
 
 private let clearString = " "

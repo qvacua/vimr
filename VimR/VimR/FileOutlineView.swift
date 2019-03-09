@@ -8,6 +8,7 @@ import NvimView
 import PureLayout
 import RxSwift
 import CocoaFontAwesome
+import os
 
 class FileOutlineView: NSOutlineView,
                        UiComponent,
@@ -125,12 +126,6 @@ class FileOutlineView: NSOutlineView,
     return result
   }
 
-  private func select(treeNode: NSTreeNode) {
-    let targetRow = self.row(forItem: treeNode)
-    self.selectRowIndexes(IndexSet(integer: targetRow), byExtendingSelection: false)
-    self.scrollRowToVisible(targetRow)
-  }
-
   func select(_ url: URL) {
     guard let childrenOfRoot = self.treeController.arrangedObjects.children
       else { return }
@@ -141,7 +136,6 @@ class FileOutlineView: NSOutlineView,
     for childOfRoot in childrenOfRoot {
       guard let node = childOfRoot.node else { continue }
 
-      stdoutLog.debug(node)
       if node.url == url {
         self.select(treeNode: childOfRoot)
         return
@@ -193,6 +187,9 @@ class FileOutlineView: NSOutlineView,
   private var triangleClosed: NSImage
   private var triangleOpen: NSImage
 
+  private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                          category: Defs.LoggerCategory.uiComponents)
+
   private func initContextMenu() {
     // Loading the nib file will set self.menu.
     guard Bundle.main.loadNibNamed(
@@ -200,7 +197,7 @@ class FileOutlineView: NSOutlineView,
       owner: self,
       topLevelObjects: nil
     ) else {
-      fileLog.error("FileBrowserMenu.xib could not be loaded")
+      self.log.error("FileBrowserMenu.xib could not be loaded")
       return
     }
     self.menu?.items.forEach { $0.target = self }
@@ -317,6 +314,12 @@ class FileOutlineView: NSOutlineView,
     self.root.children = children
     self.content.removeAll()
     self.content.append(contentsOf: children)
+  }
+
+  private func select(treeNode: NSTreeNode) {
+    let targetRow = self.row(forItem: treeNode)
+    self.selectRowIndexes(IndexSet(integer: targetRow), byExtendingSelection: false)
+    self.scrollRowToVisible(targetRow)
   }
 
   private func updateTheme(_ theme: Marked<Theme>) {

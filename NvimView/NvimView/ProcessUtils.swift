@@ -4,6 +4,7 @@
  */
 
 import Foundation
+import os
 
 class ProcessUtils {
 
@@ -39,6 +40,7 @@ class ProcessUtils {
     guard let output = String(
       data: readHandle.readDataToEndOfFile(), encoding: .utf8
     ) else {
+      ProcessUtils.logger.error("No output; returning empty ENVs.")
       return [:]
     }
     readHandle.closeFile()
@@ -47,6 +49,7 @@ class ProcessUtils {
     process.waitUntilExit()
 
     guard let range = output.range(of: marker) else {
+      ProcessUtils.logger.error("Marker not found; returning empty ENVs.")
       return [:]
     }
 
@@ -59,4 +62,7 @@ class ProcessUtils {
         result[split[0]] = split[1]
       }
   }
+
+  private static let logger = OSLog(subsystem: Defs.loggerSubsystem,
+                                    category: Defs.LoggerCategory.view)
 }

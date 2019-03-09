@@ -61,7 +61,7 @@ class Context: ReduxContext {
 
     // MainWindow.State
     self.actionEmitter.observable
-      .mapOmittingNil { action in
+      .compactMap { action in
         guard let uuidAction = action as? UuidTagged else {
           return nil
         }

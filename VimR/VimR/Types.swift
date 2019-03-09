@@ -112,7 +112,7 @@ class UiComponentTemplate: UiComponent {
       .observeOn(MainScheduler.instance)
       .subscribe(
         onNext: { [unowned self] state in
-          print("Hello, \(self.someField)")
+          Swift.print("Hello, \(self.someField)")
         }
       )
       .disposed(by: self.disposeBag)

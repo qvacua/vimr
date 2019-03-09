@@ -244,10 +244,6 @@ extension OpenQuicklyWindow {
     return cell
   }
 
-  func tableViewSelectionDidChange(_: Notification) {
-//    NSLog("\(#function): selection changed")
-  }
-
   private func rowText(for url: URL) -> NSAttributedString {
     let pathComps = url.pathComponents
     let truncatedPathComps = pathComps[self.cwdPathCompsCount..<pathComps.count]

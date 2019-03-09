@@ -8,7 +8,10 @@ import RxSwift
 
 extension PrimitiveSequence where Element == Never, TraitType == CompletableTrait {
 
-  func wait() throws {
+  func wait(
+    onCompleted: (() -> Void)? = nil,
+    onError: ((Error) -> Void)? = nil
+  ) throws {
     var trigger = false
     var err: Error? = nil
 
@@ -18,9 +21,11 @@ extension PrimitiveSequence where Element == Never, TraitType == CompletableTrai
     defer { condition.unlock() }
 
     let disposable = self.subscribe(onCompleted: {
+      onCompleted?()
       trigger = true
       broadcast(condition)
     }, onError: { error in
+      onError?(error)
       trigger = true
       err = error
       broadcast(condition)
@@ -33,36 +38,12 @@ extension PrimitiveSequence where Element == Never, TraitType == CompletableTrai
       throw e
     }
   }
-
-  func trigger(
-    onCompleted: (() -> Void)? = nil,
-    onError: ((Error) -> Void)? = nil
-  ) {
-    self.subscribe(onCompleted: onCompleted, onError: onError)
-  }
-}
-
-extension PrimitiveSequence where TraitType == MaybeTrait {
-
-  func value(
-    onSuccess: ((Element) -> Void)? = nil,
-    onError: ((Error) -> Void)? = nil
-  ) {
-    self.subscribe(onSuccess: onSuccess, onError: onError)
-  }
 }
 
 extension PrimitiveSequence where TraitType == SingleTrait {
 
   static func fromSinglesToSingleOfArray(_ singles: [Single<Element>]) -> Single<[Element]> {
     return Observable.merge(singles.map { $0.asObservable() }).toArray().asSingle()
-  }
-
-  func value(
-    onSuccess: ((Element) -> Void)? = nil,
-    onError: ((Error) -> Void)? = nil
-  ) {
-    self.subscribe(onSuccess: onSuccess, onError: onError)
   }
 
   func syncValue() -> Element? {

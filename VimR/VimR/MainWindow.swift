@@ -7,6 +7,7 @@ import Cocoa
 import RxSwift
 import NvimView
 import PureLayout
+import os
 
 class MainWindow: NSObject,
                   UiComponent,
@@ -85,6 +86,8 @@ class MainWindow: NSObject,
     case horizontalSplit
     case verticalSplit
   }
+
+  let disposeBag = DisposeBag()
 
   let uuid: UUID
   let emit: (UuidAction<Action>) -> Void
@@ -288,7 +291,7 @@ class MainWindow: NSObject,
         case .initVimError: self.showInitError()
 
         case .apiError(let error, let msg):
-          fileLog.error("Got api error with msg '\(msg)' and error: \(error)")
+          self.log.error("Got api error with msg '\(msg)' and error: \(error)")
           break
 
         case .rpcEvent(let params):
@@ -300,7 +303,7 @@ class MainWindow: NSObject,
         }
       }, onError: { error in
         // FIXME call onError
-        fileLog.error(error)
+        self.log.error(error)
       })
       .disposed(by: self.disposeBag)
 
@@ -355,7 +358,8 @@ class MainWindow: NSObject,
 
             return .empty()
           }
-          .trigger()
+          .subscribe()
+          .disposed(by: self.disposeBag)
 
         let usesTheme = state.appearance.usesTheme
         let themePrefChanged = state.appearance.usesTheme != self.usesTheme
@@ -433,7 +437,8 @@ class MainWindow: NSObject,
 
         return .empty()
       }
-      .trigger()
+      .subscribe()
+      .disposed(by: self.disposeBag)
   }
 
   func uuidAction(for action: Action) -> UuidAction<Action> {
@@ -458,8 +463,6 @@ class MainWindow: NSObject,
     self.emit(uuidAction(for: .setTheme(theme)))
   }
 
-  private let disposeBag = DisposeBag()
-
   private var currentBuffer: NvimView.Buffer?
 
   private var goToLineFromCli: Marked<Int>?
@@ -478,6 +481,9 @@ class MainWindow: NSObject,
 
   private var usesTheme = true
   private var lastThemeMark = Token()
+
+  private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                          category: Defs.LoggerCategory.uiComponents)
 
   private func updateNeoVimAppearance() {
     self.neoVimView.font = self.defaultFont

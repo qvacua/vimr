@@ -4,6 +4,7 @@
  */
 
 import Foundation
+import os
 
 extension URL {
 
@@ -90,7 +91,7 @@ extension URL {
       try (self as NSURL).getResourceValue(&rsrc, forKey: URLResourceKey(rawValue: key))
     } catch let error as NSError {
       // FIXME error handling
-      print("\(#function): \(self) -> ERROR while getting \(key): \(error)")
+      log.error("ERROR while getting \(key): \(error)")
       return false
     }
 
@@ -101,3 +102,6 @@ extension URL {
     return false
   }
 }
+
+private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                        category: Defs.LoggerCategory.general)

@@ -14,10 +14,11 @@ extension NvimView {
     guard let array = MessagePackUtils.array(
       from: value, ofSize: 2, conversion: { $0.intValue }
     ) else {
+      self.bridgeLogger.error("Could not convert \(value)")
       return
     }
 
-    self.bridgeLogger.debug("\(array[0]) x \(array[1])")
+    self.bridgeLogger.debug(array)
     gui.async {
       self.ugrid.resize(Size(width: array[0], height: array[1]))
       self.markForRenderWholeView()
@@ -25,7 +26,7 @@ extension NvimView {
   }
 
   final func clear() {
-    self.bridgeLogger.mark()
+    self.bridgeLogger.debug()
 
     gui.async {
       self.ugrid.clear()
@@ -41,6 +42,7 @@ extension NvimView {
       return CursorModeShape(rawValue: UInt(rawValue))
 
     }) else {
+      self.bridgeLogger.error("Could not convert \(value)")
       return
     }
 
@@ -54,7 +56,7 @@ extension NvimView {
   }
 
   final func flush(_ renderData: [MessagePackValue]) {
-    self.bridgeLogger.debug("# of render data: \(renderData.count)")
+    self.bridgeLogger.trace("# of render data: \(renderData.count)")
 
     gui.async {
       var (recompute, rowStart) = (false, Int.max)
@@ -64,7 +66,11 @@ extension NvimView {
 
         guard let rawType = renderEntry[0].intValue,
               let innerArray = renderEntry[1].arrayValue,
-              let type = RenderDataType(rawValue: rawType) else { return }
+              let type = RenderDataType(rawValue: rawType)
+          else {
+          self.bridgeLogger.error("Could not convert \(value)")
+          return
+        }
 
         switch type {
 
@@ -82,7 +88,7 @@ extension NvimView {
         case .scroll:
           let values = innerArray.compactMap { $0.intValue }
           guard values.count == 6 else {
-            self.bridgeLogger.error("Scroll msg does not have 6 Int's!")
+            self.bridgeLogger.error("Could not convert \(values)")
             return
           }
 
@@ -109,14 +115,17 @@ extension NvimView {
   }
 
   final func setTitle(with value: MessagePackValue) {
-    guard let title = value.stringValue else { return }
+    guard let title = value.stringValue else {
+      self.bridgeLogger.error("Could not convert \(value)")
+      return
+    }
 
     self.bridgeLogger.debug(title)
     self.eventsSubject.onNext(.setTitle(title))
   }
 
   final func stop() {
-    self.bridgeLogger.hr()
+    self.bridgeLogger.debug()
     try? self.api
       .stop()
       .andThen(Completable.create { completable in
@@ -128,7 +137,11 @@ extension NvimView {
       })
       .andThen(self.bridge.quit())
       .observeOn(MainScheduler.instance)
-      .wait()
+      .wait(onCompleted: {
+        self.bridgeLogger.info("Successfully stopped the bridge.")
+      }, onError: {
+        self.bridgeLogger.fault("There was an error stopping the bridge: \($0)")
+      })
   }
 
   final func autoCommandEvent(_ value: MessagePackValue) {
@@ -137,8 +150,12 @@ extension NvimView {
     ),
           let event = NvimAutoCommandEvent(rawValue: array[0])
       else {
+      self.bridgeLogger.error("Could not convert \(value)")
       return
     }
+
+    self.bridgeLogger.debug("\(event): \(array)")
+
     let bufferHandle = array[1]
 
     if event == .vimenter {
@@ -153,6 +170,7 @@ extension NvimView {
             while !self.rpcEventSubscribedFlag
                   && self.rpcEventSubscribedCondition
                     .wait(until: Date(timeIntervalSinceNow: 5)) {}
+            self.bridgeLogger.debug("RPC events subscription done.")
 
             completable(.completed)
             return Disposables.create()
@@ -164,6 +182,7 @@ extension NvimView {
               .appendingPathComponent(".config/nvim/ginit.vim").path
             let loadGinit = FileManager.default.fileExists(atPath: ginitPath)
             if loadGinit {
+              self.bridgeLogger.debug("Source'ing ginit.vim")
               return self.api.command(command: "source \(ginitPath)")
             } else {
               return .empty()
@@ -172,16 +191,12 @@ extension NvimView {
         )
         .andThen(self.bridge.notifyReadinessForRpcEvents())
         .subscribe(onCompleted: {
-          self.logger.debug("GUIEnter aucmd fired")
+          self.log.debug("Notified the NvimServer to fire GUIEnter")
         })
         .disposed(by: self.disposeBag)
 
       return
     }
-
-    #if TRACE
-    self.bridgeLogger.trace("\(event) -> \(bufferHandle)")
-    #endif
 
     if event == .bufwinenter || event == .bufwinleave {
       self.bufferListChanged()
@@ -201,24 +216,27 @@ extension NvimView {
   }
 
   final func ipcBecameInvalid(_ reason: String) {
-    self.bridgeLogger.debug(reason)
+    self.bridgeLogger.fault("Bridge became invalid: \(reason)")
 
     self.eventsSubject.onNext(.ipcBecameInvalid(reason))
     self.eventsSubject.onCompleted()
 
-    self.bridgeLogger.error("Force-closing due to IPC error.")
+    self.bridgeLogger.fault("Force-closing due to IPC error.")
     try? self.api
       .stop()
       .andThen(self.bridge.forceQuit())
       .observeOn(MainScheduler.instance)
-      .wait()
+      .wait(onCompleted: {
+        self.bridgeLogger.fault("Successfully force-closed the bridge.")
+      }, onError: {
+        self.bridgeLogger.fault("There was an error force-closing" +
+                                " the bridge: \($0)")
+      })
   }
 
   private func doRawLine(data: [MessagePackValue]) -> (Bool, Int) {
     guard data.count == 7 else {
-      self.stdoutLogger.error(
-        "Data has wrong number of elements: \(data.count) instead of 7"
-      )
+      self.bridgeLogger.error("Could not convert; wrong count: \(data)")
       return (false, Int.max)
     }
 
@@ -231,12 +249,12 @@ extension NvimView {
           let attrIds = data[6].arrayValue?.compactMap({ $0.intValue })
       else {
 
-      self.stdoutLogger.error("Values could not be read from: \(data)")
+      self.bridgeLogger.error("Could not convert \(data)")
       return (false, Int.max)
     }
 
     #if TRACE
-    self.bridgeLogger.trace(
+    self.bridgeLogger.debug(
       "row: \(row), startCol: \(startCol), endCol: \(endCol), " +
       "clearCol: \(clearCol), clearAttr: \(clearAttr), " +
       "chunk: \(chunk), attrIds: \(attrIds)"
@@ -245,6 +263,7 @@ extension NvimView {
 
     let count = endCol - startCol
     guard chunk.count == count && attrIds.count == count else {
+      self.bridgeLogger.error("The count of chunks and attrIds do not match.")
       return (false, Int.max)
     }
     self.ugrid.update(row: row,
@@ -311,7 +330,7 @@ extension NvimView {
   }
 
   private func doScroll(_ array: [Int]) -> Int {
-    self.bridgeLogger.debug("[top, bot, left, right, rows, cols] = \(array)")
+    self.bridgeLogger.trace("[top, bot, left, right, rows, cols] = \(array)")
 
     let (top, bottom, left, right, rows, cols)
       = (array[0], array[1] - 1, array[2], array[3] - 1, array[4], array[5])
@@ -320,12 +339,6 @@ extension NvimView {
       top: top, bottom: bottom,
       left: left, right: right
     )
-//    let maxBottom = self.ugrid.size.height - 1
-//    let regionToRender = Region(
-//      top: min(max(0, top - rows), maxBottom),
-//      bottom: max(0, min(bottom - rows, maxBottom)),
-//      left: left, right: right
-//    )
 
     self.ugrid.scroll(region: scrollRegion, rows: rows, cols: cols)
     self.markForRender(region: scrollRegion)
@@ -339,13 +352,15 @@ extension NvimView {
 extension NvimView {
 
   final func bell() {
-    self.bridgeLogger.mark()
-
+    self.bridgeLogger.debug()
     NSSound.beep()
   }
 
   final func cwdChanged(_ value: MessagePackValue) {
-    guard let cwd = value.stringValue else { return }
+    guard let cwd = value.stringValue else {
+      self.bridgeLogger.error("Could not convert \(value)")
+      return
+    }
 
     self.bridgeLogger.debug(cwd)
     self._cwd = URL(fileURLWithPath: cwd)
@@ -356,6 +371,7 @@ extension NvimView {
     guard let values = MessagePackUtils.array(
       from: value, ofSize: 5, conversion: { $0.intValue }
     ) else {
+      self.bridgeLogger.error("Could not convert \(value)")
       return
     }
 
@@ -372,10 +388,11 @@ extension NvimView {
     guard let values = MessagePackUtils.array(
       from: value, ofSize: 3, conversion: { $0.intValue }
     ) else {
+      self.bridgeLogger.error("Could not convert \(value)")
       return
     }
 
-    self.bridgeLogger.trace(values)
+    self.bridgeLogger.debug(values)
 
     let attrs = CellAttributes(
       fontTrait: [],
@@ -396,7 +413,10 @@ extension NvimView {
   }
 
   final func setDirty(with value: MessagePackValue) {
-    guard let dirty = value.boolValue else { return }
+    guard let dirty = value.boolValue else {
+      self.bridgeLogger.error("Could not convert \(value)")
+      return
+    }
 
     self.bridgeLogger.debug(dirty)
     self.eventsSubject.onNext(.setDirtyStatus(dirty))
@@ -412,8 +432,14 @@ extension NvimView {
   }
 
   final func setAttr(with value: MessagePackValue) {
-    guard let array = value.arrayValue else { return }
-    guard array.count == 6 else { return }
+    guard let array = value.arrayValue else {
+      self.bridgeLogger.error("Could not convert \(value)")
+      return
+    }
+    guard array.count == 6 else {
+      self.bridgeLogger.error("Could not convert; wrong count \(value)")
+      return
+    }
 
     guard let id = array[0].intValue,
           let rawTrait = array[1].unsignedIntegerValue,
@@ -437,7 +463,7 @@ extension NvimView {
       reverse: reverse
     )
 
-    self.bridgeLogger.trace("\(id) -> \(attrs)")
+    self.bridgeLogger.debug("AttrId: \(id): \(attrs)")
 
     gui.async {
       self.cellAttributesCollection.set(attributes: attrs, for: id)
@@ -445,49 +471,53 @@ extension NvimView {
   }
 
   final func updateMenu() {
-    self.bridgeLogger.mark()
+    self.bridgeLogger.debug()
   }
 
   final func busyStart() {
-    self.bridgeLogger.mark()
+    self.bridgeLogger.debug()
   }
 
   final func busyStop() {
-    self.bridgeLogger.mark()
+    self.bridgeLogger.debug()
   }
 
   final func mouseOn() {
-    self.bridgeLogger.mark()
+    self.bridgeLogger.debug()
   }
 
   final func mouseOff() {
-    self.bridgeLogger.mark()
+    self.bridgeLogger.debug()
   }
 
   final func visualBell() {
-    self.bridgeLogger.mark()
+    self.bridgeLogger.debug()
   }
 
   final func suspend() {
-    self.bridgeLogger.mark()
+    self.bridgeLogger.debug()
   }
 }
 
 extension NvimView {
 
   final func markForRenderWholeView() {
+    self.bridgeLogger.debug()
     self.needsDisplay = true
   }
 
   final func markForRender(region: Region) {
+    self.bridgeLogger.trace(region)
     self.setNeedsDisplay(self.rect(for: region))
   }
 
   final func markForRender(row: Int, column: Int) {
+    self.bridgeLogger.trace("\(row):\(column)")
     self.setNeedsDisplay(self.rect(forRow: row, column: column))
   }
 
   final func markForRender(position: Position) {
+    self.bridgeLogger.trace(position)
     self.setNeedsDisplay(
       self.rect(forRow: position.row, column: position.column)
     )
@@ -504,32 +534,36 @@ extension NvimView {
           for: Api.Buffer(handle), currentBuffer: curBuf.apiBuffer
         )
       }
-      .value(onSuccess: {
+      .subscribe(onSuccess: {
         self.eventsSubject.onNext(.bufferWritten($0))
         if #available(OSX 10.12.2, *) {
           self.updateTouchBarTab()
         }
       }, onError: { error in
+        self.bridgeLogger.error("Could not get the buffer \(handle): \(error)")
         self.eventsSubject.onNext(
           .apiError(msg: "Could not get the buffer \(handle).", cause: error)
         )
       })
+      .disposed(by: self.disposeBag)
   }
 
   private func newCurrentBuffer(_ handle: Int) {
     self
       .currentBuffer()
       .filter { $0.apiBuffer.handle == handle }
-      .value(onSuccess: {
+      .subscribe(onSuccess: {
         self.eventsSubject.onNext(.newCurrentBuffer($0))
         if #available(OSX 10.12.2, *) {
           self.updateTouchBarTab()
         }
       }, onError: { error in
+        self.bridgeLogger.error("Could not get the current buffer: \(error)")
         self.eventsSubject.onNext(
           .apiError(msg: "Could not get the current buffer.", cause: error)
         )
       })
+      .disposed(by: self.disposeBag)
   }
 
   private func bufferListChanged() {

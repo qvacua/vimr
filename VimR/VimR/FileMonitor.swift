@@ -6,6 +6,7 @@
 import Cocoa
 import RxSwift
 import EonilFileSystemEvents
+import os
 
 private let monitorDispatchQueue = DispatchQueue.global(qos: .userInitiated)
 
@@ -31,7 +32,7 @@ class FileMonitor: UiComponent {
         let obsoleteUrls = self.monitoredUrls.subtracting(urlsToMonitor)
 
         newUrls.forEach { url in
-          fileLog.info("Adding \(url) to monitoring")
+          self.log.info("Adding \(url) to monitoring")
           self.monitoredUrls.insert(url)
 
           let path = url.path
@@ -51,7 +52,7 @@ class FileMonitor: UiComponent {
         }
 
         obsoleteUrls.forEach { url in
-          fileLog.info("Removing \(url) from monitoring")
+          self.log.info("Removing \(url) from monitoring")
           self.monitoredUrls.remove(url)
           self.monitors.removeValue(forKey: url)
         }
@@ -64,4 +65,7 @@ class FileMonitor: UiComponent {
 
   private var monitoredUrls = Set<URL>()
   private var monitors = [URL: FileSystemEventMonitor]()
+
+  private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                          category: Defs.LoggerCategory.uiComponents)
 }

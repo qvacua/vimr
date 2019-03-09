@@ -4,6 +4,7 @@
  */
 
 import Foundation
+import os
 
 class PrefMiddleware: MiddlewareType {
 
@@ -21,7 +22,7 @@ class PrefMiddleware: MiddlewareType {
       let dictionary: [String: Any] = try dictEncoder.encode(appState)
       defaults.set(dictionary, forKey: PrefMiddleware.compatibleVersion)
     } catch {
-      fileLog.error("AppState could not converted to Dictionary: \(error)")
+      self.log.error("AppState could not converted to Dictionary: \(error)")
     }
   }
 
@@ -37,12 +38,15 @@ class PrefMiddleware: MiddlewareType {
         let dictionary: [String: Any] = try dictEncoder.encode(result.state)
         defaults.set(dictionary, forKey: PrefMiddleware.compatibleVersion)
       } catch {
-        fileLog.error("AppState could not converted to Dictionary: \(error)")
+        self.log.error("AppState could not converted to Dictionary: \(error)")
       }
 
       return result
     }
   }
+
+  private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                          category: Defs.LoggerCategory.middleware) 
 
   class MainWindowMiddleware: MiddlewareType {
 
@@ -61,12 +65,15 @@ class PrefMiddleware: MiddlewareType {
           let dictionary: [String: Any] = try dictEncoder.encode(result.state)
           defaults.set(dictionary, forKey: PrefMiddleware.compatibleVersion)
         } catch {
-          fileLog.error("AppState could not converted to Dictionary: \(error)")
+          self.log.error("AppState could not converted to Dictionary: \(error)")
         }
 
         return result
       }
     }
+
+    private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                            category: Defs.LoggerCategory.middleware)
   }
 }
 

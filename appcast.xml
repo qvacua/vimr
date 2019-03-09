@@ -7,26 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.26.1-304</title>
+      <title>v0.26.2-305</title>
       <description><![CDATA[
     <ul>
-<li>Fix broken "Navigate to the current buffer" of the file browser</li>
-<li>Dependencies updates:<ul>
-<li>Use FontAwesome 5 (thanks for the PR, @chriszielinski!)</li>
-</ul>
-</li>
+<li>GH-425: Bind http server to localhost</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.26.1-304
+        https://github.com/qvacua/vimr/releases/tag/v0.26.2-305
       </releaseNotesLink>
-      <pubDate>2019-03-08T10:19:56.833987</pubDate>
+      <pubDate>2019-03-09T22:21:36.462298</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.26.1-304/VimR-v0.26.1-304.tar.bz2"
-                 sparkle:version="304"
-                 sparkle:shortVersionString="0.26.1"
-                 sparkle:dsaSignature="MC0CFD+wxEcpX1oSqMBdwq6pa3bspqs0AhUAyrwVnPz99VB13tbzXvNd5NjNqJI="
-                 length="15266980"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.26.2-305/VimR-v0.26.2-305.tar.bz2"
+                 sparkle:version="305"
+                 sparkle:shortVersionString="0.26.2"
+                 sparkle:dsaSignature="MC4CFQCW2VswltCKY74EWmBeSbAY/DuwFwIVALfdDvPuQIl0RIobGuEsgR6qBadD"
+                 length="15168485"
                  type="application/octet-stream"/>
     </item>
   </channel>
