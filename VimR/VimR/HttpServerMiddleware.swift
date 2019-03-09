@@ -21,7 +21,7 @@ class HttpServerMiddleware {
     self.mainWindow = MainWindowMiddleware(server: server, githubCssUrl: githubCssUrl)
 
     do {
-      try server.start(in_port_t(port))
+      try server.start(in_port_t(port), forceIPv4: true)
       self.log.info("VimR http server started on http://localhost:\(port)")
 
       let previewResourceUrl = resourceUrl.appendingPathComponent("preview")
