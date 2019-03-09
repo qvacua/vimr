@@ -25,7 +25,7 @@ class RxSwiftCommonsTest: XCTestCase {
       ]
     )
 
-    let res = scheduler.start { xs.mapOmittingNil { $0 % 2 == 0 ? $0 : nil } }
+    let res = scheduler.start { xs.compactMap { $0 % 2 == 0 ? $0 : nil } }
 
     let correctMessages = [
       next(210, 2),

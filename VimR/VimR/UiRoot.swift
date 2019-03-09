@@ -83,7 +83,7 @@ class UiRoot: UiComponent {
   private var subjectForMainWindows = [UUID: CompletableSubject<MainWindow.State>]()
 
   private func newMainWindow(with state: MainWindow.State) -> MainWindow {
-    let subject = self.source.mapOmittingNil { $0.mainWindows[state.uuid] }.completableSubject()
+    let subject = self.source.compactMap { $0.mainWindows[state.uuid] }.completableSubject()
 
     self.subjectForMainWindows[state.uuid] = subject
     return MainWindow(source: subject.asObservable(), emitter: self.emitter, state: state)

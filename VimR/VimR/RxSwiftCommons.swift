@@ -8,7 +8,7 @@ import RxSwift
 
 extension ObservableType {
 
-  func mapOmittingNil<R>(_ transform: @escaping (E) throws -> R?) -> RxSwift.Observable<R> {
+  func compactMap<R>(_ transform: @escaping (E) throws -> R?) -> Observable<R> {
     return self
       .map(transform)
       .filter { $0 != nil }
