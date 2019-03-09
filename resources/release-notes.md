@@ -2,6 +2,10 @@
 
 * ...
 
+# 0.26.2-???
+
+* Bind http server to localhost
+
 # 0.26.1-???
 
 * Fix broken "Navigate to the current buffer" of the file browser
