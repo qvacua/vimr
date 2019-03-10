@@ -6,7 +6,7 @@
 import Foundation
 import os
 
-struct UCell {
+struct UCell: Codable {
 
   var string: String
   var attrId: Int
@@ -20,13 +20,52 @@ struct UCell {
   }
 }
 
-final class UGrid: CustomStringConvertible {
+final class UGrid: CustomStringConvertible, Codable {
 
   private(set) var cursorPosition = Position.zero
 
   private(set) var size = Size.zero
 
   private(set) var cells: [[UCell]] = []
+
+  enum CodingKeys: String, CodingKey {
+
+    case width
+    case height
+    case cells
+  }
+
+  init() {
+  }
+
+  init(from decoder: Decoder) throws {
+    let values = try decoder.container(keyedBy: CodingKeys.self)
+
+    let width = try values.decode(Int.self, forKey: .width)
+    let height = try values.decode(Int.self, forKey: .height)
+    self.size = Size(width: width, height: height)
+
+    self.cells = try values.decode([[UCell]].self, forKey: .cells)
+  }
+
+  func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+
+    try container.encode(self.size.width, forKey: .width)
+    try container.encode(self.size.height, forKey: .height)
+
+    try container.encode(self.cells, forKey: .cells)
+  }
+
+  #if DEBUG
+  func dump() throws {
+    let encoder = JSONEncoder()
+    encoder.outputFormatting = .prettyPrinted
+
+    let data = try encoder.encode(self)
+    try data.write(to: URL(fileURLWithPath: "/tmp/ugrid.dump.json"))
+  }
+  #endif
 
   var description: String {
     let result = "UGrid.flatCharIndex:\n" + self.cells.reduce("") { result, row in

@@ -337,9 +337,9 @@ public class NvimView: NSView,
   }
 
   @IBAction public func debug1(_ sender: Any?) {
-    self.log.debug("DEBUG 1 - Start")
-    // noop
-    self.log.debug("DEBUG 1 - End")
+    #if DEBUG
+    do { try self.ugrid.dump() } catch { self.log.error("Could not dump UGrid: \(error)") }
+    #endif
   }
 
   // MARK: - Internal
