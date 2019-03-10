@@ -163,6 +163,10 @@ class FileOutlineView: NSOutlineView,
     }
   }
 
+  func unbindTreeController() {
+    self.treeController.unbind(.contentArray)
+  }
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -215,7 +219,11 @@ class FileOutlineView: NSOutlineView,
       NSSortDescriptor(key: "isLeaf", ascending: true), // Folders first,
       NSSortDescriptor(key: "displayName", ascending: true) // then, name
     ]
+
+    // The following will create a retain cycle. The superview *must* unbind
+    // in deinit. See deinit of FileBrowser
     self.treeController.bind(.contentArray, to: self, withKeyPath: "content")
+
     self.bind(.content, to: self.treeController, withKeyPath: "arrangedObjects")
     self.bind(.selectionIndexPaths,
               to: self.treeController,

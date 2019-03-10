@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.26.2-305</title>
+      <title>v0.26.3-306</title>
       <description><![CDATA[
     <ul>
-<li>GH-425: Bind http server to localhost</li>
+<li>Bugfix: Memory leak.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.26.2-305
+        https://github.com/qvacua/vimr/releases/tag/v0.26.3-306
       </releaseNotesLink>
-      <pubDate>2019-03-09T22:21:36.462298</pubDate>
+      <pubDate>2019-03-10T18:58:31.542648</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.26.2-305/VimR-v0.26.2-305.tar.bz2"
-                 sparkle:version="305"
-                 sparkle:shortVersionString="0.26.2"
-                 sparkle:dsaSignature="MC4CFQCW2VswltCKY74EWmBeSbAY/DuwFwIVALfdDvPuQIl0RIobGuEsgR6qBadD"
-                 length="15168485"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.26.3-306/VimR-v0.26.3-306.tar.bz2"
+                 sparkle:version="306"
+                 sparkle:shortVersionString="0.26.3"
+                 sparkle:dsaSignature="MC4CFQCcY7GI852mTSbMl/T8KbTA/efNPQIVANnhf9PuV4UsXYKtumgeKmsGQRf7"
+                 length="15170307"
                  type="application/octet-stream"/>
     </item>
   </channel>
