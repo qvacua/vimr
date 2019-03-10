@@ -4,7 +4,7 @@
 
 # 0.26.3-???
 
-* Fix a memory leak.
+* Bugfix: Memory leak.
 
 # 0.26.2-305
 
