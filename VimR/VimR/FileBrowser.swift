@@ -64,6 +64,10 @@ class FileBrowser: NSView,
       .disposed(by: self.disposeBag)
   }
 
+  deinit {
+    self.fileView.unbindTreeController()
+  }
+
   private let emit: (UuidAction<Action>) -> Void
   private let disposeBag = DisposeBag()
 

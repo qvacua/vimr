@@ -2,11 +2,15 @@
 
 * ...
 
-# 0.26.2-???
+# 0.26.3-???
+
+* Fix a memory leak.
+
+# 0.26.2-305
 
 * GH-425: Bind http server to localhost
 
-# 0.26.1-???
+# 0.26.1-304
 
 * Fix broken "Navigate to the current buffer" of the file browser
 * Dependencies updates:
