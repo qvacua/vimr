@@ -100,11 +100,9 @@ final class Typesetter {
       let unichars = self.utf16Chars(from: run.nvimUtf16Cells)
       var glyphs = Array<CGGlyph>(repeating: CGGlyph(), count: unichars.count)
 
-      let gotAllGlyphs = unichars.withUnsafeBufferPointer { pointer in
-        CTFontGetGlyphsForCharacters(
-          font, pointer.baseAddress!, &glyphs, unichars.count
-        )
-      }
+      let gotAllGlyphs = CTFontGetGlyphsForCharacters(
+        font, unichars, &glyphs, unichars.count
+      )
       if gotAllGlyphs {
         let startColumnForPositions = startColumn + run.startColumn
         let endColumn = startColumnForPositions + glyphs.count
@@ -119,12 +117,9 @@ final class Typesetter {
         ]
       }
 
-      self.logger.info(
-        "Could not get all glyphs for single-width singe UTF16 character!"
-      )
       let groupRanges = glyphs.groupedRanges { _, element in element == 0 }
       let groupRuns: [[FontGlyphRun]] = groupRanges.map { range in
-        if unichars[range.lowerBound] == 0 {
+        if glyphs[range.lowerBound] == 0 {
           let nvimUtf16Cells = unichars[range].map { [$0] }
           return self.fontGlyphRunsWithLigatures(
             nvimUtf16Cells: nvimUtf16Cells,
@@ -135,16 +130,15 @@ final class Typesetter {
           )
         } else {
           let startColumnForPositions = startColumn + range.lowerBound
-          let endColumn = startColumnForPositions + glyphs.count
+          let endColumn = startColumnForPositions + range.count
           let positions = (startColumnForPositions..<endColumn).map { i in
             CGPoint(
-              x: offset.x
-                 + CGFloat(i + startColumn + range.lowerBound) * cellWidth,
+              x: offset.x + CGFloat(i) * cellWidth,
               y: offset.y
             )
           }
           return [
-            FontGlyphRun(font: font, glyphs: glyphs, positions: positions)
+            FontGlyphRun(font: font, glyphs: Array(glyphs[range]), positions: positions)
           ]
         }
       }
@@ -166,7 +160,7 @@ final class Typesetter {
       string: String(utf16CodeUnits: utf16Chars, count: utf16Chars.count),
       attributes: [
         .font: font,
-        .ligature: 1
+        .ligature: NSNumber(integerLiteral: 0)
       ]
     )
 
