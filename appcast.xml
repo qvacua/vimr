@@ -7,22 +7,27 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.26.3-306</title>
+      <title>v0.26.4-307</title>
       <description><![CDATA[
     <ul>
-<li>Bugfix: Memory leak.</li>
+<li>GH-709: Bugfix: Some Unicode characters were broken when ligatures are turned off.</li>
+<li>Dependencies updates:<ul>
+<li>ReactiveX/RxSwift@4.4.2</li>
+<li>Quick/nimble@8.0.1</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.26.3-306
+        https://github.com/qvacua/vimr/releases/tag/v0.26.4-307
       </releaseNotesLink>
-      <pubDate>2019-03-10T18:58:31.542648</pubDate>
+      <pubDate>2019-03-11T08:47:11.815092</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.26.3-306/VimR-v0.26.3-306.tar.bz2"
-                 sparkle:version="306"
-                 sparkle:shortVersionString="0.26.3"
-                 sparkle:dsaSignature="MC4CFQCcY7GI852mTSbMl/T8KbTA/efNPQIVANnhf9PuV4UsXYKtumgeKmsGQRf7"
-                 length="15170307"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.26.4-307/VimR-v0.26.4-307.tar.bz2"
+                 sparkle:version="307"
+                 sparkle:shortVersionString="0.26.4"
+                 sparkle:dsaSignature="MC4CFQDPFAkM7rKGHzg120syVP8w6N0yywIVAOZPK2SlVunrzhoQymfMzftreKGP"
+                 length="15169685"
                  type="application/octet-stream"/>
     </item>
   </channel>
