@@ -22,7 +22,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(runs).to(haveCount(2))
 
     let run = runs[0]
-    expect(run.font).to(equal(defaultFont))
+    expect(run.font).to(equalFont(defaultFont))
     expect(run.glyphs).to(haveCount(3))
     expect(run.positions).to(equal(
       (10..<13).map {
@@ -45,7 +45,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(runs).to(haveCount(2))
 
     let run = runs[0]
-    expect(run.font).to(equal(defaultFont))
+    expect(run.font).to(equalFont(defaultFont))
     expect(run.glyphs).to(haveCount(3))
     expect(run.positions).to(equal(
       (20..<23).map {
@@ -70,7 +70,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(runs).to(haveCount(6))
 
     var run = runs[0]
-    expect(run.font).to(equal(defaultFont))
+    expect(run.font).to(equalFont(defaultFont))
     expect(run.glyphs).to(haveCount(1))
     expect(run.positions).to(equal(
       [
@@ -79,7 +79,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     ))
 
     run = runs[1]
-    expect(run.font).to(equal(courierNew))
+    expect(run.font).to(equalFont(courierNew))
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions[0])
       .to(equal(CGPoint(x: offset.x + 11 * defaultWidth, y: offset.y)))
@@ -88,7 +88,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.positions[1].y).to(beCloseTo(offset.y + 0.305, within: 0.001))
 
     run = runs[2]
-    expect(run.font).to(equal(defaultFont))
+    expect(run.font).to(equalFont(defaultFont))
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions[0])
       .to(equal(CGPoint(x: offset.x + 12 * defaultWidth, y: offset.y)))
@@ -97,7 +97,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.positions[1].y).to(beCloseTo(offset.y - 0.279, within: 0.001))
 
     run = runs[3]
-    expect(run.font).to(equal(monaco))
+    expect(run.font).to(equalFont(monaco))
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions[0])
       .to(equal(CGPoint(x: offset.x + 13 * defaultWidth, y: offset.y)))
@@ -106,7 +106,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.positions[1].y).to(beCloseTo(offset.y + 2.446, within: 0.001))
 
     run = runs[4]
-    expect(run.font).to(equal(defaultFont))
+    expect(run.font).to(equalFont(defaultFont))
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions).to(equal(
       [
@@ -130,7 +130,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(runs).to(haveCount(3))
 
     var run = runs[0]
-    expect(run.font).to(equal(defaultFont))
+    expect(run.font).to(equalFont(defaultFont))
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions).to(equal(
       [
@@ -140,7 +140,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     ))
 
     run = runs[1]
-    expect(run.font).to(equal(emoji))
+    expect(run.font).to(equalFont(emoji))
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions).to(equal(
       [
@@ -164,7 +164,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(runs).to(haveCount(3))
 
     var run = runs[0]
-    expect(run.font).to(equal(defaultFont))
+    expect(run.font).to(equalFont(defaultFont))
     expect(run.glyphs).to(haveCount(1))
     expect(run.positions).to(equal(
       [
@@ -173,7 +173,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     ))
 
     run = runs[1]
-    expect(run.font).to(equal(emoji))
+    expect(run.font).to(equalFont(emoji))
     expect(run.positions).to(equal(
       [
         CGPoint(x: offset.x + 2 * defaultWidth, y: offset.y),
@@ -194,7 +194,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(runs).to(haveCount(3))
 
     var run = runs[0]
-    expect(run.font).to(equal(defaultFont))
+    expect(run.font).to(equalFont(defaultFont))
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions).to(equal(
       [
@@ -204,7 +204,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     ))
 
     run = runs[1]
-    expect(run.font).to(equal(gothic))
+    expect(run.font).to(equalFont(gothic))
     expect(run.positions).to(equal(
       [
         CGPoint(x: offset.x + 3 * defaultWidth, y: offset.y),
@@ -227,7 +227,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(runs).to(haveCount(3))
 
     var run = runs[0]
-    expect(run.font).to(equal(defaultFont))
+    expect(run.font).to(equalFont(defaultFont))
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions).to(equal(
       [
@@ -237,7 +237,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     ))
 
     run = runs[1]
-    expect(run.font).to(equal(gothic))
+    expect(run.font).to(equalFont(gothic))
     expect(run.positions).to(equal(
       [
         CGPoint(x: offset.x + 3 * defaultWidth, y: offset.y),
@@ -260,7 +260,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(runs).to(haveCount(4))
 
     var run = runs[0]
-    expect(run.font).to(equal(defaultFont))
+    expect(run.font).to(equalFont(defaultFont))
     expect(run.glyphs).to(haveCount(1))
     expect(run.positions).to(equal(
       [
@@ -269,7 +269,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     ))
 
     run = runs[1]
-    expect(run.font).to(equal(baskerville))
+    expect(run.font).to(equalFont(baskerville))
     expect(run.positions).to(equal(
       [
         CGPoint(x: offset.x + 2 * defaultWidth, y: offset.y),
@@ -277,7 +277,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     ))
 
     run = runs[2]
-    expect(run.font).to(equal(defaultFont))
+    expect(run.font).to(equalFont(defaultFont))
     expect(run.glyphs).to(haveCount(1))
     expect(run.positions).to(equal(
       [
@@ -300,7 +300,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(runs).to(haveCount(2))
 
     let run = runs[0]
-    expect(run.font).to(equal(fira))
+    expect(run.font).to(equalFont(fira))
     expect(run.glyphs).to(equal([133, 1023, 1023, 1148, 133]))
     expect(run.positions).to(equal(
       (1..<6).map {
@@ -312,12 +312,12 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
   }
 
   private func assertAsciiMarker(run: FontGlyphRun, xPosition: CGFloat) {
-    expect(run.font).to(equal(defaultFont))
+    expect(run.font).to(equalFont(defaultFont))
     expect(run.positions).to(equal([CGPoint(x: xPosition, y: offset.y)]))
   }
 
   private func assertEmojiMarker(run: FontGlyphRun, xPosition: CGFloat) {
-    expect(run.font).to(equal(emoji))
+    expect(run.font).to(equalFont(emoji))
     expect(run.positions).to(equal([CGPoint(x: xPosition, y: offset.y)]))
   }
 }
@@ -335,7 +335,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
     expect(runs).to(haveCount(2))
 
     let run = runs[0]
-    expect(run.font).to(equal(defaultFont))
+    expect(run.font).to(equalFont(defaultFont))
     expect(run.glyphs).to(haveCount(20))
     expect(run.positions).to(equal(
       (1..<21).map {
@@ -359,7 +359,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
     expect(runs).to(haveCount(2))
 
     let run = runs[0]
-    expect(run.font).to(equal(defaultFont))
+    expect(run.font).to(equalFont(defaultFont))
     expect(run.glyphs).to(haveCount(3))
     expect(run.positions).to(equal(
       [
@@ -385,7 +385,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
     // The positions of the combining characters are copied from print outputs
     // and they are visually checked by drawing them and inspecting them...
     var run = runs[0]
-    expect(run.font).to(equal(courierNew))
+    expect(run.font).to(equalFont(courierNew))
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions[0])
       .to(equal(CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y)))
@@ -394,7 +394,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
     expect(run.positions[1].y).to(beCloseTo(offset.y + 0.305, within: 0.001))
 
     run = runs[1]
-    expect(run.font).to(equal(defaultFont))
+    expect(run.font).to(equalFont(defaultFont))
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions[0])
       .to(equal(CGPoint(x: offset.x + 2 * defaultWidth, y: offset.y)))
@@ -403,7 +403,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
     expect(run.positions[1].y).to(beCloseTo(offset.y - 0.279, within: 0.001))
 
     run = runs[2]
-    expect(run.font).to(equal(monaco))
+    expect(run.font).to(equalFont(monaco))
     expect(run.glyphs).to(haveCount(2))
     expect(run.positions[0])
       .to(equal(CGPoint(x: offset.x + 3 * defaultWidth, y: offset.y)))
@@ -425,7 +425,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
     expect(runs).to(haveCount(2))
 
     let run = runs[0]
-    expect(run.font).to(equal(emoji))
+    expect(run.font).to(equalFont(emoji))
     expect(run.positions).to(equal(
       [
         CGPoint(x: offset.x + 0, y: offset.y),
@@ -450,7 +450,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
     expect(runs).to(haveCount(2))
 
     let run = runs[0]
-    expect(run.font).to(equal(emoji))
+    expect(run.font).to(equalFont(emoji))
     expect(run.positions).to(equal(
       [
         CGPoint(x: offset.x + 0, y: offset.y),
@@ -477,7 +477,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
     expect(runs).to(haveCount(2))
 
     let run = runs[0]
-    expect(run.font).to(equal(emoji))
+    expect(run.font).to(equalFont(emoji))
     expect(run.glyphs).to(haveCount(1))
     expect(run.positions).to(equal(
       [
@@ -499,7 +499,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
     expect(runs).to(haveCount(2))
 
     let run = runs[0]
-    expect(run.font).to(equal(gothic))
+    expect(run.font).to(equalFont(gothic))
     expect(run.positions).to(equal(
       [
         CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y),
@@ -522,7 +522,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
     expect(runs).to(haveCount(2))
 
     let run = runs[0]
-    expect(run.font).to(equal(gothic))
+    expect(run.font).to(equalFont(gothic))
     expect(run.positions).to(equal(
       [
         CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y),
@@ -545,7 +545,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
     expect(runs).to(haveCount(3))
 
     var run = runs[0]
-    expect(run.font).to(equal(baskerville))
+    expect(run.font).to(equalFont(baskerville))
     expect(run.positions).to(equal(
       [
         CGPoint(x: offset.x + 0, y: offset.y),
@@ -553,7 +553,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
     ))
 
     run = runs[1]
-    expect(run.font).to(equal(defaultFont))
+    expect(run.font).to(equalFont(defaultFont))
     expect(run.positions).to(equal(
       [
         CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y),
@@ -574,7 +574,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
     expect(runs).to(haveCount(2))
 
     let run = runs[0]
-    expect(run.font).to(equal(fira))
+    expect(run.font).to(equalFont(fira))
     // Ligatures of popular monospace fonts like Fira Code seem to be composed
     // of multiple characters with the same advance as other normal characters.
     expect(run.glyphs).to(equal([1614, 1614, 1063, 133]))
@@ -588,7 +588,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
   }
 
   private func assertAsciiMarker(run: FontGlyphRun, xPosition: CGFloat) {
-    expect(run.font).to(equal(defaultFont))
+    expect(run.font).to(equalFont(defaultFont))
     expect(run.positions).to(equal(
       [
         CGPoint(x: xPosition, y: offset.y),
@@ -597,7 +597,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
   }
 
   private func assertEmojiMarker(run: FontGlyphRun, xPosition: CGFloat) {
-    expect(run.font).to(equal(emoji))
+    expect(run.font).to(equalFont(emoji))
     expect(run.positions).to(equal(
       [
         CGPoint(x: xPosition, y: offset.y),
