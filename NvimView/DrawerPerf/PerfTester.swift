@@ -36,7 +36,7 @@ class PerfTester {
   }
 
   func render(_ index: Int) -> [[FontGlyphRun]] {
-    precondition(0 <= index && index <= 2, "Wrong index!")
+    precondition((0...2).contains(index), "Wrong index!")
 
     let ugrid = self.ugrids[index]
     let runs = self.runs(index,
