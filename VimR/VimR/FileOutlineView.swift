@@ -165,6 +165,8 @@ class FileOutlineView: NSOutlineView,
 
   func unbindTreeController() {
     self.treeController.unbind(.contentArray)
+    self.unbind(.content)
+    self.unbind(.selectionIndexPaths)
   }
 
   required init?(coder: NSCoder) {
