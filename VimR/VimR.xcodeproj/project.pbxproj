@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		1929B04CE8ECBD75CBBB0991 /* StringCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5D45C9792BBE76B8AFF /* StringCommonsTest.swift */; };
 		1929B05B9D664052EC2D23EF /* FileOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCE3E156C06EDF1F2806 /* FileOutlineView.swift */; };
-		1929B08C6230B9C5AB72DAF1 /* Pref128ToCurrentConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5046239709E33516F5C /* Pref128ToCurrentConverter.swift */; };
 		1929B0C7150100A84FBDB8BF /* ShortcutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF230875DED6CD7AB3EB /* ShortcutItem.swift */; };
 		1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */; };
 		1929B0F599D1F62C7BE53D2C /* HttpServerMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1DC584C89C477E83FA2 /* HttpServerMiddleware.swift */; };
@@ -318,7 +317,6 @@
 		1929B365A6434354B568B04F /* FileMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileMonitor.swift; sourceTree = "<group>"; };
 		1929B457B9D0FA4D21F3751E /* UiRootReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiRootReducer.swift; sourceTree = "<group>"; };
 		1929B49E6924847AD085C8C9 /* PrefWindowReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefWindowReducer.swift; sourceTree = "<group>"; };
-		1929B5046239709E33516F5C /* Pref128ToCurrentConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pref128ToCurrentConverter.swift; sourceTree = "<group>"; };
 		1929B56C8ED31834BA9D8543 /* FileItemUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileItemUtils.swift; sourceTree = "<group>"; };
 		1929B5D45C9792BBE76B8AFF /* StringCommonsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringCommonsTest.swift; sourceTree = "<group>"; };
 		1929B617C229B19DB3E987B8 /* PreviewMiddleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewMiddleware.swift; sourceTree = "<group>"; };
@@ -923,7 +921,6 @@
 				1929BADEB143008EFA6F3318 /* NetUtils.h */,
 				1929B6AD3396160AA2C46919 /* Debouncer.swift */,
 				1929B8EF9A9F5ACC175452BD /* PreviewUtils.swift */,
-				1929B5046239709E33516F5C /* Pref128ToCurrentConverter.swift */,
 				1929B56C8ED31834BA9D8543 /* FileItemUtils.swift */,
 				1929B8241CDE58F7AAF89AE4 /* PrefUtils.swift */,
 			);
@@ -1177,7 +1174,6 @@
 				1929B990A143763A56CFCED0 /* PrefMiddleware.swift in Sources */,
 				1929BA76A1D97D8226F7CFB1 /* Debouncer.swift in Sources */,
 				1929B71610FF1DC6E459BA49 /* PreviewUtils.swift in Sources */,
-				1929B08C6230B9C5AB72DAF1 /* Pref128ToCurrentConverter.swift in Sources */,
 				1929B94083273D4B321AD848 /* FileItemUtils.swift in Sources */,
 				1929BFDE22D155F7C4B19E96 /* HtmlPreviewTool.swift in Sources */,
 				1929B4B00D7BB191A9A6532D /* HtmlPreviewToolReducer.swift in Sources */,
