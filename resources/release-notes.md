@@ -1,8 +1,15 @@
-# 0.27.0-???
+# next
 
 * ...
 
-# 0.26.3-???
+# 0.26.4-???
+
+* GH-709: Bugfix: Some Unicode characters were broken when ligatures are turned off.
+* Dependencies updates:
+    - ReactiveX/RxSwift@4.4.2
+    - Quick/nimble@8.0.1
+
+# 0.26.3-306
 
 * Bugfix: Memory leak.
 
