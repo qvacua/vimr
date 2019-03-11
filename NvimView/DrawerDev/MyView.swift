@@ -66,7 +66,7 @@ class MyView: NSView {
     )
     */
 
-    let runs = (0..<4).map { row in
+    let runs = (0..<5).map { row in
       AttributesRun(
         location: CGPoint(x: 0, y: CGFloat(row) * cellSize.height),
         cells: self.ugrid.cells[row][0..<10],
@@ -88,6 +88,7 @@ class MyView: NSView {
       reverse: false
     )
 
+    self.runDrawer.usesLigatures = true
     runs.forEach { run in
       self.runDrawer.draw(
         runs,
@@ -180,6 +181,15 @@ class MyView: NSView {
       clearAttr: 0,
       chunk: (0..<10).compactMap { String($0) },
       attrIds: Array(repeating: 0, count: 10)
+    )
+    self.ugrid.update(
+      row: 4,
+      startCol: 0,
+      endCol: 8,
+      clearCol: 8,
+      clearAttr: 0,
+      chunk: ["क", "ख", "ग", "घ", "ड़", "-", ">", "ड़"],
+      attrIds: Array(repeating: 0, count: 8)
     )
   }
 }

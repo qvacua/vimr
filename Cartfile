@@ -1,4 +1,4 @@
-github "ReactiveX/RxSwift" == 4.4.1
+github "ReactiveX/RxSwift" == 4.4.2
 github "PureLayout/PureLayout" == 3.1.4
 github "eonil/FileSystemEvents" == 1.0.0
 github "sparkle-project/Sparkle" == 1.21.3
@@ -12,4 +12,4 @@ github "a2/MessagePack.swift" == 3.0.0
 github "elegantchaos/DictionaryCoding" == 1.0.6
 github "qvacua/ShortcutRecorder" "temporary"
 
-github "Quick/Nimble" == 7.3.4
+github "Quick/Nimble" == 8.0.1
