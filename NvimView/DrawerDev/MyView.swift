@@ -66,7 +66,7 @@ class MyView: NSView {
     )
     */
 
-    let runs = (4..<5).map { row in
+    let runs = (0..<5).map { row in
       AttributesRun(
         location: CGPoint(x: 0, y: CGFloat(row) * cellSize.height),
         cells: self.ugrid.cells[row][0..<10],
@@ -88,7 +88,7 @@ class MyView: NSView {
       reverse: false
     )
 
-    self.runDrawer.usesLigatures = false
+    self.runDrawer.usesLigatures = true
     runs.forEach { run in
       self.runDrawer.draw(
         runs,
