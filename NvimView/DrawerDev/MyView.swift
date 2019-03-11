@@ -185,11 +185,11 @@ class MyView: NSView {
     self.ugrid.update(
       row: 4,
       startCol: 0,
-      endCol: 9,
-      clearCol: 9,
+      endCol: 8,
+      clearCol: 8,
       clearAttr: 0,
-      chunk: ["क", "ख", "ग", "घ", "ड़", "-", ">", " ", "ड़"],
-      attrIds: Array(repeating: 0, count: 9)
+      chunk: ["क", "ख", "ग", "घ", "ड़", "-", ">", "ड़"],
+      attrIds: Array(repeating: 0, count: 8)
     )
   }
 }

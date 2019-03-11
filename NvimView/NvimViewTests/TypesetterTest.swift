@@ -11,6 +11,48 @@ import Nimble
 
 class TypesetterWithoutLigaturesTest: XCTestCase {
 
+  // GH-709
+  func testHindi() {
+    let runs = typesetter.fontGlyphRunsWithoutLigatures(
+      nvimUtf16Cells: emojiMarked(["क", "ख", "ग", "घ", "ड़", "-", ">", "ड़"]),
+      startColumn: 10,
+      offset: offset,
+      font: defaultFont,
+      cellWidth: defaultWidth
+    )
+    expect(runs).to(haveCount(4))
+
+    var run = runs[0]
+    expect(run.font).to(equalFont(kohinoorDevanagari))
+    expect(run.glyphs).to(equal([51, 52, 53, 54, 99]))
+    expect(run.positions).to(equal(
+      (10..<15).map {
+        CGPoint(x: offset.x + CGFloat($0) * defaultWidth, y: offset.y)
+      }
+    ))
+
+    run = runs[1]
+    expect(run.font).to(equalFont(defaultFont))
+    expect(run.glyphs).to(equal([16, 33]))
+    expect(run.positions).to(equal(
+      (15..<17).map {
+        CGPoint(x: offset.x + CGFloat($0) * defaultWidth, y: offset.y)
+      }
+    ))
+
+    run = runs[2]
+    expect(run.font).to(equalFont(kohinoorDevanagari))
+    expect(run.glyphs).to(equal([99]))
+    expect(run.positions).to(equal(
+      (17..<18).map {
+        CGPoint(x: offset.x + CGFloat($0) * defaultWidth, y: offset.y)
+      }
+    ))
+
+    self.assertEmojiMarker(run: runs[3],
+                           xPosition: offset.x + 18 * defaultWidth)
+  }
+
   func testSimpleAsciiChars() {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
       nvimUtf16Cells: emojiMarked(["a", "b", "c"]),
@@ -613,6 +655,7 @@ private let monaco = NSFont(name: "Monaco", size: 13)!
 private let emoji = NSFont(name: "AppleColorEmoji", size: 13)!
 private let gothic = NSFont(name: "Apple SD Gothic Neo", size: 13)!
 private let baskerville = NSFont(name: "Baskerville", size: 13)!
+private let kohinoorDevanagari = NSFont(name: "Kohinoor Devanagari", size: 13)!
 
 private let defaultWidth = FontUtils
   .cellSize(of: defaultFont, linespacing: 1).width
