@@ -116,6 +116,7 @@
 		4B64239A1D8EFE3000FC78C8 /* WorkspaceTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423991D8EFE3000FC78C8 /* WorkspaceTool.swift */; };
 		4B6A70941D60E04200E12030 /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
 		4B6A70961D6100E300E12030 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70951D6100E300E12030 /* SwiftCommons.swift */; };
+		4B6DFB3A22366D140066BB43 /* OSLogCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE867BD8F0ED0246CC94 /* OSLogCommons.swift */; };
 		4B9433DC20B95EC6005807BA /* MacVim-bsh.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A120B95EC1005807BA /* MacVim-bsh.icns */; };
 		4B9433DD20B95EC6005807BA /* MacVim-generic.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A220B95EC1005807BA /* MacVim-generic.icns */; };
 		4B9433DE20B95EC6005807BA /* MacVim-dylan.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A320B95EC1005807BA /* MacVim-dylan.icns */; };
@@ -1211,6 +1212,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B6DFB3A22366D140066BB43 /* OSLogCommons.swift in Sources */,
 				4B96FB3B1EBBC56F00E4E164 /* FileItemIgnorePattern.swift in Sources */,
 				4B96FB3C1EBBC56F00E4E164 /* FileUtils.swift in Sources */,
 				4B96FB3D1EBBC56F00E4E164 /* Matcher.swift in Sources */,

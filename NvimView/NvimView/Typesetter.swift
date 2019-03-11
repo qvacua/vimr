@@ -149,8 +149,8 @@ final class Typesetter {
     return runs.flatMap { $0 }
   }
 
-  private let logger = OSLog(subsystem: Defs.loggerSubsystem,
-                             category: Defs.LoggerCategory.view)
+  private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                          category: Defs.LoggerCategory.view)
 
   private func ctRuns(
     from utf16Chars: Array<Unicode.UTF16.CodeUnit>,

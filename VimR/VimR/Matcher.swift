@@ -74,6 +74,10 @@ class Matcher {
       if pchars[pidx] == tchar {
         result += 1
         pidx = pchars.index(after: pidx)
+        
+        if pidx == pchars.endIndex {
+          break
+        }
       }
     }
 
