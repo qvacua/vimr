@@ -1,6 +1,6 @@
 # next
 
-* ...
+* GH-458: Bugfix: Opening files by drag-n-dropping on VimR window does not work.
 
 # 0.26.4-307
 
