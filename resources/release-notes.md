@@ -2,7 +2,7 @@
 
 * ...
 
-# 0.26.4-???
+# 0.26.4-307
 
 * GH-709: Bugfix: Some Unicode characters were broken when ligatures are turned off.
 * Dependencies updates:
