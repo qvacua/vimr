@@ -35,7 +35,6 @@
 
 #define let __auto_type const
 #define var __auto_type
-#define pun_type(t, x) (*((t *) (&(x))))
 
 
 static NSInteger _default_foreground = 0xFF000000;
@@ -64,7 +63,7 @@ static uv_cond_t _condition;
 
 static ServerUiData *_server_ui_data;
 
-static NSString *_backspace = nil;
+static NSString *_backspace = @"<BS>";
 
 static bool _dirty = false;
 
@@ -74,7 +73,6 @@ static NSInteger _initialHeight = 15;
 static msgpack_sbuffer flush_sbuffer;
 static msgpack_packer *flush_packer;
 
-static dispatch_queue_t rpc_queue;
 
 #pragma mark Helper functions
 
@@ -247,8 +245,6 @@ static void server_ui_scheduler(Event event, void *d) {
 static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   msgpack_sbuffer_init(&flush_sbuffer);
   flush_packer = msgpack_packer_new(&flush_sbuffer, msgpack_sbuffer_write);
-
-  rpc_queue = dispatch_queue_create("rpc_queu", NULL);
 
   Loop loop;
   loop_init(&loop, NULL);
@@ -559,7 +555,7 @@ void custom_ui_start(void) {
 }
 
 void custom_ui_rpcevent_subscribed() {
-  dispatch_async(rpc_queue, ^{
+  dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
     [_neovim_server sendMessageWithId:NvimServerMsgIdRpcEventSubscribed
                                  data:NULL];
   });
@@ -636,7 +632,8 @@ void start_neovim(
 
   // set $VIMRUNTIME to ${RESOURCE_PATH_OF_XPC_BUNDLE}/runtime
   let bundlePath = [NSBundle bundleForClass:[NvimServer class]].bundlePath;
-  let resourcesPath = [bundlePath.stringByDeletingLastPathComponent stringByAppendingPathComponent:@"Resources"];
+  let resourcesPath = [bundlePath.stringByDeletingLastPathComponent
+      stringByAppendingPathComponent:@"Resources"];
   let runtimePath = [resourcesPath stringByAppendingPathComponent:@"runtime"];
   setenv("VIMRUNTIME", runtimePath.fileSystemRepresentation, true);
 
@@ -659,8 +656,6 @@ void start_neovim(
 
   uv_cond_destroy(&_condition);
   uv_mutex_destroy(&_mutex);
-
-  _backspace = [[NSString alloc] initWithString:@"<BS>"];
 
   send_msg_packing(NvimServerMsgIdNvimReady, ^(msgpack_packer *packer) {
     msgpack_pack_bool(packer, msg_didany > 0);
@@ -788,16 +783,6 @@ void neovim_ready_for_rpcevents(void **argv) {
 
 void neovim_debug1(void **argv) {
   work_async(argv, ^(NSData *data) {
-    NSLog(@"normal fg: %#08X", normal_fg);
-    NSLog(@"normal bg: %#08X", normal_bg);
-    NSLog(@"normal sp: %#08X", normal_sp);
-
-    for (int i = 0; i < HLF_COUNT; i++) {
-      NSLog(
-          @"%s: %#08X",
-          hlf_names[i],
-          HlAttrsFromAttrCode(highlight_attr[i]).rgb_fg_color
-      );
-    }
+    // noop
   });
 }
