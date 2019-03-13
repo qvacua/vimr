@@ -164,6 +164,10 @@ class FileOutlineView: NSOutlineView,
   }
 
   func unbindTreeController() {
+    // Forbid addition and removal now.
+    // See comment in FileOutlineView.handleRemoval.
+    self.treeController.isEditable = false
+
     self.treeController.unbind(.contentArray)
     self.unbind(.content)
     self.unbind(.selectionIndexPaths)
@@ -262,6 +266,9 @@ class FileOutlineView: NSOutlineView,
   private func handleAddition(
     changeTreeNode: NSTreeNode, newChildUrls: Set<URL>
   ) {
+    // See comment in FileOutlineView.handleRemoval.
+    guard self.treeController.isEditable else { return }
+
     let existingUrls = changeTreeNode.children?
                          .compactMap { $0.node?.url } ?? []
     let newNodes = newChildUrls
@@ -277,6 +284,13 @@ class FileOutlineView: NSOutlineView,
   private func handleRemoval(
     changeTreeNode: NSTreeNode, newChildUrls: Set<URL>
   ) {
+    // FileOutlineView is deinit'ed a bit after Neovim is closed.
+    // If Neovim deletes for example a temporary file, then handleRemoval is
+    // called after the self.content is frozen. Thus, we make the controller
+    // not editable when unbinding, see FileOutlineView.unbindTreeController,
+    // and check here before modifying.
+    guard self.treeController.isEditable else { return }
+
     let indexPathsToRemove =
       changeTreeNode.children?
         .filter { child in
@@ -284,6 +298,15 @@ class FileOutlineView: NSOutlineView,
           return newChildUrls.contains(url) == false
         }
         .map { $0.indexPath } ?? []
+
+    changeTreeNode.children?
+      .filter { child in
+        guard let url = child.node?.url else { return true }
+        return newChildUrls.contains(url) == false
+      }
+      .forEach { treeNode in
+        self.log.default(treeNode.node)
+      }
 
     self.treeController.removeObjects(
       atArrangedObjectIndexPaths: indexPathsToRemove
@@ -319,6 +342,9 @@ class FileOutlineView: NSOutlineView,
   }
 
   private func reloadRoot() {
+    // See comment in FileOutlineView.handleRemoval.
+    guard self.treeController.isEditable else { return }
+
     let children = self.childNodes(for: self.root)
 
     self.root.children = children
