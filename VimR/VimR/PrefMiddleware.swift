@@ -12,7 +12,6 @@ class PrefMiddleware: MiddlewareType {
   typealias ActionType = AnyAction
 
   static let compatibleVersion = "168"
-  static let lastCompatibleVersion = "128"
 
   let mainWindow = MainWindowMiddleware()
 

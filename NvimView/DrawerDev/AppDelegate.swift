@@ -1,10 +1,7 @@
-//
-//  AppDelegate.swift
-//  DrawerDev
-//
-//  Created by Tae Won Ha on 25.08.18.
-//  Copyright © 2018 Tae Won Ha. All rights reserved.
-//
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 import Cocoa
 

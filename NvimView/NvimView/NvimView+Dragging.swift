@@ -7,11 +7,15 @@ import Cocoa
 
 extension NvimView {
 
-  override public func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+  override public func draggingEntered(
+    _ sender: NSDraggingInfo
+  ) -> NSDragOperation {
     return isFile(sender: sender) ? .copy : NSDragOperation()
   }
 
-  override public func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
+  override public func draggingUpdated(
+    _ sender: NSDraggingInfo
+  ) -> NSDragOperation {
     return isFile(sender: sender) ? .copy : NSDragOperation()
   }
 
@@ -20,16 +24,15 @@ extension NvimView {
       return false
     }
 
-    guard let paths = sender.draggingPasteboard.propertyList(
-      forType: NSPasteboard.PasteboardType(String(kUTTypeFileURL))
-    ) as? [String] else {
-      return false
-    }
+    guard let urls = sender.draggingPasteboard
+      .readObjects(forClasses: [NSURL.self]) as? [URL] else { return false }
 
-    self.open(urls: paths.map { URL(fileURLWithPath: $0) })
+    self.open(urls: urls)
       .subscribeOn(self.scheduler)
       .subscribe(onError: { error in
-        self.eventsSubject.onNext(.apiError(msg: "\(paths) could not be opened.", cause: error))
+        self.eventsSubject.onNext(
+          .apiError(msg: "\(urls) could not be opened.", cause: error)
+        )
       })
       .disposed(by: self.disposeBag)
 
@@ -38,5 +41,7 @@ extension NvimView {
 }
 
 private func isFile(sender: NSDraggingInfo) -> Bool {
-  return (sender.draggingPasteboard.types?.contains(NSPasteboard.PasteboardType(String(kUTTypeFileURL)))) ?? false
+  return (sender.draggingPasteboard.types?.contains(
+    NSPasteboard.PasteboardType(String(kUTTypeFileURL))
+  )) ?? false
 }

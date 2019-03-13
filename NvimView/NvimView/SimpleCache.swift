@@ -4,6 +4,7 @@
  */
 
 import Foundation
+import os
 
 final class SimpleCache<K: Hashable, V> {
 

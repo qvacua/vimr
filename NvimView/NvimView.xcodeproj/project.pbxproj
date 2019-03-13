@@ -9,9 +9,12 @@
 /* Begin PBXBuildFile section */
 		1929B00C084F8EA5EF0BE6E2 /* NvimView+Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD896D408673954F4AA2 /* NvimView+Geometry.swift */; };
 		1929B06F50B2585777FFBE48 /* NvimApiCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B002A03693B14B14BE34 /* NvimApiCommons.swift */; };
+		1929B0B1A64AA449F666FCC9 /* 1.json in Resources */ = {isa = PBXBuildFile; fileRef = 1929B8619FD13BC2570CBFB2 /* 1.json */; };
 		1929B14D2EBC34BCFEC78ACB /* CellAttributesCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB19DD03ECD6ECC35F94 /* CellAttributesCollection.swift */; };
+		1929B1A7CC32FD7D05646B98 /* AttributesRunDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB7E3430BD3FD88A7698 /* AttributesRunDrawer.swift */; };
 		1929B2DB631E6EB5C3452B68 /* MyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BAF033A398BFBC2A7890 /* MyView.swift */; };
 		1929B2E9F089A9E2800B67F2 /* NimbleCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF88DE64FC62AFFCBC84 /* NimbleCommons.swift */; };
+		1929B326D5117A670105C209 /* 2.json in Resources */ = {isa = PBXBuildFile; fileRef = 1929B0522C47787B50071806 /* 2.json */; };
 		1929B36C51BCDFCCEE974EA2 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9C55A79D97272894F5D /* SwiftCommons.swift */; };
 		1929B3B70C96A78FD63DE737 /* NvimView+Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDC8F32F4A0D2299B5C5 /* NvimView+Debug.swift */; };
 		1929B40A751BDA2882D4FC94 /* NvimView+Objects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B22A0CAD417EC3790F02 /* NvimView+Objects.swift */; };
@@ -28,9 +31,11 @@
 		1929B7D2EB80FEA7BFBC3D2C /* Typesetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B47330DAD129520A2273 /* Typesetter.swift */; };
 		1929B83EAD32DC419FEC68DB /* CocoaCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0C89838D8402BB80BFC /* CocoaCommons.swift */; };
 		1929B90E2CFEAADE0CEE1562 /* CursorModeShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA4C89E9FE90065C32F6 /* CursorModeShape.swift */; };
+		1929B922396A4EE7F070299A /* PerfTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B114CC85D012D7477D58 /* PerfTester.swift */; };
 		1929B953E76914DA984697DC /* FontUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B96A876229DA394F906E /* FontUtils.swift */; };
 		1929B9A949EE85C27FF66367 /* UGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D83D7E150F518D49FE /* UGrid.swift */; };
 		1929BA70C221E3C199833B8C /* UiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B52174EC68D2974B5BAE /* UiBridge.swift */; };
+		1929BA918C7AB8DC411B82D2 /* 0.json in Resources */ = {isa = PBXBuildFile; fileRef = 1929B086022A7A2C99A65A21 /* 0.json */; };
 		1929BAB9A0399206FB7EBC76 /* CellAttributesCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB19DD03ECD6ECC35F94 /* CellAttributesCollection.swift */; };
 		1929BB552C9D99E9ED938759 /* CellAttributesCollectionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0B60CCAA00B08ACAB15 /* CellAttributesCollectionTest.swift */; };
 		1929BC8495028D66F0A7D618 /* AttributesRunDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB7E3430BD3FD88A7698 /* AttributesRunDrawer.swift */; };
@@ -77,6 +82,25 @@
 		4BE45C081FD2D4E3005C0A95 /* NvimServer in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B90F04F1FD2AFD3008A39E0 /* NvimServer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		4BE45C0C1FD2DA49005C0A95 /* runtime in Resources */ = {isa = PBXBuildFile; fileRef = 4BE45C0B1FD2DA49005C0A95 /* runtime */; };
 		4BEBC23A215FD19C007113C4 /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBC239215FD19C007113C4 /* Socket.framework */; };
+		4BF01CCF2235015E00411218 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF01CCE2235015E00411218 /* AppDelegate.swift */; };
+		4BF01CD12235015E00411218 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BF01CD02235015E00411218 /* Assets.xcassets */; };
+		4BF01CD42235015E00411218 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BF01CD22235015E00411218 /* MainMenu.xib */; };
+		4BF01CE42235022300411218 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDE2C6003A6EDC02129C /* ColorUtils.swift */; };
+		4BF01CE52235022300411218 /* FontUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B96A876229DA394F906E /* FontUtils.swift */; };
+		4BF01CE62235022300411218 /* CellAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE45756C88F8B43804D2 /* CellAttributes.swift */; };
+		4BF01CE72235022300411218 /* UGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D83D7E150F518D49FE /* UGrid.swift */; };
+		4BF01CE82235022300411218 /* SimpleCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B60D1775A75D7C0F6721 /* SimpleCache.swift */; };
+		4BF01CE92235022300411218 /* Runs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B06A73BE6DAA2679AAA2 /* Runs.swift */; };
+		4BF01CEA2235022300411218 /* Typesetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B47330DAD129520A2273 /* Typesetter.swift */; };
+		4BF01CEB2235022300411218 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B73455764E42DACF6BB8 /* Geometry.swift */; };
+		4BF01CEC2235022300411218 /* CellAttributesCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB19DD03ECD6ECC35F94 /* CellAttributesCollection.swift */; };
+		4BF01CED223502A300411218 /* FontTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B2CE622DF2B4D21D0C0E /* FontTrait.swift */; };
+		4BF01CEE223502C100411218 /* CocoaCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0C89838D8402BB80BFC /* CocoaCommons.swift */; };
+		4BF01CEF223502C100411218 /* OSLogCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B39C7DCDA4E9D5220CD8 /* OSLogCommons.swift */; };
+		4BF01CF0223502CC00411218 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9C55A79D97272894F5D /* SwiftCommons.swift */; };
+		4BF01CF1223502D400411218 /* Defs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF14AE831C6832659B66 /* Defs.swift */; };
+		4BF01CF2223502DB00411218 /* CoreCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BAB9FFE8345228B559EC /* CoreCommons.swift */; };
+		4BF01CF32235030E00411218 /* OSLogCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B39C7DCDA4E9D5220CD8 /* OSLogCommons.swift */; };
 		4BF18510212DCCEA00954FE7 /* NvimView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90F0041FD2AF59008A39E0 /* NvimView.framework */; };
 		4BF18511212DCCF600954FE7 /* NvimView.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B90F0041FD2AF59008A39E0 /* NvimView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF18512212DCD6E00954FE7 /* RxNeovimApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E548209E3E4100265C1D /* RxNeovimApi.framework */; };
@@ -171,15 +195,20 @@
 
 /* Begin PBXFileReference section */
 		1929B002A03693B14B14BE34 /* NvimApiCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimApiCommons.swift; sourceTree = "<group>"; };
+		1929B0522C47787B50071806 /* 2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 2.json; sourceTree = "<group>"; };
 		1929B06A73BE6DAA2679AAA2 /* Runs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Runs.swift; sourceTree = "<group>"; };
+		1929B086022A7A2C99A65A21 /* 0.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 0.json; sourceTree = "<group>"; };
 		1929B0B60CCAA00B08ACAB15 /* CellAttributesCollectionTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellAttributesCollectionTest.swift; sourceTree = "<group>"; };
 		1929B0C89838D8402BB80BFC /* CocoaCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaCommons.swift; sourceTree = "<group>"; };
+		1929B114CC85D012D7477D58 /* PerfTester.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PerfTester.swift; sourceTree = "<group>"; };
 		1929B22A0CAD417EC3790F02 /* NvimView+Objects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Objects.swift"; sourceTree = "<group>"; };
+		1929B2CE622DF2B4D21D0C0E /* FontTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontTrait.swift; sourceTree = "<group>"; };
 		1929B39C7DCDA4E9D5220CD8 /* OSLogCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSLogCommons.swift; sourceTree = "<group>"; };
 		1929B47330DAD129520A2273 /* Typesetter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Typesetter.swift; sourceTree = "<group>"; };
 		1929B52174EC68D2974B5BAE /* UiBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiBridge.swift; sourceTree = "<group>"; };
 		1929B60D1775A75D7C0F6721 /* SimpleCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleCache.swift; sourceTree = "<group>"; };
 		1929B73455764E42DACF6BB8 /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
+		1929B8619FD13BC2570CBFB2 /* 1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 1.json; sourceTree = "<group>"; };
 		1929B8E176C11DD61A8DCE95 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
 		1929B9290D503536FFDA9C49 /* MessagePackCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagePackCommons.swift; sourceTree = "<group>"; };
 		1929B96A876229DA394F906E /* FontUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontUtils.swift; sourceTree = "<group>"; };
@@ -237,6 +266,11 @@
 		4BD8742F2014C25F0039888E /* NvimAutoCommandEvent.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimAutoCommandEvent.generated.swift; sourceTree = "<group>"; };
 		4BE45C0B1FD2DA49005C0A95 /* runtime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = runtime; path = neovim/runtime; sourceTree = "<group>"; };
 		4BEBC239215FD19C007113C4 /* Socket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Socket.framework; path = ../Carthage/Build/Mac/Socket.framework; sourceTree = "<group>"; };
+		4BF01CCC2235015E00411218 /* DrawerPerf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DrawerPerf.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BF01CCE2235015E00411218 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4BF01CD02235015E00411218 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4BF01CD32235015E00411218 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		4BF01CD52235015E00411218 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BF1852021313EE300954FE7 /* DrawerDev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DrawerDev.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BF1852221313EE400954FE7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4BF1852421313EE500954FE7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -277,6 +311,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4B90F04C1FD2AFD3008A39E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BF01CC92235015E00411218 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -347,6 +388,7 @@
 				4B90F0501FD2AFD3008A39E0 /* NvimServer */,
 				4B0A1B122129F49500F1E02F /* NvimViewTests */,
 				4BF1852121313EE400954FE7 /* DrawerDev */,
+				4BF01CCD2235015E00411218 /* DrawerPerf */,
 				4B90F0051FD2AF59008A39E0 /* Products */,
 				4B90F06F1FD2B9F1008A39E0 /* Frameworks */,
 			);
@@ -359,6 +401,7 @@
 				4B90F04F1FD2AFD3008A39E0 /* NvimServer */,
 				4B0A1B112129F49500F1E02F /* NvimViewTests.xctest */,
 				4BF1852021313EE300954FE7 /* DrawerDev.app */,
+				4BF01CCC2235015E00411218 /* DrawerPerf.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -423,6 +466,22 @@
 				4BC5B0421FE551DF0071D64F /* RxSwift.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4BF01CCD2235015E00411218 /* DrawerPerf */ = {
+			isa = PBXGroup;
+			children = (
+				4BF01CCE2235015E00411218 /* AppDelegate.swift */,
+				4BF01CD02235015E00411218 /* Assets.xcassets */,
+				4BF01CD22235015E00411218 /* MainMenu.xib */,
+				4BF01CD52235015E00411218 /* Info.plist */,
+				1929B2CE622DF2B4D21D0C0E /* FontTrait.swift */,
+				1929B114CC85D012D7477D58 /* PerfTester.swift */,
+				1929B0522C47787B50071806 /* 2.json */,
+				1929B8619FD13BC2570CBFB2 /* 1.json */,
+				1929B086022A7A2C99A65A21 /* 0.json */,
+			);
+			path = DrawerPerf;
 			sourceTree = "<group>";
 		};
 		4BF1852121313EE400954FE7 /* DrawerDev */ = {
@@ -512,6 +571,23 @@
 			productReference = 4B90F04F1FD2AFD3008A39E0 /* NvimServer */;
 			productType = "com.apple.product-type.tool";
 		};
+		4BF01CCB2235015E00411218 /* DrawerPerf */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4BF01CD92235015E00411218 /* Build configuration list for PBXNativeTarget "DrawerPerf" */;
+			buildPhases = (
+				4BF01CC82235015E00411218 /* Sources */,
+				4BF01CC92235015E00411218 /* Frameworks */,
+				4BF01CCA2235015E00411218 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DrawerPerf;
+			productName = DrawerPerf;
+			productReference = 4BF01CCC2235015E00411218 /* DrawerPerf.app */;
+			productType = "com.apple.product-type.application";
+		};
 		4BF1851F21313EE300954FE7 /* DrawerDev */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4BF1852D21313EE500954FE7 /* Build configuration list for PBXNativeTarget "DrawerDev" */;
@@ -535,7 +611,7 @@
 		4B90EFFB1FD2AF59008A39E0 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0940;
+				LastSwiftUpdateCheck = 1010;
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Tae Won Ha";
 				TargetAttributes = {
@@ -549,6 +625,9 @@
 					};
 					4B90F04E1FD2AFD3008A39E0 = {
 						CreatedOnToolsVersion = 9.1;
+					};
+					4BF01CCB2235015E00411218 = {
+						CreatedOnToolsVersion = 10.1;
 					};
 					4BF1851F21313EE300954FE7 = {
 						CreatedOnToolsVersion = 9.4.1;
@@ -572,6 +651,7 @@
 				4B90F04E1FD2AFD3008A39E0 /* NvimServer */,
 				4B0A1B102129F49500F1E02F /* NvimViewTests */,
 				4BF1851F21313EE300954FE7 /* DrawerDev */,
+				4BF01CCB2235015E00411218 /* DrawerPerf */,
 			);
 		};
 /* End PBXProject section */
@@ -589,6 +669,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BE45C0C1FD2DA49005C0A95 /* runtime in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BF01CCA2235015E00411218 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BF01CD12235015E00411218 /* Assets.xcassets in Resources */,
+				4BF01CD42235015E00411218 /* MainMenu.xib in Resources */,
+				1929B326D5117A670105C209 /* 2.json in Resources */,
+				1929B0B1A64AA449F666FCC9 /* 1.json in Resources */,
+				1929BA918C7AB8DC411B82D2 /* 0.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -705,6 +797,31 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4BF01CC82235015E00411218 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BF01CF2223502DB00411218 /* CoreCommons.swift in Sources */,
+				4BF01CF1223502D400411218 /* Defs.swift in Sources */,
+				4BF01CF0223502CC00411218 /* SwiftCommons.swift in Sources */,
+				4BF01CEE223502C100411218 /* CocoaCommons.swift in Sources */,
+				4BF01CEF223502C100411218 /* OSLogCommons.swift in Sources */,
+				4BF01CED223502A300411218 /* FontTrait.swift in Sources */,
+				4BF01CE42235022300411218 /* ColorUtils.swift in Sources */,
+				4BF01CE52235022300411218 /* FontUtils.swift in Sources */,
+				4BF01CE62235022300411218 /* CellAttributes.swift in Sources */,
+				4BF01CE72235022300411218 /* UGrid.swift in Sources */,
+				4BF01CE82235022300411218 /* SimpleCache.swift in Sources */,
+				4BF01CE92235022300411218 /* Runs.swift in Sources */,
+				4BF01CEA2235022300411218 /* Typesetter.swift in Sources */,
+				4BF01CEB2235022300411218 /* Geometry.swift in Sources */,
+				4BF01CEC2235022300411218 /* CellAttributesCollection.swift in Sources */,
+				4BF01CCF2235015E00411218 /* AppDelegate.swift in Sources */,
+				1929B1A7CC32FD7D05646B98 /* AttributesRunDrawer.swift in Sources */,
+				1929B922396A4EE7F070299A /* PerfTester.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4BF1851C21313EE300954FE7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -746,6 +863,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		4BF01CD22235015E00411218 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4BF01CD32235015E00411218 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
 		4BF1852621313EE500954FE7 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -815,7 +940,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 307;
+				CURRENT_PROJECT_VERSION = 308;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -877,7 +1002,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 307;
+				CURRENT_PROJECT_VERSION = 308;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -906,7 +1031,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 307;
+				DYLIB_CURRENT_VERSION = 308;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				FRAMEWORK_VERSION = A;
@@ -928,7 +1053,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 307;
+				DYLIB_CURRENT_VERSION = 308;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				FRAMEWORK_VERSION = A;
@@ -1019,6 +1144,39 @@
 			};
 			name = Release;
 		};
+		4BF01CD72235015E00411218 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = DrawerPerf/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.DrawerPerf;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 4.2;
+			};
+			name = Debug;
+		};
+		4BF01CD82235015E00411218 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = DrawerPerf/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.DrawerPerf;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 4.2;
+			};
+			name = Release;
+		};
 		4BF1852B21313EE500954FE7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1084,6 +1242,15 @@
 			buildConfigurations = (
 				4B90F0541FD2AFD3008A39E0 /* Debug */,
 				4B90F0551FD2AFD3008A39E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4BF01CD92235015E00411218 /* Build configuration list for PBXNativeTarget "DrawerPerf" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4BF01CD72235015E00411218 /* Debug */,
+				4BF01CD82235015E00411218 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

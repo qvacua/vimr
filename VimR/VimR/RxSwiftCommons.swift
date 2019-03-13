@@ -35,9 +35,11 @@ extension PrimitiveSequence where Element == Never, TraitType == CompletableTrai
     defer { condition.unlock() }
 
     let disposable = self.subscribe(onCompleted: {
+      condition.lock()
       trigger = true
       broadcast(condition)
     }, onError: { error in
+      condition.lock()
       trigger = true
       err = error
       broadcast(condition)
@@ -76,9 +78,11 @@ extension PrimitiveSequence where TraitType == SingleTrait {
 
     let disposable = self.subscribe(onSuccess: { result in
       value = result
+      condition.lock()
       trigger = true
       broadcast(condition)
     }, onError: { error in
+      condition.lock()
       trigger = true
       broadcast(condition)
     })
@@ -91,7 +95,6 @@ extension PrimitiveSequence where TraitType == SingleTrait {
 }
 
 private func broadcast(_ condition: NSCondition) {
-  condition.lock()
   defer { condition.unlock() }
   condition.broadcast()
 }

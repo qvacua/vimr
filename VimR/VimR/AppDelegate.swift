@@ -45,11 +45,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
 
       initialAppState = state
     } else {
-      if let oldDict = UserDefaults.standard.value(forKey: PrefMiddleware.lastCompatibleVersion) as? [String: Any] {
-        initialAppState = Pref128ToCurrentConverter.appState(from: oldDict)
-      } else {
-        initialAppState = .default
-      }
+      initialAppState = .default
     }
 
     initialAppState.mainWindowTemplate.htmlPreview.server = Marked(
