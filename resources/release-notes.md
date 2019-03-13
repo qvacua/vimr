@@ -1,6 +1,7 @@
 # next
 
 * GH-458: Bugfix: Opening files by drag-n-dropping on VimR window does not work.
+* Bugfix: Crashes when some files are deleted in the `cwd` when closing.
 
 # 0.26.4-307
 
