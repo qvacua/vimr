@@ -87,6 +87,6 @@ extension PrimitiveSequence where TraitType == SingleTrait {
 }
 
 private func broadcast(_ condition: NSCondition) {
-  defer { condition.unlock() }
   condition.broadcast()
+  condition.unlock()
 }
