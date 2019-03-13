@@ -14,6 +14,23 @@ extension Array where Element: Hashable {
   }
 }
 
+extension Array {
+
+  func data() -> Data {
+    return self.withUnsafeBytes { pointer in
+      if let baseAddr = pointer.baseAddress {
+        return Data(bytes: baseAddr, count: pointer.count)
+      }
+
+      let newPointer = UnsafeMutablePointer<Element>.allocate(capacity: self.count)
+      for (index, element) in self.enumerated() {
+        newPointer[index] = element
+      }
+      return Data(bytesNoCopy: newPointer, count: self.count, deallocator: .free)
+    }
+  }
+}
+
 extension RandomAccessCollection where Index == Int {
 
   func parallelMap<T>(
