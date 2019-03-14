@@ -4,6 +4,7 @@
  */
 
 import Foundation
+import WebKit
 
 struct Defs {
 
@@ -16,4 +17,6 @@ struct Defs {
     static let uiComponents = "ui-components"
     static let middleware = "middleware"
   }
+
+  static let webViewProcessPool = WKProcessPool()
 }

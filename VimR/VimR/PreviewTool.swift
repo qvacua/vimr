@@ -33,6 +33,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
     let configuration = WKWebViewConfiguration()
     configuration.userContentController = self.userContentController
+    configuration.processPool = Defs.webViewProcessPool
     self.webview = WKWebView(frame: CGRect.zero, configuration: configuration)
 
     let refreshMenuItem = NSMenuItem(title: "Refresh Now", action: nil, keyEquivalent: "")
