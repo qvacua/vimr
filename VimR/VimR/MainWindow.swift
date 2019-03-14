@@ -469,7 +469,7 @@ class MainWindow: NSObject,
 
   private var defaultFont = NvimView.defaultFont
   private var linespacing = NvimView.defaultLinespacing
-  private var usesLigatures = false
+  private var usesLigatures = true
   private var drawsParallel = false
 
   private var previewPosition = Marked(Position.beginning)
