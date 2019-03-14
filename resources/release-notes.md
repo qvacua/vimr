@@ -1,6 +1,6 @@
 # next
 
-* ...
+* Bugfix: The state of the "Use Concurrent Rendering" checkbox is not set correctly.
 
 # 0.26.5-308
 
