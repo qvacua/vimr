@@ -28,6 +28,7 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
     self.uuid = state.uuid
 
     let configuration = WKWebViewConfiguration()
+    configuration.processPool = Defs.webViewProcessPool
     self.webview = WKWebView(frame: CGRect.zero, configuration: configuration)
 
     super.init(frame: .zero)

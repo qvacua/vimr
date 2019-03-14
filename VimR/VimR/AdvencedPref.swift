@@ -48,10 +48,12 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
         if self.useInteractiveZsh != state.mainWindowTemplate.useInteractiveZsh
            || self.useSnapshotUpdate != state.useSnapshotUpdate
            || self.useLiveResize != state.mainWindowTemplate.useLiveResize
-        {
+           || self.drawsParallel != state.mainWindowTemplate.drawsParallel {
+
           self.useInteractiveZsh = state.mainWindowTemplate.useInteractiveZsh
           self.useSnapshotUpdate = state.useSnapshotUpdate
           self.useLiveResize = state.mainWindowTemplate.useLiveResize
+          self.drawsParallel = state.mainWindowTemplate.drawsParallel
 
           self.updateViews()
         }

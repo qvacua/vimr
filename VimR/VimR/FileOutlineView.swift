@@ -273,7 +273,7 @@ class FileOutlineView: NSOutlineView,
                          .compactMap { $0.node?.url } ?? []
     let newNodes = newChildUrls
       .subtracting(existingUrls)
-      .map { Node(url: $0) }
+      .map(Node.init)
     let newIndexPaths = (0..<newNodes.count)
       .map { i in changeTreeNode.indexPath.appending(i) }
 
@@ -332,7 +332,7 @@ class FileOutlineView: NSOutlineView,
 
     let nodes = FileUtils
       .directDescendants(of: node.url)
-      .map { Node(url: $0) }
+      .map(Node.init)
 
     if self.isShowHidden {
       return nodes
@@ -539,9 +539,7 @@ extension FileOutlineView {
       return true
     }
 
-    node.children = FileUtils.directDescendants(of: node.url).map { url in
-      return Node(url: url)
-    }
+    node.children = FileUtils.directDescendants(of: node.url).map(Node.init)
 
     return true
   }

@@ -182,7 +182,7 @@ struct AppearanceState: Codable {
 
   var font = NSFont.userFixedPitchFont(ofSize: 13)!
   var linespacing: CGFloat = 1
-  var usesLigatures = false
+  var usesLigatures = true
 
   var usesTheme = true
   var showsFileIcon = true

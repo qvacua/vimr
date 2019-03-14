@@ -14,6 +14,13 @@ extension Array where Element: Hashable {
   }
 }
 
+extension Array {
+
+  func data() -> Data {
+    return self.withUnsafeBufferPointer(Data.init)
+  }
+}
+
 extension RandomAccessCollection where Index == Int {
 
   func parallelMap<T>(

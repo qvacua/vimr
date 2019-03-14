@@ -45,7 +45,7 @@ extension PrimitiveSequence where Element == Never, TraitType == CompletableTrai
       broadcast(condition)
     })
 
-    while !trigger && condition.wait(until: Date(timeIntervalSinceNow: 5)) {}
+    while !trigger { condition.wait(until: Date(timeIntervalSinceNow: 5)) }
     disposable.dispose()
 
     if let e = err {
@@ -87,7 +87,7 @@ extension PrimitiveSequence where TraitType == SingleTrait {
       broadcast(condition)
     })
 
-    while !trigger && condition.wait(until: Date(timeIntervalSinceNow: 5)) {}
+    while !trigger { condition.wait(until: Date(timeIntervalSinceNow: 5)) }
     disposable.dispose()
 
     return value
