@@ -218,7 +218,7 @@ class MainWindow: NSObject,
     self.defaultFont = state.appearance.font
     self.linespacing = state.appearance.linespacing
     self.usesLigatures = state.appearance.usesLigatures
-    self.usesLigatures = state.drawsParallel
+    self.drawsParallel = state.drawsParallel
 
     self.editorPosition = state.preview.editorPosition
     self.previewPosition = state.preview.previewPosition
