@@ -11,11 +11,9 @@
 #import "CocoaCategories.h"
 
 
-static CFRunLoopRef _mainRunLoop;
-
 NvimServer *_neovim_server;
 
-static void observe_parent_termination() {
+static void observe_parent_termination(CFRunLoopRef mainRunLoop) {
   pid_t parentPID = getppid();
 
   dispatch_queue_t queue = dispatch_get_global_queue(
@@ -35,7 +33,7 @@ static void observe_parent_termination() {
 
   dispatch_source_set_event_handler(source, ^{
     WLOG("Exiting neovim server due to parent termination.");
-    CFRunLoopStop(_mainRunLoop);
+    CFRunLoopStop(mainRunLoop);
     dispatch_source_cancel(source);
   });
 
@@ -43,8 +41,8 @@ static void observe_parent_termination() {
 }
 
 int main(int argc, const char *argv[]) {
-  _mainRunLoop = CFRunLoopGetCurrent();
-  observe_parent_termination();
+  CFRunLoopRef mainRunLoop = CFRunLoopGetCurrent();
+  observe_parent_termination(mainRunLoop);
 
   @autoreleasepool {
     NSArray<NSString *> *arguments = [NSProcessInfo processInfo].arguments;
