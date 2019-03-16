@@ -67,7 +67,7 @@ class ThemedTableCell: NSTableCellView {
 
   // MARK: - API
   static let font = NSFont.systemFont(ofSize: 12)
-  static let widthWithoutText = CGFloat(2 + 16 + 4 + 2)
+  static let widthWithoutText = (2 + 16 + 4 + 2).cgf
 
 //  static func width(with text: String) -> CGFloat {
 //    let attrStr = NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: ThemedTableCell.font])

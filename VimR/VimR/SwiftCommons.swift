@@ -9,6 +9,20 @@ func identity<T>(_ input: T) -> T {
   return input
 }
 
+extension BinaryFloatingPoint {
+
+  var cgf: CGFloat {
+    return CGFloat(self)
+  }
+}
+
+extension FixedWidthInteger {
+
+  var cgf: CGFloat {
+    return CGFloat(self)
+  }
+}
+
 extension String {
 
   func without(prefix: String) -> String {

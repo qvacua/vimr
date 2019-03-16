@@ -97,14 +97,17 @@ class MainWindow: NSObject,
     }
 
     if state.activeTools[.htmlPreview] == true {
-      self.htmlPreview = HtmlPreviewTool(source: source, emitter: emitter, state: state)
+      self.htmlPreview = HtmlPreviewTool(source: source,
+                                         emitter: emitter,
+                                         state: state)
       let htmlPreviewConfig = WorkspaceTool.Config(
         title: "HTML",
         view: self.htmlPreview!,
         customToolbar: self.htmlPreview!.innerCustomToolbar
       )
       self.htmlPreviewContainer = WorkspaceTool(htmlPreviewConfig)
-      self.htmlPreviewContainer!.dimension = state.tools[.htmlPreview]?.dimension ?? 250
+      self.htmlPreviewContainer!.dimension = state.tools[.htmlPreview]?
+                                               .dimension ?? 250
       tools[.htmlPreview] = self.htmlPreviewContainer
     }
 
@@ -318,7 +321,8 @@ class MainWindow: NSObject,
           .andThen {
             if state.preview.status == .markdown
                && state.previewTool.isReverseSearchAutomatically
-               && state.preview.previewPosition.hasDifferentMark(as: self.previewPosition) {
+               && state.preview.previewPosition
+                 .hasDifferentMark(as: self.previewPosition) {
 
               self.previewPosition = state.preview.previewPosition
               return self.neoVimView.cursorGo(
@@ -387,8 +391,11 @@ class MainWindow: NSObject,
         self.neoVimView.isLeftOptionMeta = state.isLeftOptionMeta
         self.neoVimView.isRightOptionMeta = state.isRightOptionMeta
 
-        if self.neoVimView.trackpadScrollResistance != CGFloat(state.trackpadScrollResistance) {
-          self.neoVimView.trackpadScrollResistance = CGFloat(state.trackpadScrollResistance)
+        if self.neoVimView.trackpadScrollResistance
+           != state.trackpadScrollResistance.cgf {
+          self.neoVimView.trackpadScrollResistance = CGFloat(
+            state.trackpadScrollResistance
+          )
         }
 
         if self.neoVimView.usesLiveResize != state.useLiveResize {

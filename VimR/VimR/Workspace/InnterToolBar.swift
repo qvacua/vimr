@@ -23,8 +23,8 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
 
   // MARK: - API
   static let toolbarHeight = InnerToolBar.iconDimension
-  static let iconDimension = CGFloat(18)
-  static let itemPadding = CGFloat(4)
+  static let iconDimension = 18.cgf
+  static let itemPadding = 4.cgf
 
   static func configureToStandardIconButton(
     button: NSButton,
@@ -138,7 +138,7 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     fatalError("init(coder:) has not been implemented")
   }
 
-  private static let separatorThickness = CGFloat(1)
+  private static let separatorThickness = 1.cgf
   private static let height = InnerToolBar.iconDimension + 2 + 2 + InnerToolBar.separatorThickness
 
   private let titleField = NSTextField(forAutoLayout: ())

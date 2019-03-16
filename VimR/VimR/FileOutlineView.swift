@@ -188,7 +188,7 @@ class FileOutlineView: NSOutlineView,
   }
   private let treeController = NSTreeController()
 
-  private var cachedColumnWidth = CGFloat(20)
+  private var cachedColumnWidth = 20.cgf
   private var usesTheme: Bool
   private var lastFileSystemUpdateMark = Token()
   private var showsFileIcon: Bool
@@ -555,7 +555,7 @@ extension FileOutlineView {
       return
     }
 
-    let level = CGFloat(self.level(forRow: row))
+    let level = self.level(forRow: row).cgf
     let width = level * self.indentationPerLevel + cellWidth
                 + columnWidthRightPadding
     self.cachedColumnWidth = max(self.cachedColumnWidth, width)
@@ -667,5 +667,5 @@ private extension NSTreeNode {
   }
 }
 
-private let columnWidthRightPadding = CGFloat(40)
-private let triangleImageSize = CGFloat(18)
+private let columnWidthRightPadding = 40.cgf
+private let triangleImageSize = 18.cgf

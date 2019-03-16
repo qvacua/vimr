@@ -149,4 +149,4 @@ extension MainWindow {
   }
 }
 
-private let repIconToTitleGap = CGFloat(4.0)
+private let repIconToTitleGap = (4.0).cgf

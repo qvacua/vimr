@@ -9,7 +9,10 @@ import CocoaMarkdown
 extension NSColor {
 
   static var random: NSColor {
-    return NSColor(calibratedRed: CGFloat(drand48()), green: CGFloat(drand48()), blue: CGFloat(drand48()), alpha: 1.0)
+    return NSColor(calibratedRed: CGFloat.random(in: 0...1),
+                   green: CGFloat.random(in: 0...1),
+                   blue: CGFloat.random(in: 0...1),
+                   alpha: 1.0)
   }
 
   var hex: String {

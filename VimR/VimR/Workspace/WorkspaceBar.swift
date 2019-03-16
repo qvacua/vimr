@@ -51,14 +51,14 @@ private class ProxyBar: NSView {
 
 class WorkspaceBar: NSView, WorkspaceToolDelegate {
 
-  static private let separatorThickness = CGFloat(1)
+  static private let separatorThickness = 1.cgf
 
   fileprivate(set) var tools = [WorkspaceTool]()
   
   private weak var selectedTool: WorkspaceTool?
 
   private var isMouseDownOngoing = false
-  private var dragIncrement = CGFloat(1)
+  private var dragIncrement = 1.cgf
 
   private var layoutConstraints = [NSLayoutConstraint]()
 
@@ -69,7 +69,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
   }
 
   // MARK: - API
-  static let minimumDimension = CGFloat(50)
+  static let minimumDimension = 50.cgf
 
   let location: WorkspaceBarLocation
   var isButtonVisible = true {
@@ -567,7 +567,7 @@ extension WorkspaceBar {
 
   private func resizeRect() -> CGRect {
     let separatorRect = self.outerSeparatorRect()
-    let clickDimension = CGFloat(4)
+    let clickDimension = 4.cgf
 
     switch self.location {
     case .top:
