@@ -17,76 +17,6 @@ class MainWindow: NSObject,
 
   typealias StateType = State
 
-  enum Action {
-
-    case cd(to: URL)
-    case setBufferList([NvimView.Buffer])
-
-    case newCurrentBuffer(NvimView.Buffer)
-    case bufferWritten(NvimView.Buffer)
-    case setDirtyStatus(Bool)
-
-    case becomeKey(isFullScreen: Bool)
-    case frameChanged(to: CGRect)
-
-    case scroll(to: Marked<Position>)
-    case setCursor(to: Marked<Position>)
-
-    case focus(FocusableView)
-
-    case openQuickly
-
-    case toggleAllTools(Bool)
-    case toggleToolButtons(Bool)
-    case setState(for: Tools, with: WorkspaceTool)
-    case setToolsState([(Tools, WorkspaceTool)])
-
-    case makeSessionTemporary
-
-    case setTheme(Theme)
-
-    case close
-
-    // RPC actions
-    case setFont(NSFont)
-    case setLinespacing(CGFloat)
-  }
-
-  enum FocusableView {
-
-    case neoVimView
-    case fileBrowser
-    case bufferList
-    case markdownPreview
-    case htmlPreview
-  }
-
-  enum Tools: String, Codable {
-
-    static let all = Set(
-      [
-        Tools.fileBrowser,
-        Tools.buffersList,
-        Tools.preview,
-        Tools.htmlPreview
-      ]
-    )
-
-    case fileBrowser = "com.qvacua.vimr.tools.file-browser"
-    case buffersList = "com.qvacua.vimr.tools.opened-files-list"
-    case preview = "com.qvacua.vimr.tools.preview"
-    case htmlPreview = "com.qvacua.vimr.tools.html-preview"
-  }
-
-  enum OpenMode {
-
-    case `default`
-    case currentTab
-    case newTab
-    case horizontalSplit
-    case verticalSplit
-  }
-
   let disposeBag = DisposeBag()
 
   let uuid: UUID
@@ -129,6 +59,7 @@ class MainWindow: NSObject,
     self.uuid = state.uuid
 
     self.cliPipePath = state.cliPipePath
+    self.goToLineFromCli = state.goToLineFromCli
 
     self.windowController = NSWindowController(
       windowNibName: NSNib.Name("MainWindow")
@@ -258,6 +189,61 @@ class MainWindow: NSObject,
     self.neoVimView.drawsParallel = self.drawsParallel
     self.updateNeoVimAppearance()
 
+    self.setupScrollAndCursorDebouncers()
+    self.subscribeToNvimViewEvents()
+    self.subscribeToStateChange(source: source)
+
+    self.window.setFrame(state.frame, display: true)
+    self.window.makeFirstResponder(self.neoVimView)
+
+    self.openInitialUrlsAndGoToLine(urlsToOpen: state.urlsToOpen)
+  }
+
+  func uuidAction(for action: Action) -> UuidAction<Action> {
+    return UuidAction(uuid: self.uuid, action: action)
+  }
+
+  func show() {
+    self.windowController.showWindow(self)
+  }
+
+  // The following should only be used when Cmd-Q'ing
+  func quitNeoVimWithoutSaving() -> Completable {
+    return self.neoVimView.quitNeoVimWithoutSaving()
+  }
+
+  @IBAction func debug2(_: Any?) {
+    var theme = Theme.default
+    theme.foreground = .blue
+    theme.background = .yellow
+    theme.highlightForeground = .orange
+    theme.highlightBackground = .red
+    self.emit(uuidAction(for: .setTheme(theme)))
+  }
+
+  private var currentBuffer: NvimView.Buffer?
+
+  private var goToLineFromCli: Marked<Int>?
+
+  private var defaultFont = NvimView.defaultFont
+  private var linespacing = NvimView.defaultLinespacing
+  private var usesLigatures = true
+  private var drawsParallel = false
+
+  private var previewPosition = Marked(Position.beginning)
+
+  private var preview: PreviewTool?
+  private var htmlPreview: HtmlPreviewTool?
+  private var fileBrowser: FileBrowser?
+  private var buffersList: BuffersList?
+
+  private var usesTheme = true
+  private var lastThemeMark = Token()
+
+  private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                          category: Defs.LoggerCategory.uiComponents)
+
+  private func setupScrollAndCursorDebouncers() {
     Observable
       .of(self.scrollDebouncer.observable, self.cursorDebouncer.observable)
       .merge()
@@ -265,7 +251,9 @@ class MainWindow: NSObject,
         self.emit(self.uuidAction(for: action))
       })
       .disposed(by: self.disposeBag)
+  }
 
+  private func subscribeToNvimViewEvents() {
     self.neoVimView.events
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [unowned self] event in
@@ -304,7 +292,9 @@ class MainWindow: NSObject,
         self.log.error(error)
       })
       .disposed(by: self.disposeBag)
+  }
 
+  private func subscribeToStateChange(source: Observable<StateType>) {
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { state in
@@ -421,13 +411,11 @@ class MainWindow: NSObject,
         }
       })
       .disposed(by: self.disposeBag)
+  }
 
-    self.window.setFrame(state.frame, display: true)
-    self.window.makeFirstResponder(self.neoVimView)
-
-    self.goToLineFromCli = state.goToLineFromCli
+  private func openInitialUrlsAndGoToLine(urlsToOpen: [URL: OpenMode]) {
     self
-      .open(urls: state.urlsToOpen)
+      .open(urls: urlsToOpen)
       .andThen {
         if let goToLine = self.goToLineFromCli {
           return self.neoVimView.goTo(line: goToLine.payload)
@@ -438,50 +426,6 @@ class MainWindow: NSObject,
       .subscribe()
       .disposed(by: self.disposeBag)
   }
-
-  func uuidAction(for action: Action) -> UuidAction<Action> {
-    return UuidAction(uuid: self.uuid, action: action)
-  }
-
-  func show() {
-    self.windowController.showWindow(self)
-  }
-
-  // The following should only be used when Cmd-Q'ing
-  func quitNeoVimWithoutSaving() -> Completable {
-    return self.neoVimView.quitNeoVimWithoutSaving()
-  }
-
-  @IBAction func debug2(_: Any?) {
-    var theme = Theme.default
-    theme.foreground = .blue
-    theme.background = .yellow
-    theme.highlightForeground = .orange
-    theme.highlightBackground = .red
-    self.emit(uuidAction(for: .setTheme(theme)))
-  }
-
-  private var currentBuffer: NvimView.Buffer?
-
-  private var goToLineFromCli: Marked<Int>?
-
-  private var defaultFont = NvimView.defaultFont
-  private var linespacing = NvimView.defaultLinespacing
-  private var usesLigatures = true
-  private var drawsParallel = false
-
-  private var previewPosition = Marked(Position.beginning)
-
-  private var preview: PreviewTool?
-  private var htmlPreview: HtmlPreviewTool?
-  private var fileBrowser: FileBrowser?
-  private var buffersList: BuffersList?
-
-  private var usesTheme = true
-  private var lastThemeMark = Token()
-
-  private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                          category: Defs.LoggerCategory.uiComponents)
 
   private func updateNeoVimAppearance() {
     self.neoVimView.font = self.defaultFont
