@@ -112,13 +112,13 @@ public class NvimView: NSView,
 
   public static let rpcEventName = "com.qvacua.NvimView"
 
-  public static let minFontSize = CGFloat(4)
-  public static let maxFontSize = CGFloat(128)
+  public static let minFontSize = 4.cgf
+  public static let maxFontSize = 128.cgf
   public static let defaultFont = NSFont.userFixedPitchFont(ofSize: 12)!
-  public static let defaultLinespacing = CGFloat(1)
+  public static let defaultLinespacing = 1.cgf
 
-  public static let minLinespacing = CGFloat(0.5)
-  public static let maxLinespacing = CGFloat(8)
+  public static let minLinespacing = (0.5).cgf
+  public static let maxLinespacing = 8.cgf
 
   public var isLeftOptionMeta = false
   public var isRightOptionMeta = false
@@ -129,7 +129,7 @@ public class NvimView: NSView,
 
   public internal(set) var theme = Theme.default
 
-  public var trackpadScrollResistance = CGFloat(5)
+  public var trackpadScrollResistance = 5.cgf
 
   public var usesLiveResize = false
 
@@ -350,7 +350,7 @@ public class NvimView: NSView,
   let cellAttributesCollection = CellAttributesCollection()
   let drawer: AttributesRunDrawer
   let typesetter = Typesetter()
-  var baselineOffset = CGFloat(0)
+  var baselineOffset = 0.cgf
 
   /// We store the last marked text because Cocoa's text input system does the following:
   /// 하 -> hanja popup -> insertText(하) -> attributedSubstring...() -> setMarkedText(下) -> ...
@@ -368,7 +368,7 @@ public class NvimView: NSView,
   var scrollGuardCounterY = 5
 
   var isCurrentlyPinching = false
-  var pinchTargetScale = CGFloat(1)
+  var pinchTargetScale = 1.cgf
   var pinchBitmap: NSBitmapImageRep?
 
   var currentlyResizing = false

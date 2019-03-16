@@ -42,14 +42,14 @@ final class Typesetter {
         CTRunGetStringIndices(run, .zero, &indices)
 
         var column = -1
-        var columnPosition = CGFloat(0)
-        var deltaX = CGFloat(0)
+        var columnPosition = 0.cgf
+        var deltaX = 0.cgf
 
         _ = positions.withUnsafeMutableBufferPointer { positionsPtr -> Void in
           for i in 0..<positionsPtr.count {
             let newColumn = cellIndices[indices[i]] + startColumn
             if newColumn != column {
-              columnPosition = offset.x + CGFloat(newColumn) * cellWidth
+              columnPosition = offset.x + newColumn.cgf * cellWidth
               deltaX = columnPosition - positionsPtr[i].x
               column = newColumn
             }
@@ -108,7 +108,7 @@ final class Typesetter {
         let endColumn = startColumnForPositions + glyphs.count
         let positions = (startColumnForPositions..<endColumn).map { i in
           CGPoint(
-            x: offset.x + CGFloat(i) * cellWidth,
+            x: offset.x + i.cgf * cellWidth,
             y: offset.y
           )
         }
@@ -133,7 +133,7 @@ final class Typesetter {
           let endColumn = startColumnForPositions + range.count
           let positions = (startColumnForPositions..<endColumn).map { i in
             CGPoint(
-              x: offset.x + CGFloat(i) * cellWidth,
+              x: offset.x + i.cgf * cellWidth,
               y: offset.y
             )
           }

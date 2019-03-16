@@ -57,9 +57,9 @@ extension NvimView {
 
   func pointInView(forRow row: Int, column: Int) -> CGPoint {
     return CGPoint(
-      x: self.offset.x + CGFloat(column) * self.cellSize.width,
+      x: self.offset.x + column.cgf * self.cellSize.width,
       y: self.bounds.size.height - self.offset.y
-        - CGFloat(row) * self.cellSize.height - self.cellSize.height
+        - row.cgf * self.cellSize.height - self.cellSize.height
     )
   }
 
@@ -70,10 +70,10 @@ extension NvimView {
   }
 
   func rect(for region: Region) -> CGRect {
-    let top = CGFloat(region.top)
-    let bottom = CGFloat(region.bottom)
-    let left = CGFloat(region.left)
-    let right = CGFloat(region.right)
+    let top = region.top.cgf
+    let bottom = region.bottom.cgf
+    let left = region.left.cgf
+    let right = region.right.cgf
 
     let width = right - left + 1
     let height = bottom - top + 1
