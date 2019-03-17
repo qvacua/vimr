@@ -73,12 +73,6 @@ static inline String vim_string_from(NSString *str) {
   return (String) {.data = (char *) str.cstr, .size = str.clength};
 }
 
-static void msgpack_pack_cstr(msgpack_packer *packer, const char *cstr) {
-  size_t len = strlen(cstr);
-  msgpack_pack_str(packer, len);
-  msgpack_pack_str_body(packer, cstr, len);
-}
-
 static void refresh_ui_screen(int type) {
   update_screen(type);
   setcursor();
@@ -93,6 +87,12 @@ static bool has_dirty_docs() {
   }
 
   return false;
+}
+
+static void msgpack_pack_cstr(msgpack_packer *packer, const char *cstr) {
+  size_t len = strlen(cstr);
+  msgpack_pack_str(packer, len);
+  msgpack_pack_str_body(packer, cstr, len);
 }
 
 static void msgpack_pack_bool(msgpack_packer *packer, bool value) {
