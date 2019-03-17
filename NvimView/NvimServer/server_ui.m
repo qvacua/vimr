@@ -411,14 +411,6 @@ static void server_ui_raw_line(
 ) {
   Integer count = endcol - startcol;
 
-  if (row == 0) {
-    let data = [NSMutableData dataWithCapacity:1000];
-    for (int i = 0; i < count; i++) {
-      [data appendBytes:chunk[i] length:strlen((const char *) chunk[i])];
-      [data setLength:0];
-    }
-  }
-
   pack_flush_data(RenderDataTypeRawLine, ^(msgpack_packer *packer) {
     msgpack_pack_array(packer, 7);
 
