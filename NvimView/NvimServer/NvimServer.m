@@ -47,8 +47,8 @@ static CFDataRef local_server_callback(
 
     case NvimBridgeMsgIdAgentReady: {
       @autoreleasepool {
-        NSInteger *values = (NSInteger *) CFDataGetBytePtr(data);
-        NvimServer *nvimServer = (__bridge NvimServer *) info;
+        const NSInteger *const values = (NSInteger *) CFDataGetBytePtr(data);
+        NvimServer *const nvimServer = (__bridge NvimServer *) info;
 
         start_neovim(values[0], values[1], nvimServer.nvimArgs);
 
@@ -147,7 +147,7 @@ static CFDataRef local_server_callback(
 
 - (void)runLocalServer {
   @autoreleasepool {
-    unsigned char shouldFree = false;
+    unsigned char shouldFree = false; // Carbon Boolean = unsigned char
     CFMessagePortContext localContext = {
         .version = 0,
         .info = (__bridge void *) self,
@@ -168,7 +168,7 @@ static CFDataRef local_server_callback(
   }
 
   _localServerRunLoop = CFRunLoopGetCurrent();
-  CFRunLoopSourceRef runLoopSrc = CFMessagePortCreateRunLoopSource(
+  CFRunLoopSourceRef const runLoopSrc = CFMessagePortCreateRunLoopSource(
       kCFAllocatorDefault,
       _localServerPort,
       0
