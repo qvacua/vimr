@@ -201,7 +201,10 @@ public class NvimView: NSView,
     return true
   }
 
-  public let queue = DispatchQueue(label: String(reflecting: NvimView.self), qos: .userInitiated)
+  public let queue = DispatchQueue(
+    label: String(reflecting: NvimView.self),
+    qos: .userInteractive
+  )
   public let scheduler: SerialDispatchQueueScheduler
 
   public internal(set) var currentPosition = Position.beginning
