@@ -1,6 +1,7 @@
 # next
 
 * Bugfix: The state of the "Use Concurrent Rendering" checkbox is not set correctly.
+* Bugfix: memory leak
 * Limit the number of "VimR Networking" processes.
 
 # 0.26.5-308
