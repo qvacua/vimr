@@ -55,12 +55,6 @@ extern int nvim_main(int argc, char **argv);
 // The thread in which neovim's main runs
 static uv_thread_t _nvim_thread;
 
-// Condition variable used by the XPC's init to wait till our custom UI
-// initialization is finished inside neovim
-static bool _is_ui_launched = false;
-static uv_mutex_t _mutex;
-static uv_cond_t _condition;
-
 static ServerUiData *_server_ui_data;
 
 static NSString *_backspace = @"<BS>";
@@ -259,10 +253,12 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   _server_ui_data->stop = false;
   CONTINUE(bridge);
 
-  uv_mutex_lock(&_mutex);
-  _is_ui_launched = true;
-  uv_cond_signal(&_condition);
-  uv_mutex_unlock(&_mutex);
+  send_msg_packing(NvimServerMsgIdNvimReady, ^(msgpack_packer *packer) {
+    msgpack_pack_bool(packer, msg_didany > 0);
+  });
+
+  // We have to manually trigger this to initially get the colorscheme.
+  send_colorscheme();
 
   while (!_server_ui_data->stop) {
     loop_poll_events(&loop, -1);
@@ -641,28 +637,8 @@ void start_neovim(
   // is not garbled.
   setenv("LANG", "en_US.UTF-8", true);
 
-  uv_mutex_init(&_mutex);
-  uv_cond_init(&_condition);
-
   // released in run_neovim()
   uv_thread_create(&_nvim_thread, run_neovim, [args retain]);
-
-  // continue only after our UI main code for neovim has been fully initialized
-  uv_mutex_lock(&_mutex);
-  while (!_is_ui_launched) {
-    uv_cond_wait(&_condition, &_mutex);
-  }
-  uv_mutex_unlock(&_mutex);
-
-  uv_cond_destroy(&_condition);
-  uv_mutex_destroy(&_mutex);
-
-  send_msg_packing(NvimServerMsgIdNvimReady, ^(msgpack_packer *packer) {
-    msgpack_pack_bool(packer, msg_didany > 0);
-  });
-
-  // We have to manually trigger this to initially get the colorscheme.
-  send_colorscheme();
 }
 
 #pragma mark Functions for neovim's main loop
