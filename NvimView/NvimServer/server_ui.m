@@ -140,7 +140,8 @@ static void send_dirty_status() {
       NvimServerMsgIdDirtyStatusChanged,
       ^(msgpack_packer *packer) {
         msgpack_pack_bool(packer, _dirty);
-      });
+      }
+  );
 }
 
 static void send_cwd() {
@@ -185,7 +186,8 @@ static void send_colorscheme() {
         msgpack_pack_int64(packer, foreground_for(visualAttrs));
         msgpack_pack_int64(packer, background_for(visualAttrs));
         msgpack_pack_int64(packer, foreground_for(dirAttrs));
-      });
+      }
+  );
 }
 
 static void run_neovim(void *arg) {
@@ -459,7 +461,8 @@ static void server_ui_default_colors_set(
         msgpack_pack_int64(packer, _default_foreground);
         msgpack_pack_int64(packer, _default_background);
         msgpack_pack_int64(packer, _default_special);
-      });
+      }
+  );
 }
 
 static void server_ui_set_title(UI *ui __unused, String title) {
