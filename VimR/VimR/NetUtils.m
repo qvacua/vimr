@@ -23,7 +23,7 @@ static os_log_t logger;
     logger = os_log_create("com.qvacua.VimR", "general");
   });
 
-  int sock = socket(AF_INET, SOCK_STREAM, 0);
+  const int sock = socket(AF_INET, SOCK_STREAM, 0);
   if (sock < 0) {
     os_log_error(logger, "Could not open socket");
     return 0;
@@ -57,7 +57,7 @@ static os_log_t logger;
     return 0;
   }
 
-  in_port_t result = ntohs(sin.sin_port);
+  const in_port_t result = ntohs(sin.sin_port);
 
   if (close(sock) < 0) {
     os_log_error(logger, "socket did not close: %{public}s", strerror(errno));
