@@ -65,7 +65,7 @@ static NSInteger _initialWidth = 30;
 static NSInteger _initialHeight = 15;
 
 static msgpack_sbuffer flush_sbuffer;
-static msgpack_packer *flush_packer;
+static msgpack_packer flush_packer;
 
 
 #pragma mark Helper functions
@@ -122,9 +122,9 @@ static void send_msg_packing(NvimServerMsgId msgid, pack_block body) {
 }
 
 static void pack_flush_data(RenderDataType type, pack_block body) {
-  msgpack_pack_array(flush_packer, 2);
-  msgpack_pack_int64(flush_packer, type);
-  body(flush_packer);
+  msgpack_pack_array(&flush_packer, 2);
+  msgpack_pack_int64(&flush_packer, type);
+  body(&flush_packer);
 }
 
 static void send_dirty_status() {
@@ -238,7 +238,7 @@ static void server_ui_scheduler(Event event, void *d) {
 
 static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   msgpack_sbuffer_init(&flush_sbuffer);
-  flush_packer = msgpack_packer_new(&flush_sbuffer, msgpack_sbuffer_write);
+  msgpack_packer_init(&flush_packer, &flush_sbuffer, msgpack_sbuffer_write);
 
   Loop loop;
   loop_init(&loop, NULL);
@@ -271,7 +271,6 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   xfree(ui);
 
   msgpack_sbuffer_clear(&flush_sbuffer);
-  msgpack_packer_free(flush_packer);
 }
 
 #pragma mark NeoVim's UI callbacks
@@ -291,8 +290,7 @@ static void server_ui_flush(UI *ui __unused) {
   CFRelease(data);
 
   msgpack_sbuffer_clear(&flush_sbuffer);
-  msgpack_packer_free(flush_packer);
-  flush_packer = msgpack_packer_new(&flush_sbuffer, msgpack_sbuffer_write);
+  msgpack_packer_init(&flush_packer, &flush_sbuffer, msgpack_sbuffer_write);
 }
 
 static void server_ui_grid_resize(
