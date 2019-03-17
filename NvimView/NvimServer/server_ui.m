@@ -272,7 +272,7 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   loop_close(&loop, false);
 
   xfree(_server_ui_data);
-  xfree(ui);
+  // ui is freed in ui_bridge_stop(), thus, no xfree(ui) here.
 
   free(msgpack_sbuffer_release(&flush_sbuffer));
 }
