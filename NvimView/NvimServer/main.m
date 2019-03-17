@@ -10,7 +10,7 @@
 
 
 NvimServer *_neovim_server;
-os_log_t glog;
+os_log_t logger;
 
 static void observe_parent_termination(CFRunLoopRef mainRunLoop) {
   const pid_t parent_pid = getppid();
@@ -26,12 +26,12 @@ static void observe_parent_termination(CFRunLoopRef mainRunLoop) {
   );
 
   if (source == NULL) {
-    os_log_error(glog, "No parent process monitoring...");
+    os_log_error(logger, "No parent process monitoring...");
     return;
   }
 
   dispatch_source_set_event_handler(source, ^{
-    os_log_fault(glog, "Exiting neovim server due to parent termination.");
+    os_log_fault(logger, "Exiting neovim server due to parent termination.");
     CFRunLoopStop(mainRunLoop);
     dispatch_source_cancel(source);
   });
@@ -40,7 +40,7 @@ static void observe_parent_termination(CFRunLoopRef mainRunLoop) {
 }
 
 int main(int argc, const char *argv[]) {
-  glog = os_log_create("com.qvacua.NvimServer", "server");
+  logger = os_log_create("com.qvacua.NvimServer", "server");
 
   CFRunLoopRef const mainRunLoop = CFRunLoopGetCurrent();
   observe_parent_termination(mainRunLoop);
@@ -60,7 +60,7 @@ int main(int argc, const char *argv[]) {
                                           nvimArgs:nvimArgs
     ];
     os_log_debug(
-        glog,
+        logger,
         "Started neovim server '%@' with args '%@'"
         " and connected it with the remote agent '%@'.",
         localServerName, nvimArgs, remoteServerName
@@ -71,6 +71,6 @@ int main(int argc, const char *argv[]) {
 
   CFRunLoopRun();
 
-  os_log_debug(glog, "NvimServer returning.");
+  os_log_debug(logger, "NvimServer returning.");
   return 0;
 }

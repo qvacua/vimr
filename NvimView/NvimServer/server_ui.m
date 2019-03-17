@@ -748,6 +748,6 @@ void neovim_ready_for_rpcevents(void **argv) {
 void neovim_debug1(void **argv) {
   work_async(argv, ^(NSData *data) {
     // yet noop
-    os_log(glog, "debug1");
+    os_log(logger, "debug1");
   });
 }

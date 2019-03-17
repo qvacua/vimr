@@ -194,7 +194,7 @@ static CFDataRef local_server_callback(
 
   if (_remoteServerPort == NULL) {
     os_log_error(
-        glog,
+        logger,
         "Remote server is null: The msg (%lu) could not be sent.",
         (unsigned long) msgid
     );
@@ -210,7 +210,7 @@ static CFDataRef local_server_callback(
   }
 
   os_log_error(
-      glog,
+      logger,
       "The msg (%lu) could not be sent: %d",
       (unsigned long) msgid, responseCode
   );
