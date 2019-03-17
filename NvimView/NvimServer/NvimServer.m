@@ -63,9 +63,6 @@ static CFDataRef local_server_callback(
     case NvimBridgeMsgIdResize:
       return data_async(data, neovim_resize);
 
-    case NvimBridgeMsgIdInput:
-      return data_async(data, neovim_vim_input);
-
     case NvimBridgeMsgIdDeleteInput:
       return data_async(data, neovim_delete_and_input);
 

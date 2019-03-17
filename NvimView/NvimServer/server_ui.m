@@ -686,16 +686,6 @@ void neovim_resize(void **argv) {
   });
 }
 
-void neovim_vim_input(void **argv) {
-  work_async(argv, ^(NSData *data) {
-    NSString *input = [[NSString alloc] initWithData:data
-                                            encoding:NSUTF8StringEncoding];
-
-    nvim_input(vim_string_from(input));
-    [input release];
-  });
-}
-
 void neovim_delete_and_input(void **argv) {
   work_async(argv, ^(NSData *data) {
     const NSInteger *const values = data.bytes;

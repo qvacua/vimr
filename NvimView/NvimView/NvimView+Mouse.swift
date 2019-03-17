@@ -33,9 +33,11 @@ extension NvimView {
       let (vimInputX, vimInputY) = self.vimScrollInputFor(deltaX: deltaX, deltaY: deltaY,
                                                           modifierFlags: event.modifierFlags,
                                                           cellPosition: cellPosition)
-      self.bridge
-        .vimInput(vimInputX)
-        .andThen(self.bridge.vimInput(vimInputY))
+      self.api
+        .input(keys: vimInputX, checkBlocked: false).asCompletable()
+        .andThen(
+          self.api.input(keys: vimInputY, checkBlocked: false).asCompletable()
+        )
         .subscribe()
         .disposed(by: self.disposeBag)
 
@@ -85,7 +87,7 @@ extension NvimView {
   func position(at location: CGPoint) -> Position {
     let row = Int(
       (self.bounds.size.height - location.y - self.offset.y)
-        / self.cellSize.height
+      / self.cellSize.height
     )
     let column = Int((location.x - self.offset.x) / self.cellSize.width)
 
@@ -117,8 +119,8 @@ extension NvimView {
       result = self.wrapNamedKeys("\(vimClickCount)\(vimName)") + vimMouseLocation
     }
 
-    self.bridge
-      .vimInput(result)
+    self.api
+      .input(keys: result, checkBlocked: false)
       .subscribe()
       .disposed(by: self.disposeBag)
   }
@@ -126,8 +128,8 @@ extension NvimView {
   private func shouldFireVimInputFor(event: NSEvent, newCellPosition: Position) -> Bool {
     let type = event.type
     guard type == .leftMouseDragged
-            || type == .rightMouseDragged
-            || type == .otherMouseDragged else {
+          || type == .rightMouseDragged
+          || type == .otherMouseDragged else {
 
       self.lastClickedCellPosition = newCellPosition
       return true

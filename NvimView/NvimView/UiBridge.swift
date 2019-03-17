@@ -104,10 +104,6 @@ class UiBridge {
       .timeout(timeout, scheduler: self.scheduler)
   }
 
-  func vimInput(_ str: String) -> Completable {
-    return self.sendMessage(msgId: .input, data: str.data(using: .utf8))
-  }
-
   func deleteCharacters(_ count: Int, andInputEscapedString string: String)
       -> Completable
   {
