@@ -6,9 +6,7 @@
 #import <Foundation/Foundation.h>
 
 #import "NvimServer.h"
-#import "server_ui.h"
 #import "Logging.h"
-#import "CocoaCategories.h"
 
 
 NvimServer *_neovim_server;
@@ -60,15 +58,18 @@ int main(int argc, const char *argv[]) {
                                   remoteServerName:remoteServerName
                                           nvimArgs:nvimArgs
     ];
-    os_log(glog, "Started neovim server '%s' with args '%@'"
-                 " and connected it with the remote agent '%s'.",
-        localServerName.cstr, nvimArgs, remoteServerName.cstr);
+    os_log_debug(
+        glog,
+        "Started neovim server '%@' with args '%@'"
+        " and connected it with the remote agent '%@'.",
+        localServerName, nvimArgs, remoteServerName
+    );
 
     [_neovim_server notifyReadiness];
   }
 
   CFRunLoopRun();
 
-  os_log(glog, "NvimServer returning.");
+  os_log_debug(glog, "NvimServer returning.");
   return 0;
 }
