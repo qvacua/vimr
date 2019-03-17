@@ -30,7 +30,6 @@
 #import <nvim/aucmd.h>
 #import <nvim/highlight.h>
 #import <nvim/msgpack_rpc/helpers.h>
-#import <nvim/api/private/helpers.h>
 
 
 #define let __auto_type const
@@ -753,6 +752,7 @@ void neovim_ready_for_rpcevents(void **argv) {
 
 void neovim_debug1(void **argv) {
   work_async(argv, ^(NSData *data) {
-    // noop
+    // yet noop
+    os_log(glog, "debug1");
   });
 }
