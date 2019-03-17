@@ -5,6 +5,20 @@
 
 import Foundation
 
+extension BinaryFloatingPoint {
+
+  var cgf: CGFloat {
+    return CGFloat(self)
+  }
+}
+
+extension FixedWidthInteger {
+
+  var cgf: CGFloat {
+    return CGFloat(self)
+  }
+}
+
 extension Array where Element: Hashable {
 
   // From https://stackoverflow.com/a/46354989/9850227

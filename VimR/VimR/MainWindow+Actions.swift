@@ -61,7 +61,7 @@ extension MainWindow {
       guard params.count == 2 else { return }
       guard let fontName = params[0].stringValue,
             let fontSize = params[1].integerValue,
-            let font = NSFont(name: fontName, size: CGFloat(fontSize))
+            let font = NSFont(name: fontName, size: fontSize.cgf)
         else {
         return
       }
@@ -72,7 +72,7 @@ extension MainWindow {
       guard params.count == 1 else { return }
       guard let linespacing = params[0].floatValue else { return }
 
-      self.emit(self.uuidAction(for: .setLinespacing(CGFloat(linespacing))))
+      self.emit(self.uuidAction(for: .setLinespacing(linespacing.cgf)))
 
     }
   }

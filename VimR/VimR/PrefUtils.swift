@@ -93,7 +93,7 @@ class PrefUtils {
   }
 
   static func saneLinespacing(_ fLinespacing: Float) -> CGFloat {
-    let linespacing = CGFloat(fLinespacing)
+    let linespacing = fLinespacing.cgf
     guard linespacing >= NvimView.minLinespacing && linespacing <= NvimView.maxLinespacing else {
       return NvimView.defaultLinespacing
     }

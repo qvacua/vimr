@@ -316,7 +316,7 @@ extension AppearancePref {
   }
 
   private func cappedLinespacing(_ linespacing: Float) -> CGFloat {
-    let cgfLinespacing = CGFloat(linespacing)
+    let cgfLinespacing = linespacing.cgf
 
     guard cgfLinespacing >= NvimView.minLinespacing else {
       return NvimView.defaultLinespacing
@@ -330,7 +330,7 @@ extension AppearancePref {
   }
 
   private func cappedFontSize(_ size: Int) -> CGFloat {
-    let cgfSize = CGFloat(size)
+    let cgfSize = size.cgf
 
     guard cgfSize >= NvimView.minFontSize else {
       return NvimView.defaultFont.pointSize

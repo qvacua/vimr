@@ -55,12 +55,6 @@ extern int nvim_main(int argc, char **argv);
 // The thread in which neovim's main runs
 static uv_thread_t _nvim_thread;
 
-// Condition variable used by the XPC's init to wait till our custom UI
-// initialization is finished inside neovim
-static bool _is_ui_launched = false;
-static uv_mutex_t _mutex;
-static uv_cond_t _condition;
-
 static ServerUiData *_server_ui_data;
 
 static NSString *_backspace = @"<BS>";
@@ -71,13 +65,19 @@ static NSInteger _initialWidth = 30;
 static NSInteger _initialHeight = 15;
 
 static msgpack_sbuffer flush_sbuffer;
-static msgpack_packer *flush_packer;
+static msgpack_packer flush_packer;
 
 
 #pragma mark Helper functions
 
 static inline String vim_string_from(NSString *str) {
   return (String) {.data = (char *) str.cstr, .size = str.clength};
+}
+
+static void msgpack_pack_cstr(msgpack_packer *packer, const char *cstr) {
+  size_t len = strlen(cstr);
+  msgpack_pack_str(packer, len);
+  msgpack_pack_str_body(packer, cstr, len);
 }
 
 static void refresh_ui_screen(int type) {
@@ -128,9 +128,9 @@ static void send_msg_packing(NvimServerMsgId msgid, pack_block body) {
 }
 
 static void pack_flush_data(RenderDataType type, pack_block body) {
-  msgpack_pack_array(flush_packer, 2);
-  msgpack_pack_int64(flush_packer, type);
-  body(flush_packer);
+  msgpack_pack_array(&flush_packer, 2);
+  msgpack_pack_int64(&flush_packer, type);
+  body(&flush_packer);
 }
 
 static void send_dirty_status() {
@@ -156,9 +156,7 @@ static void send_cwd() {
   }
 
   send_msg_packing(NvimServerMsgIdCwdChanged, ^(msgpack_packer *packer) {
-    let value = cstr_to_string((const char *) temp);
-    msgpack_rpc_from_string(value, packer);
-    api_free_string(value);
+    msgpack_pack_cstr(packer, temp);
     xfree(temp);
   });
 }
@@ -244,7 +242,7 @@ static void server_ui_scheduler(Event event, void *d) {
 
 static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   msgpack_sbuffer_init(&flush_sbuffer);
-  flush_packer = msgpack_packer_new(&flush_sbuffer, msgpack_sbuffer_write);
+  msgpack_packer_init(&flush_packer, &flush_sbuffer, msgpack_sbuffer_write);
 
   Loop loop;
   loop_init(&loop, NULL);
@@ -259,10 +257,12 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   _server_ui_data->stop = false;
   CONTINUE(bridge);
 
-  uv_mutex_lock(&_mutex);
-  _is_ui_launched = true;
-  uv_cond_signal(&_condition);
-  uv_mutex_unlock(&_mutex);
+  send_msg_packing(NvimServerMsgIdNvimReady, ^(msgpack_packer *packer) {
+    msgpack_pack_bool(packer, msg_didany > 0);
+  });
+
+  // We have to manually trigger this to initially get the colorscheme.
+  send_colorscheme();
 
   while (!_server_ui_data->stop) {
     loop_poll_events(&loop, -1);
@@ -274,8 +274,7 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   xfree(_server_ui_data);
   xfree(ui);
 
-  msgpack_sbuffer_clear(&flush_sbuffer);
-  msgpack_packer_free(flush_packer);
+  free(msgpack_sbuffer_release(&flush_sbuffer));
 }
 
 #pragma mark NeoVim's UI callbacks
@@ -294,9 +293,8 @@ static void server_ui_flush(UI *ui __unused) {
   [_neovim_server sendMessageWithId:NvimServerMsgIdFlush data:data];
   CFRelease(data);
 
-  msgpack_sbuffer_clear(&flush_sbuffer);
-  msgpack_packer_free(flush_packer);
-  flush_packer = msgpack_packer_new(&flush_sbuffer, msgpack_sbuffer_write);
+  free(msgpack_sbuffer_release(&flush_sbuffer));
+  msgpack_packer_init(&flush_packer, &flush_sbuffer, msgpack_sbuffer_write);
 }
 
 static void server_ui_grid_resize(
@@ -417,14 +415,6 @@ static void server_ui_raw_line(
 ) {
   Integer count = endcol - startcol;
 
-  if (row == 0) {
-    let data = [NSMutableData dataWithCapacity:1000];
-    for (int i = 0; i < count; i++) {
-      [data appendBytes:chunk[i] length:strlen((const char *) chunk[i])];
-      [data setLength:0];
-    }
-  }
-
   pack_flush_data(RenderDataTypeRawLine, ^(msgpack_packer *packer) {
     msgpack_pack_array(packer, 7);
 
@@ -436,7 +426,7 @@ static void server_ui_raw_line(
 
     msgpack_pack_array(packer, (size_t) count);
     for (Integer i = 0; i < count; i++) {
-      msgpack_rpc_from_string(cstr_to_string((const char *) chunk[i]), packer);
+      msgpack_pack_cstr(packer, (const char *) chunk[i]);
     }
     msgpack_pack_array(packer, (size_t) count);
     for (Integer i = 0; i < count; i++) {
@@ -641,28 +631,8 @@ void start_neovim(
   // is not garbled.
   setenv("LANG", "en_US.UTF-8", true);
 
-  uv_mutex_init(&_mutex);
-  uv_cond_init(&_condition);
-
   // released in run_neovim()
   uv_thread_create(&_nvim_thread, run_neovim, [args retain]);
-
-  // continue only after our UI main code for neovim has been fully initialized
-  uv_mutex_lock(&_mutex);
-  while (!_is_ui_launched) {
-    uv_cond_wait(&_condition, &_mutex);
-  }
-  uv_mutex_unlock(&_mutex);
-
-  uv_cond_destroy(&_condition);
-  uv_mutex_destroy(&_mutex);
-
-  send_msg_packing(NvimServerMsgIdNvimReady, ^(msgpack_packer *packer) {
-    msgpack_pack_bool(packer, msg_didany > 0);
-  });
-
-  // We have to manually trigger this to initially get the colorscheme.
-  send_colorscheme();
 }
 
 #pragma mark Functions for neovim's main loop

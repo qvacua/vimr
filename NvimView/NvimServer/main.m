@@ -6,16 +6,13 @@
 #import <Foundation/Foundation.h>
 
 #import "NvimServer.h"
-#import "server_ui.h"
 #import "Logging.h"
-#import "CocoaCategories.h"
 
-
-static CFRunLoopRef _mainRunLoop;
 
 NvimServer *_neovim_server;
+os_log_t glog;
 
-static void observe_parent_termination() {
+static void observe_parent_termination(CFRunLoopRef mainRunLoop) {
   pid_t parentPID = getppid();
 
   dispatch_queue_t queue = dispatch_get_global_queue(
@@ -29,13 +26,13 @@ static void observe_parent_termination() {
   );
 
   if (source == NULL) {
-    WLOG("No parent process monitoring...");
+    os_log_error(glog, "No parent process monitoring...");
     return;
   }
 
   dispatch_source_set_event_handler(source, ^{
-    WLOG("Exiting neovim server due to parent termination.");
-    CFRunLoopStop(_mainRunLoop);
+    os_log_fault(glog, "Exiting neovim server due to parent termination.");
+    CFRunLoopStop(mainRunLoop);
     dispatch_source_cancel(source);
   });
 
@@ -43,8 +40,10 @@ static void observe_parent_termination() {
 }
 
 int main(int argc, const char *argv[]) {
-  _mainRunLoop = CFRunLoopGetCurrent();
-  observe_parent_termination();
+  glog = os_log_create("com.qvacua.NvimServer", "server");
+
+  CFRunLoopRef mainRunLoop = CFRunLoopGetCurrent();
+  observe_parent_termination(mainRunLoop);
 
   @autoreleasepool {
     NSArray<NSString *> *arguments = [NSProcessInfo processInfo].arguments;
@@ -59,15 +58,18 @@ int main(int argc, const char *argv[]) {
                                   remoteServerName:remoteServerName
                                           nvimArgs:nvimArgs
     ];
-    DLOG("Started neovim server '%s' with args '%@'"
-         " and connected it with the remote agent '%s'.",
-        localServerName.cstr, nvimArgs, remoteServerName.cstr);
+    os_log_debug(
+        glog,
+        "Started neovim server '%@' with args '%@'"
+        " and connected it with the remote agent '%@'.",
+        localServerName, nvimArgs, remoteServerName
+    );
 
     [_neovim_server notifyReadiness];
   }
 
   CFRunLoopRun();
 
-  DLOG("NvimServer returning.");
+  os_log_debug(glog, "NvimServer returning.");
   return 0;
 }

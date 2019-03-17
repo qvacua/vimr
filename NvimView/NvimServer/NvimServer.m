@@ -6,7 +6,6 @@
 #import "NvimServer.h"
 #import "server_ui.h"
 #import "Logging.h"
-#import "CocoaCategories.h"
 
 // FileInfo and Boolean are #defined by Carbon and NeoVim.
 // Since we don't need the Carbon versions of them, we rename them.
@@ -169,12 +168,11 @@ static CFDataRef local_server_callback(
   }
 
   _localServerRunLoop = CFRunLoopGetCurrent();
-  CFRunLoopSourceRef runLoopSrc
-      = CFMessagePortCreateRunLoopSource(
-          kCFAllocatorDefault,
-          _localServerPort,
-          0
-      );
+  CFRunLoopSourceRef runLoopSrc = CFMessagePortCreateRunLoopSource(
+      kCFAllocatorDefault,
+      _localServerPort,
+      0
+  );
   CFRunLoopAddSource(_localServerRunLoop, runLoopSrc, kCFRunLoopCommonModes);
   CFRelease(runLoopSrc);
 
@@ -195,8 +193,11 @@ static CFDataRef local_server_callback(
 #endif
 
   if (_remoteServerPort == NULL) {
-    WLOG("Remote server is null: The msg (%lu) could not be sent.",
-        (unsigned long) msgid);
+    os_log_error(
+        glog,
+        "Remote server is null: The msg (%lu) could not be sent.",
+        (unsigned long) msgid
+    );
     return;
   }
 
@@ -208,8 +209,11 @@ static CFDataRef local_server_callback(
     return;
   }
 
-  WLOG("The msg (%lu) could not be sent: %d",
-      (unsigned long) msgid, responseCode);
+  os_log_error(
+      glog,
+      "The msg (%lu) could not be sent: %d",
+      (unsigned long) msgid, responseCode
+  );
 }
 
 - (void)notifyReadiness {

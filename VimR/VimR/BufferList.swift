@@ -179,7 +179,7 @@ extension BuffersList {
     }
 
     self.bufferList.tableColumns[0].width = max(
-      self.bufferList.tableColumns[0].width, cellWidth + CGFloat(10)
+      self.bufferList.tableColumns[0].width, cellWidth + 10.cgf
     )
   }
 

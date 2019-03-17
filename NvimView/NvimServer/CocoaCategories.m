@@ -5,14 +5,6 @@
 
 #import "CocoaCategories.h"
 
-@implementation NSObject (NeoVimServer)
-
-- (const char *)cdesc {
-  return self.description.cstr;
-}
-
-@end
-
 @implementation NSString (NeoVimServer)
 
 - (const char *)cstr {

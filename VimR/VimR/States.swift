@@ -193,13 +193,13 @@ struct AppearanceState: Codable {
 
     if let fontName = try container.decodeIfPresent(String.self, forKey: .editorFontName),
        let fontSize = try container.decodeIfPresent(Float.self, forKey: .editorFontSize),
-       let font = NSFont(name: fontName, size: CGFloat(fontSize)) {
+       let font = NSFont(name: fontName, size: fontSize.cgf) {
       self.font = font
     } else {
       self.font = NvimView.defaultFont
     }
 
-    self.linespacing = CGFloat(try container.decodeIfPresent(Float.self, forKey: .editorLinespacing) ?? 1.0)
+    self.linespacing = (try container.decodeIfPresent(Float.self, forKey: .editorLinespacing) ?? 1.0).cgf
     self.usesLigatures = try container.decodeIfPresent(Bool.self, forKey: .editorUsesLigatures) ?? true
 
     self.usesTheme = try container.decodeIfPresent(Bool.self, forKey: .usesTheme) ?? true
@@ -414,15 +414,24 @@ struct WorkspaceToolState: Codable {
   }
 
   var location = WorkspaceBarLocation.left
-  var dimension = CGFloat(200)
+  var dimension = 200.cgf
   var open = false
 
   init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
 
-    self.location = try container.decode(forKey: .location, default: WorkspaceToolState.default.location)
-    self.dimension = CGFloat(try container.decode(forKey: .dimension, default: WorkspaceToolState.default.dimension))
-    self.open = try container.decode(forKey: .open, default: WorkspaceToolState.default.open)
+    self.location = try container.decode(
+      forKey: .location,
+      default: WorkspaceToolState.default.location
+    )
+    self.dimension = try container.decode(
+      forKey: .dimension,
+      default: WorkspaceToolState.default.dimension
+    ).cgf
+    self.open = try container.decode(
+      forKey: .open,
+      default: WorkspaceToolState.default.open
+    )
   }
 
   // Use generated encode(to:)

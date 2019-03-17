@@ -40,9 +40,9 @@ final class ColorUtils {
     }
 
     // @formatter:off
-    let red =   (CGFloat((rgb >> 16) & 0xFF)) / 255.0;
-    let green = (CGFloat((rgb >>  8) & 0xFF)) / 255.0;
-    let blue =  (CGFloat((rgb      ) & 0xFF)) / 255.0;
+    let red =   ((rgb >> 16) & 0xFF).cgf / 255.0;
+    let green = ((rgb >>  8) & 0xFF).cgf / 255.0;
+    let blue =  ((rgb      ) & 0xFF).cgf / 255.0;
     // @formatter:on
 
     let color = NSColor(srgbRed: red, green: green, blue: blue, alpha: 1.0)

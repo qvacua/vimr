@@ -154,7 +154,7 @@ final class AttributesRunDrawer {
     context.saveGState()
     defer { context.restoreGState() }
 
-    let cellCount = CGFloat(run.cells.endIndex - run.cells.startIndex)
+    let cellCount = (run.cells.endIndex - run.cells.startIndex).cgf
     let backgroundRect = CGRect(
       x: run.location.x,
       y: run.location.y,
