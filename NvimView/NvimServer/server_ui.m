@@ -74,6 +74,12 @@ static inline String vim_string_from(NSString *str) {
   return (String) {.data = (char *) str.cstr, .size = str.clength};
 }
 
+static void msgpack_pack_cstr(msgpack_packer *packer, const char *cstr) {
+  size_t len = strlen(cstr);
+  msgpack_pack_str(packer, len);
+  msgpack_pack_str_body(packer, cstr, len);
+}
+
 static void refresh_ui_screen(int type) {
   update_screen(type);
   setcursor();
@@ -150,9 +156,7 @@ static void send_cwd() {
   }
 
   send_msg_packing(NvimServerMsgIdCwdChanged, ^(msgpack_packer *packer) {
-    let value = cstr_to_string((const char *) temp);
-    msgpack_rpc_from_string(value, packer);
-    api_free_string(value);
+    msgpack_pack_cstr(packer, temp);
     xfree(temp);
   });
 }
@@ -270,7 +274,7 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   xfree(_server_ui_data);
   xfree(ui);
 
-  msgpack_sbuffer_clear(&flush_sbuffer);
+  free(msgpack_sbuffer_release(&flush_sbuffer));
 }
 
 #pragma mark NeoVim's UI callbacks
@@ -289,7 +293,7 @@ static void server_ui_flush(UI *ui __unused) {
   [_neovim_server sendMessageWithId:NvimServerMsgIdFlush data:data];
   CFRelease(data);
 
-  msgpack_sbuffer_clear(&flush_sbuffer);
+  free(msgpack_sbuffer_release(&flush_sbuffer));
   msgpack_packer_init(&flush_packer, &flush_sbuffer, msgpack_sbuffer_write);
 }
 
@@ -422,7 +426,7 @@ static void server_ui_raw_line(
 
     msgpack_pack_array(packer, (size_t) count);
     for (Integer i = 0; i < count; i++) {
-      msgpack_rpc_from_string(cstr_to_string((const char *) chunk[i]), packer);
+      msgpack_pack_cstr(packer, (const char *) chunk[i]);
     }
     msgpack_pack_array(packer, (size_t) count);
     for (Integer i = 0; i < count; i++) {
