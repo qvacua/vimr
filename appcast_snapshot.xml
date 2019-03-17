@@ -7,23 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.26.6-309</title>
+      <title>v0.26.7-310</title>
       <description><![CDATA[
     <ul>
-<li>Bugfix: The state of the "Use Concurrent Rendering" checkbox is not set correctly.</li>
-<li>Limit the number of "VimR Networking" processes.</li>
+<li>Bugfix: memory leak</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.26.6-309
+        https://github.com/qvacua/vimr/releases/tag/v0.26.7-310
       </releaseNotesLink>
-      <pubDate>2019-03-14T17:05:00.892722</pubDate>
+      <pubDate>2019-03-17T19:40:16.119621</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.26.6-309/VimR-v0.26.6-309.tar.bz2"
-                 sparkle:version="309"
-                 sparkle:shortVersionString="0.26.6"
-                 sparkle:dsaSignature="MC0CFQDN7SiFbWuTh/GFS/SPiP9FnVwIvAIUWvtT8VvcF1t2Eu+gqUERPG04WJM="
-                 length="15120948"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.26.7-310/VimR-v0.26.7-310.tar.bz2"
+                 sparkle:version="310"
+                 sparkle:shortVersionString="0.26.7"
+                 sparkle:dsaSignature="MC4CFQCx9iB6PF4R41SmNEFnD7krThb/HQIVAN8woYRiQ2fwZyFESng4Ld/FYmu+"
+                 length="15104705"
                  type="application/octet-stream"/>
     </item>
   </channel>
