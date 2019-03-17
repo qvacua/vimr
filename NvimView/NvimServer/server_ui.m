@@ -409,7 +409,7 @@ static void server_ui_raw_line(
     Integer endcol,
     Integer clearcol,
     Integer clearattr,
-    Boolean wrap,
+    LineFlags flags,
     const schar_T *chunk,
     const sattr_T *attrs
 ) {
