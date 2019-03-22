@@ -72,24 +72,26 @@ extension NvimView {
     ).appendingPathComponent("vimr_\(self.uuid).sock").path
 
     self.api.msgpackRawStream
-      .subscribe(onNext: { msg in
+      .subscribe(onNext: { [weak self] msg in
         switch msg {
 
         case let .notification(method, params):
-          self.log.debug("NOTIFICATION: \(method): \(params)")
+          self?.log.debug("NOTIFICATION: \(method): \(params)")
 
           guard method == NvimView.rpcEventName else { return }
-          self.eventsSubject.onNext(.rpcEvent(params))
+          self?.eventsSubject.onNext(.rpcEvent(params))
 
         case let .error(_, msg):
-          self.log.debug("MSG ERROR: \(msg)")
+          self?.log.debug("MSG ERROR: \(msg)")
 
         default:
-          self.log.debug("???: This should not happen")
+          self?.log.debug("???: This should not happen")
           break
 
         }
-      }, onError: { print("ERROR: \($0)") })
+      }, onError: { [weak self] error in
+        self?.log.error(error)
+      })
       .disposed(by: self.disposeBag)
 
     // We wait here, since the user of NvimView cannot subscribe

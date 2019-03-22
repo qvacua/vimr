@@ -235,89 +235,89 @@ public class NvimView: NSView,
 
     self.api.queue = self.queue
     self.bridge.stream
-      .subscribe(onNext: { [unowned self] msg in
+      .subscribe(onNext: { [weak self] msg in
         switch msg {
 
         case .ready:
-          self.log.info("Nvim is ready")
+          self?.log.info("Nvim is ready")
 
         case .initVimError:
-          self.eventsSubject.onNext(.initVimError)
+          self?.eventsSubject.onNext(.initVimError)
 
         case .unknown:
-          self.bridgeLogger.error("Unknown message from NvimServer")
+          self?.bridgeLogger.error("Unknown message from NvimServer")
 
         case let .resize(value):
-          self.resize(value)
+          self?.resize(value)
 
         case .clear:
-          self.clear()
+          self?.clear()
 
         case .setMenu:
-          self.updateMenu()
+          self?.updateMenu()
 
         case .busyStart:
-          self.busyStart()
+          self?.busyStart()
 
         case .busyStop:
-          self.busyStop()
+          self?.busyStop()
 
         case .mouseOn:
-          self.mouseOn()
+          self?.mouseOn()
 
         case .mouseOff:
-          self.mouseOff()
+          self?.mouseOff()
 
         case let .modeChange(value):
-          self.modeChange(value)
+          self?.modeChange(value)
 
         case .bell:
-          self.bell()
+          self?.bell()
 
         case .visualBell:
-          self.visualBell()
+          self?.visualBell()
 
         case let .flush(value):
-          self.flush(value)
+          self?.flush(value)
 
         case let .setTitle(value):
-          self.setTitle(with: value)
+          self?.setTitle(with: value)
 
         case .stop:
-          self.stop()
+          self?.stop()
 
         case let .dirtyStatusChanged(value):
-          self.setDirty(with: value)
+          self?.setDirty(with: value)
 
         case let .cwdChanged(value):
-          self.cwdChanged(value)
+          self?.cwdChanged(value)
 
         case let .colorSchemeChanged(value):
-          self.colorSchemeChanged(value)
+          self?.colorSchemeChanged(value)
 
         case let .defaultColorsChanged(value):
-          self.defaultColorsChanged(value)
+          self?.defaultColorsChanged(value)
 
         case let .optionSet(value):
-          self.bridgeLogger.debug(value)
+          self?.bridgeLogger.debug(value)
           break
 
         case let .autoCommandEvent(value):
-          self.autoCommandEvent(value)
+          self?.autoCommandEvent(value)
 
         case let .highlightAttrs(value):
-          self.setAttr(with: value)
+          self?.setAttr(with: value)
 
         case .rpcEventSubscribed:
-          self.rpcEventSubscribed()
+          self?.rpcEventSubscribed()
 
 
         case .debug1:
-          self.debug1(self)
+          self?.debug1(nil)
 
         }
-      }, onError: { error in
-        self.bridgeLogger.fault("Error in the bridge stream: \(error)")
+      }, onError: { [weak self] error in
+        self?.bridgeLogger.fault("Error in the bridge stream: \(error)")
       })
       .disposed(by: self.disposeBag)
   }

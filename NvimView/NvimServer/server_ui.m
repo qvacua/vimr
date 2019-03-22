@@ -30,11 +30,6 @@
 #import <nvim/aucmd.h>
 #import <nvim/highlight.h>
 #import <nvim/msgpack_rpc/helpers.h>
-#import <nvim/api/private/helpers.h>
-
-
-#define let __auto_type const
-#define var __auto_type
 
 
 static NSInteger _default_foreground = 0xFF000000;
@@ -42,10 +37,10 @@ static NSInteger _default_background = 0xFFFFFFFF;
 static NSInteger _default_special = 0xFFFF0000;
 
 typedef struct {
-    UIBridgeData *bridge;
-    Loop *loop;
+  UIBridgeData *bridge;
+  Loop *loop;
 
-    bool stop;
+  bool stop;
 } ServerUiData;
 
 // We declare nvim_main because it's not declared in any header files of neovim
@@ -74,12 +69,6 @@ static inline String vim_string_from(NSString *str) {
   return (String) {.data = (char *) str.cstr, .size = str.clength};
 }
 
-static void msgpack_pack_cstr(msgpack_packer *packer, const char *cstr) {
-  size_t len = strlen(cstr);
-  msgpack_pack_str(packer, len);
-  msgpack_pack_str_body(packer, cstr, len);
-}
-
 static void refresh_ui_screen(int type) {
   update_screen(type);
   setcursor();
@@ -94,6 +83,12 @@ static bool has_dirty_docs() {
   }
 
   return false;
+}
+
+static void msgpack_pack_cstr(msgpack_packer *packer, const char *cstr) {
+  const size_t len = strlen(cstr);
+  msgpack_pack_str(packer, len);
+  msgpack_pack_str_body(packer, cstr, len);
 }
 
 static void msgpack_pack_bool(msgpack_packer *packer, bool value) {
@@ -115,7 +110,7 @@ static void send_msg_packing(NvimServerMsgId msgid, pack_block body) {
 
   body(&packer);
 
-  let data = CFDataCreateWithBytesNoCopy(
+  CFDataRef const data = CFDataCreateWithBytesNoCopy(
       kCFAllocatorDefault,
       (const UInt8 *) sbuf.data,
       sbuf.size,
@@ -134,7 +129,7 @@ static void pack_flush_data(RenderDataType type, pack_block body) {
 }
 
 static void send_dirty_status() {
-  var new_dirty_status = has_dirty_docs();
+  const bool new_dirty_status = has_dirty_docs();
   if (_dirty == new_dirty_status) {
     return;
   }
@@ -145,35 +140,30 @@ static void send_dirty_status() {
       NvimServerMsgIdDirtyStatusChanged,
       ^(msgpack_packer *packer) {
         msgpack_pack_bool(packer, _dirty);
-      });
+      }
+  );
 }
 
 static void send_cwd() {
-  var temp = xmalloc(MAXPATHL);
+  char_u *const temp = xmalloc(MAXPATHL);
   if (os_dirname(temp, MAXPATHL) == FAIL) {
     xfree(temp);
     [_neovim_server sendMessageWithId:NvimServerMsgIdCwdChanged];
   }
 
   send_msg_packing(NvimServerMsgIdCwdChanged, ^(msgpack_packer *packer) {
-    msgpack_pack_cstr(packer, temp);
+    msgpack_pack_cstr(packer, (const char *) temp);
     xfree(temp);
   });
 }
 
-static HlAttrs HlAttrsFromAttrCode(int attr_code) {
-  HlAttrs aep = syn_attr2entry(attr_code);
-  HlAttrs rgb_attrs = aep;
-  return rgb_attrs;
-}
-
 static int foreground_for(HlAttrs attrs) {
-  int mask = attrs.rgb_ae_attr;
+  const int mask = attrs.rgb_ae_attr;
   return mask & HL_INVERSE ? attrs.rgb_bg_color : attrs.rgb_fg_color;
 }
 
 static int background_for(HlAttrs attrs) {
-  int mask = attrs.rgb_ae_attr;
+  const int mask = attrs.rgb_ae_attr;
   return mask & HL_INVERSE ? attrs.rgb_fg_color : attrs.rgb_bg_color;
 }
 
@@ -184,8 +174,8 @@ static void send_colorscheme() {
     highlight_changed();
   }
 
-  HlAttrs visualAttrs = HlAttrsFromAttrCode(highlight_attr[HLF_V]);
-  HlAttrs dirAttrs = HlAttrsFromAttrCode(highlight_attr[HLF_D]);
+  const HlAttrs visualAttrs = syn_attr2entry(highlight_attr[HLF_V]);
+  const HlAttrs dirAttrs = syn_attr2entry(highlight_attr[HLF_D]);
 
   send_msg_packing(
       NvimServerMsgIdColorSchemeChanged,
@@ -196,7 +186,8 @@ static void send_colorscheme() {
         msgpack_pack_int64(packer, foreground_for(visualAttrs));
         msgpack_pack_int64(packer, background_for(visualAttrs));
         msgpack_pack_int64(packer, foreground_for(dirAttrs));
-      });
+      }
+  );
 }
 
 static void run_neovim(void *arg) {
@@ -204,14 +195,14 @@ static void run_neovim(void *arg) {
   char **argv;
 
   @autoreleasepool {
-    let nvimArgs = (NSArray<NSString *> *) arg;
+    NSArray<NSString *> *nvimArgs = arg;
 
     argc = (int) nvimArgs.count + 1;
     argv = (char **) malloc((argc + 1) * sizeof(char *));
 
     argv[0] = "nvim";
-    for (var i = 0; i < nvimArgs.count; i++) {
-      char *str = (char *) nvimArgs[(NSUInteger) i].cstr;
+    for (NSUInteger i = 0; i < nvimArgs.count; i++) {
+      char *str = (char *) nvimArgs[i].cstr;
       argv[i + 1] = malloc(strlen(str) + 1);
       strcpy(argv[i + 1], str);
     }
@@ -221,7 +212,7 @@ static void run_neovim(void *arg) {
 
   nvim_main(argc, argv);
 
-  for (var i = 0; i < argc - 1; i++) {
+  for (int i = 0; i < argc - 1; i++) {
     free(argv[i + 1]);
   }
   free(argv);
@@ -235,7 +226,7 @@ static void set_ui_size(UIBridgeData *bridge, int width, int height) {
 }
 
 static void server_ui_scheduler(Event event, void *d) {
-  UI *ui = d;
+  UI *const ui = d;
   ServerUiData *data = ui->data;
   loop_schedule(data->loop, event);
 }
@@ -284,7 +275,7 @@ static void server_ui_flush(UI *ui __unused) {
     return;
   }
 
-  let data = CFDataCreateWithBytesNoCopy(
+  CFDataRef const data = CFDataCreateWithBytesNoCopy(
       kCFAllocatorDefault,
       (const UInt8 *) flush_sbuffer.data,
       flush_sbuffer.size,
@@ -376,7 +367,7 @@ static void server_ui_hl_attr_define(
     HlAttrs cterm_attrs __unused,
     Array info __unused
 ) {
-  var trait = FontTraitNone;
+  FontTrait trait = FontTraitNone;
   if (attrs.rgb_ae_attr & HL_ITALIC) {
     trait |= FontTraitItalic;
   }
@@ -413,7 +404,7 @@ static void server_ui_raw_line(
     const schar_T *chunk,
     const sattr_T *attrs
 ) {
-  Integer count = endcol - startcol;
+  const Integer count = endcol - startcol;
 
   pack_flush_data(RenderDataTypeRawLine, ^(msgpack_packer *packer) {
     msgpack_pack_array(packer, 7);
@@ -470,7 +461,8 @@ static void server_ui_default_colors_set(
         msgpack_pack_int64(packer, _default_foreground);
         msgpack_pack_int64(packer, _default_background);
         msgpack_pack_int64(packer, _default_special);
-      });
+      }
+  );
 }
 
 static void server_ui_set_title(UI *ui __unused, String title) {
@@ -496,7 +488,7 @@ static void server_ui_option_set(UI *ui __unused, String name, Object value) {
 static void server_ui_stop(UI *ui __unused) {
   [_neovim_server sendMessageWithId:NvimServerMsgIdStop];
 
-  let data = (ServerUiData *) ui->data;
+  ServerUiData *const data = ui->data;
   data->stop = true;
 }
 
@@ -512,7 +504,7 @@ static void dummy2(UI *ui __unused, String icon) {
 // called by neovim
 
 void custom_ui_start(void) {
-  UI *ui = xcalloc(1, sizeof(UI));
+  UI *const ui = xcalloc(1, sizeof(UI));
 
   memset(ui->ui_ext, 0, sizeof(ui->ui_ext));
   ui->ui_ext[kUILinegrid] = true;
@@ -621,10 +613,13 @@ void start_neovim(
   _initialHeight = height;
 
   // set $VIMRUNTIME to ${RESOURCE_PATH_OF_XPC_BUNDLE}/runtime
-  let bundlePath = [NSBundle bundleForClass:[NvimServer class]].bundlePath;
-  let resourcesPath = [bundlePath.stringByDeletingLastPathComponent
+  NSString *const bundlePath = [
+      NSBundle bundleForClass:[NvimServer class]
+  ].bundlePath;
+  NSString *const resourcesPath = [bundlePath.stringByDeletingLastPathComponent
       stringByAppendingPathComponent:@"Resources"];
-  let runtimePath = [resourcesPath stringByAppendingPathComponent:@"runtime"];
+  NSString *const runtimePath
+      = [resourcesPath stringByAppendingPathComponent:@"runtime"];
   setenv("VIMRUNTIME", runtimePath.fileSystemRepresentation, true);
 
   // Set $LANG to en_US.UTF-8 such that the copied text to the system clipboard
@@ -641,7 +636,7 @@ typedef void (^async_work_block)(NSData *);
 
 static void work_async(void **argv, async_work_block block) {
   @autoreleasepool {
-    NSData *data = argv[0];
+    NSData *const data = argv[0];
     block(data);
     [data release]; // retained in local_server_callback
   }
@@ -649,9 +644,9 @@ static void work_async(void **argv, async_work_block block) {
 
 void neovim_scroll(void **argv) {
   work_async(argv, ^(NSData *data) {
-    let values = (NSInteger *) data.bytes;
-    int horiz = (int) values[0];
-    int vert = (int) values[1];
+    const NSInteger *const values = data.bytes;
+    const int horiz = (int) values[0];
+    const int vert = (int) values[1];
     int row = (int) values[2];
     int column = (int) values[3];
 
@@ -682,37 +677,29 @@ void neovim_scroll(void **argv) {
 
 void neovim_resize(void **argv) {
   work_async(argv, ^(NSData *data) {
-    const NSInteger *values = data.bytes;
-    let width = values[0];
-    let height = values[1];
+    const NSInteger *const values = data.bytes;
+    const NSInteger width = values[0];
+    const NSInteger height = values[1];
 
     set_ui_size(_server_ui_data->bridge, (int) width, (int) height);
     ui_refresh();
   });
 }
 
-void neovim_vim_input(void **argv) {
-  work_async(argv, ^(NSData *data) {
-    let input = [[NSString alloc] initWithData:data
-                                      encoding:NSUTF8StringEncoding];
-
-    nvim_input(vim_string_from(input));
-    [input release];
-  });
-}
-
 void neovim_delete_and_input(void **argv) {
   work_async(argv, ^(NSData *data) {
-    const NSInteger *values = data.bytes;
-    NSInteger count = values[0];
+    const NSInteger *const values = data.bytes;
+    const NSInteger count = values[0];
     for (int i = 0; i < count; i++) {
       nvim_input(vim_string_from(_backspace));
     }
 
-    void *stringPtr = (void *) (values + 1);
-    let string = [[NSString alloc] initWithBytes:stringPtr
-                                          length:data.length - sizeof(NSInteger)
-                                        encoding:NSUTF8StringEncoding];
+    const void *const stringPtr = (void *) (values + 1);
+    NSString *string = [[NSString alloc]
+        initWithBytes:stringPtr
+               length:data.length - sizeof(NSInteger)
+             encoding:NSUTF8StringEncoding
+    ];
     nvim_input(vim_string_from(string));
     [string release];
   });
@@ -753,6 +740,7 @@ void neovim_ready_for_rpcevents(void **argv) {
 
 void neovim_debug1(void **argv) {
   work_async(argv, ^(NSData *data) {
-    // noop
+    // yet noop
+    os_log(logger, "debug1");
   });
 }

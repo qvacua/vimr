@@ -6,4 +6,4 @@
 #import <Foundation/Foundation.h>
 #import <os/log.h>
 
-extern os_log_t glog;
+extern os_log_t logger;

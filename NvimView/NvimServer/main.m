@@ -10,28 +10,28 @@
 
 
 NvimServer *_neovim_server;
-os_log_t glog;
+os_log_t logger;
 
 static void observe_parent_termination(CFRunLoopRef mainRunLoop) {
-  pid_t parentPID = getppid();
+  const pid_t parent_pid = getppid();
 
-  dispatch_queue_t queue = dispatch_get_global_queue(
+  const dispatch_queue_t queue = dispatch_get_global_queue(
       DISPATCH_QUEUE_PRIORITY_DEFAULT, 0
   );
   dispatch_source_t source = dispatch_source_create(
       DISPATCH_SOURCE_TYPE_PROC,
-      (uintptr_t) parentPID,
+      (uintptr_t) parent_pid,
       DISPATCH_PROC_EXIT,
       queue
   );
 
   if (source == NULL) {
-    os_log_error(glog, "No parent process monitoring...");
+    os_log_error(logger, "No parent process monitoring...");
     return;
   }
 
   dispatch_source_set_event_handler(source, ^{
-    os_log_fault(glog, "Exiting neovim server due to parent termination.");
+    os_log_fault(logger, "Exiting neovim server due to parent termination.");
     CFRunLoopStop(mainRunLoop);
     dispatch_source_cancel(source);
   });
@@ -40,16 +40,17 @@ static void observe_parent_termination(CFRunLoopRef mainRunLoop) {
 }
 
 int main(int argc, const char *argv[]) {
-  glog = os_log_create("com.qvacua.NvimServer", "server");
+  logger = os_log_create("com.qvacua.NvimServer", "server");
 
-  CFRunLoopRef mainRunLoop = CFRunLoopGetCurrent();
+  CFRunLoopRef const mainRunLoop = CFRunLoopGetCurrent();
   observe_parent_termination(mainRunLoop);
 
   @autoreleasepool {
-    NSArray<NSString *> *arguments = [NSProcessInfo processInfo].arguments;
-    NSString *remoteServerName = arguments[1];
-    NSString *localServerName = arguments[2];
-    NSArray<NSString *> *nvimArgs = argc > 3
+    NSArray<NSString *> *const arguments
+        = [NSProcessInfo processInfo].arguments;
+    NSString *const remoteServerName = arguments[1];
+    NSString *const localServerName = arguments[2];
+    NSArray<NSString *> *const nvimArgs = argc > 3
         ? [arguments subarrayWithRange:NSMakeRange(3, (NSUInteger) (argc - 3))]
         : nil;
 
@@ -59,7 +60,7 @@ int main(int argc, const char *argv[]) {
                                           nvimArgs:nvimArgs
     ];
     os_log_debug(
-        glog,
+        logger,
         "Started neovim server '%@' with args '%@'"
         " and connected it with the remote agent '%@'.",
         localServerName, nvimArgs, remoteServerName
@@ -70,6 +71,6 @@ int main(int argc, const char *argv[]) {
 
   CFRunLoopRun();
 
-  os_log_debug(glog, "NvimServer returning.");
+  os_log_debug(logger, "NvimServer returning.");
   return 0;
 }

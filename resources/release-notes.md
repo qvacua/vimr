@@ -1,3 +1,7 @@
+# 0.26.8-311
+
+* Bugfix: memory leak
+
 # 0.26.7-310
 
 * Bugfix: memory leak

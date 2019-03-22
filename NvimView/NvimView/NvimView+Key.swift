@@ -16,7 +16,7 @@ extension NvimView {
 
     let modifierFlags = event.modifierFlags
     let isMeta = (self.isLeftOptionMeta && modifierFlags.contains(.leftOption))
-      || (self.isRightOptionMeta && modifierFlags.contains(.rightOption))
+                 || (self.isRightOptionMeta && modifierFlags.contains(.rightOption))
 
     if !isMeta {
       let cocoaHandledEvent
@@ -41,9 +41,7 @@ extension NvimView {
     let finalInput = isWrapNeeded ? self.wrapNamedKeys(flags + namedChars)
       : self.vimPlainString(chars)
 
-    try? self.bridge
-      .vimInput(finalInput)
-      .wait()
+    _ = self.api.input(keys: finalInput, checkBlocked: false).syncValue()
 
     self.keyDownDone = true
   }
@@ -131,8 +129,8 @@ extension NvimView {
     // Control code \0 causes rpc parsing problems.
     // So we escape as early as possible
     if chars == "\0" {
-      self.bridge
-        .vimInput(self.wrapNamedKeys("Nul"))
+      self.api
+        .input(keys: self.wrapNamedKeys("Nul"), checkBlocked: false)
         .subscribe()
         .disposed(by: self.disposeBag)
       return true
@@ -142,8 +140,8 @@ extension NvimView {
     // See special cases in vim/os_win32.c from vim sources
     // Also mentioned in MacVim's KeyBindings.plist
     if .control == flags && chars == "6" {
-      self.bridge
-        .vimInput("\u{1e}") // AKA ^^
+      self.api
+        .input(keys: "\u{1e}", checkBlocked: false) // AKA ^^
         .subscribe()
         .disposed(by: self.disposeBag)
       return true
@@ -151,8 +149,8 @@ extension NvimView {
 
     if .control == flags && chars == "2" {
       // <C-2> should generate \0, escaping as above
-      self.bridge
-        .vimInput(self.wrapNamedKeys("Nul"))
+      self.api
+        .input(keys: self.wrapNamedKeys("Nul"), checkBlocked: false)
         .subscribe()
         .disposed(by: self.disposeBag)
       return true
@@ -300,7 +298,7 @@ extension NvimView {
       .map { row in
         row.filter { cell in
           return aRange.location <= cell.flatCharIndex
-            && cell.flatCharIndex <= aRange.inclusiveEndIndex
+                 && cell.flatCharIndex <= aRange.inclusiveEndIndex
         }
       }
       .flatMap { $0 }

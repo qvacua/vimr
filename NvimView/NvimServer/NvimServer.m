@@ -47,8 +47,8 @@ static CFDataRef local_server_callback(
 
     case NvimBridgeMsgIdAgentReady: {
       @autoreleasepool {
-        NSInteger *values = (NSInteger *) CFDataGetBytePtr(data);
-        NvimServer *nvimServer = (__bridge NvimServer *) info;
+        const NSInteger *const values = (NSInteger *) CFDataGetBytePtr(data);
+        NvimServer *const nvimServer = (__bridge NvimServer *) info;
 
         start_neovim(values[0], values[1], nvimServer.nvimArgs);
 
@@ -62,9 +62,6 @@ static CFDataRef local_server_callback(
 
     case NvimBridgeMsgIdResize:
       return data_async(data, neovim_resize);
-
-    case NvimBridgeMsgIdInput:
-      return data_async(data, neovim_vim_input);
 
     case NvimBridgeMsgIdDeleteInput:
       return data_async(data, neovim_delete_and_input);
@@ -147,7 +144,7 @@ static CFDataRef local_server_callback(
 
 - (void)runLocalServer {
   @autoreleasepool {
-    unsigned char shouldFree = false;
+    unsigned char shouldFree = false; // Carbon Boolean = unsigned char
     CFMessagePortContext localContext = {
         .version = 0,
         .info = (__bridge void *) self,
@@ -168,7 +165,7 @@ static CFDataRef local_server_callback(
   }
 
   _localServerRunLoop = CFRunLoopGetCurrent();
-  CFRunLoopSourceRef runLoopSrc = CFMessagePortCreateRunLoopSource(
+  CFRunLoopSourceRef const runLoopSrc = CFMessagePortCreateRunLoopSource(
       kCFAllocatorDefault,
       _localServerPort,
       0
@@ -194,7 +191,7 @@ static CFDataRef local_server_callback(
 
   if (_remoteServerPort == NULL) {
     os_log_error(
-        glog,
+        logger,
         "Remote server is null: The msg (%lu) could not be sent.",
         (unsigned long) msgid
     );
@@ -210,7 +207,7 @@ static CFDataRef local_server_callback(
   }
 
   os_log_error(
-      glog,
+      logger,
       "The msg (%lu) could not be sent: %d",
       (unsigned long) msgid, responseCode
   );

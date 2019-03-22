@@ -50,15 +50,15 @@ extension NvimView {
   @IBAction func undo(_ sender: AnyObject?) {
     switch self.mode {
     case .insert, .replace:
-      self.bridge
-        .vimInput("<Esc>ui")
+      self.api
+        .input(keys: "<Esc>ui", checkBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not undo", cause: error))
         })
         .disposed(by: self.disposeBag)
     case .normal, .visual:
-      self.bridge
-        .vimInput("u")
+      self.api
+        .input(keys: "u", checkBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not undo", cause: error))
         })
@@ -71,15 +71,15 @@ extension NvimView {
   @IBAction func redo(_ sender: AnyObject?) {
     switch self.mode {
     case .insert, .replace:
-      self.bridge
-        .vimInput("<Esc><C-r>i")
+      self.api
+        .input(keys: "<Esc><C-r>i", checkBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not redo", cause: error))
         })
         .disposed(by: self.disposeBag)
     case .normal, .visual:
-      self.bridge
-        .vimInput("<C-r>")
+      self.api
+        .input(keys: "<C-r>", checkBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not redo", cause: error))
         })
@@ -92,8 +92,8 @@ extension NvimView {
   @IBAction func cut(_ sender: AnyObject?) {
     switch self.mode {
     case .visual, .normal:
-      self.bridge
-        .vimInput("\"+d")
+      self.api
+        .input(keys: "\"+d", checkBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not cut", cause: error))
         })
@@ -106,8 +106,8 @@ extension NvimView {
   @IBAction func copy(_ sender: AnyObject?) {
     switch self.mode {
     case .visual, .normal:
-      self.bridge
-        .vimInput("\"+y")
+      self.api
+        .input(keys: "\"+y", checkBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not copy", cause: error))
         })
@@ -125,8 +125,8 @@ extension NvimView {
     if self.mode == .cmdline || self.mode == .cmdlineInsert || self.mode == .cmdlineReplace
        || self.mode == .replace
        || self.mode == .termFocus {
-      self.bridge
-        .vimInput(self.vimPlainString(content))
+      self.api
+        .input(keys: self.vimPlainString(content), checkBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not paste \(content)", cause: error))
         })
@@ -156,13 +156,13 @@ extension NvimView {
 
         case .insert:
           let cmd = element.column == 0 ? "<ESC>\"+Pa" : "<ESC>\"+pa"
-          return self.bridge
-            .vimInput(cmd)
+          return self.api
+            .input(keys: cmd, checkBlocked: false).asCompletable()
             .andThen(Single.just(element.pasteModeSet))
 
         case .normal, .visual:
-          return self.bridge
-            .vimInput("\"+p")
+          return self.api
+            .input(keys: "\"+p", checkBlocked: false).asCompletable()
             .andThen(Single.just(element.pasteModeSet))
 
         default:
@@ -186,8 +186,8 @@ extension NvimView {
   @IBAction func delete(_ sender: AnyObject?) {
     switch self.mode {
     case .normal, .visual:
-      self.bridge
-        .vimInput("x")
+      self.api
+        .input(keys: "x", checkBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not delete", cause: error))
         })
@@ -200,15 +200,15 @@ extension NvimView {
   @IBAction public override func selectAll(_ sender: Any?) {
     switch self.mode {
     case .insert, .visual:
-      self.bridge
-        .vimInput("<Esc>ggVG")
+      self.api
+        .input(keys: "<Esc>ggVG", checkBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not select all", cause: error))
         })
         .disposed(by: self.disposeBag)
     default:
-      self.bridge
-        .vimInput("ggVG")
+      self.api
+        .input(keys: "ggVG", checkBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not select all", cause: error))
         })
