@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.26.7-310</title>
+      <title>v0.26.8-311</title>
       <description><![CDATA[
     <ul>
 <li>Bugfix: memory leak</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.26.7-310
+        https://github.com/qvacua/vimr/releases/tag/v0.26.8-311
       </releaseNotesLink>
-      <pubDate>2019-03-17T19:40:16.119621</pubDate>
+      <pubDate>2019-03-22T17:02:33.473549</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.26.7-310/VimR-v0.26.7-310.tar.bz2"
-                 sparkle:version="310"
-                 sparkle:shortVersionString="0.26.7"
-                 sparkle:dsaSignature="MC4CFQCx9iB6PF4R41SmNEFnD7krThb/HQIVAN8woYRiQ2fwZyFESng4Ld/FYmu+"
-                 length="15104705"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.26.8-311/VimR-v0.26.8-311.tar.bz2"
+                 sparkle:version="311"
+                 sparkle:shortVersionString="0.26.8"
+                 sparkle:dsaSignature="MC0CFGtgC3z+xOHowcJ0oV85lu2pqfBEAhUA7QkYjEW0dvgLRni1zGUOsZNmFG8="
+                 length="15103296"
                  type="application/octet-stream"/>
     </item>
   </channel>
