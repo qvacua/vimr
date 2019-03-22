@@ -352,7 +352,6 @@ public class NvimView: NSView,
   let ugrid = UGrid()
   let cellAttributesCollection = CellAttributesCollection()
   let drawer: AttributesRunDrawer
-  let typesetter = Typesetter()
   var baselineOffset = 0.cgf
 
   /// We store the last marked text because Cocoa's text input system does the following:
