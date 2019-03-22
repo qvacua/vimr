@@ -79,11 +79,11 @@ class UiBridge {
     self.server.queue = self.queue
 
     self.server.stream
-      .subscribe(onNext: { message in
-        self.handleMessage(msgId: message.msgid, data: message.data)
-      }, onError: { error in
-        self.log.error("There was an error on the local message port server: \(error)")
-        self.streamSubject.onError(Error.ipc(error))
+      .subscribe(onNext: { [weak self] message in
+        self?.handleMessage(msgId: message.msgid, data: message.data)
+      }, onError: { [weak self] error in
+        self?.log.error("There was an error on the local message port server: \(error)")
+        self?.streamSubject.onError(Error.ipc(error))
       })
       .disposed(by: self.disposeBag)
   }
