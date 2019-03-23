@@ -38,13 +38,16 @@ extension PrimitiveSequence
 
     let disposable = self.subscribe(onCompleted: {
       condition.lock()
+      defer { condition.unlock() }
       trigger = true
-      broadcast(condition)
+      condition.broadcast()
     }, onError: { error in
-      condition.lock()
-      trigger = true
       err = error
-      broadcast(condition)
+
+      condition.lock()
+      defer { condition.unlock() }
+      trigger = true
+      condition.broadcast()
     })
 
     while !trigger { condition.wait(until: Date(timeIntervalSinceNow: 5)) }
@@ -87,13 +90,16 @@ extension PrimitiveSequence where TraitType == SingleTrait {
 
     let disposable = self.subscribe(onSuccess: { result in
       value = result
+
       condition.lock()
+      defer { condition.unlock() }
       trigger = true
-      broadcast(condition)
+      condition.broadcast()
     }, onError: { error in
       condition.lock()
+      defer { condition.unlock() }
       trigger = true
-      broadcast(condition)
+      condition.broadcast()
     })
 
     while !trigger { condition.wait(until: Date(timeIntervalSinceNow: 5)) }
@@ -101,9 +107,4 @@ extension PrimitiveSequence where TraitType == SingleTrait {
 
     return value
   }
-}
-
-private func broadcast(_ condition: NSCondition) {
-  defer { condition.unlock() }
-  condition.broadcast()
 }
