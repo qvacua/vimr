@@ -45,7 +45,7 @@ class OpenQuicklyWindow: NSObject,
 
     source
       .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { [unowned self] state in
+      .subscribe(onNext: { state in
         guard state.openQuickly.open else {
           self.windowController.close()
           return
@@ -68,7 +68,7 @@ class OpenQuicklyWindow: NSObject,
         )
 
         self.searchStream
-          .subscribe(onNext: { [unowned self] pattern in
+          .subscribe(onNext: { pattern in
             self.pattern = pattern
             self.resetAndAddFilterOperation()
           })
@@ -76,7 +76,7 @@ class OpenQuicklyWindow: NSObject,
 
         self.flatFileItemsSource
           .subscribeOn(self.scheduler)
-          .do(onNext: { [unowned self] items in
+          .do(onNext: { items in
             self.scanCondition.lock()
             while self.pauseScan {
               self.scanCondition.wait()
@@ -88,7 +88,7 @@ class OpenQuicklyWindow: NSObject,
             self.resetAndAddFilterOperation()
           })
           .observeOn(MainScheduler.instance)
-          .subscribe(onNext: { [unowned self] items in
+          .subscribe(onNext: { items in
             self.count += items.count
             self.countField.stringValue = "\(self.count) items"
           })
