@@ -100,7 +100,11 @@ class UiComponentTemplate: UiComponent {
     case doSth
   }
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+  required init(
+    source: Observable<StateType>,
+    emitter: ActionEmitter,
+    state: StateType
+  ) {
     // set the typed action emit function
     self.emit = emitter.typedEmit()
 
