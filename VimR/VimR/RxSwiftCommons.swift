@@ -16,14 +16,16 @@ extension ObservableType {
   }
 }
 
-extension PrimitiveSequenceType where TraitType == CompletableTrait, ElementType == Never {
+extension PrimitiveSequenceType
+  where TraitType == CompletableTrait, ElementType == Never {
 
   func andThen(using body: () -> Completable) -> Completable {
     return self.andThen(body())
   }
 }
 
-extension PrimitiveSequence where Element == Never, TraitType == CompletableTrait {
+extension PrimitiveSequence
+  where Element == Never, TraitType == CompletableTrait {
 
   func wait() throws {
     var trigger = false
@@ -56,11 +58,18 @@ extension PrimitiveSequence where Element == Never, TraitType == CompletableTrai
 
 extension PrimitiveSequence where TraitType == SingleTrait {
 
-  static func fromSinglesToSingleOfArray(_ singles: [Single<Element>]) -> Single<[Element]> {
-    return Observable.merge(singles.map { $0.asObservable() }).toArray().asSingle()
+  static func fromSinglesToSingleOfArray(
+    _ singles: [Single<Element>]
+  ) -> Single<[Element]> {
+    return Observable
+      .merge(singles.map { $0.asObservable() })
+      .toArray()
+      .asSingle()
   }
 
-  func flatMapCompletable(_ selector: @escaping (Element) throws -> Completable) -> Completable {
+  func flatMapCompletable(
+    _ selector: @escaping (Element) throws -> Completable
+  ) -> Completable {
     return self
       .asObservable()
       .flatMap { try selector($0).asObservable() }
