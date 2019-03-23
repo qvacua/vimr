@@ -93,8 +93,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
         if state.preview.status == .markdown
            && state.previewTool.isForwardSearchAutomatically
-           && state.preview.editorPosition.hasDifferentMark(as: self.editorPosition)
-        {
+           && state.preview.editorPosition.hasDifferentMark(as: self.editorPosition) {
           self.forwardSearch(position: state.preview.editorPosition.payload)
         }
 
@@ -120,10 +119,13 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
     self.webviewMessageHandler.source
       .throttle(0.75, latest: true, scheduler: self.scheduler)
-      .subscribe(onNext: { [unowned self] (position, scrollTop) in
-        self.previewPosition = position
-        self.scrollTop = scrollTop
-        self.emit(UuidAction(uuid: self.uuid, action: .scroll(to: self.previewPosition)))
+      .subscribe(onNext: { [weak self] position, scrollTop in
+        guard let uuid = self?.uuid,
+              let previewPosition = self?.previewPosition else { return }
+
+        self?.previewPosition = position
+        self?.scrollTop = scrollTop
+        self?.emit(UuidAction(uuid: uuid, action: .scroll(to: previewPosition)))
       })
       .disposed(by: self.disposeBag)
   }
@@ -163,11 +165,11 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   private let webviewMessageHandler = WebviewMessageHandler()
 
   private let automaticForwardMenuItem = NSMenuItem(title: "Automatic Forward Search",
-                                                        action: nil,
-                                                        keyEquivalent: "")
+                                                    action: nil,
+                                                    keyEquivalent: "")
   private let automaticReverseMenuItem = NSMenuItem(title: "Automatic Reverse Search",
-                                                        action: nil,
-                                                        keyEquivalent: "")
+                                                    action: nil,
+                                                    keyEquivalent: "")
   private let refreshOnWriteMenuItem = NSMenuItem(title: "Refresh on Write", action: nil, keyEquivalent: "")
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem,
