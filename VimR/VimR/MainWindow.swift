@@ -250,8 +250,9 @@ class MainWindow: NSObject,
     Observable
       .of(self.scrollDebouncer.observable, self.cursorDebouncer.observable)
       .merge()
-      .subscribe(onNext: { [unowned self] action in
-        self.emit(self.uuidAction(for: action))
+      .subscribe(onNext: { [weak self] action in
+        guard let action = self?.uuidAction(for: action) else { return }
+        self?.emit(action)
       })
       .disposed(by: self.disposeBag)
   }
@@ -259,35 +260,43 @@ class MainWindow: NSObject,
   private func subscribeToNvimViewEvents() {
     self.neoVimView.events
       .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { [unowned self] event in
+      .subscribe(onNext: { [weak self] event in
         switch event {
 
-        case .neoVimStopped: self.neoVimStopped()
-        case .setTitle(let title): self.set(title: title)
-        case .setDirtyStatus(let dirty): self.set(dirtyStatus: dirty)
-        case .cwdChanged: self.cwdChanged()
-        case .bufferListChanged: self.bufferListChanged()
-        case .tabChanged: self.tabChanged()
-        case .newCurrentBuffer(let curBuf): self.newCurrentBuffer(curBuf)
-        case .bufferWritten(let buf): self.bufferWritten(buf)
-        case .colorschemeChanged(let theme): self.colorschemeChanged(to: theme)
+        case .neoVimStopped: self?.neoVimStopped()
+
+        case .setTitle(let title): self?.set(title: title)
+
+        case .setDirtyStatus(let dirty): self?.set(dirtyStatus: dirty)
+
+        case .cwdChanged: self?.cwdChanged()
+
+        case .bufferListChanged: self?.bufferListChanged()
+
+        case .tabChanged: self?.tabChanged()
+
+        case .newCurrentBuffer(let curBuf): self?.newCurrentBuffer(curBuf)
+
+        case .bufferWritten(let buf): self?.bufferWritten(buf)
+
+        case .colorschemeChanged(let theme): self?.colorschemeChanged(to: theme)
+
 
         case .ipcBecameInvalid(let reason):
-          self.ipcBecameInvalid(reason: reason)
+          self?.ipcBecameInvalid(reason: reason)
 
-        case .scroll: self.scroll()
-        case .cursor(let position): self.cursor(to: position)
-        case .initVimError: self.showInitError()
+        case .scroll: self?.scroll()
+
+        case .cursor(let position): self?.cursor(to: position)
+
+        case .initVimError: self?.showInitError()
 
         case .apiError(let error, let msg):
-          self.log.error("Got api error with msg '\(msg)' and error: \(error)")
-          break
+          self?.log.error("Got api error with msg '\(msg)' and error: \(error)")
 
-        case .rpcEvent(let params):
-          self.rpcEventAction(params: params)
+        case .rpcEvent(let params): self?.rpcEventAction(params: params)
 
-        case .rpcEventSubscribed:
-          break
+        case .rpcEventSubscribed: break
 
         }
       }, onError: { error in
