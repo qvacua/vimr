@@ -5,7 +5,7 @@ github "sparkle-project/Sparkle" == 1.21.3
 github "qvacua/CocoaFontAwesome" "master"
 github "qvacua/CocoaMarkdown" "master"
 github "qvacua/RxMessagePort" == 0.0.9
-github "qvacua/RxNeovimApi" == 0.3.4-3
+github "qvacua/RxNeovimApi" "develop"
 github "sindresorhus/github-markdown-css" == 3.0.1
 github "qvacua/swifter" "nonpublic"
 github "a2/MessagePack.swift" == 3.0.0
