@@ -16,14 +16,16 @@ extension ObservableType {
   }
 }
 
-extension PrimitiveSequenceType where TraitType == CompletableTrait, ElementType == Never {
+extension PrimitiveSequenceType
+  where TraitType == CompletableTrait, ElementType == Never {
 
   func andThen(using body: () -> Completable) -> Completable {
     return self.andThen(body())
   }
 }
 
-extension PrimitiveSequence where Element == Never, TraitType == CompletableTrait {
+extension PrimitiveSequence
+  where Element == Never, TraitType == CompletableTrait {
 
   func wait() throws {
     var trigger = false
@@ -36,13 +38,16 @@ extension PrimitiveSequence where Element == Never, TraitType == CompletableTrai
 
     let disposable = self.subscribe(onCompleted: {
       condition.lock()
+      defer { condition.unlock() }
       trigger = true
-      broadcast(condition)
+      condition.broadcast()
     }, onError: { error in
-      condition.lock()
-      trigger = true
       err = error
-      broadcast(condition)
+
+      condition.lock()
+      defer { condition.unlock() }
+      trigger = true
+      condition.broadcast()
     })
 
     while !trigger { condition.wait(until: Date(timeIntervalSinceNow: 5)) }
@@ -56,11 +61,18 @@ extension PrimitiveSequence where Element == Never, TraitType == CompletableTrai
 
 extension PrimitiveSequence where TraitType == SingleTrait {
 
-  static func fromSinglesToSingleOfArray(_ singles: [Single<Element>]) -> Single<[Element]> {
-    return Observable.merge(singles.map { $0.asObservable() }).toArray().asSingle()
+  static func fromSinglesToSingleOfArray(
+    _ singles: [Single<Element>]
+  ) -> Single<[Element]> {
+    return Observable
+      .merge(singles.map { $0.asObservable() })
+      .toArray()
+      .asSingle()
   }
 
-  func flatMapCompletable(_ selector: @escaping (Element) throws -> Completable) -> Completable {
+  func flatMapCompletable(
+    _ selector: @escaping (Element) throws -> Completable
+  ) -> Completable {
     return self
       .asObservable()
       .flatMap { try selector($0).asObservable() }
@@ -78,13 +90,16 @@ extension PrimitiveSequence where TraitType == SingleTrait {
 
     let disposable = self.subscribe(onSuccess: { result in
       value = result
+
       condition.lock()
+      defer { condition.unlock() }
       trigger = true
-      broadcast(condition)
+      condition.broadcast()
     }, onError: { error in
       condition.lock()
+      defer { condition.unlock() }
       trigger = true
-      broadcast(condition)
+      condition.broadcast()
     })
 
     while !trigger { condition.wait(until: Date(timeIntervalSinceNow: 5)) }
@@ -92,9 +107,4 @@ extension PrimitiveSequence where TraitType == SingleTrait {
 
     return value
   }
-}
-
-private func broadcast(_ condition: NSCondition) {
-  defer { condition.unlock() }
-  condition.broadcast()
 }

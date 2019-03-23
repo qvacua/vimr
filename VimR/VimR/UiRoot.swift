@@ -15,18 +15,26 @@ class UiRoot: UiComponent {
     case quit
   }
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+  required init(
+    source: Observable<StateType>,
+    emitter: ActionEmitter,
+    state: StateType
+  ) {
     self.source = source
     self.emitter = emitter
     self.emit = emitter.typedEmit()
 
-    self.fileMonitor = FileMonitor(source: source, emitter: emitter, state: state)
-    self.openQuicklyWindow = OpenQuicklyWindow(source: source, emitter: emitter, state: state)
+    self.fileMonitor = FileMonitor(source: source,
+                                   emitter: emitter,
+                                   state: state)
+    self.openQuicklyWindow = OpenQuicklyWindow(source: source,
+                                               emitter: emitter,
+                                               state: state)
     self.prefWindow = PrefWindow(source: source, emitter: emitter, state: state)
 
     source
       .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { [unowned self] state in
+      .subscribe(onNext: { state in
         let uuidsInState = Set(state.mainWindows.keys)
 
         uuidsInState
@@ -39,8 +47,10 @@ class UiRoot: UiComponent {
           }
 
         if self.mainWindows.isEmpty {
-          // We exit here if there are no main windows open. Otherwise, when hide/quit after last main window is active,
-          // you have to be really quick to open a new window when re-activating VimR w/o automatic new main window.
+          // We exit here if there are no main windows open.
+          // Otherwise, when hide/quit after last main window is active,
+          // you have to be really quick to open a new window
+          // when re-activating VimR w/o automatic new main window.
           return
         }
 
@@ -48,9 +58,7 @@ class UiRoot: UiComponent {
           .filter { !uuidsInState.contains($0) }
           .forEach(self.removeMainWindow)
 
-        guard self.mainWindows.isEmpty else {
-          return
-        }
+        guard self.mainWindows.isEmpty else { return }
 
         switch state.afterLastWindowAction {
 
@@ -80,13 +88,19 @@ class UiRoot: UiComponent {
   private let prefWindow: PrefWindow
 
   private var mainWindows = [UUID: MainWindow]()
-  private var subjectForMainWindows = [UUID: CompletableSubject<MainWindow.State>]()
+  private var subjectForMainWindows
+    = [UUID: CompletableSubject<MainWindow.State>]()
 
   private func newMainWindow(with state: MainWindow.State) -> MainWindow {
-    let subject = self.source.compactMap { $0.mainWindows[state.uuid] }.completableSubject()
+    let subject = self
+      .source
+      .compactMap { $0.mainWindows[state.uuid] }
+      .completableSubject()
 
     self.subjectForMainWindows[state.uuid] = subject
-    return MainWindow(source: subject.asObservable(), emitter: self.emitter, state: state)
+    return MainWindow(source: subject.asObservable(),
+                      emitter: self.emitter,
+                      state: state)
   }
 
   private func removeMainWindow(with uuid: UUID) {
