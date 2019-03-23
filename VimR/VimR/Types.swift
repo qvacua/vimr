@@ -111,7 +111,7 @@ class UiComponentTemplate: UiComponent {
     source
       .observeOn(MainScheduler.instance)
       .subscribe(
-        onNext: { [unowned self] state in
+        onNext: { state in
           Swift.print("Hello, \(self.someField)")
         }
       )

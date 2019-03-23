@@ -26,7 +26,7 @@ class UiRoot: UiComponent {
 
     source
       .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { [unowned self] state in
+      .subscribe(onNext: { state in
         let uuidsInState = Set(state.mainWindows.keys)
 
         uuidsInState
