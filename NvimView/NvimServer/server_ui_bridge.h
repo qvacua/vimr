@@ -6,13 +6,6 @@
 #ifndef NVIMSERVER_SERVER_UI_BRIDGE_H
 #define NVIMSERVER_SERVER_UI_BRIDGE_H
 
-// FileInfo and Boolean are #defined by Carbon and NeoVim:
-// Since we don't need the Carbon versions of them, we rename
-// them.
-#define FileInfo CarbonFileInfo
-#define Boolean CarbonBoolean
-
-#include <nvim/api/private/defs.h>
 #include <nvim/ui_bridge.h>
 
 typedef struct {

@@ -3,18 +3,18 @@
  * See LICENSE
  */
 
+#include <stdlib.h>
 #include <uv.h>
-#include "server.h"
-#include "server_log.h"
-#include "server_ui_bridge.h"
 
-// FileInfo and Boolean are #defined by Carbon and NeoVim:
-// Since we don't need the Carbon versions of them, we rename
-// them.
 #define FileInfo CarbonFileInfo
 #define Boolean CarbonBoolean
 
-#include <stdlib.h>
+#include "server.h"
+#include "server_log.h"
+
+#undef FileInfo
+#undef Boolean
+
 #include <nvim/main.h>
 #include <nvim/edit.h>
 #include <nvim/mouse.h>
@@ -23,6 +23,7 @@
 #include <nvim/api/private/helpers.h>
 #include <api/vim.h.generated.h>
 #include <nvim/aucmd.h>
+#include "server_ui_bridge.h"
 
 #pragma mark cond_var_t
 typedef struct {
@@ -162,6 +163,38 @@ void server_send_msg(NvimServerMsgId msgid, CFDataRef data) {
       "The msg (%lu) could not be sent: %d",
       (long) msgid, response_code
   );
+}
+
+void msgpack_pack_cstr(msgpack_packer *packer, const char *cstr) {
+  const size_t len = strlen(cstr);
+  msgpack_pack_str(packer, len);
+  msgpack_pack_str_body(packer, cstr, len);
+}
+
+void msgpack_pack_bool(msgpack_packer *packer, bool value) {
+  if (value) { msgpack_pack_true(packer); }
+  else { msgpack_pack_false(packer); }
+}
+
+void send_msg_packing(NvimServerMsgId msgid, pack_block body) {
+  msgpack_sbuffer sbuf;
+  msgpack_sbuffer_init(&sbuf);
+
+  msgpack_packer packer;
+  msgpack_packer_init(&packer, &sbuf, msgpack_sbuffer_write);
+
+  body(&packer);
+
+  CFDataRef const data = CFDataCreateWithBytesNoCopy(
+      kCFAllocatorDefault,
+      (const UInt8 *) sbuf.data,
+      sbuf.size,
+      kCFAllocatorNull
+  );
+  server_send_msg(msgid, data);
+  CFRelease(data);
+
+  msgpack_sbuffer_destroy(&sbuf);
 }
 
 static void start_nvim(void *_) {
