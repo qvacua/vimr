@@ -1,6 +1,7 @@
 # ???
 
-* ...
+* Bugfix: wrong color of "Select the HTML file" button of HTML preview tool
+* Bugfix: memory leak
 
 # 0.26.8-311
 
