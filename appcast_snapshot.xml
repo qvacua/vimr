@@ -7,22 +7,24 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.26.8-311</title>
+      <title>SNAPSHOT-312</title>
       <description><![CDATA[
     <ul>
+<li>Bugfix: wrong color of "Select the HTML file" button of HTML preview tool</li>
 <li>Bugfix: memory leak</li>
+<li>Big refactoring of NvimServer</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.26.8-311
+        https://github.com/qvacua/vimr/releases/tag/snapshot/312
       </releaseNotesLink>
-      <pubDate>2019-03-22T17:02:33.473549</pubDate>
+      <pubDate>2019-03-25T18:54:07.844359</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.26.8-311/VimR-v0.26.8-311.tar.bz2"
-                 sparkle:version="311"
-                 sparkle:shortVersionString="0.26.8"
-                 sparkle:dsaSignature="MC0CFGtgC3z+xOHowcJ0oV85lu2pqfBEAhUA7QkYjEW0dvgLRni1zGUOsZNmFG8="
-                 length="15103296"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/312/VimR-SNAPSHOT-312.tar.bz2"
+                 sparkle:version="312"
+                 sparkle:shortVersionString="SNAPSHOT-312"
+                 sparkle:dsaSignature="MC0CFQCulygoU1RD3mUu24TG6cVqYIC1xQIUcpBkRmlPvD6ZOxm+/72JjKTOwF4="
+                 length="15095994"
                  type="application/octet-stream"/>
     </item>
   </channel>
