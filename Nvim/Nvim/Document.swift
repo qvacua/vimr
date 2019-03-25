@@ -18,7 +18,6 @@ class Document: NSDocument, NSWindowDelegate {
 
   override init() {
     super.init()
-    // Add your subclass-specific initialization here.
 
     nvimView
       .events
@@ -26,10 +25,10 @@ class Document: NSDocument, NSWindowDelegate {
         switch event {
 
         case .neoVimStopped:
-          self.close()
+          DispatchQueue.main.async { self.close() }
 
         default:
-          Swift.print("other event: \(event)")
+          break
 
         }
       })

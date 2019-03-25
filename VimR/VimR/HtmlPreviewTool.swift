@@ -149,13 +149,22 @@ extension HtmlPreviewTool {
       self.addViews()
     }
 
-    override func repaint(with: Workspace.Theme) {
-
+    override func repaint(with theme: Workspace.Theme) {
+      self.selectHtmlFile.image = NSImage.fontAwesomeIcon(
+        name: .fileCode,
+        style: .solid,
+        textColor: theme.toolbarForeground,
+        dimension: InnerToolBar.iconDimension
+      )
     }
 
     private func addViews() {
       let selectHtmlFile = self.selectHtmlFile
-      InnerToolBar.configureToStandardIconButton(button: selectHtmlFile, iconName: .fileCode, style: .regular)
+      InnerToolBar.configureToStandardIconButton(
+        button: selectHtmlFile,
+        iconName: .fileCode,
+        style: .solid
+      )
       selectHtmlFile.toolTip = "Select the HTML file"
       selectHtmlFile.action = #selector(HtmlPreviewTool.selectHtmlFile)
 

@@ -110,7 +110,7 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     )
     self.closeButton.image = NSImage.fontAwesomeIcon(
       name: .timesCircle,
-      style: .regular,
+      style: .solid,
       textColor: self.theme.toolbarForeground,
       dimension: InnerToolBar.iconDimension
     )
@@ -173,7 +173,7 @@ class InnerToolBar: NSView, NSUserInterfaceValidations {
     InnerToolBar.configureToStandardIconButton(
       button: close,
       iconName: .timesCircle,
-      style: .regular,
+      style: .solid,
       color: self.theme.toolbarForeground
     )
     close.target = self
