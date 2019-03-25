@@ -3,9 +3,12 @@
  * See LICENSE
  */
 
-#import <Foundation/Foundation.h>
+#ifndef NVIMSERVER_SHARED_TYPES_H
+#define NVIMSERVER_SHARED_TYPES_H
 
-typedef NS_OPTIONS(NSUInteger, FontTrait) {
+#include "foundation_shim.h"
+
+typedef CF_OPTIONS(NSUInteger, FontTrait) {
   FontTraitNone = 0,
   FontTraitItalic = (1 << 0),
   FontTraitBold = (1 << 1),
@@ -13,13 +16,13 @@ typedef NS_OPTIONS(NSUInteger, FontTrait) {
   FontTraitUndercurl = (1 << 3)
 };
 
-typedef NS_ENUM(NSInteger, RenderDataType) {
+typedef CF_ENUM(NSInteger, RenderDataType) {
   RenderDataTypeRawLine,
   RenderDataTypeGoto,
   RenderDataTypeScroll,
 };
 
-typedef NS_ENUM(NSInteger, NvimServerMsgId) {
+typedef CF_ENUM(NSInteger, NvimServerMsgId) {
   NvimServerMsgIdServerReady = 0,
   NvimServerMsgIdNvimReady,
   NvimServerMsgIdResize,
@@ -35,7 +38,7 @@ typedef NS_ENUM(NSInteger, NvimServerMsgId) {
   NvimServerMsgIdSetTitle,
   NvimServerMsgIdStop,
   NvimServerMsgIdOptionSet,
-  
+
   NvimServerMsgIdDirtyStatusChanged,
   NvimServerMsgIdCwdChanged,
   NvimServerMsgIdColorSchemeChanged,
@@ -46,14 +49,16 @@ typedef NS_ENUM(NSInteger, NvimServerMsgId) {
   NvimServerMsgIdDebug1,
 };
 
-typedef NS_ENUM(NSInteger, NvimBridgeMsgId) {
+typedef CF_ENUM(NSInteger, NvimBridgeMsgId) {
   NvimBridgeMsgIdAgentReady = 0,
   NvimBridgeMsgIdReadyForRpcEvents,
   NvimBridgeMsgIdDeleteInput,
   NvimBridgeMsgIdResize,
   NvimBridgeMsgIdScroll,
-  
+
   NvimBridgeMsgIdFocusGained,
-  
+
   NvimBridgeMsgIdDebug1,
 };
+
+#endif // NVIMSERVER_SHARED_TYPES_H
