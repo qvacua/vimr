@@ -30,6 +30,7 @@ int main(int argc, const char *argv[]) {
       "Started NvimServer '%s' and connected it with GUI '%s'.",
       local_port_name, remote_port_name
   );
+
   CFRunLoopRun();
   os_log_debug(logger, "NvimServer exiting.");
 

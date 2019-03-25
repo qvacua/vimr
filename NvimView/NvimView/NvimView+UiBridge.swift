@@ -431,6 +431,41 @@ extension NvimView {
     self.eventsSubject.onNext(.rpcEventSubscribed)
   }
 
+  final func bridgeHasFatalError(_ value: MessagePackValue?) {
+    gui.async {
+      let alert = NSAlert()
+      alert.addButton(withTitle: "OK")
+      alert.messageText = "Error launching background neovim process"
+      alert.alertStyle = .critical
+
+      if let rawCode = value?.intValue,
+         let code = NvimServerFatalErrorCode(rawValue: rawCode) {
+
+        switch code {
+
+        case .localPort:
+          alert.informativeText = "GUI could not connect to the background " +
+                                  "neovim process. The window will close."
+
+        case .remotePort:
+          alert.informativeText = "The remote message port could not " +
+                                  "connect to GUI. The window will close."
+
+        }
+      } else {
+        alert.informativeText = "There was an unknown error launching the " +
+                                "background neovim Process. " +
+                                "The window will close."
+      }
+
+      alert.runModal()
+      self.queue.async {
+        self.eventsSubject.onNext(.neoVimStopped)
+        self.eventsSubject.onCompleted()
+      }
+    }
+  }
+
   final func setAttr(with value: MessagePackValue) {
     guard let array = value.arrayValue else {
       self.bridgeLogger.error("Could not convert \(value)")

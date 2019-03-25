@@ -311,6 +311,8 @@ public class NvimView: NSView,
         case .rpcEventSubscribed:
           self?.rpcEventSubscribed()
 
+        case let .fatalError(value):
+          self?.bridgeHasFatalError(value)
 
         case .debug1:
           self?.debug1(nil)

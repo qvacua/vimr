@@ -84,6 +84,12 @@ static void do_autocmd_guienter(void **argv);
 // We declare nvim_main because it's not declared in any header files of neovim
 extern int nvim_main(int argc, const char **argv);
 
+#ifdef DEBUG
+
+void debug_function() {
+}
+
+#endif
 
 void server_set_nvim_args(int argc, const char **const argv) {
   nvim_argc = argc + 1;
@@ -107,6 +113,14 @@ void server_init_local_port(const char *name) {
       NULL
   );
   CFRelease(name_cf);
+
+  if (local_port == NULL) {
+    send_msg_packing(NvimServerMsgIdFatalError, ^(msgpack_packer *packer) {
+      msgpack_pack_int64(packer, NvimServerFatalErrorCodeLocalPort);
+    });
+
+    exit(NvimServerFatalErrorCodeLocalPort);
+  }
 
   cond_var_t cond_var;
   cond_var_init(&cond_var, 5, false);
@@ -136,6 +150,14 @@ void server_init_remote_port(const char *name) {
   );
   remote_port = CFMessagePortCreateRemote(kCFAllocatorDefault, name_cf);
   CFRelease(name_cf);
+
+  if (remote_port == NULL) {
+    send_msg_packing(NvimServerMsgIdFatalError, ^(msgpack_packer *packer) {
+      msgpack_pack_int64(packer, NvimServerFatalErrorCodeRemotePort);
+    });
+
+    exit(NvimServerFatalErrorCodeRemotePort);
+  }
 }
 
 void server_destroy_remote_port() {

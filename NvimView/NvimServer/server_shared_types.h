@@ -46,7 +46,14 @@ typedef CF_ENUM(NSInteger, NvimServerMsgId) {
   NvimServerMsgIdAutoCommandEvent,
   NvimServerMsgIdRpcEventSubscribed,
 
+  NvimServerMsgIdFatalError,
+
   NvimServerMsgIdDebug1,
+};
+
+typedef CF_ENUM(NSInteger, NvimServerFatalErrorCode) {
+  NvimServerFatalErrorCodeLocalPort = 1,
+  NvimServerFatalErrorCodeRemotePort,
 };
 
 typedef CF_ENUM(NSInteger, NvimBridgeMsgId) {

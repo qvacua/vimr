@@ -24,4 +24,8 @@ void send_msg_packing(NvimServerMsgId msgid, pack_block body);
 void msgpack_pack_bool(msgpack_packer *packer, bool value);
 void msgpack_pack_cstr(msgpack_packer *packer, const char *cstr);
 
+#ifdef DEBUG
+void debug_function(void);
+#endif
+
 #endif // NVIMSERVER_SERVER_H
