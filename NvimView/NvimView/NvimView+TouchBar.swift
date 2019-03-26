@@ -52,7 +52,7 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
   }
 
   private func selectedTabIndex() -> Int {
-    return tabsCache.index { $0.isCurrent } ?? -1
+    return tabsCache.firstIndex { $0.isCurrent } ?? -1
   }
 
   private func getTabsControl() -> NSScrubber? {

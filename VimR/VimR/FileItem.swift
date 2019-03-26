@@ -29,8 +29,8 @@ class FileItem : CustomStringConvertible, Hashable, Comparable {
     return self.url.isPackage
   }
 
-  var hashValue: Int {
-    return url.hashValue
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(self.url)
   }
 
   /// When nil, then it has never been fnmatch'ed.

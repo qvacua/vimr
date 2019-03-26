@@ -259,6 +259,9 @@ class UiBridge {
     case .fatalError:
       self.streamSubject.onNext(.fatalError(MessagePackUtils.value(from: data)))
 
+    @unknown default:
+      self.log.error("Unkonwn msg type from NvimServer")
+      
     }
   }
 

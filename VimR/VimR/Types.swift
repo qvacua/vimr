@@ -50,8 +50,8 @@ class UuidState<S>: UuidTagged, CustomStringConvertible {
 
 class Token: Hashable, CustomStringConvertible {
 
-  var hashValue: Int {
-    return ObjectIdentifier(self).hashValue
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(ObjectIdentifier(self))
   }
 
   var description: String {

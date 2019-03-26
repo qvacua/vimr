@@ -42,7 +42,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.openOnReactivationCheckbox.boolState = state.openNewMainWindowOnReactivation
 
     self.lastWindowAction = state.afterLastWindowAction
-    self.afterLastWindowPopup.selectItem(at: indexToAfterLastWindowAction.index(of: state.afterLastWindowAction) ?? 0)
+    self.afterLastWindowPopup.selectItem(at: indexToAfterLastWindowAction.firstIndex(of: state.afterLastWindowAction) ?? 0)
 
     self.ignorePatterns = state.openQuickly.ignorePatterns
     self.ignoreField.stringValue = FileItemIgnorePattern.toString(state.openQuickly.ignorePatterns)
@@ -60,7 +60,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
         if self.lastWindowAction != state.afterLastWindowAction {
           self.afterLastWindowPopup.selectItem(
-            at: indexToAfterLastWindowAction.index(of: state.afterLastWindowAction) ?? 0
+            at: indexToAfterLastWindowAction.firstIndex(of: state.afterLastWindowAction) ?? 0
           )
         }
         self.lastWindowAction = state.afterLastWindowAction

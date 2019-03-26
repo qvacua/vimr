@@ -95,6 +95,9 @@ extension NvimView {
           recompute = true
           rowStart = min(self.doScroll(values), rowStart)
 
+        @unknown default:
+          self.log.error("Unknown flush data type")
+          
         }
       }
 
@@ -451,6 +454,9 @@ extension NvimView {
           alert.informativeText = "The remote message port could not " +
                                   "connect to GUI. The window will close."
 
+        @unknown default:
+          self.log.error("Unknown fatal error from NvimServer")
+          
         }
       } else {
         alert.informativeText = "There was an unknown error launching the " +

@@ -57,7 +57,7 @@ extension Array where Element: Equatable {
    */
   func substituting(elements: [Element]) -> [Element] {
     let elementsInArray = elements.filter { self.contains($0) }
-    let indices = elementsInArray.compactMap { self.index(of: $0) }
+    let indices = elementsInArray.compactMap { self.firstIndex(of: $0) }
 
     var result = self
     indices.enumerated().forEach { result[$0.1] = elementsInArray[$0.0] }

@@ -91,8 +91,6 @@
 		1929BF4FF30D9A9DE82C3052 /* FileUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8042AC566CDF6C998A3 /* FileUtilsTest.swift */; };
 		1929BFC70581084B5CE04A5B /* MatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFE179BCA3C75A13D71B /* MatcherTests.swift */; };
 		1929BFDE22D155F7C4B19E96 /* HtmlPreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B85023B042C485409CE1 /* HtmlPreviewTool.swift */; };
-		4B004BAC20FBB4F10043A396 /* DictionaryCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B004BA920FBA6700043A396 /* DictionaryCoding.framework */; };
-		4B004BAD20FBBE1E0043A396 /* DictionaryCoding.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B004BA920FBA6700043A396 /* DictionaryCoding.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B004BCF21063B600043A396 /* DictionaryDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCB21063B600043A396 /* DictionaryDecoder.swift */; };
 		4B004BD021063B600043A396 /* DictionaryDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCB21063B600043A396 /* DictionaryDecoder.swift */; };
 		4B004BD121063B600043A396 /* DictionaryCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCC21063B600043A396 /* DictionaryCodingKey.swift */; };
@@ -511,7 +509,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				4BDA50B52160BE76004D10A9 /* Socket.framework in CopyFiles */,
-				4B004BAD20FBBE1E0043A396 /* DictionaryCoding.framework in CopyFiles */,
 				4B9DF28A209C8DBB00DF2AAD /* RxMessagePort.framework in CopyFiles */,
 				4B9DF289209C8DAD00DF2AAD /* RxMsgpackRpc.framework in CopyFiles */,
 				4B17E54F209E3EFD00265C1D /* RxNeovimApi.framework in CopyFiles */,
@@ -607,7 +604,6 @@
 		1929BFB0F294F3714D5E095F /* PreviewToolReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewToolReducer.swift; sourceTree = "<group>"; };
 		1929BFC0A5A9C6DB09BE1368 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		1929BFE179BCA3C75A13D71B /* MatcherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatcherTests.swift; sourceTree = "<group>"; };
-		4B004BA920FBA6700043A396 /* DictionaryCoding.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DictionaryCoding.framework; path = ../Carthage/Build/Mac/DictionaryCoding.framework; sourceTree = "<group>"; };
 		4B004BCB21063B600043A396 /* DictionaryDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DictionaryDecoder.swift; path = ../../Carthage/Checkouts/DictionaryCoding/Sources/DictionaryCoding/DictionaryDecoder.swift; sourceTree = "<group>"; };
 		4B004BCC21063B600043A396 /* DictionaryCodingKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DictionaryCodingKey.swift; path = ../../Carthage/Checkouts/DictionaryCoding/Sources/DictionaryCoding/DictionaryCodingKey.swift; sourceTree = "<group>"; };
 		4B004BCD21063B600043A396 /* DictionaryEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DictionaryEncoder.swift; path = ../../Carthage/Checkouts/DictionaryCoding/Sources/DictionaryCoding/DictionaryEncoder.swift; sourceTree = "<group>"; };
@@ -718,7 +714,6 @@
 		4BEBA5141CFF374B00673FDF /* VimRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VimRTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BEBA51A1CFF374B00673FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BF07EE51D51326A009BECEB /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Base; path = Base.lproj/Credits.rtf; sourceTree = "<group>"; };
-		4BF18C311FD2E2AA00DF95D1 /* EonilFileSystemEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EonilFileSystemEvents.framework; path = ../Carthage/Build/Mac/EonilFileSystemEvents.framework; sourceTree = "<group>"; };
 		4BF18C321FD2E2AA00DF95D1 /* PureLayout.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureLayout.framework; path = ../Carthage/Build/Mac/PureLayout.framework; sourceTree = "<group>"; };
 		4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaMarkdown.framework; path = ../Carthage/Build/Mac/CocoaMarkdown.framework; sourceTree = "<group>"; };
 		4BF18C341FD2E2AA00DF95D1 /* CocoaFontAwesome.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaFontAwesome.framework; path = ../Carthage/Build/Mac/CocoaFontAwesome.framework; sourceTree = "<group>"; };
@@ -778,7 +773,6 @@
 			files = (
 				4BF18C581FD2E53400DF95D1 /* CocoaMarkdown.framework in Frameworks */,
 				4BF18C511FD2E4F200DF95D1 /* RxTest.framework in Frameworks */,
-				4B004BAC20FBB4F10043A396 /* DictionaryCoding.framework in Frameworks */,
 				4BF18C4F1FD2E4F100DF95D1 /* RxSwift.framework in Frameworks */,
 				4B17E54E209E3EFA00265C1D /* RxNeovimApi.framework in Frameworks */,
 				4BF18C4C1FD2E4CE00DF95D1 /* NvimView.framework in Frameworks */,
@@ -977,7 +971,6 @@
 			children = (
 				4BE34B822225BAC7002F57D3 /* ShortcutRecorder.framework */,
 				4B0A1AA72120C35100F1E02F /* Socket.framework */,
-				4B004BA920FBA6700043A396 /* DictionaryCoding.framework */,
 				4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */,
 				4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */,
 				4BB1F5D02097705E00EC394A /* MessagePack.framework */,
@@ -987,7 +980,6 @@
 				4BF18C491FD2E2DE00DF95D1 /* Nimble.framework */,
 				4BF18C341FD2E2AA00DF95D1 /* CocoaFontAwesome.framework */,
 				4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */,
-				4BF18C311FD2E2AA00DF95D1 /* EonilFileSystemEvents.framework */,
 				4BF18C321FD2E2AA00DF95D1 /* PureLayout.framework */,
 				4BF18C381FD2E2AB00DF95D1 /* RxCocoa.framework */,
 				4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */,
@@ -1897,7 +1889,7 @@
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
 				SWIFT_DISABLE_SAFETY_CHECKS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1948,7 +1940,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SWIFT_DISABLE_SAFETY_CHECKS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

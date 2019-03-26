@@ -51,7 +51,7 @@ class Matcher {
     let pscalars = pattern.uppercased().unicodeScalars
 
     pscalars.forEach {
-      if let idx = tscalars.index(of: $0) {
+      if let idx = tscalars.firstIndex(of: $0) {
         tscalars.remove(at: idx)
       }
     }

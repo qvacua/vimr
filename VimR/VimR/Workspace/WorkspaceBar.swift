@@ -232,7 +232,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
   }
 
   func remove(tool: WorkspaceTool) {
-    guard let idx = self.tools.index(of: tool) else {
+    guard let idx = self.tools.firstIndex(of: tool) else {
       return
     }
 
@@ -324,7 +324,7 @@ extension ProxyBar {
       // 2. the dragged tool is from this bar and is dropped at the end of the bar
       // 3. the dragged tool is not from this bar and is dropped at the end of the bar
 
-      guard let toolIdx = self.container!.tools.index(of: tool) else {
+      guard let toolIdx = self.container!.tools.firstIndex(of: tool) else {
         // 3.
         tool.bar?.remove(tool: tool)
         self.container!.append(tool: tool)
@@ -353,7 +353,7 @@ extension ProxyBar {
     // 1. is not from this bar
     // 2. is from this bar
 
-    guard let toolIdx = self.container!.tools.index(of: tool) else {
+    guard let toolIdx = self.container!.tools.firstIndex(of: tool) else {
       // 1.
       tool.bar?.remove(tool: tool)
       self.container!.insert(tool: tool, at: draggedOnToolIdx)
