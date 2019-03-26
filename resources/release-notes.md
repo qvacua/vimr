@@ -1,7 +1,7 @@
 # ???
 
 * Bugfix: wrong color of "Select the HTML file" button of HTML preview tool
-* Bugfix: memory leak
+* Bugfix: memory leak (strange behavior between `CTFontManager` and `NSFontManager`)
 
 # 0.26.8-311
 
