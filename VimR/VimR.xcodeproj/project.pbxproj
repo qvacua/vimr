@@ -195,7 +195,6 @@
 		4B263702223A487B00021586 /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */; };
 		4B263703223A487B00021586 /* CocoaFontAwesome.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C341FD2E2AA00DF95D1 /* CocoaFontAwesome.framework */; };
 		4B263704223A487B00021586 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */; };
-		4B263705223A487B00021586 /* RxMessagePort.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */; };
 		4B263706223A487B00021586 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; };
 		4B263707223A487B00021586 /* RxNeovimApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */; };
 		4B263708223A487B00021586 /* Swifter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9DF285209C8A8B00DF2AAD /* Swifter.framework */; };
@@ -281,7 +280,6 @@
 		4B26375B223A487B00021586 /* Socket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0A1AA72120C35100F1E02F /* Socket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B26375C223A487B00021586 /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C321FD2E2AA00DF95D1 /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B26375D223A487B00021586 /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C381FD2E2AB00DF95D1 /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B26375E223A487B00021586 /* RxMessagePort.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B26375F223A487B00021586 /* RxNeovimApi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B263760223A487B00021586 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B263761223A487B00021586 /* Swifter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9DF285209C8A8B00DF2AAD /* Swifter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -370,9 +368,6 @@
 		4B9DF287209C8A8B00DF2AAD /* Swifter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9DF285209C8A8B00DF2AAD /* Swifter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B9DF288209C8DA000DF2AAD /* MessagePack.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B9DF289209C8DAD00DF2AAD /* RxMsgpackRpc.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB1F5CC20976F8900EC394A /* RxMsgpackRpc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B9DF28A209C8DBB00DF2AAD /* RxMessagePort.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B9E5E1E20990E09006455C3 /* RxMessagePort.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */; };
-		4B9E5E1F20990E09006455C3 /* RxMessagePort.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BB1BEA91D48773200463C29 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */; };
 		4BB1F5CD20976F8900EC394A /* RxMsgpackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CC20976F8900EC394A /* RxMsgpackRpc.framework */; };
 		4BB1F5CF2097704D00EC394A /* RxMsgpackRpc.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CC20976F8900EC394A /* RxMsgpackRpc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -468,7 +463,6 @@
 				4B26375B223A487B00021586 /* Socket.framework in Embed Frameworks */,
 				4B26375C223A487B00021586 /* PureLayout.framework in Embed Frameworks */,
 				4B26375D223A487B00021586 /* RxCocoa.framework in Embed Frameworks */,
-				4B26375E223A487B00021586 /* RxMessagePort.framework in Embed Frameworks */,
 				4B26375F223A487B00021586 /* RxNeovimApi.framework in Embed Frameworks */,
 				4B263760223A487B00021586 /* RxSwift.framework in Embed Frameworks */,
 				4B263761223A487B00021586 /* Swifter.framework in Embed Frameworks */,
@@ -492,7 +486,6 @@
 				4BEBC23C215FD1AA007113C4 /* Socket.framework in Embed Frameworks */,
 				4BF18C441FD2E2C900DF95D1 /* PureLayout.framework in Embed Frameworks */,
 				4BF18C451FD2E2C900DF95D1 /* RxCocoa.framework in Embed Frameworks */,
-				4B9E5E1F20990E09006455C3 /* RxMessagePort.framework in Embed Frameworks */,
 				4B17E54D209E3EA400265C1D /* RxNeovimApi.framework in Embed Frameworks */,
 				4BF18C461FD2E2C900DF95D1 /* RxSwift.framework in Embed Frameworks */,
 				4B9DF287209C8A8B00DF2AAD /* Swifter.framework in Embed Frameworks */,
@@ -509,7 +502,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				4BDA50B52160BE76004D10A9 /* Socket.framework in CopyFiles */,
-				4B9DF28A209C8DBB00DF2AAD /* RxMessagePort.framework in CopyFiles */,
 				4B9DF289209C8DAD00DF2AAD /* RxMsgpackRpc.framework in CopyFiles */,
 				4B17E54F209E3EFD00265C1D /* RxNeovimApi.framework in CopyFiles */,
 				4B9DF288209C8DA000DF2AAD /* MessagePack.framework in CopyFiles */,
@@ -687,7 +679,6 @@
 		4B9433DB20B95EC6005807BA /* MacVim-css.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-css.icns"; path = "macvim-file-icons/MacVim-css.icns"; sourceTree = "<group>"; };
 		4B97E2CD1D33F53D00FC0660 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		4B9DF285209C8A8B00DF2AAD /* Swifter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Swifter.framework; path = ../Carthage/Build/Mac/Swifter.framework; sourceTree = "<group>"; };
-		4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMessagePort.framework; path = ../Carthage/Build/Mac/RxMessagePort.framework; sourceTree = "<group>"; };
 		4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
 		4BB1F5CC20976F8900EC394A /* RxMsgpackRpc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMsgpackRpc.framework; path = ../Carthage/Build/Mac/RxMsgpackRpc.framework; sourceTree = "<group>"; };
 		4BB1F5D02097705E00EC394A /* MessagePack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessagePack.framework; path = ../Carthage/Build/Mac/MessagePack.framework; sourceTree = "<group>"; };
@@ -736,7 +727,6 @@
 				4B263702223A487B00021586 /* CocoaMarkdown.framework in Frameworks */,
 				4B263703223A487B00021586 /* CocoaFontAwesome.framework in Frameworks */,
 				4B263704223A487B00021586 /* RxSwift.framework in Frameworks */,
-				4B263705223A487B00021586 /* RxMessagePort.framework in Frameworks */,
 				4B263706223A487B00021586 /* Sparkle.framework in Frameworks */,
 				4B263707223A487B00021586 /* RxNeovimApi.framework in Frameworks */,
 				4B263708223A487B00021586 /* Swifter.framework in Frameworks */,
@@ -757,7 +747,6 @@
 				4BF18C3B1FD2E2AB00DF95D1 /* CocoaMarkdown.framework in Frameworks */,
 				4BF18C3C1FD2E2AB00DF95D1 /* CocoaFontAwesome.framework in Frameworks */,
 				4BF18C3E1FD2E2AB00DF95D1 /* RxSwift.framework in Frameworks */,
-				4B9E5E1E20990E09006455C3 /* RxMessagePort.framework in Frameworks */,
 				4BF18C3F1FD2E2AB00DF95D1 /* Sparkle.framework in Frameworks */,
 				4BE34B852225BB56002F57D3 /* RxNeovimApi.framework in Frameworks */,
 				4B9DF286209C8A8B00DF2AAD /* Swifter.framework in Frameworks */,
@@ -972,7 +961,6 @@
 				4BE34B822225BAC7002F57D3 /* ShortcutRecorder.framework */,
 				4B0A1AA72120C35100F1E02F /* Socket.framework */,
 				4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */,
-				4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */,
 				4BB1F5D02097705E00EC394A /* MessagePack.framework */,
 				4BB1F5CC20976F8900EC394A /* RxMsgpackRpc.framework */,
 				4B9DF285209C8A8B00DF2AAD /* Swifter.framework */,
