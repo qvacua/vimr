@@ -4,7 +4,6 @@
  */
 
 import Foundation
-import RxMessagePort
 import RxSwift
 import MessagePack
 import os

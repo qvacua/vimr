@@ -4,7 +4,6 @@
  */
 
 import Cocoa
-import RxMessagePort
 import RxSwift
 
 @NSApplicationMain
