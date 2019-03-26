@@ -1,10 +1,7 @@
-//
-//  AppDelegate.swift
-//  Nvim
-//
-//  Created by Tae Won Ha on 22.03.19.
-//  Copyright © 2019 Tae Won Ha. All rights reserved.
-//
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 import Cocoa
 

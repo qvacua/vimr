@@ -13,22 +13,22 @@
 		4B06F6C9224526A90069C9F2 /* Document.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B06F6C7224526A80069C9F2 /* Document.xib */; };
 		4B06F6CB224526A90069C9F2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B06F6CA224526A90069C9F2 /* Assets.xcassets */; };
 		4B06F6CE224526A90069C9F2 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B06F6CC224526A90069C9F2 /* MainMenu.xib */; };
-		4B06F6DD224528020069C9F2 /* RxMsgpackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B06F6D6224528010069C9F2 /* RxMsgpackRpc.framework */; };
-		4B06F6DE224528020069C9F2 /* RxMsgpackRpc.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B06F6D6224528010069C9F2 /* RxMsgpackRpc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B06F6DF224528020069C9F2 /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B06F6D7224528010069C9F2 /* MessagePack.framework */; };
-		4B06F6E0224528020069C9F2 /* MessagePack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B06F6D7224528010069C9F2 /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B06F6E1224528020069C9F2 /* RxMessagePort.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B06F6D8224528010069C9F2 /* RxMessagePort.framework */; };
-		4B06F6E2224528020069C9F2 /* RxMessagePort.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B06F6D8224528010069C9F2 /* RxMessagePort.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B06F6E3224528020069C9F2 /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B06F6D9224528010069C9F2 /* PureLayout.framework */; };
-		4B06F6E4224528020069C9F2 /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B06F6D9224528010069C9F2 /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B06F6E5224528020069C9F2 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B06F6DA224528010069C9F2 /* RxSwift.framework */; };
-		4B06F6E6224528020069C9F2 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B06F6DA224528010069C9F2 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B06F6E7224528020069C9F2 /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B06F6DB224528010069C9F2 /* Socket.framework */; };
-		4B06F6E8224528020069C9F2 /* Socket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B06F6DB224528010069C9F2 /* Socket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B06F6E9224528020069C9F2 /* RxNeovimApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B06F6DC224528010069C9F2 /* RxNeovimApi.framework */; };
-		4B06F6EA224528020069C9F2 /* RxNeovimApi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B06F6DC224528010069C9F2 /* RxNeovimApi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B06F6ED2245291B0069C9F2 /* NvimView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B06F6EC2245291B0069C9F2 /* NvimView.framework */; };
-		4B06F6EE2245291B0069C9F2 /* NvimView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B06F6EC2245291B0069C9F2 /* NvimView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF78FB4224A17D800D5A018 /* RxMessagePort.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF78FAD224A17D800D5A018 /* RxMessagePort.framework */; };
+		4BF78FB5224A17D800D5A018 /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF78FAE224A17D800D5A018 /* MessagePack.framework */; };
+		4BF78FB6224A17D800D5A018 /* RxMsgpackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF78FAF224A17D800D5A018 /* RxMsgpackRpc.framework */; };
+		4BF78FB7224A17D800D5A018 /* RxNeovimApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF78FB0224A17D800D5A018 /* RxNeovimApi.framework */; };
+		4BF78FB8224A17D800D5A018 /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF78FB1224A17D800D5A018 /* Socket.framework */; };
+		4BF78FB9224A17D800D5A018 /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF78FB2224A17D800D5A018 /* PureLayout.framework */; };
+		4BF78FBA224A17D800D5A018 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF78FB3224A17D800D5A018 /* RxSwift.framework */; };
+		4BF78FBC224A17E700D5A018 /* NvimView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF78FBB224A17E700D5A018 /* NvimView.framework */; };
+		4BF78FBD224A185600D5A018 /* NvimView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF78FBB224A17E700D5A018 /* NvimView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF78FBE224A185600D5A018 /* MessagePack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF78FAE224A17D800D5A018 /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF78FBF224A185600D5A018 /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF78FB2224A17D800D5A018 /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF78FC0224A185600D5A018 /* RxMessagePort.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF78FAD224A17D800D5A018 /* RxMessagePort.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF78FC1224A185600D5A018 /* RxMsgpackRpc.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF78FAF224A17D800D5A018 /* RxMsgpackRpc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF78FC2224A185600D5A018 /* RxNeovimApi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF78FB0224A17D800D5A018 /* RxNeovimApi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF78FC3224A185600D5A018 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF78FB3224A17D800D5A018 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF78FC4224A185600D5A018 /* Socket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF78FB1224A17D800D5A018 /* Socket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,14 +38,14 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				4B06F6E6224528020069C9F2 /* RxSwift.framework in Embed Frameworks */,
-				4B06F6DE224528020069C9F2 /* RxMsgpackRpc.framework in Embed Frameworks */,
-				4B06F6EA224528020069C9F2 /* RxNeovimApi.framework in Embed Frameworks */,
-				4B06F6EE2245291B0069C9F2 /* NvimView.framework in Embed Frameworks */,
-				4B06F6E2224528020069C9F2 /* RxMessagePort.framework in Embed Frameworks */,
-				4B06F6E8224528020069C9F2 /* Socket.framework in Embed Frameworks */,
-				4B06F6E4224528020069C9F2 /* PureLayout.framework in Embed Frameworks */,
-				4B06F6E0224528020069C9F2 /* MessagePack.framework in Embed Frameworks */,
+				4BF78FBD224A185600D5A018 /* NvimView.framework in Embed Frameworks */,
+				4BF78FBE224A185600D5A018 /* MessagePack.framework in Embed Frameworks */,
+				4BF78FBF224A185600D5A018 /* PureLayout.framework in Embed Frameworks */,
+				4BF78FC0224A185600D5A018 /* RxMessagePort.framework in Embed Frameworks */,
+				4BF78FC1224A185600D5A018 /* RxMsgpackRpc.framework in Embed Frameworks */,
+				4BF78FC2224A185600D5A018 /* RxNeovimApi.framework in Embed Frameworks */,
+				4BF78FC3224A185600D5A018 /* RxSwift.framework in Embed Frameworks */,
+				4BF78FC4224A185600D5A018 /* Socket.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -61,14 +61,14 @@
 		4B06F6CA224526A90069C9F2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4B06F6CD224526A90069C9F2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		4B06F6CF224526A90069C9F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4B06F6D6224528010069C9F2 /* RxMsgpackRpc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMsgpackRpc.framework; path = ../Carthage/Build/Mac/RxMsgpackRpc.framework; sourceTree = "<group>"; };
-		4B06F6D7224528010069C9F2 /* MessagePack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessagePack.framework; path = ../Carthage/Build/Mac/MessagePack.framework; sourceTree = "<group>"; };
-		4B06F6D8224528010069C9F2 /* RxMessagePort.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMessagePort.framework; path = ../Carthage/Build/Mac/RxMessagePort.framework; sourceTree = "<group>"; };
-		4B06F6D9224528010069C9F2 /* PureLayout.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureLayout.framework; path = ../Carthage/Build/Mac/PureLayout.framework; sourceTree = "<group>"; };
-		4B06F6DA224528010069C9F2 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = ../Carthage/Build/Mac/RxSwift.framework; sourceTree = "<group>"; };
-		4B06F6DB224528010069C9F2 /* Socket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Socket.framework; path = ../Carthage/Build/Mac/Socket.framework; sourceTree = "<group>"; };
-		4B06F6DC224528010069C9F2 /* RxNeovimApi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxNeovimApi.framework; path = ../Carthage/Build/Mac/RxNeovimApi.framework; sourceTree = "<group>"; };
-		4B06F6EC2245291B0069C9F2 /* NvimView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NvimView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BF78FAD224A17D800D5A018 /* RxMessagePort.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMessagePort.framework; path = ../Carthage/Build/Mac/RxMessagePort.framework; sourceTree = "<group>"; };
+		4BF78FAE224A17D800D5A018 /* MessagePack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessagePack.framework; path = ../Carthage/Build/Mac/MessagePack.framework; sourceTree = "<group>"; };
+		4BF78FAF224A17D800D5A018 /* RxMsgpackRpc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMsgpackRpc.framework; path = ../Carthage/Build/Mac/RxMsgpackRpc.framework; sourceTree = "<group>"; };
+		4BF78FB0224A17D800D5A018 /* RxNeovimApi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxNeovimApi.framework; path = ../Carthage/Build/Mac/RxNeovimApi.framework; sourceTree = "<group>"; };
+		4BF78FB1224A17D800D5A018 /* Socket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Socket.framework; path = ../Carthage/Build/Mac/Socket.framework; sourceTree = "<group>"; };
+		4BF78FB2224A17D800D5A018 /* PureLayout.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureLayout.framework; path = ../Carthage/Build/Mac/PureLayout.framework; sourceTree = "<group>"; };
+		4BF78FB3224A17D800D5A018 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = ../Carthage/Build/Mac/RxSwift.framework; sourceTree = "<group>"; };
+		4BF78FBB224A17E700D5A018 /* NvimView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NvimView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,14 +76,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B06F6E5224528020069C9F2 /* RxSwift.framework in Frameworks */,
-				4B06F6DD224528020069C9F2 /* RxMsgpackRpc.framework in Frameworks */,
-				4B06F6E9224528020069C9F2 /* RxNeovimApi.framework in Frameworks */,
-				4B06F6ED2245291B0069C9F2 /* NvimView.framework in Frameworks */,
-				4B06F6E1224528020069C9F2 /* RxMessagePort.framework in Frameworks */,
-				4B06F6E7224528020069C9F2 /* Socket.framework in Frameworks */,
-				4B06F6E3224528020069C9F2 /* PureLayout.framework in Frameworks */,
-				4B06F6DF224528020069C9F2 /* MessagePack.framework in Frameworks */,
+				4BF78FBC224A17E700D5A018 /* NvimView.framework in Frameworks */,
+				4BF78FB4224A17D800D5A018 /* RxMessagePort.framework in Frameworks */,
+				4BF78FB8224A17D800D5A018 /* Socket.framework in Frameworks */,
+				4BF78FBA224A17D800D5A018 /* RxSwift.framework in Frameworks */,
+				4BF78FB6224A17D800D5A018 /* RxMsgpackRpc.framework in Frameworks */,
+				4BF78FB5224A17D800D5A018 /* MessagePack.framework in Frameworks */,
+				4BF78FB9224A17D800D5A018 /* PureLayout.framework in Frameworks */,
+				4BF78FB7224A17D800D5A018 /* RxNeovimApi.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,16 +93,9 @@
 		4B06F6B7224526A80069C9F2 = {
 			isa = PBXGroup;
 			children = (
-				4B06F6EC2245291B0069C9F2 /* NvimView.framework */,
-				4B06F6D7224528010069C9F2 /* MessagePack.framework */,
-				4B06F6D9224528010069C9F2 /* PureLayout.framework */,
-				4B06F6D8224528010069C9F2 /* RxMessagePort.framework */,
-				4B06F6D6224528010069C9F2 /* RxMsgpackRpc.framework */,
-				4B06F6DC224528010069C9F2 /* RxNeovimApi.framework */,
-				4B06F6DA224528010069C9F2 /* RxSwift.framework */,
-				4B06F6DB224528010069C9F2 /* Socket.framework */,
 				4B06F6C2224526A80069C9F2 /* Nvim */,
 				4B06F6C1224526A80069C9F2 /* Products */,
+				4BF78FAC224A17A000D5A018 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -126,6 +119,21 @@
 				1929B0B9215AF6A3082AB24B /* RxSwiftCommons.swift */,
 			);
 			path = Nvim;
+			sourceTree = "<group>";
+		};
+		4BF78FAC224A17A000D5A018 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4BF78FBB224A17E700D5A018 /* NvimView.framework */,
+				4BF78FAE224A17D800D5A018 /* MessagePack.framework */,
+				4BF78FB2224A17D800D5A018 /* PureLayout.framework */,
+				4BF78FAD224A17D800D5A018 /* RxMessagePort.framework */,
+				4BF78FAF224A17D800D5A018 /* RxMsgpackRpc.framework */,
+				4BF78FB0224A17D800D5A018 /* RxNeovimApi.framework */,
+				4BF78FB3224A17D800D5A018 /* RxSwift.framework */,
+				4BF78FB1224A17D800D5A018 /* Socket.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

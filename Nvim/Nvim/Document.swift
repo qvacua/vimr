@@ -1,10 +1,7 @@
-//
-//  Document.swift
-//  Nvim
-//
-//  Created by Tae Won Ha on 22.03.19.
-//  Copyright © 2019 Tae Won Ha. All rights reserved.
-//
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 import Cocoa
 import NvimView
@@ -13,8 +10,8 @@ import RxSwift
 
 class Document: NSDocument, NSWindowDelegate {
 
-  var nvimView = NvimView(forAutoLayout: ())
-  let disposeBag = DisposeBag()
+  private var nvimView = NvimView(forAutoLayout: ())
+  private let disposeBag = DisposeBag()
 
   override init() {
     super.init()
@@ -24,11 +21,9 @@ class Document: NSDocument, NSWindowDelegate {
       .subscribe(onNext: { event in
         switch event {
 
-        case .neoVimStopped:
-          DispatchQueue.main.async { self.close() }
+        case .neoVimStopped: DispatchQueue.main.async { self.close() }
 
-        default:
-          break
+        default: Swift.print("Event received: \(event)")
 
         }
       })
