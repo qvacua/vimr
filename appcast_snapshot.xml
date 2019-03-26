@@ -7,23 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.26.9-312</title>
+      <title>SNAPSHOT-313</title>
       <description><![CDATA[
     <ul>
-<li>Bugfix: wrong color of "Select the HTML file" button of HTML preview tool</li>
-<li>Bugfix: memory leak (strange behavior between <code>CTFontManager</code> and <code>NSFontManager</code>)</li>
+<li>Built with Swift 5</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.26.9-312
+        https://github.com/qvacua/vimr/releases/tag/snapshot/313
       </releaseNotesLink>
-      <pubDate>2019-03-26T08:16:42.610003</pubDate>
+      <pubDate>2019-03-26T23:29:01.745354</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.26.9-312/VimR-v0.26.9-312.tar.bz2"
-                 sparkle:version="312"
-                 sparkle:shortVersionString="0.26.9"
-                 sparkle:dsaSignature="MCwCFCS64ZPv77Uc/kS/lSD9+fd5I6YUAhRFRHZErcTMirUn3i2iuPTvVW+V3g=="
-                 length="15101566"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/313/VimR-SNAPSHOT-313.tar.bz2"
+                 sparkle:version="313"
+                 sparkle:shortVersionString="SNAPSHOT-313"
+                 sparkle:dsaSignature="MC0CFHVoqmAiUN+ZyUHOf85F7vYjNpBOAhUAyFq5MUhmkaqwk79eCh9FWbcvwvg="
+                 length="15269887"
                  type="application/octet-stream"/>
     </item>
   </channel>
