@@ -15,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>FMWK</string>
 	<key>CFBundleShortVersionString</key>
-	<string>SNAPSHOT-312</string>
+	<string>0.26.9</string>
 	<key>CFBundleVersion</key>
 	<string>312</string>
 	<key>NSHumanReadableCopyright</key>
