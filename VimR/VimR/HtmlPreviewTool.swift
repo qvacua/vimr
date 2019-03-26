@@ -7,7 +7,7 @@ import Cocoa
 import RxSwift
 import PureLayout
 import WebKit
-import EonilFileSystemEvents
+import os
 
 private let fileSystemEventsLatency = 1.0
 private let monitorDispatchQueue = DispatchQueue.global(qos: .userInitiated)
@@ -60,12 +60,21 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
           return
         }
 
-        self.monitor = FileSystemEventMonitor(pathsToWatch: [htmlFileUrl.path],
-                                              latency: fileSystemEventsLatency,
-                                              watchRoot: false,
-                                              queue: monitorDispatchQueue)
-        { [unowned self] events in
-          self.reloadWebview(with: serverUrl.payload)
+        do {
+          self.monitor = try EonilFSEventStream(
+            pathsToWatch: [htmlFileUrl.path],
+            sinceWhen: EonilFSEventsEventID.getCurrentEventId(),
+            latency: fileSystemEventsLatency,
+            flags: [.fileEvents],
+            handler: { [weak self] event in
+              Swift.print(event)
+              self?.reloadWebview(with: serverUrl.payload)
+            })
+          self.monitor?.setDispatchQueue(monitorDispatchQueue)
+          try self.monitor?.start()
+        } catch {
+          self.log.error("Could not start file monitor for \(htmlFileUrl): "
+                         + "\(error)")
         }
 
         self.innerCustomToolbar.selectHtmlFile.toolTip = (htmlFileUrl.path as NSString).abbreviatingWithTildeInPath
@@ -73,6 +82,11 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
         self.reloadWebview(with: serverUrl.payload)
       })
       .disposed(by: self.disposeBag)
+  }
+
+  deinit {
+    self.monitor?.stop()
+    self.monitor?.invalidate()
   }
 
   private func reloadWebview(with url: URL) {
@@ -99,9 +113,11 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
   private var scrollTop = 0
 
   private let webview: WKWebView
-  private var monitor: FileSystemEventMonitor?
+  private var monitor: EonilFSEventStream?
 
   private let disposeBag = DisposeBag()
+  private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                          category: Defs.LoggerCategory.uiComponents)
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")

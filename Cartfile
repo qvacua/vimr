@@ -1,6 +1,6 @@
 github "ReactiveX/RxSwift" == 4.4.2
 github "PureLayout/PureLayout" == 3.1.4
-github "eonil/FileSystemEvents" == 1.0.0
+github "eonil/FSEvents" "master"
 github "sparkle-project/Sparkle" == 1.21.3
 github "qvacua/CocoaFontAwesome" "master"
 github "qvacua/CocoaMarkdown" "master"
