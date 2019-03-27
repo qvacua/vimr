@@ -16,6 +16,10 @@ class Document: NSDocument, NSWindowDelegate {
   override init() {
     super.init()
 
+    self.nvimView.font = NSFont(name: "Fira Code", size: 13)
+                         ?? NSFont.userFixedPitchFont(ofSize: 13)!
+    self.nvimView.usesLigatures = true
+
     nvimView
       .events
       .subscribe(onNext: { event in
@@ -23,7 +27,7 @@ class Document: NSDocument, NSWindowDelegate {
 
         case .neoVimStopped: DispatchQueue.main.async { self.close() }
 
-        default: Swift.print("Event received: \(event)")
+        default: break //Swift.print("Event received: \(event)")
 
         }
       })
