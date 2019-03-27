@@ -25,10 +25,10 @@ extension PrimitiveSequence
 
   func wait(
     onCompleted: (() -> Void)? = nil,
-    onError: ((Error) -> Void)? = nil
+    onError: ((Swift.Error) -> Void)? = nil
   ) throws {
     var trigger = false
-    var err: Error? = nil
+    var err: Swift.Error? = nil
 
     let condition = NSCondition()
 
@@ -55,9 +55,7 @@ extension PrimitiveSequence
     while !trigger { condition.wait(until: Date(timeIntervalSinceNow: 5)) }
     disposable.dispose()
 
-    if let e = err {
-      throw e
-    }
+    if let e = err { throw e }
   }
 }
 
