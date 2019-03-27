@@ -8,14 +8,14 @@ import RxSwift
 
 class RxMsgpackRpcTests: XCTestCase {
 
-  private var connection: MsgpackRpc!
+  private var connection: RxMsgpackRpc!
   private let disposeBag = DisposeBag()
 
   override func setUp() {
     super.setUp()
 
     // $ NVIM_LISTEN_ADDRESS=/tmp/nvim.sock nvim --headless $SOMEFILE
-    connection = MsgpackRpc()
+    connection = RxMsgpackRpc()
     connection.stream
       .subscribe(onNext: { msg in
         switch msg {

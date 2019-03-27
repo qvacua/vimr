@@ -4,23 +4,22 @@
  */
 
 import Foundation
-import RxNeovimApi
 import RxSwift
 
-extension Api {
+extension RxNeovimApi {
 
   public func bufGetInfo(
-    buffer: Api.Buffer,
+    buffer: RxNeovimApi.Buffer,
     checkBlocked: Bool = true
-  ) -> Single<Dictionary<String, Api.Value>> {
+  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
 
-    let params: [Api.Value] = [
+    let params: [RxNeovimApi.Value] = [
       .int(Int64(buffer.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, Api.Value> {
+    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw Api.Error.conversion(type: Dictionary<String, Api.Value>.self)
+        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
 
       return result
@@ -40,7 +39,7 @@ extension Api {
   }
 }
 
-func msgPackDictToSwift(_ dict: Dictionary<Api.Value, Api.Value>?) -> Dictionary<String, Api.Value>? {
+private func msgPackDictToSwift(_ dict: Dictionary<RxNeovimApi.Value, RxNeovimApi.Value>?) -> Dictionary<String, RxNeovimApi.Value>? {
   return dict?.flatMapToDict { k, v in
     guard let strKey = k.stringValue else {
       return nil
@@ -50,7 +49,7 @@ func msgPackDictToSwift(_ dict: Dictionary<Api.Value, Api.Value>?) -> Dictionary
   }
 }
 
-private func msgPackArrayDictToSwift(_ array: [Api.Value]?) -> [Dictionary<String, Api.Value>]? {
+private func msgPackArrayDictToSwift(_ array: [RxNeovimApi.Value]?) -> [Dictionary<String, RxNeovimApi.Value>]? {
   return array?
     .compactMap { v in v.dictionaryValue }
     .compactMap { d in msgPackDictToSwift(d) }

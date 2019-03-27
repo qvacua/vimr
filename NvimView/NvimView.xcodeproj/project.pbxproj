@@ -40,7 +40,6 @@
 		1929BAB9A0399206FB7EBC76 /* CellAttributesCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB19DD03ECD6ECC35F94 /* CellAttributesCollection.swift */; };
 		1929BB552C9D99E9ED938759 /* CellAttributesCollectionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0B60CCAA00B08ACAB15 /* CellAttributesCollectionTest.swift */; };
 		1929BC8495028D66F0A7D618 /* AttributesRunDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB7E3430BD3FD88A7698 /* AttributesRunDrawer.swift */; };
-		1929BC8B14CA31C283455CF5 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8E176C11DD61A8DCE95 /* RxSwiftCommons.swift */; };
 		1929BCA615324C58582BFC3C /* ProcessUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD167BE7C6BB788DAE2A /* ProcessUtils.swift */; };
 		1929BCF2B3C24F0E9A96FE25 /* CursorModeShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA4C89E9FE90065C32F6 /* CursorModeShape.swift */; };
 		1929BDB2462E19B852EA1B47 /* CoreCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BAB9FFE8345228B559EC /* CoreCommons.swift */; };
@@ -79,7 +78,6 @@
 		4B0A1B142129F49500F1E02F /* SwiftCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0A1B132129F49500F1E02F /* SwiftCommonsTest.swift */; };
 		4B0A1B39212B332800F1E02F /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0A1B38212B332800F1E02F /* Nimble.framework */; };
 		4B0A1B3B212B333700F1E02F /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B0A1B38212B332800F1E02F /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B17E549209E3E4100265C1D /* RxNeovimApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E548209E3E4100265C1D /* RxNeovimApi.framework */; };
 		4B21ED53213D4AEC009FD017 /* CocoaCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0C89838D8402BB80BFC /* CocoaCommons.swift */; };
 		4B379CCD2248CFB7004B89B4 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B379CCC2248CFB6004B89B4 /* CoreFoundation.framework */; };
 		4B4A48DC222C7C6A00C8E3A1 /* SharedTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B4A48DB222C7C6A00C8E3A1 /* SharedTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -97,7 +95,14 @@
 		4B90F0421FD2AFAE008A39E0 /* NvimView+UiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0241FD2AFAD008A39E0 /* NvimView+UiBridge.swift */; };
 		4B90F0431FD2AFAE008A39E0 /* NvimView+MenuItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0251FD2AFAD008A39E0 /* NvimView+MenuItems.swift */; };
 		4B90F0521FD2AFD3008A39E0 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0511FD2AFD3008A39E0 /* main.c */; };
-		4BB1F5C9209740E400EC394A /* RxMsgpackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5C8209740E400EC394A /* RxMsgpackRpc.framework */; };
+		4BB1EFAE224B71ED00A5CD5A /* RxNeovimApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1EFAA224B71EC00A5CD5A /* RxNeovimApi.swift */; };
+		4BB1EFAF224B71ED00A5CD5A /* RxNeovimApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1EFAA224B71EC00A5CD5A /* RxNeovimApi.swift */; };
+		4BB1EFB0224B71ED00A5CD5A /* RxMsgpackRpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1EFAB224B71EC00A5CD5A /* RxMsgpackRpc.swift */; };
+		4BB1EFB1224B71ED00A5CD5A /* RxMsgpackRpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1EFAB224B71EC00A5CD5A /* RxMsgpackRpc.swift */; };
+		4BB1EFB2224B71ED00A5CD5A /* RxNeovimApi.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1EFAC224B71EC00A5CD5A /* RxNeovimApi.generated.swift */; };
+		4BB1EFB3224B71ED00A5CD5A /* RxNeovimApi.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1EFAC224B71EC00A5CD5A /* RxNeovimApi.generated.swift */; };
+		4BB1EFB4224B71ED00A5CD5A /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1EFAD224B71ED00A5CD5A /* RxSwiftCommons.swift */; };
+		4BB1EFB5224B71ED00A5CD5A /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1EFAD224B71ED00A5CD5A /* RxSwiftCommons.swift */; };
 		4BB1F5CB209740E900EC394A /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CA209740E900EC394A /* MessagePack.framework */; };
 		4BC5B0431FE551DF0071D64F /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC5B0421FE551DF0071D64F /* RxSwift.framework */; };
 		4BD874302014C2600039888E /* NvimAutoCommandEvent.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD8742F2014C25F0039888E /* NvimAutoCommandEvent.generated.swift */; };
@@ -256,7 +261,6 @@
 		1929B73455764E42DACF6BB8 /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
 		1929B7398AD1DE525FA53E38 /* server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = server.c; sourceTree = "<group>"; };
 		1929B8619FD13BC2570CBFB2 /* 1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 1.json; sourceTree = "<group>"; };
-		1929B8E176C11DD61A8DCE95 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
 		1929B9290D503536FFDA9C49 /* MessagePackCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagePackCommons.swift; sourceTree = "<group>"; };
 		1929B96A876229DA394F906E /* FontUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontUtils.swift; sourceTree = "<group>"; };
 		1929B9C55A79D97272894F5D /* SwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftCommons.swift; sourceTree = "<group>"; };
@@ -317,6 +321,10 @@
 		4B90F04F1FD2AFD3008A39E0 /* NvimServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NvimServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B90F0511FD2AFD3008A39E0 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		4B90F05B1FD2AFF7008A39E0 /* server_log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_log.h; sourceTree = "<group>"; };
+		4BB1EFAA224B71EC00A5CD5A /* RxNeovimApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RxNeovimApi.swift; path = ../../RxPack/RxNeovimApi.swift; sourceTree = "<group>"; };
+		4BB1EFAB224B71EC00A5CD5A /* RxMsgpackRpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RxMsgpackRpc.swift; path = ../../RxPack/RxMsgpackRpc.swift; sourceTree = "<group>"; };
+		4BB1EFAC224B71EC00A5CD5A /* RxNeovimApi.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RxNeovimApi.generated.swift; path = ../../RxPack/RxNeovimApi.generated.swift; sourceTree = "<group>"; };
+		4BB1EFAD224B71ED00A5CD5A /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RxSwiftCommons.swift; path = ../../RxPack/RxSwiftCommons.swift; sourceTree = "<group>"; };
 		4BB1F5C8209740E400EC394A /* RxMsgpackRpc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMsgpackRpc.framework; path = ../Carthage/Build/Mac/RxMsgpackRpc.framework; sourceTree = "<group>"; };
 		4BB1F5CA209740E900EC394A /* MessagePack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessagePack.framework; path = ../Carthage/Build/Mac/MessagePack.framework; sourceTree = "<group>"; };
 		4BC5B0421FE551DF0071D64F /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = ../Carthage/Build/Mac/RxSwift.framework; sourceTree = "<group>"; };
@@ -373,8 +381,6 @@
 				4BEBC23A215FD19C007113C4 /* Socket.framework in Frameworks */,
 				4BC5B0431FE551DF0071D64F /* RxSwift.framework in Frameworks */,
 				4BB1F5CB209740E900EC394A /* MessagePack.framework in Frameworks */,
-				4B17E549209E3E4100265C1D /* RxNeovimApi.framework in Frameworks */,
-				4BB1F5C9209740E400EC394A /* RxMsgpackRpc.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -408,7 +414,6 @@
 			children = (
 				1929BAB9FFE8345228B559EC /* CoreCommons.swift */,
 				1929B9C55A79D97272894F5D /* SwiftCommons.swift */,
-				1929B8E176C11DD61A8DCE95 /* RxSwiftCommons.swift */,
 				1929B0C89838D8402BB80BFC /* CocoaCommons.swift */,
 				1929B9290D503536FFDA9C49 /* MessagePackCommons.swift */,
 				1929B002A03693B14B14BE34 /* NvimApiCommons.swift */,
@@ -451,6 +456,10 @@
 		4B022678224ACE320052362B /* RxPack */ = {
 			isa = PBXGroup;
 			children = (
+				4BB1EFAB224B71EC00A5CD5A /* RxMsgpackRpc.swift */,
+				4BB1EFAC224B71EC00A5CD5A /* RxNeovimApi.generated.swift */,
+				4BB1EFAA224B71EC00A5CD5A /* RxNeovimApi.swift */,
+				4BB1EFAD224B71ED00A5CD5A /* RxSwiftCommons.swift */,
 				4B022688224ACFE30052362B /* ReadersWriterLock.swift */,
 				4B022687224ACFE30052362B /* RxMessagePort.swift */,
 			);
@@ -874,13 +883,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BB1EFB5224B71ED00A5CD5A /* RxSwiftCommons.swift in Sources */,
+				4BB1EFAF224B71ED00A5CD5A /* RxNeovimApi.swift in Sources */,
 				4B0A1B142129F49500F1E02F /* SwiftCommonsTest.swift in Sources */,
+				4BB1EFB1224B71ED00A5CD5A /* RxMsgpackRpc.swift in Sources */,
 				1929B434DB094D61B3977390 /* TypesetterTest.swift in Sources */,
 				4B02268A224ACFE30052362B /* RxMessagePort.swift in Sources */,
 				1929BF6E40C70A4157A5C755 /* UGridTest.swift in Sources */,
 				1929BB552C9D99E9ED938759 /* CellAttributesCollectionTest.swift in Sources */,
 				4B02268C224ACFE30052362B /* ReadersWriterLock.swift in Sources */,
 				1929B90E2CFEAADE0CEE1562 /* CursorModeShape.swift in Sources */,
+				4BB1EFB3224B71ED00A5CD5A /* RxNeovimApi.generated.swift in Sources */,
 				1929BDC146B699BF49116CAB /* Defs.swift in Sources */,
 				1929B2E9F089A9E2800B67F2 /* NimbleCommons.swift in Sources */,
 			);
@@ -909,6 +922,7 @@
 				1929B953E76914DA984697DC /* FontUtils.swift in Sources */,
 				1929B40C9C30B46C0E0B9DE2 /* CellAttributes.swift in Sources */,
 				1929B9A949EE85C27FF66367 /* UGrid.swift in Sources */,
+				4BB1EFB2224B71ED00A5CD5A /* RxNeovimApi.generated.swift in Sources */,
 				1929BC8495028D66F0A7D618 /* AttributesRunDrawer.swift in Sources */,
 				1929B6776A1D11409335FAAB /* SimpleCache.swift in Sources */,
 				1929B4632DE08273F990806F /* Runs.swift in Sources */,
@@ -917,12 +931,14 @@
 				1929B70D3BA20F66CAFF08C8 /* CoreCommons.swift in Sources */,
 				1929BEA71F454E92A0CE5AB6 /* SwiftCommons.swift in Sources */,
 				4B02268B224ACFE30052362B /* ReadersWriterLock.swift in Sources */,
-				1929BC8B14CA31C283455CF5 /* RxSwiftCommons.swift in Sources */,
+				4BB1EFAE224B71ED00A5CD5A /* RxNeovimApi.swift in Sources */,
 				1929B83EAD32DC419FEC68DB /* CocoaCommons.swift in Sources */,
 				1929BAB9A0399206FB7EBC76 /* CellAttributesCollection.swift in Sources */,
 				1929B3B70C96A78FD63DE737 /* NvimView+Debug.swift in Sources */,
 				4B022689224ACFE30052362B /* RxMessagePort.swift in Sources */,
 				1929B738A3677586230704F7 /* MessagePackCommons.swift in Sources */,
+				4BB1EFB0224B71ED00A5CD5A /* RxMsgpackRpc.swift in Sources */,
+				4BB1EFB4224B71ED00A5CD5A /* RxSwiftCommons.swift in Sources */,
 				1929B00C084F8EA5EF0BE6E2 /* NvimView+Geometry.swift in Sources */,
 				1929B06F50B2585777FFBE48 /* NvimApiCommons.swift in Sources */,
 				1929BCF2B3C24F0E9A96FE25 /* CursorModeShape.swift in Sources */,

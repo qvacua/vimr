@@ -572,7 +572,7 @@ extension NvimView {
       .currentBuffer()
       .flatMap { curBuf -> Single<NvimView.Buffer> in
         self.neoVimBuffer(
-          for: Api.Buffer(handle), currentBuffer: curBuf.apiBuffer
+          for: RxNeovimApi.Buffer(handle), currentBuffer: curBuf.apiBuffer
         )
       }
       .subscribe(onSuccess: {

@@ -4,7 +4,6 @@
  */
 
 import Cocoa
-import RxNeovimApi
 import RxSwift
 import MessagePack
 import os
@@ -349,7 +348,7 @@ public class NvimView: NSView,
 
   // MARK: - Internal
   let bridge: UiBridge
-  let api = RxNeovimApi.Api()
+  let api = RxNeovimApi()
 
   let ugrid = UGrid()
   let cellAttributesCollection = CellAttributesCollection()

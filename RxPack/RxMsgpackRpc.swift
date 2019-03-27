@@ -8,7 +8,7 @@ import RxSwift
 import MessagePack
 import Socket
 
-public final class MsgpackRpc {
+public final class RxMsgpackRpc {
 
   public typealias Value = MessagePackValue
 
@@ -61,7 +61,7 @@ public final class MsgpackRpc {
   public var streamResponses = false
 
   public var queue = DispatchQueue(
-    label: String(reflecting: MsgpackRpc.self),
+    label: String(reflecting: RxMsgpackRpc.self),
     qos: .userInitiated
   )
 
@@ -346,7 +346,8 @@ public final class MsgpackRpc {
   }
 }
 
-private typealias SingleResponseObserver = (SingleEvent<MsgpackRpc.Response>) -> Void
+private typealias SingleResponseObserver
+  = (SingleEvent<RxMsgpackRpc.Response>) -> Void
 
 fileprivate extension NSLocking {
 
