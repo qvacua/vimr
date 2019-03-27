@@ -9,55 +9,59 @@ import PureLayout
 import RxSwift
 
 class Document: NSDocument, NSWindowDelegate {
-  
+
   private var nvimView = NvimView(forAutoLayout: ())
   private let disposeBag = DisposeBag()
-  
+
   override init() {
     super.init()
-    
+
     nvimView
       .events
       .subscribe(onNext: { event in
         switch event {
-          
+
         case .neoVimStopped: DispatchQueue.main.async { self.close() }
-          
+
         default: Swift.print("Event received: \(event)")
-          
+
         }
       })
       .disposed(by: self.disposeBag)
   }
-  
+
+  func quitWithoutSaving() -> Completable {
+    return self.nvimView.quitNeoVimWithoutSaving()
+  }
+
   func windowShouldClose(_ sender: NSWindow) -> Bool {
-    try? self.nvimView.quitNeoVimWithoutSaving().wait()
+    try? self.quitWithoutSaving().wait()
     return false
   }
-  
+
   override func windowControllerDidLoadNib(_ windowController: NSWindowController) {
     super.windowControllerDidLoadNib(windowController)
-    
+
     let window = windowController.window!
     window.delegate = self
-    
+
     let view = window.contentView!
     view.addSubview(self.nvimView)
     self.nvimView.autoPinEdgesToSuperviewEdges()
   }
-  
+
   override var windowNibName: NSNib.Name? {
     // Returns the nib file name of the document
     // If you need to use a subclass of NSWindowController or if your document supports multiple NSWindowControllers, you should remove this property and override -makeWindowControllers instead.
     return NSNib.Name("Document")
   }
-  
+
   override func data(ofType typeName: String) throws -> Data {
     // Insert code here to write your document to data of the specified type, throwing an error in case of failure.
     // Alternatively, you could remove this method and override fileWrapper(ofType:), write(to:ofType:), or write(to:ofType:for:originalContentsURL:) instead.
     throw NSError(domain: NSOSStatusErrorDomain, code: unimpErr, userInfo: nil)
   }
-  
+
   override func read(from data: Data, ofType typeName: String) throws {
     // Insert code here to read your document from the given data of the specified type, throwing an error in case of failure.
     // Alternatively, you could remove this method and override read(from:ofType:) instead.
