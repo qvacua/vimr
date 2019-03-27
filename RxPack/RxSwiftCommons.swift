@@ -6,8 +6,22 @@
 import Foundation
 import RxSwift
 
+extension ObservableType {
+
+  func compactMap<R>(_ transform: @escaping (E) throws -> R?) -> Observable<R> {
+    return self
+      .map(transform)
+      .filter { $0 != nil }
+      .map { $0! }
+  }
+}
+
 extension PrimitiveSequence
   where Element == Never, TraitType == CompletableTrait {
+
+  func andThen(using body: () -> Completable) -> Completable {
+    return self.andThen(body())
+  }
 
   func wait(
     onCompleted: (() -> Void)? = nil,
