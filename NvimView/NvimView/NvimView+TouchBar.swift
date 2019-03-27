@@ -5,7 +5,6 @@
  */
 
 import Cocoa
-import RxNeovimApi
 import RxSwift
 
 @available(OSX 10.12.2, *)

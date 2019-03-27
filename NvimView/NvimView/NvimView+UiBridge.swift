@@ -4,7 +4,6 @@
  */
 
 import Cocoa
-import RxNeovimApi
 import RxSwift
 import MessagePack
 
