@@ -23,6 +23,7 @@
 		4B0226B3224B5A180052362B /* RxSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B02266D224ACCE10052362B /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B0226B4224B5A310052362B /* ReadersWriterLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B022683224ACFCB0052362B /* ReadersWriterLock.swift */; };
 		4B0226B5224B5A310052362B /* RxMsgpackRpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDD5380FFB00320A20C9 /* RxMsgpackRpc.swift */; };
+		4BB1EF8C224B62BB00A5CD5A /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1EF8B224B625700A5CD5A /* RxSwiftCommons.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -66,6 +67,7 @@
 		4B0226A5224B58DB0052362B /* RxMsgpackRpcTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RxMsgpackRpcTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B0226A7224B58DB0052362B /* RxMsgpackRpcTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxMsgpackRpcTests.swift; sourceTree = "<group>"; };
 		4B0226A9224B58DB0052362B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4BB1EF8B224B625700A5CD5A /* RxSwiftCommons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +95,7 @@
 		4B02263A224AB11A0052362B = {
 			isa = PBXGroup;
 			children = (
+				4BB1EF8B224B625700A5CD5A /* RxSwiftCommons.swift */,
 				4B022683224ACFCB0052362B /* ReadersWriterLock.swift */,
 				4B022684224ACFCB0052362B /* RxMessagePort.swift */,
 				4B02265D224AB1490052362B /* RxMessagePortDemo */,
@@ -252,6 +255,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BB1EF8C224B62BB00A5CD5A /* RxSwiftCommons.swift in Sources */,
 				4B0226B4224B5A310052362B /* ReadersWriterLock.swift in Sources */,
 				4B0226B5224B5A310052362B /* RxMsgpackRpc.swift in Sources */,
 				4B0226A8224B58DB0052362B /* RxMsgpackRpcTests.swift in Sources */,
