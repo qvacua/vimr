@@ -166,12 +166,7 @@ extension NvimView {
         .observeOn(SerialDispatchQueueScheduler(qos: .userInitiated))
         .andThen(
           Completable.create { completable in
-            self.rpcEventSubscribedCondition.lock()
-            defer { self.rpcEventSubscribedCondition.unlock() }
-
-            while !self.rpcEventSubscribedFlag
-                  && self.rpcEventSubscribedCondition
-                    .wait(until: Date(timeIntervalSinceNow: 5)) {}
+            self.rpcEventSubscriptionCondition.wait(for: 5)
             self.bridgeLogger.debug("RPC events subscription done.")
 
             completable(.completed)
@@ -425,11 +420,7 @@ extension NvimView {
   }
 
   final func rpcEventSubscribed() {
-    self.rpcEventSubscribedCondition.lock()
-    defer { self.rpcEventSubscribedCondition.unlock() }
-    self.rpcEventSubscribedFlag = true
-    self.rpcEventSubscribedCondition.broadcast()
-
+    self.rpcEventSubscriptionCondition.broadcast()
     self.eventsSubject.onNext(.rpcEventSubscribed)
   }
 
