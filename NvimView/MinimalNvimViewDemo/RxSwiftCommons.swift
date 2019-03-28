@@ -46,39 +46,3 @@ extension PrimitiveSequence
     }
   }
 }
-
-extension PrimitiveSequence where TraitType == SingleTrait {
-
-  func syncValue() -> Element? {
-    var trigger = false
-    var value: Element?
-
-    let condition = NSCondition()
-
-    condition.lock()
-    defer { condition.unlock() }
-
-    let disposable = self.subscribe(onSuccess: { result in
-      value = result
-
-      condition.lock()
-      defer { condition.unlock() }
-      trigger = true
-      condition.broadcast()
-    }, onError: { error in
-      condition.lock()
-      defer { condition.unlock() }
-      trigger = true
-      condition.broadcast()
-    })
-
-    while !trigger { condition.wait(until: Date(timeIntervalSinceNow: 5)) }
-    disposable.dispose()
-
-    return value
-  }
-
-  func asCompletable() -> Completable {
-    return self.asObservable().ignoreElements()
-  }
-}

@@ -96,7 +96,7 @@ extension NvimView {
 
         @unknown default:
           self.log.error("Unknown flush data type")
-          
+
         }
       }
 
@@ -128,7 +128,7 @@ extension NvimView {
 
   final func stop() {
     self.bridgeLogger.debug()
-    try? self.api
+    self.api
       .stop()
       .andThen(Completable.create { completable in
         self.eventsSubject.onNext(.neoVimStopped)
@@ -138,12 +138,13 @@ extension NvimView {
         return Disposables.create()
       })
       .andThen(self.bridge.quit())
-      .observeOn(MainScheduler.instance)
-      .wait(onCompleted: {
+      .subscribe(onCompleted: {
         self.bridgeLogger.info("Successfully stopped the bridge.")
+        self.nvimExitedCondition.broadcast()
       }, onError: {
         self.bridgeLogger.fault("There was an error stopping the bridge: \($0)")
       })
+      .disposed(by: self.disposeBag)
   }
 
   final func autoCommandEvent(_ value: MessagePackValue) {
@@ -446,7 +447,7 @@ extension NvimView {
 
         @unknown default:
           self.log.error("Unknown fatal error from NvimServer")
-          
+
         }
       } else {
         alert.informativeText = "There was an unknown error launching the " +

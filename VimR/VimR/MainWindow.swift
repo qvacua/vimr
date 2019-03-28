@@ -224,6 +224,7 @@ class MainWindow: NSObject,
     self.emit(uuidAction(for: .setTheme(theme)))
   }
 
+  // MARK: - Private
   private var currentBuffer: NvimView.Buffer?
 
   private var goToLineFromCli: Marked<Int>?

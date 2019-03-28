@@ -9,11 +9,21 @@ import RxSwift
 // MARK: - NvimViewDelegate
 extension MainWindow {
 
-  func neoVimStopped() {
-    if self.isClosing {
-      return
-    }
+  // Use only when Cmd-Q'ing
+  func waitTillNvimExits() {
+    self.neoVimView.waitTillNvimExits()
+  }
 
+  func neoVimStopped() {
+    if self.isClosing { return }
+    self.prepareClosing()
+
+    self.windowController.close()
+    self.set(dirtyStatus: false)
+    self.emit(self.uuidAction(for: .close))
+  }
+
+  func prepareClosing() {
     self.isClosing = true
 
     // If we close the window in the full screen mode, either by clicking the close button or by invoking :q
@@ -21,10 +31,6 @@ extension MainWindow {
     if self.window.styleMask.contains(.fullScreen) {
       self.window.toggleFullScreen(nil)
     }
-
-    self.windowController.close()
-    self.set(dirtyStatus: false)
-    self.emit(self.uuidAction(for: .close))
 
     guard let cliPipePath = self.cliPipePath, FileManager.default.fileExists(atPath: cliPipePath) else {
       return

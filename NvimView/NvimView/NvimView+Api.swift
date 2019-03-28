@@ -9,6 +9,10 @@ import MessagePack
 
 extension NvimView {
 
+  public func waitTillNvimExits() {
+    self.nvimExitedCondition.wait(for: 5)
+  }
+
   public func enterResizeMode() {
     self.currentlyResizing = true
     self.markForRenderWholeView()

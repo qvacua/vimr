@@ -9,18 +9,17 @@ import RxSwift
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-  func applicationDidFinishLaunching(_ aNotification: Notification) {}
+  func applicationDidFinishLaunching(_ aNotification: Notification) {
+  }
 
   func applicationShouldTerminate(
     _: NSApplication
   ) -> NSApplication.TerminateReply {
 
-    let docs = NSDocumentController.shared.documents
-    if docs.isEmpty { return .terminateNow }
-
-    try? Completable
-      .concat(docs.compactMap { ($0 as? Document)?.quitWithoutSaving() })
-      .wait()
+    NSDocumentController.shared
+      .documents
+      .compactMap { $0 as? Document }
+      .forEach { $0.quitWithoutSaving() }
 
     return .terminateNow
   }

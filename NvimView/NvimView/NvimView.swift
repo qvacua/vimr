@@ -217,6 +217,7 @@ public class NvimView: NSView,
   let sourceFileUrls: [URL]
 
   let rpcEventSubscriptionCondition = ConditionVariable()
+  let nvimExitedCondition = ConditionVariable()
 
   // MARK: - Private
   private var _linespacing = NvimView.defaultLinespacing

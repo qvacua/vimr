@@ -22,10 +22,11 @@ class Document: NSDocument, NSWindowDelegate {
 
     nvimView
       .events
+      .observeOn(MainScheduler.instance)
       .subscribe(onNext: { event in
         switch event {
 
-        case .neoVimStopped: DispatchQueue.main.async { self.close() }
+        case .neoVimStopped: self.close()
 
         default: break //Swift.print("Event received: \(event)")
 
@@ -34,12 +35,13 @@ class Document: NSDocument, NSWindowDelegate {
       .disposed(by: self.disposeBag)
   }
 
-  func quitWithoutSaving() -> Completable {
-    return self.nvimView.quitNeoVimWithoutSaving()
+  func quitWithoutSaving() {
+    try? self.nvimView.quitNeoVimWithoutSaving().wait()
+    self.nvimView.waitTillNvimExits()
   }
 
   func windowShouldClose(_ sender: NSWindow) -> Bool {
-    try? self.quitWithoutSaving().wait()
+    self.quitWithoutSaving()
     return false
   }
 
