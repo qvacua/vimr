@@ -4,7 +4,6 @@
  */
 
 import Cocoa
-import RxNeovimApi
 import RxSwift
 
 extension NvimView {
@@ -102,9 +101,10 @@ extension NvimView {
       .andThen(self.api.run(at: sockPath))
       .andThen(
         self.sourceFileUrls.reduce(Completable.empty()) { prev, url in
-          prev.andThen(self.api
-                         .commandOutput(str: "source \(url.path)")
-                         .asCompletable())
+          prev.andThen(
+            self.api
+              .commandOutput(command: "source \(url.path)").asCompletable()
+          )
         }
       )
       .andThen(self.api.subscribe(event: NvimView.rpcEventName))

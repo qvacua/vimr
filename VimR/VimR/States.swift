@@ -488,7 +488,7 @@ extension PreviewTool {
 
 fileprivate extension KeyedDecodingContainer where K: CodingKey {
 
-  fileprivate func decode<T: Decodable>(forKey key: K, `default`: T) throws -> T {
+  func decode<T: Decodable>(forKey key: K, `default`: T) throws -> T {
     return try self.decodeIfPresent(T.self, forKey: key) ?? `default`
   }
 }

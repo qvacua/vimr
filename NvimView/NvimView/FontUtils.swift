@@ -14,10 +14,6 @@ private struct SizedFontTrait: Hashable {
     return true
   }
 
-  var hashValue: Int {
-    return self.trait.hashValue ^ self.size.hashValue
-  }
-
   fileprivate var trait: FontTrait
   fileprivate var size: CGFloat
 }

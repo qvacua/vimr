@@ -4,11 +4,14 @@
  */
 
 import Cocoa
-import RxNeovimApi
 import RxSwift
 import MessagePack
 
 extension NvimView {
+
+  public func waitTillNvimExits() {
+    self.nvimExitedCondition.wait(for: 5)
+  }
 
   public func enterResizeMode() {
     self.currentlyResizing = true
@@ -74,7 +77,7 @@ extension NvimView {
             let bufExists = buffers.contains { $0.url == url }
             let wins = tabs.map({ $0.windows }).flatMap({ $0 })
             if let win = bufExists ? wins.first(where: { win in win.buffer.url == url }) : nil {
-              return self.api.setCurrentWin(window: Api.Window(win.handle))
+              return self.api.setCurrentWin(window: RxNeovimApi.Window(win.handle))
             }
 
             return currentBufferIsTransient ? self.open(url, cmd: "e") : self.open(url, cmd: "tabe")
@@ -112,7 +115,7 @@ extension NvimView {
       .map { tabs in tabs.map { $0.windows }.flatMap { $0 } }
       .flatMapCompletable { wins -> Completable in
         if let win = wins.first(where: { $0.buffer == buffer }) {
-          return self.api.setCurrentWin(window: Api.Window(win.handle))
+          return self.api.setCurrentWin(window: RxNeovimApi.Window(win.handle))
         }
 
         return self.api.command(command: "tab sb \(buffer.handle)")
@@ -157,7 +160,7 @@ extension NvimView {
 
   public func vimOutput(of command: String) -> Single<String> {
     return self.api
-      .commandOutput(str: command)
+      .commandOutput(command: command)
       .subscribeOn(self.scheduler)
   }
 
@@ -176,7 +179,7 @@ extension NvimView {
     return self.bridge.focusGained(false)
   }
 
-  func neoVimBuffer(for buf: Api.Buffer, currentBuffer: Api.Buffer?) -> Single<NvimView.Buffer> {
+  func neoVimBuffer(for buf: RxNeovimApi.Buffer, currentBuffer: RxNeovimApi.Buffer?) -> Single<NvimView.Buffer> {
     return self.api
       .bufGetInfo(buffer: buf)
       .map { info -> NvimView.Buffer in
@@ -186,7 +189,7 @@ extension NvimView {
               let buftype = info["buftype"]?.stringValue,
               let listed = info["buflisted"]?.boolValue
           else {
-          throw Api.Error.exception(message: "Could not convert values from the dictionary.")
+          throw RxNeovimApi.Error.exception(message: "Could not convert values from the dictionary.")
         }
 
         let url = path == "" || buftype != "" ? nil : URL(fileURLWithPath: path)
@@ -207,9 +210,9 @@ extension NvimView {
       .subscribeOn(self.scheduler)
   }
 
-  private func neoVimWindow(for window: Api.Window,
-                            currentWindow: Api.Window?,
-                            currentBuffer: Api.Buffer?) -> Single<NvimView.Window> {
+  private func neoVimWindow(for window: RxNeovimApi.Window,
+                            currentWindow: RxNeovimApi.Window?,
+                            currentBuffer: RxNeovimApi.Buffer?) -> Single<NvimView.Window> {
 
     return self.api
       .winGetBuf(window: window)
@@ -217,9 +220,9 @@ extension NvimView {
       .map { buffer in NvimView.Window(apiWindow: window, buffer: buffer, isCurrentInTab: window == currentWindow) }
   }
 
-  private func neoVimTab(for tabpage: Api.Tabpage,
-                         currentTabpage: Api.Tabpage?,
-                         currentBuffer: Api.Buffer?) -> Single<NvimView.Tabpage> {
+  private func neoVimTab(for tabpage: RxNeovimApi.Tabpage,
+                         currentTabpage: RxNeovimApi.Tabpage?,
+                         currentBuffer: RxNeovimApi.Buffer?) -> Single<NvimView.Tabpage> {
 
     return Single.zip(
         self.api.tabpageGetWin(tabpage: tabpage),

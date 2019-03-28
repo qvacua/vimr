@@ -4,7 +4,6 @@
  */
 
 import Foundation
-import RxMessagePort
 import RxSwift
 import MessagePack
 import os
@@ -37,6 +36,7 @@ class UiBridge {
     case autoCommandEvent(MessagePackValue)
     case highlightAttrs(MessagePackValue)
     case rpcEventSubscribed
+    case fatalError(MessagePackValue?)
     case debug1
     case unknown
   }
@@ -255,6 +255,12 @@ class UiBridge {
     case .rpcEventSubscribed:
       self.streamSubject.onNext(.rpcEventSubscribed)
 
+    case .fatalError:
+      self.streamSubject.onNext(.fatalError(MessagePackUtils.value(from: data)))
+
+    @unknown default:
+      self.log.error("Unkonwn msg type from NvimServer")
+      
     }
   }
 

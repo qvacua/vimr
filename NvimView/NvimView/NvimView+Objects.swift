@@ -4,7 +4,6 @@
  */
 
 import Foundation
-import RxNeovimApi
 
 extension NvimView {
 
@@ -19,7 +18,7 @@ extension NvimView {
       return lhs.url == rhs.url
     }
 
-    public let apiBuffer: Api.Buffer
+    public let apiBuffer: RxNeovimApi.Buffer
     public let url: URL?
     public let type: String
 
@@ -54,7 +53,7 @@ extension NvimView {
 
   public struct Window {
 
-    public let apiWindow: Api.Window
+    public let apiWindow: RxNeovimApi.Window
     public let buffer: Buffer
     public let isCurrentInTab: Bool
 
@@ -65,7 +64,7 @@ extension NvimView {
 
   public struct Tabpage {
 
-    public let apiTabpage: Api.Tabpage
+    public let apiTabpage: RxNeovimApi.Tabpage
     public let windows: [Window]
     public let isCurrent: Bool
 

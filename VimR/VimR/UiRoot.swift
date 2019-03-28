@@ -73,9 +73,13 @@ class UiRoot: UiComponent {
 
   // The following should only be used when Cmd-Q'ing
   func prepareQuit() {
+    self.mainWindows.values.forEach { $0.prepareClosing() }
+
     try? Completable
       .concat(self.mainWindows.values.map { $0.quitNeoVimWithoutSaving() })
       .wait()
+
+    self.mainWindows.values.forEach { $0.waitTillNvimExits() }
   }
 
   private let source: Observable<AppState>

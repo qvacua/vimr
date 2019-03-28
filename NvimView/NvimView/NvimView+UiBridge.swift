@@ -4,7 +4,6 @@
  */
 
 import Cocoa
-import RxNeovimApi
 import RxSwift
 import MessagePack
 
@@ -95,6 +94,9 @@ extension NvimView {
           recompute = true
           rowStart = min(self.doScroll(values), rowStart)
 
+        @unknown default:
+          self.log.error("Unknown flush data type")
+
         }
       }
 
@@ -126,7 +128,7 @@ extension NvimView {
 
   final func stop() {
     self.bridgeLogger.debug()
-    try? self.api
+    self.api
       .stop()
       .andThen(Completable.create { completable in
         self.eventsSubject.onNext(.neoVimStopped)
@@ -136,12 +138,13 @@ extension NvimView {
         return Disposables.create()
       })
       .andThen(self.bridge.quit())
-      .observeOn(MainScheduler.instance)
-      .wait(onCompleted: {
+      .subscribe(onCompleted: {
         self.bridgeLogger.info("Successfully stopped the bridge.")
+        self.nvimExitedCondition.broadcast()
       }, onError: {
         self.bridgeLogger.fault("There was an error stopping the bridge: \($0)")
       })
+      .disposed(by: self.disposeBag)
   }
 
   final func autoCommandEvent(_ value: MessagePackValue) {
@@ -164,12 +167,7 @@ extension NvimView {
         .observeOn(SerialDispatchQueueScheduler(qos: .userInitiated))
         .andThen(
           Completable.create { completable in
-            self.rpcEventSubscribedCondition.lock()
-            defer { self.rpcEventSubscribedCondition.unlock() }
-
-            while !self.rpcEventSubscribedFlag
-                  && self.rpcEventSubscribedCondition
-                    .wait(until: Date(timeIntervalSinceNow: 5)) {}
+            self.rpcEventSubscriptionCondition.wait(for: 5)
             self.bridgeLogger.debug("RPC events subscription done.")
 
             completable(.completed)
@@ -423,12 +421,46 @@ extension NvimView {
   }
 
   final func rpcEventSubscribed() {
-    self.rpcEventSubscribedCondition.lock()
-    defer { self.rpcEventSubscribedCondition.unlock() }
-    self.rpcEventSubscribedFlag = true
-    self.rpcEventSubscribedCondition.broadcast()
-
+    self.rpcEventSubscriptionCondition.broadcast()
     self.eventsSubject.onNext(.rpcEventSubscribed)
+  }
+
+  final func bridgeHasFatalError(_ value: MessagePackValue?) {
+    gui.async {
+      let alert = NSAlert()
+      alert.addButton(withTitle: "OK")
+      alert.messageText = "Error launching background neovim process"
+      alert.alertStyle = .critical
+
+      if let rawCode = value?.intValue,
+         let code = NvimServerFatalErrorCode(rawValue: rawCode) {
+
+        switch code {
+
+        case .localPort:
+          alert.informativeText = "GUI could not connect to the background " +
+                                  "neovim process. The window will close."
+
+        case .remotePort:
+          alert.informativeText = "The remote message port could not " +
+                                  "connect to GUI. The window will close."
+
+        @unknown default:
+          self.log.error("Unknown fatal error from NvimServer")
+
+        }
+      } else {
+        alert.informativeText = "There was an unknown error launching the " +
+                                "background neovim Process. " +
+                                "The window will close."
+      }
+
+      alert.runModal()
+      self.queue.async {
+        self.eventsSubject.onNext(.neoVimStopped)
+        self.eventsSubject.onCompleted()
+      }
+    }
   }
 
   final func setAttr(with value: MessagePackValue) {
@@ -531,7 +563,7 @@ extension NvimView {
       .currentBuffer()
       .flatMap { curBuf -> Single<NvimView.Buffer> in
         self.neoVimBuffer(
-          for: Api.Buffer(handle), currentBuffer: curBuf.apiBuffer
+          for: RxNeovimApi.Buffer(handle), currentBuffer: curBuf.apiBuffer
         )
       }
       .subscribe(onSuccess: {

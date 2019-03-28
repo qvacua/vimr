@@ -5,7 +5,6 @@
 
 import Cocoa
 import RxSwift
-import RxNeovimApi
 
 // MARK: - NSUserInterfaceValidationsProtocol
 extension NvimView {

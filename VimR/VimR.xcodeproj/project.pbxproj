@@ -91,8 +91,6 @@
 		1929BF4FF30D9A9DE82C3052 /* FileUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8042AC566CDF6C998A3 /* FileUtilsTest.swift */; };
 		1929BFC70581084B5CE04A5B /* MatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFE179BCA3C75A13D71B /* MatcherTests.swift */; };
 		1929BFDE22D155F7C4B19E96 /* HtmlPreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B85023B042C485409CE1 /* HtmlPreviewTool.swift */; };
-		4B004BAC20FBB4F10043A396 /* DictionaryCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B004BA920FBA6700043A396 /* DictionaryCoding.framework */; };
-		4B004BAD20FBBE1E0043A396 /* DictionaryCoding.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B004BA920FBA6700043A396 /* DictionaryCoding.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B004BCF21063B600043A396 /* DictionaryDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCB21063B600043A396 /* DictionaryDecoder.swift */; };
 		4B004BD021063B600043A396 /* DictionaryDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCB21063B600043A396 /* DictionaryDecoder.swift */; };
 		4B004BD121063B600043A396 /* DictionaryCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCC21063B600043A396 /* DictionaryCodingKey.swift */; };
@@ -102,7 +100,6 @@
 		4B004BD521063B600043A396 /* DictionaryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCE21063B600043A396 /* DictionaryErrors.swift */; };
 		4B004BD621063B600043A396 /* DictionaryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCE21063B600043A396 /* DictionaryErrors.swift */; };
 		4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */; };
-		4B17E54D209E3EA400265C1D /* RxNeovimApi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B17E54E209E3EFA00265C1D /* RxNeovimApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */; };
 		4B17E54F209E3EFD00265C1D /* RxNeovimApi.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B19BEFC1E110183007E823C /* markdown in Resources */ = {isa = PBXBuildFile; fileRef = 4B19BEFA1E110183007E823C /* markdown */; };
@@ -114,7 +111,6 @@
 		4B2636AD223A487B00021586 /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
 		4B2636AE223A487B00021586 /* InnterToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3965351DEB21300082D3C1 /* InnterToolBar.swift */; };
 		4B2636AF223A487B00021586 /* WorkspaceBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423971D8EFDE000FC78C8 /* WorkspaceBar.swift */; };
-		4B2636B0223A487B00021586 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */; };
 		4B2636B1223A487B00021586 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70951D6100E300E12030 /* SwiftCommons.swift */; };
 		4B2636B2223A487B00021586 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5081CFF374B00673FDF /* AppDelegate.swift */; };
 		4B2636B3223A487B00021586 /* WorkspaceTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423991D8EFE3000FC78C8 /* WorkspaceTool.swift */; };
@@ -191,16 +187,12 @@
 		4B2636FA223A487B00021586 /* OSLogCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE867BD8F0ED0246CC94 /* OSLogCommons.swift */; };
 		4B2636FB223A487B00021586 /* Defs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7F7A4B3FD52263D211D /* Defs.swift */; };
 		4B2636FD223A487B00021586 /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; };
-		4B2636FE223A487B00021586 /* RxMsgpackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CC20976F8900EC394A /* RxMsgpackRpc.framework */; };
-		4B2636FF223A487B00021586 /* EonilFileSystemEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C311FD2E2AA00DF95D1 /* EonilFileSystemEvents.framework */; };
 		4B263700223A487B00021586 /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C321FD2E2AA00DF95D1 /* PureLayout.framework */; };
 		4B263701223A487B00021586 /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0A1AA72120C35100F1E02F /* Socket.framework */; };
 		4B263702223A487B00021586 /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */; };
 		4B263703223A487B00021586 /* CocoaFontAwesome.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C341FD2E2AA00DF95D1 /* CocoaFontAwesome.framework */; };
 		4B263704223A487B00021586 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */; };
-		4B263705223A487B00021586 /* RxMessagePort.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */; };
 		4B263706223A487B00021586 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; };
-		4B263707223A487B00021586 /* RxNeovimApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */; };
 		4B263708223A487B00021586 /* Swifter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9DF285209C8A8B00DF2AAD /* Swifter.framework */; };
 		4B263709223A487B00021586 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C381FD2E2AB00DF95D1 /* RxCocoa.framework */; };
 		4B26370A223A487B00021586 /* ShortcutRecorder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE34B822225BAC7002F57D3 /* ShortcutRecorder.framework */; };
@@ -278,15 +270,11 @@
 		4B263753223A487B00021586 /* com.qvacua.VimR.vim in Resources */ = {isa = PBXBuildFile; fileRef = 1929BC6D45B7E14D4D75D4E6 /* com.qvacua.VimR.vim */; };
 		4B263755223A487B00021586 /* ShortcutRecorder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE34B822225BAC7002F57D3 /* ShortcutRecorder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B263756223A487B00021586 /* MessagePack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B263757223A487B00021586 /* RxMsgpackRpc.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CC20976F8900EC394A /* RxMsgpackRpc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B263758223A487B00021586 /* CocoaFontAwesome.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C341FD2E2AA00DF95D1 /* CocoaFontAwesome.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B263759223A487B00021586 /* CocoaMarkdown.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B26375A223A487B00021586 /* EonilFileSystemEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C311FD2E2AA00DF95D1 /* EonilFileSystemEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B26375B223A487B00021586 /* Socket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0A1AA72120C35100F1E02F /* Socket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B26375C223A487B00021586 /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C321FD2E2AA00DF95D1 /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B26375D223A487B00021586 /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C381FD2E2AB00DF95D1 /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B26375E223A487B00021586 /* RxMessagePort.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B26375F223A487B00021586 /* RxNeovimApi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B263760223A487B00021586 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B263761223A487B00021586 /* Swifter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9DF285209C8A8B00DF2AAD /* Swifter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B263762223A487B00021586 /* Sparkle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -294,6 +282,9 @@
 		4B37ADB91D6E471B00970D55 /* vimr in Resources */ = {isa = PBXBuildFile; fileRef = 4B37ADB81D6E471B00970D55 /* vimr */; };
 		4B3965361DEB21300082D3C1 /* InnterToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3965351DEB21300082D3C1 /* InnterToolBar.swift */; };
 		4B3AC8941DB031C600AC5823 /* sparkle_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */; };
+		4B3CF030224B7EAC00FA9833 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3CF02F224B7EAC00FA9833 /* RxSwiftCommons.swift */; };
+		4B3CF031224B7EAC00FA9833 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3CF02F224B7EAC00FA9833 /* RxSwiftCommons.swift */; };
+		4B3CF032224B7EAC00FA9833 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3CF02F224B7EAC00FA9833 /* RxSwiftCommons.swift */; };
 		4B4147A31D97361400DD4A2C /* WorkspaceToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */; };
 		4B5011FB1EBA6FD700F76C46 /* UrlCommonsTest in Resources */ = {isa = PBXBuildFile; fileRef = 4B5011FA1EBA6FD700F76C46 /* UrlCommonsTest */; };
 		4B6423961D8EFD7100FC78C8 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423951D8EFD7100FC78C8 /* Workspace.swift */; };
@@ -367,23 +358,40 @@
 		4B96FB3E1EBBC56F00E4E164 /* Scorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D510177918080BE39B /* Scorer.swift */; };
 		4B96FB3F1EBBC56F00E4E164 /* PrefUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8241CDE58F7AAF89AE4 /* PrefUtils.swift */; };
 		4B96FB401EBBC56F00E4E164 /* FoundationCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */; };
-		4B96FB411EBBC56F00E4E164 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */; };
 		4B96FB421EBBC56F00E4E164 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70951D6100E300E12030 /* SwiftCommons.swift */; };
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
 		4B9DF286209C8A8B00DF2AAD /* Swifter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9DF285209C8A8B00DF2AAD /* Swifter.framework */; };
 		4B9DF287209C8A8B00DF2AAD /* Swifter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9DF285209C8A8B00DF2AAD /* Swifter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B9DF288209C8DA000DF2AAD /* MessagePack.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B9DF289209C8DAD00DF2AAD /* RxMsgpackRpc.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB1F5CC20976F8900EC394A /* RxMsgpackRpc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B9DF28A209C8DBB00DF2AAD /* RxMessagePort.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B9E5E1E20990E09006455C3 /* RxMessagePort.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */; };
-		4B9E5E1F20990E09006455C3 /* RxMessagePort.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BB1BEA91D48773200463C29 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */; };
-		4BB1F5CD20976F8900EC394A /* RxMsgpackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CC20976F8900EC394A /* RxMsgpackRpc.framework */; };
-		4BB1F5CF2097704D00EC394A /* RxMsgpackRpc.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CC20976F8900EC394A /* RxMsgpackRpc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BB1F5D12097705E00EC394A /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; };
 		4BB1F5D22097706700EC394A /* MessagePack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BB409E51DD68CCC005F39A2 /* FileBrowserMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BB409E71DD68CCC005F39A2 /* FileBrowserMenu.xib */; };
 		4BB409EE1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */; };
+		4BB4CCF7224A7EA000474C79 /* EonilFSEventStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCEF224A7E9F00474C79 /* EonilFSEventStream.swift */; };
+		4BB4CCF8224A7EA000474C79 /* EonilFSEventStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCEF224A7E9F00474C79 /* EonilFSEventStream.swift */; };
+		4BB4CCF9224A7EA000474C79 /* EonilFSEventStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCEF224A7E9F00474C79 /* EonilFSEventStream.swift */; };
+		4BB4CCFA224A7EA000474C79 /* EonilFSEventStreamEventID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF0224A7E9F00474C79 /* EonilFSEventStreamEventID.swift */; };
+		4BB4CCFB224A7EA000474C79 /* EonilFSEventStreamEventID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF0224A7E9F00474C79 /* EonilFSEventStreamEventID.swift */; };
+		4BB4CCFC224A7EA000474C79 /* EonilFSEventStreamEventID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF0224A7E9F00474C79 /* EonilFSEventStreamEventID.swift */; };
+		4BB4CCFD224A7EA000474C79 /* EonilFSEventStreamIllogicalErrorLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF1224A7E9F00474C79 /* EonilFSEventStreamIllogicalErrorLog.swift */; };
+		4BB4CCFE224A7EA000474C79 /* EonilFSEventStreamIllogicalErrorLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF1224A7E9F00474C79 /* EonilFSEventStreamIllogicalErrorLog.swift */; };
+		4BB4CCFF224A7EA000474C79 /* EonilFSEventStreamIllogicalErrorLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF1224A7E9F00474C79 /* EonilFSEventStreamIllogicalErrorLog.swift */; };
+		4BB4CD00224A7EA000474C79 /* EonilFSEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF2224A7E9F00474C79 /* EonilFSEvents.swift */; };
+		4BB4CD01224A7EA000474C79 /* EonilFSEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF2224A7E9F00474C79 /* EonilFSEvents.swift */; };
+		4BB4CD02224A7EA000474C79 /* EonilFSEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF2224A7E9F00474C79 /* EonilFSEvents.swift */; };
+		4BB4CD03224A7EA000474C79 /* EonilFSEventStreamError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF3224A7E9F00474C79 /* EonilFSEventStreamError.swift */; };
+		4BB4CD04224A7EA000474C79 /* EonilFSEventStreamError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF3224A7E9F00474C79 /* EonilFSEventStreamError.swift */; };
+		4BB4CD05224A7EA000474C79 /* EonilFSEventStreamError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF3224A7E9F00474C79 /* EonilFSEventStreamError.swift */; };
+		4BB4CD06224A7EA000474C79 /* EonilFSEventStreamEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF4224A7E9F00474C79 /* EonilFSEventStreamEvent.swift */; };
+		4BB4CD07224A7EA000474C79 /* EonilFSEventStreamEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF4224A7E9F00474C79 /* EonilFSEventStreamEvent.swift */; };
+		4BB4CD08224A7EA000474C79 /* EonilFSEventStreamEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF4224A7E9F00474C79 /* EonilFSEventStreamEvent.swift */; };
+		4BB4CD09224A7EA000474C79 /* EonilFSEventStreamCreateFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF5224A7EA000474C79 /* EonilFSEventStreamCreateFlags.swift */; };
+		4BB4CD0A224A7EA000474C79 /* EonilFSEventStreamCreateFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF5224A7EA000474C79 /* EonilFSEventStreamCreateFlags.swift */; };
+		4BB4CD0B224A7EA000474C79 /* EonilFSEventStreamCreateFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF5224A7EA000474C79 /* EonilFSEventStreamCreateFlags.swift */; };
+		4BB4CD0C224A7EA000474C79 /* EonilFSEventStreamEventFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF6224A7EA000474C79 /* EonilFSEventStreamEventFlags.swift */; };
+		4BB4CD0D224A7EA000474C79 /* EonilFSEventStreamEventFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF6224A7EA000474C79 /* EonilFSEventStreamEventFlags.swift */; };
+		4BB4CD0E224A7EA000474C79 /* EonilFSEventStreamEventFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF6224A7EA000474C79 /* EonilFSEventStreamEventFlags.swift */; };
 		4BC164281FD2DEE1001903BE /* NvimView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC1642B1FD2DEE1001903BE /* NvimView.framework */; };
 		4BC1642E1FD2DEEA001903BE /* NvimView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC1642B1FD2DEE1001903BE /* NvimView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BDA50B42160BE70004D10A9 /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0A1AA72120C35100F1E02F /* Socket.framework */; };
@@ -392,14 +400,12 @@
 		4BDF50171D77540900D8FBC3 /* OpenQuicklyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF50191D77540900D8FBC3 /* OpenQuicklyWindow.xib */; };
 		4BE34B832225BAC7002F57D3 /* ShortcutRecorder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE34B822225BAC7002F57D3 /* ShortcutRecorder.framework */; };
 		4BE34B842225BAD2002F57D3 /* ShortcutRecorder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE34B822225BAC7002F57D3 /* ShortcutRecorder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BE34B852225BB56002F57D3 /* RxNeovimApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */; };
 		4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5081CFF374B00673FDF /* AppDelegate.swift */; };
 		4BEBA50B1CFF374B00673FDF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50A1CFF374B00673FDF /* Assets.xcassets */; };
 		4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50C1CFF374B00673FDF /* MainMenu.xib */; };
 		4BEBC23B215FD1AA007113C4 /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0A1AA72120C35100F1E02F /* Socket.framework */; };
 		4BEBC23C215FD1AA007113C4 /* Socket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0A1AA72120C35100F1E02F /* Socket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF07EE41D51326A009BECEB /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4BF07EE61D51326A009BECEB /* Credits.rtf */; };
-		4BF18C391FD2E2AB00DF95D1 /* EonilFileSystemEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C311FD2E2AA00DF95D1 /* EonilFileSystemEvents.framework */; };
 		4BF18C3A1FD2E2AB00DF95D1 /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C321FD2E2AA00DF95D1 /* PureLayout.framework */; };
 		4BF18C3B1FD2E2AB00DF95D1 /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */; };
 		4BF18C3C1FD2E2AB00DF95D1 /* CocoaFontAwesome.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C341FD2E2AA00DF95D1 /* CocoaFontAwesome.framework */; };
@@ -408,7 +414,6 @@
 		4BF18C401FD2E2AB00DF95D1 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C381FD2E2AB00DF95D1 /* RxCocoa.framework */; };
 		4BF18C411FD2E2C900DF95D1 /* CocoaFontAwesome.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C341FD2E2AA00DF95D1 /* CocoaFontAwesome.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF18C421FD2E2C900DF95D1 /* CocoaMarkdown.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BF18C431FD2E2C900DF95D1 /* EonilFileSystemEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C311FD2E2AA00DF95D1 /* EonilFileSystemEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF18C441FD2E2C900DF95D1 /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C321FD2E2AA00DF95D1 /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF18C451FD2E2C900DF95D1 /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C381FD2E2AB00DF95D1 /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF18C461FD2E2C900DF95D1 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -444,15 +449,11 @@
 			files = (
 				4B263755223A487B00021586 /* ShortcutRecorder.framework in Embed Frameworks */,
 				4B263756223A487B00021586 /* MessagePack.framework in Embed Frameworks */,
-				4B263757223A487B00021586 /* RxMsgpackRpc.framework in Embed Frameworks */,
 				4B263758223A487B00021586 /* CocoaFontAwesome.framework in Embed Frameworks */,
 				4B263759223A487B00021586 /* CocoaMarkdown.framework in Embed Frameworks */,
-				4B26375A223A487B00021586 /* EonilFileSystemEvents.framework in Embed Frameworks */,
 				4B26375B223A487B00021586 /* Socket.framework in Embed Frameworks */,
 				4B26375C223A487B00021586 /* PureLayout.framework in Embed Frameworks */,
 				4B26375D223A487B00021586 /* RxCocoa.framework in Embed Frameworks */,
-				4B26375E223A487B00021586 /* RxMessagePort.framework in Embed Frameworks */,
-				4B26375F223A487B00021586 /* RxNeovimApi.framework in Embed Frameworks */,
 				4B263760223A487B00021586 /* RxSwift.framework in Embed Frameworks */,
 				4B263761223A487B00021586 /* Swifter.framework in Embed Frameworks */,
 				4B263762223A487B00021586 /* Sparkle.framework in Embed Frameworks */,
@@ -469,15 +470,11 @@
 			files = (
 				4BE34B842225BAD2002F57D3 /* ShortcutRecorder.framework in Embed Frameworks */,
 				4BB1F5D22097706700EC394A /* MessagePack.framework in Embed Frameworks */,
-				4BB1F5CF2097704D00EC394A /* RxMsgpackRpc.framework in Embed Frameworks */,
 				4BF18C411FD2E2C900DF95D1 /* CocoaFontAwesome.framework in Embed Frameworks */,
 				4BF18C421FD2E2C900DF95D1 /* CocoaMarkdown.framework in Embed Frameworks */,
-				4BF18C431FD2E2C900DF95D1 /* EonilFileSystemEvents.framework in Embed Frameworks */,
 				4BEBC23C215FD1AA007113C4 /* Socket.framework in Embed Frameworks */,
 				4BF18C441FD2E2C900DF95D1 /* PureLayout.framework in Embed Frameworks */,
 				4BF18C451FD2E2C900DF95D1 /* RxCocoa.framework in Embed Frameworks */,
-				4B9E5E1F20990E09006455C3 /* RxMessagePort.framework in Embed Frameworks */,
-				4B17E54D209E3EA400265C1D /* RxNeovimApi.framework in Embed Frameworks */,
 				4BF18C461FD2E2C900DF95D1 /* RxSwift.framework in Embed Frameworks */,
 				4B9DF287209C8A8B00DF2AAD /* Swifter.framework in Embed Frameworks */,
 				4BF18C471FD2E2C900DF95D1 /* Sparkle.framework in Embed Frameworks */,
@@ -493,8 +490,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				4BDA50B52160BE76004D10A9 /* Socket.framework in CopyFiles */,
-				4B004BAD20FBBE1E0043A396 /* DictionaryCoding.framework in CopyFiles */,
-				4B9DF28A209C8DBB00DF2AAD /* RxMessagePort.framework in CopyFiles */,
 				4B9DF289209C8DAD00DF2AAD /* RxMsgpackRpc.framework in CopyFiles */,
 				4B17E54F209E3EFD00265C1D /* RxNeovimApi.framework in CopyFiles */,
 				4B9DF288209C8DA000DF2AAD /* MessagePack.framework in CopyFiles */,
@@ -589,7 +584,6 @@
 		1929BFB0F294F3714D5E095F /* PreviewToolReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewToolReducer.swift; sourceTree = "<group>"; };
 		1929BFC0A5A9C6DB09BE1368 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		1929BFE179BCA3C75A13D71B /* MatcherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatcherTests.swift; sourceTree = "<group>"; };
-		4B004BA920FBA6700043A396 /* DictionaryCoding.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DictionaryCoding.framework; path = ../Carthage/Build/Mac/DictionaryCoding.framework; sourceTree = "<group>"; };
 		4B004BCB21063B600043A396 /* DictionaryDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DictionaryDecoder.swift; path = ../../Carthage/Checkouts/DictionaryCoding/Sources/DictionaryCoding/DictionaryDecoder.swift; sourceTree = "<group>"; };
 		4B004BCC21063B600043A396 /* DictionaryCodingKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DictionaryCodingKey.swift; path = ../../Carthage/Checkouts/DictionaryCoding/Sources/DictionaryCoding/DictionaryCodingKey.swift; sourceTree = "<group>"; };
 		4B004BCD21063B600043A396 /* DictionaryEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DictionaryEncoder.swift; path = ../../Carthage/Checkouts/DictionaryCoding/Sources/DictionaryCoding/DictionaryEncoder.swift; sourceTree = "<group>"; };
@@ -606,6 +600,7 @@
 		4B37ADB81D6E471B00970D55 /* vimr */ = {isa = PBXFileReference; fileEncoding = 1; lastKnownFileType = text.script.python; path = vimr; sourceTree = "<group>"; };
 		4B3965351DEB21300082D3C1 /* InnterToolBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InnterToolBar.swift; path = Workspace/InnterToolBar.swift; sourceTree = "<group>"; };
 		4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */ = {isa = PBXFileReference; fileEncoding = 1; lastKnownFileType = text; path = sparkle_pub.pem; sourceTree = "<group>"; };
+		4B3CF02F224B7EAC00FA9833 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RxSwiftCommons.swift; path = ../../RxPack/RxSwiftCommons.swift; sourceTree = "<group>"; };
 		4B5011FA1EBA6FD700F76C46 /* UrlCommonsTest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = UrlCommonsTest; sourceTree = "<group>"; };
 		4B6423951D8EFD7100FC78C8 /* Workspace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Workspace.swift; path = Workspace/Workspace.swift; sourceTree = "<group>"; };
 		4B6423971D8EFDE000FC78C8 /* WorkspaceBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WorkspaceBar.swift; path = Workspace/WorkspaceBar.swift; sourceTree = "<group>"; };
@@ -673,13 +668,19 @@
 		4B9433DB20B95EC6005807BA /* MacVim-css.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-css.icns"; path = "macvim-file-icons/MacVim-css.icns"; sourceTree = "<group>"; };
 		4B97E2CD1D33F53D00FC0660 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		4B9DF285209C8A8B00DF2AAD /* Swifter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Swifter.framework; path = ../Carthage/Build/Mac/Swifter.framework; sourceTree = "<group>"; };
-		4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMessagePort.framework; path = ../Carthage/Build/Mac/RxMessagePort.framework; sourceTree = "<group>"; };
-		4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
 		4BB1F5CC20976F8900EC394A /* RxMsgpackRpc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMsgpackRpc.framework; path = ../Carthage/Build/Mac/RxMsgpackRpc.framework; sourceTree = "<group>"; };
 		4BB1F5D02097705E00EC394A /* MessagePack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessagePack.framework; path = ../Carthage/Build/Mac/MessagePack.framework; sourceTree = "<group>"; };
 		4BB409E61DD68CCC005F39A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/FileBrowserMenu.xib; sourceTree = "<group>"; };
 		4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProxyWorkspaceBar.swift; path = Workspace/ProxyWorkspaceBar.swift; sourceTree = "<group>"; };
 		4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WorkspaceToolButton.swift; path = Workspace/WorkspaceToolButton.swift; sourceTree = "<group>"; };
+		4BB4CCEF224A7E9F00474C79 /* EonilFSEventStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStream.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEventStream.swift; sourceTree = "<group>"; };
+		4BB4CCF0224A7E9F00474C79 /* EonilFSEventStreamEventID.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStreamEventID.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEventStreamEventID.swift; sourceTree = "<group>"; };
+		4BB4CCF1224A7E9F00474C79 /* EonilFSEventStreamIllogicalErrorLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStreamIllogicalErrorLog.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEventStreamIllogicalErrorLog.swift; sourceTree = "<group>"; };
+		4BB4CCF2224A7E9F00474C79 /* EonilFSEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEvents.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEvents.swift; sourceTree = "<group>"; };
+		4BB4CCF3224A7E9F00474C79 /* EonilFSEventStreamError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStreamError.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEventStreamError.swift; sourceTree = "<group>"; };
+		4BB4CCF4224A7E9F00474C79 /* EonilFSEventStreamEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStreamEvent.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEventStreamEvent.swift; sourceTree = "<group>"; };
+		4BB4CCF5224A7EA000474C79 /* EonilFSEventStreamCreateFlags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStreamCreateFlags.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEventStreamCreateFlags.swift; sourceTree = "<group>"; };
+		4BB4CCF6224A7EA000474C79 /* EonilFSEventStreamEventFlags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStreamEventFlags.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEventStreamEventFlags.swift; sourceTree = "<group>"; };
 		4BC1642B1FD2DEE1001903BE /* NvimView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NvimView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BDF500B1D760A3500D8FBC3 /* FileUtilsTest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FileUtilsTest; sourceTree = "<group>"; };
 		4BDF50181D77540900D8FBC3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OpenQuicklyWindow.xib; sourceTree = "<group>"; };
@@ -692,7 +693,6 @@
 		4BEBA5141CFF374B00673FDF /* VimRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VimRTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BEBA51A1CFF374B00673FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BF07EE51D51326A009BECEB /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Base; path = Base.lproj/Credits.rtf; sourceTree = "<group>"; };
-		4BF18C311FD2E2AA00DF95D1 /* EonilFileSystemEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EonilFileSystemEvents.framework; path = ../Carthage/Build/Mac/EonilFileSystemEvents.framework; sourceTree = "<group>"; };
 		4BF18C321FD2E2AA00DF95D1 /* PureLayout.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureLayout.framework; path = ../Carthage/Build/Mac/PureLayout.framework; sourceTree = "<group>"; };
 		4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaMarkdown.framework; path = ../Carthage/Build/Mac/CocoaMarkdown.framework; sourceTree = "<group>"; };
 		4BF18C341FD2E2AA00DF95D1 /* CocoaFontAwesome.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaFontAwesome.framework; path = ../Carthage/Build/Mac/CocoaFontAwesome.framework; sourceTree = "<group>"; };
@@ -709,16 +709,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B2636FD223A487B00021586 /* MessagePack.framework in Frameworks */,
-				4B2636FE223A487B00021586 /* RxMsgpackRpc.framework in Frameworks */,
-				4B2636FF223A487B00021586 /* EonilFileSystemEvents.framework in Frameworks */,
 				4B263700223A487B00021586 /* PureLayout.framework in Frameworks */,
 				4B263701223A487B00021586 /* Socket.framework in Frameworks */,
 				4B263702223A487B00021586 /* CocoaMarkdown.framework in Frameworks */,
 				4B263703223A487B00021586 /* CocoaFontAwesome.framework in Frameworks */,
 				4B263704223A487B00021586 /* RxSwift.framework in Frameworks */,
-				4B263705223A487B00021586 /* RxMessagePort.framework in Frameworks */,
 				4B263706223A487B00021586 /* Sparkle.framework in Frameworks */,
-				4B263707223A487B00021586 /* RxNeovimApi.framework in Frameworks */,
 				4B263708223A487B00021586 /* Swifter.framework in Frameworks */,
 				4B263709223A487B00021586 /* RxCocoa.framework in Frameworks */,
 				4B26370A223A487B00021586 /* ShortcutRecorder.framework in Frameworks */,
@@ -731,16 +727,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BB1F5D12097705E00EC394A /* MessagePack.framework in Frameworks */,
-				4BB1F5CD20976F8900EC394A /* RxMsgpackRpc.framework in Frameworks */,
-				4BF18C391FD2E2AB00DF95D1 /* EonilFileSystemEvents.framework in Frameworks */,
 				4BF18C3A1FD2E2AB00DF95D1 /* PureLayout.framework in Frameworks */,
 				4BEBC23B215FD1AA007113C4 /* Socket.framework in Frameworks */,
 				4BF18C3B1FD2E2AB00DF95D1 /* CocoaMarkdown.framework in Frameworks */,
 				4BF18C3C1FD2E2AB00DF95D1 /* CocoaFontAwesome.framework in Frameworks */,
 				4BF18C3E1FD2E2AB00DF95D1 /* RxSwift.framework in Frameworks */,
-				4B9E5E1E20990E09006455C3 /* RxMessagePort.framework in Frameworks */,
 				4BF18C3F1FD2E2AB00DF95D1 /* Sparkle.framework in Frameworks */,
-				4BE34B852225BB56002F57D3 /* RxNeovimApi.framework in Frameworks */,
 				4B9DF286209C8A8B00DF2AAD /* Swifter.framework in Frameworks */,
 				4BF18C401FD2E2AB00DF95D1 /* RxCocoa.framework in Frameworks */,
 				4BE34B832225BAC7002F57D3 /* ShortcutRecorder.framework in Frameworks */,
@@ -754,7 +746,6 @@
 			files = (
 				4BF18C581FD2E53400DF95D1 /* CocoaMarkdown.framework in Frameworks */,
 				4BF18C511FD2E4F200DF95D1 /* RxTest.framework in Frameworks */,
-				4B004BAC20FBB4F10043A396 /* DictionaryCoding.framework in Frameworks */,
 				4BF18C4F1FD2E4F100DF95D1 /* RxSwift.framework in Frameworks */,
 				4B17E54E209E3EFA00265C1D /* RxNeovimApi.framework in Frameworks */,
 				4BF18C4C1FD2E4CE00DF95D1 /* NvimView.framework in Frameworks */,
@@ -953,9 +944,7 @@
 			children = (
 				4BE34B822225BAC7002F57D3 /* ShortcutRecorder.framework */,
 				4B0A1AA72120C35100F1E02F /* Socket.framework */,
-				4B004BA920FBA6700043A396 /* DictionaryCoding.framework */,
 				4B17E54C209E3EA400265C1D /* RxNeovimApi.framework */,
-				4B9E5E1D20990E08006455C3 /* RxMessagePort.framework */,
 				4BB1F5D02097705E00EC394A /* MessagePack.framework */,
 				4BB1F5CC20976F8900EC394A /* RxMsgpackRpc.framework */,
 				4B9DF285209C8A8B00DF2AAD /* Swifter.framework */,
@@ -963,7 +952,6 @@
 				4BF18C491FD2E2DE00DF95D1 /* Nimble.framework */,
 				4BF18C341FD2E2AA00DF95D1 /* CocoaFontAwesome.framework */,
 				4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */,
-				4BF18C311FD2E2AA00DF95D1 /* EonilFileSystemEvents.framework */,
 				4BF18C321FD2E2AA00DF95D1 /* PureLayout.framework */,
 				4BF18C381FD2E2AB00DF95D1 /* RxCocoa.framework */,
 				4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */,
@@ -1073,12 +1061,27 @@
 			name = resources;
 			sourceTree = "<group>";
 		};
+		4BB4CCEE224A7E6D00474C79 /* FSEvents */ = {
+			isa = PBXGroup;
+			children = (
+				4BB4CCF2224A7E9F00474C79 /* EonilFSEvents.swift */,
+				4BB4CCEF224A7E9F00474C79 /* EonilFSEventStream.swift */,
+				4BB4CCF5224A7EA000474C79 /* EonilFSEventStreamCreateFlags.swift */,
+				4BB4CCF3224A7E9F00474C79 /* EonilFSEventStreamError.swift */,
+				4BB4CCF4224A7E9F00474C79 /* EonilFSEventStreamEvent.swift */,
+				4BB4CCF6224A7EA000474C79 /* EonilFSEventStreamEventFlags.swift */,
+				4BB4CCF0224A7E9F00474C79 /* EonilFSEventStreamEventID.swift */,
+				4BB4CCF1224A7E9F00474C79 /* EonilFSEventStreamIllogicalErrorLog.swift */,
+			);
+			name = FSEvents;
+			sourceTree = "<group>";
+		};
 		4BDF50101D760AB700D8FBC3 /* Commons */ = {
 			isa = PBXGroup;
 			children = (
+				4B3CF02F224B7EAC00FA9833 /* RxSwiftCommons.swift */,
 				4B6A70931D60E04200E12030 /* AppKitCommons.swift */,
 				1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */,
-				4BB1BEA81D48773200463C29 /* RxSwiftCommons.swift */,
 				4B6A70951D6100E300E12030 /* SwiftCommons.swift */,
 				1929BE867BD8F0ED0246CC94 /* OSLogCommons.swift */,
 			);
@@ -1121,6 +1124,7 @@
 		4BEBA5071CFF374B00673FDF /* VimR */ = {
 			isa = PBXGroup;
 			children = (
+				4BB4CCEE224A7E6D00474C79 /* FSEvents */,
 				4B004BCA21063B4D0043A396 /* DictionaryCoding */,
 				4B2A2C0D1D0353750074CE9A /* Bridge.h */,
 				4B238BE01D3BF24200CBDD98 /* Application.swift */,
@@ -1233,7 +1237,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Tae Won Ha";
 				TargetAttributes = {
 					4BEBA5041CFF374B00673FDF = {
@@ -1249,7 +1253,7 @@
 			};
 			buildConfigurationList = 4BEBA5001CFF374B00673FDF /* Build configuration list for PBXProject "VimR" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -1474,8 +1478,8 @@
 				4B2636AC223A487B00021586 /* Workspace.swift in Sources */,
 				4B2636AD223A487B00021586 /* AppKitCommons.swift in Sources */,
 				4B2636AE223A487B00021586 /* InnterToolBar.swift in Sources */,
+				4BB4CCF9224A7EA000474C79 /* EonilFSEventStream.swift in Sources */,
 				4B2636AF223A487B00021586 /* WorkspaceBar.swift in Sources */,
-				4B2636B0223A487B00021586 /* RxSwiftCommons.swift in Sources */,
 				4B2636B1223A487B00021586 /* SwiftCommons.swift in Sources */,
 				4B2636B2223A487B00021586 /* AppDelegate.swift in Sources */,
 				4B2636B3223A487B00021586 /* WorkspaceTool.swift in Sources */,
@@ -1486,6 +1490,7 @@
 				4B2636B8223A487B00021586 /* Matcher.swift in Sources */,
 				4B2636B9223A487B00021586 /* ScoredFileItem.swift in Sources */,
 				4B2636BA223A487B00021586 /* Scorer.swift in Sources */,
+				4BB4CD02224A7EA000474C79 /* EonilFSEvents.swift in Sources */,
 				4B2636BB223A487B00021586 /* ProxyWorkspaceBar.swift in Sources */,
 				4B2636BC223A487B00021586 /* FoundationCommons.swift in Sources */,
 				4B2636BD223A487B00021586 /* NetUtils.m in Sources */,
@@ -1494,6 +1499,7 @@
 				4B2636C0223A487B00021586 /* AppDelegateReducer.swift in Sources */,
 				4B2636C1223A487B00021586 /* UiRoot.swift in Sources */,
 				4B2636C2223A487B00021586 /* UiRootReducer.swift in Sources */,
+				4BB4CD08224A7EA000474C79 /* EonilFSEventStreamEvent.swift in Sources */,
 				4B2636C3223A487B00021586 /* MainWindowReducer.swift in Sources */,
 				4B2636C4223A487B00021586 /* PreviewTool.swift in Sources */,
 				4B2636C5223A487B00021586 /* PreviewReducer.swift in Sources */,
@@ -1502,12 +1508,15 @@
 				4B2636C8223A487B00021586 /* DictionaryEncoder.swift in Sources */,
 				4B2636C9223A487B00021586 /* PreviewToolReducer.swift in Sources */,
 				4B2636CA223A487B00021586 /* Types.swift in Sources */,
+				4BB4CD0E224A7EA000474C79 /* EonilFSEventStreamEventFlags.swift in Sources */,
 				4B2636CB223A487B00021586 /* OpenQuicklyReducer.swift in Sources */,
 				4B2636CC223A487B00021586 /* FileMonitorReducer.swift in Sources */,
 				4B2636CD223A487B00021586 /* FileMonitor.swift in Sources */,
 				4B2636CE223A487B00021586 /* FileBrowserReducer.swift in Sources */,
 				4B2636CF223A487B00021586 /* BufferList.swift in Sources */,
+				4BB4CD05224A7EA000474C79 /* EonilFSEventStreamError.swift in Sources */,
 				4B2636D0223A487B00021586 /* BufferListReducer.swift in Sources */,
+				4BB4CCFC224A7EA000474C79 /* EonilFSEventStreamEventID.swift in Sources */,
 				4B2636D1223A487B00021586 /* PrefWindow.swift in Sources */,
 				4B2636D2223A487B00021586 /* PrefPane.swift in Sources */,
 				4B2636D3223A487B00021586 /* GeneralPref.swift in Sources */,
@@ -1527,6 +1536,7 @@
 				4B2636E1223A487B00021586 /* FileItemUtils.swift in Sources */,
 				4B2636E2223A487B00021586 /* HtmlPreviewTool.swift in Sources */,
 				4B2636E3223A487B00021586 /* HtmlPreviewToolReducer.swift in Sources */,
+				4BB4CD0B224A7EA000474C79 /* EonilFSEventStreamCreateFlags.swift in Sources */,
 				4B2636E4223A487B00021586 /* AdvancedPrefReducer.swift in Sources */,
 				4B2636E5223A487B00021586 /* ToolsPref.swift in Sources */,
 				4B2636E6223A487B00021586 /* ToolsPrefReducer.swift in Sources */,
@@ -1541,6 +1551,7 @@
 				4B2636EF223A487B00021586 /* MainWindow+Actions.swift in Sources */,
 				4B2636F0223A487B00021586 /* MainWindow+Delegates.swift in Sources */,
 				4B2636F1223A487B00021586 /* KeysPref.swift in Sources */,
+				4B3CF032224B7EAC00FA9833 /* RxSwiftCommons.swift in Sources */,
 				4B2636F2223A487B00021586 /* KeysPrefReducer.swift in Sources */,
 				4B2636F3223A487B00021586 /* RxRedux.swift in Sources */,
 				4B2636F4223A487B00021586 /* ShortcutsPref.swift in Sources */,
@@ -1549,6 +1560,7 @@
 				4B2636F7223A487B00021586 /* ShortcutItem.swift in Sources */,
 				4B2636F8223A487B00021586 /* RpcEvents.swift in Sources */,
 				4B2636F9223A487B00021586 /* RpcAppearanceEpic.swift in Sources */,
+				4BB4CCFF224A7EA000474C79 /* EonilFSEventStreamIllogicalErrorLog.swift in Sources */,
 				4B2636FA223A487B00021586 /* OSLogCommons.swift in Sources */,
 				4B2636FB223A487B00021586 /* Defs.swift in Sources */,
 				1929B179DBDE58A9D9BCA819 /* MainWindow+Types.swift in Sources */,
@@ -1564,8 +1576,8 @@
 				4B6423961D8EFD7100FC78C8 /* Workspace.swift in Sources */,
 				4B6A70941D60E04200E12030 /* AppKitCommons.swift in Sources */,
 				4B3965361DEB21300082D3C1 /* InnterToolBar.swift in Sources */,
+				4BB4CCF7224A7EA000474C79 /* EonilFSEventStream.swift in Sources */,
 				4B6423981D8EFDE000FC78C8 /* WorkspaceBar.swift in Sources */,
-				4BB1BEA91D48773200463C29 /* RxSwiftCommons.swift in Sources */,
 				4B6A70961D6100E300E12030 /* SwiftCommons.swift in Sources */,
 				4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */,
 				4B64239A1D8EFE3000FC78C8 /* WorkspaceTool.swift in Sources */,
@@ -1576,6 +1588,7 @@
 				1929B3F5743967125F357C9F /* Matcher.swift in Sources */,
 				1929B53876E6952D378C2B30 /* ScoredFileItem.swift in Sources */,
 				1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */,
+				4BB4CD00224A7EA000474C79 /* EonilFSEvents.swift in Sources */,
 				4BB409EE1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */,
 				1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */,
 				1929BD2F41D93ADFF43C1C98 /* NetUtils.m in Sources */,
@@ -1584,6 +1597,7 @@
 				1929BD3878A3A47B8D685CD2 /* AppDelegateReducer.swift in Sources */,
 				1929BAFF1E011321D3186EE6 /* UiRoot.swift in Sources */,
 				1929B29B95AD176D57942E08 /* UiRootReducer.swift in Sources */,
+				4BB4CD06224A7EA000474C79 /* EonilFSEventStreamEvent.swift in Sources */,
 				1929BB4A9B2FA42A64CCCC76 /* MainWindowReducer.swift in Sources */,
 				1929B8FB248D71BF88A35761 /* PreviewTool.swift in Sources */,
 				1929B4B70926DE113E6BF990 /* PreviewReducer.swift in Sources */,
@@ -1592,12 +1606,15 @@
 				4B004BD321063B600043A396 /* DictionaryEncoder.swift in Sources */,
 				1929B3AC66EFE35D68C020E3 /* PreviewToolReducer.swift in Sources */,
 				1929B59FA5C286E010F70BEE /* Types.swift in Sources */,
+				4BB4CD0C224A7EA000474C79 /* EonilFSEventStreamEventFlags.swift in Sources */,
 				1929B6D8F5FC723B7109031F /* OpenQuicklyReducer.swift in Sources */,
 				1929B5543B1E31A26096E656 /* FileMonitorReducer.swift in Sources */,
 				1929B5F016431A76292D1E84 /* FileMonitor.swift in Sources */,
 				1929B71381946860626E5224 /* FileBrowserReducer.swift in Sources */,
 				1929BA715337FE26155B2071 /* BufferList.swift in Sources */,
+				4BB4CD03224A7EA000474C79 /* EonilFSEventStreamError.swift in Sources */,
 				1929B4E54E2F13A7F5F2B682 /* BufferListReducer.swift in Sources */,
+				4BB4CCFA224A7EA000474C79 /* EonilFSEventStreamEventID.swift in Sources */,
 				1929BAE4900D72A7877741B1 /* PrefWindow.swift in Sources */,
 				1929BEAE0592096BC1191B67 /* PrefPane.swift in Sources */,
 				1929BEDE1BE950EDA9497363 /* GeneralPref.swift in Sources */,
@@ -1617,6 +1634,7 @@
 				1929B94083273D4B321AD848 /* FileItemUtils.swift in Sources */,
 				1929BFDE22D155F7C4B19E96 /* HtmlPreviewTool.swift in Sources */,
 				1929B4B00D7BB191A9A6532D /* HtmlPreviewToolReducer.swift in Sources */,
+				4BB4CD09224A7EA000474C79 /* EonilFSEventStreamCreateFlags.swift in Sources */,
 				1929BCF7F7B9CC5499A3F506 /* AdvancedPrefReducer.swift in Sources */,
 				1929BF03FD6465F289AA80B2 /* ToolsPref.swift in Sources */,
 				1929B6C0393DE40E34F4A49A /* ToolsPrefReducer.swift in Sources */,
@@ -1631,6 +1649,7 @@
 				1929B5257DB27F03C6663482 /* MainWindow+Actions.swift in Sources */,
 				1929BE0F64A6CE5BCE2A5092 /* MainWindow+Delegates.swift in Sources */,
 				1929B8F498D1E7C53F572CE2 /* KeysPref.swift in Sources */,
+				4B3CF030224B7EAC00FA9833 /* RxSwiftCommons.swift in Sources */,
 				1929B5A2EE366F79ED32744C /* KeysPrefReducer.swift in Sources */,
 				1929BB67CAAD4F6CBD38DF0A /* RxRedux.swift in Sources */,
 				1929BB85B2D30E548A32663D /* ShortcutsPref.swift in Sources */,
@@ -1639,6 +1658,7 @@
 				1929B0C7150100A84FBDB8BF /* ShortcutItem.swift in Sources */,
 				1929B250DB3FB395A700FE8C /* RpcEvents.swift in Sources */,
 				1929BF3253594E5B1908C6CE /* RpcAppearanceEpic.swift in Sources */,
+				4BB4CCFD224A7EA000474C79 /* EonilFSEventStreamIllogicalErrorLog.swift in Sources */,
 				1929B4E8B916008399CD5D3A /* OSLogCommons.swift in Sources */,
 				1929B5A0EDD1119CFF7BB84C /* Defs.swift in Sources */,
 				1929B376DB09AB5FDBF42BA1 /* MainWindow+Types.swift in Sources */,
@@ -1649,17 +1669,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BB4CD07224A7EA000474C79 /* EonilFSEventStreamEvent.swift in Sources */,
+				4BB4CD0D224A7EA000474C79 /* EonilFSEventStreamEventFlags.swift in Sources */,
+				4BB4CD04224A7EA000474C79 /* EonilFSEventStreamError.swift in Sources */,
 				4B6DFB3A22366D140066BB43 /* OSLogCommons.swift in Sources */,
+				4BB4CD0A224A7EA000474C79 /* EonilFSEventStreamCreateFlags.swift in Sources */,
 				4B96FB3B1EBBC56F00E4E164 /* FileItemIgnorePattern.swift in Sources */,
 				4B96FB3C1EBBC56F00E4E164 /* FileUtils.swift in Sources */,
 				4B96FB3D1EBBC56F00E4E164 /* Matcher.swift in Sources */,
 				4B96FB3E1EBBC56F00E4E164 /* Scorer.swift in Sources */,
+				4BB4CCF8224A7EA000474C79 /* EonilFSEventStream.swift in Sources */,
 				4B004BD621063B600043A396 /* DictionaryErrors.swift in Sources */,
 				4B96FB3F1EBBC56F00E4E164 /* PrefUtils.swift in Sources */,
 				4B96FB401EBBC56F00E4E164 /* FoundationCommons.swift in Sources */,
-				4B96FB411EBBC56F00E4E164 /* RxSwiftCommons.swift in Sources */,
 				4B004BD021063B600043A396 /* DictionaryDecoder.swift in Sources */,
 				4B96FB421EBBC56F00E4E164 /* SwiftCommons.swift in Sources */,
+				4B3CF031224B7EAC00FA9833 /* RxSwiftCommons.swift in Sources */,
+				4BB4CCFB224A7EA000474C79 /* EonilFSEventStreamEventID.swift in Sources */,
 				1929BEFEABA0448306CDB6D4 /* FileItemIgnorePatternTest.swift in Sources */,
 				1929B66F795867B8C07FAAD4 /* DictionaryCommonsTest.swift in Sources */,
 				4B004BD221063B600043A396 /* DictionaryCodingKey.swift in Sources */,
@@ -1669,6 +1695,8 @@
 				1929B370A275F8C70AD5AA08 /* UrlCommonsTest.swift in Sources */,
 				1929BF4FF30D9A9DE82C3052 /* FileUtilsTest.swift in Sources */,
 				1929BFC70581084B5CE04A5B /* MatcherTests.swift in Sources */,
+				4BB4CD01224A7EA000474C79 /* EonilFSEvents.swift in Sources */,
+				4BB4CCFE224A7EA000474C79 /* EonilFSEventStreamIllogicalErrorLog.swift in Sources */,
 				1929BAAD7336FDFF1F78E749 /* ScorerTest.swift in Sources */,
 				4B004BD421063B600043A396 /* DictionaryEncoder.swift in Sources */,
 				1929B8E90A1378E494D481E7 /* PrefUtilsTest.swift in Sources */,
@@ -1783,6 +1811,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -1808,7 +1837,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 311;
+				CURRENT_PROJECT_VERSION = 313;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1832,7 +1861,7 @@
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
 				SWIFT_DISABLE_SAFETY_CHECKS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1841,6 +1870,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -1866,7 +1896,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 311;
+				CURRENT_PROJECT_VERSION = 313;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1882,7 +1912,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SWIFT_DISABLE_SAFETY_CHECKS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

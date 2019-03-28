@@ -4,7 +4,6 @@
  */
 
 import Cocoa
-import RxNeovimApi
 import RxSwift
 import MessagePack
 import os
@@ -14,102 +13,6 @@ public class NvimView: NSView,
                        NSTextInputClient {
 
   // MARK: - Public
-  public struct Config {
-
-    var useInteractiveZsh: Bool
-    var cwd: URL
-    var nvimArgs: [String]?
-    var envDict: [String: String]?
-    var sourceFiles: [URL]
-
-    public init(
-      useInteractiveZsh: Bool,
-      cwd: URL,
-      nvimArgs: [String]?,
-      envDict: [String: String]?,
-      sourceFiles: [URL]
-    ) {
-      self.useInteractiveZsh = useInteractiveZsh
-      self.cwd = cwd
-      self.nvimArgs = nvimArgs
-      self.envDict = envDict
-      self.sourceFiles = sourceFiles
-    }
-  }
-
-  public enum Event {
-
-    case neoVimStopped
-    case setTitle(String)
-    case setDirtyStatus(Bool)
-    case cwdChanged
-    case bufferListChanged
-    case tabChanged
-
-    case newCurrentBuffer(NvimView.Buffer)
-    case bufferWritten(NvimView.Buffer)
-
-    case colorschemeChanged(NvimView.Theme)
-
-    case ipcBecameInvalid(String)
-
-    case scroll
-    case cursor(Position)
-
-    case rpcEvent([MessagePack.MessagePackValue])
-    case rpcEventSubscribed
-
-    case initVimError
-
-    // FIXME: maybe do onError()?
-    case apiError(msg: String, cause: Swift.Error)
-  }
-
-  public enum Error: Swift.Error {
-
-    case nvimLaunch(msg: String, cause: Swift.Error)
-    case ipc(msg: String, cause: Swift.Error)
-  }
-
-  public struct Theme: CustomStringConvertible {
-
-    public static let `default` = Theme()
-
-    public var foreground = NSColor.textColor
-    public var background = NSColor.textBackgroundColor
-
-    public var visualForeground = NSColor.selectedMenuItemTextColor
-    public var visualBackground = NSColor.selectedMenuItemColor
-
-    public var directoryForeground = NSColor.textColor
-
-    public init() {
-    }
-
-    public init(_ values: [Int]) {
-      if values.count < 5 {
-        preconditionFailure("We need 5 colors!")
-      }
-
-      let color = ColorUtils.colorIgnoringAlpha
-
-      self.foreground = values[0] < 0 ? Theme.default.foreground : color(values[0])
-      self.background = values[1] < 0 ? Theme.default.background : color(values[1])
-
-      self.visualForeground = values[2] < 0 ? Theme.default.visualForeground : color(values[2])
-      self.visualBackground = values[3] < 0 ? Theme.default.visualBackground : color(values[3])
-
-      self.directoryForeground = values[4] < 0 ? Theme.default.directoryForeground : color(values[4])
-    }
-
-    public var description: String {
-      return "NVV.Theme<" +
-             "fg: \(self.foreground.hex), bg: \(self.background.hex), " +
-             "visual-fg: \(self.visualForeground.hex), visual-bg: \(self.visualBackground.hex)" +
-             ">"
-    }
-  }
-
   public static let rpcEventName = "com.qvacua.NvimView"
 
   public static let minFontSize = 4.cgf
@@ -234,6 +137,92 @@ public class NvimView: NSView,
     )
 
     self.api.queue = self.queue
+
+    self.subscribeToBridge()
+  }
+
+  convenience override public init(frame rect: NSRect) {
+    self.init(
+      frame: rect,
+      config: Config(
+        useInteractiveZsh: false,
+        cwd: URL(fileURLWithPath: NSHomeDirectory()),
+        nvimArgs: nil,
+        envDict: nil,
+        sourceFiles: []
+      )
+    )
+  }
+
+  required public init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  @IBAction public func debug1(_ sender: Any?) {
+    #if DEBUG
+    do { try self.ugrid.dump() } catch { self.log.error("Could not dump UGrid: \(error)") }
+    #endif
+  }
+
+  // MARK: - Internal
+  let bridge: UiBridge
+  let api = RxNeovimApi()
+
+  let ugrid = UGrid()
+  let cellAttributesCollection = CellAttributesCollection()
+  let drawer: AttributesRunDrawer
+  var baselineOffset = 0.cgf
+
+  /// We store the last marked text because Cocoa's text input system does the following:
+  /// 하 -> hanja popup -> insertText(하) -> attributedSubstring...() -> setMarkedText(下) -> ...
+  /// We want to return "하" in attributedSubstring...()
+  var lastMarkedText: String?
+
+  var keyDownDone = true
+
+  var lastClickedCellPosition = Position.null
+
+  var offset = CGPoint.zero
+  var cellSize = CGSize.zero
+
+  var scrollGuardCounterX = 5
+  var scrollGuardCounterY = 5
+
+  var isCurrentlyPinching = false
+  var pinchTargetScale = 1.cgf
+  var pinchBitmap: NSBitmapImageRep?
+
+  var currentlyResizing = false
+  var currentEmoji = "😎"
+
+  var _font = NvimView.defaultFont
+  var _cwd = URL(fileURLWithPath: NSHomeDirectory())
+  var shouldDrawCursor = false
+  var isInitialResize = true
+
+  // cache the tabs for Touch Bar use
+  var tabsCache = [NvimView.Tabpage]()
+
+  let eventsSubject = PublishSubject<Event>()
+  let disposeBag = DisposeBag()
+
+  var markedText: String?
+  var markedPosition = Position.null
+
+  let bridgeLogger = OSLog(subsystem: Defs.loggerSubsystem,
+                           category: Defs.LoggerCategory.bridge)
+  let log = OSLog(subsystem: Defs.loggerSubsystem,
+                  category: Defs.LoggerCategory.view)
+
+  let sourceFileUrls: [URL]
+
+  let rpcEventSubscriptionCondition = ConditionVariable()
+  let nvimExitedCondition = ConditionVariable()
+
+  // MARK: - Private
+  private var _linespacing = NvimView.defaultLinespacing
+
+  private func subscribeToBridge() {
     self.bridge.stream
       .subscribe(onNext: { [weak self] msg in
         switch msg {
@@ -311,6 +300,8 @@ public class NvimView: NSView,
         case .rpcEventSubscribed:
           self?.rpcEventSubscribed()
 
+        case let .fatalError(value):
+          self?.bridgeHasFatalError(value)
 
         case .debug1:
           self?.debug1(nil)
@@ -321,85 +312,4 @@ public class NvimView: NSView,
       })
       .disposed(by: self.disposeBag)
   }
-
-  convenience override public init(frame rect: NSRect) {
-    self.init(
-      frame: rect,
-      config: Config(
-        useInteractiveZsh: false,
-        cwd: URL(fileURLWithPath: NSHomeDirectory()),
-        nvimArgs: nil,
-        envDict: nil,
-        sourceFiles: []
-      )
-    )
-  }
-
-  required public init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-
-  @IBAction public func debug1(_ sender: Any?) {
-    #if DEBUG
-    do { try self.ugrid.dump() } catch { self.log.error("Could not dump UGrid: \(error)") }
-    #endif
-  }
-
-  // MARK: - Internal
-  let bridge: UiBridge
-  let api = RxNeovimApi.Api()
-
-  let ugrid = UGrid()
-  let cellAttributesCollection = CellAttributesCollection()
-  let drawer: AttributesRunDrawer
-  var baselineOffset = 0.cgf
-
-  /// We store the last marked text because Cocoa's text input system does the following:
-  /// 하 -> hanja popup -> insertText(하) -> attributedSubstring...() -> setMarkedText(下) -> ...
-  /// We want to return "하" in attributedSubstring...()
-  var lastMarkedText: String?
-
-  var keyDownDone = true
-
-  var lastClickedCellPosition = Position.null
-
-  var offset = CGPoint.zero
-  var cellSize = CGSize.zero
-
-  var scrollGuardCounterX = 5
-  var scrollGuardCounterY = 5
-
-  var isCurrentlyPinching = false
-  var pinchTargetScale = 1.cgf
-  var pinchBitmap: NSBitmapImageRep?
-
-  var currentlyResizing = false
-  var currentEmoji = "😎"
-
-  var _font = NvimView.defaultFont
-  var _cwd = URL(fileURLWithPath: NSHomeDirectory())
-  var shouldDrawCursor = false
-  var isInitialResize = true
-
-  // cache the tabs for Touch Bar use
-  var tabsCache = [NvimView.Tabpage]()
-
-  let eventsSubject = PublishSubject<Event>()
-  let disposeBag = DisposeBag()
-
-  var markedText: String?
-  var markedPosition = Position.null
-
-  let bridgeLogger = OSLog(subsystem: Defs.loggerSubsystem,
-                           category: Defs.LoggerCategory.bridge)
-  let log = OSLog(subsystem: Defs.loggerSubsystem,
-                  category: Defs.LoggerCategory.view)
-
-  let sourceFileUrls: [URL]
-
-  let rpcEventSubscribedCondition = NSCondition()
-  var rpcEventSubscribedFlag = false
-
-  // MARK: - Private
-  private var _linespacing = NvimView.defaultLinespacing
 }

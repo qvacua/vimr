@@ -5,7 +5,6 @@
  */
 
 import Cocoa
-import RxNeovimApi
 import RxSwift
 
 @available(OSX 10.12.2, *)
@@ -52,7 +51,7 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
   }
 
   private func selectedTabIndex() -> Int {
-    return tabsCache.index { $0.isCurrent } ?? -1
+    return tabsCache.firstIndex { $0.isCurrent } ?? -1
   }
 
   private func getTabsControl() -> NSScrubber? {
@@ -129,7 +128,7 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
 
     let window = tab.currentWindow ?? tab.windows[0]
     self.api
-      .setCurrentWin(window: Api.Window(window.handle))
+      .setCurrentWin(window: RxNeovimApi.Window(window.handle))
       .subscribeOn(self.scheduler)
       .subscribe(onError: { error in
         self.eventsSubject.onNext(.apiError(msg: "Could not set current window to \(window.handle).", cause: error))

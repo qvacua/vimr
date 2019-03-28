@@ -39,8 +39,8 @@ class FileItemIgnorePattern: Hashable, CustomStringConvertible {
       .joined(separator: ", ")
   }
 
-  var hashValue: Int {
-    return self.pattern.hashValue
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(self.pattern)
   }
 
   var description: String {
