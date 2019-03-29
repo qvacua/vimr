@@ -7,22 +7,26 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-313</title>
+      <title>SNAPSHOT-314</title>
       <description><![CDATA[
     <ul>
-<li>Built with Swift 5</li>
+<li>Bugfix: Wrong closing behavior of temporary sessions</li>
+<li>Dependencies updates:<ul>
+<li>eonil/FSEvents (instead of eonil/FileSystemEvents)</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/313
+        https://github.com/qvacua/vimr/releases/tag/snapshot/314
       </releaseNotesLink>
-      <pubDate>2019-03-26T23:29:01.745354</pubDate>
+      <pubDate>2019-03-29T15:39:09.865552</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/313/VimR-SNAPSHOT-313.tar.bz2"
-                 sparkle:version="313"
-                 sparkle:shortVersionString="SNAPSHOT-313"
-                 sparkle:dsaSignature="MC0CFHVoqmAiUN+ZyUHOf85F7vYjNpBOAhUAyFq5MUhmkaqwk79eCh9FWbcvwvg="
-                 length="15269887"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/314/VimR-SNAPSHOT-314.tar.bz2"
+                 sparkle:version="314"
+                 sparkle:shortVersionString="SNAPSHOT-314"
+                 sparkle:dsaSignature="MC0CFQDLVzrr8s6DwPq7jv436WfnJRQ4MgIUKFopDZV0EHc5Y3unFY8wXuGLtes="
+                 length="15255452"
                  type="application/octet-stream"/>
     </item>
   </channel>
