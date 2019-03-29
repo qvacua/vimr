@@ -104,7 +104,7 @@ extension RxNeovimApi {
     case conversion(type: Any.Type)
     case unknown
 
-    init(_ value:RxNeovimApi.Value?) {
+    init(_ value: RxNeovimApi.Value?) {
       let array = value?.arrayValue
       guard array?.count == 2 else {
         self = .unknown
@@ -131,7 +131,7 @@ $body
 
 extension RxNeovimApi.Buffer {
 
-  init?(_ value:RxNeovimApi.Value) {
+  init?(_ value: RxNeovimApi.Value) {
     guard let (type, data) = value.extendedValue else {
       return nil
     }
@@ -150,7 +150,7 @@ extension RxNeovimApi.Buffer {
 
 extension RxNeovimApi.Window {
 
-  init?(_ value:RxNeovimApi.Value) {
+  init?(_ value: RxNeovimApi.Value) {
     guard let (type, data) = value.extendedValue else {
       return nil
     }
@@ -169,7 +169,7 @@ extension RxNeovimApi.Window {
 
 extension RxNeovimApi.Tabpage {
 
-  init?(_ value:RxNeovimApi.Value) {
+  init?(_ value: RxNeovimApi.Value) {
     guard let (type, data) = value.extendedValue else {
       return nil
     }
