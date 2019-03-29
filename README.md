@@ -13,17 +13,20 @@ VimR — Neovim Refined
 
 ## About
 
-Project VimR is an attempt to refine the Neovim experience (or just YA Neovim GUI for macOS). The goal is to build an editor that uses Neovim inside with many of the convenience GUI features similar to those present in modern editors. We mainly use Swift, but also use Objective-C when its C-nature helps.
+Project VimR is a (YA) Neovim GUI for macOS. The goal is to build an editor that uses Neovim inside with many of the convenience GUI features similar to those present in modern editors. We mainly use Swift, but also use Objective-C when its C-nature helps.
 
-There are other working Neovim GUIs for macOS, e.g. [NyaoVim](https://github.com/rhysd/NyaoVim), [neovim-dot-app](https://github.com/rogual/neovim-dot-app), [Oni](https://onivim.io), etc., why another?
+There are other Neovim GUIs for macOS, e.g. [NyaoVim](https://github.com/rhysd/NyaoVim), [neovim-dot-app](https://github.com/rogual/neovim-dot-app), [Oni](https://onivim.io), etc., so why?
 
 - play around (obviously) with [Neovim](https://github.com/qvacua/neovim),
 - play around with Swift (and especially with [RxSwift](https://github.com/ReactiveX/RxSwift)) and
 - (most importantly) have fun!
 
-### NvimView
+## (Reusable) Components
 
-[NvimView](https://github.com/qvacua/vimr/tree/master/NvimView) is VimR's Cocoa Framework which bundles everything, e.g. Neovim's `runtime`-files, needed to embed Neovim in a Cocoa App. See the [wiki](https://github.com/qvacua/vimr/wiki/SwiftNeoVim-Framework) for more details.
+* [RxMessagePort](https://github.com/qvacua/vimr/blob/develop/RxPack/RxMessagePort.swift): RxSwift wrapper for local and remote `CFMessagePort`.
+* [RxMsgpackRpc](https://github.com/qvacua/vimr/blob/develop/RxPack/RxMsgpackRpc.swift): implementation of MsgpackRpc using RxSwift.
+* [RxNeovimApi](https://github.com/qvacua/vimr/blob/develop/RxPack/RxNeovimApi.swift): RxSwift wrapper of Neovim API.
+* [NvimView](https://github.com/qvacua/vimr/tree/develop/NvimView): Cocoa Framework which bundles everything, e.g. Neovim's `runtime`-files, needed to embed Neovim in a Cocoa App. See the [wiki](https://github.com/qvacua/vimr/wiki/NvimView-Framework).
 
 ---
 
@@ -56,7 +59,7 @@ git submodule init
 git submodule update
 ```
 
-You have to use Xcode 10.1. First install `homebrew`, then in the project root:
+You have to use Xcode 10.2. First install `homebrew`, then in the project root:
 
 ```bash
 xcode-select --install # install the Xcode command line tools, if you haven't already
