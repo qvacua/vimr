@@ -160,7 +160,7 @@ final class Typesetter {
       string: String(utf16CodeUnits: utf16Chars, count: utf16Chars.count),
       attributes: [
         .font: font,
-        .ligature: NSNumber(integerLiteral: 0)
+        .ligature: NSNumber(integerLiteral: 1)
       ]
     )
 
