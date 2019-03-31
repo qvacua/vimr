@@ -69,7 +69,7 @@ final class UGrid: CustomStringConvertible, Codable {
 
   var description: String {
     let result = "UGrid.flatCharIndex:\n" + self.cells.reduce("") { result, row in
-      return result + "(\(row[0].flatCharIndex ... row[self.size.width - 1].flatCharIndex)), "
+      return result + "(\(row[0].flatCharIndex...row[self.size.width - 1].flatCharIndex)), "
     }
 
     return result
@@ -82,7 +82,7 @@ final class UGrid: CustomStringConvertible, Codable {
     let attrId = self.cells[position.row][position.column].attrId
 
     guard attrId < CellAttributesCollection.defaultAttributesId
-            || attrId == CellAttributesCollection.reversedDefaultAttributesId
+          || attrId == CellAttributesCollection.reversedDefaultAttributesId
       else {
       return
     }
@@ -104,7 +104,7 @@ final class UGrid: CustomStringConvertible, Codable {
     let attrId = self.cells[position.row][position.column].attrId
 
     guard attrId >= CellAttributesCollection.defaultAttributesId
-            && attrId != CellAttributesCollection.reversedDefaultAttributesId
+          && attrId != CellAttributesCollection.reversedDefaultAttributesId
       else {
       return
     }
@@ -267,9 +267,9 @@ final class UGrid: CustomStringConvertible, Codable {
 
   func isSane(_ position: Position) -> Bool {
     if position.column < 0
-         || position.column >= self.size.width
-         || position.row < 0
-         || position.row >= self.size.height {
+       || position.column >= self.size.width
+       || position.row < 0
+       || position.row >= self.size.height {
       return false
     }
 
@@ -327,20 +327,18 @@ final class UGrid: CustomStringConvertible, Codable {
     chunk: [String],
     attrIds: [Int]
   ) {
-    let newCells = zip(chunk, attrIds).map { element in
-      UCell(string: element.0, attrId: element.1)
-    }
-//    self.cells[row].replaceSubrange(startCol..<endCol, with: newCells)
     for column in startCol..<endCol {
-      self.cells[row][column].string = newCells[column - startCol].string
-      self.cells[row][column].attrId = newCells[column - startCol].attrId
+      self.cells[row][column].string = chunk[column - startCol]
+      self.cells[row][column].attrId = attrIds[column - startCol]
     }
 
     if clearCol > endCol {
       cells[row].replaceSubrange(
         endCol..<clearCol,
-        with: Array(repeating: UCell(string: clearString, attrId: clearAttr),
-                    count: clearCol - endCol)
+        with: Array(
+          repeating: UCell(string: clearString, attrId: clearAttr),
+          count: clearCol - endCol
+        )
       )
     }
   }
@@ -351,8 +349,8 @@ final class UGrid: CustomStringConvertible, Codable {
     var delta = 0
     if rowStart > 0 {
       delta = self.cells[rowStart - 1][self.size.width - 1].flatCharIndex
-        - self.oneDimCellIndex(forRow: rowStart - 1,
-                                  column: self.size.width - 1)
+              - self.oneDimCellIndex(forRow: rowStart - 1,
+                                     column: self.size.width - 1)
     }
 
     for row in rowStart...rowEndInclusive {
@@ -361,7 +359,7 @@ final class UGrid: CustomStringConvertible, Codable {
           delta -= 1
         }
         self.cells[row][column].flatCharIndex
-          = self.oneDimCellIndex(forRow: row, column: column) + delta
+        = self.oneDimCellIndex(forRow: row, column: column) + delta
       }
     }
   }
