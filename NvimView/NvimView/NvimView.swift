@@ -9,6 +9,7 @@ import MessagePack
 import os
 
 public class NvimView: NSView,
+                       UiBridgeConsumer,
                        NSUserInterfaceValidations,
                        NSTextInputClient {
 
@@ -129,6 +130,7 @@ public class NvimView: NSView,
     self.sourceFileUrls = config.sourceFiles
 
     super.init(frame: .zero)
+    self.bridge.consumer = self
     self.registerForDraggedTypes([NSPasteboard.PasteboardType(String(kUTTypeFileURL))])
 
     self.wantsLayer = true
@@ -137,8 +139,6 @@ public class NvimView: NSView,
     )
 
     self.api.queue = self.queue
-
-    self.subscribeToBridge()
   }
 
   convenience override public init(frame rect: NSRect) {
@@ -221,95 +221,4 @@ public class NvimView: NSView,
 
   // MARK: - Private
   private var _linespacing = NvimView.defaultLinespacing
-
-  private func subscribeToBridge() {
-    self.bridge.stream
-      .subscribe(onNext: { [weak self] msg in
-        switch msg {
-
-        case .ready:
-          self?.log.info("Nvim is ready")
-
-        case .initVimError:
-          self?.eventsSubject.onNext(.initVimError)
-
-        case .unknown:
-          self?.bridgeLogger.error("Unknown message from NvimServer")
-
-        case let .resize(value):
-          self?.resize(value)
-
-        case .clear:
-          self?.clear()
-
-        case .setMenu:
-          self?.updateMenu()
-
-        case .busyStart:
-          self?.busyStart()
-
-        case .busyStop:
-          self?.busyStop()
-
-        case .mouseOn:
-          self?.mouseOn()
-
-        case .mouseOff:
-          self?.mouseOff()
-
-        case let .modeChange(value):
-          self?.modeChange(value)
-
-        case .bell:
-          self?.bell()
-
-        case .visualBell:
-          self?.visualBell()
-
-        case let .flush(value):
-          self?.flush(value)
-
-        case let .setTitle(value):
-          self?.setTitle(with: value)
-
-        case .stop:
-          self?.stop()
-
-        case let .dirtyStatusChanged(value):
-          self?.setDirty(with: value)
-
-        case let .cwdChanged(value):
-          self?.cwdChanged(value)
-
-        case let .colorSchemeChanged(value):
-          self?.colorSchemeChanged(value)
-
-        case let .defaultColorsChanged(value):
-          self?.defaultColorsChanged(value)
-
-        case let .optionSet(value):
-          self?.bridgeLogger.debug(value)
-          break
-
-        case let .autoCommandEvent(value):
-          self?.autoCommandEvent(value)
-
-        case let .highlightAttrs(value):
-          self?.setAttr(with: value)
-
-        case .rpcEventSubscribed:
-          self?.rpcEventSubscribed()
-
-        case let .fatalError(value):
-          self?.bridgeHasFatalError(value)
-
-        case .debug1:
-          self?.debug1(nil)
-
-        }
-      }, onError: { [weak self] error in
-        self?.bridgeLogger.fault("Error in the bridge stream: \(error)")
-      })
-      .disposed(by: self.disposeBag)
-  }
 }
