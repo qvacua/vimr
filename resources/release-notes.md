@@ -1,10 +1,10 @@
 # ???
 
-* Minimum macOS requirement is now 10.13 High Sierra.
+* Minimum macOS requirement is now 10.13 High Sierra; see GH-715
+* Bugfix: Wrong closing behavior of temporary sessions
 * Use Swift 5
 * Dependencies updates:
     - eonil/FSEvents (instead of eonil/FileSystemEvents)
-* Bugfix: Wrong closing behavior of temporary sessions
 
 # 0.26.9-312
 
