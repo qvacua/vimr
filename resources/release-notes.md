@@ -1,5 +1,6 @@
 # ???
 
+* Minimum macOS requirement is now 10.13 High Sierra.
 * Use Swift 5
 * Dependencies updates:
     - eonil/FSEvents (instead of eonil/FileSystemEvents)
