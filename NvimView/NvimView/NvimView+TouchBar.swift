@@ -7,7 +7,6 @@
 import Cocoa
 import RxSwift
 
-@available(OSX 10.12.2, *)
 extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate {
 
   override public func makeTouchBar() -> NSTouchBar? {
@@ -137,11 +136,8 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
   }
 }
 
-@available(OSX 10.12.2, *)
 private let touchBarIdentifier = NSTouchBar.CustomizationIdentifier("com.qvacua.VimR.NvimView.touchBar")
 
-@available(OSX 10.12.2, *)
 private let touchBarTabSwitcherIdentifier = NSTouchBarItem.Identifier("com.qvacua.VimR.NvimView.touchBar.tabSwitcher")
 
-@available(OSX 10.12.2, *)
 private let touchBarTabSwitcherItem = "com.qvacua.VimR.NvimView.touchBar.tabSwitcher.item"

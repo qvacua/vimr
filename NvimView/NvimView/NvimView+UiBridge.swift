@@ -576,9 +576,7 @@ extension NvimView {
       }
       .subscribe(onSuccess: {
         self.eventsSubject.onNext(.bufferWritten($0))
-        if #available(OSX 10.12.2, *) {
-          self.updateTouchBarTab()
-        }
+        self.updateTouchBarTab()
       }, onError: { error in
         self.bridgeLogger.error("Could not get the buffer \(handle): \(error)")
         self.eventsSubject.onNext(
@@ -594,9 +592,7 @@ extension NvimView {
       .filter { $0.apiBuffer.handle == handle }
       .subscribe(onSuccess: {
         self.eventsSubject.onNext(.newCurrentBuffer($0))
-        if #available(OSX 10.12.2, *) {
-          self.updateTouchBarTab()
-        }
+        self.updateTouchBarTab()
       }, onError: { error in
         self.bridgeLogger.error("Could not get the current buffer: \(error)")
         self.eventsSubject.onNext(
@@ -608,9 +604,7 @@ extension NvimView {
 
   private func bufferListChanged() {
     self.eventsSubject.onNext(.bufferListChanged)
-    if #available(OSX 10.12.2, *) {
-      self.updateTouchBarCurrentBuffer()
-    }
+    self.updateTouchBarCurrentBuffer()
   }
 }
 
