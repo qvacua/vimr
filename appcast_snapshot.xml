@@ -7,26 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-314</title>
+      <title>SNAPSHOT-315</title>
       <description><![CDATA[
     <ul>
-<li>Bugfix: Wrong closing behavior of temporary sessions</li>
-<li>Dependencies updates:<ul>
-<li>eonil/FSEvents (instead of eonil/FileSystemEvents)</li>
-</ul>
-</li>
+<li>Minimum macOS requirement is now 10.13 High Sierra; see GH-715</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/314
+        https://github.com/qvacua/vimr/releases/tag/snapshot/315
       </releaseNotesLink>
-      <pubDate>2019-03-29T15:39:09.865552</pubDate>
+      <pubDate>2019-04-06T16:11:40.357573</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/314/VimR-SNAPSHOT-314.tar.bz2"
-                 sparkle:version="314"
-                 sparkle:shortVersionString="SNAPSHOT-314"
-                 sparkle:dsaSignature="MC0CFQDLVzrr8s6DwPq7jv436WfnJRQ4MgIUKFopDZV0EHc5Y3unFY8wXuGLtes="
-                 length="15255452"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/315/VimR-SNAPSHOT-315.tar.bz2"
+                 sparkle:version="315"
+                 sparkle:shortVersionString="SNAPSHOT-315"
+                 sparkle:dsaSignature="MC0CFFqWjzc7lhjKOYdjwf51G5euolcYAhUAijjAe3jwN6oFdyQMcTWIDUQaFxc="
+                 length="14413225"
                  type="application/octet-stream"/>
     </item>
   </channel>
