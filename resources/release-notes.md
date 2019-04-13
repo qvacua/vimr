@@ -1,4 +1,4 @@
-# ???
+# 0.26.10-316
 
 * Minimum macOS requirement is now 10.13 High Sierra; see GH-715
 * Bugfix: Wrong closing behavior of temporary sessions
