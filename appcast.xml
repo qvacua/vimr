@@ -7,23 +7,28 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.26.9-312</title>
+      <title>v0.26.10-319</title>
       <description><![CDATA[
     <ul>
-<li>Bugfix: wrong color of "Select the HTML file" button of HTML preview tool</li>
-<li>Bugfix: memory leak (strange behavior between <code>CTFontManager</code> and <code>NSFontManager</code>)</li>
+<li>Minimum macOS requirement is now 10.13 High Sierra; see GH-715</li>
+<li>Bugfix: Wrong closing behavior of temporary sessions</li>
+<li>Use Swift 5</li>
+<li>Dependencies updates:<ul>
+<li>eonil/FSEvents (instead of eonil/FileSystemEvents)</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.26.9-312
+        https://github.com/qvacua/vimr/releases/tag/v0.26.10-319
       </releaseNotesLink>
-      <pubDate>2019-03-26T08:16:42.610003</pubDate>
+      <pubDate>2019-04-13T20:59:30.079777</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.26.9-312/VimR-v0.26.9-312.tar.bz2"
-                 sparkle:version="312"
-                 sparkle:shortVersionString="0.26.9"
-                 sparkle:dsaSignature="MCwCFCS64ZPv77Uc/kS/lSD9+fd5I6YUAhRFRHZErcTMirUn3i2iuPTvVW+V3g=="
-                 length="15101566"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.26.10-319/VimR-v0.26.10-319.tar.bz2"
+                 sparkle:version="319"
+                 sparkle:shortVersionString="0.26.10"
+                 sparkle:dsaSignature="MCwCFA2CjbQ3jZNgBffC/v5MoGL89ZUkAhQqpcs1L8OWTWTkIP4Imn4//k5gmQ=="
+                 length="14414830"
                  type="application/octet-stream"/>
     </item>
   </channel>
