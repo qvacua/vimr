@@ -8,50 +8,38 @@ import RxSwift
 import MessagePack
 import os
 
+protocol UiBridgeConsumer: class {
+
+  func initVimError()
+  func resize(_ value: MessagePackValue)
+  func clear()
+  func modeChange(_ value: MessagePackValue)
+  func flush(_ renderData: [MessagePackValue])
+  func setTitle(with value: MessagePackValue)
+  func stop()
+  func autoCommandEvent(_ value: MessagePackValue)
+  func ipcBecameInvalid(_ error: Swift.Error)
+  func bell()
+  func cwdChanged(_ value: MessagePackValue)
+  func colorSchemeChanged(_ value: MessagePackValue)
+  func defaultColorsChanged(_ value: MessagePackValue)
+  func optionSet(_ value: MessagePackValue)
+  func setDirty(with value: MessagePackValue)
+  func rpcEventSubscribed()
+  func bridgeHasFatalError(_ value: MessagePackValue?)
+  func setAttr(with value: MessagePackValue)
+  func updateMenu()
+  func busyStart()
+  func busyStop()
+  func mouseOn()
+  func mouseOff()
+  func visualBell()
+  func suspend()
+}
+
 class UiBridge {
 
-  enum Message {
-
-    case ready
-
-    case initVimError
-    case resize(MessagePackValue)
-    case clear
-    case setMenu
-    case busyStart
-    case busyStop
-    case mouseOn
-    case mouseOff
-    case modeChange(MessagePackValue)
-    case bell
-    case visualBell
-    case flush([MessagePackValue])
-    case setTitle(MessagePackValue)
-    case stop
-    case dirtyStatusChanged(MessagePackValue)
-    case cwdChanged(MessagePackValue)
-    case colorSchemeChanged(MessagePackValue)
-    case optionSet(MessagePackValue)
-    case defaultColorsChanged(MessagePackValue)
-    case autoCommandEvent(MessagePackValue)
-    case highlightAttrs(MessagePackValue)
-    case rpcEventSubscribed
-    case fatalError(MessagePackValue?)
-    case debug1
-    case unknown
-  }
-
-  enum Error: Swift.Error {
-
-    case launchNvim
-    case nvimNotReady
-    case nvimQuitting
-    case ipc(Swift.Error)
-  }
-
-  var stream: Observable<Message> {
-    return self.streamSubject.asObservable()
-  }
+  weak var consumer: UiBridgeConsumer?
 
   init(uuid: UUID, queue: DispatchQueue, config: NvimView.Config) {
     self.uuid = uuid
@@ -83,7 +71,7 @@ class UiBridge {
         self?.handleMessage(msgId: message.msgid, data: message.data)
       }, onError: { [weak self] error in
         self?.log.error("There was an error on the local message port server: \(error)")
-        self?.streamSubject.onError(Error.ipc(error))
+        self?.consumer?.ipcBecameInvalid(error)
       })
       .disposed(by: self.disposeBag)
   }
@@ -105,8 +93,7 @@ class UiBridge {
   }
 
   func deleteCharacters(_ count: Int, andInputEscapedString string: String)
-      -> Completable
-  {
+      -> Completable {
     guard let strData = string.data(using: .utf8) else {
       return .empty()
     }
@@ -158,7 +145,6 @@ class UiBridge {
 
   private func handleMessage(msgId: Int32, data: Data?) {
     guard let msg = NvimServerMsgId(rawValue: Int(msgId)) else {
-      self.streamSubject.onNext(.unknown)
       return
     }
 
@@ -167,8 +153,8 @@ class UiBridge {
     case .serverReady:
       self
         .establishNvimConnection()
-        .subscribe(onError: { error in
-          self.streamSubject.onError(Error.ipc(error))
+        .subscribe(onError: { [weak self] error in
+          self?.consumer?.ipcBecameInvalid(error)
         })
         .disposed(by: self.disposeBag)
 
@@ -176,91 +162,88 @@ class UiBridge {
       self.runLocalServerAndNvimCompletable?(.completed)
       self.runLocalServerAndNvimCompletable = nil
 
-      self.streamSubject.onNext(.ready)
-
       let isInitErrorPresent = MessagePackUtils.value(from: data, conversion: { $0.boolValue }) ?? false
       if isInitErrorPresent {
-        self.streamSubject.onNext(.initVimError)
+        self.consumer?.initVimError()
       }
 
     case .resize:
       guard let v = MessagePackUtils.value(from: data) else { return }
-      self.streamSubject.onNext(.resize(v))
-      break
+      self.consumer?.resize(v)
 
     case .clear:
-      self.streamSubject.onNext(.clear)
+      self.consumer?.clear()
 
     case .setMenu:
-      self.streamSubject.onNext(.setMenu)
+      self.consumer?.updateMenu()
 
     case .busyStart:
-      self.streamSubject.onNext(.busyStart)
+      self.consumer?.busyStart()
 
     case .busyStop:
-      self.streamSubject.onNext(.busyStop)
+      self.consumer?.busyStop()
 
     case .modeChange:
       guard let v = MessagePackUtils.value(from: data) else { return }
-      self.streamSubject.onNext(.modeChange(v))
+      self.consumer?.modeChange(v)
 
     case .bell:
-      self.streamSubject.onNext(.bell)
+      self.consumer?.bell()
 
     case .visualBell:
-      self.streamSubject.onNext(.visualBell)
+      self.consumer?.visualBell()
 
     case .flush:
       guard let d = data, let v = (try? unpackAll(d)) else { return }
-      self.streamSubject.onNext(.flush(v))
+      self.consumer?.flush(v)
 
     case .setTitle:
       guard let v = MessagePackUtils.value(from: data) else { return }
-      self.streamSubject.onNext(.setTitle(v))
+      self.consumer?.setTitle(with: v)
 
     case .stop:
-      self.streamSubject.onNext(.stop)
+      self.consumer?.stop()
 
     case .dirtyStatusChanged:
       guard let v = MessagePackUtils.value(from: data) else { return }
-      self.streamSubject.onNext(.dirtyStatusChanged(v))
+      self.consumer?.setDirty(with: v)
 
     case .cwdChanged:
       guard let v = MessagePackUtils.value(from: data) else { return }
-      self.streamSubject.onNext(.cwdChanged(v))
+      self.consumer?.cwdChanged(v)
 
     case .defaultColorsChanged:
       guard let v = MessagePackUtils.value(from: data) else { return }
-      self.streamSubject.onNext(.defaultColorsChanged(v))
+      self.consumer?.defaultColorsChanged(v)
 
     case .colorSchemeChanged:
       guard let v = MessagePackUtils.value(from: data) else { return }
-      self.streamSubject.onNext(.colorSchemeChanged(v))
+      self.consumer?.colorSchemeChanged(v)
 
     case .optionSet:
       guard let v = MessagePackUtils.value(from: data) else { return }
-      self.streamSubject.onNext(.optionSet(v))
+      self.consumer?.optionSet(v)
 
     case .autoCommandEvent:
       guard let v = MessagePackUtils.value(from: data) else { return }
-      self.streamSubject.onNext(.autoCommandEvent(v))
+      self.consumer?.autoCommandEvent(v)
 
     case .debug1:
-      self.streamSubject.onNext(.debug1)
+      break
 
     case .highlightAttrs:
       guard let v = MessagePackUtils.value(from: data) else { return }
-      self.streamSubject.onNext(.highlightAttrs(v))
+      self.consumer?.setAttr(with: v)
 
     case .rpcEventSubscribed:
-      self.streamSubject.onNext(.rpcEventSubscribed)
+      self.consumer?.rpcEventSubscribed()
 
     case .fatalError:
-      self.streamSubject.onNext(.fatalError(MessagePackUtils.value(from: data)))
+      self.consumer?.bridgeHasFatalError(MessagePackUtils.value(from: data))
 
     @unknown default:
       self.log.error("Unkonwn msg type from NvimServer")
-      
+
     }
   }
 
@@ -353,7 +336,6 @@ class UiBridge {
   private let scheduler: SerialDispatchQueueScheduler
   private let queue: DispatchQueue
 
-  private let streamSubject = PublishSubject<Message>()
   private let disposeBag = DisposeBag()
 
   private var localServerName: String {

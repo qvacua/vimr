@@ -81,15 +81,23 @@ class UiRootReducer: ReducerType {
 
       case .close:
         if appState.mainWindows[uuid]?.isTemporarySession == true {
+          if appState.currentMainWindowUuid == uuid {
+            appState.currentMainWindowUuid = nil
+          }
+          appState.mainWindows.removeValue(forKey: uuid)
+
           break
         }
 
-        if appState.currentMainWindowUuid == uuid, let mainWindowToClose = appState.mainWindows[uuid] {
-          appState.mainWindowTemplate = self.mainWindowTemplate(from: appState.mainWindowTemplate,
-                                                                new: mainWindowToClose,
-                                                                isFullScreen: false)
+        if appState.currentMainWindowUuid == uuid,
+           let mainWindowToClose = appState.mainWindows[uuid] {
 
           appState.currentMainWindowUuid = nil
+          appState.mainWindowTemplate = self.mainWindowTemplate(
+            from: appState.mainWindowTemplate,
+            new: mainWindowToClose,
+            isFullScreen: false
+          )
         }
 
         appState.mainWindows.removeValue(forKey: uuid)

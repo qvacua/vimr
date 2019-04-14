@@ -19,10 +19,6 @@ private struct SizedFontTrait: Hashable {
 }
 
 extension FontTrait: Hashable {
-
-  public var hashValue: Int {
-    return Int(self.rawValue)
-  }
 }
 
 final class FontUtils {

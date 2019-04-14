@@ -3,7 +3,7 @@
 set -e
 
 CODE_SIGN=$1
-DEPLOYMENT_TARGET="10.11"
+DEPLOYMENT_TARGET="10.13"
 
 echo "### Building VimR target"
 

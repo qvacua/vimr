@@ -1,10 +1,15 @@
-# ???
+# 0.26.10-316
 
-* Bugfix: wrong color of "Select the HTML file" button of HTML preview tool
-* Bugfix: memory leak (strange behavior between `CTFontManager` and `NSFontManager`)
+* Minimum macOS requirement is now 10.13 High Sierra; see GH-715
+* Bugfix: Wrong closing behavior of temporary sessions
 * Use Swift 5
 * Dependencies updates:
     - eonil/FSEvents (instead of eonil/FileSystemEvents)
+
+# 0.26.9-312
+
+* Bugfix: wrong color of "Select the HTML file" button of HTML preview tool
+* Bugfix: memory leak (strange behavior between `CTFontManager` and `NSFontManager`)
 
 # 0.26.8-311
 

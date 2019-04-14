@@ -9,6 +9,14 @@ import MessagePack
 
 extension NvimView {
 
+  final func initVimError() {
+    self.eventsSubject.onNext(.initVimError)
+  }
+
+  final func optionSet(_ value: MessagePackValue) {
+
+  }
+
   final func resize(_ value: MessagePackValue) {
     guard let array = MessagePackUtils.array(
       from: value, ofSize: 2, conversion: { $0.intValue }
@@ -213,10 +221,10 @@ extension NvimView {
     }
   }
 
-  final func ipcBecameInvalid(_ reason: String) {
-    self.bridgeLogger.fault("Bridge became invalid: \(reason)")
+  final func ipcBecameInvalid(_ error: Swift.Error) {
+    self.bridgeLogger.fault("Bridge became invalid: \(error)")
 
-    self.eventsSubject.onNext(.ipcBecameInvalid(reason))
+    self.eventsSubject.onNext(.ipcBecameInvalid(error.localizedDescription))
     self.eventsSubject.onCompleted()
 
     self.bridgeLogger.fault("Force-closing due to IPC error.")
@@ -224,11 +232,11 @@ extension NvimView {
       .stop()
       .andThen(self.bridge.forceQuit())
       .observeOn(MainScheduler.instance)
-      .wait(onCompleted: {
-        self.bridgeLogger.fault("Successfully force-closed the bridge.")
-      }, onError: {
-        self.bridgeLogger.fault("There was an error force-closing" +
-                                " the bridge: \($0)")
+      .wait(onCompleted: { [weak self] in
+        self?.bridgeLogger.fault("Successfully force-closed the bridge.")
+      }, onError: { [weak self] in
+        self?.bridgeLogger.fault("There was an error force-closing" +
+                                 " the bridge: \($0)")
       })
   }
 
@@ -568,9 +576,7 @@ extension NvimView {
       }
       .subscribe(onSuccess: {
         self.eventsSubject.onNext(.bufferWritten($0))
-        if #available(OSX 10.12.2, *) {
-          self.updateTouchBarTab()
-        }
+        self.updateTouchBarTab()
       }, onError: { error in
         self.bridgeLogger.error("Could not get the buffer \(handle): \(error)")
         self.eventsSubject.onNext(
@@ -586,9 +592,7 @@ extension NvimView {
       .filter { $0.apiBuffer.handle == handle }
       .subscribe(onSuccess: {
         self.eventsSubject.onNext(.newCurrentBuffer($0))
-        if #available(OSX 10.12.2, *) {
-          self.updateTouchBarTab()
-        }
+        self.updateTouchBarTab()
       }, onError: { error in
         self.bridgeLogger.error("Could not get the current buffer: \(error)")
         self.eventsSubject.onNext(
@@ -600,9 +604,7 @@ extension NvimView {
 
   private func bufferListChanged() {
     self.eventsSubject.onNext(.bufferListChanged)
-    if #available(OSX 10.12.2, *) {
-      self.updateTouchBarCurrentBuffer()
-    }
+    self.updateTouchBarCurrentBuffer()
   }
 }
 
