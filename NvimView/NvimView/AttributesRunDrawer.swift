@@ -18,6 +18,12 @@ final class AttributesRunDrawer {
       self.updateFontMetrics()
     }
   }
+  
+  var characterspacing: CGFloat {
+    didSet {
+      self.updateFontMetrics()
+    }
+  }
 
   var usesLigatures: Bool
   var drawsParallel = false
@@ -28,9 +34,10 @@ final class AttributesRunDrawer {
   private(set) var underlinePosition: CGFloat = 0
   private(set) var underlineThickness: CGFloat = 0
 
-  init(baseFont: NSFont, linespacing: CGFloat, usesLigatures: Bool) {
+  init(baseFont: NSFont, linespacing: CGFloat, characterspacing: CGFloat, usesLigatures: Bool) {
     self.font = baseFont
     self.linespacing = linespacing
+    self.characterspacing = characterspacing
     self.usesLigatures = usesLigatures
 
     self.updateFontMetrics()
@@ -195,7 +202,7 @@ final class AttributesRunDrawer {
 
   private func updateFontMetrics() {
     self.cellSize = FontUtils.cellSize(
-      of: self.font, linespacing: self.linespacing
+      of: self.font, linespacing: self.linespacing, characterspacing: self.characterspacing
     )
     self.baselineOffset = self.cellSize.height - CTFontGetAscent(self.font)
     self.descent = CTFontGetDescent(font)

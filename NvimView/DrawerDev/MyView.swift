@@ -21,7 +21,7 @@ class MyView: NSView {
   override func draw(_ dirtyRect: NSRect) {
     guard let context = NSGraphicsContext.current?.cgContext else { return }
 
-    let cellSize = FontUtils.cellSize(of: fira, linespacing: 1)
+    let cellSize = FontUtils.cellSize(of: fira, linespacing: 1, characterspacing: 1)
 
     /*
     let string = "a\u{034B}"
@@ -103,7 +103,7 @@ class MyView: NSView {
 
   private let ugrid = UGrid()
   private let runDrawer = AttributesRunDrawer(
-    baseFont: fira, linespacing: 1, usesLigatures: true
+    baseFont: fira, linespacing: 1, characterspacing: 1, usesLigatures: true
   )
 
   private func draw(cellGridIn context: CGContext, cellSize: CGSize) {
