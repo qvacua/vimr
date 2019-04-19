@@ -18,6 +18,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     case setUsesLigatures(Bool)
     case setFont(NSFont)
     case setLinespacing(CGFloat)
+    case setCharacterspacing(CGFloat)
   }
 
   override var displayName: String {
@@ -30,6 +31,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 
   override func windowWillClose() {
     self.linespacingAction()
+    self.characterspacingAction()
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
@@ -37,6 +39,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 
     self.font = state.mainWindowTemplate.appearance.font
     self.linespacing = state.mainWindowTemplate.appearance.linespacing
+    self.characterspacing = state.mainWindowTemplate.appearance.characterspacing
     self.usesLigatures = state.mainWindowTemplate.appearance.usesLigatures
     self.usesColorscheme = state.mainWindowTemplate.appearance.usesTheme
     self.showsFileIcon = state.mainWindowTemplate.appearance.showsFileIcon
@@ -53,6 +56,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 
         guard self.font != appearance.font
               || self.linespacing != appearance.linespacing
+              || self.characterspacing != appearance.characterspacing
               || self.usesLigatures != appearance.usesLigatures
               || self.usesColorscheme != appearance.usesTheme
               || self.showsFileIcon != appearance.showsFileIcon else {
@@ -62,6 +66,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 
         self.font = appearance.font
         self.linespacing = appearance.linespacing
+        self.characterspacing = appearance.characterspacing
         self.usesLigatures = appearance.usesLigatures
         self.usesColorscheme = appearance.usesTheme
         self.showsFileIcon = appearance.showsFileIcon
@@ -76,6 +81,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 
   private var font: NSFont
   private var linespacing: CGFloat
+  private var characterspacing: CGFloat
   private var usesLigatures: Bool
   private var usesColorscheme: Bool
   private var showsFileIcon: Bool
@@ -87,6 +93,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
   private let sizeCombo = NSComboBox(forAutoLayout: ())
   private let fontPopup = NSPopUpButton(frame: .zero, pullsDown: false)
   private let linespacingField = NSTextField(forAutoLayout: ())
+  private let characterspacingField = NSTextField(forAutoLayout: ())
   private let ligatureCheckbox = NSButton(forAutoLayout: ())
   private let previewArea = NSTextView(frame: .zero)
 
@@ -153,6 +160,9 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 
     let linespacingTitle = self.titleTextField(title: "Line Spacing:")
     let linespacingField = self.linespacingField
+    
+    let characterspacingTitle = self.titleTextField(title: "Character Spacing:")
+    let characterspacingField = self.characterspacingField
 
     let ligatureCheckbox = self.ligatureCheckbox
     self.configureCheckbox(button: ligatureCheckbox,
@@ -191,6 +201,8 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     self.addSubview(sizeCombo)
     self.addSubview(linespacingTitle)
     self.addSubview(linespacingField)
+    self.addSubview(characterspacingTitle)
+    self.addSubview(characterspacingField)
     self.addSubview(ligatureCheckbox)
     self.addSubview(previewScrollView)
 
@@ -233,8 +245,21 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
                                            queue: nil) { [unowned self] _ in
       self.linespacingAction()
     }
+    
+    characterspacingTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
+    characterspacingTitle.autoPinEdge(.right, to: .right, of: linespacingTitle)
+    characterspacingTitle.autoAlignAxis(.baseline, toSameAxisOf: characterspacingField)
+    
+    characterspacingField.autoPinEdge(.top, to: .bottom, of: linespacingField, withOffset: 18)
+    characterspacingField.autoPinEdge(.left, to: .right, of: characterspacingTitle, withOffset: 5)
+    characterspacingField.autoSetDimension(.width, toSize: 60)
+    NotificationCenter.default.addObserver(forName: NSControl.textDidEndEditingNotification,
+                                           object: characterspacingField,
+                                           queue: nil) { [unowned self] _ in
+                                            self.characterspacingAction()
+    }
 
-    ligatureCheckbox.autoPinEdge(.top, to: .bottom, of: linespacingField, withOffset: 18)
+    ligatureCheckbox.autoPinEdge(.top, to: .bottom, of: characterspacingField, withOffset: 18)
     ligatureCheckbox.autoPinEdge(.left, to: .right, of: fontTitle, withOffset: 5)
 
     previewScrollView.autoSetDimension(.height, toSize: 200, relation: .greaterThanOrEqual)
@@ -248,6 +273,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     self.fontPopup.selectItem(withTitle: self.font.fontName)
     self.sizeCombo.stringValue = String(Int(self.font.pointSize))
     self.linespacingField.stringValue = String(format: "%.2f", self.linespacing)
+    self.characterspacingField.stringValue = String(format: "%.2f", self.characterspacing)
     self.ligatureCheckbox.boolState = self.usesLigatures
     self.previewArea.font = self.font
     self.colorschemeCheckbox.boolState = self.usesColorscheme
@@ -328,6 +354,22 @@ extension AppearancePref {
 
     return cgfLinespacing
   }
+  
+  func characterspacingAction() {
+    let newCharacterspacing = self.cappedCharacterspacing(self.characterspacingField.floatValue)
+    self.emit(.setCharacterspacing(newCharacterspacing))
+  }
+  
+  private func cappedCharacterspacing(_ characterspacing: Float) -> CGFloat {
+    let cgfCharacterspacing = characterspacing.cgf
+    
+    guard cgfCharacterspacing >= 0.0 else {
+      return NvimView.defaultCharacterspacing
+    }
+    
+    return cgfCharacterspacing
+  }
+
 
   private func cappedFontSize(_ size: Int) -> CGFloat {
     let cgfSize = size.cgf

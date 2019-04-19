@@ -177,11 +177,13 @@ struct AppearanceState: Codable {
     case editorFontName = "editor-font-name"
     case editorFontSize = "editor-font-size"
     case editorLinespacing = "editor-linespacing"
+    case editorCharacterspacing = "editor-characterspacing"
     case editorUsesLigatures = "editor-uses-ligatures"
   }
 
   var font = NSFont.userFixedPitchFont(ofSize: 13)!
   var linespacing: CGFloat = 1
+  var characterspacing: CGFloat = 1
   var usesLigatures = true
 
   var usesTheme = true
@@ -200,6 +202,7 @@ struct AppearanceState: Codable {
     }
 
     self.linespacing = (try container.decodeIfPresent(Float.self, forKey: .editorLinespacing) ?? 1.0).cgf
+    self.characterspacing = (try container.decodeIfPresent(Float.self, forKey: .editorCharacterspacing) ?? 1.0).cgf
     self.usesLigatures = try container.decodeIfPresent(Bool.self, forKey: .editorUsesLigatures) ?? true
 
     self.usesTheme = try container.decodeIfPresent(Bool.self, forKey: .usesTheme) ?? true
@@ -214,6 +217,7 @@ struct AppearanceState: Codable {
     try container.encode(self.font.fontName, forKey: .editorFontName)
     try container.encode(self.font.pointSize, forKey: .editorFontSize)
     try container.encode(self.linespacing, forKey: .editorLinespacing)
+    try container.encode(self.characterspacing, forKey: .editorCharacterspacing)
     try container.encode(self.usesLigatures, forKey: .editorUsesLigatures)
   }
 

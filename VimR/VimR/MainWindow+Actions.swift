@@ -74,6 +74,12 @@ extension MainWindow {
 
       self.emit(self.uuidAction(for: .setLinespacing(linespacing.cgf)))
 
+    case .setCharacterspacing:
+      guard params.count == 1 else { return }
+      guard let characterspacing = params[0].floatValue else { return }
+      
+      self.emit(self.uuidAction(for: .setCharacterspacing(characterspacing.cgf)))
+
     }
   }
 

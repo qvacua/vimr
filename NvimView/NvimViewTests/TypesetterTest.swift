@@ -658,8 +658,8 @@ private let baskerville = NSFont(name: "Baskerville", size: 13)!
 private let kohinoorDevanagari = NSFont(name: "Kohinoor Devanagari", size: 13)!
 
 private let defaultWidth = FontUtils
-  .cellSize(of: defaultFont, linespacing: 1).width
-private let firaWidth = FontUtils.cellSize(of: fira, linespacing: 1).width
+  .cellSize(of: defaultFont, linespacing: 1, characterspacing: 1).width
+private let firaWidth = FontUtils.cellSize(of: fira, linespacing: 1, characterspacing: 1).width
 
 private let offset = CGPoint(x: 7, y: 8)
 

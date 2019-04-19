@@ -17,4 +17,5 @@ enum RpcEvent: String, CaseIterable {
 
   case setFont = "com.qvacua.vimr.rpc-events.set-font"
   case setLinespacing = "com.qvacua.vimr.rpc-events.set-linespacing"
+  case setCharacterspacing = "com.qvacua.vimr.rpc-events.set-characterspacing"
 }

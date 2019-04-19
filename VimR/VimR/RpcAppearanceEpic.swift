@@ -28,6 +28,9 @@ class RpcAppearanceEpic: EpicType {
 
       case .setLinespacing(let linespacing):
         self.emit(.setLinespacing(linespacing))
+        
+      case .setCharacterspacing(let characterspacing):
+        self.emit(.setCharacterspacing(characterspacing))
 
       default:
         break

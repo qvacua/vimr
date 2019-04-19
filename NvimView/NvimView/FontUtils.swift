@@ -23,14 +23,15 @@ extension FontTrait: Hashable {
 
 final class FontUtils {
 
-  static func cellSize(of font: NSFont, linespacing: CGFloat) -> CGSize {
+  static func cellSize(of font: NSFont, linespacing: CGFloat, characterspacing: CGFloat) -> CGSize {
     if let cached = cellSizeWithDefaultLinespacingCache.object(forKey: font) {
       return CGSize(
-        width: cached.width,
+        width: ceil(characterspacing * cached.width),
         height: ceil(linespacing * cached.height)
       )
     }
 
+    // adapted from here: https://github.com/gnachman/iTerm2/blob/master/sources/FontSizeEstimator.m#L66
     let capitalM = [UniChar(0x004D)]
     var glyph = [CGGlyph(0)]
     var advancement = CGSize.zero
@@ -50,7 +51,7 @@ final class FontUtils {
     )
 
     let cellSize = CGSize(
-      width: advancement.width,
+      width: ceil(characterspacing * advancement.width),
       height: ceil(linespacing * cellSizeToCache.height)
     )
 

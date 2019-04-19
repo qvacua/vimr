@@ -149,6 +149,7 @@ class MainWindow: NSObject,
 
     self.defaultFont = state.appearance.font
     self.linespacing = state.appearance.linespacing
+    self.characterspacing = state.appearance.characterspacing
     self.usesLigatures = state.appearance.usesLigatures
     self.drawsParallel = state.drawsParallel
 
@@ -231,6 +232,7 @@ class MainWindow: NSObject,
 
   private var defaultFont = NvimView.defaultFont
   private var linespacing = NvimView.defaultLinespacing
+  private var characterspacing = NvimView.defaultCharacterspacing
   private var usesLigatures = true
   private var drawsParallel = false
 
@@ -419,9 +421,11 @@ class MainWindow: NSObject,
 
         if self.defaultFont != state.appearance.font
            || self.linespacing != state.appearance.linespacing
+           || self.characterspacing != state.appearance.characterspacing
            || self.usesLigatures != state.appearance.usesLigatures {
           self.defaultFont = state.appearance.font
           self.linespacing = state.appearance.linespacing
+          self.characterspacing = state.appearance.characterspacing
           self.usesLigatures = state.appearance.usesLigatures
 
           self.updateNeoVimAppearance()
@@ -447,6 +451,7 @@ class MainWindow: NSObject,
   private func updateNeoVimAppearance() {
     self.neoVimView.font = self.defaultFont
     self.neoVimView.linespacing = self.linespacing
+    self.neoVimView.characterspacing = self.characterspacing
     self.neoVimView.usesLigatures = self.usesLigatures
   }
 
