@@ -1,3 +1,7 @@
+# ???
+
+* GH-720: Add option to change spacing between characters; thanks @tkonolige!
+
 # 0.26.10-316
 
 * Minimum macOS requirement is now 10.13 High Sierra; see GH-715
