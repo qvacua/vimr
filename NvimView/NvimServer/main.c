@@ -51,12 +51,12 @@ static void observe_parent_termination() {
   );
 
   if (source == NULL) {
-    os_log_error(logger, "No parent process monitoring...");
+    os_log_error(logger, "No parent process monitoring.");
     return;
   }
 
   dispatch_source_set_event_handler(source, ^{
-    os_log_fault(logger, "Exiting neovim server due to parent termination.");
+    os_log_fault(logger, "Exiting NvimServer due to parent termination.");
     CFRunLoopStop(CFRunLoopGetMain());
     dispatch_source_cancel(source);
   });
