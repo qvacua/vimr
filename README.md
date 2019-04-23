@@ -15,7 +15,7 @@ VimR — Neovim Refined
 
 Project VimR is a (YA) Neovim GUI for macOS. The goal is to build an editor that uses Neovim inside with many of the convenience GUI features similar to those present in modern editors. We mainly use Swift, but also use Objective-C when its C-nature helps.
 
-There are other Neovim GUIs for macOS, e.g. [NyaoVim](https://github.com/rhysd/NyaoVim), [neovim-dot-app](https://github.com/rogual/neovim-dot-app), [Oni](https://onivim.io), etc., so why?
+There are other Neovim GUIs for macOS, e.g. [NyaoVim](https://github.com/rhysd/NyaoVim), [neovim-dot-app](https://github.com/rogual/neovim-dot-app), [Oni](https://www.onivim.io), etc., so why?
 
 - play around (obviously) with [Neovim](https://github.com/qvacua/neovim),
 - play around with Swift (and especially with [RxSwift](https://github.com/ReactiveX/RxSwift)) and
