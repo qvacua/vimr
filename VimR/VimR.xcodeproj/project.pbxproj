@@ -689,7 +689,7 @@
 		4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaMarkdown.framework; path = ../Carthage/Build/Mac/CocoaMarkdown.framework; sourceTree = "<group>"; };
 		4BF18C341FD2E2AA00DF95D1 /* CocoaFontAwesome.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaFontAwesome.framework; path = ../Carthage/Build/Mac/CocoaFontAwesome.framework; sourceTree = "<group>"; };
 		4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = ../Carthage/Build/Mac/RxSwift.framework; sourceTree = "<group>"; };
-		4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../Carthage/Build/Mac/Sparkle.framework; sourceTree = "<group>"; };
+		4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../Sparkle.framework; sourceTree = "<group>"; };
 		4BF18C381FD2E2AB00DF95D1 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = ../Carthage/Build/Mac/RxCocoa.framework; sourceTree = "<group>"; };
 		4BF18C491FD2E2DE00DF95D1 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = ../Carthage/Build/Mac/Nimble.framework; sourceTree = "<group>"; };
 		4BF18C501FD2E4F200DF95D1 /* RxTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxTest.framework; path = ../Carthage/Build/Mac/RxTest.framework; sourceTree = "<group>"; };
