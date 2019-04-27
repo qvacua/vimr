@@ -1,7 +1,7 @@
 # included as Framework
 github "ReactiveX/RxSwift" == 4.4.2
 github "PureLayout/PureLayout" == 3.1.4
-github "qvacua/Sparkle" "master"
+github "qvacua/Sparkle" == 1.21.3-qvacua
 github "qvacua/CocoaFontAwesome" "master"
 github "qvacua/CocoaMarkdown" "master"
 github "qvacua/swifter" "nonpublic"
