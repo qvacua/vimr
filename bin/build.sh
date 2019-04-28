@@ -25,10 +25,11 @@ if [[ "${PUBLISH}" = true ]] && [[ "${RELEASE_NOTES}" == "" ]] ; then
     exit 1
 fi
 
-if [[ "${IS_SNAPSHOT}" = false ]] && [[ "${UPDATE_APPCAST}" = false ]] ; then
-    echo "### ERROR Not updating appcast for release!"
-    exit 1
-fi
+# We have to manually notarize the app for now.
+#if [[ "${IS_SNAPSHOT}" = false ]] && [[ "${UPDATE_APPCAST}" = false ]] ; then
+#    echo "### ERROR Not updating appcast for release!"
+#    exit 1
+#fi
 
 if [[ "${IS_SNAPSHOT}" = false ]] && [[ "${BRANCH}" != "master" ]] ; then
     echo "### ERROR Not building master for release!"
@@ -50,10 +51,10 @@ echo "### Building VimR"
 ./bin/prepare_repositories.sh
 ./bin/clean_old_builds.sh
 
-if [[ "${PUBLISH}" = true ]] ; then
+if [[ "${IS_SNAPSHOT}" = false ]] || [[ "${PUBLISH}" = true ]] ; then
     ./bin/set_new_versions.sh ${IS_SNAPSHOT} "${MARKETING_VERSION}"
 else
-    echo "Not publishing => not incrementing the version..."
+    echo "Not publishing and no release => not incrementing the version..."
 fi
 
 ./bin/build_vimr.sh true
