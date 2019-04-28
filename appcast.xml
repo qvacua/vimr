@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.27.0-321</title>
+      <title>v0.27.1-322</title>
       <description><![CDATA[
     <ul>
-<li>GH-720: Add option to change spacing between characters; thanks @tkonolige!</li>
+<li>Notarize the app</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.27.0-321
+        https://github.com/qvacua/vimr/releases/tag/v0.27.1-322
       </releaseNotesLink>
-      <pubDate>2019-04-27T01:12:22.320806</pubDate>
+      <pubDate>2019-04-28T16:37:19.584669</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.27.0-321/VimR-v0.27.0-321.tar.bz2"
-                 sparkle:version="321"
-                 sparkle:shortVersionString="0.27.0"
-                 sparkle:dsaSignature="MC0CFHTV+dN6C75QAZHHmh7E5c8lqzC5AhUA5axWu7kZo7OwofIC9Q23H2ilC9k="
-                 length="14409516"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.27.1-322/Users.hat.Downloads.VimR-v0.27.1-322.tar.bz2"
+                 sparkle:version="322"
+                 sparkle:shortVersionString="0.27.1"
+                 sparkle:dsaSignature="MCwCFCRfL3jIwRYhZQaFVfvdKYA4G43nAhRjUJNK34NC+Yuip1ESX9iu7VqZ4g=="
+                 length="14455566"
                  type="application/octet-stream"/>
     </item>
   </channel>
