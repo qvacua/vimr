@@ -19,7 +19,7 @@ echo "IS_SNAPSHOT: ${IS_SNAPSHOT}"
 pushd build/Build/Products/Release
 
 echo "### Creating release"
-if [ "${IS_SNAPSHOT}" = true ] ; then
+if [[ "${IS_SNAPSHOT}" = true ]] ; then
     GITHUB_TOKEN="${TOKEN}" github-release release \
         --user qvacua \
         --repo vimr \
@@ -36,6 +36,10 @@ else
         --description "${RELEASE_NOTES}"
 fi
 
+if [[ -z "${VIMR_FILE_NAME}" ]]; then
+     echo "No file to upload; exiting..."
+     exit 0
+fi
 
 echo "### Uploading build"
 GITHUB_TOKEN="${TOKEN}" github-release upload \

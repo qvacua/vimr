@@ -30,6 +30,9 @@ class AppearancePrefReducer: ReducerType {
 
     case let .setLinespacing(linespacing):
       appearance.linespacing = linespacing
+      
+    case let .setCharacterspacing(characterspacing):
+      appearance.characterspacing = characterspacing
 
     }
 

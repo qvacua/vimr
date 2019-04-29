@@ -40,6 +40,7 @@ extension MainWindow {
     // RPC actions
     case setFont(NSFont)
     case setLinespacing(CGFloat)
+    case setCharacterspacing(CGFloat)
   }
 
   enum FocusableView {

@@ -38,3 +38,8 @@ function! s:VimRSetLinespacing(linespacing) abort
 	call rpcnotify(0, 'com.qvacua.NvimView', 'set-linespacing', a:linespacing)
 endfunction
 command! -nargs=1 VimRSetLinespacing call s:VimRSetLinespacing(<args>)
+
+function! s:VimRSetCharacterspacing(characterspacing) abort
+call rpcnotify(0, 'com.qvacua.NvimView', 'set-linespacing', a:characterspacing)
+endfunction
+command! -nargs=1 VimRSetCharacterspacing call s:VimRSetCharacterspacing(<args>)

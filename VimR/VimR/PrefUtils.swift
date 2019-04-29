@@ -100,4 +100,13 @@ class PrefUtils {
 
     return linespacing
   }
+  
+  static func saneCharacterspacing(_ fCharacterspacing: Float) -> CGFloat {
+    let characterspacing = fCharacterspacing.cgf
+    guard characterspacing >= 0.0 else {
+      return NvimView.defaultCharacterspacing
+    }
+    
+    return characterspacing
+  }
 }

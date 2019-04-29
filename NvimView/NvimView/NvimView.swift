@@ -20,6 +20,7 @@ public class NvimView: NSView,
   public static let maxFontSize = 128.cgf
   public static let defaultFont = NSFont.userFixedPitchFont(ofSize: 12)!
   public static let defaultLinespacing = 1.cgf
+  public static let defaultCharacterspacing = 1.cgf
 
   public static let minLinespacing = (0.5).cgf
   public static let maxLinespacing = 8.cgf
@@ -61,6 +62,21 @@ public class NvimView: NSView,
       }
 
       self._linespacing = newValue
+      self.updateFontMetaData(self._font)
+    }
+  }
+    
+  public var characterspacing: CGFloat {
+    get {
+      return self._characterspacing
+    }
+    
+    set {
+      guard newValue >= 0.0 else {
+        return
+      }
+      
+      self._characterspacing = newValue
       self.updateFontMetaData(self._font)
     }
   }
@@ -121,6 +137,7 @@ public class NvimView: NSView,
     self.drawer = AttributesRunDrawer(
       baseFont: self._font,
       linespacing: self._linespacing,
+      characterspacing: self._characterspacing,
       usesLigatures: self.usesLigatures
     )
     self.bridge = UiBridge(uuid: self.uuid, queue: self.queue, config: config)
@@ -135,7 +152,7 @@ public class NvimView: NSView,
 
     self.wantsLayer = true
     self.cellSize = FontUtils.cellSize(
-      of: self.font, linespacing: self.linespacing
+      of: self.font, linespacing: self.linespacing, characterspacing: self.characterspacing
     )
 
     self.api.queue = self.queue
@@ -221,4 +238,5 @@ public class NvimView: NSView,
 
   // MARK: - Private
   private var _linespacing = NvimView.defaultLinespacing
+  private var _characterspacing = NvimView.defaultCharacterspacing
 }

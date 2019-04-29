@@ -130,13 +130,9 @@
 		4BF01CF2223502DB00411218 /* CoreCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BAB9FFE8345228B559EC /* CoreCommons.swift */; };
 		4BF18510212DCCEA00954FE7 /* NvimView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90F0041FD2AF59008A39E0 /* NvimView.framework */; };
 		4BF18511212DCCF600954FE7 /* NvimView.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B90F0041FD2AF59008A39E0 /* NvimView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BF18512212DCD6E00954FE7 /* RxNeovimApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B17E548209E3E4100265C1D /* RxNeovimApi.framework */; };
 		4BF18514212DCD6E00954FE7 /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CA209740E900EC394A /* MessagePack.framework */; };
-		4BF18515212DCD6E00954FE7 /* RxMsgpackRpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5C8209740E400EC394A /* RxMsgpackRpc.framework */; };
 		4BF18516212DCD6E00954FE7 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC5B0421FE551DF0071D64F /* RxSwift.framework */; };
-		4BF18517212DCD7900954FE7 /* RxNeovimApi.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B17E548209E3E4100265C1D /* RxNeovimApi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF18519212DCD7900954FE7 /* MessagePack.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB1F5CA209740E900EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BF1851A212DCD7900954FE7 /* RxMsgpackRpc.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB1F5C8209740E400EC394A /* RxMsgpackRpc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF1851B212DCD7900954FE7 /* RxSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BC5B0421FE551DF0071D64F /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF1852321313EE400954FE7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF1852221313EE400954FE7 /* AppDelegate.swift */; };
 		4BF1852521313EE500954FE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BF1852421313EE500954FE7 /* Assets.xcassets */; };
@@ -199,9 +195,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				4BDA50B22160BE1B004D10A9 /* Socket.framework in CopyFiles */,
-				4BF18517212DCD7900954FE7 /* RxNeovimApi.framework in CopyFiles */,
 				4BF18519212DCD7900954FE7 /* MessagePack.framework in CopyFiles */,
-				4BF1851A212DCD7900954FE7 /* RxMsgpackRpc.framework in CopyFiles */,
 				4BF1851B212DCD7900954FE7 /* RxSwift.framework in CopyFiles */,
 				4BF18511212DCCF600954FE7 /* NvimView.framework in CopyFiles */,
 				4B0A1B3B212B333700F1E02F /* Nimble.framework in CopyFiles */,
@@ -363,9 +357,7 @@
 			files = (
 				4BF18510212DCCEA00954FE7 /* NvimView.framework in Frameworks */,
 				4B0A1B39212B332800F1E02F /* Nimble.framework in Frameworks */,
-				4BF18512212DCD6E00954FE7 /* RxNeovimApi.framework in Frameworks */,
 				4BF18514212DCD6E00954FE7 /* MessagePack.framework in Frameworks */,
-				4BF18515212DCD6E00954FE7 /* RxMsgpackRpc.framework in Frameworks */,
 				4BDA50B32160BE2C004D10A9 /* Socket.framework in Frameworks */,
 				4BF18516212DCD6E00954FE7 /* RxSwift.framework in Frameworks */,
 			);
@@ -1158,7 +1150,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 319;
+				CURRENT_PROJECT_VERSION = 323;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1220,12 +1212,13 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 319;
+				CURRENT_PROJECT_VERSION = 323;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1249,7 +1242,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 319;
+				DYLIB_CURRENT_VERSION = 323;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				FRAMEWORK_VERSION = A;
@@ -1271,7 +1264,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 319;
+				DYLIB_CURRENT_VERSION = 323;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				FRAMEWORK_VERSION = A;
