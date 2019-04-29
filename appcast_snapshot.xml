@@ -7,22 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.27.1-322</title>
+      <title>v0.27.2-323</title>
       <description><![CDATA[
     <ul>
-<li>Notarize the app</li>
+<li>Update neovim to v0.3.5</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.27.1-322
+        https://github.com/qvacua/vimr/releases/tag/v0.27.2-323
       </releaseNotesLink>
-      <pubDate>2019-04-28T16:37:19.584669</pubDate>
+      <pubDate>2019-04-29T21:49:57.933458</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.27.1-322/Users.hat.Downloads.VimR-v0.27.1-322.tar.bz2"
-                 sparkle:version="322"
-                 sparkle:shortVersionString="0.27.1"
-                 sparkle:dsaSignature="MCwCFCRfL3jIwRYhZQaFVfvdKYA4G43nAhRjUJNK34NC+Yuip1ESX9iu7VqZ4g=="
-                 length="14455566"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.27.2-323/Users.hat.Downloads.VimR-v0.27.2-323.tar.bz2"
+                 sparkle:version="323"
+                 sparkle:shortVersionString="0.27.2"
+                 sparkle:dsaSignature="MC4CFQCPsNwyqiHNPGKrGkLzdSdYF5UWjgIVAIVCw6rH+HJGMeSmoFUcBDx//AmM"
+                 length="14453396"
                  type="application/octet-stream"/>
     </item>
   </channel>
