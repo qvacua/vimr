@@ -390,6 +390,11 @@
 		4BB4CD0E224A7EA000474C79 /* EonilFSEventStreamEventFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4CCF6224A7EA000474C79 /* EonilFSEventStreamEventFlags.swift */; };
 		4BC164281FD2DEE1001903BE /* NvimView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC1642B1FD2DEE1001903BE /* NvimView.framework */; };
 		4BC1642E1FD2DEEA001903BE /* NvimView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC1642B1FD2DEE1001903BE /* NvimView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BC903EA22799DEB0016A1CD /* RxRelay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC903E822799DEB0016A1CD /* RxRelay.framework */; };
+		4BC903ED22799E170016A1CD /* RxRelay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC903E822799DEB0016A1CD /* RxRelay.framework */; };
+		4BC903EE22799E180016A1CD /* RxRelay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC903E822799DEB0016A1CD /* RxRelay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BC903EF22799E2D0016A1CD /* RxRelay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC903E822799DEB0016A1CD /* RxRelay.framework */; };
+		4BC903F022799E2D0016A1CD /* RxRelay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC903E822799DEB0016A1CD /* RxRelay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BC97BC72273B27500B68997 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; };
 		4BC97BC82273B27600B68997 /* Sparkle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BDA50B42160BE70004D10A9 /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0A1AA72120C35100F1E02F /* Socket.framework */; };
@@ -451,6 +456,7 @@
 				4B26375C223A487B00021586 /* PureLayout.framework in Embed Frameworks */,
 				4B26375D223A487B00021586 /* RxCocoa.framework in Embed Frameworks */,
 				4B263760223A487B00021586 /* RxSwift.framework in Embed Frameworks */,
+				4BC903EE22799E180016A1CD /* RxRelay.framework in Embed Frameworks */,
 				4B263761223A487B00021586 /* Swifter.framework in Embed Frameworks */,
 				4B263762223A487B00021586 /* Sparkle.framework in Embed Frameworks */,
 				4B263763223A487B00021586 /* NvimView.framework in Embed Frameworks */,
@@ -472,6 +478,7 @@
 				4BEBC23C215FD1AA007113C4 /* Socket.framework in Embed Frameworks */,
 				4BF18C441FD2E2C900DF95D1 /* PureLayout.framework in Embed Frameworks */,
 				4BF18C451FD2E2C900DF95D1 /* RxCocoa.framework in Embed Frameworks */,
+				4BC903F022799E2D0016A1CD /* RxRelay.framework in Embed Frameworks */,
 				4BF18C461FD2E2C900DF95D1 /* RxSwift.framework in Embed Frameworks */,
 				4B9DF287209C8A8B00DF2AAD /* Swifter.framework in Embed Frameworks */,
 				4BC1642E1FD2DEEA001903BE /* NvimView.framework in Embed Frameworks */,
@@ -674,6 +681,7 @@
 		4BB4CCF5224A7EA000474C79 /* EonilFSEventStreamCreateFlags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStreamCreateFlags.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEventStreamCreateFlags.swift; sourceTree = "<group>"; };
 		4BB4CCF6224A7EA000474C79 /* EonilFSEventStreamEventFlags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStreamEventFlags.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEventStreamEventFlags.swift; sourceTree = "<group>"; };
 		4BC1642B1FD2DEE1001903BE /* NvimView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NvimView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BC903E822799DEB0016A1CD /* RxRelay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxRelay.framework; path = ../Carthage/Build/Mac/RxRelay.framework; sourceTree = "<group>"; };
 		4BDF500B1D760A3500D8FBC3 /* FileUtilsTest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FileUtilsTest; sourceTree = "<group>"; };
 		4BDF50181D77540900D8FBC3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OpenQuicklyWindow.xib; sourceTree = "<group>"; };
 		4BE34B822225BAC7002F57D3 /* ShortcutRecorder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ShortcutRecorder.framework; path = ../Carthage/Build/Mac/ShortcutRecorder.framework; sourceTree = "<group>"; };
@@ -708,6 +716,7 @@
 				4B263704223A487B00021586 /* RxSwift.framework in Frameworks */,
 				4B263706223A487B00021586 /* Sparkle.framework in Frameworks */,
 				4B263708223A487B00021586 /* Swifter.framework in Frameworks */,
+				4BC903ED22799E170016A1CD /* RxRelay.framework in Frameworks */,
 				4B263709223A487B00021586 /* RxCocoa.framework in Frameworks */,
 				4B26370A223A487B00021586 /* ShortcutRecorder.framework in Frameworks */,
 				4B26370B223A487B00021586 /* NvimView.framework in Frameworks */,
@@ -726,6 +735,7 @@
 				4BF18C3C1FD2E2AB00DF95D1 /* CocoaFontAwesome.framework in Frameworks */,
 				4BF18C3E1FD2E2AB00DF95D1 /* RxSwift.framework in Frameworks */,
 				4B9DF286209C8A8B00DF2AAD /* Swifter.framework in Frameworks */,
+				4BC903EF22799E2D0016A1CD /* RxRelay.framework in Frameworks */,
 				4BF18C401FD2E2AB00DF95D1 /* RxCocoa.framework in Frameworks */,
 				4BE34B832225BAC7002F57D3 /* ShortcutRecorder.framework in Frameworks */,
 				4BC164281FD2DEE1001903BE /* NvimView.framework in Frameworks */,
@@ -740,6 +750,7 @@
 				4BF18C511FD2E4F200DF95D1 /* RxTest.framework in Frameworks */,
 				4BF18C4F1FD2E4F100DF95D1 /* RxSwift.framework in Frameworks */,
 				4BF18C4C1FD2E4CE00DF95D1 /* NvimView.framework in Frameworks */,
+				4BC903EA22799DEB0016A1CD /* RxRelay.framework in Frameworks */,
 				4BDA50B42160BE70004D10A9 /* Socket.framework in Frameworks */,
 				4BF18C4A1FD2E2DE00DF95D1 /* Nimble.framework in Frameworks */,
 			);
@@ -933,6 +944,7 @@
 		4B5012001EBA791000F76C46 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4BC903E822799DEB0016A1CD /* RxRelay.framework */,
 				4BE34B822225BAC7002F57D3 /* ShortcutRecorder.framework */,
 				4B0A1AA72120C35100F1E02F /* Socket.framework */,
 				4BB1F5D02097705E00EC394A /* MessagePack.framework */,
