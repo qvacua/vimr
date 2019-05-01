@@ -89,7 +89,7 @@ class UiBridge {
         // This will be completed in .nvimReady branch of handleMessage()
         return Disposables.create()
       })
-      .timeout(timeout, scheduler: self.scheduler)
+      .timeout(.seconds(timeout), scheduler: self.scheduler)
   }
 
   func deleteCharacters(_ count: Int, andInputEscapedString string: String)
@@ -347,4 +347,4 @@ class UiBridge {
   }
 }
 
-private let timeout = CFTimeInterval(5)
+private let timeout = 5
