@@ -17,9 +17,9 @@
         <key>CFBundlePackageType</key>
         <string>APPL</string>
         <key>CFBundleShortVersionString</key>
-        <string>0.27.2</string>
+        <string>0.27.3</string>
         <key>CFBundleVersion</key>
-        <string>323</string>
+        <string>324</string>
         <key>LSMinimumSystemVersion</key>
         <string>$(MACOSX_DEPLOYMENT_TARGET)</string>
         <key>NSHumanReadableCopyright</key>
