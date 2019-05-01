@@ -1,4 +1,11 @@
-# 0.27.2-???
+# ???
+
+* GH-725: Better character spacing; thanks @tkonolige!
+* Dependencies updates:
+    - RxSwift/RxSwift@5.0.1
+    - IBM-Swift/BlueSocket@1.0.46
+
+# 0.27.2-323
 
 * Update neovim to v0.3.5
 

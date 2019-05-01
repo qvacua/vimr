@@ -7,22 +7,27 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.27.2-323</title>
+      <title>v0.27.3-324</title>
       <description><![CDATA[
     <ul>
-<li>Update neovim to v0.3.5</li>
+<li>GH-725: Better character spacing; thanks @tkonolige!</li>
+<li>Dependencies updates:<ul>
+<li>RxSwift/RxSwift@5.0.1</li>
+<li>IBM-Swift/BlueSocket@1.0.46</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.27.2-323
+        https://github.com/qvacua/vimr/releases/tag/v0.27.3-324
       </releaseNotesLink>
-      <pubDate>2019-04-29T21:49:57.933458</pubDate>
+      <pubDate>2019-05-01T11:01:42.506634</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.27.2-323/Users.hat.Downloads.VimR-v0.27.2-323.tar.bz2"
-                 sparkle:version="323"
-                 sparkle:shortVersionString="0.27.2"
-                 sparkle:dsaSignature="MC4CFQCPsNwyqiHNPGKrGkLzdSdYF5UWjgIVAIVCw6rH+HJGMeSmoFUcBDx//AmM"
-                 length="14453396"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.27.3-324/VimR-v0.27.3-324.tar.bz2"
+                 sparkle:version="324"
+                 sparkle:shortVersionString="0.27.3"
+                 sparkle:dsaSignature="MC4CFQDtN/n8J23HtxOJV7PT/fvctzqzDQIVAIrjps40XgMT2zKVT4fchX5ZZO4W"
+                 length="14480395"
                  type="application/octet-stream"/>
     </item>
   </channel>

@@ -68,6 +68,17 @@ brew bundle
 ./bin/build_vimr.sh # VimR.app will be placed in build/Build/Products/Release/
 ```
 
+If the build fails for some reason, do the following and build again:
+
+```
+cd NvimView/neovim
+git reset --hard @
+git clean -fd
+make distclean
+cd ..
+./bin/build_vimr.sh
+```
+
 ## Project Setup
 
 ### Artifacts Hierarchy

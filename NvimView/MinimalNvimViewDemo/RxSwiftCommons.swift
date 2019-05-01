@@ -6,8 +6,7 @@
 import Foundation
 import RxSwift
 
-extension PrimitiveSequence
-  where Element == Never, TraitType == CompletableTrait {
+extension PrimitiveSequence where Element == Never, Trait == CompletableTrait {
 
   func wait(
     onCompleted: (() -> Void)? = nil,

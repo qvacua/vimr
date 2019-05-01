@@ -30,8 +30,8 @@ class MainWindow: NSObject,
   let workspace: Workspace
   let neoVimView: NvimView
 
-  let scrollDebouncer = Debouncer<Action>(interval: 0.75)
-  let cursorDebouncer = Debouncer<Action>(interval: 0.75)
+  let scrollDebouncer = Debouncer<Action>(interval: .milliseconds(750))
+  let cursorDebouncer = Debouncer<Action>(interval: .milliseconds(750))
   var editorPosition = Marked(Position.beginning)
 
   let tools: [Tools: WorkspaceTool]
