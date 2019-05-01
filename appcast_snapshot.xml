@@ -7,7 +7,7 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.27.3-324</title>
+      <title>v0.27.3-325</title>
       <description><![CDATA[
     <ul>
 <li>GH-725: Better character spacing; thanks @tkonolige!</li>
@@ -19,15 +19,15 @@
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.27.3-324
+        https://github.com/qvacua/vimr/releases/tag/v0.27.3-325
       </releaseNotesLink>
-      <pubDate>2019-05-01T11:01:42.506634</pubDate>
+      <pubDate>2019-05-01T13:09:16.324695</pubDate>
       <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.27.3-324/VimR-v0.27.3-324.tar.bz2"
-                 sparkle:version="324"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.27.3-325/VimR-v0.27.3-325.tar.bz2"
+                 sparkle:version="325"
                  sparkle:shortVersionString="0.27.3"
-                 sparkle:dsaSignature="MC4CFQDtN/n8J23HtxOJV7PT/fvctzqzDQIVAIrjps40XgMT2zKVT4fchX5ZZO4W"
-                 length="14480395"
+                 sparkle:dsaSignature="MC0CFFxJ8Hd7GRgPv/leRkvkNJfEs8KBAhUAvgLr9zF3CuFjWDUJRhxbkVmFOyk="
+                 length="14513520"
                  type="application/octet-stream"/>
     </item>
   </channel>
