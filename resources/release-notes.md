@@ -1,5 +1,6 @@
 # ???
 
+* GH-725: Better character spacing
 * Dependencies updates:
     - RxSwift/RxSwift@5.0.1
     - IBM-Swift/BlueSocket@1.0.46
