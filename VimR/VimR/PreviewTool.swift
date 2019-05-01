@@ -118,7 +118,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
       .disposed(by: self.disposeBag)
 
     self.webviewMessageHandler.source
-      .throttle(0.75, latest: true, scheduler: self.scheduler)
+      .throttle(.milliseconds(750), latest: true, scheduler: self.scheduler)
       .subscribe(onNext: { [weak self] position, scrollTop in
         guard let uuid = self?.uuid,
               let previewPosition = self?.previewPosition else { return }
