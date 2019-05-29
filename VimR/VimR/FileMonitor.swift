@@ -44,10 +44,7 @@ class FileMonitor: UiComponent {
               latency: FileMonitor.fileSystemEventsLatency,
               flags: [],
               handler: { [weak self] event in
-                let url = URL(fileURLWithPath: event.path)
-                let parent = FileUtils.commonParent(of: [url])
-
-                self?.emit(.change(in: parent))
+                self?.emit(.change(in: URL(fileURLWithPath: event.path)))
               })
             monitor.setDispatchQueue(monitorDispatchQueue)
             try monitor.start()
