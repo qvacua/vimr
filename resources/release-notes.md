@@ -1,6 +1,7 @@
 # ???
 
 * GH-725: Better character spacing; thanks @tkonolige!
+* Bugfix: File Browser sometimes does not update.
 * Dependencies updates:
     - RxSwift/RxSwift@5.0.1
     - IBM-Swift/BlueSocket@1.0.46
