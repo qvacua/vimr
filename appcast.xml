@@ -21,7 +21,7 @@
         https://github.com/qvacua/vimr/releases/tag/v0.27.4-326
       </releaseNotesLink>
       <pubDate>2019-05-31T19:30:16.632348</pubDate>
-      <minimumSystemVersion>10.10.0</minimumSystemVersion>
+      <minimumSystemVersion>10.13.0</minimumSystemVersion>
       <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.27.4-326/VimR-v0.27.4-326.tar.bz2"
                  sparkle:version="326"
                  sparkle:shortVersionString="0.27.4"
