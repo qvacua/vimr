@@ -1,9 +1,13 @@
-# ???
+# 0.27.4
 
-* GH-725: Better character spacing; thanks @tkonolige!
 * Bugfix: File Browser sometimes does not update.
 * Dependencies updates:
     - Neovim 0.3.7
+
+# 0.27.3
+
+* GH-725: Better character spacing; thanks @tkonolige!
+* Dependencies updates:
     - RxSwift/RxSwift@5.0.1
     - IBM-Swift/BlueSocket@1.0.46
 
