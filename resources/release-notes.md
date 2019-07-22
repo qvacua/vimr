@@ -1,3 +1,9 @@
+# 0.27.5
+
+* Dependencies updates:
+    - Neovim 0.3.8
+
+
 # 0.27.4
 
 * Bugfix: File Browser sometimes does not update.
