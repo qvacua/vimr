@@ -7,27 +7,26 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.27.3-324</title>
+      <title>v0.27.4-326</title>
       <description><![CDATA[
     <ul>
-<li>GH-725: Better character spacing; thanks @tkonolige!</li>
+<li>Bugfix: File Browser sometimes does not update.</li>
 <li>Dependencies updates:<ul>
-<li>RxSwift/RxSwift@5.0.1</li>
-<li>IBM-Swift/BlueSocket@1.0.46</li>
+<li>Neovim 0.3.7</li>
 </ul>
 </li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.27.3-324
+        https://github.com/qvacua/vimr/releases/tag/v0.27.4-326
       </releaseNotesLink>
-      <pubDate>2019-05-01T11:01:42.506634</pubDate>
-      <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.27.3-324/VimR-v0.27.3-324.tar.bz2"
-                 sparkle:version="324"
-                 sparkle:shortVersionString="0.27.3"
-                 sparkle:dsaSignature="MC4CFQDtN/n8J23HtxOJV7PT/fvctzqzDQIVAIrjps40XgMT2zKVT4fchX5ZZO4W"
-                 length="14480395"
+      <pubDate>2019-05-31T19:30:16.632348</pubDate>
+      <minimumSystemVersion>10.13.0</minimumSystemVersion>
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.27.4-326/VimR-v0.27.4-326.tar.bz2"
+                 sparkle:version="326"
+                 sparkle:shortVersionString="0.27.4"
+                 sparkle:dsaSignature="MCwCFCTcKYha1gP3VATXKmlosqU5l+7vAhRuxOj7jlUbilBMepUx4CN4/Eh8oA=="
+                 length="14509863"
                  type="application/octet-stream"/>
     </item>
   </channel>
