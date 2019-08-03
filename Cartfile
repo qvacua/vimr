@@ -1,13 +1,13 @@
 # included as Framework
 github "ReactiveX/RxSwift" == 5.0.1
-github "PureLayout/PureLayout" == 3.1.4
+github "PureLayout/PureLayout" == 3.1.5
 github "qvacua/Sparkle" == 1.21.3-qvacua
 github "qvacua/CocoaFontAwesome" "master"
 github "qvacua/CocoaMarkdown" "master"
 github "qvacua/swifter" "nonpublic"
-github "a2/MessagePack.swift" == 3.0.0
+github "a2/MessagePack.swift" == 3.0.1
 github "qvacua/ShortcutRecorder" "temporary"
-github "IBM-Swift/BlueSocket" == 1.0.46
+github "IBM-Swift/BlueSocket" == 1.0.48
 
 # included directly
 github "eonil/FSEvents" "master"
@@ -15,4 +15,4 @@ github "elegantchaos/DictionaryCoding" == 1.0.6
 github "sindresorhus/github-markdown-css" == 3.0.1
 
 # for testing only
-github "Quick/Nimble" == 8.0.1
+github "Quick/Nimble" == 8.0.2
