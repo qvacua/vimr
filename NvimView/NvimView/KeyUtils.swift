@@ -91,4 +91,5 @@ private let specialKeys = [
   NSF35FunctionKey: "F35",
   0x09: "Tab",
   0x19: "Tab",
+  0xd: "CR",
 ]
