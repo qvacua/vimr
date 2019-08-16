@@ -1,3 +1,7 @@
+# ???
+
+* Add MathJax to Markdown preview
+
 # 0.27.5
 
 * Dependencies updates:
