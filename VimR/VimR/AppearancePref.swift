@@ -164,6 +164,10 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     let characterspacingTitle = self.titleTextField(title: "Character Spacing:")
     let characterspacingField = self.characterspacingField
 
+    let characterspacingInfo = self.infoTextField(
+      markdown: "Character spacing not equal to `1` will likely break ligatures."
+    )
+
     let ligatureCheckbox = self.ligatureCheckbox
     self.configureCheckbox(button: ligatureCheckbox,
                            title: "Use Ligatures",
@@ -203,6 +207,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     self.addSubview(linespacingField)
     self.addSubview(characterspacingTitle)
     self.addSubview(characterspacingField)
+    self.addSubview(characterspacingInfo)
     self.addSubview(ligatureCheckbox)
     self.addSubview(previewScrollView)
 
@@ -259,7 +264,10 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
                                             self.characterspacingAction()
     }
 
-    ligatureCheckbox.autoPinEdge(.top, to: .bottom, of: characterspacingField, withOffset: 18)
+    characterspacingInfo.autoPinEdge(.left, to: .left, of: characterspacingField)
+    characterspacingInfo.autoPinEdge(.top, to: .bottom, of: characterspacingField, withOffset: 5)
+
+    ligatureCheckbox.autoPinEdge(.top, to: .bottom, of: characterspacingInfo, withOffset: 18)
     ligatureCheckbox.autoPinEdge(.left, to: .right, of: fontTitle, withOffset: 5)
 
     previewScrollView.autoSetDimension(.height, toSize: 200, relation: .greaterThanOrEqual)
