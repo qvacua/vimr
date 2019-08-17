@@ -49,7 +49,7 @@ class PreviewMiddleware {
       }
 
       do {
-        try self.render(buffer, to: html)
+        try self.render(buffer, to: html, using: state.customMarkdownProcessor)
         self.previewFiles[uuid] = html
       } catch let error as NSError {
         // FIXME: error handling!
@@ -61,16 +61,42 @@ class PreviewMiddleware {
     private let log = OSLog(subsystem: Defs.loggerSubsystem,
                             category: Defs.LoggerCategory.middleware)
 
-    private func render(_ bufferUrl: URL, to htmlUrl: URL) throws {
-      let doc = CMDocument(contentsOfFile: bufferUrl.path, options: .sourcepos)
-      let renderer = CMHTMLRenderer(document: doc)
+    private func render(_ bufferUrl: URL, to htmlUrl: URL, using customMarkdownProcessor: String) throws {
+      var body: String?
 
-      guard let body = renderer?.render() else {
+      if customMarkdownProcessor != "" {
+        let content = try Data(contentsOf: bufferUrl)
+
+        let sh = Process()
+
+        let output = Pipe()
+        let input = Pipe()
+        let err = Pipe()
+
+        sh.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+        sh.arguments = ["bash", "-l", "-c", customMarkdownProcessor]
+        sh.standardInput = input
+        sh.standardOutput = output
+        sh.standardError = err
+
+        input.fileHandleForWriting.write(content)
+        input.fileHandleForWriting.closeFile()
+
+        try sh.run()
+
+        body = String(decoding: output.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self)
+      } else {
+        let doc = CMDocument(contentsOfFile: bufferUrl.path, options: .sourcepos)
+        let renderer = CMHTMLRenderer(document: doc)
+        body = renderer?.render()
+      }
+
+      if body == nil {
         // FIXME: error handling!
         return
       }
 
-      let html = filledTemplate(body: body, title: bufferUrl.lastPathComponent)
+      let html = filledTemplate(body: body!, title: bufferUrl.lastPathComponent)
       let htmlFilePath = htmlUrl.path
 
       try html.write(toFile: htmlFilePath, atomically: true, encoding: .utf8)
