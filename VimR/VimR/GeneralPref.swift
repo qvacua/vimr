@@ -17,6 +17,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     case setAfterLastWindowAction(AppState.AfterLastWindowAction)
     case setOpenOnReactivation(Bool)
     case setIgnorePatterns(Set<FileItemIgnorePattern>)
+    case setCustomMarkdownProcessor(String)
   }
 
   override var displayName: String {
@@ -29,6 +30,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
   override func windowWillClose() {
     self.ignorePatternsAction()
+    self.customMarkdownProcessorAction()
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
@@ -46,6 +48,9 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     self.ignorePatterns = state.openQuickly.ignorePatterns
     self.ignoreField.stringValue = FileItemIgnorePattern.toString(state.openQuickly.ignorePatterns)
+
+    self.customMarkdownProcessor = state.mainWindowTemplate.customMarkdownProcessor
+    self.customMarkdownProcessorField.stringValue = state.mainWindowTemplate.customMarkdownProcessor
 
     source
       .observeOn(MainScheduler.instance)
@@ -81,6 +86,10 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
   private let ignoreField = NSTextField(forAutoLayout: ())
 
   private var ignorePatterns = Set<FileItemIgnorePattern>()
+
+  private var customMarkdownProcessor = ""
+
+  private let customMarkdownProcessorField = NSTextField(forAutoLayout: ())
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -125,6 +134,14 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
                          + "For detailed information see [VimR Wiki](https://github.com/qvacua/vimr/wiki)."
       )
 
+    let customMarkdownProcessorTitle = self.titleTextField(title: "Custom Markdown Processor:")
+    let customMarkdownProcessorField = self.customMarkdownProcessorField
+    NotificationCenter.default.addObserver(forName: NSControl.textDidEndEditingNotification,
+                                           object: ignoreField,
+                                           queue: nil) { [unowned self] _ in
+      self.customMarkdownProcessorAction()
+    }
+
     let cliToolTitle = self.titleTextField(title: "CLI Tool:")
     let cliToolButton = NSButton(forAutoLayout: ())
     cliToolButton.title = "Copy 'vimr' CLI Tool..."
@@ -152,6 +169,9 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.addSubview(cliToolTitle)
     self.addSubview(cliToolButton)
     self.addSubview(cliToolInfo)
+
+    self.addSubview(customMarkdownProcessorTitle)
+    self.addSubview(customMarkdownProcessorField)
 
     paneTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 18)
     paneTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
@@ -198,6 +218,14 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     cliToolInfo.autoPinEdge(.top, to: .bottom, of: cliToolButton, withOffset: 5)
     cliToolInfo.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
     cliToolInfo.autoPinEdge(.left, to: .right, of: cliToolTitle, withOffset: 5)
+
+    customMarkdownProcessorTitle.autoAlignAxis(.baseline, toSameAxisOf: customMarkdownProcessorField)
+    customMarkdownProcessorTitle.autoPinEdge(.right, to: .right, of: openUntitledWindowTitle)
+    customMarkdownProcessorTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
+
+    customMarkdownProcessorField.autoPinEdge(.top, to: .bottom, of: cliToolInfo, withOffset: 18)
+    customMarkdownProcessorField.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
+    customMarkdownProcessorField.autoPinEdge(.left, to: .right, of: customMarkdownProcessorTitle, withOffset: 5)
   }
 }
 
@@ -261,6 +289,16 @@ extension GeneralPref {
 
     self.ignorePatterns = patterns
     self.emit(.setIgnorePatterns(ignorePatterns))
+  }
+
+  private func customMarkdownProcessorAction() {
+    let command = self.customMarkdownProcessorField.stringValue
+    if command == self.customMarkdownProcessor {
+      return
+    }
+
+    self.customMarkdownProcessor = command
+    self.emit(.setCustomMarkdownProcessor(customMarkdownProcessor))
   }
 
   private func alert(title: String, info: String) {
