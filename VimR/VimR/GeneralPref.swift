@@ -137,7 +137,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     let customMarkdownProcessorTitle = self.titleTextField(title: "Custom Markdown Processor:")
     let customMarkdownProcessorField = self.customMarkdownProcessorField
     NotificationCenter.default.addObserver(forName: NSControl.textDidEndEditingNotification,
-                                           object: ignoreField,
+                                           object: customMarkdownProcessorField,
                                            queue: nil) { [unowned self] _ in
       self.customMarkdownProcessorAction()
     }
