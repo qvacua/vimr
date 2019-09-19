@@ -14,7 +14,7 @@ import os
 class PerfTester {
 
   init() {
-    self.cellSize = FontUtils.cellSize(of: self.font, linespacing: 1.25)
+    self.cellSize = FontUtils.cellSize(of: self.font, linespacing: 1.25, characterspacing: 1)
 
     for name in ["0", "1", "2"] {
       guard let fileUrl = Bundle(for: PerfTester.self)

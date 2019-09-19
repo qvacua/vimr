@@ -171,7 +171,7 @@ static void server_ui_raw_line(
     Integer endcol,
     Integer clearcol,
     Integer clearattr,
-    Boolean wrap __unused,
+    LineFlags flags,
     const schar_T *chunk,
     const sattr_T *attrs
 ) {
@@ -439,7 +439,7 @@ void server_set_ui_size(UIBridgeData *bridge, int width, int height) {
 static void server_ui_scheduler(Event event, void *d) {
   UI *const ui = d;
   server_ui_bridge_data_t *data = ui->data;
-  loop_schedule(data->loop, event);
+  loop_schedule_fast(data->loop, event);
 }
 
 static void server_ui_main(UIBridgeData *bridge, UI *ui) {
@@ -472,7 +472,7 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
 
   server_destroy_local_port();
   server_destroy_remote_port();
-  xfree(ui);
+  // ui is freed in ui_bridge_stop(), thus, no xfree(ui) here.
 
   free(msgpack_sbuffer_release(&flush_sbuffer));
 

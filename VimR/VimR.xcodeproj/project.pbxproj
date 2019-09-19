@@ -1465,7 +1465,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp ${SRCROOT}/../Carthage/Checkouts/github-markdown-css/github-markdown.css ${SRCROOT}/VimR/markdown/";
+			shellScript = "cp ${SRCROOT}/../Carthage/Checkouts/github-markdown-css/github-markdown.css ${SRCROOT}/VimR/markdown/\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
