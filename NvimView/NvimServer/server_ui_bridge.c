@@ -439,7 +439,7 @@ void server_set_ui_size(UIBridgeData *bridge, int width, int height) {
 static void server_ui_scheduler(Event event, void *d) {
   UI *const ui = d;
   server_ui_bridge_data_t *data = ui->data;
-  loop_schedule(data->loop, event);
+  loop_schedule_fast(data->loop, event);
 }
 
 static void server_ui_main(UIBridgeData *bridge, UI *ui) {

@@ -271,7 +271,7 @@ static void setenv_vimruntime() {
 }
 
 static CFDataRef data_async(CFDataRef data, argv_callback cb) {
-  loop_schedule(&main_loop, event_create(cb, 3, data));
+  loop_schedule_fast(&main_loop, event_create(cb, 3, data));
   return NULL;
 }
 
