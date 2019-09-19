@@ -1,4 +1,4 @@
-// Auto generated for nvim v0.4.0-dev.
+// Auto generated for nvim v0.4.2.
 // See bin/generate_autocmds.py
 
 enum NvimAutoCommandEvent: Int {
@@ -92,20 +92,24 @@ enum NvimAutoCommandEvent: Int {
   case tabnewentered = 87
   case termchanged = 88
   case termclose = 89
-  case termopen = 90
-  case termresponse = 91
-  case textchanged = 92
-  case textchangedi = 93
-  case textchangedp = 94
-  case textyankpost = 95
-  case user = 96
-  case vimenter = 97
-  case vimleave = 98
-  case vimleavepre = 99
-  case vimresized = 100
-  case vimresume = 101
-  case vimsuspend = 102
-  case winenter = 103
-  case winleave = 104
-  case winnew = 105
+  case termenter = 90
+  case termleave = 91
+  case termopen = 92
+  case termresponse = 93
+  case textchanged = 94
+  case textchangedi = 95
+  case textchangedp = 96
+  case textyankpost = 97
+  case uienter = 98
+  case uileave = 99
+  case user = 100
+  case vimenter = 101
+  case vimleave = 102
+  case vimleavepre = 103
+  case vimresized = 104
+  case vimresume = 105
+  case vimsuspend = 106
+  case winenter = 107
+  case winleave = 108
+  case winnew = 109
 }
