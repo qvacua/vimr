@@ -7,25 +7,26 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.27.5-327</title>
+      <title>v0.28.0-328</title>
       <description><![CDATA[
     <ul>
+<li>Add MathJax to Markdown preview</li>
 <li>Dependencies updates:<ul>
-<li>Neovim 0.3.8</li>
+<li>Neovim 0.4.2</li>
 </ul>
 </li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.27.5.327
+        https://github.com/qvacua/vimr/releases/tag/v0.28.0-328
       </releaseNotesLink>
-      <pubDate>2019-07-22T22:02:32.755884</pubDate>
-      <minimumSystemVersion>10.10.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.27.5.327/VimR-v0.27.5-327.tar.bz2"
-                 sparkle:version="327"
-                 sparkle:shortVersionString="0.27.5"
-                 sparkle:dsaSignature="MC4CFQCTeCTcsZHf8fRGYm1yVXVEftEtxwIVAOlsfCKW3d+HloHfEIKZyzJJgp5N"
-                 length="14511125"
+      <pubDate>2019-09-20T12:09:38.433154</pubDate>
+      <minimumSystemVersion>10.12.0</minimumSystemVersion>
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.28.0-328/VimR-v0.28.0-328.tar.bz2"
+                 sparkle:version="328"
+                 sparkle:shortVersionString="0.28.0"
+                 sparkle:dsaSignature="MC4CFQCK6KxBHkRFr2kBcA03ez//UGDi6gIVAOfJd8mnRPPE8FKUI768cQfW2RWS"
+                 length="14665619"
                  type="application/octet-stream"/>
     </item>
   </channel>
