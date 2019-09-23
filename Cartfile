@@ -10,7 +10,7 @@ github "qvacua/ShortcutRecorder" "temporary"
 github "IBM-Swift/BlueSocket" == 1.0.48
 
 # included directly
-github "eonil/FSEvents" "master"
+github "eonil/FSEvents" == 0.1.3
 github "elegantchaos/DictionaryCoding" == 1.0.6
 github "sindresorhus/github-markdown-css" == 3.0.1
 
