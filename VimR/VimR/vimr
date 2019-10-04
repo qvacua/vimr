@@ -113,7 +113,7 @@ def main(args):
     else:
         if not args.file:
             action = Action.ACTIVATE
-        elif args.new_window:
+        elif args.new_window or args.cur_env:
             action = Action.NEW_WINDOW
         elif args.separate_windows:
             action = Action.SEPARATE_WINDOWS
