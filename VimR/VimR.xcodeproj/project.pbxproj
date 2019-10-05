@@ -1241,6 +1241,9 @@
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Tae Won Ha";
 				TargetAttributes = {
+					4B2636A7223A487B00021586 = {
+						DevelopmentTeam = H96Q2NKTQH;
+					};
 					4BEBA5041CFF374B00673FDF = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = H96Q2NKTQH;
@@ -1775,6 +1778,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H96Q2NKTQH;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/../Carthage/Build/Mac",
@@ -1794,6 +1798,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H96Q2NKTQH;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/../Carthage/Build/Mac",
