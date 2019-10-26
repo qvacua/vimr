@@ -1,4 +1,4 @@
-// Auto generated for nvim v0.4.2.
+// Auto generated for nvim v0.5.0-dev.
 // See bin/generate_autocmds.py
 
 enum NvimAutoCommandEvent: Int {
