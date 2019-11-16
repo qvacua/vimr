@@ -676,6 +676,152 @@ extension RxNeovimApi {
       .map(transform)
   }
 
+  func bufGetExtmarkById(
+    buffer: RxNeovimApi.Buffer,
+    ns_id: Int,
+    id: Int,
+    checkBlocked: Bool = true
+  ) -> Single<[Int]> {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(buffer.handle)),
+        .int(Int64(ns_id)),
+        .int(Int64(id)),
+    ]
+
+    func transform(_ value: Value) throws -> [Int] {
+      guard let result = (value.arrayValue?.compactMap({ v in (v.integerValue == nil ? nil : Int(v.integerValue!)) })) else {
+        throw RxNeovimApi.Error.conversion(type: [Int].self)
+      }
+
+      return result
+    }
+
+    if checkBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_buf_get_extmark_by_id", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_buf_get_extmark_by_id", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
+  func bufGetExtmarks(
+    buffer: RxNeovimApi.Buffer,
+    ns_id: Int,
+    start: RxNeovimApi.Value,
+    end: RxNeovimApi.Value,
+    opts: Dictionary<String, RxNeovimApi.Value>,
+    checkBlocked: Bool = true
+  ) -> Single<RxNeovimApi.Value> {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(buffer.handle)),
+        .int(Int64(ns_id)),
+        start,
+        end,
+        .map(opts.mapToDict({ (Value.string($0), $1) })),
+    ]
+
+    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+      guard let result = (Optional(value)) else {
+        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
+      }
+
+      return result
+    }
+
+    if checkBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_buf_get_extmarks", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_buf_get_extmarks", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
+  func bufSetExtmark(
+    buffer: RxNeovimApi.Buffer,
+    ns_id: Int,
+    id: Int,
+    line: Int,
+    col: Int,
+    opts: Dictionary<String, RxNeovimApi.Value>,
+    checkBlocked: Bool = true
+  ) -> Single<Int> {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(buffer.handle)),
+        .int(Int64(ns_id)),
+        .int(Int64(id)),
+        .int(Int64(line)),
+        .int(Int64(col)),
+        .map(opts.mapToDict({ (Value.string($0), $1) })),
+    ]
+
+    func transform(_ value: Value) throws -> Int {
+      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+        throw RxNeovimApi.Error.conversion(type: Int.self)
+      }
+
+      return result
+    }
+
+    if checkBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_buf_set_extmark", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_buf_set_extmark", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
+  func bufDelExtmark(
+    buffer: RxNeovimApi.Buffer,
+    ns_id: Int,
+    id: Int,
+    checkBlocked: Bool = true
+  ) -> Single<Bool> {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(buffer.handle)),
+        .int(Int64(ns_id)),
+        .int(Int64(id)),
+    ]
+
+    func transform(_ value: Value) throws -> Bool {
+      guard let result = (value.boolValue) else {
+        throw RxNeovimApi.Error.conversion(type: Bool.self)
+      }
+
+      return result
+    }
+
+    if checkBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_buf_del_extmark", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_buf_del_extmark", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
   func bufAddHighlight(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
@@ -809,6 +955,38 @@ extension RxNeovimApi {
 
     return self
       .rpc(method: "nvim_buf_set_virtual_text", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
+  func bufGetVirtualText(
+    buffer: RxNeovimApi.Buffer,
+    lnum: Int,
+    checkBlocked: Bool = true
+  ) -> Single<RxNeovimApi.Value> {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(buffer.handle)),
+        .int(Int64(lnum)),
+    ]
+
+    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+      guard let result = (Optional(value)) else {
+        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
+      }
+
+      return result
+    }
+
+    if checkBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_buf_get_virtual_text", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_buf_get_virtual_text", params: params, expectsReturnValue: true)
       .map(transform)
   }
 
