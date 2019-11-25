@@ -1,4 +1,9 @@
-# ???
+# 0.29.0-329
+
+* Dependencies updates:
+    - Neovim 0.4.3
+
+# 0.28.0-328
 
 * Add MathJax to Markdown preview
 * Dependencies updates:
