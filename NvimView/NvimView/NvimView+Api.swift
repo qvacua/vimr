@@ -160,7 +160,7 @@ extension NvimView {
 
   public func vimOutput(of command: String) -> Single<String> {
     return self.api
-      .commandOutput(command: command)
+      .exec(src: command, output: true)
       .subscribeOn(self.scheduler)
   }
 

@@ -103,7 +103,7 @@ extension NvimView {
         self.sourceFileUrls.reduce(Completable.empty()) { prev, url in
           prev.andThen(
             self.api
-              .commandOutput(command: "source \(url.path)").asCompletable()
+              .exec(src: "source \(url.path)", output: true).asCompletable()
           )
         }
       )

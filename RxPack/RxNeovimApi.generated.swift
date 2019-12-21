@@ -1343,6 +1343,38 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
+  func exec(
+    src: String,
+    output: Bool,
+    checkBlocked: Bool = true
+  ) -> Single<String> {
+
+    let params: [RxNeovimApi.Value] = [
+        .string(src),
+        .bool(output),
+    ]
+
+    func transform(_ value: Value) throws -> String {
+      guard let result = (value.stringValue) else {
+        throw RxNeovimApi.Error.conversion(type: String.self)
+      }
+
+      return result
+    }
+
+    if checkBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_exec", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_exec", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
   func command(
     command: String,
     expectsReturnValue: Bool = true,
@@ -1556,36 +1588,6 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func commandOutput(
-    command: String,
-    checkBlocked: Bool = true
-  ) -> Single<String> {
-
-    let params: [RxNeovimApi.Value] = [
-        .string(command),
-    ]
-
-    func transform(_ value: Value) throws -> String {
-      guard let result = (value.stringValue) else {
-        throw RxNeovimApi.Error.conversion(type: String.self)
-      }
-
-      return result
-    }
-
-    if checkBlocked {
-      return self
-        .checkBlocked(
-          self.rpc(method: "nvim_command_output", params: params, expectsReturnValue: true)
-        )
-        .map(transform)
-    }
-
-    return self
-      .rpc(method: "nvim_command_output", params: params, expectsReturnValue: true)
-      .map(transform)
-  }
-
   func eval(
     expr: String,
     checkBlocked: Bool = true
@@ -1616,7 +1618,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func executeLua(
+  func execLua(
     code: String,
     args: RxNeovimApi.Value,
     checkBlocked: Bool = true
@@ -1638,13 +1640,13 @@ extension RxNeovimApi {
     if checkBlocked {
       return self
         .checkBlocked(
-          self.rpc(method: "nvim_execute_lua", params: params, expectsReturnValue: true)
+          self.rpc(method: "nvim_exec_lua", params: params, expectsReturnValue: true)
         )
         .map(transform)
     }
 
     return self
-      .rpc(method: "nvim_execute_lua", params: params, expectsReturnValue: true)
+      .rpc(method: "nvim_exec_lua", params: params, expectsReturnValue: true)
       .map(transform)
   }
 
