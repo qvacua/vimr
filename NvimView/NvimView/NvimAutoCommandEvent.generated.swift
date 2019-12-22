@@ -1,7 +1,8 @@
-// Auto generated for nvim v0.4.3.
-// See bin/generate_autocmds.py
+// Auto generated for nvim v0.4.3
+// See bin/generate_autocmds.sh
 
 enum NvimAutoCommandEvent: Int {
+
   case bufadd = 0
   case bufdelete = 1
   case bufenter = 2
