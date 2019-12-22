@@ -293,7 +293,6 @@
 		4B0A1B132129F49500F1E02F /* SwiftCommonsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftCommonsTest.swift; sourceTree = "<group>"; };
 		4B0A1B152129F49500F1E02F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B0A1B38212B332800F1E02F /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = ../Carthage/Build/Mac/Nimble.framework; sourceTree = "<group>"; };
-		4B17E548209E3E4100265C1D /* RxNeovimApi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxNeovimApi.framework; path = ../Carthage/Build/Mac/RxNeovimApi.framework; sourceTree = "<group>"; };
 		4B379CCC2248CFB6004B89B4 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		4B4A48DA222C7C5600C8E3A1 /* server_shared_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_shared_types.h; sourceTree = "<group>"; };
 		4B4A48DB222C7C6A00C8E3A1 /* SharedTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedTypes.h; sourceTree = "<group>"; };
@@ -318,7 +317,6 @@
 		4BB1EFAB224B71EC00A5CD5A /* RxMsgpackRpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RxMsgpackRpc.swift; path = ../../RxPack/RxMsgpackRpc.swift; sourceTree = "<group>"; };
 		4BB1EFAC224B71EC00A5CD5A /* RxNeovimApi.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RxNeovimApi.generated.swift; path = ../../RxPack/RxNeovimApi.generated.swift; sourceTree = "<group>"; };
 		4BB1EFAD224B71ED00A5CD5A /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RxSwiftCommons.swift; path = ../../RxPack/RxSwiftCommons.swift; sourceTree = "<group>"; };
-		4BB1F5C8209740E400EC394A /* RxMsgpackRpc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMsgpackRpc.framework; path = ../Carthage/Build/Mac/RxMsgpackRpc.framework; sourceTree = "<group>"; };
 		4BB1F5CA209740E900EC394A /* MessagePack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessagePack.framework; path = ../Carthage/Build/Mac/MessagePack.framework; sourceTree = "<group>"; };
 		4BC5B0421FE551DF0071D64F /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = ../Carthage/Build/Mac/RxSwift.framework; sourceTree = "<group>"; };
 		4BD8742F2014C25F0039888E /* NvimAutoCommandEvent.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimAutoCommandEvent.generated.swift; sourceTree = "<group>"; };
@@ -557,9 +555,7 @@
 				4B379CCC2248CFB6004B89B4 /* CoreFoundation.framework */,
 				4BEBC239215FD19C007113C4 /* Socket.framework */,
 				4B0A1B38212B332800F1E02F /* Nimble.framework */,
-				4B17E548209E3E4100265C1D /* RxNeovimApi.framework */,
 				4BB1F5CA209740E900EC394A /* MessagePack.framework */,
-				4BB1F5C8209740E400EC394A /* RxMsgpackRpc.framework */,
 				4BC5B0421FE551DF0071D64F /* RxSwift.framework */,
 			);
 			name = Frameworks;
