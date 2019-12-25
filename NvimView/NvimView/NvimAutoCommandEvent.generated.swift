@@ -2,6 +2,7 @@
 // See bin/generate_autocmds.py
 
 enum NvimAutoCommandEvent: Int {
+
   case bufadd = 0
   case bufdelete = 1
   case bufenter = 2

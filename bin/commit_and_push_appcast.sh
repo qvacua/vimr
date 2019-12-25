@@ -1,25 +1,29 @@
 #!/bin/bash
+set -Eeuo pipefail
 
-set -e
+echo "### Commit and push appcast"
+pushd "$( dirname "${BASH_SOURCE[0]}" )/.." > /dev/null
 
-BRANCH=$1
-COMPOUND_VERSION=$2
-IS_SNAPSHOT=$3
-UPDATE_SNAPSHOT_APPCAST_FOR_RELEASE=$4
+readonly branch=${branch:?"Eg develop"}
+readonly compound_version=${compound_version:?"Eg v0.29.0-329"}
+readonly is_snapshot=${is_snapshot:?"true or false"}
+readonly update_snapshot_appcast_for_release=${update_snapshot_appcast_for_release:?"true or false"}
 
-if [ "${IS_SNAPSHOT}" = true ] ; then
+if [[ ${is_snapshot} == true ]] ; then
     cp ./build/Build/Products/Release/appcast_snapshot.xml .
 else
     cp ./build/Build/Products/Release/appcast.xml .
 fi
 
-if [ "${IS_SNAPSHOT}" = false ] && [ "${UPDATE_SNAPSHOT_APPCAST_FOR_RELEASE}" = true ] ; then
+if [[ ${is_snapshot} == false ]] && [[ ${update_snapshot_appcast_for_release} == true ]]; then
     cp appcast.xml appcast_snapshot.xml
 fi
 
-echo "### Commiting and pushing appcast(s) to ${BRANCH}"
+echo "### Commiting and pushing appcast(s) to ${branch}"
 
 git add appcast*
-git commit -S -m "Bump appcast(s) to ${COMPOUND_VERSION}"
-git push origin HEAD:"${BRANCH}"
+git commit -S -m "Bump appcast(s) to ${compound_version}"
+git push origin HEAD:"${branch}"
 
+popd > /dev/null
+echo "### Committed and pushed appcast(s)"

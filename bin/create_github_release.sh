@@ -1,50 +1,55 @@
 #!/bin/bash
+set -Eeuo pipefail
 
-set -e
+echo "### Create github release"
+pushd "$( dirname "${BASH_SOURCE[0]}" )/.." > /dev/null
 
-TOKEN=$(cat ~/.local/secrets/github.qvacua.release.token)
+readonly compound_version=${compound_version:?"v0.29.0-329"}
+readonly tag=${tag:?"v0.29.0-329"}
+readonly vimr_file_name=${vimr_file_name:?"VimR-v0.29.0-329.tar.bz2"}
+readonly release_notes=${release_notes:?"Some (multiline) markdown text"}
+readonly is_snapshot=${is_snapshot:?"true or false"}
 
-COMPOUND_VERSION=$1
-TAG=$2
-VIMR_FILE_NAME=$3
-RELEASE_NOTES=$4
-IS_SNAPSHOT=$5
+readonly token=$(cat ~/.local/secrets/github.qvacua.release.token)
 
-echo "COMPOUND_VERSION: ${COMPOUND_VERSION}"
-echo "TAG: ${TAG}"
-echo "VIMR_FILE_NAME: ${VIMR_FILE_NAME}"
-echo "RELEASE_NOTES: ${RELEASE_NOTES}"
-echo "IS_SNAPSHOT: ${IS_SNAPSHOT}"
+echo "* compound_version: ${compound_version}"
+echo "* tag: ${tag}"
+echo "* vimr_file_name: ${vimr_file_name}"
+echo "* release_notes: ${release_notes}"
+echo "* is_snapshot: ${is_snapshot}"
 
-pushd build/Build/Products/Release
+pushd build/Build/Products/Release > /dev/null
+    echo "### Creating release"
+    if [[ ${is_snapshot} == true ]]; then
+        GITHUB_TOKEN="${token}" github-release release \
+            --user qvacua \
+            --repo vimr \
+            --tag "${tag}" \
+            --pre-release \
+            --name "${compound_version}" \
+            --description "${release_notes}"
+    else
+        GITHUB_TOKEN="${token}" github-release release \
+            --user qvacua \
+            --repo vimr \
+            --tag "${tag}" \
+            --name "${compound_version}" \
+            --description "${release_notes}"
+    fi
 
-echo "### Creating release"
-if [[ "${IS_SNAPSHOT}" = true ]] ; then
-    GITHUB_TOKEN="${TOKEN}" github-release release \
+    if [[ -z ${vimr_file_name} ]]; then
+         echo "No file to upload; exiting..."
+         exit 0
+    fi
+
+    echo "### Uploading build"
+    GITHUB_TOKEN="${token}" github-release upload \
         --user qvacua \
         --repo vimr \
-        --tag "${TAG}" \
-        --pre-release \
-        --name "${COMPOUND_VERSION}" \
-        --description "${RELEASE_NOTES}"
-else
-    GITHUB_TOKEN="${TOKEN}" github-release release \
-        --user qvacua \
-        --repo vimr \
-        --tag "${TAG}" \
-        --name "${COMPOUND_VERSION}" \
-        --description "${RELEASE_NOTES}"
-fi
+        --tag "${tag}" \
+        --name "${vimr_file_name}" \
+        --file "${vimr_file_name}"
+popd > /dev/null
 
-if [[ -z "${VIMR_FILE_NAME}" ]]; then
-     echo "No file to upload; exiting..."
-     exit 0
-fi
-
-echo "### Uploading build"
-GITHUB_TOKEN="${TOKEN}" github-release upload \
-    --user qvacua \
-    --repo vimr \
-    --tag "${TAG}" \
-    --name "${VIMR_FILE_NAME}" \
-    --file "${VIMR_FILE_NAME}"
+popd > /dev/null
+echo "### Created github release"

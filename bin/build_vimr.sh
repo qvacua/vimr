@@ -1,11 +1,14 @@
 #!/bin/bash
-
-set -e
-
-CODE_SIGN=$1
-DEPLOYMENT_TARGET="10.13"
+set -Eeuo pipefail
 
 echo "### Building VimR target"
+pushd "$( dirname "${BASH_SOURCE[0]}" )/.." > /dev/null
+
+readonly deployment_target_file="./resources/macos_deployment_target.txt"
+readonly deployment_target=$(cat ${deployment_target_file})
+readonly code_sign=${code_sign:?"true or false"}
+readonly use_carthage_cache=${use_carthage_cache:?"true or false"}
+readonly build_path="./build"
 
 # Build NeoVim
 # 0. Delete previously built things
@@ -13,38 +16,45 @@ echo "### Building VimR target"
 # 2. Delete the build folder to re-configure
 # 3. Build libnvim
 pushd NvimView/neovim
+    ln -f -s ../local.mk .
 
-ln -f -s ../local.mk .
+    rm -rf build
+    make distclean
 
-rm -rf build
-make distclean
+    echo "### Building nvim to get the complete runtime folder"
+    rm -rf /tmp/nvim-runtime
+    make \
+        CFLAGS="-mmacosx-version-min=${deployment_target}" \
+        MACOSX_DEPLOYMENT_TARGET=${deployment_target} \
+        CMAKE_FLAGS="-DCUSTOM_UI=0 -DCMAKE_INSTALL_PREFIX=/tmp/nvim-runtime" \
+        install
 
-echo "### Building nvim to get the complete runtime folder"
-rm -rf /tmp/nvim-runtime
-make CFLAGS="-mmacosx-version-min=${DEPLOYMENT_TARGET}" MACOSX_DEPLOYMENT_TARGET=${DEPLOYMENT_TARGET} CMAKE_FLAGS="-DCUSTOM_UI=0 -DCMAKE_INSTALL_PREFIX=/tmp/nvim-runtime" install
+    rm -rf build
+    make clean
 
-rm -rf build
-make clean
+    ../../bin/build_libnvim.sh
 
-../../bin/build_libnvim.sh
-
-echo "### Copying runtime"
-rm -rf runtime
-cp -r /tmp/nvim-runtime/share/nvim/runtime .
-
-popd
+    echo "### Copying runtime"
+    rm -rf runtime
+    cp -r /tmp/nvim-runtime/share/nvim/runtime .
+popd > /dev/null
 
 echo "### Updating carthage"
-carthage update --platform osx
+if [[ ${use_carthage_cache} == true ]]; then
+    carthage update --cache-builds --platform macos
+else
+    carthage update --platform macos
+fi
 
 echo "### Xcodebuilding"
 
-rm -rf build
+rm -rf ${build_path}
 
-if [[ "${CODE_SIGN}" = true ]] ; then
-    xcodebuild CODE_SIGN_IDENTITY="Developer ID Application: Tae Won Ha (H96Q2NKTQH)" -configuration Release -scheme VimR -workspace VimR.xcworkspace -derivedDataPath build
+if [[ ${code_sign} == true ]] ; then
+    xcodebuild CODE_SIGN_IDENTITY="Developer ID Application: Tae Won Ha (H96Q2NKTQH)" -configuration Release -scheme VimR -workspace VimR.xcworkspace -derivedDataPath ${build_path} clean build
 else
-    xcodebuild -configuration Release -scheme VimR -workspace VimR.xcworkspace -derivedDataPath build
+    xcodebuild -configuration Release -scheme VimR -workspace VimR.xcworkspace -derivedDataPath ${build_path} clean build
 fi
 
+popd > /dev/null
 echo "### Built VimR target"

@@ -1,26 +1,28 @@
 #!/bin/bash
-
-set -e
-
-DEPLOYMENT_TARGET="10.13"
+set -Eeuo pipefail
 
 echo "### Building libnvim"
+pushd "$(dirname "${BASH_SOURCE[0]}")/.." > /dev/null
+
+readonly deployment_target_file="./resources/macos_deployment_target.txt"
+readonly deployment_target=$(cat ${deployment_target_file})
 
 # Brew's gettext does not get sym-linked to PATH
 export PATH=/usr/local/opt/gettext/bin:$PATH
 
-ln -sf ../local.mk .
+pushd NvimView/neovim
+    ln -sf ../local.mk .
 
-# We assume that we're already in the neovim project root.
-# Use custom gettext source only when building libnvim => not in local.mk which is also used to build the full nvim
-# to get the full runtime.
+    # Use custom gettext source only when building libnvim => not in local.mk which is also used to build the full nvim
+    # to get the full runtime.
+    make \
+        CFLAGS="-mmacosx-version-min=${deployment_target}" \
+        CXXFLAGS="-mmacosx-version-min=${deployment_target}" \
+        MACOSX_DEPLOYMENT_TARGET=${deployment_target} \
+        CMAKE_EXTRA_FLAGS="-DGETTEXT_SOURCE=CUSTOM -DCMAKE_OSX_DEPLOYMENT_TARGET=${deployment_target} -DCMAKE_CXX_COMPILER=$(xcrun -find c++)" \
+        DEPS_CMAKE_FLAGS="-DCMAKE_OSX_DEPLOYMENT_TARGET=${deployment_target} -DCMAKE_CXX_COMPILER=$(xcrun -find c++)" \
+        libnvim
+popd > /dev/null
 
-make \
-  CFLAGS="-mmacosx-version-min=${DEPLOYMENT_TARGET}" \
-  CXXFLAGS="-mmacosx-version-min=${DEPLOYMENT_TARGET}" \
-  MACOSX_DEPLOYMENT_TARGET=${DEPLOYMENT_TARGET} \
-  CMAKE_EXTRA_FLAGS="-DGETTEXT_SOURCE=CUSTOM -DCMAKE_OSX_DEPLOYMENT_TARGET=${DEPLOYMENT_TARGET} -DCMAKE_CXX_COMPILER=$(xcrun -find c++)" \
-  DEPS_CMAKE_FLAGS="-DCMAKE_OSX_DEPLOYMENT_TARGET=${DEPLOYMENT_TARGET} -DCMAKE_CXX_COMPILER=$(xcrun -find c++)" \
-  libnvim
-
+popd > /dev/null
 echo "### Built libnvim"

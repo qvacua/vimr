@@ -1,32 +1,31 @@
 #!/bin/bash
-
-set -e
-
-IS_SNAPSHOT=$1
-MARKETING_VERSION=$2
+set -Eeuo pipefail
 
 echo "### Setting versions of VimR"
+pushd "$( dirname "${BASH_SOURCE[0]}" )/.." > /dev/null
 
-pushd VimR
+readonly is_snapshot=${is_snapshot:?"true or false"}
+marketing_version=${marketing_version:?"0.29.0"}
 
-# bundle version
-agvtool bump -all
-BUNDLE_VERSION=$(agvtool what-version | sed '2q;d' | sed -E 's/ +(.+)/\1/')
+pushd VimR > /dev/null
+    # bundle version
+    agvtool bump -all
+    readonly bundle_version=$(agvtool what-version | sed '2q;d' | sed -E 's/ +(.+)/\1/')
 
-# marketing version
-if [ "${IS_SNAPSHOT}" = true ] ; then
-    MARKETING_VERSION="SNAPSHOT-${BUNDLE_VERSION}"
-fi
+    # marketing version
+    if [[ ${is_snapshot} == true ]]; then
+        marketing_version="SNAPSHOT-${bundle_version}"
+    fi
 
-agvtool new-marketing-version ${MARKETING_VERSION}
-
-popd
+    agvtool new-marketing-version ${marketing_version}
+popd > /dev/null
 
 for proj in 'NvimView'; do
     pushd ${proj}
-    agvtool new-version -all ${BUNDLE_VERSION}
-    agvtool new-marketing-version ${MARKETING_VERSION}
+    agvtool new-version -all ${bundle_version}
+    agvtool new-marketing-version ${marketing_version}
     popd
 done
 
+popd > /dev/null
 echo "### Set versions of VimR"
