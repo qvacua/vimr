@@ -22,6 +22,9 @@
 #include <nvim/fileio.h>
 #include <nvim/api/private/helpers.h>
 #include <api/vim.h.generated.h>
+#include <nvim/ui.h>
+#include <ui.h.generated.h>
+#include <fileio.h.generated.h>
 #include <nvim/aucmd.h>
 #include "server_ui_bridge.h"
 
@@ -219,7 +222,7 @@ void send_msg_packing(NvimServerMsgId msgid, pack_block body) {
   msgpack_sbuffer_destroy(&sbuf);
 }
 
-static void start_nvim(void *_) {
+static void start_nvim(void *arg __unused) {
   backspace = cstr_as_string("<BS>");
 
   setenv_vimruntime();
@@ -481,7 +484,7 @@ static void debug1(void **argv) {
   });
 }
 
-static void do_autocmd_guienter(void **argv) {
+static void do_autocmd_guienter(void **argv __unused) {
   static bool recursive = false;
 
   if (recursive) {
