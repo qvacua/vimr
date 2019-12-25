@@ -85,9 +85,11 @@ static void server_ui_cursor_goto(
     Integer col
 ) {
   pack_flush_data(RenderDataTypeGoto, ^(msgpack_packer *packer) {
-    msgpack_pack_array(packer, 2);
+    msgpack_pack_array(packer, 4);
     msgpack_pack_int64(packer, row);
     msgpack_pack_int64(packer, col);
+    msgpack_pack_int64(packer, curwin->w_cursor.lnum);
+    msgpack_pack_int64(packer, curwin->w_cursor.col + 1);
   });
 }
 
