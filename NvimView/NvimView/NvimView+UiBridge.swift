@@ -87,10 +87,10 @@ extension NvimView {
           rowStart = r ? min(rowStart, s) : rowStart
 
         case .goto:
-          guard let row = innerArray[0].unsignedIntegerValue,
-                let col = innerArray[1].unsignedIntegerValue,
-                let textPositionRow = innerArray[2].unsignedIntegerValue,
-                let textPositionCol = innerArray[3].unsignedIntegerValue else { return }
+          guard let row = innerArray[0].uint64Value,
+                let col = innerArray[1].uint64Value,
+                let textPositionRow = innerArray[2].uint64Value,
+                let textPositionCol = innerArray[3].uint64Value else { return }
 
           self.doGoto(
             position: Position(row: Int(row), column: Int(col)),
@@ -489,7 +489,7 @@ extension NvimView {
     }
 
     guard let id = array[0].intValue,
-          let rawTrait = array[1].unsignedIntegerValue,
+          let rawTrait = array[1].uint64Value,
           let fg = array[2].intValue,
           let bg = array[3].intValue,
           let sp = array[4].intValue,

@@ -1,4 +1,4 @@
-// Auto generated for nvim version 0.4.2.
+// Auto generated for nvim version 0.4.3.
 // See bin/generate_api_methods.py
 
 import Foundation
@@ -25,7 +25,7 @@ extension RxNeovimApi {
         return
       }
 
-      guard let rawValue = array?[0].unsignedIntegerValue, let message = array?[1].stringValue else {
+      guard let rawValue = array?[0].uint64Value, let message = array?[1].stringValue else {
         self = .unknown
         return
       }

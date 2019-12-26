@@ -259,7 +259,7 @@ public final class RxMsgpackRpc {
       return
     }
 
-    guard let rawType = array[0].unsignedIntegerValue,
+    guard let rawType = array[0].uint64Value,
           let type = MessageType(rawValue: rawType)
       else {
       self.streamSubject.onNext(.error(
@@ -280,7 +280,7 @@ public final class RxMsgpackRpc {
         return
       }
 
-      guard let msgid64 = array[1].unsignedIntegerValue else {
+      guard let msgid64 = array[1].uint64Value else {
         self.streamSubject.onNext(.error(
           value: unpacked,
           msg: "Could not get the msgid"
