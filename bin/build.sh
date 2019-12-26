@@ -10,12 +10,12 @@ export PATH=/usr/local/bin:$PATH
 
 readonly publish=${publish:?"true or false"}
 readonly branch=${branch:?"Eg develop"}
-readonly release_notes=${release_notes:?"Some (multiline) markdown text"}
 readonly is_snapshot=${is_snapshot:?"true or false"}
 readonly update_appcast=${update_appcast:?"true or false"}
 readonly update_snapshot_appcast_for_release=${update_snapshot_appcast_for_release:?"true or false"}
 
 export marketing_version=${marketing_version}
+readonly release_notes=${release_notes}
 
 
 if [[ "${is_snapshot}" = false ]] && [[ "${marketing_version}" == "" ]] ; then
