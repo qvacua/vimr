@@ -10,6 +10,7 @@
 		1929B00C084F8EA5EF0BE6E2 /* NvimView+Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD896D408673954F4AA2 /* NvimView+Geometry.swift */; };
 		1929B0533B55B2349DE2EFE2 /* foundation_shim.h in Headers */ = {isa = PBXBuildFile; fileRef = 1929B27A8FF9A75A09969777 /* foundation_shim.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1929B06F50B2585777FFBE48 /* NvimApiCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B002A03693B14B14BE34 /* NvimApiCommons.swift */; };
+		1929B09C1ADB384F37698FB8 /* NvimCursorModeShape.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B03EB461210D48D47510 /* NvimCursorModeShape.generated.swift */; };
 		1929B0B1A64AA449F666FCC9 /* 1.json in Resources */ = {isa = PBXBuildFile; fileRef = 1929B8619FD13BC2570CBFB2 /* 1.json */; };
 		1929B13ACA836714CD801F41 /* ConditionVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B4CC2D4AF391223461A2 /* ConditionVariable.swift */; };
 		1929B14D2EBC34BCFEC78ACB /* CellAttributesCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB19DD03ECD6ECC35F94 /* CellAttributesCollection.swift */; };
@@ -19,6 +20,7 @@
 		1929B326D5117A670105C209 /* 2.json in Resources */ = {isa = PBXBuildFile; fileRef = 1929B0522C47787B50071806 /* 2.json */; };
 		1929B36C51BCDFCCEE974EA2 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9C55A79D97272894F5D /* SwiftCommons.swift */; };
 		1929B3B70C96A78FD63DE737 /* NvimView+Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDC8F32F4A0D2299B5C5 /* NvimView+Debug.swift */; };
+		1929B3D4281D2E30A9603368 /* NvimCursorModeShape.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B03EB461210D48D47510 /* NvimCursorModeShape.generated.swift */; };
 		1929B40A751BDA2882D4FC94 /* NvimView+Objects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B22A0CAD417EC3790F02 /* NvimView+Objects.swift */; };
 		1929B40C9C30B46C0E0B9DE2 /* CellAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE45756C88F8B43804D2 /* CellAttributes.swift */; };
 		1929B434C0299827CCE6D1CC /* Defs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF14AE831C6832659B66 /* Defs.swift */; };
@@ -32,7 +34,6 @@
 		1929B74691D92B9F369787E5 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDE2C6003A6EDC02129C /* ColorUtils.swift */; };
 		1929B7D2EB80FEA7BFBC3D2C /* Typesetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B47330DAD129520A2273 /* Typesetter.swift */; };
 		1929B83EAD32DC419FEC68DB /* CocoaCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0C89838D8402BB80BFC /* CocoaCommons.swift */; };
-		1929B90E2CFEAADE0CEE1562 /* CursorModeShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA4C89E9FE90065C32F6 /* CursorModeShape.swift */; };
 		1929B922396A4EE7F070299A /* PerfTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B114CC85D012D7477D58 /* PerfTester.swift */; };
 		1929B953E76914DA984697DC /* FontUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B96A876229DA394F906E /* FontUtils.swift */; };
 		1929B9A949EE85C27FF66367 /* UGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D83D7E150F518D49FE /* UGrid.swift */; };
@@ -44,7 +45,6 @@
 		1929BB552C9D99E9ED938759 /* CellAttributesCollectionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0B60CCAA00B08ACAB15 /* CellAttributesCollectionTest.swift */; };
 		1929BC8495028D66F0A7D618 /* AttributesRunDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB7E3430BD3FD88A7698 /* AttributesRunDrawer.swift */; };
 		1929BCA615324C58582BFC3C /* ProcessUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD167BE7C6BB788DAE2A /* ProcessUtils.swift */; };
-		1929BCF2B3C24F0E9A96FE25 /* CursorModeShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA4C89E9FE90065C32F6 /* CursorModeShape.swift */; };
 		1929BDB2462E19B852EA1B47 /* CoreCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BAB9FFE8345228B559EC /* CoreCommons.swift */; };
 		1929BDC146B699BF49116CAB /* Defs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF14AE831C6832659B66 /* Defs.swift */; };
 		1929BDD254F59FC0F5B800E7 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B73455764E42DACF6BB8 /* Geometry.swift */; };
@@ -235,6 +235,7 @@
 
 /* Begin PBXFileReference section */
 		1929B002A03693B14B14BE34 /* NvimApiCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimApiCommons.swift; sourceTree = "<group>"; };
+		1929B03EB461210D48D47510 /* NvimCursorModeShape.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimCursorModeShape.generated.swift; sourceTree = "<group>"; };
 		1929B0522C47787B50071806 /* 2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 2.json; sourceTree = "<group>"; };
 		1929B06A73BE6DAA2679AAA2 /* Runs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Runs.swift; sourceTree = "<group>"; };
 		1929B086022A7A2C99A65A21 /* 0.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 0.json; sourceTree = "<group>"; };
@@ -258,7 +259,6 @@
 		1929B9C55A79D97272894F5D /* SwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftCommons.swift; sourceTree = "<group>"; };
 		1929B9D7F040B8B9E2F038DF /* FontTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontTrait.swift; sourceTree = "<group>"; };
 		1929B9D83D7E150F518D49FE /* UGrid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UGrid.swift; sourceTree = "<group>"; };
-		1929BA4C89E9FE90065C32F6 /* CursorModeShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CursorModeShape.swift; sourceTree = "<group>"; };
 		1929BAB0B8BA4E6CDF5C56F3 /* NvimView+Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Types.swift"; sourceTree = "<group>"; };
 		1929BAB9FFE8345228B559EC /* CoreCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreCommons.swift; sourceTree = "<group>"; };
 		1929BAF033A398BFBC2A7890 /* MyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyView.swift; sourceTree = "<group>"; };
@@ -524,11 +524,11 @@
 				1929B2BA05AC3E1A11D6EBFC /* Commons */,
 				1929BDC8F32F4A0D2299B5C5 /* NvimView+Debug.swift */,
 				1929BD896D408673954F4AA2 /* NvimView+Geometry.swift */,
-				1929BA4C89E9FE90065C32F6 /* CursorModeShape.swift */,
 				1929BF14AE831C6832659B66 /* Defs.swift */,
 				1929B27A8FF9A75A09969777 /* foundation_shim.h */,
 				1929BAB0B8BA4E6CDF5C56F3 /* NvimView+Types.swift */,
 				1929B4CC2D4AF391223461A2 /* ConditionVariable.swift */,
+				1929B03EB461210D48D47510 /* NvimCursorModeShape.generated.swift */,
 			);
 			path = NvimView;
 			sourceTree = "<group>";
@@ -879,11 +879,11 @@
 				1929BF6E40C70A4157A5C755 /* UGridTest.swift in Sources */,
 				1929BB552C9D99E9ED938759 /* CellAttributesCollectionTest.swift in Sources */,
 				4B02268C224ACFE30052362B /* ReadersWriterLock.swift in Sources */,
-				1929B90E2CFEAADE0CEE1562 /* CursorModeShape.swift in Sources */,
 				4BB1EFB3224B71ED00A5CD5A /* RxNeovimApi.generated.swift in Sources */,
 				1929BDC146B699BF49116CAB /* Defs.swift in Sources */,
 				1929B2E9F089A9E2800B67F2 /* NimbleCommons.swift in Sources */,
 				1929BB125782E25A9CF7F56C /* ConditionVariable.swift in Sources */,
+				1929B09C1ADB384F37698FB8 /* NvimCursorModeShape.generated.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -929,11 +929,11 @@
 				4BB1EFB4224B71ED00A5CD5A /* RxSwiftCommons.swift in Sources */,
 				1929B00C084F8EA5EF0BE6E2 /* NvimView+Geometry.swift in Sources */,
 				1929B06F50B2585777FFBE48 /* NvimApiCommons.swift in Sources */,
-				1929BCF2B3C24F0E9A96FE25 /* CursorModeShape.swift in Sources */,
 				1929B5C5DB438B66EC131EDE /* Defs.swift in Sources */,
 				1929B4C729F3713A6BBEAEC9 /* OSLogCommons.swift in Sources */,
 				1929BA25DA32AE80C527BB2A /* NvimView+Types.swift in Sources */,
 				1929B13ACA836714CD801F41 /* ConditionVariable.swift in Sources */,
+				1929B3D4281D2E30A9603368 /* NvimCursorModeShape.generated.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

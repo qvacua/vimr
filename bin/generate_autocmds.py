@@ -5,10 +5,10 @@ import io
 import re
 from string import Template
 
-NVIM_AUEVENTS_ENUM_FILE = "./neovim/build/include/auevents_enum.generated.h"
+# Assume that we're in $REPO_ROOT/NvimView
 
+NVIM_AUEVENTS_ENUM_FILE = "./neovim/build/include/auevents_enum.generated.h"
 SWIFT_TEMPLATE_FILE = "../resources/autocmds.template.swift"
-SWIFT_AUTOCMDS_FILE = './NvimView/NvimAutoCommandEvent.generated.swift'
 
 
 def convert(line: str) -> (str, str):
@@ -32,8 +32,6 @@ def swift_autocmds(version: str, template_string: str) -> str:
 
 
 if __name__ == '__main__':
-    result_file_path = SWIFT_AUTOCMDS_FILE
     version = os.environ['version']
-    with io.open(SWIFT_TEMPLATE_FILE, "r") as template, \
-            io.open(result_file_path, 'w') as header_file:
-        header_file.write(swift_autocmds(version, template.read()))
+    with io.open(SWIFT_TEMPLATE_FILE, "r") as template:
+        print(swift_autocmds(version, template.read()))

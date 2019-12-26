@@ -1,5 +1,5 @@
 // Auto generated for nvim v0.4.3
-// See bin/generate_autocmds.sh
+// See bin/generate_autocmds.py
 
 enum NvimAutoCommandEvent: Int {
 
@@ -114,3 +114,4 @@ enum NvimAutoCommandEvent: Int {
   case winleave = 108
   case winnew = 109
 }
+

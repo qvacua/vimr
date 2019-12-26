@@ -27,7 +27,8 @@ pushd NvimView/neovim > /dev/null
 popd > /dev/null
 
 pushd NvimView
-    version=${nvim_version} ../bin/generate_autocmds.py
+    version=${nvim_version} ../bin/generate_autocmds.py > "./NvimView/NvimAutoCommandEvent.generated.swift"
+    version=${nvim_version} ../bin/generate_cursor_shape.py > "./NvimView/NvimCursorModeShape.generated.swift"
 popd > /dev/null
 
 popd > /dev/null
