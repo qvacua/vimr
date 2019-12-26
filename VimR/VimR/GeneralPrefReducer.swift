@@ -28,6 +28,9 @@ class GeneralPrefReducer: ReducerType {
       state.openQuickly.ignorePatterns = patterns
       state.openQuickly.ignoreToken = Token()
 
+    case let .setCustomMarkdownProcessor(command):
+      state.mainWindowTemplate.customMarkdownProcessor = command
+      state.mainWindows.keys.forEach { state.mainWindows[$0]?.customMarkdownProcessor = command }
     }
 
     return (state, pair.action, true)
