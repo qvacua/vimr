@@ -121,7 +121,7 @@ extension NvimView {
       return
     }
 
-    if self.mode == .cmdline || self.mode == .cmdlineInsert || self.mode == .cmdlineReplace
+    if self.mode == .cmdlineNormal || self.mode == .cmdlineInsert || self.mode == .cmdlineReplace
        || self.mode == .replace
        || self.mode == .termFocus {
       self.api

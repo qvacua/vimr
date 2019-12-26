@@ -12,7 +12,7 @@ public enum CursorModeShape: UInt {
   case visual
   case insert
   case replace
-  case cmdline
+  case cmdlineNormal
   case cmdlineInsert
   case cmdlineReplace
   case operatorPending
