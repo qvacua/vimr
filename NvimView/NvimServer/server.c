@@ -373,7 +373,7 @@ static const char *cfstr2cstr(CFStringRef cfstr, bool *free_bytes) {
 
   if (converted == 0 || out_len == 0) { return NULL; }
 
-  const char *result = malloc((size_t) (out_len + 1));
+  char *result = malloc((size_t) (out_len + 1));
   converted = CFStringGetBytes(
       cfstr,
       whole_range,
@@ -391,6 +391,7 @@ static const char *cfstr2cstr(CFStringRef cfstr, bool *free_bytes) {
   }
 
   *free_bytes = true;
+  result[out_len] = NULL;
   return result;
 }
 
