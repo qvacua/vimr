@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19C57" minimumToolsVersion="Automatic" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+    <entity name="FileItem2" representedClassName="FileItem2" syncable="YES" codeGenerationType="class">
+        <attribute name="direntType" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <attribute name="isHidden" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isPackage" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="needsScanChildren" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="pathStart" attributeType="String"/>
+        <attribute name="url" attributeType="URI"/>
+        <relationship name="children" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="FileItem2" inverseName="parent" inverseEntity="FileItem2"/>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FileItem2" inverseName="children" inverseEntity="FileItem2"/>
+        <fetchIndex name="byIsDirAndUrlIndex">
+            <fetchIndexElement property="direntType" type="Binary" order="ascending"/>
+            <fetchIndexElement property="url" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byIsDirAndNeedsScanChildrenIndex">
+            <fetchIndexElement property="direntType" type="Binary" order="ascending"/>
+            <fetchIndexElement property="needsScanChildren" type="Binary" order="ascending"/>
+        </fetchIndex>
+    </entity>
+    <elements>
+        <element name="FileItem2" positionX="-63" positionY="-18" width="128" height="163"/>
+    </elements>
+</model>

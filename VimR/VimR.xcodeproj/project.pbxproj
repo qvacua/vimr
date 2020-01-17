@@ -429,6 +429,28 @@
 		4BF18C571FD2E52300DF95D1 /* NvimView.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BC1642B1FD2DEE1001903BE /* NvimView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF18C581FD2E53400DF95D1 /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */; };
 		4BF18C591FD2E53B00DF95D1 /* CocoaMarkdown.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF70EC423D1B3F9009E51E9 /* FuzzyMatcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EBF23D1B3F9009E51E9 /* FuzzyMatcher.mm */; };
+		4BF70EC523D1B3F9009E51E9 /* FuzzyMatcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EBF23D1B3F9009E51E9 /* FuzzyMatcher.mm */; };
+		4BF70EC623D1B3F9009E51E9 /* fuzzy_match.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EC223D1B3F9009E51E9 /* fuzzy_match.cc */; };
+		4BF70EC723D1B3F9009E51E9 /* fuzzy_match.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EC223D1B3F9009E51E9 /* fuzzy_match.cc */; };
+		4BF70EC823D1B3F9009E51E9 /* FuzzyMatcherPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EC323D1B3F9009E51E9 /* FuzzyMatcherPool.swift */; };
+		4BF70EC923D1B3F9009E51E9 /* FuzzyMatcherPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EC323D1B3F9009E51E9 /* FuzzyMatcherPool.swift */; };
+		4BF70ED223D1B4AF009E51E9 /* FoundationCommons.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70ED123D1B4AF009E51E9 /* FoundationCommons.m */; };
+		4BF70ED323D1B4AF009E51E9 /* FoundationCommons.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70ED123D1B4AF009E51E9 /* FoundationCommons.m */; };
+		4BF70ED623D1B54F009E51E9 /* ScoredUrl.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70ED523D1B54F009E51E9 /* ScoredUrl.m */; };
+		4BF70ED723D1B54F009E51E9 /* ScoredUrl.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70ED523D1B54F009E51E9 /* ScoredUrl.m */; };
+		4BF70ED923D1B591009E51E9 /* FuzzySearch.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70ED823D1B591009E51E9 /* FuzzySearch.xcdatamodel */; };
+		4BF70EDA23D1B591009E51E9 /* FuzzySearch.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70ED823D1B591009E51E9 /* FuzzySearch.xcdatamodel */; };
+		4BF70EE123D1B5B3009E51E9 /* FileScanBaton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EDF23D1B5B3009E51E9 /* FileScanBaton.m */; };
+		4BF70EE223D1B5B3009E51E9 /* FileScanBaton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EDF23D1B5B3009E51E9 /* FileScanBaton.m */; };
+		4BF70EE523D1B5EC009E51E9 /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE323D1B5EC009E51E9 /* FileService.swift */; };
+		4BF70EE623D1B5EC009E51E9 /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE323D1B5EC009E51E9 /* FileService.swift */; };
+		4BF70EE723D1B5EC009E51E9 /* FileMonitor2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE423D1B5EC009E51E9 /* FileMonitor2.swift */; };
+		4BF70EE823D1B5EC009E51E9 /* FileMonitor2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE423D1B5EC009E51E9 /* FileMonitor2.swift */; };
+		4BF70EEA23D1B5FF009E51E9 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */; };
+		4BF70EEB23D1B5FF009E51E9 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */; };
+		4BF70EED23D1B618009E51E9 /* ConditionVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EEC23D1B618009E51E9 /* ConditionVariable.swift */; };
+		4BF70EEE23D1B619009E51E9 /* ConditionVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EEC23D1B618009E51E9 /* ConditionVariable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -712,6 +734,26 @@
 		4BF70EBC23D1B335009E51E9 /* ignore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ignore.h; path = "../../third-party/libag/include/ignore.h"; sourceTree = "<group>"; };
 		4BF70EBD23D1B335009E51E9 /* lang.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = lang.h; path = "../../third-party/libag/include/lang.h"; sourceTree = "<group>"; };
 		4BF70EBE23D1B335009E51E9 /* scandir.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = scandir.h; path = "../../third-party/libag/include/scandir.h"; sourceTree = "<group>"; };
+		4BF70EBF23D1B3F9009E51E9 /* FuzzyMatcher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = FuzzyMatcher.mm; path = FuzzyMatcher/FuzzyMatcher.mm; sourceTree = "<group>"; };
+		4BF70EC023D1B3F9009E51E9 /* fuzzy_match.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = fuzzy_match.hh; path = FuzzyMatcher/fuzzy_match.hh; sourceTree = "<group>"; };
+		4BF70EC123D1B3F9009E51E9 /* FuzzyMatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FuzzyMatcher.h; path = FuzzyMatcher/FuzzyMatcher.h; sourceTree = "<group>"; };
+		4BF70EC223D1B3F9009E51E9 /* fuzzy_match.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fuzzy_match.cc; path = FuzzyMatcher/fuzzy_match.cc; sourceTree = "<group>"; };
+		4BF70EC323D1B3F9009E51E9 /* FuzzyMatcherPool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FuzzyMatcherPool.swift; path = FuzzyMatcher/FuzzyMatcherPool.swift; sourceTree = "<group>"; };
+		4BF70ED023D1B4AF009E51E9 /* FoundationCommons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FoundationCommons.h; sourceTree = "<group>"; };
+		4BF70ED123D1B4AF009E51E9 /* FoundationCommons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FoundationCommons.m; sourceTree = "<group>"; };
+		4BF70ED423D1B54F009E51E9 /* ScoredUrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScoredUrl.h; sourceTree = "<group>"; };
+		4BF70ED523D1B54F009E51E9 /* ScoredUrl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScoredUrl.m; sourceTree = "<group>"; };
+		4BF70ED823D1B591009E51E9 /* FuzzySearch.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FuzzySearch.xcdatamodel; sourceTree = "<group>"; };
+		4BF70EDF23D1B5B3009E51E9 /* FileScanBaton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileScanBaton.m; sourceTree = "<group>"; };
+		4BF70EE023D1B5B3009E51E9 /* FileScanBaton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileScanBaton.h; sourceTree = "<group>"; };
+		4BF70EE323D1B5EC009E51E9 /* FileService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
+		4BF70EE423D1B5EC009E51E9 /* FileMonitor2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileMonitor2.swift; sourceTree = "<group>"; };
+		4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		4BF70EEC23D1B618009E51E9 /* ConditionVariable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConditionVariable.swift; sourceTree = "<group>"; };
+		4BF70EF723D1B6D9009E51E9 /* FileItem2+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "FileItem2+CoreDataProperties.m"; sourceTree = "<group>"; };
+		4BF70EF823D1B6D9009E51E9 /* FileItem2+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "FileItem2+CoreDataClass.m"; sourceTree = "<group>"; };
+		4BF70EF923D1B6D9009E51E9 /* FileItem2+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FileItem2+CoreDataProperties.h"; sourceTree = "<group>"; };
+		4BF70EFA23D1B6D9009E51E9 /* FileItem2+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FileItem2+CoreDataClass.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1091,6 +1133,8 @@
 		4BDF50101D760AB700D8FBC3 /* Commons */ = {
 			isa = PBXGroup;
 			children = (
+				4BF70ED023D1B4AF009E51E9 /* FoundationCommons.h */,
+				4BF70ED123D1B4AF009E51E9 /* FoundationCommons.m */,
 				4B3CF02F224B7EAC00FA9833 /* RxSwiftCommons.swift */,
 				4B6A70931D60E04200E12030 /* AppKitCommons.swift */,
 				1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */,
@@ -1136,6 +1180,7 @@
 		4BEBA5071CFF374B00673FDF /* VimR */ = {
 			isa = PBXGroup;
 			children = (
+				4BF70ECB23D1B40A009E51E9 /* Fuzzy Search */,
 				4BF70EB323D1B30A009E51E9 /* the_silver_searcher */,
 				4BB4CCEE224A7E6D00474C79 /* FSEvents */,
 				4B004BCA21063B4D0043A396 /* DictionaryCoding */,
@@ -1185,9 +1230,34 @@
 			name = the_silver_searcher;
 			sourceTree = "<group>";
 		};
+		4BF70ECB23D1B40A009E51E9 /* Fuzzy Search */ = {
+			isa = PBXGroup;
+			children = (
+				4BF70EF723D1B6D9009E51E9 /* FileItem2+CoreDataProperties.m */,
+				4BF70EF823D1B6D9009E51E9 /* FileItem2+CoreDataClass.m */,
+				4BF70EF923D1B6D9009E51E9 /* FileItem2+CoreDataProperties.h */,
+				4BF70EFA23D1B6D9009E51E9 /* FileItem2+CoreDataClass.h */,
+				4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */,
+				4BF70EE423D1B5EC009E51E9 /* FileMonitor2.swift */,
+				4BF70EE323D1B5EC009E51E9 /* FileService.swift */,
+				4BF70ED823D1B591009E51E9 /* FuzzySearch.xcdatamodel */,
+				4BF70ED423D1B54F009E51E9 /* ScoredUrl.h */,
+				4BF70ED523D1B54F009E51E9 /* ScoredUrl.m */,
+				4BF70EC223D1B3F9009E51E9 /* fuzzy_match.cc */,
+				4BF70EC023D1B3F9009E51E9 /* fuzzy_match.hh */,
+				4BF70EC123D1B3F9009E51E9 /* FuzzyMatcher.h */,
+				4BF70EBF23D1B3F9009E51E9 /* FuzzyMatcher.mm */,
+				4BF70EC323D1B3F9009E51E9 /* FuzzyMatcherPool.swift */,
+				4BF70EE023D1B5B3009E51E9 /* FileScanBaton.h */,
+				4BF70EDF23D1B5B3009E51E9 /* FileScanBaton.m */,
+			);
+			name = "Fuzzy Search";
+			sourceTree = "<group>";
+		};
 		4BF8EED91D858C4400CAC08A /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				4BF70EEC23D1B618009E51E9 /* ConditionVariable.swift */,
 				1929BA8AC40B901B20F20B71 /* FileUtils.swift */,
 				1929BEEB33113B0E33C3830F /* Matcher.swift */,
 				1929B9D510177918080BE39B /* Scorer.swift */,
@@ -1514,6 +1584,7 @@
 				4B2636AD223A487B00021586 /* AppKitCommons.swift in Sources */,
 				4B2636AE223A487B00021586 /* InnterToolBar.swift in Sources */,
 				4B2636AF223A487B00021586 /* WorkspaceBar.swift in Sources */,
+				4BF70EDA23D1B591009E51E9 /* FuzzySearch.xcdatamodel in Sources */,
 				4B2636B1223A487B00021586 /* SwiftCommons.swift in Sources */,
 				4B2636B2223A487B00021586 /* AppDelegate.swift in Sources */,
 				4B2636B3223A487B00021586 /* WorkspaceTool.swift in Sources */,
@@ -1521,6 +1592,7 @@
 				4B2636B5223A487B00021586 /* FileItemIgnorePattern.swift in Sources */,
 				4B2636B6223A487B00021586 /* DictionaryErrors.swift in Sources */,
 				4B2636B7223A487B00021586 /* FileUtils.swift in Sources */,
+				4BF70EC723D1B3F9009E51E9 /* fuzzy_match.cc in Sources */,
 				4B2636B8223A487B00021586 /* Matcher.swift in Sources */,
 				4B2636B9223A487B00021586 /* ScoredFileItem.swift in Sources */,
 				4B2636BA223A487B00021586 /* Scorer.swift in Sources */,
@@ -1533,6 +1605,8 @@
 				4B2636C1223A487B00021586 /* UiRoot.swift in Sources */,
 				4B2636C2223A487B00021586 /* UiRootReducer.swift in Sources */,
 				4B2636C3223A487B00021586 /* MainWindowReducer.swift in Sources */,
+				4BF70ED723D1B54F009E51E9 /* ScoredUrl.m in Sources */,
+				4BF70EC923D1B3F9009E51E9 /* FuzzyMatcherPool.swift in Sources */,
 				4B2636C4223A487B00021586 /* PreviewTool.swift in Sources */,
 				4B917E612334D52D00752149 /* EonilFSEvents.swift in Sources */,
 				4B2636C5223A487B00021586 /* PreviewReducer.swift in Sources */,
@@ -1542,6 +1616,7 @@
 				4B2636C9223A487B00021586 /* PreviewToolReducer.swift in Sources */,
 				4B2636CA223A487B00021586 /* Types.swift in Sources */,
 				4B2636CB223A487B00021586 /* OpenQuicklyReducer.swift in Sources */,
+				4BF70EE223D1B5B3009E51E9 /* FileScanBaton.m in Sources */,
 				4B917E582334D52D00752149 /* EonilFSEventStreamCreateFlags.swift in Sources */,
 				4B2636CC223A487B00021586 /* FileMonitorReducer.swift in Sources */,
 				4B2636CD223A487B00021586 /* FileMonitor.swift in Sources */,
@@ -1550,6 +1625,7 @@
 				4B2636D0223A487B00021586 /* BufferListReducer.swift in Sources */,
 				4B2636D1223A487B00021586 /* PrefWindow.swift in Sources */,
 				4B917E552334D52D00752149 /* EonilFSEventStream.swift in Sources */,
+				4BF70EE823D1B5EC009E51E9 /* FileMonitor2.swift in Sources */,
 				4B2636D2223A487B00021586 /* PrefPane.swift in Sources */,
 				4B2636D3223A487B00021586 /* GeneralPref.swift in Sources */,
 				4B917E522334D52D00752149 /* EonilFSEventStreamEventFlags.swift in Sources */,
@@ -1564,16 +1640,19 @@
 				4B2636DB223A487B00021586 /* OpenQuicklyWindow.swift in Sources */,
 				4B2636DC223A487B00021586 /* OpenQuicklyFilterOperation.swift in Sources */,
 				4B2636DD223A487B00021586 /* OpenQuicklyFileViewRow.swift in Sources */,
+				4BF70EEB23D1B5FF009E51E9 /* CoreDataStack.swift in Sources */,
 				4B2636DE223A487B00021586 /* PrefMiddleware.swift in Sources */,
 				4B2636DF223A487B00021586 /* Debouncer.swift in Sources */,
 				4B2636E0223A487B00021586 /* PreviewUtils.swift in Sources */,
 				4B2636E1223A487B00021586 /* FileItemUtils.swift in Sources */,
 				4B2636E2223A487B00021586 /* HtmlPreviewTool.swift in Sources */,
 				4B2636E3223A487B00021586 /* HtmlPreviewToolReducer.swift in Sources */,
+				4BF70ED323D1B4AF009E51E9 /* FoundationCommons.m in Sources */,
 				4B2636E4223A487B00021586 /* AdvancedPrefReducer.swift in Sources */,
 				4B2636E5223A487B00021586 /* ToolsPref.swift in Sources */,
 				4B2636E6223A487B00021586 /* ToolsPrefReducer.swift in Sources */,
 				4B2636E7223A487B00021586 /* PrefUtils.swift in Sources */,
+				4BF70EC523D1B3F9009E51E9 /* FuzzyMatcher.mm in Sources */,
 				4B917E642334D52D00752149 /* EonilFSEventStreamEventID.swift in Sources */,
 				4B2636E8223A487B00021586 /* ThemedTableSubviews.swift in Sources */,
 				4B2636E9223A487B00021586 /* ImageAndTextTableCell.swift in Sources */,
@@ -1592,9 +1671,11 @@
 				4B2636F4223A487B00021586 /* ShortcutsPref.swift in Sources */,
 				4B2636F5223A487B00021586 /* ShortcutsTableSubviews.swift in Sources */,
 				4B2636F6223A487B00021586 /* DefaultShortcuts.swift in Sources */,
+				4BF70EE623D1B5EC009E51E9 /* FileService.swift in Sources */,
 				4B2636F7223A487B00021586 /* ShortcutItem.swift in Sources */,
 				4B2636F8223A487B00021586 /* RpcEvents.swift in Sources */,
 				4B2636F9223A487B00021586 /* RpcAppearanceEpic.swift in Sources */,
+				4BF70EEE23D1B619009E51E9 /* ConditionVariable.swift in Sources */,
 				4B2636FA223A487B00021586 /* OSLogCommons.swift in Sources */,
 				4B2636FB223A487B00021586 /* Defs.swift in Sources */,
 				1929B179DBDE58A9D9BCA819 /* MainWindow+Types.swift in Sources */,
@@ -1612,6 +1693,7 @@
 				4B6A70941D60E04200E12030 /* AppKitCommons.swift in Sources */,
 				4B3965361DEB21300082D3C1 /* InnterToolBar.swift in Sources */,
 				4B6423981D8EFDE000FC78C8 /* WorkspaceBar.swift in Sources */,
+				4BF70ED923D1B591009E51E9 /* FuzzySearch.xcdatamodel in Sources */,
 				4B6A70961D6100E300E12030 /* SwiftCommons.swift in Sources */,
 				4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */,
 				4B64239A1D8EFE3000FC78C8 /* WorkspaceTool.swift in Sources */,
@@ -1619,6 +1701,7 @@
 				1929B6388EAF16C190B82955 /* FileItemIgnorePattern.swift in Sources */,
 				4B004BD521063B600043A396 /* DictionaryErrors.swift in Sources */,
 				1929B67DA3EB21A631EF1DBB /* FileUtils.swift in Sources */,
+				4BF70EC623D1B3F9009E51E9 /* fuzzy_match.cc in Sources */,
 				1929B3F5743967125F357C9F /* Matcher.swift in Sources */,
 				1929B53876E6952D378C2B30 /* ScoredFileItem.swift in Sources */,
 				1929BD3F9E609BFADB27584B /* Scorer.swift in Sources */,
@@ -1631,6 +1714,8 @@
 				1929BAFF1E011321D3186EE6 /* UiRoot.swift in Sources */,
 				1929B29B95AD176D57942E08 /* UiRootReducer.swift in Sources */,
 				1929BB4A9B2FA42A64CCCC76 /* MainWindowReducer.swift in Sources */,
+				4BF70ED623D1B54F009E51E9 /* ScoredUrl.m in Sources */,
+				4BF70EC823D1B3F9009E51E9 /* FuzzyMatcherPool.swift in Sources */,
 				1929B8FB248D71BF88A35761 /* PreviewTool.swift in Sources */,
 				4B917E5F2334D52D00752149 /* EonilFSEvents.swift in Sources */,
 				1929B4B70926DE113E6BF990 /* PreviewReducer.swift in Sources */,
@@ -1640,6 +1725,7 @@
 				1929B3AC66EFE35D68C020E3 /* PreviewToolReducer.swift in Sources */,
 				1929B59FA5C286E010F70BEE /* Types.swift in Sources */,
 				1929B6D8F5FC723B7109031F /* OpenQuicklyReducer.swift in Sources */,
+				4BF70EE123D1B5B3009E51E9 /* FileScanBaton.m in Sources */,
 				4B917E562334D52D00752149 /* EonilFSEventStreamCreateFlags.swift in Sources */,
 				1929B5543B1E31A26096E656 /* FileMonitorReducer.swift in Sources */,
 				1929B5F016431A76292D1E84 /* FileMonitor.swift in Sources */,
@@ -1648,6 +1734,7 @@
 				1929B4E54E2F13A7F5F2B682 /* BufferListReducer.swift in Sources */,
 				1929BAE4900D72A7877741B1 /* PrefWindow.swift in Sources */,
 				4B917E532334D52D00752149 /* EonilFSEventStream.swift in Sources */,
+				4BF70EE723D1B5EC009E51E9 /* FileMonitor2.swift in Sources */,
 				1929BEAE0592096BC1191B67 /* PrefPane.swift in Sources */,
 				1929BEDE1BE950EDA9497363 /* GeneralPref.swift in Sources */,
 				4B917E502334D52D00752149 /* EonilFSEventStreamEventFlags.swift in Sources */,
@@ -1662,16 +1749,19 @@
 				1929B3557317755A43513B17 /* OpenQuicklyWindow.swift in Sources */,
 				1929B333855A5406C400DA92 /* OpenQuicklyFilterOperation.swift in Sources */,
 				1929B1837C750CADB3A5BCB9 /* OpenQuicklyFileViewRow.swift in Sources */,
+				4BF70EEA23D1B5FF009E51E9 /* CoreDataStack.swift in Sources */,
 				1929B990A143763A56CFCED0 /* PrefMiddleware.swift in Sources */,
 				1929BA76A1D97D8226F7CFB1 /* Debouncer.swift in Sources */,
 				1929B71610FF1DC6E459BA49 /* PreviewUtils.swift in Sources */,
 				1929B94083273D4B321AD848 /* FileItemUtils.swift in Sources */,
 				1929BFDE22D155F7C4B19E96 /* HtmlPreviewTool.swift in Sources */,
 				1929B4B00D7BB191A9A6532D /* HtmlPreviewToolReducer.swift in Sources */,
+				4BF70ED223D1B4AF009E51E9 /* FoundationCommons.m in Sources */,
 				1929BCF7F7B9CC5499A3F506 /* AdvancedPrefReducer.swift in Sources */,
 				1929BF03FD6465F289AA80B2 /* ToolsPref.swift in Sources */,
 				1929B6C0393DE40E34F4A49A /* ToolsPrefReducer.swift in Sources */,
 				1929B542A071BD03C846F6EF /* PrefUtils.swift in Sources */,
+				4BF70EC423D1B3F9009E51E9 /* FuzzyMatcher.mm in Sources */,
 				4B917E622334D52D00752149 /* EonilFSEventStreamEventID.swift in Sources */,
 				1929BE2F3E0182CC51F2763A /* ThemedTableSubviews.swift in Sources */,
 				1929B6460862447A31B5B082 /* ImageAndTextTableCell.swift in Sources */,
@@ -1690,9 +1780,11 @@
 				1929BB85B2D30E548A32663D /* ShortcutsPref.swift in Sources */,
 				1929BA269EBD68251410A08E /* ShortcutsTableSubviews.swift in Sources */,
 				1929B2D56C4652E251C23AD4 /* DefaultShortcuts.swift in Sources */,
+				4BF70EE523D1B5EC009E51E9 /* FileService.swift in Sources */,
 				1929B0C7150100A84FBDB8BF /* ShortcutItem.swift in Sources */,
 				1929B250DB3FB395A700FE8C /* RpcEvents.swift in Sources */,
 				1929BF3253594E5B1908C6CE /* RpcAppearanceEpic.swift in Sources */,
+				4BF70EED23D1B618009E51E9 /* ConditionVariable.swift in Sources */,
 				1929B4E8B916008399CD5D3A /* OSLogCommons.swift in Sources */,
 				1929B5A0EDD1119CFF7BB84C /* Defs.swift in Sources */,
 				1929B376DB09AB5FDBF42BA1 /* MainWindow+Types.swift in Sources */,
@@ -1823,6 +1915,7 @@
 					"$(PROJECT_DIR)/../third-party/libxz/lib/liblzma.a",
 					"$(PROJECT_DIR)/../third-party/libpcre/lib/libpcre.a",
 					"$(PROJECT_DIR)/../third-party/libag/lib/libag.a",
+					"-pthread",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR.dev;
 				PRODUCT_MODULE_NAME = VimR;
@@ -1852,6 +1945,7 @@
 					"$(PROJECT_DIR)/../third-party/libxz/lib/liblzma.a",
 					"$(PROJECT_DIR)/../third-party/libpcre/lib/libpcre.a",
 					"$(PROJECT_DIR)/../third-party/libag/lib/libag.a",
+					"-pthread",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR.dev;
 				PRODUCT_MODULE_NAME = VimR;
@@ -1995,6 +2089,7 @@
 					"$(PROJECT_DIR)/../third-party/libxz/lib/liblzma.a",
 					"$(PROJECT_DIR)/../third-party/libpcre/lib/libpcre.a",
 					"$(PROJECT_DIR)/../third-party/libag/lib/libag.a",
+					"-pthread",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR;
 				PRODUCT_NAME = VimR;
@@ -2022,6 +2117,7 @@
 					"$(PROJECT_DIR)/../third-party/libxz/lib/liblzma.a",
 					"$(PROJECT_DIR)/../third-party/libpcre/lib/libpcre.a",
 					"$(PROJECT_DIR)/../third-party/libag/lib/libag.a",
+					"-pthread",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR;
 				PRODUCT_NAME = VimR;
