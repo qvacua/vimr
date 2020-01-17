@@ -56,26 +56,10 @@ class OpenQuicklyWindow: NSObject,
         self.cwd = state.openQuickly.cwd
         self.cwdPathCompsCount = self.cwd.pathComponents.count
         self.cwdControl.url = self.cwd
-        self.currentFileService = self.fileServicesPerRootUrl[self.cwd]
 
         self.searchStream
           .observeOn(MainScheduler.instance)
-          .subscribe(onNext: { pattern in
-            self.pattern = pattern
-            guard pattern.count >= 2 else { return }
-
-            self.currentFileService?.stopScanScore()
-            self.scanToken = Token()
-            let localToken = self.scanToken
-
-            self.fileViewItems.removeAll()
-            self.currentFileService?.scanScore(for: pattern) { scoredUrls in
-              DispatchQueue.main.async {
-                guard localToken == self.scanToken else { return }
-                self.fileViewItems.append(contentsOf: scoredUrls)
-              }
-            }
-          })
+          .subscribe(onNext: { [weak self] pattern in self?.scanAndScore(pattern) })
           .disposed(by: self.disposeBag)
 
         self.windowController.showWindow(self)
@@ -96,14 +80,12 @@ class OpenQuicklyWindow: NSObject,
 
   private(set) var cwd = FileUtils.userHomeUrl
   private var cwdPathCompsCount = 0
-  private var currentFileService: FileService?
   private var scanToken = Token()
 
   private var fileServicesPerRootUrl: [URL: FileService] = [:]
   private var rootUrls: Set<URL> { Set(self.fileServicesPerRootUrl.map { url, _ in url }) }
 
   // FIXME: migrate to State later...
-  private(set) var pattern = ""
   @objc dynamic private(set) var fileViewItems = [ScoredUrl]()
   private var count = 0
   private let fileViewItemsController = NSArrayController()
@@ -121,8 +103,28 @@ class OpenQuicklyWindow: NSObject,
   private let log = OSLog(subsystem: Defs.loggerSubsystem,
                           category: Defs.LoggerCategory.uiComponents)
 
-  private var window: NSWindow {
-    return self.windowController.window!
+  private var window: NSWindow { self.windowController.window! }
+
+  private func scanAndScore(_ pattern: String) {
+    guard let fileService = self.fileServicesPerRootUrl[self.cwd] else { return }
+    fileService.stopScanScore()
+
+    guard pattern.count >= 2 else {
+      self.fileViewItems.removeAll()
+      return
+    }
+
+    self.scanToken = Token()
+    let localToken = self.scanToken
+
+    self.fileViewItems.removeAll()
+    fileService.scanScore(for: pattern) { scoredUrls in
+      DispatchQueue.main.async {
+        guard localToken == self.scanToken else { return }
+        self.fileViewItems.append(contentsOf: scoredUrls)
+        self.countField.stringValue = "\(self.fileViewItems.count) Items"
+      }
+    }
   }
 
   private func updateRootUrls(state: AppState) {
@@ -331,7 +333,6 @@ extension OpenQuicklyWindow {
 
     self.count = 0
 
-    self.pattern = ""
     self.fileViewItems.removeAll()
 
     self.searchField.stringValue = ""
