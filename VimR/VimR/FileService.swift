@@ -13,8 +13,10 @@ class FileService {
 
   var root: URL {
     didSet {
-      self.deleteAllFiles()
-      self.ensureRootFileInStore()
+      self.queue.sync {
+        self.deleteAllFiles()
+        self.ensureRootFileInStore()
+      }
     }
   }
 
@@ -269,7 +271,7 @@ class FileService {
     self.writeContext = self.coreDataStack.newBackgroundContext()
     self.fileMonitor = FileMonitor2(urlToMonitor: root)
 
-    self.ensureRootFileInStore()
+    self.queue.sync { self.ensureRootFileInStore() }
     try self.fileMonitor.start { [weak self] url in self?.handleChange(in: url) }
   }
 
@@ -313,7 +315,7 @@ class FileService {
         } catch {
           self.log.error(
             "Could not fetch File with url \(folderUrl) "
-              + "or could not save after setting needsScanChildren: \(error)"
+            + "or could not save after setting needsScanChildren: \(error)"
           )
         }
 
@@ -332,19 +334,18 @@ class FileService {
     return req
   }
 
+  /// Call this in self.queue.(a)sync
   private func deleteAllFiles() {
     let delReq = NSBatchDeleteRequest(
       fetchRequest: NSFetchRequest(entityName: String(describing: FileItem2.self))
     )
 
-    self.queue.async {
-      let ctx = self.writeContext
-      ctx.performAndWait {
-        do {
-          try ctx.execute(delReq)
-        } catch {
-          self.log.error("Could not delete all Files: \(error)")
-        }
+    let ctx = self.writeContext
+    ctx.performAndWait {
+      do {
+        try ctx.execute(delReq)
+      } catch {
+        self.log.error("Could not delete all Files: \(error)")
       }
     }
   }

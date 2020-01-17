@@ -94,6 +94,7 @@ class OpenQuicklyWindow: NSObject,
   private let fileView = NSTableView.standardTableView()
 
   private let searchStream: Observable<String>
+  private let fileService: FileService
 
   private var window: NSWindow {
     return self.windowController.window!
