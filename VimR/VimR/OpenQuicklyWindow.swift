@@ -12,7 +12,7 @@ class OpenQuicklyWindow: NSObject,
                          UiComponent,
                          NSWindowDelegate,
                          NSTextFieldDelegate,
-                         NSTableViewDelegate, NSTableViewDataSource {
+                         NSTableViewDelegate {
 
   typealias StateType = AppState
 
@@ -81,8 +81,9 @@ class OpenQuicklyWindow: NSObject,
 
   // FIXME: migrate to State later...
   private(set) var pattern = ""
-  private(set) var fileViewItems = [ScoredFileItem]()
+  @objc private(set) var fileViewItems = [ScoredUrl]()
   private var count = 0
+  private let fileViewItemsController = NSArrayController()
 
   private let windowController: NSWindowController
 
@@ -110,7 +111,17 @@ class OpenQuicklyWindow: NSObject,
 
     let fileView = self.fileView
     fileView.intercellSpacing = CGSize(width: 4, height: 4)
-    fileView.dataSource = self
+
+    let c = self.fileViewItemsController
+    c.avoidsEmptySelection = false
+    c.preservesSelection = true
+    c.objectClass = ScoredUrl.self
+    c.sortDescriptors = [NSSortDescriptor(key: "score", ascending: false)]
+    c.automaticallyRearrangesObjects = true
+    c.bind(.contentArray, to: self, withKeyPath: "fileViewItems")
+
+    fileView.bind(.content, to: c, withKeyPath: "arrangedObjects")
+    fileView.bind(.selectionIndexes, to: c, withKeyPath: "selectionIndexes")
     fileView.delegate = self
 
     let fileScrollView = NSScrollView.standardScrollView()
@@ -163,15 +174,6 @@ class OpenQuicklyWindow: NSObject,
   }
 }
 
-// MARK: - NSTableViewDataSource
-extension OpenQuicklyWindow {
-
-  @objc(numberOfRowsInTableView:)
-  func numberOfRows(in _: NSTableView) -> Int {
-    return self.fileViewItems.count
-  }
-}
-
 // MARK: - NSTableViewDelegate
 extension OpenQuicklyWindow {
 
@@ -179,7 +181,7 @@ extension OpenQuicklyWindow {
     return OpenQuicklyFileViewRow()
   }
 
-  @objc(tableView: viewForTableColumn:row:)
+  @objc(tableView:viewForTableColumn:row:)
   func tableView(_ tableView: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
     let cachedCell = (tableView.makeView(
       withIdentifier: NSUserInterfaceItemIdentifier("file-view-row"), owner: self) as? ImageAndTextTableCell
@@ -216,7 +218,7 @@ extension OpenQuicklyWindow {
 // MARK: - NSTextFieldDelegate
 extension OpenQuicklyWindow {
 
-  @objc(control: textView:doCommandBySelector:)
+  @objc(control:textView:doCommandBySelector:)
   func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
     switch commandSelector {
     case NSSelectorFromString("cancelOperation:"):
