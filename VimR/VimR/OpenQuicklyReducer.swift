@@ -17,7 +17,6 @@ class OpenQuicklyReducer: ReducerType {
     var appState = pair.state
 
     appState.openQuickly.open = false
-    appState.openQuickly.flatFileItems = Observable.empty()
     appState.openQuickly.cwd = FileUtils.userHomeUrl
 
     switch pair.action {

@@ -16,10 +16,6 @@ class FileMonitorReducer: ReducerType {
     switch tuple.action {
 
     case let .change(in: url):
-      if let fileItem = FileItemUtils.item(for: url, root: state.openQuickly.root, create: false) {
-        fileItem.needsScanChildren = true
-      }
-
       state.mainWindows
         .filter { (uuid, mainWindow) in url == mainWindow.cwd || url.isContained(in: mainWindow.cwd) }
         .map { $0.0 }

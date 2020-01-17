@@ -7,6 +7,7 @@ import Cocoa
 import RxSwift
 import RxCocoa
 import PureLayout
+import os
 
 class OpenQuicklyWindow: NSObject,
                          UiComponent,
@@ -31,8 +32,6 @@ class OpenQuicklyWindow: NSObject,
       .throttle(.milliseconds(2 * 500), latest: true, scheduler: MainScheduler.instance)
       .distinctUntilChanged()
 
-    self.fileService = FileService(root: self.cwd)
-
     super.init()
 
     self.window.delegate = self
@@ -42,6 +41,8 @@ class OpenQuicklyWindow: NSObject,
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { state in
+        self.updateRootUrls(state: state)
+
         guard state.openQuickly.open else {
           self.windowController.close()
           return
@@ -81,6 +82,9 @@ class OpenQuicklyWindow: NSObject,
   private(set) var cwd = FileUtils.userHomeUrl
   private var cwdPathCompsCount = 0
 
+  private var fileServicesPerRootUrl: [URL: FileService] = [:]
+  private var rootUrls: Set<URL> { Set(self.fileServicesPerRootUrl.map { url, _ in url }) }
+
   // FIXME: migrate to State later...
   private(set) var pattern = ""
   @objc private(set) var fileViewItems = [ScoredUrl]()
@@ -96,10 +100,34 @@ class OpenQuicklyWindow: NSObject,
   private let fileView = NSTableView.standardTableView()
 
   private let searchStream: Observable<String>
-  private let fileService: FileService
+
+  private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                          category: Defs.LoggerCategory.uiComponents)
 
   private var window: NSWindow {
     return self.windowController.window!
+  }
+
+  private func updateRootUrls(state: AppState) {
+    let urlsToMonitor = Set(state.mainWindows.map { $1.cwd })
+
+    let newUrls = urlsToMonitor.subtracting(self.rootUrls)
+    let obsoleteUrls = self.rootUrls.subtracting(urlsToMonitor)
+
+    newUrls.forEach { url in
+      self.log.info("Adding \(url) and its service.")
+      guard let service = try? FileService(root: url) else {
+        self.log.error("Could not create FileService for \(url)")
+        return
+      }
+
+      self.fileServicesPerRootUrl[url] = service
+    }
+
+    obsoleteUrls.forEach { url in
+      self.log.info("Removing \(url) and its service.")
+      self.fileServicesPerRootUrl.removeValue(forKey: url)
+    }
   }
 
   private func addViews() {

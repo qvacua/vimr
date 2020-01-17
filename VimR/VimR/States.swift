@@ -80,9 +80,6 @@ extension OpenQuicklyWindow {
       case ignorePatterns = "ignore-patterns"
     }
 
-    let root = FileItem(URL(fileURLWithPath: "/", isDirectory: true))
-
-    var flatFileItems = Observable<[FileItem]>.empty()
     var cwd = FileUtils.userHomeUrl
     var ignorePatterns = State.defaultIgnorePatterns
     var ignoreToken = Token()
