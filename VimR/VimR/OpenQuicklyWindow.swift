@@ -31,6 +31,8 @@ class OpenQuicklyWindow: NSObject,
       .throttle(.milliseconds(2 * 500), latest: true, scheduler: MainScheduler.instance)
       .distinctUntilChanged()
 
+    self.fileService = FileService(root: self.cwd)
+
     super.init()
 
     self.window.delegate = self

@@ -263,7 +263,7 @@ class FileService {
 
   init(root: URL) throws {
     self.coreDataStack = try CoreDataStack(
-      modelName: "FileSearchTest",
+      modelName: "FuzzySearch",
       storeLocation: .temp(UUID().uuidString),
       deleteOnDeinit: true
     )

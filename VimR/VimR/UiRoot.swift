@@ -24,12 +24,8 @@ class UiRoot: UiComponent {
     self.emitter = emitter
     self.emit = emitter.typedEmit()
 
-    self.fileMonitor = FileMonitor(source: source,
-                                   emitter: emitter,
-                                   state: state)
-    self.openQuicklyWindow = OpenQuicklyWindow(source: source,
-                                               emitter: emitter,
-                                               state: state)
+    self.fileMonitor = FileMonitor(source: source, emitter: emitter, state: state)
+    self.openQuicklyWindow = OpenQuicklyWindow(source: source, emitter: emitter, state: state)
     self.prefWindow = PrefWindow(source: source, emitter: emitter, state: state)
 
     source
