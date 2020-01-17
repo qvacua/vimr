@@ -62,7 +62,7 @@ class OpenQuicklyWindow: NSObject,
           .observeOn(MainScheduler.instance)
           .subscribe(onNext: { pattern in
             self.pattern = pattern
-            guard pattern.count >= 2 else {return }
+            guard pattern.count >= 2 else { return }
 
             self.currentFileService?.stopScanScore()
             self.scanToken = Token()
@@ -231,8 +231,11 @@ extension OpenQuicklyWindow {
 
   @objc(tableView:viewForTableColumn:row:)
   func tableView(_ tableView: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
-    let cachedCell = (tableView.makeView(
-      withIdentifier: NSUserInterfaceItemIdentifier("file-view-row"), owner: self) as? ImageAndTextTableCell
+    let cachedCell = (
+      tableView.makeView(
+        withIdentifier: NSUserInterfaceItemIdentifier("file-view-row"),
+        owner: self
+      ) as? ImageAndTextTableCell
     )?.reset()
     let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
@@ -267,7 +270,11 @@ extension OpenQuicklyWindow {
 extension OpenQuicklyWindow {
 
   @objc(control:textView:doCommandBySelector:)
-  func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+  func control(
+    _ control: NSControl,
+    textView: NSTextView,
+    doCommandBy commandSelector: Selector
+  ) -> Bool {
     switch commandSelector {
     case NSSelectorFromString("cancelOperation:"):
       self.window.performClose(self)
