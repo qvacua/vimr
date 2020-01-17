@@ -701,6 +701,17 @@
 		4BF18C381FD2E2AB00DF95D1 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = ../Carthage/Build/Mac/RxCocoa.framework; sourceTree = "<group>"; };
 		4BF18C491FD2E2DE00DF95D1 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = ../Carthage/Build/Mac/Nimble.framework; sourceTree = "<group>"; };
 		4BF18C501FD2E4F200DF95D1 /* RxTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxTest.framework; path = ../Carthage/Build/Mac/RxTest.framework; sourceTree = "<group>"; };
+		4BF70EB423D1B335009E51E9 /* print.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = print.h; path = "../../third-party/libag/include/print.h"; sourceTree = "<group>"; };
+		4BF70EB523D1B335009E51E9 /* util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = util.h; path = "../../third-party/libag/include/util.h"; sourceTree = "<group>"; };
+		4BF70EB623D1B335009E51E9 /* log.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = log.h; path = "../../third-party/libag/include/log.h"; sourceTree = "<group>"; };
+		4BF70EB723D1B335009E51E9 /* decompress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = decompress.h; path = "../../third-party/libag/include/decompress.h"; sourceTree = "<group>"; };
+		4BF70EB823D1B335009E51E9 /* search.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = search.h; path = "../../third-party/libag/include/search.h"; sourceTree = "<group>"; };
+		4BF70EB923D1B335009E51E9 /* options.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = options.h; path = "../../third-party/libag/include/options.h"; sourceTree = "<group>"; };
+		4BF70EBA23D1B335009E51E9 /* config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = config.h; path = "../../third-party/libag/include/config.h"; sourceTree = "<group>"; };
+		4BF70EBB23D1B335009E51E9 /* uthash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = uthash.h; path = "../../third-party/libag/include/uthash.h"; sourceTree = "<group>"; };
+		4BF70EBC23D1B335009E51E9 /* ignore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ignore.h; path = "../../third-party/libag/include/ignore.h"; sourceTree = "<group>"; };
+		4BF70EBD23D1B335009E51E9 /* lang.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = lang.h; path = "../../third-party/libag/include/lang.h"; sourceTree = "<group>"; };
+		4BF70EBE23D1B335009E51E9 /* scandir.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = scandir.h; path = "../../third-party/libag/include/scandir.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1125,6 +1136,7 @@
 		4BEBA5071CFF374B00673FDF /* VimR */ = {
 			isa = PBXGroup;
 			children = (
+				4BF70EB323D1B30A009E51E9 /* the_silver_searcher */,
 				4BB4CCEE224A7E6D00474C79 /* FSEvents */,
 				4B004BCA21063B4D0043A396 /* DictionaryCoding */,
 				4B2A2C0D1D0353750074CE9A /* Bridge.h */,
@@ -1153,6 +1165,24 @@
 				1929B275B9921DA7503A1932 /* Utils */,
 			);
 			path = VimRTests;
+			sourceTree = "<group>";
+		};
+		4BF70EB323D1B30A009E51E9 /* the_silver_searcher */ = {
+			isa = PBXGroup;
+			children = (
+				4BF70EBA23D1B335009E51E9 /* config.h */,
+				4BF70EB723D1B335009E51E9 /* decompress.h */,
+				4BF70EBC23D1B335009E51E9 /* ignore.h */,
+				4BF70EBD23D1B335009E51E9 /* lang.h */,
+				4BF70EB623D1B335009E51E9 /* log.h */,
+				4BF70EB923D1B335009E51E9 /* options.h */,
+				4BF70EB423D1B335009E51E9 /* print.h */,
+				4BF70EBE23D1B335009E51E9 /* scandir.h */,
+				4BF70EB823D1B335009E51E9 /* search.h */,
+				4BF70EBB23D1B335009E51E9 /* uthash.h */,
+				4BF70EB523D1B335009E51E9 /* util.h */,
+			);
+			name = the_silver_searcher;
 			sourceTree = "<group>";
 		};
 		4BF8EED91D858C4400CAC08A /* Utils */ = {
@@ -1783,8 +1813,17 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/../Carthage/Build/Mac",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../third-party/libxz/include",
+					"$(PROJECT_DIR)/../third-party/libpcre/include",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/VimR.dev.Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				OTHER_LDFLAGS = (
+					"$(PROJECT_DIR)/../third-party/libxz/lib/liblzma.a",
+					"$(PROJECT_DIR)/../third-party/libpcre/lib/libpcre.a",
+					"$(PROJECT_DIR)/../third-party/libag/lib/libag.a",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR.dev;
 				PRODUCT_MODULE_NAME = VimR;
 				PRODUCT_NAME = "VimR-dev";
@@ -1803,8 +1842,17 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/../Carthage/Build/Mac",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../third-party/libxz/include",
+					"$(PROJECT_DIR)/../third-party/libpcre/include",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/VimR.dev.Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				OTHER_LDFLAGS = (
+					"$(PROJECT_DIR)/../third-party/libxz/lib/liblzma.a",
+					"$(PROJECT_DIR)/../third-party/libpcre/lib/libpcre.a",
+					"$(PROJECT_DIR)/../third-party/libag/lib/libag.a",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR.dev;
 				PRODUCT_MODULE_NAME = VimR;
 				PRODUCT_NAME = "VimR-dev";
@@ -1937,8 +1985,17 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/../Carthage/Build/Mac",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../third-party/libxz/include",
+					"$(PROJECT_DIR)/../third-party/libpcre/include",
+				);
 				INFOPLIST_FILE = VimR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				OTHER_LDFLAGS = (
+					"$(PROJECT_DIR)/../third-party/libxz/lib/liblzma.a",
+					"$(PROJECT_DIR)/../third-party/libpcre/lib/libpcre.a",
+					"$(PROJECT_DIR)/../third-party/libag/lib/libag.a",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR;
 				PRODUCT_NAME = VimR;
 				SWIFT_OBJC_BRIDGING_HEADER = VimR/Bridge.h;
@@ -1955,8 +2012,17 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/../Carthage/Build/Mac",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../third-party/libxz/include",
+					"$(PROJECT_DIR)/../third-party/libpcre/include",
+				);
 				INFOPLIST_FILE = VimR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				OTHER_LDFLAGS = (
+					"$(PROJECT_DIR)/../third-party/libxz/lib/liblzma.a",
+					"$(PROJECT_DIR)/../third-party/libpcre/lib/libpcre.a",
+					"$(PROJECT_DIR)/../third-party/libag/lib/libag.a",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR;
 				PRODUCT_NAME = VimR;
 				SWIFT_OBJC_BRIDGING_HEADER = VimR/Bridge.h;
