@@ -146,5 +146,5 @@ popd > /dev/null
 echo "### Built deps"
 }
 
-#build_gettext
+build_gettext
 build_vimr_deps
