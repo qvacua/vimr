@@ -22,24 +22,18 @@ class OpenQuicklyWindow: NSObject,
     case close
   }
 
-  let scanCondition = NSCondition()
-  var pauseScan = false
-
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
     self.windowController = NSWindowController(windowNibName: NSNib.Name("OpenQuicklyWindow"))
 
     self.searchStream = self.searchField.rx
       .text.orEmpty
-      .throttle(0.2, scheduler: MainScheduler.instance)
+      .throttle(.milliseconds(2 * 500), latest: true, scheduler: MainScheduler.instance)
       .distinctUntilChanged()
 
     super.init()
 
     self.window.delegate = self
-
-    self.filterOpQueue.qualityOfService = .userInitiated
-    self.filterOpQueue.name = "open-quickly-filter-operation-queue"
 
     self.addViews()
 
@@ -60,48 +54,15 @@ class OpenQuicklyWindow: NSObject,
         self.cwdPathCompsCount = self.cwd.pathComponents.count
         self.cwdControl.url = self.cwd
 
-        self.flatFileItemsSource = FileItemUtils.flatFileItems(
-          of: state.openQuickly.cwd,
-          ignorePatterns: state.openQuickly.ignorePatterns,
-          ignoreToken: state.openQuickly.ignoreToken,
-          root: state.openQuickly.root
-        )
-
         self.searchStream
           .subscribe(onNext: { pattern in
             self.pattern = pattern
-            self.resetAndAddFilterOperation()
           })
-          .disposed(by: self.perSessionDisposeBag)
-
-        self.flatFileItemsSource
-          .subscribeOn(self.scheduler)
-          .do(onNext: { items in
-            self.scanCondition.lock()
-            while self.pauseScan {
-              self.scanCondition.wait()
-            }
-            self.scanCondition.unlock()
-
-            //
-            self.flatFileItems.append(contentsOf: items)
-            self.resetAndAddFilterOperation()
-          })
-          .observeOn(MainScheduler.instance)
-          .subscribe(onNext: { items in
-            self.count += items.count
-            self.countField.stringValue = "\(self.count) items"
-          })
-          .disposed(by: self.perSessionDisposeBag)
+          .disposed(by: self.disposeBag)
 
         self.windowController.showWindow(self)
       })
       .disposed(by: self.disposeBag)
-  }
-
-  func reloadFileView(withScoredItems items: [ScoredFileItem]) {
-    self.fileViewItems = items
-    self.fileView.reloadData()
   }
 
   func startProgress() {
@@ -115,19 +76,13 @@ class OpenQuicklyWindow: NSObject,
   private let emit: (Action) -> Void
   private let disposeBag = DisposeBag()
 
-  private var flatFileItemsSource = Observable<[FileItem]>.empty()
   private(set) var cwd = FileUtils.userHomeUrl
   private var cwdPathCompsCount = 0
 
   // FIXME: migrate to State later...
   private(set) var pattern = ""
-  private(set) var flatFileItems = [FileItem]()
   private(set) var fileViewItems = [ScoredFileItem]()
   private var count = 0
-  private var perSessionDisposeBag = DisposeBag()
-  private let filterOpQueue = OperationQueue()
-
-  private let scheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
 
   private let windowController: NSWindowController
 
@@ -141,12 +96,6 @@ class OpenQuicklyWindow: NSObject,
 
   private var window: NSWindow {
     return self.windowController.window!
-  }
-
-  private func resetAndAddFilterOperation() {
-    self.filterOpQueue.cancelAllOperations()
-    let op = OpenQuicklyFilterOperation(forOpenQuickly: self)
-    self.filterOpQueue.addOperation(op)
   }
 
   private func addViews() {
@@ -323,14 +272,9 @@ extension OpenQuicklyWindow {
   func windowWillClose(_: Notification) {
     self.endProgress()
 
-    self.filterOpQueue.cancelAllOperations()
-
-    self.perSessionDisposeBag = DisposeBag()
-    self.pauseScan = false
     self.count = 0
 
     self.pattern = ""
-    self.flatFileItems = []
     self.fileViewItems = []
     self.fileView.reloadData()
 
