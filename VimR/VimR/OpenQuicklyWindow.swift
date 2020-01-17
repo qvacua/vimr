@@ -308,8 +308,7 @@ extension OpenQuicklyWindow {
     self.count = 0
 
     self.pattern = ""
-    self.fileViewItems = []
-    self.fileView.reloadData()
+    self.fileViewItems.removeAll()
 
     self.searchField.stringValue = ""
     self.countField.stringValue = "0 items"
