@@ -423,8 +423,8 @@
 		4BF70EDA23D1B591009E51E9 /* FuzzySearch.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70ED823D1B591009E51E9 /* FuzzySearch.xcdatamodel */; };
 		4BF70EE123D1B5B3009E51E9 /* FileScanBaton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EDF23D1B5B3009E51E9 /* FileScanBaton.m */; };
 		4BF70EE223D1B5B3009E51E9 /* FileScanBaton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EDF23D1B5B3009E51E9 /* FileScanBaton.m */; };
-		4BF70EE523D1B5EC009E51E9 /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE323D1B5EC009E51E9 /* FileService.swift */; };
-		4BF70EE623D1B5EC009E51E9 /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE323D1B5EC009E51E9 /* FileService.swift */; };
+		4BF70EE523D1B5EC009E51E9 /* FuzzySearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE323D1B5EC009E51E9 /* FuzzySearchService.swift */; };
+		4BF70EE623D1B5EC009E51E9 /* FuzzySearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE323D1B5EC009E51E9 /* FuzzySearchService.swift */; };
 		4BF70EE723D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE423D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift */; };
 		4BF70EE823D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE423D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift */; };
 		4BF70EEA23D1B5FF009E51E9 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */; };
@@ -716,7 +716,7 @@
 		4BF70ED823D1B591009E51E9 /* FuzzySearch.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FuzzySearch.xcdatamodel; sourceTree = "<group>"; };
 		4BF70EDF23D1B5B3009E51E9 /* FileScanBaton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileScanBaton.m; sourceTree = "<group>"; };
 		4BF70EE023D1B5B3009E51E9 /* FileScanBaton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileScanBaton.h; sourceTree = "<group>"; };
-		4BF70EE323D1B5EC009E51E9 /* FileService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
+		4BF70EE323D1B5EC009E51E9 /* FuzzySearchService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FuzzySearchService.swift; sourceTree = "<group>"; };
 		4BF70EE423D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FuzzySearchFileMonitor.swift; sourceTree = "<group>"; };
 		4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		4BF70EEC23D1B618009E51E9 /* ConditionVariable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConditionVariable.swift; sourceTree = "<group>"; };
@@ -1194,7 +1194,7 @@
 				4BF70EFE23D36C8C009E51E9 /* FileItem+CoreDataClass.h */,
 				4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */,
 				4BF70EE423D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift */,
-				4BF70EE323D1B5EC009E51E9 /* FileService.swift */,
+				4BF70EE323D1B5EC009E51E9 /* FuzzySearchService.swift */,
 				4BF70ED823D1B591009E51E9 /* FuzzySearch.xcdatamodel */,
 				4BF70ED423D1B54F009E51E9 /* ScoredUrl.h */,
 				4BF70ED523D1B54F009E51E9 /* ScoredUrl.m */,
@@ -1616,7 +1616,7 @@
 				4B2636F4223A487B00021586 /* ShortcutsPref.swift in Sources */,
 				4B2636F5223A487B00021586 /* ShortcutsTableSubviews.swift in Sources */,
 				4B2636F6223A487B00021586 /* DefaultShortcuts.swift in Sources */,
-				4BF70EE623D1B5EC009E51E9 /* FileService.swift in Sources */,
+				4BF70EE623D1B5EC009E51E9 /* FuzzySearchService.swift in Sources */,
 				4B2636F7223A487B00021586 /* ShortcutItem.swift in Sources */,
 				4B2636F8223A487B00021586 /* RpcEvents.swift in Sources */,
 				4B2636F9223A487B00021586 /* RpcAppearanceEpic.swift in Sources */,
@@ -1718,7 +1718,7 @@
 				1929BB85B2D30E548A32663D /* ShortcutsPref.swift in Sources */,
 				1929BA269EBD68251410A08E /* ShortcutsTableSubviews.swift in Sources */,
 				1929B2D56C4652E251C23AD4 /* DefaultShortcuts.swift in Sources */,
-				4BF70EE523D1B5EC009E51E9 /* FileService.swift in Sources */,
+				4BF70EE523D1B5EC009E51E9 /* FuzzySearchService.swift in Sources */,
 				1929B0C7150100A84FBDB8BF /* ShortcutItem.swift in Sources */,
 				1929B250DB3FB395A700FE8C /* RpcEvents.swift in Sources */,
 				1929BF3253594E5B1908C6CE /* RpcAppearanceEpic.swift in Sources */,

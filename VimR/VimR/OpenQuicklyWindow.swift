@@ -27,11 +27,11 @@ class OpenQuicklyWindow: NSObject,
   @objc dynamic private(set) var unsortedScoredUrls = [ScoredUrl]()
 
   // Call this only when quitting
-  func cleanUp() { self.fileServicesPerRootUrl.removeAll() }
+  func cleanUp() { self.searchServicePerRootUrl.removeAll() }
 
   @objc func useVcsAction(_: Any?) {
     self.scanToken = Token()
-    self.currentFileService?.stopScanScore()
+    self.currentSearchService?.stopScanScore()
     self.endProgress()
     self.unsortedScoredUrls.removeAll()
 
@@ -67,8 +67,8 @@ class OpenQuicklyWindow: NSObject,
   private var usesVcsIgnores = true
   private var scanToken = Token()
 
-  private var fileServicesPerRootUrl: [URL: FileService] = [:]
-  private var currentFileService: FileService?
+  private var searchServicePerRootUrl: [URL: FuzzySearchService] = [:]
+  private var currentSearchService: FuzzySearchService?
   private let scoredUrlsController = NSArrayController()
 
   private let windowController: NSWindowController
@@ -109,7 +109,7 @@ class OpenQuicklyWindow: NSObject,
       self.useVcsIgnoresCheckBox.boolState = curWinState.usesVcsIgnores
 
       self.scanToken = Token()
-      self.currentFileService?.usesVcsIgnores = self.usesVcsIgnores
+      self.currentSearchService?.usesVcsIgnores = self.usesVcsIgnores
       self.unsortedScoredUrls.removeAll()
 
       let pattern = self.searchField.stringValue
@@ -134,7 +134,7 @@ class OpenQuicklyWindow: NSObject,
     self.useVcsIgnoresCheckBox.boolState = curWinState.usesVcsIgnores
 
     let cwd = curWinState.cwd
-    self.currentFileService = self.fileServicesPerRootUrl[cwd]
+    self.currentSearchService = self.searchServicePerRootUrl[cwd]
     self.cwdPathCompsCount = cwd.pathComponents.count
     self.cwdControl.url = cwd
 
@@ -148,7 +148,7 @@ class OpenQuicklyWindow: NSObject,
 
   private func reset() {
     self.scanToken = Token()
-    self.currentFileService?.stopScanScore()
+    self.currentSearchService?.stopScanScore()
 
     self.endProgress()
     self.unsortedScoredUrls.removeAll()
@@ -157,7 +157,7 @@ class OpenQuicklyWindow: NSObject,
   }
 
   private func scanAndScore(_ pattern: String) {
-    self.currentFileService?.stopScanScore()
+    self.currentSearchService?.stopScanScore()
 
     guard pattern.count >= 2 else {
       self.unsortedScoredUrls.removeAll()
@@ -168,7 +168,7 @@ class OpenQuicklyWindow: NSObject,
     let localToken = self.scanToken
 
     self.unsortedScoredUrls.removeAll()
-    self.currentFileService?.scanScore(
+    self.currentSearchService?.scanScore(
       for: pattern,
       beginCallback: { self.startProgress() },
       endCallback: { self.endProgress() }
@@ -186,24 +186,24 @@ class OpenQuicklyWindow: NSObject,
 
   private func updateRootUrls(state: AppState) {
     let urlsToMonitor = Set(state.mainWindows.map { $1.cwd })
-    let currentUrls = Set(self.fileServicesPerRootUrl.map { url, _ in url })
+    let currentUrls = Set(self.searchServicePerRootUrl.map { url, _ in url })
 
     let newUrls = urlsToMonitor.subtracting(currentUrls)
     let obsoleteUrls = currentUrls.subtracting(urlsToMonitor)
 
     newUrls.forEach { url in
       self.log.info("Adding \(url) and its service.")
-      guard let service = try? FileService(root: url) else {
+      guard let service = try? FuzzySearchService(root: url) else {
         self.log.error("Could not create FileService for \(url)")
         return
       }
 
-      self.fileServicesPerRootUrl[url] = service
+      self.searchServicePerRootUrl[url] = service
     }
 
     obsoleteUrls.forEach { url in
       self.log.info("Removing \(url) and its service.")
-      self.fileServicesPerRootUrl.removeValue(forKey: url)
+      self.searchServicePerRootUrl.removeValue(forKey: url)
     }
   }
 
