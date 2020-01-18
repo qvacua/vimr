@@ -126,6 +126,7 @@ class OpenQuicklyWindow: NSObject,
     // TODO: read global vcs ignores
     self.prepareSearch(curWinState: curWinState)
     self.windowController.showWindow(nil)
+    self.searchField.beFirstResponder()
   }
 
   private func prepareSearch(curWinState: MainWindow.State) {
