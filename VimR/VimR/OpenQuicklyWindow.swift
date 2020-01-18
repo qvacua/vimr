@@ -91,14 +91,15 @@ class OpenQuicklyWindow: NSObject,
   private func subscription(_ state: StateType) {
     self.updateRootUrls(state: state)
 
-    guard state.openQuickly.open,
-          let curWinState = state.currentMainWindow else {
+    guard state.openQuickly.open, let curWinState = state.currentMainWindow else {
       self.windowController.close()
       return
     }
 
+    let windowIsOpen = self.window.isKeyWindow
+
     // The window is open and the user changed the setting
-    if self.usesVcsIgnores != curWinState.usesVcsIgnores && self.window.isKeyWindow {
+    if self.usesVcsIgnores != curWinState.usesVcsIgnores && windowIsOpen {
       self.usesVcsIgnores = curWinState.usesVcsIgnores
 
       self.reset()
@@ -107,12 +108,14 @@ class OpenQuicklyWindow: NSObject,
       return
     }
 
-    if self.window.isKeyWindow {
+    if windowIsOpen {
       // already open, so do nothing
       return
     }
 
     self.usesVcsIgnores = curWinState.usesVcsIgnores
+
+    // TODO: read global vcs ignores
     self.prepareSearch(curWinState: curWinState)
     self.windowController.showWindow(nil)
   }
