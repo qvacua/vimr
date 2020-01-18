@@ -116,7 +116,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
       "Quit",
     ])
 
-    let ignoreListTitle = self.titleTextField(title: "Files To Ignore:")
+    let ignoreListTitle = self.titleTextField(title: "Open Quickly:")
     let ignoreField = self.ignoreField
     NotificationCenter.default.addObserver(forName: NSControl.textDidEndEditingNotification,
                                            object: ignoreField,
@@ -124,11 +124,13 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
       self.ignorePatternsAction()
     }
     let ignoreInfo =
-      self.infoTextField(markdown:
-                         "Comma-separated list of ignore patterns  \n"
-                         + "Matching files will be ignored in \"Open Quickly\" and the file browser.  \n"
-                         + "Example: `*/.git, */node_modules`  \n"
-                         + "For detailed information see [VimR Wiki](https://github.com/qvacua/vimr/wiki)."
+      self.infoTextField(
+        markdown:
+        """
+        When checked, the ignore files of VCSs, e.g. `gitignore`, will we used to ignore files.  
+        This checkbox will set the initial value for each VimR window.  
+        You can change this setting for each VimR window in the Open Quickly window.
+        """
       )
 
     let cliToolTitle = self.titleTextField(title: "CLI Tool:")
