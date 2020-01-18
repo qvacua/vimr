@@ -7,27 +7,26 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-330</title>
+      <title>SNAPSHOT-331</title>
       <description><![CDATA[
     <ul>
-<li>Bugfix: Forward search in Markdown preview does not work.</li>
-<li>Dependencies updates:<ul>
-<li>IBM-Swift/BlueSocket 1.0.52</li>
-<li>elegantchaos/DictionaryCoding 1.0.7</li>
+<li>Improve Open Quickly<ul>
+<li>Use <a href="https://github.com/ggreer/the_silver_searcher">The Silver Searcher</a>'s ignore mechanism</li>
+<li>Use <a href="https://github.com/MaskRay/ccls">ccls</a>' fuzzy search</li>
 </ul>
 </li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/330
+        https://github.com/qvacua/vimr/releases/tag/snapshot/331
       </releaseNotesLink>
-      <pubDate>2019-12-25T17:33:57.259799</pubDate>
+      <pubDate>2020-01-18T21:43:43.353075</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/330/VimR-SNAPSHOT-330.tar.bz2"
-                 sparkle:version="330"
-                 sparkle:shortVersionString="SNAPSHOT-330"
-                 sparkle:dsaSignature="MC0CFH/R8kd4LFqgSPqM5cZ7NWlxWcclAhUA3Kn4mHRf/HcBdMtxWhbJabBCrnQ="
-                 length="14508630"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/331/VimR-SNAPSHOT-331.tar.bz2"
+                 sparkle:version="331"
+                 sparkle:shortVersionString="SNAPSHOT-331"
+                 sparkle:dsaSignature="MC4CFQCMHcdbHe3rjJMA/8IG8y/gMHLm4AIVANjMwduRWinKIgkEFrV1c90LNemF"
+                 length="14655979"
                  type="application/octet-stream"/>
     </item>
   </channel>
