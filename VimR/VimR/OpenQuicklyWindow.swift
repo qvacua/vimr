@@ -84,8 +84,6 @@ class OpenQuicklyWindow: NSObject,
       return
     }
 
-    Swift.print(curWinState.usesVcsIgnores)
-
     guard state.openQuickly.open else {
       self.windowController.close()
       return
@@ -95,6 +93,8 @@ class OpenQuicklyWindow: NSObject,
       // already open, so do nothing
       return
     }
+
+    self.usesVcsIgnores = curWinState.usesVcsIgnores
 
     let cwd = curWinState.cwd
     self.cwdPathCompsCount = cwd.pathComponents.count
