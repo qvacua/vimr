@@ -31,6 +31,10 @@ class OpenQuicklyWindow: NSObject,
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
     self.windowController = NSWindowController(windowNibName: NSNib.Name("OpenQuicklyWindow"))
+    self.searchStream = self.searchField.rx
+      .text.orEmpty
+      .throttle(.milliseconds(1 * 500), latest: true, scheduler: MainScheduler.instance)
+      .distinctUntilChanged()
 
     super.init()
 
@@ -47,6 +51,8 @@ class OpenQuicklyWindow: NSObject,
   private let emit: (Action) -> Void
   private let disposeBag = DisposeBag()
 
+  private let searchStream: Observable<String>
+  private var perSessionDisposeBag = DisposeBag()
   private var cwdPathCompsCount = 0
   private var usesVcsIgnores = true
   private var scanToken = Token()
@@ -100,16 +106,13 @@ class OpenQuicklyWindow: NSObject,
     self.cwdPathCompsCount = cwd.pathComponents.count
     self.cwdControl.url = cwd
 
-    self.searchField.rx
-      .text.orEmpty
-      .throttle(.milliseconds(1 * 500), latest: true, scheduler: MainScheduler.instance)
-      .distinctUntilChanged()
+    self.searchStream
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [weak self] pattern in
         guard let fileService = self?.fileServicesPerRootUrl[cwd] else { return }
         self?.scanAndScore(pattern, with: fileService)
       })
-      .disposed(by: self.disposeBag)
+      .disposed(by: self.perSessionDisposeBag)
 
     self.windowController.showWindow(self)
   }
@@ -356,6 +359,7 @@ extension OpenQuicklyWindow {
 
     self.unsortedScoredUrls.removeAll()
     self.searchField.stringValue = ""
+    self.perSessionDisposeBag = DisposeBag()
   }
 
   func windowDidResignKey(_: Notification) { self.window.performClose(self) }
