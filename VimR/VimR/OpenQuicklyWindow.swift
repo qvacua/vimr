@@ -69,13 +69,8 @@ class OpenQuicklyWindow: NSObject,
       .disposed(by: self.disposeBag)
   }
 
-  func startProgress() {
-    self.progressIndicator.startAnimation(self)
-  }
-
-  func endProgress() {
-    self.progressIndicator.stopAnimation(self)
-  }
+  // Call this only when quitting
+  func cleanUp() { self.fileServicesPerRootUrl.removeAll() }
 
   private let emit: (Action) -> Void
   private let disposeBag = DisposeBag()
@@ -116,12 +111,24 @@ class OpenQuicklyWindow: NSObject,
     let localToken = self.scanToken
 
     self.unsortedScoredUrls.removeAll()
-    fileService.scanScore(for: pattern) { scoredUrls in
+    fileService.scanScore(
+      for: pattern,
+      beginCallback: { self.startProgress() },
+      endCallback: { self.endProgress() }
+    ) { scoredUrls in
       DispatchQueue.main.async {
         guard localToken == self.scanToken else { return }
         self.unsortedScoredUrls.append(contentsOf: scoredUrls)
       }
     }
+  }
+
+  private func startProgress() {
+    self.progressIndicator.startAnimation(self)
+  }
+
+  private func endProgress() {
+    self.progressIndicator.stopAnimation(self)
   }
 
   private func updateRootUrls(state: AppState) {
@@ -193,9 +200,6 @@ class OpenQuicklyWindow: NSObject,
     searchField.autoPinEdge(toSuperviewEdge: .right, withInset: 8)
     searchField.autoPinEdge(toSuperviewEdge: .left, withInset: 8)
 
-    progressIndicator.autoAlignAxis(.horizontal, toSameAxisOf: searchField)
-    progressIndicator.autoPinEdge(.right, to: .right, of: searchField, withOffset: -4)
-
     fileScrollView.autoPinEdge(.top, to: .bottom, of: searchField, withOffset: 8)
     fileScrollView.autoPinEdge(toSuperviewEdge: .left, withInset: -1)
     fileScrollView.autoPinEdge(toSuperviewEdge: .right, withInset: -1)
@@ -204,6 +208,10 @@ class OpenQuicklyWindow: NSObject,
     cwdControl.autoPinEdge(.top, to: .bottom, of: fileScrollView, withOffset: 4)
     cwdControl.autoPinEdge(toSuperviewEdge: .left, withInset: 2)
     cwdControl.autoPinEdge(toSuperviewEdge: .bottom, withInset: 4)
+
+    progressIndicator.autoAlignAxis(.horizontal, toSameAxisOf: cwdControl)
+    progressIndicator.autoPinEdge(.left, to: .right, of: cwdControl, withOffset: 4)
+    progressIndicator.autoPinEdge(toSuperviewEdge: .right, withInset: 8)
   }
 }
 

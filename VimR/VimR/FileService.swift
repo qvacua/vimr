@@ -29,9 +29,16 @@ class FileService {
     self.stop = true
   }
 
-  func scanScore(for pattern: String, callback: @escaping ScoredUrlsCallback) {
+  func scanScore(
+    for pattern: String,
+    beginCallback: @escaping () -> Void,
+    endCallback: @escaping () -> Void,
+    callback: @escaping ScoredUrlsCallback
+  ) {
     self.queue.async {
       print("Queue start: \(Thread.current)")
+      beginCallback()
+
       let ctx = self.writeContext
       ctx.performAndWait {
         print("starting scan \(Thread.current)")
@@ -49,6 +56,8 @@ class FileService {
 
         print("end scan")
       }
+
+      endCallback()
       print("Queue end")
     }
   }

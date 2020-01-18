@@ -76,6 +76,7 @@ class UiRoot: UiComponent {
       .wait()
 
     self.mainWindows.values.forEach { $0.waitTillNvimExits() }
+    self.openQuicklyWindow.cleanUp()
   }
 
   private let source: Observable<AppState>
