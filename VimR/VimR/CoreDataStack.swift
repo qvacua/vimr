@@ -78,7 +78,7 @@ class CoreDataStack {
 
     let condition = ConditionVariable()
     var error: Swift.Error?
-    self.container.loadPersistentStores { (_, err) in
+    self.container.loadPersistentStores { _, err in
       error = err
       condition.broadcast()
     }

@@ -123,13 +123,9 @@ class OpenQuicklyWindow: NSObject,
     }
   }
 
-  private func startProgress() {
-    self.progressIndicator.startAnimation(self)
-  }
+  private func startProgress() { self.progressIndicator.startAnimation(self) }
 
-  private func endProgress() {
-    self.progressIndicator.stopAnimation(self)
-  }
+  private func endProgress() { self.progressIndicator.stopAnimation(self) }
 
   private func updateRootUrls(state: AppState) {
     let urlsToMonitor = Set(state.mainWindows.map { $1.cwd })
