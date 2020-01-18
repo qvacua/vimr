@@ -9,7 +9,7 @@
 
 #ifdef DEBUG
 FILE *out_fd;
-static dispatch_once_t onceToken;
+static dispatch_once_t debugToken;
 #endif
 
 @implementation FileScanBaton {
@@ -22,6 +22,7 @@ static dispatch_once_t onceToken;
 }
 
 static const char *cfstr_to_cstr_copy(CFStringRef cfstr);
+static void load_global_gitignores(ignores *ig);
 
 - (bool)test:(NSURL *_Nonnull)url {
   struct dirent dirent = url.fakeDirent;
@@ -30,7 +31,7 @@ static const char *cfstr_to_cstr_copy(CFStringRef cfstr);
 
 - (instancetype)initWithBaseUrl:(NSURL *)baseUrl {
 #ifdef DEBUG
-  dispatch_once(&onceToken, ^{
+  dispatch_once(&debugToken, ^{
     out_fd = fopen("/Users/hat/Downloads/scan.log", "w");
     set_log_level(LOG_LEVEL_DEBUG);
   });
@@ -43,7 +44,7 @@ static const char *cfstr_to_cstr_copy(CFStringRef cfstr);
   _url = baseUrl;
   _pathStart = @".";
 
-  _ig = init_ignore(NULL, "", 0);
+  _ig = init_ignore([FileScanBaton stubBatonWithGlobalGitignores].ig, "", 0);
 
   [self initScanDirBaton];
   [self loadVcsIgnores];
@@ -106,6 +107,33 @@ static const char *cfstr_to_cstr_copy(CFStringRef cfstr);
   free((void *) _pathStartCstr);
 }
 
++ (instancetype)stubBatonWithGlobalGitignores {
+  static FileScanBaton *sharedStub = nil;
+
+  static dispatch_once_t singletonToken;
+  dispatch_once(&singletonToken, ^{
+    sharedStub = [[FileScanBaton alloc] initAsStub];
+  });
+
+  return sharedStub;
+}
+
+- (instancetype)initAsStub {
+  self = [super init];
+  if (self == nil) {return nil;}
+
+  _baseUrl = [NSURL fileURLWithPath:@"~"];
+  _url = _baseUrl;
+  _pathStart = @".";
+
+  _ig = init_ignore(NULL, "", 0);
+
+  [self initScanDirBaton];
+  load_global_gitignores(_ig);
+
+  return self;
+}
+
 static const char *cfstr_to_cstr_copy(CFStringRef cfstr) {
   CFIndex out_len = 0;
   CFRange whole_range = CFRangeMake(0, CFStringGetLength(cfstr));
@@ -141,6 +169,36 @@ static const char *cfstr_to_cstr_copy(CFStringRef cfstr) {
 
   result[out_len] = NULL;
   return result;
+}
+
+// From the_silver_searcher/options.c
+static void load_global_gitignores(ignores *ig) {
+  const char *home_dir = getenv("HOME");
+
+  FILE *gitconfig_file = NULL;
+  size_t buf_len = 0;
+  char *gitconfig_res = NULL;
+  gitconfig_file = popen("git config -z --path --get core.excludesfile 2>/dev/null", "r");
+  if (gitconfig_file != NULL) {
+    do {
+      gitconfig_res = ag_realloc(gitconfig_res, buf_len + 65);
+      buf_len += fread(gitconfig_res + buf_len, 1, 64, gitconfig_file);
+    } while (!feof(gitconfig_file) && buf_len > 0 && buf_len % 64 == 0);
+    gitconfig_res[buf_len] = '\0';
+    if (buf_len == 0) {
+      free(gitconfig_res);
+      const char *config_home = getenv("XDG_CONFIG_HOME");
+      if (config_home) {
+        ag_asprintf(&gitconfig_res, "%s/%s", config_home, "git/ignore");
+      } else {
+        ag_asprintf(&gitconfig_res, "%s/%s", home_dir, ".config/git/ignore");
+      }
+    }
+    log_debug("global core.excludesfile: %s", gitconfig_res);
+    load_ignore_patterns(ig, gitconfig_res);
+    free(gitconfig_res);
+    pclose(gitconfig_file);
+  }
 }
 
 @end
