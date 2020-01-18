@@ -65,7 +65,6 @@ class OpenQuicklyWindow: NSObject,
   private let log = OSLog(subsystem: Defs.loggerSubsystem,
                           category: Defs.LoggerCategory.uiComponents)
 
-  private var rootUrls: Set<URL> { Set(self.fileServicesPerRootUrl.map { url, _ in url }) }
   private var window: NSWindow { self.windowController.window! }
 
   private func configureWindow() {
@@ -136,9 +135,10 @@ class OpenQuicklyWindow: NSObject,
 
   private func updateRootUrls(state: AppState) {
     let urlsToMonitor = Set(state.mainWindows.map { $1.cwd })
+    let currentUrls =  Set(self.fileServicesPerRootUrl.map { url, _ in url })
 
-    let newUrls = urlsToMonitor.subtracting(self.rootUrls)
-    let obsoleteUrls = self.rootUrls.subtracting(urlsToMonitor)
+    let newUrls = urlsToMonitor.subtracting(currentUrls)
+    let obsoleteUrls = currentUrls.subtracting(urlsToMonitor)
 
     newUrls.forEach { url in
       self.log.info("Adding \(url) and its service.")
