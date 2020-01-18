@@ -24,10 +24,6 @@ class GeneralPrefReducer: ReducerType {
     case let .setOpenOnReactivation(value):
       state.openNewMainWindowOnReactivation = value
 
-    case let .setIgnorePatterns(patterns):
-      state.openQuickly.ignorePatterns = patterns
-      state.openQuickly.ignoreToken = Token()
-
     case let .setDefaultUsesVcsIgnores(value):
       state.openQuickly.defaultUsesVcsIgnores = value
 

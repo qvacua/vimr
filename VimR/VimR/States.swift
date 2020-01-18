@@ -77,27 +77,17 @@ extension OpenQuicklyWindow {
   struct State: Codable {
 
     static let `default` = State()
-    static let defaultIgnorePatterns = Set(["*/.git", "*.o", "*.d", "*.dia"].map(FileItemIgnorePattern.init))
 
     enum CodingKeys: String, CodingKey {
 
       case defaultUsesVcsIgnore = "default-uses-vcs-ignores"
-      case ignorePatterns = "ignore-patterns"
     }
 
     var defaultUsesVcsIgnores = true
-    var ignorePatterns = State.defaultIgnorePatterns
-    var ignoreToken = Token()
-
     var open = false
 
     init(from decoder: Decoder) throws {
       let container = try decoder.container(keyedBy: CodingKeys.self)
-      if let patternsAsString = try container.decodeIfPresent(String.self, forKey: .ignorePatterns) {
-        self.ignorePatterns = FileItemIgnorePattern.from(string: patternsAsString)
-      } else {
-        self.ignorePatterns = State.defaultIgnorePatterns
-      }
 
       self.defaultUsesVcsIgnores = try container.decode(
         forKey: .defaultUsesVcsIgnore,
@@ -107,7 +97,6 @@ extension OpenQuicklyWindow {
 
     func encode(to encoder: Encoder) throws {
       var container = encoder.container(keyedBy: CodingKeys.self)
-      try container.encode(FileItemIgnorePattern.toString(self.ignorePatterns), forKey: .ignorePatterns)
       try container.encode(self.defaultUsesVcsIgnores, forKey: .defaultUsesVcsIgnore)
     }
 

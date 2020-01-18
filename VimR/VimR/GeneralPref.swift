@@ -16,7 +16,6 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     case setOpenOnLaunch(Bool)
     case setAfterLastWindowAction(AppState.AfterLastWindowAction)
     case setOpenOnReactivation(Bool)
-    case setIgnorePatterns(Set<FileItemIgnorePattern>)
     case setDefaultUsesVcsIgnores(Bool)
   }
 
@@ -26,10 +25,6 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
   override var pinToContainer: Bool {
     return true
-  }
-
-  override func windowWillClose() {
-    self.ignorePatternsAction()
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
@@ -45,9 +40,6 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     self.lastWindowAction = state.afterLastWindowAction
     self.afterLastWindowPopup.selectItem(at: indexToAfterLastWindowAction.firstIndex(of: state.afterLastWindowAction) ?? 0)
-
-    self.ignorePatterns = state.openQuickly.ignorePatterns
-    self.ignoreField.stringValue = FileItemIgnorePattern.toString(state.openQuickly.ignorePatterns)
 
     source
       .observeOn(MainScheduler.instance)
@@ -81,10 +73,6 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
   private let afterLastWindowPopup = NSPopUpButton(forAutoLayout: ())
 
-  private let ignoreField = NSTextField(forAutoLayout: ())
-
-  private var ignorePatterns = Set<FileItemIgnorePattern>()
-
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -117,12 +105,6 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     ])
 
     let ignoreListTitle = self.titleTextField(title: "Open Quickly:")
-    let ignoreField = self.ignoreField
-    NotificationCenter.default.addObserver(forName: NSControl.textDidEndEditingNotification,
-                                           object: ignoreField,
-                                           queue: nil) { [unowned self] _ in
-      self.ignorePatternsAction()
-    }
     let ignoreInfo =
       self.infoTextField(
         markdown:
@@ -264,16 +246,6 @@ extension GeneralPref {
 
     self.lastWindowAction = indexToAfterLastWindowAction[index]
     self.emit(.setAfterLastWindowAction(self.lastWindowAction))
-  }
-
-  private func ignorePatternsAction() {
-    let patterns = FileItemIgnorePattern.from(string: self.ignoreField.stringValue)
-    if patterns == self.ignorePatterns {
-      return
-    }
-
-    self.ignorePatterns = patterns
-    self.emit(.setIgnorePatterns(ignorePatterns))
   }
 
   private func alert(title: String, info: String) {
