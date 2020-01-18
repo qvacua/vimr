@@ -427,4 +427,4 @@ class FileService {
   private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.service)
 }
 
-private let coreDataBatchSize = 1000
+private let coreDataBatchSize = 10000
