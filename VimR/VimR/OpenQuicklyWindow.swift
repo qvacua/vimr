@@ -108,10 +108,8 @@ class OpenQuicklyWindow: NSObject,
       return
     }
 
-    if windowIsOpen {
-      // already open, so do nothing
-      return
-    }
+    // already open, so do nothing
+    if windowIsOpen { return }
 
     self.usesVcsIgnores = curWinState.usesVcsIgnores
 
