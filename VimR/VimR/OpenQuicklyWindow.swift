@@ -43,6 +43,7 @@ class OpenQuicklyWindow: NSObject,
   // Call this only when quitting
   func cleanUp() { self.fileServicesPerRootUrl.removeAll() }
 
+  // MARK: - Private
   private let emit: (Action) -> Void
   private let disposeBag = DisposeBag()
 
