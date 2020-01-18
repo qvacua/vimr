@@ -152,6 +152,7 @@ class FileService {
     }
 
     let (initialBaton, initialBatons) = self.baton(for: folder.url!)
+    let testIgnores = self.usesVcsIgnores
     var batons = initialBatons
     var stack = [(initialBaton, folder)]
     while let iterElement = stack.popLast() {
@@ -160,7 +161,6 @@ class FileService {
       autoreleasepool {
         let baton = iterElement.0
         let folder = iterElement.1
-        let testIgnores = self.usesVcsIgnores
 
         let urlToScan = folder.url!
 
