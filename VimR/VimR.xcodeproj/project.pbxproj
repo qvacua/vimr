@@ -428,8 +428,8 @@
 		4BF70EE223D1B5B3009E51E9 /* FileScanBaton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EDF23D1B5B3009E51E9 /* FileScanBaton.m */; };
 		4BF70EE523D1B5EC009E51E9 /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE323D1B5EC009E51E9 /* FileService.swift */; };
 		4BF70EE623D1B5EC009E51E9 /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE323D1B5EC009E51E9 /* FileService.swift */; };
-		4BF70EE723D1B5EC009E51E9 /* FileMonitor2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE423D1B5EC009E51E9 /* FileMonitor2.swift */; };
-		4BF70EE823D1B5EC009E51E9 /* FileMonitor2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE423D1B5EC009E51E9 /* FileMonitor2.swift */; };
+		4BF70EE723D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE423D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift */; };
+		4BF70EE823D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE423D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift */; };
 		4BF70EEA23D1B5FF009E51E9 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */; };
 		4BF70EEB23D1B5FF009E51E9 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */; };
 		4BF70EED23D1B618009E51E9 /* ConditionVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EEC23D1B618009E51E9 /* ConditionVariable.swift */; };
@@ -723,13 +723,13 @@
 		4BF70EDF23D1B5B3009E51E9 /* FileScanBaton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileScanBaton.m; sourceTree = "<group>"; };
 		4BF70EE023D1B5B3009E51E9 /* FileScanBaton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileScanBaton.h; sourceTree = "<group>"; };
 		4BF70EE323D1B5EC009E51E9 /* FileService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
-		4BF70EE423D1B5EC009E51E9 /* FileMonitor2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileMonitor2.swift; sourceTree = "<group>"; };
+		4BF70EE423D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FuzzySearchFileMonitor.swift; sourceTree = "<group>"; };
 		4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		4BF70EEC23D1B618009E51E9 /* ConditionVariable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConditionVariable.swift; sourceTree = "<group>"; };
-		4BF70EF723D1B6D9009E51E9 /* FileItem2+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "FileItem2+CoreDataProperties.m"; sourceTree = "<group>"; };
-		4BF70EF823D1B6D9009E51E9 /* FileItem2+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "FileItem2+CoreDataClass.m"; sourceTree = "<group>"; };
-		4BF70EF923D1B6D9009E51E9 /* FileItem2+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FileItem2+CoreDataProperties.h"; sourceTree = "<group>"; };
-		4BF70EFA23D1B6D9009E51E9 /* FileItem2+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FileItem2+CoreDataClass.h"; sourceTree = "<group>"; };
+		4BF70EFB23D36C8C009E51E9 /* FileItem+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "FileItem+CoreDataProperties.m"; sourceTree = "<group>"; };
+		4BF70EFC23D36C8C009E51E9 /* FileItem+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "FileItem+CoreDataClass.m"; sourceTree = "<group>"; };
+		4BF70EFD23D36C8C009E51E9 /* FileItem+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FileItem+CoreDataProperties.h"; sourceTree = "<group>"; };
+		4BF70EFE23D36C8C009E51E9 /* FileItem+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FileItem+CoreDataClass.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1197,12 +1197,12 @@
 		4BF70ECB23D1B40A009E51E9 /* Fuzzy Search */ = {
 			isa = PBXGroup;
 			children = (
-				4BF70EF723D1B6D9009E51E9 /* FileItem2+CoreDataProperties.m */,
-				4BF70EF823D1B6D9009E51E9 /* FileItem2+CoreDataClass.m */,
-				4BF70EF923D1B6D9009E51E9 /* FileItem2+CoreDataProperties.h */,
-				4BF70EFA23D1B6D9009E51E9 /* FileItem2+CoreDataClass.h */,
+				4BF70EFB23D36C8C009E51E9 /* FileItem+CoreDataProperties.m */,
+				4BF70EFC23D36C8C009E51E9 /* FileItem+CoreDataClass.m */,
+				4BF70EFD23D36C8C009E51E9 /* FileItem+CoreDataProperties.h */,
+				4BF70EFE23D36C8C009E51E9 /* FileItem+CoreDataClass.h */,
 				4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */,
-				4BF70EE423D1B5EC009E51E9 /* FileMonitor2.swift */,
+				4BF70EE423D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift */,
 				4BF70EE323D1B5EC009E51E9 /* FileService.swift */,
 				4BF70ED823D1B591009E51E9 /* FuzzySearch.xcdatamodel */,
 				4BF70ED423D1B54F009E51E9 /* ScoredUrl.h */,
@@ -1581,7 +1581,7 @@
 				4B2636D0223A487B00021586 /* BufferListReducer.swift in Sources */,
 				4B2636D1223A487B00021586 /* PrefWindow.swift in Sources */,
 				4B917E552334D52D00752149 /* EonilFSEventStream.swift in Sources */,
-				4BF70EE823D1B5EC009E51E9 /* FileMonitor2.swift in Sources */,
+				4BF70EE823D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift in Sources */,
 				4B2636D2223A487B00021586 /* PrefPane.swift in Sources */,
 				4B2636D3223A487B00021586 /* GeneralPref.swift in Sources */,
 				4B917E522334D52D00752149 /* EonilFSEventStreamEventFlags.swift in Sources */,
@@ -1683,7 +1683,7 @@
 				1929B4E54E2F13A7F5F2B682 /* BufferListReducer.swift in Sources */,
 				1929BAE4900D72A7877741B1 /* PrefWindow.swift in Sources */,
 				4B917E532334D52D00752149 /* EonilFSEventStream.swift in Sources */,
-				4BF70EE723D1B5EC009E51E9 /* FileMonitor2.swift in Sources */,
+				4BF70EE723D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift in Sources */,
 				1929BEAE0592096BC1191B67 /* PrefPane.swift in Sources */,
 				1929BEDE1BE950EDA9497363 /* GeneralPref.swift in Sources */,
 				4B917E502334D52D00752149 /* EonilFSEventStreamEventFlags.swift in Sources */,

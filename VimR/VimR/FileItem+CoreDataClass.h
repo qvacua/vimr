@@ -1,8 +1,8 @@
 //
-//  FileItem2+CoreDataClass.h
+//  FileItem+CoreDataClass.h
 //  VimR
 //
-//  Created by Tae Won Ha on 17.01.20.
+//  Created by Tae Won Ha on 18.01.20.
 //  Copyright © 2020 Tae Won Ha. All rights reserved.
 //
 //
@@ -12,10 +12,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FileItem2 : NSManagedObject
+@interface FileItem : NSManagedObject
 
 @end
 
 NS_ASSUME_NONNULL_END
 
-#import "FileItem2+CoreDataProperties.h"
+#import "FileItem+CoreDataProperties.h"

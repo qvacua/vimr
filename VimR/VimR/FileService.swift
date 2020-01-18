@@ -79,7 +79,7 @@ class FileService {
   ) {
     let predicate = NSPredicate(format: "direntType != %d", DT_DIR)
 
-    let countReq = FileItem2.fetchRequest()
+    let countReq = FileItem.fetchRequest()
     countReq.predicate = predicate
     countReq.includesSubentities = false
     guard let count = try? context.count(for: countReq) else {
@@ -89,7 +89,7 @@ class FileService {
     self.log.info("Scoring \(count) Files for pattern \(matcherPool.pattern)")
 
     let urlSorter = NSSortDescriptor(key: "url", ascending: true)
-    let fetchReq = FileItem2.fetchRequest()
+    let fetchReq = FileItem.fetchRequest()
     fetchReq.fetchLimit = coreDataBatchSize
     fetchReq.sortDescriptors = [urlSorter]
     fetchReq.predicate = predicate
@@ -146,7 +146,7 @@ class FileService {
     var saveCounter = 1
     var counter = 1
 
-    guard let folder = context.object(with: folderId) as? FileItem2 else {
+    guard let folder = context.object(with: folderId) as? FileItem else {
       self.log.error("Could not convert object with ID \(folderId) to File")
       return
     }
@@ -174,7 +174,7 @@ class FileService {
 
         let childFiles = childUrls
           .filter { !$0.isPackage }
-          .map { url -> FileItem2 in self.file(fromUrl: url, pathStart: baton.pathStart, in: context) }
+          .map { url -> FileItem in self.file(fromUrl: url, pathStart: baton.pathStart, in: context) }
         saveCounter += childFiles.count
         counter += childFiles.count
 
@@ -206,7 +206,7 @@ class FileService {
           let ids = stack.map { $0.1.objectID }
           stack = Array(zip(
             stack.map { $0.0 },
-            ids.map { context.object(with: $0) as! FileItem2 }
+            ids.map { context.object(with: $0) as! FileItem }
           ))
         }
       }
@@ -246,7 +246,7 @@ class FileService {
     callback: ([ScoredUrl]) -> ()
   ) {
     let files = context.registeredObjects
-      .compactMap { $0 as? FileItem2 }
+      .compactMap { $0 as? FileItem }
       .filter { $0.direntType != DT_DIR }
 
     self.log.debug("Scoring \(files.count) Files")
@@ -255,7 +255,7 @@ class FileService {
 
   private func scoreFiles(
     matcherPool: FuzzyMatcherPool,
-    files: [FileItem2],
+    files: [FileItem],
     callback: ScoredUrlsCallback
   ) {
     let matchFullPath = matcherPool.pattern.contains("/")
@@ -290,7 +290,7 @@ class FileService {
     )
     self.root = root
     self.writeContext = self.coreDataStack.newBackgroundContext()
-    self.fileMonitor = FileMonitor2(urlToMonitor: root)
+    self.fileMonitor = FuzzySearchFileMonitor(urlToMonitor: root)
 
     self.queue.sync { self.ensureRootFileInStore() }
     try self.fileMonitor.start { [weak self] url in self?.handleChange(in: url) }
@@ -348,8 +348,8 @@ class FileService {
   private func fileFetchRequest(
     _ format: String,
     _ arguments: [Any]? = nil
-  ) -> NSFetchRequest<FileItem2> {
-    let req: NSFetchRequest<FileItem2> = FileItem2.fetchRequest()
+  ) -> NSFetchRequest<FileItem> {
+    let req: NSFetchRequest<FileItem> = FileItem.fetchRequest()
     req.predicate = NSPredicate(format: format, argumentArray: arguments)
 
     return req
@@ -358,7 +358,7 @@ class FileService {
   /// Call this in self.queue.(a)sync
   private func deleteAllFiles() {
     let delReq = NSBatchDeleteRequest(
-      fetchRequest: NSFetchRequest(entityName: String(describing: FileItem2.self))
+      fetchRequest: NSFetchRequest(entityName: String(describing: FileItem.self))
     )
 
     let ctx = self.writeContext
@@ -405,8 +405,8 @@ class FileService {
     fromUrl url: URL,
     pathStart: String,
     in context: NSManagedObjectContext
-  ) -> FileItem2 {
-    let file = FileItem2(context: context)
+  ) -> FileItem {
+    let file = FileItem(context: context)
     file.url = url
     file.direntType = Int16(url.direntType)
     file.isHidden = url.isHidden
@@ -442,7 +442,7 @@ class FileService {
 
   private let queue = DispatchQueue(label: "scan-score-queue", qos: .userInitiated)
 
-  private let fileMonitor: FileMonitor2
+  private let fileMonitor: FuzzySearchFileMonitor
   private let writeContext: NSManagedObjectContext
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.service)

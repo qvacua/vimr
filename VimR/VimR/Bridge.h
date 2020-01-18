@@ -9,4 +9,4 @@
 #import "FoundationCommons.h"
 #import "ScoredUrl.h"
 #import "FileScanBaton.h"
-#import "FileItem2+CoreDataProperties.h"
+#import "FileItem+CoreDataProperties.h"
