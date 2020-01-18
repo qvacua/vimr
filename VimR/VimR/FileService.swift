@@ -238,6 +238,7 @@ class FileService {
     files: [FileItem2],
     callback: ScoredUrlsCallback
   ) {
+    let matchFullPath = matcherPool.pattern.contains("/")
     let count = files.count
 
     let chunkCount = Int(ceil(Double(count) / Double(fuzzyMatchChunkSize)))
@@ -252,7 +253,7 @@ class FileService {
 
       callback(files[start..<end].compactMap { file in
         let url = file.url!
-        let score = matcher.score(url.pathComponents.last!)
+        let score = matcher.score(matchFullPath ? url.path : url.lastPathComponent)
         if score <= matcher.minScore + 1 { return nil }
 
         return ScoredUrl(url: url, score: score)
