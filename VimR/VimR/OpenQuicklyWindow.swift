@@ -23,49 +23,20 @@ class OpenQuicklyWindow: NSObject,
     case close
   }
 
-  @objc dynamic var unsortedScoredUrls = [ScoredUrl]()
+  @objc dynamic private(set) var unsortedScoredUrls = [ScoredUrl]()
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
     self.windowController = NSWindowController(windowNibName: NSNib.Name("OpenQuicklyWindow"))
 
-    self.searchStream = self.searchField.rx
-      .text.orEmpty
-      .throttle(.milliseconds(2 * 500), latest: true, scheduler: MainScheduler.instance)
-      .distinctUntilChanged()
-
     super.init()
 
     self.window.delegate = self
-
     self.addViews()
 
     source
       .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { state in
-        self.updateRootUrls(state: state)
-
-        guard state.openQuickly.open else {
-          self.windowController.close()
-          return
-        }
-
-        if self.window.isKeyWindow {
-          // already open, so do nothing
-          return
-        }
-
-        self.cwd = state.openQuickly.cwd
-        self.cwdPathCompsCount = self.cwd.pathComponents.count
-        self.cwdControl.url = self.cwd
-
-        self.searchStream
-          .observeOn(MainScheduler.instance)
-          .subscribe(onNext: { [weak self] pattern in self?.scanAndScore(pattern) })
-          .disposed(by: self.disposeBag)
-
-        self.windowController.showWindow(self)
-      })
+      .subscribe(onNext: { [weak self] state in self?.subscription(state) })
       .disposed(by: self.disposeBag)
   }
 
@@ -80,23 +51,47 @@ class OpenQuicklyWindow: NSObject,
   private var scanToken = Token()
 
   private var fileServicesPerRootUrl: [URL: FileService] = [:]
-  private var rootUrls: Set<URL> { Set(self.fileServicesPerRootUrl.map { url, _ in url }) }
-
   private let scoredUrlsController = NSArrayController()
 
   private let windowController: NSWindowController
-
   private let searchField = NSTextField(forAutoLayout: ())
   private let progressIndicator = NSProgressIndicator(forAutoLayout: ())
   private let cwdControl = NSPathControl(forAutoLayout: ())
   private let fileView = NSTableView.standardTableView()
 
-  private let searchStream: Observable<String>
-
   private let log = OSLog(subsystem: Defs.loggerSubsystem,
                           category: Defs.LoggerCategory.uiComponents)
 
+  private var rootUrls: Set<URL> { Set(self.fileServicesPerRootUrl.map { url, _ in url }) }
   private var window: NSWindow { self.windowController.window! }
+
+  private func subscription(_ state: StateType) {
+    self.updateRootUrls(state: state)
+
+    guard state.openQuickly.open else {
+      self.windowController.close()
+      return
+    }
+
+    if self.window.isKeyWindow {
+      // already open, so do nothing
+      return
+    }
+
+    self.cwd = state.openQuickly.cwd
+    self.cwdPathCompsCount = self.cwd.pathComponents.count
+    self.cwdControl.url = self.cwd
+
+    self.searchField.rx
+      .text.orEmpty
+      .throttle(.milliseconds(1 * 500), latest: true, scheduler: MainScheduler.instance)
+      .distinctUntilChanged()
+      .observeOn(MainScheduler.instance)
+      .subscribe(onNext: { [weak self] pattern in self?.scanAndScore(pattern) })
+      .disposed(by: self.disposeBag)
+
+    self.windowController.showWindow(self)
+  }
 
   private func scanAndScore(_ pattern: String) {
     guard let fileService = self.fileServicesPerRootUrl[self.cwd] else { return }
@@ -218,7 +213,6 @@ extension OpenQuicklyWindow {
     return OpenQuicklyFileViewRow()
   }
 
-  @objc(tableView:viewForTableColumn:row:)
   func tableView(_ tableView: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
     let cachedCell = (
       tableView.makeView(
@@ -245,9 +239,7 @@ extension OpenQuicklyWindow {
     let truncatedPathComps = pathComps[self.cwdPathCompsCount..<pathComps.count]
     let name = truncatedPathComps.last!
 
-    if truncatedPathComps.dropLast().isEmpty {
-      return NSMutableAttributedString(string: name)
-    }
+    if truncatedPathComps.dropLast().isEmpty { return NSMutableAttributedString(string: name) }
 
     let rowText: NSMutableAttributedString
     let pathInfo = truncatedPathComps.dropLast().reversed().joined(separator: " / ")
@@ -263,13 +255,13 @@ extension OpenQuicklyWindow {
 // MARK: - NSTextFieldDelegate
 extension OpenQuicklyWindow {
 
-  @objc(control:textView:doCommandBySelector:)
   func control(
     _ control: NSControl,
     textView: NSTextView,
     doCommandBy commandSelector: Selector
   ) -> Bool {
     switch commandSelector {
+
     case NSSelectorFromString("cancelOperation:"):
       self.window.performClose(self)
       return true
@@ -290,6 +282,7 @@ extension OpenQuicklyWindow {
 
     default:
       return false
+
     }
   }
 
@@ -327,7 +320,5 @@ extension OpenQuicklyWindow {
     self.searchField.stringValue = ""
   }
 
-  func windowDidResignKey(_: Notification) {
-    self.window.performClose(self)
-  }
+  func windowDidResignKey(_: Notification) { self.window.performClose(self) }
 }
