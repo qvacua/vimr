@@ -109,7 +109,7 @@ class OpenQuicklyWindow: NSObject,
       self.useVcsIgnoresCheckBox.boolState = curWinState.usesVcsIgnores
 
       self.scanToken = Token()
-      self.currentFileService?.useVcsIgnores = self.usesVcsIgnores
+      self.currentFileService?.usesVcsIgnores = self.usesVcsIgnores
       self.unsortedScoredUrls.removeAll()
 
       let pattern = self.searchField.stringValue

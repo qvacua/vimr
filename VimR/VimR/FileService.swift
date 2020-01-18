@@ -20,7 +20,7 @@ class FileService {
     }
   }
 
-  var useVcsIgnores = true {
+  var usesVcsIgnores = true {
     willSet { self.stopScanScore() }
     didSet {
       self.queue.sync {
@@ -160,13 +160,14 @@ class FileService {
       autoreleasepool {
         let baton = iterElement.0
         let folder = iterElement.1
+        let testIgnores = self.usesVcsIgnores
 
         let urlToScan = folder.url!
 
         let childUrls = FileUtils
           .directDescendants(of: urlToScan)
           .filter {
-            let keep = baton.test($0)
+            let keep = testIgnores ? baton.test($0) : true
             if !keep { self.log.debug("Ignoring \($0.path)") }
             return keep
           }
