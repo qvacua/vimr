@@ -30,7 +30,7 @@ class OpenQuicklyWindow: NSObject,
   func cleanUp() { self.fileServicesPerRootUrl.removeAll() }
 
   @objc func useVcsAction(_: Any?) {
-    self.emit(.setUsesVcsIgnores(self.useVcsIgnores.boolState))
+    self.emit(.setUsesVcsIgnores(self.useVcsIgnoresCheckBox.boolState))
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
@@ -63,11 +63,12 @@ class OpenQuicklyWindow: NSObject,
   private var scanToken = Token()
 
   private var fileServicesPerRootUrl: [URL: FileService] = [:]
+  private var currentFileService: FileService?
   private let scoredUrlsController = NSArrayController()
 
   private let windowController: NSWindowController
   private let titleField = NSTextField.defaultTitleTextField()
-  private let useVcsIgnores = NSButton(forAutoLayout: ())
+  private let useVcsIgnoresCheckBox = NSButton(forAutoLayout: ())
   private let searchField = NSTextField(forAutoLayout: ())
   private let progressIndicator = NSProgressIndicator(forAutoLayout: ())
   private let cwdControl = NSPathControl(forAutoLayout: ())
@@ -90,15 +91,19 @@ class OpenQuicklyWindow: NSObject,
   private func subscription(_ state: StateType) {
     self.updateRootUrls(state: state)
 
-    guard let curWinState = state.currentMainWindow else {
+    guard state.openQuickly.open,
+          let curWinState = state.currentMainWindow else {
       self.windowController.close()
       return
     }
 
-    self.usesVcsIgnores = curWinState.usesVcsIgnores
+    // The window is open and the user changed the setting
+    if self.usesVcsIgnores != curWinState.usesVcsIgnores && self.window.isKeyWindow {
+      self.usesVcsIgnores = curWinState.usesVcsIgnores
 
-    guard state.openQuickly.open else {
-      self.windowController.close()
+      self.reset()
+      self.prepareSearch(curWinState: curWinState)
+
       return
     }
 
@@ -107,23 +112,39 @@ class OpenQuicklyWindow: NSObject,
       return
     }
 
+    self.usesVcsIgnores = curWinState.usesVcsIgnores
+    self.prepareSearch(curWinState: curWinState)
+    self.windowController.showWindow(nil)
+  }
+
+  private func prepareSearch(curWinState: MainWindow.State) {
+    self.useVcsIgnoresCheckBox.boolState = curWinState.usesVcsIgnores
+
     let cwd = curWinState.cwd
+    self.currentFileService = self.fileServicesPerRootUrl[cwd]
     self.cwdPathCompsCount = cwd.pathComponents.count
     self.cwdControl.url = cwd
 
     self.searchStream
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [weak self] pattern in
-        guard let fileService = self?.fileServicesPerRootUrl[cwd] else { return }
-        self?.scanAndScore(pattern, with: fileService)
+        self?.scanAndScore(pattern)
       })
       .disposed(by: self.perSessionDisposeBag)
-
-    self.windowController.showWindow(self)
   }
 
-  private func scanAndScore(_ pattern: String, with fileService: FileService) {
-    fileService.stopScanScore()
+  private func reset() {
+    self.scanToken = Token()
+    self.currentFileService?.stopScanScore()
+
+    self.endProgress()
+    self.unsortedScoredUrls.removeAll()
+    self.searchField.stringValue = ""
+    self.perSessionDisposeBag = DisposeBag()
+  }
+
+  private func scanAndScore(_ pattern: String) {
+    self.currentFileService?.stopScanScore()
 
     guard pattern.count >= 2 else {
       self.unsortedScoredUrls.removeAll()
@@ -134,7 +155,7 @@ class OpenQuicklyWindow: NSObject,
     let localToken = self.scanToken
 
     self.unsortedScoredUrls.removeAll()
-    fileService.scanScore(
+    self.currentFileService?.scanScore(
       for: pattern,
       beginCallback: { self.startProgress() },
       endCallback: { self.endProgress() }
@@ -174,7 +195,7 @@ class OpenQuicklyWindow: NSObject,
   }
 
   private func addViews() {
-    let useVcsIg = self.useVcsIgnores
+    let useVcsIg = self.useVcsIgnoresCheckBox
     useVcsIg.setButtonType(.switch)
     useVcsIg.controlSize = .mini
     useVcsIg.title = "Use VCS Ignores"
@@ -365,13 +386,7 @@ extension OpenQuicklyWindow {
     return false
   }
 
-  func windowWillClose(_: Notification) {
-    self.endProgress()
-
-    self.unsortedScoredUrls.removeAll()
-    self.searchField.stringValue = ""
-    self.perSessionDisposeBag = DisposeBag()
-  }
+  func windowWillClose(_: Notification) { self.reset() }
 
   func windowDidResignKey(_: Notification) { self.window.performClose(self) }
 }

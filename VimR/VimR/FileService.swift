@@ -38,6 +38,7 @@ class FileService {
     self.queue.async {
       print("Queue start: \(Thread.current)")
       beginCallback()
+      defer { endCallback() }
 
       let ctx = self.writeContext
       ctx.performAndWait {
@@ -57,7 +58,6 @@ class FileService {
         print("end scan")
       }
 
-      endCallback()
       print("Queue end")
     }
   }
