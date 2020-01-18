@@ -11,17 +11,11 @@
   ccls::FuzzyMatcher *_matcher;
 }
 
-- (NSInteger)maxPatternLength {
-  return ccls::FuzzyMatcher::kMaxPat;
-}
++ (NSInteger)maxPatternLength {return ccls::FuzzyMatcher::kMaxPat;}
 
-- (NSInteger)maxTextLength {
-  return ccls::FuzzyMatcher::kMaxText;
-}
++ (NSInteger)maxTextLength {return ccls::FuzzyMatcher::kMaxText;}
 
-- (NSInteger)minScore {
-  return ccls::FuzzyMatcher::kMinScore;
-}
++ (NSInteger)minScore {return ccls::FuzzyMatcher::kMinScore;}
 
 - (instancetype)initWithPattern:(NSString *)pattern {
   self = [super init];

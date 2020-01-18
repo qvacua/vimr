@@ -260,10 +260,11 @@ class FileService {
 
       if self.shouldStop() { return }
 
+      let scoreThreshold = FuzzyMatcher.minScore() + 1
       callback(files[start..<end].compactMap { file in
         let url = file.url!
         let score = matcher.score(matchFullPath ? url.path : url.lastPathComponent)
-        if score <= matcher.minScore + 1 { return nil }
+        if score <= scoreThreshold { return nil }
 
         return ScoredUrl(url: url, score: score)
       })
