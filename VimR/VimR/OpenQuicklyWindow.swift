@@ -25,6 +25,9 @@ class OpenQuicklyWindow: NSObject,
 
   @objc dynamic private(set) var unsortedScoredUrls = [ScoredUrl]()
 
+  // Call this only when quitting
+  func cleanUp() { self.fileServicesPerRootUrl.removeAll() }
+
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
     self.windowController = NSWindowController(windowNibName: NSNib.Name("OpenQuicklyWindow"))
@@ -39,9 +42,6 @@ class OpenQuicklyWindow: NSObject,
       .subscribe(onNext: { [weak self] state in self?.subscription(state) })
       .disposed(by: self.disposeBag)
   }
-
-  // Call this only when quitting
-  func cleanUp() { self.fileServicesPerRootUrl.removeAll() }
 
   // MARK: - Private
   private let emit: (Action) -> Void
