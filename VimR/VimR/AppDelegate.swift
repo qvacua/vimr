@@ -207,8 +207,7 @@ extension AppDelegate {
   }
 
   private func updateMainWindowTemplateBeforeQuitting() {
-    guard let uuid = self.context.state.currentMainWindowUuid,
-          let curMainWindow = self.context.state.mainWindows[uuid] else { return }
+    guard let curMainWindow = self.context.state.currentMainWindow else { return }
 
     self.context.state.mainWindowTemplate = curMainWindow
     self.context.savePrefs()

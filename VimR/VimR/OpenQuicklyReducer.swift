@@ -16,18 +16,19 @@ class OpenQuicklyReducer: ReducerType {
   func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
     var appState = pair.state
 
-    appState.openQuickly.open = false
-
     switch pair.action {
 
-    case let .open(url):
-      guard let uuid = appState.currentMainWindowUuid else {
-        return pair
-      }
+    case let .setUsesVcsIgnores(usesVcsIgnores):
+      guard let uuid = appState.currentMainWindowUuid else { return pair }
+      appState.mainWindows[uuid]?.usesVcsIgnores = usesVcsIgnores
 
+    case let .open(url):
+      guard let uuid = appState.currentMainWindowUuid else { return pair }
       appState.mainWindows[uuid]?.urlsToOpen[url] = .newTab
+      appState.openQuickly.open = false
 
     case .close:
+      appState.openQuickly.open = false
       break
 
     }

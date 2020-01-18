@@ -19,6 +19,7 @@ class OpenQuicklyWindow: NSObject,
 
   enum Action {
 
+    case setUsesVcsIgnores(Bool)
     case open(URL)
     case close
   }
@@ -27,6 +28,10 @@ class OpenQuicklyWindow: NSObject,
 
   // Call this only when quitting
   func cleanUp() { self.fileServicesPerRootUrl.removeAll() }
+
+  @objc func useVcsAction(_: Any?) {
+    self.emit(.setUsesVcsIgnores(self.useVcsIgnores.boolState))
+  }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
@@ -84,11 +89,13 @@ class OpenQuicklyWindow: NSObject,
 
   private func subscription(_ state: StateType) {
     self.updateRootUrls(state: state)
-    guard let curWinUuid = state.currentMainWindowUuid,
-          let curWinState = state.mainWindows[curWinUuid] else {
+
+    guard let curWinState = state.currentMainWindow else {
       self.windowController.close()
       return
     }
+
+    self.usesVcsIgnores = curWinState.usesVcsIgnores
 
     guard state.openQuickly.open else {
       self.windowController.close()
@@ -99,8 +106,6 @@ class OpenQuicklyWindow: NSObject,
       // already open, so do nothing
       return
     }
-
-    self.usesVcsIgnores = curWinState.usesVcsIgnores
 
     let cwd = curWinState.cwd
     self.cwdPathCompsCount = cwd.pathComponents.count
@@ -173,6 +178,8 @@ class OpenQuicklyWindow: NSObject,
     useVcsIg.setButtonType(.switch)
     useVcsIg.controlSize = .mini
     useVcsIg.title = "Use VCS Ignores"
+    useVcsIg.target = self
+    useVcsIg.action = #selector(OpenQuicklyWindow.useVcsAction)
 
     let title = self.titleField
     title.font = .boldSystemFont(ofSize: 11)
@@ -308,8 +315,12 @@ extension OpenQuicklyWindow {
       return true
 
     case NSSelectorFromString("insertNewline:"):
-      // TODO open the url
-      self.emit(.open(self.unsortedScoredUrls[self.fileView.selectedRow].url))
+      guard let sortedUrls = self.scoredUrlsController.arrangedObjects as? Array<ScoredUrl> else {
+        self.log.error("Could not convert arranged objects to [ScoredUrl].")
+        return true
+      }
+
+      self.emit(.open(sortedUrls[self.fileView.selectedRow].url))
       self.window.performClose(self)
       return true
 

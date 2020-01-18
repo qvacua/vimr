@@ -41,6 +41,10 @@ struct AppState: Codable {
   var currentMainWindowUuid: UUID?
 
   var mainWindows: [UUID: MainWindow.State] = [:]
+  var currentMainWindow: MainWindow.State? {
+    guard let uuid = self.currentMainWindowUuid else { return nil }
+    return self.mainWindows[uuid]
+  }
 
   var openQuickly = OpenQuicklyWindow.State.default
 
