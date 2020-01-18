@@ -60,6 +60,7 @@ class AppDelegateReducer: ReducerType {
     )
     mainWindow.preview.server = self.baseServerUrl.appendingPathComponent(MarkdownReducer.nonePath)
 
+    mainWindow.usesVcsIgnores = state.openQuickly.defaultUsesVcsIgnores
     mainWindow.nvimArgs = config.nvimArgs
     mainWindow.cliPipePath = config.cliPipePath
     mainWindow.envDict = config.envDict

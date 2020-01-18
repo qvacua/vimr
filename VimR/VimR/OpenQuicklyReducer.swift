@@ -16,20 +16,19 @@ class OpenQuicklyReducer: ReducerType {
   func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
     var appState = pair.state
 
-    appState.openQuickly.open = false
-    appState.openQuickly.flatFileItems = Observable.empty()
-    appState.openQuickly.cwd = FileUtils.userHomeUrl
-
     switch pair.action {
 
-    case let .open(url):
-      guard let uuid = appState.currentMainWindowUuid else {
-        return pair
-      }
+    case let .setUsesVcsIgnores(usesVcsIgnores):
+      guard let uuid = appState.currentMainWindowUuid else { return pair }
+      appState.mainWindows[uuid]?.usesVcsIgnores = usesVcsIgnores
 
+    case let .open(url):
+      guard let uuid = appState.currentMainWindowUuid else { return pair }
       appState.mainWindows[uuid]?.urlsToOpen[url] = .newTab
+      appState.openQuickly.open = false
 
     case .close:
+      appState.openQuickly.open = false
       break
 
     }
@@ -48,16 +47,10 @@ class OpenQuicklyReducer: ReducerType {
       case .openQuickly:
         var appState = pair.state
 
-        guard let uuid = appState.currentMainWindowUuid else {
-          return pair
-        }
-
-        guard let cwd = appState.mainWindows[uuid]?.cwd else {
-          return pair
-        }
+        guard let uuid = appState.currentMainWindowUuid,
+              appState.mainWindows[uuid]?.cwd != nil else { return pair }
 
         appState.openQuickly.open = true
-        appState.openQuickly.cwd = cwd
 
         return (appState, pair.action, true)
 

@@ -7,149 +7,221 @@ import Cocoa
 import RxSwift
 import RxCocoa
 import PureLayout
+import os
 
 class OpenQuicklyWindow: NSObject,
                          UiComponent,
                          NSWindowDelegate,
                          NSTextFieldDelegate,
-                         NSTableViewDelegate, NSTableViewDataSource {
+                         NSTableViewDelegate {
 
   typealias StateType = AppState
 
   enum Action {
 
+    case setUsesVcsIgnores(Bool)
     case open(URL)
     case close
   }
 
-  let scanCondition = NSCondition()
-  var pauseScan = false
+  @objc dynamic private(set) var unsortedScoredUrls = [ScoredUrl]()
+
+  // Call this only when quitting
+  func cleanUp() {
+    self.searchServicePerRootUrl.values.forEach { $0.cleanUp() }
+    self.searchServicePerRootUrl.removeAll()
+  }
+
+  @objc func useVcsAction(_: Any?) {
+    self.scanToken = Token()
+    self.currentSearchService?.stopScanScore()
+    self.endProgress()
+    self.unsortedScoredUrls.removeAll()
+
+    self.emit(.setUsesVcsIgnores(self.useVcsIgnoresCheckBox.boolState))
+  }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
     self.windowController = NSWindowController(windowNibName: NSNib.Name("OpenQuicklyWindow"))
-
     self.searchStream = self.searchField.rx
       .text.orEmpty
-      .throttle(0.2, scheduler: MainScheduler.instance)
+      .throttle(.milliseconds(1 * 500), latest: true, scheduler: MainScheduler.instance)
       .distinctUntilChanged()
 
     super.init()
 
-    self.window.delegate = self
-
-    self.filterOpQueue.qualityOfService = .userInitiated
-    self.filterOpQueue.name = "open-quickly-filter-operation-queue"
-
+    self.configureWindow()
     self.addViews()
 
     source
       .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { state in
-        guard state.openQuickly.open else {
-          self.windowController.close()
-          return
-        }
-
-        if self.window.isKeyWindow {
-          // already open, so do nothing
-          return
-        }
-
-        self.cwd = state.openQuickly.cwd
-        self.cwdPathCompsCount = self.cwd.pathComponents.count
-        self.cwdControl.url = self.cwd
-
-        self.flatFileItemsSource = FileItemUtils.flatFileItems(
-          of: state.openQuickly.cwd,
-          ignorePatterns: state.openQuickly.ignorePatterns,
-          ignoreToken: state.openQuickly.ignoreToken,
-          root: state.openQuickly.root
-        )
-
-        self.searchStream
-          .subscribe(onNext: { pattern in
-            self.pattern = pattern
-            self.resetAndAddFilterOperation()
-          })
-          .disposed(by: self.perSessionDisposeBag)
-
-        self.flatFileItemsSource
-          .subscribeOn(self.scheduler)
-          .do(onNext: { items in
-            self.scanCondition.lock()
-            while self.pauseScan {
-              self.scanCondition.wait()
-            }
-            self.scanCondition.unlock()
-
-            //
-            self.flatFileItems.append(contentsOf: items)
-            self.resetAndAddFilterOperation()
-          })
-          .observeOn(MainScheduler.instance)
-          .subscribe(onNext: { items in
-            self.count += items.count
-            self.countField.stringValue = "\(self.count) items"
-          })
-          .disposed(by: self.perSessionDisposeBag)
-
-        self.windowController.showWindow(self)
-      })
+      .subscribe(onNext: { [weak self] state in self?.subscription(state) })
       .disposed(by: self.disposeBag)
   }
 
-  func reloadFileView(withScoredItems items: [ScoredFileItem]) {
-    self.fileViewItems = items
-    self.fileView.reloadData()
-  }
-
-  func startProgress() {
-    self.progressIndicator.startAnimation(self)
-  }
-
-  func endProgress() {
-    self.progressIndicator.stopAnimation(self)
-  }
-
+  // MARK: - Private
   private let emit: (Action) -> Void
   private let disposeBag = DisposeBag()
 
-  private var flatFileItemsSource = Observable<[FileItem]>.empty()
-  private(set) var cwd = FileUtils.userHomeUrl
-  private var cwdPathCompsCount = 0
-
-  // FIXME: migrate to State later...
-  private(set) var pattern = ""
-  private(set) var flatFileItems = [FileItem]()
-  private(set) var fileViewItems = [ScoredFileItem]()
-  private var count = 0
+  private let searchStream: Observable<String>
   private var perSessionDisposeBag = DisposeBag()
-  private let filterOpQueue = OperationQueue()
+  private var cwdPathCompsCount = 0
+  private var usesVcsIgnores = true
+  private var scanToken = Token()
 
-  private let scheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
+  private var searchServicePerRootUrl: [URL: FuzzySearchService] = [:]
+  private var currentSearchService: FuzzySearchService?
+  private let scoredUrlsController = NSArrayController()
 
   private let windowController: NSWindowController
-
+  private let titleField = NSTextField.defaultTitleTextField()
+  private let useVcsIgnoresCheckBox = NSButton(forAutoLayout: ())
   private let searchField = NSTextField(forAutoLayout: ())
   private let progressIndicator = NSProgressIndicator(forAutoLayout: ())
   private let cwdControl = NSPathControl(forAutoLayout: ())
-  private let countField = NSTextField(forAutoLayout: ())
   private let fileView = NSTableView.standardTableView()
 
-  private let searchStream: Observable<String>
+  private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                          category: Defs.LoggerCategory.uiComponents)
 
-  private var window: NSWindow {
-    return self.windowController.window!
+  private var window: NSWindow { self.windowController.window! }
+
+  private func configureWindow() {
+    [
+      NSWindow.ButtonType.closeButton,
+      NSWindow.ButtonType.miniaturizeButton,
+      NSWindow.ButtonType.zoomButton,
+    ].forEach { self.window.standardWindowButton($0)?.isHidden = true }
+    self.window.delegate = self
   }
 
-  private func resetAndAddFilterOperation() {
-    self.filterOpQueue.cancelAllOperations()
-    let op = OpenQuicklyFilterOperation(forOpenQuickly: self)
-    self.filterOpQueue.addOperation(op)
+  private func subscription(_ state: StateType) {
+    self.updateRootUrls(state: state)
+
+    guard state.openQuickly.open, let curWinState = state.currentMainWindow else {
+      self.windowController.close()
+      return
+    }
+
+    let windowIsOpen = self.window.isKeyWindow
+
+    // The window is open and the user changed the setting
+    if self.usesVcsIgnores != curWinState.usesVcsIgnores && windowIsOpen {
+      self.usesVcsIgnores = curWinState.usesVcsIgnores
+      self.useVcsIgnoresCheckBox.boolState = curWinState.usesVcsIgnores
+
+      self.scanToken = Token()
+      self.currentSearchService?.usesVcsIgnores = self.usesVcsIgnores
+      self.unsortedScoredUrls.removeAll()
+
+      let pattern = self.searchField.stringValue
+      if pattern.count >= 2 { self.scanAndScore(pattern) }
+
+      return
+    }
+
+    // already open, so do nothing
+    if windowIsOpen { return }
+
+    self.usesVcsIgnores = curWinState.usesVcsIgnores
+
+    // TODO: read global vcs ignores
+    self.prepareSearch(curWinState: curWinState)
+    self.windowController.showWindow(nil)
+    self.searchField.beFirstResponder()
+  }
+
+  private func prepareSearch(curWinState: MainWindow.State) {
+    self.usesVcsIgnores = curWinState.usesVcsIgnores
+    self.useVcsIgnoresCheckBox.boolState = curWinState.usesVcsIgnores
+
+    let cwd = curWinState.cwd
+    self.currentSearchService = self.searchServicePerRootUrl[cwd]
+    self.cwdPathCompsCount = cwd.pathComponents.count
+    self.cwdControl.url = cwd
+
+    self.searchStream
+      .observeOn(MainScheduler.instance)
+      .subscribe(onNext: { [weak self] pattern in
+        self?.scanAndScore(pattern)
+      })
+      .disposed(by: self.perSessionDisposeBag)
+  }
+
+  private func reset() {
+    self.scanToken = Token()
+    self.currentSearchService?.stopScanScore()
+
+    self.endProgress()
+    self.unsortedScoredUrls.removeAll()
+    self.searchField.stringValue = ""
+    self.perSessionDisposeBag = DisposeBag()
+  }
+
+  private func scanAndScore(_ pattern: String) {
+    self.currentSearchService?.stopScanScore()
+
+    guard pattern.count >= 2 else {
+      self.unsortedScoredUrls.removeAll()
+      return
+    }
+
+    self.scanToken = Token()
+    let localToken = self.scanToken
+
+    self.unsortedScoredUrls.removeAll()
+    self.currentSearchService?.scanScore(
+      for: pattern,
+      beginCallback: { self.startProgress() },
+      endCallback: { self.endProgress() }
+    ) { scoredUrls in
+      DispatchQueue.main.async {
+        guard localToken == self.scanToken else { return }
+        self.unsortedScoredUrls.append(contentsOf: scoredUrls)
+      }
+    }
+  }
+
+  private func startProgress() { self.progressIndicator.startAnimation(self) }
+
+  private func endProgress() { self.progressIndicator.stopAnimation(self) }
+
+  private func updateRootUrls(state: AppState) {
+    let urlsToMonitor = Set(state.mainWindows.map { $1.cwd })
+    let currentUrls = Set(self.searchServicePerRootUrl.map { url, _ in url })
+
+    let newUrls = urlsToMonitor.subtracting(currentUrls)
+    let obsoleteUrls = currentUrls.subtracting(urlsToMonitor)
+
+    newUrls.forEach { url in
+      self.log.info("Adding \(url) and its service.")
+      guard let service = try? FuzzySearchService(root: url) else {
+        self.log.error("Could not create FileService for \(url)")
+        return
+      }
+
+      self.searchServicePerRootUrl[url] = service
+    }
+
+    obsoleteUrls.forEach { url in
+      self.log.info("Removing \(url) and its service.")
+      self.searchServicePerRootUrl.removeValue(forKey: url)
+    }
   }
 
   private func addViews() {
+    let useVcsIg = self.useVcsIgnoresCheckBox
+    useVcsIg.setButtonType(.switch)
+    useVcsIg.controlSize = .mini
+    useVcsIg.title = "Use VCS Ignores"
+    useVcsIg.target = self
+    useVcsIg.action = #selector(OpenQuicklyWindow.useVcsAction)
+
+    let title = self.titleField
+    title.font = .boldSystemFont(ofSize: 11)
+    title.stringValue = "Open Quickly"
+
     let searchField = self.searchField
     searchField.rx.delegate.setForwardToDelegate(self, retainDelegate: false)
 
@@ -161,7 +233,17 @@ class OpenQuicklyWindow: NSObject,
 
     let fileView = self.fileView
     fileView.intercellSpacing = CGSize(width: 4, height: 4)
-    fileView.dataSource = self
+
+    let c = self.scoredUrlsController
+    c.avoidsEmptySelection = false
+    c.preservesSelection = true
+    c.objectClass = ScoredUrl.self
+    c.sortDescriptors = [NSSortDescriptor(key: "score", ascending: false)]
+    c.automaticallyRearrangesObjects = true
+    c.bind(.contentArray, to: self, withKeyPath: "unsortedScoredUrls")
+
+    fileView.bind(.content, to: c, withKeyPath: "arrangedObjects")
+    fileView.bind(.selectionIndexes, to: c, withKeyPath: "selectionIndexes")
     fileView.delegate = self
 
     let fileScrollView = NSScrollView.standardScrollView()
@@ -176,26 +258,23 @@ class OpenQuicklyWindow: NSObject,
     cwdControl.cell?.font = NSFont.systemFont(ofSize: NSFont.smallSystemFontSize)
     cwdControl.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
-    let countField = self.countField
-    countField.isEditable = false
-    countField.isBordered = false
-    countField.alignment = .right
-    countField.backgroundColor = NSColor.clear
-    countField.stringValue = "0 items"
-
     let contentView = self.window.contentView!
+    contentView.addSubview(title)
+    contentView.addSubview(useVcsIg)
     contentView.addSubview(searchField)
     contentView.addSubview(progressIndicator)
     contentView.addSubview(fileScrollView)
     contentView.addSubview(cwdControl)
-    contentView.addSubview(countField)
 
-    searchField.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
-    searchField.autoPinEdge(toSuperviewEdge: .right, withInset: 8)
-    searchField.autoPinEdge(toSuperviewEdge: .left, withInset: 8)
+    title.autoPinEdge(toSuperviewEdge: .left, withInset: 8)
+    title.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
 
-    progressIndicator.autoAlignAxis(.horizontal, toSameAxisOf: searchField)
-    progressIndicator.autoPinEdge(.right, to: .right, of: searchField, withOffset: -4)
+    useVcsIg.autoAlignAxis(.horizontal, toSameAxisOf: title)
+    useVcsIg.autoPinEdge(toSuperviewEdge: .right, withInset: 8)
+
+    searchField.autoPinEdge(.top, to: .bottom, of: useVcsIg, withOffset: 8)
+    searchField.autoPinEdge(.left, to: .left, of: title)
+    searchField.autoPinEdge(.right, to: .right, of: useVcsIg)
 
     fileScrollView.autoPinEdge(.top, to: .bottom, of: searchField, withOffset: 8)
     fileScrollView.autoPinEdge(toSuperviewEdge: .left, withInset: -1)
@@ -203,23 +282,12 @@ class OpenQuicklyWindow: NSObject,
     fileScrollView.autoSetDimension(.height, toSize: 200, relation: .greaterThanOrEqual)
 
     cwdControl.autoPinEdge(.top, to: .bottom, of: fileScrollView, withOffset: 4)
-//    cwdControl.autoPinEdge(toSuperviewEdge: .bottom)
     cwdControl.autoPinEdge(toSuperviewEdge: .left, withInset: 2)
     cwdControl.autoPinEdge(toSuperviewEdge: .bottom, withInset: 4)
 
-//    countField.autoPinEdge(toSuperviewEdge: .bottom)
-    countField.autoPinEdge(.top, to: .bottom, of: fileScrollView, withOffset: 4)
-    countField.autoPinEdge(toSuperviewEdge: .right, withInset: 2)
-    countField.autoPinEdge(.left, to: .right, of: cwdControl, withOffset: 4)
-  }
-}
-
-// MARK: - NSTableViewDataSource
-extension OpenQuicklyWindow {
-
-  @objc(numberOfRowsInTableView:)
-  func numberOfRows(in _: NSTableView) -> Int {
-    return self.fileViewItems.count
+    progressIndicator.autoAlignAxis(.horizontal, toSameAxisOf: cwdControl)
+    progressIndicator.autoPinEdge(.left, to: .right, of: cwdControl, withOffset: 4)
+    progressIndicator.autoPinEdge(toSuperviewEdge: .right, withInset: 8)
   }
 }
 
@@ -230,14 +298,21 @@ extension OpenQuicklyWindow {
     return OpenQuicklyFileViewRow()
   }
 
-  @objc(tableView: viewForTableColumn:row:)
   func tableView(_ tableView: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
-    let cachedCell = (tableView.makeView(
-      withIdentifier: NSUserInterfaceItemIdentifier("file-view-row"), owner: self) as? ImageAndTextTableCell
+    let cachedCell = (
+      tableView.makeView(
+        withIdentifier: NSUserInterfaceItemIdentifier("file-view-row"),
+        owner: self
+      ) as? ImageAndTextTableCell
     )?.reset()
     let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
-    let url = self.fileViewItems[row].url
+    guard let sortedUrls = self.scoredUrlsController.arrangedObjects as? Array<ScoredUrl> else {
+      self.log.error("Could not convert arranged objects to [ScoredUrl].")
+      return nil
+    }
+
+    let url = sortedUrls[row].url
     cell.attributedText = self.rowText(for: url as URL)
     cell.image = FileUtils.icon(forUrl: url)
 
@@ -249,9 +324,7 @@ extension OpenQuicklyWindow {
     let truncatedPathComps = pathComps[self.cwdPathCompsCount..<pathComps.count]
     let name = truncatedPathComps.last!
 
-    if truncatedPathComps.dropLast().isEmpty {
-      return NSMutableAttributedString(string: name)
-    }
+    if truncatedPathComps.dropLast().isEmpty { return NSMutableAttributedString(string: name) }
 
     let rowText: NSMutableAttributedString
     let pathInfo = truncatedPathComps.dropLast().reversed().joined(separator: " / ")
@@ -267,16 +340,24 @@ extension OpenQuicklyWindow {
 // MARK: - NSTextFieldDelegate
 extension OpenQuicklyWindow {
 
-  @objc(control: textView:doCommandBySelector:)
-  func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+  func control(
+    _ control: NSControl,
+    textView: NSTextView,
+    doCommandBy commandSelector: Selector
+  ) -> Bool {
     switch commandSelector {
+
     case NSSelectorFromString("cancelOperation:"):
       self.window.performClose(self)
       return true
 
     case NSSelectorFromString("insertNewline:"):
-      // TODO open the url
-      self.emit(.open(self.fileViewItems[self.fileView.selectedRow].url))
+      guard let sortedUrls = self.scoredUrlsController.arrangedObjects as? Array<ScoredUrl> else {
+        self.log.error("Could not convert arranged objects to [ScoredUrl].")
+        return true
+      }
+
+      self.emit(.open(sortedUrls[self.fileView.selectedRow].url))
       self.window.performClose(self)
       return true
 
@@ -290,6 +371,7 @@ extension OpenQuicklyWindow {
 
     default:
       return false
+
     }
   }
 
@@ -320,25 +402,7 @@ extension OpenQuicklyWindow {
     return false
   }
 
-  func windowWillClose(_: Notification) {
-    self.endProgress()
+  func windowWillClose(_: Notification) { self.reset() }
 
-    self.filterOpQueue.cancelAllOperations()
-
-    self.perSessionDisposeBag = DisposeBag()
-    self.pauseScan = false
-    self.count = 0
-
-    self.pattern = ""
-    self.flatFileItems = []
-    self.fileViewItems = []
-    self.fileView.reloadData()
-
-    self.searchField.stringValue = ""
-    self.countField.stringValue = "0 items"
-  }
-
-  func windowDidResignKey(_: Notification) {
-    self.window.performClose(self)
-  }
+  func windowDidResignKey(_: Notification) { self.window.performClose(self) }
 }

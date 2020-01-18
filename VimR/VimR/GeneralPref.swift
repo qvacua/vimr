@@ -16,7 +16,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     case setOpenOnLaunch(Bool)
     case setAfterLastWindowAction(AppState.AfterLastWindowAction)
     case setOpenOnReactivation(Bool)
-    case setIgnorePatterns(Set<FileItemIgnorePattern>)
+    case setDefaultUsesVcsIgnores(Bool)
   }
 
   override var displayName: String {
@@ -25,10 +25,6 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
   override var pinToContainer: Bool {
     return true
-  }
-
-  override func windowWillClose() {
-    self.ignorePatternsAction()
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
@@ -40,12 +36,10 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     self.openWhenLaunchingCheckbox.boolState = state.openNewMainWindowOnLaunch
     self.openOnReactivationCheckbox.boolState = state.openNewMainWindowOnReactivation
+    self.defaultUsesVcsIgnoresCheckbox.boolState = state.openQuickly.defaultUsesVcsIgnores
 
     self.lastWindowAction = state.afterLastWindowAction
     self.afterLastWindowPopup.selectItem(at: indexToAfterLastWindowAction.firstIndex(of: state.afterLastWindowAction) ?? 0)
-
-    self.ignorePatterns = state.openQuickly.ignorePatterns
-    self.ignoreField.stringValue = FileItemIgnorePattern.toString(state.openQuickly.ignorePatterns)
 
     source
       .observeOn(MainScheduler.instance)
@@ -75,12 +69,9 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
   private let openWhenLaunchingCheckbox = NSButton(forAutoLayout: ())
   private let openOnReactivationCheckbox = NSButton(forAutoLayout: ())
+  private let defaultUsesVcsIgnoresCheckbox = NSButton(forAutoLayout: ())
 
   private let afterLastWindowPopup = NSPopUpButton(forAutoLayout: ())
-
-  private let ignoreField = NSTextField(forAutoLayout: ())
-
-  private var ignorePatterns = Set<FileItemIgnorePattern>()
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -92,10 +83,13 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     let openUntitledWindowTitle = self.titleTextField(title: "Open Untitled Window:")
     self.configureCheckbox(button: self.openWhenLaunchingCheckbox,
                            title: "On launch",
-                           action: #selector(GeneralPref.openUntitledWindowWhenLaunchingAction(_:)))
+                           action: #selector(GeneralPref.openUntitledWindowWhenLaunchingAction))
     self.configureCheckbox(button: self.openOnReactivationCheckbox,
                            title: "On re-activation",
-                           action: #selector(GeneralPref.openUntitledWindowOnReactivationAction(_:)))
+                           action: #selector(GeneralPref.openUntitledWindowOnReactivationAction))
+    self.configureCheckbox(button: self.defaultUsesVcsIgnoresCheckbox,
+                           title: "Use VCS Ignores",
+                           action: #selector(GeneralPref.defaultUsesVcsIgnoresAction))
 
     let whenLaunching = self.openWhenLaunchingCheckbox
     let onReactivation = self.openOnReactivationCheckbox
@@ -110,19 +104,17 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
       "Quit",
     ])
 
-    let ignoreListTitle = self.titleTextField(title: "Files To Ignore:")
-    let ignoreField = self.ignoreField
-    NotificationCenter.default.addObserver(forName: NSControl.textDidEndEditingNotification,
-                                           object: ignoreField,
-                                           queue: nil) { [unowned self] _ in
-      self.ignorePatternsAction()
-    }
+    let ignoreListTitle = self.titleTextField(title: "Open Quickly:")
     let ignoreInfo =
-      self.infoTextField(markdown:
-                         "Comma-separated list of ignore patterns  \n"
-                         + "Matching files will be ignored in \"Open Quickly\" and the file browser.  \n"
-                         + "Example: `*/.git, */node_modules`  \n"
-                         + "For detailed information see [VimR Wiki](https://github.com/qvacua/vimr/wiki)."
+      self.infoTextField(
+        markdown:
+        """
+        When checked, the ignore files of VCSs, e.g. `gitignore`, will we used to ignore files.  
+        This checkbox will set the initial value for each VimR window.  
+        You can change this setting for each VimR window in the Open Quickly window.  
+        The behavior should be almost identical to that of
+        [The Silver Searcher](https://github.com/ggreer/the_silver_searcher).
+        """
       )
 
     let cliToolTitle = self.titleTextField(title: "CLI Tool:")
@@ -137,13 +129,15 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
       markdown: "Put the executable `vimr` in your `$PATH` and execute `vimr -h` for help."
     )
 
+    let vcsIg = self.defaultUsesVcsIgnoresCheckbox
+
     self.addSubview(paneTitle)
     self.addSubview(openUntitledWindowTitle)
     self.addSubview(whenLaunching)
     self.addSubview(onReactivation)
 
+    self.addSubview(vcsIg)
     self.addSubview(ignoreListTitle)
-    self.addSubview(ignoreField)
     self.addSubview(ignoreInfo)
 
     self.addSubview(afterLastWindowTitle)
@@ -175,17 +169,16 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     lastWindow.autoPinEdge(.top, to: .bottom, of: onReactivation, withOffset: 18)
     lastWindow.autoPinEdge(.left, to: .right, of: afterLastWindowTitle, withOffset: 5)
 
-    ignoreListTitle.autoAlignAxis(.baseline, toSameAxisOf: ignoreField)
+    ignoreListTitle.autoAlignAxis(.baseline, toSameAxisOf: vcsIg)
     ignoreListTitle.autoPinEdge(.right, to: .right, of: openUntitledWindowTitle)
     ignoreListTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
 
-    ignoreField.autoPinEdge(.top, to: .bottom, of: lastWindow, withOffset: 18)
-    ignoreField.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
-    ignoreField.autoPinEdge(.left, to: .right, of: ignoreListTitle, withOffset: 5)
+    vcsIg.autoPinEdge(.top, to: .bottom, of: lastWindow, withOffset: 18)
+    vcsIg.autoPinEdge(.left, to: .right, of: ignoreListTitle, withOffset: 5)
 
-    ignoreInfo.autoPinEdge(.top, to: .bottom, of: ignoreField, withOffset: 5)
+    ignoreInfo.autoPinEdge(.top, to: .bottom, of: vcsIg, withOffset: 5)
     ignoreInfo.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
-    ignoreInfo.autoPinEdge(.left, to: .right, of: ignoreListTitle, withOffset: 5)
+    ignoreInfo.autoPinEdge(.left, to: .left, of: vcsIg)
 
     cliToolTitle.autoAlignAxis(.baseline, toSameAxisOf: cliToolButton)
     cliToolTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
@@ -234,6 +227,10 @@ extension GeneralPref {
     }
   }
 
+  @objc func defaultUsesVcsIgnoresAction(_ sender: NSButton) {
+    self.emit(.setDefaultUsesVcsIgnores(sender.boolState))
+  }
+
   @objc func openUntitledWindowWhenLaunchingAction(_ sender: NSButton) {
     self.emit(.setOpenOnLaunch(self.openWhenLaunchingCheckbox.boolState))
   }
@@ -251,16 +248,6 @@ extension GeneralPref {
 
     self.lastWindowAction = indexToAfterLastWindowAction[index]
     self.emit(.setAfterLastWindowAction(self.lastWindowAction))
-  }
-
-  private func ignorePatternsAction() {
-    let patterns = FileItemIgnorePattern.from(string: self.ignoreField.stringValue)
-    if patterns == self.ignorePatterns {
-      return
-    }
-
-    self.ignorePatterns = patterns
-    self.emit(.setIgnorePatterns(ignorePatterns))
   }
 
   private func alert(title: String, info: String) {

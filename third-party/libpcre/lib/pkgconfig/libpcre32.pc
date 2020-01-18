@@ -1,0 +1,13 @@
+# Package Information for pkg-config
+
+prefix=/Users/hat/vimr/.deps/pcre/../../third-party/libpcre
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libpcre32
+Description: PCRE - Perl compatible regular expressions C library with 32 bit character support
+Version: 8.43
+Libs: -L${libdir} -lpcre32
+Libs.private: -D_THREAD_SAFE -pthread 
+Cflags: -I${includedir} 
