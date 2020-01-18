@@ -133,15 +133,6 @@ class FileService {
     context: NSManagedObjectContext,
     callback: ([ScoredUrl]) -> ()
   ) {
-    let saveAndReset = { (context: NSManagedObjectContext) in
-      do {
-        try context.save()
-      } catch {
-        self.log.error("There was an error saving the context: \(error)")
-      }
-      context.reset()
-    }
-
     var saveCounter = 1
     var counter = 1
 
@@ -154,7 +145,7 @@ class FileService {
     var batons = initialBatons
     var stack = [(initialBaton, folder)]
     while let iterElement = stack.popLast() {
-      if self.shouldStop({ saveAndReset(context) }) { return }
+      if self.shouldStop({ self.saveAndReset(context: context) }) { return }
 
       autoreleasepool {
         let baton = iterElement.0
@@ -194,7 +185,7 @@ class FileService {
             context: context,
             callback: callback
           )
-          saveAndReset(context)
+          self.saveAndReset(context: context)
 
           saveCounter = 0
 
@@ -212,9 +203,18 @@ class FileService {
 
     self.log.debug("Flushing and scoring last \(saveCounter) Files")
     self.scoreAllRegisteredFiles(matcherPool: matcherPool, context: context, callback: callback)
-    saveAndReset(context)
+    self.saveAndReset(context: context)
 
     self.log.debug("Stored \(counter) Files")
+  }
+
+  private func saveAndReset(context: NSManagedObjectContext) {
+    do {
+      try context.save()
+    } catch {
+      self.log.error("There was an error saving the context: \(error)")
+    }
+    context.reset()
   }
 
   private func shouldStop(_ body: (() -> Void)? = nil) -> Bool {

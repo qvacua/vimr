@@ -59,6 +59,7 @@ class OpenQuicklyWindow: NSObject,
   private let progressIndicator = NSProgressIndicator(forAutoLayout: ())
   private let cwdControl = NSPathControl(forAutoLayout: ())
   private let fileView = NSTableView.standardTableView()
+  private let vcsIgnoreCheckbox = NSButton(forAutoLayout: ())
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem,
                           category: Defs.LoggerCategory.uiComponents)
