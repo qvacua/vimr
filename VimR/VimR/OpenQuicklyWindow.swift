@@ -94,7 +94,6 @@ class OpenQuicklyWindow: NSObject,
   private let searchField = NSTextField(forAutoLayout: ())
   private let progressIndicator = NSProgressIndicator(forAutoLayout: ())
   private let cwdControl = NSPathControl(forAutoLayout: ())
-  private let countField = NSTextField(forAutoLayout: ())
   private let fileView = NSTableView.standardTableView()
 
   private let searchStream: Observable<String>
@@ -121,7 +120,6 @@ class OpenQuicklyWindow: NSObject,
       DispatchQueue.main.async {
         guard localToken == self.scanToken else { return }
         self.unsortedScoredUrls.append(contentsOf: scoredUrls)
-        self.countField.stringValue = "\(self.unsortedScoredUrls.count) Items"
       }
     }
   }
@@ -185,19 +183,11 @@ class OpenQuicklyWindow: NSObject,
     cwdControl.cell?.font = NSFont.systemFont(ofSize: NSFont.smallSystemFontSize)
     cwdControl.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
-    let countField = self.countField
-    countField.isEditable = false
-    countField.isBordered = false
-    countField.alignment = .right
-    countField.backgroundColor = NSColor.clear
-    countField.stringValue = "0 items"
-
     let contentView = self.window.contentView!
     contentView.addSubview(searchField)
     contentView.addSubview(progressIndicator)
     contentView.addSubview(fileScrollView)
     contentView.addSubview(cwdControl)
-    contentView.addSubview(countField)
 
     searchField.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
     searchField.autoPinEdge(toSuperviewEdge: .right, withInset: 8)
@@ -212,14 +202,8 @@ class OpenQuicklyWindow: NSObject,
     fileScrollView.autoSetDimension(.height, toSize: 200, relation: .greaterThanOrEqual)
 
     cwdControl.autoPinEdge(.top, to: .bottom, of: fileScrollView, withOffset: 4)
-//    cwdControl.autoPinEdge(toSuperviewEdge: .bottom)
     cwdControl.autoPinEdge(toSuperviewEdge: .left, withInset: 2)
     cwdControl.autoPinEdge(toSuperviewEdge: .bottom, withInset: 4)
-
-//    countField.autoPinEdge(toSuperviewEdge: .bottom)
-    countField.autoPinEdge(.top, to: .bottom, of: fileScrollView, withOffset: 4)
-    countField.autoPinEdge(toSuperviewEdge: .right, withInset: 2)
-    countField.autoPinEdge(.left, to: .right, of: cwdControl, withOffset: 4)
   }
 }
 
@@ -336,9 +320,7 @@ extension OpenQuicklyWindow {
     self.endProgress()
 
     self.unsortedScoredUrls.removeAll()
-
     self.searchField.stringValue = ""
-    self.countField.stringValue = "0 items"
   }
 
   func windowDidResignKey(_: Notification) {
