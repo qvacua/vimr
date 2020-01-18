@@ -17,6 +17,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     case setAfterLastWindowAction(AppState.AfterLastWindowAction)
     case setOpenOnReactivation(Bool)
     case setIgnorePatterns(Set<FileItemIgnorePattern>)
+    case setDefaultUsesVcsIgnores(Bool)
   }
 
   override var displayName: String {
@@ -40,6 +41,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     self.openWhenLaunchingCheckbox.boolState = state.openNewMainWindowOnLaunch
     self.openOnReactivationCheckbox.boolState = state.openNewMainWindowOnReactivation
+    self.defaultUsesVcsIgnoresCheckbox.boolState = state.openQuickly.defaultUsesVcsIgnores
 
     self.lastWindowAction = state.afterLastWindowAction
     self.afterLastWindowPopup.selectItem(at: indexToAfterLastWindowAction.firstIndex(of: state.afterLastWindowAction) ?? 0)
@@ -75,6 +77,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
   private let openWhenLaunchingCheckbox = NSButton(forAutoLayout: ())
   private let openOnReactivationCheckbox = NSButton(forAutoLayout: ())
+  private let defaultUsesVcsIgnoresCheckbox = NSButton(forAutoLayout: ())
 
   private let afterLastWindowPopup = NSPopUpButton(forAutoLayout: ())
 
@@ -92,10 +95,13 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     let openUntitledWindowTitle = self.titleTextField(title: "Open Untitled Window:")
     self.configureCheckbox(button: self.openWhenLaunchingCheckbox,
                            title: "On launch",
-                           action: #selector(GeneralPref.openUntitledWindowWhenLaunchingAction(_:)))
+                           action: #selector(GeneralPref.openUntitledWindowWhenLaunchingAction))
     self.configureCheckbox(button: self.openOnReactivationCheckbox,
                            title: "On re-activation",
-                           action: #selector(GeneralPref.openUntitledWindowOnReactivationAction(_:)))
+                           action: #selector(GeneralPref.openUntitledWindowOnReactivationAction))
+    self.configureCheckbox(button: self.defaultUsesVcsIgnoresCheckbox,
+                           title: "Use VCS Ignores",
+                           action: #selector(GeneralPref.defaultUsesVcsIgnoresAction))
 
     let whenLaunching = self.openWhenLaunchingCheckbox
     let onReactivation = self.openOnReactivationCheckbox
@@ -137,13 +143,15 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
       markdown: "Put the executable `vimr` in your `$PATH` and execute `vimr -h` for help."
     )
 
+    let vcsIg = self.defaultUsesVcsIgnoresCheckbox
+
     self.addSubview(paneTitle)
     self.addSubview(openUntitledWindowTitle)
     self.addSubview(whenLaunching)
     self.addSubview(onReactivation)
 
+    self.addSubview(vcsIg)
     self.addSubview(ignoreListTitle)
-    self.addSubview(ignoreField)
     self.addSubview(ignoreInfo)
 
     self.addSubview(afterLastWindowTitle)
@@ -175,17 +183,16 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     lastWindow.autoPinEdge(.top, to: .bottom, of: onReactivation, withOffset: 18)
     lastWindow.autoPinEdge(.left, to: .right, of: afterLastWindowTitle, withOffset: 5)
 
-    ignoreListTitle.autoAlignAxis(.baseline, toSameAxisOf: ignoreField)
+    ignoreListTitle.autoAlignAxis(.baseline, toSameAxisOf: vcsIg)
     ignoreListTitle.autoPinEdge(.right, to: .right, of: openUntitledWindowTitle)
     ignoreListTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
 
-    ignoreField.autoPinEdge(.top, to: .bottom, of: lastWindow, withOffset: 18)
-    ignoreField.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
-    ignoreField.autoPinEdge(.left, to: .right, of: ignoreListTitle, withOffset: 5)
+    vcsIg.autoPinEdge(.top, to: .bottom, of: lastWindow, withOffset: 18)
+    vcsIg.autoPinEdge(.left, to: .right, of: ignoreListTitle, withOffset: 5)
 
-    ignoreInfo.autoPinEdge(.top, to: .bottom, of: ignoreField, withOffset: 5)
+    ignoreInfo.autoPinEdge(.top, to: .bottom, of: vcsIg, withOffset: 5)
     ignoreInfo.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
-    ignoreInfo.autoPinEdge(.left, to: .right, of: ignoreListTitle, withOffset: 5)
+    ignoreInfo.autoPinEdge(.left, to: .left, of: vcsIg)
 
     cliToolTitle.autoAlignAxis(.baseline, toSameAxisOf: cliToolButton)
     cliToolTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
@@ -232,6 +239,10 @@ extension GeneralPref {
         self.alert(title: "Error copying 'vimr'", info: err.localizedDescription)
       }
     }
+  }
+
+  @objc func defaultUsesVcsIgnoresAction(_ sender: NSButton) {
+    self.emit(.setDefaultUsesVcsIgnores(sender.boolState))
   }
 
   @objc func openUntitledWindowWhenLaunchingAction(_ sender: NSButton) {

@@ -28,6 +28,9 @@ class GeneralPrefReducer: ReducerType {
       state.openQuickly.ignorePatterns = patterns
       state.openQuickly.ignoreToken = Token()
 
+    case let .setDefaultUsesVcsIgnores(value):
+      state.openQuickly.defaultUsesVcsIgnores = value
+
     }
 
     return (state, pair.action, true)

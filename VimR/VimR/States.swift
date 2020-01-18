@@ -81,9 +81,11 @@ extension OpenQuicklyWindow {
 
     enum CodingKeys: String, CodingKey {
 
+      case defaultUsesVcsIgnore = "default-uses-vcs-ignores"
       case ignorePatterns = "ignore-patterns"
     }
 
+    var defaultUsesVcsIgnores = true
     var ignorePatterns = State.defaultIgnorePatterns
     var ignoreToken = Token()
 
@@ -96,11 +98,17 @@ extension OpenQuicklyWindow {
       } else {
         self.ignorePatterns = State.defaultIgnorePatterns
       }
+
+      self.defaultUsesVcsIgnores = try container.decode(
+        forKey: .defaultUsesVcsIgnore,
+        default: OpenQuicklyWindow.State.default.defaultUsesVcsIgnores
+      )
     }
 
     func encode(to encoder: Encoder) throws {
       var container = encoder.container(keyedBy: CodingKeys.self)
       try container.encode(FileItemIgnorePattern.toString(self.ignorePatterns), forKey: .ignorePatterns)
+      try container.encode(self.defaultUsesVcsIgnores, forKey: .defaultUsesVcsIgnore)
     }
 
     private init() {
