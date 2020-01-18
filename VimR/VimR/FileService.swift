@@ -20,6 +20,16 @@ class FileService {
     }
   }
 
+  var useVcsIgnores = true {
+    willSet { self.stopScanScore() }
+    didSet {
+      self.queue.sync {
+        self.deleteAllFiles()
+        self.ensureRootFileInStore()
+      }
+    }
+  }
+
   let coreDataStack: CoreDataStack
 
   func stopScanScore() {

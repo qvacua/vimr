@@ -30,6 +30,11 @@ class OpenQuicklyWindow: NSObject,
   func cleanUp() { self.fileServicesPerRootUrl.removeAll() }
 
   @objc func useVcsAction(_: Any?) {
+    self.scanToken = Token()
+    self.currentFileService?.stopScanScore()
+    self.endProgress()
+    self.unsortedScoredUrls.removeAll()
+
     self.emit(.setUsesVcsIgnores(self.useVcsIgnoresCheckBox.boolState))
   }
 
@@ -101,9 +106,14 @@ class OpenQuicklyWindow: NSObject,
     // The window is open and the user changed the setting
     if self.usesVcsIgnores != curWinState.usesVcsIgnores && windowIsOpen {
       self.usesVcsIgnores = curWinState.usesVcsIgnores
+      self.useVcsIgnoresCheckBox.boolState = curWinState.usesVcsIgnores
 
-      self.reset()
-      self.prepareSearch(curWinState: curWinState)
+      self.scanToken = Token()
+      self.currentFileService?.useVcsIgnores = self.usesVcsIgnores
+      self.unsortedScoredUrls.removeAll()
+
+      let pattern = self.searchField.stringValue
+      if pattern.count >= 2 { self.scanAndScore(pattern) }
 
       return
     }
@@ -119,6 +129,7 @@ class OpenQuicklyWindow: NSObject,
   }
 
   private func prepareSearch(curWinState: MainWindow.State) {
+    self.usesVcsIgnores = curWinState.usesVcsIgnores
     self.useVcsIgnoresCheckBox.boolState = curWinState.usesVcsIgnores
 
     let cwd = curWinState.cwd
