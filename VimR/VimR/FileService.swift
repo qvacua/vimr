@@ -239,15 +239,14 @@ class FileService {
     callback: ScoredUrlsCallback
   ) {
     let count = files.count
-    let chunkSize = 100
 
-    let chunkCount = Int(ceil(Double(count) / Double(chunkSize)))
+    let chunkCount = Int(ceil(Double(count) / Double(fuzzyMatchChunkSize)))
     DispatchQueue.concurrentPerform(iterations: chunkCount) { chunkIndex in
       let matcher = matcherPool.request()
       defer { matcherPool.giveBack(matcher) }
 
-      let start = Swift.min(chunkIndex * chunkSize, count)
-      let end = Swift.min(start + chunkSize, count)
+      let start = Swift.min(chunkIndex * fuzzyMatchChunkSize, count)
+      let end = Swift.min(start + fuzzyMatchChunkSize, count)
 
       if self.shouldStop() { return }
 
@@ -427,4 +426,5 @@ class FileService {
   private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.service)
 }
 
+private let fuzzyMatchChunkSize = 100
 private let coreDataBatchSize = 10000
