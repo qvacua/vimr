@@ -80,7 +80,6 @@ extension OpenQuicklyWindow {
       case ignorePatterns = "ignore-patterns"
     }
 
-    var cwd = FileUtils.userHomeUrl
     var ignorePatterns = State.defaultIgnorePatterns
     var ignoreToken = Token()
 
@@ -281,6 +280,8 @@ extension MainWindow {
     var nvimArgs: [String]?
     var cliPipePath: String?
     var envDict: [String: String]?
+
+    var usesVcsIgnores = true
 
     var isLeftOptionMeta = false
     var isRightOptionMeta = false

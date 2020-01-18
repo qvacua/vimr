@@ -17,7 +17,6 @@ class OpenQuicklyReducer: ReducerType {
     var appState = pair.state
 
     appState.openQuickly.open = false
-    appState.openQuickly.cwd = FileUtils.userHomeUrl
 
     switch pair.action {
 
@@ -47,16 +46,10 @@ class OpenQuicklyReducer: ReducerType {
       case .openQuickly:
         var appState = pair.state
 
-        guard let uuid = appState.currentMainWindowUuid else {
-          return pair
-        }
-
-        guard let cwd = appState.mainWindows[uuid]?.cwd else {
-          return pair
-        }
+        guard let uuid = appState.currentMainWindowUuid,
+              appState.mainWindows[uuid]?.cwd != nil else { return pair }
 
         appState.openQuickly.open = true
-        appState.openQuickly.cwd = cwd
 
         return (appState, pair.action, true)
 

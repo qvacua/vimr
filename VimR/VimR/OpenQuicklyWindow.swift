@@ -47,8 +47,8 @@ class OpenQuicklyWindow: NSObject,
   private let emit: (Action) -> Void
   private let disposeBag = DisposeBag()
 
-  private(set) var cwd = FileUtils.userHomeUrl
   private var cwdPathCompsCount = 0
+  private var usesVcsIgnores = true
   private var scanToken = Token()
 
   private var fileServicesPerRootUrl: [URL: FileService] = [:]
@@ -78,6 +78,13 @@ class OpenQuicklyWindow: NSObject,
 
   private func subscription(_ state: StateType) {
     self.updateRootUrls(state: state)
+    guard let curWinUuid = state.currentMainWindowUuid,
+          let curWinState = state.mainWindows[curWinUuid] else {
+      self.windowController.close()
+      return
+    }
+
+    Swift.print(curWinState.usesVcsIgnores)
 
     guard state.openQuickly.open else {
       self.windowController.close()
@@ -89,23 +96,25 @@ class OpenQuicklyWindow: NSObject,
       return
     }
 
-    self.cwd = state.openQuickly.cwd
-    self.cwdPathCompsCount = self.cwd.pathComponents.count
-    self.cwdControl.url = self.cwd
+    let cwd = curWinState.cwd
+    self.cwdPathCompsCount = cwd.pathComponents.count
+    self.cwdControl.url = cwd
 
     self.searchField.rx
       .text.orEmpty
       .throttle(.milliseconds(1 * 500), latest: true, scheduler: MainScheduler.instance)
       .distinctUntilChanged()
       .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { [weak self] pattern in self?.scanAndScore(pattern) })
+      .subscribe(onNext: { [weak self] pattern in
+        guard let fileService = self?.fileServicesPerRootUrl[cwd] else { return }
+        self?.scanAndScore(pattern, with: fileService)
+      })
       .disposed(by: self.disposeBag)
 
     self.windowController.showWindow(self)
   }
 
-  private func scanAndScore(_ pattern: String) {
-    guard let fileService = self.fileServicesPerRootUrl[self.cwd] else { return }
+  private func scanAndScore(_ pattern: String, with fileService: FileService) {
     fileService.stopScanScore()
 
     guard pattern.count >= 2 else {
@@ -135,7 +144,7 @@ class OpenQuicklyWindow: NSObject,
 
   private func updateRootUrls(state: AppState) {
     let urlsToMonitor = Set(state.mainWindows.map { $1.cwd })
-    let currentUrls =  Set(self.fileServicesPerRootUrl.map { url, _ in url })
+    let currentUrls = Set(self.fileServicesPerRootUrl.map { url, _ in url })
 
     let newUrls = urlsToMonitor.subtracting(currentUrls)
     let obsoleteUrls = currentUrls.subtracting(urlsToMonitor)
