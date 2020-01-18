@@ -231,6 +231,17 @@ extension NSOutlineView {
   }
 }
 
+extension NSTextField {
+
+  static func defaultTitleTextField() -> NSTextField {
+    let field = NSTextField(forAutoLayout: ())
+    field.backgroundColor = NSColor.clear;
+    field.isEditable = false;
+    field.isBordered = false;
+    return field
+  }
+}
+
 extension NSScrollView {
 
   static func standardScrollView() -> NSScrollView {

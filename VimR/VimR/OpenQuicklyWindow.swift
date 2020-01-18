@@ -31,7 +31,7 @@ class OpenQuicklyWindow: NSObject,
 
     super.init()
 
-    self.window.delegate = self
+    self.configureWindow()
     self.addViews()
 
     source
@@ -55,17 +55,27 @@ class OpenQuicklyWindow: NSObject,
   private let scoredUrlsController = NSArrayController()
 
   private let windowController: NSWindowController
+  private let titleField = NSTextField.defaultTitleTextField()
+  private let useVcsIgnores = NSButton(forAutoLayout: ())
   private let searchField = NSTextField(forAutoLayout: ())
   private let progressIndicator = NSProgressIndicator(forAutoLayout: ())
   private let cwdControl = NSPathControl(forAutoLayout: ())
   private let fileView = NSTableView.standardTableView()
-  private let vcsIgnoreCheckbox = NSButton(forAutoLayout: ())
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem,
                           category: Defs.LoggerCategory.uiComponents)
 
   private var rootUrls: Set<URL> { Set(self.fileServicesPerRootUrl.map { url, _ in url }) }
   private var window: NSWindow { self.windowController.window! }
+
+  private func configureWindow() {
+    [
+      NSWindow.ButtonType.closeButton,
+      NSWindow.ButtonType.miniaturizeButton,
+      NSWindow.ButtonType.zoomButton,
+    ].forEach { self.window.standardWindowButton($0)?.isHidden = true }
+    self.window.delegate = self
+  }
 
   private func subscription(_ state: StateType) {
     self.updateRootUrls(state: state)
@@ -147,6 +157,15 @@ class OpenQuicklyWindow: NSObject,
   }
 
   private func addViews() {
+    let useVcsIg = self.useVcsIgnores
+    useVcsIg.setButtonType(.switch)
+    useVcsIg.controlSize = .mini
+    useVcsIg.title = "Use VCS Ignores"
+
+    let title = self.titleField
+    title.font = .boldSystemFont(ofSize: 11)
+    title.stringValue = "Open Quickly"
+
     let searchField = self.searchField
     searchField.rx.delegate.setForwardToDelegate(self, retainDelegate: false)
 
@@ -184,14 +203,22 @@ class OpenQuicklyWindow: NSObject,
     cwdControl.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
     let contentView = self.window.contentView!
+    contentView.addSubview(title)
+    contentView.addSubview(useVcsIg)
     contentView.addSubview(searchField)
     contentView.addSubview(progressIndicator)
     contentView.addSubview(fileScrollView)
     contentView.addSubview(cwdControl)
 
-    searchField.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
-    searchField.autoPinEdge(toSuperviewEdge: .right, withInset: 8)
-    searchField.autoPinEdge(toSuperviewEdge: .left, withInset: 8)
+    title.autoPinEdge(toSuperviewEdge: .left, withInset: 8)
+    title.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
+
+    useVcsIg.autoAlignAxis(.horizontal, toSameAxisOf: title)
+    useVcsIg.autoPinEdge(toSuperviewEdge: .right, withInset: 8)
+
+    searchField.autoPinEdge(.top, to: .bottom, of: useVcsIg, withOffset: 8)
+    searchField.autoPinEdge(.left, to: .left, of: title)
+    searchField.autoPinEdge(.right, to: .right, of: useVcsIg)
 
     fileScrollView.autoPinEdge(.top, to: .bottom, of: searchField, withOffset: 8)
     fileScrollView.autoPinEdge(toSuperviewEdge: .left, withInset: -1)
