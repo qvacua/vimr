@@ -18,7 +18,7 @@ class FuzzySearchFileMonitor {
       flags: [],
       handler: { [weak self] event in
         if event.flag == .historyDone {
-          self?.log.debug("Not firing first event (.historyDone): \(event)")
+          self?.log.info("Not firing first event (.historyDone): \(event)")
           return
         }
 

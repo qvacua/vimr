@@ -32,6 +32,14 @@ class FuzzySearchService {
 
   let coreDataStack: CoreDataStack
 
+  func cleanUp() {
+    do {
+      try self.coreDataStack.deleteStore()
+    } catch {
+      self.log.error("Could not delete core data store: \(error)")
+    }
+  }
+
   func stopScanScore() {
     self.stopLock.lock()
     defer { self.stopLock.unlock() }
@@ -46,13 +54,12 @@ class FuzzySearchService {
     callback: @escaping ScoredUrlsCallback
   ) {
     self.queue.async {
-      print("Queue start: \(Thread.current)")
+      self.log.info("Starting fuzzy search for \(pattern) in \(self.root)")
       beginCallback()
       defer { endCallback() }
 
       let ctx = self.writeContext
       ctx.performAndWait {
-        print("starting scan \(Thread.current)")
         self.stopLock.lock()
         self.stop = false
         self.stopLock.unlock()
@@ -64,11 +71,9 @@ class FuzzySearchService {
         if self.shouldStop() { return }
 
         self.scanScoreFilesNeedScanning(matcherPool: matcherPool, context: ctx, callback: callback)
-
-        print("end scan")
       }
 
-      print("Queue end")
+      self.log.info("Finished fuzzy search for \(pattern) in \(self.root)")
     }
   }
 
@@ -323,7 +328,7 @@ class FuzzySearchService {
         do {
           let fetchResult = try ctx.fetch(req)
           guard let folder = fetchResult.first else {
-            self.log.info("File with url \(folderUrl) not found, doing nothing")
+            self.log.debug("File with url \(folderUrl) not found, doing nothing")
             return
           }
 

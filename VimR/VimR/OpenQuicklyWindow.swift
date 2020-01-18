@@ -27,7 +27,10 @@ class OpenQuicklyWindow: NSObject,
   @objc dynamic private(set) var unsortedScoredUrls = [ScoredUrl]()
 
   // Call this only when quitting
-  func cleanUp() { self.searchServicePerRootUrl.removeAll() }
+  func cleanUp() {
+    self.searchServicePerRootUrl.values.forEach { $0.cleanUp() }
+    self.searchServicePerRootUrl.removeAll()
+  }
 
   @objc func useVcsAction(_: Any?) {
     self.scanToken = Token()
