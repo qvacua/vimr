@@ -23,7 +23,7 @@ class OpenQuicklyWindow: NSObject,
     case close
   }
 
-  @objc dynamic var fileItems = [ScoredUrl]()
+  @objc dynamic var unsortedScoredUrls = [ScoredUrl]()
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
@@ -87,7 +87,7 @@ class OpenQuicklyWindow: NSObject,
   private var fileServicesPerRootUrl: [URL: FileService] = [:]
   private var rootUrls: Set<URL> { Set(self.fileServicesPerRootUrl.map { url, _ in url }) }
 
-  private let fileViewItemsController = NSArrayController()
+  private let scoredUrlsController = NSArrayController()
 
   private let windowController: NSWindowController
 
@@ -109,19 +109,19 @@ class OpenQuicklyWindow: NSObject,
     fileService.stopScanScore()
 
     guard pattern.count >= 2 else {
-      self.fileItems.removeAll()
+      self.unsortedScoredUrls.removeAll()
       return
     }
 
     self.scanToken = Token()
     let localToken = self.scanToken
 
-    self.fileItems.removeAll()
+    self.unsortedScoredUrls.removeAll()
     fileService.scanScore(for: pattern) { scoredUrls in
       DispatchQueue.main.async {
         guard localToken == self.scanToken else { return }
-        self.fileItems.append(contentsOf: scoredUrls)
-        self.countField.stringValue = "\(self.fileItems.count) Items"
+        self.unsortedScoredUrls.append(contentsOf: scoredUrls)
+        self.countField.stringValue = "\(self.unsortedScoredUrls.count) Items"
       }
     }
   }
@@ -161,13 +161,13 @@ class OpenQuicklyWindow: NSObject,
     let fileView = self.fileView
     fileView.intercellSpacing = CGSize(width: 4, height: 4)
 
-    let c = self.fileViewItemsController
+    let c = self.scoredUrlsController
     c.avoidsEmptySelection = false
     c.preservesSelection = true
     c.objectClass = ScoredUrl.self
     c.sortDescriptors = [NSSortDescriptor(key: "score", ascending: false)]
     c.automaticallyRearrangesObjects = true
-    c.bind(.contentArray, to: self, withKeyPath: "fileItems")
+    c.bind(.contentArray, to: self, withKeyPath: "unsortedScoredUrls")
 
     fileView.bind(.content, to: c, withKeyPath: "arrangedObjects")
     fileView.bind(.selectionIndexes, to: c, withKeyPath: "selectionIndexes")
@@ -240,7 +240,12 @@ extension OpenQuicklyWindow {
     )?.reset()
     let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
-    let url = self.fileItems[row].url
+    guard let sortedUrls = self.scoredUrlsController.arrangedObjects as? Array<ScoredUrl> else {
+      self.log.error("Could not convert arranged objects to [ScoredUrl].")
+      return nil
+    }
+
+    let url = sortedUrls[row].url
     cell.attributedText = self.rowText(for: url as URL)
     cell.image = FileUtils.icon(forUrl: url)
 
@@ -283,7 +288,7 @@ extension OpenQuicklyWindow {
 
     case NSSelectorFromString("insertNewline:"):
       // TODO open the url
-      self.emit(.open(self.fileItems[self.fileView.selectedRow].url))
+      self.emit(.open(self.unsortedScoredUrls[self.fileView.selectedRow].url))
       self.window.performClose(self)
       return true
 
@@ -330,7 +335,7 @@ extension OpenQuicklyWindow {
   func windowWillClose(_: Notification) {
     self.endProgress()
 
-    self.fileItems.removeAll()
+    self.unsortedScoredUrls.removeAll()
 
     self.searchField.stringValue = ""
     self.countField.stringValue = "0 items"
