@@ -45,6 +45,8 @@ class MainWindow: NSObject,
   var repIcon: NSButton?
   var titleView: NSTextField?
 
+  var isDirty = false
+  var closeWindow = false
   var isClosing = false
   let cliPipePath: String?
 

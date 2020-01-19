@@ -52,6 +52,7 @@ extension MainWindow {
   }
 
   func set(dirtyStatus: Bool) {
+    self.isDirty = dirtyStatus
     self.emit(self.uuidAction(for: .setDirtyStatus(dirtyStatus)))
   }
 
@@ -151,11 +152,34 @@ extension MainWindow {
   }
 
   func windowShouldClose(_: NSWindow) -> Bool {
+    defer { self.closeWindow = false }
+
     if (self.neoVimView.isBlocked().syncValue() ?? false) {
       let alert = NSAlert()
       alert.messageText = "Nvim is waiting for your input."
       alert.alertStyle = .informational
       alert.runModal()
+      return false
+    }
+
+    if self.closeWindow {
+      if self.isDirty {
+        let alert = NSAlert()
+        alert.addButton(withTitle: "Cancel")
+        let discardAndCloseButton = alert.addButton(withTitle: "Discard and Close")
+        alert.messageText = "The current buffer has unsaved changes!"
+        alert.alertStyle = .warning
+        discardAndCloseButton.keyEquivalentModifierMask = .command
+        discardAndCloseButton.keyEquivalent = "d"
+        alert.beginSheetModal(for: self.window, completionHandler: { response in
+          if response == .alertSecondButtonReturn {
+            try? self.neoVimView.quitNeoVimWithoutSaving().wait()
+          }
+        })
+      } else {
+        try? self.neoVimView.quitNeoVimWithoutSaving().wait()
+      }
+
       return false
     }
 

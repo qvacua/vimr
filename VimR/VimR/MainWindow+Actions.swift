@@ -158,7 +158,8 @@ extension MainWindow {
   }
 
   @IBAction func closeWindow(_ sender: Any?) {
-
+    self.closeWindow = true
+    self.window.performClose(nil)
   }
 
   @IBAction func saveDocument(_ sender: Any?) {
