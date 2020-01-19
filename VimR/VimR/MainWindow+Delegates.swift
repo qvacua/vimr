@@ -52,7 +52,6 @@ extension MainWindow {
   }
 
   func set(dirtyStatus: Bool) {
-    self.isDirty = dirtyStatus
     self.emit(self.uuidAction(for: .setDirtyStatus(dirtyStatus)))
   }
 
@@ -163,19 +162,12 @@ extension MainWindow {
     }
 
     if self.closeWindow {
-      if self.isDirty {
-        let alert = NSAlert()
-        alert.addButton(withTitle: "Cancel")
-        let discardAndCloseButton = alert.addButton(withTitle: "Discard and Close")
-        alert.messageText = "The current buffer has unsaved changes!"
-        alert.alertStyle = .warning
-        discardAndCloseButton.keyEquivalentModifierMask = .command
-        discardAndCloseButton.keyEquivalent = "d"
-        alert.beginSheetModal(for: self.window, completionHandler: { response in
+      if self.neoVimView.hasDirtyBuffers().syncValue() == true {
+        self.discardCloseActionAlert().beginSheetModal(for: self.window) { response in
           if response == .alertSecondButtonReturn {
             try? self.neoVimView.quitNeoVimWithoutSaving().wait()
           }
-        })
+        }
       } else {
         try? self.neoVimView.quitNeoVimWithoutSaving().wait()
       }
@@ -188,6 +180,16 @@ extension MainWindow {
       return false
     }
 
+    self.discardCloseActionAlert().beginSheetModal(for: self.window) { response in
+      if response == .alertSecondButtonReturn {
+        try? self.neoVimView.closeCurrentTabWithoutSaving().wait()
+      }
+    }
+
+    return false
+  }
+
+  private func discardCloseActionAlert() -> NSAlert {
     let alert = NSAlert()
     alert.addButton(withTitle: "Cancel")
     let discardAndCloseButton = alert.addButton(withTitle: "Discard and Close")
@@ -195,13 +197,8 @@ extension MainWindow {
     alert.alertStyle = .warning
     discardAndCloseButton.keyEquivalentModifierMask = .command
     discardAndCloseButton.keyEquivalent = "d"
-    alert.beginSheetModal(for: self.window, completionHandler: { response in
-      if response == .alertSecondButtonReturn {
-        try? self.neoVimView.closeCurrentTabWithoutSaving().wait()
-      }
-    })
 
-    return false
+    return alert
   }
 }
 

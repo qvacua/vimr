@@ -13,6 +13,10 @@ extension NvimView {
     return self.api.getMode().map { dict in dict["blocking"]?.boolValue ?? false }
   }
 
+  public func hasDirtyBuffers() -> Single<Bool> {
+    return self.api.getDirtyStatus()
+  }
+
   public func waitTillNvimExits() {
     self.nvimExitedCondition.wait(for: 5)
   }
