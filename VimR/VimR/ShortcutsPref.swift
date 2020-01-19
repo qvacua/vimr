@@ -17,19 +17,11 @@ class ShortcutsPref: PrefPane,
 
   @objc dynamic var content = [ShortcutItem]()
 
-  override var displayName: String {
-    return "Shortcuts"
-  }
+  override var displayName: String { "Shortcuts" }
 
-  override var pinToContainer: Bool {
-    return true
-  }
+  override var pinToContainer: Bool { true }
 
-  required init(
-    source: Observable<StateType>,
-    emitter: ActionEmitter,
-    state: StateType
-  ) {
+  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.shortcutsDefaultsController = NSUserDefaultsController(
       defaults: self.shortcutsUserDefaults,
       initialValues: nil
@@ -37,14 +29,12 @@ class ShortcutsPref: PrefPane,
 
     super.init(frame: .zero)
 
-    initShortcutUserDefaults()
+    self.initShortcutUserDefaults()
 
     self.addViews()
 
     self.initShortcutItems()
-    if let children = self.shortcutItemsRoot.children {
-      self.content.append(contentsOf: children)
-    }
+    if let children = self.shortcutItemsRoot.children { self.content.append(contentsOf: children) }
 
     self.initMenuItemsBindings()
     self.initOutlineViewBindings()
@@ -52,25 +42,19 @@ class ShortcutsPref: PrefPane,
     self.shortcutList.expandItem(nil, expandChildren: true)
   }
 
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
   private let shortcutList = NSOutlineView.standardOutlineView()
   private let shortcutScrollView = NSScrollView.standardScrollView()
   private let resetButton = NSButton(forAutoLayout: ())
 
   private let treeController = NSTreeController()
-  private let shortcutItemsRoot = ShortcutItem(
-    title: "root", isLeaf: false, item: nil
-  )
+  private let shortcutItemsRoot = ShortcutItem(title: "root", isLeaf: false, item: nil)
 
   private let keyEqTransformer = SRKeyEquivalentTransformer()
   private let keyEqModTransformer = SRKeyEquivalentModifierMaskTransformer()
 
-  private let shortcutsUserDefaults = UserDefaults(
-    suiteName: "com.qvacua.VimR.menuitems"
-  )
+  private let shortcutsUserDefaults = UserDefaults(suiteName: "com.qvacua.VimR.menuitems")
   private let shortcutsDefaultsController: NSUserDefaultsController
 
   private func initShortcutUserDefaults() {
@@ -88,16 +72,14 @@ class ShortcutsPref: PrefPane,
     self.treeController.objectClass = ShortcutItem.self
     self.treeController.avoidsEmptySelection = false
     self.treeController.preservesSelection = true
-    self.treeController.sortDescriptors = [
-      NSSortDescriptor(key: "title", ascending: true)
-    ]
+    self.treeController.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
     self.treeController.bind(.contentArray, to: self, withKeyPath: "content")
-    self.shortcutList.bind(.content,
-                           to: self.treeController,
-                           withKeyPath: "arrangedObjects")
-    self.shortcutList.bind(.selectionIndexPaths,
-                           to: self.treeController,
-                           withKeyPath: "selectionIndexPaths")
+    self.shortcutList.bind(.content, to: self.treeController, withKeyPath: "arrangedObjects")
+    self.shortcutList.bind(
+      .selectionIndexPaths,
+      to: self.treeController,
+      withKeyPath: "selectionIndexPaths"
+    )
   }
 
   private func traverseMenuItems(with fn: (String, NSMenuItem) -> Void) {
@@ -109,9 +91,7 @@ class ShortcutsPref: PrefPane,
         continue
       }
 
-      guard let menuItem = item.item, let identifier = item.identifier else {
-        continue
-      }
+      guard let menuItem = item.item, let identifier = item.identifier else { continue }
 
       fn(identifier, menuItem)
     }
@@ -150,9 +130,7 @@ class ShortcutsPref: PrefPane,
       guard let entry = queue.popLast() else { break }
 
       if !entry.shortcutItem.isLeaf
-         || entry.shortcutItem
-              .identifier?
-              .hasPrefix("com.qvacua.vimr.menuitems.") == true {
+         || entry.shortcutItem.identifier?.hasPrefix("com.qvacua.vimr.menuitems.") == true {
 
         entry.parent.children?.append(entry.shortcutItem)
       }
@@ -165,9 +143,11 @@ class ShortcutsPref: PrefPane,
           .map { menuItem in
             (
               parent: entry.shortcutItem,
-              shortcutItem: ShortcutItem(title: menuItem.title,
-                                         isLeaf: !menuItem.hasSubmenu,
-                                         item: menuItem)
+              shortcutItem: ShortcutItem(
+                title: menuItem.title,
+                isLeaf: !menuItem.hasSubmenu,
+                item: menuItem
+              )
             )
           }
         queue.append(contentsOf: shortcutChildItems)
@@ -198,13 +178,9 @@ class ShortcutsPref: PrefPane,
 
     paneTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 18)
     paneTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
-    paneTitle.autoPinEdge(
-      toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual
-    )
+    paneTitle.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
 
-    shortcutScrollView.autoPinEdge(
-      .top, to: .bottom, of: paneTitle, withOffset: 18
-    )
+    shortcutScrollView.autoPinEdge(.top, to: .bottom, of: paneTitle, withOffset: 18)
     shortcutScrollView.autoPinEdge(.left, to: .left, of: paneTitle)
     shortcutScrollView.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
 
@@ -243,9 +219,7 @@ extension ShortcutsPref {
 
   private func isUppercase(_ str: String) -> Bool {
     for c in str.unicodeScalars {
-      if !CharacterSet.uppercaseLetters.contains(c) {
-        return false
-      }
+      if !CharacterSet.uppercaseLetters.contains(c) { return false }
     }
 
     return true
@@ -258,8 +232,7 @@ extension ShortcutsPref {
     let view = self.shortcutList.makeView(
       withIdentifier: NSUserInterfaceItemIdentifier("shortcut-row-view"),
       owner: self
-    ) as? ShortcutTableRow
-               ?? ShortcutTableRow(withIdentifier: "shortcut-row-view")
+    ) as? ShortcutTableRow ?? ShortcutTableRow(withIdentifier: "shortcut-row-view")
 
     return view
   }
@@ -272,8 +245,7 @@ extension ShortcutsPref {
     let cellView = self.shortcutList.makeView(
       withIdentifier: NSUserInterfaceItemIdentifier("shortcut-cell-view"),
       owner: self
-    ) as? ShortcutTableCell
-                   ?? ShortcutTableCell(withIdentifier: "shortcut-cell-view")
+    ) as? ShortcutTableCell ?? ShortcutTableCell(withIdentifier: "shortcut-cell-view")
 
     let repObj = (item as? NSTreeNode)?.representedObject
     guard let item = repObj as? ShortcutItem else { return nil }
@@ -289,38 +261,25 @@ extension ShortcutsPref {
     }
 
     cellView.customized = !self.shortcutsAreEqual(
-      self.shortcutsDefaultsController
-        .value(forKeyPath: "values.\(identifier)"),
+      self.shortcutsDefaultsController.value(forKeyPath: "values.\(identifier)"),
       defaultShortcuts[identifier]
     )
     cellView.layoutViews()
     cellView.setDelegateOfRecorder(self)
-    cellView.bindRecorder(
-      toKeyPath: "values.\(identifier)",
-      to: self.shortcutsDefaultsController
-    )
+    cellView.bindRecorder(toKeyPath: "values.\(identifier)", to: self.shortcutsDefaultsController)
 
     return cellView
   }
 
-  func outlineView(_: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
-    return 28
-  }
+  func outlineView(_: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat { 28 }
 
   private func shortcutsAreEqual(_ lhs: Any?, _ rhs: Any?) -> Bool {
-    if lhs == nil && rhs == nil {
-      return true
-    }
+    if lhs == nil && rhs == nil { return true }
 
     guard let lhsShortcut = lhs as? [String: Any],
-          let rhsShortcut = rhs as? [String: Any]
-      else {
-      return false
-    }
+          let rhsShortcut = rhs as? [String: Any] else { return false }
 
-    if lhsShortcut.isEmpty && rhsShortcut.isEmpty {
-      return true
-    }
+    if lhsShortcut.isEmpty && rhsShortcut.isEmpty { return true }
 
     if lhsShortcut[SRShortcutCharacters] as? String
        != rhsShortcut[SRShortcutCharacters] as? String {
@@ -332,8 +291,7 @@ extension ShortcutsPref {
       return false
     }
 
-    if lhsShortcut[SRShortcutKeyCode] as? Int
-       != rhsShortcut[SRShortcutKeyCode] as? Int {
+    if lhsShortcut[SRShortcutKeyCode] as? Int != rhsShortcut[SRShortcutKeyCode] as? Int {
       return false
     }
 

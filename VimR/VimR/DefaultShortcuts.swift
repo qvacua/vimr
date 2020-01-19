@@ -50,6 +50,12 @@ let defaultShortcuts: [String: [String: Any]] = [
     SRShortcutKeyCode: 13,
     SRShortcutModifierFlagsKey: 1048840,
   ],
+  "com.qvacua.vimr.menuitems.file.close-window": [
+    SRShortcutCharacters: "w",
+    SRShortcutCharactersIgnoringModifiers: "W",
+    SRShortcutKeyCode: 13,
+    SRShortcutModifierFlagsKey: 1179914,
+  ],
   "com.qvacua.vimr.menuitems.file.new": [
     SRShortcutCharacters: "n",
     SRShortcutCharactersIgnoringModifiers: "n",
