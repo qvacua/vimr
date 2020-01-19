@@ -23,9 +23,7 @@ class MainWindow: NSObject,
   let emit: (UuidAction<Action>) -> Void
 
   let windowController: NSWindowController
-  var window: NSWindow {
-    return self.windowController.window!
-  }
+  var window: NSWindow { self.windowController.window! }
 
   let workspace: Workspace
   let neoVimView: NvimView
@@ -504,11 +502,11 @@ class MainWindow: NSObject,
   private func showInitError() {
     let notification = NSUserNotification()
     notification.title = "Error during initialization"
-    notification
-      .informativeText = """
-                           There was an error during the initialization of NeoVim.
-                           Use :messages to view the error messages.
-                         """
+    notification.informativeText =
+    """
+    There was an error during the initialization of NeoVim.
+    Use :messages to view the error messages.
+    """
 
     NSUserNotificationCenter.default.deliver(notification)
   }

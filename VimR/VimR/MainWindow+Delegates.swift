@@ -151,6 +151,14 @@ extension MainWindow {
   }
 
   func windowShouldClose(_: NSWindow) -> Bool {
+    if (self.neoVimView.isBlocked().syncValue() ?? false) {
+      let alert = NSAlert()
+      alert.messageText = "Nvim is waiting for your input."
+      alert.alertStyle = .informational
+      alert.runModal()
+      return false
+    }
+
     guard (self.neoVimView.isCurrentBufferDirty().syncValue() ?? false) else {
       try? self.neoVimView.closeCurrentTab().wait()
       return false

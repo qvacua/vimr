@@ -80,9 +80,11 @@ class UiRoot: UiComponent {
   func prepareQuit() {
     self.mainWindows.values.forEach { $0.prepareClosing() }
 
-    try? Completable
-      .concat(self.mainWindows.values.map { $0.quitNeoVimWithoutSaving() })
-      .wait()
+    if !self.mainWindows.isEmpty {
+      try? Completable
+        .concat(self.mainWindows.values.map { $0.quitNeoVimWithoutSaving() })
+        .wait()
+    }
 
     self.mainWindows.values.forEach { $0.waitTillNvimExits() }
     self.openQuicklyWindow.cleanUp()
