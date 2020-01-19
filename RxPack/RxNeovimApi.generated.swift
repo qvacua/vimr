@@ -824,7 +824,7 @@ extension RxNeovimApi {
 
   func bufAddHighlight(
     buffer: RxNeovimApi.Buffer,
-    ns_id: Int,
+    src_id: Int,
     hl_group: String,
     line: Int,
     col_start: Int,
@@ -834,7 +834,7 @@ extension RxNeovimApi {
 
     let params: [RxNeovimApi.Value] = [
         .int(Int64(buffer.handle)),
-        .int(Int64(ns_id)),
+        .int(Int64(src_id)),
         .string(hl_group),
         .int(Int64(line)),
         .int(Int64(col_start)),
@@ -922,7 +922,7 @@ extension RxNeovimApi {
 
   func bufSetVirtualText(
     buffer: RxNeovimApi.Buffer,
-    ns_id: Int,
+    src_id: Int,
     line: Int,
     chunks: RxNeovimApi.Value,
     opts: Dictionary<String, RxNeovimApi.Value>,
@@ -931,7 +931,7 @@ extension RxNeovimApi {
 
     let params: [RxNeovimApi.Value] = [
         .int(Int64(buffer.handle)),
-        .int(Int64(ns_id)),
+        .int(Int64(src_id)),
         .int(Int64(line)),
         chunks,
         .map(opts.mapToDict({ (Value.string($0), $1) })),
@@ -960,13 +960,13 @@ extension RxNeovimApi {
 
   func bufGetVirtualText(
     buffer: RxNeovimApi.Buffer,
-    lnum: Int,
+    line: Int,
     checkBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
 
     let params: [RxNeovimApi.Value] = [
         .int(Int64(buffer.handle)),
-        .int(Int64(lnum)),
+        .int(Int64(line)),
     ]
 
     func transform(_ value: Value) throws -> RxNeovimApi.Value {
@@ -1459,6 +1459,36 @@ extension RxNeovimApi {
 
     return self
       .rpc(method: "nvim_get_hl_by_id", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
+  func getHlIdByName(
+    name: String,
+    checkBlocked: Bool = true
+  ) -> Single<Int> {
+
+    let params: [RxNeovimApi.Value] = [
+        .string(name),
+    ]
+
+    func transform(_ value: Value) throws -> Int {
+      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+        throw RxNeovimApi.Error.conversion(type: Int.self)
+      }
+
+      return result
+    }
+
+    if checkBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_get_hl_id_by_name", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_get_hl_id_by_name", params: params, expectsReturnValue: true)
       .map(transform)
   }
 

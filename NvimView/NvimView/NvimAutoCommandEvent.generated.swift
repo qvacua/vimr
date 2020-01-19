@@ -1,5 +1,5 @@
-// Auto generated for nvim v0.5.0-dev.
-// See bin/generate_autocmds.py
+// Auto generated for nvim v0.5.0-dev
+// See bin/generate_autocmds.sh
 
 enum NvimAutoCommandEvent: Int {
 
@@ -24,12 +24,12 @@ enum NvimAutoCommandEvent: Int {
   case bufwritepre = 18
   case chaninfo = 19
   case chanopen = 20
-  case cmdlinechanged = 21
-  case cmdlineenter = 22
-  case cmdlineleave = 23
-  case cmdundefined = 24
-  case cmdwinenter = 25
-  case cmdwinleave = 26
+  case cmdundefined = 21
+  case cmdwinenter = 22
+  case cmdwinleave = 23
+  case cmdlinechanged = 24
+  case cmdlineenter = 25
+  case cmdlineleave = 26
   case colorscheme = 27
   case colorschemepre = 28
   case completechanged = 29
@@ -79,8 +79,8 @@ enum NvimAutoCommandEvent: Int {
   case shellfilterpost = 73
   case signal = 74
   case sourcecmd = 75
-  case sourcepre = 76
-  case sourcepost = 77
+  case sourcepost = 76
+  case sourcepre = 77
   case spellfilemissing = 78
   case stdinreadpost = 79
   case stdinreadpre = 80
@@ -110,7 +110,8 @@ enum NvimAutoCommandEvent: Int {
   case vimresized = 104
   case vimresume = 105
   case vimsuspend = 106
-  case winenter = 107
-  case winleave = 108
-  case winnew = 109
+  case winclosed = 107
+  case winenter = 108
+  case winleave = 109
+  case winnew = 110
 }
