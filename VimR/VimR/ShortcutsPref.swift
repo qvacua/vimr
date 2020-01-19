@@ -29,7 +29,7 @@ class ShortcutsPref: PrefPane,
 
     super.init(frame: .zero)
 
-    initShortcutUserDefaults()
+    self.initShortcutUserDefaults()
 
     self.addViews()
 

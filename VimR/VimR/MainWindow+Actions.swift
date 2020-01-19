@@ -157,6 +157,10 @@ extension MainWindow {
     self.emit(self.uuidAction(for: .openQuickly))
   }
 
+  @IBAction func closeWindow(_ sender: Any?) {
+
+  }
+
   @IBAction func saveDocument(_ sender: Any?) {
     self.neoVimView
       .currentBuffer()
