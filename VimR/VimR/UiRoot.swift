@@ -68,6 +68,15 @@ class UiRoot: UiComponent {
   }
 
   // The following should only be used when Cmd-Q'ing
+  func hasBlockedWindows() -> Bool {
+    for mainWin in self.mainWindows.values {
+      if mainWin.neoVimView.isBlocked().syncValue() == true { return true }
+    }
+
+    return false
+  }
+
+  // The following should only be used when Cmd-Q'ing
   func prepareQuit() {
     self.mainWindows.values.forEach { $0.prepareClosing() }
 
