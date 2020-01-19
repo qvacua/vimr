@@ -24,12 +24,8 @@ class UiRoot: UiComponent {
     self.emitter = emitter
     self.emit = emitter.typedEmit()
 
-    self.fileMonitor = FileMonitor(source: source,
-                                   emitter: emitter,
-                                   state: state)
-    self.openQuicklyWindow = OpenQuicklyWindow(source: source,
-                                               emitter: emitter,
-                                               state: state)
+    self.fileMonitor = FileMonitor(source: source, emitter: emitter, state: state)
+    self.openQuicklyWindow = OpenQuicklyWindow(source: source, emitter: emitter, state: state)
     self.prefWindow = PrefWindow(source: source, emitter: emitter, state: state)
 
     source
@@ -72,14 +68,26 @@ class UiRoot: UiComponent {
   }
 
   // The following should only be used when Cmd-Q'ing
+  func hasBlockedWindows() -> Bool {
+    for mainWin in self.mainWindows.values {
+      if mainWin.neoVimView.isBlocked().syncValue() == true { return true }
+    }
+
+    return false
+  }
+
+  // The following should only be used when Cmd-Q'ing
   func prepareQuit() {
     self.mainWindows.values.forEach { $0.prepareClosing() }
 
-    try? Completable
-      .concat(self.mainWindows.values.map { $0.quitNeoVimWithoutSaving() })
-      .wait()
+    if !self.mainWindows.isEmpty {
+      try? Completable
+        .concat(self.mainWindows.values.map { $0.quitNeoVimWithoutSaving() })
+        .wait()
+    }
 
     self.mainWindows.values.forEach { $0.waitTillNvimExits() }
+    self.openQuicklyWindow.cleanUp()
   }
 
   private let source: Observable<AppState>

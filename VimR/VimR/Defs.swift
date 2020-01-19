@@ -16,6 +16,7 @@ struct Defs {
 
     static let uiComponents = "ui-components"
     static let middleware = "middleware"
+    static let service = "service"
   }
 
   static let webViewProcessPool = WKProcessPool()

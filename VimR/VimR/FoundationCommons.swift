@@ -8,6 +8,8 @@ import os
 
 extension URL {
 
+  var direntType: UInt8 { (self as NSURL).direntType() }
+
   func isDirectParent(of url: URL) -> Bool {
     guard self.isFileURL && url.isFileURL else {
       return false

@@ -41,6 +41,10 @@ struct AppState: Codable {
   var currentMainWindowUuid: UUID?
 
   var mainWindows: [UUID: MainWindow.State] = [:]
+  var currentMainWindow: MainWindow.State? {
+    guard let uuid = self.currentMainWindowUuid else { return nil }
+    return self.mainWindows[uuid]
+  }
 
   var openQuickly = OpenQuicklyWindow.State.default
 
@@ -73,34 +77,27 @@ extension OpenQuicklyWindow {
   struct State: Codable {
 
     static let `default` = State()
-    static let defaultIgnorePatterns = Set(["*/.git", "*.o", "*.d", "*.dia"].map(FileItemIgnorePattern.init))
 
     enum CodingKeys: String, CodingKey {
 
-      case ignorePatterns = "ignore-patterns"
+      case defaultUsesVcsIgnore = "default-uses-vcs-ignores"
     }
 
-    let root = FileItem(URL(fileURLWithPath: "/", isDirectory: true))
-
-    var flatFileItems = Observable<[FileItem]>.empty()
-    var cwd = FileUtils.userHomeUrl
-    var ignorePatterns = State.defaultIgnorePatterns
-    var ignoreToken = Token()
-
+    var defaultUsesVcsIgnores = true
     var open = false
 
     init(from decoder: Decoder) throws {
       let container = try decoder.container(keyedBy: CodingKeys.self)
-      if let patternsAsString = try container.decodeIfPresent(String.self, forKey: .ignorePatterns) {
-        self.ignorePatterns = FileItemIgnorePattern.from(string: patternsAsString)
-      } else {
-        self.ignorePatterns = State.defaultIgnorePatterns
-      }
+
+      self.defaultUsesVcsIgnores = try container.decode(
+        forKey: .defaultUsesVcsIgnore,
+        default: OpenQuicklyWindow.State.default.defaultUsesVcsIgnores
+      )
     }
 
     func encode(to encoder: Encoder) throws {
       var container = encoder.container(keyedBy: CodingKeys.self)
-      try container.encode(FileItemIgnorePattern.toString(self.ignorePatterns), forKey: .ignorePatterns)
+      try container.encode(self.defaultUsesVcsIgnores, forKey: .defaultUsesVcsIgnore)
     }
 
     private init() {
@@ -284,6 +281,8 @@ extension MainWindow {
     var nvimArgs: [String]?
     var cliPipePath: String?
     var envDict: [String: String]?
+
+    var usesVcsIgnores = true
 
     var isLeftOptionMeta = false
     var isRightOptionMeta = false

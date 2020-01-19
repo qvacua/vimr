@@ -9,6 +9,10 @@ import MessagePack
 
 extension NvimView {
 
+  public func isBlocked() -> Single<Bool> {
+    return self.api.getMode().map { dict in dict["blocking"]?.boolValue ?? false }
+  }
+
   public func waitTillNvimExits() {
     self.nvimExitedCondition.wait(for: 5)
   }

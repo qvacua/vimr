@@ -8,34 +8,6 @@ import NvimView
 
 class PrefUtils {
 
-  private static let whitespaceCharSet = CharacterSet.whitespaces
-
-  static func ignorePatterns(fromString str: String) -> Set<FileItemIgnorePattern> {
-    if str.trimmingCharacters(in: self.whitespaceCharSet).count == 0 {
-      return Set()
-    }
-
-    let patterns: [FileItemIgnorePattern] = str
-      .components(separatedBy: ",")
-      .compactMap {
-        let trimmed = $0.trimmingCharacters(in: self.whitespaceCharSet)
-        if trimmed.count == 0 {
-          return nil
-        }
-
-        return FileItemIgnorePattern(pattern: trimmed)
-      }
-
-    return Set(patterns)
-  }
-
-  static func ignorePatternString(fromSet set: Set<FileItemIgnorePattern>) -> String {
-    return Array(set)
-      .map { $0.pattern }
-      .sorted()
-      .joined(separator: ", ")
-  }
-
   static func value<T>(from dict: [String: Any], for key: String) -> T? {
     return dict[key] as? T
   }

@@ -90,9 +90,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
           self.setSparkleUrl(self.useSnapshot)
         }
 
-        if appState.quit {
-          NSApp.terminate(self)
-        }
+        if appState.quit { NSApp.terminate(self) }
       })
       .disposed(by: self.disposeBag)
   }
@@ -169,7 +167,21 @@ extension AppDelegate {
   func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
     self.context.savePrefs()
 
-    if self.hasDirtyWindows && self.hasMainWindows {
+    guard self.hasMainWindows else {
+      self.uiRoot?.prepareQuit()
+      return .terminateNow
+    }
+
+    // check first whether there are blocked nvim instances, if so, abort and inform the user
+    if self.uiRoot?.hasBlockedWindows() == true {
+      let alert = NSAlert()
+      alert.messageText = "There are windows waiting for your input."
+      alert.alertStyle = .informational
+      alert.runModal()
+      return .terminateCancel
+    }
+
+    if self.hasDirtyWindows {
       let alert = NSAlert()
       alert.addButton(withTitle: "Cancel")
       let discardAndQuitButton = alert.addButton(withTitle: "Discard and Quit")
@@ -187,13 +199,8 @@ extension AppDelegate {
       return .terminateCancel
     }
 
-    if self.hasMainWindows {
-      self.updateMainWindowTemplateBeforeQuitting()
-      self.uiRoot?.prepareQuit()
-      return .terminateNow
-    }
-
-    // There are no open main window, then just quit.
+    self.updateMainWindowTemplateBeforeQuitting()
+    self.uiRoot?.prepareQuit()
     return .terminateNow
   }
 
@@ -209,8 +216,7 @@ extension AppDelegate {
   }
 
   private func updateMainWindowTemplateBeforeQuitting() {
-    guard let uuid = self.context.state.currentMainWindowUuid,
-          let curMainWindow = self.context.state.mainWindows[uuid] else { return }
+    guard let curMainWindow = self.context.state.currentMainWindow else { return }
 
     self.context.state.mainWindowTemplate = curMainWindow
     self.context.savePrefs()

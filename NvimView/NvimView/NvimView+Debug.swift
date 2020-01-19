@@ -68,7 +68,7 @@ extension NvimView {
     case .visual:                  return "Visual"
     case .insert:                  return "Insert"
     case .replace:                 return "Replace"
-    case .cmdline:                 return "Cmdline"
+    case .cmdlineNormal:                 return "Cmdline"
     case .cmdlineInsert:           return "CmdlineInsert"
     case .cmdlineReplace:          return "CmdlineReplace"
     case .operatorPending:         return "OperatorPending"

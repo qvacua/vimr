@@ -115,3 +115,4 @@ enum NvimAutoCommandEvent: Int {
   case winleave = 109
   case winnew = 110
 }
+
