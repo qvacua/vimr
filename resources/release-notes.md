@@ -3,6 +3,7 @@
 * Improve Open Quickly
     - Use [The Silver Searcher](https://github.com/ggreer/the_silver_searcher)'s ignore mechanism
     - Use [ccls](https://github.com/MaskRay/ccls)' fuzzy search
+* Bugfix: VimR hangs when there are windows in which nvim is waiting for user input.
 * Bugfix: Forward search in Markdown preview does not work.
 * Dependencies updates:
     - IBM-Swift/BlueSocket 1.0.52
