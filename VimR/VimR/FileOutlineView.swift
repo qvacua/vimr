@@ -22,11 +22,7 @@ class FileOutlineView: NSOutlineView,
   private(set) var lastThemeMark = Token()
   private(set) var theme = Theme.default
 
-  required init(
-    source: Observable<StateType>,
-    emitter: ActionEmitter,
-    state: StateType
-  ) {
+  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
     self.uuid = state.uuid
     self.root = Node(url: state.cwd)
@@ -54,8 +50,7 @@ class FileOutlineView: NSOutlineView,
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { state in
-        if state.viewToBeFocused != nil,
-           case .fileBrowser = state.viewToBeFocused! {
+        if state.viewToBeFocused != nil, case .fileBrowser = state.viewToBeFocused! {
           self.beFirstResponder()
         }
 
@@ -64,15 +59,12 @@ class FileOutlineView: NSOutlineView,
           themeChanged: state.appearance.theme.mark != self.lastThemeMark,
           usesTheme: state.appearance.usesTheme,
           forTheme: { self.updateTheme(state.appearance.theme) },
-          forDefaultTheme: { self.updateTheme(Marked(Theme.default)) })
+          forDefaultTheme: { self.updateTheme(Marked(Theme.default)) }
+        )
 
         self.usesTheme = state.appearance.usesTheme
 
-        guard self.shouldReloadData(
-          for: state, themeChanged: themeChanged
-        ) else {
-          return
-        }
+        guard self.shouldReloadData(for: state, themeChanged: themeChanged) else { return }
 
         self.showsFileIcon = state.appearance.showsFileIcon
         self.isShowHidden = state.fileBrowserShowHidden
@@ -86,20 +78,18 @@ class FileOutlineView: NSOutlineView,
       .filter { !self.shouldReloadData(for: $0) }
       .filter { $0.lastFileSystemUpdate.mark != self.lastFileSystemUpdateMark }
       .map { $0.lastFileSystemUpdate.payload }
-      .throttle(2 * FileMonitor.fileSystemEventsLatency + 1,
-                latest: true,
-                scheduler: SerialDispatchQueueScheduler(qos: .background))
+      .throttle(
+        2 * FileMonitor.fileSystemEventsLatency + 1,
+        latest: true,
+        scheduler: SerialDispatchQueueScheduler(qos: .background)
+      )
       .map { ($0, Set(self.childUrls(for: $0))) }
       .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { (url, newChildUrls) in
-        guard let changeTreeNode = self.changeRootTreeNode(for: url) else {
-          return
-        }
+      .subscribe(onNext: { url, newChildUrls in
+        guard let changeTreeNode = self.changeRootTreeNode(for: url) else { return }
 
-        self.handleRemoval(changeTreeNode: changeTreeNode,
-                           newChildUrls: newChildUrls)
-        self.handleAddition(changeTreeNode: changeTreeNode,
-                            newChildUrls: newChildUrls)
+        self.handleRemoval(changeTreeNode: changeTreeNode, newChildUrls: newChildUrls)
+        self.handleAddition(changeTreeNode: changeTreeNode, newChildUrls: newChildUrls)
       })
       .disposed(by: self.disposeBag)
 
@@ -127,8 +117,7 @@ class FileOutlineView: NSOutlineView,
   }
 
   func select(_ url: URL) {
-    guard let childrenOfRoot = self.treeController.arrangedObjects.children
-      else { return }
+    guard let childrenOfRoot = self.treeController.arrangedObjects.children else { return }
 
     var stack = [NSTreeNode]()
 
@@ -157,9 +146,7 @@ class FileOutlineView: NSOutlineView,
         return
       }
 
-      if node.url.isParent(of: url) {
-        stack.append(contentsOf: item.children ?? [])
-      }
+      if node.url.isParent(of: url) { stack.append(contentsOf: item.children ?? []) }
     }
   }
 
@@ -173,9 +160,7 @@ class FileOutlineView: NSOutlineView,
     self.unbind(.selectionIndexPaths)
   }
 
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
   private let emit: (UuidAction<FileBrowser.Action>) -> Void
   private let disposeBag = DisposeBag()
@@ -183,9 +168,7 @@ class FileOutlineView: NSOutlineView,
   private let uuid: UUID
 
   private var root: Node
-  private var cwd: URL {
-    return self.root.url
-  }
+  private var cwd: URL { self.root.url }
   private let treeController = NSTreeController()
 
   private var cachedColumnWidth = 20.cgf
@@ -231,59 +214,40 @@ class FileOutlineView: NSOutlineView,
     self.treeController.bind(.contentArray, to: self, withKeyPath: "content")
 
     self.bind(.content, to: self.treeController, withKeyPath: "arrangedObjects")
-    self.bind(.selectionIndexPaths,
-              to: self.treeController,
-              withKeyPath: "selectionIndexPaths")
+    self.bind(.selectionIndexPaths, to: self.treeController, withKeyPath: "selectionIndexPaths")
   }
 
   private func changeRootTreeNode(`for` url: URL) -> NSTreeNode? {
-    if url == self.cwd {
-      return self.treeController.arrangedObjects
-    }
+    if url == self.cwd { return self.treeController.arrangedObjects }
 
     let cwdCompsCount = self.cwd.pathComponents.count
     guard cwdCompsCount <= url.pathComponents.count else { return nil }
     let comps = url.pathComponents.suffix(cwdCompsCount)
 
     let rootTreeNode = self.treeController.arrangedObjects
-    let changeTreeNode = comps.reduce(rootTreeNode) { (prev, comp) in
-      return prev.children?.first { child in
-        return child.node?.displayName == comp
-      } ?? prev
+    let changeTreeNode = comps.reduce(rootTreeNode) { prev, comp in
+      return prev.children?.first { child in return child.node?.displayName == comp } ?? prev
     }
 
-    guard let changeNode = changeTreeNode.node else {
-      return nil
-    }
+    guard let changeNode = changeTreeNode.node else { return nil }
 
-    guard changeNode.url == url && changeNode.children != nil else {
-      return nil
-    }
+    guard changeNode.url == url && changeNode.children != nil else { return nil }
 
     return changeTreeNode
   }
 
-  private func handleAddition(
-    changeTreeNode: NSTreeNode, newChildUrls: Set<URL>
-  ) {
+  private func handleAddition(changeTreeNode: NSTreeNode, newChildUrls: Set<URL>) {
     // See comment in FileOutlineView.handleRemoval.
     guard self.treeController.isEditable else { return }
 
-    let existingUrls = changeTreeNode.children?
-                         .compactMap { $0.node?.url } ?? []
-    let newNodes = newChildUrls
-      .subtracting(existingUrls)
-      .map(Node.init)
-    let newIndexPaths = (0..<newNodes.count)
-      .map { i in changeTreeNode.indexPath.appending(i) }
+    let existingUrls = changeTreeNode.children?.compactMap { $0.node?.url } ?? []
+    let newNodes = newChildUrls.subtracting(existingUrls).map(Node.init)
+    let newIndexPaths = (0..<newNodes.count).map { i in changeTreeNode.indexPath.appending(i) }
 
-    self.treeController.insert(newNodes,
-                               atArrangedObjectIndexPaths: newIndexPaths)
+    self.treeController.insert(newNodes, atArrangedObjectIndexPaths: newIndexPaths)
   }
 
-  private func handleRemoval(
-    changeTreeNode: NSTreeNode, newChildUrls: Set<URL>
-  ) {
+  private func handleRemoval(changeTreeNode: NSTreeNode, newChildUrls: Set<URL>) {
     // FileOutlineView is deinit'ed a bit after Neovim is closed.
     // If Neovim deletes for example a temporary file, then handleRemoval is
     // called after the self.content is frozen. Thus, we make the controller
@@ -291,26 +255,23 @@ class FileOutlineView: NSOutlineView,
     // and check here before modifying.
     guard self.treeController.isEditable else { return }
 
-    let indexPathsToRemove =
-      changeTreeNode.children?
-        .filter { child in
-          guard let url = child.node?.url else { return true }
-          return newChildUrls.contains(url) == false
-        }
-        .map { $0.indexPath } ?? []
+    let indexPathsToRemove = changeTreeNode
+                               .children?
+                               .filter { child in
+                                 guard let url = child.node?.url else { return true }
+                                 return newChildUrls.contains(url) == false
+                               }
+                               .map { $0.indexPath } ?? []
 
-    changeTreeNode.children?
+    changeTreeNode
+      .children?
       .filter { child in
         guard let url = child.node?.url else { return true }
         return newChildUrls.contains(url) == false
       }
-      .forEach { treeNode in
-        self.log.default(treeNode.node)
-      }
+      .forEach { treeNode in self.log.default(treeNode.node) }
 
-    self.treeController.removeObjects(
-      atArrangedObjectIndexPaths: indexPathsToRemove
-    )
+    self.treeController.removeObjects(atArrangedObjectIndexPaths: indexPathsToRemove)
   }
 
   private func childUrls(for url: URL) -> [URL] {
@@ -318,25 +279,17 @@ class FileOutlineView: NSOutlineView,
       return lhs.lastPathComponent < rhs.lastPathComponent
     }
 
-    if self.isShowHidden {
-      return urls
-    }
+    if self.isShowHidden { return urls }
 
     return urls.filter { !$0.isHidden }
   }
 
   private func childNodes(for node: Node) -> [Node] {
-    if node.isChildrenScanned {
-      return node.children ?? []
-    }
+    if node.isChildrenScanned { return node.children ?? [] }
 
-    let nodes = FileUtils
-      .directDescendants(of: node.url)
-      .map(Node.init)
+    let nodes = FileUtils.directDescendants(of: node.url).map(Node.init)
 
-    if self.isShowHidden {
-      return nodes
-    }
+    if self.isShowHidden { return nodes }
 
     return nodes.filter { !$0.isHidden }
   }
@@ -378,31 +331,19 @@ class FileOutlineView: NSOutlineView,
     self.lastThemeMark = theme.mark
   }
 
-  private func shouldReloadData(
-    for state: StateType, themeChanged: Bool = false
-  ) -> Bool {
-    if self.isShowHidden != state.fileBrowserShowHidden {
-      return true
-    }
+  private func shouldReloadData(for state: StateType, themeChanged: Bool = false) -> Bool {
+    if self.isShowHidden != state.fileBrowserShowHidden { return true }
 
-    if themeChanged {
-      return true
-    }
+    if themeChanged { return true }
 
-    if self.showsFileIcon != state.appearance.showsFileIcon {
-      return true
-    }
+    if self.showsFileIcon != state.appearance.showsFileIcon { return true }
 
-    if state.cwd != self.cwd {
-      return true
-    }
+    if state.cwd != self.cwd { return true }
 
     return false
   }
 
-  private func node(from item: Any?) -> Node? {
-    return (item as? NSTreeNode)?.node
-  }
+  private func node(from item: Any?) -> Node? { (item as? NSTreeNode)?.node }
 }
 
 // MARK: - Actions
@@ -410,102 +351,62 @@ extension FileOutlineView {
 
   @IBAction func doubleClickAction(_: Any?) {
     let clickedTreeNode = self.clickedItem
-    guard let node = self.node(from: clickedTreeNode) else {
-      return
-    }
+    guard let node = self.node(from: clickedTreeNode) else { return }
 
     if node.isDir {
       self.toggle(item: clickedTreeNode)
     } else {
-      self.emit(
-        UuidAction(uuid: self.uuid,
-                   action: .open(url: node.url, mode: .default))
-      )
+      self.emit(UuidAction(uuid: self.uuid, action: .open(url: node.url, mode: .default)))
     }
   }
 
   @IBAction func openInNewTab(_: Any?) {
-    guard let node = self.node(from: self.clickedItem) else {
-      return
-    }
+    guard let node = self.node(from: self.clickedItem) else { return }
 
-    self.emit(
-      UuidAction(uuid: self.uuid, action: .open(url: node.url, mode: .newTab))
-    )
+    self.emit(UuidAction(uuid: self.uuid, action: .open(url: node.url, mode: .newTab)))
   }
 
   @IBAction func openInCurrentTab(_: Any?) {
-    guard let node = self.node(from: self.clickedItem) else {
-      return
-    }
+    guard let node = self.node(from: self.clickedItem) else { return }
 
-    self.emit(
-      UuidAction(uuid: self.uuid,
-                 action: .open(url: node.url, mode: .currentTab))
-    )
+    self.emit(UuidAction(uuid: self.uuid, action: .open(url: node.url, mode: .currentTab)))
   }
 
   @IBAction func openInHorizontalSplit(_: Any?) {
-    guard let node = self.node(from: self.clickedItem) else {
-      return
-    }
+    guard let node = self.node(from: self.clickedItem) else { return }
 
-    self.emit(
-      UuidAction(uuid: self.uuid,
-                 action: .open(url: node.url, mode: .horizontalSplit))
-    )
+    self.emit(UuidAction(uuid: self.uuid, action: .open(url: node.url, mode: .horizontalSplit)))
   }
 
   @IBAction func openInVerticalSplit(_: Any?) {
-    guard let node = self.node(from: self.clickedItem) else {
-      return
-    }
+    guard let node = self.node(from: self.clickedItem) else { return }
 
-    self.emit(
-      UuidAction(uuid: self.uuid,
-                 action: .open(url: node.url, mode: .verticalSplit))
-    )
+    self.emit(UuidAction(uuid: self.uuid, action: .open(url: node.url, mode: .verticalSplit)))
   }
 
   @IBAction func setAsWorkingDirectory(_: Any?) {
-    guard let node = self.node(from: self.clickedItem) else {
-      return
-    }
+    guard let node = self.node(from: self.clickedItem) else { return }
 
-    guard node.url.isDir else {
-      return
-    }
+    guard node.url.isDir else { return }
 
-    self.emit(
-      UuidAction(uuid: self.uuid, action: .setAsWorkingDirectory(node.url))
-    )
+    self.emit(UuidAction(uuid: self.uuid, action: .setAsWorkingDirectory(node.url)))
   }
 }
 
 // MARK: - NSOutlineViewDelegate
 extension FileOutlineView {
 
-  func outlineView(
-    _ outlineView: NSOutlineView,
-    rowViewForItem item: Any
-  ) -> NSTableRowView? {
+  func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
     let view = self.makeView(
       withIdentifier: NSUserInterfaceItemIdentifier("file-row-view"),
       owner: self
-    ) as? ThemedTableRow ?? ThemedTableRow(withIdentifier: "file-row-view",
-                                           themedView: self)
+    ) as? ThemedTableRow ?? ThemedTableRow(withIdentifier: "file-row-view", themedView: self)
 
     return view
   }
 
-  func outlineView(
-    _: NSOutlineView,
-    viewFor tableColumn: NSTableColumn?,
-    item: Any
-  ) -> NSView? {
-    guard let node = self.node(from: item) else {
-      return nil
-    }
+  func outlineView(_: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
+    guard let node = self.node(from: item) else { return nil }
 
     let cellView = self.makeView(
       withIdentifier: NSUserInterfaceItemIdentifier("file-cell-view"),
@@ -523,48 +424,30 @@ extension FileOutlineView {
     return cellView
   }
 
-  func outlineView(_: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
-    return 20
-  }
+  func outlineView(_: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat { 20 }
 
-  func outlineView(
-    _ outlineView: NSOutlineView,
-    shouldExpandItem item: Any
-  ) -> Bool {
-    guard let node = self.node(from: item) else {
-      return false
-    }
+  func outlineView(_ outlineView: NSOutlineView, shouldExpandItem item: Any) -> Bool {
+    guard let node = self.node(from: item) else { return false }
 
-    if node.isChildrenScanned {
-      return true
-    }
+    if node.isChildrenScanned { return true }
 
     node.children = FileUtils.directDescendants(of: node.url).map(Node.init)
 
     return true
   }
 
-  func outlineView(
-    _ outlineView: NSOutlineView,
-    didAdd rowView: NSTableRowView,
-    forRow row: Int
-  ) {
-    guard let cellWidth = (rowView.view(atColumn: 0) as? NSTableCellView)?
-      .fittingSize.width
-      else {
+  func outlineView(_ outlineView: NSOutlineView, didAdd rowView: NSTableRowView, forRow row: Int) {
+    guard let cellWidth = (rowView.view(atColumn: 0) as? NSTableCellView)?.fittingSize.width else {
       return
     }
 
     let level = self.level(forRow: row).cgf
-    let width = level * self.indentationPerLevel + cellWidth
-                + columnWidthRightPadding
+    let width = level * self.indentationPerLevel + cellWidth + columnWidthRightPadding
     self.cachedColumnWidth = max(self.cachedColumnWidth, width)
     self.tableColumns[0].width = cachedColumnWidth
 
     let rv = rowView as? ThemedTableRow
-    guard rv?.themeToken != self.lastThemeMark else {
-      return
-    }
+    guard rv?.themeToken != self.lastThemeMark else { return }
 
     let triangleView = rv?.triangleView
     triangleView?.image = self.triangleClosed
@@ -576,16 +459,10 @@ extension FileOutlineView {
 // MARK: - NSUserInterfaceValidations
 extension FileOutlineView {
 
-  override func validateUserInterfaceItem(
-    _ item: NSValidatedUserInterfaceItem
-  ) -> Bool {
-    guard let clickedNode = self.node(from: self.clickedItem) else {
-      return true
-    }
+  override func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
+    guard let clickedNode = self.node(from: self.clickedItem) else { return true }
 
-    if item.action == #selector(setAsWorkingDirectory(_:)) {
-      return clickedNode.url.isDir
-    }
+    if item.action == #selector(setAsWorkingDirectory(_:)) { return clickedNode.url.isDir }
 
     return true
   }
@@ -610,10 +487,7 @@ extension FileOutlineView {
       if node.url.isDir || node.url.isPackage {
         self.toggle(item: node)
       } else {
-        self.emit(
-          UuidAction(uuid: self.uuid,
-                     action: .open(url: node.url, mode: .newTab))
-        )
+        self.emit(UuidAction(uuid: self.uuid, action: .open(url: node.url, mode: .newTab)))
       }
 
     default:
@@ -624,34 +498,22 @@ extension FileOutlineView {
 
 class Node: NSObject, Comparable {
 
-  static func <(lhs: Node, rhs: Node) -> Bool {
-    return lhs.displayName < rhs.displayName
-  }
+  static func <(lhs: Node, rhs: Node) -> Bool { lhs.displayName < rhs.displayName }
 
   @objc dynamic var url: URL
   @objc dynamic var isLeaf: Bool
   @objc dynamic var isHidden: Bool
   @objc dynamic var children: [Node]?
 
-  @objc dynamic var childrenCount: Int {
-    return self.children?.count ?? -1
-  }
-  @objc dynamic var displayName: String {
-    return self.url.lastPathComponent
-  }
+  @objc dynamic var childrenCount: Int { self.children?.count ?? -1 }
+  @objc dynamic var displayName: String { self.url.lastPathComponent }
 
-  var isDir: Bool {
-    return !self.isLeaf
-  }
+  var isDir: Bool { !self.isLeaf }
   var isChildrenScanned = false
 
-  override var description: String {
-    return "<Node: \(self.url): \(self.childrenCount) children>"
-  }
+  override var description: String { "<Node: \(self.url): \(self.childrenCount) children>" }
 
-  override var hash: Int {
-    return self.url.hashValue
-  }
+  override var hash: Int { self.url.hashValue }
 
   init(url: URL) {
     self.url = url
@@ -662,9 +524,7 @@ class Node: NSObject, Comparable {
 
 private extension NSTreeNode {
 
-  var node: Node? {
-    return self.representedObject as? Node
-  }
+  var node: Node? { self.representedObject as? Node }
 }
 
 private let columnWidthRightPadding = 40.cgf
