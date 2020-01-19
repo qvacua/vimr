@@ -3,6 +3,7 @@
 * Improve Open Quickly
     - Use [The Silver Searcher](https://github.com/ggreer/the_silver_searcher)'s ignore mechanism
     - Use [ccls](https://github.com/MaskRay/ccls)' fuzzy search
+* GH-730: Add "Close Window" menu item, which closes all tabs (and the VimR window).
 * Bugfix: VimR hangs when there are windows in which nvim is waiting for user input.
 * Bugfix: Forward search in Markdown preview does not work.
 * Dependencies updates:
