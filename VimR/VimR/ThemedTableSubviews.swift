@@ -37,7 +37,8 @@ class ThemedTableRow: NSTableRowView {
   open override func drawBackground(in dirtyRect: NSRect) {
     if let cell = self.view(atColumn: 0) as? ThemedTableCell {
       if cell.isDir {
-        cell.textField?.textColor = self.themedView?.theme.directoryForeground ?? Theme.default.directoryForeground
+        cell.textField?.textColor
+        = self.themedView?.theme.directoryForeground ?? Theme.default.directoryForeground
       } else {
         cell.textField?.textColor = self.themedView?.theme.foreground ?? Theme.default.foreground
       }
@@ -49,7 +50,8 @@ class ThemedTableRow: NSTableRowView {
 
   override func drawSelection(in dirtyRect: NSRect) {
     if let cell = self.view(atColumn: 0) as? ThemedTableCell {
-      cell.textField?.textColor = self.themedView?.theme.highlightForeground ?? Theme.default.highlightForeground
+      cell.textField?.textColor
+      = self.themedView?.theme.highlightForeground ?? Theme.default.highlightForeground
     }
 
     self.themedView?.theme.highlightBackground.set()
@@ -58,9 +60,7 @@ class ThemedTableRow: NSTableRowView {
 
   private weak var themedView: ThemedView?
 
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }
 
 class ThemedTableCell: NSTableCellView {
@@ -83,9 +83,7 @@ class ThemedTableCell: NSTableCellView {
   var isDir = false
 
   var attributedText: NSAttributedString {
-    get {
-      return self.textField!.attributedStringValue
-    }
+    get { self.textField!.attributedStringValue }
 
     set {
       self.textField?.attributedStringValue = newValue
@@ -94,9 +92,7 @@ class ThemedTableCell: NSTableCellView {
   }
 
   var text: String {
-    get {
-      return self.textField!.stringValue
-    }
+    get { self.textField!.stringValue }
 
     set {
       self.textField?.stringValue = newValue
@@ -105,9 +101,7 @@ class ThemedTableCell: NSTableCellView {
   }
 
   var image: NSImage? {
-    get {
-      return self.imageView?.image
-    }
+    get { self.imageView?.image }
 
     set {
       self.imageView?.image = newValue
@@ -172,7 +166,5 @@ class ThemedTableCell: NSTableCellView {
   private let _textField = NSTextField(forAutoLayout: ())
   private let _imageView = NSImageView(forAutoLayout: ())
 
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }

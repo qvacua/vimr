@@ -99,8 +99,7 @@ class FileOutlineView: NSOutlineView,
   }
 
   // We cannot use outlineView(_:willDisplayOutlineCell:for:item:) delegate
-  // method to customize the disclosure triangle in a view-based
-  // NSOutlineView.
+  // method to customize the disclosure triangle in a view-based NSOutlineView.
   // See https://stackoverflow.com/a/20454413/9850227
   override func makeView(
     withIdentifier identifier: NSUserInterfaceItemIdentifier, owner: Any?
