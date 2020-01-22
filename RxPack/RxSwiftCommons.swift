@@ -11,7 +11,7 @@ extension ObservableType {
   func compactMap<R>(
     _ transform: @escaping (Element) throws -> R?
   ) -> Observable<R> {
-    return self
+    self
       .map(transform)
       .filter { $0 != nil }
       .map { $0! }
@@ -20,9 +20,7 @@ extension ObservableType {
 
 extension PrimitiveSequence where Element == Never, Trait == CompletableTrait {
 
-  func andThen(using body: () -> Completable) -> Completable {
-    return self.andThen(body())
-  }
+  func andThen(using body: () -> Completable) -> Completable { self.andThen(body()) }
 
   func wait(
     onCompleted: (() -> Void)? = nil,
@@ -65,7 +63,7 @@ extension PrimitiveSequence where Trait == SingleTrait {
   static func fromSinglesToSingleOfArray(
     _ singles: [Single<Element>]
   ) -> Single<[Element]> {
-    return Observable
+    Observable
       .merge(singles.map { $0.asObservable() })
       .toArray()
   }
@@ -73,7 +71,7 @@ extension PrimitiveSequence where Trait == SingleTrait {
   func flatMapCompletable(
     _ selector: @escaping (Element) throws -> Completable
   ) -> Completable {
-    return self
+    self
       .asObservable()
       .flatMap { try selector($0).asObservable() }
       .ignoreElements()
@@ -108,7 +106,5 @@ extension PrimitiveSequence where Trait == SingleTrait {
     return value
   }
 
-  func asCompletable() -> Completable {
-    return self.asObservable().ignoreElements()
-  }
+  func asCompletable() -> Completable { self.asObservable().ignoreElements() }
 }

@@ -9,10 +9,12 @@ import CocoaMarkdown
 extension NSColor {
 
   static var random: NSColor {
-    return NSColor(calibratedRed: CGFloat.random(in: 0...1),
-                   green: CGFloat.random(in: 0...1),
-                   blue: CGFloat.random(in: 0...1),
-                   alpha: 1.0)
+    NSColor(
+      calibratedRed: CGFloat.random(in: 0...1),
+      green: CGFloat.random(in: 0...1),
+      blue: CGFloat.random(in: 0...1),
+      alpha: 1.0
+    )
   }
 
   var hex: String {
@@ -60,26 +62,16 @@ extension NSImage {
 extension NSButton {
 
   var boolState: Bool {
-    get {
-      return self.state == .on ? true : false
-    }
-
-    set {
-      self.state = newValue ? .on : .off
-    }
+    get { self.state == .on ? true : false }
+    set { self.state = newValue ? .on : .off }
   }
 }
 
 extension NSMenuItem {
 
   var boolState: Bool {
-    get {
-      return self.state == .on ? true : false
-    }
-
-    set {
-      self.state = newValue ? .on : .off
-    }
+    get { self.state == .on ? true : false }
+    set { self.state = newValue ? .on : .off }
   }
 }
 
@@ -104,9 +96,7 @@ extension NSAttributedString {
     (translation as NSAffineTransform).concat()
   }
 
-  var wholeRange: NSRange {
-    return NSRange(location: 0, length: self.length)
-  }
+  var wholeRange: NSRange { NSRange(location: 0, length: self.length) }
 
   static func infoLabel(markdown: String) -> NSAttributedString {
     let size = NSFont.smallSystemFontSize
@@ -137,21 +127,13 @@ extension NSAttributedString {
 
 extension NSView {
 
-  func removeAllSubviews() {
-    self.subviews.forEach { $0.removeFromSuperview() }
-  }
+  func removeAllSubviews() { self.subviews.forEach { $0.removeFromSuperview() } }
 
-  func removeAllConstraints() {
-    self.removeConstraints(self.constraints)
-  }
+  func removeAllConstraints() { self.removeConstraints(self.constraints) }
 
-  @objc var isFirstResponder: Bool {
-    return self.window?.firstResponder == self
-  }
+  @objc var isFirstResponder: Bool { self.window?.firstResponder == self }
 
-  func beFirstResponder() {
-    self.window?.makeFirstResponder(self)
-  }
+  func beFirstResponder() { self.window?.makeFirstResponder(self) }
 }
 
 extension NSTableView {
@@ -203,21 +185,17 @@ extension NSOutlineView {
   }
 
   /**
-   The selected item. When the selection is empty, then returns `nil`. When multiple items are selected, then returns
-   the last selected item.
+   The selected item. When the selection is empty, then returns `nil`.
+   When multiple items are selected, then returns the last selected item.
    */
   var selectedItem: Any? {
-    if self.selectedRow < 0 {
-      return nil
-    }
+    if self.selectedRow < 0 { return nil }
 
     return self.item(atRow: self.selectedRow)
   }
 
   var clickedItem: Any? {
-    if self.clickedRow < 0 {
-      return nil
-    }
+    if self.clickedRow < 0 { return nil }
 
     return self.item(atRow: self.clickedRow)
   }

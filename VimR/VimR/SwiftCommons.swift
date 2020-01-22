@@ -5,30 +5,22 @@
 
 import Foundation
 
-func identity<T>(_ input: T) -> T {
-  return input
-}
+func identity<T>(_ input: T) -> T { input }
 
 extension BinaryFloatingPoint {
 
-  var cgf: CGFloat {
-    return CGFloat(self)
-  }
+  var cgf: CGFloat { CGFloat(self) }
 }
 
 extension FixedWidthInteger {
 
-  var cgf: CGFloat {
-    return CGFloat(self)
-  }
+  var cgf: CGFloat { CGFloat(self) }
 }
 
 extension String {
 
   func without(prefix: String) -> String {
-    guard self.hasPrefix(prefix) else {
-      return self
-    }
+    guard self.hasPrefix(prefix) else { return self }
 
     let idx = self.index(self.startIndex, offsetBy: prefix.count)
     return String(self[idx..<self.endIndex])
@@ -41,17 +33,16 @@ extension Array where Element: Equatable {
     var result = [Element]()
 
     for value in self {
-      if result.contains(value) == false {
-        result.append(value)
-      }
+      if result.contains(value) == false { result.append(value) }
     }
 
     return result
   }
 
   /**
-   Returns an array where elements of `elements` contained in the array are substituted by elements of `elements`.
-   This is useful when you need pointer equality rather than `Equatable`-equality like in `NSOutlineView`.
+   Returns an array where elements of `elements` contained in the array are substituted
+   by elements of `elements`. This is useful when you need pointer equality
+   rather than `Equatable`-equality like in `NSOutlineView`.
 
    If an element of `elements` is not contained in the array, it's ignored.
    */
@@ -76,24 +67,25 @@ extension Array where Element: Hashable {
   }
 }
 
-func tuplesToDict<K:Hashable, V, S:Sequence>(_ sequence: S) -> Dictionary<K, V> where S.Iterator.Element == (K, V) {
+func tuplesToDict<K: Hashable, V, S: Sequence>(_ sequence: S)
+    -> Dictionary<K, V> where S.Iterator.Element == (K, V) {
   var result = Dictionary<K, V>(minimumCapacity: sequence.underestimatedCount)
 
-  for (key, value) in sequence {
-    result[key] = value
-  }
+  for (key, value) in sequence { result[key] = value }
 
   return result
 }
 
 extension Dictionary {
 
-  func mapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)) rethrows -> Dictionary<K, V> {
+  func mapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)) rethrows
+      -> Dictionary<K, V> {
     let array = try self.map(transform)
     return tuplesToDict(array)
   }
 
-  func flatMapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows -> Dictionary<K, V> {
+  func flatMapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows
+      -> Dictionary<K, V> {
     let array = try self.compactMap(transform)
     return tuplesToDict(array)
   }
