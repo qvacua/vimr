@@ -6,6 +6,7 @@
 * GH-730: Add "Close Window" menu item, which closes all tabs (and the VimR window).
 * Bugfix: VimR hangs when there are windows in which nvim is waiting for user input.
 * Bugfix: Forward search in Markdown preview does not work.
+* Bugfix: "Open Quickly" result rows are not dark mode compatible.
 * Dependencies updates:
     - IBM-Swift/BlueSocket 1.0.52
     - elegantchaos/DictionaryCoding 1.0.7
