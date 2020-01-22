@@ -393,10 +393,7 @@ class FuzzySearchService {
     var lastUrl = self.root
     while let pathComp = pathComps.popFirst() {
       let childUrl = lastUrl.appendingPathComponent(pathComp)
-      let childBaton = FileScanBaton(
-        parent: lastBaton,
-        url: childUrl
-      )
+      let childBaton = FileScanBaton(parent: lastBaton, url: childUrl)
       batons.append(childBaton)
 
       lastBaton = childBaton
@@ -431,9 +428,7 @@ class FuzzySearchService {
         do {
           let result = try moc.fetch(req)
           Swift.print("Files with needsScanChildren = true:")
-          result.forEach {
-            Swift.print("\t\($0.url)")
-          }
+          result.forEach { Swift.print("\t\($0.url)") }
           Swift.print("--- \(result.count)")
         } catch {
           Swift.print(error)

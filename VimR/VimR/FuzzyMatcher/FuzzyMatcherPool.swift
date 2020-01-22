@@ -13,9 +13,7 @@ class FuzzyMatcherPool {
   init(pattern: String, initialPoolSize: Int = 2) {
     self.pattern = pattern
     self.matchers = []
-    for _ in 0..<initialPoolSize {
-      self.matchers.append(FuzzyMatcher(pattern: pattern))
-    }
+    for _ in 0..<initialPoolSize { self.matchers.append(FuzzyMatcher(pattern: pattern)) }
   }
 
   func request() -> FuzzyMatcher {
@@ -31,9 +29,7 @@ class FuzzyMatcherPool {
   }
 
   func giveBack(_ matcher: FuzzyMatcher) {
-    self.lock.withLock {
-      self.matchers.append(matcher)
-    }
+    self.lock.withLock { self.matchers.append(matcher) }
   }
 
   deinit {

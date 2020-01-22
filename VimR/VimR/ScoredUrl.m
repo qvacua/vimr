@@ -1,7 +1,7 @@
-//
-// Created by Tae Won Ha on 05.01.20.
-// Copyright (c) 2020 Tae Won Ha. All rights reserved.
-//
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 #import "ScoredUrl.h"
 
