@@ -33,36 +33,6 @@ class ImageAndTextTableCell: NSTableCellView {
     )
   }
 
-  override var backgroundStyle: NSView.BackgroundStyle {
-    didSet {
-      let attrStr = NSMutableAttributedString(attributedString: self.attributedText)
-
-      let wholeRange = NSRange(location: 0, length: attrStr.length)
-      var nameRange = NSRange(location: 0, length: 0)
-      let _ = attrStr.attributes(at: 0, longestEffectiveRange: &nameRange, in: wholeRange)
-
-      // If we only have one style, Cocoa automatically inverts the color of the text.
-      if nameRange.length == attrStr.length { return }
-
-      switch self.backgroundStyle {
-      case .light:
-        attrStr.addAttribute(
-          NSAttributedString.Key.foregroundColor, value: NSColor.black, range: nameRange
-        )
-
-      case .dark:
-        attrStr.addAttribute(
-          NSAttributedString.Key.foregroundColor, value: NSColor.white, range: nameRange
-        )
-
-      default:
-        return
-      }
-
-      self.attributedText = attrStr
-    }
-  }
-
   var attributedText: NSAttributedString {
     get { self.textField!.attributedStringValue }
     set { self.textField?.attributedStringValue = newValue }

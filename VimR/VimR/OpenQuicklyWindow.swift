@@ -329,9 +329,16 @@ extension OpenQuicklyWindow {
     let rowText: NSMutableAttributedString
     let pathInfo = truncatedPathComps.dropLast().reversed().joined(separator: " / ")
     rowText = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
-    rowText.addAttribute(NSAttributedString.Key.foregroundColor,
-                         value: NSColor.lightGray,
-                         range: NSRange(location: name.count, length: pathInfo.count + 3))
+    rowText.addAttribute(
+      NSAttributedString.Key.foregroundColor,
+      value: NSColor.textColor,
+      range: NSRange(location: 0, length: name.count)
+    )
+    rowText.addAttribute(
+      NSAttributedString.Key.foregroundColor,
+      value: NSColor.lightGray,
+      range: NSRange(location: name.count, length: pathInfo.count + 3)
+    )
 
     return rowText
   }
@@ -358,7 +365,7 @@ extension OpenQuicklyWindow {
       }
 
       let selectedRow = self.fileView.selectedRow
-      guard selectedRow >= 0 && selectedRow < sortedUrls.count else {return false }
+      guard selectedRow >= 0 && selectedRow < sortedUrls.count else { return false }
 
       self.emit(.open(sortedUrls[selectedRow].url))
       self.window.performClose(self)
