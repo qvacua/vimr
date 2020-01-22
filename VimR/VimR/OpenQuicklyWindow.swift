@@ -357,7 +357,10 @@ extension OpenQuicklyWindow {
         return true
       }
 
-      self.emit(.open(sortedUrls[self.fileView.selectedRow].url))
+      let selectedRow = self.fileView.selectedRow
+      guard selectedRow >= 0 && selectedRow < sortedUrls.count else {return false }
+
+      self.emit(.open(sortedUrls[selectedRow].url))
       self.window.performClose(self)
       return true
 
