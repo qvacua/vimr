@@ -7,23 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-332</title>
+      <title>SNAPSHOT-333</title>
       <description><![CDATA[
     <ul>
-<li>GH-730: Add "Close Window" menu item, which closes all tabs (and the VimR window).</li>
-<li>Bugfix: VimR hangs when there are windows in which nvim is waiting for user input.</li>
+<li>Bugfix: "Open Quickly" result rows are not dark mode compatible.</li>
+<li>Bugfix: Enter without selecting a result in the "Open Quickly" window results in a crash.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/332
+        https://github.com/qvacua/vimr/releases/tag/snapshot/333
       </releaseNotesLink>
-      <pubDate>2020-01-20T20:31:16.999957</pubDate>
+      <pubDate>2020-01-22T20:07:09.178574</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/332/VimR-SNAPSHOT-332.tar.bz2"
-                 sparkle:version="332"
-                 sparkle:shortVersionString="SNAPSHOT-332"
-                 sparkle:dsaSignature="MCwCFD4UdvhUVepEH560lIkBGnMvz+PZAhRV09U1fr6WnPGkTxv6yGwStrnVGg=="
-                 length="14655704"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/333/VimR-SNAPSHOT-333.tar.bz2"
+                 sparkle:version="333"
+                 sparkle:shortVersionString="SNAPSHOT-333"
+                 sparkle:dsaSignature="MC0CFQCFPQpyDSdeLZkNmpMG7Nx1prV7MQIUf+mO5mY4lZcnrdF/gSwOEG6gJgI="
+                 length="14659544"
                  type="application/octet-stream"/>
     </item>
   </channel>
