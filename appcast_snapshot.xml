@@ -7,26 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-331</title>
+      <title>SNAPSHOT-333</title>
       <description><![CDATA[
     <ul>
-<li>Improve Open Quickly<ul>
-<li>Use <a href="https://github.com/ggreer/the_silver_searcher">The Silver Searcher</a>'s ignore mechanism</li>
-<li>Use <a href="https://github.com/MaskRay/ccls">ccls</a>' fuzzy search</li>
-</ul>
-</li>
+<li>Bugfix: "Open Quickly" result rows are not dark mode compatible.</li>
+<li>Bugfix: Enter without selecting a result in the "Open Quickly" window results in a crash.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/331
+        https://github.com/qvacua/vimr/releases/tag/snapshot/333
       </releaseNotesLink>
-      <pubDate>2020-01-18T21:43:43.353075</pubDate>
+      <pubDate>2020-01-22T20:07:09.178574</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/331/VimR-SNAPSHOT-331.tar.bz2"
-                 sparkle:version="331"
-                 sparkle:shortVersionString="SNAPSHOT-331"
-                 sparkle:dsaSignature="MC4CFQCMHcdbHe3rjJMA/8IG8y/gMHLm4AIVANjMwduRWinKIgkEFrV1c90LNemF"
-                 length="14655979"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/333/VimR-SNAPSHOT-333.tar.bz2"
+                 sparkle:version="333"
+                 sparkle:shortVersionString="SNAPSHOT-333"
+                 sparkle:dsaSignature="MC0CFQCFPQpyDSdeLZkNmpMG7Nx1prV7MQIUf+mO5mY4lZcnrdF/gSwOEG6gJgI="
+                 length="14659544"
                  type="application/octet-stream"/>
     </item>
   </channel>

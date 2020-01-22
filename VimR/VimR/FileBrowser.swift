@@ -24,9 +24,7 @@ class FileBrowser: NSView,
   let innerCustomToolbar = InnerCustomToolbar()
   let menuItems: [NSMenuItem]
 
-  override var isFirstResponder: Bool {
-    return self.fileView.isFirstResponder
-  }
+  override var isFirstResponder: Bool { self.fileView.isFirstResponder }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
@@ -36,13 +34,13 @@ class FileBrowser: NSView,
 
     self.fileView = FileOutlineView(source: source, emitter: emitter, state: state)
 
-    self.showHiddenMenuItem = NSMenuItem(title: "Show Hidden Files",
-                                         action: #selector(FileBrowser.showHiddenAction),
-                                         keyEquivalent: "")
+    self.showHiddenMenuItem = NSMenuItem(
+      title: "Show Hidden Files",
+      action: #selector(FileBrowser.showHiddenAction),
+      keyEquivalent: ""
+    )
     showHiddenMenuItem.boolState = state.fileBrowserShowHidden
-    self.menuItems = [
-      showHiddenMenuItem,
-    ]
+    self.menuItems = [showHiddenMenuItem]
 
     super.init(frame: .zero)
 
@@ -64,9 +62,7 @@ class FileBrowser: NSView,
       .disposed(by: self.disposeBag)
   }
 
-  deinit {
-    self.fileView.unbindTreeController()
-  }
+  deinit { self.fileView.unbindTreeController() }
 
   private let emit: (UuidAction<Action>) -> Void
   private let disposeBag = DisposeBag()
@@ -80,9 +76,7 @@ class FileBrowser: NSView,
 
   private var cwd: URL
 
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
   private func addViews() {
     let scrollView = NSScrollView.standardScrollView()
@@ -110,20 +104,26 @@ extension FileBrowser {
     }
 
     override func repaint(with theme: Workspace.Theme) {
-      self.goToParentButton.image = NSImage.fontAwesomeIcon(name: .levelUpAlt,
-                                                            style: .solid,
-                                                            textColor: theme.toolbarForeground,
-                                                            dimension: InnerToolBar.iconDimension)
+      self.goToParentButton.image = NSImage.fontAwesomeIcon(
+        name: .levelUpAlt,
+        style: .solid,
+        textColor: theme.toolbarForeground,
+        dimension: InnerToolBar.iconDimension
+      )
 
-      self.scrollToSourceButton.image = NSImage.fontAwesomeIcon(name: .bullseye,
-                                                                style: .solid,
-                                                                textColor: theme.toolbarForeground,
-                                                                dimension: InnerToolBar.iconDimension)
+      self.scrollToSourceButton.image = NSImage.fontAwesomeIcon(
+        name: .bullseye,
+        style: .solid,
+        textColor: theme.toolbarForeground,
+        dimension: InnerToolBar.iconDimension
+      )
 
-      self.refreshButton.image = NSImage.fontAwesomeIcon(name: .sync,
-                                                         style: .solid,
-                                                         textColor: theme.toolbarForeground,
-                                                         dimension: InnerToolBar.iconDimension)
+      self.refreshButton.image = NSImage.fontAwesomeIcon(
+        name: .sync,
+        style: .solid,
+        textColor: theme.toolbarForeground,
+        dimension: InnerToolBar.iconDimension
+      )
     }
 
     fileprivate weak var fileBrowser: FileBrowser? {
@@ -136,12 +136,20 @@ extension FileBrowser {
 
     private func addViews() {
       let goToParent = self.goToParentButton
-      InnerToolBar.configureToStandardIconButton(button: goToParent, iconName: .levelUpAlt, style: .solid)
+      InnerToolBar.configureToStandardIconButton(
+        button: goToParent,
+        iconName: .levelUpAlt,
+        style: .solid
+      )
       goToParent.toolTip = "Set parent as working directory"
       goToParent.action = #selector(FileBrowser.goToParentAction)
 
       let scrollToSource = self.scrollToSourceButton
-      InnerToolBar.configureToStandardIconButton(button: scrollToSource, iconName: .bullseye, style: .solid)
+      InnerToolBar.configureToStandardIconButton(
+        button: scrollToSource,
+        iconName: .bullseye,
+        style: .solid
+      )
       scrollToSource.toolTip = "Navigate to the current buffer"
       scrollToSource.action = #selector(FileBrowser.scrollToSourceAction)
 
@@ -155,15 +163,9 @@ extension FileBrowser {
       self.addSubview(refresh)
 
       refresh.autoPinEdge(toSuperviewEdge: .top)
-      refresh.autoPinEdge(toSuperviewEdge: .right,
-                          withInset: InnerToolBar.itemPadding)
+      refresh.autoPinEdge(toSuperviewEdge: .right, withInset: InnerToolBar.itemPadding)
       goToParent.autoPinEdge(toSuperviewEdge: .top)
-      goToParent.autoPinEdge(
-        .right,
-        to: .left,
-        of: refresh,
-        withOffset: -InnerToolBar.itemPadding
-      )
+      goToParent.autoPinEdge(.right, to: .left, of: refresh, withOffset: -InnerToolBar.itemPadding)
       scrollToSource.autoPinEdge(toSuperviewEdge: .top)
       scrollToSource.autoPinEdge(
         .right,
@@ -173,9 +175,7 @@ extension FileBrowser {
       )
     }
 
-    required init?(coder: NSCoder) {
-      fatalError("init(coder:) has not been implemented")
-    }
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
   }
 }
 
@@ -183,9 +183,7 @@ extension FileBrowser {
 extension FileBrowser {
 
   @objc func showHiddenAction(_ sender: Any?) {
-    guard let menuItem = sender as? NSMenuItem else {
-      return
-    }
+    guard let menuItem = sender as? NSMenuItem else { return }
 
     self.emit(UuidAction(uuid: self.uuid, action: .setShowHidden(!menuItem.boolState)))
   }
@@ -195,9 +193,7 @@ extension FileBrowser {
   }
 
   @objc func scrollToSourceAction(_ sender: Any?) {
-    guard let url = self.currentBufferUrl else {
-      return
-    }
+    guard let url = self.currentBufferUrl else { return }
 
     self.fileView.select(url)
   }

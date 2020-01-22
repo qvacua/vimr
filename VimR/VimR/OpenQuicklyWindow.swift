@@ -183,9 +183,13 @@ class OpenQuicklyWindow: NSObject,
     }
   }
 
-  private func startProgress() { self.progressIndicator.startAnimation(self) }
+  private func startProgress() {
+    DispatchQueue.main.async { self.progressIndicator.startAnimation(self) }
+  }
 
-  private func endProgress() { self.progressIndicator.stopAnimation(self) }
+  private func endProgress() {
+    DispatchQueue.main.async {self.progressIndicator.stopAnimation(self) }
+  }
 
   private func updateRootUrls(state: AppState) {
     let urlsToMonitor = Set(state.mainWindows.map { $1.cwd })
@@ -329,9 +333,16 @@ extension OpenQuicklyWindow {
     let rowText: NSMutableAttributedString
     let pathInfo = truncatedPathComps.dropLast().reversed().joined(separator: " / ")
     rowText = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
-    rowText.addAttribute(NSAttributedString.Key.foregroundColor,
-                         value: NSColor.lightGray,
-                         range: NSRange(location: name.count, length: pathInfo.count + 3))
+    rowText.addAttribute(
+      NSAttributedString.Key.foregroundColor,
+      value: NSColor.textColor,
+      range: NSRange(location: 0, length: name.count)
+    )
+    rowText.addAttribute(
+      NSAttributedString.Key.foregroundColor,
+      value: NSColor.lightGray,
+      range: NSRange(location: name.count, length: pathInfo.count + 3)
+    )
 
     return rowText
   }
@@ -357,7 +368,10 @@ extension OpenQuicklyWindow {
         return true
       }
 
-      self.emit(.open(sortedUrls[self.fileView.selectedRow].url))
+      let selectedRow = self.fileView.selectedRow
+      guard selectedRow >= 0 && selectedRow < sortedUrls.count else { return false }
+
+      self.emit(.open(sortedUrls[selectedRow].url))
       self.window.performClose(self)
       return true
 

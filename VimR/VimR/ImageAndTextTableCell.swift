@@ -11,81 +11,41 @@ class ImageAndTextTableCell: NSTableCellView {
   private let _textField = NSTextField(forAutoLayout: ())
   private let _imageView = NSImageView(forAutoLayout: ())
 
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
   // MARK: - API
   static let font = NSFont.systemFont(ofSize: 12)
   static let widthWithoutText = (2 + 16 + 4 + 2).cgf
 
   static func width(with text: String) -> CGFloat {
-    let attrStr = NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: ImageAndTextTableCell.font])
+    let attrStr = NSAttributedString(
+      string: text,
+      attributes: [NSAttributedString.Key.font: ImageAndTextTableCell.font]
+    )
 
     return self.widthWithoutText + attrStr.size().width
   }
 
   override var intrinsicContentSize: CGSize {
-    return CGSize(width: ImageAndTextTableCell.widthWithoutText + self._textField.intrinsicContentSize.width,
-                  height: max(self._textField.intrinsicContentSize.height, 16))
-  }
-
-  override var backgroundStyle: NSView.BackgroundStyle {
-    didSet {
-      let attrStr = NSMutableAttributedString(attributedString: self.attributedText)
-
-      let wholeRange = NSRange(location: 0, length: attrStr.length)
-      var nameRange = NSRange(location: 0, length: 0)
-      let _ = attrStr.attributes(at: 0, longestEffectiveRange: &nameRange, in: wholeRange)
-
-      if nameRange.length == attrStr.length {
-        // If we only have one style, Cocoa automatically inverts the color of the text.
-        return
-      }
-
-      switch self.backgroundStyle {
-      case .light:
-        attrStr.addAttribute(NSAttributedString.Key.foregroundColor, value: NSColor.black, range: nameRange)
-
-      case .dark:
-        attrStr.addAttribute(NSAttributedString.Key.foregroundColor, value: NSColor.white, range: nameRange)
-
-      default:
-        return
-      }
-
-      self.attributedText = attrStr
-    }
+    return CGSize(
+      width: ImageAndTextTableCell.widthWithoutText + self._textField.intrinsicContentSize.width,
+      height: max(self._textField.intrinsicContentSize.height, 16)
+    )
   }
 
   var attributedText: NSAttributedString {
-    get {
-      return self.textField!.attributedStringValue
-    }
-
-    set {
-      self.textField?.attributedStringValue = newValue
-    }
+    get { self.textField!.attributedStringValue }
+    set { self.textField?.attributedStringValue = newValue }
   }
 
   var text: String {
-    get {
-      return self.textField!.stringValue
-    }
-
-    set {
-      self.textField?.stringValue = newValue
-    }
+    get { self.textField!.stringValue }
+    set { self.textField?.stringValue = newValue }
   }
 
   var image: NSImage? {
-    get {
-      return self.imageView?.image
-    }
-
-    set {
-      self.imageView?.image = newValue
-    }
+    get { self.imageView?.image }
+    set { self.imageView?.image = newValue }
   }
 
   init(withIdentifier identifier: String) {

@@ -151,6 +151,8 @@ extension MainWindow {
   }
 
   func windowShouldClose(_: NSWindow) -> Bool {
+    defer { self.closeWindow = false }
+
     if (self.neoVimView.isBlocked().syncValue() ?? false) {
       let alert = NSAlert()
       alert.messageText = "Nvim is waiting for your input."
@@ -159,11 +161,35 @@ extension MainWindow {
       return false
     }
 
+    if self.closeWindow {
+      if self.neoVimView.hasDirtyBuffers().syncValue() == true {
+        self.discardCloseActionAlert().beginSheetModal(for: self.window) { response in
+          if response == .alertSecondButtonReturn {
+            try? self.neoVimView.quitNeoVimWithoutSaving().wait()
+          }
+        }
+      } else {
+        try? self.neoVimView.quitNeoVimWithoutSaving().wait()
+      }
+
+      return false
+    }
+
     guard (self.neoVimView.isCurrentBufferDirty().syncValue() ?? false) else {
       try? self.neoVimView.closeCurrentTab().wait()
       return false
     }
 
+    self.discardCloseActionAlert().beginSheetModal(for: self.window) { response in
+      if response == .alertSecondButtonReturn {
+        try? self.neoVimView.closeCurrentTabWithoutSaving().wait()
+      }
+    }
+
+    return false
+  }
+
+  private func discardCloseActionAlert() -> NSAlert {
     let alert = NSAlert()
     alert.addButton(withTitle: "Cancel")
     let discardAndCloseButton = alert.addButton(withTitle: "Discard and Close")
@@ -171,13 +197,8 @@ extension MainWindow {
     alert.alertStyle = .warning
     discardAndCloseButton.keyEquivalentModifierMask = .command
     discardAndCloseButton.keyEquivalent = "d"
-    alert.beginSheetModal(for: self.window, completionHandler: { response in
-      if response == .alertSecondButtonReturn {
-        try? self.neoVimView.closeCurrentTabWithoutSaving().wait()
-      }
-    })
 
-    return false
+    return alert
   }
 }
 
