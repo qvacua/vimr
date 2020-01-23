@@ -89,11 +89,6 @@ echo "### Compund version: ${compound_version}"
 echo "### Tag: ${tag}"
 echo "### VimR archive file name: ${vimr_file_name}"
 
-if [[ "${publish}" == false ]] ; then
-    echo "Do not publish => exiting now..."
-    exit 0
-fi
-
 echo "### Notarizing"
 pushd ./build/Build/Products/Release > /dev/null
     codesign \
@@ -116,6 +111,11 @@ pushd ./build/Build/Products/Release > /dev/null
     xcrun stapler staple VimR.app
     tar cjf ${vimr_file_name} VimR.app
 popd > /dev/null
+
+if [[ "${publish}" == false ]] ; then
+    echo "Do not publish => exiting now..."
+    exit 0
+fi
 
 ./bin/commit_and_push_tags.sh
 ./bin/create_github_release.sh
