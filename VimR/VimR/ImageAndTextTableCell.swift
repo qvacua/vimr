@@ -11,8 +11,6 @@ class ImageAndTextTableCell: NSTableCellView {
   private let _textField = NSTextField(forAutoLayout: ())
   private let _imageView = NSImageView(forAutoLayout: ())
 
-  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-
   // MARK: - API
   static let font = NSFont.systemFont(ofSize: 12)
   static let widthWithoutText = (2 + 16 + 4 + 2).cgf
@@ -27,7 +25,7 @@ class ImageAndTextTableCell: NSTableCellView {
   }
 
   override var intrinsicContentSize: CGSize {
-    return CGSize(
+    CGSize(
       width: ImageAndTextTableCell.widthWithoutText + self._textField.intrinsicContentSize.width,
       height: max(self._textField.intrinsicContentSize.height, 16)
     )
@@ -87,4 +85,6 @@ class ImageAndTextTableCell: NSTableCellView {
 
     return self
   }
+
+  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }

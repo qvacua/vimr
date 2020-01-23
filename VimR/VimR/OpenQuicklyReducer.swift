@@ -24,7 +24,7 @@ class OpenQuicklyReducer: ReducerType {
 
     case let .open(url):
       guard let uuid = appState.currentMainWindowUuid else { return pair }
-      appState.mainWindows[uuid]?.urlsToOpen[url] = .newTab
+      appState.mainWindows[uuid]?.urlsToOpen[url] = .default
       appState.openQuickly.open = false
 
     case .close:
