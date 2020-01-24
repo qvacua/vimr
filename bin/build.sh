@@ -91,9 +91,6 @@ echo "### VimR archive file name: ${vimr_file_name}"
 
 echo "### Notarizing"
 pushd ./build/Build/Products/Release > /dev/null
-#    codesign \
-#        --force -s "Developer ID Application: Tae Won Ha (H96Q2NKTQH)" --timestamp --options=runtime \
-#        VimR.app/Contents/Frameworks/NvimView.framework/Versions/A/PlugIns/NvimServer
     ditto -c -k --keepParent VimR.app VimR.app.zip
     echo "### Uploading"
     export readonly request_uuid=$(xcrun \
