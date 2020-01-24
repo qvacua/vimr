@@ -99,7 +99,7 @@ void server_set_nvim_args(int argc, const char **const argv) {
   nvim_argv = malloc(nvim_argc * sizeof(char *));
 
   nvim_argv[0] = "nvim";
-  for (int i = 0; i < argc; i++) {nvim_argv[i + 1] = argv[i];}
+  for (int i = 0; i < argc; i++) { nvim_argv[i + 1] = argv[i]; }
 }
 
 void server_init_local_port(const char *name) {
@@ -141,7 +141,7 @@ void server_init_local_port(const char *name) {
 
 void server_destroy_local_port() {
   CFRunLoopStop(local_port_run_loop);
-  if (CFMessagePortIsValid(local_port)) {CFMessagePortInvalidate(local_port);}
+  if (CFMessagePortIsValid(local_port)) { CFMessagePortInvalidate(local_port); }
   CFRelease(local_port);
 }
 
@@ -164,7 +164,7 @@ void server_init_remote_port(const char *name) {
 }
 
 void server_destroy_remote_port() {
-  if (CFMessagePortIsValid(remote_port)) {CFMessagePortInvalidate(remote_port);}
+  if (CFMessagePortIsValid(remote_port)) { CFMessagePortInvalidate(remote_port); }
   CFRelease(remote_port);
 }
 
@@ -179,7 +179,7 @@ void server_send_msg(NvimServerMsgId msgid, CFDataRef data) {
       NULL
   );
 
-  if (response_code == kCFMessagePortSuccess) {return;}
+  if (response_code == kCFMessagePortSuccess) { return; }
 
   os_log_error(logger, "The msg (%lu) could not be sent: %d", (long) msgid, response_code);
 }
@@ -191,8 +191,8 @@ void msgpack_pack_cstr(msgpack_packer *packer, const char *cstr) {
 }
 
 void msgpack_pack_bool(msgpack_packer *packer, bool value) {
-  if (value) {msgpack_pack_true(packer);}
-  else {msgpack_pack_false(packer);}
+  if (value) { msgpack_pack_true(packer); }
+  else { msgpack_pack_false(packer); }
 }
 
 void send_msg_packing(NvimServerMsgId msgid, pack_block body) {
@@ -259,7 +259,7 @@ static void setenv_vimruntime() {
 
   setenv("VIMRUNTIME", runtime_cstr, true);
 
-  if (free_runtime_cstr) {free((void *) runtime_cstr);}
+  if (free_runtime_cstr) { free((void *) runtime_cstr); }
 
   CFRelease(runtime_path);
 }
@@ -317,7 +317,7 @@ static CFDataRef local_port_callback(
 
     default:
       os_log(logger, "msgid received: %{public}ld", (long) msgid);
-      if (data != NULL) {CFRelease(data);}
+      if (data != NULL) { CFRelease(data); }
       return NULL;
 
   }
@@ -347,7 +347,7 @@ static const char *cfstr2cstr(CFStringRef cfstr, bool *free_bytes) {
   *free_bytes = false;
 
   const char *cptr = CFStringGetCStringPtr(cfstr, kCFStringEncodingUTF8);
-  if (cptr != NULL) {return cptr;}
+  if (cptr != NULL) { return cptr; }
 
   CFIndex out_len = 0;
   CFRange whole_range = CFRangeMake(0, CFStringGetLength(cfstr));
@@ -362,7 +362,7 @@ static const char *cfstr2cstr(CFStringRef cfstr, bool *free_bytes) {
       &out_len
   );
 
-  if (converted == 0 || out_len == 0) {return NULL;}
+  if (converted == 0 || out_len == 0) { return NULL; }
 
   char *result = malloc((size_t) (out_len + 1));
   converted = CFStringGetBytes(
@@ -397,7 +397,7 @@ static void scroll(void **argv) {
     int row = (int) values[2];
     int column = (int) values[3];
 
-    if (horiz == 0 && vert == 0) {return;}
+    if (horiz == 0 && vert == 0) { return; }
 
     if (row < 0 || column < 0) {
       row = 0;
@@ -437,7 +437,7 @@ static void delete_and_input(void **argv) {
   work_async(argv, ^(CFDataRef data) {
     const NSInteger *const values = (const NSInteger *const) CFDataGetBytePtr(data);
     const NSInteger count = values[0];
-    for (int i = 0; i < count; i++) {nvim_input(backspace);}
+    for (int i = 0; i < count; i++) { nvim_input(backspace); }
 
     const char *stringPtr = (const char *) (values + 1);
     String string = cbuf_to_string(stringPtr, CFDataGetLength(data) - sizeof(NSInteger));

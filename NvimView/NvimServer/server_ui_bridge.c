@@ -111,11 +111,7 @@ static void server_ui_mode_info_set(
     Array cursor_styles __unused
 ) {}
 
-static void server_ui_mode_change(
-    UI *ui __unused,
-    String mode_str __unused,
-    Integer mode
-) {
+static void server_ui_mode_change(UI *ui __unused, String mode_str __unused, Integer mode) {
   send_msg_packing(NvimServerMsgIdModeChange, ^(msgpack_packer *packer) {
     msgpack_pack_int64(packer, mode);
   });
@@ -189,13 +185,9 @@ static void server_ui_raw_line(
     msgpack_pack_int64(packer, clearattr);
 
     msgpack_pack_array(packer, (size_t) count);
-    for (Integer i = 0; i < count; i++) {
-      msgpack_pack_cstr(packer, (const char *) chunk[i]);
-    }
+    for (Integer i = 0; i < count; i++) { msgpack_pack_cstr(packer, (const char *) chunk[i]); }
     msgpack_pack_array(packer, (size_t) count);
-    for (Integer i = 0; i < count; i++) {
-      msgpack_pack_int16(packer, attrs[i]);
-    }
+    for (Integer i = 0; i < count; i++) { msgpack_pack_int16(packer, attrs[i]); }
   });
 }
 
