@@ -17,25 +17,12 @@ public final class RxMessagePortClient {
 
     public static func responseCodeToString(code: Int32) -> String {
       switch code {
-
-      case kCFMessagePortSendTimeout:
-        return "kCFMessagePortSendTimeout"
-
-      case kCFMessagePortReceiveTimeout:
-        return "kCFMessagePortReceiveTimeout"
-
-      case kCFMessagePortIsInvalid:
-        return "kCFMessagePortIsInvalid"
-
-      case kCFMessagePortTransportError:
-        return "kCFMessagePortTransportError"
-
-      case kCFMessagePortBecameInvalidError:
-        return "kCFMessagePortBecameInvalidError"
-
-      default:
-        return "unknown"
-
+      case kCFMessagePortSendTimeout:return "kCFMessagePortSendTimeout"
+      case kCFMessagePortReceiveTimeout:return "kCFMessagePortReceiveTimeout"
+      case kCFMessagePortIsInvalid:return "kCFMessagePortIsInvalid"
+      case kCFMessagePortTransportError:return "kCFMessagePortTransportError"
+      case kCFMessagePortBecameInvalidError:return "kCFMessagePortBecameInvalidError"
+      default:return "unknown"
       }
     }
   }
@@ -49,15 +36,14 @@ public final class RxMessagePortClient {
     qos: .userInitiated
   )
 
-  public init() {
-  }
+  public init() {}
 
   public func send(
     msgid: Int32,
     data: Data?,
     expectsReply: Bool
   ) -> Single<Data?> {
-    return Single.create { single in
+    Single.create { single in
       self.queue.async {
         self.portLock.withReadLock {
           guard self.portIsValid else {
@@ -105,7 +91,7 @@ public final class RxMessagePortClient {
   }
 
   public func connect(to name: String) -> Completable {
-    return Completable.create { completable in
+    Completable.create { completable in
       self.queue.async {
         self.portLock.withWriteLock {
           self.port = CFMessagePortCreateRemote(kCFAllocatorDefault, name.cfstr)
@@ -124,7 +110,7 @@ public final class RxMessagePortClient {
   }
 
   public func stop() -> Completable {
-    return Completable.create { completable in
+    Completable.create { completable in
       self.queue.async {
         self.portLock.withWriteLock {
           self.portIsValid = false
@@ -155,29 +141,21 @@ public final class RxMessagePortServer {
   }
 
   public var syncReplyBody: SyncReplyBody? {
-    get {
-      return self.messageHandler.syncReplyBody
-    }
-    set {
-      self.messageHandler.syncReplyBody = newValue
-    }
+    get { self.messageHandler.syncReplyBody }
+    set { self.messageHandler.syncReplyBody = newValue }
   }
 
-  public var stream: Observable<Message> {
-    return self.streamSubject.asObservable()
-  }
+  public var stream: Observable<Message> { self.streamSubject.asObservable() }
 
   public var queue = DispatchQueue(
     label: String(reflecting: RxMessagePortServer.self),
     qos: .userInitiated
   )
 
-  public init() {
-    self.messageHandler = MessageHandler(subject: self.streamSubject)
-  }
+  public init() { self.messageHandler = MessageHandler(subject: self.streamSubject) }
 
   public func run(as name: String) -> Completable {
-    return Completable.create { completable in
+    Completable.create { completable in
       self.queue.async {
         var localCtx = CFMessagePortContext(
           version: 0,
@@ -193,8 +171,7 @@ public final class RxMessagePortServer {
           { _, msgid, data, info in
             guard let infoPtr = UnsafeRawPointer(info) else { return nil }
 
-            let handler = Unmanaged<MessageHandler>
-              .fromOpaque(infoPtr).takeUnretainedValue()
+            let handler = Unmanaged<MessageHandler>.fromOpaque(infoPtr).takeUnretainedValue()
             return handler.handleMessage(msgId: msgid, cfdata: data)
           },
           &localCtx,
@@ -218,14 +195,12 @@ public final class RxMessagePortServer {
   }
 
   public func stop() -> Completable {
-    return Completable.create { completable in
+    Completable.create { completable in
       self.queue.async {
         self.messageHandler.syncReplyBody = nil
         self.streamSubject.onCompleted()
 
-        if let portRunLoop = self.portRunLoop {
-          CFRunLoopStop(portRunLoop)
-        }
+        if let portRunLoop = self.portRunLoop { CFRunLoopStop(portRunLoop) }
 
         if self.port != nil && CFMessagePortIsValid(self.port) {
           CFMessagePortInvalidate(self.port)
@@ -247,11 +222,7 @@ public final class RxMessagePortServer {
 
   private func runServer() {
     self.portRunLoop = CFRunLoopGetCurrent()
-    let runLoopSrc = CFMessagePortCreateRunLoopSource(
-      kCFAllocatorDefault,
-      self.port,
-      0
-    )
+    let runLoopSrc = CFMessagePortCreateRunLoopSource(kCFAllocatorDefault, self.port, 0)
     CFRunLoopAddSource(self.portRunLoop, runLoopSrc, .defaultMode)
     CFRunLoopRun()
   }
@@ -261,9 +232,7 @@ private class MessageHandler {
 
   fileprivate var syncReplyBody: RxMessagePortServer.SyncReplyBody?
 
-  fileprivate init(subject: PublishSubject<RxMessagePortServer.Message>) {
-    self.subject = subject
-  }
+  fileprivate init(subject: PublishSubject<RxMessagePortServer.Message>) { self.subject = subject }
 
   fileprivate func handleMessage(
     msgId: Int32,
@@ -286,21 +255,15 @@ private class MessageHandler {
 
 private extension Data {
 
-  var cfdata: CFData {
-    return self as NSData
-  }
+  var cfdata: CFData { self as NSData }
 }
 
 private extension CFData {
 
-  var data: Data {
-    return self as NSData as Data
-  }
+  var data: Data { self as NSData as Data }
 }
 
 private extension String {
 
-  var cfstr: CFString {
-    return self as NSString
-  }
+  var cfstr: CFString { self as NSString }
 }
