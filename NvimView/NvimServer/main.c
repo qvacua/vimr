@@ -40,9 +40,7 @@ int main(int argc, const char *argv[]) {
 static void observe_parent_termination() {
   const pid_t parent_pid = getppid();
 
-  const dispatch_queue_t queue = dispatch_get_global_queue(
-      DISPATCH_QUEUE_PRIORITY_DEFAULT, 0
-  );
+  const dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
   dispatch_source_t source = dispatch_source_create(
       DISPATCH_SOURCE_TYPE_PROC,
       (uintptr_t) parent_pid,

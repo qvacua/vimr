@@ -47,7 +47,7 @@
 
 - (instancetype)initWithUrl:(NSURL *)url score:(NSInteger)score {
   self = [super init];
-  if (!self) {return nil;}
+  if (!self) { return nil; }
 
   _url = url;
   _score = score;

@@ -26,13 +26,13 @@
     return DT_UNKNOWN;
   }
 
-  if ([value isEqualToString:NSURLFileResourceTypeNamedPipe]) {return DT_FIFO;}
-  if ([value isEqualToString:NSURLFileResourceTypeCharacterSpecial]) {return DT_CHR;}
-  if ([value isEqualToString:NSURLFileResourceTypeDirectory]) {return DT_DIR;}
-  if ([value isEqualToString:NSURLFileResourceTypeBlockSpecial]) {return DT_BLK;}
-  if ([value isEqualToString:NSURLFileResourceTypeRegular]) {return DT_REG;}
-  if ([value isEqualToString:NSURLFileResourceTypeSymbolicLink]) {return DT_LNK;}
-  if ([value isEqualToString:NSURLFileResourceTypeSocket]) {return DT_SOCK;}
+  if ([value isEqualToString:NSURLFileResourceTypeNamedPipe]) { return DT_FIFO; }
+  if ([value isEqualToString:NSURLFileResourceTypeCharacterSpecial]) { return DT_CHR; }
+  if ([value isEqualToString:NSURLFileResourceTypeDirectory]) { return DT_DIR; }
+  if ([value isEqualToString:NSURLFileResourceTypeBlockSpecial]) { return DT_BLK; }
+  if ([value isEqualToString:NSURLFileResourceTypeRegular]) { return DT_REG; }
+  if ([value isEqualToString:NSURLFileResourceTypeSymbolicLink]) { return DT_LNK; }
+  if ([value isEqualToString:NSURLFileResourceTypeSocket]) { return DT_SOCK; }
 
   return DT_UNKNOWN;
 }

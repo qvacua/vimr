@@ -164,9 +164,7 @@ void server_init_remote_port(const char *name) {
 }
 
 void server_destroy_remote_port() {
-  if (CFMessagePortIsValid(remote_port)) {
-    CFMessagePortInvalidate(remote_port);
-  }
+  if (CFMessagePortIsValid(remote_port)) { CFMessagePortInvalidate(remote_port); }
   CFRelease(remote_port);
 }
 
@@ -183,11 +181,7 @@ void server_send_msg(NvimServerMsgId msgid, CFDataRef data) {
 
   if (response_code == kCFMessagePortSuccess) { return; }
 
-  os_log_error(
-      logger,
-      "The msg (%lu) could not be sent: %d",
-      (long) msgid, response_code
-  );
+  os_log_error(logger, "The msg (%lu) could not be sent: %d", (long) msgid, response_code);
 }
 
 void msgpack_pack_cstr(msgpack_packer *packer, const char *cstr) {
@@ -238,10 +232,7 @@ static void setenv_vimruntime() {
   CFBundleRef main_bundle = CFBundleGetMainBundle();
   CFURLRef exe_url = CFBundleCopyBundleURL(main_bundle);
 
-  CFURLRef bundle_url = CFURLCreateCopyDeletingLastPathComponent(
-      kCFAllocatorDefault,
-      exe_url
-  );
+  CFURLRef bundle_url = CFURLCreateCopyDeletingLastPathComponent(kCFAllocatorDefault, exe_url);
   CFRelease(exe_url);
 
   CFURLRef rsrc_url = CFURLCreateCopyAppendingPathComponent(
@@ -406,9 +397,7 @@ static void scroll(void **argv) {
     int row = (int) values[2];
     int column = (int) values[3];
 
-    if (horiz == 0 && vert == 0) {
-      return;
-    }
+    if (horiz == 0 && vert == 0) { return; }
 
     if (row < 0 || column < 0) {
       row = 0;
@@ -435,8 +424,7 @@ static void scroll(void **argv) {
 
 static void resize(void **argv) {
   work_async(argv, ^(CFDataRef data) {
-    const NSInteger *const values
-        = (const NSInteger *const) CFDataGetBytePtr(data);
+    const NSInteger *const values = (const NSInteger *const) CFDataGetBytePtr(data);
     const NSInteger width = values[0];
     const NSInteger height = values[1];
 
@@ -447,18 +435,12 @@ static void resize(void **argv) {
 
 static void delete_and_input(void **argv) {
   work_async(argv, ^(CFDataRef data) {
-    const NSInteger *const values
-        = (const NSInteger *const) CFDataGetBytePtr(data);
+    const NSInteger *const values = (const NSInteger *const) CFDataGetBytePtr(data);
     const NSInteger count = values[0];
-    for (int i = 0; i < count; i++) {
-      nvim_input(backspace);
-    }
+    for (int i = 0; i < count; i++) { nvim_input(backspace); }
 
     const char *stringPtr = (const char *) (values + 1);
-    String string = cbuf_to_string(
-        stringPtr,
-        CFDataGetLength(data) - sizeof(NSInteger)
-    );
+    String string = cbuf_to_string(stringPtr, CFDataGetLength(data) - sizeof(NSInteger));
     nvim_input(string);
     api_free_string(string);
   });

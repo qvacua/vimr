@@ -3,83 +3,48 @@
  * See LICENSE
  */
 
-import Cocoa
-import RxSwift
+import Foundation
 import os
 
-private let monitorDispatchQueue = DispatchQueue.global(qos: .userInitiated)
-
-class FileMonitor: UiComponent {
-
-  typealias StateType = AppState
-
-  enum Action {
-
-    case change(in : URL)
-  }
+class FileMonitor {
 
   static let fileSystemEventsLatency = 1.0
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmit()
+  private(set) var urlToMonitor = FileUtils.userHomeUrl
 
-    source
-      .subscribe(onNext: { [unowned self] appState in
-        let urlsToMonitor = Set(appState.mainWindows.map { $1.cwd })
-
-        let newUrls = urlsToMonitor.subtracting(self.monitoredUrls)
-        let obsoleteUrls = self.monitoredUrls.subtracting(urlsToMonitor)
-
-        newUrls.forEach { url in
-          self.log.info("Adding \(url) to monitoring")
-          self.monitoredUrls.insert(url)
-
-          let path = url.path
-
-          // FIXME: Handle EonilFileSystemEventFlag.RootChanged, ie watchRoot: true
-          do {
-            let monitor = try EonilFSEventStream(
-              pathsToWatch: [path],
-              sinceWhen: EonilFSEventsEventID.getCurrentEventId(),
-              latency: FileMonitor.fileSystemEventsLatency,
-              flags: [],
-              handler: { [weak self] event in
-                self?.emit(.change(in: URL(fileURLWithPath: event.path)))
-              })
-            monitor.setDispatchQueue(monitorDispatchQueue)
-            try monitor.start()
-            self.monitors[url] = monitor
-          } catch {
-            self.log.error("Could not start file monitor for \(path): "
-                           + "\(error)")
-          }
+  func monitor(url: URL, eventHandler: (@escaping (URL) -> Void)) throws {
+    self.stopMonitor()
+    self.urlToMonitor = url
+    self.monitor = try EonilFSEventStream(
+      pathsToWatch: [urlToMonitor.path],
+      sinceWhen: EonilFSEventsEventID.getCurrentEventId(),
+      latency: FileMonitor.fileSystemEventsLatency,
+      flags: [],
+      handler: { [weak self] event in
+        if event.flag == .historyDone {
+          self?.log.info("Not firing first event (.historyDone): \(event)")
+          return
         }
 
-        obsoleteUrls.forEach { url in
-          self.log.info("Removing \(url) from monitoring")
-          self.monitoredUrls.remove(url)
+        eventHandler(URL(fileURLWithPath: event.path))
+      }
+    )
+    self.monitor?.setDispatchQueue(globalFileMonitorQueue)
 
-          self.monitors[url]?.stop()
-          self.monitors[url]?.invalidate()
-          self.monitors.removeValue(forKey: url)
-        }
-      })
-      .disposed(by: self.disposeBag)
+    try self.monitor?.start()
+    self.log.info("Started monitoring \(self.urlToMonitor)")
   }
 
-  deinit {
-    self.monitors.values.forEach { monitor in
-      monitor.stop()
-      monitor.invalidate()
-    }
+  deinit { stopMonitor() }
+
+  private func stopMonitor() {
+    self.monitor?.stop()
+    self.monitor?.invalidate()
   }
 
-  private let emit: (Action) -> Void
-  private let disposeBag = DisposeBag()
+  private var monitor: EonilFSEventStream?
 
-  private var monitoredUrls = Set<URL>()
-  private var monitors = [URL: EonilFSEventStream]()
-
-  private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                          category: Defs.LoggerCategory.uiComponents)
+  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.service)
 }
+
+private let globalFileMonitorQueue = DispatchQueue.global(qos: .userInitiated)

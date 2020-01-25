@@ -38,7 +38,7 @@ static void load_global_gitignores(ignores *ig);
 #endif
 
   self = [super init];
-  if (self == nil) {return nil;}
+  if (self == nil) { return nil; }
 
   _baseUrl = baseUrl;
   _url = baseUrl;
@@ -54,7 +54,7 @@ static void load_global_gitignores(ignores *ig);
 
 - (instancetype)initWithParent:(FileScanBaton *)parent url:(NSURL *)url {
   self = [super init];
-  if (self == nil) {return nil;}
+  if (self == nil) { return nil; }
 
   _baseUrl = parent.url;
   _url = url;
@@ -120,7 +120,7 @@ static void load_global_gitignores(ignores *ig);
 
 - (instancetype)initAsStub {
   self = [super init];
-  if (self == nil) {return nil;}
+  if (self == nil) { return nil; }
 
   _baseUrl = [NSURL fileURLWithPath:@"~"];
   _url = _baseUrl;
@@ -148,7 +148,7 @@ static const char *cfstr_to_cstr_copy(CFStringRef cfstr) {
       &out_len
   );
 
-  if (converted == 0 || out_len == 0) {return NULL;}
+  if (converted == 0 || out_len == 0) { return NULL; }
 
   char *result = malloc((size_t) (out_len + 1));
   converted = CFStringGetBytes(
