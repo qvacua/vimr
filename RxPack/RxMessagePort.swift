@@ -45,45 +45,43 @@ public final class RxMessagePortClient {
   ) -> Single<Data?> {
     Single.create { single in
       self.queue.async {
-        self.portLock.withReadLock {
-          guard self.portIsValid else {
-            single(.error(Error.portInvalid))
-            return
-          }
-
-          let returnDataPtr: UnsafeMutablePointer<Unmanaged<CFData>?>
-            = UnsafeMutablePointer.allocate(capacity: 1)
-          defer { returnDataPtr.deallocate() }
-
-          let responseCode = CFMessagePortSendRequest(
-            self.port,
-            msgid,
-            data?.cfdata,
-            self.timeout,
-            self.timeout,
-            expectsReply ? CFRunLoopMode.defaultMode.rawValue : nil,
-            expectsReply ? returnDataPtr : nil
-          )
-
-          guard responseCode == kCFMessagePortSuccess else {
-            single(.error(Error.send(msgid: msgid, response: responseCode)))
-            return
-          }
-
-          guard expectsReply else {
-            single(.success(nil))
-            return
-          }
-
-          // Upon return, [returnData] contains a CFData object
-          // containing the reply data. Ownership follows the The Create Rule.
-          // From: https://developer.apple.com/documentation/corefoundation/1543076-cfmessageportsendrequest
-          // This means that we have to release the returned CFData.
-          // Thus, we have to use Unmanaged.takeRetainedValue()
-          // See also https://www.mikeash.com/pyblog/friday-qa-2017-08-11-swiftunmanaged.html
-          let data: Data? = returnDataPtr.pointee?.takeRetainedValue().data
-          single(.success(data))
+        guard self.portIsValid else {
+          single(.error(Error.portInvalid))
+          return
         }
+
+        let returnDataPtr: UnsafeMutablePointer<Unmanaged<CFData>?>
+          = UnsafeMutablePointer.allocate(capacity: 1)
+        defer { returnDataPtr.deallocate() }
+
+        let responseCode = CFMessagePortSendRequest(
+          self.port,
+          msgid,
+          data?.cfdata,
+          self.timeout,
+          self.timeout,
+          expectsReply ? CFRunLoopMode.defaultMode.rawValue : nil,
+          expectsReply ? returnDataPtr : nil
+        )
+
+        guard responseCode == kCFMessagePortSuccess else {
+          single(.error(Error.send(msgid: msgid, response: responseCode)))
+          return
+        }
+
+        guard expectsReply else {
+          single(.success(nil))
+          return
+        }
+
+        // Upon return, [returnData] contains a CFData object
+        // containing the reply data. Ownership follows the The Create Rule.
+        // From: https://developer.apple.com/documentation/corefoundation/1543076-cfmessageportsendrequest
+        // This means that we have to release the returned CFData.
+        // Thus, we have to use Unmanaged.takeRetainedValue()
+        // See also https://www.mikeash.com/pyblog/friday-qa-2017-08-11-swiftunmanaged.html
+        let data: Data? = returnDataPtr.pointee?.takeRetainedValue().data
+        single(.success(data))
       }
 
       return Disposables.create()
@@ -93,17 +91,15 @@ public final class RxMessagePortClient {
   public func connect(to name: String) -> Completable {
     Completable.create { completable in
       self.queue.async {
-        self.portLock.withWriteLock {
-          self.port = CFMessagePortCreateRemote(kCFAllocatorDefault, name.cfstr)
+        self.port = CFMessagePortCreateRemote(kCFAllocatorDefault, name.cfstr)
 
-          if self.port == nil {
-            completable(.error(Error.clientInit))
-            return
-          }
-
-          self.portIsValid = true
-          completable(.completed)
+        if self.port == nil {
+          completable(.error(Error.clientInit))
+          return
         }
+
+        self.portIsValid = true
+        completable(.completed)
       }
       return Disposables.create()
     }
@@ -112,13 +108,11 @@ public final class RxMessagePortClient {
   public func stop() -> Completable {
     Completable.create { completable in
       self.queue.async {
-        self.portLock.withWriteLock {
-          self.portIsValid = false
-          if self.port != nil && CFMessagePortIsValid(self.port) {
-            CFMessagePortInvalidate(self.port)
-          }
-          completable(.completed)
+        self.portIsValid = false
+        if self.port != nil && CFMessagePortIsValid(self.port) {
+          CFMessagePortInvalidate(self.port)
         }
+        completable(.completed)
       }
 
       return Disposables.create()
@@ -126,7 +120,6 @@ public final class RxMessagePortClient {
   }
 
   private var portIsValid = false
-  private let portLock = ReadersWriterLock()
   private var port: CFMessagePort?
 }
 
