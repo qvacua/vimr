@@ -15,87 +15,60 @@ public final class RxNeovimApi {
 
   public struct Buffer: Equatable {
 
-    public static func ==(lhs: Buffer, rhs: Buffer) -> Bool {
-      return lhs.handle == rhs.handle
-    }
+    public static func ==(lhs: Buffer, rhs: Buffer) -> Bool { lhs.handle == rhs.handle }
 
     public let handle: Int
 
-    public init(_ handle: Int) {
-      self.handle = handle
-    }
+    public init(_ handle: Int) { self.handle = handle }
   }
 
   public struct Window: Equatable {
 
-    public static func ==(lhs: Window, rhs: Window) -> Bool {
-      return lhs.handle == rhs.handle
-    }
+    public static func ==(lhs: Window, rhs: Window) -> Bool { lhs.handle == rhs.handle }
 
     public let handle: Int
 
-    public init(_ handle: Int) {
-      self.handle = handle
-    }
+    public init(_ handle: Int) { self.handle = handle }
   }
 
   public struct Tabpage: Equatable {
 
-    public static func ==(lhs: Tabpage, rhs: Tabpage) -> Bool {
-      return lhs.handle == rhs.handle
-    }
+    public static func ==(lhs: Tabpage, rhs: Tabpage) -> Bool { lhs.handle == rhs.handle }
 
     public let handle: Int
 
-    public init(_ handle: Int) {
-      self.handle = handle
-    }
+    public init(_ handle: Int) { self.handle = handle }
   }
 
   public typealias Value = RxMsgpackRpc.Value
 
   public var streamResponses: Bool {
-    get {
-      return self.msgpackRpc.streamResponses
-    }
-    set {
-      self.msgpackRpc.streamResponses = newValue
-    }
+    get { self.msgpackRpc.streamResponses }
+    set { self.msgpackRpc.streamResponses = newValue }
   }
 
   public var streamRawResponses: Bool {
-    get {
-      return self.msgpackRpc.streamResponses
-    }
-    set {
-      self.msgpackRpc.streamResponses = newValue
-    }
+    get { self.msgpackRpc.streamResponses }
+    set { self.msgpackRpc.streamResponses = newValue }
   }
 
-  public var msgpackRawStream: Observable<RxMsgpackRpc.Message> {
-    return self.msgpackRpc.stream
+  public var msgpackRawStream: Observable<RxMsgpackRpc.Message> { self.msgpackRpc.stream }
+
+  public var queue = DispatchQueue(
+    label: String(reflecting: RxNeovimApi.self),
+    qos: .userInitiated
+  ) {
+    didSet { self.msgpackRpc.queue = self.queue }
   }
 
-  public var queue = DispatchQueue(label: String(reflecting: RxNeovimApi.self), qos: .userInitiated) {
-    didSet {
-      self.msgpackRpc.queue = self.queue
-    }
-  }
+  public init() { self.msgpackRpc.queue = self.queue }
 
-  public init() {
-    self.msgpackRpc.queue = self.queue
-  }
+  public func run(at path: String) -> Completable { self.msgpackRpc.run(at: path) }
 
-  public func run(at path: String) -> Completable {
-    return self.msgpackRpc.run(at: path)
-  }
-
-  public func stop() -> Completable {
-    return self.msgpackRpc.stop()
-  }
+  public func stop() -> Completable { self.msgpackRpc.stop() }
 
   public func checkBlocked<T>(_ single: Single<T>) -> Single<T> {
-    return self
+    self
       .getMode()
       .flatMap { dict -> Single<T> in
         guard (dict["blocking"]?.boolValue ?? false) == false else {
@@ -106,16 +79,15 @@ public final class RxNeovimApi {
       }
   }
 
-  public func rpc(method: String,
-                  params: [RxNeovimApi.Value],
-                  expectsReturnValue: Bool = true) -> Single<RxNeovimApi.Value> {
-
-    return self.msgpackRpc
+  public func rpc(
+    method: String,
+    params: [RxNeovimApi.Value],
+    expectsReturnValue: Bool = true
+  ) -> Single<RxNeovimApi.Value> {
+    self.msgpackRpc
       .request(method: method, params: params, expectsReturnValue: expectsReturnValue)
       .map { response -> RxMsgpackRpc.Value in
-        guard response.error.isNil else {
-          throw RxNeovimApi.Error(response.error)
-        }
+        guard response.error.isNil else { throw RxNeovimApi.Error(response.error) }
 
         return response.result
       }
