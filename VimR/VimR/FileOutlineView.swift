@@ -44,6 +44,10 @@ class FileOutlineView: NSOutlineView,
 
     super.init(frame: .zero)
 
+    try? self.fileMonitor.monitor(url: state.cwd) { [weak self] url in
+      self?.handleFileSystemChanges(url)
+    }
+
     NSOutlineView.configure(toStandard: self)
     self.delegate = self
 
@@ -69,27 +73,15 @@ class FileOutlineView: NSOutlineView,
         self.showsFileIcon = state.appearance.showsFileIcon
         self.isShowHidden = state.fileBrowserShowHidden
         self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
-        self.root = Node(url: state.cwd)
+
+        if self.root.url != state.cwd {
+          self.root = Node(url: state.cwd)
+          try? self.fileMonitor.monitor(url: state.cwd) { [weak self] url in
+            self?.handleFileSystemChanges(url)
+          }
+        }
+
         self.reloadRoot()
-      })
-      .disposed(by: self.disposeBag)
-
-    source
-      .filter { !self.shouldReloadData(for: $0) }
-      .filter { $0.lastFileSystemUpdate.mark != self.lastFileSystemUpdateMark }
-      .map { $0.lastFileSystemUpdate.payload }
-      .throttle(
-        2 * FileMonitor.fileSystemEventsLatency + 1,
-        latest: true,
-        scheduler: SerialDispatchQueueScheduler(qos: .background)
-      )
-      .map { ($0, Set(self.childUrls(for: $0))) }
-      .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { url, newChildUrls in
-        guard let changeTreeNode = self.changeRootTreeNode(for: url) else { return }
-
-        self.handleRemoval(changeTreeNode: changeTreeNode, newChildUrls: newChildUrls)
-        self.handleAddition(changeTreeNode: changeTreeNode, newChildUrls: newChildUrls)
       })
       .disposed(by: self.disposeBag)
 
@@ -161,6 +153,16 @@ class FileOutlineView: NSOutlineView,
 
   required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
+  private func handleFileSystemChanges(_ changedUrl: URL) {
+    let newChildUrls = Set(self.childUrls(for: changedUrl))
+    DispatchQueue.main.async {
+      guard let changeTreeNode = self.changeRootTreeNode(for: changedUrl) else { return }
+
+      self.handleRemoval(changeTreeNode: changeTreeNode, newChildUrls: newChildUrls)
+      self.handleAddition(changeTreeNode: changeTreeNode, newChildUrls: newChildUrls)
+    }
+  }
+
   private let emit: (UuidAction<FileBrowser.Action>) -> Void
   private let disposeBag = DisposeBag()
 
@@ -169,6 +171,7 @@ class FileOutlineView: NSOutlineView,
   private var root: Node
   private var cwd: URL { self.root.url }
   private let treeController = NSTreeController()
+  private let fileMonitor = FuzzySearchFileMonitor()
 
   private var cachedColumnWidth = 20.cgf
   private var usesTheme: Bool

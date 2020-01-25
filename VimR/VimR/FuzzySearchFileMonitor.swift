@@ -10,7 +10,11 @@ class FuzzySearchFileMonitor {
 
   static let fileSystemEventsLatency = 1.0
 
-  func start(eventHandler: (@escaping (URL) -> Void)) throws {
+  private(set) var urlToMonitor = FileUtils.userHomeUrl
+
+  func monitor(url: URL, eventHandler: (@escaping (URL) -> Void)) throws {
+    self.stopMonitor()
+    self.urlToMonitor = url
     self.monitor = try EonilFSEventStream(
       pathsToWatch: [urlToMonitor.path],
       sinceWhen: EonilFSEventsEventID.getCurrentEventId(),
@@ -31,16 +35,13 @@ class FuzzySearchFileMonitor {
     self.log.info("Started monitoring \(self.urlToMonitor)")
   }
 
-  init(urlToMonitor: URL) {
-    self.urlToMonitor = urlToMonitor
-  }
+  deinit { stopMonitor() }
 
-  deinit {
+  private func stopMonitor() {
     self.monitor?.stop()
     self.monitor?.invalidate()
   }
 
-  private var urlToMonitor: URL
   private var monitor: EonilFSEventStream?
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.service)

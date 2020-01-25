@@ -295,10 +295,9 @@ class FuzzySearchService {
     )
     self.root = root
     self.writeContext = self.coreDataStack.newBackgroundContext()
-    self.fileMonitor = FuzzySearchFileMonitor(urlToMonitor: root)
 
     self.queue.sync { self.ensureRootFileInStore() }
-    try self.fileMonitor.start { [weak self] url in self?.handleChange(in: url) }
+    try self.fileMonitor.monitor(url: root) { [weak self] url in self?.handleChange(in: url) }
   }
 
   private func ensureRootFileInStore() {
@@ -442,7 +441,7 @@ class FuzzySearchService {
 
   private let queue = DispatchQueue(label: "scan-score-queue", qos: .userInitiated)
 
-  private let fileMonitor: FuzzySearchFileMonitor
+  private let fileMonitor = FuzzySearchFileMonitor()
   private let writeContext: NSManagedObjectContext
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.service)
