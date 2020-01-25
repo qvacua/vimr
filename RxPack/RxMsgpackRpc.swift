@@ -48,9 +48,7 @@ public final class RxMsgpackRpc {
    Streams `Message.notification`s and `Message.error`s by default.
    When `streamResponses` is set to `true`, then also `Message.response`s.
   */
-  public var stream: Observable<Message> {
-    return self.streamSubject.asObservable()
-  }
+  public var stream: Observable<Message> { self.streamSubject.asObservable() }
 
   /**
    When `true`, all messages of type `MessageType.response` are also streamed
@@ -68,11 +66,10 @@ public final class RxMsgpackRpc {
   private var socket: Socket?
   private var thread: Thread?
 
-  public init() {
-  }
+  public init() {}
 
   public func run(at path: String) -> Completable {
-    return Completable.create { completable in
+    Completable.create { completable in
       self.queue.async {
         self.stopLock.withWriteLock {
           self.stopped = false
@@ -103,7 +100,7 @@ public final class RxMsgpackRpc {
   }
 
   public func stop() -> Completable {
-    return Completable.create { completable in
+    Completable.create { completable in
       self.queue.async {
         self.stopLock.withWriteLock {
           self.streamSubject.onCompleted()
@@ -121,8 +118,7 @@ public final class RxMsgpackRpc {
     params: [Value],
     expectsReturnValue: Bool
   ) -> Single<Response> {
-
-    return Single.create { single in
+    Single.create { single in
       self.queue.async {
         let msgid: UInt32 = self.nextMsgidLock.withLock {
           let result = self.nextMsgid
@@ -142,13 +138,13 @@ public final class RxMsgpackRpc {
         self.stopLock.withReadLock {
           if self.stopped {
             single(.error(Error(msg: "Connection stopped, " +
-              "but trying to send a request with msg id \(msgid)")))
+                                     "but trying to send a request with msg id \(msgid)")))
             return
           }
 
           guard let socket = self.socket else {
             single(.error(Error(msg: "Socket is invalid, " +
-              "but trying to send a request with msg id \(msgid)")))
+                                     "but trying to send a request with msg id \(msgid)")))
             return
           }
 
@@ -163,19 +159,17 @@ public final class RxMsgpackRpc {
             if writtenBytes < packed.count {
               single(.error(Error(
                 msg: "(Written) = \(writtenBytes) < \(packed.count) = " +
-                  "(requested) for msg id: \(msgid)"
+                     "(requested) for msg id: \(msgid)"
               )))
 
               return
             }
           } catch {
             self.streamSubject.onError(Error(
-              msg: "Could not write to socket for msg id: " +
-                "\(msgid)", cause: error))
+              msg: "Could not write to socket for msg id: \(msgid)", cause: error))
 
             single(.error(Error(
-              msg: "Could not write to socket for msg id: " +
-                "\(msgid)", cause: error)))
+              msg: "Could not write to socket for msg id: \(msgid)", cause: error)))
 
             return
           }
@@ -202,7 +196,7 @@ public final class RxMsgpackRpc {
   private let singlesLock = NSLock()
 
   private func nilResponse(with msgid: UInt32) -> Response {
-    return Response(msgid: msgid, error: .nil, result: .nil)
+    Response(msgid: msgid, error: .nil, result: .nil)
   }
 
   private func cleanUpAndCloseSocket() {
@@ -219,9 +213,7 @@ public final class RxMsgpackRpc {
 
   private func setUpThreadAndStartReading() {
     self.thread = Thread {
-      guard let socket = self.socket else {
-        return
-      }
+      guard let socket = self.socket else { return }
 
       var readData = Data(capacity: 10240)
       repeat {
@@ -233,9 +225,7 @@ public final class RxMsgpackRpc {
             values.forEach(self.processMessage)
           }
         } catch let error as Socket.Error {
-          self.streamSubject.onError(Error(
-            msg: "Could not read from socket", cause: error)
-          )
+          self.streamSubject.onError(Error(msg: "Could not read from socket", cause: error))
           // No need to lock since we are currently trying to open the socket.
           self.cleanUpAndCloseSocket()
           return
@@ -274,17 +264,13 @@ public final class RxMsgpackRpc {
       guard array.count == 4 else {
         self.streamSubject.onNext(.error(
           value: unpacked,
-          msg: "Got an array of length \(array.count) " +
-            "for a message type response"
+          msg: "Got an array of length \(array.count) for a message type response"
         ))
         return
       }
 
       guard let msgid64 = array[1].uint64Value else {
-        self.streamSubject.onNext(.error(
-          value: unpacked,
-          msg: "Could not get the msgid"
-        ))
+        self.streamSubject.onNext(.error(value: unpacked, msg: "Could not get the msgid"))
         return
       }
       self.processResponse(
@@ -297,8 +283,7 @@ public final class RxMsgpackRpc {
       guard array.count == 3 else {
         self.streamSubject.onNext(.error(
           value: unpacked,
-          msg: "Got an array of length \(array.count) " +
-            "for a message type notification"
+          msg: "Got an array of length \(array.count) for a message type notification"
         ))
 
         return
@@ -327,11 +312,7 @@ public final class RxMsgpackRpc {
 
   private func processResponse(msgid: UInt32, error: Value, result: Value) {
     if self.streamResponses {
-      self.streamSubject.onNext(.response(
-        msgid: msgid,
-        error: error,
-        result: result
-      ))
+      self.streamSubject.onNext(.response(msgid: msgid, error: error, result: result))
     }
 
     guard let single: SingleResponseObserver = self.singlesLock.withLock({
@@ -346,8 +327,7 @@ public final class RxMsgpackRpc {
   }
 }
 
-private typealias SingleResponseObserver
-  = (SingleEvent<RxMsgpackRpc.Response>) -> Void
+private typealias SingleResponseObserver = (SingleEvent<RxMsgpackRpc.Response>) -> Void
 
 fileprivate extension NSLocking {
 
