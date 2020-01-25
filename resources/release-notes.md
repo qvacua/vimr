@@ -1,4 +1,8 @@
-# 0.30.0-???
+# Next
+
+* Improve handling of file system changes for the file browser
+
+# 0.30.0-335
 
 * Improve Open Quickly
     - Use [The Silver Searcher](https://github.com/ggreer/the_silver_searcher)'s ignore mechanism
