@@ -36,7 +36,6 @@ class Context: ReduxContext {
           AppDelegateReducer(baseServerUrl: baseServerUrl).reduce,
           uiRootReducer.mainWindow.reduce,
           openQuicklyReducer.mainWindow.reduce,
-          FileMonitorReducer().reduce,
           openQuicklyReducer.reduce,
           uiRootReducer.reduce,
 
