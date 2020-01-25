@@ -171,7 +171,7 @@ class FileOutlineView: NSOutlineView,
   private var root: Node
   private var cwd: URL { self.root.url }
   private let treeController = NSTreeController()
-  private let fileMonitor = FuzzySearchFileMonitor()
+  private let fileMonitor = FileMonitor()
 
   private var cachedColumnWidth = 20.cgf
   private var usesTheme: Bool

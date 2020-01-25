@@ -24,6 +24,7 @@
 		1929B376DB09AB5FDBF42BA1 /* MainWindow+Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B41F704A4D67621197ED /* MainWindow+Types.swift */; };
 		1929B3A6C332FFAAEC7FD219 /* MainWindow+CustomTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B71B4BB6550F5BC6D4CF /* MainWindow+CustomTitle.swift */; };
 		1929B3AC66EFE35D68C020E3 /* PreviewToolReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFB0F294F3714D5E095F /* PreviewToolReducer.swift */; };
+		1929B4219A68586E2CED6E96 /* FileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B333D8752E2E68F35122 /* FileMonitor.swift */; };
 		1929B443B7AB2176A7818CA1 /* fuzzy_match.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1B01340283D6AAD6B06 /* fuzzy_match.cc */; };
 		1929B4B00D7BB191A9A6532D /* HtmlPreviewToolReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE5AEA3D0980860EED50 /* HtmlPreviewToolReducer.swift */; };
 		1929B4B70926DE113E6BF990 /* PreviewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE37AA2843779CAFA76F /* PreviewReducer.swift */; };
@@ -64,6 +65,7 @@
 		1929BB4A9B2FA42A64CCCC76 /* MainWindowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD83A13BF133741766CC /* MainWindowReducer.swift */; };
 		1929BB67CAAD4F6CBD38DF0A /* RxRedux.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B66A5E2D00EA143AFD86 /* RxRedux.swift */; };
 		1929BB85B2D30E548A32663D /* ShortcutsPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0E9B2F018D3E31D4B0B /* ShortcutsPref.swift */; };
+		1929BB96BC6037652034BABF /* FileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B333D8752E2E68F35122 /* FileMonitor.swift */; };
 		1929BBE28654E4307AF1E2FD /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC2F05E9A5C0DB039739 /* Theme.swift */; };
 		1929BCC7908DD899999B70BE /* AppearancePrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BED01F5D94BFCA4CF80F /* AppearancePrefReducer.swift */; };
 		1929BCC9D3604933DFF07E2E /* FileBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA5C7099CDEB04B76BA4 /* FileBrowser.swift */; };
@@ -421,8 +423,6 @@
 		4BF70EE223D1B5B3009E51E9 /* FileScanBaton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EDF23D1B5B3009E51E9 /* FileScanBaton.m */; };
 		4BF70EE523D1B5EC009E51E9 /* FuzzySearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE323D1B5EC009E51E9 /* FuzzySearchService.swift */; };
 		4BF70EE623D1B5EC009E51E9 /* FuzzySearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE323D1B5EC009E51E9 /* FuzzySearchService.swift */; };
-		4BF70EE723D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE423D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift */; };
-		4BF70EE823D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE423D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift */; };
 		4BF70EEA23D1B5FF009E51E9 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */; };
 		4BF70EEB23D1B5FF009E51E9 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */; };
 		4BF70EED23D1B618009E51E9 /* ConditionVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EEC23D1B618009E51E9 /* ConditionVariable.swift */; };
@@ -525,6 +525,7 @@
 		1929B1B01340283D6AAD6B06 /* fuzzy_match.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fuzzy_match.cc; path = FuzzyMatcher/fuzzy_match.cc; sourceTree = "<group>"; };
 		1929B1DC584C89C477E83FA2 /* HttpServerMiddleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServerMiddleware.swift; sourceTree = "<group>"; };
 		1929B230EE8F1428980988F0 /* RpcAppearanceEpic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RpcAppearanceEpic.swift; sourceTree = "<group>"; };
+		1929B333D8752E2E68F35122 /* FileMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileMonitor.swift; sourceTree = "<group>"; };
 		1929B34FC23D805A8B29E8F7 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		1929B364460D86F17E80943C /* PrefMiddleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefMiddleware.swift; sourceTree = "<group>"; };
 		1929B41F704A4D67621197ED /* MainWindow+Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainWindow+Types.swift"; sourceTree = "<group>"; };
@@ -715,7 +716,6 @@
 		4BF70EDF23D1B5B3009E51E9 /* FileScanBaton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileScanBaton.m; sourceTree = "<group>"; };
 		4BF70EE023D1B5B3009E51E9 /* FileScanBaton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileScanBaton.h; sourceTree = "<group>"; };
 		4BF70EE323D1B5EC009E51E9 /* FuzzySearchService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FuzzySearchService.swift; sourceTree = "<group>"; };
-		4BF70EE423D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FuzzySearchFileMonitor.swift; sourceTree = "<group>"; };
 		4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		4BF70EEC23D1B618009E51E9 /* ConditionVariable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConditionVariable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1201,7 +1201,6 @@
 			isa = PBXGroup;
 			children = (
 				4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */,
-				4BF70EE423D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift */,
 				4BF70EE323D1B5EC009E51E9 /* FuzzySearchService.swift */,
 				4BF70ED423D1B54F009E51E9 /* ScoredUrl.h */,
 				4BF70ED523D1B54F009E51E9 /* ScoredUrl.m */,
@@ -1227,6 +1226,7 @@
 				1929B6AD3396160AA2C46919 /* Debouncer.swift */,
 				1929B8EF9A9F5ACC175452BD /* PreviewUtils.swift */,
 				1929B8241CDE58F7AAF89AE4 /* PrefUtils.swift */,
+				1929B333D8752E2E68F35122 /* FileMonitor.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -1576,7 +1576,6 @@
 				4B2636D0223A487B00021586 /* BufferListReducer.swift in Sources */,
 				4B2636D1223A487B00021586 /* PrefWindow.swift in Sources */,
 				4B917E552334D52D00752149 /* EonilFSEventStream.swift in Sources */,
-				4BF70EE823D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift in Sources */,
 				4B2636D2223A487B00021586 /* PrefPane.swift in Sources */,
 				4B2636D3223A487B00021586 /* GeneralPref.swift in Sources */,
 				4B917E522334D52D00752149 /* EonilFSEventStreamEventFlags.swift in Sources */,
@@ -1630,6 +1629,7 @@
 				1929B179DBDE58A9D9BCA819 /* MainWindow+Types.swift in Sources */,
 				1929BAEE911EC7620EE51911 /* fuzzy_match.cc in Sources */,
 				1929B543D5C82485F053CF17 /* FuzzySearch.xcdatamodel in Sources */,
+				1929BB96BC6037652034BABF /* FileMonitor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1676,7 +1676,6 @@
 				1929B4E54E2F13A7F5F2B682 /* BufferListReducer.swift in Sources */,
 				1929BAE4900D72A7877741B1 /* PrefWindow.swift in Sources */,
 				4B917E532334D52D00752149 /* EonilFSEventStream.swift in Sources */,
-				4BF70EE723D1B5EC009E51E9 /* FuzzySearchFileMonitor.swift in Sources */,
 				1929BEAE0592096BC1191B67 /* PrefPane.swift in Sources */,
 				1929BEDE1BE950EDA9497363 /* GeneralPref.swift in Sources */,
 				4B917E502334D52D00752149 /* EonilFSEventStreamEventFlags.swift in Sources */,
@@ -1730,6 +1729,7 @@
 				1929B376DB09AB5FDBF42BA1 /* MainWindow+Types.swift in Sources */,
 				1929B443B7AB2176A7818CA1 /* fuzzy_match.cc in Sources */,
 				1929BF5D0EFCC56A733BB4B7 /* FuzzySearch.xcdatamodel in Sources */,
+				1929B4219A68586E2CED6E96 /* FileMonitor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

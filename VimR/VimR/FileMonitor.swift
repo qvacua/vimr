@@ -6,7 +6,7 @@
 import Foundation
 import os
 
-class FuzzySearchFileMonitor {
+class FileMonitor {
 
   static let fileSystemEventsLatency = 1.0
 
@@ -18,7 +18,7 @@ class FuzzySearchFileMonitor {
     self.monitor = try EonilFSEventStream(
       pathsToWatch: [urlToMonitor.path],
       sinceWhen: EonilFSEventsEventID.getCurrentEventId(),
-      latency: FuzzySearchFileMonitor.fileSystemEventsLatency,
+      latency: FileMonitor.fileSystemEventsLatency,
       flags: [],
       handler: { [weak self] event in
         if event.flag == .historyDone {

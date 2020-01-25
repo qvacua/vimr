@@ -441,7 +441,7 @@ class FuzzySearchService {
 
   private let queue = DispatchQueue(label: "scan-score-queue", qos: .userInitiated)
 
-  private let fileMonitor = FuzzySearchFileMonitor()
+  private let fileMonitor = FileMonitor()
   private let writeContext: NSManagedObjectContext
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.service)
