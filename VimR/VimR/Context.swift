@@ -16,9 +16,7 @@ extension ReduxTypes {
 class Context: ReduxContext {
 
   // The following should only be used when Cmd-Q'ing
-  func savePrefs() {
-    self.prefMiddleware.applyPref(from: self.state)
-  }
+  func savePrefs() { self.prefMiddleware.applyPref(from: self.state) }
 
   init(baseServerUrl: URL, state: AppState) {
     super.init(initialState: state)
@@ -62,13 +60,9 @@ class Context: ReduxContext {
     // MainWindow.State
     self.actionEmitter.observable
       .compactMap { action in
-        guard let uuidAction = action as? UuidTagged else {
-          return nil
-        }
+        guard let uuidAction = action as? UuidTagged else { return nil }
 
-        guard let mainWindowState = self.state.mainWindows[uuidAction.uuid] else {
-          return nil
-        }
+        guard let mainWindowState = self.state.mainWindows[uuidAction.uuid] else { return nil }
 
         return (mainWindowState, action, false)
       }
@@ -98,9 +92,7 @@ class Context: ReduxContext {
   private let prefMiddleware = PrefMiddleware()
 
   private func emitAppState(_ tuple: (state: MainWindow.State, action: AnyAction, modified: Bool)) {
-    guard let uuidAction = tuple.action as? UuidTagged else {
-      return
-    }
+    guard let uuidAction = tuple.action as? UuidTagged else { return }
 
     self.state.mainWindows[uuidAction.uuid] = tuple.state
     self.stateSubject.onNext(self.state)
