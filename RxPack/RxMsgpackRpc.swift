@@ -58,31 +58,26 @@ public final class RxMsgpackRpc {
   */
   public var streamResponses = false
 
-  private var socket: Socket?
-  private var thread: Thread?
-
   public func run(at path: String) -> Completable {
     Completable.create { completable in
       self.queue.async {
-        self.stopLock.withWriteLock {
-          self.stopped = false
+        self.stopped = false
 
-          do {
-            try self.socket = Socket.create(
-              family: .unix,
-              type: .stream,
-              proto: .unix
-            )
-            try self.socket?.connect(to: path)
-            self.setUpThreadAndStartReading()
-          } catch {
-            self.streamSubject.onError(
-              Error(msg: "Could not get socket", cause: error)
-            )
-            completable(.error(
-              Error(msg: "Could not get socket at \(path)", cause: error)
-            ))
-          }
+        do {
+          try self.socket = Socket.create(
+            family: .unix,
+            type: .stream,
+            proto: .unix
+          )
+          try self.socket?.connect(to: path)
+          self.setUpThreadAndStartReading()
+        } catch {
+          self.streamSubject.onError(
+            Error(msg: "Could not get socket", cause: error)
+          )
+          completable(.error(
+            Error(msg: "Could not get socket at \(path)", cause: error)
+          ))
         }
 
         completable(.completed)
@@ -95,12 +90,10 @@ public final class RxMsgpackRpc {
   public func stop() -> Completable {
     Completable.create { completable in
       self.queue.async {
-        self.stopLock.withWriteLock {
-          self.streamSubject.onCompleted()
-          self.cleanUpAndCloseSocket()
+        self.streamSubject.onCompleted()
+        self.cleanUpAndCloseSocket()
 
-          completable(.completed)
-        }
+        completable(.completed)
       }
       return Disposables.create()
     }
@@ -128,48 +121,46 @@ public final class RxMsgpackRpc {
           ]
         )
 
-        self.stopLock.withReadLock {
-          if self.stopped {
-            single(.error(Error(msg: "Connection stopped, " +
-                                     "but trying to send a request with msg id \(msgid)")))
-            return
+        if self.stopped {
+          single(.error(Error(msg: "Connection stopped, " +
+                                   "but trying to send a request with msg id \(msgid)")))
+          return
+        }
+
+        guard let socket = self.socket else {
+          single(.error(Error(msg: "Socket is invalid, " +
+                                   "but trying to send a request with msg id \(msgid)")))
+          return
+        }
+
+        if expectsReturnValue {
+          self.singlesLock.withLock {
+            self.singles[msgid] = single
           }
+        }
 
-          guard let socket = self.socket else {
-            single(.error(Error(msg: "Socket is invalid, " +
-                                     "but trying to send a request with msg id \(msgid)")))
-            return
-          }
-
-          if expectsReturnValue {
-            self.singlesLock.withLock {
-              self.singles[msgid] = single
-            }
-          }
-
-          do {
-            let writtenBytes = try socket.write(from: packed)
-            if writtenBytes < packed.count {
-              single(.error(Error(
-                msg: "(Written) = \(writtenBytes) < \(packed.count) = " +
-                     "(requested) for msg id: \(msgid)"
-              )))
-
-              return
-            }
-          } catch {
-            self.streamSubject.onError(Error(
-              msg: "Could not write to socket for msg id: \(msgid)", cause: error))
-
+        do {
+          let writtenBytes = try socket.write(from: packed)
+          if writtenBytes < packed.count {
             single(.error(Error(
-              msg: "Could not write to socket for msg id: \(msgid)", cause: error)))
+              msg: "(Written) = \(writtenBytes) < \(packed.count) = " +
+                   "(requested) for msg id: \(msgid)"
+            )))
 
             return
           }
+        } catch {
+          self.streamSubject.onError(Error(
+            msg: "Could not write to socket for msg id: \(msgid)", cause: error))
 
-          if !expectsReturnValue {
-            single(.success(self.nilResponse(with: msgid)))
-          }
+          single(.error(Error(
+            msg: "Could not write to socket for msg id: \(msgid)", cause: error)))
+
+          return
+        }
+
+        if !expectsReturnValue {
+          single(.success(self.nilResponse(with: msgid)))
         }
       }
 
@@ -177,16 +168,18 @@ public final class RxMsgpackRpc {
     }
   }
 
+  // MARK: - Private
   private var nextMsgid: UInt32 = 0
   private let nextMsgidLock = NSLock()
 
+  private var socket: Socket?
+  private var thread: Thread?
   private let queue = DispatchQueue(
     label: String(reflecting: RxMsgpackRpc.self),
     qos: .userInitiated
   )
 
   private var stopped = true
-  private let stopLock = ReadersWriterLock()
 
   private let streamSubject = PublishSubject<Message>()
 
@@ -224,8 +217,7 @@ public final class RxMsgpackRpc {
           }
         } catch let error as Socket.Error {
           self.streamSubject.onError(Error(msg: "Could not read from socket", cause: error))
-          // No need to lock since we are currently trying to open the socket.
-          self.cleanUpAndCloseSocket()
+          self.queue.async { self.cleanUpAndCloseSocket() }
           return
         } catch {
           self.streamSubject.onNext(
