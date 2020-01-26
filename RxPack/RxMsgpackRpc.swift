@@ -106,11 +106,8 @@ public final class RxMsgpackRpc {
   ) -> Single<Response> {
     Single.create { single in
       self.queue.async {
-        let msgid: UInt32 = self.nextMsgidLock.withLock {
-          let result = self.nextMsgid
-          self.nextMsgid += 1
-          return result
-        }
+        let msgid = self.nextMsgid
+        self.nextMsgid += 1
 
         let packed = pack(
           [
@@ -133,11 +130,7 @@ public final class RxMsgpackRpc {
           return
         }
 
-        if expectsReturnValue {
-          self.singlesLock.withLock {
-            self.singles[msgid] = single
-          }
-        }
+        if expectsReturnValue { self.singles[msgid] = single }
 
         do {
           let writtenBytes = try socket.write(from: packed)
@@ -170,7 +163,6 @@ public final class RxMsgpackRpc {
 
   // MARK: - Private
   private var nextMsgid: UInt32 = 0
-  private let nextMsgidLock = NSLock()
 
   private var socket: Socket?
   private var thread: Thread?
@@ -180,22 +172,16 @@ public final class RxMsgpackRpc {
   )
 
   private var stopped = true
+  private var singles: [UInt32: SingleResponseObserver] = [:]
 
   private let streamSubject = PublishSubject<Message>()
-
-  private var singles: [UInt32: SingleResponseObserver] = [:]
-  private let singlesLock = NSLock()
 
   private func nilResponse(with msgid: UInt32) -> Response {
     Response(msgid: msgid, error: .nil, result: .nil)
   }
 
   private func cleanUpAndCloseSocket() {
-    self.singlesLock.withLock {
-      self.singles.forEach { msgid, single in
-        single(.success(self.nilResponse(with: msgid)))
-      }
-    }
+    self.singles.forEach { msgid, single in single(.success(self.nilResponse(with: msgid))) }
     self.singles.removeAll()
 
     self.stopped = true
@@ -263,11 +249,10 @@ public final class RxMsgpackRpc {
         self.streamSubject.onNext(.error(value: unpacked, msg: "Could not get the msgid"))
         return
       }
-      self.processResponse(
-        msgid: UInt32(msgid64),
-        error: array[2],
-        result: array[3]
-      )
+
+      self.queue.async {
+        self.processResponse(msgid: UInt32(msgid64), error: array[2], result: array[3])
+      }
 
     case .notification:
       guard array.count == 3 else {
@@ -305,26 +290,11 @@ public final class RxMsgpackRpc {
       self.streamSubject.onNext(.response(msgid: msgid, error: error, result: result))
     }
 
-    guard let single: SingleResponseObserver = self.singlesLock.withLock({
-      let s = self.singles[msgid]
-      self.singles.removeValue(forKey: msgid)
-      return s
-    }) else {
-      return
-    }
+    guard let single: SingleResponseObserver = self.singles[msgid] else { return }
 
     single(.success(Response(msgid: msgid, error: error, result: result)))
+    self.singles.removeValue(forKey: msgid)
   }
 }
 
 private typealias SingleResponseObserver = (SingleEvent<RxMsgpackRpc.Response>) -> Void
-
-fileprivate extension NSLocking {
-
-  @discardableResult
-  func withLock<T>(_ body: () -> T) -> T {
-    self.lock()
-    defer { self.unlock() }
-    return body()
-  }
-}

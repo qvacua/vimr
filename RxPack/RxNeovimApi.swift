@@ -91,13 +91,3 @@ public final class RxNeovimApi {
     qos: .userInitiated
   )
 }
-
-fileprivate extension NSLocking {
-
-  @discardableResult
-  func withLock<T>(_ body: () -> T) -> T {
-    self.lock()
-    defer { self.unlock() }
-    return body()
-  }
-}
