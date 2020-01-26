@@ -65,17 +65,17 @@ public class NvimView: NSView,
       self.updateFontMetaData(self._font)
     }
   }
-    
+
   public var characterspacing: CGFloat {
     get {
       return self._characterspacing
     }
-    
+
     set {
       guard newValue >= 0.0 else {
         return
       }
-      
+
       self._characterspacing = newValue
       self.updateFontMetaData(self._font)
     }
@@ -121,10 +121,6 @@ public class NvimView: NSView,
     return true
   }
 
-  public let queue = DispatchQueue(
-    label: String(reflecting: NvimView.self),
-    qos: .userInteractive
-  )
   public let scheduler: SerialDispatchQueueScheduler
 
   public internal(set) var currentPosition = Position.beginning
@@ -140,9 +136,11 @@ public class NvimView: NSView,
       characterspacing: self._characterspacing,
       usesLigatures: self.usesLigatures
     )
-    self.bridge = UiBridge(uuid: self.uuid, queue: self.queue, config: config)
-    self.scheduler = SerialDispatchQueueScheduler(queue: self.queue,
-                                                  internalSerialQueueName: "com.qvacua.NvimView.NvimView")
+    self.bridge = UiBridge(uuid: self.uuid, config: config)
+    self.scheduler = SerialDispatchQueueScheduler(
+      queue: self.queue,
+      internalSerialQueueName: "com.qvacua.NvimView.NvimView"
+    )
 
     self.sourceFileUrls = config.sourceFiles
 
@@ -154,8 +152,6 @@ public class NvimView: NSView,
     self.cellSize = FontUtils.cellSize(
       of: self.font, linespacing: self.linespacing, characterspacing: self.characterspacing
     )
-
-    self.api.queue = self.queue
   }
 
   convenience override public init(frame rect: NSRect) {
@@ -182,6 +178,11 @@ public class NvimView: NSView,
   }
 
   // MARK: - Internal
+  let queue = DispatchQueue(
+    label: String(reflecting: NvimView.self),
+    qos: .userInteractive
+  )
+
   let bridge: UiBridge
   let api = RxNeovimApi()
 

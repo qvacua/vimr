@@ -41,7 +41,7 @@ class UiBridge {
 
   weak var consumer: UiBridgeConsumer?
 
-  init(uuid: UUID, queue: DispatchQueue, config: NvimView.Config) {
+  init(uuid: UUID, config: NvimView.Config) {
     self.uuid = uuid
 
     self.useInteractiveZsh = config.useInteractiveZsh
@@ -60,11 +60,10 @@ class UiBridge {
       self.log.debug("Using ENVs from login shell: \(self.envDict)")
     }
 
-    self.queue = queue
-    self.scheduler = SerialDispatchQueueScheduler(queue: queue,
-                                                  internalSerialQueueName: String(reflecting: UiBridge.self))
-    self.client.queue = self.queue
-    self.server.queue = self.queue
+    self.scheduler = SerialDispatchQueueScheduler(
+      queue: queue,
+      internalSerialQueueName: String(reflecting: UiBridge.self)
+    )
 
     self.server.stream
       .subscribe(onNext: { [weak self] message in
@@ -334,7 +333,10 @@ class UiBridge {
   private var runLocalServerAndNvimCompletable: Completable.CompletableObserver?
 
   private let scheduler: SerialDispatchQueueScheduler
-  private let queue: DispatchQueue
+  private let queue = DispatchQueue(
+    label: String(reflecting: UiBridge.self),
+    qos: .userInitiated
+  )
 
   private let disposeBag = DisposeBag()
 

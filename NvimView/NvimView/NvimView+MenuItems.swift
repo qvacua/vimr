@@ -50,14 +50,14 @@ extension NvimView {
     switch self.mode {
     case .insert, .replace:
       self.api
-        .input(keys: "<Esc>ui", checkBlocked: false)
+        .input(keys: "<Esc>ui", errWhenBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not undo", cause: error))
         })
         .disposed(by: self.disposeBag)
     case .normal, .visual:
       self.api
-        .input(keys: "u", checkBlocked: false)
+        .input(keys: "u", errWhenBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not undo", cause: error))
         })
@@ -71,14 +71,14 @@ extension NvimView {
     switch self.mode {
     case .insert, .replace:
       self.api
-        .input(keys: "<Esc><C-r>i", checkBlocked: false)
+        .input(keys: "<Esc><C-r>i", errWhenBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not redo", cause: error))
         })
         .disposed(by: self.disposeBag)
     case .normal, .visual:
       self.api
-        .input(keys: "<C-r>", checkBlocked: false)
+        .input(keys: "<C-r>", errWhenBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not redo", cause: error))
         })
@@ -92,7 +92,7 @@ extension NvimView {
     switch self.mode {
     case .visual, .normal:
       self.api
-        .input(keys: "\"+d", checkBlocked: false)
+        .input(keys: "\"+d", errWhenBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not cut", cause: error))
         })
@@ -106,7 +106,7 @@ extension NvimView {
     switch self.mode {
     case .visual, .normal:
       self.api
-        .input(keys: "\"+y", checkBlocked: false)
+        .input(keys: "\"+y", errWhenBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not copy", cause: error))
         })
@@ -125,7 +125,7 @@ extension NvimView {
        || self.mode == .replace
        || self.mode == .termFocus {
       self.api
-        .input(keys: self.vimPlainString(content), checkBlocked: false)
+        .input(keys: self.vimPlainString(content), errWhenBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not paste \(content)", cause: error))
         })
@@ -156,12 +156,12 @@ extension NvimView {
         case .insert:
           let cmd = element.column == 0 ? "<ESC>\"+Pa" : "<ESC>\"+pa"
           return self.api
-            .input(keys: cmd, checkBlocked: false).asCompletable()
+            .input(keys: cmd, errWhenBlocked: false).asCompletable()
             .andThen(Single.just(element.pasteModeSet))
 
         case .normal, .visual:
           return self.api
-            .input(keys: "\"+p", checkBlocked: false).asCompletable()
+            .input(keys: "\"+p", errWhenBlocked: false).asCompletable()
             .andThen(Single.just(element.pasteModeSet))
 
         default:
@@ -186,7 +186,7 @@ extension NvimView {
     switch self.mode {
     case .normal, .visual:
       self.api
-        .input(keys: "x", checkBlocked: false)
+        .input(keys: "x", errWhenBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not delete", cause: error))
         })
@@ -200,14 +200,14 @@ extension NvimView {
     switch self.mode {
     case .insert, .visual:
       self.api
-        .input(keys: "<Esc>ggVG", checkBlocked: false)
+        .input(keys: "<Esc>ggVG", errWhenBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not select all", cause: error))
         })
         .disposed(by: self.disposeBag)
     default:
       self.api
-        .input(keys: "ggVG", checkBlocked: false)
+        .input(keys: "ggVG", errWhenBlocked: false)
         .subscribe(onError: { error in
           self.eventsSubject.onNext(.apiError(msg: "Could not select all", cause: error))
         })

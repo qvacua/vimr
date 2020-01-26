@@ -12,15 +12,14 @@ import io
 
 void_func_template = Template('''\
   func ${func_name}(${args}
-    expectsReturnValue: Bool = true,
-    checkBlocked: Bool = true
+    expectsReturnValue: Bool = false
   ) -> Completable {
 
     let params: [RxNeovimApi.Value] = [
         ${params}
     ]
 
-    if expectsReturnValue && checkBlocked {
+    if expectsReturnValue {
       return self
         .checkBlocked(
           self.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: expectsReturnValue)
@@ -55,7 +54,7 @@ get_mode_func_template = Template('''\
 
 func_template = Template('''\
   func ${func_name}(${args}
-    checkBlocked: Bool = true
+    errWhenBlocked: Bool = true
   ) -> Single<${result_type}> {
 
     let params: [RxNeovimApi.Value] = [
@@ -70,7 +69,7 @@ func_template = Template('''\
       return result
     }
 
-    if checkBlocked {
+    if errWhenBlocked {
       return self
         .checkBlocked(
           self.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: true)

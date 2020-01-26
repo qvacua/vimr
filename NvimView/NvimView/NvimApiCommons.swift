@@ -9,7 +9,7 @@ import RxSwift
 extension RxNeovimApi {
 
   public func getDirtyStatus(
-    checkBlocked: Bool = true
+    errWhenBlocked: Bool = true
   ) -> Single<Bool> {
 
     let params: [RxNeovimApi.Value] = [
@@ -23,7 +23,7 @@ extension RxNeovimApi {
       return result
     }
 
-    if checkBlocked {
+    if errWhenBlocked {
       return self
         .checkBlocked(
           self.rpc(method: "nvim_get_dirty_status", params: params, expectsReturnValue: true)
@@ -38,7 +38,7 @@ extension RxNeovimApi {
 
   public func bufGetInfo(
     buffer: RxNeovimApi.Buffer,
-    checkBlocked: Bool = true
+    errWhenBlocked: Bool = true
   ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
 
     let params: [RxNeovimApi.Value] = [
@@ -53,7 +53,7 @@ extension RxNeovimApi {
       return result
     }
 
-    if checkBlocked {
+    if errWhenBlocked {
       return self
         .checkBlocked(
           self.rpc(method: "nvim_buf_get_info", params: params)

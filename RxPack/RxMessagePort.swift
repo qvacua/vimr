@@ -17,25 +17,12 @@ public final class RxMessagePortClient {
 
     public static func responseCodeToString(code: Int32) -> String {
       switch code {
-
-      case kCFMessagePortSendTimeout:
-        return "kCFMessagePortSendTimeout"
-
-      case kCFMessagePortReceiveTimeout:
-        return "kCFMessagePortReceiveTimeout"
-
-      case kCFMessagePortIsInvalid:
-        return "kCFMessagePortIsInvalid"
-
-      case kCFMessagePortTransportError:
-        return "kCFMessagePortTransportError"
-
-      case kCFMessagePortBecameInvalidError:
-        return "kCFMessagePortBecameInvalidError"
-
-      default:
-        return "unknown"
-
+      case kCFMessagePortSendTimeout:return "kCFMessagePortSendTimeout"
+      case kCFMessagePortReceiveTimeout:return "kCFMessagePortReceiveTimeout"
+      case kCFMessagePortIsInvalid:return "kCFMessagePortIsInvalid"
+      case kCFMessagePortTransportError:return "kCFMessagePortTransportError"
+      case kCFMessagePortBecameInvalidError:return "kCFMessagePortBecameInvalidError"
+      default:return "unknown"
       }
     }
   }
@@ -44,60 +31,50 @@ public final class RxMessagePortClient {
 
   public var timeout = RxMessagePortClient.defaultTimeout
 
-  public var queue = DispatchQueue(
-    label: String(reflecting: RxMessagePortClient.self),
-    qos: .userInitiated
-  )
-
-  public init() {
-  }
-
   public func send(
     msgid: Int32,
     data: Data?,
     expectsReply: Bool
   ) -> Single<Data?> {
-    return Single.create { single in
+    Single.create { single in
       self.queue.async {
-        self.portLock.withReadLock {
-          guard self.portIsValid else {
-            single(.error(Error.portInvalid))
-            return
-          }
-
-          let returnDataPtr: UnsafeMutablePointer<Unmanaged<CFData>?>
-            = UnsafeMutablePointer.allocate(capacity: 1)
-          defer { returnDataPtr.deallocate() }
-
-          let responseCode = CFMessagePortSendRequest(
-            self.port,
-            msgid,
-            data?.cfdata,
-            self.timeout,
-            self.timeout,
-            expectsReply ? CFRunLoopMode.defaultMode.rawValue : nil,
-            expectsReply ? returnDataPtr : nil
-          )
-
-          guard responseCode == kCFMessagePortSuccess else {
-            single(.error(Error.send(msgid: msgid, response: responseCode)))
-            return
-          }
-
-          guard expectsReply else {
-            single(.success(nil))
-            return
-          }
-
-          // Upon return, [returnData] contains a CFData object
-          // containing the reply data. Ownership follows the The Create Rule.
-          // From: https://developer.apple.com/documentation/corefoundation/1543076-cfmessageportsendrequest
-          // This means that we have to release the returned CFData.
-          // Thus, we have to use Unmanaged.takeRetainedValue()
-          // See also https://www.mikeash.com/pyblog/friday-qa-2017-08-11-swiftunmanaged.html
-          let data: Data? = returnDataPtr.pointee?.takeRetainedValue().data
-          single(.success(data))
+        guard self.portIsValid else {
+          single(.error(Error.portInvalid))
+          return
         }
+
+        let returnDataPtr: UnsafeMutablePointer<Unmanaged<CFData>?>
+          = UnsafeMutablePointer.allocate(capacity: 1)
+        defer { returnDataPtr.deallocate() }
+
+        let responseCode = CFMessagePortSendRequest(
+          self.port,
+          msgid,
+          data?.cfdata,
+          self.timeout,
+          self.timeout,
+          expectsReply ? CFRunLoopMode.defaultMode.rawValue : nil,
+          expectsReply ? returnDataPtr : nil
+        )
+
+        guard responseCode == kCFMessagePortSuccess else {
+          single(.error(Error.send(msgid: msgid, response: responseCode)))
+          return
+        }
+
+        guard expectsReply else {
+          single(.success(nil))
+          return
+        }
+
+        // Upon return, [returnData] contains a CFData object
+        // containing the reply data. Ownership follows the The Create Rule.
+        // From: https://developer.apple.com/documentation/corefoundation/1543076-cfmessageportsendrequest
+        // This means that we have to release the returned CFData.
+        // Thus, we have to use Unmanaged.takeRetainedValue()
+        // See also https://www.mikeash.com/pyblog/friday-qa-2017-08-11-swiftunmanaged.html
+        let data: Data? = returnDataPtr.pointee?.takeRetainedValue().data
+        single(.success(data))
       }
 
       return Disposables.create()
@@ -105,34 +82,30 @@ public final class RxMessagePortClient {
   }
 
   public func connect(to name: String) -> Completable {
-    return Completable.create { completable in
+    Completable.create { completable in
       self.queue.async {
-        self.portLock.withWriteLock {
-          self.port = CFMessagePortCreateRemote(kCFAllocatorDefault, name.cfstr)
+        self.port = CFMessagePortCreateRemote(kCFAllocatorDefault, name.cfstr)
 
-          if self.port == nil {
-            completable(.error(Error.clientInit))
-            return
-          }
-
-          self.portIsValid = true
-          completable(.completed)
+        if self.port == nil {
+          completable(.error(Error.clientInit))
+          return
         }
+
+        self.portIsValid = true
+        completable(.completed)
       }
       return Disposables.create()
     }
   }
 
   public func stop() -> Completable {
-    return Completable.create { completable in
+    Completable.create { completable in
       self.queue.async {
-        self.portLock.withWriteLock {
-          self.portIsValid = false
-          if self.port != nil && CFMessagePortIsValid(self.port) {
-            CFMessagePortInvalidate(self.port)
-          }
-          completable(.completed)
+        self.portIsValid = false
+        if self.port != nil && CFMessagePortIsValid(self.port) {
+          CFMessagePortInvalidate(self.port)
         }
+        completable(.completed)
       }
 
       return Disposables.create()
@@ -140,8 +113,12 @@ public final class RxMessagePortClient {
   }
 
   private var portIsValid = false
-  private let portLock = ReadersWriterLock()
   private var port: CFMessagePort?
+
+  private let queue = DispatchQueue(
+    label: String(reflecting: RxMessagePortClient.self),
+    qos: .userInitiated
+  )
 }
 
 public final class RxMessagePortServer {
@@ -155,29 +132,16 @@ public final class RxMessagePortServer {
   }
 
   public var syncReplyBody: SyncReplyBody? {
-    get {
-      return self.messageHandler.syncReplyBody
-    }
-    set {
-      self.messageHandler.syncReplyBody = newValue
-    }
+    get { self.messageHandler.syncReplyBody }
+    set { self.messageHandler.syncReplyBody = newValue }
   }
 
-  public var stream: Observable<Message> {
-    return self.streamSubject.asObservable()
-  }
+  public var stream: Observable<Message> { self.streamSubject.asObservable() }
 
-  public var queue = DispatchQueue(
-    label: String(reflecting: RxMessagePortServer.self),
-    qos: .userInitiated
-  )
-
-  public init() {
-    self.messageHandler = MessageHandler(subject: self.streamSubject)
-  }
+  public init() { self.messageHandler = MessageHandler(subject: self.streamSubject) }
 
   public func run(as name: String) -> Completable {
-    return Completable.create { completable in
+    Completable.create { completable in
       self.queue.async {
         var localCtx = CFMessagePortContext(
           version: 0,
@@ -193,8 +157,7 @@ public final class RxMessagePortServer {
           { _, msgid, data, info in
             guard let infoPtr = UnsafeRawPointer(info) else { return nil }
 
-            let handler = Unmanaged<MessageHandler>
-              .fromOpaque(infoPtr).takeUnretainedValue()
+            let handler = Unmanaged<MessageHandler>.fromOpaque(infoPtr).takeUnretainedValue()
             return handler.handleMessage(msgId: msgid, cfdata: data)
           },
           &localCtx,
@@ -218,14 +181,12 @@ public final class RxMessagePortServer {
   }
 
   public func stop() -> Completable {
-    return Completable.create { completable in
+    Completable.create { completable in
       self.queue.async {
         self.messageHandler.syncReplyBody = nil
         self.streamSubject.onCompleted()
 
-        if let portRunLoop = self.portRunLoop {
-          CFRunLoopStop(portRunLoop)
-        }
+        if let portRunLoop = self.portRunLoop { CFRunLoopStop(portRunLoop) }
 
         if self.port != nil && CFMessagePortIsValid(self.port) {
           CFMessagePortInvalidate(self.port)
@@ -242,16 +203,17 @@ public final class RxMessagePortServer {
   private var portThread: Thread?
   private var portRunLoop: CFRunLoop?
 
+  private let queue = DispatchQueue(
+    label: String(reflecting: RxMessagePortClient.self),
+    qos: .userInitiated
+  )
+
   private var messageHandler: MessageHandler
   private let streamSubject = PublishSubject<Message>()
 
   private func runServer() {
     self.portRunLoop = CFRunLoopGetCurrent()
-    let runLoopSrc = CFMessagePortCreateRunLoopSource(
-      kCFAllocatorDefault,
-      self.port,
-      0
-    )
+    let runLoopSrc = CFMessagePortCreateRunLoopSource(kCFAllocatorDefault, self.port, 0)
     CFRunLoopAddSource(self.portRunLoop, runLoopSrc, .defaultMode)
     CFRunLoopRun()
   }
@@ -261,9 +223,7 @@ private class MessageHandler {
 
   fileprivate var syncReplyBody: RxMessagePortServer.SyncReplyBody?
 
-  fileprivate init(subject: PublishSubject<RxMessagePortServer.Message>) {
-    self.subject = subject
-  }
+  fileprivate init(subject: PublishSubject<RxMessagePortServer.Message>) { self.subject = subject }
 
   fileprivate func handleMessage(
     msgId: Int32,
@@ -286,21 +246,15 @@ private class MessageHandler {
 
 private extension Data {
 
-  var cfdata: CFData {
-    return self as NSData
-  }
+  var cfdata: CFData { self as NSData }
 }
 
 private extension CFData {
 
-  var data: Data {
-    return self as NSData as Data
-  }
+  var data: Data { self as NSData as Data }
 }
 
 private extension String {
 
-  var cfstr: CFString {
-    return self as NSString
-  }
+  var cfstr: CFString { self as NSString }
 }
