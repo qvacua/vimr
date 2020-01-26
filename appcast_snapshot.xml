@@ -7,37 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.30.0-335</title>
+      <title>SNAPSHOT-336</title>
       <description><![CDATA[
     <ul>
-<li>Improve Open Quickly<ul>
-<li>Use <a href="https://github.com/ggreer/the_silver_searcher">The Silver Searcher</a>'s ignore mechanism</li>
-<li>Use <a href="https://github.com/MaskRay/ccls">ccls</a>' fuzzy search</li>
-</ul>
-</li>
-<li>GH-730: Add "Close Window" menu item, which closes all tabs (and the VimR window).</li>
-<li>GH-768: Bugfix: coc.nvim does not work.</li>
-<li>Bugfix: VimR hangs when there are windows in which nvim is waiting for user input.</li>
-<li>Bugfix: Forward search in Markdown preview does not work.</li>
-<li>Bugfix: "Open Quickly" result rows are not dark mode compatible.</li>
-<li>Bugfix: Enter without selecting a result in the "Open Quickly" window results in a crash.</li>
-<li>Dependencies updates:<ul>
-<li>IBM-Swift/BlueSocket 1.0.52</li>
-<li>elegantchaos/DictionaryCoding 1.0.7</li>
-</ul>
-</li>
+<li><em>Note that SNAPSHOT builds are prone to be very unstable.</em></li>
+<li>Improve handling of file system changes for the file browser</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.30.0-335
+        https://github.com/qvacua/vimr/releases/tag/snapshot/336
       </releaseNotesLink>
-      <pubDate>2020-01-24T23:40:24.018858</pubDate>
+      <pubDate>2020-01-26T22:17:08.186659</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.30.0-335/VimR-v0.30.0-335.tar.bz2"
-                 sparkle:version="335"
-                 sparkle:shortVersionString="0.30.0"
-                 sparkle:dsaSignature="MCwCFBruv+r11RKh6fPQq1aP+bJoIabKAhRDGo9Q6NNCefyQnpsBhm44fKRJ3w=="
-                 length="14656304"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/336/VimR-SNAPSHOT-336.tar.bz2"
+                 sparkle:version="336"
+                 sparkle:shortVersionString="SNAPSHOT-336"
+                 sparkle:dsaSignature="MCwCFBcZO/2EKNKIme3I2mOMZ7m+BEmdAhRgZdHZ9L7GBbda0jbX0XcSu8OCwg=="
+                 length="14699218"
                  type="application/octet-stream"/>
     </item>
   </channel>
