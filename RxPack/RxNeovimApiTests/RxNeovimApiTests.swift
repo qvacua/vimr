@@ -24,6 +24,16 @@ class NvimMsgPackTests: XCTestCase {
     try? self.nvim.stop().wait()
   }
 
+  func testSth() {
+    nvim
+      .command(command: "pwd")
+      .subscribe(onCompleted: { print("completed") }, onError: { print($0) })
+//      .subscribe(onSuccess: { print($0) })
+      .disposed(by: self.disposeBag)
+
+    sleep(1)
+  }
+
   func testExample() {
     let formatter = DateFormatter()
     formatter.dateStyle = .short
@@ -33,9 +43,7 @@ class NvimMsgPackTests: XCTestCase {
     for i in 0...5 {
       nvim
         .command(
-          command: "echo '\(formatter.string(from: now)) \(i)'",
-          expectsReturnValue: true,
-          checkBlocked: true
+          command: "echo '\(formatter.string(from: now)) \(i)'"
         )
         .subscribe(onCompleted: { print("\(i) handled") })
         .disposed(by: dispose)
