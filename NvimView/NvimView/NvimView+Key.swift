@@ -41,7 +41,7 @@ extension NvimView {
     let finalInput = isWrapNeeded ? self.wrapNamedKeys(flags + namedChars)
       : self.vimPlainString(chars)
 
-    _ = self.api.input(keys: finalInput, checkBlocked: false).syncValue()
+    _ = self.api.input(keys: finalInput, errWhenBlocked: false).syncValue()
 
     self.keyDownDone = true
   }
@@ -130,7 +130,7 @@ extension NvimView {
     // So we escape as early as possible
     if chars == "\0" {
       self.api
-        .input(keys: self.wrapNamedKeys("Nul"), checkBlocked: false)
+        .input(keys: self.wrapNamedKeys("Nul"), errWhenBlocked: false)
         .subscribe()
         .disposed(by: self.disposeBag)
       return true
@@ -141,7 +141,7 @@ extension NvimView {
     // Also mentioned in MacVim's KeyBindings.plist
     if .control == flags && chars == "6" {
       self.api
-        .input(keys: "\u{1e}", checkBlocked: false) // AKA ^^
+        .input(keys: "\u{1e}", errWhenBlocked: false) // AKA ^^
         .subscribe()
         .disposed(by: self.disposeBag)
       return true
@@ -150,7 +150,7 @@ extension NvimView {
     if .control == flags && chars == "2" {
       // <C-2> should generate \0, escaping as above
       self.api
-        .input(keys: self.wrapNamedKeys("Nul"), checkBlocked: false)
+        .input(keys: self.wrapNamedKeys("Nul"), errWhenBlocked: false)
         .subscribe()
         .disposed(by: self.disposeBag)
       return true

@@ -34,9 +34,9 @@ extension NvimView {
                                                           modifierFlags: event.modifierFlags,
                                                           cellPosition: cellPosition)
       self.api
-        .input(keys: vimInputX, checkBlocked: false).asCompletable()
+        .input(keys: vimInputX, errWhenBlocked: false).asCompletable()
         .andThen(
-          self.api.input(keys: vimInputY, checkBlocked: false).asCompletable()
+          self.api.input(keys: vimInputY, errWhenBlocked: false).asCompletable()
         )
         .subscribe()
         .disposed(by: self.disposeBag)
@@ -120,7 +120,7 @@ extension NvimView {
     }
 
     self.api
-      .input(keys: result, checkBlocked: false)
+      .input(keys: result, errWhenBlocked: false)
       .subscribe()
       .disposed(by: self.disposeBag)
   }
