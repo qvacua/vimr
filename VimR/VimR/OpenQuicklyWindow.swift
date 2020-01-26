@@ -152,6 +152,7 @@ class OpenQuicklyWindow: NSObject,
   private func reset() {
     self.scanToken = Token()
     self.currentSearchService?.stopScanScore()
+    self.currentSearchService = nil
 
     self.endProgress()
     self.unsortedScoredUrls.removeAll()
