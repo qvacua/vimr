@@ -31,13 +31,6 @@ public final class RxMessagePortClient {
 
   public var timeout = RxMessagePortClient.defaultTimeout
 
-  public var queue = DispatchQueue(
-    label: String(reflecting: RxMessagePortClient.self),
-    qos: .userInitiated
-  )
-
-  public init() {}
-
   public func send(
     msgid: Int32,
     data: Data?,
@@ -121,6 +114,11 @@ public final class RxMessagePortClient {
 
   private var portIsValid = false
   private var port: CFMessagePort?
+
+  private let queue = DispatchQueue(
+    label: String(reflecting: RxMessagePortClient.self),
+    qos: .userInitiated
+  )
 }
 
 public final class RxMessagePortServer {
@@ -139,11 +137,6 @@ public final class RxMessagePortServer {
   }
 
   public var stream: Observable<Message> { self.streamSubject.asObservable() }
-
-  public var queue = DispatchQueue(
-    label: String(reflecting: RxMessagePortServer.self),
-    qos: .userInitiated
-  )
 
   public init() { self.messageHandler = MessageHandler(subject: self.streamSubject) }
 
@@ -209,6 +202,11 @@ public final class RxMessagePortServer {
   private var port: CFMessagePort?
   private var portThread: Thread?
   private var portRunLoop: CFRunLoop?
+
+  private let queue = DispatchQueue(
+    label: String(reflecting: RxMessagePortClient.self),
+    qos: .userInitiated
+  )
 
   private var messageHandler: MessageHandler
   private let streamSubject = PublishSubject<Message>()

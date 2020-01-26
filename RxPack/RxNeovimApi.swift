@@ -54,15 +54,6 @@ public final class RxNeovimApi {
 
   public var msgpackRawStream: Observable<RxMsgpackRpc.Message> { self.msgpackRpc.stream }
 
-  public var queue = DispatchQueue(
-    label: String(reflecting: RxNeovimApi.self),
-    qos: .userInitiated
-  ) {
-    didSet { self.msgpackRpc.queue = self.queue }
-  }
-
-  public init() { self.msgpackRpc.queue = self.queue }
-
   public func run(at path: String) -> Completable { self.msgpackRpc.run(at: path) }
 
   public func stop() -> Completable { self.msgpackRpc.stop() }
@@ -94,6 +85,11 @@ public final class RxNeovimApi {
   }
 
   private let msgpackRpc = RxMsgpackRpc()
+
+  private let queue = DispatchQueue(
+    label: String(reflecting: RxNeovimApi.self),
+    qos: .userInitiated
+  )
 }
 
 fileprivate extension NSLocking {

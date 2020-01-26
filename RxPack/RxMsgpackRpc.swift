@@ -58,15 +58,8 @@ public final class RxMsgpackRpc {
   */
   public var streamResponses = false
 
-  public var queue = DispatchQueue(
-    label: String(reflecting: RxMsgpackRpc.self),
-    qos: .userInitiated
-  )
-
   private var socket: Socket?
   private var thread: Thread?
-
-  public init() {}
 
   public func run(at path: String) -> Completable {
     Completable.create { completable in
@@ -186,6 +179,11 @@ public final class RxMsgpackRpc {
 
   private var nextMsgid: UInt32 = 0
   private let nextMsgidLock = NSLock()
+
+  private let queue = DispatchQueue(
+    label: String(reflecting: RxMsgpackRpc.self),
+    qos: .userInitiated
+  )
 
   private var stopped = true
   private let stopLock = ReadersWriterLock()
