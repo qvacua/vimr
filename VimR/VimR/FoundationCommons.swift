@@ -81,4 +81,10 @@ extension URL {
   }
 }
 
+extension ValueTransformer {
+
+  static var keyedUnarchiveFromDataTransformer
+    = ValueTransformer(forName: .keyedUnarchiveFromDataTransformerName)!
+}
+
 private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.general)

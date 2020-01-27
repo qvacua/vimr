@@ -29,6 +29,7 @@ class ShortcutsPref: PrefPane,
 
     super.init(frame: .zero)
 
+    self.migrateDefaults()
     self.initShortcutUserDefaults()
 
     self.addViews()
@@ -51,18 +52,43 @@ class ShortcutsPref: PrefPane,
   private let treeController = NSTreeController()
   private let shortcutItemsRoot = ShortcutItem(title: "root", isLeaf: false, item: nil)
 
-  private let keyEqTransformer = KeyEquivalentTransformer()
-  private let keyEqModTransformer = KeyEquivalentModifierMaskTransformer()
+  private let keyEqTransformer = DataToKeyEquivalentTransformer()
+  private let keyEqModTransformer = DataToKeyEquivalentModifierMaskTransformer()
 
   private let shortcutsUserDefaults = UserDefaults(suiteName: "com.qvacua.VimR.menuitems")
   private let shortcutsDefaultsController: NSUserDefaultsController
 
+  private func migrateDefaults() {
+    if (self.shortcutsUserDefaults?.integer(forKey: defaultsVersionKey) ?? 0) == defaultsVersion {
+      return
+    }
+
+    legacyDefaultShortcuts.keys.forEach { id in
+      let shortcut: Shortcut?
+      if let dict = self.shortcutsUserDefaults?.value(forKey: id) as? [String: Any] {
+        shortcut = Shortcut(dictionary: dict)
+      } else {
+        shortcut = defaultShortcuts[id] ?? nil
+      }
+
+      let data = ValueTransformer
+        .keyedUnarchiveFromDataTransformer
+        .reverseTransformedValue(shortcut) as? NSData
+      self.shortcutsUserDefaults?.set(data, forKey: id)
+    }
+
+    self.shortcutsUserDefaults?.set(defaultsVersion, forKey: defaultsVersionKey)
+  }
+
   private func initShortcutUserDefaults() {
-    defaultShortcuts.forEach { identifier, shortcutData in
-      if self.shortcutsUserDefaults?.value(forKey: identifier) == nil {
-        self.shortcutsUserDefaults?.set(shortcutData, forKey: identifier)
+    let transformer = ValueTransformer(forName: .keyedUnarchiveFromDataTransformerName)!
+    defaultShortcuts.forEach { id, shortcut in
+      if self.shortcutsUserDefaults?.value(forKey: id) == nil {
+        let shortcutData = transformer.reverseTransformedValue(shortcut) as? NSData
+        self.shortcutsUserDefaults?.set(shortcutData, forKey: id)
       }
     }
+    self.shortcutsUserDefaults?.set(defaultsVersion, forKey: defaultsVersionKey)
   }
 
   private func initOutlineViewBindings() {
@@ -206,7 +232,7 @@ extension ShortcutsPref {
       guard response == .alertSecondButtonReturn else { return }
       self.traverseMenuItems { identifier, _ in
         self.shortcutsDefaultsController.setValue(
-          defaultShortcuts[identifier],
+          legacyDefaultShortcuts[identifier],
           forKeyPath: "values.\(identifier)"
         )
       }
@@ -260,10 +286,7 @@ extension ShortcutsPref {
       return cellView
     }
 
-    cellView.customized = !self.shortcutsAreEqual(
-      self.shortcutsDefaultsController.value(forKeyPath: "values.\(identifier)"),
-      defaultShortcuts[identifier]
-    )
+    cellView.customized = !self.areShortcutsEqual(identifier)
     cellView.layoutViews()
     cellView.setDelegateOfRecorder(self)
     cellView.bindRecorder(toKeyPath: "values.\(identifier)", to: self.shortcutsDefaultsController)
@@ -273,41 +296,50 @@ extension ShortcutsPref {
 
   func outlineView(_: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat { 28 }
 
-  private func shortcutsAreEqual(_ lhs: Any?, _ rhs: Any?) -> Bool {
-    if lhs == nil && rhs == nil { return true }
+  private func areShortcutsEqual(_ identifier: String) -> Bool {
+    guard let dataFromDefaults = self.shortcutsDefaultsController.value(
+      forKeyPath: "values.\(identifier)"
+    ) as? NSData else { return true }
 
-    guard let lhsShortcut = lhs as? [String: Any],
-          let rhsShortcut = rhs as? [String: Any] else { return false }
+    guard let shortcutFromDefaults = ValueTransformer
+      .keyedUnarchiveFromDataTransformer
+      .transformedValue(dataFromDefaults) as? Shortcut else { return true }
 
-    if lhsShortcut.isEmpty && rhsShortcut.isEmpty { return true }
+    let defaultShortcut = defaultShortcuts[identifier] ?? nil
 
-    if lhsShortcut[SRShortcutCharacters] as? String
-       != rhsShortcut[SRShortcutCharacters] as? String {
-      return false
-    }
-
-    if lhsShortcut[SRShortcutCharactersIgnoringModifiers] as? String
-       != rhsShortcut[SRShortcutCharactersIgnoringModifiers] as? String {
-      return false
-    }
-
-    if lhsShortcut[SRShortcutKeyCode] as? Int != rhsShortcut[SRShortcutKeyCode] as? Int {
-      return false
-    }
-
-    if lhsShortcut[SRShortcutModifierFlagsKey] as? Int
-       != rhsShortcut[SRShortcutModifierFlagsKey] as? Int {
-      return false
-    }
-
-    return true
+    return shortcutFromDefaults.isEqual(to: defaultShortcut) == true
   }
 }
 
 // MARK: - SRRecorderControlDelegate
 extension ShortcutsPref {
 
-  func shortcutRecorderDidEndRecording(_ sender: RecorderControl!) {
+  func recorderControlDidEndRecording(_ sender: RecorderControl) {
     self.treeController.rearrangeObjects()
+  }
+}
+
+private let defaultsVersionKey = "version"
+private let defaultsVersion = 337
+
+private class DataToKeyEquivalentTransformer: ValueTransformer {
+
+  override func transformedValue(_ value: Any?) -> Any? {
+    guard let shortcut = ValueTransformer
+      .keyedUnarchiveFromDataTransformer
+      .transformedValue(value) as? Shortcut else { return "" }
+
+    return KeyEquivalentTransformer.shared.transformedValue(shortcut)
+  }
+}
+
+private class DataToKeyEquivalentModifierMaskTransformer: ValueTransformer {
+
+  override func transformedValue(_ value: Any?) -> Any? {
+    guard let shortcut = ValueTransformer
+      .keyedUnarchiveFromDataTransformer
+      .transformedValue(value) as? Shortcut else { return NSNumber(value: 0) }
+
+    return KeyEquivalentModifierMaskTransformer.shared.transformedValue(shortcut)
   }
 }
