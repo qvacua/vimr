@@ -5,7 +5,7 @@ github "ReactiveX/RxSwift" == 5.0.1
 github "a2/MessagePack.swift" == 3.0.1
 github "qvacua/CocoaFontAwesome" "master"
 github "qvacua/CocoaMarkdown" "master"
-github "qvacua/ShortcutRecorder" "temporary"
+github "qvacua/ShortcutRecorder" "develop"
 github "qvacua/Sparkle" == 1.21.3-qvacua
 github "qvacua/swifter" "nonpublic"
 

@@ -36,7 +36,7 @@ class ShortcutTableCell: NSTableCellView {
     }
   }
 
-  func setDelegateOfRecorder(_ delegate: SRRecorderControlDelegate) {
+  func setDelegateOfRecorder(_ delegate: RecorderControlDelegate) {
     self.shortcutRecorder.delegate = delegate
   }
 
@@ -67,8 +67,8 @@ class ShortcutTableCell: NSTableCellView {
     recorder.allowsEscapeToCancelRecording = true
     recorder.allowsDeleteToClearShortcutAndEndRecording = true
     recorder.storesEmptyValueForNoShortcut = true
-    recorder.setAllowedModifierFlags(
-      [.command, .shift, .option, .control],
+    recorder.set(
+      allowedModifierFlags: [.command, .shift, .option, .control],
       requiredModifierFlags: [],
       allowsEmptyModifierFlags: false
     )
@@ -117,7 +117,7 @@ class ShortcutTableCell: NSTableCellView {
     textField.autoPinEdge(toSuperviewEdge: .top, withInset: 3)
   }
 
-  private let shortcutRecorder = SRRecorderControl(forAutoLayout: ())
+  private let shortcutRecorder = RecorderControl(forAutoLayout: ())
   private let _textField = NSTextField(forAutoLayout: ())
 
   required init?(coder: NSCoder) {

@@ -11,7 +11,7 @@ import ShortcutRecorder
 class ShortcutsPref: PrefPane,
                      UiComponent,
                      NSOutlineViewDelegate,
-                     SRRecorderControlDelegate {
+                     RecorderControlDelegate {
 
   typealias StateType = AppState
 
@@ -51,8 +51,8 @@ class ShortcutsPref: PrefPane,
   private let treeController = NSTreeController()
   private let shortcutItemsRoot = ShortcutItem(title: "root", isLeaf: false, item: nil)
 
-  private let keyEqTransformer = SRKeyEquivalentTransformer()
-  private let keyEqModTransformer = SRKeyEquivalentModifierMaskTransformer()
+  private let keyEqTransformer = KeyEquivalentTransformer()
+  private let keyEqModTransformer = KeyEquivalentModifierMaskTransformer()
 
   private let shortcutsUserDefaults = UserDefaults(suiteName: "com.qvacua.VimR.menuitems")
   private let shortcutsDefaultsController: NSUserDefaultsController
@@ -307,7 +307,7 @@ extension ShortcutsPref {
 // MARK: - SRRecorderControlDelegate
 extension ShortcutsPref {
 
-  func shortcutRecorderDidEndRecording(_ sender: SRRecorderControl!) {
+  func shortcutRecorderDidEndRecording(_ sender: RecorderControl!) {
     self.treeController.rearrangeObjects()
   }
 }
