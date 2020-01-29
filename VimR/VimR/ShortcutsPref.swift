@@ -28,6 +28,17 @@ class ShortcutsPref: PrefPane,
     )
 
     super.init(frame: .zero)
+    if let version = self.shortcutsUserDefaults?.integer(forKey: "version"), version > 0 {
+      let alert = NSAlert()
+      alert.alertStyle = .warning
+      alert.messageText = "Incompatible Defaults for Shortcuts"
+      alert.informativeText = "The stored defaults for shortcuts are not compatible with "
+                              + "this version of VimR. You can delete the stored defaults "
+                              + "by executing 'defaults delete com.qvacua.VimR.menuitems' "
+                              + "in Terminal."
+      alert.runModal()
+      return
+    }
 
     self.migrateDefaults()
     self.initShortcutUserDefaults()
