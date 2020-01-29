@@ -28,7 +28,9 @@ class ShortcutsPref: PrefPane,
     )
 
     super.init(frame: .zero)
-    if let version = self.shortcutsUserDefaults?.integer(forKey: "version"), version > 0 {
+
+    if let version = self.shortcutsUserDefaults?.integer(forKey: "version"),
+       version > defaultsVersion {
       let alert = NSAlert()
       alert.alertStyle = .warning
       alert.messageText = "Incompatible Defaults for Shortcuts"
