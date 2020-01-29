@@ -7,23 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-336</title>
+      <title>v0.31.0-337</title>
       <description><![CDATA[
     <ul>
-<li><em>Note that SNAPSHOT builds are prone to be very unstable.</em></li>
 <li>Improve handling of file system changes for the file browser</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/336
+        https://github.com/qvacua/vimr/releases/tag/v0.31.0-337
       </releaseNotesLink>
-      <pubDate>2020-01-26T22:17:08.186659</pubDate>
+      <pubDate>2020-01-29T18:46:32.955903</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/336/VimR-SNAPSHOT-336.tar.bz2"
-                 sparkle:version="336"
-                 sparkle:shortVersionString="SNAPSHOT-336"
-                 sparkle:dsaSignature="MCwCFBcZO/2EKNKIme3I2mOMZ7m+BEmdAhRgZdHZ9L7GBbda0jbX0XcSu8OCwg=="
-                 length="14699218"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.31.0-337/VimR-v0.31.0-337.tar.bz2"
+                 sparkle:version="337"
+                 sparkle:shortVersionString="0.31.0"
+                 sparkle:dsaSignature="MCwCFGUJZ7akEbHT3JcZCICNswi8iJZdAhRofIjp5z72Del7RHv2hvJyZ9b7CQ=="
+                 length="14698478"
                  type="application/octet-stream"/>
     </item>
   </channel>

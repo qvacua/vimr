@@ -27,23 +27,21 @@ class ShortcutTableCell: NSTableCellView {
   var isDir = false
 
   var text: String {
-    get {
-      return self.textField!.stringValue
-    }
-
-    set {
-      self.textField?.stringValue = newValue
-    }
+    get { self.textField!.stringValue }
+    set { self.textField?.stringValue = newValue }
   }
 
-  func setDelegateOfRecorder(_ delegate: SRRecorderControlDelegate) {
+  func setDelegateOfRecorder(_ delegate: RecorderControlDelegate) {
     self.shortcutRecorder.delegate = delegate
   }
 
   func bindRecorder(toKeyPath keypath: String, to content: Any) {
     self.shortcutRecorder.unbind(.value)
     self.shortcutRecorder.bind(
-      .value, to: content, withKeyPath: keypath
+      .value,
+      to: content,
+      withKeyPath: keypath,
+      options: [.valueTransformer: ValueTransformer.keyedUnarchiveFromDataTransformer]
     )
   }
 
@@ -66,9 +64,8 @@ class ShortcutTableCell: NSTableCellView {
     let recorder = self.shortcutRecorder
     recorder.allowsEscapeToCancelRecording = true
     recorder.allowsDeleteToClearShortcutAndEndRecording = true
-    recorder.storesEmptyValueForNoShortcut = true
-    recorder.setAllowedModifierFlags(
-      [.command, .shift, .option, .control],
+    recorder.set(
+      allowedModifierFlags: [.command, .shift, .option, .control],
       requiredModifierFlags: [],
       allowsEmptyModifierFlags: false
     )
@@ -117,11 +114,9 @@ class ShortcutTableCell: NSTableCellView {
     textField.autoPinEdge(toSuperviewEdge: .top, withInset: 3)
   }
 
-  private let shortcutRecorder = SRRecorderControl(forAutoLayout: ())
+  private let shortcutRecorder = RecorderControl(forAutoLayout: ())
   private let _textField = NSTextField(forAutoLayout: ())
 
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }
 

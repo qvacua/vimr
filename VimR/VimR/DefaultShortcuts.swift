@@ -6,7 +6,41 @@
 import Foundation
 import ShortcutRecorder
 
-let defaultShortcuts: [String: [String: Any]] = [
+let defaultShortcuts: [String: Shortcut?] = [
+  "com.qvacua.vimr.menuitems.edit.copy": Shortcut(keyEquivalent: "⌘C"),
+  "com.qvacua.vimr.menuitems.edit.cut": Shortcut(keyEquivalent: "⌘X"),
+  "com.qvacua.vimr.menuitems.edit.delete": Shortcut(keyEquivalent: ""),
+  "com.qvacua.vimr.menuitems.edit.paste": Shortcut(keyEquivalent: "⌘V"),
+  "com.qvacua.vimr.menuitems.edit.redo": Shortcut(keyEquivalent: "⇧⌘Z"),
+  "com.qvacua.vimr.menuitems.edit.select-all": Shortcut(keyEquivalent: "⌘A"),
+  "com.qvacua.vimr.menuitems.edit.undo": Shortcut(keyEquivalent: "⌘Z"),
+  "com.qvacua.vimr.menuitems.file.close": Shortcut(keyEquivalent: "⌘W"),
+  "com.qvacua.vimr.menuitems.file.close-window": Shortcut(keyEquivalent: "⇧⌘W"),
+  "com.qvacua.vimr.menuitems.file.new": Shortcut(keyEquivalent: "⌘N"),
+  "com.qvacua.vimr.menuitems.file.new-tab": Shortcut(keyEquivalent: "⌘T"),
+  "com.qvacua.vimr.menuitems.file.open-in-new-window": Shortcut(keyEquivalent: "⌥⌘O"),
+  "com.qvacua.vimr.menuitems.file.open-quickly": Shortcut(keyEquivalent: "⇧⌘O"),
+  "com.qvacua.vimr.menuitems.file.open": Shortcut(keyEquivalent: "⌘O"),
+  "com.qvacua.vimr.menuitems.file.save-as": Shortcut(keyEquivalent: "⇧⌘S"),
+  "com.qvacua.vimr.menuitems.file.save": Shortcut(keyEquivalent: "⌘S"),
+  "com.qvacua.vimr.menuitems.help.vimr-help": Shortcut(keyEquivalent: ""),
+  "com.qvacua.vimr.menuitems.tools.focus-neovim-view": Shortcut(keyEquivalent: "⌘."),
+  "com.qvacua.vimr.menuitems.tools.toggle-all-tools": Shortcut(keyEquivalent: "⌘\\"),
+  "com.qvacua.vimr.menuitems.tools.toggle-file-browser": Shortcut(keyEquivalent: "⌘1"),
+  "com.qvacua.vimr.menuitems.tools.toggle-buffer-list": Shortcut(keyEquivalent: "⌘2"),
+  "com.qvacua.vimr.menuitems.tools.toggle-markdown-preview": Shortcut(keyEquivalent: "⌘3"),
+  "com.qvacua.vimr.menuitems.tools.toggle-html-preview": Shortcut(keyEquivalent: "⌘4"),
+  "com.qvacua.vimr.menuitems.tools.toggle-tool-buttons": Shortcut(keyEquivalent: "⇧⌘\\"),
+  "com.qvacua.vimr.menuitems.view.enter-full-screen": Shortcut(keyEquivalent: "⌃⌘F"),
+  "com.qvacua.vimr.menuitems.view.font.bigger": Shortcut(keyEquivalent: "⌘+"),
+  "com.qvacua.vimr.menuitems.view.font.reset-to-default-size": Shortcut(keyEquivalent: "⌘0"),
+  "com.qvacua.vimr.menuitems.view.font.smaller": Shortcut(keyEquivalent: "⌘-"),
+  "com.qvacua.vimr.menuitems.window.bring-all-to-front": Shortcut(keyEquivalent: ""), 
+  "com.qvacua.vimr.menuitems.window.minimize": Shortcut(keyEquivalent: "⌘M"),
+  "com.qvacua.vimr.menuitems.window.zoom": Shortcut(keyEquivalent: ""),
+]
+
+let legacyDefaultShortcuts: [String: [String: Any]] = [
   "com.qvacua.vimr.menuitems.edit.copy": [
     SRShortcutCharacters: "c",
     SRShortcutCharactersIgnoringModifiers: "c",
