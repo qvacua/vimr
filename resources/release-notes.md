@@ -1,5 +1,10 @@
 # Next
 
+* Dependencies updates:
+    - Kentzo/ShortcutRecorder 3.1
+
+# 0.31.0-337
+
 * Improve handling of file system changes for the file browser
 
 # 0.30.0-335
